@@ -5,38 +5,23 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TMP_M_FEAT_TBL_SERVER 
+class TMP_M_FEAT_TBL_SERVER
 
 inherit
-	DELAY_SERVER [MELTED_FEATURE_TABLE]
+	COMPILER_SERVER [MELTED_FEATURE_TABLE]
 
 create
 	make
-	
-feature 
 
-	id (t: MELTED_FEATURE_TABLE): INTEGER is
-			-- Id associated with `t'
-		do
-			Result := t.type_id
-		end
+feature
 
-	cache: M_FEAT_TBL_CACHE is
+	cache: CACHE [MELTED_FEATURE_TABLE] is
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
-	Delayed: SEARCH_TABLE [INTEGER] is
-			-- Cache for delayed items
-		once
-			create Result.make ((3 * Cache.cache_size) // 2)
-		end
-
-	Size_limit: INTEGER is 50
-			-- Size of the TMP_M_FEAT_TBL_SERVER file (50 Ko)
-
-	Chunk: INTEGER is 50;
+	Chunk: INTEGER is 200;
 			-- Size of a HASH_TABLE block
 
 indexing

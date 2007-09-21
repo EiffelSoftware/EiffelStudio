@@ -17,13 +17,13 @@ feature {NONE}
 			create Result.make;
 		end;
 
-	Tmp_feat_tbl_server: TMP_FEAT_TBL_SERVER is
-			-- Server of feature table during recompilation. Will be
-			-- merge into `Feat_tbl_server' after a successful
+	Tmp_feature_server: TMP_FEATURE_SERVER is
+			-- Server of features during recompilation. Will be
+			-- merge into `Feature_server' after a successful
 			-- recompilation.
 		once
-			create Result.make;
-		end;
+			create Result.make
+		end
 
 	Tmp_byte_server: TMP_BYTE_SERVER is
 			-- Server for byte code. Will be useful to update the byte code
@@ -81,6 +81,14 @@ feature {NONE}
 		once
 			create Result.make;
 		end;
+
+	feature_table_cache: CACHE [COMPUTED_FEATURE_TABLE] is
+			-- Cache for features
+		once
+			create Result.make
+		ensure
+			cache_not_void: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

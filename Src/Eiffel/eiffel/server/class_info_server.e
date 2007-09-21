@@ -17,12 +17,6 @@ inherit
 
 feature
 
-	cache: CLASS_INFO_CACHE is
-			-- Cache for routine tables
-		once
-			create Result.make
-		end
-
 	has (an_id: INTEGER): BOOLEAN is
 			-- Is an item of id `an_id' present in the current server ?
 		do
@@ -88,7 +82,6 @@ feature -- Server size configuration
 			-- Size of a HASH_TABLE block
 
 invariant
-	cache_not_void: cache /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

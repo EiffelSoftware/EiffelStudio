@@ -8,10 +8,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TMP_INV_BYTE_SERVER 
+class TMP_INV_BYTE_SERVER
 
 inherit
-	DELAY_SERVER [INVARIANT_B]
+	COMPILER_SERVER [INVARIANT_B]
 		redefine
 			flush, make
 		end
@@ -24,30 +24,18 @@ feature
 	to_remove: LINKED_LIST [INTEGER];
 			-- Ids to remove during finalization
 
-	id (t: INVARIANT_B): INTEGER is
-			-- Id associated with `t'
-		do
-			Result := t.class_id
-		end
-
 	make is
 			-- Hash table creation
 		do
-			Precursor {DELAY_SERVER};
+			Precursor
 			create to_remove.make;
 			to_remove.compare_objects
 		end;
 
-	cache: INV_BYTE_CACHE is
+	cache: CACHE [INVARIANT_B] is
 			-- Cache for routine tables
-		once	
-			create Result.make
-		end
-
-	Delayed: SEARCH_TABLE [INTEGER] is
-			-- Cache for delayed items
 		once
-			create Result.make ((3 * Cache.cache_size) // 2)
+			create Result.make
 		end
 
 	remove_id (i: INTEGER) is
@@ -61,7 +49,7 @@ feature
 	flush is
 			-- Finalization after a successful recompilation.
 		do
-			Precursor {DELAY_SERVER};
+			Precursor
 			from
 				to_remove.start;
 			until
@@ -73,9 +61,6 @@ feature
 		end;
 
 feature -- Server size configuration
-
-	Size_limit: INTEGER is 200
-			-- Size of the TMP_INV_BYTE_SERVER file (200 Ko)
 
 	Chunk: INTEGER is 500;
 			-- Size of a HASH_TABLE block

@@ -22,7 +22,7 @@ feature -- Initialization
 			create classes.make
 			create unref_classes.make (10)
 			create server_controler.make
-			create feat_tbl_server.make
+			create feature_server.make
 			create body_server.make
 			create byte_server.make
 			create ast_server.make
@@ -45,10 +45,7 @@ feature -- Purge of compilation files
 			if normal_compilation then
 				server_controler.remove_useless_files
 			end
-
-			feat_tbl_server.cache.wipe_out
 			depend_server.cache.wipe_out
-			class_info_server.cache.wipe_out
 			inv_byte_server.cache.wipe_out
 			byte_server.cache.wipe_out
 			ast_server.cache.wipe_out
@@ -67,8 +64,8 @@ feature -- Access
 	server_controler: SERVER_CONTROL;
 			-- Controler of servers
 
-	feat_tbl_server: FEAT_TBL_SERVER;
-			-- Server for feature tables
+	feature_server: FEATURE_SERVER
+			-- Server for features
 
 	body_server: BODY_SERVER;
 			-- Server for instances of EIFFEL_FEAT
@@ -117,7 +114,6 @@ invariant
 	classes_not_void: classes /= Void
 	unref_classes_not_void: unref_classes /= Void
 	server_controler_not_void: server_controler /= Void
-	feat_tbl_server_not_void: feat_tbl_server /= Void
 	body_server_not_void: body_server /= Void
 	byte_server_not_void: byte_server /= Void
 	ast_server_not_void: ast_server /= Void

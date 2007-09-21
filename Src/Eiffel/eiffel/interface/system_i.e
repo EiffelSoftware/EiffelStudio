@@ -102,6 +102,7 @@ feature {NONE} -- Initialization
 			create body_index_counter.make
 			create feature_as_counter.make
 			create type_id_counter
+			create feature_counter.make
 
 				-- Routine table controler creation
 			create history_control.make
@@ -142,6 +143,9 @@ feature -- Counters
 
 	routine_id_counter: ROUTINE_COUNTER
 			-- Counter for routine ids
+
+	feature_counter: COMPILER_COUNTER
+			-- Counter for FEATURE_I objects.
 
 	class_counter: CLASS_COUNTER
 			-- Counter of classes
@@ -1030,7 +1034,7 @@ end
 				-- partly removed classes
 			recheck_partly_removed (l_vis_build.partly_removed_classes)
 
-			debug ("Timing")
+			debug ("timing")
 				create d2.make_now
 				print ("Degree 6 rebuild duration: ")
 				print (d2.relative_duration (d1).fine_seconds_count)
@@ -1646,6 +1650,11 @@ feature -- Recompilation
 			d1, d2: DATE_TIME
 			l_il_env: IL_ENVIRONMENT
 		do
+			debug ("timing")
+					-- Enable time accounting to get some precise GC statistics.
+				(create {MEMORY}).enable_time_accounting
+			end
+
 				-- create new backup subdir
 			if automatic_backup then
 				workbench.create_backup_directory
@@ -1705,7 +1714,7 @@ feature -- Recompilation
 					create d1.make_now
 				end
 				process_degree_5
-				debug ("Timing")
+				debug ("timing")
 					create d2.make_now
 					print ("Degree 5 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
@@ -1793,7 +1802,7 @@ end
 					-- Inheritance analysis: `Degree_4' is sorted by class
 					-- topological ids so the parent come first the heirs after.
 				process_degree_4
-				debug ("Timing")
+				debug ("timing")
 					create d2.make_now
 					print ("Degree 4 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
@@ -1812,7 +1821,7 @@ end
 
 					-- Byte code production and type checking
 				process_degree_3
-				debug ("Timing")
+				debug ("timing")
 					create d2.make_now
 					print ("Degree 3 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
@@ -1839,7 +1848,7 @@ end
 					--| someone removed an inheritance link to DISPOSABLE.
 				reset_disposable_descendants
 
-				debug ("Timing")
+				debug ("timing")
 					create d2.make_now
 					print ("After degreee 3 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
@@ -1851,7 +1860,7 @@ end
 					-- Melt the changed features
 				melt
 
-				debug ("Timing")
+				debug ("timing")
 					create d2.make_now
 					print ("Degree 2 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
@@ -1862,7 +1871,7 @@ end
 
 					-- Finalize a successful compilation
 				finish_compilation
-				debug ("Timing")
+				debug ("timing")
 					create d2.make_now
 					print ("Server storing duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
@@ -1880,7 +1889,7 @@ end
 debug ("VERBOSE")
 	io.error.put_string ("Saving melted.eif%N")
 end
-					debug ("Timing")
+					debug ("timing")
 						create d2.make_now
 						print ("Melted file generation duration: ")
 						print (d2.relative_duration (d1).fine_seconds_count)
@@ -1909,7 +1918,7 @@ end
 				Degree_output.put_freezing_message
 				freeze_system
 				is_freeze_requested := False
-				debug ("Timing")
+				debug ("timing")
 					create d2.make_now
 					print ("Degree -1 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
@@ -1919,7 +1928,7 @@ end
 			end
 			if il_generation and then (private_melt or else not degree_minus_1.is_empty) and not il_quick_finalization then
 				generate_il
-				debug ("Timing")
+				debug ("timing")
 					create d2.make_now
 					print ("Degree 1 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
@@ -2666,12 +2675,17 @@ end
 					if l_eiffel_class /= Void then
 						l_eiffel_class.set_new_byte_code_needed (False)
 					end
+					if l_class.current_feature_table /= Void then
+						l_class.set_previous_feature_table (l_class.current_feature_table)
+						l_class.set_current_feature_table (Void)
+					end
 				end
 				i := i + 1
 			end
 
 				-- Update servers
-			Feat_tbl_server.take_control (Tmp_feat_tbl_server)
+			feature_server.take_control (tmp_feature_server)
+			feature_table_cache.wipe_out
 			Tmp_ast_server.finalize
 			Ast_server.take_control (Tmp_ast_server)
 			Depend_server.take_control (Tmp_depend_server)
@@ -2975,7 +2989,7 @@ feature -- Final mode generation
 					--| if some classes have been modified) unless we force its recomputation.
 				reset_disposable_descendants
 
-				debug ("Timing")
+				debug ("timing")
 					create d1.make_now
 				end
 
@@ -3000,7 +3014,7 @@ feature -- Final mode generation
 					byte_context.compute_expanded_descendants
 					generate_il
 					byte_context.clear_system_data
-					debug ("Timing")
+					debug ("timing")
 						create d2.make_now
 						print ("Degree -2/-3 duration: ")
 						print (d2.relative_duration (d1).fine_seconds_count)
@@ -3038,7 +3052,7 @@ feature -- Final mode generation
 
 					byte_context.clear_system_data
 					process_degree_minus_2
-					debug ("Timing")
+					debug ("timing")
 						create d2.make_now
 						print ("Degree -2 duration: ")
 						print (d2.relative_duration (d1).fine_seconds_count)
@@ -3054,7 +3068,7 @@ feature -- Final mode generation
 						deg_output := Degree_output
 						deg_output.put_start_dead_code_removal_message
 						remove_dead_code
-						debug ("Timing")
+						debug ("timing")
 							create d2.make_now
 							print ("Dead code removal duration: ")
 							print (d2.relative_duration (d1).fine_seconds_count)
@@ -3077,7 +3091,7 @@ feature -- Final mode generation
 					byte_context.compute_expanded_descendants
 					process_degree_minus_3
 
-					debug ("Timing")
+					debug ("timing")
 						create d2.make_now
 						print ("Degree -3 duration: ")
 						print (d2.relative_duration (d1).fine_seconds_count)
@@ -3230,14 +3244,12 @@ feature {NONE} -- Implementation
 					-- Remove if from the servers
 				Inv_byte_server.remove (id)
 				Ast_server.remove (id)
-				Feat_tbl_server.remove (id)
 				Inv_ast_server.remove (id)
 				Depend_server.remove (id)
 				M_rout_id_server.remove (id)
 				M_desc_server.remove (id)
 				Tmp_inv_byte_server.remove (id)
 				Tmp_ast_server.remove (id)
-				Tmp_feat_tbl_server.remove (id)
 				Tmp_depend_server.remove (id)
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
@@ -5257,14 +5269,13 @@ feature {NONE} -- Conveniences.
 			l_part_gc_info := l_mem.gc_statistics ({MEM_CONST}.incremental_collector)
 			print ("GC incremental cycle is " + l_part_gc_info.cycle_count.out + "%N")
 			print ("GC incremental cycle is " + l_part_gc_info.cpu_time_average.out + "%N")
---| FIXME IEK Uncomment when added to base.
---			print ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
-	--		print ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
+			print ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
+			print ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
 			print ("Full Collection period " + l_mem.collection_period.out + "%N")
---			print ("GC percentage time " +
---				(100 * (((l_full_gc_info.cycle_count * l_full_gc_info.cpu_time_average) +
---				 (l_part_gc_info.cycle_count * l_part_gc_info.cpu_time_average)) /
---				 l_part_gc_info.cpu_total_time)).out + "%N%N")
+			print ("GC percentage time " +
+				(100 * (((l_full_gc_info.cycle_count * l_full_gc_info.cpu_time_average) +
+				 (l_part_gc_info.cycle_count * l_part_gc_info.cpu_time_average)) /
+				 l_part_gc_info.cpu_total_time)).out + "%N%N")
 		end
 
 feature {NONE} -- Implementation

@@ -1,22 +1,23 @@
 indexing
-	description: "Cache for polymorphic unit tables indexed by routine id."
+	description: "Cache for features in a FEATURE_TABLE"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
+	status: "See notice at end of class.";
+	date: "$Date$";
 	revision: "$Revision$"
 
-class POLY_CACHE
+class
+	COMPUTED_FEATURE_TABLE
 
 inherit
-	CACHE [POLY_TABLE [ENTRY]]
+	ARRAYED_LIST [FEATURE_I]
+
+	IDABLE
+		undefine
+			is_equal, copy
+		end
 
 create
 	make
-
-feature
-
-	Default_size: INTEGER is 200;
-			-- Size of cache
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

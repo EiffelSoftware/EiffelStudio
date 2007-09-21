@@ -1,5 +1,5 @@
 indexing
-	description: "[
+description: "[
 		Class for a feature table: it is basically a hash table of entries
 		the real feature name available in the corresponding classes, and of items
 		the feature id corresponding to the names (id of instance of FEATURE_I).
@@ -18,26 +18,7 @@ inherit
 			id as feat_tbl_id,
 			set_id as set_feat_tbl_id
 		undefine
-			copy, is_equal
-		end
-
-	HASH_TABLE [FEATURE_I, INTEGER]
-		rename
-			item as item_id,
-			has as has_id,
-			has_key as has_key_id,
-			search as search_id
-		export
-			{NONE} all
-			{FEATURE_TABLE} keys, content, deleted_marks, has_default
-			{ANY}
-				after, conflict, count, cursor, forth, found,
-				found_item, go_to, has_id, has_key_id, item_for_iteration,
-				item_id, key_for_iteration, linear_representation,
-				put, remove, replace, search_id, start, valid_key, off,
-				valid_cursor
-		redefine
-			make, put, remove, replace
+			is_equal, copy
 		end
 
 	PREFIX_INFIX_NAMES
@@ -45,49 +26,71 @@ inherit
 			{NONE} all
 			{ANY} is_mangled_alias_name
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	SHARED_WORKBENCH
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	SHARED_TABLE
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	SHARED_ERROR_HANDLER
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	SHARED_BODY_ID
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	SHARED_ARRAY_BYTE
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	SHARED_SERVER
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	COMPILER_EXPORTER
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
 		undefine
-			copy, is_equal
+			is_equal, copy
+		end
+
+	HASH_TABLE [INTEGER, INTEGER]
+		rename
+			has as has_id,
+			has_key as has_key_id,
+			make as internal_table_make,
+			search as search_id,
+			item_for_iteration as internal_table_item_for_iteration,
+			key_for_iteration as internal_table_key_for_iteration,
+			put as internal_table_put,
+			replace as internal_table_replace,
+			remove as internal_table_remove,
+			force as internal_table_force,
+			item as internal_table_item,
+			found_item as internal_table_found_item,
+			start as internal_table_start,
+			after as internal_table_after,
+			forth as internal_table_forth
+		export
+			{NONE} all
+			{ANY} count, has_id, found, conflict, search_id
 		end
 
 create
@@ -97,15 +100,20 @@ feature {NONE} -- Creation
 
 	make (n: INTEGER) is
 		do
-			Precursor (n)
+			internal_table_make (n)
 			create alias_table.make (0)
-			create select_table.make (n)
 		end
 
 feature -- Access
 
+	feature_id_table: ARRAY [INTEGER]
+			-- Table of feature_name ID indexed by their feature ID.
+
+	body_index_table: HASH_TABLE [INTEGER, INTEGER]
+			-- Table of feature_name ID indexed by their body_index.
+
 	select_table: SELECT_TABLE
-			-- Table of features sorted by origin
+			-- Table of features sorted by their routine ID.
 
 	overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
 			-- Hash_table of overloaded features. It is Void by default in a non external class.
@@ -125,8 +133,13 @@ feature -- Access
 			-- Feature with alias name id `alias_name_id', if present; Void otherwise
 		require
 			valid_alias_name_id: alias_name_id > 0
+		local
+			l_id: INTEGER
 		do
-			Result := alias_table.item (alias_name_id)
+			l_id := alias_table.item (alias_name_id)
+			if l_id > 0 then
+				Result := system.feature_server.item (l_id)
+			end
 		end
 
 	search_id_under_renaming (a_feature_name_id: INTEGER; a_renaming: RENAMING_A)
@@ -137,10 +150,146 @@ feature -- Access
 			search_id (a_renaming.renamed (a_feature_name_id))
 		end
 
+	features: COMPUTED_FEATURE_TABLE is
+			-- Linear representation of all features of `feature_table'.
+		require
+			computed: is_computed
+		local
+			l_id: INTEGER
+			l_server: FEATURE_SERVER
+		do
+			Result := feature_table
+			if Result = Void then
+				Result := feature_table_cache.item_id (feat_tbl_id)
+				if Result = Void then
+					from
+						create Result.make (count)
+						Result.set_id (feat_tbl_id)
+						internal_table_start
+						l_server := system.feature_server
+					until
+						internal_table_after
+					loop
+						l_id := internal_table_item_for_iteration
+						if l_id > 0 then
+							Result.extend (l_server.item (l_id))
+						end
+						internal_table_forth
+					end
+					feature_table_cache.force (Result)
+				end
+			end
+		ensure
+			features_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
-	alias_table: HASH_TABLE [FEATURE_I, INTEGER]
-			-- Table of features indexes by their alias names
+	alias_table: HASH_TABLE [INTEGER, INTEGER]
+			-- Table of features indexed by their alias names
+
+	feature_table: COMPUTED_FEATURE_TABLE
+			-- List of features used for quickly traversing Current without
+			-- retrieving each FEATURE_I objects on demand.
+			-- Note: `feature_table' should be Void when storing a project
+			-- as otherwise we would be storing all the FEATURE_I objects.
+
+feature {NONE} -- Implementation
+
+	internal_features: COMPUTED_FEATURE_TABLE is
+			-- Linear representation of all features of `feature_table'.
+		require
+			computed: is_computed
+		do
+			Result := feature_table
+			if Result = Void then
+				Result := features
+				feature_table := Result
+			end
+		ensure
+			features_not_void: Result /= Void
+		end
+
+feature -- HASH_TABLE like feature
+
+	item_id (an_id: INTEGER): FEATURE_I is
+			-- Item of name ID `an_id'
+		require
+			an_id_positive: an_id > 0
+		local
+			l_id: INTEGER
+		do
+			l_id := internal_table_item (an_id)
+			if l_id > 0 then
+				Result := system.feature_server.item (l_id)
+			end
+		end
+
+	found_item: FEATURE_I is
+			--
+		local
+			l_id: INTEGER
+		do
+			l_id := internal_table_found_item
+			if l_id > 0 then
+				Result := system.feature_server.item (l_id)
+			end
+		end
+
+	put (new: FEATURE_I; key: INTEGER) is
+		local
+			alias_name_id: INTEGER
+		do
+				-- Even if there is an id, we recreate one.
+			new.set_id (system.feature_counter.next_id)
+			tmp_feature_server.put (new)
+			internal_table_put (new.id, key)
+				-- Update alias table
+			alias_name_id := new.alias_name_id
+			if alias_name_id > 0 then
+				alias_table.put (new.id, alias_name_id)
+			end
+		end
+
+	replace (new: FEATURE_I; key: INTEGER) is
+		do
+			remove (key)
+			put (new, key)
+		end
+
+	item_for_iteration: FEATURE_I is
+		local
+			l_id: INTEGER
+			l_feat_tbl: like feature_table
+		do
+			l_feat_tbl := feature_table
+			if l_feat_tbl /= Void then
+				Result := l_feat_tbl.item_for_iteration
+			else
+				l_id := internal_table_item_for_iteration
+				if l_id > 0 then
+					Result := system.feature_server.item (l_id)
+				end
+			end
+		end
+
+feature {NONE} -- HASH_TABLE like features
+
+	remove (key: INTEGER) is
+		local
+			old_feature: FEATURE_I
+			alias_name_id: INTEGER
+		do
+			old_feature := item_id (key)
+			if old_feature /= Void then
+					-- Remove old alias name
+				alias_name_id := old_feature.alias_name_id
+				if alias_name_id > 0 then
+					alias_table.remove (alias_name_id)
+				end
+			end
+			internal_table_remove (key)
+		end
 
 feature -- Access: compatibility
 
@@ -153,7 +302,9 @@ feature -- Access: compatibility
 			id: INTEGER
 		do
 			id := Names_heap.id_of (s)
-			Result := item_id (id)
+			if id > 0 then
+				Result := item_id (id)
+			end
 		end
 
 	overloaded_items (an_id: INTEGER): LIST [FEATURE_I] is
@@ -183,11 +334,17 @@ feature -- Access: compatibility
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
-		local
-			l_id: INTEGER
 		do
-			l_id := Names_heap.id_of (s)
-			Result := l_id > 0 and then has_key_id (l_id)
+			Result := has_id (Names_heap.id_of (s))
+		end
+
+	search (s: STRING) is
+			-- Search for `s'.
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		do
+			search_id (Names_heap.id_of (s))
 		end
 
 	alias_item (alias_name: STRING): FEATURE_I is
@@ -197,6 +354,53 @@ feature -- Access: compatibility
 			is_mangled_alias_name: is_mangled_alias_name (alias_name)
 		do
 			Result := item_alias_id (names_heap.id_of (alias_name))
+		end
+
+feature -- Traversal
+
+	start is
+			-- Start iteration
+		local
+			l_feat_tbl: like feature_table
+		do
+			l_feat_tbl := feature_table
+			if l_feat_tbl /= Void then
+				l_feat_tbl.start
+			else
+					-- Load all the features in memory. It makes sense, since
+					-- the traversal will need to go through all the items.
+				internal_features.do_nothing
+				feature_table.start
+			end
+		end
+
+	after: BOOLEAN is
+			-- Are we off?
+		local
+			l_feat_tbl: like feature_table
+		do
+			l_feat_tbl := feature_table
+			if l_feat_tbl /= Void then
+				Result := l_feat_tbl.after
+			else
+				Result := internal_table_after
+			end
+			if Result and then is_flushed then
+				feature_table := Void
+			end
+		end
+
+	forth is
+			-- Are we off?
+		local
+			l_feat_tbl: like feature_table
+		do
+			l_feat_tbl := feature_table
+			if l_feat_tbl /= Void then
+				l_feat_tbl.forth
+			else
+				internal_table_forth
+			end
 		end
 
 feature -- Status report
@@ -217,15 +421,14 @@ feature -- Status report
 			Result := alias_table.conflict
 		end
 
-feature -- Settings
+	is_computed: BOOLEAN
+			-- Is Current properly computed? I.e. went through degree 4?
 
-	set_select_table (t: like select_table) is
-			-- Assign `t' to `seletc_table'.
-		do
-			select_table := t
-		ensure
-			select_table_set: select_table = t
-		end
+	is_flushed: BOOLEAN
+			-- Find out if we can discard `feature_table' during a traversal
+			-- that is to say we are sure it was stored to disk.
+
+feature -- Settings
 
 	set_overloaded_names (o: like overloaded_names) is
 			-- Assign `o' to `overloaded_names'.
@@ -235,57 +438,16 @@ feature -- Settings
 			overloaded_names_set: overloaded_names = o
 		end
 
-feature -- Element change
-
-	put (new: FEATURE_I; key: INTEGER) is
-		local
-			alias_name_id: INTEGER
+	set_computed is
+			-- Mark `is_computed' to True. This is useful in the
+			-- case of an empty feature table.
 		do
-			Precursor (new, key)
-				-- Update alias table
-			alias_name_id := new.alias_name_id
-			if alias_name_id > 0 then
-				alias_table.put (new, alias_name_id)
-			end
-		end
-
-	replace (new: FEATURE_I; key: INTEGER) is
-		local
-			old_feature: FEATURE_I
-			alias_name_id: INTEGER
-		do
-			old_feature := item_id (key)
-			if old_feature /= Void then
-					-- Remove old alias name
-				alias_name_id := old_feature.alias_name_id
-				if alias_name_id > 0 then
-					alias_table.remove (alias_name_id)
-				end
-			end
-			Precursor (new, key)
-				-- Register new alias name (if any)
-			alias_name_id := new.alias_name_id
-			if alias_name_id > 0 then
-				alias_table.put (new, alias_name_id)
-			end
-		end
-
-feature -- Removal
-
-	remove (key: INTEGER) is
-		local
-			old_feature: FEATURE_I
-			alias_name_id: INTEGER
-		do
-			old_feature := item_id (key)
-			if old_feature /= Void then
-					-- Remove old alias name
-				alias_name_id := old_feature.alias_name_id
-				if alias_name_id > 0 then
-					alias_table.remove (alias_name_id)
-				end
-			end
-			Precursor (key)
+			is_computed := True
+			create feature_id_table.make (0, -1)
+			create body_index_table.make (0)
+			create feature_table.make (0)
+			feature_table.set_id (feat_tbl_id)
+			create select_table.make (0, Current)
 		end
 
 feature -- Comparison
@@ -298,6 +460,8 @@ feature -- Comparison
 			-- syntaxically.
 		require
 			good_argument: other /= Void
+			is_computed: is_computed
+			other_is_computed: other.is_computed
 		local
 			feature_name_id: INTEGER
 			f1, f2: FEATURE_I
@@ -321,9 +485,9 @@ feature -- Comparison
 				until
 					after
 				loop
-					feature_name_id := key_for_iteration
-					f2 := other.item_id (feature_name_id)
 					f1 := item_for_iteration
+					feature_name_id := f1.feature_name_id
+					f2 := other.item_id (feature_name_id)
 					if f2 = Void then
 							-- Old feature is not in Current feature table, this
 							-- is not equivalent
@@ -589,19 +753,21 @@ feature -- Check
 			-- are still valid and remove the entry otherwise
 		local
 			f: FEATURE_I
+			l_features: like features
 		do
 			from
 				create removed_feature_ids.make
-				start
+				l_features := internal_features
+				l_features.start
 			until
-				after
+				l_features.after
 			loop
-				f := item_for_iteration
+				f := l_features.item_for_iteration
 				if not f.is_valid then
 						-- The result type or one of the arguments type is not valid
 debug ("ACTIVITY")
 	io.error.put_string ("Update table: ")
-	io.error.put_string (Names_heap.item (key_for_iteration))
+	io.error.put_string (f.feature_name)
 	io.error.put_string (" removed%N")
 end
 					Tmp_ast_server.desactive (f.body_index)
@@ -610,9 +776,10 @@ end
 					-- since it will be done in by pass2 in `feature_unit' if need be
 
 					removed_feature_ids.extend ([f.rout_id_set.first, f.body_index])
-					remove (key_for_iteration)
+					remove (f.feature_name_id)
+					l_features.remove
 				else
-					forth
+					l_features.forth
 				end
 			end
 		end
@@ -627,16 +794,14 @@ end
 			non_deferred, deferred_found: BOOLEAN
 			feature_i: FEATURE_I
 			vcch1: VCCH1
-			l_select_table: SELECT_TABLE
 		do
 			from
 				non_deferred := not associated_class.is_deferred
-				l_select_table := select_table
-				l_select_table.start
+				start
 			until
-				l_select_table.after
+				after
 			loop
-				feature_i := l_select_table.item_for_iteration
+				feature_i := item_for_iteration
 				if feature_i.is_deferred then
 					deferred_found := True
 					if non_deferred then
@@ -647,7 +812,7 @@ end
 					end
 				end
 				check_feature (feature_i)
-				l_select_table.forth
+				forth
 			end
 		end
 
@@ -677,6 +842,37 @@ end
 			f.check_types (Current)
 		end
 
+	compute_lookup_tables is
+			-- Build `select_table', `feature_id_table' and `body_index_table'.
+		local
+			l_feat: FEATURE_I
+			nb, l_id: INTEGER
+		do
+			from
+				nb := count
+				create feature_table.make (nb)
+				feature_table.set_id (feat_tbl_id)
+				create select_table.make (nb, Current)
+				create feature_id_table.make (1, nb)
+				create body_index_table.make (nb)
+				internal_table_start
+			until
+				internal_table_after
+			loop
+				l_id := internal_table_item_for_iteration
+				check l_id_positive: l_id > 0 end
+				l_feat := system.feature_server.item (l_id)
+				feature_id_table.force (l_feat.feature_name_id, l_feat.feature_id)
+				body_index_table.put (l_feat.feature_name_id, l_feat.body_index)
+				select_table.add_feature (l_feat)
+				feature_table.extend (l_feat)
+				internal_table_forth
+			end
+			is_computed := True
+		ensure
+			is_computed: is_computed
+		end
+
 	check_expanded is
 			-- Check the expanded validity rules
 		local
@@ -696,50 +892,37 @@ end
 
 	feature_of_feature_id (i: INTEGER): FEATURE_I is
 			-- Feature of feature_id id equal to `i'.
+		require
+			is_computed: is_computed
 		local
-			feat: FEATURE_I
-			l_cursor: CURSOR
+			l_id: INTEGER
 		do
-			l_cursor := cursor
-			from
-				start
-			until
-				after or else Result /= Void
-			loop
-				feat := item_for_iteration
-				if feat.feature_id = i then
-					Result := feat
-				end
-				forth
+			if feature_id_table.valid_index (i) then
+				l_id := feature_id_table.item (i)
 			end
-			go_to (l_cursor)
+			if l_id > 0 then
+				Result := item_id (l_id)
+			end
 		end
 
 	feature_of_body_index (i: INTEGER): FEATURE_I is
 			-- Feature of body id equal to `i'.
+		require
+			is_computed: is_computed
 		local
-			feat: FEATURE_I
-			l_cursor: CURSOR
+			l_id: INTEGER
 		do
-			l_cursor := cursor
-			from
-				start
-			until
-				after or else Result /= Void
-			loop
-				feat := item_for_iteration
-				if feat.body_index = i then
-					Result := feat
-				end
-				forth
+			l_id := body_index_table.item (i)
+			if l_id > 0 then
+				Result := item_id (l_id)
 			end
-			go_to (l_cursor)
 		end
 
 	feature_of_rout_id (rout_id: INTEGER): FEATURE_I is
 			-- Feature with routine ID `rout_id'.
 		require
 			valid_rout_id: rout_id > 0
+			is_computed: is_computed
 		do
 			Result := select_table.item (rout_id)
 		end
@@ -748,16 +931,19 @@ end
 			-- Feature with routine ID `rout_id'.
 		require
 			rout_id_set_not_void: rout_id_set /= Void
+			is_computed: is_computed
 		local
 			i, nb: INTEGER
+			l_select_table: like select_table
 		do
 			from
 				i := 1
 				nb := rout_id_set.count
+				l_select_table := select_table
 			until
 				i > nb or Result /= Void
 			loop
-				Result := select_table.item (rout_id_set.item (i))
+				Result := l_select_table.item (rout_id_set.item (i))
 				i := i + 1
 			end
 		end
@@ -1015,7 +1201,7 @@ feature -- API
 			loop
 				feat := item_for_iteration
 				if feat /= Void then
-					Result.put (feat.api_feature (c_id), Names_heap.item (key_for_iteration))
+					Result.put (feat.api_feature (c_id), feat.feature_name)
 				end
 				forth
 			end
@@ -1042,55 +1228,34 @@ feature -- API
 			Result := list
 		end
 
-feature -- Debugging
+feature -- Server storing
 
-	trace is
-			-- Debug purpose
-		do
-			io.error.put_string ("%N%NFeature table for ")
-			io.error.put_string (associated_class.name)
-			from
-				start
-			until
-				after
-			loop
-				io.error.put_character ('%N')
-				print (item_for_iteration.generator)
-				io.error.put_character (' ')
-				print (item_for_iteration.feature_name)
---				item_for_iteration.trace
-				forth
-			end
-		end
-
-	trace_replications is
-			-- Debug purpose
+	flush is
 		local
-			it: FEATURE_I
+			l_old_item: like feature_table
+			l_cache: like feature_table_cache
 		do
-			io.error.put_string ("Feature table for ")
-			io.error.put_string (associated_class.name)
-			io.error.put_new_line
-			from
-				start
-			until
-				after
-			loop
-				it := item_for_iteration
-if it.written_class > System.any_class.compiled_class then
-				it.trace
-				io.error.put_string ("code id: ")
-				io.error.put_integer (it.code_id)
-				io.error.put_string (" DT: ")
-				io.error.put_string (it.generator)
-				io.error.put_new_line
-end
-				forth
+			l_cache := feature_table_cache
+			l_old_item := l_cache.item_id (feat_tbl_id)
+			if l_old_item = Void then
+					-- No previous item of id `feat_tbl_id'
+				l_cache.force (feature_table)
+			else
+					-- There is a previous item of id `feat_tbl_id', so we
+					-- update the cache with new item.
+				l_cache.change_last_item (feature_table)
 			end
+			feature_table := Void
+			is_flushed := True
+			tmp_feature_server.flush
 		end
 
 invariant
 	alias_table_not_void: alias_table /= Void
+	body_index_table_not_void: is_computed implies body_index_table /= Void
+	feature_id_table_not_void: is_computed implies feature_id_table /= Void
+	select_table_not_void: is_computed implies select_table /= Void
+	related_select_table: is_computed implies select_table.feature_table = Current
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	BYTE_SERVER 
+	BYTE_SERVER
 
 inherit
 	COMPILER_SERVER [BYTE_CODE]
@@ -19,41 +19,33 @@ create
 
 feature -- Update
 
-	id (t: BYTE_CODE): INTEGER is
-			-- Id associated with `t'
-		do
-			Result := t.body_index
-		end
-
-	cache: BYTE_CACHE is
+	cache: CACHE [BYTE_CODE] is
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
-	
+
 feature -- Access
 
 	item (an_id: INTEGER): BYTE_CODE is
 			-- Byte code of body index `an_id'. Look first in the temporary
 			-- byte code server
 		do
-			if Tmp_byte_server.has (an_id) then
-				Result := Tmp_byte_server.item (an_id);
-			else
-				Result := server_item (an_id);
-			end;
-		end;
+			Result := tmp_byte_server.item (an_id)
+			if Result = Void then
+				Result := Precursor (an_id)
+			end
+		end
 
 	disk_item (an_id: INTEGER): BYTE_CODE is
 			-- Byte code of body index `an_id'. Look first in the temporary
 			-- byte code server
 		do
-			if Tmp_byte_server.has (an_id) then
-				Result := Tmp_byte_server.disk_item (an_id);
-			else
-				Result := Precursor {COMPILER_SERVER} (an_id);
-			end;
-		end;
+			Result := tmp_byte_server.disk_item (an_id)
+			if Result = Void then
+				Result := Precursor {COMPILER_SERVER} (an_id)
+			end
+		end
 
 	has (an_id: INTEGER): BOOLEAN is
 			-- Is the id `an_id' present in `Tmp_byte_server' or
@@ -61,13 +53,10 @@ feature -- Access
 		require else
 			positive_id: an_id /= 0;
 		do
-			Result := server_has (an_id) or else Tmp_byte_server.has (an_id);
+			Result := Precursor (an_id) or else Tmp_byte_server.has (an_id);
 		end;
 
 feature -- Server size configuration
-
-	Size_limit: INTEGER is 150
-			-- Size of the BYTE_SERVER file (150 Ko)
 
 	Chunk: INTEGER is 500
 			-- Size of a HASH_TABLE block

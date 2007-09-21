@@ -38,7 +38,6 @@ feature -- Access
 			-- Retrieve object.
 		local
 			l_class: CLASS_C
-			old_item: LEAF_AS_LIST
 			l_text: STRING
 			l_retried: BOOLEAN
 		do
@@ -46,9 +45,8 @@ feature -- Access
 					-- 02/06/2006 Patrickr
 					-- On a read only project we can't write, so we just store the match list in the cache.
 					-- It would be better to have a more intelligent store mechanism, that would do this.
-				if cache.has_id (an_id) then
-					Result := cache.item_id (an_id)
-				elseif stored_has (an_id) then
+				Result := cache.item_id (an_id)
+				if Result = Void then
 					Result := stored_item (an_id)
 				end
 				l_class := system.class_of_id (an_id)
@@ -68,12 +66,8 @@ feature -- Access
 						if not system.eiffel_project.is_read_only then
 							put (Result)
 						else
-							old_item := cache.item_id (an_id)
-							if old_item = Void then
-								cache.force (Result)
-							else
-								cache.change_last_item (Result)
-							end
+							cache.remove_id (an_id)
+							cache.force (Result)
 						end
 					end
 				end
@@ -85,13 +79,7 @@ feature -- Access
 			retry
 		end
 
-	id (t: LEAF_AS_LIST): INTEGER is
-			-- Id associated with `t'
-		do
-			Result := t.class_id
-		end
-
-	cache: MATCH_LIST_CACHE is
+	cache: CACHE [LEAF_AS_LIST] is
 			-- Cache to speedup
 		once
 			create Result.make
@@ -108,9 +96,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-
-	Size_limit: INTEGER is 200
-			-- Size of the `MATCH_LIST_SERVER' file (200 Ko)
 
 	Chunk: INTEGER is 500;
 			-- Size of a HASH_TABLE' block

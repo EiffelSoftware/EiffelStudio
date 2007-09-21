@@ -485,7 +485,7 @@ feature -- Third pass: byte code production and type check
 			-- 2. the class is marked `changed3' only, make a type check
 			--	on all the features of the class.
 		local
-			feat_table: FEATURE_TABLE
+			feat_table: COMPUTED_FEATURE_TABLE
 				-- Feature invariant_type_checktable of the class
 			feature_i, def_resc: FEATURE_I
 				-- A feature of the class
@@ -518,13 +518,9 @@ feature -- Third pass: byte code production and type check
 					-- Initialization for actual types evaluation
 				Inst_context.set_group (cluster)
 
-					-- For a changed class, the supplier list has
-					-- to be updated
-				if Tmp_depend_server.has (class_id) then
-					dependances := Tmp_depend_server.item (class_id)
-				elseif Depend_server.has (class_id) then
-					dependances := Depend_server.item (class_id)
-				else
+					-- For a changed class, the supplier list has to be updated
+				dependances := depend_server.item (class_id)
+				if dependances = Void then
 					create dependances.make (changed_features.count)
 					dependances.set_class_id (class_id)
 				end
@@ -533,10 +529,10 @@ feature -- Third pass: byte code production and type check
 					new_suppliers := suppliers.same_suppliers
 				end
 
-				feat_table := feature_table
+				feat_table := feature_table.features
 				def_resc := default_rescue_feature
 
-				ast_context.initialize (Current, actual_type, feat_table)
+				ast_context.initialize (Current, actual_type, feature_table)
 
 				if melted_set /= Void then
 					melted_set.clear_all
@@ -1187,7 +1183,7 @@ feature -- Melting
 			-- Melt all the features written in the class
 		local
 			c_dep: CLASS_DEPENDANCE
-			tbl: FEATURE_TABLE
+			tbl: COMPUTED_FEATURE_TABLE
 			feature_i: FEATURE_I
 		do
 			Inst_context.set_group (cluster)
@@ -1195,7 +1191,7 @@ feature -- Melting
 
 				-- Melt feature written in the class
 			from
-				tbl := feature_table
+				tbl := feature_table.features
 				tbl.start
 			until
 				tbl.after

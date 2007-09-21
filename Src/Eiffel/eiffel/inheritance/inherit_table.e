@@ -265,7 +265,7 @@ feature
 			check_validity2;
 
 				-- Computes a good size for the feature table
-			resulting_table := inherited_features.twin
+			resulting_table := inherited_features
 
 				-- Check redeclarations into an attribute
 			check_redeclarations (resulting_table);
@@ -275,10 +275,13 @@ feature
 
 				-- Compute selection table
 			Origin_table.compute_feature_table (parents, feature_table, resulting_table);
-			resulting_table.set_select_table (Origin_table.computed);
 				-- Check sum error: because of possible bad selections,
 				-- anchored types on features could not be evaluated here.
 			Error_handler.checksum;
+
+				-- Now that the table is completely build, we are building
+				-- the quick lookup table.
+			resulting_table.compute_lookup_tables
 
 				-- Check types in the feature table
 			resulting_table.check_table;
@@ -365,7 +368,8 @@ end;
 							-- The new export status is more restrictive than the old one
 						not old_creators.item_for_iteration.equiv (new_creators.item (creation_name))
 					then
-						if resulting_table.has (creation_name) then
+						resulting_table.search (creation_name)
+						if resulting_table.found then
 								-- The routine is not a creation routine any more
 								-- or the export status has changed
 debug ("ACTIVITY")
@@ -453,11 +457,9 @@ end;
 
 				-- Put the resulting table in the temporary feature table
 				-- server.
-			Tmp_feat_tbl_server.put (resulting_table);
-debug ("HAS_CALLS", "TRACE_TABLE")
-			resulting_table.trace_replications;
-			resulting_table.trace;
-end;
+			a_class.set_current_feature_table (resulting_table)
+				-- Flush all the routines we have created so far to the disk.
+			resulting_table.flush
 				-- Update table `changed_features' of `a_class'.
 			update_changed_features;
 			clear;
@@ -484,33 +486,32 @@ end;
 			id: INTEGER;
 		do
 			id := a_class.class_id;
-				-- Look for a previous feature table in server `Feat_tbl_server'
-				-- nb: we don't have to look for it in the temporary server
-				-- for feature table here, that's why we are using feature
-				-- `server_item' of class FEAT_TBL_SERVER.
-			if Feat_tbl_server.server_has (id) then
-					-- We have a previous compiled class
-				feature_table := Feat_tbl_server.server_item (id);
-				feature_table.update_table;
+				-- Look for a previous feature table
+			feature_table := a_class.previous_feature_table
+			if feature_table = Void then
+					-- No previous compilation.
+				feature_table := Empty_table
 			else
-					-- No previous compilation
-				feature_table := Empty_table;
+				feature_table.update_table
 			end;
 				-- Prepare `inherited_features'.
 			inherited_features.set_feat_tbl_id (id);
 				-- Compute `previous_feature_table'.
-			if Tmp_feat_tbl_server.has (id) then
+			previous_feature_table := a_class.current_feature_table
+			if previous_feature_table /= Void then
 					-- There was an error and a feature table has been already
 					-- computed for this class.
-				previous_feature_table := Tmp_feat_tbl_server.item (id);
 				previous_feature_table.update_table;
 			end;
 		end;
 
 	Empty_table: FEATURE_TABLE is
 			-- Empty feature table
-		once
+		do
 			create Result.make (1)
+			Result.set_computed
+		ensure
+			empty_table_not_void: Result /= Void
 		end
 
 	merge (parent_c: PARENT_C) is
@@ -519,7 +520,7 @@ end;
 		local
 			parent: CLASS_C
 				-- Parent class
-			parent_table: FEATURE_TABLE;
+			parent_table: COMPUTED_FEATURE_TABLE
 				-- Feature table of the parent `parent_c'
 			info: INHERIT_INFO
 				-- Information on one inherited feature
@@ -533,7 +534,7 @@ end;
 				create parent_type
 				parent_type.set_actual_type (parent_c.parent_type)
 					-- Look for the parent table on the disk
-				parent_table := parent.feature_table
+				parent_table := parent.feature_table.features
 				check
 					parent_table_exists: parent_table /= Void;
 						-- Because of topological sort, the parents are
@@ -768,7 +769,7 @@ end;
 			loop
 				feature_i := feature_table.item_for_iteration;
 				if feature_i.written_in = id then
-					feature_name_id := feature_table.key_for_iteration;
+					feature_name_id := feature_i.feature_name_id
 						-- recompute a former local declaration
 					analyze_local (feature_i.duplicate, feature_name_id);
 				end;
@@ -1002,9 +1003,7 @@ end;
 							-- This should not happen, but if it does.
 						is_the_same := False
 					else
-						if Tmp_ast_server.body_has (body_index) then
-							old_tmp_description := Tmp_ast_server.body_item (body_index)
-						end
+						old_tmp_description := Tmp_ast_server.body_item (body_index)
 
 							-- Incrementality of the workbench is here: we
 							-- compare the content of a new feature and the
@@ -1458,47 +1457,35 @@ end;
 	compute_invariant is
 			-- Compute invariant clause
 		require
-			good_context: not (a_class = Void or else class_info = Void);
-			changed: a_class.changed;
+			good_context: not (a_class = Void or else class_info = Void)
+			changed: a_class.changed
 		local
-			class_id: INTEGER;
+			class_id: INTEGER
 				-- information left by the temporary server `Tmp_ast_server'
 				-- and stored in `class_info'
-			old_invar_clause, invar_clause: INVARIANT_AS;
-			old_clause_exists, clause_exists: BOOLEAN;
+			old_invar_clause, invar_clause: INVARIANT_AS
 		do
 				-- First: check is the invariant clause of the current
 				-- class has syntactically changed. If yes, flag
 				-- `changed5' of `a_class' is set to True.
-			class_id := a_class.class_id;
+			class_id := a_class.class_id
 				-- Look in the non-temporary invariant AST server for
 				-- for an old invariant clause
-			old_clause_exists := Inv_ast_server.server_has (class_id);
-			clause_exists := Tmp_ast_server.invariant_has (class_id)
-			if clause_exists then
+			old_invar_clause := inv_ast_server.server_item (class_id)
+			invar_clause := tmp_ast_server.invariant_item (class_id)
+			if invar_clause /= Void then
 					-- The changed class `a_class' has an invariant clause
-				if old_clause_exists then
-						-- Evaluation of an old invariant clause in order
-						-- to see if it has changed
-					old_invar_clause := Inv_ast_server.server_item (class_id);
-					invar_clause := Tmp_ast_server.invariant_item (class_id);
-
+				if old_invar_clause /= Void then
 						-- Incrementality test on invariant clause
-					if invar_clause = Void then
-						invariant_changed := old_invar_clause /= Void
-					else
-						invariant_changed := not (
-							old_invar_clause /= Void and then
-							invar_clause.is_equivalent (old_invar_clause))
-					end
+					invariant_changed := not invar_clause.is_equivalent (old_invar_clause)
 				else
-					invariant_changed := True;
-				end;
-			elseif old_clause_exists or a_class.has_invariant then
-				invariant_removed := True;
+					invariant_changed := True
+				end
+			elseif old_invar_clause /= Void or a_class.has_invariant then
+				invariant_removed := True
 				tmp_ast_server.invariant_remove (class_id)
-			end;
-		end;
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -1563,31 +1550,31 @@ feature {NONE} -- Implementation
 			end
 		end
 
-		mark_generic_attribute_seeds (resulting_table: FEATURE_TABLE) is
-				-- Mark attributes that are seeds of generic types to generate
-				-- wrappers for them.
-			require
-				resulting_table_attached: resulting_table /= Void
-			local
-				f: FEATURE_I
-				a: ATTRIBUTE_I
-			do
-				from
-					resulting_table.start
-				until
-					resulting_table.after
-				loop
-					f := resulting_table.item_for_iteration
-					if f.is_attribute and then f.is_origin and then f.rout_id_set.count = 1 and then f.has_formal then
-						a ?= f
-						check
-							a_attached: a /= Void
-						end
-						a.set_generate_in (f.written_in)
+	mark_generic_attribute_seeds (resulting_table: FEATURE_TABLE) is
+			-- Mark attributes that are seeds of generic types to generate
+			-- wrappers for them.
+		require
+			resulting_table_attached: resulting_table /= Void
+		local
+			f: FEATURE_I
+			a: ATTRIBUTE_I
+		do
+			from
+				resulting_table.start
+			until
+				resulting_table.after
+			loop
+				f := resulting_table.item_for_iteration
+				if f.is_attribute and then f.is_origin and then f.rout_id_set.count = 1 and then f.has_formal then
+					a ?= f
+					check
+						a_attached: a /= Void
 					end
-					resulting_table.forth
+					a.set_generate_in (f.written_in)
 				end
+				resulting_table.forth
 			end
+		end
 
 feature {NONE} -- Temporary body index
 
@@ -1633,4 +1620,5 @@ indexing
 		]"
 
 end
+
 

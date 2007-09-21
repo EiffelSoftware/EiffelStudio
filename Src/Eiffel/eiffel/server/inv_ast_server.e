@@ -10,10 +10,6 @@ class
 
 inherit
 	READ_SERVER [INVARIANT_AS]
-		rename
-			ast_server as offsets
-		export
-			{ANY} merge
 		redefine
 			has, item
 		end
@@ -23,7 +19,7 @@ create
 
 feature
 
-	cache: INV_AST_CACHE is
+	cache: CACHE [INVARIANT_AS] is
 			-- Cache for routine tables
 		once
 			create Result.make
@@ -33,21 +29,18 @@ feature
 			-- Is the id `an_id' present either in Current or in
 			-- `Tmp_inv_ast_server' ?
 		do
-			Result := Tmp_ast_server.invariant_has (an_id) or else server_has (an_id)
-		end;
+			Result := Tmp_ast_server.invariant_has (an_id) or else Precursor (an_id)
+		end
 
 	item (an_id: INTEGER): INVARIANT_AS is
 			-- Invariant of class of id `an_id'. Look for it first in
 			-- the associated temporary server
 	   do
-			if Tmp_ast_server.invariant_has (an_id) then
-				Result := Tmp_ast_server.invariant_item (an_id);
-			else
-				Result := server_item (an_id);
-			end;
-		ensure then
-			Result_exists: Result /= Void
-		end;
+			Result := Tmp_ast_server.invariant_item (an_id)
+			if Result = Void then
+				Result := Precursor (an_id)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

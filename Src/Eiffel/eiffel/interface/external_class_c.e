@@ -192,6 +192,9 @@ feature -- Initialization
 			clean_overloaded_names (l_feat_tbl)
 			l_feat_tbl.set_overloaded_names (overloaded_names)
 
+				-- Building lookup tables for the feature_table.
+			l_feat_tbl.compute_lookup_tables
+
 				-- Initialize `types'.
 			init_types
 
@@ -206,7 +209,8 @@ feature -- Initialization
 			set_skeleton (l_feat_tbl.skeleton)
 
 				-- Save freshly computed feature table on disk.
-			Tmp_feat_tbl_server.put (l_feat_tbl)
+			l_feat_tbl.flush
+			current_feature_table := l_feat_tbl
 			external_class := Void
 			is_built := True
 		ensure
@@ -597,7 +601,6 @@ feature {NONE} -- Initialization
 		require
 			a_feat_not_void: a_feat /= Void
 			a_feat_tbl_not_void: a_feat_tbl /= Void
-			has_select_table: a_feat_tbl.select_table /= Void
 		local
 			i: INTEGER
 			l_base_name, l_new_name, l_feat_name: STRING
@@ -629,14 +632,12 @@ feature {NONE} -- Initialization
 			end
 
 			a_feat_tbl.put (a_feat, a_feat.feature_name_id)
-			a_feat_tbl.select_table.put (a_feat, a_feat.rout_id_set.first)
 		end
 
 	process_features (a_feat_tbl: like feature_table; a_features: ARRAYED_LIST [CONSUMED_ENTITY]) is
 			-- Get all features and make sure all referenced types are in system.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
-			has_origin_table: a_feat_tbl.select_table /= Void
 			a_features_not_void: a_features /= Void
 		local
 			l_member: CONSUMED_ENTITY
@@ -1135,7 +1136,6 @@ feature {NONE} -- Implementation
 			-- Set `written_feature_id'.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
-			a_feat_tbl_has_select_table: a_feat_tbl.select_table /= Void
 			a_feat_not_void: a_feat /= Void
 			a_feat_with_no_rout_id_set: a_feat.rout_id_set = Void
 			a_member_not_void: a_member /= Void

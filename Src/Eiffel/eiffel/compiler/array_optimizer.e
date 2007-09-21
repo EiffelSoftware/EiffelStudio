@@ -111,7 +111,6 @@ feature {NONE} -- Array optimization
 		local
 			a_class: CLASS_C
 			ftable: FEATURE_TABLE
-			select_table: SELECT_TABLE
 			a_feature: FEATURE_I
 			class_depend: CLASS_DEPENDANCE
 			depend_list: FEATURE_DEPENDANCE
@@ -128,7 +127,6 @@ feature {NONE} -- Array optimization
 			loop
 				a_class := array_descendants.item
 				ftable := a_class.feature_table
-				select_table := ftable.select_table
 				class_depend := Depend_server.item (a_class.class_id)
 
 				from
@@ -151,8 +149,8 @@ feature {NONE} -- Array optimization
 							if lower = Void then
 									-- Optimization: get the FEATURE_Is only
 									-- if the sets are not disjoint
-								lower := select_table.item (lower_rout_id)
-								area := select_table.item (area_rout_id)
+								lower := ftable.feature_of_rout_id (lower_rout_id)
+								area := ftable.feature_of_rout_id (area_rout_id)
 							end
 							if
 								byte_code.assigns_to (lower.feature_id)
@@ -218,7 +216,6 @@ end
 			d: ARRAYED_LIST [CLASS_C]
 			an_id: INTEGER
 			ftable: FEATURE_TABLE
-			select_table: SELECT_TABLE
 			dep: DEPEND_UNIT
 		do
 			if not array_descendants.has (a_class) then
@@ -231,25 +228,24 @@ end
 				array_descendants.forth
 				an_id := a_class.class_id
 				ftable := a_class.feature_table
-				select_table := ftable.select_table
 
-				create dep.make (an_id, select_table.item (put_rout_id))
+				create dep.make (an_id, ftable.feature_of_rout_id (put_rout_id))
 				special_features.extend (dep)
-				create dep.make (an_id, select_table.item (item_rout_id))
+				create dep.make (an_id, ftable.feature_of_rout_id (item_rout_id))
 				special_features.extend (dep)
-				create dep.make (an_id, select_table.item (infix_at_rout_id))
+				create dep.make (an_id, ftable.feature_of_rout_id (infix_at_rout_id))
 				special_features.extend (dep)
 
 					-- Record `lower' and `area'
-				create dep.make (an_id, select_table.item (lower_rout_id))
+				create dep.make (an_id, ftable.feature_of_rout_id (lower_rout_id))
 				lower_and_area_features.extend (dep)
-				create dep.make (an_id, select_table.item (area_rout_id))
+				create dep.make (an_id, ftable.feature_of_rout_id (area_rout_id))
 				lower_and_area_features.extend (dep)
 
 					-- Record unsafe features
-				create dep.make (an_id, select_table.item (make_area_rout_id))
+				create dep.make (an_id, ftable.feature_of_rout_id (make_area_rout_id))
 				unsafe_features.extend (dep)
-				create dep.make (an_id, select_table.item (set_area_rout_id))
+				create dep.make (an_id, ftable.feature_of_rout_id (set_area_rout_id))
 				unsafe_features.extend (dep)
 				from
 					d := a_class.descendants
@@ -375,7 +371,7 @@ feature -- Contexts
 				array_type ?= bc.arguments.item (id)
 			end
 			array_type_a := array_type.type_a
-			f := array_type.base_class.feature_table.select_table.item (item_rout_id)
+			f := array_type.base_class.feature_of_rout_id (item_rout_id)
 
 			type_a ?= f.type
 			type_a := type_a.instantiation_in (array_type_a, array_type.base_class.class_id)

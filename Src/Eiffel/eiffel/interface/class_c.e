@@ -2377,6 +2377,11 @@ feature -- Meta-type
 					-- No instantiation for non-generic class
 				Result := types.first
 			else
+					-- FIXME: Manu 2007/09/13: This way of finding the class type in descendant
+					-- is clearly not the best way as it is slow since we are creating a new TYPE_I
+					-- instance just to find its associated type id. The better way would be to
+					-- iterate through the generics of Current and find a CLASS_TYPE instances.
+					-- See eweasel test#valid045 to see the slowness.
 				actual_class_type := class_type.associated_class.actual_type
 					-- General instantiation of the actual class type where
 					-- the feature is written in the context of the actual
@@ -3776,7 +3781,7 @@ feature -- Anchored types
 			from
 				l_old := anchored_features
 				create l_anchored_features.make (10)
-				l_select := l_feat_tbl.select_table
+				l_select := feature_table.select_table
 				l_select.start
 			until
 				l_select.after
@@ -3876,12 +3881,31 @@ feature -- Implementation
 
 feature -- Implementation
 
+	set_current_feature_table (a_tbl: like feature_table) is
+		do
+			current_feature_table := a_tbl
+		ensure
+			current_feature_table_set: current_feature_table = a_tbl
+		end
+
+	set_previous_feature_table (a_tbl: like feature_table) is
+		do
+			previous_feature_table := a_tbl
+		ensure
+			previous_feature_table_set: previous_feature_table = a_tbl
+		end
+
+	previous_feature_table, current_feature_table: FEATURE_TABLE
+
 	feature_table: FEATURE_TABLE is
 			-- Compiler feature table
 		require
 			has_feature_table: has_feature_table
 		do
-			Result := Feat_tbl_server.item (class_id)
+			Result := current_feature_table
+			if Result = Void then
+				Result := previous_feature_table
+			end
 		ensure
 			valid_result: Result /= Void
 		end
@@ -3889,7 +3913,7 @@ feature -- Implementation
 	has_feature_table: BOOLEAN is
 			-- Has Current a feature table
 		do
-			Result := Feat_tbl_server.has (class_id)
+			Result := current_feature_table /= Void or previous_feature_table /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -4251,4 +4275,5 @@ indexing
 		]"
 
 end -- class CLASS_C
+
 

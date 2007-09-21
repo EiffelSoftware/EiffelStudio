@@ -30,11 +30,9 @@ feature -- Access
 	poly_table (rout_id: INTEGER): POLY_TABLE [ENTRY] is
 			-- Routine table of id `rout_id'
 		do
-			if Tmp_poly_server.has (rout_id) then
-					-- Not in cache and the routine id is not associated
-					-- to a routine table of deferred features only.
-				Result := Tmp_poly_server.item (rout_id)
-			end
+				-- Not in cache and the routine id is not associated
+				-- to a routine table of deferred features only.
+			Result := Tmp_poly_server.item (rout_id)
 		end
 
 	used: SEARCH_TABLE [INTEGER]

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class SUPPLIER_LIST 
+class SUPPLIER_LIST
 
 inherit
 	ARRAYED_LIST [SUPPLIER_INFO]
@@ -99,7 +99,7 @@ feature -- Element change
 				else
 					suppl_info.add_occurrence
 				end
-	
+
 				l.forth
 			end
 		ensure
@@ -173,7 +173,7 @@ feature -- Consistency
 			debug ("ACTIVITY")
 				trace
 			end
-			from	
+			from
 				Result := True
 				l_system := eiffel_system.system
 				l.start
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation: traversal
 		do
 			from
 				start
-			until	
+			until
 					-- The test for `after' is a defensive programming
 					-- test!!!
 				after or else item.supplier_id = id
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation: traversal
 				forth
 			end
 		end
-		
+
 	info (id: INTEGER): SUPPLIER_INFO is
 			-- Supplier information associated to supplier of id `id'.
 		require
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation: traversal
 			end
 			go_to (cur)
 		end
-				
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

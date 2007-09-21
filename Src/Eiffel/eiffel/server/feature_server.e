@@ -1,23 +1,51 @@
 indexing
-	description: "Cache for AST indexed by class id"
+	description: "Server for storing FEATURE_I objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class AST_CACHE 
+class
+	FEATURE_SERVER
 
 inherit
-	CACHE [CLASS_AS]
+	COMPILER_SERVER [FEATURE_I]
+		redefine
+			has, item
+		end
 
 create
-
 	make
 
-feature
+feature -- Access
 
-	Default_size: INTEGER is 20;
-			-- Size of cache
+	cache: CACHE [FEATURE_I] is
+			-- Cache for features
+		once
+			create Result.make
+		end
+
+	has (an_id: INTEGER): BOOLEAN is
+			-- Has the current server or the associated temporary
+			-- server an item of id `an_id'.
+		do
+			Result := tmp_feature_server.has (an_id) or else Precursor (an_id)
+		end;
+
+	item (an_id: INTEGER): FEATURE_I is
+			-- Feature table of id `an_id'. Look first in the temporary
+			-- feature table server. It not present, look in itself.
+		do
+			Result := tmp_feature_server.item (an_id)
+			if Result = Void then
+				Result := Precursor (an_id)
+			end
+		end
+
+feature -- Server size configuration
+
+	Chunk: INTEGER is 5000;
+			-- Size of a HASH_TABLE block
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

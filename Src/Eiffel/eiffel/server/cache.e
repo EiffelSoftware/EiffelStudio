@@ -5,13 +5,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class CACHE [T -> IDABLE]
+class CACHE [T -> IDABLE]
 
 inherit
-	
 	TO_SPECIAL [ARRAY [H_CELL[T]]]
 
 	SHARED_CONFIGURE_RESOURCES
+
+create
+	make
 
 feature -- Initialisation
 
@@ -29,31 +31,9 @@ feature -- Initialisation
 			create array_count.make (0, s - 1)
 			create history.make (s)
 			create index.make (0, s - 1)
-			from 
+			from
 			until
 				i = s
-			loop
-				create array.make (1, 5)
-				area.put (array, i)
-				i := i + 1
-			end
-		end
-
-	make_i (n : INTEGER)  is
-			-- Creates a table of n hash_entry
-		local
-			i: INTEGER
-			array: ARRAY [H_CELL[T]]
-		do
-			size := n
-			count := 0
-			make_area (n)
-			create array_count.make (0, n - 1)
-			create history.make (n)
-			create index.make (0, n - 1)
-			from 
-			until
-				i = n
 			loop
 				create array.make (1, 5)
 				area.put (array, i)
@@ -65,8 +45,14 @@ feature -- Initialisation
 			-- Cache size
 		local
 			s: STRING
+			l_int: INTERNAL
 		do
-			s := generator
+			create l_int
+			if l_int.generic_count (Current) > 0 then
+				s := l_int.class_name_of_type (l_int.generic_dynamic_type (Current, 1))
+			else
+				s := generator
+			end
 			s.to_lower
 			Result := Configure_resources.get_integer (s, default_value)
 
@@ -82,25 +68,23 @@ feature -- Initialisation
 	default_value: INTEGER is
 			-- Default value of cache
 		do
-			Result :=  Configure_resources.get_integer (r_Cache_size, Default_size)
+			Result :=  Configure_resources.get_integer (r_Cache_size, 20)
 		end;
 
-	Default_size: INTEGER is
+	Default_size: INTEGER
 			-- Default cache size
-		deferred
-		end;
 
 	array_count: ARRAY [INTEGER]
 		-- number of element in each sub-array
 
 feature -- Cache manipulations
-							
+
 	has_id (id: INTEGER): BOOLEAN is
 			-- Is an item of id `i' in the cache ?
 		require
 			not_void: id /= 0
 		local
-			i, j, k: INTEGER			
+			i, j, k: INTEGER
 			found: BOOLEAN
 			l_array: ARRAY [H_CELL[T]]
 		do
@@ -119,7 +103,7 @@ feature -- Cache manipulations
 
 			debug ("CACHE")
 				if Size < 500 then
-					from 
+					from
 						i :=  0
 						j := Size
 					until
@@ -134,7 +118,7 @@ feature -- Cache manipulations
 						i := i + 1
 					end
 				end
-			
+
 				io.put_string ("%N")
 				io.put_string (generator)
 				io.put_string (" has a total of: ")
@@ -169,7 +153,7 @@ feature -- Cache manipulations
 		require
 			not_void: id /= 0
 		local
-			i, j, k: INTEGER			
+			i, j, k: INTEGER
 			found: BOOLEAN
 			l_array: ARRAY [H_CELL[T]]
 			tmp: H_CELL[T]
@@ -199,7 +183,7 @@ feature -- Cache manipulations
 
 			debug ("CACHE")
 				if Size < 500 then
-					from 
+					from
 						i :=  0
 						j := Size
 					until
@@ -240,14 +224,14 @@ feature -- Cache manipulations
 				io.put_string ("%N%N")
 			end
 		end
-	
+
 	remove_id (id: INTEGER) is
 			-- Remove item of id `i' form cache.
 			-- better use force instead
 		require
 			not_void: id /= 0
 		local
-			i, j, k: INTEGER			
+			i, j, k: INTEGER
 			found: BOOLEAN
 			l_array: ARRAY [H_CELL[T]]
 			tmp: H_CELL[T]
@@ -268,7 +252,7 @@ feature -- Cache manipulations
 				j := j + 1
 				tmp := l_array.item (j)
 				history.remove (tmp.index)
-				from 
+				from
 					k := j
 					last_removed_item := tmp.item
 					j := array_count.item (i)
@@ -281,20 +265,21 @@ feature -- Cache manipulations
 				end
 				l_array.put (Void, j)
 			end
-		end	
+		end
 
 	force (e: T) is
-			-- like put if full remove an element 
+			-- like put if full remove an element
 			-- to put our new one
 		require
 			not_void: e /= Void
+			not_has_id: not has_id (e.id)
 		local
 			i, t: INTEGER
 			l_array: array [H_CELL[T]]
 			h_cell: H_CELL[T]
 			to_remove: T
 			l_default: T
-		do	
+		do
 			i := e.id \\ Size
 			l_array := area.item (i)
 			history.add (e)
@@ -307,33 +292,33 @@ feature -- Cache manipulations
 				count := count + 1
 			end
 			t := array_count.item (i)
-			if l_array.count = t then	
+			if l_array.count = t then
 				l_array.grow (2 * t)
 			end
 			array_count.put (t + 1, i)
 			l_array.put (h_cell, t + 1)
 		end
-		
+
 	is_full: BOOLEAN is
 			-- is the cache full ?
 		do
 			Result := count >= size
-		end				
+		end
 
 	is_empty: BOOLEAN is
 			-- is the cache empty ?
 		do
 			Result := count = 0
 		end
-		
+
 	clear_all, wipe_out is
 			-- wipe all out
 		local
 			s: INTEGER
 		do
-			from 
-				s := Size 
-			until 	
+			from
+				s := Size
+			until
 				s = 0
 			loop
 				s := s - 1
@@ -352,7 +337,7 @@ feature -- Cache manipulations
 		do
 			tmp := last_item_array.item (last_item_pos)
 			tmp.set_item (e)
-			history.set_item (e,tmp.index) 
+			history.set_item (e,tmp.index)
 		end
 
 	history: CACHE_HISTORY[T]
@@ -399,7 +384,7 @@ feature -- linear iteration
 		end
 
 	after: BOOLEAN
-		
+
 	forth is
 			-- put item_for_iteration on the next element of the cache
 		local
@@ -408,7 +393,7 @@ feature -- linear iteration
 			found: BOOLEAN
 		do
 			from
-				item_array := last_item_array_number			
+				item_array := last_item_array_number
 				item_number := last_item_pos + 1
 				array_current := last_item_array
 			until
@@ -437,7 +422,7 @@ feature -- linear iteration
 				last_item_array_number := item_array
 				last_item_pos := item_number
 			end
-		end					
+		end
 
 	item_for_iteration: T is
 			-- give the item in a linear ?????
@@ -448,7 +433,7 @@ feature -- linear iteration
 feature {NONE}
 
 	last_item_array: ARRAY [H_CELL[T]]
-		-- the array in which the last searched item 
+		-- the array in which the last searched item
 		-- was found
 
 	last_item_pos: INTEGER
@@ -457,7 +442,7 @@ feature {NONE}
 
 	last_item_array_number: INTEGER
 		-- the number of last_item_array	
-							
+
 feature {NONE} -- to implement force
 
 	internal_remove (e: T) is
@@ -466,7 +451,7 @@ feature {NONE} -- to implement force
 		require
 			not_void: e /= Void
 		local
-			i, j, k: INTEGER			
+			i, j, k: INTEGER
 			found: BOOLEAN
 			id: INTEGER
 			l_array: ARRAY [H_CELL[T]]
@@ -492,7 +477,7 @@ feature {NONE} -- to implement force
 				-- the if is to avoid a bug I didn't find (yet)
 				-- in the cache history
 				j := j + 1
-				from 
+				from
 					k := j
 					last_removed_item := l_array.item (j).item
 					j := array_count.item (i)
@@ -505,7 +490,7 @@ feature {NONE} -- to implement force
 				end
 				l_array.put (Void, j)
 			end
-		end	
+		end
 
 feature {NONE} -- statistics
 
@@ -523,7 +508,7 @@ feature {NONE} -- statistics
 
 	success_has_id: REAL
 		-- proportion of successful calls to has_id
-	
+
 	success_item_id: REAL
 		-- proportion of successful calls to item_id
 

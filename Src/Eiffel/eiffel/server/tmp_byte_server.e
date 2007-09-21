@@ -8,36 +8,21 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TMP_BYTE_SERVER 
+class TMP_BYTE_SERVER
 
 inherit
-	DELAY_SERVER [BYTE_CODE]
+	COMPILER_SERVER [BYTE_CODE]
 
 create
 	make
-	
-feature 
 
-	id (t: BYTE_CODE): INTEGER is
-			-- Id associated with `t'
-		do
-			Result := t.body_index
-		end
+feature
 
-	cache: BYTE_CACHE is
+	cache: CACHE [BYTE_CODE] is
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
-
-	Delayed: SEARCH_TABLE [INTEGER] is
-			-- Cache for delayed items
-		once
-			create Result.make ((3 * Cache.cache_size) // 2)
-		end
-
-	Size_limit: INTEGER is 150
-			-- Size of the TMP_BYTE_SERVER file (150 Ko)
 
 	Chunk: INTEGER is 500;
 			-- Size of a HASH_TABLE block

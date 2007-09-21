@@ -13,6 +13,8 @@ indexing
 deferred class FEATURE_I
 
 inherit
+	IDABLE
+
 	SHARED_WORKBENCH
 
 	SHARED_SERVER
@@ -401,7 +403,6 @@ feature -- Comparison
 			other_not_void: other /= Void
 			tbl_not_void: tbl /= Void
 		local
-			origin_table: HASH_TABLE [FEATURE_I, INTEGER]
 			assigner_command: FEATURE_I
 			other_assigner_command: FEATURE_I
 		do
@@ -410,7 +411,6 @@ feature -- Comparison
 			if assigner_name_id = 0 or else other.assigner_name_id = 0 then
 				Result := True
 			else
-				origin_table := tbl.select_table
 				if written_in = system.current_class.class_id then
 					assigner_command :=  tbl.item_id (assigner_name_id)
 				else
@@ -420,7 +420,7 @@ feature -- Comparison
 						-- Assigner command is not found
 					error_handler.insert_error (create {VFAC1}.make (system.current_class, Current))
 				else
-					assigner_command := origin_table.item (assigner_command.rout_id_set.first)
+					assigner_command := tbl.feature_of_rout_id (assigner_command.rout_id_set.first)
 					if other.written_in = system.current_class.class_id then
 						other_assigner_command := tbl.item_id (other.assigner_name_id)
 					else
@@ -429,7 +429,7 @@ feature -- Comparison
 					check
 						other_assigner_command_not_void: other_assigner_command /= Void
 					end
-					other_assigner_command := origin_table.item (other_assigner_command.rout_id_set.first)
+					other_assigner_command := tbl.feature_of_rout_id (other_assigner_command.rout_id_set.first)
 					Result := assigner_command = other_assigner_command
 				end
 			end
@@ -553,16 +553,16 @@ feature -- Setting
 			feature_name_set: equal (feature_name, s)
 		end
 
-	set_feature_name_id, set_renamed_name_id (id: INTEGER; alias_id: INTEGER) is
-			-- Assign `id' to `feature_name_id'.
+	set_feature_name_id, set_renamed_name_id (a_id: INTEGER; alias_id: INTEGER) is
+			-- Assign `a_id' to `feature_name_id'.
 		require
-			valid_id: Names_heap.valid_index (id)
+			valid_id: Names_heap.valid_index (a_id)
 			valid_alias_id: Names_heap.valid_index (alias_id)
 		do
-			feature_name_id := id
+			feature_name_id := a_id
 			alias_name_id := alias_id
 		ensure
-			feature_name_id_set: feature_name_id = id
+			feature_name_id_set: feature_name_id = a_id
 			alias_name_id_set: alias_name_id = alias_id
 		end
 
@@ -758,10 +758,14 @@ feature -- Setting
 			has_property_setter_set: has_property_setter = v
 		end
 
-	set_rout_id_set (set: like rout_id_set) is
-			-- Assign `set' to `rout_id_set'.
+	set_rout_id_set (an_id_set: like rout_id_set) is
+			-- Assign `an_id_set' to `rout_id_set'.
+		require
+			an_id_set_not_void: an_id_set /= Void
 		do
-			rout_id_set := set
+			rout_id_set := an_id_set
+		ensure
+			rout_id_set: rout_id_set = an_id_set
 		end
 
 	set_private_external_name_id (n_id: like private_external_name_id) is
@@ -1247,6 +1251,8 @@ feature -- Conveniences
 			-- Result type of feature
 		do
 			Result := void_type
+		ensure
+			type_not_void: Result /= Void
 		end
 
 	set_type (t: like type; a: like assigner_name_id) is
@@ -1343,15 +1349,13 @@ feature -- Export checking
 	suppliers: TWO_WAY_SORTED_SET [INTEGER] is
 			-- Class ids of all suppliers of feature
 		require
-			Tmp_depend_server.has (written_in) or else
-			Depend_server.has (written_in)
+			has_dependance: depend_server.has (written_in)
 		local
 			class_dependance: CLASS_DEPENDANCE
 		do
-			if Tmp_depend_server.has (written_in) then
-				class_dependance := Tmp_depend_server.item (written_in)
-			else
-				class_dependance := Depend_server.item (written_in)
+			class_dependance := depend_server.item (written_in)
+			check
+				class_dependance_not_void: class_dependance /= Void
 			end
 			Result := class_dependance.item (body_index).suppliers
 		end
@@ -1389,20 +1393,16 @@ feature -- Check
 			class_ast: CLASS_AS
 			bid: INTEGER
 		do
-			if body_index > 0 then
-				bid := body_index
-				if Tmp_ast_server.body_has (bid) then
-					Result := Tmp_ast_server.body_item (bid)
-				elseif Body_server.server_has (bid) then
-					Result := Body_server.server_item (bid)
-				end
+			bid := body_index
+			if bid > 0 then
+				Result := body_server.item (bid)
 			end
 			if Result = Void then
-				if Tmp_ast_server.has (written_in) then
 					-- Means a degree 4 error has occurred so the
 					-- best we can do is to search through the
 					-- class ast and find the feature as
-					class_ast := Tmp_ast_server.item (written_in)
+				class_ast := Tmp_ast_server.item (written_in)
+				if class_ast /= Void then
 					Result ?= class_ast.feature_with_name (feature_name_id)
 				end
 			end
@@ -1704,7 +1704,8 @@ feature -- Signature checking
 					vreg.set_entity_name (Names_heap.item (arg_id))
 					Error_handler.insert_error (vreg)
 				end
-				if feat_table.has_key_id (arg_id) then
+				feat_table.search_id (arg_id)
+				if feat_table.found then
 						-- An argument name is a feature name of the feature
 						-- table.
 					create vrfa
@@ -1773,7 +1774,7 @@ feature -- Signature checking
 
 			if
 				is_infix and then
-				((argument_count /= 1) or else (type = Void_type))
+				((argument_count /= 1) or else (type.is_void))
 			then
 					-- Infixed features should have only one argument
 					-- and must have a return type.
@@ -1784,7 +1785,7 @@ feature -- Signature checking
 			end
 			if
 				is_prefix and then
-				((argument_count /= 0) or else (type = Void_type))
+				((argument_count /= 0) or else (type.is_void))
 			then
 					-- Prefixed features shouldn't have any argument
 					-- and must have a return type.
@@ -2091,10 +2092,9 @@ end
 			il_generation: System.il_generation
 		local
 			old_type, new_type: TYPE_A
-			i, arg_count, id: INTEGER
+			i, arg_count: INTEGER
 			old_arguments: like arguments
 		do
-			id := a_written_type.class_id
 			old_type ?= old_feature.type
 			old_type := old_type.actual_argument_type (special_arguments).
 				instantiation_in (a_written_type, a_written_type.class_id).actual_type
@@ -2259,7 +2259,7 @@ end
 					-- Lookup feature in `feature_table' as feature table in the current class is not set yet.
 				assigner := feature_table.item_id (assigner_name_id)
 			else
-				assigner := feature_table.select_table.item
+				assigner := feature_table.feature_of_rout_id
 					(written_class.feature_named (assigner_name).rout_id_set.first)
 			end
 			if assigner = Void or else assigner.has_return_value then
@@ -2580,10 +2580,9 @@ feature -- C code generation
 				generate_header (buffer)
 
 				tmp_body_index := body_index
-				if Tmp_opt_byte_server.has (tmp_body_index) then
-					byte_code := Tmp_opt_byte_server.disk_item (tmp_body_index)
-				else
-					byte_code := Byte_server.disk_item (tmp_body_index)
+				byte_code := tmp_opt_byte_server.disk_item (tmp_body_index)
+				if byte_code = Void then
+					byte_code := byte_server.disk_item (tmp_body_index)
 				end
 
 					-- Generation of C code for an Eiffel feature written in

@@ -15,23 +15,14 @@ create
 
 feature -- Access
 
-	id (t: MELTED_DESC): INTEGER is
-			-- Id associated with `t'
-		do
-			Result := t.class_id
-		end
-
-	cache: M_DESC_CACHE is
+	cache: CACHE [MELTED_DESC] is
 		once
 			create Result.make
 		end
-		
+
 feature -- Server size configuration
 
-	Size_limit: INTEGER is 50
-			-- Size of the M_DESC_SERVER file (50 Ko)
-
-	Chunk: INTEGER is 50
+	Chunk: INTEGER is 200
 			-- Size of a HASH_TABLE block
 
 invariant

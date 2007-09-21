@@ -107,9 +107,7 @@ feature {NONE} -- Implementation
 			result_type: TYPE_I
 		do
 				-- Make sure we can find the BYTE_CODE
- 			if byte_server.server_has (body_index) then
- 				byte_code := Byte_server.disk_item (body_index)
- 			end
+			byte_code := Byte_server.disk_item (body_index)
 
 				-- A feature call can be inlined only if it is not a call
 				-- to a deferred feature or a once. Previously this computation

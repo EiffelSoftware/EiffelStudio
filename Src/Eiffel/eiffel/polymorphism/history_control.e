@@ -118,8 +118,8 @@ end
 				new_set.sort
 
 				id := new_set.rout_id
-				if Tmp_poly_server.has (id) then
-					server_set := Tmp_poly_server.item (id)
+				server_set := tmp_poly_server.item (id)
+				if server_set /= Void then
 						-- Merge `new_set' with `server_set' and keep the order.
 					server_set.merge (new_set)
 				else
@@ -162,7 +162,7 @@ feature -- Cleaning
 
 feature {NONE} -- Implementation
 
-	Overload: INTEGER is 120000
+	Overload: INTEGER is 150000
 			-- Number of units after which we will perform a transfer.
 
 invariant

@@ -7,30 +7,26 @@ indexing
 
 class SERVER_CONTROL
 
-inherit
-	CACHE [SERVER_FILE]
-		redefine
-			make, wipe_out
-		end
-
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 		do
-			Precursor {CACHE}
-			create files.make (Chunk)
+			create cache.make
+			create files.make (0, Chunk)
 			create removed_files.make (Chunk)
 			create file_counter.make
 		end
 
-feature -- Status
+feature {SERVER_CONTROL} -- Status report
 
-	files: HASH_TABLE [SERVER_FILE, INTEGER]
+	files: ARRAY [SERVER_FILE]
 			-- Table of all the files under the control of the
 			-- current object
+
+feature {NONE} -- Status report
 
 	removed_files: HASH_TABLE [SERVER_FILE, INTEGER]
 			-- Table of all the removed files
@@ -40,14 +36,19 @@ feature -- Status
 			--| i.e. only in final mode were we don't need to preserve files
 			--| since there is no incrementality here
 
+	Chunk: INTEGER is 50
+			-- Array chunk
+
+feature -- Status report
+
 	file_counter: FILE_COUNTER
 			-- Server file id counter
 
 	last_computed_id: INTEGER
 			-- Last new computed server file id
 
-	Chunk: INTEGER is 50
-			-- Array chunk
+	cache: CACHE [SERVER_FILE]
+			-- Cache for files.
 
 feature -- Update
 
@@ -79,7 +80,7 @@ feature -- Ids creation
 			end
 
 			create new_file.make (id)
-			files.put (new_file, id)
+			files.force (new_file, id)
 			last_computed_id := id
 
 debug ("SERVER")
@@ -102,7 +103,7 @@ feature -- File operations
 			end
 
 				-- Remove `f' from the controler
-			files.remove (f.file_id)
+			files.put (Void, f.file_id)
 			removed_files.put (f, f.file_id)
 
 				-- Remove file from the disk if not already deleted
@@ -113,32 +114,30 @@ feature -- File operations
 
 	remove_useless_files is
 			-- Remove all empty files from disk
-		local
-			file: SERVER_FILE
-			local_files: like files
 		do
 				-- Delete files from disk which are already not used
-			from
-				local_files := files
-				local_files.start
-			until
-				local_files.after
-			loop
-				file := local_files.item_for_iteration
-				if file.exists and then not file.precompiled and file.occurrence = 0 then
-					remove_file (file)
-				else
-					local_files.forth
-				end
-			end
+			files.do_all (agent (a_file: SERVER_FILE)
+				do
+					if
+						a_file /= Void and then a_file.exists and then
+						not a_file.precompiled and a_file.occurrence = 0
+					then
+						remove_file (a_file)
+					end
+				end)
 		end
 
 	file_of_id (i: INTEGER): SERVER_FILE is
 			-- File of id `i'.
 		require
-			id_not_void: i > 0
+			i_positive: i > 0
+		local
+			l_files: like files
 		do
-			Result := files.item (i)
+			l_files := files
+			if l_files.upper >= i then
+				Result := l_files.item (i)
+			end
 		end
 
 	open_file (f: SERVER_FILE) is
@@ -146,13 +145,14 @@ feature -- File operations
 		require
 			good_argument: f /= Void
 			is_closed: not f.is_open
+			not_in_cache: not cache.has_id (f.file_id)
 		do
 			f.open
-			force (f)
-			if last_removed_item /= Void then
-				last_removed_item.close
+			cache.force (f)
+			if cache.last_removed_item /= Void then
+				cache.last_removed_item.close
 				check
-					not_in_cache: not has_id (last_removed_item.file_id)
+					not_in_cache: not cache.has_id (cache.last_removed_item.file_id)
 				end
 			end
 		ensure
@@ -164,112 +164,78 @@ feature -- File operations
 		require
 			f_not_void: f /= Void
 			is_open: f.is_open
-			has_id: has_id (f.file_id)
+			has_id: cache.has_id (f.file_id)
 		do
 			f.close
-			remove_id (f.file_id)
+			cache.remove_id (f.file_id)
 		ensure
 			f_closed: not f.is_open
-			not_in_cache: not has_id (f.file_id)
+			not_in_cache: not cache.has_id (f.file_id)
 		end
-
-	Default_size: INTEGER is 20
 
 	wipe_out is
 			-- Empty the cache
 		do
 			from
-				start
+				cache.start
 			until
-				after
+				cache.after
 			loop
-				item_for_iteration.close
-				forth
+				cache.item_for_iteration.close
+				cache.forth
 			end
-			Precursor {CACHE}
+			cache.wipe_out
 		end
 
 feature -- Status report
 
 	is_readable: BOOLEAN is
 			-- Are the server files readable?
-		local
-			file: SERVER_FILE
-			local_files: like files
 		do
-			from
-				Result := True
-				local_files := files
-				local_files.start
-			until
-				not Result or local_files.after
-			loop
-				file:= local_files.item_for_iteration
-				if file.exists then
-					Result := file.is_readable
-				end
-				local_files.forth
-			end
+			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
+				do
+					Result := a_file = Void or else
+						(a_file.exists and then a_file.is_readable)
+				end)
 		end
 
 	is_writable: BOOLEAN is
 			-- Are the server files readable and writable?
-		local
-			file: SERVER_FILE
-			local_files: like files
 		do
-			from
-				Result := True
-				local_files := files
-				local_files.start
-			until
-				not Result or local_files.after
-			loop
-				file:= local_files.item_for_iteration
-				if file.exists then
-					if file.precompiled then
-						Result := file.is_readable
+			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
+				do
+					if a_file /= Void and then a_file.exists then
+						if a_file.precompiled then
+							Result := a_file.is_readable
+						else
+							Result := a_file.is_readable and a_file.is_writable
+						end
 					else
-						Result := (file.is_readable and file.is_writable)
+						Result := True
 					end
-				end
-				local_files.forth
-			end
+				end)
 		end
 
 	exists: BOOLEAN is
 			-- Do the server files exist?
-		local
-			local_files: like files
 		do
-			from
-				Result := True
-				local_files := files
-				local_files.start
-			until
-				not Result or local_files.after
-			loop
-				Result := local_files.item_for_iteration.exists
-				local_files.forth
-			end
+			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
+				do
+					Result := a_file = Void or else a_file.exists
+				end)
 		end
 
 feature -- Initialization
 
 	init is
 			-- Update the path names of the various server files.
-		local
-			local_files: like files
 		do
-			from
-				local_files := files
-				local_files.start
-			until
-				local_files.after
-			loop
-				local_files.item_for_iteration.update_path
-				local_files.forth
-			end
+			files.do_all (agent (a_file: SERVER_FILE)
+				do
+					if a_file /= Void then
+						a_file.update_path
+					end
+				end)
 		end
 
 feature -- Merging
@@ -281,7 +247,12 @@ feature -- Merging
 			other_not_void: other /= Void
 		do
 			file_counter.append (other.file_counter)
-			files.merge (other.files)
+			other.files.do_all_with_index (agent (a_file: SERVER_FILE; a_index: INTEGER)
+				do
+					if a_file /= Void then
+						files.force (a_file, a_index)
+					end
+				end)
 		end
 
 feature -- SERVER_FILE sizes
@@ -292,6 +263,11 @@ feature -- SERVER_FILE sizes
 		do
 			block_size := s
 		end
+
+invariant
+	files_not_void: files /= Void
+	removed_files_not_void: removed_files /= Void
+	file_counter_not_void: file_counter /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

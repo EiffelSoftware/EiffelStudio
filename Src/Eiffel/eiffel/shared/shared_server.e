@@ -12,12 +12,6 @@ inherit
 
 feature {NONE}
 
-	Feat_tbl_server: FEAT_TBL_SERVER is
-			-- Server for feature tables
-		once
-			Result := System.feat_tbl_server
-		end
-
 	Body_server: BODY_SERVER is
 			-- Server for instances of CONTENT_AS
 		once

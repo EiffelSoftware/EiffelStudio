@@ -27,13 +27,6 @@ feature -- Initialization
 
 feature
 
-	id (t: T): INTEGER is
-			-- Id associated with `t'
-		require
-			t_not_void: t /= Void
-		deferred
-		end
-
 	current_file_id: INTEGER
 			-- Current server file id used by primitive `put'.
 
@@ -53,41 +46,33 @@ end
 			force (sinf, item_id)
 		end
 
-	Size_limit: INTEGER is
+	Size_limit: INTEGER is 500
 			-- Limit of the size of one file under the control	
-			-- of the current server
-		deferred
-		end
+			-- of the current server (500KB)
 
 	put (t: T) is
 			-- Put object `t' in server.
 		local
-			old_item: T
+			l_old_item: T
+			l_id: INTEGER
+			l_cache: like cache
 		do
-debug ("SERVER")
-	io.put_string ("Putting element of id: ")
-	io.put_integer (t.id)
-	io.put_string ("(")
-	io.put_integer (id (t))
-	io.put_string (") into")
-	io.put_string (generator)
-	io.put_new_line
-end
 				-- Update id of element
-			t.set_id (id (t))
+			l_id := t.id
 
 				-- Write item to disk right away.
 			write (t)
-		
-				-- Put `t' in cache if not full.
-			old_item := cache.item_id (id (t))
-			if old_item = Void then
-					-- No previous item of id `t'
-				cache.force (t)
+
+				-- Put `t' in cache
+			l_cache := cache
+			l_old_item := l_cache.item_id (l_id)
+			if l_old_item = Void then
+					-- No previous item of id `l_id'
+				l_cache.force (t)
 			else
-					-- There is a previous item and routine `item_id' 
+					-- There is a previous item of id `l_id'
 					-- reorganized the cache
-				cache.change_last_item (t)
+				l_cache.change_last_item (t)
 			end
 		end
 
@@ -97,14 +82,14 @@ end
 			an_id: INTEGER
 			pos: INTEGER
 			server_file, old_server_file: SERVER_FILE
-			info, old_info: SERVER_INFO
+			info: SERVER_INFO
 		do
 			server_file := Server_controler.file_of_id (current_file_id)
 			if
 				server_file = Void
 				or else server_file.last_offset > Size_limit * Server_controler.block_size
 				or else server_file.precompiled
-			then 
+			then
 				set_current_file_id
 				server_file := Server_controler.file_of_id (current_file_id)
 			end
@@ -112,7 +97,7 @@ end
 				Server_controler.open_file (server_file)
 			end
 
-			an_id := id (t)
+			an_id := t.id
 
 debug ("SERVER")
 	print ("%N%Nitem in ")
@@ -120,21 +105,19 @@ debug ("SERVER")
 	print (" writing ID ")
 	print (an_id)
 end
-
 			pos := store_append (server_file.descriptor, $t, $make_index, $need_index, $Current)
 			create info.make (pos, server_file.file_id)
 			server_file.add_occurrence
 
-			old_info := tbl_item (an_id)
-			if old_info /= Void then
-				old_server_file := Server_controler.file_of_id (old_info.file_id)
+			force (info, an_id)
+			if found then
+				old_server_file := Server_controler.file_of_id (found_item.file_id)
 				check
 						-- Server file should exist since we are getting it from a SERVER_INFO.
 					old_server_file_not_void: old_server_file /= Void
 				end
 				old_server_file.remove_occurrence
 			end
-			force (info, an_id)
 		end
 
 	remove (an_id: INTEGER) is
@@ -197,8 +180,10 @@ end
 						Server_controler.open_file (server_file)
 					end
 					Result := retrieve_all (server_file.descriptor, info.position)
+					check
+						same_id: Result.id = an_id
+					end
 						-- Insert it in the queue
-					Result.set_id (an_id)
 					cache.force (Result)
 				end
 			end
@@ -230,14 +215,16 @@ end
 				end
 					-- Id not avaible in memory
 				Result := retrieve_all (server_file.descriptor, info.position)
-				Result.set_id (an_id)
+				check
+					same_id: Result.id = an_id
+				end
 			end
 		end
 
 	clear is
 			-- Clear the server.
 			-- Clears the server entirely.
-			-- Must not be used in conjunction with 
+			-- Must not be used in conjunction with
 			-- `take_control' since that routine relies
 			-- on shallow copy semantics!
 		local
@@ -271,7 +258,7 @@ end
 		require
 			good_argument: other /= Void
 		local
-			info, old_info: SERVER_INFO
+			info: SERVER_INFO
 			an_id: INTEGER
 			other_cache: like cache
 			l_server_file: SERVER_FILE
@@ -285,9 +272,9 @@ end
 			loop
 				info := other.item_for_iteration
 				an_id := other.key_for_iteration
-				old_info := tbl_item (an_id)
-				if old_info /= Void then
-					l_server_file := Server_controler.file_of_id (old_info.file_id)
+				search (an_id)
+				if found then
+					l_server_file := Server_controler.file_of_id (found_item.file_id)
 					check
 							-- Server file should exist since we are getting it from a SERVER_INFO.
 						l_server_file_not_void: l_server_file /= Void
@@ -304,7 +291,7 @@ end
 				cache.copy (other_cache)
 				other_cache.make
 			end
-			
+
 			l_server_file := server_controler.file_of_id (other.current_file_id)
 			if l_server_file /= Void and then l_server_file.occurrence > 0 then
 					-- If there are no objects in the server file for `other', then

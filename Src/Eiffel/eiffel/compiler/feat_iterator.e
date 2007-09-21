@@ -48,13 +48,13 @@ feature
 						unit := table.item;
 						old_position := table.position
 						mark (unit.body_index, unit.class_id, unit.written_in, dispose_rout_id);
-						table.go_to (old_position)	
+						table.go_to (old_position)
 						table.forth
 					end
 				end
 			end
 		end
-			
+
 feature {NONE}
 
 	mark (body_index: INTEGER; static_class_id: INTEGER; original_class_id: INTEGER; rout_id_val: INTEGER) is
@@ -66,20 +66,10 @@ feature {NONE}
 		do
 			mark_and_record (body_index, static_class_id, original_class_id);
 
-			if Tmp_poly_server.has (rout_id_val) then
-debug ("DEAD_CODE")
-	print ("%NMarking Poly_table `")
-	print (rout_id_val)
-	print ("'; for feature written in ")
-	print (System.class_of_id (original_class_id).name)
-	print ("%N")
-end
+			table ?= tmp_poly_server.item (rout_id_val)
+			if table /= Void then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
-				table ?= Tmp_poly_server.item (rout_id_val);
-				check
-					table_exists: table /= Void;
-				end;
 				from
 					table.start
 				until
@@ -89,24 +79,12 @@ end
 					if System.class_of_id (unit.class_id).simple_conform_to (System.class_of_id (original_class_id)) then
 						old_position := table.position;
 						if not is_alive (unit.body_index) then
-DEBUG ("DEAD_CODE")
-	io.put_string ("marking for rout_id: ")
-	io.put_integer (rout_id_val)
-	io.put_string ("%N")
-end
 								mark (unit.body_index, unit.class_id, unit.written_in, rout_id_val);
 						end;
 						table.go_to (old_position);
 					end;
 					table.forth
 				end;
-debug ("DEAD_CODE")
-	print ("End of marking Poly_table `")
-	print (rout_id_val)
-	print ("'; for feature written in ")
-	print (System.class_of_id (original_class_id).name)
-	print ("%N%N")
-end
 			end;
 		end;
 
@@ -125,8 +103,8 @@ end
 DEBUG("DEAD_CODE")
 	------------------------------------------
 	--		DEBUG			--
-	
-	io.put_string ("MARKING: ")			
+
+	io.put_string ("MARKING: ")
 	a_class := System.class_of_id (actual_class_id)
 	io.put_string (a_class.feature_table.feature_of_body_index (body_index).feature_name)
 	io.put_string (" (bid: ")
@@ -198,7 +176,7 @@ feature
 
 	is_alive (body_index: INTEGER): BOOLEAN is
 		do
-			Result := used_table.item (body_index) 
+			Result := used_table.item (body_index)
 		end
 
 	is_treated (body_index: INTEGER; rout_id: INTEGER): BOOLEAN is

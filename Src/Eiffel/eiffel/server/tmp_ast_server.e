@@ -11,8 +11,6 @@ class TMP_AST_SERVER
 
 inherit
 	COMPILER_SERVER [CLASS_AS]
-		rename
-			id as class_id
 		redefine
 			make_index, need_index, make,
 			has, item, put, remove
@@ -179,8 +177,6 @@ feature -- Element access
 
 	item (a_class_id: INTEGER): CLASS_AS is
 			-- Get class with `a_class_id'.
-		require else
-			a_class_id_positive: a_class_id >= 0
 		do
 			Result := storage.item (a_class_id)
 			if Result = Void then
@@ -204,10 +200,8 @@ feature -- Element access
 			info: READ_INFO
 			server_file: SERVER_FILE
 		do
-			body_storage.search (a_body_id)
-			if body_storage.found then
-				Result := body_storage.found_item
-			else
+			Result := body_storage.item (a_body_id)
+			if Result = Void then
 				info := body_info.item (a_body_id)
 				if info /= Void then
 					server_file := Server_controler.file_of_id (info.file_id)
@@ -219,6 +213,8 @@ feature -- Element access
 						Server_controler.open_file (server_file)
 					end
 					Result := partial_retrieve_body (server_file.descriptor, info.position, info.object_count)
+						-- We set the `id' there because `Result.id' is actually the ID given at parsing
+						-- time, it is not its body index.
 					Result.set_id (a_body_id)
 				end
 			end
@@ -371,7 +367,7 @@ feature {NONE} -- Implementation (in memory)
 
 feature -- Implementation (disk cache)
 
-	cache: AST_CACHE is
+	cache: CACHE [CLASS_AS] is
 			-- Cache for classes.
 		once
 			create Result.make
@@ -393,12 +389,6 @@ feature {NONE} -- Store to disk
 
 	current_class_id: INTEGER
 			-- The current class id (used to insert invariants during file saving).
-
-	class_id (t: CLASS_AS): INTEGER is
-			-- Id associated with `t'.
-		do
-			Result := t.class_id
-		end
 
 	make_index (obj: ANY; file_position, object_count: INTEGER) is
 			-- Store object `obj' and track the instances
@@ -461,9 +451,6 @@ feature {NONE} -- Implementation of dynamic type checking
 		end
 
 feature {NONE} -- Implementation Constants
-
-	Size_limit: INTEGER is 400
-			-- Size of the TMP_AST_SERVER file (400 Ko)
 
 	Chunk: INTEGER is 500
 			-- Size of a HASH_TABLE block

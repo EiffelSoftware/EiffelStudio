@@ -53,7 +53,6 @@ feature -- Selection
 		require
 			not is_empty
 		local
-			feat_table		: SELECT_TABLE
 			first_feature	: FEATURE_I
 		do
 			selected_rout_id_set := Void
@@ -76,12 +75,11 @@ feature -- Selection
 						-- Keep track of the selection
 					Selected.put_front (Result.feature_name_id);
 					from
-						start;
-						feat_table := Origin_table.computed;
+						start
 					until
 						is_empty
 					loop
-						unselect (new_t, old_t, feat_table);
+						unselect (new_t, old_t);
 					end;
 						--| Merge routine ids from unselected features
 					Result.set_is_selected (True);
@@ -147,10 +145,24 @@ end;
 			-- Is only one body id invloved in the selection list ?
 		require
 			not is_empty
+		local
+			l_cursor: like cursor
+			l_code: INTEGER
 		do
-			Result := 	first.a_feature.code_id
-						=
-						last.a_feature.code_id;
+			Result := True
+			if count > 1 then
+				l_cursor := cursor
+				from
+					start
+					l_code := first.a_feature.code_id
+				until
+					after or not Result
+				loop
+					Result := l_code = item.a_feature.code_id
+					forth
+				end
+				go_to (l_cursor)
+			end
 		end;
 
 	same_parent_type: BOOLEAN is
@@ -200,10 +212,10 @@ end;
 			go_to (old_cursor);
 		end;
 
-	unselect (new_t, old_t: FEATURE_TABLE; select_table: SELECT_TABLE) is
+	unselect (new_t, old_t: FEATURE_TABLE) is
 			-- Process first unselected feature
 		require
-			good_arguments: not (new_t = Void or old_t = Void);
+			good_arguments: new_t /= Void and old_t /= Void
 			not_off: not off
 		local
 			info			: INHERIT_INFO
@@ -286,7 +298,6 @@ end;
 					-- A wrapper has to be generated.
 				attribute_i.set_generate_in (system.current_class.class_id)
 			end
-			select_table.put (a_feature, new_rout_id);
 			new_t.replace (a_feature, feature_name_id);
 
 				-- Remove unselection
@@ -367,7 +378,7 @@ if item.a_feature.written_class > System.any_class.compiled_class and
 				io.error.put_new_line;
 				io.error.put_string ("Written in feature name: ");
 
-	if System.Feat_tbl_server.has (item.a_feature.written_in) then
+	if item.a_feature.written_class.has_feature_table then
 				io.error.put_string
 (item.a_feature.written_class.feature_table.feature_of_body_index
 (item.a_feature.body_index).feature_name);

@@ -29,6 +29,10 @@ class
 
 inherit
 	HASH_TABLE [SELECTION_LIST, INTEGER]
+		export
+			{NONE} all
+			{ANY} clear_all
+		end
 
 	SHARED_WORKBENCH
 		export
@@ -84,62 +88,22 @@ feature
 			end
 		end
 
-	delete (info: INHERIT_INFO) is
-			-- Delete information `info' in the table.
-		require
-			good_argument: info /= Void
-			good_context: not (info.a_feature = Void or else info.a_feature.rout_id_set = Void)
-		local
-			rout_id_set: ROUT_ID_SET
-			i, nb: INTEGER
-			rout_id: INTEGER
-			l: SELECTION_LIST
-		do
-			from
-				rout_id_set := info.a_feature.rout_id_set
-				nb := rout_id_set.count
-				i := 1
-			until
-				i > nb
-			loop
-				rout_id := rout_id_set.item (i)
-				l := item (rout_id)
-				l.start
-				l.compare_references
-				l.search (info)
-				check
-					not l.after
-				end
-				l.remove
-
-				i := i + 1
-			end
-		end
-
 	compute_feature_table (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE) is
 			-- Origin table for instance of FEATURE_TABLE resulting
 			-- of an analysis of possible repeated inheritance
+		require
+			parents_not_void: parents /= Void
 		local
 			selected: FEATURE_I
 			vmrc3: VMRC3
-			l_computed: like computed
 		do
-			debug
-				io.error.put_string ("========= START TRACE, class ")
-				io.error.put_string (new_t.associated_class.name)
-				io.error.put_string (" ============%N")
-			end
 			from
-				create l_computed.make (count)
-				computed := l_computed
 				start
 			until
 				after
 			loop
 				selected := item_for_iteration.selection (parents, old_t, new_t)
-				if selected /= Void then
-					l_computed.put (selected, key_for_iteration)
-				else
+				if selected = Void then
 							-- No selected feature
 					create vmrc3
 					vmrc3.set_class (System.current_class)
@@ -152,13 +116,6 @@ feature
 				io.error.put_string ("========= END TRACE ==========%N")
 			end
 		end
-
-	computed: SELECT_TABLE;
-			-- Feature table computed by `compute_feature_table'.
-			-- Selection: if all the parents in the informations are all the same, then
-			-- a selection is not needed if either all the body id's are the same or
-			-- one of them is selected. If there are differrent parent, a selection is
-			-- not needed if all the body ids are the same.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -9,38 +9,23 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TMP_DEPEND_SERVER 
+class TMP_DEPEND_SERVER
 
 inherit
-	DELAY_SERVER [CLASS_DEPENDANCE]
+	COMPILER_SERVER [CLASS_DEPENDANCE]
 
 create
 	make
 
-feature 
+feature
 
-	id (t: CLASS_DEPENDANCE): INTEGER is
-			-- Id associated with `t'
-		do
-			Result := t.class_id
-		end
-
-	cache: DEPEND_CACHE is
+	cache: CACHE [CLASS_DEPENDANCE] is
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
-	Delayed: SEARCH_TABLE [INTEGER] is
-			-- Cache for delayed items
-		once
-			create Result.make ((3 * Cache.cache_size) // 2)
-		end
-
-	Size_limit: INTEGER is 100
-			-- Size of the TMP_DEPEND_SERVER file (100 Ko)
-
-	Chunk: INTEGER is 150;
+	Chunk: INTEGER is 500;
 			-- Size of a HASH_TABLE block
 
 indexing

@@ -37,13 +37,15 @@ feature -- Initialization
 
 	make is
 		do
-			tbl_make (Chunk)		
+			tbl_make (Chunk)
 		end
 
 feature -- Access
 
 	has, frozen server_has (i: INTEGER): BOOLEAN is
 			-- Does the server contain an element of id `i'?
+		require
+			an_id_positive: i > 0
 		do
 			Result := tbl_has (i)
 		end
@@ -51,20 +53,19 @@ feature -- Access
 	server_item, item (an_id: INTEGER): T is
 			-- Object of id `an_id'
 		require
-			cache_not_void: cache /= Void
-			an_id_in_table: has (an_id)
+			an_id_positive: an_id > 0
 		deferred
 		end
-		
+
 	disk_item (an_id: INTEGER):T is
 			-- Object of id `an_id'
 		require
-			an_id_in_table: has (an_id)
+			an_id_positive: an_id > 0
 		deferred
 		end
 
 feature -- Removal
-	
+
 	remove (an_id: INTEGER) is
 			-- Remove an element from the Server
 		deferred
@@ -92,6 +93,8 @@ feature -- Implementation
 	cache: CACHE [T] is
 			-- Server cache, to make things faster
 		deferred
+		ensure
+			cache_not_void: Result /= Void
 		end
 
 feature {NONE} -- External features

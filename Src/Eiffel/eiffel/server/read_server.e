@@ -56,21 +56,10 @@ feature -- Access
 			cache.remove_id (an_id)
 		end
 
-	offsets: HASH_TABLE [SERVER_INFO, INTEGER] is
-			-- Class offsets in the corresponding server
-		deferred
-		end
-
 feature -- Size
 
 	Chunk: INTEGER is 500
 			-- Chunk size when updating the READ_SERVER
-
-feature -- Trace
-
-	trace is
-		do
-		end
 
 invariant
 	cache_not_void: cache /= Void

@@ -13,20 +13,140 @@ indexing
 class SELECT_TABLE
 
 inherit
-	HASH_TABLE [FEATURE_I, INTEGER]
+	SHARED_WORKBENCH
+		undefine
+			is_equal, copy
+		end
 
 	COMPILER_EXPORTER
 		undefine
-			copy, is_equal
+			is_equal, copy
 		end
 
 	SHARED_HISTORY_CONTROL
 		undefine
-			copy, is_equal
+			is_equal, copy
+		end
+
+	HASH_TABLE [INTEGER, INTEGER]
+		rename
+			make as internal_table_make,
+			item as internal_table_item,
+			item_for_iteration as internal_table_item_for_iteration,
+			found_item as internal_table_found_item,
+			put as internal_table_put
 		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (n: INTEGER; a_feat_tbl: FEATURE_TABLE) is
+			--
+		require
+			a_feat_tbl_not_void: a_feat_tbl /= Void
+		do
+			internal_table_make (n)
+			feature_table := a_feat_tbl
+		ensure
+			feature_table_set: feature_table = a_feat_tbl
+		end
+
+feature -- Access
+
+	feature_table: FEATURE_TABLE
+			-- Feature table associated to Current.
+
+feature -- HASH_TABLE like feature
+
+	item (an_id: INTEGER): FEATURE_I is
+			-- Item of name ID `an_id'
+		require
+			an_id_positive: an_id > 0
+		local
+			l_id: INTEGER
+		do
+			l_id := internal_table_item (an_id)
+			if l_id > 0 then
+				Result := feature_table.item_id (l_id)
+			end
+		end
+
+	item_for_iteration: FEATURE_I is
+		local
+			l_id: INTEGER
+		do
+			l_id := internal_table_item_for_iteration
+			check l_id > 0 end
+			Result := feature_table.item_id (l_id)
+		end
+
+	found_item: FEATURE_I is
+			--
+		local
+			l_id: INTEGER
+		do
+			l_id := internal_table_found_item
+			check l_id > 0 end
+			Result := feature_table.item_id (l_id)
+		end
+
+	put (new: FEATURE_I; key: INTEGER) is
+		require
+			new_not_void: new /= Void
+		do
+			internal_table_put (new.feature_name_id, key)
+		end
+
+feature -- Element change
+
+	add_feature (a_feat: FEATURE_I) is
+			-- Add `a_feat' in Current
+		require
+			a_feat_not_void: a_feat /= Void
+		local
+			i, nb, l_name_id: INTEGER
+			l_id_set: ROUT_ID_SET
+		do
+			l_id_set := a_feat.rout_id_set
+			nb := l_id_set.count
+			l_name_id := a_feat.feature_name_id
+			internal_table_put (l_name_id, l_id_set.first)
+			if nb > 1 then
+				from
+					i := 2
+				until
+					i > nb
+				loop
+					internal_table_put (l_name_id, l_id_set.item (i))
+					i := i + 1
+				end
+			end
+		end
+
+	remove_feature (a_feat: FEATURE_I) is
+			-- Add `a_feat' in Current
+		require
+			a_feat_not_void: a_feat /= Void
+		local
+			i, nb: INTEGER
+			l_id_set: ROUT_ID_SET
+		do
+			l_id_set := a_feat.rout_id_set
+			nb := l_id_set.count
+			remove (l_id_set.first)
+			if nb > 1 then
+				from
+					i := 2
+				until
+					i > nb
+				loop
+					remove (l_id_set.item (i))
+					i := i + 1
+				end
+			end
+		end
 
 feature -- Final mode
 
@@ -34,18 +154,36 @@ feature -- Final mode
 			-- Insert units of Current in the history
 			-- controler (routine table construction)
 		local
-			feature_i: FEATURE_I
+			l_feature_i: FEATURE_I
+			l_table: like feature_table
+			l_id_set: ROUT_ID_SET
+			i, nb: INTEGER
+			l_control: like history_control
 		do
 			from
-				start
+				l_table := feature_table
+				l_control := history_control
+				l_table.start
 			until
-				after
+				l_table.after
 			loop
-				feature_i := item_for_iteration
-				if feature_i.has_entry then
-					History_control.add_new (feature_i, id, key_for_iteration)
+				l_feature_i := l_table.item_for_iteration
+				if l_feature_i.has_entry then
+					l_id_set := l_feature_i.rout_id_set
+					l_control.add_new (l_feature_i, id, l_id_set.first)
+					nb := l_id_set.count
+					if nb > 1 then
+						from
+							i := 2
+						until
+							i > nb
+						loop
+							l_control.add_new (l_feature_i, id, l_id_set.item (i))
+							i := i + 1
+						end
+					end
 				end
-				forth
+				l_table.forth
 			end
 		end
 
@@ -99,7 +237,10 @@ feature -- Generation
 			c_not_void: c /= Void
 		local
 			eiffel_class: EIFFEL_CLASS_C
-			inline_agent: FEATURE_I
+			l_feature_i: FEATURE_I
+			l_table: COMPUTED_FEATURE_TABLE
+			l_id_set: ROUT_ID_SET
+			i, nb: INTEGER
 		do
 			create Result.make (c, count)
 			if c.has_invariant then
@@ -107,12 +248,26 @@ feature -- Generation
 			end
 
 			from
-				start
+				l_table := feature_table.features
+				l_table.start
 			until
-				after
+				l_table.after
 			loop
-				Result.put (key_for_iteration, item_for_iteration)
-				forth
+				l_feature_i := l_table.item_for_iteration
+				l_id_set := l_feature_i.rout_id_set
+				Result.put (l_id_set.first, l_feature_i)
+				nb := l_id_set.count
+				if nb > 1 then
+					from
+						i := 2
+					until
+						i > nb
+					loop
+						Result.put (l_id_set.item (i), l_feature_i)
+						i := i + 1
+					end
+				end
+				l_table.forth
 			end
 
 			eiffel_class ?= c
@@ -122,8 +277,8 @@ feature -- Generation
 				until
 					eiffel_class.inline_agent_table.after
 				loop
-					inline_agent := eiffel_class.inline_agent_table.item_for_iteration
-					Result.put (inline_agent.rout_id_set.first, inline_agent)
+					l_feature_i := eiffel_class.inline_agent_table.item_for_iteration
+					Result.put (l_feature_i.rout_id_set.first, l_feature_i)
 					eiffel_class.inline_agent_table.forth
 				end
 			end
@@ -165,7 +320,6 @@ feature -- Melting
 			descriptors (c).melt
 		end
 
-
 feature {NONE} -- Implementation
 
 	is_consistent: BOOLEAN is
@@ -187,6 +341,12 @@ feature {NONE} -- Implementation
 		end
 
 invariant
+	feature_table_not_void: feature_table /= Void
+		-- Test below is because while in the creation procedure of FEATURE_TABLE
+		-- the creation of the SELECT_TABLE is not completed yet, so we have to protect
+		-- ourself here.
+	related_feature_table: feature_table.select_table /= Void implies
+		feature_table.select_table = Current
 	is_consistent: is_consistent
 
 indexing

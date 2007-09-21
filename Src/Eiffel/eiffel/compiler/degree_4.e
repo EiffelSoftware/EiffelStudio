@@ -88,6 +88,10 @@ feature -- Processing
 			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes.sorted_classes
 
+				-- We need to clean the cache of feature tables since we would not know how
+				-- to distinguish the previous from the current computed feature tables.
+			feature_table_cache.wipe_out
+
 				-- Check that the constraint class is a valid class.
 				-- I.e. we cannot have [G -> like t] or others.
 			reset_constraint_error_list
@@ -642,4 +646,5 @@ indexing
 		]"
 
 end -- class DEGREE_4
+
 

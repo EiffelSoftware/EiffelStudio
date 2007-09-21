@@ -101,13 +101,13 @@ feature
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
 
-	set_renamed_name_id (id: INTEGER; alias_id: INTEGER) is
+	set_renamed_name_id (a_id: INTEGER; alias_id: INTEGER) is
 			-- Assign `id' to `feature_name_id'.
 		do
 			if external_alias_name_id = 0 then
 				extension.set_alias_name_id (feature_name_id)
 			end
-			Precursor {PROCEDURE_I} (id, alias_id)
+			Precursor {PROCEDURE_I} (a_id, alias_id)
 		end
 
 	set_encapsulated (b: BOOLEAN) is

@@ -10,12 +10,8 @@ class
 
 inherit
 	READ_SERVER [FEATURE_AS]
-		rename
-			ast_server as offsets
-		export
-			{ANY} Tmp_ast_server
 		redefine
-			item, trace
+			has, item
 		end
 
 create
@@ -23,53 +19,27 @@ create
 
 feature
 
-	cache: BODY_CACHE is
+	cache: CACHE [FEATURE_AS] is
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
+	has (an_id: INTEGER): BOOLEAN is
+			-- Has current `an_id'?
+		do
+			Result := tmp_ast_server.body_has (an_id) or else Precursor (an_id)
+		end
+
 	item (an_id: INTEGER): FEATURE_AS is
 			-- Body of id `an_id'. Look first in the temporary
 			-- body server. It not present, look in itself.
-		require else
-			has_an_id: Tmp_ast_server.body_has (an_id) or else has (an_id)
 		do
-debug
-io.error.put_string ("item ");
-io.error.put_integer (an_id)
-end;
-			if Tmp_ast_server.body_has (an_id) then
-debug
-io.error.put_string (" in tmp_server%N")
-end;
-				Result := Tmp_ast_server.body_item (an_id)
-			else
-debug
-io.error.put_string (" in BODY_SERVER%N")
-end;
-				Result := server_item (an_id);
-			end;
-		end;
-
-	trace is
-		do
-			from
-				start
-				io.error.put_string ("Keys:%N");
-			until
-				after
-			loop
-				io.error.put_string ("%T");
-				io.error.put_integer (key_for_iteration);
-				if item_for_iteration = Void then
-					io.error.put_string (" VOID ELEMENT");
-				end;
-				io.error.put_new_line;
-				forth
-			end;
-			io.error.put_string ("O_N_TABLE:%N");
-		end;
+			Result := Tmp_ast_server.body_item (an_id)
+			if Result = Void then
+				Result := Precursor (an_id)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

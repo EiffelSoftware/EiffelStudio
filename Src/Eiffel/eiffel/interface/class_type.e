@@ -608,7 +608,7 @@ feature -- Generation
 	pass4 is
 			-- Generation of the C file
 		local
-			feature_table: FEATURE_TABLE
+			l_feature_table: COMPUTED_FEATURE_TABLE
 			current_class: CLASS_C
 			current_eiffel_class: EIFFEL_CLASS_C
 			feature_i: FEATURE_I
@@ -637,7 +637,7 @@ feature -- Generation
 				create headers.make (100)
 			end
 
-			feature_table := current_class.feature_table
+			l_feature_table := current_class.feature_table.features
 			if final_mode then
 					-- Check to see if there is really something to generate
 
@@ -646,15 +646,15 @@ feature -- Generation
 						 system.keep_assertions)
 
 				from
-					feature_table.start
+					l_feature_table.start
 				until
-					generate_c_code or else feature_table.after
+					generate_c_code or else l_feature_table.after
 				loop
-					feature_i := feature_table.item_for_iteration
+					feature_i := l_feature_table.item_for_iteration
 					if feature_i.to_generate_in (current_class) then
 						generate_c_code := feature_i.used
 					end
-					feature_table.forth
+					l_feature_table.forth
 				end
 			else
 				generate_c_code := is_modifiable
@@ -712,16 +712,16 @@ feature -- Generation
 				end
 
 				from
-					feature_table.start
+					l_feature_table.start
 				until
-					feature_table.after
+					l_feature_table.after
 				loop
-					feature_i := feature_table.item_for_iteration
+					feature_i := l_feature_table.item_for_iteration
 					if feature_i.to_generate_in (current_class) then
 							-- Generate the C code of `feature_i'
 						generate_feature (feature_i, buffer)
 					end
-					feature_table.forth
+					l_feature_table.forth
 				end
 
 				if current_eiffel_class /= Void then

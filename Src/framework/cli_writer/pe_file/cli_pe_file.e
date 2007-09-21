@@ -230,10 +230,11 @@ feature -- Saving
 	save is
 			--
 		local
-			l_pe_file: RAW_FILE
+			l_pe_file, l_meta_data_file: RAW_FILE
 			l_padding, l_signature: MANAGED_POINTER
 			l_strong_name_location, l_size: INTEGER
 			l_uni_string: UNI_STRING
+			l_meta_data_file_name: STRING
 		do
 				-- First compute size of PE file headers and sections.
 			compute_sizes
@@ -289,7 +290,19 @@ feature -- Saving
 				l_pe_file.put_managed_pointer (l_padding, 0, resources_size)
  			end
 
-			l_pe_file.put_managed_pointer (emitter.assembly_memory, 0, meta_data_size)
+				-- Save the metadata to `l_pe_file'. We cannot use `MD_EMIT.assembly_memory'
+				-- because on some platforms the amount of required memory cannot be allocated
+				-- in one chunk.
+				-- Instead we save it to disk and then copy it over. This is not efficient
+				-- but we cannot use the stream version of the API since we do not have a way
+				-- to make an IStream from an Eiffel FILE.
+			l_meta_data_file_name := file_name + ".pe"
+			emitter.save (create {UNI_STRING}.make (l_meta_data_file_name))
+			create l_meta_data_file.make_open_read (l_meta_data_file_name)
+			check valid_size: l_meta_data_file.count = meta_data_size end
+			l_meta_data_file.copy_to (l_pe_file)
+			l_meta_data_file.close
+			l_meta_data_file.delete
 
 			if import_table_padding > 0 then
 				create l_padding.make (import_table_padding)

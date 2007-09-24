@@ -13,12 +13,12 @@ class
 inherit
 	EV_LABEL
 		rename
-			set_text as set_label_text,
-			set_minimum_height as set_label_minimum_height,
-			reset_minimum_height as reset_label_minimum_height
+			text as label_text,
+			set_text as set_label_text
+		export
+			{NONE} label_text, set_label_text, set_minimum_height, set_minimum_width, set_minimum_size
 		redefine
 			set_font,
-			set_minimum_size,
 			remove_text
 		end
 
@@ -39,6 +39,8 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			align_text_left
+			create text.make_empty
+			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (200, 200, 200))
 			resize_actions.extend (agent (a,b,c,d: INTEGER_32)
 				do
 					resize_actions.block
@@ -47,10 +49,19 @@ feature {NONE} -- Initialization
 				end)
 		end
 
+feature -- Access
+
+	text: STRING_32
+			-- The orginally set text, not the actual text display.
+			-- Note: for the rendered text see `label_text'.
+
 feature {NONE} -- Access
 
-	ellipsed_minimum_height: INTEGER
-			-- Minimum height for ellipsed text
+	maximum_width: INTEGER
+			-- Maximum width for text wrapping
+
+	maximum_height: INTEGER
+			-- Maximum height for text ellipsing
 
 feature -- Element change
 
@@ -68,6 +79,8 @@ feature -- Element change
 			l_sizes: like measure_words
 			l_cache: HASH_TABLE [INTEGER, STRING_32]
 		do
+			text := a_text
+
 			l_lines := a_text.split ('%N')
 			create l_cache.make (13)
 			create l_text_lines.make (1)
@@ -85,6 +98,8 @@ feature -- Element change
 			if is_displayed then
 				resize_text
 			end
+		ensure
+			text_set: text = a_text
 		end
 
 	set_font (a_font: like font) is
@@ -96,31 +111,44 @@ feature -- Element change
 			end
 		end
 
-	set_minimum_height (a_minimum_height: INTEGER) is
-			-- Set `a_minimum_height' in pixels to `minimum_height'.
-			-- If `height' is less than `a_minimum_height', resize.
-			-- From now, `minimum_height' is fixed and will not be changed
-			-- dynamically by the application anymore.
+	set_maximum_width (a_width: INTEGER) is
+			-- Set maximum size for text wrapping.
 		require
 			not_destroyed: not is_destroyed
-			a_minimum_height_positive: a_minimum_height >= 0
+			a_width_positive: a_width >= 0
 		do
-			set_label_minimum_height (a_minimum_height)
-			ellipsed_minimum_height := a_minimum_height
+			maximum_width := a_width
 		ensure
-			minimum_height_assigned: (a_minimum_height > 0 implies minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (minimum_height <= 1))
-			minimum_height_set_by_user_set: minimum_height_set_by_user
+			maximum_width_set: maximum_width = a_width
+			is_maximum_width_set_by_user: is_maximum_width_set_by_user
 		end
 
-	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
-			-- Assign `a_minimum_height' to `minimum_height'
-			-- and `a_minimum_width' to `minimum_width' in pixels.
-			-- If `width' or `height' is less than minimum size, resize.
-			-- From now, minimum size is fixed and will not be changed
-			-- dynamically by the application anymore.
+	set_maximum_height (a_height: INTEGER) is
+			-- Set maximum size for text ellipsing.
+		require
+			not_destroyed: not is_destroyed
+			a_height_positive: a_height >= 0
 		do
-			set_minimum_width (a_minimum_width)
-			set_minimum_height (a_minimum_height)
+			maximum_height := a_height
+		ensure
+			maximum_height_set: maximum_height = a_height
+			is_maximum_height_set_by_user: is_maximum_height_set_by_user
+		end
+
+	set_maximum_size (a_width, a_height: INTEGER) is
+			-- Set maximum size for text wrapping and text ellipsing.
+		require
+			not_destroyed: not is_destroyed
+			a_width_positive: a_width >= 0
+			a_height_positive: a_height >= 0
+		do
+			set_maximum_width (a_width)
+			set_maximum_height (a_height)
+		ensure
+			maximum_height_set: maximum_height = a_height
+			is_maximum_height_set_by_user: is_maximum_height_set_by_user
+			maximum_width_set: maximum_width = a_width
+			is_maximum_width_set_by_user: is_maximum_width_set_by_user
 		end
 
 feature -- Removal
@@ -138,18 +166,6 @@ feature -- Removal
 			text_sizes_detached: text_sizes = Void
 		end
 
-feature {EV_BUILDER} -- Removal
-
-	reset_minimum_height
-			-- Reset minimum_height_set_by_user.
-		do
-			reset_label_minimum_height
-			ellipsed_minimum_height := 0
-		ensure
-			minimum_height_set_by_user_reset: not minimum_height_set_by_user
-			ellipsed_minimum_height_set_by_user_reset: not ellipsed_minimum_height_set_by_user
-		end
-
 feature -- Status report
 
 	is_text_wrapped: BOOLEAN assign set_is_text_wrapped
@@ -161,10 +177,15 @@ feature -- Status report
 
 feature {EV_BUILDER} -- Status report
 
-	ellipsed_minimum_height_set_by_user: BOOLEAN
+	is_maximum_height_set_by_user: BOOLEAN
 			-- Indicates if the ellipsed miniumu width has been set
 		do
-			Result := ellipsed_minimum_height > 0
+			Result := maximum_height > 0
+		end
+
+	is_maximum_width_set_by_user: BOOLEAN
+		do
+			Result := maximum_width > 0
 		end
 
 feature -- Status setting
@@ -301,6 +322,11 @@ feature {NONE} -- Line rendering
 		local
 			l_text_lines: like text_lines
 			l_text_sizes: like text_sizes
+			l_max_width: like maximum_width
+			l_max_height: like maximum_height
+			l_wrapped: like is_text_wrapped
+			l_ellipsed: like is_text_ellipsed
+			l_font: like font
 			l_words: ARRAY [STRING_32]
 			l_sizes: ARRAY [INTEGER]
 			l_word: STRING_32
@@ -313,124 +339,136 @@ feature {NONE} -- Line rendering
 			l_len: INTEGER
 			l_size: TUPLE [width, height, left, right: INTEGER]
 		do
-			reset_label_minimum_height
-			if is_text_ellipsed or is_text_wrapped then
+			reset_minimum_height
+			reset_minimum_width
+
+			l_wrapped := is_text_wrapped
+			l_ellipsed := is_text_ellipsed
+			if l_wrapped or l_ellipsed then
 				l_text_lines := text_lines
 				l_text_sizes := text_sizes
+
 				if l_text_lines /= Void and l_text_sizes /= Void then
-					if minimum_width_set_by_user then
-						create l_text.make (text.count)
-						l_width := minimum_width.max (width)
-						from l_text_sizes.start until l_text_sizes.after loop
-							l_sizes := l_text_sizes.item
-							l_words := l_text_lines.i_th (l_text_sizes.index)
-							l_eval_width := 0
-							from
-								i := 1
-								l_count := l_sizes.count
-							until
-								i > l_count
-							loop
-								l_len := l_sizes.item (i)
-								l_word := l_words.item (i)
-								if not is_text_wrapped or l_eval_width + l_len <= l_width then
-									l_eval_width := l_eval_width + l_len
-									l_text.append (l_word)
-								else
-									l_text.append ("%N")
-									l_eval_width := l_len
-									if l_eval_width > l_width then
-											-- The word is too long for the width, split the word up
-										from until l_word.is_empty loop
-											from
-												l_stop := False
-												j := l_word.count
-											until
-												j = 0 or l_stop
-											loop
-												l_small_word := l_word.substring (1, j)
-												if j = 1 or else font.string_width (l_small_word) <= l_width then
-													l_text.append (l_small_word)
-													l_text.append_character ('%N')
+						-- Reorganize text to ensure text fits to set maximum width
+					l_font := font
+					l_max_width := maximum_width
+					create l_text.make (text.count)
+					l_width := l_max_width.max (width)
+					from l_text_sizes.start until l_text_sizes.after loop
+							-- Retrieve words and word pixel lengths
+						l_sizes := l_text_sizes.item
+						l_words := l_text_lines.i_th (l_text_sizes.index)
+						l_eval_width := 0
+						from
+							i := 1
+							l_count := l_sizes.count
+						until
+							i > l_count
+						loop
+							l_len := l_sizes.item (i)
+							l_word := l_words.item (i)
 
-													l_word := l_word.substring (j + 1, l_word.count)
-													l_len := font.string_width (l_word)
-													l_eval_width := l_len
-													l_stop := True
-												else
-													j := j - 1
-												end
-											end
-											if font.string_width (l_word) <= l_width then
-												l_text.append (l_word)
-												l_word.wipe_out
-											end
-										end
-									else
-										if l_word.item (1) = ' ' then
-												-- Remove a single space as we just replace it with a new line character.
-												-- Note: If the first character is a tab, it's preserved.
-											l_word := l_word.substring (2, l_word.count)
-										end
-										if not l_word.is_empty then
-											l_text.append (l_words.item (i))
-										end
-									end
-								end
-
-								i := i + 1
-							end
-
-							if not l_text_sizes.islast then
-								l_text.append ("%N")
-							end
-							l_text_sizes.forth
-						end
-						l_size := font.string_size (l_text)
-						if is_text_ellipsed then
-							if l_size.height > ellipsed_minimum_height then
-									-- Remove lines that are too high
-								from until i <= 1 or l_size.height <= ellipsed_minimum_height loop
-									i := l_text.last_index_of ('%N', l_text.count)
-									if i > 1 then
-										l_text.keep_head (i - 1)
-										l_size := font.string_size (l_text)
-									end
-								end
-								if l_text.count > 3 then
-										-- Add ellipses
-									i := l_text.last_index_of ('%N', l_text.count)
-									if i > 0 then
-										l_size := font.string_size (l_text.substring (i + 1, l_text.count))
-									else
-										i := l_text.count
-									end
-									if l_size.width > minimum_width and i > 3 then
-										l_text.keep_head (l_text.count - 3)
-										l_text.append ("...")
-									end
-								end
-							end
-
-								-- Set hieght
-							l_size := font.string_size (l_text)
-							if ellipsed_minimum_height_set_by_user then
-								set_label_minimum_height (l_size.height.min (ellipsed_minimum_height))
+							if not l_wrapped or l_eval_width + l_len <= l_width then
+								l_eval_width := l_eval_width + l_len
+								l_text.append (l_word)
 							else
-								set_label_minimum_height (l_size.height)
+								l_text.append ("%N")
+								l_eval_width := l_len
+								if l_eval_width > l_width then
+										-- The word is too long for the width, split the word up
+									from until l_word.is_empty loop
+										from
+											l_stop := False
+											j := l_word.count
+										until
+											j = 0 or l_stop
+										loop
+											l_small_word := l_word.substring (1, j)
+											if j = 1 or else l_font.string_width (l_small_word) <= l_width then
+												l_text.append (l_small_word)
+												l_text.append_character ('%N')
+
+												l_word := l_word.substring (j + 1, l_word.count)
+												l_len := l_font.string_width (l_word)
+												l_eval_width := l_len
+												l_stop := True
+											else
+												j := j - 1
+											end
+										end
+										if font.string_width (l_word) <= l_width then
+											l_text.append (l_word)
+											l_word.wipe_out
+										end
+									end
+								else
+									if l_word.item (1) = ' ' then
+											-- Remove a single space as we just replace it with a new line character.
+											-- Note: If the first character is a tab, it's preserved.
+										l_word := l_word.substring (2, l_word.count)
+									end
+									if not l_word.is_empty then
+										l_text.append (l_words.item (i))
+									end
+								end
 							end
-						else
-							set_label_minimum_height (l_size.height)
+
+							i := i + 1
 						end
 
-						set_label_text (l_text)
+						if not l_text_sizes.islast then
+							l_text.append ("%N")
+						end
+						l_text_sizes.forth
 					end
+
+					l_size := font.string_size (l_text)
+					if l_ellipsed then
+							-- Ellipse text if the wrapped text extends beyond the maximum set height.
+						l_max_height := maximum_height
+						if l_size.height > l_max_height then
+								-- Remove lines that are too high
+							from until i <= 1 or l_size.height <= l_max_height loop
+								i := l_text.last_index_of ('%N', l_text.count)
+								if i > 1 then
+									l_text.keep_head (i - 1)
+									l_size := l_font.string_size (l_text)
+								end
+							end
+							if l_text.count > 3 then
+									-- Add ellipses
+								i := l_text.last_index_of ('%N', l_text.count)
+								if i > 0 then
+									l_size := l_font.string_size (l_text.substring (i + 1, l_text.count))
+								else
+									i := l_text.count
+								end
+								if l_size.width > l_max_width and i > 3 then
+									l_text.keep_head (l_text.count - 3)
+									l_text.append ("...")
+								end
+							end
+						end
+
+							-- Set height
+						l_size := font.string_size (l_text)
+						if is_maximum_height_set_by_user then
+							set_minimum_height (l_size.height.min (l_max_height))
+						else
+							set_minimum_height (l_size.height)
+						end
+					else
+						set_minimum_height (l_size.height)
+					end
+					set_minimum_width (l_size.width + l_size.right + l_size.left)
+					set_label_text (l_text)
 				end
 			end
 		end
 
 
 invariant
+	text_attached: text /= Void
 	text_lines_and_text_sizes_synced: (text_lines = Void) = (text_sizes = Void) and then
 			text_lines /= Void implies text_lines.count = text_sizes.count
 

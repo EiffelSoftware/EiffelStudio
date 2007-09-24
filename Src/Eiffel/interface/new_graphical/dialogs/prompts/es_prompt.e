@@ -18,6 +18,7 @@ inherit
 			{NONE} set_is_modal, is_modal, icon
 		redefine
 			dialog_border_width,
+			on_before_show,
 			on_handle_key
 		end
 
@@ -107,7 +108,7 @@ feature {NONE} -- User interface initialization
 			l_icon.set_minimum_size (l_large_icon.width, l_large_icon.height)
 			l_vbox.extend (l_icon)
 			l_vbox.disable_item_expand (l_icon)
-			l_vbox.extend (create {EV_CELL})
+			--l_vbox.extend (create {EV_CELL})
 
 				-- Box for icon with room for expansion
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.prompt_horizontal_icon_spacing)
@@ -148,17 +149,19 @@ feature {NONE} -- User interface initialization
 			is_initializing: is_initializing
 		do
 				-- Prompt sub title
-			create prompt_sub_title_label
+			create prompt_sub_title_label.make
 			prompt_sub_title_label.align_text_left
 			prompt_sub_title_label.set_font (fonts_and_colors.prompt_sub_title_font)
 			prompt_sub_title_label.set_foreground_color (fonts_and_colors.prompt_sub_title_forground_color)
+			prompt_sub_title_label.set_is_text_wrapped (True)
 			prompt_sub_title_label.hide
 
 				-- Prompt text
-			create prompt_text
+			create prompt_text.make
 			prompt_text.align_text_left
 			prompt_text.set_font (fonts_and_colors.prompt_text_font)
 			prompt_text.set_foreground_color (fonts_and_colors.prompt_text_forground_color)
+			prompt_text.set_is_text_wrapped (True)
 			prompt_text.hide
 
 				-- Extend widgets
@@ -370,10 +373,10 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- User interface elements
 
-	prompt_sub_title_label: ES_LABEL
+	prompt_sub_title_label: EVS_LABEL
 			-- Label for prompts main text
 
-	prompt_text: ES_LABEL
+	prompt_text: EVS_LABEL
 			-- Label for prompts sub-text, if any
 
 feature {NONE} -- Basic operations
@@ -553,6 +556,29 @@ feature {NONE} -- Action handlers
 				Result := Precursor {ES_DIALOG} (a_key, a_alt, a_ctrl, a_shift, a_released)
 			end
 		end
+
+feature {NONE} -- Action handlers
+
+	on_before_show
+			-- Called prior to the dialog being shown
+		local
+			l_width: INTEGER
+		do
+			Precursor {ES_DIALOG}
+
+				-- Adjust prompt text widths to ensure they are not too big for the screen.
+				-- This will cause long text to be wrapped.
+			l_width := prompt_text.font.string_width (prompt_text.text)
+			prompt_text.set_maximum_width (l_width.min (maximum_prompt_text_width))
+
+			l_width := prompt_sub_title_label.font.string_width (prompt_sub_title_label.text)
+			prompt_sub_title_label.set_maximum_width (l_width.min (maximum_prompt_text_width))
+		end
+
+feature {NONE} -- Constants
+
+	maximum_prompt_text_width: INTEGER = 500
+			-- Maximum width for prompt text (text is wrapped if it extends beyond the width)
 
 invariant
 	prompt_sub_title_label_attached: prompt_sub_title_label /= Void

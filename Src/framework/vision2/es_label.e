@@ -9,6 +9,9 @@ indexing
 class
 	ES_LABEL
 
+obsolete
+	"Use {EVS_LABEL} instead"
+
 inherit
 	EV_LABEL
 

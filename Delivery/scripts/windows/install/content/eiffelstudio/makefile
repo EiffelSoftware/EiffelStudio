@@ -32,7 +32,7 @@ WXS = \
 build: $(WXS)
 
 studio_gcc.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\gcc" -dr:"Dir.gcc" -g:"gcc" -r -n:"gcc." > $@.tmp
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\gcc" -dr:"Dir.gcc" -g:"gcc" -r -n:"gcc." > $@.tmp
 	move $@.tmp $@
 
 studio_core.wxs:

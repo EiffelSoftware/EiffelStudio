@@ -696,10 +696,10 @@ feature -- Status setting
 			cwin_set_window_long (item, Gwl_exstyle, cwel_integer_to_pointer (an_ex_style))
 
 				-- Update changes
-			update_cached_style (old_ex_style, an_ex_style)
+			update_cached_style (an_ex_style, old_ex_style)
 		end
 
-	update_cached_style(new_ex_style, old_ex_style: INTEGER) is
+	update_cached_style (new_ex_style, old_ex_style: INTEGER) is
 			-- Update Window cache buffer for Window style.
 			--|
 			--| Certain window data is cached, so changes you make using
@@ -709,27 +709,27 @@ feature -- Status setting
 			--| the SWP_FRAMECHANGED flag for the cache to be updated
 			--| properly.
 		local
-			Hwnd_const: POINTER
-			Swp_const: INTEGER
+			hwnd_const: POINTER
+			swp_const: INTEGER
 			l_success: BOOLEAN
 		do
 			if flag_set (new_ex_style, Ws_ex_topmost) then
-				-- The new style specify "Top most",
-				-- so we change the current Z order to "Top most".
-				Hwnd_const := Hwnd_topmost
+					-- The new style specify "Top most",
+					-- so we change the current Z order to "Top most".
+				hwnd_const := Hwnd_topmost
 			else
 				if flag_set (old_ex_style, Ws_ex_topmost) then
-					-- The old style specify "Top most", not the
-					-- new one so we change the current Z order.
-					Hwnd_const := Hwnd_notopmost
+						-- The old style specify "Top most", not the
+						-- new one so we change the current Z order.
+					hwnd_const := Hwnd_notopmost
 				else
-					-- The old style does not specify "Top most", like the
-					-- new one so ignore Z order changes.
-					Swp_const := set_flag (Swp_const, Swp_nozorder)
+						-- The old style does not specify "Top most", like the
+						-- new one so ignore Z order changes.
+					swp_const := swp_nozorder
 				end
 			end
-			Swp_const := Swp_const | Swp_nomove | Swp_nosize | Swp_framechanged | swp_noactivate
-			l_success := {WEL_API}.set_window_pos (item, Hwnd_const, 0, 0, 0, 0, Swp_const)
+			swp_const := swp_const | swp_nomove | swp_nosize | swp_framechanged | swp_noactivate
+			l_success := {WEL_API}.set_window_pos (item, hwnd_const, 0, 0, 0, 0, swp_const)
 		end
 
 feature -- Element change

@@ -274,7 +274,6 @@ feature {NONE} -- Line analysis
 			-- `Result': An array with a matching count to `a_words' containing the pixel lengths of each word in `a_words'.
 		require
 			a_words_attached: a_words /= Void
-			not_a_words_is_empty: not a_words.is_empty
 			a_words_contains_attached_items: not a_words.has (Void)
 			a_words_contains_valid_items: a_words.for_all (agent (a_str: STRING_32): BOOLEAN do Result := not a_str.is_empty end)
 			a_cache_attached: a_cache /= Void

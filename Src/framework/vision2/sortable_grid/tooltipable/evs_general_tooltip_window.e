@@ -218,7 +218,7 @@ feature -- Owner
 feature{NONE} -- Implementation
 
 	is_in_default_state: BOOLEAN is
-			-- Redefine
+			-- Redefined to True since we are changing the default state by redefining `initialize'.
 		do
 			Result := True
 		end

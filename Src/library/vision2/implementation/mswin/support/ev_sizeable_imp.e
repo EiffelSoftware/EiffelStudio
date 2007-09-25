@@ -39,18 +39,24 @@ feature -- Resizing
 
 	set_size (w, h: INTEGER) is
 			-- Resize `Current'.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			ev_resize (w.max (minimum_width), h.max (minimum_height))
 		end
 
 	set_width (value:INTEGER) is
 			-- Make `value' the new width of `Current'.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			ev_resize (value.max (minimum_width), height)
 		end
 
 	set_height (value: INTEGER) is
 			-- Make `value' the new height of `Current'.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			ev_resize (width, value.max (minimum_height))
 		end
@@ -59,6 +65,8 @@ feature -- Resizing
 			-- Make `value' the new `minimum_width' of `Current'.
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			child_cell.disable_user_min_width_set
 			ev_set_minimum_width (value)
@@ -69,6 +77,8 @@ feature -- Resizing
 			-- Make `value' the new `minimum_height' of `Current'.
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			child_cell.disable_user_min_height_set
 			ev_set_minimum_height (value)
@@ -78,6 +88,8 @@ feature -- Resizing
 	set_minimum_size (mw, mh: INTEGER) is
 			-- Make `mw' the new minimum_width and `mh' the new
 			-- minimum_height of `Current'.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			child_cell.disable_user_min_width_set
 			child_cell.disable_user_min_height_set
@@ -90,6 +102,8 @@ feature -- Resizing
 			-- Make `value' the new `minimum_width' of `Current'.
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
@@ -97,12 +111,16 @@ feature -- Resizing
 			-- Make `value' the new `minimum_height' of `Current'.
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	ev_set_minimum_size (mw, mh: INTEGER) is
 			-- Make `mw' the new minimum_width and `mh' the new
 			-- minimum_height of `Current'.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
@@ -111,6 +129,8 @@ feature -- Position
 	set_position (new_x_position: INTEGER; new_y_position: INTEGER) is
 			-- Put at horizontal position `new_x_position' and at
 			-- vertical position `new_y_position' relative to parent.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			child_cell.set_is_positioned
 			ev_move (new_x_position, new_y_position)
@@ -123,6 +143,8 @@ feature -- Basic operation
 			-- Move and resize the widget. Only the parent can call this feature
 			-- because it doesn't notify the parent of the change.
 			-- Equivalent of `parent_ask_resize' with move.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			ev_move_and_resize (a_x_position, a_y_position,
 					minimum_width.max (a_width),
@@ -132,6 +154,8 @@ feature -- Basic operation
 	parent_ask_resize (a_width, a_height: INTEGER) is
 			-- Called by the parent when the size of `Current' has to be
 			-- changed to `a_width', `a_height'.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			ev_move_and_resize (child_cell.x, child_cell.y,
 					minimum_width.max (a_width),
@@ -199,24 +223,32 @@ feature {EV_ANY_I} -- deferred feature
 	width: INTEGER is
 			-- Width of `Current'.
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	height: INTEGER is
 			-- Height of `Current'.
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	x_position: INTEGER is
 			-- Horizontal position relative to parent
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	y_position: INTEGER is
 			-- Vertical position relative to parent
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
@@ -224,6 +256,8 @@ feature {EV_ANY_I} -- deferred feature
 			-- Move the window to `a_x_position', `a_y_position'.
 			-- Use move for a basic wel moving.
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			child_cell.move (a_x_position, a_y_position)
 			if is_show_requested then
@@ -237,6 +271,8 @@ feature {EV_ANY_I} -- deferred feature
 			-- resize it with `a_width', `a_height'.
 			-- This feature must be redefine by the containers to readjust its
 			-- children too.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			child_cell.move_and_resize (a_x_position, a_y_position, a_width, a_height)
 			if is_show_requested then
@@ -249,6 +285,8 @@ feature {EV_ANY_I} -- deferred feature
 			-- Resize the window with `a_width', `a_height'.
 			-- Use resize for a basic wel resizing.
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			child_cell.resize (a_width, a_height)
 			if is_show_requested then
@@ -257,6 +295,8 @@ feature {EV_ANY_I} -- deferred feature
 		end
 
 	frozen ev_width: INTEGER is
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			if is_show_requested then
 				Result := wel_width
@@ -266,6 +306,8 @@ feature {EV_ANY_I} -- deferred feature
 		end
 
 	frozen ev_height: INTEGER is
+		require
+			not_is_destroyed: not is_destroyed
 		do
 			if is_show_requested then
 				Result := wel_height
@@ -278,6 +320,8 @@ feature {EV_ANY_I} -- deferred feature
 			-- Move the window to `a_x_position', `a_y_position'.
 			-- Use move for a basic wel moving.
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
@@ -287,6 +331,8 @@ feature {EV_ANY_I} -- deferred feature
 			-- resize it with `a_width', `a_height'.
 			-- This feature must be redefine by the containers to readjust its
 			-- children too.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
@@ -294,28 +340,38 @@ feature {EV_ANY_I} -- deferred feature
 			-- Resize the window with `a_width', `a_height'.
 			-- Use resize for a basic wel resizing.
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	wel_width: INTEGER is
 			-- Real `width' of widget as seen on screen.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	wel_height: INTEGER is
 			-- Real `height' of widget as seen on screen.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	is_show_requested: BOOLEAN is
 			-- Is `Current' to be shown?
 			-- Implemented by wel.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible to screen?
 			-- Implemented by WEL
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 

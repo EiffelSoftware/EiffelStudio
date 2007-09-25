@@ -88,6 +88,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			is_destroyed_set: is_destroyed
 		end
 
+feature -- Status report
+
+	is_destroyed: BOOLEAN is
+			-- Is `Current' no longer usable?
+		do
+			Result := get_state_flag (is_destroyed_flag)
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_ANY
@@ -143,12 +151,6 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Has `Current' been initialized properly?
 		do
 			Result := get_state_flag (is_initialized_flag)
-		end
-
-	is_destroyed: BOOLEAN is
-			-- Is `Current' no longer usable?
-		do
-			Result := get_state_flag (is_destroyed_flag)
 		end
 
 	is_in_destroy: BOOLEAN is

@@ -296,12 +296,16 @@ feature -- Basic operations
 
 	top_level_window_imp: EV_WINDOW_IMP is
 			-- Top window of Current.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
 	compute_minimum_width, compute_minimum_height, compute_minimum_size is
 			-- Recompute the minimum_width of the object.
 			-- Should call only ev_set_minimum_xxxx.
+		require
+			not_is_destroyed: not is_destroyed
 		deferred
 		end
 

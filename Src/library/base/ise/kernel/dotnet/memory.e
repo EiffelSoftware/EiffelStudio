@@ -47,9 +47,6 @@ feature -- Status report
 			-- Minimum amount of bytes to be allocated before
 			-- starting an automatic garbage collection.
 		do
-			check
-				False
-			end
 		end
 
 	collection_period: INTEGER is
@@ -59,9 +56,6 @@ feature -- Status report
 			-- value from it.
 			-- If null, no full collection is launched.
 		do
-			check
-				False
-			end
 		end
 
 	coalesce_period: INTEGER is
@@ -71,9 +65,6 @@ feature -- Status report
 			-- value from it.
 			-- If null, no full coalescing is launched.
 		do
-			check
-				False
-			end
 		end
 			
 	collecting: BOOLEAN is
@@ -86,17 +77,11 @@ feature -- Status report
 			-- Size of largest coalesced block since last call to
 			-- `largest_coalesced'; 0 if none.
 		do
-			check
-				False
-			end
 		end
 
 	max_mem: INTEGER is
 			-- Maximum amount of bytes the run-time can allocate.
 		do
-			check
-				False
-			end
 		end
 
 	chunk_size: INTEGER is
@@ -106,9 +91,6 @@ feature -- Status report
 			-- is defined, it is set to the closest reasonable 
 			-- value from it.
 		do
-			check
-				False
-			end
 		end
 
 	tenure: INTEGER is
@@ -119,9 +101,6 @@ feature -- Status report
 			-- is defined, it is set to the closest reasonable 
 			-- value from it.
 		do
-			check
-				False
-			end
 		end
 			
 	generation_object_limit: INTEGER is
@@ -130,9 +109,6 @@ feature -- Status report
 			-- is defined, it is set to the closest reasonable 
 			-- value from it.
 		do
-			check
-				False
-			end
 		end
 	
 	scavenge_zone_size: INTEGER is
@@ -141,9 +117,6 @@ feature -- Status report
 			-- is defined, it is set to the closest reasonable 
 			-- value from it.
 		do
-			check
-				False
-			end
 		end
 
 feature -- Status report
@@ -151,26 +124,17 @@ feature -- Status report
 	referers (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that refer to `an_object'.
 		do
-			check
-				False
-			end
 		end
 		
 	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that have same dynamic type as `an_object'.
 		do
-			check
-				False
-			end
 		end
 
 	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER] is
 			-- Retrieves all object in system as a table indexed by dynamic type
 			-- where elements are all instances of a given data type.
 		do
-			check
-				False
-			end
 		end
 
 	memory_count_map: HASH_TABLE [INTEGER, INTEGER] is
@@ -178,9 +142,6 @@ feature -- Status report
 			-- Same as `memory_map' except that no references on the objects themselves
 			-- is kept.
 		do
-			check
-				False
-			end
 		end
 
 feature -- Status setting
@@ -199,27 +160,18 @@ feature -- Status setting
 			-- Enter ``speed'' mode: will optimize speed of memory
 			-- allocation rather than memory usage.
 		do
-			check
-				False
-			end
 		end
 
 	allocate_compact is
 			-- Enter ``memory'' mode: will try to compact memory
 			-- before requesting more from the operating system.
 		do
-			check
-				False
-			end
 		end
 
 	allocate_tiny is
 			-- Enter ``tiny'' mode: will enter ``memory'' mode
 			-- after having freed as much memory as possible.
 		do
-			check
-				False
-			end
 		end
 
 	enable_time_accounting is
@@ -241,9 +193,6 @@ feature -- Status setting
 		require
 			positive_value: value > 0
 		do
-			check
-				False
-			end
 		end
 
 	set_collection_period (value: INTEGER) is
@@ -254,9 +203,6 @@ feature -- Status setting
 		require
 			positive_value: value >= 0
 		do
-			check
-				False
-			end
 		end
 
 	set_coalesce_period (value: INTEGER) is
@@ -266,9 +212,6 @@ feature -- Status setting
 		require
 			positive_value: value >= 0
 		do
-			check
-				False
-			end
 		end
 
 	set_max_mem (value: INTEGER) is
@@ -276,9 +219,6 @@ feature -- Status setting
 		require
 			positive_value: value > 0
 		do
-			check
-				False
-			end
 		end
 
 feature -- Removal
@@ -299,18 +239,12 @@ feature -- Removal
 			-- Erratic behavior will result if the object is still
 			-- referenced.
 		do
-			check
-				False
-			end
 		end
 
 	mem_free (addr: POINTER) is
 			-- Free memory of object at `addr'.
 			-- (Preferred interface is `free'.)
 		do
-			check
-				False
-			end
 		end
 
 	full_coalesce is
@@ -318,9 +252,8 @@ feature -- Removal
 			-- blocks to reduce fragmentation. Useful, when
 			-- a lot of memory is allocated with garbage collector off.
 		do
-			check
-				False
-			end
+				-- Perform a collection for now.
+			{GC}.collect (0)
 		end
 
 	collect is
@@ -342,16 +275,10 @@ feature {NONE} -- Implementation
 	gc_monitoring (flag: BOOLEAN) is
 			-- Set up GC monitoring according to `flag'
 		do
-			check
-				False
-			end
 		end
 	
 	find_referers (target: POINTER; esult: POINTER; result_size: INTEGER) is
 		do
-			check
-				False
-			end
 		end
 
 indexing

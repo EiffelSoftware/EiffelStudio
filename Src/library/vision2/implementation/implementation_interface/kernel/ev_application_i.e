@@ -729,6 +729,7 @@ feature -- Implementation
 				if show_exception_dialog then
 						-- Show a basic exception dialog so that exception doesn't get lost if undealt with.
 					l_exception_string := an_exception.trace_as_string
+					l_exception_string.prune_all ('%R')
 					create exception_dialog
 					create l_label
 					l_label.disable_word_wrapping

@@ -12,9 +12,7 @@ inherit
 	EV_POPUP_WINDOW
 		redefine
 			initialize,
-			implementation,
-			is_in_default_state,
-			create_implementation
+			is_in_default_state
 		end
 
 	EVS_GENERAL_TOOLTIP_UTILITY
@@ -255,15 +253,6 @@ feature{NONE} -- Implementation
 			Result := pointer_motion_agent_internal
 		ensure
 			result_attached: Result /= Void
-		end
-
-	implementation: EVS_GENERAL_TOOLTIP_WINDOW_IMP;
-			-- Implementation.
-
-	create_implementation is
-			-- Redefine.
-		do
-			create {EVS_GENERAL_TOOLTIP_WINDOW_IMP} implementation.make (Current)
 		end
 
 indexing

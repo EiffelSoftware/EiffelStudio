@@ -17,7 +17,8 @@ inherit
 			class_name,
 			class_style,
 			make,
-			initialize
+			initialize,
+			show_flags
 		end
 
 	EV_POPUP_WINDOW_I
@@ -25,7 +26,8 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color,
 			lock_update,
-			unlock_update
+			unlock_update,
+			disconnect_from_window_manager
 		redefine
 			interface
 		end
@@ -41,6 +43,18 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			create accel_list.make (10)
 			make_child (application_imp.silly_main_window, "")
+		end
+
+feature -- Status Setting
+
+	disconnect_from_window_manager is
+			-- Show popup window disconnected from Window manager.
+			-- By default when shown the window will have full capture
+			-- and be setup so that clicking on an area outside the window
+			-- or pressing the Escape key will hide it.
+		do
+			Precursor
+			set_ex_style (ex_style | ws_ex_topmost)
 		end
 
 feature {NONE} -- Initialization
@@ -79,18 +93,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	show_flags: INTEGER is
+		do
+			if is_disconnected_from_window_manager then
+				Result := sw_shownoactivate
+			else
+				Result := sw_show
+			end
+		end
+
 	default_style: INTEGER is
 			-- Default style of `Current'.
-			-- Set with the option `Ws_clipchildren' to avoid flashing.
+			-- Set with the option `ws_clipchildren' to avoid flashing.
 		do
-			Result := Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings
+			Result := ws_popup + ws_overlapped + ws_clipchildren + ws_clipsiblings
 		end
 
 	default_ex_style: INTEGER is
 			-- Redefine
 			-- Set with `ws_ex_toolwindow' to avoid addition title in taskbar.
 		do
-			Result := Ws_ex_toolwindow
+			if is_disconnected_from_window_manager then
+				Result := ws_ex_topmost
+			end
+			Result := Result | ws_ex_toolwindow
 		end
 
 feature  -- Implementation

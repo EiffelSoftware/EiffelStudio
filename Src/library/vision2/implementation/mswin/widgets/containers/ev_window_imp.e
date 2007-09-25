@@ -1371,7 +1371,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 		do
 			if not is_displayed then
 				call_show_actions := True
-				Precursor {WEL_FRAME_WINDOW}
+				cwin_show_window (wel_item, show_flags)
 				if item_imp /= Void then
 					notify_change (nc_minsize, item_imp)
 				end
@@ -1383,6 +1383,12 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 					call_show_actions := False
 				end
 			end
+		end
+
+	show_flags: INTEGER is
+			-- Flags used for `ShowWindow'.
+		do
+			Result := sw_show
 		end
 
 	is_parented_window: BOOLEAN

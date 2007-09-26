@@ -10,7 +10,7 @@ inherit
 		redefine
 			append_once_mark,
 			is_once, is_global_once,
-			pre_inlined_code, inlined_byte_code, generate_once_declaration,
+			pre_inlined_code, inlined_byte_code_type, generate_once_declaration,
 			generate_once_data, generate_once_prologue, generate_once_epilogue
 		end
 
@@ -289,16 +289,9 @@ feature -- Inlining
 		do
 		end
 
-	inlined_byte_code: STD_BYTE_CODE is
-		local
-			inlined_once_byte_code: INLINED_ONCE_BYTE_CODE
+	inlined_byte_code_type: INLINED_ONCE_BYTE_CODE is
+			-- Type for `inlined_byte_code'
 		do
-			Result := Precursor
-			if Result.has_inlined_code then
-				create inlined_once_byte_code
-				inlined_once_byte_code.fill_from (Result)
-				Result := inlined_once_byte_code
-			end;
 		end
 
 feature {NONE} -- Convenience

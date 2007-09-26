@@ -1,18 +1,23 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class INLINED_BYTE_CODE
 
 inherit
-
 	STD_BYTE_CODE
 		redefine
 			has_inlined_code
 		end
 
-feature
+create
+	make
 
-	fill_from (std: STD_BYTE_CODE) is
+feature {NONE} -- Initialization
+
+	make (std: STD_BYTE_CODE) is
+		require
+			std_not_void: std /= Void
 		do
 			arguments := std.arguments
 			body_index := std.body_index
@@ -29,6 +34,8 @@ feature
 			compound := std.compound
 			once_manifest_string_count := std.once_manifest_string_count
 		end
+
+feature -- Status report
 
 	has_inlined_code: BOOLEAN is
 		do

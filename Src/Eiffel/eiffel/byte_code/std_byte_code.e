@@ -1949,7 +1949,6 @@ feature -- Inlining
 
 	inlined_byte_code: STD_BYTE_CODE is
 		local
-			inlined_b: INLINED_BYTE_CODE
 			inliner: INLINER
 		do
 			if compound /= Void then
@@ -1962,15 +1961,21 @@ feature -- Inlining
 			if inliner.current_feature_inlined then
 					-- If something has been inlined, create
 					-- a new byte code
-				create inlined_b
-				inlined_b.fill_from (Current)
-				Result := inlined_b
+				create {like inlined_byte_code_type} Result.make (Current)
 
 					-- Reset the flags in INLINER
 				inliner.reset
 			else
 				Result := Current
 			end
+		end
+
+feature {NONE} -- Typing
+
+	inlined_byte_code_type: INLINED_BYTE_CODE
+			-- For typing purposes to create the proper kind of INLINED_BYTE_CODE
+			-- in `inlined_byte_code'.
+		do
 		end
 
 feature {NONE} -- Convenience

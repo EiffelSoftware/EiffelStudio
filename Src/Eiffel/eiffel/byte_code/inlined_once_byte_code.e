@@ -13,8 +13,22 @@ inherit
 		undefine
 			append_once_mark,
 			is_once, is_global_once,
-			pre_inlined_code, inlined_byte_code, generate_once_declaration,
+			pre_inlined_code, inlined_byte_code_type, generate_once_declaration,
 			generate_once_data, generate_once_prologue, generate_once_epilogue
+		redefine
+			make
+		end
+
+create
+	make
+
+feature -- Update
+
+	make (std: STD_BYTE_CODE) is
+			-- Initialize current from non-inlined `std'.
+		do
+			Precursor {INLINED_BYTE_CODE} (std)
+			set_is_global_once (std.is_global_once)
 		end
 
 indexing

@@ -12,18 +12,17 @@ feature
 		do		-- Record an exception when `old g' is evaluated.
 			if not retried then
 				h := h + 1
-			else
-				s := ""
 			end
 		ensure
-			h = old g - s.count + 1		-- 2. Raise an OLD_VIOLATION.
+			old_g: h = old g - s.count		-- 2. Raise an OLD_VIOLATION.
 		rescue
-			old_exception ?= last_exception
+			old_exception ?= (create {EXCEPTION_MANAGER}).last_exception
 			if old_exception /= Void then
 				print ("True")
 			else
 				print ("False")
 			end
+			s := ""
 			retried := True
 			retry
 		end

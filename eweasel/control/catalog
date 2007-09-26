@@ -1324,7 +1324,8 @@ test	feature-call-via-cecil			ccomp063 tcf pass c_compilation
 test	deferred-to-string-constant	ccomp064 tcf pass finalizing
 test	built-in-unary-plus	ccomp065 tcf fail c_compilation
 test	expanded-generic-conformance-c-bad-finalization	ccomp066 tcf fail c_compilation
-if WINDOWS test	dll-generation-failure		ccomp067 tcf fail c_compilation
+if WINDOWS test	dll-generation-failure	ccomp067 tcf fail c_compilation
+test	once-global-procedure-c-failure	ccomp068 tcf fail c_compilation
 
 -- Storable tests
 
@@ -1387,8 +1388,8 @@ test	tuple-comparison		tuple005	tcf	pass tuple
 test	tuple-twining			tuple006	tcf	pass tuple
 test	named-tuple-assignment	tuple007	tcf	pass tuple
 test	named-tuple-same-labels	tuple008	tcf	pass tuple
-test	 named-tuple-same-labels-crash	tuple009	tcf	pass tuple
-test	 internal-tuple-creation	tuple010	tcf	pass tuple
+test	named-tuple-same-labels-crash	tuple009	tcf	pass tuple
+test	internal-tuple-creation	tuple010	tcf	pass tuple
 
 -- Systematic validity tests
 

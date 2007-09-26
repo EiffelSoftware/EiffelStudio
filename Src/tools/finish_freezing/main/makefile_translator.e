@@ -171,9 +171,9 @@ feature -- Execution
 			end
 			eiffel_make.append (" -target %"")
 			eiffel_make.append (env.current_working_directory)
-			eiffel_make.append ("%" -make ")
+			eiffel_make.append ("%" -make %"")
 			eiffel_make.append (command)
-			eiffel_make.append ("")
+			eiffel_make.append ("%" ")
 
 				-- On Windows, we need to surround the command with " since it is executed
 				-- by COMSPEC.

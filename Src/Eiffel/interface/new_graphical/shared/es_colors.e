@@ -12,6 +12,42 @@ class
 
 feature -- Access
 
+	frozen stock_colors: EV_STOCK_COLORS
+			-- Access to a shared instance of {EV_STOCK_COLORS}
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- General colors
+
+	high_priority_foreground_color: EV_COLOR
+			-- High priority item foreground text color
+		once
+			Result := stock_colors.red
+		ensure
+			result_attached: Result /= Void
+		end
+
+	normal_priority_foreground_color: EV_COLOR
+			-- Normal priority item foreground text color
+		once
+			Result := stock_colors.black
+		ensure
+			result_attached: Result /= Void
+		end
+
+	low_priority_foreground_color: EV_COLOR
+			-- Low priority item foreground text color
+		once
+			Result := stock_colors.gray
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Grids
+
 	grid_line_color: EV_COLOR
 			-- Grid widget selection color when focused
 		once
@@ -90,35 +126,6 @@ feature -- Prompts
 			-- Background banner color for prompt dialogs
 		once
 			create Result.make_with_8_bit_rgb (255, 255, 255)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	prompt_sub_title_font: EV_FONT
-			-- Font for prompt text
-		once
-			Result := (create {EV_LABEL}).font
-			Result.set_height (14)
-			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	prompt_text_font: EV_FONT
-			-- Font for prompt sub text
-		once
-			Result := (create {EV_LABEL}).font
-			Result.set_height (12)
-		ensure
-			result_attached: Result /= Void
-		end
-
-feature {NONE} -- Access
-
-	stock_colors: EV_STOCK_COLORS is
-			-- EiffelVision2 stock colors
-		once
-			create Result
 		ensure
 			result_attached: Result /= Void
 		end

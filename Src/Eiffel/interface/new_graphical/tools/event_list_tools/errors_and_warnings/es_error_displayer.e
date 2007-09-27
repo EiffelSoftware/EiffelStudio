@@ -209,7 +209,7 @@ feature {NONE} -- Factory
 		require
 			a_error_attached: a_error /= Void
 		do
-			create {EVENT_LIST_ERROR_ITEM}Result.make ({EVENT_LIST_ITEM_CATEGORIES}.compilation, a_error.out, a_error)
+			create {EVENT_LIST_ERROR_ITEM}Result.make ({ENVIRONMENT_CATEGORIES}.compilation, a_error.out, a_error)
 		ensure
 			result_attached: Result /= Void
 			result_user_data_set: Result.data = a_error

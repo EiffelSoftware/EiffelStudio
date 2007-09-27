@@ -118,7 +118,7 @@ feature -- Status report
 					-- item out of view.
 				l_grid := grid_events
 				Result := l_grid.row_count = 0 or else
-					l_grid.last_visible_row = l_grid.row (l_grid.row_count)
+					(l_grid.is_displayed and then l_grid.last_visible_row = l_grid.row (l_grid.row_count))
 			end
 		end
 
@@ -535,6 +535,7 @@ feature {NONE} -- Sort handling
 
 				l_row.set_data (l_event_item)
 				populate_event_grid_row_items (l_event_item, l_row)
+				l_grid.grid_row_fill_empty_cells (l_row)
 				if l_event_items.item_for_iteration.expand then
 					l_row.expand
 				end
@@ -630,19 +631,43 @@ feature {NONE} -- Query
 			result_attached: Result /= Void
 		end
 
-	category_pixmap_from_task (a_task: EVENT_LIST_ITEM_I): EV_PIXMAP
-			-- Retrieves a pixmap associated with a tasks category
+	category_icon_from_event_item (a_event_item: EVENT_LIST_ITEM_I): EV_PIXMAP
+			-- Retrieves a pixmap associated with a event item's category.
 			--
-			-- `a_task': The task to query a category of
-			-- `a_pixmap': The pixmap representing the task's category
+			-- `a_event_item': The event item to query a category of.
+			-- `a_pixmap': The pixmap representing the event item's category.
 		require
-			a_task_attached: a_task /= Void
+			a_event_item_attached: a_event_item /= Void
 		do
-			inspect a_task.category
-			when {EVENT_LIST_ITEM_CATEGORIES}.compilation then
+			inspect a_event_item.category
+			when {ENVIRONMENT_CATEGORIES}.compilation then
 				Result := stock_pixmaps.compile_animation_7_icon
+			when {ENVIRONMENT_CATEGORIES}.refactoring then
+				Result := stock_pixmaps.refactor_rename_icon
+			when {ENVIRONMENT_CATEGORIES}.editor then
+				Result := stock_pixmaps.general_document_icon
+			when {ENVIRONMENT_CATEGORIES}.debugger then
+				Result := stock_pixmaps.debugger_environment_force_debug_mode_icon
 			else
 				-- No matching category
+			end
+		end
+
+	priority_icon_from_event_item (a_event_item: EVENT_LIST_ITEM_I): EV_PIXMAP
+			-- Retrieves a pixmap associated with a event item's priority.
+			--
+			-- `a_event_item': The event item to query a category of.
+			-- `a_pixmap': The pixmap representing the event items's priority.
+		require
+			a_event_item_attached: a_event_item /= Void
+		do
+			inspect a_event_item.priority
+			when {PRIORITY_LEVELS}.low then
+				Result := stock_pixmaps.general_move_down_icon
+			when {PRIORITY_LEVELS}.normal then
+				Result := stock_pixmaps.general_blank_icon
+			when {PRIORITY_LEVELS}.high then
+				Result := stock_pixmaps.general_move_up_icon
 			end
 		end
 
@@ -689,6 +714,7 @@ feature {NONE} -- Events
 					-- Set row information and items
 				l_row.set_data (a_event_item)
 				populate_event_grid_row_items (a_event_item, l_row)
+				l_grid.grid_row_fill_empty_cells (l_row)
 
 				item_count := item_count + 1
 
@@ -796,6 +822,7 @@ feature {NONE} -- Events
 				if l_row /= Void then
 						-- Re-creates event row
 					populate_event_grid_row_items (a_event_item, l_row)
+					grid_events.grid_row_fill_empty_cells (l_row)
 				end
 			end
 		ensure then

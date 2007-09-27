@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		Priority levels used to signify in basic terms if an entity should have an elevated or lowered priority.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,27 +8,29 @@ indexing
 	revision: "$revision$"
 
 class
-	EVENT_LIST_ITEM_CATEGORIES
+	PRIORITY_LEVELS
 
 feature -- Access
 
-	none: NATURAL_8 = 0
-			-- Unknown category
+	low: INTEGER_8 = -1
+	normal: INTEGER_8 = 0
+	high: INTEGER_8 = 1
 
-	internal_event: NATURAL_8 = 1
-			-- An internal event
+feature -- Query
 
-	compilation: NATURAL_8 = 2
-			-- A compilation/build
-
-	debugger: NATURAL_8 = 3
-			-- Eiffel debugger
-
-	editor: NATURAL_8 = 4
-			-- Text editor
-
-	refactoring: NATURAL_8 = 5
-			-- Refactoring engin
+	is_valid_priority_level (a_level: INTEGER_8): BOOLEAN
+			-- Determines if `a_level' is a valid severity level
+			--
+			-- `a_level': A severity level
+			-- `Result': True to indicate the level of severity is valid; False otherwise.
+		do
+			Result :=
+				a_level = low or
+				a_level = normal or
+				a_level = high
+		ensure
+			not_a_level_is_valid: not Result implies a_level /= low and a_level /= normal and a_level /= high
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

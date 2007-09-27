@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		All EiffelStudio predefine user interface fonts.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,27 +8,47 @@ indexing
 	revision: "$revision$"
 
 class
-	EVENT_LIST_ITEM_CATEGORIES
+	ES_FONTS
 
-feature -- Access
+feature -- General fonts
 
-	none: NATURAL_8 = 0
-			-- Unknown category
+	standard_label_font: EV_FONT
+			-- Access to standard widget font
+		once
+			Result := (create {EV_LABEL}).font
+		ensure
+			result_attached: Result /= Void
+		end
 
-	internal_event: NATURAL_8 = 1
-			-- An internal event
+	highlighted_label_font: EV_FONT
+			-- Access to standard widget font with highlighting
+		once
+			Result := standard_label_font.twin
+			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+		ensure
+			result_attached: Result /= Void
+		end
 
-	compilation: NATURAL_8 = 2
-			-- A compilation/build
+feature -- Prompts
 
-	debugger: NATURAL_8 = 3
-			-- Eiffel debugger
+	prompt_sub_title_font: EV_FONT
+			-- Font for prompt text
+		once
+			Result := standard_label_font.twin
+			Result.set_height (14)
+			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+		ensure
+			result_attached: Result /= Void
+		end
 
-	editor: NATURAL_8 = 4
-			-- Text editor
-
-	refactoring: NATURAL_8 = 5
-			-- Refactoring engin
+	prompt_text_font: EV_FONT
+			-- Font for prompt sub text
+		once
+			Result := standard_label_font.twin
+			Result.set_height (12)
+		ensure
+			result_attached: Result /= Void
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

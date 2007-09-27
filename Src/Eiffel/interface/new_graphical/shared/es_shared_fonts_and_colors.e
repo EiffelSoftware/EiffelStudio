@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		Access to shared EiffelStudio color information
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,27 +8,25 @@ indexing
 	revision: "$revision$"
 
 class
-	EVENT_LIST_ITEM_CATEGORIES
+	ES_SHARED_FONTS_AND_COLORS
 
 feature -- Access
 
-	none: NATURAL_8 = 0
-			-- Unknown category
+	frozen colors: ES_COLORS
+			-- Shared access to EiffelStudio colors
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
 
-	internal_event: NATURAL_8 = 1
-			-- An internal event
-
-	compilation: NATURAL_8 = 2
-			-- A compilation/build
-
-	debugger: NATURAL_8 = 3
-			-- Eiffel debugger
-
-	editor: NATURAL_8 = 4
-			-- Text editor
-
-	refactoring: NATURAL_8 = 5
-			-- Refactoring engin
+	frozen fonts: ES_FONTS
+			-- Shared access to EiffelStudio fonts
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

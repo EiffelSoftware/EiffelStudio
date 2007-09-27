@@ -236,7 +236,9 @@ feature {NONE} -- Query
 	is_error_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- Determines if event `a_event_item' is an error event
 		do
-			Result := not is_warning_event (a_event_item) and then (({ERROR}) #? a_event_item.data) /= Void
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error then
+				Result := not is_warning_event (a_event_item) and then (({ERROR}) #? a_event_item.data) /= Void
+			end
 		ensure
 			not_is_warning_event: Result implies not is_warning_event (a_event_item)
 		end
@@ -246,17 +248,9 @@ feature {NONE} -- Query
 		require
 			a_event_item_attached: a_event_item /= Void
 		do
-			Result := (({WARNING}) #? a_event_item.data) /= Void
-		ensure
-			not_is_error_event: Result implies not is_error_event (a_event_item)
-		end
-
-	is_event_context_available (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
-			-- Determines if event `a_event_item' has a context available
-		require
-			a_event_item_attached: a_event_item /= Void
-		do
-
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error then
+				Result := (({WARNING}) #? a_event_item.data) /= Void
+			end
 		ensure
 			not_is_error_event: Result implies not is_error_event (a_event_item)
 		end
@@ -786,7 +780,7 @@ feature {NONE} -- User interface manipulation
 
 				-- Set category pixmap item
 			create l_item
-			l_pixmap := category_pixmap_from_task (a_event_item)
+			l_pixmap := category_icon_from_event_item (a_event_item)
 			if l_pixmap /= Void then
 				l_item.set_pixmap (l_pixmap)
 

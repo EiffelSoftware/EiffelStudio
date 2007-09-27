@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Access to shared EiffelStudio color information
+		Category identifers for various parts of the EiffelStudio ecosystem.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,24 +8,43 @@ indexing
 	revision: "$revision$"
 
 class
-	ES_SHARED_COLORS
+	ENVIRONMENT_CATEGORIES
 
 feature -- Access
 
-	frozen colors: ES_COLORS
-			-- Shared access to EiffelStudio colors
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
+	none: NATURAL_8 = 0
+			-- Unknown category
 
-	frozen fonts_and_colors: ES_COLORS
-			-- Shared access to EiffelStudio colors
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
+	internal_event: NATURAL_8 = 1
+			-- An internal event
+
+	compilation: NATURAL_8 = 2
+			-- A compilation/build
+
+	debugger: NATURAL_8 = 3
+			-- Eiffel debugger
+
+	editor: NATURAL_8 = 4
+			-- Text editor
+
+	refactoring: NATURAL_8 = 5
+			-- Refactoring engine
+
+feature -- Query
+
+	is_valid_category (a_cat: NATURAL_8): BOOLEAN
+			-- Determines if `a_cat' is a valid environment category
+			--
+			-- `a_cat': A category identifier to validate
+			-- `Result': True to indicate the category is valid; False otherwise.
+		do
+			Result :=
+				a_cat = none or
+				a_cat = internal_event or
+				a_cat = compilation or
+				a_cat = debugger or
+				a_cat = editor or
+				a_cat = refactoring
 		end
 
 ;indexing

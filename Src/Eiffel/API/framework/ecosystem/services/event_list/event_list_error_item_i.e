@@ -1,34 +1,25 @@
 indexing
 	description: "[
-
+		The interface of an event list service ({EVENT_LIST_SERVICE_I}) item for Eiffel compiler {ERROR} objects.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";
 	revision: "$revision$"
 
-class
-	EVENT_LIST_ITEM_CATEGORIES
+deferred class
+	EVENT_LIST_ERROR_ITEM_I
+
+inherit
+	EVENT_LIST_ITEM_I
 
 feature -- Access
 
-	none: NATURAL_8 = 0
-			-- Unknown category
-
-	internal_event: NATURAL_8 = 1
-			-- An internal event
-
-	compilation: NATURAL_8 = 2
-			-- A compilation/build
-
-	debugger: NATURAL_8 = 3
-			-- Eiffel debugger
-
-	editor: NATURAL_8 = 4
-			-- Text editor
-
-	refactoring: NATURAL_8 = 5
-			-- Refactoring engin
+	frozen type: NATURAL_8
+			-- Event list item type identifier, see {EVENT_LIST_ITEM_TYPES}
+		once
+			Result := {EVENT_LIST_ITEM_TYPES}.error
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

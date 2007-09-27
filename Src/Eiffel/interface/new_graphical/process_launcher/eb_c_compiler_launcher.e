@@ -193,7 +193,7 @@ feature{NONE}  -- Actions
 					l_service ?= service_provider.query_service ({EVENT_LIST_SERVICE_I})
 					if l_service /= Void then
 						create l_error.make ("Please review the C Output Pane.")
-						l_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({EVENT_LIST_ITEM_CATEGORIES}.compilation, l_error.message, l_error))
+						l_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 					end
 				else
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
@@ -223,7 +223,7 @@ feature{NONE}  -- Actions
 			l_service ?= service_provider.query_service ({EVENT_LIST_SERVICE_I})
 			if l_service /= Void then
 				create l_error.make ("Could not launch C/C++ compiler.")
-				l_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({EVENT_LIST_ITEM_CATEGORIES}.compilation, l_error.message, l_error))
+				l_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 			end
 			launch_failed_actions.call (Void)
 			finished_actions.call (Void)

@@ -1,6 +1,7 @@
 indexing
 	description: "[
-
+		Shared access to basic entity priority identifiers.
+		For more information see {PRIORITY_LEVELS}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,27 +9,17 @@ indexing
 	revision: "$revision$"
 
 class
-	EVENT_LIST_ITEM_CATEGORIES
+	SHARED_PRIORITY_LEVELS
 
 feature -- Access
 
-	none: NATURAL_8 = 0
-			-- Unknown category
-
-	internal_event: NATURAL_8 = 1
-			-- An internal event
-
-	compilation: NATURAL_8 = 2
-			-- A compilation/build
-
-	debugger: NATURAL_8 = 3
-			-- Eiffel debugger
-
-	editor: NATURAL_8 = 4
-			-- Text editor
-
-	refactoring: NATURAL_8 = 5
-			-- Refactoring engin
+	priorities: PRIORITY_LEVELS
+			-- Priority levels
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -1,6 +1,7 @@
 indexing
 	description: "[
-
+		Type identifiers for event list items so code that cannot perform object tests (internal or external)
+		can identify the event list item type.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,27 +9,18 @@ indexing
 	revision: "$revision$"
 
 class
-	EVENT_LIST_ITEM_CATEGORIES
+	EVENT_LIST_ITEM_TYPES
 
 feature -- Access
 
-	none: NATURAL_8 = 0
-			-- Unknown category
+	unknown: NATURAL_8 = 0
+			-- Unknown event list item type
 
-	internal_event: NATURAL_8 = 1
-			-- An internal event
+	error: NATURAL_8 = 1
+			-- Error event list item
 
-	compilation: NATURAL_8 = 2
-			-- A compilation/build
-
-	debugger: NATURAL_8 = 3
-			-- Eiffel debugger
-
-	editor: NATURAL_8 = 4
-			-- Text editor
-
-	refactoring: NATURAL_8 = 5
-			-- Refactoring engin
+	log: NATURAL_8 = 2
+			-- Logger event list item type
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

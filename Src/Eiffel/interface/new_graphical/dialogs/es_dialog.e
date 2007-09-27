@@ -27,7 +27,7 @@ inherit
 			{NONE} all
 		end
 
-	ES_SHARED_COLORS
+	ES_SHARED_FONTS_AND_COLORS
 		export
 			{NONE} all
 		end
@@ -468,7 +468,7 @@ feature -- Basic operations
 				-- halted until the dialog is closed or destroyed. Therefore,
 				-- this postcondition will only be executed after the dialog
 				-- is closed or destroyed.
-			dialog_closed_so_no_blocking_window: not dialog.is_destroyed implies dialog.blocking_window = Void
+			--dialog_closed_so_no_blocking_window: not dialog.is_destroyed implies dialog.blocking_window = Void
 		end
 
 	show_on_active_window is
@@ -503,7 +503,7 @@ feature -- Basic operations
 				-- halted until the dialog is closed or destroyed. Therefore,
 				-- this postcondition will only be executed after the dialog
 				-- is closed or destroyed.
-			dialog_closed_so_no_blocking_window: not dialog.is_destroyed implies dialog.blocking_window = Void
+			--dialog_closed_so_no_blocking_window: not dialog.is_destroyed implies dialog.blocking_window = Void
 		end
 
 feature {NONE} -- Basic operation

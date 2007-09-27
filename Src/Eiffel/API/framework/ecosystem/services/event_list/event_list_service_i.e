@@ -15,6 +15,9 @@ indexing
 deferred class
 	EVENT_LIST_SERVICE_I
 
+inherit
+	SERVICE_I
+
 feature -- Access
 
 	items (a_context_cookie: UUID): DS_BILINEAR [EVENT_LIST_ITEM_I]
@@ -77,6 +80,16 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			result_contains_attached_items: not Result.has (Void)
+		end
+
+feature {NONE} -- Access
+
+	item_types: EVENT_LIST_ITEM_TYPES
+			-- Access to event list item types
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Events

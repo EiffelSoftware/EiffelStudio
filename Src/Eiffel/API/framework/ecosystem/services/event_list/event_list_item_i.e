@@ -11,20 +11,40 @@ indexing
 deferred class
 	EVENT_LIST_ITEM_I
 
+inherit -- {NONE}
+	SHARED_ENVIRONMENT_CATEGORIES
+		export
+			{NONE} all
+		end
+
+	SHARED_PRIORITY_LEVELS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
-	category: NATURAL_8
-			-- Event item category
+	type: NATURAL_8
+			-- Event list item type identifier, see {EVENT_LIST_ITEM_TYPES}
 		deferred
 		end
 
-	priority: NATURAL_8
-			-- Event item priority
+	category: NATURAL_8
+			-- Event list item category, see {ENVIRONMENT_CATEGORIES}
 		deferred
+		ensure
+			result_is_valid_category: is_valid_category (Result)
+		end
+
+	priority: INTEGER_8
+			-- Event list item priority, see {PRIORITY_LEVELS}
+		deferred
+		ensure
+			result_is_valid_priority: is_valid_priority (Result)
 		end
 
 	description: STRING_32
-			-- Event item description
+			-- Event list item description
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -34,6 +54,8 @@ feature -- Access
 	data: ANY
 			-- User custom data
 		deferred
+		ensure
+			result_is_valid_data: is_valid_data (Result)
 		end
 
 feature -- Query
@@ -42,23 +64,27 @@ feature -- Query
 			-- Determines if category `a_category' is valid for the current event item.
 			--
 			-- `a_category': A category code to validate.
-			-- `Result': True if `a_category' is a valid category, False otherwise.
-		deferred
+			-- `Result': True if `a_category' is a valid category; False otherwise.
+		do
+			Result := categories.is_valid_category (a_category)
 		end
 
 	is_valid_priority (a_priority: like priority): BOOLEAN
 			-- Determines if priority `a_priority' is valid for the current event item.
 			--
 			-- `a_priority': A priority code to validate.
-			-- `Result': True if `a_priority' is a valid priority, False otherwise.
-		deferred
+			-- `Result': True if `a_priority' is a valid priority; False otherwise.
+		do
+			Result := priorities.is_valid_priority_level (a_priority)
 		end
 
-invariant
-	category_is_valid_category: is_valid_category (category)
-	priority_is_valid_priority: is_valid_priority (priority)
-	description_attached: description /= Void
-	not_description_is_empty: not description.is_empty
+	is_valid_data (a_data: like data): BOOLEAN
+			-- Determines is the user data `a_data' is valid for the current event item.
+			--
+			-- `a_data': The user data to validate.
+			-- `Result': True if the user data is valid; False otherwise.
+		deferred
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

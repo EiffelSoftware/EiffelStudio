@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		An implementation of an event list service ({EVENT_LIST_SERVICE_I}) item for Eiffel compiler {ERROR} objects.
+		A helper class to allow quick implementation for consumer client access to a particular service.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,60 +8,47 @@ indexing
 	revision: "$revision$"
 
 class
-	EVENT_LIST_ERROR_ITEM
+	SERVICE_CONSUMER [G -> SERVICE_I]
 
 inherit
-	EVENT_LIST_ERROR_ITEM_I
-
-	EVENT_LIST_ITEM
-		rename
-			make as make_event_list_item
-		end
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_category: like category; a_description: like description; a_error: like data)
-			-- Initialize a new event list error item.
-			--
-			-- `a_category': Event item category, see {ENVIRONMENT_CATEGORIES}.
-			-- `a_description': A textual representation of the error.
-			-- `a_error': The error object associated with this event item
-		require
-			a_category_is_valid_category: is_valid_category (a_category)
-			a_description_attached: a_description /= Void
-			not_a_description_is_empty: not a_description.is_empty
-			a_error_is_valid_data: is_valid_data (a_error)
-		do
-			make_event_list_item (a_category, {PRIORITY_LEVELS}.normal, a_error)
-			description := a_description
-		ensure
-			category_set: category = a_category
-			description_set: description = a_description
-			user_data_set: data = a_error
+	SHARED_SERVICE_PROVIDER
+		export
+			{NONE} all
 		end
 
 feature -- Access
 
-	description: STRING_32
-			-- Event item description
-
-feature -- Query
-
-	is_valid_data (a_data: like data): BOOLEAN
-			-- Determines is the user data `a_data' is valid for the current event item.
-			--
-			-- `a_data': The user data to validate.
-			-- `Result': True if the user data is valid; False otherwise.
+	service: G
+			-- Access to the service
+		require
+			is_service_available: is_service_available
 		do
-			Result := a_data /= Void and then (({ERROR}) #? data) /= Void
+			Result := internal_service
+			if Result = Void then
+				Result ?= service_provider.query_service ({G})
+				if Result /= Void then
+						-- Cache service once it becomes available
+					internal_service := Result
+				end
+			end
 		end
 
+feature -- Status report
+
+	is_service_available: BOOLEAN
+			-- Indicates if the service is available
+		do
+			Result := service /= Void
+		end
+
+feature {NONE} -- Internal implementation cache
+
+	internal_service: like service
+			-- Cached version of `service'
+			-- Note: do not use directly!
+
 invariant
-	description_attached: description /= Void
-	not_description_is_empty: not description.is_empty
+	service_attached: is_service_available implies service /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

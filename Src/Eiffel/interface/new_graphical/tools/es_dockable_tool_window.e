@@ -36,7 +36,7 @@ inherit
 			{NONE} all
 		end
 
-	ES_SHARED_COLORS
+	ES_SHARED_FONTS_AND_COLORS
 		export
 			{NONE} all
 		end

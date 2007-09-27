@@ -14,6 +14,8 @@ class
 	SERVICE_HEAP
 
 inherit
+	SERVICE_I
+
 	SERVICE_CONTAINER_IMPL
 		rename
 			add_service as provider_add_service,
@@ -36,7 +38,7 @@ create {SHARED_SERVICE_PROVIDER}
 
 feature -- Extension
 
-	add_service (a_type: TYPE [ANY]; a_service: ANY) is
+	add_service (a_type: TYPE [ANY]; a_service: SERVICE_I) is
 			-- Add a service `a_service' with a linked association with type `a_type'.
 		require
 			a_type_attached: a_type /= Void
@@ -49,7 +51,7 @@ feature -- Extension
 			proffers_service: proffers_service (a_type)
 		end
 
-	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, ANY]) is
+	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, SERVICE_I]) is
 			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instaiates
 			-- an instance of service when requested.
 
@@ -57,7 +59,6 @@ feature -- Extension
 			a_type_attached: a_type /= Void
 			a_activator_attached: a_activator /= Void
 			not_proffers_service: not proffers_service (a_type)
-			service_conforms_to_type: service_conforms_to_type (a_type, a_activator)
 		do
 			provider_add_service_with_activator (a_type, a_activator, False)
 		ensure

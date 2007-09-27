@@ -23,14 +23,14 @@ feature {NONE} -- Initialization
 
 feature -- Extension
 
-	add_service (a_type: TYPE [ANY]; a_service: ANY; a_promote: BOOLEAN) is
+	add_service (a_type: TYPE [ANY]; a_service: SERVICE_I; a_promote: BOOLEAN) is
 			-- Add a service `a_service' with a linked association with type `a_type'.
 			-- If service is being promoted it will be registered with a parent service provider.
 		do
 			services.put (create {SERVICE_STATIC_CONCEALER}.make (a_service), type_hash_code (a_type))
 		end
 
-	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, ANY] a_promote: BOOLEAN) is
+	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, SERVICE_I] a_promote: BOOLEAN) is
 			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instaiates
 			-- an instance of service when requested.
 			-- If service is being promoted it will be registered with a parent service provider.
@@ -61,12 +61,14 @@ feature -- Query
 
 feature -- Query
 
-	frozen query_service (a_type: TYPE [ANY]): ANY
+	frozen query_service (a_type: TYPE [ANY]): SERVICE_I
 			-- Queries for service `a_type' and returns result if service was found on Current
+		local
+			l_obj: ANY
 		do
-			Result := internal_query_service (a_type)
-			if Result /= Void then
-				Result := reveal_service (Result)
+			l_obj := internal_query_service (a_type)
+			if l_obj /= Void then
+				Result := reveal_service (l_obj)
 			end
 		ensure then
 				-- If this contract is violated when you need to reveal the service. See `reveal_service'
@@ -90,7 +92,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	reveal_service (a_service: ANY): ANY
+	reveal_service (a_service: ANY): SERVICE_I
 			-- Extracts `a_service' from a possible concealed service.s
 			--
 			-- `a_service': The service to reveal.
@@ -102,7 +104,7 @@ feature {NONE} -- Basic operations
 		do
 			l_concealer ?= a_service
 			if l_concealer = Void then
-				Result := a_service
+				Result ?= a_service
 			else
 					-- Reveal service
 				Result := l_concealer.service

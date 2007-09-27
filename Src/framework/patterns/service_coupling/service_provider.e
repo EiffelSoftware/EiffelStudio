@@ -23,7 +23,7 @@ deferred class
 
 feature -- Query
 
-	query_service (a_type: TYPE [ANY]): ANY
+	query_service (a_type: TYPE [ANY]): SERVICE_I
 			-- Queries for service `a_type' and returns result if service was found on Current
 		require
 			a_type_attached: a_type /= Void

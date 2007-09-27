@@ -56,7 +56,7 @@ feature -- Query
 			-- `a_data': The user data to validate.
 			-- `Result': True if the user data is valid; False otherwise.
 		do
-			Result := a_data /= Void and then (({ERROR}) #? data) /= Void
+			Result := a_data /= Void and then (({ERROR}) #? a_data) /= Void
 		end
 
 invariant

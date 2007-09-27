@@ -129,6 +129,7 @@ test	agent-parens-zero-args		syntax043 tcf pass syntax
 test	empty-convert-clause		syntax044 tcf fail syntax
 test	verbatim-manifest-string	syntax045 tcf pass syntax
 test	integer-constant-range		syntax046 tcf pass syntax
+test	multi-syntax-error			syntax047 tcf pass syntax
 
 -- Validity tests
 

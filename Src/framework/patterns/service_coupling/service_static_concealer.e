@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: ANY
+	service: SERVICE_I
 			-- Actual service
 
 ;indexing

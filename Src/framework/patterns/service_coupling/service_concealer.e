@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	service: ANY is
+	service: SERVICE_I is
 			-- Actual service
 		deferred
 		end

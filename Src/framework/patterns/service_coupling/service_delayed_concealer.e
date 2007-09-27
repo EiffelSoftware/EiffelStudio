@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: ANY is
+	service: SERVICE_I is
 			-- Actual service
 		do
 			Result := internal_service
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	activator: FUNCTION [ANY, TUPLE, ANY]
+	activator: FUNCTION [ANY, TUPLE, SERVICE_I]
 			-- Function used to initialize service
 
 feature {NONE} -- Internal implementation cache

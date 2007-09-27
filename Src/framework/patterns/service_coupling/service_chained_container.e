@@ -31,7 +31,7 @@ create
 
 feature -- Extension
 
-	add_service (a_type: TYPE [ANY]; a_service: ANY; a_promote: BOOLEAN) is
+	add_service (a_type: TYPE [ANY]; a_service: SERVICE_I; a_promote: BOOLEAN) is
 			-- Add a service `a_service' with a linked association with type `a_type'.
 			-- If service is being promoted it will be registered with a parent service provider.
 		local
@@ -45,7 +45,7 @@ feature -- Extension
 			end
 		end
 
-	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, ANY] a_promote: BOOLEAN) is
+	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, SERVICE_I] a_promote: BOOLEAN) is
 			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instaiates
 			-- an instance of service when requested.
 			-- If service is being promoted it will be registered with a parent service provider.

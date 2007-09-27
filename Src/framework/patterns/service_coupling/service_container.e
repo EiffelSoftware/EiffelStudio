@@ -26,7 +26,7 @@ deferred class
 
 feature -- Extension
 
-	add_service (a_type: TYPE [ANY]; a_service: ANY; a_promote: BOOLEAN) is
+	add_service (a_type: TYPE [ANY]; a_service: SERVICE_I; a_promote: BOOLEAN) is
 			-- Add a service `a_service' with a linked association with type `a_type'.
 			-- If service is being promoted it will be registered with a parent service provider.
 		require
@@ -39,7 +39,7 @@ feature -- Extension
 			proffers_service: proffers_service (a_type, a_promote)
 		end
 
-	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, ANY] a_promote: BOOLEAN) is
+	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, SERVICE_I] a_promote: BOOLEAN) is
 			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instaiates
 			-- an instance of service when requested.
 			-- If service is being promoted it will be registered with a parent service provider.
@@ -76,7 +76,7 @@ feature -- Query
 		deferred
 		end
 
-	service_conforms_to_type (a_type: TYPE [ANY]; a_service: ANY): BOOLEAN
+	service_conforms_to_type (a_type: TYPE [ANY]; a_service: SERVICE_I): BOOLEAN
 			-- Determines if service `a_services' conforms to type `a_type'
 			-- Note: This function is only to be used by preconditions and is not meant for client use.
 		require

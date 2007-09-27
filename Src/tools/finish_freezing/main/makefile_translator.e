@@ -165,6 +165,8 @@ feature -- Execution
 			subst_platform (command)
 			subst_compiler (command)
 			l_make_flags := options.get_string ("make_flags", "")
+			l_make_flags.left_adjust
+			l_make_flags.right_adjust
 
 				-- Launch building of `E1\estructure.h' in case it is not built and we are not
 				-- in .NET mode
@@ -189,8 +191,10 @@ feature -- Execution
 			l_flags.extend (env.current_working_directory)
 			l_flags.extend ("-make")
 			l_flags.extend (command)
-			l_flags.extend ("-make_flags")
-			l_flags.extend (l_make_flags)
+			if not l_make_flags.is_empty then
+				l_flags.extend ("-make_flags")
+				l_flags.extend (l_make_flags)
+			end
 
 			l_process := process_launcher (eiffel_layout.Emake_command_name, l_flags, Void)
 			l_process.launch

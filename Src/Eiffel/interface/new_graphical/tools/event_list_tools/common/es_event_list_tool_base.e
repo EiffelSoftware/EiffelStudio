@@ -663,11 +663,11 @@ feature {NONE} -- Query
 		do
 			inspect a_event_item.priority
 			when {PRIORITY_LEVELS}.low then
-				Result := stock_pixmaps.general_move_down_icon
+				Result := stock_pixmaps.priority_low_icon
 			when {PRIORITY_LEVELS}.normal then
 				--| Just return Void
 			when {PRIORITY_LEVELS}.high then
-				Result := stock_pixmaps.class_features_attribute_icon
+				Result := stock_pixmaps.priority_high_icon
 			end
 		end
 

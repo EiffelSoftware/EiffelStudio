@@ -2654,6 +2654,30 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (29, 9))
 		end
 
+	frozen priority_high_icon: EV_PIXMAP is
+			-- Access to 'high' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (30, 9))
+		end
+
+	frozen priority_high_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'high' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (30, 9))
+		end
+
+	frozen priority_low_icon: EV_PIXMAP is
+			-- Access to 'low' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (31, 9))
+		end
+
+	frozen priority_low_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'low' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (31, 9))
+		end
+
 	frozen view_previous_icon: EV_PIXMAP is
 			-- Access to 'previous' pixmap.
 		once

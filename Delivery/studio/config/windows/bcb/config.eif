@@ -72,6 +72,8 @@ rmdir: "rd"
 
 -- make program
 make: "%"$(ISE_EIFFEL)\BCC55\bin\make.exe%""
+make_utility: "$(ISE_EIFFEL)\BCC55\bin\make.exe"
+make_flags: ""
 command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=%"$(ISE_EIFFEL)%" -f %%i%""
 
 dpflags: ""

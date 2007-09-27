@@ -1084,7 +1084,8 @@ test	merging-feature-with-formal	exec275 tcf pass execution expanded generic mer
 test	entry-point-defined	exec276 tcf pass execution expanded generic merging
 test	derivation-reverse-attachment	exec277 tcf pass execution expanded generic attachment
 test	expanded-creation-correctness	exec278 tcf fail execution expanded
-test	special-base-address			exec279 tcf fail execution expanded
+test	special-base-address		exec279 tcf fail execution expanded
+test	default-create-not-called	exec280 tcf fail execution expanded
 
 
 -- Compiler termination (exception trace, panic, etc.)

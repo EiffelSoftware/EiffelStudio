@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end
 
+	PROCESS_FACTORY
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -148,36 +153,51 @@ feature -- Execution
 			-- run the make utility on the generated Makefile
 		local
 			command: STRING
+			l_make_flags: STRING
 			eiffel_make: STRING
+			l_process: PROCESS
+			l_success: BOOLEAN
+			l_flags: LIST [STRING]
 		do
 				-- the command to execute the make utility on this platform
-			command := options.get_string ("make", Void)
+			command := options.get_string ("make_utility", "")
 			subst_eiffel (command)
 			subst_platform (command)
 			subst_compiler (command)
+			l_make_flags := options.get_string ("make_flags", "")
 
 				-- Launch building of `E1\estructure.h' in case it is not built and we are not
 				-- in .NET mode
 			if not is_il_code then
-				env.system ("%"" + command + " E1" + directory_separator + "estructure.h%"")
+				l_flags := l_make_flags.split (' ')
+				l_flags.extend ("E1" + directory_separator + "estructure.h")
+				l_process := process_launcher (command, l_flags, Void)
+				l_process.launch
+				l_success := l_process.launched
+				if l_success then
+					l_process.wait_for_exit
+				end
 			end
 
-				-- Launch distributed make.
-			eiffel_make := "%"" + eiffel_layout.Emake_command_name + "%""
-
+				-- Launch emake.
+			create {ARRAYED_LIST [STRING]} l_flags.make (8)
 			if processor_count > 0 then
-				eiffel_make.append (" -cpu ")
-				eiffel_make.append_integer (processor_count)
+				l_flags.extend ("-cpu")
+				l_flags.extend (processor_count.out)
 			end
-			eiffel_make.append (" -target %"")
-			eiffel_make.append (env.current_working_directory)
-			eiffel_make.append ("%" -make %"")
-			eiffel_make.append (command)
-			eiffel_make.append ("%" ")
+			l_flags.extend ("-target")
+			l_flags.extend (env.current_working_directory)
+			l_flags.extend ("-make")
+			l_flags.extend (command)
+			l_flags.extend ("-make_flags")
+			l_flags.extend (l_make_flags)
 
-				-- On Windows, we need to surround the command with " since it is executed
-				-- by COMSPEC.
-			env.system ("%"" + eiffel_make + "%"")
+			l_process := process_launcher (eiffel_layout.Emake_command_name, l_flags, Void)
+			l_process.launch
+			l_success := l_process.launched
+			if l_success then
+				l_process.wait_for_exit
+			end
 		end
 
 feature {NONE} -- Translation

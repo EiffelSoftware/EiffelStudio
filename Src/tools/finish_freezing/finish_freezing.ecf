@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="finish_freezing" uuid="4054F4B6-BAD4-4CA2-8732-682E43F9FC39" library_target="c_config_library">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="finish_freezing" uuid="4054F4B6-BAD4-4CA2-8732-682E43F9FC39" library_target="c_config_library">
 	<target name="c_config_library" abstract="true">
 		<file_rule>
 			<exclude>\.svn$</exclude>
@@ -21,8 +22,9 @@
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
-		<setting name="multithreaded" value="False"/>
+		<setting name="multithreaded" value="true"/>
 		<library name="arg_parser" location="${EIFFEL_SRC}\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf"/>
 		<cluster name="finish_freezing" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>
 		<cluster name="spec" location="$EIFFEL_SRC\tools\finish_freezing\spec\windows\"/>

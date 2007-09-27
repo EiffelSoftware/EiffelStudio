@@ -38,6 +38,7 @@ feature -- Initialization
 				-- By default initialize number of CPU to 1.
 			create actions.make
 			create failed_actions.make
+			create {ARRAYED_LIST [STRING]} make_flags.make (0)
 
 			parse_arguments
 			if not has_error then
@@ -62,6 +63,9 @@ feature -- Status report
 	make_utility: STRING
 			-- Name/path of `make' utility.
 
+	make_flags: LIST [STRING]
+			-- Flags for `make_utility'.
+
 	actions, failed_actions: MT_ACTION_QUEUE
 			-- List of actions being executed.
 
@@ -70,10 +74,11 @@ feature {NONE} -- Implementation
 	parse_arguments is
 			-- Parse arguments and report errors, if any.
 		local
-			l_nb_cpu, l_make, l_target: STRING
+			l_nb_cpu, l_make, l_make_flags, l_target: STRING
 			l_has_error: BOOLEAN
 			l_dir: DIRECTORY
 			l_help: STRING
+			l_index: INTEGER
 		do
 			l_help := separate_word_option_value ("help")
 			if l_help /= Void and then l_help.is_empty then
@@ -115,15 +120,33 @@ feature {NONE} -- Implementation
 					end
 
 					if not l_has_error then
-						l_nb_cpu := separate_word_option_value ("cpu")
-						if l_nb_cpu /= Void then
-							if l_nb_cpu.is_empty or not l_nb_cpu.is_integer then
+						l_index := index_of_word_option ("make_flags")
+						if l_index > 0 and l_index < argument_count then
+								-- We take the argument following `make_flags' as flags for `make_utility'.
+							l_make_flags := argument (l_index + 1)
+						end
+						if l_index > 0 then
+							if l_make_flags = Void or else l_make_flags.is_empty then
 									-- Error, we expected a number of CPU
-								io.error.put_string ("Error: Missing number of CPU.%N")
+								io.error.put_string ("Error: Missing make flags.%N")
 								print_usage
 								l_has_error := True
 							else
-								number_of_cpu := l_nb_cpu.to_integer
+								make_flags := l_make_flags.split (' ')
+							end
+						end
+
+						if not l_has_error then
+							l_nb_cpu := separate_word_option_value ("cpu")
+							if l_nb_cpu /= Void then
+								if l_nb_cpu.is_empty or not l_nb_cpu.is_integer then
+										-- Error, we expected a number of CPU
+									io.error.put_string ("Error: Missing number of CPU.%N")
+									print_usage
+									l_has_error := True
+								else
+									number_of_cpu := l_nb_cpu.to_integer
+								end
 							end
 						end
 					end
@@ -136,7 +159,11 @@ feature {NONE} -- Implementation
 					end
 					if l_make = Void then
 						if (create {PLATFORM}).is_windows then
-							make_utility := "nmake.exe -s -nologo"
+							make_utility := "nmake.exe"
+							if l_make_flags = Void then
+								make_flags.extend ("-s")
+								make_flags.extend ("-nologo")
+							end
 						else
 							make_utility := "make"
 						end
@@ -151,9 +178,26 @@ feature {NONE} -- Implementation
 
 	print_usage is
 			-- Print usage.
+		local
+			i: INTEGER
 		do
-			io.error.put_string ("%NUsage: eiffel_make [-target DIR] [-make MAKE] [-cpu N]%N%N%
-				%Default option for make is  : `nmake -s -nologo'.%N%
+			debug
+					-- Print arguments as we get them.
+				from
+					i := 1
+				until
+					i > argument_count
+				loop
+					print (argument (i))
+					print ("%N")
+					i := i + 1
+				end
+			end
+			io.error.put_string ("Command line was: %N")
+			io.error.put_string (command_line)
+			io.error.put_string ("%N%NExpected: eiffel_make [-target DIR] [-make MAKE] [-make_flags FLAGS] [-cpu N]%N%N%
+				%Default option for make is  : `nmake'. %N%
+				%Default option for make_flags is: `-s -nologo'.%N%
 				%Default option for target is: `.'.%N%
 				%Default option for cpu is   : number of CPU on this machine,%N")
 		end
@@ -248,7 +292,8 @@ feature {NONE} -- Implementation
 					-- An error occurred, signal it.
 				die (1)
 			else
-				if not compile_directory (target) then
+					-- No need to twin here since we are single threaded again.
+				if not compile_directory (target, make_flags) then
 					die (1)
 				end
 			end
@@ -274,7 +319,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compile_directory (a_dir: DIRECTORY_NAME): BOOLEAN is
+	compile_directory (a_dir: DIRECTORY_NAME; l_flags: LIST [STRING]): BOOLEAN is
 			-- Compile in `a_dir'.
 		require
 			target_not_void: target /= Void
@@ -285,9 +330,8 @@ feature {NONE} -- Implementation
 			make_utility_not_empty: not make_utility.is_empty
 		local
 			l_process: PROCESS
-			l_util: STRING
 		do
-			l_process := process_launcher (make_utility, Void, a_dir)
+			l_process := process_launcher (make_utility, l_flags, a_dir)
 			l_process.launch
 			Result := l_process.launched
 			if Result then
@@ -325,7 +369,9 @@ feature {NONE} -- Implementation
 				if not l_file.exists then
 						-- Only process directories which do not have a `finished' file, which shows
 						-- that the directory needs to be processed.
-					actions.extend (agent compile_directory (l_name))
+						-- It is important to twin `make_flags' as otherwise multiple threads
+						-- could access it at the same time.
+					actions.extend (agent compile_directory (l_name, make_flags.twin))
 				end
 			end
 
@@ -355,6 +401,7 @@ feature {NONE} -- Constants
 invariant
 	actions_not_void: actions /= Void
 	failed_actions_not_void: failed_actions /= Void
+	make_flags_not_void: make_flags /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

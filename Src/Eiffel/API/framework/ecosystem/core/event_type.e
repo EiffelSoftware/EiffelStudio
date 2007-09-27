@@ -198,6 +198,23 @@ feature -- Status settings
 			suspension_count_incremented: suspension_count = old suspension_count - 1
 		end
 
+	perform_suspended_action (a_action: PROCEDURE [ANY, TUPLE])
+			-- Performs a action whilst suspending subscriptions from recieve a publication
+			--
+			-- `a_action': Action to call while the event is suspended.
+		require
+			not_is_zombie: not is_zombie
+		do
+			suspend_subscription
+			a_action.call ([])
+			restore_subscription
+		ensure
+			suspension_count_unchanged: suspension_count = old suspension_count
+		rescue
+				-- In case call raises and exception, restore the subscription
+			restore_subscription
+		end
+
 feature {NONE} -- Factory
 
 	create_subscribers: like subscribers

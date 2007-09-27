@@ -665,9 +665,9 @@ feature {NONE} -- Query
 			when {PRIORITY_LEVELS}.low then
 				Result := stock_pixmaps.general_move_down_icon
 			when {PRIORITY_LEVELS}.normal then
-				Result := stock_pixmaps.general_blank_icon
+				--| Just return Void
 			when {PRIORITY_LEVELS}.high then
-				Result := stock_pixmaps.general_move_up_icon
+				Result := stock_pixmaps.class_features_attribute_icon
 			end
 		end
 

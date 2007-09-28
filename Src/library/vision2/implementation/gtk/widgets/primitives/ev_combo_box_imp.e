@@ -133,6 +133,8 @@ feature {NONE} -- Initialization
 				end
 			end
 			previous_selected_item_imp := a_selected_item_imp
+				-- Fire any pending text change actions.
+			on_change_actions
 		end
 
 	previous_selected_item_imp: EV_LIST_ITEM_IMP

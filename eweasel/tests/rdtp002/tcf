@@ -12,9 +12,7 @@ compile_result ok
 c_compile_final
 c_compile_result ok
 
-if UNIX execute_final 	NONE exec_output1
-if not UNIX execute_final 	NONE exec_output1
-
+execute_final 	NONE exec_output1
 execute_result ok
 compare	exec_output1 output
 

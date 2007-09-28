@@ -43,12 +43,33 @@ feature -- C code generation
 
 	enlarged: CREATION_EXPR_B is
 			-- Enlarge current_node
+		local
+			l_type: CL_TYPE_I
 		do
 			create Result
 			Result.set_info (info)
 			Result.set_type (type)
 			if call /= Void then
-				Result.set_call (call.enlarged_on (type))
+				if context.final_mode and then info.is_explicit then
+						-- Special handling of creation when type is monomorphic:
+						-- 1 - if body of `call' is empty then we do not generate the call at all
+						-- 2 - if not empty, we do as if it was a call to precursor.
+						-- 3 - if we cannot get the type of the creation, we do it the normal way.
+						-- 4 - if empty and it is {SPECIAL}.make we do the normal way.
+					l_type := info.type_to_create
+					if l_type = Void then
+						Result.set_call (call.enlarged_on (type))
+					elseif not l_type.base_class.feature_of_rout_id (call.routine_id).is_empty then
+						Result.set_call (call.enlarged_on (type))
+						Result.call.set_precursor_type (l_type)
+					elseif call.routine_id = system.special_make_id then
+							-- We cannot optimized the empty routine `{SPECIAL}.make' as otherwise
+							-- it will simply generate a normal creation in `generate' below.
+						Result.set_call (call.enlarged_on (type))
+					end
+				else
+					Result.set_call (call.enlarged_on (type))
+				end
 			end
 			Result.set_creation_instruction (is_creation_instruction)
 		end

@@ -12,6 +12,7 @@ feature
 	default_create is
 		do
 			print ("TEST3.default_create%N")
+			create string.make_empty
 		end
 
 end

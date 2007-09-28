@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			-- Parse the special part clause.
 		local
 			word, lower_word, special: STRING
-			parse_class_name, is_static: BOOLEAN
+			parse_class_name, is_static, l_has_error: BOOLEAN
 			end_keyword: INTEGER
 			class_header_file: STRING
 		do
@@ -253,88 +253,103 @@ end
 
 			end_keyword := next_white_space (special, 1)
 			if end_keyword = 0 then
-				raise_error ("Only one word in C++ specific part")
-			end
-
-			word := special.substring (1, end_keyword - 1)
-			lower_word := word.as_lower
-
-			special := special.substring (end_keyword, special.count)
-			special.left_adjust
-
-			if lower_word.is_equal (static_keyword) then
-				is_static := True
-				end_keyword := next_white_space (special, 1)
-				if end_keyword = 0 then
-					raise_error ("Header file is missing in C++ specific part")
-				end
+				insert_error ("Only one word in C++ specific part")
+			else
 				word := special.substring (1, end_keyword - 1)
 				lower_word := word.as_lower
 
 				special := special.substring (end_keyword, special.count)
 				special.left_adjust
-			end
 
-			parse_class_name := True
-			if lower_word.is_equal (new_keyword) then
-				type := new
-				if is_static then
-					 raise_error ("`static' cannot be used with `new'")
-				end
-			elseif lower_word.is_equal (delete_keyword) then
-				type := delete
-				if is_static then
-					raise_error ("`static' cannot be used with `delete'")
-				end
-			elseif lower_word.is_equal (static_keyword) then
-				raise_error ("`static' cannot appear twice in C++ specific part")
-			elseif lower_word.is_equal (data_member_keyword) then
-				if is_static then
-					type := static_data_member
-				else
-					type := data_member
-				end
-			else
-				parse_class_name := False
-				if is_static then
-					type := static
-				else
-					type := standard
-				end
-			end
+				if lower_word.is_equal (static_keyword) then
+					is_static := True
+					end_keyword := next_white_space (special, 1)
+					if end_keyword = 0 then
+						l_has_error := True
+						insert_error ("Header file is missing in C++ specific part")
+					else
+						word := special.substring (1, end_keyword - 1)
+						lower_word := word.as_lower
 
-			if parse_class_name then
-				end_keyword := next_white_space (special, 1)
-				if end_keyword = 0 then
-					raise_error ("Header file is missing in C++ specific part")
+						special := special.substring (end_keyword, special.count)
+						special.left_adjust
+					end
 				end
-				word := special.substring (1, end_keyword - 1)
-				special := special.substring (end_keyword, special.count)
-				special.left_adjust
-			end
 
-			class_name := word
+				if not l_has_error then
+					parse_class_name := True
+					if lower_word.is_equal (new_keyword) then
+						type := new
+						if is_static then
+							l_has_error := True
+							insert_error ("`static' cannot be used with `new'")
+						end
+					elseif lower_word.is_equal (delete_keyword) then
+						type := delete
+						if is_static then
+							l_has_error := True
+							insert_error ("`static' cannot be used with `delete'")
+						end
+					elseif lower_word.is_equal (static_keyword) then
+						l_has_error := True
+						insert_error ("`static' cannot appear twice in C++ specific part")
+					elseif lower_word.is_equal (data_member_keyword) then
+						if is_static then
+							type := static_data_member
+						else
+							type := data_member
+						end
+					else
+						parse_class_name := False
+						if is_static then
+							type := static
+						else
+							type := standard
+						end
+					end
 
-			end_keyword := parse_file_name (special, 1)
-			if end_keyword = 0 then
-				raise_error ("Invalid include file")
-			end
-			class_header_file := special.substring (1, end_keyword)
-			special.remove_head (end_keyword)
-			special.left_adjust
-			if not special.is_empty then
-				 raise_error ("Invalid character after include file")
-			end
+					if not l_has_error then
+						if parse_class_name then
+							end_keyword := next_white_space (special, 1)
+							if end_keyword = 0 then
+								l_has_error := True
+								insert_error ("Header file is missing in C++ specific part")
+							else
+								word := special.substring (1, end_keyword - 1)
+								special := special.substring (end_keyword, special.count)
+								special.left_adjust
+							end
+						end
 
-				-- Add special file name to the list of header files at the
-			-- first position.
-			if header_files = Void then
-				create header_files.make (1,1)
-			else
-				header_files.force (header_files.item (header_files.lower), header_files.upper + 1)
+						if not l_has_error then
+							class_name := word
+
+							end_keyword := parse_file_name (special, 1)
+							if end_keyword = 0 then
+								insert_error ("Invalid include file")
+							else
+								class_header_file := special.substring (1, end_keyword)
+								special.remove_head (end_keyword)
+								special.left_adjust
+								if not special.is_empty then
+									insert_error ("Invalid character after include file")
+								else
+										-- Add special file name to the list of header files at the
+										-- first position.
+									if header_files = Void then
+										create header_files.make (1,1)
+									else
+										header_files.force (header_files.item (header_files.lower),
+											header_files.upper + 1)
+									end
+									Names_heap.put (class_header_file)
+									header_files.put (Names_heap.found_item, header_files.lower)
+								end
+							end
+						end
+					end
+				end
 			end
-			Names_heap.put (class_header_file)
-			header_files.put (Names_heap.found_item, header_files.lower)
 		end
 
 	next_white_space (s: STRING; start: INTEGER): INTEGER is

@@ -310,25 +310,25 @@ Class_declaration:
 				end
 				
 				if $5 /= Void and then $5.count > 65536 then
-					error_handler.insert_error (create {SYNTAX_ERROR}.make (line, column, filename, "Number of formal generic parameters exceeds 65536", False))
-					error_handler.raise_error
-				end
-				root_node := new_class_description ($4, temp_string_as1,
-					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
-					$1, $15, $5, $8, $10, $11, $12, $14, suppliers, temp_string_as2, $16)
-				if root_node /= Void then
-					root_node.set_text_positions (
-						formal_generics_end_position,
-						inheritance_end_position,
-						features_end_position)
-						if $6 /= Void then
-							root_node.set_alias_keyword ($6.first)
-						end
-						if $7 /= Void then
-							root_node.set_obsolete_keyword ($7.first)
-						end
-						root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, separate_keyword, external_keyword)
-						root_node.set_class_keyword ($3)
+					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Number of formal generic parameters exceeds 65536", False))
+				else
+					root_node := new_class_description ($4, temp_string_as1,
+						is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
+						$1, $15, $5, $8, $10, $11, $12, $14, suppliers, temp_string_as2, $16)
+					if root_node /= Void then
+						root_node.set_text_positions (
+							formal_generics_end_position,
+							inheritance_end_position,
+							features_end_position)
+							if $6 /= Void then
+								root_node.set_alias_keyword ($6.first)
+							end
+							if $7 /= Void then
+								root_node.set_obsolete_keyword ($7.first)
+							end
+							root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, separate_keyword, external_keyword)
+							root_node.set_class_keyword ($3)
+					end
 				end
 			}
 	;
@@ -973,9 +973,8 @@ Rename: TE_RENAME
 			{
 				$$ := ast_factory.new_rename_clause_as (Void, $1)
 				if is_constraint_renaming then
-					error_handler.insert_error (
+					report_one_error (
 						create {SYNTAX_ERROR}.make ($1.line, $1.column, filename, "Empty rename clause.", False))
-					error_handler.raise_error
 				else
 					error_handler.insert_warning (
 							create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
@@ -1345,8 +1344,7 @@ Instruction_impl: Creation
 					-- Call production should be used instead,
 					-- but this complicates the grammar.
 				if has_type then
-					error_handler.insert_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
-					error_handler.raise_error
+					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
 				else
 					$$ := new_call_instruction_from_expression ($1)
 				end
@@ -1656,8 +1654,8 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					$1.to_lower		
 					last_identifier_list.reverse_extend ($1.name_id)
 					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
+					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				end
-				$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				last_identifier_list := Void     
 				last_rsqure.force ($4)
 			}
@@ -1665,7 +1663,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 
 			{
 				$$ := $4
-				if $$ /= Void then
+				if $$ /= Void and then not $$.is_empty then
 					last_identifier_list := $$.reversed_first.id_list
 					if last_identifier_list /= Void then
 						$1.to_lower		
@@ -1686,7 +1684,6 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					$1.to_lower		
 					last_identifier_list.reverse_extend ($1.name_id)
 					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
-					
 					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				end
 				last_identifier_list := Void
@@ -1704,7 +1701,6 @@ Formal_generics:
 	|	TE_LSQURE TE_RSQURE
 			{
 				formal_generics_end_position := position
-				--- $$ := Void
 				$$ := ast_factory.new_eiffel_list_formal_dec_as (0)
 				if $$ /= Void then
 					$$.set_squre_symbols ($1, $2)
@@ -1714,8 +1710,8 @@ Formal_generics:
 			{
 				formal_generics_end_position := position
 				$$ := $4
-				$$.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
 				if $$ /= Void then
+					$$.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
 					$$.set_squre_symbols ($1, $7)
 				end
 			}
@@ -1810,9 +1806,12 @@ Constraint: -- Empty
 			-- { $$ := Void }
 	|	TE_CONSTRAIN Single_constraint Creation_constraint
 			{
-				constraining_type_list := ast_factory.new_eiffel_list_constraining_type_as (1)
-				if $1 /= Void then
+					-- We do not want Void items in this list.
+				if $2 /= Void then
+					constraining_type_list := ast_factory.new_eiffel_list_constraining_type_as (1)
 					constraining_type_list.reverse_extend ($2)
+				else
+					constraining_type_list := Void
 				end
 
 				$$ := ast_factory.new_constraint_triple ($1, constraining_type_list, $3)
@@ -1840,24 +1839,35 @@ Constraint_type:
 			{ $$ := $1 }
 	|	TE_LIKE Identifier_as_lower
 			{
-				error_handler.insert_error (ast_factory.new_vtgc1_error (line, column, filename, $2, Void))
-				error_handler.raise_error
+				report_one_error (ast_factory.new_vtgc1_error (line, column, filename, $2, Void))
 			}
 	|	TE_LIKE TE_CURRENT
 			{
-				error_handler.insert_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
-				error_handler.raise_error
+				report_one_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
 			}
 	;
 
 Multiple_constraint_list:	Single_constraint
 			{
-				$$ := ast_factory.new_eiffel_list_constraining_type_as (counter_value + 1)
-				if $$ /= Void and $1 /= Void then
-					$$.reverse_extend ($1)
+					-- Special list treatment here as we do not want Void
+					-- element in `Assertion_list'.
+				if $1 /= Void then
+					$$ := ast_factory.new_eiffel_list_constraining_type_as (counter_value + 1)
+					if $$ /= Void then
+						$$.reverse_extend ($1)
+					end
+				else
+					$$ := ast_factory.new_eiffel_list_constraining_type_as (counter_value)
 				end
 			}
-	|	Single_constraint TE_COMMA Increment_counter Multiple_constraint_list
+	|	Single_constraint TE_COMMA
+			{
+					-- Only increment counter when clause is not Void.
+				if $1 /= Void then
+					increment_counter
+				end
+			}
+		Multiple_constraint_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
@@ -1865,8 +1875,7 @@ Multiple_constraint_list:	Single_constraint
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
 
-			--	error_handler.insert_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
-			--	error_handler.raise_error
+			--	report_one_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
 
 			}
 	;

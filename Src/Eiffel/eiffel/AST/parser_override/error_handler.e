@@ -38,7 +38,7 @@ feature -- Properties
 	warning_list: LINKED_LIST [ERROR]
 			-- Warning list
 
-	new_error: BOOLEAN
+	has_new_error: BOOLEAN
 			-- Boolean for testing if new error since last `mark'
 
 feature -- Status
@@ -110,7 +110,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 		require
 			good_argument: e /= Void
 		do
-			new_error := True
+			has_new_error := True
 			fixme ("[
 				Callers should set the error position. We have checked this for most errors
 				but some may not be correct, this is why there is still a fixme.
@@ -131,7 +131,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 	mark is
 			-- Mark for testing `new_error'.
 		do
-			new_error := False
+			has_new_error := False
 		end
 
 	nb_errors: INTEGER is

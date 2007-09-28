@@ -68,8 +68,6 @@ feature -- Access
 					l_vtbt.set_value (v.integer_32_value)
 					l_vtbt.set_location (v.start_location)
 					Error_handler.insert_error (l_vtbt)
-						-- Cannot go on here
-					Error_handler.raise_error
 				end
 			end
 		end
@@ -96,7 +94,6 @@ feature -- Access
 					-- Check for Concurrent Eiffel which is not yet supported
 				if Result.is_separate then
 					error_handler.insert_error (create {SEPARATE_SYNTAX_ERROR}.init)
-					error_handler.raise_error
 				end
 			end
 		end
@@ -146,7 +143,6 @@ feature -- Access
 		do
 			if not system.address_expression_allowed then
 				error_handler.insert_error (create {SYNTAX_ERROR}.init)
-				error_handler.raise_error
 			elseif e /= Void then
 				create Result.initialize (e, a_as, l_as, r_as)
 			end
@@ -317,16 +313,19 @@ feature {NONE} -- Validation
 		local
 			l_type: TYPE_A
 		do
+			is_valid_integer_real := True
 			if for_integer then
 				if a_type /= Void then
 					l_type := type_a_generator.evaluate_type_if_possible (a_type, System.current_class)
 				end
 				if l_type /= Void then
 					if not l_type.is_valid or (not l_type.is_integer and not l_type.is_natural) then
+						is_valid_integer_real := False
 						a_psr.report_invalid_type_for_integer_error (a_type, buffer)
 					end
 				elseif a_type /= Void then
 						-- A type was specified but did not result in a valid type
+					is_valid_integer_real := False
 					a_psr.report_invalid_type_for_integer_error (a_type, buffer)
 				end
 			else
@@ -335,10 +334,12 @@ feature {NONE} -- Validation
 				end
 				if l_type /= Void then
 					if not l_type.is_valid or (not l_type.is_real_32 and not l_type.is_real_64) then
+						is_valid_integer_real := False
 						a_psr.report_invalid_type_for_real_error (a_type, buffer)
 					end
 				elseif a_type /= Void then
 						-- A type was specified but did not result in a valid type
+					is_valid_integer_real := False
 					a_psr.report_invalid_type_for_real_error (a_type, buffer)
 				end
 			end

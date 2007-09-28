@@ -68,7 +68,7 @@ feature -- Status report
 			Result := last_type
 			last_type := Void
 			associated_type_ast := Void
-			if error_handler.new_error then
+			if error_handler.has_new_error then
 				error_handler.checksum
 			end
 		end

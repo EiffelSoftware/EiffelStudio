@@ -162,14 +162,14 @@ feature {NONE} -- Implementation
 					debug
 						io.error.put_string ("Void%N")
 					end
-					raise_external_error ("Unrecognized external language", 1)
+					insert_external_error ("Unrecognized external language", 1)
 				else
 					debug
 						io.error.put_string (ext_language_name)
 						io.error.put_new_line
 					end
 					pos := source.substring_index (ext_language_name,1)
-					raise_external_error ("Unrecognized external language", pos)
+					insert_external_error ("Unrecognized external language", pos)
 				end
 			else
 					-- cleaning string for next operation
@@ -181,9 +181,9 @@ feature {NONE} -- Implementation
 					start_special_part := source.index_of ('[', 1)
 					end_special_part := source.index_of (']', 1)
 					if end_special_part = 0 then
-						raise_external_error ("Missing closing bracket ']'", start_special_part)
+						insert_external_error ("Missing closing bracket ']'", start_special_part)
 					elseif end_special_part = start_special_part + 1 then
-						raise_external_error ("Empty brackets" , start_special_part)
+						insert_external_error ("Empty brackets" , start_special_part)
 					else
 						special_part := source.substring (start_special_part + 1, end_special_part - 1)
 						special_part.right_adjust
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 						end
 						if pos = 0 then
 								-- Only one word in brackets
-							raise_external_error ("Only one word between brackets",
+							insert_external_error ("Only one word between brackets",
 								source.index_of ('[', 1) + 1)
 						else
 								-- Is it a C++ external?
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 				if image.count /= 0 and then image.item (1) = '(' then
 					pos := image.index_of (')',2)
 					if pos = 0 then
-						raise_external_error ("Missing closing parenthesis ) in signature clause",
+						insert_external_error ("Missing closing parenthesis ) in signature clause",
 							source.index_of ('(', 1))
 					else
 						signature_part := image.substring (1, pos)
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 				if signature_part /= Void or else image.count /= 0 then
 					if extension = Void then
 						if ext_language_name.is_equal ("C++") then
-							raise_external_error ("Missing special part", 1)
+							insert_external_error ("Missing special part", 1)
 						else
 							create {C_EXTENSION_AS} extension
 						end
@@ -337,13 +337,13 @@ feature {NONE} -- Implementation
 						debug
 							io.error.put_string (image)
 						end
-						raise_external_error ("Extra text at end of external language specification",
+						insert_external_error ("Extra text at end of external language specification",
 							source.substring_index (image,1))
 					end
 				end
 
 				if extension = Void and ext_language_name.is_equal ("C++") then
-					raise_external_error ("Missing special part", 1)
+					insert_external_error ("Missing special part", 1)
 				end
 
 				if extension /= Void then
@@ -351,11 +351,11 @@ feature {NONE} -- Implementation
 				end
 
 					-- For old external we generate a syntax warning if option is turned on.
-				raise_external_warning
+				insert_external_warning
 			end
 		end
 
-	raise_external_warning is
+	insert_external_warning is
 			-- Raises warning when parsing an old external syntax.
 		local
 			l_warning: SYNTAX_WARNING
@@ -364,7 +364,8 @@ feature {NONE} -- Implementation
 				-- as new external syntax is not clearly specified.
 			if
 				False and
-				(system.current_class /= Void and then system.current_class.lace_class.options.is_warning_enabled (w_syntax))
+				(system.current_class /= Void and then
+				system.current_class.lace_class.options.is_warning_enabled (w_syntax))
 			then
 				create l_warning.make (
 					eiffel_parser.line,
@@ -374,7 +375,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	raise_external_error (msg: STRING; start_p: INTEGER) is
+	insert_external_error (msg: STRING; start_p: INTEGER) is
 			-- Raises error occurred while parsing
 		local
 			ext_error: EXTERNAL_SYNTAX_ERROR
@@ -383,7 +384,6 @@ feature {NONE} -- Implementation
 			ext_error.set_column (start_p)
 			ext_error.set_external_error_message (msg)
 			Error_handler.insert_error (ext_error)
-			Error_handler.raise_error
 		end
 
 invariant

@@ -118,7 +118,7 @@ end
 
 			if end_file = 0 then
 					-- Invalid file
-				raise_error ("Invalid file name")
+				insert_error ("Invalid file name")
 			else
 				name := special_part.substring (1, end_file)
 				count := special_part.count
@@ -126,7 +126,7 @@ end
 					remaining := special_part.substring (end_file + 1, count)
 					remaining.left_adjust
 					if remaining.count > 0 then
-						raise_error ("Extra characters after file name")
+						insert_error ("Extra characters after file name")
 					end
 				end
 			end

@@ -261,14 +261,6 @@ feature -- Action
 				vd21.set_cluster (cluster)
 				vd21.set_file_name (file_name)
 				Error_handler.insert_error (vd21)
-					-- Cannot go on here
-				Error_handler.raise_error
-					--
-					-- NOT REACHED
-					--
-				check
-					False
-				end
 			else
 				has_unique := False
 
@@ -326,17 +318,11 @@ feature -- Action
 						-- copy class
 					copy_class (lace_class, l_dir_name)
 				end
-
-				Error_handler.checksum
 			end
-		ensure
-			build_ast_not_void: Result /= Void
 		rescue
-			if Rescue_status.is_error_exception then
-					-- Error happened
-				if file /= Void and then not file.is_closed then
-					file.close
-				end
+				-- Error happened
+			if file /= Void and then not file.is_closed then
+				file.close
 			end
 		end
 
@@ -381,12 +367,6 @@ feature -- Action
 				-- Initialization of the current class
 			init (ast_b, old_syntactical_suppliers)
 
-				-- Check sum error
-			Error_handler.checksum
-			check
-				No_error: not Error_handler.has_error
-			end
-
 				-- The class has not been removed (modification of the
 				-- number of generics)
 			if System.class_of_id (class_id) /= Void then
@@ -412,8 +392,6 @@ feature -- Action
 					-- Clean the filters, i.e. remove all the obsolete types
 				filters.clean
 			end
-		ensure
-			No_error: not Error_handler.has_error
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened
@@ -434,44 +412,37 @@ feature -- Element change
 			not_precompiled: not is_precompiled
 			file_is_readable: file_is_readable
 		local
-			error: BOOLEAN
 			prev_class: CLASS_C
 			l_date: INTEGER
 		do
-			if not error then
-				prev_class := System.current_class
-				System.set_current_class (Current)
-					-- If we are saving, there will be a parse anyway because
-					-- the date on file will have changed. We are saving us a
-					-- few costly instructions in case the AST is not in memory.
-				if not after_save then
-					Result := ast
-					l_date := lace_class.file_date
-				end
-				if Result = Void or else Result.date /= l_date then
-						-- If there is no stored AST, or if the date stored in the AST
-						-- is different from the one on disk, we rebuild the AST.
-					Result := build_ast (False, False)
+			check no_error: not error_handler.has_error end
+			prev_class := System.current_class
+			System.set_current_class (Current)
+				-- If we are saving, there will be a parse anyway because
+				-- the date on file will have changed. We are saving us a
+				-- few costly instructions in case the AST is not in memory.
+			if not after_save then
+				Result := ast
+				l_date := lace_class.file_date
+			end
+			if Result = Void or else Result.date /= l_date then
+					-- If there is no stored AST, or if the date stored in the AST
+					-- is different from the one on disk, we rebuild the AST.
+				Result := build_ast (False, False)
+				if Result /= Void and then not error_handler.has_error then
 					Result.set_class_id (class_id)
 						-- Although it is not very nice to store in the server, it will save
 						-- a lot of parsing when switching back and forth between classes.
 					tmp_ast_server.put (Result)
+				else
+					error_handler.wipe_out
+					Result := Void
 				end
-			else
-					-- Wipe out any errors thrown during parser.
-				Error_handler.wipe_out
-				Result := Void
 			end
 			System.set_current_class (prev_class)
 		rescue
-			if Rescue_status.is_error_exception then
-				Rescue_status.set_is_error_exception (False)
-				error := True
-				retry
-			else
-					-- Restore context.
-				System.set_current_class (prev_class)
-			end
+				-- Restore context.
+			System.set_current_class (prev_class)
 		end
 
 feature -- Third pass: byte code production and type check
@@ -620,7 +591,7 @@ feature -- Third pass: byte code production and type check
 
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
-							type_check_error := Error_handler.new_error
+							type_check_error := Error_handler.has_new_error
 
 							if not type_check_error then
 								if f_suppliers /= Void then
@@ -728,7 +699,7 @@ feature -- Third pass: byte code production and type check
 							remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
-							type_check_error := error_handler.new_error
+							type_check_error := error_handler.has_new_error
 							if
 								not type_check_error and then
 								(feature_checker.byte_code.property_name /= Void or else
@@ -822,7 +793,7 @@ feature -- Third pass: byte code production and type check
 					remove_inline_agents_of_feature (invariant_feature.body_index, ast_context.old_inline_agents)
 					feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
-					if not Error_handler.new_error then
+					if not Error_handler.has_new_error then
 						if f_suppliers /= Void then
 							if new_suppliers = Void then
 								new_suppliers := suppliers.same_suppliers

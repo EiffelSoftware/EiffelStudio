@@ -322,35 +322,37 @@ feature -- Value AST creation
 			token_value: STRING
 		do
 			validate_integer_real_type (a_psr, a_type, buffer, True)
-				-- Remember original token
-			token_value := buffer.twin
-				-- Remove underscores (if any) without breaking
-				-- original token
-			if token_value.has ('_') then
-				token_value := token_value.twin
-				token_value.prune_all ('_')
-			end
-			if token_value.is_number_sequence then
-				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
-			elseif token_value.count >= 3 and then token_value.item (1) = '0' then
-				if token_value.item (2).lower = 'x' then
-					Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
-				elseif token_value.item (2).lower = 'c' then
-					Result := new_integer_octal_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
-				elseif token_value.item (2).lower = 'b' then
-					Result := new_integer_binary_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+			if is_valid_integer_real then
+					-- Remember original token
+				token_value := buffer.twin
+					-- Remove underscores (if any) without breaking
+					-- original token
+				if token_value.has ('_') then
+					token_value := token_value.twin
+					token_value.prune_all ('_')
 				end
-			end
-			if Result = Void or else not Result.is_initialized then
-				if sign_symbol = '-' then
-						-- Add `-' for a better reporting.
-					buffer.precede ('-')
-					a_psr.report_integer_too_small_error (a_type, buffer)
-				else
-					a_psr.report_integer_too_large_error (a_type, buffer)
+				if token_value.is_number_sequence then
+					Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				elseif token_value.count >= 3 and then token_value.item (1) = '0' then
+					if token_value.item (2).lower = 'x' then
+						Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+					elseif token_value.item (2).lower = 'c' then
+						Result := new_integer_octal_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+					elseif token_value.item (2).lower = 'b' then
+						Result := new_integer_binary_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+					end
 				end
-					-- Dummy code (for error recovery) follows:
-				Result := new_integer_as (a_type, False, "0", Void, s_as, 0, 0, 0, 0)
+				if Result = Void or else not Result.is_initialized then
+					if sign_symbol = '-' then
+							-- Add `-' for a better reporting.
+						buffer.precede ('-')
+						a_psr.report_integer_too_small_error (a_type, buffer)
+					else
+						a_psr.report_integer_too_large_error (a_type, buffer)
+					end
+						-- Dummy code (for error recovery) follows:
+					Result := new_integer_as (a_type, False, "0", Void, s_as, 0, 0, 0, 0)
+				end
 			end
 		end
 
@@ -363,13 +365,15 @@ feature -- Value AST creation
 			l_buffer: STRING
 		do
 			validate_integer_real_type (a_psr, a_type, buffer, False)
-			if is_signed and sign_symbol = '-' then
-				l_buffer := buffer.twin
-				buffer.precede ('-')
-			else
-				l_buffer := buffer
+			if is_valid_integer_real then
+				if is_signed and sign_symbol = '-' then
+					l_buffer := buffer.twin
+					buffer.precede ('-')
+				else
+					l_buffer := buffer
+				end
+				Result := new_real_as (a_type, buffer, l_buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 			end
-			Result := new_real_as (a_type, buffer, l_buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 		end
 
 feature {NONE} -- Validation
@@ -384,7 +388,11 @@ feature {NONE} -- Validation
 			if for_integer then
 			else
 			end
+			is_valid_integer_real := True
 		end
+
+	is_valid_integer_real: BOOLEAN
+			-- Was last call to `validate_integer_real_type' successful?
 
 feature -- Roundtrip: leaf_as
 
@@ -1462,7 +1470,9 @@ feature -- Access
 	new_like_current_as (other: CURRENT_AS; l_as: KEYWORD_AS; attachment_mark: SYMBOL_AS): LIKE_CUR_AS is
 			-- New LIKE_CURRENT AST node
 		do
-			create Result.make (other, l_as, attachment_mark)
+			if other /= Void then
+				create Result.make (other, l_as, attachment_mark)
+			end
 		end
 
 	new_location_as (l, c, p, s: INTEGER): LOCATION_AS is
@@ -1648,7 +1658,9 @@ feature -- Access
 	new_static_access_as (c: TYPE_AS; f: ID_AS; p: PARAMETER_LIST_AS; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS is
 			-- New STATIC_ACCESS AST node
 		do
-			create Result.initialize (c, f, p, f_as, d_as)
+			if c /= Void and f /= Void then
+				create Result.initialize (c, f, p, f_as, d_as)
+			end
 		end
 
 	new_string_as (s: STRING; l, c, p, n: INTEGER; buf: STRING): STRING_AS is
@@ -1821,31 +1833,41 @@ feature -- Access
 	new_rename_clause_as (l: EIFFEL_LIST [RENAME_AS]; k_as: KEYWORD_AS): RENAME_CLAUSE_AS is
 			-- New RENAME_CLAUSE AST node
 		do
-			create Result.make (l, k_as)
+			if l = Void or else not l.is_empty then
+				create Result.make (l, k_as)
+			end
 		end
 
 	new_export_clause_as (l: EIFFEL_LIST [EXPORT_ITEM_AS]; k_as: KEYWORD_AS): EXPORT_CLAUSE_AS is
 			-- New EXPORT_CLAUSE AST node
 		do
-			create Result.make (l, k_as)
+			if l = Void or else not l.is_empty then
+				create Result.make (l, k_as)
+			end
 		end
 
 	new_undefine_clause_as (l: EIFFEL_LIST [FEATURE_NAME]; k_as: KEYWORD_AS): UNDEFINE_CLAUSE_AS is
 			-- New UNDEFINE_CLAUSE AST node
 		do
-			create Result.make (l, k_as)
+			if l = Void or else not l.is_empty then
+				create Result.make (l, k_as)
+			end
 		end
 
 	new_redefine_clause_as (l: EIFFEL_LIST [FEATURE_NAME]; k_as: KEYWORD_AS): REDEFINE_CLAUSE_AS is
 			-- New REDEFINE_CLAUSE AST node
 		do
-			create Result.make (l, k_as)
+			if l = Void or else not l.is_empty then
+				create Result.make (l, k_as)
+			end
 		end
 
 	new_select_clause_as (l: EIFFEL_LIST [FEATURE_NAME]; k_as: KEYWORD_AS): SELECT_CLAUSE_AS is
 			-- New SELECT_CLAUSE AST node
 		do
-			create Result.make (l, k_as)
+			if l = Void or else not l.is_empty then
+				create Result.make (l, k_as)
+			end
 		end
 
 	new_creation_constrain_triple (fl: EIFFEL_LIST [FEATURE_NAME]; c_as, e_as: KEYWORD_AS): CREATION_CONSTRAIN_TRIPLE is

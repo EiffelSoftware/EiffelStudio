@@ -13,7 +13,26 @@ inherit
 create
 	make
 
-feature
+feature {NONE} -- Initialization
+
+	make is
+		do
+			test_roundtrip := False
+			create {AST_NULL_FACTORY} factory
+			execute
+
+			create {AST_ROUNDTRIP_LIGHT_FACTORY} factory
+			execute
+
+			create {AST_ROUNDTRIP_SCANNER_FACTORY} factory
+			execute
+
+			test_roundtrip := True
+			create {AST_ROUNDTRIP_FACTORY} factory
+			execute
+		end
+
+feature {NONE} -- Implementation
 
    	generated_text (a_class: CLASS_AS; a_match_list: LEAF_AS_LIST): STRING is
            -- Is roundtrip generated code from `a_ast' in `a_class' and `a_match_list' the same as it is in `a_source'?
@@ -41,7 +60,7 @@ feature
 			fn: STRING
 		do
 			if equal (file_name.substring (file_name.count - 1, file_name.count), ".e") then
-				create parser.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
+				create parser.make_with_factory (factory)
 				create file.make (file_name)
 				count := file.count
 				file.open_read
@@ -53,7 +72,7 @@ feature
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
 						parser.error_handler.wipe_out
-					else
+					elseif test_roundtrip then
 						output := generated_text (parser.root_node, parser.match_list)
 						res := file.last_string.is_equal (output)
 						if not res then
@@ -109,7 +128,7 @@ feature
 
 		end
 
-	make is
+	execute is
 		require
 			argument_count > 0
 		local
@@ -137,6 +156,13 @@ feature
 		end
 
 feature {NONE}
+
 	error_count: INTEGER
+
+	test_roundtrip: BOOLEAN
+			-- Are we testing the roundtrip?
+
+	factory: AST_FACTORY
+			-- Factory being used for parsing.
 
 end -- class PARSER_TEST

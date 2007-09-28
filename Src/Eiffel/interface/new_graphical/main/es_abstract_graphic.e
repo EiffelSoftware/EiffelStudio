@@ -198,7 +198,7 @@ feature {NONE} -- Services
 
 feature {NONE} -- Service factories
 
-	create_event_list_service: EVENT_LIST_SERVICE_I
+	create_event_list_service: EVENT_LIST_SERVICE_S
 			-- Creates the event list service
 		do
 			create {EVENT_LIST_SERVICE}Result.make

@@ -4794,12 +4794,9 @@ feature -- Implementation
 					-- For better error reporting as we insert a dummy call for type checking.
 				l_call.feature_name.set_position (a_location.line, a_location.column,
 					a_location.position, a_location.location_count)
-				if l_is_formal_creation or else not l_feature.is_empty then
-						-- We want to generate a call only when needed:
-						-- 1 - In a formal generic creation call
-						-- 2 - When body of `default_create' is not empty
-					l_orig_call := l_call
-				end
+					-- The line below is to ensure that a call to `default_create' will be
+					-- generated (see eweasel test#exec280).
+				l_orig_call := l_call
 				l_call.set_routine_ids (l_feature.rout_id_set)
 				l_is_default_creation := True
 			else

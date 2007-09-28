@@ -1,7 +1,7 @@
 indexing
 	description	: "[
 		An EiffelStudio base implementation for all tools implementing a derviation of an event list tool. The tool is based on the 
-		ecosystem event list service {EVENT_LIST_SERVICE_I}.
+		ecosystem event list service {EVENT_LIST_SERVICE_S}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	on_before_initialize
 			-- Use to perform additional creation initializations
 		local
-			l_service: EVENT_LIST_SERVICE_I
+			l_service: EVENT_LIST_SERVICE_S
 		do
 			Precursor {ES_DOCKABLE_TOOL_WINDOW}
 
@@ -56,7 +56,7 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- Recycle tool.
 		local
-			l_agent: PROCEDURE [ANY, TUPLE [service: EVENT_LIST_SERVICE_I; event_item: EVENT_LIST_ITEM_I]]
+			l_agent: PROCEDURE [ANY, TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
 		do
 			if event_service /= Void then
 				l_agent := agent on_event_added
@@ -88,7 +88,7 @@ feature {NONE} -- Access
 			Result := 0
 		end
 
-	frozen event_service: EVENT_LIST_SERVICE_I
+	frozen event_service: EVENT_LIST_SERVICE_S
 			-- Event service the user interface is connected to
 
 	frozen grid_wrapper: EVS_GRID_WRAPPER [EV_GRID_ROW]
@@ -673,7 +673,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Events
 
-	on_event_added (a_service: EVENT_LIST_SERVICE_I; a_event_item: EVENT_LIST_ITEM_I)
+	on_event_added (a_service: EVENT_LIST_SERVICE_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- Called when a event item is added to the event service.
 			--
 			-- `a_service': Event service where event was added.
@@ -732,7 +732,7 @@ feature {NONE} -- Events
 			item_count_increased: is_appliable_event (a_event_item) implies item_count = old item_count + 1
 		end
 
-	on_event_removed (a_service: EVENT_LIST_SERVICE_I; a_event_item: EVENT_LIST_ITEM_I) is
+	on_event_removed (a_service: EVENT_LIST_SERVICE_S; a_event_item: EVENT_LIST_ITEM_I) is
 			-- Called after a event item has been removed from the service `a_service'
 			--
 			-- `a_service': Event service where the event was removed.
@@ -805,7 +805,7 @@ feature {NONE} -- Events
 			item_count_increased: is_appliable_event (a_event_item) implies item_count = old item_count - 1
 		end
 
-	on_event_changed (a_service: EVENT_LIST_SERVICE_I; a_event_item: EVENT_LIST_ITEM_I)
+	on_event_changed (a_service: EVENT_LIST_SERVICE_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- Called after a event item has been changed.
 			--
 			-- `a_service': Event service where the event was changed.

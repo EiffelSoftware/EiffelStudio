@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		An error display for the graphical version of EiffelStudio, used in combination with the event list service {EVENT_LIST_SERVICE_I}
+		An error display for the graphical version of EiffelStudio, used in combination with the event list service {EVENT_LIST_SERVICE_S}
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,9 +17,9 @@ inherit
 			clear_warnings
 		end
 
-	SHARED_SERVICE_PROVIDER
+	EVENT_LIST_SERVICE_CONSUMER
 		export
-			{NONE} all
+			{NONE}
 		end
 
 create
@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			a_manager_attached: a_manager /= Void
 		do
 			window_manager := a_manager
-			event_list_service ?= service_provider.query_service ({EVENT_LIST_SERVICE_S})
 		ensure
 			window_manager_set: window_manager = a_manager
 		end
@@ -58,21 +57,8 @@ feature {NONE} -- Access
 			not_result_is_default: not Result.is_equal (create {UUID})
 		end
 
-	event_list_service: EVENT_LIST_SERVICE_I
-			-- Event list service to log errors and warnings to
-
 	window_manager: EB_WINDOW_MANAGER
 			-- Manager of all development windows
-
-feature {NONE} -- Status report
-
-	is_event_list_service_available: BOOLEAN
-			-- Determines if the event list service is available
-		do
-			Result := event_list_service /= Void
-		ensure
-			result_implies_event_list_service_attached: Result implies event_list_service /= Void
-		end
 
 feature -- Basic operations
 

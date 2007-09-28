@@ -279,7 +279,6 @@
 				<exclude>/query_language$</exclude>
 				<exclude>/profiler$</exclude>
 			</file_rule>
-			<mapping old_name="EVENT_LIST_SERVICE_S" new_name="EVENT_LIST_SERVICE_I"/>
 		</cluster>
 		<cluster name="compiler_api_profiler" location="$EIFFEL_SRC\Eiffel\API\profiler\" recursive="true"/>
 		<cluster name="compiler_api_ql" location="$EIFFEL_SRC\Eiffel\API\query_language\" recursive="true"/>

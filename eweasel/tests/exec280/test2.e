@@ -1,5 +1,5 @@
 class
-	TEST2
+	TEST2 [G]
 
 inherit
 	ANY
@@ -7,13 +7,11 @@ inherit
 			default_create
 		end
 
-create
-	default_create
-
 feature -- Initialization
 
 	default_create is
 		do
+			print ("TEST2.default_create%N")
 			create string.make_empty
 		end
 

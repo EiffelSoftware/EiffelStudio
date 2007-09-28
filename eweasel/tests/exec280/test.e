@@ -11,6 +11,6 @@ create
 
 feature -- Access
 
-	target: TEST2
+	target: TEST2 [STRING_8]
 
 end

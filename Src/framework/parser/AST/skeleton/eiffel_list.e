@@ -72,7 +72,7 @@ feature -- Access
 
 	reversed_first: T is
 		require
-			count >= 1
+			not_empty: not is_empty
 		do
 			Result := area.item (capacity - count)
 		end

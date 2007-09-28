@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 						a_type.right_adjust
 						a_type.left_adjust
 						if a_type.is_empty then
-							raise_error ("Empty type declaration in signature")
+							insert_error ("Empty type declaration in signature")
 						else
 							arg_count := arg_count + 1
 							Names_heap.put (a_type)
@@ -186,13 +186,13 @@ feature {NONE} -- Implementation
 				pos := c_signature.index_of (':', end_arg_list)
 				if pos /= 0 then
 					if pos = c_signature.count - 1 then
-						raise_error ("Missing return type in signature")
+						insert_error ("Missing return type in signature")
 					else
 						a_type := c_signature.substring (pos + 1, c_signature.count)
 						a_type.right_adjust
 						a_type.left_adjust
 						if a_type.is_empty then
-							raise_error ("Missing return type in signature")
+							insert_error ("Missing return type in signature")
 						else
 							Names_heap.put (a_type)
 							return_type := Names_heap.found_item
@@ -210,6 +210,7 @@ feature {NONE} -- Implementation
 			unprocessed: STRING
 			header_f: STRING
 			nb: INTEGER
+			l_has_error: BOOLEAN
 		do
 			if include_files /= Void then
 				include_files.left_adjust
@@ -232,11 +233,12 @@ end
 				from
 					start_pos := 1
 				until
-					unprocessed.is_empty
+					unprocessed.is_empty or l_has_error
 				loop
 					end_pos := parse_file_name (unprocessed, start_pos)
 					if end_pos = 0 then
-						raise_error ("Invalid include file")
+						l_has_error := True
+						insert_error ("Invalid include file")
 					else
 						include_count := include_count + 1
 						header_f := unprocessed.substring (start_pos, end_pos)
@@ -251,7 +253,8 @@ end
 								unprocessed.remove_head (1)
 								unprocessed.left_adjust
 							else
-								raise_error ("Invalid character after include file")
+								l_has_error := True
+								insert_error ("Invalid character after include file")
 							end
 						end
 					end
@@ -291,7 +294,7 @@ debug
 end
 		end
 
-	raise_error (msg: STRING) is
+	insert_error (msg: STRING) is
 			-- Raise syntax error (`msg' is the explanation).
 		local
 			ext_error: EXTERNAL_SYNTAX_ERROR
@@ -299,7 +302,6 @@ end
 			create ext_error.init
 			ext_error.set_external_error_message (msg)
 			Error_handler.insert_error (ext_error)
-			Error_handler.raise_error
 		end
 
 feature {NONE} -- Implementation

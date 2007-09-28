@@ -23,7 +23,7 @@ inherit
 			make as make_eiffel_scanner,
 			make_with_factory as make_eiffel_scanner_with_factory
 		redefine
-			reset
+			reset, report_one_error
 		end
 
 	SHARED_PARSER_FILE_BUFFER
@@ -667,8 +667,7 @@ feature {NONE} -- Instruction factory
 			end
 			if call = Void then
 					-- Report error.
-				Error_handler.insert_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
-				Error_handler.raise_error
+				report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
 			else
 					-- Make a call instruction.
 				Result := ast_factory.new_instr_call_as (call)
@@ -683,8 +682,7 @@ feature {AST_FACTORY} -- Error handling
 			an_error: BASIC_GEN_TYPE_ERR
 		do
 			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (an_error)
 		end
 
 	report_invalid_type_for_real_error (a_type: TYPE_AS; a_real: STRING) is
@@ -698,8 +696,7 @@ feature {AST_FACTORY} -- Error handling
 			create an_error.make (line, column, filename,
 				"Specified type %"" + a_type.dump +
 					"%" is not a valid type for real constant %"" + a_real + "%"", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (an_error)
 		end
 
 	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: STRING) is
@@ -713,8 +710,7 @@ feature {AST_FACTORY} -- Error handling
 			create an_error.make (line, column, filename,
 				"Specified type %"" + a_type.dump +
 					"%" is not a valid type for integer constant %"" + an_int + "%"", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (an_error)
 		end
 
 	report_integer_too_large_error (a_type: TYPE_AS; an_int: STRING) is
@@ -733,8 +729,7 @@ feature {AST_FACTORY} -- Error handling
 				l_message := "Integer value " + an_int + " is too large for any integer type."
 			end
 			create an_error.make (line, column, filename, l_message, False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (an_error)
 		end
 
 	report_integer_too_small_error (a_type: TYPE_AS; an_int: STRING) is
@@ -753,8 +748,7 @@ feature {AST_FACTORY} -- Error handling
 				l_message := "Integer value " + an_int + " is too small for any integer type."
 			end
 			create an_error.make (line, column, filename, l_message, False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (an_error)
 		end
 
 	report_character_code_too_large_error (a_code: STRING) is
@@ -767,19 +761,23 @@ feature {AST_FACTORY} -- Error handling
 		do
 			l_message := "Character code " + a_code + " is too large for CHARACTER_32."
 			create an_error.make (line, column, filename, l_message, False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (an_error)
+		end
+
+	report_one_error (a_error: ERROR) is
+			-- An error was reported.
+		do
+			Precursor (a_error)
+				-- To avoid reporting more than one error for the same syntax error
+				-- we simply abort the parsing.
+			abort
 		end
 
 	report_error (a_message: STRING) is
 			-- A syntax error has been detected.
 			-- Print error message.
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "", False))
 		end
 
 feature{NONE} -- Roundtrip

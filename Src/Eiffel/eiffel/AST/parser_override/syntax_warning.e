@@ -83,7 +83,7 @@ feature -- Output
 				-- Error happened in a class
 			a_text_formatter.add (" in class ")
 			a_text_formatter.add_class_syntax (Current, associated_class, associated_class.class_signature)
-			if warning_message /= Void then
+			if not warning_message.is_empty then
 				a_text_formatter.add_new_line
 				a_text_formatter.add (warning_message)
 				a_text_formatter.add_new_line
@@ -127,6 +127,7 @@ feature -- Output
 
 invariant
 	associated_class_not_void: associated_class /= Void
+	warning_message_not_void: warning_message /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

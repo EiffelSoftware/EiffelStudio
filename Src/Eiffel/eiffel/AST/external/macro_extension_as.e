@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 
 			if end_file = 0 then
 					-- Invalid file
-				raise_error ("Invalid file name")
+				insert_error ("Invalid file name")
 			else
 				special_file_name := special_part.substring (1, end_file)
 				count := special_part.count
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 					remaining := special_part.substring (end_file + 1, count)
 					remaining.left_adjust
 					if remaining.count > 0 then
-						raise_error ("Extra characters after file name")
+						insert_error ("Extra characters after file name")
 					end
 				end
 					-- Add special file name to the list of header files at the

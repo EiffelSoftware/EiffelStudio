@@ -181,27 +181,30 @@ feature -- Settings
 
 feature {NONE} -- Error handling
 
+	report_one_error (a_error: ERROR) is
+			-- Log `a_error'.
+		require
+			a_error_not_void: a_error /= Void
+		do
+			error_handler.insert_error (a_error)
+				-- To avoid reporting more than one error for the same lexical error
+				-- we simply abort the scanning.
+			terminate
+		end
+
 	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
 			-- Log `a_message' and raise an exception.
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename, a_message, False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, a_message, False))
 		end
 
 	report_character_missing_quote_error (char: STRING) is
 			-- Invalid character: final quote missing.
 		require
 			char_not_void: char /= Void
-		local
-			an_error: BAD_CHARACTER
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {BAD_CHARACTER}.make (line, column, filename, "", False))
 
 				-- Dummy code (for error recovery) follows:
 			token_buffer.append_character ('a')
@@ -210,12 +213,8 @@ feature {NONE} -- Error handling
 
 	report_string_bad_special_character_error is
 			-- Invalid special character after % in manisfest string.
-		local
-			an_error: STRING_EXTENSION
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {STRING_EXTENSION}.make (line, column, filename, "", False))
 
 				-- Dummy code (for error recovery) follows:
 			token_buffer.append_character ('a')
@@ -223,12 +222,8 @@ feature {NONE} -- Error handling
 
 	report_string_invalid_code_error (a_code: INTEGER) is
 			-- Invalid character code after % in manisfest string.
-		local
-			an_error: STRING_EXTENSION
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {STRING_EXTENSION}.make (line, column, filename, "", False))
 
 				-- Dummy code (for error recovery) follows:
 			token_buffer.append_character ('a')
@@ -238,12 +233,8 @@ feature {NONE} -- Error handling
 			-- Invalid string: final quote missing.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			an_error: STRING_UNCOMPLETED
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {STRING_UNCOMPLETED}.make (line, column, filename, "", False))
 
 				-- Dummy code (for error recovery) follows:
 			if a_string.is_empty then
@@ -257,12 +248,8 @@ feature {NONE} -- Error handling
 			-- Invalid verbatim string: final bracket-quote missing.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			an_error: VERBATIM_STRING_UNCOMPLETED
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {VERBATIM_STRING_UNCOMPLETED}.make (line, column, filename, "", False))
 
 				-- Dummy code (for error recovery) follows:
 			if a_string.is_empty then
@@ -279,32 +266,23 @@ feature {NONE} -- Error handling
 			a_text_not_void: a_text /= Void
 			too_long_token: a_text.count > maximum_string_length
 		do
-			Error_handler.insert_error (
+			report_one_error (
 				create {SYNTAX_ERROR}.make (line, column, filename,
 					"Identifier, manifest string or free operator is " + a_text.count.out +
 					" characters long that exceeds limit of " + maximum_string_length.out + " characters.",
 					False))
-			Error_handler.raise_error
 		end
 
 	report_unknown_token_error (a_token: CHARACTER) is
 			-- Unknown token.
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "", False))
 		end
 
 	report_invalid_integer_error (a_text: STRING) is
 			-- Invalid integer
-		local
-			an_error: VIIN
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
+			report_one_error (create {VIIN}.make (line, column, filename, "", False))
 		end
 
 feature {NONE} -- Implementation

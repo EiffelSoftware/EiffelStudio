@@ -37,6 +37,9 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
+	has_error: BOOLEAN
+			-- Did an error occur during the last processing?
+
 feature -- Measurement
 
 	count: INTEGER

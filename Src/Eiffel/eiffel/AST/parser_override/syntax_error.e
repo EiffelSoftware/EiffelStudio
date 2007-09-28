@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			file_name := f
 			error_message := m
 			is_in_use_file := u
+			associated_class := system.current_class
 		ensure
 			line_set: line = s
 			column_set: column = e
@@ -80,9 +81,6 @@ feature -- Properties
 
 	associated_class: CLASS_C
 			-- Associate class, if any
-		do
-			Result := System.current_class
-		end
 
 feature -- Output
 
@@ -108,21 +106,20 @@ feature -- Output
 				-- Error happened in a class
 			if associated_class /= Void then
 				a_text_formatter.add (" in class ")
-				a_text_formatter.add_class_syntax (Current, associated_class,
-						System.current_class.class_signature)
+				a_text_formatter.add_class_syntax (Current, associated_class, associated_class.class_signature)
 			elseif file_name /= Void then
-				-- `current_class' May be void at degree 6 when parsing partial classes
+					-- `associated_class' May be void at degree 6 when parsing partial classes
 				a_text_formatter.add (" in file ")
 				a_text_formatter.add (file_name)
 			end
-			if error_message /= Void then
+			if error_message /= Void and then not error_message.is_empty then
 				a_text_formatter.add_new_line
 				a_text_formatter.add (error_message)
-				a_text_formatter.add_new_line
 			end
 			a_text_formatter.add_new_line
 			build_explain (a_text_formatter)
 			if has_source_text then
+				a_text_formatter.add_new_line
 				display_line (a_text_formatter, previous_line)
 				display_syntax_line (a_text_formatter, current_line)
 				display_line (a_text_formatter, next_line)
@@ -137,7 +134,7 @@ feature -- Output
 		local
 			l_class_c: CLASS_C
 		do
-			l_class_c := system.current_class
+			l_class_c := associated_class
 			if l_class_c /= Void then
 				a_text_formatter.add_group (l_class_c.group, l_class_c.group.name)
 				a_text_formatter.add (".")

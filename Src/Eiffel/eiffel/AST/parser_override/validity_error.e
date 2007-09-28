@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			set_position (s, e)
 			file_name := f
 			is_in_use_file := u
+			associated_class := system.current_class
 		ensure
 			line_set: line = s
 			column_set: column = e
@@ -62,15 +63,18 @@ feature -- Properties
 	is_in_use_file: BOOLEAN
 			-- Did error occurred when parsing `Use' clause of an Ace file.
 
+	associated_class: CLASS_C
+			-- Associate class, if any
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			initialize_output
-			if System.current_class /= Void then
+			if associated_class /= Void then
 				a_text_formatter.add ("Class: ")
-				a_text_formatter.add_class_syntax (Current, System.current_class,
-						System.current_class.class_signature)
+				a_text_formatter.add_class_syntax (Current, associated_class,
+						associated_class.class_signature)
 				a_text_formatter.add_new_line
 			elseif file_name /= Void then
 				-- `current_class' May be void at degree 6 when parsing partial classes

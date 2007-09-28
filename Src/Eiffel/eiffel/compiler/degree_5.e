@@ -43,7 +43,7 @@ feature -- Processing
 	execute is
 			-- Process all classes.
 		local
-			i: INTEGER
+			i, nb_errors: INTEGER
 			classes: ARRAY [CLASS_C]
 			class_counter: CLASS_COUNTER
 			a_class: CLASS_C
@@ -52,7 +52,8 @@ feature -- Processing
 			classes := System.classes
 			class_counter := System.class_counter
 			Workbench.set_compilation_started
-			from until count = 0 loop
+				-- We loop until we reached the number of classes with an error.
+			from until count = nb_errors loop
 					-- Traverse several times the list of classes
 					-- because syntactical clients may be added to
 					-- Degree 5 before the current cursor position
@@ -62,9 +63,13 @@ feature -- Processing
 					if a_class /= Void and then a_class.degree_5_needed then
 						Degree_output.put_degree_5 (a_class, count)
 						System.set_current_class (a_class)
+						has_error := False
 						process_class (a_class)
+						if has_error then
+							nb_errors := nb_errors + 1
+						end
 							-- Remove class if not already done.
-						if a_class.degree_5_needed then
+						if a_class.degree_5_needed and not has_error then
 							a_class.remove_from_degree_5
 							count := count - 1
 						end
@@ -72,6 +77,7 @@ feature -- Processing
 					i := i + 1
 				end
 			end
+			error_handler.checksum
 			Degree_output.put_end_degree
 		end
 
@@ -105,7 +111,7 @@ feature -- Processing
 							l_old_info := Void
 						end
 						a_class.fill_parents (l_old_info, class_info_server.item (a_class.class_id))
-						if Error_handler.new_error then
+						if Error_handler.has_new_error then
 							insert_class (a_class)
 						end
 					end
@@ -113,6 +119,7 @@ feature -- Processing
 				i := i + 1
 			end
 			System.set_current_class (Void)
+			error_handler.checksum
 		end
 
 feature {NONE} -- Processing
@@ -129,36 +136,33 @@ feature {NONE} -- Processing
 			class_id := a_class.class_id
 			if a_class.is_external_class_c then
 				a_class.external_class_c.process_degree_5
+				a_class.lace_class.config_class.set_up_to_date
 			else
 				eif_class := a_class.eiffel_class_c
 				if eif_class.parsing_needed then
 						-- Parse class and save a backup if requested and generates warning.
 					ast := eif_class.build_ast (True, True)
-									debug ("PARSE")
-										io.error.put_string ("parsed%N")
-									end
-				elseif Tmp_ast_server.has (class_id) then
-									debug ("PARSE")
-										io.error.put_string ("retrieved%N")
-									end
-					ast := Tmp_ast_server.item (class_id)
 				else
-					ast := Ast_server.item (class_id)
+					ast := Tmp_ast_server.item (class_id)
+					if ast = Void then
+						ast := Ast_server.item (class_id)
+					end
 				end
-				check
-						-- The ast is either recomputed or
-						-- retrieved from a server.
-					ast_not_void: ast /= Void
-				end
-				eif_class.end_of_pass1 (ast)
 
-					-- No syntax error happened: set the compilation
-					-- status of the current changed class.
-				check
-					No_error: not Error_handler.has_error
+				if ast /= Void then
+						-- For the check statement below.
+					error_handler.mark
+					eif_class.end_of_pass1 (ast)
+						-- No syntax error happened: set the compilation
+						-- status of the current changed class.
+					check
+						No_error: not Error_handler.has_new_error
+					end
+					a_class.lace_class.config_class.set_up_to_date
+				else
+					has_error := True
 				end
 			end
-			a_class.lace_class.config_class.set_up_to_date
 		end
 
 feature -- Element change
@@ -178,16 +182,6 @@ feature -- Element change
 		do
 			insert_class (a_class)
 			a_class.set_parsing_needed (True)
-		end
-
-	insert_parsed_class (a_class: CLASS_C) is
-			-- Add `a_class' to be processed for end of Degree 1
-			-- (parsing has already been done).
-		require
-			a_class_not_void: a_class /= Void
-			ast_is_in_server: is_in_tmp_ast_server (a_class)
-		do
-			insert_class (a_class)
 		end
 
 	insert_changed_class (a_class: CLASS_C) is

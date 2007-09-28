@@ -1111,85 +1111,83 @@ feature -- Parent checking
 					l_dummy_list.extend (class_id)
 					l_vhpr1.set_involved_classes (l_dummy_list)
 					Error_handler.insert_error (l_vhpr1)
-						-- Cannot go on here
-					Error_handler.raise_error
-				end
+				else
+						-- VHPR3 checking and extract structure from parsing.
+					from
+						l_count := l_parents_as.count
+						create parents_classes.make (l_count)
+						create computed_parents.make (l_count)
+						create parents.make (l_count)
+						create l_compiled_parent_generator
+						l_parents_as.start
+					until
+						l_parents_as.after
+					loop
+							-- Evaluation of the parent type
+						l_parent_as := l_parents_as.item
+						l_raw_type := l_parent_as.type
+						l_parent_c := l_compiled_parent_generator.compiled_parent (system, Current, l_parent_as)
+							-- Check if there is no anchor and no bit symbol in the parent type.
+						if not l_parent_c.parent_type.is_valid or else l_parent_c.parent_type.has_like then
+							create l_ve04
+							l_ve04.set_class (Current)
+							l_ve04.set_parent_type (l_raw_type)
+							l_ve04.set_location (l_parent_as.start_location)
+							Error_handler.insert_error (l_ve04)
+						else
+							computed_parents.extend (l_parent_c)
 
-					-- VHPR3 checking and extract structure from parsing.
-				from
-					l_count := l_parents_as.count
-					create parents_classes.make (l_count)
-					create computed_parents.make (l_count)
-					create parents.make (l_count)
-					create l_compiled_parent_generator
-					l_parents_as.start
-				until
-					l_parents_as.after
-				loop
-						-- Evaluation of the parent type
-					l_parent_as := l_parents_as.item
-					l_raw_type := l_parent_as.type
-					l_parent_c := l_compiled_parent_generator.compiled_parent (system, Current, l_parent_as)
-						-- Check if there is no anchor and no bit symbol in the parent type.
-					if not l_parent_c.parent_type.is_valid or else l_parent_c.parent_type.has_like then
-						create l_ve04
-						l_ve04.set_class (Current)
-						l_ve04.set_parent_type (l_raw_type)
-						l_ve04.set_location (l_parent_as.start_location)
-						Error_handler.insert_error (l_ve04)
-					else
-						computed_parents.extend (l_parent_c)
-
-						l_parent_class := clickable_info.associated_eiffel_class (lace_class,
-							l_parent_as.type).compiled_class
-							-- Insertion of a new descendant for the parent class
-						check
-							parent_class_exists: l_parent_class /= Void
-								-- This ensures that routine `check_suppliers'
-								-- has been called before.
-						end
-						l_parent_class.add_descendant (Current)
-
-							-- Use reference class type as a parent.
-						l_parent_type := l_parent_c.parent_type
-						if l_parent_type.is_expanded then
-							l_parent_type := l_parent_type.reference_type
-						end
-
-						if l_parent_class.is_generic then
-								-- Look for a derivation of the same class.
-							from
-								parents_classes.start
-							until
-								parents_classes.after
-							loop
-								if parents_classes.item = l_parent_class then
-									if not parents.i_th (parents_classes.index).same_as (l_parent_type) then
-											-- Different generic derivations are used in Parent parts.
-										error_handler.insert_error (create {VHPR5_ECMA}.make
-											(Current, l_parent_type, parents.i_th (parents_classes.index), l_parent_as.start_location))
-									end
-								end
-								parents_classes.forth
+							l_parent_class := clickable_info.associated_eiffel_class (lace_class,
+								l_parent_as.type).compiled_class
+								-- Insertion of a new descendant for the parent class
+							check
+								parent_class_exists: l_parent_class /= Void
+									-- This ensures that routine `check_suppliers'
+									-- has been called before.
 							end
-						end
+							l_parent_class.add_descendant (Current)
 
-							-- This addresses eweasel test#term146 where we assumed before at degree 4
-							-- they had the correct number of formal generics and thus performed conformance
-							-- checking blindly. Now we check the error at the end of degree 5 to prevent
-							-- this problem.
-						if not l_parent_type.good_generics then
-							l_vtug := l_parent_type.error_generics
-							l_vtug.set_class (Current)
-							l_vtug.set_location (l_parent_as.start_location)
-							error_handler.insert_error (l_vtug)
-						end
+								-- Use reference class type as a parent.
+							l_parent_type := l_parent_c.parent_type
+							if l_parent_type.is_expanded then
+								l_parent_type := l_parent_type.reference_type
+							end
 
-						parents.extend (l_parent_type)
-							-- Insertion in `parents_classes'.
-						parents_classes.extend (l_parent_class)
+							if l_parent_class.is_generic then
+									-- Look for a derivation of the same class.
+								from
+									parents_classes.start
+								until
+									parents_classes.after
+								loop
+									if parents_classes.item = l_parent_class then
+										if not parents.i_th (parents_classes.index).same_as (l_parent_type) then
+												-- Different generic derivations are used in Parent parts.
+											error_handler.insert_error (create {VHPR5_ECMA}.make
+												(Current, l_parent_type, parents.i_th (parents_classes.index), l_parent_as.start_location))
+										end
+									end
+									parents_classes.forth
+								end
+							end
+
+								-- This addresses eweasel test#term146 where we assumed before at degree 4
+								-- they had the correct number of formal generics and thus performed conformance
+								-- checking blindly. Now we check the error at the end of degree 5 to prevent
+								-- this problem.
+							if not l_parent_type.good_generics then
+								l_vtug := l_parent_type.error_generics
+								l_vtug.set_class (Current)
+								l_vtug.set_location (l_parent_as.start_location)
+								error_handler.insert_error (l_vtug)
+							end
+
+							parents.extend (l_parent_type)
+								-- Insertion in `parents_classes'.
+							parents_classes.extend (l_parent_class)
+						end
+						l_parents_as.forth
 					end
-					l_parents_as.forth
 				end
 			elseif not (class_id = l_ancestor_id) then
 					-- No parents are syntactiaclly specified: ANY is

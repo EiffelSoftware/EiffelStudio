@@ -869,7 +869,7 @@ static  void    analyze_routinfo ()
 static  void    analyze_desc ()
 
 {
-	long    count, tid, info, type, i, j;
+	long    count, tid, info, type, offset, i, j;
 	short   org_count, info_count, org_id;
 	short   *dinfo;
 
@@ -899,7 +899,7 @@ static  void    analyze_desc ()
 
 				if (info_count)
 				{
-					dinfo = (short *) malloc (2*info_count * sizeof (short));
+					dinfo = (short *) malloc (3*info_count * sizeof (short));
 
 					if (dinfo == (short *) 0)
 					{
@@ -916,12 +916,14 @@ static  void    analyze_desc ()
 				while (j--)
 				{
 					info = (long) rbody_index ();
+					offset = (long) ruint32 ();
 					type = (long) rshort ();
 
 /*
 					fprintf (mfp,"  I/T : [%5d, %5d]\n", (int) info, (int) type);
 */
 					dinfo [i++] = (short) info;
+					dinfo [i++] = (short) offset;
 					dinfo [i++] = (short) type;
 /* GENERIC CONFORMANCE */
 
@@ -937,7 +939,7 @@ static  void    analyze_desc ()
 						fprintf (mfp, "\n  ");
 
 					fprintf (mfp, "%ld: (%d,%d) ",
-							 i, dinfo [2*i], dinfo [2*i+1]);
+							 i, dinfo [3*i], dinfo [3*i+1], dinfo [3 * i + 2]);
 				}
 
 				fprintf (mfp, "\n");

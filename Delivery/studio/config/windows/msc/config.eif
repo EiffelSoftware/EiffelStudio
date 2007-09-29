@@ -70,6 +70,7 @@ ranlib: "echo"
 
 -- platform remove command
 rm: "del"
+safe_rm: "if exist @ del @"
 file_exist: "if exist"
 rmdir: "rd"
 

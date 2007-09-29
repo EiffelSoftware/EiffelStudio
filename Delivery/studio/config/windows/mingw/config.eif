@@ -70,6 +70,7 @@ ranlib: "%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/ranlib.exe%""
 
 -- platform remove command
 rm: "%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/msys/1.0/bin/rm%" -f"
+safe_rm: "if [ -f @ ] ; then $(RM) @ ; fi"
 file_exist: "" 
 rmdir: "%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/msys/1.0/bin/rd%""
 

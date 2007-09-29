@@ -1184,7 +1184,10 @@ feature {NONE} -- Translation
 
 				-- $(RM) "$(SHARD_CECIL)"
 			read_next
-			makefile.put_string (makefile_sh.last_string)
+			lastline := options.get_string ("safe_rm", "").twin
+			lastline.replace_substring_all ("@", "$(SHARED_CECIL)")
+			lastline.precede ('%T')
+			makefile.put_string (lastline)
 			makefile.put_new_line
 
 				-- $(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS)
@@ -1302,8 +1305,10 @@ feature {NONE} -- Translation
 
 -- $(RM) "$(SYSTEM_IN_DYNAMIC_LIB)"
 			read_next
-			makefile.put_string ("%T$(FILE_EXIST) $(SYSTEM_IN_DYNAMIC_LIB) ")
-			makefile.put_string (makefile_sh.last_string)
+			lastline := options.get_string ("safe_rm", "").twin
+			lastline.replace_substring_all ("@", "$(SYSTEM_IN_DYNAMIC_LIB)")
+			lastline.precede ('%T')
+			makefile.put_string (lastline)
 			makefile.put_new_line
 
 -- $(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS)

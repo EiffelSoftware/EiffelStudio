@@ -1134,7 +1134,7 @@ feature -- Conveniences
 		local
 			l_ext: IL_EXTENSION_I
 		do
-			Result := (is_constant and not is_once)
+			Result := is_constant
 			if not Result then
 				if System.il_generation then
 					l_ext ?= extension

@@ -136,13 +136,13 @@ cecil_def: "%
 %%T@type %"$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/templates/cecil.def%" >> $@"
 
 cecil_dynlib: "\%N%
-%%T--dlltool-name %"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/dlltool%" \ %N%
-%%T--as %"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/as%" \ %N%
+%%T--dlltool-name %"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/dlltool%" \%N%
+%%T--as %"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/as%" \%N%
 %%T--def $(DEF_FILE) --output-lib c_dll_$appl.lib -o $(SHARED_CECIL)%N"
 
 system_dynlib: "\%N%
-%%T--dlltool-name %"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/dlltool%" \ %N%
-%%T--as %"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/as%" \ %N%
+%%T--dlltool-name %"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/dlltool%" \%N%
+%%T--as %"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/as%" \%N%
 %%T--def $(DEF_FILE) --output-lib dll_$appl.lib -o $(SYSTEM_IN_DYNAMIC_LIB)%N"
 
 il_system_compilation_line: "%

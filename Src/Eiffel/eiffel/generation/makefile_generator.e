@@ -659,7 +659,10 @@ feature -- Generation, Header
 			if System.il_generation then
 				make_file.put_string ("IL_SYSTEM = lib")
 				make_file.put_string (system_name)
-				make_file.put_string ("$shared_suffix %N")
+				make_file.put_string ("$shared_suffix%N")
+				make_file.put_string ("IL_OBJECT = lib")
+				make_file.put_string (system_name)
+				make_file.put_string (".$obj_file_ext%N")
 				make_file.put_string ("IL_RESOURCE = ")
 				make_file.put_string (system_name)
 				make_file.put_new_line
@@ -869,9 +872,7 @@ feature -- Generation (Linking rules)
 			make_file.put_string ("all: $(IL_SYSTEM)")
 			make_file.put_new_line
 
-			make_file.put_string ("OBJECTS= lib")
-			make_file.put_string (system_name)
-			make_file.put_string (".obj")
+			make_file.put_string ("OBJECTS= $(IL_OBJECT)")
 			make_file.put_new_line
 			make_file.put_new_line
 

@@ -1167,6 +1167,9 @@ feature {NONE} -- Translation
 				makefile.put_string (" \%N")
 				lastline := options.get_string ("cecil_dynlib", Void).twin
 				lastline.replace_substring_all ("$appl", appl)
+				subst_eiffel (lastline)
+				subst_platform (lastline)
+				subst_compiler (lastline)
 				makefile.put_string (lastline)
 				makefile.put_new_line
 			else
@@ -1282,6 +1285,9 @@ feature {NONE} -- Translation
 				makefile.put_string (" \%N")
 				lastline := options.get_string ("system_dynlib", Void).twin
 				lastline.replace_substring_all ("$appl", appl)
+				subst_eiffel (lastline)
+				subst_platform (lastline)
+				subst_compiler (lastline)
 				makefile.put_string (lastline)
 				makefile.put_new_line
 			else

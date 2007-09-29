@@ -1236,8 +1236,6 @@ rt_public void reclaim(void)
 	struct chunk *c, *cn;
 #endif
 
-	DISCARD_BREAKPOINTS;
-
 #ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_terminate_all_other_threads());
 #endif
@@ -1339,8 +1337,6 @@ rt_public void reclaim(void)
 
 		/* Final collection terminated, unmark the flag */
 	eif_is_in_final_collect = EIF_FALSE;
-
-	UNDISCARD_BREAKPOINTS;
 }
 
 #ifdef ISE_GC

@@ -800,7 +800,7 @@ feature {NONE} -- Generation
 				buffer.put_string ("{")
 				buffer.put_new_line
 				buffer.indent
-				if not final_mode and then args_count > 0 then
+				if not final_mode and then args_count > 0 and then (is_for_agent implies not a_oargs_encapsulated) then
 						-- Declare structure to be used for passing arguments.
 					buffer.put_string ("EIF_TYPED_VALUE u [")
 					buffer.put_integer (args_count)

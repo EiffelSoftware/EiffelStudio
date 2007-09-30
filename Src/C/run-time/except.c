@@ -1075,6 +1075,16 @@ rt_public void xraise(int code)
 	eraise(NULL, (long) code);
 }
 
+rt_public EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE Current) {
+	if (Current) {
+		return Current;
+	} else {
+		eraise(NULL,EN_VOID);
+			/* Not reached, but to make the C compiler happy. */
+		return NULL;
+	}
+}
+
 rt_public void eraise(char *tag, long num)
 	/* May be called from Eiffel, and INTEGER is long */
 {

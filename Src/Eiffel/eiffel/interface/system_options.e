@@ -64,6 +64,9 @@ feature -- Access
 			-- Is the application going to be a console application?
 			--| ie on Windows only we need to link with the correct flags.
 
+	check_for_void_target: BOOLEAN
+			-- Are targets of a call check for Voidness?
+
 	force_32bits: BOOLEAN
 			-- Is the application going to be a 32bit bound application?
 
@@ -430,6 +433,14 @@ feature -- Update
 			is_console_application := b
 		ensure
 			is_console_application_set: is_console_application = b
+		end
+
+	set_check_for_void_target (b: BOOLEAN) is
+			-- Set `check_for_void_target' to `b'.
+		do
+			check_for_void_target := b
+		ensure
+			check_for_void_target_set: check_for_void_target = b
 		end
 
 	set_32bits (b: BOOLEAN) is

@@ -195,6 +195,11 @@ feature {NONE} -- Implementation
 			add_boolean_setting_actions (l_bool_prop, s_check_vape, True)
 			properties.add_property (l_bool_prop)
 
+			l_bool_prop := new_boolean_property (conf_interface_names.target_check_for_void_target_name, current_target.setting_check_for_void_target)
+			l_bool_prop.set_description (conf_interface_names.target_check_for_void_target_description)
+			add_boolean_setting_actions (l_bool_prop, s_check_for_void_target, False)
+			properties.add_property (l_bool_prop)
+
 			l_bool_prop := new_boolean_property (conf_interface_names.target_console_application_name, current_target.setting_console_application)
 			l_bool_prop.set_description (conf_interface_names.target_console_application_description)
 			add_boolean_setting_actions (l_bool_prop, s_console_application, False)

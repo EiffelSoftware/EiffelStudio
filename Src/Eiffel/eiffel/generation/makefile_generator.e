@@ -567,6 +567,11 @@ feature -- Generation, Header
 				make_file.put_string ("-DNO_ISE_GC ")
 			end
 
+			if not System.check_for_void_target then
+					-- Disable check for Void target.
+				make_file.put_string ("-DEIF_NO_RTCV ")
+			end
+
 			generate_specific_defines
 			make_file.put_string ("-I%"$rt_include%" ")
 			make_file.put_string ("-I. %H$(INCLUDE_PATH)%N")
@@ -590,6 +595,12 @@ feature -- Generation, Header
 			if not System.uses_ise_gc_runtime then
 				make_file.put_string ("-DNO_ISE_GC ")
 			end
+
+			if not System.check_for_void_target then
+					-- Disable check for Void target.
+				make_file.put_string ("-DEIF_NO_RTCV ")
+			end
+
 
 			generate_specific_defines
 

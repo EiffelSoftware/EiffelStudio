@@ -219,14 +219,26 @@ end
 			if is_direct_once.item then
 				buf.put_character (',')
 				buf.put_character ('(')
-				gen_reg.print_register
+				if not context.workbench_mode then
+					buf.put_string ("RTCV(")
+					gen_reg.print_register
+					buf.put_character (')')
+				else
+					gen_reg.print_register
+				end
 				if parameters /= Void then
 					generate_parameters_list
 				end
 				buf.put_character (')')
 			else
 				buf.put_character ('(')
-				gen_reg.print_register
+				if not context.workbench_mode then
+					buf.put_string ("RTCV(")
+					gen_reg.print_register
+					buf.put_character (')')
+				else
+					gen_reg.print_register
+				end
 				if parameters /= Void then
 					generate_parameters_list
 				end

@@ -100,6 +100,8 @@ feature -- Target names and descriptions
 	target_address_expression_description: STRING_GENERAL is do Result := locale.translation ("Are simplified address expressions enabled?")	end
 	target_automatic_backup_name: STRING_GENERAL is do Result := locale.translation ("Automatic Backup")	end
 	target_automatic_backup_description: STRING_GENERAL is do Result := locale.translation ("Automatically generate a backup during recompilation?")	end
+	target_check_for_void_target_name: STRING_GENERAL is do Result := locale.translation ("Check for Void target")	end
+	target_check_for_void_target_description: STRING_GENERAL is do Result := locale.translation ("Throw a call on Void target exception?")	end
 	target_check_vape_name: STRING_GENERAL is do Result := locale.translation ("Check VAPE")	end
 	target_check_vape_description: STRING_GENERAL is do Result := locale.translation ("Enforce VAPE validity constraint?")	end
 	target_console_application_name: STRING_GENERAL is do Result := locale.translation ("Console Application")	end

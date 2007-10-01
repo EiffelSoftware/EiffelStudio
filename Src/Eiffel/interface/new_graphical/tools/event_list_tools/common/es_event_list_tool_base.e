@@ -18,13 +18,14 @@ inherit
 			user_widget as grid_events
 		redefine
 			on_before_initialize,
+			on_after_initialized,
 			internal_recycle
 		end
 
 feature {NONE} -- Initialization
 
 	on_before_initialize
-			-- Use to perform additional creation initializations
+			-- Use to perform additional creation initializations, before the UI has been created.
 		local
 			l_service: EVENT_LIST_SERVICE_S
 		do
@@ -40,14 +41,11 @@ feature {NONE} -- Initialization
 			event_service := l_service
 		end
 
-feature {NONE} -- User interface initialization
-
-	build_tool_interface (a_widget: ES_GRID)
-			-- Builds the tools user interface elements.
-			-- Note: This function is called prior to showing the tool for the first time.
-			--
-			-- `a_widget': A widget to build the tool interface using.
+	on_after_initialized
+			-- Use to perform additional creation initializations, after the UI has been created.
 		do
+			Precursor {ES_DOCKABLE_TOOL_WINDOW}
+			synchronize_event_list_items
 			update_content_applicable_widgets (item_count > 0)
 		end
 
@@ -206,6 +204,19 @@ feature {NONE} -- Basic operations
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	synchronize_event_list_items
+			-- Synchronized the event list items already pushed to the service before the tool was shown
+		require
+			is_initialized: is_initialized
+		local
+			l_service: like event_service
+		do
+			l_service := event_service
+			if l_service /= Void then
+				l_service.all_items.do_all (agent on_event_added (l_service, ?))
+			end
 		end
 
 feature {NONE} -- Navigation
@@ -729,7 +740,8 @@ feature {NONE} -- Events
 			end
 		ensure then
 			a_event_find_event_row: is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
-			item_count_increased: is_appliable_event (a_event_item) implies item_count = old item_count + 1
+			item_count_increased: (is_appliable_event (a_event_item) and not destory_old_items_automatically) implies item_count = old item_count + 1
+			item_count_small_enought: destory_old_items_automatically implies item_count <= maximum_item_count
 		end
 
 	on_event_removed (a_service: EVENT_LIST_SERVICE_S; a_event_item: EVENT_LIST_ITEM_I) is

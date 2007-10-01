@@ -397,9 +397,6 @@ feature {NONE} -- Events
 			-- `a_service': Event service where event was added.
 			-- `a_event_item': The event item added to the service.
 		do
-			if not is_initialized then
-				initialize
-			end
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
 			if is_appliable_event (a_event_item) then
 				if is_error_event (a_event_item) then
@@ -419,9 +416,6 @@ feature {NONE} -- Events
 			-- `a_service': Event service where the event was removed.
 			-- `a_event_item': The event item removed from the service.
 		do
-			if not is_initialized then
-				initialize
-			end
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
 			if is_appliable_event (a_event_item) then
 				if is_error_event (a_event_item) then

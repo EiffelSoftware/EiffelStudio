@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			--
 			-- `a_widget': A widget to build the tool interface using.
 		do
-			Precursor {ES_EVENT_LIST_TOOL_BASE} (a_widget)
 			grid_token_support.synchronize_color_or_font_change_with_editor
 			grid_token_support.enable_grid_item_pnd_support
 			grid_token_support.enable_ctrl_right_click_to_open_new_window

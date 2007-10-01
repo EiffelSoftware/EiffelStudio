@@ -35,6 +35,7 @@ chdir EIFGENs/$target/$compile_type
 echo "  Launching C compilation"
 (time finish_freezing >& ../../../c_comp1 )>> ../../../c_comp1
 strip ec
+echo "  ec size is: `du -sh ec`"
 mv ec ../../../ec_stage1
 chdir ..
 mv $compile_type ../../$compile_type/stage1
@@ -52,6 +53,7 @@ if ( -e ec_stage1 ) then
 	echo "  Launching C compilation"
 	(time finish_freezing >& ../../../c_comp2)>> ../../../c_comp2
 	strip ec
+	echo "  ec size is: `du -sh ec`"
 	mv ec ../../../ec_stage2
 	chdir ..
 	mv $compile_type ../../$compile_type/stage2
@@ -69,6 +71,7 @@ if ( -e ec_stage1 ) then
 		echo "  Launching C compilation"
 		(time finish_freezing >& ../../../c_comp3)>> ../../../c_comp3
 		strip ec
+		echo "  ec size is: `du -sh ec`"
 		mv ec ../../../ec_stage3
 		chdir ..
 		mv $compile_type ../../$compile_type/stage3

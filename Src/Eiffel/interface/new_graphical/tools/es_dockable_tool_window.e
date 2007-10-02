@@ -64,14 +64,11 @@ feature {NONE} -- Initialization
 
 				is_initializing := False
 				is_initialized := True
+
+				on_after_initialized
 			end
 		ensure
 			is_initialized: not is_initializing implies is_initialized
-		end
-
-	on_before_initialize
-			-- Use to perform additional creation initializations
-		do
 		end
 
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
@@ -82,11 +79,21 @@ feature {NONE} -- Initialization
 			-- Initialize when showing for the first time.
 			-- This is useful when `content' is auto hide.
 			content.show_actions.extend_kamikaze (agent
-													do
-														if not is_initialized then
-															initialize
-														end
-													end)
+				do
+					if not is_initialized then
+						initialize
+					end
+				end)
+		end
+
+	on_before_initialize
+			-- Use to perform additional creation initializations, before the UI has been created.
+		do
+		end
+
+	on_after_initialized
+			-- Use to perform additional creation initializations, after the UI has been created.
+		do
 		end
 
 feature {NONE} -- Clean up

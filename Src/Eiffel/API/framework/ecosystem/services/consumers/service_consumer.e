@@ -38,7 +38,7 @@ feature -- Status report
 	is_service_available: BOOLEAN
 			-- Indicates if the service is available
 		do
-			Result := service /= Void
+			Result := internal_service /= Void or else (service_provider.query_service ({G}) /= Void)
 		end
 
 feature {NONE} -- Internal implementation cache

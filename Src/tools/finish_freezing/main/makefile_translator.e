@@ -841,13 +841,13 @@ feature {NONE} -- Translation
 					lastline := "MAKE = $make"
 				end
 
-				if lastline.substring (1, 12).is_equal ("EIFLIB = -L\") then
+				if lastline.substring (1, 11).is_equal ("EIFLIB = -L") then
 						-- Using a shared library, we have to replace `lastline' for proper translation
 					create runtime.make (256)
 					runtime.append (lastline.substring (1, 9))
 					i := 13
 					j := lastline.substring_index ("-l", i)
-					runtime.append (lastline.substring (i, j - 2))
+					runtime.append (lastline.substring (i, j - 3))
 					runtime.append ("$shared_prefix")
 					i := lastline.substring_index ("eiflib", j)
 					runtime.append (lastline.substring (j + 2, i + 5))

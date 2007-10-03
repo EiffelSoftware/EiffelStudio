@@ -155,7 +155,7 @@ RT_LNK void com_eraise(EIF_CONTEXT char *tag, long num);	/* Raise EiffelCOM exce
 RT_LNK void enomem(void);										/* Raises "Out of memory" exception */
 #endif
 
-rt_public EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE);
+RT_LNK EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE);
 
 RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
 RT_LNK struct ex_vect *exret(EIF_CONTEXT struct ex_vect *rout_vect);	/* Retries execution of routine */

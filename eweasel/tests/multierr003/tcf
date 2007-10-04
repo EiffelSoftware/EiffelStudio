@@ -1,0 +1,26 @@
+test_name degree-5-infinite-loop
+test_description Adding a certain kind of errors at degree 5 could trigger an infinite loop in degree 5.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+copy_raw	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	ok
+
+copy_raw	test_rev1.e $CLUSTER test.e
+copy_raw	test1_rev1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error TEST1 VCFG(1)
+
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+resume_compile
+compile_result	ok
+
+
+test_end

@@ -13,6 +13,7 @@ feature {NONE}
 			create t2
 			t1 := t2
 			print (t1.a) print ("%N")
+			print (t2.a) print ("%N")
 		end
 
 

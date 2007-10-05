@@ -202,7 +202,6 @@ feature -- Status setting
 	reset_tool is
 		do
 			reset_update_on_idle
-			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			notes_on_threads.wipe_out
 			clean_threads_info
 		end
@@ -214,6 +213,7 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			reset_tool
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 		end
 
 feature {NONE} -- Implementation

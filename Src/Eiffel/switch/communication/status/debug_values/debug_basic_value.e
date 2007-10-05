@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			not_attr_name_void: attr_name /= Void
 			v_not_void: v /= Void
 		do
-			name := attr_name
+			set_name (attr_name)
 			if a_class /= Void then
 				e_class := a_class
 				is_attribute := True

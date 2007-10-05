@@ -194,7 +194,7 @@ feature -- Implementation
 							reset_recv_value
 						else
 							Result := item
-							clear_item
+							reset_recv_value
 							if Result /= Void then
 								last_result := Result
 								Result.set_name (once_routine.feature_name)
@@ -298,7 +298,7 @@ feature -- Recycling
 
 	recycle is
 		do
-			clear_item
+			reset_recv_value
 			clear_last_values
 			once_indexes.wipe_out
 		end

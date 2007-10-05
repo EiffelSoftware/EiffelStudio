@@ -36,10 +36,10 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			reason := reas
 			if (reason /= Pg_new_breakpoint) then
 					-- Compute class type.
-				dynamic_class := Eiffel_system.class_of_dynamic_id (dt)
+				dynamic_class := Eiffel_system.class_of_dynamic_id (dt, False)
 
 					-- Compute origin class type
-				origin_class := Eiffel_system.class_of_dynamic_id (ot)
+				origin_class := Eiffel_system.class_of_dynamic_id (ot, False)
 
 					-- Compute feature (E_FEATURE)
 					--|Note: the applicaiton sends us the original name.

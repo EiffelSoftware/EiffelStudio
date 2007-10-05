@@ -73,8 +73,10 @@ feature {NONE} -- Implementation
 		do
 			if comp_type.is_equal ("workbench") then
 				create profile_out_file.make_from_string (project_location.workbench_path)
+				is_finalized_profile := False
 			else
 				create profile_out_file.make_from_string (project_location.final_path)
+				is_finalized_profile := True
 			end;
 			profile_out_file.set_file_name (profile_name);
 			create file.make (profile_out_file);
@@ -99,7 +101,7 @@ feature {NONE} -- Implementation
 	do_conversion is
 			-- Creates both files and initiates conversion.
 		do
-			create profile_converter.make (profile_out_file, translat_file, config);
+			create profile_converter.make (profile_out_file, translat_file, config, is_finalized_profile);
 			profile_converter.convert_profile_listing
 			is_last_conversion_ok := profile_converter.is_conversion_ok
 		end;
@@ -122,6 +124,9 @@ feature -- Access
 
 	conf_load_error: BOOLEAN
 			-- configuration load error
+
+	is_finalized_profile: BOOLEAN
+			-- Is current profile result coming from a finalized system?
 
 feature {NONE} -- attributes
 

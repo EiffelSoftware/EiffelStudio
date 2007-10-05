@@ -106,12 +106,12 @@ feature {NONE} -- Initialization
 			level_in_stack := lvl
 			is_melted := mlt
 			break_index := br
-			dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1)
+			dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1, False)
 			if dynamic_type /= Void then
 				dynamic_class := dynamic_type.associated_class
 				class_name := dynamic_class.name_in_upper
 			end
-			written_class := Eiffel_system.class_of_dynamic_id (origin + 1)
+			written_class := Eiffel_system.class_of_dynamic_id (origin + 1, False)
 			object_address := addr
 			display_object_address := object_address
 				-- set the private body index to a fake value
@@ -484,12 +484,12 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 			if exhausted then
 				is_exhausted := True
 			else
-				dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1)
+				dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1, False)
 				if dynamic_type /= Void then
 					dynamic_class := dynamic_type.associated_class
 					class_name := dynamic_class.name_in_upper
 				end
-				written_class := Eiffel_system.class_of_dynamic_id (origin + 1)
+				written_class := Eiffel_system.class_of_dynamic_id (origin + 1, False)
 
 				break_index := line_number
 				object.to_upper

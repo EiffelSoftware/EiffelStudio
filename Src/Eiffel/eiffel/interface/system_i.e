@@ -2978,6 +2978,7 @@ feature -- Final mode generation
 			eiffel_project.terminate_c_compilation
 			if not retried and is_finalization_needed then
 				if not il_generation then
+					internal_retrieved_finalized_type_mapping := Void
 					create l_type_id_mapping.make (0, static_type_id_counter.count)
 					process_dynamic_types (False, l_type_id_mapping)
 				end
@@ -3132,6 +3133,9 @@ feature -- Final mode generation
 					if il_generation then
 						process_optimized_single_types (True, l_type_id_mapping)
 					else
+						if universe.target.options.is_profile then
+							store_finalized_type_mapping (l_type_id_mapping)
+						end
 						process_dynamic_types (True, l_type_id_mapping)
 					end
 				end
@@ -3159,7 +3163,11 @@ feature -- Final mode generation
 
 				-- Reset `class_types'
 			if l_type_id_mapping /= Void then
-				process_dynamic_types (True, l_type_id_mapping)
+				if il_generation then
+					process_optimized_single_types (True, l_type_id_mapping)
+				else
+					process_dynamic_types (True, l_type_id_mapping)
+				end
 			end
 
 			if rescue_status.is_error_exception then
@@ -3725,6 +3733,91 @@ feature -- Generation
 			t.generate_make_file
 		end
 
+	store_finalized_type_mapping (a_backup: ARRAY [INTEGER]) is
+			-- Store the mapping between workbench `type_id' and the finalized one.
+			-- This mapping is needed for the profiler wizard when displaying finalized result.
+		require
+			a_backup_not_void: a_backup /= Void
+			a_backup_valid: a_backup.lower >= 0 and a_backup.upper <= static_type_id_counter.count
+		local
+			class_array: ARRAY [CLASS_C]
+			a_class: CLASS_C
+			types: TYPE_LIST
+			i, nb: INTEGER
+			l_new_old_mapping: ARRAY [INTEGER]
+			l_writer: SED_MEDIUM_READER_WRITER
+			l_mapping_file: RAW_FILE
+			l_file_name: FILE_NAME
+			l_facility: SED_STORABLE_FACILITIES
+		do
+				-- Build mapping between the new IDs and the old one.
+			from
+				class_array := classes
+				nb := class_counter.count
+				create l_new_old_mapping.make (a_backup.lower, a_backup.upper)
+				i := 1
+			until
+				i > nb
+			loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					from
+						types := a_class.types
+						types.start
+					until
+						types.after
+					loop
+						l_new_old_mapping [types.item.type_id] := a_backup [types.item.static_type_id]
+						types.forth
+					end
+				end
+				i := i + 1
+			end
+
+			create l_file_name.make_from_string (project_location.final_path)
+			l_file_name.set_file_name (finalized_type_mapping)
+			create l_mapping_file.make_open_write (l_file_name)
+			create l_writer.make (l_mapping_file)
+			l_writer.set_for_writing
+			create l_facility
+			l_facility.independent_store (l_new_old_mapping, l_writer, True)
+			l_mapping_file.close
+		end
+
+	internal_retrieved_finalized_type_mapping: like retrieved_finalized_type_mapping
+			-- Storage for `retrieved_finalized_type_mapping'.
+
+	retrieved_finalized_type_mapping: ARRAY [INTEGER] is
+			-- Mapping between finalized type IDs and the workbench one if present. Void otherwise.
+		local
+			l_file: RAW_FILE
+			l_facility: SED_STORABLE_FACILITIES
+			l_reader: SED_MEDIUM_READER_WRITER
+			l_file_name: FILE_NAME
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := internal_retrieved_finalized_type_mapping
+				if Result = Void then
+					create l_file_name.make_from_string (project_location.final_path)
+					l_file_name.set_file_name (finalized_type_mapping)
+					create l_file.make (l_file_name)
+					if l_file.exists then
+						l_file.open_read
+						create l_reader.make (l_file)
+						l_reader.set_for_reading
+						create l_facility
+						Result ?=  l_facility.retrieved (l_reader, True)
+						l_file.close
+						internal_retrieved_finalized_type_mapping := Result
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	process_dynamic_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER]) is
 			-- Processing of the dynamic types.
 			-- This is only needed when finalizing because this is where it is important
@@ -3841,7 +3934,10 @@ feature -- Generation
 				l_count := l_types.count
 				from i := 1 until i = l_count loop
 					l_type := l_types[i]
-					if l_type /= Void and then not l_type.is_precompiled and then not l_type.is_external and then l_type.is_generated_as_single_type then
+					if
+						l_type /= Void and then not l_type.is_precompiled and then
+						not l_type.is_external and then l_type.is_generated_as_single_type
+					then
 						l_type.set_implementation_id (a_backup[i])
 					end
 					i := i + 1
@@ -3851,7 +3947,10 @@ feature -- Generation
 				l_count := l_types.count
 				from i := 1 until i = l_count loop
 					l_type := l_types[i]
-					if l_type /= Void and then not l_type.is_precompiled and then not l_type.is_external  and then l_type.is_generated_as_single_type then
+					if
+						l_type /= Void and then not l_type.is_precompiled and then
+						not l_type.is_external  and then l_type.is_generated_as_single_type
+					then
 						a_backup.put (l_type.implementation_id, i)
 							-- Set implementation id to static id for .NET types that have been marked a single.
 						l_type.set_implementation_id (l_type.static_type_id)

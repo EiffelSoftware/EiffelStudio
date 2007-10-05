@@ -22,7 +22,7 @@ create
 
 feature -- Creation
 
-	make (profile, translat: STRING; s_p_config: SHARED_PROF_CONFIG) is
+	make (profile, translat: STRING; s_p_config: SHARED_PROF_CONFIG; a_is_final: BOOLEAN) is
 			-- Create the converter.
 			-- `profile' is the output file from the profile-tool,
 			-- `translat' is the name of the TRANSLAT file for this
@@ -30,6 +30,7 @@ feature -- Creation
 		do
 			config := s_p_config
 			profilename := profile
+			is_finalized_profile := a_is_final
 			create profile_information.make
 			create cyclics.make
 			read_profile_file
@@ -301,7 +302,7 @@ end
 							Eiffel_project.system_defined and then
 							Eiffel_system.valid_dynamic_id (dtype)
 						then
-							eclass := Eiffel_system.class_of_dynamic_id (dtype)
+							eclass := Eiffel_system.class_of_dynamic_id (dtype, is_finalized_profile)
 							if eclass /= Void then
 								class_n := eclass.name_in_upper
 								a_group := eclass.group
@@ -790,6 +791,9 @@ feature -- Access
 		-- Has the conversion worked properly?
 
 feature {NONE} -- Attributes
+
+	is_finalized_profile: BOOLEAN
+			-- Is converter done on the finalized profile?
 
 	profilename: STRING
 

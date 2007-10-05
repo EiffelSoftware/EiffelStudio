@@ -138,7 +138,7 @@ feature -- Update
 				else
 					create attributes.make (capacity)
 					if Eiffel_system.valid_dynamic_id (object_type_id) then
-						recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (object_type_id), False)
+						recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (object_type_id, False), False)
 					else
 						recv_attributes (attributes, Void, False)
 					end
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 						create exp_attr.make_attribute (attr_name, e_class, type_id, Void);
 						attr := exp_attr
 						if Eiffel_system.valid_dynamic_id (type_id) then
-							recv_attributes (exp_attr.attributes, Eiffel_system.class_of_dynamic_id (type_id), False)
+							recv_attributes (exp_attr.attributes, Eiffel_system.class_of_dynamic_id (type_id, False), False)
 						else
 							recv_attributes (exp_attr.attributes, Void, False)
 						end;

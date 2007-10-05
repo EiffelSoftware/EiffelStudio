@@ -74,7 +74,7 @@ feature -- Access
 					--| Extra safe test. The dynamic type should be known
 					--| from the system, but somehow Dino managed to crash
 					--| ebench here. This is very weird!!!
-					Result := Eiffel_system.class_of_dynamic_id (dynamic_type_id)
+					Result := Eiffel_system.class_of_dynamic_id (dynamic_type_id, False)
 					private_dynamic_class := Result
 				end
 			end

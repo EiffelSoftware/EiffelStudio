@@ -217,7 +217,6 @@ feature -- Debug Operation
 			-- Continue the execution of the program (stepping ...)
 		require
 			debugger_running_and_stopped: manager.safe_application_is_stopped
-			execution_replay_mode_not_activated: not manager.application_status.replay_activated
 		local
 			status: APPLICATION_STATUS
 			app_exec: APPLICATION_EXECUTION

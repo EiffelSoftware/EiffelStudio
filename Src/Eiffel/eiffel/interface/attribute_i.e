@@ -140,7 +140,7 @@ feature -- Element Change
 				external_b.set_external_name_id (external_name_id)
 				external_b.set_extension (extension)
 				Result := external_b
-			elseif is_qualified and then type.type_i.is_formal then
+			elseif is_qualified and then system.seed_of_routine_id (rout_id_set.first).has_formal then
 					-- Call a generic wrapper.
 				Result := Precursor (access_type, static_type, is_qualified)
 			else

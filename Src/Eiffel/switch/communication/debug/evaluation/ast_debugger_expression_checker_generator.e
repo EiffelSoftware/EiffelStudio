@@ -27,6 +27,7 @@ feature {NONE} -- Implementation: type validation
 			l_vd29: VD29
 			l_classes: LIST [CLASS_I]
 			l_cl: CLASS_I
+			context_hack_applied: BOOLEAN
 		do
 			if is_inherited then
 					-- Convert TYPE_AS into TYPE_A.
@@ -34,8 +35,9 @@ feature {NONE} -- Implementation: type validation
 			else
 				l_type := type_a_generator.evaluate_type_if_possible (a_type, context.current_class)
 			end
-			
+
 			if l_type = Void then
+				context_hack_applied := True
 				fixme ("2006-09-14: Is it correct to try to find the correct context ? Need more testing with class renaming. (Asked by Manu)")
 					-- Check about dependencies
 				l_class_type ?= a_type
@@ -79,7 +81,6 @@ feature {NONE} -- Implementation: type validation
 					l_type := l_type.evaluated_type_in_descendant (context.written_class,
 									context.current_class, current_feature)
 				else
-					l_type := type_a_generator.evaluate_type (a_type, context.current_class)
 						-- Perform simple check that TYPE_A is valid.
 					l_type := type_a_checker.check_and_solved (l_type, a_type)
 				end

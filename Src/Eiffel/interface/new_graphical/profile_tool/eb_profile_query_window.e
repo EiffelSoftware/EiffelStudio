@@ -631,6 +631,12 @@ feature -- Status Setting
 			rebuild_grid
 		end
 
+feature -- Access
+
+	min_column_index: INTEGER is 1
+	max_column_index: INTEGER is 6
+		-- Various indexes of columns
+
 feature {NONE} -- Implementation
 
 	displayed_column_indexes: ARRAY [INTEGER]
@@ -1003,7 +1009,7 @@ feature {NONE} -- Implementation
 	sort_column (column_index: INTEGER) is
 			-- Sort logical column `column_index'.
 		require
-			valid_column_index: column_index >= 1 and column_index <= 6
+			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
 		local
 			ascending: BOOLEAN
 			sorted_tuple: TUPLE [BOOLEAN, BOOLEAN]
@@ -1049,7 +1055,7 @@ feature {NONE} -- Implementation
 			-- direction based on `ascending'.
 		require
 			flat_mode_enabled: not tree_structure_enabled
-			valid_column_index: column_index >= 1 and column_index <= 1
+			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
 		local
 			quick_sorter: DS_ARRAY_QUICK_SORTER [EB_PROFILE_QUERY_GRID_ROW]
 			equality_tester: AGENT_BASED_EQUALITY_TESTER [EB_PROFILE_QUERY_GRID_ROW]
@@ -1064,7 +1070,7 @@ feature {NONE} -- Implementation
 			-- direction based on `ascending'.
 		require
 			tree_structure_enabled: tree_structure_enabled
-			valid_column_index: column_index >= 1 and column_index <= 1
+			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
 		local
 			quick_sorter: DS_ARRAY_QUICK_SORTER [EB_PROFILE_QUERY_GRID_ROW]
 			equality_tester: AGENT_BASED_EQUALITY_TESTER [EB_PROFILE_QUERY_GRID_ROW]
@@ -1098,7 +1104,7 @@ feature {NONE} -- Implementation
 		require
 			query_grid_row1_not_void: query_grid_row1 /= Void
 			query_grid_row2_not_void: query_grid_row2 /= Void
-			valid_column_index: column_index >= 1 and column_index <= 6
+			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
 		local
 			last_equal: BOOLEAN
 		do
@@ -1163,7 +1169,7 @@ feature {NONE} -- Implementation
 			-- Resize column `a_column' in `output_grid' to required width to display
 			-- its contents if the mouse pointer is currently over a column divider.
 		require
-			valid_column: a_column >= 1 and a_column <= output_grid.row_count
+			valid_column: a_column >= min_column_index and a_column <= max_column_index
 		local
 			pointed_index: INTEGER
 			grid_row: EV_GRID_ROW
@@ -1211,7 +1217,7 @@ feature {NONE} -- Implementation
 			-- Are `query_grid_row1' and `query_grid_row2' considered equal for property defined by `column_index'?
 		require
 			profile_data_not_void: query_grid_row1 /= Void and query_grid_row2 /= Void
-			valid_column_index: column_index >= 1 and column_index <= 6
+			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
 		do
 			inspect column_index
 			when 1 then

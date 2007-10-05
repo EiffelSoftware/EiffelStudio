@@ -1898,16 +1898,28 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 7))
 		end
 
+	frozen callstack_marked_arrow_icon: EV_PIXMAP is
+			-- Access to 'marked arrow' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (3, 7))
+		end
+
+	frozen callstack_marked_arrow_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'marked arrow' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 7))
+		end
+
 	frozen debugger_environment_force_debug_mode_icon: EV_PIXMAP is
 			-- Access to 'force debug mode' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (3, 7))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (4, 7))
 		end
 
 	frozen debugger_environment_force_debug_mode_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'force debug mode' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 7))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 7))
 		end
 
 	frozen general_blank_icon: EV_PIXMAP is

@@ -167,8 +167,19 @@ feature -- Viewers
 			end
 		end
 
+	refresh_current_viewer is
+			-- Refresh Current Viewer
+		local
+			v: like current_viewer
+		do
+			v := current_viewer
+			if v /= Void then
+				viewer_changed_actions.call ([v])
+			end
+		end
+
 	replace_cell_content (cl: EV_CELL; w: EV_WIDGET) is
-			--
+			-- Replace the content of cell `c' with `w'
 		local
 			p: EV_CONTAINER
 		do
@@ -182,16 +193,21 @@ feature -- Viewers
 feature -- Actions
 
 	viewer_changed_actions: ACTION_SEQUENCE [TUPLE [like current_viewer]]
+			-- Actions triggered when current viewer changed.
 
 feature -- Access
 
 	viewers: ARRAYED_LIST [EB_OBJECT_VIEWER]
+			-- List of viewers.
 
 	tool: EB_OBJECT_VIEWERS_TOOL
+			-- Associated viewer tool.
 
 	widget: EV_WIDGET
+			-- Vision2 widget representing Current.
 
 	title: STRING_GENERAL
+			-- Global title
 
 feature -- Change
 
@@ -213,6 +229,7 @@ feature -- Change
 feature -- Access
 
 	is_locked: BOOLEAN
+			-- Is locked ?
 
 	is_stone_valid (st: OBJECT_STONE): BOOLEAN is
 			-- Is `st' valid stone for Current?

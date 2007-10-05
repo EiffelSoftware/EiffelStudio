@@ -188,6 +188,14 @@ feature -- Button texts
 	b_warning: STRING_GENERAL is						do Result := locale.translation("Warning") end
 	b_warnings: STRING_GENERAL is						do Result := locale.translation("Warnings") end
 
+	b_Activate_execution_recording: STRING_GENERAL is 		do Result := locale.translation("Record Execution")	end
+	b_Deactivate_execution_recording: STRING_GENERAL is 	do Result := locale.translation("Disable Execution Recording")	end
+	b_Activate_execution_replay_mode: STRING_GENERAL is 		do Result := locale.translation("Replay mode")	end
+	b_Deactivate_execution_replay_mode: STRING_GENERAL is 	do Result := locale.translation("Execution mode")	end
+
+	b_Control_debuggee_object_storage: STRING_GENERAL is	do Result := locale.translation("Debuggee Object Storage")	end
+
+
 feature -- Choices
 
 	c_right_click_receiver: HASH_TABLE [STRING_GENERAL, STRING] is
@@ -644,6 +652,14 @@ feature -- Accelerator, focus label and menu name
 	l_compiled_class_stone_name: STRING_GENERAL is do Result := locale.translation ("Compiled class stone") end
 	l_group_stone_name: STRING_GENERAL is do Result := locale.translation ("Group stone") end
 	l_target_stone_name: STRING_GENERAL is do Result := locale.translation ("Target stone") end
+
+	m_Activate_execution_recording: STRING_GENERAL is 		do Result := locale.translation("Activate execution recording")	end
+	m_Deactivate_execution_recording: STRING_GENERAL is 	do Result := locale.translation("Deactivate execution recording")	end
+	m_Activate_execution_replay_mode: STRING_GENERAL is 		do Result := locale.translation("Activate replay mode")	end
+	m_Deactivate_execution_replay_mode: STRING_GENERAL is 	do Result := locale.translation("Deactivate replay mode")	end
+
+	m_Control_debuggee_object_storage: STRING_GENERAL is	do Result := locale.translation("Control debuggee object storage")	end
+
 
 feature -- Menu entries
 
@@ -1374,6 +1390,7 @@ feature -- Label texts
 
 	l_Version: STRING_GENERAL is				do Result := locale.translation ("Version") end
 	l_viewer_display_complete_object: STRING_GENERAL is do Result := locale.translation("Display Complete Object") end
+	l_viewer_display_auto_upper_limit: STRING_GENERAL is do Result := locale.translation("Auto Set Upper Limit") end
 	l_viewer_enable_word_wrapping: STRING_GENERAL is do Result := locale.translation("Enable Word Wrapping") end
 	l_copy_text_to_clipboard: STRING_GENERAL is do Result := locale.translation("Copy Text To Clipboard") end
 	l_view_label: STRING_GENERAL is do Result := locale.translation ("View label") end
@@ -2240,6 +2257,17 @@ feature -- Description text, no translation (for the editor).
 										%and drop it here to have extended information about it."
 	ee_Running: STRING is				"Application is running"
 	ee_Running_no_stop_points: STRING is	"Application is running (ignoring breakpoints)"
+
+
+	e_Activate_execution_recording: STRING_GENERAL is	do Result := locale.translation("Activate execution recording")	end
+	e_Deactivate_execution_recording: STRING_GENERAL is	do Result := locale.translation("Deactivate execution recording")	end
+
+	e_Activate_execution_replay_mode: STRING_GENERAL is	do Result := locale.translation("Activate execution replay mode")	end
+	e_Deactivate_execution_replay_mode: STRING_GENERAL is	do Result := locale.translation("Deactivate execution replay mode")	end
+
+	e_Control_debuggee_object_storage: STRING_GENERAL is	do Result := locale.translation("Control debuggee object storage")	end
+	
+
 feature -- Error
 
 	err_error: STRING_GENERAL is do Result := locale.translation ("Error ") end

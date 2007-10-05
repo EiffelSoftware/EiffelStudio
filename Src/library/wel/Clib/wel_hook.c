@@ -31,7 +31,7 @@ indexing
 HHOOK hMouseHook = NULL;	// HHOOK from SetWindowsHook
 HWND hHookWindow = NULL;	// Handle to the window that hook the mouse
 #pragma data_seg()			// Back to regular, nonshared data
-#ifdef EIF_IS_64_BITS
+#ifdef EIF_64_BITS
 #pragma comment(linker, "-section:.shared,rws")
 #else
 #pragma comment(linker, "-section:.shared,rws -EXPORT:MouseProc=_MouseProc@12 -EXPORT:hook_mouse=_hook_mouse@4 -EXPORT:unhook_mouse=_unhook_mouse@0 -EXPORT:get_hook_window=_get_hook_window@0")

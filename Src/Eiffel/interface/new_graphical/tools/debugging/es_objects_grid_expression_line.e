@@ -336,7 +336,7 @@ feature -- Graphical changes
 				new_text.left_adjust
 				if expression.as_object then
 						--| i.e: we just change the "title" of the expression
-					if not new_text.is_equal (expression.name) then
+					if expression.name = Void or else not new_text.is_equal (expression.name) then
 						expression.set_name (new_text)
 						set_title (expression.name)
 					end

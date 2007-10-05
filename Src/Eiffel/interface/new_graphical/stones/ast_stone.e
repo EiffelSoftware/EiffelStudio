@@ -18,6 +18,8 @@ inherit
 			x_stone_cursor
 		end
 
+	SHARED_SERVER
+
 create
 	make
 
@@ -56,6 +58,26 @@ feature -- Access
 			Result := x_stone_cursor_internal
 		ensure then
 			good_result: Result = x_stone_cursor_internal
+		end
+
+feature -- Measurement
+
+	line_position: INTEGER is
+			-- Line number
+		do
+			Result := ast.first_token (match_list_server.item (e_class.class_id)).line
+		end
+
+	character_position: INTEGER is
+			-- Character position
+		do
+			Result := ast.first_token (match_list_server.item (e_class.class_id)).position
+		end
+
+	column_position: INTEGER is
+			-- Column position
+		do
+			Result := ast.first_token (match_list_server.item (e_class.class_id)).column
 		end
 
 feature -- Status report

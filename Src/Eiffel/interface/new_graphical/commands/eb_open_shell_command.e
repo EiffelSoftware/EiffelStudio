@@ -23,6 +23,8 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	SHARED_SERVER
+
 	SYSTEM_CONSTANTS
 
 	EB_SHARED_PREFERENCES
@@ -31,8 +33,6 @@ inherit
 		end
 
 	EB_CONSTANTS
-
-	EXECUTION_ENVIRONMENT
 
 create
 	make
@@ -143,39 +143,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_ast (ast: AST_STONE) is
+	process_ast (s: AST_STONE) is
 			-- Process AST stone
 		require
-			ast_not_void: ast /= Void
+			ast_not_void: s /= Void
 		local
 			req: COMMAND_EXECUTOR
 			fn: STRING
 			ln: INTEGER
-			p: INTEGER
-			f: RAW_FILE
-			loc: LOCATION_AS
 		do
-			fn := ast.file_name
+			fn := s.file_name
 			if fn /= Void then
-					--| Maybe there is a better way to find line number from an AST_NODE...
-				loc ?= ast.ast
-				if loc /= Void then
-					create f.make (fn)
-					if f.exists and f.is_readable then
-						f.open_read
-						from
-							p := loc.position
-							ln := 0
-						until
-							f.end_of_file or f.position >= p
-						loop
-							ln := ln + 1
-							f.next_line
-						end
-						f.close
-					end
-				end
-
+				ln := s.line_position
 				create req
 				req.execute (preferences.misc_data.external_editor_cli (fn, ln.max (1)))
 			end

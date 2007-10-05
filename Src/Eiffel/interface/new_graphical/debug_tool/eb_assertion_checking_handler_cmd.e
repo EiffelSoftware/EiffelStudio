@@ -113,7 +113,9 @@ feature -- Change text
 				until
 					toolbar_items.after
 				loop
-					toolbar_items.item.set_text (t)
+					if not toolbar_items.item.text.is_empty then
+						toolbar_items.item.set_text (t)
+					end
 					toolbar_items.item.set_pixmap (p)
 					toolbar_items.forth
 				end
@@ -126,7 +128,9 @@ feature -- Change text
 				until
 					sd_toolbar_items.after
 				loop
-					sd_toolbar_items.item.set_text (t)
+					if sd_toolbar_items.item.text /= Void then
+						sd_toolbar_items.item.set_text (t)
+					end
 					sd_toolbar_items.item.set_pixmap (p)
 					sd_toolbar_items.forth
 				end

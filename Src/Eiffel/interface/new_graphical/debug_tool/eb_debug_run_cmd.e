@@ -54,11 +54,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all

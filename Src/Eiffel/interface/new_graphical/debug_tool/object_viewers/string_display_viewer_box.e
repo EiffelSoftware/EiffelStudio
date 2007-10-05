@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 				create tbb
 				tbb.set_pixmap (pixmaps.icon_pixmaps.debugger_object_expand_icon)
 				tbb.select_actions.extend (agent auto_slice_selected)
-				tbb.set_tooltip (interface_names.l_viewer_display_complete_object)
+				tbb.set_tooltip (interface_names.l_viewer_display_auto_upper_limit)
 				l_tb.extend (tbb)
 
 				l_tb.extend (create {EV_TOOL_BAR_SEPARATOR})
@@ -312,6 +312,7 @@ feature -- Change
 				end
 			end
 			editor.disable_edit
+			viewers_manager.refresh_current_viewer
 		end
 
 	destroy is
@@ -413,13 +414,10 @@ feature {NONE} -- Event handling
 			-- Called by `select_actions' of `auto_set_slice_button'.
 		do
 			if has_object then
-				lower_slice_field.set_text ("0")
-				upper_slice_field.set_text ((-1).out) --(current_dump_value.last_string_representation_length - 1).out)
-				slice_min_ref.set_item (0)
+				upper_slice_field.set_text ((-1).out)
 				slice_max_ref.set_item (-1)
 				refresh
-
-				set_limits (0, current_dump_value.last_string_representation_length - 1)
+				set_limits (slice_min, current_dump_value.last_string_representation_length - 1)
 				upper_slice_field.set_text (slice_max.out)
 			end
 		end

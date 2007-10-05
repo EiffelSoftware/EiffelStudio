@@ -628,7 +628,7 @@ feature {NONE} -- Classic specific
 							if item /= Void then
 								item.set_hector_addr
 								Result := item.dump_value
-								clear_item
+								reset_recv_value
 							end
 						end
 					end

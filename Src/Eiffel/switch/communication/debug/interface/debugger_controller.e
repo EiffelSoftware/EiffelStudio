@@ -215,11 +215,13 @@ feature -- Debug Operation
 
 	resume_workbench_application is
 			-- Continue the execution of the program (stepping ...)
+		require
+			debugger_running_and_stopped: manager.safe_application_is_stopped
+			execution_replay_mode_not_activated: not manager.application_status.replay_activated
 		local
 			status: APPLICATION_STATUS
 			app_exec: APPLICATION_EXECUTION
 		do
-			check debugger_running_and_stopped: manager.safe_application_is_stopped end
 			app_exec := manager.application
 
 			status := app_exec.status
@@ -519,7 +521,7 @@ feature {NONE} -- debugging
 			end
 		end
 
-feature {DEBUGGER_MANAGER} -- Implementation
+feature -- {DEBUGGER_MANAGER, SHARED_DEBUGGER_MANAGER} -- Implementation
 
 	manager: DEBUGGER_MANAGER
 

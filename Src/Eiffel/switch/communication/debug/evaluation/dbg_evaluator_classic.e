@@ -123,7 +123,7 @@ feature {DBG_EVALUATOR} -- Interface
 						if item /= Void then
 							item.set_hector_addr
 							last_result_value := item.dump_value
-							clear_item
+							reset_recv_value
 						end
 					else
 						last_result_value := debugger_manager.dump_value_factory.new_procedure_return_value (create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (fi.feature_name))

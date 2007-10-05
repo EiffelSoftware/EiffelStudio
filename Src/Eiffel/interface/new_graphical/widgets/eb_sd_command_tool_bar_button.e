@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 			command.managed_sd_toolbar_items.extend (Current)
 			name := command.name
 		end
-
+		
 feature -- Cleaning
 
 	internal_recycle is
-			-- To be called when the button has became useless.
+			-- To be called when the button has became useless
 		do
 			command.managed_sd_toolbar_items.prune_all (Current)
 			drop_actions.wipe_out

@@ -160,30 +160,39 @@ feature -- Launching
 			-- Close the Eiffel debugger's daemon
 		local
 			r, n: INTEGER
+			retried: BOOLEAN
 		do
-			stop_ecdbgd_alive_checking
-			if is_ecdbgd_alive then
-				r := c_close_ecdbgd (0)
+			if not retried then
+				stop_ecdbgd_alive_checking
+				if is_ecdbgd_alive then
+					r := c_close_ecdbgd (0)
 
-				from
-					n := 0
-				until
-					not is_ecdbgd_alive or n > 100 --| timeout: 100ms
-				loop
-					sleep (1_000_000) -- i.e: 1 ms
-					n := n + 1
+					from
+						n := 0
+					until
+						not is_ecdbgd_alive or n > 100 --| timeout: 100ms
+					loop
+						sleep (1_000_000) -- i.e: 1 ms
+						n := n + 1
+					end
+					check
+						not_is_ecdbgd_alive: not is_ecdbgd_alive
+					end
+					--| it is not that critical to be sure ecdbgd is closed
+					--| but it should be very quick .. so let's check
 				end
-				check
-					not_is_ecdbgd_alive: not is_ecdbgd_alive
-				end
-				--| it is not that critical to be sure ecdbgd is closed
-				--| but it should be very quick .. so let's check
+					--| It is better to do that even if it is not alive.
+				clean_connection
+				ec_dbg_launched := False
+			else
+				clean_connection
+				ec_dbg_launched := False
 			end
-				--| It is better to do that even if it is not alive.
-			clean_connection
-			ec_dbg_launched := False
 		ensure
 			ecdbgd_dead: not is_ecdbgd_alive
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Status

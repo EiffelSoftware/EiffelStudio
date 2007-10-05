@@ -128,6 +128,8 @@ feature {NONE}
 
 	Translation_log_file_name: STRING is "TRANSLAT";
 
+	Finalized_type_mapping: STRING is "class_mapping"
+
 	Finished_file_for_make: STRING is "finished"
 
 	Local_assemblies: STRING is "Assemblies"

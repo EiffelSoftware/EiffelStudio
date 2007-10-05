@@ -138,7 +138,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 				]")
 
 			if Eiffel_system.valid_dynamic_id (type + 1) then
-				cl := Eiffel_system.class_of_dynamic_id (type + 1)
+				cl := Eiffel_system.class_of_dynamic_id (type + 1, False)
 				if
 					cl /= Void
 					and then cl.is_special

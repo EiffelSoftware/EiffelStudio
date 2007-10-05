@@ -213,7 +213,7 @@ feature {COMPILER_EXPORTER}
 			Result := System.class_types.valid_index (i)
 		end;
 
-	class_of_dynamic_id (i: INTEGER): CLASS_C is
+	class_of_dynamic_id (i: INTEGER; a_is_final: BOOLEAN): CLASS_C is
 			-- Eiffel Class of dynamic id `i'
 		require
 			positive_i: i >= 0;
@@ -221,19 +221,29 @@ feature {COMPILER_EXPORTER}
 		local
 			ct: CLASS_TYPE
 		do
-			ct := System.class_types.item (i);
+			ct := type_of_dynamic_id (i, a_is_final)
 			if ct /= Void then
 				Result := ct.associated_class
 			end
 		end;
 
-	type_of_dynamic_id (i: INTEGER): CLASS_TYPE is
+	type_of_dynamic_id (i: INTEGER; a_is_final: BOOLEAN): CLASS_TYPE is
 			-- Class type of dynamic id `id'
 		require
 			positive_i: i >= 0;
 			valid_i: valid_dynamic_id (i)
+		local
+			ct: CLASS_TYPE
+			l_mapping: ARRAY [INTEGER]
 		do
-			Result := System.class_types.item (i)
+			if a_is_final then
+				l_mapping := system.retrieved_finalized_type_mapping
+				if l_mapping /= Void then
+					Result := system.class_types.item (l_mapping.item (i))
+				end
+			else
+				Result := System.class_types.item (i)
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Element change

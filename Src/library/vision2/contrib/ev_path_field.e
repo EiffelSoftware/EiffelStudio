@@ -1,5 +1,5 @@
 indexing
-	description: "Provide a text field with a browse button on its left."
+	description: "Provide a text field with a browse button on its right."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -12,10 +12,25 @@ inherit
 	EV_VERTICAL_BOX
 
 create
+	make,
+	make_with_text,
 	make_with_parent,
 	make_with_text_and_parent
 
 feature {NONE} -- Initialization
+
+	make is
+			-- Create a widget that is made to browse for directory.
+		do
+			make_with_text (Void)
+		end
+
+	make_with_text (t: STRING_GENERAL) is
+			-- Create a widget that is made to browse for directory.
+		do
+			default_create
+			build_widget (t)
+		end
 
 	make_with_parent (win: like parent_window) is
 			-- Create a widget that is made to browse for directory.
@@ -30,9 +45,8 @@ feature {NONE} -- Initialization
 		require
 			win_not_void: win /= Void
 		do
-			default_create
-			build_widget (t)
-			parent_window := win
+			make_with_text (t)
+			set_parent_window (win)
 		ensure
 			parent_window_set: parent_window = win
 		end
@@ -42,8 +56,16 @@ feature -- Access
 	field: EV_TEXT_FIELD
 			-- Text field holding path value.
 
-	parent_window: EV_WINDOW
+	parent_window: EV_WINDOW is
 			-- Window to which browsing dialog will be modal.
+		do
+			Result := internal_parent_window
+			if Result = Void then
+				Result := parent_window_of (Current)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	default_start_directory: STRING_32
 			-- Default start directory for browsing dialog.
@@ -61,6 +83,12 @@ feature -- Status
 		end
 
 feature -- Settings
+
+	set_parent_window (win: EV_WINDOW) is
+			-- Set `internal_parent_window' with `win'
+		do
+			internal_parent_window := win
+		end
 
 	set_text, set_path (p: STRING_GENERAL) is
 			-- Assign `p' to `path'.
@@ -124,7 +152,7 @@ feature {NONE} -- GUI building
 			l_hbox.set_padding ((create {EV_LAYOUT_CONSTANTS}).Small_padding_size)
 
 			create field
-			create browse_button.make_with_text_and_action ("Browse...", agent browse_for_directory)
+			create browse_button.make_with_text_and_action (Label_browse, agent browse_for_directory)
 
 			l_hbox.extend (field)
 			l_hbox.extend (browse_button)
@@ -132,6 +160,7 @@ feature {NONE} -- GUI building
 
 			extend (l_hbox)
 		end
+
 
 	browse_button: EV_BUTTON
 			-- Browse for a file or a directory.
@@ -143,7 +172,7 @@ feature {NONE} -- GUI building
 			l_start_directory: STRING_32
 		do
 			create dd
-			dd.set_title ("Select a directory")
+			dd.set_title (Label_select_directory)
 			l_start_directory := start_directory
 			if
 				l_start_directory /= Void and then
@@ -159,6 +188,7 @@ feature {NONE} -- GUI building
 			end
 		end
 
+
 	browse_for_file (filter: STRING_GENERAL) is
 			-- Popup a "select directory" dialog.
 		local
@@ -167,10 +197,10 @@ feature {NONE} -- GUI building
 		do
 			create fd
 			if filter /= Void then
-				fd.filters.extend ([filter.as_string_32, ("Files of type (").as_string_32 + filter.as_string_32 + ")"])
-				fd.filters.extend ([("*.*").as_string_32, ("All Files (*.*)").as_string_32])
+				fd.filters.extend ([filter.as_string_32, Label_files_of_type (filter)])
+				fd.filters.extend ([("*.*").as_string_32, Label_all_files.as_string_32])
 			end
-			fd.set_title ("Select a file")
+			fd.set_title (Label_select_file)
 			l_start_directory := start_directory
 			if
 				l_start_directory /= Void and then
@@ -194,9 +224,39 @@ feature {NONE} -- GUI building
 			end
 		end
 
+feature {NONE} -- Interface names
+
+	Label_browse: STRING is "Browse..."
+	Label_select_directory: STRING is "Select a directory"
+	Label_select_file: STRING is "Select a file"
+	Label_all_files: STRING is "All Files (*.*)"
+	Label_files_of_type (f: STRING_GENERAL): STRING_32 is
+		require
+			f_not_void: f /= Void
+		do
+			Result := "Files of type ("
+			Result.append_string_general (f)
+			Result.append_character (')')
+		end
+
+feature {NONE} -- Parent window
+
+	parent_window_of (w: EV_WIDGET): EV_WINDOW is
+			-- Window to which browsing dialog will be modal.
+		do
+			if w /= Void then
+				Result ?= w
+				if Result = Void then
+					Result := parent_window_of (w.parent)
+				end
+			end
+		end
+
+	internal_parent_window: EV_WINDOW
+			-- Window to which browsing dialog will be modal.
+
 invariant
 	field_not_void: field /= Void
-	parent_window_not_void: parent_window /= Void
 	browse_button_not_void: browse_button /= Void
 
 indexing

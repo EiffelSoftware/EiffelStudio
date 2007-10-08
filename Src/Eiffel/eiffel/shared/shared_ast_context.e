@@ -1,9 +1,10 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	
 class SHARED_AST_CONTEXT
 
-feature {NONE}
+feature -- Access
 
 	Context: AST_CONTEXT is
 			-- Context for third pass

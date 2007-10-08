@@ -158,11 +158,9 @@ feature -- Checking
 			i, nb: INTEGER
 			l_area: SPECIAL [TYPE_A]
 			a_area: like argument_names
-			arg_eval: ARG_EVALUATOR
 			l_names_heap: like Names_heap
 		do
 			from
-				arg_eval := Arg_evaluator
 				a_area := argument_names
 				l_area := area
 				l_names_heap := Names_heap
@@ -181,10 +179,6 @@ feature -- Checking
 						-- an exception is triggered by the type evaluator
 					solved_type /= Void
 				end
-				if associated_class = f.written_class then
-						-- Check validity of a generic type
-					type_a_checker.check_type_validity (solved_type, Void)
-				end
 					-- Instantiation: instantitation of the
 					-- argument types must be done in the context of the
 					-- actual type of the class associated to the actual
@@ -192,9 +186,36 @@ feature -- Checking
 					-- Don't forget that the arguments are written where
 					-- the feature is written.
 				l_area.put (solved_type, i)
+				i := i + 1
+			end
+		end
 
-				solved_type.check_for_obsolete_class (associated_class)
-
+	check_type_validity (a_context_class: CLASS_C; a_feature: FEATURE_I; a_checker: TYPE_A_CHECKER) is
+			-- Check like types in arguments and instantiate arguments
+		require
+			a_context_class_not_void: a_context_class /= Void
+			a_feature_not_void: a_feature /= Void
+			a_checker_not_void: a_checker /= Void
+		local
+			i, nb: INTEGER
+			l_area: SPECIAL [TYPE_A]
+			l_check: BOOLEAN
+			l_type: TYPE_A
+		do
+			from
+				l_area := area
+				nb := count
+				l_check := a_context_class.class_id = a_feature.written_in
+			until
+				i = nb
+			loop
+				l_type := l_area.item (i)
+					-- Process anchored type for argument types
+				if l_check then
+						-- Check validity of a generic type
+					a_checker.check_type_validity (l_type, Void)
+				end
+				l_type.check_for_obsolete_class (a_context_class)
 				i := i + 1
 			end
 		end

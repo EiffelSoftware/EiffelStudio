@@ -80,10 +80,10 @@ feature -- Processing
 			-- why we re-sort the list of classes after the topological
 			-- sort in order to take advantage of it.
 		local
-			i, nb, j: INTEGER
+			i, nb: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
-			l_error_count_before: INTEGER
+			l_error_level: NATURAL
 		do
 			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes.sorted_classes
@@ -91,6 +91,10 @@ feature -- Processing
 				-- We need to clean the cache of feature tables since we would not know how
 				-- to distinguish the previous from the current computed feature tables.
 			feature_table_cache.wipe_out
+
+				-- Reset routine IDs for `ANY.default_create', `ANY.default_rescue' and `SPECIAL.make'
+				-- as they might change if they go again through degree 4.
+			system.reset_routine_ids
 
 				-- Check that the constraint class is a valid class.
 				-- I.e. we cannot have [G -> like t] or others.
@@ -100,6 +104,8 @@ feature -- Processing
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed then
+							-- In addition of checking the generics below, we also reset the `is_ignored_for_degree_4' flag.
+						a_class.set_is_ignored_for_degree_4 (False)
 						if a_class.changed and then a_class.generics /= Void then
 							System.set_current_class (a_class)
 							a_class.check_constraint_genericity
@@ -115,7 +121,9 @@ feature -- Processing
 
 				-- Cannot continue if there is an error in the
 				-- constraint genericity clause of a class.
-			Error_handler.checksum
+			if error_handler.has_error then
+				error_handler.raise_error
+			end
 
 			nb := 0
 
@@ -124,22 +132,33 @@ feature -- Processing
 			from i := 1 until nb = count loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
-					if not a_class.degree_4_processed then
-						j := j + 1
+					if not a_class.degree_4_processed and not a_class.is_ignored_for_degree_4 then
 						Degree_output.put_degree_4 (a_class, count - nb)
 						System.set_current_class (a_class)
 							-- Adds future checks to the `remaining_validity_checking_list'
+						l_error_level := error_handler.error_level
 						process_class (a_class)
-						check
-							No_error: not Error_handler.has_error
+						if error_handler.error_level = l_error_level then
+								-- We only merge the remaining checks if the class did not produce any other errors
+							merge_remaining_validity_checks_into_global_list
+							a_class.set_degree_4_processed
+						else
+								-- We cannot add the temporary added checks so we need to get rid of them
+								-- we will process them at the next compilation when user will have fix the
+								-- errors reported by the user.
+							empty_temp_remaining_validity_checking_list
+							a_class.set_is_ignored_for_degree_4 (True)
+							remove_descendant_classes_from_processing (a_class)
 						end
-							-- We only merge the remaining checks if the class did not produce any other errors
-						merge_remaining_validity_checks_into_global_list
-						a_class.set_degree_4_processed
 					end
 					nb := nb + 1
 				end
 				i := i + 1
+			end
+
+				-- No need to continue if we have found some errors.
+			if error_handler.has_error then
+				error_handler.raise_error
 			end
 
 				-- Check now the validity on creation constraint, i.e. that the
@@ -152,13 +171,12 @@ feature -- Processing
 				if a_class /= Void and then a_class.degree_4_needed then
 					if a_class.changed and then a_class.generics /= Void then
 						System.set_current_class (a_class)
-						l_error_count_before := error_handler.nb_errors
+						l_error_level := error_handler.error_level
 						a_class.check_constraint_renaming
 							-- We only check the creation constraitns if the renaming was valid.
-						if error_handler.nb_errors = l_error_count_before then
+						if error_handler.error_level = l_error_level then
 							a_class.check_creation_constraint_genericity
 						end
-
 					end
 					nb := nb - 1
 				end
@@ -167,7 +185,9 @@ feature -- Processing
 
 				-- We cannot go on here as the creation constraints are not guaranteed to be valid.
 				-- The remaining_validity_check_list will be kept. All checks will be done once we have no mroe errors.
-			error_handler.checksum
+			if error_handler.has_error then
+				error_handler.raise_error
+			end
 
 				-- Check now that all the instances of a generic class are
 				-- valid for the creation constraint if there is one. The
@@ -288,6 +308,26 @@ feature -- Setting
 			changed_status.extend (a_class.class_id)
 		end
 
+	remove_descendant_classes_from_processing (a_class: CLASS_C) is
+			-- Set all descendants of `a_class' with `is_ignored_for_degree_4' to True.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_descendants: ARRAYED_LIST [CLASS_C]
+		do
+			from
+				l_descendants := a_class.descendants
+				l_descendants.start
+			until
+				l_descendants.after
+			loop
+				l_descendants.item.set_is_ignored_for_degree_4 (True)
+				remove_descendant_classes_from_processing (l_descendants.item)
+				l_descendants.forth
+			end
+		end
+
+
 feature {NONE} -- Processing
 
 	process_class (a_class: CLASS_C) is
@@ -297,43 +337,44 @@ feature {NONE} -- Processing
 		local
 			do_pass2: BOOLEAN
 			external_class: EXTERNAL_CLASS_C
+			retried: BOOLEAN
 		do
-			external_class ?= a_class
-			if external_class /= Void then
-				external_class.process_degree_4
-			else
-				if a_class.changed then
-					do_pass2 := True
-						-- Incrementality: Degree 3 can be done successfully
-						-- on a class marked changed and then the class is
-						-- reinserted in Degree 4.
-					Degree_3.insert_new_class (a_class)
-					Degree_2.insert_new_class (a_class)
+			if not retried then
+				external_class ?= a_class
+				if external_class /= Void then
+					external_class.process_degree_4
 				else
-					do_pass2 := a_class.changed2
-				end
-				if do_pass2 then
-						-- Analysis of inheritance for a class.
-					analyzer.pass2 (a_class, a_class.supplier_status_modified)
-
-						-- No error happened: set the compilation
-						-- status of `class_c'.
-					check
-						No_error: not Error_handler.has_error
+					if a_class.changed then
+						do_pass2 := True
+							-- Incrementality: Degree 3 can be done successfully
+							-- on a class marked changed and then the class is
+							-- reinserted in Degree 4.
+						Degree_3.insert_new_class (a_class)
+						Degree_2.insert_new_class (a_class)
+					else
+						do_pass2 := a_class.changed2
 					end
+					if do_pass2 then
+							-- Analysis of inheritance for a class.
+						analyzer.pass2 (a_class, a_class.supplier_status_modified)
 
-						-- Update the freeze list for changed hash tables.
-					Degree_1.insert_class (a_class)
-				elseif a_class.assert_prop_list /= Void then
-						-- Propagation of assertion modifications only.
-									debug ("ACTIVITY")
-										io.error.put_string ("Propagation of assertions only%N")
-									end
-					propagate_pass2 (a_class, False)
+							-- Update the freeze list for changed hash tables.
+						Degree_1.insert_class (a_class)
+					elseif a_class.assert_prop_list /= Void then
+							-- Propagation of assertion modifications only.
+										debug ("ACTIVITY")
+											io.error.put_string ("Propagation of assertions only%N")
+										end
+						propagate_pass2 (a_class, False)
+					end
 				end
 			end
-		ensure
-			no_error: not Error_handler.has_error
+		rescue
+			if error_handler.rescue_status.is_error_exception  then
+					-- When an error is triggered we do as if no error had occurred.
+				retried := True
+				retry
+			end
 		end
 
 feature {INHERIT_TABLE} -- Propagation
@@ -606,7 +647,9 @@ feature {NONE} -- Generic checking
 
 				-- Cannot continue if there is an error in the
 				-- creation constraint genericity clause of a class.
-			Error_handler.checksum
+			if error_handler.has_error then
+				error_handler.raise_error
+			end
 		end
 
 invariant

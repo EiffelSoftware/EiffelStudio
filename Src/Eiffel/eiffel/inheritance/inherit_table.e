@@ -182,7 +182,10 @@ feature
 			old_convert_to, old_convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			creation_name: STRING;
 			equiv_tables: BOOLEAN;
+			l_error_level: NATURAL
 		do
+			l_error_level := error_handler.error_level
+
 			a_class := pass_c
 				-- Store previous data
 			old_creators := a_class.creators
@@ -227,7 +230,9 @@ feature
 				-- We also check if renamed features are available
 			parents.merge_and_check_renamings (Current)
 
-			Error_handler.checksum;
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 				-- Treat the renamings
 				--| Needs to be done twice
 				--| a is processed
@@ -241,7 +246,9 @@ feature
 			parents.check_validity2;
 				-- Check-sum error after analysis fo the inherited
 				-- features
-			Error_handler.checksum;
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 
 				-- Analyze local features
 			if a_class.changed then
@@ -250,7 +257,9 @@ feature
 					-- Class `a_class' is syntactically changed
 				analyze_declarations;
 					-- No update of `Instantiator' if there is an error
-				Error_handler.checksum;
+				if error_handler.error_level /= l_error_level then
+					error_handler.raise_error
+				end
 					-- Look for generic types in the inheritance clause
 					-- of a syntactically changed class
 				a_class.update_instantiator1;
@@ -271,13 +280,17 @@ feature
 			check_redeclarations (resulting_table);
 
 				-- Check sum
-			Error_handler.checksum;
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 
 				-- Compute selection table
 			Origin_table.compute_feature_table (parents, feature_table, resulting_table);
 				-- Check sum error: because of possible bad selections,
 				-- anchored types on features could not be evaluated here.
-			Error_handler.checksum;
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 
 				-- Now that the table is completely build, we are building
 				-- the quick lookup table.
@@ -293,29 +306,30 @@ feature
 				-- Creators processing
 		   	a_class.set_creators (class_info.creation_table (resulting_table));
 				-- No update of `Instantiator' if there is an error
-			Error_handler.checksum;
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 
 				-- Convertibility processing
 				-- Note: Manu 04/23/2003: Do we need to make a once of `CONVERTIBILITY_CHECKER'?
 				-- At the moment no as it does not seem expensive to create it all the time.
 			(create {CONVERTIBILITY_CHECKER}).init_and_check_convert_tables (
 				a_class, resulting_table, class_info.convertors)
-			Error_handler.checksum
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 
 				-- Track generic types in the result and arguments of
 				-- features of a changed class
 			if a_class.changed then
-					-- Generic types tracking
-				resulting_table.update_instantiator2;
 					-- Compute invariant clause
 				compute_invariant;
 			end;
 
 				-- Check sum error
-			Error_handler.checksum;
-			check
-				No_error: not Error_handler.has_error;
-			end;
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 
 				-- Pass2 controler evaluation
 			feature_table.fill_pass2_control (pass2_control, resulting_table);
@@ -463,8 +477,6 @@ end;
 				-- Update table `changed_features' of `a_class'.
 			update_changed_features;
 			clear;
-		ensure
-			No_error: not Error_handler.has_error;
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened during second pass: clear the
@@ -1170,8 +1182,6 @@ end;
 	update_changed_features is
 			-- Update table `changed_features' of `a_class' after a
 			-- successful second pass
-		require
-			no_error: not Error_handler.has_error;
 		local
 			feature_name_id: INTEGER
 			class_id: INTEGER

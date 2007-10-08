@@ -4864,8 +4864,8 @@ feature -- Implementation
 						-- Set some type informations		
 					if l_is_multi_constraint_case then
 						check
-							last_calls_target_not_void: last_calls_target_type /= Void 
-							conforming: l_creation_class /= Void implies 
+							last_calls_target_not_void: last_calls_target_type /= Void
+							conforming: l_creation_class /= Void implies
 								last_calls_target_type.associated_class.conform_to (l_creation_class)
 						end
 						l_call.set_class_id (last_calls_target_type.associated_class.class_id)
@@ -7701,7 +7701,9 @@ feature {NONE} -- Implementation: type validation
 			a_type_not_void: a_type /= Void
 		local
 			l_type: TYPE_A
+			l_error_level: NATURAL
 		do
+			l_error_level := error_handler.error_level
 			if is_inherited then
 					-- Convert TYPE_AS into TYPE_A.
 				l_type := type_a_generator.evaluate_type (a_type, context.written_class)
@@ -7721,6 +7723,10 @@ feature {NONE} -- Implementation: type validation
 			type_a_checker.check_type_validity (l_type, a_type)
 				-- Update `last_type' with found type.
 			last_type := l_type
+
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 		end
 
 	adapted_type (a_type, a_last_type, a_last_constrained: TYPE_A): TYPE_A is

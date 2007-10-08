@@ -819,9 +819,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 			to_check_is_formal_implies_formal_type_not_void: to_check.conformance_type.is_formal implies formal_type /= Void
 		do
 			reset_constraint_error_list
-				-- We assume that we only get checks if the class is valid.
-				-- However, if contracts are disabled we catch the error also with the following if-statement.
-			check is_valid: is_valid end
+				-- Some delay checks involves classes that are not in the system anymore,
+				-- in that case there is nothing to check.
 			if is_valid and then context_class.is_valid and then to_check /= Void and then to_check.is_valid then
 				creation_constraint_check (formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
 				generate_error_from_creation_constraint_list (context_class, a_context_feature, formal_dec_as.start_location )

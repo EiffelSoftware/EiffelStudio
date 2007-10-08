@@ -38,8 +38,10 @@ feature -- Properties
 	warning_list: LINKED_LIST [ERROR]
 			-- Warning list
 
-	has_new_error: BOOLEAN
-			-- Boolean for testing if new error since last `mark'
+	error_level: NATURAL is
+		do
+			Result := error_list.count.as_natural_32
+		end
 
 feature -- Status
 
@@ -81,10 +83,7 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 		require
 			non_void_error_displayer: error_displayer /= Void
 		do
-			if has_warning then
-				error_displayer.trace_warnings (Current)
-				warning_list.wipe_out
-			end
+			trace_warnings
 
 			if has_error then
 				error_displayer.trace_errors (Current)
@@ -110,7 +109,6 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 		require
 			good_argument: e /= Void
 		do
-			has_new_error := True
 			fixme ("[
 				Callers should set the error position. We have checked this for most errors
 				but some may not be correct, this is why there is still a fixme.
@@ -126,17 +124,6 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 		do
 			warning_list.extend (w)
 			warning_list.finish
-		end
-
-	mark is
-			-- Mark for testing `new_error'.
-		do
-			has_new_error := False
-		end
-
-	nb_errors: INTEGER is
-		do
-			Result := error_list.count
 		end
 
 	has_warning: BOOLEAN is
@@ -157,7 +144,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 		end
 
 	checksum is
-			-- Check if there are errors in `error_list' and raise
+			-- Check if there are new errors in `error_list' and raise
 			-- an error if needed.
 		require
 			non_void_error_displayer: error_displayer /= Void

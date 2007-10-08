@@ -484,35 +484,57 @@ feature -- Third pass: byte code production and type check
 			def_resc_depend: DEPEND_UNIT
 			type_checked: BOOLEAN
 
+			l_error_level: NATURAL
 		do
+				-- Initialization for actual types evaluation
+			Inst_context.set_group (cluster)
+
+				-- For a changed class, the supplier list has to be updated
+			dependances := depend_server.item (class_id)
+			if dependances = Void then
+				create dependances.make (changed_features.count)
+				dependances.set_class_id (class_id)
+			end
+
+			if changed then
+				new_suppliers := suppliers.same_suppliers
+			end
+
+			feat_table := feature_table.features
+			def_resc := default_rescue_feature
+
+			ast_context.initialize (Current, actual_type, feature_table)
+
+			if melted_set /= Void then
+				melted_set.clear_all
+			end
+
+			feature_checker.init (ast_context)
+
+			old_inline_agent_table := inline_agent_table.twin
+
+				-- Check validity of the types in signatures.
 			from
-					-- Initialization for actual types evaluation
-				Inst_context.set_group (cluster)
-
-					-- For a changed class, the supplier list has to be updated
-				dependances := depend_server.item (class_id)
-				if dependances = Void then
-					create dependances.make (changed_features.count)
-					dependances.set_class_id (class_id)
-				end
-
-				if changed then
-					new_suppliers := suppliers.same_suppliers
-				end
-
-				feat_table := feature_table.features
-				def_resc := default_rescue_feature
-
-				ast_context.initialize (Current, actual_type, feature_table)
-
-				if melted_set /= Void then
-					melted_set.clear_all
-				end
-
-				feature_checker.init (ast_context)
 				feat_table.start
+			until
+				feat_table.after
+			loop
+				feature_i := feat_table.item_for_iteration
+				ast_context.set_written_class (feature_i.written_class)
+				ast_context.set_current_feature (feature_i)
+				feature_i.check_type_validity (Current)
+				feat_table.forth
+			end
 
-				old_inline_agent_table := inline_agent_table.twin
+				-- We need to stop here since some invalid signatures were detected.
+				-- When more than one error can be detected at degree 3, we will remove
+				-- this check and replace it by an if statement which will simply ignore
+				-- the current class and continue.
+			error_handler.checksum
+
+				-- Now check the body.
+			from
+				feat_table.start
 			until
 				feat_table.after
 			loop
@@ -585,13 +607,13 @@ feature -- Third pass: byte code production and type check
 								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 						then
 								-- Type check
-							Error_handler.mark
+							l_error_level := Error_handler.error_level
 							ast_context.old_inline_agents.wipe_out
 							remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
 
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
-							type_check_error := Error_handler.has_new_error
+							type_check_error := Error_handler.error_level /= l_error_level
 
 							if not type_check_error then
 								if f_suppliers /= Void then
@@ -694,12 +716,12 @@ feature -- Third pass: byte code production and type check
 								or else (propagators.empty_intersection (f_suppliers)
 								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 						then
-							error_handler.mark
+							l_error_level := error_handler.error_level
 							ast_context.old_inline_agents.wipe_out
 							remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
-							type_check_error := error_handler.has_new_error
+							type_check_error := error_handler.error_level /= l_error_level
 							if
 								not type_check_error and then
 								(feature_checker.byte_code.property_name /= Void or else
@@ -787,13 +809,13 @@ feature -- Third pass: byte code production and type check
 								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 				then
 					invar_clause := Inv_ast_server.item (class_id)
-					Error_handler.mark
+					l_error_level := Error_handler.error_level
 
 					ast_context.old_inline_agents.wipe_out
 					remove_inline_agents_of_feature (invariant_feature.body_index, ast_context.old_inline_agents)
 					feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
-					if not Error_handler.has_new_error then
+					if Error_handler.error_level = l_error_level then
 						if f_suppliers /= Void then
 							if new_suppliers = Void then
 								new_suppliers := suppliers.same_suppliers

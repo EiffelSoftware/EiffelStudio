@@ -8,6 +8,14 @@ indexing
 
 class CONSTRAINT_INFO
 
+inherit
+	ANY
+
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 feature -- Properties
 
 	type: GEN_TYPE_A
@@ -28,13 +36,18 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C) is
 		require
+			a_text_formatter_not_void: a_text_formatter /= Void
+			a_context_class_not_void: a_context_class /= Void
 			actual_type_set /= Void
 			c_type /= Void
 		local
 			l_gen_type: GEN_TYPE_A
+			l_current_class: CLASS_C
 		do
+			l_current_class := system.current_class
+			system.set_current_class (a_context_class)
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("For type: ")
 			type.append_to (a_text_formatter)
@@ -71,6 +84,7 @@ feature -- Output
 						end (a_text_formatter, ?))
 				a_text_formatter.add ("%N")
 			end
+			system.set_current_class (l_current_class)
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision $"
 
 class
-	VTCG4 
+	VTCG4
 
 inherit
 	EIFFEL_ERROR
@@ -40,7 +40,7 @@ feature -- Output
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (a_text_formatter)
+				error_list.item.build_explain (a_text_formatter, class_c)
 				error_list.forth
 			end
 		end

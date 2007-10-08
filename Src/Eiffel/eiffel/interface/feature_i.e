@@ -1742,7 +1742,9 @@ feature -- Signature checking
 			l_class := feat_table.associated_class
 			context.initialize (l_class, l_class.actual_type, feat_table)
 			context.set_current_feature (Current)
-			if type.has_like and then is_once then
+				-- Not that the checks is only done for real `onces'. Constants
+				-- have their checks done through VQMC.
+			if type.has_like and then (is_once and not is_constant) then
 					-- We have an anchored type.
 					-- Check if the feature is not a once feature
 				create vffd7
@@ -1755,22 +1757,17 @@ feature -- Signature checking
 			type_a_checker.init_with_feature_table (Current, feat_table, Void, error_handler)
 			solved_type := type_a_checker.check_and_solved (type, Void)
 
-			if feat_table.associated_class = written_class then
-				type_a_checker.check_type_validity (solved_type, Void)
-			end
-
 			set_type (solved_type, assigner_name_id)
 				-- Instantitate the feature type in the context of the
 				-- actual type of the class associated to `feat_table'.
 
-			if is_once and then solved_type.has_formal_generic then
+			if (is_once and not is_constant) and then solved_type.has_formal_generic then
 					-- A once funtion cannot have a type with formal generics
 				create vffd7
 				vffd7.set_class (written_class)
 				vffd7.set_feature_name (feature_name)
 				Error_handler.insert_error (vffd7)
 			end
-			solved_type.check_for_obsolete_class (feat_table.associated_class)
 
 			if
 				is_infix and then
@@ -1801,6 +1798,34 @@ feature -- Signature checking
 			end
 		end
 
+	check_type_validity (a_context_class: CLASS_C) is
+			-- Check type validity.
+		require
+			context_class_not_void: a_context_class /= Void
+			context_initialized: context.current_class = a_context_class and context.current_feature = Current
+		local
+			l_type: TYPE_A
+		do
+			if a_context_class.changed then
+					-- Generic types tracking
+				update_instantiator2 (a_context_class)
+			end
+
+			if a_context_class.class_id = written_in then
+				l_type := type
+				type_a_checker.init_with_feature_table (
+					Current, a_context_class.feature_table, Void, error_handler)
+				if not l_type.is_void then
+					type_a_checker.check_type_validity (l_type, Void)
+					l_type.check_for_obsolete_class (a_context_class)
+				end
+			end
+			if arguments /= Void then
+					-- Check types of arguments
+				arguments.check_type_validity (a_context_class, Current, type_a_checker)
+			end
+		end
+
 	check_expanded (class_c: CLASS_C) is
 			-- Check expanded validity rules
 		require
@@ -1821,8 +1846,8 @@ end
 					-- `set_type' has been called in `check_types' so
 					-- the reverse assignment is valid.
 				solved_type ?= type.actual_type
-				if	solved_type.has_expanded then
-					if 	solved_type.expanded_deferred then
+				if solved_type.has_expanded then
+					if solved_type.expanded_deferred then
 						create {VTEC1} vtec
 					elseif not solved_type.valid_expanded_creation (class_c) then
 						create {VTEC2} vtec

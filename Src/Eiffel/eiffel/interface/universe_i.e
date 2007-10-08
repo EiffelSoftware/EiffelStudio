@@ -547,7 +547,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 				end
 				a_set.forth
 			end
-			error_handler.checksum
 		end
 
 feature {COMPILER_EXPORTER} -- Precompilation

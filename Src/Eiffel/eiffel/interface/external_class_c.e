@@ -60,7 +60,6 @@ feature -- Initialization
 			if external_class = Void then
 					-- For some reasons, the XML file could not be retried.
 				error_handler.insert_error (create {VIIC}.make (Current))
-				error_handler.raise_error
 			else
 				private_external_name := external_class.dotnet_name
 
@@ -1388,7 +1387,6 @@ feature {NONE} -- Implementation
 					vtct.set_class (Current)
 					vtct.set_dotnet_class_name (l_type_name)
 					Error_handler.insert_error (vtct)
-					Error_handler.raise_error
 				else
 					if force_compilation and then not l_result.is_compiled then
 						Workbench.add_class_to_recompile (l_result)

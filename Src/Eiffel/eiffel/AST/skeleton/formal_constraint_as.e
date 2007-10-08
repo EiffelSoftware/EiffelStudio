@@ -473,12 +473,12 @@ feature -- Validity checking
 			has_creation_constraint: has_creation_constraint
 			renaming_is_sane: (agent (a_context_class2: CLASS_C): BOOLEAN
 									local
-										l_old_error_count: INTEGER
+										l_error_level: NATURAL
 									do
-										l_old_error_count := error_handler.nb_errors
+										l_error_level := error_handler.error_level
 										check_constraint_renaming (a_context_class2)
 											-- No erros should occur.
-										Result := (l_old_error_count = error_handler.nb_errors)
+										Result := (l_error_level = error_handler.error_level)
 									end).item ([a_context_class])
 		local
 

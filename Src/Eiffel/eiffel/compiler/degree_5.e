@@ -47,29 +47,34 @@ feature -- Processing
 			classes: ARRAY [CLASS_C]
 			class_counter: CLASS_COUNTER
 			a_class: CLASS_C
+			l_error_level: NATURAL
+			l_classes_with_error: ARRAY [BOOLEAN]
 		do
 			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes
+				-- We do not process more than once classes that had an error.
+			create l_classes_with_error.make (classes.lower, classes.upper)
 			class_counter := System.class_counter
 			Workbench.set_compilation_started
-				-- We loop until we reached the number of classes with an error.
-			from until count = nb_errors loop
+				-- We loop until we reached the number of classes with an error or found more errors
+				-- than classes to process.
+			from until count <= nb_errors loop
 					-- Traverse several times the list of classes
 					-- because syntactical clients may be added to
 					-- Degree 5 before the current cursor position
 					-- during the process.
 				from i := 1 until i > class_counter.count loop
 					a_class := classes.item (i)
-					if a_class /= Void and then a_class.degree_5_needed then
+					if a_class /= Void and then a_class.degree_5_needed and not l_classes_with_error [i] then
 						Degree_output.put_degree_5 (a_class, count)
 						System.set_current_class (a_class)
-						has_error := False
+						l_error_level := error_handler.error_level
 						process_class (a_class)
-						if has_error then
+						if error_handler.error_level /= l_error_level then
+							l_classes_with_error [i] := True
 							nb_errors := nb_errors + 1
-						end
-							-- Remove class if not already done.
-						if a_class.degree_5_needed and not has_error then
+						elseif a_class.degree_5_needed then
+								-- Remove class if not already done.
 							a_class.remove_from_degree_5
 							count := count - 1
 						end
@@ -90,6 +95,7 @@ feature -- Processing
 			a_class: CLASS_C
 			l_old_info: CLASS_INFO
 			l_removed_classes: SEARCH_TABLE [CLASS_C]
+			l_error_level: NATURAL
 		do
 			from
 				classes := system.classes
@@ -104,14 +110,14 @@ feature -- Processing
 				if a_class /= Void and then (l_removed_classes = Void or else not l_removed_classes.has (a_class)) then
 					if a_class.need_new_parents then
 						System.set_current_class (a_class)
-						Error_handler.mark
+						l_error_level := error_handler.error_level
 						if class_info_server.server_has (a_class.class_id) then
 							l_old_info := class_info_server.server_item (a_class.class_id)
 						else
 							l_old_info := Void
 						end
 						a_class.fill_parents (l_old_info, class_info_server.item (a_class.class_id))
-						if Error_handler.has_new_error then
+						if Error_handler.error_level /= l_error_level then
 							insert_class (a_class)
 						end
 					end
@@ -150,17 +156,8 @@ feature {NONE} -- Processing
 				end
 
 				if ast /= Void then
-						-- For the check statement below.
-					error_handler.mark
 					eif_class.end_of_pass1 (ast)
-						-- No syntax error happened: set the compilation
-						-- status of the current changed class.
-					check
-						No_error: not Error_handler.has_new_error
-					end
 					a_class.lace_class.config_class.set_up_to_date
-				else
-					has_error := True
 				end
 			end
 		end

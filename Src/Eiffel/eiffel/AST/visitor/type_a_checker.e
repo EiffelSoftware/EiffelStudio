@@ -60,16 +60,18 @@ feature -- Status report
 		require
 			a_unevaluated_type_not_void: a_unevaluated_type /= Void
 			has_error_reporting: has_error_reporting
+		local
+			l_error_level: NATURAL
 		do
-			error_handler.mark
+			l_error_level := error_handler.error_level
 			like_control.turn_off
 			associated_type_ast := a_type_as
 			a_unevaluated_type.process (Current)
 			Result := last_type
 			last_type := Void
 			associated_type_ast := Void
-			if error_handler.has_new_error then
-				error_handler.checksum
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
 			end
 		end
 
@@ -223,7 +225,6 @@ feature -- Special checking
 					end
 				end
 			end
-			error_handler.checksum
 		end
 
 	check_constraint_type (a_context_class: CLASS_C; a_type: TYPE_AS; a_error_handler: ERROR_HANDLER) is
@@ -251,7 +252,7 @@ feature -- Special checking
 			l_vtct: VTCT
 			l_vtug: VTUG
 			l_has_error: BOOLEAN
-			l_nb_errors: INTEGER
+			l_error_level: NATURAL
 			l_t1, l_t2: TYPE_AS
 			l_t1_a, l_t2_a: TYPE_A
 			l_pos: INTEGER
@@ -281,7 +282,6 @@ feature -- Special checking
 					l_vtct.set_class_name (l_class_type.class_name.name)
 					l_vtct.set_location (l_class_type.start_location)
 					a_error_handler.insert_error (l_vtct)
-					a_error_handler.raise_error
 				else
 					l_associated_class := l_class_i.compiled_class
 					l_is_tuple_type := l_associated_class.is_tuple
@@ -332,14 +332,13 @@ feature -- Special checking
 								l_class_type_generics.start
 								l_cl_generics.start
 								l_pos := 1
-								a_error_handler.mark
 							until
 								l_class_type_generics.after or else l_has_error
 							loop
-								l_nb_errors := a_error_handler.nb_errors
+								l_error_level := a_error_handler.error_level
 								l_t1 := l_class_type_generics.item
 								check_constraint_type (a_context_class, l_t1, a_error_handler)
-								l_has_error := a_error_handler.nb_errors /= l_nb_errors
+								l_has_error := a_error_handler.error_level /= l_error_level
 								if not l_has_error then
 									l_t1_a := type_a_generator.evaluate_type (l_t1, a_context_class)
 									from
@@ -354,7 +353,7 @@ feature -- Special checking
 											if l_t2_a /= Void then
 												l_t1_a.check_const_gen_conformance
 													(l_gen_type, l_t2_a, a_context_class, l_pos)
-												l_has_error := a_error_handler.nb_errors /= l_nb_errors
+												l_has_error := a_error_handler.error_level /= l_error_level
 											end
 										end
 										l_cl_generics.item.constraints.forth
@@ -375,10 +374,10 @@ feature -- Special checking
 							until
 								l_generics.after or else l_has_error
 							loop
-								l_nb_errors := a_error_handler.nb_errors
+								l_error_level := a_error_handler.error_level
 								l_t1 := l_generics.item
 								check_constraint_type (a_context_class, l_t1, a_error_handler)
-								l_has_error := a_error_handler.nb_errors /= l_nb_errors
+								l_has_error := a_error_handler.error_level /= l_error_level
 								l_generics.forth
 							end
 							l_generics.go_i_th (l_pos)
@@ -484,7 +483,7 @@ feature {TYPE_A} -- Visitors
 			-- Process `a_type'.
 		do
 			last_type := a_type
-			if a_type.is_expanded and not a_type.is_basic then
+			if a_type.is_true_expanded then
 				check
 					has_associated_class: a_type.has_associated_class
 				end

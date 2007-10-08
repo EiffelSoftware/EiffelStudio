@@ -1416,15 +1416,6 @@ end
 				original_body_index_table.copy (body_index_table)
 				Degree_1.wipe_out
 			end
-
-				-- Reset internal data that needs to be recomputed
-				-- at each recompilation in case it might changed during
-				-- a recompilation. It happens if at the first compilation
-				-- you do, there is an error, then those IDs from the routines
-				-- of ANY/SPECIAL will definitely be changed
-			internal_default_rescue_rout_id := -1
-			internal_default_create_rout_id := -1
-			internal_special_make_rout_id := - 1
 		end
 
 feature -- ANY.default_rescue routine id
@@ -1463,8 +1454,7 @@ feature -- ANY.default_create routine id
 			Result := internal_default_create_rout_id
 			if Result < 0 then
 				Result := 0
-				if any_class /= Void and then
-						any_class.compiled_class /= Void then
+				if any_class /= Void and then any_class.compiled_class /= Void then
 					feature_i := any_class.compiled_class.
 						feature_table.item_id (names.default_create_name_id)
 					if feature_i /= Void then
@@ -1497,6 +1487,20 @@ feature -- SPECIAL.make routine id
 				end
 				internal_special_make_rout_id := Result
 			end
+		end
+
+feature -- Routine IDS update
+
+	reset_routine_ids is
+			-- Reset internal data that needs to be recomputed
+			-- at each recompilation in case it might changed during
+			-- a recompilation. It happens if at the first compilation
+			-- you do, there is an error, then those IDs from the routines
+			-- of ANY/SPECIAL will definitely be changed
+		do
+			internal_default_rescue_rout_id := -1
+			internal_default_create_rout_id := -1
+			internal_special_make_rout_id := - 1
 		end
 
 feature {NONE} -- Implementation: predefined routine IDs

@@ -393,7 +393,7 @@ feature -- Commands
 			increment_compilation_counter:
 				(successful and (System.has_been_changed or else System.freezing_occurred))
 					implies compilation_counter = old compilation_counter + 1
-			error_handler_empty: error_handler.nb_errors = 0
+			error_handler_empty: error_handler.error_list.is_empty
 		rescue
 			if Rescue_status.is_error_exception then
 				Error_handler.force_display

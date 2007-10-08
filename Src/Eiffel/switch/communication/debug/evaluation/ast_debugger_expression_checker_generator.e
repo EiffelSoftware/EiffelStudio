@@ -27,8 +27,10 @@ feature {NONE} -- Implementation: type validation
 			l_vd29: VD29
 			l_classes: LIST [CLASS_I]
 			l_cl: CLASS_I
+			l_error_level: NATURAL
 			context_hack_applied: BOOLEAN
 		do
+			l_error_level := error_handler.error_level
 			if is_inherited then
 					-- Convert TYPE_AS into TYPE_A.
 				l_type := type_a_generator.evaluate_type_if_possible (a_type, context.written_class)
@@ -89,6 +91,11 @@ feature {NONE} -- Implementation: type validation
 			end
 				-- Update `last_type' with found type.
 			last_type := l_type
+
+				-- If there was an error, we simply throw an error.
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
 		end
 
 	process_un_old_as (l_as: UN_OLD_AS) is

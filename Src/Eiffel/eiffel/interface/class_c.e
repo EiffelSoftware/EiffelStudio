@@ -1266,7 +1266,9 @@ feature -- Parent checking
 			l_parent_class: CLASS_C
 			l_single_classes: LINKED_LIST [CLASS_C]
 			l_old_is_single, l_has_external_parent: BOOLEAN
+			l_error_level: NATURAL
 		do
+			l_error_level := error_handler.error_level
 				-- Clear feature context
 			ast_context.clear_feature_context
 			from
@@ -1306,7 +1308,7 @@ feature -- Parent checking
 						vtcg4.set_error_list (parent_actual_type.constraint_error_list)
 						vtcg4.set_parent_type (parent_actual_type)
 						fixme ("Shouldn't we be able to provide a location?")
-						Error_handler.insert_error (vtcg4)
+						error_handler.insert_error (vtcg4)
 					end
 				end
 
@@ -1315,7 +1317,7 @@ feature -- Parent checking
 					create vifi1.make (Current)
 					vifi1.set_parent_class (l_parent_class)
 					fixme ("Shouldn't we be able to provide a location?")
-					Error_handler.insert_error (vifi1)
+					error_handler.insert_error (vifi1)
 				end
 				i := i + 1
 			end
@@ -1327,7 +1329,7 @@ feature -- Parent checking
 				create vifi2.make (Current)
 				vifi2.set_parent_classes (l_single_classes)
 				fixme ("Shouldn't we be able to provide a location?")
-				Error_handler.insert_error (vifi2)
+				error_handler.insert_error (vifi2)
 			end
 			if l_single_classes /= Void and then is_expanded then
 					-- External classes are inherited by expanded class.
@@ -1335,7 +1337,7 @@ feature -- Parent checking
 					l_single_classes_not_empty: not l_single_classes.is_empty
 				end
 				fixme ("Shouldn't we be able to provide a location?")
-				Error_handler.insert_error (create {VIFI3}.make (Current, l_single_classes))
+				error_handler.insert_error (create {VIFI3}.make (Current, l_single_classes))
 			end
 
 				-- Only classes that explicitely inherit from an external class only once
@@ -1356,7 +1358,9 @@ feature -- Parent checking
 					clients.forth
 				end
 			end
-			Error_handler.checksum
+			if error_handler.error_level /= l_error_level then
+				Error_handler.raise_error
+			end
 		ensure
 			parents_set: parents /= Void
 		end
@@ -3987,12 +3991,25 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 			-- Has current class been processed in
 			-- first pass of Degree 4?
 
+	is_ignored_for_degree_4: BOOLEAN
+			-- Should class be ignored for current degree 4?
+			-- Set to True when a parent of current class triggered a compilation
+			-- error during degree 4.
+
 	expanded_modified: BOOLEAN
 			-- Has the expanded status of current
 			-- class been modified?
 
 	supplier_status_modified: BOOLEAN
 			-- Has the status of a supplier changed?
+
+	set_is_ignored_for_degree_4 (v: like is_ignored_for_degree_4) is
+			-- Set `is_ignored_for_degree_4' to `v'.
+		do
+			is_ignored_for_degree_4 := v
+		ensure
+			is_ignored_for_degree_4_set: is_ignored_for_degree_4 = v
+		end
 
 	set_degree_4_processed is
 			-- Set `degree_4_processed' to True.

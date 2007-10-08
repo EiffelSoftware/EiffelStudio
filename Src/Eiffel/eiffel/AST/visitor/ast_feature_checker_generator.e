@@ -4749,7 +4749,7 @@ feature -- Implementation
 					loop
 						l_ccl_item := l_constraint_creation_list.item
 						l_feature_item := l_ccl_item.feature_item
-						if l_feature_item.rout_id_set.first = system.default_create_id then
+						if l_feature_item.rout_id_set.first = system.default_create_rout_id then
 							l_feature := l_feature_item
 							l_renamed_creation_type := l_ccl_item.type_item
 							if l_renamed_creation_type.has_renaming then
@@ -4776,7 +4776,7 @@ feature -- Implementation
 									until
 										a_constraint_creation_list.after
 									loop
-										if a_constraint_creation_list.item.feature_item.rout_id_set.first = system.default_create_id then
+										if a_constraint_creation_list.item.feature_item.rout_id_set.first = system.default_create_rout_id then
 											Result := False
 										end
 									a_constraint_creation_list.forth

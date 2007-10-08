@@ -85,7 +85,7 @@ feature -- Access
 					create Result.make (creators.count);
 					creators.start;
 					if a_class.is_expanded then
-						l_def_create := feat_table.feature_of_rout_id (System.default_create_id)
+						l_def_create := feat_table.feature_of_rout_id (System.default_create_rout_id)
 					end
 				until
 					creators.after

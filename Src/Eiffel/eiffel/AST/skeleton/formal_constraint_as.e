@@ -276,7 +276,7 @@ feature -- Status
 						if feat_table.found_item /= Void then
 							Result.extend ([l_constraint_types_item, feat_table.found_item])
 								-- We will not set has_default_create in the multi constraint case if
-							l_is_version_of_default_create := (feat_table.found_item.rout_id_set.first = System.default_create_id)
+							l_is_version_of_default_create := (feat_table.found_item.rout_id_set.first = System.default_create_rout_id)
 							if
 								l_is_version_of_default_create and then
 								not l_has_more_than_one_version_default_create

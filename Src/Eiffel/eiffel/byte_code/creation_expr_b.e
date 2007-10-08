@@ -62,7 +62,7 @@ feature -- C code generation
 					elseif not l_type.base_class.feature_of_rout_id (call.routine_id).is_empty then
 						Result.set_call (call.enlarged_on (type))
 						Result.call.set_precursor_type (l_type)
-					elseif call.routine_id = system.special_make_id then
+					elseif call.routine_id = system.special_make_rout_id then
 							-- We cannot optimized the empty routine `{SPECIAL}.make' as otherwise
 							-- it will simply generate a normal creation in `generate' below.
 						Result.set_call (call.enlarged_on (type))
@@ -88,7 +88,7 @@ feature -- Analyze
 				get_register
 				l_call := call
 				if l_call /= Void then
-					if l_call.routine_id = system.special_make_id then
+					if l_call.routine_id = system.special_make_rout_id then
 						check
 							is_special_call_valid: is_special_call_valid
 						end
@@ -115,7 +115,7 @@ feature -- Analyze
 				Precursor {ACCESS_B}
 				l_call := call
 				if l_call /= Void then
-					if l_call.routine_id = system.special_make_id then
+					if l_call.routine_id = system.special_make_rout_id then
 						check
 							is_special_call_valid: is_special_call_valid
 						end
@@ -263,7 +263,7 @@ feature -- Generation
 			l_basic_type ?= real_type (type)
 			l_call := call
 			l_special_creation := l_basic_type = Void and then
-				l_call /= Void and then l_call.routine_id = system.special_make_id
+				l_call /= Void and then l_call.routine_id = system.special_make_rout_id
 			if l_basic_type /= Void then
 				register.print_register
 				buf.put_string (" = ")

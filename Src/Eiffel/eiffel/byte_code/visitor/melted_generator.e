@@ -494,7 +494,7 @@ feature {NONE} -- Visitors
 				l_basic_type.make_default_byte_code (ba)
 			else
 				l_call := a_node.call
-				if l_call /= Void and then l_call.routine_id = system.special_make_id then
+				if l_call /= Void and then l_call.routine_id = system.special_make_rout_id then
 					l_special_type ?= context.creation_type (a_node.type)
 					check
 						is_special_call_valid: a_node.is_special_call_valid

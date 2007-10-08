@@ -839,7 +839,7 @@ feature{NONE} -- Implementation
 				l_creators := l_class.creators
 				if l_creators = Void then
 						-- Simply search for the version of `{ANY}.default_create'.
-					Result := a_item.e_feature.rout_id_set.has (eiffel_system.system.default_create_id)
+					Result := a_item.e_feature.rout_id_set.has (eiffel_system.system.default_create_rout_id)
 				elseif not l_creators.is_empty then
 					Result := l_creators.has (a_item.e_feature.name)
 				end

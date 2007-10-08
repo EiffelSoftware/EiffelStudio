@@ -653,14 +653,13 @@ feature {COMPILER_EXPORTER} -- Access
 			act_type: TYPE_A
 		do
 			act_type := actual_type
-			Result := act_type.is_expanded and then
-						act_type.associated_class.is_deferred
+			Result := act_type.is_expanded and then act_type.associated_class.is_deferred
 		end
 
 	valid_expanded_creation (class_c: CLASS_C): BOOLEAN is
 			-- Is the expanded type has an associated class with one
-			-- creation routine with no arguments only, exported to
-			-- `a_class'
+			-- creation routine which is a version of {ANY}.default_create
+			-- exported `class_c'.
 		require
 			has_expanded
 		local

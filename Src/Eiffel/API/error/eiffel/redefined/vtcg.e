@@ -13,7 +13,7 @@ inherit
 		redefine
 			build_explain
 		end
-	
+
 feature -- Properties
 
 	code: STRING is "VTCG";
@@ -33,7 +33,7 @@ feature -- Output
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (a_text_formatter);
+				error_list.item.build_explain (a_text_formatter, class_c);
 				error_list.forth;
 			end;
 		end;

@@ -260,16 +260,16 @@ feature -- Status report
 	show_errors: BOOLEAN
 			-- Indicates if errors should be shown
 		do
-			Result := errors_button.is_selected
+			Result := not is_initialized or else errors_button.is_selected
 		end
 
 	show_warnings: BOOLEAN
 			-- Indicates if errors should be shown
 		do
-			Result := warnings_button.is_selected
+			Result := not is_initialized or else warnings_button.is_selected
 		end
 
-feature {ES_ERRORS_AND_WARNINGS_COMMAND} -- Navigation
+feature {ES_ERROR_LIST_TOOL} -- Navigation
 
 	go_to_next_error (a_cycle: BOOLEAN)
 			-- Goes to next error in the list.

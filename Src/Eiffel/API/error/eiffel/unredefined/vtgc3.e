@@ -1,5 +1,3 @@
-
-
 indexing
 	description: "Error for the formal generic part of a class."
 	legal: "See notice at end of class."
@@ -109,5 +107,4 @@ indexing
 		Customer support http://support.eiffel.com
 	]"
 
-end -- class VTGC3
-
+end

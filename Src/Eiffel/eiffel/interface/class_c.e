@@ -2446,7 +2446,7 @@ feature -- default_rescue routine
 			has_feature_table: has_feature_table
 			any_class_compiled: System.any_class /= Void
 		do
-			Result := feature_table.feature_of_rout_id (System.default_rescue_id)
+			Result := feature_table.feature_of_rout_id (System.default_rescue_rout_id)
 		end
 
 feature -- default_create routine
@@ -2458,7 +2458,7 @@ feature -- default_create routine
 		require
 			has_feature_table: has_feature_table
 		do
-			Result := feature_table.feature_of_rout_id (System.default_create_id)
+			Result := feature_table.feature_of_rout_id (System.default_create_rout_id)
 		end
 
 	allows_default_creation : BOOLEAN is

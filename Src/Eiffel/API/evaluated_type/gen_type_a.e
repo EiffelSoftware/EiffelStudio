@@ -957,7 +957,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 									-- case we should not list `default_create' has not beeing met if listed in the creation
 									-- constraint.
 								feature_i := crc_list.item.feature_item
-								if creators_table /= Void or else not feature_i.rout_id_set.has (system.default_create_id) then
+								if creators_table /= Void or else not feature_i.rout_id_set.has (system.default_create_rout_id) then
 									l_unmatched_features.extend (feature_i)
 								end
 								crc_list.forth

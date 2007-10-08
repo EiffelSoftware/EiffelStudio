@@ -860,13 +860,13 @@ end
 				end
 			end
 
-			if Result and then rout_id_set.first = System.default_rescue_id then
+			if Result and then rout_id_set.first = System.default_rescue_rout_id then
 				-- This is the default rescue feature.
 				-- Test whether emptiness of body has changed.
 				Result := (is_empty = other.is_empty)
 			end
 
-			if Result and then rout_id_set.first = System.default_create_id then
+			if Result and then rout_id_set.first = System.default_create_rout_id then
 				-- This is the default create feature.
 				-- Test whether emptiness of body has changed.
 				Result := (is_empty = other.is_empty)

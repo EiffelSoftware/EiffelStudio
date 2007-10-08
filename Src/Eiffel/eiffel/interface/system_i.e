@@ -1422,21 +1422,21 @@ end
 				-- a recompilation. It happens if at the first compilation
 				-- you do, there is an error, then those IDs from the routines
 				-- of ANY/SPECIAL will definitely be changed
-			internal_default_rescue_id := -1
-			internal_default_create_id := -1
-			internal_special_make_id := - 1
+			internal_default_rescue_rout_id := -1
+			internal_default_create_rout_id := -1
+			internal_special_make_rout_id := - 1
 		end
 
 feature -- ANY.default_rescue routine id
 
-	default_rescue_id: INTEGER is
+	default_rescue_rout_id: INTEGER is
 			-- Routine id of default rescue from ANY.
 			-- Return 0 if ANY has not been compiled or
 			-- does not have a feature named `default_rescue'.
 		local
 			feature_i: FEATURE_I
 		do
-			Result := internal_default_rescue_id
+			Result := internal_default_rescue_rout_id
 			if Result < 0 then
 				Result := 0
 				if any_class /= Void and then
@@ -1447,20 +1447,20 @@ feature -- ANY.default_rescue routine id
 						Result := feature_i.rout_id_set.first
 					end
 				end
-				internal_default_rescue_id := Result
+				internal_default_rescue_rout_id := Result
 			end
 		end
 
 feature -- ANY.default_create routine id
 
-	default_create_id: INTEGER is
+	default_create_rout_id: INTEGER is
 			-- Routine id of default create from ANY.
 			-- Return 0 if ANY has not been compiled or
 			-- does not have a feature named `default_create'.
 		local
 			feature_i: FEATURE_I
 		do
-			Result := internal_default_create_id
+			Result := internal_default_create_rout_id
 			if Result < 0 then
 				Result := 0
 				if any_class /= Void and then
@@ -1471,20 +1471,20 @@ feature -- ANY.default_create routine id
 						Result := feature_i.rout_id_set.first
 					end
 				end
-				internal_default_create_id := Result
+				internal_default_create_rout_id := Result
 			end
 		end
 
 feature -- SPECIAL.make routine id
 
-	special_make_id: INTEGER is
+	special_make_rout_id: INTEGER is
 			-- Routine id of `make' from SPECIAL.
 			-- Return 0 if SPECIAL has not been compiled or
 			-- does not have a feature named `make'.
 		local
 			feature_i: FEATURE_I
 		do
-			Result := internal_special_make_id
+			Result := internal_special_make_rout_id
 			if Result < 0 then
 				Result := 0
 				if special_class /= Void and then
@@ -1495,19 +1495,19 @@ feature -- SPECIAL.make routine id
 						Result := feature_i.rout_id_set.first
 					end
 				end
-				internal_special_make_id := Result
+				internal_special_make_rout_id := Result
 			end
 		end
 
 feature {NONE} -- Implementation: predefined routine IDs
 
-	internal_default_rescue_id: INTEGER
+	internal_default_rescue_rout_id: INTEGER
 			-- Once per compilation value of routine id of `default_rescue_id' from ANY.
 
-	internal_default_create_id: INTEGER
+	internal_default_create_rout_id: INTEGER
 			-- Once per compilation value of routine id of `default_create' from ANY.
 
-	internal_special_make_id: INTEGER
+	internal_special_make_rout_id: INTEGER
 			-- Once per compilation value of routine id of `make' from SPECIAL.
 
 feature -- Feature declaration

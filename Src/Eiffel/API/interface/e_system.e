@@ -233,7 +233,6 @@ feature {COMPILER_EXPORTER}
 			positive_i: i >= 0;
 			valid_i: valid_dynamic_id (i)
 		local
-			ct: CLASS_TYPE
 			l_mapping: ARRAY [INTEGER]
 		do
 			if a_is_final then

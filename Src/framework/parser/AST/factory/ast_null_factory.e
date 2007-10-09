@@ -35,7 +35,7 @@ inherit
 			new_identifier_list, new_if_as, new_index_as, new_infix_as, new_inspect_as,
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_interval_as, new_invariant_as,
 			new_like_id_as, new_like_current_as, new_location_as, new_loop_as, new_nested_as,
-			new_nested_expr_as, new_none_type_as, new_once_as, new_operand_as, new_paran_as, new_parent_as,
+			new_nested_expr_as, new_none_type_as, new_object_test_as, new_once_as, new_operand_as, new_paran_as, new_parent_as,
 			new_precursor_as, new_prefix_as, new_real_as, new_rename_as, new_require_as, new_require_else_as,
 			new_result_as, new_retry_as, new_reverse_as, new_routine_as, new_routine_creation_as,
 			new_old_routine_creation_as, new_static_access_as, new_string_as, new_tagged_as,
@@ -879,6 +879,11 @@ feature -- Access
 
 	new_none_type_as (c: ID_AS): NONE_TYPE_AS is
 			-- New type AST node for "NONE"
+		do
+		end
+
+	new_object_test_as (start: SYMBOL_AS; name: ID_AS; type: TYPE_AS; expression: EXPR_AS): OBJECT_TEST_AS is
+			-- New OBJECT_TEST_AS node
 		do
 		end
 

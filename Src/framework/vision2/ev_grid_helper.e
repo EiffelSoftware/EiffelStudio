@@ -97,7 +97,7 @@ feature -- Access
 			to_index: INTEGER
 		do
 			to_index := grid_next_top_row (grid, row_index, offset)
-			if to_index /= row_index then
+			if to_index > 0 and then to_index /= row_index then
 				if offset > 0 then
 					to_index := to_index + 1
 				end
@@ -107,40 +107,66 @@ feature -- Access
 		end
 
 	grid_next_top_row (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
+			-- Row index of the i_th `offset' top row from `row_index' row.
 		require
 			non_parented_row: grid.row (row_index).parent_row = Void
-			row_index > 0 and then row_index <= grid.row_count
+			in_range: row_index > 0 and then row_index <= grid.row_count
 		local
 			j,k: INTEGER
 			r: EV_GRID_ROW
 		do
-			from
-				j := 1
-				k := row_index
-				r := grid.row (row_index)
-			until
-				(j > offset.abs) or not (k > 0 and k <= grid.row_count)
-			loop
-				if offset < 0 then
-					k := k - 1
-				else
-					k := k + r.subrow_count_recursive + 1
-				end
-				if k > 0 and k <= grid.row_count then
-					r := grid.row (k)
-					r := r.parent_row_root
-					k := r.index
-					if offset > 0 then
-						k := k + r.subrow_count_recursive
-						r := grid.row (k)
+			if grid.is_tree_enabled then
+				from
+					j := 1
+					k := row_index
+					r := grid.row (row_index)
+				until
+					(j > offset.abs) or not (k > 0 and k <= grid.row_count)
+				loop
+					if offset < 0 then
+						k := k - 1
+					else
+						k := k + r.subrow_count_recursive + 1
 					end
+					if k > 0 and k <= grid.row_count then
+						r := grid.row (k)
+						r := r.parent_row_root
+						k := r.index
+						if offset > 0 then
+							k := k + r.subrow_count_recursive
+							r := grid.row (k)
+						end
+					end
+					j := j + 1
 				end
-				j := j + 1
+			else
+				if row_index + offset <= grid.row_count then
+					r := grid.row (row_index + offset)
+				end
 			end
 			if r /= Void then
 				Result := r.index
 			else
 				Result := row_index
+			end
+		ensure
+			result_in_range: Result > 0 implies Result <= grid.row_count
+		end
+
+	grid_ith_top_row (a_grid: EV_GRID; a_index: INTEGER): EV_GRID_ROW is
+			-- I_th's top row of `a_grid'.
+		local
+			r: INTEGER
+		do
+			if a_grid.row_count > 0 then
+				if a_index = 1 then
+					Result := a_grid.row (1)
+				else
+					r := grid_next_top_row (a_grid, 1, a_index - 1)
+					if r > 1 then
+						Result := a_grid.row (r)
+					end
+				end
 			end
 		end
 

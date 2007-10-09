@@ -700,7 +700,7 @@ feature {NONE} -- Events
 			l_row: EV_GRID_ROW
 			l_count: INTEGER
 		do
-			if is_appliable_event (a_event_item) then
+			if is_initialized and then is_appliable_event (a_event_item) then
 				l_grid := grid_events
 				l_count := l_grid.row_count
 
@@ -739,8 +739,8 @@ feature {NONE} -- Events
 				end
 			end
 		ensure then
-			a_event_find_event_row: is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
-			item_count_increased: (is_appliable_event (a_event_item) and not destory_old_items_automatically) implies item_count = old item_count + 1
+			a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
+			item_count_increased: (is_initialized and then is_appliable_event (a_event_item) and not destory_old_items_automatically) implies item_count = old item_count + 1
 			item_count_small_enought: destory_old_items_automatically implies item_count <= maximum_item_count
 		end
 
@@ -760,7 +760,7 @@ feature {NONE} -- Events
 			l_index: INTEGER
 			l_selected: BOOLEAN
 		do
-			if is_appliable_event (a_event_item) then
+			if is_initialized and then is_appliable_event (a_event_item) then
 				check
 					item_count_big_enough: item_count >= 1
 				end
@@ -813,8 +813,8 @@ feature {NONE} -- Events
 				end
 			end
 		ensure then
-			not_a_event_find_event_row: is_appliable_event (a_event_item) implies find_event_row (a_event_item) = Void
-			item_count_increased: is_appliable_event (a_event_item) implies item_count = old item_count - 1
+			not_a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) = Void
+			item_count_increased: is_initialized and then is_appliable_event (a_event_item) implies item_count = old item_count - 1
 		end
 
 	on_event_changed (a_service: EVENT_LIST_SERVICE_S; a_event_item: EVENT_LIST_ITEM_I)
@@ -829,7 +829,7 @@ feature {NONE} -- Events
 		local
 			l_row: EV_GRID_ROW
 		do
-			if is_appliable_event (a_event_item) then
+			if is_initialized and then is_appliable_event (a_event_item) then
 				l_row := find_event_row (a_event_item)
 				if l_row /= Void then
 						-- Re-creates event row
@@ -838,7 +838,7 @@ feature {NONE} -- Events
 				end
 			end
 		ensure then
-			a_event_find_event_row: find_event_row (a_event_item) /= Void
+			a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
 		end
 
 	on_grid_events_item_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM) is

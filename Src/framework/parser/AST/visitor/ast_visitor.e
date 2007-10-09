@@ -894,6 +894,13 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
+	process_object_test_as (l_as: OBJECT_TEST_AS) is
+			-- Process `l_as'.
+		require
+			l_as_not_void: l_as /= Void
+		deferred
+		end
+
 	process_void_as (l_as: VOID_AS) is
 			-- Process `l_as'.
 		require
@@ -1069,7 +1076,7 @@ feature {AST_EIFFEL} -- Clickable visitor
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

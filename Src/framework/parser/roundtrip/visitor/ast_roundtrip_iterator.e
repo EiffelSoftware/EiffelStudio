@@ -747,6 +747,14 @@ feature
 			safe_process (l_as.rbracket_symbol)
 		end
 
+	process_object_test_as (l_as: OBJECT_TEST_AS) is
+		do
+			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.name)
+			safe_process (l_as.type)
+			safe_process (l_as.expression)
+		end
+
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
 		do
 			l_as.language_name.process (Current)

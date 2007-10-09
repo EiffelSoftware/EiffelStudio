@@ -477,6 +477,13 @@ feature {NONE} -- Implementation
 			l_as.operands.process (Current)
 		end
 
+	process_object_test_as (l_as: OBJECT_TEST_AS) is
+		do
+			l_as.name.process (Current)
+			l_as.type.process (Current)
+			l_as.expression.process (Current)
+		end
+
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
 		do
 				-- Nothing to be done
@@ -871,7 +878,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

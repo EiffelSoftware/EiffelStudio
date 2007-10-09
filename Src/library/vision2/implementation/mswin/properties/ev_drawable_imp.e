@@ -597,6 +597,9 @@ feature -- Drawing operations
 			pixmap_imp			: EV_PIXMAP_IMP_STATE
 			source_drawable	: EV_PIXMAP_IMP_DRAWABLE
 			dest_dc				: WEL_DC
+			l_blend_function	: WEL_BLEND_FUNCTION
+			l_src_drawing_mode	: INTEGER
+			l_result			: BOOLEAN
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			pixmap_height := pixmap_imp.height
@@ -659,12 +662,21 @@ feature -- Drawing operations
 						source_bitmap := pixmap_imp.get_bitmap
 						create source_bitmap_dc.make_by_dc (s_dc)
 						source_bitmap_dc.select_bitmap (source_bitmap)
-
-						dest_dc.bit_blt (
-							x, y,
-							source_width, source_height,
-							source_bitmap_dc, source_x, source_y, src_drawing_mode
-						)
+						l_src_drawing_mode := src_drawing_mode
+						if not (l_src_drawing_mode = srccopy) then
+							dest_dc.bit_blt (
+								x, y,
+								source_width, source_height,
+								source_bitmap_dc, source_x, source_y, l_src_drawing_mode
+							)
+						else
+							-- Alpha blend function works same as bit blt function, but it care about alpha channel if possible.
+							create l_blend_function.make
+							l_result := dest_dc.alpha_blend (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, source_width, source_height, l_blend_function)
+							check successed: l_result = True end
+							check not_shared: not l_blend_function.shared end
+							l_blend_function.dispose
+						end
 							-- Free GDI Objects
 						source_bitmap_dc.unselect_bitmap
 						source_bitmap_dc.delete

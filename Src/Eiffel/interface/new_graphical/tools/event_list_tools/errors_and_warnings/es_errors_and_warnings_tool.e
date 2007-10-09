@@ -396,9 +396,18 @@ feature {NONE} -- Events
 			--
 			-- `a_service': Event service where event was added.
 			-- `a_event_item': The event item added to the service.
+		local
+			l_applicable: BOOLEAN
 		do
+			l_applicable := is_appliable_event (a_event_item)
+			if l_applicable and not is_initialized then
+					-- We have to perform initialization to set the icon and counter
+				initialize
+			end
+
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
-			if is_appliable_event (a_event_item) then
+
+			if l_applicable then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count + 1)
 				elseif is_warning_event (a_event_item) then
@@ -408,6 +417,8 @@ feature {NONE} -- Events
 				end
 				update_content_applicable_navigation_buttons
 			end
+		ensure then
+			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
 	on_event_removed (a_service: EVENT_LIST_SERVICE_S; a_event_item: EVENT_LIST_ITEM_I) is
@@ -415,9 +426,17 @@ feature {NONE} -- Events
 			--
 			-- `a_service': Event service where the event was removed.
 			-- `a_event_item': The event item removed from the service.
+		local
+			l_applicable: BOOLEAN
 		do
+			l_applicable := is_appliable_event (a_event_item)
+			if l_applicable and not is_initialized then
+					-- We have to perform initialization to set the icon and counter
+				initialize
+			end
+
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_BASE} (a_service, a_event_item)
-			if is_appliable_event (a_event_item) then
+			if l_applicable then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count - 1)
 				elseif is_warning_event (a_event_item) then
@@ -427,6 +446,8 @@ feature {NONE} -- Events
 				end
 				update_content_applicable_navigation_buttons
 			end
+		ensure then
+			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
 	on_toogle_errors_button is

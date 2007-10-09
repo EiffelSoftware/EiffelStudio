@@ -218,7 +218,7 @@ feature -- Redefine
 			if l_contents.count = 1 then
 				Precursor {SD_STATE} (a_data, a_container)
 				create l_docking_state.make_for_tab_zone (l_contents.first, a_container, a_data.direction)
-				l_content.change_state (l_docking_state)
+				l_contents.first.change_state (l_docking_state)
 				l_docking_state.set_direction (a_data.direction)
 			elseif l_contents.count > 1 then
 				from

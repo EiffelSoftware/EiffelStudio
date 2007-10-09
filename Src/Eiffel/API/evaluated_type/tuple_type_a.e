@@ -72,7 +72,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := 1
 					count := generics.count
 					other_count := other_generics.count
-					Result := (count >= other_count)
+					Result := (count >= other_count) and then (tuple_type.is_attached implies is_attached)
 				until
 					(i > other_count) or else (not Result)
 				loop

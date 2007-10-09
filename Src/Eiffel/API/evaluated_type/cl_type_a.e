@@ -12,7 +12,7 @@ inherit
 		redefine
 			is_expanded, is_reference, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
-			has_expanded, is_valid, format, convert_to,
+			has_expanded, is_valid, format, convert_to, is_attached,
 			is_full_named_type, is_external, is_enum, is_conformant_to
 		end
 
@@ -107,7 +107,7 @@ feature -- Properties
 	is_attached: BOOLEAN is
 			-- Is the type attached?
 		do
-			Result := attachment_bits & is_attached_mask /= 0
+			Result := (attachment_bits & is_attached_mask /= 0) or else is_expanded
 		end
 
 	is_valid: BOOLEAN is
@@ -388,8 +388,9 @@ feature {COMPILER_EXPORTER} -- Conformance
 					end
 				else
 					Result :=
-						associated_class.conform_to (other_class_type.associated_class)
-						and then other_class_type.valid_generic (Current)
+						associated_class.conform_to (other_class_type.associated_class) and then
+						other_class_type.valid_generic (Current) and then
+						(other_class_type.is_attached implies is_attached)
 					if not Result and then system.il_generation and then system.system_object_class /= Void then
 							-- Any type in .NET conforms to System.Object
 						check

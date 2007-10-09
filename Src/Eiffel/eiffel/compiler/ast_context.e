@@ -34,9 +34,19 @@ feature {NONE} -- Initialization
 	make is
 			-- Create instance of AST_CONTEXT.	
 		do
+			create inline_agent_counter
+			create_local_containers
+		end
+
+	create_local_containers
+			-- Create containers to keep information about locals, scopes
+			-- and other data within a feature.
+		do
 			create locals.make (10)
 			create supplier_ids.make
-			create inline_agent_counter
+			create {ARRAYED_STACK [INTEGER]} scopes.make (0)
+			create object_test_locals.make (0)
+			create used_object_test_local_names.make (0)
 		end
 
 feature -- Access
@@ -87,6 +97,9 @@ feature -- Access
 	used_local_names: SEARCH_TABLE [INTEGER]
 			-- Local names that are already used by enclosing features
 
+	used_object_test_local_names: SEARCH_TABLE [INTEGER]
+			-- Names of object-test locals used by enclosing features
+
 	set_used_argument_names (table: like used_argument_names) is
 			-- Set the used argument names
 		do
@@ -108,6 +121,106 @@ feature -- Access
 			if not Result and then used_local_names /= Void then
 				Result := used_local_names.has (id)
 			end
+			if not Result then
+				Result := scopes.has (id)
+			end
+		end
+
+	is_object_test_local_used (id: INTEGER): BOOLEAN
+			-- Is the name `id' already used in an object test of an enclosing feature?
+		do
+			Result := used_object_test_local_names.has (id)
+		end
+
+feature {NONE} -- Local scopes
+
+	object_test_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
+			-- Types of object-test locals indexes by their name id
+
+feature {AST_FEATURE_CHECKER_GENERATOR} -- Local scopes
+
+	add_object_test_local (t: TYPE_A; id: INTEGER)
+			-- Add a new object test local of type `t' with name `id'.
+		local
+			l: LOCAL_INFO
+		do
+			create l
+			l.set_type (t)
+			l.set_position (locals.count + object_test_locals.count + 1)
+			object_test_locals.put (l, id)
+			used_object_test_local_names.put (id)
+		end
+
+	object_test_local (id: INTEGER): LOCAL_INFO
+			-- Information about object-test local of name `id' if such
+			-- a local is currently in scope
+		do
+			if scopes.has (id) then
+				Result := object_test_locals.item (id)
+			end
+		end
+
+feature {AST_CONTEXT} -- Local scopes
+
+	scopes: STACK [INTEGER_32]
+			-- Currently active scopes
+
+feature -- Scope state
+
+	scope: INTEGER
+			-- Current scope ID
+		do
+				-- For simplicity the current number of local scopes is used.
+			Result := scope_count
+		end
+
+	set_scope (s: like scope)
+			-- Reset `scope' to the previously recorded scope ID `s'.
+		do
+			remove_scopes (scope_count - s)
+		end
+
+feature {AST_SCOPE_MATCHER} -- Local scopes
+
+	scope_count: INTEGER
+			-- Number of active scopes
+		do
+			Result := scopes.count
+		end
+
+	add_argument_scope (id: INTEGER)
+			-- Add a scope for an argument identified by `id'.
+		do
+			scopes.put (id)
+		ensure
+			scope_count_inremented: scope_count = old scope_count +1
+		end
+
+	add_object_test_scope (id: INTEGER)
+			-- Add a scope for an object-test local identified by `id'.
+		do
+			scopes.put (id)
+		ensure
+			scope_count_inremented: scope_count = old scope_count +1
+		end
+
+	remove_scopes (n: like scope_count)
+			-- Remove `n' last scopes from the context.
+		require
+			valid_n: 0 <= n and n <= scope_count
+		local
+			i: like scope_count
+		do
+			from
+				i := n
+			until
+				i <= 0
+			loop
+				scopes.remove
+				i := i - 1
+			end
+		ensure
+			scopes_updated: scopes.count = old scopes.count - n
 		end
 
 feature -- Status report
@@ -218,17 +331,26 @@ feature -- Setting
 				-- Pattern id
 			byte_code.set_pattern_id (current_feature.pattern_id)
 				-- Local variable declarations
-			local_count := locals.count
+			local_count := locals.count + object_test_locals.count
 			if local_count > 0 then
+				create local_dec.make (1, local_count)
 				from
 					locals.start
-					create local_dec.make (1, local_count)
 				until
 					locals.after
 				loop
 					local_info := locals.item_for_iteration
 					local_dec.put (local_info.type.type_i, local_info.position)
 					locals.forth
+				end
+				from
+					object_test_locals.start
+				until
+					object_test_locals.after
+				loop
+					local_info := object_test_locals.item_for_iteration
+					local_dec.put (local_info.type.type_i, local_info.position)
+					object_test_locals.forth
 				end
 				byte_code.set_locals (local_dec)
 			end
@@ -276,19 +398,21 @@ feature -- Managing the type stack
 			last_conversion_info := Void
 			supplier_ids.wipe_out
 			written_class := Void
-		end;
+			object_test_locals.wipe_out
+			used_object_test_local_names.wipe_out
+			scopes.wipe_out
+		end
 
 feature	-- Saving contexts
 
 	save: AST_CONTEXT is
-			--Returns a saved context
+			-- Returns a saved context
 		do
 			Result := twin
-
-			create locals.make (10)
-			create supplier_ids.make
+			create_local_containers
 			used_argument_names := Void
 			used_local_names := Void
+			scopes.copy (Result.scopes)
 		end
 
 	restore (context: AST_CONTEXT) is
@@ -301,10 +425,12 @@ feature {NONE} --Internals
 	old_inline_agents_int:  HASH_TABLE [FEATURE_I, INTEGER]
 
 invariant
-	locals_not_void: locals /= Void
+	locals_attached: locals /= Void
+	object_test_locals_attached: object_test_locals /= Void
+
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

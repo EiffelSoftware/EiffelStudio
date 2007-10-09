@@ -77,6 +77,7 @@ inherit
 			process_bin_eq_as,
 			process_bin_ne_as,
 			process_bracket_as,
+			process_object_test_as,
 			process_external_lang_as,
 			process_feature_as,
 			process_feature_list_as,
@@ -1437,6 +1438,14 @@ feature {NONE} -- Implementation
 					last_type := l_type
 				end
 			end
+		end
+
+	process_object_test_as (l_as: OBJECT_TEST_AS) is
+		do
+			l_as.name.process (Current)
+			l_as.type.process (Current)
+			l_as.expression.process (Current)
+			last_type := boolean_type
 		end
 
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is

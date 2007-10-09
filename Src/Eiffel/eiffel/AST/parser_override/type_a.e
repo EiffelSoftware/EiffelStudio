@@ -300,6 +300,12 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	is_attached: BOOLEAN is
+			-- Is type attached?
+		do
+					-- False by default
+		end
+
 feature -- Comparison
 
 	frozen is_safe_equivalent (other: TYPE_A): BOOLEAN is

@@ -22,6 +22,11 @@ inherit
 			internal_recycle
 		end
 
+	EVENT_LIST_SERVICE_CONSUMER
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	on_before_initialize
@@ -32,20 +37,21 @@ feature {NONE} -- Initialization
 			Precursor {ES_DOCKABLE_TOOL_WINDOW}
 
 				-- Retrieve event list service
-			l_service ?= service_provider.query_service ({EVENT_LIST_SERVICE_S})
-			if l_service /= Void then
+			if is_event_list_service_available then
+				l_service := event_list_service
 				l_service.item_added_events.subscribe (agent on_event_added)
 				l_service.item_changed_events.subscribe (agent on_event_changed)
 				l_service.item_removed_events.subscribe (agent on_event_removed)
 			end
-			event_service := l_service
 		end
 
 	on_after_initialized
 			-- Use to perform additional creation initializations, after the UI has been created.
 		do
 			Precursor {ES_DOCKABLE_TOOL_WINDOW}
-			synchronize_event_list_items
+			if not surpress_synchronization then
+				synchronize_event_list_items
+			end
 			update_content_applicable_widgets (item_count > 0)
 		end
 
@@ -55,19 +61,22 @@ feature {NONE} -- Clean up
 			-- Recycle tool.
 		local
 			l_agent: PROCEDURE [ANY, TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
+			l_service: like event_list_service
 		do
-			if event_service /= Void then
+			if is_event_list_service_available then
+				l_service := event_list_service
+
 				l_agent := agent on_event_added
-				if event_service.item_added_events.is_subscribed (l_agent) then
-					event_service.item_added_events.unsubscribe (l_agent)
+				if l_service.item_added_events.is_subscribed (l_agent) then
+					l_service.item_added_events.unsubscribe (l_agent)
 				end
 				l_agent := agent on_event_removed
-				if event_service.item_removed_events.is_subscribed (l_agent) then
-					event_service.item_removed_events.unsubscribe (l_agent)
+				if l_service.item_removed_events.is_subscribed (l_agent) then
+					l_service.item_removed_events.unsubscribe (l_agent)
 				end
 				l_agent := agent on_event_changed
-				if event_service.item_changed_events.is_subscribed (l_agent) then
-					event_service.item_changed_events.unsubscribe (l_agent)
+				if l_service.item_changed_events.is_subscribed (l_agent) then
+					l_service.item_changed_events.unsubscribe (l_agent)
 				end
 			end
 
@@ -85,9 +94,6 @@ feature {NONE} -- Access
 		do
 			Result := 0
 		end
-
-	frozen event_service: EVENT_LIST_SERVICE_S
-			-- Event service the user interface is connected to
 
 	frozen grid_wrapper: EVS_GRID_WRAPPER [EV_GRID_ROW]
 			-- A grid helper class
@@ -124,6 +130,13 @@ feature -- Status report
 			-- Indicates if old event items should be destroyed automatically in a FIFO fashion.
 		do
 			Result := maximum_item_count > 0
+		end
+
+	surpress_synchronization: BOOLEAN
+			-- State to indicate if synchonization with the event list service should be suppressed
+			-- when initializing.
+		do
+			Result := False
 		end
 
 feature {NONE} -- Basic operations
@@ -210,11 +223,12 @@ feature {NONE} -- Basic operations
 			-- Synchronized the event list items already pushed to the service before the tool was shown
 		require
 			is_initialized: is_initialized
+			not_surpress_synchronization: not surpress_synchronization
 		local
-			l_service: like event_service
+			l_service: like event_list_service
 		do
-			l_service := event_service
-			if l_service /= Void then
+			if is_event_list_service_available then
+				l_service := event_list_service
 				l_service.all_items.do_all (agent on_event_added (l_service, ?))
 			end
 		end
@@ -888,7 +902,6 @@ feature {NONE} -- Internal implementation cache
 
 invariant
 	grid_events_attached: is_initialized implies grid_events /= Void
-	event_service_attached: event_service /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

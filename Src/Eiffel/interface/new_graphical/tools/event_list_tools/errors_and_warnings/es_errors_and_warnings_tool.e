@@ -17,6 +17,7 @@ inherit
 			internal_recycle,
 			create_right_tool_bar_items,
 			is_appliable_event,
+			surpress_synchronization,
 			maximum_item_count,
 			on_event_added,
 			on_event_removed,
@@ -126,6 +127,12 @@ feature {NONE} -- Access
 		do
 			Result := 100
 		end
+
+feature {NONE} -- Status report
+
+	frozen surpress_synchronization: BOOLEAN
+			-- State to indicate if synchonization with the event list service should be suppressed
+			-- when initializing.
 
 feature {NONE} -- User interface items
 
@@ -401,7 +408,9 @@ feature {NONE} -- Events
 		do
 			l_applicable := is_appliable_event (a_event_item)
 			if l_applicable and not is_initialized then
-					-- We have to perform initialization to set the icon and counter
+					-- We have to perform initialization to set the icon and counter.
+					-- Synchronization with the event list service is surpress to prevent duplication of event items being added.
+				surpress_synchronization := True
 				initialize
 			end
 
@@ -432,6 +441,8 @@ feature {NONE} -- Events
 			l_applicable := is_appliable_event (a_event_item)
 			if l_applicable and not is_initialized then
 					-- We have to perform initialization to set the icon and counter
+					-- Synchronization with the event list service is surpress to prevent duplication of event items being added.
+				surpress_synchronization := True
 				initialize
 			end
 

@@ -32,7 +32,6 @@ feature -- Processing
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			eif_class: EIFFEL_CLASS_C
-			descriptors: ARRAY [INTEGER]
 		do
 			classes := System.classes.sorted_classes
 				-- Generation of the descriptor tables.
@@ -59,14 +58,16 @@ feature -- Processing
 				end
 			else
 				if System.first_compilation then
-					descriptors := m_desc_server.current_keys
-					nb := descriptors.count
-					from i := 1 until i > nb loop
-						a_class := System.class_of_id (descriptors.item (i))
+					from
+						m_desc_server.start
+					until
+						m_desc_server.after
+					loop
+						a_class := System.class_of_id (m_desc_server.key_for_iteration)
 						if a_class /= Void then
 							insert_class (a_class)
 						end
-						i := i + 1
+						m_desc_server.forth
 					end
 				end
 				nb := count

@@ -53,7 +53,7 @@ feature -- Processing
 			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes
 				-- We do not process more than once classes that had an error.
-			create l_classes_with_error.make (classes.lower, classes.upper)
+			create l_classes_with_error.make (classes.lower, classes.lower - 1)
 			class_counter := System.class_counter
 			Workbench.set_compilation_started
 				-- We loop until we reached the number of classes with an error or found more errors
@@ -65,13 +65,16 @@ feature -- Processing
 					-- during the process.
 				from i := 1 until i > class_counter.count loop
 					a_class := classes.item (i)
-					if a_class /= Void and then a_class.degree_5_needed and not l_classes_with_error [i] then
+					if
+						a_class /= Void and then a_class.degree_5_needed and
+						(not l_classes_with_error.valid_index (i) or else not l_classes_with_error [i])
+					then
 						Degree_output.put_degree_5 (a_class, count)
 						System.set_current_class (a_class)
 						l_error_level := error_handler.error_level
 						process_class (a_class)
 						if error_handler.error_level /= l_error_level then
-							l_classes_with_error [i] := True
+							l_classes_with_error.force (True, i)
 							nb_errors := nb_errors + 1
 						elseif a_class.degree_5_needed then
 								-- Remove class if not already done.

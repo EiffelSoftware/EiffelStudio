@@ -138,8 +138,7 @@ feature -- Command
 		local
 			l_rect: EV_RECTANGLE
 		do
-			create l_rect.make (0, 0, width, height)
-			Result := sub_pixmap (l_rect)
+			create Result.make_with_pixel_buffer (Current)
 		end
 
 feature -- Query

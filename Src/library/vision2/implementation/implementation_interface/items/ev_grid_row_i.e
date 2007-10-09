@@ -720,7 +720,7 @@ feature -- Status setting
 			parent_tree_enabled: parent.is_tree_enabled
 		do
 			is_ensured_expandable := True
-			parent_i.redraw
+			redraw
 		ensure
 			is_expandable: is_expandable
 		end
@@ -733,8 +733,7 @@ feature -- Status setting
 			no_subrows_contained: subrow_count = 0
 		do
 			is_ensured_expandable := False
-
-			parent_i.redraw
+			redraw
 		ensure
 			not_is_expandable: not is_expandable
 		end

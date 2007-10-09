@@ -777,12 +777,15 @@ feature {NONE} -- Filling
 					end
 				end
 				dcl := object_dynamic_class
-				if
-					dcl /= Void
-					and then Eb_debugger_manager.display_agent_details
-					and then dcl.conform_to (debugger_manager.compiler_data.routine_class_c)
-				then
-					fill_extra_attributes_for_agent (a_row, list_cursor)
+				if dcl /= Void then
+					if dcl.conform_to (debugger_manager.compiler_data.tuple_class_c) then
+						fill_extra_attributes_for_tuple (a_row, list_cursor)
+					elseif
+						Eb_debugger_manager.display_agent_details
+						and then dcl.conform_to (debugger_manager.compiler_data.routine_class_c)
+					then
+						fill_extra_attributes_for_agent (a_row, list_cursor)
+					end
 				end
 			end
 			if a_row.is_expandable and then not a_row.is_expanded then
@@ -881,6 +884,43 @@ feature {NONE} -- Agent filling
 			result_attached: Result /= Void
 		end
 
+	fill_extra_attributes_for_tuple (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]) is
+		require
+			a_row /= Void
+			list_cursor /= Void
+		local
+			lrow: EV_GRID_ROW
+			vitem: DEBUG_BASIC_VALUE [BOOLEAN]
+			grid: EV_GRID
+			r: INTEGER
+			glab: EV_GRID_LABEL_ITEM
+			gf: EB_GRID_EDITOR_TOKEN_ITEM
+			f: E_FEATURE
+		do
+			grid := a_row.parent
+			list_cursor.start
+			if not list_cursor.off then
+				vitem ?= list_cursor.item
+				if vitem /= Void then
+					r := 1
+					a_row.insert_subrow (r)
+					lrow := a_row.subrow (r)
+
+					f := debugger_manager.compiler_data.tuple_class_c.feature_with_name ("object_comparison")
+					create gf
+					gf.set_pixmap (pixmap_from_e_feature (f))
+					gf.set_overriden_fonts (label_font_table, label_font_height)
+					Grid_feature_style.set_e_feature (f)
+					gf.set_text_with_tokens (Grid_feature_style.text)
+					lrow.set_item (Col_name_index, gf)
+
+					create glab.make_with_text (vitem.output_value)
+					glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
+					lrow.set_item (Col_value_index, glab)
+				end
+			end
+		end
+
 	fill_extra_attributes_for_agent (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]) is
 		require
 			a_row /= Void
@@ -944,10 +984,10 @@ feature {NONE} -- Agent filling
 				glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
 				lrow.set_item (Col_name_index, glab)
 
-				Grid_feature_style.set_e_feature (ag_fe)
 				create gf
 				gf.set_pixmap (pixmap_from_e_feature (ag_fe))
 				gf.set_overriden_fonts (label_font_table, label_font_height)
+				Grid_feature_style.set_e_feature (ag_fe)
 				gf.set_text_with_tokens (Grid_feature_style.text)
 				lrow.set_item (Col_value_index, gf)
 			end

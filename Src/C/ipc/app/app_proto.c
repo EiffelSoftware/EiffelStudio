@@ -65,7 +65,7 @@
 #include "rt_gen_types.h"
 #include "rt_struct.h"
 #include "rt_globals.h"
-#include "rt_main.h" /* For debug_mode. */
+#include "rt_main.h" 	/* For debug_mode. */
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode
@@ -87,9 +87,9 @@ rt_private void wean(EIF_PSTREAM s, Opaque *what);			/* Wean adopted object */
 rt_private void once_inspect(EIF_PSTREAM s, Opaque *what);	/* Once routines inspection */
 rt_private void obj_inspect(EIF_OBJ object);
 rt_private void bit_inspect(EIF_OBJ object);
-rt_private void string_inspect(EIF_OBJ object);				/* String object inspection */
-rt_private void load_bc(int slots, int amount);				/* Load byte code information */
-rt_private long sp_lower, sp_upper;						/* Special objects' bounds to be inspected */
+rt_private void string_inspect(EIF_OBJ object);		/* String object inspection */
+rt_private void load_bc(int slots, int amount);		/* Load byte code information */
+rt_private long sp_lower, sp_upper;					/* Special objects' bounds to be inspected */
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
 
 rt_private void set_check_assert (int v) ;	/* Set current assertion checking off/on */
@@ -133,6 +133,7 @@ extern int already_warned; /* Have we already warned the user concerning a possi
 #define NO_CURRMODIF	0
 #define LOCAL_ITEM		1
 #define OBJECT_ATTR		2
+
 /*
  * IDR protocol initialization.
  */
@@ -262,7 +263,7 @@ static int curr_modify = NO_CURRMODIF;
 		curr_modify = NO_CURRMODIF;
 		dthread_restore();
 		break;
-	case MOVE:						/* Change active routine */
+	case MOVE:			/* Change active routine */
 		dmove(arg_1);
 		break;
 	case CLEAR_BREAKPOINTS:				/* Clear breakpoints table */
@@ -499,9 +500,7 @@ rt_shared void dnotify(int evt_type, int evt_data)
 {
 	if (!debug_mode)		/* If not in debugging mode */
 		return ;			/* Resume execution immediately */
-#ifdef WORKBENCH
 	notify_rqst(app_sp, evt_type, evt_data);		/* Notify workbench we stopped */
-#endif	/* WORKBENCH */
 }
 
 /* Encapsulate the 'modify_local' function */
@@ -655,7 +654,7 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 #endif
 	
 	
-	switch (what->op_1) {		/* First value describes request */
+	switch (what->op_1) {			/* First value describes request */
 	case OUT_INDEX:					/* ONCE_INDEX for the once routine */
 	 	b_index = (BODY_INDEX) what->op_3;	/* Body_id of once routine */
 #ifdef EIF_THREADS
@@ -1223,7 +1222,7 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 		/* Send address of Current object */
 	app_twrite (&object, sizeof (EIF_POINTER));
 
-	count = RT_SPECIAL_COUNT(object) - 1;
+	count = RT_SPECIAL_COUNT(object);
 
 		/* Send the capacity of the special object */
 	app_twrite (&count, sizeof(int32));
@@ -1235,9 +1234,8 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 	if (count > 0) {
 		EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) object;
 			/* Don't forget that first element of TUPLE is the BOOLEAN
-			 * `object_comparison' attribute which we don't display for now. */
-		l_item++;
-		for (i = 1; count > 0; count--, i++, l_item++) {
+			 * `object_comparison' attribute. */
+		for (i = 0; count > 0; count--, i++, l_item++) {
 			sprintf (buffer, "%d", i);
 			app_twrite (buffer, strlen(buffer));
 			sk_type = eif_tuple_item_sk_type(l_item);
@@ -1630,9 +1628,8 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 		ip = rqst.rq_dump.dmp_item;
 		if ((ip != NULL) && (ip->type & SK_HEAD) == SK_STRING) {
 			s = (char*) ip->it_ref;
-		} else {
-			ip = NULL;
 		}
+		ip = NULL;
 	}
 	if (s == NULL) {
 		send_ack(sp, AK_ERROR);		/* Protocol error */

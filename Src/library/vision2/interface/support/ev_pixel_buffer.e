@@ -135,8 +135,6 @@ feature -- Command
 
 	to_pixmap: EV_PIXMAP is
 			-- Convert to EV_PIXMAP.
-		local
-			l_rect: EV_RECTANGLE
 		do
 			create Result.make_with_pixel_buffer (Current)
 		end

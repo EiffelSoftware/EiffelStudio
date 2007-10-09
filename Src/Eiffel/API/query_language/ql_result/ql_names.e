@@ -394,6 +394,7 @@ feature -- AST node index
 	select_clause: INTEGER is 143
 	formal_generic_list: INTEGER is 144
 	constraining_type:  INTEGER is 145
+	object_test: INTEGER is 146
 
 feature -- AST node match
 
@@ -482,6 +483,7 @@ feature -- AST node match
 			Result.force (<<bin_eq>>, "bin_eq")
 			Result.force (<<bin_ne>>, "bin_ne")
 			Result.force (<<bracket>>, "bracket")
+			Result.force (<<object_test>>, "object_test")
 			Result.force (<<external_lang>>, "external_lang")
 			Result.force (<<feature_as>>, "feature")
 			Result.force (<<infix_prefix>>, "infix_prefix")
@@ -565,7 +567,7 @@ feature -- Access
 	ql_no_tag: STRING is "no tag";
 
 indexing
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2007, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

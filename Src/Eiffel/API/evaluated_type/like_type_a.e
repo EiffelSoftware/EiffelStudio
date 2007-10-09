@@ -19,6 +19,7 @@ inherit
 			has_associated_class,
 			has_like,
 			instantiated_in,
+			is_attached,
 			is_basic,
 			is_expanded,
 			is_external,
@@ -110,6 +111,16 @@ feature -- Properties
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		deferred
+		end
+
+	is_attached: BOOLEAN is
+			-- Is type attached?
+		do
+			if has_attached_mark then
+				Result := True
+			elseif not has_detachable_mark then
+				Result := conformance_type.is_attached
+			end
 		end
 
 feature -- Access

@@ -2366,18 +2366,32 @@ feature -- Implementation
 						l_as.set_class_id (class_id_of (l_type))
 					end
 				else
-						-- Look for a feature
-					l_feature := Void
-					if is_inherited then
-						check system.class_of_id (l_last_id) = last_type.associated_class end
-						l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
-					end
-					process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
-					l_type := last_type
-					if not is_inherited then
-							-- set some type attributes of the node
-						l_as.set_class_id (l_last_id)
-						l_as.set_routine_ids (last_routine_id_set)
+					l_local_info := context.object_test_local (l_as.feature_name.name_id)
+					if l_local_info /= Void then
+						l_local_info.set_is_used (True)
+						last_access_writable := False
+						l_has_vuar_error := l_as.parameters /= Void
+						l_type := l_local_info.type
+						l_type := l_type.instantiation_in (last_type, l_last_id)
+						if l_needs_byte_node then
+							create l_local
+							l_local.set_position (l_local_info.position)
+							last_byte_node := l_local
+						end
+					else
+							-- Look for a feature
+						l_feature := Void
+						if is_inherited then
+							check system.class_of_id (l_last_id) = last_type.associated_class end
+							l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
+						end
+						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
+						l_type := last_type
+						if not is_inherited then
+								-- set some type attributes of the node
+							l_as.set_class_id (l_last_id)
+							l_as.set_routine_ids (last_routine_id_set)
+						end
 					end
 				end
 			end
@@ -2667,8 +2681,12 @@ feature -- Implementation
 			l_byte_code: BYTE_CODE
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_needs_byte_node: BOOLEAN
+			s: INTEGER
 		do
 			l_needs_byte_node := is_byte_node_enabled
+
+				-- Remember current scope state
+			s := context.scope
 
 				-- Check local variables
 			if l_as.locals /= Void then
@@ -2731,6 +2749,9 @@ feature -- Implementation
 				end
 			end
 
+				-- Revert to the original scope state
+			context.set_scope (s)
+
 			if l_as.locals /= Void and then context.current_class.is_warning_enabled (w_unused_local) then
 				check_unused_locals (context.locals)
 			end
@@ -2751,7 +2772,22 @@ feature -- Implementation
 			-- Nothing to be done
 		end
 
+	process_compound (compound: EIFFEL_LIST [INSTRUCTION_AS])
+			-- Process instruction list keeping track of local scopes.
+		local
+			s: INTEGER
+		do
+			s := context.scope
+			compound.process (Current)
+			context.set_scope (s)
+		end
+
 	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
+		do
+			process_eiffel_list_with_matcher (l_as, Void)
+		end
+
+	process_eiffel_list_with_matcher (l_as: EIFFEL_LIST [AST_EIFFEL]; m: AST_SCOPE_MATCHER) is
 		local
 			l_cursor: INTEGER
 			l_list: BYTE_LIST [BYTE_NODE]
@@ -2766,6 +2802,9 @@ feature -- Implementation
 					l_as.after
 				loop
 					l_as.item.process (Current)
+					if m /= Void then
+						m.add_scopes (l_as.item, context)
+					end
 					l_list.extend (last_byte_node)
 					l_as.forth
 				end
@@ -2776,6 +2815,9 @@ feature -- Implementation
 					l_as.after
 				loop
 					l_as.item.process (Current)
+					if m /= Void then
+						m.add_scopes (l_as.item, context)
+					end
 					l_as.forth
 				end
 			end
@@ -3583,7 +3625,7 @@ feature -- Implementation
 			process_unary_as (l_as)
 		end
 
-	process_binary_as (l_as: BINARY_AS) is
+	process_binary_as (l_as: BINARY_AS; scope_matcher: AST_SCOPE_MATCHER) is
 		require
 			l_as_not_void: l_as /= Void
 		local
@@ -3605,6 +3647,7 @@ feature -- Implementation
 			l_is_left_multi_constrained, l_is_right_multi_constrained: BOOLEAN
 			l_class: CLASS_C
 			l_context_current_class: CLASS_C
+			s: INTEGER
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_context_current_class := context.current_class
@@ -3644,7 +3687,14 @@ feature -- Implementation
 			end
 
 				-- Then type check the right operand
+			if scope_matcher /= Void then
+				s := context.scope
+				scope_matcher.add_scopes (l_as.left, context)
+			end
 			l_as.right.process (Current)
+			if scope_matcher /= Void then
+				context.set_scope (s)
+			end
 			l_right_type := last_type.actual_type
 			if l_right_type.is_formal then
 				l_formal ?= l_right_type
@@ -3778,12 +3828,12 @@ feature -- Implementation
 
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, create {AST_SCOPE_CONJUNCTIVE_EXPRESSION})
 		end
 
 	process_bin_free_as (l_as: BIN_FREE_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_implies_as (l_as: BIN_IMPLIES_AS) is
@@ -3794,7 +3844,7 @@ feature -- Implementation
 		do
 			l_old_expr := old_expressions
 			old_expressions := Void
-			process_binary_as (l_as)
+			process_binary_as (l_as, create {AST_SCOPE_IMPLICATIVE_EXPRESSION})
 			if is_byte_node_enabled then
 					-- Special optimization, if the left-hand side is False, then
 					-- expression is evaluated to True and we discard any new UN_OLD_AS
@@ -3821,77 +3871,77 @@ feature -- Implementation
 
 	process_bin_or_as (l_as: BIN_OR_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, create {AST_SCOPE_DISJUNCTIVE_EXPRESSION})
 		end
 
 	process_bin_xor_as (l_as: BIN_XOR_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_ge_as (l_as: BIN_GE_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_gt_as (l_as: BIN_GT_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_le_as (l_as: BIN_LE_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_lt_as (l_as: BIN_LT_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_div_as (l_as: BIN_DIV_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_minus_as (l_as: BIN_MINUS_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_mod_as (l_as: BIN_MOD_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_plus_as (l_as: BIN_PLUS_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_power_as (l_as: BIN_POWER_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_slash_as (l_as: BIN_SLASH_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_star_as (l_as: BIN_STAR_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_and_as (l_as: BIN_AND_AS) is
 		do
-			process_binary_as (l_as)
+			process_binary_as (l_as, Void)
 		end
 
 	process_bin_eq_as (l_as: BIN_EQ_AS) is
@@ -4125,6 +4175,76 @@ feature -- Implementation
 				nested_b.set_target (target_access)
 				last_byte_node := nested_b
 			end
+		end
+
+	process_object_test_as (l_as: OBJECT_TEST_AS) is
+		local
+			l_needs_byte_node: BOOLEAN
+			local_name_id: INTEGER
+			local_type: TYPE_A
+			expr: EXPR_B
+			expression_type: TYPE_A
+		do
+			l_needs_byte_node := is_byte_node_enabled
+
+				-- Type check object-test local
+			local_name_id := l_as.name.name_id
+			if not is_inherited then
+				if current_feature.has_argument_name (local_name_id) then
+						-- The local name is an argument name of the
+						-- current analyzed feature
+					error_handler.insert_error (create {VUOT1}.make (context, l_as.name))
+				elseif context.current_feature_table.has_id (local_name_id) then
+						-- The local name is a feature name of the
+						-- current analyzed class.
+					error_handler.insert_error (create {VUOT1}.make (context, l_as.name))
+				end
+			end
+			if context.is_name_used (local_name_id) then
+					-- The object-test local is a name of a feature local variable
+				error_handler.insert_error (create {VUOT1}.make (context, l_as.name))
+			end
+			if context.is_object_test_local_used (local_name_id) then
+					-- The object-test local is a name of a local of another object test
+				error_handler.insert_error (create {VUOT3}.make (context, l_as.name))
+			end
+			check_type (l_as.type)
+			local_type := last_type
+			if not local_type.is_attached then
+				error_handler.insert_error (create {VUOT2}.make (context, local_name_id, local_type, l_as.name))
+			end
+
+				-- We do NOT want to update the type in the instantiator
+				-- if there is an error
+			error_handler.checksum
+
+			context.add_object_test_local (local_type, local_name_id)
+
+			if current_feature.written_in = context.current_class.class_id then
+				Instantiator.dispatch (local_type, context.current_class)
+			end
+
+			if local_type.has_associated_class then
+					-- Add the supplier in the feature_dependance list
+				context.supplier_ids.add_supplier (local_type.associated_class)
+			end
+
+			if local_type /= Void then
+				local_type.check_for_obsolete_class (context.current_class)
+			end
+
+				-- Type check expression
+			l_as.expression.process (Current)
+			expression_type := last_type
+			if l_needs_byte_node then
+				expr ?= last_byte_node
+			end
+
+			if l_needs_byte_node then
+				create {BOOL_CONST_B} last_byte_node.make (False)
+			end
+
+			last_type := boolean_type
 		end
 
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
@@ -4582,7 +4702,7 @@ feature -- Implementation
 		do
 			if l_as.check_list /= Void then
 				set_is_checking_check (True)
-				l_as.check_list.process (Current)
+				process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION})
 				set_is_checking_check (False)
 
 				if is_byte_node_enabled then
@@ -5164,7 +5284,7 @@ feature -- Implementation
 			l_node_keys: ARRAYED_LIST [STRING]
 		do
 			if l_as.compound /= Void then
-				l_as.compound.process (Current)
+				process_compound (l_as.compound)
 				if is_byte_node_enabled then
 					l_list ?= last_byte_node
 					create l_debug
@@ -5201,6 +5321,8 @@ feature -- Implementation
 			l_if: IF_B
 			l_expr: EXPR_B
 			l_list: BYTE_LIST [BYTE_NODE]
+			s: INTEGER
+			scope_matcher: AST_SCOPE_MATCHER
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			break_point_slot_count := break_point_slot_count + 1
@@ -5224,13 +5346,21 @@ feature -- Implementation
 			end
 
 				-- Type check on compound
+			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
+			s := context.scope
+			scope_matcher.add_scopes (l_as.condition, context)
 			if l_as.compound /= Void then
-				l_as.compound.process (Current)
+				process_compound (l_as.compound)
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 					l_if.set_compound (l_list)
 				end
 			end
+			context.set_scope (s)
+
+			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
+			s := context.scope
+			scope_matcher.add_scopes (l_as.condition, context)
 
 				-- Type check on alternaltives compounds
 			if l_as.elsif_list /= Void then
@@ -5240,15 +5370,16 @@ feature -- Implementation
 					l_if.set_elsif_list (l_list)
 				end
 			end
-
 				-- Type check on default compound
 			if l_as.else_part /= Void then
-				l_as.else_part.process (Current)
+				process_compound (l_as.else_part)
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 					l_if.set_else_part (l_list)
 				end
 			end
+
+			context.set_scope (s)
 
 			if l_needs_byte_node then
 				l_if.set_line_number (l_as.condition.start_location.line)
@@ -5321,7 +5452,7 @@ feature -- Implementation
 			end
 
 			if l_as.else_part /= Void then
-				l_as.else_part.process (Current)
+				process_compound (l_as.else_part)
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 					l_inspect.set_else_part (l_list)
@@ -5367,6 +5498,8 @@ feature -- Implementation
 			l_expr: EXPR_B
 			l_loop: LOOP_B
 			l_variant: VARIANT_B
+			s: INTEGER
+			scope_matcher: AST_SCOPE_MATCHER
 		do
 			has_loop := True
 			l_needs_byte_node := is_byte_node_enabled
@@ -5378,7 +5511,7 @@ feature -- Implementation
 
 			if l_as.from_part /= Void then
 					-- Type check the from part
-				l_as.from_part.process (Current)
+				process_compound (l_as.from_part)
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 					l_loop.set_from_part (l_list)
@@ -5419,11 +5552,15 @@ feature -- Implementation
 
 			if l_as.compound /= Void then
 					-- Type check the loop compound
-				l_as.compound.process (Current)
+				create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
+				s := context.scope
+				scope_matcher.add_scopes (l_as.stop, context)
+				process_compound (l_as.compound)
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 					l_loop.set_compound (l_list)
 				end
+				context.set_scope (s)
 			end
 
 			if l_needs_byte_node then
@@ -5495,7 +5632,7 @@ feature -- Implementation
 			l_as.set_first_breakpoint_slot_index (break_point_slot_count + 1)
 
 			if l_as.compound /= Void then
-				l_as.compound.process (Current)
+				process_compound (l_as.compound)
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 				end
@@ -5519,7 +5656,7 @@ feature -- Implementation
 			l_as.set_first_breakpoint_slot_index (break_point_slot_count + 1)
 
 			if l_as.compound /= Void then
-				l_as.compound.process (Current)
+				process_compound (l_as.compound)
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 				end
@@ -5685,7 +5822,7 @@ feature -- Implementation
 
 					-- Type check on compound
 				if l_as.compound /= Void then
-					l_as.compound.process (Current)
+					process_compound (l_as.compound)
 					if l_needs_byte_node then
 						l_list ?= last_byte_node
 						l_elsif.set_compound (l_list)
@@ -5722,7 +5859,7 @@ feature -- Implementation
 			if not is_byte_node_enabled then
 				l_as.interval.process (Current)
 				if l_as.compound /= Void then
-					l_as.compound.process (Current)
+					process_compound (l_as.compound)
 				end
 			else
 						-- Collect all intervals in an array
@@ -5774,7 +5911,7 @@ feature -- Implementation
 					create l_case
 					l_case.set_interval (l_tmp)
 					if l_as.compound /= Void then
-						l_as.compound.process (Current)
+						process_compound (l_as.compound)
 						l_list ?= last_byte_node
 						l_case.set_compound (l_list)
 					end
@@ -5801,7 +5938,7 @@ feature -- Implementation
 	process_require_as (l_as: REQUIRE_AS) is
 		do
 			if l_as.assertions /= Void then
-				l_as.assertions.process (Current)
+				process_eiffel_list_with_matcher (l_as.assertions, create {AST_SCOPE_ASSERTION})
 			end
 		end
 
@@ -7874,7 +8011,7 @@ feature {NONE} -- Implementation: checking locals
 						l_local_info.set_type (l_solved_type)
 						l_local_info.set_position (i)
 						if l_context_locals.has (l_local_name_id) then
-								-- Error: two locals withe the same name
+								-- Error: two locals with the same name
 							create l_vreg
 							l_vreg.set_entity_name (l_local_name)
 							context.init_error (l_vreg)

@@ -2046,6 +2046,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_object_test_as (l_as: OBJECT_TEST_AS) is
+		do
+			if not expr_type_visiting then
+				text_formatter_decorator.process_symbol_text (ti_l_curly)
+			end
+			l_as.name.process (Current)
+			if not expr_type_visiting then
+				text_formatter_decorator.process_symbol_text (ti_colon)
+				text_formatter_decorator.put_space
+			end
+			l_as.type.process (Current)
+			if not expr_type_visiting then
+				text_formatter_decorator.process_symbol_text (ti_r_curly)
+				text_formatter_decorator.put_space
+			end
+			l_as.expression.process (Current)
+			last_type := boolean_type
+		end
+
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
 		do
 			check

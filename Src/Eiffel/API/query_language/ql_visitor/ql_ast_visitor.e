@@ -976,6 +976,17 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	process_object_test_as (l_as: OBJECT_TEST_AS) is
+		do
+			if not is_matching_finished then
+				match_ast (bracket)
+				safe_process (l_as.lcurly_symbol)
+				safe_process (l_as.name)
+				safe_process (l_as.type)
+				safe_process (l_as.expression)
+			end
+		end
+
 	process_bracket_as (l_as: BRACKET_AS)
 		do
 			if not is_matching_finished then

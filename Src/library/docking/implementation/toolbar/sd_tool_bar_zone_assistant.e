@@ -354,8 +354,11 @@ feature -- Command
 						end
 						l_all_items.forth
 					end
-					check must_found: l_item /= Void end
-					l_content.items.extend (l_item)
+					if l_item /= Void then
+							-- l_item may be void in the case of changing tools, which
+							-- affects the layout.
+						l_content.items.extend (l_item)
+					end
 				end
 				l_data.forth
 			end

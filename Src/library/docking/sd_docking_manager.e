@@ -116,6 +116,22 @@ feature {NONE} -- Initialization
 			inner_containers.extend (l_inner_container)
 		end
 
+feature -- Access
+
+	restoration_callback: FUNCTION [ANY, TUPLE [title: STRING_GENERAL], SD_CONTENT]
+			-- Agent to use to attempt to retrieve a {SD_CONTENT} during restoration from a cached
+			-- layout file.
+
+feature -- Element change
+
+	set_restoration_callback (a_callback: like restoration_callback)
+			-- Sets a callback to fetch a content area when it's not already located in a container.
+		do
+			restoration_callback := a_callback
+		ensure
+			restoration_callback_set: restoration_callback = a_callback
+		end
+
 feature -- Query
 
 	contents: ACTIVE_LIST [SD_CONTENT]

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="image_eiffel_code" uuid="F467B9B0-F727-4CAB-9878-25C294973DD7">
-	<target name="image_eiffel_code">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="eiffel_image_embedder" uuid="F467B9B0-F727-4CAB-9878-25C294973DD7">
+	<target name="eiffel_image_embedder">
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<option trace="false" profile="false" debug="false" warning="true">
 			<debug name="__unnamed_debug__" enabled="false"/>
@@ -25,6 +25,7 @@
 		<setting name="dead_code_removal" value="true"/>
 		<setting name="dynamic_runtime" value="false"/>
 		<setting name="exception_trace" value="false"/>
+		<setting name="executable_name" value="eimgemb"/>
 		<setting name="inlining" value="false"/>
 		<setting name="line_generation" value="false"/>
 		<setting name="multithreaded" value="false"/>

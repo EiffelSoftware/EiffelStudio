@@ -15,11 +15,15 @@ feature -- Initialization
 	set_site (a_site: like site)
 			-- Sites `site' with `a_site'.
 		require
-			is_valid_site: is_valid_site (a_site)
+			is_valid_site: a_site /= Void implies is_valid_site (a_site)
 		local
 			l_entities: like siteable_entities
 		do
 			site := a_site
+			if a_site /= Void then
+				on_sited
+			end
+
 			l_entities := siteable_entities
 			if not l_entities.is_empty then
 				l_entities.do_all (agent (a_item: like Current)
@@ -31,6 +35,15 @@ feature -- Initialization
 			end
 		ensure
 			site_set: site = a_site
+		end
+
+feature {NONE} -- Initialization
+
+	on_sited
+			-- Called when Current has been sited
+		require
+			site_attached: site /= Void
+		do
 		end
 
 feature -- Access

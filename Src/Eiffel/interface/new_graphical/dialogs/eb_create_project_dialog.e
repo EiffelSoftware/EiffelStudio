@@ -219,7 +219,7 @@ feature -- Execution
 				blank_project_builder.create_blank_project
 
 					-- Create a new project using the previously generated files.
-				create l_project_loader.make (parent_window)
+				create l_project_loader.make (Current)
 				l_project_loader.set_is_project_location_requested (False)
 				l_project_initialized := eiffel_project.initialized
 				if l_project_initialized then

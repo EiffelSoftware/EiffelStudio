@@ -12,9 +12,7 @@ inherit
 	ISE_SERVER [SERVER_INFO, T]
 		redefine
 			make,
-			clear,
-			copy,
-			is_equal
+			clear
 		end
 
 feature -- Initialization
@@ -22,7 +20,7 @@ feature -- Initialization
 	make is
 		do
 			set_current_file_id
-			tbl_make (Chunk)
+			Precursor
 		end
 
 feature
@@ -43,7 +41,7 @@ end
 
 	put_precompiled (fid: INTEGER; item_id: INTEGER; sinf: SERVER_INFO) is
 		do
-			force (sinf, item_id)
+			tbl_force (sinf, item_id)
 		end
 
 	Size_limit: INTEGER is 500
@@ -109,7 +107,7 @@ end
 			create info.make (pos, server_file.file_id)
 			server_file.add_occurrence
 
-			force (info, an_id)
+			tbl_force (info, an_id)
 			if found then
 				old_server_file := Server_controler.file_of_id (found_item.file_id)
 				check
@@ -281,7 +279,7 @@ end
 					end
 					l_server_file.remove_occurrence
 				end
-				force (info, an_id)
+				tbl_force (info, an_id)
 				other.forth
 			end
 			other.clear_all
@@ -316,32 +314,6 @@ end
 	need_index (obj: ANY): BOOLEAN is
 			-- Is an index needed for `obj'?
 		do
-		end
-
-feature -- Duplication
-
-	copy (other: like Current) is
-			-- Re-initialize from `other'.
-		do
-			standard_copy (other)
-			set_keys (other.keys.twin)
-				-- `content' should be deep cloned since we don't want to
-				-- share the server_info which are a kind of secondary keys
-				-- (key to access the data on the disk).
-			set_content (other.content.deep_twin)
-			set_deleted_marks (other.deleted_marks.twin)
-		end
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Does server contain the same information as `other'?
-		do
-			Result :=
-				deep_equal (keys, other.keys) and
-				deep_equal (content, other.content) and
-				equal (deleted_marks, other.deleted_marks) and
-				current_file_id = other.current_file_id
 		end
 
 indexing

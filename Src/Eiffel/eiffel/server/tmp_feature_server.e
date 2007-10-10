@@ -101,7 +101,7 @@ feature -- Server
 				pos := store_append (l_server_file_descriptor, $l_item, l_null, l_null, $Current)
 					-- Not that we do not perform any cleaning here. This is because, it has to
 					-- be done when the new feature table is going to replace the old one.
-				force (create {SERVER_INFO}.make (pos, l_server_file_id), l_item.id)
+				tbl_force (create {SERVER_INFO}.make (pos, l_server_file_id), l_item.id)
 				l_storage.forth
 			end
 			l_storage.wipe_out

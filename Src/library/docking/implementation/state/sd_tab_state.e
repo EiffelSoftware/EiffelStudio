@@ -213,7 +213,11 @@ feature -- Redefine
 				l_titles.forth
 			end
 
-			internal_content := l_contents.first
+			if not l_contents.is_empty then
+				internal_content := l_contents.first
+			else
+				internal_content := Void
+			end
 
 			if l_contents.count = 1 then
 				Precursor {SD_STATE} (a_data, a_container)

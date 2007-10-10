@@ -100,6 +100,7 @@ feature -- Querys
 			a_unique_title_not_void: a_unique_title /= Void
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_callback: FUNCTION [ANY, TUPLE [STRING_GENERAL], SD_CONTENT]
 		do
 			from
 				l_contents := internal_docking_manager.contents
@@ -111,6 +112,15 @@ feature -- Querys
 					Result := l_contents.item
 				end
 				l_contents.forth
+			end
+
+			if Result = Void then
+					-- Try a registed callback on the docking manager.
+				l_callback := internal_docking_manager.restoration_callback
+				if l_callback /= Void then
+						-- Check callback
+					Result := l_callback.item ([a_unique_title])
+				end
 			end
 
 			if Result = Void then

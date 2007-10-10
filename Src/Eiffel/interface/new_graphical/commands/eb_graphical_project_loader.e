@@ -580,9 +580,9 @@ feature {NONE} -- User interaction
 	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
 			-- Should new environment values be accepted?
 		local
-			l_question: ES_DISCARDABLE_QUESTION_PROMPT
+			l_question: ES_QUESTION_PROMPT
 		do
-			create l_question.make_standard (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val), interface_names.l_discard_build_precompile_dialog, preferences.dialog_data.confirm_build_precompile_string)
+			create l_question.make_standard (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val))
 			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent do is_update_environment := True end)
 			l_question.set_button_action (l_question.dialog_buttons.no_button, agent do is_update_environment := False end)
 			l_question.show (parent_window)

@@ -74,6 +74,15 @@ feature {PREFERENCES} -- Initialization
 
 feature {PREFERENCES} -- Resource Management
 
+	exists: BOOLEAN is
+			-- Does storage exists ?
+		local
+			f: RAW_FILE
+		do
+			create f.make (location)
+			Result := f.exists
+		end
+
 	has_preference (a_name: STRING): BOOLEAN is
 			-- Does the underlying store contain a preference with `a_name'?
 		do

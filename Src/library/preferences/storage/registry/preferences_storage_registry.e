@@ -77,6 +77,15 @@ feature {PREFERENCES} -- Initialization
 
 feature {PREFERENCES} -- Resource Management
 
+	exists: BOOLEAN is
+			-- Does storage exists ?
+		do
+			Result := True 
+				--| Registry exists by default on Windows
+				--| If the related key did not exists, 
+				--|   `initialize_with_preferences' created it anyway
+		end
+
 	has_preference (a_name: STRING): BOOLEAN is
 			-- Does the underlying store contain a preference with `a_name'?
 		do

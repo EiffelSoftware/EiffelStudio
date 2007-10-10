@@ -9,35 +9,17 @@ deferred class
 	ISE_SERVER [G -> SERVER_INFO, T -> IDABLE]
 
 inherit
-	HASH_TABLE [G, INTEGER]
-		rename
-			make as tbl_make,
-			item as tbl_item,
-			has as tbl_has,
-			remove as tbl_remove,
-			put as tbl_put
-		end
-
 	COMPILER_EXPORTER
-		undefine
-			copy, is_equal
-		end
 
 	SHARED_SERVER
-		undefine
-			copy, is_equal
-		end
 
 	SHARED_SCONTROL
-		undefine
-			copy, is_equal
-		end
 
 feature -- Initialization
 
 	make is
 		do
-			tbl_make (Chunk)
+			create tables.make (1)
 		end
 
 feature -- Access
@@ -118,6 +100,298 @@ feature {NONE} -- External features
 		external
 			"C | %"pretrieve.h%""
 		end
+
+feature -- Traversal
+
+	start is
+			-- Bring cursor to first position.
+		do
+			tables_index := 0
+			tbl_forth
+		end
+
+	item_for_iteration: G is
+			-- Element at current iteration position
+		require
+			not_off: not after
+		do
+			Result := current_table.item_for_iteration
+		end
+
+	key_for_iteration: INTEGER is
+			-- Key at current iteration position
+		require
+			not_off: not after
+		do
+			Result := current_table.key_for_iteration
+		end
+
+	after: BOOLEAN is
+			-- Is cursor past last item?
+		do
+			Result := current_table = Void
+		end
+
+	forth is
+			-- Advance cursor to next occupied position,
+			-- or off if no such position remains.
+		require
+			not_off: not after
+		local
+			l_table: like table_type
+		do
+			l_table := current_table
+			l_table.forth
+			if l_table.after then
+				tbl_forth
+			end
+		end
+
+feature -- Status report
+
+	found: BOOLEAN
+			-- Did last operation find the item sought?
+
+	found_item: G
+			-- Item, if any, yielded by last search operation
+
+	count: INTEGER is
+			-- Number of items in table
+		local
+			i, nb: INTEGER
+			l_tables: like tables
+			l_table: like table_type
+		do
+			from
+				i := 0
+				l_tables := tables
+				nb := l_tables.count
+			until
+				i = nb
+			loop
+				l_table := l_tables.item (i)
+				if l_table /= Void then
+					Result := Result + l_table.count
+				end
+			end
+		end
+
+feature -- Search
+
+	search (key: INTEGER) is
+			-- Search for item of key `key'.
+			-- If found, set found to true, and set
+			-- found_item to item associated with `key'.
+		local
+			l_table: like table_type
+			l_default: G
+		do
+			l_table := table_entry (key)
+			if l_table /= Void then
+				l_table.search (key)
+				found := l_table.found
+				found_item := l_table.found_item
+			else
+				found := False
+				found_item := l_default
+			end
+		ensure
+			found_or_not_found: found or not found
+			item_if_found: found implies (found_item = tbl_item (key))
+		end
+
+feature -- Element change
+
+	merge (other: like table_type) is
+			-- Merge `other' into Current. If `other' has some elements
+			-- with same key as in `Current', replace them by one from
+			-- `other'.
+		require
+			other_not_void: other /= Void
+		do
+			from
+				other.start
+			until
+				other.after
+			loop
+				tbl_force (other.item_for_iteration, other.key_for_iteration)
+				other.forth
+			end
+		ensure
+			inserted: other.current_keys.linear_representation.for_all (agent tbl_has)
+		end
+
+	clear_all is
+			-- Reset all items to default values; reset status.
+		do
+			create tables.make (1)
+		end
+
+feature {NONE} -- HASH_TABLE like features
+
+	tbl_computed_default_value: G
+			-- Default value of type G
+		do
+		end
+
+	tbl_item (key: INTEGER): G is
+			-- Item associated with `key', if present
+			-- otherwise default value of type `G'
+		require
+			key_valid: key >= 0
+		local
+			l_table: like table_type
+		do
+			l_table := table_entry (key)
+			if l_table /= Void then
+				Result := l_table.item (key)
+			end
+		ensure
+			default_value_if_not_present: (not (tbl_has (key))) implies (Result = tbl_computed_default_value)
+		end
+
+	tbl_has (key: INTEGER): BOOLEAN is
+			-- Is there an item in the table with key `key'?
+		local
+			l_table: like table_type
+		do
+			l_table := table_entry (key)
+			Result := l_table /= Void and then l_table.has (key)
+		end
+
+	tbl_remove (key: INTEGER) is
+			-- Remove item associated with `key', if present.
+		local
+			l_table: like table_type
+		do
+			l_table := table_entry (key)
+			if l_table /= Void then
+				l_table.remove (key)
+			end
+		ensure
+			not_present: not has (key)
+		end
+
+	tbl_put (new: G; key: INTEGER) is
+			-- Insert `new' with `key' if there is no other item
+			-- associated with the same key.
+		require
+			key_valid: key >= 0
+		do
+			safe_table_entry (key).put (new, key)
+		ensure
+			present: tbl_has (key)
+		end
+
+	tbl_force (new: G; key: INTEGER) is
+			-- Update table so that `new' will be the item associated
+			-- with `key'.
+			-- If there was an item for that key, set found
+			-- and set found_item to that item.
+			-- If there was none, set not found and set
+			-- found_item to the default value.
+		require
+			key_valid: key >= 0
+		local
+			l_table: like table_type
+		do
+			l_table := safe_table_entry (key)
+			l_table.force (new, key)
+			found := l_table.found
+			found_item := l_table.found_item
+		ensure
+			present: tbl_has (key)
+			inserted: tbl_item (key) = new
+		end
+
+feature {NONE} -- Helpers
+
+	table_type: HASH_TABLE [G, INTEGER] is do end
+			-- For typing purposes.
+
+	tables: SPECIAL [like table_type]
+			-- All tables for current server.
+
+	tbl_modulo: INTEGER is 100_000
+			-- Maximum number of entries per HASH_TABLE.
+
+	tables_index: INTEGER
+	current_table: like table_type
+			-- Cursor for traversing the server.
+
+	table_entry (key: INTEGER): like table_type is
+			-- Table in which `key' is or will be. If not yet present Void.
+		require
+			key_valid: key >= 0
+		local
+			i: INTEGER
+			l_tables: like tables
+		do
+			i := key // tbl_modulo
+			l_tables := tables
+			if i < l_tables.count then
+				Result := l_tables.item (i)
+			end
+		end
+
+	safe_table_entry (key: INTEGER): like table_type is
+			-- Table in which `key' is or will be. If not yet present,
+			-- we create its associated table and possibly reallocate `tables'.
+		require
+			key_valid: key >= 0
+		local
+			i: INTEGER
+			l_tables: like tables
+		do
+			i := key // tbl_modulo
+			l_tables := tables
+			if i >= l_tables.count then
+				l_tables := l_tables.aliased_resized_area (i + 1)
+				tables := l_tables
+			end
+			Result := l_tables.item (i)
+			if Result = Void then
+				create Result.make (chunk.min (tbl_modulo))
+				l_tables.put (Result, i)
+			end
+		ensure
+			table_entry_not_void: Result /= Void
+		end
+
+	tbl_forth  is
+			-- Initiate a `forth' starting at position  `tables_index'.
+		require
+			tables_index_non_negative: tables_index >= 0
+		local
+			i, nb: INTEGER
+			l_tables: like tables
+			l_table: like table_type
+		do
+				-- Find first non-void entry in `tables'.
+			from
+				l_tables := tables
+				l_table := Void
+				i := tables_index
+				nb := l_tables.count
+			until
+				l_table /= Void or i >= nb
+			loop
+				l_table := l_tables.item (i)
+				if l_table /= Void then
+					if not l_table.is_empty then
+						l_table.start
+					else
+						l_table := Void
+					end
+				end
+				i := i + 1
+			end
+			current_table := l_table
+			tables_index := i
+		end
+
+invariant
+	tables_not_void: tables /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			l_pixel_buffer ?= a_pixel_buffer.implementation
 			check not_void: l_pixel_buffer /= Void end
 			l_gdip_bitmap := l_pixel_buffer.gdip_bitmap
-			if l_gdip_bitmap /= Void then
+			if l_gdip_bitmap /= Void and then color_depth = 32 then
 				-- We create a 32bit DIB bitmap if possible, so current can have alpha informations.
 				-- Because EV_PIXMAP_IMP_STATE doesn't have `private_bitmap' and `private_mask_bitmap' features,
 				-- we have to implement it in this class.				
@@ -1805,6 +1805,16 @@ feature {NONE} -- Implementation
 			set_is_initialized (False)
 		end
 
+	color_depth: INTEGER is
+			-- Screen color depth
+		local
+			l_screen: WEL_SCREEN_DC
+		once
+			create l_screen
+			l_screen.get
+			Result := l_screen.device_caps (({WEL_CAPABILITIES_CONSTANTS}.bits_pixel))
+			l_screen.delete
+		end
 
 feature {NONE} -- Constants
 

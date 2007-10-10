@@ -55,9 +55,11 @@ feature -- Access
 	reason_type_is_generic: STRING is "Type is a generic type"
 	reason_member_is_generic: STRING is "Member is a generic member"
 
-	reason_entity_marked_non_eiffel_compliant: STRING is "Entity was marked with EIFFEL_CONSUMABLE_ATTRIBUTE";
+	reason_entity_marked_non_eiffel_compliant: STRING is "Entity was marked with EIFFEL_CONSUMABLE_ATTRIBUTE"
 
-indexing
+	reason_type_crash: STRING is "Crash during type evaluation"
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

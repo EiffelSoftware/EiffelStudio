@@ -36,6 +36,8 @@ create
 feature {NONE} -- Initialization
 
 	make
+			-- Initialize new wrappable label.
+			-- Note: Be sure to call `calculate_size' before the label has been shown!
 		do
 			default_create
 			align_text_left
@@ -118,6 +120,11 @@ feature -- Element change
 			a_width_positive: a_width >= 0
 		do
 			maximum_width := a_width
+			if is_displayed then
+				resize_text
+			else
+				is_size_calculated := False
+			end
 		ensure
 			maximum_width_set: maximum_width = a_width
 			is_maximum_width_set_by_user: is_maximum_width_set_by_user
@@ -130,6 +137,11 @@ feature -- Element change
 			a_height_positive: a_height >= 0
 		do
 			maximum_height := a_height
+			if is_displayed then
+				resize_text
+			else
+				is_size_calculated := False
+			end
 		ensure
 			maximum_height_set: maximum_height = a_height
 			is_maximum_height_set_by_user: is_maximum_height_set_by_user
@@ -160,6 +172,8 @@ feature -- Removal
 			text_sizes := Void
 			if is_displayed then
 				resize_text
+			else
+				is_size_calculated := False
 			end
 		ensure then
 			text_lines_detached: text_lines = Void
@@ -188,6 +202,9 @@ feature {EV_BUILDER} -- Status report
 			Result := maximum_width > 0
 		end
 
+	is_size_calculated: BOOLEAN
+			-- Indicates if the size of the label had been calcuated
+
 feature -- Status setting
 
 	set_is_text_wrapped (a_wrap: like is_text_wrapped)
@@ -201,6 +218,8 @@ feature -- Status setting
 			is_text_wrapped := a_wrap
 			if is_displayed and l_changed then
 				resize_text
+			elseif l_changed then
+				is_size_calculated := False
 			end
 		ensure
 			is_text_wrapped_set: is_text_wrapped = a_wrap
@@ -218,9 +237,22 @@ feature -- Status setting
 			is_text_ellipsed := a_ellipse
 			if is_displayed and l_changed then
 				resize_text
+			elseif l_changed then
+				is_size_calculated := False
 			end
 		ensure
 			is_text_ellipsed_set: is_text_ellipsed = a_ellipse
+		end
+
+feature -- Basic operations
+
+	calculate_size
+			-- Calculates the size of the label.
+			-- Note: You must call this prior to a show to get the correct size information
+		do
+			resize_text
+		ensure
+			is_size_calculated: is_size_calculated
 		end
 
 feature {NONE} -- Line analysis
@@ -302,10 +334,12 @@ feature {NONE} -- Line analysis
 				Result.put (l_len, i)
 				i := i + 1
 			end
+			is_size_calculated := True
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_contains_valid_items: Result.for_all (agent (a_len: INTEGER): BOOLEAN do Result := a_len > 0 end)
+			is_size_calculated: is_size_calculated
 		end
 
 feature {NONE} -- Line rendering

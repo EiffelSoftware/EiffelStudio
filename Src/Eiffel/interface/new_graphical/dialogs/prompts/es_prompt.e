@@ -570,9 +570,11 @@ feature {NONE} -- Action handlers
 				-- This will cause long text to be wrapped.
 			l_width := prompt_text.font.string_width (prompt_text.text)
 			prompt_text.set_maximum_width (l_width.min (maximum_prompt_text_width))
+			prompt_text.calculate_size
 
 			l_width := prompt_sub_title_label.font.string_width (prompt_sub_title_label.text)
 			prompt_sub_title_label.set_maximum_width (l_width.min (maximum_prompt_text_width))
+			prompt_sub_title_label.calculate_size
 		end
 
 feature {NONE} -- Constants

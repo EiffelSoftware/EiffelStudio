@@ -74,6 +74,13 @@ feature {PREFERENCES} -- Query
 		deferred
 		end
 
+	exists: BOOLEAN is
+			-- Does storage exists ?
+		require
+			initialized: initialized
+		deferred
+		end
+
 feature {PREFERENCES} -- Access
 
 	location: STRING

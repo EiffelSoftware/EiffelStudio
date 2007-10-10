@@ -395,6 +395,14 @@ feature -- Preference
 			all_preferences_default: True
 		end
 
+feature -- Storage access
+
+	preferences_storage_exists: BOOLEAN is
+			-- Does preferences storage exists ?
+		do
+			Result := preferences_storage.exists
+		end
+
 feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCES_STORAGE_I} -- Implementation
 
 	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN, BOOLEAN], STRING]

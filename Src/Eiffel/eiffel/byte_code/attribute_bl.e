@@ -163,14 +163,13 @@ end
 				type_c.generate_access_cast (buf)
 			end
 			buf.put_character ('(')
-			reg.print_register
---			if reg.is_predefined or reg.register /= No_register then
---				buf.put_string (gc_plus)
---			else
---				buf.put_string (" +")
---				buf.put_new_line
---				buf.indent
---			end
+			if context.workbench_mode or reg.is_current then
+				reg.print_register
+			else
+				buf.put_string ("RTCV(")
+				reg.print_register
+				buf.put_character (')')
+			end
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, False)
 			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
@@ -207,9 +206,6 @@ end
 				offset_class_type.skeleton.generate_offset (buf, real_feature_id (typ.base_class), False)
 			end
 			buf.put_character (')')
---			if not (reg.is_predefined or reg.register /= No_register) then
---				buf.exdent
---			end
 		end
 
 	fill_from (a: ATTRIBUTE_B) is

@@ -14,7 +14,7 @@ feature
 		local
 			s: STRING;
 			c: CHARACTER;
-			n: INTEGER;
+			n: INTEGER_64;
 			r: REAL;
 		do
 			-------------------------------------------------

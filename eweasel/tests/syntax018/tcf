@@ -16,10 +16,10 @@ compile_result	syntax_error TEST 26
 
 copy_raw	test_rev1.e $CLUSTER test.e
 resume_compile
-compile_result	validity_error TEST Unused_local_warning VJAR
+compile_result validity_warning TEST Unused_local_warning
 
 copy_raw	test_rev2.e $CLUSTER test.e
-resume_compile
-compile_result	syntax_error TEST 25
+compile_melted
+compile_result validity_warning TEST Unused_local_warning
 
 test_end

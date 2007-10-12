@@ -34,6 +34,7 @@ feature -- Processing
 			a_class_c: CLASS_C
 			a_class: EIFFEL_CLASS_C
 			l_conv_checker: CONVERTIBILITY_CHECKER
+			l_error_level: NATURAL_32
 		do
 			nb := count
 			Degree_output.put_start_degree (Degree_number, nb)
@@ -57,15 +58,22 @@ feature -- Processing
 
 					Degree_output.put_degree_3 (a_class, nb)
 					System.set_current_class (a_class)
+					l_error_level := error_handler.error_level
 					process_class (a_class)
-					a_class.remove_from_degree_3
-					count := count - 1
+					if error_handler.error_level = l_error_level then
+							-- No errors we can safely remove it from degree 3
+						a_class.remove_from_degree_3
+						count := count - 1
+					end
 					nb := nb - 1
 
 					j := j + 1
 				end
 				i := i + 1
 			end
+
+				-- If there was an error, we cannot continue
+			error_handler.checksum
 
 			update_assertions
 
@@ -85,20 +93,26 @@ feature {NONE} -- Processing
 			-- features.
 		require
 			a_class_not_void: a_class /= Void
+		local
+			retried: BOOLEAN
 		do
-				-- Process creation feature of `a_class'.
-			a_class.process_creation_feature
-			a_class.pass3
+				-- We still protect ourselves against exception raised just in case while the
+				-- error code handling is fully redesigned.
+			if not retried then
+					-- Process creation feature of `a_class'.
+				a_class.process_creation_feature
+				a_class.pass3
 
-				-- Type checking and maybe byte code production for `a_class'.
-			if System.il_generation then
-				a_class.update_anchors
+					-- Type checking and maybe byte code production for `a_class'.
+				if System.il_generation then
+					a_class.update_anchors
+				end
 			end
-
-				-- No error happened: set the compilation
-				-- status of class `class_c'.
-			check
-				No_error: not Error_handler.has_error
+		rescue
+			if error_handler.rescue_status.is_error_exception  then
+					-- When an error is triggered we do as if no error had occurred.
+				retried := True
+				retry
 			end
 		end
 

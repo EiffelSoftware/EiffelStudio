@@ -143,7 +143,6 @@ feature -- Type check
 			if has_error then
 				context.init_error (struct_error)
 				Error_handler.insert_error (struct_error)
-				Error_handler.raise_error
 			else
 				if not has_new_syntax then
 						-- With the new syntax there is no signature to check

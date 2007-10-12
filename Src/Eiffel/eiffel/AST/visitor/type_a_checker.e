@@ -60,19 +60,13 @@ feature -- Status report
 		require
 			a_unevaluated_type_not_void: a_unevaluated_type /= Void
 			has_error_reporting: has_error_reporting
-		local
-			l_error_level: NATURAL
 		do
-			l_error_level := error_handler.error_level
 			like_control.turn_off
 			associated_type_ast := a_type_as
 			a_unevaluated_type.process (Current)
 			Result := last_type
 			last_type := Void
 			associated_type_ast := Void
-			if error_handler.error_level /= l_error_level then
-				error_handler.raise_error
-			end
 		end
 
 feature -- Settings

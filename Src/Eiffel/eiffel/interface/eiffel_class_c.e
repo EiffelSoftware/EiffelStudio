@@ -484,7 +484,7 @@ feature -- Third pass: byte code production and type check
 			def_resc_depend: DEPEND_UNIT
 			type_checked: BOOLEAN
 
-			l_error_level: NATURAL
+			l_class_error_level, l_error_level: NATURAL
 		do
 				-- Initialization for actual types evaluation
 			Inst_context.set_group (cluster)
@@ -514,6 +514,8 @@ feature -- Third pass: byte code production and type check
 			old_inline_agent_table := inline_agent_table.twin
 
 				-- Check validity of the types in signatures.
+			l_error_level := Error_handler.error_level
+			l_class_error_level := l_error_level
 			from
 				feat_table.start
 			until
@@ -526,415 +528,406 @@ feature -- Third pass: byte code production and type check
 				feat_table.forth
 			end
 
-				-- We need to stop here since some invalid signatures were detected.
-				-- When more than one error can be detected at degree 3, we will remove
-				-- this check and replace it by an if statement which will simply ignore
-				-- the current class and continue.
-			error_handler.checksum
+			if error_handler.error_level = l_error_level then
+					-- Now check the body.
+				from
+					feat_table.start
+				until
+					feat_table.after
+				loop
+					feature_i := feat_table.item_for_iteration
+					ast_context.set_written_class (feature_i.written_class)
+					ast_context.set_current_feature (feature_i)
+					type_checked := False
 
-				-- Now check the body.
-			from
-				feat_table.start
-			until
-				feat_table.after
-			loop
-				feature_i := feat_table.item_for_iteration
-				ast_context.set_written_class (feature_i.written_class)
-				ast_context.set_current_feature (feature_i)
-				type_checked := False
+					if feature_i.to_melt_in (Current) then
+						feature_name_id := feature_i.feature_name_id
 
-				if feature_i.to_melt_in (Current) then
-					feature_name_id := feature_i.feature_name_id
+						if
+							def_resc /= Void
+							and then not def_resc.is_empty
+							and then def_resc.feature_name_id /= feature_name_id
+						then
+							feature_i.create_default_rescue (def_resc.feature_name_id)
+						end
 
-					if
-						def_resc /= Void
-						and then not def_resc.is_empty
-						and then def_resc.feature_name_id /= feature_name_id
-					then
-						feature_i.create_default_rescue (def_resc.feature_name_id)
+							-- For a changed feature written in the class or for all
+							-- features of the class when `new_byte_code_needed' is true
+							-- (This fixes test#incr279 for which some nodes needed to
+							-- be updated to reflect the change of generic parameters).
+						feature_changed := 	changed_features.has (feature_name_id) or new_byte_code_needed
+
+						if not feature_changed then
+								-- Force a change on all feature of current class if line
+								-- debugging is turned on. Not doing so could make obsolete
+								-- line information on non-changed features.
+								-- This should also be done for IL code generation, otherwise
+								-- debug info is inconsistent.
+							feature_changed := System.line_generation or System.il_generation
+						end
+						feature_changed := feature_changed and not feature_i.is_attribute
+
+						f_suppliers := dependances.item (feature_i.body_index)
+
+							-- Feature is considered syntactically changed if
+							-- some of the entities used by it have changed
+							-- of nature (attribute/function versus incrementality).
+						if not (feature_changed or else f_suppliers = Void) then
+							feature_changed := (not propagators.melted_empty_intersection (f_suppliers))
+							if not feature_changed then
+								if f_suppliers.has_removed_id then
+									feature_changed := True
+								end
+							end
+							if feature_changed then
+									-- Automatic melting of the feature
+								if new_suppliers = Void then
+									new_suppliers := suppliers.same_suppliers
+								end
+							end
+						end
+
+						if feature_i.is_attribute then
+								-- Redefinitions of functions into attributes are
+								-- always melted
+							feature_changed := True
+						end
+
+							-- No type check for constants and attributes.
+							-- [It is done in second pass.]
+						if feature_i.is_routine then
+							if
+								feature_changed
+								or else
+								not (f_suppliers = Void
+									or else (propagators.empty_intersection (f_suppliers)
+									and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
+							then
+									-- Type check
+								l_error_level := Error_handler.error_level
+								ast_context.old_inline_agents.wipe_out
+								remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
+
+								feature_checker.type_check_and_code (feature_i)
+								type_checked := True
+								type_check_error := Error_handler.error_level /= l_error_level
+
+								if not type_check_error then
+									if f_suppliers /= Void then
+											-- Dependances update: remove old
+											-- dependances for `feature_name'.
+										if new_suppliers = Void then
+											new_suppliers := suppliers.same_suppliers
+										end
+										new_suppliers.remove_occurrence (f_suppliers)
+										dependances.remove (feature_i.body_index)
+									end
+
+										-- Dependances update: add new
+										-- dependances for `feature_name'.
+									f_suppliers := ast_context.supplier_ids
+
+									if
+										def_resc /= Void and then
+										not feature_i.is_deferred and then
+										not feature_i.is_external and then
+										not feature_i.is_attribute and then
+										not feature_i.is_constant
+									then
+											-- Make it dependant on `default_rescue'
+										create def_resc_depend.make (class_id, def_resc)
+										f_suppliers.extend (def_resc_depend)
+									end
+										-- We need to duplicate `f_suppliers' now, otherwise
+										-- we will be wiped out in `ast_context.clear_feature_context'.
+									f_suppliers := f_suppliers.twin
+
+									f_suppliers.set_feature_name_id (feature_name_id)
+									dependances.put (f_suppliers, feature_i.body_index)
+									if new_suppliers = Void then
+										new_suppliers := suppliers.same_suppliers
+									end
+									new_suppliers.add_occurrence (f_suppliers)
+
+										-- Byte code processing
+									tmp_byte_server.put (feature_checker.byte_code)
+
+									inline_agent_byte_code := feature_checker.inline_agent_byte_codes
+									if inline_agent_byte_code /= Void then
+										from
+											inline_agent_byte_code.start
+										until
+											inline_agent_byte_code.after
+										loop
+											tmp_byte_server.put (inline_agent_byte_code.item)
+											inline_agent_byte_code.forth
+										end
+									end
+									byte_code_generated := True
+								end
+							else
+								-- Check the conflicts between local variable names
+								-- and feature names
+								-- FIX ME: ONLY needed when new features are inserted in the feature table
+								check_local_names_needed := True
+							end
+						else
+								-- is_routine = False
+							record_suppliers (feature_i, dependances)
+						end
+
+						if
+							(feature_changed or else byte_code_generated)
+							and then not (type_check_error or else feature_i.is_deferred)
+						then
+								-- Remember the melted feature information
+								-- if it is not deferred. If it is an external, then
+								-- we need to trigger a freeze.
+								-- If it is visible via CECIL, we need to trigger
+								-- freeze as well.
+							if
+								not system.is_freeze_requested and then
+								(feature_i.is_external or else
+								visible_level.is_visible (feature_i, class_id))
+							then
+								system.request_freeze
+							end
+							add_feature_to_melted_set (feature_i)
+						end
+						type_check_error := False
+						byte_code_generated := False
+
+						if not type_checked and then changed3 and then feature_i.is_routine then
+								-- Forced type check on the feature
+							feature_checker.type_check_only (feature_i, False)
+							check_local_names_needed := False
+						elseif check_local_names_needed then
+							feature_i.check_local_names (feature_i.real_body)
+						end
+					elseif not feature_i.is_routine then
+						if feature_i.body_index /= 0 then
+							if
+								feature_changed
+								or else
+								not (f_suppliers = Void
+									or else (propagators.empty_intersection (f_suppliers)
+									and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
+							then
+								l_error_level := error_handler.error_level
+								ast_context.old_inline_agents.wipe_out
+								remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
+								feature_checker.type_check_and_code (feature_i)
+								type_checked := True
+								type_check_error := error_handler.error_level /= l_error_level
+								if
+									not type_check_error and then
+									(feature_checker.byte_code.property_name /= Void or else
+									feature_checker.byte_code.property_custom_attributes /= Void)
+								then
+										-- Save byte code
+									tmp_byte_server.put (feature_checker.byte_code)
+									inline_agent_byte_code := feature_checker.inline_agent_byte_codes
+									if inline_agent_byte_code /= Void then
+										from
+											inline_agent_byte_code.start
+										until
+											inline_agent_byte_code.after
+										loop
+											tmp_byte_server.put (inline_agent_byte_code.item)
+											inline_agent_byte_code.forth
+										end
+									end
+									byte_code_generated := True
+								end
+							else
+								feature_checker.type_check_only (feature_i, False)
+							end
+						end
+						record_suppliers (feature_i, dependances)
+					elseif is_full_class_checking then
+							-- We check inherited routines in the context of current class.
+						feature_checker.type_check_only (feature_i, class_id /= feature_i.written_in)
+						record_suppliers (feature_i, dependances)
+					end
+					ast_context.clear_feature_context
+					feat_table.forth
+				end -- Main loop
+
+					-- Recomputation of invariant clause
+				if invariant_feature /= Void then
+					old_invariant_body_index := invariant_feature.body_index
+					f_suppliers := dependances.item (old_invariant_body_index)
+				else
+					f_suppliers := Void
+				end
+
+				if propagators.invariant_removed then
+					if old_invariant_body_index /= 0 then
+						dependances.remove (old_invariant_body_index)
+					end
+					if new_suppliers = Void then
+						new_suppliers := suppliers.same_suppliers
+					end
+					if invariant_feature /= Void then
+						ast_context.old_inline_agents.wipe_out
+						remove_inline_agents_of_feature (invariant_feature.body_index, Void)
+					end
+					if f_suppliers /= Void then
+						new_suppliers.remove_occurrence (f_suppliers)
+					end
+					invariant_feature := Void
+				else
+					invariant_changed := propagators.invariant_changed
+					if not (invariant_changed or else f_suppliers = Void) then
+						invariant_changed := not propagators.melted_empty_intersection (f_suppliers)
 					end
 
-						-- For a changed feature written in the class or for all
-						-- features of the class when `new_byte_code_needed' is true
-						-- (This fixes test#incr279 for which some nodes needed to
-						-- be updated to reflect the change of generic parameters).
-					feature_changed := 	changed_features.has (feature_name_id) or new_byte_code_needed
-
-					if not feature_changed then
-							-- Force a change on all feature of current class if line
+					if not invariant_changed then
+							-- Force a change on invariant only if it still exist and if line
 							-- debugging is turned on. Not doing so could make obsolete
 							-- line information on non-changed features.
 							-- This should also be done for IL code generation, otherwise
 							-- debug info is inconsistent.
-						feature_changed := System.line_generation or System.il_generation
+							-- We also do it if `new_byte_code_needed' has been set.
+						invariant_changed := invariant_feature /= Void and then
+							(System.line_generation or System.il_generation or new_byte_code_needed)
 					end
-					feature_changed := feature_changed and not feature_i.is_attribute
-
-					f_suppliers := dependances.item (feature_i.body_index)
-
-						-- Feature is considered syntactically changed if
-						-- some of the entities used by it have changed
-						-- of nature (attribute/function versus incrementality).
-					if not (feature_changed or else f_suppliers = Void) then
-						feature_changed := (not propagators.melted_empty_intersection (f_suppliers))
-						if not feature_changed then
-							if f_suppliers.has_removed_id then
-								feature_changed := True
-							end
-						end
-						if feature_changed then
-								-- Automatic melting of the feature
-							if new_suppliers = Void then
-								new_suppliers := suppliers.same_suppliers
-							end
+					if invariant_changed then
+						if invariant_feature = Void then
+							create invariant_feature.make (Current)
+							invariant_feature.set_body_index (Body_index_counter.next_id)
+							invariant_feature.set_feature_id (feature_id_counter.next)
 						end
 					end
+					if
+						invariant_changed
+						or else not	(f_suppliers = Void
+									or else (propagators.empty_intersection (f_suppliers)
+									and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
+					then
+						invar_clause := Inv_ast_server.item (class_id)
+						l_error_level := Error_handler.error_level
 
-					if feature_i.is_attribute then
-							-- Redefinitions of functions into attributes are
-							-- always melted
-						feature_changed := True
-					end
+						ast_context.old_inline_agents.wipe_out
+						remove_inline_agents_of_feature (invariant_feature.body_index, ast_context.old_inline_agents)
+						feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
-						-- No type check for constants and attributes.
-						-- [It is done in second pass.]
-					if feature_i.is_routine then
-						if
-							feature_changed
-							or else
-							not (f_suppliers = Void
-								or else (propagators.empty_intersection (f_suppliers)
-								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
-						then
-								-- Type check
-							l_error_level := Error_handler.error_level
-							ast_context.old_inline_agents.wipe_out
-							remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
-
-							feature_checker.type_check_and_code (feature_i)
-							type_checked := True
-							type_check_error := Error_handler.error_level /= l_error_level
-
-							if not type_check_error then
-								if f_suppliers /= Void then
-										-- Dependances update: remove old
-										-- dependances for `feature_name'.
-									if new_suppliers = Void then
-										new_suppliers := suppliers.same_suppliers
-									end
-									new_suppliers.remove_occurrence (f_suppliers)
-									dependances.remove (feature_i.body_index)
-								end
-
-									-- Dependances update: add new
-									-- dependances for `feature_name'.
-								f_suppliers := ast_context.supplier_ids
-
-								if
-									def_resc /= Void and then
-									not feature_i.is_deferred and then
-									not feature_i.is_external and then
-									not feature_i.is_attribute and then
-									not feature_i.is_constant
-								then
-										-- Make it dependant on `default_rescue'
-									create def_resc_depend.make (class_id, def_resc)
-									f_suppliers.extend (def_resc_depend)
-								end
-									-- We need to duplicate `f_suppliers' now, otherwise
-									-- we will be wiped out in `ast_context.clear_feature_context'.
-								f_suppliers := f_suppliers.twin
-
-								f_suppliers.set_feature_name_id (feature_name_id)
-								dependances.put (f_suppliers, feature_i.body_index)
+						if Error_handler.error_level = l_error_level then
+							if f_suppliers /= Void then
 								if new_suppliers = Void then
 									new_suppliers := suppliers.same_suppliers
 								end
-								new_suppliers.add_occurrence (f_suppliers)
-
-									-- Byte code processing
-								tmp_byte_server.put (feature_checker.byte_code)
-
-								inline_agent_byte_code := feature_checker.inline_agent_byte_codes
-								if inline_agent_byte_code /= Void then
-									from
-										inline_agent_byte_code.start
-									until
-										inline_agent_byte_code.after
-									loop
-										tmp_byte_server.put (inline_agent_byte_code.item)
-										inline_agent_byte_code.forth
-									end
+								new_suppliers.remove_occurrence (f_suppliers)
+								if old_invariant_body_index /= 0 then
+									dependances.remove (old_invariant_body_index)
 								end
-								byte_code_generated := True
 							end
-						else
-							-- Check the conflicts between local variable names
-							-- and feature names
-							-- FIX ME: ONLY needed when new features are inserted in the feature table
-							check_local_names_needed := True
-						end
-					else
-							-- is_routine = False
-						record_suppliers (feature_i, dependances)
-					end
-
-					if
-						(feature_changed or else byte_code_generated)
-						and then not (type_check_error or else feature_i.is_deferred)
-					then
-							-- Remember the melted feature information
-							-- if it is not deferred. If it is an external, then
-							-- we need to trigger a freeze.
-							-- If it is visible via CECIL, we need to trigger
-							-- freeze as well.
-						if
-							not system.is_freeze_requested and then
-							(feature_i.is_external or else
-							visible_level.is_visible (feature_i, class_id))
-						then
-							system.request_freeze
-						end
-						add_feature_to_melted_set (feature_i)
-					end
-					type_check_error := False
-					byte_code_generated := False
-
-					if not type_checked and then changed3 and then feature_i.is_routine then
-							-- Forced type check on the feature
-						feature_checker.type_check_only (feature_i, False)
-						check_local_names_needed := False
-					elseif check_local_names_needed then
-						feature_i.check_local_names (feature_i.real_body)
-					end
-				elseif not feature_i.is_routine then
-					if feature_i.body_index /= 0 then
-						if
-							feature_changed
-							or else
-							not (f_suppliers = Void
-								or else (propagators.empty_intersection (f_suppliers)
-								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
-						then
-							l_error_level := error_handler.error_level
-							ast_context.old_inline_agents.wipe_out
-							remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
-							feature_checker.type_check_and_code (feature_i)
-							type_checked := True
-							type_check_error := error_handler.error_level /= l_error_level
-							if
-								not type_check_error and then
-								(feature_checker.byte_code.property_name /= Void or else
-								feature_checker.byte_code.property_custom_attributes /= Void)
-							then
-									-- Save byte code
-								tmp_byte_server.put (feature_checker.byte_code)
-								inline_agent_byte_code := feature_checker.inline_agent_byte_codes
-								if inline_agent_byte_code /= Void then
-									from
-										inline_agent_byte_code.start
-									until
-										inline_agent_byte_code.after
-									loop
-										tmp_byte_server.put (inline_agent_byte_code.item)
-										inline_agent_byte_code.forth
-									end
-								end
-								byte_code_generated := True
+								-- We need to duplicate `f_suppliers' now, otherwise
+								-- we will be wiped out in `ast_context.clear_feature_context'.
+							f_suppliers := ast_context.supplier_ids.twin
+							if invariant_feature /= Void then
+								f_suppliers.set_feature_name_id (invariant_feature.feature_name_id)
+								dependances.put (f_suppliers, invariant_feature.body_index)
 							end
-						else
-							feature_checker.type_check_only (feature_i, False)
-						end
-					end
-					record_suppliers (feature_i, dependances)
-				elseif is_full_class_checking then
-						-- We check inherited routines in the context of current class.
-					feature_checker.type_check_only (feature_i, class_id /= feature_i.written_in)
-					record_suppliers (feature_i, dependances)
-				end
-				ast_context.clear_feature_context
-				feat_table.forth
-			end -- Main loop
-
-				-- Recomputation of invariant clause
-			if invariant_feature /= Void then
-				old_invariant_body_index := invariant_feature.body_index
-				f_suppliers := dependances.item (old_invariant_body_index)
-			else
-				f_suppliers := Void
-			end
-
-			if propagators.invariant_removed then
-				if old_invariant_body_index /= 0 then
-					dependances.remove (old_invariant_body_index)
-				end
-				if new_suppliers = Void then
-					new_suppliers := suppliers.same_suppliers
-				end
-				if invariant_feature /= Void then
-					ast_context.old_inline_agents.wipe_out
-					remove_inline_agents_of_feature (invariant_feature.body_index, Void)
-				end
-				if f_suppliers /= Void then
-					new_suppliers.remove_occurrence (f_suppliers)
-				end
-				invariant_feature := Void
-			else
-				invariant_changed := propagators.invariant_changed
-				if not (invariant_changed or else f_suppliers = Void) then
-					invariant_changed := not propagators.melted_empty_intersection (f_suppliers)
-				end
-
-				if not invariant_changed then
-						-- Force a change on invariant only if it still exist and if line
-						-- debugging is turned on. Not doing so could make obsolete
-						-- line information on non-changed features.
-						-- This should also be done for IL code generation, otherwise
-						-- debug info is inconsistent.
-						-- We also do it if `new_byte_code_needed' has been set.
-					invariant_changed := invariant_feature /= Void and then
-						(System.line_generation or System.il_generation or new_byte_code_needed)
-				end
-				if invariant_changed then
-					if invariant_feature = Void then
-						create invariant_feature.make (Current)
-						invariant_feature.set_body_index (Body_index_counter.next_id)
-						invariant_feature.set_feature_id (feature_id_counter.next)
-					end
-				end
-				if
-					invariant_changed
-					or else not	(f_suppliers = Void
-								or else (propagators.empty_intersection (f_suppliers)
-								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
-				then
-					invar_clause := Inv_ast_server.item (class_id)
-					l_error_level := Error_handler.error_level
-
-					ast_context.old_inline_agents.wipe_out
-					remove_inline_agents_of_feature (invariant_feature.body_index, ast_context.old_inline_agents)
-					feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
-
-					if Error_handler.error_level = l_error_level then
-						if f_suppliers /= Void then
 							if new_suppliers = Void then
 								new_suppliers := suppliers.same_suppliers
 							end
-							new_suppliers.remove_occurrence (f_suppliers)
-							if old_invariant_body_index /= 0 then
-								dependances.remove (old_invariant_body_index)
+							new_suppliers.add_occurrence (f_suppliers)
+
+							Tmp_inv_byte_server.put (feature_checker.invariant_byte_code)
+
+							inline_agent_byte_code := feature_checker.inline_agent_byte_codes
+							if inline_agent_byte_code /= Void then
+								from
+									inline_agent_byte_code.start
+								until
+									inline_agent_byte_code.after
+								loop
+									tmp_byte_server.put (inline_agent_byte_code.item)
+									inline_agent_byte_code.forth
+								end
 							end
-						end
-							-- We need to duplicate `f_suppliers' now, otherwise
-							-- we will be wiped out in `ast_context.clear_feature_context'.
-						f_suppliers := ast_context.supplier_ids.twin
-						if invariant_feature /= Void then
-							f_suppliers.set_feature_name_id (invariant_feature.feature_name_id)
-							dependances.put (f_suppliers, invariant_feature.body_index)
-						end
-						if new_suppliers = Void then
-							new_suppliers := suppliers.same_suppliers
-						end
-						new_suppliers.add_occurrence (f_suppliers)
 
-						Tmp_inv_byte_server.put (feature_checker.invariant_byte_code)
-
-						inline_agent_byte_code := feature_checker.inline_agent_byte_codes
-						if inline_agent_byte_code /= Void then
-							from
-								inline_agent_byte_code.start
-							until
-								inline_agent_byte_code.after
-							loop
-								tmp_byte_server.put (inline_agent_byte_code.item)
-								inline_agent_byte_code.forth
-							end
+							add_feature_to_melted_set (invariant_feature)
 						end
-
-						add_feature_to_melted_set (invariant_feature)
+							-- Clean context
+						ast_context.clear_feature_context
+					elseif invariant_feature /= Void and degree_3_needed then
+							-- we have to type check again to get the types into the ast
+						invar_clause := Inv_ast_server.item (class_id)
+						feature_checker.invariant_type_check (invariant_feature, invar_clause, False)
 					end
-						-- Clean context
-					ast_context.clear_feature_context
-				elseif invariant_feature /= Void and degree_3_needed then
-						-- we have to type check again to get the types into the ast
-					invar_clause := Inv_ast_server.item (class_id)
-					feature_checker.invariant_type_check (invariant_feature, invar_clause, False)
+				end
+
+				if System.il_generation then
+					process_custom_attributes
+				end
+
+				if error_handler.error_level = l_class_error_level then
+					if changed then
+
+							-- Remove dependances of removed features
+						from
+							removed_features := propagators.removed_features
+							removed_features.start
+						until
+							removed_features.after
+						loop
+							body_index := removed_features.item_for_iteration
+
+							remove_inline_agents_of_feature (body_index, Void)
+							ast_context.old_inline_agents.wipe_out
+
+							f_suppliers := dependances.item (body_index)
+							if f_suppliers /= Void then
+								if new_suppliers = Void then
+									new_suppliers := suppliers.same_suppliers
+								end
+								new_suppliers.remove_occurrence (f_suppliers)
+							end
+							dependances.remove (body_index)
+
+								-- Second pass desactive body id of changed
+								-- features only. Deactive body ids of removed
+								-- features.
+							Tmp_ast_server.desactive (body_index)
+
+							removed_features.forth
+						end
+					end
+
+					if new_suppliers /= Void then
+							-- Write new dependances in the dependances temporary
+							-- server
+						Tmp_depend_server.put (dependances)
+
+							-- Update the client/supplier relations for the current
+							-- class
+						update_suppliers (new_suppliers)
+
+					end
+
+					if has_features_to_melt then
+						Degree_1.insert_class (Current)
+					elseif propagators.invariant_removed then
+						Degree_1.insert_class (Current)
+					end
 				end
 			end
 
-			if System.il_generation then
-				process_custom_attributes
+			if error_handler.error_level /= l_class_error_level then
+					-- Clean data to avoid improper handling at 
+					-- next compilation.
+				ast_context.clear_feature_context
+				tmp_ast_server.cache.wipe_out
+				inline_agent_table := old_inline_agent_table
 			end
-
-				-- Check sum error
-			Error_handler.checksum
-
-			if changed then
-
-					-- Remove dependances of removed features
-				from
-					removed_features := propagators.removed_features
-					removed_features.start
-				until
-					removed_features.after
-				loop
-					body_index := removed_features.item_for_iteration
-
-					remove_inline_agents_of_feature (body_index, Void)
-					ast_context.old_inline_agents.wipe_out
-
-					f_suppliers := dependances.item (body_index)
-					if f_suppliers /= Void then
-						if new_suppliers = Void then
-							new_suppliers := suppliers.same_suppliers
-						end
-						new_suppliers.remove_occurrence (f_suppliers)
-					end
-					dependances.remove (body_index)
-
-						-- Second pass desactive body id of changed
-						-- features only. Deactive body ids of removed
-						-- features.
-					Tmp_ast_server.desactive (body_index)
-
-					removed_features.forth
-				end
-			end
-
-			if new_suppliers /= Void then
-					-- Write new dependances in the dependances temporary
-					-- server
-				Tmp_depend_server.put (dependances)
-
-					-- Update the client/supplier relations for the current
-					-- class
-				update_suppliers (new_suppliers)
-
-			end
-
-			if has_features_to_melt then
-				Degree_1.insert_class (Current)
-			elseif propagators.invariant_removed then
-				Degree_1.insert_class (Current)
-			end
-		ensure
-			No_error: not Error_handler.has_error
 		rescue
 			if Rescue_status.is_error_exception then
-					-- Clean context if error
-						-- FIXME call `clear_all' ????
+					-- Clean data to avoid improper handling at 
+					-- next compilation.
 				ast_context.clear_feature_context
-
-					-- Clean the caches if error
-
-					--| TMP_AST_SERVER is a SERVER, not a DELAY_SERVER
-					--| Calling `wipe_out' on the cache won't remove anything
-					--| from the server itself
-
-					--| The other servers are READ_SERVERs.
-
 				Tmp_ast_server.cache.wipe_out
-
 				inline_agent_table := old_inline_agent_table
 			end
 		end

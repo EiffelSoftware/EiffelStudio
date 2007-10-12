@@ -14,14 +14,14 @@ feature
 		local
 			s: STRING;
 			c: CHARACTER;
-			n: INTEGER;
+			n: INTEGER_64;
 			r: REAL;
 		do
 			-------------------------------------------------
 			-- The following are accepted, but ETL says they
 			-- shouldn't be.
 
-			-- Single character - should only accept '%''.
+			-- Single character '
 			c := ''';
 			
 			-- Integer with invalid and missing underscores

@@ -86,7 +86,6 @@ feature -- Type check
 				create ext_dll_sign
 				context.init_error (ext_dll_sign)
 				Error_handler.insert_error (ext_dll_sign)
-				Error_handler.raise_error
 			end
 		end
 

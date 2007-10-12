@@ -73,7 +73,9 @@ feature -- Type check
 			arg_type: TYPE_A
 			error: BOOLEAN
 			cpp_error: EXT_CPP
+			l_error_level: NATURAL_32
 		do
+			l_error_level := error_handler.error_level
 			a_feat ?= context.current_feature
 
 				-- Check first argument if necessary
@@ -92,81 +94,77 @@ feature -- Type check
 					cpp_error.set_error_message ("First argument must be of type POINTER")
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
 				end
 			when new, static, static_data_member then
 				-- No restriction on first parameter
 			end
 
-			inspect
-				type
-			when data_member, static_data_member then
-					-- Must be a function
-				if not a_feat.is_function then
-					create cpp_error
-					cpp_error.set_error_message ("This external must be a function")
-					context.init_error (cpp_error)
-					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
+			if error_handler.error_level = l_error_level then
+				inspect
+					type
+				when data_member, static_data_member then
+						-- Must be a function
+					if not a_feat.is_function then
+						create cpp_error
+						cpp_error.set_error_message ("This external must be a function")
+						context.init_error (cpp_error)
+						Error_handler.insert_error (cpp_error)
+					end
+					if type = data_member then
+						error := a_feat.argument_count /= 1
+						create cpp_error
+						cpp_error.set_error_message ("First argument must be of type POINTER")
+					else
+						error := a_feat.argument_count /= 0
+						create cpp_error
+						cpp_error.set_error_message ("No argument allowed")
+					end
+					if error then
+						context.init_error (cpp_error)
+						Error_handler.insert_error (cpp_error)
+					end
+				when new then
+						-- Must return a pointer
+					arg_type ?= a_feat.type
+					if not arg_type.actual_type.is_pointer then
+						create cpp_error
+						cpp_error.set_error_message ("The return type must be POINTER")
+						context.init_error (cpp_error)
+						Error_handler.insert_error (cpp_error)
+					end
+					if a_feat.alias_name_id > 0 then
+						create cpp_error
+						cpp_error.set_error_message ("The alias clause is not allowed")
+						context.init_error (cpp_error)
+						Error_handler.insert_error (cpp_error)
+					end
+				when delete then
+						-- Must be a procedure
+					if a_feat.is_function then
+						create cpp_error
+						cpp_error.set_error_message ("This external must be a procedure")
+						context.init_error (cpp_error)
+						Error_handler.insert_error (cpp_error)
+					end
+					if a_feat.argument_count /= 1 then
+						create cpp_error
+						cpp_error.set_error_message ("The only argument must be of type POINTER")
+						context.init_error (cpp_error)
+						Error_handler.insert_error (cpp_error)
+					end
+					if a_feat.alias_name_id > 0 then
+						create cpp_error
+						cpp_error.set_error_message ("The alias clause is not allowed")
+						context.init_error (cpp_error)
+						Error_handler.insert_error (cpp_error)
+					end
+				when standard, static then
+						-- No restriction
 				end
-				if type = data_member then
-					error := a_feat.argument_count /= 1
-					create cpp_error
-					cpp_error.set_error_message ("First argument must be of type POINTER")
-				else
-					error := a_feat.argument_count /= 0
-					create cpp_error
-					cpp_error.set_error_message ("No argument allowed")
+				if error_handler.error_level = l_error_level then
+					type_check_signature
 				end
-				if error then
-					context.init_error (cpp_error)
-					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
-				end
-			when new then
-					-- Must return a pointer
-				arg_type ?= a_feat.type
-				if not arg_type.actual_type.is_pointer then
-					create cpp_error
-					cpp_error.set_error_message ("The return type must be POINTER")
-					context.init_error (cpp_error)
-					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
-				end
-				if a_feat.alias_name_id > 0 then
-					create cpp_error
-					cpp_error.set_error_message ("The alias clause is not allowed")
-					context.init_error (cpp_error)
-					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
-				end
-			when delete then
-					-- Must be a procedure
-				if a_feat.is_function then
-					create cpp_error
-					cpp_error.set_error_message ("This external must be a procedure")
-					context.init_error (cpp_error)
-					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
-				end
-				if a_feat.argument_count /= 1 then
-					create cpp_error
-					cpp_error.set_error_message ("The only argument must be of type POINTER")
-					context.init_error (cpp_error)
-					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
-				end
-				if a_feat.alias_name_id > 0 then
-					create cpp_error
-					cpp_error.set_error_message ("The alias clause is not allowed")
-					context.init_error (cpp_error)
-					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
-				end
-			when standard, static then
-					-- No restriction
 			end
-			type_check_signature
 		end
 
 	type_check_signature is
@@ -229,7 +227,6 @@ feature -- Type check
 					cpp_error.set_error_message (error_msg)
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
-					Error_handler.raise_error
 				end
 			end
 		end

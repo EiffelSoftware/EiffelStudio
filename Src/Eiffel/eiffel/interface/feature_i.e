@@ -1757,44 +1757,46 @@ feature -- Signature checking
 			type_a_checker.init_with_feature_table (Current, feat_table, Void, error_handler)
 			solved_type := type_a_checker.check_and_solved (type, Void)
 
-			set_type (solved_type, assigner_name_id)
-				-- Instantitate the feature type in the context of the
-				-- actual type of the class associated to `feat_table'.
+			if solved_type /= Void then
+				set_type (solved_type, assigner_name_id)
+					-- Instantitate the feature type in the context of the
+					-- actual type of the class associated to `feat_table'.
 
-			if (is_once and not is_constant) and then solved_type.has_formal_generic then
-					-- A once funtion cannot have a type with formal generics
-				create vffd7
-				vffd7.set_class (written_class)
-				vffd7.set_feature_name (feature_name)
-				Error_handler.insert_error (vffd7)
-			end
+				if (is_once and not is_constant) and then solved_type.has_formal_generic then
+						-- A once funtion cannot have a type with formal generics
+					create vffd7
+					vffd7.set_class (written_class)
+					vffd7.set_feature_name (feature_name)
+					Error_handler.insert_error (vffd7)
+				end
 
-			if
-				is_infix and then
-				((argument_count /= 1) or else (type.is_void))
-			then
-					-- Infixed features should have only one argument
-					-- and must have a return type.
-				create vffd6
-				vffd6.set_class (written_class)
-				vffd6.set_feature_name (feature_name)
-				Error_handler.insert_error (vffd6)
-			end
-			if
-				is_prefix and then
-				((argument_count /= 0) or else (type.is_void))
-			then
-					-- Prefixed features shouldn't have any argument
-					-- and must have a return type.
-				create vffd5
-				vffd5.set_class (written_class)
-				vffd5.set_feature_name (feature_name)
-				Error_handler.insert_error (vffd5)
-			end
+				if
+					is_infix and then
+					((argument_count /= 1) or else (type.is_void))
+				then
+						-- Infixed features should have only one argument
+						-- and must have a return type.
+					create vffd6
+					vffd6.set_class (written_class)
+					vffd6.set_feature_name (feature_name)
+					Error_handler.insert_error (vffd6)
+				end
+				if
+					is_prefix and then
+					((argument_count /= 0) or else (type.is_void))
+				then
+						-- Prefixed features shouldn't have any argument
+						-- and must have a return type.
+					create vffd5
+					vffd5.set_class (written_class)
+					vffd5.set_feature_name (feature_name)
+					Error_handler.insert_error (vffd5)
+				end
 
-			if arguments /= Void then
-					-- Check types of arguments
-				arguments.check_types (feat_table, Current)
+				if arguments /= Void then
+						-- Check types of arguments
+					arguments.check_types (feat_table, Current)
+				end
 			end
 		end
 

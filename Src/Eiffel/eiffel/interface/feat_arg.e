@@ -173,19 +173,9 @@ feature -- Checking
 					-- Process anchored type for argument types
 				argument_name := l_names_heap.item (a_area.item (i))
 				solved_type := type_a_checker.check_and_solved (l_area.item (i), Void)
-
-				check
-						-- If an anchored type cannot be evlaluated,
-						-- an exception is triggered by the type evaluator
-					solved_type /= Void
+				if solved_type /= Void then
+					l_area.put (solved_type, i)
 				end
-					-- Instantiation: instantitation of the
-					-- argument types must be done in the context of the
-					-- actual type of the class associated to the actual
-					-- type of the class associated to `feat_table'.
-					-- Don't forget that the arguments are written where
-					-- the feature is written.
-				l_area.put (solved_type, i)
 				i := i + 1
 			end
 		end

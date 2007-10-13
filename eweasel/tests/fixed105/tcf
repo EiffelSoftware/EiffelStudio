@@ -22,12 +22,12 @@ compile_result 	 ok
 
 copy_raw 	 test1_rev2.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error TEST VGCC(6)
+compile_result 	 validity_error TEST VGCC(6) VGCC(6) VGCC(6) VGCC(6)
 
 copy_raw 	 test_rev2.e  $CLUSTER test.e
 copy_raw 	 test1_rev3.e  $CLUSTER test1.e
 resume_compile
-compile_result 	 validity_error TEST VGCC(6)
+compile_result 	 validity_error TEST VGCC(6) VGCC(6) VGCC(6) VGCC(6)
 
 copy_raw 	 test_rev3.e  $CLUSTER test.e
 resume_compile

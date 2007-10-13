@@ -13,12 +13,12 @@ copy_sub 	 Ace $TEST Ace
 define		 POSTCONDITION "old old true"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	validity_error TEST Unused_local_warning VAOL(2)
+compile_result 	validity_error TEST VAOL(2)
 
 define		 POSTCONDITION "old (old 1 = 1)"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST Unused_local_warning VAOL(2)
+compile_result 	 validity_error TEST VAOL(2)
 
 define		 POSTCONDITION "old x = 0"
 copy_sub 	 test.e  $CLUSTER test.e

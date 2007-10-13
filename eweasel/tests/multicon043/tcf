@@ -10,5 +10,5 @@ copy_raw 	test2.e $CLUSTER test2.e
 
 
 compile_melted
-compile_result validity_error TEST1 VTMC(2)
+compile_result validity_error TEST1 VTMC(2) VTMC(2) VTMC(2)
 test_end

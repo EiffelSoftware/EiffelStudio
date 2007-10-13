@@ -15,6 +15,7 @@ feature
 			s: STRING
 		do
 			s := create {NONE} s.make
+			s := create {NONE}.make
 		end
 
 end

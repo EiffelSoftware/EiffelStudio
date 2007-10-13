@@ -23,6 +23,6 @@ compare		exec_output1 output
 define		 TRY_BODY "weasel := weasel.i_th (1);"
 copy_sub 	 test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_error TEST1 Unused_local_warning VJAR
+compile_result 	 validity_error TEST1 VJAR
 
 test_end

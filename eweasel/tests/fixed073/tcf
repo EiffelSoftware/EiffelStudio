@@ -18,7 +18,7 @@ compile_result 	 ok
 define		 ANCHOR_DECL "b: INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VJAR
+compile_result 	 validity_error TEST VJAR VUAR(2)
 
 define		 ANCHOR_DECL "b: STRING"
 copy_sub 	 test.e  $CLUSTER test.e
@@ -32,6 +32,6 @@ compile_result 	 ok
 define		 ANCHOR_DECL "b: INTEGER"
 copy_sub 	 test_rev1.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VJAR
+compile_result 	 validity_error TEST VJAR VUAR(2)
 
 test_end

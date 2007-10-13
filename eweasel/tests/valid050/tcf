@@ -12,6 +12,6 @@ test_description A call which seems to be export-valid (obeys VUEX) and violates
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 compile_melted
-compile_result	validity_error TEST VUAR(1)
+compile_result	validity_error TEST VUAR(1) VUAR(1)
 
 test_end

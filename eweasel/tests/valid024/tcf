@@ -11,5 +11,5 @@ test_description Violate constraint VUEX with a qualified call that is an operat
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 compile_melted
-compile_result validity_error TEST VUEX(2)
+compile_result validity_error TEST VUEX(2) VUEX(2)
 test_end

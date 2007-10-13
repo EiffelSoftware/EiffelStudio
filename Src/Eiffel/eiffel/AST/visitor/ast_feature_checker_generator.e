@@ -998,12 +998,10 @@ feature -- Implementation
 			is_checking_cas := True
 			l_as.creation_expr.process (Current)
 			l_creation_type ?= last_type
-			if
-				l_creation_type = Void or else not l_creation_type.has_like or else
-				l_creation_type.has_formal_generic
-			then
-				fixme ("Generate an error here as it should be a valid type")
-			else
+			if l_creation_type /= Void then
+				if l_creation_type.has_like or else l_creation_type.has_formal_generic then
+					fixme ("Generate an error here as it should be a valid type")
+				end
 				if is_byte_node_enabled then
 					l_creation ?= last_byte_node
 					create l_ca_b.make (l_creation)

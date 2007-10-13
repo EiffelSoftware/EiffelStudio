@@ -20,12 +20,12 @@ copy_raw 	test.e $CLUSTER test.e
 copy_sub 	multi.e $CLUSTER multi.e
 
 compile_melted
-compile_result 	validity_error MULTI VTMC(1)
+compile_result 	validity_error MULTI VTMC(1) VUEX(2) VTMC(2)
 
 define COMMENT_LINE_1 "--"
 copy_sub 	multi.e $CLUSTER multi.e
 resume_compile
-compile_result 	validity_error MULTI VUEX(2)
+compile_result 	validity_error MULTI VUEX(2) VTMC(2)
 
 define COMMENT_LINE_2 "--"
 copy_sub 	multi.e $CLUSTER multi.e

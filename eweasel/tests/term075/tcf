@@ -12,6 +12,6 @@ test_description A routine with the instruction `s := create {NONE} s.make' wher
 copy_sub 	 Ace $TEST Ace
 copy_raw	 test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_error TEST VGCC(3)
+compile_result 	validity_error TEST VGCC(3) VUAR(1) VGCC(3)
 	
 test_end

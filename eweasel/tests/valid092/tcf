@@ -13,17 +13,17 @@ copy_sub 	 Ace $TEST Ace
 define		 ENTITY "int"
 copy_sub 	 test.e $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST Unused_local_warning VOMB(2)
+compile_result 	 validity_error TEST VOMB(2)
 
 define		 ENTITY "like_curr"
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST Unused_local_warning VOMB(2)
+compile_result 	 validity_error TEST VOMB(2)
 
 define		 ENTITY "char"
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST Unused_local_warning VOMB(2)
+compile_result 	 validity_error TEST VOMB(2)
 
 define		 ENTITY "1"
 copy_sub 	 test.e $CLUSTER test.e

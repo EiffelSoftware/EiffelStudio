@@ -48,7 +48,7 @@ compile_result 	 validity_error TEST VAOL(1)
 define		 REST "try is do end invariant old b; old value = 47"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST VAOL(1)
+compile_result 	 validity_error TEST VAOL(1) VAOL(1)
 
 define		 REST "try is do ensure old value = value; old b end"
 copy_sub 	 test.e  $CLUSTER test.e

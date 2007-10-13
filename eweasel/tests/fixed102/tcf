@@ -18,7 +18,7 @@ compile_result 	 ok
 define		 BODY "local x1: ARRAY [INTEGER]; x1: ARRAY [BOOLEAN]; x1: ARRAY [DOUBLE]; do end;"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VREG
+compile_result 	 validity_error TEST VREG VREG
 
 define		 BODY "local x1: ARRAY [INTEGER]; x2: ARRAY [BOOLEAN]; x3: ARRAY [DOUBLE]; do end;"
 copy_sub 	 test.e  $CLUSTER test.e

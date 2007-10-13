@@ -22,6 +22,6 @@ define HEADER "f1, f2"
 define OTHER ""
 copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST1 VUPR(1)
+compile_result 	validity_error TEST1 VUPR(1) VUPR(1)
 
 test_end

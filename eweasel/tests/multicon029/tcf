@@ -13,6 +13,6 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	multi.e $CLUSTER multi.e
 compile_melted
-compile_result validity_error MULTI VGCC(8)
+compile_result validity_error MULTI VGCC(8); TEST VTCG
 
 test_end

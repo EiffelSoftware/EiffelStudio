@@ -17,15 +17,20 @@ copy_sub 	string_8.e $CLUSTER string_8.e
 copy_sub 	string_32.e $CLUSTER string_32.e
 copy_sub 	string_general.e $CLUSTER string_general.e
 compile_melted
-compile_result 	validity_error TYPE VJRV(2) ; FILE VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN; PLAIN_TEXT_FILE VEEN; CONSOLE VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN
+compile_result 	validity_error TYPE VJRV(2); STRING_TO_INTEGER_CONVERTOR VEEN VEEN; FILE VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN; PLAIN_TEXT_FILE VEEN; CONSOLE VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN VEEN
 
 define PARENT 	"TO_SPECIAL [CHARACTER] rename item as item redefine copy, is_equal, out, item, infix "@", put, valid_index end"
 copy_sub 	string_8.e $CLUSTER string_8.e
+define PARENT 	"TO_SPECIAL [CHARACTER_32] rename item as item redefine copy, is_equal, out, item, infix "@", put, valid_index end"
+copy_sub 	string_32.e $CLUSTER string_32.e
 resume_compile
 compile_result 	validity_error STRING_8 Library_error
 
+define PARENT 	"TO_SPECIAL [CHARACTER] rename item as item redefine copy, is_equal, out, item, infix "@", put, valid_index end"
 define ATTRIBUTE "internal_hash_code: INTEGER"
 copy_sub 	string_8.e $CLUSTER string_8.e
+define PARENT 	"TO_SPECIAL [CHARACTER_32] rename item as item redefine copy, is_equal, out, item, infix "@", put, valid_index end"
+copy_sub 	string_32.e $CLUSTER string_32.e
 resume_compile
 compile_result 	ok
 

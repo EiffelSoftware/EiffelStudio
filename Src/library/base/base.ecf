@@ -90,6 +90,29 @@
 					<dotnet value="true"/>
 				</condition>
 			</file_rule>
+			<file_rule>
+				<exclude>/runtime$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="ise_runtime" location="ise\runtime\" recursive="true">
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/classic$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/debug$</exclude>
+				<condition>
+					<build value="finalize"/>
+				</condition>
+			</file_rule>
 		</cluster>
 	</target>
 </system>

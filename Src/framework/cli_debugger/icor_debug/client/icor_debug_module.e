@@ -120,6 +120,31 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
+	has_short_name (n: STRING): BOOLEAN is
+			-- Is Current's short name `n' ?
+			-- i.e: is `get_name' ends with `n.dll' or `n.exe' ?
+		local
+			en: STRING
+			mn: STRING
+			i,j: INTEGER
+		do
+			create en.make_from_string (n)
+			en.append (".dll")
+
+			mn := get_name
+			from
+				Result := mn.count >= n.count + 4 -- i.e: (n + ".dll").count				
+				i := mn.count - 4
+				j := n.count
+			until
+				not Result or j = 0 -- (or i = 0, but j = 0 before i)
+			loop
+				Result := mn.item (i).lower = n.item (j).lower
+				i := i - 1
+				j := j - 1
+			end
+		end
+
 feature {ICOR_DEBUG_MODULE} -- Restricted Access	
 
 	get_md_import_interface: MD_IMPORT is
@@ -179,10 +204,15 @@ feature {ICOR_EXPORTER} -- Access
 			p_cchname: INTEGER
 			mp_name: MANAGED_POINTER
 		do
-			create mp_name.make (256 * 2)
+			last_call_success := 0
+			Result := name
+			if Result = Void then
+				create mp_name.make (256 * 2)
 
-			last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
-			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+				last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+				name := Result
+			end
 		ensure
 			success: last_call_success = 0
 		end

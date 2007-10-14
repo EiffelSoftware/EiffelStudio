@@ -10,9 +10,9 @@ class
 	DBG_EVALUATOR_CLASSIC
 
 inherit
-	DBG_EVALUATOR_IMP
+	DBG_EVALUATOR
 		redefine
-			init
+			make
 		end
 
 	DEBUG_EXT
@@ -37,15 +37,16 @@ inherit
 create
 	make
 
-feature -- Concrete initialization
+feature {NONE} -- Initialization
 
-	init is
-			-- Retrieve new value for evaluation mecanism.
+	make is
+		require else
+			is_classic_project: debugger_manager.is_classic_project
 		do
-			Precursor
+			Precursor {DBG_EVALUATOR}
 		end
 
-feature {DBG_EVALUATOR} -- Interface
+feature {NONE} -- Implementation
 
 	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
@@ -132,7 +133,7 @@ feature {DBG_EVALUATOR} -- Interface
 			end
 		end
 
-	effective_evaluate_once (f: FEATURE_I) is
+	effective_evaluate_once_function (f: FEATURE_I) is
 		local
 			once_r: ONCE_REQUEST
 			res: ABSTRACT_DEBUG_VALUE
@@ -206,6 +207,9 @@ feature {DBG_EVALUATOR} -- Interface
 --				end
 --			end
 --		end
+
+
+feature -- Query
 
 	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
 		do

@@ -1,5 +1,5 @@
 indexing
-description	: "Controls execution of dotnet debugged application."
+	description	: "Controls execution of dotnet debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
@@ -47,6 +47,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 	COMPILER_EXPORTER
 		export
 			{NONE} all
@@ -68,6 +73,7 @@ feature {APPLICATION_EXECUTION} -- Initialization
 			p: BOOLEAN_PREFERENCE
 		do
 			Precursor {APPLICATION_EXECUTION} (dbg)
+
 			Eifnet_debugger.init
 
 			p := Debugger_manager.dotnet_keep_stepping_info_non_eiffel_feature_pref
@@ -347,6 +353,114 @@ feature -- Execution
 				Eifnet_debugger.terminate_debugging
 			end
 			process_termination
+		end
+
+	query_replay_status (direction: INTEGER): INTEGER is
+			-- Query number of available steps in `direction'.
+		do
+				--| Not Yet Implemented for dotnet !
+			to_implement ("Add support for execution replay to dotnet system.")
+		end
+
+	remote_rt_object_icd_value: ICOR_DEBUG_VALUE is
+			-- Return the remote rt_object
+		local
+			m: ICOR_DEBUG_MODULE
+			f: ICOR_DEBUG_FRAME
+			icl: ICOR_DEBUG_CLASS
+			ctok, ftok: INTEGER
+		do
+			m := eifnet_debugger.ise_runtime_module
+			if m /= Void then
+				ctok := eifnet_debugger.edv_external_formatter.token_IseRuntime
+				if ctok > 0 then
+					ftok := eifnet_debugger.edv_external_formatter.token_IseRuntime__rt_extension_object
+					if ftok > 0 then
+						icl := m.get_class_from_token (ctok)
+						f := eifnet_debugger.new_active_frame
+						Result := icl.get_static_field_value (ftok, f)
+						f.clean_on_dispose
+						icl.clean_on_dispose
+					end
+				end
+			end
+		end
+
+	remote_rt_object: EIFNET_ABSTRACT_DEBUG_VALUE is
+			-- Return the remote rt_object
+		local
+			icdv: ICOR_DEBUG_VALUE
+		do
+			icdv := remote_rt_object_icd_value
+			if icdv /= Void then
+				Result := debug_value_from_icdv (icdv, system.rt_extension_class.compiled_class)
+			end
+		end
+
+	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is
+		local
+			icdv, r: ICOR_DEBUG_VALUE
+			rto: like remote_rt_object
+			icdm: ICOR_DEBUG_MODULE
+			icdf: ICOR_DEBUG_FUNCTION
+			args: ARRAY [ICOR_DEBUG_VALUE]
+			dv: EIFNET_ABSTRACT_DEBUG_VALUE
+			i_ref, i_fn: ICOR_DEBUG_VALUE
+		do
+			dv ?= kept_object_item (oa)
+			if dv /= Void then
+				rto := remote_rt_object
+				if rto /= Void then
+					icdv := rto.icd_referenced_value
+					icdm := rto.icd_value_info.value_icd_module
+					icdf := icdm.get_function_from_token (icdm.md_feature_token (rto.icd_value_info.value_class_token, "saved_object_to"))
+					if icdf /= Void then
+						i_ref := dv.icd_value
+						i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
+						args := <<icdv, i_ref, i_fn>>
+						r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
+						i_fn.clean_on_dispose
+						i_ref.clean_on_dispose
+						icdf.clean_on_dispose
+						Result := r /= Void
+					end
+				end
+			end
+		end
+
+	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is
+		local
+			icdv, r: ICOR_DEBUG_VALUE
+			rto: like remote_rt_object
+			icdm: ICOR_DEBUG_MODULE
+			icdf: ICOR_DEBUG_FUNCTION
+			args: ARRAY [ICOR_DEBUG_VALUE]
+			dv: EIFNET_ABSTRACT_DEBUG_VALUE
+			i_ref, i_fn: ICOR_DEBUG_VALUE
+		do
+			rto := remote_rt_object
+			if rto /= Void then
+				icdv := rto.icd_referenced_value
+				icdm := rto.icd_value_info.value_icd_module
+				icdf := icdm.get_function_from_token (icdm.md_feature_token (rto.icd_value_info.value_class_token, "object_loaded_from"))
+				if icdf /= Void then
+					if oa /= Void then
+						dv ?= kept_object_item (oa)
+						if dv /= Void then
+							i_ref := dv.icd_value
+						end
+					end
+					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
+					args := <<icdv, i_ref, i_fn>>
+					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
+					i_fn.clean_on_dispose
+					if i_ref /= Void then
+						i_ref.clean_on_dispose
+					end
+					icdf.clean_on_dispose
+					Result := debug_value_from_icdv (r, Void)
+				end
+			end
 		end
 
 	clean_on_process_termination is

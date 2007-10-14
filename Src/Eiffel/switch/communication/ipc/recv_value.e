@@ -139,10 +139,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 
 			if Eiffel_system.valid_dynamic_id (type + 1) then
 				cl := Eiffel_system.class_of_dynamic_id (type + 1, False)
-				if
-					cl /= Void
-					and then cl.is_special
-				then
+				if cl /= Void and then cl.is_special then
 					create {SPECIAL_VALUE} item.make_set_ref (ref, type + 1)
 				else
 					create {REFERENCE_VALUE} item.make (ref, type + 1)
@@ -176,7 +173,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 			item := Void
 		end
 
-feature {RECV_VALUE} -- Reset
+feature -- Reset
 
 	reset_recv_value is
 		do
@@ -237,7 +234,7 @@ feature -- Status report
 			create Result.make (Rqst_dbg_Exception_trace)
 		end
 
-feature {NONE} -- internal
+feature -- internal
 
 	item: ABSTRACT_DEBUG_VALUE
 			-- Last received value

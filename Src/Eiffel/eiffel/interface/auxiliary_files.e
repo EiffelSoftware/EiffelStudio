@@ -364,7 +364,7 @@ feature -- Dynamic Library file
 				end
 
 				system_name.append_string(".def")
-				if context.final_mode then
+				if Context.final_mode then
 					create dynamic_lib_def_file_name.make_from_string (project_location.final_path)
 				else
 					create dynamic_lib_def_file_name.make_from_string (project_location.workbench_path)
@@ -374,7 +374,7 @@ feature -- Dynamic Library file
 				def_buffer.put_in_file (dynamic_lib_def_file)
 				dynamic_lib_def_file.close
 
-				create C_dynamic_lib_file.make_c_code_file (gen_file_name (context.final_mode, "edynlib"));
+				create C_dynamic_lib_file.make_c_code_file (gen_file_name (Context.final_mode, "edynlib"));
 				buffer.put_in_file (C_dynamic_lib_file)
 				C_dynamic_lib_file.close
 			end
@@ -415,6 +415,9 @@ feature -- Plug and Makefile file
 			l_create_type: CREATE_TYPE
 			l_creation_type: CL_TYPE_I
 			l_gen_type: GEN_TYPE_I
+
+			l_rt_dbg_cl: CLASS_C
+			l_rt_extension_notify_name, l_rt_extension_notify_argument_name: STRING
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
@@ -464,7 +467,7 @@ feature -- Plug and Makefile file
 			buffer.put_string (twin_name)
 			buffer.put_string ("();%N")
 
-				-- Make string declaration
+				-- Make STRING declaration
 			str_make_feat := string_cl.feature_table.item_id (Names_heap.make_name_id)
 			str_make_name := Encoder.feature_name (id, str_make_feat.body_index).twin
 			buffer.put_string ("extern void ")
@@ -481,7 +484,7 @@ feature -- Plug and Makefile file
 				buffer.put_string ("();%N")
 			end
 
-				--| make array declaration
+				--| make ARRAY declaration
 				--| Temporary solution. When a system uses precompiled information,
 				--| the C code for ARRAY[ANY] is never re-generated, but the computed
 				--| name of the make routine will (unfortunately) change. Therefore, the
@@ -508,7 +511,7 @@ feature -- Plug and Makefile file
 			buffer.put_string (arr_make_name)
 			buffer.put_string ("();%N")
 
-				-- Make routine declaration
+				-- Make ROUTINE declaration
 			rout_cl := system.class_of_id (system.routine_class_id)
 
 			if rout_cl.types /= Void and then not rout_cl.types.is_empty then
@@ -524,6 +527,37 @@ feature -- Plug and Makefile file
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_rout_disp_name)
 				buffer.put_string ("();%N")
+			end
+
+				-- RT_EXTENSION declaration
+			if not final_mode then
+				l_rt_dbg_cl := system.rt_extension_class.compiled_class
+				if l_rt_dbg_cl /= Void then
+					cl_type := l_rt_dbg_cl.types.first
+					id := cl_type.static_type_id
+
+					feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_name_id)
+					if feat /= Void then
+						l_rt_extension_notify_name := Encoder.feature_name (id, feat.body_index).twin
+					end
+					if l_rt_extension_notify_name /= Void then
+						buffer.put_string ("extern void ")
+						buffer.put_string (l_rt_extension_notify_name)
+						buffer.put_string ("();")
+						buffer.put_new_line
+					end
+
+					feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_argument_name_id)
+					if feat /= Void then
+						l_rt_extension_notify_argument_name := Encoder.feature_name (id, feat.body_index).twin
+					end
+					if l_rt_extension_notify_argument_name /= Void then
+						buffer.put_string ("extern EIF_TYPED_VALUE ")
+						buffer.put_string (l_rt_extension_notify_argument_name)
+						buffer.put_string ("();")
+						buffer.put_new_line
+					end
+				end
 			end
 
 			if final_mode then
@@ -732,7 +766,7 @@ feature -- Plug and Makefile file
 			buffer.put_string ("%N%Tegc_system_name = %"")
 			buffer.put_string (System.name)
 			buffer.put_string ("%";%N%Tegc_system_location = ")
-			if context.final_mode then
+			if final_mode then
 				buffer.put_string_literal (project_location.final_path)
 			else
 				buffer.put_string_literal (project_location.workbench_path)
@@ -776,6 +810,35 @@ feature -- Plug and Makefile file
 
 			buffer.put_string ("%Tegc_platform_level = 0x00000D00;")
 			buffer.put_new_line
+
+				--| RT_EXTENSION and co...
+			if not final_mode then
+				buffer.put_string ("%Tegc_rt_extension_dt = ")
+				buffer.put_type_id (system.rt_extension_type_id)
+				buffer.put_string (";")
+				buffer.put_new_line
+
+				if l_rt_extension_notify_name /= Void then
+					if context.final_mode then
+						buffer.put_string ("%Tegc_rt_extension_notify = (void (*)(EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE)) ")
+					else
+						buffer.put_string ("%Tegc_rt_extension_notify = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
+					end
+					buffer.put_string (l_rt_extension_notify_name)
+					buffer.put_character (';')
+					buffer.put_new_line
+				end
+				if l_rt_extension_notify_argument_name /= Void then
+					if context.final_mode then
+						buffer.put_string ("%Tegc_rt_extension_notify_argument = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_INTEGER)) ")
+					else
+						buffer.put_string ("%Tegc_rt_extension_notify_argument = (EIF_TYPED_VALUE (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
+					end
+					buffer.put_string (l_rt_extension_notify_argument_name)
+					buffer.put_character (';')
+					buffer.put_new_line
+				end
+			end
 
 			if final_mode then
 					-- Initialize polymorphic tables

@@ -443,7 +443,7 @@ feature -- Expression evaluation messages
 		do Result := locale.translation ("Cannot find complete dynamic type of an expanded type.") end
 
 	msg_error_native_array_partially_supported (fname: STRING_GENERAL): STRING_GENERAL is
-		do 
+		do
 			if fname = Void then
 				Result := locale.translation ("NATIVE_ARRAY is not yet fully supported.")
 			else
@@ -465,9 +465,9 @@ feature -- Expression evaluation messages
 				s32.append_string_general (desc)
 			end
 			if addr = Void then
-				Result := locale.formatted_string (locale.translation ("Unable to evaluate {$1}.$2$3"), [cname, fname, s32]) 
+				Result := locale.formatted_string (locale.translation ("Unable to evaluate {$1}.$2$3"), [cname, fname, s32])
 			else
-				Result := locale.formatted_string (locale.translation ("Unable to evaluate {$1}.$2 on <$3>$4"), [cname, fname, addr, s32]) 
+				Result := locale.formatted_string (locale.translation ("Unable to evaluate {$1}.$2 on <$3>$4"), [cname, fname, addr, s32])
 			end
 		end
 
@@ -488,14 +488,19 @@ feature -- Expression evaluation messages
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Unable to evaluate (non once) routine {$1}.$2 on Void object or type name"), [cname, fname]) end
-			
+
 	msg_error_exception_occurred_during_evaluation (cname, fname: STRING_GENERAL; a_trace: STRING_GENERAL): STRING_GENERAL is
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
-			trace_not_void: a_trace /= Void
+		local
+			l_trace: STRING_GENERAL
 		do
-			Result := locale.formatted_string (locale.translation ("Exception occurred during evaluation of {$1}.$2:%N$3"), [cname, fname, a_trace])
+			l_trace := a_trace
+			if l_trace = Void then
+				l_trace := ""
+			end
+			Result := locale.formatted_string (locale.translation ("Exception occurred during evaluation of {$1}.$2:%N$3"), [cname, fname, l_trace])
 		end
 
 	msg_error_once_evaluation_failed (fname: STRING_GENERAL; msg: STRING_GENERAL): STRING_GENERAL is
@@ -532,24 +537,24 @@ feature -- Expression evaluation messages
 	msg_error_cannot_find_attribute (aname: STRING_GENERAL): STRING_GENERAL is
 		require
 			aname_not_void: aname /= Void
-		do Result := locale.formatted_string (locale.translation ("Could not find attribute value for `$1'"), [aname]) end			
+		do Result := locale.formatted_string (locale.translation ("Could not find attribute value for `$1'"), [aname]) end
 
 	msg_error_cannot_evaluate_attribute_of_expanded (aname: STRING_GENERAL): STRING_GENERAL is
 		require
 			aname_not_void: aname /= Void
-		do Result := locale.formatted_string (locale.translation ("Cannot evaluate attribute `$1' of an expanded value."), [aname]) end			
+		do Result := locale.formatted_string (locale.translation ("Cannot evaluate attribute `$1' of an expanded value."), [aname]) end
 
 	msg_error_cannot_find_context_object (addr: STRING_GENERAL): STRING_GENERAL is
 		require
 			addr_not_void: addr /= Void
-		do Result := locale.formatted_string (locale.translation ("Error occurred: unable to find the context object <$1>."), [addr]) end			
+		do Result := locale.formatted_string (locale.translation ("Error occurred: unable to find the context object <$1>."), [addr]) end
 
 	msg_error_type_not_compiled (tname: STRING_GENERAL): STRING_GENERAL is
 		require
 			tname_not_void: tname /= Void
-		do Result := locale.formatted_string (locale.translation ("Type {$1} is not compiled."), [tname]) end			
+		do Result := locale.formatted_string (locale.translation ("Type {$1} is not compiled."), [tname]) end
 
-			
+
 
 
 indexing

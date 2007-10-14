@@ -219,19 +219,19 @@ feature {NONE} -- Implementation
 		local
 			ctlr: DEBUGGER_CONTROLLER
 			wdir: STRING
+			param: DEBUGGER_EXECUTION_PARAMETERS
 		do
-			ctlr := debugger_manager.controller
-			ctlr.clear_params
-			ctlr.set_param_arguments (param_args)
 			wdir := param_working_directory
 			if wdir = Void or else wdir.is_empty then
 				wdir := Eiffel_project.lace.directory_name
 						--Execution_environment.current_working_directory
 			end
-			ctlr.set_param_working_directory (wdir)
-			ctlr.set_param_environment_variables (param_env_variables)
-			ctlr.debug_application (a_exec_mode)
-			ctlr.clear_params
+			ctlr := debugger_manager.controller
+			create param
+			param.set_arguments (param_args)
+			param.set_working_directory (wdir)
+			param.set_environment_variables (param_env_variables)
+			ctlr.debug_application (param, a_exec_mode)
 		end
 
 indexing

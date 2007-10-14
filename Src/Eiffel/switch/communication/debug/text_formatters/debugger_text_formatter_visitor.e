@@ -80,7 +80,7 @@ feature -- Call stack
 		deferred
 		end
 
-	append_debugger_information (dbg: DEBUGGER_MANAGER; st: TEXT_FORMATTER) is
+	append_debugger_information (dbg: DEBUGGER_MANAGER; param: DEBUGGER_EXECUTION_PARAMETERS; st: TEXT_FORMATTER) is
 			-- Display information about debugger
 		require
 			dbg /= Void

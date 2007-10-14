@@ -185,6 +185,7 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (hex_format_cmd.new_mini_sd_toolbar_item)
 
 			mini_toolbar.extend (object_viewer_cmd.new_mini_sd_toolbar_item)
+			mini_toolbar.extend (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item_for_watch_tool (Current))
 
 			create delete_expression_cmd.make
 			delete_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
@@ -856,6 +857,7 @@ feature {NONE} -- Event handling
 							end
 						end
 						to_index := grid.grid_move_top_row_node_by (grid, sel_index, offset)
+						check to_index > 0 end
 						grid.remove_selection
 						sel.enable_select
 					end
@@ -1306,6 +1308,15 @@ feature -- Access
 				end
 			end
 			a_item.refresh
+		end
+
+	add_debug_value (dv: ABSTRACT_DEBUG_VALUE) is
+			-- Add value `dv' to the watch tool's grid
+		local
+			expr: EB_EXPRESSION
+		do
+			create expr.make_as_object (dv.dynamic_class, dv.address)
+			add_expression (expr, False)
 		end
 
 feature -- Update

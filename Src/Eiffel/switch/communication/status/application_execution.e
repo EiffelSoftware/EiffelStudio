@@ -223,7 +223,7 @@ end
 
 feature -- Execution
 
-	run (args, cwd: STRING; env: HASH_TABLE [STRING_32, STRING_32]) is
+	run (params: DEBUGGER_EXECUTION_PARAMETERS) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -237,16 +237,20 @@ feature -- Execution
 			non_negative_interrupt: debugger_manager.interrupt_number >= 0
 		local
 			l_envstr: STRING_32
-			app: STRING
+			env: HASH_TABLE [STRING_32, STRING_32]
+			args, app: STRING
 			ctlr: DEBUGGER_CONTROLLER
 		do
-			param_arguments := args
-			param_execution_directory := cwd
-			param_environment := env
+			parameters := params
 			ctlr := debugger_manager.controller
+			args := params.arguments
+			if args = Void then
+				create args.make_empty
+			end
+			env := ctlr.environment_variables_updated_with (params.environment_variables, True)
 			l_envstr := environment_variables_to_string (env)
 			app := Eiffel_system.application_name (True)
-			run_with_env_string (app, args, cwd, l_envstr)
+			run_with_env_string (app, args, params.working_directory, l_envstr)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -322,6 +326,95 @@ feature -- Execution
 		deferred
 		end
 
+	activate_execution_replay_recording (b: BOOLEAN) is
+			-- Activate or Deactivate execution recording mode
+		require
+			execution_replay_not_recording: b /= status.replay_recording
+		do
+			status.set_replay_recording (b)
+			check status.replay_recording = b end
+		ensure
+			execution_replay_recording: status.replay_recording = b
+		end
+
+	activate_execution_replay_mode (b: BOOLEAN) is
+			-- Activate or Deactivate execution replay mode
+		require
+			turned_on_when_stopped: b implies status.is_stopped
+			replay_activation_change: b /= status.replay_activated
+		local
+			d: INTEGER
+			r: BOOLEAN
+		do
+			if b then
+				status.set_replay_activated (True)
+				check status.replay_depth = 0 end
+				d := query_replay_status (Replay_back_direction)
+				status.set_replay_depth_limit (d)
+			else
+				from
+					r := True
+					d := status.replay_depth
+				until
+					d = 0 or not r
+				loop
+					r := replay (replay_forth_direction)
+					d := d - 1
+				end
+
+				status.set_replay_activated (False)
+
+				check
+					r and status.replay_depth = 0
+				end
+			end
+		ensure
+			replay_activated: status.replay_activated = b
+			replay_depth_is_zero: status.replay_depth = 0
+		end
+
+	replay (direction: INTEGER): BOOLEAN is
+		require
+			app_is_stopped: is_stopped
+			replay_activated: status.replay_activated
+		local
+			d: INTEGER
+		do
+			d := status.replay_depth
+			inspect direction
+			when Replay_back_direction then
+				d := d + 1
+			when Replay_forth_direction then
+				d := d - 1
+			else
+			end
+			status.set_replay_depth (d)
+			Result := True
+		end
+
+	query_replay_status (direction: INTEGER): INTEGER is
+			-- Query number of available steps in `direction'.
+		deferred
+		end
+
+	remote_rt_object: ABSTRACT_DEBUG_VALUE is
+			-- Return the remote rt_object
+		deferred
+		end
+
+	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is
+		deferred
+		end
+
+	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is
+		deferred
+		end
+
+	Replay_back_direction: INTEGER = 1
+	Replay_forth_direction: INTEGER = 2
+	Replay_left_direction: INTEGER = 3
+	Replay_right_direction: INTEGER = 4
+
 feature -- Assertion change
 
 	disable_assertion_check is
@@ -377,14 +470,8 @@ feature -- Query
 
 feature -- Parameters
 
-	param_arguments: STRING
-			-- Arguments used to run Application.
-
-	param_execution_directory: STRING
-			-- Execution directory used to run Application.
-
-	param_environment: HASH_TABLE [STRING_32, STRING_32]
-			-- Modified Environment used to run Application.
+	parameters: DEBUGGER_EXECUTION_PARAMETERS
+			-- Parameters used to run Application
 
 feature -- Setting
 

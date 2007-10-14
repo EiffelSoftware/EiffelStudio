@@ -631,6 +631,18 @@ doc:	</attribute>
 */
 rt_public EIF_REFERENCE root_obj = NULL;
 
+
+/*
+doc:	<attribute name="rt_extension_obj" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Pointer to RT_EXTENSION object of current system. Initialized by generated C code.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public EIF_REFERENCE rt_extension_obj = NULL;
+#endif
+
 /*
 doc:	<attribute name="has_reclaim_been_called" return_type="EIF_BOOLEAN" export="private">
 doc:		<summary>Flag to prevent multiple calls to `reclaim' which could occur if for some reasons `reclaim´ failed, then the `main' routine of the Eiffel program will call `failure' which calls `reclaim' again. So if it failed the first time around it is going to fail a second time and therefore it is useless to call `reclaim' again.</summary>
@@ -1277,6 +1289,9 @@ rt_public void reclaim(void)
 				 * Ensures that `root_obj' is cleared.
 				 */
 			root_obj = NULL;
+#ifdef WORKBENCH
+			rt_extension_obj = NULL;
+#endif
 			plsc ();
 
 #endif
@@ -1406,6 +1421,9 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 
 		/* Perform marking */
 	root_obj = MARK_SWITCH(&root_obj);	/* Primary root */
+#ifdef WORKBENCH
+	rt_extension_obj = MARK_SWITCH(&rt_extension_obj);	/* Primary root */
+#endif
 
 		/* Deal with once manifest strings. */
 #ifndef EIF_THREADS
@@ -3617,6 +3635,10 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	/* First deal with the root object. If it is not old, then mark it */
 	if (root_obj && !(HEADER(root_obj)->ov_flags & EO_OLD))
 		root_obj = GEN_SWITCH(&root_obj);
+#ifdef WORKBENCH
+	if (rt_extension_obj && !(HEADER(rt_extension_obj)->ov_flags & EO_OLD))
+		rt_extension_obj = GEN_SWITCH(&rt_extension_obj);
+#endif
 
 	/* Deal with remembered set, which records the addresses of all the
 	 * old objects pointing to new ones.

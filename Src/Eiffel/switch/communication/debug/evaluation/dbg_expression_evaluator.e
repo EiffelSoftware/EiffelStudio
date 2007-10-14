@@ -11,11 +11,6 @@ deferred class
 
 inherit
 
-	SHARED_DBG_EVALUATOR
-		export
-			{NONE} all
-		end
-
 	SHARED_DEBUGGER_MANAGER
 
 	SHARED_BENCH_NAMES
@@ -25,7 +20,6 @@ feature {NONE} -- Initialization
 	make_as_object (addr: like context_address) is
 		do
 			generic_make
-			reset_dbg_evaluator
 			set_context_address (addr)
 			set_as_object  (True)
 			set_on_object  (True)
@@ -44,9 +38,15 @@ feature {NONE} -- Initialization
 
 	generic_make is
 		do
+			debugger_manager.reset_dbg_evaluator
+			dbg_evaluator := debugger_manager.dbg_evaluator
+
 			error := 0
 			create error_messages.make
 		end
+
+	dbg_evaluator: DBG_EVALUATOR
+			-- cached dbg evaluator
 
 feature -- change
 

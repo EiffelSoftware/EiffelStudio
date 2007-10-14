@@ -17,7 +17,8 @@ inherit
 			can_not_launch_system_message,
 			recycle,
 			clean_on_process_termination,
-			make_with_debugger
+			make_with_debugger,
+			activate_execution_replay_recording, replay
 		end
 
 	OBJECT_ADDR
@@ -27,7 +28,7 @@ inherit
 			{NONE} all
 		end
 
-	IPC_SHARED
+	RECV_VALUE
 		export
 			{NONE} all
 		end
@@ -190,6 +191,85 @@ feature -- Execution
 			Ipc_engine.end_of_debugging
 		ensure then
 			app_is_not_running: not is_running
+		end
+
+	activate_execution_replay_recording (b: BOOLEAN) is
+			-- Activate Execution replay recording on debuggee depending of `b'
+		do
+			Precursor {APPLICATION_EXECUTION} (b)
+			cont_request.send_rqst_3_integer (rqst_rt_operation, rtop_exec_replay, rtop_exec_replay_record, b.to_integer)
+		end
+
+	replay (direction: INTEGER): BOOLEAN is
+			-- Replay execution in direction `direction'
+		do
+			Result := Precursor {APPLICATION_EXECUTION} (direction)
+			if Result then
+				cont_request.send_rqst_3_integer (rqst_rt_operation, rtop_exec_replay, direction, 1)
+				Result := to_boolean (c_tread)
+			end
+		end
+
+	query_replay_status (direction: INTEGER): INTEGER is
+			-- Query exec replay status for direction `direction'
+			-- Return the number of available steps.
+		do
+			cont_request.send_rqst_3_integer (rqst_rt_operation, rtop_exec_replay, direction, 0)
+			Result := to_integer_32 (c_tread)
+		end
+
+	remote_rt_object: ABSTRACT_DEBUG_VALUE is
+			-- Return the remote rt_object
+		do
+			ewb_request.send_rqst_1 (rqst_rt_operation, rtop_dump_rt_object)
+			ewb_request.reset_recv_value
+			ewb_request.recv_value (ewb_request)
+			Result := ewb_request.item
+			Result.set_hector_addr
+			ewb_request.reset_recv_value
+		end
+
+	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is
+			-- Store remotly the debuggee's object referenced by `oa' in file `fn'
+		local
+			c_string: C_STRING
+			b: BOOLEAN
+		do
+			ewb_request.send_ref_value (hex_to_pointer (oa))
+			ewb_request.send_rqst_1 (rqst_rt_operation, rtop_object_storage_save)
+
+			create c_string.make (fn)
+			send_string_value (c_string.item)
+			b := recv_ack
+			if b then
+				Result := to_boolean (c_tread)
+			end
+		end
+
+	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is
+			-- Load remotly and return the debuggee's object referenced by `oa' from file `fn'.
+		local
+			c_string: C_STRING
+			b: BOOLEAN
+			p: POINTER
+		do
+			if oa /= Void then
+				p := hex_to_pointer (oa)
+			end
+			ewb_request.send_ref_value (p)
+			ewb_request.send_rqst_1 (rqst_rt_operation, rtop_object_storage_load)
+			create c_string.make (fn)
+			send_string_value (c_string.item)
+			b := recv_ack
+			if b then
+				ewb_request.reset_recv_value
+				ewb_request.recv_value (ewb_request)
+				Result := ewb_request.item
+				if Result /= Void then
+					Result.set_hector_addr
+				end
+				ewb_request.reset_recv_value
+			end
 		end
 
 	clean_on_process_termination is

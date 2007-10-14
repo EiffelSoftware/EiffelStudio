@@ -347,6 +347,10 @@ doc:	</attribute>
 */
 rt_public int in_assertion = 0;
 
+#ifdef WORKBENCH
+RT_LNK int is_inside_rt_eiffel_code = 0;
+#endif
+
 /*
 doc:	<attribute name="EIF_once_values" return_type="EIF_once_value_t *" export="public">
 doc:		<summary>Array to save value of each computed once. It is used to store once per thread values.</summary>

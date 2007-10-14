@@ -11,7 +11,7 @@ class
 
 inherit
 
-	DBG_EVALUATOR_IMP
+	DBG_EVALUATOR
 
 create
 	make
@@ -21,7 +21,7 @@ feature -- Access
 	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I; ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]; is_static_call: BOOLEAN) is
 		do
 		end
-	effective_evaluate_once (f: FEATURE_I) is
+	effective_evaluate_once_function (f: FEATURE_I) is
 		do
 		end
 

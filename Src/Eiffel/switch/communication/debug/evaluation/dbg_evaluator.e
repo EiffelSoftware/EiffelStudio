@@ -6,6 +6,7 @@ indexing
 	date        : "$Date$"
 	revision    : "$Revision$"
 
+deferred
 class
 	DBG_EVALUATOR
 
@@ -36,80 +37,289 @@ inherit
 			{NONE} all
 		end
 
-create
-	make
+--create
+--	make
 
 feature {NONE} -- Initialization
 
 	make is
 			-- Initialize `Current'.
 		do
-			build_evaluator
+			create error_messages.make
 		end
 
-	build_evaluator is
-		do
-			fixme ("try to make this decision between dotnet or classic before")
-			if Debugger_manager.is_dotnet_project then
-					--| Soon or later .. change this by creating descendant of Current
-				create {DBG_EVALUATOR_DOTNET} implementation.make (Current)
-			else
-				create {DBG_EVALUATOR_CLASSIC} implementation.make (Current)
-			end
-		end
-
-feature {SHARED_DBG_EVALUATOR} -- Init
+feature {DEBUGGER_MANAGER, DBG_EXPRESSION_EVALUATOR} -- Init
 
 	reset is
 		do
-			implementation.parameters_reset
-			implementation.clear_evaluation
+			reset_error
+			clear_evaluation
+			parameters_reset
+		end
+
+	clear_evaluation is
+		do
 			last_result_value := Void
 			last_result_static_type := Void
 		end
 
-feature {SHARED_DBG_EVALUATOR} -- Variables
+feature {DBG_EXPRESSION_EVALUATOR} -- Variables
 
 	last_result_value: DUMP_VALUE
 
 	last_result_static_type: CLASS_C
 
-	error_evaluation_message: STRING_32
+	error: INTEGER
+			-- Error code
 
-	error_exception_message: STRING_32
+	error_messages: LINKED_LIST [TUPLE [code: INTEGER; msg: STRING_32]]
+			-- List of [Code, Message]
+			-- Error's message if any otherwise Void
 
-	error_occurred: BOOLEAN is
+	error_message: STRING_32 is
 		do
-			Result := error_evaluation_message /= Void or error_exception_message /= Void
+			Result := error_message_by (0) -- All
 		end
 
-feature {SHARED_DBG_EVALUATOR, DBG_EVALUATOR_IMP} -- Variables preparation
+	error_message_by (a_code_filter: INTEGER): STRING_32 is
+			-- Error message filter by `a_code_filter'.
+			-- if `a_code_filter' is zero => all messages
+			-- if `a_code_filter' is positive => all messages associated with `a_code_filter'
+			-- if `a_code_filter' is negative => all messages except the ones associated with - `a_code_filter'
+		local
+			details: TUPLE [code: INTEGER; msg: STRING_32]
+			l_msg: STRING_GENERAL
+			l_code: INTEGER
+		do
+			if error /= 0 and not error_messages.is_empty then
+				from
+					create Result.make (10)
+					error_messages.start
+				until
+					error_messages.after
+				loop
+					details := error_messages.item
+					l_code := details.code
+					if
+						a_code_filter = 0
+						or else (a_code_filter > 0 and l_code = a_code_filter )
+						or else (a_code_filter < 0 and l_code /= -a_code_filter)
+					then
+						l_msg := details.msg
+						if l_msg = Void and l_code /= 0 then
+							l_msg := error_code_to_message (l_code)
+						end
+						if l_msg /= Void then
+							Result.append_string_general (l_msg)
+						end
+						error_messages.forth
+						if not error_messages.after then
+							Result.append ("%N--------------------------%N")
+						end
+					else
+						error_messages.forth
+					end
+				end
+				if Result.is_empty then
+					Result := Void
+				end
+			end
+		end
+
+	error_evaluation_message: STRING_32 is
+		do
+			if evaluation_error_occurred then
+				Result := error_message_by (Cst_error_occurred)
+			end
+		end
+
+	error_but_exception_message: STRING_32 is
+		do
+			if error_but_exception_occurred then
+				Result := error_message_by (-Cst_error_exception_during_evaluation)
+			end
+		end
+
+	error_exception_message: STRING_32 is
+		do
+			if exception_occurred then
+				Result := error_message_by (Cst_error_exception_during_evaluation)
+			end
+		end
+
+	error_occurred: BOOLEAN is
+			-- Did an error occurred during processing ?
+		do
+			Result := error /= 0
+		end
+
+	evaluation_error_occurred: BOOLEAN is
+			-- Did the evaluation raised an error ?
+		do
+			Result := error & Cst_error_occurred /= 0
+		end
+
+	evaluation_aborted: BOOLEAN is
+			-- Did the evaluation aborted ?
+		do
+			Result := error & cst_error_evaluation_aborted /= 0
+		end
+
+	exception_occurred: BOOLEAN is
+			-- Did the evaluation raised an exception ?
+		do
+			Result := error & cst_error_exception_during_evaluation /= 0
+		end
+
+	error_but_exception_occurred: BOOLEAN is
+			-- Error other than Exception occurred ?
+		do
+			Result := error_occurred and then error /= cst_error_exception_during_evaluation
+		end
+
+feature -- Error values
+
+	Cst_error_occurred: INTEGER is 0x1
+	Cst_error_evaluation_aborted: INTEGER is 0x2
+	Cst_error_exception_during_evaluation: INTEGER is 0x4
+	Cst_error_unable_to_get_target_object: INTEGER is 0x8
+	Cst_error_occurred_during_parameters_preparation: INTEGER is 0x10
+
+	error_code_to_message (a_code: INTEGER): STRING_GENERAL
+		require
+			code_not_zero: a_code /= 0
+		do
+			inspect a_code
+				when Cst_error_evaluation_aborted then
+					Result := Debugger_names.cst_error_evaluation_aborted
+				when Cst_error_exception_during_evaluation then
+					Result := Debugger_names.cst_error_exception_during_evaluation
+				when Cst_error_occurred then
+					Result := Debugger_names.cst_error_occurred
+				when Cst_error_unable_to_get_target_object then
+					Result := Debugger_names.cst_error_unable_to_get_target_object
+				when Cst_error_occurred_during_parameters_preparation then
+					Result := Debugger_names.cst_error_occurred_during_parameters_preparation
+				else
+			end
+		end
+
+feature {DBG_EXPRESSION_EVALUATOR} -- Variables preparation
 
 	set_last_variables (trv: DUMP_VALUE; trs: CLASS_C) is
 		do
-			error_evaluation_message := Void
-			error_exception_message := Void
+			reset_error
 			last_result_value := trv
 			last_result_static_type := trs
 		end
 
-	notify_error_evaluation (mesg: STRING_GENERAL) is
+	reset_error is
 		do
-			if error_evaluation_message /= Void then
-				error_evaluation_message.append_character ('%N')
-				error_evaluation_message.append_string_general (mesg)
-			elseif mesg /= Void then
-				error_evaluation_message := mesg.as_string_32
-			end
+			error := 0
+			error_messages.wipe_out
 		end
 
-	notify_error_exception (mesg: STRING_GENERAL) is
+	notify_error (a_code: INTEGER; a_msg: STRING_GENERAL) is
+		require
+			a_code /= 0
+		local
+			m: STRING_32
 		do
-			if error_exception_message /= Void then
-				error_exception_message.append_character ('%N')
-				error_exception_message.append_string_general (mesg)
-			elseif mesg /= Void then
-				error_exception_message := mesg.as_string_32
+			if a_msg /= Void then
+				m := a_msg.as_string_32
+			end
+			error := error | a_code
+			error_messages.extend ([a_code, m])
+		end
+
+	notify_error_evaluation	(a_msg: STRING_GENERAL) is
+		do
+			notify_error (Cst_error_occurred, a_msg)
+		end
+
+	notify_error_exception (a_msg: STRING_GENERAL) is
+		do
+			notify_error (Cst_error_exception_during_evaluation, a_msg)
+		end
+
+feature {NONE} -- Query		
+
+	address_from_basic_dump_value (a_target: DUMP_VALUE): STRING is
+		require
+			a_target /= Void and then a_target.address = Void
+		do
+		end
+
+feature {NONE} -- Parameters Implementation
+
+	parameters_reset is
+		do
+		end
+
+	parameters_init (n: INTEGER) is
+		do
+		end
+
+	parameters_push (dmp: DUMP_VALUE) is
+		deferred
+		end
+
+	parameters_push_and_metamorphose (dmp: DUMP_VALUE) is
+		deferred
+		end
+
+	prepare_parameters (dt: CLASS_TYPE; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+			-- Prepare parameters for function evaluation
+			-- For classic system
+			--| Warning: for classic system be sure `Init_recv_c' had been done before
+		require
+			f_is_not_attribute: f = Void or else not f.is_attribute
+			params /= Void and then not params.is_empty
+		local
+			dmp: DUMP_VALUE
+			bak_cc: CLASS_C
+		do
+				--| Prepare parameters ...
+			bak_cc := System.current_class
+			if dt /= Void then
+				System.set_current_class (dt.associated_class)
+			end
+			parameters_init (params.count)
+			from
+				params.start
+			until
+				params.after or error_occurred
+			loop
+				dmp := params.item
+					-- We need to evaluate feature argument using BYTE_CONTEXT because
+					-- it might have some formal and the metamorphose should only appear
+					-- when there is indeed a type difference and not because the expected
+					-- argument is a formal parameter and the actual argument value is
+					-- a basic type.
+					-- This happen when evaluation `my_hash_table.item (1)' where
+					-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]'.
+				if dmp.is_basic then
+					if
+						f /= Void
+						and dt /= Void
+						and then (not Byte_context.real_type_in (
+									f.arguments.i_th (params.index).type_i
+									, dt).is_basic
+								)
+					then
+						parameters_push_and_metamorphose (dmp)
+					else
+						parameters_push (dmp)
+						-- FIXME jfiat : in very specific case we have  'f =  Void'
+						-- i.e: when we have only the feature_name with no more info
+					end
+				else
+					parameters_push (dmp)
+				end
+				params.forth
+			end
+			if bak_cc /= Void then
+				System.set_current_class (bak_cc)
 			end
 		end
 
@@ -126,9 +336,7 @@ feature -- Concrete evaluation
 			l_dyntype := cl.types.first
 				--| FIXME jfiat: we deal only non generic types
 
-			prepare_evaluation
-			implementation.effective_evaluate_static_function (f, l_dyntype, params)
-			retrieve_evaluation
+			effective_evaluate_static_function (f, l_dyntype, params)
 
 			if last_result_value /= Void then
 				last_result_static_type := class_c_from_type_a (f.type, cl)
@@ -138,7 +346,7 @@ feature -- Concrete evaluation
 		end
 
 	evaluate_once (f: FEATURE_I) is
-			--
+			-- Evaluate once feature
 		require
 			feature_not_void: f /= Void
 		do
@@ -317,16 +525,15 @@ feature -- Concrete evaluation
 			a_feature_name_not_void: a_feature_name /= Void
 			a_external_name_not_void: a_external_name /= Void
 		do
-			prepare_evaluation
-			implementation.effective_evaluate_function_with_name (a_addr, a_target, a_feature_name, a_external_name, params)
-			retrieve_evaluation
+			effective_evaluate_function_with_name (a_addr, a_target, a_feature_name, a_external_name, params)
 		end
 
 	effective_evaluate_once_function (f: FEATURE_I) is
-		do
-			prepare_evaluation
-			implementation.effective_evaluate_once (f)
-			retrieve_evaluation
+		require
+			feature_not_void: f /= Void
+			f.written_class.types.count <= 1
+			f_is_once: f.is_once
+		deferred
 		end
 
 	effective_evaluate_routine (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
@@ -334,25 +541,74 @@ feature -- Concrete evaluation
 				params: LIST [DUMP_VALUE];
 				is_static_call: BOOLEAN
 			) is
-		do
-			prepare_evaluation
-			implementation.effective_evaluate_routine (
-								a_addr, a_target, f, realf, ctype, orig_class, params, is_static_call
-							)
-			retrieve_evaluation
+		require
+			realf /= Void
+		deferred
 		end
 
 	create_empty_instance_of (a_type_i: CL_TYPE_I) is
 		require
 			a_type_i_not_void: a_type_i /= Void
 			a_type_i_compiled: a_type_i.has_associated_class_type
+		deferred
+		end
+
+feature -- Implementation
+
+	effective_evaluate_static_function (f: FEATURE_I; ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
+		require
+			f /= Void
+			f_is_not_attribute: not f.is_attribute
 		do
-			prepare_evaluation
-			implementation.create_empty_instance_of (a_type_i)
-			retrieve_evaluation
+			--| only for dotnet for now
+		end
+
+	effective_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
+				a_feature_name, a_external_name: STRING;
+				params: LIST [DUMP_VALUE]) is
+			-- Note: this feature is used only for external function				
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+			a_external_name_not_void: a_external_name /= Void
+		do
 		end
 
 feature -- Query
+
+	adapted_class_type (ctype: CLASS_TYPE; f: FEATURE_I): CLASS_TYPE is
+			-- Adapted class_type receiving the call of `f'
+		local
+			l_f_class_c: CLASS_C
+			l_cl_type_a: CL_TYPE_A
+		do
+			if ctype.associated_class.is_basic then
+				Result := associated_reference_basic_class_type (ctype.associated_class)
+			else
+					--| Get the real class_type
+				l_f_class_c := f.written_class
+				if ctype.associated_class.is_equal (l_f_class_c) then
+						--| The feature is not inherited
+					Result := ctype
+				else
+					if l_f_class_c.types.count = 1 then
+						Result := l_f_class_c.types.first
+					elseif l_f_class_c.is_basic then
+						Result := l_f_class_c.types.first
+					else
+							--| The feature is inherited
+
+							--| let's search and find the correct CLASS_TYPE among the parents
+							--| this will solve the problem of inherited once and generic class
+							--| the level on inheritance is represented by the CLASS_C
+							--| then the derivation of the GENERIC by the CLASS_TYPE
+							--| among the parent we know the right CLASS_TYPE
+							--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
+						l_cl_type_a := ctype.type.type_a
+						Result := l_cl_type_a.find_class_type (l_f_class_c).type_i.associated_class_type
+					end
+				end
+			end
+		end
 
 	attributes_list_from_object (a_addr: STRING): DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
@@ -381,15 +637,13 @@ feature -- Query
 	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
 		require
 			cse_not_void: cse /= Void
-		do
-			Result := implementation.current_object_from_callstack (cse)
+		deferred
 		end
 
 	dump_value_at_address (addr: STRING): DUMP_VALUE is
 		require
 			addr /= Void
-		do
-			Result := implementation.dump_value_at_address (addr)
+		deferred
 		end
 
 	address_from_dump_value (a_target: DUMP_VALUE): STRING is
@@ -401,8 +655,14 @@ feature -- Query
 					--| cannot evaluate attribute on manifest value
 					--| (such as "foo", 1 or True .. in the expression)
 					-- but let's try to improve this ...
-				Result := implementation.address_from_basic_dump_value (a_target)
+				Result := address_from_basic_dump_value (a_target)
 			end
+		end
+
+	class_c_from_external_b_with_extension	(a_external_b: EXTERNAL_B): CLASS_C is
+		require
+			a_external_b /= Void and then a_external_b.extension /= Void
+		do
 		end
 
 feature {NONE} -- List helpers
@@ -488,8 +748,16 @@ feature {DBG_EXPRESSION_EVALUATOR} -- compiler helpers
 		require
 			cl_not_void: cl /= Void
 			cl_is_basic: cl.is_basic
+		local
+			l_basic: BASIC_I
 		do
-			Result := implementation.associated_reference_basic_class_type (cl)
+			l_basic ?= cl.actual_type.type_i
+			check
+				l_basic_not_void: l_basic /= Void
+			end
+			Result := l_basic.associated_reference_class_type
+		ensure
+			associated_reference_basic_class_type_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -529,28 +797,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-	prepare_evaluation is
-			-- Initialization before effective evaluation
-		do
-			implementation.prepare_evaluation (last_result_value, last_result_static_type)
-		end
-
-	retrieve_evaluation is
-			-- Get the effective evaluation's result and info
-		do
-			last_result_value       := implementation.last_result_value
-			last_result_static_type := implementation.last_result_static_type
-			if last_result_static_type = Void and last_result_value /= Void then
-				last_result_static_type := last_result_value.dynamic_class
-			end
-			if implementation.error_occurred then
-				notify_error_evaluation (implementation.error_message)
-			end
-			implementation.clear_evaluation
-		end
-
-	implementation: DBG_EVALUATOR_IMP;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

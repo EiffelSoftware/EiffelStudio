@@ -81,6 +81,19 @@ doc:	</attribute>
 rt_public EIF_INTEGER egc_prof_enabled;	  
 
 /*
+doc:	<attribute name="exec_recording_enabled" return_type="EIF_INTEGER" export="public">
+doc:		<summary>To enable or disable execution recording.</summary>
+doc:		<thread_safety>Safe only if not modified during execution. Safe if app is stopped</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>RT_EXTENSION</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public EIF_INTEGER exec_recording_enabled;	  
+#endif
+
+
+/*
 doc:	<attribute name="egc_strmake" return_type="fnptr" export="public">
 doc:		<summary>Address of Eiffel routine STRING.make to create Eiffel strings from C.</summary>
 doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
@@ -302,6 +315,21 @@ rt_public int egc_platform_level;
 		 * a unlocked version of the ISE Eiffel environment or not. If
 		 * it was not the case a message is displayed.
 		 */
+
+
+/*
+doc:	<attribute name="egc_rt_extension_notify" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine RT_EXTENSION.notify to notify event from C.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>RT_EXTENSION</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public int32 egc_rt_extension_dt;				/* E1/einit.c */
+rt_public void (*egc_rt_extension_notify)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
+rt_public EIF_TYPED_VALUE (*egc_rt_extension_notify_argument)(EIF_REFERENCE, EIF_TYPED_VALUE);
+#endif
 
 #ifdef __cplusplus
 }

@@ -524,6 +524,47 @@ feature -- Access
 			Result := current_eiffel_call_stack_element /= Void
 		end
 
+feature -- Execution replay
+
+	replay_recording: BOOLEAN
+
+	replay_activated: BOOLEAN
+
+	replay_depth_limit: INTEGER
+
+	replay_depth: INTEGER
+
+	set_replay_recording (b: BOOLEAN) is
+		require
+			stop_recording_only_if_not_replaying: b implies not replay_activated
+		do
+			replay_recording := b
+		end
+
+	set_replay_activated (b: BOOLEAN) is
+			--
+		require
+			activate_replay_only_if_recording: b implies replay_recording
+		do
+			replay_activated := b
+		end
+
+	set_replay_depth_limit (d: INTEGER) is
+			--
+		require
+			d_positive_or_zero: d >= 0
+		do
+			replay_depth_limit := d
+		end
+
+	set_replay_depth (d: INTEGER) is
+			--
+		require
+			d_in_range: d >= 0 and d <= replay_depth_limit
+		do
+			replay_depth := d
+		end
+
 feature -- Update
 
 	update_on_stopped_state is

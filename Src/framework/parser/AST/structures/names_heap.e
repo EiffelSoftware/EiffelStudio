@@ -337,6 +337,8 @@ feature {NONE} -- Implementation: access
 			put ("floor_real_32") check found_item = floor_real_32_name_id end
 			put ("floor_real_64") check found_item = floor_real_64_name_id end
 			put ("is_deep_equal") check found_item = is_deep_equal_name_id end
+			put ("notify") check found_item = notify_name_id end
+			put ("notify_argument") check found_item = notify_argument_name_id end
 		end
 
 invariant

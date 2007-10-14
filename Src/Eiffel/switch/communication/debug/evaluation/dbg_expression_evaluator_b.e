@@ -1124,16 +1124,12 @@ feature {NONE} -- EXPR_B evaluation
 
 	evaluate_external_b	(a_external_b: EXTERNAL_B) is
 		local
-			ti: TYPE_I
 			fi: FEATURE_I
 			cl: CLASS_C
 			params: ARRAYED_LIST [DUMP_VALUE]
 		do
 			if a_external_b.is_static_call then
-				ti := a_external_b.static_class_type
-				if ti /= Void then
-					cl := class_c_from_type_i (ti)
-				end
+				cl := class_c_from_external_b (a_external_b)
 			elseif on_class then
 				cl := context_class
 			end
@@ -1401,13 +1397,18 @@ feature {NONE} -- Concrete evaluation
 	retrieve_evaluation is
 			-- Get the effective evaluation's result and info
 		do
-			tmp_result_value       := Dbg_evaluator.last_result_value
-			tmp_result_static_type := Dbg_evaluator.last_result_static_type
-			if Dbg_evaluator.error_evaluation_message /= Void then
-				notify_error_evaluation (Dbg_evaluator.error_evaluation_message)
+			tmp_result_value       := dbg_evaluator.last_result_value
+			tmp_result_static_type := dbg_evaluator.last_result_static_type
+			if tmp_result_static_type = Void and tmp_result_value /= Void then
+				tmp_result_static_type := tmp_result_value.dynamic_class
 			end
-			if Dbg_evaluator.error_exception_message /= Void then
-				notify_error_evaluation (Dbg_evaluator.error_exception_message)
+
+			if dbg_evaluator.exception_occurred then
+				notify_error_exception (dbg_evaluator.error_exception_message)
+			end
+
+			if dbg_evaluator.error_but_exception_occurred then
+				notify_error_evaluation (dbg_evaluator.error_but_exception_message)
 			end
 		end
 
@@ -1426,10 +1427,8 @@ feature {NONE} -- Concrete evaluation
 		end
 
 	evaluate_once (f: FEATURE_I) is
-			--
 		require
 			feature_not_void: f /= Void
---			f_is_once: f.is_once
 		do
 			prepare_evaluation
 			Dbg_evaluator.evaluate_once (f)
@@ -1619,9 +1618,6 @@ feature -- Change Context
 		end
 
 	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type) is
-		require
---			f_not_void: f /= Void
---			c_not_void: c /= Void
 		local
 			l_reset_byte_node: BOOLEAN
 			c_c_t: CLASS_TYPE
@@ -1634,10 +1630,6 @@ feature -- Change Context
 					context_feature := f
 					l_reset_byte_node := True
 				end
-				if context_feature = Void then
-					context_feature := Default_context_feature
-				end
-
 				if not equal (context_class, c) then
 					context_class := c
 					l_reset_byte_node := True
@@ -1657,6 +1649,13 @@ feature -- Change Context
 				if context_class = Void and context_class_type /= Void then
 					context_class_type := Void
 					l_reset_byte_node := True
+				end
+
+				if context_feature = Void then
+					if not on_object then
+						l_reset_byte_node := True
+						context_feature := Default_context_feature
+					end
 				end
 				if l_reset_byte_node then
 						--| this means we will recompute the EXPR_B value according to the new context				
@@ -1878,6 +1877,11 @@ feature {NONE} -- Implementation
 									Ast_context.set_locals (l_ct_locals)
 								end
 							end
+						elseif on_object and then context_class /= Void then
+							l_cl := context_class
+							prepare_contexts (l_cl, Void)
+							System.set_current_class (l_cl)
+							ast_context.set_written_class (l_cl)
 						end
 							--| Compute and get `expression_byte_node'
 						internal_byte_node := byte_node_from_ast (dbg_expression.expression_ast)
@@ -1909,7 +1913,7 @@ feature {NONE} -- Implementation
 			-- compute expression_byte_node from EXPR_AS `exp'
 		require
 			exp_not_void: exp /= Void
-			context_feature_not_void: context_feature /= Void
+			context_feature_not_void: on_context implies context_feature /= Void
 		local
 			retried: BOOLEAN
 			type_check_succeed: BOOLEAN
@@ -2029,6 +2033,22 @@ feature {NONE} -- Compiler helpers
 						--| else giveup, no need to find an erroneous feature whic lead to debuggee crash
 					end
 				end
+			end
+		end
+
+	class_c_from_external_b (a_external_b: EXTERNAL_B): CLASS_C is
+			-- Class C related to `a_external_b' if exists.
+		require
+			a_expr_b_not_void: a_external_b /= Void
+		local
+			ti: TYPE_I
+		do
+			ti := a_external_b.static_class_type
+			if ti /= Void then
+				Result := class_c_from_type_i (ti)
+			elseif a_external_b.extension /= Void then
+				 -- try to find out the class thanks to extension
+				Result := Dbg_evaluator.class_c_from_external_b_with_extension (a_external_b)
 			end
 		end
 

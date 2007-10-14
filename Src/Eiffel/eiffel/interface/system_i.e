@@ -411,6 +411,7 @@ feature -- Properties
 			local_workbench.change_class (predicate_class)
 			local_workbench.change_class (typed_pointer_class)
 			local_workbench.change_class (type_class)
+			local_workbench.change_class (rt_extension_class)
 
 			if il_generation then
 				local_workbench.change_class (native_array_class)
@@ -479,6 +480,7 @@ feature -- Properties
 			predicate_class.compiled_class.record_precompiled_class_in_system
 			typed_pointer_class.compiled_class.record_precompiled_class_in_system
 			type_class.compiled_class.record_precompiled_class_in_system
+			rt_extension_class.compiled_class.record_precompiled_class_in_system
 
 			if il_generation then
 				native_array_class.compiled_class.record_precompiled_class_in_system
@@ -2132,6 +2134,8 @@ end
 			predicate_class.compiled_class.mark_class (marked_classes)
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
 			type_class.compiled_class.mark_class (marked_classes)
+
+			rt_extension_class.compiled_class.mark_class (marked_classes)
 
 			if il_generation then
 				native_array_class.compiled_class.mark_class (marked_classes)
@@ -4930,6 +4934,16 @@ feature -- Pattern table generation
 			buffer.put_string ("%Troot_obj = RTLNSMART(")
 			buffer.put_string ("egc_rcdt")
 			buffer.put_string (");%N")
+			if not final_mode then
+				buffer.put_string ("%Tif (egc_rt_extension_dt != -1) {")
+				buffer.put_new_line
+				buffer.put_string ("%T%Trt_extension_obj = RTLNSMART(")
+				buffer.put_string ("egc_rt_extension_dt")
+				buffer.put_string (");")
+				buffer.put_new_line
+				buffer.put_string ("%T};")
+				buffer.put_new_line
+			end
 
 			if final_mode then
 				if root_creation_name /= Void then
@@ -4944,16 +4958,16 @@ feature -- Pattern table generation
 			else
 				buffer.put_string (
 					"[
-						if (egc_rcorigin != -1) {
-							if (egc_rcarg) {
-								EIF_TYPED_VALUE u_args;
-								u_args.type = SK_REF;
-								u_args.it_r = argarr(argc, argv);
-								(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, u_args);
-							} else {
-								(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj);
+							if (egc_rcorigin != -1) {
+								if (egc_rcarg) {
+									EIF_TYPED_VALUE u_args;
+									u_args.type = SK_REF;
+									u_args.it_r = argarr(argc, argv);
+									(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, u_args);
+								} else {
+									(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj);
+								}
 							}
-						}
 					]"
 				)
 			end

@@ -104,6 +104,44 @@ extern struct dcall *dpop(void);						/* Pop value off stack */
 extern struct dcall *dtop(void);						/* Current top value */
 extern void dmove(int offset);							/* Move active routine cursor */
 
+#ifdef WORKBENCH
+
+/* RT addons in Eiffel */
+#define RTDBGD_ENTER_FEATURE_NOTIFICATION	1	/*  See {RT_EXTENSION}.Op_enter_feature */
+#define RTDBGD_LEAVE_FEATURE_NOTIFICATION	2	/*  See {RT_EXTENSION}.Op_leave_feature */ 
+#define RTDBGD_REPLAY_RECORD_NOTIFICATION	3	/*  See {RT_EXTENSION}.Op_exec_replay_record */
+#define RTDBGD_REPLAY_NOTIFICATION			4	/*  See {RT_EXTENSION}.Op_exec_replay */
+#define RTDBGD_REPLAY_QUERY_NOTIFICATION	5	/*  See {RT_EXTENSION}.Op_exec_replay_query */
+#define RTDBGD_OBJECT_STORAGE_SAVE			6	/*  See {RT_EXTENSION}.Op_object_storage_save */
+#define RTDBGD_OBJECT_STORAGE_LOAD			7	/*  See {RT_EXTENSION}.Op_object_storage_load */
+
+#define RT_REPLAY_RECORD	0	/* See {RT_EXTENSION}.Op_exec_replay_record */
+#define RT_REPLAY_BACK		1	/* See {RT_DBG_EXECUTION_RECORDER}.Direction_back */
+#define RT_REPLAY_FORTH		2	/* See {RT_DBG_EXECUTION_RECORDER}.Direction_forth */
+#define RT_REPLAY_LEFT		3	/* See {RT_DBG_EXECUTION_RECORDER}.Direction_left */
+#define RT_REPLAY_RIGHT		4	/* See {RT_DBG_EXECUTION_RECORDER}.Direction_right */
+
+/* Macro related to RT_ eiffel class and Execution replay
+ *  RT_ENTER_EIFFELCODE enter into RT_ Eiffel class code
+ *  RT_EXIT_EIFFELCODE  exit from RT_ Eiffel class code
+ *  RTDBGE	notify RT_ debugger when entering a feature
+ *  RTDBGL	notify RT_ debugger when leaving a feature
+ *  RTDBGR  notify RT_ debugger when entering a rescue clause
+ */
+
+extern void rt_ext_notify_event (int op, char* curr, int cid, int fid, int dep, char* pfn);
+		
+#define RT_ENTER_EIFFELCODE is_inside_rt_eiffel_code = 1;
+#define RT_EXIT_EIFFELCODE is_inside_rt_eiffel_code = 0;
+#define RTDBGE(cid,fid,curr,dep,fn)	\
+		rt_ext_notify_event (RTDBGD_ENTER_FEATURE_NOTIFICATION, curr, cid, fid, dep, fn);
+#define RTDBGL(cid,fid,curr,dep)	\
+		rt_ext_notify_event (RTDBGD_LEAVE_FEATURE_NOTIFICATION, curr, cid, fid, dep, (char*) NULL);
+#define RTDBGR(curr,dep)	\
+		rt_ext_notify_event (RTDBGD_ENTER_FEATURE_NOTIFICATION, curr, 0, 0, dep, (char*) NULL);
+
+#endif /* WORKBENCH */
+
 /* Breakpoint handling */
 extern void dbreak(EIF_CONTEXT int why);		/* Program execution stopped */
 

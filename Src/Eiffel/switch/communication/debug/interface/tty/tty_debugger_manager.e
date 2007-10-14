@@ -79,9 +79,9 @@ feature -- Output helpers
 			append_system_info (tty_output)
 		end
 
-	display_debugger_info is
+	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS) is
 		do
-			text_formatter_visitor.append_debugger_information (Current, tty_output)
+			text_formatter_visitor.append_debugger_information (Current, param, tty_output)
 		end
 
 feature -- output

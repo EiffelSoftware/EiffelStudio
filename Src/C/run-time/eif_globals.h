@@ -101,6 +101,10 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* interp.c */
 	unsigned char *IC_cx;				/* Interpreter Counter (like PC on a CPU) */
+
+		/* related to RT_... Eiffel class */
+	int is_inside_rt_eiffel_code_cx;
+
 #endif	/* WORKBENCH */
 
 		/* garcol.c */
@@ -175,23 +179,25 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
  */
 
 #ifdef WORKBENCH
-#define d_data				(eif_globals->d_data_cx)		/* rt_public */
-#define cop_stack			(eif_globals->cop_stack_cx)		/* rt_public */
+#define d_data						(eif_globals->d_data_cx)		/* rt_public */
+#define cop_stack					(eif_globals->cop_stack_cx)		/* rt_public */
+
+#define is_inside_rt_eiffel_code	(eif_globals->is_inside_rt_eiffel_code_cx)	/* rt_public */
 #endif
 
 #define eif_stack			(eif_globals->eif_stack_cx)	/* rt_public */
 #define exdata				(eif_globals->exdata_cx)	/* rt_public */
 
 #ifdef WORKBENCH
-#define IC					(eif_globals->IC_cx)			/* rt_public */
+#define IC							(eif_globals->IC_cx)			/* rt_public */
 #endif
 
 #define caller_assertion_level (eif_globals->caller_assertion_level_cx)	/* rt_public*/
 #define nstcall				(eif_globals->nstcall_cx)			/* rt_public */
 
-#define EIF_once_values		(eif_globals->EIF_once_values_cx)	/* rt_public */
-#define EIF_oms			(eif_globals->EIF_oms_cx)	/* rt_public */
-#define in_assertion		(eif_globals->in_assertion_cx)	/* rt_public */
+#define EIF_once_values			(eif_globals->EIF_once_values_cx)	/* rt_public */
+#define EIF_oms					(eif_globals->EIF_oms_cx)	/* rt_public */
+#define in_assertion			(eif_globals->in_assertion_cx)	/* rt_public */
 
 #ifdef ISE_GC
 #define loc_set				(eif_globals->loc_set_cx) /* rt_public */

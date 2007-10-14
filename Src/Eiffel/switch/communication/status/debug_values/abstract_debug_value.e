@@ -174,7 +174,7 @@ feature -- Output
 			valid_kind: Result >= Immediate_value and then Result <= Error_message_value
 		end
 
-feature {DUMP_VALUE, CALL_STACK_ELEMENT, DBG_EVALUATOR_IMP, ABSTRACT_DEBUG_VALUE, IPC_REQUEST}
+feature {DUMP_VALUE, CALL_STACK_ELEMENT, DBG_EVALUATOR, ABSTRACT_DEBUG_VALUE, IPC_REQUEST, OBJECT_ADDR}
 
 	set_hector_addr is
 			-- Convert the physical addresses received from the application

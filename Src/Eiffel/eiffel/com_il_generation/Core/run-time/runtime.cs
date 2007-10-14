@@ -292,6 +292,14 @@ feature -- Exceptions
 	}
 
 /*
+feature {NONE} -- RT Extension
+*/
+
+	[ThreadStatic]
+    public static RT_EXTENSION_I rt_extension_object;
+        // RT_EXTENSION object
+	
+/*
 feature {NONE} -- Implementation
 */
 	private static Hashtable assertion_levels;

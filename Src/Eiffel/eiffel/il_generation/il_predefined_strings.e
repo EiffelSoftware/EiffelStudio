@@ -13,6 +13,7 @@ feature -- Access
 	runtime_namespace: STRING is "EiffelSoftware.Runtime"
 	runtime_class_name: STRING is "EiffelSoftware.Runtime.ISE_RUNTIME"
 	assertions_class_name: STRING is "EiffelSoftware.Runtime.ASSERTIONS"
+	rt_extension_interface_name: STRING is "EiffelSoftware.Runtime.RT_EXTENSION_I"
 	type_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_TYPE"
 	type_array_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_TYPE[]"
 	generic_type_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_GENERIC_TYPE"

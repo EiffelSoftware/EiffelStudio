@@ -89,6 +89,10 @@ RT_LNK struct stack oms_set;	/* Once manifest strings */
 /* Exported data-structure declarations */
 RT_LNK EIF_REFERENCE root_obj;	/* Address of `root' object */	
 
+#ifdef WORKBENCH
+RT_LNK EIF_REFERENCE rt_extension_obj;	/* Address of `rt_extension' object */	
+#endif
+
 /* General-purpose exported functions */
 RT_LNK void plsc(void);					/* Partial scavenging */
 RT_LNK void reclaim(void);				/* Reclaim all the objects */

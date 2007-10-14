@@ -259,6 +259,21 @@ feature {NONE} -- Initialization
 			create quit_cmd.make (Current)
 			toolbarable_commands.extend (quit_cmd)
 
+			create toggle_exec_replay_recording_mode_cmd.make (Current)
+			toolbarable_commands.extend (toggle_exec_replay_recording_mode_cmd)
+			toggle_exec_replay_recording_mode_cmd.disable_sensitive
+
+			create toggle_exec_replay_mode_cmd.make (Current)
+			toolbarable_commands.extend (toggle_exec_replay_mode_cmd)
+			create exec_replay_back_cmd.make_back (Current)
+			toolbarable_commands.extend (exec_replay_back_cmd)
+			create exec_replay_forth_cmd.make_forth (Current)
+			toolbarable_commands.extend (exec_replay_forth_cmd)
+
+			toggle_exec_replay_mode_cmd.disable_sensitive
+			exec_replay_back_cmd.disable_sensitive
+			exec_replay_forth_cmd.disable_sensitive
+
 			step_cmd.enable_sensitive
 			into_cmd.enable_sensitive
 			out_cmd.enable_sensitive
@@ -343,6 +358,16 @@ feature -- Access
 
 	debug_run_cmd: EB_DEBUG_RUN_CMD
 		-- Command to run the project under debugger.
+
+	toggle_exec_replay_recording_mode_cmd: EB_DEBUG_TOGGLE_EXECUTION_REPLAY_RECORDING_MODE_CMD
+
+	toggle_exec_replay_mode_cmd: EB_DEBUG_TOGGLE_EXECUTION_REPLAY_MODE_CMD
+
+	exec_replay_back_cmd: EB_EXEC_DEBUG_REPLAY_CMD
+			-- Command that can exec replay back the execution
+
+	exec_replay_forth_cmd: EB_EXEC_DEBUG_REPLAY_CMD
+			-- Command that can exec replay forth the execution
 
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_AND_MENUABLE_COMMAND]
 			-- All commands that can be put in a toolbar.
@@ -501,6 +526,23 @@ feature -- tools management
 			Result.extend (l_item)
 			a_recycler.add_recyclable (l_item)
 			l_item := out_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.add_recyclable (l_item)
+
+				-- Separator.
+			create sep
+			Result.extend (sep)
+
+			l_item := toggle_exec_replay_recording_mode_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.add_recyclable (l_item)
+			l_item := toggle_exec_replay_mode_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.add_recyclable (l_item)
+			l_item := exec_replay_back_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.add_recyclable (l_item)
+			l_item := exec_replay_forth_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.add_recyclable (l_item)
 
@@ -886,16 +928,16 @@ feature -- Output
 			output_manager.display_system_info
 		end
 
-	display_debugger_info is
+	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS) is
 		do
-			text_formatter_visitor.append_debugger_information (Current, output_manager)
+			text_formatter_visitor.append_debugger_information (Current, param, output_manager)
 		end
 
 	display_system_status is
 		do
 			display_system_info
 			if application_is_executing then
-				display_debugger_info
+				display_debugger_info (application.parameters)
 			end
 		end
 
@@ -1013,6 +1055,74 @@ feature -- Status setting
 			then
 				unraise
 			end
+		end
+
+	update_execution_replay is
+			-- Update execution replay commands and widgets
+		local
+			xr: BOOLEAN
+			d, m: INTEGER
+		do
+			if safe_application_is_stopped then
+				xr := application_status.replay_activated
+				if xr then
+					d := application_status.replay_depth
+					m := application_status.replay_depth_limit
+					if 0 <= d and d <= m then
+						if d < m then
+							exec_replay_back_cmd.enable_sensitive
+						else
+							exec_replay_back_cmd.disable_sensitive
+						end
+						if 0 < d then
+							exec_replay_forth_cmd.enable_sensitive
+						else
+							exec_replay_forth_cmd.disable_sensitive
+						end
+					else
+						exec_replay_back_cmd.disable_sensitive
+						exec_replay_forth_cmd.disable_sensitive
+					end
+					if call_stack_tool /= Void then
+						call_stack_tool.set_execution_replay_level (d, m)
+					end
+				else
+					exec_replay_back_cmd.disable_sensitive
+					exec_replay_forth_cmd.disable_sensitive
+					if call_stack_tool /= Void then
+						call_stack_tool.set_execution_replay_level (0, 0)
+					end
+				end
+			end
+		end
+
+	activate_execution_replay_mode (b: BOOLEAN) is
+			-- Activate or Deactivate execution replay mode
+		local
+			dlim: INTEGER
+		do
+			if safe_application_is_stopped then
+				application.activate_execution_replay_mode (b)
+				dlim := application.status.replay_depth_limit
+			end
+			if b then
+				disable_debugging_commands (False)
+
+				toggle_exec_replay_recording_mode_cmd.disable_sensitive
+				toggle_exec_replay_mode_cmd.enable_sensitive
+			else
+				enable_debugging_commands
+
+				toggle_exec_replay_recording_mode_cmd.enable_sensitive
+				toggle_exec_replay_mode_cmd.enable_sensitive
+			end
+			if call_stack_tool /= Void then
+				call_stack_tool.activate_execution_replay_mode (b, dlim)
+				if b then
+					call_stack_tool.show
+				end
+			end
+			update_execution_replay
 		end
 
 	set_debugging_window (a_window: EB_DEVELOPMENT_WINDOW) is
@@ -1134,6 +1244,11 @@ feature -- Status setting
 				create object_viewer_cmd.make
 			end
 			object_viewer_cmd.enable_sensitive
+
+			if object_storage_management_cmd = Void then
+				create object_storage_management_cmd.make
+			end
+			object_storage_management_cmd.disable_sensitive
 
 				--| Grid Objects Tool
 			if objects_tool = Void then
@@ -1324,6 +1439,8 @@ feature -- Status setting
 			-- Make the debug tools disappear from `a_window'.
 		require
 			debugger_raised: raised
+			not_application_launching_in_progress: not application_launching_in_progress
+			not_application_is_executing: not application_is_executing
 		local
 			split: EV_SPLIT_AREA
 			l_unlock: BOOLEAN
@@ -1383,6 +1500,7 @@ feature -- Status setting
 			call_stack_tool.reset_tool
 			objects_tool.reset_tool
 			object_viewer_cmd.end_debug
+			object_storage_management_cmd.end_debug
 			if object_viewer_tool /= Void then
 				object_viewer_tool.reset_tool
 			end
@@ -1550,6 +1668,10 @@ feature -- Debugging events
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
 
+			toggle_exec_replay_recording_mode_cmd.disable_sensitive
+			toggle_exec_replay_mode_cmd.disable_sensitive
+			object_storage_management_cmd.disable_sensitive
+
 			assertion_checking_handler_cmd.reset
 
 			if dialog /= Void and then not dialog.is_destroyed then
@@ -1588,6 +1710,15 @@ feature -- Debugging events
 			into_cmd.enable_sensitive
 			set_critical_stack_depth_cmd.enable_sensitive
 			assertion_checking_handler_cmd.enable_sensitive
+
+			if is_classic_project then
+				toggle_exec_replay_recording_mode_cmd.enable_sensitive
+				if application_status.replay_recording then
+					toggle_exec_replay_mode_cmd.enable_sensitive
+				end
+			end
+			object_storage_management_cmd.enable_sensitive
+
 
 			debug ("debugger_interface")
 				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
@@ -1654,6 +1785,7 @@ feature -- Debugging events
 	on_application_before_resuming is
 		do
 			Precursor
+			toggle_exec_replay_mode_cmd.reset
 			objects_tool.record_grids_layout
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.record_grid_layout)
 		end
@@ -1675,6 +1807,10 @@ feature -- Debugging events
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
 			assertion_checking_handler_cmd.disable_sensitive
+
+			toggle_exec_replay_recording_mode_cmd.disable_sensitive
+			toggle_exec_replay_mode_cmd.disable_sensitive
+			object_storage_management_cmd.disable_sensitive
 
 			objects_tool.disable_refresh
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
@@ -1713,6 +1849,9 @@ feature -- Debugging events
 
 				--| Clean and reset debugging tools
 			reset_tools
+			assertion_checking_handler_cmd.reset
+			toggle_exec_replay_mode_cmd.reset
+			toggle_exec_replay_recording_mode_cmd.reset
 
 			if was_executing then
 					-- Make all debugging tools disappear.
@@ -1745,7 +1884,11 @@ feature -- Debugging events
 			out_cmd.disable_sensitive
 
 			set_critical_stack_depth_cmd.enable_sensitive
-			assertion_checking_handler_cmd.reset
+
+			toggle_exec_replay_mode_cmd.disable_sensitive
+			exec_replay_back_cmd.disable_sensitive
+			exec_replay_forth_cmd.disable_sensitive
+			object_storage_management_cmd.disable_sensitive
 
 			Precursor (was_executing)
 		end
@@ -1784,6 +1927,10 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
 feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY} -- Command
 
 	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
+			-- Command controlling the object viewer tools
+
+	object_storage_management_cmd: ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
+			-- Command controlling the remove object storage operation
 
 feature -- Options
 
@@ -1870,13 +2017,13 @@ feature {NONE} -- Implementation
 			if is_msil_dll_system then
 				disable_debugging_commands (True)
 			else
-				debug_cmd.enable_sensitive
-				no_stop_cmd.enable_sensitive
-
 				clear_bkpt.enable_sensitive
 				enable_bkpt.enable_sensitive
 				disable_bkpt.enable_sensitive
 				bkpt_info_cmd.enable_sensitive
+
+				debug_cmd.enable_sensitive
+				no_stop_cmd.enable_sensitive
 				assertion_checking_handler_cmd.disable_sensitive
 
 				options_cmd.enable_sensitive
@@ -1884,6 +2031,7 @@ feature {NONE} -- Implementation
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
 				out_cmd.disable_sensitive
+
 			end
 		end
 
@@ -1901,7 +2049,6 @@ feature {NONE} -- Implementation
 			out_cmd.disable_sensitive
 
 			assertion_checking_handler_cmd.disable_sensitive
-
 			options_cmd.disable_sensitive
 			exception_handler_cmd.disable_sensitive
 		end
@@ -1916,6 +2063,7 @@ feature {NONE} -- Implementation
 				disable_bkpt.disable_sensitive
 				bkpt_info_cmd.disable_sensitive
 				force_debug_mode_cmd.disable_sensitive
+				toggle_exec_replay_recording_mode_cmd.disable_sensitive
 			end
 
 			debug_cmd.disable_sensitive
@@ -1924,6 +2072,8 @@ feature {NONE} -- Implementation
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			assertion_checking_handler_cmd.disable_sensitive
+			toggle_exec_replay_mode_cmd.disable_sensitive
+			object_storage_management_cmd.disable_sensitive
 		end
 
 	change_critical_stack_depth is

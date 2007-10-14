@@ -263,8 +263,6 @@ feature {NONE} -- Observing event handling.
 		do
 			run_button.enable_sensitive
 			run_and_close_button.enable_sensitive
-			start_wb_button.enable_sensitive
-			start_final_button.enable_sensitive
 		end
 
 	on_application_launched (dbg: DEBUGGER_MANAGER) is
@@ -278,8 +276,6 @@ feature {NONE} -- Observing event handling.
 		do
 			run_button.disable_sensitive
 			run_and_close_button.disable_sensitive
-			start_wb_button.disable_sensitive
-			start_final_button.disable_sensitive
 		end
 
 	on_application_stopped (dbg: DEBUGGER_MANAGER) is
@@ -287,8 +283,6 @@ feature {NONE} -- Observing event handling.
 		do
 			run_button.enable_sensitive
 			run_and_close_button.enable_sensitive
-			start_wb_button.enable_sensitive
-			start_final_button.enable_sensitive
 		end
 
 invariant

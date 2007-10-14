@@ -12,15 +12,16 @@ class
 	DBG_EVALUATOR_DOTNET
 
 inherit
-	DBG_EVALUATOR_IMP
+	DBG_EVALUATOR
 		redefine
-			init,
-			error_code_to_message,
+			make,
 			effective_evaluate_function_with_name,
 			effective_evaluate_static_function,
 			address_from_basic_dump_value,
+			class_c_from_external_b_with_extension,
 			parameters_init,
-			parameters_reset
+			parameters_reset,
+			error_code_to_message
 		end
 
 	EIFNET_EXPORTER
@@ -34,8 +35,10 @@ create
 
 feature -- Concrete initialization
 
-	init is
+	make is
 			-- Retrieve new value for evaluation mecanism.
+		require else
+			is_dotnet_project: debugger_manager.is_dotnet_project
 		local
 			app: APPLICATION_EXECUTION_DOTNET
 		do
@@ -45,7 +48,7 @@ feature -- Concrete initialization
 			eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
 		end
 
-feature {DBG_EVALUATOR} -- Interface
+feature {NONE} -- Implementation
 
 	effective_evaluate_routine (addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
@@ -113,8 +116,8 @@ feature {DBG_EVALUATOR} -- Interface
 									exc_dv.set_tag (Debugger_names.msg_error_exception_occurred_during_evaluation (f.written_class.name_in_upper, f.feature_name, Void))
 									notify_error_exception (
 											Debugger_names.msg_error_exception_occurred_during_evaluation (
-												f.written_class.name_in_upper, 
-												f.feature_name, 
+												f.written_class.name_in_upper,
+												f.feature_name,
 												exc_dv.display_message
 											)
 										)
@@ -333,7 +336,7 @@ feature {DBG_EVALUATOR} -- Interface
 			end
 		end
 
-	effective_evaluate_once (f: FEATURE_I) is
+	effective_evaluate_once_function (f: FEATURE_I) is
 		local
 			l_class_c: CLASS_C
 			l_icd_value: ICOR_DEBUG_VALUE
@@ -454,6 +457,8 @@ feature {DBG_EVALUATOR} -- Interface
 			Result := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_dv>>, False, True)
 		end
 
+feature -- Query
+
 	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
 		local
 			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
@@ -479,6 +484,20 @@ feature {DBG_EVALUATOR} -- Interface
 		do
 			dump := dotnet_metamorphose_basic_to_value (a_target)
 			Result := dump.address
+		end
+
+	class_c_from_external_b_with_extension (a_external_b: EXTERNAL_B): CLASS_C is
+		local
+			exti: IL_EXTENSION_I
+			tk: INTEGER
+			n: STRING
+		do
+			exti ?= a_external_b.extension
+			if exti /= Void then
+					--| Dotnet system
+				n := exti.base_class
+				tk := exti.token
+			end
 		end
 
 feature {NONE} -- Parameters operation
@@ -604,6 +623,7 @@ feature {NONE} -- Bridge
 		do
 			Result := eifnet_debugger.new_active_frame
 		end
+
 feature {NONE} -- Error code id
 
 	Cst_error_unable_to_get_icd_function: INTEGER is 0x20
@@ -613,7 +633,7 @@ feature {NONE} -- Error code id
 			if a_code = Cst_error_unable_to_get_icd_function then
 				Result := Debugger_names.Cst_error_unable_to_get_icd_function
 			else
-				Result := Precursor {DBG_EVALUATOR_IMP} (a_code)
+				Result := Precursor {DBG_EVALUATOR} (a_code)
 			end
 		end
 
@@ -675,7 +695,7 @@ feature {NONE} -- Implementation
 			last_exception_trace := Void
 
 				--| Build the arguments for dotnet
-			l_icdv_args := prepared_parameters (a_params, True) --not is_external)
+			l_icdv_args := prepared_parameters (a_params, not is_external)
 			if not error_occurred then
 				debug ("debugger_trace_eval_data")
 					print (generating_type + ".dotnet_evaluate_icd_function: target ... %N")
@@ -684,8 +704,9 @@ feature {NONE} -- Implementation
 
 --| FIXME: bug#11255: Debugger gets it all wrong in .NET
 --| Might be related to first argument, or arguments count ...
-
-				l_icdv_args.put (target_icdv, l_icdv_args.lower) -- First arg is the obj on which the evaluation is done.
+				if not is_external then
+					l_icdv_args.put (target_icdv, l_icdv_args.lower) -- First arg is the obj on which the evaluation is done.					
+				end
 
 				l_icd_frame := current_icor_debug_frame
 				if l_icd_frame = Void then

@@ -113,11 +113,14 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_clear_breakpoints: INTEGER is 46
 			-- Clear breakpoints table from debuggee.
 
-	Rqst_dbg_Exception_trace: INTEGER is 47
+	Rqst_dbg_exception_trace: INTEGER is 47
 			-- Get dbg exception trace
 
 	Rqst_new_instance: INTEGER is 49
 			-- Create new instance of class
+
+	Rqst_rt_operation: INTEGER is 50
+			-- Invoke an `RT_EXTENSION' operation	
 
 feature {NONE} -- Resume
 
@@ -174,7 +177,31 @@ feature {NONE} -- Inspection constants
 	Out_once_per_process: INTEGER is 1
 			-- Precised that once is per process
 
---feature {APPLICATION_STATUS} -- Implementation
+feature -- Rt operations
+
+	Rtop_option: INTEGER 				= 0
+			-- See rqst_constant.h
+	Rtop_exec_replay: INTEGER 			= 1
+			-- See rqst_constant.h	
+	Rtop_dump_rt_object: INTEGER 		= 2
+			-- See rqst_constant.h	
+	Rtop_object_storage_save: INTEGER 	= 3
+			-- See rqst_constant.h	
+	Rtop_object_storage_load: INTEGER 	= 4
+			-- See rqst_constant.h	
+
+	Rtop_exec_replay_record: INTEGER 	= 0
+			-- See {RT_EXTENSION}.Op_exec_replay_record
+	Rtop_exec_replay_back: INTEGER 		= 1
+			-- See {RT_DBG_EXECUTION_RECORDER}.Direction_back
+	Rtop_exec_replay_forth: INTEGER 	= 2
+			-- See {RT_DBG_EXECUTION_RECORDER}.Direction_forth			
+	Rtop_exec_replay_left: INTEGER 		= 3
+			-- See {RT_DBG_EXECUTION_RECORDER}.Direction_left
+	Rtop_exec_replay_right: INTEGER 	= 4
+			-- See {RT_DBG_EXECUTION_RECORDER}.Direction_right	
+
+feature {APPLICATION_STATUS} -- Implementation
 
 --	Pg_raise: INTEGER is 1
 --			-- Explicitely raised exception

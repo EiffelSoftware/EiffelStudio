@@ -66,6 +66,8 @@
 #include "rt_struct.h"
 #include "rt_globals.h"
 #include "rt_main.h" 	/* For debug_mode. */
+#include "eif_local.h"	/* For epop() */
+#include "eif_debug.h"	/* For rt addons */
 
 #ifndef WORKBENCH
 This module should not be compiled in non-workbench mode
@@ -89,6 +91,11 @@ rt_private void obj_inspect(EIF_OBJ object);
 rt_private void bit_inspect(EIF_OBJ object);
 rt_private void string_inspect(EIF_OBJ object);		/* String object inspection */
 rt_private void load_bc(int slots, int amount);		/* Load byte code information */
+rt_private int dexecreplay(int dir, int steps);	/* ... */
+rt_private int dexecreplay_levels(int dir);		/* ... */
+rt_private void dobjectstorage_save(EIF_PSTREAM sp);				/* Save object to file */
+rt_private void dobjectstorage_load(EIF_PSTREAM sp);				/* Load stored object from file */
+
 rt_private long sp_lower, sp_upper;					/* Special objects' bounds to be inspected */
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
 
@@ -124,6 +131,7 @@ rt_private EIF_TYPED_VALUE *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
 rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, int typeid);
+rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp);
 rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
 extern EIF_TYPED_VALUE *dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
@@ -229,9 +237,15 @@ static int curr_modify = NO_CURRMODIF;
 		dthread_restore();
 		break;
 	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=dynamic_type / arg4=is_external / arg5=is_precompiled / arg6=is_basic_type / arg7=is_static_call */
-		dthread_prepare();
-		dynamic_evaluation(sp, arg_1, arg_2, arg_3, (arg_4 >> 1) & 1, (arg_4 >> 2) & 1, (arg_4 >> 3) & 1);
-		dthread_restore();
+		{
+			int b;
+			b = exec_recording_enabled;
+			exec_recording_enabled = 0;
+			dthread_prepare();
+			dynamic_evaluation(sp, arg_1, arg_2, arg_3, (arg_4 >> 1) & 1, (arg_4 >> 2) & 1, (arg_4 >> 3) & 1);
+			dthread_restore();
+			exec_recording_enabled = b;
+		}
 		break;
 	case NEW_INSTANCE:
 		dbg_new_instance_of_type (sp, (int) arg_1);
@@ -263,8 +277,43 @@ static int curr_modify = NO_CURRMODIF;
 		curr_modify = NO_CURRMODIF;
 		dthread_restore();
 		break;
-	case MOVE:			/* Change active routine */
-		dmove(arg_1);
+	case RT_OPERATION:
+		dthread_prepare();
+		switch (arg_1) {
+			case RT_REPLAY:
+				/*    arg_2: record; arg_3: value */
+				/* or arg_2: up,down,left,right; arg_3: steps */
+				{
+					if (arg_2 == RT_REPLAY_RECORD) {
+						dexecreplay(RT_REPLAY_RECORD, arg_3);
+					} else if (arg_3 == 0) { /* no steps .. then this is a question */
+						int l = 0;
+						l = dexecreplay_levels(arg_2);
+						app_twrite (&l, sizeof(int));
+					} else {
+						EIF_BOOLEAN b = EIF_FALSE;
+						b = EIF_TEST(dexecreplay(arg_2, arg_3) == 1);; 
+						app_twrite (&b, sizeof(EIF_BOOLEAN));
+					};
+				};
+				break;
+			case RT_DUMP_OBJECT:
+				dbg_dump_rt_extension_object(sp);
+				break;
+			case RT_OBJECT_STORAGE_SAVE:
+				dobjectstorage_save (sp);
+				break;
+			case RT_OBJECT_STORAGE_LOAD:
+				dobjectstorage_load (sp);
+				break;
+			default:
+				break;
+		}
+		dthread_restore();
+		break;
+	case MOVE:			
+			/* Change active routine */
+		 dmove(arg_1);
 		break;
 	case CLEAR_BREAKPOINTS:				/* Clear breakpoints table */
 		dbreak_clear_table();
@@ -502,6 +551,233 @@ rt_shared void dnotify(int evt_type, int evt_data)
 		return ;			/* Resume execution immediately */
 	notify_rqst(app_sp, evt_type, evt_data);		/* Notify workbench we stopped */
 }
+
+
+/**************************************
+ * RT_EXTENSION interactions          *
+ **************************************/
+
+#define rtd_arg_value(x,i,t) ((EIF_TYPED_VALUE *)x.it_r + i)->it_ ## t
+
+rt_private EIF_TYPED_VALUE dinvoke_rt_extension_argument (int op)
+{
+	EIF_TYPED_VALUE rtd_op = {op, SK_INT32}; 
+	return (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);
+}
+
+rt_private void dinvoke_rt_extension (int op, EIF_TYPED_VALUE rtd_arg)
+{
+	EIF_TYPED_VALUE rtd_op = {op, SK_INT32};
+	(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);
+}
+
+rt_private int dexecreplay_levels (int dir) 
+	/* 
+	 * Return the potential steps in the direction `dir'
+	 */
+{
+	EIF_TYPED_VALUE rtd_arg;						
+	EIF_GET_CONTEXT;
+	switch (dir) {
+		case RT_REPLAY_BACK:
+		case RT_REPLAY_FORTH:
+			CHECK("Execution recording must be on", exec_recording_enabled == 1);	
+			CHECK("is_inside_rt_eiffel_code should be False", is_inside_rt_eiffel_code != 0);	
+			RT_ENTER_EIFFELCODE; /* Stop the recording */
+			rtd_arg = dinvoke_rt_extension_argument (RTDBGD_REPLAY_QUERY_NOTIFICATION);
+			rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) dir; 	/* back,forth,... */
+			dinvoke_rt_extension (RTDBGD_REPLAY_QUERY_NOTIFICATION, rtd_arg);
+			RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
+			return (int) rtd_arg_value(rtd_arg, 2, i4);
+			break;
+		case RT_REPLAY_LEFT:
+			/* Direction not yet supported */
+		case RT_REPLAY_RIGHT:
+			/* Direction not yet supported */
+		default:
+			return 0;
+			break;
+	}
+}
+
+rt_private int dexecreplay (int op, int val) 
+	/* Execution replay
+	 * if op is RT_REPLAY_RECORD then (de)activate recording according to `val'
+	 * else `op' is a direction
+	 * op = back,forth,left,right
+	 * val: nb of steps in the direction `op'
+	 */
+{
+	EIF_TYPED_VALUE rtd_arg;
+	EIF_GET_CONTEXT;
+	switch (op) {
+		case RT_REPLAY_RECORD:
+			if (rt_extension_obj == NULL) {
+					/* Do not enable exec recording if `rt_extension_obj' is not available ! */
+				exec_recording_enabled = 0;
+			} else {
+				exec_recording_enabled = ((int) val == 1)?1:0;
+				RT_ENTER_EIFFELCODE; /* Stop the recording */
+				rtd_arg = dinvoke_rt_extension_argument (RTDBGD_REPLAY_RECORD_NOTIFICATION);
+				rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) exec_recording_enabled; /* 1=True or not_1=False */
+				dinvoke_rt_extension (RTDBGD_REPLAY_RECORD_NOTIFICATION, rtd_arg);
+				RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
+			}
+			break;
+		case RT_REPLAY_BACK:
+		case RT_REPLAY_FORTH:
+			CHECK("Execution recording must be on", exec_recording_enabled == 1);	
+			CHECK("is_inside_rt_eiffel_code should be False", is_inside_rt_eiffel_code != 0);	
+			RT_ENTER_EIFFELCODE; /* Stop the recording */
+			rtd_arg = dinvoke_rt_extension_argument (RTDBGD_REPLAY_NOTIFICATION);
+			rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) op; 	/* back,forth,... */
+			rtd_arg_value(rtd_arg, 2, i4) = (EIF_INTEGER_32) val; 	/* nb steps */
+			dinvoke_rt_extension (RTDBGD_REPLAY_NOTIFICATION, rtd_arg);
+			RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
+			return (int) rtd_arg_value(rtd_arg, 2, i4);
+			break;
+		case RT_REPLAY_LEFT:
+		case RT_REPLAY_RIGHT:
+		default:
+			return -1;
+			break;
+	}
+	return 1;
+}
+
+rt_private void dobjectstorage_save (EIF_PSTREAM sp)
+{
+	EIF_TYPED_VALUE *ip = NULL;
+	Request rqst;			/* Loading request */
+	char *s;
+	EIF_TYPED_VALUE *pv = NULL;
+
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+
+		/* Get and pop last value */
+	pv = opop();
+
+	/* Get file name */
+	Request_Clean (rqst);
+	/* Get request */
+#ifdef EIF_WINDOWS
+	if (-1 == app_recv_packet(sp, &rqst, TRUE)) 
+#else
+	if (-1 == app_recv_packet(sp, &rqst))
+#endif
+	{
+		send_ack(sp, AK_ERROR);		/* Protocol error */
+		return;
+	}
+	if (rqst.rq_type == DUMPED && rqst.rq_dump.dmp_type == DMP_ITEM) {
+		ip = rqst.rq_dump.dmp_item;
+		if ((ip != NULL) && (ip->type & SK_HEAD) == SK_STRING) {
+			s = (char*) ip->it_ref;
+		}
+		ip = NULL;
+	}
+	if (s == NULL) {
+		send_ack(sp, AK_ERROR);		/* Protocol error */
+		return;
+	} else if (rt_extension_obj == NULL) {
+		send_ack(sp, AK_ERROR); 	/* rt_extension_obj is not available */
+		return;
+	} else {
+		/* Call RT_EXTENSION */
+		EIF_TYPED_VALUE rtd_arg;						
+		EIF_BOOLEAN b = EIF_FALSE;
+		send_ack(sp, AK_OK);
+		RT_ENTER_EIFFELCODE; /* Stop the recording */
+		rtd_arg = dinvoke_rt_extension_argument (RTDBGD_OBJECT_STORAGE_SAVE);	/* Obj Storage Save */
+		rtd_arg_value(rtd_arg, 1, r) = (EIF_REFERENCE) (pv->item.r); 			/* Object 			*/
+		rtd_arg_value(rtd_arg, 2, p) = s;									 	/* Filename 		*/
+		dinvoke_rt_extension (RTDBGD_OBJECT_STORAGE_SAVE, rtd_arg);
+		RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
+		b = EIF_TEST((int) (rtd_arg_value(rtd_arg, 3, i4) == 1));
+		app_twrite (&b, sizeof(EIF_BOOLEAN));
+	};
+}
+
+rt_private void dobjectstorage_load (EIF_PSTREAM sp)
+{
+	EIF_TYPED_VALUE *ip = NULL;
+	Request rqst;			/* Loading request */
+	char *s;
+	EIF_TYPED_VALUE *pv = NULL;
+	struct dump dumped;			/* Item returned */
+	EIF_REFERENCE tmp = NULL;
+
+
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+
+		/* Get and pop last value */
+	pv = opop();
+
+	/* Get file name */
+	Request_Clean (rqst);
+	/* Get request */
+#ifdef EIF_WINDOWS
+	if (-1 == app_recv_packet(sp, &rqst, TRUE)) 
+#else
+	if (-1 == app_recv_packet(sp, &rqst))
+#endif
+	{
+		send_ack(sp, AK_ERROR);		/* Protocol error */
+		return;
+	}
+	if (rqst.rq_type == DUMPED && rqst.rq_dump.dmp_type == DMP_ITEM) {
+		ip = rqst.rq_dump.dmp_item;
+		if ((ip != NULL) && (ip->type & SK_HEAD) == SK_STRING) {
+			s = (char*) ip->it_ref;
+		}
+		ip = NULL;
+	}
+	if (s == NULL) {
+		send_ack(sp, AK_ERROR);		/* Protocol error */
+		return;
+	} else if (rt_extension_obj == NULL) {
+		send_ack(sp, AK_ERROR); 	/* rt_extension_obj is not available */
+		return;
+	} else {
+		/* Call RT_EXTENSION */
+		EIF_TYPED_VALUE rtd_arg;						
+		EIF_BOOLEAN b = EIF_FALSE;
+		send_ack(sp, AK_OK);
+		RT_ENTER_EIFFELCODE; /* Stop the recording */
+		rtd_arg = dinvoke_rt_extension_argument (RTDBGD_OBJECT_STORAGE_LOAD);	/* Obj Storage Load */
+		rtd_arg_value(rtd_arg, 1, r) = (EIF_REFERENCE) (pv->item.r); 			/* Object 			*/
+		rtd_arg_value(rtd_arg, 2, p) = s;									 	/* Filename 		*/
+		dinvoke_rt_extension (RTDBGD_OBJECT_STORAGE_LOAD, rtd_arg);
+		RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
+		tmp = (EIF_REFERENCE) rtd_arg_value(rtd_arg, 1, r);
+	}
+
+	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
+	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
+	if (tmp != NULL) {
+		ip->it_ref = (EIF_REFERENCE) tmp;
+		ip->type = SK_REF | Dtype(ip->it_ref);
+	} else {
+		ip->it_ref = (EIF_REFERENCE) 0;
+		ip->type = SK_VOID;
+	}
+
+	Request_Clean (rqst);
+	rqst.rq_type = DUMPED;			/* A dumped stack item */
+	dumped.dmp_type = DMP_ITEM;		/* We are dumping a variable */
+	dumped.dmp_item = ip;
+	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
+	app_send_packet(sp, &rqst);		/* Send to network */
+}
+
+#undef rtd_arg_value
+
+/*                                      *
+ * End of RT_EXTENSION interactions     *
+ ****************************************/
+
 
 /* Encapsulate the 'modify_local' function */
 rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, EIF_TYPED_VALUE *ip)
@@ -1600,6 +1876,34 @@ rt_private EIF_BOOLEAN app_recv_ack (EIF_PSTREAM sp)
 	}
 }
 
+rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp)
+{
+	/* Dump the rt_extension_obj */
+
+	EIF_TYPED_VALUE *ip = NULL;
+	Request rqst;				/* What we receive and send back */
+	struct dump dumped;			/* Item returned */
+	EIF_REFERENCE tmp = NULL;
+
+	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
+	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
+	tmp = rt_extension_obj;
+	if (tmp != NULL) {
+		ip->it_ref = (EIF_REFERENCE) tmp;
+		ip->type = SK_REF | Dtype(ip->it_ref);
+	} else {
+		ip->it_ref = (EIF_REFERENCE) 0;
+		ip->type = SK_VOID;
+	}
+
+	Request_Clean (rqst);
+	rqst.rq_type = DUMPED;			/* A dumped stack item */
+	dumped.dmp_type = DMP_ITEM;		/* We are dumping a variable */
+	dumped.dmp_item = ip;
+	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
+	app_send_packet(sp, &rqst);		/* Send to network */
+}
+
 rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 {
 	/* Must be the typeid of a Reference class */
@@ -1733,5 +2037,6 @@ rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid)
 		app_twrite(buf, strlen(buf));
 	}
 }
+
 
 

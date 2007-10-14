@@ -597,7 +597,11 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 						 * from Estudio, we can avoid the execution of this declaration
  						 * when the application is started from the command line
  						 */
-		if (!d_data.db_discard_breakpoints) {
+		if (
+				!d_data.db_discard_breakpoints
+				&& !is_inside_rt_eiffel_code
+				) 
+		{
 			int stopped = 0;
 			BODY_INDEX bodyid = exvect->ex_bodyid;
 
@@ -671,7 +675,9 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	   					* when the application is started from the command line
 	   					*/
 
-		if (!d_data.db_discard_breakpoints) {
+		if (!d_data.db_discard_breakpoints
+				&& !is_inside_rt_eiffel_code) 
+		{
 			BODY_INDEX bodyid = exvect->ex_bodyid;
 			DBGMTX_LOCK;	/* Enter critical section */
 				
@@ -2110,6 +2116,34 @@ rt_public void c_wipe_out(register struct c_stochunk *chunk)
 	)
 		eif_rt_xfree((char *) chunk);
 }
+
+/*
+ * RT_EXTENSION interaction for debugging
+ */
+#ifdef WORKBENCH
+rt_public void rt_ext_notify_event (int op, char* curr, int cid, int fid, int dep, char* pfn)
+{
+	EIF_GET_CONTEXT
+	if (exec_recording_enabled == 1 && is_inside_rt_eiffel_code != 1) {	
+		EIF_TYPED_VALUE rtd_arg;						
+		EIF_TYPED_VALUE rtd_op = {op, SK_INT32};		
+		EIF_REFERENCE rtd_str = NULL;					
+		RT_ENTER_EIFFELCODE;								
+		rtd_arg = (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);	
+		((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r = ((EIF_REFERENCE) curr); 	
+		((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) cid); 	
+		((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) fid); 	
+		((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) dep); 
+		if (op == RTDBGD_ENTER_FEATURE_NOTIFICATION) {
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_p = pfn;
+		};
+		(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
+		RT_EXIT_EIFFELCODE;
+	};	
+}
+
+
+#endif
 
 /*
 doc:</file>

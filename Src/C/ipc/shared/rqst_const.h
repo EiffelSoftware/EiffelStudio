@@ -89,8 +89,9 @@
 #define DBG_EXCEPTION_TRACE 47	/* Get exception trace by id */
 #define APPLICATION_ENV	48		/* Send current env to launch application */
 #define NEW_INSTANCE	49		/* Create new instance of class */
+#define RT_OPERATION	50		/* Invoke an `RT_EXTENSION' operation */
 
-#define MAX_REQUEST_TYPE 49		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 50		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */
@@ -116,6 +117,13 @@
 
 #define OUT_ONCE_PER_THREAD		0 /* Asked Once is per thread */
 #define OUT_ONCE_PER_PROCESS	1 /* Asked Once is per process */
+
+/* RT_EXTENSION access constants related to RT_OPERATION request */
+#define RT_OPTION				0
+#define RT_REPLAY				1
+#define RT_DUMP_OBJECT			2
+#define RT_OBJECT_STORAGE_SAVE	3
+#define RT_OBJECT_STORAGE_LOAD	4
 
 /* Special object inspection */
 #define DEFAULT_SLICE	50		/* Default maximum number of items to be sent */

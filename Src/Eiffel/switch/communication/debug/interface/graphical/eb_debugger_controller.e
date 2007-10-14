@@ -24,11 +24,11 @@ inherit
 
 	EB_SHARED_MANAGERS
 
-feature
+feature -- Aspects
 
-	before_starting is
+	before_starting (param: DEBUGGER_EXECUTION_PARAMETERS) is
 		do
-			Precursor
+			Precursor (param)
 			if not manager.application_is_executing then
 				output_manager.clear_general
 			end
@@ -36,13 +36,13 @@ feature
 			output_manager.add_string ("Launching system :")
 			output_manager.add_new_line
 			output_manager.add_comment ("  - directory = ")
-			output_manager.add_quoted_text (param_working_directory)
+			output_manager.add_quoted_text (param.working_directory)
 			output_manager.add_new_line
 			output_manager.add_comment_text ("  - arguments = ")
-			if param_arguments.is_empty then
+			if param = Void or else param.arguments.is_empty then
 				output_manager.add_string ("<Empty>")
 			else
-				output_manager.add_quoted_text (param_arguments)
+				output_manager.add_quoted_text (param.arguments)
 			end
 --| For now useless since the output panel display those info just a few nanoseconds ...
 --			if environment_vars /= Void and then not environment_vars.is_empty then

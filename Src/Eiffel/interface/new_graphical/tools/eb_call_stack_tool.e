@@ -88,6 +88,10 @@ feature {NONE} -- Initialization
 			set_row_unsensitive_fg_color_agent := agent set_row_unsensitive_fg_color
 			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.extend (set_row_unsensitive_fg_color_agent)
 
+			row_replayable_bg_color := Preferences.debug_tool_data.row_replayable_background_color
+			set_row_replayable_bg_color_agent := agent set_row_replayable_bg_color
+			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.extend (set_row_replayable_bg_color_agent)
+
 				--| UI structure			
 			create box
 			create box2
@@ -95,6 +99,9 @@ feature {NONE} -- Initialization
 			box2.set_padding (3)
 
 			special_label_col := (create {EV_STOCK_COLORS}).blue
+				--| Replay control box
+			build_box_replay_controls
+
 				--| Thread box
 			create box_thread
 
@@ -165,6 +172,10 @@ feature {NONE} -- Initialization
 
 			box2.extend (box_exception)
 			box2.disable_item_expand (box_exception)
+
+			box2.extend (box_replay_controls)
+			box2.disable_item_expand (box_replay_controls)
+			activate_execution_replay_mode (False, 0)
 
 			box.extend (box2)
 			box.disable_item_expand (box2)
@@ -257,6 +268,13 @@ feature {NONE} -- Initialization
 			set_stack_depth_cmd.enable_sensitive
 			mini_toolbar.extend (set_stack_depth_cmd.new_mini_sd_toolbar_item)
 
+			if eb_debugger_manager.toggle_exec_replay_recording_mode_cmd /= Void then
+				mini_toolbar.extend (eb_debugger_manager.toggle_exec_replay_recording_mode_cmd.new_mini_sd_toolbar_item)
+			end
+			if eb_debugger_manager.toggle_exec_replay_mode_cmd /= Void then
+				mini_toolbar.extend (eb_debugger_manager.toggle_exec_replay_mode_cmd.new_mini_sd_toolbar_item)
+			end
+
 			mini_toolbar.compute_minimum_size
 		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
@@ -267,6 +285,9 @@ feature -- Box management
 	box_thread: EV_HORIZONTAL_BOX
 	box_stop_cause: EV_HORIZONTAL_BOX
 
+	box_replay_controls: EV_HORIZONTAL_BOX
+	replay_controls_label: EV_LABEL
+
 	display_box_thread (b: BOOLEAN) is
 			-- Show or hide box related to available Thread ids
 		do
@@ -274,6 +295,95 @@ feature -- Box management
 				box_thread.show
 			else
 				box_thread.hide
+			end
+		end
+
+	build_box_replay_controls is
+		local
+			tb: SD_TOOL_BAR
+		do
+			create box_replay_controls
+			create tb.make
+			box_replay_controls.extend (tb)
+			tb.extend (eb_debugger_manager.exec_replay_back_cmd.new_sd_toolbar_item (True))
+			tb.extend (eb_debugger_manager.exec_replay_forth_cmd.new_sd_toolbar_item (True))
+			create replay_controls_label
+			box_replay_controls.extend (replay_controls_label)
+			box_replay_controls.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (210,250,190))
+			box_replay_controls.propagate_background_color
+			tb.compute_minimum_size
+		end
+
+feature -- Execution replay
+
+	execution_replay_activated: BOOLEAN
+			-- Is Execution replay activated ?
+
+	execution_replay_depth_limit_level: INTEGER
+			-- Maximal depth level
+
+	activate_execution_replay_mode (b: BOOLEAN; deplim: INTEGER) is
+			-- Enable or disable execution replay
+		local
+			i,n: INTEGER
+			r: EV_GRID_ROW
+		do
+			execution_replay_activated := b
+			execution_replay_depth_limit_level := deplim
+			if b and then not box_replay_controls.is_show_requested then
+				box_replay_controls.show
+				replay_controls_label.set_text ("../" + deplim.out)
+			else
+				replay_controls_label.remove_text
+				box_replay_controls.hide
+			end
+			marked_level := 1
+			if stack_grid /= Void then
+				stack_grid.remove_selection
+				from
+					i := 1
+				until
+					i > stack_grid.row_count
+				loop
+					r := stack_grid.row (i)
+					if r.parent_row = Void then
+					else
+						r := r.parent_row_root
+						i := r.index
+					end
+					n := n - 1
+					refresh_stack_grid_row (r, arrowed_level)
+					i := i + 1
+				end
+			end
+		end
+
+	set_execution_replay_level (dep: INTEGER; deplim: INTEGER) is
+		require
+			app_is_stopped: debugger_manager.safe_application_is_stopped
+			in_range: deplim > 0 implies dep <= deplim
+		local
+			dbg: like debugger_manager
+			li, m: INTEGER
+		do
+			dbg := debugger_manager
+			replay_controls_label.set_text ((1 + dep).out + "/" + (1 + deplim).out)
+			replay_controls_label.refresh_now
+			if stack_grid /= Void then
+				stack_grid.remove_selection
+			end
+			if deplim = 0 then
+				li := 1
+			else
+				li := (1 + dep).min (stack_grid.row_count) --| Fixme				
+			end
+			if li > 0 then
+				m := marked_level
+				marked_level := li
+				select_element_by_level (li)
+				refresh_stack_grid_row (row_for_level (m), li)
+			else
+				marked_level := 0
 			end
 		end
 
@@ -402,8 +512,6 @@ feature -- Memory management
 		do
 			reset_update_on_idle
 
-			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
-			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.prune_all (set_row_unsensitive_fg_color_agent)
 
 			exception.remove_text
 			exception.remove_tooltip
@@ -424,9 +532,27 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			reset_tool
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
+			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.prune_all (set_row_unsensitive_fg_color_agent)
+			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.prune_all (set_row_replayable_bg_color_agent)
 		end
 
 feature {NONE} -- Grid Implementation
+
+	row_for_level (a_level: INTEGER): EV_GRID_ROW is
+			-- Call stack row related to `a_level'.
+		local
+			level_r: INTEGER_REF
+		do
+			Result := stack_grid.grid_ith_top_row (stack_grid, a_level)
+			level_r ?= Result.data
+			if level_r /= Void then
+				if a_level /= level_r.item then
+					check should_not_occured: False end
+					Result := Void
+				end
+			end
+		end
 
 	level_from_row (a_row: EV_GRID_ROW): INTEGER is
 			-- Call stack level related to `a_row'.
@@ -501,6 +627,10 @@ feature {NONE} -- Implementation
 	arrowed_level: INTEGER
 			-- Line number in the stack that has an arrow displayed.
 
+	marked_level: INTEGER
+			-- Line number in the stack that has an arrow marked.
+			-- i.e: for replayed level cursor
+
 	save_call_stack_cmd: EB_STANDARD_CMD
 			-- Command that saves the call stack to a file.
 
@@ -528,11 +658,8 @@ feature {NONE} -- Implementation
 			-- Display current execution status.
 			-- dbg_was_stopped is ignore if Application/Debugger is not running			
 		local
-			i: INTEGER
-			stack: EIFFEL_CALL_STACK
-			l_tooltipable_grid_row: EV_GRID_ROW
-			glab: EV_GRID_LABEL_ITEM
 			l_status: APPLICATION_STATUS
+			stack: EIFFEL_CALL_STACK
 		do
 			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
 			request_clean_stack_grid
@@ -549,39 +676,56 @@ feature {NONE} -- Implementation
 				if
 					dbg_was_stopped and l_status.is_stopped
 				then
-					clean_stack_grid
 					stack := l_status.current_call_stack
-					if stack /= Void and then not stack.is_empty then
-						save_call_stack_cmd.enable_sensitive
-						copy_call_stack_cmd.enable_sensitive
-						from
-							stack.start
-							stack_grid.insert_new_rows (stack.count, 1)
-							i := 1
-						until
-							stack.after
-						loop
-							attach_element_to_row (stack.item, i, stack_grid.row (i))
-							if not stack.item.is_eiffel_call_stack_element then
-								stack_grid.row (i).disable_select
-							end
-							i := i + 1
-							stack.forth
-						end
-						if l_status.is_stopped then
-							select_element_by_level (1)
-						end
-					else
-						l_tooltipable_grid_row := stack_grid.grid_extended_new_row (stack_grid)
-						create glab.make_with_text ("Unable to get call stack data")
-						glab.set_tooltip ("Double click to refresh call stack")
-						glab.set_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
-						glab.pointer_double_press_actions.force_extend (agent update)
-						l_tooltipable_grid_row.set_item (1, glab)
+					fill_stack_grid_with (stack)
+					if l_status.is_stopped
+						and then stack /= Void
+						and then not stack.is_empty
+					then
+						select_element_by_level (1)
 					end
-					stack_grid.request_columns_auto_resizing
 				end
 			end
+		end
+
+	fill_stack_grid_with (stack: EIFFEL_CALL_STACK) is
+			-- Fill the satck_grid with `stack' data
+		local
+			g: ES_GRID
+			l_tooltipable_grid_row: EV_GRID_ROW
+			glab: EV_GRID_LABEL_ITEM
+			i: INTEGER
+		do
+			clean_stack_grid
+			g := stack_grid
+			if stack /= Void and then not stack.is_empty then
+				save_call_stack_cmd.enable_sensitive
+				copy_call_stack_cmd.enable_sensitive
+				from
+					stack.start
+					g.insert_new_rows (stack.count, 1)
+					i := 1
+				until
+					stack.after
+				loop
+					attach_element_to_row (stack.item, i, stack_grid.row (i))
+					if not stack.item.is_eiffel_call_stack_element then
+						stack_grid.row (i).disable_select
+					end
+					i := i + 1
+					stack.forth
+				end
+			else
+				save_call_stack_cmd.disable_sensitive
+				copy_call_stack_cmd.disable_sensitive
+				l_tooltipable_grid_row := g.grid_extended_new_row (g)
+				create glab.make_with_text ("Unable to get call stack data")
+				glab.set_tooltip ("Double click to refresh call stack")
+				glab.set_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
+				glab.pointer_double_press_actions.force_extend (agent update)
+				l_tooltipable_grid_row.set_item (1, glab)
+			end
+			stack_grid.request_columns_auto_resizing
 		end
 
 	display_stop_cause (arg_is_stopped: BOOLEAN) is
@@ -901,28 +1045,37 @@ feature {NONE} -- Implementation
 		end
 
 	refresh_stack_grid_row (a_row: EV_GRID_ROW; current_level: INTEGER) is
-			-- Refresh row of stack_grid regarding the current_level information
+			-- Refresh row of stack_grid regarding the `current_level' information
 		require
 			a_row /= Void
 		local
 			glab: EV_GRID_LABEL_ITEM
 			level: INTEGER
+			ep: EV_PIXMAP
 		do
 			level := level_from_row (a_row)
 			a_row.set_foreground_color (Void)
 			a_row.set_background_color (Void)
 
-				--| Set GUI behavior
 			glab ?= a_row.item (1)
+			ep := pixmaps.icon_pixmaps.callstack_empty_arrow_icon
 			if level = current_level then
 				glab.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
 				a_row.set_background_color (row_highlight_bg_color)
 			elseif level >= 0 then
-				glab.set_pixmap (pixmaps.icon_pixmaps.callstack_empty_arrow_icon)
+				glab.set_pixmap (ep)
 			else
 				glab.remove_pixmap
-				glab.set_left_border (glab.left_border + glab.spacing + pixmaps.icon_pixmaps.callstack_active_arrow_icon.width)
+				glab.set_left_border (glab.left_border + glab.spacing + ep.width)
 				a_row.set_foreground_color (row_unsensitive_fg_color)
+			end
+			if execution_replay_activated then
+				if level - 1 <= execution_replay_depth_limit_level then
+					a_row.set_background_color (row_replayable_bg_color)
+				end
+				if level = marked_level then
+					glab.set_pixmap (pixmaps.icon_pixmaps.callstack_marked_arrow_icon)
+				end
 			end
 		end
 
@@ -936,14 +1089,6 @@ feature {NONE} -- Implementation
 			create st.make (level)
 			if st.is_valid then
 				Eb_debugger_manager.launch_stone (st)
-			end
-		end
-
-	select_element (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; level: INTEGER) is
-			-- Set `a_stone' in the development window.
-		do
-			if a_button = 1 then
-				select_element_by_level (level)
 			end
 		end
 
@@ -1323,7 +1468,9 @@ feature {NONE} -- Implementation, cosmetic
 			lab.set_font (f)
 		end
 
-	set_row_unsensitive_fg_color_agent, set_row_highlight_bg_color_agent: PROCEDURE [ANY, TUPLE [COLOR_PREFERENCE]]
+	set_row_unsensitive_fg_color_agent,
+	set_row_highlight_bg_color_agent,
+	set_row_replayable_bg_color_agent: PROCEDURE [ANY, TUPLE [COLOR_PREFERENCE]]
 			-- Store agents for `set_row_highlight_bg_color' and `set_row_unsensitive_fg_color' so that they
 			-- get properly removed when recycling.
 
@@ -1337,11 +1484,18 @@ feature {NONE} -- Implementation, cosmetic
 			row_unsensitive_fg_color := v.value
 		end
 
+	set_row_replayable_bg_color (v: COLOR_PREFERENCE) is
+		do
+			row_replayable_bg_color := v.value
+		end
+
 	row_highlight_bg_color: EV_COLOR
 
-	row_unsensitive_fg_color: EV_COLOR;
+	row_unsensitive_fg_color: EV_COLOR
 
-indexing
+	row_replayable_bg_color: EV_COLOR
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

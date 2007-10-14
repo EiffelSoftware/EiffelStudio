@@ -150,7 +150,7 @@ feature -- Dotnet access
 			-- Is Current represent a typical dotnet value ?
 			-- (String are processing in a special way)
 
-feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR_IMP} -- Internal basic data
+feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR, APPLICATION_EXECUTION_DOTNET} -- Internal basic data
 
 	value_dotnet: ICOR_DEBUG_VALUE
 			-- Dotnet value as an ICorDebugValue interface
@@ -873,7 +873,7 @@ feature -- Conversion
 			Result_not_void: Result /= Void
 		end
 
-feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR_IMP} -- Internal data
+feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR} -- Internal data
 
 	value_address	: STRING -- string standing for the address of the object if type=Type_object
 	value_string    : STRING_32 -- String value

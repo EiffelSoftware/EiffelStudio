@@ -183,7 +183,6 @@ feature -- Type checking
 	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS) is
 			-- Type check `an_exp' in the context of `a_feature'.
 		require
-			a_feature_not_void: a_feature /= Void
 			an_exp_not_void: an_exp /= Void
 		local
 			l_exp_call: EXPR_CALL_AS
@@ -227,7 +226,6 @@ feature -- Type checking
 	expression_or_instruction_type_check_and_code (a_feature: FEATURE_I; an_ast: AST_EIFFEL) is
 			-- Type check `an_ast' in the context of `a_feature'.
 		require
-			a_feature_not_void: a_feature /= Void
 			an_ast_not_void: an_ast /= Void
 		local
 			l_cl, l_wc: CLASS_C
@@ -239,18 +237,20 @@ feature -- Type checking
 			current_feature := a_feature
 
 			l_cl := context.current_class
-			l_wc := current_feature.written_class
-			if l_wc /= l_cl then
-				l_ft := context.current_feature_table
-				l_ctx := context.twin
-				context.initialize (l_wc, l_wc.actual_type, l_ft)
-				type_a_checker.init_for_checking (a_feature, l_wc, Void, error_handler)
-				an_ast.process (Current)
-				reset
-				is_inherited := True
-				context.restore (l_ctx)
+			if current_feature /= Void then
+				l_wc := current_feature.written_class
+				if l_wc /= l_cl then
+					l_ft := context.current_feature_table
+					l_ctx := context.twin
+					context.initialize (l_wc, l_wc.actual_type, l_ft)
+					type_a_checker.init_for_checking (a_feature, l_wc, Void, error_handler)
+					an_ast.process (Current)
+					reset
+					is_inherited := True
+					context.restore (l_ctx)
+				end
+				type_a_checker.init_for_checking (a_feature, l_cl, Void, error_handler)
 			end
-			type_a_checker.init_for_checking (a_feature, l_cl, Void, error_handler)
 			an_ast.process (Current)
 		end
 

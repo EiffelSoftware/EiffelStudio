@@ -57,44 +57,9 @@ feature {NONE} -- Initialization
 			manager := a_manager
 		end
 
-feature -- Access
-
-	param_arguments: STRING
-
-	param_working_directory: STRING
-
-	param_environment_variables: HASH_TABLE [STRING_32, STRING_32]
-
-feature -- Change
-
-	clear_params is
-		do
-			set_param_arguments (Void)
-			set_param_working_directory (Void)
-			set_param_environment_variables (Void)
-		end
-
-	set_param_arguments (v: like param_arguments) is
-			-- set `v' to `param_arguments'.
-		do
-			param_arguments := v
-		end
-
-	set_param_working_directory (v: like param_working_directory) is
-			-- set `v' to `param_working_directory'.
-		do
-			param_working_directory := v
-		end
-
-	set_param_environment_variables (v: like param_environment_variables) is
-			-- set `v' to `param_environment_variables'.
-		do
-			param_environment_variables := v
-		end
-
 feature -- Debug Operation
 
-	debug_application (a_execution_mode: INTEGER) is
+	debug_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER) is
 			-- Launch the program from the project target.
 			-- see EXEC_MODES for `a_execution_mode' values.
 		local
@@ -155,7 +120,7 @@ feature -- Debug Operation
 											-- Launch cordbg.exe.
 										(create {COMMAND_EXECUTOR}).execute_with_args
 											(l_app_string,
-												safe_path (eiffel_system.application_name (True)) + " " + param_arguments)
+												safe_path (eiffel_system.application_name (True)) + " " + param.arguments)
 										launch_program := True
 									elseif l_il_env.use_dbgclr (dotnet_debugger) then
 											-- Launch DbgCLR.exe.
@@ -167,7 +132,7 @@ feature -- Debug Operation
 								else
 										--| Without BP, we just launch the execution as it is
 									(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
-										param_arguments)
+										param.arguments)
 									launch_program := True
 								end
 							end
@@ -190,11 +155,11 @@ feature -- Debug Operation
 										prefstr := Void
 									end
 									discardable_if_confirmed_do (Warning_messages.w_Ignoring_all_stop_points,
-														agent debug_workbench_application (a_execution_mode),
+														agent debug_workbench_application (param, a_execution_mode),
 														2, prefstr
 													)
 								else
-									debug_workbench_application (a_execution_mode)
+									debug_workbench_application (param, a_execution_mode)
 								end
 							end
 						end
@@ -217,6 +182,7 @@ feature -- Debug Operation
 			-- Continue the execution of the program (stepping ...)
 		require
 			debugger_running_and_stopped: manager.safe_application_is_stopped
+			execution_replay_mode_not_activated: not manager.application_status.replay_activated
 		local
 			status: APPLICATION_STATUS
 			app_exec: APPLICATION_EXECUTION
@@ -305,7 +271,7 @@ feature {DEBUGGER_MANAGER} -- Debugging operation
 
 feature -- Start Operation
 
-	start_workbench_application is
+	start_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS) is
 		local
 			appl_name: STRING
 			cmd_exec: COMMAND_EXECUTOR
@@ -352,15 +318,15 @@ feature -- Start Operation
 					end
 					if launch_it then
 						create cmd_exec
-						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param_environment_variables, False))
+						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param.environment_variables, False))
 						check
 							env8_not_void: env8 /= Void
 						end
 						env8.force (project_location.workbench_path, "MELT_PATH")
 						cmd_exec.execute_with_args_and_working_directory_and_environment (
 									safe_path (appl_name),
-									param_arguments,
-									param_working_directory,
+									param.arguments,
+									param.working_directory,
 									env8
 								)
 					end
@@ -368,7 +334,7 @@ feature -- Start Operation
 			end
 		end
 
-	start_finalized_application is
+	start_finalized_application (param: DEBUGGER_EXECUTION_PARAMETERS) is
 		local
 			appl_name: STRING
 			cmd_exec: COMMAND_EXECUTOR
@@ -415,11 +381,11 @@ feature -- Start Operation
 					end
 					if launch_it then
 						create cmd_exec
-						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param_environment_variables, True))
+						env8 := environment_variables_to_string_8 (environment_variables_updated_with (param.environment_variables, True))
 						cmd_exec.execute_with_args_and_working_directory_and_environment (
 									safe_path (appl_name),
-									param_arguments,
-									param_working_directory,
+									param.arguments,
+									param.working_directory,
 									env8
 								)
 
@@ -431,9 +397,9 @@ feature -- Start Operation
 
 feature {NONE} -- Callbacks
 
-	before_starting is
+	before_starting (param: DEBUGGER_EXECUTION_PARAMETERS) is
 		do
-			manager.display_debugger_info
+			manager.display_debugger_info (param)
 		end
 
 	after_starting is
@@ -460,26 +426,17 @@ feature {NONE} -- Callbacks
 
 feature {NONE} -- debugging
 
-	debug_workbench_application (a_execution_mode: INTEGER) is
+	debug_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER) is
 		require
-			param_working_directory /= Void
+			param.working_directory /= Void
 		local
 			working_dir: STRING
-			environment_vars: like param_environment_variables
-			l_cmd_line_arg: STRING
 			app_exec: APPLICATION_EXECUTION
 		do
-			before_starting
+			before_starting (param)
 
 				--| Getting well formatted workind directory path
-			working_dir := param_working_directory
-			environment_vars := param_environment_variables
-
-				--| Building the command line argument
-			l_cmd_line_arg := param_arguments
-			if l_cmd_line_arg = Void then
-				create l_cmd_line_arg.make_empty
-			end
+			working_dir := param.working_directory
 
 			if not directory_exists (working_dir) then
 				warning (Warning_messages.w_Invalid_working_directory (working_dir))
@@ -494,7 +451,7 @@ feature {NONE} -- debugging
 				app_exec := manager.application
 				app_exec.set_execution_mode (a_execution_mode)
 				app_exec.on_application_before_launching
-				app_exec.run (l_cmd_line_arg, working_dir, environment_variables_updated_with (environment_vars, True))
+				app_exec.run (param)
 				if manager.application_is_executing then
 					if app_exec.execution_mode = {EXEC_MODES}.No_stop_points then
 						manager.debugger_status_message (debugger_names.m_system_is_running_ignoring_breakpoints)

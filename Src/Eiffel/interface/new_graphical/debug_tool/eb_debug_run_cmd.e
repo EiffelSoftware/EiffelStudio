@@ -264,13 +264,14 @@ feature -- Execution
 			-- Launch the program from the project target.
 		local
 			ctlr: DEBUGGER_CONTROLLER
+			param: DEBUGGER_EXECUTION_PARAMETERS
 		do
 			ctlr := debugger_manager.controller
-			ctlr.set_param_arguments (current_cmd_line_argument)
-			ctlr.set_param_working_directory (application_working_directory)
-			ctlr.set_param_environment_variables (application_environment_variables)
-			ctlr.debug_application (a_execution_mode)
-			ctlr.clear_params
+			create param
+			param.set_arguments (current_cmd_line_argument)
+			param.set_working_directory (application_working_directory)
+			param.set_environment_variables (application_environment_variables)
+			ctlr.debug_application (param, a_execution_mode)
 		end
 
 	resume_application is

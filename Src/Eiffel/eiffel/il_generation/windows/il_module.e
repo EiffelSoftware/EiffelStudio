@@ -266,6 +266,7 @@ feature -- Access: tokens
 
 	ise_eiffel_type_info_type_token,
 	ise_runtime_type_token,
+	ise_rt_extension_type_token,
 	ise_type_token,
 	ise_generic_conformance_token,
 	ise_class_type_token,
@@ -899,6 +900,8 @@ feature -- Code generation
 		local
 			l_entry_type_token: INTEGER
 			l_root_creator_token: INTEGER
+			l_rt_extension_object_token: INTEGER
+			l_field_sig: like field_sig
 			l_sig: like method_sig
 			l_type_id: INTEGER
 			l_nb_args: INTEGER
@@ -942,6 +945,20 @@ feature -- Code generation
 					Runtime_class_name, "assertion_initialize",
 					{SHARED_IL_CONSTANTS}.static_type, <<type_handle_class_name>>,
 					Void, False)
+			end
+
+			if not System.in_final_mode then
+					-- Create RT_EXTENSION object and assign it to ISE_RUNTIME.
+				il_code_generator.create_object (rt_extension_type_implementation_id)
+				l_field_sig := field_sig
+				l_field_sig.reset
+				l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
+					ise_rt_extension_type_token)
+				l_rt_extension_object_token := md_emit.define_member_ref (
+					create {UNI_STRING}.make ("rt_extension_object"),
+					ise_runtime_type_token,
+					l_field_sig)
+				il_code_generator.method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, l_rt_extension_object_token)
 			end
 
 				-- Create root object and call creation procedure.
@@ -2774,6 +2791,7 @@ feature {NONE} -- Once per modules being generated.
 			value_type_token := 0
 			math_type_token := 0
 			system_exception_token := 0
+			ise_rt_extension_type_token := 0
 			compute_mscorlib_token
 			compute_mscorlib_type_tokens
 			compute_power_method_token
@@ -3010,6 +3028,9 @@ feature {NONE} -- Once per modules being generated.
 
 			ise_runtime_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (runtime_class_name), ise_runtime_token)
+
+			ise_rt_extension_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (rt_extension_interface_name), ise_runtime_token)
 
 				-- Define `ise_last_exception_token'.
 			l_sig := field_sig
@@ -3283,6 +3304,12 @@ feature {NONE} -- Convenience
 			Result := System.typed_pointer_class.compiled_class.class_id
 		ensure
 			typed_pointer_class_id_positive: Result > 0
+		end
+
+	rt_extension_type_implementation_id: INTEGER is
+			-- Type id of RT_EXTENSION class.
+		once
+			Result := system.rt_extension_class.compiled_class.types.first.type.implementation_id
 		end
 
 feature {NONE} -- Cleaning

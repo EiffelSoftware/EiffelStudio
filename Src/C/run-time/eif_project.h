@@ -179,10 +179,18 @@ extern "C" {
 	RT_LNK EIF_INTEGER egc_project_version;	/* Tag corresponding to the project version */
 
 	RT_LNK int egc_platform_level;
+
+#ifdef WORKBENCH
+	RT_LNK EIF_INTEGER exec_recording_enabled;	  /* Is the Eiffel exec recording on ? */
+	RT_LNK int32 egc_rt_extension_dt;				/* E1/einit.c */
+	RT_LNK void (*egc_rt_extension_notify)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
+	RT_LNK EIF_TYPED_VALUE (*egc_rt_extension_notify_argument)(EIF_REFERENCE, EIF_TYPED_VALUE);
+#endif
 	 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* _EIF_PROJECT_H_ */
+
 

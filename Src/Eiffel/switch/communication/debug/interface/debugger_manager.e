@@ -81,16 +81,23 @@ feature -- Application execution
 			end
 			if is_dotnet_project then
 				create {APPLICATION_EXECUTION_DOTNET} app.make_with_debugger (Current)
+				set_shared_application (app)
+				create {DBG_EVALUATOR_DOTNET} dbg_evaluator.make
 			else
 				create {APPLICATION_EXECUTION_CLASSIC} app.make_with_debugger (Current)
+				set_shared_application (app)
+				create {DBG_EVALUATOR_CLASSIC} dbg_evaluator.make
 			end
-			set_shared_application (app)
 		end
 
 	destroy_application is
 		do
 			if application_initialized then
 				application.recycle
+			end
+			if dbg_evaluator /= Void then
+				reset_dbg_evaluator
+				dbg_evaluator := Void
 			end
 			set_shared_application (Void)
 		end
@@ -106,6 +113,8 @@ feature -- Application execution
 	application_launching_in_progress: BOOLEAN
 
 	application: APPLICATION_EXECUTION
+
+	dbg_evaluator: DBG_EVALUATOR
 
 feature -- Output helpers
 
@@ -144,11 +153,19 @@ feature -- Output helpers
 		do
 		end
 
-	display_debugger_info is
+	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS) is
 		do
 		end
 
 feature -- Change
+
+	reset_dbg_evaluator is
+			-- Reset `dbg_evaluator'
+		do
+			if dbg_evaluator /= Void then
+				dbg_evaluator.reset
+			end
+		end
 
 	set_error_message (s: STRING) is
 		require

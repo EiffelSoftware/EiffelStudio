@@ -84,6 +84,8 @@ feature -- Access
 	type_class, system_type_class: CLASS_I
 			-- Class TYPE
 
+	rt_extension_class: CLASS_I
+
 feature -- Access: XX_REF classes
 
 	character_8_ref_class, character_32_ref_class: CLASS_I
@@ -266,7 +268,7 @@ feature -- Access
 		end
 
 	system_type_id: INTEGER is
-			-- Id of class STRING
+			-- Id of class SYSTEM_STRING
 		require
 			system_type_class_exists: system_type_class /= Void
 			compiled: system_type_class.is_compiled
@@ -277,12 +279,23 @@ feature -- Access
 		end
 
 	eiffel_type_id: INTEGER is
-			-- Id of class STRING
+			-- Id of class TYPE
 		require
 			type_class_exists: type_class /= Void
 			compiled: type_class.is_compiled
 		do
 			Result := type_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
+	rt_extension_type_id: INTEGER is
+			-- Id of type RT_EXTENSION
+		require
+			rt_extension_class_exists: rt_extension_class /= Void
+			compiled: rt_extension_class.is_compiled
+		do
+			Result := rt_extension_class.compiled_class.types.first.type_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -695,6 +708,16 @@ feature -- Settings
 			system_type_class := c
 		ensure
 			system_type_class_set: system_type_class = c
+		end
+
+	set_rt_extension_class (c: CLASS_I) is
+			-- Assign `c' to `rt_extension_class'.
+		require
+			c_not_void: c /= Void
+		do
+			rt_extension_class := c
+		ensure
+			rt_extension_class_set: rt_extension_class = c
 		end
 
 feature -- Settings: XX_REF classes

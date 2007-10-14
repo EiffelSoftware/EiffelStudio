@@ -956,6 +956,8 @@ RT_LNK int fcount;
  *  RTE_T start try block (for body)
  *  RTE_E start except block (for rescue)
  *  RTE_EE end except block
+ *
+ *  RTDBGE,RTDBGL are declared in eif_debug.h
  */
 #define RTED		jmp_buf exenv; int EIF_VOLATILE saved_assertion = in_assertion
 #define RTES		if (setjmp(exenv)) goto rescue
@@ -967,15 +969,18 @@ RT_LNK int fcount;
 
 #ifdef WORKBENCH
 #define RTEX		struct ex_vect * EIF_VOLATILE exvect; uint32 EIF_VOLATILE db_cstack
-#define RTEAA(x,y,z,i,j,b) exvect = new_exset(x, y, z,i,j,b); db_cstack = ++d_data.db_callstack_depth;
-#define RTEE		RTSO; d_data.db_callstack_depth = --db_cstack; expop(&eif_stack)
+#define RTEAA(x,y,z,i,j,b) exvect = new_exset(x, y, z,i,j,b); db_cstack = ++d_data.db_callstack_depth; \
+					RTDBGE(y,b,z,db_cstack,x);
+#define RTEE		RTDBGL(exvect->ex_orig,exvect->ex_bodyid,exvect->ex_id,db_cstack); \
+					RTSO; d_data.db_callstack_depth = --db_cstack; expop(&eif_stack)
 #define RTEOK		RTSO; d_data.db_callstack_depth = --db_cstack; exok ()
 
 #define RTEJ		current_call_level = trace_call_level; \
 					if (prof_stack) saved_prof_top = prof_stack->st_top; \
 					start: exvect->ex_jbuf = &exenv; RTES
 
-#define RTEU d_data.db_callstack_depth = db_cstack; exresc(MTC exvect);
+#define RTEU d_data.db_callstack_depth = db_cstack; exresc(MTC exvect);	\
+					RTDBGR(exvect->ex_id,db_cstack);
 
 #define RTE_T \
 	current_call_level = trace_call_level; \
@@ -1444,4 +1449,5 @@ RT_LNK int fcount;
 #endif
 
 #endif
+
 

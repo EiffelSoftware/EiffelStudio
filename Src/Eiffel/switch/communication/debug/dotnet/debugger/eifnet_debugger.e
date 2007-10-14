@@ -26,11 +26,6 @@ inherit
 
 	SHARED_DEBUG_VALUE_KEEPER
 
-	SHARED_DBG_EVALUATOR
-		export
-			{NONE} all
-		end
-
 	EIFNET_EXPORTER
 		export
 			{NONE} all
@@ -177,7 +172,8 @@ feature -- Initialization
 				-- Reset objects who has session related data
 		do
 			reset_exception_info
-			reset_dbg_evaluator
+			debugger_manager.reset_dbg_evaluator
+
 			reset_info
 			exit_process_occurred := False
 
@@ -1668,6 +1664,42 @@ feature -- Easy access
 			Result := icor_debug_module (l_class_module_name)
 		end
 
+	icor_debug_module_for_external_class (a_class_c: CLASS_C): ICOR_DEBUG_MODULE is
+		require
+			a_class_c_not_void: a_class_c /= Void
+		local
+			ai: ASSEMBLY_I
+			n: STRING
+			m: ICOR_DEBUG_MODULE
+			mods: HASH_TABLE [ICOR_DEBUG_MODULE, STRING_8]
+		do
+			ai ?= a_class_c.group
+			n := ai.consumed_assembly.name
+			m := ise_runtime_module
+			if m /= Void and then m.has_short_name (n) then
+				Result := m
+			else
+				m := info.mscorlid_module
+				if m /= Void and then m.has_short_name (n) then
+					Result := m
+				end
+			end
+			if Result = Void then
+				mods := info.loaded_modules
+				from
+					mods.start
+				until
+					mods.after or Result /= Void
+				loop
+					m := mods.item_for_iteration
+					if m.has_short_name (n) then
+						Result := m
+					end
+					mods.forth
+				end
+			end
+		end
+
 	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
 		require
 			arg_class_type_not_void: a_class_type /= Void
@@ -1750,6 +1782,19 @@ feature -- Function Evaluation
 						feattok := icdm.md_member_token_by_names (info.system_object_class_name, f_name)
 						if feattok > 0 then
 							Result := icdm.get_function_from_token (feattok)
+							if Result = Void then
+									--| Let's try the ise_runtime module with ISE_RUNTIME
+									--| We might need to look in all ancestor of `a_classtok'
+									--| but for now, let's do simple.
+								icdm := info.icor_debug_module_for_ise_runtime
+								if icdm /= Void and icdm /= a_icdmod then
+									feattok := icdm.md_member_token_by_names ("EiffelSoftware.Runtime.ISE_RUNTIME", f_name)
+									if feattok > 0 then
+										Result := icdm.get_function_from_token (feattok)
+									end
+								end
+							end
+
 						end
 					end
 				end
@@ -1768,21 +1813,27 @@ feature -- Function Evaluation
 			l_icd_obj_val: ICOR_DEBUG_OBJECT_VALUE
 			l_info: EIFNET_DEBUG_VALUE_INFO
 		do
-			if icdv /= Void and ct.is_external then
-				create l_info.make (icdv)
-				if l_info.has_object_interface then
-					l_icd_obj_val := l_info.new_interface_debug_object_value
-					if l_icd_obj_val /= Void then
-						l_icd_class := l_icd_obj_val.get_class
-						if l_icd_class /= Void then
-							l_icd_module := l_icd_class.get_module
-							l_feat_name := a_feat.external_name
-						end
-						l_icd_obj_val.clean_on_dispose
-					end
+			if ct.is_external then
+				l_icd_module := icor_debug_module_for_external_class (ct.associated_class)
+				if l_icd_module /= Void then
+					l_feat_tok := l_icd_module.md_member_token_by_names (ct.full_il_implementation_type_name, a_feat.external_name)
 				end
-				l_info.icd_prepared_value.clean_on_dispose
-				l_info.clean
+					if l_feat_tok = 0 and icdv /= Void then
+					create l_info.make (icdv)
+					if l_info.has_object_interface then
+						l_icd_obj_val := l_info.new_interface_debug_object_value
+						if l_icd_obj_val /= Void then
+							l_icd_class := l_icd_obj_val.get_class
+							if l_icd_class /= Void then
+								l_icd_module := l_icd_class.get_module
+								l_feat_name := a_feat.external_name
+							end
+							l_icd_obj_val.clean_on_dispose
+						end
+					end
+					l_info.icd_prepared_value.clean_on_dispose
+					l_info.clean
+				end
 			else
 					--| This should be an true Eiffel type
 				l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)

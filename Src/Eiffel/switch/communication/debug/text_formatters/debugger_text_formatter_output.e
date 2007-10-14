@@ -80,24 +80,28 @@ feature -- Generic
 
 feature -- Application status
 
-	append_debugger_information (dbg: DEBUGGER_MANAGER; tf: TEXT_FORMATTER) is
+	append_debugger_information (dbg: DEBUGGER_MANAGER; a_params: DEBUGGER_EXECUTION_PARAMETERS; tf: TEXT_FORMATTER) is
 			-- Append debugger information
 		local
+			params: DEBUGGER_EXECUTION_PARAMETERS
 			ctlr: DEBUGGER_CONTROLLER
 			app: APPLICATION_EXECUTION
 			s: STRING
 		do
 			ctlr := dbg.controller
 			app := dbg.application
+			if app /= Void then
+				params := app.parameters
+			else
+				params := a_params
+			end
 
 				--| Display information
 			tf.add_string ("Launching system :")
 			tf.add_new_line
 			tf.add_comment ("  - directory = ")
-			if app /= Void then
-				s := app.param_execution_directory
-			else
-				s := ctlr.param_working_directory
+			if params /= Void then
+				s := params.working_directory
 			end
 			if s /= Void then
 				tf.add_quoted_text (s)
@@ -106,10 +110,8 @@ feature -- Application status
 			end
 			tf.add_new_line
 			tf.add_comment_text ("  - arguments = ")
-			if app /= Void then
-				s := app.param_arguments
-			else
-				s := ctlr.param_arguments
+			if params /= Void then
+				s := params.arguments
 			end
 			if s = Void or else s.is_empty then
 				tf.add_string ("<Empty>")

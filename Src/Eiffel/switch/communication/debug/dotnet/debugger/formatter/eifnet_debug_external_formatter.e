@@ -140,7 +140,19 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			l_icd_module := debugger_info.icor_debug_module_for_ise_runtime
 			if l_icd_module /= Void then
 				l_type_token := l_icd_module.md_class_token_by_type_name ((create {IL_PREDEFINED_STRINGS}).runtime_class_name) --"EiffelSoftware.Runtime.ISE_RUNTIME")
+				private_token_IseRuntime := l_type_token
 				private_token_IseRuntime__check_assert := l_icd_module.md_member_token (l_type_token, "check_assert")
+				private_token_IseRuntime__rt_extension_object := l_icd_module.md_member_token (l_type_token, "rt_extension_object")
+			end
+		end
+
+	token_IseRuntime: INTEGER is
+			-- token of ISE_RUNTIME
+		do
+			Result := private_token_IseRuntime
+			if Result = 0 then
+				get_ise_runtime_tokens
+				Result := private_token_IseRuntime
 			end
 		end
 
@@ -154,10 +166,26 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
+	token_IseRuntime__rt_extension_object: INTEGER is
+			-- Attribute token of ISE_RUNTIME::rt_extension_object
+		do
+			Result := private_token_IseRuntime__rt_extension_object
+			if Result = 0 then
+				get_ise_runtime_tokens
+				Result := private_token_IseRuntime__rt_extension_object
+			end
+		end
+
 feature {NONE} -- ISE_RUNTIME: Once per instance implementation
+
+	private_token_IseRuntime: INTEGER
+			-- token of class ISE_RUNTIME.
 
 	private_token_IseRuntime__check_assert: INTEGER
 			-- Attribute token of ISE_RUNTIME::check_assert .		
+
+	private_token_IseRuntime__rt_extension_object: INTEGER
+			-- Attribute token of ISE_RUNTIME::rt_extension_object .		
 
 feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 

@@ -194,6 +194,27 @@ feature -- Specific access
 			Result_not_Void: Result /= Void
 		end
 
+	ise_runtime_class_c: CLASS_C is
+			-- ISE_RUNTIME class (for dotnet)
+		local
+			lst: LIST [CLASS_I]
+			l_cli: CLASS_I
+		do
+			Result := opo_ise_runtime_class_c
+			if Result = Void then
+				lst := eiffel_universe.classes_with_name ("ISE_RUNTIME")
+				if lst.count = 1 then
+					l_cli := lst.first
+				else
+					l_cli := eiffel_universe.class_named ("ISE_RUNTIME", eiffel_universe.group_of_name ("base"))
+				end
+				if l_cli /= Void then
+					Result := l_cli.compiled_class
+				end
+				opo_ise_runtime_class_c := Result
+			end
+		end
+
 feature -- IL Access
 
 	system_object_class_c: CLASS_C
@@ -202,9 +223,10 @@ feature -- IL Access
 
 feature {NONE} -- Once per object
 
-	opo_internal_class_c: like internal_class_c;
+	opo_internal_class_c: like internal_class_c
+	opo_ise_runtime_class_c: like ise_runtime_class_c
 
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -431,6 +431,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_function_class, "FUNCTION")
 			l_actions.put (agent system.set_predicate_class, "PREDICATE")
 			l_actions.put (agent system.set_type_class, "TYPE")
+			l_actions.put (agent system.set_rt_extension_class, "RT_EXTENSION")
 
 				-- XX_REF classes
 			l_actions.put (agent system.set_bit_class, "BIT_REF")

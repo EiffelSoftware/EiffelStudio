@@ -5033,8 +5033,11 @@ feature -- Implementation
 						l_call.feature_name.set_position (a_location.line, a_location.column,
 							a_location.position, a_location.location_count)
 							-- The line below is to ensure that a call to `default_create' will be
-							-- generated (see eweasel test#exec280).
-						l_orig_call := l_call
+							-- generated (see eweasel test#exec280) but only for non .NET classes
+							-- (see eweasel test#dotnet007).
+						if l_creation_class = Void or else not l_creation_class.is_external then
+							l_orig_call := l_call
+						end
 						l_call.set_routine_ids (l_feature.rout_id_set)
 						l_is_default_creation := True
 					else

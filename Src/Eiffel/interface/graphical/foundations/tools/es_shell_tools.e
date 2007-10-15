@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			a_window_attached: a_window /= Void
 			not_a_window_is_recycled: not a_window.is_recycled
 		do
-			create requested_tools.make_default
+			create internal_requested_tools.make_default
 			window := a_window
 		ensure
 			window_set: window = a_window
@@ -38,7 +38,7 @@ feature {NONE} -- Clean up
 			-- Called to clean up resources of Current.
 		do
 				-- Recycle all activated tools.
-			requested_tools.do_all (agent (a_items: ARRAY [ES_TOOL [EB_TOOL]])
+			internal_requested_tools.do_all (agent (a_items: ARRAY [ES_TOOL [EB_TOOL]])
 				local
 					l_count, i: INTEGER
 				do
@@ -48,9 +48,93 @@ feature {NONE} -- Clean up
 						i := i + 1
 					end
 				end)
-			requested_tools.wipe_out
+			internal_requested_tools.wipe_out
 		ensure then
+			internal_requested_tools_is_empty: internal_requested_tools.is_empty
 			requested_tools_is_empty: requested_tools.is_empty
+		end
+
+	clean_requested_tools
+			-- Performs a clean up for `requested_tools' as to remove any recycled tools from it.
+		local
+			l_requested_tools: like internal_requested_tools
+			l_cursor: DS_HASH_TABLE_CURSOR [ARRAY [ES_TOOL [EB_TOOL]], STRING]
+			l_tools: ARRAY [ES_TOOL [EB_TOOL]]
+			l_tool: ES_TOOL [EB_TOOL]
+			l_count, i: INTEGER
+			l_remove_indexes: DS_ARRAYED_LIST [INTEGER]
+			l_remove_keys: DS_ARRAYED_LIST [STRING]
+			l_new_tools: ARRAY [ES_TOOL [EB_TOOL]]
+			l_index: INTEGER
+		do
+			l_requested_tools := internal_requested_tools
+
+				-- Perform a clean up so the requested tools never returns any recycled tools.
+				-- This way any request for a tool will always return an activated tool because
+				-- the tool function will not find an activated and recycled tool, and therefore
+				-- will create a new tool instance.
+			l_cursor := l_requested_tools.new_cursor
+			from l_cursor.start until l_cursor.after loop
+					-- Iterate through the tool types to examine the array of activated tools.
+
+				l_remove_indexes := Void
+				l_tools := l_cursor.item
+				from i := 1; l_count := l_tools.count until i > l_count loop
+						-- Examine each activated tool
+					l_tool := l_tools.item (i)
+
+					if l_tool.is_recycled then
+							-- Tool has been recycled so it needs to be removed
+						if l_remove_indexes = Void then
+							create l_remove_indexes.make_default
+						end
+						l_remove_indexes.force_last (i)
+					end
+
+					i := i + 1
+				end
+
+				if l_remove_indexes /= Void then
+						-- Need to remove recycled items
+
+					if l_remove_indexes.count = l_tools.count then
+							-- All the tools are recycled so we just need remove the bucket instead of
+							-- creating a new array, for the bucket, with no items.
+						if l_remove_keys = Void then
+							create l_remove_keys.make_default
+						end
+						l_remove_keys.force_last (l_cursor.key)
+					else
+							-- One or more tools have been recycled so we need to reorganize the tool array
+							-- to remove unwanted, recycled tools.
+						check l_count_unmodified: l_count = l_tools.count end
+
+						create l_new_tools.make (1, l_count - l_remove_indexes.count)
+						from i := 1; l_index := 1 until i > l_count loop
+							if not l_remove_indexes.has (i) then
+								l_tool := l_tools.item (i)
+									-- Must set the correct edition
+								l_tool.set_edition (l_index.to_natural_8)
+								l_new_tools.put (l_tool, l_index)
+								l_index := l_index + 1
+							end
+							i := i + 1
+						end
+
+							-- Set new tool array
+						l_requested_tools.replace (l_new_tools, l_cursor.key)
+					end
+				end
+				l_cursor.forth
+			end
+
+			if l_remove_keys /= Void then
+					-- Remove buckets for a given key.
+				from l_remove_keys.start until l_remove_keys.after loop
+					l_requested_tools.remove (l_remove_keys.item_for_iteration)
+					l_remove_keys.forth
+				end
+			end
 		end
 
 feature -- Access
@@ -58,7 +142,7 @@ feature -- Access
 	window: EB_DEVELOPMENT_WINDOW
 			-- Development window where tools are hosted
 
-	frozen tools: DS_BILINEAR [ES_TOOL [EB_TOOL]]
+	frozen all_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
 			-- List of available first-edition tools, that can be used by Current.
 			-- Note: If you need access to later editions please use `tool_edition'.
 		require
@@ -66,26 +150,25 @@ feature -- Access
 		local
 			l_types: like tool_types
 			l_cursor: DS_BILINEAR_CURSOR [TYPE [ES_TOOL [EB_TOOL]]]
-			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
 		once
 			l_types := tool_types
 			l_cursor := l_types.new_cursor
 
-			create l_tools.make (l_types.count)
+			create Result.make_default
 			from l_cursor.start until l_cursor.after loop
-				l_tools.put_last (tool (l_cursor.item))
+				Result.append_last (tools (l_cursor.item))
 				l_cursor.forth
 			end
-
-			Result := l_tools
 		ensure
 			result_attached: Result /= Void
 			result_contains_attached_items: not Result.has (Void)
 			result_count_matches_tool_types: tool_types.count = Result.count
 		end
 
+feature {NONE} -- Access
+
 	tool_types: DS_BILINEAR [TYPE [ES_TOOL [EB_TOOL]]]
-			-- List of available tools, that can be used by Current.
+			-- List of predefined available tools in the EiffelStudio shell.
 		require
 			not_is_recycled: not is_recycled
 		local
@@ -93,7 +176,7 @@ feature -- Access
 		once
 			create l_tools.make (23)
 
-				-- Add tools here
+				-- Common tools
 			l_tools.put_last ({ES_CLASS_TOOL})
 			l_tools.put_last ({ES_CONSOLE_TOOL})
 			l_tools.put_last ({ES_C_OUTPUT_TOOL})
@@ -111,6 +194,11 @@ feature -- Access
 			l_tools.put_last ({ES_SEARCH_TOOL})
 			l_tools.put_last ({ES_WINDOWS_TOOL})
 
+				-- Custom formatter tools
+				-- FIXME: Custom formatter tools have been tricking to adapt for 6.1. Given the time-frame
+				--        optimizations will be deferred for a later release, hopefully 6.2.
+			--l_tools.put_last ({ES_CUSTOM_FORMATTER_TOOL})
+
 				-- Debugger tools
 			l_tools.put_last ({ES_DEBUGGER_BREAKPOINTS_TOOL})
 			l_tools.put_last ({ES_DEBUGGER_THREADS_TOOL})
@@ -119,8 +207,6 @@ feature -- Access
 			l_tools.put_last ({ES_DEBUGGER_OBJECTS_TOOL})
 			l_tools.put_last ({ES_DEBUGGER_OBJECT_VIEWER_TOOL})
 
-			l_tools.put_last ({ES_LOGGER_TOOL})
-
 			l_tools.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [TYPE [ES_TOOL [EB_TOOL]]]}.make (agent {TYPE [ES_TOOL [EB_TOOL]]}.is_equal))
 			Result := l_tools
 		ensure
@@ -128,10 +214,12 @@ feature -- Access
 			result_contains_attached_items: not Result.has (Void)
 		end
 
-feature {NONE} -- Access
-
-	requested_tools: DS_HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], STRING]
-			-- Table of requested, and therefore created, tools
+	requested_tools: DS_HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], STRING] is
+			-- Table of requested, and therefore created, tools.
+		do
+			clean_requested_tools
+			Result := internal_requested_tools
+		end
 
 feature {NONE} -- Helpers
 
@@ -163,9 +251,9 @@ feature -- Query
 			end
 		end
 
-	tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): ES_TOOL [EB_TOOL]
+	frozen tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): ES_TOOL [EB_TOOL]
 			-- Retrieves an activate tool associated with a particular type.
-			-- Note: Requesting a tool that has not yet been activated/instantiated will activate it before
+			-- Note: Requesting a tool descriptor that has not yet been instantiated will instatiate it before
 			--       it is returned.
 			--
 			-- `a_type': The type of tool requested.
@@ -173,7 +261,6 @@ feature -- Query
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
-			tool_types_has_a_type: tool_types.has (a_type)
 		do
 			Result := tool_edition (a_type, 1)
 		ensure
@@ -183,9 +270,46 @@ feature -- Query
 			result_sited: Result.window = window
 		end
 
+	frozen tools (a_type: TYPE [ES_TOOL [EB_TOOL]]): DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
+			-- Retrieves an activate all tools associated with a particular type.
+			-- Note: Requesting a tool descriptor that has not yet been instantiated will instatiate it before
+			--       it is returned.
+			--
+			-- `a_type': The type of tool requested.
+			-- `Result': A list of activated tools corresponding to the supplied type.
+		require
+			not_is_recycled: not is_recycled
+			a_type_attached: a_type /= Void
+		local
+			l_count, i: like editions_of_tool
+		do
+			create Result.make_default
+			l_count := editions_of_tool (a_type, False)
+			if l_count = 0 then
+					-- No requests made yet, so we force the retrival of the first edition
+				Result.force_last (tool (a_type))
+			else
+					-- Iterate over the available editions.
+				from i := {NATURAL_8} 1 until i > l_count loop
+					Result.force_last (tool_edition (a_type, i))
+					i := i + 1
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_contains_attached_items: not Result.has (Void)
+			result_contains_valid_items: Result.for_all (agent (a_tool: ES_TOOL [EB_TOOL]): BOOLEAN
+				do
+					Result := not a_tool.is_recycled and then
+						a_tool.window = window and then
+						requested_tools.has (tool_id_from_tool (a_tool))
+				end)
+		end
+
 	tool_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_edition: NATURAL_8): ES_TOOL [EB_TOOL]
 			-- Retrieves an activate edition of a tool associated with a particular type.
-			-- Note: Requesting a tool that has not yet been activated/instantiated will activate it before
+			-- Note: Requesting a tool descriptor that has not yet been instantiated will instatiate it before
 			--       it is returned.
 			--
 			-- `a_type': The type of tool requested.
@@ -194,21 +318,22 @@ feature -- Query
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
-			tool_types_has_a_type: tool_types.has (a_type)
 			a_edition_positive: a_edition > 0
-			a_edition_small_enough: a_edition <= editions_of_tool (a_type) + 1
+			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
-			l_tools: like requested_tools
+			l_tools: like internal_requested_tools
 			l_id: like tool_id
 			l_editions: ARRAY [ES_TOOL [EB_TOOL]]
+			l_tool: like create_tool
 		do
-			l_tools := requested_tools
+			l_tools := internal_requested_tools
 			l_id := tool_id (a_type)
 			if l_tools.has (l_id) then
 				l_editions := l_tools.item (l_id)
 				if a_edition > l_editions.count then
+					l_tool := create_tool (a_type, a_edition)
 					l_editions.grow (a_edition)
-					l_editions.put (create_tool (a_type, a_edition), a_edition)
+					l_editions.put (l_tool, a_edition)
 				end
 			else
 				create l_editions.make (1, 1)
@@ -230,7 +355,7 @@ feature -- Query
 
 	tool_next_available_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_reuse: BOOLEAN): ES_TOOL [EB_TOOL]
 			-- Retrieves the next available tool associated with a particular type.
-			-- Note: Requesting a tool that has not yet been activated/instantiated will activate it before
+			-- Note: Requesting a tool descriptor that has not yet been instantiated will instatiate it before
 			--       it is returned.
 			--
 			-- `a_type': The type of tool requested.
@@ -239,63 +364,89 @@ feature -- Query
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
-			tool_types_has_a_type: tool_types.has (a_type)
 		local
 			l_editions: like editions_of_tool
 			l_tools: ARRAY [ES_TOOL [EB_TOOL]]
 			l_tool: ES_TOOL [EB_TOOL]
 			l_count, i: INTEGER
 		do
-			l_editions := editions_of_tool (a_type)
-			if a_reuse and then l_editions > 0 then
-					-- Check if there are any unactivated tools, or tools not show.
-				l_tools := requested_tools.item (tool_id (a_type))
-				from
-					i := 1
-					l_count := l_tools.count
-				until
-					i > l_count or Result /= Void
-				loop
-					l_tool := l_tools[i]
-					if
-						not l_tool.is_recycled and then
-						not l_tool.is_tool_instantiated or else
-						(l_tool.tool.is_recycled and then not l_tool.tool.shown)
-					then
-						Result := l_tool
+			l_tool := tool_edition (a_type, 1)
+			if not l_tool.is_tool_instantiated then
+					-- We reuse the first edition if it hasn't been created because `all_tools'
+					-- will add an descriptor instances, even if the tool is never used.
+				Result := l_tool
+			else
+				l_editions := editions_of_tool (a_type, False)
+				if a_reuse and then l_editions > 0 then
+						-- Check if there are any unactivated tools, or tools not show.
+					l_tools := requested_tools.item (tool_id (a_type))
+					from
+						i := 1
+						l_count := l_tools.count
+					until
+						i > l_count or Result /= Void
+					loop
+						l_tool := l_tools[i]
+						if
+							not l_tool.is_recycled and then
+							(not l_tool.is_tool_instantiated or else
+							(not l_tool.tool.is_recycled and then not l_tool.tool.shown))
+						then
+							Result := l_tool
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
-			end
 
-			if Result = Void then
-				Result := tool_edition (a_type, l_editions + 1)
+				if Result = Void then
+					Result := tool_edition (a_type, l_editions + 1)
+				end
 			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_recycled: not Result.is_recycled
 			requested_tools_has_a_type: requested_tools.has (tool_id (a_type))
 			result_sited: Result.window = window
-			editions_of_tool_increment: not a_reuse implies editions_of_tool (a_type) = old editions_of_tool (a_type) + 1
+			--editions_of_tool_increment: not a_reuse implies editions_of_tool (a_type, False) = old editions_of_tool (a_type, False) + 1
 		end
 
-	editions_of_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): NATURAL_8
-			-- Retrieves the number of active editions of a particular tool.
+	editions_of_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_active: BOOLEAN): NATURAL_8
+			-- Retrieves the number of editions of a particular tool.
 			--
 			-- `a_type': Tool type to retrieve the number of active editions for.
+			-- `a_active': True to retrieve the number of "activated" (instantiated) tool instances; False for the available instances.
 			-- `Result': A positive number of active tools or 0 to indicate the tool has not yet been requested.
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
 		local
-			l_tools: like requested_tools
+			l_tool_types: like requested_tools
+			l_tools: ARRAY [ES_TOOL [EB_TOOL]]
+			l_tool: ES_TOOL [EB_TOOL]
 			l_id: like tool_id
+			l_count, i: INTEGER
 		do
-			l_tools := requested_tools
+			l_tool_types := requested_tools
 			l_id := tool_id (a_type)
-			if l_tools.has (l_id) then
-				Result := l_tools.item (l_id).count.to_natural_8
+			if l_tool_types.has (l_id) then
+				l_tools := l_tool_types.item (l_id)
 			end
+			if l_tools /= Void then
+				if a_active then
+						-- Active instances only.
+					from i := 1; l_count := l_tools.count until i > l_count loop
+						l_tool := l_tools[i]
+						if l_tool.is_tool_instantiated then
+							Result := Result + 1
+						end
+						i := i + 1
+					end
+				else
+						-- All instances, active and not.
+					Result := l_tools.count.to_natural_8
+				end
+			end
+
 		ensure
 			result_positive: requested_tools.has (tool_id (a_type)) implies Result > 0
 		end
@@ -317,6 +468,24 @@ feature {NONE} -- Query
 			result_consistent: Result.is_equal (tool_id (a_type))
 		end
 
+	tool_id_from_tool (a_tool: ES_TOOL [EB_TOOL]): STRING_32
+			-- Retrieve tool identifier for a given tool.
+			--
+			-- `a_tool': Tool to retrieve a ID for.
+			-- `Result': A string identifier identifying the tool type supplied.
+		require
+			a_tool_attached: a_tool /= Void
+		local
+			l_type: TYPE [ES_TOOL [EB_TOOL]]
+		do
+			l_type ?= internal.type_of (a_tool)
+			Result := tool_id (l_type)
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_consistent: Result.is_equal (tool_id_from_tool (a_tool))
+		end
+
 feature -- Basic operation
 
 	show_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_activate: BOOLEAN)
@@ -327,7 +496,6 @@ feature -- Basic operation
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
-			tool_types_has_a_type: tool_types.has (a_type)
 		do
 			show_tool_edition (a_type, 1, a_activate)
 		ensure
@@ -344,9 +512,8 @@ feature -- Basic operation
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
-			tool_types_has_a_type: tool_types.has (a_type)
 			a_edition_positive: a_edition > 0
-			a_edition_small_enough: a_edition <= editions_of_tool (a_type) + 1
+			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
 			l_tool: like tool
 		do
@@ -366,7 +533,6 @@ feature -- Basic operation
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
-			tool_types_has_a_type: tool_types.has (a_type)
 		local
 			l_tool: like tool
 		do
@@ -375,6 +541,28 @@ feature -- Basic operation
 		ensure
 			tool_is_instatiated: (old tool_next_available_edition (a_type, a_reuse)).is_tool_instantiated
 			tool_is_shown: (old tool_next_available_edition (a_type, a_reuse)).tool.shown
+		end
+
+feature {ES_TOOL} -- Removal
+
+	close_tool (a_tool: ES_TOOL [EB_TOOL]) is
+			-- Performs clean up of tool and removes it from the cached heap of tools.
+			-- Note: This should be called only by ES_TOOL! Calling it from elsewhere
+			--       will only perform the recycling.
+			--
+			-- `a_tool': Tool to close and clean up.
+		require
+			a_tool_attached: a_tool /= Void
+		do
+			if not a_tool.is_recycled and then a_tool.is_recycled_on_closing then
+				a_tool.recycle
+				a_tool.set_window (Void)
+				clean_requested_tools
+			end
+		ensure
+			a_tool_is_recycled: a_tool.is_recycled_on_closing implies a_tool.is_recycled
+			not_requested_tools: a_tool.is_recycled_on_closing implies (not requested_tools.has (tool_id_from_tool (a_tool)) or not
+				requested_tools.item (tool_id_from_tool (a_tool)).has (a_tool))
 		end
 
 feature {NONE} -- Factory
@@ -389,7 +577,7 @@ feature {NONE} -- Factory
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
 			a_edition_positive: a_edition > 0
-			a_edition_small_enough: a_edition <= editions_of_tool (a_type) + 1
+			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
 			l_internal: like internal
 		do
@@ -406,11 +594,18 @@ feature {NONE} -- Factory
 			result_sited: Result.window = window
 		end
 
+feature {NONE} -- Internal implementation cache
+
+	internal_requested_tools: like requested_tools
+			-- Mutable version of `requested_tools'
+			-- Note: Functions wanting to add tools to `requested_tools' should use this attribute instead
+			--       of `requested_tools'. All queries should use `requested_tools' and not this attribute!
+
 invariant
 	window_attached: window /= Void
 	not_window_is_recycled: not window.is_recycled
-	requested_tools_attached: requested_tools /= Void
-	requested_tools_contains_attached_items: not requested_tools.has_item (Void)
+	internal_requested_tools_attached: internal_requested_tools /= Void
+	internal_requested_tools_contains_attached_items: not internal_requested_tools.has_item (Void)
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

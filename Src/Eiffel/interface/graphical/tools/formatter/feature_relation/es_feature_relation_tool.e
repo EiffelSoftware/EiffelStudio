@@ -11,7 +11,7 @@ frozen class
 	ES_FEATURE_RELATION_TOOL
 
 inherit
-	ES_TOOL [EB_FEATURES_RELATION_TOOL]
+	ES_FORMATTER_TOOL [EB_FEATURES_RELATION_TOOL]
 
 create {NONE}
 	default_create
@@ -46,6 +46,11 @@ feature -- Access
 		do
 			Result := "show_feature_relation_tool"
 		end
+
+feature -- Status report
+
+	is_customizable: BOOLEAN = True
+			-- Indicates if the tool can be customize to support custom views.
 
 feature {NONE} -- Factory
 

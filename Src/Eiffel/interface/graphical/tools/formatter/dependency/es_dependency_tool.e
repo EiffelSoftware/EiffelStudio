@@ -11,7 +11,7 @@ frozen class
 	ES_DEPENDENCY_TOOL
 
 inherit
-	ES_TOOL [EB_DEPENDENCY_TOOL]
+	ES_FORMATTER_TOOL [EB_DEPENDENCY_TOOL]
 
 create {NONE}
 	default_create
@@ -47,6 +47,11 @@ feature -- Access
 		do
 			Result := "show_dependency_tool"
 		end
+
+feature -- Status report
+
+	is_customizable: BOOLEAN = True
+			-- Indicates if the tool can be customize to support custom views.
 
 feature {NONE} -- Factory
 

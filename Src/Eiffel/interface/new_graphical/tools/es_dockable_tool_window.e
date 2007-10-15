@@ -25,6 +25,7 @@ inherit
 			build_mini_toolbar,
 			icon,
 			icon_pixmap,
+			title,
 			show,
 			build_docking_content
 		end
@@ -134,12 +135,6 @@ feature {NONE} -- User interface initialization
 		end
 
 feature -- Access
-
-	tool_ref_id: STRING
-			-- Reference identifier, typical used in a preference persistance mechanism.
-		do
-			Result := generating_type.as_lower
-		end
 
 	frozen title: STRING_GENERAL assign set_title
 			-- Title of the tool which for show, it maybe not in English.
@@ -305,14 +300,25 @@ feature {NONE} -- Access
 
 	tool_icon_buffer: like icon
 			-- The tool's original icon as a pixel buffer.
-		deferred
+		do
+			Result := tool_descriptor.icon
 		ensure
 			result_attached: Result /= Void
 		end
 
 	tool_title: like title
 			-- The tool's original title.
-		deferred
+		local
+			l_tool: like tool_descriptor
+			l_result: STRING_32
+		do
+			l_tool := tool_descriptor
+			create l_result.make (15)
+			l_result.append (l_tool.title)
+			if l_tool.is_supporting_multiple_instances and then l_tool.edition > 1 then
+				l_result.append (" #" + l_tool.edition.out)
+			end
+			Result := l_result
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

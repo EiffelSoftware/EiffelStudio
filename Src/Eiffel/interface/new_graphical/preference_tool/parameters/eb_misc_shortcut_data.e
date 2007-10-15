@@ -177,6 +177,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([True, True, False, key_strings.item (Key_0).twin.as_string_8], "show_c_output_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_x).twin.as_string_8], "show_external_output_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_e).twin.as_string_8], "show_errors_and_warnings_tool")
+			l_hash.put ([True, True, False, key_strings.item (Key_l).twin.as_string_8], "show_logger_tool")
 			l_hash.put ([False, False, False, key_strings.item (Key_f4).twin.as_string_8], "show_properties_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_t).twin.as_string_8], "show_features_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_u).twin.as_string_8], "show_clusters_tool")

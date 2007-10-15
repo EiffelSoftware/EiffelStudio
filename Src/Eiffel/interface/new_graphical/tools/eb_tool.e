@@ -57,19 +57,23 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like develop_window) is
-			-- Create a new tool with `a_manager' as manager.
+	make (a_window: like develop_window; a_tool: like tool_descriptor)
+			-- Initializes a tool window
+			--
+			-- `a_window': The host shell window the tool will be shown in.
+			-- `a_tool': The tool descriptor used to instatiate the tool.
 		require
-			a_manager_exists: a_manager /= Void
+			a_window_attached: a_window /= Void
+			not_a_window_is_recycled: not a_window.is_recycled
+			a_tool_attached: a_tool /= Void
+			not_a_tool_is_recycled: not a_tool.is_recycled
 		do
-				-- Link with the manager and the explorer.
-			develop_window := a_manager
-
-				-- Register and initialize
+			develop_window := a_window
+			tool_descriptor := a_tool
 			build_interface
-
 		ensure
-			set: develop_window = a_manager
+			develop_window_set: develop_window = a_window
+			tool_descriptor_set: tool_descriptor = a_tool
 		end
 
 	build_interface is
@@ -128,14 +132,16 @@ feature -- Access
 
 	title_for_pre: STRING is
 			-- Title of the tool
-		deferred
+		do
+			Result := tool_descriptor.type_id
 		ensure then
 			valid_title: Result /= Void and then not Result.is_empty
 		end
 
 	title: STRING_GENERAL is
 			-- Title of the tool which for show, it maybe not in English.
-		deferred
+		do
+			Result := tool_descriptor.edition_title
 		ensure then
 			valid_title: Result /= Void and then not Result.is_empty
 		end
@@ -168,15 +174,22 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it appears in toolbars and menu, there is no pixmap by default.
 		do
+			Result := tool_descriptor.icon_pixmap
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer as it appears in toolbars and menu, there is no pixmap by default.
 		do
+			Result := tool_descriptor.icon
 		end
 
 	develop_window: EB_DEVELOPMENT_WINDOW
 			-- Development window.
+
+feature {NONE} -- Access
+
+	tool_descriptor: ES_TOOL [like Current]
+			-- Descriptor used to created tool.
 
 feature -- Status report
 
@@ -208,6 +221,7 @@ feature -- Status setting
 		do
 			content.hide
 			ev_application.do_once_on_idle (agent set_focus_to_editor_when_idle)
+			tool_descriptor.close
 		end
 
 	show is
@@ -231,6 +245,15 @@ feature -- Status setting
 			if widget /= Void then
 				Result := has_focus_on_widgets_internal (widget)
 			end
+		end
+
+feature {ES_TOOL} -- Event handlers
+
+	on_edition_changed
+			-- Called when a tool's edition number changes due to purging recycled tools
+		do
+			content.set_unique_title (title_for_pre)
+			content.set_long_title (title)
 		end
 
 feature {NONE} -- Implementation
@@ -321,6 +344,9 @@ feature -- Obsolete
 		obsolete "Use `minimized_title' instead"
 		do
 		end
+
+invariant
+	tool_descriptor_attached: tool_descriptor /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

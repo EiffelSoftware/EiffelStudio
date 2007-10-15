@@ -12,10 +12,8 @@ class
 inherit
 	EB_TOOL
 		redefine
-			menu_name,
 			attach_to_docking_manager,
-			internal_recycle,
-			pixmap
+			internal_recycle
 		end
 
 	EB_SHARED_MANAGERS
@@ -58,33 +56,6 @@ feature {NONE} -- Initialization
 			-- Build interface
 		do
 			make_with_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.interface_names.to_output_tool
-		end
-
-	title: STRING_GENERAL is
-			-- Redefine
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.interface_names.l_tab_output
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap shown when c compilation failed.
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.pixmaps.icon_pixmaps.tool_output_icon
 		end
 
 	pixmap_failure: EV_PIXMAP is
@@ -192,12 +163,6 @@ feature -- Access
 
 	text_area: EB_CLICKABLE_EDITOR
 			-- Editor to handle the displayed text is displayed.
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := Interface_names.m_Output
-		end
 
 	output_display_factory: EB_TEXT_OUTPUT_FACTORY
 			-- Output display factory.

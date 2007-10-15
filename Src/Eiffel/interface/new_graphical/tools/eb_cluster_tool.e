@@ -11,12 +11,8 @@ class
 
 inherit
 	EB_TOOL
-		rename
-			make as tool_make
 		redefine
-			menu_name,
-			pixmap,
-			pixel_buffer,
+			make,
 			mini_toolbar,
 			build_mini_toolbar,
 			build_docking_content,
@@ -38,13 +34,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
 			-- Make a new cluster tool.
-		require
-			a_manager_exists: a_manager /= Void
 		do
 			window := a_manager
-			tool_make (a_manager)
+			Precursor (a_manager, a_tool)
 		end
 
 	build_interface is
@@ -113,36 +107,6 @@ feature -- Access
 
 	window: EB_DEVELOPMENT_WINDOW
 			-- development window `Current' is in.
-
-	title: STRING_GENERAL is
-			-- title of the tool.
-		do
-			Result := Interface_names.t_Cluster_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_cluster_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- name as it may appear in a menu.
-		do
-			Result := Interface_names.m_Cluster_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_clusters_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer
-		do
-			Result := pixmaps.icon_pixmaps.tool_clusters_icon_buffer
-		end
 
 	show_current_class_cluster_cmd: EB_STANDARD_CMD
 			-- Command that highlights currently edited object in the cluster tree.

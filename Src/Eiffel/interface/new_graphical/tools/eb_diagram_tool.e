@@ -17,7 +17,6 @@ inherit
 				develop_window
 		redefine
 			attach_to_docking_manager,
-			pixmap,
 			mini_toolbar,
 			build_mini_toolbar,
 			build_docking_content,
@@ -536,33 +535,6 @@ feature {NONE} -- Initialization
 
 feature -- EB_TOOL features
 
-	title: STRING_GENERAL is
-			-- Title
-		local
-			l_constatns: EB_CONSTANTS
-		do
-			create l_constatns
-			Result := l_constatns.interface_names.l_tab_diagram
-		end
-
-	title_for_pre: STRING is
-			-- Redefine
-		local
-			l_constatns: EB_CONSTANTS
-		do
-			create l_constatns
-			Result := l_constatns.interface_names.to_diagram_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.pixmaps.icon_pixmaps.tool_diagram_icon
-		end
-
 	build_interface is
 			-- Build interface
 		do
@@ -593,10 +565,9 @@ feature
 	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Attach to docking manager
 		do
-				build_docking_content (a_docking_manager)
-				check output_tool_created: develop_window.tools.output_tool /= Void end
-				check not_already_has: not a_docking_manager.has_content (content) end
-				a_docking_manager.contents.extend (content)
+			build_docking_content (a_docking_manager)
+			check not_already_has: not a_docking_manager.has_content (content) end
+			a_docking_manager.contents.extend (content)
 		end
 
 feature -- Status report

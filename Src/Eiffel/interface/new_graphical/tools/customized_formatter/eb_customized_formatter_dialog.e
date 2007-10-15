@@ -172,36 +172,35 @@ feature -- Access
 	tool_table: HASH_TABLE [TUPLE [display_name: STRING_32; pixmap: EV_PIXMAP], STRING] is
 			-- Table of supported tools			
 		local
-			l_tool_info: like tool_info
-			l_tools: LINKED_LIST [EB_TOOL]
-			l_tool_manager: EB_DEVELOPMENT_WINDOW_TOOLS
+			l_shell_tools: ES_SHELL_TOOLS
+			l_tools: DS_BILINEAR_CURSOR [ES_TOOL [EB_TOOL]]
+			l_tool: ES_FORMATTER_TOOL [EB_FORMATTER_BASED_TOOL]
+			l_custom_tools: LIST [EB_TOOL]
+			l_custom_tool: EB_CUSTOMIZED_TOOL
 		do
-			create Result.make (20)
-			l_tool_manager := window_manager.last_focused_development_window.tools
-			create l_tools.make
-			l_tools.extend (l_tool_manager.class_tool)
-			l_tools.extend (l_tool_manager.features_relation_tool)
-			l_tools.extend (l_tool_manager.dependency_tool)
-			l_tools.append (l_tool_manager.satisfied_tools (l_tool_manager.all_tools, agent (a_tool: EB_TOOL): BOOLEAN do Result := a_tool.is_customized_tool end))
-			from
-				l_tools.start
-			until
-				l_tools.after
-			loop
-				l_tool_info := tool_info (l_tools.item)
-				Result.put ([l_tool_info.display_name.as_string_32, l_tool_info.pixmap], l_tool_info.store_name)
+			create Result.make (1)
+
+				-- Access dynamic tools.
+			l_shell_tools := window_manager.last_focused_development_window.shell_tools
+			l_tools := l_shell_tools.all_tools.new_cursor
+			from l_tools.start until l_tools.after loop
+				l_tool ?= l_tools.item
+				if l_tool /= Void and then l_tool.is_customizable then
+					Result.put ([l_tool.edition_title, l_tool.icon_pixmap], l_tool.type_id)
+				end
 				l_tools.forth
 			end
-		ensure
-			result_attached: Result /= Void
-		end
 
-	tool_info (a_tool: EB_TOOL): TUPLE [display_name: STRING_GENERAL; pixmap: EV_PIXMAP; store_name: STRING] is
-			-- Return information about `a_tool'
-		require
-			a_tool_attached: a_tool /= Void
-		do
-			Result := [a_tool.title, a_tool.pixmap, a_tool.title_for_pre]
+				-- Access customized tools.
+				-- FIXME: The formatters need to use the new delayed-activation model!
+			l_custom_tools := window_manager.last_focused_development_window.tools.customized_tools
+			from l_custom_tools.start until l_custom_tools.after loop
+				l_custom_tool ?= l_custom_tools.item
+				if l_custom_tool /= Void and then l_custom_tool.is_customized_tool then
+					Result.put ([l_custom_tool.title.as_string_32, l_custom_tool.pixmap], l_custom_tool.title_for_pre)
+				end
+				l_custom_tools.forth
+			end
 		ensure
 			result_attached: Result /= Void
 		end

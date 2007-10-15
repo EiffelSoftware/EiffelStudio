@@ -13,8 +13,6 @@ inherit
 		rename
 			make as tool_make
 		redefine
-			menu_name,
-			pixmap,
 			attach_to_docking_manager,
 			build_docking_content,
 			build_mini_toolbar,
@@ -27,14 +25,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_favorites_manager: EB_FAVORITES_MANAGER) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor; a_favorites_manager: EB_FAVORITES_MANAGER) is
 			-- Make a new favorites tool.
 		require
 			a_manager_exists: a_manager /= Void
 			a_favorites_manager_exists: a_favorites_manager /= Void
+			a_tool_attached: a_tool /= Void
+			not_a_tool_is_recycled: not a_tool.is_recycled
 		do
 			favorites_manager := a_favorites_manager
-			tool_make (a_manager)
+			tool_make (a_manager, a_tool)
+		ensure
+			tool_descriptor_set: tool_descriptor = a_tool
 		end
 
 	build_interface is
@@ -84,7 +86,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 
 			check not_already_has: not a_docking_manager.has_content (content) end
 			a_docking_manager.contents.extend (content)
-			check friend_created: develop_window.tools.breakpoints_tool  /= Void end
 		end
 
 feature -- Access
@@ -93,30 +94,6 @@ feature -- Access
 			-- Widget representing Current
 		do
 			Result := favorites_manager.widget
-		end
-
-	title: STRING_GENERAL is
-			-- Title of the tool
-		do
-			Result := Interface_names.t_favorites_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_Favorites_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := Interface_names.m_Favorites_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_favorites_icon
 		end
 
 feature -- Command

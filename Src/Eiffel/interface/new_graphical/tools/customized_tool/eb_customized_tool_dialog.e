@@ -309,7 +309,9 @@ feature{NONE} -- Implementation
 			l_item_table: HASH_TABLE [EB_CUSTOMIZED_TOOL_DESP, STRING]
 			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_CUSTOMIZED_TOOL_DESP]
 			l_tool: EB_TOOL
-			l_tools: LIST [EB_TOOL]
+			l_tools: LIST [EB_CUSTOMIZED_TOOL]
+			l_shell_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
+			l_shell_tool: ES_TOOL [EB_TOOL]
 		do
 			create {LINKED_LIST [TUPLE [a_tool_name: STRING_GENERAL; a_tool_id: STRING]]} Result.make
 			create l_item_table.make (items.count)
@@ -323,7 +325,16 @@ feature{NONE} -- Implementation
 				l_cursor.forth
 			end
 
-			l_tools := window_manager.last_focused_development_window.tools.all_tools.twin
+				-- Retrieve the environment tools
+			l_shell_tools := window_manager.last_focused_development_window.shell_tools.all_tools.new_cursor
+			from l_shell_tools.start until l_shell_tools.after loop
+				l_shell_tool := l_shell_tools.item
+				Result.extend ([l_shell_tool.title, l_shell_tool.type_id.as_string_8])
+				l_shell_tools.forth
+			end
+
+				-- Retrieve the customized tools
+			l_tools := window_manager.last_focused_development_window.tools.customized_tools
 			from
 				l_tools.start
 			until

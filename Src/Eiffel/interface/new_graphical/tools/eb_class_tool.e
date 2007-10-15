@@ -15,7 +15,6 @@ inherit
 			last_stone as stone
 		redefine
 			attach_to_docking_manager,
-			pixmap,
 			stone
 		end
 
@@ -28,39 +27,11 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Docking issues
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
-			check friend_tool_created: develop_window.tools.diagram_tool /= Void end
 			check not_already_has: not a_docking_manager.has_content (content) end
 			a_docking_manager.contents.extend (content)
 		end
 
 feature -- Access
-
-	title: STRING_GENERAL is
-			-- Title
-		local
-			l_constatns: EB_CONSTANTS
-		do
-			create l_constatns
-			Result := l_constatns.interface_names.l_tab_class_info
-		end
-
-	title_for_pre: STRING is
-			-- Redefine
-		local
-			l_constatns: EB_CONSTANTS
-		do
-			create l_constatns
-			Result := l_constatns.interface_names.to_class_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.pixmaps.icon_pixmaps.tool_class_icon
-		end
 
 	stone: CLASSI_STONE
 			-- Stone

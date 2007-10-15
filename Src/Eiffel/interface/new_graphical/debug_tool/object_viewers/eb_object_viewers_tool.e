@@ -18,9 +18,6 @@ inherit
 
 	EB_TOOL
 		redefine
-			menu_name,
-			pixmap,
-			pixel_buffer,
 --			on_shown,
 			internal_recycle,
 			attach_to_docking_manager,
@@ -59,10 +56,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_command (cmd: EB_OBJECT_VIEWER_COMMAND; a_manager: EB_DEVELOPMENT_WINDOW) is
+	make_with_command (cmd: EB_OBJECT_VIEWER_COMMAND; a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
+		require
+			cmd_attached: cmd /= Void
+			a_manager_attached: a_manager /= Void
+			not_a_manager_is_recycled: not a_manager.is_recycled
+			a_tool_attached: a_tool /= Void
+			not_a_tool_is_recycled: not a_tool.is_recycled
 		do
 			command := cmd
-			make (a_manager)
+			make (a_manager, a_tool)
 		end
 
 	build_interface is
@@ -133,36 +136,6 @@ feature -- Access
 
 	widget: EV_WIDGET
 			-- Widget representing Current.
-
-	title: STRING_GENERAL is
-			-- Title of the tool.
-		do
-			Result := Interface_names.t_Object_viewer_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_Object_viewer_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := Interface_names.m_Object_viewer_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.debugger_object_expand_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.debugger_object_expand_icon_buffer
-		end
 
 feature -- change
 

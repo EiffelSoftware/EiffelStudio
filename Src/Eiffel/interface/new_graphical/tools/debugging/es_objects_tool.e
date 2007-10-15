@@ -26,12 +26,10 @@ inherit
 
 	EB_STONABLE_TOOL
 		rename
-			make as make_tool,
 			mini_toolbar as mini_toolbar_box,
 			build_mini_toolbar as build_mini_toolbar_box
 		redefine
-			menu_name,
-			pixmap,
+			make,
 			mini_toolbar_box,
 			build_mini_toolbar_box,
 			build_docking_content,
@@ -56,18 +54,15 @@ inherit
 		end
 
 create
-	make_with_debugger
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_debugger (a_manager: EB_DEVELOPMENT_WINDOW; a_debugger: EB_DEBUGGER_MANAGER) is
-			-- Initialize with `a_debugger'.
-		require
-			a_debugger_not_void: a_debugger /= Void
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: ES_DEBUGGER_TOOL [ES_OBJECTS_TOOL]) is
 		do
-			set_debugger_manager (a_debugger)
 			cleaning_delay := preferences.debug_tool_data.delay_before_cleaning_objects_grid
-			make_tool (a_manager)
+			debugger_manager := a_tool.debugger_manager
+			Precursor (a_manager, a_tool)
 		end
 
 feature {NONE} -- Internal properties
@@ -552,30 +547,6 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Widget representing Current.
 
-	title: STRING_GENERAL is
-			-- Title of the tool.
-		do
-			Result := interface_names.t_object_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_object_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := interface_names.m_object_tools
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_objects_icon
-		end
-
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
@@ -608,7 +579,7 @@ feature -- Menu
 					mi.disable_sensitive
 					m.extend (create {EV_MENU_SEPARATOR})
 				else
-					m.set_text (interface_names.m_objects_tool_layout_menu_title)					
+					m.set_text (interface_names.m_objects_tool_layout_menu_title)
 				end
 				create mi.make_with_text (interface_names.m_objects_tool_layout_reset)
 				mi.select_actions.extend (agent reset_objects_grids_positions)

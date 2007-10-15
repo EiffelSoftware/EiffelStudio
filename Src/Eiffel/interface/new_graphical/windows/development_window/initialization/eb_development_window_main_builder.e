@@ -286,6 +286,7 @@ feature -- Command
 			develop_window.commands.set_show_toolbar_commands (l_show_toolbar_commands)
 			create l_editor_commands.make (10)
 			develop_window.commands.set_editor_commands (l_editor_commands)
+			develop_window.commands.set_show_shell_tool_commands (create {HASH_TABLE [ES_SHOW_TOOL_COMMAND, ES_TOOL [EB_TOOL]]}.make (1))
 
 			develop_window.commands.new_feature_cmd.disable_sensitive
 			develop_window.commands.toggle_feature_alias_cmd.disable_sensitive
@@ -344,7 +345,10 @@ feature -- Command
 			l_maximize_editor_area_command: EB_MAXIMIZE_EDITOR_AREA_COMMAND
 		do
 				-- Error navigation
-			l_ear_commander := develop_window.tools.errors_and_warnings_tool
+			l_ear_commander ?= develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL})
+			check
+				l_ear_commander_attached: l_ear_commander /= Void
+			end
 			if l_ear_commander /= Void then
 				create l_go_to_previous_error_cmd.make (l_ear_commander)
 				develop_window.commands.set_go_to_previous_error_command (l_go_to_previous_error_cmd)
@@ -595,16 +599,12 @@ feature -- Command
 			create l_docking_manager.make (develop_window.panel, develop_window.window)
 			develop_window.set_docking_manager (l_docking_manager)
 			develop_window.docking_manager.set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
+			l_docking_manager.set_restoration_callback (agent retrieve_docking_content)
+
+				-- Build dynmaic tools
+			build_shell_tools
 
 				-- Build the features tool
-
-			build_features_tool
-			build_cluster_tool
-			build_breakpoints_tool
-			build_favorites_tool
-			build_properties_tool
-			build_windows_tool
-			build_search_and_report_tool
 			build_customized_tools
 
 			create l_editors_manager.make (develop_window)
@@ -640,18 +640,6 @@ feature -- Command
 				-- scroll bars, which were affecting the resizing although they should not have done so.
 				-- Having a default minimum height on the editor is perfectly reasonable.
 				--			develop_window.tools.editor_tool.widget.set_minimum_height (20)
-
-			build_output_tool
-			build_diagram_tool
-			build_class_tool
-			build_features_relation_tool
-
-			build_dependency_tool
-
-			build_metric_tool  -- This line cause mini toolbar problem?
-			build_external_output_tool
-			build_c_output_tool
-			build_errors_and_warnings_tool
 
 				-- Build the refactoring tools
 			develop_window.commands.toolbarable_commands.extend (develop_window.refactoring_manager.pull_command)
@@ -857,187 +845,81 @@ feature -- Command
 			end
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Access
 
-	build_features_tool is
-			-- Build features tool
-		local
-			l_features_tool: EB_FEATURES_TOOL
-		do
-			create l_features_tool.make (develop_window)
-			develop_window.tools.set_features_tool (l_features_tool)
-
-			setup_tool (l_features_tool, "show_features_tool")
+	frozen tool_utils: ES_TOOL_UTILITIES
+			-- Shared access to tool shim utilities
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
-	build_cluster_tool is
-				-- Build cluster tool
-		local
-			l_cluster_tool: EB_CLUSTER_TOOL
-		do
-			create l_cluster_tool.make (develop_window)
-			develop_window.tools.set_cluster_tool (l_cluster_tool)
+feature {NONE} -- Tool construction
 
-			setup_tool (l_cluster_tool, "show_clusters_tool")
+	build_shell_tools is
+			-- Builds all dynamically activated tools of {ES_SHELL_TOOLS}.
+		do
+			develop_window.shell_tools.all_tools.do_all (agent setup_shell_tool)
 		end
 
-	build_output_tool is
-			-- Build output tool.
+	setup_shell_tool (a_tool: ES_TOOL [EB_TOOL]) is
+			-- Sets up a dynamically created tool's shortcut, and commands.
+		require
+			a_tool_not_void: a_tool /= Void
 		local
-			l_output_tool: EB_OUTPUT_TOOL
+			l_show_cmd: ES_SHOW_TOOL_COMMAND
+			l_accel: EV_ACCELERATOR
+			l_shortcut: SHORTCUT_PREFERENCE
 		do
-			create l_output_tool.make (develop_window)
-			develop_window.tools.set_output_tool (l_output_tool)
-			setup_tool (l_output_tool, "show_output_tool")
-		end
+			create l_show_cmd.make (a_tool)
+			develop_window.commands.show_shell_tool_commands.force (l_show_cmd, a_tool)
+			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
 
-	build_diagram_tool is
-			-- Build diagram tool.
-		local
-			l_diagram_tool: EB_DIAGRAM_TOOL
-		do
-			if develop_window.has_case then
-				create l_diagram_tool.make (develop_window)
-				develop_window.tools.set_diagram_tool (l_diagram_tool)
-				setup_tool (l_diagram_tool, "show_diagram_tool")
+			if a_tool.shortcut_preference_name /= Void and then a_tool.edition = 1 then
+					-- Create shortcuts for first edition only!
+				l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_tool.shortcut_preference_name)
+				if l_shortcut /= Void then
+					create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+					l_accel.actions.extend (agent l_show_cmd.execute)
+					l_show_cmd.set_accelerator (l_accel)
+					l_show_cmd.set_referred_shortcut (l_shortcut)
+				end
 			end
 		end
 
-	build_class_tool is
-			-- Build class tool.
+feature {NONE} -- Docking
+
+	frozen retrieve_docking_content (a_tool_id: STRING_GENERAL): SD_CONTENT is
+			-- Performs dynamic creation of tools when restoration of the docked layout requires them.
+			--
+			-- `a_tool_id': The unique title for the persisted docking content.
+			-- `Result': The docking content, attatched to the docking manager or Void if the
+			--           tool id is indvalid.
+		require
+			a_tool_id_attached: a_tool_id /= Void
+			not_a_tool_id_is_empty: not a_tool_id.is_empty
 		local
-			l_class_tool: EB_CLASS_TOOL
+			l_tool: ES_TOOL [EB_TOOL]
+			l_info: TUPLE [type: TYPE [ES_TOOL [EB_TOOL]]; edition: NATURAL_8]
 		do
-			create l_class_tool.make (develop_window)
-			develop_window.tools.set_class_tool (l_class_tool)
-			setup_tool (l_class_tool, "show_class_tool")
+			l_info := tool_utils.tool_info (a_tool_id)
+			if l_info /= Void and then l_info.edition = 1 then
+					-- We only want to rebuild first edition tools! We might want to change this in the future.
+				l_tool := develop_window.shell_tools.tool_next_available_edition (l_info.type, True)
+				if l_tool /= Void then
+					check
+							-- This check is just for the future, if we support reinstantiation of multiple editions.
+						l_tool_is_supporting_multiple_instance: l_tool.edition > 1 implies l_tool.is_supporting_multiple_instances
+					end
+
+						-- The following initialize the tool and attached it to the docking manager.
+					Result := l_tool.tool.content
+				end
+			end
 		end
 
-	build_features_relation_tool is
-			-- Build features relation tool.
-		local
-			l_features_relation_tool: EB_FEATURES_RELATION_TOOL
-		do
-			create l_features_relation_tool.make (develop_window)
-			develop_window.tools.set_features_relation_tool (l_features_relation_tool)
-			setup_tool (l_features_relation_tool, "show_feature_relation_tool")
-		end
-
-	build_dependency_tool is
-			-- Build dependency tool.
-		local
-			l_dependency_tool: EB_DEPENDENCY_TOOL
-		do
-			create l_dependency_tool.make (develop_window)
-			develop_window.tools.set_dependency_tool (l_dependency_tool)
-			setup_tool (l_dependency_tool, "show_dependency_tool")
-		end
-
-	build_metric_tool is
-			-- Build metric tool.
-		local
-			l_metric_tool: EB_METRIC_TOOL
-		do
-			check has_metric: develop_window.has_metrics end
-			create l_metric_tool.make (develop_window)
-			develop_window.tools.set_metric_tool (l_metric_tool)
-			setup_tool (l_metric_tool, "show_metric_tool")
-			l_metric_tool.content.show_actions.extend (agent l_metric_tool.on_select)
-		end
-
-	build_external_output_tool is
-			-- Build external output tool.
-		local
-			l_external_output_tool: EB_EXTERNAL_OUTPUT_TOOL
-		do
-			create l_external_output_tool.make (develop_window)
-			develop_window.tools.set_external_output_tool (l_external_output_tool)
-			setup_tool (l_external_output_tool, "show_external_output_tool")
-		end
-
-	build_c_output_tool is
-			-- Build c output tool.
-		local
-			l_c_output_tool: EB_C_OUTPUT_TOOL
-		do
-			create l_c_output_tool.make (develop_window)
-			develop_window.tools.set_c_output_tool (l_c_output_tool)
-			setup_tool (l_c_output_tool, "show_c_output_tool")
-		end
-
-	build_search_and_report_tool is
-			-- Build search tool.
-		local
-			l_search_tool: EB_MULTI_SEARCH_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
-			l_shortcut: SHORTCUT_PREFERENCE
-			l_shared_preference: EB_SHARED_PREFERENCES
-			l_search_report_tool: EB_SEARCH_REPORT_TOOL
-		do
-				-- Search tool
-			create l_search_tool.make (develop_window)
-			develop_window.tools.set_search_tool (l_search_tool)
-			l_search_tool.attach_to_docking_manager (develop_window.docking_manager)
-			create l_show_cmd.make (develop_window, l_search_tool)
-			create l_shared_preference
-			l_shortcut := l_shared_preference.preferences.misc_shortcut_data.shortcuts.item ("show_search_tool")
-			create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
-			l_accel.actions.extend (agent l_search_tool.prepare_search)
-			l_show_cmd.set_accelerator (l_accel)
-			l_show_cmd.set_referred_shortcut (l_shortcut)
-			develop_window.commands.show_tool_commands.force (l_show_cmd, l_search_tool)
-			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-			develop_window.add_recyclable (l_search_tool)
-
-				-- Report tool
-			l_search_report_tool := l_search_tool.report_tool
-			develop_window.tools.set_search_report_tool (l_search_report_tool)
-			setup_tool (l_search_report_tool, "show_search_report_tool")
-
-			l_search_tool.build_mini_toolbar
-			l_search_report_tool.build_mini_toolbar
-		end
-
-	build_breakpoints_tool is
-			-- Build breakpoints tool.
-		local
-			l_breakpoints_tool: ES_BREAKPOINTS_TOOL
-		do
-			create l_breakpoints_tool.make (develop_window)
-			develop_window.tools.set_breakpoints_tool (l_breakpoints_tool)
-			setup_tool (l_breakpoints_tool, "show_breakpoints_tool")
-		end
-
-	build_favorites_tool is
-			-- Build favorites tool.
-		local
-			l_favorites_tool: EB_FAVORITES_TOOL
-		do
-			create l_favorites_tool.make (develop_window, develop_window.favorites_manager)
-			develop_window.tools.set_favorites_tool (l_favorites_tool)
-			setup_tool (l_favorites_tool, "show_favorites_tool")
-		end
-
-	build_properties_tool is
-			-- Build properties tool.
-		local
-			l_properties_tool: EB_PROPERTIES_TOOL
-		do
-			create l_properties_tool.make (develop_window)
-			develop_window.tools.set_properties_tool (l_properties_tool)
-			setup_tool (l_properties_tool, "show_properties_tool")
-		end
-
-	build_windows_tool is
-			-- Build windows tool (formerly known as Selector tool).
-		local
-			l_windows_tool: EB_WINDOWS_TOOL
-		do
-			create l_windows_tool.make (develop_window)
-			develop_window.tools.set_windows_tool (l_windows_tool)
-			setup_tool (l_windows_tool, "show_windows_tool")
-		end
+feature{NONE} -- Implementation
 
 	build_customized_tools is
 			-- Build customized tools.
@@ -1066,16 +948,6 @@ feature{NONE} -- Implementation
 					l_descriptors.forth
 				end
 			end
-		end
-
-	build_errors_and_warnings_tool is
-			-- Build warnings tool.
-		local
-			l_tool: ES_ERRORS_AND_WARNINGS_TOOL
-		do
-			create l_tool.make (develop_window)
-			develop_window.tools.set_errors_and_warnings_tool (l_tool)
-			setup_tool (l_tool, "show_errors_and_warnings_tool")
 		end
 
 	setup_tool (a_tool: EB_TOOL; a_shortcut_string: STRING) is

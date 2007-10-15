@@ -135,9 +135,6 @@ feature -- Query
 			l_data: TUPLE [menu_item: EB_COMMAND_MENU_ITEM; tool_id: STRING]
 			l_done: BOOLEAN
 		do
-			check
-				a_tool_exists: develop_window.tools.all_tools.has (a_tool)
-			end
 			from
 				l_menu := tools_list_menu
 				l_menu.start

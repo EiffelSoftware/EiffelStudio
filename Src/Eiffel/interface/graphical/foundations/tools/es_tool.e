@@ -235,7 +235,7 @@ feature {ES_SHELL_TOOLS} -- Status report
 			not_is_recycled: not is_recycled
 		do
 				-- Keeps a single tool available always.
-			Result := is_supporting_multiple_instances and window.dynamic_tools.editions_of_tool ({like Current}, False) > 1
+			Result := is_supporting_multiple_instances and window.shell_tools.editions_of_tool ({like Current}, False) > 1
 		end
 
 feature -- Status report
@@ -336,7 +336,7 @@ feature -- Basic operations
 					-- the tool is cleaned up too.
 				tool.close
 			else
-				window.dynamic_tools.close_tool (Current)
+				window.shell_tools.close_tool (Current)
 			end
 		end
 

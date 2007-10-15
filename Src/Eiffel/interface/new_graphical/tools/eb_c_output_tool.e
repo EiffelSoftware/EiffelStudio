@@ -18,9 +18,6 @@ inherit
 			clear, internal_recycle, scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin,
 			is_general,
-			title,
-			title_for_pre,
-			pixmap,
 			attach_to_docking_manager,
 			build_docking_content,
 			show,
@@ -60,10 +57,11 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_tool: EB_DEVELOPMENT_WINDOW) is
+	make (a_tool: EB_DEVELOPMENT_WINDOW; a_desc: like tool_descriptor) is
 			-- Create a new external output tool.
 		do
 			develop_window := a_tool
+			tool_descriptor := a_desc
 			initialization (a_tool)
 			widget := l_ev_vertical_box_1
 			c_compilation_output_manager.extend (Current)
@@ -186,33 +184,6 @@ feature{NONE} -- Initialization
 			l_ev_save_toolbar.compute_minimum_size
 
 			l_locale_lbl.set_text (interface_names.l_locale)
-		end
-
-	title_for_pre: STRING is
-			-- Title
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.interface_names.to_c_output_tool
-		end
-
-	title: STRING_GENERAL is
-			-- Title
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.interface_names.l_tab_c_output
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.pixmaps.icon_pixmaps.tool_c_output_icon
 		end
 
 	pixmap_failure: EV_PIXMAP is

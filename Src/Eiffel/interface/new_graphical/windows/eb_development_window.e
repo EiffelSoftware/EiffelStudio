@@ -138,6 +138,10 @@ feature {NONE} -- Initialization
 			create agents.make (Current)
 			create tools.make (Current)
 			create ui.make (Current)
+
+				-- `shell_tools' are automatically cleaned up when `shell_tools' is recycled.
+			create shell_tools.make (Current)
+			add_recyclable (shell_tools)
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
@@ -271,28 +275,29 @@ feature -- Window Properties
 			-- Close focusing content.
 		local
 			l_content: SD_CONTENT
-			l_tools: ARRAYED_LIST [EB_TOOL]
-			l_tool: EB_TOOL
+			l_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
+			l_tool: ES_TOOL [EB_TOOL]
+			l_tool_window: EB_TOOL
 			l_comb: EV_COMBO_BOX
 			l_is_comb: BOOLEAN
 		do
 			l_content := docking_manager.focused_content
-			l_comb ?= ev_application.focused_widget
-			l_is_comb := l_comb /= Void
 			if l_content /= Void then
-				l_tools := tools.all_tools
-				from
-					l_tools.start
-				until
-					l_tools.after or l_tool /= Void
-				loop
-					if l_tools.item.content = l_content then
-					 	l_tool := l_tools.item
+				l_tools := shell_tools.all_tools.new_cursor
+				from l_tools.start until l_tools.after or l_tool_window /= Void loop
+					l_tool := l_tools.item
+					if l_tool.is_tool_instantiated and not l_tool.is_recycled then
+						if l_tool.tool.content = l_content then
+						 	l_tool_window := l_tool.tool
+						end
 					end
 					l_tools.forth
 				end
-				if l_tool /= Void and then (l_tool.has_focus or not l_is_comb) then
-					l_tool.close
+
+				l_comb ?= ev_application.focused_widget
+				l_is_comb := l_comb /= Void
+				if l_tool_window /= Void and then (l_tool_window.has_focus or not l_is_comb) then
+					l_tool_window.close
 				else
 					if editors_manager.current_editor /= Void and then
 						editors_manager.current_editor.docking_content = l_content and then
@@ -960,6 +965,7 @@ feature -- Window management
 			-- After docking manager have all widgets, set all tools to standard default layout.
 		local
 			l_tool: EB_TOOL
+			l_last_tool: EB_TOOL
 			l_tool_bar_content, l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
 			l_no_locked_window: BOOLEAN
 		do
@@ -973,11 +979,12 @@ feature -- Window management
 			l_tool := tools.c_output_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
 
-			l_tool := tools.errors_and_warnings_tool
+			l_tool := shell_tools.tool ({ES_ERROR_LIST_TOOL}).tool
 			l_tool.content.set_tab_with (tools.c_output_tool.content, True)
+			l_last_tool := l_tool
 
 			l_tool := tools.output_tool
-			l_tool.content.set_tab_with (tools.errors_and_warnings_tool.content, True)
+			l_tool.content.set_tab_with (l_last_tool.content, True)
 
 			l_tool := tools.features_relation_tool
 			l_tool.content.set_tab_with (tools.output_tool.content, True)
@@ -2441,6 +2448,9 @@ feature -- Parts
 	ui: EB_DEVELOPMENT_WINDOW_UI
 			-- All widgets, such as save file dialogs.
 
+	shell_tools: ES_SHELL_TOOLS
+		-- Access to the EiffelStudio shell embedded tools
+
 feature {EB_DEVELOPMENT_WINDOW_PART}
 
 	set_text_edited (a_bool: like text_edited) is
@@ -2465,6 +2475,7 @@ invariant
 	not_void: agents /= Void
 	not_void: tools /= Void
 	not_void: ui /= Void
+	dynamic_tools_attached: shell_tools /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

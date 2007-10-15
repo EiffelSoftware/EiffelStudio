@@ -12,9 +12,6 @@ class
 inherit
 	EB_TOOL
 		redefine
-			menu_name,
-			pixmap,
-			pixel_buffer,
 			mini_toolbar,
 			internal_recycle,
 			show
@@ -92,36 +89,6 @@ feature -- Access
 
 	widget: EV_WIDGET
 			-- Widget representing Current.
-
-	title: STRING_GENERAL is
-			-- Title of the tool.
-		do
-			Result := Interface_names.t_Threads_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_Threads_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := interface_names.m_threads_tool -- Interface_names.m_Call_stack_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_threads_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_threads_icon_buffer
-		end
 
 feature -- Status setting
 

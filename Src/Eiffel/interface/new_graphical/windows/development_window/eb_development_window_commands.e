@@ -134,7 +134,7 @@ feature -- Query
 
 	restore_editors_command: EB_RESTORE_EDITORS_COMMAND
 			-- Command that restore all minimized editors.
-			
+
 	customized_formatter_command: EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND
 			-- Command to setup customzied formatter
 
@@ -159,6 +159,9 @@ feature -- Commands
 			-- All commands that can be put in a toolbar.
 
 	show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
+			-- Commands to show/hide a tool.
+
+	show_shell_tool_commands: HASH_TABLE [ES_SHOW_TOOL_COMMAND, ES_TOOL [EB_TOOL]]
 			-- Commands to show/hide a tool.
 
 	editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
@@ -372,6 +375,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			show_tool_commands := a_commands
 		ensure
 			set: show_tool_commands = a_commands
+		end
+
+	set_show_shell_tool_commands (a_commands: like show_shell_tool_commands) is
+			-- Set `show_tool_commands'
+		do
+			show_shell_tool_commands := a_commands
+		ensure
+			set: show_shell_tool_commands = a_commands
 		end
 
 	set_show_toolbar_commands (a_commands: like show_toolbar_commands) is
@@ -630,6 +641,10 @@ feature -- Recycle
 			toggle_stone_cmd := Void
 			delete_class_cluster_cmd := Void
 			print_cmd := Void
+			go_to_next_error_command := Void
+			go_to_previous_error_command := Void
+			go_to_next_warning_command := Void
+			go_to_previous_warning_command := Void
 
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end

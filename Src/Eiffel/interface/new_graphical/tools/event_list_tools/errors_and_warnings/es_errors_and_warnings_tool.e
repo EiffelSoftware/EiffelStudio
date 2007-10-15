@@ -18,7 +18,6 @@ inherit
 			create_right_tool_bar_items,
 			is_appliable_event,
 			surpress_synchronization,
-			maximum_item_count,
 			on_event_added,
 			on_event_removed,
 			update_content_applicable_widgets,
@@ -106,27 +105,6 @@ feature -- Access
 
 	warning_count: NATURAL_8
 			-- Number of warnings
-
-feature {NONE} -- Access
-
-	tool_title: like title
-			-- The tool's original title.
-		do
-			Result := "Error List"
-		end
-
-	tool_icon_buffer: like icon
-			-- The tool's original icon as a pixel buffer.
-		do
-			Result := stock_pixmaps.tool_errors_list_with_errors_icon_buffer
-		end
-
-	maximum_item_count: NATURAL
-			-- Maximum number of items displayable by the list.
-			-- Note: Use 0 to indicate no maximum.
-		do
-			Result := 100
-		end
 
 feature {NONE} -- Status report
 
@@ -373,7 +351,7 @@ feature {NONE} -- Basic operations
 				l_error ?= l_event_item.data
 				if l_error /= Void then
 						-- Show the C/C++ compiler output
-					l_tool := develop_window.tools.c_output_tool
+					l_tool ?= develop_window.shell_tools.tool ({ES_C_OUTPUT_TOOL}).tool
 					if l_tool /= Void then
 						l_tool.scroll_to_end
 						l_tool.force_display
@@ -679,8 +657,6 @@ feature {NONE} -- User interface manipulation
 
 	set_error_count (a_count: NATURAL_8)
 			-- Sets `error_count' to `a_count'
-		require
-			a_count_small_enough: a_count + error_count + warning_count <= maximum_item_count
 		local
 			l_text: STRING_32
 		do
@@ -702,8 +678,6 @@ feature {NONE} -- User interface manipulation
 
 	set_warning_count (a_count: NATURAL_8)
 			-- Sets `warning_count' to `a_count'
-		require
-			a_count_small_enough: a_count + error_count + warning_count <= maximum_item_count
 		local
 			l_text: STRING_32
 		do

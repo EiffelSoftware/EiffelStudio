@@ -15,9 +15,6 @@ inherit
 		export
 			{NONE} show
 		redefine
-			menu_name,
-			pixmap,
-			pixel_buffer,
 			mini_toolbar,
 			build_mini_toolbar,
 			internal_recycle,
@@ -304,19 +301,17 @@ feature {NONE} -- Initialize
 	build_report_box: EV_VERTICAL_BOX is
 			-- Build report box
 		deferred
-		ensure
-			report_tool_not_void: report_tool /= Void
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialize
+feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
 
 	build_mini_toolbar is
 			-- Build mini tool bar.
 		local
-			l_cmd: EB_SHOW_TOOL_COMMAND
+			l_cmd: ES_SHOW_TOOL_COMMAND
 		do
 			create mini_toolbar.make
-			l_cmd := develop_window.commands.show_tool_commands.item (report_tool)
+			l_cmd := develop_window.commands.show_shell_tool_commands.item (develop_window.shell_tools.tool ({ES_SEARCH_REPORT_TOOL}))
 				-- Pixmap should be changed.
 			l_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.callstack_send_to_external_editor_icon)
 			l_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.callstack_send_to_external_editor_icon_buffer)
@@ -332,36 +327,6 @@ feature -- EB_TOOL
 
 	widget: EV_WIDGET
 			-- Widget representing Current
-
-	title: STRING_GENERAL is
-			-- Title of the tool
-		do
-			Result := Interface_names.t_search_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_search_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := Interface_names.m_search_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_advanced_search_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer
-		do
-			Result := pixmaps.icon_pixmaps.tool_advanced_search_icon_buffer
-		end
 
 	show_and_set_focus is
 			-- Show the search tool and set focus to the search text field
@@ -393,6 +358,11 @@ feature -- Access
 
 	report_tool: EB_SEARCH_REPORT_TOOL
 			-- Report tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_REPORT_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
 
 	show_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions called when the item becomes visible.
@@ -449,6 +419,9 @@ feature -- Widgets
 
 	search_report_grid: EB_SEARCH_REPORT_GRID
 			-- Grid to contain search report
+		do
+			Result := report_tool.search_report_grid
+		end
 
 	replace_combo_box: EV_COMBO_BOX
 			-- Replacment combo box
@@ -586,8 +559,6 @@ feature {NONE} -- Destroy behavior.
 		do
 			save_preferences
 			show_actions.wipe_out
-			report_tool.recycle
-			report_tool := Void
 			widget.destroy
 			recycle_widgets
 			widget := Void
@@ -614,7 +585,6 @@ feature {NONE} -- Destroy behavior.
 			search_compiled_class_button := Void
 			incremental_search_button := Void
 			scope_list := Void
-			search_report_grid := Void
 			replace_combo_box := Void
 			notebook := Void
 			whole_word_button := Void

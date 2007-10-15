@@ -13,9 +13,6 @@ inherit
 		rename
 			stone as current_stone
 		redefine
-			menu_name,
-			pixmap,
-			pixel_buffer,
 			on_shown,
 			widget,
 			make,
@@ -39,14 +36,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
 			-- Make a new features tool.
 		do
 			develop_window ?= a_manager
 			is_signature_enabled := Preferences.feature_tool_data.is_signature_enabled
 			is_alias_enabled := Preferences.feature_tool_data.is_alias_enabled
 			is_assigner_enabled := Preferences.feature_tool_data.is_assigner_enabled
-			Precursor (a_manager)
+			Precursor (a_manager, a_tool)
 		end
 
 	build_interface is
@@ -97,36 +94,6 @@ feature -- Access
 
 	tree: EB_FEATURES_TREE
 			-- Widget corresponding to the tree of features.
-
-	title: STRING_GENERAL is
-			-- Title of the tool
-		do
-			Result := Interface_names.t_features_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_features_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := Interface_names.m_features_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_features_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer representing the command.
-		do
-			Result := pixmaps.icon_pixmaps.tool_features_icon_buffer
-		end
 
 feature -- Command
 

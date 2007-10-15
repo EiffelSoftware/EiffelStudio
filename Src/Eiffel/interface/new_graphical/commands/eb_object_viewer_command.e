@@ -131,11 +131,7 @@ feature -- Basic operations
 			-- Launch `Current' as a command.
 			-- Pop up a new empty dialog.
 		do
---			if ev_application.ctrl_pressed then
---				open_new_tool
---			else
-				open_new_dialog
---			end
+			open_new_dialog
 		end
 
 	refresh is
@@ -175,13 +171,6 @@ feature {EB_OBJECT_VIEWERS_TOOL, EB_OBJECT_VIEWERS_DIALOG} -- Dialog
 			is_no_longer_known: not opened_viewers.has (e)
 		end
 
-feature {EB_DEBUGGER_MANAGER} -- Tool management
-
-	new_tool (w: EB_DEVELOPMENT_WINDOW): EB_OBJECT_VIEWERS_TOOL is
-		do
-			create Result.make_with_command (Current, w)
-		end
-
 feature {EB_CONTEXT_MENU_FACTORY} -- Implementation
 
 	on_stone_dropped (st: OBJECT_STONE) is
@@ -213,20 +202,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			added_a_dialog: opened_viewers.count = (old opened_viewers.count) + 1
-		end
-
-	open_new_tool is
-			-- Create and display a new expanded viewer tool
-		local
-			nt: EB_OBJECT_VIEWERS_TOOL
-		do
-			nt := new_tool (Eb_debugger_manager.debugging_window)
-			nt.attach_to_docking_manager (eb_debugger_manager.debugging_window.docking_manager)
-			opened_viewers.extend (nt)
-			last_opened_viewer := nt
-			nt.show
-		ensure
-			added_a_tool: opened_viewers.count = (old opened_viewers.count) + 1
 		end
 
 	last_opened_viewer: EB_OBJECT_VIEWERS_I;

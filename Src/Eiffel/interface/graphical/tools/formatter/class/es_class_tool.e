@@ -11,7 +11,7 @@ frozen class
 	ES_CLASS_TOOL
 
 inherit
-	ES_TOOL [EB_CLASS_TOOL]
+	ES_FORMATTER_TOOL [EB_CLASS_TOOL]
 
 create {NONE}
 	default_create
@@ -22,6 +22,7 @@ feature -- Access
 			-- Tool icon
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
 		do
+			Result := stock_pixmaps.tool_class_icon_buffer
 			Result := stock_pixmaps.tool_class_icon_buffer
 		end
 
@@ -46,6 +47,11 @@ feature -- Access
 		do
 			Result := "show_class_tool"
 		end
+
+feature -- Status report
+
+	is_customizable: BOOLEAN = True
+			-- Indicates if the tool can be customize to support custom views.
 
 feature {NONE} -- Factory
 

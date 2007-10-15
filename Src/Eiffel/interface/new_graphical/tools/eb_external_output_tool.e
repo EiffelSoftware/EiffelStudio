@@ -22,9 +22,6 @@ inherit
 			quick_refresh_editor,quick_refresh_margin, is_general,
 			build_docking_content,
 			attach_to_docking_manager,
-			pixmap,
-			title,
-			title_for_pre,
 			show
 		end
 
@@ -62,33 +59,6 @@ feature{NONE} -- Initialization
 			create l_constants
 			content.set_long_title (title)
 			content.set_short_title (title)
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.pixmaps.icon_pixmaps.tool_external_output_icon
-		end
-
-	title: STRING_GENERAL is
-			-- Pixmap
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.interface_names.l_tab_external_output
-		end
-
-	title_for_pre: STRING is
-			-- Title
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.interface_names.to_external_ouput_tool
 		end
 
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is

@@ -12,8 +12,6 @@ class
 inherit
 	EB_STONABLE_TOOL
 		redefine
-			menu_name,
-			pixmap,
 			mini_toolbar,
 			build_mini_toolbar,
 			internal_recycle,
@@ -407,32 +405,8 @@ feature -- Access
 	exception_dialog_button: SD_TOOL_BAR_BUTTON
 			-- Button to display exception dialog.
 
-	title_for_pre: STRING is
-			-- Title of the tool.
-		do
-			Result := Interface_names.to_Call_stack_tool
-		end
-
-	title: STRING_GENERAL is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.t_Call_stack_tool
-		end
-
 	stack_grid: ES_GRID
 			-- Graphical representation of the execution stack.
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := Interface_names.m_Call_stack_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_call_stack_icon
-		end
 
 	stone: STONE
 			-- Not used.

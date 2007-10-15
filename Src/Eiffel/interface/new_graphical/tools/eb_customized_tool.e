@@ -14,6 +14,8 @@ inherit
 			make as old_make
 		redefine
 			is_customized_tool,
+			title,
+			title_for_pre,
 			pixmap,
 			pixel_buffer
 		end
@@ -161,18 +163,19 @@ feature -- Setting
 		do
 			l_tool_id := suitable_tool_for_stone (st)
 			if l_tool_id /= Void then
-				develop_window.tools.show_tool_by_id (l_tool_id)
+				l_tool ?= develop_window.tools.customizable_tool_by_id (l_tool_id)
+				if l_tool /= Void then
+					l_tool.show_with_setting
+				end
 			end
+
 			if develop_window.unified_stone then
 				develop_window.set_stone (st)
 			elseif develop_window.link_tools then
 				develop_window.tools.set_stone (st)
 			else
-				if l_tool_id /= Void then
-					l_tool ?= develop_window.tools.tool_by_id (l_tool_id)
-					if l_tool /= Void then
-						l_tool.set_stone (st)
-					end
+				if l_tool /= Void then
+					l_tool.set_stone (st)
 				end
 			end
 		end

@@ -16,14 +16,11 @@ inherit
 
 	EB_TOOL
 		rename
-			make as make_tool,
 			widget as report_box
 		redefine
 			build_docking_content,
 			build_mini_toolbar,
 			mini_toolbar,
-			pixmap,
-			pixel_buffer,
 			internal_recycle,
 			show
 		end
@@ -33,23 +30,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_search_tool: EB_MULTI_SEARCH_TOOL) is
-			-- Initialization
-		require
-			a_search_tool_not_void: a_search_tool /= Void
-		do
-			search_tool := a_search_tool
-			make_tool (a_search_tool.develop_window)
-		ensure
-			search_tool_not_void: search_tool /= Void
-		end
-
 	build_interface is
 			-- Create and return a box containing result grid.
 		local
 			frm: EV_FRAME
 			report_toolbar: EV_TOOL_BAR
 			hbox: EV_HORIZONTAL_BOX
+			l_tool: ES_SEARCH_TOOL
 		do
 			create report_toolbar
 			report_toolbar.disable_vertical_button_style
@@ -85,7 +72,8 @@ feature {NONE} -- Initialization
 			shortcut_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
 			shortcut_tool_bar.extend (collapse_all_button)
 
-			create search_report_grid.make (search_tool)
+			l_tool ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL})
+			create search_report_grid.make (l_tool)
 
 			create report_box
 			report_box.extend (frm)
@@ -113,15 +101,15 @@ feature {NONE} -- Initialization
 			content.focus_in_actions.extend (agent show)
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialize
+feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
 
 	build_mini_toolbar is
 			-- Build mini tool bar.
 		local
-			l_cmd: EB_SHOW_TOOL_COMMAND
+			l_cmd: ES_SHOW_TOOL_COMMAND
 		do
 			create mini_toolbar.make
-			l_cmd := develop_window.commands.show_tool_commands.item (search_tool)
+			l_cmd := develop_window.commands.show_shell_tool_commands.item (develop_window.shell_tools.tool ({ES_SEARCH_TOOL}))
 				-- Pixmap should be changed.
 			l_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_search_icon)
 			l_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_search_icon_buffer)
@@ -140,33 +128,12 @@ feature -- Access
 
 	search_tool: EB_MULTI_SEARCH_TOOL
 			-- Search tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL})
+		end
 
 	report_box: EV_VERTICAL_BOX
 			-- Widget
-
-	title_for_pre: STRING is
-			-- Title
-		do
-			Result := interface_names.to_search_report_tool
-		end
-
-	title: STRING_GENERAL is
-			-- Redefine
-		do
-			Result := interface_names.t_search_report_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap
-		do
-			Result := pixmaps.icon_pixmaps.tool_find_results_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer
-		do
-			Result := pixmaps.icon_pixmaps.tool_find_results_icon_buffer
-		end
 
 	mini_toolbar: SD_TOOL_BAR
 			-- Mini tool bar
@@ -232,7 +199,6 @@ feature {NONE} -- Recyclable
 	internal_recycle is
 			-- Recyclable
 		do
-			search_tool := Void
 			search_report_grid.wipe_out
 			Precursor {EB_TOOL}
 		end

@@ -86,7 +86,6 @@ feature {NONE} -- Initialization
 
 					--| End of settings
 				init_commands
-				create watch_tool_list.make
 			end
 
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
@@ -185,6 +184,8 @@ feature {NONE} -- Initialization
 								)
 			show_tool_commands.extend (l_cmd)
 			show_watch_tool_command := l_cmd
+
+			create object_viewer_cmd.make
 
 --| FIXME XR: TODO: Add:
 --| 3) edit feature, feature evaluation
@@ -304,7 +305,6 @@ feature {NONE} -- Initialization
 			else
 				enable_commands_on_project_loaded
 			end
-
 				-- Enable/Disable commands on project loading/unloading.
 			Eiffel_project.manager.create_agents.extend (agent enable_commands_on_project_created)
 			Eiffel_project.manager.load_agents.extend (agent enable_commands_on_project_loaded)
@@ -400,51 +400,52 @@ feature -- tools
 
 	call_stack_tool: EB_CALL_STACK_TOOL
 			-- A tool that represents the call stack in a graphical display.
+		do
+			Result ?= debugging_window.shell_tools.tool ({ES_DEBUGGER_CALL_STACK_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
 
 	threads_tool: ES_DBG_THREADS_TOOL
 			-- A tool that represents the threads list in a graphical display.
+		do
+			Result ?= debugging_window.shell_tools.tool ({ES_DEBUGGER_THREADS_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
 
 	objects_tool: ES_OBJECTS_TOOL
+		do
+			Result ?= debugging_window.shell_tools.tool ({ES_DEBUGGER_OBJECTS_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
 
 	object_viewer_tool: EB_OBJECT_VIEWERS_TOOL
+		do
+			Result ?= debugging_window.shell_tools.tool ({ES_DEBUGGER_OBJECT_VIEWER_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
 
 	watch_tool_list: LINKED_SET [ES_WATCH_TOOL]
-
-	all_tools: ARRAYED_LIST [EB_TOOL] is
-			-- All managed tools.
+			-- List of watched tools
 		local
-			l_wc: INTEGER
-			l_list: LINKED_SET [ES_WATCH_TOOL]
+			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
 		do
-			if watch_tool_list /= Void then
-				l_wc := watch_tool_list.count
-			end
-			create Result.make (3 + l_wc)
-			if call_stack_tool /= Void then
-				Result.extend (call_stack_tool)
-			end
-			if threads_tool /= Void then
-				Result.extend (threads_tool)
-			end
-			if objects_tool /= Void then
-				Result.extend (objects_tool)
-			end
-			if object_viewer_tool /= Void then
-				Result.extend (object_viewer_tool)
-			end
-			if watch_tool_list /= Void then
-				from
-					l_list := watch_tool_list
-					l_list.start
-				until
-					l_list.after
-				loop
-					Result.extend (l_list.item)
-					l_list.forth
-				end
-			end
+			l_tools := debugging_window.shell_tools.tools ({ES_DEBUGGER_WATCH_TOOL})
+			create Result.make
+			l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL])
+				local
+					l_tool: ES_WATCH_TOOL
+				do
+					if a_tool.is_tool_instantiated then
+						l_tool ?= a_tool.tool
+						a_result.extend (l_tool)
+					end
+				end (?, Result))
 		ensure
-			result_not_void: Result /= Void
+			result_attached: Result /= Void
 		end
 
 feature -- Output visitor
@@ -620,10 +621,13 @@ feature -- tools management
 			mn: STRING_GENERAL
 			wt: ES_WATCH_TOOL
 			l_recyclable: EB_RECYCLABLE
-			l_bptool: ES_BREAKPOINTS_TOOL
-			l_show_cmd: EB_SHOW_TOOL_COMMAND
+			l_show_cmd: ES_SHOW_TOOL_COMMAND
+			l_watch_list: like watch_tool_list
 		do
 			m := w.menus.debugging_tools_menu
+			if raised then
+				m.enable_sensitive
+			end
 				-- Recycle existing menu items.
 			from
 				m.start
@@ -641,8 +645,7 @@ feature -- tools management
 
 			if raised then
 				if debugging_window /= Void then
-					l_bptool := debugging_window.tools.breakpoints_tool
-					l_show_cmd := debugging_window.commands.show_tool_commands.item (l_bptool)
+					l_show_cmd := debugging_window.commands.show_shell_tool_commands.item (debugging_window.shell_tools.tool ({ES_DEBUGGER_BREAKPOINTS_TOOL}))
 					mi := l_show_cmd.new_menu_item
 					m.extend (mi)
 					w.add_recyclable (mi)
@@ -660,8 +663,10 @@ feature -- tools management
 				m.extend (mi)
 				w.add_recyclable (mi)
 
+				l_watch_list := watch_tool_list
+
 					-- Do not display shortcut if any watch tool exists.
-				if not watch_tool_list.is_empty then
+				if not l_watch_list.is_empty then
 					create_and_show_watch_tool_command.set_referred_shortcut (Void)
 				else
 					create_and_show_watch_tool_command.set_referred_shortcut (show_watch_tool_preference)
@@ -670,14 +675,14 @@ feature -- tools management
 				m.extend (mi)
 				w.add_recyclable (mi)
 
-				if not watch_tool_list.is_empty then
+				if not l_watch_list.is_empty then
 					m.extend (create {EV_MENU_SEPARATOR})
 					from
-						watch_tool_list.start
+						l_watch_list.start
 					until
-						watch_tool_list.after
+						l_watch_list.after
 					loop
-						wt := watch_tool_list.item
+						wt := l_watch_list.item
 						mn := wt.menu_name.twin
 						if show_watch_tool_command.shortcut_available then
 							mn.append ("%T")
@@ -690,7 +695,7 @@ feature -- tools management
 						m.extend (mi)
 						w.add_recyclable (mi)
 
-						watch_tool_list.forth
+						l_watch_list.forth
 					end
 				end
 				m.enable_sensitive
@@ -783,10 +788,12 @@ feature -- tools management
 			-- Create a new watch tool attached to current debugging window
 		local
 			t: EB_TOOL
+			l_watch_list: like watch_tool_list
 		do
 			if debugging_window /= Void then
-				if not watch_tool_list.is_empty then
-					t := watch_tool_list.last
+				l_watch_list := watch_tool_list
+				if not l_watch_list.is_empty then
+					t := l_watch_list.last
 				else
 					t := objects_tool
 				end
@@ -801,38 +808,12 @@ feature -- tools management
 			a_manager /= Void
 		local
 			l_watch_tool: ES_WATCH_TOOL
-			i: INTEGER
 		do
-			i := new_watch_tool_number
+				-- This call has the side affect of creating the tool, do not remove it!
+			l_watch_tool ?= debugging_window.shell_tools.tool_next_available_edition ({ES_DEBUGGER_WATCH_TOOL}, False).tool
 
-				--| Create watch tool
-			create l_watch_tool.make_with_title (a_manager, Current,
-					last_watch_tool_number,
-					Interface_names.t_watch_tool.as_string_32 + " #" + i.out,
-					Interface_names.to_watch_tool + i.out
-				)
-			if
-				a_tool /= Void
-				and then a_tool.content /= Void
-				and then a_tool.content.is_visible
-			then
-			 	l_watch_tool.attach_to_docking_manager_with (a_manager.docking_manager, a_tool)
-			else
-				l_watch_tool.attach_to_docking_manager (a_manager.docking_manager)
-			end
-			watch_tool_list.extend (l_watch_tool)
-			assign_watch_tool_unique_titles
 			update_all_debugging_tools_menu
 		end
-
-	close_watch_tool (wt: ES_WATCH_TOOL) is
-		require
-			wt /= Void
-		do
-			wt.close
-			watch_tool_list.prune_all (wt)
-		end
-
 feature -- Windows observer
 
 	on_window_removed (a_item: EB_WINDOW) is
@@ -861,21 +842,6 @@ feature -- Events helpers
 		do
 			set_events_handler (create {EB_DEBUGGER_EVENTS_HANDLER}.make (agent debugging_window))
 		end
-
-feature {NONE} -- watch tool numbering
-
-	new_watch_tool_number: INTEGER is
-		do
-				--| Get new watch id
-			if watch_tool_list.is_empty then
-				last_watch_tool_number := 1
-			else
-				last_watch_tool_number := last_watch_tool_number + 1
-			end
-			Result := last_watch_tool_number
-		end
-
-	last_watch_tool_number: INTEGER
 
 feature -- Status report
 
@@ -1251,28 +1217,18 @@ feature -- Status setting
 			object_storage_management_cmd.disable_sensitive
 
 				--| Grid Objects Tool
-			if objects_tool = Void then
-				create objects_tool.make_with_debugger (debugging_window, Current)
-			else
-				objects_tool.set_manager (debugging_window)
-			end
-			objects_tool.attach_to_docking_manager (l_docking_manager)
+			objects_tool.set_manager (debugging_window)
 
 			objects_tool.set_cleaning_delay (preferences.debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.request_update
 
 				--| object viewer Objects Tool
-			if object_viewer_tool = Void then
-				object_viewer_tool := object_viewer_cmd.new_tool (debugging_window)
-			else
-				object_viewer_tool.set_manager (debugging_window)
-			end
-			object_viewer_tool.attach_to_docking_manager (l_docking_manager)
+			object_viewer_tool.set_manager (debugging_window)
 
 				--| Watches tool
 			l_watch_tool_list := watch_tool_list
 				--| At least one watch tool
-			nwt := Preferences.debug_tool_data.number_of_watch_tools.max (1)
+			nwt := Preferences.debug_tool_data.number_of_watch_tools
 			if l_watch_tool_list.count < nwt  then
 				from
 					l_tool := Void
@@ -1283,85 +1239,26 @@ feature -- Status setting
 						end
 					end
 				until
-					l_watch_tool_list.count >= nwt
+					watch_tool_list.count >= nwt
 				loop
 					create_new_watch_tool_inside_notebook (debugging_window, l_tool)
 				end
-			elseif not l_watch_tool_list.is_empty then
-				from
-					l_tool := Void
-					if not l_watch_tool_list.is_empty then
-						l_watch_tool := l_watch_tool_list.last
-						if l_watch_tool.shown then
-							l_tool := l_watch_tool
-						end
-					end
-					l_watch_tool_list.start
-				until
-					l_watch_tool_list.after
-				loop
-					l_watch_tool := l_watch_tool_list.item
-					if l_watch_tool /= Void then
-						l_watch_tool.set_manager (debugging_window)
-						if l_tool /= Void and then l_watch_tool.content /= Void and then l_watch_tool.content.target_content_shown (l_tool.content) then
-							l_watch_tool.attach_to_docking_manager_with (l_docking_manager, l_tool)
-						else
-							l_watch_tool.attach_to_docking_manager (l_docking_manager)
-						end
-					end
-					l_watch_tool_list.forth
-				end
+					-- `watch_tool_list' has changed, so fetch a new cache
+				l_watch_tool_list := watch_tool_list
 			end
+
 			l_watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
 			l_watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
 				--| Threads Tool
-			if threads_tool = Void then
-				create threads_tool.make (debugging_window)
-			end
-			threads_tool.attach_to_docking_manager (debugging_window.docking_manager)
 			threads_tool.request_update
 
 				--| Call Stack Tool
-			if call_stack_tool = Void then
-				create call_stack_tool.make (debugging_window)
-			end
-			call_stack_tool.attach_to_docking_manager (debugging_window.docking_manager)
 			call_stack_tool.request_update
 
 				-- Show Tools and final visual settings
 			debugging_window.show_tools
 			restore_debug_docking_layout
-
-				--| Watch tool can not be simply hidden
-				--| they are shown or closed.
-			from
-				l_tool := Void
-				if not l_watch_tool_list.is_empty then
-					l_watch_tool := l_watch_tool_list.last
-					if l_watch_tool.shown then
-						l_tool := l_watch_tool
-					end
-				end
-				if l_tool = Void
-					and then objects_tool /= Void
-					and then objects_tool.shown
-				then
-					l_tool := objects_tool
-				end
-				l_watch_tool_list.start
-			until
-				l_watch_tool_list.after
-			loop
-				l_watch_tool := l_watch_tool_list.item
-				if l_watch_tool.content /= Void and then not l_watch_tool.content.is_visible then
-					if l_tool /= Void then
-						l_watch_tool.content.set_tab_with (l_tool.content, False)
-					end
-					l_watch_tool.content.show
-				end
-				l_watch_tool_list.forth
-			end
 
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
 			split ?= objects_tool.widget
@@ -1462,20 +1359,7 @@ feature -- Status setting
 			end
 
 			save_debug_docking_layout
-			objects_tool.content.close
 			Preferences.debug_tool_data.number_of_watch_tools_preference.set_value (watch_tool_list.count)
-			from
-				watch_tool_list.start
-			until
-				watch_tool_list.after
-			loop
-				watch_tool_list.item.content.close
-				watch_tool_list.forth
-			end
-
-			call_stack_tool.content.close
-			threads_tool.content.close
-			object_viewer_tool.content.close
 
 				-- Free and recycle tools
 			raised := False
@@ -1539,24 +1423,6 @@ feature -- Status setting
 			if raised then
 				call_stack_tool.update
 				threads_tool.update
-			end
-		end
-
-	assign_watch_tool_unique_titles is
-			-- Reassign all unique titles of watch tools.
-		local
-			w: ES_WATCH_TOOL
-			lst: like watch_tool_list
-		do
-			from
-				lst := watch_tool_list
-				lst.start
-			until
-				lst.after
-			loop
-				w := lst.item
-				w.content.set_unique_title (once "watch_tool_" + lst.index.out)
-				lst.forth
 			end
 		end
 
@@ -2203,11 +2069,13 @@ feature {NONE} -- Implementation
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
+			l_dyna_tools: ES_SHELL_TOOLS
 			l_tool, l_last_watch_tool: EB_TOOL
 			l_window: EV_WINDOW
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_sd_button: SD_TOOL_BAR_ITEM
 			l_buttons: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_watch_tool_list: like watch_tool_list
 		do
 			-- Setup toolbar buttons
 			check one_button: restart_cmd.managed_sd_toolbar_items.count = 1 end
@@ -2237,6 +2105,7 @@ feature {NONE} -- Implementation
 			debugging_window.close_all_tools
 
 			l_tools := debugging_window.tools
+			l_dyna_tools := debugging_window.shell_tools
 
 			-- Tools below editor
 			l_tool := l_tools.class_tool
@@ -2253,19 +2122,20 @@ feature {NONE} -- Implementation
 			l_tools.breakpoints_tool.content.set_relative (objects_tool.content, {SD_ENUMERATION}.right)
 			threads_tool.content.set_tab_with (l_tools.breakpoints_tool.content, True)
 
+			l_watch_tool_list := watch_tool_list
 			from
-				watch_tool_list.finish
+				l_watch_tool_list.finish
 			until
-				watch_tool_list.before
+				l_watch_tool_list.before
 			loop
 
 				if l_last_watch_tool = Void then
-					watch_tool_list.item.content.set_tab_with (threads_tool.content, True)
+					l_watch_tool_list.item.content.set_tab_with (threads_tool.content, True)
 				else
-					watch_tool_list.item.content.set_tab_with (l_last_watch_tool.content, True)
+					l_watch_tool_list.item.content.set_tab_with (l_last_watch_tool.content, True)
 				end
 				l_last_watch_tool := watch_tool_list.item
-				watch_tool_list.back
+				l_watch_tool_list.back
 			end
 
 			l_tool := l_tools.diagram_tool
@@ -2289,7 +2159,7 @@ feature {NONE} -- Implementation
 
 			l_tools.metric_tool.content.set_tab_with (l_tools.dependency_tool.content, False)
 
-			l_tool := l_tools.errors_and_warnings_tool
+			l_tool := l_dyna_tools.tool ({ES_ERROR_LIST_TOOL}).tool
 			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
 				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
 				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
@@ -2340,11 +2210,6 @@ feature {NONE} -- Memory management
 	recycle_items_from_window is
 			-- Disconnect possible items and `debugging_window'.
 		do
-			call_stack_tool := Void
-			threads_tool := Void
-			objects_tool := Void
-			object_viewer_tool := Void
-			watch_tool_list.wipe_out
 		end
 
 feature {NONE} -- MSIL system implementation

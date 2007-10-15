@@ -10,14 +10,10 @@ class
 
 inherit
 	EB_STONABLE_TOOL
-		rename
-			make as tool_make
 		undefine
 			layout_constants
 		redefine
-			menu_name,
-			pixmap,
-			pixel_buffer,
+			make,
 			build_docking_content,
 			show,
 			internal_recycle,
@@ -62,16 +58,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
 			-- Make a new properties tool.
-		require
-			a_manager_exists: a_manager /= Void
 		do
 			set_pixmaps (pixmaps)
-			tool_make (a_manager)
 			cluster_manager.extend (Current)
 			create {CONF_COMP_FACTORY} conf_factory
-			window := a_manager.window
+
+			Precursor (a_manager, a_tool)
 		end
 
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
@@ -101,36 +95,6 @@ feature -- Access
 
 	widget: EV_VERTICAL_BOX
 			-- Widget representing Current
-
-	title: STRING_GENERAL is
-			-- Title of the tool
-		do
-			Result := Interface_names.t_Properties_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_properties_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := Interface_names.m_Properties_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_properties_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer
-		do
-			Result := pixmaps.icon_pixmaps.project_settings_system_icon_buffer
-		end
 
 feature -- Status report
 

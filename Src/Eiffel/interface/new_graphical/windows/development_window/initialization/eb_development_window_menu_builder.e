@@ -770,7 +770,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				develop_window.menus.favorites_menu.first.disable_sensitive
 			end
 
-			l_show_favorites_menu_item := develop_window.commands.show_tool_commands.item (develop_window.tools.favorites_tool).new_menu_item
+			l_show_favorites_menu_item := develop_window.commands.show_shell_tool_commands.item (develop_window.shell_tools.tool ({ES_FAVORITES_TOOL})).new_menu_item
 			develop_window.menus.set_show_favorites_menu_item (l_show_favorites_menu_item)
 			develop_window.menus.show_favorites_menu_item.select_actions.extend (agent develop_window.execute_show_favorites)
 
@@ -1035,30 +1035,30 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		do
 			create Result.make_with_text (develop_window.Interface_names.m_Explorer_bar)
 			Result.wipe_out
-			fill_show_menu_for_tool (Result, develop_window.tools.features_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.cluster_tool)
+			insert_show_tool_menu_item (Result, {ES_FEATURES_TOOL})
+			insert_show_tool_menu_item (Result, {ES_GROUP_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			fill_show_menu_for_tool (Result, develop_window.tools.class_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.features_relation_tool)
+			insert_show_tool_menu_item (Result, {ES_CLASS_TOOL})
+			insert_show_tool_menu_item (Result, {ES_FEATURE_RELATION_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			fill_show_menu_for_tool (Result, develop_window.tools.output_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.c_output_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.external_output_tool)
+			insert_show_tool_menu_item (Result, {ES_OUTPUT_TOOL})
+			insert_show_tool_menu_item (Result, {ES_C_OUTPUT_TOOL})
+			insert_show_tool_menu_item (Result, {ES_CONSOLE_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			fill_show_menu_for_tool (Result, develop_window.tools.errors_and_warnings_tool)
+			insert_show_tool_menu_item (Result, {ES_ERROR_LIST_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			fill_show_menu_for_tool (Result, develop_window.tools.search_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.search_report_tool)
+			insert_show_tool_menu_item (Result, {ES_SEARCH_TOOL})
+			insert_show_tool_menu_item (Result, {ES_SEARCH_REPORT_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			fill_show_menu_for_tool (Result, develop_window.tools.properties_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.diagram_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.metric_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.dependency_tool)
+			insert_show_tool_menu_item (Result, {ES_PROPERTIES_TOOL})
+			insert_show_tool_menu_item (Result, {ES_DIAGRAM_TOOL})
+			insert_show_tool_menu_item (Result, {ES_METRICS_TOOL})
+			insert_show_tool_menu_item (Result, {ES_DEPENDENCY_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			fill_show_menu_for_tool (Result, develop_window.tools.windows_tool)
-			fill_show_menu_for_tool (Result, develop_window.tools.favorites_tool)
+			insert_show_tool_menu_item (Result, {ES_WINDOWS_TOOL})
+			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			fill_show_menu_for_tool (Result, develop_window.tools.breakpoints_tool)
+			insert_show_tool_menu_item (Result, {ES_DEBUGGER_BREAKPOINTS_TOOL})
 
 			l_customized_tools := develop_window.tools.customized_tools
 			if not l_customized_tools.is_empty then
@@ -1134,6 +1134,29 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				if a_tool.is_customized_tool then
 					l_menu_item.set_data ([l_menu_item, a_tool.title_for_pre])
 				end
+			end
+		end
+
+	insert_show_tool_menu_item (a_menu: EV_MENU; a_tool: TYPE [ES_TOOL [EB_TOOL]]) is
+			-- Inserts a menu item for showing a tool.
+			--
+			-- `a_menu': The menu to insert a generated menu item into.
+			-- `a_tool': The tool shim type used to activate and show the tool.
+		require
+			a_menu_attached: a_menu /= Void
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+			a_tool_attached: a_tool /= Void
+		local
+			l_tool: ES_TOOL [EB_TOOL]
+			l_menu_item: EB_COMMAND_MENU_ITEM
+			l_cmd: ES_SHOW_TOOL_COMMAND
+		do
+			l_tool := develop_window.shell_tools.tool (a_tool)
+			l_cmd := develop_window.commands.show_shell_tool_commands.item (l_tool)
+			if l_cmd /= Void then
+				l_menu_item := l_cmd.new_menu_item
+				develop_window.add_recyclable (l_menu_item)
+				a_menu.extend (l_menu_item)
 			end
 		end
 

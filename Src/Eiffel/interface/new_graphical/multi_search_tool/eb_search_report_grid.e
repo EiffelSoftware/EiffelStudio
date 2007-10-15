@@ -57,7 +57,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_search_tool: EB_MULTI_SEARCH_TOOL) is
+	make (a_search_tool: like search_tool) is
 			-- Initialization
 		require
 			a_search_tool_attached: a_search_tool /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			build_interface
 			set_configurable_target_menu_mode
 			set_configurable_target_menu_handler (agent context_menu_handler)
-			set_context_menu_factory (a_search_tool.develop_window.menus.context_menu_factory)
+			set_context_menu_factory (a_search_tool.window.menus.context_menu_factory)
 		ensure
 			report_summary_string_not_void: report_summary_string /= Void
 			search_tool_set: search_tool = a_search_tool
@@ -108,7 +108,7 @@ feature -- Access
 			Result := interface_names.l_file_location
 		end
 
-	search_tool: EB_MULTI_SEARCH_TOOL
+	search_tool: ES_SEARCH_TOOL
 			-- The search tool
 
 feature {EB_MULTI_SEARCH_TOOL} -- Access
@@ -129,7 +129,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Access
 	multi_search_performer: MSR is
 			-- Search performer from the search tool.
 		do
-			Result := search_tool.multi_search_performer
+			Result := search_tool.tool.multi_search_performer
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -164,7 +164,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Redraw
 				end
 				remove_and_clear_all_rows
 				put_report_summary
-				search_tool.report_tool.new_search_tool_bar.hide
+				search_tool.tool.report_tool.new_search_tool_bar.hide
 
 				l_index := multi_search_performer.index
 				font := label_font
@@ -407,7 +407,7 @@ feature {NONE} -- Stone
 		require
 			a_class_i_not_void: a_class_i /= Void
 		do
-			Result := search_tool.stone_from_class_i (a_class_i)
+			Result := search_tool.tool.stone_from_class_i (a_class_i)
 		end
 
 feature {NONE} -- Sort data
@@ -472,7 +472,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_text_found := multi_search_performer.text_found_count
 			l_class_found := multi_search_performer.class_count
 			report_summary_string := ("   ").as_string_32 + interface_names.l_n_matches (l_text_found) + " " + interface_names.l_in_n_classes (l_class_found)
-			search_tool.report_tool.set_summary (report_summary_string)
+			search_tool.tool.report_tool.set_summary (report_summary_string)
 		end
 
 	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE is
@@ -612,7 +612,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 		local
 			l_item: MSR_ITEM
 		do
-			search_tool.set_check_class_succeed (True)
+			search_tool.tool.set_check_class_succeed (True)
 			if a_row.parent /= Void and then a_row.parent_row /= Void and then a_row.parent_row.is_expandable and then not a_row.parent_row.is_expanded then
 				a_row.parent_row.expand
 				adjust_grid_column_width
@@ -625,7 +625,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 				multi_search_performer.start
 				multi_search_performer.search (l_item)
 				if multi_search_performer.is_search_launched and then not multi_search_performer.off then
-					search_tool.check_class_file_and_do (agent on_grid_row_selected_perform)
+					search_tool.tool.check_class_file_and_do (agent on_grid_row_selected_perform)
 				end
 			end
 		end
@@ -637,19 +637,21 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_editor: EB_EDITOR
 			l_saving_string: STRING_GENERAL
 			l_start, l_end: INTEGER
+			l_tool: EB_MULTI_SEARCH_TOOL
 		do
-			search_tool.set_new_search_set (False)
+			l_tool := search_tool.tool
+			l_tool.set_new_search_set (False)
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				l_text_item ?= multi_search_performer.item
 			end
 			if l_text_item /= Void then
-				if search_tool.old_editor /= Void and then not search_tool.old_editor.is_recycled then
-					l_editor := search_tool.old_editor
+				if l_tool.old_editor /= Void and then not l_tool.old_editor.is_recycled then
+					l_editor := l_tool.old_editor
 				else
-					l_editor := search_tool.editor
+					l_editor := l_tool.editor
 				end
 				if l_editor /= Void then
-					if (not search_tool.is_item_source_changed (l_text_item)) then
+					if (not l_tool.is_item_source_changed (l_text_item)) then
 						l_start := l_text_item.start_index_in_unix_text
 						l_end := l_text_item.end_index_in_unix_text + 1
 						if l_end > l_start then
@@ -663,38 +665,38 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 						if l_editor.has_selection then
 							l_editor.show_selection (False)
 						end
-						if search_tool.saved_cursor /= 0 and then search_tool.saved_cursor = multi_search_performer.index then
-							search_tool.first_result_reached_actions.call ([True])
+						if l_tool.saved_cursor /= 0 and then l_tool.saved_cursor = multi_search_performer.index then
+							l_tool.first_result_reached_actions.call ([True])
 						else
-							search_tool.first_result_reached_actions.call ([False])
+							l_tool.first_result_reached_actions.call ([False])
 						end
 						if multi_search_performer.islast then
-							search_tool.bottom_reached_actions.call ([True])
+							l_tool.bottom_reached_actions.call ([True])
 						else
-							search_tool.bottom_reached_actions.call ([False])
+							l_tool.bottom_reached_actions.call ([False])
 						end
 						l_editor.refresh_now
-						search_tool.report_tool.set_summary (report_summary_string)
-						search_tool.report_tool.set_new_search_button_visible (False)
-						if not search_tool.report_cursor_recorded then
-							search_tool.save_current_cursor
-							search_tool.set_report_cursor_recorded (True)
+						l_tool.report_tool.set_summary (report_summary_string)
+						l_tool.report_tool.set_new_search_button_visible (False)
+						if not l_tool.report_cursor_recorded then
+							l_tool.save_current_cursor
+							l_tool.set_report_cursor_recorded (True)
 						end
 					else
-						search_tool.bottom_reached_actions.call ([False])
-						search_tool.first_result_reached_actions.call ([False])
-						if search_tool.is_customized or search_tool.is_whole_project_searched then
+						l_tool.bottom_reached_actions.call ([False])
+						l_tool.first_result_reached_actions.call ([False])
+						if l_tool.is_customized or l_tool.is_whole_project_searched then
 							l_saving_string := interface_names.l_try_saving_file_and_searching
 						else
 							l_saving_string := interface_names.l_try_searching
 						end
-						search_tool.report_tool.set_summary (report_summary_string.as_string_32 + "   " + l_saving_string)
-						search_tool.report_tool.set_new_search_button_visible (True)
+						l_tool.report_tool.set_summary (report_summary_string.as_string_32 + "   " + l_saving_string)
+						l_tool.report_tool.set_new_search_button_visible (True)
 					end
 				end
 			else
-				search_tool.report_tool.set_summary (report_summary_string)
-				search_tool.report_tool.set_new_search_button_visible (False)
+				l_tool.report_tool.set_summary (report_summary_string)
+				l_tool.report_tool.set_new_search_button_visible (False)
 			end
 		end
 

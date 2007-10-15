@@ -107,9 +107,11 @@ feature {NONE} -- Implementation
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_toolbarable_name: STRING_GENERAL
 			l_separator_name: STRING_GENERAL
+			l_added: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 		do
 			create Result.make (8)
 			l_separator_name := (create {EB_TOOLBARABLE_SEPARATOR}).name
+			create l_added.make (10)
 
 			from
 				l_i := a_layout.lower
@@ -161,6 +163,7 @@ feature {NONE} -- Implementation
 								l_button.disable_sensitive
 							end
 							Result.extend (l_button)
+							l_added.extend (l_toolbarable_command)
 							if l_command_visibility then
 								l_toolbarable_command.enable_displayed
 								l_button.enable_displayed

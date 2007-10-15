@@ -322,8 +322,8 @@ feature -- Agents
 			a_changed_tools_attached: a_changed_tools /= Void
 			a_changed_tools_valid: not a_changed_tools.has (Void)
 		local
-			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
 			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
+			l_customized_tools: LIST [EB_CUSTOMIZED_TOOL]
 			l_main_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER
 			l_unchanged_tools: LIST [EB_CUSTOMIZED_TOOL]
 		do
@@ -331,7 +331,7 @@ feature -- Agents
 			create l_main_builder.make (develop_window)
 
 				-- Remove changed tools.
-			l_customized_tools := l_tools.customized_tools_from_tools (l_tools.tools_by_id (l_tools.all_tools, a_changed_tools, True))
+			l_customized_tools := l_tools.customized_tools_from_tools (l_tools.customizable_tools_by_id (l_tools.customizable_tools, a_changed_tools, True))
 			l_customized_tools.do_all (agent l_main_builder.deregister_customized_tool)
 
 				-- Add changed/newly added tools.
@@ -339,7 +339,7 @@ feature -- Agents
 			l_main_builder.register_customized_tools (l_customized_tools)
 
 				-- Refresh titile/pixmap/stone handlers for unchanged tools.
-			l_unchanged_tools := l_tools.customized_tools_from_tools (l_tools.tools_by_id (l_tools.all_tools, a_changed_tools, False))
+			l_unchanged_tools := l_tools.customized_tools_from_tools (l_tools.customizable_tools_by_id (l_tools.customizable_tools, a_changed_tools, False))
 			if not l_unchanged_tools.is_empty then
 				l_unchanged_tools.do_all (agent l_tools.refresh_customized_tool_appearance)
 			end

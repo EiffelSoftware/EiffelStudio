@@ -14,7 +14,6 @@ inherit
 		rename
 			last_stone as stone
 		redefine
-			pixmap,
 			close,
 			build_docking_content
 		end
@@ -32,24 +31,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	title_for_pre: STRING is
-			-- Redefine
-		do
-			Result := interface_names.to_dependency_tool
-		end
-
-	title: STRING_GENERAL is
-			-- Redefine
-		do
-			Result := interface_names.l_tab_dependency_info
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Redefine
-		do
-			Result := pixmaps.icon_pixmaps.diagram_supplier_link_icon
-		end
 
 	predefined_formatters: like formatters is
 			-- Predefined formatters

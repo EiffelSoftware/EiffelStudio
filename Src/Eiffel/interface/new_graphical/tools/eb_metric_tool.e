@@ -13,8 +13,6 @@ inherit
 	EB_TOOL
 		redefine
 			make,
-			pixmap,
-			pixel_buffer,
 			show,
 			internal_recycle,
 			close
@@ -41,10 +39,12 @@ create
 
 feature -- Initialization
 
-	make (dw: EB_DEVELOPMENT_WINDOW) is
+	make (dw: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
 			-- Initialize `Current'.
 		do
 			develop_window := dw
+			tool_descriptor := a_tool
+
 			create widget
 			create metric_notebook
 
@@ -86,30 +86,6 @@ feature -- Initialization
 	build_interface is
 			-- Redefine
 		do
-		end
-
-	title: STRING_GENERAL is
-			-- Redefine
-		do
-			Result := interface_names.t_metric_tool
-		end
-
-	title_for_pre: STRING is
-			-- Redefine
-		do
-			Result := interface_names.to_metric_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap
-		do
-			Result := pixmaps.icon_pixmaps.tool_metric_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer
-		do
-			Result := pixmaps.icon_pixmaps.tool_metric_icon_buffer
 		end
 
 feature -- Actions

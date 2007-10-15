@@ -8,16 +8,211 @@ indexing
 class
 	EB_DEVELOPMENT_WINDOW_TOOLS
 
+obsolete
+	"[
+		This class is being deprecated and will not be available in the 6.2 release cycle.
+		Tool access should now be facilitated through {ES_SHELL_TOOLS}.tool passing
+		a tool shim type.
+	]"
+
 inherit
 	EB_DEVELOPMENT_WINDOW_PART
-		redefine
-			internal_recycle
-		end
 
 	EB_STONABLE
 
 create
 	make
+
+feature -- Access
+
+	class_tool: EB_CLASS_TOOL
+			-- Class tool
+			-- This tool was orignal belong to context_tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_CLASS_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	cluster_tool: EB_CLUSTER_TOOL
+			-- Cluster tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_GROUP_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	c_output_tool: EB_C_OUTPUT_TOOL
+			-- C output tool
+			-- This tool was orignal belong to context_tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_C_OUTPUT_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	dependency_tool: EB_DEPENDENCY_TOOL
+			-- Dependency tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	diagram_tool: EB_DIAGRAM_TOOL
+			-- Diagram tool
+			-- This tool was orignal belong to context_tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_DIAGRAM_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL
+			-- Errors and warnings tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	external_output_tool: EB_EXTERNAL_OUTPUT_TOOL
+			-- External output tool
+			-- This tool was orignal belong to context_tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_CONSOLE_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	favorites_tool: EB_FAVORITES_TOOL
+			-- Favorites tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_FAVORITES_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	features_tool: EB_FEATURES_TOOL
+			-- Features tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	features_relation_tool: EB_FEATURES_RELATION_TOOL
+			-- Features relation tool
+			-- This tool was orignal belong to context_tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	metric_tool: EB_METRIC_TOOL
+			-- Metric tool
+			-- This tool was orignal belong to context_tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_METRICS_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	output_tool: EB_OUTPUT_TOOL
+			-- Output tool.
+			-- This tool was orignal belong to context_tool
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_OUTPUT_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	properties_tool: EB_PROPERTIES_TOOL
+			-- Properties tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_PROPERTIES_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	search_report_tool: EB_SEARCH_REPORT_TOOL
+			-- Search report tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_REPORT_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	search_tool: EB_MULTI_SEARCH_TOOL
+			-- Search tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	windows_tool: EB_WINDOWS_TOOL
+			-- Windows tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_WINDOWS_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	breakpoints_tool: ES_BREAKPOINTS_TOOL
+			-- Breakpoints tool.
+		do
+			Result ?= develop_window.shell_tools.tool ({ES_DEBUGGER_BREAKPOINTS_TOOL}).tool
+		ensure
+			result_attached: Result /= Void
+		end
+
+	customizable_tools: ARRAYED_LIST [EB_TOOL] is
+			-- Access to list of tools that can be customized
+		local
+			l_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
+			l_format_tool: ES_FORMATTER_TOOL [EB_FORMATTER_BASED_TOOL]
+			l_tool: EB_TOOL
+			l_customized_tools: LIST [EB_TOOL]
+		do
+			create Result.make (3)
+			l_customized_tools := customized_tools
+
+				-- Fetch list of shell tool and extract the customizable ones.
+			l_tools := develop_window.shell_tools.all_tools.new_cursor
+			from l_tools.start until l_tools.after loop
+				l_format_tool ?= l_tools.item
+				if l_format_tool /= Void and then l_format_tool.is_customizable then
+						-- The tool is customizable so activate the tool instance
+					l_tool := l_format_tool.tool
+					if not l_customized_tools.has (l_tool) then
+							-- Only add the tool if it's not a customized tool because these will be added later
+						Result.extend (l_tool)
+					end
+				end
+				l_tools.forth
+			end
+
+				-- Add the customized tools
+			Result.append (l_customized_tools)
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
+		end
+
+	customized_tools: LIST [EB_CUSTOMIZED_TOOL] is
+			-- Access to list of customized tools added by the user
+		do
+			Result := internal_customized_tools
+			if Result = Void then
+				create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} Result.make
+				internal_customized_tools := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = customized_tools
+		end
 
 feature -- Commands
 
@@ -86,7 +281,7 @@ feature -- Commands
 			conv_dev := develop_window
 			if conv_dev /= Void then
 				if not conv_dev.unified_stone then
-					invalidate_tools
+					invalidate_customizable_tools
 					if conv_dev.link_tools then
 						if stone /= Void then
 							stone := stone.synchronized_stone
@@ -138,6 +333,28 @@ feature -- Commands
 			default_class_tool.show_with_setting
 		end
 
+feature -- Default tools
+
+	default_class_tool: EB_STONABLE_TOOL is
+			-- Default class stone tool
+		do
+			Result := class_tool
+		end
+
+	default_feature_tool: EB_STONABLE_TOOL is
+			-- Default feature stone tool
+		do
+			Result := features_relation_tool
+		end
+
+feature -- Query
+
+	stone: STONE
+			-- Stone current related.
+			-- In the non-docking Eiffel Studio, it's context tool's stone.
+
+feature -- Custom tools
+
 	set_stone_to_customized_tools (a_stone: STONE) is
 			-- Set `a_stone' to `customized_tools'.
 		local
@@ -155,19 +372,6 @@ feature -- Commands
 				l_cus_tools.forth
 			end
 			l_cus_tools.go_to (l_cursor)
-		end
-
-	show_tool_by_id (a_id: STRING) is
-			-- Show the tool from `all_tools' whose id is `a_id' if possible.
-		require
-			a_id_attached: a_id /= Void
-		local
-			l_tool: EB_TOOL
-		do
-			l_tool := tool_by_id (a_id)
-			if l_tool /= Void then
-				l_tool.show_with_setting
-			end
 		end
 
 	refresh_customized_tool_appearance (a_tool: EB_CUSTOMIZED_TOOL) is
@@ -192,177 +396,58 @@ feature -- Commands
 			develop_window.menus.update_item_from_tools_list_menu (a_tool)
 		end
 
-feature -- Default tools
-
-	default_class_tool: EB_STONABLE_TOOL is
-		do
-			Result := class_tool
-		end
-
-	default_feature_tool: EB_STONABLE_TOOL is
-		do
-			Result := features_relation_tool
-		end
-
-feature -- Query
-
-	stone: STONE
-			-- Stone current related.
-			-- In the non-docking Eiffel Studio, it's context tool's stone.
-
-	all_tools: ARRAYED_LIST [EB_TOOL] is
-			-- All tools
-		do
-			create Result.make (17)
-			if favorites_tool /= Void then
-				Result.extend (favorites_tool)
-			end
-			if properties_tool /= Void then
-				Result.extend (properties_tool)
-			end
-			if class_tool /= Void then
-				Result.extend (cluster_tool)
-			end
-			if search_tool /= Void then
-				Result.extend (search_tool)
-			end
-			if search_report_tool /= Void then
-				Result.extend (search_report_tool)
-			end
-			if features_tool /= Void then
-				Result.extend (features_tool)
-			end
-			if breakpoints_tool /= Void then
-				Result.extend (breakpoints_tool)
-			end
-			if windows_tool /= Void then
-				Result.extend (windows_tool)
-			end
-			if errors_and_warnings_tool /= Void then
-				Result.extend (errors_and_warnings_tool)
-			end
-			if output_tool /= Void then
-				Result.extend (output_tool)
-			end
-			if diagram_tool /= Void then
-				Result.extend (diagram_tool)
-			end
-			if class_tool /= Void then
-				Result.extend (class_tool)
-			end
-			if features_relation_tool /= Void then
-				Result.extend (features_relation_tool)
-			end
-			if dependency_tool /= Void then
-				Result.extend (dependency_tool)
-			end
-			if metric_tool /= Void then
-				Result.extend (metric_tool)
-			end
-			if external_output_tool /= Void then
-				Result.extend (external_output_tool)
-			end
-			if c_output_tool /= Void then
-				Result.extend (c_output_tool)
-			end
-			Result.append (develop_window.eb_debugger_manager.all_tools)
-			Result.append (customized_tools)
-		ensure
-			not_void: Result /= Void
-		end
-
-	favorites_tool: EB_FAVORITES_TOOL
-			-- Favorites tool.
-
-	properties_tool: EB_PROPERTIES_TOOL
-			-- Properties tool.
-
-	cluster_tool: EB_CLUSTER_TOOL
-			-- Cluster tool.
-
-	search_tool: EB_MULTI_SEARCH_TOOL
-			-- Search tool.
-
-	search_report_tool: EB_SEARCH_REPORT_TOOL
-			-- Search report tool.
-
-	features_tool: EB_FEATURES_TOOL
-			-- Features tool.
-
-	breakpoints_tool: ES_BREAKPOINTS_TOOL
-			-- Breakpoints tool.
-
-	windows_tool: EB_WINDOWS_TOOL
-			-- Windows tool.
-
-	output_tool: EB_OUTPUT_TOOL
-			-- Output tool.
-			-- This tool was orignal belong to context_tool
-
-	diagram_tool: EB_DIAGRAM_TOOL
-			-- Diagram tool
-			-- This tool was orignal belong to context_tool
-
-	class_tool: EB_CLASS_TOOL
-			-- Class tool
-			-- This tool was orignal belong to context_tool
-
-	features_relation_tool: EB_FEATURES_RELATION_TOOL
-			-- Features relation tool
-			-- This tool was orignal belong to context_tool
-
-	dependency_tool: EB_DEPENDENCY_TOOL
-			-- Dependency tool
-
-	metric_tool: EB_METRIC_TOOL
-			-- Metric tool
-			-- This tool was orignal belong to context_tool
-
-	external_output_tool: EB_EXTERNAL_OUTPUT_TOOL
-			-- External output tool
-			-- This tool was orignal belong to context_tool
-
-	c_output_tool: EB_C_OUTPUT_TOOL
-			-- C output tool
-			-- This tool was orignal belong to context_tool
-
-	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL assign set_errors_and_warnings_tool
-			-- Errors and warnings tool
-
-	customized_tools: LIST [EB_CUSTOMIZED_TOOL] is
-			-- Customized tools
-		do
-			if customized_tools_internal = Void then
-				create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} customized_tools_internal.make
-			end
-			Result := customized_tools_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	satisfied_tools (a_tools: like all_tools; a_agent: FUNCTION [ANY, TUPLE [EB_TOOL], BOOLEAN]): like all_tools is
-			-- List of tools from `a_tools' which are satisfied by `a_agent'
+	customized_tools_from_tools (a_tools: like customizable_tools): LIST [EB_CUSTOMIZED_TOOL] is
+			-- Customized tools from `a_tools'.
 		require
 			a_tools_attached: a_tools /= Void
-			a_agent_attached: a_agent /= Void
+			a_tools_valid: not a_tools.has (Void)
+		local
+			l_cursor: CURSOR
+			l_customized_tool: EB_CUSTOMIZED_TOOL
 		do
-			Result := a_tools.twin
+			create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} Result.make
+			l_cursor := a_tools.cursor
 			from
-				Result.start
+				a_tools.start
 			until
-				Result.after
+				a_tools.after
 			loop
-				if a_agent.item ([Result.item]) then
-					Result.forth
-				else
-					Result.remove
+				if a_tools.item.is_customized_tool then
+					l_customized_tool ?= a_tools.item
+					Result.extend (l_customized_tool)
 				end
+				a_tools.forth
 			end
+			a_tools.go_to (l_cursor)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	tools_by_id (a_tools: like all_tools; a_ids: LIST [STRING]; a_include: BOOLEAN): like all_tools is
+	customizable_tool_by_id (a_id: STRING): EB_TOOL is
+			-- Tool from `all_tools' whose id is `a_id'
+			-- Void if no such tool is found.
+		require
+			a_id_attached: a_id /= Void
+		local
+			l_tools: like customizable_tools
+			l_cursor: CURSOR
+		do
+			l_tools := customizable_tools
+			l_cursor := l_tools.cursor
+			from
+				l_tools.start
+			until
+				l_tools.after or Result /= Void
+			loop
+				if l_tools.item.title_for_pre.is_equal (a_id) then
+					Result := l_tools.item
+				end
+				l_tools.forth
+			end
+			l_tools.go_to (l_cursor)
+		end
+
+	customizable_tools_by_id (a_tools: like customizable_tools; a_ids: LIST [STRING]; a_include: BOOLEAN): like customizable_tools is
 			-- Tools from `a_tools' whose IDs are in `a_ids' if `a_include' is True,
 			-- otherwise, return tools from `a_tools' whose IDS are not in `a_ids'.
 		require
@@ -396,200 +481,7 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
-	customized_tools_from_tools (a_tools: LIST [EB_TOOL]): LIST [EB_CUSTOMIZED_TOOL] is
-			-- Customized tools from `a_tools'.
-		require
-			a_tools_attached: a_tools /= Void
-			a_tools_valid: not a_tools.has (Void)
-		local
-			l_cursor: CURSOR
-			l_customized_tool: EB_CUSTOMIZED_TOOL
-		do
-			create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} Result.make
-			l_cursor := a_tools.cursor
-			from
-				a_tools.start
-			until
-				a_tools.after
-			loop
-				if a_tools.item.is_customized_tool then
-					l_customized_tool ?= a_tools.item
-					Result.extend (l_customized_tool)
-				end
-				a_tools.forth
-			end
-			a_tools.go_to (l_cursor)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	tool_by_id (a_id: STRING): EB_TOOL is
-			-- Tool from `all_tools' whose id is `a_id'
-			-- Void if no such tool is found.
-		require
-			a_id_attached: a_id /= Void
-		local
-			l_tools: like all_tools
-			l_cursor: CURSOR
-		do
-			l_tools := all_tools
-			l_cursor := l_tools.cursor
-			from
-				l_tools.start
-			until
-				l_tools.after or Result /= Void
-			loop
-				if l_tools.item.title_for_pre.is_equal (a_id) then
-					Result := l_tools.item
-				end
-				l_tools.forth
-			end
-			l_tools.go_to (l_cursor)
-		end
-
-feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER, EB_DEVELOPMENT_WINDOW} -- Setting
-
-	set_features_tool (a_tool: like features_tool) is
-			-- Set `a_tool'
-		do
-			features_tool := a_tool
-		ensure
-			set: features_tool = a_tool
-		end
-
-	set_cluster_tool (a_tool: like cluster_tool) is
-			-- Set cluster_tool
-		do
-			cluster_tool := a_tool
-		ensure
-			set: cluster_tool = a_tool
-		end
-
-	set_output_tool (a_tool: like output_tool) is
-			-- Set `output_tool.
-		do
-			output_tool := a_tool
-		ensure
-			set: output_tool = a_tool
-		end
-
-	set_diagram_tool (a_tool: like diagram_tool) is
-			-- Set `diagram_tool.
-		do
-			diagram_tool := a_tool
-		ensure
-			set: diagram_tool = a_tool
-		end
-
-	set_class_tool (a_tool: like class_tool) is
-			-- Set 'class_tool'
-		do
-			class_tool := a_tool
-		ensure
-			set: class_tool = a_tool
-		end
-
-	set_features_relation_tool (a_tool: like features_relation_tool) is
-			-- Set `features_relation_tool'
-		do
-			features_relation_tool := a_tool
-		ensure
-			set: features_relation_tool = a_tool
-		end
-
-	set_dependency_tool (a_tool: like dependency_tool) is
-			-- Set `dependency_tool'
-		do
-			dependency_tool := a_tool
-		ensure
-			set: dependency_tool = a_tool
-		end
-
-	set_metric_tool (a_tool: like metric_tool) is
-			-- Set `metric_tool'
-		do
-			metric_tool := a_tool
-		ensure
-			set: metric_tool = a_tool
-		end
-
-	set_external_output_tool (a_tool: like external_output_tool) is
-			-- Set `external_output_tool'
-		do
-			external_output_tool := a_tool
-		ensure
-			set: external_output_tool = a_tool
-		end
-
-	set_c_output_tool (a_tool: like c_output_tool) is
-			-- Set `c_output_tool'
-		do
-			c_output_tool := a_tool
-		ensure
-			set: c_output_tool = a_tool
-		end
-
-	set_errors_and_warnings_tool (a_tool: like errors_and_warnings_tool)
-		do
-			errors_and_warnings_tool := a_tool
-		ensure
-			errors_and_warnings_tool_set: errors_and_warnings_tool = a_tool
-		end
-
-	set_search_tool (a_tool: like search_tool) is
-			-- Set `search_tool'
-		do
-			search_tool := a_tool
-		ensure
-			set: search_tool = a_tool
-		end
-
-	set_search_report_tool (a_tool: like search_report_tool) is
-			-- Set `search_report_tool'
-		do
-			search_report_tool := a_tool
-		ensure
-			set: search_report_tool /= Void
-		end
-
-	set_breakpoints_tool (a_tool: like breakpoints_tool) is
-			-- Set `breakpoints_tool'
-		do
-			breakpoints_tool := a_tool
-		ensure
-			set: breakpoints_tool = a_tool
-		end
-
-	set_favorites_tool (a_tool: like favorites_tool) is
-			-- Set `favorites_tool'
-		do
-			favorites_tool := a_tool
-		ensure
-			set: favorites_tool = a_tool
-		end
-
-	set_properties_tool (a_tool: like properties_tool) is
-			-- Set `properties_tool'
-		do
-			properties_tool	:= a_tool
-		ensure
-			set: properties_tool = a_tool
-		end
-
-	set_windows_tool (a_tool: like windows_tool) is
-			-- Set `windows_tool'
-		do
-			windows_tool := a_tool
-		ensure
-			set: windows_tool = a_tool
-		end
-
-feature{NONE} -- Implementation
-
-	customized_tools_internal: like customized_tools
-			-- Implementation of `customized_tools'
-
-	invalidate_tools is
+	invalidate_customizable_tools is
 			-- Invalidate tools which will force a refresh of all currently selected formatters.
 		do
 			class_tool.invalidate
@@ -600,31 +492,16 @@ feature{NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Recycle
+	customized_tools_internal: like customized_tools
+			-- Implementation of `customized_tools'
 
-	internal_recycle is
-		do
-			set_features_tool (Void)
-			set_cluster_tool (Void)
-			set_output_tool (Void)
-			set_diagram_tool (Void)
-			set_class_tool (Void)
-			set_features_relation_tool (Void)
-			set_dependency_tool (Void)
-			set_metric_tool (Void)
-			set_external_output_tool (Void)
-			set_c_output_tool (Void)
-			set_errors_and_warnings_tool (Void)
-			set_search_tool (Void)
-			set_search_tool (Void)
-			set_breakpoints_tool (Void)
-			set_favorites_tool (Void)
-			set_properties_tool (Void)
-			set_windows_tool (Void)
-			Precursor {EB_DEVELOPMENT_WINDOW_PART}
-		end
+feature {NONE} -- Internal implementation cache
 
-indexing
+	internal_customized_tools: like customized_tools
+			-- Cached version of `customized_tools'
+			-- Note: Do not use directly!
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

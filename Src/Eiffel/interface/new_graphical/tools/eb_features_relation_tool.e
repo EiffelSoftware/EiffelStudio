@@ -15,7 +15,6 @@ inherit
 			last_stone as stone
 		redefine
 			attach_to_docking_manager,
-			pixmap,
 			stone,
 			retrieve_formatters,
 			force_last_stone
@@ -30,39 +29,11 @@ feature{EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Docking issue
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
-			check friend_tool_created: develop_window.tools.class_tool /= Void end
 			check not_already_has: not a_docking_manager.has_content (content) end
 			a_docking_manager.contents.extend (content)
 		end
 
 feature -- Access
-
-	title: STRING_GENERAL is
-			-- Title
-		local
-			l_constatns: EB_CONSTANTS
-		do
-			create l_constatns
-			Result := l_constatns.interface_names.l_tab_feature_info
-		end
-
-	title_for_pre: STRING is
-			-- Title
-		local
-			l_constatns: EB_CONSTANTS
-		do
-			create l_constatns
-			Result := l_constatns.interface_names.to_Feature_relation_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap
-		local
-			l_constants: EB_CONSTANTS
-		do
-			create l_constants
-			Result := l_constants.pixmaps.icon_pixmaps.tool_feature_icon
-		end
 
 	flat_formatter: EB_ROUTINE_FLAT_FORMATTER
 			-- Special handle to flat formatters of routine. Required to properly update

@@ -11,9 +11,6 @@ class
 inherit
 	EB_TOOL
 		redefine
-			menu_name,
-			pixmap,
-			pixel_buffer,
 			widget,
 			attach_to_docking_manager,
 			internal_recycle,
@@ -42,7 +39,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 
 			check not_already_has: not a_docking_manager.has_content (content) end
 			a_docking_manager.contents.extend (content)
-			check friend_created: develop_window.tools.favorites_tool  /= Void end
 		end
 
 feature -- Access
@@ -50,35 +46,6 @@ feature -- Access
 	widget: EB_WINDOW_MANAGER_LIST
 			-- Widget representing Current
 
-	title: STRING_GENERAL is
-			-- Redefine
-		do
-			Result := interface_names.t_windows_tool
-		end
-
-	title_for_pre: STRING is
-			-- Title for prefence, STRING_8
-		do
-			Result := Interface_names.to_windows_tool
-		end
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			Result := Interface_names.m_Windows_tool
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.windows_windows_icon
-		end
-
-	pixel_buffer: EV_PIXEL_BUFFER is
-			-- Pixel buffer
-		do
-			Result := pixmaps.icon_pixmaps.windows_windows_icon_buffer
-		end
 
 	show is
 			-- Show tool.

@@ -16,8 +16,7 @@ inherit
 
 	EB_STONABLE_TOOL
 		redefine
-			menu_name,
-			pixmap,
+			make,
 			show,
 			close,
 			internal_recycle,
@@ -52,27 +51,15 @@ inherit
 		end
 
 create
-	make_with_title
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_manager: like develop_window; a_debugger: EB_DEBUGGER_MANAGER; a_watch_id: INTEGER; a_title: like title; a_title_for_pre: like title_for_pre) is
+	make (a_manager: like develop_window; a_tool: like tool_descriptor) is
 		do
-			set_debugger_manager (a_debugger)
-			watch_id := a_watch_id
-			if a_title = Void or else a_title.is_empty then
-				set_title ((interface_names.t_Watch_tool).as_string_32 + " #" + watch_id.out)
-			else
-				set_title (a_title)
-			end
-			if a_title_for_pre = Void or else a_title_for_pre.is_empty then
-				set_title_for_pre (interface_names.to_Watch_tool + watch_id.out)
-			else
-				set_title_for_pre (a_title_for_pre)
-			end
-
+			watch_id := a_tool.edition
 			auto_expression_enabled := False
-			make (a_manager)
+			Precursor (a_manager, a_tool)
 		end
 
 	build_interface is
@@ -245,10 +232,7 @@ feature {EB_DEBUGGER_MANAGER} -- Closing
 	close is
 		do
 			Precursor
-			recycle
-			content.close
 			debugger_manager.watch_tool_list.prune_all (Current)
-			debugger_manager.assign_watch_tool_unique_titles
 			debugger_manager.update_all_debugging_tools_menu
 		end
 
@@ -261,28 +245,6 @@ feature -- Access
 			-- Widget representing Current.
 		do
 			Result := watches_grid
-		end
-
-	title: STRING_GENERAL
-			-- Title of the tool.
-
-	title_for_pre: STRING
-			-- Title for prefence, STRING_8
-
-	menu_name: STRING_GENERAL is
-			-- Name as it may appear in a menu.
-		do
-			if title /= Void then
-				Result := title
-			else
-				Result := interface_names.m_Watch_tool
-			end
-		end
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap as it may appear in toolbars and menus.
-		do
-			Result := pixmaps.icon_pixmaps.tool_watch_icon
 		end
 
 	can_refresh: BOOLEAN
@@ -303,28 +265,6 @@ feature -- Change
 			-- Affect `a_manager' to `debugger_manager'.
 		do
 			debugger_manager := a_manager
-		end
-
-	set_title (a_title: like title) is
-		require
-			title_valid: a_title /= Void and then not a_title.is_empty
-		do
-			title := a_title
-			if content /= Void then
-				content.set_short_title (title)
-				content.set_long_title (title)
-			end
-		ensure
-			title_set: title.is_equal (a_title)
-		end
-
-	set_title_for_pre (a_title: like title_for_pre) is
-		require
-			title_for_pre_valid: a_title /= Void and then not a_title.is_empty
-		do
-			title_for_pre := a_title
-		ensure
-			title_set: title_for_pre.is_equal (a_title)
 		end
 
 	show is
@@ -657,7 +597,7 @@ feature {NONE} -- Event handling
 			create mi.make_with_text_and_action (interface_names.f_create_new_watch, agent open_new_created_watch_tool)
 			m.extend (mi)
 			if debugger_manager.watch_tool_list.count > 1 then
-				create mi.make_with_text_and_action (interface_names.b_Close_tool (title), agent debugger_manager.close_watch_tool (Current))
+				create mi.make_with_text_and_action (interface_names.b_Close_tool (title), agent close)
 				m.extend (mi)
 			end
 

@@ -18,10 +18,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like develop_window) is
+	make (a_manager: like develop_window; a_tool: like tool_descriptor) is
 			-- Initialization
 		do
-			Precursor {EB_TOOL} (a_manager)
+			Precursor {EB_TOOL} (a_manager, a_tool)
 			is_last_stone_processed := True
 		end
 

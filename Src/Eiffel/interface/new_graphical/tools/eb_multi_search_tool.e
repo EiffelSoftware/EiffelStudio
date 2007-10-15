@@ -74,10 +74,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
 			-- Initialization
 		do
-			Precursor (a_manager)
+			Precursor (a_manager, a_tool)
 			create multi_search_performer.make
 			new_search_set := True
 			is_text_new_loaded := True
@@ -176,9 +176,6 @@ feature {NONE} -- Initialization
 	build_report_box: EV_VERTICAL_BOX is
 			-- Build a report.
 		do
-			create report_tool.make (Current)
-			Result := report_tool.report_box
-			search_report_grid := report_tool.search_report_grid
 		end
 
 feature -- Docking management

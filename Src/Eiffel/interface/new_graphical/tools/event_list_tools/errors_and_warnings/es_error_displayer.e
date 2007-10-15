@@ -88,13 +88,13 @@ feature {NONE} -- Basic operations
 			a_window_attached: a_window /= Void
 			is_event_list_service_available: is_event_list_service_available
 		local
-			l_tool: ES_ERRORS_AND_WARNINGS_TOOL
+			l_tool: ES_TOOL [EB_TOOL]
 		do
 			if not a_window.is_recycled and then a_window.is_visible then
-				l_tool := a_window.tools.errors_and_warnings_tool
+				l_tool := a_window.shell_tools.tool ({ES_ERROR_LIST_TOOL})
 				if l_tool /= Void and then not l_tool.is_recycled then
 						-- Force tool to be shown
-					l_tool.show
+					l_tool.show (True)
 				end
 			end
 		end

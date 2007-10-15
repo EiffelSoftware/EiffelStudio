@@ -24,6 +24,7 @@ inherit
 			set_site as set_window,
 			on_sited as initialize
 		redefine
+			initialize,
 			out
 		end
 
@@ -49,12 +50,22 @@ feature {NONE} -- Initialization
 		do
 		end
 
+	initialize
+			-- Called when Current has been sited
+		do
+			create edition_changed
+			Precursor {SITE}
+		end
+
 feature {NONE} -- Clean up
 
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
 			if internal_tool /= Void then
+					-- Clean up tool
+				check is_tool_instantiated: is_tool_instantiated end
+				internal_tool.content.close
 				internal_tool.recycle
 				internal_tool := Void
 			end
@@ -116,6 +127,11 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
+	edition: NATURAL_8
+			-- Tool edition index.
+			-- Note: When `is_supporting_multiple_instances' returns true this will
+			--       be set to an index greater than 1.
+
 	shortcut_preference_name: STRING_32
 			-- An optional shortcut preference name, for automatic preference binding.
 			-- Note: The preference should be registered in the default.xml file
@@ -125,6 +141,21 @@ feature -- Access
 		deferred
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
+		end
+
+	frozen type_id: STRING_32 is
+			-- A type identifier, used to store layout information and reinstantiate the type from
+			-- a stored layout.
+		do
+			Result := internal_type_id
+			if Result = Void then
+				Result := tool_utilities.tool_id (Current)
+				internal_type_id := Result
+			end
+		ensure then
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_consistent: Result = Result
 		end
 
 	frozen tool: G
@@ -147,29 +178,6 @@ feature -- Access
 			is_tool_instantiated: is_tool_instantiated
 		end
 
-	edition: NATURAL_8
-			-- Tool edition index.
-			-- Note: When `is_supporting_multiple_instances' returns true this will
-			--       be set to an index greater than 1.
-
-	frozen type_id: STRING_32 is
-			-- A type identifier, used to store layout information and reinstantiate the type from
-			-- a stored layout.
-		local
-			l_type: like generating_type
-			l_edition: like edition
-		do
-			Result := internal_type_id
-			if Result = Void then
-				Result := tool_utilities.tool_id (Current)
-				internal_type_id := Result
-			end
-		ensure then
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
-			result_consistent: Result = Result
-		end
-
 feature {ES_SHELL_TOOLS} -- Element change
 
 	set_edition (a_edition: like edition)
@@ -180,12 +188,32 @@ feature {ES_SHELL_TOOLS} -- Element change
 			not_is_recycled: not is_recycled
 			is_supporting_multiple_instances: a_edition > 1 implies is_supporting_multiple_instances
 			a_edition_positive: a_edition > 0
+		local
+			l_old: like edition
 		do
-			edition := a_edition
-			internal_type_id := Void
+			l_old := edition
+			if l_old /= a_edition then
+				edition := a_edition
+				internal_type_id := Void
+				if is_tool_instantiated then
+						-- Notify tool that the edition changed
+					tool.on_edition_changed
+				end
+					-- Raise events
+				if edition_changed /= Void then
+					edition_changed.publish ([Current, l_old, a_edition])
+				end
+			end
+
+			if l_old /= a_edition then
+					-- Calling an event handler might cause `internal_type_id' to become attached.
+					-- It's more important that we satify the post-condition an inccur a very minor
+					-- additional calculation of the type id.
+				internal_type_id := Void
+			end
 		ensure
-			edition_set: edition = a_edition
-			internal_type_id_detached: internal_type_id = Void
+			edition_set: a_edition /= old edition implies edition = a_edition
+			internal_type_id_detached: a_edition /= old edition implies internal_type_id = Void
 		end
 
 feature -- Status report
@@ -197,6 +225,17 @@ feature -- Status report
 			not_is_recycled: not is_recycled
 		do
 			Result := False
+		end
+
+feature {ES_SHELL_TOOLS} -- Status report
+
+	is_recycled_on_closing: BOOLEAN
+			-- Indicates if the tool should be recycled on closing
+		require
+			not_is_recycled: not is_recycled
+		do
+				-- Keeps a single tool available always.
+			Result := is_supporting_multiple_instances and window.dynamic_tools.editions_of_tool ({like Current}, False) > 1
 		end
 
 feature -- Status report
@@ -288,6 +327,23 @@ feature -- Basic operations
 		ensure
 			tool_shown: tool.shown
 		end
+
+	close
+			-- Closes or hides the tool based on the tool's options
+		do
+			if is_tool_instantiated and then tool.shown then
+					-- Close was called directly, so reroute through the actual tool instance to ensure
+					-- the tool is cleaned up too.
+				tool.close
+			else
+				window.dynamic_tools.close_tool (Current)
+			end
+		end
+
+feature -- Events
+
+	edition_changed: EVENT_TYPE [TUPLE [tool: ES_TOOL [EB_TOOL]; old_edition, new_edition: like edition]]
+			-- Events raised when a tool's edition number changes.
 
 feature {NONE} -- Factory
 

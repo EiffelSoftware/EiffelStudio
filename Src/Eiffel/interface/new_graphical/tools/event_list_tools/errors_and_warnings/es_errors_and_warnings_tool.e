@@ -100,10 +100,10 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	error_count: NATURAL_8
+	error_count: NATURAL
 			-- Number of errors
 
-	warning_count: NATURAL_8
+	warning_count: NATURAL
 			-- Number of warnings
 
 feature {NONE} -- Status report
@@ -655,14 +655,14 @@ feature {NONE} -- Factory
 
 feature {NONE} -- User interface manipulation
 
-	set_error_count (a_count: NATURAL_8)
+	set_error_count (a_count: like error_count)
 			-- Sets `error_count' to `a_count'
 		local
 			l_text: STRING_32
 		do
 			error_count := a_count
 			create l_text.make (20)
-			l_text.append_natural_8 (a_count)
+			l_text.append_natural_32 (a_count)
 			l_text.append_character (' ')
 			if a_count = 1 then
 				l_text.append_string (interface_names.b_error)
@@ -676,14 +676,14 @@ feature {NONE} -- User interface manipulation
 			error_count_set: error_count = a_count
 		end
 
-	set_warning_count (a_count: NATURAL_8)
+	set_warning_count (a_count: like warning_count)
 			-- Sets `warning_count' to `a_count'
 		local
 			l_text: STRING_32
 		do
 			warning_count := a_count
 			create l_text.make (20)
-			l_text.append_natural_8 (a_count)
+			l_text.append_natural_32 (a_count)
 			l_text.append_character (' ')
 			if a_count = 1 then
 				l_text.append_string (interface_names.b_warning)

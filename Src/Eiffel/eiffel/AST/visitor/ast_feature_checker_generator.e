@@ -1758,7 +1758,7 @@ feature -- Implementation
 				end
 			end
 		ensure
-			last_calls_target_type_proper_set: (error_level = old error_level and is_last_access_tuple_access) implies last_calls_target_type /= Void
+			last_calls_target_type_proper_set: (error_level = old error_level and not is_last_access_tuple_access) implies last_calls_target_type /= Void
 		end
 
 	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS) is

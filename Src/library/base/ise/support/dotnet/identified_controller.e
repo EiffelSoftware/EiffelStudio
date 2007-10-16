@@ -6,30 +6,42 @@ indexing
     date: "$Date$"
     revision: "$Revision$"
 
-
 class IDENTIFIED_CONTROLLER
- 
+
+inherit
+	ANY
+
+	IDENTIFIED_ROUTINES
+		export
+			{NONE} all
+		end
+
 feature -- Measurement
- 
+
 	object_id_stack_size: INTEGER is
 			-- Size of the object_id stack in chunks
 			--| a chunk contains 1000 elements
+		local
+			l_success: BOOLEAN
 		do
-			Result := (create {IDENTIFIED}).reference_list.capacity // 1000 + 1
+			l_success := xyz_mutex.wait_one
+			Result := xyz_reference_list.capacity // 1000 + 1
+			xyz_mutex.release_mutex
 		end
 
 feature -- Status setting
- 
+
 	extend_object_id_stack (nb_chunks: INTEGER) is
 			-- Extend the object_id stack by `nb_chunks' chunks.
 			--| a chunk contains 1000 elements
 		require
 			positive_nb: nb_chunks > 0
 		local
-			tmp: ARRAYED_LIST [WEAK_REFERENCE]
+			l_success: BOOLEAN
 		do
-			tmp := (create {IDENTIFIED}).reference_list
-			tmp.resize (tmp.capacity + 1000 * nb_chunks)
+			l_success := xyz_mutex.wait_one
+			xyz_reference_list.resize (xyz_reference_list.capacity + 1000 * nb_chunks)
+			xyz_mutex.release_mutex
 		end
 
 indexing
@@ -44,8 +56,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class IDENTIFIED_CONTROLLER
-
-
+end

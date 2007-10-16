@@ -13,21 +13,10 @@ obsolete
 	"Use EV_POPUP_WINDOW instead"
 
 inherit
-	EV_WINDOW
-		redefine
-			create_implementation
-		end
+	EV_POPUP_WINDOW
 
 create
 	default_create
-
-feature {NONE} -- Implementation
-
-	create_implementation is
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {EV_SHADOW_DIALOG_IMP} implementation.make (Current)
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -39,7 +28,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
 
 end

@@ -181,7 +181,7 @@ feature -- Access
 
 	hash_code: INTEGER
 		-- Used to uniquely identify grid item within `parent_i'.
-		-- Should be set to -1 if `Current' is not parented.
+		-- Should be set to 0 if `Current' is not parented.
 
 feature -- Status setting
 
@@ -683,7 +683,7 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 invariant
 	is_parented_implies_parents_set: is_parented implies parent_i /= Void and then column_i /= Void and then row_i /= Void
 	not_is_parented_implies_parents_not_set: not is_parented implies parent_i = Void and then column_i = Void and then row_i = Void
-	hash_code_valid: is_initialized implies ((not is_parented and hash_code = -1) or (is_parented and then hash_code > 0))
+	hash_code_valid: is_initialized implies ((not is_parented and hash_code = 0) or (is_parented and then hash_code > 0))
 
 indexing
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

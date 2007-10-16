@@ -622,7 +622,7 @@ feature -- tools management
 			wt: ES_WATCH_TOOL
 			l_recyclable: EB_RECYCLABLE
 			l_show_cmd: ES_SHOW_TOOL_COMMAND
-			l_watch_list: like watch_tool_list
+			l_wt_lst: like watch_tool_list
 		do
 			m := w.menus.debugging_tools_menu
 			if raised then
@@ -663,10 +663,10 @@ feature -- tools management
 				m.extend (mi)
 				w.add_recyclable (mi)
 
-				l_watch_list := watch_tool_list
+				l_wt_lst := watch_tool_list
 
 					-- Do not display shortcut if any watch tool exists.
-				if not l_watch_list.is_empty then
+				if not l_wt_lst.is_empty then
 					create_and_show_watch_tool_command.set_referred_shortcut (Void)
 				else
 					create_and_show_watch_tool_command.set_referred_shortcut (show_watch_tool_preference)
@@ -675,14 +675,14 @@ feature -- tools management
 				m.extend (mi)
 				w.add_recyclable (mi)
 
-				if not l_watch_list.is_empty then
+				if not l_wt_lst.is_empty then
 					m.extend (create {EV_MENU_SEPARATOR})
 					from
-						l_watch_list.start
+						l_wt_lst.start
 					until
-						l_watch_list.after
+						l_wt_lst.after
 					loop
-						wt := l_watch_list.item
+						wt := l_wt_lst.item
 						mn := wt.menu_name.twin
 						if show_watch_tool_command.shortcut_available then
 							mn.append ("%T")
@@ -695,7 +695,7 @@ feature -- tools management
 						m.extend (mi)
 						w.add_recyclable (mi)
 
-						l_watch_list.forth
+						l_wt_lst.forth
 					end
 				end
 				m.enable_sensitive
@@ -746,39 +746,39 @@ feature -- tools management
 			-- Show a hidden watch tool if any.
 			-- If all shown, show next one.
 		local
-			l_watch_tools: like watch_tool_list
+			l_wt_lst: like watch_tool_list
 			l_shown: BOOLEAN
 			l_watch_tool: ES_WATCH_TOOL
 			l_focused_watch_index: INTEGER
 		do
 			if raised then
-				l_watch_tools := watch_tool_list
-				if l_watch_tools.is_empty then
+				l_wt_lst := watch_tool_list
+				if l_wt_lst.is_empty then
 					create_and_show_new_watch_tool
 				else
 					from
-						l_watch_tools.start
+						l_wt_lst.start
 					until
-						l_watch_tools.after
+						l_wt_lst.after
 					loop
-						if l_watch_tools.item.content.has_focus then
+						if l_wt_lst.item.content.has_focus then
 							l_shown := True
-							l_focused_watch_index := l_watch_tools.index
+							l_focused_watch_index := l_wt_lst.index
 						end
-						if l_watch_tool = Void and then not l_watch_tools.item.shown then
-							l_watch_tool := l_watch_tools.item
+						if l_watch_tool = Void and then not l_wt_lst.item.shown then
+							l_watch_tool := l_wt_lst.item
 						end
-						l_watch_tools.forth
+						l_wt_lst.forth
 					end
 					if l_watch_tool /= Void then
 						l_watch_tool.show
 					else
-						if l_focused_watch_index = l_watch_tools.count then
+						if l_focused_watch_index = l_wt_lst.count then
 							l_focused_watch_index := 1
 						else
 							l_focused_watch_index := l_focused_watch_index + 1
 						end
-						l_watch_tools.i_th (l_focused_watch_index).show
+						l_wt_lst.i_th (l_focused_watch_index).show
 					end
 				end
 			end
@@ -788,16 +788,17 @@ feature -- tools management
 			-- Create a new watch tool attached to current debugging window
 		local
 			t: EB_TOOL
-			l_watch_list: like watch_tool_list
+			l_wt_lst: like watch_tool_list
 		do
 			if debugging_window /= Void then
-				l_watch_list := watch_tool_list
-				if not l_watch_list.is_empty then
-					t := l_watch_list.last
+				l_wt_lst := watch_tool_list
+				if not l_wt_lst.is_empty then
+					t := l_wt_lst.last
 				else
 					t := objects_tool
 				end
 				create_new_watch_tool_inside_notebook (debugging_window, t)
+					--| use `watch_tool_list' since this is a new list
 				watch_tool_list.last.show
 			end
 		end
@@ -1177,7 +1178,7 @@ feature -- Status setting
 		local
 			split: EV_SPLIT_AREA
 			l_watch_tool: ES_WATCH_TOOL
-			l_watch_tool_list: like watch_tool_list
+			l_wt_lst: like watch_tool_list
 			l_tool: EB_TOOL
 			l_docking_manager: SD_DOCKING_MANAGER
 			nwt: INTEGER
@@ -1226,29 +1227,29 @@ feature -- Status setting
 			object_viewer_tool.set_manager (debugging_window)
 
 				--| Watches tool
-			l_watch_tool_list := watch_tool_list
+			l_wt_lst := watch_tool_list
 				--| At least one watch tool
 			nwt := Preferences.debug_tool_data.number_of_watch_tools
-			if l_watch_tool_list.count < nwt  then
+			if l_wt_lst.count < nwt  then
 				from
 					l_tool := Void
-					if not l_watch_tool_list.is_empty then
-						l_watch_tool := l_watch_tool_list.last
+					if not l_wt_lst.is_empty then
+						l_watch_tool := l_wt_lst.last
 						if l_watch_tool.shown then
 							l_tool := l_watch_tool
 						end
 					end
 				until
-					watch_tool_list.count >= nwt
+					l_wt_lst.count >= nwt
 				loop
 					create_new_watch_tool_inside_notebook (debugging_window, l_tool)
 				end
 					-- `watch_tool_list' has changed, so fetch a new cache
-				l_watch_tool_list := watch_tool_list
+				l_wt_lst := watch_tool_list
 			end
 
-			l_watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
-			l_watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
+			l_wt_lst.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
+			l_wt_lst.do_all (agent {ES_WATCH_TOOL}.request_update)
 
 				--| Threads Tool
 			threads_tool.request_update
@@ -1718,6 +1719,7 @@ feature -- Debugging events
 			assertion_checking_handler_cmd.reset
 			toggle_exec_replay_mode_cmd.reset
 			toggle_exec_replay_recording_mode_cmd.reset
+			toggle_exec_replay_recording_mode_cmd.disable_sensitive -- disable by default
 
 			if was_executing then
 					-- Make all debugging tools disappear.
@@ -1929,8 +1931,9 @@ feature {NONE} -- Implementation
 				disable_bkpt.disable_sensitive
 				bkpt_info_cmd.disable_sensitive
 				force_debug_mode_cmd.disable_sensitive
-				toggle_exec_replay_recording_mode_cmd.disable_sensitive
 			end
+
+			toggle_exec_replay_recording_mode_cmd.disable_sensitive
 
 			debug_cmd.disable_sensitive
 			no_stop_cmd.disable_sensitive
@@ -2075,7 +2078,7 @@ feature {NONE} -- Implementation
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_sd_button: SD_TOOL_BAR_ITEM
 			l_buttons: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_watch_tool_list: like watch_tool_list
+			l_wt_lst: like watch_tool_list
 		do
 			-- Setup toolbar buttons
 			check one_button: restart_cmd.managed_sd_toolbar_items.count = 1 end
@@ -2122,20 +2125,20 @@ feature {NONE} -- Implementation
 			l_tools.breakpoints_tool.content.set_relative (objects_tool.content, {SD_ENUMERATION}.right)
 			threads_tool.content.set_tab_with (l_tools.breakpoints_tool.content, True)
 
-			l_watch_tool_list := watch_tool_list
+			l_wt_lst := watch_tool_list
 			from
-				l_watch_tool_list.finish
+				l_wt_lst.finish
 			until
-				l_watch_tool_list.before
+				l_wt_lst.before
 			loop
 
 				if l_last_watch_tool = Void then
-					l_watch_tool_list.item.content.set_tab_with (threads_tool.content, True)
+					l_wt_lst.item.content.set_tab_with (threads_tool.content, True)
 				else
-					l_watch_tool_list.item.content.set_tab_with (l_last_watch_tool.content, True)
+					l_wt_lst.item.content.set_tab_with (l_last_watch_tool.content, True)
 				end
-				l_last_watch_tool := watch_tool_list.item
-				l_watch_tool_list.back
+				l_last_watch_tool := l_wt_lst.item
+				l_wt_lst.back
 			end
 
 			l_tool := l_tools.diagram_tool

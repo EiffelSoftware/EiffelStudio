@@ -38,11 +38,11 @@ feature -- Execution
 	reset is
 		do
 			if execution_replay_mode_activated then
-				execution_replay_mode_activated := False
 				eb_debugger_manager.activate_execution_replay_mode (execution_replay_mode_activated)
-				update_graphical
-				set_select (execution_replay_mode_activated)
+				execution_replay_mode_activated := False
 			end
+			update_graphical
+			set_select (execution_replay_mode_activated)
 		end
 
 	execute is

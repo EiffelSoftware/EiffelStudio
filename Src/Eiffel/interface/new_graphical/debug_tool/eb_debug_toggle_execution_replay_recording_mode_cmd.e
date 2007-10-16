@@ -41,9 +41,9 @@ feature -- Execution
 				if debugger_manager.application_initialized then
 					debugger_manager.application.activate_execution_replay_recording (execution_recording_activated)
 				end
-				update_graphical
-				set_select (execution_recording_activated)
 			end
+			update_graphical
+			set_select (execution_recording_activated)
 		end
 
 	execute is

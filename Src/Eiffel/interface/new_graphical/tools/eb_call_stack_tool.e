@@ -307,7 +307,7 @@ feature -- Box management
 			tb.extend (eb_debugger_manager.exec_replay_forth_cmd.new_sd_toolbar_item (True))
 			create replay_controls_label
 			box_replay_controls.extend (replay_controls_label)
-			box_replay_controls.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (210,250,190))
+			box_replay_controls.set_background_color (row_replayable_bg_color)
 			box_replay_controls.propagate_background_color
 			tb.compute_minimum_size
 		end
@@ -1461,6 +1461,10 @@ feature {NONE} -- Implementation, cosmetic
 	set_row_replayable_bg_color (v: COLOR_PREFERENCE) is
 		do
 			row_replayable_bg_color := v.value
+			if box_replay_controls /= Void then
+				box_replay_controls.set_background_color (row_replayable_bg_color)
+				box_replay_controls.propagate_background_color
+			end
 		end
 
 	row_highlight_bg_color: EV_COLOR

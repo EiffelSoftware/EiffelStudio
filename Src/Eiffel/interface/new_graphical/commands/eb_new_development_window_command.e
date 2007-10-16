@@ -15,7 +15,9 @@ inherit
 			new_toolbar_item,
 			new_sd_toolbar_item,
 			tooltext,
-			pixel_buffer
+			pixel_buffer,
+			mini_pixmap,
+			mini_pixel_buffer
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -147,6 +149,18 @@ feature {NONE} -- Implementation
 			when context_style then
 				-- No pixel buffer for this case.
 			end
+		end
+
+	mini_pixmap: EV_PIXMAP is
+			-- Pixmap representing the command for mini toolbars.
+		do
+			Result := pixmaps.mini_pixmaps.new_window_icon
+		end
+
+	mini_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command for mini toolbars.
+		do
+			Result := pixmaps.mini_pixmaps.new_window_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

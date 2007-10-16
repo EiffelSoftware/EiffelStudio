@@ -199,29 +199,6 @@ feature {NONE} -- Access
 			result_consistent: Result = user_widget
 		end
 
-	development_window: EB_DEVELOPMENT_WINDOW
-			-- Access to top-level parent window
-		require
-			not_is_recycled: not is_recycled
-			user_widget_has_parent: user_widget.has_parent
-		local
-			l_window: EV_WINDOW
-			l_windows: BILINEAR [EB_WINDOW]
-		do
-			l_window := helpers.widget_top_level_window (user_widget, True)
-			if l_window /= Void then
-				l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
-				from l_windows.start until l_windows.after or Result /= Void loop
-					if l_window = l_windows.item.window then
-						Result ?= l_windows.item
-					end
-					l_windows.forth
-				end
-			end
-		ensure
-			not_result_is_recycled: Result /= Void implies not Result.is_recycled
-		end
-
 	frozen mini_tool_bar_widget: SD_TOOL_BAR
 			-- Access to user widget, as `widget' may not be the indicated user widget due to
 			-- tool bar additions

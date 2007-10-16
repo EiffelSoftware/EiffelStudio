@@ -464,7 +464,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 3))
 		end
-
 	frozen watch_auto_icon: EV_PIXMAP is
 			-- Access to 'auto' pixmap.
 		once
@@ -476,7 +475,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 3))
 		end
-
 	frozen callstack_send_to_external_editor_icon: EV_PIXMAP is
 			-- Access to 'send to external editor' pixmap.
 		once
@@ -512,7 +510,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 4))
 		end
-
 	frozen execution_record_icon: EV_PIXMAP is
 			-- Access to 'record' pixmap.
 		once
@@ -538,17 +535,16 @@ feature -- Access
 		end
 
 	frozen execution_object_storage_icon: EV_PIXMAP is
-			-- Access to 'replay' pixmap.
+			-- Access to 'object storage' pixmap.
 		once
 			Result := raw_buffer.sub_pixmap (pixel_rectangle (6, 4))
 		end
 
 	frozen execution_object_storage_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'replay' pixmap pixel buffer.
+			-- Access to 'object storage' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 4))
 		end
-
 	frozen new_feature_icon: EV_PIXMAP is
 			-- Access to 'feature' pixmap.
 		once
@@ -631,6 +627,18 @@ feature -- Access
 			-- Access to 'watch tool' pixmap pixel buffer.
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 5))
+		end
+
+	frozen new_window_icon: EV_PIXMAP is
+			-- Access to 'window' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (8, 5))
+		end
+
+	frozen new_window_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'window' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 5))
 		end
 	frozen completion_remember_size_icon: EV_PIXMAP is
 			-- Access to 'remember size' pixmap.

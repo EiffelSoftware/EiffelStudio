@@ -3034,6 +3034,10 @@ feature {NONE} -- Implementation: binary operators
 					il_generator.duplicate_top
 					il_generator.generate_local (l_right_value)
 					generate_equal_routine ({PREDEFINED_NAMES}.equal_name_id)
+						-- Negate result if required for comparing objects.
+					if an_opcode = il_ne then
+						il_generator.generate_unary_operator (il_not)
+					end
 					il_generator.mark_label (l_end_label)
 				end
 			end

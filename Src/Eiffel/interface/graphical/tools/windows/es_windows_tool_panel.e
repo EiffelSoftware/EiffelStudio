@@ -1,5 +1,7 @@
 indexing
-	description	: "Tool to view all opened windows"
+	description	: "[
+		A tool to view all the opened development windows.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
@@ -9,60 +11,49 @@ class
 	ES_WINDOWS_TOOL_PANEL
 
 inherit
-	EB_TOOL
+	ES_DOCKABLE_TOOL_PANEL [EB_WINDOW_MANAGER_LIST]
 		redefine
-			widget,
-			attach_to_docking_manager,
-			internal_recycle,
-			show
+			create_mini_tool_bar_items
 		end
-
-	EB_SHARED_WINDOW_MANAGER
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- User interface initialization
 
-	build_interface is
-			-- Build all the tool's widgets.
+	build_tool_interface (a_widget: EB_WINDOW_MANAGER_LIST)
+			-- Builds the tools user interface elements.
+			-- Note: This function is called prior to showing the tool for the first time.
+			--
+			-- `a_widget': A widget to build the tool interface using.
 		do
-			widget := window_manager.new_widget
 		end
 
-feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
+feature {NONE} -- Factory
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
-			-- Attach to docking manager
+	create_widget: EB_WINDOW_MANAGER_LIST
+			-- Create a new container widget upon request.
+			-- Note: You may build the tool elements here or in `build_tool_interface'
+		local
+			l_manager: EB_SHARED_WINDOW_MANAGER
 		do
-			build_docking_content (a_docking_manager)
-
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
+			create l_manager
+			Result := l_manager.window_manager.new_widget
 		end
 
-feature -- Access
-
-	widget: EB_WINDOW_MANAGER_LIST
-			-- Widget representing Current
-
-
-	show is
-			-- Show tool.
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
-			Precursor {EB_TOOL}
-			widget.set_focus
+			-- No tool bar items
 		end
 
-feature -- Memory management
-
-	internal_recycle is
-			-- Recycle `Current', but leave `Current' in an unstable state,
-			-- so that we know whether we're still referenced or not.
+	create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display on the window title
 		do
-			widget.recycle
-			widget := Void
-			Precursor {EB_TOOL}
+			create Result.make (2)
+			Result.put_last (develop_window.new_development_window_cmd.new_mini_sd_toolbar_item)
+		ensure then
+			result_attached: Result /= Void
 		end
 
 indexing
@@ -97,4 +88,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_WINDOWS_TOOL
+end

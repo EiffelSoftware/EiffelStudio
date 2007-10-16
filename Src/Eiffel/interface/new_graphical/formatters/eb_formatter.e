@@ -413,10 +413,11 @@ feature -- Actions
 	execute_with_stone (a_stone: STONE) is
 			-- Notify `manager' of the dropping of `stone'.
 		do
-			manager.set_stone (a_stone)
 			if not selected then
+				set_stone (a_stone)
 				execute
 			end
+			manager.set_stone (a_stone)
 		end
 
 feature -- Commands

@@ -72,7 +72,7 @@ include EIFFEL_SRC:[C]Makeinc.VMS
 
 
 IDRS_OBJ = [C.idrs]idrs.obj
-MTIDRS_OBJ = [C.idrs]idrs.obj_MT
+MTIDRS_OBJ = [C.idrs]mtidrs.obj
 NETWORK_OBJ = [C.ipc.app]network.olb
 #MTNETWORK_OBJ = [C.ipc.app]network.obj_MT
 
@@ -260,62 +260,54 @@ EOBJ = \
 MT_LOBJ_EXTRA = \
 	$(MTIDRS_OBJ) 
 MT_LOBJ = \
-	malloc.obj_MT \
-	garcol.obj_MT \
-	local.obj_MT \
-	store.obj_MT \
-	retrieve.obj_MT \
-	hash.obj_MT \
-	traverse.obj_MT \
-	hashin.obj_MT \
-	tools.obj_MT \
-	internal.obj_MT \
-	plug.obj_MT \
-	copy.obj_MT \
-	equal.obj_MT \
-	lmalloc.obj_MT \
-	out.obj_MT \
-	timer.obj_MT \
-	urgent.obj_MT \
-	sig.obj_MT \
-	hector.obj_MT \
-	cecil.obj_MT \
-	bits.obj_MT \
-	file.obj_MT \
-	dir.obj_MT \
-	misc.obj_MT \
-	error.obj_MT \
-	umain.obj_MT \
-	memory.obj_MT \
-	argv.obj_MT \
-	boolstr.obj_MT \
-	search.obj_MT \
-	run_idr.obj_MT \
-	path_name.obj_MT \
-	object_id.obj_MT \
-	eif_threads.obj_MT \
-	eif_project.obj_MT \
-	eif_rw_lock.obj_MT \
-	gen_conf.obj_MT \
-	eif_type_id.obj_MT \
-	rout_obj.obj_MT \
-	option.obj_MT \
-	compress.obj_MT \
-	console.obj_MT \
-	main.obj_MT \
-	except.obj_MT 
-
-
-
-
-
+	MTmalloc.obj \
+	MTgarcol.obj \
+	MTlocal.obj \
+	MTstore.obj \
+	MTretrieve.obj \
+	MThash.obj \
+	MTtraverse.obj \
+	MThashin.obj \
+	MTtools.obj \
+	MTinternal.obj \
+	MTplug.obj \
+	MTcopy.obj \
+	MTequal.obj \
+	MTlmalloc.obj \
+	MTout.obj \
+	MTtimer.obj \
+	MTurgent.obj \
+	MTsig.obj \
+	MThector.obj \
+	MTcecil.obj \
+	MTbits.obj \
+	MTfile.obj \
+	MTdir.obj \
+	MTmisc.obj \
+	MTerror.obj \
+	MTumain.obj \
+	MTmemory.obj \
+	MTargv.obj \
+	MTboolstr.obj \
+	MTsearch.obj \
+	MTrun_idr.obj \
+	MTpath_name.obj \
+	MTobject_id.obj \
+	MTeif_threads.obj \
+	MTeif_project.obj \
+	MTeif_rw_lock.obj \
+	MTgen_conf.obj \
+	MTeif_type_id.obj \
+	MTrout_obj.obj \
+	MToption.obj \
+	MTcompress.obj \
+	MTconsole.obj \
+	MTmain.obj \
+	MTexcept.obj 
 
 
 
 NETWORK = network.olb
-
-
-
 
 
 
@@ -330,12 +322,13 @@ wkbench : wkbench.olb
 
 
 $(OBJECTS) : $(EXTRA_DEPENDENCIES)
-#$(VMS_OBJ) : $(EXTRA_DEPENDENCIES)
-#$(LOBJ) $(VMS_OBJ) : $(EXTRA_DEPENDENCIES)
-#$(MT_LOBJ) : $(EXTRA_DEPENDENCIES)
+$(VMS_OBJ) : $(EXTRA_DEPENDENCIES)
+$(LOBJ) $(MT_LOBJ) : $(EXTRA_DEPENDENCIES)
+$(LOBJ_EXTRA) $(MT_LOBJ_EXTRA) : $(EXTRA_DEPENDENCIES)
 
 # ancillary targets; need to be created before any compilation is done
 all :: ancillary
+	show default
 
 ancillary : eif_size.h
 
@@ -355,7 +348,8 @@ size.obj : size.vms
     
 eifrtvms_test:
 	CC/debug/noopt/diag $(CFLAGS) eifrtvms/obj=eifrtvms_test.obj /define=(TEST) $(MY_CFLAGS)
-	LINK/debug eifrtvms_test.obj,path_name.robj,[c.ipc.shared]ipc/libr,vms_jackets_root:[source]vms_jackets_dbg.olb/libr
+#	LINK/debug $(MY_LINKFLAGS) eifrtvms_test.obj,path_name.obj,[c.ipc.shared]ipc/libr,vms_jackets_root:[lib]vms_jackets_dbg.olb/libr
+	LINK/debug $(MY_LINKFLAGS) eifrtvms_test.obj, [c.ipc.shared]ipc/libr, vms_jackets_root:[lib]vms_jackets_dbg.olb/libr
 
 eifrtvms.lis vms_names.lis : $(EXTRA_DEPENDENCIES)
 
@@ -405,33 +399,23 @@ all :: finalized.olb
 local_realclean ::
 	$(RM) finalized.olb;*
 
-finalized.olb : $(VMS_OBJ) $(LOBJ)
+finalized.olb : $(VMS_OBJ) $(LOBJ) $(LOBJ_EXTRA)
 	libr/create/insert $@ $^
-	libr/insert $@ $(LOBJ_EXTRA)
 	libr/insert $@ [-.ipc.shared]shword.obj,system.obj	! needed by eifrtvms
 ##	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] ! eiflib: 
 	@purge/nolog *.*obj*
 	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
-#	copy/log $@ MTfinalized.olb
-#	copy/log $@,MTfinalized.olb ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
-#	copy/log $@,MTfinalized.olb ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib]
-#	@-purge/nolog $@,MTfinalized.olb,*.obj*,ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib]*.olb
 
 all :: MTfinalized.olb
 
 #MTfinalized.olb : finalized.olb
 #	copy $^ $@
-MTfinalized.olb : $(VMS_OBJ) $(MT_LOBJ)
+MTfinalized.olb : $(VMS_OBJ) $(MT_LOBJ) $(MT_LOBJ_EXTRA)
 	libr/create/insert $@ $^
-	libr/insert $@ $(MT_LOBJ_EXTRA)
 	libr/insert $@ [-.ipc.shared]shword.obj,system.obj	! needed by eifrtvms
 ##	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] ! eiflib: 
 	@purge/nolog *.*obj*
 	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
-#	copy/log $@ MTfinalized.olb
-#	copy/log $@,MTfinalized.olb ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
-#	copy/log $@,MTfinalized.olb ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib]
-#	@-purge/nolog $@,MTfinalized.olb,*.obj*,ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib]*.olb
 
 
 #all :: runtime.olb
@@ -523,7 +507,15 @@ lint :
 	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
 
 
+###
+### Manual dependencies 
+###
+
+vms_names.obj : eif_setup.h
+
 # all listfiles
+
+
 
 #local_clean :: remove
 
@@ -603,12 +595,6 @@ show ::
 
 
 ########################################################################
-# Manual dependencies 
-$(VMS_OBJ) : eif_vmsdef.h  $(EXTRA_DEPENDENCIES) 
-vms_names.obj : eif_setup.h
-
-
-########################################################################
 # Common rules for all Makefiles -- do not edit
 
 emptyrule :: 
@@ -664,6 +650,14 @@ deinstall.man ::
 Makefiles :: 
 
 Makefiles.SH :: 
+
+########################################################################
+# manually generated dependencies
+#eifrtvms.obj :: eifrtvms.c $(EXTRA_DEPENDENCIES) 
+#$(ROBJ) :: $(EXTRA_DEPENDENCIES)
+#$(WKOBJ) :: $(EXTRA_DEPENDENCIES)
+#$(EOBJ1) :: $(EXTRA_DEPENDENCIES)
+#eif_threads.obj : eif_threads.h [.include]rt_threads.h $(EXTRA_DEPENDENCIES) 
 
 ########################################################################
 # Dependencies generated by make depend

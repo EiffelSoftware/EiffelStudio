@@ -50,7 +50,7 @@ feature -- Basic operations
 			xyz_mutex.release_mutex
 		end
 
-feature {NONE} -- Implementation
+feature {IDENTIFIED_CONTROLLER} -- Implementation
 
 	xyz_reference_list: ARRAYED_LIST [WEAK_REFERENCE] is
 			-- List of weak references used. Id's correspond to indices in this list.

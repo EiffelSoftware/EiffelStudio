@@ -234,7 +234,7 @@ feature {NONE} -- Execution replay
 	execution_recording_cell: CELL [RT_DBG_EXECUTION_RECORDER] is
 			-- Cell containing the once per thread recorder, if activated.
 		indexing
-			note: "Once per thread"
+			description: "Once per thread"
 		once
 			create Result
 		end

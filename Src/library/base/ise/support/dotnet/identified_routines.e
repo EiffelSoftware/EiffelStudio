@@ -14,37 +14,63 @@ feature -- Basic operations
 	eif_id_object (an_id: INTEGER): ANY is
 			-- Object associated with `an_id'
 		local
+			l_success: BOOLEAN
 			wr: WEAK_REFERENCE
 		do
-			if reference_list.valid_index (an_id) then
-				wr := reference_list.i_th (an_id)
+			l_success := xyz_mutex.wait_one
+			if xyz_reference_list.valid_index (an_id) then
+				wr := xyz_reference_list.i_th (an_id)
 				if wr /= Void then
 					Result ?= wr.target
 				end
 			end
+			xyz_mutex.release_mutex
 		end
 
 	eif_object_id (an_object: ANY): INTEGER is
 			-- New identifier for `an_object'
+		local
+			l_success: BOOLEAN
 		do
-			reference_list.extend (create {WEAK_REFERENCE}.make_from_target (Current))
-			Result := reference_list.count
+			l_success := xyz_mutex.wait_one
+			xyz_reference_list.extend (create {WEAK_REFERENCE}.make_from_target (Current))
+			Result := xyz_reference_list.count
+			xyz_mutex.release_mutex
 		end
 
 	eif_object_id_free (an_id: INTEGER) is
 			-- Free the entry `an_id'
+		local
+			l_success: BOOLEAN
 		do
-			if reference_list.valid_index (an_id) then
-				reference_list.put_i_th (Void, an_id)
+			l_success := xyz_mutex.wait_one
+			if xyz_reference_list.valid_index (an_id) then
+				xyz_reference_list.put_i_th (Void, an_id)
 			end
+			xyz_mutex.release_mutex
 		end
 
 feature {NONE} -- Implementation
 
-	reference_list: ARRAYED_LIST [WEAK_REFERENCE] is
+	xyz_reference_list: ARRAYED_LIST [WEAK_REFERENCE] is
 			-- List of weak references used. Id's correspond to indices in this list.
+			-- Synchronization has to be done with `xyz_mutex'.
+		indexing
+			once_status: global
 		once
 			create Result.make (50)
+		ensure
+			xyz_reference_list_not_void: Result /= Void
+		end
+
+	xyz_mutex: SYSTEM_MUTEX is
+			--
+		indexing
+			once_status: global
+		once
+			create Result.make
+		ensure
+			xyz_mutex_not_void: Result /= Void
 		end
 
 end

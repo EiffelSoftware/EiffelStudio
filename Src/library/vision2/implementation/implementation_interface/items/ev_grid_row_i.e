@@ -49,7 +49,7 @@ feature {EV_ANY} -- Initialization
 			subrow_count_recursive := 0
 			expanded_subrow_count_recursive := 0
 			is_expanded := False
-			hash_code := -1
+			hash_code := 0
 			is_show_requested := True
 			set_is_initialized (True)
 		end
@@ -376,6 +376,10 @@ feature -- Access
 		do
 			Result := parent /= Void and (subrow_count > 0 or is_ensured_expandable)
 		end
+
+	hash_code: INTEGER
+			-- Number to uniquely identify grid row within `parent_i'.
+			-- Should be set to 0 if `Current' is not parented.
 
 feature -- Status report
 
@@ -1107,7 +1111,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 				parent_row_i.update_for_subrow_removal (Current)
 			end
 
-			hash_code := -1
+			hash_code := 0
 			unparent
 			parent_row_i := Void
 			subrow_index := 0
@@ -1334,9 +1338,6 @@ feature {EV_GRID_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	hash_code: INTEGER
-			-- Number to uniquely identify grid row within `parent_i'.
-
 	contained_expanded_items_recursive: INTEGER is
 			-- `Result' is sum of of expanded nodes for each of the child rows
 			-- of `Current', and each child row themselves. This is used when expanding
@@ -1401,7 +1402,7 @@ invariant
 --	it is commented until we find a better way to express it:
 --	no_subrows_implies_not_expanded: parent /= Void and then subrow_count = 0 implies not is_expanded
 	subrows_not_void: is_initialized implies subrows /= Void
-	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = -1) or else (parent /= Void and then hash_code > 0))
+	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = 0) or else (parent /= Void and then hash_code > 0))
 
 indexing
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

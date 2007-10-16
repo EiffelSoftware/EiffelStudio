@@ -280,6 +280,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_void_b: VOID_B
 
 			l_value_i: VALUE_I
+			l_type_expr_b: TYPE_EXPR_B
 			l_routine_creation_b: ROUTINE_CREATION_B
 		do
 			debug ("debugger_evaluator")
@@ -324,7 +325,12 @@ feature {NONE} -- EXPR_B evaluation
 									if l_routine_creation_b /= Void then
 										evaluate_routine_creation_b (l_routine_creation_b)
 									else
-										evaluate_manifest_value (a_expr_b)
+										l_type_expr_b ?= a_expr_b
+										if l_type_expr_b /= Void then
+											evaluate_type_expr_b (l_type_expr_b)
+										else
+											evaluate_manifest_value (a_expr_b)
+										end
 									end
 								end
 							end
@@ -901,6 +907,33 @@ feature {NONE} -- EXPR_B evaluation
 				if not error_occurred then
 					tmp_result_value := l_message_value
 				end
+			end
+			tmp_target := l_tmp_target_backup
+		end
+
+	evaluate_type_expr_b (a_type_expr_b: TYPE_EXPR_B) is
+			-- TYPE [..] creation
+		require
+			a_type_expr_b_not_void: a_type_expr_b /= Void
+		local
+			l_class: CLASS_C
+			l_def_create_feat_i: FEATURE_I
+			l_tmp_target_backup: like tmp_target
+			l_call_value: DUMP_VALUE
+			l_type_i: CL_TYPE_I
+		do
+			fixme ("Later when we have a way to ensure the unicity of TYPE instances, we'll need to update this part")
+			l_tmp_target_backup := tmp_target
+			l_type_i := resolved_real_type_in_context (a_type_expr_b.type)
+			create_empty_instance_of (l_type_i)
+			if not error_occurred then
+				l_call_value := tmp_result_value
+				tmp_target := l_call_value
+					--| Call default_create
+				l_class := debugger_manager.compiler_data.type_class_c
+				l_def_create_feat_i := l_class.default_create_feature
+				evaluate_routine (tmp_target.address, tmp_target, l_class, l_def_create_feat_i, Void)
+				tmp_result_value := l_call_value
 			end
 			tmp_target := l_tmp_target_backup
 		end
@@ -1912,13 +1945,17 @@ feature {NONE} -- Implementation
 	byte_node_from_ast (exp: EXPR_AS): like byte_node is
 			-- compute expression_byte_node from EXPR_AS `exp'
 		require
-			exp_not_void: exp /= Void
 			context_feature_not_void: on_context implies context_feature /= Void
 		local
 			retried: BOOLEAN
 			type_check_succeed: BOOLEAN
 		do
-			if not retried then
+			if exp = Void then
+					--| How come it is Void ?
+					--| for instance, expression: create {STRING}.make_empty
+				reset_error
+				notify_error_expression (Debugger_names.cst_error_during_expression_analyse)
+			elseif not retried then
 				reset_error
 				error_handler.wipe_out
 				Ast_context.set_is_ignoring_export (True)

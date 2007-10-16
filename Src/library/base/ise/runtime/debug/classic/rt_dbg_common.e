@@ -83,6 +83,12 @@ feature -- Object access
 --			Result.set_offset (field_offset (i, obj))
 		end
 
+	object_is_expanded (object: ANY): BOOLEAN is
+			-- Is `object' an expanded value ?
+		do
+			Result := c_object_is_expanded ($object)
+		end
+
 feature -- Query
 
 	changes_between (csr1, csr2: RT_DBG_CALLSTACK_RECORD): ARRAYED_LIST [TUPLE [obj: ANY; record: RT_DBG_RECORD]] is
@@ -130,6 +136,15 @@ feature -- Query
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature {NONE} -- External implementation
+
+	c_object_is_expanded (object: POINTER): BOOLEAN is
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"eif_is_expanded(HEADER($object)->ov_flags)"
 		end
 
 indexing

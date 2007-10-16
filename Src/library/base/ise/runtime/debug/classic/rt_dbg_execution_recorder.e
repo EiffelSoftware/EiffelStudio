@@ -86,7 +86,7 @@ feature -- Access
 			flds: LIST [RT_DBG_RECORD]
 		do
 			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "enter_feature (" + ref.generator + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
+				dtrace (offset (dep) + "enter_feature (" + ref.generating_type + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
 				if fnp /= Default_pointer then
 					dtrace (" -> " + create {STRING}.make_from_c (fnp) )
 				end
@@ -134,7 +134,7 @@ feature -- Access
 			flds: LIST [RT_DBG_RECORD]
 		do
 			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "enter_rescue (" + ref.generator + ", " + dep.out + ")");
+				dtrace (offset (dep) + "enter_rescue (" + ref.generating_type + ", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]")
 				dtrace ("%N")
 			end
@@ -142,13 +142,16 @@ feature -- Access
 			from
 				r := top_callstack_record
 			until
-				r = Void or r.depth = dep
+				r = Void or else r.depth = dep
 			loop
 				r := r.parent
 			end
 			if r = Void then
 					-- Unable to find the related callstack record
 					-- then reset current recording
+				debug ("RT_EXTENSION")
+					dtrace (offset (dep) + "enter_rescue -> No record !!%N")
+				end
 			else
 				debug ("RT_EXTENSION")
 					dtrace (offset (dep) + "enter_rescue -> found record: " + r.to_string + "%N")
@@ -180,7 +183,11 @@ feature -- Access
 				top_callstack_record := r
 			end
 			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "enter_rescue (" + ref.generator + ", " + dep.out + ") - DONE")
+				dtrace (offset (dep) + "enter_rescue (" + ref.generating_type + ", " + dep.out + ")")
+				if top_callstack_record /= Void then
+					dtrace (" --TOP--> " + top_callstack_record.to_string)
+				end
+				dtrace (" - DONE%N")
 			end
 		end
 
@@ -190,7 +197,7 @@ feature -- Access
 			r: like top_callstack_record
 		do
 			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "leave_feature (" + ref.generator + ", " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
+				dtrace (offset (dep) + "leave_feature (" + ref.generating_type + " <" + ($ref).out + ">, " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
 			end
 
 			if top_callstack_record = Void then
@@ -213,7 +220,8 @@ feature -- Access
 					top_callstack_record := Void
 				else
 					check
-						same_obj: r.object = ref
+						same_object_type: dynamic_type (r.object) = dynamic_type (ref)
+						same_reference: not object_is_expanded (ref) implies r.object = ref
 						same_cid: r.class_type_id = cid
 						same_fid: r.feature_rout_id = fid
 						same_dep: r.depth = dep
@@ -223,12 +231,15 @@ feature -- Access
 				end
 			end
 			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "leave_feature (" + ref.generator + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
+				dtrace (offset (dep) + "leave_feature (" + ref.generating_type + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
 				if r /= Void and then r.feature_name /= Void then
 					dtrace (" -> " + r.feature_name)
 				end
 				dtrace (" [[" + record_count.out + "]]")
-				dtrace ("%N")
+				if top_callstack_record /= Void then
+					dtrace (" --TOP--> " + top_callstack_record.to_string)
+				end
+				dtrace (" - DONE%N")
 			end
 		end
 
@@ -279,7 +290,7 @@ feature -- Access
 				c := record_count
 				if c > 1.1 * max_record_count then
 					debug ("RT_EXTENSION")
-						dtrace (generator + ".monitor_records_count %N")
+						dtrace (generating_type + ".monitor_records_count %N")
 					end
 					from
 						p := top_callstack_record
@@ -344,7 +355,7 @@ feature -- Replay operation
 				if r /= Void then
 					dtrace ("Replay BACK -> stack = {")
 					if r.object /= Void then
-						dtrace (r.object.generator + ":")
+						dtrace (r.object.generating_type + ":")
 					end
 					dtrace (r.class_type_id.out + "}." + r.feature_rout_id.out + ".%N")
 				else
@@ -398,7 +409,7 @@ feature -- Queries
 	increment_records_count (n: INTEGER) is
 			-- Incremente `record_count' by `n'
 		do
-			debug ("RT_EXTENSION")
+			debug ("RT_EXTENSION_TRACE")
 				dtrace ("incremente records count by " + n.out + " (" + record_count.out + "->" + (n + record_count).out + "). %N")
 			end
 			record_count := record_count + n
@@ -416,7 +427,7 @@ feature -- Internal helper
 				dtrace ("restore_records -> " + chgs.count.out + " entries...%N")
 				chgs.do_all (agent (tu: TUPLE [ao: ANY; ar: RT_DBG_RECORD])
 						do
-							dtrace (" + " + tu.ao.generator + " #" + tu.ar.position.out + " : " + tu.ar.to_string + "%N")
+							dtrace (" + " + tu.ao.generating_type + " #" + tu.ar.position.out + " : " + tu.ar.to_string + "%N")
 						end
 					)
 			end
@@ -441,7 +452,7 @@ feature -- Internal helper
 				dtrace ("revert_records -> " + chgs.count.out + " entries...%N")
 				chgs.do_all (agent (tu: TUPLE [ao: ANY; ar: RT_DBG_RECORD])
 						do
-							dtrace (" + " + tu.ao.generator + " #" + tu.ar.position.out + " : " + tu.ar.to_string + "%N")
+							dtrace (" + " + tu.ao.generating_type + " #" + tu.ar.position.out + " : " + tu.ar.to_string + "%N")
 						end
 					)
 			end

@@ -180,8 +180,8 @@ feature -- Access
 			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 
 	hash_code: INTEGER
-		-- Used to uniquely identify grid item within `parent_i'.
-		-- Should be set to 0 if `Current' is not parented.
+			-- Used to uniquely identify grid item within `parent_i'.
+			-- Should be set to 0 if `Current' is not parented.
 
 feature -- Status setting
 

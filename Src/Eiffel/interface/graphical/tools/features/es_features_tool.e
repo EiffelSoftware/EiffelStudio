@@ -11,7 +11,7 @@ frozen class
 	ES_FEATURES_TOOL
 
 inherit
-	ES_TOOL [EB_FEATURES_TOOL]
+	ES_TOOL [ES_FEATURES_TOOL_PANEL]
 
 create {NONE}
 	default_create
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	create_tool: EB_FEATURES_TOOL
+	create_tool: ES_FEATURES_TOOL_PANEL
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)

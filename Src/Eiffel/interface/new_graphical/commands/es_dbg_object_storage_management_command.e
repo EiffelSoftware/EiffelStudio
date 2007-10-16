@@ -125,7 +125,7 @@ feature -- Associated tool
 			active_watch_tool := w
 		end
 
-	active_watch_tool: ES_WATCH_TOOL
+	active_watch_tool: ES_WATCH_TOOL_PANEL
 			-- Active watch tool.
 
 feature -- Status report

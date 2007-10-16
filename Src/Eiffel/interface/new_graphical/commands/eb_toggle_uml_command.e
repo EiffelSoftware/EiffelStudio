@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-feature {EB_DIAGRAM_TOOL} -- Implementation
+feature {ES_DIAGRAM_TOOL_PANEL} -- Implementation
 
 	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON;
 			-- Current sd toggle button.

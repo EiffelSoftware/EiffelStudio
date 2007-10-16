@@ -74,7 +74,7 @@ feature -- Element change
 			manager.remove_observer (Current)
 		end
 
-feature {EB_DIAGRAM_TOOL} -- Save/Restore
+feature {ES_DIAGRAM_TOOL_PANEL} -- Save/Restore
 
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.

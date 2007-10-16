@@ -91,7 +91,7 @@ feature -- Basic Operations
 	synchronize_on_process_starts (cmd_line: STRING) is
 			-- Synchronize states when launch external command `cmd_line'.
 		local
-			eo: EB_EXTERNAL_OUTPUT_TOOL
+			eo: ES_CONSOLE_TOOL_PANEL
 		do
 			from
 				managed_output_tools.start
@@ -110,7 +110,7 @@ feature -- Basic Operations
 	synchronize_on_process_exits is
 			-- Synchronize states when an external command exits.
 		local
-			eo: EB_EXTERNAL_OUTPUT_TOOL
+			eo: ES_CONSOLE_TOOL_PANEL
 		do
 			from
 				managed_output_tools.start
@@ -129,7 +129,7 @@ feature -- Basic Operations
 			-- Display process state `s' to external command output panel.
 			-- If `warning' is True, display in red color, otherwise in black color.
 		local
-			eo: EB_EXTERNAL_OUTPUT_TOOL
+			eo: ES_CONSOLE_TOOL_PANEL
 		do
 			from
 				managed_output_tools.start
@@ -147,7 +147,7 @@ feature -- Basic Operations
 	process_block_text (text: EB_PROCESS_IO_DATA_BLOCK) is
 			-- Print `text' on `target_development_window'.
 		local
-			eo: EB_EXTERNAL_OUTPUT_TOOL
+			eo: ES_CONSOLE_TOOL_PANEL
 		do
 			from
 				managed_output_tools.start
@@ -175,7 +175,7 @@ feature -- Basic Operations
 			-- If `selected_cmd' not Void, make it a default selection in
 			-- external command list.
 		local
-			et: EB_EXTERNAL_OUTPUT_TOOL
+			et: ES_CONSOLE_TOOL_PANEL
 		do
 			from
 				managed_output_tools.start
@@ -229,13 +229,13 @@ feature -- Basic Operations / Compiler messages
 
 feature -- Element change
 
-	extend (an_output_tool: EB_OUTPUT_TOOL) is
+	extend (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
 			-- Add this output tool to the list of managed output tools.
 		do
 			managed_output_tools.extend (an_output_tool)
 		end
 
-	prune (an_output_tool: EB_OUTPUT_TOOL) is
+	prune (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
 			-- Remove this output tool from the list of managed output tools.
 		do
 			managed_output_tools.start
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 
 feature  -- Implementation / Private attributes
 
-	managed_output_tools: ARRAYED_LIST [EB_OUTPUT_TOOL] is
+	managed_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL] is
 			-- Managed output tools
 		once
 			create Result.make (10)

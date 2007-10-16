@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_multi_search_tool: EB_MULTI_SEARCH_TOOL) is
+	make (a_multi_search_tool: ES_MULTI_SEARCH_TOOL_PANEL) is
 			-- Initializewith an EB_EDITOR
 		require
 			a_multi_search_tool_not_void: a_multi_search_tool /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	search_tool: EB_MULTI_SEARCH_TOOL;
+	search_tool: ES_MULTI_SEARCH_TOOL_PANEL;
 			-- Search tool
 
 indexing

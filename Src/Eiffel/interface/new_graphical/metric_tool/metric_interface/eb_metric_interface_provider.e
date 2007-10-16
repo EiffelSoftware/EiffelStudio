@@ -413,7 +413,7 @@ feature{NONE} -- Font
 
 feature -- Pick and drop
 
-	drop_class (st: CLASSI_STONE; a_metric_tool: EB_METRIC_TOOL) is
+	drop_class (st: CLASSI_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL) is
 			-- Action to be performed when `st' is dropped on current panel.
 		require
 			st_valid: st /= Void
@@ -432,7 +432,7 @@ feature -- Pick and drop
 			end
 		end
 
-	drop_feature (st: FEATURE_STONE; a_metric_tool: EB_METRIC_TOOL) is
+	drop_feature (st: FEATURE_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL) is
 			-- Action to be performed when `st' is dropped on current panel.
 		require
 			st_valid: st /= Void
@@ -444,7 +444,7 @@ feature -- Pick and drop
 			a_metric_tool.develop_window.tools.features_relation_tool.set_focus
 		end
 
-	drop_cluster (st: CLUSTER_STONE; a_metric_tool: EB_METRIC_TOOL) is
+	drop_cluster (st: CLUSTER_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL) is
 			-- Action to be performed when `st' is dropped on current panel.
 		require
 			st_valid: st /= Void
@@ -453,7 +453,7 @@ feature -- Pick and drop
 			a_metric_tool.develop_window.tools.launch_stone (st)
 		end
 
-	extend_drop_actions (a_action_holder: EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_metric_tool: EB_METRIC_TOOL) is
+	extend_drop_actions (a_action_holder: EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_metric_tool: ES_METRICS_TOOL_PANEL) is
 			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into `a_action_holder'.
 		require
 			a_action_holder_attached: a_action_holder /= Void
@@ -464,7 +464,7 @@ feature -- Pick and drop
 			a_action_holder.drop_actions.extend (agent drop_cluster (?, a_metric_tool))
 		end
 
-	tool_drop_actions (a_metric_tool: EB_METRIC_TOOL): EV_PND_ACTION_SEQUENCE is
+	tool_drop_actions (a_metric_tool: ES_METRICS_TOOL_PANEL): EV_PND_ACTION_SEQUENCE is
 			-- Drop actions
 		do
 			create Result
@@ -473,7 +473,7 @@ feature -- Pick and drop
 			Result.extend (agent drop_cluster (?, a_metric_tool))
 		end
 
-	append_drop_actions (a_action_holders: ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]; a_metric_tool: EB_METRIC_TOOL) is
+	append_drop_actions (a_action_holders: ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]; a_metric_tool: ES_METRICS_TOOL_PANEL) is
 			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into every item in `a_action_holders'.
 		require
 			a_action_holders_attached: a_action_holders /= Void

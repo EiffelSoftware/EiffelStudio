@@ -81,7 +81,7 @@ feature -- Basic Operations
 	process_block_text (text: EB_PROCESS_IO_DATA_BLOCK) is
 			-- Print `text' in all output tools.
 		local
-			eo: EB_C_OUTPUT_TOOL
+			eo: ES_C_OUTPUT_TOOL_PANEL
 		do
 			from
 				managed_output_tools.start
@@ -100,7 +100,7 @@ feature -- Basic Operations
 	notify_c_compilation_output_finished is
 			-- Notify all output tools that all output from c compilation has been finished.
 		local
-			eo: EB_C_OUTPUT_TOOL
+			eo: ES_C_OUTPUT_TOOL_PANEL
 		do
 			from
 				managed_output_tools.start
@@ -145,13 +145,13 @@ feature -- Basic Operations / Compiler messages
 
 feature -- Element change
 
-	extend (an_output_tool: EB_OUTPUT_TOOL) is
+	extend (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
 			-- Add this output tool to the list of managed output tools.
 		do
 			managed_output_tools.extend (an_output_tool)
 		end
 
-	prune (an_output_tool: EB_OUTPUT_TOOL) is
+	prune (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
 			-- Remove this output tool from the list of managed output tools.
 		do
 			managed_output_tools.start
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 
 feature  -- Implementation / Private attributes
 
-	managed_output_tools: ARRAYED_LIST [EB_OUTPUT_TOOL] is
+	managed_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL] is
 			-- Managed output tools
 		once
 			create Result.make (10)

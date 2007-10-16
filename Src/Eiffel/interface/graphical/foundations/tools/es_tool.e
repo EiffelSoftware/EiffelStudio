@@ -62,16 +62,16 @@ feature {NONE} -- Clean up
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
-			if internal_tool /= Void then
+			if internal_panel /= Void then
 					-- Clean up tool
 				check is_tool_instantiated: is_tool_instantiated end
-				internal_tool.content.close
-				internal_tool.recycle
-				internal_tool := Void
+				internal_panel.content.close
+				internal_panel.recycle
+				internal_panel := Void
 			end
 		ensure then
-			internal_tool_dettached: internal_tool = Void
-			internal_tool_recycled: old internal_tool /= Void implies (old internal_tool).is_recycled
+			internal_tool_dettached: internal_panel = Void
+			internal_tool_recycled: old internal_panel /= Void implies (old internal_panel).is_recycled
 		end
 
 feature -- Access
@@ -158,23 +158,28 @@ feature -- Access
 			result_consistent: Result = Result
 		end
 
-	frozen tool: G
-			-- Actual tool window.
+	frozen panel: G
+			-- Actual tool panel.
 			-- Note: Only call this feature when absolutely necessary as it will create the tool.
+			--
+			-- WARNING: This feature is only exported for now. It will be hidden from almost all clients
+			--          in the future. Interaction with the tool UI should be done only through `Current'
+			--          using proxy routines, which respect `is_tool_instantiated' and not unecessarly
+			--          creating the tool UI.
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result := internal_tool
+			Result := internal_panel
 			if Result = Void then
 				Result := create_tool
-				internal_tool := Result
+				internal_panel := Result
 
 				Result.attach_to_docking_manager (window.docking_manager)
 				build_tool (Result)
 			end
 		ensure
 			result_attached: Result /= Void
-			result_consistent: Result = tool
+			result_consistent: Result = panel
 			is_tool_instantiated: is_tool_instantiated
 		end
 
@@ -197,7 +202,7 @@ feature {ES_SHELL_TOOLS} -- Element change
 				internal_type_id := Void
 				if is_tool_instantiated then
 						-- Notify tool that the edition changed
-					tool.on_edition_changed
+					panel.on_edition_changed
 				end
 					-- Raise events
 				if edition_changed /= Void then
@@ -241,11 +246,11 @@ feature {ES_SHELL_TOOLS} -- Status report
 feature -- Status report
 
 	frozen is_tool_instantiated: BOOLEAN
-			-- Indicates if the tool has been instantiated by a call to `tool'.
+			-- Indicates if the tool has been instantiated by a call to `panel'.
 			-- This is useful if you want to know if the tool has been used by another part
 			-- of the system.
 		do
-			Result := internal_tool /= Void
+			Result := internal_panel /= Void
 		end
 
 feature -- Hashing
@@ -312,29 +317,29 @@ feature -- Basic operations
 		require
 			not_is_recycled: not is_recycled
 		do
-			if not tool.shown then
-				tool.show
+			if not panel.shown then
+				panel.show
 				if a_activate then
 					check
-							-- FIXME: Paul, when {ES_TOOL} uses {ES_DOCKABLE_TOOL_WINDOW} instead of {EB_TOOL} this check
+							-- FIXME: Paul, when {ES_TOOL} uses {ES_DOCKABLE_TOOL_PANEL} instead of {EB_TOOL} this check
 							-- can be greatly simplified.
-						tool_is_initialized: (({ES_DOCKABLE_TOOL_WINDOW [EV_WIDGET]}) #? tool) /= Void implies
-							(({ES_DOCKABLE_TOOL_WINDOW [EV_WIDGET]}) #? tool).is_initialized
+						tool_is_initialized: (({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel) /= Void implies
+							(({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel).is_initialized
 					end
-					tool.content.set_focus
+					panel.content.set_focus
 				end
 			end
 		ensure
-			tool_shown: tool.shown
+			tool_shown: panel.shown
 		end
 
 	close
 			-- Closes or hides the tool based on the tool's options
 		do
-			if is_tool_instantiated and then tool.shown then
+			if is_tool_instantiated and then panel.shown then
 					-- Close was called directly, so reroute through the actual tool instance to ensure
 					-- the tool is cleaned up too.
-				tool.close
+				panel.close
 			else
 				window.shell_tools.close_tool (Current)
 			end
@@ -362,8 +367,8 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internal implementation cache
 
-	internal_tool: like tool
-			-- Cached version of `tool'
+	internal_panel: like panel
+			-- Cached version of `panel'
 			-- Note: Do not use directly!
 
 	internal_type_id: like type_id

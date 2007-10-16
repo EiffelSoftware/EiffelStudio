@@ -914,7 +914,7 @@ feature {NONE} -- Docking
 					end
 
 						-- The following initialize the tool and attached it to the docking manager.
-					Result := l_tool.tool.content
+					Result := l_tool.panel.content
 				end
 			end
 		end

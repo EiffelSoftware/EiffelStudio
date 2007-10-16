@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EB_DIAGRAM_TOOL} -- Implementation
+feature {ES_DIAGRAM_TOOL_PANEL} -- Implementation
 
 	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON;
 			-- Current toggle button.

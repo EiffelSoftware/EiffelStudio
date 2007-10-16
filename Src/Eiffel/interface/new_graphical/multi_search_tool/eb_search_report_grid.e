@@ -111,7 +111,7 @@ feature -- Access
 	search_tool: ES_SEARCH_TOOL
 			-- The search tool
 
-feature {EB_MULTI_SEARCH_TOOL} -- Access
+feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Access
 
 	header_width: ARRAYED_LIST [INTEGER] is
 			-- List of header width.
@@ -129,12 +129,12 @@ feature {EB_MULTI_SEARCH_TOOL} -- Access
 	multi_search_performer: MSR is
 			-- Search performer from the search tool.
 		do
-			Result := search_tool.tool.multi_search_performer
+			Result := search_tool.panel.multi_search_performer
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-feature {EB_MULTI_SEARCH_TOOL} -- Redraw
+feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 
 	redraw_grid is
 			-- Redraw grid according to search result and refresh summary label.
@@ -164,7 +164,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Redraw
 				end
 				remove_and_clear_all_rows
 				put_report_summary
-				search_tool.tool.report_tool.new_search_tool_bar.hide
+				search_tool.panel.report_tool.new_search_tool_bar.hide
 
 				l_index := multi_search_performer.index
 				font := label_font
@@ -407,7 +407,7 @@ feature {NONE} -- Stone
 		require
 			a_class_i_not_void: a_class_i /= Void
 		do
-			Result := search_tool.tool.stone_from_class_i (a_class_i)
+			Result := search_tool.panel.stone_from_class_i (a_class_i)
 		end
 
 feature {NONE} -- Sort data
@@ -460,7 +460,7 @@ feature {NONE} -- Sort data
 	sorting_order: BOOLEAN
 			-- If True, sort from the smaller to the larger.
 
-feature {EB_MULTI_SEARCH_TOOL} -- Implementation
+feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 
 	put_report_summary is
 			-- Put report summary
@@ -472,7 +472,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_text_found := multi_search_performer.text_found_count
 			l_class_found := multi_search_performer.class_count
 			report_summary_string := ("   ").as_string_32 + interface_names.l_n_matches (l_text_found) + " " + interface_names.l_in_n_classes (l_class_found)
-			search_tool.tool.report_tool.set_summary (report_summary_string)
+			search_tool.panel.report_tool.set_summary (report_summary_string)
 		end
 
 	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE is
@@ -612,7 +612,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 		local
 			l_item: MSR_ITEM
 		do
-			search_tool.tool.set_check_class_succeed (True)
+			search_tool.panel.set_check_class_succeed (True)
 			if a_row.parent /= Void and then a_row.parent_row /= Void and then a_row.parent_row.is_expandable and then not a_row.parent_row.is_expanded then
 				a_row.parent_row.expand
 				adjust_grid_column_width
@@ -625,7 +625,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 				multi_search_performer.start
 				multi_search_performer.search (l_item)
 				if multi_search_performer.is_search_launched and then not multi_search_performer.off then
-					search_tool.tool.check_class_file_and_do (agent on_grid_row_selected_perform)
+					search_tool.panel.check_class_file_and_do (agent on_grid_row_selected_perform)
 				end
 			end
 		end
@@ -637,9 +637,9 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			l_editor: EB_EDITOR
 			l_saving_string: STRING_GENERAL
 			l_start, l_end: INTEGER
-			l_tool: EB_MULTI_SEARCH_TOOL
+			l_tool: ES_MULTI_SEARCH_TOOL_PANEL
 		do
-			l_tool := search_tool.tool
+			l_tool := search_tool.panel
 			l_tool.set_new_search_set (False)
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				l_text_item ?= multi_search_performer.item

@@ -380,7 +380,7 @@ feature -- Pop up
 			end
 		end
 
-	widget_owner: EB_FORMATTER_BASED_TOOL
+	widget_owner: ES_FORMATTER_TOOL_PANEL_BASE
 			-- Container of `widget'.
 
 	set_widget_owner (new_owner: like widget_owner) is

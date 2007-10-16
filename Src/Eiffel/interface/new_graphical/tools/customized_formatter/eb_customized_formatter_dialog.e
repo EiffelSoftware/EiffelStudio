@@ -174,7 +174,7 @@ feature -- Access
 		local
 			l_shell_tools: ES_SHELL_TOOLS
 			l_tools: DS_BILINEAR_CURSOR [ES_TOOL [EB_TOOL]]
-			l_tool: ES_FORMATTER_TOOL [EB_FORMATTER_BASED_TOOL]
+			l_tool: ES_FORMATTER_TOOL [ES_FORMATTER_TOOL_PANEL_BASE]
 			l_custom_tools: LIST [EB_TOOL]
 			l_custom_tool: EB_CUSTOMIZED_TOOL
 		do

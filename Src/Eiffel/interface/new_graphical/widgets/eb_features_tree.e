@@ -75,7 +75,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_features_tool: EB_FEATURES_TOOL; clickable: BOOLEAN) is
+	make (a_features_tool: ES_FEATURES_TOOL_PANEL; clickable: BOOLEAN) is
 			-- Initialization: build the widget and the tree.
 		do
 			is_clickable := clickable
@@ -131,7 +131,7 @@ feature -- Access
 	is_assigner_enabled: BOOLEAN
 			-- Is assigner command shown?
 
-feature {EB_FEATURES_TOOL} -- Implementation
+feature {ES_FEATURES_TOOL_PANEL} -- Implementation
 
 	feature_name (a_ef: E_FEATURE): STRING is
 			-- Feature name of `a_ef' depending of the signature displayed or not.
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	features_tool: EB_FEATURES_TOOL
+	features_tool: ES_FEATURES_TOOL_PANEL
 			-- Associated features tool.
 
 	build_tree_folder (n: STRING; fl: EIFFEL_LIST [FEATURE_AS]; a_class: CLASS_C): EV_TREE_ITEM is

@@ -16,7 +16,7 @@ inherit
 			out
 		end
 
-	ES_TOOL [ES_ERRORS_AND_WARNINGS_TOOL]
+	ES_TOOL [ES_ERRORS_AND_WARNINGS_TOOL_PANEL]
 
 create {NONE}
 	default_create
@@ -61,7 +61,7 @@ feature -- Basic operations
 			--            not action when the end has been reached.
 		do
 			if is_tool_instantiated then
-				tool.go_to_next_error (a_cycle)
+				panel.go_to_next_error (a_cycle)
 			end
 		end
 
@@ -72,7 +72,7 @@ feature -- Basic operations
 			--            not action when the start has been reached.
 		do
 			if is_tool_instantiated then
-				tool.go_to_previous_error (a_cycle)
+				panel.go_to_previous_error (a_cycle)
 			end
 		end
 
@@ -83,7 +83,7 @@ feature -- Basic operations
 			--            not action when the end has been reached.
 		do
 			if is_tool_instantiated then
-				tool.go_to_next_warning (a_cycle)
+				panel.go_to_next_warning (a_cycle)
 			end
 		end
 
@@ -94,13 +94,13 @@ feature -- Basic operations
 			--            not action when the start has been reached.
 		do
 			if is_tool_instantiated then
-				tool.go_to_previous_warning (a_cycle)
+				panel.go_to_previous_warning (a_cycle)
 			end
 		end
 
 feature {NONE} -- Factory
 
-	create_tool: ES_ERRORS_AND_WARNINGS_TOOL
+	create_tool: ES_ERRORS_AND_WARNINGS_TOOL_PANEL
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)

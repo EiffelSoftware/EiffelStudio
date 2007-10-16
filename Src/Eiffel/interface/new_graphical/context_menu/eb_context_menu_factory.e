@@ -251,7 +251,7 @@ feature -- Feature tree
 			a_name_not_void: a_name /= Void
 			a_menu_not_void: a_menu /= Void
 		local
-			l_feature_tool: EB_FEATURES_TOOL
+			l_feature_tool: ES_FEATURES_TOOL_PANEL
 		do
 			if menu_displayable (a_pebble) then
 				l_feature_tool := dev_window.tools.features_tool
@@ -266,7 +266,7 @@ feature -- Feature tree
 			a_clause_not_void: a_clause /= Void
 			a_menu_not_void: a_menu /= Void
 		local
-			l_feature_tool: EB_FEATURES_TOOL
+			l_feature_tool: ES_FEATURES_TOOL_PANEL
 		do
 			if menu_displayable (a_pebble) then
 				l_feature_tool := dev_window.tools.features_tool
@@ -369,7 +369,7 @@ feature -- Call stack menu
 
 feature -- Object tool, Object Viewer and Watch tool menus
 
-	object_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_objects_tool: ES_OBJECTS_TOOL) is
+	object_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_objects_tool: ES_OBJECTS_TOOL_PANEL) is
 			-- Object tool menu
 		local
 			l_object_stone: OBJECT_STONE
@@ -398,7 +398,7 @@ feature -- Object tool, Object Viewer and Watch tool menus
 			end
 		end
 
-	watch_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL) is
+	watch_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL_PANEL) is
 			-- Watch tool menu
 		local
 			l_object_stone: OBJECT_STONE
@@ -1043,7 +1043,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu, l_menu2: EV_MENU
 			l_class_stone: CLASSC_STONE
 			l_debugger: EB_DEBUGGER_MANAGER
-			l_list: LINKED_SET [ES_WATCH_TOOL]
+			l_list: LINKED_SET [ES_WATCH_TOOL_PANEL]
 		do
 			create l_menu.make_with_text (names.m_add_to)
 			a_menu.extend (l_menu)
@@ -1172,7 +1172,7 @@ feature {NONE} -- Menu section, Granularity 1.
 	extend_search_scope_remove (a_menu: EV_MENU; a_pebble: ANY) is
 			-- Extend search remove menu.
 		local
-			l_search_tool: EB_MULTI_SEARCH_TOOL
+			l_search_tool: ES_MULTI_SEARCH_TOOL_PANEL
 		do
 			l_search_tool := dev_window.tools.search_tool
 			a_menu.extend (new_menu_item (names.m_remove))
@@ -1187,7 +1187,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 		local
 			l_menu_item: EV_MENU_ITEM
-			l_properties_tool: EB_PROPERTIES_TOOL
+			l_properties_tool: ES_PROPERTIES_TOOL_PANEL
 			l_stone: STONE
 		do
 			l_stone ?= a_pebble
@@ -1231,7 +1231,7 @@ feature {NONE} -- Diagram menu section, Granularity 1.
 			l_menu: EV_MENU
 			l_classi_stone: CLASSI_STONE
 			l_figures: CLASS_FIGURE_LIST_STONE
-			l_diagram_tool: EB_DIAGRAM_TOOL
+			l_diagram_tool: ES_DIAGRAM_TOOL_PANEL
 		do
 			l_classi_stone ?= a_pebble
 			l_figures ?= a_pebble
@@ -1525,7 +1525,7 @@ feature {NONE} -- Debug tool menu section, Granularity 1.
 			end
 		end
 
-	extend_delete_expression (a_menu: EV_MENU; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL) is
+	extend_delete_expression (a_menu: EV_MENU; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL_PANEL) is
 			-- Extend delete expression menu.
 		require
 			a_menu_not_void: a_menu /= Void

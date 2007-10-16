@@ -173,7 +173,7 @@ feature -- Element change
 			explore_suppliers (center_class, supplier_depth, False)
 		end
 
-feature {EB_DIAGRAM_TOOL} -- Synchronization
+feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
 	synchronize is
 			-- Contexts need to be updated because of recompilation

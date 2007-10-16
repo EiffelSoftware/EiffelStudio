@@ -11,7 +11,7 @@ frozen class
 	ES_SEARCH_TOOL
 
 inherit
-	ES_TOOL [EB_MULTI_SEARCH_TOOL]
+	ES_TOOL [ES_MULTI_SEARCH_TOOL_PANEL]
 		redefine
 			build_tool
 		end
@@ -21,7 +21,7 @@ create {NONE}
 
 feature {NONE} -- Initialization
 
-	build_tool (a_tool: EB_MULTI_SEARCH_TOOL)
+	build_tool (a_tool: ES_MULTI_SEARCH_TOOL_PANEL)
 			-- Initializes tool after it has been created.
 			--
 			-- `a_tool': Tool to initialize.
@@ -63,7 +63,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	create_tool: EB_MULTI_SEARCH_TOOL
+	create_tool: ES_MULTI_SEARCH_TOOL_PANEL
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)

@@ -1198,7 +1198,7 @@ feature {NONE} -- Implementation
 	date: INTEGER
 			-- Date of last modification on `class_i' by `Current'.
 
-	context_editor: EB_DIAGRAM_TOOL
+	context_editor: ES_DIAGRAM_TOOL_PANEL
 			--
 
 	invalidate_text is

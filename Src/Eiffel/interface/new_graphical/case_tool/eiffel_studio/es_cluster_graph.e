@@ -166,7 +166,7 @@ feature -- Element change
 	last_included_classes: LIST [EG_LINKABLE]
 			-- Last classes added by `include_all_classes'.
 
-feature {EB_DIAGRAM_TOOL} -- Synchronization
+feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
 	synchronize is
 			-- Contexts need to be updated because of recompilation

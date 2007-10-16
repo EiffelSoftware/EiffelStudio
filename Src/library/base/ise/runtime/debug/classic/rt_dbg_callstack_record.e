@@ -314,11 +314,6 @@ feature -- Change
 	flatten is
 		require
 			not_flat: not is_flat
-		local
-			res: like flat_field_records
-			frcds: like flat_field_records
-			subs: like call_records
-			r: like Current
 		do
 			if not is_flat then
 				flat_field_records := changes_between (Current, Void)

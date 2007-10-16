@@ -251,7 +251,6 @@ feature {NONE} -- Object storage
 			-- Process the object saving for `t' data
 		local
 			fn: STRING
-			b: BOOLEAN
 		do
 			create fn.make_from_c (t.fn)
 			t.succeed := saved_object_to (t.ref, fn) /= Void

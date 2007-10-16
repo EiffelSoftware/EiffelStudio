@@ -372,7 +372,58 @@ feature {NONE} -- Implementation
 		end
 
 	refresh_breakpoints_info is
+			-- Refresh and recomputed breakpoints's grid when shown
+		local
+			w: EV_WIDGET
+		do
+			if shown then -- Tool exists in layout
+				check content /= Void end
+				w := content.user_widget
+				if
+					w /= Void
+					and then w /= Void
+				then
+					if w /= Void and then w.is_displayed then
+						refresh_breakpoints_info_now
+					else
+						request_refresh_breakpoints_info_now
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Refresh breakpoints info Now implementation
+
+	agent_refresh_breakpoints_info_now: PROCEDURE [ANY, TUPLE]
+			-- agent on `refresh_breakpoints_info_now'.
+
+	request_refresh_breakpoints_info_now is
+			-- Request `refresh_breakpoints_info_now'
+		require
+			tool_shown: shown
+		do
+			if agent_refresh_breakpoints_info_now = Void then
+				agent_refresh_breakpoints_info_now := agent refresh_breakpoints_info_now
+				content.show_actions.extend_kamikaze (agent_refresh_breakpoints_info_now)
+			else
+				-- already requested
+			end
+		end
+
+	cancel_refresh_breakpoints_info_now is
+			-- Request `refresh_breakpoints_info_now'
+		do
+			if content /= Void and then agent_refresh_breakpoints_info_now /= Void then
+				content.show_actions.prune_all (agent_refresh_breakpoints_info_now)
+				agent_refresh_breakpoints_info_now := Void
+			end
+		end
+
+	refresh_breakpoints_info_now is
 			-- Refresh and recomputed breakpoints's grid
+		require
+			tool_shown: shown
+			content_widget_visible: content /= Void and then content.user_widget /= Void and then content.user_widget.is_show_requested
 		local
 			row: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -380,57 +431,57 @@ feature {NONE} -- Implementation
 			col: EV_COLOR
 			bpm: BREAKPOINTS_MANAGER
 		do
-			if shown then
-				class_color := preferences.editor_data.class_text_color
-				feature_color := preferences.editor_data.feature_text_color
-				condition_color := preferences.editor_data.string_text_color
+			cancel_refresh_breakpoints_info_now
 
-				col := preferences.editor_data.comments_text_color
-				bpm := Debugger_manager
-				grid.call_delayed_clean
-				if not bpm.has_breakpoints then
-					grid.insert_new_row (1)
-					create lab.make_with_text (interface_names.l_no_break_point)
-					lab.set_foreground_color (col)
-					grid.set_item (1, 1, lab)
+			class_color := preferences.editor_data.class_text_color
+			feature_color := preferences.editor_data.feature_text_color
+			condition_color := preferences.editor_data.string_text_color
+
+			col := preferences.editor_data.comments_text_color
+			bpm := Debugger_manager
+			grid.call_delayed_clean
+			if not bpm.has_breakpoints then
+				grid.insert_new_row (1)
+				create lab.make_with_text (interface_names.l_no_break_point)
+				lab.set_foreground_color (col)
+				grid.set_item (1, 1, lab)
+			else
+				if not breakpoints_separated_by_status then
+					if bpm.has_breakpoints then
+						f_list := bpm.features_with_breakpoint_set
+						insert_bp_features_list (f_list, Void, True, True)
+					end
 				else
-					if not breakpoints_separated_by_status then
-						if bpm.has_breakpoints then
-							f_list := bpm.features_with_breakpoint_set
-							insert_bp_features_list (f_list, Void, True, True)
-						end
-					else
-						if bpm.has_enabled_breakpoints then
-							row := grid.extended_new_row
-							row.set_background_color (bg_separator_color)
-							create lab.make_with_text (interface_names.l_enabled)
-							lab.set_foreground_color (col)
-							row.set_item (1, lab)
-							row.set_item (2, create {EV_GRID_ITEM})
-							row.set_item (3, create {EV_GRID_ITEM})
+					if bpm.has_enabled_breakpoints then
+						row := grid.extended_new_row
+						row.set_background_color (bg_separator_color)
+						create lab.make_with_text (interface_names.l_enabled)
+						lab.set_foreground_color (col)
+						row.set_item (1, lab)
+						row.set_item (2, create {EV_GRID_ITEM})
+						row.set_item (3, create {EV_GRID_ITEM})
 
-							f_list := bpm.features_with_breakpoint_set
-							insert_bp_features_list (f_list, row, True, False)
-							row.expand
-						end
-						if bpm.has_disabled_breakpoints then
-							row := grid.extended_new_row
-							row.set_background_color (bg_separator_color)
-							create lab.make_with_text (interface_names.l_disabled)
-							lab.set_foreground_color (col)
-							row.set_item (1, lab)
-							row.set_item (2, create {EV_GRID_ITEM})
-							row.set_item (3, create {EV_GRID_ITEM})
+						f_list := bpm.features_with_breakpoint_set
+						insert_bp_features_list (f_list, row, True, False)
+						row.expand
+					end
+					if bpm.has_disabled_breakpoints then
+						row := grid.extended_new_row
+						row.set_background_color (bg_separator_color)
+						create lab.make_with_text (interface_names.l_disabled)
+						lab.set_foreground_color (col)
+						row.set_item (1, lab)
+						row.set_item (2, create {EV_GRID_ITEM})
+						row.set_item (3, create {EV_GRID_ITEM})
 
-							f_list := bpm.features_with_breakpoint_set
-							insert_bp_features_list (f_list, row, False, True)
-							row.expand
-						end
+						f_list := bpm.features_with_breakpoint_set
+						insert_bp_features_list (f_list, row, False, True)
+						row.expand
 					end
 				end
-				grid.request_columns_auto_resizing
-				restore_grid_layout
 			end
+			grid.request_columns_auto_resizing
+			restore_grid_layout
 		end
 
 feature {NONE} -- Impl bp

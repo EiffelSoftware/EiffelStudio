@@ -7,7 +7,7 @@ indexing
 
 class
 	WEL_WINFORM_CONTAINER
-	
+
 inherit
 	WEL_CONTROL_WINDOW
 		rename
@@ -28,11 +28,13 @@ feature {NONE} -- Initialization
 			a_parent_not_void: a_parent /= Void
 			a_prent_exists: a_parent.exists
 			an_item_not_void: an_item /= Void
+		local
+			l_previous_hwnd: POINTER
 		do
 			control_make (a_parent, "WINFORM_CONTAINER")
 			create winform_container.make
 			an_item.set_parent (winform_container)
-			cwin_set_parent (winform_container.handle, item)
+			l_previous_hwnd := {WEL_API}.set_parent (winform_container.handle, item)
 			winform := an_item
 		ensure
 			parent_set: parent = a_parent

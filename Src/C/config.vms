@@ -33,7 +33,8 @@
 */
 
 /*
- * config.vms (aka eif_config.h)
+ * config.vms (aka eif_config.h for VMS)
+ * $Id$
  * This file was produced by running the config_h.SH script, which
  * gets its values from config.sh, which is generally produced by
  * running Configure,

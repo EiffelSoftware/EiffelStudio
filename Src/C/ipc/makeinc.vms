@@ -33,4 +33,4 @@ endif
 include EIFFEL_SRC:[C]makeinc.vms
 
 
-
+# end C/ipc/Makeinc.VMS (aka EIFFEL_SRC:[C.ipc]Makeinc.VMS)

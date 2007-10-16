@@ -27,7 +27,7 @@ SED = /bin/sed
 # Automatically generated parameters -- do not edit
 
 SOURCES =  $(LSRC)
-OBJECTS = idrs.obj idrs.obj_MT
+OBJECTS = idrs.obj mtidrs.obj
 
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
@@ -68,11 +68,13 @@ listings : $(LISTINGS)
 
 
 
-#LIBS = idr.olb # idr.olb$(CSSUF)
-all :: $(OBJECTS)
+#LIBS = idr.olb mtidr.olb
 
-all :: $(LIBS)
+#all :: $(LIBS)
+all :: $(OBJECTS)
 #	write sys$$output "Makefile = $(MAKEFILES), MAKEFLAGS = $(MAKEFLAGS)"
+	-purge/nolog *.*obj	! all
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 local_realclean ::
 	$(RM) $(LIBS);*,$(OBJECTS)
@@ -80,14 +82,14 @@ local_realclean ::
 #all :: idr.olb
 idr.olb : $(LOBJ)
 	libr/create/insert $@ $^
-	@-purge/nolog *.*obj
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+#	@-purge/nolog *.*obj
+#	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 #all :: idr_MT.olb
-idr_MT.olb : $(MT_LOBJ)
+mtidr.olb : $(MT_LOBJ)
 	libr/create/insert $@ $^
-	@-purge/nolog *.*obj
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+#	@-purge/nolog *.*obj
+#	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
 foo :

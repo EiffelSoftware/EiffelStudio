@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	metric_tool: EB_METRIC_TOOL
+	metric_tool: ES_METRICS_TOOL_PANEL
 			-- Metric tool
 
 	metric_tool_window: EV_WINDOW is

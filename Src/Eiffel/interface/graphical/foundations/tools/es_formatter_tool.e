@@ -8,7 +8,7 @@ indexing
 	revision: "$revision$"
 
 deferred class
-	ES_FORMATTER_TOOL [G -> EB_FORMATTER_BASED_TOOL]
+	ES_FORMATTER_TOOL [G -> ES_FORMATTER_TOOL_PANEL_BASE]
 
 inherit
 	ES_TOOL [G]

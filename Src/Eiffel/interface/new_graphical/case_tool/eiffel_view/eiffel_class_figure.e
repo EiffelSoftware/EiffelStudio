@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			old_center: EG_LINKABLE_FIGURE
 			old_es_center: ES_CLASS
 			fdl: EG_FORCE_DIRECTED_LAYOUT
-			ce: EB_DIAGRAM_TOOL
+			ce: ES_DIAGRAM_TOOL_PANEL
 			new_classes: LIST [ES_CLASS]
 			layout: EIFFEL_INHERITANCE_LAYOUT
 		do
@@ -319,9 +319,9 @@ feature {NONE} -- Implementation
 					else
 						create layout.make_with_world (world)
 						if world.is_uml then
-							layout.set_spacing ({EB_DIAGRAM_TOOL}.default_uml_horizontal_spacing, {EB_DIAGRAM_TOOL}.default_uml_vertical_spacing)
+							layout.set_spacing ({ES_DIAGRAM_TOOL_PANEL}.default_uml_horizontal_spacing, {ES_DIAGRAM_TOOL_PANEL}.default_uml_vertical_spacing)
 						else
-							layout.set_spacing ({EB_DIAGRAM_TOOL}.default_bon_horizontal_spacing, {EB_DIAGRAM_TOOL}.default_bon_vertical_spacing)
+							layout.set_spacing ({ES_DIAGRAM_TOOL_PANEL}.default_bon_horizontal_spacing, {ES_DIAGRAM_TOOL_PANEL}.default_bon_vertical_spacing)
 						end
 						layout.layout
 						if not world.context_editor.history.undo_list.is_empty then

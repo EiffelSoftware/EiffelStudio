@@ -11,7 +11,7 @@ frozen class
 	ES_DIAGRAM_TOOL
 
 inherit
-	ES_TOOL [EB_DIAGRAM_TOOL]
+	ES_TOOL [ES_DIAGRAM_TOOL_PANEL]
 
 create {NONE}
 	default_create
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	create_tool: EB_DIAGRAM_TOOL
+	create_tool: ES_DIAGRAM_TOOL_PANEL
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)

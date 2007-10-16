@@ -159,7 +159,7 @@ feature -- Basic operations
 			end
 		end
 
-feature {EB_OBJECT_VIEWERS_TOOL, EB_OBJECT_VIEWERS_DIALOG} -- Dialog
+feature {ES_OBJECT_VIEWER_TOOL_PANEL, EB_OBJECT_VIEWERS_DIALOG} -- Dialog
 
 	remove_entry (e: like last_opened_viewer) is
 			-- Remove `e' from the list of displayed viewers.

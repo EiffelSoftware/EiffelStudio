@@ -104,7 +104,7 @@ feature -- Status report
 
 feature -- Access
 
-	context_editor: EB_DIAGRAM_TOOL
+	context_editor: ES_DIAGRAM_TOOL_PANEL
 			-- Context showing `Current'.
 
 	model: ES_GRAPH
@@ -466,7 +466,7 @@ feature -- Element change.
 			end
 		end
 
-feature {EB_DIAGRAM_TOOL} -- Status settings
+feature {ES_DIAGRAM_TOOL_PANEL} -- Status settings
 
 	show_anchors is
 			-- Show all anchors of fixed linkable figures.
@@ -491,7 +491,7 @@ feature {EB_CHANGE_COLOR_COMMAND, EB_DELETE_FIGURE_COMMAND, EG_FIGURE} -- Cluste
 			end
 		end
 
-feature {EB_DIAGRAM_TOOL} -- Legend
+feature {ES_DIAGRAM_TOOL_PANEL} -- Legend
 
 	cluster_legend: EIFFEL_CLUSTER_LEGEND
 			-- Legend of clusters and colors.
@@ -798,7 +798,7 @@ feature -- Store/Retrive
 			Precursor {EG_FIGURE_WORLD} (node)
 		end
 
-feature {EB_DIAGRAM_TOOL} -- Statistic
+feature {ES_DIAGRAM_TOOL_PANEL} -- Statistic
 
 	set_last_draw_time (ms: INTEGER) is
 			-- Set time needed for draw.

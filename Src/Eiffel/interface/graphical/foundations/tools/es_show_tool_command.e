@@ -118,7 +118,7 @@ feature -- Execution
 			l_x, l_y: INTEGER
 			l_window: EV_WINDOW
 		do
-			if not tool.tool.shown then
+			if not tool.panel.shown then
 				create l_shared
 				l_window := tool.window.window
 				l_x := l_window.screen_x + l_window.width // 2 - l_shared.default_floating_window_width // 2

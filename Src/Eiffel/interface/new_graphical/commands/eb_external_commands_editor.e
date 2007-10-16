@@ -222,7 +222,7 @@ feature -- Basic operations
 			end
 		end
 
-feature{EB_EXTERNAL_OUTPUT_TOOL} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
+feature{ES_CONSOLE_TOOL_PANEL} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
 
 	refresh_list_from_outside is
 			-- Refresh command list from EB_EXTERNAL_OUTPUT_TOOL

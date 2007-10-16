@@ -1036,7 +1036,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			create Result.make_with_text (develop_window.Interface_names.m_Explorer_bar)
 			Result.wipe_out
 			insert_show_tool_menu_item (Result, {ES_FEATURES_TOOL})
-			insert_show_tool_menu_item (Result, {ES_GROUP_TOOL})
+			insert_show_tool_menu_item (Result, {ES_GROUPS_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_CLASS_TOOL})
 			insert_show_tool_menu_item (Result, {ES_FEATURE_RELATION_TOOL})
@@ -1058,7 +1058,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_WINDOWS_TOOL})
 			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			insert_show_tool_menu_item (Result, {ES_DEBUGGER_BREAKPOINTS_TOOL})
+			insert_show_tool_menu_item (Result, {ES_BREAKPOINTS_TOOL})
 
 			l_customized_tools := develop_window.tools.customized_tools
 			if not l_customized_tools.is_empty then

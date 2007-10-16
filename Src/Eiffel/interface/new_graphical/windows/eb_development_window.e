@@ -98,7 +98,7 @@ inherit
 
 	EC_EIFFEL_LAYOUT
 		export
-			{EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, EB_DIAGRAM_TOOL}
+			{EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, ES_DIAGRAM_TOOL_PANEL}
 				 has_case, has_metrics, has_dll_generation, has_profiler, has_documentation_generation, has_xmi_generation
 			{EB_DEBUGGER_MANAGER} Docking_standard_layout_path, standard_tools_debug_layout_name
 			{NONE} All
@@ -287,8 +287,8 @@ feature -- Window Properties
 				from l_tools.start until l_tools.after or l_tool_window /= Void loop
 					l_tool := l_tools.item
 					if l_tool.is_tool_instantiated and not l_tool.is_recycled then
-						if l_tool.tool.content = l_content then
-						 	l_tool_window := l_tool.tool
+						if l_tool.panel.content = l_content then
+						 	l_tool_window := l_tool.panel
 						end
 					end
 					l_tools.forth
@@ -750,7 +750,7 @@ feature -- Resource Update
 			-- process the user entry in the address bar
 		local
 			l_class_stone: CLASSI_STONE
-			l_multi_search_tool: EB_MULTI_SEARCH_TOOL
+			l_multi_search_tool: ES_MULTI_SEARCH_TOOL_PANEL
 		do
 			save_canceled := False
 			l_class_stone ?= stone
@@ -979,7 +979,7 @@ feature -- Window management
 			l_tool := tools.c_output_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
 
-			l_tool := shell_tools.tool ({ES_ERROR_LIST_TOOL}).tool
+			l_tool := shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
 			l_tool.content.set_tab_with (tools.c_output_tool.content, True)
 			l_last_tool := l_tool
 
@@ -1265,7 +1265,7 @@ feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 			end
 		end
 
-feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
+feature {ES_FEATURES_TOOL_PANEL, EB_FEATURES_TREE, DOTNET_CLASS_AS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
 
 	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is
 			-- Set 'features' to 'a_features' and store in hash table with key 'a_type' denoting name of consumed

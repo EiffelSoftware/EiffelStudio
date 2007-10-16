@@ -24,7 +24,7 @@ inherit
 create
 	make
 
-create {EB_OBJECT_VIEWERS_TOOL}
+create {ES_OBJECT_VIEWER_TOOL_PANEL}
 	make_for_tool
 
 feature {NONE} -- Initialization
@@ -200,7 +200,7 @@ feature -- Access
 	viewers: ARRAYED_LIST [EB_OBJECT_VIEWER]
 			-- List of viewers.
 
-	tool: EB_OBJECT_VIEWERS_TOOL
+	tool: ES_OBJECT_VIEWER_TOOL_PANEL
 			-- Associated viewer tool.
 
 	widget: EV_WIDGET

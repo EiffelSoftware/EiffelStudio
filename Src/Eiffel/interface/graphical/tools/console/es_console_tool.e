@@ -11,7 +11,7 @@ frozen class
 	ES_CONSOLE_TOOL
 
 inherit
-	ES_TOOL [EB_EXTERNAL_OUTPUT_TOOL]
+	ES_TOOL [ES_CONSOLE_TOOL_PANEL]
 
 create {NONE}
 	default_create
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {NONE} -- Factory
 
-	create_tool: EB_EXTERNAL_OUTPUT_TOOL
+	create_tool: ES_CONSOLE_TOOL_PANEL
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)

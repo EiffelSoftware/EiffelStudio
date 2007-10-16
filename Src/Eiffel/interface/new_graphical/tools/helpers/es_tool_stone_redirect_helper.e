@@ -89,8 +89,8 @@ feature {NONE} -- Redirects
 		require
 			a_stone_attached: a_stone /= Void
 		local
-			l_class_tool: EB_CLASS_TOOL
-			l_feature_tool: EB_FEATURES_RELATION_TOOL
+			l_class_tool: ES_CLASS_TOOL_PANEL
+			l_feature_tool: ES_FEATURES_RELATION_TOOL_PANEL
 			l_feature_stone: FEATURE_STONE
 		do
 			l_feature_stone ?= a_stone
@@ -116,7 +116,7 @@ feature {NONE} -- Redirects
 		require
 			a_stone_attached: a_stone /= Void
 		local
-			l_feature_tool: EB_FEATURES_RELATION_TOOL
+			l_feature_tool: ES_FEATURES_RELATION_TOOL_PANEL
 		do
 			l_feature_tool := development_window.tools.features_relation_tool
 			l_feature_tool.set_stone (a_stone)

@@ -9,7 +9,7 @@ class
 	EB_CUSTOMIZED_TOOL
 
 inherit
-	EB_FORMATTER_BASED_TOOL
+	ES_FORMATTER_TOOL_PANEL_BASE
 		rename
 			make as old_make
 		redefine

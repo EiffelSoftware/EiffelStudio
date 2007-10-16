@@ -260,13 +260,13 @@ feature -- Basic Operations / Compiler messages
 
 feature -- Element change
 
-	extend (an_output_tool: EB_OUTPUT_TOOL) is
+	extend (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
 			-- Add this output tool to the list of managed output tools.
 		do
 			managed_output_tools.extend (an_output_tool)
 		end
 
-	prune (an_output_tool: EB_OUTPUT_TOOL) is
+	prune (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
 			-- Remove this output tool from the list of managed output tools.
 		do
 			managed_output_tools.start
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Private attributes
 
-	managed_output_tools: ARRAYED_LIST [EB_OUTPUT_TOOL] is
+	managed_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL] is
 			-- Managed output tools
 		indexing
 			once_status: global
@@ -753,7 +753,7 @@ feature {NONE} -- Implementation / Private attributes
 			create Result.make (10)
 		end
 
-	general_output_tools: ARRAYED_LIST [EB_OUTPUT_TOOL] is
+	general_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL] is
 			-- General output tool
 		do
 			create Result.make (3)

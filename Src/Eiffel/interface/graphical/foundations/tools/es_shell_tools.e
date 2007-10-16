@@ -186,7 +186,7 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_FAVORITES_TOOL})
 			l_tools.put_last ({ES_FEATURES_TOOL})
 			l_tools.put_last ({ES_FEATURE_RELATION_TOOL})
-			l_tools.put_last ({ES_GROUP_TOOL})
+			l_tools.put_last ({ES_GROUPS_TOOL})
 			l_tools.put_last ({ES_METRICS_TOOL})
 			l_tools.put_last ({ES_OUTPUT_TOOL})
 			l_tools.put_last ({ES_PROPERTIES_TOOL})
@@ -200,12 +200,12 @@ feature {NONE} -- Access
 			--l_tools.put_last ({ES_CUSTOM_FORMATTER_TOOL})
 
 				-- Debugger tools
-			l_tools.put_last ({ES_DEBUGGER_BREAKPOINTS_TOOL})
-			l_tools.put_last ({ES_DEBUGGER_THREADS_TOOL})
-			l_tools.put_last ({ES_DEBUGGER_CALL_STACK_TOOL})
-			l_tools.put_last ({ES_DEBUGGER_WATCH_TOOL})
-			l_tools.put_last ({ES_DEBUGGER_OBJECTS_TOOL})
-			l_tools.put_last ({ES_DEBUGGER_OBJECT_VIEWER_TOOL})
+			l_tools.put_last ({ES_BREAKPOINTS_TOOL})
+			l_tools.put_last ({ES_THREADS_TOOL})
+			l_tools.put_last ({ES_CALL_STACK_TOOL})
+			l_tools.put_last ({ES_WATCH_TOOL})
+			l_tools.put_last ({ES_OBJECTS_TOOL})
+			l_tools.put_last ({ES_OBJECT_VIEWER_TOOL})
 
 			l_tools.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [TYPE [ES_TOOL [EB_TOOL]]]}.make (agent {TYPE [ES_TOOL [EB_TOOL]]}.is_equal))
 			Result := l_tools
@@ -390,7 +390,7 @@ feature -- Query
 						if
 							not l_tool.is_recycled and then
 							(not l_tool.is_tool_instantiated or else
-							(not l_tool.tool.is_recycled and then not l_tool.tool.shown))
+							(not l_tool.panel.is_recycled and then not l_tool.panel.shown))
 						then
 							Result := l_tool
 						end
@@ -500,7 +500,7 @@ feature -- Basic operation
 			show_tool_edition (a_type, 1, a_activate)
 		ensure
 			tool_is_instatiated: tool (a_type).is_tool_instantiated
-			tool_is_shown: tool (a_type).tool.shown
+			tool_is_shown: tool (a_type).panel.shown
 		end
 
 	show_tool_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_edition: NATURAL_8; a_activate: BOOLEAN)
@@ -521,7 +521,7 @@ feature -- Basic operation
 			l_tool.show (a_activate)
 		ensure
 			tool_is_instatiated: tool_edition (a_type, a_edition).is_tool_instantiated
-			tool_is_shown: tool_edition (a_type, a_edition).tool.shown
+			tool_is_shown: tool_edition (a_type, a_edition).panel.shown
 		end
 
 	show_tool_next_available_edition (a_type: TYPE [ES_TOOL [EB_TOOL]]; a_reuse: BOOLEAN; a_activate: BOOLEAN)
@@ -540,7 +540,7 @@ feature -- Basic operation
 			l_tool.show (a_activate)
 		ensure
 			tool_is_instatiated: (old tool_next_available_edition (a_type, a_reuse)).is_tool_instantiated
-			tool_is_shown: (old tool_next_available_edition (a_type, a_reuse)).tool.shown
+			tool_is_shown: (old tool_next_available_edition (a_type, a_reuse)).panel.shown
 		end
 
 feature {ES_TOOL} -- Removal

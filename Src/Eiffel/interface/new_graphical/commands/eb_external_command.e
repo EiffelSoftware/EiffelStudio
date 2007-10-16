@@ -359,7 +359,7 @@ feature -- Status setting
 			set_accelerator (l_accelerators.item (index))
 		end
 
-feature{EB_EXTERNAL_OUTPUT_TOOL} -- Status setting
+feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 
 	set_command (cmd: STRING) is
 			-- Set `external_command' with `cmd'.

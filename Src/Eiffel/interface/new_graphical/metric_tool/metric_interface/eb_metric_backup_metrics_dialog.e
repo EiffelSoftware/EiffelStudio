@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_metric_tool: EB_METRIC_TOOL) is
+	make (a_metric_tool: ES_METRICS_TOOL_PANEL) is
 			-- Initialize `metric_tool' with `a_metric_tool'.
 		require
 			a_metric_tool_attached: a_metric_tool /= Void

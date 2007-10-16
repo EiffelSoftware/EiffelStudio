@@ -11,7 +11,7 @@ frozen class
 	ES_FEATURE_RELATION_TOOL
 
 inherit
-	ES_FORMATTER_TOOL [EB_FEATURES_RELATION_TOOL]
+	ES_FORMATTER_TOOL [ES_FEATURES_RELATION_TOOL_PANEL]
 
 create {NONE}
 	default_create
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature {NONE} -- Factory
 
-	create_tool: EB_FEATURES_RELATION_TOOL
+	create_tool: ES_FEATURES_RELATION_TOOL_PANEL
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)

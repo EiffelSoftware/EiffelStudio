@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			if not tool.cluster_graph.last_included_classes.is_empty then
 				a_cluster_fig.reset_user_size
 				tool.world.update
-				tool.layout.set_spacing ({EB_DIAGRAM_TOOL}.default_bon_horizontal_spacing, {EB_DIAGRAM_TOOL}.default_bon_vertical_spacing)
+				tool.layout.set_spacing ({ES_DIAGRAM_TOOL_PANEL}.default_bon_horizontal_spacing, {ES_DIAGRAM_TOOL_PANEL}.default_bon_vertical_spacing)
 				tool.layout.layout_cluster_only (a_cluster_fig)
 
 				a_cluster_fig.set_port_position (port_x, port_y)

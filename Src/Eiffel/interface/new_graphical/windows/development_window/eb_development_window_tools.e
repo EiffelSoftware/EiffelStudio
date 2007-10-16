@@ -25,145 +25,145 @@ create
 
 feature -- Access
 
-	class_tool: EB_CLASS_TOOL
+	class_tool: ES_CLASS_TOOL_PANEL
 			-- Class tool
 			-- This tool was orignal belong to context_tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_CLASS_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_CLASS_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	cluster_tool: EB_CLUSTER_TOOL
+	cluster_tool: ES_GROUPS_TOOL_PANEL
 			-- Cluster tool.
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_GROUP_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_GROUPS_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	c_output_tool: EB_C_OUTPUT_TOOL
+	c_output_tool: ES_C_OUTPUT_TOOL_PANEL
 			-- C output tool
 			-- This tool was orignal belong to context_tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_C_OUTPUT_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_C_OUTPUT_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	dependency_tool: EB_DEPENDENCY_TOOL
+	dependency_tool: ES_DEPENDENCY_TOOL_PANEL
 			-- Dependency tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	diagram_tool: EB_DIAGRAM_TOOL
+	diagram_tool: ES_DIAGRAM_TOOL_PANEL
 			-- Diagram tool
 			-- This tool was orignal belong to context_tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_DIAGRAM_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_DIAGRAM_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL
+	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL_PANEL
 			-- Errors and warnings tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	external_output_tool: EB_EXTERNAL_OUTPUT_TOOL
+	external_output_tool: ES_CONSOLE_TOOL_PANEL
 			-- External output tool
 			-- This tool was orignal belong to context_tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_CONSOLE_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_CONSOLE_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	favorites_tool: EB_FAVORITES_TOOL
+	favorites_tool: ES_FAVORITES_TOOL_PANEL
 			-- Favorites tool.
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_FAVORITES_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_FAVORITES_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	features_tool: EB_FEATURES_TOOL
+	features_tool: ES_FEATURES_TOOL_PANEL
 			-- Features tool.
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	features_relation_tool: EB_FEATURES_RELATION_TOOL
+	features_relation_tool: ES_FEATURES_RELATION_TOOL_PANEL
 			-- Features relation tool
 			-- This tool was orignal belong to context_tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	metric_tool: EB_METRIC_TOOL
+	metric_tool: ES_METRICS_TOOL_PANEL
 			-- Metric tool
 			-- This tool was orignal belong to context_tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_METRICS_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_METRICS_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	output_tool: EB_OUTPUT_TOOL
+	output_tool: ES_OUTPUT_TOOL_PANEL
 			-- Output tool.
 			-- This tool was orignal belong to context_tool
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_OUTPUT_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_OUTPUT_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	properties_tool: EB_PROPERTIES_TOOL
+	properties_tool: ES_PROPERTIES_TOOL_PANEL
 			-- Properties tool.
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_PROPERTIES_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_PROPERTIES_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	search_report_tool: EB_SEARCH_REPORT_TOOL
+	search_report_tool: ES_SEARCH_REPORT_TOOL_PANEL
 			-- Search report tool.
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_REPORT_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_REPORT_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	search_tool: EB_MULTI_SEARCH_TOOL
+	search_tool: ES_MULTI_SEARCH_TOOL_PANEL
 			-- Search tool.
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	windows_tool: EB_WINDOWS_TOOL
+	windows_tool: ES_WINDOWS_TOOL_PANEL
 			-- Windows tool.
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_WINDOWS_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_WINDOWS_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
 
-	breakpoints_tool: ES_BREAKPOINTS_TOOL
+	breakpoints_tool: ES_BREAKPOINTS_TOOL_PANEL
 			-- Breakpoints tool.
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_DEBUGGER_BREAKPOINTS_TOOL}).tool
+			Result ?= develop_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
 		ensure
 			result_attached: Result /= Void
 		end
@@ -172,7 +172,7 @@ feature -- Access
 			-- Access to list of tools that can be customized
 		local
 			l_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
-			l_format_tool: ES_FORMATTER_TOOL [EB_FORMATTER_BASED_TOOL]
+			l_format_tool: ES_FORMATTER_TOOL [ES_FORMATTER_TOOL_PANEL_BASE]
 			l_tool: EB_TOOL
 			l_customized_tools: LIST [EB_TOOL]
 		do
@@ -185,7 +185,7 @@ feature -- Access
 				l_format_tool ?= l_tools.item
 				if l_format_tool /= Void and then l_format_tool.is_customizable then
 						-- The tool is customizable so activate the tool instance
-					l_tool := l_format_tool.tool
+					l_tool := l_format_tool.panel
 					if not l_customized_tools.has (l_tool) then
 							-- Only add the tool if it's not a customized tool because these will be added later
 						Result.extend (l_tool)

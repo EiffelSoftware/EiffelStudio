@@ -166,8 +166,8 @@ feature{NONE} -- Implementation
 			l_tool: ES_TOOL [EB_TOOL]
 		do
 			l_tool := develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL})
-			if l_tool /= Void and then not l_tool.is_recycled and then l_tool.tool.content /= Void then
-				Result := (l_tool.tool.content.state_value = {SD_ENUMERATION}.auto_hide) and (not develop_window.eiffel_project.successful)
+			if l_tool /= Void and then not l_tool.is_recycled and then l_tool.panel.content /= Void then
+				Result := (l_tool.panel.content.state_value = {SD_ENUMERATION}.auto_hide) and (not develop_window.eiffel_project.successful)
 			end
 		end
 

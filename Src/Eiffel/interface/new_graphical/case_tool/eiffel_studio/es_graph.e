@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context_editor: EB_DIAGRAM_TOOL
+	context_editor: ES_DIAGRAM_TOOL_PANEL
 			-- Container of `Current'.
 			-- Used to access surface on which `Current' is displayed.
 
@@ -362,7 +362,7 @@ feature -- Element change
 			end
 		end
 
-feature {EB_DIAGRAM_TOOL} -- Synchronization
+feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
 	synchronize is
 			-- Contexts need to be updated because of recompilation

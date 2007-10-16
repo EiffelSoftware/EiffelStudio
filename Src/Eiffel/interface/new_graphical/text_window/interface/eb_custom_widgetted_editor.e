@@ -73,7 +73,7 @@ feature -- Access
 
 	search_bar: QUICK_SEARCH_BAR
 
-	search_tool: EB_MULTI_SEARCH_TOOL is
+	search_tool: ES_MULTI_SEARCH_TOOL_PANEL is
 			-- Current search tool.
 		do
 			if dev_window /= Void then
@@ -485,7 +485,7 @@ feature {NONE} -- Implementation
 	prepare_search_selection is
 			-- Prepare search selection.
 		local
-			l_search_tool: EB_MULTI_SEARCH_TOOL
+			l_search_tool: ES_MULTI_SEARCH_TOOL_PANEL
 			l_incremental_search: BOOLEAN
 		do
 			l_search_tool := search_tool

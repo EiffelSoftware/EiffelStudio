@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): BOOLEAN is
+	item alias "[]" (i: INTEGER): BOOLEAN is
 			-- Access `i-th' boolean in Current.
 		require
 			valid_index: valid_index (i)

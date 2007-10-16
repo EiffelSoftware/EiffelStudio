@@ -1240,7 +1240,7 @@ feature -- Status setting
 						end
 					end
 				until
-					l_wt_lst.count >= nwt
+					watch_tool_list.count >= nwt --| Be sure to use `watch_tool_list' and not the cached list
 				loop
 					create_new_watch_tool_inside_notebook (debugging_window, l_tool)
 				end

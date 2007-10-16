@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			delay_before_cleaning_objects_grid_preference := l_manager.new_integer_preference_value (l_manager, delay_before_cleaning_objects_string, 500)
 			row_highlight_background_color_preference := l_manager.new_color_preference_value (l_manager, row_highlight_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 170))
 			row_unsensitive_foreground_color_preference := l_manager.new_color_preference_value (l_manager, row_unsensitive_foreground_color_string, create {EV_COLOR}.make_with_8_bit_rgb (150, 150, 150))
-			row_replayable_background_color_preference := l_manager.new_color_preference_value (l_manager, row_replayable_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 210, 170))
+			row_replayable_background_color_preference := l_manager.new_color_preference_value (l_manager, row_replayable_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (205, 230, 255))
 			select_call_stack_level_on_double_click_preference := l_manager.new_boolean_preference_value (l_manager, select_call_stack_level_on_double_click_string, False)
 			is_stack_grid_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_stack_grid_layout_managed_string, True)
 			is_debugged_grid_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_debugged_grid_layout_managed_string, True)

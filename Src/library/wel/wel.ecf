@@ -59,4 +59,7 @@
 			</file_rule>
 		</cluster>
 	</target>
+	<target name="wel_dotnet" extends="wel">
+		<setting name="msil_generation" value="true"/>
+	</target>
 </system>

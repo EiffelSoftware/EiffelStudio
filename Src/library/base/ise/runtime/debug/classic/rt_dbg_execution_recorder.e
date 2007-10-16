@@ -325,7 +325,6 @@ feature -- Replay operation
 		local
 			n, r, p: like top_callstack_record
 			chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]
-			l_chg: TUPLE [obj: ANY; rec: RT_DBG_RECORD]
 		do
 			debug ("RT_EXTENSION")
 				dtrace ("Replay BACK -> start%N")
@@ -373,7 +372,7 @@ feature -- Replay operation
 		require
 			replay_stack_not_empty: replay_stack /= Void and then not replay_stack.is_empty
 		local
-			r, n: like top_callstack_record
+			r: like top_callstack_record
 			t: TUPLE [record: like top_callstack_record; chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]]
 		do
 			debug ("RT_EXTENSION")
@@ -477,7 +476,6 @@ feature -- helper
 			d: STRING
 			lst: LIST [like top_callstack_record]
 			flds: LIST [RT_DBG_RECORD]
-			tv: RT_DBG_RECORD
 		do
 			cn := class_name_of_type (r.class_type_id)
 			if r.feature_name /= Void then

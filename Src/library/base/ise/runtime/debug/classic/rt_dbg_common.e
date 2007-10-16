@@ -101,7 +101,6 @@ feature -- Query
 			flds: LIST [RT_DBG_RECORD]
 			rcds: LIST [RT_DBG_CALLSTACK_RECORD]
 			r: RT_DBG_RECORD
-			csr: RT_DBG_CALLSTACK_RECORD
 		do
 			if csr1.is_flat then
 				Result := csr1.flat_field_records

@@ -64,6 +64,12 @@ feature {NONE} -- Initialization
 
 			cleaning_delay := 500
 			set_selected_rows_function (agent selected_rows_in_grid)
+
+			header.item_resize_end_actions.extend (agent (a_item: EV_HEADER_ITEM)
+					-- Called to set last moved header item.
+				do
+					last_resized_grid_header := a_item
+				end)
 		end
 
 	color_separator: EV_COLOR is
@@ -81,6 +87,11 @@ feature -- Access
 	auto_size_best_fit_column: INTEGER
 			-- Column index automatically resized to ensure all columns fit in view.
 			-- Note: 0 indicates no best-fitting
+
+feature {NONE} -- Access
+
+	last_resized_grid_header: EV_HEADER_ITEM
+			-- Last resized header
 
 feature -- Status report
 
@@ -466,13 +477,13 @@ feature {NONE} -- Borders drawing
 	set_border_enabled (b: BOOLEAN) is
 		do
 			if b /= border_enabled then
-				border_enabled := True
+				border_enabled := B
 				if border_enabled then
 					pre_draw_overlay_actions.extend (agent on_draw_borders)
 					header.item_resize_actions.extend (agent invalidate_for_border)
 				else
-					pre_draw_overlay_actions.wipe_out
-					header.item_resize_actions.wipe_out
+					pre_draw_overlay_actions.prune (agent on_draw_borders)
+					header.item_resize_actions.prune (agent invalidate_for_border)
 				end
 			end
 		end
@@ -579,49 +590,60 @@ feature {NONE} -- column resizing impl
 			l_new_width: INTEGER
 		do
 			if use_auto_size_best_fit then
-				if not implementation.is_header_item_resizing then
-					debug
-						print (generator + ".ensure_last_column_use_all_width %N")
-					end
-					l_index := auto_size_best_fit_column
-					if column_count > l_index then
-						if column (l_index).is_displayed then
-							from
-								i := 1
-								l_count := column_count
-								create l_columns.make (l_count)
-							until
-								i > l_count
-							loop
-								l_col := column (i)
-								if l_col.is_displayed then
-									l_columns.extend (l_col)
-									if i /= l_index then
-											-- Ingore the width of the column we want to change
-										l_total_width := l_total_width + l_col.width
+				l_index := auto_size_best_fit_column
+				if last_resized_grid_header /= Void and then last_resized_grid_header = header.i_th (l_index) and then header.count > l_index then
+						-- Small hack that pretends the next column is auto-resized. This fixes an issue that prevents the
+						-- adjecent column from being resized correctly.
+					last_resized_grid_header := Void
+					auto_size_best_fit_column := l_index + 1
+					ensure_auto_size_best_fit
+					auto_size_best_fit_column := l_index
+				else
+						-- Do normal resizing
+					if not implementation.is_header_item_resizing then
+						debug
+							print (generator + ".ensure_last_column_use_all_width %N")
+						end
+						l_index := auto_size_best_fit_column
+						if column_count > l_index then
+							if column (l_index).is_displayed then
+								from
+									i := 1
+									l_count := column_count
+									create l_columns.make (l_count)
+								until
+									i > l_count
+								loop
+									l_col := column (i)
+									if l_col.is_displayed then
+										l_columns.extend (l_col)
+										if i /= l_index then
+												-- Ingore the width of the column we want to change
+											l_total_width := l_total_width + l_col.width
+										end
 									end
+									i := i + 1
 								end
-								i := i + 1
-							end
 
-							if not l_columns.is_empty then
-								l_col := column (l_index)
-								l_new_width := viewable_width - l_total_width
-								if l_new_width /= l_col.width then
-									if l_new_width < 0 then
-										l_new_width := 0
+								if not l_columns.is_empty then
+									l_col := column (l_index)
+									l_new_width := viewable_width - l_total_width
+									if l_new_width /= l_col.width then
+										if l_new_width < 0 then
+											l_new_width := 0
+										end
+										resize_actions.block
+										virtual_size_changed_actions.block
+										l_col.set_width (l_new_width)
+										virtual_size_changed_actions.resume
+										resize_actions.resume
 									end
-									resize_actions.block
-									virtual_size_changed_actions.block
-									l_col.set_width (l_new_width)
-									virtual_size_changed_actions.resume
-									resize_actions.resume
 								end
-							end
-						else
-								-- Use last, if possible
-							if last_column_use_all_width_enabled then
-								ensure_last_column_use_all_width
+							else
+									-- Use last, if possible
+								if last_column_use_all_width_enabled then
+									ensure_last_column_use_all_width
+								end
 							end
 						end
 					end
@@ -769,6 +791,7 @@ feature {NONE} -- Auto Events
 
 	on_resize_events (ax, ay, aw, ah: INTEGER) is
 		do
+			last_resized_grid_header := Void
 			if not is_destroyed then
 				delayed_last_column_auto_resizing.request_call
 			end

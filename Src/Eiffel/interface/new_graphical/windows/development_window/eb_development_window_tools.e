@@ -152,14 +152,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	windows_tool: ES_WINDOWS_TOOL_PANEL
-			-- Windows tool.
-		do
-			Result ?= develop_window.shell_tools.tool ({ES_WINDOWS_TOOL}).panel
-		ensure
-			result_attached: Result /= Void
-		end
-
 	breakpoints_tool: ES_BREAKPOINTS_TOOL_PANEL
 			-- Breakpoints tool.
 		do

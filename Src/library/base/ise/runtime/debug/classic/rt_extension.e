@@ -24,9 +24,9 @@ feature -- Notification
 				end
 				inspect a_id
 				when Op_enter_feature then
-					process_enter_feature (enter_leave_feature_argument (a_data))
+					process_enter_feature (events_feature_argument (a_data))
 				when Op_leave_feature then
-					process_leave_feature (enter_leave_feature_argument (a_data))
+					process_leave_feature (events_feature_argument (a_data))
 				when Op_exec_replay_record then
 					process_execution_replay_record (exec_replay_argument (a_data))
 				when Op_exec_replay then
@@ -58,7 +58,7 @@ feature -- Notification
 			if not retried then
 				inspect a_id
 				when Op_enter_feature, Op_leave_feature then
-					create {like enter_leave_feature_argument} Result
+					create {like events_feature_argument} Result
 				when Op_exec_replay_record, Op_exec_replay, Op_exec_replay_query then
 					create {like exec_replay_argument} Result
 				when Op_object_storage_save, Op_object_storage_load then
@@ -142,8 +142,8 @@ feature -- Constants (check eif_debug.h uses the same values)
 
 feature {NONE} -- Execution replay
 
-	enter_leave_feature_argument (t: TUPLE): TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level:INTEGER; fn: POINTER] is
-			-- Argument for `process_enter_feature' and `process_leave_feature'.
+	events_feature_argument (t: TUPLE): TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level:INTEGER; fn: POINTER] is
+			-- Argument for `process_*_feature'.
 		do
 			Result ?= t
 		end
@@ -154,7 +154,23 @@ feature {NONE} -- Execution replay
 			Result ?= t
 		end
 
-	process_enter_feature (a_data: like enter_leave_feature_argument) is
+	process_enter_feature (a_data: like events_feature_argument) is
+			-- Execution enters a feature
+		require
+			execution_recording_not_void: execution_recording /= Void
+		local
+			r: like execution_recording
+		do
+			if a_data.fid = 0 and a_data.cid = 0 then
+					--| This part will be changed soon.
+				process_rescue_feature (a_data)
+			else
+				r := execution_recording
+				r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level, a_data.fn)
+			end
+		end
+
+	process_rescue_feature (a_data: like events_feature_argument) is
 			-- Execution enters a feature
 		require
 			execution_recording_not_void: execution_recording /= Void
@@ -162,14 +178,10 @@ feature {NONE} -- Execution replay
 			r: like execution_recording
 		do
 			r := execution_recording
-			if a_data.cid = 0 then
-				r.enter_rescue (a_data.ref, a_data.level)
-			else
-				r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level, a_data.fn)
-			end
+			r.enter_rescue (a_data.ref, a_data.level)
 		end
 
-	process_leave_feature (a_data: like enter_leave_feature_argument) is
+	process_leave_feature (a_data: like events_feature_argument) is
 			-- Execution leaves a feature
 		require
 			execution_recording_not_void: execution_recording /= Void

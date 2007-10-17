@@ -221,7 +221,7 @@ feature -- Access
 				else
 					check
 						same_object_type: dynamic_type (r.object) = dynamic_type (ref)
-						same_reference: not object_is_expanded (ref) implies r.object = ref
+						same_reference: not r.is_expanded implies r.object = ref
 						same_cid: r.class_type_id = cid
 						same_fid: r.feature_rout_id = fid
 						same_dep: r.depth = dep

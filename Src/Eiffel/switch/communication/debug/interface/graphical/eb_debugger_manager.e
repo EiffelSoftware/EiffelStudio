@@ -462,6 +462,13 @@ feature -- tools management
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.refresh)
 		end
 
+	record_objects_grids_layout is
+			-- Record objects grids layout
+		do
+			objects_tool.record_grids_layout
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.record_grid_layout)
+		end
+
 	new_toolbar (a_recycler: EB_RECYCLER): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Toolbar containing all debugging commands.
 		require
@@ -1501,6 +1508,7 @@ feature -- Debugging events
 	launch_stone (st: STONE) is
 			-- Set `st' in the debugging window as the new stone.
 		do
+			record_objects_grids_layout
 			debugging_window.tools.launch_stone (st)
 		end
 

@@ -319,6 +319,7 @@ feature -- Accelerator, focus label and menu name
 	l_class_tree_clusters: STRING_GENERAL is	do Result := locale.translation("Clusters")	end
 	l_class_tree_libraries: STRING_GENERAL is	do Result := locale.translation("Libraries")	end
 	l_class_tree_overrides: STRING_GENERAL is	do Result := locale.translation("Overrides")	end
+	l_class_tree_targets: STRING_GENERAL is	do Result := locale.translation("Targets")	end
 
 	f_Clear_breakpoints: STRING_GENERAL is		do Result := locale.translation("Remove all breakpoints")	end
 	m_Clear_breakpoints: STRING_GENERAL is		do Result := locale.translation("Re&move All Breakpoints")	end
@@ -669,7 +670,7 @@ feature -- Accelerator, focus label and menu name
 	m_Exec_replay_forth: STRING_GENERAL is	do Result := locale.translation("Replay Execution Forth")	end
 	m_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Replay Execution Left")	end
 	m_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Replay Execution Right")	end
-	
+
 
 	m_Control_debuggee_object_storage: STRING_GENERAL is	do Result := locale.translation("Control Debuggee Object Storage")	end
 
@@ -687,6 +688,7 @@ feature -- Tool tips
 	f_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Navigates to the next warning or the first warning found if the end of the list is reached") end
 	f_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Navigates to the next warning or the last warning found if the start of the list is reached") end
 	f_filter_warnings: STRING_GENERAL is 				do Result := locale.translation ("Filter shown and navigatable warnings") end
+	f_toogle_expand_errors: STRING_GENERAL is do Result := locale.translation("Automatically expands errors to reveal the full verbose error information.")	end
 
 feature -- Formatter displayer names
 
@@ -2098,8 +2100,7 @@ feature -- Titles translation needless (Title Original) for preference strings.
 	to_Metric_tool: STRING is					"Metrics"
 	to_External_Ouput_tool: STRING is			"External Output"
 	to_C_Output_tool: STRING is					"C Output"
-	to_Error_tool: STRING is					"Error"
-	to_Warning_tool: STRING is					"Warning"
+	to_Error_list_tool: STRING is				"Error List"
 
 	to_name: STRING is 							"Name"
 	to_expression: STRING is 					"Expression"

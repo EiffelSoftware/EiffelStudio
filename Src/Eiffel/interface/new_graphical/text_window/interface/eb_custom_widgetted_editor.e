@@ -76,8 +76,8 @@ feature -- Access
 	search_tool: ES_MULTI_SEARCH_TOOL_PANEL is
 			-- Current search tool.
 		do
-			if dev_window /= Void then
-				Result := dev_window.tools.search_tool
+			if dev_window /= Void and then not dev_window.shell_tools.is_recycled then
+				Result ?= dev_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
 			end
 		end
 

@@ -1,5 +1,5 @@
 test_name multi-invalid-signature
-test_description This test should report 2 VDRD2 errors.
+test_description This test should report 2 VTUG(1) errors.
 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e

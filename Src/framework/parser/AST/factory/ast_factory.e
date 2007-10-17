@@ -782,11 +782,10 @@ feature -- Access
 
 	new_bracket_as (t: EXPR_AS; o: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): BRACKET_AS is
 			-- New BRACKET AST node
-		require
-			t_not_void: t /= Void
-			o_not_void: o /= Void
 		do
-			create Result.make (t, o, l_as, r_as)
+			if t /= Void and (o /= Void and then not o.is_empty)  then
+				create Result.make (t, o, l_as, r_as)
+			end
 		end
 
 	new_body_as (a: FORMAL_ARGU_DEC_LIST_AS; t: TYPE_AS; r: ID_AS; c: CONTENT_AS; c_as: SYMBOL_AS; k_as: LEAF_AS; a_as: KEYWORD_AS; i_as: INDEXING_CLAUSE_AS): BODY_AS is

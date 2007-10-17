@@ -105,7 +105,6 @@ feature -- Output
 			-- Display warnings messages from `handler'.
 		local
 			l_warnings: LIST [ERROR]
-			l_warning: WARNING
 			l_cursor: CURSOR
 			l_service: like event_list_service
 			l_context: UUID
@@ -117,13 +116,7 @@ feature -- Output
 					l_context := warning_context
 					l_cursor := l_warnings.cursor
 					from l_warnings.start until l_warnings.after loop
-						l_warning ?= l_warnings.item
-						check
-							l_warning_attached: l_warning /= Void
-						end
-						if l_warning /= Void then
-							l_service.put_event_item (l_context, create_warning_event_item (l_warning))
-						end
+						l_service.put_event_item (l_context, create_warning_event_item (l_warnings.item))
 						l_warnings.forth
 					end
 					l_warnings.go_to (l_cursor)
@@ -173,7 +166,7 @@ feature -- Output
 
 feature {NONE} -- Factory
 
-	create_warning_event_item (a_warning: WARNING): EVENT_LIST_ITEM_I
+	create_warning_event_item (a_warning: ERROR): EVENT_LIST_ITEM_I
 			-- Creates a new event list item for a warning.
 			--
 			-- `a_warning': Warning to create an event list item for.

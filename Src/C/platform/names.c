@@ -40,6 +40,7 @@
 
 #include "eif_eiffel.h"
 #include "eif_misc.h"
+#include <stdlib.h>
 
 rt_public EIF_REFERENCE eif_timeout_msg (void)
 {
@@ -48,7 +49,6 @@ rt_public EIF_REFERENCE eif_timeout_msg (void)
 	 */
 
 	char *eif_timeout;
-	extern char *getenv(const char *);				/* Get environment variable value */
 
 	char s[512];
 

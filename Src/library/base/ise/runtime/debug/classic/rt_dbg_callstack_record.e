@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			feature_rout_id := fid
 			depth := dep
 			object := ref
+			is_expanded := object_is_expanded (object)
 		end
 
 	recorder: RT_DBG_EXECUTION_RECORDER
@@ -47,11 +48,10 @@ feature -- Recording
 		local
 			rs: like field_records
 		do
-			rs := object_records (object)
-			field_records := rs
---			if rs /= Void and then not rs.is_empty then
---				recorder.increment_records_count (rs.count)
---			end
+			if not is_expanded then
+				rs := object_records (object)
+				field_records := rs
+			end
 
 			debug ("RT_EXTENSION_TRACE")
 				if rs /= Void then
@@ -243,6 +243,8 @@ feature -- Properties
 	depth: INTEGER
 
 	object: ANY
+
+	is_expanded: BOOLEAN
 
 feature -- Status
 

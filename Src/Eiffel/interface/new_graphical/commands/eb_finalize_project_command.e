@@ -88,9 +88,11 @@ feature {NONE} -- Implementation
 			-- Ask for confirmation if the assertion are to be kept, and
 			-- finalize thereafter.
 		local
-			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
+			l_confirm: ES_DISCARDABLE_WARNING_PROMPT
+			l_buttons: ES_DIALOG_BUTTONS
 		do
-			create l_confirm.make_standard_with_cancel (warning_messages.w_finalize_warning, interface_names.l_discard_freeze_dialog, preferences.dialog_data.confirm_finalize_string)
+			create l_buttons
+			create l_confirm.make (warning_messages.w_finalize_warning, l_buttons.yes_no_cancel_buttons, l_buttons.cancel_button, l_buttons.yes_button, l_buttons.cancel_button, interface_names.l_discard_freeze_dialog, preferences.dialog_data.confirm_finalize_string)
 			l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent set_c_compilation_and_compile (True))
 			l_confirm.set_button_action (l_confirm.dialog_buttons.no_button, agent set_c_compilation_and_compile (False))
 			l_confirm.show_on_active_window

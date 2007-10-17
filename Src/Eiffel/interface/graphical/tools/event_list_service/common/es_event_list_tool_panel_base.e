@@ -777,12 +777,12 @@ feature {NONE} -- Events
 			l_selected: BOOLEAN
 		do
 			if is_initialized and then is_appliable_event (a_event_item) then
-				check
-					item_count_big_enough: item_count >= 1
-				end
-
 				l_row := find_event_row (a_event_item)
 				if l_row /= Void then
+					check
+						item_count_big_enough: item_count >= 1
+					end
+
 					item_count := item_count - 1
 
 					l_selected := l_row.is_selected

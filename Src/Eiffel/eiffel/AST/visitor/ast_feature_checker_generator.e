@@ -5966,6 +5966,8 @@ feature -- Implementation
 					create l_elsif
 					l_elsif.set_expr (l_expr)
 				end
+			else
+				l_has_error := True
 			end
 
 				-- Type check on compound

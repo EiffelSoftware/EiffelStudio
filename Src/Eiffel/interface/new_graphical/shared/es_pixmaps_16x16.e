@@ -109,7 +109,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 1))
 		end
-
 	frozen expanded_override_normal_icon: EV_PIXMAP is
 			-- Access to 'normal' pixmap.
 		once
@@ -157,7 +156,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 1))
 		end
-
 	frozen expanded_overriden_normal_icon: EV_PIXMAP is
 			-- Access to 'normal' pixmap.
 		once
@@ -205,7 +203,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 1))
 		end
-
 	frozen class_normal_icon: EV_PIXMAP is
 			-- Access to 'normal' pixmap.
 		once
@@ -301,7 +298,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 1))
 		end
-
 	frozen class_override_normal_icon: EV_PIXMAP is
 			-- Access to 'normal' pixmap.
 		once
@@ -397,7 +393,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (28, 1))
 		end
-
 	frozen class_overriden_normal_icon: EV_PIXMAP is
 			-- Access to 'normal' pixmap.
 		once
@@ -493,7 +488,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 2))
 		end
-
 	frozen feature_routine_icon: EV_PIXMAP is
 			-- Access to 'routine' pixmap.
 		once
@@ -577,7 +571,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 3))
 		end
-
 	frozen feature_frozen_routine_icon: EV_PIXMAP is
 			-- Access to 'routine' pixmap.
 		once
@@ -637,7 +630,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 3))
 		end
-
 	frozen feature_obsolete_routine_icon: EV_PIXMAP is
 			-- Access to 'routine' pixmap.
 		once
@@ -721,7 +713,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (19, 3))
 		end
-
 	frozen feature_local_variable_icon: EV_PIXMAP is
 			-- Access to 'variable' pixmap.
 		once
@@ -733,7 +724,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 3))
 		end
-
 	frozen feature_group_icon: EV_PIXMAP is
 			-- Access to 'group' pixmap.
 		once
@@ -745,7 +735,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (21, 3))
 		end
-
 	frozen top_level_folder_clusters_icon: EV_PIXMAP is
 			-- Access to 'clusters' pixmap.
 		once
@@ -817,7 +806,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 4))
 		end
-
 	frozen folder_features_all_icon: EV_PIXMAP is
 			-- Access to 'all' pixmap.
 		once
@@ -853,7 +841,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 4))
 		end
-
 	frozen folder_cluster_icon: EV_PIXMAP is
 			-- Access to 'cluster' pixmap.
 		once
@@ -1009,7 +996,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 4))
 		end
-
 	frozen folder_hidden_cluster_icon: EV_PIXMAP is
 			-- Access to 'cluster' pixmap.
 		once
@@ -1057,7 +1043,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (26, 4))
 		end
-
 	frozen folder_override_cluster_icon: EV_PIXMAP is
 			-- Access to 'cluster' pixmap.
 		once
@@ -1105,7 +1090,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (30, 4))
 		end
-
 	frozen tool_features_icon: EV_PIXMAP is
 			-- Access to 'features' pixmap.
 		once
@@ -1477,7 +1461,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (31, 5))
 		end
-
 	frozen project_melt_icon: EV_PIXMAP is
 			-- Access to 'melt' pixmap.
 		once
@@ -1537,7 +1520,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 6))
 		end
-
 	frozen debug_run_icon: EV_PIXMAP is
 			-- Access to 'run' pixmap.
 		once
@@ -1705,7 +1687,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (19, 6))
 		end
-
 	frozen debugger_object_immediate_icon: EV_PIXMAP is
 			-- Access to 'immediate' pixmap.
 		once
@@ -1837,7 +1818,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (30, 6))
 		end
-
 	frozen breakpoints_delete_icon: EV_PIXMAP is
 			-- Access to 'delete' pixmap.
 		once
@@ -1873,7 +1853,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (33, 6))
 		end
-
 	frozen callstack_active_arrow_icon: EV_PIXMAP is
 			-- Access to 'active arrow' pixmap.
 		once
@@ -1909,7 +1888,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 7))
 		end
-
 	frozen debugger_environment_force_debug_mode_icon: EV_PIXMAP is
 			-- Access to 'force debug mode' pixmap.
 		once
@@ -1921,7 +1899,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 7))
 		end
-
 	frozen general_blank_icon: EV_PIXMAP is
 			-- Access to 'blank' pixmap.
 		once
@@ -2353,7 +2330,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 9))
 		end
-
 	frozen sort_descending_icon: EV_PIXMAP is
 			-- Access to 'descending' pixmap.
 		once
@@ -2389,7 +2365,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 9))
 		end
-
 	frozen command_send_to_external_editor_icon: EV_PIXMAP is
 			-- Access to 'send to external editor' pixmap.
 		once
@@ -2449,7 +2424,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 9))
 		end
-
 	frozen refactor_feature_up_icon: EV_PIXMAP is
 			-- Access to 'feature up' pixmap.
 		once
@@ -2473,7 +2447,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 9))
 		end
-
 	frozen context_link_icon: EV_PIXMAP is
 			-- Access to 'link' pixmap.
 		once
@@ -2509,7 +2482,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 9))
 		end
-
 	frozen search_bottom_reached_icon: EV_PIXMAP is
 			-- Access to 'bottom reached' pixmap.
 		once
@@ -2533,7 +2505,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (18, 9))
 		end
-
 	frozen windows_minimize_all_icon: EV_PIXMAP is
 			-- Access to 'minimize all' pixmap.
 		once
@@ -2581,7 +2552,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 9))
 		end
-
 	frozen toolbar_separator_icon: EV_PIXMAP is
 			-- Access to 'separator' pixmap.
 		once
@@ -2593,7 +2563,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (23, 9))
 		end
-
 	frozen errors_and_warnings_next_error_icon: EV_PIXMAP is
 			-- Access to 'next error' pixmap.
 		once
@@ -2666,30 +2635,40 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (29, 9))
 		end
 
+	frozen errors_and_warnings_expand_errors_icon: EV_PIXMAP is
+			-- Access to 'expand errors' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (30, 9))
+		end
+
+	frozen errors_and_warnings_expand_errors_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'expand errors' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (30, 9))
+		end
 	frozen priority_high_icon: EV_PIXMAP is
 			-- Access to 'high' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (30, 9))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (31, 9))
 		end
 
 	frozen priority_high_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'high' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (30, 9))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (31, 9))
 		end
 
 	frozen priority_low_icon: EV_PIXMAP is
 			-- Access to 'low' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (31, 9))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (32, 9))
 		end
 
 	frozen priority_low_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'low' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (31, 9))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (32, 9))
 		end
-
 	frozen view_previous_icon: EV_PIXMAP is
 			-- Access to 'previous' pixmap.
 		once
@@ -2809,7 +2788,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 10))
 		end
-
 	frozen new_eiffel_project_icon: EV_PIXMAP is
 			-- Access to 'eiffel project' pixmap.
 		once
@@ -3097,7 +3075,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (24, 11))
 		end
-
 	frozen feature_callers_icon: EV_PIXMAP is
 			-- Access to 'callers' pixmap.
 		once
@@ -3217,7 +3194,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 12))
 		end
-
 	frozen class_ancestors_icon: EV_PIXMAP is
 			-- Access to 'ancestors' pixmap.
 		once
@@ -3265,7 +3241,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 12))
 		end
-
 	frozen class_features_attribute_icon: EV_PIXMAP is
 			-- Access to 'attribute' pixmap.
 		once
@@ -3361,7 +3336,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 12))
 		end
-
 	frozen metric_basic_icon: EV_PIXMAP is
 			-- Access to 'basic' pixmap.
 		once
@@ -3577,7 +3551,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (18, 13))
 		end
-
 	frozen metric_not_common_criteria_icon: EV_PIXMAP is
 			-- Access to 'common criteria' pixmap.
 		once
@@ -3637,7 +3610,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (23, 13))
 		end
-
 	frozen metric_domain_application_icon: EV_PIXMAP is
 			-- Access to 'application' pixmap.
 		once
@@ -3673,7 +3645,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (26, 13))
 		end
-
 	frozen metric_unit_target_icon: EV_PIXMAP is
 			-- Access to 'target' pixmap.
 		once
@@ -3793,7 +3764,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 14))
 		end
-
 	frozen metric_filter_icon: EV_PIXMAP is
 			-- Access to 'filter' pixmap.
 		once
@@ -3805,7 +3775,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 14))
 		end
-
 	frozen diagram_zoom_in_icon: EV_PIXMAP is
 			-- Access to 'zoom in' pixmap.
 		once
@@ -4069,7 +4038,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 15))
 		end
-
 	frozen preference_boolean_icon: EV_PIXMAP is
 			-- Access to 'boolean' pixmap.
 		once
@@ -4153,7 +4121,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 16))
 		end
-
 	frozen document_eiffel_project_icon: EV_PIXMAP is
 			-- Access to 'eiffel project' pixmap.
 		once
@@ -4201,7 +4168,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 16))
 		end
-
 	frozen compile_animation_1_icon: EV_PIXMAP is
 			-- Access to 'animation 1' pixmap.
 		once
@@ -4321,7 +4287,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 17))
 		end
-
 	frozen run_animation_1_icon: EV_PIXMAP is
 			-- Access to 'animation 1' pixmap.
 		once
@@ -4381,7 +4346,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 17))
 		end
-
 	frozen project_settings_system_icon: EV_PIXMAP is
 			-- Access to 'system' pixmap.
 		once
@@ -4585,7 +4549,6 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 18))
 		end
-
 
 feature {NONE} -- Query
 

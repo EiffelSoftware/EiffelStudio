@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create class_browser_data.make (a_preferences)
 			create external_command_data.make (a_preferences)
 			create metric_tool_data.make (a_preferences)
+			create error_list_tool_data.make (a_preferences)
 			create misc_shortcut_data.make (a_preferences)
 			is_gui_mode := True
 		end
@@ -68,6 +69,9 @@ feature -- Access
 	metric_tool_data: EB_METRIC_TOOL_DATA
 			-- Preference data for metric tool
 
+	error_list_tool_data: ES_ERROR_LIST_DATA
+			-- Preference data for error list tool
+
 	misc_shortcut_data: EB_MISC_SHORTCUT_DATA
 			-- Shortcuts other than editor shortcuts and external command shortcuts.
 
@@ -83,6 +87,7 @@ invariant
 	editor_data_not_void: is_gui_mode implies editor_data /= Void
 	search_tool_data_not_void: is_gui_mode implies search_tool_data /= Void
 	metric_tool_data_attached: is_gui_mode implies metric_tool_data /= Void
+	error_list_tool_data_attached: is_gui_mode implies error_list_tool_data /= Void
 	class_browser_data_attached: is_gui_mode implies class_browser_data /= Void
 
 indexing

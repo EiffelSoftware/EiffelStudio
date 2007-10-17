@@ -129,6 +129,8 @@
 	<PREF NAME="tools.class_browser.caller_sorting_order" DESCRIPTION="Sorting order of callers." HIDDEN="True"><STRING>1:1</STRING></PREF>
 	<PREF NAME="tools.class_browser.class_flat_client_sorting_order" DESCRIPTION="Sorting order of flat clients of class." HIDDEN="True"><STRING>1:1</STRING></PREF>
 
+	<PREF NAME="tools.error_list.expand_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information."><BOOLEAN>False</BOOLEAN></PREF>	
+
 	<PREF NAME="interface.dialogs.confirm_always_compile_before_executing" DESCRIPTION="Display confirmation dialog on execution."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_apply_debugger_profiles" DESCRIPTION="Display confirmation dialog when applying debugger profiles."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>

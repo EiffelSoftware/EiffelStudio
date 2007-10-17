@@ -81,6 +81,9 @@ feature {NONE} -- Iniitalization
 
 				-- Set UI based on initial state
 			update_content_applicable_navigation_buttons
+
+				-- Hook up events for preference data
+			preferences.error_list_tool_data.expand_errors_preferences.change_actions.extend (agent on_expand_error_preference_change)
 		end
 
 feature {NONE} -- Clean up
@@ -94,6 +97,8 @@ feature {NONE} -- Clean up
 				filter_widget.filter_changed_actions.prune (agent on_warnings_filter_changed)
 				errors_button.select_actions.prune (agent on_toogle_errors_button)
 				warnings_button.select_actions.prune (agent on_toogle_warnings_button)
+
+				preferences.error_list_tool_data.expand_errors_preferences.change_actions.prune (agent on_expand_error_preference_change)
 			end
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 		end
@@ -119,6 +124,9 @@ feature {NONE} -- User interface items
 
 	warnings_button: SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toogle to show/hide warning events
+
+	expand_errors_button: SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Toogle to expanded error events automatically
 
 	error_info_button: SD_TOOL_BAR_BUTTON
 			-- Error information button
@@ -252,6 +260,14 @@ feature -- Status report
 			-- Indicates if errors should be shown
 		do
 			Result := not is_initialized or else warnings_button.is_selected
+		end
+
+	expand_errors: BOOLEAN
+			-- Indicates if errors should be shown automatically
+		do
+			if is_initialized then
+				Result := preferences.error_list_tool_data.expand_errors
+			end
 		end
 
 feature {ES_ERROR_LIST_TOOL} -- Navigation
@@ -506,6 +522,41 @@ feature {NONE} -- Events
 			update_content_applicable_navigation_buttons
 		end
 
+	on_toggle_expand_errors_button
+			-- Called when the expand error button is selected
+		local
+			l_expand: BOOLEAN
+			l_grid: like grid_events
+			l_row: EV_GRID_ROW
+			l_event_item: EVENT_LIST_ERROR_ITEM_I
+			l_count, i: INTEGER
+		do
+			l_expand := expand_errors_button.is_selected
+
+			preferences.error_list_tool_data.expand_errors_preferences.set_value (l_expand)
+
+			l_grid := grid_events
+			from
+				i := 1
+				l_count := l_grid.row_count
+			until
+				i > l_count
+			loop
+				l_row := l_grid.row (i)
+				if l_row.is_expandable then
+					l_event_item ?= l_row.data
+					if l_event_item /= Void and then is_error_event (l_event_item) then
+						if l_expand then
+							l_row.expand
+						else
+							l_row.collapse
+						end
+					end
+				end
+				i := i + 1
+			end
+		end
+
 	on_error_info
 			-- Call when the error information button is clicked
 		local
@@ -577,6 +628,22 @@ feature {NONE} -- Events
 			end
 		end
 
+	on_expand_error_preference_change
+			-- Called when the expand error preference change
+		local
+			l_expand: BOOLEAN
+		do
+			l_expand := expand_errors
+			if is_initialized and expand_errors_button.is_selected /= l_expand then
+				if l_expand then
+					expand_errors_button.enable_select
+				else
+					expand_errors_button.disable_select
+				end
+				on_toggle_expand_errors_button
+			end
+		end
+
 feature {NONE} -- Factory
 
 	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -612,7 +679,7 @@ feature {NONE} -- Factory
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 		do
-			create Result.make (7)
+			create Result.make (8)
 
 				-- Navigation buttons
 			l_button := go_to_next_error_command.new_sd_toolbar_item (False)
@@ -629,6 +696,18 @@ feature {NONE} -- Factory
 
 				-- Separator
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- Automatic expand error button
+			create expand_errors_button.make
+			expand_errors_button.set_pixmap (stock_pixmaps.errors_and_warnings_expand_errors_icon)
+			expand_errors_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_expand_errors_icon_buffer)
+			expand_errors_button.set_tooltip (interface_names.f_toogle_expand_errors)
+			expand_errors_button.select_actions.extend (agent on_toggle_expand_errors_button)
+			expand_errors_button.select_actions.compare_objects
+			if preferences.error_list_tool_data.expand_errors then
+				expand_errors_button.enable_select
+			end
+			Result.put_last (expand_errors_button)
 
 			create error_info_command.make
 			error_info_button := error_info_command.new_sd_toolbar_item (False)
@@ -884,6 +963,15 @@ feature {NONE} -- User interface manipulation
 			else
 				check False end
 			end
+
+				-- Set expanded status
+			if a_row.is_expandable and then is_error_event (a_event_item) then
+				if expand_errors then
+					a_row.expand
+				elseif a_row.is_expanded then
+					a_row.collapse
+				end
+			end
 		end
 
 feature {NONE} -- Constants
@@ -897,6 +985,7 @@ invariant
 	errors_button_attached: is_initialized implies errors_button /= Void
 	warnings_button_attached: is_initialized implies warnings_button /= Void
 	filter_button_attached: is_initialized implies filter_button /= Void
+	expand_errors_button_attached: is_initialized implies expand_errors_button /= Void
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;indexing

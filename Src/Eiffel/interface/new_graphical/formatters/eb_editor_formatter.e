@@ -86,6 +86,7 @@ feature -- Positioning
 			-- Save manager position and go to position in `editor' if possible.
 		local
 			l_line_stone: LINE_STONE
+			l_feature_stone: FEATURE_STONE
 		do
 			save_manager_position
 			if
@@ -98,9 +99,13 @@ feature -- Positioning
 				if l_line_stone /= Void then
 					editor.display_line_at_top_when_ready (l_line_stone.line_number, l_line_stone.column_number)
 				else
-					editor.display_line_at_top_when_ready (stone.position, 0)
+					l_feature_stone ?= stone
+					if l_feature_stone /= Void then
+						editor.display_line_at_top_when_ready (l_feature_stone.line_number, 0)
+					else
+						editor.display_line_at_top_when_ready (1, 0)
+					end
 				end
-
 			end
 		end
 

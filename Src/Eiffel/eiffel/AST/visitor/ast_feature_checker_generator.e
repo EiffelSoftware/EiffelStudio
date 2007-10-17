@@ -1869,127 +1869,18 @@ feature -- Implementation
 			process_expressions_list (l_as.expressions)
 			l_last_types := last_expressions_type
 
-			if is_byte_node_enabled then
-				l_list ?= last_byte_node
-			end
+			if l_last_types /= Void then
+				if is_byte_node_enabled then
+					l_list ?= last_byte_node
+				end
 
-				-- Let's try to find the type of the manifest array.
-			if l_has_array_target then
-					-- Check that expressions' type matches element's type of `l_gen_type' array.
-				l_type_a := l_element_type
-				if nb > 0 then
-					from
-						i := 1
-					until
-						i > nb
-					loop
-						l_element_type := l_last_types.item (i)
-						if not l_element_type.conform_to (l_type_a) then
-							if l_element_type.convert_to (context.current_class, l_type_a) then
-								if is_byte_node_enabled and not is_checking_cas then
-									l_list.put_i_th (context.last_conversion_info.byte_node (
-										l_list.i_th (i)), i)
-								end
-							else
-								l_has_error := True
-								i := nb + 1	-- Exit the loop
-							end
-						end
-						i := i + 1
-					end
-				end
-				if not l_has_error then
-						-- We could keep `l_gen_type' for `l_array_type', but unfortunately it
-						-- causes the eweasel test `term131' to fail because if it contains an
-						-- anchor then it is not marked as used for dead code removal (because
-						-- anchor appears in signature and signatures are not solved for dependances
-						-- at degree 4) and we would crash while generating the table at the very
-						-- end of finalization.
-						-- For now we use `l_type_a.deep_actual_type' (which removes any usage of
-						-- the anchor) to solve the problem.
-					create l_generics.make (1, 1)
-					l_generics.put (l_type_a.deep_actual_type, 1)
-					if is_checking_cas then
-						check l_gen_type.class_id = system.native_array_id end
-						create {NATIVE_ARRAY_TYPE_A} l_array_type.make (system.native_array_id, l_generics)
-					else
-						create l_array_type.make (system.array_id, l_generics)
-					end
-					instantiator.dispatch (l_array_type, context.current_class)
-				end
-			end
-			if l_array_type = Void then
-				if nb > 0 then
-					if is_checking_cas then
-							-- `l_gen_type' is not an array type, so for now we compute as if
-							-- there was no context the type of the manifest array by taking the lowest
-							-- common type.
-						from
-							l_has_error := False
-								-- Take first element in manifest array and let's suppose
-								-- it is the lowest type.
-							l_type_a := l_last_types.item (1)
-							i := 2
-						until
-							i > nb
-						loop
-							l_element_type := l_last_types.item (i)
-								-- Let's try to find the type to which everyone conforms to.
-								-- If not found it will be ANY.
-							if
-								l_element_type.conform_to (l_type_a) or
-								l_element_type.convert_to (context.current_class, l_type_a)
-							then
-									-- Nothing to be done
-							elseif
-								l_type_a.conform_to (l_element_type) or
-								l_type_a.convert_to (context.current_class, l_element_type)
-							then
-									-- Found a lowest type.
-								l_type_a := l_element_type
-							else
-									-- Cannot find a common type
-								l_has_error := True
-								i := nb + 1 -- Exit the loop
-							end
-							i := i + 1
-						end
-					else
-							-- `l_gen_type' is not an array type, so for now we compute as if
-							-- there was no context the type of the manifest array by taking the lowest
-							-- common type.
-						from
-							l_has_error := False
-								-- Take first element in manifest array and let's suppose
-								-- it is the lowest type.
-							l_type_a := l_last_types.item (1)
-							i := 2
-						until
-							i > nb
-						loop
-							l_element_type := l_last_types.item (i)
-								-- Let's try to find the type to which everyone conforms to.
-								-- If not found it will be ANY.
-							if l_element_type.conform_to (l_type_a) then
-									-- Nothing to be done
-							elseif l_type_a.conform_to (l_element_type) then
-									-- Found a lowest type.
-								l_type_a := l_element_type
-							else
-									-- Cannot find a common type
-								l_has_error := True
-								i := nb + 1 -- Exit the loop
-							end
-							i := i + 1
-						end
-					end
-					if l_has_error then
-							-- We could not find a common type, so let's iterate again to ensure that
-							-- elements conform or convert to ANY.
+					-- Let's try to find the type of the manifest array.
+				if l_has_array_target then
+						-- Check that expressions' type matches element's type of `l_gen_type' array.
+					l_type_a := l_element_type
+					if nb > 0 then
 						from
 							i := 1
-							l_has_error := False
-							create {CL_TYPE_A} l_type_a.make (system.any_id)
 						until
 							i > nb
 						loop
@@ -2009,30 +1900,143 @@ feature -- Implementation
 						end
 					end
 					if not l_has_error then
+							-- We could keep `l_gen_type' for `l_array_type', but unfortunately it
+							-- causes the eweasel test `term131' to fail because if it contains an
+							-- anchor then it is not marked as used for dead code removal (because
+							-- anchor appears in signature and signatures are not solved for dependances
+							-- at degree 4) and we would crash while generating the table at the very
+							-- end of finalization.
+							-- For now we use `l_type_a.deep_actual_type' (which removes any usage of
+							-- the anchor) to solve the problem.
 						create l_generics.make (1, 1)
-						l_generics.put (l_type_a, 1)
+						l_generics.put (l_type_a.deep_actual_type, 1)
+						if is_checking_cas then
+							check l_gen_type.class_id = system.native_array_id end
+							create {NATIVE_ARRAY_TYPE_A} l_array_type.make (system.native_array_id, l_generics)
+						else
+							create l_array_type.make (system.array_id, l_generics)
+						end
+						instantiator.dispatch (l_array_type, context.current_class)
+					end
+				end
+				if l_array_type = Void then
+					if nb > 0 then
+						if is_checking_cas then
+								-- `l_gen_type' is not an array type, so for now we compute as if
+								-- there was no context the type of the manifest array by taking the lowest
+								-- common type.
+							from
+								l_has_error := False
+									-- Take first element in manifest array and let's suppose
+									-- it is the lowest type.
+								l_type_a := l_last_types.item (1)
+								i := 2
+							until
+								i > nb
+							loop
+								l_element_type := l_last_types.item (i)
+									-- Let's try to find the type to which everyone conforms to.
+									-- If not found it will be ANY.
+								if
+									l_element_type.conform_to (l_type_a) or
+									l_element_type.convert_to (context.current_class, l_type_a)
+								then
+										-- Nothing to be done
+								elseif
+									l_type_a.conform_to (l_element_type) or
+									l_type_a.convert_to (context.current_class, l_element_type)
+								then
+										-- Found a lowest type.
+									l_type_a := l_element_type
+								else
+										-- Cannot find a common type
+									l_has_error := True
+									i := nb + 1 -- Exit the loop
+								end
+								i := i + 1
+							end
+						else
+								-- `l_gen_type' is not an array type, so for now we compute as if
+								-- there was no context the type of the manifest array by taking the lowest
+								-- common type.
+							from
+								l_has_error := False
+									-- Take first element in manifest array and let's suppose
+									-- it is the lowest type.
+								l_type_a := l_last_types.item (1)
+								i := 2
+							until
+								i > nb
+							loop
+								l_element_type := l_last_types.item (i)
+									-- Let's try to find the type to which everyone conforms to.
+									-- If not found it will be ANY.
+								if l_element_type.conform_to (l_type_a) then
+										-- Nothing to be done
+								elseif l_type_a.conform_to (l_element_type) then
+										-- Found a lowest type.
+									l_type_a := l_element_type
+								else
+										-- Cannot find a common type
+									l_has_error := True
+									i := nb + 1 -- Exit the loop
+								end
+								i := i + 1
+							end
+						end
+						if l_has_error then
+								-- We could not find a common type, so let's iterate again to ensure that
+								-- elements conform or convert to ANY.
+							from
+								i := 1
+								l_has_error := False
+								create {CL_TYPE_A} l_type_a.make (system.any_id)
+							until
+								i > nb
+							loop
+								l_element_type := l_last_types.item (i)
+								if not l_element_type.conform_to (l_type_a) then
+									if l_element_type.convert_to (context.current_class, l_type_a) then
+										if is_byte_node_enabled and not is_checking_cas then
+											l_list.put_i_th (context.last_conversion_info.byte_node (
+												l_list.i_th (i)), i)
+										end
+									else
+										l_has_error := True
+										i := nb + 1	-- Exit the loop
+									end
+								end
+								i := i + 1
+							end
+						end
+						if not l_has_error then
+							create l_generics.make (1, 1)
+							l_generics.put (l_type_a, 1)
+							create l_array_type.make (system.array_id, l_generics)
+							instantiator.dispatch (l_array_type, context.current_class)
+						end
+					else
+							-- Empty manifest array
+						create l_generics.make (1, 1)
+						l_generics.put (create {CL_TYPE_A}.make (system.any_id), 1)
 						create l_array_type.make (system.array_id, l_generics)
 						instantiator.dispatch (l_array_type, context.current_class)
 					end
-				else
-						-- Empty manifest array
-					create l_generics.make (1, 1)
-					l_generics.put (create {CL_TYPE_A}.make (system.any_id), 1)
-					create l_array_type.make (system.array_id, l_generics)
-					instantiator.dispatch (l_array_type, context.current_class)
 				end
-			end
 
-			if not l_has_error then
-					-- Update type stack
-				last_type := l_array_type
-				l_as.set_array_type (last_type)
-				if is_byte_node_enabled then
-					create {ARRAY_CONST_B} last_byte_node.make (l_list,
-						l_array_type.type_i, l_array_type.create_info)
+				if not l_has_error then
+						-- Update type stack
+					last_type := l_array_type
+					l_as.set_array_type (last_type)
+					if is_byte_node_enabled then
+						create {ARRAY_CONST_B} last_byte_node.make (l_list,
+							l_array_type.type_i, l_array_type.create_info)
+					end
+				else
+					fixme ("Insert new validity error saying that manifest array is not valid")
+					reset_types
 				end
 			else
-				fixme ("Insert new validity error saying that manifest array is not valid")
 				reset_types
 			end
 		end
@@ -6327,9 +6331,6 @@ feature {NONE} -- Implementation
 					current_target_type := l_cur_type
 					l_as.item.process (Current)
 					l_expr ?= last_byte_node
-					check
-						l_expr_not_void: l_expr /= Void
-					end
 					l_list.extend (l_expr)
 					l_type_list.put (last_type, i)
 					i := i + 1
@@ -6405,9 +6406,6 @@ feature {NONE} -- Implementation
 					end
 					l_as.item.process (Current)
 					l_expr ?= last_byte_node
-					check
-						l_expr_not_void: l_expr /= Void
-					end
 					l_list.extend (l_expr)
 					l_type_list.put (last_type, i)
 					i := i + 1

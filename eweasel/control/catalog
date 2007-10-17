@@ -355,6 +355,7 @@ test	precursor-once						valid217 tcf fail validity
 test	multi-error-degree-4	multierr001 tcf pass errors
 test	degree-5-forget-error	multierr002 tcf pass errors
 test	degree-5-infinite-loop	multierr003 tcf pass errors
+test	multi-invalid-signature	multierr004 tcf pass errors
 
 -- System validity tests
 test	svalid-infix-with-conversion	svalid001 tcf pass system validity

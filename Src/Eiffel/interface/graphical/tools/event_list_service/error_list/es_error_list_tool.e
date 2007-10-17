@@ -41,7 +41,7 @@ feature -- Access
 			-- Tool title.
 			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
 		do
-			Result := "Error List"
+			Result := interface_names.to_error_list_tool
 		end
 
 	shortcut_preference_name: STRING_32

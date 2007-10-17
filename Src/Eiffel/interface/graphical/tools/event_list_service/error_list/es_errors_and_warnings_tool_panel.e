@@ -758,7 +758,7 @@ feature {NONE} -- User interface manipulation
 			end
 		end
 
-	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW) is
+	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW)
 			-- Populates a grid row's item on a given row using the event `a_event_item'.
 			--
 			-- `a_event_item': A event to base the creation of a grid row on.
@@ -774,6 +774,8 @@ feature {NONE} -- User interface manipulation
 			l_content: LIST [EDITOR_TOKEN]
 			l_pixmap: EV_PIXMAP
 			l_row: EV_GRID_ROW
+			l_pos_token: EDITOR_TOKEN_NUMBER
+			l_line: EIFFEL_EDITOR_LINE
 		do
 			create l_item
 			a_row.set_item (1, l_item)
@@ -843,12 +845,19 @@ feature {NONE} -- User interface manipulation
 				end
 
 					-- Line and column number
-
-				create l_item
+				l_editor_item := Void
 				if l_error.line > 0 then
-					l_item.set_text (l_error.line.out + ", " + l_error.column.max (1).out)
+						-- Created position token
+					create l_pos_token.make (l_error.line.out + ", " + l_error.column.max (1).out)
+					l_pos_token.set_is_clickable (True)
+					l_pos_token.set_pebble (event_context_stone (a_event_item))
+
+						-- Create editor item					
+					create l_line.make_empty_line
+					l_line.append_token (l_pos_token)
+					l_editor_item := create_clickable_grid_item (l_line)
 				end
-				a_row.set_item (position_column, l_item)
+				a_row.set_item (position_column, l_editor_item)
 			end
 
 				-- Fill empty items

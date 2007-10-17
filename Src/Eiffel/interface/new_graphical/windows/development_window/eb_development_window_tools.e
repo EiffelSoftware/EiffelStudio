@@ -28,6 +28,8 @@ feature -- Access
 	class_tool: ES_CLASS_TOOL_PANEL
 			-- Class tool
 			-- This tool was orignal belong to context_tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_CLASS_TOOL}).panel
 		ensure
@@ -36,6 +38,8 @@ feature -- Access
 
 	cluster_tool: ES_GROUPS_TOOL_PANEL
 			-- Cluster tool.
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_GROUPS_TOOL}).panel
 		ensure
@@ -45,6 +49,8 @@ feature -- Access
 	c_output_tool: ES_C_OUTPUT_TOOL_PANEL
 			-- C output tool
 			-- This tool was orignal belong to context_tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_C_OUTPUT_TOOL}).panel
 		ensure
@@ -53,6 +59,8 @@ feature -- Access
 
 	dependency_tool: ES_DEPENDENCY_TOOL_PANEL
 			-- Dependency tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}).panel
 		ensure
@@ -62,6 +70,8 @@ feature -- Access
 	diagram_tool: ES_DIAGRAM_TOOL_PANEL
 			-- Diagram tool
 			-- This tool was orignal belong to context_tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_DIAGRAM_TOOL}).panel
 		ensure
@@ -70,6 +80,8 @@ feature -- Access
 
 	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL_PANEL
 			-- Errors and warnings tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
 		ensure
@@ -79,6 +91,8 @@ feature -- Access
 	external_output_tool: ES_CONSOLE_TOOL_PANEL
 			-- External output tool
 			-- This tool was orignal belong to context_tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_CONSOLE_TOOL}).panel
 		ensure
@@ -87,6 +101,8 @@ feature -- Access
 
 	favorites_tool: ES_FAVORITES_TOOL_PANEL
 			-- Favorites tool.
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_FAVORITES_TOOL}).panel
 		ensure
@@ -95,6 +111,8 @@ feature -- Access
 
 	features_tool: ES_FEATURES_TOOL_PANEL
 			-- Features tool.
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL}).panel
 		ensure
@@ -104,6 +122,8 @@ feature -- Access
 	features_relation_tool: ES_FEATURES_RELATION_TOOL_PANEL
 			-- Features relation tool
 			-- This tool was orignal belong to context_tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
 		ensure
@@ -113,6 +133,8 @@ feature -- Access
 	metric_tool: ES_METRICS_TOOL_PANEL
 			-- Metric tool
 			-- This tool was orignal belong to context_tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_METRICS_TOOL}).panel
 		ensure
@@ -122,6 +144,8 @@ feature -- Access
 	output_tool: ES_OUTPUT_TOOL_PANEL
 			-- Output tool.
 			-- This tool was orignal belong to context_tool
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_OUTPUT_TOOL}).panel
 		ensure
@@ -130,6 +154,8 @@ feature -- Access
 
 	properties_tool: ES_PROPERTIES_TOOL_PANEL
 			-- Properties tool.
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_PROPERTIES_TOOL}).panel
 		ensure
@@ -138,6 +164,8 @@ feature -- Access
 
 	search_report_tool: ES_SEARCH_REPORT_TOOL_PANEL
 			-- Search report tool.
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_REPORT_TOOL}).panel
 		ensure
@@ -146,6 +174,8 @@ feature -- Access
 
 	search_tool: ES_MULTI_SEARCH_TOOL_PANEL
 			-- Search tool.
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
 		ensure
@@ -154,6 +184,8 @@ feature -- Access
 
 	breakpoints_tool: ES_BREAKPOINTS_TOOL_PANEL
 			-- Breakpoints tool.
+		require
+			not_is_recycled: not is_recycled
 		do
 			Result ?= develop_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
 		ensure

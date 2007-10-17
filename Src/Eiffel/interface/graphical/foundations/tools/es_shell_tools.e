@@ -150,19 +150,23 @@ feature -- Access
 		local
 			l_types: like tool_types
 			l_cursor: DS_BILINEAR_CURSOR [TYPE [ES_TOOL [EB_TOOL]]]
-		once
-			l_types := tool_types
-			l_cursor := l_types.new_cursor
-
-			create Result.make_default
-			from l_cursor.start until l_cursor.after loop
-				Result.append_last (tools (l_cursor.item))
-				l_cursor.forth
+		do
+			Result := internal_all_tools
+			if Result = Void then
+				l_types := tool_types
+				l_cursor := l_types.new_cursor
+				create Result.make_default
+				from l_cursor.start until l_cursor.after loop
+					Result.append_last (tools (l_cursor.item))
+					l_cursor.forth
+				end
+				internal_all_tools := Result
 			end
 		ensure
 			result_attached: Result /= Void
 			result_contains_attached_items: not Result.has (Void)
 			result_count_matches_tool_types: tool_types.count = Result.count
+			result_consistent: Result = all_tools
 		end
 
 feature {NONE} -- Access
@@ -595,6 +599,10 @@ feature {NONE} -- Factory
 		end
 
 feature {NONE} -- Internal implementation cache
+
+	internal_all_tools: like all_tools
+			-- Cached version of `all_tools'
+			-- Note: Do not use directly!
 
 	internal_requested_tools: like requested_tools
 			-- Mutable version of `requested_tools'

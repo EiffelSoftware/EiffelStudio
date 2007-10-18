@@ -34,6 +34,7 @@ inherit
 			build_mini_toolbar_box,
 			build_docking_content,
 			internal_recycle,
+			tool_descriptor,
 			show
 		end
 
@@ -58,14 +59,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: ES_DEBUGGER_TOOL [ES_OBJECTS_TOOL_PANEL]) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: ES_OBJECTS_TOOL) is
 		do
 			cleaning_delay := preferences.debug_tool_data.delay_before_cleaning_objects_grid
 			debugger_manager := a_tool.debugger_manager
 			Precursor (a_manager, a_tool)
 		end
 
-feature {NONE} -- Internal properties
+feature {NONE} -- Access
+
+	tool_descriptor: ES_OBJECTS_TOOL
+			-- Descriptor used to created tool.		
+
+feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 
 	first_grid_id: STRING is "1"
 
@@ -90,7 +96,7 @@ feature {NONE} -- Internal properties
 					lst.extend (position_locals)
 					lst.extend (position_result)
 					if dropped_objects_grid /= Void then
-						objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
+						ids_from_objects_grid (dropped_objects_grid.id).prune_all (position_dropped)
 					end
 					lst.extend (position_dropped)
 					dropped_objects_grid := objects_grids.item_for_iteration.grid
@@ -157,6 +163,23 @@ feature {NONE} -- Internal properties
 	objects_grids: HASH_TABLE [like objects_grid_data, STRING]
 			-- Contains the stack and debugged objects grids
 
+	objects_grid_ids: LIST [STRING] is
+			-- Grid id of all the objects_grids
+		local
+			ht: like objects_grids
+		do
+			ht := objects_grids
+			create {ARRAYED_LIST [STRING]} Result.make (ht.count)
+			from
+				ht.start
+			until
+				ht.after
+			loop
+				Result.extend (ht.key_for_iteration)
+				ht.forth
+			end
+		end
+
 	objects_grid (a_id: STRING): ES_OBJECTS_GRID is
 			-- Objects grid identified by `a_id'.
 		require
@@ -165,7 +188,7 @@ feature {NONE} -- Internal properties
 			Result := objects_grids.item (a_id).grid
 		end
 
-	objects_grid_ids (a_id: STRING): LIST [INTEGER] is
+	ids_from_objects_grid (a_id: STRING): LIST [INTEGER] is
 			-- Objects grid's contents identified by `a_id'.
 		require
 			a_id /= Void
@@ -375,26 +398,6 @@ feature {NONE} -- Interface
 			end
 		end
 
-	assign_objects_grids_position (a_gid: STRING; a_pos: INTEGER) is
-			-- Change grid position for item at position `a_pos' to grid identified by `a_gid'
-		local
-			apref: ARRAY_PREFERENCE
-			lst: LIST [INTEGER]
-		do
-			lst := objects_grids.item (a_gid).ids
-			if not lst.has (a_pos) then
-				if a_pos = position_dropped then
-					if dropped_objects_grid /= Void then
-						objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
-					end
-					dropped_objects_grid := objects_grid (a_gid)
-				end
-				lst.extend (a_pos)
-				apref := preferences.debug_tool_data.objects_tool_layout_preference
-				apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
-			end
-		end
-
 	reset_objects_grids_positions is
 			-- Reset Objects tool grids positions
 		local
@@ -405,45 +408,6 @@ feature {NONE} -- Interface
 			apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
 		end
 
-	remove_objects_grids_position (a_gid: STRING; a_pos: INTEGER) is
-			-- Change grid position for item at position `a_pos' to grid identified by `a_gid'
-		local
-			apref: ARRAY_PREFERENCE
-			lst: LIST [INTEGER]
-		do
-			lst := objects_grids.item (a_gid).ids
-			if lst.has (a_pos) then
-				lst.prune_all (a_pos)
-				if a_pos = position_dropped and dropped_objects_grid /= Void then
-					objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
-				end
-				apref := preferences.debug_tool_data.objects_tool_layout_preference
-				apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
-			end
-		end
-
-	move_objects_grids_position	(a_gid: STRING; a_pos: INTEGER; a_step: INTEGER) is
-		require
-			valid_step: a_step /= 0
-		local
-			apref: ARRAY_PREFERENCE
-			lst: LIST [INTEGER]
-		do
-			lst := objects_grids.item (a_gid).ids
-			if lst.has (a_pos) then
-				lst.start
-				lst.search (a_pos)
-				if
-					not lst.exhausted
-					and lst.valid_index (lst.index + a_step)
-				then
-					lst.swap (lst.index + a_step)
-				end
-				apref := preferences.debug_tool_data.objects_tool_layout_preference
-				apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
-			end
-		end
-
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
 			-- Context menu handler
 		do
@@ -451,6 +415,14 @@ feature {NONE} -- Interface
 		end
 
 feature -- preference
+
+	change_objects_layout_preference_value (ar: ARRAY [STRING]) is
+		local
+			apref: ARRAY_PREFERENCE
+		do
+			apref := preferences.debug_tool_data.objects_tool_layout_preference
+			apref.set_value (ar) --| Should trigger "update"
+		end
 
 	refresh_objects_layout_from_preference (p: ARRAY_PREFERENCE) is
 			-- Refresh the layout using preference `p'
@@ -464,7 +436,6 @@ feature -- preference
 		do
 			vals := p.value
 			if not error_occurred and (vals /= Void and then not vals.is_empty) then
---				reset_objects_grids_contents_to_default
 				from
 					i := vals.lower
 				until
@@ -475,7 +446,7 @@ feature -- preference
 						error_occurred := True
 					elseif s.item (1) = '#' then
 						l_id := s.substring (2, s.count)
-						lst := objects_grid_ids (l_id)
+						lst := ids_from_objects_grid (l_id)
 						if lst /= Void then
 							lst.wipe_out
 						end
@@ -483,7 +454,7 @@ feature -- preference
 						si := s.to_integer
 						if i = position_dropped then
 							if dropped_objects_grid /= Void then
-								objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
+								ids_from_objects_grid (dropped_objects_grid.id).prune_all (position_dropped)
 							end
 							dropped_objects_grid := objects_grid (l_id)
 						end
@@ -496,7 +467,7 @@ feature -- preference
 					i := i + 1
 				end
 				if not error_occurred then
-					lst := objects_grid_ids (second_grid_id)
+					lst := ids_from_objects_grid (second_grid_id)
 					if lst = Void or else lst.is_empty then
 						split.second.hide
 					elseif not split.second.is_show_requested then
@@ -555,20 +526,21 @@ feature -- Access
 
 feature -- Menu
 
+	open_objects_tool_layout_editor is
+			-- Open layout editor
+		local
+			dlg: ES_OBJECTS_TOOL_LAYOUT_EDITOR
+		do
+			create dlg.make_with_objects_tool (tool_descriptor)
+			dlg.set_is_modal (True)
+			dlg.show_on_active_window
+		end
+
 	tool_menu (for_tool: BOOLEAN): EV_MENU is
 			-- Menu for Current tool.
 		local
-			m, sm,subm: EV_MENU
-			mi,msi,mall: EV_MENU_ITEM
-			l_has_all: BOOLEAN
-			og: like objects_grid
-			lid: STRING
-			pos_titles: ARRAY [STRING_GENERAL]
-			gdata: like objects_grid_data
-			gids: LIST [INTEGER]
-			i: INTEGER
-			missings: ARRAYED_LIST [INTEGER]
-			l_keys: TWO_WAY_SORTED_SET [STRING]
+			m: EV_MENU
+			mi: EV_MENU_ITEM
 		do
 			if not objects_grids.is_empty then
 				create m
@@ -581,113 +553,16 @@ feature -- Menu
 				else
 					m.set_text (interface_names.m_objects_tool_layout_menu_title)
 				end
+
+				create mi.make_with_text (interface_names.m_objects_tool_layout_editor_title)
+				mi.select_actions.extend (agent open_objects_tool_layout_editor)
+				m.extend (mi)
+
 				create mi.make_with_text (interface_names.m_objects_tool_layout_reset)
 				mi.select_actions.extend (agent reset_objects_grids_positions)
 				m.extend (mi)
-
-				from
-					create l_keys.make
-					objects_grids.start
-				until
-					objects_grids.after
-				loop
-					l_keys.extend (objects_grids.key_for_iteration)
-					objects_grids.forth
-				end
-				from
-					create pos_titles.make (Position_entries.lower, Position_entries.upper)
-					pos_titles[position_stack] := Interface_names.l_stack_information
-					pos_titles[position_current] := Interface_names.l_current_object
-					pos_titles[position_arguments] := Interface_names.l_arguments
-					pos_titles[position_locals] := Interface_names.l_locals
-					pos_titles[position_result] := Interface_names.l_result
-					pos_titles[position_dropped] := Interface_names.l_dropped_references
-
-					l_keys.start
-				until
-					l_keys.after
-				loop
-					lid := l_keys.item
-					gdata := objects_grids.item (lid)
-
-					create missings.make_from_array (position_entries.deep_twin)
-					og := gdata.grid
-					create sm.make_with_text (og.name)
-					m.extend (sm)
-
-					l_has_all := True
-					gids := gdata.ids
-					if gids /= Void and then not gids.is_empty then
-						create mall.make_with_text (interface_names.m_objects_tool_layout_remove_all)
-						mall.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
-						mall.enable_sensitive
-						sm.extend (mall)
-						sm.extend (create {EV_MENU_SEPARATOR})
-
-						from
-							gids.start
-						until
-							gids.after
-						loop
-							i := gids.item
-							if i > 0 then
-								mall.select_actions.extend (agent remove_objects_grids_position (lid, i))
-								missings.prune_all (i)
-								create subm.make_with_text (pos_titles[i])
-								if not gids.isfirst then
-									create msi.make_with_text (interface_names.f_move_item_up)
-									msi.select_actions.extend (agent move_objects_grids_position (lid, i, -1))
-									msi.set_pixmap (pixmaps.mini_pixmaps.general_up_icon)
-									subm.extend (msi)
-								end
-								create msi.make_with_text (interface_names.b_remove)
-								msi.select_actions.extend (agent remove_objects_grids_position (lid, i))
-								msi.set_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
-								subm.extend (msi)
-								if not gids.islast then
-									create msi.make_with_text (interface_names.f_move_item_down)
-									msi.select_actions.extend (agent move_objects_grids_position (lid, i, +1))
-									msi.set_pixmap (pixmaps.mini_pixmaps.general_down_icon)
-									subm.extend (msi)
-								end
-								sm.extend (subm)
-							end
-							gids.forth
-						end
-						sm.extend (create {EV_MENU_SEPARATOR})
-					end
-
-					l_has_all := missings.is_empty
-					if not l_has_all then
-						create mall.make_with_text (interface_names.m_objects_tool_layout_add_all)
-						mall.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
-						mall.enable_sensitive
-						sm.extend (mall)
-						sm.extend (create {EV_MENU_SEPARATOR})
-
-						from
-							missings.start
-						until
-							missings.after
-						loop
-							i := missings.item
-							if i > 0 then
-								create mi.make_with_text (pos_titles[i])
-								mi.set_pixmap (pixmaps.mini_pixmaps.general_add_icon)
-								mi.select_actions.extend (agent assign_objects_grids_position (lid, i))
-								sm.extend (mi)
-
-								mall.select_actions.extend (agent assign_objects_grids_position (lid, i))
-							end
-							missings.forth
-						end
-					end
-					l_keys.forth
-				end
 			end
 		end
-
-
 
 feature {NONE} -- Notebook item's behavior
 
@@ -1583,7 +1458,7 @@ feature {NONE} -- Debugged objects grid Implementation
 				loop
 					if lst_pos.item = position_dropped then
 						if dropped_objects_grid /= Void then
-							objects_grid_ids (dropped_objects_grid.id).prune_all (position_dropped)
+							ids_from_objects_grid (dropped_objects_grid.id).prune_all (position_dropped)
 						end
 						dropped_objects_grid := gdata.grid
 						gdata.lines.force (Void) --| FIXME: for now, Void item is the placeholder for displayed objects

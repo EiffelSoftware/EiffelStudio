@@ -63,6 +63,12 @@ feature -- Context setting
 			context_set: context = a_ctxt
 		end
 
+	reset is
+			-- Reset visitor for a next visit.
+		do
+			context.clear
+		end
+
 feature -- Roundtrip: process leaf
 
 	process_break_as (l_as: BREAK_AS) is

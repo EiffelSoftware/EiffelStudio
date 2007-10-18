@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 
 invariant
 	preferences_not_void: preferences /= Void
-	expand_errors_preference_attached: expand_errors /= Void
+	expand_errors_preference_attached: expand_errors_preferences /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

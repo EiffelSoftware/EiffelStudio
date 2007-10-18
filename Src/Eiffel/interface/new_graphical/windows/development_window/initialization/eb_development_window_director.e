@@ -50,6 +50,9 @@ feature -- Command
 			else
 				l_debugger_manager.force_debug_mode_cmd.execute_for_opening (False)
 			end
+			if l_debugger_manager /= Void then
+				l_debugger_manager.update_debugging_tools_menu_from (develop_window)
+			end
 
 			develop_window.window.unlock_update
 			develop_window.window.hide

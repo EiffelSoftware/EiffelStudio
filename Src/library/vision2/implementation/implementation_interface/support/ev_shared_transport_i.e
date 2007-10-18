@@ -62,25 +62,25 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			Result := env.application.implementation.dockable_targets
 		end
 
-	insert_label: EV_CELL is
-				-- Label used to indicate where `Current' will be placed in target.
-			local
-				pixmap: EV_PIXMAP
-			once
-				Create Result
-				Result.set_minimum_size (10, 10)
-				create pixmap
-				pixmap.set_size (2, 2)
-				pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).default_background_color)
-				pixmap.draw_point (0, 0)
-				pixmap.draw_point (1, 1)
-				pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				pixmap.draw_point (0, 1)
-				pixmap.draw_point (1, 0)
-				Result.set_background_pixmap (pixmap)
-			ensure
-				result_not_void: Result /= Void
-			end
+	frozen insert_label: EV_CELL is
+			-- Label used to indicate where `Current' will be placed in target.
+		local
+			pixmap: EV_PIXMAP
+		once
+			Create Result
+			Result.set_minimum_size (10, 10)
+			create pixmap
+			pixmap.set_size (2, 2)
+			pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).default_background_color)
+			pixmap.draw_point (0, 0)
+			pixmap.draw_point (1, 1)
+			pixmap.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+			pixmap.draw_point (0, 1)
+			pixmap.draw_point (1, 0)
+			Result.set_background_pixmap (pixmap)
+		ensure
+			result_not_void: Result /= Void
+		end
 
 	insert_label_imp: EV_CELL_I is
 			-- Once access to implementation of `insert_label'.
@@ -109,8 +109,8 @@ feature -- Access EV_DRAGABLE_SOURCE.
 				insert_label.parent.prune (insert_label)
 					-- Now, perform special processing if the parent of `insert_label'
 					-- was a cell. Note that we check `cell_parent' is not Void before checking its
-					-- generating type.
-				if cell_parent /= Void and then cell_parent.generating_type.is_equal ("EV_CELL") then
+					-- type against the type of `insert_label' which is guaranteed to be of type EV_CELL.
+				if cell_parent /= Void and then cell_parent.same_type (insert_label) then
 					box_cell_parent ?= cell_parent.parent
 					if box_cell_parent /= Void then
 						index := box_cell_parent.index_of (cell_parent, 1)
@@ -164,6 +164,8 @@ feature -- Access EV_DRAGABLE_SOURCE.
 		once
 			create Result
 		end
+
+	
 
 feature -- Access common.
 

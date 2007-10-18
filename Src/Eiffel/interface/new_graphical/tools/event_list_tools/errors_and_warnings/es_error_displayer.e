@@ -90,7 +90,7 @@ feature {NONE} -- Basic operations
 		local
 			l_tool: ES_TOOL [EB_TOOL]
 		do
-			if not a_window.is_recycled and then a_window.is_visible then
+			if not a_window.is_recycled and then a_window.is_visible and then a_window = window_manager.last_focused_development_window then
 				l_tool := a_window.shell_tools.tool ({ES_ERROR_LIST_TOOL})
 				if l_tool /= Void and then not l_tool.is_recycled then
 						-- Force tool to be shown

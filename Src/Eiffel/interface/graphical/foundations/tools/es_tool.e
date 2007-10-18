@@ -317,7 +317,7 @@ feature -- Basic operations
 		require
 			not_is_recycled: not is_recycled
 		do
-			if not panel.shown then
+			if not panel.shown or panel.is_auto_hide then
 				panel.show
 				if a_activate then
 					check

@@ -114,7 +114,7 @@ feature -- Status setting
 			-- Only if `Current' is in the focused window.
 		do
 			if develop_window = Window_manager.last_focused_window then
-				if not shown then
+				if not shown or else is_auto_hide then
 					show_with_setting
 				end
 				content.set_focus

@@ -227,7 +227,7 @@ feature -- Status setting
 	show is
 			-- Show the tool (if possible)
 		do
-			if not content.is_visible then
+			if not shown or else is_auto_hide then
 				content.show
 			end
 			content.set_focus

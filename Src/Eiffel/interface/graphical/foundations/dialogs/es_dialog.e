@@ -441,6 +441,8 @@ feature {NONE} -- Query
 				Result := interface_names.b_retry
 			when {ES_DIALOG_BUTTONS}.ignore_button then
 				Result := interface_names.b_ignore
+			when {ES_DIALOG_BUTTONS}.close_button then
+				Result := interface_names.b_close
 			end
 		ensure
 			result_attached: Result /= Void

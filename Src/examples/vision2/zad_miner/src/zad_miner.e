@@ -16,7 +16,7 @@ inherit
 			default_create, copy
 		end
 
-creation
+create
 
 	make_and_launch
 

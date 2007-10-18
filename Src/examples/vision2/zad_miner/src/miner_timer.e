@@ -8,7 +8,7 @@ indexing
 class
 	MINER_TIMER
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -60,7 +60,7 @@ feature -- Implementation
 				min := (time // 10 // 60) \\ 60
 				sec := ( time // 10) \\ 60
 
-				!! t_text.make(0)
+				create t_text.make(0)
 				t_text.append (hour.out)
 				t_text.append (":")
 				if (min <10) then

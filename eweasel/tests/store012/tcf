@@ -1,0 +1,18 @@
+test_name 	retrieve-corrupted-file-thread-freezes
+test_description A class tries to retrieve an invalid storable, after that, one cannot launch threads anymore and the application takes 50% of the CPU.
+
+copy_sub 	Ace $TEST Ace
+define_file	CORRUPTED_FILE  $OUTPUT bad_file
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	bad_file $OUTPUT bad_file
+compile_melted
+compile_result 	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

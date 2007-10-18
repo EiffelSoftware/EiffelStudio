@@ -373,9 +373,34 @@ feature -- Status report
 			-- Length of last string_representation Result
 
 	formatted_truncated_string_representation (min, max: INTEGER): STRING_32 is
+		local
+			i: INTEGER
 		do
 			Result := truncated_string_representation (min, max)
-			Result.replace_substring_all ("%U", "%%U")
+			from
+				i := 1
+			until
+				i > Result.count
+			loop
+				inspect Result.item (i)
+				when '%U' then
+					Result.put ('U', i)
+					Result.insert_character ('%%', i)
+					i := i + 2
+				when '%R' then
+					Result.put ('R', i)
+					Result.insert_character ('%%', i)
+					i := i + 2
+				when '%%' then
+					if i + 1 <= Result.count and then Result.item (i + 1) = 'R' then
+						Result.insert_character ('%%', i)
+						i := i + 1
+					end
+					i := i + 1
+				else
+					i := i + 1
+				end
+			end
 		end
 
 	truncated_string_representation (min, max: INTEGER): STRING_32 is

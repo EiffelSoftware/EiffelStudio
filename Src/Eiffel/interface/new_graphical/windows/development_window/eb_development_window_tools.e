@@ -78,16 +78,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	errors_and_warnings_tool: ES_ERRORS_AND_WARNINGS_TOOL_PANEL
-			-- Errors and warnings tool
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result ?= develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}).panel
-		ensure
-			result_attached: Result /= Void
-		end
-
 	external_output_tool: ES_CONSOLE_TOOL_PANEL
 			-- External output tool
 			-- This tool was orignal belong to context_tool

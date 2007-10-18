@@ -113,7 +113,10 @@ feature -- Status setting
 			-- Jump to this tab and display `explorer_parent'.
 			-- Only if `Current' is in the focused window.
 		do
-			if content.is_visible and then develop_window = Window_manager.last_focused_window then
+			if develop_window = Window_manager.last_focused_window then
+				if not shown then
+					show_with_setting
+				end
 				content.set_focus
 			end
 		end

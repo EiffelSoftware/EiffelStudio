@@ -85,7 +85,9 @@ feature -- Attributes
 	successful: BOOLEAN is
 			-- Is the last compilation successful?
 		do
-			Result := lace.successful and then system.successful and not not_actions_successful
+			if system_defined then
+				Result := lace.successful and then system.successful and not not_actions_successful
+			end
 		end
 
 feature -- Update

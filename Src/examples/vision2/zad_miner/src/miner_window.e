@@ -16,7 +16,7 @@ inherit
 			default_create, copy
 		end
 
-creation
+create
 	default_create
 
 feature -- Initialization
@@ -52,14 +52,14 @@ feature -- Initialization
 			create end_menu_item.make_with_text ("End Game")
 			menu.extend (end_menu_item)
 			
-			new_menu_item.select_actions.extend (~new_game_action)
-			end_menu_item.select_actions.extend (~end_game_action)
+			new_menu_item.select_actions.extend (agent new_game_action)
+			end_menu_item.select_actions.extend (agent end_game_action)
 
 			debug ("SHOW_MINE")
 				if is_debuggable then
 					create debug_menu_item.make_with_text ("Debug (On/Off)")
 					menu.extend (debug_menu_item)
-					debug_menu_item.select_actions.extend (~toggle_debug_action)
+					debug_menu_item.select_actions.extend (agent toggle_debug_action)
 					if debug_menu_item.is_selected /= debugging then
 						debug_menu_item.toggle
 					end
@@ -71,7 +71,7 @@ feature -- Initialization
 
 			create menu_item.make_with_text ("About")
 			menu.extend (menu_item)
-			menu_item.select_actions.extend (~show_about_action)
+			menu_item.select_actions.extend (agent show_about_action)
 		end
 	
 	init_window is
@@ -106,7 +106,7 @@ feature -- Initialization
 			create miner_timer.make (label_time)
 			delai := 500
 			create timer.make_with_interval (delai)
-			timer.actions.extend (miner_timer~execute (delai))
+			timer.actions.extend (agent miner_timer.execute (delai))
 			miner_timer.start
 
 				--| prepare the battle field ... the field of mines
@@ -127,7 +127,7 @@ feature -- About box
 		once
 			create Result.make_with_title ("About")
 
-			Result.close_request_actions.extend (~hide_about_action)
+			Result.close_request_actions.extend (agent hide_about_action)
 			Result.disable_user_resize
 
 			create hbox
@@ -229,8 +229,8 @@ feature -- Mines and Field
 		local
 			time: TIME
 		once
-			!! time.make_now
-			!! Result.make
+			create time.make_now
+			create Result.make
 			random.set_seed(time.seconds)
 			random.start
 		ensure
@@ -242,7 +242,7 @@ feature -- Mines and Field
 			-- Table of mine buttons
 			-- created once.
 		once
-			!! Result.make(nb_x,nb_y)
+			create Result.make(nb_x,nb_y)
 			create_mine_field
 		end
 
@@ -274,8 +274,8 @@ feature -- Mines and Field
 					line.extend (mine_b)
 					mine_b.set_pixmap (pix_first)
 
-					mine_b.pointer_button_press_actions.extend (~show_button_action (h_index, v_index, ?,?,?,?,?,?,?,?) )
-					mine_b.pointer_double_press_actions.extend (~auto_action (h_index, v_index, ?,?,?,?,?,?,?,?) )
+					mine_b.pointer_button_press_actions.extend (agent show_button_action (h_index, v_index, ?,?,?,?,?,?,?,?) )
+					mine_b.pointer_double_press_actions.extend (agent auto_action (h_index, v_index, ?,?,?,?,?,?,?,?) )
 					h_index := h_index + 1
 				end
 				v_index := v_index + 1
@@ -577,9 +577,9 @@ feature -- Game status
 			set_label_time_text ( "00:00:00" )
 			control_zone_label.extend (label_time)
 
-			control_zone_restart.select_actions.extend (~restart_action)
-			control_zone_level_up.select_actions.extend (~change_level_action (+1) )
-			control_zone_level_down.select_actions.extend (~change_level_action (-1) )
+			control_zone_restart.select_actions.extend (agent restart_action)
+			control_zone_level_up.select_actions.extend (agent change_level_action (+1) )
+			control_zone_level_down.select_actions.extend (agent change_level_action (-1) )
 
 		end
 

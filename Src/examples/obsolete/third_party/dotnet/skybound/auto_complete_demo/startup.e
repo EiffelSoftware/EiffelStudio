@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			create l_thread_start.make (Current, $make)
 			create l_thread.make (l_thread_start)
-			l_thread.set_apartment_state (feature {APARTMENT_STATE}.sta)
+			l_thread.set_apartment_state ({APARTMENT_STATE}.sta)
 			l_thread.start
 			l_thread.join
 		end

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			grid_cell.extend (grid)
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 			status_bar_frame.extend (status_bar)
-			create mem_short.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.key_1), True, False, False)
+			create mem_short.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_1), True, False, False)
 			accelerators.extend (mem_short)
 			tools_notebook.selection_actions.extend (agent update_tab_information)
 		end

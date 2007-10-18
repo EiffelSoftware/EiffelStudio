@@ -29,7 +29,7 @@ feature -- Initialization
 			reset
 -- 			create flag_it.make(~put_a_flag)
 -- 			add_button_press_command(3,flag_it,Void)
-			pointer_button_press_actions.extend (~put_a_flag_action)
+			pointer_button_press_actions.extend (agent put_a_flag_action)
 		end
 
 	flagcode:INTEGER is

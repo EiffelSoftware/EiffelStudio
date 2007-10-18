@@ -1432,8 +1432,10 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 
 			develop_window.tools.set_last_stone (last_stone)
 
-			if widget.is_displayed or else is_auto_hide then
+			if widget.is_displayed then
 				force_last_stone
+			elseif is_auto_hide then
+				request_force_last_stone_now
 			end
 		end
 
@@ -1504,6 +1506,39 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 			end
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+feature {NONE} -- force last stone when displayed
+
+	force_last_stone_now is
+		do
+			cancel_force_last_stone_now
+			force_last_stone
+		end
+
+	agent_force_last_stone_now: PROCEDURE [ANY, TUPLE]
+			-- agent on `force_last_stone_now'.
+
+	request_force_last_stone_now is
+			-- Request `force_last_stone_now'
+		require
+			tool_shown: shown
+		do
+			if agent_force_last_stone_now = Void then
+				agent_force_last_stone_now := agent force_last_stone_now
+				content.show_actions.extend_kamikaze (agent_force_last_stone_now)
+			else
+				-- already requested
+			end
+		end
+
+	cancel_force_last_stone_now is
+			-- Request `force_last_stone_now'
+		do
+			if content /= Void and then agent_force_last_stone_now /= Void then
+				content.show_actions.prune_all (agent_force_last_stone_now)
+				agent_force_last_stone_now := Void
+			end
 		end
 
 feature {EB_CENTER_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Center diagram command

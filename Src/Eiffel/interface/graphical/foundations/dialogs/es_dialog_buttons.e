@@ -3,6 +3,9 @@ indexing
 		Access to all common button groups used in EiffelStudio dialogs.
 		Note: Use {ES_SHARED_DIALOG_BUTTONS} to access a shared instance. If you are using {ES_DIALOG} as a base
 		      then {ES_DIALOG}.dialog_buttons_helper is available for use to access a single instance of {ES_DIALOG_BUTTONS}.
+		      
+		Help keep {ES_DIALOG_BUTTONS} tidy! Please do not pollute the buttons with tool/dialog specific buttons. This is a place
+		for heavly used button identifiers.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -108,6 +111,16 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
+	frozen close_buttons: DS_HASH_SET [INTEGER]
+		once
+			create Result.make (1)
+			Result.put_last (close_button)
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
+		end
+
 feature -- Query
 
 	is_valid_button_id (a_id: INTEGER): BOOLEAN
@@ -131,11 +144,12 @@ feature -- Result id's
 	abort_button: INTEGER = 5
 	retry_button: INTEGER = 6
 	ignore_button: INTEGER = 7
+	close_button: INTEGER = 8
 
 	button_id_mask: INTEGER
 			-- Button ID mask
 		once
-			Result := 0b111
+			Result := 0b1111
 		end
 
 ;indexing

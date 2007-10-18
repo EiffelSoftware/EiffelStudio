@@ -56,6 +56,8 @@ feature {NONE} -- Clean up
 
 	clean_requested_tools
 			-- Performs a clean up for `requested_tools' as to remove any recycled tools from it.
+		require
+			not_is_recycled: not is_recycled
 		local
 			l_requested_tools: like internal_requested_tools
 			l_cursor: DS_HASH_TABLE_CURSOR [ARRAY [ES_TOOL [EB_TOOL]], STRING]
@@ -221,7 +223,9 @@ feature {NONE} -- Access
 	requested_tools: DS_HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], STRING] is
 			-- Table of requested, and therefore created, tools.
 		do
-			clean_requested_tools
+			if not is_recycled then
+				clean_requested_tools
+			end
 			Result := internal_requested_tools
 		end
 
@@ -561,7 +565,9 @@ feature {ES_TOOL} -- Removal
 			if not a_tool.is_recycled and then a_tool.is_recycled_on_closing then
 				a_tool.recycle
 				a_tool.set_window (Void)
-				clean_requested_tools
+				if not is_recycled then
+					clean_requested_tools
+				end
 			end
 		ensure
 			a_tool_is_recycled: a_tool.is_recycled_on_closing implies a_tool.is_recycled

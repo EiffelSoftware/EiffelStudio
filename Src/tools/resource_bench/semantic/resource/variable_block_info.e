@@ -12,7 +12,7 @@ class VARIABLE_BLOCK_INFO
 inherit
 	S_VARIABLE_BLOCK_INFO
 
-creation
+create
 	make
 
 indexing

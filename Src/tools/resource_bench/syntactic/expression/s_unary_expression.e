@@ -25,13 +25,13 @@ feature
 			unary_operator: UNARY_OPERATOR
 			e5: E5
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! unary_operator.make
+			create unary_operator.make
 			put (unary_operator)
 
-			!! e5.make
+			create e5.make
 			put (e5)
 		end
 

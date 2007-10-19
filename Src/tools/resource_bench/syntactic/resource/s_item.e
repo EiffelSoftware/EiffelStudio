@@ -25,13 +25,13 @@ feature
 			menuitem: MENUITEM_STATEMENT
 			popup: POPUP_STATEMENT
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! menuitem.make
+			create menuitem.make
 			put (menuitem)
 
-			!! popup.make
+			create popup.make
 			put (popup)
 		end
 

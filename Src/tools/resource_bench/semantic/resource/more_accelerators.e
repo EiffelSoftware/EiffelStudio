@@ -19,7 +19,7 @@ class MORE_ACCELERATORS
 inherit
 	S_MORE_ACCELERATORS
 
-creation
+create
 	make
 
 indexing

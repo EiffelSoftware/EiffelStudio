@@ -19,7 +19,7 @@ class USER_DEFINED_RESOURCE
 inherit
 	S_USER_DEFINED_RESOURCE
 
-creation
+create
 	make
 
 indexing

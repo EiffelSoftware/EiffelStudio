@@ -19,7 +19,7 @@ class IF_STATEMENT
 inherit
 	S_IF_STATEMENT
 
-creation
+create
 	make
 
 indexing

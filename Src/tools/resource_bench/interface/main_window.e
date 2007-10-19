@@ -102,7 +102,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make
 
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			interface.set_dialog_parent (Current)
 
 				-- Create a toolbar.
-			!! tool_bar.make (Current, Idr_toolbar)
+			create tool_bar.make (Current, Idr_toolbar)
 			tool_bar.add_bitmaps (standard_toolbar_bitmaps, 6)
 			standard_index := tool_bar.last_bitmap_index
 
@@ -127,11 +127,11 @@ feature {NONE} -- Initialization
 			tool_bar.disable_button (Cmd_build_wel_code)
 
 				-- Create Status.
-			!! status_window.make (Current, status_window_id)
+			create status_window.make (Current, status_window_id)
 			status_window.set_parts (<<-1>>)
 
 				-- Create client.
-			!! client_window.make (Current, "Client Window")
+			create client_window.make (Current, "Client Window")
 	
 				-- Create the menu bar.
 			set_menu (main_menu)
@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 			main_menu.disable_item (Cmd_build_wel_code)
 			main_menu.disable_item (Cmd_build_resource_file)
 
-			!! cursor.make_by_predefined_id (Idc_arrow)
+			create cursor.make_by_predefined_id (Idc_arrow)
 			cursor.set
 			
 			set_application_directory (current_working_directory)
@@ -159,7 +159,7 @@ feature -- Access
 	main_menu: WEL_MENU is
 			-- The `main_menu' of the Resource Bench application.
 		once
-			!! Result.make_by_id (Idr_menu)
+			create Result.make_by_id (Idr_menu)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -193,7 +193,7 @@ feature -- Access
 			-- Bitmap containing the small standard bitmaps
     			-- for the toolbar.
 		once
-			!! Result.make_by_predefined_id (Idb_std_small_color)
+			create Result.make_by_predefined_id (Idb_std_small_color)
 		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists
@@ -203,7 +203,7 @@ feature -- Access
 			-- Bitmap containing the small bitmaps
     			-- for the toolbar.
     		once
-    			!! Result.make (Idr_toolbar)
+    			create Result.make (Idr_toolbar)
     		ensure
 			result_not_void: Result /= Void
 			result_exists: Result.exists
@@ -214,25 +214,25 @@ feature -- Access
     		local
     			button: WEL_TOOL_BAR_BUTTON
     		once    
-    			!! Result.make (0, 5)
+    			create Result.make (0, 5)
 
-    			!! button.make_separator
+    			create button.make_separator
     			Result.force (button, 0)
 
-    			!! button.make_button (standard_index + Std_filenew, Cmd_file_new)
+    			create button.make_button (standard_index + Std_filenew, Cmd_file_new)
 			button.set_state (Tbstate_indeterminate)
     			Result.force (button, 1)
 
-    			!! button.make_button (standard_index + Std_fileopen, Cmd_file_open)
+    			create button.make_button (standard_index + Std_fileopen, Cmd_file_open)
     			Result.force (button, 2)
 
-   			!! button.make_button (standard_index + Std_filesave, Cmd_file_save_project)
+   			create button.make_button (standard_index + Std_filesave, Cmd_file_save_project)
     			Result.force (button, 3)
 
-    			!! button.make_separator
+    			create button.make_separator
     			Result.force (button, 4)
 
-  			!! button.make_button (rb_index, Cmd_build_wel_code)
+  			create button.make_button (rb_index, Cmd_build_wel_code)
     			Result.force (button, 5)
     		ensure
 			result_not_void: Result /= Void
@@ -247,7 +247,7 @@ feature -- Behavior
 		do
 			if info.code = Ttn_needtext then
 					-- Set resource string id.
-				!! tt1.make_by_nmhdr (info)
+				create tt1.make_by_nmhdr (info)
 				tt1.set_text_id (tt1.hdr.id_from)
 			end
 		end
@@ -326,7 +326,7 @@ feature -- Behavior
 						tool_bar.enable_button (Cmd_file_save_project)
 						tool_bar.enable_button (Cmd_build_wel_code)
 					else
-						!! message.make (30)
+						create message.make (30)
 						message.append ("Resource Bench couldn't open the file:%N")
 						message.append (open_file_dialog.file_name)
 						interface.display_text (std_error, message)
@@ -437,8 +437,8 @@ feature {NONE} -- Implementation
 		local
 			ofn: WEL_OFN_CONSTANTS
 		once
-			!! ofn
-			!! Result.make
+			create ofn
+			create Result.make
 			Result.set_filter (<<"Resource file (*.rc)", "Project file (*.prb)", "All file (*.*)">>, <<"*.rc", "*.prb", "*.*">>)
 			Result.add_flag (ofn.Ofn_filemustexist)
 		ensure
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 	save_resource_file_dialog: WEL_SAVE_FILE_DIALOG is
 			-- Display the standard save file dialog.
 		once
-			!! Result.make
+			create Result.make
 			Result.set_filter (<<"Resource file (*.rc)", "All file (*.*)">>, <<"*.rc", "*.*">>)
 		ensure
 			result_not_void: Result /= Void
@@ -457,7 +457,7 @@ feature {NONE} -- Implementation
 	save_project_file_dialog: WEL_SAVE_FILE_DIALOG is
 			-- Display the standard save file dialog.
 		once
-			!! Result.make
+			create Result.make
 			Result.set_filter (<<"Project file (*.prb)", "All file (*.*)">>, <<"*.PRB", "*.*">>)
 		ensure
 			result_not_void: Result /= Void
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			!! msg_box.make
+			create msg_box.make
 			msg_box.question_message_box (Current, "Do you want to exit?", "Exit")
 
 			if msg_box.message_box_result = Idyes then
@@ -479,12 +479,12 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon.
 		once
-			!! Result.make_by_id (1)
+			create Result.make_by_id (1)
 		end
 
 	class_background: WEL_NULL_BRUSH is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	do_analyze (a_parent: WEL_COMPOSITE_WINDOW; a_open_file: WEL_OPEN_FILE_DIALOG) is
@@ -499,10 +499,10 @@ feature {NONE} -- Implementation
 			filename: STRING
 			directory_name: STRING
 		do
-			!! cursor.make_by_predefined_id (Idc_wait)
+			create cursor.make_by_predefined_id (Idc_wait)
 			cursor.set
 
-			!! folder.make (Tmp_directory)
+			create folder.make (Tmp_directory)
 			If (not folder.exists) then
 				folder.create_dir
 			end
@@ -518,9 +518,9 @@ feature {NONE} -- Implementation
 
 			temp_filename := Tmp_directory.twin
 			temp_filename.append ("Temp_file.rc")
-			!! temp_file.make_open_write (temp_filename)
+			create temp_file.make_open_write (temp_filename)
 
-			!! preprocessor.make (temp_file)
+			create preprocessor.make (temp_file)
 			preprocessor.convert_definition (filename)
 			temp_file.close
 
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 
 				create_tree_view_control (client_window, filename)
 
-				!! properties_window.make_with_coordinates (client_window, "Properties Window",
+				create properties_window.make_with_coordinates (client_window, "Properties Window",
 						tree_view.width -1, -2,
 						client_window.width - tree_view.width,
 						client_window.height)
@@ -549,7 +549,7 @@ feature {NONE} -- Implementation
 
 			interface.hide_all
 	
-			!! cursor.make_by_predefined_id (Idc_arrow)
+			create cursor.make_by_predefined_id (Idc_arrow)
 			cursor.set
 		end
 
@@ -563,8 +563,8 @@ feature {NONE} -- Implementation
 		do
 			filename := a_open_file.file_name.twin
 
-			!! file.make_open_read (filename)
-			!! the_tds.retrieve_tds (file)
+			create file.make_open_read (filename)
+			create the_tds.retrieve_tds (file)
 
 			set_tds (the_tds)
 
@@ -574,7 +574,7 @@ feature {NONE} -- Implementation
 			if (properties_window /= Void) and then (properties_window.exists) then
 				properties_window.destroy
 			end
-			!! properties_window.make_with_coordinates (client_window, "Properties Window",
+			create properties_window.make_with_coordinates (client_window, "Properties Window",
 					tree_view.width -1, -2,
 					client_window.width - tree_view.width,
 					client_window.height)
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 		local
 			file: RAW_FILE
 		do
-			!! file.make_open_write (a_filename)
+			create file.make_open_write (a_filename)
 			tds.store_tds (file)
 		end
 
@@ -610,14 +610,14 @@ feature {NONE} -- Implementation
 			set_working_directory (current_working_directory)
 			change_working_directory (application_directory)
 
-			!! file.make (Grammar_name)
+			create file.make (Grammar_name)
 
 			if (file.exists) then
-				!! file.make_open_read (Grammar_name)
-				!! analyzer.retrieve_grammar (file)
+				create file.make_open_read (Grammar_name)
+				create analyzer.retrieve_grammar (file)
 			else
-				!! analyzer.make
-				!! file.make_open_write (Grammar_name)
+				create analyzer.make
+				create file.make_open_write (Grammar_name)
 				analyzer.store_grammar (file)
 			end
 
@@ -643,11 +643,11 @@ feature {NONE} -- Implementation
 				tree_view.destroy
 			end
 
-			!! tree_view.make (a_parent, -1, -1, 250, a_parent.height - 2, -1)
+			create tree_view.make (a_parent, -1, -1, 250, a_parent.height - 2, -1)
 
-			!! tvis.make
+			create tvis.make
 			tvis.set_root
-			!! tv_item.make
+			create tv_item.make
 			tv_item.set_text (a_filename)
 			tvis.set_tree_view_item (tv_item)
 			tree_view.insert_item (tvis)
@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			!! file.make_open_write (a_filename)
+			create file.make_open_write (a_filename)
 			tds.generate_resource_file (file)	
 			file.close		
 		end
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation
 		local
 			about: DIALOG_ABOUT
 		do
-			!! about.make (Current)
+			create about.make (Current)
 		end
 
 	do_wel_code is
@@ -682,7 +682,7 @@ feature {NONE} -- Implementation
 		local
 			browse: DIALOG_BROWSE
 		do
-			!! browse.make (Current)
+			create browse.make (Current)
 		end
 
 indexing

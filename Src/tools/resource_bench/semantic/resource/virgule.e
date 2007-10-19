@@ -12,7 +12,7 @@ class VIRGULE
 inherit
 	S_VIRGULE
 
-creation
+create
 	make
 
 indexing

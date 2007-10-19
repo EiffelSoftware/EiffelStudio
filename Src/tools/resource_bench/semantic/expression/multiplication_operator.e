@@ -14,7 +14,7 @@ class
 inherit
 	S_MULTIPLICATION_OPERATOR
 
-creation
+create
 	make
 
 indexing

@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,16 +37,16 @@ feature
 			styles_list: STYLES_LIST
 			optional_extended_styles_list: OPTIONAL_EXTENDED_STYLES_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword (",")
 			commit
 
-			!! styles_list.make
+			create styles_list.make
 			put (styles_list)
 
-			!! optional_extended_styles_list.make
+			create optional_extended_styles_list.make
 			put (optional_extended_styles_list)
 		end
 

@@ -15,7 +15,7 @@ inherit
 			default_ex_style
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

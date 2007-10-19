@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			style: STYLE
 			list: NORMAL_STYLES_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! style.make
+			create style.make
 			put (style)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

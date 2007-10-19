@@ -12,7 +12,7 @@ class POPUP_EX_STATEMENT
 inherit
 	S_POPUP_EX_STATEMENT
 
-creation
+create
 	make
 
 indexing

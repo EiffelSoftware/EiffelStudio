@@ -12,7 +12,7 @@ class FILE_VERSION
 inherit
 	S_FILE_VERSION
 
-creation
+create
 	make
 
 indexing

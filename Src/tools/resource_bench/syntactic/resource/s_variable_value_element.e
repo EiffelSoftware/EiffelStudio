@@ -25,7 +25,7 @@ feature
 			langID: IDENTIFIER
 			charsetID: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 			
 			keyword ("VALUE")
@@ -35,12 +35,12 @@ feature
 			
 			keyword (",")
 
-			!! langID.make
+			create langID.make
 			put (langID)
 
 			keyword (",")
 
-			!! charsetID.make
+			create charsetID.make
 			put (charsetID)
 		end
 

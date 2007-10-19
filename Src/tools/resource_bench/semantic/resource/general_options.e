@@ -13,7 +13,7 @@ class GENERAL_OPTIONS
 inherit
 	S_GENERAL_OPTIONS
 
-creation
+create
 	make
 
 indexing

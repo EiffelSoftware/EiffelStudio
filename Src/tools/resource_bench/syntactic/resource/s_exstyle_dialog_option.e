@@ -24,13 +24,13 @@ feature
 		local
 			Extended_styles_list: EXTENDED_STYLES_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("EXSTYLE=")
 			commit
 
-			!! Extended_styles_list.make
+			create Extended_styles_list.make
 			put (Extended_styles_list)
 		end
 

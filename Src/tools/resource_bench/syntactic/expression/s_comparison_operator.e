@@ -29,25 +29,25 @@ feature
 			le: LE
 			ge: GE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 	
-			!! equal_op.make
+			create equal_op.make
 			put (equal_op)
 
-			!! not_equal.make
+			create not_equal.make
 			put (not_equal)
 
-			!! lt.make
+			create lt.make
 			put (lt)
 
-			!! gt.make
+			create gt.make
 			put (gt)
 
-			!! le.make
+			create le.make
 			put (le)
 
-			!! ge.make
+			create ge.make
 			put (ge)
 		end
 

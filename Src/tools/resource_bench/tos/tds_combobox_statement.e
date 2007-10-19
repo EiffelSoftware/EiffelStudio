@@ -19,7 +19,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -29,10 +29,10 @@ feature -- Initialization
 			cbs_dropdown: TDS_STYLE
 			cbs_dropdownlist: TDS_STYLE
 		do
-			!! cbs_dropdown.make
+			create cbs_dropdown.make
 			cbs_dropdown.set_style ("CBS_DROPDOWN")
 			
-			!! cbs_dropdownlist.make
+			create cbs_dropdownlist.make
 			cbs_dropdownlist.set_style ("CBS_DROPDOWNLIST")
 
 			if style.is_almost_present (cbs_dropdownlist) then

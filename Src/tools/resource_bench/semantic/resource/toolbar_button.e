@@ -21,7 +21,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -33,7 +33,7 @@ feature
 		do
 			toolbar ?= tds.current_resource
 
-			!! id
+			create id
 			id.set_id (tds.last_token)
 
 			toolbar.insert_button (id)

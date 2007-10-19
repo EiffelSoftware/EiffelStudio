@@ -27,7 +27,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -40,13 +40,13 @@ feature
 			dialog ?= tds.current_resource
 
 			if (token.string_value.is_equal ("COMBOBOX")) then
-				!tds_combobox_statement! control.make
+				create {tds_combobox_statement} control.make
 
 			elseif (token.string_value.is_equal ("EDITTEXT")) then
-				!tds_edittext_statement! control.make
+				create {tds_edittext_statement} control.make
 
 			elseif (token.string_value.is_equal ("LISTBOX")) then
-				!tds_listbox_statement! control.make
+				create {tds_listbox_statement} control.make
 			end
 
 			control.set_wel_code (true)

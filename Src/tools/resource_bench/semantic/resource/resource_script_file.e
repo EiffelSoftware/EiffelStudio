@@ -27,7 +27,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -36,7 +36,7 @@ feature
 		local
 			a_tds: TABLE_OF_SYMBOLS_STRUCTURE
 		do
-			!! a_tds.make
+			create a_tds.make
 			set_tds (a_tds)
 		end
 

@@ -25,13 +25,13 @@ feature
 			normal: MENUITEM_NORMAL_STATEMENT
 			separator: MENUITEM_SEPARATOR_STATEMENT
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! normal.make
+			create normal.make
 			put (normal)
 			
-			!! separator.make
+			create separator.make
 			put (separator)
 		end
 

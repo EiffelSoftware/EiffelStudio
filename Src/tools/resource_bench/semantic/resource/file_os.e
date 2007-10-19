@@ -12,7 +12,7 @@ class FILE_OS
 inherit
 	S_FILE_OS
 
-creation
+create
 	make
 
 indexing

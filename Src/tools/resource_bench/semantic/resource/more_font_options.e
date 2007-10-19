@@ -12,7 +12,7 @@ class MORE_FONT_OPTIONS
 inherit
 	S_MORE_FONT_OPTIONS
 
-creation
+create
 	make
 
 indexing

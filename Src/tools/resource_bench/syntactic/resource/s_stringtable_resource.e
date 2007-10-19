@@ -29,22 +29,22 @@ feature
 			strings_list: STRINGS_LIST
 			end1: END_BLOCK
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("STRINGTABLE")
 			commit
 
-			!! options.make
+			create options.make
 			put (options)
 
-			!! begin1.make
+			create begin1.make
 			put (begin1)
 
-			!! strings_list.make
+			create strings_list.make
 			put (strings_list)
 
-			!! end1.make
+			create end1.make
 			put (end1)
 		end
 

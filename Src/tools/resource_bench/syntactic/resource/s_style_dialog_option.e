@@ -24,13 +24,13 @@ feature
 		local
 			Styles_list: STYLES_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("STYLE")
 			commit
 
-			!! Styles_list.make
+			create Styles_list.make
 			put (Styles_list)
 		end
 

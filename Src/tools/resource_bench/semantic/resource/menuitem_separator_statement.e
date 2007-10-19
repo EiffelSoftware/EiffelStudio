@@ -20,7 +20,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -34,7 +34,7 @@ feature
 			menu ?= tds.current_resource
 			menu := menu.current_menu.item
 
-			!! the_item.make
+			create the_item.make
 			the_item.set_separator
                 				
 			menu.insert_item (the_item)

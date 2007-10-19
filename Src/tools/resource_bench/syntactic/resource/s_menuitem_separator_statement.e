@@ -22,7 +22,7 @@ feature
 
 	production: LINKED_LIST [CONSTRUCT] is
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("SEPARATOR")

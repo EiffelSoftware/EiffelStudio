@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			data: IDENTIFIER
 			list: TEXTINCLUDE_DATA_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! data.make
+			create data.make
 			put (data)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

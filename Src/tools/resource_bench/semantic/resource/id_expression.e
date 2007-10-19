@@ -12,7 +12,7 @@ class ID_EXPRESSION
 inherit
 	S_ID_EXPRESSION
 
-creation
+create
 	make
 
 indexing

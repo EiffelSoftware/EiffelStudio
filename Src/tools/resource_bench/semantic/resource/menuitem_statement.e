@@ -12,7 +12,7 @@ class MENUITEM_STATEMENT
 inherit
 	S_MENUITEM_STATEMENT
 
-creation
+create
 	make
 
 indexing

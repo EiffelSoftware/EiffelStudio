@@ -12,7 +12,7 @@ class FILE_SUBTYPE
 inherit
 	S_FILE_SUBTYPE
 
-creation
+create
 	make
 
 indexing

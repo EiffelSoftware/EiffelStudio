@@ -24,13 +24,13 @@ feature
 		local
 			version: VERSION
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("PRODUCTVERSION")
 			commit
 
-			!! version.make
+			create version.make
 			put (version)
 		end
 

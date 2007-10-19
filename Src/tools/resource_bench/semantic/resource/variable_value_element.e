@@ -12,7 +12,7 @@ class VARIABLE_VALUE_ELEMENT
 inherit
 	S_VARIABLE_VALUE_ELEMENT
 
-creation
+create
 	make
 
 indexing

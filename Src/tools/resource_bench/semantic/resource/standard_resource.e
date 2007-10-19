@@ -13,7 +13,7 @@ class STANDARD_RESOURCE
 inherit
 	S_STANDARD_RESOURCE
 
-creation
+create
 	make
 
 indexing

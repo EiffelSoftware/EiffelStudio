@@ -24,12 +24,12 @@ feature
 		local
 			id_value: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("BUTTON")
 
-			!! id_value.make
+			create id_value.make
 			put (id_value)
 		end
 

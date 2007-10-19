@@ -33,51 +33,51 @@ feature
 			height: IDENTIFIER
 			optional: OPTIONAL_EXTENDED_STYLES_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("CONTROL")
 			commit
 
-			!! text.make
+			create text.make
 			put (text)
 
 			keyword (",")
 
-			!! id.make
+			create id.make
 			put (id)
 
 			keyword (",")
 
-			!! class_ident.make
+			create class_ident.make
 			put (class_ident)
 
 			keyword (",")
 
-			!! Styles_list.make
+			create Styles_list.make
 			put (Styles_list)
 
 			keyword (",")
 
-			!! x.make
+			create x.make
 			put (x)
 
 			keyword (",")
 
-			!! y.make
+			create y.make
 			put (y)
 
 			keyword (",")
 
-			!! width.make
+			create width.make
 			put (width)
 
 			keyword (",")
 
-			!! height.make
+			create height.make
 			put (height)
 	
-			!! optional.make
+			create optional.make
 			put (optional)
 		end
 

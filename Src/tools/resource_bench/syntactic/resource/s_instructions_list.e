@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			instruction: INSTRUCTION
 			list: INSTRUCTIONS_LIST
 		once
-			!!Result.make
+			create Result.make
 			Result.forth
 
-			!! instruction.make
+			create instruction.make
 			put (instruction)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

@@ -24,13 +24,13 @@ feature
 		local
 			filetype: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("FILETYPE")
 			commit
 
-			!! filetype.make
+			create filetype.make
 			put (filetype)
 		end
 

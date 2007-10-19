@@ -25,13 +25,13 @@ feature
 			filename: IDENTIFIER
 			data_block: DATA_BLOCK
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! filename.make
+			create filename.make
 			put (filename)
 
-			!! data_block.make
+			create data_block.make
 			put (data_block)
 		end
 

@@ -24,7 +24,7 @@ feature
 		local
 			identifier: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("defined")
@@ -32,7 +32,7 @@ feature
 
 			keyword ("(")
 
-			!! identifier.make
+			create identifier.make
 			put (identifier)
 
 			keyword (")")

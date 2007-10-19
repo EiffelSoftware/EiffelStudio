@@ -12,7 +12,7 @@ class STRING_BLOCK_ELEMENT
 inherit
 	S_STRING_BLOCK_ELEMENT
 
-creation
+create
 	make
 
 indexing

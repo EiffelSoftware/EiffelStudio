@@ -12,7 +12,7 @@ class VERSIONINFO_RESOURCE
 inherit
 	S_VERSIONINFO_RESOURCE
 
-creation
+create
 	make
 
 indexing

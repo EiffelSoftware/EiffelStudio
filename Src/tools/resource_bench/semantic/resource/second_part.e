@@ -19,7 +19,7 @@ class SECOND_PART
 inherit
 	S_SECOND_PART
 
-creation
+create
 	make
 
 indexing

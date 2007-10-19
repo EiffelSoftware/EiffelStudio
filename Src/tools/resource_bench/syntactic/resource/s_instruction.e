@@ -34,31 +34,31 @@ feature
 			ifndef_statement: IFNDEF_STATEMENT
 			pragma_statement: PRAGMA_STATEMENT
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! resource.make
+			create resource.make
 			put (resource)
 
-			!! define_statement.make
+			create define_statement.make
 			put (define_statement)
 
-			!! include_statement.make
+			create include_statement.make
 			put (include_statement)
 
-			!! undef_statement.make
+			create undef_statement.make
 			put (undef_statement)
 
-			!! if_statement.make
+			create if_statement.make
 			put (if_statement)
 
-			!! ifdef_statement.make
+			create ifdef_statement.make
 			put (ifdef_statement)
 
-			!! ifndef_statement.make
+			create ifndef_statement.make
 			put (ifndef_statement)
 
-			!! pragma_statement.make
+			create pragma_statement.make
 			put (pragma_statement)
 		end
 

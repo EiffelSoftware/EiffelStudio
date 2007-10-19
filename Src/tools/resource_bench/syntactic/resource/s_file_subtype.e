@@ -24,13 +24,13 @@ feature
 		local
 			filesubtype: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("FILESUBTYPE")
 			commit
 
-			!! filesubtype.make
+			create filesubtype.make
 			put (filesubtype)
 		end
 

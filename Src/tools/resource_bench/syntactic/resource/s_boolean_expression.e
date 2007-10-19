@@ -24,10 +24,10 @@ feature
 		local
 			expression: EXPRESSION
 		once
-			!!Result.make
+			create Result.make
 			Result.forth
 			
-			!! expression.make
+			create expression.make
 			put (expression)
 		end
 

@@ -24,13 +24,13 @@ feature
 		local
 			instructions_list: INSTRUCTIONS_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("#else")
 			commit
 
-			!! instructions_list.make
+			create instructions_list.make
 			put (instructions_list)
 		end
 

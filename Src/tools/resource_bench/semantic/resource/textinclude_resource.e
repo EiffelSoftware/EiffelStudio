@@ -12,7 +12,7 @@ class TEXTINCLUDE_RESOURCE
 inherit
 	S_TEXTINCLUDE_RESOURCE
 
-creation
+create
 	make
 
 indexing

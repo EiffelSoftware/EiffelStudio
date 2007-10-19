@@ -12,7 +12,7 @@ class EXTENDED_STYLES_LIST_ELEMENT
 inherit
 	S_EXTENDED_STYLES_LIST_ELEMENT
 
-creation
+create
 	make
 
 indexing

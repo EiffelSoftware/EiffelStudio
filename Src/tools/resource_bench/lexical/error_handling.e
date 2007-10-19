@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 
 	has_error_cell: CELL [BOOLEAN] is
 		once
-			!! Result.put (False)
+			create Result.put (False)
 		ensure
 			result_not_void: Result /= Void
 		end

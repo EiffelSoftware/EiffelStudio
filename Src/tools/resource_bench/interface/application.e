@@ -21,7 +21,7 @@ inherit
 
 	APPLICATION_IDS
 
-creation
+create
 	make
 
 
@@ -46,19 +46,19 @@ feature
 	main_window: MAIN_WINDOW is
 			-- Create the application's main window
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	accelerators: WEL_ACCELERATORS is
 			-- Create the application's accelerator
 		once
-			!! Result.make_by_id (Idr_accelerator)
+			create Result.make_by_id (Idr_accelerator)
 		end
 
 	init_application is
 			-- Load the common controls dll
 		do
-			!! common_controls_dll.make
+			create common_controls_dll.make
 		end
 
 	common_controls_dll: WEL_COMMON_CONTROLS_DLL;

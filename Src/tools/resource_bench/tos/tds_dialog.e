@@ -20,7 +20,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -35,7 +35,7 @@ feature -- Initialization
 
 	make_control_statement is
 		do
-			!! statement_list.make (10)
+			create statement_list.make (10)
 		end
 
 feature -- Access
@@ -127,7 +127,7 @@ feature -- Element change
 			a_feature_name_exists: a_feature_name.count > 0
 		do
 			if redefined_features = Void then
-				!! redefined_features.make
+				create redefined_features.make
 				redefined_features.compare_objects
 			end
 
@@ -281,10 +281,10 @@ feature -- Code generation
 			tv_item: WEL_TREE_VIEW_ITEM
 			parent: POINTER
 		do
-			!! tvis.make
+			create tvis.make
 			tvis.set_sort
 			tvis.set_parent (a_parent)
-			!! tv_item.make
+			create tv_item.make
 			tv_item.set_text ("Dialog")
 			tvis.set_tree_view_item (tv_item)
 			a_tree_view.insert_item (tvis)
@@ -314,12 +314,12 @@ feature -- Code generation
 				after
 			loop
 				if is_wel_code_on then
-					!! a_filename.make (64)
+					create a_filename.make (64)
 					a_filename.append (class_name)
 					a_filename.to_lower
 					a_filename.append (".e")
 
-					!! text_file.make_open_write (a_filename)
+					create text_file.make_open_write (a_filename)
 
 					text_file.putstring ("indexing %N%Tdescription: %"")
 					text_file.putstring (class_name)

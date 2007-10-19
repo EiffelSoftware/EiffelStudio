@@ -24,10 +24,10 @@ feature
 		local
 			filename: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! filename.make
+			create filename.make
 			put (filename)
 		end
 

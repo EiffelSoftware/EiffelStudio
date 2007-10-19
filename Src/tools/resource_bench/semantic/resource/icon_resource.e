@@ -21,7 +21,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -30,7 +30,7 @@ feature
 		local
 			icon: TDS_ICON
 		do     
-			!! icon.make
+			create icon.make
 			icon.set_id (tds.last_token)
 			tds.insert_resource (icon)
 

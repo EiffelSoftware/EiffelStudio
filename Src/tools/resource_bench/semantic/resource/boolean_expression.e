@@ -19,7 +19,7 @@ class BOOLEAN_EXPRESSION
 inherit
 	S_BOOLEAN_EXPRESSION	
 
-creation
+create
 	make
 
 indexing

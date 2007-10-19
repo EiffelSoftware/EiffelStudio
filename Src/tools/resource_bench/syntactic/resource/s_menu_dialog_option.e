@@ -24,13 +24,13 @@ feature
 		local
 			menuname: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("MENU")
 			commit
 
-			!! menuname.make
+			create menuname.make
 			put (menuname)
 		end
 

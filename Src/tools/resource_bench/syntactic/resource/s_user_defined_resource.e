@@ -26,16 +26,16 @@ feature
 			load_and_mem: LOAD_AND_MEM
 			more: MORE_USER_DEFINED_RESOURCE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! typeID.make
+			create typeID.make
 			put (typeID)
 
-			!! load_and_mem.make
+			create load_and_mem.make
 			put (load_and_mem)
 
-			!! more.make
+			create more.make
 			put (more)
 		end
 

@@ -9,7 +9,7 @@ indexing
 class
 	COUPLE
 
-creation
+create
 	make
 
 feature -- Initialization

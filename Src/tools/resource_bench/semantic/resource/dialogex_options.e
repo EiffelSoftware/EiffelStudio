@@ -13,7 +13,7 @@ class DIALOGEX_OPTIONS
 inherit
 	S_DIALOGEX_OPTIONS
 
-creation
+create
 	make
 
 indexing

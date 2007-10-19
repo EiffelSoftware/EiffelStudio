@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -38,16 +38,16 @@ feature
 			e1: E1
 			se1: SE1
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! or_op.make
+			create or_op.make
 			put (or_op)
 
-			!! e1.make
+			create e1.make
 			put (e1)
 
-			!! se1.make
+			create se1.make
 			put (se1)
 		end
 

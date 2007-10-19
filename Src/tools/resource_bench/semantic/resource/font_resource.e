@@ -21,7 +21,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -30,7 +30,7 @@ feature
 		local
 			font: TDS_FONT
 		do     
-			!! font.make
+			create font.make
 			font.set_id (tds.last_token)
 			tds.insert_resource (font)
 

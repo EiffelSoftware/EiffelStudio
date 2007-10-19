@@ -12,7 +12,7 @@ class STRING_BLOCK_INFO_LIST
 inherit
 	S_STRING_BLOCK_INFO_LIST
 
-creation
+create
 	make
 
 indexing

@@ -12,7 +12,7 @@ class DLGINIT_RESOURCE
 inherit
 	S_DLGINIT_RESOURCE
 
-creation
+create
 	make
 
 indexing

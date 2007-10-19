@@ -12,7 +12,7 @@ class CONTROL_STATEMENT_EX
 inherit
 	S_CONTROL_STATEMENT_EX
 
-creation
+create
 	make
 
 indexing

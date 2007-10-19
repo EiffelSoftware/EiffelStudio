@@ -25,16 +25,16 @@ feature
 			text: IDENTIFIER
 			more: MORE_MENUITEM_EX_STATEMENT
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("MENUITEM")
 			commit
 	
-			!! text.make
+			create text.make
 			put (text)
 
-			!! more.make
+			create more.make
 			put (more)
 		end
 

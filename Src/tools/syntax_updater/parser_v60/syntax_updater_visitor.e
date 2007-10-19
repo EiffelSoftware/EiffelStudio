@@ -26,8 +26,8 @@ feature -- AST visiting
 	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
 			-- Process `l_as'.
 		do
+			process_following_breaks
 			context.add_string ("agent ")
-			remove_following_spaces
 			if l_as.target /= Void then
 				safe_process (l_as.lparan_symbol)
 				l_as.target.process (Current)
@@ -164,8 +164,13 @@ feature {NONE} -- Access
 						until
 							l_done
 						loop
-							if not l_string.is_empty and then l_string.item (1).is_space then
-								l_string.remove (1)
+							if not l_string.is_empty then
+								inspect
+									l_string.item (1)
+								when ' ', '%T' then l_string.remove (1)
+								else
+									l_done := True
+								end
 							else
 								l_done := True
 							end
@@ -176,6 +181,34 @@ feature {NONE} -- Access
 				end
 			end
 		end
+
+	process_following_breaks is
+			-- Process all breaks until a non-break is encountered.
+		local
+			i: INTEGER
+			stop: BOOLEAN
+			l_break: BREAK_AS
+		do
+			from
+				i := last_index + 1
+			until
+				stop
+			loop
+				if match_list.valid_index (i) then
+					l_break ?= match_list.i_th (i)
+					if l_break /= Void then
+						l_break.process (Current)
+					else
+						stop := True
+					end
+				else
+					stop := True
+				end
+				i := i + 1
+			end
+			last_index := i
+		end
+
 
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

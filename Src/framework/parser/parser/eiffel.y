@@ -1345,7 +1345,7 @@ Instruction_impl: Creation
 					-- but this complicates the grammar.
 				if has_type then
 					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
-				else
+				elseif $1 /= Void then
 					$$ := new_call_instruction_from_expression ($1)
 				end
 			}

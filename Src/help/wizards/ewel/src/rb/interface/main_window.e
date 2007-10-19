@@ -519,7 +519,7 @@ feature {NONE} -- Implementation
 			!! temp_file.make_open_write (temp_filename)
 
 			!! preprocessor.make (temp_file)
-			preprocessor.convert (filename)
+			preprocessor.convert_file (filename)
 			temp_file.close
 
 			set_define_table (preprocessor.define_table)

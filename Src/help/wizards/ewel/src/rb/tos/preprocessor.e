@@ -56,7 +56,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	convert (input_file: STRING) is
+	convert_file (input_file: STRING) is
 			-- Scans input_file for "#define id integer" and puts them in output_file
 		require
 			input_file_not_Void: input_file /= Void
@@ -225,7 +225,7 @@ feature -- Implementation
 					if name.item (1) = '%"' then
 						if file_exists (make_path (name)) then
 							actual_path.extend (actual_path.item)
-							convert (make_path (name))
+							convert_file (make_path (name))
 							l_of_include_file.extend (name)
 						else
 							!! error_message.make (50)
@@ -238,7 +238,7 @@ feature -- Implementation
 				-- Doesn't include absolute header.
 				--	else
 				--		actual_path.extend (include_path)
-				--		convert (make_path (name))
+				--		convert_file (make_path (name))
 					end
 
 				end

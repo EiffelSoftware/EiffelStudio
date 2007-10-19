@@ -15,7 +15,7 @@ feature -- Access
 	line_pragma: BREAK_AS
 			-- Associated line if any
 
-feature {EIFFEL_PARSER} -- Line pragma
+feature {EIFFEL_PARSER_SKELETON} -- Line pragma
 
 	set_line_pragma (a_line_pragma: like line_pragma) is
 			-- Set `line_pragma' with `a_line_pragma'.

@@ -2216,6 +2216,140 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_object_test_b (a_node: OBJECT_TEST_B) is
+			-- Process `a_node'.
+		local
+			l_target_type, l_source_type: TYPE_I
+			l_source_class_type: CL_TYPE_I
+			l_target_class_type: CL_TYPE_I
+			success_label, failure_label: IL_LABEL
+			basic_failure_label: IL_LABEL
+		do
+				-- Get types
+			l_target_type := a_node.target.type
+			if l_target_type.is_formal then
+				l_target_type := context.creation_type (l_target_type)
+			end
+			l_source_type := context.real_type (a_node.expression.type)
+			check
+				target_type_not_void: l_target_type /= Void
+				source_type_not_void: l_source_type /= Void
+			end
+
+				-- FIXME: At the moment we don't know how to
+				-- find out the real type of the generic
+				-- parameter, so we cheat.
+			l_target_type := context.real_type (l_target_type)
+
+				-- Generate expression byte code
+			is_object_load_required := True
+			a_node.expression.process (Current)
+			is_object_load_required := False
+
+			l_target_class_type ?= l_target_type
+			if
+				l_target_class_type /= Void and then
+				l_target_class_type.base_class.is_typed_pointer and then not
+				l_source_type.same_as (l_target_type)
+			then
+					-- Objcet test for TYPED_POINTER fails
+					-- if the source is not of the same type as the target.
+					-- Remove expression value because it is not used.
+				il_generator.pop
+					-- Types do not conform.
+				il_generator.put_boolean_constant (False)
+			elseif l_source_type.is_expanded and then l_target_type.is_expanded then
+					-- NOOP if classes are different or normal assignment otherwise.
+				l_source_class_type ?= l_source_type
+				if
+					l_target_class_type /= Void and then l_source_class_type /= Void and then
+					l_target_class_type.class_id = l_source_class_type.class_id
+				then
+						-- Do normal assignment.
+					generate_reattachment (a_node.expression, l_source_type, l_target_type)
+						-- Generate assignment header depending of the type
+						-- of the target (local, attribute or result).
+					generate_il_assignment (a_node.target, l_source_type)
+						-- Types conform.
+					il_generator.put_boolean_constant (True)
+				else
+						-- Remove expression value because it is not used.
+					il_generator.pop
+						-- Types do not conform.
+					il_generator.put_boolean_constant (False)
+				end
+			else
+				if l_source_type.is_expanded then
+					l_source_class_type ?= l_source_type
+					if l_source_class_type /= Void and then l_source_class_type.base_class.is_typed_pointer then
+							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
+						l_source_type := system.pointer_class.compiled_class.actual_type.type_i
+					end
+					generate_il_metamorphose (l_source_type, l_target_type, True)
+				end
+
+				if l_target_type.is_expanded then
+						-- Conditional branch is used to avoid reattachment
+						-- if the types do not conform.
+					il_generator.duplicate_top
+				end
+
+					-- Generate Test on type
+				il_generator.generate_is_instance_of (l_target_type)
+
+				if l_target_type.is_expanded then
+
+					failure_label := il_generator.create_label
+					success_label := il_generator.create_label
+					il_generator.branch_on_true (success_label)
+
+						-- Assignment attempt failed.
+
+					l_target_class_type ?= l_target_type
+					if l_target_class_type /= Void and then l_target_class_type.is_basic and then l_target_class_type.meta_generic = Void then
+							-- Check native .NET type.
+							-- Generate Test on type
+						il_generator.generate_is_instance_of_external (l_target_class_type)
+						il_generator.duplicate_top
+						basic_failure_label := il_generator.create_label
+						il_generator.branch_on_false (basic_failure_label)
+							-- Generate reattachment.
+						il_generator.generate_external_unmetamorphose (l_target_class_type)
+							-- Generate assignment header depending of the type
+							-- of the target (local, attribute or result).
+						generate_il_assignment (a_node.target, l_source_type)
+							-- Types conform.
+						il_generator.put_boolean_constant (True)
+							-- Terminate reattachment.
+						il_generator.branch_to (failure_label)
+						il_generator.mark_label (basic_failure_label)
+					end
+
+						-- Remove duplicate obtained from call to `isinst'.
+					il_generator.pop
+						-- Types do not conform.
+					il_generator.put_boolean_constant (False)
+
+					il_generator.branch_to (failure_label)
+
+					il_generator.mark_label (success_label)
+				end
+
+					-- Keep result of type test as a boolean value.
+				il_generator.duplicate_top
+
+				generate_reattachment (a_node.expression, l_source_type, l_target_type)
+
+					-- Generate assignment header depending of the type
+					-- of the target (local, attribute or result).
+				generate_il_assignment (a_node.target, l_source_type)
+
+				if failure_label /= Void then
+					il_generator.mark_label (failure_label)
+				end
+			end
+		end
+
 	process_once_string_b (a_node: ONCE_STRING_B) is
 			-- Process `a_node'.
 		do

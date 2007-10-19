@@ -1206,6 +1206,68 @@ feature {NONE} -- Visitors
 			a_node.message.process (Current)
 		end
 
+	process_object_test_b (a_node: OBJECT_TEST_B) is
+			-- Process `a_node'.
+		local
+			l_source_type: TYPE_I
+			l_target_type: TYPE_I
+			l_source_class_type: CL_TYPE_I
+			l_target_class_type: CL_TYPE_I
+		do
+				-- Generate expression byte code
+			l_source_type := context.real_type (a_node.expression.type)
+			l_target_type := context.creation_type (a_node.target.type)
+
+			make_expression_byte_code_for_type (a_node.expression, l_target_type)
+
+			if l_target_type.is_none then
+					-- Remove expression value because it is not used.
+				ba.append (bc_pop)
+				ba.append_uint32_integer (1)
+					-- Types do not conform or expression is not attached.
+				ba.append (bc_bool)
+				ba.append_boolean (False)
+			elseif l_target_type.is_expanded and then l_source_type.is_expanded then
+					-- NOOP if classes are different or normal assignment otherwise.
+				l_source_class_type ?= l_source_type
+				l_target_class_type ?= l_target_type
+				if
+					l_target_class_type /= Void and then l_source_class_type /= Void and then
+					l_target_class_type.class_id = l_source_class_type.class_id
+				then
+						-- Do normal assignment.
+					if l_target_type.is_bit then
+						ba.append (a_node.target.bit_assign_code)
+					elseif l_target_type.is_basic then
+						ba.append (a_node.target.assign_code)
+					else
+						ba.append (a_node.target.expanded_assign_code)
+					end
+					melted_assignment_generator.generate_assignment (ba, a_node.target)
+						-- Types conform.
+					ba.append (bc_bool)
+					ba.append_boolean (True)
+				else
+						-- Remove expression value because it is not used.
+					ba.append (bc_pop)
+					ba.append_uint32_integer (1)
+						-- Types do not conform.
+					ba.append (bc_bool)
+					ba.append_boolean (False)
+				end
+			else
+					-- Target is a reference
+				ba.append (a_node.target.reverse_code)
+				melted_assignment_generator.generate_assignment (ba, a_node.target)
+					-- Generate type of target
+				a_node.info.make_byte_code (ba)
+					-- Check if the target is attached.
+				process_local_b (a_node.target)
+				ba.append (bc_void)
+				ba.append (bc_ne)
+			end
+		end
+
 	process_once_string_b (a_node: ONCE_STRING_B) is
 			-- Process `a_node'.
 		do
@@ -1573,7 +1635,7 @@ feature {NONE} -- Implementation
 			elseif l_expression_type.is_none then
 					-- Reattachment of void to expanded.
 				ba.append (Bc_exp_excep)
-			elseif not a_target_type.is_basic and then l_expression_type.is_expanded then
+			elseif not a_target_type.is_basic and then l_expression_type.is_true_expanded then
 					-- Source and target are expanded:
 					-- clone
 				ba.append (Bc_clone)

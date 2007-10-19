@@ -125,11 +125,11 @@ feature -- AST visiting
 					is_updated := True
 					process_leading_leaves (l_as.create_creation_keyword.index)
 					last_index := l_as.create_creation_keyword.index
+					context.add_string ("create")
 				else
 					l_as.create_creation_keyword.process (Current)
 				end
 			end
-			context.add_string ("create")
 			safe_process (l_as.clients)
 			safe_process (l_as.feature_list)
 		end

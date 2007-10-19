@@ -225,7 +225,7 @@ feature -- Status Setting
 			create l_format
 			l_format.set_font (a_font)
 			modify_region (1, text.count, l_format, create {EV_CHARACTER_FORMAT_RANGE_INFORMATION}.make_with_flags 
-				(feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family))
+				({EV_CHARACTER_FORMAT_CONSTANTS}.font_family))
 		end
 
 	tag_selection (a_tag: STRING) is

@@ -55,7 +55,7 @@ feature -- Path Locations
 			l_reg_key_ptr: POINTER
 		do
 			create l_registry
-			l_reg_key_ptr := l_registry.open_key (feature {WEL_HKEY}.hkey_local_machine, "Software\Microsoft\Windows\CurrentVersion", feature {WEL_REGISTRY_ACCESS_MODE}.key_query_value)
+			l_reg_key_ptr := l_registry.open_key ({WEL_HKEY}.hkey_local_machine, "Software\Microsoft\Windows\CurrentVersion", {WEL_REGISTRY_ACCESS_MODE}.key_query_value)
 			l_key_value := l_registry.key_value (l_reg_key_ptr, "ProgramFilesDir")
 			if l_key_value /= void then
 				create Result.make_from_string (l_key_value.string_value)

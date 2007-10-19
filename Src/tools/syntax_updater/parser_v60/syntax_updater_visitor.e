@@ -15,17 +15,33 @@ inherit
 			process_bang_creation_expr_as,
 			process_create_as,
 			process_static_access_as,
-			context
+			context,
+			reset
 		end
 
 create
 	make_with_default_context
+
+feature -- Status report
+
+	is_updated: BOOLEAN
+			-- Did current processing changed the AST?
+
+feature -- Reset
+
+	reset is
+			-- Reset `Current'.
+		do
+			is_updated := False
+			Precursor {AST_ROUNDTRIP_PRINTER_VISITOR}
+		end
 
 feature -- AST visiting
 
 	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
 			-- Process `l_as'.
 		do
+			is_updated := True
 			process_following_breaks
 			context.add_string ("agent ")
 			if l_as.target /= Void then
@@ -47,6 +63,7 @@ feature -- AST visiting
 	process_bang_creation_as (l_as: BANG_CREATION_AS) is
 			-- Process `l_as'.
 		do
+			is_updated := True
 			if l_as.lbang_symbol /= Void then
 					-- Process the previous white spaces and ignore the !
 				process_leading_leaves (l_as.lbang_symbol.index)
@@ -77,6 +94,7 @@ feature -- AST visiting
 	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
 			-- Process `l_as'.
 		do
+			is_updated := True
 			if l_as.lbang_symbol /= Void then
 					-- Process the previous white spaces and ignore the !
 				process_leading_leaves (l_as.lbang_symbol.index)
@@ -98,10 +116,18 @@ feature -- AST visiting
 		end
 
 	process_create_as (l_as: CREATE_AS) is
+		local
+			l_str: STRING
 		do
 			if l_as.create_creation_keyword /= Void then
-				process_leading_leaves (l_as.create_creation_keyword.index)
-				last_index := l_as.create_creation_keyword.index
+				l_str := l_as.create_creation_keyword.literal_text (match_list)
+				if l_str.is_case_insensitive_equal ("creation") then
+					is_updated := True
+					process_leading_leaves (l_as.create_creation_keyword.index)
+					last_index := l_as.create_creation_keyword.index
+				else
+					l_as.create_creation_keyword.process (Current)
+				end
 			end
 			context.add_string ("create")
 			safe_process (l_as.clients)
@@ -114,6 +140,7 @@ feature -- AST visiting
 			if l_as.feature_keyword /= Void then
 					-- Process the previous white spaces, ignore `feature' and remove
 					-- remaining spaces.
+				is_updated := True
 				process_leading_leaves (l_as.feature_keyword.index)
 				last_index := l_as.feature_keyword.index
 				remove_following_spaces
@@ -124,7 +151,6 @@ feature -- AST visiting
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_parameters)
 		end
-
 
 feature {NONE} -- Access
 

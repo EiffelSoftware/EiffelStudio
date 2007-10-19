@@ -27,7 +27,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature
@@ -247,58 +247,58 @@ feature {NONE}
 			control: TDS_CONTROL_STATEMENT
 		do
 			if (type.is_equal ("AUTO3STATE")) then
-				!TDS_AUTO3STATE_STATEMENT! control.make
+				create {TDS_AUTO3STATE_STATEMENT} control.make
 
 			elseif (type.is_equal ("AUTOCHECKBOX")) then
-				!TDS_AUTOCHECKBOX_STATEMENT! control.make
+				create {TDS_AUTOCHECKBOX_STATEMENT} control.make
 
 			elseif (type.is_equal ("AUTORADIOBUTTON")) then
-				!TDS_AUTORADIOBUTTON_STATEMENT! control.make
+				create {TDS_AUTORADIOBUTTON_STATEMENT} control.make
 
 			elseif (type.is_equal ("CHECKBOX")) then
-				!TDS_CHECKBOX_STATEMENT! control.make
+				create {TDS_CHECKBOX_STATEMENT} control.make
 
 --			elseif (type.is_equal ("COMBOBOX")) then
 --				!TDS_COMBOBOX_STATEMENT! control.make
 
 			elseif (type.is_equal ("CTEXT")) then
-				!TDS_CTEXT_STATEMENT! control.make
+				create {TDS_CTEXT_STATEMENT} control.make
 
 			elseif (type.is_equal ("DEFPUSHBUTTON")) then
-				!TDS_DEFPUSHBUTTON_STATEMENT! control.make
+				create {TDS_DEFPUSHBUTTON_STATEMENT} control.make
 
 --			elseif (type.is_equal ("EDITTEXT")) then
 --				!TDS_EDITTEXT_STATEMENT! control.make
 
 			elseif (type.is_equal ("GROUPBOX")) then
-				!TDS_GROUPBOX_STATEMENT! control.make
+				create {TDS_GROUPBOX_STATEMENT} control.make
 
 			elseif (type.is_equal ("ICON")) then
-				!TDS_ICON_STATEMENT! control.make
+				create {TDS_ICON_STATEMENT} control.make
 
 --			elseif (type.is_equal ("LISTBOX")) then
 --				!TDS_LISTBOX_STATEMENT! control.make
 
 			elseif (type.is_equal ("LTEXT")) then
-				!TDS_LTEXT_STATEMENT! control.make
+				create {TDS_LTEXT_STATEMENT} control.make
 
 			elseif (type.is_equal ("PUSHBOX")) then
-				!TDS_PUSHBOX_STATEMENT! control.make
+				create {TDS_PUSHBOX_STATEMENT} control.make
 
 			elseif (type.is_equal ("PUSHBUTTON")) then
-				!TDS_PUSHBUTTON_STATEMENT! control.make
+				create {TDS_PUSHBUTTON_STATEMENT} control.make
 
 			elseif (type.is_equal ("RADIOBUTTON")) then
-				!TDS_RADIOBUTTON_STATEMENT! control.make
+				create {TDS_RADIOBUTTON_STATEMENT} control.make
 
 			elseif (type.is_equal ("RTEXT")) then
-				!TDS_RTEXT_STATEMENT! control.make
+				create {TDS_RTEXT_STATEMENT} control.make
 
 			elseif (type.is_equal ("SCROLLBAR")) then
-				!TDS_SCROLLBAR_STATEMENT! control.make
+				create {TDS_SCROLLBAR_STATEMENT} control.make
 
 			elseif (type.is_equal ("STATE3")) then
-				!TDS_3STATE_STATEMENT! control.make
+				create {TDS_3STATE_STATEMENT} control.make
 
 			end
 				

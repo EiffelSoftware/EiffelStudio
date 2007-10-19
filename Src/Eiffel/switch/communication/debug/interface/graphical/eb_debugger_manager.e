@@ -1507,8 +1507,15 @@ feature -- Debugging events
 
 	launch_stone (st: STONE) is
 			-- Set `st' in the debugging window as the new stone.
+		local
+			feat_tool: ES_FEATURES_RELATION_TOOL_PANEL
 		do
 			record_objects_grids_layout
+			feat_tool := debugging_window.tools.features_relation_tool
+			if feat_tool /= Void then
+				feat_tool.pop_feature_flat
+				feat_tool.show
+			end
 			debugging_window.tools.launch_stone (st)
 		end
 

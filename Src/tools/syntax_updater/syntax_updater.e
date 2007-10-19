@@ -17,8 +17,6 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		local
-			l_mem: MEMORY
 		do
 
 			create factory

@@ -7,6 +7,8 @@ class
 inherit
 	ARGUMENTS
 
+	STRING_HANDLER
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
 create
@@ -15,13 +17,21 @@ create
 feature {NONE} -- Initialization
 
 	make is
+		local
+			l_mem: MEMORY
 		do
+
 			create factory
 			create parser.make_with_factory (factory)
+			create fast_factory
+			create fast_parser.make_with_factory (fast_factory)
 				-- Enabling `il_parsing' only means accepting more, not accepting less
 				-- which is important to allow for such a syntax converter
 			parser.set_il_parser
+			fast_parser.set_il_parser
 			create visitor.make_with_default_context
+
+			create string_buffer.make (102400)
 			execute
 		end
 
@@ -96,27 +106,40 @@ feature {NONE} -- Implementation
 		local
 			file: KL_BINARY_INPUT_FILE
 			outfile: KL_BINARY_OUTPUT_FILE
-			count: INTEGER
+			count, nb: INTEGER
 		do
 			if equal (file_name.substring (file_name.count - 1, file_name.count), ".e") then
 				create file.make (file_name)
 				count := file.count
 				file.open_read
 				if file.is_open_read then
-					file.read_string (count)
-					parser.parse_from_string (file.last_string)
+					if string_buffer.count < count then
+						string_buffer.resize (count)
+					end
+					string_buffer.set_count (count)
+					nb := file.read_to_string (string_buffer, 1, count)
+					string_buffer.set_count (nb)
 					file.close
-
-					if parser.error_handler.has_error then
+						-- Fast parsing using our `fast_factory' to detect old constructs.
+					fast_factory.reset
+					fast_parser.parse_from_string (string_buffer)
+					if fast_parser.error_handler.has_error then
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
-						parser.error_handler.wipe_out
-						io.error.put_string ("Syntax error in file: " + file_name)
-						io.error.put_new_line
-					else
+							parser.error_handler.wipe_out
+							io.error.put_string ("Syntax error in file: " + file_name)
+							io.error.put_new_line
+					elseif fast_factory.has_obsolete_constructs then
+							-- Slow parsing to rewrite the class using the new constructs.
+						parser.parse_from_string (string_buffer)
+						check parser.error_handler.has_error end
+
 						visitor.setup (parser.root_node, parser.match_list, True, True)
-						visitor.reset
-						visitor.process_ast_node (parser.root_node)
+							-- Free some memory from the parser that we don't need.
+						parser.reset
+						parser.reset_nodes
+							-- Perform the visiting
+						visitor.process_ast_node (visitor.parsed_class)
 						if visitor.is_updated then
 							create outfile.make (file_name)
 							outfile.open_write
@@ -128,6 +151,8 @@ feature {NONE} -- Implementation
 								io.error.put_new_line
 							end
 						end
+							-- Free our memory.
+						visitor.reset
 					end
 				else
 					io.error.put_string ("Couldn't open: " + file_name)
@@ -139,13 +164,21 @@ feature {NONE} -- Implementation
 feature {NONE}
 
 	parser: EIFFEL_PARSER
+	fast_parser: EIFFEL_PARSER
 	factory: AST_ROUNDTRIP_FACTORY
+	fast_factory: SYNTAX_UPDATER_FACTORY
 	visitor: SYNTAX_UPDATER_VISITOR
 			-- Factories and visitors being used for parsing.
 
+	string_buffer: STRING
+			-- Buffer for reading Eiffel classes.
+
 invariant
 	parser_not_void: parser /= Void
+	fast_parser_not_void: parser /= Void
 	factory_not_void: factory /= Void
+	fast_factory_not_void: fast_factory /= Void
 	visitor_not_void: visitor /= Void
+	string_buffer_not_void: string_buffer /= Void
 
 end

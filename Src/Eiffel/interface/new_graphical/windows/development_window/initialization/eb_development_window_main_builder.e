@@ -1013,13 +1013,13 @@ feature{NONE} -- Implementation
 			create l_undo_accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			develop_window.set_undo_accelerator (l_undo_accelerator)
 
-			if develop_window.has_case then
+			if develop_window.has_diagram then
 				l_undo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.undo_cmd).on_ctrl_z)
 			end
 
 			l_shortcut := develop_window.preferences.misc_shortcut_data.redo_shortcut
 			create l_redo_accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
-			if develop_window.has_case then
+			if develop_window.has_diagram then
 				l_redo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.redo_cmd).on_ctrl_y)
 			end
 			develop_window.window.accelerators.extend (l_undo_accelerator)

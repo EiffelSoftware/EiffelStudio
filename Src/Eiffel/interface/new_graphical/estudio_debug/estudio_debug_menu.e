@@ -91,10 +91,14 @@ feature {NONE} -- Actions
 			create cbut.make_with_text_and_action ("Close", agent l_dlg.destroy)
 			vb.extend (tf)
 			vb.extend (but)
+			vb.extend (cbut)
 			vb.disable_item_expand (tf)
 			vb.disable_item_expand (but)
+			vb.disable_item_expand (cbut)
+
 			l_dlg.extend (vb)
 			l_dlg.set_default_cancel_button (cbut)
+			cbut.hide
 			l_dlg.set_width (200)
 			paste_new_uuid (tf)
 			if window /= Void then

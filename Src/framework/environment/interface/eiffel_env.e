@@ -1022,7 +1022,7 @@ feature -- IL environment
 
 feature -- Version limitation
 
-	has_case: BOOLEAN is True
+	has_diagram: BOOLEAN is True
 			-- Does this version have the diagram tool?
 
 	has_metrics: BOOLEAN is True

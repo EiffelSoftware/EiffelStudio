@@ -99,7 +99,7 @@ inherit
 	EC_EIFFEL_LAYOUT
 		export
 			{EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, ES_DIAGRAM_TOOL_PANEL}
-				 has_case, has_metrics, has_dll_generation, has_profiler, has_documentation_generation, has_xmi_generation
+				 has_diagram, has_metrics, has_dll_generation, has_profiler, has_documentation_generation, has_xmi_generation
 			{EB_DEBUGGER_MANAGER} Docking_standard_layout_path, standard_tools_debug_layout_name
 			{NONE} All
 		end
@@ -349,7 +349,7 @@ feature -- Update
 --			end
 --			tools.class_tool.invalidate
 --			tools.features_relation_tool.invalidate
-			if has_case then
+			if has_diagram then
 				tools.diagram_tool.synchronize
 			end
 

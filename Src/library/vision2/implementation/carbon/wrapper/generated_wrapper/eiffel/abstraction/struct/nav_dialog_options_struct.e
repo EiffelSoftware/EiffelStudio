@@ -11,7 +11,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make_new_unshared,
 	make_new_shared,

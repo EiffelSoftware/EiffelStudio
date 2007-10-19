@@ -165,7 +165,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			create Result
 		end
 
-	
+
 
 feature -- Access common.
 

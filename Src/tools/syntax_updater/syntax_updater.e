@@ -18,6 +18,9 @@ feature {NONE} -- Initialization
 		do
 			create factory
 			create parser.make_with_factory (factory)
+				-- Enabling `il_parsing' only means accepting more, not accepting less
+				-- which is important to allow for such a syntax converter
+			parser.set_il_parser
 			create visitor.make_with_default_context
 			execute
 		end

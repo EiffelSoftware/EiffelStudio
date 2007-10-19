@@ -34,6 +34,8 @@ inherit
 			new_once_string_keyword_as,
 			new_integer_as,
 			new_integer_hexa_as,
+			new_integer_octal_as,
+			new_integer_binary_as,
 			new_real_as,
 			new_filled_bit_id_as,
 			new_string_as,
@@ -143,6 +145,24 @@ feature -- Leaf Nodes
 		end
 
 	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
+			-- New INTEGER_AS node
+		do
+			Result := Precursor (t, s, v, buf, s_as, l, c, p, n)
+			if Result /= Void then
+				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+			end
+		end
+
+	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
+			-- New INTEGER_AS node
+		do
+			Result := Precursor (t, s, v, buf, s_as, l, c, p, n)
+			if Result /= Void then
+				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
+			end
+		end
+
+	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 			Result := Precursor (t, s, v, buf, s_as, l, c, p, n)

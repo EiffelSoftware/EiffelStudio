@@ -102,7 +102,11 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := body.last_token (a_list)
+			if internal_operands /= Void then
+				Result := internal_operands.last_token (a_list)
+			else
+				Result := body.last_token (a_list)
+			end
 		end
 
 invariant

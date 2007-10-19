@@ -47,6 +47,8 @@ inherit
 			new_prefix_keyword_as,
 			new_integer_as,
 			new_integer_hexa_as,
+			new_integer_octal_as,
+			new_integer_binary_as,
 			new_real_as,
 			new_filled_bit_id_as,
 			new_string_as,
@@ -171,6 +173,30 @@ feature -- Leaf nodes
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
+				Result.set_position (l, c, p, n)
+				Result.set_sign_symbol (s_as)
+				increase_match_list_count
+				Result.set_index (match_list_count)
+			end
+		end
+
+	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
+			-- New INTEGER_AS node
+		do
+			if v /= Void then
+				create Result.make_from_octal_string (t, s, v)
+				Result.set_position (l, c, p, n)
+				Result.set_sign_symbol (s_as)
+				increase_match_list_count
+				Result.set_index (match_list_count)
+			end
+		end
+
+	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
+			-- New INTEGER_AS node
+		do
+			if v /= Void then
+				create Result.make_from_binary_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
 				increase_match_list_count
@@ -363,11 +389,14 @@ feature -- Access
 			end
 			if token_value.is_number_sequence then
 				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
-			elseif
-				token_value.item (1) = '0' and then
-				token_value.item (2).lower = 'x'
-			then
-				Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+			elseif token_value.count >= 3 and then token_value.item (1) = '0' then
+				if token_value.item (2).lower = 'x' then
+					Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				elseif token_value.item (2).lower = 'c' then
+					Result := new_integer_octal_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				elseif token_value.item (2).lower = 'b' then
+					Result := new_integer_binary_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				end
 			end
 		end
 

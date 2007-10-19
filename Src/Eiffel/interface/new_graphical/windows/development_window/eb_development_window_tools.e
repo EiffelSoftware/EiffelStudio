@@ -245,8 +245,6 @@ feature -- Commands
 			-- Orignal version from EB_CONTEXT_TOOL set_stone.
 		do
 			develop_window.eb_debugger_manager.set_stone (a_stone)
-			features_relation_tool.pop_feature_flat
-			features_relation_tool.show
 			features_relation_tool.set_stone (a_stone)
 			class_tool.set_stone (a_stone)
 			dependency_tool.set_stone (a_stone)

@@ -139,14 +139,17 @@ feature {NONE} -- Local scopes
 
 feature {AST_FEATURE_CHECKER_GENERATOR} -- Local scopes
 
-	add_object_test_local (t: TYPE_A; id: INTEGER)
-			-- Add a new object test local of type `t' with name `id'.
-		local
-			l: LOCAL_INFO
+	next_object_test_local_position: INTEGER
+			-- Position of a next object test local
 		do
-			create l
-			l.set_type (t)
-			l.set_position (locals.count + object_test_locals.count + 1)
+			Result := locals.count + object_test_locals.count + 1
+		end
+
+	add_object_test_local (l: LOCAL_INFO; id: INTEGER)
+			-- Add a new object test local of type `t' with name `id'.
+		require
+			l_attached: l /= Void
+		do
 			object_test_locals.put (l, id)
 			used_object_test_local_names.put (id)
 		end

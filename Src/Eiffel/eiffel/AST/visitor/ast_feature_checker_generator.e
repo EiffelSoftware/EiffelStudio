@@ -4293,8 +4293,9 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			local_name_id: INTEGER
 			local_type: TYPE_A
+			local_info: LOCAL_INFO
+			local_b: LOCAL_B
 			expr: EXPR_B
-			expression_type: TYPE_A
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -4325,7 +4326,8 @@ feature -- Implementation
 				if not local_type.is_attached then
 					error_handler.insert_error (create {VUOT2}.make (context, local_name_id, local_type, l_as.name))
 				end
-				context.add_object_test_local (local_type, local_name_id)
+
+				local_type.check_for_obsolete_class (context.current_class)
 
 				if current_feature.written_in = context.current_class.class_id then
 					Instantiator.dispatch (local_type, context.current_class)
@@ -4336,25 +4338,28 @@ feature -- Implementation
 					context.supplier_ids.add_supplier (local_type.associated_class)
 				end
 
-				local_type.check_for_obsolete_class (context.current_class)
+				create local_info
+				local_info.set_type (local_type)
+				local_info.set_position (context.next_object_test_local_position)
+				context.add_object_test_local (local_info, local_name_id)
+				local_info.set_is_used (True)
 
 					-- Type check expression
 				l_as.expression.process (Current)
-				expression_type := last_type
-				if expression_type /= Void then
-					if l_needs_byte_node then
-						expr ?= last_byte_node
-					end
-					if l_needs_byte_node then
-						create {BOOL_CONST_B} last_byte_node.make (False)
-					end
-				else
-					if l_needs_byte_node then
-						create {BOOL_CONST_B} last_byte_node.make (False)
-					end
+				if l_needs_byte_node and then last_type /= Void then
+					expr ?= last_byte_node
+					create local_b
+					local_b.set_position (local_info.position)
+					create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, local_type.create_info)
 				end
-				last_type := boolean_type
 			end
+
+			if l_needs_byte_node and then last_type = Void then
+					-- Generate a stub.
+				create {BOOL_CONST_B} last_byte_node.make (False)
+			end
+
+			last_type := boolean_type
 		end
 
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is

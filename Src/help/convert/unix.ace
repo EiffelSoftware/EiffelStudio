@@ -2,7 +2,7 @@ system
 	help 
 
 root
-	convert(converter):"make" 
+	fm_convert(converter):"make" 
 
 default
 	assertion(all);

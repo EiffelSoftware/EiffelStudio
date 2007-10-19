@@ -33,14 +33,7 @@ feature -- Operation
 
 	clear is
 		do
-			from
-
-			until
-				ctxt.is_empty
-			loop
-				ctxt.start
-				ctxt.remove
-			end
+			ctxt.wipe_out
 			byte_count := 0
 		ensure then
 			ctxt_is_empty: ctxt.is_empty

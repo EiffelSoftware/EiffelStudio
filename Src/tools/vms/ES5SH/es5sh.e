@@ -56,7 +56,7 @@ class ES5SH
 inherit
 	ES5SH_COMMON
 
-creation
+create
 	make
 		
 feature -- Initialization
@@ -1906,7 +1906,7 @@ feature -- Produce output files
 				create l_objects.make_ignoring_repeats (value_macro_OBJECTS, space_character)
 			end
 			-- for each file in list, append to big_file, skipping #line directives
-			l_objects.do_all (~append_source_to_big_file_agent (?, l_big_file, l_path, l_extension))
+			l_objects.do_all (agent append_source_to_big_file_agent (?, l_big_file, l_path, l_extension))
 			l_big_file.close
 		end; -- produce_concatenated_source_file
 

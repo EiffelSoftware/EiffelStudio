@@ -11,7 +11,7 @@ class
 inherit
 	RANDOM
 
-creation
+create
 	make, make_default
 
 feature {NONE} -- Initialization

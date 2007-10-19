@@ -18,7 +18,7 @@ inherit
 			method_name as routine_name
 		end
 
-creation
+create
 	make, make_from_command
 
 feature -- Creation

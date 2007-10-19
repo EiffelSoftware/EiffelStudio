@@ -20,7 +20,7 @@ inherit
 	
 	WINDOWS
 
-creation
+create
 
 	make
 

@@ -13,7 +13,7 @@ inherit
 
 	EV_TITLED_WINDOW
 
-creation
+create
 
 	make
 

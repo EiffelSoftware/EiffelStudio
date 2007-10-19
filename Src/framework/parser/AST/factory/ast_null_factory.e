@@ -47,7 +47,7 @@ inherit
 			new_create_creation_expr_as,new_bang_creation_expr_as,
 			new_bracket_as,
 			new_assigner_mark_as, new_typed_char_as,
-			new_integer_value, new_real_value,
+			new_character_value, new_integer_value, new_real_value,
 			set_buffer, append_text_to_buffer, append_string_to_buffer,
 			create_match_list,
 			reverse_extend_separator, reverse_extend_identifier,
@@ -176,8 +176,11 @@ feature -- Roundtrip: New AST node
 
 feature -- Roundtrip
 
+	new_character_value (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer, a_text: STRING): CHAR_AS is
+		do
+		end
+
 	new_integer_value (a_psr: EIFFEL_PARSER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS is
-			--
 		do
 		end
 

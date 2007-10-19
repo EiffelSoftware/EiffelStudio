@@ -40,8 +40,8 @@ feature -- Roundtrip
 	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
 			-- Process `l_as'.
 		do
-			process_agent_routine_creation_as (l_as)
 			safe_process (l_as.body)
+			safe_process (l_as.operands)
 		end
 
 	process_create_creation_as (l_as: CREATE_CREATION_AS) is
@@ -332,6 +332,7 @@ feature {NONE} -- Implementation
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
 		do
 			safe_process (l_as.target)
+			safe_process (l_as.feature_name)
 			safe_process (l_as.operands)
 		end
 

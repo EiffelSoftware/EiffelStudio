@@ -298,14 +298,8 @@ feature
 			-- Process `l_as'.
 		do
 			safe_process (l_as.agent_keyword)
-			if l_as.target /= Void then
-				safe_process (l_as.lparan_symbol)
-				l_as.target.process (Current)
-				safe_process (l_as.rparan_symbol)
-				safe_process (l_as.dot_symbol)
-			end
-			safe_process (l_as.internal_operands)
 			safe_process (l_as.body)
+			safe_process (l_as.internal_operands)
 		end
 
 	process_create_creation_as (l_as: CREATE_CREATION_AS) is

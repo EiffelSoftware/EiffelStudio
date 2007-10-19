@@ -66,14 +66,23 @@ feature -- Initialization
 			print (~ io)
 			print (io~print)
 			print (io ~ print)
+			print ( io ~
+				print)
 			print (io -- TOTO
 			~ -- TUTU
 			--TATA
 			print)
 			print ((io)~print)
 			print ((io) ~ print)
+			print ( ( io ) ~print)
+			print ( -- TOTO
+				(io) --TUTU
+				~ print)
 			print (io~print ("FDSF"))
 			print (io ~ print ("FDSF"))
+
+			print (equal (toto,
+				~print))
 
 			!!a
 			!!a.default_create

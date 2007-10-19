@@ -3,7 +3,7 @@ indexing
 	author:"Vincent Brendel"
 
 class
-	CONVERT
+	FM_CONVERT
 
 inherit
 	ARGUMENTS
@@ -93,4 +93,4 @@ feature -- Access
 	target_file: FILE_NAME
 			-- The XML-help-file to be generated.
 
-end -- CONVERT
+end

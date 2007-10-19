@@ -17,7 +17,7 @@ inherit
 			proceed_with_current_info
 		end
 
-creation
+create
 	make
 
 feature -- basic Operations
@@ -37,11 +37,11 @@ feature -- basic Operations
 			Create location.make("Sources Location",wizard_information.location,10,30,Current)
 			Create project_location.make("Project Location",wizard_information.project_location,10,30,Current)
 			Create browse1_b.make_with_text("Browse ...")
-			browse1_b.press_actions.extend(~browse(FALSE))
+			browse1_b.press_actions.extend(agent browse(FALSE))
 			Create browse2_b.make_with_text("Browse ...")
 			Create h1
 			Create h2
-			browse2_b.press_actions.extend(~browse(TRUE))
+			browse2_b.press_actions.extend(agent browse(TRUE))
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(h1)
 			h1.extend(location)
@@ -92,7 +92,7 @@ feature -- basic Operations
 			dir_selector: EV_DIRECTORY_DIALOG	
 		do
 			Create dir_selector
-			dir_selector.ok_actions.extend(~directory_selected(dir_selector,is_for_project))
+			dir_selector.ok_actions.extend(agent directory_selected(dir_selector,is_for_project))
 			dir_selector.show_modal
 		end
 

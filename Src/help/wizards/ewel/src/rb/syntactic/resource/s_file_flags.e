@@ -24,13 +24,13 @@ feature
 		local
 			fileflags: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("FILEFLAGS")
 			commit
 
-			!! fileflags.make
+			create fileflags.make
 			put (fileflags)
 		end
 

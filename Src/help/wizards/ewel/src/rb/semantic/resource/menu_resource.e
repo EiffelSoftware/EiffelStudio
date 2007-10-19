@@ -18,7 +18,7 @@ inherit
 
 	TABLE_OF_SYMBOLS
 
-creation
+create
 	make
 
 feature 
@@ -27,7 +27,7 @@ feature
 		local
 			menu: TDS_MENU
 		do     
-			!! menu.make
+			create menu.make
 			menu.set_id (tds.last_token)
 			tds.insert_resource (menu)
 

@@ -27,22 +27,22 @@ feature
 			control_list: CONTROL_STATEMENT_LIST
 			end1: END_BLOCK
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("DIALOG")
 			commit
 
-			!! options.make
+			create options.make
 			put (options)
 
-			!! begin1.make
+			create begin1.make
 			put (begin1)
 
-			!! control_list.make
+			create control_list.make
 			put (control_list)
 			
-			!! end1.make
+			create end1.make
 			put (end1)
 		end
 

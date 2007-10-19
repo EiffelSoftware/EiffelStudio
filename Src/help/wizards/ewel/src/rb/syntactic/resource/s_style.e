@@ -25,14 +25,14 @@ feature
 			unary_not: UNARY_NOT
 			style: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! unary_not.make
+			create unary_not.make
 			put (unary_not)
 			unary_not.set_optional
 
-			!! style.make
+			create style.make
 			put (style)
 		end
 

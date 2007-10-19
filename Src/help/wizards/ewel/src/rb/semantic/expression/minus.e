@@ -14,7 +14,7 @@ class
 inherit
 	S_MINUS
 
-creation
+create
 	make
 
 indexing

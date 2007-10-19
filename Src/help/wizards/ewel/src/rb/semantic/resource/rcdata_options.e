@@ -12,7 +12,7 @@ class RCDATA_OPTIONS
 inherit
 	S_RCDATA_OPTIONS
 
-creation
+create
 	make
 
 indexing

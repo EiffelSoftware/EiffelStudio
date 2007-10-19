@@ -23,12 +23,12 @@ feature -- Initialization
 
 	make_style is
 		do
-			!! style.make
+			create style.make
 		end
 
 	make_exstyle is
 		do
-			!! exstyle.make
+			create exstyle.make
 		end
 
 	finish_control_setup is
@@ -86,7 +86,7 @@ feature -- Element change
 			temp: INTEGER
 		do
 			if id = Void then
-				!! id
+				create id
 			end
 
 			if a_id.is_integer then
@@ -160,7 +160,7 @@ feature -- Element change
 			a_style_not_void: a_style /= Void
 		do
 			if (style = Void) then
-				!! style.make
+				create style.make
 			end
 
 			style.extend (a_style)
@@ -172,7 +172,7 @@ feature -- Element change
 			a_exstyle_not_void: a_exstyle /= Void
 		do
 			if (exstyle = Void) then
-				!! exstyle.make
+				create exstyle.make
 			end
 
 			exstyle.extend (a_exstyle)
@@ -331,7 +331,7 @@ feature {NONE}
 			-- Store the specific ids used by the resource compiler:
 			-- idcancel, idok... (see WEL_ID_CONSTANTS for the list).
 		once
-			!! result.make (0,8)
+			create result.make (0,8)
 			result.compare_objects
 			result.make_from_array (<<"idok", "idcancel", "idabort", "idretry", "idignore", "idyes",
 						     "idno", "idclose", "idhelp">>)

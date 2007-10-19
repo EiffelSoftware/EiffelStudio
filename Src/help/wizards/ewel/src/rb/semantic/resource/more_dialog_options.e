@@ -13,7 +13,7 @@ class MORE_DIALOG_OPTIONS
 inherit
 	S_MORE_DIALOG_OPTIONS
 
-creation
+create
 	make
 
 indexing

@@ -10,7 +10,7 @@ class
 	ROOT_GENERATOR
 
 
-creation
+create
 	make
 
 feature -- Initialization

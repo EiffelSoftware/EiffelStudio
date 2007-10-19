@@ -15,7 +15,7 @@ inherit
 			make as list_make
 		end
 
-creation
+create
 	make
 
 feature	-- initialization
@@ -23,7 +23,7 @@ feature	-- initialization
 	make is
 		do
 			list_make
-			!! button_list.make
+			create button_list.make
 			set_type (R_toolbar)
 		end
 

@@ -12,7 +12,7 @@ class NORMAL_STYLES_LIST
 inherit
 	S_NORMAL_STYLES_LIST
 
-creation
+create
 	make
 
 indexing

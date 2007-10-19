@@ -12,7 +12,7 @@ class
 inherit
 	XML_COMPOSITE
 
-creation 
+create 
 	make
 
 feature -- Creation

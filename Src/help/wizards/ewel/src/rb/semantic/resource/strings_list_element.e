@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature 
@@ -33,7 +33,7 @@ feature
 			stringtable_element: TDS_STRING
 			stringtable: TDS_STRINGTABLE
 		do
-			!! stringtable_element.make
+			create stringtable_element.make
 
 			stringtable ?= tds.current_resource
 

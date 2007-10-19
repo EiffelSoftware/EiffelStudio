@@ -85,10 +85,10 @@ feature -- Basic Operation
 				add_about_dialog.select_actions>>)
 
 				-- Connect actions.
-			add_menu_bar.select_actions.extend (~change_preview)
-			add_tool_bar.select_actions.extend (~change_preview)
-			add_status_bar.select_actions.extend (~change_preview)
-			add_about_dialog.select_actions.extend (~change_preview)
+			add_menu_bar.select_actions.extend (agent change_preview)
+			add_tool_bar.select_actions.extend (agent change_preview)
+			add_status_bar.select_actions.extend (agent change_preview)
+			add_about_dialog.select_actions.extend (agent change_preview)
 		end
 
 	change_preview is

@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			raw_data: IDENTIFIER
 			list: NORMAL_RAW_DATA_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! raw_data.make
+			create raw_data.make
 			put (raw_data)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

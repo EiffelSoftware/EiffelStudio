@@ -19,7 +19,7 @@ class UNDEF_STATEMENT
 inherit
 	S_UNDEF_STATEMENT
 
-creation
+create
 	make
 
 indexing

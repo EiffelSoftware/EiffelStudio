@@ -26,16 +26,16 @@ feature
 			icon: ICON_STATEMENT
 			generic: GENERIC_STATEMENT
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! general.make
+			create general.make
 			put (general)
 
-			!! icon.make
+			create icon.make
 			put (icon)
 
-			!! generic.make
+			create generic.make
 			put (generic)
 		end
 

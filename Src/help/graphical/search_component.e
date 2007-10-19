@@ -10,7 +10,7 @@ class
 inherit
 	FACILITIES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -36,10 +36,10 @@ feature -- Initialization
 			create search_list.make(v)
 			viewer.tabs.append_page(v, "Search")
 
-			create com.make(~item_selected)
+			create com.make(agent item_selected)
 			search_list.add_select_command(com, Void)
 
-			create com.make(~key_pressed)
+			create com.make(agent key_pressed)
 			search_edit.add_key_press_command(com, Void)
 		end
 

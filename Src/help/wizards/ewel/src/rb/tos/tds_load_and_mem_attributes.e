@@ -12,7 +12,7 @@ class
 inherit
 	LINKED_LIST [STRING]
 
-creation
+create
 	make
 
 feature -- Code generation

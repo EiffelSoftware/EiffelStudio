@@ -14,7 +14,7 @@ class
 inherit
 	S_E5
 
-creation
+create
 	make
 
 indexing

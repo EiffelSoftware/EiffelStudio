@@ -91,7 +91,7 @@ feature -- Access
 			ok_b.select_actions.extend (action)
 			warning_dialog.set_default_push_button (ok_b)
 			cancel_b := warning_dialog.button (Cancel_text)
-			cancel_b.select_actions.extend (warning_dialog~destroy)
+			cancel_b.select_actions.extend (agent warning_dialog.destroy)
 			warning_dialog.set_default_cancel_button (cancel_b)
 			warning_dialog.show_modal_to_window (Current)
 		end

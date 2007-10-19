@@ -9,7 +9,7 @@ indexing
 class
 	CLASS_NAME
 
-Creation
+create
 	make
 
 feature -- Initialization

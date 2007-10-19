@@ -12,7 +12,7 @@ class PRODUCT_VERSION
 inherit
 	S_PRODUCT_VERSION
 
-creation
+create
 	make
 
 indexing

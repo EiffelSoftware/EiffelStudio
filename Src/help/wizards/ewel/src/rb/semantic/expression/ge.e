@@ -14,7 +14,7 @@ class
 inherit
 	S_GE
 
-creation
+create
 	make
 
 indexing

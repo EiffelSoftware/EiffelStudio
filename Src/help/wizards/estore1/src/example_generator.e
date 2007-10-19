@@ -9,7 +9,7 @@ indexing
 class
 	EXAMPLE_GENERATOR
 
-creation
+create
 	make
 
 feature -- Initialization

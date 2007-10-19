@@ -9,7 +9,7 @@ indexing
 class
 	XML_UNIT_RESOURCE
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -23,7 +23,7 @@ feature -- Initialization
 			node: XML_ELEMENT
 			txt: XML_TEXT
 		do
-			!! name.make(20)
+			create name.make(20)
 			structure ?= r
 			cursor := root_resource.new_cursor
 			from

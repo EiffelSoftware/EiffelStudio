@@ -13,7 +13,7 @@ class RESOURCE
 inherit
 	S_RESOURCE
 
-creation
+create
 	make
 
 indexing

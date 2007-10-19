@@ -12,7 +12,7 @@ class RAW_DATA_LIST
 inherit
 	S_RAW_DATA_LIST
 
-creation
+create
 	make
 
 indexing

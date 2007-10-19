@@ -25,13 +25,13 @@ feature
 			add: ADD
 			minus: MINUS
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 			
-			!! add.make
+			create add.make
 			put (add)
 
-			!! minus.make
+			create minus.make
 			put (minus)
 		end
 

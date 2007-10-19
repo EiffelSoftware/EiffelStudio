@@ -12,7 +12,7 @@ class MORE_ICON_DESCRIPTION
 inherit
 	S_MORE_ICON_DESCRIPTION
 
-creation
+create
 	make
 
 indexing

@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -38,16 +38,16 @@ feature
 			e3: E3
 			se3: SE3
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! comparison.make
+			create comparison.make
 			put (comparison)
 
-			!! e3.make
+			create e3.make
 			put (e3)
 
-			!! se3.make
+			create se3.make
 			put (se3)
 		end
 

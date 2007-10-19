@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 class ROOT_CLASS
 
-creation
+create
 	make
 
 feature -- Initialization

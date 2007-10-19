@@ -25,13 +25,13 @@ feature
 			load_and_mem: LOAD_AND_MEM
 			general_options: GENERAL_OPTIONS_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! load_and_mem.make
+			create load_and_mem.make
 			put (load_and_mem)
 
-			!! general_options.make
+			create general_options.make
 			put (general_options)
 		end
 

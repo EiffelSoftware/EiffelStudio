@@ -27,22 +27,22 @@ feature
 			block_info: BLOCK_INFO
 			end1: END_BLOCK
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("VERSIONINFO")
 			commit
 
-			!! fixed_info.make
+			create fixed_info.make
 			put (fixed_info)
 
-			!! begin1.make
+			create begin1.make
 			put (begin1)
 
-			!! block_info.make
+			create block_info.make
 			put (block_info)
 
-			!! end1.make
+			create end1.make
 			put (end1)
 		end
 

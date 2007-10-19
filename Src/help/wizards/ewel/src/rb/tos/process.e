@@ -21,7 +21,7 @@ inherit
 
 	STORABLE
 
-creation
+create
 	make, retrieve_grammar
 
 feature -- Initialization
@@ -33,7 +33,7 @@ feature -- Initialization
 		do  
 			interface.display_text (std_out, "Building the grammar...")
 
-			!! resource_script_file.make
+			create resource_script_file.make
 			build (resource_script_file.document)
 		end
 
@@ -105,7 +105,7 @@ feature
 
 			interface.display_text (std_out, "Analyzing the resource file...")
 
-			!! file.make_open_read (a_filename)
+			create file.make_open_read (a_filename)
 			file.read_stream (file.count)
 
 			resource_script_file.document.set_input_string (file.last_string);

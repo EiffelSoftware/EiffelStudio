@@ -12,7 +12,7 @@ class BLOCK_INFO
 inherit
 	S_BLOCK_INFO
 
-creation
+create
 	make
 
 indexing

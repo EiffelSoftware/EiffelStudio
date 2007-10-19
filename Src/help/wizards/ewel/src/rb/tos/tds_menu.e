@@ -15,7 +15,7 @@ inherit
 			make as list_make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -25,13 +25,13 @@ feature -- Initialization
 			-- and create the associated `items_list'.
 		do
 			list_make
-			!! items_list.make
+			create items_list.make
 			set_type (R_menu)
 		end
 
 	make_current_menu is
 		do
-			!! current_menu.make
+			create current_menu.make
 		end
 
 feature -- Access
@@ -217,10 +217,10 @@ feature -- Code generation
 			parent: POINTER
 			a_parent: POINTER
 		do
-			!! tvis.make
+			create tvis.make
 			tvis.set_sort
 			tvis.set_parent (a_parent)
-			!! tv_item.make
+			create tv_item.make
 			tv_item.set_text ("Menu")
 			tvis.set_tree_view_item (tv_item)
 --			a_tree_view.insert_item (tvis)

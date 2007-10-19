@@ -28,31 +28,31 @@ feature
 			y: IDENTIFIER
 			more: MORE_ICON_DESCRIPTION
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("ICON")
 			commit
 
-			!! text.make
+			create text.make
 			put (text)
 
 			keyword (",")
 
-			!! id.make
+			create id.make
 			put (id)
 
 			keyword (",")
 
-			!! x.make
+			create x.make
 			put (x)
 			
 			keyword (",")
 
-			!! y.make
+			create y.make
 			put (y)
 			
-			!! more.make
+			create more.make
 			put (more)
 		end
 

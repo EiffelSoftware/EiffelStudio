@@ -16,7 +16,7 @@ inherit
 
 	FACILITIES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -111,7 +111,7 @@ feature -- Access
 	first_window: VIEWER_WINDOW is
 			-- The main window.
 		once
-			!! Result.make_viewer(Current)
+			create Result.make_viewer(Current)
 			set_main_window(Result)
 		end
 

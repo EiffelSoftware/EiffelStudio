@@ -14,7 +14,7 @@ class
 inherit
 	S_LT
 
-creation
+create
 	make
 
 indexing

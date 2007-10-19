@@ -17,7 +17,7 @@ inherit
 			change_entries
 		end
 
-creation
+create
 	make
 
 feature -- basic Operations

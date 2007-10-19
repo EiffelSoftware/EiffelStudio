@@ -34,13 +34,13 @@ feature
 			id: ID_EXPRESSION
 			more: EVEN_MORE_MENUITEM_EX
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! id.make
+			create id.make
 			put (id)
 
-			!! more.make
+			create more.make
 			put (more)
 		end
 

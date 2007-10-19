@@ -15,7 +15,7 @@ inherit
 			topic
 		end
 
-creation
+create
 	make_item
 
 feature -- Initialization

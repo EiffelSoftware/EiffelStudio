@@ -12,7 +12,7 @@ class END_BLOCK
 inherit
 	S_END_BLOCK
 
-creation
+create
 	make
 
 indexing

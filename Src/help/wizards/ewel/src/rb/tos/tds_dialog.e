@@ -17,7 +17,7 @@ inherit
 
 	TDS_DEFINE_TABLE
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -32,7 +32,7 @@ feature -- Initialization
 
 	make_control_statement is
 		do
-			!! statement_list.make (10)
+			create statement_list.make (10)
 		end
 
 feature -- Access
@@ -124,7 +124,7 @@ feature -- Element change
 			a_feature_name_exists: a_feature_name.count > 0
 		do
 			if redefined_features = Void then
-				!! redefined_features.make
+				create redefined_features.make
 				redefined_features.compare_objects
 			end
 
@@ -307,12 +307,12 @@ feature -- Code generation
 				cur_dialog ?= item
 				if cur_dialog /= Void then
 					if cur_dialog.is_wel_code_on then
-						!! a_filename.make (64)
+						create a_filename.make (64)
 						a_filename.append (cur_dialog.class_name)
 						a_filename.to_lower
 						a_filename.append (".e")
 	
-						!! text_file.make_open_write (a_filename)
+						create text_file.make_open_write (a_filename)
 
 						text_file.putstring ("indexing %N%Tdescription: %"")
 						text_file.putstring (cur_dialog.class_name)

@@ -59,7 +59,7 @@ feature -- Settings
 			selection_window.set_display_list (tr_list)
 			selection_window.set_content
 			db_tablerow_selector.set_selecting_control (selection_window.selecting_control)
-			db_tablerow_selector.set_raising_action (selection_window~show)
+			db_tablerow_selector.set_raising_action (agent selection_window.show)
 			db_creator.set_tablerow_selector (db_tablerow_selector)
 			table_comp.set_db_creator (db_creator)
 		end

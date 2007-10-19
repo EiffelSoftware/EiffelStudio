@@ -10,7 +10,7 @@ class
 inherit
 	STORABLE
 
-creation
+create
 	make
 
 feature -- Initialization

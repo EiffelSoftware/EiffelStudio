@@ -26,7 +26,7 @@ feature
 			list: VARIABLE_VALUE_LIST
 			end1: END_BLOCK
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 			
 			keyword ("BLOCK")
@@ -34,13 +34,13 @@ feature
 
 			keyword ("%"VarFileInfo%"")
 
-			!! begin1.make
+			create begin1.make
 			put (begin1)
 			
-			!! list.make
+			create list.make
 			put (list)
 
-			!! end1.make
+			create end1.make
 			put (end1)
 		end
 

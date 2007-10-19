@@ -12,7 +12,7 @@ class ELIF_PART
 inherit
 	S_ELIF_PART
 
-creation
+create
 	make
 
 indexing

@@ -16,7 +16,7 @@ inherit
 			proceed_with_current_info
 		end
 
-creation
+create
 	make
 
 feature -- basic Operations
@@ -36,13 +36,13 @@ feature -- basic Operations
 			Create h1
 			Create oracle_b.make_with_text("Oracle")
 			Create odbc_b.make_with_text("ODBC")
-			odbc_b.press_actions.extend(~set_handle_insensitive(FALSE))
+			odbc_b.press_actions.extend(agent set_handle_insensitive(FALSE))
 			if not wizard_information.is_oracle then
 				odbc_b.enable_select 
 			else
 				oracle_b.enable_select
 			end
-			oracle_b.press_actions.extend(~set_handle_insensitive(TRUE))
+			oracle_b.press_actions.extend(agent set_handle_insensitive(TRUE))
 			Create db_name.make("Data Source Name",wizard_information.data_source,10,20,Current)
 			Create username.make("username",wizard_information.username,10,20,Current)
 			Create password.make("Password",wizard_information.password,10,20,Current)

@@ -30,36 +30,36 @@ feature
 			height: IDENTIFIER
 			optional_styles: OPTIONAL_STYLES_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! control_type.make
+			create control_type.make
 			put (control_type)
 
-			!! id.make
+			create id.make
 			put (id)
 
 			keyword (",")
 
-			!! x.make
+			create x.make
 			put (x)
 
 			keyword (",")
 
-			!! y.make
+			create y.make
 			put (y)
 
 			keyword (",")
 
-			!! width.make
+			create width.make
 			put (width)
 
 			keyword (",")
 
-			!! height.make
+			create height.make
 			put (height)
 
-			!! optional_styles.make
+			create optional_styles.make
 			put (optional_styles)
 		end
 

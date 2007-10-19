@@ -17,7 +17,7 @@ inherit
 
 	TABLE_OF_SYMBOLS
 
-creation
+create
 	make
 
 feature
@@ -26,7 +26,7 @@ feature
 		local
 			toolbar: TDS_TOOLBAR
 		do     
-			!! toolbar.make
+			create toolbar.make
 			toolbar.set_id (tds.last_token)
 
 			tds.insert_resource (toolbar)

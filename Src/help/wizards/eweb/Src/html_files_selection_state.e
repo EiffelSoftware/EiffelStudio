@@ -31,17 +31,17 @@ feature -- Basic Operation
 		do 
 			Create h1
 			h1.extend(Create {EV_BUTTON}.make_with_text_and_action("Add File",
-				~popup_selector(Create {EV_FILE_OPEN_DIALOG})))
+				agent popup_selector(Create {EV_FILE_OPEN_DIALOG})))
 			h1.extend(Create {EV_BUTTON}.make_with_text_and_action("Add Directory",
-				~popup_selector(Create {EV_DIRECTORY_DIALOG})))
+				agent popup_selector(Create {EV_DIRECTORY_DIALOG})))
 			choice_box.extend(h1)
 			choice_box.disable_item_expand(h1)
 			Create selected_files
 			choice_box.extend(selected_files)
 			selected_files.enable_multiple_selection
 			Create h1
-			h1.extend(Create {EV_BUTTON}.make_with_text_and_action("Remove Selected Files",~remove_selected_files))
-			h1.extend(Create {EV_BUTTON}.make_with_text_and_action("Reset",~reset))
+			h1.extend(Create {EV_BUTTON}.make_with_text_and_action("Remove Selected Files",agent remove_selected_files))
+			h1.extend(Create {EV_BUTTON}.make_with_text_and_action("Reset",agent reset))
 			choice_box.extend(h1)
 			choice_box.disable_item_expand(h1)
 			choice_box.extend(Create {EV_HORIZONTAL_BOX})
@@ -80,7 +80,7 @@ feature -- Basic Operation
 	popup_selector(dialog: EV_STANDARD_DIALOG) is
 			-- Popup dialog 'dialog' in order to select file(s).
 		do
-			dialog.ok_actions.extend(~add_files(dialog))
+			dialog.ok_actions.extend(agent add_files(dialog))
 			dialog.show_modal
 			dialog.ok_actions.wipe_out
 		end

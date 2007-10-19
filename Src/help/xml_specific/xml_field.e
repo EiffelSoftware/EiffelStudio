@@ -12,7 +12,7 @@ class
 inherit
 	XML_COMPOSITE
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -21,7 +21,7 @@ feature -- Initialization
 			-- Initialize
 		do
 			name:= n
-			!! heir.make
+			create heir.make
 		end
 
 feature -- Access

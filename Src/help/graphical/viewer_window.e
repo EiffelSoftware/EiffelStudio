@@ -12,7 +12,7 @@ inherit
 
 	FACILITIES
 
-creation
+create
 	make_viewer
 
 feature -- Initialization
@@ -47,8 +47,8 @@ feature {NONE} -- Initialization
 			split: EV_HORIZONTAL_SPLIT_AREA
 			status_bar: EV_STATUS_BAR
 		do
-			!! view_history.make
-			!! view_future.make
+			create view_history.make
+			create view_future.make
 			create status_bar.make(Current)
 			create split.make(Current)
 			create left.make(split)
@@ -82,19 +82,19 @@ feature {NONE} -- Initialization
 			arg: EV_ARGUMENT1[STRING]
 			sep: EV_TOOL_BAR_SEPARATOR
 		do
-			!! com.make(~menu_item_selected)
+			create com.make(agent menu_item_selected)
 			create back_button.make_with_text(tool_bar, "Back")
-			!! arg.make("Back")
+			create arg.make("Back")
 			back_button.add_select_command(com, arg)
 			create forth_button.make_with_text(tool_bar, "Forth")
-			!! arg.make("Forth")
+			create arg.make("Forth")
 			forth_button.add_select_command(com, arg)
-			!! sep.make(tool_bar)
+			create sep.make(tool_bar)
 			create previous_button.make_with_text(tool_bar, "Previous")
-			!! arg.make("Previous")
+			create arg.make("Previous")
 			previous_button.add_select_command(com, arg)
 			create next_button.make_with_text(tool_bar, "Next")
-			!! arg.make("Next")
+			create arg.make("Next")
 			next_button.add_select_command(com, arg)
 		end
 
@@ -104,14 +104,14 @@ feature {NONE} -- Initialization
 			itt: EV_MENU
 			menu: EV_STATIC_MENU_BAR
 		do
-			!! menu.make(Current)			
-			!! itt.make_with_text(menu, "File")
+			create menu.make(Current)			
+			create itt.make_with_text(menu, "File")
 			add_menu_item(itt, "Open")
 			add_menu_item(itt, "Update Database")
 			add_menu_item(itt, "Exit")
-			!! itt.make_with_text(menu,"Edit")
+			create itt.make_with_text(menu,"Edit")
 			add_menu_item(itt, "Copy")
-			!! itt.make_with_text(menu,"Go")
+			create itt.make_with_text(menu,"Go")
 			add_menu_item(itt, "Back")
 			back_item := last_item
 			add_menu_item(itt, "Forth")
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 			next_item := last_item
 			add_menu_item(itt, "Previous")
 			previous_item := last_item
-			!! itt.make_with_text(menu,"Help!!!")
+			create itt.make_with_text(menu,"Help!!!")
 			add_menu_item(itt, "Help about Help")
 			add_menu_item(itt, "About Help")
 		end
@@ -133,9 +133,9 @@ feature {NONE} -- Initialization
 			com: EV_ROUTINE_COMMAND
 			arg: EV_ARGUMENT1[STRING]
 		do
-			!! com.make(~menu_item_selected)
-			!! arg.make(text)
-			!! last_item.make_with_text(itt, text)
+			create com.make(agent menu_item_selected)
+			create arg.make(text)
+			create last_item.make_with_text(itt, text)
 			last_item.add_select_command(com, arg)
 		end
 
@@ -293,9 +293,9 @@ feature {NONE} -- Implementation
 		do
 			create open_win.make(Current)
 			open_win.set_title("Select help file")
-			!! names.make(0,0)
+			create names.make(0,0)
 			names.force("XML files",0)
-			!! patterns.make(0,0)
+			create patterns.make(0,0)
 			patterns.force("*.xml",0)
 			open_win.set_filter(names, patterns)
 			open_win.select_filter("*.xml")

@@ -12,7 +12,7 @@ class NORMAL_RAW_DATA_LIST
 inherit
 	S_NORMAL_RAW_DATA_LIST
 
-creation
+create
 	make
 
 indexing

@@ -19,7 +19,7 @@ feature -- Building
 			l: G
 		do
 			parser := pars
-			!! error_message.make(20)
+			create error_message.make(20)
 			initialize_structure
 			create_structure
 		ensure
@@ -43,7 +43,7 @@ feature -- Building
 			s: STRING
 			txt: XML_TEXT
 		do
-			!! error_message.make(20)
+			create error_message.make(20)
 			doc := parser.root_element
 			if not doc.name.is_equal("DOCUMENT") then
 				error_message.append("DOCUMENT TAG missing%N")
@@ -85,7 +85,7 @@ feature -- Building
 				loop
 					node ?= cursor.item
 					if node /= Void and then node.name.is_equal("TOPIC") then
-							!! category.make(node, Current)
+							create category.make(node, Current)
 							categories.extend(category)
 					end
 					cursor.forth

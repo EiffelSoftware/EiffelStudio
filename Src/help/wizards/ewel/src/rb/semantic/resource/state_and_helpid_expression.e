@@ -12,7 +12,7 @@ class STATE_AND_HELPID_EXPRESSIONS
 inherit
 	S_STATE_AND_HELPID_EXPRESSIONS
 
-creation
+create
 	make
 
 indexing

@@ -30,7 +30,7 @@ feature -- Initialization
 			dbms_code := code
 			create db_subset_selection.make (db_manager (dbms_code))
 			db_subset_selection.set_object (create {USER_CONSTRAINTS}.make)
-			db_subset_selection.set_extract_function (~table_name_from_user_constraints)
+			db_subset_selection.set_extract_function (agent table_name_from_user_constraints)
 		end
 
 feature -- Status report

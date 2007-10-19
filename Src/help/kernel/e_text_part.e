@@ -7,7 +7,7 @@ indexing
 class
 	E_TEXT_PART
 
-creation
+create
 	make_empty,
 	make_from_other
 

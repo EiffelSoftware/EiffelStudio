@@ -27,19 +27,19 @@ feature
 			defined_test: DEFINED_TEST
 			identifier: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! unary_expression.make
+			create unary_expression.make
 			put (unary_expression)
 
-			!! sub_expression.make
+			create sub_expression.make
 			put (sub_expression)
 
-			!! defined_test.make
+			create defined_test.make
 			put (defined_test)
 
-			!! identifier.make
+			create identifier.make
 			put (identifier)
 		end
 

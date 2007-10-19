@@ -9,7 +9,7 @@ indexing
 class
 	RESOURCE_STRUCTURE
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -19,10 +19,10 @@ feature -- Initialization
 		require
 			parser_exists: pars /= Void
 		do
-			!! categories.make
-			!! table.make(150)
+			create categories.make
+			create table.make(150)
 			parser := pars
-			!! error_message.make(20)
+			create error_message.make(20)
 			initialize_structure
 			create_structure
 		ensure
@@ -47,7 +47,7 @@ feature -- Initialization
 			s: STRING
 			txt: XML_TEXT
 		do
-			!! error_message.make(20)
+			create error_message.make(20)
 			if parser.root_element = Void then
 				error_message.append("No root element%N")
 			else
@@ -93,7 +93,7 @@ feature -- Initialization
 				loop
 					node ?= cursor.item
 					if node /= Void and then node.name.is_equal("TOPIC") then
-							!! category.make(node, Current)
+							create category.make(node, Current)
 							categories.extend(category)
 					end
 					cursor.forth

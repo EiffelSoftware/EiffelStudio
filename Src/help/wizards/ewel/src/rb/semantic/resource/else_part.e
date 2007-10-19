@@ -19,7 +19,7 @@ class ELSE_PART
 inherit
 	S_ELSE_PART
 
-creation
+create
 	make
 
 indexing

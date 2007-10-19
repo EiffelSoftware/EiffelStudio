@@ -25,13 +25,13 @@ feature
 			nameID: IDENTIFIER
 			resource_type: RESOURCE_TYPE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! nameID.make
+			create nameID.make
 			put (nameID)
 
-			!! resource_type.make
+			create resource_type.make
 			put (resource_type)
 		end
 

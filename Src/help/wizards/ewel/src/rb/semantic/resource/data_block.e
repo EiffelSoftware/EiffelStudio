@@ -12,7 +12,7 @@ class DATA_BLOCK
 inherit
 	S_DATA_BLOCK
 
-creation
+create
 	make
 
 indexing

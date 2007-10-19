@@ -7,7 +7,7 @@ indexing
 class
 	LIST_COMPONENT
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -28,11 +28,11 @@ feature -- Initialization
 			v.set_child_expandable(list_edit, false)
 			create list.make(v)
 			viewer.tabs.append_page(v,"Index")
-			create com.make(~item_selected)
+			create com.make(agent item_selected)
 			list.add_select_command(com, Void)
-			create com.make(~edit_changed)
+			create com.make(agent edit_changed)
 			list_edit.add_change_command(com, Void)
-			create com.make(~key_pressed)
+			create com.make(agent key_pressed)
 			list_edit.add_key_press_command(com, Void)
 
 			create kc.make

@@ -13,7 +13,7 @@ class FIXED_INFO
 inherit
 	S_FIXED_INFO
 
-creation
+create
 	make
 
 indexing

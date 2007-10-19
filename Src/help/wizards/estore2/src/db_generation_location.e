@@ -39,7 +39,7 @@ feature -- basic Operations
 			create browse1_b.make_with_text ("Browse ...")
 			browse1_b.set_minimum_width (74)
 			browse1_b.set_minimum_height (23)
-			browse1_b.select_actions.extend (~browse)
+			browse1_b.select_actions.extend (agent browse)
 			create v1
 			v1.extend (create {EV_CELL})
 			v1.extend (browse1_b)
@@ -133,7 +133,7 @@ feature -- basic Operations
 			dir_selector: EV_DIRECTORY_DIALOG	
 		do
 			Create dir_selector
-			dir_selector.ok_actions.extend (~directory_selected(dir_selector))
+			dir_selector.ok_actions.extend (agent directory_selected(dir_selector))
 			dir_selector.show_modal_to_window (first_window)
 		end
 

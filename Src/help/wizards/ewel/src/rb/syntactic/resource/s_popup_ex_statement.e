@@ -28,25 +28,25 @@ feature
 			items_ex_list: ITEMS_EX_LIST
 			end1: END_BLOCK
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("POPUP")
 			commit
 
-			!! text.make
+			create text.make
 			put (text)
 
-			!! more.make
+			create more.make
 			put (more)
 
-			!! begin1.make
+			create begin1.make
 			put (begin1)
 
-			!! items_ex_list.make
+			create items_ex_list.make
 			put (items_ex_list)
 
-			!! end1.make
+			create end1.make
 			put (end1)
 		end
 

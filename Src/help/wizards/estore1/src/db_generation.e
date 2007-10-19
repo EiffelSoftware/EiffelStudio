@@ -21,7 +21,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	make
 
 feature -- basic Operations

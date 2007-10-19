@@ -24,13 +24,13 @@ feature
 		local
 			more: MORE_MENUITEM_STATEMENT
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("MENUITEM")
 			commit
 
-			!! more.make
+			create more.make
 			put (more)
 		end
 

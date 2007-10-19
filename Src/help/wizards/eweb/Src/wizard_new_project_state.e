@@ -37,7 +37,7 @@ feature -- Basic Operation
 			Create location.make("Choose a Directory",
 							 wizard_information.project_location, 10, 30, Current)
 			Create browse_b.make_with_text("Browse...")
-			browse_b.press_actions.extend(~Browse)
+			browse_b.press_actions.extend(agent Browse)
 
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(h1)
@@ -82,7 +82,7 @@ feature -- Basic Operation
 			dir_selector: EV_DIRECTORY_DIALOG	
 		do
 			Create dir_selector
-			dir_selector.ok_actions.extend(~directory_selected(dir_selector))
+			dir_selector.ok_actions.extend(agent directory_selected(dir_selector))
 			dir_selector.show_modal
 		end
 

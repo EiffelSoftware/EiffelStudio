@@ -18,7 +18,7 @@ inherit
 
 	WIZARD_PROJECT_SHARED
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

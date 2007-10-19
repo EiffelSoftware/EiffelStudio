@@ -12,7 +12,7 @@ class ITEMS_EX_LIST
 inherit
 	S_ITEMS_EX_LIST
 
-creation
+create
 	make
 
 indexing

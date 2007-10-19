@@ -13,7 +13,7 @@ class DEFINE_STATEMENT
 inherit
 	S_DEFINE_STATEMENT
 
-creation
+create
 	make
 
 indexing

@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -38,21 +38,21 @@ feature
 			height: IDENTIFIER
 			optional: OPTIONAL_STYLES_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword (",")
 			commit
 
-			!! width.make
+			create width.make
 			put (width)
 
 			keyword (",")
 
-			!! height.make
+			create height.make
 			put (height)
 
-			!! optional.make
+			create optional.make
 			put (optional)
 		end
 

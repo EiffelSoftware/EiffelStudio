@@ -13,7 +13,7 @@ class LANGUAGE_RESOURCE
 inherit
 	S_LANGUAGE_RESOURCE
 
-creation
+create
 	make
 
 indexing

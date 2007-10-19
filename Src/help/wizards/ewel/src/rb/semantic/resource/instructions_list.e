@@ -19,7 +19,7 @@ class INSTRUCTIONS_LIST
 inherit
 	S_INSTRUCTIONS_LIST	
 
-creation
+create
 	make
 
 indexing

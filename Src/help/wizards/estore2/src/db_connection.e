@@ -98,7 +98,7 @@ feature -- basic Operations
 				end
 				av_dbms_list.forth
 			end
-			dbms_cbox.select_actions.extend (~update_fields)
+			dbms_cbox.select_actions.extend (agent update_fields)
 		end
 
 	proceed_with_current_info is 

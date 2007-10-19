@@ -9,7 +9,7 @@ indexing
 class
 	WIZARD_INFORMATION
 
-creation {WIZARD_WINDOW}
+create {WIZARD_WINDOW}
 	make 
 
 feature {NONE} -- Initialization

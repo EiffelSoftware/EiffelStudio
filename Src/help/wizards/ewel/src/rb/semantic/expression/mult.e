@@ -14,7 +14,7 @@ class
 inherit
 	S_MULT
 
-creation
+create
 	make
 
 indexing

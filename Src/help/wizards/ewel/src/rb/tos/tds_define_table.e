@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 	define_table_cell: CELL [HASH_TABLE [COUPLE, STRING]] is
 			-- The current `define_table'.
 		once
-			!!Result.put (Void)
+			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
 		end

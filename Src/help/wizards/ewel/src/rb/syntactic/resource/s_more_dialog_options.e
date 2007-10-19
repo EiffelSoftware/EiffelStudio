@@ -30,25 +30,25 @@ feature
 			style: STYLE_DIALOG_OPTION
 			exstyle: EXSTYLE_DIALOG_OPTION
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! caption.make
+			create caption.make
 			put (caption)
 
-			!! class_option.make
+			create class_option.make
 			put (class_option)
 
-			!! font.make
+			create font.make
 			put (font)
 
-			!! menu.make
+			create menu.make
 			put (menu)
 
-			!! style.make
+			create style.make
 			put (style)
 
-			!! exstyle.make
+			create exstyle.make
 			put (exstyle)
 		end
 

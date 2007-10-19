@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature
@@ -35,7 +35,7 @@ feature
 			resource_menu ?= tds.current_resource
 
 			if (resource_menu /= Void) and then (resource_menu.is_popup) then
-				!! menu.make
+				create menu.make
 
 				resource_menu.current_menu.item.current_item.set_popup_menu (menu)	
 				resource_menu.current_menu.extend (menu)

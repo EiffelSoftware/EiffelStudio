@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature	-- Initialization
@@ -26,7 +26,7 @@ feature	-- Initialization
 		local
 			es_multiple: TDS_STYLE
 		do
-			!! es_multiple.make
+			create es_multiple.make
 			es_multiple.set_style ("ES_MULTILINE")
 
 			if (style /= Void) and then (style.is_almost_present (es_multiple)) then

@@ -17,7 +17,7 @@ inherit
 
 	TABLE_OF_SYMBOLS
 
-creation
+create
 	make
 
 feature 
@@ -27,7 +27,7 @@ feature
 			anicursor: TDS_ANICURSOR
 
 		do     
-			!! anicursor.make
+			create anicursor.make
 			anicursor.set_id (tds.last_token)
 			tds.insert_resource (anicursor)
 

@@ -9,7 +9,7 @@ indexing
 class
 	VALUE_RESOURCE
 
-creation
+create
 	make
 
 feature -- Creation

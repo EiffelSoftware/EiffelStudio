@@ -196,8 +196,8 @@ feature -- Status report
 	shown: BOOLEAN is
 			-- Is Current shown on the screen?
 		do
-			if content /= Void then
-				Result := content.is_visible
+			if content /= Void and then not is_recycled then
+				Result := content.is_visible and then widget.is_displayed
 			end
 		end
 

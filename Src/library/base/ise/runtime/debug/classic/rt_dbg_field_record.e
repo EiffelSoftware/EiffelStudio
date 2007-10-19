@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (i,t: INTEGER; v: like value) is
-			--
+			-- Make field record with index `i', type `t' an value `v'
 		do
 			index := i
 			type := t
@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 feature -- Properties
 
 	value: G assign set_value
+			-- Associated value.
 
 feature -- Access
 
@@ -50,18 +51,20 @@ feature -- Access
 		end
 
 	to_string: STRING is
-			--
+			-- String representation
 		local
 			v: ANY
 		do
 			inspect type
-			when {INTERNAL}.reference_type, {INTERNAL}.expanded_type then
+			when {INTERNAL}.reference_type then
 				v ?= value
 				if v = Void then
 					Result := "Void"
 				else
 					Result := ($v).out
 				end
+			when {INTERNAL}.expanded_type then
+				Result := ($value).out
 			else
 				Result := value.out
 			end
@@ -70,7 +73,7 @@ feature -- Access
 feature -- Change properties
 
 	set_value (v: like value) is
-			--
+			-- Set `value'
 		do
 			value := v
 		end
@@ -78,6 +81,7 @@ feature -- Change properties
 feature -- Runtime
 
 	restore (obj: ANY; bak: RT_DBG_RECORD) is
+			-- Restore `value' on `obj', and associate `bak' as `backup'
 		do
 			debug ("RT_EXTENSION")
 				dtrace (generator + ".restore (" + obj.generator + " #" + index.out + ")%N")
@@ -97,6 +101,7 @@ feature -- Runtime
 		end
 
 	revert (obj: ANY) is
+			-- Revert previous change due to Current to `obj'
 		local
 			bak: like backup
 		do
@@ -116,6 +121,7 @@ feature -- Runtime
 feature {NONE} -- Internal Implementation
 
 	set_object_field (obj: ANY; r: RT_DBG_RECORD) is
+			-- Set object field defined by `r' on target `obj'
 		local
 			i: like index
 			l_fr_integer_8: RT_DBG_FIELD_RECORD [INTEGER_8]
@@ -140,7 +146,6 @@ feature {NONE} -- Internal Implementation
 			when Integer_8_type then
 				l_fr_integer_8 ?= r
 				set_integer_8_field (i, obj, (l_fr_integer_8).value)
---				set_integer_8_field (i, obj, ({RT_DBG_FIELD_RECORD [INTEGER_8]} #? r).value)
 			when Integer_16_type then
 				l_fr_integer_16 ?= r
 				set_integer_16_field (i, obj, (l_fr_integer_16).value)
@@ -189,10 +194,8 @@ feature {NONE} -- Internal Implementation
 --			when Bit_type then
 --			when none_type then
 			else
-
 			end
 		end
-
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

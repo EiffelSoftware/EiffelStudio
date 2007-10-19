@@ -19,14 +19,13 @@ feature -- Notification
 			retried: BOOLEAN
 		do
 			if not retried then
-				debug ("RT_EXTENSION_TRACE")
-					dtrace ("RT_EXTENSION.notify (" + a_id.out + ")%N")
-				end
 				inspect a_id
 				when Op_enter_feature then
 					process_enter_feature (events_feature_argument (a_data))
 				when Op_leave_feature then
 					process_leave_feature (events_feature_argument (a_data))
+				when Op_rescue_feature then
+					process_rescue_feature (events_feature_argument (a_data))
 				when Op_exec_replay_record then
 					process_execution_replay_record (exec_replay_argument (a_data))
 				when Op_exec_replay then
@@ -38,14 +37,15 @@ feature -- Notification
 				when Op_object_storage_load then
 					process_object_storage_load (object_storage_argument (a_data))
 				else
-					derror (out + " ->" + a_id.out + "%N")
-				end
-				debug ("RT_EXTENSION_TRACE")
-					dtrace ("RT_EXTENSION.notify (" + a_id.out + ") -> DONE.%N")
+					debug ("RT_EXTENSION")
+						dtrace ("Error: " + out + " ->" + a_id.out + "%N")
+					end
 				end
 			end
 		rescue
-			derror ("Rescue -> RT_EXTENSION.notify (" + a_id.out + ")%N")
+			debug ("RT_EXTENSION")
+				dtrace ("Error: Rescue -> RT_EXTENSION.notify (" + a_id.out + ")%N")
+			end
 			retried := True
 			retry
 		end
@@ -57,7 +57,7 @@ feature -- Notification
 		do
 			if not retried then
 				inspect a_id
-				when Op_enter_feature, Op_leave_feature then
+				when Op_enter_feature, Op_leave_feature, Op_rescue_feature then
 					create {like events_feature_argument} Result
 				when Op_exec_replay_record, Op_exec_replay, Op_exec_replay_query then
 					create {like exec_replay_argument} Result
@@ -67,7 +67,9 @@ feature -- Notification
 				end
 			end
 		rescue
-			derror ("Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
+			debug ("RT_EXTENSION")
+				dtrace ("Error: Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
+			end
 			retried := True
 			retry
 		end
@@ -130,15 +132,16 @@ feature -- Direct Access
 
 feature -- Constants (check eif_debug.h uses the same values)
 
-	Op_enter_feature: INTEGER = 1
-	Op_leave_feature: INTEGER = 2
+	Op_enter_feature: 		INTEGER = 10
+	Op_leave_feature: 		INTEGER = 11
+	Op_rescue_feature: 		INTEGER = 12
 
-	Op_exec_replay_record: INTEGER = 3
-	Op_exec_replay: INTEGER = 4
-	Op_exec_replay_query: INTEGER = 5
+	Op_exec_replay_record: 	INTEGER = 15
+	Op_exec_replay: 		INTEGER = 16
+	Op_exec_replay_query: 	INTEGER = 17
 
-	Op_object_storage_save: INTEGER = 6
-	Op_object_storage_load: INTEGER = 7
+	Op_object_storage_save:	INTEGER = 31
+	Op_object_storage_load:	INTEGER = 32
 
 feature {NONE} -- Execution replay
 
@@ -161,13 +164,8 @@ feature {NONE} -- Execution replay
 		local
 			r: like execution_recording
 		do
-			if a_data.fid = 0 and a_data.cid = 0 then
-					--| This part will be changed soon.
-				process_rescue_feature (a_data)
-			else
-				r := execution_recording
-				r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level, a_data.fn)
-			end
+			r := execution_recording
+			r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level, a_data.fn)
 		end
 
 	process_rescue_feature (a_data: like events_feature_argument) is
@@ -196,10 +194,11 @@ feature {NONE} -- Execution replay
 			-- (De)Activate execution recording
 		local
 			r: like execution_recording
+			b: BOOLEAN
 		do
-			if a_data.op = 1 then
+			if a_data.op.to_boolean then --| True: 1; False: 0
 				check execution_recording = Void end
-				create r.make
+				create r.make (5_000)
 				execution_recording_cell.replace (r)
 				r.start_recording
 			else

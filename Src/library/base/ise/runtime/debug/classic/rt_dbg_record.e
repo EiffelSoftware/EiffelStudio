@@ -16,10 +16,13 @@ inherit
 feature -- Properties
 
 	position: INTEGER assign set_position
+			-- Position of record.
 
 	type: INTEGER assign set_type
+			-- Type of record value.
 
 	backup: RT_DBG_RECORD assign set_backup
+			-- Backup value after restore operation
 
 feature -- Access
 
@@ -42,19 +45,19 @@ feature -- Access
 feature -- Change properties
 
 	set_position (v: like position) is
-			--
+			-- Set `position'
 		do
 			position := v
 		end
 
 	set_type (v: like type) is
-			--
+			-- Set `type'
 		do
 			type := v
 		end
 
 	set_backup (v: like backup) is
-			--
+			-- Set `backup'
 		do
 			backup := v
 		end
@@ -62,12 +65,15 @@ feature -- Change properties
 feature -- Runtime
 
 	restore (obj: ANY; bak: RT_DBG_RECORD) is
+			-- Restore Current on target `obj',
+			-- and associate the backup value to `bak'
 		require
 			no_backup: backup = Void
 		deferred
 		end
 
 	revert (obj: ANY) is
+			-- Revert previous `restore' using the associated `backup' value
 		deferred
 		end
 

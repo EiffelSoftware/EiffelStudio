@@ -110,20 +110,20 @@
 #define IN_STRING_ADDR	7		/* String object at given address */
 
 /* Once inspection types */
-#define OUT_CALLED		0		/* Check whether once routine has been called         */
-#define OUT_INDEX		2		/* Ask for ONCE index for BODY_INDEX                  */
-#define OUT_DATA_PER_THREAD		3		/* Ask for ONCE data .. ie: status, result, exception */
-#define OUT_DATA_PER_PROCESS	4		/* Ask for ONCE data .. ie: status, result, exception */
+#define OUT_CALLED				0	/* Check whether once routine has been called         */
+#define OUT_INDEX				2	/* Ask for ONCE index for BODY_INDEX                  */
+#define OUT_DATA_PER_THREAD		3	/* Ask for ONCE data .. ie: status, result, exception */
+#define OUT_DATA_PER_PROCESS	4	/* Ask for ONCE data .. ie: status, result, exception */
 
 #define OUT_ONCE_PER_THREAD		0 /* Asked Once is per thread */
 #define OUT_ONCE_PER_PROCESS	1 /* Asked Once is per process */
 
-/* RT_EXTENSION access constants related to RT_OPERATION request */
-#define RT_OPTION				0
-#define RT_REPLAY				1
-#define RT_DUMP_OBJECT			2
-#define RT_OBJECT_STORAGE_SAVE	3
-#define RT_OBJECT_STORAGE_LOAD	4
+/* RT_EXTENSION access constants related to IPC `RT_OPERATION' request */
+#define RQST_RTOP_OPTION				0
+#define RQST_RTOP_EXEC_REPLAY			1
+#define RQST_RTOP_DUMP_OBJECT			2
+#define RQST_RTOP_OBJECT_STORAGE_SAVE	3
+#define RQST_RTOP_OBJECT_STORAGE_LOAD	4
 
 /* Special object inspection */
 #define DEFAULT_SLICE	50		/* Default maximum number of items to be sent */

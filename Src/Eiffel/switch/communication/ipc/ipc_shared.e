@@ -13,250 +13,123 @@ feature {IPC_ENGINE} -- Request constants
 
 		-- Same as in file /ipc/shared/rqst_const.h
 
-	Rqst_hello: INTEGER is 4
-			-- Application's handshake with ewb
-
-	Rqst_inspect: INTEGER is 7
-			-- Object inspection
-
-	Rqst_dump_threads: INTEGER is 8
-			-- Notification from Application.
-
-	Rqst_dump_stack: INTEGER is 9
-			-- A general stack dump request
-
-	Rqst_dump_variables: INTEGER is 10
-			-- Dump variable for the current feature on stack.
-			-- Defined as DUMP_VARIABLE in run-time
-
-	Rqst_move: INTEGER is 12
-			-- Change active routine pointer
-
-	Rqst_break: INTEGER is 13
-			-- Add/delete breakpoint
-
-	Rqst_resume: INTEGER is 14
-			-- Resume execution
-
-	Rqst_quit: INTEGER is 15
-			-- Application must die immediately
-
-	Rqst_application: INTEGER is 17
-			-- Start up application (for ised)
-
-	Rqst_load: INTEGER is 22
-			-- Load byte code information
-
-	Rqst_bc: INTEGER is 23
-			-- Byte code transfer
-
-	Rqst_kill: INTEGER is 24
-			-- Kill application asynchronously
-
-	Rqst_adopt: INTEGER is 25
-			-- Adopt object
-
-	Rqst_access: INTEGER is 26
-			-- Access object through hector
-
-	Rqst_wean: INTEGER is 27
-			-- Wean adopted object
-
-	Rqst_once: INTEGER is 28
-			-- Once routines inspection
-
-	Rqst_interrupt: INTEGER is 29
-			-- Debugger asking interruption of application
-
-	Rqst_sp_lower: INTEGER is 33
-			-- Bounds for special objects inspection
-
-	Rqst_metamorphose: INTEGER is 34
-			-- Convert the top-level item on the operational stack from a basic type to a reference type.
-
-	Rqst_new_breakpoint: INTEGER is 36
-			-- Debugger asking interruption of application in
-			-- order to take new breakpoint(s) into account.
-
-	Rqst_modify_local: INTEGER is 37
-			-- Debugger asking modification of a local item
-			-- (argument/local variable/result).
-
-	Rqst_modify_attr: INTEGER is 38
-			-- Debugger asking modification of an object attribute.
-
-	Rqst_dynamic_eval: INTEGER is 39
-			-- Debugger asking the application to evaluate a
-			-- given feature with the given parameters.
-
-	Rqst_application_cwd: INTEGER is 40
-			-- Set current directory for application.
-
-	Rqst_application_env: INTEGER is 48
-			-- Set current env for application.
-
-	Rqst_overflow_detection: INTEGER is 41
-			-- Set the call stack depth at which we warn the user.
-
-	Rqst_change_thread: INTEGER is 42
-			-- Set the thread id to inspect.
-
-	Rqst_set_assertion_check: INTEGER is 43
-			-- Set the assertion checking state.
-
-	Rqst_close_debugger: INTEGER is 44
-			-- Close the debugger daemon.
-
-	Rqst_set_ipc_param: INTEGER is 45
-			-- Set IPC parameters.
-
-	Rqst_clear_breakpoints: INTEGER is 46
-			-- Clear breakpoints table from debuggee.
-
-	Rqst_dbg_exception_trace: INTEGER is 47
-			-- Get dbg exception trace
-
-	Rqst_new_instance: INTEGER is 49
-			-- Create new instance of class
-
-	Rqst_rt_operation: INTEGER is 50
-			-- Invoke an `RT_EXTENSION' operation	
+	Rqst_hello: INTEGER 				= 4 -- Application's handshake with ewb
+	Rqst_inspect: INTEGER 				= 7 -- Object inspection
+	Rqst_dump_threads: INTEGER 			= 8 -- Notification from Application.
+	Rqst_dump_stack: INTEGER 			= 9 -- A general stack dump request
+	Rqst_dump_variables: INTEGER 		= 10 -- Dump variable for the current feature on stack.
+											 -- Defined as DUMP_VARIABLE in run-time
+	Rqst_move: INTEGER 					= 12 -- Change active routine pointer
+	Rqst_break: INTEGER 				= 13 -- Add/delete breakpoint
+	Rqst_resume: INTEGER 				= 14 -- Resume execution
+	Rqst_quit: INTEGER 					= 15 -- Application must die immediately
+	Rqst_application: INTEGER 			= 17 -- Start up application (for ised)
+	Rqst_load: INTEGER 					= 22 -- Load byte code information
+	Rqst_bc: INTEGER 					= 23 -- Byte code transfer
+	Rqst_kill: INTEGER 					= 24 -- Kill application asynchronously
+	Rqst_adopt: INTEGER 				= 25 -- Adopt object
+	Rqst_access: INTEGER 				= 26 -- Access object through hector
+	Rqst_wean: INTEGER 					= 27 -- Wean adopted object
+	Rqst_once: INTEGER 					= 28 -- Once routines inspection
+	Rqst_interrupt: INTEGER 			= 29 -- Debugger asking interruption of application
+	Rqst_sp_lower: INTEGER 				= 33 -- Bounds for special objects inspection
+	Rqst_metamorphose: INTEGER 			= 34 -- Convert the top-level item on the operational stack from a basic type to a reference type.
+	Rqst_new_breakpoint: INTEGER 		= 36 -- Debugger asking interruption of application in
+											 -- order to take new breakpoint(s) into account.
+	Rqst_modify_local: INTEGER 			= 37 -- Debugger asking modification of a local item
+											 -- (argument/local variable/result).
+	Rqst_modify_attr: INTEGER 			= 38 -- Debugger asking modification of an object attribute.
+	Rqst_dynamic_eval: INTEGER 			= 39 -- Debugger asking the application to evaluate a
+											 -- given feature with the given parameters.
+	Rqst_application_cwd: INTEGER 		= 40 -- Set current directory for application.
+	Rqst_application_env: INTEGER 		= 48 -- Set current env for application.
+	Rqst_overflow_detection: INTEGER 	= 41 -- Set the call stack depth at which we warn the user.
+	Rqst_change_thread: INTEGER 		= 42 -- Set the thread id to inspect.
+	Rqst_set_assertion_check: INTEGER 	= 43 -- Set the assertion checking state.
+	Rqst_close_debugger: INTEGER 		= 44 -- Close the debugger daemon.
+	Rqst_set_ipc_param: INTEGER 		= 45 -- Set IPC parameters.
+	Rqst_clear_breakpoints: INTEGER 	= 46 -- Clear breakpoints table from debuggee.
+	Rqst_dbg_exception_trace: INTEGER 	= 47 -- Get dbg exception trace
+	Rqst_new_instance: INTEGER 			= 49 -- Create new instance of class
+	Rqst_rt_operation: INTEGER 			= 50 -- Invoke an `RT_EXTENSION' operation	
 
 feature {NONE} -- Resume
 
-	Resume_cont: INTEGER is 0
-			-- Continue until next breakpoint
+	Resume_cont: INTEGER				= 0 -- Continue until next breakpoint
+	Resume_step: INTEGER				= 1 -- Advance one step
+	Resume_next: INTEGER				= 2 -- Advance until next line
 
-	Resume_step: INTEGER is 1
-			-- Advance one step
-
-	Resume_next: INTEGER is 2
-			-- Advance until next line
-
-	Break_set: INTEGER is 0
-			-- Activate user breakpoint			-- ( <=> DT_SET in run-time )
-
-	Break_remove: INTEGER is 1 				-- ( <=> DT_REMOVE in run-time )
-			-- Remove user breakpoint
-
-	Break_set_stack_depth: INTEGER is 2		-- ( <=> DT_SET_STACKBP in run-time )
-			-- Activate stepinto mode
-
-	Break_set_stepinto: INTEGER is 3		-- ( <=> DT_SET_STEPINTO in run-time )
-			-- Activate stepinto mode
+	Break_set: INTEGER					= 0 -- Activate user breakpoint	( <=> DT_SET in run-time )
+	Break_remove: INTEGER				= 1 -- Remove user breakpoint ( <=> DT_REMOVE in run-time )
+	Break_set_stack_depth: INTEGER		= 2 -- Activate stepinto mode ( <=> DT_SET_STACKBP in run-time )
+	Break_set_stepinto: INTEGER			= 3 -- Activate stepinto mode ( <=> DT_SET_STEPINTO in run-time )
 
 feature {NONE} -- Inspection constants
 
-	In_address: INTEGER is 0
-			-- Inspect Object at given physical addr
+	In_address: INTEGER					= 0 -- Inspect Object at given physical addr
+	In_h_addr: INTEGER					= 5 -- Inspect Object at given hector addr
+	In_bit_addr: INTEGER				= 6 -- Inspect Bit object at given addr
+	In_string_addr: INTEGER				= 7 -- Inspect String object at given addr
 
-	In_h_addr: INTEGER is 5
-			-- Inspect Object at given hector addr
+	Out_called: INTEGER					= 0 -- Check whether once routine has been called
+	Out_index: INTEGER					= 2 -- Ask for result of already called once function
+	Out_data_per_thread: INTEGER		= 3 -- Ask for result of already called once function per thread
+	Out_data_per_process: INTEGER		= 4 -- Ask for result of already called once function per process
 
-	In_bit_addr: INTEGER is 6
-			-- Inspect Bit object at given addr
-
-	In_string_addr: INTEGER is 7
-			-- Inspect String object at given addr
-
-	Out_called: INTEGER is 0
-			-- Check whether once routine has been called
-
-	Out_index: INTEGER is 2
-			-- Ask for result of already called once function
-
-	Out_data_per_thread: INTEGER is 3
-			-- Ask for result of already called once function per thread
-
-	Out_data_per_process: INTEGER is 4
-			-- Ask for result of already called once function per process
-
-	Out_once_per_thread: INTEGER is 0
-			-- Precised that once is per thread
-
-	Out_once_per_process: INTEGER is 1
-			-- Precised that once is per process
+	Out_once_per_thread: INTEGER		= 0 -- Precised that once is per thread
+	Out_once_per_process: INTEGER		= 1 -- Precised that once is per process
 
 feature -- Rt operations
 
-	Rtop_option: INTEGER 				= 0
-			-- See rqst_constant.h
-	Rtop_exec_replay: INTEGER 			= 1
-			-- See rqst_constant.h	
-	Rtop_dump_rt_object: INTEGER 		= 2
-			-- See rqst_constant.h	
-	Rtop_object_storage_save: INTEGER 	= 3
-			-- See rqst_constant.h	
-	Rtop_object_storage_load: INTEGER 	= 4
-			-- See rqst_constant.h	
-
-	Rtop_exec_replay_record: INTEGER 	= 0
-			-- See {RT_EXTENSION}.Op_exec_replay_record
-	Rtop_exec_replay_back: INTEGER 		= 1
-			-- See {RT_DBG_EXECUTION_RECORDER}.Direction_back
-	Rtop_exec_replay_forth: INTEGER 	= 2
-			-- See {RT_DBG_EXECUTION_RECORDER}.Direction_forth			
-	Rtop_exec_replay_left: INTEGER 		= 3
-			-- See {RT_DBG_EXECUTION_RECORDER}.Direction_left
-	Rtop_exec_replay_right: INTEGER 	= 4
-			-- See {RT_DBG_EXECUTION_RECORDER}.Direction_right	
+	Rtop_option: INTEGER 				= 0	-- See rqst_constant.h:RQST_RTOP_OPTION
+	Rtop_exec_replay: INTEGER 			= 1	-- See rqst_constant.h:RQST_RTOP_EXEC_REPLAY
+	Rtop_dump_object: INTEGER 			= 2	-- See rqst_constant.h:RQST_RTOP_DUMP_OBJECT
+	Rtop_object_storage_save: INTEGER 	= 3	-- See rqst_constant.h:RQST_RTOP_OBJECT_STORAGE_SAVE
+	Rtop_object_storage_load: INTEGER 	= 4	-- See rqst_constant.h:RQST_RTOP_OBJECT_STORAGE_LOAD
 
 feature {APPLICATION_STATUS} -- Implementation
 
---	Pg_raise: INTEGER is 1
---			-- Explicitely raised exception
-
---	Pg_viol: INTEGER is 2
---			-- Implicitely raised exception
-
---	Pg_break: INTEGER is 3
---			-- Breakpoint reached
-
---	Pg_interrupt: INTEGER is 4
---			-- System execution interrupted
-
---	Pg_new_breakpoint: INTEGER is 5
---			-- New breakpoints added while running. The application should stop
---			-- to record the new breakpoints.
-
---	Pg_step: INTEGER is 6
---			-- The application completed a step operation.
-
---	Pg_overflow: INTEGER is 7
---			-- The application might run into a stack overflow.
+--	Pg_raise: INTEGER					= 1	-- Explicitely raised exception
+--	Pg_viol: INTEGER					= 2	-- Implicitely raised exception
+--	Pg_break: INTEGER					= 3	-- Breakpoint reached
+--	Pg_interrupt: INTEGER				= 4	-- System execution interrupted
+--	Pg_new_breakpoint: INTEGER			= 5	-- New breakpoints added while running. The application should stop
+											-- to record the new breakpoints.
+--	Pg_step: INTEGER					= 6	-- The application completed a step operation.
+--	Pg_overflow: INTEGER				= 7	-- The application might run into a stack overflow.
 
 		-- stack request code: same as in ipc/shared/stack.h
---	Exceptions_stack: INTEGER is 0
---	Calls_stack: INTEGER is 1
---	Full_stack: INTEGER is 2
---	Locals_stack: INTEGER is 3
---	Args_stack: INTEGER is 4
---	Vars_stack: INTEGER is 5
---	Once_stack: INTEGER is 6
+--	Exceptions_stack: INTEGER			= 0
+--	Calls_stack: INTEGER				= 1
+--	Full_stack: INTEGER					= 2
+--	Locals_stack: INTEGER				= 3
+--	Args_stack: INTEGER					= 4
+--	Vars_stack: INTEGER					= 5
+--	Once_stack: INTEGER					= 6
 
 -- Need to be updated.
-	Rqst_cont: INTEGER is 2
-	Rqst_step: INTEGER is 3
-	Rqst_next: INTEGER is 4
+	Rqst_cont: INTEGER					= 2
+	Rqst_step: INTEGER					= 3
+	Rqst_next: INTEGER					= 4
 
 feature {NONE} -- Notification event type (check eif_debug.h)
 
-	Notif_thr_created: INTEGER is 1
-	Notif_thr_exited: INTEGER is 2
+	Notif_thr_created: INTEGER			= 1
+	Notif_thr_exited: INTEGER			= 2
 
 feature {NONE} -- For workbench responses.
 
 	-- Same as in C file: ipc/ewb/ewb.h
 
-	Rep_db_info: INTEGER is 1
-	Rep_job_done: INTEGER is 2
-	Rep_failure: INTEGER is 3
-	Rep_melt: INTEGER is 4
-	Rep_dead: INTEGER is 5
-	Rep_stopped: INTEGER is 6;
-	Rep_notified: INTEGER is 7;
+	Rep_db_info: INTEGER				= 1
+	Rep_job_done: INTEGER				= 2
+	Rep_failure: INTEGER				= 3
+	Rep_melt: INTEGER					= 4
+	Rep_dead: INTEGER					= 5
+	Rep_stopped: INTEGER				= 6
+	Rep_notified: INTEGER				= 7
 
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

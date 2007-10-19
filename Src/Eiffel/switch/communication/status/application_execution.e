@@ -349,7 +349,7 @@ feature -- Execution
 			if b then
 				status.set_replay_activated (True)
 				check status.replay_depth = 0 end
-				d := query_replay_status (Replay_back_direction)
+				d := query_replay_status (Rtdbg_op_replay_back)
 				status.set_replay_depth_limit (d)
 			else
 				from
@@ -358,7 +358,7 @@ feature -- Execution
 				until
 					d = 0 or not r
 				loop
-					r := replay (replay_forth_direction)
+					r := replay (Rtdbg_op_replay_forth)
 					d := d - 1
 				end
 
@@ -382,9 +382,9 @@ feature -- Execution
 		do
 			d := status.replay_depth
 			inspect direction
-			when Replay_back_direction then
+			when Rtdbg_op_replay_back then
 				d := d + 1
-			when Replay_forth_direction then
+			when Rtdbg_op_replay_forth then
 				d := d - 1
 			else
 			end
@@ -410,10 +410,13 @@ feature -- Execution
 		deferred
 		end
 
-	Replay_back_direction: INTEGER = 1
-	Replay_forth_direction: INTEGER = 2
-	Replay_left_direction: INTEGER = 3
-	Replay_right_direction: INTEGER = 4
+feature -- RT_EXTENSION constants (note: maybe this should be in a RTDBG_CONSTANTS class)
+
+	Rtdbg_op_replay_record: INTEGER 	= 0	-- See eif_debug.h:RTDBG_OP_REPLAY_RECORD	+ {RT_EXTENSION}.Op_exec_replay_record 		
+	Rtdbg_op_replay_back: INTEGER 		= 1	-- See eif_debug.h:RTDBG_OP_REPLAY_BACK		+ {RT_DBG_EXECUTION_RECORDER}.Direction_back 	
+	Rtdbg_op_replay_forth: INTEGER 		= 2	-- See eif_debug.h:RTDBG_OP_REPLAY_FORTH	+ {RT_DBG_EXECUTION_RECORDER}.Direction_forth 	
+	Rtdbg_op_replay_left: INTEGER 		= 3	-- See eif_debug.h:RTDBG_OP_REPLAY_LEFT 	+ {RT_DBG_EXECUTION_RECORDER}.Direction_left 	
+	Rtdbg_op_replay_right: INTEGER 		= 4	-- See eif_debug.h:RTDBG_OP_REPLAY_RIGHT	+ {RT_DBG_EXECUTION_RECORDER}.Direction_right 	
 
 feature -- Assertion change
 

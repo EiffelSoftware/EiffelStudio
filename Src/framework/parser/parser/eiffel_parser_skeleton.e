@@ -299,12 +299,14 @@ feature -- Removal
 			expression_node := Void
 			indexing_node := Void
 			entity_declaration_node := Void
+			match_list := Void
 		ensure
 			root_node_void: root_node = Void
 			type_node_void: type_node = Void
 			expression_node_void: expression_node = Void
 			indexing_node_void: indexing_node = Void
 			entity_declaration_node_void: entity_declaration_node = Void
+			match_list_void: match_list = Void
 		end
 
 	wipe_out is

@@ -401,7 +401,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-feature {EIFFEL_PARSER} -- Element change
+feature {EIFFEL_PARSER_SKELETON} -- Element change
 
 	set_text_positions (ge, ip, fp: INTEGER) is
 			-- Set positions in class text.

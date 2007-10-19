@@ -114,7 +114,7 @@ feature -- Error Managment
 
 feature
 
-	convert (an_identifier: STRING) : INTEGER is
+	to_integer (an_identifier: STRING) : INTEGER is
 			-- Convert `an_identifier' which can be a string or a integer string
 			-- into a integer value.
 		require

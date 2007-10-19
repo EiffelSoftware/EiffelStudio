@@ -26,16 +26,16 @@ feature
 			language: LANGUAGE_OPTION
 			version: VERSION_OPTION
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! characteristics.make
+			create characteristics.make
 			put (characteristics)
 
-			!! language.make
+			create language.make
 			put (language)
 
-			!! version.make
+			create version.make
 			put (version)
 		end
 

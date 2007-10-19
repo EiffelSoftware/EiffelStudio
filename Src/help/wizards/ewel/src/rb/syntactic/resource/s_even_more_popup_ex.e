@@ -25,13 +25,13 @@ feature
 			type: TYPE_EXPRESSION
 			state_and_helpId: STATE_AND_HELPID_EXPRESSIONS
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! type.make
+			create type.make
 			put (type)
 
-			!! state_and_helpId.make
+			create state_and_helpId.make
 			put (state_and_helpId)
 		end
 

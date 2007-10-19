@@ -88,7 +88,7 @@ feature {NONE}
 	identifier_string: STRING is
 			-- contain the regular expression of identifiers
 		once
-			!! Result.make (150)
+			create Result.make (150)
 
 			Result.append (" *(('a'..'z') | '_' | '.' | ('0'..'9')) | ")
 			Result.append (" ('%"' *(($. - '\t' - '\n' - '\r' - '%"') | (%"\%"\%"%")) '%"') |")
@@ -100,7 +100,7 @@ feature {NONE}
 	attributes_string: STRING is
 			-- contain the list of the LOAD_AND_MEM_ATTRIBUTES
 		once
-			!! Result.make (120)
+			create Result.make (120)
 			
 			Result.append ("%"PRELOAD%" | %"LOADONCALL%" |")
 			Result.append ("%"FIXED%" | %"MOVEABLE%" |")
@@ -110,7 +110,7 @@ feature {NONE}
 	blank_string: STRING is
 			-- contain the blank character of the language
 		once
-			!! Result.make (120)
+			create Result.make (120)
 
 			Result.append (" +('\t'|'\n'|' ') |")
 			Result.append (" (%"//%" -> %"\n%") |")

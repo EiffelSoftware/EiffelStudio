@@ -13,7 +13,7 @@ class MORE_USER_DEFINED_RESOURCE
 inherit
 	S_MORE_USER_DEFINED_RESOURCE
 
-creation
+create
 	make
 
 indexing

@@ -37,7 +37,7 @@ feature -- Access
 		local
 			win: EV_WARNING_DIALOG
 		do
-			!! win.make_with_text(par, title, message)
+			create win.make_with_text(par, title, message)
 			win.show
 		end
 

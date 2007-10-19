@@ -24,13 +24,13 @@ feature
 		local
 			filename: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("MESSAGETABLE")
 			commit
 
-			!! filename.make
+			create filename.make
 			put (filename)
 		end
 

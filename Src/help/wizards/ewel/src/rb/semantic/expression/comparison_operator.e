@@ -14,7 +14,7 @@ class
 inherit
 	S_COMPARISON_OPERATOR
 
-creation
+create
 	make
 
 indexing

@@ -13,7 +13,7 @@ inherit
 
 	EV_HORIZONTAL_BOX
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -32,7 +32,7 @@ feature -- Initialization
 			default_create
 
 			create check_code_generation.make_with_text ("Generate code")
-			check_code_generation.select_actions.extend (~on_select_check_code)
+			check_code_generation.select_actions.extend (agent on_select_check_code)
 
 			create dialog_class_name.make ("Class name", "", 10, 10, w_window, False)
 

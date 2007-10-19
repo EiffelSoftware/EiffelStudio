@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			control: CONTROL_STATEMENT_EX
 			list: CONTROL_STATEMENT_EX_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! control.make
+			create control.make
 			put (control)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

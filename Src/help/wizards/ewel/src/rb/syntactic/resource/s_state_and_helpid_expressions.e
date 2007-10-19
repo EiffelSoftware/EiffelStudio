@@ -25,13 +25,13 @@ feature
 			state: STATE_EXPRESSION
 			helpID: HELP_ID_EXPRESSION
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! state.make
+			create state.make
 			put (state)
 
-			!! helpID.make
+			create helpID.make
 			put (helpID)
 		end
 

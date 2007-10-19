@@ -36,7 +36,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make_with_coordinates
 
 feature
@@ -86,11 +86,11 @@ feature -- Behavior
 			icon_resource ?= current_resource
 			
 			if bitmap_resource /= Void then
-				!! file.make (bitmap_resource.filename)
+				create file.make (bitmap_resource.filename)
 				if file.exists then
-					!! file.make_open_read (bitmap_resource.filename)
-					!! dib.make_by_file (file)
-					!! bitmap.make_by_dib (paint_dc, dib, Dib_rgb_colors)
+					create file.make_open_read (bitmap_resource.filename)
+					create dib.make_by_file (file)
+					create bitmap.make_by_dib (paint_dc, dib, Dib_rgb_colors)
 					paint_dc.draw_bitmap (bitmap, 1, 3, bitmap.width, bitmap.height)
 				else
 					error_message.wipe_out
@@ -104,8 +104,8 @@ feature -- Behavior
 			end
 
 			if cursor_resource /= Void then
-				!! filename.make_from_string (cursor_resource.filename)
-				!! cursor.make_by_file (filename)
+				create filename.make_from_string (cursor_resource.filename)
+				create cursor.make_by_file (filename)
 				if cursor.exists then
 					paint_dc.draw_cursor (cursor, 1, 3)
 				else
@@ -120,8 +120,8 @@ feature -- Behavior
 			end
 
 			if icon_resource /= Void then
-				!! filename.make_from_string (icon_resource.filename)
-				!! icon.make_by_file (filename)
+				create filename.make_from_string (icon_resource.filename)
+				create icon.make_by_file (filename)
 				if icon.exists then
 					paint_dc.draw_icon (icon, 1, 3)
 				else
@@ -139,17 +139,17 @@ feature -- Behavior
 	class_background: WEL_LIGHT_GRAY_BRUSH is
 			-- Standard window background color
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	ansi_font: WEL_ANSI_VARIABLE_FONT is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	class_name: STRING is
 		once
-			!! Result.make (20)
+			create Result.make (20)
 			Result := "Properties window"
 		end
 	
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 	error_message: STRING is
 			-- Error string message.
 		once
-			!! Result.make (30)
+			create Result.make (30)
 		end
 
 indexing

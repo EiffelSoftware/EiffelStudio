@@ -24,13 +24,13 @@ feature
 		local
 			fileflagsmask: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("FILEFLAGSMASK")
 			commit
 
-			!! fileflagsmask.make
+			create fileflagsmask.make
 			put (fileflagsmask)
 		end
 

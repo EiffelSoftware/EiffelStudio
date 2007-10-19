@@ -12,7 +12,7 @@ class
 inherit
 	HASH_TABLE[RESOURCE,STRING]
 		
-creation
+create
 
 	make
 

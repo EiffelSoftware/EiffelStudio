@@ -14,7 +14,7 @@ class SINGLE_LINE
 inherit
 	S_SINGLE_LINE
 
-creation
+create
 	make
 
 indexing

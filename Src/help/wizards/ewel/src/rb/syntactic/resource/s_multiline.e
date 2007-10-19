@@ -35,37 +35,37 @@ feature
 			dlginit: DLGINIT_RESOURCE
 			toolbar: TOOLBAR_RESOURCE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! accelerators.make
+			create accelerators.make
 			put (accelerators)
 
-			!! dialog.make
+			create dialog.make
 			put (dialog)
 
-			!! dialogEx.make
+			create dialogEx.make
 			put (dialogEx)
 
-			!! menu.make
+			create menu.make
 			put (menu)
 
-			!! menuEx.make
+			create menuEx.make
 			put (menuEx)
 
-			!! rcdata.make
+			create rcdata.make
 			put (rcdata)
 
-			!! version.make
+			create version.make
 			put (version)
 
-			!! textinclude.make
+			create textinclude.make
 			put (textinclude)
 
-			!! dlginit.make
+			create dlginit.make
 			put (Dlginit)
 
-			!! toolbar.make
+			create toolbar.make
 			put (toolbar)
 		end
 

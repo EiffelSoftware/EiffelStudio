@@ -14,7 +14,7 @@ class
 inherit
 	S_DIV
 
-creation
+create
 	make
 
 indexing

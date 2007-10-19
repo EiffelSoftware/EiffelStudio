@@ -26,18 +26,18 @@ feature
 			id_value: IDENTIFIER
 			more: MORE_ACCELERATORS
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! event.make
+			create event.make
 			put (event)
 
 			keyword (",")
 
-			!! id_value.make
+			create id_value.make
 			put (id_value)
 
-			!! more.make
+			create more.make
 			put (more)
 		end
 

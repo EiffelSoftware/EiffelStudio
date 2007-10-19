@@ -32,7 +32,7 @@ feature -- Initialization
 			create text_format.make
 			reset_text_format
 			create hyperlinks.make
-			create com.make(~link_clicked)
+			create com.make(agent link_clicked)
 			add_button_press_command(1, com, Void)
 		end
 

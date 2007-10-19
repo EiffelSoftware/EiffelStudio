@@ -14,7 +14,7 @@ class
 inherit
 	S_DEFINED_TEST
 
-creation
+create
 	make
 
 indexing

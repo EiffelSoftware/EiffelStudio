@@ -25,13 +25,13 @@ feature
 			button: TOOLBAR_BUTTON
 			separator: TOOLBAR_SEPARATOR
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! button.make
+			create button.make
 			put (button)
 
-			!! separator.make
+			create separator.make
 			put (separator)
 		end
 

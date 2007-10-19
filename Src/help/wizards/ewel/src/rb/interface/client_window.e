@@ -12,7 +12,7 @@ class
 inherit
 	TABLE_OF_SYMBOLS
 
-creation
+create
 	make
 
 feature -- Access
@@ -90,13 +90,13 @@ feature -- Implementation
 
 	class_name: STRING is
 		once
-			!! result.make (20)
+			create result.make (20)
 			result := "Client window"
 		end
 
 	class_background: WEL_NULL_BRUSH is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	new_resource: TDS_RESOURCE

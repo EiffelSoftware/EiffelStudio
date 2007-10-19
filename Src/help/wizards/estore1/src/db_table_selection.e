@@ -16,7 +16,7 @@ inherit
 			proceed_with_current_info
 		end
 
-creation
+create
 	make
 
 feature -- basic Operations
@@ -37,8 +37,8 @@ feature -- basic Operations
 		do 
 			Create selected_items
 			Create unselected_items
-			selected_items.select_actions.extend(~unselect_item)
-			unselected_items.select_actions.extend(~select_item)
+			selected_items.select_actions.extend(agent unselect_item)
+			unselected_items.select_actions.extend(agent select_item)
 
 			Create txt.make(main_box)
 			txt.add_line(" ")

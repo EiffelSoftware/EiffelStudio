@@ -25,16 +25,16 @@ feature
 			identifier: IDENTIFIER
 			value: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("#define")
 			commit
 
-			!! identifier.make
+			create identifier.make
 			put (identifier)
 
-			!! value.make
+			create value.make
 			put (value)
 			value.set_optional
 		end

@@ -9,7 +9,7 @@ indexing
 class
 	RESOURCE_CATEGORY
  
-creation
+create
 	make 
 
 feature -- Initialization
@@ -27,9 +27,9 @@ feature -- Initialization
 			s: STRING
 			txt: XML_TEXT
 		do
-			!! Resources.make
-			!! Categories.make
-			!! description.make(20)
+			create Resources.make
+			create Categories.make
+			create description.make(20)
 			cursor := doc.new_cursor
 			from
 				cursor.start
@@ -52,10 +52,10 @@ feature -- Initialization
 								des_cursor.forth
 							end		
 						elseif node.name.is_equal("TEXT") then
-							!! resource.make(node,struc)
+							create resource.make(node,struc)
 							resources.extend(resource)
 						elseif node.name.is_equal("TOPIC") then
-							!! category.make(node,struc)
+							create category.make(node,struc)
 							categories.extend(category)
 						end
 				end

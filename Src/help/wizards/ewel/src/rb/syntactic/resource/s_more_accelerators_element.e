@@ -24,12 +24,12 @@ feature
 		local
 			identifier: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword (",")
 
-			!! identifier.make
+			create identifier.make
 			put (identifier)
 		end
 

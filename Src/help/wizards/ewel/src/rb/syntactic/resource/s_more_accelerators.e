@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			element: MORE_ACCELERATORS_ELEMENT
 			list: MORE_ACCELERATORS
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! element.make
+			create element.make
 			put (element)
 			
-			!! list.make
+			create list.make
 			put (list)
 		end
 

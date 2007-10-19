@@ -15,7 +15,7 @@ inherit
 			is_equal		
 		end
 
-creation
+create
 	make,
 	make_from_xml_tree
 

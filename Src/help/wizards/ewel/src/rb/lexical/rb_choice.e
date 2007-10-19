@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 			if not has_error then
 				set_has_error (true)
 
-				!! s2.make (50)
+				create s2.make (50)
 				s2.append (" (line ")
 				s2.append_integer (document.token.line_number)
 				s2.append ("): ")

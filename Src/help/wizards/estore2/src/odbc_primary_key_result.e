@@ -9,7 +9,7 @@ indexing
 class
 	ODBC_PRIMARY_KEY_RESULT
 
-creation
+create
 	make
 
 feature -- Initialization

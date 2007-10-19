@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			menu_item: ITEM
 			list: ITEMS_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! menu_item.make
+			create menu_item.make
 			put (menu_item)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

@@ -7,7 +7,7 @@ indexing
 class
 	E_TOPIC_LINK
 
-creation
+create
 	make
 
 feature -- Initialization

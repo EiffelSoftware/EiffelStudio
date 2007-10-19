@@ -14,7 +14,7 @@ class
 inherit
 	S_EQUAL_OP
 
-creation
+create
 	make
 
 indexing

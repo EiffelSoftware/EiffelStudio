@@ -17,7 +17,7 @@ inherit
 			build
 		end
 
-creation
+create
 	make
 
 feature -- basic Operations

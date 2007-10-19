@@ -12,7 +12,7 @@ class EVEN_MORE_POPUP_EX
 inherit
 	S_EVEN_MORE_POPUP_EX
 
-creation
+create
 	make
 
 indexing

@@ -12,7 +12,7 @@ inherit
 
 	FACILITIES
 
-creation
+create
 	make
 
 feature -- Initialization

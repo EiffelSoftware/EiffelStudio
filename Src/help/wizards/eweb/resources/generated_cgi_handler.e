@@ -12,7 +12,7 @@ class
 inherit 
 	CGI_INTERFACE
 	
-creation
+create
 	make
 
 feature -- Execution

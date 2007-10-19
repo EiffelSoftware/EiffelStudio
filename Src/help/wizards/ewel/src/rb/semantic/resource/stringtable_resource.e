@@ -18,7 +18,7 @@ inherit
 
 	TABLE_OF_SYMBOLS
 
-creation
+create
 	make
 
 feature 
@@ -27,7 +27,7 @@ feature
 		local
 			stringtable: TDS_STRINGTABLE
 		do     
-			!! stringtable.make
+			create stringtable.make
 
 			tds.insert_resource (stringtable)
 			tds.set_current_resource (stringtable)

@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -26,7 +26,7 @@ feature -- Initialization
 		local
 			lbs_multiplesel: TDS_STYLE
 		do
-			!! lbs_multiplesel.make
+			create lbs_multiplesel.make
 			lbs_multiplesel.set_style ("LBS_MULTIPLESEL")
 
 			if style.is_almost_present (lbs_multiplesel) then

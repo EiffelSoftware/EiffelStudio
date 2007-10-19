@@ -7,7 +7,7 @@ indexing
 class
 	TREE_COMPONENT
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -24,7 +24,7 @@ feature -- Initialization
 			create v.make(viewer.tabs)
 			create tree.make(v)
 			viewer.tabs.append_page(v,"Tree")
-			!! com.make(~item_selected)
+			create com.make(agent item_selected)
 			tree.add_select_command(com, Void)
 		end
 

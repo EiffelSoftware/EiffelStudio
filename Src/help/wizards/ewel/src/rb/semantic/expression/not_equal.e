@@ -14,7 +14,7 @@ class
 inherit
 	S_NOT_EQUAL
 
-creation
+create
 	make
 
 indexing

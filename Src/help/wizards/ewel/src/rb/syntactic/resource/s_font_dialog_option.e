@@ -26,21 +26,21 @@ feature
 			typeface: IDENTIFIER
 			more: MORE_FONT_OPTIONS
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("FONT")
 			commit
 
-			!! pointsize.make
+			create pointsize.make
 			put (pointsize)
 
 			keyword (",")
 
-			!! typeface.make
+			create typeface.make
 			put (typeface)
 
-			!! more.make
+			create more.make
 			put (more)
 		end
 

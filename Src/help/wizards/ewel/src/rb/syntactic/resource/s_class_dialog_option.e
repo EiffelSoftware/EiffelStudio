@@ -24,13 +24,13 @@ feature
 		local
 			class_ident: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("CLASS")
 			commit
 
-			!! class_ident.make
+			create class_ident.make
 			put (class_ident)
 		end
 

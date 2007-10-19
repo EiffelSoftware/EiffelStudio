@@ -13,7 +13,7 @@ class RESOURCE_TYPE
 inherit
 	S_RESOURCE_TYPE
 
-creation
+create
 	make
 
 indexing

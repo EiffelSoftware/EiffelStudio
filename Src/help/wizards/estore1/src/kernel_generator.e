@@ -12,7 +12,7 @@ class
 inherit
 	WIZARD_SHARED
 
-Creation
+create
 	make
 
 feature -- Initialization

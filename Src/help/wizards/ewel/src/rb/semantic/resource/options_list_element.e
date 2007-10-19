@@ -12,7 +12,7 @@ class OPTIONS_LIST_ELEMENT
 inherit
 	S_OPTIONS_LIST_ELEMENT
 
-creation
+create
 	make
 
 indexing

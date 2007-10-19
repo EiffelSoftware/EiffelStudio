@@ -14,7 +14,7 @@ class
 inherit
 	S_ADDITION_OPERATOR
 
-creation
+create
 	make
 
 indexing

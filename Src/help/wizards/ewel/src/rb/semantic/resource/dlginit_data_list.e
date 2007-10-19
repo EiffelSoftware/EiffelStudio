@@ -12,7 +12,7 @@ class DLGINIT_DATA_LIST
 inherit
 	S_DLGINIT_DATA_LIST
 
-creation
+create
 	make
 
 indexing

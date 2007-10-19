@@ -15,7 +15,7 @@ class MULTILINE
 inherit
 	S_MULTILINE
 
-creation
+create
 	make
 
 indexing

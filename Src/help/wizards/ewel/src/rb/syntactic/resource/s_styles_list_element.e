@@ -25,13 +25,13 @@ feature
 			operator: OR_OPERATOR
 			style: STYLE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! operator.make
+			create operator.make
 			put (operator)
 
-			!! style.make
+			create style.make
 			put (style)
 		end
 

@@ -13,7 +13,7 @@ class MESSAGETABLE_RESOURCE
 inherit
 	S_MESSAGETABLE_RESOURCE
 
-creation
+create
 	make
 
 indexing

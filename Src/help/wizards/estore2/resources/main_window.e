@@ -24,7 +24,7 @@ feature -- Initialization
 			not_void: appl /= Void
 		do
 			make
-			close_request_actions.extend (appl~destroy)
+			close_request_actions.extend (agent appl.destroy)
 			set_title (main_window_title)
 			create table_window_list.make (10)
 		end
@@ -52,11 +52,11 @@ feature {NONE} -- Implementation
 			vbox.extend (table_selection_cbox)
 			fill_cbox
 			create button.make_with_text (Table_select_button_text)
-			button.add_action (~popup_table_window)
+			button.add_action (agent popup_table_window)
 			vbox.extend (button)
 			vbox.extend_separator
 			create button.make_with_text (Exit_button_text)
-			button.add_action (close_request_actions~call ([]))
+			button.add_action (agent close_request_actions.call ([]))
 			vbox.extend (button)
 		end
 

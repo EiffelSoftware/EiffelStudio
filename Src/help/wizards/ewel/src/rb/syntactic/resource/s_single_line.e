@@ -31,28 +31,28 @@ feature
 			font: FONT_RESOURCE
 			messagetable: MESSAGETABLE_RESOURCE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! anicursor.make
+			create anicursor.make
 			put (anicursor)
 
-			!! aniicon.make
+			create aniicon.make
 			put (aniicon)
 
-			!! bitmap.make
+			create bitmap.make
 			put (bitmap)
 
-			!! cursor.make
+			create cursor.make
 			put (cursor)
 
-			!! icon.make
+			create icon.make
 			put (icon)
 
-			!! font.make
+			create font.make
 			put (font)
 
-			!! messagetable.make
+			create messagetable.make
 			put (messagetable)
 		end
 

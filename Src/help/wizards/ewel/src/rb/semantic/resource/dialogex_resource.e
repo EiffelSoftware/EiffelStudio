@@ -13,7 +13,7 @@ class DIALOGEX_RESOURCE
 inherit
 	S_DIALOGEX_RESOURCE
 
-creation
+create
 	make
 
 indexing

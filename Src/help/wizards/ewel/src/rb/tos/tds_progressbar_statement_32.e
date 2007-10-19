@@ -9,7 +9,7 @@ indexing
 class
 	TDS_PROGRESSBAR_STATEMENT_32
 
-creation
+create
 	make
 
 feature -- Initialization

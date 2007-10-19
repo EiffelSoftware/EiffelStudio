@@ -15,7 +15,7 @@ inherit
 			build
 		end
 
-creation
+create
 	make
 
 

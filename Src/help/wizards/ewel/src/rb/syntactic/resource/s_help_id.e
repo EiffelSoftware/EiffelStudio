@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -36,13 +36,13 @@ feature
 		local
 			identifier: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword (",")
 			commit
 
-			!! identifier.make
+			create identifier.make
 			put (identifier)
 		end
 

@@ -26,17 +26,17 @@ feature
 			virgule: VIRGULE
 			string_value: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! stringID.make
+			create stringID.make
 			put (stringID)
 
-			!! virgule.make
+			create virgule.make
 			put (virgule)
 			virgule.set_optional
 
-			!! string_value.make
+			create string_value.make
 			put (string_value)
 		end
 

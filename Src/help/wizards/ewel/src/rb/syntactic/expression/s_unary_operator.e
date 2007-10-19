@@ -25,13 +25,13 @@ feature
 			minus: MINUS
 			unary_not: UNARY_NOT
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 	
-			!! minus.make
+			create minus.make
 			put (minus)
 			
-			!! unary_not.make
+			create unary_not.make
 			put (unary_not)
 		end
 

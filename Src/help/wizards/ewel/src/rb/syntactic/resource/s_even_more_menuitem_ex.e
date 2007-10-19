@@ -25,13 +25,13 @@ feature
 			type: TYPE_EXPRESSION
 			state: STATE_EXPRESSION
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 			
-			!! type.make
+			create type.make
 			put (type)
 
-			!! state.make
+			create state.make
 			put (state)
 		end
 

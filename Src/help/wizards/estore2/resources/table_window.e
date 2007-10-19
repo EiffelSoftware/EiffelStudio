@@ -27,7 +27,7 @@ feature -- Initialization
 			table_description := tables.description (code)
 			make
 			set_title (table_window_title (table_description.Table_name))
-			close_request_actions.extend (~destroy)
+			close_request_actions.extend (agent destroy)
 		end
 
 	set_initial_focus is
@@ -52,9 +52,9 @@ feature {NONE} -- Implementation
 			container.disable_default_expand
 			create table_component.make
 			table_component.set_tablecode (table_description.Table_code)
-			table_component.set_warning_handler (~send_warning (?))
-			table_component.set_status_handler (~send_status (?))
-			table_component.set_confirmation_handler (~send_confirmation (?, ?))
+			table_component.set_warning_handler (agent send_warning (?))
+			table_component.set_status_handler (agent send_status (?))
+			table_component.set_confirmation_handler (agent send_confirmation (?, ?))
 			create frame.make_with_text ("Search:")
 			container.extend (frame)
 			factory.add_display_searcher (table_component, frame)

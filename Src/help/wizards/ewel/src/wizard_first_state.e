@@ -61,8 +61,8 @@ feature -- Basic Operation
 			set_updatable_entries(<<win_application.select_actions, dialog_application.select_actions>>)
 
 				-- Connect actions.
-			win_application.select_actions.extend (~change_preview)
-			dialog_application.select_actions.extend (~change_preview)
+			win_application.select_actions.extend (agent change_preview)
+			dialog_application.select_actions.extend (agent change_preview)
 		end
 
 	change_preview is

@@ -24,13 +24,13 @@ feature
 		local
 			fileos: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("FILEOS")
 			commit
 
-			!! fileos.make
+			create fileos.make
 			put (fileos)
 		end
 

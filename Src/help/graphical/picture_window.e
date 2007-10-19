@@ -10,7 +10,7 @@ class
 inherit
 	EV_WINDOW
 
-creation
+create
 	make_empty
 
 feature -- Initialization

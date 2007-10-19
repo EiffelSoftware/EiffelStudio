@@ -27,19 +27,19 @@ feature
 			specific: SPECIFIC_STATEMENT
 			general: GENERAL_STATEMENT
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! icon.make
+			create icon.make
 			put (icon)
 
-			!! generic.make
+			create generic.make
 			put (generic)
 
-			!! specific.make
+			create specific.make
 			put (specific)
 
-			!! general.make
+			create general.make
 			put (general)
 		end
 

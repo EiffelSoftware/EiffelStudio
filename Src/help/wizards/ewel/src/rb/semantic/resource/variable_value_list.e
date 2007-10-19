@@ -12,7 +12,7 @@ class VARIABLE_VALUE_LIST
 inherit
 	S_VARIABLE_VALUE_LIST
 
-creation
+create
 	make
 
 indexing

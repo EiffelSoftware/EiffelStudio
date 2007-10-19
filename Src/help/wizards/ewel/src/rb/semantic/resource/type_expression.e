@@ -12,7 +12,7 @@ class TYPE_EXPRESSION
 inherit
 	S_TYPE_EXPRESSION
 
-creation
+create
 	make
 
 indexing

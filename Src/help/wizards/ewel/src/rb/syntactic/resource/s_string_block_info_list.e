@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			element: STRING_BLOCK_ELEMENT
 			list: STRING_BLOCK_INFO_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! element.make
+			create element.make
 			put (element)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

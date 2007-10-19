@@ -13,7 +13,7 @@ class IFDEF_STATEMENT
 inherit
 	S_IFDEF_STATEMENT
 
-creation
+create
 	make
 
 indexing

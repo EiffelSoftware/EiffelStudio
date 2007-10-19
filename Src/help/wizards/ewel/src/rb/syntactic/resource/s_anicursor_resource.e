@@ -25,16 +25,16 @@ feature
 			load_and_mem: LOAD_AND_MEM
 			filename: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("ANICURSOR")
 			commit
 
-			!! load_and_mem.make
+			create load_and_mem.make
 			put (load_and_mem)
 
-			!! filename.make
+			create filename.make
 			put (filename)
 		end
 

@@ -17,7 +17,7 @@ inherit
 
 	TABLE_OF_SYMBOLS
 
-creation
+create
 	make
 
 feature 
@@ -27,7 +27,7 @@ feature
 			aniicon: TDS_ANIICON
 
 		do                
-			!! aniicon.make
+			create aniicon.make
 			aniicon.set_id (tds.last_token)
 			tds.insert_resource (aniicon)
 

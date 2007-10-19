@@ -12,7 +12,7 @@ class NOTHING
 inherit
 	S_NOTHING
 
-creation
+create
 	make
 
 indexing

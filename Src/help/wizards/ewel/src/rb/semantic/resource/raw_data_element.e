@@ -12,7 +12,7 @@ class RAW_DATA_ELEMENT
 inherit
 	S_RAW_DATA_ELEMENT
 
-creation
+create
 	make
 
 indexing

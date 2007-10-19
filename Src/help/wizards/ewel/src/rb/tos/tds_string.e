@@ -9,14 +9,14 @@ indexing
 class
 	TDS_STRING
 
-creation
+create
 	make
 
 feature -- Initialization
 
 	make is
 		do
-			!! text_id
+			create text_id
 		end
 
 feature	-- Access

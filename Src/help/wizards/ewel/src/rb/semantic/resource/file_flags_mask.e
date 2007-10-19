@@ -12,7 +12,7 @@ class FILE_FLAGS_MASK
 inherit
 	S_FILE_FLAGS_MASK
 
-creation
+create
 	make
 
 indexing

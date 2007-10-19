@@ -45,7 +45,7 @@ feature -- basic Operations
 			create v1
 
 			create add_all_b.make_with_text ("Add all ->")
-			add_all_b.select_actions.extend (~add_all_items)
+			add_all_b.select_actions.extend (agent add_all_items)
 			v1.extend (add_all_b)
 			add_all_b.set_minimum_width (Button_width)
 			add_all_b.set_minimum_height (Button_height)
@@ -55,7 +55,7 @@ feature -- basic Operations
 
 			v1.extend (create {EV_CELL})
 			create add_b.make_with_text ("Add->")
-			add_b.select_actions.extend (~add_items)
+			add_b.select_actions.extend (agent add_items)
 			v1.extend (add_b)
 			add_b.set_minimum_width (Button_width)
 			add_b.set_minimum_height (Button_height)
@@ -63,7 +63,7 @@ feature -- basic Operations
 			v1.disable_item_expand (add_b)
 
 			create remove_b.make_with_text ("<-Remove")
-			remove_b.select_actions.extend (~remove_items)
+			remove_b.select_actions.extend (agent remove_items)
 			v1.extend (remove_b)
 			remove_b.set_minimum_width (Button_width)
 			remove_b.set_minimum_height (Button_height)
@@ -73,7 +73,7 @@ feature -- basic Operations
 
 			v1.extend (create {EV_CELL})
 			create remove_all_b.make_with_text ("<- Remove all")
-			remove_all_b.select_actions.extend (~remove_all_items)
+			remove_all_b.select_actions.extend (agent remove_all_items)
 			v1.extend (remove_all_b)
 			remove_all_b.set_minimum_width (Button_width)
 			remove_all_b.set_minimum_height (Button_height)

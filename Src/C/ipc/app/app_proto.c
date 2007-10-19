@@ -280,12 +280,12 @@ static int curr_modify = NO_CURRMODIF;
 	case RT_OPERATION:
 		dthread_prepare();
 		switch (arg_1) {
-			case RT_REPLAY:
+			case RQST_RTOP_EXEC_REPLAY:
 				/*    arg_2: record; arg_3: value */
 				/* or arg_2: up,down,left,right; arg_3: steps */
 				{
-					if (arg_2 == RT_REPLAY_RECORD) {
-						dexecreplay(RT_REPLAY_RECORD, arg_3);
+					if (arg_2 == RTDBG_OP_REPLAY_RECORD) {
+						dexecreplay(RTDBG_OP_REPLAY_RECORD, arg_3);
 					} else if (arg_3 == 0) { /* no steps .. then this is a question */
 						int l = 0;
 						l = dexecreplay_levels(arg_2);
@@ -297,13 +297,13 @@ static int curr_modify = NO_CURRMODIF;
 					};
 				};
 				break;
-			case RT_DUMP_OBJECT:
+			case RQST_RTOP_DUMP_OBJECT:
 				dbg_dump_rt_extension_object(sp);
 				break;
-			case RT_OBJECT_STORAGE_SAVE:
+			case RQST_RTOP_OBJECT_STORAGE_SAVE:
 				dobjectstorage_save (sp);
 				break;
-			case RT_OBJECT_STORAGE_LOAD:
+			case RQST_RTOP_OBJECT_STORAGE_LOAD:
 				dobjectstorage_load (sp);
 				break;
 			default:
@@ -579,20 +579,20 @@ rt_private int dexecreplay_levels (int dir)
 	EIF_TYPED_VALUE rtd_arg;						
 	EIF_GET_CONTEXT;
 	switch (dir) {
-		case RT_REPLAY_BACK:
-		case RT_REPLAY_FORTH:
+		case RTDBG_OP_REPLAY_BACK:
+		case RTDBG_OP_REPLAY_FORTH:
 			CHECK("Execution recording must be on", exec_recording_enabled == 1);	
 			CHECK("is_inside_rt_eiffel_code should be False", is_inside_rt_eiffel_code != 0);	
 			RT_ENTER_EIFFELCODE; /* Stop the recording */
-			rtd_arg = dinvoke_rt_extension_argument (RTDBGD_REPLAY_QUERY_NOTIFICATION);
+			rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_REPLAY_QUERY);
 			rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) dir; 	/* back,forth,... */
-			dinvoke_rt_extension (RTDBGD_REPLAY_QUERY_NOTIFICATION, rtd_arg);
+			dinvoke_rt_extension (RTDBG_EVENT_REPLAY_QUERY, rtd_arg);
 			RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
 			return (int) rtd_arg_value(rtd_arg, 2, i4);
 			break;
-		case RT_REPLAY_LEFT:
+		case RTDBG_OP_REPLAY_LEFT:
 			/* Direction not yet supported */
-		case RT_REPLAY_RIGHT:
+		case RTDBG_OP_REPLAY_RIGHT:
 			/* Direction not yet supported */
 		default:
 			return 0;
@@ -602,7 +602,7 @@ rt_private int dexecreplay_levels (int dir)
 
 rt_private int dexecreplay (int op, int val) 
 	/* Execution replay
-	 * if op is RT_REPLAY_RECORD then (de)activate recording according to `val'
+	 * if op is RTDBG_OP_REPLAY_RECORD then (de)activate recording according to `val'
 	 * else `op' is a direction
 	 * op = back,forth,left,right
 	 * val: nb of steps in the direction `op'
@@ -611,33 +611,33 @@ rt_private int dexecreplay (int op, int val)
 	EIF_TYPED_VALUE rtd_arg;
 	EIF_GET_CONTEXT;
 	switch (op) {
-		case RT_REPLAY_RECORD:
+		case RTDBG_OP_REPLAY_RECORD:
 			if (rt_extension_obj == NULL) {
 					/* Do not enable exec recording if `rt_extension_obj' is not available ! */
 				exec_recording_enabled = 0;
 			} else {
 				exec_recording_enabled = ((int) val == 1)?1:0;
 				RT_ENTER_EIFFELCODE; /* Stop the recording */
-				rtd_arg = dinvoke_rt_extension_argument (RTDBGD_REPLAY_RECORD_NOTIFICATION);
+				rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_REPLAY_RECORD);
 				rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) exec_recording_enabled; /* 1=True or not_1=False */
-				dinvoke_rt_extension (RTDBGD_REPLAY_RECORD_NOTIFICATION, rtd_arg);
+				dinvoke_rt_extension (RTDBG_EVENT_REPLAY_RECORD, rtd_arg);
 				RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
 			}
 			break;
-		case RT_REPLAY_BACK:
-		case RT_REPLAY_FORTH:
+		case RTDBG_OP_REPLAY_BACK:
+		case RTDBG_OP_REPLAY_FORTH:
 			CHECK("Execution recording must be on", exec_recording_enabled == 1);	
 			CHECK("is_inside_rt_eiffel_code should be False", is_inside_rt_eiffel_code != 0);	
 			RT_ENTER_EIFFELCODE; /* Stop the recording */
-			rtd_arg = dinvoke_rt_extension_argument (RTDBGD_REPLAY_NOTIFICATION);
+			rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_REPLAY);
 			rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) op; 	/* back,forth,... */
 			rtd_arg_value(rtd_arg, 2, i4) = (EIF_INTEGER_32) val; 	/* nb steps */
-			dinvoke_rt_extension (RTDBGD_REPLAY_NOTIFICATION, rtd_arg);
+			dinvoke_rt_extension (RTDBG_EVENT_REPLAY, rtd_arg);
 			RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
 			return (int) rtd_arg_value(rtd_arg, 2, i4);
 			break;
-		case RT_REPLAY_LEFT:
-		case RT_REPLAY_RIGHT:
+		case RTDBG_OP_REPLAY_LEFT:
+		case RTDBG_OP_REPLAY_RIGHT:
 		default:
 			return -1;
 			break;
@@ -689,10 +689,10 @@ rt_private void dobjectstorage_save (EIF_PSTREAM sp)
 		EIF_BOOLEAN b = EIF_FALSE;
 		send_ack(sp, AK_OK);
 		RT_ENTER_EIFFELCODE; /* Stop the recording */
-		rtd_arg = dinvoke_rt_extension_argument (RTDBGD_OBJECT_STORAGE_SAVE);	/* Obj Storage Save */
+		rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_OBJECT_STORAGE_SAVE);	/* Obj Storage Save */
 		rtd_arg_value(rtd_arg, 1, r) = (EIF_REFERENCE) (pv->item.r); 			/* Object 			*/
 		rtd_arg_value(rtd_arg, 2, p) = s;									 	/* Filename 		*/
-		dinvoke_rt_extension (RTDBGD_OBJECT_STORAGE_SAVE, rtd_arg);
+		dinvoke_rt_extension (RTDBG_EVENT_OBJECT_STORAGE_SAVE, rtd_arg);
 		RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
 		b = EIF_TEST((int) (rtd_arg_value(rtd_arg, 3, i4) == 1));
 		app_twrite (&b, sizeof(EIF_BOOLEAN));
@@ -746,10 +746,10 @@ rt_private void dobjectstorage_load (EIF_PSTREAM sp)
 		EIF_BOOLEAN b = EIF_FALSE;
 		send_ack(sp, AK_OK);
 		RT_ENTER_EIFFELCODE; /* Stop the recording */
-		rtd_arg = dinvoke_rt_extension_argument (RTDBGD_OBJECT_STORAGE_LOAD);	/* Obj Storage Load */
+		rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_OBJECT_STORAGE_LOAD);	/* Obj Storage Load */
 		rtd_arg_value(rtd_arg, 1, r) = (EIF_REFERENCE) (pv->item.r); 			/* Object 			*/
 		rtd_arg_value(rtd_arg, 2, p) = s;									 	/* Filename 		*/
-		dinvoke_rt_extension (RTDBGD_OBJECT_STORAGE_LOAD, rtd_arg);
+		dinvoke_rt_extension (RTDBG_EVENT_OBJECT_STORAGE_LOAD, rtd_arg);
 		RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
 		tmp = (EIF_REFERENCE) rtd_arg_value(rtd_arg, 1, r);
 	}

@@ -16,29 +16,25 @@ create {RT_EXTENSION}
 
 feature {NONE} -- Initialization
 
-	make is
+	make (nb: INTEGER) is
 			-- Creation of Current object
 		do
-			max_record_count := 5_000
+			max_record_count := nb
 		end
 
 feature -- Status
 
 	start_recording is
+			-- Start recording
 		require
 			top_callstack_record_is_void: top_callstack_record = Void
 		do
-			debug ("RT_EXTENSION")
-				dtrace ("Start recording %N")
-			end
 			record_count := 0
 		end
 
 	stop_recording is
+			-- Stop recording (and clean data)
 		do
-			debug ("RT_EXTENSION")
-				dtrace ("Stop recording %N")
-			end
 			top_callstack_record := Void
 			bottom_callstack_record := Void
 			record_count := 0
@@ -51,6 +47,13 @@ feature -- Status
 			top_callstack_record_is_void: top_callstack_record = Void
 		end
 
+	reset_recording is
+			-- Reset recording
+		do
+			stop_recording
+			start_recording
+		end
+
 feature -- Properties
 
 	record_count: INTEGER
@@ -60,10 +63,10 @@ feature -- Properties
 			-- Maximum number of record
 			-- `0' stands for no limit.
 
-	top_callstack_record: RT_DBG_CALLSTACK_RECORD
+	top_callstack_record: RT_DBG_CALL_RECORD
 			-- Current top callstack record.
 
-	bottom_callstack_record: RT_DBG_CALLSTACK_RECORD
+	bottom_callstack_record: RT_DBG_CALL_RECORD
 			-- Bottom (or root) callstack record.
 
 feature -- Constants from eif_debug.h
@@ -81,17 +84,16 @@ feature -- Access
 		require
 			cid_positive: cid > 0
 		local
-			r: RT_DBG_CALLSTACK_RECORD
+			r: RT_DBG_CALL_RECORD
 			fn: STRING
 			flds: LIST [RT_DBG_RECORD]
 		do
 			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "enter_feature (" + ref.generating_type + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
+				dtrace_indent (dep); dtrace ("enter_feature (" + ref.generating_type + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
 				if fnp /= Default_pointer then
 					dtrace (" -> " + create {STRING}.make_from_c (fnp) )
 				end
-				dtrace (" [[" + record_count.out + "]]")
-				dtrace ("%N")
+				dtrace (" [[" + record_count.out + "]]%N")
 			end
 			monitor_record_count
 			create r.make (Current, ref, cid, fid, dep)
@@ -113,30 +115,19 @@ feature -- Access
 			check top_callstack_record /= Void end
 			if bottom_callstack_record = Void then
 				bottom_callstack_record := top_callstack_record
-				debug ("RT_EXTENSION")
-					dtrace ("Set root record to " + bottom_callstack_record.to_string + "%N")
-				end
-			end
-			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "enter_feature (" + ref.generator + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")")
-				if fn /= Void then
-					dtrace (" -> " + fn)
-				end
-				dtrace (" - DONE%N")
 			end
 		end
 
 	enter_rescue (ref: ANY; dep: INTEGER) is
 			-- Enter rescue on object `ref', depth is `dep'
 		local
-			r,pr,c: RT_DBG_CALLSTACK_RECORD
+			r,pr,c: RT_DBG_CALL_RECORD
 			subs: LIST [like top_callstack_record]
 			flds: LIST [RT_DBG_RECORD]
 		do
 			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "enter_rescue (" + ref.generating_type + ", " + dep.out + ")");
-				dtrace (" [[" + record_count.out + "]]")
-				dtrace ("%N")
+				dtrace_indent (dep); dtrace ("enter_rescue (" + ref.generating_type + ", " + dep.out + ")");
+				dtrace (" [[" + record_count.out + "]]%N")
 			end
 			r := top_callstack_record
 			from
@@ -150,12 +141,11 @@ feature -- Access
 					-- Unable to find the related callstack record
 					-- then reset current recording
 				debug ("RT_EXTENSION")
-					dtrace (offset (dep) + "enter_rescue -> No record !!%N")
+					dtrace ("Error: enter_rescue -> No record !!%N")
 				end
+				stop_recording
+				start_recording
 			else
-				debug ("RT_EXTENSION")
-					dtrace (offset (dep) + "enter_rescue -> found record: " + r.to_string + "%N")
-				end
 				pr := r.parent
 				if pr /= Void then
 						--| Close remaining callstack record (from top, to rescued callstack)
@@ -182,13 +172,6 @@ feature -- Access
 				end
 				top_callstack_record := r
 			end
-			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "enter_rescue (" + ref.generating_type + ", " + dep.out + ")")
-				if top_callstack_record /= Void then
-					dtrace (" --TOP--> " + top_callstack_record.to_string)
-				end
-				dtrace (" - DONE%N")
-			end
 		end
 
 	leave_feature (ref: ANY; cid,fid: INTEGER; dep: INTEGER) is
@@ -197,7 +180,7 @@ feature -- Access
 			r: like top_callstack_record
 		do
 			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "leave_feature (" + ref.generating_type + " <" + ($ref).out + ">, " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
+				dtrace_indent (dep); dtrace ("leave_feature (" + ref.generating_type + " <" + ($ref).out + ">, " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
 			end
 
 			if top_callstack_record = Void then
@@ -212,9 +195,6 @@ feature -- Access
 
 						--| We are leaving the root record.
 						--| and thus discard previous recorded data
-					debug ("RT_EXTENSION")
-						dtrace ("Leaving root_callstack ... %N")
-					end
 					record_count := 0
 					bottom_callstack_record := Void
 					top_callstack_record := Void
@@ -229,17 +209,6 @@ feature -- Access
 					r.close
 					top_callstack_record := r.parent
 				end
-			end
-			debug ("RT_EXTENSION")
-				dtrace (offset (dep) + "leave_feature (" + ref.generating_type + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
-				if r /= Void and then r.feature_name /= Void then
-					dtrace (" -> " + r.feature_name)
-				end
-				dtrace (" [[" + record_count.out + "]]")
-				if top_callstack_record /= Void then
-					dtrace (" --TOP--> " + top_callstack_record.to_string)
-				end
-				dtrace (" - DONE%N")
 			end
 		end
 
@@ -264,9 +233,6 @@ feature -- Access
 			inspect dir
 			when Direction_back then
 				if bottom_callstack_record /= Void then
---					debug ("RT_EXTENSION_TRACE")
-					display (bottom_callstack_record, True, False)
---					end
 					Result := top_callstack_record.available_calls_to_bottom
 				end
 			when Direction_forth then
@@ -289,9 +255,6 @@ feature -- Access
 			if max_record_count > 0 then
 				c := record_count
 				if c > 1.1 * max_record_count then
-					debug ("RT_EXTENSION")
-						dtrace (generating_type + ".monitor_records_count %N")
-					end
 					from
 						p := top_callstack_record
 					until
@@ -318,17 +281,18 @@ feature -- Access
 feature -- Replay operation
 
 	last_replay_operation_failed: BOOLEAN
+			-- Does last replay operation failed ?
 
 	replay_stack: LINKED_LIST [TUPLE [record: like top_callstack_record; chgs: LIST [TUPLE [ANY,RT_DBG_RECORD]]]]
+			-- Replay operation stacks.
+			-- useful to "revert" the replay steps.
 
 	replay_back is
+			-- Replay execution back
 		local
 			n, r, p: like top_callstack_record
 			chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]
 		do
-			debug ("RT_EXTENSION")
-				dtrace ("Replay BACK -> start%N")
-			end
 			r := top_callstack_record
 			p := top_callstack_record.parent
 			last_replay_operation_failed := False
@@ -349,35 +313,16 @@ feature -- Replay operation
 				replay_stack.extend ([r, chgs])
 				top_callstack_record := p
 			end
-			debug ("RT_EXTENSION")
-				r := top_callstack_record
-				if r /= Void then
-					dtrace ("Replay BACK -> stack = {")
-					if r.object /= Void then
-						dtrace (r.object.generating_type + ":")
-					end
-					dtrace (r.class_type_id.out + "}." + r.feature_rout_id.out + ".%N")
-				else
-					dtrace ("Replay BACK -> nowhere %N")
-				end
-				if last_replay_operation_failed then
-					dtrace ("Replay BACK -> failed.%N")
-				else
-					dtrace ("Replay BACK -> done.%N")
-				end
-			end
 		end
 
 	replay_forth is
+			-- Replay execution forth
 		require
 			replay_stack_not_empty: replay_stack /= Void and then not replay_stack.is_empty
 		local
 			r: like top_callstack_record
 			t: TUPLE [record: like top_callstack_record; chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]]
 		do
-			debug ("RT_EXTENSION")
-				dtrace ("Replay FORTH -> start%N")
-			end
 			if replay_stack /= Void then
 				check replay_stack.count > 0 end
 				replay_stack.finish
@@ -393,14 +338,6 @@ feature -- Replay operation
 			else
 				last_replay_operation_failed := True
 			end
-
-			debug ("RT_EXTENSION")
-				dtrace ("Replay FORTH -> done ")
-				if last_replay_operation_failed then
-					dtrace ("(failure!)")
-				end
-				dtrace (".%N")
-			end
 		end
 
 feature -- Queries
@@ -408,28 +345,18 @@ feature -- Queries
 	increment_records_count (n: INTEGER) is
 			-- Incremente `record_count' by `n'
 		do
-			debug ("RT_EXTENSION_TRACE")
-				dtrace ("incremente records count by " + n.out + " (" + record_count.out + "->" + (n + record_count).out + "). %N")
-			end
 			record_count := record_count + n
 		end
 
 feature -- Internal helper
 
 	restore_records (chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]) is
+			-- Restore value related to records from `chgs'
 		require
 			chgs /= Void
 		local
 			l_chg: TUPLE [obj: ANY; rec: RT_DBG_RECORD]
 		do
-			debug ("RT_EXTENSION")
-				dtrace ("restore_records -> " + chgs.count.out + " entries...%N")
-				chgs.do_all (agent (tu: TUPLE [ao: ANY; ar: RT_DBG_RECORD])
-						do
-							dtrace (" + " + tu.ao.generating_type + " #" + tu.ar.position.out + " : " + tu.ar.to_string + "%N")
-						end
-					)
-			end
 			from
 				chgs.finish
 			until
@@ -442,19 +369,12 @@ feature -- Internal helper
 		end
 
 	revert_records (chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]) is
+			-- Revert previous restoring related to records from `chgs'
 		require
 			chgs /= Void
 		local
 			l_chg: TUPLE [obj: ANY; rec: RT_DBG_RECORD]
 		do
-			debug ("RT_EXTENSION")
-				dtrace ("revert_records -> " + chgs.count.out + " entries...%N")
-				chgs.do_all (agent (tu: TUPLE [ao: ANY; ar: RT_DBG_RECORD])
-						do
-							dtrace (" + " + tu.ao.generating_type + " #" + tu.ar.position.out + " : " + tu.ar.to_string + "%N")
-						end
-					)
-			end
 			from
 				chgs.start
 			until
@@ -464,105 +384,6 @@ feature -- Internal helper
 				l_chg.rec.revert (l_chg.obj)
 				chgs.forth
 			end
-		end
-
-feature -- helper
-
-	display (r: like top_callstack_record; rec: BOOLEAN; a_show_values: BOOLEAN) is
-		local
-			fn: STRING
-			cn: STRING
-			dep: INTEGER
-			d: STRING
-			lst: LIST [like top_callstack_record]
-			flds: LIST [RT_DBG_RECORD]
-		do
-			cn := class_name_of_type (r.class_type_id)
-			if r.feature_name /= Void then
-				fn := r.feature_name
-			else
-				fn := r.feature_rout_id.out
-			end
-			dep := r.depth
-			lst := r.call_records
-			flds := r.field_records
-			d := offset (dep)
-
-			io.put_string (d)
-			io.put_character ('<')
-			io.put_string (cn + "." + fn)
-			if
-				not rec
-				or (lst = Void or else lst.is_empty)
-			then
-				io.put_character (' ')
-				io.put_character ('/')
-				io.put_character ('>')
-				io.put_new_line
-				if a_show_values then
-					display_fields (flds, r, d)
-				end
-			else
-				io.put_character ('>')
-				io.put_new_line
-				if
-					lst /= Void
-				then
-					check has_records: not lst.is_empty end
-					from
-						lst.start
-					until
-						lst.after
-					loop
-						display (lst.item, rec, a_show_values)
-						lst.forth
-					end
-				end
-				if a_show_values then
-					display_fields (flds, r, d)
-				end
-				io.put_string (d)
-				io.put_character ('<')
-				io.put_character ('/')
-				io.put_string (cn + "." + fn)
-				io.put_character ('>')
-				io.put_new_line
-			end
-		end
-
-	display_fields (flds: LIST [RT_DBG_RECORD]; r: like top_callstack_record; d: STRING) is
-		local
-			tv: RT_DBG_RECORD
-		do
-			if flds /= Void then
-				from
-					flds.start
-				until
-					flds.after
-				loop
-					tv := flds.item_for_iteration
-					io.put_string (d)
-					io.put_string (" - ")
-					io.put_integer (tv.position)
-					io.put_character ('<')
-					io.put_integer (tv.type)
-					io.put_character ('>')
-					io.put_string (" = ")
-					io.put_string (tv.to_string)
-
-					tv := object_record (tv.position, r.object)
-					io.put_string (" -> ")
-					io.put_string (tv.to_string)
-
-					io.put_new_line
-					flds.forth
-				end
-			end
-		end
-
-	offset (i: INTEGER): STRING is
-		do
-			create Result.make_filled (' ', 2 * i)
 		end
 
 indexing

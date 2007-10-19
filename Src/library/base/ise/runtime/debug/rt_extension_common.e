@@ -10,18 +10,15 @@ deferred class
 
 feature -- Trace
 
+	dtrace_indent (n: INTEGER) is
+		do
+			io.error.put_string (create {STRING}.make_filled (' ', 2 * n))
+		end
+
 	dtrace (m: STRING) is
-			--
 		do
-			print (m)
+			io.error.put_string (m)
 		end
-
-	derror (m: STRING) is
-			--
-		do
-			dtrace (m)
-		end
-
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

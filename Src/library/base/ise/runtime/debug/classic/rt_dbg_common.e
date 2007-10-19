@@ -91,7 +91,7 @@ feature -- Object access
 
 feature -- Query
 
-	changes_between (csr1, csr2: RT_DBG_CALLSTACK_RECORD): ARRAYED_LIST [TUPLE [obj: ANY; record: RT_DBG_RECORD]] is
+	changes_between (csr1, csr2: RT_DBG_CALL_RECORD): ARRAYED_LIST [TUPLE [obj: ANY; record: RT_DBG_RECORD]] is
 			-- from `r1' to -beginning-of- `r2'.
 		require
 			csr1_not_void: csr1 /= Void
@@ -99,7 +99,7 @@ feature -- Query
 			o: ANY
 			chgs: like changes_between
 			flds: LIST [RT_DBG_RECORD]
-			rcds: LIST [RT_DBG_CALLSTACK_RECORD]
+			rcds: LIST [RT_DBG_CALL_RECORD]
 			r: RT_DBG_RECORD
 		do
 			if csr1.is_flat then

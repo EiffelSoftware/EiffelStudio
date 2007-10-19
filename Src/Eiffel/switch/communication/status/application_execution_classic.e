@@ -197,7 +197,7 @@ feature -- Execution
 			-- Activate Execution replay recording on debuggee depending of `b'
 		do
 			Precursor {APPLICATION_EXECUTION} (b)
-			cont_request.send_rqst_3_integer (rqst_rt_operation, rtop_exec_replay, rtop_exec_replay_record, b.to_integer)
+			cont_request.send_rqst_3_integer (rqst_rt_operation, rtop_exec_replay, rtdbg_op_replay_record, b.to_integer)
 		end
 
 	replay (direction: INTEGER): BOOLEAN is
@@ -221,7 +221,7 @@ feature -- Execution
 	remote_rt_object: ABSTRACT_DEBUG_VALUE is
 			-- Return the remote rt_object
 		do
-			ewb_request.send_rqst_1 (rqst_rt_operation, rtop_dump_rt_object)
+			ewb_request.send_rqst_1 (rqst_rt_operation, rtop_dump_object)
 			ewb_request.reset_recv_value
 			ewb_request.recv_value (ewb_request)
 			Result := ewb_request.item

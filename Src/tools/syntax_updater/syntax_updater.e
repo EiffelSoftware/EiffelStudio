@@ -117,14 +117,16 @@ feature {NONE} -- Implementation
 						visitor.setup (parser.root_node, parser.match_list, True, True)
 						visitor.reset
 						visitor.process_ast_node (parser.root_node)
-						create outfile.make (file_name)
-						outfile.open_write
-						if outfile.is_open_write then
-							outfile.put_string (visitor.text)
-							outfile.close
-						else
-							io.error.put_string ("Could not write to: " + file_name)
-							io.error.put_new_line
+						if visitor.is_updated then
+							create outfile.make (file_name)
+							outfile.open_write
+							if outfile.is_open_write then
+								outfile.put_string (visitor.text)
+								outfile.close
+							else
+								io.error.put_string ("Could not write to: " + file_name)
+								io.error.put_new_line
+							end
 						end
 					end
 				else

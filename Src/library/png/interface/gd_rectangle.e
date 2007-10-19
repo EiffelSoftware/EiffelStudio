@@ -14,7 +14,7 @@ inherit
 
 	GD_FIGURE
 
-creation
+create
 	make
 
 feature -- Initialization

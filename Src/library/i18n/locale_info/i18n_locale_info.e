@@ -30,7 +30,7 @@ inherit
 			make as initialize_code_page_info
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

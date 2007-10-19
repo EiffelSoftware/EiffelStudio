@@ -9,7 +9,7 @@ indexing
 class
 	APPLICATION_PRECONDITION
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -23,7 +23,7 @@ inherit
 			create_implementation
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

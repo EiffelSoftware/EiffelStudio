@@ -17,7 +17,7 @@ inherit
 			method_name as command_name
 		end
 
-creation
+create
 	make
 
 feature -- Creation

@@ -9,7 +9,7 @@ indexing
 class
 	APPLICATION_ARGUMENT
 
-creation
+create
 	make
 
 feature -- Creation

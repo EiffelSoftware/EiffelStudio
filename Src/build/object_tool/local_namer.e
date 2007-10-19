@@ -5,7 +5,7 @@ class LOCAL_NAMER
 
 		--| FIXME inherited from Build "as_is"
 
-creation
+create
 
 	make
 	

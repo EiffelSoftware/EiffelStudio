@@ -23,7 +23,7 @@ inherit
 
 	QUERY_EDITOR_FORM
 
-creation
+create
 	make
 
 feature {NONE}

@@ -14,7 +14,7 @@ inherit
 
 	EV_LIST_ITEM
 
-creation
+create
 	make
 
 feature -- Creation

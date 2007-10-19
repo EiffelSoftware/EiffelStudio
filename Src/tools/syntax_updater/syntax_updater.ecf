@@ -7,14 +7,15 @@
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option warning="true">
-			<assertions precondition="true" postcondition="true" check="true" loop="true" supplier_precondition="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="exception_trace" value="true"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="0"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="root_cluster" location=".\"/>
 		<override name="parser_v60" location="parser_v60\"/>
 	</target>

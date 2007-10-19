@@ -24,13 +24,13 @@ feature
 		local
 			text: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("CAPTION")
 			commit
 
-			!! text.make
+			create text.make
 			put (text)
 		end
 

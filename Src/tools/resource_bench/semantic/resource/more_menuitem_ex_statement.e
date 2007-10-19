@@ -12,7 +12,7 @@ class MORE_MENUITEM_EX_STATEMENT
 inherit
 	S_MORE_MENUITEM_EX_STATEMENT
 
-creation
+create
 	make
 
 indexing

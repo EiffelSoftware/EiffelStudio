@@ -21,7 +21,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -30,7 +30,7 @@ feature
 		local
 			bitmap: TDS_BITMAP
 		do     
-			!! bitmap.make
+			create bitmap.make
 			bitmap.set_id (tds.last_token)
 			tds.insert_resource (bitmap)
 

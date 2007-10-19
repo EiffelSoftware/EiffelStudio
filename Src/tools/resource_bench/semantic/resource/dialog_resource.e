@@ -21,7 +21,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -30,7 +30,7 @@ feature
 		local
 			dialog: TDS_DIALOG
 		do     
-			!! dialog.make
+			create dialog.make
 			dialog.set_id (tds.last_token)
 			dialog.set_class_name (dialog.id.to_class_style ("DIALOG"))
 			tds.insert_resource (dialog)

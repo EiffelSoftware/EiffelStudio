@@ -25,18 +25,18 @@ feature
 			string_name: IDENTIFIER
 			string_value: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("VALUE")
 			commit
 
-			!! string_name.make
+			create string_name.make
 			put (string_name)
 
 			keyword (",")
 
-			!! string_value.make
+			create string_value.make
 			put (string_value)
 		end
 

@@ -21,7 +21,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -31,7 +31,7 @@ feature
 			cursor: TDS_CURSOR
 
 		do     
-			!! cursor.make
+			create cursor.make
 			cursor.set_id (tds.last_token)
 			tds.insert_resource (cursor)
 

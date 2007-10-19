@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -38,16 +38,16 @@ feature
 			e5: E5
 			se5: SE5
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! multiplication.make
+			create multiplication.make
 			put (multiplication)
 
-			!! e5.make
+			create e5.make
 			put (e5)
 
-			!! se5.make
+			create se5.make
 			put (se5)
 		end
 

@@ -34,18 +34,18 @@ feature
 			weight: IDENTIFIER
 			italic: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword (",")
 			commit
 
-			!! weight.make
+			create weight.make
 			put (weight)
 
 			keyword (",")
 
-			!! italic.make
+			create italic.make
 			put (italic)
 		end
 

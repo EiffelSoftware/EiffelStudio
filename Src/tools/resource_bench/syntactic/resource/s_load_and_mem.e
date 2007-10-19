@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			attributes: ATTRIBUTES
 			list: LOAD_AND_MEM
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! attributes.make
+			create attributes.make
 			put (attributes)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

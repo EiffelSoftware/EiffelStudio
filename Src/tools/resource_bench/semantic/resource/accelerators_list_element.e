@@ -29,7 +29,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 
 	make
 
@@ -41,7 +41,7 @@ feature
 			accelerators: TDS_ACCELERATORS
 
 		do
-			!! accelerators_item
+			create accelerators_item
 
 			accelerators ?= tds.current_resource
 

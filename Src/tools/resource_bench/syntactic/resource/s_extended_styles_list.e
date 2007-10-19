@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			extended_style: EXTENDED_STYLE
 			list: NORMAL_EXTENDED_STYLES_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 			
-			!! extended_style.make
+			create extended_style.make
 			put (extended_style)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

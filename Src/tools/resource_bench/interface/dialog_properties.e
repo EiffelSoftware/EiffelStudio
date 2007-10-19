@@ -34,7 +34,7 @@ inherit
 
 	WEL_WINDOWS_ROUTINES
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -47,25 +47,25 @@ feature -- Initialization
 			a_dialog_not_void: a_dialog /= Void
 		do
 			make_by_id (a_parent, Idd_dialog_properties_constant)
-			!! check_code_generation.make_by_id (Current, Idc_check_code_generation_constant)
-			!! dialog_class_name.make_by_id (Current, Idc_class_name_constant)
-			!! control_selection_list.make_by_id (Current, Idc_control_list_constant)
+			create check_code_generation.make_by_id (Current, Idc_check_code_generation_constant)
+			create dialog_class_name.make_by_id (Current, Idc_class_name_constant)
+			create control_selection_list.make_by_id (Current, Idc_control_list_constant)
 
-			!! idc_dialog_caption.make_by_id (Current, Idc_dialog_caption_constant)
+			create idc_dialog_caption.make_by_id (Current, Idc_dialog_caption_constant)
 
-			!! idc_setup_dialog.make_by_id (Current, Idc_setup_dialog_constant)
-			!! idc_notify.make_by_id (Current, Idc_notify_constant)
-			!! idc_on_ok.make_by_id (Current, Idc_on_ok_constant)
-			!! idc_on_cancel.make_by_id (Current, Idc_on_cancel_constant)
-			!! idc_on_abort.make_by_id (Current, Idc_on_abort_constant)
-			!! idc_on_ignore.make_by_id (Current, Idc_on_ignore_constant)
-			!! idc_on_retry.make_by_id (Current, Idc_on_retry_constant)
-			!! idc_on_yes.make_by_id (Current, Idc_on_yes_constant)
-			!! idc_on_no.make_by_id (Current, Idc_on_no_constant)
+			create idc_setup_dialog.make_by_id (Current, Idc_setup_dialog_constant)
+			create idc_notify.make_by_id (Current, Idc_notify_constant)
+			create idc_on_ok.make_by_id (Current, Idc_on_ok_constant)
+			create idc_on_cancel.make_by_id (Current, Idc_on_cancel_constant)
+			create idc_on_abort.make_by_id (Current, Idc_on_abort_constant)
+			create idc_on_ignore.make_by_id (Current, Idc_on_ignore_constant)
+			create idc_on_retry.make_by_id (Current, Idc_on_retry_constant)
+			create idc_on_yes.make_by_id (Current, Idc_on_yes_constant)
+			create idc_on_no.make_by_id (Current, Idc_on_no_constant)
 
-			!! idc_modal.make_by_id (Current, Idc_modal_constant)
-			!! idc_modeless.make_by_id (Current, Idc_modeless_constant)
-			!! idc_main_dialog.make_by_id (Current, Idc_main_dialog_constant)
+			create idc_modal.make_by_id (Current, Idc_modal_constant)
+			create idc_modeless.make_by_id (Current, Idc_modeless_constant)
+			create idc_main_dialog.make_by_id (Current, Idc_main_dialog_constant)
 
 			current_dialog := a_dialog
 		ensure
@@ -77,7 +77,7 @@ feature -- Initialization
 			tt1: WEL_TOOLTIP_TEXT
 		do
 			if msg = Wm_notify then
-				!! tt1.make_by_pointer (lparam)
+				create tt1.make_by_pointer (lparam)
 				if tt1.hdr.code = Ttn_needtext then
 						-- Set resource string id.
 					tt1.set_text_id (tt1.hdr.id_from)
@@ -315,7 +315,7 @@ feature -- Element change
 			end
 
 			if current_dialog.statement_list /= Void then
-				!! control_name.make (20)
+				create control_name.make (20)
 
 				from
 					current_dialog.statement_list.start

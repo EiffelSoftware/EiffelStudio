@@ -26,16 +26,16 @@ feature
 			stringtable: STRINGTABLE_RESOURCE
 			standard: STANDARD_RESOURCE
 		once
-			!!Result.make
+			create Result.make
 			Result.forth
 
-			!! language.make
+			create language.make
 			put (language)
 
-			!! stringtable.make
+			create stringtable.make
 			put (stringtable)
 
-			!! standard.make
+			create standard.make
 			put (standard)
 		end
 

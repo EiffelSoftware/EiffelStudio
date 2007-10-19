@@ -12,7 +12,7 @@ class STATE_EXPRESSION
 inherit
 	S_STATE_EXPRESSION
 
-creation
+create
 	make
 
 indexing

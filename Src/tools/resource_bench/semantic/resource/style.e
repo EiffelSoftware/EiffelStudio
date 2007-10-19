@@ -20,7 +20,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -29,7 +29,7 @@ feature
 		local
 			style: TDS_STYLE
 		do                
-			!! style.make
+			create style.make
 			tds.set_style (style)
 		end
 

@@ -12,7 +12,7 @@ class FILE_FLAGS
 inherit
 	S_FILE_FLAGS
 
-creation
+create
 	make
 
 indexing

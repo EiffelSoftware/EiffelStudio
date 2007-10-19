@@ -12,7 +12,7 @@ class VERSION
 inherit
 	S_VERSION
 
-creation
+create
 	make
 
 indexing

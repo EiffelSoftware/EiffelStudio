@@ -12,7 +12,7 @@ class TEXTINCLUDE_DATA_LIST
 inherit
 	S_TEXTINCLUDE_DATA_LIST
 
-creation
+create
 	make
 
 indexing

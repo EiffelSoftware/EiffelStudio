@@ -27,7 +27,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,7 +37,7 @@ feature
 			resource_menu: TDS_MENU
 			menu_item: TDS_MENU_ITEM
 		do         
-			!! menu_item.make
+			create menu_item.make
 
 			resource_menu ?= tds.current_resource
 			resource_menu.set_is_popup (true)

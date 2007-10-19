@@ -12,7 +12,7 @@ class
 inherit
 	LINKED_LIST [TDS_STYLE]
 
-creation
+create
 	make
 
 feature	-- Query

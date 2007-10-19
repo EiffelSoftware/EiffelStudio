@@ -12,7 +12,7 @@ class TOOLBAR_LIST
 inherit
 	S_TOOLBAR_LIST
 
-creation
+create
 	make
 
 indexing

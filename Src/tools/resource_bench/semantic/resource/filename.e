@@ -12,7 +12,7 @@ class FILENAME
 inherit
 	S_FILENAME
 
-creation
+create
 	make
 
 indexing

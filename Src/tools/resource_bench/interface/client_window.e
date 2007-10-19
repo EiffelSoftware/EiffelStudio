@@ -30,7 +30,7 @@ inherit
 
 	TABLE_OF_SYMBOLS
 
-creation
+create
 	make
 
 feature -- Access
@@ -51,7 +51,7 @@ feature -- Behavior
 			tt2: WEL_NM_TREE_VIEW
 		do
 			if info.code = Tvn_selchanged then
-				!! tt2.make_by_nmhdr (info)
+				create tt2.make_by_nmhdr (info)
 				-- A new item has been selected (tt2.item_new).
 				new_resource := tds.access_tree_view_item (tt2.new_item.h_item)
 				change_and_display
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 
 	class_background: WEL_NULL_BRUSH is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	new_resource: TDS_RESOURCE
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 
 			dialog ?= new_resource
 			if dialog /= Void then
-				!! properties_dialog.make (properties_window, dialog)
+				create properties_dialog.make (properties_window, dialog)
 				properties_dialog.activate
 			end
 

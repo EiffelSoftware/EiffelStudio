@@ -12,7 +12,7 @@ class MORE_ACCELERATORS_ELEMENT
 inherit
 	S_MORE_ACCELERATORS_ELEMENT
 
-creation
+create
 	make
 
 indexing

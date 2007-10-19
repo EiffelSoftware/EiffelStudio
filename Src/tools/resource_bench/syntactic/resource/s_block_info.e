@@ -26,13 +26,13 @@ feature
 			string_block_info: STRING_BLOCK_INFO
 			variable_block_info: VARIABLE_BLOCK_INFO
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! string_block_info.make
+			create string_block_info.make
 			put (string_block_info)
 
-			!! variable_block_info.make
+			create variable_block_info.make
 			put (variable_block_info)
 		end
 

@@ -13,7 +13,7 @@ class MENUEX_RESOURCE
 inherit
 	S_MENUEX_RESOURCE
 
-creation
+create
 	make
 
 indexing

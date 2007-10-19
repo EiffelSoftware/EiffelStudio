@@ -13,7 +13,7 @@ class STRINGS_LIST
 inherit
 	S_STRINGS_LIST
 
-creation
+create
 	make
 
 indexing

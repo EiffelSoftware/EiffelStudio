@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 	tds_cell: CELL [TABLE_OF_SYMBOLS_STRUCTURE] is
 			-- The current `tds'.
 		once
-			!!Result.put (Void)
+			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
 		end

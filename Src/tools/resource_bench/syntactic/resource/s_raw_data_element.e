@@ -25,14 +25,14 @@ feature
 			virgule: VIRGULE
 			raw_data: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! virgule.make
+			create virgule.make
 			put (virgule)
 			virgule.set_optional
 
-			!! raw_data.make
+			create raw_data.make
 			put (raw_data)
 		end
 

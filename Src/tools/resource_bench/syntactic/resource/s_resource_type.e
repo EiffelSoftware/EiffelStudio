@@ -26,16 +26,16 @@ feature
 			multiline: MULTILINE
 			user: USER_DEFINED_RESOURCE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! single_line.make
+			create single_line.make
 			put (single_line)
 
-			!! multiline.make
+			create multiline.make
 			put (multiline)
 
-			!! user.make
+			create user.make
 			put (user)
                 end
 

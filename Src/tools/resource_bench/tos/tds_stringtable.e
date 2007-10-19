@@ -15,7 +15,7 @@ inherit
 			make as list_make
 		end
 
-creation
+create
 	make
 
 feature	-- initialization
@@ -23,7 +23,7 @@ feature	-- initialization
 	make is
 		do
 			list_make
-			!! strings_list.make
+			create strings_list.make
 			set_type (R_stringtable)
 		end
 
@@ -156,18 +156,18 @@ feature -- Code generation
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
 			tv_item: WEL_TREE_VIEW_ITEM
 		do
-			!! tvis.make
+			create tvis.make
 			tvis.set_sort
 			tvis.set_parent (a_parent)
-			!! tv_item.make
+			create tv_item.make
 			tv_item.set_text ("Stringtable")
 			tvis.set_tree_view_item (tv_item)
 			a_tree_view.insert_item (tvis)
 
-			!! tvis.make
+			create tvis.make
 			tvis.set_sort
 			tvis.set_parent (a_tree_view.last_item)
-			!! tv_item.make
+			create tv_item.make
 			tv_item.set_text ("Stringtable")
 			tvis.set_tree_view_item (tv_item)
 			a_tree_view.insert_item (tvis)

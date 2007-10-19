@@ -13,7 +13,7 @@ class SINGLE_LINE_USER_RESOURCE
 inherit
 	S_SINGLE_LINE_USER_RESOURCE
 
-creation
+create
 	make
 
 indexing

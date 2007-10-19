@@ -26,18 +26,18 @@ feature
 			result_ident: IDENTIFIER
 			options: OPTIONS_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! text.make
+			create text.make
 			put (text)
 
 			keyword (",")
 
-			!! result_ident.make
+			create result_ident.make
 			put (result_ident)
 
-			!! options.make
+			create options.make
 			put (options)
 		end
 

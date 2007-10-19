@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			itemEx: ITEM_EX
 			list: ITEMS_EX_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! itemEx.make
+			create itemEx.make
 			put (itemEx)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

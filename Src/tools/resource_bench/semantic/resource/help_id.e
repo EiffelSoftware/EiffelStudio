@@ -12,7 +12,7 @@ class HELP_ID
 inherit
 	S_HELP_ID
 
-creation
+create
 	make
 
 indexing

@@ -16,7 +16,7 @@ feature
 		require	
 			parent_not_void: dialog_parent /= Void
 		once
-			!! Result.make (dialog_parent)
+			create Result.make (dialog_parent)
 		ensure
 			dialog_message_exists: Result.exists
 		end
@@ -26,7 +26,7 @@ feature
 		require	
 			parent_not_void: dialog_parent /= Void
 		once
-			!! Result.make (dialog_parent)
+			create Result.make (dialog_parent)
 		ensure
 			dialog_error_exists: Result.exists
 		end
@@ -44,7 +44,7 @@ feature -- Access
 
 	interface: INTERFACE_MANAGER is
 		once
-			!! Result
+			create Result
 		end
 
 feature -- Element change

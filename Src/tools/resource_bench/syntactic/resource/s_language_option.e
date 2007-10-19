@@ -25,18 +25,18 @@ feature
 			language: IDENTIFIER
 			sublanguage: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("LANGUAGE")
 			commit
 			
-			!! language.make
+			create language.make
 			put (language)
 			
 			keyword (",")
 
-			!! sublanguage.make
+			create sublanguage.make
 			put (sublanguage)
 		end
 

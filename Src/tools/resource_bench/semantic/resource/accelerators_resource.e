@@ -21,7 +21,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -31,7 +31,7 @@ feature
 			accelerators: TDS_ACCELERATORS
 
 		do     
-			!! accelerators.make
+			create accelerators.make
 			accelerators.set_id (tds.last_token)
 
 			tds.insert_resource (accelerators)

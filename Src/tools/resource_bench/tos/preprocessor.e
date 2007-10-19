@@ -14,7 +14,7 @@ inherit
 
 	INTERFACE_MANAGER
 
-creation
+create
 	make
 
 feature	-- Initialization
@@ -26,12 +26,12 @@ feature	-- Initialization
 			a_output_file_is_open: a_output_file.is_open_write		
 		do
 			set_output_file (a_output_file)
-			!! define_table.make (20)
+			create define_table.make (20)
 			
-			!! condition_stack.make
+			create condition_stack.make
 			condition_stack.extend (true)
 
-			!! actual_path.make
+			create actual_path.make
 			actual_path.extend (".")
 
 			interface.display_text (std_out, "Preprocessing the resource file...")
@@ -70,7 +70,7 @@ feature -- Basic operations
 			output: BOOLEAN
 			char: CHARACTER
 		do
-			!! file.make_open_read (input_file)
+			create file.make_open_read (input_file)
 
 			from
 				file.start
@@ -127,7 +127,7 @@ feature -- Status report
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
-			!! a_file.make (filename)
+			create a_file.make (filename)
 			Result := a_file.exists
 		end
 
@@ -159,7 +159,7 @@ feature -- Implementation
 				expression := a_file.last_string.twin
 				
 				if old_level then
-					!! couple.make (name, expression)
+					create couple.make (name, expression)
 					define_table.put (couple, name)
 				end
 
@@ -229,7 +229,7 @@ feature -- Implementation
 							actual_path.extend (actual_path.item)
 							convert_definition (make_path (name))
 						else
-							!! error_message.make (50)
+							create error_message.make (50)
 							error_message.append ("%NCan't include the file ")
 							error_message.append (name)
 							error_message.append ("%NPreprocessing will continue.")
@@ -274,7 +274,7 @@ feature -- Implementation
 			a_name_exists: a_name /= Void and then a_name.count > 0 
 			actual_path_not_void: actual_path.item /= Void
 		do
-			!! Result.make (64)
+			create Result.make (64)
 			Result.append (actual_path.item)
 			Result.append ("\")
 			Result.append (extract_name (a_name))
@@ -327,7 +327,7 @@ feature -- Implementation
 		local
 			env: EXECUTION_ENVIRONMENT
 		once
-			!! env
+			create env
 			Result := env.get ("INCLUDE").twin
 		end
 

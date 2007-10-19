@@ -24,13 +24,13 @@ feature
 		local
 			expression: EXPRESSION
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("(")
 			commit
 
-			!! expression.make
+			create expression.make
 			put (expression)
 
 			keyword (")")

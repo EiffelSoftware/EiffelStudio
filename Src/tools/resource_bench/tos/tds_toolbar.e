@@ -15,7 +15,7 @@ inherit
 			make as list_make
 		end
 
-creation
+create
 	make
 
 feature	-- initialization
@@ -23,7 +23,7 @@ feature	-- initialization
 	make is
 		do
 			list_make
-			!! button_list.make
+			create button_list.make
 			set_type (R_toolbar)
 		end
 
@@ -183,10 +183,10 @@ feature -- Code generation
 			tv_item: WEL_TREE_VIEW_ITEM
 			parent: POINTER
 		do
-			!! tvis.make
+			create tvis.make
 			tvis.set_sort
 			tvis.set_parent (a_parent)
-			!! tv_item.make
+			create tv_item.make
 			tv_item.set_text ("Toolbar")
 			tvis.set_tree_view_item (tv_item)
 			a_tree_view.insert_item (tvis)

@@ -26,19 +26,19 @@ feature
 			instructions_list: INSTRUCTIONS_LIST
 			second_part: SECOND_PART
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("#if")
 			commit
 
-			!! boolean_expression.make
+			create boolean_expression.make
 			put (boolean_expression)
 
-			!! instructions_list.make
+			create instructions_list.make
 			put (instructions_list)
 
-			!! second_part.make
+			create second_part.make
 			put (second_part)
 
 			keyword ("#endif")

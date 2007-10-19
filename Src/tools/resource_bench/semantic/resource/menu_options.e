@@ -12,7 +12,7 @@ class MENU_OPTIONS
 inherit
 	S_MENU_OPTIONS
 
-creation
+create
 	make
 
 indexing

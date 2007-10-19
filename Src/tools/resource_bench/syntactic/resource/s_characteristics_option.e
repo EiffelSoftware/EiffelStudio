@@ -24,13 +24,13 @@ feature
 		local
 			dword: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("CHARACTERISTICS")
 			commit
 			
-			!! dword.make
+			create dword.make
 			put (dword)
 		end
 

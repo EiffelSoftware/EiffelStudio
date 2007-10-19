@@ -25,7 +25,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 
 	make, retrieve_tds
 
@@ -35,7 +35,7 @@ feature -- Initialization
 			-- create the `tds'
 		do
 			table_make (10)
-			!! version.make (12)
+			create version.make (12)
 			version.append ("Version 2.1")
 		end
 
@@ -198,7 +198,7 @@ feature -- Code generation
 		local
 			include_file: PLAIN_TEXT_FILE
 		do
-			!! include_file.make_open_write ("ids.h")
+			create include_file.make_open_write ("ids.h")
 			include_file.putstring ("////////////////////////////////////////////////////////////////%N")
 			include_file.putstring ("//%N")
 			include_file.putstring ("// Constants definition%N")
@@ -306,7 +306,7 @@ feature -- Code generation
 				forth
 			end
 
-			!! text_file.make_open_write ("application_ids.e")
+			create text_file.make_open_write ("application_ids.e")
 			text_file.putstring ("class %N%TAPPLICATION_IDS%N")
 
 			if define_table /= Void then

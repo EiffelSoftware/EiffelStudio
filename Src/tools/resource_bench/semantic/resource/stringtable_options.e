@@ -13,7 +13,7 @@ class STRINGTABLE_OPTIONS
 inherit
 	S_STRINGTABLE_OPTIONS
 
-creation
+create
 	make
 
 indexing

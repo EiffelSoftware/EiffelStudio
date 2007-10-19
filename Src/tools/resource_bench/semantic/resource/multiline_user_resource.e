@@ -13,7 +13,7 @@ class MULTILINE_USER_RESOURCE
 inherit
 	S_MULTILINE_USER_RESOURCE
 
-creation
+create
 	make
 
 indexing

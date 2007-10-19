@@ -25,13 +25,13 @@ feature
 			e1: E1
 			se1: SE1
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! e1.make
+			create e1.make
 			put (e1)
 
-			!! se1.make
+			create se1.make
 			put (se1)
 		end
 

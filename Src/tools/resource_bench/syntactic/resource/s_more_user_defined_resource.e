@@ -25,13 +25,13 @@ feature
 			single: SINGLE_LINE_USER_RESOURCE
 			multiline: MULTILINE_USER_RESOURCE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! single.make
+			create single.make
 			put (single)
 
-			!! multiline.make
+			create multiline.make
 			put (multiline)
 		end
 

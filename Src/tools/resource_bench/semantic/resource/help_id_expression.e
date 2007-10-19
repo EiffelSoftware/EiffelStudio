@@ -12,7 +12,7 @@ class HELP_ID_EXPRESSION
 inherit
 	S_HELP_ID_EXPRESSION
 
-creation
+create
 	make
 
 indexing

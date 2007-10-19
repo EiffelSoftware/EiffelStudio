@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			a_parent_not_void: a_parent /= Void
 		do
 			make_by_id (a_parent, Idd_dialog_message)
-			!! static_info.make_by_id (Current, Idc_info)
+			create static_info.make_by_id (Current, Idc_info)
 			activate
 		ensure
 			exists: exists				

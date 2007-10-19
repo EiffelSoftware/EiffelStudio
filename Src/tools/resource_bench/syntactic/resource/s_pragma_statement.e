@@ -24,13 +24,13 @@ feature
 		local
 			nothing: NOTHING
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
 			keyword ("#pragma")
 			commit
 
-			!! nothing.make
+			create nothing.make
 			put (nothing)
 		end
 

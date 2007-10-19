@@ -9,7 +9,7 @@ indexing
 class
 	TDS_MENU_ITEM
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -17,7 +17,7 @@ feature -- Initialization
 	make is
 		do
 			is_separator := false
-			!! command_id
+			create command_id
 		end
 
 feature  -- Access
@@ -64,7 +64,7 @@ feature -- Element change
 			a_flag_exists: a_flag /= Void and then a_flag.count > 0
 		do
 			if (flags = Void) then
-				!! flags.make
+				create flags.make
 			end
 
 			flags.extend (a_flag.twin)

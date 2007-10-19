@@ -12,7 +12,7 @@ class DLGINIT_DATA_ELEMENT
 inherit
 	S_DLGINIT_DATA_ELEMENT
 
-creation
+create
 	make
 
 indexing

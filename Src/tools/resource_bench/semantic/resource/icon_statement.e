@@ -27,7 +27,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 	make
 
 feature 
@@ -36,7 +36,7 @@ feature
 			icon: TDS_ICON_STATEMENT
 			dialog: TDS_DIALOG
 		do     
-			!! icon.make
+			create icon.make
 			icon.set_wel_code (true)
 
 			dialog ?= tds.current_resource

@@ -14,7 +14,7 @@ class
 inherit
 	S_LE
 
-creation
+create
 	make
 
 indexing

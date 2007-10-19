@@ -12,7 +12,7 @@ class STRING_VALUE_LIST
 inherit
 	S_STRING_VALUE_LIST
 
-creation
+create
 	make
 
 indexing

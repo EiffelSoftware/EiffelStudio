@@ -27,25 +27,25 @@ feature
 			hi_dw2: IDENTIFIER
 			lo_dw2: IDENTIFIER
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! hi_dw1.make
+			create hi_dw1.make
 			put (hi_dw1)
 
 			keyword (",")
 
-			!! lo_dw1.make
+			create lo_dw1.make
 			put (lo_dw1)
 
 			keyword (",")
 
-			!! hi_dw2.make
+			create hi_dw2.make
 			put (hi_dw2)
 
 			keyword (",")
 
-			!! lo_dw2.make
+			create lo_dw2.make
 			put (lo_dw2)
 		end
 

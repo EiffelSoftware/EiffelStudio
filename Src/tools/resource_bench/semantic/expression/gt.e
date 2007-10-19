@@ -14,7 +14,7 @@ class
 inherit
 	S_GT
 
-creation
+create
 	make
 
 indexing

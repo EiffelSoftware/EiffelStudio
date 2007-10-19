@@ -13,7 +13,7 @@ class RCDATA_RESOURCE
 inherit
 	S_RCDATA_RESOURCE
 
-creation
+create
 	make
 
 indexing

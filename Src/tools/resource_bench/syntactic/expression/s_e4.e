@@ -25,13 +25,13 @@ feature
 			e5: E5
 			se5:SE5
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! e5.make
+			create e5.make
 			put (e5)
 
-			!! se5.make
+			create se5.make
 			put (se5)
 		end
 

@@ -14,7 +14,7 @@ class INSTRUCTION
 inherit
 	S_INSTRUCTION
 
-creation
+create
 	make
 
 indexing

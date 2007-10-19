@@ -31,29 +31,29 @@ feature
                         file_type: FILE_TYPE
 			file_subtype: FILE_SUBTYPE
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! file_version.make
+			create file_version.make
 			put (file_version)
 
-			!! product_version.make
+			create product_version.make
 			put (product_version)
 
-			!! file_flags_mask.make
+			create file_flags_mask.make
 			put (file_flags_mask)
 			
-			!! file_flags.make
+			create file_flags.make
 			put (file_flags)
 			file_flags.set_optional
 
-			!! fileOS.make
+			create fileOS.make
 			put (fileOS)
 
-			!! file_type.make
+			create file_type.make
 			put (file_type)
 
-			!! file_subtype.make
+			create file_subtype.make
 			put (file_subtype)
 			file_subtype.set_optional
 		end

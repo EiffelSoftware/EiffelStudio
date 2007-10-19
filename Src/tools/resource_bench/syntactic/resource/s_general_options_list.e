@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			options: GENERAL_OPTIONS
 			list: GENERAL_OPTIONS_LIST
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! options.make
+			create options.make
 			put (options)
 
-			!! list.make
+			create list.make
 			put (list)
 		end
 

@@ -15,7 +15,7 @@ inherit
 			make as list_make
 		end
 
-creation
+create
 	make
 
 feature	-- Initialization
@@ -96,10 +96,10 @@ feature -- Code generation
 			tv_item: WEL_TREE_VIEW_ITEM
 			parent: POINTER
 		do
-			!! tvis.make
+			create tvis.make
 			tvis.set_sort
 			tvis.set_parent (a_parent)
-			!! tv_item.make
+			create tv_item.make
 			tv_item.set_text ("Bitmap")
 			tvis.set_tree_view_item (tv_item)
 			a_tree_view.insert_item (tvis)

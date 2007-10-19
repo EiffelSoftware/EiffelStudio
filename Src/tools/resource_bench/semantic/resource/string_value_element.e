@@ -12,7 +12,7 @@ class STRING_VALUE_ELEMENT
 inherit
 	S_STRING_VALUE_ELEMENT
 
-creation
+create
 	make
 
 indexing

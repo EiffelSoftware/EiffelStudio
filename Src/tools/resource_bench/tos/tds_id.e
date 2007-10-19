@@ -154,10 +154,10 @@ feature -- Code generation
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
 			tv_item: WEL_TREE_VIEW_ITEM
 		do
-			!! tvis.make
+			create tvis.make
 			tvis.set_sort
 			tvis.set_parent (a_parent)
-			!! tv_item.make
+			create tv_item.make
 
 			if (is_number) then
 				tv_item.set_text (number_id.out)

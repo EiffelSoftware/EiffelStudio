@@ -14,7 +14,7 @@ class
 inherit
 	S_EXPRESSION
 
-creation
+create
 	make
 
 indexing

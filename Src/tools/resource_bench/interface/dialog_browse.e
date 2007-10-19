@@ -26,7 +26,7 @@ inherit
 		export
 			{NONE} all
 		end
-creation
+create
 	make
 
 feature -- Initialization
@@ -37,7 +37,7 @@ feature -- Initialization
 			a_parent_not_void: a_parent /= Void
 		do
 			make_by_id (a_parent, Idd_dialog_browse)
-			!! edit_path.make_by_id (Current, Idc_edit_path)
+			create edit_path.make_by_id (Current, Idc_edit_path)
 			activate
 		end
 
@@ -54,7 +54,7 @@ feature -- Behavior
 			folder: DIRECTORY
 			directory_name: STRING
 		do
-			!! folder.make (edit_path.text)
+			create folder.make (edit_path.text)
 
 			if not folder.exists then
 				interface.display_text (std_error, "The specified directory doesn't exist")

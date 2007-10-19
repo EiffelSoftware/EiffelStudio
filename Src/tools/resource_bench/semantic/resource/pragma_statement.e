@@ -12,7 +12,7 @@ class PRAGMA_STATEMENT
 inherit
 	S_PRAGMA_STATEMENT
 
-creation
+create
 	make
 
 indexing

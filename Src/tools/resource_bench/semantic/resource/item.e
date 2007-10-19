@@ -12,7 +12,7 @@ class ITEM
 inherit
 	S_ITEM
 
-creation
+create
 	make
 
 indexing

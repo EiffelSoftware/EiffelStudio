@@ -16,7 +16,7 @@ inherit
 			make as old_make
 		end
 
-creation
+create
 	make
 
 feature 
@@ -37,13 +37,13 @@ feature
 			else_part: ELSE_PART
 			elif_part: ELIF_PART
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 
-			!! else_part.make
+			create else_part.make
 			put (else_part)
 
-			!! elif_part.make
+			create elif_part.make
 			put (elif_part)
 		end
 

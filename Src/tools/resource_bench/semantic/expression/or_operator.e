@@ -14,7 +14,7 @@ class
 inherit
 	S_OR_OPERATOR
 
-creation
+create
 	make
 
 indexing

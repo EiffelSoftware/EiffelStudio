@@ -14,7 +14,7 @@ class
 inherit
 	S_ADD
 
-creation
+create
 	make
 
 indexing

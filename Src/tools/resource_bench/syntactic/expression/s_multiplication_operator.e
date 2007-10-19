@@ -25,13 +25,13 @@ feature
 			mult: MULT
 			div: DIV
 		once
-			!! Result.make
+			create Result.make
 			Result.forth
 			
-			!! mult.make
+			create mult.make
 			put (mult)
 	
-			!! div.make
+			create div.make
 			put (div)
 		end
 

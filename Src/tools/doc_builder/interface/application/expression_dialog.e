@@ -108,7 +108,7 @@ feature {NONE} -- Expressions Implementation
 	key_pressed (a_key: EV_KEY) is
 			-- A key was pressed on the list
 		do
-			if a_key.code = feature {EV_KEY_CONSTANTS}.Key_delete then
+			if a_key.code = {EV_KEY_CONSTANTS}.Key_delete then
 				expression_list.go_i_th (expression_list.index_of (expression_list.selected_item, 1))
 				Expressions.remove (expression_list.selected_item @ 1)
 				Ordered_expressions.go_i_th (Ordered_expressions.index_of (expression_list.selected_item @ 1, 1))

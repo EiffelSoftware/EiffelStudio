@@ -55,19 +55,19 @@ feature -- Access
 	required: BOOLEAN is
 			-- Required?
 		do
-			Result := use.to_integer = feature {XML_XML_SCHEMA_USE}.required.to_integer
+			Result := use.to_integer = {XML_XML_SCHEMA_USE}.required.to_integer
 		end		
 	
 	prohibited: BOOLEAN is
 			-- Prohibited?
 		do
-			Result := use.to_integer = feature {XML_XML_SCHEMA_USE}.prohibited.to_integer
+			Result := use.to_integer = {XML_XML_SCHEMA_USE}.prohibited.to_integer
 		end
 
 	optional: BOOLEAN is
 			-- Optional?
 		do
-			Result := use.to_integer = feature {XML_XML_SCHEMA_USE}.optional.to_integer
+			Result := use.to_integer = {XML_XML_SCHEMA_USE}.optional.to_integer
 		end
 
 feature {NONE} -- Implementation

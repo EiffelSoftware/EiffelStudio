@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 				end
 				create thread_start.make (Current, $make_gui)
 				create thread.make (thread_start)
-				thread.set_apartment_state (feature {APARTMENT_STATE}.sta)
+				thread.set_apartment_state ({APARTMENT_STATE}.sta)
 				thread.start
 				thread.join
 			elseif l_args.args_ok then

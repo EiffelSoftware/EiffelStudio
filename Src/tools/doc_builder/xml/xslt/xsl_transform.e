@@ -45,9 +45,9 @@ feature	--Creation
 				create arguments.make
 				is_valid_xsl := True
 			else
-				xpath_exception ?= feature {EXCEPTION_MANAGER}.last_exception
-				xslt_compile_exception ?= feature {EXCEPTION_MANAGER}.last_exception
-				xslt_exception ?= feature {EXCEPTION_MANAGER}.last_exception
+				xpath_exception ?= {EXCEPTION_MANAGER}.last_exception
+				xslt_compile_exception ?= {EXCEPTION_MANAGER}.last_exception
+				xslt_exception ?= {EXCEPTION_MANAGER}.last_exception
 				if xpath_exception /= Void then
 					create load_error_message.make_from_cil (xpath_exception.message)
 				end
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				l_xml_exception ?= feature {EXCEPTION_MANAGER}.last_exception
+				l_xml_exception ?= {EXCEPTION_MANAGER}.last_exception
 				if l_xml_exception /= Void then
 					if error_report /= Void then
 						error_report.append_error (l_xml_exception.message, l_xml_exception.line_number, l_xml_exception.line_position)	

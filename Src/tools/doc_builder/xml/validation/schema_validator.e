@@ -39,7 +39,7 @@ feature -- Schema Validation
 				create event_handler.make  (Current, $validation_callback)
 				create validation_reader.make_from_reader (reader)
 				validation_reader.add_validation_event_handler (event_handler)
-				validation_reader.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
+				validation_reader.set_validation_type ({XML_VALIDATION_TYPE}.schema)
 				from
 					is_valid := True
 					--error_report := Void
@@ -69,7 +69,7 @@ feature -- Schema and file validation
 			if not retried then
 				create reader.make_from_url (a_filename.to_cil)
 		        create vr.make_from_reader (reader)
-		        vr.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
+		        vr.set_validation_type ({XML_VALIDATION_TYPE}.schema)
 		        create vr_handler.make (Current, $validation_callback)
 		        vr.add_validation_event_handler (vr_handler)
 	            from
@@ -109,7 +109,7 @@ feature -- Schema and file validation
 		        vr.add_validation_event_handler (vr_handler)
 		        l_schema := schemas.add_string_xml_reader (Void, schema_reader)
 		        vr.schemas.add (schemas)
-		        vr.set_validation_type (feature {XML_VALIDATION_TYPE}.schema)
+		        vr.set_validation_type ({XML_VALIDATION_TYPE}.schema)
 	            from
 	            	is_valid := True
 	            until
@@ -117,7 +117,7 @@ feature -- Schema and file validation
 	            loop            		
 	            end
            	else
-           		exception ?= feature {ISE_RUNTIME}.last_exception
+           		exception ?= {ISE_RUNTIME}.last_exception
            		if exception /= Void then
            			create l_error.make_with_line_information (exception.message, exception.line_number, exception.line_position)
            			l_error.set_action (agent (shared_error_reporter.actions).highlight_text_in_editor (l_error.line_number, l_error.line_position))
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			l_pos := args.exception.line_position
 			create l_error.make_with_line_information (args.message, l_no, l_pos)
 			l_error.set_action (agent (shared_error_reporter.actions).highlight_text_in_editor (l_no, l_pos))
-			if args.severity = feature {XML_XML_SEVERITY_TYPE}.error then
+			if args.severity = {XML_XML_SEVERITY_TYPE}.error then
 				is_valid := False
 			end			
 			shared_error_reporter.set_error (l_error)

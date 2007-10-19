@@ -150,7 +150,7 @@ feature {NONE} -- Events
 	address_key_pressed (key: EV_KEY) is
 			-- A key was pressed in the address bar
 		do
-			if key.code = feature {EV_KEY_CONSTANTS}.Key_enter then
+			if key.code = {EV_KEY_CONSTANTS}.Key_enter then
 				load_url (address_bar.text)
 				add_url (address_bar.text)
 			end

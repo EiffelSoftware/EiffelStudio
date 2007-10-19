@@ -771,15 +771,15 @@ feature {NONE} -- Initialization of tree elements
 				-- Add type icon.
 			inspect
 				flag
-			when feature {TYPE_FLAGS}.Is_class then
+			when {TYPE_FLAGS}.Is_class then
 				l_ico := load_icon (Path_icon_class)
-			when feature {TYPE_FLAGS}.Is_interface then
+			when {TYPE_FLAGS}.Is_interface then
 				l_ico := load_icon (Path_icon_interface_class)
-			when feature {TYPE_FLAGS}.Is_enum then
+			when {TYPE_FLAGS}.Is_enum then
 				l_ico := load_icon (Path_icon_enum_class)
-			when feature {TYPE_FLAGS}.Is_delegate then
+			when {TYPE_FLAGS}.Is_delegate then
 				l_ico := load_icon (Path_icon_delegate_class)
-			when feature {TYPE_FLAGS}.Is_value_type then
+			when {TYPE_FLAGS}.Is_value_type then
 				l_ico := load_icon (Path_icon_value_type_class)
 			else
 				-- Unknown flag

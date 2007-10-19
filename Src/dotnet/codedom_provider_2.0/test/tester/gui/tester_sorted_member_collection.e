@@ -12,7 +12,7 @@ class
 inherit
 	SORTED_TWO_WAY_LIST [STRING]
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

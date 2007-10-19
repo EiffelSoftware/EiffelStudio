@@ -207,7 +207,7 @@ feature {NONE} -- Constants
 	Void_type: SYSTEM_TYPE is
 			-- Void .NET type
 		once
-			Result := feature {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
+			Result := {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
 		end
 
 	op_implicit: SYSTEM_STRING is "op_Explicit"

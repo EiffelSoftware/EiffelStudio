@@ -69,6 +69,13 @@ feature -- Access
 
 feature -- Settings
 
+	reset is
+			-- Reset current
+		do
+			parsed_class := Void
+			match_list := Void
+		end
+
 	setup (a_class: CLASS_AS; a_list: LEAF_AS_LIST; will_process_leading, will_process_trailing: BOOLEAN) is
 			-- Setup environment for roundtrip visit.
 		require

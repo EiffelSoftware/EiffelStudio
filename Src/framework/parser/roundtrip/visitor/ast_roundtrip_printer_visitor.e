@@ -29,7 +29,8 @@ inherit
 			process_real_as,
 			process_id_as,
 			process_break_as,
-			process_symbol_stub_as
+			process_symbol_stub_as,
+			reset
 		end
 create
 	make,
@@ -66,6 +67,7 @@ feature -- Context setting
 	reset is
 			-- Reset visitor for a next visit.
 		do
+			Precursor
 			context.clear
 		end
 

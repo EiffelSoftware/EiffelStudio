@@ -13,7 +13,7 @@ inherit
 
 	WIZARD_WRITER_FEATURE_CLAUSES
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

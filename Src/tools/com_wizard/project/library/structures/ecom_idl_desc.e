@@ -16,7 +16,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make, make_from_pointer
 
 feature {NONE} -- Initialization

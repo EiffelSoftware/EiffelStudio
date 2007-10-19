@@ -13,7 +13,7 @@ inherit
 
 	WIZARD_VARIABLE_NAME_MAPPER
 
-creation
+create
 	make,
 	make_constant
 

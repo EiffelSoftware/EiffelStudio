@@ -11,7 +11,7 @@ class
 inherit
 	WIZARD_WRITER_C
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -11,7 +11,7 @@ class
 inherit
 	ECOM_STRUCTURE
 	
-creation
+create
 	make,
 	make_by_pointer
 

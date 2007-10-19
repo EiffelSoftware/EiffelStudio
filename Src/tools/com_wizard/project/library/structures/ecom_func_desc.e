@@ -34,7 +34,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make, make_from_pointer
 
 feature {NONE} -- Initialization
@@ -64,7 +64,7 @@ feature -- Access
 		local 
 			i, temp: INTEGER
 		do
-			!! Result.make (1, valid_scodes_count)
+			create Result.make (1, valid_scodes_count)
 			from
 				i := 1
 			until
@@ -101,13 +101,13 @@ feature -- Access
 			i: INTEGER
 			elem: ECOM_ELEM_DESC
 		do
-			!! Result.make (1, total_param_count)
+			create Result.make (1, total_param_count)
 			from
 				i := 1
 			until
 				i > total_param_count
 			loop
-				!! elem.make_from_pointer (ccom_funcdesc_parameter_i (item, i -1))
+				create elem.make_from_pointer (ccom_funcdesc_parameter_i (item, i -1))
 				Result.put (elem, i)
 				i := i + 1
 			end
@@ -150,7 +150,7 @@ feature -- Access
 	return_type: ECOM_ELEM_DESC is
 			-- Return type
 		do
-			!! Result.make_from_pointer (ccom_funcdesc_return_type (item))
+			create Result.make_from_pointer (ccom_funcdesc_return_type (item))
 		end
 
 	func_flags: INTEGER IS

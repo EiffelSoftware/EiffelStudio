@@ -31,7 +31,7 @@ feature -- Element Change
 			non_void_title: a_title /= Void
 			valid_title: not a_title.is_empty
 		do
-			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Title, a_title)])
+			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Title, a_title)])
 		end
 
 	set_range (a_range: INTEGER) is
@@ -39,13 +39,13 @@ feature -- Element Change
 		require
 			valid_range: a_range >= 0
 		do
-			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Set_range, a_range)])
+			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Set_range, a_range)])
 		end
 
 	step is
 			-- Increment progress.
 		do
-			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Step, Void)])
+			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Step, Void)])
 		end
 
 feature -- Basic Operations
@@ -53,13 +53,13 @@ feature -- Basic Operations
 	start is
 			-- Start report (i.e. activate dialog).
 		do
-			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Start, Void)])
+			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Start, Void)])
 		end
 
 	finish is
 			-- Terminate report (i.e. terminate dialog)
 		do
-			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Finish, Void)])
+			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make ({WIZARD_PROGRESS_EVENT_ID}.Finish, Void)])
 		end
 
 feature {NONE} -- Implementation

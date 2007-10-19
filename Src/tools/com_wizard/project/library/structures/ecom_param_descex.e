@@ -11,7 +11,7 @@ class
 inherit
 	ECOM_STRUCTURE
 
-creation
+create
 	make, make_from_pointer
 
 feature {NONE} -- Initialization
@@ -28,7 +28,7 @@ feature -- Access
 			-- VARIANT structure with default value 
 			-- of parameter, described by PARAMDESC
 		do
-			!! Result.make_from_pointer (ccom_paramdescex_variant (item))
+			create Result.make_from_pointer (ccom_paramdescex_variant (item))
 		end
 
 	bytes: INTEGER is

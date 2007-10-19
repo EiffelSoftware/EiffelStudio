@@ -13,7 +13,7 @@ inherit
 	ECOM_STRUCTURE
 
 
-creation
+create
 	make,
 	make_from_pointer
 
@@ -30,7 +30,7 @@ feature -- Access
 	type_desc: ECOM_TYPE_DESC is
 			-- Array elements type
 		do
-			!! Result.make_from_pointer (ccom_arraydesc_typedesc (item))
+			create Result.make_from_pointer (ccom_arraydesc_typedesc (item))
 		end
 
 	count_dimension: INTEGER is

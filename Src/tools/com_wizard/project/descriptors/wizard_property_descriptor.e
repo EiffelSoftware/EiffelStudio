@@ -19,7 +19,7 @@ inherit
 			{WIZARD_PROPERTY_DESCRIPTOR_FACTORY} all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

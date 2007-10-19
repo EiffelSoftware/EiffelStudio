@@ -8,7 +8,7 @@ indexing
 class
 	EI_CLUSTER_DATA_INPUT
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

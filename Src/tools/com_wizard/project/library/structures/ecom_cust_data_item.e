@@ -11,7 +11,7 @@ class
 inherit
 	ECOM_STRUCTURE
 
-creation
+create
 	make,
 	make_from_pointer
 
@@ -28,7 +28,7 @@ feature -- Access
 	guid: ECOM_GUID is
 			-- GUID
 		do
-			!! Result.make_from_pointer (ccom_custdataitem_guid (item))
+			create Result.make_from_pointer (ccom_custdataitem_guid (item))
 		ensure
 			Result /= Void
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	variant_structure: ECOM_VARIANT is
 			-- VARIANT structure
 		do
-			!! Result.make_from_pointer (ccom_custdataitem_variant (item))
+			create Result.make_from_pointer (ccom_custdataitem_variant (item))
 		ensure
 			Result /= Void
 		end

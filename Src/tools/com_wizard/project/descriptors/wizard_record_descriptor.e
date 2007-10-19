@@ -14,7 +14,7 @@ inherit
 			creation_message
 		end
 
-creation
+create
 	make
 
 feature {NONE}-- Initialization

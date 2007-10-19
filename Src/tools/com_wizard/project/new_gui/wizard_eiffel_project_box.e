@@ -86,10 +86,10 @@ feature {NONE} -- Implementation
 			-- Setup environment accordingly.
 		do
 			if not a_target.is_empty then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_target)
+				create Result.make_success ({WIZARD_VALIDITY_STATUS_IDS}.Eiffel_target)
 				environment.set_eiffel_target (a_target)
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_target)
+				create Result.make_error ({WIZARD_VALIDITY_STATUS_IDS}.Eiffel_target)
 			end
 			set_status (Result)
 		end
@@ -99,11 +99,11 @@ feature {NONE} -- Implementation
 			-- Setup environment accordingly.
 		do
 			if is_valid_folder (a_project_file) then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_project)
+				create Result.make_success ({WIZARD_VALIDITY_STATUS_IDS}.Eiffel_project)
 				environment.set_eiffel_project_path (a_project_file)
 				environment.set_project_name (a_project_file.substring (a_project_file.last_index_of ('\', a_project_file.count) + 1, a_project_file.count))
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_project)
+				create Result.make_error ({WIZARD_VALIDITY_STATUS_IDS}.Eiffel_project)
 			end
 			set_status (Result)
 		end
@@ -113,10 +113,10 @@ feature {NONE} -- Implementation
 			-- Setup environment accordingly.
 		do
 			if is_valid_file (a_file) then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.ecf_file)
+				create Result.make_success ({WIZARD_VALIDITY_STATUS_IDS}.ecf_file)
 				environment.set_source_ecf_file_name (a_file)
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.ecf_file)
+				create Result.make_error ({WIZARD_VALIDITY_STATUS_IDS}.ecf_file)
 			end
 			set_status (Result)
 		end
@@ -126,10 +126,10 @@ feature {NONE} -- Implementation
 			-- Setup environment accordingly.
 		do
 			if is_valid_eiffel_identifier (a_eiffel_class) then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_class)
+				create Result.make_success ({WIZARD_VALIDITY_STATUS_IDS}.Eiffel_class)
 				environment.set_eiffel_class_name (a_eiffel_class)
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_class)
+				create Result.make_error ({WIZARD_VALIDITY_STATUS_IDS}.Eiffel_class)
 			end
 			set_status (Result)
 		end
@@ -139,10 +139,10 @@ feature {NONE} -- Implementation
 			-- Setup environment accordingly.
 		do
 			if is_valid_eiffel_identifier (a_cluster) then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_cluster)
+				create Result.make_success ({WIZARD_VALIDITY_STATUS_IDS}.Eiffel_cluster)
 				environment.set_class_cluster_name (a_cluster)
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Eiffel_cluster)
+				create Result.make_error ({WIZARD_VALIDITY_STATUS_IDS}.Eiffel_cluster)
 			end
 			set_status (Result)
 		end

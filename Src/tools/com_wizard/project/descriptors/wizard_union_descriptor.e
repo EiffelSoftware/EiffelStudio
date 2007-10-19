@@ -12,7 +12,7 @@ inherit
 	WIZARD_TYPE_DESCRIPTOR
 
 
-creation
+create
 	make
 
 feature {NONE}-- Initialization

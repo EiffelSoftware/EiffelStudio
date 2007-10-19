@@ -39,39 +39,39 @@ feature -- Basic operations
 	add_title (reason: STRING) is
 			-- Display title.
 		do
-			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_title, reason)])
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_title, reason)])
 		end
 
 	add_message (reason: STRING) is
 			-- Display message `reason' from `origin'.
 		do
-			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_message, reason)])
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_message, reason)])
 		end
 
 	add_text (reason: STRING) is
 			-- Display text `reason' from `origin'.
 		do
-			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_text, reason)])
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_text, reason)])
 		end
 
 	add_warning (reason: STRING) is
 			-- Display warning.
 		do
-			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_warning, reason)])
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_warning, reason)])
 		end
 
 	display_error is
 			-- Display current error.
 		do
 			if environment.abort and environment.is_valid_error_code (environment.error_code) then
-				event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_error, environment.error_message)])
+				event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Display_error, environment.error_message)])
 			end
 		end
 
 	clear is
 			-- Clear output.
 		do
-			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Clear, Void)])
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make ({WIZARD_OUTPUT_EVENT_ID}.Clear, Void)])
 		end
 
 invariant

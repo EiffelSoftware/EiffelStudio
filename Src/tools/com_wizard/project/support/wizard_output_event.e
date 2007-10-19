@@ -51,11 +51,11 @@ feature {NONE} -- Implementation
 			inspect
 				a_id
 			when Display_warning then
-				Result := feature {EV_THREAD_SEVERITY_CONSTANTS}.Warning
+				Result := {EV_THREAD_SEVERITY_CONSTANTS}.Warning
 			when Display_error then
-				Result := feature {EV_THREAD_SEVERITY_CONSTANTS}.Error
+				Result := {EV_THREAD_SEVERITY_CONSTANTS}.Error
 			else
-				Result := feature {EV_THREAD_SEVERITY_CONSTANTS}.Information
+				Result := {EV_THREAD_SEVERITY_CONSTANTS}.Information
 			end
 		end
 		

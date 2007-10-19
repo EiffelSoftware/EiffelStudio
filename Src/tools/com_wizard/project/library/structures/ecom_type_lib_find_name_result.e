@@ -8,7 +8,7 @@ indexing
 class
 	ECOM_TYPE_LIB_FIND_NAME_RESULT
 	
-creation
+create
 	make
 	
 feature -- Initialization

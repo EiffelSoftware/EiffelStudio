@@ -466,7 +466,9 @@ feature -- Stonable
 			-- Directly set `stone' with `a_stone'
 		do
 			stone := a_stone
-			manager.set_pos_container (Current)
+			if manager /= Void then
+				manager.set_pos_container (Current)
+			end
 			if stone /= Void and selected then
 				stone.set_pos_container (Current)
 			end

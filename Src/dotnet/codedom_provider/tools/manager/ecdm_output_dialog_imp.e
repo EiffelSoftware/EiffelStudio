@@ -57,9 +57,9 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			create internal_font
-			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_typewriter)
-			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_regular)
-			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_family ({EV_FONT_CONSTANTS}.Family_typewriter)
+			internal_font.set_weight ({EV_FONT_CONSTANTS}.Weight_regular)
+			internal_font.set_shape ({EV_FONT_CONSTANTS}.Shape_regular)
 			internal_font.set_height_in_points (9)
 			internal_font.preferred_families.extend ("Lucida Console")
 			output.set_font (internal_font)

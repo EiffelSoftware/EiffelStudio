@@ -300,9 +300,9 @@ feature {NONE}-- Initialization
 			warning_box.set_padding_width (5)
 			warning_box.set_border_width (5)
 			create internal_font
-			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
-			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
-			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_family ({EV_FONT_CONSTANTS}.Family_sans)
+			internal_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
+			internal_font.set_shape ({EV_FONT_CONSTANTS}.Shape_regular)
 			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			warning_title_label.set_font (internal_font)

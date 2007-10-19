@@ -6,7 +6,7 @@ indexing
 class
 	PAIR[G,H]
 
-creation
+create
 	make,
 	default_create
 

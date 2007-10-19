@@ -180,8 +180,17 @@ feature -- Status setting
 
 	pop_feature_flat is
 			-- Force the display of `Current' and select the flat form.
+		local
+			f: EB_FORMATTER
 		do
-			(formatters @ flat_format_index).execute
+			f := formatters @ flat_format_index
+			if
+				f /= Void and then
+				f.widget /= Void and then
+				not f.widget.is_displayed
+			then
+				f.execute
+			end
 		end
 
 	pop_default_formatter is

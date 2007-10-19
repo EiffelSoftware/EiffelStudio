@@ -127,7 +127,7 @@ feature -- Basic Operations
 			l_registry: WEL_REGISTRY
 		do	
 			create l_registry
-			create l_value.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, a_value)
+			create l_value.make ({WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, a_value)
 			l_registry.save_key_value (root_key, a_key, l_value)
 		ensure
 			saved: is_saved_string (a_key) and then saved_string (a_key).is_equal (a_value)

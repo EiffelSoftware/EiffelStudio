@@ -119,10 +119,10 @@ feature {NONE} -- Implementation
 			-- Show marshaller box if `a_file_name' corresponds to an IDL file.
 		do
 			if is_valid_file (a_file_name) then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Component_definition_file)
+				create Result.make_success ({WIZARD_VALIDITY_STATUS_IDS}.Component_definition_file)
 				update_environment
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Component_definition_file)
+				create Result.make_error ({WIZARD_VALIDITY_STATUS_IDS}.Component_definition_file)
 			end
 			set_status (Result)
 		end

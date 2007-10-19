@@ -16,7 +16,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make,
 	make_from_pointer
 
@@ -43,7 +43,7 @@ feature -- Access
 		require
 			valid_type: is_ptr (var_type) or is_safearray (var_type)
 		do
-			!! Result.make_from_pointer (c_typedesc_typedesc (item))
+			create Result.make_from_pointer (c_typedesc_typedesc (item))
 		end
 
 	array_desc: ECOM_ARRAY_DESC is

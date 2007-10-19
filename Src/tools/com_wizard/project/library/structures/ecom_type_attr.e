@@ -26,7 +26,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make, make_from_pointer
 
 feature {NONE} -- Initialization
@@ -42,7 +42,7 @@ feature -- Access
 	guid: ECOM_GUID is
 			-- GUID of type information
 		do
-			!! Result.make_from_pointer (c_typeattr_guid (item))
+			create Result.make_from_pointer (c_typeattr_guid (item))
 		end
 
 	lcid: INTEGER is
@@ -138,13 +138,13 @@ feature -- Access
 		require
 			type_kind = Tkind_alias
 		do
-			!! Result.make_from_pointer (c_typeattr_alias_typedesc (item))
+			create Result.make_from_pointer (c_typeattr_alias_typedesc (item))
 		end
 
 	idl_desc: ECOM_IDL_DESC is
 			-- IDL attribute
 		do
-			!! Result.make_from_pointer (c_typeattr_idl_attributes (item))
+			create Result.make_from_pointer (c_typeattr_idl_attributes (item))
 		end
 
 feature -- Measurement

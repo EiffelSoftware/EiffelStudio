@@ -111,17 +111,17 @@ feature -- Basic Operations
 			if l_output_event /= Void then
 				inspect
 					l_output_event.id
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_title then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_title then
 					add_title (l_output_event.text)
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_text then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_text then
 					add_text (l_output_event.text)
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_message then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_message then
 					add_message (l_output_event.text)
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_warning then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_warning then
 					add_warning (l_output_event.text)
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_error then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_error then
 					add_error (l_output_event.text)
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Clear then
+				when {WIZARD_OUTPUT_EVENT_ID}.Clear then
 					clear
 				else
 					check
@@ -133,7 +133,7 @@ feature -- Basic Operations
 				if l_progress_event /= Void then
 					inspect
 						l_progress_event.id
-					when feature {WIZARD_PROGRESS_EVENT_ID}.Start then
+					when {WIZARD_PROGRESS_EVENT_ID}.Start then
 						percentage_label.set_text ("0")
 						progress_bar_box.show
 						stop_button.enable_sensitive
@@ -143,7 +143,7 @@ feature -- Basic Operations
 						final_message_box.hide
 						progress_bar_label.set_foreground_color ((create {EV_STOCK_COLORS}).Black)
 						output_text.hide_scroll_bars
-					when feature {WIZARD_PROGRESS_EVENT_ID}.Finish then
+					when {WIZARD_PROGRESS_EVENT_ID}.Finish then
 						set_output
 						progress_bar_box.hide
 						progress_bar_label.set_text ("Ready.")
@@ -154,7 +154,7 @@ feature -- Basic Operations
 						destination_path_label.set_text (environment.destination_folder)
 						final_message_box.show
 						output_text.show_scroll_bars
-					when feature {WIZARD_PROGRESS_EVENT_ID}.Step then
+					when {WIZARD_PROGRESS_EVENT_ID}.Step then
 						check
 					--		not_finished: not environment.abort implies (progress_bar.value < (progress_bar.value_range.upper - progress_bar.value_range.lower))
 						end
@@ -164,11 +164,11 @@ feature -- Basic Operations
 						progress_bar.step_forward
 						l_percent := ((progress_bar.value / (progress_bar.value_range.upper - progress_bar.value_range.lower)) * 100).rounded
 						percentage_label.set_text (l_percent.out)
-					when feature {WIZARD_PROGRESS_EVENT_ID}.Set_range then
+					when {WIZARD_PROGRESS_EVENT_ID}.Set_range then
 						progress_bar.value_range.resize_exactly (0, l_progress_event.value)
 						progress_bar.set_value (0)
 						percentage_label.set_text ("0")
-					when feature {WIZARD_PROGRESS_EVENT_ID}.Title then
+					when {WIZARD_PROGRESS_EVENT_ID}.Title then
 						progress_bar_label.set_text (l_progress_event.text_value)
 					else
 						check
@@ -228,7 +228,7 @@ feature {NONE} -- GUI Events Handling
 			l_font: EV_FONT
 		do
 			l_font := destination_path_label.font
-			l_font.set_weight (feature {EV_FONT_CONSTANTS}.weight_regular)
+			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 			destination_path_label.set_font (l_font)
 		end
 
@@ -239,7 +239,7 @@ feature {NONE} -- GUI Events Handling
 			l_font: EV_FONT
 		do
 			l_font := destination_path_label.font
-			l_font.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			destination_path_label.set_font (l_font)
 		end
 

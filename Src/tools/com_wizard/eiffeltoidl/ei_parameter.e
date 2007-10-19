@@ -8,7 +8,7 @@ indexing
 class
 	EI_PARAMETER
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

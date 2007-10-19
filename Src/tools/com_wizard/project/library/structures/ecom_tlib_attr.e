@@ -21,7 +21,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make, make_from_pointer
 
 feature {NONE} -- Initialization
@@ -37,7 +37,7 @@ feature -- Access
 	guid: ECOM_GUID is
 			-- Unique ID of the library
 		do
-			!! Result.make_from_pointer (ccom_tlibattr_guid (item))
+			create Result.make_from_pointer (ccom_tlibattr_guid (item))
 		end
 
 	lcid: INTEGER is

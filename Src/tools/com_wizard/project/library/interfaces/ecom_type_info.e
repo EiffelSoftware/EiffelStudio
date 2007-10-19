@@ -21,7 +21,7 @@ inherit
 
 	ECOM_TYPE_FLAGS
 
-creation
+create
 	make
 
 feature -- Access

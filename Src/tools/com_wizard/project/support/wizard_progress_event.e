@@ -57,9 +57,9 @@ feature {NONE} -- Implementation
 			-- Event severity
 		do
 			if a_id = Finish then
-				Result := feature {EV_THREAD_SEVERITY_CONSTANTS}.Stop
+				Result := {EV_THREAD_SEVERITY_CONSTANTS}.Stop
 			else
-				Result := feature {EV_THREAD_SEVERITY_CONSTANTS}.Information
+				Result := {EV_THREAD_SEVERITY_CONSTANTS}.Information
 			end
 		end
 		

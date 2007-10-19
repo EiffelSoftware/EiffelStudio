@@ -14,7 +14,7 @@ inherit
 			generated_code as generated_header_file
 		end
 
-creation
+create
 	make
 	
 feature {NONE} -- Initialization

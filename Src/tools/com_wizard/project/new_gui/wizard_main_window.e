@@ -100,10 +100,10 @@ feature {NONE} -- Initialization
 			update_buttons
 			initialize_generate_button
 
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_tab), True, False, False)
+			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_tab), True, False, False)
 			l_accel.actions.extend (agent on_next)
 			accelerators.extend (l_accel)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_tab), True, False, True)
+			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_tab), True, False, True)
 			l_accel.actions.extend (agent on_previous)
 			accelerators.extend (l_accel)
 
@@ -479,9 +479,9 @@ feature {NONE} -- Implementation
 				end
 			end
 			if l_is_valid then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Project_name)
+				create Result.make_success ({WIZARD_VALIDITY_STATUS_IDS}.Project_name)
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Project_name)
+				create Result.make_error ({WIZARD_VALIDITY_STATUS_IDS}.Project_name)
 			end
 			set_status (Result)
 		end
@@ -494,10 +494,10 @@ feature {NONE} -- Implementation
 		do
 			l_success := not a_folder.is_empty
 			if l_success then
-				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Destination_folder)
+				create Result.make_success ({WIZARD_VALIDITY_STATUS_IDS}.Destination_folder)
 				environment.set_destination_folder (a_folder)
 			else
-				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Destination_folder)
+				create Result.make_error ({WIZARD_VALIDITY_STATUS_IDS}.Destination_folder)
 			end
 			set_status (Result)
 		end

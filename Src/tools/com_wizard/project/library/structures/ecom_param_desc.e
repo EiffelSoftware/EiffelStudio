@@ -16,7 +16,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make, make_from_pointer
 
 feature {NONE} -- Initialization
@@ -34,7 +34,7 @@ feature -- Access
 		require
 			has_fopt_and_fhasdefault (flags)
 		do
-			!! Result.make_from_pointer (ccom_paramdesc_default (item))
+			create Result.make_from_pointer (ccom_paramdesc_default (item))
 		end
 
 	flags: INTEGER is

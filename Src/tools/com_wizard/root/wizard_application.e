@@ -182,16 +182,16 @@ feature {NONE} -- Implementation
 			if l_output_event /= Void then
 				inspect
 					l_output_event.id
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_error then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_error then
 					print ("ERROR:%N")
 					print (l_output_event.text)
 					print ("%N%N")
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_message then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_message then
 					print (l_output_event.text)
 					print ("%N")
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_text then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_text then
 					print (l_output_event.text)
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_title then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_title then
 					print ("%N")
 					print (l_output_event.text)
 					create l_underline.make (l_output_event.text.count)
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 					print ("%N")
 					print (l_underline)
 					print ("%N%N")
-				when feature {WIZARD_OUTPUT_EVENT_ID}.Display_warning then
+				when {WIZARD_OUTPUT_EVENT_ID}.Display_warning then
 					print ("WARNING:%N")
 					print (l_output_event.text)
 					print ("%N")

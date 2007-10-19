@@ -17,7 +17,7 @@ inherit
 
 	COMPARABLE
 
-creation
+create
 	make
 
 feature -- Initialization

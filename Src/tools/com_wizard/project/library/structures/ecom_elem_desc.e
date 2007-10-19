@@ -11,7 +11,7 @@ class
 inherit
 	ECOM_STRUCTURE
 
-creation
+create
 	make, make_from_pointer
 
 feature {NONE} -- Initialization
@@ -27,19 +27,19 @@ feature -- Access
 	type_desc: ECOM_TYPE_DESC is
 			-- TYPEDESC structure
 		do
-			!! Result.make_from_pointer (ccom_elemdesc_typedesc (item))
+			create Result.make_from_pointer (ccom_elemdesc_typedesc (item))
 		end
 
 	idl_desc: ECOM_IDL_DESC is
 			-- IDLDESC structure
 		do
-			!! Result.make_from_pointer (ccom_elemdesc_idldesc (item))
+			create Result.make_from_pointer (ccom_elemdesc_idldesc (item))
 		end
 
 	param_desc: ECOM_PARAM_DESC is
 			-- PARAMDESC structure
 		do
-			!! Result.make_from_pointer (ccom_elemdesc_paramdesc (item))
+			create Result.make_from_pointer (ccom_elemdesc_paramdesc (item))
 		end
 
 feature -- Measurement

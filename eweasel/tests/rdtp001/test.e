@@ -35,4 +35,10 @@ feature
 			io.new_line
 		end
 
+	button_id_mask: INTEGER
+			-- Button ID mask
+		once
+			Result := 0b1111
+		end
+
 end -- class TUPLE_TEST

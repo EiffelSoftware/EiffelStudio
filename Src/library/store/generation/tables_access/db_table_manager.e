@@ -11,7 +11,7 @@ class
 inherit
 	ABSTRACT_DB_TABLE_MANAGER
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -591,7 +591,7 @@ feature {NONE} -- Update implementation
 			if update_parameters_table.item (code) /= Void then
 				Result := update_parameters_table.item (code)
 			else
-				Result := tables.description (code).mapped_list (~parameter)
+				Result := tables.description (code).mapped_list (agent parameter)
 				update_parameters_table.put (Result, code)
 			end
 		end

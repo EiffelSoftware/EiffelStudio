@@ -974,10 +974,10 @@ Rename: TE_RENAME
 				$$ := ast_factory.new_rename_clause_as (Void, $1)
 				if is_constraint_renaming then
 					report_one_error (
-						create {SYNTAX_ERROR}.make ($1.line, $1.column, filename, "Empty rename clause.", False))
+						create {SYNTAX_ERROR}.make (line, column, filename, "Empty rename clause.", False))
 				else
 					error_handler.insert_warning (
-							create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
+							create {SYNTAX_WARNING}.make (line, column, filename,
 							"Remove empty rename clauses."))
 				end
 			}
@@ -1489,7 +1489,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{
 				$$ := $2
 				ast_factory.set_expanded_class_type ($$, True, $1)
-				if has_syntax_warning and $2 /= Void then
+				if has_syntax_warning and $1 /= Void then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
 						once "Make an expanded version of the base class associated with this type."))

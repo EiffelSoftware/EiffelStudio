@@ -472,6 +472,16 @@ feature {NONE} -- Implementation
 			process_binary_as (l_as)
 		end
 
+	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+		do
+			process_binary_as (l_as)
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+		do
+			process_binary_as (l_as)
+		end
+
 	process_bracket_as (l_as: BRACKET_AS) is
 		do
 			l_as.target.process (Current)

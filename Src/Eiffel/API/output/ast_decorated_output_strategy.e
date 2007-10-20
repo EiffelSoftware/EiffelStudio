@@ -1958,6 +1958,11 @@ feature {NONE} -- Implementation
 
 	process_bin_ne_as (l_as: BIN_NE_AS) is
 		do
+			process_bin_eq_as (l_as)
+		end
+
+	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+		do
 			l_as.left.process (Current)
 			if not expr_type_visiting then
 				text_formatter_decorator.put_space
@@ -1966,6 +1971,11 @@ feature {NONE} -- Implementation
 			end
 			l_as.right.process (Current)
 			last_type := boolean_type
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+		do
+			process_bin_tilde_as (l_as)
 		end
 
 	process_bracket_as (l_as: BRACKET_AS) is

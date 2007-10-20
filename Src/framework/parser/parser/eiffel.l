@@ -147,6 +147,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_GE, Current)
 				last_token := TE_GE
 			}
+"/~"			{
+				last_symbol_as_value := ast_factory.new_symbol_as (TE_NOT_TILDE, Current)
+				last_token := TE_NOT_TILDE
+			}
 "/="		{				
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_NE, Current)
 				last_token := TE_NE

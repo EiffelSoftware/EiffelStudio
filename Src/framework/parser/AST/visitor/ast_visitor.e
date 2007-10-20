@@ -880,6 +880,20 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
+	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_bracket_as (l_as: BRACKET_AS) is
 			-- Process `l_as'.
 		require

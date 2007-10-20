@@ -76,6 +76,8 @@ inherit
 			process_bin_and_as,
 			process_bin_eq_as,
 			process_bin_ne_as,
+			process_bin_tilde_as,
+			process_bin_not_tilde_as,
 			process_bracket_as,
 			process_object_test_as,
 			process_external_lang_as,
@@ -1377,6 +1379,20 @@ feature {NONE} -- Implementation
 		end
 
 	process_bin_ne_as (l_as: BIN_NE_AS) is
+		do
+			l_as.left.process (Current)
+			l_as.right.process (Current)
+			last_type := boolean_type
+		end
+
+	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+		do
+			l_as.left.process (Current)
+			l_as.right.process (Current)
+			last_type := boolean_type
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
 		do
 			l_as.left.process (Current)
 			l_as.right.process (Current)

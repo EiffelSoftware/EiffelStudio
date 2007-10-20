@@ -395,6 +395,8 @@ feature -- AST node index
 	formal_generic_list: INTEGER is 144
 	constraining_type:  INTEGER is 145
 	object_test: INTEGER is 146
+	bin_tilde: INTEGER is 147
+	bin_not_tilde: INTEGER is 148
 
 feature -- AST node match
 
@@ -482,6 +484,8 @@ feature -- AST node match
 			Result.force (<<bin_and>>, "bin_and")
 			Result.force (<<bin_eq>>, "bin_eq")
 			Result.force (<<bin_ne>>, "bin_ne")
+			Result.force (<<bin_tilde>>, "bin_tilde")
+			Result.force (<<bin_not_tilde>>, "bin_not_tilde")
 			Result.force (<<bracket>>, "bracket")
 			Result.force (<<object_test>>, "object_test")
 			Result.force (<<external_lang>>, "external_lang")

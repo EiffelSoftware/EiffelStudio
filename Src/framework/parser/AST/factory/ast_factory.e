@@ -699,6 +699,14 @@ feature -- Access
 			end
 		end
 
+	new_bin_not_tilde_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_NOT_TILDE_AS is
+			-- New binary /~ AST node
+		do
+			if l /= Void and r /= Void then
+				create Result.initialize (l, r, o)
+			end
+		end
+
 	new_bin_or_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_OR_AS is
 			-- New binary or AST node
 		do
@@ -741,6 +749,14 @@ feature -- Access
 
 	new_bin_star_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_STAR_AS is
 			-- New binary * AST node
+		do
+			if l /= Void and r /= Void then
+				create Result.initialize (l, r, o)
+			end
+		end
+
+	new_bin_tilde_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_TILDE_AS is
+			-- New binary ~ AST node
 		do
 			if l /= Void and r /= Void then
 				create Result.initialize (l, r, o)

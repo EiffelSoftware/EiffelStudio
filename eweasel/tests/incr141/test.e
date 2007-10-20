@@ -12,7 +12,7 @@ feature
 		local
 			p: PROCEDURE [TEST, $GENERIC2]
   		do
-			p := ~make
+			p := agent make
   		end
 	
 end

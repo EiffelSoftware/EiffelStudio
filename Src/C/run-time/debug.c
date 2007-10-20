@@ -2134,7 +2134,7 @@ rt_public void rt_ext_notify_event (int op, char* curr, int cid, int fid, int de
 		((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) cid); 	
 		((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) fid); 	
 		((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) dep); 
-		if (op == RTDBGD_ENTER_FEATURE_NOTIFICATION) {
+		if (op == RTDBG_EVENT_ENTER_FEATURE) {
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_p = pfn;
 		};
 		(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			

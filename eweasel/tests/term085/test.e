@@ -5,13 +5,13 @@
 --| Public License version 2.
 
 class TEST
-creation 
+create 
 	make
 feature 
 	make is
 		do
-			print (io~put_string (?))
-			try (~weasel)
+			print (agent io.put_string (?))
+			try (agent weasel)
   		end
 	
 	try (p: PROCEDURE [ANY, TUPLE]) is
@@ -20,7 +20,7 @@ feature
 		do
 			create s.make (1, 0)
 			p.call (Void)
-			print ((s~make (?, 2)).generating_type); io.new_line
+			print ((agent s.make (?, 2)).generating_type); io.new_line
   		end
 	
 	weasel is
@@ -29,5 +29,5 @@ feature
   		end
 	
 invariant
-	{ARRAY [STRING]}~make /= Void
+	agent {ARRAY [STRING]}.make /= Void
 end

@@ -35,14 +35,18 @@ feature -- Notification
 				when Op_object_storage_load then
 					process_object_storage_load (object_storage_argument (a_data))
 				else
-					derror (out + " ->" + a_id.out + "%N")
+					debug ("RT_EXTENSION")
+						dtrace ("Error: " + out + " ->" + a_id.out + "%N")
+					end
 				end
 				debug ("RT_EXTENSION_TRACE")
 					dtrace ("RT_EXTENSION.notify (" + a_id.out + ") -> DONE.%N")
 				end
 			end
 		rescue
-			derror ("Rescue -> RT_EXTENSION.notify (" + a_id.out + ")%N")
+			debug ("RT_EXTENSION")
+				dtrace ("Error: Rescue -> RT_EXTENSION.notify (" + a_id.out + ")%N")
+			end
 			retried := True
 			retry
 		end
@@ -62,7 +66,9 @@ feature -- Notification
 				end
 			end
 		rescue
-			derror ("Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
+			debug ("RT_EXTENSION")
+				dtrace ("Error: Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
+			end
 			retried := True
 			retry
 		end

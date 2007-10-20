@@ -330,7 +330,7 @@ feature -- Basic operations
 				end
 			end
 		ensure
-			tool_shown: panel.shown
+			tool_shown: not panel.is_auto_hide implies panel.shown
 		end
 
 	close

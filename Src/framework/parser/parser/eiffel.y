@@ -27,6 +27,8 @@ create
 %left		TE_OR
 %left		TE_XOR
 %left		TE_AND
+-- Uncomment when Tilda_agent_call is removed.
+--%left 		TE_TILDE TE_NOT_TILDE TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE
 %left 		TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE
 %left		TE_PLUS TE_MINUS
 %left		TE_STAR TE_SLASH TE_MOD TE_DIV
@@ -51,8 +53,8 @@ create
 %token <SYMBOL_AS> 		TE_BANG TE_SEMICOLON
 %token <SYMBOL_AS>		TE_COLON TE_COMMA
 %token <SYMBOL_AS>		TE_CONSTRAIN TE_QUESTION
-%token <SYMBOL_AS> 		TE_DOTDOT TE_TILDE TE_DOT
-%token <SYMBOL_AS> 		TE_EQ TE_LT TE_GT TE_LE TE_GE TE_NE
+%token <SYMBOL_AS> 		TE_DOTDOT TE_DOT
+%token <SYMBOL_AS> 		TE_TILDE TE_NOT_TILDE TE_EQ TE_LT TE_GT TE_LE TE_GE TE_NE
 %token <SYMBOL_AS> 		TE_PLUS TE_MINUS TE_STAR TE_SLASH TE_POWER
 %token <SYMBOL_AS> 		TE_DIV TE_MOD
 
@@ -2474,6 +2476,11 @@ Expression:
 			{ $$ := $1 }
 	|	Typed_expression
 			{ $$ := $1; has_type := True }
+-- To uncomment when Tilda_agent_call are really removed from parser
+--	|	Expression TE_TILDE Expression
+--			{ $$ := ast_factory.new_bin_tilde_as ($1, $3, $2); has_type := True }
+--	|	Expression TE_NOT_TILDE Expression
+--			{ $$ := ast_factory.new_bin_not_tilde_as ($1, $3, $2); has_type := True }
 	|	Expression TE_EQ Expression
 			{ $$ := ast_factory.new_bin_eq_as ($1, $3, $2); has_type := True }
 	|	Expression TE_NE Expression

@@ -4138,6 +4138,24 @@ feature -- Implementation
 			process_bin_eq_as (l_as)
 		end
 
+	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+		local
+			l_unsupported: NOT_SUPPORTED
+		do
+			create l_unsupported
+			context.init_error (l_unsupported)
+			l_unsupported.set_message ("Operators ~ and /~ are not yet supported.")
+			if l_as.operator /= Void then
+				l_unsupported.set_location (l_as.operator.start_location)
+			end
+			error_handler.insert_error (l_unsupported)
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+		do
+			process_bin_tilde_as (l_as)
+		end
+
 	process_bracket_as (l_as: BRACKET_AS) is
 		local
 			was_assigner_call: BOOLEAN

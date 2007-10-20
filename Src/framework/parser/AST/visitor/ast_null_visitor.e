@@ -363,6 +363,14 @@ feature -- Implementation
 		do
 		end
 
+	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+		do
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+		do
+		end
+
 	process_bracket_as (l_as: BRACKET_AS) is
 		do
 		end

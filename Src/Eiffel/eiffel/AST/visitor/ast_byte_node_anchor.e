@@ -18,7 +18,7 @@ inherit
 			process_bin_ge_as, process_bin_gt_as, process_bin_le_as, process_bin_lt_as,
 			process_bin_div_as, process_bin_minus_as, process_bin_mod_as, process_bin_plus_as,
 			process_bin_power_as, process_bin_slash_as, process_bin_star_as, process_bin_and_as,
-			process_bin_eq_as, process_bin_ne_as
+			process_bin_eq_as, process_bin_ne_as, process_bin_tilde_as, process_bin_not_tilde_as
 		end
 
 feature -- Byte node
@@ -175,6 +175,16 @@ feature {NONE} -- Implementation
 	process_bin_ne_as (l_as: BIN_NE_AS) is
 		do
 			create {BIN_NE_B} last_binary_node
+		end
+
+	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+		do
+				-- To be implemented
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+		do
+				-- To be implemented
 		end
 
 indexing

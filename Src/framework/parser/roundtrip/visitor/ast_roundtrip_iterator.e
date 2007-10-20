@@ -19,9 +19,8 @@ indexing
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
-	date: ""
-	revision: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	AST_ROUNDTRIP_ITERATOR
@@ -736,6 +735,16 @@ feature
 		end
 
 	process_bin_ne_as (l_as: BIN_NE_AS) is
+		do
+			process_binary_as (l_as)
+		end
+
+	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+		do
+			process_binary_as (l_as)
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
 		do
 			process_binary_as (l_as)
 		end

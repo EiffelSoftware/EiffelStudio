@@ -976,6 +976,22 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	process_bin_tilde_as (l_as: BIN_TILDE_AS)
+		do
+			if not is_matching_finished then
+				match_ast (bin_tilde)
+				process_binary_as (l_as)
+			end
+		end
+
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS)
+		do
+			if not is_matching_finished then
+				match_ast (bin_not_tilde)
+				process_binary_as (l_as)
+			end
+		end
+
 	process_object_test_as (l_as: OBJECT_TEST_AS) is
 		do
 			if not is_matching_finished then

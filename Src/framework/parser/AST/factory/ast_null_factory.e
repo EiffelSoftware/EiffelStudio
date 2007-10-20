@@ -15,8 +15,9 @@ inherit
 			new_array_as, new_assign_as, new_bin_and_as, new_bin_and_then_as, new_bin_div_as,
 			new_bin_eq_as, new_bin_free_as, new_bin_ge_as, new_bin_gt_as, new_bin_implies_as,
 			new_bin_le_as, new_bin_lt_as, new_bin_minus_as, new_bin_mod_as, new_bin_ne_as,
-			new_bin_or_as, new_bin_or_else_as, new_bin_plus_as, new_bin_power_as, new_bin_slash_as,
-			new_bin_star_as, new_bin_xor_as, new_bit_const_as, new_bits_as, new_bits_symbol_as, new_built_in_as,
+			new_bin_not_tilde_as, new_bin_or_as, new_bin_or_else_as, new_bin_plus_as,
+			new_bin_power_as, new_bin_slash_as, new_bin_star_as, new_bin_tilde_as,
+			new_bin_xor_as, new_bit_const_as, new_bits_as, new_bits_symbol_as, new_built_in_as,
 			new_body_as, new_boolean_as, new_case_as, new_character_as, new_check_as, new_class_as,
 			new_class_type_as, new_client_as, new_constant_as, new_convert_feat_as, new_create_as,
 			new_creation_as, new_creation_expr_as, new_current_as, new_custom_attribute_as,
@@ -429,6 +430,11 @@ feature -- Access
 		do
 		end
 
+	new_bin_not_tilde_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_NOT_TILDE_AS is
+			-- New binary /~ AST node
+		do
+		end
+
 	new_bin_or_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_OR_AS is
 			-- New binary or AST node
 		do
@@ -456,6 +462,11 @@ feature -- Access
 
 	new_bin_star_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_STAR_AS is
 			-- New binary * AST node
+		do
+		end
+
+	new_bin_tilde_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_TILDE_AS is
+			-- New binary ~ AST node
 		do
 		end
 

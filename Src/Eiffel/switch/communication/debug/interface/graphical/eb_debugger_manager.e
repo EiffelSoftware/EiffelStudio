@@ -401,7 +401,9 @@ feature -- tools
 	call_stack_tool: ES_CALL_STACK_TOOL_PANEL
 			-- A tool that represents the call stack in a graphical display.
 		do
-			Result ?= debugging_window.shell_tools.tool ({ES_CALL_STACK_TOOL}).panel
+			if debugging_window /= Void then
+				Result ?= debugging_window.shell_tools.tool ({ES_CALL_STACK_TOOL}).panel
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -409,21 +411,27 @@ feature -- tools
 	threads_tool: ES_THREADS_TOOL_PANEL
 			-- A tool that represents the threads list in a graphical display.
 		do
-			Result ?= debugging_window.shell_tools.tool ({ES_THREADS_TOOL}).panel
+			if debugging_window /= Void then
+				Result ?= debugging_window.shell_tools.tool ({ES_THREADS_TOOL}).panel
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
 	objects_tool: ES_OBJECTS_TOOL_PANEL
 		do
-			Result ?= debugging_window.shell_tools.tool ({ES_OBJECTS_TOOL}).panel
+			if debugging_window /= Void then
+				Result ?= debugging_window.shell_tools.tool ({ES_OBJECTS_TOOL}).panel
+			end
 		ensure
 			result_attached: Result /= Void
 		end
 
 	object_viewer_tool: ES_OBJECT_VIEWER_TOOL_PANEL
 		do
-			Result ?= debugging_window.shell_tools.tool ({ES_OBJECT_VIEWER_TOOL}).panel
+			if debugging_window /= Void then
+				Result ?= debugging_window.shell_tools.tool ({ES_OBJECT_VIEWER_TOOL}).panel
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -433,17 +441,19 @@ feature -- tools
 		local
 			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
 		do
-			l_tools := debugging_window.shell_tools.tools ({ES_WATCH_TOOL})
-			create Result.make
-			l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL_PANEL])
-				local
-					l_tool: ES_WATCH_TOOL_PANEL
-				do
-					if a_tool.is_tool_instantiated then
-						l_tool ?= a_tool.panel
-						a_result.extend (l_tool)
-					end
-				end (?, Result))
+			if debugging_window /= Void then
+				l_tools := debugging_window.shell_tools.tools ({ES_WATCH_TOOL})
+				create Result.make
+				l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL_PANEL])
+					local
+						l_tool: ES_WATCH_TOOL_PANEL
+					do
+						if a_tool.is_tool_instantiated then
+							l_tool ?= a_tool.panel
+							a_result.extend (l_tool)
+						end
+					end (?, Result))
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -818,9 +828,10 @@ feature -- tools management
 			l_watch_tool: ES_WATCH_TOOL_PANEL
 		do
 				-- This call has the side affect of creating the tool, do not remove it!
-			l_watch_tool ?= debugging_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False).panel
-
-			update_all_debugging_tools_menu
+			if debugging_window /= Void then
+				l_watch_tool ?= debugging_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False).panel
+				update_all_debugging_tools_menu
+			end
 		end
 feature -- Windows observer
 
@@ -912,6 +923,12 @@ feature -- Output
 			display_system_info
 			if application_is_executing then
 				display_debugger_info (application.parameters)
+			end
+			if 
+				debugging_window /= Void and then
+				debugging_window.tools.output_tool /= Void 
+			then
+				debugging_window.tools.output_tool.show
 			end
 		end
 
@@ -1511,12 +1528,14 @@ feature -- Debugging events
 			feat_tool: ES_FEATURES_RELATION_TOOL_PANEL
 		do
 			record_objects_grids_layout
-			feat_tool := debugging_window.tools.features_relation_tool
-			if feat_tool /= Void then
-				feat_tool.pop_feature_flat
-				feat_tool.show
+			if debugging_window /= Void then
+				feat_tool := debugging_window.tools.features_relation_tool
+				if feat_tool /= Void then
+					feat_tool.pop_feature_flat
+					feat_tool.show
+				end
+				debugging_window.tools.launch_stone (st)
 			end
-			debugging_window.tools.launch_stone (st)
 		end
 
 	on_application_before_launching is
@@ -2211,9 +2230,11 @@ feature {NONE} -- Implementation
 		local
 			l_tool: ES_BREAKPOINTS_TOOL_PANEL
 		do
-			l_tool := debugging_window.tools.breakpoints_tool
-			if l_tool.content.is_visible then
-				l_tool.refresh
+			if debugging_window /= Void then
+				l_tool := debugging_window.tools.breakpoints_tool
+				if l_tool.content.is_visible then
+					l_tool.refresh
+				end
 			end
 		end
 

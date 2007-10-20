@@ -975,12 +975,25 @@ Rename: TE_RENAME
 			{
 				$$ := ast_factory.new_rename_clause_as (Void, $1)
 				if is_constraint_renaming then
-					report_one_error (
-						create {SYNTAX_ERROR}.make (line, column, filename, "Empty rename clause.", False))
+					if $1 /= Void then
+						report_one_error (
+							create {SYNTAX_ERROR}.make ($1.line, $1.column, filename,
+							"Empty rename clause.", False))
+					else
+						report_one_error (
+							create {SYNTAX_ERROR}.make (line, column, filename,
+							"Empty rename clause.", False))
+					end
 				else
-					error_handler.insert_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-							"Remove empty rename clauses."))
+					if $1 /= Void then
+						error_handler.insert_warning (
+								create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
+								"Remove empty rename clauses."))
+					else
+						error_handler.insert_warning (
+								create {SYNTAX_WARNING}.make (line, column, filename,
+								"Remove empty rename clauses."))
+					end
 				end
 			}
 	|	TE_RENAME Add_counter Rename_list Remove_counter

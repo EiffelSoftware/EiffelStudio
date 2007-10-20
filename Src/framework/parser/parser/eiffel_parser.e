@@ -6510,12 +6510,25 @@ end
 
 				yyval109 := ast_factory.new_rename_clause_as (Void, yyvs12.item (yyvsp12))
 				if is_constraint_renaming then
-					report_one_error (
-						create {SYNTAX_ERROR}.make (line, column, filename, "Empty rename clause.", False))
+					if yyvs12.item (yyvsp12) /= Void then
+						report_one_error (
+							create {SYNTAX_ERROR}.make (yyvs12.item (yyvsp12).line, yyvs12.item (yyvsp12).column, filename,
+							"Empty rename clause.", False))
+					else
+						report_one_error (
+							create {SYNTAX_ERROR}.make (line, column, filename,
+							"Empty rename clause.", False))
+					end
 				else
-					error_handler.insert_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-							"Remove empty rename clauses."))
+					if yyvs12.item (yyvsp12) /= Void then
+						error_handler.insert_warning (
+								create {SYNTAX_WARNING}.make (yyvs12.item (yyvsp12).line, yyvs12.item (yyvsp12).column, filename,
+								"Remove empty rename clauses."))
+					else
+						error_handler.insert_warning (
+								create {SYNTAX_WARNING}.make (line, column, filename,
+								"Remove empty rename clauses."))
+					end
 				end
 			
 if yy_parsing_status = yyContinue then

@@ -194,7 +194,6 @@ feature {NONE} -- Execution replay
 			-- (De)Activate execution recording
 		local
 			r: like execution_recording
-			b: BOOLEAN
 		do
 			if a_data.op.to_boolean then --| True: 1; False: 0
 				check execution_recording = Void end

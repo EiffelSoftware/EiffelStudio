@@ -8,8 +8,8 @@ deferred class TEST1
 feature
 	weasel is
 		do
-			p := ~weasel
-			p := ~wimp
+			p := agent weasel
+			p := agent wimp
 		end
 
 	p: PROCEDURE [TEST1, TUPLE]

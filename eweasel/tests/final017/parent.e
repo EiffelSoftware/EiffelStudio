@@ -14,7 +14,7 @@ feature
 		local
 			p: PROCEDURE [like Current, TUPLE]
 		do
-			p := ~weasel
+			p := agent weasel
 			p.call (Void)
 		end
 end

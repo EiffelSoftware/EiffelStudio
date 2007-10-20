@@ -5,7 +5,7 @@
 --| Public License version 2.
 
 class TEST
-creation 
+create 
 	make
 feature 
 	make is
@@ -13,5 +13,5 @@ feature
   		end
 	
 invariant
-	s~make /= Void
+	agent s.make /= Void
 end

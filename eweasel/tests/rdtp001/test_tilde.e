@@ -13,7 +13,6 @@ feature
 			end
 			if equal (True, False) ~ equal (False, True) then
 			end
-			a := ~print
 		end
 
 end

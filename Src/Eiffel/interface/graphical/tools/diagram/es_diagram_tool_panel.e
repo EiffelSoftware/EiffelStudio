@@ -1521,8 +1521,6 @@ feature {NONE} -- force last stone when displayed
 
 	request_force_last_stone_now is
 			-- Request `force_last_stone_now'
-		require
-			tool_shown: shown
 		do
 			if agent_force_last_stone_now = Void then
 				agent_force_last_stone_now := agent force_last_stone_now

@@ -2288,52 +2288,39 @@ feature {NONE} -- Visitors
 					generate_il_metamorphose (l_source_type, l_target_type, True)
 				end
 
-				if l_target_type.is_expanded then
-						-- Conditional branch is used to avoid reattachment
-						-- if the types do not conform.
-					il_generator.duplicate_top
-				end
-
 					-- Generate Test on type
 				il_generator.generate_is_instance_of (l_target_type)
+				il_generator.duplicate_top
 
-				if l_target_type.is_expanded then
+				failure_label := il_generator.create_label
+				success_label := il_generator.create_label
+				il_generator.branch_on_true (success_label)
 
-					failure_label := il_generator.create_label
-					success_label := il_generator.create_label
-					il_generator.branch_on_true (success_label)
+					-- Assignment attempt failed.
 
-						-- Assignment attempt failed.
-
-					l_target_class_type ?= l_target_type
-					if l_target_class_type /= Void and then l_target_class_type.is_basic and then l_target_class_type.meta_generic = Void then
-							-- Check native .NET type.
-							-- Generate Test on type
-						il_generator.generate_is_instance_of_external (l_target_class_type)
-						il_generator.duplicate_top
-						basic_failure_label := il_generator.create_label
-						il_generator.branch_on_false (basic_failure_label)
-							-- Generate reattachment.
-						il_generator.generate_external_unmetamorphose (l_target_class_type)
-							-- Generate assignment header depending of the type
-							-- of the target (local, attribute or result).
-						generate_il_assignment (a_node.target, l_source_type)
-							-- Types conform.
-						il_generator.put_boolean_constant (True)
-							-- Terminate reattachment.
-						il_generator.branch_to (failure_label)
-						il_generator.mark_label (basic_failure_label)
-					end
-
-						-- Remove duplicate obtained from call to `isinst'.
-					il_generator.pop
-						-- Types do not conform.
-					il_generator.put_boolean_constant (False)
-
+				l_target_class_type ?= l_target_type
+				if l_target_class_type /= Void and then l_target_class_type.is_basic and then l_target_class_type.meta_generic = Void then
+						-- Check native .NET type.
+						-- Generate Test on type
+					il_generator.generate_is_instance_of_external (l_target_class_type)
+					il_generator.duplicate_top
+					basic_failure_label := il_generator.create_label
+					il_generator.branch_on_false (basic_failure_label)
+						-- Generate reattachment.
+					il_generator.generate_external_unmetamorphose (l_target_class_type)
+						-- Generate assignment header depending of the type
+						-- of the target (local, attribute or result).
+					generate_il_assignment (a_node.target, l_source_type)
+						-- Types conform.
+					il_generator.put_boolean_constant (True)
+						-- Terminate reattachment.
 					il_generator.branch_to (failure_label)
-
-					il_generator.mark_label (success_label)
+					il_generator.mark_label (basic_failure_label)
 				end
+
+					-- Types do not conform.
+				il_generator.branch_to (failure_label)
+				il_generator.mark_label (success_label)
 
 					-- Keep result of type test as a boolean value.
 				il_generator.duplicate_top

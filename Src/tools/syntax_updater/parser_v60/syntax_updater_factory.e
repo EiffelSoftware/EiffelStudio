@@ -12,7 +12,7 @@ inherit
 		redefine
 			new_bang_creation_as,
 			new_bang_creation_expr_as,
-			new_tilda_routine_creation_as,
+			new_old_routine_creation_as,
 			new_static_access_as,
 			new_keyword_as,
 			new_creation_keyword_as
@@ -62,7 +62,7 @@ feature -- Processing
 			has_obsolete_constructs := True
 		end
 
-	new_tilda_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: SYMBOL_AS): TILDA_ROUTINE_CREATION_AS is
+	new_old_routine_creation_as (l: AST_EIFFEL; t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: SYMBOL_AS): PAIR [ROUTINE_CREATION_AS, LOCATION_AS]
 		do
 			has_obsolete_constructs := True
 		end

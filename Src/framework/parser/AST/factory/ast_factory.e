@@ -120,6 +120,8 @@ feature -- Access
 
 	new_tilda_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: SYMBOL_AS): TILDA_ROUTINE_CREATION_AS is
 			-- New AGENT_ROUTINE_CREATION AST node.
+		obsolete
+			"To be removed. Use `new_old_routine_creation_as' instead."
 		do
 			create Result.make (t, f, o, is_qualified, a_as)
 		end

@@ -43,7 +43,7 @@ inherit
 			new_tuple_as, new_type_dec_as, new_type_expr_as, new_un_free_as, new_un_minus_as,
 			new_un_not_as, new_un_old_as, new_un_plus_as, new_un_strip_as, new_unique_as,
 			new_variant_as, new_verbatim_string_as, new_void_as, new_filled_none_id_as,
-			new_assigner_call_as, new_tilda_routine_creation_as,
+			new_assigner_call_as,
 			new_create_creation_as, new_bang_creation_as,
 			new_create_creation_expr_as,new_bang_creation_expr_as,
 			new_bracket_as,
@@ -106,11 +106,6 @@ feature -- Roundtrip
 feature -- Roundtrip: New AST node
 
 	new_agent_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: KEYWORD_AS; d_as: SYMBOL_AS): AGENT_ROUTINE_CREATION_AS is
-			-- New AGENT_ROUTINE_CREATION AST node.
-		do
-		end
-
-	new_tilda_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: SYMBOL_AS): TILDA_ROUTINE_CREATION_AS is
 			-- New AGENT_ROUTINE_CREATION AST node.
 		do
 		end

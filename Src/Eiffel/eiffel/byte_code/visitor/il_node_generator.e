@@ -2319,11 +2319,11 @@ feature {NONE} -- Visitors
 				end
 
 					-- Types do not conform.
+				il_generator.pop
+				il_generator.put_boolean_constant (False)
 				il_generator.branch_to (failure_label)
-				il_generator.mark_label (success_label)
 
-					-- Keep result of type test as a boolean value.
-				il_generator.duplicate_top
+				il_generator.mark_label (success_label)
 
 				generate_reattachment (a_node.expression, l_source_type, l_target_type)
 
@@ -2331,9 +2331,10 @@ feature {NONE} -- Visitors
 					-- of the target (local, attribute or result).
 				generate_il_assignment (a_node.target, l_source_type)
 
-				if failure_label /= Void then
-					il_generator.mark_label (failure_label)
-				end
+					-- Types conform.
+				il_generator.put_boolean_constant (True)
+
+				il_generator.mark_label (failure_label)
 			end
 		end
 

@@ -62,6 +62,7 @@ feature -- Initialization
 		local
 			a: ANY
 		do
+			print ({ARRAY [STRING]}~io)
 			print (~io)
 			print (~ io)
 			print (io~print)

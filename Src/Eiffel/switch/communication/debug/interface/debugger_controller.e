@@ -453,6 +453,7 @@ feature {NONE} -- debugging
 				app_exec.on_application_before_launching
 				app_exec.run (param)
 				if manager.application_is_executing then
+					manager.init_application
 					if app_exec.execution_mode = {EXEC_MODES}.No_stop_points then
 						manager.debugger_status_message (debugger_names.m_system_is_running_ignoring_breakpoints)
 					else

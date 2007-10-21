@@ -46,6 +46,8 @@ feature -- Concrete initialization
 			app ?= debugger_manager.application
 			eifnet_debugger := app.eifnet_debugger
 			eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
+		ensure then
+			eifnet_evaluator /= Void
 		end
 
 feature {NONE} -- Implementation

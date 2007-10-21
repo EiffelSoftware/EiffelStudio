@@ -1255,7 +1255,11 @@ feature -- Access
 		local
 			expr: EB_EXPRESSION
 		do
-			create expr.make_as_object (dv.dynamic_class, dv.address)
+			if dv.dynamic_class = Void then
+				create expr.make_for_context ("Void")
+			else
+				create expr.make_as_object (dv.dynamic_class, dv.address)
+			end
 			add_expression (expr, False)
 		end
 

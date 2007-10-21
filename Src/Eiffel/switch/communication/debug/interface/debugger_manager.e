@@ -82,10 +82,20 @@ feature -- Application execution
 			if is_dotnet_project then
 				create {APPLICATION_EXECUTION_DOTNET} app.make_with_debugger (Current)
 				set_shared_application (app)
-				create {DBG_EVALUATOR_DOTNET} dbg_evaluator.make
 			else
 				create {APPLICATION_EXECUTION_CLASSIC} app.make_with_debugger (Current)
 				set_shared_application (app)
+			end
+		end
+
+	init_application is
+			-- Initialize application
+		require
+			application_not_void: application /= Void
+		do
+			if is_dotnet_project then
+				create {DBG_EVALUATOR_DOTNET} dbg_evaluator.make
+			else
 				create {DBG_EVALUATOR_CLASSIC} dbg_evaluator.make
 			end
 		end

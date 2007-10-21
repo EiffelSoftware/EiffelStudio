@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 					elseif fast_factory.has_obsolete_constructs then
 							-- Slow parsing to rewrite the class using the new constructs.
 						parser.parse_from_string (string_buffer)
-						check parser.error_handler.has_error end
+						check no_error: not parser.error_handler.has_error end
 
 						visitor.setup (parser.root_node, parser.match_list, True, True)
 							-- Free some memory from the parser that we don't need.

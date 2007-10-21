@@ -9,7 +9,7 @@ class
 	RT_EXTENSION
 
 inherit
-	RT_EXTENSION_COMMON
+	RT_EXTENSION_GENERAL
 
 feature -- Notification
 
@@ -73,75 +73,6 @@ feature -- Notification
 			retried := True
 			retry
 		end
-
-feature -- Direct Access
-
-	saved_object_to (r: ANY; fn: STRING): ANY is
-			-- Save object `r' into file `fn'
-		local
-			file: RAW_FILE
-		do
-			create file.make (fn)
-			if not file.exists or else file.is_writable then
-				file.create_read_write
-				file.independent_store (r)
-				file.close
-				Result := r
-			else
-				Result := Void
-			end
-		end
-
-	object_loaded_from (r: ANY; fn: STRING): ANY is
-			-- Loaded object from file `fn'.
-			-- if `r' is Void return a new object
-			-- else load into `r'
-			-- If failure then results Void object.
-		local
-			o1, o2: ANY
-			file: RAW_FILE
-			retried: BOOLEAN
-		do
-			if not retried then
-				o1 := r
-				create file.make (fn)
-				if file.exists and then file.is_readable then
-					file.open_read
-					o2 := file.retrieved
-					file.close
-					if o1 /= Void then
-						if o1.same_type (o2) then
-							o1.standard_copy (o2)
-							Result := o1
-						else
-							Result := Void
-						end
-					else
-						Result := o2
-					end
-				else
-					Result := Void
-				end
-			else
-				Result := r
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-feature -- Constants (check eif_debug.h uses the same values)
-
-	Op_enter_feature: 		INTEGER = 10
-	Op_leave_feature: 		INTEGER = 11
-	Op_rescue_feature: 		INTEGER = 12
-
-	Op_exec_replay_record: 	INTEGER = 15
-	Op_exec_replay: 		INTEGER = 16
-	Op_exec_replay_query: 	INTEGER = 17
-
-	Op_object_storage_save:	INTEGER = 31
-	Op_object_storage_load:	INTEGER = 32
 
 feature {NONE} -- Execution replay
 

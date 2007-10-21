@@ -49,10 +49,22 @@ feature -- AST visiting
 				l_as.target.process (Current)
 				safe_process (l_as.rparan_symbol)
 				remove_following_spaces
-				context.add_string (".")
-			end
-			if l_as.tilda_symbol /= Void then
+				if l_as.tilda_symbol /= Void then
+					if l_as.tilda_symbol.code = {EIFFEL_TOKENS}.te_curlytilde then
+						context.add_string ("}.")
+					else
+						context.add_string (".")
+					end
+					process_leading_leaves (l_as.tilda_symbol.index)
+					last_index := l_as.tilda_symbol.index
+				else
+					context.add_string (".")
+				end
+			elseif l_as.tilda_symbol /= Void then
 				process_leading_leaves (l_as.tilda_symbol.index)
+				if l_as.tilda_symbol.code = {EIFFEL_TOKENS}.te_curlytilde then
+					context.add_string ("}")
+				end
 				last_index := l_as.tilda_symbol.index
 			end
 			remove_following_spaces

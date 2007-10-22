@@ -18,7 +18,7 @@ inherit
 			clean_on_dispose
 		end
 
-create 
+create
 	make_by_pointer,
 	make_value_by_pointer
 
@@ -30,26 +30,26 @@ feature {NONE} -- Initialization
 			make_by_pointer (an_item)
 			get_strong_reference_value
 		end
-		
+
 	make_by_pointer (an_item: POINTER) is
 			-- Make Current by pointer.
 		do
 			Precursor (an_item)
-		end		
-		
+		end
+
 	init_icor is
 			-- 	
 		do
 			Precursor
 			type := get_type
 			size := get_size
-			address_as_string := get_address.to_integer.to_hex_string	
+			address_as_string := get_address.to_integer.to_hex_string
 		end
-		
+
 feature {ICOR_EXPORTER} -- Pseudo twin
-		
+
 	duplicated_object: like Current is
-	
+
 		do
 			Result := twin
 			Result.add_ref
@@ -57,17 +57,17 @@ feature {ICOR_EXPORTER} -- Pseudo twin
 				Result.update_strong_reference_value (strong_reference_value.duplicated_object)
 			end
 		end
-			
+
 feature {ICOR_EXPORTER} -- Properties
 
 	type: INTEGER
-	
+
 	size: INTEGER
-	
+
 	address_as_string: STRING
-	
+
 	strong_reference_value: ICOR_DEBUG_HANDLE_VALUE
-	
+
 feature {ICOR_EXPORTER} -- Query
 
 	get_strong_reference_value is
@@ -95,7 +95,7 @@ feature {ICOR_EXPORTER} -- Query
 				strong_reference_value := query_interface_icor_debug_handle_value
 			end
 		end
-		
+
 	update_strong_reference_value (v: like strong_reference_value) is
 		do
 			strong_reference_value := v
@@ -105,13 +105,13 @@ feature {ICOR_EXPORTER} -- References Properties
 
 	is_null_reference: BOOLEAN
 			-- If Current is a reference value, return True if Current is null
-			
+
 	set_is_null_reference (v: like is_null_reference) is
 			-- Set value `v' to `is_null_reference' attribute
 		do
 			is_null_reference := v
 		end
-	
+
 feature {ICOR_EXPORTER} -- helpers
 
 	error_code_is_object_neutered (lcs: INTEGER): BOOLEAN is
@@ -119,7 +119,7 @@ feature {ICOR_EXPORTER} -- helpers
 		do
 			Result := Api_error_code_formatter.error_code_is_CORDBG_E_OBJECT_NEUTERED (lcs)
 		end
-		
+
 --NOTA JFIAT: not used for now, let's keep it for later maybe
 --feature {ICOR_EXPORTER} -- helpers
 --
@@ -158,7 +158,7 @@ feature -- Cleaning / Dispose
 			end
 			Precursor
 		end
-	
+
 feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_generic_value: ICOR_DEBUG_GENERIC_VALUE is
@@ -208,7 +208,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 				create Result.make_by_pointer (p)
 			end
 		end
-		
+
 	query_interface_icor_debug_heap_value2: ICOR_DEBUG_HEAP_VALUE2 is
 		require
 			item_not_null: item_not_null
@@ -219,7 +219,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
-		end		
+		end
 
 	query_interface_icor_debug_object_value: ICOR_DEBUG_OBJECT_VALUE is
 		require
@@ -274,7 +274,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 feature {ICOR_EXPORTER} -- Access
 
 	get_type: INTEGER is
-			-- GetType  
+			-- GetType
 		require
 			item_not_null: item_not_null
 		do
@@ -284,7 +284,7 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	get_size: INTEGER is
-			-- GetSize returns the size in bytes 
+			-- GetSize returns the size in bytes
 		require
 			item_not_null: item_not_null
 		do
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation / Constants
 		alias
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugGenericValue, (void **) $a_p)"
 		end
-		
+
 	cpp_query_interface_ICorDebugReferenceValue (obj: POINTER; a_p: POINTER): INTEGER is
 		require
 			obj /= Default_pointer
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation / Constants
 		alias
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugHandleValue, (void **) $a_p)"
 		end
-		
+
 	cpp_query_interface_ICorDebugHeapValue (obj: POINTER; a_p: POINTER): INTEGER is
 		require
 			obj /= Default_pointer
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation / Constants
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugHeapValue, (void **) $a_p)"
-		end		
+		end
 
 	cpp_query_interface_ICorDebugHeapValue2 (obj: POINTER; a_p: POINTER): INTEGER is
 		require
@@ -451,18 +451,18 @@ feature -- only for test purpose (evaluation in debugger)
 			i_obj := query_interface_icor_debug_object_value
 			i_ref := query_interface_icor_debug_reference_value
 			i_hdl := query_interface_icor_debug_handle_value
-			i_str := query_interface_icor_debug_string_value			
-			i_gen := query_interface_icor_debug_generic_value			
-			i_arr := query_interface_icor_debug_array_value	
-			i_hea := query_interface_icor_debug_heap_value			
+			i_str := query_interface_icor_debug_string_value
+			i_gen := query_interface_icor_debug_generic_value
+			i_arr := query_interface_icor_debug_array_value
+			i_hea := query_interface_icor_debug_heap_value
 			i_hea2 := query_interface_icor_debug_heap_value2
 
 			Result := [
-						"Object", i_obj, 
-						"Reference", i_ref, 
-						"Handle", i_hdl, 
-						"String", i_str, 
-						"Generic", i_gen, 
+						"Object", i_obj,
+						"Reference", i_ref,
+						"Handle", i_hdl,
+						"String", i_str,
+						"Generic", i_gen,
 						"Array", i_arr ,
 						"Heap", i_hea ,
 						"Heap2", i_hea2

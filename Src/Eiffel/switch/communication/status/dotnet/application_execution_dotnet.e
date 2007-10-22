@@ -415,13 +415,16 @@ feature -- Execution
 					icdm := rto.icd_value_info.value_icd_module
 					icdf := icdm.get_function_from_token (icdm.md_feature_token (rto.icd_value_info.value_class_token, "saved_object_to"))
 					if icdf /= Void then
-						i_ref := dv.icd_value
+						i_ref := dv.icd_referenced_value
 						i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
 						args := <<icdv, i_ref, i_fn>>
 						r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
 						i_fn.clean_on_dispose
 						icdf.clean_on_dispose
-						Result := r /= Void
+						if r /= Void then
+							Result := not eifnet_debugger.icor_debug_value_is_null_value (r)
+							r.clean_on_dispose
+						end
 					end
 				end
 			end

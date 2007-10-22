@@ -1380,6 +1380,24 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			end
 		end
 
+feature -- Bridge to formatters
+
+	icor_debug_value_is_null_value (icd: ICOR_DEBUG_VALUE): BOOLEAN is
+			-- Is `icd' a null reference ?
+		require
+			icd_not_void: icd /= Void
+		local
+			l_prep: ICOR_DEBUG_VALUE
+		do
+			l_prep := edv_formatter.prepared_debug_value (icd)
+			if l_prep /= Void then
+				Result := edv_formatter.prepared_icor_debug_value_is_null (l_prep)
+				if l_prep /= icd then
+					l_prep.clean_on_dispose
+				end
+			end
+		end
+
 feature -- Assertion change
 
 	check_assert_on_debuggee (b: BOOLEAN): BOOLEAN is

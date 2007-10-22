@@ -1,0 +1,8 @@
+VUTA, ECMA-367, 2nd edition, section 8.23.14
+
+    Target rule
+
+    An Object_call is target-valid if and only if either:
+
+        1 It is unqualified.
+        2 Its target is an attached expression.

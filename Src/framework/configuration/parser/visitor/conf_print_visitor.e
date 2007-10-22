@@ -749,6 +749,12 @@ feature {NONE} -- Implementation
 				if an_options.is_cat_call_detection_configured then
 					append_text (" cat_call_detection=%""+an_options.is_cat_call_detection.out.as_lower+"%"")
 				end
+				if an_options.is_attached_by_default_configured then
+					append_text (" is_attached_by_default=%""+an_options.is_attached_by_default.out.as_lower+"%"")
+				end
+				if an_options.is_void_safe_configured then
+					append_text (" is_void_safe=%""+an_options.is_void_safe.out.as_lower+"%"")
+				end
 				l_str := an_options.local_namespace
 				if l_str /= Void and then not l_str.is_empty then
 					append_text (" namespace=%""+escape_xml (l_str)+"%"")
@@ -1020,7 +1026,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

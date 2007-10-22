@@ -152,6 +152,46 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
+				-- Attachment properties
+			l_bool_prop := new_boolean_property (conf_interface_names.option_is_attached_by_default_name, an_inherited_options.is_attached_by_default)
+			l_bool_prop.set_description (conf_interface_names.option_is_attached_by_default_description)
+			l_bool_prop.change_value_actions.extend (agent an_options.set_is_attached_by_default)
+			if a_inherits then
+				l_bool_prop.set_refresh_action (agent an_inherited_options.is_attached_by_default)
+				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_is_attached_by_default)
+				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+
+				if an_options.is_attached_by_default_configured then
+					l_bool_prop.enable_overriden
+				else
+					l_bool_prop.enable_inherited
+				end
+			end
+			properties.add_property (l_bool_prop)
+
+				-- Void safety
+			l_bool_prop := new_boolean_property (conf_interface_names.option_is_void_safe_name, an_inherited_options.is_void_safe)
+			l_bool_prop.set_description (conf_interface_names.option_is_void_safe_description)
+			l_bool_prop.change_value_actions.extend (agent an_options.set_is_void_safe)
+			if a_inherits then
+				l_bool_prop.set_refresh_action (agent an_inherited_options.is_void_safe)
+				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_is_void_safe)
+				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+
+				if an_options.is_void_safe_configured then
+					l_bool_prop.enable_overriden
+				else
+					l_bool_prop.enable_inherited
+				end
+			end
+			properties.add_property (l_bool_prop)
+
 			properties.current_section.expand
 		end
 
@@ -513,7 +553,7 @@ feature {NONE} -- Refresh displayed data.
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

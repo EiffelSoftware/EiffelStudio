@@ -1,9 +1,9 @@
-test_name 	precondition-violation
-test_description Raise exception of precondition violation, recipient is the caller
+test_name 	ignoring-developer-exception
+test_description Ignore developer exception
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	a.e $CLUSTER a.e
-copy_raw 	application.e $CLUSTER application.e
+copy_raw 	my_exception.e $CLUSTER my_exception.e
 
 compile_melted
 c_compile_work

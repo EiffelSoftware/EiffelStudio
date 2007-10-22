@@ -4,11 +4,26 @@ test_description Raise exception during evaluation of invariant, recipient is th
 copy_sub 	Ace $TEST Ace
 copy_raw 	a.e $CLUSTER a.e
 copy_raw 	application.e $CLUSTER application.e
+
+compile_melted
+c_compile_work
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+cleanup_compile
 compile_frozen
 compile_result 	ok
-
-execute_work 	NONE 	exec_output1
+c_compile_work
+execute_work	NONE exec_output1
 execute_result 	ok
 compare		exec_output1 output
+
+cleanup_compile
+compile_final_keep
+c_compile_final
+execute_final	NONE exec_output2
+execute_result ok
+compare		exec_output2 output1
  
 test_end

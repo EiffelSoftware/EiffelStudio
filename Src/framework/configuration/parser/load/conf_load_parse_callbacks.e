@@ -1114,7 +1114,7 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class,
 			l_warning, l_msil_application_optimize, l_full_class_checking,
-			l_cat_call_detection: STRING
+			l_cat_call_detection, l_is_attached_by_default, l_is_void_safe: STRING
 		do
 			l_trace := current_attributes.item (at_trace)
 			l_profile := current_attributes.item (at_profile)
@@ -1126,6 +1126,8 @@ feature {NONE} -- Implementation attribute processing
 			l_class := current_attributes.item (at_class)
 			l_full_class_checking := current_attributes.item (at_full_class_checking)
 			l_cat_call_detection := current_attributes.item (at_cat_call_detection)
+			l_is_attached_by_default := current_attributes.item (at_is_attached_by_default)
+			l_is_void_safe := current_attributes.item (at_is_void_safe)
 
 			current_option := factory.new_option
 			if l_trace /= Void then
@@ -1181,6 +1183,20 @@ feature {NONE} -- Implementation attribute processing
 					current_option.set_cat_call_detection (l_cat_call_detection.to_boolean)
 				else
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("cat_call_detection"))
+				end
+			end
+			if l_is_attached_by_default /= Void then
+				if l_is_attached_by_default.is_boolean then
+					current_option.set_is_attached_by_default (l_is_attached_by_default.to_boolean)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_attached_by_default"))
+				end
+			end
+			if l_is_void_safe /= Void then
+				if l_is_void_safe.is_boolean then
+					current_option.set_is_void_safe (l_is_void_safe.to_boolean)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_void_safe"))
 				end
 			end
 
@@ -1879,7 +1895,11 @@ feature {NONE} -- Implementation state transitions
 				-- * debug
 				-- * warning
 				-- * namespace
-			create l_attr.make (9)
+				-- * full_class_checking
+				-- * cat_call_detection
+				-- * is_attached_by_default
+				-- * is_void_safe
+			create l_attr.make (11)
 			l_attr.force (at_trace, "trace")
 			l_attr.force (at_profile, "profile")
 			l_attr.force (at_optimize, "optimize")
@@ -1889,6 +1909,8 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_namespace, "namespace")
 			l_attr.force (at_full_class_checking, "full_class_checking")
 			l_attr.force (at_cat_call_detection, "cat_call_detection")
+			l_attr.force (at_is_attached_by_default, "is_attached_by_default")
+			l_attr.force (at_is_void_safe, "is_void_safe")
 			Result.force (l_attr, t_option)
 
 				-- class_option
@@ -2186,6 +2208,8 @@ feature {NONE} -- Implementation constants
 	at_use_application_options: INTEGER is 1057
 	at_full_class_checking: INTEGER is 1058
 	at_cat_call_detection: INTEGER is 1059
+	at_is_attached_by_default: INTEGER is 1060
+	at_is_void_safe: INTEGER is 1061
 
 feature -- Assertions
 
@@ -2201,7 +2225,7 @@ invariant
 	factory_not_void: factory /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

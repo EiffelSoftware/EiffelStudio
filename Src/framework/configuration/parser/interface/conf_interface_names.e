@@ -310,6 +310,12 @@ feature -- Option names and descriptions
 	option_cat_call_detection_name: STRING_GENERAL is do Result := locale.translation ("Cat call detection (experimental)") end
 	option_cat_call_detection_description: STRING_GENERAL is do Result := locale.translation ("Are all feature calls checked if they are a potential cat-call?") end
 
+	option_is_attached_by_default_name: STRING_GENERAL do Result := locale.translation ("Are types attached by default?") end
+	option_is_attached_by_default_description: STRING_GENERAL do Result := locale.translation ("Are types without explicit attachment mark considered attached?") end
+
+	option_is_void_safe_name: STRING_GENERAL do Result := locale.translation ("Is source code void safe?") end
+	option_is_void_safe_description: STRING_GENERAL do Result := locale.translation ("Shall feature calls on targets of detachable types be reported as errors?") end
+
 	warning_names: HASH_TABLE [STRING_GENERAL, STRING] is
 			-- Warning names.
 		once
@@ -795,7 +801,7 @@ feature -- Boolean values
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

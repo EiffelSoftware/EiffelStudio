@@ -1,0 +1,1668 @@
+
+Dump of file curl.lib
+
+File Type: LIBRARY
+
+Archive member name at 8: /               
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+     AA0 size
+correct header end
+
+    113 public symbols
+
+     15CA __IMPORT_DESCRIPTOR_curl
+     17EA __NULL_IMPORT_DESCRIPTOR
+     191E curl_NULL_THUNK_DATA
+     21DC __imp_curl_global_init
+     21DC curl_global_init
+     2246 __imp_curl_global_init_mem
+     2246 curl_global_init_mem
+     216E __imp_curl_global_cleanup
+     216E curl_global_cleanup
+     1C24 __imp_curl_easy_init
+     1C24 curl_easy_init
+     1D62 __imp_curl_easy_setopt
+     1D62 curl_easy_setopt
+     1C8C __imp_curl_easy_perform
+     1C8C curl_easy_perform
+     1A74 __imp_curl_easy_cleanup
+     1A74 curl_easy_cleanup
+     1BB8 __imp_curl_easy_getinfo
+     1BB8 curl_easy_getinfo
+     1AE0 __imp_curl_easy_duphandle
+     1AE0 curl_easy_duphandle
+     1CF8 __imp_curl_easy_reset
+     1CF8 curl_easy_reset
+     2BEE __imp_curl_mvsnprintf
+     2BEE curl_mvsnprintf
+     23EA __imp_curl_msnprintf
+     23EA curl_msnprintf
+     22B4 __imp_curl_maprintf
+     22B4 curl_maprintf
+     2AB6 __imp_curl_mvaprintf
+     2AB6 curl_mvaprintf
+     2452 __imp_curl_msprintf
+     2452 curl_msprintf
+     2384 __imp_curl_mprintf
+     2384 curl_mprintf
+     231C __imp_curl_mfprintf
+     231C curl_mfprintf
+     2C58 __imp_curl_mvsprintf
+     2C58 curl_mvsprintf
+     2B86 __imp_curl_mvprintf
+     2B86 curl_mvprintf
+     2B1E __imp_curl_mvfprintf
+     2B1E curl_mvfprintf
+     2F4A __imp_curl_strequal
+     2F4A curl_strequal
+     2FB2 __imp_curl_strnequal
+     2FB2 curl_strnequal
+     1F0A __imp_curl_formadd
+     1F0A curl_formadd
+     1F70 __imp_curl_formfree
+     1F70 curl_formfree
+     1FD8 __imp_curl_formget
+     1FD8 curl_formget
+     2E70 __imp_curl_slist_append
+     2E70 curl_slist_append
+     2EDC __imp_curl_slist_free_all
+     2EDC curl_slist_free_all
+     3082 __imp_curl_version
+     3082 curl_version
+     30E8 __imp_curl_version_info
+     30E8 curl_version_info
+     20A2 __imp_curl_getdate
+     20A2 curl_getdate
+     1B4E __imp_curl_easy_escape
+     1B4E curl_easy_escape
+     1E38 __imp_curl_easy_unescape
+     1E38 curl_easy_unescape
+     203E __imp_curl_free
+     203E curl_free
+     1EA4 __imp_curl_escape
+     1EA4 curl_escape
+     301A __imp_curl_unescape
+     301A curl_unescape
+     2108 __imp_curl_getenv
+     2108 curl_getenv
+     1DCC __imp_curl_easy_strerror
+     1DCC curl_easy_strerror
+     29DC __imp_curl_multi_strerror
+     29DC curl_multi_strerror
+     2E02 __imp_curl_share_strerror
+     2E02 curl_share_strerror
+     26DA __imp_curl_multi_init
+     26DA curl_multi_init
+     2602 __imp_curl_multi_fdset
+     2602 curl_multi_fdset
+     2596 __imp_curl_multi_cleanup
+     2596 curl_multi_cleanup
+     266C __imp_curl_multi_info_read
+     266C curl_multi_info_read
+     2822 __imp_curl_multi_setopt
+     2822 curl_multi_setopt
+     2A4A __imp_curl_multi_timeout
+     2A4A curl_multi_timeout
+     252A __imp_curl_multi_assign
+     252A curl_multi_assign
+     27B0 __imp_curl_multi_remove_handle
+     27B0 curl_multi_remove_handle
+     24BA __imp_curl_multi_add_handle
+     24BA curl_multi_add_handle
+     2744 __imp_curl_multi_perform
+     2744 curl_multi_perform
+     288E __imp_curl_multi_socket
+     288E curl_multi_socket
+     28FA __imp_curl_multi_socket_action
+     28FA curl_multi_socket_action
+     296C __imp_curl_multi_socket_all
+     296C curl_multi_socket_all
+     2D2C __imp_curl_share_init
+     2D2C curl_share_init
+     2D96 __imp_curl_share_setopt
+     2D96 curl_share_setopt
+     2CC0 __imp_curl_share_cleanup
+     2CC0 curl_share_cleanup
+
+Archive member name at AE4: /               
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+     AAA size
+correct header end
+
+    58 offsets
+
+        1     15CA
+        2     17EA
+        3     191E
+        4     21DC
+        5     2246
+        6     216E
+        7     1C24
+        8     1D62
+        9     1C8C
+        A     1A74
+        B     1BB8
+        C     1AE0
+        D     1CF8
+        E     2BEE
+        F     23EA
+       10     22B4
+       11     2AB6
+       12     2452
+       13     2384
+       14     231C
+       15     2C58
+       16     2B86
+       17     2B1E
+       18     2F4A
+       19     2FB2
+       1A     1F0A
+       1B     1F70
+       1C     1FD8
+       1D     2E70
+       1E     2EDC
+       1F     3082
+       20     30E8
+       21     20A2
+       22     1B4E
+       23     1E38
+       24     203E
+       25     1EA4
+       26     301A
+       27     2108
+       28     1DCC
+       29     29DC
+       2A     2E02
+       2B     26DA
+       2C     2602
+       2D     2596
+       2E     266C
+       2F     2822
+       30     2A4A
+       31     252A
+       32     27B0
+       33     24BA
+       34     2744
+       35     288E
+       36     28FA
+       37     296C
+       38     2D2C
+       39     2D96
+       3A     2CC0
+
+    113 public symbols
+
+        1 __IMPORT_DESCRIPTOR_curl
+        2 __NULL_IMPORT_DESCRIPTOR
+        A __imp_curl_easy_cleanup
+        C __imp_curl_easy_duphandle
+       22 __imp_curl_easy_escape
+        B __imp_curl_easy_getinfo
+        7 __imp_curl_easy_init
+        9 __imp_curl_easy_perform
+        D __imp_curl_easy_reset
+        8 __imp_curl_easy_setopt
+       28 __imp_curl_easy_strerror
+       23 __imp_curl_easy_unescape
+       25 __imp_curl_escape
+       1A __imp_curl_formadd
+       1B __imp_curl_formfree
+       1C __imp_curl_formget
+       24 __imp_curl_free
+       21 __imp_curl_getdate
+       27 __imp_curl_getenv
+        6 __imp_curl_global_cleanup
+        4 __imp_curl_global_init
+        5 __imp_curl_global_init_mem
+       10 __imp_curl_maprintf
+       14 __imp_curl_mfprintf
+       13 __imp_curl_mprintf
+        F __imp_curl_msnprintf
+       12 __imp_curl_msprintf
+       33 __imp_curl_multi_add_handle
+       31 __imp_curl_multi_assign
+       2D __imp_curl_multi_cleanup
+       2C __imp_curl_multi_fdset
+       2E __imp_curl_multi_info_read
+       2B __imp_curl_multi_init
+       34 __imp_curl_multi_perform
+       32 __imp_curl_multi_remove_handle
+       2F __imp_curl_multi_setopt
+       35 __imp_curl_multi_socket
+       36 __imp_curl_multi_socket_action
+       37 __imp_curl_multi_socket_all
+       29 __imp_curl_multi_strerror
+       30 __imp_curl_multi_timeout
+       11 __imp_curl_mvaprintf
+       17 __imp_curl_mvfprintf
+       16 __imp_curl_mvprintf
+        E __imp_curl_mvsnprintf
+       15 __imp_curl_mvsprintf
+       3A __imp_curl_share_cleanup
+       38 __imp_curl_share_init
+       39 __imp_curl_share_setopt
+       2A __imp_curl_share_strerror
+       1D __imp_curl_slist_append
+       1E __imp_curl_slist_free_all
+       18 __imp_curl_strequal
+       19 __imp_curl_strnequal
+       26 __imp_curl_unescape
+       1F __imp_curl_version
+       20 __imp_curl_version_info
+        A curl_easy_cleanup
+        C curl_easy_duphandle
+       22 curl_easy_escape
+        B curl_easy_getinfo
+        7 curl_easy_init
+        9 curl_easy_perform
+        D curl_easy_reset
+        8 curl_easy_setopt
+       28 curl_easy_strerror
+       23 curl_easy_unescape
+       25 curl_escape
+       1A curl_formadd
+       1B curl_formfree
+       1C curl_formget
+       24 curl_free
+       21 curl_getdate
+       27 curl_getenv
+        6 curl_global_cleanup
+        4 curl_global_init
+        5 curl_global_init_mem
+       10 curl_maprintf
+       14 curl_mfprintf
+       13 curl_mprintf
+        F curl_msnprintf
+       12 curl_msprintf
+       33 curl_multi_add_handle
+       31 curl_multi_assign
+       2D curl_multi_cleanup
+       2C curl_multi_fdset
+       2E curl_multi_info_read
+       2B curl_multi_init
+       34 curl_multi_perform
+       32 curl_multi_remove_handle
+       2F curl_multi_setopt
+       35 curl_multi_socket
+       36 curl_multi_socket_action
+       37 curl_multi_socket_all
+       29 curl_multi_strerror
+       30 curl_multi_timeout
+       11 curl_mvaprintf
+       17 curl_mvfprintf
+       16 curl_mvprintf
+        E curl_mvsnprintf
+       15 curl_mvsprintf
+       3A curl_share_cleanup
+       38 curl_share_init
+       39 curl_share_setopt
+       2A curl_share_strerror
+       1D curl_slist_append
+       1E curl_slist_free_all
+       18 curl_strequal
+       19 curl_strnequal
+       26 curl_unescape
+       1F curl_version
+       20 curl_version_info
+        3 curl_NULL_THUNK_DATA
+
+Archive member name at 15CA: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+     1E3 size
+correct header end
+
+FILE HEADER VALUES
+            8664 machine (x64)
+               3 number of sections
+        470DE627 time date stamp Thu Oct 11 17:00:23 2007
+             107 file pointer to symbol table
+               8 number of symbols
+               0 size of optional header
+               0 characteristics
+
+SECTION HEADER #1
+.debug$S name
+       0 physical address
+       0 virtual address
+      3F size of raw data
+      8C file pointer to raw data (0000008C to 000000CA)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+42100040 flags
+         Initialized Data
+         Discardable
+         1 byte align
+         Read Only
+
+RAW DATA #1
+  00000000: 02 00 00 00 0F 00 09 00 00 00 00 00 08 63 75 72  .............cur
+  00000010: 6C 2E 65 78 65 28 00 13 10 07 00 00 00 D0 00 00  l.exe(.......Ð..
+  00000020: 00 00 00 00 00 08 00 00 00 27 C6 12 4D 69 63 72  .........'Æ.Micr
+  00000030: 6F 73 6F 66 74 20 28 52 29 20 4C 49 4E 4B 00     osoft (R) LINK.
+
+SECTION HEADER #2
+.idata$2 name
+       0 physical address
+       0 virtual address
+      14 size of raw data
+      CB file pointer to raw data (000000CB to 000000DE)
+      DF file pointer to relocation table
+       0 file pointer to line numbers
+       3 number of relocations
+       0 number of line numbers
+C0300040 flags
+         Initialized Data
+         4 byte align
+         Read Write
+
+RAW DATA #2
+  00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  00000010: 00 00 00 00                                      ....
+
+RELOCATIONS #2
+                                                Symbol    Symbol
+ Offset    Type              Applied To         Index     Name
+ --------  ----------------  -----------------  --------  ------
+ 0000000C  ADDR32NB                   00000000         3  .idata$6
+ 00000000  ADDR32NB                   00000000         4  .idata$4
+ 00000010  ADDR32NB                   00000000         5  .idata$5
+
+SECTION HEADER #3
+.idata$6 name
+       0 physical address
+       0 virtual address
+       A size of raw data
+      FD file pointer to raw data (000000FD to 00000106)
+      DF file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+C0200040 flags
+         Initialized Data
+         2 byte align
+         Read Write
+
+RAW DATA #3
+  00000000: 63 75 72 6C 2E 65 78 65 00 00                    curl.exe..
+
+COFF SYMBOL TABLE
+000 007BC627 ABS    notype       Static       | @comp.id
+001 00000000 SECT2  notype       External     | __IMPORT_DESCRIPTOR_curl
+002 C0000040 SECT2  notype       Section      | .idata$2
+003 00000000 SECT3  notype       Static       | .idata$6
+004 C0000040 UNDEF  notype       Section      | .idata$4
+005 C0000040 UNDEF  notype       Section      | .idata$5
+006 00000000 UNDEF  notype       External     | __NULL_IMPORT_DESCRIPTOR
+007 00000000 UNDEF  notype       External     | curl_NULL_THUNK_DATA
+
+String Table Size = 0x4C bytes
+
+Archive member name at 17EA: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      F8 size
+correct header end
+
+FILE HEADER VALUES
+            8664 machine (x64)
+               2 number of sections
+        470DE627 time date stamp Thu Oct 11 17:00:23 2007
+              B7 file pointer to symbol table
+               2 number of symbols
+               0 size of optional header
+               0 characteristics
+
+SECTION HEADER #1
+.debug$S name
+       0 physical address
+       0 virtual address
+      3F size of raw data
+      64 file pointer to raw data (00000064 to 000000A2)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+42100040 flags
+         Initialized Data
+         Discardable
+         1 byte align
+         Read Only
+
+RAW DATA #1
+  00000000: 02 00 00 00 0F 00 09 00 00 00 00 00 08 63 75 72  .............cur
+  00000010: 6C 2E 65 78 65 28 00 13 10 07 00 00 00 D0 00 00  l.exe(.......Ð..
+  00000020: 00 00 00 00 00 08 00 00 00 27 C6 12 4D 69 63 72  .........'Æ.Micr
+  00000030: 6F 73 6F 66 74 20 28 52 29 20 4C 49 4E 4B 00     osoft (R) LINK.
+
+SECTION HEADER #2
+.idata$3 name
+       0 physical address
+       0 virtual address
+      14 size of raw data
+      A3 file pointer to raw data (000000A3 to 000000B6)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+C0300040 flags
+         Initialized Data
+         4 byte align
+         Read Write
+
+RAW DATA #2
+  00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  00000010: 00 00 00 00                                      ....
+
+COFF SYMBOL TABLE
+000 007BC627 ABS    notype       Static       | @comp.id
+001 00000000 SECT2  notype       External     | __NULL_IMPORT_DESCRIPTOR
+
+String Table Size = 0x1D bytes
+
+Archive member name at 191E: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+     119 size
+correct header end
+
+FILE HEADER VALUES
+            8664 machine (x64)
+               3 number of sections
+        470DE627 time date stamp Thu Oct 11 17:00:23 2007
+              DB file pointer to symbol table
+               2 number of symbols
+               0 size of optional header
+               0 characteristics
+
+SECTION HEADER #1
+.debug$S name
+       0 physical address
+       0 virtual address
+      3F size of raw data
+      8C file pointer to raw data (0000008C to 000000CA)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+42100040 flags
+         Initialized Data
+         Discardable
+         1 byte align
+         Read Only
+
+RAW DATA #1
+  00000000: 02 00 00 00 0F 00 09 00 00 00 00 00 08 63 75 72  .............cur
+  00000010: 6C 2E 65 78 65 28 00 13 10 07 00 00 00 D0 00 00  l.exe(.......Ð..
+  00000020: 00 00 00 00 00 08 00 00 00 27 C6 12 4D 69 63 72  .........'Æ.Micr
+  00000030: 6F 73 6F 66 74 20 28 52 29 20 4C 49 4E 4B 00     osoft (R) LINK.
+
+SECTION HEADER #2
+.idata$5 name
+       0 physical address
+       0 virtual address
+       8 size of raw data
+      CB file pointer to raw data (000000CB to 000000D2)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+C0400040 flags
+         Initialized Data
+         8 byte align
+         Read Write
+
+RAW DATA #2
+  00000000: 00 00 00 00 00 00 00 00                          ........
+
+SECTION HEADER #3
+.idata$4 name
+       0 physical address
+       0 virtual address
+       8 size of raw data
+      D3 file pointer to raw data (000000D3 to 000000DA)
+       0 file pointer to relocation table
+       0 file pointer to line numbers
+       0 number of relocations
+       0 number of line numbers
+C0400040 flags
+         Initialized Data
+         8 byte align
+         Read Write
+
+RAW DATA #3
+  00000000: 00 00 00 00 00 00 00 00                          ........
+
+COFF SYMBOL TABLE
+000 007BC627 ABS    notype       Static       | @comp.id
+001 00000000 SECT2  notype       External     | curl_NULL_THUNK_DATA
+
+String Table Size = 0x1A bytes
+
+Archive member name at 1A74: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_cleanup
+  Type         : code
+  Name type    : name
+  Hint         : 0
+  Name         : curl_easy_cleanup
+
+Archive member name at 1AE0: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      31 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001D
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_duphandle
+  Type         : code
+  Name type    : name
+  Hint         : 1
+  Name         : curl_easy_duphandle
+
+Archive member name at 1B4E: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2E size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001A
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_escape
+  Type         : code
+  Name type    : name
+  Hint         : 2
+  Name         : curl_easy_escape
+
+Archive member name at 1BB8: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_getinfo
+  Type         : code
+  Name type    : name
+  Hint         : 3
+  Name         : curl_easy_getinfo
+
+Archive member name at 1C24: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2C size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000018
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_init
+  Type         : code
+  Name type    : name
+  Hint         : 4
+  Name         : curl_easy_init
+
+Archive member name at 1C8C: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_perform
+  Type         : code
+  Name type    : name
+  Hint         : 5
+  Name         : curl_easy_perform
+
+Archive member name at 1CF8: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2D size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000019
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_reset
+  Type         : code
+  Name type    : name
+  Hint         : 6
+  Name         : curl_easy_reset
+
+Archive member name at 1D62: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2E size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001A
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_setopt
+  Type         : code
+  Name type    : name
+  Hint         : 7
+  Name         : curl_easy_setopt
+
+Archive member name at 1DCC: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      30 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001C
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_strerror
+  Type         : code
+  Name type    : name
+  Hint         : 8
+  Name         : curl_easy_strerror
+
+Archive member name at 1E38: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      30 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001C
+  DLL name     : curl.exe
+  Symbol name  : curl_easy_unescape
+  Type         : code
+  Name type    : name
+  Hint         : 9
+  Name         : curl_easy_unescape
+
+Archive member name at 1EA4: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      29 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000015
+  DLL name     : curl.exe
+  Symbol name  : curl_escape
+  Type         : code
+  Name type    : name
+  Hint         : 10
+  Name         : curl_escape
+
+Archive member name at 1F0A: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2A size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000016
+  DLL name     : curl.exe
+  Symbol name  : curl_formadd
+  Type         : code
+  Name type    : name
+  Hint         : 11
+  Name         : curl_formadd
+
+Archive member name at 1F70: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2B size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000017
+  DLL name     : curl.exe
+  Symbol name  : curl_formfree
+  Type         : code
+  Name type    : name
+  Hint         : 12
+  Name         : curl_formfree
+
+Archive member name at 1FD8: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2A size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000016
+  DLL name     : curl.exe
+  Symbol name  : curl_formget
+  Type         : code
+  Name type    : name
+  Hint         : 13
+  Name         : curl_formget
+
+Archive member name at 203E: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      27 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000013
+  DLL name     : curl.exe
+  Symbol name  : curl_free
+  Type         : code
+  Name type    : name
+  Hint         : 14
+  Name         : curl_free
+
+Archive member name at 20A2: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2A size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000016
+  DLL name     : curl.exe
+  Symbol name  : curl_getdate
+  Type         : code
+  Name type    : name
+  Hint         : 15
+  Name         : curl_getdate
+
+Archive member name at 2108: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      29 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000015
+  DLL name     : curl.exe
+  Symbol name  : curl_getenv
+  Type         : code
+  Name type    : name
+  Hint         : 16
+  Name         : curl_getenv
+
+Archive member name at 216E: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      31 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001D
+  DLL name     : curl.exe
+  Symbol name  : curl_global_cleanup
+  Type         : code
+  Name type    : name
+  Hint         : 17
+  Name         : curl_global_cleanup
+
+Archive member name at 21DC: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2E size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001A
+  DLL name     : curl.exe
+  Symbol name  : curl_global_init
+  Type         : code
+  Name type    : name
+  Hint         : 18
+  Name         : curl_global_init
+
+Archive member name at 2246: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      32 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001E
+  DLL name     : curl.exe
+  Symbol name  : curl_global_init_mem
+  Type         : code
+  Name type    : name
+  Hint         : 19
+  Name         : curl_global_init_mem
+
+Archive member name at 22B4: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2B size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000017
+  DLL name     : curl.exe
+  Symbol name  : curl_maprintf
+  Type         : code
+  Name type    : name
+  Hint         : 20
+  Name         : curl_maprintf
+
+Archive member name at 231C: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2B size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000017
+  DLL name     : curl.exe
+  Symbol name  : curl_mfprintf
+  Type         : code
+  Name type    : name
+  Hint         : 21
+  Name         : curl_mfprintf
+
+Archive member name at 2384: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2A size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000016
+  DLL name     : curl.exe
+  Symbol name  : curl_mprintf
+  Type         : code
+  Name type    : name
+  Hint         : 22
+  Name         : curl_mprintf
+
+Archive member name at 23EA: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2C size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000018
+  DLL name     : curl.exe
+  Symbol name  : curl_msnprintf
+  Type         : code
+  Name type    : name
+  Hint         : 23
+  Name         : curl_msnprintf
+
+Archive member name at 2452: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2B size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000017
+  DLL name     : curl.exe
+  Symbol name  : curl_msprintf
+  Type         : code
+  Name type    : name
+  Hint         : 24
+  Name         : curl_msprintf
+
+Archive member name at 24BA: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      33 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001F
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_add_handle
+  Type         : code
+  Name type    : name
+  Hint         : 25
+  Name         : curl_multi_add_handle
+
+Archive member name at 252A: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_assign
+  Type         : code
+  Name type    : name
+  Hint         : 26
+  Name         : curl_multi_assign
+
+Archive member name at 2596: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      30 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001C
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_cleanup
+  Type         : code
+  Name type    : name
+  Hint         : 27
+  Name         : curl_multi_cleanup
+
+Archive member name at 2602: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2E size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001A
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_fdset
+  Type         : code
+  Name type    : name
+  Hint         : 28
+  Name         : curl_multi_fdset
+
+Archive member name at 266C: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      32 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001E
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_info_read
+  Type         : code
+  Name type    : name
+  Hint         : 29
+  Name         : curl_multi_info_read
+
+Archive member name at 26DA: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2D size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000019
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_init
+  Type         : code
+  Name type    : name
+  Hint         : 30
+  Name         : curl_multi_init
+
+Archive member name at 2744: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      30 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001C
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_perform
+  Type         : code
+  Name type    : name
+  Hint         : 31
+  Name         : curl_multi_perform
+
+Archive member name at 27B0: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      36 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000022
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_remove_handle
+  Type         : code
+  Name type    : name
+  Hint         : 32
+  Name         : curl_multi_remove_handle
+
+Archive member name at 2822: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_setopt
+  Type         : code
+  Name type    : name
+  Hint         : 33
+  Name         : curl_multi_setopt
+
+Archive member name at 288E: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_socket
+  Type         : code
+  Name type    : name
+  Hint         : 34
+  Name         : curl_multi_socket
+
+Archive member name at 28FA: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      36 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000022
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_socket_action
+  Type         : code
+  Name type    : name
+  Hint         : 35
+  Name         : curl_multi_socket_action
+
+Archive member name at 296C: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      33 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001F
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_socket_all
+  Type         : code
+  Name type    : name
+  Hint         : 36
+  Name         : curl_multi_socket_all
+
+Archive member name at 29DC: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      31 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001D
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_strerror
+  Type         : code
+  Name type    : name
+  Hint         : 37
+  Name         : curl_multi_strerror
+
+Archive member name at 2A4A: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      30 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001C
+  DLL name     : curl.exe
+  Symbol name  : curl_multi_timeout
+  Type         : code
+  Name type    : name
+  Hint         : 38
+  Name         : curl_multi_timeout
+
+Archive member name at 2AB6: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2C size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000018
+  DLL name     : curl.exe
+  Symbol name  : curl_mvaprintf
+  Type         : code
+  Name type    : name
+  Hint         : 39
+  Name         : curl_mvaprintf
+
+Archive member name at 2B1E: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2C size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000018
+  DLL name     : curl.exe
+  Symbol name  : curl_mvfprintf
+  Type         : code
+  Name type    : name
+  Hint         : 40
+  Name         : curl_mvfprintf
+
+Archive member name at 2B86: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2B size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000017
+  DLL name     : curl.exe
+  Symbol name  : curl_mvprintf
+  Type         : code
+  Name type    : name
+  Hint         : 41
+  Name         : curl_mvprintf
+
+Archive member name at 2BEE: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2D size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000019
+  DLL name     : curl.exe
+  Symbol name  : curl_mvsnprintf
+  Type         : code
+  Name type    : name
+  Hint         : 42
+  Name         : curl_mvsnprintf
+
+Archive member name at 2C58: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2C size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000018
+  DLL name     : curl.exe
+  Symbol name  : curl_mvsprintf
+  Type         : code
+  Name type    : name
+  Hint         : 43
+  Name         : curl_mvsprintf
+
+Archive member name at 2CC0: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      30 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001C
+  DLL name     : curl.exe
+  Symbol name  : curl_share_cleanup
+  Type         : code
+  Name type    : name
+  Hint         : 44
+  Name         : curl_share_cleanup
+
+Archive member name at 2D2C: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2D size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000019
+  DLL name     : curl.exe
+  Symbol name  : curl_share_init
+  Type         : code
+  Name type    : name
+  Hint         : 45
+  Name         : curl_share_init
+
+Archive member name at 2D96: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_share_setopt
+  Type         : code
+  Name type    : name
+  Hint         : 46
+  Name         : curl_share_setopt
+
+Archive member name at 2E02: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      31 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001D
+  DLL name     : curl.exe
+  Symbol name  : curl_share_strerror
+  Type         : code
+  Name type    : name
+  Hint         : 47
+  Name         : curl_share_strerror
+
+Archive member name at 2E70: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_slist_append
+  Type         : code
+  Name type    : name
+  Hint         : 48
+  Name         : curl_slist_append
+
+Archive member name at 2EDC: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      31 size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001D
+  DLL name     : curl.exe
+  Symbol name  : curl_slist_free_all
+  Type         : code
+  Name type    : name
+  Hint         : 49
+  Name         : curl_slist_free_all
+
+Archive member name at 2F4A: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2B size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000017
+  DLL name     : curl.exe
+  Symbol name  : curl_strequal
+  Type         : code
+  Name type    : name
+  Hint         : 50
+  Name         : curl_strequal
+
+Archive member name at 2FB2: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2C size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000018
+  DLL name     : curl.exe
+  Symbol name  : curl_strnequal
+  Type         : code
+  Name type    : name
+  Hint         : 51
+  Name         : curl_strnequal
+
+Archive member name at 301A: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2B size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000017
+  DLL name     : curl.exe
+  Symbol name  : curl_unescape
+  Type         : code
+  Name type    : name
+  Hint         : 52
+  Name         : curl_unescape
+
+Archive member name at 3082: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2A size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 00000016
+  DLL name     : curl.exe
+  Symbol name  : curl_version
+  Type         : code
+  Name type    : name
+  Hint         : 53
+  Name         : curl_version
+
+Archive member name at 30E8: curl.exe/       
+470DE627 time/date Thu Oct 11 17:00:23 2007
+         uid
+         gid
+       0 mode
+      2F size
+correct header end
+
+  Version      : 0
+  Machine      : 8664 (x64)
+  TimeDateStamp: 470DE627 Thu Oct 11 17:00:23 2007
+  SizeOfData   : 0000001B
+  DLL name     : curl.exe
+  Symbol name  : curl_version_info
+  Type         : code
+  Name type    : name
+  Hint         : 54
+  Name         : curl_version_info
+
+     Exports
+
+       ordinal    name
+
+                  curl_easy_cleanup
+                  curl_easy_duphandle
+                  curl_easy_escape
+                  curl_easy_getinfo
+                  curl_easy_init
+                  curl_easy_perform
+                  curl_easy_reset
+                  curl_easy_setopt
+                  curl_easy_strerror
+                  curl_easy_unescape
+                  curl_escape
+                  curl_formadd
+                  curl_formfree
+                  curl_formget
+                  curl_free
+                  curl_getdate
+                  curl_getenv
+                  curl_global_cleanup
+                  curl_global_init
+                  curl_global_init_mem
+                  curl_maprintf
+                  curl_mfprintf
+                  curl_mprintf
+                  curl_msnprintf
+                  curl_msprintf
+                  curl_multi_add_handle
+                  curl_multi_assign
+                  curl_multi_cleanup
+                  curl_multi_fdset
+                  curl_multi_info_read
+                  curl_multi_init
+                  curl_multi_perform
+                  curl_multi_remove_handle
+                  curl_multi_setopt
+                  curl_multi_socket
+                  curl_multi_socket_action
+                  curl_multi_socket_all
+                  curl_multi_strerror
+                  curl_multi_timeout
+                  curl_mvaprintf
+                  curl_mvfprintf
+                  curl_mvprintf
+                  curl_mvsnprintf
+                  curl_mvsprintf
+                  curl_share_cleanup
+                  curl_share_init
+                  curl_share_setopt
+                  curl_share_strerror
+                  curl_slist_append
+                  curl_slist_free_all
+                  curl_strequal
+                  curl_strnequal
+                  curl_unescape
+                  curl_version
+                  curl_version_info
+
+  Summary
+
+          BD .debug$S
+          14 .idata$2
+          14 .idata$3
+           8 .idata$4
+           8 .idata$5
+           A .idata$6

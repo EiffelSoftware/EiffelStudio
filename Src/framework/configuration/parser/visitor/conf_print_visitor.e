@@ -651,7 +651,11 @@ feature {NONE} -- Implementation
 				if l_action.working_directory /= Void then
 					append_text (" working_directory=%""+escape_xml (l_action.working_directory.original_path)+"%"")
 				end
-				append_text (" command=%""+escape_xml (l_action.command)+"%">%N")
+				append_text (" command=%""+escape_xml (l_action.command) + "%"")
+				if l_action.must_succeed then
+					append_text (" succeed=%"true%"")
+				end
+				append_text (">%N")
 				indent := indent + 1
 				append_description_tag (l_action.description)
 				append_conditionals (l_action.internal_conditions, False)

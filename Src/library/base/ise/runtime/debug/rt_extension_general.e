@@ -60,11 +60,9 @@ feature -- Object storage Access
 					o2 := file.retrieved
 					file.close
 					if o1 /= Void then
-						if o1.same_type (o2) then
+						if o2 /= Void and then o1.same_type (o2) then
 							o1.standard_copy (o2)
 							Result := o1
-						else
-							Result := Void
 						end
 					else
 						Result := o2

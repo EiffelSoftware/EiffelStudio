@@ -13,14 +13,14 @@
 		<setting name="exception_trace" value="true"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="0"/>
-		<pre_compile_action working_directory="$EIFFEL_SRC\tools\syntax_updater\parser_v60\" command="nmake">
+		<pre_compile_action working_directory="$EIFFEL_SRC\tools\syntax_updater\parser_v60\" command="nmake" succeed="true">
 			<description>Generate Parser Files</description>
 			<condition>
 				<platform value="windows"/>
 				<custom name="ISE_C_COMPILER" value="msc"/>
 			</condition>
 		</pre_compile_action>
-		<pre_compile_action working_directory="$EIFFEL_SRC\tools\syntax_updater\parser_v60\" command="make">
+		<pre_compile_action working_directory="$EIFFEL_SRC\tools\syntax_updater\parser_v60\" command="make" succeed="true">
 			<description>Generate Parser Files</description>
 			<condition>
 				<platform excluded_value="windows"/>

@@ -10,25 +10,8 @@ class
 
 inherit
 	RT_EXTENSION_GENERAL
-		redefine
-			saved_object_to,
-			object_loaded_from
-		end
 
 	RT_EXTENSION_I
-
-feature -- Object storage Access
-
-	saved_object_to (r: ANY; fn: STRING): ANY is
-			-- Save object `r' into file `fn'
-		do
-			Result := Precursor {RT_EXTENSION_GENERAL} (r, fn)
-		end
-
-	object_loaded_from (r: ANY; fn: STRING): ANY is
-		do
-			Result := Precursor {RT_EXTENSION_GENERAL} (r, fn)
-		end
 
 feature -- Notification
 

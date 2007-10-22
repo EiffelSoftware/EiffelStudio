@@ -1184,6 +1184,10 @@ feature -- Implementation
 
 			l_context_current_class := context.current_class
 
+			if l_context_current_class.lace_class.is_void_safe and then not a_type.is_attached then
+				error_handler.insert_error (create {VUTA2}.make (context, a_type, l_feature_name))
+			end
+
 			l_last_type := a_type.actual_type
 			if not l_last_type.is_formal then
 					-- We have no formal, therefore we don't need to recompute `l_last_constrained'
@@ -2359,6 +2363,9 @@ feature -- Implementation
 					l_as.enable_argument
 					l_as.set_argument_position (l_arg_pos)
 					l_as.set_class_id (class_id_of (l_type))
+				end
+				if not l_type.is_attached and then context.is_argument_attached (l_as.feature_name.name_id) then
+					l_type := l_type.as_attached
 				end
 			else
 					-- Look for a local if not in a pre- or postcondition

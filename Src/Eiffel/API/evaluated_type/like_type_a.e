@@ -28,7 +28,8 @@ inherit
 			is_none,
 			is_reference,
 			is_valid,
-			meta_type
+			meta_type,
+			set_attached_mark
 		end
 
 feature -- Properties
@@ -140,10 +141,10 @@ feature -- Primitives
 		end
 
 	set_attached_mark is
-			-- Set class type declaration as having an explicit attached mark.
+			-- Mark type declaration as having an explicit attached mark.
 		do
 			attachment_bits := has_attached_mark_mask
-		ensure
+		ensure then
 			has_attached_mark
 		end
 

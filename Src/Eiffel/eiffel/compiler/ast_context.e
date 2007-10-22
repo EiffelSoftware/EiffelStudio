@@ -163,6 +163,12 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Local scopes
 			end
 		end
 
+	is_argument_attached (id: INTEGER): BOOLEAN
+			-- Is argument `id' in the scope where it is considered attached?
+		do
+			Result := scopes.has (id)
+		end
+
 feature {AST_CONTEXT} -- Local scopes
 
 	scopes: STACK [INTEGER_32]
@@ -247,6 +253,7 @@ feature -- Setting
 			current_class := a_class
 			create current_class_type
 			current_class_type.set_actual_type (a_type)
+			current_class_type.set_attached_mark
 			current_feature_table := a_feat_tbl
 			written_class := Void
 		ensure

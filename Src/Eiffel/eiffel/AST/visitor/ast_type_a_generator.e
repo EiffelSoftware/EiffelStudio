@@ -182,7 +182,7 @@ feature {NONE} -- Visitor implementation
 						else
 							l_type.set_detachable_mark
 						end
-					elseif current_class.lace_class.is_void_safe then
+					elseif current_class.lace_class.is_attached_by_default then
 						l_type.set_is_attached
 					end
 				end

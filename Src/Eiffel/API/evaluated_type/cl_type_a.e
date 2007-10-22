@@ -13,7 +13,8 @@ inherit
 			is_expanded, is_reference, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, is_valid, format, convert_to, is_attached,
-			is_full_named_type, is_external, is_enum, is_conformant_to
+			is_full_named_type, is_external, is_enum, is_conformant_to,
+			set_attached_mark
 		end
 
 	DEBUG_OUTPUT
@@ -285,10 +286,10 @@ feature {COMPILER_EXPORTER} -- Settings
 		end
 
 	set_attached_mark is
-			-- Set class type declaration as having an explicit attached mark.
+			-- Mark class type declaration as having an explicit attached mark.
 		do
 			attachment_bits := has_attached_mark_mask | is_attached_mask
-		ensure
+		ensure then
 			has_attached_mark
 			is_attached
 		end

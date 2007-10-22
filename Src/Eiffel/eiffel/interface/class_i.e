@@ -221,6 +221,19 @@ feature -- Access
 			Result := options.is_cat_call_detection
 		end
 
+	is_attached_by_default: BOOLEAN
+			-- Is class type without an explicit attachment mark
+			-- considered as an attached one?
+		do
+			Result := options.is_attached_by_default
+		end
+
+	is_void_safe: BOOLEAN is
+			-- Does class use void-safe constructs?
+		do
+			Result := options.is_void_safe
+		end
+
 	is_compiled: BOOLEAN is
 			-- Is the class already compiled ?
 		do
@@ -242,12 +255,6 @@ feature -- Access
 	is_external_class: BOOLEAN is
 			-- Is class defined outside current system.
 		do
-		end
-
-	is_void_safe: BOOLEAN is
-			-- Does class use void-safe constructs?
-		do
-				-- False by default
 		end
 
 	file_date: INTEGER is

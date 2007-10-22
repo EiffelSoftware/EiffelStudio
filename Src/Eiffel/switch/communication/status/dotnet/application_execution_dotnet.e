@@ -420,7 +420,6 @@ feature -- Execution
 						args := <<icdv, i_ref, i_fn>>
 						r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
 						i_fn.clean_on_dispose
-						i_ref.clean_on_dispose
 						icdf.clean_on_dispose
 						Result := r /= Void
 					end
@@ -454,9 +453,6 @@ feature -- Execution
 					args := <<icdv, i_ref, i_fn>>
 					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
 					i_fn.clean_on_dispose
-					if i_ref /= Void then
-						i_ref.clean_on_dispose
-					end
 					icdf.clean_on_dispose
 					Result := debug_value_from_icdv (r, Void)
 				end

@@ -15,7 +15,7 @@ if [ $# -ge 3 ]; then
 		# Launch platform specific scripts
 	ssh -p $port -l $user $remote_host "mkdir -p local/TEST_DELIV"
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; \rm -rf PorterPackage"
-	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; tar xvf ~/PorterPackage_all.tar"
+	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV ; tar xvf ../../PorterPackage_all.tar"
 		# Do the compilation
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; sh ./compile_exes $platform"
 		# Build the delivery

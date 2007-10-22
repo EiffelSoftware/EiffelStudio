@@ -401,7 +401,6 @@ feature -- Execution
 		local
 			icdv, r: ICOR_DEBUG_VALUE
 			rto: like remote_rt_object
-			icdm: ICOR_DEBUG_MODULE
 			icdf: ICOR_DEBUG_FUNCTION
 			args: ARRAY [ICOR_DEBUG_VALUE]
 			dv: EIFNET_ABSTRACT_DEBUG_VALUE
@@ -411,16 +410,14 @@ feature -- Execution
 			if dv /= Void then
 				rto := remote_rt_object
 				if rto /= Void then
+					icdf := rto.icd_value_info.value_icd_function ("saved_object_to")
 					icdv := rto.icd_referenced_value
-					icdm := rto.icd_value_info.value_icd_module
-					icdf := icdm.get_function_from_token (icdm.md_feature_token (rto.icd_value_info.value_class_token, "saved_object_to"))
 					if icdf /= Void then
 						i_ref := dv.icd_referenced_value
 						i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
 						args := <<icdv, i_ref, i_fn>>
 						r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
 						i_fn.clean_on_dispose
-						icdf.clean_on_dispose
 						if r /= Void then
 							Result := not eifnet_debugger.icor_debug_value_is_null_value (r)
 							r.clean_on_dispose
@@ -434,7 +431,6 @@ feature -- Execution
 		local
 			icdv, r: ICOR_DEBUG_VALUE
 			rto: like remote_rt_object
-			icdm: ICOR_DEBUG_MODULE
 			icdf: ICOR_DEBUG_FUNCTION
 			args: ARRAY [ICOR_DEBUG_VALUE]
 			dv: EIFNET_ABSTRACT_DEBUG_VALUE
@@ -443,20 +439,18 @@ feature -- Execution
 			rto := remote_rt_object
 			if rto /= Void then
 				icdv := rto.icd_referenced_value
-				icdm := rto.icd_value_info.value_icd_module
-				icdf := icdm.get_function_from_token (icdm.md_feature_token (rto.icd_value_info.value_class_token, "object_loaded_from"))
+				icdf := rto.icd_value_info.value_icd_function ("object_loaded_from")
 				if icdf /= Void then
 					if oa /= Void then
 						dv ?= kept_object_item (oa)
 						if dv /= Void then
-							i_ref := dv.icd_value
+							i_ref := dv.icd_referenced_value
 						end
 					end
 					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
 					args := <<icdv, i_ref, i_fn>>
 					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
 					i_fn.clean_on_dispose
-					icdf.clean_on_dispose
 					Result := debug_value_from_icdv (r, Void)
 				end
 			end

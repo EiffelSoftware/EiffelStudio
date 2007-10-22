@@ -24,14 +24,16 @@ feature -- Initialization
 			retried := True
 			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
 			if l_exception /= Void then
-				print ("True" + "%N")
+				print ("True%N")
+				print_exception (l_exception, True)
 			else
-				print ("False" + "%N")
+				print ("False%N")
 			end
 			if l_exception /= Void and then l_exception.original = my_exception then
-				print ("True" + "%N")
+				print ("True%N")
+				print_exception (l_exception.original, False)
 			else
-				print ("False" + "%N")
+				print ("False%N")
 			end
 			retry
 		end

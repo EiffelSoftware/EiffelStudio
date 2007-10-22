@@ -21,11 +21,19 @@ feature -- Initialization
 			retried := True
 			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
 			if l_exception /= Void then
-				print ("True" + "%N")
+				print ("True%N")
+				print_exception (l_exception)
 			else
-				print ("False" + "%N")
+				print ("False%N")
 			end
 			retry
+		end
+
+	print_exception (a_ex: EXCEPTION) is
+			--
+		do
+			print (a_ex.recipient_name + "%N")
+			print (a_ex.type_name + "%N")
 		end
 
 end -- class APPLICATION

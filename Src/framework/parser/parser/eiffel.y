@@ -210,7 +210,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 143
+%expect 144
 
 %%
 
@@ -287,18 +287,18 @@ Eiffel_parser:
 Class_declaration:
 		Indexing								-- $1
 		Header_mark								-- $2
-		Class_mark								-- $3
+		Class_mark							-- $3
 		Class_or_tuple_identifier				-- $4
 		Formal_generics							-- $5
 		External_name							-- $6
 		Obsolete								-- $7
-		Inheritance	End_inheritance_pos			-- $8 $9
-		Creators								-- $10
-		Convert_clause							-- $11
-		Features End_features_pos				-- $12 $13
-		Class_invariant 						-- $14
-		Indexing								-- $15
-		TE_END									-- $16
+		{conforming_inheritance_flag := False; non_conforming_inheritance_flag := False } Inheritance {inheritance_end_position := position; conforming_inheritance_flag := True} Inheritance -- $8 $9 $10 $11
+		Creators								-- $12
+		Convert_clause							-- $13
+		Features End_features_pos				-- $14 $15
+		Class_invariant 						-- $16
+		Indexing								-- $17
+		TE_END									-- $18
 			{
 				if $6 /= Void then
 					temp_string_as1 := $6.second
@@ -311,31 +311,26 @@ Class_declaration:
 					temp_string_as2 := Void
 				end
 				
-				if $5 /= Void and then $5.count > 65536 then
-					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Number of formal generic parameters exceeds 65536", False))
-				else
-					root_node := new_class_description ($4, temp_string_as1,
-						is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
-						$1, $15, $5, $8, $10, $11, $12, $14, suppliers, temp_string_as2, $16)
-					if root_node /= Void then
-						root_node.set_text_positions (
-							formal_generics_end_position,
-							inheritance_end_position,
-							features_end_position)
-							if $6 /= Void then
-								root_node.set_alias_keyword ($6.first)
-							end
-							if $7 /= Void then
-								root_node.set_obsolete_keyword ($7.first)
-							end
-							root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, separate_keyword, external_keyword)
-							root_node.set_class_keyword ($3)
-					end
+				root_node := new_class_description ($4, temp_string_as1,
+					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
+					$1, $17, $5, $9, $11, $12, $13, $14, $16, suppliers, temp_string_as2, $18)
+				if root_node /= Void then
+					root_node.set_text_positions (
+						formal_generics_end_position,
+						inheritance_end_position,
+						features_end_position)
+						if $6 /= Void then
+							root_node.set_alias_keyword ($6.first)
+						end
+						if $7 /= Void then
+							root_node.set_obsolete_keyword ($7.first)
+						end
+						root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, separate_keyword, external_keyword)
+						root_node.set_class_keyword ($3)
 				end
 			}
 	;
 
-End_inheritance_pos: { inheritance_end_position := position } ;
 End_features_pos: { features_end_position := position } ;
 End_feature_clause_pos: { feature_clause_end_position := position };
 -- Indexing
@@ -896,31 +891,73 @@ Constant_attribute: Manifest_constant
 
 -- Inheritance
 
-
 Inheritance: -- Empty
-			-- { $$ := Void }
+		      	{ $$ := Void }
 	|	TE_INHERIT ASemi
 			{
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-						once "Use `inherit ANY' or do not specify an empty inherit clause"))
-				end
-				--- $$ := Void
-				$$ := ast_factory.new_eiffel_list_parent_as (0)
-				if $$ /= Void then
-					$$.set_inherit_keyword ($1)
+				if not conforming_inheritance_flag then
+						-- Conforming inheritance
+					if has_syntax_warning then
+						Error_handler.insert_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+							once "Use `inherit ANY' or do not specify an empty inherit clause"))
+					end
+					$$ := ast_factory.new_eiffel_list_parent_as (0)
+					if $$ /= Void then
+						$$.set_inheritance_tokens ($1, Void, Void, Void)
+					end
+				else
+						-- Raise error as conforming inheritance has already been specified
+					if non_conforming_inheritance_flag then
+						report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Conforming inheritance clause must come before non conforming inheritance clause", False))
+					else
+						report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Only one conforming inheritance clause allowed per class", False))
+					end
 				end
 			}
-	|	TE_INHERIT Add_counter Parent_list Remove_counter
+	|	TE_INHERIT  Add_counter Parent_list Remove_counter
 			{
-				$$ := $3
-				if $$ /= Void then
-					$$.set_inherit_keyword ($1)
-				end				
+				if not conforming_inheritance_flag then
+						-- Conforming inheritance
+					$$ := $3
+					if $$ /= Void then
+						$$.set_inheritance_tokens ($1, Void, Void, Void)
+					end
+				else
+						-- Raise error as conforming inheritance has already been specified
+					if non_conforming_inheritance_flag then
+						report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Conforming inheritance clause must come before non conforming inheritance clause", False))
+					else
+						report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Only one conforming inheritance clause allowed per class", False))
+					end
+				end
 			}
+	|	TE_INHERIT TE_LCURLY Class_identifier TE_RCURLY
+			{
+					-- Non conforming inheritance
+				
+				if not non_conforming_inheritance_flag then
+						-- Check to make sure Class_identifier is 'NONE'
+						-- An error will be thrown if TYPE_AS is not of type NONE_TYPE_AS
+					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type ($3, Void, Void))
+				else
+						-- Raise error as non conforming inheritance has already been specified
+					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Only one non-conforming inheritance clause allowed per class", False))
+				end
+			}
+		Add_counter Parent_list Remove_counter
+			{
+				$$ := $7
+				if $$ /= Void then
+					$$.set_inheritance_tokens ($1, $2, $3, $4)
+				end
+				
+					-- Set flag so that no more inheritance clauses can be added as non-conforming is always the last one.
+				non_conforming_inheritance_flag := True
+			}
+			
 	;
-
+			
 Parent_list: Parent
 			{
 				$$ := ast_factory.new_eiffel_list_parent_as (counter_value + 1)
@@ -3207,7 +3244,7 @@ Infix_operator: TE_STR_LT
 			{
 				$$ := ast_factory.new_string_as (cloned_lower_string (token_buffer), line, column, position, token_buffer.count + 2, token_buffer2)
 			}
-	;
+				;
 
 Manifest_array: TE_LARRAY TE_RARRAY
 			{

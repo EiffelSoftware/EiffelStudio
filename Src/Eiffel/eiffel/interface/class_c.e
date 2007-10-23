@@ -511,7 +511,6 @@ feature -- Building conformance table
 			topological_id_processed: topological_id > 0
 			conformance: topological_id <= cl.topological_id
 		local
-			a_parent: CLASS_C
 			a_table: PACKED_BOOLEANS
 			l_area: SPECIAL [CLASS_C]
 			i, nb: INTEGER
@@ -521,19 +520,18 @@ feature -- Building conformance table
 					-- The parent has not been inserted yet
 				a_table.put (True, topological_id)
 				from
-					l_area := parents_classes.area
-					nb := parents_classes.count
+					l_area := conforming_parents_classes.area
+					nb := conforming_parents_classes.count
 				until
 					i = nb
 				loop
-					a_parent := l_area.item (i)
-					a_parent.build_conformance_table_of (cl)
+					l_area [i].build_conformance_table_of (cl)
 					i := i + 1
 				end
 			end
 		end
 
-feature -- Expanded rues validity
+feature -- Expanded rules validity
 
 	check_expanded is
 			-- Check the expanded validity rule.
@@ -797,7 +795,7 @@ feature -- Skeleton processing
 feature {NONE} -- Class initialization
 
 	similar_parents
-			(a_old_parents, a_new_parents: EIFFEL_LIST [PARENT_AS]): TUPLE [BOOLEAN, BOOLEAN]
+			(a_old_parents, a_new_parents: EIFFEL_LIST [PARENT_AS]): TUPLE [previous_types_remain: BOOLEAN; parents_removed: BOOLEAN]
 		is
 			-- First element of tuple: Does `a_new_parents' include all types used in
 			-- `a_old_parents' and no type has been removed from `a_old_parents'.
@@ -1082,16 +1080,19 @@ feature -- Parent checking
 			a_class_info_not_void: a_class_info /= Void
 		local
 			l_parents_as: EIFFEL_LIST [PARENT_AS]
+			l_parents_classes: like parents_classes
+			l_non_conforming_parents_as, l_conforming_parents_as: EIFFEL_LIST [PARENT_AS]
+			l_has_non_conforming_parents, l_has_conforming_parents: BOOLEAN
 			l_parent_c: PARENT_C
 			l_parent_class: CLASS_C
 			l_parent_as: PARENT_AS
 			l_raw_type: CLASS_TYPE_AS
-			l_ancestor_id, l_count: INTEGER
+			l_any_id: INTEGER
 			l_vhpr1: VHPR1
 			l_ve04: VE04
 			l_dummy_list: LINKED_LIST [INTEGER]
 			l_client: CLASS_C
-			l_tuple: TUPLE [BOOLEAN, BOOLEAN]
+			l_conforming_parents_tuple, l_non_conforming_parents_tuple: like similar_parents
 			l_compiled_parent_generator: AST_PARENT_C_GENERATOR
 			l_parent_type: CL_TYPE_A
 			l_vtug: VTUG
@@ -1102,10 +1103,19 @@ feature -- Parent checking
 				-- Initialize context
 			Inst_context.set_group (group)
 			l_parents_as := a_class_info.parents
-			l_ancestor_id := System.any_id
+			l_non_conforming_parents_as := a_class_info.non_conforming_parents
+			l_conforming_parents_as := a_class_info.conforming_parents
+			l_has_non_conforming_parents := l_non_conforming_parents_as /= Void and then not l_non_conforming_parents_as.is_empty
+			l_has_conforming_parents := l_conforming_parents_as /= Void and then not l_conforming_parents_as.is_empty
+			l_any_id := System.any_id
 
 			if l_parents_as /= Void and then not l_parents_as.is_empty then
-				if class_id = l_ancestor_id then
+				check
+					inheritance_clauses_correct: l_has_non_conforming_parents or l_has_conforming_parents
+						-- If we have a parents_as list then we must have a non-empty parents list.
+				end
+				if class_id = l_any_id then
+						-- Throw a VHPR1 error is ANY contains any custom inheritance clauses.
 					create l_vhpr1
 					create l_dummy_list.make
 					l_dummy_list.extend (class_id)
@@ -1114,10 +1124,44 @@ feature -- Parent checking
 				else
 						-- VHPR3 checking and extract structure from parsing.
 					from
-						l_count := l_parents_as.count
-						create parents_classes.make (l_count)
-						create computed_parents.make (l_count)
-						create parents.make (l_count)
+							-- Reset any previous parent class storage.
+						computed_parents := Void
+						conforming_parents := Void
+						non_conforming_parents := Void
+						conforming_parents_classes := Void
+						non_conforming_parents_classes := Void
+						if l_has_conforming_parents then
+							create conforming_parents_classes.make (l_conforming_parents_as.count)
+							create conforming_parents.make (l_conforming_parents_as.count)
+							if l_has_non_conforming_parents then
+								create non_conforming_parents_classes.make (l_non_conforming_parents_as.count)
+								create non_conforming_parents.make (l_non_conforming_parents_as.count)
+							end
+						else
+								-- We must have non-conforming parents
+							create non_conforming_parents_classes.make (l_non_conforming_parents_as.count)
+							create non_conforming_parents.make (l_non_conforming_parents_as.count)
+
+								-- We need to add class ANY as an ancestor as no conforming parents are syntactically specified.
+							create conforming_parents_classes.make (1)
+							create conforming_parents.make (1)
+							create computed_parents.make (l_non_conforming_parents_as.count + 1)
+
+								-- Add a descendant to class ANY
+							System.any_class.compiled_class.add_descendant (Current)
+								-- Insertion in `parents_classes'
+							conforming_parents_classes.extend (System.any_class.compiled_class)
+								-- Insertion in `parents'
+							conforming_parents.extend (Any_type)
+								-- Insertion in `computed_parents'
+							computed_parents.extend (Any_parent)
+						end
+
+						if computed_parents = Void then
+								-- If not already created by sole non-conforming inheritance, create the other parents lists.
+							create computed_parents.make (l_parents_as.count)
+						end
+
 						create l_compiled_parent_generator
 						l_parents_as.start
 					until
@@ -1139,6 +1183,7 @@ feature -- Parent checking
 
 							l_parent_class := clickable_info.associated_eiffel_class (lace_class,
 								l_parent_as.type).compiled_class
+
 								-- Insertion of a new descendant for the parent class
 							check
 								parent_class_exists: l_parent_class /= Void
@@ -1156,18 +1201,19 @@ feature -- Parent checking
 							if l_parent_class.is_generic then
 									-- Look for a derivation of the same class.
 								from
-									parents_classes.start
+									l_parents_classes := parents_classes
+									l_parents_classes.start
 								until
-									parents_classes.after
+									l_parents_classes.after
 								loop
-									if parents_classes.item = l_parent_class then
-										if not parents.i_th (parents_classes.index).same_as (l_parent_type) then
+									if l_parents_classes.item = l_parent_class then
+										if not parents.i_th (l_parents_classes.index).same_as (l_parent_type) then
 												-- Different generic derivations are used in Parent parts.
 											error_handler.insert_error (create {VHPR5_ECMA}.make
-												(Current, l_parent_type, parents.i_th (parents_classes.index), l_parent_as.start_location))
+												(Current, l_parent_type, parents.i_th (l_parents_classes.index), l_parent_as.start_location))
 										end
 									end
-									parents_classes.forth
+									l_parents_classes.forth
 								end
 							end
 
@@ -1182,45 +1228,51 @@ feature -- Parent checking
 								error_handler.insert_error (l_vtug)
 							end
 
-							parents.extend (l_parent_type)
-								-- Insertion in `parents_classes'.
-							parents_classes.extend (l_parent_class)
+								-- Add parent class to either conforming or non-conforming inheritance list.
+							if l_has_non_conforming_parents and then l_non_conforming_parents_as.has (l_parent_as) then
+								non_conforming_parents_classes.extend (l_parent_class)
+								non_conforming_parents.extend (l_parent_type)
+							else
+								conforming_parents_classes.extend (l_parent_class)
+								conforming_parents.extend (l_parent_type)
+							end
 						end
 						l_parents_as.forth
 					end
 				end
-			elseif not (class_id = l_ancestor_id) then
+			elseif not (class_id = l_any_id) then
 					-- No parents are syntactiaclly specified: ANY is
 					-- the default parent for Eiffel classes.
-				create parents_classes.make (1)
+				create conforming_parents_classes.make (1)
 				create computed_parents.make (1)
-				create parents.make (1)
+				create conforming_parents.make (1)
 
 					-- Add a descendant to class ANY
 				System.any_class.compiled_class.add_descendant (Current)
 					-- Insertion in `parents_classes'
-				parents_classes.extend (System.any_class.compiled_class)
+				conforming_parents_classes.extend (System.any_class.compiled_class)
 					-- Insertion in `parents'
-				parents.extend (Any_type)
+				conforming_parents.extend (Any_type)
 					-- Insertion in `computed_parents'
 				computed_parents.extend (Any_parent)
 			else
 					-- In case of the ancestor class to all classes, just create an empty
 					-- parent structure.
-				create parents_classes.make (0)
-				create parents.make (0)
+				create conforming_parents_classes.make (0)
+				create conforming_parents.make (0)
 				create computed_parents.make (0)
 			end
 
 			if a_old_class_info /= Void then
-				l_tuple := similar_parents (a_old_class_info.parents, a_class_info.parents)
-				if not l_tuple.boolean_item (1) then
+				l_conforming_parents_tuple := similar_parents (a_old_class_info.conforming_parents, l_conforming_parents_as)
+				l_non_conforming_parents_tuple := similar_parents (a_old_class_info.non_conforming_parents, l_non_conforming_parents_as)
+				if not l_conforming_parents_tuple.previous_types_remain or else not l_non_conforming_parents_tuple.previous_types_remain then
 						-- Conformance tables incrementality as inheritance has changed
 					set_changed (True)
 					set_changed3a (True)
 					System.set_update_sort (True)
 
-					if l_tuple.boolean_item (2) then
+					if l_conforming_parents_tuple.parents_removed or else l_non_conforming_parents_tuple.parents_removed then
 							-- A parent has been removed:
 							-- Take care of signature conformance for redefinion of
 							-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
@@ -1267,13 +1319,15 @@ feature -- Parent checking
 			l_single_classes: LINKED_LIST [CLASS_C]
 			l_old_is_single, l_has_external_parent: BOOLEAN
 			l_error_level: NATURAL
+			l_parents: like parents
 		do
 			l_error_level := error_handler.error_level
 				-- Clear feature context
 			ast_context.clear_feature_context
 			from
-				l_area := parents.area
-				nb := parents.count
+				l_parents := parents
+				l_area := l_parents.area
+				nb := l_parents.count
 				l_old_is_single := is_single
 				has_external_main_parent := False
 			until
@@ -2050,10 +2104,12 @@ end
 			parent_type: CL_TYPE_A
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
+			l_parents: like parents
 		do
 			from
-				l_area := parents.area
-				nb := parents.count
+				l_parents := parents
+				l_area := l_parents.area
+				nb := l_parents.count
 			until
 				i = nb
 			loop
@@ -2368,7 +2424,7 @@ feature -- Meta-type
 			-- of descendant type `class_type'.
 		require
 			good_argument: class_type /= Void
-			conformance: class_type.associated_class.conform_to (Current)
+			conformance: class_type.associated_class.conform_to (Current) or else True --| FIXME IEK: Create inherits_from routine in CLASS_C for non-conforming inheritance.
 		local
 			actual_class_type, written_actual_type: CL_TYPE_A
 		do
@@ -2620,13 +2676,56 @@ feature -- Properties
 			-- Number of features in current class including inherited one.
 
 	parents_classes: FIXED_LIST [CLASS_C]
-			-- Parent classes
+			-- Parent classes.
+		local
+			l_non_conforming_parents_classes: like non_conforming_parents_classes
+		do
+			Result := conforming_parents_classes
+			l_non_conforming_parents_classes := non_conforming_parents_classes
+			if Result /= Void then
+				if l_non_conforming_parents_classes /= Void then
+					Result := Result.twin
+						-- We have to twin the list to avoid side effect whilst appending.
+					Result.append (l_non_conforming_parents_classes)
+				end
+			else
+				Result := l_non_conforming_parents_classes
+			end
+		end
+
+	conforming_parents_classes: FIXED_LIST [CLASS_C]
+			-- Conforming parent classes.
+
+	non_conforming_parents_classes: FIXED_LIST [CLASS_C]
+			-- Non-conforming parent classes.
 
 	need_new_parents: BOOLEAN
 			-- Does Current need to recompute `parents' and `computed_parents'?
 
 	parents: FIXED_LIST [CL_TYPE_A]
 			-- Parent class types
+			-- List containing both conforming and non-conforming parent class types of `Current'.
+		local
+			l_non_conforming_parents: like non_conforming_parents
+		do
+			Result := conforming_parents
+			l_non_conforming_parents := non_conforming_parents
+			if Result /= Void then
+				if l_non_conforming_parents /= Void then
+					Result := Result.twin
+						-- We need to twin the result if appending to avoid side effect.
+					Result.append (l_non_conforming_parents)
+				end
+			else
+				Result := l_non_conforming_parents
+			end
+		end
+
+	conforming_parents: FIXED_LIST [CL_TYPE_A]
+			-- Conforming parent class types.
+
+	non_conforming_parents: FIXED_LIST [CL_TYPE_A]
+			-- Non-conforming parent class types.
 
 	computed_parents: PARENT_LIST
 			-- Computed version of parent clauses.

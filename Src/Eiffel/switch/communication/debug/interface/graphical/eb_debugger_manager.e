@@ -455,7 +455,7 @@ feature -- tools
 					end (?, Result))
 			end
 		ensure
-			result_attached: Result /= Void
+			result_attached: debugging_window /= Void implies Result /= Void
 		end
 
 feature -- Output visitor
@@ -924,9 +924,9 @@ feature -- Output
 			if application_is_executing then
 				display_debugger_info (application.parameters)
 			end
-			if 
+			if
 				debugging_window /= Void and then
-				debugging_window.tools.output_tool /= Void 
+				debugging_window.tools.output_tool /= Void
 			then
 				debugging_window.tools.output_tool.show
 			end
@@ -1543,6 +1543,7 @@ feature -- Debugging events
 		do
 			Precursor
 			disable_debugging_commands (False)
+			assertion_checking_handler_cmd.reset
 			notify_breakpoints_changes
 		end
 
@@ -1573,7 +1574,6 @@ feature -- Debugging events
 			toggle_exec_replay_mode_cmd.disable_sensitive
 			object_storage_management_cmd.disable_sensitive
 
-			assertion_checking_handler_cmd.reset
 
 			if dialog /= Void and then not dialog.is_destroyed then
 				close_dialog
@@ -1612,14 +1612,15 @@ feature -- Debugging events
 			set_critical_stack_depth_cmd.enable_sensitive
 			assertion_checking_handler_cmd.enable_sensitive
 
-			if is_classic_project then
-				toggle_exec_replay_recording_mode_cmd.enable_sensitive
-				if application_status.replay_recording then
-					toggle_exec_replay_mode_cmd.enable_sensitive
+ 			if rt_extension_available then
+				if is_classic_project then --| For now only classic
+					toggle_exec_replay_recording_mode_cmd.enable_sensitive
+					if application_status.replay_recording then
+						toggle_exec_replay_mode_cmd.enable_sensitive
+					end
 				end
+				object_storage_management_cmd.enable_sensitive
 			end
-			object_storage_management_cmd.enable_sensitive
-
 
 			debug ("debugger_interface")
 				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")

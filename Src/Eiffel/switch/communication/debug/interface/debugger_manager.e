@@ -453,6 +453,11 @@ feature -- Status
 			Result := Eiffel_project.workbench.system.il_generation
 		end
 
+	rt_extension_available: BOOLEAN
+			-- is RT_EXTENSION available ?
+			-- Value valid only during the debugging session.
+			-- Initially set just before the launching, and reset when terminated
+
 feature -- Parameters context
 
 --| This code may be used later to enhance display of string ...
@@ -922,6 +927,7 @@ feature -- Debugging events
 				bl.forth
 			end
 			save_debugger_data
+			rt_extension_available := Eiffel_system.system.rt_extension_class /= Void
 			application_launching_in_progress := True
 			application_prelaunching_actions.call (Void)
 		end
@@ -1045,6 +1051,7 @@ feature -- Debugging events
 		do
 			-- do_nothing
 			application_quit_actions.call (Void)
+			rt_extension_available := False
 		end
 
 feature -- Actions

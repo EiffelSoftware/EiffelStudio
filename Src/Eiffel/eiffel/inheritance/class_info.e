@@ -34,8 +34,29 @@ inherit
 
 feature -- Access
 
-	parents: EIFFEL_LIST [PARENT_AS];
-			-- Parents
+	parents: EIFFEL_LIST [PARENT_AS]
+			-- List containing both conforming and non-conforming parents of `Current'.
+		local
+			l_non_conforming_parents: like non_conforming_parents
+		do
+			Result := conforming_parents
+			l_non_conforming_parents := non_conforming_parents
+			if Result /= Void then
+				if l_non_conforming_parents /= Void then
+					Result := Result.twin
+						-- We need to twin the result if appending to avoid side effect.
+					Result.append (l_non_conforming_parents)
+				end
+			else
+				Result := l_non_conforming_parents
+			end
+		end
+
+	conforming_parents: EIFFEL_LIST [PARENT_AS];
+			-- List containing only conforming parents of `Current'.
+
+	non_conforming_parents: EIFFEL_LIST [PARENT_AS];
+			-- List containing only non-conforming parents of `Current'.
 
 	creators: EIFFEL_LIST [CREATE_AS];
 			-- Creators
@@ -148,11 +169,17 @@ feature -- Access
 
 feature -- Settings
 
-	set_parents (p: like parents) is
-			-- Assign `p' to `parents'.
+	set_conforming_parents (cp: like conforming_parents) is
+			-- Assign `cp' to `conforming_parents'.
 		do
-			parents := p;
-		end;
+			conforming_parents := cp;
+		end
+
+	set_non_conforming_parents (ncp: like non_conforming_parents) is
+			-- Assign `ncp' to `non_conforming_parents'.
+		do
+			non_conforming_parents := ncp;
+		end
 
 	set_creators (c: like creators) is
 			-- Assign `c' to `creators'.

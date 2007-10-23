@@ -411,7 +411,9 @@ feature -- Properties
 			local_workbench.change_class (predicate_class)
 			local_workbench.change_class (typed_pointer_class)
 			local_workbench.change_class (type_class)
-			local_workbench.change_class (rt_extension_class)
+			if rt_extension_class /= Void then
+				local_workbench.change_class (rt_extension_class)
+			end
 
 			if il_generation then
 				local_workbench.change_class (native_array_class)
@@ -480,7 +482,9 @@ feature -- Properties
 			predicate_class.compiled_class.record_precompiled_class_in_system
 			typed_pointer_class.compiled_class.record_precompiled_class_in_system
 			type_class.compiled_class.record_precompiled_class_in_system
-			rt_extension_class.compiled_class.record_precompiled_class_in_system
+			if rt_extension_class /= Void and then rt_extension_class.is_compiled then
+				rt_extension_class.compiled_class.record_precompiled_class_in_system
+			end
 
 			if il_generation then
 				native_array_class.compiled_class.record_precompiled_class_in_system
@@ -2135,7 +2139,9 @@ end
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
 			type_class.compiled_class.mark_class (marked_classes)
 
-			rt_extension_class.compiled_class.mark_class (marked_classes)
+			if rt_extension_class /= Void and then rt_extension_class.is_compiled then
+				rt_extension_class.compiled_class.mark_class (marked_classes)
+			end
 
 			if il_generation then
 				native_array_class.compiled_class.mark_class (marked_classes)

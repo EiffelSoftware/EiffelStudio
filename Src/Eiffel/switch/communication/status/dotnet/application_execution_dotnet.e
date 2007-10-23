@@ -392,7 +392,7 @@ feature -- Execution
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_rt_object_icd_value
-			if icdv /= Void then
+			if icdv /= Void and then system.rt_extension_class /= Void then
 				Result := debug_value_from_icdv (icdv, system.rt_extension_class.compiled_class)
 			end
 		end

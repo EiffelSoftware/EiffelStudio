@@ -396,8 +396,10 @@ feature {COMPILER_EXPORTER} -- Implementation
 			system_exists: system /= Void
 		local
 			l_actions: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]
+			l_exceptions: SEARCH_TABLE [STRING]
 		do
 			create l_actions.make (50)
+			create l_exceptions.make (1)
 
 			if system.il_generation then
 				l_actions.put (agent system.set_system_object_class, "SYSTEM_OBJECT")
@@ -431,6 +433,10 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_function_class, "FUNCTION")
 			l_actions.put (agent system.set_predicate_class, "PREDICATE")
 			l_actions.put (agent system.set_type_class, "TYPE")
+
+				-- RT_EXTENSION is not really needed, so when we do not find it, we simply
+				-- continue as if it was not present.
+			l_exceptions.put ("RT_EXTENSION")
 			l_actions.put (agent system.set_rt_extension_class, "RT_EXTENSION")
 
 				-- XX_REF classes
@@ -457,7 +463,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				l_actions.put (agent system.set_system_type_class, "SYSTEM_TYPE")
 			end
 
-			check_class_unicity (l_actions)
+			check_class_unicity (l_actions, l_exceptions)
 
 			if system.il_generation then
 					-- One more check, let's find out that `system_object' and `system_string'
@@ -484,12 +490,15 @@ feature {COMPILER_EXPORTER} -- Implementation
 			Error_handler.checksum
 		end
 
-	check_class_unicity (a_set: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]) is
+	check_class_unicity (a_set: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]; a_except: SEARCH_TABLE [STRING]) is
 			-- Universe checking, check all class names in `a_set' to ensure that only
 			-- one instance with specified name is found in universe. If it is unique,
 			-- then for each unique instance calls associated action.
+			-- If not found, but present in `a_except' then compiler simply continue has if nothing
+			-- was requested.
 		require
 			a_set_not_void: a_set /= Void
+			a_except_not_void: a_except /= Void
 		local
 			vd23: VD23
 			vd24: VD24
@@ -530,7 +539,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 				if l_count = 0 then
 					create vd23
 					vd23.set_class_name (l_class_name)
-					error_handler.insert_error (vd23)
+					if not a_except.has (l_class_name) then
+						error_handler.insert_error (vd23)
+					end
 					-- if we have two results it's possible that we got a class which is overriden and the override itself
 					-- return the class that is overriden
 				elseif l_count = 2 and then l_classes.i_th (1).actual_class = l_classes.i_th (2) then

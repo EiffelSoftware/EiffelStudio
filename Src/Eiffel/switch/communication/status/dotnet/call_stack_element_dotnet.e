@@ -499,7 +499,6 @@ feature {NONE} -- Implementation
 			locals_list		: like private_locals
 			rout			: like routine
 			rout_i			: like routine_i
-			i				: INTEGER
 			l_names_heap: like Names_heap
 			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE

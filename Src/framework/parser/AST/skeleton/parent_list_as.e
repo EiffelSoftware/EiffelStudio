@@ -56,14 +56,28 @@ feature -- Roundtrip/Token
 feature -- Roundtrip
 
 	inherit_keyword: KEYWORD_AS
-			-- Keyword "inherit" associated with current AST node
+			-- Keyword "inherit" associated with current AST node.
 
-	set_inherit_keyword (a_keyword: KEYWORD_AS) is
-			-- Set `inherit_keyword' with `a_keyword'.
+	left_curly_symbol: SYMBOL_AS
+			-- Symbol '{' associated with current AST node if non-conforming inheritance is specified.
+
+	none_id_as: ID_AS
+			-- 'NONE' ID_AS used for specifying non-conforming inheritance.
+
+	right_curly_symbol: SYMBOL_AS
+			-- Symbol '}' associated with current AST node if non-conforming inheritance is specified.
+
+	set_inheritance_tokens (a_inherit_keyword: like inherit_keyword; a_left_curly_symbol: like left_curly_symbol; a_none_id_as: like none_id_as; a_right_curly_symbol: like right_curly_symbol) is
+			-- Set tokens associated with inheritance clause.
 		do
-			inherit_keyword := a_keyword
+			inherit_keyword := a_inherit_keyword
+			left_curly_symbol := a_left_curly_symbol
+			none_id_as := a_none_id_as
+			right_curly_symbol := a_right_curly_symbol
 		ensure
-			inherit_keyword_set: inherit_keyword = a_keyword
+			inherit_keyword_set: inherit_keyword = a_inherit_keyword
+			left_curly_symbol_set: left_curly_symbol = a_left_curly_symbol
+			right_curly_symbol_set: right_curly_symbol = a_right_curly_symbol
 		end
 
 indexing

@@ -73,7 +73,6 @@ feature {NONE} -- Initialization
 				private_body_index := -1
 
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Creating item%N"); end
-				create unprocessed_values.make(10)
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_recv_c%N"); end
 				Init_recv_c
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_rout_c%N"); end
@@ -118,7 +117,6 @@ feature {NONE} -- Initialization
 			private_body_index := -1
 
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Creating item%N"); end
-			create unprocessed_values.make(10)
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_recv_c%N"); end
 			init_recv_c
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_rout_c%N"); end
@@ -191,25 +189,24 @@ feature -- Properties
 
 feature {EIFFEL_CALL_STACK} -- Implementation
 
-	set_hector_addr_for_locals_and_arguments is
+	set_hector_addr (lst: ARRAY [ABSTRACT_DEBUG_VALUE]) is
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
 		local
-			l: like unprocessed_values
+			i: INTEGER
 		do
-			l := unprocessed_values
 			check
 				not_initialized: not initialized
-				valid_unprocessed_values: l /= Void
+				valid_values: lst /= Void
 			end
 			from
-				l.start
+				i := lst.lower
 			until
-				l.after
+				i > lst.upper
 			loop
-				l.item.set_hector_addr
-				l.forth
+				lst.item (i).set_hector_addr
+				i := i + 1
 			end
 		end
 
@@ -226,19 +223,28 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 
 feature {NONE} -- Implementation
 
-	retrieve_locals_and_arguments is
+	retrieved_locals_and_arguments: TUPLE [args: ARRAY [ABSTRACT_DEBUG_VALUE]; locals: ARRAY [ABSTRACT_DEBUG_VALUE]] is
+		local
+			l_values: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
+			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]
+			i: INTEGER
 		do
 			debug ("DEBUGGER_TRACE");
 				io.error.put_string (generator + ": receiving locals & arguments%N")
 				io.error.put_string (generator + ": sending the request%N")
 				io.error.put_string (generator + ": thread id = " + thread_id.to_hex_string + ".%N")
 			end
-				-- send the request
+
+				-- Init
+				--| note: this might be a nice enhancement to get first the number of arguments,locals,...
+			create l_values.make (10)
+
+				-- send the request			
 			send_rqst_1 (Rqst_dump_variables, level_in_stack)
 
+			--| ARGUMENTS |--
+
 				-- Receive the arguments.
-			retrieved_arguments_count := 0
-			retrieved_locals_count := 0
 				-- (`item' is set to Void when no more values are expected.)
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": receiving the arguments%N"); end
 			from
@@ -250,11 +256,27 @@ feature {NONE} -- Implementation
 				error or item = Void
 			loop
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": processing value : ARGUMENTS%N"); end
-				unprocessed_values.extend (item)
-				retrieved_arguments_count := retrieved_arguments_count + 1
+				l_values.extend (item)
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
 				recv_value (Current)
 			end
+			if not l_values.is_empty then
+				from
+					i := 1
+					create l_args.make (i, l_values.count)
+					l_values.start
+				until
+					l_values.after
+				loop
+					l_args[i] := l_values.item
+					i := i + 1
+					l_values.forth
+				end
+			end
+
+
+			--| LOCALS |--
+			l_values.wipe_out
 
 				-- Receive the local entities.
 				-- user-defined, then loop variants and old expr, and finally the result if any.
@@ -269,8 +291,7 @@ feature {NONE} -- Implementation
 				error or item = Void
 			loop
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": processing value LOCALS%N"); end
-				unprocessed_values.extend (item)
-				retrieved_locals_count := retrieved_locals_count + 1
+				l_values.extend (item)
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
 				recv_value (Current)
 			end
@@ -278,15 +299,32 @@ feature {NONE} -- Implementation
 			debug ("DEBUGGER_TRACE");
 				io.error.put_string (generator + ": receiving locals & arguments COMPLETED %N")
 			end
+			if not l_values.is_empty then
+				from
+					i := 1
+					create l_locals.make (i, l_values.count)
+					l_values.start
+				until
+					l_values.after
+				loop
+					l_locals[i] := l_values.item
+					i := i + 1
+					l_values.forth
+				end
+			end
+
+			Result := [l_args, l_locals]
 		end
 
 	initialize_stack is
 		local
 			local_decl_grps	: EIFFEL_LIST [TYPE_DEC_AS]
 			id_list			: ARRAYED_LIST [INTEGER]
-			l_count			: INTEGER
+			i, l_count			: INTEGER
 			value			: ABSTRACT_DEBUG_VALUE
-			unprocessed_l	: like unprocessed_values
+			args_locs_info  : like retrieved_locals_and_arguments
+			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]
+			l_index, l_upper: INTEGER
 			locals_list		: like private_locals
 			args_list		: like private_arguments
 			arg_types		: E_FEATURE_ARGUMENTS
@@ -302,150 +340,160 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-
 				debug ("DEBUGGER_TRACE_CALLSTACK")
-					io.put_string (generator + ".initializing_stack: " + routine_name + " from "+dynamic_class.name+"%N")
+					io.put_string (generator + ".initializing_stack: " + routine_name + " from "+ dynamic_class.name +"%N")
 				end
 				if not is_exhausted then
-					retrieve_locals_and_arguments
-					set_hector_addr_for_locals_and_arguments
+					args_locs_info := retrieved_locals_and_arguments -- get the values into `args_locs_info'
+					l_args := args_locs_info.args
+					l_locals := args_locs_info.locals
+					if l_args /= Void then
+						set_hector_addr (l_args)
+					end
+					if l_locals /= Void then
+						set_hector_addr (l_locals)
+					end
 				end
-				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument"+"%N"); end
-
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument" + "%N"); end
 				feat := routine
-
-				unprocessed_l := unprocessed_values
-				unprocessed_l.start
 				if feat /= Void then
-					--l_count := feat.argument_count
-					l_count := retrieved_arguments_count
-					if l_count > 0 then
-						arg_types := feat.arguments
-						if arg_types = Void then
-							unprocessed_l.go_i_th (unprocessed_l.index + l_count)
-						else
-							create args_list.make_filled (l_count)
-							from
-								arg_types.start
-								arg_names := feat.argument_names
-								arg_names.start
-								args_list.start
-							until
-								args_list.after
-							loop
-								value := unprocessed_l.item
-								value.set_name (arg_names.item)
-								if arg_types.item.has_associated_class then
-									value.set_static_class (arg_types.item.associated_class)
-								end
+					if l_args /= Void then
+						l_index := l_args.lower
+						l_upper := l_args.upper
+						counter := 1
 
-								args_list.replace (value)
-								args_list.forth
-								arg_types.forth
-								arg_names.forth
-								unprocessed_l.forth
-							end
-						end
-					end
-
-					local_decl_grps := local_decl_grps_from (feat)
-					if local_decl_grps /= Void then
-						l_old_group := inst_context.group
-						inst_context.set_group (feat.associated_class.group)
-
-						l_old_class := System.current_class
-						System.set_current_class (dynamic_class)
-
-						create locals_list.make (retrieved_locals_count)
-						from
-							feat_i := routine_i
-							l_wc := feat_i.written_class
-							l_count := 0
-							local_decl_grps.start
-							l_names_heap := Names_heap
-						until
-							local_decl_grps.after or
-							l_count >= retrieved_locals_count
-						loop
-							id_list := local_decl_grps.item.id_list
-							if not id_list.is_empty then
-								l_stat_class := static_class_for_local (local_decl_grps.item, feat_i, l_wc)
+						--l_count := feat.argument_count
+						l_count := l_args.count
+						if l_count > 0 then
+							arg_types := feat.arguments
+							if arg_types = Void then
+								l_index := l_index + l_count
+							else
+								create args_list.make_filled (l_count)
 								from
-									id_list.start
+									arg_types.start
+									arg_names := feat.argument_names
+									arg_names.start
+									args_list.start
 								until
-									id_list.after or
-									l_count >= retrieved_locals_count
+									args_list.after or l_index > l_upper
 								loop
-									value := unprocessed_l.item
-									value.set_name (l_names_heap.item (id_list.item))
-									if l_stat_class /= Void then
-										value.set_static_class (l_stat_class)
+									value := l_args.item (l_index)
+									value.set_item_number (counter)
+									counter := counter + 1
+
+									value.set_name (arg_names.item)
+									if arg_types.item.has_associated_class then
+										value.set_static_class (arg_types.item.associated_class)
 									end
-									locals_list.extend (value)
-									id_list.forth
-									unprocessed_l.forth
-									l_count := l_count + 1
+
+									args_list.replace (value)
+									args_list.forth
+									arg_types.forth
+									arg_names.forth
+									l_index := l_index + 1
 								end
 							end
-							local_decl_grps.forth
 						end
-						if l_old_group /= Void then
-							inst_context.set_group (l_old_group)
-						end
-						if l_old_class /= Void then
-							System.set_current_class (l_old_class)
-						end
-
+						l_args := Void
 					end
-					if feat.is_function and not unprocessed_values.is_empty then
-						private_result := unprocessed_values.last
-						private_result.set_name ("Result")
-						if feat.type.has_associated_class then
-							private_result.set_static_class (feat.type.associated_class)
-						end
-					end
-				end
-
-					-- initialize item numbers
-				if args_list /= Void then
-					from
-						args_list.start
+					if l_locals /= Void then
+						l_index := l_locals.lower
+						l_upper := l_locals.upper
 						counter := 1
-					until
-						args_list.after
-					loop
-						args_list.item.set_item_number (counter)
-						args_list.forth
-						counter := counter + 1
+
+						local_decl_grps := local_decl_grps_from (feat)
+						if local_decl_grps /= Void then
+							l_old_group := inst_context.group
+							inst_context.set_group (feat.associated_class.group)
+
+							l_old_class := System.current_class
+							System.set_current_class (dynamic_class)
+
+							create locals_list.make (l_locals.count)
+							from
+								feat_i := routine_i
+								l_wc := feat_i.written_class
+								local_decl_grps.start
+								l_names_heap := Names_heap
+							until
+								local_decl_grps.after or l_index > l_upper
+							loop
+								id_list := local_decl_grps.item.id_list
+								if not id_list.is_empty then
+									l_stat_class := static_class_for_local (local_decl_grps.item, feat_i, l_wc)
+									from
+										id_list.start
+									until
+										id_list.after or l_index > l_upper
+									loop
+										value := l_locals.item (l_index)
+										value.set_item_number (counter)
+										counter := counter + 1
+
+										value.set_name (l_names_heap.item (id_list.item))
+										if l_stat_class /= Void then
+											value.set_static_class (l_stat_class)
+										end
+										locals_list.extend (value)
+										id_list.forth
+										l_index := l_index + 1
+									end
+								end
+								local_decl_grps.forth
+							end
+							if l_old_group /= Void then
+								inst_context.set_group (l_old_group)
+							end
+							if l_old_class /= Void then
+								System.set_current_class (l_old_class)
+							end
+						end
+						if feat.is_function and l_index <= l_upper then
+							private_result := l_locals.item (l_upper)
+							l_upper := l_upper - 1
+							private_result.set_name (once "Result")
+							if feat.type.has_associated_class then
+								private_result.set_static_class (feat.type.associated_class)
+							end
+						end
+
+						if l_index <= l_upper then
+							from
+								--| Remaining values -> OT locals
+								i := 1
+							until
+								l_index > l_upper
+							loop
+								value := l_locals.item (l_index)
+								value.set_item_number (counter)
+								counter := counter + 1
+
+								value.set_name ("{} #" + i.out)
+								locals_list.extend (value)
+								i := i + 1
+								l_index := l_index + 1
+							end
+						end
+						check
+							(feat.is_function implies locals_list.count = l_locals.count - 1 )
+							or else locals_list.count = l_locals.count
+						end
+						l_locals := Void
 					end
 				end
-				private_arguments := args_list
-
+				if args_list /= Void and then not args_list.is_empty then
+					private_arguments := args_list
+				end
 				if locals_list /= Void and then not locals_list.is_empty then
-					from
-						locals_list.start
-						counter := 1
-					until
-						locals_list.after
-					loop
-						locals_list.item.set_item_number (counter)
-						locals_list.forth
-						counter := counter + 1
-					end
 					private_locals := locals_list
-				else
-					private_locals := Void
 				end
-
-				unprocessed_values := Void
 				initialized := True
 				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("%TFinished initializating stack: "+routine_name+"%N"); end
 			else
 				set_error
 				initialized := True
 			end
-		ensure then
-			void_unprocessed: unprocessed_values = Void
 		rescue
 			set_error
 			retried := True
@@ -456,16 +504,6 @@ feature {NONE} -- Implementation Properties
 
 	private_routine: like routine
 			-- Associated routine
-
-	retrieved_arguments_count: INTEGER
-			-- How many arguments were successfully retrieved from the run-time?
-
-	retrieved_locals_count: INTEGER
-			-- How many locals were successfully retrieved from the run-time (Result included if any)?
-
-	unprocessed_values: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
-			-- Unprocessed values (locals and args) passed
-			-- by the application
 
 	display_object_address: STRING
 			-- String representing the Address of the current

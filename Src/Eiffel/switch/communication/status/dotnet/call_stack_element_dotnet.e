@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			locals_list		: like private_locals
 			rout			: like routine
 			rout_i			: like routine_i
-			counter			: INTEGER
+			i				: INTEGER
 			l_names_heap: like Names_heap
 			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
@@ -605,9 +605,11 @@ feature {NONE} -- Implementation
 									loop
 										value := l_list.item
 										value.set_name (l_names_heap.item (id_list.item))
+										value.set_item_number (l_index + 1)
 										if l_stat_class /= Void then
 											value.set_static_class (l_stat_class)
 										end
+
 										locals_list.extend (value)
 										id_list.forth
 										l_list.forth
@@ -622,18 +624,22 @@ feature {NONE} -- Implementation
 							if l_old_class /= Void then
 								System.set_current_class (l_old_class)
 							end
-
-								--| initialize item numbers for locals
-							from
-								locals_list.start
-								counter := 1
-							until
-								locals_list.after
-							loop
-								locals_list.item.set_item_number (counter)
-								locals_list.forth
-								counter := counter + 1
-							end
+--| Update this part OT locals will be available at E_FEATURE interface (or similar)							
+--							if not l_list.after then
+--									--| Remaining locals, should be OT locals
+--								from
+--									i := 1
+--								until
+--									l_list.after
+--								loop
+--									value := l_list.item
+--									value.set_name (" _object test #" + i.out)
+--									value.set_item_number (l_index + i)
+--									locals_list.extend (value)
+--									l_list.forth
+--									i := i + 1
+--								end
+--							end
 						end
 					end
 				end

@@ -927,7 +927,8 @@ feature -- Debugging events
 				bl.forth
 			end
 			save_debugger_data
-			rt_extension_available := Eiffel_system.system.rt_extension_class /= Void
+			rt_extension_available := Eiffel_system.system.rt_extension_class /= Void and then
+										Eiffel_system.system.rt_extension_class.is_compiled
 			application_launching_in_progress := True
 			application_prelaunching_actions.call (Void)
 		end

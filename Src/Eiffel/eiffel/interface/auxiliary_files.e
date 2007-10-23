@@ -530,33 +530,34 @@ feature -- Plug and Makefile file
 			end
 
 				-- RT_EXTENSION declaration
-			if not final_mode then
+			if 
+				not final_mode and then
+				system.rt_extension_class /= Void and then system.rt_extension_class.is_compiled
+			then
 				l_rt_dbg_cl := system.rt_extension_class.compiled_class
-				if l_rt_dbg_cl /= Void then
-					cl_type := l_rt_dbg_cl.types.first
-					id := cl_type.static_type_id
+				cl_type := l_rt_dbg_cl.types.first
+				id := cl_type.static_type_id
 
-					feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_name_id)
-					if feat /= Void then
-						l_rt_extension_notify_name := Encoder.feature_name (id, feat.body_index).twin
-					end
-					if l_rt_extension_notify_name /= Void then
-						buffer.put_string ("extern void ")
-						buffer.put_string (l_rt_extension_notify_name)
-						buffer.put_string ("();")
-						buffer.put_new_line
-					end
+				feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_name_id)
+				if feat /= Void then
+					l_rt_extension_notify_name := Encoder.feature_name (id, feat.body_index).twin
+				end
+				if l_rt_extension_notify_name /= Void then
+					buffer.put_string ("extern void ")
+					buffer.put_string (l_rt_extension_notify_name)
+					buffer.put_string ("();")
+					buffer.put_new_line
+				end
 
-					feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_argument_name_id)
-					if feat /= Void then
-						l_rt_extension_notify_argument_name := Encoder.feature_name (id, feat.body_index).twin
-					end
-					if l_rt_extension_notify_argument_name /= Void then
-						buffer.put_string ("extern EIF_TYPED_VALUE ")
-						buffer.put_string (l_rt_extension_notify_argument_name)
-						buffer.put_string ("();")
-						buffer.put_new_line
-					end
+				feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_argument_name_id)
+				if feat /= Void then
+					l_rt_extension_notify_argument_name := Encoder.feature_name (id, feat.body_index).twin
+				end
+				if l_rt_extension_notify_argument_name /= Void then
+					buffer.put_string ("extern EIF_TYPED_VALUE ")
+					buffer.put_string (l_rt_extension_notify_argument_name)
+					buffer.put_string ("();")
+					buffer.put_new_line
 				end
 			end
 
@@ -812,7 +813,10 @@ feature -- Plug and Makefile file
 			buffer.put_new_line
 
 				--| RT_EXTENSION and co...
-			if not final_mode then
+			if 
+				not final_mode and then
+				system.rt_extension_class /= Void and then system.rt_extension_class.is_compiled
+			then
 				buffer.put_string ("%Tegc_rt_extension_dt = ")
 				buffer.put_type_id (system.rt_extension_type_id)
 				buffer.put_string (";")

@@ -947,7 +947,10 @@ feature -- Code generation
 					Void, False)
 			end
 
-			if not System.in_final_mode then
+			if
+				not System.in_final_mode and then
+				system.rt_extension_class /= Void and then system.rt_extension_class.is_compiled
+			then
 					-- Create RT_EXTENSION object and assign it to ISE_RUNTIME.
 				il_code_generator.create_object (rt_extension_type_implementation_id)
 				l_field_sig := field_sig
@@ -3308,6 +3311,9 @@ feature {NONE} -- Convenience
 
 	rt_extension_type_implementation_id: INTEGER is
 			-- Type id of RT_EXTENSION class.
+		require
+			present: system.rt_extension_class /= Void
+			compiled: system.rt_extension_class.is_compiled
 		once
 			Result := system.rt_extension_class.compiled_class.types.first.type.implementation_id
 		end

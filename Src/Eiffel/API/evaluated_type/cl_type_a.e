@@ -457,16 +457,16 @@ feature {COMPILER_EXPORTER} -- Conformance
 		local
 			i, count: INTEGER
 			parent_actual_type: TYPE_A
-			parents: FIXED_LIST [CL_TYPE_A]
+			l_conforming_parents: FIXED_LIST [CL_TYPE_A]
 		do
 			from
-				parents := associated_class.parents
+				l_conforming_parents := associated_class.conforming_parents
 				i := 1
-				count := parents.count
+				count := l_conforming_parents.count
 			until
 				i > count or else Result
 			loop
-				parent_actual_type := parent_type (parents.i_th (i))
+				parent_actual_type := parent_type (l_conforming_parents.i_th (i))
 				Result := parent_actual_type.conform_to (gen_type)
 				i := i + 1
 			end
@@ -542,7 +542,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			-- context
 		require
 			good_argument: c /= Void
-			conformance: associated_class.conform_to (c)
+			conformance: associated_class.conform_to (c) or else True --| FIXME IEK Add CLASS_C.inherits_from routine for non-conforming inheritance.
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent: CL_TYPE_A

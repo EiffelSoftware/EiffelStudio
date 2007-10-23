@@ -10,7 +10,7 @@ copy_raw test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 
 compile_melted
-compile_result syntax_error TEST1 11; TEST3 11
+compile_result syntax_error TEST1 13; TEST3 13
 
 define SYNTAX_ERROR ""
 

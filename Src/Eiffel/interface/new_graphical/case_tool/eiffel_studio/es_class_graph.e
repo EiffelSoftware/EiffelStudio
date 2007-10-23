@@ -231,7 +231,8 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			ci: CLASS_I
 		do
 			if depth > 0 and then a_class.is_compiled then
-				l := a_class.compiled_class.parents
+					--| FIXME IEK Add non-conforming parents when support is added in the diagram tool.
+				l := a_class.compiled_class.conforming_parents
 				if l /= Void then
 					from
 						l.start
@@ -256,7 +257,8 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			if depth > 0 and then a_class.is_compiled then
-				l := a_class.compiled_class.parents
+				l := a_class.compiled_class.conforming_parents
+					--| FIXME IEK Add non-conforming inheritance support when added to diagram tool.
 				if l /= Void then
 					from
 						if progress_bar then
@@ -326,7 +328,8 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 					i > nb
 				loop
 					ci := l.i_th (i).original_class
-					if not ci.group.is_physical_assembly then
+						--| FIXME IEK For now we have to check that the class is conforming by checking against 'conforming_parents'.
+					if not ci.group.is_physical_assembly and then a_class.compiled_class.conforming_parents_classes.has (ci.compiled_class) then
 						add_class (ci)
 						explore_descendants (ci, depth - 1, progress_bar)
 						if progress_bar then

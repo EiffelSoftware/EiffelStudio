@@ -2364,7 +2364,10 @@ feature -- Implementation
 					l_as.set_argument_position (l_arg_pos)
 					l_as.set_class_id (class_id_of (l_type))
 				end
-				if not l_type.is_attached and then context.is_argument_attached (l_as.feature_name.name_id) then
+				if not l_type.is_attached and then
+					context.is_argument_attached (l_as.feature_name.name_id) and then
+					l_context_current_class.lace_class.is_void_safe
+				then
 					l_type := l_type.as_attached
 				end
 			else

@@ -1313,7 +1313,7 @@ feature {NONE} -- Implementation
 			end
 			if parent_type = Void then
 				from
-					parents := a_class.parents
+					parents := a_class.conforming_parents
 					parents.start
 				until
 					parents.after

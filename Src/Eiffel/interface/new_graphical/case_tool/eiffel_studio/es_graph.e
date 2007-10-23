@@ -589,7 +589,8 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			es_classes: ARRAYED_LIST [ES_CLASS]
 			l_link: ES_INHERITANCE_LINK
 		do
-			l := a_class.class_i.compiled_class.parents
+			l := a_class.class_i.compiled_class.conforming_parents
+				--| FIXME IEK Add non-conforming parents when diagramming support has been added.
 			if l /= Void then
 				from l.start until l.after loop
 					cl := l.item.associated_class.original_class

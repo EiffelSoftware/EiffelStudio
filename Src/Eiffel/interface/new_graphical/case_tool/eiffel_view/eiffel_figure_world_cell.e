@@ -103,6 +103,7 @@ feature {NONE} -- Recycling
 	internal_recycle is
 			-- Recycle `Current' and leave `Current' in an unstable state.
 		do
+			autoscroll.destroy
 			preferences.diagram_tool_data.remove_observer (Current)
 			world.recycle
 		end

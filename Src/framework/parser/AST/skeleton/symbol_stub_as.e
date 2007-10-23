@@ -52,6 +52,7 @@ feature -- Text
 			 when {EIFFEL_TOKENS}.te_dotdot then Result := once ".."
 			 when {EIFFEL_TOKENS}.te_question then Result := once "?"
 			 when {EIFFEL_TOKENS}.te_tilde then Result := once "~"
+			 when {EIFFEL_TOKENS}.te_not_tilde then Result := once "/~"
 			 when {EIFFEL_TOKENS}.te_curlytilde then Result := once "}~"
 			 when {EIFFEL_TOKENS}.te_dot then Result := once "."
 			 when {EIFFEL_TOKENS}.te_address then Result := once "$"

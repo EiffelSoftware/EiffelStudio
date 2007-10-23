@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			-- Compute or retrieve the ast. The result will be available in ast and match_list.
 		require
 			text_managed: text_managed
-			class_compiled_or_parsing: class_i.compiled_representation = Void implies is_parsing
+			class_compiled_or_parsing: class_i.compiled_class = Void implies is_parsing
 		local
 			l_compiled: CLASS_C
 		do

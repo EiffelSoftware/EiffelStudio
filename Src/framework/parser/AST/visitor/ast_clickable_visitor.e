@@ -118,7 +118,8 @@ feature {NONE} -- Implementation
 			internal_click_list.extend (l_click_ast)
 			safe_process (l_as.generics)
 
-			safe_process (l_as.parents)
+			safe_process (l_as.conforming_parents)
+			safe_process (l_as.non_conforming_parents)
 			safe_process (l_as.creators)
 			safe_process (l_as.convertors)
 			safe_process (l_as.features)

@@ -944,7 +944,8 @@ feature
 			safe_process (s)
 			safe_process (l_as.obsolete_keyword)
 			safe_process (l_as.obsolete_message)
-			safe_process (l_as.internal_parents)
+			safe_process (l_as.internal_conforming_parents)
+			safe_process (l_as.internal_non_conforming_parents)
 			safe_process (l_as.creators)
 			safe_process (l_as.convertors)
 			safe_process (l_as.features)
@@ -1181,6 +1182,9 @@ feature
 			-- Process `l_as'.
 		do
 			safe_process (l_as.inherit_keyword)
+			safe_process (l_as.left_curly_symbol)
+			safe_process (l_as.none_id_as)
+			safe_process (l_as.right_curly_symbol)
 			process_eiffel_list (l_as)
 		end
 

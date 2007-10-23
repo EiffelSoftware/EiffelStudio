@@ -398,6 +398,16 @@ feature {NONE} -- Validation
 	is_valid_integer_real: BOOLEAN
 			-- Was last call to `validate_integer_real_type' successful?
 
+feature -- Validation
+
+	validate_non_conforming_inheritance_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS) is
+			-- Validate `a_type' for non-conforming inheritance.
+		require
+			a_psr_not_void: a_psr /= Void
+		do
+			-- We can assume that it is valid
+		end
+
 feature -- Roundtrip: leaf_as
 
 	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
@@ -861,7 +871,8 @@ feature -- Access
 			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
-			p: PARENT_LIST_AS;
+			cp: PARENT_LIST_AS;
+			ncp: PARENT_LIST_AS
 			c: EIFFEL_LIST [CREATE_AS];
 			co: CONVERT_FEAT_LIST_AS;
 			f: EIFFEL_LIST [FEATURE_CLAUSE_AS];
@@ -874,7 +885,7 @@ feature -- Access
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
 				create Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, top_ind,
-				bottom_ind, g, p, c, co, f, inv, s, o, ed)
+				bottom_ind, g, cp, ncp, c, co, f, inv, s, o, ed)
 			end
 		end
 

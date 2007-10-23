@@ -48,7 +48,8 @@ feature
 			end
 			if tmp_class /= Void then
 				create Result
-				Result.set_parents (tmp_class.parents)
+				Result.set_conforming_parents (tmp_class.conforming_parents)
+				Result.set_non_conforming_parents (tmp_class.non_conforming_parents)
 				Result.set_creators (tmp_class.creators)
 				Result.set_convertors (tmp_class.convertors)
 				Result.set_class_id (tmp_class.class_id)
@@ -66,7 +67,8 @@ feature
 			end
 			if tmp_class /= Void then
 				create Result
-				Result.set_parents (tmp_class.parents)
+				Result.set_conforming_parents (tmp_class.conforming_parents)
+				Result.set_non_conforming_parents (tmp_class.non_conforming_parents)
 				Result.set_creators (tmp_class.creators)
 				Result.set_convertors (tmp_class.convertors)
 				Result.set_class_id (tmp_class.class_id)

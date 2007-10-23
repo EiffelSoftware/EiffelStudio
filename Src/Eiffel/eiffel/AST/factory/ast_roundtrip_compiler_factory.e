@@ -31,7 +31,8 @@ inherit
 			new_external_lang_as,
 			new_formal_dec_as,
 			new_vtgc1_error,
-			validate_integer_real_type
+			validate_integer_real_type,
+			validate_non_conforming_inheritance_type
 		end
 
 	AST_COMPILER_FACTORY

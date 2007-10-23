@@ -39,16 +39,20 @@ feature{NONE} -- Initialization
 feature -- Applicability
 
 	can_apply: BOOLEAN is
+		local
+			l_source_parents, l_destination_parents: PARENT_LIST_AS
 		do
+			l_source_parents := source.parents
+			l_destination_parents := destination.parents
 			if
-				source.internal_parents = Void or else
-			 	source.internal_parents.is_empty
+				l_source_parents = Void or else
+			 	l_source_parents.is_empty
 			 then
 				Result := True
-			elseif destination.internal_parents = Void then
+			elseif l_destination_parents = Void then
 				Result := destination.class_name.can_append_text (destination_match_list)
-			elseif destination.internal_parents.is_empty then
-				Result := destination.internal_parents.inherit_keyword.can_append_text (destination_match_list)
+			elseif l_destination_parents.is_empty then
+				Result := destination.parents.inherit_keyword.can_append_text (destination_match_list)
 			else
 				compute_modification
 				Result := last_computed_modifier.for_all (agent {ERT_AST_MODIFIER}.can_apply)
@@ -56,15 +60,19 @@ feature -- Applicability
 		end
 
 	apply is
+		local
+			l_source_parents, l_destination_parents: PARENT_LIST_AS
 		do
+			l_source_parents := source.parents
+			l_destination_parents := destination.parents
 			if
-				source.internal_parents = Void or else
-			 	source.internal_parents.is_empty
+				l_source_parents = Void or else
+			 	l_source_parents.is_empty
 			then
-			elseif destination.internal_parents = Void then
-				destination.class_name.append_text ("%N"+source.internal_parents.text (source_match_list), destination_match_list)
-			elseif destination.internal_parents.is_empty then
-				destination.internal_parents.inherit_keyword.replace_text (source.internal_parents.text (source_match_list), destination_match_list)
+			elseif l_destination_parents = Void then
+				destination.class_name.append_text ("%N"+source.parents.text (source_match_list), destination_match_list)
+			elseif l_destination_parents.is_empty then
+				destination.parents.inherit_keyword.replace_text (source.parents.text (source_match_list), destination_match_list)
 			else
 				compute_modification
 				last_computed_modifier.do_all (agent {ERT_AST_MODIFIER}.apply)
@@ -80,8 +88,8 @@ feature{NONE} -- Implementation
 	compute_modification is
 			-- Compute modification
 		require
-			merge_needed: destination.internal_parents /= Void and then not destination.internal_parents.is_empty
-			source_has_parents: source.internal_parents /= Void and then not source.internal_parents.is_empty
+			merge_needed: destination.parents /= Void and then not destination.parents.is_empty
+			source_has_parents: source.parents /= Void and then not source.parents.is_empty
 		local
 			l_index: INTEGER
 			dest_index: INTEGER
@@ -92,18 +100,21 @@ feature{NONE} -- Implementation
 			l_appended_parents: STRING
 			l_modifier: ERT_EIFFEL_LIST_MODIFIER
 			l_processed: ARRAY [BOOLEAN]
+			l_source_parents, l_destination_parents: PARENT_LIST_AS
 		do
+			l_source_parents := source.parents
+			l_destination_parents := destination.parents
 			create last_computed_modifier.make
 			create l_appended_parents.make (256)
-			create l_processed.make (1, destination.internal_parents.count)
+			create l_processed.make (1, l_destination_parents.count)
 			dest_index := 1
-			dest_count := destination.internal_parents.count
-			dest_ori_index := destination.internal_parents.index
-			l_index := source.internal_parents.index
+			dest_count := l_destination_parents.count
+			dest_ori_index := l_destination_parents.index
+			l_index := l_source_parents.index
 			from
-				source.internal_parents.start
+				l_source_parents.start
 			until
-				source.internal_parents.after
+				l_source_parents.after
 			loop
 				from
 					i := 1
@@ -112,11 +123,11 @@ feature{NONE} -- Implementation
 					i > dest_count or done
 				loop
 					if not l_processed.item (i) then
-						if source.internal_parents.item.type.is_equivalent (destination.internal_parents.i_th (i).type) then
+						if l_source_parents.item.type.is_equivalent (l_destination_parents.i_th (i).type) then
 							last_computed_modifier.extend (
 								create {ERT_PARENT_AS_MERGE_MODIFIER}.make
-									(destination.internal_parents.i_th (i), destination_match_list,
-									 source.internal_parents.item, source_match_list))
+									(l_destination_parents.i_th (i), destination_match_list,
+									 l_source_parents.item, source_match_list))
 							done := True
 							l_processed.put (True, i)
 						end
@@ -125,21 +136,21 @@ feature{NONE} -- Implementation
 				end
 				if not done then
 					l_appended_parents.append ("%N%N%T")
-					l_appended_parents.append (source.internal_parents.item.text (source_match_list))
+					l_appended_parents.append (l_source_parents.item.text (source_match_list))
 				else
 					l_appended_parents.wipe_out
 				end
-				source.internal_parents.forth
+				l_source_parents.forth
 				if not l_appended_parents.is_empty then
-					create l_modifier.make (destination.internal_parents, destination_match_list)
+					create l_modifier.make (l_destination_parents, destination_match_list)
 					l_modifier.set_arguments ("", "", "")
 					l_modifier.append (l_appended_parents.twin)
 					l_appended_parents.wipe_out
 					last_computed_modifier.extend (l_modifier)
 				end
 			end
-			source.internal_parents.go_i_th (l_index)
-			destination.internal_parents.go_i_th (dest_ori_index)
+			l_source_parents.go_i_th (l_index)
+			l_destination_parents.go_i_th (dest_ori_index)
 		ensure
 			modification_computed: last_computed_modifier /= Void
 		end

@@ -1252,7 +1252,8 @@ feature{NONE} -- Implementation
 				safe_process (s)
 				safe_process (l_as.obsolete_keyword)
 				safe_process (l_as.obsolete_message)
-				safe_process (l_as.internal_parents)
+				safe_process (l_as.conforming_parents)
+				safe_process (l_as.non_conforming_parents)
 				safe_process (l_as.creators)
 				safe_process (l_as.convertors)
 				safe_process (l_as.features)
@@ -1578,6 +1579,9 @@ feature{NONE} -- Implementation
 			if not is_matching_finished then
 				match_ast (parent_list)
 				safe_process (l_as.inherit_keyword)
+				safe_process (l_as.left_curly_symbol)
+				safe_process (l_as.none_id_as)
+				safe_process (l_as.right_curly_symbol)
 				process_eiffel_list (l_as)
 			end
 		end

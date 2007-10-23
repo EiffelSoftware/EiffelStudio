@@ -3991,25 +3991,12 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 			-- Has current class been processed in
 			-- first pass of Degree 4?
 
-	is_ignored_for_degree_4: BOOLEAN
-			-- Should class be ignored for current degree 4?
-			-- Set to True when a parent of current class triggered a compilation
-			-- error during degree 4.
-
 	expanded_modified: BOOLEAN
 			-- Has the expanded status of current
 			-- class been modified?
 
 	supplier_status_modified: BOOLEAN
 			-- Has the status of a supplier changed?
-
-	set_is_ignored_for_degree_4 (v: like is_ignored_for_degree_4) is
-			-- Set `is_ignored_for_degree_4' to `v'.
-		do
-			is_ignored_for_degree_4 := v
-		ensure
-			is_ignored_for_degree_4_set: is_ignored_for_degree_4 = v
-		end
 
 	set_degree_4_processed is
 			-- Set `degree_4_processed' to True.

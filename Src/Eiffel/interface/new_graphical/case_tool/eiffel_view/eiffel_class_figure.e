@@ -564,7 +564,7 @@ feature {NONE} -- Implementation (move)
 			l_class_fig_stone: CLASSI_FIGURE_STONE
 			l_world: EIFFEL_CLUSTER_DIAGRAM
 		do
-			if not model.class_i.is_read_only then
+			if model /= Void and then not model.class_i.is_read_only then
 				l_class_fig_stone ?= a_any
 				if l_class_fig_stone /= Void then
 					Result := True

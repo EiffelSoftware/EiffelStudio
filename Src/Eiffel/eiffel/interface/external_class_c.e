@@ -104,7 +104,8 @@ feature -- Initialization
 					Void,	-- top_indexes
 					Void,	-- bottom_indexes
 					Void,	-- generics
-					Void,	-- parents
+					Void,	-- conforming parents
+					Void,	-- non-conforming parents.
 					Void,	-- creators
 					Void,	-- convertors
 					Void,	-- features
@@ -450,14 +451,14 @@ feature {NONE} -- Initialization
 				nb := nb + external_class.interfaces.count
 			end
 
-			create parents_classes.make (nb)
-			create parents.make (nb)
+			create conforming_parents_classes.make (nb)
+			create conforming_parents.make (nb)
 
 			if external_class.parent /= Void then
 				parent_type := internal_type_from_consumed_type (True, external_class.parent)
 				parent_class := parent_type.associated_class
-				parents.extend (parent_type)
-				parents_classes.extend (parent_class)
+				conforming_parents.extend (parent_type)
+				conforming_parents_classes.extend (parent_class)
 				parent_class.add_descendant (Current)
 				add_syntactical_supplier (parent_type)
 			elseif external_class.is_interface then
@@ -465,8 +466,8 @@ feature {NONE} -- Initialization
 				is_interface := True
 				parent_class := System.system_object_class.compiled_class
 				parent_type := parent_class.actual_type
-				parents.extend (parent_type)
-				parents_classes.extend (parent_class)
+				conforming_parents.extend (parent_type)
+				conforming_parents_classes.extend (parent_class)
 				parent_class.add_descendant (Current)
 				syntactical_suppliers.start
 				syntactical_suppliers.search (parent_class)
@@ -485,8 +486,8 @@ feature {NONE} -- Initialization
 					if l_ext_class /= Void then
 						parent_type := internal_type_from_consumed_type (True, l_ext_class)
 						parent_class := parent_type.associated_class
-						parents.extend (parent_type)
-						parents_classes.extend (parent_class)
+						conforming_parents.extend (parent_type)
+						conforming_parents_classes.extend (parent_class)
 						parent_class.add_descendant (Current)
 						add_syntactical_supplier (parent_type)
 					end
@@ -498,8 +499,8 @@ feature {NONE} -- Initialization
 					-- Add ANY as a parent class of SYSTEM_OBJECT, and therefore
 					-- of all .NET classes
 				parent_class := any_type.associated_class
-				parents.extend (any_type)
-				parents_classes.extend (parent_class)
+				conforming_parents.extend (any_type)
+				conforming_parents_classes.extend (parent_class)
 				parent_class.add_descendant (Current)
 				add_syntactical_supplier (any_type)
 			end
@@ -1142,6 +1143,7 @@ feature {NONE} -- Implementation
 			l_rout_id_set: ROUT_ID_SET
 			l_feat: FEATURE_I
 			l_parent_class: CLASS_C
+			l_parents: FIXED_LIST [CL_TYPE_A]
 		do
 				-- We need to look up parents of current class to find if some routine IDs
 				-- have been assigned or not. At this stage `a_feat' contains valid data,
@@ -1173,13 +1175,14 @@ feature {NONE} -- Implementation
 					-- We first check on all interfaces of current class, and only when
 					-- we do not find any matching routine, then we check the main parent.
 				from
-					parents.start
+					l_parents := parents
+					l_parents.start
 				until
-					parents.after
+					l_parents.after
 				loop
-					if parents.item.associated_class.is_interface then
+					if l_parents.item.associated_class.is_interface then
 						l_feat := matching_external_feature_in (a_feat,
-							parents.item.associated_class, a_member)
+							l_parents.item.associated_class, a_member)
 						if l_feat /= Void then
 							l_rout_id_set.merge (l_feat.rout_id_set)
 							if l_feat.written_in = a_feat.written_in then
@@ -1193,9 +1196,9 @@ feature {NONE} -- Implementation
 						check
 							no_parent_found_yet: l_parent_class = Void
 						end
-						l_parent_class := parents.item.associated_class
+						l_parent_class := l_parents.item.associated_class
 					end
-					parents.forth
+					l_parents.forth
 				end
 				if l_rout_id_set.is_empty and l_parent_class /= Void then
 						-- Let's check the main parent now.

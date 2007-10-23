@@ -520,7 +520,8 @@ feature -- Access
 			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
-			p: PARENT_LIST_AS;
+			cp: PARENT_LIST_AS;
+			ncp: PARENT_LIST_AS;
 			c: EIFFEL_LIST [CREATE_AS];
 			co: CONVERT_FEAT_LIST_AS;
 			f: EIFFEL_LIST [FEATURE_CLAUSE_AS];

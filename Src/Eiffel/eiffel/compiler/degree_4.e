@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			-- Create a new Degree 4.
 		do
 			create changed_status.make
+			create ignored_classes.make (0)
 		end
 
 feature -- Access
@@ -69,6 +70,10 @@ feature -- Access
 	changed_status: TWO_WAY_SORTED_SET [INTEGER]
 			-- Sorted set of all the classes for which the expanded
 			-- or deferred status has changed
+
+	ignored_classes: SEARCH_TABLE [CLASS_C]
+			-- List of classes that should not be processed at degree 4 due to an
+			-- error in one of their ancestors.
 
 feature -- Processing
 
@@ -87,6 +92,7 @@ feature -- Processing
 		do
 			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes.sorted_classes
+			ignored_classes.wipe_out
 
 				-- We need to clean the cache of feature tables since we would not know how
 				-- to distinguish the previous from the current computed feature tables.
@@ -104,8 +110,6 @@ feature -- Processing
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed then
-							-- In addition of checking the generics below, we also reset the `is_ignored_for_degree_4' flag.
-						a_class.set_is_ignored_for_degree_4 (False)
 						if a_class.changed and then a_class.generics /= Void then
 							System.set_current_class (a_class)
 							a_class.check_constraint_genericity
@@ -132,7 +136,7 @@ feature -- Processing
 			from i := 1 until nb = count loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
-					if not a_class.degree_4_processed and not a_class.is_ignored_for_degree_4 then
+					if not a_class.degree_4_processed and not ignored_classes.has (a_class) then
 						Degree_output.put_degree_4 (a_class, count - nb)
 						System.set_current_class (a_class)
 							-- Adds future checks to the `remaining_validity_checking_list'
@@ -147,7 +151,7 @@ feature -- Processing
 								-- we will process them at the next compilation when user will have fix the
 								-- errors reported by the user.
 							empty_temp_remaining_validity_checking_list
-							a_class.set_is_ignored_for_degree_4 (True)
+							ignored_classes.put (a_class)
 							remove_descendant_classes_from_processing (a_class)
 						end
 					end
@@ -309,7 +313,7 @@ feature -- Setting
 		end
 
 	remove_descendant_classes_from_processing (a_class: CLASS_C) is
-			-- Set all descendants of `a_class' with `is_ignored_for_degree_4' to True.
+			-- Add all descendants of `a_class' to `ignored_classes'.
 		require
 			a_class_not_void: a_class /= Void
 		local
@@ -321,7 +325,7 @@ feature -- Setting
 			until
 				l_descendants.after
 			loop
-				l_descendants.item.set_is_ignored_for_degree_4 (True)
+				ignored_classes.put (l_descendants.item)
 				remove_descendant_classes_from_processing (l_descendants.item)
 				l_descendants.forth
 			end

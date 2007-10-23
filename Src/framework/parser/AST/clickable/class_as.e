@@ -33,7 +33,8 @@ feature {NONE} -- Initialization
 			top_ind: like top_indexes;
 			bottom_ind: like bottom_indexes;
 			g: like generics;
-			p: like parents;
+			cp: like parents;
+			ncp: like parents;
 			c: like creators;
 			co: like convertors;
 			f: like features;
@@ -60,7 +61,8 @@ feature {NONE} -- Initialization
 			internal_top_indexes := top_ind
 			internal_bottom_indexes := bottom_ind
 			internal_generics := g
-			internal_parents := p
+			internal_conforming_parents := cp
+			internal_non_conforming_parents := ncp
 			creators := c
 			convertors := co
 			features := f
@@ -92,7 +94,7 @@ feature {NONE} -- Initialization
 			internal_top_indexes_set: internal_top_indexes = top_ind
 			internal_bottom_indexes_set: internal_bottom_indexes = bottom_ind
 			internal_generics_set: internal_generics = g
-			internal_parents_set: internal_parents = p
+			internal_parents_set: internal_conforming_parents = cp
 			creators_set: creators = c
 			convertors_set: convertors = co
 			features_set: features = f
@@ -197,8 +199,11 @@ feature -- Roundtrip
 	internal_top_indexes: INDEXING_CLAUSE_AS
 			-- Internal indexing clause at top of class.
 
-	internal_parents: PARENT_LIST_AS
-			-- Internal inheritance clause
+	internal_conforming_parents: PARENT_LIST_AS
+			-- Internal conforming inheritance clause
+
+	internal_non_conforming_parents: PARENT_LIST_AS
+			-- Internal non-conforming inheritance clause
 
 	internal_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Internal formal generic parameter list
@@ -239,12 +244,41 @@ feature -- Attributes
 		end
 
 	parents: PARENT_LIST_AS is
-			-- Inheritance clause
+			-- Parents from both conforming and non-conforming inheritance clauses.
+		local
+			l_non_conforming_parents: like non_conforming_parents
 		do
-			if internal_parents = Void or else internal_parents.is_empty then
-				Result := Void
+			Result := conforming_parents
+			l_non_conforming_parents := non_conforming_parents
+			if Result /= Void then
+					-- Add non-conforming parents to list
+				if l_non_conforming_parents /= Void then
+					Result := Result.twin
+						-- We need to twin the result to append the non-conforming parents.
+					Result.append (l_non_conforming_parents)
+				end
 			else
-				Result := internal_parents
+				Result := l_non_conforming_parents
+			end
+		end
+
+	conforming_parents: PARENT_LIST_AS is
+			-- Parents from conforming inheritance clause.
+		do
+			Result := internal_conforming_parents
+				-- Return Void if list is empty
+			if Result /= Void and then Result.is_empty then
+				Result := Void
+			end
+		end
+
+	non_conforming_parents: PARENT_LIST_AS is
+			-- Parents from non-conforming inheritance clause.
+		do
+			Result := internal_non_conforming_parents
+				-- Return Void if list is empty
+			if Result /= Void and then Result.is_empty then
+				Result := Void
 			end
 		end
 

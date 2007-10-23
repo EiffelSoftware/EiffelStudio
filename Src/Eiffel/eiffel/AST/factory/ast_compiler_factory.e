@@ -25,7 +25,8 @@ inherit
 			new_integer_binary_as,
 			new_external_lang_as,
 			new_vtgc1_error,
-			validate_integer_real_type
+			validate_integer_real_type,
+			validate_non_conforming_inheritance_type
 		end
 
 	PREDEFINED_NAMES
@@ -76,7 +77,8 @@ feature -- Access
 			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_CONSTRAINT_AS];
-			p: PARENT_LIST_AS;
+			cp: PARENT_LIST_AS;
+			ncp: PARENT_LIST_AS
 			c: EIFFEL_LIST [CREATE_AS];
 			co: CONVERT_FEAT_LIST_AS;
 			f: EIFFEL_LIST [FEATURE_CLAUSE_AS];
@@ -89,7 +91,7 @@ feature -- Access
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
 				create Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, top_ind,
-				bottom_ind, g, p, c, co, f, inv, s, o, ed)
+				bottom_ind, g, cp, ncp, c, co, f, inv, s, o, ed)
 
 					-- Check for Concurrent Eiffel which is not yet supported
 				if Result.is_separate then
@@ -342,6 +344,21 @@ feature {NONE} -- Validation
 					is_valid_integer_real := False
 					a_psr.report_invalid_type_for_real_error (a_type, buffer)
 				end
+			end
+		end
+
+	validate_non_conforming_inheritance_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS)
+			-- Validate `a_type' for non-conforming inheritance.
+		local
+			l_none_type_as: NONE_TYPE_AS
+			l_syntax_error: SYNTAX_ERROR
+		do
+				-- Make sure that `a_type' is of type NONE_TYPE_AS.
+			l_none_type_as ?= a_type
+			if l_none_type_as = Void then
+					-- Raise error.
+				create l_syntax_error.make (a_psr.line, a_psr.column, a_psr.filename, "Use 'inherit {NONE}' to specify non-conforming inheritance", False)
+				a_psr.report_one_error (l_syntax_error)
 			end
 		end
 

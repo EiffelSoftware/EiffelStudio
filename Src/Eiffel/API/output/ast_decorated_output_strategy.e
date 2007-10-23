@@ -2767,7 +2767,8 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.process_filter_item (f_obsolete, False)
 				text_formatter_decorator.put_new_line
 			end
-			if text_formatter_decorator.is_clickable_format and l_as.parents /= Void then
+				-- Process conforming inheritance.
+			if text_formatter_decorator.is_clickable_format and l_as.conforming_parents /= Void then
 				text_formatter_decorator.put_new_line
 				text_formatter_decorator.process_filter_item (f_inheritance, True)
 				text_formatter_decorator.set_without_tabs
@@ -2777,13 +2778,36 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.set_new_line_between_tokens
 				text_formatter_decorator.set_separator (ti_new_line)
 				processing_parents := True
-				l_as.parents.process (Current)
+				l_as.conforming_parents.process (Current)
 				processing_parents := False
 				text_formatter_decorator.process_filter_item (f_inheritance, False)
 				text_formatter_decorator.put_new_line
 				text_formatter_decorator.exdent
 			end
 			text_formatter_decorator.put_new_line
+
+				-- Process non-conforming inheritance.
+			if text_formatter_decorator.is_clickable_format and l_as.non_conforming_parents /= Void then
+				text_formatter_decorator.process_filter_item (f_inheritance, True)
+				text_formatter_decorator.set_without_tabs
+				text_formatter_decorator.process_keyword_text (ti_inherit_keyword, Void)
+				text_formatter_decorator.process_basic_text (ti_space)
+				text_formatter_decorator.process_basic_text (ti_l_curly)
+				text_formatter_decorator.process_basic_text (ti_none_class)
+				text_formatter_decorator.process_basic_text (ti_r_curly)
+				text_formatter_decorator.indent
+				text_formatter_decorator.put_new_line
+				text_formatter_decorator.set_new_line_between_tokens
+				text_formatter_decorator.set_separator (ti_new_line)
+				processing_parents := True
+				l_as.non_conforming_parents.process (Current)
+				processing_parents := False
+				text_formatter_decorator.process_filter_item (f_inheritance, False)
+				text_formatter_decorator.put_new_line
+				text_formatter_decorator.exdent
+			end
+			text_formatter_decorator.put_new_line
+
 			l_creators := l_as.creators
 			if l_creators = Void and then not l_as.is_deferred and then current_class.has_feature_table then
 				l_feat := current_class.default_create_feature

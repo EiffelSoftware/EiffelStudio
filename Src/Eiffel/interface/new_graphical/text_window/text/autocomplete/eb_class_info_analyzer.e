@@ -440,6 +440,7 @@ feature {NONE} -- Implementation (`type_from')
 			feat: E_FEATURE
 			l_current_class_c: CLASS_C
 			l_precursor_from: TYPE_A
+			l_current_class_c_parents: FIXED_LIST [CL_TYPE_A]
 		do
 			from
 				last_constraints := Void
@@ -526,13 +527,14 @@ feature {NONE} -- Implementation (`type_from')
 							end
 						else
 							go_to_previous_token
-							if current_feature_as /= Void and then l_current_class_c.parents /= Void then
+							l_current_class_c_parents := l_current_class_c.parents
+							if current_feature_as /= Void and then l_current_class_c_parents /= Void then
 								from
-									l_current_class_c.parents.start
+									l_current_class_c_parents.start
 								until
-									feat /= Void or else l_current_class_c.parents.after
+									feat /= Void or else l_current_class_c_parents.after
 								loop
-									l_precursor_from := l_current_class_c.parents.item
+									l_precursor_from := l_current_class_c_parents.item
 									check
 										type_as_associated_class: type.has_associated_class
 									end
@@ -540,7 +542,7 @@ feature {NONE} -- Implementation (`type_from')
 										feat := l_precursor_from.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
 										written_class := l_precursor_from.associated_class
 									end
-									l_current_class_c.parents.forth
+									l_current_class_c_parents.forth
 								end
 							end
 						end

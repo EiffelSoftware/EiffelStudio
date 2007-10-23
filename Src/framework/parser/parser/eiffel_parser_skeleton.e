@@ -413,6 +413,12 @@ feature {NONE} -- Implementation
 	has_convert_mark: BOOLEAN
 			-- Boolean mark for alias names with convert mark
 
+	conforming_inheritance_flag: BOOLEAN
+			-- Flag for declaring when conforming inheritance has been added.
+
+	non_conforming_inheritance_flag: BOOLEAN
+			-- Flag for declaring when non conforming inheritance has been added.
+
 	has_type: BOOLEAN
 			-- Is expression undoubtly typed?
 
@@ -558,13 +564,14 @@ feature {NONE} -- Actions
 	new_class_description (n: ID_AS; n2: STRING_AS;
 		is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
 		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
-		p: PARENT_LIST_AS; c: EIFFEL_LIST [CREATE_AS]; co: CONVERT_FEAT_LIST_AS;
+		a_parent_list_1: PARENT_LIST_AS; a_parent_list_2: PARENT_LIST_AS; c: EIFFEL_LIST [CREATE_AS]; co: CONVERT_FEAT_LIST_AS;
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
 		s: SUPPLIERS_AS; o: STRING_AS; ed: KEYWORD_AS): CLASS_AS is
 			-- New CLASS AST node;
 			-- Update the clickable list.
 		local
 			ext_name: STRING_AS
+			l_conforming_parents, l_non_conforming_parents: PARENT_LIST_AS
 		do
 			if n2 /= Void then
 				if not il_parser then
@@ -574,8 +581,18 @@ feature {NONE} -- Actions
 					ext_name := n2
 				end
 			end
+
+			if non_conforming_inheritance_flag and then a_parent_list_2 = Void then
+					-- No conforming inheritance has been specified, so `a_parent_list_1' is non-conforming
+				l_conforming_parents := Void
+				l_non_conforming_parents := a_parent_list_1
+			else
+				l_conforming_parents := a_parent_list_1
+				l_non_conforming_parents := a_parent_list_2
+			end
+
 			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, first_ind,
-				last_ind, g, p, c, co, f, inv, s, o, ed)
+				last_ind, g, l_conforming_parents, l_non_conforming_parents, c, co, f, inv, s, o, ed)
 		end
 
 feature {NONE} -- ID factory

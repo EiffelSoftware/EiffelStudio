@@ -1422,7 +1422,9 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 		/* Perform marking */
 	root_obj = MARK_SWITCH(&root_obj);	/* Primary root */
 #ifdef WORKBENCH
-	rt_extension_obj = MARK_SWITCH(&rt_extension_obj);	/* Primary root */
+	if (rt_extension_obj) {
+		rt_extension_obj = MARK_SWITCH(&rt_extension_obj);	/* Primary root */
+	}
 #endif
 
 		/* Deal with once manifest strings. */

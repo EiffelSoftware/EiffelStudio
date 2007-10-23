@@ -5,6 +5,7 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	application.e $CLUSTER application.e
 
 compile_melted
+compile_result 	ok
 c_compile_work
 execute_work	NONE exec_output
 execute_result ok
@@ -20,6 +21,7 @@ compare		exec_output1 output
 
 cleanup_compile
 compile_final_keep
+compile_result 	ok
 c_compile_final
 execute_final	NONE exec_output2
 execute_result ok

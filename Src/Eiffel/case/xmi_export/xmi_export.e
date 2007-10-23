@@ -326,13 +326,15 @@ feature {NONE} -- Implementation
 			new_xmi_generalization: XMI_GENERALIZATION
 			new_xmi_generalization_presentation: XMI_GENERALIZATION_PRESENTATION
 			current_diagram: XMI_DIAGRAM
+			l_parents: FIXED_LIST [CL_TYPE_A]
 		do
 			from
-				c.parents.start
+				l_parents := c.parents
+				l_parents.start
 			until
-				c.parents.after
+				l_parents.after
 			loop
-				current_parent := c.parents.item.associated_class
+				current_parent := l_parents.item.associated_class
 				if is_in_selection (current_parent) then
 					new_xmi_class := xmi_class_by_class_c (c)
 					new_xmi_parent_class := xmi_class_by_class_c (current_parent)
@@ -346,7 +348,7 @@ feature {NONE} -- Implementation
 						current_diagram.add_presentation (new_xmi_generalization_presentation)
 					end
 				end
-				c.parents.forth
+				l_parents.forth
 			end
 		end
 

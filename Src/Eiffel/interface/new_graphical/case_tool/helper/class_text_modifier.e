@@ -322,7 +322,7 @@ feature -- Modification (Add/Remove feature)
 					remove_code (p.start_position, p.end_position)
 					reparse
 					if valid_syntax then
-						if class_as.parents = Void or else class_as.parents.is_empty then
+						if class_as.conforming_parents = Void or else class_as.conforming_parents.is_empty then
 							remove_code (
 								position_before_inherit,
 								class_as.inherit_clause_insert_position - 1)
@@ -353,7 +353,7 @@ feature -- Modification (Add/Remove feature)
 			prepare_for_modification
 			if valid_syntax then
 				insertion_position := class_as.inherit_clause_insert_position
-				if class_as.parents = Void then
+				if class_as.conforming_parents = Void then
 					insert_code ("inherit%N")
 				end
 				insert_code ("%T" + a_name + "%N%N")

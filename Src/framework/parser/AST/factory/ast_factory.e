@@ -293,23 +293,25 @@ feature -- Value AST creation
 				l_integer := new_integer_value (a_psr, '+', Void, l_code, Void)
 				enable_match_list_extension
 				resume_match_list_count
-				if l_integer.natural_64_value <= {NATURAL_8}.Max_value then
-					if a_type = Void then
-						Result := new_character_as (l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
+				if l_integer /= Void then
+					if l_integer.natural_64_value <= {NATURAL_8}.Max_value then
+						if a_type = Void then
+							Result := new_character_as (l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
+						else
+							Result := new_typed_char_as (a_type, l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
+						end
+					elseif l_integer.natural_64_value <= {NATURAL_32}.Max_value then
+						if a_type = Void then
+							Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
+						else
+							Result := new_typed_char_as (a_type, l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
+						end
 					else
-						Result := new_typed_char_as (a_type, l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
-					end
-				elseif l_integer.natural_64_value <= {NATURAL_32}.Max_value then
-					if a_type = Void then
-						Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
-					else
-						Result := new_typed_char_as (a_type, l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
-					end
-				else
-					a_psr.report_character_code_too_large_error (l_code)
+						a_psr.report_character_code_too_large_error (l_code)
 
-						-- Dummy code (for error recovery) follows:
-					Result := new_character_as ('a', 0, 0, 0, 0, "")
+							-- Dummy code (for error recovery) follows:
+						Result := new_character_as ('a', 0, 0, 0, 0, "")
+					end
 				end
 			end
 		end

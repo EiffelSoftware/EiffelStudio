@@ -48,7 +48,7 @@ feature {NONE} -- Output constants
 
 	Finished_prefix: STRING is "System Recompiled";
 
-	Panic_string: STRING is "panic";
+	Panic_string: STRING is " panic";
 
 indexing
 	copyright: "[

@@ -147,6 +147,28 @@ feature -- Access
 			--   C compiler (e.g., CL does not support strings longer than 0xFFFF bytes)
 			--   CLI specification (e.g., identifiers cannot be longer 0x1FFFFFFF bytes)
 
+feature -- Convenience
+
+	token_line (a_node: AST_EIFFEL): like line is
+			-- Line of `a_node' if not Void, `line' otherwise.
+		do
+			if a_node /= Void then
+				Result := a_node.start_location.line
+			else
+				Result := line
+			end
+		end
+
+	token_column (a_node: AST_EIFFEL): like column is
+			-- Line of `a_node' if not Void, `column' otherwise.
+		do
+			if a_node /= Void then
+				Result := a_node.start_location.column
+			else
+				Result := column
+			end
+		end
+
 feature -- Osolete
 
 	error_code: INTEGER is 0

@@ -16,7 +16,12 @@ indexing
 	Unix domain specifics
 */
 
+#ifdef __VMS	/* resolve module name clash with .../C/run-time/local.c */
+#pragma module NET_LOCAL
+#endif /* __VMS */
+
 #include "eif_config.h"
+#include "eif_portable.h"	/* required for VMS, recommended for all */ 
 
 #if defined EIF_VMS || defined VXWORKS
     /* This module just won't compile under those platforms; give it up now. */

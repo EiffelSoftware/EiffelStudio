@@ -20,10 +20,6 @@ indexing
 #ifndef _netvmsdef_h_
 #define _netvmsdef_h_
 
-/* These should already have been done, but just for insurance... */
-#include "eif_config.h"
-#include "eif_portable.h"
-
 #ifdef EIF_VMS	    /* controls the rest of this file... */
 
 /* #define _SOCKADDR_LEN   /* if defined, forces BSD4.4 enhanced socket functionality */
@@ -31,28 +27,28 @@ indexing
 /* #define VMS_MULTINET 1	/* if set, force use of Multinet */
 /* #define _DECC_V4_SOURCE    /* if set, forces old definitions */
 
-/* # include <types.h> */
-/* # include <time.h> */
 #include <unistd.h>
 #include <fcntl.h>
-# ifndef O_NONBLOCK	
-   /* omission in fcntl.h for DECC V5.2 (__DECC_VER == 50290003) on VMS < 70000000 */
-#  define O_NONBLOCK  0100000
-# endif /* O_NONBLOCK */
-# if __VMS_VER < 70000000
+#include <tcp.h>	/* TCP_NODELAY, et. al. */
+
+#ifndef O_NONBLOCK	/* omission in fcntl.h for DECC V5.2 (__DECC_VER == 50290003) on VMS < 70000000 */
+#define O_NONBLOCK  0100000
+#endif /* O_NONBLOCK */
+
+#if __VMS_VER < 70000000
     /* ditto for unistd.h when __VMS_VER < 70000000 */
     int unlink(const char *__path);
-# endif /* __VMS_VER < 7.0 */
+#endif /* __VMS_VER < 7.0 */
 
-# if defined(VMS_MULTINET)
-#  define NET_RETLEN_TYPE size_t
-#  include <multinet_root:[multinet.include.sys]types.h>
-#  include <multinet_root:[multinet.include.sys]socket.h>
-#  include <multinet_root:[multinet.include]netdb.h>
-#  include <multinet_root:[multinet.include.netinet]in.h>
-#  include <multinet_root:[multinet.include.sys]ioctl.h>
-#  define ioctl socket_ioctl
-#  ifdef MULTINET_OLD /* and hence need prototypes for these functions: */
+#if defined(VMS_MULTINET)
+# define NET_RETLEN_TYPE size_t
+# include <multinet_root:[multinet.include.sys]types.h>
+# include <multinet_root:[multinet.include.sys]socket.h>
+# include <multinet_root:[multinet.include]netdb.h>
+# include <multinet_root:[multinet.include.netinet]in.h>
+# include <multinet_root:[multinet.include.sys]ioctl.h>
+# define ioctl socket_ioctl
+# ifdef MULTINET_OLD /* and hence need prototypes for these functions: */
     /* Multinet V3.4 socket.h et.al. dont define prototypes for these. */
     typedef unsigned long __in_addr_t;
     typedef unsigned short __in_port_t;
@@ -82,32 +78,33 @@ indexing
     __in_addr_t inet_lnaof(struct in_addr __in);
     __in_addr_t inet_netof(struct in_addr __in);
 
-#  else	/* (not MULTINET_OLD)
+# else	/* (not MULTINET_OLD) */
 	/* Most multinet socket functions are now prototyped. These are	*/
 	/* still unprototyped/undefined as of Multinet V4.0A		*/
 	int inet_addr(const char *__cp);
 	char *inet_ntoa(struct in_addr __in); 
-#  endif /* multinet_old (no prototypes) */
-# elif defined(__DECC_VER)  /* (not VMS_MULTINET) and hence >= v5.0 */
-#  define NET_RETLEN_TYPE size_t
-#  include <types.h>
-/*  # include <time.h> */
-#  include <socket.h>
-#  include <netdb.h>
-#  include <in.h>
-#  include <ioctl.h>
-#  include <inet.h>
-/* #  include <netinet.h> */
-#   if !defined __VMS_VER || __VMS_VER < 70000000 /* and no ioctl is available... */
-#   define ioctl my_ioctl
+# endif /* multinet_old (no prototypes) */
+#elif defined(__DECC_VER)  /* (not VMS_MULTINET) and hence >= v5.0 */
+# define NET_RETLEN_TYPE size_t
+# include <types.h>
+/* #include <time.h> */
+# include <socket.h>
+# include <netdb.h>
+# include <in.h>
+# include <ioctl.h>
+# include <inet.h>
+/* # include <netinet.h> */
+#  if !defined __VMS_VER || __VMS_VER < 70000000 /* and no ioctl is available... */
+#  define ioctl my_ioctl
     int ioctl(int __sd, int __r, void * __argp);
-#   endif
-# else
+#  endif
+#else
 	/* neither VMS_MULTINET nor __DECC_VER defined. What to do? */
 	Configuration error in __FILE__ - not MULTINET, old DECC
-#  define NET_RETLEN_TYPE size_t
-# endif /* VMS_MULTINET || __DECC_VER( > 5.x) */
+# define NET_RETLEN_TYPE size_t
+#endif /* VMS_MULTINET || __DECC_VER( > 5.x) */
 typedef NET_RETLEN_TYPE net_retlen_t;
+
 
 #endif  /* EIF_VMS */
 #endif  /* _netvmsdef_h_ */

@@ -75,11 +75,15 @@ feature -- Access
 	config_class: CONF_CLASS is
 			-- Configuration class.
 		deferred
+		ensure
+			config_class_not_void: Result /= Void
 		end
 
 	actual_class: CLASS_I is
 			-- Return the actual class (takes overriding into account).
 		deferred
+		ensure
+			actual_class_not_void: Result /= Void
 		end
 
 	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]] is

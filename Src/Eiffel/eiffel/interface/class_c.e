@@ -1241,11 +1241,15 @@ feature -- Parent checking
 					end
 				end
 			elseif not (class_id = l_any_id) then
-					-- No parents are syntactiaclly specified: ANY is
+					-- No parents are syntactically specified: ANY is
 					-- the default parent for Eiffel classes.
 				create conforming_parents_classes.make (1)
 				create computed_parents.make (1)
 				create conforming_parents.make (1)
+
+					-- Wipe out any previous non-conforming parents as they are no longer valid.
+				non_conforming_parents := Void
+				non_conforming_parents_classes := Void
 
 					-- Add a descendant to class ANY
 				System.any_class.compiled_class.add_descendant (Current)
@@ -1261,6 +1265,10 @@ feature -- Parent checking
 				create conforming_parents_classes.make (0)
 				create conforming_parents.make (0)
 				create computed_parents.make (0)
+
+					-- Wipe out any previous non-conforming parents as they are no longer valid.
+				non_conforming_parents := Void
+				non_conforming_parents_classes := Void
 			end
 
 			if a_old_class_info /= Void then

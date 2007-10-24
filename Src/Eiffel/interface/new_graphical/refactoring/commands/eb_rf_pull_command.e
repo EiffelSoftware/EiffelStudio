@@ -111,7 +111,9 @@ feature -- Events
 			feature_i: FEATURE_I
 			rf: ERF_FEATURE_PULL
 		do
-			feature_i := fs.class_i.compiled_class.feature_of_feature_id (fs.e_feature.feature_id)
+			if fs.e_class /= Void then
+				feature_i := fs.e_class.feature_of_feature_id (fs.e_feature.feature_id)
+			end
 			if feature_i /= Void and then fs.e_feature.associated_class.class_id = feature_i.written_in then
 				rf := manager.feature_pull_refactoring
 				rf.set_feature (feature_i)

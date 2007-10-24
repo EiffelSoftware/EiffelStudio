@@ -411,10 +411,9 @@ Index_clause_impl: Identifier_as_lower TE_COLON Index_terms ASemi
 	|	Index_terms ASemi
 			{
 				$$ := ast_factory.new_index_as (Void, $1, Void)
-				if has_syntax_warning and $1 /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($1.start_location.line,
-						$1.start_location.column, filename,
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Missing `Index' part of `Index_clause'."))
 				end
 			}
@@ -899,7 +898,7 @@ Inheritance: -- Empty
 						-- Conforming inheritance
 					if has_syntax_warning then
 						Error_handler.insert_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
+							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 							once "Use `inherit ANY' or do not specify an empty inherit clause"))
 					end
 					$$ := ast_factory.new_eiffel_list_parent_as (0)
@@ -909,9 +908,9 @@ Inheritance: -- Empty
 				else
 						-- Raise error as conforming inheritance has already been specified
 					if non_conforming_inheritance_flag then
-						report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Conforming inheritance clause must come before non conforming inheritance clause", False))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Conforming inheritance clause must come before non conforming inheritance clause", False))
 					else
-						report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Only one conforming inheritance clause allowed per class", False))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one conforming inheritance clause allowed per class", False))
 					end
 				end
 			}
@@ -926,9 +925,9 @@ Inheritance: -- Empty
 				else
 						-- Raise error as conforming inheritance has already been specified
 					if non_conforming_inheritance_flag then
-						report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Conforming inheritance clause must come before non conforming inheritance clause", False))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Conforming inheritance clause must come before non conforming inheritance clause", False))
 					else
-						report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Only one conforming inheritance clause allowed per class", False))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one conforming inheritance clause allowed per class", False))
 					end
 				end
 			}
@@ -942,7 +941,7 @@ Inheritance: -- Empty
 					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type ($3, Void, Void))
 				else
 						-- Raise error as non conforming inheritance has already been specified
-					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Only one non-conforming inheritance clause allowed per class", False))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one non-conforming inheritance clause allowed per class", False))
 				end
 			}
 		Add_counter Parent_list Remove_counter
@@ -1012,25 +1011,13 @@ Rename: TE_RENAME
 			{
 				$$ := ast_factory.new_rename_clause_as (Void, $1)
 				if is_constraint_renaming then
-					if $1 /= Void then
-						report_one_error (
-							create {SYNTAX_ERROR}.make ($1.line, $1.column, filename,
-							"Empty rename clause.", False))
-					else
-						report_one_error (
-							create {SYNTAX_ERROR}.make (line, column, filename,
-							"Empty rename clause.", False))
-					end
+					report_one_error (
+						create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+						"Empty rename clause.", False))
 				else
-					if $1 /= Void then
-						error_handler.insert_warning (
-								create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
-								"Remove empty rename clauses."))
-					else
-						error_handler.insert_warning (
-								create {SYNTAX_WARNING}.make (line, column, filename,
-								"Remove empty rename clauses."))
-					end
+					error_handler.insert_warning (
+							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+							"Remove empty rename clauses."))
 				end
 			}
 	|	TE_RENAME Add_counter Rename_list Remove_counter
@@ -1396,7 +1383,8 @@ Instruction_impl: Creation
 					-- Call production should be used instead,
 					-- but this complicates the grammar.
 				if has_type then
-					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
+						filename, "Expression cannot be used as an instruction", False))
 				elseif $1 /= Void then
 					$$ := new_call_instruction_from_expression ($1)
 				end
@@ -1541,9 +1529,9 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{
 				$$ := $2
 				ast_factory.set_expanded_class_type ($$, True, $1)
-				if has_syntax_warning and $1 /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Make an expanded version of the base class associated with this type."))
 				end
 			}
@@ -1891,11 +1879,11 @@ Constraint_type:
 			{ $$ := $1 }
 	|	TE_LIKE Identifier_as_lower
 			{
-				report_one_error (ast_factory.new_vtgc1_error (line, column, filename, $2, Void))
+				report_one_error (ast_factory.new_vtgc1_error (token_line ($1), token_column ($1), filename, $2, Void))
 			}
 	|	TE_LIKE TE_CURRENT
 			{
-				report_one_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
+				report_one_error (ast_factory.new_vtgc1_error (token_line ($1), token_column ($1), filename, Void, $2))
 			}
 	;
 
@@ -1926,9 +1914,6 @@ Multiple_constraint_list:	Single_constraint
 					$$.reverse_extend ($1)
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
-
-			--	report_one_error (ast_factory.new_vtgc1_error (line, column, filename, Void, $2))
-
 			}
 	;
 
@@ -2232,27 +2217,27 @@ Creation_clause:
 	|	TE_CREATION
 			{
 				$$ := ast_factory.new_create_as (Void, Void, $1)
-				if has_syntax_warning and $1 /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Use keyword `create' instead."))
 				end
 			}
 	|	TE_CREATION Clients Feature_list
 			{
 				$$ := ast_factory.new_create_as ($2, $3, $1)
-				if has_syntax_warning and $1 /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Use keyword `create' instead."))
 				end
 			}
 	|	TE_CREATION Client_list
 			{
 				$$ := ast_factory.new_create_as (ast_factory.new_client_as ($2), Void, $1)
-				if has_syntax_warning and $1 /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Use keyword `create' instead."))
 				end
 			}
@@ -2295,10 +2280,10 @@ Agent_call:
 		{
 			if $1 /= Void then
 				$$ := $1.first
-				if has_syntax_warning and $1.second /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($1.second.line,
-						$1.second.column, filename, once "Use keyword `agent' instead."))
+						create {SYNTAX_WARNING}.make (token_line ($1.first), token_column ($1.first),
+						filename, once "Use keyword `agent' instead."))
 				end
 			end
 		}
@@ -2441,19 +2426,19 @@ Delayed_actual: TE_QUESTION
 Creation: TE_BANG TE_BANG Creation_target Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_as (Void, $3, $4, $1, $2)
-				if has_syntax_warning and $3 /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($3.start_location.line,
-						$3.start_location.column, filename, "Use keyword `create' instead."))
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
+						filename, "Use keyword `create' instead."))
 				end
 			}
 	|	TE_BANG Attached_type TE_BANG Creation_target Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_as ($2, $4, $5, $1, $3)
-				if has_syntax_warning and $4 /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($4.start_location.line,
-						$4.start_location.column, filename, "Use keyword `create' instead."))
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
+						filename, "Use keyword `create' instead."))
 				end
 			}
 	|	TE_CREATE Creation_target Creation_call
@@ -2467,10 +2452,10 @@ Creation_expression: TE_CREATE Typed Creation_call
 	|	TE_BANG Attached_type TE_BANG Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_expr_as ($2, $4, $1, $3)
-				if has_syntax_warning and $2 /= Void then
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($2.start_location.line,
-						$2.start_location.column, filename, "Use keyword `create' instead."))
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
+						filename, "Use keyword `create' instead."))
 				end
 			}
 	;
@@ -2691,15 +2676,10 @@ Old_a_static_call:
 		TE_FEATURE Typed TE_DOT Identifier_as_lower Parameters
 			{
 				$$ := ast_factory.new_static_access_as ($2, $4, $5, $1, $3);
-				if has_syntax_warning and ($1 /= Void or $2 /= Void) then
-					if $1 /= Void then
-						ast_location := $1.start_location
-					else
-						ast_location := $2.start_location
-					end
+				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (ast_location.line,
-							ast_location.column, filename, once "Remove the `feature' keyword."))
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
+							filename, once "Remove the `feature' keyword."))
 				end
 			}
 	;
@@ -2817,7 +2797,7 @@ Class_identifier: TE_ID
 				process_id_as_with_existing_stub (last_keyword_as_id_index)
 				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
 
@@ -2848,7 +2828,7 @@ Identifier_as_lower: TE_ID
 				process_id_as_with_existing_stub (last_keyword_as_id_index)
 				if has_syntax_warning then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
 				if last_id_as_value /= Void then

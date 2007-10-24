@@ -475,7 +475,7 @@ feature -- Status setting
 			-- Show tool
 		do
 			Precursor {EB_STONABLE_TOOL}
-			if stack_grid.is_sensitive then
+			if stack_grid.is_displayed and then stack_grid.is_sensitive then
 				stack_grid.set_focus
 			end
 		end

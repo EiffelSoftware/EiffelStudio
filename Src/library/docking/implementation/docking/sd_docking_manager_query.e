@@ -341,6 +341,32 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
+	is_floating (a_content: SD_CONTENT): BOOLEAN is
+			-- If `a_content' floating?
+		require
+			not_void: a_content /= Void
+		local
+			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
+			l_zone: SD_ZONE
+			l_container: SD_MULTI_DOCK_AREA
+		do
+			l_zone := a_content.state.zone
+			if l_zone /= Void then
+				from
+					l_floating_zones := floating_zones
+					l_floating_zones.start
+				until
+					l_floating_zones.after or Result
+				loop
+					l_container := l_floating_zones.item.inner_container
+					if l_container /= Void then
+						Result := l_container.has_recursive (l_zone)
+					end
+					l_floating_zones.forth
+				end
+			end
+		end
+
 	is_title_unique (a_title: STRING_GENERAL): BOOLEAN is
 			-- If `a_title' unique in all contents unique_title?
 		local

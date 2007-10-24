@@ -133,6 +133,15 @@ feature -- Access
 	is_visible: BOOLEAN
 			-- If Current visible?
 
+	is_floating: BOOLEAN
+			-- If Current floating?
+			-- Note: Maybe Current not visible but floating.
+		do
+			if docking_manager /= Void then
+				Result := docking_manager.query.is_floating (Current)
+			end
+		end
+
 	has_focus: BOOLEAN is
 			-- If Current content has focus?
 		do
@@ -597,7 +606,8 @@ feature -- States report
 
 feature {SD_STATE, SD_HOT_ZONE, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR, SD_ZONE,
 		 SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR, SD_TAB_STUB, SD_DOCKING_MANAGER_AGENTS,
-		 SD_DOCKING_MANAGER_COMMAND, SD_ZONE_NAVIGATION_DIALOG, SD_TAB_STATE_ASSISTANT} -- State
+		 SD_DOCKING_MANAGER_COMMAND, SD_ZONE_NAVIGATION_DIALOG, SD_TAB_STATE_ASSISTANT,
+		  SD_DOCKING_MANAGER_QUERY} -- State
 
 	state: like internal_state is
 			-- Current state

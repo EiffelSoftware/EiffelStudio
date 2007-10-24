@@ -41,17 +41,17 @@
 
 #ifdef EIF_VMS		/* VMS platform specific definitions; must precede any system or library includes */
 #define __NEW_STARLET		/* define prototypes for VMS system (sys$) and library (lib$) functions */
-#define _POSIX_EXIT		/* uses POSIX-1 semantics for exit() */
-//#define _POSIX_C_SOURCE 2
-//#define _XOPEN_SOURCE
-//#define _XOPEN_SOURCE_EXTENDED
+#define _POSIX_EXIT		/* use POSIX-1 semantics for exit() */
+//#define _POSIX_C_SOURCE 2 
+//#define _XOPEN_SOURCE 
+//#define _XOPEN_SOURCE_EXTENDED 
 //#define _LARGEFILE		/* enable use of 64-bit file offsets */
 #define USE_VMS_JACKETS 1	/* force use of VMS Porting Library, aka "The Jackets" */
 #ifdef USE_VMS_JACKETS  	/* if using VMS Porting Library ("The Jackets") */
 #define GENERIC_MOTIF_REDEFINES
 //#define GENERIC_PTHREAD_REDEFINES
 #include <vms_jackets.h>	/* VMS Porting Library jackets */
-#undef fork
+#undef fork /* remove VMS_JACKETS #define fork vfork */
 #endif /* USE_VMS_JACKETS */
 #define fork eifrt_vms_fork_jacket
 
@@ -124,17 +124,34 @@ typedef unsigned int		uintptr_t;
 #endif
 
 #elif defined(EIF_SOLARIS)
-#elif defined(EIF_VMS)
-#include <inttypes.h>
+
 #elif defined(VXWORKS)
 typedef int intptr_t;
 typedef unsigned int uintptr_t;
+
+#elif defined(EIF_VMS)
+#include <inttypes.h>
+#if defined(__ALPHA) /* VMSAlpha may be 32 or 64 bit */
+#if __INITIAL_POINTER_SIZE > 32
+typedef	int64_t	 rt_int_ptr;
+typedef uint64_t rt_uint_ptr;
 #else
+typedef int32_t  rt_int_ptr;
+typedef uint32_t rt_uint_ptr;
+#endif
+#else /* VMSVAX always 32 bit; VMSIA64 always 64 bit? */
+typedef intptr_t    rt_int_ptr;
+typedef uintptr_t   rt_uint_ptr;
+#endif
+#else
+
 #include <stdint.h>
 #endif
 
+#if !defined(EIF_VMS)
 typedef intptr_t	rt_int_ptr;
 typedef uintptr_t	rt_uint_ptr;
+#endif
 
 /*
  * Integer 32 bit constants
@@ -291,4 +308,4 @@ typedef uint32 ONCE_INDEX;
 }
 #endif
 
-#endif
+#endif /* _portable_h_ */

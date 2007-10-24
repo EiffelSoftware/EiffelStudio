@@ -18,6 +18,7 @@ indexing
 
 
 #include "eif_config.h"
+#include "eif_portable.h"	/* required for VMS, recommended for all */
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -59,7 +60,11 @@ indexing
 #define EREMOTE                 WSAEREMOTE
 #endif
 
+#ifdef EIF_VMS
+#include "netvmsdef.h"
+#else
 #include <sys/types.h>
+#endif
 
 #ifdef VXWORKS
 #include <types/vxTypesOld.h>

@@ -372,13 +372,17 @@ feature -- Load/Save file
 	load_text is
 			-- Load the text.
 		do
-			text := class_i.text
+				-- We use `actual_class' because we want the class on which the user
+				-- is working on, not the one that he is overridding.
+			text := class_i.actual_class.text
 		end
 
 	save_text is
 			-- Save the text.
 		do
-			save (class_i.file_name, text)
+				-- We use `actual_class' because we want the class on which the user
+				-- is working on, not the one that he is overridding.
+			save (class_i.actual_class.file_name, text)
 		end
 
 	discard_text is

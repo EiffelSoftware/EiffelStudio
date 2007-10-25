@@ -13,6 +13,8 @@ feature -- Basic operations
 
 	eif_id_object (an_id: INTEGER): ANY is
 			-- Object associated with `an_id'
+		require
+			an_id_non_negative: an_id >= 0
 		local
 			l_success: BOOLEAN
 			wr: WEAK_REFERENCE
@@ -40,6 +42,8 @@ feature -- Basic operations
 
 	eif_object_id_free (an_id: INTEGER) is
 			-- Free the entry `an_id'
+		require
+			an_id_non_negative: an_id >= 0
 		local
 			l_success: BOOLEAN
 		do

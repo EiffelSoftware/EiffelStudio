@@ -20,10 +20,17 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create, is_equal, copy
 		end
+
+	EB_SHARED_WINDOW_MANAGER
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make_with_window
 
@@ -48,6 +55,11 @@ feature {NONE} -- Initialization
 				--| Recompile backups
 			create menu_item.make_with_text_and_action ("Replay Backup", agent launch_replay_backup_tool)
 			extend (menu_item)
+
+				--| Recenter all floating tools
+			create menu_item.make_with_text_and_action ("Center Floating tools", agent center_floating_tools)
+			extend (menu_item)
+
 		end
 
 feature {NONE} -- Actions
@@ -120,6 +132,39 @@ feature {NONE} -- Actions
 			-- Launch tool that enables us to replay precisely a backup.
 		do
 			replay_window.window.raise
+		end
+
+feature -- center floating tools
+
+	center_floating_tools is
+		local
+			dw: EB_DEVELOPMENT_WINDOW
+			lst: LIST [SD_CONTENT]
+
+			c: SD_CONTENT
+			wx,wy,ww,wh: INTEGER
+		do
+			dw := window_manager.last_focused_development_window
+			if dw /= Void then
+				lst := dw.docking_manager.contents
+				if lst /= Void then
+					wx := dw.window.x_position
+					wy := dw.window.y_position
+					ww := dw.window.width
+					wh := dw.window.height
+					from
+						lst.start
+					until
+						lst.after
+					loop
+						c := lst.item_for_iteration
+						if c /= Void and then c.is_visible and then c.is_floating then
+							c.set_floating (wx + ww // 3, wy + wh // 3)
+						end
+						lst.forth
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

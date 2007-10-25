@@ -683,7 +683,7 @@ feature -- tools management
 				l_wt_lst := watch_tool_list
 
 					-- Do not display shortcut if any watch tool exists.
-				if not l_wt_lst.is_empty then
+				if l_wt_lst /= Void and then not l_wt_lst.is_empty then
 					create_and_show_watch_tool_command.set_referred_shortcut (Void)
 				else
 					create_and_show_watch_tool_command.set_referred_shortcut (show_watch_tool_preference)
@@ -692,7 +692,7 @@ feature -- tools management
 				m.extend (mi)
 				w.add_recyclable (mi)
 
-				if not l_wt_lst.is_empty then
+				if l_wt_lst /= Void and then not l_wt_lst.is_empty then
 					m.extend (create {EV_MENU_SEPARATOR})
 					from
 						l_wt_lst.start

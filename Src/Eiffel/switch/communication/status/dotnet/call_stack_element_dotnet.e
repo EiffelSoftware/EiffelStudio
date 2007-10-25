@@ -548,9 +548,6 @@ feature {NONE} -- Implementation
 								if l_dotnet_ref_value.object_value /= Void then
 									private_result := l_dotnet_ref_value.once_function_value (rout)
 									l_dotnet_ref_value.release_object_value
-									if private_result /= Void then
-										private_result.set_name ("Result")
-									end
 								end
 							end
 						else -- not once
@@ -559,46 +556,48 @@ feature {NONE} -- Implementation
 								l_list.start
 								private_result := l_list.first
 								l_list.remove
-								private_result.set_name ("Result")
 							end
 						end
 						if private_result /= Void then
+							private_result.set_name (once "Result")
 							if rout.type.has_associated_class then
 								private_result.set_static_class (rout.type.associated_class)
 							end
 						end
 					end
+					--| now the result value has been removed
+					--| let's get the real Local variables
 
 					--| LOCAL |--
 					if l_list /= Void and then not l_list.is_empty then
-						--| now the result value has been removed
-						--| let's get the real Local variables
+						l_old_group := inst_context.group
+						Inst_context.set_group (rout.associated_class.group)
+
+						l_old_class := System.current_class
+						System.set_current_class (dynamic_class)
+
+						rout_i := routine_i
+						l_wc := rout_i.written_class
+						l_names_heap := Names_heap
+
+						l_count := l_list.count
+						l_index := 0
+						l_list.start
 						counter := 1
+
+						create locals_list.make (l_count)
+
 						local_decl_grps := local_decl_grps_from (rout)
 						if local_decl_grps /= Void then
-							l_old_group := inst_context.group
-							Inst_context.set_group (rout.associated_class.group)
-
-							l_old_class := System.current_class
-							System.set_current_class (dynamic_class)
-
-							rout_i := routine_i
-							l_wc := rout_i.written_class
-
-							l_count := l_list.count
-							create locals_list.make (l_count)
 							from
-								l_index := 0
 								local_decl_grps.start
-								l_names_heap := Names_heap
-								l_list.start
 							until
-								local_decl_grps.after
-								or l_index > l_count
+								local_decl_grps.after or
+								l_index > l_count
 							loop
 								id_list := local_decl_grps.item.id_list
 								if not id_list.is_empty then
-									l_stat_class := static_class_for_local (local_decl_grps.item, rout_i, l_wc)
+									l_stat_class := static_class_for_local (local_decl_grps.item.type, rout_i, l_wc)
 									from
 										id_list.start
 									until
@@ -606,9 +605,9 @@ feature {NONE} -- Implementation
 										l_index > l_count
 									loop
 										value := l_list.item
-										value.set_name (l_names_heap.item (id_list.item))
 										value.set_item_number (counter)
 										counter := counter + 1
+										value.set_name (l_names_heap.item (id_list.item))
 										if l_stat_class /= Void then
 											value.set_static_class (l_stat_class)
 										end
@@ -621,33 +620,37 @@ feature {NONE} -- Implementation
 								end
 								local_decl_grps.forth
 							end
-							if l_old_group /= Void then
-								inst_context.set_group (l_old_group)
-							end
-							if l_old_class /= Void then
-								System.set_current_class (l_old_class)
-							end
-							if not l_list.after then
-									--| Remaining locals, should be OT locals
-								l_ot_locals := object_test_locals_from (rout)
-								if l_ot_locals /= Void and then not l_ot_locals.is_empty then
-									from
-										l_ot_locals.start
-									until
-										l_list.after or l_ot_locals.after
-									loop
-										value := l_list.item
-										value.set_item_number (counter)
-										counter := counter + 1
-										value.set_name (l_names_heap.item (l_ot_locals.item_for_iteration.id.name_id))
-										locals_list.extend (value)
-										l_ot_locals.forth
-										l_list.forth
+						end
+						if not l_list.after then
+								--| Remaining locals, should be OT locals
+							l_ot_locals := object_test_locals_from (rout)
+							if l_ot_locals /= Void and then not l_ot_locals.is_empty then
+								from
+									l_ot_locals.start
+								until
+									l_list.after or l_ot_locals.after
+								loop
+									value := l_list.item
+									value.set_item_number (counter)
+									counter := counter + 1
+									value.set_name (l_names_heap.item (l_ot_locals.item.id.name_id))
+									l_stat_class := static_class_for_local (l_ot_locals.item.type, rout_i, l_wc)
+									if l_stat_class /= Void then
+										value.set_static_class (l_stat_class)
 									end
+									locals_list.extend (value)
+									l_ot_locals.forth
+									l_list.forth
 								end
 							end
 						end
-					end
+						if l_old_group /= Void then
+							inst_context.set_group (l_old_group)
+						end
+						if l_old_class /= Void then
+							System.set_current_class (l_old_class)
+						end
+					end -- l_list not empty
 				end
 
 					--| Associate to private list |--

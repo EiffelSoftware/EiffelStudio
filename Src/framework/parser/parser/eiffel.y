@@ -1275,11 +1275,12 @@ Routine:
 					temp_keyword_as := Void
 				end
 				if $7 /= Void then
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, $7.first)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, $7.first, object_test_locals)
 				else
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, Void)					
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, Void, object_test_locals)
 				end
 				once_manifest_string_count := 0
+				object_test_locals := Void
 			}
 	;
 
@@ -2098,8 +2099,9 @@ Class_invariant: -- Empty
 		Assertion
 			{
 				set_id_level (Normal_level)
-				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_count, $1)
+				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_count, $1, object_test_locals)
 				once_manifest_string_count := 0
+				object_test_locals := Void
 			}
 	;
 
@@ -2523,7 +2525,14 @@ Expression:
 	|	Qualified_binary_expression
 			{ $$ := $1; has_type := True }
 	|	TE_LCURLY TE_ID TE_COLON Type TE_RCURLY Expression
-			{ $$ := ast_factory.new_object_test_as ($1, $2, $4, $6); has_type := True }
+			{
+				$$ := ast_factory.new_object_test_as ($1, $2, $4, $6);
+				has_type := True
+				if object_test_locals = Void then
+					create object_test_locals.make (1)
+				end
+				object_test_locals.extend ([$2, $4])
+			}
 	;
 
 Qualified_binary_expression:

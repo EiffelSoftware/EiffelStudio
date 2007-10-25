@@ -1481,12 +1481,12 @@ feature -- Access
 			end
 		end
 
-	new_invariant_as (a: EIFFEL_LIST [TAGGED_AS]; once_manifest_string_count: INTEGER; i_as: KEYWORD_AS): INVARIANT_AS is
+	new_invariant_as (a: EIFFEL_LIST [TAGGED_AS]; once_manifest_string_count: INTEGER; i_as: KEYWORD_AS; object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]): INVARIANT_AS is
 			-- New INVARIANT AST node
 		require
 			valid_once_manifest_string_count: once_manifest_string_count >= 0
 		do
-			create Result.initialize (a, once_manifest_string_count, i_as)
+			create Result.initialize (a, once_manifest_string_count, i_as, object_test_locals)
 		end
 
 	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS; attachment_mark: SYMBOL_AS): LIKE_ID_AS is
@@ -1660,7 +1660,8 @@ feature -- Access
 	new_routine_as (o: STRING_AS; pr: REQUIRE_AS;
 			l: LOCAL_DEC_LIST_AS; b: ROUT_BODY_AS; po: ENSURE_AS;
 			r: EIFFEL_LIST [INSTRUCTION_AS]; end_loc: KEYWORD_AS;
-			oms_count, a_pos: INTEGER; k_as, r_as: KEYWORD_AS): ROUTINE_AS
+			oms_count, a_pos: INTEGER; k_as, r_as: KEYWORD_AS;
+			object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]): ROUTINE_AS
 		is
 			-- New ROUTINE AST node
 		require
@@ -1668,7 +1669,7 @@ feature -- Access
 			a_pos_positive: a_pos > 0
 		do
 			if b /= Void and end_loc /= Void then
-				create Result.initialize (o, pr, l, b, po, r, end_loc, oms_count, a_pos, k_as, r_as)
+				create Result.initialize (o, pr, l, b, po, r, end_loc, oms_count, a_pos, k_as, r_as, object_test_locals)
 			end
 		end
 

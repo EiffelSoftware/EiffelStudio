@@ -195,13 +195,13 @@ feature {NONE} -- Implementation Properties
 
 feature {NONE} -- Implementation helper
 
-	static_class_for_local (a_local_item: TYPE_DEC_AS; a_rout_i: FEATURE_I; a_class: CLASS_C): CLASS_C is
-			-- Static class for local represented by `a_local_item' and `a_rout_i'
+	static_class_for_local (a_type: TYPE_AS; a_rout_i: FEATURE_I; a_class: CLASS_C): CLASS_C is
+			-- Static class for local represented by `a_type' and `a_rout_i'
 			-- `a_class' should be `a_rout_i.written_class'.
 		local
 			l_type_a: TYPE_A
 		do
-			l_type_a := type_a_generator.evaluate_type (a_local_item.type, a_class)
+			l_type_a := type_a_generator.evaluate_type (a_type, a_class)
 			type_a_checker.init_for_checking (a_rout_i, a_class, Void, Void)
 			l_type_a := type_a_checker.solved (l_type_a, Void)
 			if l_type_a /= Void and then l_type_a.has_associated_class then

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			test_character_justify
 			test_clear_all
 			test_copy
+			test_ends_with
 			test_extend
 			test_fill_blank
 			test_fill_character
@@ -101,6 +102,7 @@ feature {NONE} -- Initialization
 			test_share
 			test_shared_with
 			test_split
+			test_starts_with
 			test_string
 			test_subcopy
 			test_substring
@@ -357,6 +359,21 @@ feature {NONE} -- Implementation
 			check_boolean ("copy", not s.shared_with (t))
 		end
 		
+	test_ends_with is
+		local
+			s: STRING
+		do
+			s := "1234567890"
+			check_boolean ("Ends with empty%N", s.ends_with (""))
+			check_boolean ("Ends with itself%N", s.ends_with (s))
+			check_boolean ("Ends with its twin%N", s.ends_with (s.twin))
+			check_boolean ("Not ends with itself twice%N", not s.ends_with (s + s))
+			check_boolean ("Not ends with 123%N", not s.ends_with ("123"))
+			check_boolean ("Not ends with 23%N", not s.ends_with ("23"))
+			check_boolean ("Ends with 890%N", s.ends_with ("890"))
+			check_boolean ("Not ends with 89%N", not s.ends_with ("89"))
+		end
+
 	test_fill_blank is
 		local
 			s: STRING
@@ -2036,6 +2053,21 @@ feature {NONE} -- Implementation
 			check_equality ("split", l [1], "1234")
 			check_equality ("split", l [2], "4321234")
 			check_equality ("split", l [3], "")
+		end
+
+	test_starts_with is
+		local
+			s: STRING
+		do
+			s := "1234567890"
+			check_boolean ("Starts with empty%N", s.starts_with (""))
+			check_boolean ("Starts with itself%N", s.starts_with (s))
+			check_boolean ("Starts with its twin%N", s.starts_with (s.twin))
+			check_boolean ("Not starts with itself twice%N", not s.starts_with (s + s))
+			check_boolean ("Starts with 123%N", s.starts_with ("123"))
+			check_boolean ("Not starts with 23%N", not s.starts_with ("23"))
+			check_boolean ("Not starts with 890%N", not s.starts_with ("890"))
+			check_boolean ("Not starts with 89%N", not s.starts_with ("89"))
 		end
 
 	test_string is

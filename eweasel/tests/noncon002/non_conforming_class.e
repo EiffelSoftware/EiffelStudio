@@ -1,0 +1,3 @@
+class
+	NON_CONFORMING_CLASS
+end

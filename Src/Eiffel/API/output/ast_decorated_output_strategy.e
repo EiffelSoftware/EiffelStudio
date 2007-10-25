@@ -2792,9 +2792,9 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_keyword_text (ti_inherit_keyword, Void)
 				text_formatter_decorator.process_basic_text (ti_space)
-				text_formatter_decorator.process_basic_text (ti_l_curly)
+				text_formatter_decorator.process_symbol_text (ti_l_curly)
 				text_formatter_decorator.process_basic_text (ti_none_class)
-				text_formatter_decorator.process_basic_text (ti_r_curly)
+				text_formatter_decorator.process_symbol_text (ti_r_curly)
 				text_formatter_decorator.indent
 				text_formatter_decorator.put_new_line
 				text_formatter_decorator.set_new_line_between_tokens

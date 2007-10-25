@@ -318,25 +318,26 @@ feature {NONE} -- Implementation
 
 	initialize_stack is
 		local
-			local_decl_grps	: EIFFEL_LIST [TYPE_DEC_AS]
-			id_list			: ARRAYED_LIST [INTEGER]
-			i, l_count			: INTEGER
-			value			: ABSTRACT_DEBUG_VALUE
-			args_locs_info  : like retrieved_locals_and_arguments
+			local_decl_grps: like local_decl_grps_from
+			l_ot_locals: like object_test_locals_from
+			id_list: ARRAYED_LIST [INTEGER]
+			i, l_count: INTEGER
+			value: ABSTRACT_DEBUG_VALUE
+			args_locs_info: like retrieved_locals_and_arguments
 			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]
 			l_index, l_upper: INTEGER
-			locals_list		: like private_locals
-			args_list		: like private_arguments
-			arg_types		: E_FEATURE_ARGUMENTS
-			arg_names		: LIST [STRING]
-			feat			: like routine
-			feat_i			: like routine_i
-			counter			: INTEGER
-			l_names_heap	: like Names_heap
-			l_stat_class	: CLASS_C
-			l_old_group   	: CONF_GROUP
-			l_old_class		: CLASS_C
-			l_wc			: CLASS_C
+			locals_list: like private_locals
+			args_list: like private_arguments
+			arg_types: E_FEATURE_ARGUMENTS
+			arg_names: LIST [STRING]
+			rout: like routine
+			rout_i: like routine_i
+			counter: INTEGER
+			l_names_heap: like Names_heap
+			l_stat_class: CLASS_C
+			l_old_group: CONF_GROUP
+			l_old_class: CLASS_C
+			l_wc: CLASS_C
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -355,8 +356,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("Finished retrieving locals and argument" + "%N"); end
-				feat := routine
-				if feat /= Void then
+				rout := routine
+				if rout /= Void then
 					if l_args /= Void then
 						l_index := l_args.lower
 						l_upper := l_args.upper
@@ -365,14 +366,14 @@ feature {NONE} -- Implementation
 						--l_count := feat.argument_count
 						l_count := l_args.count
 						if l_count > 0 then
-							arg_types := feat.arguments
+							arg_types := rout.arguments
 							if arg_types = Void then
 								l_index := l_index + l_count
 							else
 								create args_list.make_filled (l_count)
 								from
 									arg_types.start
-									arg_names := feat.argument_names
+									arg_names := rout.argument_names
 									arg_names.start
 									args_list.start
 								until
@@ -402,18 +403,18 @@ feature {NONE} -- Implementation
 						l_upper := l_locals.upper
 						counter := 1
 
-						local_decl_grps := local_decl_grps_from (feat)
+						local_decl_grps := local_decl_grps_from (rout)
 						if local_decl_grps /= Void then
 							l_old_group := inst_context.group
-							inst_context.set_group (feat.associated_class.group)
+							inst_context.set_group (rout.associated_class.group)
 
 							l_old_class := System.current_class
 							System.set_current_class (dynamic_class)
 
 							create locals_list.make (l_locals.count)
 							from
-								feat_i := routine_i
-								l_wc := feat_i.written_class
+								rout_i := routine_i
+								l_wc := rout_i.written_class
 								local_decl_grps.start
 								l_names_heap := Names_heap
 							until
@@ -421,7 +422,7 @@ feature {NONE} -- Implementation
 							loop
 								id_list := local_decl_grps.item.id_list
 								if not id_list.is_empty then
-									l_stat_class := static_class_for_local (local_decl_grps.item, feat_i, l_wc)
+									l_stat_class := static_class_for_local (local_decl_grps.item, rout_i, l_wc)
 									from
 										id_list.start
 									until
@@ -449,34 +450,37 @@ feature {NONE} -- Implementation
 								System.set_current_class (l_old_class)
 							end
 						end
-						if feat.is_function and l_index <= l_upper then
+						if rout.is_function and l_index <= l_upper then
 							private_result := l_locals.item (l_upper)
 							l_upper := l_upper - 1
 							private_result.set_name (once "Result")
-							if feat.type.has_associated_class then
-								private_result.set_static_class (feat.type.associated_class)
+							if rout.type.has_associated_class then
+								private_result.set_static_class (rout.type.associated_class)
 							end
 						end
 
 						if l_index <= l_upper then
-							from
-								--| Remaining values -> OT locals
-								i := 1
-							until
-								l_index > l_upper
-							loop
-								value := l_locals.item (l_index)
-								value.set_item_number (counter)
-								counter := counter + 1
-
-								value.set_name ("{} #" + i.out)
-								locals_list.extend (value)
-								i := i + 1
-								l_index := l_index + 1
+							l_ot_locals := object_test_locals_from (rout)
+							if l_ot_locals /= Void and then not l_ot_locals.is_empty then
+								from
+									l_ot_locals.start
+									i := 1
+								until
+									l_index > l_upper or l_ot_locals.after
+								loop
+									value := l_locals.item (l_index)
+									value.set_item_number (counter)
+									counter := counter + 1
+									value.set_name (l_names_heap.item (l_ot_locals.item_for_iteration.id.name_id))
+									locals_list.extend (value)
+									i := i + 1
+									l_index := l_index + 1
+									l_ot_locals.forth
+								end
 							end
 						end
 						check
-							(feat.is_function implies locals_list.count = l_locals.count - 1 )
+							(rout.is_function implies locals_list.count = l_locals.count - 1 )
 							or else locals_list.count = l_locals.count
 						end
 						l_locals := Void
@@ -489,7 +493,7 @@ feature {NONE} -- Implementation
 					private_locals := locals_list
 				end
 				initialized := True
-				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("%TFinished initializating stack: "+routine_name+"%N"); end
+				debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("%TFinished initializating stack: " + routine_name + "%N"); end
 			else
 				set_error
 				initialized := True

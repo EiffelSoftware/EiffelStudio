@@ -247,6 +247,11 @@ feature -- Properties
 		do
 		end;
 
+	object_test_locals: LIST [TUPLE [ID_AS, TYPE_AS]] is
+			-- Object test locals mentioned in the routine
+		do
+		end
+
 	argument_count: INTEGER is
 			-- Number of arguments of the feature
 		do

@@ -170,6 +170,12 @@ feature {NONE} -- Implementation
 			Result := feat.locals
 		end
 
+	object_test_locals_from (feat: E_FEATURE): LIST [TUPLE [id: ID_AS; type: TYPE_AS]] is
+			-- Locals declaration groups for `feat'.
+		do
+			Result := feat.object_test_locals
+		end
+
 feature {NONE} -- Implementation Properties
 
 	private_locals: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]

@@ -13,7 +13,7 @@ inherit
 		redefine
 			has_postcondition, has_precondition,
 			argument_names, arguments, is_once,
-			is_deferred, locals, obsolete_message,
+			is_deferred, locals, object_test_locals, obsolete_message,
 			is_external, associated_feature_i,
 			is_inline_agent, updated_version,
 			body_id_for_ast
@@ -95,6 +95,40 @@ feature -- Access
 					end
 				else
 					Result := routine_as.locals
+				end
+			end
+		end
+
+	object_test_locals: LIST [TUPLE [ID_AS, TYPE_AS]] is
+			-- Object test locals mentioned in the routine
+		local
+			routine_as: ROUTINE_AS
+			feature_as: FEATURE_AS
+			built_in_as: BUILT_IN_AS
+		do
+			if is_inline_agent then
+				feature_as := Body_server.item (enclosing_body_id)
+				if feature_as /= Void then
+					routine_as ?= inline_agent_lookup.lookup_inline_agent_of_feature (
+							feature_as, inline_agent_nr).content
+				end
+			elseif body_index > 0 then
+				routine_as ?= Body_server.item (body_index).body.content
+			end
+			if routine_as /= Void then
+				if routine_as.is_built_in then
+					built_in_as ?= routine_as.routine_body
+					if built_in_as /= Void then
+						feature_as := built_in_as.body
+						if feature_as /= Void then
+							routine_as ?= feature_as.body.content
+							if routine_as /= Void then
+								Result := routine_as.object_test_locals
+							end
+						end
+					end
+				else
+					Result := routine_as.object_test_locals
 				end
 			end
 		end

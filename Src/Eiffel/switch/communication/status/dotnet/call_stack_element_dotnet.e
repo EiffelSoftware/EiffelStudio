@@ -491,14 +491,16 @@ feature {NONE} -- Implementation
 		require
 			initialized_current_object
 		local
-			local_decl_grps	: EIFFEL_LIST [TYPE_DEC_AS]
-			id_list			: ARRAYED_LIST [INTEGER]
-			l_index			: INTEGER
-			l_count			: INTEGER
-			value			: ABSTRACT_DEBUG_VALUE
-			locals_list		: like private_locals
-			rout			: like routine
-			rout_i			: like routine_i
+			local_decl_grps: EIFFEL_LIST [TYPE_DEC_AS]
+			l_ot_locals: like object_test_locals_from
+			id_list: ARRAYED_LIST [INTEGER]
+			l_index: INTEGER
+			l_count: INTEGER
+			value: ABSTRACT_DEBUG_VALUE
+			locals_list: like private_locals
+			rout: like routine
+			rout_i: like routine_i
+			counter: INTEGER
 			l_names_heap: like Names_heap
 			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
@@ -571,6 +573,7 @@ feature {NONE} -- Implementation
 					if l_list /= Void and then not l_list.is_empty then
 						--| now the result value has been removed
 						--| let's get the real Local variables
+						counter := 1
 						local_decl_grps := local_decl_grps_from (rout)
 						if local_decl_grps /= Void then
 							l_old_group := inst_context.group
@@ -604,7 +607,8 @@ feature {NONE} -- Implementation
 									loop
 										value := l_list.item
 										value.set_name (l_names_heap.item (id_list.item))
-										value.set_item_number (l_index + 1)
+										value.set_item_number (counter)
+										counter := counter + 1
 										if l_stat_class /= Void then
 											value.set_static_class (l_stat_class)
 										end
@@ -623,22 +627,25 @@ feature {NONE} -- Implementation
 							if l_old_class /= Void then
 								System.set_current_class (l_old_class)
 							end
---| Update this part OT locals will be available at E_FEATURE interface (or similar)							
---							if not l_list.after then
---									--| Remaining locals, should be OT locals
---								from
---									i := 1
---								until
---									l_list.after
---								loop
---									value := l_list.item
---									value.set_name (" _object test #" + i.out)
---									value.set_item_number (l_index + i)
---									locals_list.extend (value)
---									l_list.forth
---									i := i + 1
---								end
---							end
+							if not l_list.after then
+									--| Remaining locals, should be OT locals
+								l_ot_locals := object_test_locals_from (rout)
+								if l_ot_locals /= Void and then not l_ot_locals.is_empty then
+									from
+										l_ot_locals.start
+									until
+										l_list.after or l_ot_locals.after
+									loop
+										value := l_list.item
+										value.set_item_number (counter)
+										counter := counter + 1
+										value.set_name (l_names_heap.item (l_ot_locals.item_for_iteration.id.name_id))
+										locals_list.extend (value)
+										l_ot_locals.forth
+										l_list.forth
+									end
+								end
+							end
 						end
 					end
 				end

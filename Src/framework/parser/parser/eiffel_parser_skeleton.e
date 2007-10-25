@@ -164,6 +164,7 @@ feature -- Initialization
 			is_supplier_recorded := True
 			is_constraint_renaming := False
 			once_manifest_string_count := 0
+			object_test_locals := Void
 			counters.wipe_out
 			last_rsqure.wipe_out
 		end
@@ -286,6 +287,10 @@ feature -- Access
 			-- Number of once manifest strings in current feature declaration
 			-- or in an invariant
 
+	object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]
+			-- List of object test locals found
+			-- in the current feature declaration
+
 	feature_clause_end_position: INTEGER
 			-- End of a feature clause
 
@@ -299,6 +304,7 @@ feature -- Removal
 			expression_node := Void
 			indexing_node := Void
 			entity_declaration_node := Void
+			object_test_locals := Void
 			match_list := Void
 		ensure
 			root_node_void: root_node = Void
@@ -306,6 +312,7 @@ feature -- Removal
 			expression_node_void: expression_node = Void
 			indexing_node_void: indexing_node = Void
 			entity_declaration_node_void: entity_declaration_node = Void
+			object_test_locals_void: object_test_locals = Void
 			match_list_void: match_list = Void
 		end
 

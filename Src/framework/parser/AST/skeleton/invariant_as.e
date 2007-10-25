@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like assertion_list; oms_count: like once_manifest_string_count; i_as: like invariant_keyword) is
+	initialize (a: like assertion_list; oms_count: like once_manifest_string_count; i_as: like invariant_keyword; ot_locals: like object_test_locals) is
 			-- Create a new INVARIANT AST node.
 		require
 			valid_oms_count: oms_count >= 0
@@ -33,10 +33,12 @@ feature {NONE} -- Initialization
 			assertion_list := filter_tagged_list (full_assertion_list)
 			once_manifest_string_count := oms_count
 			invariant_keyword := i_as
+			object_test_locals := ot_locals
 		ensure
 			full_assertion_list_set: full_assertion_list = a
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
 			invariant_keyword_set: invariant_keyword = i_as
+			object_test_locals_set: object_test_locals = ot_locals
 		end
 
 feature -- Visitor
@@ -63,6 +65,9 @@ feature -- Attribute
 
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings
+
+	object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]
+			-- Object test locals declared in the invariant
 
 feature -- Roundtrip/Token
 

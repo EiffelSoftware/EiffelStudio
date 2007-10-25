@@ -24,7 +24,8 @@ feature {NONE} -- Initialization
 	initialize (o: like obsolete_message; pr: like precondition;
 		l: like internal_locals; b: like routine_body; po: like postcondition;
 		r: like rescue_clause; ek: like end_keyword;
-		oms_count: like once_manifest_string_count; a_pos: like body_start_position; k_as, r_as: like obsolete_keyword) is
+		oms_count: like once_manifest_string_count; a_pos: like body_start_position; k_as, r_as: like obsolete_keyword;
+		ot_locals: like object_test_locals) is
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
@@ -43,6 +44,7 @@ feature {NONE} -- Initialization
 			body_start_position := a_pos
 			obsolete_keyword := k_as
 			rescue_keyword := r_as
+			object_test_locals := ot_locals
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
@@ -55,6 +57,7 @@ feature {NONE} -- Initialization
 			body_start_position_set: body_start_position = a_pos
 			obsolete_keyword_set: obsolete_keyword = k_as
 			rescue_keyword_set: rescue_keyword = r_as
+			object_test_locals_set: object_test_locals = ot_locals
 		end
 
 feature -- Visitor
@@ -112,6 +115,9 @@ feature -- Attributes
 
 	end_keyword: KEYWORD_AS
 			-- Location for `end' keyword
+
+	object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]
+			-- Object test locals mentioned in the routine
 
 feature -- Location
 

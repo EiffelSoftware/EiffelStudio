@@ -8101,11 +8101,12 @@ end
 					temp_keyword_as := Void
 				end
 				if yyvs16.item (yyvsp16) /= Void then
-					yyval74 := ast_factory.new_routine_as (temp_string_as1, yyvs71.item (yyvsp71), yyvs114.item (yyvsp114), yyvs73.item (yyvsp73), yyvs46.item (yyvsp46), yyvs16.item (yyvsp16).second, yyvs12.item (yyvsp12), once_manifest_string_count, fbody_pos, temp_keyword_as, yyvs16.item (yyvsp16).first)
+					yyval74 := ast_factory.new_routine_as (temp_string_as1, yyvs71.item (yyvsp71), yyvs114.item (yyvsp114), yyvs73.item (yyvsp73), yyvs46.item (yyvsp46), yyvs16.item (yyvsp16).second, yyvs12.item (yyvsp12), once_manifest_string_count, fbody_pos, temp_keyword_as, yyvs16.item (yyvsp16).first, object_test_locals)
 				else
-					yyval74 := ast_factory.new_routine_as (temp_string_as1, yyvs71.item (yyvsp71), yyvs114.item (yyvsp114), yyvs73.item (yyvsp73), yyvs46.item (yyvsp46), Void, yyvs12.item (yyvsp12), once_manifest_string_count, fbody_pos, temp_keyword_as, Void)					
+					yyval74 := ast_factory.new_routine_as (temp_string_as1, yyvs71.item (yyvsp71), yyvs114.item (yyvsp114), yyvs73.item (yyvsp73), yyvs46.item (yyvsp46), Void, yyvs12.item (yyvsp12), once_manifest_string_count, fbody_pos, temp_keyword_as, Void, object_test_locals)
 				end
 				once_manifest_string_count := 0
+				object_test_locals := Void
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 8
@@ -13327,8 +13328,9 @@ debug ("GEYACC")
 end
 
 				set_id_level (Normal_level)
-				yyval62 := ast_factory.new_invariant_as (yyvs22.item (yyvsp22), once_manifest_string_count, yyvs12.item (yyvsp12))
+				yyval62 := ast_factory.new_invariant_as (yyvs22.item (yyvsp22), once_manifest_string_count, yyvs12.item (yyvsp12), object_test_locals)
 				once_manifest_string_count := 0
+				object_test_locals := Void
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
@@ -16324,7 +16326,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval48 := ast_factory.new_object_test_as (yyvs4.item (yyvsp4 - 2), yyvs2.item (yyvsp2), yyvs79.item (yyvsp79), yyvs48.item (yyvsp48)); has_type := True 
+				yyval48 := ast_factory.new_object_test_as (yyvs4.item (yyvsp4 - 2), yyvs2.item (yyvsp2), yyvs79.item (yyvsp79), yyvs48.item (yyvsp48));
+				has_type := True
+				if object_test_locals = Void then
+					create object_test_locals.make (1)
+				end
+				object_test_locals.extend ([yyvs2.item (yyvsp2), yyvs79.item (yyvsp79)])
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 6
 	yyvsp4 := yyvsp4 -3
@@ -22181,7 +22189,6 @@ end
 feature {NONE} -- Table templates
 
 	yytranslate_template: SPECIAL [INTEGER] is
-			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -22229,7 +22236,6 @@ feature {NONE} -- Table templates
 		end
 
 	yyr1_template: SPECIAL [INTEGER] is
-			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
 			    0,  324,  324,  324,  324,  324,  324,  324,  324,  325,
@@ -22299,7 +22305,6 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes1_template: SPECIAL [INTEGER] is
-			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
 			    1,   12,   12,   12,   12,   12,   12,    2,    2,    2,
@@ -22417,7 +22422,6 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes2_template: SPECIAL [INTEGER] is
-			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    4,    4,   12,   12,   12,   12,    4,
@@ -22438,7 +22442,6 @@ feature {NONE} -- Table templates
 		end
 
 	yydefact_template: SPECIAL [INTEGER] is
-			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
 			   14,  580,  315,  579,  580,    0,  482,  481,  480,    0,
@@ -22556,7 +22559,6 @@ feature {NONE} -- Table templates
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER] is
-			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			  417,  481,  427,  319,  919,  689,  542,  531,  501,  290,
@@ -22587,7 +22589,6 @@ feature {NONE} -- Table templates
 		end
 
 	yypact_template: SPECIAL [INTEGER] is
-			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
 			  400, 1102,  478,  993, -32768, 1895, -32768, -32768, -32768, 1322,
@@ -22705,7 +22706,6 @@ feature {NONE} -- Table templates
 		end
 
 	yypgoto_template: SPECIAL [INTEGER] is
-			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			 -359, -32768, -392, -32768,  326, -32768,  704,  549,  712, -317,
@@ -22736,7 +22736,6 @@ feature {NONE} -- Table templates
 		end
 
 	yytable_template: SPECIAL [INTEGER] is
-			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
 			    9,  143,  134,  446,  199,  317,  270,  150,  151,  159,
@@ -23066,7 +23065,6 @@ feature {NONE} -- Table templates
 		end
 
 	yycheck_template: SPECIAL [INTEGER] is
-			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
 			    0,   17,   12,  346,   56,  140,  116,   43,   44,   45,

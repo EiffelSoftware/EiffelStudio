@@ -82,7 +82,13 @@ feature {NONE} -- Initialization
                 -- This is useful when `content' is auto hide.
             content.show_actions.extend_kamikaze (agent
                 do
-                    if not is_initialized then
+                    if
+                    	not is_recycled and then
+                    	not is_initialized and then
+                    	develop_window /= Void and then
+                    	not (develop_window.is_recycled or develop_window.is_recycling)
+                    then
+                    		-- Only initialize if we really can (not in shutdown)
                         initialize
                     end
                 end)

@@ -32,14 +32,11 @@ feature -- Query
 			-- Result is void if not exists
 		require
 			not_void: a_name /= Void
-		local
-			l_c_string: WEL_STRING
 		do
 			if loaded_modules.has_key (a_name) then
 				Result := loaded_modules.item (a_name)
 			else
-				create l_c_string.make (a_name)
-				Result := implementation.load_module (l_c_string.item)
+				Result := implementation.load_module (a_name)
 				if Result /= default_pointer then
 					loaded_modules.extend (Result, a_name)
 				end
@@ -52,14 +49,11 @@ feature -- Query
 		require
 			exists: a_module /= default_pointer
 			not_void: a_name /= Void
-		local
-			l_c_string: C_STRING
 		do
 			if loaded_apis.has (a_name) then
 				Result := loaded_apis.item (a_name)
 			else
-				create l_c_string.make (a_name)
-				Result := implementation.loal_api (a_module, l_c_string.item)
+				Result := implementation.loal_api (a_module, a_name)
 				if Result /= default_pointer then
 					loaded_apis.extend (Result, a_name)
 				end

@@ -1241,7 +1241,7 @@ feature -- Access
 		require
 			t_not_void: t /= Void
 			context_class_type_not_void: context_class_type /= Void
-			is_ancestor: is_ancestor (t)
+			is_ancestor: is_ancestor (t) or True --| FIXME IEK Add inherits_from usage when implemented.
 		do
 			class_type := t
 			current_type := t.type

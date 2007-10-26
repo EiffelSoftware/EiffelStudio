@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			exception_frame: EV_FRAME
 			exception_text: SELECTABLE_TEXT_PANEL
 			save_button: EV_BUTTON
+			report_button: EV_BUTTON
 		do
 			trace := a_trace
 
@@ -76,10 +77,12 @@ feature {NONE} -- Initialization
 			create quit_button.make_with_text_and_action ("Quit now!", agent execute_die)
 			create restart_button.make_with_text_and_action ("Restart now!", agent restart)
 			create save_button.make_with_text_and_action ("Save", agent save_exeption_trace)
+			create report_button.make_with_text_and_action ("Report", agent report_exeption_trace)
 			Layout_constants.set_default_width_for_button (ignore_button)
 			Layout_constants.set_default_width_for_button (quit_button)
 			Layout_constants.set_default_width_for_button (restart_button)
 			Layout_constants.set_default_width_for_button (save_button)
+			Layout_constants.set_default_width_for_button (report_button)
 
 			create exception_text
 			exception_text.set_cursors (create {EB_EDITOR_CURSORS})
@@ -114,6 +117,8 @@ feature {NONE} -- Initialization
 			buttons_box.disable_item_expand (restart_button)
 			buttons_box.extend (save_button)
 			buttons_box.disable_item_expand (save_button)
+			buttons_box.extend (report_button)
+			buttons_box.disable_item_expand (report_button)
 			buttons_box.extend (create {EV_CELL})
 
 			create main_box
@@ -173,6 +178,16 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+	report_exeption_trace is
+			-- Report exeception to Eiffel Software support web site.
+		local
+			l_dialog: EB_EXCEPTION_SUBMIT_DIALOG
+		do
+			create l_dialog.make
+			l_dialog.set_exception_trace (trace)
+			l_dialog.show_relative_to_window (Current)
 		end
 
 	trace: STRING;

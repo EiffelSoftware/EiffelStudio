@@ -69,9 +69,15 @@ feature {NONE} -- Clean up
 				internal_panel.recycle
 				internal_panel := Void
 			end
+			edition_changed.dispose
+			edition_changed := Void
+			set_window (Void)
 		ensure then
 			internal_tool_dettached: internal_panel = Void
 			internal_tool_recycled: old internal_panel /= Void implies (old internal_panel).is_recycled
+			window_detached: window = Void
+			edition_changed_detached: edition_changed = Void
+			edition_changed_disposed: (old edition_changed).is_zombie
 		end
 
 feature -- Access

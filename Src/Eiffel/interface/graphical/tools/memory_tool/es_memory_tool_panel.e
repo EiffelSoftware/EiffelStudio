@@ -37,9 +37,8 @@ feature {NONE} -- User interface initialization
 			--
 			-- `a_widget': A widget to build the tool interface using.
 		local
-			l_box: EV_HORIZONTAL_BOX
 			l_col: EV_GRID_COLUMN
-			l_separator: EV_CELL
+			l_box: EV_HORIZONTAL_BOX
 		do
 			create l_box
 
@@ -70,14 +69,13 @@ feature {NONE} -- User interface initialization
 			memory_map_grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
 			stone_director.bind (memory_map_grid)
 			register_action (memory_map_grid.row_expand_actions, agent (a_row: EV_GRID_ROW) do execute_with_busy_cursor (agent on_row_expanded (a_row)) end)
-			register_action (memory_map_grid.row_collapse_actions, agent on_row_collapsed)
 			l_box.extend (memory_map_grid)
 
-			create l_separator
-			l_separator.set_background_color (colors.stock_colors.black)
-			l_separator.set_minimum_width (1)
-			l_box.extend (l_separator)
-			l_box.disable_item_expand (l_separator)
+			create memory_stats_separator
+			memory_stats_separator.set_background_color (colors.stock_colors.black)
+			memory_stats_separator.set_minimum_width (1)
+			l_box.extend (memory_stats_separator)
+			l_box.disable_item_expand (memory_stats_separator)
 
 			a_widget.extend (l_box)
 
@@ -85,10 +83,11 @@ feature {NONE} -- User interface initialization
 			create memory_stats_text
 			memory_stats_text.set_minimum_width (300)
 			memory_stats_text.set_font (preferences.editor_data.editor_font_preference.value)
-			memory_stats_text.hide
 			stone_director.bind (memory_stats_text)
 			a_widget.extend (memory_stats_text)
-			--a_widget.disable_item_expand (memory_stats_text)
+
+			memory_stats_separator.hide
+			memory_stats_text.hide
 
 			create memory_update_timer
 			register_action (memory_update_timer.actions, agent on_memory_update_timeout)
@@ -101,19 +100,9 @@ feature {NONE} -- Clean up
 		do
 			if is_initialized then
 				stone_director.unbind (memory_map_grid)
-				memory_map_grid := Void
-
 				stone_director.unbind (memory_stats_text)
-				memory_stats_text := Void
-
 				memory_update_timer.destroy
-				memory_update_timer := Void
 			end
-			if memory_data /= Void then
-				memory_data.wipe_out
-				memory_data := Void
-			end
-
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 		ensure then
 			memory_update_timer_destroyed: (old memory_update_timer) /= Void implies (old memory_update_timer).is_destroyed
@@ -170,6 +159,10 @@ feature {NONE} -- Query
 		end
 
 	sorted_objects (a_table: HASH_TABLE [INTEGER, INTEGER]): DS_ARRAYED_LIST [INTEGER] is
+			-- Sorts memory map by type name and returns a list of sorted associated type ids.
+			--
+			-- `a_table': Memory counter map table to sort.
+			-- `Result': List of type id's sorted by their actual type name.
 		local
 			l_table: HASH_TABLE [INTEGER, STRING]
 			l_internal: INTERNAL
@@ -266,16 +259,12 @@ feature {NONE} -- Basic operations
 			a_row.set_item (object_column_index, l_item)
 
 			l_count := a_data.instances
-			if l_count > 0 then
-				create l_item.make_with_text (l_count.out)
-				l_item.set_foreground_color (colors.stock_colors.dark_gray)
-			else
-				create l_item
-			end
+			create l_item.make_with_text (l_count.out)
+			l_item.set_foreground_color (colors.stock_colors.dark_gray)
 			a_row.set_item (count_column_index, l_item)
 
 			l_count := a_data.delta
-			if l_count > 0 then
+			if l_count /= 0 then
 				create l_item.make_with_text (l_count.out)
 				l_item.set_foreground_color (colors.stock_colors.red)
 			else
@@ -385,9 +374,18 @@ feature {NONE} -- Basic operations
 			if l_referers /= Void then
 				l_count := l_referers.count
 				l_grid := memory_map_grid
-				l_grid.insert_new_rows_parented (l_count, a_row.index + 1, a_row)
+
+				from i := 1 until i > l_count  loop
+					l_object := l_referers.item (i - 1)
+					if a_row = l_object then
+						l_offset := l_offset + 1
+					end
+					i := i + 1
+				end
+				l_grid.insert_new_rows_parented (l_count - l_offset, a_row.index + 1, a_row)
 
 				create l_internal
+				l_offset := 0
 				from i := 1 until i > l_count  loop
 					l_object := l_referers.item (i - 1)
 					l_subrow := a_row.subrow (i - l_offset)
@@ -432,12 +430,12 @@ feature {NONE} -- Basic operations
 					end
 					i := i + 1
 				end
-				if l_offset > 0 then
-					from until l_offset = 0 loop
-						a_row.remove_subrow (l_grid.row (a_row.index + a_row.subrow_count_recursive))
-						l_offset := l_offset - 1
-					end
-				end
+--				if l_offset > 0 then
+--					from until l_offset = 0 loop
+--						a_row.remove_subrow (l_grid.row (a_row.index + a_row.subrow_count_recursive))
+--						l_offset := l_offset - 1
+--					end
+--				end
 			end
 		ensure
 			a_row_data_attached: a_row.data /= Void
@@ -471,6 +469,18 @@ feature {NONE} -- Analysis
 				-- Calculate memory object count
 			create l_internal
 			create l_data.make (l_map.count * 10)
+
+			if l_last_map /= Void then
+					-- Extend the map with the removed ids
+				from l_last_map.start until l_last_map.after loop
+					l_id := l_last_map.key_for_iteration
+					if not l_map.has (l_id) then
+						l_map.extend (0, l_id)
+					end
+					l_last_map.forth
+				end
+			end
+
 			l_sorted_ids := sorted_objects (l_map)
 			from l_sorted_ids.start until l_sorted_ids.after loop
 				l_id := l_sorted_ids.item_for_iteration
@@ -479,7 +489,6 @@ feature {NONE} -- Analysis
 
 				if l_last_map /= Void then
 					l_delta := l_count - l_last_map.item (l_id)
-					l_last_map.remove (l_id)
 				else
 					l_delta := l_count
 				end
@@ -487,35 +496,6 @@ feature {NONE} -- Analysis
 				l_data.force_last ([l_name, l_count, l_delta, l_id])
 				l_sorted_ids.forth
 			end
---			from l_map.start until l_map.after loop
---				l_id := l_map.key_for_iteration
---				l_name := l_internal.type_name_of_type (l_id)
---				l_count := l_map.item_for_iteration
-
---				if l_last_map /= Void then
---					l_delta := l_count - l_last_map.item (l_id)
---					l_last_map.remove (l_id)
---				else
---					l_delta := l_count
---				end
-
---				l_data.force_last ([l_name, l_count, l_delta, l_id])
---				l_map.forth
---			end
-
-			if l_last_map /= Void and then not l_last_map.is_empty then
-					-- Add removed objects from last calculation (negative deltas with count of 0)
-				check
-					not_a_refresh: not a_refresh
-				end
-				from l_last_map.start until l_last_map.after loop
-					l_id := l_last_map.key_for_iteration
-					l_name := l_internal.type_name_of_type (l_id)
-					l_data.force_last ([l_name, 0, - l_last_map.item_for_iteration, l_id])
-					l_last_map.forth
-				end
-			end
-
 			last_map := l_map
 			memory_data := l_data
 		ensure
@@ -579,6 +559,9 @@ feature {NONE} -- User interface elements
 
 	memory_stats_text: EV_TEXT
 			-- Text widget displaying memory usage info
+
+	memory_stats_separator: EV_CELL
+			-- Box used to contain memory stats, used for setting visibility
 
 	memory_update_timer: EV_TIMEOUT
 			-- Timer used to update memory usage stats
@@ -658,10 +641,12 @@ feature {NONE} -- Action handlers
 			not_is_recycled: not is_recycled
 		do
 			if show_memory_usage_button.is_selected then
+				memory_stats_separator.show
 				memory_stats_text.show
 				on_memory_update_timeout
 				memory_update_timer.set_interval (memory_update_timer_interval)
 			else
+				memory_stats_separator.hide
 				memory_stats_text.hide
 				memory_update_timer.set_interval (0)
 			end
@@ -727,38 +712,13 @@ feature {NONE} -- Action handlers
 			not_a_row_is_destroyed: not a_row.is_destroyed
 			a_row_has_memory_map_parent: a_row.parent = memory_map_grid
 		do
-			if a_row.is_part_of_tree_structure then
-				populate_memory_grid_referer_subrows (a_row)
-			else
-				populate_memory_grid_type_subrows (a_row)
-			end
-		end
-
-	on_row_collapsed (a_row: EV_GRID_ROW) is
-			-- Called when a row is collapsed
-		require
-			not_is_recycled: not is_recycled
-			is_initialized: is_initialized
-			a_row_attached: a_row /= Void
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_has_memory_map_parent: a_row.parent = memory_map_grid
-		local
-			l_count: INTEGER
-			l_row: EV_GRID_ROW
-		do
-				-- Remove all sub rows
-			from l_count := a_row.subrow_count until l_count = 0 loop
-				l_row := a_row.subrow (a_row.subrow_count)
-				if l_row.is_expandable and then l_row.is_expanded then
-					l_row.collapse
+			if a_row.subrow_count = 0 then
+				if a_row.is_part_of_tree_structure then
+					populate_memory_grid_referer_subrows (a_row)
+				else
+					populate_memory_grid_type_subrows (a_row)
 				end
-				l_row.set_data (Void)
-				l_count := l_count - 1
 			end
-			memory_map_grid.remove_rows (a_row.index + 1, a_row.index + a_row.subrow_count_recursive)
-			a_row.ensure_expandable
-		ensure
-			a_row_has_nosub_rows: a_row.subrow_count = 0
 		end
 
 feature {NONE} -- Factory
@@ -803,19 +763,23 @@ feature {NONE} -- Factory
 		local
 			l_label: EV_LABEL
 			l_widget: SD_TOOL_BAR_WIDGET_ITEM
+			l_box: EV_HORIZONTAL_BOX
 		do
-			create Result.make (4)
+			create Result.make (3)
 
+			create l_box
 			create l_label.make_with_text ("Filter ")
-			create l_widget.make (l_label)
-			Result.put_last (l_widget)
+			l_box.extend (l_label)
 
 			create filter_combo
 			filter_combo.set_minimum_width (200)
 			filter_combo.set_minimum_height (20)
-			create l_widget.make (filter_combo)
-			Result.put_last (l_widget)
+			l_box.extend (filter_combo)
 
+			create l_widget.make (l_box)
+			l_widget.set_name ("memory filter")
+
+			Result.put_last (l_widget)
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			create show_memory_usage_button.make
@@ -835,14 +799,15 @@ feature {NONE} -- Constants
 	delta_column_index: INTEGER = 3
 
 invariant
-	memory_update_timer_attached: is_initialized and not is_recycled implies memory_update_timer /= Void
-	memory_stats_text_attached: is_initialized and not is_recycled implies memory_stats_text /= Void
-	memory_data_contains_attached_items: memory_data /= Void implies not memory_data.has (Void)
 	disable_collection_button_attached: is_initialized and not is_recycled implies disable_collection_button /= Void
 	collect_button_attached: is_initialized and not is_recycled implies collect_button /= Void
 	refresh_button_attached: is_initialized and not is_recycled implies refresh_button /= Void
 	filter_combo_attached: is_initialized and not is_recycled implies filter_combo /= Void
 	show_memory_usage_button_attached: is_initialized and not is_recycled implies show_memory_usage_button /= Void
+	memory_map_grid_attached: is_initialized and not is_recycled implies memory_map_grid /= Void
+	memory_stats_text_attached: is_initialized and not is_recycled implies memory_stats_text /= Void
+	memory_stats_separator_attached: is_initialized and not is_recycled implies memory_stats_separator /= Void
+	memory_update_timer_attached: is_initialized and not is_recycled implies memory_update_timer /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

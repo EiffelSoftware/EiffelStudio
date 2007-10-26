@@ -13,7 +13,33 @@ class
 
 feature -- Command
 
-	load_module (a_name: POINTER): POINTER is
+	load_module (a_name: STRING): POINTER is
+			-- Load module with `a_name'.
+			-- `a_name' is LPCTSTR, we should use WEL_STRING here.
+		require
+			exists: a_name /= Void
+		local
+			l_wel_string: WEL_STRING
+		do
+			create l_wel_string.make (a_name)
+			Result := c_load_module (l_wel_string.item)
+		end
+
+	loal_api (a_module: POINTER; a_name: STRING): POINTER is
+			-- Load api which name is `a_name' in `a_module'
+		require
+			exists: a_module /= default_pointer
+			exists: a_name /= Void
+		local
+			l_c_string: C_STRING
+		do
+			create l_c_string.make (a_name)
+			Result := c_loal_api (a_module, l_c_string.item)
+		end
+
+feature {NONE} -- Implementation
+
+	c_load_module (a_name: POINTER): POINTER is
 			-- Load module with `a_name'.
 			-- `a_name' is LPCTSTR, we should use WEL_STRING here.
 		require
@@ -24,7 +50,7 @@ feature -- Command
 			"return (EIF_POINTER) LoadLibrary ($a_name);"
 		end
 
-	loal_api (a_module: POINTER; a_name: POINTER): POINTER is
+	c_loal_api (a_module: POINTER; a_name: POINTER): POINTER is
 			-- Load api which name is `a_name' in `a_module'
 		require
 			exists: a_module /= default_pointer

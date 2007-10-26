@@ -12,18 +12,17 @@ indexing
 class
 	CURL_EXTERNALS
 
-feature -- Externals
+feature -- Command
 
 	global_init is
 			-- Declared as curl_global_init().
-		external
-			"C inline use <curl/curl.h>"
-		alias
-			"[
-			{
-				curl_global_init (CURL_GLOBAL_ALL);
-			}
-			]"
+		local
+			l_ptr: POINTER
+		do
+			l_ptr := api_loader.safe_load_api (module_name, "curl_global_init")
+			if l_ptr /= default_pointer then
+				c_curl_global_init (l_ptr, {CURL_GLOBAL_CONSTANTS}.curl_global_all);
+			end
 		end
 
 	formadd_string_string (a_form: CURL_FORM; a_last_pointer: CURL_FORM; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER) is
@@ -53,35 +52,12 @@ feature -- Externals
 			end
 		end
 
-	set_write_function (a_curl_handle: POINTER) is
-			-- Setting CURLOPT_WRITEFUNCTION option of `a_curl_handle'.
-			-- We need this function since cURL need a static c function pointer as value.
-		require
-			exists: a_curl_handle /= default_pointer
-		external
-			"C inline use <eiffel_curl.h>"
-		alias
-			"[
-			{
-				curl_easy_setopt ($a_curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-			}
-			]"
-		end
+feature -- Query
 
-	set_debug_function (a_curl_handle: POINTER) is
-			-- Setting CURLOPT_DEBUGFUNCTION option of `a_curl_handle'.
-			-- We need this function since cURL need a static c function pointer as value.
-		require
-			exists: a_curl_handle /= default_pointer
-		external
-			"C inline use <eiffel_curl.h>"
-		alias
-			"[
-			{
-				curl_easy_setopt($a_curl_handle, CURLOPT_DEBUGFUNCTION, my_trace);
-				curl_easy_setopt($a_curl_handle, CURLOPT_VERBOSE, TRUE);				
-			}
-			]"
+	is_dynamic_library_exists: BOOLEAN is
+			-- If dll/so files exist?
+		do
+			Result := (api_loader.module_pointer (module_name) /= default_pointer)
 		end
 
 feature {CURL_FORM} -- Internal command
@@ -90,48 +66,104 @@ feature {CURL_FORM} -- Internal command
 			-- Declared as curl_formfree ().
 		require
 			exists: a_curl_form /= default_pointer
-		external
-			"C inline use <curl/curl.h>"
-		alias
-			"[
-			{
-				curl_formfree($a_curl_form);
-			}
-			]"
+		local
+			l_api: POINTER
+		do
+			l_api := api_loader.safe_load_api (module_name, "curl_formfree")
+			if l_api /= default_pointer then
+				c_formfree (l_api, a_curl_form)
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	c_slist_append (a_list_pointer: POINTER; a_string: POINTER): POINTER is
-			-- Declared as curl_slist_append ().
-		external
-			"C inline use <curl/curl.h>"
-		alias
-			"[
-			{
-				return curl_slist_append ((struct curl_slist *)$a_list_pointer, (char *)$a_string);
-			}
-			]"
+	api_loader: API_LOADER is
+			-- API dynamic loader
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
 		end
+
+	module_name: STRING is "libcurl.dll"
+			-- Module name.
 
 	internal_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER) is
 			-- Declared as curl_formadd ().
 		local
 			l_c_string_1, l_c_string_2: C_STRING
+			l_api: POINTER
 		do
-			create l_c_string_1.make (a_arg_1_value)
-			create l_c_string_2.make (a_arg_2_value)
-			c_formadd_string_string (a_form, a_last_pointer, a_arg_1, l_c_string_1.item, a_arg_2, l_c_string_2.item, a_arg_3)
+			l_api := api_loader.safe_load_api (module_name, "curl_formadd");
+			if l_api /= default_pointer then
+				create l_c_string_1.make (a_arg_1_value)
+				create l_c_string_2.make (a_arg_2_value)
+				c_formadd_string_string (l_api, a_form, a_last_pointer, a_arg_1, l_c_string_1.item, a_arg_2, l_c_string_2.item, a_arg_3)
+			end
 		end
 
-	c_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: POINTER; a_arg_2: INTEGER; a_arg_2_value: POINTER; a_arg_3: INTEGER) is
+feature {NONE} -- C externals
+
+	c_formadd_string_string (a_api: POINTER; a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: POINTER; a_arg_2: INTEGER; a_arg_2_value: POINTER; a_arg_3: INTEGER) is
 			-- C implementation of formadd_string_string ().
+		require
+			exists: a_api /= default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
 			{
-				curl_formadd ((struct curl_httppost *)$a_form, (struct curl_httppost *)$a_last_pointer, (int)$a_arg_1, (char *)$a_arg_1_value, (int)$a_arg_2, (char *)$a_arg_2_value, (int)$a_arg_3);
+				(FUNCTION_CAST(void, (struct curl_httppost **, struct curl_httppost **, int, char *, int, char *, int)) $a_api)
+																						((struct curl_httppost *)$a_form,
+																						(struct curl_httppost *)$a_last_pointer,
+																						(int)$a_arg_1,
+																						(char *)$a_arg_1_value,
+																						(int)$a_arg_2,
+																						(char *)$a_arg_2_value,
+																						(int)$a_arg_3);
+			}
+			]"
+		end
+
+	c_formfree (a_api: POINTER; a_curl_form: POINTER) is
+			-- Declared as curl_formfree ().
+		require
+			exists: a_api /= default_pointer
+			exists: a_curl_form /= default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				(FUNCTION_CAST(void, (struct curl_httppost *)) $a_api)
+												((struct curl_httppost *) $a_curl_form);
+			]"
+		end
+
+	c_curl_global_init (a_api: POINTER; a_opt: NATURAL_64) is
+			-- `a_api' point to AIP curl_global_init ()
+			-- `a_opt' is intialization option.
+		require
+			exists: a_api /= default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				(FUNCTION_CAST(void, (long)) $a_api)((long) $a_opt);
+			]"
+		end
+
+	c_slist_append (a_api: POINTER; a_list_pointer: POINTER; a_string: POINTER): POINTER is
+			-- Declared as curl_slist_append ().
+		require
+			exists: a_api /= default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+			{
+				return (FUNCTION_CAST(void *, (struct curl_slist *, const char *)) $a_api)
+											((struct curl_slist *)$a_list_pointer, 
+											(const char *)$a_string);
 			}
 			]"
 		end

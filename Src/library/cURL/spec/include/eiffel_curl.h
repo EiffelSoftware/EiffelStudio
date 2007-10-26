@@ -65,7 +65,7 @@ static void dump(const char *text, FILE *stream, unsigned char *ptr, size_t size
   fflush(stream);
 }
 
-static int my_trace(CURL *handle, curl_infotype type, unsigned char *data, size_t size, void *userp)
+static int curl_trace(CURL *handle, curl_infotype type, unsigned char *data, size_t size, void *userp)
 {
   const char *text;
 

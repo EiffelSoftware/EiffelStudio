@@ -8,7 +8,10 @@ indexing
 deferred class
 	EB_DEVELOPMENT_WINDOW_BUILDER
 
-feature{NONE} -- Initlization
+inherit
+	EB_RECYCLABLE
+
+feature {NONE} -- Initlization
 
 	make (a_window: EB_DEVELOPMENT_WINDOW) is
 			-- Creation method
@@ -20,13 +23,20 @@ feature{NONE} -- Initlization
 			set: develop_window = a_window
 		end
 
+feature {NONE} -- Clean up
+
+	internal_recycle
+			-- To be called when the button has became useless.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	develop_window: EB_DEVELOPMENT_WINDOW
 			-- Development window associate with.
 
 invariant
-	not_void: develop_window /= Void
+	not_void: not is_recycled implies develop_window /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

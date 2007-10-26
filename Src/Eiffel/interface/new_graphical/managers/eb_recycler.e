@@ -8,6 +8,9 @@ indexing
 deferred class
 	EB_RECYCLER
 
+obsolete
+	"Use facilities in {EB_RECYCABLE} instead. Check `auto_recycle' and `delay_auto_recycle'"
+
 feature -- Basic operations
 
 	destroy is

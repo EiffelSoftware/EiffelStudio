@@ -80,7 +80,8 @@ feature -- Basic operations
 		do
 			if not rescued then
 				if ev_application.ctrl_pressed then
-					gc_window.show
+						-- Displays memory tool.
+					window_manager.last_focused_development_window.shell_tools.show_tool ({ES_MEMORY_TOOL}, True)
 				else
 					l_config := lace.conf_system.file_name
 					config_windows.search (l_config)
@@ -208,13 +209,6 @@ feature {NONE} -- Implementation
 
 	configuration_window: CONFIGURATION_WINDOW
 			-- Configuration window, as a class attribute in order for it to not get collecte by the gc.
-
-	gc_window: EB_GC_STATISTIC_WINDOW is
-		once
-			create Result.make
-		ensure
-			gc_window_not_void: Result /= Void
-		end
 
 	name: STRING is "System_tool"
 			-- Name of command. Used to store command in preferences

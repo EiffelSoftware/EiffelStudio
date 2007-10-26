@@ -48,6 +48,10 @@ feature {NONE} -- Initialization
 			create menu_item.make_with_text_and_action ("Memory Analyzer", agent launch_memory_tool)
 			extend (menu_item)
 
+				--| Recenter all floating tools
+			create menu_item.make_with_text_and_action ("Show Memory Tool", agent show_memory_tool)
+			extend (menu_item)
+
 				--| UUID Generator
 			create menu_item.make_with_text_and_action ("UUID generator", agent launch_uuid_tool)
 			extend (menu_item)
@@ -59,7 +63,6 @@ feature {NONE} -- Initialization
 				--| Recenter all floating tools
 			create menu_item.make_with_text_and_action ("Center Floating tools", agent center_floating_tools)
 			extend (menu_item)
-
 		end
 
 feature {NONE} -- Actions
@@ -86,6 +89,12 @@ feature {NONE} -- Actions
 			else
 				ma_window.show
 			end
+		end
+
+	show_memory_tool
+			-- Shows the integrated memory tool
+		do
+			window_manager.last_focused_development_window.shell_tools.show_tool ({ES_MEMORY_TOOL}, True)
 		end
 
 	launch_uuid_tool is

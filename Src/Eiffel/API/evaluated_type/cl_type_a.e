@@ -406,7 +406,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 		end
 
 	is_conformant_to (other: TYPE_A): BOOLEAN is
-			-- Does Current inherit from other?
+			-- Does Current conform to other?
 			-- Most of the time, it is equivalent to `conform_to' except
 			-- when current is an expanded type.
 		local

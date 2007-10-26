@@ -305,7 +305,7 @@ feature {NONE} -- Access
 
                 l_items := create_tool_bar_items
                 if l_items /= Void then
-                    create Result.make
+                    create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
                     l_items.do_all (agent Result.extend)
                     l_cell.put (Result)
                     Result.compute_minimum_size
@@ -330,7 +330,7 @@ feature {NONE} -- Access
 
                 l_items := create_right_tool_bar_items
                 if l_items /= Void then
-                    create Result.make
+                    create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
                     Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
                     l_items.do_all (agent Result.extend)
                     l_cell.put (Result)

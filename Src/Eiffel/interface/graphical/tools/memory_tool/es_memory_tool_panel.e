@@ -69,6 +69,7 @@ feature {NONE} -- User interface initialization
 			memory_map_grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
 			stone_director.bind (memory_map_grid)
 			register_action (memory_map_grid.row_expand_actions, agent (a_row: EV_GRID_ROW) do execute_with_busy_cursor (agent on_row_expanded (a_row)) end)
+
 			l_box.extend (memory_map_grid)
 
 			create memory_stats_separator
@@ -116,6 +117,25 @@ feature {NONE} -- Access
 	last_map: HASH_TABLE [INTEGER, INTEGER]
 			-- Last cached object count map from `calculate_memory_data'
 
+	filter_match_expression: RX_PCRE_MATCHER is
+			-- Regular expression used when filtering memory map result
+		require
+			is_filtering: is_filtering
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+		do
+			Result := internal_filter_match_expression
+			if Result = Void then
+				create Result.make
+				Result.compile (filter_combo.text)
+				internal_filter_match_expression := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_is_compiled: Result.is_compiled
+			result_consistent: Result = filter_match_expression
+		end
+
 feature {NONE} -- Helpers
 
 	frozen memory: MEMORY
@@ -136,6 +156,16 @@ feature {NONE} -- Status report
 			not_is_recycled: not is_recycled
 		do
 			Result := memory.collecting
+		end
+
+	is_filtering: BOOLEAN
+			-- Indicates if the memory map should be filter
+		require
+			not_is_recycled: not is_recycled
+		do
+			Result := is_initialized and then not filter_combo.text.is_empty
+		ensure
+			result_implies_filter_combo_has_text: Result implies not filter_combo.text.is_empty
 		end
 
 feature {NONE} -- Query
@@ -231,19 +261,24 @@ feature {NONE} -- Basic operations
 		local
 			l_grid: like memory_map_grid
 			l_data: DS_ARRAYED_LIST_CURSOR [like row_data]
+			l_expression: like filter_match_expression
 		do
 			l_grid := memory_map_grid
 			l_grid.remove_and_clear_all_rows
 			l_grid.set_row_count_to (memory_data.count)
 
+			if is_filtering then
+				l_expression := filter_match_expression
+			end
+
 			l_data := memory_data.new_cursor
 			from l_data.start until l_data.after loop
-				populate_memory_grid_row (l_grid.row (l_data.index), l_data.item)
+				populate_memory_grid_row (l_grid.row (l_data.index), l_data.item, l_expression)
 				l_data.forth
 			end
 		end
 
-	populate_memory_grid_row (a_row: EV_GRID_ROW; a_data: like row_data)
+	populate_memory_grid_row (a_row: EV_GRID_ROW; a_data: like row_data; a_match_expression: like filter_match_expression) is
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
@@ -251,6 +286,7 @@ feature {NONE} -- Basic operations
 			not_a_row_is_destroyed: not a_row.is_destroyed
 			not_a_row_is_part_of_tree_structure: not a_row.is_part_of_tree_structure
 			a_data_attached: a_data /= Void
+			a_match_expression_is_compiled: a_match_expression /= Void implies a_match_expression.is_compiled
 		local
 			l_item: EV_GRID_LABEL_ITEM
 			l_count: INTEGER
@@ -266,7 +302,11 @@ feature {NONE} -- Basic operations
 			l_count := a_data.delta
 			if l_count /= 0 then
 				create l_item.make_with_text (l_count.out)
-				l_item.set_foreground_color (colors.stock_colors.red)
+				if l_count > 0 then
+					l_item.set_foreground_color (colors.stock_colors.red)
+				else
+					l_item.set_foreground_color (colors.stock_colors.green)
+				end
 			else
 				create l_item
 			end
@@ -274,6 +314,10 @@ feature {NONE} -- Basic operations
 
 			a_row.set_data (a_data)
 			a_row.ensure_expandable
+
+			if a_match_expression /= Void and then not a_match_expression.matches (a_data.name) then
+				a_row.hide
+			end
 		ensure
 			a_row_data_set: a_row.data = a_data
 		end
@@ -652,8 +696,51 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_filter_changed
+			-- Called when the filter combo box text changes.
+			-- Note: Connected to `filter_combo'.
+		require
+			not_is_recycled: not is_recycled
+			is_initialized: is_initialized
+		local
+			l_grid: like memory_map_grid
+			l_row: EV_GRID_ROW
+			l_data: like row_data
+			l_count, i: INTEGER
+			l_regex: like filter_match_expression
+			l_was_filtering: BOOLEAN
+		do
+				-- Wipe out cached expression
+			internal_filter_match_expression := Void
+
+				-- Show/hide applicable rows
+			l_grid := memory_map_grid
+			l_count := l_grid.row_count
+			if l_count >= 0 then
+				if is_filtering then
+					l_regex := filter_match_expression
+				end
+
+				from i := 1 until i > l_count loop
+					l_row := l_grid.row (i)
+					if not l_row.is_part_of_tree_structure then
+						l_data ?= l_row.data
+						check
+							l_data_attached: l_data /= Void
+						end
+						if l_regex = Void or else l_regex.matches (l_data.name) then
+							l_row.show
+						else
+							l_row.hide
+						end
+					end
+					i := i + l_row.subrow_count_recursive + 1
+				end
+			end
+		end
+
 	on_memory_update_timeout
-			-- Call when the memory update timer times out
+			-- Call when the memory update timer times out.
 			-- Note: Connected to `memory_update_timer'.
 		require
 			not_is_recycled: not is_recycled
@@ -752,6 +839,9 @@ feature {NONE} -- Factory
 			create disable_collection_button.make
 			disable_collection_button.set_text ("Surpress GC")
 			disable_collection_button.set_tooltip ("Enables/Disables the GC.")
+			if not is_gc_collecting then
+				disable_collection_button.enable_select
+			end
 			register_action (disable_collection_button.select_actions, agent do execute_with_busy_cursor (agent on_toogle_collection) end)
 			Result.put_last (disable_collection_button)
 		ensure then
@@ -768,13 +858,16 @@ feature {NONE} -- Factory
 			create Result.make (3)
 
 			create l_box
-			create l_label.make_with_text ("Filter ")
+			l_box.set_padding (6)
+			create l_label.make_with_text ("Type filter:")
 			l_box.extend (l_label)
 
 			create filter_combo
 			filter_combo.set_minimum_width (200)
-			filter_combo.set_minimum_height (20)
+			filter_combo.set_tooltip ("Enter a regular expression to filter the mapped list of types.")
+			register_action (filter_combo.change_actions, agent on_filter_changed)
 			l_box.extend (filter_combo)
+			l_box.disable_item_expand (filter_combo)
 
 			create l_widget.make (l_box)
 			l_widget.set_name ("memory filter")
@@ -784,6 +877,7 @@ feature {NONE} -- Factory
 
 			create show_memory_usage_button.make
 			show_memory_usage_button.set_text ("Show Stats")
+			show_memory_usage_button.set_tooltip ("Show/hide memory statistical information.")
 			register_action (show_memory_usage_button.select_actions, agent on_toggle_memory_stats)
 			Result.put_last (show_memory_usage_button)
 
@@ -797,6 +891,12 @@ feature {NONE} -- Constants
 	object_column_index: INTEGER = 1
 	count_column_index: INTEGER = 2
 	delta_column_index: INTEGER = 3
+
+feature {NONE} -- Internal implementation cache
+
+	internal_filter_match_expression: like filter_match_expression
+			-- Cached version of `filter_match_expression'
+			-- Note: do not use direcly!
 
 invariant
 	disable_collection_button_attached: is_initialized and not is_recycled implies disable_collection_button /= Void

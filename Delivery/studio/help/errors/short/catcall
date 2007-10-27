@@ -1,1 +1,3 @@
-Warning: This feature call is a potential cat-call if the variable is bound to a specific descendant type.
+Warning: This feature call is a potential catcall if the target becomes attached
+  to an instance of a proper descendant type.
+What to do: <<No Suggestion Yet>>

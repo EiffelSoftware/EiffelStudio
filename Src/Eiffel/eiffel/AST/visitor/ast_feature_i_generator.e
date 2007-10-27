@@ -110,6 +110,7 @@ feature {NONE} -- Implementation
 			l_assigner_name_id: INTEGER
 			l_built_in_processor: BUILT_IN_PROCESSOR
 			l_feature_as: FEATURE_AS
+			l_type: TYPE_A
 		do
 			if l_as.assigner /= Void then
 				l_assigner_name_id := l_as.assigner.name_id
@@ -139,7 +140,12 @@ feature {NONE} -- Implementation
 					constant_exists: l_constant /= Void
 					type_exists: l_as.type /= Void
 				end
-				l_const.set_type (query_type (l_as.type), l_assigner_name_id)
+				l_type := query_type (l_as.type)
+				if not l_type.is_basic and then current_class.lace_class.is_void_safe then
+						-- Type of constant is always attached.
+					l_type := l_type.as_attached
+				end
+				l_const.set_type (l_type, l_assigner_name_id)
 				l_result := l_const
 				l_result.set_is_empty (True)
 

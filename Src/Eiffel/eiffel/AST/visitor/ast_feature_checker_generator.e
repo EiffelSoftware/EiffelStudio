@@ -1789,6 +1789,10 @@ feature -- Implementation
 			if error_level = l_error_level then
 					-- Update type stack
 				create l_tuple_type.make (system.tuple_id, last_expressions_type)
+				if not l_tuple_type.is_attached and then context.current_class.lace_class.is_void_safe then
+						-- Type of tuple is always attached
+					l_tuple_type := l_tuple_type.as_attached
+				end
 				instantiator.dispatch (l_tuple_type, context.current_class)
 				last_tuple_type := l_tuple_type
 				last_type := l_tuple_type
@@ -1920,6 +1924,10 @@ feature -- Implementation
 						else
 							create l_array_type.make (system.array_id, l_generics)
 						end
+						if context.current_class.lace_class.is_void_safe then
+								-- Type of a manifest array is always attached
+							l_array_type := l_array_type.as_attached
+						end
 						instantiator.dispatch (l_array_type, context.current_class)
 					end
 				end
@@ -2017,6 +2025,10 @@ feature -- Implementation
 							create l_generics.make (1, 1)
 							l_generics.put (l_type_a, 1)
 							create l_array_type.make (system.array_id, l_generics)
+							if context.current_class.lace_class.is_void_safe then
+									-- Type of a manifest array is always attached
+								l_array_type := l_array_type.as_attached
+							end
 							instantiator.dispatch (l_array_type, context.current_class)
 						end
 					else
@@ -2024,6 +2036,10 @@ feature -- Implementation
 						create l_generics.make (1, 1)
 						l_generics.put (create {CL_TYPE_A}.make (system.any_id), 1)
 						create l_array_type.make (system.array_id, l_generics)
+						if context.current_class.lace_class.is_void_safe then
+								-- Type of a manifest array is always attached
+							l_array_type := l_array_type.as_attached
+						end
 						instantiator.dispatch (l_array_type, context.current_class)
 					end
 				end
@@ -2062,8 +2078,15 @@ feature -- Implementation
 		end
 
 	process_string_as (l_as: STRING_AS) is
+		local
+			t: like last_type
 		do
-			last_type := string_type
+			t := string_type
+			if t /= Void and then context.current_class.lace_class.is_void_safe then
+					-- Constants are always of an attached type
+				t := t.as_attached
+			end
+			last_type := t
 			if is_byte_node_enabled then
 				if l_as.is_once_string then
 					once_manifest_string_index := once_manifest_string_index + 1
@@ -3055,6 +3078,10 @@ feature -- Implementation
 				l_as.id_list.forth
 			end
 			last_type := strip_type
+			if context.current_class.lace_class.is_void_safe then
+					-- Type of strip expression is always attached.
+				last_type := last_type.as_attached
+			end
 			if l_needs_byte_node then
 				last_byte_node := l_strip
 			end
@@ -3299,6 +3326,10 @@ feature -- Implementation
 			l_type := last_type
 			if l_type /= Void then
 				create l_type_type.make (system.type_class.compiled_class.class_id, << l_type >>)
+				if context.current_class.lace_class.is_void_safe then
+						-- The type is always attached
+					l_type_type := l_type_type.as_attached
+				end
 				instantiator.dispatch (l_type_type, context.current_class)
 				last_type := l_type_type
 				if is_byte_node_enabled then
@@ -5303,6 +5334,11 @@ feature -- Implementation
 						l_as.type.process (Current)
 						l_explicit_type := last_type
 							-- If `l_explicit_type' is Void then we stop the process here.
+						if l_explicit_type /= Void and then not l_explicit_type.is_attached and then context.current_class.lace_class.is_void_safe then
+								-- Creation type is always attached
+							l_explicit_type := l_explicit_type.as_attached
+							last_type := l_explicit_type
+						end
 					end
 
 					if error_level = l_error_level then
@@ -5342,6 +5378,11 @@ feature -- Implementation
 								l_creation_type := l_explicit_type
 							else
 								l_creation_type := l_target_type
+								if not l_creation_type.is_attached and then context.current_class.lace_class.is_void_safe then
+										-- Creation type is always attached.
+									l_creation_type := l_creation_type.as_attached
+									last_type := l_creation_type
+								end
 							end
 
 								-- Check call validity for creation.
@@ -5422,6 +5463,11 @@ feature -- Implementation
 					l_vgcc3.set_location (l_as.type.start_location)
 					error_handler.insert_error (l_vgcc3)
 				else
+					if not l_creation_type.is_attached and then context.current_class.lace_class.is_void_safe then
+							-- Type of a creation expression is always attached.
+						l_creation_type := l_creation_type.as_attached
+						last_type := l_creation_type
+					end
 					instantiator.dispatch (l_creation_type, context.current_class)
 
 						-- Check call validity for creation.
@@ -7472,6 +7518,11 @@ feature {NONE} -- Agents
 			create l_tuple.make (System.tuple_id, l_oargtypes)
 				-- Insert it as second generic parameter of ROUTINE.
 			l_generics.put (l_tuple, 2)
+
+			if context.current_class.lace_class.is_void_safe then
+					-- Type of an agent is always attached.
+				l_result_type := l_result_type.as_attached
+			end
 
 			if is_byte_node_enabled then
 				create l_routine_creation

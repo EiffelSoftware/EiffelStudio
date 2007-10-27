@@ -253,12 +253,14 @@ feature -- Setting
 			current_class := a_class
 			create current_class_type
 			current_class_type.set_actual_type (a_type)
-			current_class_type.set_attached_mark
+			if current_class.lace_class.is_void_safe then
+				current_class_type.set_attached_mark
+			end
 			current_feature_table := a_feat_tbl
 			written_class := Void
 		ensure
 			current_class_set: current_class = a_class
-			current_class_type_set: current_class_type.conformance_type = a_type
+			current_class_type_set: current_class_type.conformance_type = a_type or else current_class_type.conformance_type.same_as (a_type.as_attached)
 			current_feature_table_set: current_feature_table = a_feat_tbl
 		end
 

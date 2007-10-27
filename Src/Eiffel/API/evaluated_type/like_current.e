@@ -14,7 +14,8 @@ inherit
 			actual_type, associated_class, conform_to, conformance_type, convert_to,
 			generics, has_associated_class, instantiated_in,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
-			meta_type, set_actual_type, type_i, evaluated_type_in_descendant, is_tuple
+			meta_type, set_actual_type, type_i, evaluated_type_in_descendant, is_tuple,
+			set_attached_mark, set_detachable_mark
 		end
 
 feature -- Visitor
@@ -153,7 +154,7 @@ feature -- Output
 			conformance_type.ext_append_to (st, c)
 		end
 
-feature {COMPILER_EXPORTER} -- Primitives
+feature {COMPILER_EXPORTER} -- Modification
 
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `original_actual_type'.
@@ -161,6 +162,26 @@ feature {COMPILER_EXPORTER} -- Primitives
 			conformance_type := a
 			actual_type := Current
 		end
+
+	set_attached_mark is
+			-- Mark type declaration as having an explicit attached mark.
+		do
+			Precursor
+			if not conformance_type.is_attached then
+				conformance_type := conformance_type.as_attached
+			end
+		end
+
+	set_detachable_mark is
+			-- Set class type declaration as having an explicit detachable mark.
+		do
+			Precursor
+			if conformance_type.is_attached then
+				conformance_type := conformance_type.as_detachable
+			end
+		end
+
+feature {COMPILER_EXPORTER} -- Primitives
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',

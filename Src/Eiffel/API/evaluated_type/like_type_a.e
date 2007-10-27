@@ -29,7 +29,8 @@ inherit
 			is_reference,
 			is_valid,
 			meta_type,
-			set_attached_mark
+			set_attached_mark,
+			set_detachable_mark
 		end
 
 feature -- Properties
@@ -43,6 +44,11 @@ feature -- Properties
 				-- `conformance_type' has to be called because
 				-- `actual_type' may yield yet another anchored type.
 			Result := actual_type.conformance_type
+			if has_attached_mark and then not Result.is_attached then
+				Result := Result.as_attached
+			elseif has_detachable_mark and then Result.is_attached then
+				Result := Result.as_detachable
+			end
 		end
 
 	has_attached_mark: BOOLEAN is
@@ -152,7 +158,7 @@ feature -- Primitives
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			attachment_bits := has_detachable_mark_mask
-		ensure
+		ensure then
 			has_detachable_mark
 		end
 

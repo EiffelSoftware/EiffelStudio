@@ -14,7 +14,7 @@ inherit
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, is_valid, format, convert_to, is_attached,
 			is_full_named_type, is_external, is_enum, is_conformant_to,
-			set_attached_mark
+			set_attached_mark, set_detachable_mark
 		end
 
 	DEBUG_OUTPUT
@@ -298,7 +298,7 @@ feature {COMPILER_EXPORTER} -- Settings
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			attachment_bits := has_detachable_mark_mask
-		ensure
+		ensure then
 			has_detachable_mark
 			not is_attached
 		end

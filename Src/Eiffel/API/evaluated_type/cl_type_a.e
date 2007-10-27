@@ -201,10 +201,8 @@ feature -- Output
 		do
 			if has_attached_mark then
 				st.process_symbol_text (ti_exclamation)
-				st.add_space
 			elseif has_detachable_mark then
 				st.process_symbol_text (ti_question)
-				st.add_space
 			end
 			if has_expanded_mark then
 				st.process_keyword_text (ti_expanded_keyword, Void)
@@ -236,10 +234,8 @@ feature -- Output
 			create Result.make (n)
 			if has_attached_mark then
 				Result.append_character ('!')
-				Result.append_character (' ')
 			elseif has_detachable_mark then
 				Result.append_character ('?')
-				Result.append_character (' ')
 			end
 			if has_expanded_mark then
 				Result.append ("expanded ")

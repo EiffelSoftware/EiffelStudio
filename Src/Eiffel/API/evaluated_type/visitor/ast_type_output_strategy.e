@@ -108,10 +108,8 @@ feature {TYPE_A} -- Visitors
 		do
 			if a_type.has_attached_mark then
 				text_formatter.process_symbol_text (ti_exclamation)
-				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
 				text_formatter.process_symbol_text (ti_question)
-				text_formatter.add_space
 			end
 			if a_type.has_expanded_mark then
 				text_formatter.process_keyword_text (ti_expanded_keyword, Void)
@@ -181,10 +179,8 @@ feature {TYPE_A} -- Visitors
 		do
 			if a_type.has_attached_mark then
 				text_formatter.process_symbol_text (ti_exclamation)
-				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
 				text_formatter.process_symbol_text (ti_question)
-				text_formatter.add_space
 			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
@@ -201,10 +197,8 @@ feature {TYPE_A} -- Visitors
 		do
 			if a_type.has_attached_mark then
 				text_formatter.process_symbol_text (ti_exclamation)
-				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
 				text_formatter.process_symbol_text (ti_question)
-				text_formatter.add_space
 			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
@@ -218,10 +212,8 @@ feature {TYPE_A} -- Visitors
 		do
 			if a_type.has_attached_mark then
 				text_formatter.process_symbol_text (ti_exclamation)
-				text_formatter.add_space
 			elseif a_type.has_detachable_mark then
 				text_formatter.process_symbol_text (ti_question)
-				text_formatter.add_space
 			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space

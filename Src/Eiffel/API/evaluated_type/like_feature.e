@@ -119,10 +119,8 @@ feature -- Output
 			Result.append_character ('[')
 			if has_attached_mark then
 				Result.append_character ('!')
-				Result.append_character (' ')
 			elseif has_detachable_mark then
 				Result.append_character ('?')
-				Result.append_character (' ')
 			end
 			Result.append ("like " + feature_name +"] ")
 			Result.append (s)
@@ -137,10 +135,8 @@ feature -- Output
 			st.process_symbol_text (ti_l_bracket)
 			if has_attached_mark then
 				st.process_symbol_text (ti_exclamation)
-				st.add_space
 			elseif has_detachable_mark then
 				st.process_symbol_text (ti_question)
-				st.add_space
 			end
 			st.process_keyword_text (ti_like_keyword, Void)
 			st.add_space

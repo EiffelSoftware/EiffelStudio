@@ -127,10 +127,8 @@ feature -- Output
 			Result.append_character ('[')
 			if has_attached_mark then
 				Result.append_character ('!')
-				Result.append_character (' ')
 			elseif has_detachable_mark then
 				Result.append_character ('?')
-				Result.append_character (' ')
 			end
 			Result.append ("like Current] ")
 			Result.append (actual_dump)

@@ -14,8 +14,6 @@ inherit
 	COMPILER_SERVER [FEATURE_I]
 		rename
 			put as server_put
-		export
-			{NONE} all
 		redefine
 			item, has, flush, make
 		end

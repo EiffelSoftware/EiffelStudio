@@ -19,6 +19,9 @@ inherit
 create
 	make
 
+create {COMPUTED_FEATURE_TABLE}
+	make_filled
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

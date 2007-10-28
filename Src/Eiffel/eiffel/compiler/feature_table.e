@@ -88,9 +88,6 @@ inherit
 			start as internal_table_start,
 			after as internal_table_after,
 			forth as internal_table_forth
-		export
-			{NONE} all
-			{ANY} count, has_id, found, conflict, search_id
 		end
 
 create

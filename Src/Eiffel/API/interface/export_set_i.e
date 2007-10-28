@@ -47,6 +47,9 @@ inherit
 create
 	make
 
+create {EXPORT_SET_I}
+	ll_make
+
 feature {NONE} -- Initialization
 
 	make (a_client: like item) is

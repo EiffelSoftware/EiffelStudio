@@ -29,10 +29,6 @@ class
 
 inherit
 	HASH_TABLE [SELECTION_LIST, INTEGER]
-		export
-			{NONE} all
-			{ANY} clear_all
-		end
 
 	SHARED_WORKBENCH
 		export

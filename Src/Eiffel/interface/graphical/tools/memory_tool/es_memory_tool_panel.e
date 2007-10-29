@@ -50,7 +50,7 @@ feature {NONE} -- User interface initialization
 
 			l_col := memory_map_grid.column (count_column_index)
 			l_col.set_title ("Count")
-			l_col.set_width (50)
+			l_col.set_width (80)
 
 			l_col := memory_map_grid.column (delta_column_index)
 			l_col.set_title ("Delta")
@@ -69,6 +69,12 @@ feature {NONE} -- User interface initialization
 			memory_map_grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
 			stone_director.bind (memory_map_grid)
 			register_action (memory_map_grid.row_expand_actions, agent (a_row: EV_GRID_ROW) do execute_with_busy_cursor (agent on_row_expanded (a_row)) end)
+			register_action (memory_map_grid.pointer_button_release_item_actions, agent (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
+				do
+					if a_button = {EV_POINTER_CONSTANTS}.right then
+						show_item_context_menu (a_item, a_x - a_item.parent.virtual_x_position, (a_y + a_item.parent.header.height) - a_item.parent.virtual_y_position)
+					end
+				end)
 
 			l_box.extend (memory_map_grid)
 
@@ -92,6 +98,9 @@ feature {NONE} -- User interface initialization
 
 			create memory_update_timer
 			register_action (memory_update_timer.actions, agent on_memory_update_timeout)
+
+			create filter_update_timer
+			register_action (filter_update_timer.actions, agent on_filter_update_timeout)
 		end
 
 feature {NONE} -- Clean up
@@ -103,6 +112,7 @@ feature {NONE} -- Clean up
 				stone_director.unbind (memory_map_grid)
 				stone_director.unbind (memory_stats_text)
 				memory_update_timer.destroy
+				filter_update_timer.destroy
 			end
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 		ensure then
@@ -178,14 +188,12 @@ feature {NONE} -- Query
 		require
 			a_row_attached: a_row /= Void
 			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_is_part_of_tree_structure: a_row.is_part_of_tree_structure
 		do
 			Result ?= a_row.data
 		ensure
-			result_attached: Result /= Void
-			result_name_attached: Result.name /= Void
-			not_result_name_is_empty: not Result.name.is_empty
-			result_id_positive: Result.id > 0
+			result_name_attached: Result /= Void implies Result.name /= Void
+			not_result_name_is_empty: Result /= Void implies not Result.name.is_empty
+			result_id_positive: Result /= Void implies Result.id > 0
 		end
 
 	sorted_objects (a_table: HASH_TABLE [INTEGER, INTEGER]): DS_ARRAYED_LIST [INTEGER] is
@@ -243,6 +251,8 @@ feature {NONE} -- Basic operations
 				-- Do update
 			execute_with_busy_cursor (agent
 				do
+					clear_memory_grid
+
 						-- Collect prior to mapping
 					on_collect
 
@@ -252,19 +262,36 @@ feature {NONE} -- Basic operations
 				end)
 		end
 
+	clear_memory_grid
+			-- Removes all items from the memory grid
+		local
+			l_grid: like memory_map_grid
+			l_count, i: INTEGER
+		do
+			l_grid := memory_map_grid
+			l_count := l_grid.row_count
+			from i := 1 until i > l_count loop
+				l_grid.row (i).set_data (Void)
+				i := i + 1
+			end
+			l_grid.remove_and_clear_all_rows
+		ensure
+			memory_map_grid_row_count_is_zero: memory_map_grid.row_count = 0
+		end
+
 	populate_memory_grid
 			-- Populates the memory map grid with calculated contents
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 			memory_data_attached: memory_data /= Void
+			memory_map_grid_row_count_is_zero: memory_map_grid.row_count = 0
 		local
 			l_grid: like memory_map_grid
 			l_data: DS_ARRAYED_LIST_CURSOR [like row_data]
 			l_expression: like filter_match_expression
 		do
 			l_grid := memory_map_grid
-			l_grid.remove_and_clear_all_rows
 			l_grid.set_row_count_to (memory_data.count)
 
 			if is_filtering then
@@ -279,6 +306,10 @@ feature {NONE} -- Basic operations
 		end
 
 	populate_memory_grid_row (a_row: EV_GRID_ROW; a_data: like row_data; a_match_expression: like filter_match_expression) is
+			-- Populates a row with a object type.
+			--
+			-- `a_row': The row to populate with type subrows.
+			-- `a_match_expression': A regular expression to determine the row's default visibility
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
@@ -323,6 +354,9 @@ feature {NONE} -- Basic operations
 		end
 
 	populate_memory_grid_type_subrows (a_row: EV_GRID_ROW) is
+			-- Populates a row with type instances.
+			--
+			-- `a_row': The row to populate with type instance subrows.
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
@@ -331,17 +365,12 @@ feature {NONE} -- Basic operations
 			not_a_row_is_part_of_tree_structure: not a_row.is_part_of_tree_structure
 			a_row_data_attached: a_row.data /= Void
 		local
-			l_item: EV_GRID_LABEL_ITEM
 			l_row_data: like row_data
 			l_grid: like memory_map_grid
 			l_objects: ARRAYED_LIST [ANY]
-			l_subrow: EV_GRID_ROW
 			l_object: ANY
-			l_recyclable: EB_RECYCLABLE
-			l_description: STRING
-			l_color: EV_COLOR
 		do
-			l_row_data ?= a_row.data
+			l_row_data := row_data (a_row)
 			check
 				l_row_data_attached: l_row_data /= Void
 			end
@@ -351,41 +380,7 @@ feature {NONE} -- Basic operations
 				l_grid.insert_new_rows_parented (l_objects.count, a_row.index + 1, a_row)
 				from l_objects.start until l_objects.after loop
 					l_object := l_objects.item
-					l_subrow := a_row.subrow (l_objects.index)
-
-						-- Object description
-					l_recyclable ?= l_object
-					create l_description.make (15)
-					l_description.append_integer (l_objects.index)
-					if l_recyclable /= Void then
-						l_subrow.set_background_color (colors.grid_disabled_item_text_color)
-						if l_recyclable.is_recycled then
-							l_description.append (once " (Recycled)")
-							l_color := colors.stock_colors.green
-						else
-							l_description.append (once " (Not Recycled)")
-							l_color := colors.stock_colors.red
-						end
-					else
-						l_color := Void
-					end
-					create l_item.make_with_text (l_description)
-					if l_color /= Void then
-						l_subrow.set_foreground_color (l_color)
-					end
-					l_subrow.set_item (object_column_index, l_item)
-
-						-- Address
-					create l_item.make_with_text (($l_object).out)
-					l_item.set_foreground_color (colors.stock_colors.dark_gray)
-					l_subrow.set_item (count_column_index, l_item)
-
-						-- Blank
-					l_subrow.set_item (delta_column_index, create {EV_GRID_ITEM})
-
-					l_subrow.ensure_expandable
-					l_subrow.set_data (l_object)
-
+					populate_memory_grid_referer_row (a_row.subrow (l_objects.index), l_objects.index, l_object)
 					l_objects.forth
 				end
 			end
@@ -394,6 +389,9 @@ feature {NONE} -- Basic operations
 		end
 
 	populate_memory_grid_referer_subrows (a_row: EV_GRID_ROW) is
+			-- Populates a row with referring object (object is taken from the supplied row's user data) subrows.
+			--
+			-- `a_row': The row to populate with subrows.
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
@@ -405,13 +403,8 @@ feature {NONE} -- Basic operations
 			l_referers: SPECIAL [ANY]
 			l_grid: like memory_map_grid
 			l_subrow: EV_GRID_ROW
-			l_item: EV_GRID_LABEL_ITEM
-			l_internal: INTERNAL
 			l_count, i: INTEGER
-			l_description: STRING
 			l_object: ANY
-			l_recyclable: EB_RECYCLABLE
-			l_color: EV_COLOR
 			l_offset: INTEGER
 		do
 			l_referers := memory.referers (a_row.data)
@@ -426,63 +419,133 @@ feature {NONE} -- Basic operations
 					end
 					i := i + 1
 				end
-				l_grid.insert_new_rows_parented (l_count - l_offset, a_row.index + 1, a_row)
+				if l_count - l_offset > 0 then
+					l_grid.insert_new_rows_parented (l_count - l_offset, a_row.index + 1, a_row)
 
-				create l_internal
-				l_offset := 0
-				from i := 1 until i > l_count  loop
-					l_object := l_referers.item (i - 1)
-					l_subrow := a_row.subrow (i - l_offset)
+					l_offset := 0
+					from i := 1 until i > l_count  loop
+						l_object := l_referers.item (i - 1)
 
-						-- Object description
-					if a_row /= l_object then
-						create l_description.make (30)
-						l_description.append_integer (i - l_offset)
-						l_description.append (once ": ")
-						l_recyclable ?= l_object
-						if l_recyclable /= Void then
-							l_subrow.set_background_color (colors.grid_disabled_item_text_color)
-							if l_recyclable.is_recycled then
-								l_description.append (once "(Recycled) ")
-								l_color := colors.stock_colors.green
-							else
-								l_description.append (once "(Not Recycled) ")
-								l_color := colors.stock_colors.red
-							end
+							-- Object description
+						if a_row /= l_object then
+							l_subrow := a_row.subrow (i - l_offset)
+							populate_memory_grid_referer_row (l_subrow, i - l_offset, l_object)
 						else
-							l_color := Void
+							l_offset := l_offset + 1
 						end
-						l_description.append (l_internal.type_name (l_object))
-
-						create l_item.make_with_text (l_description)
-						if l_color /= Void then
-							l_subrow.set_foreground_color (l_color)
-						end
-						l_subrow.set_item (object_column_index, l_item)
-
-						create l_item.make_with_text (($l_object).out)
-						l_subrow.set_item (count_column_index, l_item)
-						l_item.set_foreground_color (colors.stock_colors.dark_gray)
-
-							-- Blank
-						l_subrow.set_item (delta_column_index, create {EV_GRID_ITEM})
-
-						l_subrow.ensure_expandable
-						l_subrow.set_data (l_object)
-					else
-						l_offset := l_offset + 1
+						i := i + 1
 					end
-					i := i + 1
 				end
---				if l_offset > 0 then
---					from until l_offset = 0 loop
---						a_row.remove_subrow (l_grid.row (a_row.index + a_row.subrow_count_recursive))
---						l_offset := l_offset - 1
---					end
---				end
 			end
 		ensure
 			a_row_data_attached: a_row.data /= Void
+		end
+
+	populate_memory_grid_referer_row (a_row: EV_GRID_ROW; a_index: INTEGER; a_object: ANY) is
+			-- Populates a row with the object information
+			--
+			-- `a_row': The row to populate, or repopulate.
+			-- `a_index': The originating indexing for the row.
+			-- `a_object': The object to extract data used populate the row.
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+			a_row_attached: a_row /= Void
+			not_a_row_is_destroyed: not a_row.is_destroyed
+			a_row_is_part_of_tree_structure: a_row.is_part_of_tree_structure
+			a_index_positive: a_index > 0
+			a_object_attached: a_object /= Void
+		local
+			l_item: EV_GRID_LABEL_ITEM
+			l_description: STRING
+			l_recyclable: EB_RECYCLABLE
+			l_color: EV_COLOR
+		do
+			create l_description.make (30)
+			l_description.append_integer (a_index)
+			l_description.append (once ": ")
+			l_recyclable ?= a_object
+			if l_recyclable /= Void then
+				a_row.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (230, 230, 230))
+				if l_recyclable.is_recycled then
+					l_description.append (once "(Recycled) ")
+					l_color := colors.stock_colors.dark_green
+				else
+					l_description.append (once "(Not Recycled) ")
+					l_color := colors.stock_colors.red
+				end
+			else
+				l_color := Void
+			end
+			if row_data (a_row.parent_row) = Void then
+				l_description.append (a_object.generating_type)
+			end
+
+			create l_item.make_with_text (l_description)
+			if l_color /= Void then
+				a_row.set_foreground_color (l_color)
+			end
+			a_row.set_item (object_column_index, l_item)
+
+			create l_item.make_with_text (($a_object).out)
+			a_row.set_item (count_column_index, l_item)
+			l_item.set_foreground_color (colors.stock_colors.dark_gray)
+
+				-- Blank
+			a_row.set_item (delta_column_index, create {EV_GRID_ITEM})
+
+			a_row.ensure_expandable
+			a_row.set_data (a_object)
+		ensure
+			a_row_data_set: a_row.data = a_object
+			a_row_is_expandable: a_row.is_expandable
+		end
+
+	show_item_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
+			-- Displays a memory map grid item's context menu.
+			--
+			-- `a_item': The item where the context menu should be display.
+			-- `a_x': The x position of the context menu, relative to `memory_data_grid'.
+			-- `a_y': The y position of the context menu, relative to `memory_data_grid'.
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+			a_item_attached: a_item /= Void
+			not_a_item_is_destroyed: not a_item.is_destroyed
+			a_x_non_negative: a_x >= 0
+			a_y_non_negative: a_y >= 0
+		local
+			l_object: ANY
+			l_recycleable: EB_RECYCLABLE
+			l_menu: EV_MENU
+			l_menu_item: EV_MENU_ITEM
+			l_data: like row_data
+		do
+			l_object ?= a_item.row.data
+
+				-- Only allow recycling in objects that are not used by the tool.
+			l_data ?= l_object
+			if l_object /= Void and l_data = Void then
+				create l_menu
+				create l_menu_item.make_with_text_and_action ("Go to object", agent (a_object: ANY) do execute_with_busy_cursor (agent select_object (a_object)) end (l_object))
+				l_menu.extend (l_menu_item)
+				l_menu.extend (create {EV_MENU_SEPARATOR})
+				create l_menu_item.make_with_text_and_action ("Free object",  agent (a_object: ANY) do execute_with_busy_cursor (agent free_object (a_object)) end (l_object))
+				l_menu.extend (l_menu_item)
+
+				l_recycleable ?= l_object
+				if l_recycleable /= Void and then not l_recycleable.is_recycled then
+						-- Add recycle option
+
+					create l_menu_item.make_with_text_and_action ("Perform recycle",  agent (a_object: EB_RECYCLABLE) do execute_with_busy_cursor (agent recycle_object (a_object)) end (l_recycleable))
+					l_menu.extend (l_menu_item)
+				end
+
+					-- Display menu
+				l_menu.show_at (a_item.parent, a_x, a_y)
+
+				l_menu.destroy
+			end
 		end
 
 feature {NONE} -- Analysis
@@ -610,6 +673,9 @@ feature {NONE} -- User interface elements
 	memory_update_timer: EV_TIMEOUT
 			-- Timer used to update memory usage stats
 
+	filter_update_timer: EV_TIMEOUT
+			-- Timer used to update filtered view of the memory data
+
 feature {NONE} -- Action handlers
 
 	on_toogle_collection
@@ -696,49 +762,6 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_filter_changed
-			-- Called when the filter combo box text changes.
-			-- Note: Connected to `filter_combo'.
-		require
-			not_is_recycled: not is_recycled
-			is_initialized: is_initialized
-		local
-			l_grid: like memory_map_grid
-			l_row: EV_GRID_ROW
-			l_data: like row_data
-			l_count, i: INTEGER
-			l_regex: like filter_match_expression
-			l_was_filtering: BOOLEAN
-		do
-				-- Wipe out cached expression
-			internal_filter_match_expression := Void
-
-				-- Show/hide applicable rows
-			l_grid := memory_map_grid
-			l_count := l_grid.row_count
-			if l_count >= 0 then
-				if is_filtering then
-					l_regex := filter_match_expression
-				end
-
-				from i := 1 until i > l_count loop
-					l_row := l_grid.row (i)
-					if not l_row.is_part_of_tree_structure then
-						l_data ?= l_row.data
-						check
-							l_data_attached: l_data /= Void
-						end
-						if l_regex = Void or else l_regex.matches (l_data.name) then
-							l_row.show
-						else
-							l_row.hide
-						end
-					end
-					i := i + l_row.subrow_count_recursive + 1
-				end
-			end
-		end
-
 	on_memory_update_timeout
 			-- Call when the memory update timer times out.
 			-- Note: Connected to `memory_update_timer'.
@@ -790,6 +813,60 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_filter_changed
+			-- Called when the filter combo box text changes.
+			-- Note: Connected to `filter_combo'.
+		do
+			filter_update_timer.set_interval (0)
+			filter_update_timer.set_interval (filter_update_timer_interval)
+		end
+
+	on_filter_update_timeout
+			-- Call when the filter update timer expires.
+			-- Note: connected to `on_filter_update_timer'
+		require
+			not_is_recycled: not is_recycled
+			is_initialized: is_initialized
+		local
+			l_grid: like memory_map_grid
+			l_row: EV_GRID_ROW
+			l_data: like row_data
+			l_count, i: INTEGER
+			l_regex: like filter_match_expression
+		do
+				-- Wipe out cached expression
+			internal_filter_match_expression := Void
+
+				-- Show/hide applicable rows
+			l_grid := memory_map_grid
+			l_count := l_grid.row_count
+			if l_count >= 0 then
+				if is_filtering then
+					l_regex := filter_match_expression
+				end
+
+				from i := 1 until i > l_count loop
+					l_row := l_grid.row (i)
+					if not l_row.is_part_of_tree_structure then
+						l_data ?= l_row.data
+						check
+							l_data_attached: l_data /= Void
+						end
+						if l_regex = Void or else l_regex.matches (l_data.name) then
+							l_row.show
+						else
+							l_row.hide
+						end
+					end
+					i := i + l_row.subrow_count_recursive + 1
+				end
+			end
+
+			filter_update_timer.set_interval (0)
+		ensure
+			filter_update_timer_reset: filter_update_timer.interval = 0
+		end
+
 	on_row_expanded (a_row: EV_GRID_ROW)
 			-- Called when a row is expanded on the memory map grid
 		require
@@ -806,6 +883,160 @@ feature {NONE} -- Action handlers
 					populate_memory_grid_type_subrows (a_row)
 				end
 			end
+		end
+
+feature {NONE} -- Memory pruning
+
+	select_object (a_object: ANY) is
+			-- Navigates to a object in the grid strcuture.
+			--
+			-- `a_object': An object to navigate too.
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+			a_object_attached: a_object /= Void
+		local
+			l_grid: EV_GRID
+			l_count, i: INTEGER
+			l_row: EV_GRID_ROW
+			l_object_row: EV_GRID_ROW
+			l_type_name: STRING
+			l_data: like row_data
+			l_stop: BOOLEAN
+		do
+			l_type_name := a_object.generating_type
+
+				-- Attempt to locate type row
+			l_grid := memory_map_grid
+			l_count := l_grid.row_count
+			from i := 1 until i > l_count or l_stop loop
+				l_row := l_grid.row (i)
+				l_data := row_data (l_row)
+				l_stop := l_data /= Void and then l_data.name.is_equal (l_type_name)
+				if not l_stop then
+					i := i + l_row.subrow_count_recursive + 1
+				end
+			end
+
+			if l_stop then
+				check
+					l_row_attached: l_row /= Void
+				end
+					-- Expand row to populate sub items
+				l_row.expand
+				on_row_expanded (l_row)
+				if not l_row.is_show_requested then
+						-- Ensure the row is always shown, because the filter might hide it.
+					l_row.show
+				end
+
+					-- Attempt to locate object
+				l_stop := False
+				l_count := l_row.subrow_count
+				from i := 1 until i > l_count or l_stop loop
+					l_object_row := l_row.subrow (i)
+					l_stop := l_object_row.data = a_object
+					i := i + 1
+				end
+
+				if l_stop then
+					check
+						l_object_row_attached: l_object_row /= Void
+					end
+						-- Perform selection
+					l_grid.selected_rows.do_all (agent (a_row: EV_GRID_ROW) do a_row.disable_select end)
+					l_object_row.enable_select
+					l_object_row.ensure_visible
+				end
+			end
+		end
+
+	free_object (a_object: ANY) is
+			-- Release an object.
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+			a_object_attached: a_object /= Void
+		local
+			l_name: STRING
+			l_address: STRING
+			l_warning: ES_WARNING_PROMPT
+			l_grid: like memory_map_grid
+			l_count, i: INTEGER
+			l_row: EV_GRID_ROW
+		do
+			if a_object /= Current and a_object /= tool_descriptor and a_object /= develop_window then
+				l_name := a_object.generating_type
+				l_address := ($a_object).out
+				create l_warning.make_standard_with_cancel ("Freeing an object can harm this running application%NAre you sure you want to free " + l_name + "(" + l_address + ")?")
+				l_warning.show_on_active_window
+
+				if l_warning.dialog_result = l_warning.dialog_buttons.ok_button then
+						-- Hide all associated objects
+					l_grid := memory_map_grid
+					from i := 1; l_count := l_grid.row_count until i> l_count loop
+						l_row := l_grid.row (i)
+						if l_row.data = a_object then
+							l_row.hide
+							l_row.set_data (Void)
+						end
+						i := i + 1
+					end
+					memory.free (a_object)
+				end
+
+				l_warning.recycle
+			else
+				prompts.show_error_prompt ("This object cannot be removed as it's in use by the " + tool_title.as_string_32 + " tool.", Void, Void)
+			end
+		end
+
+	recycle_object (a_object: EB_RECYCLABLE) is
+			-- Recycled an object
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+			a_object_attached: a_object /= Void
+		local
+			l_index: INTEGER
+			l_count, i: INTEGER
+			l_subrow_count, j: INTEGER
+			l_row: EV_GRID_ROW
+			l_parent_row: EV_GRID_ROW
+			l_grid: like memory_map_grid
+		do
+			if a_object /= Current and a_object /= tool_descriptor and a_object /= develop_window then
+				a_object.recycle
+
+					-- Redraw all items currently displaying a representation of `a_object'
+				l_grid := memory_map_grid
+				from i := 1; l_count := l_grid.row_count until i > l_count loop
+					l_row := l_grid.row (i)
+
+					if l_row.data = a_object then
+							-- Attempt to row item index
+						l_index := 0
+						l_parent_row := l_row.parent_row
+						from j := 1; l_subrow_count := l_parent_row.subrow_count until j > l_subrow_count or l_index > 0 loop
+							if l_parent_row.subrow (j) = l_row then
+								l_index := j
+							end
+							j := j + 1
+						end
+						check
+							l_index_positive: l_index > 0
+						end
+							-- Repopulate the row with the new info.
+						populate_memory_grid_referer_row (l_row, l_index, a_object)
+					end
+
+					i := i + 1
+				end
+			else
+				prompts.show_error_prompt ("This object cannot be recycled as it's in use by the " + tool_title.as_string_32 + " tool.", Void, Void)
+			end
+		ensure
+			a_object_is_recycled: a_object.is_recycled
 		end
 
 feature {NONE} -- Factory
@@ -865,6 +1096,7 @@ feature {NONE} -- Factory
 			create filter_combo
 			filter_combo.set_minimum_width (200)
 			filter_combo.set_tooltip ("Enter a regular expression to filter the mapped list of types.")
+			filter_combo.set_text ("^ES_GROUP_TOOL")
 			register_action (filter_combo.change_actions, agent on_filter_changed)
 			l_box.extend (filter_combo)
 			l_box.disable_item_expand (filter_combo)
@@ -888,6 +1120,7 @@ feature {NONE} -- Factory
 feature {NONE} -- Constants
 
 	memory_update_timer_interval: INTEGER = 500
+	filter_update_timer_interval: INTEGER = 500
 	object_column_index: INTEGER = 1
 	count_column_index: INTEGER = 2
 	delta_column_index: INTEGER = 3
@@ -908,6 +1141,7 @@ invariant
 	memory_stats_text_attached: is_initialized and not is_recycled implies memory_stats_text /= Void
 	memory_stats_separator_attached: is_initialized and not is_recycled implies memory_stats_separator /= Void
 	memory_update_timer_attached: is_initialized and not is_recycled implies memory_update_timer /= Void
+	filter_update_timer_attached: is_initialized and not is_recycled implies filter_update_timer /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

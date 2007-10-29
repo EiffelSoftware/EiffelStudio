@@ -89,7 +89,7 @@ feature -- Basic operations
 
 					-- Remove registered actions
 				if internal_recycle_actions /= Void then
-					internal_recycle_actions.do_all (agent (a_item: TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; action: PROCEDURE [like Current, TUPLE]])
+					internal_recycle_actions.do_all (agent (a_item: TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; action: PROCEDURE [ANY, TUPLE]])
 						local
 							l_compare: BOOLEAN
 						do
@@ -141,24 +141,26 @@ feature {NONE} -- Basic operations
 			l_skip_implementation: BOOLEAN
 			l_actions: ACTION_SEQUENCE [TUPLE]
 		do
-				-- Because of the need to destroy EiffelVision2 widgets, we need to detect
-				-- and skip the detachment of {EV_ANY}.implementation.
-			l_any ?= a_recyclable
-			l_skip_implementation:= l_any /= Void
+			debug ("recycle_and_detach")
+					-- Because of the need to destroy EiffelVision2 widgets, we need to detect
+					-- and skip the detachment of {EV_ANY}.implementation.
+				l_any ?= a_recyclable
+				l_skip_implementation:= l_any /= Void
 
-			create l_internal
-			l_count := l_internal.field_count (a_recyclable)
-			from i := 1 until i > l_count loop
-				if l_internal.field_type (i, a_recyclable) = l_internal.reference_type and then (not l_skip_implementation or else not l_internal.field_name (i, a_recyclable).is_equal (once "implementation")) then
-					l_actions ?= l_internal.field (i, a_recyclable)
-					if l_actions /= Void then
-						l_actions.wipe_out
+				create l_internal
+				l_count := l_internal.field_count (a_recyclable)
+				from i := 1 until i > l_count loop
+					if l_internal.field_type (i, a_recyclable) = l_internal.reference_type and then (not l_skip_implementation or else not l_internal.field_name (i, a_recyclable).is_equal (once "implementation")) then
+						l_actions ?= l_internal.field (i, a_recyclable)
+						if l_actions /= Void then
+							l_actions.wipe_out
+						end
+
+							-- Detach field (except {EV_ANY}.implementation)
+						l_internal.set_reference_field (i, a_recyclable, Void)
 					end
-
-						-- Detach field (except {EV_ANY}.implementation)
-					l_internal.set_reference_field (i, a_recyclable, Void)
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -205,9 +207,9 @@ feature {ANY} -- Extension
 			recycle_pool_has_a_action: recycle_pool.has (a_action)
 		end
 
-feature {NONE} -- Agent assistance
+feature -- Agent assistance
 
-	register_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [like Current, TUPLE]) is
+	register_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]) is
 			-- Registers an action sequence and automatically pools it for later removal
 		require
 			a_sequence_attached: a_sequence /= Void
@@ -262,7 +264,7 @@ feature {NONE} -- Access
 			esult_consistent: Result = recycle_pool
 		end
 
-	frozen recycle_actions: ARRAYED_LIST [TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [like Current, TUPLE]]]
+	frozen recycle_actions: ARRAYED_LIST [TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]]]
 			-- List of items to be automatically recycled when Current is recycled
 		require
 			not_is_recycled: not is_recycled

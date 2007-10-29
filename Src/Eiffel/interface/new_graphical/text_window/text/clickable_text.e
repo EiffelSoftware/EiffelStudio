@@ -223,7 +223,7 @@ feature -- Initialization
 			end
 		ensure
 			cursor_positioned: cursor.y_in_lines = l_line
-			selection_cursor_positioned: selection_cursor.y_in_lines = l_line
+			selection_cursor_positioned: not cursor.token.is_new_line implies selection_cursor.y_in_lines = l_line
 		end
 
 feature -- Load Text handling

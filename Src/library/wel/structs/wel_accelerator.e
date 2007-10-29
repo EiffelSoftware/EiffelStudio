@@ -18,7 +18,7 @@ inherit
 create
 	make,
 	make_by_pointer
-
+ 
 feature {NONE} -- Initialization
 
 	make (a_key, a_command_id, a_flags: INTEGER) is
@@ -42,18 +42,24 @@ feature -- Access
 
 	key: INTEGER is
 			-- Key of accelerator
+		require
+			exists: exists
 		do
 			Result := cwel_accel_get_key (item)
 		end
 
 	flags: INTEGER is
 			-- Flags of accelerator
+		require
+			exists: exists
 		do
 			Result := cwel_accel_get_fvirt (item)
 		end
 
 	command_id: INTEGER is
 			-- Command id of accelerator
+		require
+			exists: exists
 		do
 			Result := cwel_accel_get_cmd (item)
 		end
@@ -62,6 +68,8 @@ feature -- Element change
 
 	set_key (a_key: INTEGER) is
 			-- Set `key' to `a_key'.
+		require
+			exists: exists
 		do
 			cwel_accel_set_key (item, a_key)
 		ensure
@@ -70,15 +78,18 @@ feature -- Element change
 
 	set_flags (a_flags: INTEGER) is
 			-- Set `flags' to `a_flags'.
+		require
+			exists: exists
 		do
 			cwel_accel_set_fvirt (item, a_flags)
 		ensure
 			flags_set: flags = a_flags
-		end			
+		end
 
 	set_command_id (a_command_id: INTEGER) is
 			-- Set `command_id' to `a_command_id'.
 		require
+			exists: exists
 			valid_command_id: a_command_id >= 0
 		do
 			cwel_accel_set_cmd (item, a_command_id)

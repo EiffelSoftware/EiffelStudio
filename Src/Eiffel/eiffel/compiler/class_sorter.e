@@ -130,7 +130,7 @@ feature {NONE} -- Filling
 					count := count + 1
 					a_class.set_topological_id (count)
 					original.put (a_class, count)
-					successors.put (a_class.descendants, count)
+					successors.put (a_class.direct_descendants, count)
 				end
 				i := i + 1
 			end

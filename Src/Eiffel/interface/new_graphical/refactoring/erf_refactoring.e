@@ -153,7 +153,7 @@ feature {NONE} -- Implementation convenience
 			descendant_class: CLASS_C
 		do
 			create Result.make (100)
-			descendants := a_class.compiled_class.descendants
+			descendants := a_class.compiled_class.direct_descendants
 			if not descendants.is_empty then
 				from
 					descendants.start
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation convenience
 						-- if not already added, add class and its descendants
 					if not Result.has (descendant_class.lace_class) then
 						Result.force (descendant_class.lace_class)
-						descendants.append (descendant_class.descendants)
+						descendants.append (descendant_class.direct_descendants)
 					end
 
 					descendants.forth

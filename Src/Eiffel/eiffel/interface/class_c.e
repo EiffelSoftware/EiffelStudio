@@ -996,7 +996,7 @@ feature
 			loop
 				c := l_area.item (i)
 				if c /= Void then
-					des:= c.descendants
+					des:= c.direct_descendants
 					des.start
 					des.search (Current)
 					if not des.after then
@@ -1786,14 +1786,14 @@ feature -- Convenience features
 		require
 			good_argument: c /= Void
 		local
-			desc: like descendants
+			desc: like direct_descendants
 		do
-			desc := descendants
+			desc := direct_descendants
 			if not desc.has (c) then
 				desc.extend (c)
 			end
 		ensure
-			inserted: descendants.has (c)
+			inserted: direct_descendants.has (c)
 		end
 
 	external_name: STRING is
@@ -2648,7 +2648,7 @@ feature -- Initialization
 			is_class_any := name.is_equal ("ANY")
 			is_class_none := name.is_equal ("NONE")
 				-- Creation of the descendant list
-			create descendants.make (10)
+			create direct_descendants.make (10)
 				-- Creation of the supplier list
 			create suppliers.make (2)
 				-- Creation of the client list
@@ -2738,7 +2738,7 @@ feature -- Properties
 	computed_parents: PARENT_LIST
 			-- Computed version of parent clauses.
 
-	descendants: ARRAYED_LIST [CLASS_C]
+	direct_descendants: ARRAYED_LIST [CLASS_C]
 			-- Direct descendants of the current class
 
 	clients: ARRAYED_LIST [CLASS_C]
@@ -4338,7 +4338,7 @@ invariant
 
 		-- Default invariants common to all kind of generation.
 	lace_class_exists: lace_class /= Void
-	descendants_exists: descendants /= Void
+	descendants_exists: direct_descendants /= Void
 	suppliers_exisis: suppliers /= Void
 	clients_exists: clients /= Void
 	config_class_connection: original_class.compiled_class = Current

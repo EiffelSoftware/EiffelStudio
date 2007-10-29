@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 				end
 
 				if recursive then
-					l_classes := a_class.descendants
+					l_classes := a_class.direct_descendants
 					if l_classes /= Void then
 						from
 							l_classes.start

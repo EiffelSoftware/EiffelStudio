@@ -291,7 +291,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			ci: CLASS_I
 		do
 			if depth > 0 and then a_class.is_compiled then
-				l := a_class.compiled_class.descendants
+				l := a_class.compiled_class.direct_descendants
 				from
 					l.start
 				until
@@ -317,7 +317,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			if depth > 0 and then a_class.is_compiled then
-				l := a_class.compiled_class.descendants
+				l := a_class.compiled_class.direct_descendants
 				from
 					i := 1
 					nb := l.count

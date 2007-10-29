@@ -146,7 +146,7 @@ feature{NONE} -- Implementation
 		local
 			l_descendants: ARRAYED_LIST [CLASS_C]
 		do
-			l_descendants := a_class_c.descendants
+			l_descendants := a_class_c.direct_descendants
 			if not l_descendants.is_empty then
 				from
 					l_descendants.start
@@ -176,7 +176,7 @@ feature{NONE} -- Implementation
 				create l_descendants.make (1)
 				l_descendants.extend (a_class_c)
 			else
-				l_descendants := a_class_c.descendants
+				l_descendants := a_class_c.direct_descendants
 			end
 			if not l_descendants.is_empty then
 				l_candidate_class_list := candidate_class_list

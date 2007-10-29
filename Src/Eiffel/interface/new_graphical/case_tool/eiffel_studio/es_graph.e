@@ -631,7 +631,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			es_classes: ARRAYED_LIST [ES_CLASS]
 			l_link: ES_INHERITANCE_LINK
 		do
-			l := a_class.class_i.compiled_class.descendants
+			l := a_class.class_i.compiled_class.direct_descendants
 			if l /= Void then
 				from l.start until l.after loop
 					cl := l.item.original_class

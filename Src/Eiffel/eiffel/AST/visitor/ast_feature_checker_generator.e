@@ -5565,48 +5565,51 @@ feature -- Implementation
 					l_vwbe1.set_location (l_as.condition.end_location)
 					error_handler.insert_error (l_vwbe1)
 				end
+			else
+					-- An error occurred, no byte code generation can be allowed.
+				l_needs_byte_node := False
+			end
 
-					-- Type check on compound
-				create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
-				s := context.scope
-				scope_matcher.add_scopes (l_as.condition, context)
-				if l_as.compound /= Void then
-					process_compound (l_as.compound)
-					if l_needs_byte_node then
-						l_list ?= last_byte_node
-						l_if.set_compound (l_list)
-					end
-				end
-				context.set_scope (s)
-
-				create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
-				s := context.scope
-				scope_matcher.add_scopes (l_as.condition, context)
-
-					-- Type check on alternaltives compounds
-				if l_as.elsif_list /= Void then
-					l_as.elsif_list.process (Current)
-					if l_needs_byte_node then
-						l_list ?= last_byte_node
-						l_if.set_elsif_list (l_list)
-					end
-				end
-					-- Type check on default compound
-				if l_as.else_part /= Void then
-					process_compound (l_as.else_part)
-					if l_needs_byte_node then
-						l_list ?= last_byte_node
-						l_if.set_else_part (l_list)
-					end
-				end
-
-				context.set_scope (s)
-
+				-- Type check on compound
+			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
+			s := context.scope
+			scope_matcher.add_scopes (l_as.condition, context)
+			if l_as.compound /= Void then
+				process_compound (l_as.compound)
 				if l_needs_byte_node then
-					l_if.set_line_number (l_as.condition.start_location.line)
-					l_if.set_end_location (l_as.end_keyword)
-					last_byte_node := l_if
+					l_list ?= last_byte_node
+					l_if.set_compound (l_list)
 				end
+			end
+			context.set_scope (s)
+
+			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
+			s := context.scope
+			scope_matcher.add_scopes (l_as.condition, context)
+
+				-- Type check on alternaltives compounds
+			if l_as.elsif_list /= Void then
+				l_as.elsif_list.process (Current)
+				if l_needs_byte_node then
+					l_list ?= last_byte_node
+					l_if.set_elsif_list (l_list)
+				end
+			end
+				-- Type check on default compound
+			if l_as.else_part /= Void then
+				process_compound (l_as.else_part)
+				if l_needs_byte_node then
+					l_list ?= last_byte_node
+					l_if.set_else_part (l_list)
+				end
+			end
+
+			context.set_scope (s)
+
+			if l_needs_byte_node then
+				l_if.set_line_number (l_as.condition.start_location.line)
+				l_if.set_end_location (l_as.end_keyword)
+				last_byte_node := l_if
 			end
 		end
 

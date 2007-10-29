@@ -89,9 +89,10 @@ feature -- Status report
 			cl_type_i: CL_TYPE_I
 		do
 			Result := True
+			cl_type_i ?= source_type
 			if
 				context.original_body_index = context.twin_body_index or else
-				source_type.is_frozen or else
+				(cl_type_i /= Void and then cl_type_i.base_class.is_optimized_as_frozen) or else
 				source_type.is_none or else
 				is_type_fixed
 			then
@@ -102,7 +103,6 @@ feature -- Status report
 			elseif system.in_final_mode then
 					-- Avoid dynamic check of object type if we know
 					-- in advance that the type cannot be expanded.
-				cl_type_i ?= source_type
 				if cl_type_i /= Void then
 					Result := context.has_expanded_descendants (cl_type_i.associated_class_type.type_id)
 				end

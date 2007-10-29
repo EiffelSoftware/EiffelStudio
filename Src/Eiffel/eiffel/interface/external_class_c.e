@@ -69,7 +69,7 @@ feature -- Initialization
 				is_deferred := external_class.is_deferred
 				is_expanded := external_class.is_expanded
 				is_enum := external_class.is_enum
-				internal_is_frozen := external_class.is_frozen
+				is_frozen := external_class.is_frozen
 
 					-- Initializes inheritance structure
 				process_parents

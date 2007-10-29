@@ -2794,10 +2794,14 @@ feature -- Properties
 	has_external_main_parent: BOOLEAN
 			-- Is one non-external parent class generated as a single IL type?
 
-	is_frozen: BOOLEAN is
+	is_frozen: BOOLEAN
 			-- Is class frozen, ie we cannot inherit from it?
+
+	is_optimized_as_frozen: BOOLEAN is
+			-- Although class might not be marked `is_frozen' we may want to consider it as frozen
+			-- for the code generation.
 		do
-			Result := internal_is_frozen or apply_msil_application_optimizations
+			Result := is_frozen or apply_msil_application_optimizations
 		end
 
 	is_external: BOOLEAN
@@ -4286,9 +4290,6 @@ feature -- output
 		end
 
 feature {NONE} -- Implementation
-
-	internal_is_frozen: BOOLEAN
-			-- Mutable version of `is_frozen'.
 
 	internal_feature_table_file_id: INTEGER
 			-- Number added at end of C file corresponding to generated

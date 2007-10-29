@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 			local_decl_grps: like local_decl_grps_from
 			l_ot_locals: like object_test_locals_from
 			id_list: ARRAYED_LIST [INTEGER]
-			i, l_count: INTEGER
+			l_count: INTEGER
 			value: ABSTRACT_DEBUG_VALUE
 			args_locs_info: like retrieved_locals_and_arguments
 			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]

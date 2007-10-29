@@ -1096,7 +1096,6 @@ feature {NONE} -- Factory
 			create filter_combo
 			filter_combo.set_minimum_width (200)
 			filter_combo.set_tooltip ("Enter a regular expression to filter the mapped list of types.")
-			filter_combo.set_text ("^ES_GROUP_TOOL")
 			register_action (filter_combo.change_actions, agent on_filter_changed)
 			l_box.extend (filter_combo)
 			l_box.disable_item_expand (filter_combo)

@@ -320,7 +320,7 @@ feature -- Setting
 			l_descendants: ARRAYED_LIST [CLASS_C]
 		do
 			from
-				l_descendants := a_class.descendants
+				l_descendants := a_class.direct_descendants
 				l_descendants.start
 			until
 				l_descendants.after
@@ -500,7 +500,7 @@ feature {NONE} -- Propagation to Degree 4
 								io.error.put_boolean (real_pass2)
 								io.error.put_new_line
 							end
-			desc := a_class.descendants
+			desc := a_class.direct_descendants
 			a_class.set_changed2 (True)
 			chg3a := a_class.changed3a
 			from desc.start until desc.after loop

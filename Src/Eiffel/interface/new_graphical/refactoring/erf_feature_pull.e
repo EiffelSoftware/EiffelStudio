@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 		do
 			recursive_descendants.put (a_class.class_id)
 			from
-				l_classes := a_class.descendants
+				l_classes := a_class.direct_descendants
 				l_classes.start
 			until
 				l_classes.after
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 				l_cm.commit
 				-- else maybe a descendant implements it
 			else
-				l_descendants := a_class.descendants
+				l_descendants := a_class.direct_descendants
 				if l_descendants /= Void then
 					from
 						l_descendants.start

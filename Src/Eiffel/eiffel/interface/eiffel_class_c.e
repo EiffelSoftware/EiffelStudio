@@ -149,7 +149,7 @@ feature -- Status report
 				-- as a single binary) and only when there are no descendants.
 			Result := (not is_deferred and not is_expanded and is_eiffel_class_c) and then lace_class.options.is_msil_application_optimize and then system.il_generation and then
 				(system.byte_context.final_mode or universe.compilation_modes.is_precompiling) and then
-				((descendants = Void or else descendants.is_empty) or internal_is_frozen)
+				((direct_descendants = Void or else direct_descendants.is_empty) or internal_is_frozen)
 		end
 
 feature -- Action

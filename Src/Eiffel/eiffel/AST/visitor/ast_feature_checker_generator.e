@@ -8458,17 +8458,17 @@ feature {NONE} -- Implementation: catcall check
 								a_class_not_void: a_class /= Void
 								a_list_not_void: a_list /= Void
 							do
-								a_list.append (a_class.descendants)
+								a_list.append (a_class.direct_descendants)
 							end
 						(?, l_descendants)
 					)
 				else
 						-- Type is formal. Take descendants from associated class of constraint
-					l_descendants := l_formal.constrained_type (context.current_class).associated_class.descendants
+					l_descendants := l_formal.constrained_type (context.current_class).associated_class.direct_descendants
 				end
 			else
 					-- Normal type. Take descenants from associated class
-				l_descendants := a_type.associated_class.descendants
+				l_descendants := a_type.associated_class.direct_descendants
 			end
 				-- Go through descendants and remove the ones which don't conform
 				-- This can happen with non-conforming inheritance or restrict types

@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 					-- add the descendants
 				from
-					l_descendants := a_class.descendants
+					l_descendants := a_class.direct_descendants
 					l_descendants.start
 				until
 					l_descendants.after

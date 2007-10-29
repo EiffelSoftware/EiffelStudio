@@ -4827,7 +4827,7 @@ feature -- Dispose routine
 			d: CLASS_C
 		do
 			from
-				descendants := c.descendants
+				descendants := c.direct_descendants
 				descendants.start
 			until
 				descendants.after

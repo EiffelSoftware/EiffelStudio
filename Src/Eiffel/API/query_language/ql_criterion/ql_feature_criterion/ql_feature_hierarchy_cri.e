@@ -96,7 +96,7 @@ feature{NONE} -- Implementation
 			desc_c: CLASS_C
 			l_used_in_domain_generator: like used_in_domain_generator
 		do
-			descendants := e_class.descendants
+			descendants := e_class.direct_descendants
 			classes.extend (e_class)
 			l_used_in_domain_generator := used_in_domain_generator
 			from

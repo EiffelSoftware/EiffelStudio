@@ -248,7 +248,7 @@ end
 				create dep.make (an_id, ftable.feature_of_rout_id (set_area_rout_id))
 				unsafe_features.extend (dep)
 				from
-					d := a_class.descendants
+					d := a_class.direct_descendants
 					d.start
 				until
 					d.after

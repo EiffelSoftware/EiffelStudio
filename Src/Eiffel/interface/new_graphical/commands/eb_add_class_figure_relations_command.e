@@ -111,7 +111,7 @@ feature -- Basic operations
 			when adds_ancestors then
 				Result := a_class.parents_classes
 			when adds_descendents then
-				Result := a_class.descendants
+				Result := a_class.direct_descendants
 			end
 		end
 

@@ -60,7 +60,7 @@ feature -- Element change
 			is_still_valid: BOOLEAN
 		do
 			if ancestor.class_i.is_compiled then
-				l := ancestor.class_i.compiled_class.descendants
+				l := ancestor.class_i.compiled_class.direct_descendants
 				if l /= Void then
 					from
 						l.start

@@ -119,7 +119,7 @@ feature -- Miscellaneous
 		local
 			c_classes: LINEAR [CLASS_C]
 		do
-			c_classes := class_c.descendants
+			c_classes := class_c.direct_descendants
 			if c_classes /= Void and then not c_classes.is_empty then
 				text.process_keyword_text ("Descendants", Void)
 				text.add_new_line

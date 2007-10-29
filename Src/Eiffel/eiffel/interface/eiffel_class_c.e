@@ -147,9 +147,10 @@ feature -- Status report
 				-- Optimizations will take place on non-deferfed classes that are tag with having optimizations
 				-- applied. Optimizations will be performed on finalize or precompile (because wb precompiles can be uses
 				-- as a single binary) and only when there are no descendants.
-			Result := (not is_deferred and not is_expanded and is_eiffel_class_c) and then lace_class.options.is_msil_application_optimize and then system.il_generation and then
+			Result := system.il_generation and then (not is_deferred and not is_expanded) and then
+				lace_class.options.is_msil_application_optimize and then
 				(system.byte_context.final_mode or universe.compilation_modes.is_precompiling) and then
-				((direct_descendants = Void or else direct_descendants.is_empty) or internal_is_frozen)
+				((direct_descendants = Void or else direct_descendants.is_empty) or is_frozen)
 		end
 
 feature -- Action
@@ -916,7 +917,7 @@ feature -- Third pass: byte code production and type check
 			end
 
 			if error_handler.error_level /= l_class_error_level then
-					-- Clean data to avoid improper handling at 
+					-- Clean data to avoid improper handling at
 					-- next compilation.
 				ast_context.clear_feature_context
 				tmp_ast_server.cache.wipe_out
@@ -924,7 +925,7 @@ feature -- Third pass: byte code production and type check
 			end
 		rescue
 			if Rescue_status.is_error_exception then
-					-- Clean data to avoid improper handling at 
+					-- Clean data to avoid improper handling at
 					-- next compilation.
 				ast_context.clear_feature_context
 				Tmp_ast_server.cache.wipe_out
@@ -1482,10 +1483,10 @@ feature {NONE} -- Class initialization
 			else
 				is_external := ast_b.is_external
 			end
-			old_is_frozen := internal_is_frozen
-			internal_is_frozen := ast_b.is_frozen
+			old_is_frozen := is_frozen
+			is_frozen := ast_b.is_frozen
 
-			if (old_parents /= Void and then old_is_frozen /= internal_is_frozen) then
+			if (old_parents /= Void and then old_is_frozen /= is_frozen) then
 				changed_status := True
 				changed_frozen := True
 			end

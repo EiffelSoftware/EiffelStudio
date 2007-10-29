@@ -1167,7 +1167,7 @@ feature -- Metadata description
 						if class_c.is_deferred then
 							l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.abstract
 						end
-						if class_c.is_frozen or class_type.is_expanded then
+						if class_c.is_optimized_as_frozen or class_type.is_expanded then
 							l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
 						end
 
@@ -1234,7 +1234,7 @@ feature -- Metadata description
 					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Abstract
 				end
 
-				if class_c.is_frozen or class_type.is_expanded then
+				if class_c.is_optimized_as_frozen or class_type.is_expanded then
 					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
 				end
 

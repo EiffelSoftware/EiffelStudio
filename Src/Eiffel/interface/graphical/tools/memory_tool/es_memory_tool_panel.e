@@ -14,6 +14,7 @@ inherit
 	ES_DOCKABLE_TOOL_PANEL [EV_HORIZONTAL_SPLIT_AREA]
 		redefine
 			on_before_initialize,
+			on_after_initialized,
 			internal_recycle,
 			create_right_tool_bar_items
 		end
@@ -27,6 +28,13 @@ feature {NONE} -- Initialization
 			-- Use to perform additional creation initializations, before the UI has been created.
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
+		end
+
+	on_after_initialized
+			-- Use to perform additional creation initializations, after the UI has been created.
+		do
+			Precursor {ES_DOCKABLE_TOOL_PANEL}
+			enable_sorting_on_columns (<<memory_map_grid.column (object_column_index), memory_map_grid.column (count_column_index), memory_map_grid.column (delta_column_index)>>)
 		end
 
 feature {NONE} -- User interface initialization
@@ -133,20 +141,43 @@ feature {NONE} -- Access
 			is_filtering: is_filtering
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
+		local
+			l_cell: like internal_filter_match_expression
 		do
-			Result := internal_filter_match_expression
-			if Result = Void then
+			l_cell := internal_filter_match_expression
+			if l_cell = Void then
 				create Result.make
-				Result.compile (filter_combo.text)
-				internal_filter_match_expression := Result
+				Result.compile (filter_combo.text.as_upper)
+				if not Result.is_compiled then
+						-- Invalid Eiffel class name, so no results will be shown.
+					Result.compile (once "^$")
+				end
+				create l_cell.put (Result)
+				internal_filter_match_expression := l_cell
+			else
+				Result := l_cell.item
 			end
 		ensure
-			result_attached: Result /= Void
-			result_is_compiled: Result.is_compiled
+			result_is_compiled: Result /= Void implies Result.is_compiled
 			result_consistent: Result = filter_match_expression
 		end
 
 feature {NONE} -- Helpers
+
+	frozen grid_wrapper: EVS_GRID_WRAPPER [EV_GRID_ROW]
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+		do
+			Result := internal_grid_wrapper
+			if Result = Void then
+				create Result.make (memory_map_grid)
+				internal_grid_wrapper := Result
+			end
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = grid_wrapper
+		end
 
 	frozen memory: MEMORY
 			-- Shared access to a single instance of {MEMORY}
@@ -194,39 +225,6 @@ feature {NONE} -- Query
 			result_name_attached: Result /= Void implies Result.name /= Void
 			not_result_name_is_empty: Result /= Void implies not Result.name.is_empty
 			result_id_positive: Result /= Void implies Result.id > 0
-		end
-
-	sorted_objects (a_table: HASH_TABLE [INTEGER, INTEGER]): DS_ARRAYED_LIST [INTEGER] is
-			-- Sorts memory map by type name and returns a list of sorted associated type ids.
-			--
-			-- `a_table': Memory counter map table to sort.
-			-- `Result': List of type id's sorted by their actual type name.
-		local
-			l_table: HASH_TABLE [INTEGER, STRING]
-			l_internal: INTERNAL
-			l_list: SORTED_TWO_WAY_LIST [STRING]
-			l_name: STRING
-		do
-			create l_internal
-
-			create l_table.make (a_table.count)
-			create l_list.make
-			create Result.make (a_table.count)
-			from a_table.start until a_table.after loop
-				l_name := l_internal.type_name_of_type (a_table.key_for_iteration)
-				l_list.extend (l_name)
-				l_table.put (a_table.key_for_iteration, l_name)
-				a_table.forth
-			end
-			l_list.compare_objects
-			l_list.sort
-
-			from l_list.start until l_list.after loop
-				Result.put_last (l_table.item (l_list.item))
-				l_list.forth
-			end
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Basic operations
@@ -292,6 +290,7 @@ feature {NONE} -- Basic operations
 			l_expression: like filter_match_expression
 		do
 			l_grid := memory_map_grid
+			l_grid.lock_update
 			l_grid.set_row_count_to (memory_data.count)
 
 			if is_filtering then
@@ -302,6 +301,11 @@ feature {NONE} -- Basic operations
 			from l_data.start until l_data.after loop
 				populate_memory_grid_row (l_grid.row (l_data.index), l_data.item, l_expression)
 				l_data.forth
+			end
+			l_grid.unlock_update
+		rescue
+			if l_grid.is_locked then
+				l_grid.unlock_update
 			end
 		end
 
@@ -548,6 +552,98 @@ feature {NONE} -- Basic operations
 			end
 		end
 
+feature {NONE} -- Sort handling
+
+	enable_sorting_on_columns (a_columns: ARRAY [EV_GRID_COLUMN])
+			-- Enables sorting on a selected set of columns
+			--
+			-- `a_columns': The columns to enable sorting on.
+		require
+			not_is_recycled: not is_recycled
+			a_columns_attached: a_columns /= Void
+		local
+			l_wrapper: like grid_wrapper
+			l_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EV_GRID_ROW]
+			l_column: EV_GRID_COLUMN
+			l_upper, i: INTEGER
+		do
+			l_wrapper := grid_wrapper
+			l_wrapper.enable_auto_sort_order_change
+			if l_wrapper.sort_action = Void then
+				l_wrapper.set_sort_action (agent sort_handler)
+			end
+
+			from
+				i := a_columns.lower
+				l_upper := a_columns.upper
+			until i > l_upper loop
+				l_column := a_columns [i]
+				check l_column_attached: l_column /= Void end
+				if l_column /= Void then
+						-- Set fake sorting routine as sorting is handled in `sort_handler'
+					create l_sort_info.make (agent (a_row, a_other_row: EV_GRID_ROW; a_order: INTEGER_32): BOOLEAN do Result := False end, {EVS_GRID_TWO_WAY_SORTING_ORDER}.descending_order)
+					l_sort_info.enable_auto_indicator
+					l_wrapper.set_sort_info (l_column.index, l_sort_info)
+				end
+				i := i + 1
+			end
+		end
+
+	sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW]) is
+			-- Action to be performed when sort `a_column_list' using `a_comparator'.
+		require
+			a_column_list_attached: a_column_list /= Void
+			not_a_column_list_is_empty: not a_column_list.is_empty
+			a_comparator_attached: a_comparator /= Void
+		do
+				-- Repopulate grid
+			execute_with_busy_cursor (agent
+				do
+					clear_memory_grid
+					sort_memory_data (memory_data)
+					populate_memory_grid
+				end)
+		end
+
+	sort_memory_data (a_map: like memory_data) is
+			-- Sorts memory map by type name and returns a list of sorted associated type ids.
+			--
+			-- `a_table': Memory counter map table to sort.
+			-- `Result': List of type id's sorted by their actual type name.
+		require
+			not_is_recycled: not is_recycled
+			a_map_attached: a_map /= Void
+		local
+			l_last_sort_column: INTEGER
+			l_last_sort_order: INTEGER
+		do
+			if is_initialized then
+				l_last_sort_column := grid_wrapper.last_sorted_column
+				if l_last_sort_column > 0 then
+					l_last_sort_order := grid_wrapper.column_sort_info.item (l_last_sort_column).current_order
+				end
+			end
+			if l_last_sort_column = 0 then
+				l_last_sort_column := object_column_index
+				l_last_sort_order := {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order
+			end
+
+			a_map.sort (create {DS_QUICK_SORTER [like row_data]}.make (create {AGENT_BASED_EQUALITY_TESTER [like row_data]}.make (agent (a_data, a_other_data: like row_data a_column, a_order: INTEGER): BOOLEAN
+				do
+					inspect a_column
+					when object_column_index then
+						Result := a_data.name < a_other_data.name
+					when count_column_index then
+						Result := a_data.instances < a_other_data.instances
+					when delta_column_index then
+						Result := a_data.delta < a_other_data.delta
+					end
+					if a_order /= {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order then
+						Result := not Result
+					end
+				end (?, ?, l_last_sort_column, l_last_sort_order))))
+		end
+
 feature {NONE} -- Analysis
 
 	calculate_memory_data (a_refresh: BOOLEAN) is
@@ -556,7 +652,6 @@ feature {NONE} -- Analysis
 			-- `a_refresh': Causes pre-existing data to be discarded.
 		local
 			l_map: HASH_TABLE [INTEGER, INTEGER]
-			l_sorted_ids: like sorted_objects
 			l_last_map: like last_map
 			l_memory: like memory
 			l_data: like memory_data
@@ -588,11 +683,10 @@ feature {NONE} -- Analysis
 				end
 			end
 
-			l_sorted_ids := sorted_objects (l_map)
-			from l_sorted_ids.start until l_sorted_ids.after loop
-				l_id := l_sorted_ids.item_for_iteration
+			from l_map.start until l_map.after loop
+				l_id := l_map.key_for_iteration
 				l_name := l_internal.type_name_of_type (l_id)
-				l_count := l_map.item (l_id)
+				l_count := l_map.item_for_iteration
 
 				if l_last_map /= Void then
 					l_delta := l_count - l_last_map.item (l_id)
@@ -601,9 +695,11 @@ feature {NONE} -- Analysis
 				end
 
 				l_data.force_last ([l_name, l_count, l_delta, l_id])
-				l_sorted_ids.forth
+				l_map.forth
 			end
 			last_map := l_map
+
+			sort_memory_data (l_data)
 			memory_data := l_data
 		ensure
 			memory_data_attached: memory_data /= Void
@@ -847,7 +943,7 @@ feature {NONE} -- Action handlers
 
 				from i := 1 until i > l_count loop
 					l_row := l_grid.row (i)
-					if not l_row.is_part_of_tree_structure then
+					if l_row.parent_row = Void then
 						l_data ?= l_row.data
 						check
 							l_data_attached: l_data /= Void
@@ -1126,9 +1222,13 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Internal implementation cache
 
-	internal_filter_match_expression: like filter_match_expression
+	internal_filter_match_expression: CELL [like filter_match_expression]
 			-- Cached version of `filter_match_expression'
 			-- Note: do not use direcly!
+
+	internal_grid_wrapper: like grid_wrapper
+			-- Cached version of `grid_wrapper'
+			-- Note: do not use directly!
 
 invariant
 	disable_collection_button_attached: is_initialized and not is_recycled implies disable_collection_button /= Void

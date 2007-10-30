@@ -149,8 +149,14 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	module_name: STRING is "libcurl.dll"
+	module_name: STRING is
 			-- Module name.
+		local
+			l_utility: CURL_UTILITY
+		once
+			create l_utility
+			Result := l_utility.module_name
+		end
 
 	setopt_void_star (a_curl_handle: POINTER; a_opt: INTEGER; a_data:POINTER) is
 			-- Declared as curl_easy_setopt().
@@ -218,10 +224,10 @@ feature {NONE} -- C externals
 		alias
 			"[
 			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, CURLoption)) $a_api)
+				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)$a_opt,
-												(CURLoption)$a_data);			
+												$a_data);			
 			}
 			]"
 		end
@@ -238,10 +244,10 @@ feature {NONE} -- C externals
 		alias
 			"[
 			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, CURLoption)) $a_api)
+				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)$a_opt,
-												(CURLoption)$a_data);			
+												$a_data);			
 			}
 			]"
 		end
@@ -256,10 +262,10 @@ feature {NONE} -- C externals
 		alias
 			"[
 			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, CURLoption)) $a_setopt_api)
+				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_WRITEFUNCTION,
-												(CURLoption)WriteMemoryCallback);
+												WriteMemoryCallback);
 			}
 			]"
 		end
@@ -274,15 +280,15 @@ feature {NONE} -- C externals
 		alias
 			"[
 			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, CURLoption)) $a_setopt_api)
+				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_DEBUGFUNCTION,
-												(CURLoption)curl_trace);
+												curl_trace);
 
-				(FUNCTION_CAST(void, (CURL *, CURLoption, CURLoption)) $a_setopt_api)
+				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_VERBOSE,
-												(CURLoption)TRUE);																														
+												TRUE);																														
 			}
 			]"
 		end

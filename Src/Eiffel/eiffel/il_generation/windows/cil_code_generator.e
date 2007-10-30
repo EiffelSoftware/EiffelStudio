@@ -1161,7 +1161,7 @@ feature -- Class info
 				external_class_mapping.put (class_type.type, class_type.full_il_type_name)
 			end
 
-			parents := class_c.parents
+			parents := class_c.conforming_parents
 			create class_interface.make_from_context (class_c.class_interface, class_type)
 			create pars.make (parents.count)
 

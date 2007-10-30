@@ -85,8 +85,14 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	module_name: STRING is "libcurl.dll"
+	module_name: STRING is
 			-- Module name.
+		local
+			l_utility: CURL_UTILITY
+		once
+			create l_utility
+			Result := l_utility.module_name
+		end
 
 	internal_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER) is
 			-- Declared as curl_formadd ().

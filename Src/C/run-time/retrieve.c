@@ -1137,6 +1137,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
 	jmp_buf exenv;
 
@@ -1155,6 +1156,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 		result = eif_unsafe_portable_retrieve(char_read_function);
 		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 	}
+	expop(&eif_stack);
 	return result;
 #else
 	return eif_unsafe_portable_retrieve(char_read_function);

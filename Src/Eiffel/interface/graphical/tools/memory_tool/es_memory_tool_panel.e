@@ -209,6 +209,16 @@ feature {NONE} -- Status report
 			result_implies_filter_combo_has_text: Result implies not filter_combo.text.is_empty
 		end
 
+	is_showing_positive_deltas: BOOLEAN
+			-- Indicates if the memory map should be filter to show only positive deltas
+		require
+			not_is_recycled: not is_recycled
+		do
+			Result := is_initialized and then show_deltas_button.is_selected
+		ensure
+			result_implies_show_deltas_button_is_selected: Result implies show_deltas_button.is_selected
+		end
+
 feature {NONE} -- Query
 
 	row_data (a_row: EV_GRID_ROW): TUPLE [name: STRING; instances: INTEGER; delta: INTEGER; id: INTEGER] is
@@ -350,7 +360,7 @@ feature {NONE} -- Basic operations
 			a_row.set_data (a_data)
 			a_row.ensure_expandable
 
-			if a_match_expression /= Void and then not a_match_expression.matches (a_data.name) then
+			if (a_match_expression /= Void and then not a_match_expression.matches (a_data.name)) or (is_showing_positive_deltas and then a_data.delta = 0) then
 				a_row.hide
 			end
 		ensure
@@ -754,8 +764,11 @@ feature {NONE} -- User interface elements
 	filter_combo: EV_COMBO_BOX
 			-- Filter box for memory map filtering
 
+	show_deltas_button: SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Show/hide positive deltas
+
 	show_memory_usage_button: SD_TOOL_BAR_TOGGLE_BUTTON
-		-- Show/hide memory usage button
+			-- Show/hide memory usage button
 
 	memory_map_grid: ES_GRID
 			-- Grid used to display memory map information
@@ -837,6 +850,17 @@ feature {NONE} -- Action handlers
 			else
 				refresh_memory_map (False)
 			end
+		end
+
+	on_toogle_show_deltas
+			-- Called when user toogle showing of deltas
+			-- Note: Connected to `show_deltas_button'
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+		do
+				-- Refilter
+			on_filter_update_timeout
 		end
 
 	on_toggle_memory_stats
@@ -929,6 +953,7 @@ feature {NONE} -- Action handlers
 			l_data: like row_data
 			l_count, i: INTEGER
 			l_regex: like filter_match_expression
+			l_show_only_deltas: like is_showing_positive_deltas
 		do
 				-- Wipe out cached expression
 			internal_filter_match_expression := Void
@@ -940,6 +965,7 @@ feature {NONE} -- Action handlers
 				if is_filtering then
 					l_regex := filter_match_expression
 				end
+				l_show_only_deltas := is_showing_positive_deltas
 
 				from i := 1 until i > l_count loop
 					l_row := l_grid.row (i)
@@ -948,7 +974,7 @@ feature {NONE} -- Action handlers
 						check
 							l_data_attached: l_data /= Void
 						end
-						if l_regex = Void or else l_regex.matches (l_data.name) then
+						if (l_regex = Void or else l_regex.matches (l_data.name)) and (not l_show_only_deltas or else l_data.delta > 0) then
 							l_row.show
 						else
 							l_row.hide
@@ -1182,7 +1208,7 @@ feature {NONE} -- Factory
 			l_widget: SD_TOOL_BAR_WIDGET_ITEM
 			l_box: EV_HORIZONTAL_BOX
 		do
-			create Result.make (3)
+			create Result.make (4)
 
 			create l_box
 			l_box.set_padding (6)
@@ -1195,11 +1221,19 @@ feature {NONE} -- Factory
 			register_action (filter_combo.change_actions, agent on_filter_changed)
 			l_box.extend (filter_combo)
 			l_box.disable_item_expand (filter_combo)
+			l_box.extend (create {EV_CELL})
+			l_box.last.set_minimum_width (2)
 
 			create l_widget.make (l_box)
 			l_widget.set_name ("memory filter")
-
 			Result.put_last (l_widget)
+
+			create show_deltas_button.make
+			show_deltas_button.set_text ("Deltas Only")
+			show_deltas_button.enable_select
+			register_action (show_deltas_button.select_actions, agent on_toogle_show_deltas)
+			Result.put_last (show_deltas_button)
+
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			create show_memory_usage_button.make

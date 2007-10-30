@@ -368,6 +368,7 @@ test	multi-invalid-signature	multierr004 tcf pass errors
 test	error-in-manifest-array-tuple	multierr005 tcf pass errors
 test	error-in-elsif			multierr006 tcf pass errors
 test	failing-to-recompile-descendant	multierr007 tcf pass errors
+test	recompile-descendant-code	multierr008 tcf pass errors
 
 -- System validity tests
 test	svalid-infix-with-conversion	svalid001 tcf pass system validity

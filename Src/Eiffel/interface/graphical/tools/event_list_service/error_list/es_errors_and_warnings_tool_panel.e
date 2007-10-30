@@ -83,7 +83,7 @@ feature {NONE} -- Iniitalization
 			update_content_applicable_navigation_buttons
 
 				-- Hook up events for preference data
-			preferences.error_list_tool_data.expand_errors_preferences.change_actions.extend (agent on_expand_error_preference_change)
+			register_action (preferences.error_list_tool_data.expand_errors_preferences.change_actions, agent on_expand_error_preference_change)
 		end
 
 feature {NONE} -- Clean up

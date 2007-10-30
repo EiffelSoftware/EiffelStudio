@@ -131,7 +131,10 @@ feature -- Basic operations
 feature {NONE} -- Basic operations
 
 	frozen detach_entities (a_recyclable: EB_RECYCLABLE) is
-			-- Detaches objects from their container
+			-- Detaches objects from their container.
+			-- Note: Please enable the debug clause recycle_and_detach to enable this feature for debugging purposes.
+			--
+			-- `a_recyclable': The object to detach entities for.
 		require
 			a_recyclable_attached: a_recyclable /= Void
 		local
@@ -210,13 +213,13 @@ feature {ANY} -- Extension
 feature -- Agent assistance
 
 	register_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]) is
-			-- Registers an action sequence and automatically pools it for later removal
+			-- Registers an action sequence and automatically pools it for later removal.
+			--
+			-- `a_sequence': Action sequence to extend an action on.
+			-- `a_action': The action to extend to the sequence.
 		require
 			a_sequence_attached: a_sequence /= Void
 			a_action_attached: a_action /= Void
---			cat_call_prevention: (create {INTERNAL}).type_conforms_to (
---				(create {INTERNAL}).generic_dynamic_type (a_action, 2),
---				(create {INTERNAL}).generic_dynamic_type (a_sequence, 1))
 		do
 			a_sequence.extend (a_action)
 			recycle_actions.extend ([a_sequence, a_action])
@@ -224,10 +227,27 @@ feature -- Agent assistance
 			a_sequence_has_action: a_sequence.has (a_action)
 		end
 
+	register_kamikaze_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]) is
+			-- Registers a single-execute action sequence and automatically pools it for later removal, if it was not used.
+			--
+			-- `a_sequence': Action sequence to extend an action on.
+			-- `a_action': The action to extend to the sequence.
+		require
+			a_sequence_attached: a_sequence /= Void
+			a_action_attached: a_action /= Void
+		do
+			a_sequence.extend_kamikaze (a_action)
+			recycle_actions.extend ([a_sequence, a_action])
+		ensure
+			a_sequence_has_action: a_sequence.has_kamikaze_action (a_action)
+		end
+
 feature {EB_RECYCLABLE} -- Removal
 
 	frozen remove_auto_recycle (a_object: ANY)
 			-- Removes a recycled entity from being automatically recycled
+			--
+			-- `a_object': The object to remove from the auto-recycle pool.
 		require
 			not_is_recycled: not is_recycled
 			a_object_attached: a_object /= Void
@@ -287,7 +307,9 @@ feature {EB_RECYCLABLE} -- Access
 feature {EB_RECYCLABLE} -- Element change
 
 	frozen set_recycler (a_recycler: like recycler)
-			-- Set's parent recycler for auto-recycle
+			-- Set's parent recycler for auto-recycle.
+			--
+			-- `a_recycler': The parent recycler that will auto-recycle Current; Void to detach and suppress auto-recycling.
 		do
 			recycler := a_recycler
 		ensure
@@ -316,6 +338,9 @@ feature {NONE} -- Query
 			-- Attempts to reveal a recyclable item, which will call an agent if the object
 			-- actually represents an agent call to retrieve an object for the classes Current state
 			-- instead of it's initial state.
+			--
+			-- `a_object': The object to reveal a recyclable object for.
+			-- `Result': A object that could potentially be recycled.
 		require
 			a_object_attached: a_object /= Void
 		local

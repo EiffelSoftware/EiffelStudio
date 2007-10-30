@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 
                 -- Initialize when showing for the first time.
                 -- This is useful when `content' is auto hide.
-            content.show_actions.extend_kamikaze (agent
+			register_kamikaze_action (content.show_actions, agent
                 do
                     if
                     	not is_recycled and then
@@ -604,7 +604,7 @@ feature {NONE} -- Factory
 
                 -- Top padding compensates for {SD_TOOL_BAR} not vertically aligning tool bars
             create l_top_padding
-            l_top_padding.set_minimum_height (1)
+            l_top_padding.set_minimum_height (2)
 
             create l_container
             l_container.set_minimum_height (26)

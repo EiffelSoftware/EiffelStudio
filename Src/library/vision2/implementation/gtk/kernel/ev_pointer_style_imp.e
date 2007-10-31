@@ -269,6 +269,20 @@ feature -- Implementation
 	gdk_pixbuf: POINTER
 		-- Pixbuf used for pointer style implementation.
 
+feature -- Duplication
+
+	copy_from_pointer_style (a_pointer_style: like interface)
+			-- Copy attributes of `a_pointer_style' to `Current'
+		local
+			l_pointer_style_imp: like Current
+		do
+			l_pointer_style_imp ?= a_pointer_style.implementation
+			if l_pointer_style_imp.gdk_pixbuf /= default_pointer then
+				set_gdkpixbuf ({EV_GTK_EXTERNALS}.gdk_pixbuf_copy (l_pointer_style_imp.gdk_pixbuf))
+			end
+			predefined_cursor_code := l_pointer_style_imp.predefined_cursor_code
+		end
+
 feature {EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 
 	predefined_cursor_code: INTEGER;

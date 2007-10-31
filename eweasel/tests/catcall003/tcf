@@ -8,6 +8,6 @@ copy_raw test_more_constraint.e $CLUSTER test_more_constraint.e
 copy_raw test_simple.e $CLUSTER test_simple.e
 
 compile_melted
-compile_result ok
+compile_result validity_warning TEST Catcall Catcall Catcall Catcall Catcall
 
 test_end

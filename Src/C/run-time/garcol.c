@@ -1248,10 +1248,6 @@ rt_public void reclaim(void)
 	struct chunk *c, *cn;
 #endif
 
-#ifdef ISE_GC
-	GC_THREAD_PROTECT(eif_terminate_all_other_threads());
-#endif
-
 		/* Mark final collection */
 	eif_is_in_final_collect = EIF_TRUE;
 
@@ -1268,6 +1264,10 @@ rt_public void reclaim(void)
 		if (!eif_no_reclaim && !(rt_g_data.status & GC_STOP)) {	/* Does user want no reclaim? */
 #else
 		if (!eif_no_reclaim) {
+#endif
+
+#ifdef ISE_GC
+	GC_THREAD_PROTECT(eif_terminate_all_other_threads());
 #endif
 
 #ifdef RECLAIM_DEBUG

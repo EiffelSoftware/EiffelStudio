@@ -25,7 +25,7 @@ copy_sub test.e $CLUSTER test.e
 resume_compile
 compile_result validity_warning TEST Catcall
 
-define VALUE		create {FILE_NAME}.make ("TEST")
+define VALUE		create {FILE_NAME}.make_from_string ("TEST")
 define FORMAL_TYPE	FILE_NAME
 copy_sub test.e $CLUSTER test.e
 copy_sub test2.e $CLUSTER test2.e

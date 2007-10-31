@@ -107,18 +107,19 @@ feature {NONE} -- Initialization
 	call_selection_action_sequences is
 			-- Call the appropriate selection action sequences
 		local
-			a_selected_item: EV_LIST_ITEM
-			a_selected_item_imp: EV_LIST_ITEM_IMP
+			l_selected_item: EV_LIST_ITEM
+			l_previous_selected_item_imp, l_selected_item_imp: EV_LIST_ITEM_IMP
 		do
-			a_selected_item := selected_item
+			l_selected_item := selected_item
+			l_previous_selected_item_imp := previous_selected_item_imp
 			if is_list_shown then
 					-- Make sure that the list is hidden from the screen before calling selection actions.
 				{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
 			end
-			if a_selected_item /= Void then
-				a_selected_item_imp ?= a_selected_item.implementation
-				if a_selected_item_imp.select_actions_internal /= Void then
-					a_selected_item_imp.select_actions_internal.call (Void)
+			if l_selected_item /= Void then
+				l_selected_item_imp ?= l_selected_item.implementation
+				if l_selected_item_imp.select_actions_internal /= Void then
+					l_selected_item_imp.select_actions_internal.call (Void)
 				end
 				if select_actions_internal /= Void then
 					select_actions_internal.call (Void)
@@ -132,9 +133,10 @@ feature {NONE} -- Initialization
 					deselect_actions_internal.call (Void)
 				end
 			end
-			previous_selected_item_imp := a_selected_item_imp
-				-- Fire any pending text change actions.
-			on_change_actions
+			previous_selected_item_imp := l_selected_item_imp
+			if l_selected_item_imp /= Void then
+				on_change_actions
+			end
 		end
 
 	previous_selected_item_imp: EV_LIST_ITEM_IMP

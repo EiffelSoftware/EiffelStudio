@@ -879,7 +879,12 @@ rt_public void eif_thr_exit(void)
 		EIF_EXIT_C;
 
 #ifdef ISE_GC
-			/* Destroy GC data associated with the current thread. */
+			/* Destroy GC data associated with the current thread. Since we also
+			 * destroy the data used for signal handling, we cannot handle signals
+			 * anymore. So we are just going to prevent the signal from being
+			 * processed alltogether by a call to SIGBLOCK without corresponding
+			 * SIGRESUME. */
+		SIGBLOCK;
 		eif_synchronize_gc (rt_globals);
 		eif_remove_gc_stacks (rt_globals);
 		eif_unsynchronize_gc (rt_globals);

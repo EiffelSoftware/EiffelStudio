@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	get_icon_info: WEL_ICON_INFO is
-			-- Retrieve information about a icon/cusor
+			-- Retrieve information about a icon/cursor
 			--
 			-- Return Void if an error occurred while retrieving
 			-- the information.

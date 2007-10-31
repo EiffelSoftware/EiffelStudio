@@ -43,7 +43,7 @@ feature {NONE} -- Clean up
 			suicide_actions := Void
 		ensure then
 			subscribers_emptied: (old subscribers).is_empty
-			subscribers_detached: subscribers /= Void
+			subscribers_detached: subscribers = Void
 			suicide_actions_emptied:  (old suicide_actions).is_empty
 			suicide_actions_detached: suicide_actions = Void
 		end

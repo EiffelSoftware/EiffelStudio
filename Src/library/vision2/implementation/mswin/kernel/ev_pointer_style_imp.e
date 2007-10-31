@@ -199,6 +199,18 @@ feature -- Query
 			end
 		end
 
+feature -- Duplication
+
+	copy_from_pointer_style (a_pointer_style: like interface)
+			-- Copy attributes of `a_pointer_style' to `Current.
+		local
+			a_pointer_style_imp: like Current
+		do
+				-- Copy wel_cursor from `a_pointer_style'
+			a_pointer_style_imp ?= a_pointer_style.implementation
+			wel_cursor := a_pointer_style_imp.wel_cursor.twin
+		end
+
 feature {NONE} -- Implementation
 
 	build_default_icon (a_idi_constant: POINTER) is

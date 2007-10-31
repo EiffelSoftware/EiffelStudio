@@ -73,6 +73,15 @@ feature -- Query
 		deferred
 		end
 
+feature -- Duplication
+
+	copy_from_pointer_style (a_pointer_style: like interface)
+			-- Copy attributes of `a_pointer_style' to `Current.
+		require
+			a_pointer_style_not_void: a_pointer_style /= Void
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	interface: EV_POINTER_STYLE;

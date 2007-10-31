@@ -144,7 +144,7 @@ feature -- Default cursors
 	Wait_cursor: EV_POINTER_STYLE is
 			-- Hourglass
 		once
-			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.wait_cursor)
 		end
 
 	Header_sizewe_cursor: EV_POINTER_STYLE is

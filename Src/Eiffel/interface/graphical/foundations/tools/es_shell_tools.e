@@ -12,6 +12,9 @@ class
 
 inherit
 	EB_RECYCLABLE
+		redefine
+			internal_detach_entities
+		end
 
 create
 	make
@@ -48,14 +51,24 @@ feature {NONE} -- Clean up
 						i := i + 1
 					end
 				end)
-			internal_requested_tools.wipe_out
+		end
+
+	internal_detach_entities
+			-- Detaches objects from their container
+		do
+			internal_requested_tools := Void
+			internal_all_tools := Void
+			window := Void
+
+			Precursor {EB_RECYCLABLE}
 		ensure then
-			internal_requested_tools_is_empty: internal_requested_tools.is_empty
-			requested_tools_is_empty: requested_tools.is_empty
+			internal_requested_tools_detached: internal_requested_tools = Void
+			internal_all_tools_detached: internal_all_tools = Void
+			window_detached: window = Void
 		end
 
 	clean_requested_tools
-			-- Performs a clean up for `requested_tools' as to remove any recycled tools from it.
+			-- Performs a clean up for `requested_tools' to remove any recycled tools from it.
 		require
 			not_is_recycled: not is_recycled
 		local
@@ -229,6 +242,26 @@ feature {NONE} -- Access
 			Result := internal_requested_tools
 		end
 
+feature -- Status reporting
+
+	is_multi_edition_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): BOOLEAN
+			-- Determines if a tool support multiple editions
+			--
+			-- `a_type': The type of tool requested.
+			-- `Result': True if multiple editions are supported, False otherwise.
+		require
+			not_is_recycled: not is_recycled
+			a_type_attached: a_type /= Void
+		local
+			l_tool: ES_TOOL [EB_TOOL]
+		do
+				-- Fetch first edition to determine if it supports multiple instances.
+			l_tool := tool (a_type)
+			if l_tool /= Void then
+				Result := l_tool.is_supporting_multiple_instances
+			end
+		end
+
 feature {NONE} -- Helpers
 
 	frozen internal: INTERNAL
@@ -326,6 +359,7 @@ feature -- Query
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
+			a_type_is_multi_edition_tool: a_edition > 1 implies is_multi_edition_tool (a_type)
 			a_edition_positive: a_edition > 0
 			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
@@ -454,7 +488,6 @@ feature -- Query
 					Result := l_tools.count.to_natural_8
 				end
 			end
-
 		ensure
 			result_positive: requested_tools.has (tool_id (a_type)) implies Result > 0
 		end
@@ -520,6 +553,7 @@ feature -- Basic operation
 		require
 			not_is_recycled: not is_recycled
 			a_type_attached: a_type /= Void
+			a_type_is_multi_edition_tool: a_edition > 1 implies is_multi_edition_tool (a_type)
 			a_edition_positive: a_edition > 0
 			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
 		local
@@ -570,8 +604,8 @@ feature {ES_TOOL} -- Removal
 				end
 			end
 		ensure
-			a_tool_is_recycled: a_tool.is_recycled_on_closing implies a_tool.is_recycled
-			not_requested_tools: a_tool.is_recycled_on_closing implies (not requested_tools.has (tool_id_from_tool (a_tool)) or not
+			a_tool_is_recycled: a_tool.is_recycled or else not a_tool.is_recycled_on_closing
+			not_requested_tools: (a_tool.is_recycled or else a_tool.is_recycled_on_closing) implies (not requested_tools.has (tool_id_from_tool (a_tool)) or not
 				requested_tools.item (tool_id_from_tool (a_tool)).has (a_tool))
 		end
 
@@ -616,10 +650,10 @@ feature {NONE} -- Internal implementation cache
 			--       of `requested_tools'. All queries should use `requested_tools' and not this attribute!
 
 invariant
-	window_attached: window /= Void
-	not_window_is_recycled: not window.is_recycled
-	internal_requested_tools_attached: internal_requested_tools /= Void
-	internal_requested_tools_contains_attached_items: not internal_requested_tools.has_item (Void)
+	window_attached: not is_recycled implies window /= Void
+	not_window_is_recycled: not is_recycled implies not window.is_recycled
+	internal_requested_tools_attached: not is_recycled implies internal_requested_tools /= Void
+	internal_requested_tools_contains_attached_items: not is_recycled implies not internal_requested_tools.has_item (Void)
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

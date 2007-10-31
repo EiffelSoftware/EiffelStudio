@@ -1,8 +1,13 @@
-class TEST1 [G]
+class
+	TEST1 [ G-> H, H -> G]
+
 feature
-	f (v: G) is
+
+	f is
+		local
+			g: G
 		do
+			print (g.same_type (g))
 		end
 
 end
-

@@ -1,13 +1,34 @@
-test_name catcall-check-failure-recursive-generic
-test_description Simple detection of a catcall where target of the call involves a recursive constraint generic crashes the catcall checker.
+test_name simple-catcall-generic
+test_description Simple detection of a catcall involving call of feature with generic formal arguments which is only allowed on non-variant actual generic parameter.
 
 copy_sub Ace $TEST Ace
-copy_raw test.e $CLUSTER test.e
+define ENTITY_MARK		""
+define GENERIC_MARK		""
+copy_sub test.e $CLUSTER test.e
 copy_raw test1.e $CLUSTER test1.e
-copy_raw test_more_constraint.e $CLUSTER test_more_constraint.e
-copy_raw test_simple.e $CLUSTER test_simple.e
 
 compile_melted
 compile_result ok
+
+define ENTITY_MARK		""
+define GENERIC_MARK		"variant"
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_warning TEST Catcall
+
+define ENTITY_MARK		"frozen"
+define GENERIC_MARK		"variant"
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_warning TEST Catcall
+
+define ENTITY_MARK		"frozen"
+define GENERIC_MARK		""
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
 
 test_end

@@ -13,7 +13,7 @@ class
 inherit
 	EV_ANY
 		redefine
-			implementation
+			implementation, copy, is_equal
 		end
 
 create
@@ -123,6 +123,37 @@ feature -- Query
 			-- Height
 		do
 			Result := implementation.height
+		end
+
+feature -- Duplication
+
+	copy (other: like current) is
+			-- Update `Current' to have same appearence as `other'.
+			-- (So as to satisfy `is_equal'.)
+		do
+			check
+				not_destroyed: not is_destroyed
+			end
+			if implementation = Void then
+				default_create
+			end
+				-- Copy the "pixmap part"
+			implementation.copy_from_pointer_style (other)
+			set_x_hotspot (other.x_hotspot)
+			set_y_hotspot (other.y_hotspot)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Does `other' have the same appearance as `Current'.
+		do
+			if other /= Void then
+					-- Images are proportional.
+				Result := (
+					width * other.height = other.width * height and then (other.x_hotspot = x_hotspot and other.y_hotspot = y_hotspot)
+				)
+			end
 		end
 
 feature -- Implementation

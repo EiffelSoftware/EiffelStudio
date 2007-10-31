@@ -1,0 +1,8 @@
+VEVI, ECMA-367, 2nd edition, section 8.19.17
+
+    Variable Initialization rule
+
+    It is valid for an Expression, other than the target of
+    an Assigner_call, to be also a Variable if it is
+    properly set at the evaluation position defined by the
+    closest enclosing Instruction or Assertion_clause.

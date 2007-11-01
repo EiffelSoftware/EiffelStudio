@@ -870,6 +870,7 @@ feature -- Memory management
 				fake_editors := Void
 			end
 			development_window := Void
+			docking_manager := Void
 		end
 
 feature {NONE} -- Access

@@ -87,6 +87,7 @@ feature {NONE} -- Implementation
 			l_accelerators: EV_ACCELERATOR_LIST
 			l_accelerator: like accelerator
 			l_compare_object: BOOLEAN
+			l_dev_window: EB_VISION_WINDOW
 		do
 			collect_destroyed_accelerators
 
@@ -125,7 +126,9 @@ feature {NONE} -- Implementation
 					end
 						-- Add new accelerator to `a_window'
 					if l_accelerators.has (l_accelerator) then
-						shortcut_manager.post_updating_actions.extend_kamikaze (agent extend_accelerator (l_accelerators, l_accelerator))
+						l_dev_window ?= a_window
+						check not_void: l_dev_window /= Void end
+						shortcut_manager.post_updating_actions_of (l_dev_window).extend_kamikaze (agent extend_accelerator (l_accelerators, l_accelerator))
 					else
 						extend_accelerator (l_accelerators, l_accelerator)
 					end

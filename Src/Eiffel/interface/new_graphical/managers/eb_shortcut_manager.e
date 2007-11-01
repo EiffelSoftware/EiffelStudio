@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialization
 		do
-			create post_updating_actions
+			create post_updating_actions.make (1)
 		end
 
 feature -- Access
@@ -28,14 +28,20 @@ feature -- Access
 			-- Update all commands.
 		do
 			window_manager.refresh_commands
-			post_updating_actions.call (Void)
+			post_updating_actions.do_all (agent (a_tuple: TUPLE [a_window: EB_VISION_WINDOW; a_list: EV_NOTIFY_ACTION_SEQUENCE])
+											do
+												a_tuple.a_list.call (Void)
+											end)
 		end
 
 	update_external_commands is
 			-- Update external commands.
 		do
 			window_manager.refresh_external_commands
-			post_updating_actions.call (Void)
+			post_updating_actions.do_all (agent (a_tuple: TUPLE [a_window: EB_VISION_WINDOW; a_list: EV_NOTIFY_ACTION_SEQUENCE])
+											do
+												a_tuple.a_list.call (Void)
+											end)
 		end
 
 	propagate_accelerators (a_dev_window: EB_DEVELOPMENT_WINDOW) is
@@ -49,16 +55,61 @@ feature -- Access
 			a_docking_manager_not_void: a_dev_window.docking_manager /= Void
 		do
 			if not post_updating_actions.is_empty then
-				post_updating_actions.extend_kamikaze (agent (a_dev_window.docking_manager).propagate_accelerators)
+				post_updating_actions_of (a_dev_window.window).extend_kamikaze (agent (a_dev_window.docking_manager).propagate_accelerators)
 			else
 				a_dev_window.docking_manager.propagate_accelerators
 			end
 		end
 
+	clear_actions (a_develop_window: EB_VISION_WINDOW) is
+			-- Clear actions related with `a_develop_window'.
+			-- `a_develop_window' is value from EB_DEBELOPMENT_WINDOW.window.
+		require
+			not_void: a_develop_window /= Void
+		do
+			from
+				post_updating_actions.start
+			until
+				post_updating_actions.after
+			loop
+				if post_updating_actions.item.dev_win = a_develop_window then
+					post_updating_actions.remove
+				else
+					post_updating_actions.forth
+				end
+			end
+		end
+
 feature {EB_COMMAND} -- Access
 
-	post_updating_actions: EV_NOTIFY_ACTION_SEQUENCE;
+	post_updating_actions_of (a_win: EB_VISION_WINDOW): EV_NOTIFY_ACTION_SEQUENCE is
+			-- `a_win' is from EB_DEVELOPMENT_WINDOW.window
+			-- Actions related with `a_win'.
+		require
+			not_void: a_win /= Void
+		do
+			from
+				post_updating_actions.start
+			until
+				post_updating_actions.after or Result /= Void
+			loop
+				if post_updating_actions.item.dev_win = a_win then
+					Result := post_updating_actions.item.actions
+				end
+				post_updating_actions.forth
+			end
+
+			if Result = Void then
+				create Result
+				post_updating_actions.extend ([a_win, Result])
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	post_updating_actions: ARRAYED_LIST [TUPLE [dev_win: EB_VISION_WINDOW; actions: EV_NOTIFY_ACTION_SEQUENCE]];
 			-- Called after updating EB_COMMANDs.
+			-- Item count should same size as total EB_DEVELOPMENT_WINDOW count.
 
 invariant
 	post_updating_actions_not_void: post_updating_actions /= Void

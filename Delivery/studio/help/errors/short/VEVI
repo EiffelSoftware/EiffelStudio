@@ -1,0 +1,3 @@
+Error: variable is not properly set.
+What to do: ensure the variable is properly set by the corresponding
+  setter instruction.

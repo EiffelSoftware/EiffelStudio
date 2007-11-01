@@ -22,6 +22,8 @@ inherit
 			{ANY} has, parent, count, prunable, is_destroyed
 			{SD_TOOL_BAR_ZONE, SD_TOOL_BAR} set_item_size, width, screen_x
 			{SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_CONTENT} destroy
+		redefine
+			destroy
 		end
 
 create
@@ -175,6 +177,13 @@ feature -- Command
 			is_ignore_resize := a_ignore
 		ensure
 			set: is_ignore_resize = a_ignore
+		end
+
+	destroy is
+			-- Redefine
+		do
+			docking_manager := Void
+			Precursor {EV_FIXED}
 		end
 
 feature {SD_TOOL_BAR_ROW_POSITIONER} -- Internal Issues

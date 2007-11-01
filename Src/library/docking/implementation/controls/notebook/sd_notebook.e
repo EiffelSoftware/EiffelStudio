@@ -297,6 +297,7 @@ feature -- Command
 				internal_tabs.item.destroy
 				internal_tabs.forth
 			end
+			internal_docking_manager := Void
 			Precursor {EV_VERTICAL_BOX}
 		end
 
@@ -538,6 +539,12 @@ feature -- Query
 			create Result.make (internal_tab_box.screen_x, internal_tab_box.screen_y, internal_tab_box.width, internal_tab_box.height)
 		ensure
 			not_void: Result /= Void
+		end
+
+	docking_manager: like internal_docking_manager is
+			-- Docking manager which Current managed by.
+		do
+			Result := internal_docking_manager
 		end
 
 feature {NONE}  -- Implementation

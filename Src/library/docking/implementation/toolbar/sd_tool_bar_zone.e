@@ -327,8 +327,14 @@ feature -- Command
 	destroy is
 			-- Destroy
 			-- Called by SD_TOOL_BAR_MANAGER.destroy
+		local
+			l_row: SD_TOOL_BAR_ROW
 		do
 			prune_tool_bar_zone (Current)
+			l_row := row
+			if l_row /= Void then
+				l_row.destroy
+			end
 			tool_bar := Void
 			docking_manager := Void
 		end

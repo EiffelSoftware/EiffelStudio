@@ -126,6 +126,7 @@ feature -- Command
 				parent.prune (Current)
 				parent := Void
 			end
+			internal_docking_manager := Void
 		ensure
 			cleared: parent = Void
 		end

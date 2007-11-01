@@ -145,6 +145,14 @@ feature -- Query
 			Result := l_in_docking_gripper_area or l_in_floating_tool_bar
 		end
 
+feature -- Command
+
+	destroy is
+			-- Clear references
+		do
+			internal_docking_manager := Void
+		end
+
 feature {NONE} -- Implementation functions
 
 	on_cancel is

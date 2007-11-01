@@ -80,8 +80,6 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Set `internal_docking_manager'.
-		require
-			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			internal_docking_manager := a_docking_manager
 		ensure

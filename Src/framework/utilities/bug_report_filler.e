@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			l_last_html := html_of_confirm_page (l_last_html)
 
 			-- Final submit
-			l_final_url_location := find_location (a_last_html.as_string_8)
+			l_final_url_location := find_location (l_last_html.as_string_8)
 			-- We need this page to find the latest VIEWSTATE and EVENTVALIDATION value.
 			l_result_string := html_of_final_submit_page ("https://www2.eiffel.com" + l_final_url_location)
 

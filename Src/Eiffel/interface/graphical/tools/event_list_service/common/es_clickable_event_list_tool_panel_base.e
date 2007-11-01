@@ -41,7 +41,10 @@ feature {NONE} -- Clean up
 			if is_initialized then
 				grid_token_support.desynchronize_color_or_font_change_with_editor
 			end
+			internal_grid_token_support := Void
 			Precursor {ES_EVENT_LIST_TOOL_PANEL_BASE}
+		ensure then
+			internal_grid_token_support_detached: internal_grid_token_support = Void
 		end
 
 feature {NONE} -- Access
@@ -53,6 +56,7 @@ feature {NONE} -- Access
 			if Result = Void then
 				create Result.make_with_grid (grid_events)
 				internal_grid_token_support := Result
+				auto_recycle (internal_grid_token_support)
 			end
 		ensure
 			result_attached: Result /= Void

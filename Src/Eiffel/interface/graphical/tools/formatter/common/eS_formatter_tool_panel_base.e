@@ -17,6 +17,7 @@ inherit
 			force_last_stone,
 			show,
 			internal_recycle,
+			internal_detach_entities,
 			show_with_setting
 		end
 
@@ -26,7 +27,8 @@ inherit
 		rename
 			set_stone as drop_stone
 		redefine
-			internal_recycle
+			internal_recycle,
+			internal_detach_entities
 		end
 
 	EB_VIEWPOINT_AREA
@@ -82,6 +84,35 @@ feature{NONE} -- Initialization
 			build_formatters
 			fill_in
 			on_select
+		end
+
+feature{NONE} -- Clean up
+
+	internal_recycle is
+			-- To be called when the button has became useless.
+		do
+			Precursor {EB_HISTORY_OWNER}
+
+			safe_remove_agent (on_customized_formatter_loaded_agent, customized_formatter_manager.change_actions)
+			if eiffel_project.manager.load_agents.has (on_project_loaded_agent) then
+				eiffel_project.manager.load_agents.prune_all (on_project_loaded_agent)
+			end
+			if metric_manager.metric_loaded_actions.has (on_metric_loaded_agent) then
+				metric_manager.metric_loaded_actions.prune_all (on_metric_loaded_agent)
+			end
+			detach_veto_format_function
+			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
+			do_all_in_list (displayer_cache.linear_representation, agent (a_displayer: EB_FORMATTER_DISPLAYER) do a_displayer.recycle end)
+
+			Precursor {EB_STONABLE_TOOL}
+			Precursor {EB_HISTORY_OWNER}
+		end
+
+	internal_detach_entities
+			-- Detaches objects from their container
+		do
+			Precursor {EB_STONABLE_TOOL}
+			Precursor {EB_HISTORY_OWNER}
 		end
 
 feature -- Access
@@ -879,27 +910,6 @@ feature{NONE} -- Implementation
 
 	customized_formatter_button_internal: like customized_formatter_button
 			-- Implementation of `customized_formatter_button'
-
-feature{NONE} -- Recycle
-
-	internal_recycle is
-			-- To be called when the button has became useless.
-		do
-			Precursor {EB_HISTORY_OWNER}
-
-			safe_remove_agent (on_customized_formatter_loaded_agent, customized_formatter_manager.change_actions)
-			if eiffel_project.manager.load_agents.has (on_project_loaded_agent) then
-				eiffel_project.manager.load_agents.prune_all (on_project_loaded_agent)
-			end
-			if metric_manager.metric_loaded_actions.has (on_metric_loaded_agent) then
-				metric_manager.metric_loaded_actions.prune_all (on_metric_loaded_agent)
-			end
-			detach_veto_format_function
-			do_all_in_list (customized_formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.recycle end)
-			do_all_in_list (displayer_cache.linear_representation, agent (a_displayer: EB_FORMATTER_DISPLAYER) do a_displayer.recycle end)
-
-			Precursor {EB_STONABLE_TOOL}
-		end
 
 invariant
 	on_customized_formatter_loaded_agent_attached: on_customized_formatter_loaded_agent /= Void

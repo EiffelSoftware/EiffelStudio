@@ -181,6 +181,7 @@ feature {NONE} -- Memory management
 		do
 			reset_tool
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
+			Precursor {EB_TOOL}
 		end
 
 feature {NONE} -- Implementation

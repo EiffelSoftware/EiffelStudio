@@ -404,6 +404,7 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			reset_tool
+			Precursor {EB_STONABLE_TOOL}
 		end
 
 	recycle_expressions is

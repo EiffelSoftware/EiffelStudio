@@ -104,8 +104,8 @@ feature {NONE} -- Initialization
 			if pixel_buffer /= Void then
 				content.set_pixel_buffer (pixel_buffer)
 			end
-			content.close_request_actions.extend (agent close)
-			content.focus_in_actions.extend (agent show)
+			register_action (content.close_request_actions, agent close)
+			register_action (content.focus_in_actions, agent show)
 		end
 
 	build_mini_toolbar is
@@ -305,11 +305,13 @@ feature {NONE} -- Implementation
 		local
 			l_editor: EB_SMART_EDITOR
 		do
-			l_editor := develop_window.editors_manager.current_editor
-			if l_editor /= Void then
-				develop_window.editors_manager.select_editor (l_editor, False)
-				if l_editor.editor_drawing_area.is_displayed then
-					l_editor.editor_drawing_area.set_focus
+			if develop_window /= Void and then not develop_window.is_recycled then
+				l_editor := develop_window.editors_manager.current_editor
+				if l_editor /= Void then
+					develop_window.editors_manager.select_editor (l_editor, False)
+					if l_editor.editor_drawing_area.is_displayed then
+						l_editor.editor_drawing_area.set_focus
+					end
 				end
 			end
 		end
@@ -338,18 +340,22 @@ feature {NONE} -- Memory management
 				content := Void
 			end
 			develop_window := Void
-		end
-
-feature -- Obsolete
-
-	icon_name: STRING is
-			-- Name of the tool in minimized state
-		obsolete "Use `minimized_title' instead"
-		do
+			tool_descriptor := Void
+			if mini_toolbar /= Void then
+				mini_toolbar.destroy
+				mini_toolbar := Void
+			end
+		ensure then
+			content_detached: content = Void
+			develop_window_detached: develop_window = Void
+			tool_descriptor_detached: tool_descriptor = Void
+			mini_toolbar_detached: mini_toolbar = Void
 		end
 
 invariant
-	tool_descriptor_attached: tool_descriptor /= Void
+	develop_window_attached: not is_recycled implies develop_window /= Void
+		-- Customizable tool needs to be converted.
+	--tool_descriptor_attached: not is_recycled implies tool_descriptor /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

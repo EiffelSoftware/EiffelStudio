@@ -1716,6 +1716,20 @@ feature -- Implementation
 								last_feature_name_correct: last_feature_name = l_feature.feature_name
 							end
 							last_routine_id_set := l_feature.rout_id_set
+							if last_access_writable and then l_result_type.is_attached and then not l_result_type.is_expanded then
+									-- Take care only for non-self-initializing attributes.
+								if is_in_assignment or else is_target_of_creation_instruction then
+										-- Mark that the attribute is initialized.
+									context.variables.set_attribute (l_feature.feature_id)
+								elseif not is_checking_postcondition and then not context.variables.is_attribute_set (l_feature.feature_id) then
+										-- Attribute is not properly initialized.
+									error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
+									if not is_checking_precondition then
+											-- Mark that the attribute is initialized to avoid repeated errors.
+										context.variables.set_attribute (l_feature.feature_id)
+									end
+								end
+							end
 						else
 								-- `l_feature' was not valid for current, report
 								-- corresponding error.
@@ -2172,6 +2186,18 @@ feature -- Implementation
 						-- Update the type stack
 					last_type := l_feat_type
 					last_access_writable := True
+					if l_feat_type.is_attached and then not l_feat_type.is_expanded then
+							-- Take care only for non-self-initializing locals.
+						if is_in_assignment or else is_target_of_creation_instruction then
+								-- Mark that Result is initialized.
+							context.variables.set_result
+						elseif not is_checking_postcondition and then not context.variables.is_result_set then
+								-- Result is not properly initialized.
+							error_handler.insert_error (create {VEVI}.make_result (context, l_as))
+								-- Mark that Result is initialized to avoid repeated errors.
+							context.variables.set_result
+						end
+					end
 					if is_byte_node_enabled then
 						create {RESULT_B} last_byte_node
 					end
@@ -2422,6 +2448,17 @@ feature -- Implementation
 						l_veen2b.set_identifier (l_as.feature_name.name)
 						l_veen2b.set_location (l_as.feature_name)
 						error_handler.insert_error (l_veen2b)
+					elseif l_type.is_attached and then not l_type.is_expanded then
+							-- Take care only for non-self-initializing locals.
+						if is_in_assignment or else is_target_of_creation_instruction then
+								-- Mark that the local is initialized.
+							context.variables.set_local (l_local_info.position)
+						elseif not context.variables.is_local_set (l_local_info.position) then
+								-- Local is not properly initialized.
+							error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
+								-- Mark that the local is initialized to avoid repeated errors.
+							context.variables.set_local (l_local_info.position)
+						end
 					end
 					if not is_inherited then
 							-- set some type attributes of the node
@@ -2763,12 +2800,28 @@ feature -- Implementation
 			s: INTEGER
 			l_error_level: NATURAL_32
 			l_has_invalid_locals: BOOLEAN
+			l_feat_type: TYPE_A
+			creators: HASH_TABLE [EXPORT_I, STRING_8]
+			is_creation_procedure: BOOLEAN
+			feature_id: INTEGER
+			attr: FEATURE_I
+			skeleton: GENERIC_SKELETON
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_error_level := error_level
 
 				-- Remember current scope state
 			s := context.scope
+
+			creators := context.current_class.creators
+			if creators /= Void and then creators.has (current_feature.feature_name) or else
+				context.current_class.creation_feature /= Void and then context.current_class.creation_feature.feature_id = current_feature.feature_id
+			then
+				context.variables.start_creation_procedure
+				is_creation_procedure := True
+			else
+				context.variables.start_feature
+			end
 
 				-- Check preconditions
 			if l_as.precondition /= Void then
@@ -2798,6 +2851,29 @@ feature -- Implementation
 					l_byte_code.set_precondition (l_list)
 				end
 
+				l_feat_type := current_feature.type
+				if l_feat_type.is_attached and then not l_feat_type.is_expanded and then not context.variables.is_result_initialized then
+						-- Result is not properly initialized.
+					error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
+				end
+				if is_creation_procedure then
+						-- Verify that attributes are properly initialized.
+					from
+						skeleton := context.current_class.skeleton
+						skeleton.start
+					until
+						skeleton.after
+					loop
+						feature_id := skeleton.item_for_iteration.feature_id
+						attr := context.current_class.feature_of_feature_id (feature_id)
+						l_feat_type := attr.type
+						if l_feat_type.is_attached and then not l_feat_type.is_expanded and then not context.variables.is_attribute_initialized (feature_id) then
+								-- Attribute is not properly initialized.
+							error_handler.insert_error (create {VEVI}.make_attribute (attr, context.current_class.class_id, context, l_as.end_keyword))
+						end
+						skeleton.forth
+					end
+				end
 					-- Check postconditions
 				if l_as.postcondition /= Void then
 						-- Set access id level analysis to `is_checking_postcondition': locals
@@ -2814,6 +2890,11 @@ feature -- Implementation
 			end
 
 				-- Check rescue-clause
+			if is_creation_procedure then
+				context.variables.start_creation_procedure
+			else
+				context.variables.start_feature
+			end
 			if l_as.rescue_clause /= Void then
 					-- A deferred or external feature cannot have a rescue
 					-- clause
@@ -2826,7 +2907,7 @@ feature -- Implementation
 				elseif not l_has_invalid_locals then
 						-- Set mark of context
 					is_in_rescue := True
-					l_as.rescue_clause.process (Current)
+					process_compound (l_as.rescue_clause)
 					if l_needs_byte_node then
 						l_list ?= last_byte_node
 						l_byte_code.set_rescue_clause (l_list)
@@ -2872,7 +2953,9 @@ feature -- Implementation
 			s: INTEGER
 		do
 			s := context.scope
+			context.variables.enter_compound
 			compound.process (Current)
+			context.variables.leave_compound
 			context.set_scope (s)
 		end
 

@@ -15,7 +15,7 @@ inherit
 		rename
 			make as target_make
 		redefine
-			internal_recycle
+			internal_detach_entities
 		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -45,6 +45,18 @@ feature {NONE} -- Initialization
 			target_make (a_tool.window)
 			tool := a_tool
 			is_sensitive := True
+		end
+
+feature -- Clean up
+
+	internal_detach_entities
+			-- Detaches objects from their container
+		do
+			tool := Void
+
+			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}
+		ensure then
+			tool_detached: tool = Void
 		end
 
 feature -- Access
@@ -179,15 +191,6 @@ feature -- Element change
 			mini_pixmap_set: mini_pixel_buffer = a_mini_pixel_buffer
 		end
 
-feature -- Recyclable
-
-	internal_recycle is
-			-- Recycle
-		do
-			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}
-			accelerator := Void
-		end
-
 feature {NONE} -- Implementation
 
 	update_tooltip (toggle: EB_COMMAND_TOOL_BAR_BUTTON) is
@@ -217,6 +220,9 @@ feature {NONE} -- Implementation
 			end
 			a_toogle.set_tooltip (l_tt)
 		end
+
+invariant
+	tool_attached: not is_recycled implies tool /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

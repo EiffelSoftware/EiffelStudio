@@ -509,6 +509,7 @@ feature {NONE} -- Memory management
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.prune_all (set_row_unsensitive_fg_color_agent)
 			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.prune_all (set_row_replayable_bg_color_agent)
+			Precursor {EB_STONABLE_TOOL}
 		end
 
 feature {NONE} -- Grid Implementation

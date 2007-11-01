@@ -1678,10 +1678,10 @@ feature -- Status setting
 					else
 							-- There are no rows in `Current', so we set the
 							-- value of `vertical_scroll_bar' to 0.
-						check
-							row_count_must_be_zero: row_count = 0
-							vertical_scroll_bar.value_range.has (0)
-						end
+--						check
+--							row_count_must_be_zero: row_count = 0
+--							vertical_scroll_bar.value_range.has (0)
+--						end
 						vertical_scroll_bar.set_value (0)
 					end
 					vertical_scroll_bar.change_actions.resume
@@ -3082,30 +3082,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		do
 			l_original_computed_visible_row_count := computed_visible_row_count
 			original_row_index := rows.index
-			if not is_tree_enabled then
-				index := an_index
+
+			if row_count > 0 and is_tree_enabled then
+					-- We only find the parent row when `Current' is not empty and we have the tree enabled.
+				index := row_internal (an_index).parent_row_root.index
 			else
-				if row_count > 0 then
-						-- We only find the parent row when `Current' is
-						-- not empty.
-					from
-						l_parent_row_i := row_internal (an_index)
-					until
-						l_parent_row_i.parent_row_i = Void
-					loop
-						l_parent_row_i := l_parent_row_i.parent_row_i
-					end
-					index := l_parent_row_i.index
-				else
-						-- `Current' is empty, so simply keep the same index.
-					index := an_index
-				end
-				if row_count > 0 and index <= row_count and then not row (index).is_show_requested then
-						-- If we are removing a row that is hidden, then unless we reset the index to start
-						-- recomputation to a row that is shown, the visible count lookup will return an incorrect value
-						-- and corrupt our calculations.
-					index := 1
-				end
+					-- `Current' is empty, so simply keep the same index.
+				index := an_index
 			end
 			if uses_row_offsets then
 					-- Only perform recomputation if the rows do not all have the same height
@@ -3116,12 +3099,25 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					create row_indexes_to_visible_indexes
 					create visible_indexes_to_row_indexes
 				else
-					current_row_offset := row_offsets @ (index)
-					rows.go_i_th (index)
+						-- Retrieve the count of visible rows calculated last time this feature was called.
 					l_visible_row_count := visible_row_count
 					if index > 1 then
+							-- Check that `index' is within the previous range of computed visible row indexes. Note that
+							-- this does not check it is was previously displayed, but just between the lowest and the highest that were
+							-- previously displayed.
 						if l_visible_row_count > 0 and then index <= visible_indexes_to_row_indexes.i_th (l_visible_row_count) then
-							visible_count := row_indexes_to_visible_indexes.i_th (index)
+								-- Now we check that the row index we are trying to compute from was previously visible in `Current'.
+								-- If it was not visible, then we are unable to assertain the visible row count at this index, which we need
+								-- in order to continue computing from this index.
+								-- If the row at this index was not displayed, then we start a re-compute from the row at index 1. We could
+								-- find the next visible row before the one we wanted, but there is no way to determine this without iterating
+								-- so we simply start from the top.
+							if row_indexes_to_visible_indexes.i_th (index) > 0 and then visible_indexes_to_row_indexes.i_th (row_indexes_to_visible_indexes.i_th (index)) + 1 = index then
+								visible_count := row_indexes_to_visible_indexes.i_th (index)
+							else
+								index := 1
+								visible_count := 0
+							end
 						else
 								-- In this situation, we are adding a row that has not already been computed.
 								-- Therefore, `visible_count' is set to the number of rows that was previously
@@ -3133,8 +3129,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 							-- no rows in the grid. So, we reset these attributes to the start.
 						visible_count := 0
 					end
+					current_row_offset := row_offsets @ (index)
 				end
-					-- Ensure we enlarge our data structures to accomodate the totla number of rows.
+
+					-- Ensure we enlarge our data structures to accomodate the total number of rows.
 					-- We do not reduce the size of these lists to avoid the performance overhead.
 				if row_offsets.count < rows.count + 1 then
 					row_offsets.resize (rows.count + 1)
@@ -4097,8 +4095,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			vertical_box.disable_item_expand (header_viewport)
 			create viewport
 			viewport.resize_actions.extend (agent viewport_resized)
-			create static_fixed
 
+			create static_fixed
 			static_fixed.set_minimum_size (static_fixed_x_offset * 2, static_fixed_y_offset * 2)
 			create static_fixed_viewport
 			static_fixed_viewport.resize_actions.extend (agent resize_viewport_in_static_fixed)

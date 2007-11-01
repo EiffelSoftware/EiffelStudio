@@ -111,6 +111,12 @@ feature {NONE} -- Clean up
         local
             l_site: SITE [EB_DEVELOPMENT_WINDOW]
         do
+        	check
+        			-- Be sure to recycle using the tool descriptor and not the tool panel.
+        			-- The tool panel is automatically cleaned up.
+        		tool_descriptor_recycled: tool_descriptor.is_recycled or tool_descriptor.is_recycling
+        	end
+
             internal_stone_director := Void
 
             if internal_icon_pixmap /= Void then

@@ -55,7 +55,11 @@ feature {NONE} -- Clean up
 				accelerator.actions.wipe_out
 				accelerator := Void
 			end
+			tool_commander := Void
 			collect_destroyed_accelerators
+		ensure then
+			tool_commander_detached: tool_commander = Void
+			accelerator_detached: accelerator = Void
 		end
 
 feature -- Access

@@ -79,8 +79,11 @@ feature {NONE} -- Clean up
 					l_service.item_changed_events.unsubscribe (l_agent)
 				end
 			end
+			internal_grid_wrapper := Void
 
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
+		ensure then
+			internal_grid_wrapper_deatched: internal_grid_wrapper = Void
 		end
 
 feature {NONE} -- Access
@@ -102,6 +105,7 @@ feature {NONE} -- Access
 			if Result = Void then
 				create Result.make (grid_events)
 				internal_grid_wrapper := Result
+				auto_recycle (internal_grid_wrapper)
 			end
 		ensure
 			result_attached: Result /= Void

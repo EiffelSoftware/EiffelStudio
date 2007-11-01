@@ -141,10 +141,6 @@ feature {NONE} -- Clean up
 					l_buttons.forth
 				end
 
-				dialog.key_press_actions.prune (agent on_key_pressed)
-				dialog.key_release_actions.prune (agent on_key_release)
-				dialog.show_actions.prune (agent show_actions.call ([]))
-
 				button_actions.wipe_out
 
 				dialog.destroy

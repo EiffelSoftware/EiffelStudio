@@ -28,6 +28,7 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- To be called when the button has became useless.
 		do
+			develop_window := Void
 		end
 
 feature {NONE} -- Implementation

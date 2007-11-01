@@ -1788,6 +1788,8 @@ feature {NONE} -- Recycle
 	internal_recycle is
 			-- Recycle all.
 		do
+			shortcut_manager.clear_actions (window)
+
 			recycle_command
 			recycle_formatters
 			recycle_menu

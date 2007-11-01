@@ -333,7 +333,10 @@ feature {NONE} -- Memory management
 	internal_recycle is
 			-- Recycle tool.
 		do
-			content := Void
+			if content /= Void then
+				content.destroy
+				content := Void
+			end
 			develop_window := Void
 		end
 

@@ -52,9 +52,9 @@ feature {NONE} -- Initialization
 
 			dialog_result := buttons.first
 			dialog.set_icon_pixmap (icon)
-			dialog.key_press_actions.extend (agent on_key_pressed)
-			dialog.key_release_actions.extend (agent on_key_release)
-			dialog.show_actions.extend (agent show_actions.call ([]))
+			register_action (dialog.key_press_actions, agent on_key_pressed)
+			register_action (dialog.key_release_actions, agent on_key_release)
+			register_action (dialog.show_actions, agent show_actions.call ([]))
 
 			is_initialized := True
 			is_initializing := l_init
@@ -712,6 +712,7 @@ feature {NONE} -- Action handlers
 		do
 			adjust_dialog_button_widths
 			dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
+			dialog.set_default_push_button (dialog_window_buttons.item (default_button))
 		end
 
 feature -- Conversion
@@ -789,9 +790,9 @@ feature {NONE} -- Factory
 
 				l_button := create_dialog_button (l_id)
 					-- Add close action
-				l_button.select_actions.extend (agent on_close_requested (l_id))
+				register_action (l_button.select_actions, agent on_close_requested (l_id))
 					-- Add action to ensure the dialog result is set
-				l_button.select_actions.extend (agent on_dialog_button_pressed (l_id))
+				register_action (l_button.select_actions, agent on_dialog_button_pressed (l_id))
 					-- Bind other actions
 				bind_dialog_button (l_id, l_button)
 

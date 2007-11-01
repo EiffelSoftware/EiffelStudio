@@ -39,8 +39,8 @@ mtldflags: ""
 ccldflags: "-c -x -Tpe -L%"$(ISE_EIFFEL)\bcc55\lib%" -L%"$(ISE_EIFFEL)\bcc55\lib\PSDK%""
 console_flags: "-ap"
 windows_flags: "-aa"
-ldsharedflags: "-Tpd -Gn"
-mtldsharedflags: "-Tpd -Gn"
+ldsharedflags: "-L%"$(ISE_EIFFEL)\BCC55\lib%" -L%"$(ISE_EIFFEL)\BCC55\lib\PSDK%" -Tpd -Gn"
+mtldsharedflags: "-L%"$(ISE_EIFFEL)\BCC55\lib%" -L%"$(ISE_EIFFEL)\BCC55\lib\PSDK%" -Tpd -Gn"
 
 -- eiffel run-time specification
 prefix: "$(ISE_C_COMPILER)\"

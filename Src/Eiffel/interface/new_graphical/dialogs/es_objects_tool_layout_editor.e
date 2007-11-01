@@ -23,59 +23,30 @@ inherit
 			locals_id as position_locals,
 			result_id as position_result,
 			dropped_id as position_dropped
+		export
+			{NONE} all
 		end
 
-	EV_SHARED_APPLICATION
-
-	ES_SHARED_PROMPT_PROVIDER
-
 create
-	make_with_objects_tool
+	make
 
 convert
 	to_dialog: {EV_DIALOG}
 
 feature {NONE} -- Initialization
 
-	make_with_objects_tool (t: like objects_tool) is
-			-- Make with objects tool
-		do
-			set_objects_tool (t)
-			make
-		end
-
 	make is
 			-- Initialize dialog		
 		do
-			buttons := dialog_buttons.yes_no_cancel_buttons
-			default_button := dialog_buttons.yes_button
-			default_cancel_button := dialog_buttons.cancel_button
-			default_confirm_button := dialog_buttons.yes_button
 			Precursor {ES_DIALOG}
+
 			set_button_text (dialog_buttons.yes_button, interface_names.b_apply)
-			set_button_text (dialog_buttons.no_button, interface_names.b_reset)
-			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
-
-
 			set_button_action (dialog_buttons.yes_button, agent on_apply)
+			set_button_text (dialog_buttons.no_button, interface_names.b_reset)
 			set_button_action (dialog_buttons.no_button, agent on_reset)
+			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
 			set_button_action (dialog_buttons.cancel_button, agent on_cancel)
 		end
-
-feature -- Change
-
-	set_objects_tool (t: like objects_tool) is
-			-- set `objects_tool'
-		do
-			objects_tool := t
-			if is_initialized then
-				update
-			end
-		end
-
-feature -- Properties
-
-	objects_tool: ES_OBJECTS_TOOL
 
 feature {NONE} -- User interface initialization
 
@@ -127,23 +98,75 @@ feature {NONE} -- User interface initialization
 			end
 		end
 
+feature -- Access
+
+	icon: EV_PIXEL_BUFFER
+			-- The dialog's icon
+		do
+			Result := stock_pixmaps.general_edit_icon_buffer
+		end
+
+	title: STRING_32
+			-- The dialog's title
+		do
+			Result := interface_names.m_objects_tool_layout_editor_title
+		end
+
+	buttons: DS_SET [INTEGER]
+			-- Set of button id's for dialog
+			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+		once
+			Result := dialog_buttons.yes_no_cancel_buttons
+		end
+
+	default_button: INTEGER
+			-- The dialog's default action button
+		once
+			Result := {ES_DIALOG_BUTTONS}.yes_button
+		end
+
+	default_confirm_button: INTEGER
+			-- The dialog's default confirm button
+		once
+			Result := {ES_DIALOG_BUTTONS}.yes_button
+		end
+
+	default_cancel_button: INTEGER
+			-- The dialog's default cancel button
+			-- Note: The default cancel button is set on show, so if you want to change the
+			--       default cancel button after the dialog has been shown, please see the implmentation
+			--       of `show' to see how it is done.
+		once
+			Result := {ES_DIALOG_BUTTONS}.cancel_button
+		end
+
+feature {NONE} -- Access
+
+	objects_tool: ES_OBJECTS_TOOL
+			-- Access to debugger object tool
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
+		do
+			Result ?= development_window.shell_tools.tool ({ES_OBJECTS_TOOL})
+		ensure
+			result_attached: Result /= Void
+			not_result_is_recycled: not Result.is_recycled
+		end
+
+
+feature {NONE} -- User interface elements
+
 	grid: EV_GRID
 
 	button_arrow_up, button_arrow_down: SD_TOOL_BAR_BUTTON
 
-feature -- Actions
-
-	on_close_requested (a_id: INTEGER)
-		do
-			if a_id = dialog_buttons.yes_button then -- Apply
-			elseif a_id = dialog_buttons.no_button then -- Reset			
-			else
-				-- Close/Cancel ...
-				Precursor {ES_DIALOG} (a_id)
-			end
-		end
+feature {NONE} -- Actions
 
 	update is
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		local
 			gids: LIST [STRING]
 			l_keys: TWO_WAY_SORTED_SET [STRING]
@@ -237,6 +260,9 @@ feature -- Actions
 
 	refresh is
 			-- Refresh due to show or resize action
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		local
 			i: INTEGER
 			m,w: INTEGER
@@ -264,6 +290,9 @@ feature -- Actions
 
 	on_grid_item_selected (gi: EV_GRID_ITEM) is
 			-- item selected
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		do
 			if gi /= Void and then gi.parent /= Void then
 				if gi.row.index > 1 then
@@ -281,6 +310,9 @@ feature -- Actions
 
 	on_grid_item_unselected (gi: EV_GRID_ITEM) is
 			-- item unselected
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		do
 			button_arrow_up.disable_sensitive
 			button_arrow_down.disable_sensitive
@@ -288,6 +320,9 @@ feature -- Actions
 
 	key_pressed_on_grid (k: EV_KEY) is
 			--
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		local
 			i: EV_GRID_ITEM
 			ch: EV_GRID_CHECKABLE_LABEL_ITEM
@@ -317,6 +352,9 @@ feature -- Actions
 
 	move_cell_by (a_cell: EV_GRID_ITEM; by: INTEGER) is
 			--
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		local
 			i,o: EV_GRID_ITEM
 			lst: LIST [EV_GRID_ITEM]
@@ -345,8 +383,25 @@ feature -- Actions
 			end
 		end
 
+feature {NONE} -- Action handlers
+
+	on_close_requested (a_id: INTEGER)
+			-- Called when a dialog button is pressed and a close is requested.
+			-- Note: Redefine to veto a close request.
+			--
+			-- `a_id': A button id corrsponding to the button pressed to close the dialog.
+			--         Use ES_DIALOG_BUTTONS or Dialog_buttons to determine the id's correspondance.
+		do
+			if a_id = dialog_buttons.cancel_button then
+				Precursor {ES_DIALOG} (a_id)
+			end
+		end
+
 	on_apply is
-			-- On apply action
+			-- Called when the Apply button is pressed.
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		local
 			i,j,nb: INTEGER
 			s: STRING
@@ -404,43 +459,22 @@ feature -- Actions
 		end
 
 	on_reset is
-			-- On reset action
+			-- Called when the Reset button is pressed.
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		do
 			objects_tool.panel.reset_objects_grids_contents_to_default
 			update
 		end
 
 	on_cancel is
+			-- Called when the Cancel button is pressed.
+		require
+			is_initialized: is_initialized
+			not_is_recycled: not is_recycled
 		do
 		end
-
-feature -- Access
-
-	icon: EV_PIXEL_BUFFER
-			-- The dialog's icon
-		do
-			Result := stock_pixmaps.general_edit_icon_buffer
-		end
-
-	title: STRING_32
-			-- The dialog's title
-		do
-			Result := interface_names.m_objects_tool_layout_editor_title
-		end
-
-	buttons: DS_SET [INTEGER]
-			-- Set of button id's for dialog
-			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
-
-
-	default_button: INTEGER
-			-- The dialog's default action button
-
-	default_cancel_button: INTEGER
-			-- The dialog's default cancel button
-
-	default_confirm_button: INTEGER
-			-- The dialog's default confirm button
 
 ;indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

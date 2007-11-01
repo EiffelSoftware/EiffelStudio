@@ -531,9 +531,10 @@ feature -- Menu
 		local
 			dlg: ES_OBJECTS_TOOL_LAYOUT_EDITOR
 		do
-			create dlg.make_with_objects_tool (tool_descriptor)
+			create dlg.make
 			dlg.set_is_modal (True)
 			dlg.show_on_active_window
+			dlg.recycle
 		end
 
 	tool_menu (for_tool: BOOLEAN): EV_MENU is
@@ -860,6 +861,7 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			reset_tool
+			Precursor {EB_STONABLE_TOOL}
 		end
 
 feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change

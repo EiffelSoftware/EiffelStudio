@@ -16,13 +16,9 @@ inherit
 		end
 
 	SD_WIDGETS_LISTS
-		rename
-			dispose as destroy
 		undefine
 			is_equal,
 			copy
-		redefine
-			destroy
 		end
 
 create
@@ -330,11 +326,11 @@ feature -- Command
 
 	destroy is
 			-- Destroy
+			-- Called by SD_TOOL_BAR_MANAGER.destroy
 		do
 			prune_tool_bar_zone (Current)
 			tool_bar := Void
-
-			Precursor {SD_WIDGETS_LISTS}
+			docking_manager := Void
 		end
 
 	show is

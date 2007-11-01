@@ -13,7 +13,8 @@ inherit
 	EB_TOOL
 		redefine
 			make,
-			show
+			show,
+			internal_recycle
 		end
 
 feature {NONE} -- Initialization
@@ -23,6 +24,17 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EB_TOOL} (a_manager, a_tool)
 			is_last_stone_processed := True
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle is
+			-- Recycle tool.
+		do
+			last_stone := Void
+			Precursor {EB_TOOL}
+		ensure then
+			last_stone_detached: last_stone = Void
 		end
 
 feature -- Access

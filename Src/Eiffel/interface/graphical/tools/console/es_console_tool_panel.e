@@ -245,7 +245,7 @@ feature{NONE} -- Initialization
 			cmd_lst.focus_in_actions.extend (agent on_focus_in_in_cmd_lst)
 			cmd_lst.set_text ("")
 			check not_void: cmd_lst.choices /= Void end
-			cmd_lst.choices.focus_in_actions.extend (agent on_focus_in_completion_window)
+			register_action (cmd_lst.choices.focus_in_actions, agent on_focus_in_completion_window)
 
 --			cmd_lst.drop_actions.extend (agent drop_class)
 --			cmd_lst.drop_actions.extend (agent drop_feature)
@@ -826,6 +826,7 @@ feature {NONE} -- Recycle
 			widget := Void
 			text_area := Void
 			develop_window := Void
+			Precursor {ES_OUTPUT_TOOL_PANEL}
 		end
 
 	recycle_widgets is

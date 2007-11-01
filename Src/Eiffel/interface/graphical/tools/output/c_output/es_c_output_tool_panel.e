@@ -807,7 +807,7 @@ feature {NONE} -- Recycle
 			-- To be called before destroying this objects
 		do
 			c_compilation_output_manager.prune (Current)
-			develop_window := Void
+			Precursor {ES_OUTPUT_TOOL_PANEL}
 		end
 
 indexing

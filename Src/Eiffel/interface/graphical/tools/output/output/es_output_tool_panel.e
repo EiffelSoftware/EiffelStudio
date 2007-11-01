@@ -93,9 +93,13 @@ feature -- Clean up
 			-- To be called before destroying this objects
 		do
 			graphical_output_manager.prune (Current)
-			text_area.recycle
-			text_area := Void
+			if text_area /= Void then
+				text_area.recycle
+				text_area := Void
+			end
 			Precursor {EB_TOOL}
+		ensure then
+			text_area_detached: text_area = Void
 		end
 
 feature -- Status setting

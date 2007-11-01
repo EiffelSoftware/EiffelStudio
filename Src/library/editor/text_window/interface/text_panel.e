@@ -1469,6 +1469,10 @@ feature -- Memory management
 				text_displayed.recycle
 				text_displayed := Void
 			end
+			if editor_viewport /= Void then
+				editor_viewport.destroy
+				editor_viewport := Void
+			end
 			panel_manager.remove_panel (Current)
 		ensure
 			not_initialized: not is_initialized

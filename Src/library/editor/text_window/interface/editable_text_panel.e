@@ -179,13 +179,17 @@ feature -- Indirect observer / manager pattern.
 	add_history_observer (history_observer: UNDO_REDO_OBSERVER) is
 			-- Add observer of `history'.
 		do
-			text_displayed.history.add_observer (history_observer)
+			if text_displayed /= Void then
+				text_displayed.history.add_observer (history_observer)
+			end
 		end
 
 	remove_history_observer (history_observer: UNDO_REDO_OBSERVER) is
 			-- Remove observer of `history'.
 		do
-			text_displayed.history.remove_observer (history_observer)
+			if text_displayed /= Void then
+				text_displayed.history.remove_observer (history_observer)
+			end
 		end
 
 feature -- Private Status

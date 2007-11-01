@@ -346,6 +346,7 @@ feature -- Command
 	destroy is
 			-- Redefine
 		do
+			internal_docking_manager := Void
 			prune_auto_hide_panel (Current)
 			Precursor {SD_HOR_VER_BOX}
 		end

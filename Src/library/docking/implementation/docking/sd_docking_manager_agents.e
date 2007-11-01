@@ -49,6 +49,7 @@ feature -- Command
 			-- Initlialize actions.
 		do
 			internal_docking_manager.contents.add_actions.extend (agent on_added_content)
+			internal_docking_manager.contents.remove_actions.extend (agent on_prune_content)
 			internal_docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
 			internal_docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
 			internal_docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
@@ -184,6 +185,16 @@ feature  -- Agents
 			set: a_content.docking_manager = internal_docking_manager
 		end
 
+	on_prune_content (a_content: SD_CONTENT) is
+				--  Handle prune a content from contents.
+			require
+				not_void: a_content /= Void
+			do
+				a_content.set_docking_manager (Void)
+			ensure
+				set: a_content.docking_manager = Void
+			end
+
 	on_main_window_focus_out is
 			-- Handle window lost focus event.
 		local
@@ -222,27 +233,28 @@ feature  -- Agents
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_has_focus: BOOLEAN
 		do
-			if not internal_docking_manager.main_window.is_destroyed and not internal_docking_manager.property.is_opening_config then
-				l_floating_zones := internal_docking_manager.query.floating_zones
-				l_has_focus := internal_docking_manager.main_window.has_focus
-				if not l_has_focus then
-					from
-						l_floating_zones.start
-					until
-						l_floating_zones.after or l_has_focus
-					loop
-						l_has_focus := l_floating_zones.item.has_focus
-						l_floating_zones.forth
+			if internal_docking_manager /= Void then
+				if not internal_docking_manager.main_window.is_destroyed and not internal_docking_manager.property.is_opening_config then
+					l_floating_zones := internal_docking_manager.query.floating_zones
+					l_has_focus := internal_docking_manager.main_window.has_focus
+					if not l_has_focus then
+						from
+							l_floating_zones.start
+						until
+							l_floating_zones.after or l_has_focus
+						loop
+							l_has_focus := l_floating_zones.item.has_focus
+							l_floating_zones.forth
+						end
+					end
+					if not l_has_focus then
+						--FIXIT: Currently we disable this feature.
+						-- Because when show a dialog, it'll get focus, make main window lost focus.
+						-- We should make a window can never get focus first.
+		--				internal_docking_manager.tool_bar_manager.hide_all_floating
 					end
 				end
-				if not l_has_focus then
-					--FIXIT: Currently we disable this feature.
-					-- Because when show a dialog, it'll get focus, make main window lost focus.
-					-- We should make a window can never get focus first.
-	--				internal_docking_manager.tool_bar_manager.hide_all_floating
-				end
 			end
-
 		end
 
 	on_top_level_window_focus_in is
@@ -366,6 +378,7 @@ feature -- Destory
 			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
 			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
 			focused_tab_stub := Void
+			internal_docking_manager := Void
 		end
 
 feature -- Contract support

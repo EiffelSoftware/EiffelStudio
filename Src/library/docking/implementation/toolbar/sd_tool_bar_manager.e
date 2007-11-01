@@ -161,6 +161,7 @@ feature -- Command
 				l_contents.forth
 			end
 			contents.wipe_out
+			docking_manager := Void
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_CONTENT} -- Internal functions.

@@ -165,6 +165,7 @@ feature -- Command
 			-- Destory all underline objects
 		do
 			main_area_drop_actions.wipe_out
+			internal_docking_manager := Void
 		end
 
 	remove_from_clicked_list (a_content: SD_CONTENT) is

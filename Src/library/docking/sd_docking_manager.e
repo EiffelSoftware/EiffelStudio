@@ -405,12 +405,25 @@ feature -- Command
 	destroy is
 			-- Destroy all underline objects.
 		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
+			l_notebooks: ARRAYED_LIST [SD_NOTEBOOK]
 		do
 			internal_shared.docking_manager_list.prune_all (Current)
 			property.destroy
 			agents.destroy
 			tool_bar_manager.destroy
+
+			from
+				l_contents := contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				l_contents.item.destroy
+				l_contents.forth
+			end
+
 			contents.wipe_out
 
 			-- We have to destroy floating zones for Linux implementation, on Windows not needed.
@@ -422,6 +435,35 @@ feature -- Command
 			loop
 				l_floating_zones.item.destroy
 				l_floating_zones.forth
+			end
+
+			if internal_auto_hide_panel_top /= Void then
+				internal_auto_hide_panel_top.destroy
+				internal_auto_hide_panel_top := Void
+			end
+			if internal_auto_hide_panel_bottom /= Void then
+				internal_auto_hide_panel_bottom.destroy
+				internal_auto_hide_panel_bottom := Void
+			end
+			if internal_auto_hide_panel_left /= Void then
+				internal_auto_hide_panel_left.destroy
+				internal_auto_hide_panel_left := Void
+			end
+			if internal_auto_hide_panel_right /= Void then
+				internal_auto_hide_panel_right.destroy
+				internal_auto_hide_panel_right := Void
+			end
+
+			from
+				l_notebooks := internal_shared.widgets.all_notebooks
+				l_notebooks.start
+			until
+				l_notebooks.after
+			loop
+				if l_notebooks.item.docking_manager = Current then
+					l_notebooks.item.destroy
+				end
+				l_notebooks.forth
 			end
 		end
 

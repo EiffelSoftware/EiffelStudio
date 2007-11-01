@@ -326,6 +326,7 @@ feature -- Set
 			-- Set focus to `Current'.
 		require
 			visible: is_visible
+			not_destroyed: not is_destroyed
 		do
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				state.set_focus (Current)
@@ -337,6 +338,8 @@ feature -- Set
 
 	set_focus_no_maximzied (a_zone: EV_WIDGET) is
 			-- Same as `set_focus', but only do things when no maximized zone in dock area which has `a_zone'
+		require
+			not_destroyed: not is_destroyed
 		do
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				if docking_manager.query.maximized_inner_container (a_zone) = Void then
@@ -384,6 +387,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (a_relative)
 			a_direction_valid: four_direction (a_direction)
 			not_auto_hide: a_relative.state_value /= {SD_ENUMERATION}.auto_hide
+			not_destroyed: not is_destroyed
 		do
 			set_visible (True)
    			state.change_zone_split_area (a_relative.state.zone, a_direction)
@@ -395,6 +399,7 @@ feature -- Set Position
 		require
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
+			not_destroyed: not is_destroyed
 		do
 			set_visible (True)
 			state.set_direction (a_direction)
@@ -407,6 +412,7 @@ feature -- Set Position
 		require
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
+			not_destroyed: not is_destroyed
 		do
 			set_visible (True)
 			state.stick (a_direction)
@@ -417,6 +423,7 @@ feature -- Set Position
 			-- Set `Current' floating at position `a_screen_x', `a_screen_y'.
 		require
 			manager_has_content: manager_has_content (Current)
+			not_destroyed: not is_destroyed
 		do
 			set_visible (True)
 			state.float (a_screen_x, a_screen_y)
@@ -430,6 +437,7 @@ feature -- Set Position
 			manager_has_current_content: manager_has_content (Current)
 			manager_has_a_content: manager_has_content (a_content)
 			target_content_zone_parent_exist: target_content_zone_parent_exist (a_content)
+			not_destroyed: not is_destroyed
 		local
 			l_tab_zone: SD_TAB_ZONE
 			l_docking_zone: SD_DOCKING_ZONE
@@ -458,6 +466,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			editor_place_holder_in: manager_has_place_holder
 			is_editor: type = {SD_ENUMERATION}.editor
+			not_destroyed: not is_destroyed
 		do
 			set_visible (True)
 			set_relative (docking_manager.zones.place_holder_content, {SD_ENUMERATION}.top)
@@ -469,6 +478,9 @@ feature -- Set Position
 
 	set_split_proportion (a_proportion: REAL) is
 			-- If current content is docking or tabbed, set parent splitter proportion to `a_proportion'.
+		require
+			valid: 0 <= a_proportion and a_proportion <= 1
+			not_destroyed: not is_destroyed
 		do
 			state.set_split_proportion (a_proportion)
 		end
@@ -516,18 +528,22 @@ feature -- Command
 
 	close is
 			-- Destroy `Current', only destroy zone. Prune Current from SD_DOCKING_MANAGER.
+		require
+			not_destroyed: not is_destroyed
 		do
 			state.close
-			docking_manager.contents.start
-			docking_manager.contents.prune (Current)
 			docking_manager.property.remove_from_clicked_list (Current)
 			if docking_manager.property.last_focus_content = Current then
 				docking_manager.property.set_last_focus_content (Void)
 			end
+			docking_manager.contents.start
+			docking_manager.contents.prune (Current)
 		end
 
 	hide is
 			-- Hide zone which has `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			state.hide
 			is_visible := False
@@ -538,6 +554,8 @@ feature -- Command
 
 	show is
 			-- Show zone which has `Current'.
+		require
+			not_destroyed: not is_destroyed
 		do
 			state.show
 			is_visible := True
@@ -545,12 +563,16 @@ feature -- Command
 
 	minimize is
 			-- Minimize if possible
+		require
+			not_destroyed: not is_destroyed
 		do
 			state.minimize
 		end
 
 	update_mini_tool_bar_size is
 			-- Update mini tool bar size
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_zone: SD_ZONE
 		do
@@ -558,6 +580,44 @@ feature -- Command
 			if l_zone /= Void then
 				l_zone.update_mini_tool_bar_size
 			end
+		end
+
+	destroy is
+			-- When a SD_DOCKING_MANAGER destroy, all SD_CONTENTs in it will be destroyed.
+			-- Clear all resources and all references.
+		do
+			if not is_destroyed then
+				is_destroyed := True
+				internal_state := Void
+				-- We can create a SD_STATE_VOID here, otherwise it will reference to `docking_manager',
+				-- and this is a memory leak.
+				docking_manager := Void
+				if internal_close_request_actions /= Void then
+					internal_close_request_actions.wipe_out
+					internal_close_request_actions := Void
+				end
+				if internal_focus_in_actions /= Void then
+					internal_focus_in_actions.wipe_out
+					internal_focus_in_actions := Void
+				end
+				if internal_focus_out_actions /= Void then
+					internal_focus_out_actions.wipe_out
+					internal_focus_out_actions := Void
+				end
+				if drop_actions /= Void then
+					drop_actions.wipe_out
+					drop_actions := Void
+				end
+				if show_actions /= Void then
+					show_actions.wipe_out
+					show_actions := Void
+				end
+
+				internal_user_widget := Void
+				internal_mini_toolbar := Void
+			end
+		ensure
+			destroyed: is_destroyed
 		end
 
 feature -- States report
@@ -604,6 +664,9 @@ feature -- States report
 			end
 		end
 
+	is_destroyed: BOOLEAN
+			-- If Curernt destroyed? Not useable anymore?
+
 feature {SD_STATE, SD_HOT_ZONE, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR, SD_ZONE,
 		 SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR, SD_TAB_STUB, SD_DOCKING_MANAGER_AGENTS,
 		 SD_DOCKING_MANAGER_COMMAND, SD_ZONE_NAVIGATION_DIALOG, SD_TAB_STATE_ASSISTANT,
@@ -622,8 +685,6 @@ feature {SD_DOCKING_MANAGER_AGENTS}
 
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Set docking manager
-		require
-			a_docking_manager_not_void: a_docking_manager /= Void
 		local
 			l_state_void: SD_STATE_VOID
 		do

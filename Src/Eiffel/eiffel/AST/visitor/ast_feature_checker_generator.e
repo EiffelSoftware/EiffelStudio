@@ -479,6 +479,9 @@ feature {NONE} -- Implementation: State
 	is_target_of_creation_instruction: BOOLEAN
 			-- Are we type checking the call to the creation routine?
 
+	is_target_of_reverse_assignment: BOOLEAN
+			-- Is target of a reverse assignment being processed?
+
 	check_for_vaol: BOOLEAN
 			-- Is current checking for VAOL error?
 
@@ -646,6 +649,7 @@ feature -- Settings
 			is_in_rescue := False
 			is_in_creation_expression := False
 			is_target_of_creation_instruction := False
+			is_target_of_reverse_assignment := False
 			check_for_vaol := False
 			depend_unit_level := 0
 			last_access_writable := False
@@ -1718,9 +1722,11 @@ feature -- Implementation
 							last_routine_id_set := l_feature.rout_id_set
 							if last_access_writable and then l_result_type.is_attached and then not l_result_type.is_expanded then
 									-- Take care only for non-self-initializing attributes.
-								if is_in_assignment or else is_target_of_creation_instruction then
-										-- Mark that the attribute is initialized.
-									context.variables.set_attribute (l_feature.feature_id)
+								if l_is_in_assignment or else l_is_target_of_creation_instruction then
+									if not is_target_of_reverse_assignment then
+											-- Mark that the attribute is initialized.
+										context.variables.set_attribute (l_feature.feature_id)
+									end
 								elseif not is_checking_postcondition and then not context.variables.is_attribute_set (l_feature.feature_id) then
 										-- Attribute is not properly initialized.
 									error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
@@ -2189,8 +2195,10 @@ feature -- Implementation
 					if l_feat_type.is_attached and then not l_feat_type.is_expanded then
 							-- Take care only for non-self-initializing locals.
 						if is_in_assignment or else is_target_of_creation_instruction then
-								-- Mark that Result is initialized.
-							context.variables.set_result
+							if not is_target_of_reverse_assignment then
+									-- Mark that Result is initialized.
+								context.variables.set_result
+							end
 						elseif not is_checking_postcondition and then not context.variables.is_result_set then
 								-- Result is not properly initialized.
 							error_handler.insert_error (create {VEVI}.make_result (context, l_as))
@@ -2451,8 +2459,10 @@ feature -- Implementation
 					elseif l_type.is_attached and then not l_type.is_expanded then
 							-- Take care only for non-self-initializing locals.
 						if is_in_assignment or else is_target_of_creation_instruction then
-								-- Mark that the local is initialized.
-							context.variables.set_local (l_local_info.position)
+							if not is_target_of_reverse_assignment then
+									-- Mark that the local is initialized.
+								context.variables.set_local (l_local_info.position)
+							end
 						elseif not context.variables.is_local_set (l_local_info.position) then
 								-- Local is not properly initialized.
 							error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
@@ -4870,9 +4880,11 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 				-- Type check the target
-			set_is_in_assignment (True)
 			last_access_writable := False
+			set_is_in_assignment (True)
+			is_target_of_reverse_assignment := True
 			l_as.target.process (Current)
+			is_target_of_reverse_assignment := False
 			set_is_in_assignment (False)
 			l_target_type := last_type
 			if l_target_type /= Void then

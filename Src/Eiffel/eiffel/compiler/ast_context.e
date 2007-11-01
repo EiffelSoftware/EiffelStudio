@@ -47,6 +47,13 @@ feature {NONE} -- Initialization
 			create {ARRAYED_STACK [INTEGER]} scopes.make (0)
 			create object_test_locals.make (0)
 			create used_object_test_local_names.make (0)
+			if current_class /= Void then
+				if current_class.lace_class.is_void_safe then
+					create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
+				else
+					create {AST_VARIABLE_CONTEXT} variables
+				end
+			end
 		end
 
 feature -- Access
@@ -232,6 +239,11 @@ feature {AST_SCOPE_MATCHER} -- Local scopes
 			scopes_updated: scopes.count = old scopes.count - n
 		end
 
+feature -- Variable context
+
+	variables: AST_VARIABLE_CONTEXT
+			-- Context for tracking variable usage.
+
 feature -- Status report
 
 	is_ignoring_export: BOOLEAN
@@ -255,6 +267,9 @@ feature -- Setting
 			current_class_type.set_actual_type (a_type)
 			if current_class.lace_class.is_void_safe then
 				current_class_type.set_attached_mark
+				create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
+			else
+				create {AST_VARIABLE_CONTEXT} variables
 			end
 			current_feature_table := a_feat_tbl
 			written_class := Void
@@ -398,6 +413,7 @@ feature -- Managing the type stack
 			current_class := Void
 			current_class_type := Void
 			current_feature_table := Void
+			variables := Void
 			clear_feature_context
 		end
 
@@ -413,6 +429,9 @@ feature -- Managing the type stack
 			object_test_locals.wipe_out
 			used_object_test_local_names.wipe_out
 			scopes.wipe_out
+			if variables /= Void then
+				variables.wipe_out
+			end
 		end
 
 feature	-- Saving contexts
@@ -428,7 +447,7 @@ feature	-- Saving contexts
 		end
 
 	restore (context: AST_CONTEXT) is
-			--Restores a given context
+			-- Restores a given context
 		do
 			copy (context)
 		end

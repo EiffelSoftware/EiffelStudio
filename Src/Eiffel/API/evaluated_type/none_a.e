@@ -80,11 +80,11 @@ feature {COMPILER_EXPORTER}
 		local
 			l_type: TYPE_A
 		do
-				-- If `other' is expanded, then it does not conform to NONE.
+				-- If `other' is attached, then NONE does not conform to it.
 				-- But it should not be `VOID_A' since VOID_A is only used as
 				-- return type for procedure
 			l_type := other.conformance_type
-			Result := not l_type.is_expanded and not l_type.is_void
+			Result := not l_type.is_expanded and not l_type.is_void and then not l_type.is_attached
 		end
 
 indexing

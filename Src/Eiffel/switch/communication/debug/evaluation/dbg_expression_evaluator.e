@@ -39,10 +39,18 @@ feature {NONE} -- Initialization
 	generic_make is
 		do
 			debugger_manager.reset_dbg_evaluator
-			dbg_evaluator := debugger_manager.dbg_evaluator
+			get_dbg_evaluator
 
 			error := 0
 			create error_messages.make
+		end
+
+	get_dbg_evaluator is
+			-- Get non void dbg_evaluator
+		do
+			if dbg_evaluator = Void then
+				dbg_evaluator := debugger_manager.dbg_evaluator
+			end
 		end
 
 	dbg_evaluator: DBG_EVALUATOR
@@ -408,12 +416,14 @@ feature {EB_EXPRESSION} -- Evaluation
 		require
 			dbg_expression_valid_syntax: as_object or else not dbg_expression.syntax_error
 			running_and_stopped: debugger_manager.safe_application_is_stopped
-		deferred
-		ensure
-			error_message_if_failed: (final_result_value = Void
-										and	final_result_static_type = Void
-										and final_result_type = Void)
-									implies (error_occurred)
+		do
+			reset_error
+			get_dbg_evaluator
+
+				--| Clean evaluation.
+			final_result_static_type := Void
+			final_result_type := Void
+			final_result_value := Void
 		end
 
 invariant

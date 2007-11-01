@@ -336,8 +336,7 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
---			develop_window := Void
-
+			Precursor {EB_TOOL}
 		end
 
 indexing

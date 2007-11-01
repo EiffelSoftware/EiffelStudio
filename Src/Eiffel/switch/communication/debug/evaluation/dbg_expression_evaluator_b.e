@@ -13,7 +13,8 @@ class
 inherit
 	DBG_EXPRESSION_EVALUATOR
 		redefine
-			dbg_expression, reset_error
+			dbg_expression, reset_error,
+			evaluate
 		end
 
 	SHARED_WORKBENCH
@@ -78,14 +79,10 @@ feature {EB_EXPRESSION} -- Evaluation
 			l_error_occurred: BOOLEAN
 			dobj: DEBUGGED_OBJECT
 		do
-			reset_error
-				--| Clean evaluation.
-			final_result_static_type := Void
-			final_result_type := Void
-			final_result_value := Void
-			tmp_result_static_type := Void
-			tmp_result_value := Void
-			tmp_target := Void
+			Precursor {DBG_EXPRESSION_EVALUATOR} (keep_assertion_checking)
+
+				--| Clean tmp evaluation.			
+			clean_temp_data
 
 			if as_object then
 				final_result_value := dump_value_at_address (context_address)
@@ -162,6 +159,11 @@ feature {EB_EXPRESSION} -- Evaluation
 					final_result_static_type := Void
 				end
 			end
+		ensure then
+			error_occurred_if_no_result: (final_result_value = Void
+										and	final_result_static_type = Void
+										and final_result_type = Void)
+									implies (error_occurred)
 		end
 
 	reset_error is
@@ -1423,8 +1425,10 @@ feature {NONE} -- Concrete evaluation
 
 	prepare_evaluation is
 			-- Initialization before effective evaluation
+		require
+			dbg_evaluator /= Void
 		do
-			Dbg_evaluator.set_last_variables (tmp_result_value, tmp_result_static_type)
+			dbg_evaluator.set_last_variables (tmp_result_value, tmp_result_static_type)
 		end
 
 	retrieve_evaluation is

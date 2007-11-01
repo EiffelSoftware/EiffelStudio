@@ -343,6 +343,9 @@ feature -- Change
 		do
 			reset_hits_count
 			last_condition_value := Void
+			if condition /= Void then
+				condition.reset
+			end
 		end
 
 feature -- Status

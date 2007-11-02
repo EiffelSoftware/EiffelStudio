@@ -11,7 +11,7 @@ compile_result	validity_error TEST1 VEEN
 
 copy_raw	test1_rev1.e $CLUSTER test1.e
 
-compile_melted
+resume_compile
 compile_result ok
 
 execute_work NONE exec_output1

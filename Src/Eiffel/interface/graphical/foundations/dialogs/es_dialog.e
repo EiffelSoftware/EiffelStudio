@@ -401,6 +401,14 @@ feature {NONE} -- Status report
 	is_initializing: BOOLEAN
 			-- Indicates if the user interface is currently being initialized
 
+	is_recycled_on_closing: BOOLEAN
+			-- Indicates if the dialog should be recycled on closing.
+		require
+			not_is_recycled: not is_recycled
+		once
+			Result := True
+		end
+
 feature -- Status setting
 
 	set_is_modal (a_modal: BOOLEAN)
@@ -810,6 +818,10 @@ feature {NONE} -- Factory
 				register_action (l_button.select_actions, agent on_dialog_button_pressed (l_id))
 					-- Bind other actions
 				bind_dialog_button (l_id, l_button)
+				if is_recycled_on_closing then
+						-- Process automatic recycling
+					register_action (l_button.select_actions, agent do if not is_shown then recycle end end)
+				end
 
 				Result.force (l_button, l_id)
 				l_buttons.forth

@@ -159,7 +159,7 @@ feature {NONE} -- Actions
 			glab: EV_GRID_CHECKABLE_LABEL_ITEM
 			i, j, k: INTEGER
 			pos_entries: ARRAY [INTEGER]
-			pos_titles: ARRAY [STRING_GENERAL]
+			pos_titles, pos_tooltips: ARRAY [STRING_32]
 			pos_missings: ARRAYED_LIST [INTEGER]
 			l_has_all: BOOLEAN
 		do
@@ -182,6 +182,14 @@ feature {NONE} -- Actions
 				pos_titles[position_locals] := Interface_names.l_locals
 				pos_titles[position_result] := Interface_names.l_result
 				pos_titles[position_dropped] := Interface_names.l_dropped_references
+
+				create pos_tooltips.make (pos_entries.lower, pos_entries.upper)
+				pos_tooltips[position_stack] := Interface_names.f_stack_information
+				pos_tooltips[position_current] := Interface_names.f_current_object
+				pos_tooltips[position_arguments] := Interface_names.f_arguments
+				pos_tooltips[position_locals] := Interface_names.f_locals
+				pos_tooltips[position_result] := Interface_names.f_result
+				pos_tooltips[position_dropped] := Interface_names.f_dropped_references
 
 				from
 					i := 1
@@ -208,6 +216,7 @@ feature {NONE} -- Actions
 							k := lines.item_for_iteration
 							pos_missings.prune_all (k)
 							create glab.make_with_text (pos_titles[k])
+							glab.set_tooltip (pos_tooltips[k])
 							glab.set_is_checked (True)
 							glab.set_data (k.out)
 							grid.set_item (i, j, glab)
@@ -224,6 +233,7 @@ feature {NONE} -- Actions
 								k := pos_missings.item_for_iteration
 								if k > 0 then
 									create glab.make_with_text (pos_titles[k])
+									glab.set_tooltip (pos_tooltips[k])
 									glab.set_is_checked (False)
 									glab.set_data (k.out)
 									grid.set_item (i, j, glab)
@@ -468,12 +478,14 @@ feature {NONE} -- Factory
 			button_arrow_up.set_pixel_buffer (stock_pixmaps.general_move_up_icon_buffer)
 			register_action (button_arrow_up.select_actions, agent move_cell_by (Void, -1))
 			button_arrow_up.disable_sensitive
+			button_arrow_up.set_tooltip (interface_names.f_move_item_up)
 			Result.put_last (button_arrow_up)
 
 			create button_arrow_down.make
 			button_arrow_down.set_pixel_buffer (stock_pixmaps.general_move_down_icon_buffer)
 			register_action (button_arrow_down.select_actions, agent move_cell_by (Void, 1))
 			button_arrow_down.disable_sensitive
+			button_arrow_down.set_tooltip (interface_names.f_move_item_down)
 			Result.put_last (button_arrow_down)
 		ensure then
 			button_arrow_up_attached: button_arrow_up /= Void

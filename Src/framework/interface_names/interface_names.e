@@ -691,6 +691,13 @@ feature -- Tool tips
 	f_filter_warnings: STRING_GENERAL is 				do Result := locale.translation ("Filter shown and navigatable warnings") end
 	f_toogle_expand_errors: STRING_GENERAL is do Result := locale.translation("Automatically expands errors to reveal the full verbose error information.")	end
 
+	f_stack_information: STRING_GENERAL is 		do Result := locale.translation ("Specific information related to current call stack (exception,...)") end
+	f_current_object: STRING_GENERAL is 		do Result := locale.translation ("`Current' object associated to selected call stack element") end
+	f_arguments: STRING_GENERAL is 				do Result := locale.translation ("Arguments value(s) associated to selected call stack element") end
+	f_locals: STRING_GENERAL is 				do Result := locale.translation ("Locals value(s) associated to selected call stack element") end
+	f_result: STRING_GENERAL is 				do Result := locale.translation ("`Result' value associated to selected call stack element") end
+	f_dropped_references: STRING_GENERAL is 	do Result := locale.translation ("Debugged object dropped onto Objects tool") end
+
 feature -- Formatter displayer names
 
 	l_class_tree_displayer_help: STRING_GENERAL do Result := locale.translation ("This view is suitable for displaying class hierarchy%Nsuch as class ancestors/descendants") end

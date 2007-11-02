@@ -3064,7 +3064,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			visible_count: INTEGER
 			row_index: INTEGER
 			l_row_count: INTEGER
-			l_parent_row_i: EV_GRID_ROW_I
 			just_looped: BOOLEAN
 			original_row_index: INTEGER
 			l_row_indexes_to_visible_indexes: EV_GRID_ARRAYED_LIST [INTEGER]

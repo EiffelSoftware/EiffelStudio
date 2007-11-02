@@ -9,7 +9,7 @@ class
 	ES_OBJECTS_TOOL_LAYOUT_EDITOR
 
 inherit
-	ES_DIALOG
+	ES_TOOL_DIALOG
 		redefine
 			on_close_requested,
 			make
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize dialog		
 		do
-			Precursor {ES_DIALOG}
+			Precursor {ES_TOOL_DIALOG}
 
 			set_button_text (dialog_buttons.yes_button, interface_names.b_apply)
 			set_button_action (dialog_buttons.yes_button, agent on_apply)
@@ -55,47 +55,29 @@ feature {NONE} -- User interface initialization
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		local
-			tb: SD_TOOL_BAR
 			vb: EV_VERTICAL_BOX
 		do
-			vb := a_container
-
-			create tb.make
-			create button_arrow_up.make
-			button_arrow_up.set_pixel_buffer (stock_pixmaps.general_move_up_icon_buffer)
-			button_arrow_up.select_actions.extend (agent move_cell_by (Void, -1))
-			tb.extend (button_arrow_up)
-			create button_arrow_down.make
-			button_arrow_down.set_pixel_buffer (stock_pixmaps.general_move_down_icon_buffer)
-			button_arrow_down.select_actions.extend (agent move_cell_by (Void, +1))
-			tb.extend (button_arrow_down)
-			tb.update_size
-			button_arrow_up.disable_sensitive
-			button_arrow_down.disable_sensitive
-
-			vb.extend (tb)
-
 			create grid
 			grid.set_column_count_to (1)
 			grid.set_row_count_to (1)
 			grid.enable_single_item_selection
 			grid.enable_row_height_fixed
+			register_action (grid.item_select_actions, agent on_grid_item_selected)
+			register_action (grid.item_deselect_actions, agent on_grid_item_unselected)
+			register_action (grid.key_release_actions, agent key_pressed_on_grid)
 
-			grid.item_select_actions.extend (agent on_grid_item_selected)
-			grid.item_deselect_actions.extend (agent on_grid_item_unselected)
-
-			grid.key_release_actions.extend (agent key_pressed_on_grid)
+			create vb
+			vb.set_border_width (1)
+			vb.set_background_color (colors.stock_colors.black)
 			vb.extend (grid)
-			vb.set_background_color (grid.background_color)
-			vb.propagate_background_color
 
-			if objects_tool /= Void then
-				on_reset
-			end
-			show_actions.extend (agent refresh)
-			if dialog /= Void then
-				dialog.resize_actions.force_extend (agent refresh)
-			end
+			a_container.extend (vb)
+
+			register_kamikaze_action (show_actions, agent on_reset)
+			register_action (show_actions, agent refresh)
+			register_action (dialog.resize_actions, agent refresh)
+		ensure then
+			grid_attached: grid /= Void
 		end
 
 feature -- Access
@@ -145,7 +127,7 @@ feature {NONE} -- Access
 	objects_tool: ES_OBJECTS_TOOL
 			-- Access to debugger object tool
 		require
-			is_initialized: is_initialized
+			is_initialized: is_initialized or is_initializing
 			not_is_recycled: not is_recycled
 		do
 			Result ?= development_window.shell_tools.tool ({ES_OBJECTS_TOOL})
@@ -393,7 +375,7 @@ feature {NONE} -- Action handlers
 			--         Use ES_DIALOG_BUTTONS or Dialog_buttons to determine the id's correspondance.
 		do
 			if a_id = dialog_buttons.cancel_button then
-				Precursor {ES_DIALOG} (a_id)
+				Precursor {ES_TOOL_DIALOG} (a_id)
 			end
 		end
 
@@ -461,7 +443,7 @@ feature {NONE} -- Action handlers
 	on_reset is
 			-- Called when the Reset button is pressed.
 		require
-			is_initialized: is_initialized
+			is_initialized: is_initialized or is_initializing
 			not_is_recycled: not is_recycled
 		do
 			objects_tool.panel.reset_objects_grids_contents_to_default
@@ -474,6 +456,28 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 		do
+		end
+
+feature {NONE} -- Factory
+
+    create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            -- Retrieves a list of tool bar items to display at the top of the tool.
+		do
+			create Result.make (2)
+			create button_arrow_up.make
+			button_arrow_up.set_pixel_buffer (stock_pixmaps.general_move_up_icon_buffer)
+			register_action (button_arrow_up.select_actions, agent move_cell_by (Void, -1))
+			button_arrow_up.disable_sensitive
+			Result.put_last (button_arrow_up)
+
+			create button_arrow_down.make
+			button_arrow_down.set_pixel_buffer (stock_pixmaps.general_move_down_icon_buffer)
+			register_action (button_arrow_down.select_actions, agent move_cell_by (Void, 1))
+			button_arrow_down.disable_sensitive
+			Result.put_last (button_arrow_down)
+		ensure then
+			button_arrow_up_attached: button_arrow_up /= Void
+			button_arrow_down_attached: button_arrow_down /= Void
 		end
 
 ;indexing

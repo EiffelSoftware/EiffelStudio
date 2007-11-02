@@ -13,9 +13,9 @@ deferred class
 inherit
 	EB_RECYCLABLE
 
-	ES_SHARED_DIALOG_BUTTONS
-
 -- inherit {NONE}
+
+	ES_SHARED_DIALOG_BUTTONS
 
 	EV_BUILDER
 		export
@@ -60,6 +60,18 @@ feature {NONE} -- Initialization
 			is_initializing := l_init
 		ensure
 			is_initialized: is_initialized
+		end
+
+	make_with_window (a_window: like development_window)
+			-- Initialize dialog using a specific development window
+		require
+			a_window_attached: a_window /= Void
+			not_a_window_is_recycled: not a_window.is_recycled
+		do
+			internal_development_window := a_window
+			make
+		ensure
+			development_window_set: development_window = a_window
 		end
 
 	initialize
@@ -225,19 +237,26 @@ feature {NONE} -- Access
 			-- Access to top-level parent window
 		require
 			not_is_recycled: not is_recycled
-			dialog_has_parent: dialog.has_parent
 		local
 			l_window: EV_WINDOW
 			l_windows: BILINEAR [EB_WINDOW]
 		do
-			l_window := helpers.widget_top_level_window (dialog, True)
-			if l_window /= Void then
-				l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
-				from l_windows.start until l_windows.after or Result /= Void loop
-					if l_window = l_windows.item.window then
-						Result ?= l_windows.item
+			Result := internal_development_window
+			if Result = Void then
+				if is_modal then
+					l_window := helpers.widget_top_level_window (dialog.blocking_window, True)
+				end
+				if l_window /= Void then
+						-- Attempt to find matching top level window.
+					l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
+					from l_windows.start until l_windows.after or Result /= Void loop
+						if l_window = l_windows.item.window then
+							Result ?= l_windows.item
+						end
+						l_windows.forth
 					end
-					l_windows.forth
+				else
+					Result := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.last_focused_development_window
 				end
 			end
 		ensure
@@ -834,6 +853,9 @@ feature {NONE} -- Internal implementation cache
 	internal_buttons: like buttons
 			-- Cached version of `buttons'
 			-- Note: Do not use directly.
+
+	internal_development_window: like development_window
+			-- Mutable version of `development_window'
 
 invariant
 	dialog_result_is_valid_button_id: buttons.has (dialog_result)

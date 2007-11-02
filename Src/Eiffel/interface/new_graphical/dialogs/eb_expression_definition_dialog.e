@@ -611,7 +611,7 @@ feature {NONE} -- Event handling
 						and then Debugger_manager.application.is_valid_object_address (t)
 					then
 						o := debugger_manager.object_manager.debugged_object (t, 0, 0)
-						if as_object_radio.is_selected then
+						if as_object_radio.is_selected or else expression_field.text.is_empty then
 							create new_expression.make_as_object (o.dtype , o.object_address)
 							new_expression.set_name (object_name_field.text)
 						else

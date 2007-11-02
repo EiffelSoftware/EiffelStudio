@@ -88,8 +88,10 @@ feature -- Change text
 			sd_toolbar_items: like internal_managed_sd_toolbar_items
 			t: STRING_GENERAL
 			p: like pixmap
+			pb: like pixel_buffer
 		do
 			p := pixmap
+			pb := pixel_buffer
 			t := menu_name
 
 			menu_items := internal_managed_menu_items
@@ -131,7 +133,7 @@ feature -- Change text
 					if sd_toolbar_items.item.text /= Void then
 						sd_toolbar_items.item.set_text (t)
 					end
-					sd_toolbar_items.item.set_pixmap (p)
+					sd_toolbar_items.item.set_pixel_buffer (pb)
 					sd_toolbar_items.forth
 				end
 			end

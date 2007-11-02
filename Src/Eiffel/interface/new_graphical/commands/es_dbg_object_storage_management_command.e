@@ -75,14 +75,13 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- No big pixmap is necessary.
 		do
-			Result := mini_pixmap
+			Result := pixmaps.icon_pixmaps.execution_object_storage_icon_buffer
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer representing the command.
 		do
-			-- Currently there is no pixel buffer for this command.
-			Result := mini_pixel_buffer
+			Result := pixmaps.icon_pixmaps.execution_object_storage_icon_buffer
 		end
 
 	menu_name: STRING_GENERAL is

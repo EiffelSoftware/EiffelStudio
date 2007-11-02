@@ -376,10 +376,13 @@ feature -- Execution replay
 				li := (1 + dep).min (stack_grid.row_count) --| Fixme				
 			end
 			if li > 0 then
-				m := marked_level
-				marked_level := li
+				if li /= marked_level then
+					m := marked_level
+					marked_level := li
+					refresh_stack_grid_row (row_for_level (m), li)
+				end
 				select_element_by_level (li)
-				refresh_stack_grid_row (row_for_level (m), li)
+				refresh_stack_grid_row (row_for_level (marked_level), li)
 			else
 				marked_level := 0
 			end
@@ -445,8 +448,8 @@ feature -- Status setting
 				end
 				if new_level >= 1 and then count >= new_level then
 					l_row := stack_grid.row (new_level)
-					refresh_stack_grid_row (l_row, new_level)
 					arrowed_level := new_level
+					refresh_stack_grid_row (l_row, new_level)
 				end
 			end
 		end
@@ -1033,16 +1036,18 @@ feature {NONE} -- Implementation
 			a_row.set_background_color (Void)
 
 			glab ?= a_row.item (1)
-			ep := pixmaps.icon_pixmaps.callstack_empty_arrow_icon
 			if level = current_level then
 				glab.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
 				a_row.set_background_color (row_highlight_bg_color)
-			elseif level >= 0 then
-				glab.set_pixmap (ep)
 			else
-				glab.remove_pixmap
-				glab.set_left_border (glab.left_border + glab.spacing + ep.width)
-				a_row.set_foreground_color (row_unsensitive_fg_color)
+				ep := pixmaps.icon_pixmaps.callstack_empty_arrow_icon
+				if level >= 0 then
+					glab.set_pixmap (ep)
+				else
+					glab.remove_pixmap
+					glab.set_left_border (glab.left_border + glab.spacing + ep.width)
+					a_row.set_foreground_color (row_unsensitive_fg_color)
+				end
 			end
 			if execution_replay_activated then
 				if level - 1 <= execution_replay_depth_limit_level then

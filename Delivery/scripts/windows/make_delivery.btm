@@ -131,9 +131,6 @@ remtrace wizards
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/wizards wizards
 fullrf %STUDIO_DIR\studio\wizards\new_projects\wizard.dsc
 fullrd %STUDIO_DIR\studio\wizards\new_projects\wizard
-remtrace C_library
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library C_library
-fullrd C_library\.libs
 remtrace root
 exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG

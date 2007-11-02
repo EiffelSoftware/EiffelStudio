@@ -943,7 +943,7 @@ feature {NONE} -- Implementation
 					--| Origin class
 				dc := e_cse.dynamic_class
 				oc := e_cse.written_class
-				if oc /= Void then
+				if oc /= Void and then oc /= dc then
 					l_orig_class_info := oc.name_in_upper
 					l_tooltip.prepend_string (interface_names.l_from_class (l_orig_class_info))
 					l_same_name := dc /= Void and then oc.same_type (dc) and then oc.is_equal (dc)

@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 		do
 			a_pointer_style_imp ?= a_pointer_style.implementation
 
-			if a_pointer_style_imp.predefined_cursor_code /= -1 then
+			if a_pointer_style_imp.predefined_cursor_code > 0 then
 				-- We are building from a stock cursor.
 				inspect
 					a_pointer_style_imp.predefined_cursor_code

@@ -943,10 +943,12 @@ feature {NONE} -- Implementation
 					--| Origin class
 				dc := e_cse.dynamic_class
 				oc := e_cse.written_class
-				if oc /= Void and then oc /= dc then
+				if oc /= Void then
 					l_orig_class_info := oc.name_in_upper
-					l_tooltip.prepend_string (interface_names.l_from_class (l_orig_class_info))
 					l_same_name := dc /= Void and then oc.same_type (dc) and then oc.is_equal (dc)
+					if not l_same_name then
+						l_tooltip.prepend_string (interface_names.l_from_class (l_orig_class_info))
+					end
 				else
 					l_orig_class_info := Interface_names.l_Same_class_name
 				end
@@ -1010,7 +1012,7 @@ feature {NONE} -- Implementation
 
 			create glab.make_with_text (l_orig_class_info)
 			if l_same_name then
-				glab.set_foreground_color ((create {EV_STOCK_COLORS}).grey)
+				glab.set_foreground_color (grayed_fg_color)
 			end
 			glab.set_tooltip (l_orig_class_info)
 			a_row.set_item (3, glab)
@@ -1478,6 +1480,11 @@ feature {NONE} -- Implementation, cosmetic
 	row_unsensitive_fg_color: EV_COLOR
 
 	row_replayable_bg_color: EV_COLOR
+
+	grayed_fg_color: EV_COLOR is
+		once
+			Result := (create {EV_STOCK_COLORS}).grey
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

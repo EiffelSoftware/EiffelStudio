@@ -376,9 +376,11 @@ test	svalid-infix-with-conversion	svalid001 tcf pass system validity
 test	svalid-rename-constant-inspect	svalid002 tcf pass system validity
 
 -- Catcall tests
-test	simple-catcall			catcall001 tcf pass catcall
-test	simple-catcall-generic	catcall002 tcf pass catcall
+test	simple-catcall				catcall001 tcf pass catcall
+test	simple-catcall-generic		catcall002 tcf pass catcall
 test	catcall-check-failure-recursive-generic	catcall003 tcf pass catcall
+test	catcall-generic				catcall004 tcf pass catcall
+test	catcall-generic-numeric		catcall005 tcf pass catcall
 
 -- Incrementality tests
 

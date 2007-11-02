@@ -1899,6 +1899,43 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 7))
 		end
+
+	frozen execution_record_icon: EV_PIXMAP is
+			-- Access to 'record' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (5, 7))
+		end
+
+	frozen execution_record_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'record' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 7))
+		end
+
+	frozen execution_replay_icon: EV_PIXMAP is
+			-- Access to 'replay' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (6, 7))
+		end
+
+	frozen execution_replay_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'replay' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 7))
+		end
+
+	frozen execution_object_storage_icon: EV_PIXMAP is
+			-- Access to 'object storage' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (7, 7))
+		end
+
+	frozen execution_object_storage_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'object storage' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 7))
+		end
+
 	frozen general_blank_icon: EV_PIXMAP is
 			-- Access to 'blank' pixmap.
 		once

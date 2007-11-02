@@ -74,11 +74,12 @@ feature -- Change text
 			toolbar_items: like internal_managed_toolbar_items
 			sd_toolbar_items: like internal_managed_sd_toolbar_items
 			t: STRING_GENERAL
-			p: like pixmap
-			pb: like pixel_buffer
+			p,mp: like pixmap
+			mpb: like mini_pixel_buffer
 		do
 			p := pixmap
-			pb := pixel_buffer
+			mp := mini_pixmap
+			mpb := mini_pixel_buffer
 			t := menu_name
 
 			menu_items := internal_managed_menu_items
@@ -105,7 +106,7 @@ feature -- Change text
 					if toolbar_items.item.text /= Void then
 						toolbar_items.item.set_text (t)
 					end
-					toolbar_items.item.set_pixmap (p)
+					toolbar_items.item.set_pixmap (mp)
 					toolbar_items.forth
 				end
 			end
@@ -120,7 +121,7 @@ feature -- Change text
 					if sd_toolbar_items.item.text /= Void then
 						sd_toolbar_items.item.set_text (t)
 					end
-					sd_toolbar_items.item.set_pixel_buffer (pb)
+					sd_toolbar_items.item.set_pixel_buffer (mpb)
 					sd_toolbar_items.forth
 				end
 			end

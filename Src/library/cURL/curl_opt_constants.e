@@ -144,6 +144,16 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_writefunction: INTEGER is
+			-- Declared as CURLOPT_WRITEFUNCTION.
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_WRITEFUNCTION;
+			]"
+		end
+
 	is_valid (a_integer: INTEGER): BOOLEAN is
 			-- If `a_integer' value vaild?
 		do
@@ -159,7 +169,8 @@ feature -- Enumerations.
 						a_integer = curlopt_useragent or
 						a_integer = curlopt_verbose or
 						a_integer = curlopt_writedata or
-						a_integer = curlopt_writeheader
+						a_integer = curlopt_writeheader or
+						a_integer = curlopt_writefunction
 		end
 
 indexing

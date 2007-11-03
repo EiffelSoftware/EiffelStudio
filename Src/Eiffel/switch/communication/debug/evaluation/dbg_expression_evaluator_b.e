@@ -1616,16 +1616,16 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	create_special_any_instance (a_elt_type_i: CL_TYPE_I; a_count: INTEGER) is
-			-- Create new instance of SPECIAL represented by `a_type_id', `a_elt_type_i' and `a_count'
+	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+			-- Create new instance of SPECIAL represented by `a_type_id' and `a_count'
 		require
-			a_elt_type_i_not_void: a_elt_type_i /= Void
-			already_resolved: a_elt_type_i = resolved_real_type_in_context (a_elt_type_i)
+			a_type_i_not_void: a_type_i /= Void
+			already_resolved: a_type_i = resolved_real_type_in_context (a_type_i)
 			is_special: a_type_i.base_class.is_special
 		local
 			l_cl_type_i: CL_TYPE_I
 		do
-			l_cl_type_i := a_elt_type_i
+			l_cl_type_i := a_type_i
 			if l_cl_type_i.has_associated_class_type then
 				prepare_evaluation
 				Dbg_evaluator.create_special_any_instance (l_cl_type_i, a_count)

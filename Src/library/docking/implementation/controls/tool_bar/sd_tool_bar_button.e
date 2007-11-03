@@ -364,7 +364,7 @@ feature{SD_TOOL_BAR} -- Implementation
 	width_before_text: INTEGER is
 			-- Width before text left side
 		do
-			if pixmap /= Void then
+			if pixel_buffer /= Void or pixmap /= Void then
 				Result := {SD_TOOL_BAR}.padding_width + icon_width + {SD_TOOL_BAR}.padding_width
 			else
 				Result := {SD_TOOL_BAR}.padding_width

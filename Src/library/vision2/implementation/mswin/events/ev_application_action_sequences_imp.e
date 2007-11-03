@@ -117,6 +117,12 @@ feature -- Event handling
 			create Result
 		end
 
+	create_system_color_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a system_color_change_actions.
+		do
+			create Result
+		end
+
 	create_destroy_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a destory action sequence.
 		do

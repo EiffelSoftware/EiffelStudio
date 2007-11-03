@@ -454,6 +454,30 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
+	system_color_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when screen color depth changed.
+		do
+			if system_color_change_actions_internal = Void then
+				system_color_change_actions_internal :=
+					 create_system_color_change_actions
+			end
+			Result := system_color_change_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_system_color_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a system_color_change_actions.
+		deferred
+		end
+
+	system_color_change_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+			-- Implementation of once per object `system_color_change_actions'.
+
+feature -- Event handling
+
 	destroy_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when current application is destroying.
 		do

@@ -12,8 +12,11 @@ class
 inherit
 	WEL_FRAME_WINDOW
 		redefine
-			on_wm_theme_changed
+			on_wm_theme_changed,
+			on_wm_syscolor_change
 		end
+
+	EV_ANY_HANDLER
 
 create
 	make
@@ -39,7 +42,22 @@ feature -- Implementation
 			l_env: EV_ENVIRONMENT
 		do
 			create l_env
-			l_env.application.theme_changed_actions.call ([])
+			l_env.application.theme_changed_actions.call (Void)
+		end
+
+	on_wm_syscolor_change is
+			-- Redefine
+		local
+			l_env: EV_ENVIRONMENT
+			l_app_i: EV_APPLICATION_I
+		do
+			Precursor {WEL_FRAME_WINDOW}
+
+			create l_env
+			-- We use EV_APPLICATION_I instead of EV_APPLICATION since
+			-- system_color_change_actions not implementated on GTK.
+			l_app_i := l_env.application.implementation
+			l_app_i.system_color_change_actions.call (Void)
 		end
 
 end

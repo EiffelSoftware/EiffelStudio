@@ -9,14 +9,23 @@ indexing
 class DEGREE_3
 
 inherit
-
 	DEGREE
+		redefine
+			make
+		end
+
 	COMPILER_EXPORTER
 	SHARED_ERROR_HANDLER
 
 create
-
 	make
+
+feature {NONE} -- Initialization
+
+	make is
+		do
+			create ignored_classes.make (0)
+		end
 
 feature -- Access
 
@@ -37,6 +46,7 @@ feature -- Processing
 			l_error_level: NATURAL_32
 		do
 			nb := count
+			ignored_classes.wipe_out
 			Degree_output.put_start_degree (Degree_number, nb)
 			classes := System.classes.sorted_classes
 
@@ -60,10 +70,19 @@ feature -- Processing
 					System.set_current_class (a_class)
 					l_error_level := error_handler.error_level
 					process_class (a_class)
-					if error_handler.error_level = l_error_level then
-							-- No errors we can safely remove it from degree 3
-						a_class.remove_from_degree_3
-						count := count - 1
+						-- If class was in `ignored_classes', then we still need
+						-- to recheck it at the next compilation as otherwise we
+						-- would not typecheck inherited features after the ancestor
+						-- class fixed the error.
+					if not ignored_classes.has (a_class) then
+						if error_handler.error_level = l_error_level then
+								-- No errors we can safely remove it from degree 3
+							a_class.remove_from_degree_3
+							count := count - 1
+						else
+							ignored_classes.put (a_class)
+							remove_descendant_classes_from_processing (a_class)
+						end
 					end
 					nb := nb - 1
 
@@ -101,7 +120,7 @@ feature {NONE} -- Processing
 			if not retried then
 					-- Process creation feature of `a_class'.
 				a_class.process_creation_feature
-				a_class.pass3
+				a_class.pass3 (not ignored_classes.has (a_class))
 
 					-- Type checking and maybe byte code production for `a_class'.
 				if System.il_generation then
@@ -113,6 +132,29 @@ feature {NONE} -- Processing
 					-- When an error is triggered we do as if no error had occurred.
 				retried := True
 				retry
+			end
+		end
+
+	ignored_classes: SEARCH_TABLE [CLASS_C]
+			-- List of classes that should not be processed at degree 4 due to an
+			-- error in one of their ancestors.
+
+	remove_descendant_classes_from_processing (a_class: CLASS_C) is
+			-- Add all descendants of `a_class' to `ignored_classes'.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_descendants: ARRAYED_LIST [CLASS_C]
+		do
+			from
+				l_descendants := a_class.direct_descendants
+				l_descendants.start
+			until
+				l_descendants.after
+			loop
+				ignored_classes.put (l_descendants.item)
+				remove_descendant_classes_from_processing (l_descendants.item)
+				l_descendants.forth
 			end
 		end
 
@@ -187,6 +229,9 @@ feature -- Removal
 			end
 			count := 0
 		end
+
+invariant
+	ignored_classes_not_void: ignored_classes /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

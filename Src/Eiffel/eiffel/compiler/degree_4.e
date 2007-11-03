@@ -657,8 +657,8 @@ feature {NONE} -- Generic checking
 		end
 
 invariant
-
 	changed_status_not_void: changed_status /= Void
+	ignored_classes_not_void: ignored_classes /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

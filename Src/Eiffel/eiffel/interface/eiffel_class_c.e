@@ -448,7 +448,7 @@ feature -- Element change
 
 feature -- Third pass: byte code production and type check
 
-	pass3 is
+	pass3 (is_safe_to_check_ancestor: BOOLEAN) is
 			-- Third pass of the compiler on current class. Two cases:
 			-- 1. the class is marked `changed': for all the features
 			--	marked `melted', produce byte code and make a type check.
@@ -456,6 +456,9 @@ feature -- Third pass: byte code production and type check
 			--	for all the other features.
 			-- 2. the class is marked `changed3' only, make a type check
 			--	on all the features of the class.
+			-- We only check ancestor code, only if `is_safe_to_check_ancestor' since
+			-- if ancestor code as some degree 3 errors, we do not have enough information
+			-- to properly check it.
 		local
 			feat_table: COMPUTED_FEATURE_TABLE
 				-- Feature invariant_type_checktable of the class
@@ -609,7 +612,7 @@ feature -- Third pass: byte code production and type check
 								ast_context.old_inline_agents.wipe_out
 								remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
 
-								feature_checker.type_check_and_code (feature_i)
+								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor)
 								type_checked := True
 								type_check_error := Error_handler.error_level /= l_error_level
 
@@ -700,7 +703,7 @@ feature -- Third pass: byte code production and type check
 
 						if not type_checked and then changed3 and then feature_i.is_routine then
 								-- Forced type check on the feature
-							feature_checker.type_check_only (feature_i, False)
+							feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, False)
 							check_local_names_needed := False
 						elseif check_local_names_needed then
 							feature_i.check_local_names (feature_i.real_body)
@@ -717,7 +720,7 @@ feature -- Third pass: byte code production and type check
 								l_error_level := error_handler.error_level
 								ast_context.old_inline_agents.wipe_out
 								remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
-								feature_checker.type_check_and_code (feature_i)
+								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor)
 								type_checked := True
 								type_check_error := error_handler.error_level /= l_error_level
 								if
@@ -741,13 +744,15 @@ feature -- Third pass: byte code production and type check
 									byte_code_generated := True
 								end
 							else
-								feature_checker.type_check_only (feature_i, False)
+								feature_checker.type_check_only (feature_i, is_safe_to_check_ancestor, False)
 							end
 						end
 						record_suppliers (feature_i, dependances)
-					elseif is_full_class_checking then
-							-- We check inherited routines in the context of current class.
-						feature_checker.type_check_only (feature_i, class_id /= feature_i.written_in)
+					elseif is_safe_to_check_ancestor and then is_full_class_checking then
+							-- We check inherited routines in the context of current class only
+							-- if its parents were properly type checked.
+						feature_checker.type_check_only (feature_i,
+							is_safe_to_check_ancestor, class_id /= feature_i.written_in)
 						record_suppliers (feature_i, dependances)
 					end
 					ast_context.clear_feature_context

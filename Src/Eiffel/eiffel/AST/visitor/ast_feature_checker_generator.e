@@ -119,10 +119,11 @@ feature -- Initialization
 
 feature -- Type checking
 
-	type_check_only (a_feature: FEATURE_I; a_code_inherited: BOOLEAN) is
+	type_check_only (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_code_inherited: BOOLEAN) is
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+			valid_inherited_check: a_code_inherited implies a_is_safe_to_check_inherited
 		do
 			fixme (once "Make sure to use `a_code_inherited' to properly initialize our type checker.")
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
@@ -131,7 +132,9 @@ feature -- Type checking
 			reset
 			is_byte_node_enabled := False
 			break_point_slot_count := 0
-			process_inherited_assertions (a_feature, True)
+			if a_is_safe_to_check_inherited then
+				process_inherited_assertions (a_feature, True)
+			end
 			if a_code_inherited then
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				if not a_feature.is_deferred then
@@ -143,10 +146,12 @@ feature -- Type checking
 				a_feature.body.process (Current)
 			end
 			is_byte_node_enabled := False
-			process_inherited_assertions (a_feature, False)
+			if a_is_safe_to_check_inherited then
+				process_inherited_assertions (a_feature, False)
+			end
 		end
 
-	type_check_and_code (a_feature: FEATURE_I) is
+	type_check_and_code (a_feature: FEATURE_I; a_is_safe_to_check_inherited: BOOLEAN) is
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -157,13 +162,18 @@ feature -- Type checking
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
-			is_byte_node_enabled := False
-			break_point_slot_count := 0
-			process_inherited_assertions (a_feature, True)
-			is_byte_node_enabled := True
-			a_feature.body.process (Current)
-			is_byte_node_enabled := False
-			process_inherited_assertions (a_feature, False)
+			if a_is_safe_to_check_inherited then
+				is_byte_node_enabled := False
+				break_point_slot_count := 0
+				process_inherited_assertions (a_feature, True)
+				is_byte_node_enabled := True
+				a_feature.body.process (Current)
+				is_byte_node_enabled := False
+				process_inherited_assertions (a_feature, False)
+			else
+				is_byte_node_enabled := True
+				a_feature.body.process (Current)
+			end
 
 			if a_feature.real_body /= Void then
 				rout_as ?= a_feature.real_body.content
@@ -3185,7 +3195,7 @@ feature -- Implementation
 			l_expr: EXPR_B
 		do
 			l_as.expr.process (Current)
-			if is_byte_node_enabled then
+			if is_byte_node_enabled and last_byte_node /= Void then
 				l_expr ?= last_byte_node
 				create {PARAN_B} last_byte_node.make (l_expr)
 			end

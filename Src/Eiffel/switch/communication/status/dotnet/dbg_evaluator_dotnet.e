@@ -441,6 +441,50 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+		local
+			l_class_c: CLASS_C
+			l_icd_value: ICOR_DEBUG_VALUE
+			l_class: ICOR_DEBUG_CLASS
+		do
+			if a_type_i.has_associated_class_type then
+					--| Create INTERNAL's object
+				l_class_c := debugger_manager.compiler_data.internal_class_c
+				if l_class_c /= Void then
+					l_class := eifnet_debugger.icor_debug_class (l_class_c.types.first)
+					l_icd_value := eifnet_evaluator.new_object_no_constructor_evaluation (new_active_icd_frame, l_class)
+					if not eifnet_evaluator.last_call_succeed then
+						notify_error (Cst_error_occurred, Void)
+					else
+							--| At this point l_icd_value represents an instance of INTERNAL
+						last_result_value := new_special_any_instance_using_internal (a_type_i, a_count, l_icd_value, l_class_c)
+					end
+				else
+					notify_error (Cst_error_occurred, Void)
+				end
+			else
+				notify_error_evaluation (Debugger_names.msg_error_instanciation_of_type_raised_error (a_type_i.name))
+			end
+		end
+
+	new_special_any_instance_using_internal (a_type_i: CL_TYPE_I; a_count: INTEGER; a_internal_value: ICOR_DEBUG_VALUE; a_internal_class_c: CLASS_C): DUMP_VALUE is
+		local
+			l_dyn_type_from_str_feat_i,
+			l_new_instance_of_feat_i: FEATURE_I
+			l_icd_func: ICOR_DEBUG_FUNCTION
+			l_i_dv, l_dv, l_dv_count: DUMP_VALUE
+		do
+			l_dyn_type_from_str_feat_i := a_internal_class_c.feature_named ("dynamic_type_from_string")
+			l_icd_func := eifnet_debugger.icd_function_by_feature (a_internal_value, a_internal_class_c.types.first, l_dyn_type_from_str_feat_i)
+			l_i_dv := debugger_manager.dump_value_factory.new_manifest_string_value (a_type_i.name, debugger_manager.compiler_data.string_8_class_c)
+			l_dv := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_i_dv>>, False, True)
+			l_dv_count := debugger_manager.dump_value_factory.new_integer_32_value (a_count, debugger_manager.compiler_data.integer_32_class_c)
+
+			l_new_instance_of_feat_i := a_internal_class_c.feature_named ("new_special_any_instance")
+			l_icd_func := eifnet_debugger.icd_function_by_feature (a_internal_value, a_internal_class_c.types.first, l_new_instance_of_feat_i)
+			Result := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_dv, l_dv_count>>, False, True)
+		end
+
 	new_empty_instance_of_using_internal (a_type_i: CL_TYPE_I; a_internal_value: ICOR_DEBUG_VALUE; a_internal_class_c: CLASS_C): DUMP_VALUE is
 			--
 		local

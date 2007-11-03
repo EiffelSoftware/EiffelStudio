@@ -23,6 +23,7 @@ feature -- Parsing
 			s8: STRING
 			p: EIFFEL_PARSER
 			retried: BOOLEAN
+			en: EXPR_AS
 		do
 			if not retried then
 				if has_unicode_character then
@@ -35,9 +36,15 @@ feature -- Parsing
 					check expression_not_void: expression /= Void end
 					s8 := expression.as_string_8
 					p.parse_from_string (once "check " + s8)
-					expression_ast ?= p.expression_node
-					check
-						expression_ast /= Void
+					en := p.expression_node
+					if en /= Void then
+						expression_ast ?= p.expression_node
+
+						check
+							expression_ast /= Void
+						end
+					else
+						syntax_error := True
 					end
 				end
 			else

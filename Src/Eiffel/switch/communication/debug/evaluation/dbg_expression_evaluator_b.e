@@ -1012,25 +1012,55 @@ feature {NONE} -- EXPR_B evaluation
 		end
 
 	evaluate_creation_expr_b_with_type (a_creation_expr_b: CREATION_EXPR_B; a_type_i: CL_TYPE_I) is
-			-- (export status {NONE})
 		require
 			a_type_i_not_void: a_type_i /= Void
 		local
 			l_tmp_target_backup: like tmp_target
 			l_call_value: DUMP_VALUE
+			l_call_access: CALL_ACCESS_B
 			l_call: CALL_B
+			l_type_i: CL_TYPE_I
+			l_gen_type_i: GEN_TYPE_I
+			l_elt_type_i: CL_TYPE_I
+			l_params: BYTE_LIST [PARAMETER_B]
+			l_dv: DUMP_VALUE
 		do
 			l_tmp_target_backup := tmp_target
-			create_empty_instance_of (resolved_real_type_in_context (a_type_i))
-			if not error_occurred then
-				tmp_target := tmp_result_value
-				l_call_value := tmp_target
-				l_call := a_creation_expr_b.call
-				if l_call /= Void then
-					evaluate_call_b (l_call)
+			l_type_i := resolved_real_type_in_context (a_type_i)
+			if l_type_i.base_class.is_special then
+				l_gen_type_i ?= l_type_i
+				if l_gen_type_i /= Void then
+					if l_gen_type_i.true_generics.valid_index (1) then
+						l_elt_type_i ?= l_gen_type_i.true_generics[1]
+						if l_elt_type_i /= Void then
+							l_call_access := a_creation_expr_b.call
+							if l_call_access /= Void then
+								l_params := l_call_access.parameters
+								if l_params /= Void and then l_params.count = 1 then
+									l_dv := parameter_evaluation (l_params.first)
+									if l_dv.is_type_integer_32 then
+										create_special_any_instance (resolved_real_type_in_context (l_type_i), l_dv.as_dump_value_basic.value_integer_32)
+									end
+								end
+							end
+						end
+					end
 				end
+				if error_occurred or else l_dv = Void then
+					notify_error_evaluation (Debugger_names.msg_error_can_not_instanciate_type (l_type_i.name, Debugger_names.cst_error_special_not_yet_supported))
+				end
+			else
+				create_empty_instance_of (l_type_i)
 				if not error_occurred then
-					tmp_result_value := l_call_value
+					tmp_target := tmp_result_value
+					l_call_value := tmp_target
+					l_call := a_creation_expr_b.call
+					if l_call /= Void then
+						evaluate_call_b (l_call)
+					end
+					if not error_occurred then
+						tmp_result_value := l_call_value
+					end
 				end
 			end
 			tmp_target := l_tmp_target_backup
@@ -1569,27 +1599,39 @@ feature {NONE} -- Concrete evaluation
 		require
 			a_type_i_not_void: a_type_i /= Void
 			already_resolved: a_type_i = resolved_real_type_in_context (a_type_i)
+			not_special: not a_type_i.base_class.is_special
 		local
 			l_cl_type_i: CL_TYPE_I
-			ct: CLASS_TYPE
-			l_is_special: BOOLEAN
 		do
 			l_cl_type_i := a_type_i
 			if l_cl_type_i.has_associated_class_type then
-				ct := l_cl_type_i.associated_class_type
-				if ct.associated_class /= Void then
-					l_is_special := ct.associated_class.is_special
+				prepare_evaluation
+				Dbg_evaluator.create_empty_instance_of (l_cl_type_i)
+				retrieve_evaluation
+				if error_occurred and l_cl_type_i.has_true_formal then
+					notify_error_not_implemented (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
 				end
-				if l_is_special then
-					fixme ("To create SPECIAL objects, we have to use INTERNAL.new_special_any_instance ... ")
-					notify_error_evaluation (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_special_not_yet_supported))
-				else
-					prepare_evaluation
-					Dbg_evaluator.create_empty_instance_of (l_cl_type_i)
-					retrieve_evaluation
-					if error_occurred and l_cl_type_i.has_true_formal then
-						notify_error_not_implemented (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
-					end
+			else
+				notify_error_evaluation (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_not_compiled))
+			end
+		end
+
+	create_special_any_instance (a_elt_type_i: CL_TYPE_I; a_count: INTEGER) is
+			-- Create new instance of SPECIAL represented by `a_type_id', `a_elt_type_i' and `a_count'
+		require
+			a_elt_type_i_not_void: a_elt_type_i /= Void
+			already_resolved: a_elt_type_i = resolved_real_type_in_context (a_elt_type_i)
+			is_special: a_type_i.base_class.is_special
+		local
+			l_cl_type_i: CL_TYPE_I
+		do
+			l_cl_type_i := a_elt_type_i
+			if l_cl_type_i.has_associated_class_type then
+				prepare_evaluation
+				Dbg_evaluator.create_special_any_instance (l_cl_type_i, a_count)
+				retrieve_evaluation
+				if error_occurred and l_cl_type_i.has_true_formal then
+					notify_error_not_implemented (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
 				end
 			else
 				notify_error_evaluation (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_not_compiled))

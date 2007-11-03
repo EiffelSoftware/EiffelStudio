@@ -553,6 +553,14 @@ feature -- Concrete evaluation
 		deferred
 		end
 
+	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+		require
+			a_type_i_not_void: a_type_i /= Void
+			a_type_i_compiled: a_type_i.has_associated_class_type
+			is_special: a_type_i.base_class.is_special
+		deferred
+		end
+
 feature -- Implementation
 
 	effective_evaluate_static_function (f: FEATURE_I; ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is

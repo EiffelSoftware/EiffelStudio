@@ -1,16 +1,6 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
---| All rights reserved.
---| Your use of this work is governed under the terms of the GNU General
---| Public License version 2.
-
--- This is a test control file
-
 test_name basic-non-conforming-inheritance
 test_description Testing basic non-conforming inheritance
 
-test_name no-index-tag
-test_description Index_clause without an Index_tag
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 compile_melted

@@ -143,6 +143,10 @@ feature {NONE} -- Initialization
 			layout_constant.set_default_width_for_button (submit)
 			l_horizontal_box.extend (submit)
 			l_horizontal_box.disable_item_expand (submit)
+
+			set_default_push_button (submit)
+			-- We need following line to show top right close button.
+			set_default_cancel_button (create {EV_BUTTON})
 		end
 
 	init_link_label (a_label: EV_LABEL; a_url: STRING) is

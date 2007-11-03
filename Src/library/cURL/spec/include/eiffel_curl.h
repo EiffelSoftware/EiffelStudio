@@ -12,8 +12,8 @@
 typedef char bool;
 #define TRUE 1
 
-#ifndef my_curl
-#define my_curl
+#ifndef eiffel_curl
+#define eiffel_curl
 
 struct cURLMemoryStruct {
   char *memory;
@@ -96,7 +96,7 @@ static int curl_trace(CURL *handle, curl_infotype type, unsigned char *data, siz
   return 0;
 }
 
-static void *myrealloc(void *ptr, size_t size)
+static void *eiffel_realloc(void *ptr, size_t size)
 {
   /* There might be a realloc() out there that doesn't like reallocing
      NULL pointers, so we take care of it here */
@@ -113,7 +113,7 @@ static size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *da
 
   struct cURLMemoryStruct *mem = (struct cURLMemoryStruct *)data;
 
-  mem->memory = (char *)myrealloc(mem->memory, mem->size + realsize + 1);
+  mem->memory = (char *)eiffel_realloc(mem->memory, mem->size + realsize + 1);
   
   if (mem->memory) {
     memcpy(&(mem->memory[mem->size]), ptr, realsize);

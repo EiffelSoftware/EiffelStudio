@@ -103,7 +103,7 @@ feature {NONE} -- Expression validator
 	valid_expression (expr: STRING): BOOLEAN is
 			-- Is `expr' a valid expression?
 		do
-			Result := expr /= Void
+			Result := expr /= Void and then not expr.is_empty
 			if Result then
 				Result := not expr.has ('%R') and not expr.has ('%N')
 			end

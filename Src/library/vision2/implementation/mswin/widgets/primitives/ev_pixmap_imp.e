@@ -1805,15 +1805,60 @@ feature {NONE} -- Implementation
 			set_is_initialized (False)
 		end
 
+feature {NONE} -- Color depth implementation
+
 	color_depth: INTEGER is
+			-- Current screen color depth.
+		do
+			init_color_depth
+			Result := color_depth_cell.item
+		ensure
+			positive: Result > 0
+		end
+
+	init_color_depth is
+			-- Initialize all `color_depth' related stuffs.
+		indexing
+			once_status: global
+		once
+			refresh_color_depth
+			register_color_depth_action
+		end
+
+	register_color_depth_action is
+			-- Add action to system color change actions.
+		local
+			l_env: EV_ENVIRONMENT
+			l_app_i: EV_APPLICATION_I
+		do
+			create l_env
+			l_app_i := l_env.application.implementation
+			l_app_i.system_color_change_actions.extend (agent refresh_color_depth)
+		ensure
+			action_added:
+		end
+
+	refresh_color_depth is
 			-- Screen color depth
+		indexing
+			once_status: global
 		local
 			l_screen: WEL_SCREEN_DC
-		once
+		do
 			create l_screen
 			l_screen.get
-			Result := l_screen.device_caps (({WEL_CAPABILITIES_CONSTANTS}.bits_pixel))
+			color_depth_cell.put (l_screen.device_caps (({WEL_CAPABILITIES_CONSTANTS}.bits_pixel)))
 			l_screen.delete
+		end
+
+	color_depth_cell: CELL [INTEGER] is
+			-- Color depth singleton cell
+		indexing
+			once_status: global
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
 		end
 
 feature {NONE} -- Constants

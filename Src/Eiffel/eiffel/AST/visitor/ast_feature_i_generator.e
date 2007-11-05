@@ -86,6 +86,8 @@ feature {NONE} -- Implementation: Access
 feature {NONE} -- Implementation
 
 	process_body_as (l_as: BODY_AS) is
+		require
+			l_as_not_void: l_as /= Void
 		local
 			l_attr: ATTRIBUTE_I
 			l_const: CONSTANT_I

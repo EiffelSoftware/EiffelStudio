@@ -39,8 +39,6 @@ feature {NONE} -- Initialization
 			default_create
 			init_ui
 
-			-- Add ESC support
-			key_press_actions.extend (agent on_key_press)
 			show_actions.extend_kamikaze (agent username.set_focus)
 		end
 
@@ -144,9 +142,14 @@ feature {NONE} -- Initialization
 			l_horizontal_box.extend (submit)
 			l_horizontal_box.disable_item_expand (submit)
 
+			create cancel.make_with_text_and_action ("Cancel", agent on_cancel)
+			layout_constant.set_default_width_for_button (cancel)
+			l_horizontal_box.extend (cancel)
+			l_horizontal_box.disable_item_expand (cancel)
+			
 			set_default_push_button (submit)
 			-- We need following line to show top right close button.
-			set_default_cancel_button (create {EV_BUTTON})
+			set_default_cancel_button (cancel)
 		end
 
 	init_link_label (a_label: EV_LABEL; a_url: STRING) is
@@ -231,6 +234,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_cancel is
+			-- Handel cancel button pressed action.
+		do
+			destroy
+		end
+
 	on_login_fail is
 			-- Notify end user login failed.
 		local
@@ -253,17 +262,6 @@ feature {NONE} -- Implementation
 			create l_dialog.make_standard ("Failed when submitting bug report.%N" + a_exception)
 			l_dialog.show (Current)
 			destroy
-		end
-
-	on_key_press (a_key: EV_KEY) is
-			-- Handle key press actions.
-		do
-			inspect a_key.code
-			when {EV_KEY_CONSTANTS}.key_escape  then
-				destroy
-			else
-
-			end
 		end
 
 	on_blank_username_password is
@@ -312,6 +310,9 @@ feature {NONE} -- UI implementations
 
 	password: EV_PASSWORD_FIELD
 			-- Text field where end user inout password.
+
+	cancel: EV_BUTTON
+			-- Button to cancel current operation
 
 	submit: EV_BUTTON
 			-- Button to submit

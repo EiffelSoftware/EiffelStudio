@@ -403,6 +403,7 @@ feature -- Object tool, Object Viewer and Watch tool menus
 		local
 			l_object_stone: OBJECT_STONE
 			l_sep_added: BOOLEAN
+			l_row: EV_GRID_ROW
 		do
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
@@ -414,12 +415,15 @@ feature -- Object tool, Object Viewer and Watch tool menus
 					extend_separator (a_menu)
 					l_sep_added := True
 					extend_expanded_object_view (a_menu, a_pebble)
-				end
-				if a_watch_tool.has_selected_item then
-					if not l_sep_added then
-						extend_separator (a_menu)
+
+					l_row ?= l_object_stone.ev_item
+					if l_row /= Void then
+						if not l_sep_added then
+							extend_separator (a_menu)
+						end
+						a_menu.extend (new_menu_item (names.m_remove))
+						a_menu.last.select_actions.extend (agent a_watch_tool.remove_expression_row (l_row))
 					end
-					extend_delete_expression (a_menu, a_pebble, a_watch_tool)
 				end
 				extend_property_menu (a_menu, a_pebble)
 			end
@@ -1514,27 +1518,22 @@ feature {NONE} -- Debug tool menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 		local
 			l_stone: OBJECT_STONE
-			l_command: EB_OBJECT_VIEWER_COMMAND
+			l_objviewer_command: EB_OBJECT_VIEWER_COMMAND
+			l_objstore_command: ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
 		do
 			l_stone ?= a_pebble
 			if l_stone /= Void then
-				l_command := dev_window.eb_debugger_manager.object_viewer_cmd
-				a_menu.extend (l_command.new_menu_item_unmanaged)
+				l_objviewer_command := dev_window.eb_debugger_manager.object_viewer_cmd
+				a_menu.extend (l_objviewer_command.new_menu_item_unmanaged)
 				a_menu.last.select_actions.wipe_out
-				a_menu.last.select_actions.extend (agent l_command.on_stone_dropped (l_stone))
-			end
-		end
+				a_menu.last.select_actions.extend (agent l_objviewer_command.on_stone_dropped (l_stone))
 
-	extend_delete_expression (a_menu: EV_MENU; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL_PANEL) is
-			-- Extend delete expression menu.
-		require
-			a_menu_not_void: a_menu /= Void
-			a_watch_tool_not_void: a_watch_tool /= Void
-		do
-			a_menu.extend (new_menu_item (names.m_delete))
-			a_menu.last.select_actions.extend (agent a_watch_tool.remove_object_line (a_pebble))
-			if not a_watch_tool.is_removable (a_pebble) then
-				a_menu.last.disable_sensitive
+				l_objstore_command := dev_window.eb_debugger_manager.object_storage_management_cmd
+				if l_objstore_command /= Void then
+					a_menu.extend (l_objstore_command.new_menu_item_unmanaged)
+					a_menu.last.select_actions.wipe_out
+					a_menu.last.select_actions.extend (agent l_objstore_command.on_stone_dropped (l_stone))
+				end
 			end
 		end
 

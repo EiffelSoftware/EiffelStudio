@@ -34,6 +34,14 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Status
+
+	load_operation_enabled: BOOLEAN is
+			-- Is load operation enabled ?
+		do
+			Result := active_watch_tool /= Void
+		end
+
 feature -- Access
 
 	mini_pixmap: EV_PIXMAP is
@@ -87,7 +95,7 @@ feature -- Access
 	menu_name: STRING_GENERAL is
 			-- Menu name for `Current'.
 		do
-			Result := Interface_names.m_Control_debuggee_object_storage
+			Result := Interface_names.m_Save_debuggee_object
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
@@ -159,11 +167,16 @@ feature -- Basic operations
 			dlg: ES_DBG_OBJECT_STORAGE_MANAGEMENT_DIALOG
 			dv: ABSTRACT_DEBUG_VALUE
 		do
-			if debugger_manager.safe_application_is_stopped then
+			if
+				debugger_manager.safe_application_is_stopped and then
+				load_operation_enabled
+			then
 				create dlg.make
+				dlg.enable_load_operation
 				dlg.set_object_stone (Void)
 				dlg.set_is_modal (True)
 				dlg.show_on_active_window
+
 				dv := dlg.object_value
 				if dv /= Void and then active_watch_tool /= Void then
 					active_watch_tool.add_debug_value (dv)
@@ -193,6 +206,7 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Implementation
 			if debugger_manager.safe_application_is_stopped then
 				create dlg.make
 				dlg.set_object_stone (st)
+--				dlg.enable_load_operation --| do not enable load operation
 				dlg.set_is_modal (True)
 				dlg.show_on_active_window
 			end

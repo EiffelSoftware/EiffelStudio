@@ -41,6 +41,8 @@ feature {NONE} -- Initialization
 			set_button_action (dialog_buttons.yes_button, agent on_save)
 			set_button_action (dialog_buttons.no_button, agent on_load)
 
+			button_load.hide -- by default load is disabled
+
 			check_fields
 		end
 
@@ -83,20 +85,24 @@ feature -- Actions
 
 	on_load is
 			-- On load action
+		require
+			load_operation_enabled: load_operation_enabled
 		do
-			if debugger_manager.safe_application_is_stopped then
-				if object_stone /= Void then
-					object_value := debugger_manager.application.remotely_loaded_object (object_stone.object_address, path_field.path)
+			if load_operation_enabled then
+				if debugger_manager.safe_application_is_stopped then
+					if object_stone /= Void then
+						object_value := debugger_manager.application.remotely_loaded_object (object_stone.object_address, path_field.path)
+					else
+						object_value := debugger_manager.application.remotely_loaded_object (Void, path_field.path)
+					end
+					if object_value /= Void then
+						display_success_message
+					else
+						display_failure_message
+					end
 				else
-					object_value := debugger_manager.application.remotely_loaded_object (Void, path_field.path)
+					display_not_stopped_error_message
 				end
-				if object_value /= Void then
-					display_success_message
-				else
-					display_failure_message
-				end
-			else
-				display_not_stopped_error_message
 			end
 		end
 
@@ -118,6 +124,9 @@ feature {NONE} -- Prompts
 		end
 
 feature -- Access
+
+	load_operation_enabled: BOOLEAN
+			-- Is Load operation enabled ?
 
 	path_field: EV_PATH_FIELD
 
@@ -165,6 +174,15 @@ feature -- Access
 
 feature -- Change
 
+	enable_load_operation is
+			-- Enable load operation
+		do
+			load_operation_enabled := True
+			if button_load /= Void and then not button_load.is_destroyed then
+				button_load.show
+			end
+		end
+
 	set_object_stone (st: OBJECT_STONE) is
 		do
 			object_stone := st
@@ -189,7 +207,11 @@ feature -- Change
 			else
 				button_save.disable_sensitive
 			end
-			if f /= Void and then f.exists and then f.is_readable then
+			if
+				load_operation_enabled and then
+				f /= Void and then
+				f.exists and then f.is_readable
+			then
 				button_load.enable_sensitive
 			else
 				button_load.disable_sensitive

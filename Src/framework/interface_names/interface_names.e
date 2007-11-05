@@ -674,6 +674,7 @@ feature -- Accelerator, focus label and menu name
 
 
 	m_Control_debuggee_object_storage: STRING_GENERAL is	do Result := locale.translation("Control Debuggee Object Storage")	end
+	m_Save_debuggee_object: STRING_GENERAL is	do Result := locale.translation("Save Debuggee Object")	end
 
 feature -- Menu entries
 

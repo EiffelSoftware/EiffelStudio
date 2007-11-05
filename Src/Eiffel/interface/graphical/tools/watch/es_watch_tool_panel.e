@@ -558,6 +558,22 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 			end
 		end
 
+	remove_expression_row (row: EV_GRID_ROW) is
+		require
+			row_not_void: row /= Void
+		local
+			l_item: like watched_item_from
+		do
+			l_item ?= watched_item_from (row)
+			if l_item /= Void then
+				l_item.safe_unattach
+				watched_items.prune_all (l_item)
+			end
+--| bug#11272 : using the next line raises display issue:
+--|			watches_grid.remove_row (row.index)
+			watches_grid.remove_rows (row.index, row.index + row.subrow_count_recursive)
+		end
+
 	is_removable (a: ANY): BOOLEAN is
 		do
 			Result := True
@@ -845,22 +861,6 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	remove_expression_row (row: EV_GRID_ROW) is
-		require
-			row_not_void: row /= Void
-		local
-			l_item: like watched_item_from
-		do
-			l_item ?= watched_item_from (row)
-			if l_item /= Void then
-				l_item.safe_unattach
-				watched_items.prune_all (l_item)
-			end
---| bug#11272 : using the next line raises display issue:
---|			watches_grid.remove_row (row.index)
-			watches_grid.remove_rows (row.index, row.index + row.subrow_count_recursive)
-		end
-
 	update_commands_on_expressions_delayer: ES_DELAYED_ACTION
 			-- Action delayer for `update_commands_on_expressions'
 			-- this way we don't disable command to re-enable right after
@@ -1112,7 +1112,7 @@ feature {NONE} -- Event handling
 						expr_item.compute_grid_display
 					end
 					watches_grid.remove_selection
-					if expr_item.row.is_displayed then
+					if not expr_item.row.is_destroyed and then expr_item.row.is_displayed then
 						expr_item.row.ensure_visible
 					end
 					expr_item.row.enable_select

@@ -365,6 +365,8 @@ feature {NONE} -- Interface
 			hex_format_cmd.enable_sensitive
 			mini_toolbar.extend (hex_format_cmd.new_mini_sd_toolbar_item)
 
+			mini_toolbar.extend (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item)
+
 				--| Attach the slices_cmd to the objects grid
 			from
 				objects_grids.start

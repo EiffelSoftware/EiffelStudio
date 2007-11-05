@@ -936,13 +936,16 @@ feature -- Commands
 			Precursor {EV_GRID}
 
 			if delayed_columns_auto_resizing /= Void then
-				delayed_columns_auto_resizing.cancel_request
+				delayed_columns_auto_resizing.destroy
+				delayed_columns_auto_resizing := Void
 			end
 			if delayed_last_column_auto_resizing /= Void then
-				delayed_last_column_auto_resizing.cancel_request
+				delayed_last_column_auto_resizing.destroy
+				delayed_last_column_auto_resizing := Void
 			end
 			if delayed_cleaning /= Void then
-				delayed_cleaning.cancel_request
+				delayed_cleaning.destroy
+				delayed_cleaning := Void
 			end
 		end
 

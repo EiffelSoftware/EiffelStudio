@@ -395,6 +395,7 @@ feature -- Memory management
 			recycle_expressions
 			watches_grid.reset_layout_manager
 			clean_watched_grid
+			update_commands_on_expressions_delayer := Void
 		end
 
 feature {NONE} -- Memory management
@@ -857,42 +858,73 @@ feature {NONE} -- Event handling
 			watches_grid.remove_rows (row.index, row.index + row.subrow_count_recursive)
 		end
 
-	disable_commands_on_expressions is
+	update_commands_on_expressions_delayer: ES_DELAYED_ACTION
+			-- Action delayer for `update_commands_on_expressions'
+			-- this way we don't disable command to re-enable right after
+
+	request_update_commands_on_expressions is
 		do
-			delete_expression_cmd.disable_sensitive
-			edit_expression_cmd.disable_sensitive
-			toggle_state_of_expression_cmd.disable_sensitive
-			move_up_cmd.disable_sensitive
-			move_down_cmd.disable_sensitive
+			if update_commands_on_expressions_delayer = Void then
+				create update_commands_on_expressions_delayer.make (agent update_commands_on_expressions, 100)
+			end
+			update_commands_on_expressions_delayer.request_call
 		end
 
-	enable_commands_on_expressions is
+	update_commands_on_expressions is
+		local
+			lst: LIST [EV_GRID_ROW]
+			row: EV_GRID_ROW
 		do
-			delete_expression_cmd.enable_sensitive
-			edit_expression_cmd.enable_sensitive
-			toggle_state_of_expression_cmd.enable_sensitive
-			move_up_cmd.enable_sensitive
-			move_down_cmd.enable_sensitive
+			if update_commands_on_expressions_delayer /= Void then
+				update_commands_on_expressions_delayer.cancel_request
+			end
+			lst := watches_grid.selected_rows
+			if not lst.is_empty then
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					row := lst.item_for_iteration
+					if
+						row.parent_row = Void and then
+						row /= new_expression_row
+					then
+						lst.forth
+					else
+						lst.remove
+					end
+				end
+			end
+
+			if lst.count > 0 then
+				delete_expression_cmd.enable_sensitive
+				toggle_state_of_expression_cmd.enable_sensitive
+			else
+				delete_expression_cmd.disable_sensitive
+				toggle_state_of_expression_cmd.disable_sensitive
+			end
+			if watches_grid.selected_rows.count = 1 then
+				edit_expression_cmd.enable_sensitive
+				move_up_cmd.enable_sensitive
+				move_down_cmd.enable_sensitive
+			else
+				edit_expression_cmd.disable_sensitive
+				move_up_cmd.disable_sensitive
+				move_down_cmd.disable_sensitive
+			end
 		end
 
 	on_row_selected (row: EV_GRID_ROW) is
 			-- An item in the list of expression was selected.
 		do
-			if
-				row.parent_row = Void
-				and row /= new_expression_row
-				and not is_auto_expression_watched_item (row)
-			then
-				enable_commands_on_expressions
-			else
-				disable_commands_on_expressions
-			end
+			update_commands_on_expressions
 		end
 
 	on_row_deselected (row: EV_GRID_ROW) is
 			-- An item in the list of expression was selected.
 		do
-			disable_commands_on_expressions
+			request_update_commands_on_expressions
 		end
 
 	key_pressed (k: EV_KEY) is

@@ -69,7 +69,7 @@ feature {NONE} -- recycle
 		local
 			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 		do
-			if observer_started and target /= Void then
+			if observer_started and target /= Void and then not target.editors_manager.is_recycled then
 				l_editors := target.editors_manager.editors
 				from
 					l_editors.start

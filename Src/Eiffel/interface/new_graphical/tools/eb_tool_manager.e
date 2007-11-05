@@ -11,11 +11,9 @@ deferred class
 
 inherit
 	EB_WINDOW
-		rename
-			destroy_recyclable_items as internal_recycle
 		redefine
-			destroy_imp,
-			internal_recycle
+			internal_recycle,
+			internal_detach_entities
 		end
 
 	SHARED_DEBUGGER_MANAGER
@@ -27,7 +25,8 @@ inherit
 		undefine
 			default_create
 		redefine
-			internal_recycle
+			internal_recycle,
+			internal_detach_entities
 		end
 
 	EB_SHARED_PREFERENCES
@@ -46,6 +45,44 @@ feature {NONE} -- Initialization
 			-- Create and set up the list of tools that can be put on the left
 			-- and on the bottom-right.
 		do
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle
+			-- To be called when the button has became useless.
+		do
+			window.accelerators.wipe_out
+			toolbars_area.wipe_out
+			panel.wipe_out
+			container.wipe_out
+			toolbars_area.destroy
+			panel.destroy
+			container.destroy
+
+			Precursor {EB_HISTORY_OWNER}
+			Precursor {EB_WINDOW}
+		end
+
+	internal_detach_entities
+			-- Detaches objects from their container
+		do
+			container := Void
+			toolbars_area := Void
+			favorites_manager := Void
+			cluster_manager := Void
+			status_bar := Void
+			panel := Void
+
+			Precursor {EB_HISTORY_OWNER}
+			Precursor {EB_WINDOW}
+		ensure then
+			container_detached: container = Void
+			toolbars_area_detached: toolbars_area = Void
+			favorites_manager_detached: favorites_manager = Void
+			cluster_manager_detached: cluster_manager = Void
+			status_bar_detached: status_bar = Void
+			panel_detached: panel = Void
 		end
 
 feature -- Access
@@ -71,27 +108,6 @@ feature -- Status setting
 			status_bar.widget.show
 		end
 
-feature -- Memory management
-
-	destroy_imp is
-			-- Recycle `Current', and leave it in an unstable state,
-			-- so that we know whether we are really not referenced any more.
-		do
-			toolbars_area.wipe_out
-
-			panel.wipe_out
-			container.wipe_out
-				--	All these components are automatically recycled through add_recyclable.
-
-				-- Recycle the history manager.
-				-- This is called polymorphically by EV_WINDOW.
-			recycle
-			Precursor {EB_WINDOW}
-			toolbars_area.destroy
-			panel.destroy
-			container.destroy
-		end
-
 feature {EB_DEBUGGER_MANAGER, EB_TOOL, EB_DEVELOPMENT_WINDOW_BUILDER,
 			EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Explorer bars
 
@@ -110,15 +126,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- V
 
 	toolbars_area: EV_VERTICAL_BOX
 			-- Area where toolbars will be displayed.
-
---	general_customizable_toolbar: EB_TOOLBAR
---			-- Customizable part of `general_toolbar'.
-
---	project_customizable_toolbar: EB_TOOLBAR
---			-- Customizable part of `project_toolbar'.
-
---	refactoring_customizable_toolbar: EB_TOOLBAR
---			-- Customizable part of `refactoring_toolbar'.
 
 feature -- Favorites & History handling.
 
@@ -165,14 +172,6 @@ feature {NONE} -- Initialization flags
 
 	tools_initialized: BOOLEAN
 			-- Are the tools initialized?
-
-	internal_recycle is
-			-- Destroy `Current'.
-		do
-			window.accelerators.wipe_out
-			Precursor {EB_HISTORY_OWNER}
-			Precursor {EB_WINDOW}
-		end
 
 feature {NONE} -- Constants
 

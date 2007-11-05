@@ -51,7 +51,7 @@ feature -- Command
 			loop
 				l_conv_mit ?= l_debug_menu.item
 				if l_conv_mit /= Void then
-					develop_window.add_recyclable (l_conv_mit)
+					auto_recycle (l_conv_mit)
 				end
 				l_debug_menu.forth
 			end
@@ -74,12 +74,12 @@ feature -- Command
 
 				-- Pull up command.
 			l_command_menu_item := develop_window.refactoring_manager.pull_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_refactoring_menu.extend (l_command_menu_item)
 
 				-- Rename command.
 			l_command_menu_item := develop_window.refactoring_manager.rename_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_refactoring_menu.extend (l_command_menu_item)
 
 				-- Separator -------------------------------------------------
@@ -87,12 +87,12 @@ feature -- Command
 
 				-- Undo command.
 			l_command_menu_item := develop_window.refactoring_manager.undo_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_refactoring_menu.extend (l_command_menu_item)
 
 				-- Redo command.
 			l_command_menu_item := develop_window.refactoring_manager.redo_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_refactoring_menu.extend (l_command_menu_item)
 		ensure
 			refactoring_menu_created: develop_window.menus.refactoring_menu /= Void
@@ -157,7 +157,7 @@ feature -- Command
 			loop
 				command_menu_item := l_show_tool_bar_commands.item.new_menu_item
 				-- This is done by docking manager now.
-				develop_window.add_recyclable (command_menu_item)
+				auto_recycle (command_menu_item)
 				Result.extend (command_menu_item)
 
 				l_show_tool_bar_commands.forth
@@ -190,18 +190,18 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- New editor tab
 			l_command_menu_item := develop_window.commands.new_tab_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 
 				-- New
 			l_command_menu_item := develop_window.New_development_window_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 
 				-- Close
 			l_shortcut := preferences.misc_shortcut_data.close_window_shortcut
 			create l_menu_item.make_with_text (develop_window.Interface_names.m_close.as_string_32 + "%T" + l_shortcut.display_string)
-			l_menu_item.select_actions.extend (agent develop_window.destroy)
+			register_action (l_menu_item.select_actions, agent develop_window.destroy)
 			develop_window.menus.file_menu.extend (l_menu_item)
 
 				-- Separator --------------------------------------
@@ -209,28 +209,28 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Save
 			l_command_menu_item := develop_window.save_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 
 				-- Save all	
 			l_command_menu_item := develop_window.save_all_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 
 				-- Save as
 			l_command_menu_item := develop_window.commands.save_as_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 
 				-- External editor
 			l_command_menu_item := develop_window.commands.shell_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 
 				-- Separator --------------------------------------
 			develop_window.menus.file_menu.extend (create {EV_MENU_SEPARATOR})
 			l_command_menu_item := develop_window.commands.print_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 
 				-- Separator --------------------------------------
@@ -250,7 +250,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Recent Projects
 			develop_window.menus.set_recent_projects_menu (develop_window.recent_projects_manager.new_menu)
-			develop_window.add_recyclable (develop_window.menus.recent_projects_menu)
+			auto_recycle (develop_window.menus.recent_projects_menu)
 			develop_window.menus.file_menu.extend (develop_window.menus.recent_projects_menu)
 
 				-- Separator --------------------------------------
@@ -258,7 +258,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Exit
 			l_command_menu_item := develop_window.Exit_application_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 		end
 
@@ -340,12 +340,12 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Undo
 			l_command_menu_item := develop_window.commands.undo_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Redo
 			l_command_menu_item := develop_window.commands.redo_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Separator --------------------------------------
@@ -353,21 +353,21 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Cut
 			l_command_menu_item := develop_window.commands.editor_cut_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (develop_window.commands.editor_cut_cmd)
 			l_command_controller.add_selection_command (develop_window.commands.editor_cut_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Copy
 			l_command_menu_item := develop_window.commands.editor_copy_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (develop_window.commands.editor_copy_cmd)
 			l_command_controller.add_selection_command (develop_window.commands.editor_copy_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Paste
 			l_command_menu_item := develop_window.commands.editor_paste_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (develop_window.commands.editor_paste_cmd)
 			l_command_controller.add_edition_command (develop_window.commands.editor_paste_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
@@ -381,7 +381,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd.add_agent (agent develop_window.select_all)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 
@@ -393,7 +393,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_ln_cmd.set_is_for_main_editors (True)
 			l_command_menu_item := l_ln_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_ln_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_ln_cmd)
 
@@ -409,7 +409,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd.add_agent (agent develop_window.search)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
@@ -423,7 +423,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd.add_agent (agent develop_window.goto)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
@@ -438,7 +438,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
 			develop_window.commands.editor_commands.extend (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.edit_menu.extend (l_command_menu_item)
 
 				-- Find sub menu
@@ -455,7 +455,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
 			develop_window.commands.editor_commands.extend (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_sub_menu.extend (l_command_menu_item)
 
 				-- Find previous
@@ -468,7 +468,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
 			develop_window.commands.editor_commands.extend (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_sub_menu.extend (l_command_menu_item)
 
 				-- Find selection forward
@@ -481,7 +481,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
 			develop_window.commands.editor_commands.extend (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_sub_menu.extend (l_command_menu_item)
 
 				-- Find selection backward
@@ -494,7 +494,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
 			develop_window.commands.editor_commands.extend (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_sub_menu.extend (l_command_menu_item)
 
 			develop_window.menus.edit_menu.extend (l_sub_menu)
@@ -510,7 +510,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_os_cmd.set_menu_name (develop_window.Interface_names.m_indent)
 			l_os_cmd.add_agent (agent editor_indent_selection)
 			l_command_menu_item := l_os_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_os_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -520,7 +520,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_os_cmd.set_menu_name (develop_window.Interface_names.m_unindent)
 			l_os_cmd.add_agent (agent editor_unindent_selection)
 			l_command_menu_item := l_os_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_os_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -532,7 +532,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_shortcut := develop_window.preferences.editor_data.shortcuts.item ("set_to_lowercase")
 			l_os_cmd.set_referred_shortcut (l_shortcut)
 			l_command_menu_item := l_os_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_os_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -544,7 +544,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_shortcut := develop_window.preferences.editor_data.shortcuts.item ("set_to_uppercase")
 			l_os_cmd.set_referred_shortcut (l_shortcut)
 			l_command_menu_item := l_os_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_os_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -556,7 +556,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd.set_referred_shortcut (l_shortcut)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -568,7 +568,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd.set_referred_shortcut (l_shortcut)
 			l_command_menu_item := l_cmd.new_menu_item
 			l_command_controller.add_edition_command (l_cmd)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -584,7 +584,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_controller.add_edition_command (l_cmd)
 			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("embed_if_clause")
 			l_cmd.set_referred_shortcut (l_shortcut)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -597,7 +597,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_controller.add_edition_command (l_cmd)
 			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("embed_debug_clause")
 			l_cmd.set_referred_shortcut (l_shortcut)
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -615,7 +615,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_controller.add_edition_command (l_cmd)
 			l_cmd.add_agent (agent editor_complete_feature_name)
 
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -630,7 +630,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_controller.add_edition_command (l_cmd)
 			l_cmd.add_agent (agent editor_complete_class_name)
 
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.commands.editor_commands.extend (l_cmd)
 			l_sub_menu.extend (l_command_menu_item)
 
@@ -645,7 +645,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_cmd.add_agent (agent develop_window.toggle_formatting_marks)
 			develop_window.commands.editor_commands.extend (l_cmd)
 
-			develop_window.add_recyclable (develop_window.menus.formatting_marks_command_menu_item)
+			auto_recycle (develop_window.menus.formatting_marks_command_menu_item)
 			l_sub_menu.extend (develop_window.menus.formatting_marks_command_menu_item)
 
 			develop_window.menus.edit_menu.extend (l_sub_menu)
@@ -674,11 +674,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 			l_new_menu_item := develop_window.commands.toggle_stone_cmd.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.send_stone_to_context_cmd.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 				-- Go to menu
 			l_new_basic_item := develop_window.history_manager.new_menu
 			develop_window.menus.view_menu.extend (l_new_basic_item)
@@ -710,49 +710,49 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 			l_new_menu_item := develop_window.commands.reset_layout_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.set_default_layout_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.open_layout_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.save_layout_as_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 				-- Separator --------------------------------------
 			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
 
 			l_new_menu_item := develop_window.commands.lock_tool_bar_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.lock_docking_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.lock_editor_docking_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 				-- Separator --------------------------------------
 			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
 
 			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.minimize_editors_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 
 			l_new_menu_item := develop_window.commands.restore_editors_command.new_menu_item
 			develop_window.menus.view_menu.extend (l_new_menu_item)
-			develop_window.add_recyclable (l_new_menu_item)
+			auto_recycle (l_new_menu_item)
 		end
 
 	build_favorites_menu is
@@ -778,7 +778,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.menus.favorites_menu.put_right (develop_window.menus.show_favorites_menu_item)
 
 				-- The favorites menu is already collected by the favorites manager.
-			develop_window.add_recyclable (develop_window.menus.favorites_menu)
+			auto_recycle (develop_window.menus.favorites_menu)
 		end
 
 	build_project_menu is
@@ -792,37 +792,37 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Melt
 			l_command_menu_item := develop_window.Melt_project_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Discover melt
 			l_command_menu_item := develop_window.discover_melt_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Override scan
 			l_command_menu_item := develop_window.override_scan_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Freeze
 			l_command_menu_item := develop_window.Freeze_project_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Finalize
 			l_command_menu_item := develop_window.Finalize_project_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Precompile
 			l_command_menu_item := develop_window.precompilation_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Cancel
 			l_command_menu_item := develop_window.project_cancel_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Separator -------------------------------------------------
@@ -830,29 +830,29 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Compile Workbench C code
 			l_command_menu_item := develop_window.commands.c_workbench_compilation_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Compile Finalized C code
 			l_command_menu_item := develop_window.commands.c_finalized_compilation_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 			-- Jason Wei
 				-- Terminate C compilation
 			l_command_menu_item := develop_window.Terminate_c_compilation_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 			-- Jason Wei
 
 				-- Execute Workbench code
 			l_command_menu_item := develop_window.run_workbench_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Execute Finalized code
 			l_command_menu_item := develop_window.run_finalized_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Separator -------------------------------------------------
@@ -860,22 +860,22 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Go to next error
 			l_command_menu_item := develop_window.commands.go_to_next_error_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Go to previous error
 			l_command_menu_item := develop_window.commands.go_to_previous_error_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Go to next warning
 			l_command_menu_item := develop_window.commands.go_to_next_warning_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Go to previous warning
 			l_command_menu_item := develop_window.commands.go_to_previous_warning_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- Separator -------------------------------------------------
@@ -883,12 +883,12 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- System Tool window
 			l_command_menu_item := develop_window.system_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 				-- System information
 			l_command_menu_item := develop_window.commands.system_info_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
 			if develop_window.has_documentation_generation or develop_window.has_xmi_generation then
@@ -899,14 +899,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			if develop_window.has_documentation_generation then
 					-- Generate Documentation
 				l_command_menu_item := develop_window.document_cmd.new_menu_item
-				develop_window.add_recyclable (l_command_menu_item)
+				auto_recycle (l_command_menu_item)
 				l_project_menu.extend (l_command_menu_item)
 			end
 
 			if develop_window.has_xmi_generation then
 					-- Export XMI
 				l_command_menu_item := develop_window.export_cmd.new_menu_item
-				develop_window.add_recyclable (l_command_menu_item)
+				auto_recycle (l_command_menu_item)
 				l_project_menu.extend (l_command_menu_item)
 			end
 		end
@@ -922,22 +922,22 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- New Cluster command.
 			l_command_menu_item := develop_window.commands.new_cluster_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.tools_menu.extend (l_command_menu_item)
 
 				-- New Class command.
 			l_command_menu_item := develop_window.commands.new_class_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.tools_menu.extend (l_command_menu_item)
 
 				-- New Feature command.
 			l_command_menu_item := develop_window.commands.new_feature_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.tools_menu.extend (l_command_menu_item)
 
 				-- Delete class/cluster command.
 			l_command_menu_item := develop_window.commands.delete_class_cluster_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.tools_menu.extend (l_command_menu_item)
 
 				-- Separator --------------------------------------
@@ -946,19 +946,19 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			if develop_window.has_profiler then
 					-- Profiler Window
 				l_command_menu_item := develop_window.commands.show_profiler.new_menu_item
-				develop_window.add_recyclable (l_command_menu_item)
+				auto_recycle (l_command_menu_item)
 				develop_window.menus.tools_menu.extend (l_command_menu_item)
 			end
 
 				-- Precompile Wizard
 			l_command_menu_item := develop_window.wizard_precompile_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			develop_window.menus.tools_menu.extend (l_command_menu_item)
 
 			if develop_window.has_dll_generation then
 					-- Dynamic Library Window
 				l_command_menu_item := develop_window.show_dynamic_lib_tool.new_menu_item
-				develop_window.add_recyclable (l_command_menu_item)
+				auto_recycle (l_command_menu_item)
 				l_tools_menu.extend (l_command_menu_item)
 			end
 
@@ -966,11 +966,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_tools_menu.extend (create {EV_MENU_SEPARATOR})
 
 			l_command_menu_item := develop_window.commands.customized_formatter_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_tools_menu.extend (l_command_menu_item)
 
 			l_command_menu_item := develop_window.commands.customized_tool_command.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_tools_menu.extend (l_command_menu_item)
 
 				-- Separator -------------------------------------------------
@@ -978,12 +978,12 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 					-- Preferences
 			l_command_menu_item := develop_window.Show_preferences_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_tools_menu.extend (l_command_menu_item)
 
 					-- External commands editor
 			l_command_menu_item := develop_window.commands.Edit_external_commands_cmd.new_menu_item
-			develop_window.add_recyclable (l_command_menu_item)
+			auto_recycle (l_command_menu_item)
 			l_tools_menu.extend (l_command_menu_item)
 
 			rebuild_tools_menu
@@ -1023,7 +1023,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				l_ms.after
 			loop
 				l_tools_menu.extend (l_ms.item)
-				develop_window.add_recyclable (l_ms.item)
+				auto_recycle (l_ms.item)
 				l_ms.forth
 			end
 		end
@@ -1059,6 +1059,8 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_BREAKPOINTS_TOOL})
+			Result.extend (create {EV_MENU_SEPARATOR})
+			insert_show_tool_menu_item (Result, {ES_MEMORY_TOOL})
 
 			l_customized_tools := develop_window.tools.customized_tools
 			if not l_customized_tools.is_empty then
@@ -1071,7 +1073,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			-- Create and build `edit_menu'
 		do
 			develop_window.menus.set_window_menu (develop_window.window_manager.new_menu)
-			develop_window.add_recyclable (develop_window.menus.window_menu)
+			auto_recycle (develop_window.menus.window_menu)
 		ensure
 			window_menu_created: is_window_menu_created
 		end
@@ -1089,22 +1091,22 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- Guided Tour
 			create l_menu_item.make_with_text (develop_window.Interface_names.m_Guided_tour)
-			l_menu_item.select_actions.extend (agent develop_window.display_guided_tour)
+			register_action (l_menu_item.select_actions, agent develop_window.display_guided_tour)
 			l_help_menu.extend (l_menu_item)
 
 				-- Contents
 			create l_menu_item.make_with_text (develop_window.Interface_names.m_Contents)
-			l_menu_item.select_actions.extend (agent develop_window.display_help_contents)
+			register_action (l_menu_item.select_actions, agent develop_window.display_help_contents)
 			l_help_menu.extend (l_menu_item)
 
 				-- How to's
 			create l_menu_item.make_with_text (develop_window.Interface_names.m_How_to_s)
-			l_menu_item.select_actions.extend (agent develop_window.display_how_to_s)
+			register_action (l_menu_item.select_actions, agent develop_window.display_how_to_s)
 			l_help_menu.extend (l_menu_item)
 
 				-- Eiffel introduction
 			create l_menu_item.make_with_text (develop_window.Interface_names.m_Eiffel_introduction)
-			l_menu_item.select_actions.extend (agent develop_window.display_eiffel_introduction)
+			register_action (l_menu_item.select_actions, agent develop_window.display_eiffel_introduction)
 			l_help_menu.extend (l_menu_item)
 
 				-- Add the separator
@@ -1114,7 +1116,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- About
 			create l_menu_item.make_with_text (develop_window.Interface_names.m_About)
 			create l_about_cmd
-			l_menu_item.select_actions.extend (agent l_about_cmd.execute)
+			register_action (l_menu_item.select_actions, agent l_about_cmd.execute)
 			l_help_menu.extend (l_menu_item)
 		ensure
 			help_menu_created: is_help_menu_created
@@ -1129,7 +1131,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_com := develop_window.commands.show_tool_commands.item (a_tool)
 			if l_com /= Void then
 				l_menu_item := l_com.new_menu_item
-				develop_window.add_recyclable (l_menu_item)
+				auto_recycle (l_menu_item)
 				a_menu.extend (l_menu_item)
 				if a_tool.is_customized_tool then
 					l_menu_item.set_data ([l_menu_item, a_tool.title_for_pre])
@@ -1153,11 +1155,15 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		do
 			l_tool := develop_window.shell_tools.tool (a_tool)
 			l_cmd := develop_window.commands.show_shell_tool_commands.item (l_tool)
-			if l_cmd /= Void then
-				l_menu_item := l_cmd.new_menu_item
-				develop_window.add_recyclable (l_menu_item)
-				a_menu.extend (l_menu_item)
+			if l_cmd = Void then
+				create l_cmd.make (l_tool)
+				develop_window.auto_recycle (l_cmd)
+				develop_window.commands.show_shell_tool_commands.extend (l_cmd, l_tool)
 			end
+
+			l_menu_item := l_cmd.new_menu_item
+			auto_recycle (l_menu_item)
+			a_menu.extend (l_menu_item)
 		end
 
 feature {NONE} -- Agents for editor

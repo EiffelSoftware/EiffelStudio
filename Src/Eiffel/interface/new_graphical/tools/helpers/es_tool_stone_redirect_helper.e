@@ -10,6 +10,9 @@ indexing
 class
 	ES_TOOL_STONE_REDIRECT_HELPER
 
+inherit
+	EB_RECYCLABLE
+
 create
 	make
 
@@ -28,6 +31,16 @@ feature {NONE} -- Initialization
 			development_window_set: development_window = a_window
 		end
 
+feature {NONE} -- Clean up
+
+	internal_recycle is
+			-- To be called when the button has became useless.
+		do
+			development_window := Void
+		ensure then
+			development_window_detached: development_window = Void
+		end
+
 feature {NONE} -- Access
 
 	development_window: EB_DEVELOPMENT_WINDOW
@@ -41,11 +54,12 @@ feature -- Basic operations
 			-- `a_widget': Widget to bind common drop actions to.
 		require
 			a_widget_attached: a_widget /= Void
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		do
-			a_widget.drop_actions.extend (agent drop_breakable)
-			a_widget.drop_actions.extend (agent drop_class)
-			a_widget.drop_actions.extend (agent drop_feature)
-			a_widget.drop_actions.extend (agent drop_cluster)
+			register_action (a_widget.drop_actions, agent drop_breakable)
+			register_action (a_widget.drop_actions, agent drop_class)
+			register_action (a_widget.drop_actions, agent drop_feature)
+			register_action (a_widget.drop_actions, agent drop_cluster)
 		end
 
 	unbind (a_widget: EV_WIDGET)
@@ -69,6 +83,7 @@ feature {NONE} -- Redirects
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
 		require
+			not_is_recycled: not is_recycled
 			a_stone_attached: a_stone /= Void
 		local
 			l_manager: BREAKPOINTS_MANAGER
@@ -87,6 +102,7 @@ feature {NONE} -- Redirects
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
 		require
+			not_is_recycled: not is_recycled
 			a_stone_attached: a_stone /= Void
 		local
 			l_class_tool: ES_CLASS_TOOL_PANEL
@@ -114,6 +130,7 @@ feature {NONE} -- Redirects
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
 		require
+			not_is_recycled: not is_recycled
 			a_stone_attached: a_stone /= Void
 		local
 			l_feature_tool: ES_FEATURES_RELATION_TOOL_PANEL
@@ -130,14 +147,15 @@ feature {NONE} -- Redirects
 			--
 			-- `a_stone': Stone to redirect the drop actions to.
 		require
+			not_is_recycled: not is_recycled
 			a_stone_attached: a_stone /= Void
 		do
 			development_window.tools.launch_stone (a_stone)
 		end
 
 invariant
-	development_window_attached: development_window /= Void
-	not_development_window_is_recycled: not development_window.is_recycled
+	development_window_attached: not is_recycled implies development_window /= Void
+	not_development_window_is_recycled: not is_recycled implies not development_window.is_recycled
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

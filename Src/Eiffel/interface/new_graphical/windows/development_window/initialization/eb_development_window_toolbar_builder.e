@@ -70,7 +70,7 @@ feature -- Building commands
 			loop
 				l_recyclable ?= l_sd_toolbar.item
 				if l_recyclable /= Void then
-					develop_window.add_recyclable (l_recyclable)
+					develop_window.auto_recycle (l_recyclable)
 				end
 				l_sd_toolbar.forth
 			end
@@ -205,7 +205,7 @@ feature -- Building commands
 			loop
 				l_recyclable ?= l_tool_bar.item
 				if l_recyclable /= Void then
-					develop_window.add_recyclable (l_recyclable)
+					develop_window.auto_recycle (l_recyclable)
 				end
 				l_tool_bar.forth
 			end

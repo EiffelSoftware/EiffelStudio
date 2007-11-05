@@ -13,12 +13,8 @@ inherit
 	EB_STONABLE
 
 	EB_RECYCLABLE
-
-	EB_RECYCLER
-		rename
-			destroy as internal_recycle
 		redefine
-			internal_recycle
+			internal_detach_entities
 		end
 
 feature -- Access
@@ -31,15 +27,22 @@ feature -- Access
 	history_manager: EB_HISTORY_MANAGER
 			-- Manager for history. It encapsulates the history.
 
-feature {NONE} -- Removal
+feature {NONE} -- Clean up
 
 	internal_recycle is
 			-- Free references to `Current'.
 		do
-			Precursor {EB_RECYCLER}
 			if history_manager /= Void then
 				history_manager.recycle
 			end
+		end
+
+	internal_detach_entities
+			-- Detaches objects from their container
+		do
+			history_manager := Void
+
+			Precursor {EB_RECYCLABLE}
 		end
 
 feature -- Status setting

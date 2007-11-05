@@ -84,19 +84,19 @@ feature {NONE} -- Initialization Implementation
 
 				-- Add the actions (New window, Minimize all, ...)
 			command_menu_item := New_development_window_cmd.new_menu_item
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 			extend (command_menu_item)
 
 			command_menu_item := window_manager.minimize_all_cmd.new_menu_item
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 			extend (command_menu_item)
 
 			command_menu_item := window_manager.raise_all_cmd.new_menu_item
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 			extend (command_menu_item)
 
 			command_menu_item := window_manager.raise_all_unsaved_cmd.new_menu_item
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 			extend (command_menu_item)
 
 				-- Add the separator

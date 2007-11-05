@@ -26,14 +26,21 @@ feature {NONE} -- Initialization
 
 	make (a_command: EB_TOOLBARABLE_COMMAND) is
 			-- Creation method
+		local
+			l_recyclable: EB_RECYCLABLE
 		do
 			sd_make
 
 			command := a_command
 			command.managed_sd_toolbar_items.extend (Current)
 			name := command.name
+
+			l_recyclable ?= a_command
+			if l_recyclable /= Void then
+				l_recyclable.auto_recycle (Current)
+			end
 		end
-		
+
 feature -- Cleaning
 
 	internal_recycle is

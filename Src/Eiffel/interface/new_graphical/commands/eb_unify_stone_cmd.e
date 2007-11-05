@@ -164,6 +164,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 			Result.select_actions.extend (agent toggle_buttons)
 			Result.enable_sensitive
+			auto_recycle (Result)
 		end
 
 feature {NONE} -- Recyclable

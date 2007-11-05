@@ -72,8 +72,7 @@ feature {NONE} -- Initialization
 				set_minimized_title (title)
 			end
 			create help_engine.make
-
-			window.focus_in_actions.extend (agent window_manager.set_focused_window (Current))
+			register_action (window.focus_in_actions, agent window_manager.set_focused_window (Current))
 
 			initialized := True
 
@@ -261,19 +260,19 @@ feature {NONE} -- Initialization
 
 			command_menu_item := new_cmd.new_menu_item
 			file_menu.extend (command_menu_item)
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 
 			command_menu_item := open_cmd.new_menu_item
 			file_menu.extend (command_menu_item)
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 
 			command_menu_item := save_cmd.new_menu_item
 			file_menu.extend (command_menu_item)
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 
 			command_menu_item := save_as_cmd.new_menu_item
 			file_menu.extend (command_menu_item)
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 
 			create menu_sep
 			file_menu.extend (menu_sep)
@@ -292,19 +291,19 @@ feature {NONE} -- Initialization
 
 			command_menu_item := add_feature_cmd.new_menu_item
 			edit_menu.extend (command_menu_item)
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 
 			command_menu_item := edit_feature_cmd.new_menu_item
 			edit_menu.extend (command_menu_item)
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 
 			command_menu_item := remove_feature_cmd.new_menu_item
 			edit_menu.extend (command_menu_item)
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 
 			command_menu_item := check_exports_cmd.new_menu_item
 			edit_menu.extend (command_menu_item)
-			add_recyclable (command_menu_item)
+			auto_recycle (command_menu_item)
 		end
 
 	build_menu_bar is
@@ -329,15 +328,15 @@ feature {NONE} -- Initialization
 			create tb.make
 			tbit := new_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
-			add_recyclable (tbit)
+			auto_recycle (tbit)
 
 			tbit := open_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
-			add_recyclable (tbit)
+			auto_recycle (tbit)
 
 			tbit := save_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
-			add_recyclable (tbit)
+			auto_recycle (tbit)
 
 			tool_bar.extend (tb)
 			tool_bar.disable_item_expand (tb)
@@ -347,23 +346,22 @@ feature {NONE} -- Initialization
 			tool_bar.extend (sep)
 			tool_bar.disable_item_expand (sep)
 
-
 			create tb.make
 			tbit := check_exports_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
-			add_recyclable (tbit)
+			auto_recycle (tbit)
 
 			tbit := add_feature_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
-			add_recyclable (tbit)
+			auto_recycle (tbit)
 
 			tbit := edit_feature_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
-			add_recyclable (tbit)
+			auto_recycle (tbit)
 
 			tbit := remove_feature_cmd.new_sd_toolbar_item (False)
 			tb.extend (tbit)
-			add_recyclable (tbit)
+			auto_recycle (tbit)
 
 			tool_bar.extend (tb)
 			tool_bar.disable_item_expand (tb)

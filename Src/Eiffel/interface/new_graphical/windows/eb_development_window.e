@@ -22,6 +22,7 @@ inherit
 				init_commands, Pixmaps
 			{EB_STONE_FIRST_CHECKER}
 				Ev_application
+			{ANY} auto_recycle, delayed_auto_recycle
 		redefine
 			refresh,
 			refresh_all_commands,
@@ -30,7 +31,8 @@ inherit
 			destroy_imp,
 			destroy,
 			position,
-			pos_container
+			pos_container,
+			internal_detach_entities
 		end
 
 	EB_FILEABLE
@@ -134,14 +136,17 @@ feature {NONE} -- Initialization
 			-- Creation method.
 		do
 			create commands.make (Current)
+			auto_recycle (commands)
 			create menus.make (Current)
+			auto_recycle (menus)
 			create agents.make (Current)
+			auto_recycle (agents)
 			create tools.make (Current)
-			create ui.make (Current)
-
-				-- `shell_tools' are automatically cleaned up when `shell_tools' is recycled.
+			auto_recycle (tools)
 			create shell_tools.make (Current)
-			add_recyclable (shell_tools)
+			auto_recycle (shell_tools)
+			create ui.make (Current)
+			auto_recycle (ui)
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
@@ -160,6 +165,77 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 			save_all_cmd := a_cmd
 		ensure
 			set: save_all_cmd = a_cmd
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle is
+			-- Recycle all.
+		do
+			recycle_formatters
+			shortcut_manager.clear_actions (window)
+			agents.manager.remove_observer (agents)
+			customized_tool_manager.change_actions.prune_all (agents.on_customized_tools_changed_agent)
+			if save_cmd /= Void then
+				save_cmd.recycle
+			end
+			if save_all_cmd /= Void then
+				save_all_cmd.recycle
+			end
+			commands.set_save_as_cmd (Void)
+			if command_controller /= Void then
+				command_controller.recycle
+			end
+			if refactoring_manager /= Void then
+				refactoring_manager.destroy
+			end
+			if editors_manager /= Void then
+				editors_manager.recycle
+			end
+			if docking_manager /= Void then
+				docking_manager.destroy
+			end
+				managed_class_formatters.wipe_out
+				managed_feature_formatters.wipe_out
+				managed_main_formatters.wipe_out
+--				commands.toolbarable_commands.wipe_out
+			Precursor {EB_TOOL_MANAGER}
+		end
+
+	internal_detach_entities
+			-- Detaches objects from their container
+		do
+			save_cmd := Void
+			save_all_cmd := Void
+			command_controller := Void
+			docking_manager := Void
+			editors_manager := Void
+			history_manager := Void
+			favorites_manager := Void
+			cluster_manager := Void
+			tools := Void
+			commands := Void
+			menus := Void
+			agents := Void
+			ui := Void
+			shell_tools := Void
+
+			Precursor {EB_TOOL_MANAGER}
+		ensure then
+			save_cmd_detached: save_cmd = Void
+			save_all_cmd_detached: save_all_cmd = Void
+			command_controller_detached: command_controller = Void
+			docking_manager_detached: docking_manager = Void
+			editors_manager_detached: editors_manager = Void
+			history_manager_detached: history_manager = Void
+			favorites_manager_detached: favorites_manager = Void
+			cluster_manager_detached: cluster_manager = Void
+			tools_detached: tools = Void
+			commands_detached: commands = Void
+			menus_detached: menus = Void
+			agents_detached: agents = Void
+			ui_detached: ui = Void
+			shell_tools_detached: shell_tools = Void
 		end
 
 feature -- Access
@@ -837,16 +913,6 @@ feature -- Resource Update
 			end
 		end
 
-feature -- Recycler management
-
-	remove_recyclable (a_recyclable: EB_RECYCLABLE) is
-			-- Remove `a_recyclable' from `managed_recyclable_items'
-		do
-			if a_recyclable /= Void then
-				managed_recyclable_items.prune_all (a_recyclable)
-			end
-		end
-
 feature -- Window management
 
 	give_focus is
@@ -1311,6 +1377,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			if not is_destroying then
 				is_destroying := True
 
+
 					-- If a launched application is still running, kill it.
 				if
 					Eb_debugger_manager.application_is_executing
@@ -1334,25 +1401,23 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 				menus.recycle
 				history_manager.recycle
 
-				Precursor {EB_TOOL_MANAGER}
 				if menus.view_menu /= Void then
 					menus.view_menu.destroy
 				end
 
-				managed_class_formatters.wipe_out
-				managed_class_formatters := Void
-				managed_feature_formatters.wipe_out
-				managed_feature_formatters := Void
-				managed_main_formatters.wipe_out
-				managed_main_formatters := Void
-				commands.toolbarable_commands.wipe_out
+				Precursor {EB_TOOL_MANAGER}
 
 				if editors_manager /= Void then
 					editors_manager.recycle
-					editors_manager := Void
 				end
 
-				stone := Void
+
+
+				managed_class_formatters := Void
+				managed_feature_formatters := Void
+				managed_main_formatters := Void
+--				editors_manager := Void
+--				stone := Void
 			end
 		end
 
@@ -1785,55 +1850,6 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WIND
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
-			-- Recycle all.
-		do
-			shortcut_manager.clear_actions (window)
-
-			recycle_command
-			recycle_formatters
-			recycle_menu
-			recycle_agents
-			recycle_ui
-
-			Precursor {EB_TOOL_MANAGER}
-			if save_cmd /= Void then
-				save_cmd.recycle
-			end
-			if save_all_cmd /= Void then
-				save_all_cmd.recycle
-			end
-			commands.set_save_as_cmd (Void)
-			save_cmd := Void
-			command_controller.recycle
-			if refactoring_manager /= Void then
-				refactoring_manager.destroy
-			end
-
-			history_manager := Void
-			favorites_manager := Void
-			cluster_manager := Void
-
-			if editors_manager /= Void then
-				editors_manager.recycle
-				editors_manager := Void
-			end
-			agents.manager.remove_observer (agents)
-			customized_tool_manager.change_actions.prune_all (agents.on_customized_tools_changed_agent)
-
-			if docking_manager /= Void then
-				docking_manager.destroy
-				docking_manager := Void
-			end
-			recycle_tools
-		end
-
-	recycle_command is
-			-- Recycle command
-		do
-			commands.recycle
-		end
-
 	recycle_formatters is
 			-- Recycle formatters
 		do
@@ -1869,30 +1885,6 @@ feature {NONE} -- Recycle
 				end
 				managed_main_formatters.forth
 			end
-		end
-
-	recycle_menu is
-			-- Recycle menus.
-		do
-			menus.recycle
-		end
-
-	recycle_agents is
-			-- Recycle agents.
-		do
-			agents.recycle
-		end
-
-	recycle_tools is
-			-- Recycle tools.
-		do
-			tools.recycle
-		end
-
-	recycle_ui is
-			--
-		do
-			ui.recycle
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_BUILDER
@@ -2320,11 +2312,11 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 						force_destroy
 					end
 				else
-					Precursor {EB_TOOL_MANAGER}
 					if context_refreshing_timer /= Void then
 						context_refreshing_timer.destroy
 						context_refreshing_timer := Void
 					end
+					Precursor {EB_TOOL_MANAGER}
 				end
 			end
 		end
@@ -2472,12 +2464,12 @@ feature {EB_DEVELOPMENT_WINDOW_PART}
 		end
 
 invariant
-	not_void: commands /= Void
-	not_void: menus /= Void
-	not_void: agents /= Void
-	not_void: tools /= Void
-	not_void: ui /= Void
-	dynamic_tools_attached: shell_tools /= Void
+	commands_attached: not is_recycled implies commands /= Void
+	menus_attached: not is_recycled implies menus /= Void
+	agents_attached: not is_recycled implies agents /= Void
+	tools_attached: not is_recycled implies tools /= Void
+	dynamic_tools_attached: not is_recycled implies shell_tools /= Void
+	ui_attached: not is_recycled implies ui /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

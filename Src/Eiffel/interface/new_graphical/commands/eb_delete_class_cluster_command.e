@@ -55,6 +55,7 @@ feature -- Access
 			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent drop_class)
 			Result.drop_actions.extend (agent drop_cluster)
+			auto_recycle (Result)
 		end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
@@ -66,6 +67,7 @@ feature -- Access
 			Result := Precursor
 			Result.drop_actions.extend (agent drop_class)
 			Result.drop_actions.extend (agent drop_cluster)
+			auto_recycle (Result)
 		end
 
 	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is

@@ -479,7 +479,7 @@ feature -- tools management
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.record_grid_layout)
 		end
 
-	new_toolbar (a_recycler: EB_RECYCLER): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	new_toolbar (a_recycler: EB_RECYCLABLE): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Toolbar containing all debugging commands.
 		require
 			a_recycler_not_void: a_recycler /= Void
@@ -494,13 +494,13 @@ feature -- tools management
 			loop
 				l_button ?= Result.item
 				if l_button /= Void then
-					a_recycler.add_recyclable (l_button)
+					a_recycler.auto_recycle (l_button)
 				end
 				Result.forth
 			end
 		end
 
-	new_debug_menu (a_recycler: EB_RECYCLER): EV_MENU is
+	new_debug_menu (a_recycler: EB_RECYCLABLE): EV_MENU is
 			-- Generate a menu that can be displayed in development windows.
 		require
 			a_recycler_not_void: a_recycler /= Void
@@ -513,16 +513,16 @@ feature -- tools management
 
 			l_item := clear_bkpt.new_menu_item
 			Result.extend (clear_bkpt.new_menu_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := disable_bkpt.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := enable_bkpt.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := bkpt_info_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
@@ -530,22 +530,21 @@ feature -- tools management
 
 			l_item := options_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
 			Result.extend (sep)
-			a_recycler.add_recyclable (l_item)
 
 			l_item := step_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := into_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := out_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
@@ -553,16 +552,16 @@ feature -- tools management
 
 			l_item := toggle_exec_replay_recording_mode_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := toggle_exec_replay_mode_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := exec_replay_back_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := exec_replay_forth_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
@@ -570,10 +569,10 @@ feature -- tools management
 
 			l_item := debug_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := no_stop_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
@@ -582,13 +581,13 @@ feature -- tools management
 
 			l_item := restart_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := stop_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := quit_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
@@ -596,24 +595,24 @@ feature -- tools management
 
 			l_item := set_critical_stack_depth_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
 			Result.extend (sep)
 			l_item := exception_handler_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 				-- Separator.
 			create sep
 			Result.extend (sep)
 			l_item := assertion_checking_handler_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 			l_item := force_debug_mode_cmd.new_menu_item
 			Result.extend (l_item)
-			a_recycler.add_recyclable (l_item)
+			a_recycler.auto_recycle (l_item)
 
 --| FIXME XR: TODO: Add:
 --| 3) edit feature, feature evaluation
@@ -654,7 +653,6 @@ feature -- tools management
 				l_recyclable ?= m.item
 				if l_recyclable /= Void then
 					l_recyclable.recycle
-					w.remove_recyclable (l_recyclable)
 				end
 				m.forth
 			end
@@ -665,20 +663,20 @@ feature -- tools management
 					l_show_cmd := debugging_window.commands.show_shell_tool_commands.item (debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}))
 					mi := l_show_cmd.new_menu_item
 					m.extend (mi)
-					w.add_recyclable (mi)
+					w.auto_recycle (mi)
 				end
 				mi := show_call_stack_tool_command.new_menu_item
 				m.extend (mi)
-				w.add_recyclable (mi)
+				w.auto_recycle (mi)
 				mi := show_thread_tool_command.new_menu_item
 				m.extend (mi)
-				w.add_recyclable (mi)
+				w.auto_recycle (mi)
 				mi := show_objects_tool_command.new_menu_item
 				m.extend (mi)
-				w.add_recyclable (mi)
+				w.auto_recycle (mi)
 				mi := show_object_viewer_tool_command.new_menu_item
 				m.extend (mi)
-				w.add_recyclable (mi)
+				w.auto_recycle (mi)
 
 				l_wt_lst := watch_tool_list
 
@@ -690,7 +688,7 @@ feature -- tools management
 				end
 				mi := create_and_show_watch_tool_command.new_menu_item
 				m.extend (mi)
-				w.add_recyclable (mi)
+				w.auto_recycle (mi)
 
 				if l_wt_lst /= Void and then not l_wt_lst.is_empty then
 					m.extend (create {EV_MENU_SEPARATOR})
@@ -710,7 +708,7 @@ feature -- tools management
 						mi.select_actions.wipe_out
 						mi.select_actions.extend (agent wt.show)
 						m.extend (mi)
-						w.add_recyclable (mi)
+						w.auto_recycle (mi)
 
 						l_wt_lst.forth
 					end

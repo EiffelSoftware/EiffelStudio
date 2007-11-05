@@ -22,10 +22,16 @@ create
 feature {NONE} -- Initialization
 
 	make (a_command: EB_TOOLBARABLE_COMMAND) is
+		local
+			l_recyclable: EB_RECYCLABLE
 		do
 			default_create
 			command := a_command
 			command.add_toolbar_item (Current)
+			l_recyclable ?= a_command
+			if l_recyclable /= Void then
+				l_recyclable.auto_recycle (Current)
+			end
 		end
 
 feature {NONE} -- Cleaning

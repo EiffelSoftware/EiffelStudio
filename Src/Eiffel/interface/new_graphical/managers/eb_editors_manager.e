@@ -41,12 +41,12 @@ feature -- Initialization
 			build_observer_lists
 			development_window := a_dev_win
 			docking_manager := a_dev_win.docking_manager
-			docking_manager.tab_drop_actions.extend (agent ((a_dev_win.commands).new_tab_cmd).execute_with_stone_content)
+			register_action (docking_manager.tab_drop_actions, agent ((a_dev_win.commands).new_tab_cmd).execute_with_stone_content)
 			if veto_pebble_function_internal = Void then
 				docking_manager.tab_drop_actions.set_veto_pebble_function (agent default_veto_func)
 			end
 			create_editor
-			docking_manager.main_area_drop_action.extend (agent create_editor_beside_content (?, Void))
+			register_action (docking_manager.main_area_drop_action, agent create_editor_beside_content (?, Void))
 			if veto_pebble_function_internal = Void then
 				docking_manager.main_area_drop_action.set_veto_pebble_function (agent default_veto_func)
 			end
@@ -1128,7 +1128,7 @@ feature {NONE} -- Implementation
 			if veto_pebble_function_internal = Void then
 				last_created_editor.drop_actions.set_veto_pebble_function (agent default_veto_func)
 			end
-			last_created_editor.drop_actions.extend (agent on_drop (?, last_created_editor))
+			register_action (last_created_editor.drop_actions, agent on_drop (?, last_created_editor))
 			editors_internal.extend (last_created_editor)
 			if editors_internal.off then
 				editors_internal.start
@@ -1165,14 +1165,14 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_with_widget_title_pixmap (a_editor.widget, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title)
 
-			Result.drop_actions.extend (agent on_drop (?, a_editor))
+			register_action (Result.drop_actions, agent on_drop (?, a_editor))
 			if veto_pebble_function_internal = Void then
 				Result.drop_actions.set_veto_pebble_function (agent default_veto_func)
 			end
 
 			docking_manager.contents.extend (Result)
-			Result.focus_in_actions.extend (agent on_focus (a_editor))
-			Result.close_request_actions.extend (agent on_close (a_editor))
+			register_action (Result.focus_in_actions, agent on_focus (a_editor))
+			register_action (Result.close_request_actions, agent on_close (a_editor))
 			Result.set_type ({SD_ENUMERATION}.editor)
 			if a_content /= Void then
 				Result.set_tab_with (a_content, development_window.preferences.editor_data.new_tab_at_left)
@@ -1192,9 +1192,9 @@ feature {NONE} -- Implementation
 			create {EB_FAKE_SMART_EDITOR} last_created_editor.make (Result)
 			last_created_editor.set_docking_content (Result)
 
-			-- When fake editor first time showing, we change it to a real one.
-			Result.focus_in_actions.extend (agent on_fake_focus (last_created_editor))
-			Result.show_actions.extend (agent on_show (last_created_editor))
+				-- When fake editor first time showing, we change it to a real one.
+			register_action (Result.focus_in_actions, agent on_fake_focus (last_created_editor))
+			register_action (Result.show_actions, agent on_show (last_created_editor))
 			Result.close_request_actions.extend (agent Result.close)
 
 			docking_manager.contents.extend (Result)
@@ -1208,7 +1208,7 @@ feature {NONE} -- Implementation
 			not_void: a_content /= Void
 		do
 			a_content.set_user_widget (a_editor.widget)
-			a_content.drop_actions.extend (agent on_drop (?, a_editor))
+			register_action (a_content.drop_actions, agent on_drop (?, a_editor))
 			if veto_pebble_function_internal = Void then
 				a_content.drop_actions.set_veto_pebble_function (agent default_veto_func)
 			end
@@ -1216,10 +1216,10 @@ feature {NONE} -- Implementation
 			a_content.show_actions.wipe_out
 
 			a_content.focus_in_actions.wipe_out
-			a_content.focus_in_actions.extend (agent on_focus (a_editor))
+			register_action (a_content.focus_in_actions, agent on_focus (a_editor))
 			-- There are fake content close request actions which should be removed first.
 			a_content.close_request_actions.wipe_out
-			a_content.close_request_actions.extend (agent on_close (a_editor))
+			register_action (a_content.close_request_actions, agent on_close (a_editor))
 
 			a_editor.set_docking_content (a_content)
 			a_editor.set_stone (a_fake_editor.stone)

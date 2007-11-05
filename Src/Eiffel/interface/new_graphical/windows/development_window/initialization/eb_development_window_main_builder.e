@@ -13,9 +13,31 @@ class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_BUILDER
+		redefine
+			internal_recycle,
+			internal_detach_entities
+		end
 
 create
 	make
+
+feature {NONE} -- Clean up
+
+	internal_recycle is
+			-- To be called when the button has became useless.
+		do
+			if develop_window.docking_manager /= Void then
+				develop_window.docking_manager.set_restoration_callback (Void)
+			end
+			Precursor {EB_DEVELOPMENT_WINDOW_BUILDER}
+		end
+
+	internal_detach_entities is
+			-- Detaches objects from their container
+		do
+
+			Precursor {EB_DEVELOPMENT_WINDOW_BUILDER}
+		end
 
 feature -- Command
 
@@ -129,8 +151,8 @@ feature -- Command
 			l_minimize_editors_command: EB_MINIMIZE_EDITORS_COMMAND
 			l_restore_editors_command: EB_RESTORE_EDITORS_COMMAND
 		do
-			-- Directly call a un-redefine init_commands in EB_DEVELOPMENT_WINDOW
-			-- Non-docking Eiffel Studio was call Precursor
+				-- Directly call a un-redefine init_commands in EB_DEVELOPMENT_WINDOW
+				-- Non-docking Eiffel Studio was call Precursor
 			develop_window.init_commands
 
 			create l_toolbarable_commands.make (15)
@@ -141,16 +163,18 @@ feature -- Command
 
 				-- Open, save, ...
 			create l_new_tab_cmd.make (develop_window)
+			auto_recycle (l_new_tab_cmd)
 			develop_window.commands.set_new_tab_cmd (l_new_tab_cmd)
 			develop_window.commands.toolbarable_commands.extend (develop_window.commands.new_tab_cmd)
 
 			create l_save_cmd.make (develop_window)
+			auto_recycle (l_save_cmd)
 			develop_window.set_save_cmd (l_save_cmd)
 			develop_window.commands.toolbarable_commands.extend (develop_window.save_cmd)
 
 			create l_save_as_cmd.make (develop_window)
+			auto_recycle (l_save_as_cmd)
 			develop_window.commands.set_save_as_cmd (l_save_as_cmd)
-
 			if develop_window.editors_manager = Void or else
 				develop_window.editors_manager.current_editor = Void or else
 				develop_window.editors_manager.current_editor.is_empty
@@ -161,14 +185,17 @@ feature -- Command
 			end
 
 			create l_save_all_cmd.make (develop_window)
+			auto_recycle (l_save_all_cmd)
 			develop_window.set_save_all_cmd (l_save_all_cmd)
 			develop_window.commands.toolbarable_commands.extend (develop_window.save_all_cmd)
 
 			create l_shell_cmd.make (develop_window)
+			auto_recycle (l_shell_cmd)
 			develop_window.commands.set_shell_cmd (l_shell_cmd)
 			develop_window.commands.toolbarable_commands.extend (develop_window.commands.shell_cmd)
 
 			create l_print_cmd.make (develop_window)
+			auto_recycle (l_print_cmd)
 			develop_window.commands.set_print_cmd (l_print_cmd)
 			if develop_window.is_empty then
 				develop_window.commands.print_cmd.disable_sensitive
@@ -179,82 +206,102 @@ feature -- Command
 
 				-- Compilation
 			create l_c_workbench_compilation_cmd.make_workbench (develop_window)
+			auto_recycle (l_c_workbench_compilation_cmd)
 			develop_window.commands.set_c_workbench_compilation_cmd (l_c_workbench_compilation_cmd)
 			create l_c_finalized_compilation_cmd.make_finalized (develop_window)
+			auto_recycle (l_c_finalized_compilation_cmd)
 			develop_window.commands.set_c_finalized_compilation_cmd (l_c_finalized_compilation_cmd)
 			if develop_window.has_dll_generation then
 				create l_show_dynamic_lib_tool.make
+				auto_recycle (l_show_dynamic_lib_tool)
 				develop_window.set_show_dynamic_lib_tool (l_show_dynamic_lib_tool)
 				develop_window.show_dynamic_lib_tool.set_menu_name (develop_window.Interface_names.m_new_dynamic_lib)
 				develop_window.show_dynamic_lib_tool.add_agent (agent develop_window.show_dynamic_library_dialog)
 			end
 			if develop_window.has_profiler then
 				create l_show_profiler
+				auto_recycle (l_show_profiler)
 				develop_window.commands.set_show_profiler (l_show_profiler)
 			end
 
 				-- Undo/redo, cut, copy, paste.
 			create l_undo_cmd.make (develop_window)
+			auto_recycle (l_undo_cmd)
 			develop_window.commands.set_undo_cmd (l_undo_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_undo_cmd)
 
 			create l_redo_cmd.make (develop_window)
+			auto_recycle (l_redo_cmd)
 			develop_window.commands.set_redo_cmd (l_redo_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_redo_cmd)
 
 			create l_editor_cut_cmd.make (develop_window)
+			auto_recycle (l_editor_cut_cmd)
 			develop_window.commands.set_editor_cut_cmd (l_editor_cut_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_editor_cut_cmd)
 
 			create l_editor_copy_cmd.make (develop_window)
+			auto_recycle (l_editor_copy_cmd)
 			develop_window.commands.set_editor_copy_cmd (l_editor_copy_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_editor_copy_cmd)
 
 			create l_editor_paste_cmd.make (develop_window)
+			auto_recycle (l_editor_paste_cmd)
 			develop_window.commands.set_editor_paste_cmd (l_editor_paste_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_editor_paste_cmd)
 
 			create l_new_cluster_cmd.make (develop_window)
+			auto_recycle (l_new_cluster_cmd)
 			develop_window.commands.set_new_cluster_cmd (l_new_cluster_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_new_cluster_cmd)
 
 			create l_new_library_cmd.make (develop_window)
+			auto_recycle (l_new_library_cmd)
 			develop_window.commands.set_new_library_cmd (l_new_library_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_new_library_cmd)
 
 			create l_new_assembly_cmd.make (develop_window)
+			auto_recycle (l_new_assembly_cmd)
 			develop_window.commands.set_new_assembly_cmd (l_new_assembly_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_new_assembly_cmd)
 
 			create l_new_class_cmd.make (develop_window)
+			auto_recycle (l_new_class_cmd)
 			develop_window.commands.set_new_class_cmd (l_new_class_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_new_class_cmd)
 
 			create l_delete_class_cluster_cmd.make (develop_window)
+			auto_recycle (l_delete_class_cluster_cmd)
 			develop_window.commands.set_delete_class_cluster_cmd (l_delete_class_cluster_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_delete_class_cluster_cmd)
 
 			create l_new_feature_cmd.make (develop_window)
+			auto_recycle (l_new_feature_cmd)
 			develop_window.commands.set_new_feature_cmd (l_new_feature_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_new_feature_cmd)
 
 			create l_toggle_feature_alias_cmd.make (develop_window)
+			auto_recycle (l_toggle_feature_alias_cmd)
 			develop_window.commands.set_toggle_feature_alias_cmd (l_toggle_feature_alias_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_toggle_feature_alias_cmd)
 
 			create l_toggle_feature_signature_cmd.make (develop_window)
+			auto_recycle (l_toggle_feature_signature_cmd)
 			develop_window.commands.set_toggle_feature_signature_cmd (l_toggle_feature_signature_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_toggle_feature_signature_cmd)
 
 			create l_toggle_feature_assigner_cmd.make (develop_window)
+			auto_recycle (l_toggle_feature_assigner_cmd)
 			develop_window.commands.set_toggle_feature_assigner_cmd (l_toggle_feature_assigner_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_toggle_feature_assigner_cmd)
 
 			create l_toggle_stone_cmd.make (develop_window)
+			auto_recycle (l_toggle_stone_cmd)
 			develop_window.commands.set_toggle_stone_cmd (l_toggle_stone_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_toggle_stone_cmd)
 
 			create l_send_stone_to_context_cmd.make
+			auto_recycle (l_send_stone_to_context_cmd)
 			develop_window.commands.set_send_stone_to_context_cmd (l_send_stone_to_context_cmd)
 			l_send_stone_to_context_cmd.set_pixmap (develop_window.pixmaps.icon_pixmaps.context_sync_icon)
 			l_send_stone_to_context_cmd.set_pixel_buffer (develop_window.pixmaps.icon_pixmaps.context_sync_icon_buffer)
@@ -685,15 +732,15 @@ feature -- Command
 				-- Vision2 initialization
 			create l_window
 			develop_window.set_window (l_window)
-			l_window.show_actions.extend (agent window_displayed)
-			l_window.restore_actions.extend (agent safe_restore)
+			register_action (l_window.show_actions, agent window_displayed)
+			register_action (l_window.restore_actions, agent safe_restore)
 			init_size_and_position
 			l_window.close_request_actions.wipe_out
-			l_window.close_request_actions.put_front (agent develop_window.destroy)
+			register_action (l_window.close_request_actions, agent develop_window.destroy)
 			l_window.set_icon_pixmap (develop_window.pixmap)
 
-			l_window.resize_actions.force_extend (agent develop_window.save_size)
-			l_window.move_actions.force_extend (agent develop_window.save_position)
+			register_action (l_window.resize_actions, agent develop_window.save_size)
+			register_action (l_window.move_actions, agent develop_window.save_position)
 
 				-- Initialize commands and connect them.
 			init_commands
@@ -717,9 +764,7 @@ feature -- Command
 
 			create l_help_engine.make
 			develop_window.set_help_engine (l_help_engine)
-
-			develop_window.window.focus_in_actions.extend (agent (develop_window.window_manager).set_focused_window (develop_window))
-
+			develop_window.register_action (develop_window.window.focus_in_actions, agent (develop_window.window_manager).set_focused_window (develop_window))
 			develop_window.set_initialized_for_builder (True)
 		end
 
@@ -741,12 +786,11 @@ feature -- Command
 			create l_favorites_manager.make (develop_window)
 			develop_window.set_favorites_manager (l_favorites_manager)
 				-- The favorites manager is already collected by the favorites tool.
-			develop_window.add_recyclable (l_favorites_manager)
+			auto_recycle (l_favorites_manager)
 
 			create l_cluster_manager.make (develop_window)
 			develop_window.set_cluster_manager (l_cluster_manager)
-
-			develop_window.add_recyclable (l_cluster_manager)
+			auto_recycle (l_cluster_manager)
 
 				-- Set up the name of the window.
 			develop_window.set_title (develop_window.Interface_names.t_Empty_development_window)
@@ -766,7 +810,7 @@ feature -- Command
 				-- Create the status bar.
 			create l_status_bar.make
 			develop_window.set_status_bar (l_status_bar)
-			develop_window.add_recyclable (l_status_bar)
+			auto_recycle (l_status_bar)
 
 				-- Build all tools that can take place in this window.
 			build_tools
@@ -849,7 +893,7 @@ feature -- Command
 				if not l_cmds.exhausted then
 					l_cmds.remove
 				end
-				develop_window.recycle_item (a_tool)
+				auto_recycle (a_tool)
 			end
 		end
 
@@ -881,6 +925,7 @@ feature {NONE} -- Tool construction
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			create l_show_cmd.make (a_tool)
+			auto_recycle (l_show_cmd)
 			develop_window.commands.show_shell_tool_commands.force (l_show_cmd, a_tool)
 			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
 
@@ -973,7 +1018,7 @@ feature{NONE} -- Implementation
 			create l_show_cmd.make (develop_window, a_tool)
 			develop_window.commands.show_tool_commands.force (l_show_cmd, a_tool)
 			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
-			develop_window.add_recyclable (a_tool)
+			auto_recycle (a_tool)
 
 			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_shortcut_string)
 			if l_shortcut /= Void then

@@ -27,10 +27,16 @@ create
 feature {NONE} -- Initialization
 
 	make (a_command: EB_MENUABLE_COMMAND) is
+		local
+			l_recyclable: EB_RECYCLABLE
 		do
 			default_create
 			command := a_command
 			command.add_menu_item (Current)
+			l_recyclable ?= a_command
+			if l_recyclable /= Void then
+				l_recyclable.auto_recycle (Current)
+			end
 		end
 
 feature {NONE} -- Cleaning
@@ -38,7 +44,9 @@ feature {NONE} -- Cleaning
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
-			command.remove_menu_item (Current)
+			if command.managed_menu_items.has (Current) then
+				command.remove_menu_item (Current)
+			end
 			command := Void
 			select_actions.wipe_out
 		end

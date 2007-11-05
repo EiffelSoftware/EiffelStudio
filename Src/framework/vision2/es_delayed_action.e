@@ -212,6 +212,21 @@ feature -- Delayed action access
 			delayed_action_timer_destroyed: delayed_action_timer = Void
 		end
 
+	destroy is
+			-- Destroy current
+		do
+			on_request_start_action := Void
+			on_request_end_action := Void --| avoid calling end action when cancelling request
+			cancel_request
+			delayed_action := Void
+		ensure
+			destroyed: 	on_request_start_action = Void and then
+						on_request_end_action = Void and then
+						delayed_action = Void and then
+						action_timer = Void and then
+						delayed_action_timer = Void
+		end
+
 feature {NONE} -- Delayed cleaning implementation
 
 	on_request_start_action: PROCEDURE [ANY, TUPLE]

@@ -116,6 +116,8 @@ feature {NONE} -- Implementation
 					-- Receive the Result.
 				recv_value (Current)
 				if is_exception_trace then
+						--FIXME: this can slow down the debugger (cf: bug#13548) y retrieving this huge string
+					fixme ("Optimize this part when EAO is integrated")
 					get_exception_trace
 					notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exception_trace))
 					reset_recv_value

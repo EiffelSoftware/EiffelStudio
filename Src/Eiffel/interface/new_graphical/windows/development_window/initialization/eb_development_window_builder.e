@@ -10,8 +10,11 @@ deferred class
 
 inherit
 	EB_RECYCLABLE
+		redefine
+			internal_detach_entities
+		end
 
-feature {NONE} -- Initlization
+feature{NONE} -- Initlization
 
 	make (a_window: EB_DEVELOPMENT_WINDOW) is
 			-- Creation method
@@ -19,16 +22,28 @@ feature {NONE} -- Initlization
 			not_void: a_window /= Void
 		do
 			develop_window := a_window
+
+				-- Forces current to be recycled by the development window.
+			a_window.auto_recycle (Current)
 		ensure
 			set: develop_window = a_window
 		end
 
 feature {NONE} -- Clean up
 
-	internal_recycle
+	internal_recycle is
 			-- To be called when the button has became useless.
 		do
 			develop_window := Void
+		end
+
+	internal_detach_entities is
+			-- Detaches objects from their container
+		do
+			develop_window := Void
+			Precursor {EB_RECYCLABLE}
+		ensure then
+			develop_window_detached: develop_window = Void
 		end
 
 feature {NONE} -- Implementation
@@ -37,7 +52,7 @@ feature {NONE} -- Implementation
 			-- Development window associate with.
 
 invariant
-	not_void: not is_recycled implies develop_window /= Void
+	not_void: develop_window /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

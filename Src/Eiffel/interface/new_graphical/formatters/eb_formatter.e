@@ -544,6 +544,17 @@ feature {NONE} -- Recyclable
 					displayer.recycle
 				end
 			end
+			if sd_button /= Void then
+				sd_button.drop_actions.set_veto_pebble_function (Void)
+				sd_button.drop_actions.wipe_out
+				sd_button := Void
+			end
+			if button /= Void then
+				button.drop_actions.set_veto_pebble_function (Void)
+				button.drop_actions.wipe_out
+				button.destroy
+				button := Void
+			end
 		end
 
 feature {NONE} -- Implementation

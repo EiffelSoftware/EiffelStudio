@@ -221,7 +221,7 @@ feature{NONE} -- Implementation
 
 			main_builder.set_up_accelerators
 
-			develop_window.window.focus_in_actions.extend(agent (develop_window.agents).on_focus)
+			develop_window.register_action (develop_window.window.focus_in_actions, agent (develop_window.agents).on_focus)
 
 				-- Create the toolbars.
 			toolbar_builder.build_toolbars_area
@@ -249,7 +249,7 @@ feature{NONE} -- Implementation
 
 			develop_window.set_initialized_for_builder (True)
 			develop_window.set_is_destroying (False)
-			develop_window.customized_tool_manager.change_actions.extend (develop_window.agents.on_customized_tools_changed_agent)
+			develop_window.agents.register_action (develop_window.customized_tool_manager.change_actions, develop_window.agents.on_customized_tools_changed_agent)
 		end
 
 	main_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER

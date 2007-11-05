@@ -25,24 +25,6 @@ inherit
 			default_create
 		end
 
-	EB_RECYCLER
-		rename
-			destroy as internal_recycle
-		undefine
-			is_equal, copy, default_create
-		redefine
-			internal_recycle
-		select
-			internal_recycle
-		end
-
-	EB_RECYCLER
-		rename
-			destroy as discard_buttons
-		undefine
-			is_equal, copy, default_create
-		end
-
 	EB_RECYCLABLE
 		undefine
 			is_equal, copy, default_create
@@ -190,7 +172,15 @@ feature -- Conversion
 			end
 
 				-- Discard current toolbar.
-			discard_buttons
+			widget.do_all (agent (a_item: EV_WIDGET)
+				local
+					l_recyclable: EB_RECYCLABLE
+				do
+					l_recyclable ?= a_item
+					if l_recyclable /= Void then
+						l_recyclable.recycle
+					end
+				end)
 			widget.wipe_out
 
 				-- Create a new toolbar.
@@ -203,7 +193,7 @@ feature -- Conversion
 				curitem := item.new_toolbar_item (is_text_displayed or else is_text_important)
 				recyclable_item ?= curitem
 				if recyclable_item /= Void then
-					add_recyclable (recyclable_item)
+					auto_recycle (recyclable_item)
 				end
 				cv_sep ?= item
 				if cv_sep /= Void then
@@ -270,11 +260,12 @@ feature {NONE} -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			Precursor {EB_RECYCLER}
 			if widget /= Void then
 				widget.destroy
 				widget := Void
 			end
+		ensure then
+			widget_attached: widget = Void
 		end
 
 indexing

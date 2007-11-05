@@ -95,7 +95,7 @@ feature -- Observer Change
 				observers.prune_all (a_observer)
 			end
 		ensure
-			a_observer_not_exist: not observers.has (a_observer)
+			a_observer_not_exist: observers /= Void implies not observers.has (a_observer)
 		end
 
 feature {NONE}-- Observers

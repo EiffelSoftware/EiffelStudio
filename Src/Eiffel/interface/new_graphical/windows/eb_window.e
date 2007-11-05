@@ -42,11 +42,9 @@ inherit
 			{NONE} all
 		end
 
-	EB_RECYCLER
-		rename
-			destroy as destroy_recyclable_items
-		export
-			{NONE} all
+	EB_RECYCLABLE
+		redefine
+			internal_detach_entities
 		end
 
 	EB_SHARED_DEBUGGER_MANAGER
@@ -69,6 +67,43 @@ feature {NONE} -- Initialization
 			-- Initialize commands.
 		do
 			create show_dynamic_lib_tool.make
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle
+			-- To be called when the button has became useless.
+		do
+			if window_menu /= Void then
+				window_manager.remove_observer (window_menu)
+			end
+			if edit_menu /= Void then
+				edit_menu.destroy
+			end
+			if file_menu /= Void then
+				file_menu.destroy
+			end
+			if help_menu /= Void then
+				help_menu.destroy
+			end
+			if window /= Void then
+				window.destroy
+			end
+		end
+
+	internal_detach_entities
+			-- Detaches objects from their container
+		do
+			Precursor {EB_RECYCLABLE}
+			window := Void
+			edit_menu := Void
+			help_menu := Void
+			file_menu := Void
+		ensure then
+			window_detached: window = Void
+			edit_menu_detached: edit_menu = Void
+			help_menu_detached: help_menu = Void
+			file_menu_detached: file_menu = Void
 		end
 
 feature -- Access
@@ -310,26 +345,8 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 	destroy_imp is
 			-- Destroy window.
 		do
-			if window_menu /= Void then
-				window_manager.remove_observer (window_menu)
-			end
-			destroy_recyclable_items
-			if edit_menu /= Void then
-				edit_menu.destroy
-				edit_menu := Void
-			end
-			if file_menu /= Void then
-				file_menu.destroy
-				file_menu := Void
-			end
-			if help_menu /= Void then
-				help_menu.destroy
-				help_menu := Void
-			end
-
+			recycle
 			destroyed := True
-			window.destroy
-			window := Void
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Controls & widgets
@@ -364,7 +381,7 @@ feature {NONE} -- Menus initializations
 			file_menu.extend (menu_item)
 
 			command_menu_item := Exit_application_cmd.new_menu_item
-			add_recyclable (Command_menu_item)
+			auto_recycle (Command_menu_item)
 			file_menu.extend (command_menu_item)
 		ensure
 			file_menu_created: file_menu /= Void

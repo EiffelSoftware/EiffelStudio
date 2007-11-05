@@ -118,7 +118,7 @@ feature -- Query
 				l_data ?= l_menu_item.data
 				if l_data /= Void and then l_data.tool_id.is_equal (a_tool.title_for_pre) then
 					l_menu.remove
-					l_develop_window.recycle_item (l_data.menu_item)
+					l_develop_window.auto_recycle (l_data.menu_item)
 				else
 					l_menu.forth
 				end
@@ -351,7 +351,7 @@ feature {NONE} -- Context menu factory
 			-- Build context menu factory.
 		do
 			create context_menu_factory_internal.make (develop_window)
-			develop_window.add_recyclable (context_menu_factory_internal)
+			develop_window.auto_recycle (context_menu_factory_internal)
 		ensure
 			context_menu_factory_internal_not_void: context_menu_factory_internal /= Void
 		end

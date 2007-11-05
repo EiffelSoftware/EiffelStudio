@@ -11,13 +11,6 @@ class
 inherit
 	EB_RECYCLABLE
 
-	EB_RECYCLER
-		rename
-			destroy as internal_recycle
-		redefine
-			internal_recycle
-		end
-
 	EB_SHARED_PREFERENCES
 
 create
@@ -40,11 +33,11 @@ feature {NONE} -- Initialization
 			create cluster_display_list.make (max_size)
 			create feature_display_list.make (max_size)
 				-- Register the recyclable command
-			add_recyclable (back_command)
-			add_recyclable (forth_command)
+			auto_recycle (back_command)
+			auto_recycle (forth_command)
 
 				-- register itself as recyclable to parent
-			a_owner.add_recyclable (Current)
+			a_owner.auto_recycle (Current)
 		end
 
 feature -- Access
@@ -102,7 +95,7 @@ feature -- Access
 			-- recycled when Current will be recycled.
 		do
 			create Result.make (Current)
-			add_recyclable (Result)
+			auto_recycle (Result)
 		end
 
 feature -- Status report

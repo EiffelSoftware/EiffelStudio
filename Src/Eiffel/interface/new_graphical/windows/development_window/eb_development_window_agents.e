@@ -10,6 +10,9 @@ class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_PART
+		redefine
+			internal_detach_entities
+		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
 		redefine
@@ -26,6 +29,17 @@ inherit
 
 create
 	make
+
+feature {NONE} -- Clean up
+
+	internal_detach_entities is
+			-- Detaches objects from their container
+		do
+			Precursor {EB_DEVELOPMENT_WINDOW_PART}
+			on_customized_tools_changed_agent_internal := Void
+		ensure then
+			on_customized_tools_changed_agent_internal_detached: on_customized_tools_changed_agent_internal = Void
+		end
 
 feature -- Text observer Agents
 
@@ -329,6 +343,7 @@ feature -- Agents
 		do
 			l_tools := develop_window.tools
 			create l_main_builder.make (develop_window)
+			auto_recycle (l_main_builder)
 
 				-- Remove changed tools.
 			l_customized_tools := l_tools.customized_tools_from_tools (l_tools.customizable_tools_by_id (l_tools.customizable_tools, a_changed_tools, True))

@@ -52,7 +52,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_CONTEXT_MENU_HANDLER
 
 	ES_SHARED_PROMPT_PROVIDER
@@ -259,7 +259,7 @@ feature {NONE} -- Initialization
 			create l_view_points_combo
 			view_points_combo := l_view_points_combo
 			l_view_points_combo.disable_sensitive
-			l_view_points_combo.select_actions.extend (agent parent_widget.on_viewpoint_changed)
+			register_action (l_view_points_combo.select_actions, agent parent_widget.on_viewpoint_changed)
 			l_view_points_combo.disable_edit
 			l_view_points_combo.set_minimum_width (120)
 

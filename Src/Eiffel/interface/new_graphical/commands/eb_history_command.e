@@ -149,7 +149,7 @@ feature {NONE} -- Implementation / Observer pattern
 			if not observer_started then
 				history_manager.add_observer (Current)
 				observer_started := True
-				target.add_recyclable (Current)
+				target.auto_recycle (Current)
 			end
 		end
 

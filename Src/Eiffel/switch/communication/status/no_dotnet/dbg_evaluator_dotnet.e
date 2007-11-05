@@ -37,6 +37,10 @@ feature -- Access
 		do
 		end
 
+	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+		do
+		end
+
 	dump_value_at_address (addr: STRING): DUMP_VALUE is
 		do
 		end

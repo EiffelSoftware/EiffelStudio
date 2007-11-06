@@ -315,7 +315,7 @@ feature {NONE} -- Interface
 			g.set_pre_activation_action (agent pre_activate_cell)
 
 			g.set_configurable_target_menu_mode
-			g.set_configurable_target_menu_handler (agent context_menu_handler)
+			g.set_configurable_target_menu_handler (agent context_menu_handler (?, ?, ?, ?, g))
 		end
 
 	build_mini_toolbar_box is
@@ -410,10 +410,10 @@ feature {NONE} -- Interface
 			apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_grid: ES_OBJECTS_GRID ) is
 			-- Context menu handler
 		do
-			develop_window.menus.context_menu_factory.object_tool_menu (a_menu, a_target_list, a_source, a_pebble, Current)
+			develop_window.menus.context_menu_factory.object_tool_menu (a_menu, a_target_list, a_source, a_pebble, Current, a_grid)
 		end
 
 feature -- preference

@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 		do
 			l_dev_window := window_manager.last_focused_development_window
 			if l_dev_window /= Void then
-				l_dev_window.menus.context_menu_factory.object_viewer_browser_view_menu (a_menu, a_target_list, a_source, a_pebble)
+				l_dev_window.menus.context_menu_factory.object_viewer_browser_view_menu (a_menu, a_target_list, a_source, a_pebble, viewer)
 			end
 		end
 

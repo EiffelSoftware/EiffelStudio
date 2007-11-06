@@ -340,6 +340,9 @@ feature -- Accelerator, focus label and menu name
 	m_Complete_class_name: STRING_GENERAL is		do Result := locale.translation("Complete Class &Name")	end
 	m_Context_tool: STRING_GENERAL is			do Result := locale.translation("Conte&xt")	end
 	m_Copy: STRING_GENERAL is					do Result := locale.translation("&Copy%TCtrl+C")	end
+
+	m_Copy_cell_to_clipboard: STRING_GENERAL is					do Result := locale.translation("Copy Cell To Clipboard")	end
+	m_Copy_row_to_clipboard: STRING_GENERAL is					do Result := locale.translation("Copy Row To Clipboard")	end
 	f_Copy: STRING_GENERAL is					do Result := locale.translation("Copy (Ctrl+C)")	end
 	m_copy_of (a_string: STRING_GENERAL): STRING_GENERAL is
 		do

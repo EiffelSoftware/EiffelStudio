@@ -14,6 +14,8 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	EV_SHARED_APPLICATION
+
 	EB_RECYCLABLE
 
 	SHARED_BENCH_NAMES
@@ -369,7 +371,7 @@ feature -- Call stack menu
 
 feature -- Object tool, Object Viewer and Watch tool menus
 
-	object_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_objects_tool: ES_OBJECTS_TOOL_PANEL) is
+	object_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_objects_tool: ES_OBJECTS_TOOL_PANEL; a_grid: ES_OBJECTS_GRID) is
 			-- Object tool menu
 		local
 			l_object_stone: OBJECT_STONE
@@ -395,10 +397,13 @@ feature -- Object tool, Object Viewer and Watch tool menus
 						a_menu.extend (m)
 					end
 				end
+				if a_grid /= Void then
+					extend_objects_grid_menu (a_menu, a_grid)
+				end
 			end
 		end
 
-	watch_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL_PANEL) is
+	watch_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_watch_tool: ES_WATCH_TOOL_PANEL; a_grid: ES_OBJECTS_GRID) is
 			-- Watch tool menu
 		local
 			l_object_stone: OBJECT_STONE
@@ -420,16 +425,20 @@ feature -- Object tool, Object Viewer and Watch tool menus
 					if l_row /= Void then
 						if not l_sep_added then
 							extend_separator (a_menu)
+							l_sep_added := True
 						end
 						a_menu.extend (new_menu_item (names.m_remove))
 						a_menu.last.select_actions.extend (agent a_watch_tool.remove_expression_row (l_row))
 					end
 				end
 				extend_property_menu (a_menu, a_pebble)
+				if a_grid /= Void then
+					extend_objects_grid_menu (a_menu, a_grid)
+				end
 			end
 		end
 
-	object_viewer_browser_view_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	object_viewer_browser_view_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_grid: ES_OBJECTS_GRID) is
 			-- Object viewer browser view menu.
 		do
 			if menu_displayable (a_pebble) then
@@ -437,8 +446,60 @@ feature -- Object tool, Object Viewer and Watch tool menus
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
+				if a_grid /= Void then
+					extend_objects_grid_menu (a_menu, a_grid)
+				end
 			end
 		end
+
+	extend_objects_grid_menu (a_menu: EV_MENU; a_grid: ES_OBJECTS_GRID) is
+			-- Objects grid specific menu
+		local
+			l_cell: EV_GRID_ITEM
+			l_label: EV_GRID_LABEL_ITEM
+			l_sep_added: BOOLEAN
+			s: STRING_GENERAL
+			l_row: ES_OBJECTS_GRID_ROW
+			l_line: ES_OBJECTS_GRID_LINE
+		do
+			l_cell := a_grid.last_picked_item
+			l_row ?= l_cell.row
+			if l_row /= Void then
+				l_line := l_row.associated_line
+				if l_line /= Void then
+					s := l_line.text_data_for_clipboard
+					if s /= Void and then not s.is_empty then
+						if not l_sep_added then
+							extend_separator (a_menu)
+							l_sep_added := True
+						end
+						a_menu.extend (new_menu_item (names.m_Copy_row_to_clipboard))
+						a_menu.last.select_actions.extend (agent copy_to_clipboard (s))
+					end
+				end
+			end
+			l_label ?= l_cell
+			if l_label /= Void then
+				s := l_label.text
+				if not s.is_empty then
+					if not l_sep_added then
+						extend_separator (a_menu)
+						l_sep_added := True
+					end
+					a_menu.extend (new_menu_item (names.m_Copy_cell_to_clipboard))
+					a_menu.last.select_actions.extend (agent copy_to_clipboard (s))
+				end
+			end
+		end
+
+	copy_to_clipboard (t: STRING_GENERAL) is
+			-- Copy `t' to clipboard
+		do
+			if t /= Void then
+				ev_application.clipboard.set_text (t)
+			end
+		end
+
 
 feature -- Search scope menu
 

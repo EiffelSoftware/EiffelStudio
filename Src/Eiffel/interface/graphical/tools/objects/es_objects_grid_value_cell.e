@@ -42,8 +42,8 @@ feature -- Query
 			-- Setup the actions sequences when the item is shown.
 		do
 			Precursor
-			text_field.focus_out_actions.wipe_out
-			text_field.focus_out_actions.extend (agent focus_lost)
+			text_label.focus_out_actions.wipe_out
+			text_label.focus_out_actions.extend (agent focus_lost)
 			if button /= Void then
 				button.focus_out_actions.extend (agent focus_lost)
 				button.select_actions.extend (button_action)
@@ -59,11 +59,11 @@ feature -- Query
 		do
 			Precursor (popup_window)
 			if button_action /= Void then
-				h := text_field.height
+				h := text_label.height
 --				h := popup_window.height
-				popup_window.prune_all (text_field)
+				popup_window.prune_all (text_label)
 				create hb
-				hb.extend (text_field)
+				hb.extend (text_label)
 				create button
 				button.set_pixmap (Mini_pixmaps.debugger_expand_info_icon)
 				hb.extend (button)
@@ -121,7 +121,7 @@ feature {NONE} -- Impl
 		require
 			is_activated
 		do
-			Result := text_field.has_focus or (button /= Void and then button.has_focus)
+			Result := text_label.has_focus or (button /= Void and then button.has_focus)
 		end
 
 indexing

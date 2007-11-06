@@ -295,8 +295,9 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_3: current_degree = 3
 		do
-			processed := processed + 1 -- Used when error occurs
+			total_number := nbr_to_go + processed
 			display_degree (degree_message(3), nbr_to_go, a_class.name)
+			processed := processed + 1
 		end
 
 	put_degree_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is

@@ -16,6 +16,6 @@ define	CODE	"b := a"
 copy_sub	test1.e	$CLUSTER test1.e
 
 compile_melted
-compile_result	validity_error	TEST1 VJAR
+compile_result	validity_error	TEST2 VJAR
 
 test_end

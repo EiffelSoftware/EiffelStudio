@@ -41,21 +41,12 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_class_c: CLASS_C; a_feature_as: FEATURE_AS) is
 			-- Initialization
-			-- Set `class_c' with `a_class_c'.
 		do
-			context_class_c := a_class_c
-			context_feature_as := a_feature_as
-			if a_feature_as /= Void then
-				current_feature_as := [a_feature_as, a_feature_as.feature_names.first]
-			else
-				current_feature_as := Void
-			end
-			completion_possibilities := Void
-			class_completion_possibilities := Void
+			set_context (a_class_c, a_feature_as)
 		end
 
 feature -- Access
@@ -79,6 +70,22 @@ feature -- Access
 
 	dynamic_context_class_c_function: FUNCTION [ANY, TUPLE, CLASS_C]
 	dynamic_context_feature_as_function: FUNCTION [ANY, TUPLE, FEATURE_AS]
+
+feature -- Change
+
+	set_context (a_class_c: CLASS_C; a_feature_as: FEATURE_AS) is
+			-- Set `context_class_c' with `a_class_c'.
+		do
+			context_class_c := a_class_c
+			context_feature_as := a_feature_as
+			if a_feature_as /= Void then
+				current_feature_as := [a_feature_as, a_feature_as.feature_names.first]
+			else
+				current_feature_as := Void
+			end
+			completion_possibilities := Void
+			class_completion_possibilities := Void
+		end
 
 feature -- Basic operation
 

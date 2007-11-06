@@ -542,7 +542,7 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 						if ev_application.ctrl_pressed then
 							add_object (ost, oname)
 						else
-							create dlg.make_with_named_object (ost.object_address, oname)
+							create dlg.make_with_named_object (ost.object_address, oname, ost.dynamic_class)
 						end
 					else
 						cst ?= s

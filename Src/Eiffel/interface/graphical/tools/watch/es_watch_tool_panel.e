@@ -854,7 +854,7 @@ feature {NONE} -- Event handling
 					if sel_index > 1 and sel_index = new_expression_row.index then
 						sel_index := sel_index - 1
 					end
-					watches_grid.row (sel_index).enable_select
+					watches_grid.row (sel_index).parent_row_root.enable_select
 				else
 					on_row_deselected (Void)
 				end

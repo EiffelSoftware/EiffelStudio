@@ -14,4 +14,8 @@ copy_raw	test1_rev1.e $CLUSTER test1.e
 resume_compile
 compile_result	ok
 
+execute_work	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
 test_end

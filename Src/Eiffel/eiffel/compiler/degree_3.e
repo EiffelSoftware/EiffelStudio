@@ -38,16 +38,15 @@ feature -- Processing
 			-- Process Degree 3.
 			-- Byte code production and type checking.
 		local
-			i, nb, j: INTEGER
+			i, nb: INTEGER
 			classes: ARRAY [CLASS_C]
-			a_class_c: CLASS_C
-			a_class: EIFFEL_CLASS_C
+			l_class_c: CLASS_C
+			l_class: EIFFEL_CLASS_C
 			l_conv_checker: CONVERTIBILITY_CHECKER
 			l_error_level: NATURAL_32
 		do
-			nb := count
 			ignored_classes.wipe_out
-			Degree_output.put_start_degree (Degree_number, nb)
+			Degree_output.put_start_degree (Degree_number, count)
 			classes := System.classes.sorted_classes
 
 				-- Check convertibility validity, there should be only one way
@@ -56,37 +55,47 @@ feature -- Processing
 			l_conv_checker.system_validity_checking (classes)
 			Error_handler.checksum
 
-			from i := 1 until nb = 0 loop
-				a_class_c := classes.item (i)
+			from
+				i := classes.lower
+				nb := classes.upper
+			until
+				i > nb
+			loop
+				l_class_c := classes.item (i)
 
-				if a_class_c /= Void and then a_class_c.degree_3_needed then
+				if l_class_c /= Void and then l_class_c.degree_3_needed then
 						-- only normal eiffel classes have a degree 3
 					check
-						eiffel_class_c: a_class_c.is_eiffel_class_c
+						eiffel_class_c: l_class_c.is_eiffel_class_c
 					end
-					a_class := a_class_c.eiffel_class_c
+					l_class := l_class_c.eiffel_class_c
 
-					Degree_output.put_degree_3 (a_class, nb)
-					System.set_current_class (a_class)
+					Degree_output.put_degree_3 (l_class, count)
+					System.set_current_class (l_class)
 					l_error_level := error_handler.error_level
-					process_class (a_class)
+					process_class (l_class)
+					if l_class.is_full_class_checking then
+							-- We need to add the descendant classes for checking
+							-- to ensure code is still valid.
+						l_class.direct_descendants.do_all (agent (a_class: CLASS_C)
+							do
+								insert_class (a_class)
+							end)
+					end
 						-- If class was in `ignored_classes', then we still need
 						-- to recheck it at the next compilation as otherwise we
 						-- would not typecheck inherited features after the ancestor
 						-- class fixed the error.
-					if not ignored_classes.has (a_class) then
+					if not ignored_classes.has (l_class) then
 						if error_handler.error_level = l_error_level then
 								-- No errors we can safely remove it from degree 3
-							a_class.remove_from_degree_3
+							l_class.remove_from_degree_3
 							count := count - 1
 						else
-							ignored_classes.put (a_class)
-							remove_descendant_classes_from_processing (a_class)
+							ignored_classes.put (l_class)
+							remove_descendant_classes_from_processing (l_class)
 						end
 					end
-					nb := nb - 1
-
-					j := j + 1
 				end
 				i := i + 1
 			end

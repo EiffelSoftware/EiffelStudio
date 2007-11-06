@@ -361,19 +361,20 @@ test	generic-creation-constraint			valid216 tcf fail validity
 test	precursor-once						valid217 tcf fail validity
 
 -- Multiple error reporting tests
-test	multi-error-degree-4	multierr001 tcf pass errors
-test	degree-5-forget-error	multierr002 tcf pass errors
-test	degree-5-infinite-loop	multierr003 tcf pass errors
-test	multi-invalid-signature	multierr004 tcf pass errors
-test	error-in-manifest-array-tuple	multierr005 tcf pass errors
-test	error-in-elsif			multierr006 tcf pass errors
-test	failing-to-recompile-descendant	multierr007 tcf pass errors
-test	recompile-descendant-code	multierr008 tcf pass errors
-test	recompile-assertion-descendant-code	multierr009 tcf pass errors
+test	multi-error-degree-4	multierr001 tcf pass multi-errors
+test	degree-5-forget-error	multierr002 tcf pass multi-errors
+test	degree-5-infinite-loop	multierr003 tcf pass multi-errors
+test	multi-invalid-signature	multierr004 tcf pass multi-errors
+test	error-in-manifest-array-tuple	multierr005 tcf pass multi-errors
+test	error-in-elsif			multierr006 tcf pass multi-errors
+test	failing-to-recompile-descendant	multierr007 tcf pass multi-errors
+test	recompile-descendant-code	multierr008 tcf pass multi-errors
+test	recompile-assertion-descendant-code	multierr009 tcf pass multi-errors
 
 -- System validity tests
-test	svalid-infix-with-conversion	svalid001 tcf pass system validity
-test	svalid-rename-constant-inspect	svalid002 tcf pass system validity
+test	svalid-infix-with-conversion	svalid001 tcf pass system-validity
+test	svalid-rename-constant-inspect	svalid002 tcf pass system-validity
+test	svalid-incremental-check		svalid003 tcf pass system-validity
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

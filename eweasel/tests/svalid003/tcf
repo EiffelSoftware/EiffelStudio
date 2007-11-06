@@ -1,0 +1,21 @@
+test_name	svalid-incremental-check
+test_description When full check is enabled, one has to recheck code in descendant whener it is modified.
+
+define	CODE	""
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_sub	test1.e	$CLUSTER test1.e
+copy_raw	test2.e	$CLUSTER test2.e
+copy_raw	a.e	$CLUSTER a.e
+copy_raw	b.e	$CLUSTER b.e
+
+compile_melted
+compile_result ok
+
+define	CODE	"b := a"
+copy_sub	test1.e	$CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error	TEST1 VJAR
+
+test_end

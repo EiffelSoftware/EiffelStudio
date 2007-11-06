@@ -64,7 +64,6 @@ DPFLAGS  = $(CINCLUDES) $(CDEFINES)
 CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
 
 # define vms specific symbols for compiling, etc.
-#include eiffelc:makeinc.vms
 include EIFFEL_SRC:[C.ipc]Makeinc.VMS	    # use ipc common definitions
 
 # Files used to build the daemon
@@ -199,7 +198,7 @@ ewb_proto.obj : ../../run-time/eif_struct.h
 ewb_proto.obj : ../../idrs/idrs.h
 ewb_proto.obj : ../shared/rqst_idrs.h
 ewb_proto.obj : ../../idrs/idrs.h
-ewb_proto.obj : proto.h
+ewb_proto.obj : eproto.h
 eproto.obj : eproto.c
 eproto.obj : ../../eif_config.h
 eproto.obj : ../../eif_portable.h
@@ -222,7 +221,7 @@ eproto.obj : ../../eif_portable.h
 eproto.obj : ../../run-time/eif_interp.h
 eproto.obj : ../../eif_portable.h
 eproto.obj : ../../run-time/eif_struct.h
-eproto.obj : proto.h
+eproto.obj : eproto.h
 eproto.obj : ../shared/com.h
 eproto.obj : ../shared/stream.h
 eproto.obj : ../shared/ewbio.h
@@ -250,7 +249,7 @@ eif_in.obj : ../../eif_portable.h
 eif_in.obj : ../../run-time/eif_interp.h
 eif_in.obj : ../../eif_portable.h
 eif_in.obj : ../../run-time/eif_struct.h
-eif_in.obj : proto.h
+eif_in.obj : eproto.h
 eif_in.obj : ../shared/com.h
 eif_in.obj : ../shared/stream.h
 eif_in.obj : ../shared/ewbio.h
@@ -294,7 +293,7 @@ eif_out.obj : ../../eif_portable.h
 eif_out.obj : ../../run-time/eif_interp.h
 eif_out.obj : ../../eif_portable.h
 eif_out.obj : ../../run-time/eif_struct.h
-eif_out.obj : proto.h
+eif_out.obj : eproto.h
 eif_out.obj : ../shared/com.h
 eif_out.obj : ../shared/stream.h
 eif_out.obj : ../shared/ewbio.h
@@ -330,7 +329,7 @@ ewb_init.obj : ../../eif_confmagic.h
 ewb_init.obj : ../shared/eif_logfile.h
 ewb_init.obj : ../shared/stream.h
 ewb_init.obj : ../shared/ewbio.h
-ewb_init.obj : proto.h
+ewb_init.obj : eproto.h
 ewb_init.obj : ../shared/transfer.h
 new.obj : new.c
 ewb_dumped.obj : ewb_dumped.c
@@ -374,7 +373,7 @@ ewb_dumped.obj : eif_io.h
 ewb_dumped.obj : ../../eif_config.h
 ewb_dumped.obj : ../../eif_portable.h
 ewb_dumped.obj : ../shared/request.h
-ewb_dumped.obj : proto.h
+ewb_dumped.obj : eproto.h
 ewb_dumped.obj : ../shared/com.h
 ewb_dumped.obj : ../shared/stream.h
 ewb_dumped.obj : ../shared/ewbio.h

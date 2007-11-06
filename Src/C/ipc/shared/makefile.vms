@@ -101,8 +101,7 @@ local_realclean ::
 LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
 $(LISTINGS) : $(EXTRA_DEPENDENCIES)
 listings : $(LISTINGS)
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
-
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
 #LOBJ = ipcvms.obj com.obj
@@ -114,8 +113,8 @@ ipc.olb : $(LOBJ)
 #	write sys$$output "$(LOCAL_MAKEFILE): $@: $$? = $?"
 #	write sys$$output "$(LOCAL_MAKEFILE): $@: $$^ = $^"
 	libr/create/insert $@ $^
-	@-purge/nolog *.obj
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+	-purge/nolog *.obj
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
 #depend :: ../../mkdep
@@ -340,4 +339,3 @@ rqst_idrs.obj : ../../run-time/eif_struct.h
 rqst_idrs.obj : ../../idrs/idrs.h
 rqst_idrs.obj : rqst_idrs.h
 rqst_idrs.obj : ../../idrs/idrs.h
-

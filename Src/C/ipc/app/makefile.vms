@@ -1,6 +1,6 @@
 ########################################################################
 # Makefile.VMS generated from Makefile.SH on Fri Nov 18 08:53:49 PST 1994
-#   .../C/ipc/app/makefile
+#   .../C/ipc/app/Makefile.VMS
 # $Id$
 
 SHELL = /bin/sh
@@ -26,6 +26,7 @@ SED = /bin/sed
 # Automatically generated parameters -- do not edit
 
 SOURCES =  $(LIB)
+OBJECTS =  $(LOBJ)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -51,38 +52,16 @@ all :: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
+CDEFINES = WORKBENCH,EIF_IPC
+CINCLUDES = [C.ipc.shared],[C.run-time],[C.idrs],[C.run-time.include]
+
 # define vms specific symbols for compiling, etc.
-#include $(TOP)makeinc.vms
-include [-]makeinc.vms		# ipc common definitions
+include EIFFEL_SRC:[C.IPC]Makeinc.VMS
 
-# to compile for debugging, say	    make <target> "DEBUG_CFLAGS=/debug/noopt"
-# to compile for distribution, say  make <target> "DEBUG_CFLAGS="
-#                              or   make <target> "DEBUG_CFLAGS=/opt"
+#DPFLAGS = $(CINCLUDES)$(CDEFINES)
+#CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
 
-#DPFLAGS = /Inc=($(TOP),$(LIBDIR),$(LIBRUN),$(LIBIDR))/prefix=all/names=as_is
-#CFLAGS = $(DPFLAGS) /Def=WORKBENCH $(DEBUG_CFLAGS)
-#LDFLAGS = $(LIBARCH)
-#LDFLAGS = $(LIBDIR)$(LIBNAME)
-CINCLUDES = /INCL=($(TOP),$(LIBDIR),[--.run-time],[--.run-time.include],$(LIBIDR))
-CINCLUDES = /INCL=($(DECC_INCLUDES),$(LIBDIR),[--.run-time],[--.run-time.include],$(LIBIDR))
-LOCAL_CDEFINES = WORKBENCH,EIF_IPC
-ifneq ($(LOCAL_CDEFINES),)
-ifneq ($(IPC_CDEFINES),)
-CDEFINES = /DEF=($(LOCAL_CDEFINES),$(IPC_CDEFINES))
-else
-CDEFINES = /DEF=($(LOCAL_CDEFINES))
-endif
-else
-ifneq ($(IPC_CDEFINES),)
-CDEFINES = /DEF=($(IPC_CDEFINES))
-else
-#CDEFINES = 
-endif
-endif
-
-DPFLAGS = $(CINCLUDES)$(CDEFINES)
-CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
-
+LOCAL_DEPENDENCIES = $(MAKEFILE_DEPENDENCIES) $(TOP)/eif_config.h $(TOP)/eif_portable.h $(TOP)/eif_confmagic.h
 
 # Files used to build the application
 LIB = app_listen.c app_proto.c app_server.c
@@ -103,8 +82,7 @@ OBJ = $(patsubst %.c,%.obj,$(LIB))
 #OBJ_CS = $(patsubst %.c,%.obj_cs,$(LIB))
 LOBJ = $(OBJ)
 
-#$(OBJ) $(LOBJ) $(OBJ_CS) : $(LOCAL_MAKEFILE)   # make objects depend on this makefile 
-$(OBJ) $(LOBJ) : $(LOCAL_MAKEFILE)   # make objects depend on this makefile 
+$(OBJECTS) : $(EXTRA_DEPENDENCIES)
 
 all :: network.olb
 
@@ -160,7 +138,7 @@ $(LIBDIR)$(LIBNAME): .FORCE
 	\@[c]make.vms $(LIBDIR)$(LIBNAME)
 	@echo "Continuing in $(CURRENT)..."
 
-network.olb:: $(LIBDIR)$(LIBNAME)
+network.olb :: $(LIBDIR)$(LIBNAME)
 
 $(LIBIDR)$(LIBIDRNAME): .FORCE
 	@echo "Checking $(LIBIDRNAME) in $(LIBIDR)..."
@@ -170,7 +148,7 @@ $(LIBIDR)$(LIBIDRNAME): .FORCE
 	@\@[c]make.vms $(LIBIDR)$(LIBIDRNAME)
 	@echo "Continuing in $(CURRENT)..."
 
-network.olb:: $(LIBIDR)$(LIBIDRNAME)
+network.olb :: $(LIBIDR)$(LIBIDRNAME)
 
 # target for local objects
 local :: $(LOBJ)
@@ -180,13 +158,13 @@ local_realclean::
 	-delete/log *.olb;*
 
 #network.olb : $(LOBJ)
-network.olb : $(LOBJ) $(LIBARCH) $(LIBIDRARCH)
+network.olb :: $(LOBJ) $(LIBARCH) $(LIBIDRARCH)
 #	$(RM) $@
 #	$(LD) $(JLKFLAGS) -r $(LOBJ) -o $@ $(LIBARCH) $(LIBIDRARCH)
 #	libr/create $@  $(LOBJC), $(LIBDIR)*.OBJ, $(LIBIDR)*.OBJ
 #	libr/create $@  $^, $(LIBDIR)*.obj, $(LIBIDR)*.obj
 	libr/create $@  *.obj
-	libr/insert $@  $(LIBDIR)*.obj, $(LIBIDR)*.obj
+#	libr/insert $@  $(LIBDIR)*.obj, $(LIBIDR)*.obj
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit
@@ -252,7 +230,7 @@ app_listen.obj : app_listen.c
 app_listen.obj : ../../eif_config.h
 app_listen.obj : ../../eif_portable.h
 app_listen.obj : ../../eif_confmagic.h
-app_listen.obj : proto.h
+app_listen.obj : app_proto.h
 app_listen.obj : ../shared/select.h
 app_listen.obj : ../shared/ewbio.h
 app_listen.obj : ../shared/stream.h
@@ -324,7 +302,7 @@ app_server.obj : app_server.c
 app_server.obj : ../../eif_config.h
 app_server.obj : ../../eif_portable.h
 app_server.obj : ../../eif_confmagic.h
-app_server.obj : proto.h
+app_server.obj : app_proto.h
 app_server.obj : ../shared/ewbio.h
 app_server.obj : ../shared/stream.h
 app_server.obj : ../shared/transfer.h

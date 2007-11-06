@@ -22,6 +22,12 @@ feature -- Parent objects grid
 			Result ?= parent
 		end
 
+	associated_line: ES_OBJECTS_GRID_LINE is
+			-- Associated line if exists.
+		do
+			Result ?= data
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

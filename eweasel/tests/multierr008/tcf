@@ -16,6 +16,21 @@ compile_result ok
 
 execute_work NONE exec_output1
 execute_result	ok
-compare	exec_output1 output
+compare	exec_output1 output1
+
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2_rev1.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST1 VEEN
+
+copy_raw	test1_rev1.e $CLUSTER test1.e
+
+resume_compile
+compile_result ok
+
+execute_work NONE exec_output2
+execute_result	ok
+compare	exec_output2 output2
 
 test_end

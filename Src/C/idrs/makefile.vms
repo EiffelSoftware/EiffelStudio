@@ -61,18 +61,17 @@ MT_LOBJ = $(patsubst %.c,MT%.obj,$(LSRC))
 # force objects deopend on makefiles et. al.
 $(OBJECTS) : $(EXTRA_DEPENDENCIES)
 
-LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
+LISTINGS = $(patsubst %.obj,%.lis,$(OBJECTS))
 $(LISTINGS) : $(EXTRA_DEPENDENCIES)
 listings : $(LISTINGS)
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
 
-#LIBS = idr.olb mtidr.olb
-
+LIBS = idr.olb mtidr.olb
 #all :: $(LIBS)
+
 all :: $(OBJECTS)
-#	write sys$$output "Makefile = $(MAKEFILES), MAKEFLAGS = $(MAKEFLAGS)"
 	-purge/nolog *.*obj	! all
 	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
@@ -82,14 +81,14 @@ local_realclean ::
 #all :: idr.olb
 idr.olb : $(LOBJ)
 	libr/create/insert $@ $^
-#	@-purge/nolog *.*obj
-#	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+#	-purge/nolog *.*obj
+#	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 #all :: idr_MT.olb
 mtidr.olb : $(MT_LOBJ)
 	libr/create/insert $@ $^
-#	@-purge/nolog *.*obj
-#	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+#	-purge/nolog *.*obj
+#	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
 foo :

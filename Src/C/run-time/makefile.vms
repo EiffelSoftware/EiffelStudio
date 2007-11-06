@@ -92,8 +92,8 @@ LSRC = malloc.c garcol.c local.c except.c store.c retrieve.c \
 
 OTHER = main.c except.c
 
+# these files need to be compiled with -DWORKBENCH
 WADD = debug.c interp.c update.c wbench.c
-
 
 
 
@@ -326,9 +326,12 @@ $(VMS_OBJ) : $(EXTRA_DEPENDENCIES)
 $(LOBJ) $(MT_LOBJ) : $(EXTRA_DEPENDENCIES)
 $(LOBJ_EXTRA) $(MT_LOBJ_EXTRA) : $(EXTRA_DEPENDENCIES)
 
+all ::
+	show logical eiffel_src,ise_eiffel,ise_library,ise_platform
+	show default
+
 # ancillary targets; need to be created before any compilation is done
 all :: ancillary
-	show default
 
 ancillary : eif_size.h
 

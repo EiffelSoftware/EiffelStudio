@@ -1,6 +1,7 @@
 ########################################################################
 # Makefile generated from Makefile.SH on Fri Nov 18 08:54:49 PST 1994
 #   .../C/plat/makefile.vms
+# $Id$
 
 SHELL = /bin/sh
 JMAKE = jmake
@@ -93,8 +94,8 @@ local_realclean::
 $(THISLIB) : $(LOBJ)
 #	libr/create $@ $(LOBJ)
 	libr/create $@ $^
-	@purge/nolog *.*obj*
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+	-purge/nolog *.*obj*
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
 depend:: ../mkdep

@@ -121,8 +121,8 @@ mtcompiler.olb : $(MT_FOBJ)
 
 $(WKLIB) : $(WOBJ)
 	libr/create $@ $^
-	@-purge/nolog $@,*.obj*
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+	-purge/nolog $@,*.obj*
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 .SUFFIXES : .obj_wk
 

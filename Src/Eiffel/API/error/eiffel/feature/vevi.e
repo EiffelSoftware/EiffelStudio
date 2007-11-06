@@ -10,7 +10,8 @@ class VEVI
 inherit
 	FEATURE_ERROR
 		redefine
-			build_explain
+			build_explain,
+			print_single_line_error_message
 		end
 
 create
@@ -78,6 +79,23 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			Precursor (a_text_formatter)
+			append_variable_name (a_text_formatter)
+			a_text_formatter.add_new_line
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor (a_text_formatter)
+			a_text_formatter.add (" ")
+			append_variable_name (a_text_formatter)
+		end
+
+	append_variable_name (a_text_formatter: TEXT_FORMATTER)
+			-- Append associated variable name to `a_text_formatter'.
+		do
 			if attribute_variable /= Void then
 				a_text_formatter.add ("Attribute: ")
 				attribute_variable.append_signature (a_text_formatter)
@@ -90,7 +108,6 @@ feature -- Output
 				a_text_formatter.add ("Variable: ")
 				a_text_formatter.process_keyword_text ("Result", Void)
 			end
-			a_text_formatter.add_new_line
 		end
 
 indexing

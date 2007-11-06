@@ -317,7 +317,7 @@ Class_declaration:
 				else
 					root_node := new_class_description ($4, temp_string_as1,
 						is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
-						$1, $15, $5, $8, $10, $11, $12, $14, suppliers, temp_string_as2, $16)
+						$1, $15, $5, $8, Void, $10, $11, $12, $14, suppliers, temp_string_as2, $16)
 					if root_node /= Void then
 						root_node.set_text_positions (
 							formal_generics_end_position,
@@ -910,14 +910,14 @@ Inheritance: -- Empty
 				--- $$ := Void
 				$$ := ast_factory.new_eiffel_list_parent_as (0)
 				if $$ /= Void then
-					$$.set_inherit_keyword ($1)
+					$$.set_inheritance_tokens ($1, Void, Void, Void)
 				end
 			}
 	|	TE_INHERIT Add_counter Parent_list Remove_counter
 			{
 				$$ := $3
 				if $$ /= Void then
-					$$.set_inherit_keyword ($1)
+					$$.set_inheritance_tokens ($1, Void, Void, Void)
 				end				
 			}
 	;
@@ -1239,9 +1239,9 @@ Routine:
 					temp_keyword_as := Void
 				end
 				if $7 /= Void then
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, $7.first)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, $7.second, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, $7.first, Void)
 				else
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, Void)					
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $4, $5, $6, Void, $8, once_manifest_string_count, fbody_pos, temp_keyword_as, Void, Void)
 				end
 				once_manifest_string_count := 0
 			}
@@ -2064,7 +2064,7 @@ Class_invariant: -- Empty
 		Assertion
 			{
 				set_id_level (Normal_level)
-				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_count, $1)
+				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_count, $1, Void)
 				once_manifest_string_count := 0
 			}
 	;

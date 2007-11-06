@@ -306,7 +306,10 @@ feature -- Graphical changes
 					end
 					if l_class_c /= Void then
 						create l_provider.make (l_class_c, l_feature_as)
-						if expression = Void or else expression.context_class = Void then
+						if
+							expression = Void or else
+							expression.context_class = Void
+						then
 							l_provider.set_dynamic_context_functions (
 											agent eb_debugger_manager.current_debugging_class_c,
 											agent eb_debugger_manager.current_debugging_feature_as)

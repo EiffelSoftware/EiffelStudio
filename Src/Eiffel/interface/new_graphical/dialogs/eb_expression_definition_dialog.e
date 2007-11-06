@@ -79,11 +79,6 @@ feature {NONE} -- Initialization
 			disable_all
 		end
 
-	stick_with_current_object: BOOLEAN
-			-- Do we stick to object mode ?
-			-- i.e: disable other context/class mode
-			-- and disable address editing
-
 	make_with_object (oa: STRING) is
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
@@ -127,16 +122,18 @@ feature {NONE} -- Initialization
 			expression_field.set_text (a_exp)
 		end
 
-	make_with_named_object (oa: STRING; on: STRING_32) is
+	make_with_named_object (oa: STRING; on: STRING_32; ac: CLASS_C) is
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
-			-- `on' is a name for this object
+			-- `on' is a name for this object.
+			-- `ac' is the dynamic type of the object.
 		require
 			application_stopped: Debugger_manager.safe_application_is_stopped
 			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
 			stick_with_current_object := True
+			on_object_context_class := ac
 			make
 			on_object_radio.enable_select
 			address_field.set_text (oa)
@@ -369,7 +366,7 @@ feature {NONE} -- Graphical initialization and changes
 			end
 		end
 
-feature -- Access
+feature -- Change
 
 	set_edit_expression_title is
 			-- Set Edit expression title
@@ -382,6 +379,16 @@ feature -- Access
 		do
 			dialog.set_title (Interface_names.t_New_expression)
 		end
+
+feature -- Property
+
+	stick_with_current_object: BOOLEAN
+			-- Do we stick to object mode ?
+			-- i.e: disable other context/class mode
+			-- and disable address editing
+
+	on_object_context_class: CLASS_C
+			-- Dynamic type related to object in `on_object' mode.
 
 	callback: PROCEDURE [ANY, TUPLE]
 			-- Callback that should be called after the dialog is closed.
@@ -692,9 +699,17 @@ feature {NONE} -- Code completion.
 			class_field_attached: class_field /= Void
 		do
 			create expression_field_provider.make (Void, Void)
-			expression_field_provider.set_dynamic_context_functions (
-											agent eb_debugger_manager.current_debugging_class_c,
-											agent eb_debugger_manager.current_debugging_feature_as)
+			if
+				on_object_radio.is_selected and then
+				on_object_context_class /= Void
+			then
+				expression_field_provider.set_context (on_object_context_class, Void)
+			else
+				expression_field_provider.set_dynamic_context_functions (
+						agent eb_debugger_manager.current_debugging_class_c,
+						agent eb_debugger_manager.current_debugging_feature_as
+					)
+			end
 
 			expression_field_provider.set_code_completable (expression_field)
 			expression_field.set_completion_possibilities_provider (expression_field_provider)

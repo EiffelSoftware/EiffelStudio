@@ -14,6 +14,7 @@ feature
 
 	make is
 		do
+			print ("Hello%N")
 		end
 
 end

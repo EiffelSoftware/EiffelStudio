@@ -39,14 +39,17 @@
 		]"
 */
 
-
-#ifdef __VMS		/* this runs for the rest of the module */
-
-#pragma module EIFRTVMS	    // force uppercase module name
-
 /*
-doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific code">
+doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific runtime tools">
 */
+
+#ifdef __VMS	/* this runs for the rest of the module */
+
+#pragma module EIFRTVMS		// force uppercase module name
+
+#if !defined NDEBUG
+#define EIF_ASSERTIONS
+#endif
 
 #include "eif_config.h"
 #include "eif_portable.h"
@@ -61,7 +64,6 @@ doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific code">
 #include <jpidef>
 #include <ssdef>
 #include <starlet>	/* vms system services */
-#include <descrip>	/* descriptor data structures */
 #include <lnmdef>	/* sys$trnlnm, etc. LNM$ symbols */
 #include <fab>		/* RMS FAB definitions */
 #include <nam>		/* RMS NAM (name block) definitions */
@@ -70,7 +72,7 @@ doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific code">
 /* nested concatenation enables concatenation of macro values (instead of names) */
 #define CAT22(x,y) CAT2(x,y)
 
-/* define a global symbol to make the pointer size manifest in the object */
+/* define a global symbol to make the pointer size manifest in the object module */
 #if defined __INITIAL_POINTER_SIZE
 globalvalue CAT22(eifrt_vms__pointer_size__, __INITIAL_POINTER_SIZE) = __INITIAL_POINTER_SIZE;
 #else
@@ -135,7 +137,8 @@ rt_public size_t eifrt_vms_dirname_len (const char* path)
     else result = 0;
     return result;
 } /* end eifrt_vms_dirname_len() */
-/* does the path end in a VMS terminator (dev:[dir] or dev:)? Boolean result. */
+
+/* does the path end in a VMS terminator (dev:[dir] or dev:)? Boolean result. */
 rt_public int eifrt_vms_has_path_terminator (const char* path)
 {
 	if (path && *path) {
@@ -248,7 +251,6 @@ rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
 	}
 	return NULL;
 } /* end eifrt_vms_directory_file_name() */
-
 
 /* Returns full filename of current program image executable.  Places	    */
 /* result in output buffer, which must be big enough, else output is	    */
@@ -444,8 +446,8 @@ int eifrt_vms_spawn (const char *a_cmd, int a_flags)
     }
     return result;
 } /* end eifrt_vms_spawn */
-
-/* Problem 1: Unix-centric programs often check each element of a path name for		*/
+
+/* Problem 1: Unix-centric programs often check each element of a path name for		*/
 /* environment variables ($-prefixed names) and translate them in place, emulating	*/
 /* shell processing. On VMS, logical names are made to appear as environment variables	*/
 /* by the VMS C RTL implementation of getenv().  Many VMS C RTL functions, and		*/
@@ -471,6 +473,8 @@ int eifrt_vms_spawn (const char *a_cmd, int a_flags)
 /* because it uses a local static buffer. It is expected to be temporary.		*/
 /*											*/
 
+#undef getenv
+#define getenv #error calling jacket
 rt_public char* eifrt_vms_getenv (const char* name)
 {
     const char **p;
@@ -511,7 +515,7 @@ rt_public char* eifrt_vms_getenv (const char* name)
 	    sts = sys$trnlnm (&tran_attr, (void*)&tab_dx, &lnm_dx, 0, &items);
 	    if (VMS_FAILURE(sts)) break;
 	    valbuf[vallen] = '\0';
-	    if (name_attr & LNM$M_CONCEALED || strchr (valbuf, ':')) {
+	    if (name_attr & LNM$M_CONCEALED /*** || strchr (valbuf, ':') ***/ ) {
 #ifdef moose	/* this was a bad idea, it causes all sorts of other problems; it is preserved here as a reminder. */
 		/* return colon terminated name */
 		static char badidea[LNM$C_NAMLENGTH +2];    /* NOT THREAD SAFE! */
@@ -668,7 +672,7 @@ rt_public char* eifrt_vms_strdup (const char* str) {
 rt_public int eifrt_vms_system (const char* cmd) {
     extern int DECC$SYSTEM (const char* cmd) ;
     int result = DECC$SYSTEM (cmd);
-    if (getenv("EIF_TRACE_SYSTEM"))
+    if (DECC$GETENV("EIF_TRACE_SYSTEM"))
 	fprintf (stderr, "eifrt_vms_system (%s): result = %d\n", cmd, result);
     return result;
 }
@@ -688,7 +692,9 @@ rt_public int eifrt_vms_unlink (const char *name) {
 #include <errno.h>
 #include <starlet.h>		/* for sys$getmsg() */
 
-main () {
+main (int argc, char* argv[]) 
+{
+#ifdef moose
 	char			buff[256];
 	int			cond;
 	int			flags = 0xf;
@@ -707,6 +713,26 @@ main () {
 		printf("\n<%d> %s\n",status,mesg);
 /*		lib$stop(cond); */
 	}
+#endif // moose
+
+	int ii;
+	const char* p;
+
+    if (argc < 2) {
+	printf ("Usage: %s <environment_variable>...\n", argv[0]);
+    } else {
+	for (ii=1;  ii < argc;  ++ii) {
+	    p = DECC$GETENV (argv[ii]);
+	    if (!p) 
+		printf ("%s not defined\n", argv[ii]);
+	    else {
+		printf ("getenv(\"%s\") = \"%s\"\n", argv[ii], p);
+		p = eifrt_vms_getenv (argv[ii]);
+		printf ("eifrt_vms_getenv() returns \"%s\"\n", p);
+	    }
+	}
+    }
+
 }
 #endif	/* TEST */
 

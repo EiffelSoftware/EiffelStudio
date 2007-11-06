@@ -1,6 +1,6 @@
 /* 
 	filename:	"eif_vmsdef.h"
-	description:    "OpenVMS platform specific definitions"
+	description: "OpenVMS platform specific definitions"
 	date:		"$Date$"
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
@@ -229,9 +229,6 @@ typedef unsigned short int ile_retlen_t;	/* type of returned length (see <iledef
 
 
 
-
-
-
 /* Definitions for VMS jacket routines */
 #define getenv eifrt_vms_getenv
 #define putenv eifrt_vms_putenv
@@ -283,8 +280,9 @@ extern const char eifrt_vms_valid_filename_chars[];
 
 
 
-
-//#pragma message disable EXTRASEMI   // disable extraneous semicolon messages (in generated [.E?]epoly*.c modules) 
+//#ifdef moose /* this was needed in prior versions of Eiffel compiler */
+#pragma message disable EXTRASEMI  	// disable extraneous semicolon messages (in generated [.E?]epoly*.c modules) 
+//#endif
 
 
 #endif /* EIF_VMS        */

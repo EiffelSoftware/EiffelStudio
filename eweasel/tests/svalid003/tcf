@@ -18,4 +18,10 @@ copy_sub	test1.e	$CLUSTER test1.e
 compile_melted
 compile_result	validity_error	TEST2 VJAR
 
+define	CODE	"a := b"
+copy_sub	test1.e	$CLUSTER test1.e
+
+resume_compile
+compile_result	ok
+
 test_end

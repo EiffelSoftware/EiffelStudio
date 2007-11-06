@@ -4474,7 +4474,7 @@ feature -- Implementation
 					error_handler.insert_error (create {VUOT1}.make (context, l_as.name))
 				end
 			end
-			if context.is_name_used (local_name_id) then
+			if context.locals.has (local_name_id) then
 					-- The object-test local is a name of a feature local variable
 				error_handler.insert_error (create {VUOT1}.make (context, l_as.name))
 			end

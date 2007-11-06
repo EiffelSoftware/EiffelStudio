@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			end
 			text_label.set_text (text)
 
-			text_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255,0,0)) --implementation.displayed_background_color)
+			text_label.set_background_color (implementation.displayed_background_color)
 			popup_window.set_background_color (implementation.displayed_background_color)
 			text_label.set_foreground_color (implementation.displayed_foreground_color)
 

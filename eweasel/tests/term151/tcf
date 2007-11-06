@@ -1,0 +1,10 @@
+test_name 	integer-like-constant
+test_description A constant is defined using a `like' declaration which causes the compiler to crash.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

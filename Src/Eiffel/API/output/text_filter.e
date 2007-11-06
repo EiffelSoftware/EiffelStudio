@@ -1227,7 +1227,7 @@ feature {NONE} -- Implementation
 				Result.append (os_separator)
 			end
 			Result.append (rel_filename)
-			if file_separator.is_equal ("%U") then
+			if not file_separator.is_equal ("%U") then
 				Result.replace_substring_all (os_separator, file_separator)
 			end
 		end

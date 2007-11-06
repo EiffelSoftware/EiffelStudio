@@ -636,7 +636,7 @@ feature -- Access
 				Result.append_character (operating_environment.directory_separator)
 			end
 			Result.append (rel_filename)
-			if filter.file_separator /= Void and then filter.file_separator.is_equal ("%U") then
+			if filter.file_separator /= Void and then not filter.file_separator.is_equal ("%U") then
 				Result.replace_substring_all (operating_environment.directory_separator.out, filter.file_separator.as_string_8)
 			end
 		end

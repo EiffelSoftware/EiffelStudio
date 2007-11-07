@@ -45,6 +45,10 @@ feature -- Access
 		do
 		end
 
+	address_from_basic_dump_value (a_target: DUMP_VALUE): STRING is
+		do
+		end
+
 	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
 		do
 		end

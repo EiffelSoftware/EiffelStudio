@@ -61,7 +61,7 @@ feature -- Basic operations
 
 feature -- Query
 
-	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): EV_WINDOW
+	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): EV_WINDOW is
 			-- Locates parent window of `a_widget', if the widget has been parented.
 			--
 			-- `a_widget': A widget to locate a top level window for.
@@ -72,6 +72,7 @@ feature -- Query
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		local
 			l_stop_looking: BOOLEAN
+			l_dialog: EV_DIALOG
 		do
 			Result ?= a_widget
 			if a_main and Result /= Void then
@@ -82,6 +83,11 @@ feature -- Query
 			if not l_stop_looking then
 				if a_widget.has_parent then
 					Result := widget_top_level_window (a_widget.parent, a_main)
+				else
+					l_dialog ?= a_widget
+					if l_dialog /= Void and then l_dialog.blocking_window /= Void then
+						Result := widget_top_level_window (l_dialog.blocking_window, a_main)
+					end
 				end
 			else
 				check result_attached: Result /= Void end

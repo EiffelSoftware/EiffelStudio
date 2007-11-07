@@ -643,7 +643,8 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 							es_classes.after
 						loop
 							es_class := es_classes.item
-							if es_class.class_i = cl and then es_class.is_needed_on_diagram then
+								-- For now only add conforming descendents.
+							if es_class.class_i = cl and then es_class.is_needed_on_diagram and then (es_class.class_c.non_conforming_parents = Void or else not es_class.class_c.non_conforming_parents_classes.has (a_class.class_c)) then
 								l_link := inheritance_link_connecting (es_class, a_class)
 								if l_link = Void then
 									create {ES_INHERITANCE_LINK} l_link.make_with_classes (es_class, a_class)

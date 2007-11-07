@@ -254,10 +254,12 @@ feature {NONE} -- Exception handling
 	clean_exit (trace: STRING) is
 			-- Perform clean quit of $EiffelGraphicalCompiler$
 		local
-			error_dlg: EB_EXCEPTION_DIALOG
+			l_dialog: ES_EXCEPTION_DIALOG
 		do
-			create error_dlg.make (trace)
-			error_dlg.show_modal_to_window (parent_for_dialog)
+			create l_dialog.make
+			l_dialog.set_trace (trace)
+			l_dialog.show (parent_for_dialog)
+			l_dialog.recycle
 		end
 
 feature {NONE} -- Factory

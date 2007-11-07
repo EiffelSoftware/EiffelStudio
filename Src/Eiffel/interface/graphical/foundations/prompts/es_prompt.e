@@ -166,7 +166,9 @@ feature {NONE} -- User interface initialization
 
 				-- Extend widgets
 			a_container.extend (prompt_sub_title_label)
+			a_container.disable_item_expand (prompt_sub_title_label)
 			a_container.extend (prompt_text)
+			a_container.disable_item_expand (prompt_text)
 		ensure
 			prompt_sub_title_label_attached: prompt_sub_title_label /= Void
 			prompt_text_attached: prompt_text /= Void

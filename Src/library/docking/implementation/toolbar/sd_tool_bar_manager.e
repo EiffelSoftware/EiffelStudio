@@ -135,7 +135,6 @@ feature -- Command
 			-- Release hooks.
 		local
 			l_floating_tool_bars: like floating_tool_bars
-			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 		do
 			from
 				l_floating_tool_bars := floating_tool_bars

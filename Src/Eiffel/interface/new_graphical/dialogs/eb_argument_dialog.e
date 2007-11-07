@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			a_window_not_void: a_window /= Void
 			cmd_not_void: cmd /= Void
 		do
-			make_with_title (interface_names.t_Debugging_options)
+			make_with_title (interface_names.t_Execution_parameters)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			Debugger_manager.add_observer (Current)
 			set_size (600, 400)

@@ -17,7 +17,6 @@ inherit
 			make,
 			effective_evaluate_function_with_name,
 			effective_evaluate_static_function,
-			address_from_basic_dump_value,
 			class_c_from_external_b_with_extension,
 			parameters_init,
 			parameters_reset,
@@ -866,7 +865,7 @@ feature {NONE} -- Implementation
 				when {DUMP_VALUE_CONSTANTS}.type_pointer then
 					Result := eifnet_evaluator.new_ptr_evaluation (new_active_icd_frame, dmvb.value_pointer)
 
-				when {DUMP_VALUE_CONSTANTS}.type_string then
+				when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
 					Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
 				else
 				end
@@ -884,7 +883,7 @@ feature {NONE} -- Implementation
 		do
 			Result := dmv.value_dotnet
 
-			if dmv.is_basic or dmv.is_type_string then
+			if dmv.is_basic or dmv.is_type_manifest_string then
 				if Result /= Void then
 						--| we have a basic type as dotnet value
 
@@ -921,7 +920,7 @@ feature {NONE} -- Implementation
 
 					when {DUMP_VALUE_CONSTANTS}.type_pointer then
 						Result := eifnet_evaluator.icdv_reference_pointer_from_icdv_pointer (new_active_icd_frame, Result)
-					when {DUMP_VALUE_CONSTANTS}.type_string then
+					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
 						Result := eifnet_evaluator.icdv_string_from_icdv_system_string (new_active_icd_frame, Result)
 					else
 					end
@@ -960,7 +959,7 @@ feature {NONE} -- Implementation
 						Result := eifnet_evaluator.new_reference_character_8_evaluation (new_active_icd_frame, dmvb.value_character_8 )
 					when {DUMP_VALUE_CONSTANTS}.type_character_32 then
 						Result := eifnet_evaluator.new_reference_character_32_evaluation (new_active_icd_frame, dmvb.value_character_32 )
-					when {DUMP_VALUE_CONSTANTS}.type_string then
+					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
 						Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
 					else
 					end

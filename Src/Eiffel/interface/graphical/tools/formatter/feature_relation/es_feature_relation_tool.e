@@ -47,6 +47,12 @@ feature -- Access
 			Result := "show_feature_relation_tool"
 		end
 
+	pop_feature_flat
+			-- Force the display of `Current' and select the flat form.
+		do
+			panel.pop_feature_flat
+		end
+
 feature -- Status report
 
 	is_customizable: BOOLEAN = True

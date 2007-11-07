@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_expression (exp: EB_EXPRESSION; g: like parent_grid) is
+	make_with_expression (exp: DBG_EXPRESSION; g: like parent_grid) is
 		require
 			exp /= Void
 		do
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_with_readonly_expression (exp: EB_EXPRESSION; g: like parent_grid) is
+	make_with_readonly_expression (exp: DBG_EXPRESSION; g: like parent_grid) is
 		require
 			exp /= Void
 		do
@@ -192,7 +192,7 @@ feature -- Properties
 	is_auto_expression: BOOLEAN
 			-- Is auto expression line ?
 
-	expression: EB_EXPRESSION
+	expression: DBG_EXPRESSION
 			-- Associated expression.
 
 	expression_evaluator: DBG_EXPRESSION_EVALUATOR

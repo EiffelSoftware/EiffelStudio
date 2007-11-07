@@ -59,7 +59,7 @@ feature -- Button texts
 	b_Create_folder: STRING_GENERAL is					do Result := locale.translation("Create Folder...")	end
 	b_Delete_command: STRING_GENERAL is					do Result := locale.translation("Delete")	end
 	b_Descendant_time: STRING_GENERAL is				do Result := locale.translation("Descendant Time")	end
-	b_Debugging_options: STRING_GENERAL is				do Result := locale.translation ("Debugging options") end
+	b_Execution_parameters: STRING_GENERAL is			do Result := locale.translation ("Execution Parameters") end
 	b_Discard_assertions: STRING_GENERAL is				do Result := locale.translation("Discard Assertions")	end
 	b_Display_Exception_Trace: STRING_GENERAL is		do Result := locale.translation("Display Exception Trace")	end
 	b_do_nothing: STRING_GENERAL is 					do Result := locale.translation("Do nothing")	end
@@ -362,12 +362,12 @@ feature -- Accelerator, focus label and menu name
 	m_Dbg_assertion_checking_disable: STRING_GENERAL is	do Result := locale.translation("Disable Assertion Checking")	end
 	m_Dbg_assertion_checking_restore: STRING_GENERAL is	do Result := locale.translation("Restore Assertion Checking")	end
 	m_Dbg_exception_handler: STRING_GENERAL is	do Result := locale.translation("Exception Handling")	end
-	m_Debug_interrupt_new: STRING_GENERAL is		do Result := locale.translation("I&nterrupt Application")	end
+	m_Debug_interrupt_new: STRING_GENERAL is		do Result := locale.translation("I&nterrupt Execution")	end
 	f_Debug_edit_object: STRING_GENERAL is		do Result := locale.translation("Edit Object content")	end
 	m_Debug_edit_object: STRING_GENERAL is		do Result := locale.translation("Edit Object Content")	end
 	f_Debug_dynamic_eval: STRING_GENERAL is		do Result := locale.translation("Dynamic feature evaluation")	end
 	m_Debug_dynamic_eval: STRING_GENERAL is		do Result := locale.translation("Dynamic Feature Evaluation")	end
-	m_Debug_kill: STRING_GENERAL is				do Result := locale.translation("&Stop Application")	end
+	m_Debug_kill: STRING_GENERAL is				do Result := locale.translation("&Stop Execution")	end
 	f_Debug_run: STRING_GENERAL is				do Result := locale.translation("Run")	end
 	m_Debug_run: STRING_GENERAL is				do Result := locale.translation("&Run%TCtrl+R")	end
 	m_Debug_run_new: STRING_GENERAL is			do Result := locale.translation("St&art")	end
@@ -447,7 +447,7 @@ feature -- Accelerator, focus label and menu name
 	f_display_breakpoints_sep_by_status: STRING_GENERAL is	do Result := locale.translation("Display breakpoints separated by status")	end
 	m_Disable_stop_points: STRING_GENERAL is	do Result := locale.translation("&Disable All Breakpoints")	end
 	m_Debug_block: STRING_GENERAL is			do Result := locale.translation("E&mbed in %"Debug...%"%TCtrl+D")	end
-	m_debugging_options: STRING_GENERAL is				do Result := locale.translation ("De&bugging Options") end
+	m_Execution_parameters: STRING_GENERAL is	do Result := locale.translation ("Execution &Parameters") end
 	m_Editor: STRING_GENERAL is					do Result := locale.translation("&Editor")	end
 	m_Eiffel_introduction: STRING_GENERAL is	do Result := locale.translation("&Introduction to Eiffel")	end
 	f_Enable_stop_points: STRING_GENERAL is		do Result := locale.translation("Enable all breakpoints")	end
@@ -768,8 +768,7 @@ feature -- Menu mnenomics
 	m_Create_new_assembly: STRING_GENERAL is	do Result := locale.translation("Add &Assembly...")	end
 	m_Create_new_class: STRING_GENERAL is		do Result := locale.translation("&New Class...")	end
 	m_Create_new_feature: STRING_GENERAL is		do Result := locale.translation("New Fea&ture...")	end
-	m_Debug: STRING_GENERAL is					do Result := locale.translation("&Debug")	end
-	m_Debugging_tool: STRING_GENERAL is			do Result := locale.translation("&Debugging Tools")	end
+	m_Debug: STRING_GENERAL is					do Result := locale.translation("E&xecution")	end
 	m_Disable_this_bkpt: STRING_GENERAL is		do Result := locale.translation("&Disable This Breakpoint")	end
 	m_Display_error_help: STRING_GENERAL is		do Result := locale.translation("Compilation Error &Wizard...")	end
 	m_Display_system_info: STRING_GENERAL is	do Result := locale.translation("S&ystem Info")	end
@@ -932,7 +931,7 @@ feature -- Label texts
 	l_Continue_execution: STRING_GENERAL is			do Result := locale.translation("Continue execution")	end
 	l_Choose_folder: STRING_GENERAL is			do Result := locale.translation("Select the destination folder ")	end
 	l_one_target_among: STRING_GENERAL is			do Result := locale.translation("Choose one target among: ")	end
-	l_Only_available_for_stopped_application: STRING_GENERAL is do Result := locale.translation("This feature is only available when debugging, and when the debugged application is stopped.")	end
+	l_Only_available_for_stopped_application: STRING_GENERAL is do Result := locale.translation("This feature is only available when debugging, and when the execution is stopped.")	end
 
 	l_class: STRING_GENERAL is					do Result := locale.translation ("Class") end
 	l_class_address: STRING_GENERAL is			do Result := locale.translation ("Class address") end
@@ -975,8 +974,8 @@ feature -- Label texts
 	l_Compile_first: STRING_GENERAL is			do Result := locale.translation("Compile to have information")	end
 	l_Compile_project: STRING_GENERAL is		do Result := locale.translation("Compile project")	end
 	l_Condition: STRING_GENERAL is				do Result := locale.translation("Condition")	end
-	l_Confirm_kill: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to stop debugging the application?")	end
-	l_Confirm_kill_and_restart: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to stop and restart the application?")	end
+	l_Confirm_kill: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to stop the execution?")	end
+	l_Confirm_kill_and_restart: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to stop and restart the execution?")	end
 
 	l_constructing_diagram_for (a_name: STRING_GENERAL): STRING_GENERAL is			do Result := locale.formatted_string (locale.translation("Constructing diagram for $1"), [a_name])	end
 	l_Context: STRING_GENERAL is				do Result := locale.translation("Context")	end
@@ -1760,7 +1759,7 @@ feature -- Label texts
 	l_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Go to next warning") end
 	l_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to previous warning") end
 
-	l_always_compile_before_debug:STRING_GENERAL is 	do Result := locale.translation ("always compile before debugging.") end
+	l_always_compile_before_debug:STRING_GENERAL is 	do Result := locale.translation ("always compile before executing.") end
 
 feature -- Label text, no translation (for the editor)
 
@@ -1798,7 +1797,7 @@ feature -- Fixed shortcut names
 	fs_select_all: STRING_GENERAL is				do Result := locale.translation ("Select all") end
 	fs_indent: STRING_GENERAL is					do Result := locale.translation ("Indent") end
 	fs_unindent: STRING_GENERAL is					do Result := locale.translation ("Unindent") end
-	fs_debug_menu: STRING_GENERAL is				do Result := locale.translation ("Debug menu") end
+	fs_debug_menu: STRING_GENERAL is				do Result := locale.translation ("Execution menu") end
 
 feature -- Title part
 
@@ -2045,8 +2044,7 @@ feature -- Title part
 	t_warning: STRING_GENERAL is 						do Result := locale.translation ("Warning") end
 	t_Features_tool: STRING_GENERAL is					do Result := locale.translation ("Features")	end
 	t_Editor: STRING_GENERAL is							do Result := locale.translation("Editor")	end
-	t_Debugging_options: STRING_GENERAL is					do Result := locale.translation("Debugging Options")	end
-	t_Debugging_tool: STRING_GENERAL is					do Result := locale.translation("Debugging")	end
+	t_execution_parameters: STRING_GENERAL is			do Result := locale.translation("Execution Parameters")	end
 
 	t_Standard_toolbar: STRING_GENERAL is				do Result := locale.translation ("Standard Buttons") end
 	t_Address_toolbar: STRING_GENERAL is				do Result := locale.translation ("Address Bar") end
@@ -2079,8 +2077,6 @@ feature -- Title part
 feature -- Sub titles
 
 		-- Debugger
-	st_debugging_not_recommended: STRING_GENERAL is		do Result := locale.translation ("Debugging not recommended") end
-	st_stop_debugger: STRING_GENERAL is		do Result := locale.translation ("Stop debugging") end
 	st_compile_changes: STRING_GENERAL is		do Result := locale.translation ("Uncompile changes") end
 	st_exit_eiffelstudio: STRING_GENERAL is		do Result := locale.translation ("Exit EiffelStudio") end
 	st_unsaved_changed: STRING_GENERAL is		do Result := locale.translation ("You have unsaved changes") end
@@ -2102,7 +2098,6 @@ feature -- Titles translation needless (Title Original) for preference strings.
 	to_Object_viewer_tool: STRING is			"Object Viewer"
 	to_Features_tool: STRING is					"Features"
 	to_Editor: STRING is						"Editor"
-	to_Debugging_tool: STRING is				"Debugging"
 
 	to_Output_tool: STRING is					"Output"
 	to_Diagram_tool: STRING is					"Diagram"
@@ -2175,15 +2170,15 @@ feature -- Description texts
 	e_Edit_exported_feature: STRING_GENERAL is	do Result := locale.translation("Edit the properties of the selected feature")	end
 	e_Edit_expression: STRING_GENERAL is		do Result := locale.translation("Edit the selected expression")	end
 	e_Edited: STRING_GENERAL is					do Result := locale.translation("Some classes were edited since last compilation")	end
-	e_Exec_debug: STRING_GENERAL is				do Result := locale.translation("Start application and stop at breakpoints")	end
-	e_Exec_debug_continue: STRING_GENERAL is	do Result := locale.translation("Continue application and stop at breakpoints")	end
-	e_Exec_kill: STRING_GENERAL is				do Result := locale.translation("Stop application")	end
+	e_Exec_debug: STRING_GENERAL is				do Result := locale.translation("Start execution and stop at breakpoints")	end
+	e_Exec_debug_continue: STRING_GENERAL is	do Result := locale.translation("Continue execution and stop at breakpoints")	end
+	e_Exec_kill: STRING_GENERAL is				do Result := locale.translation("Stop execution")	end
 	e_Exec_into: STRING_GENERAL is				do Result := locale.translation("Step into a routine")	end
-	e_Exec_no_stop: STRING_GENERAL is			do Result := locale.translation("Start application without stopping at breakpoints")	end
+	e_Exec_no_stop: STRING_GENERAL is			do Result := locale.translation("Start execution without stopping at breakpoints")	end
 	e_Exec_out: STRING_GENERAL is				do Result := locale.translation("Step out of a routine")	end
-	e_Exec_step: STRING_GENERAL is				do Result := locale.translation("Execute the application one line at a time")	end
-	e_Exec_stop: STRING_GENERAL is				do Result := locale.translation("Pause application at current point")	end
-	e_Exec_recompile: STRING_GENERAL is         do Result := locale.translation("Recompiling project will end current run.") end
+	e_Exec_step: STRING_GENERAL is				do Result := locale.translation("Execute execution one step at a time")	end
+	e_Exec_stop: STRING_GENERAL is				do Result := locale.translation("Pause execution at current point")	end
+	e_Exec_recompile: STRING_GENERAL is         do Result := locale.translation("Recompiling project will end current execution.") end
 	e_History_back: STRING_GENERAL is			do Result := locale.translation("Back")	end
 	e_History_forth: STRING_GENERAL is			do Result := locale.translation("Forward")	end
 	e_Minimize_all: STRING_GENERAL is			do Result := locale.translation("Minimize all windows")	end
@@ -2233,7 +2228,7 @@ feature -- Description texts
 	e_Terminate_c_compilation: STRING_GENERAL is do Result := locale.translation("Terminate current C compilation in progress")	end
 
 	e_Dbg_exception_handler: STRING_GENERAL is do Result := locale.translation("Exception handling")	end
-	e_Dbg_assertion_checking: STRING_GENERAL is do Result := locale.translation("Disable or restore Assertion checking handling during debugging")	end
+	e_Dbg_assertion_checking: STRING_GENERAL is do Result := locale.translation("Disable or restore assertion checking handling during execution")	end
 
 	e_open_selection_in_editor: STRING_GENERAL is do Result := locale.translation("Open selected file name in specified external editor")	end
 	e_save_c_compilation_output: STRING_GENERAL is do Result := locale.translation("Save C Compilation output to file")	end

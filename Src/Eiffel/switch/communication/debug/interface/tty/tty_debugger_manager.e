@@ -289,7 +289,7 @@ feature -- Interaction
 			end
 			Result.add_entry ("E", debugger_names.e_expression_evaluation, agent
 					local
-						x: EB_EXPRESSION
+						x: DBG_EXPRESSION
 						s: STRING_GENERAL
 					do
 						localized_print (debugger_names.m_expression)
@@ -502,7 +502,7 @@ feature -- Breakpoints management
 	edit_breakpoint_condition (bp: BREAKPOINT) is
 		local
 			s: STRING
-			exp: EB_EXPRESSION
+			exp: DBG_EXPRESSION
 			fe: E_FEATURE
 			d: STRING
 		do

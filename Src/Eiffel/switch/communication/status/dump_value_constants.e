@@ -32,7 +32,7 @@ feature -- Type identifiant in context of DUMP_VALUE
 	Type_pointer		: INTEGER is 15
 
 	Type_object			: INTEGER is 16
-	Type_string			: INTEGER is 17
+	Type_manifest_string: INTEGER is 17
 	Type_string_dotnet	: INTEGER is 18
 	Type_expanded_object: INTEGER is 19
 	Type_exception		: INTEGER is 20

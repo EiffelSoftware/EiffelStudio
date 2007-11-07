@@ -544,6 +544,11 @@ feature -- Expression evaluation messages
 			aname_not_void: aname /= Void
 		do Result := locale.formatted_string (locale.translation ("Cannot evaluate attribute `$1' of an expanded value."), [aname]) end
 
+	msg_error_cannot_evaluate_attribute_of_manifest_string (aname: STRING_GENERAL): STRING_GENERAL is
+		require
+			aname_not_void: aname /= Void
+		do Result := locale.formatted_string (locale.translation ("Cannot evaluate attribute `$1' of a manisfest string declared in expression."), [aname]) end
+
 	msg_error_cannot_find_context_object (addr: STRING_GENERAL): STRING_GENERAL is
 		require
 			addr_not_void: addr /= Void

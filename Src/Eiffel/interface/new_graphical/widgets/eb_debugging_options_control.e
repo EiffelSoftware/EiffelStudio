@@ -268,7 +268,7 @@ feature {NONE} -- Display profiles impl
 			display_profiles_box.set_padding_width (Layout_constants.Small_padding_size)
 			display_profiles_box.set_border_width (Layout_constants.Small_border_size)
 
-			create f.make_with_text (interface_names.t_debugging_options)
+			create f.make_with_text (interface_names.t_execution_parameters)
 			create vb
 			f.extend (vb)
 

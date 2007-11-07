@@ -222,7 +222,7 @@ feature -- Breakpoints management
 			-- Process `bp'
 			-- and return True in `a_stopped_execution' if application has to stop.
 		local
-			expr: EB_EXPRESSION
+			expr: DBG_EXPRESSION
 			evaluator: DBG_EXPRESSION_EVALUATOR
 			bp_reached: BOOLEAN
 			bp_continue: BOOLEAN
@@ -277,7 +277,7 @@ feature -- Breakpoints management
 			m_area: SPECIAL [CHARACTER]
 			m_max: INTEGER
 			cse: CALL_STACK_ELEMENT
-			expr: EB_EXPRESSION
+			dv: DUMP_VALUE
 			i: INTEGER
 			c: CHARACTER
 			s: STRING
@@ -356,10 +356,9 @@ feature -- Breakpoints management
 					elseif in_expression then
 						if c = '}' then
 							in_expression := False
-							create expr.make_for_context (v)
-							expr.evaluate
-							if not expr.error_occurred then
-								s.append (expr.expression_evaluator.final_result_value.output_for_debugger)
+							dv := expression_evaluation (v)
+							if dv /= Void then
+								s.append (dv.output_for_debugger)
 							end
 						else
 							v.append_character (c)
@@ -735,6 +734,27 @@ feature -- Access
 				create l_comp.make
 
 				Result.sort (create {DS_QUICK_SORTER [STRING_32]}.make (l_comp))
+			end
+		end
+
+feature -- Expression evaluation
+
+	expression_evaluation (a_expr: STRING): DUMP_VALUE is
+			-- Expression evaluation's result for `a_expr' in current context
+			-- (note: Result = Void implies an error occurred)
+		require
+			safe_application_is_stopped: safe_application_is_stopped
+		local
+			exp: DBG_EXPRESSION
+		do
+			if safe_application_is_stopped then
+				create exp.make_for_context (a_expr)
+				if not exp.error_occurred then
+					exp.evaluate_with_settings (False)
+					if not exp.error_occurred then
+						Result := exp.expression_evaluator.final_result_value
+					end
+				end
 			end
 		end
 

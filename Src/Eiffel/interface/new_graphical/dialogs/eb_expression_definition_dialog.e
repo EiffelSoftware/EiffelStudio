@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 			disable_all
 		end
 
-	make_with_expression (expr: EB_EXPRESSION) is
+	make_with_expression (expr: DBG_EXPRESSION) is
 			-- Initialize `Current' based on `expr'.
 		require
 			valid_expression: expr /= Void
@@ -401,7 +401,7 @@ feature -- Status report
 			Result := dialog.is_destroyed
 		end
 
-	new_expression: EB_EXPRESSION
+	new_expression: DBG_EXPRESSION
 			-- Expression defined  by `Current', if any.
 
 feature -- Change
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	modified_expression: EB_EXPRESSION
+	modified_expression: DBG_EXPRESSION
 			-- Expression that is being edited, if any.
 
 	disable_all is

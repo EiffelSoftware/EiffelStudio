@@ -229,6 +229,7 @@ feature -- Command
 	destroy	is
 			-- Redefine
 		do
+			content := Void
 			prune_tool_bar (Current)
 			Precursor {SD_DRAWING_AREA}
 		end

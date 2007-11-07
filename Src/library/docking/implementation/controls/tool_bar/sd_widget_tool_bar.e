@@ -357,8 +357,13 @@ feature -- Command
 	destroy is
 			-- Redefine
 		do
+			content := Void
 			internal_shared.widgets.prune_tool_bar (Current)
 			Precursor {SD_FIXED}
+			if tool_bar /= Void then
+				tool_bar.destroy
+				tool_bar := Void
+			end
 		end
 
 feature -- Query

@@ -210,7 +210,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 144
+%expect 126
 
 %%
 
@@ -2524,7 +2524,7 @@ Expression:
 			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2); has_type := True }
 	|	Qualified_binary_expression
 			{ $$ := $1; has_type := True }
-	|	TE_LCURLY TE_ID TE_COLON Type TE_RCURLY Expression
+	|	TE_LCURLY TE_ID TE_COLON Type TE_RCURLY Expression %prec TE_NOT
 			{
 				$$ := ast_factory.new_object_test_as ($1, $2, $4, $6);
 				has_type := True

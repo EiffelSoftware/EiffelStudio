@@ -1032,12 +1032,9 @@ feature -- Warning messages
 		end
 
 	w_Internal_error: STRING_GENERAL is
-		do Result := locale.translation ("An internal error occurred.%N%N%
-		%1 - Check that you have enough space to compile.%N%
-		%2 - If this happens even after relaunching the environment%N%
-		%     delete your EIFGEN and recompile from scratch.%N%N%
-		%Follow the instructions at http://support.eiffel.com/submit.html in%N%
-		%order to submit a bug report at http://support.eiffel.com") end
+		do Result := locale.translation ("Check that you have enough space on disk to compile the project.%N%
+		%If this happens even after relaunching EiffelStudio delete the project's EIFGENs folder and perform a clean recompilation.%N%N%
+		%Follow the instructions at http://support.eiffel.com/submit.html in order to submit a bug report at http://support.eiffel.com or use the Report button below.") end
 
 	w_Class_already_edited: STRING_GENERAL is do Result := locale.translation ("This class is already being edited%N%
 										%in another editor.%N%

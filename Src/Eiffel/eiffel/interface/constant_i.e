@@ -104,10 +104,15 @@ feature -- Settings
 	check_types (feat_tbl: FEATURE_TABLE) is
 			-- Check Result and argument types
 		local
+			t: like type
 			actual_type: TYPE_A
 			vqmc: VQMC
 		do
 			Precursor {ENCAPSULATED_I} (feat_tbl)
+			if not type.is_attached and then feat_tbl.associated_class.lace_class.is_void_safe then
+					-- Type of constant is always attached.
+				type := type.as_attached
+			end
 			actual_type := type.actual_type
 			if value.valid_type (actual_type) then
 				value.set_real_type (actual_type)

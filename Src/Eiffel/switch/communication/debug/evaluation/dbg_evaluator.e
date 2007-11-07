@@ -247,7 +247,7 @@ feature {NONE} -- Query
 	address_from_basic_dump_value (a_target: DUMP_VALUE): STRING is
 		require
 			a_target /= Void and then a_target.address = Void
-		do
+		deferred
 		end
 
 feature {NONE} -- Parameters Implementation
@@ -393,7 +393,12 @@ feature -- Concrete evaluation
 --				result_object := a_target
 --				result_static_type := a_target.dynamic_class
 			else
-				notify_error_evaluation (Debugger_names.msg_error_cannot_evaluate_attribute_of_expanded (f.feature_name))
+				if a_target /= Void and then a_target.is_type_manifest_string then
+						-- Manifest string
+					notify_error_evaluation (Debugger_names.msg_error_cannot_evaluate_attribute_of_manifest_string (f.feature_name))
+				else
+					notify_error_evaluation (Debugger_names.msg_error_cannot_evaluate_attribute_of_expanded (f.feature_name))
+				end
 			end
 		end
 

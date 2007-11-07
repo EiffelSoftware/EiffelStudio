@@ -351,7 +351,7 @@ feature -- operation on conditions
 			a_input: EV_TEXTABLE; a_output: EV_LABEL) is
 			-- Attempt to create a conditional breakpoint.
 		local
-			expr: EB_EXPRESSION
+			expr: DBG_EXPRESSION
 			bpm: BREAKPOINTS_MANAGER
 			bp: BREAKPOINT
 		do

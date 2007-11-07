@@ -68,7 +68,7 @@ feature -- Breakpoints update
 
 feature -- Breakpoints access
 
-	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
+	condition (f: E_FEATURE; i: INTEGER): DBG_EXPRESSION is
 			-- Breakpoint's condition located at (`f',`i').
 		require
 			valid_breakpoint: is_breakpoint_set (f, i)
@@ -216,7 +216,7 @@ feature -- Breakpoints change
 			end
 		end
 
-	set_condition (f: E_FEATURE; i: INTEGER; expr: EB_EXPRESSION) is
+	set_condition (f: E_FEATURE; i: INTEGER; expr: DBG_EXPRESSION) is
 			-- Make the breakpoint located at (`f',`i') conditional with condition `expr'.
 			-- Create an enabled breakpoint if is doesn't already exist.
 		require

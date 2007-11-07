@@ -99,6 +99,11 @@ feature -- Properties
 	dbg_expression: DBG_EXPRESSION
 			-- Current expression to evaluate
 
+	dbg_expression_has_syntax_error: BOOLEAN is
+		do
+			Result := dbg_expression.has_syntax_error
+		end
+
 	on_class: BOOLEAN
 			-- Is the expression relative to a class ?
 
@@ -369,7 +374,7 @@ feature -- Access
 			-- is feature `f' a boolean expression ?
 		require
 			valid_f: f /= Void
-			no_error: not dbg_expression.syntax_error
+			no_error: not dbg_expression_has_syntax_error
 			good_state: f.written_class /= Void and then f.written_class.has_feature_table
 		deferred
 		end
@@ -409,12 +414,12 @@ feature -- Access
 			-- Static type of `Current'.
 			-- Only used and set in `is_condition', not in `evaluate' or `set_expression'.
 
-feature {EB_EXPRESSION} -- Evaluation
+feature {DBG_EXPRESSION} -- Evaluation
 
 	evaluate (keep_assertion_checking: BOOLEAN) is
 			-- Compute the value of the last message of `Current'.
 		require
-			dbg_expression_valid_syntax: as_object or else not dbg_expression.syntax_error
+			dbg_expression_valid_syntax: as_object or else not dbg_expression.has_syntax_error
 			running_and_stopped: debugger_manager.safe_application_is_stopped
 		do
 			reset_error

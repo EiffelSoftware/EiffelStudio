@@ -260,6 +260,20 @@ feature -- Query
 			end
 		end
 
+	address_from_basic_dump_value (a_target: DUMP_VALUE): STRING is
+		require else
+			a_target_not_void: a_target /= Void
+		local
+			dv: DUMP_VALUE
+		do
+			if a_target.is_type_manifest_string then
+				dv := a_target.to_dump_value_object
+				if dv /= Void then
+					Result := dv.address
+				end
+			end
+		end
+
 feature {NONE} -- Parameters operation
 
 	parameters_push (dmp: DUMP_VALUE) is

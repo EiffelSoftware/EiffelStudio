@@ -1,5 +1,5 @@
 indexing
-	description : "Objects used to evaluate a DBG_EXPRESSION_B ..."
+	description : "Objects used to evaluate a DBG_EXPRESSION ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author      : "$Author$"
@@ -71,7 +71,7 @@ feature -- helpers
 			Result := debugger_manager.application_status
 		end
 
-feature {EB_EXPRESSION} -- Evaluation
+feature {DBG_EXPRESSION} -- Evaluation
 
 	evaluate (keep_assertion_checking: BOOLEAN) is
 			-- Compute the value of the last message of `Current'.
@@ -1648,7 +1648,7 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Evaluation data
 
 feature -- Context
 
-	dbg_expression: DBG_EXPRESSION_B
+	dbg_expression: DBG_EXPRESSION
 
 	context_feature: FEATURE_I
 

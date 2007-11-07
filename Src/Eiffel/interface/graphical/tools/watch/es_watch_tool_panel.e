@@ -350,7 +350,7 @@ feature -- Status setting
 	prepare_for_debug is
 			-- Remove obsolete expressions from `Current'.
 		local
-			l_expr: EB_EXPRESSION
+			l_expr: DBG_EXPRESSION
 			witem: like watched_item_from
 			witems: like watched_items
 		do
@@ -480,7 +480,7 @@ feature {NONE} -- add new expression from the grid
 
 	add_new_expression_for_context (s: STRING_32) is
 		local
-			expr: EB_EXPRESSION
+			expr: DBG_EXPRESSION
 		do
 			if valid_expression_text (s) then
 				create expr.make_for_context (s)
@@ -490,7 +490,7 @@ feature {NONE} -- add new expression from the grid
 
 	add_new_auto_expression (s: STRING_32) is
 		local
-			expr: EB_EXPRESSION
+			expr: DBG_EXPRESSION
 		do
 			if valid_expression_text (s) then
 				create expr.make_for_context (s)
@@ -715,7 +715,7 @@ feature {NONE} -- Event handling
 		local
 			rows: ARRAYED_LIST [EV_GRID_ROW]
 			sel: EV_GRID_ROW
-			expr: EB_EXPRESSION
+			expr: DBG_EXPRESSION
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			l_item: like watched_item_from
 		do
@@ -745,7 +745,7 @@ feature {NONE} -- Event handling
 			-- Toggle state of the selected expressions from the list.
 		local
 			rows: LIST [EV_GRID_ROW]
-			l_expr: EB_EXPRESSION
+			l_expr: DBG_EXPRESSION
 			sel_index: INTEGER
 			l_item: like watched_item_from
 		do
@@ -1061,7 +1061,7 @@ feature {NONE} -- Event handling
 	add_expression_with_dialog (dlg: EB_EXPRESSION_DEFINITION_DIALOG) is
 			-- Add a new expression defined by `dlg'.
 		local
-			l_expr: EB_EXPRESSION
+			l_expr: DBG_EXPRESSION
 		do
 			l_expr := dlg.new_expression
 			add_expression (l_expr, False)
@@ -1073,7 +1073,7 @@ feature {NONE} -- Event handling
 			oname /= Void
 			application_is_running: debugger_manager.application_is_executing
 		local
-			expr: EB_EXPRESSION
+			expr: DBG_EXPRESSION
 		do
 			debugger_manager.application_status.keep_object (ost.object_address)
 			create expr.make_as_object (ost.dynamic_class , ost.object_address)
@@ -1081,7 +1081,7 @@ feature {NONE} -- Event handling
 			add_expression (expr, False)
 		end
 
-	add_expression (expr: EB_EXPRESSION; is_auto: BOOLEAN) is
+	add_expression (expr: DBG_EXPRESSION; is_auto: BOOLEAN) is
 		local
 			expr_item: like watched_item_from
 		do
@@ -1270,7 +1270,7 @@ feature -- Access
 			a_item_attached: a_item.row /= Void
 		local
 			l_row: EV_GRID_ROW
-			l_expr: EB_EXPRESSION
+			l_expr: DBG_EXPRESSION
 		do
 			l_row := a_item.row
 			l_expr := a_item.expression
@@ -1289,7 +1289,7 @@ feature -- Access
 	add_debug_value (dv: ABSTRACT_DEBUG_VALUE) is
 			-- Add value `dv' to the watch tool's grid
 		local
-			expr: EB_EXPRESSION
+			expr: DBG_EXPRESSION
 		do
 			if dv.dynamic_class = Void then
 				create expr.make_for_context ("Void")
@@ -1341,7 +1341,7 @@ feature {NONE} -- Implementation
 			-- dbg_was_stopped is ignore if Application/Debugger is not running
 		local
 			eval: BOOLEAN
-			l_expr: EB_EXPRESSION
+			l_expr: DBG_EXPRESSION
 			l_item: like watched_item_from
 			witems: like watched_items
 		do
@@ -1411,7 +1411,7 @@ feature {NONE} -- Implementation
 
 	Cst_nota_col: INTEGER is 5
 
-	new_watched_item_from_expression (expr: EB_EXPRESSION; a_grid: ES_OBJECTS_GRID): like watched_item_from is
+	new_watched_item_from_expression (expr: DBG_EXPRESSION; a_grid: ES_OBJECTS_GRID): like watched_item_from is
 		require
 			expr /= Void
 			a_grid /= Void
@@ -1460,7 +1460,7 @@ feature {NONE} -- Implementation
 			Result := w /= Void and then w.is_auto_expression
 		end
 
-	watched_item_for_expression (expr: EB_EXPRESSION): like watched_item_from is
+	watched_item_for_expression (expr: DBG_EXPRESSION): like watched_item_from is
 		require
 			valid_expr: expr /= Void
 		local
@@ -1480,7 +1480,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	refresh_expression (expr: EB_EXPRESSION) is
+	refresh_expression (expr: DBG_EXPRESSION) is
 		require
 			valid_expr: expr /= Void
 		local
@@ -1498,7 +1498,7 @@ feature {NONE} -- Implementation
 		local
 			r: INTEGER
 			row: EV_GRID_ROW
-			expr: EB_EXPRESSION
+			expr: DBG_EXPRESSION
 			l_item: like watched_item_from
 		do
 			if watches_grid.row_count > 0 then

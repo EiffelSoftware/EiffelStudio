@@ -104,11 +104,11 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			dynamic_class_set: dynamic_class = dtype
 		end
 
-	set_manifest_string_value  (value: STRING; dtype: CLASS_C) is
+	set_manifest_string_value (value: STRING; dtype: CLASS_C) is
 			-- make a string item initialized to `value'
 		do
 			value_string := value
-			type := Type_string
+			type := Type_manifest_string
 			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
@@ -238,7 +238,7 @@ feature -- Status report
 			string_c, string_32_c, system_string_c: CLASS_C
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
-			if type = Type_string then
+			if type = Type_manifest_string then
 				Result := True
 			elseif type = Type_string_dotnet then
 				Result := not is_void
@@ -288,7 +288,7 @@ feature -- Status report
 			debug ("debugger_interface")
 				io.put_string ("Finding output value of dump_value%N")
 			end
-			if type = Type_string then
+			if type = Type_manifest_string then
 				debug ("debugger_interface")
 					io.put_string ("Finding output value of constant string")
 				end
@@ -322,7 +322,7 @@ feature -- Status report
 			--| `output_value' = "This is a string"
 		do
 			Result := output_value (True).twin
-			if type /= type_string and has_formatted_output then
+			if type /= Type_manifest_string and has_formatted_output then
 				Result.append_character (' ')
 				Result.append_character ('=')
 				Result.append_character (' ')
@@ -671,7 +671,7 @@ feature -- Action
 			value_string_c: ANY
 		do
 			inspect (type)
-			when Type_string then
+			when Type_manifest_string then
 				fixme("We should handle STRING_32 on the runtime side of the debuger")
 				value_string_c := value_string.as_string_8.to_c
 				send_string_value ($value_string_c)
@@ -749,7 +749,7 @@ feature -- Access
 			s: STRING_32
 		do
 			inspect type
-			when Type_string then
+			when Type_manifest_string then
 				if format_result then
 					create Result.make (value_string.count + 2)
 					Result.append_character ('%"')
@@ -852,7 +852,7 @@ feature -- Access
 			-- If it makes sense, return the address of current object.
 			-- Void if `is_void' or if `Current' does not represent an object.
 		do
-			if type = Type_object or type = Type_string_dotnet then
+			if type = Type_object or type = Type_string_dotnet or type = Type_manifest_string then
 				Result := value_address
 			end
 		end
@@ -873,7 +873,7 @@ feature -- Access
 	is_basic: BOOLEAN is
 			-- Is `Current' of a basic type?
 		do
-			Result := not is_type_object and type /= Type_string and type /= Type_string_dotnet
+			Result := not is_type_object and type /= Type_manifest_string and type /= Type_string_dotnet
 		end
 
 feature -- Conversion
@@ -898,6 +898,25 @@ feature -- Conversion
 			Result_not_void: Result /= Void
 		end
 
+feature {DBG_EVALUATOR} -- Convertor
+
+	to_dump_value_object: DUMP_VALUE is
+			-- Current manifest string converted to an instance of STRING.
+		require
+			is_type_manifest_string
+		local
+			s: STRING_8
+		do
+			fixme ("This is a temporary safe solution for 6.1, later we'll need to redesign part of debugger's data+evaluator")
+			s := value_string
+			if s /= Void then
+				Result := debugger_manager.expression_evaluation ("(%"" + s + "%").twin")
+			end
+			if Result = Void then
+				Result := debugger_manager.dump_value_factory.new_void_value (debugger_manager.compiler_data.string_8_class_c)
+			end
+		end
+
 feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR} -- Internal data
 
 	value_address	: STRING -- string standing for the address of the object if type=Type_object
@@ -918,7 +937,7 @@ feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUAT
 			Result := type = Type_object or type = type_expanded_object
 		end
 
-	is_type_string: BOOLEAN is do Result := type = Type_string end
+	is_type_manifest_string: BOOLEAN is do Result := type = Type_manifest_string end
 --	is_type_expanded: BOOLEAN is do Result := type = Type_expanded_object end
 	is_type_exception: BOOLEAN is do Result := type = Type_exception end
 

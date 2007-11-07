@@ -825,8 +825,8 @@ feature -- tools management
 		local
 			l_watch_tool: ES_WATCH_TOOL_PANEL
 		do
-				-- This call has the side affect of creating the tool, do not remove it!
 			if debugging_window /= Void then
+					--| IMPORTANT: The following call has the side affect of creating the tool, do not remove it!				
 				l_watch_tool ?= debugging_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False).panel
 				update_all_debugging_tools_menu
 			end
@@ -923,10 +923,9 @@ feature -- Output
 				display_debugger_info (application.parameters)
 			end
 			if
-				debugging_window /= Void and then
-				debugging_window.tools.output_tool /= Void
+				debugging_window /= Void
 			then
-				debugging_window.tools.output_tool.show
+				debugging_window.shell_tools.tool ({ES_OUTPUT_TOOL}).show (False)
 			end
 		end
 
@@ -940,31 +939,23 @@ feature -- Change
 	toggle_display_breakpoints is
 			-- Show or hide the breakpoint tool
 		local
-			bp_tool: ES_BREAKPOINTS_TOOL_PANEL
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			conv_dev := last_focused_development_window (False)
 			if conv_dev /= Void then
-				bp_tool := conv_dev.tools.breakpoints_tool
-				if bp_tool /= Void then
-					bp_tool.show
-				end
+				conv_dev.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).show (False)
 			end
 		end
 
 	display_breakpoints (show_tool_if_closed: BOOLEAN) is
 			-- Show the list of breakpoints (set and disabled) in the output manager.
 		local
-			bp_tool: ES_BREAKPOINTS_TOOL_PANEL
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			conv_dev := last_focused_development_window (False)
 			if conv_dev /= Void then
-				bp_tool := conv_dev.tools.breakpoints_tool
-				if bp_tool /= Void then
-					if show_tool_if_closed then
-						bp_tool.show
-					end
+				if show_tool_if_closed then
+					conv_dev.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).show (False)
 				end
 			end
 		end
@@ -1498,10 +1489,15 @@ feature {NONE} -- Raise/unraise notification
 feature -- Debugging events
 
 	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
+		local
+			l_tool: ES_BREAKPOINTS_TOOL_PANEL
 		do
 			Result := Precursor {DEBUGGER_MANAGER} (bp)
 			if debugging_window /= Void then
-				debugging_window.tools.breakpoints_tool.refresh
+				 l_tool ?= debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
+				 if l_tool /= Void then
+				 	l_tool.refresh
+				 end
 			end
 		end
 
@@ -1523,15 +1519,13 @@ feature -- Debugging events
 	launch_stone (st: STONE) is
 			-- Set `st' in the debugging window as the new stone.
 		local
-			feat_tool: ES_FEATURES_RELATION_TOOL_PANEL
+			feat_tool: ES_FEATURE_RELATION_TOOL
 		do
 			record_objects_grids_layout
 			if debugging_window /= Void then
-				feat_tool := debugging_window.tools.features_relation_tool
-				if feat_tool /= Void then
-					feat_tool.pop_feature_flat
-					feat_tool.show
-				end
+				feat_tool ?= debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
+				feat_tool.pop_feature_flat
+				feat_tool.show (False)
 				debugging_window.tools.launch_stone (st)
 			end
 		end
@@ -1547,6 +1541,8 @@ feature -- Debugging events
 
 	on_application_launched is
 			-- Application has just been launched.
+		local
+			feat_tool: ES_FEATURE_RELATION_TOOL
 		do
 			update_all_debugging_tools_menu
 
@@ -1555,7 +1551,8 @@ feature -- Debugging events
 				io.put_string (generator + ".on_application_launched %N")
 			end
 
-			debugging_window.tools.features_relation_tool.pop_feature_flat
+			feat_tool ?= debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
+			feat_tool.pop_feature_flat
 
 				-- Modify the debugging window display.
 			stop_cmd.enable_sensitive
@@ -1632,7 +1629,7 @@ feature -- Debugging events
 					launch_stone (st)
 					-- After launch_stone, the call stack tool will show something, so we want the feature relation tool show up too.
 					if call_stack_tool.widget.is_displayed then
-						debugging_window.tools.features_relation_tool.show
+						debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).show (False)
 					end
 				end
 			end
@@ -2104,10 +2101,9 @@ feature {NONE} -- Implementation
 			-- Restore standard debug docking layout.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_tools: EB_DEVELOPMENT_WINDOW_TOOLS
 			l_dyna_tools: ES_SHELL_TOOLS
 			l_tool, l_last_watch_tool: EB_TOOL
-			l_window: EV_WINDOW
+			l_refer_tool_content: SD_CONTENT
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_sd_button: SD_TOOL_BAR_ITEM
 			l_buttons: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -2140,33 +2136,46 @@ feature {NONE} -- Implementation
 			-- Setup tools
 			debugging_window.close_all_tools
 
-			l_tools := debugging_window.tools
 			l_dyna_tools := debugging_window.shell_tools
 
-			-- Tools below editor
-			l_tool := l_tools.class_tool
-			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
-			l_tool := l_tools.features_relation_tool
-			l_tool.content.set_tab_with (l_tools.class_tool.content, True)
 
+				--| Class tool (below the editor)
+			l_tool := l_dyna_tools.tool ({ES_CLASS_TOOL}).panel
+			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
+			l_refer_tool_content := l_tool.content
+
+				--| Features relation tool (tabbed with Class tool)
+			l_tool := l_dyna_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
+			l_tool.content.set_tab_with (l_refer_tool_content, True)
+
+				--| Call stack tool (on right)
 			call_stack_tool.content.set_top ({SD_ENUMERATION}.right)
+
+				--| Objects tool			
 			objects_tool.content.set_top ({SD_ENUMERATION}.bottom)
 			if objects_tool.content.is_visible then
 				objects_tool.content.set_focus
 			end
+			l_refer_tool_content := objects_tool.content
 
-			l_tools.breakpoints_tool.content.set_relative (objects_tool.content, {SD_ENUMERATION}.right)
-			threads_tool.content.set_tab_with (l_tools.breakpoints_tool.content, True)
+				--| Breakpoints tool
+			l_tool := l_dyna_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
+			l_tool.content.set_relative (l_refer_tool_content, {SD_ENUMERATION}.right)
+			l_refer_tool_content := l_tool.content
 
+				--| Threads tool
+			threads_tool.content.set_tab_with (l_refer_tool_content, True)
+			l_refer_tool_content := threads_tool.content
+
+				--| Watch tools
 			l_wt_lst := watch_tool_list
 			from
 				l_wt_lst.finish
 			until
 				l_wt_lst.before
 			loop
-
 				if l_last_watch_tool = Void then
-					l_wt_lst.item.content.set_tab_with (threads_tool.content, True)
+					l_wt_lst.item.content.set_tab_with (l_refer_tool_content, True)
 				else
 					l_wt_lst.item.content.set_tab_with (l_last_watch_tool.content, True)
 				end
@@ -2174,7 +2183,8 @@ feature {NONE} -- Implementation
 				l_wt_lst.back
 			end
 
-			l_tool := l_tools.diagram_tool
+				--| Diagram tool
+			l_tool := l_dyna_tools.tool ({ES_DIAGRAM_TOOL}).panel
 			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
 				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
 				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
@@ -2184,7 +2194,8 @@ feature {NONE} -- Implementation
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
 
-			l_tool := l_tools.dependency_tool
+				--| Dependency tool
+			l_tool := l_dyna_tools.tool ({ES_DEPENDENCY_TOOL}).panel
 			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
 				-- First we pin it, then pin it again. So we can make sure the tab stub order and tab stub direction.
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
@@ -2192,9 +2203,13 @@ feature {NONE} -- Implementation
 			else
 				l_tool.content.set_auto_hide ({SD_ENUMERATION}.bottom)
 			end
+			l_refer_tool_content := l_tool.content
 
-			l_tools.metric_tool.content.set_tab_with (l_tools.dependency_tool.content, False)
+				--| Metrics tool
+			l_tool := l_dyna_tools.tool ({ES_METRICS_TOOL}).panel
+			l_tool.content.set_tab_with (l_refer_tool_content, False)
 
+				--| Error list tool
 			l_tool := l_dyna_tools.tool ({ES_ERROR_LIST_TOOL}).panel
 			if l_tool.content.state_value = {SD_ENUMERATION}.auto_hide then
 				-- Same reason as EB_DEVELOPMENT_WINDOW.internal_construct_standard_layout_by_code.
@@ -2206,9 +2221,11 @@ feature {NONE} -- Implementation
 			end
 
 			-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
-			l_window := debugging_window.window
-			l_tools.favorites_tool.content.set_tab_with (call_stack_tool.content, False)
-			l_tools.favorites_tool.content.hide
+
+			l_refer_tool_content := call_stack_tool.content
+			l_tool := l_dyna_tools.tool ({ES_FAVORITES_TOOL}).panel
+			l_tool.content.set_tab_with (l_refer_tool_content, False)
+			l_tool.content.hide
 
 				--| Minimize all editors
 			from
@@ -2230,7 +2247,7 @@ feature {NONE} -- Implementation
 			l_tool: ES_BREAKPOINTS_TOOL_PANEL
 		do
 			if debugging_window /= Void then
-				l_tool := debugging_window.tools.breakpoints_tool
+				l_tool ?= debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
 				if l_tool.content.is_visible then
 					l_tool.refresh
 				end

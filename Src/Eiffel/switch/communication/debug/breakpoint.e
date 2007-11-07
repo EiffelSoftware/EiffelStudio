@@ -138,7 +138,7 @@ feature -- Properties
 			--| mode: 0x4 multiple of
 			--| mode: 0x8 greater or equal
 
-	condition: EB_EXPRESSION
+	condition: DBG_EXPRESSION
 			-- Condition to stop.
 
 	condition_as_is_true: BOOLEAN is
@@ -250,7 +250,7 @@ feature -- Run to cursor mode
 
 	backup_data: TUPLE [
 						bench_status: INTEGER;
-						condition_type: INTEGER; condition: EB_EXPRESSION;
+						condition_type: INTEGER; condition: DBG_EXPRESSION;
 						continue_on_condition_failure: BOOLEAN;
 						message: STRING; continue_execution: BOOLEAN;
 						hits_count: INTEGER; hits_count_condition: like hits_count_condition
@@ -554,7 +554,7 @@ feature -- Setting
 
 feature -- Condition change
 
-	set_condition (expr: EB_EXPRESSION) is
+	set_condition (expr: DBG_EXPRESSION) is
 			-- Set `Current's condition.
 		require
 			valid_breakable_line_number: breakable_line_number > 0

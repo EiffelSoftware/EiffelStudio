@@ -72,7 +72,7 @@ feature -- Properties
 	tooltip: STRING_GENERAL is
 			-- Tooltip for `Current'.
 		do
-			Result := interface_names.b_Debugging_options
+			Result := interface_names.b_Execution_parameters
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER is
@@ -90,19 +90,19 @@ feature -- Properties
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := "Debugging_options"
+			Result := "Execution_parameters"
 		end
 
 	menu_name: STRING_GENERAL is
 			-- Menu name
 		do
-			Result := interface_names.m_debugging_options
+			Result := interface_names.m_Execution_parameters
 		end
 
 	tooltext: STRING_GENERAL is
 			-- Default text displayed in toolbar button
 		do
-			Result := interface_names.b_Debugging_options
+			Result := interface_names.b_Execution_parameters
 		end
 
 feature {NONE} -- Attributes

@@ -136,7 +136,6 @@ feature -- Command
 		local
 			l_floating_tool_bars: like floating_tool_bars
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
-			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 		do
 			from
 				l_floating_tool_bars := floating_tool_bars
@@ -148,18 +147,10 @@ feature -- Command
 				l_floating_tool_bars.forth
 			end
 			ev_application.pointer_button_press_actions.prune_all (application_right_click_agent)
-			from
-				l_contents := contents
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				l_tool_bar_zone := l_contents.item.zone
-				if l_tool_bar_zone /= Void then
-					l_tool_bar_zone.destroy
-				end
-				l_contents.forth
-			end
+			contents.do_all (agent (a_content: SD_TOOL_BAR_CONTENT)
+										do
+											a_content.destroy
+										end)
 			contents.wipe_out
 			docking_manager := Void
 		end

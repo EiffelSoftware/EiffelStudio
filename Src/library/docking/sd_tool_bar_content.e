@@ -125,6 +125,8 @@ feature -- Command
 
 	show is
 			-- Show Current.
+		require
+			not_destroyed: not is_destroyed
 		do
 			if not is_visible then
 				if zone /= Void then
@@ -145,6 +147,8 @@ feature -- Command
 
 	hide is
 			-- Hide Current
+		require
+			not_destroyed: not is_destroyed
 		local
 			l_row: SD_TOOL_BAR_ROW
 		do
@@ -171,6 +175,8 @@ feature -- Command
 
 	close is
 			-- Close Current
+		require
+			not_destroyed: not is_destroyed
 		do
 			destroy_container
 			if manager /= Void then
@@ -182,6 +188,7 @@ feature -- Command
 	set_title (a_display_title: STRING_GENERAL) is
 			-- Set `title' with `a_display_title'
 		require
+			not_destroyed: not is_destroyed
 			not_void: a_display_title /= Void
 		do
 			title := a_display_title
@@ -192,6 +199,7 @@ feature -- Command
 	set_top (a_direction: INTEGER) is
 			-- Set dock at `a_direction'
 		require
+			not_destroyed: not is_destroyed
 			valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 			added: is_added
 		do
@@ -207,6 +215,7 @@ feature -- Command
 	set_top_with (a_target_content: SD_TOOL_BAR_CONTENT) is
 			-- Set Current dock at same row/column with `a_other_content'.
 		require
+			not_destroyed: not is_destroyed
 			not_void: a_target_content /= Void
 			added: is_added
 			target_docking: a_target_content.is_docking
@@ -222,10 +231,24 @@ feature -- Command
 
 	refresh is
 			-- Refresh tool bar if items visible changed.
+		require
+			not_destroyed: not is_destroyed
 		do
 			if zone /= Void then
 				zone.assistant.refresh_items_visible
 			end
+		end
+
+	destroy is
+			-- When a SD_DOCKING_MANAGER destroy, all SD_CONTENTs in it will be destroyed.
+			-- Clear all resources and all references.
+		do
+			if zone /= Void then
+				zone.destroy
+			end
+			is_destroyed := True
+		ensure
+			destroyed: is_destroyed
 		end
 
 feature -- Query
@@ -447,6 +470,9 @@ feature -- Query
 		do
 			Result := manager /= Void
 		end
+
+	is_destroyed: BOOLEAN
+			-- If Current destroyed?
 
 	is_visible: BOOLEAN
 			-- If Current visible?

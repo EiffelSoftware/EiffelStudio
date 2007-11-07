@@ -335,7 +335,14 @@ feature -- Command
 			if l_row /= Void then
 				l_row.destroy
 			end
-			tool_bar := Void
+			if agents /= Void then
+				agents.destroy
+				agents := Void
+			end
+			if tool_bar /= Void then
+				tool_bar.destroy
+				tool_bar := Void
+			end
 			docking_manager := Void
 		end
 

@@ -95,14 +95,14 @@ feature {NONE} -- Implementation
 			not_void: data /= Void
 			ready: data.is_all_data_filled
 		local
-			l_whole_file: CURL_MEMORY_STRUCT
+			l_whole_file: CURL_STRING
 			l_view_state_value, l_event_validation: STRING
-			l_post_string: STRING
+			l_post_string: CURL_STRING
 		do
-			create l_whole_file.make
+			create l_whole_file.make_empty
 
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "https://www2.eiffel.com/login/secure/logon.aspx")
-			curl_easy.setopt_memory_struct (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_whole_file)
+			curl_easy.setopt_curl_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_whole_file)
 
 			easy_perform
 
@@ -112,15 +112,15 @@ feature {NONE} -- Implementation
 			url_encoding (l_view_state_value)
 			url_encoding (l_event_validation)
 
-			create l_whole_file.make
+			create l_whole_file.make_empty
 			--curl_set_header_opt (curl_handle)
 
-			l_post_string := post_string_for_login (l_view_state_value, l_event_validation, data.username.as_string_8, data.password.as_string_8)
+			create l_post_string.make_from_string (post_string_for_login (l_view_state_value, l_event_validation, data.username.as_string_8, data.password.as_string_8))
 
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "https://www2.eiffel.com/login/secure/logon.aspx")
  			curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_post, 1)
  			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfields, l_post_string)
- 			curl_easy.setopt_memory_struct (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_whole_file)
+ 			curl_easy.setopt_curl_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_whole_file)
  			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_cookie, "____Pagemain_div__ToggleState=1")
 
 			easy_perform
@@ -166,14 +166,14 @@ feature {NONE} -- Implementation
 			l_view_state, l_validation: STRING
 			l_event_target: STRING
 			l_form: CURL_FORM
-			l_memory: CURL_MEMORY_STRUCT
+			l_memory: CURL_STRING
 		do
 			l_view_state := (find_view_state (a_last_html.as_string_8))
 			l_validation := (find_event_validation (a_last_html.as_string_8))
 
 			l_event_target := ("ctl00$ctl00$default_main_content$main_content$category_list")
 			l_form := form_for_bug_report (l_view_state, l_validation, l_event_target)
-			create l_memory.make
+			create l_memory.make_empty
 
 			setopt_with_form (l_memory, l_form)
 
@@ -190,10 +190,10 @@ feature {NONE} -- Implementation
 	 		not_void: a_post_url_string /= Void
 	 		not_void: a_refer_header /= Void
 	 	local
-	 		l_data: CURL_MEMORY_STRUCT
+	 		l_data: CURL_STRING
 		do
-			create l_data.make
-			curl_easy.setopt_memory_struct (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_data)
+			create l_data.make_empty
+			curl_easy.setopt_curl_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_data)
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, a_target_url)
 			curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_post, 1)
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfields, a_post_url_string)
@@ -208,13 +208,13 @@ feature {NONE} -- Html contents
 		require
 			not_void: curl_handle /= default_pointer
 		local
-			l_data: CURL_MEMORY_STRUCT
+			l_data: CURL_STRING
 		do
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "https://www2.eiffel.com/support/protected/problem_report_form.aspx")
 			curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_post, 0)
 
-			create l_data.make
-			curl_easy.setopt_memory_struct (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_data)
+			create l_data.make_empty
+			curl_easy.setopt_curl_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_data)
 
 			easy_perform
 			Result := l_data.string
@@ -230,7 +230,7 @@ feature {NONE} -- Html contents
 			l_event_target: STRING
 			l_result_string: STRING
 			l_form: CURL_FORM
-			l_result_html: CURL_MEMORY_STRUCT
+			l_result_html: CURL_STRING
 		do
 			l_result_string := a_last_html.as_string_8
 
@@ -240,7 +240,7 @@ feature {NONE} -- Html contents
 
 			l_form := form_for_bug_report (l_view_state, l_validation, l_event_target)
 
-			create l_result_html.make
+			create l_result_html.make_empty
 			setopt_with_form (l_result_html, l_form)
 
 			easy_perform
@@ -254,13 +254,13 @@ feature {NONE} -- Html contents
 			not_void: curl_handle /= default_pointer
 			not_void: a_final_sutmit_page /= Void
 		local
-			l_result_html: CURL_MEMORY_STRUCT
+			l_result_html: CURL_STRING
 		do
-			create l_result_html.make
+			create l_result_html.make_empty
 
 			curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_post, 0)
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, a_final_sutmit_page)
-			curl_easy.setopt_memory_struct (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_result_html)
+			curl_easy.setopt_curl_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_result_html)
 
 			easy_perform
 
@@ -348,6 +348,7 @@ feature {NONE} -- cURL level implementations
 			curl_handle := curl_easy.init
 			debug ("cURL")
 				curl_easy.set_debug_function (curl_handle)
+				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_verbose, 1)
 			end
 			curl_easy.set_write_function (curl_handle)
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_cookiefile, "cookie.txt")
@@ -370,13 +371,13 @@ feature {NONE} -- cURL level implementations
 			end
 		end
 
-	 setopt_with_form (a_data: CURL_MEMORY_STRUCT; a_formpost: CURL_FORM) is
+	 setopt_with_form (a_data: CURL_STRING; a_formpost: CURL_FORM) is
 	 		-- Set options with `a_formpost'.
 	 	require
 	 		not_void_and_exists: a_formpost /= Void and then a_formpost.is_exists
 	 		not_void: curl_handle /= default_pointer
 		do
-			curl_easy.setopt_memory_struct (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, a_data)
+			curl_easy.setopt_curl_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, a_data)
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_cookie, "____Pagemain_div__ToggleState=1; ____Pagemain_id__ToggleState=1")
 			curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "https://www2.eiffel.com/support/protected/problem_report_form.aspx")
 			curl_easy.setopt_form (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httppost, a_formpost)

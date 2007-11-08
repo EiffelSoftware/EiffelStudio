@@ -101,8 +101,8 @@ CFLAGS = $(CFLAGS) /DUSE_WINDOWS_SSPI /I$(WINDOWS_SDK_PATH)\include
 ##############################################################
 # Runtime library configuration
 
-RTLIB   = /MD
-RTLIBD  = /MDd
+RTLIB   = /MT
+RTLIBD  = /MTd
 
 !IF "$(RTLIBCFG)" == "static"
 RTLIB  = /MT

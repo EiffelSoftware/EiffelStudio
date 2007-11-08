@@ -19,36 +19,30 @@
 #define eiffel_curl
 
 typedef EIF_INTEGER (* EIF_CURL_PROGRESS_PROC) (
-#ifndef EIF_IL_DLL
-	EIF_OBJECT,     /* CURL_FUNCTION Eiffel object */
-#endif
-	 EIF_POINTER, /* a_user_pointer */
-	 EIF_REAL_64, /* a_dltotal */
-	 EIF_REAL_64, /* a_dlnow */
-	 EIF_REAL_64, /* a_ultotal */
-	 EIF_REAL_64  /* a_ulnow */
-	 );
+	EIF_OBJECT,  /* CURL_FUNCTION Eiffel object */
+	EIF_POINTER, /* a_user_pointer */
+	EIF_REAL_64, /* a_dltotal */
+	EIF_REAL_64, /* a_dlnow */
+	EIF_REAL_64, /* a_ultotal */
+	EIF_REAL_64  /* a_ulnow */
+	);
 	
 typedef EIF_INTEGER (* EIF_CURL_WRITE_PROC) (
-#ifndef EIF_IL_DLL
-	EIF_OBJECT,     /* CURL_FUNCTION Eiffel object */
-#endif
-	 EIF_POINTER, /* a_data_pointer */
-	 EIF_INTEGER, /* a_size */
-	 EIF_INTEGER, /* a_nmemb */
-	 EIF_POINTER  /* a_write_pointer */
-	 );
+	EIF_OBJECT,  /* CURL_FUNCTION Eiffel object */
+	EIF_POINTER, /* a_data_pointer */
+	EIF_INTEGER, /* a_size */
+	EIF_INTEGER, /* a_nmemb */
+	EIF_POINTER  /* a_write_pointer */
+	);
 	
 typedef EIF_INTEGER (* EIF_CURL_DEBUG_PROC) (
-#ifndef EIF_IL_DLL
-	EIF_OBJECT,     /* CURL_FUNCTION Eiffel object */
-#endif
-	 EIF_POINTER, /* a_curl_handle */
-	 EIF_INTEGER, /* a_curl_infotype */
-	 EIF_POINTER	/* a_char_pointer */
-	 EIF_INTEGER, /* a_size */
-	 EIF_POINTER  /* a_user_pointer */
-	 );
+	EIF_OBJECT,  /* CURL_FUNCTION Eiffel object */
+	EIF_POINTER, /* a_curl_handle */
+	EIF_INTEGER, /* a_curl_infotype */
+	EIF_POINTER, /* a_char_pointer */
+	EIF_INTEGER, /* a_size */
+	EIF_POINTER  /* a_user_pointer */
+	);
 
 EIF_OBJECT eiffel_function_object = NULL;
 	/* Address of Eiffel object CURL_FUNCTION */
@@ -98,9 +92,7 @@ size_t curl_write_function (void *ptr, size_t size, size_t nmemb, void *data)
 {
 	if (eiffel_function_object) {
 		return (size_t) ((eiffel_write_function) (
-#ifndef EIF_IL_DLL
 			(EIF_OBJECT) eif_access (eiffel_function_object),
-#endif
 			(EIF_POINTER) ptr,
 			(EIF_INTEGER) size,
 			(EIF_INTEGER) nmemb,
@@ -115,9 +107,7 @@ size_t curl_progress_function (void * a_object_id, double a_dltotal, double a_dl
  {
 	if (eiffel_function_object) {
 		return (size_t) ((eiffel_progress_function) (
-#ifndef EIF_IL_DLL
 			(EIF_OBJECT) eif_access (eiffel_function_object),
-#endif
 			(EIF_POINTER) a_object_id,
 			(EIF_REAL_64) a_dltotal,
 			(EIF_REAL_64) a_dlnow,
@@ -133,9 +123,7 @@ size_t curl_debug_function (CURL * a_curl_handle, curl_infotype a_curl_infotype,
  {
 	if (eiffel_function_object) {
 		return (size_t) ((eiffel_debug_function) (
-#ifndef EIF_IL_DLL
 			(EIF_OBJECT) eif_access (eiffel_function_object),
-#endif
 			(EIF_POINTER) a_curl_handle,
 			(EIF_INTEGER) a_curl_infotype,
 			(EIF_POINTER) a_char_pointer,

@@ -54,18 +54,18 @@ feature -- Command
 			setopt_void_star (a_curl_handle, a_opt, a_form.item)
 		end
 
-	setopt_memory_struct (a_curl_handle: POINTER; a_opt: INTEGER; a_memory_struct: CURL_MEMORY_STRUCT) is
+	setopt_curl_string (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_string: CURL_STRING) is
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
-			not_void: a_memory_struct /= Void
+			not_void: a_curl_string /= Void
 		local
 			l_api: POINTER
 		do
 			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
 			if l_api /= default_pointer then
-				c_setopt (l_api, a_curl_handle, a_opt, a_memory_struct.item)
+				c_setopt_int (l_api, a_curl_handle, a_opt, a_curl_string.object_id)
 			end
 		end
 
@@ -113,6 +113,26 @@ feature -- Command
 
 feature -- Special setting
 
+	set_curl_function (a_curl_function: CURL_FUNCTION) is
+			-- Set `curl_function' with `a_curl_function'
+		do
+			internal_curl_function := a_curl_function
+		ensure
+			set: a_curl_function /= Void implies curl_function = a_curl_function
+		end
+
+	curl_function: CURL_FUNCTION is
+			-- cURL functions in curl_easy_setopt.
+		do
+			Result := internal_curl_function
+			if Result = Void then
+				create {CURL_DEFAULT_FUNCTION} Result.make
+				internal_curl_function := Result
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 	set_write_function (a_curl_handle: POINTER) is
 				-- Set cURL write function
 		require
@@ -122,7 +142,20 @@ feature -- Special setting
 		do
 			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
 			if l_api /= default_pointer then
-				c_set_write_function (l_api, a_curl_handle)
+				curl_function.c_set_write_function (l_api, a_curl_handle)
+			end
+		end
+
+	set_progress_function (a_curl_handle: POINTER) is
+				-- Set cURL progress function for upload/download progress.
+		require
+			exists: a_curl_handle /= default_pointer
+		local
+			l_api: POINTER
+		do
+			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
+			if l_api /= default_pointer then
+				curl_function.c_set_progress_function (l_api, a_curl_handle)
 			end
 		end
 
@@ -135,11 +168,14 @@ feature -- Special setting
 		do
 			l_api := api_loader.safe_load_api (module_name, "curl_easy_setopt")
 			if l_api /= default_pointer then
-				c_debug_function (l_api, a_curl_handle)
+				curl_function.c_set_debug_function (l_api, a_curl_handle)
 			end
 		end
 
 feature {NONE} -- Implementation
+
+	internal_curl_function: CURL_FUNCTION
+			-- cURL functions.
 
 	api_loader: API_LOADER is
 			-- API dynamic loader
@@ -232,7 +268,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_setopt (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data:POINTER) is
+	c_setopt (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: POINTER) is
 			-- C implementation of `setopt_void_star'.
 			-- Declared as curl_easy_setopt ().
 		require
@@ -248,47 +284,6 @@ feature {NONE} -- C externals
 												((CURL *) $a_curl_handle,
 												(CURLoption)$a_opt,
 												$a_data);			
-			}
-			]"
-		end
-
-	c_set_write_function (a_setopt_api: POINTER; a_curl_handle: POINTER) is
-				-- Setting CURLOPT_WRITEFUNCTION option of `a_curl_handle'.
-				-- We need this function since cURL need a static c function pointer as value.
-		require
-			exists: a_setopt_api /= default_pointer
-		external
-			"C inline use <eiffel_curl.h>"
-		alias
-			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_WRITEFUNCTION,
-												WriteMemoryCallback);
-			}
-			]"
-		end
-
-	c_debug_function (a_setopt_api: POINTER; a_curl_handle: POINTER) is
-				-- Setting CURLOPT_DEBUGFUNCTION option of `a_curl_handle'.
-				-- We need this function since cURL need a static c function pointer as value.
-		require
-			exists: a_curl_handle /= default_pointer
-		external
-			"C inline use <eiffel_curl.h>"
-		alias
-			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_DEBUGFUNCTION,
-												curl_trace);
-
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_VERBOSE,
-												TRUE);																														
 			}
 			]"
 		end

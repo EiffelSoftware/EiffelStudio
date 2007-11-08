@@ -154,6 +154,36 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_progressfunction: INTEGER is
+			-- Declared as CURLOPT_PROGRESSFUNCTION
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_PROGRESSFUNCTION;
+			]"
+		end
+
+	curlopt_noprogress: INTEGER is
+			-- Decalred as CURLOPT_NOPROGRESS
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_NOPROGRESS;
+			]"
+		end
+
+	curlopt_progressdata: INTEGER is
+			-- Decalred as CURLOPT_PROGRESSDATA
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_PROGRESSDATA;
+			]"
+		end
+
 	is_valid (a_integer: INTEGER): BOOLEAN is
 			-- If `a_integer' value vaild?
 		do
@@ -170,7 +200,10 @@ feature -- Enumerations.
 						a_integer = curlopt_verbose or
 						a_integer = curlopt_writedata or
 						a_integer = curlopt_writeheader or
-						a_integer = curlopt_writefunction
+						a_integer = curlopt_writefunction or
+						a_integer = curlopt_progressfunction or
+						a_integer = curlopt_progressdata or
+						a_integer = curlopt_noprogress
 		end
 
 indexing

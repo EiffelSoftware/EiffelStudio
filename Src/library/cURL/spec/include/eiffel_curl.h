@@ -9,119 +9,140 @@
 
 #include <curl/curl.h>
 
-typedef char bool;
-#define TRUE 1
+#include "eif_main.h"
+
+#ifdef EIF_THREADS
+#include "eif_threads.h"
+#endif
 
 #ifndef eiffel_curl
 #define eiffel_curl
 
-struct cURLMemoryStruct {
-  char *memory;
-  size_t size;
-};
-
-static void dump(const char *text, FILE *stream, unsigned char *ptr, size_t size,bool nohex)
-{
-  size_t i;
-  size_t c;
-
-  unsigned int width=0x10;
-
-  if(nohex)
-    /* without the hex output, we can fit more on screen */
-    width = 0x400;
-
-   fprintf(stream, "%s, %zd bytes (0x%zx)\n", text, size, size);
-
-  for(i=0; i<size; i+= width) {
-
-    fprintf(stream, "%04zx: ", i);
-
-    if(!nohex) {
-      /* hex not disabled, show it */
-      for(c = 0; c < width; c++)
-        if(i+c < size)
-          fprintf(stream, "%02x ", ptr[i+c]);
-        else
-          fputs("   ", stream);
-    }
-
-    for(c = 0; (c < width) && (i+c < size); c++) {
-      /* check for 0D0A; if found, skip past and start a new line of output */
-      if (nohex && (i+c+1 < size) && ptr[i+c]==0x0D && ptr[i+c+1]==0x0A) {
-        i+=(c+2-width);
-        break;
-      }
-      fprintf(stream, "%c",
-              (ptr[i+c]>=0x20) && (ptr[i+c]<0x80)?ptr[i+c]:'.');
-      /* check again for 0D0A, to avoid an extra \n if it's at width */
-      if (nohex && (i+c+2 < size) && ptr[i+c+1]==0x0D && ptr[i+c+2]==0x0A) {
-        i+=(c+3-width);
-        break;
-      }
-    }
-    fputc('\n', stream); /* newline */
-  }
-  fflush(stream);
-}
-
-static int curl_trace(CURL *handle, curl_infotype type, unsigned char *data, size_t size, void *userp)
-{
-  const char *text;
-
-  (void)handle; /* prevent compiler warning */
-
-  switch (type) {
-  case CURLINFO_TEXT:
-    fprintf(stderr, "== Info: %s", data);
-  default: /* in case a new one is introduced to shock us */
-    return 0;
-
-  case CURLINFO_HEADER_OUT:
-    text = "=> Send header";
-    break;
-  case CURLINFO_DATA_OUT:
-    text = "=> Send data";
-    break;
-  case CURLINFO_HEADER_IN:
-    text = "<= Recv header";
-
-    break;
-  case CURLINFO_DATA_IN:
-    text = "<= Recv data";
-    break;
-  }
-
-  dump(text, stderr, data, size, TRUE);
-  return 0;
-}
-
-static void *eiffel_realloc(void *ptr, size_t size)
-{
-  /* There might be a realloc() out there that doesn't like reallocing
-     NULL pointers, so we take care of it here */
-  if(ptr)
-     return realloc(ptr, size);
-  else
-     return malloc(size);
-}
-
-static size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
-{
-  size_t realsize = size * nmemb;
-  size_t totalsize;
-
-  struct cURLMemoryStruct *mem = (struct cURLMemoryStruct *)data;
-
-  mem->memory = (char *)eiffel_realloc(mem->memory, mem->size + realsize + 1);
-  
-  if (mem->memory) {
-    memcpy(&(mem->memory[mem->size]), ptr, realsize);
-    mem->size += realsize;
-    mem->memory[mem->size] = 0;
-  } 
-  	
-  return realsize;
-}
-
+typedef EIF_INTEGER (* EIF_CURL_PROGRESS_PROC) (
+#ifndef EIF_IL_DLL
+	EIF_OBJECT,     /* CURL_FUNCTION Eiffel object */
 #endif
+	 EIF_POINTER, /* a_user_pointer */
+	 EIF_REAL_64, /* a_dltotal */
+	 EIF_REAL_64, /* a_dlnow */
+	 EIF_REAL_64, /* a_ultotal */
+	 EIF_REAL_64  /* a_ulnow */
+	 );
+	
+typedef EIF_INTEGER (* EIF_CURL_WRITE_PROC) (
+#ifndef EIF_IL_DLL
+	EIF_OBJECT,     /* CURL_FUNCTION Eiffel object */
+#endif
+	 EIF_POINTER, /* a_data_pointer */
+	 EIF_INTEGER, /* a_size */
+	 EIF_INTEGER, /* a_nmemb */
+	 EIF_POINTER  /* a_write_pointer */
+	 );
+	
+typedef EIF_INTEGER (* EIF_CURL_DEBUG_PROC) (
+#ifndef EIF_IL_DLL
+	EIF_OBJECT,     /* CURL_FUNCTION Eiffel object */
+#endif
+	 EIF_POINTER, /* a_curl_handle */
+	 EIF_INTEGER, /* a_curl_infotype */
+	 EIF_POINTER	/* a_char_pointer */
+	 EIF_INTEGER, /* a_size */
+	 EIF_POINTER  /* a_user_pointer */
+	 );
+
+EIF_OBJECT eiffel_function_object = NULL;
+	/* Address of Eiffel object CURL_FUNCTION */
+	
+EIF_CURL_PROGRESS_PROC eiffel_progress_function = NULL;
+	/* Address of Eiffel CURL_FUNCTION.progress_function */
+
+EIF_CURL_WRITE_PROC eiffel_write_function = NULL;
+	/* Address of Eiffel CURL_FUNCTION.write_function */
+
+EIF_CURL_DEBUG_PROC eiffel_debug_function = NULL;
+	/* Address of Eiffel CURL_FUNCTION.debug_function */
+
+/* Set Eiffel CURL_FUNCTION object address */
+void c_set_object(EIF_OBJECT a_address)
+{
+	eiffel_function_object = (EIF_OBJECT) eif_adopt (a_address);
+}
+
+/* Release Eiffel CURL_FUNCTION object address */
+void c_release_object()
+{
+	eif_wean (eiffel_function_object);
+}
+
+/* Set CURL_FUNCTOIN.progress_function address */
+void c_set_progress_function_address( EIF_POINTER a_address)
+{
+	eiffel_progress_function = (EIF_CURL_PROGRESS_PROC) a_address;
+}
+
+/* Set CURL_FUNCTOIN.write_function address */
+void c_set_write_function_address( EIF_POINTER a_address)
+{
+	eiffel_write_function = (EIF_CURL_WRITE_PROC) a_address;
+}
+
+/* Set CURL_FUNCTOIN.debug_function address */
+void c_set_debug_function_address (EIF_POINTER a_address)
+{
+	eiffel_debug_function = (EIF_CURL_DEBUG_PROC) a_address;
+}
+
+/* 	Eiffel adapter function for CURLOPT_WRITEFUNCTION
+		We need this function since Eiffel function call need first parameter is EIF_OBJECT. */
+size_t curl_write_function (void *ptr, size_t size, size_t nmemb, void *data)
+{
+	if (eiffel_function_object) {
+		return (size_t) ((eiffel_write_function) (
+#ifndef EIF_IL_DLL
+			(EIF_OBJECT) eif_access (eiffel_function_object),
+#endif
+			(EIF_POINTER) ptr,
+			(EIF_INTEGER) size,
+			(EIF_INTEGER) nmemb,
+			(EIF_POINTER) data));
+	} else {
+	}  
+}
+
+/* 	Eiffel adapter function for CURLOPT_PROGRESSFUNCTION
+		We need this function since Eiffel function call need first parameter is EIF_OBJECT. */
+size_t curl_progress_function (void * a_object_id, double a_dltotal, double a_dlnow, double a_ultotal, double a_ulnow)
+ {
+	if (eiffel_function_object) {
+		return (size_t) ((eiffel_progress_function) (
+#ifndef EIF_IL_DLL
+			(EIF_OBJECT) eif_access (eiffel_function_object),
+#endif
+			(EIF_POINTER) a_object_id,
+			(EIF_REAL_64) a_dltotal,
+			(EIF_REAL_64) a_dlnow,
+			(EIF_REAL_64) a_ultotal,
+			(EIF_REAL_64) a_ulnow));
+	} else {
+	}   
+ }
+
+/* 	Eiffel adapter function for CURLOPT_DEBUGFUNCTION
+		We need this function since Eiffel function call need first parameter is EIF_OBJECT. */ 
+size_t curl_debug_function (CURL * a_curl_handle, curl_infotype a_curl_infotype, unsigned char * a_char_pointer, size_t a_size, void * a_object_id)
+ {
+	if (eiffel_function_object) {
+		return (size_t) ((eiffel_debug_function) (
+#ifndef EIF_IL_DLL
+			(EIF_OBJECT) eif_access (eiffel_function_object),
+#endif
+			(EIF_POINTER) a_curl_handle,
+			(EIF_INTEGER) a_curl_infotype,
+			(EIF_POINTER) a_char_pointer,
+			(EIF_INTEGER) a_size,
+			(EIF_POINTER) a_object_id));
+	} else {
+	}   
+ }
+ 
+#endif	

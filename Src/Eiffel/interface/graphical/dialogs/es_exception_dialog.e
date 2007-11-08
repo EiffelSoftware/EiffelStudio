@@ -74,7 +74,7 @@ feature {NONE} -- Initialize
 
 			create exception_text_panel
 			exception_text_panel.disable_line_numbers
-			exception_text_panel.widget.set_minimum_size (400, 100)
+			exception_text_panel.widget.set_minimum_size (400, 165)
 			if trace /= Void then
 				resize_exception_text_panel
 				exception_text_panel.load_text (trace)
@@ -266,7 +266,7 @@ feature {NONE} -- Action handlers
 		do
 			create l_dialog.make
 			l_dialog.set_exception_trace (trace)
-			l_dialog.show_relative_to_window (dialog)
+			l_dialog.show_modal_to_window (dialog)
 		end
 
 feature -- Button constants

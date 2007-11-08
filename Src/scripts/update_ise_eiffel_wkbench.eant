@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+
+<project name="UpdateIseEiffel_wkbench" default="menu">
+	<description>
+		description: "update or create the ${ISE_EIFFEL}_wkbench folder (cf: http://dev.eiffel.com/Running_EiffelStudio_in_Workbench_mode)"
+		author: "Jocelyn Fiat and others"
+	</description>
+
+	<target name="menu">
+		<set name="debug_mode" value="false" unless="${debug_mode}=true" />
+		<set name="runtimeversion" value="" unless="${runtimeversion}=" />
+		<echo message=" -> debug_mode=${debug_mode}" />
+		<echo message=" -> runtimeversion=${runtimeversion}" />
+		<geant target="update_wkbench" reuse_variables="true" />
+	</target>
+
+	<target name="debug">
+		<set name="debug_mode" value="true" />
+		<set name="runtimeversion" value="d" />
+		<geant target="menu" reuse_variables="true" />
+	</target>
+	<target name="w">
+		<set name="runtimeversion" value="w" />
+		<geant target="menu" reuse_variables="true" />
+	</target>
+
+	<target name="init">
+		<set name="config_local_path" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}config-local.eant" />
+		<available resource="${config_local_path}" variable="config_local_available"/>
+		<geant target="create_config_local_script" reuse_variables="true" fork="false" unless="${config_local_available}=true"/>
+		<geant file="${config_local_path}" target="init" reuse_variables="true" fork="false"/>
+		<available resource="${ISE_EIFFEL}_wkbench" variable="ise_wkbench_available"/>
+		<geant target="create_wkbench" if="${ise_wkbench_available}=false" />
+	</target>
+
+	<target name="create_config_local_script" >
+		<echo message="Creating local config script [${config_local_path}]" />
+		<echo to_file="${config_local_path}">
+&lt;project name="LocalConfig" default="init"&gt;
+	&lt;target name="init" &gt;
+		&lt;set name="compile_dir" value="&#36;{EIFFEL_SRC}&#36;{path_separator}Eiffel&#36;{path_separator}Ace" /&gt;
+		&lt;set name="delivery_dir" value="&#36;{EIFFEL_SRC}&#36;{path_separator}Delivery"  /&gt;
+	&lt;/target&gt;
+&lt;/project&gt;
+		</echo>
+	</target>
+
+	<target name="create_wkbench" >
+		<copy to_directory="${ISE_EIFFEL}_wkbench"
+			force="true"
+			dir="${delivery_dir}" 
+			unless="${return_code}=0"
+			>
+			<fileset include="@(**/*)" />
+		</copy>
+		<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${ISE_PLATFORM}" 
+			force="true"
+			dir="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}platform" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}-dotnet" 
+			force="true"
+			if="${is_windows}"
+			dir="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}dotnet" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<mkdir directory="${ISE_EIFFEL}_wkbench${path_separator}dotnet" />
+	</target>
+
+	<target name="update_wkbench" depend="init">
+		<echo message="debug_mode=${debug_mode}" />
+		<set name="wb_platform_dir" value="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+		<set name="ise_platform_dir" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+
+		<available resource="${delivery_dir}" variable="tmp0_available" />
+		<geant target="copy_from_delivery" reuse_variables="true" if="${tmp0_available}=true" />
+		<echo message="! Unavailable: Delivery folder= ${delivery_dir}" unless="${tmp0_available}=true" />
+
+		<mkdir directory="${wb_platform_dir}" />
+
+		<available resource="${ise_platform_dir}" variable="tmp0_available" />
+		<geant target="copy_from_ise_eiffel" reuse_variables="true" if="${tmp0_available}=true" />
+		<echo message="! Unavailable: ISE_EIFFEL folder= ${ise_platform_dir}" unless="${tmp0_available}=true" />
+
+		<available resource="${EIFFEL_SRC}" variable="tmp0_available" />
+		<geant target="copy_from_eiffel_src" reuse_variables="true" if="${tmp0_available}=true" />
+		<echo message="! Unavailable: EIFFEL_SRC folder= ${EIFFEL_SRC}" unless="${tmp0_available}=true" />
+
+		<set name="wcode_dir" value="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}W_code" />
+		<available resource="${wcode_dir}" variable="tmp0_available" />
+		<geant target="copy_from_to_w_code" reuse_variables="true" if="${tmp0_available}=true" />
+		<echo message="! Unavailable: W_code folder= ${wcode_dir}" unless="${tmp0_available}=true" />
+
+	</target>
+
+	<target name="copy_from_ise_eiffel" depend="init">
+		<echo message="Copy from [ISE_EIFFEL=${ISE_EIFFEL}]" />
+		<mkdir directory="${wb_platform_dir}${path_separator}bin" />
+		<copy to_directory="${wb_platform_dir}${path_separator}bin" 
+			force="true"
+			dir="${ise_platform_dir}${path_separator}bin" >
+			<fileset include="@(**/*)" />
+		</copy>
+
+		<mkdir directory="${wb_platform_dir}${path_separator}include" />
+		<copy to_directory="${wb_platform_dir}${path_separator}include" 
+			force="true"
+			dir="${ise_platform_dir}${path_separator}include" >
+			<fileset include="@(**/*)" />
+		</copy>
+
+		<mkdir directory="${wb_platform_dir}${path_separator}lib" />
+		<copy to_directory="${wb_platform_dir}${path_separator}lib" 
+			dir="${ise_platform_dir}${path_separator}lib" 
+			force="true"
+			>
+			<fileset include="@(**/*)" />
+		</copy>
+
+		<mkdir directory="${wb_platform_dir}${path_separator}lib${path_separator}${ISE_C_COMPILER}" />
+		<copy to_directory="${wb_platform_dir}${path_separator}lib${path_separator}${ISE_C_COMPILER}" 
+			dir="${ise_platform_dir}${path_separator}lib${path_separator}${ISE_C_COMPILER}" 
+			force="true"
+			if="${is_windows}" >
+			<fileset include="@(**/*)" />
+		</copy>
+	</target>
+
+	<target name="copy_from_delivery" depend="init">
+		<echo message="Copy from [Delivery=${delivery_dir}]" />
+		<copy to_directory="${ISE_EIFFEL}_wkbench"
+			force="true"
+			dir="${delivery_dir}" 
+			unless="${return_code}=0"
+			>
+			<fileset include="@(**/*)" />
+		</copy>
+	</target>
+
+	<target name="copy_from_eiffel_src" depend="init">
+		<echo message="Copy from [EIFFEL_SRC=${EIFFEL_SRC}]" />
+		<set name="runtimedir" value="${EIFFEL_SRC}${path_separator}C${runtimeversion}" unless="${debug_mode}=true" />
+		<set name="runtimedir" value="${EIFFEL_SRC}${path_separator}Cd${runtimeversion}" if="${debug_mode}=true" />
+		<echo message=" - Runtime dir = ${runtimedir} " />
+		<echo message=" - Update eif_.h" />
+		<copy to_directory="${wb_platform_dir}${path_separator}include" 
+			  force="true"
+			  dir="${runtimedir}" >
+			<fileset include="@(eif_*.h)" />
+		</copy>
+		<copy to_directory="${wb_platform_dir}${path_separator}include" 
+			  force="true"
+			  dir="${runtimedir}${path_separator}console" >
+			<fileset include="@(eif_*.h)" />
+		</copy>
+		<copy to_directory="${wb_platform_dir}${path_separator}include" 
+			  force="true"
+			  dir="${runtimedir}${path_separator}platform" >
+			<fileset include="@(eif_*.h)" />
+		</copy>
+		<copy to_directory="${wb_platform_dir}${path_separator}include" 
+			  force="true"
+			  dir="${runtimedir}${path_separator}run-time" >
+			<fileset include="@(eif_*.h)" />
+		</copy>
+
+		<echo message=" - Update lib" />
+		<copy to_directory="${wb_platform_dir}${path_separator}lib${path_separator}${ISE_C_COMPILER}" 
+				dir="${runtimedir}${path_separator}run-time${path_separator}LIB" 
+				force="true"
+				if="${is_windows}" >
+			<fileset include="@(**/*.lib)" />
+		</copy>
+		<copy to_directory="${wb_platform_dir}${path_separator}lib${path_separator}${ISE_C_COMPILER}" dir="${runtimedir}${path_separator}run-time" force="true" unless="${is_windows}" >
+			<fileset include="@(**/*.a)" />
+		</copy>
+
+		<available resource="${runtimedir}${path_separator}ipc${path_separator}daemon${path_separator}ecdbgd${exe}" variable="tmp_available" />
+		<echo message=" - Update ecdbgd " />
+		<copy to_file="${wb_platform_dir}${path_separator}bin${path_separator}ecdbgd${exe}" file="${runtimedir}${path_separator}ipc${path_separator}daemon${path_separator}ecdbgd${exe}" force="true" if="${tmp_available}=true" />
+
+		<echo message=" - Update dotnet .dll" if="${is_windows}" />
+		<copy to_directory="${wb_platform_dir}${path_separator}bin" 
+			  dir="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time" 
+			  force="true"
+			  if="${is_windows}" >
+			<fileset include="@(**/*.dll)" />
+		</copy>
+		<copy to_directory="${wb_platform_dir}${path_separator}lib" 
+			  dir="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time" 
+			  force="true"
+			  if="${is_windows}" >
+			<fileset include="@(**/*.dll)" />
+		</copy>
+	</target>
+
+	<target name="copy_from_to_w_code" depend="init">
+		<echo message="Copy from and to [W_code=${wcode_dir}]" />
+		<echo message="From W_code - update ec${exe} and ec.melted" />
+		<copy to_file="${wb_platform_dir}${path_separator}bin${path_separator}ec${exe}" file="${wcode_dir}${path_separator}ec${exe}" force="true" />
+		<copy to_file="${wb_platform_dir}${path_separator}bin${path_separator}ec.melted" file="${wcode_dir}${path_separator}ec.melted" force="true"  />
+
+		<!-- make sure we have the consumer in the W_code folder -->
+		<echo message="Copy to W_code the consumer dll" if="${is_windows}" />
+		<copy to_directory="${wcode_dir}"  force="true"
+			  dir="${wb_platform_dir}\bin" if="${is_windows}" >
+			<fileset include="@(**/*.dll)" />
+		</copy>
+	</target>
+
+</project>
+
+

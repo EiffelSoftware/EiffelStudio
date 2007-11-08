@@ -375,6 +375,7 @@ test	recompile-assertion-descendant-code	multierr009 tcf pass multi-errors
 test	svalid-infix-with-conversion	svalid001 tcf pass system-validity
 test	svalid-rename-constant-inspect	svalid002 tcf pass system-validity
 test	svalid-incremental-check		svalid003 tcf pass system-validity
+test	precursor-validity				svalid004 tcf pass system-validity
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

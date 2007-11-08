@@ -53,7 +53,7 @@
 			>
 			<fileset include="@(**/*)" />
 		</copy>
-		<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${ISE_PLATFORM}" 
+		<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" 
 			force="true"
 			dir="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}platform" >
 			<fileset include="@(**/*)" />

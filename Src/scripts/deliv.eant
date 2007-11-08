@@ -190,8 +190,8 @@
 		<echo message="Compile library ..." to_file="$build_es_logfile" append="true" />
 		<geant target="compile_library" reuse_variables="true" fork="false" />
 		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" variable="tmp_available"/>
-		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${OUTPUT_DIR}${path_separator}wel_hook.dll" if="${tmp_available}=true" />
+		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll\wel_hook.dll" variable="tmp_available"/>
+		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll\wel_hook.dll" to_file="${OUTPUT_DIR}${path_separator}wel_hook.dll" if="${tmp_available}=true" />
 		<echo message="compiled" to_file="${OUTPUT_DIR}${path_separator}library_is_compiled" if="${return_code}=0" />
 	</target>
 
@@ -456,6 +456,8 @@
 		<copy to_directory="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include" dir="${EIFFEL_SRC}/C/run-time" >
 			<fileset include="@(*.h)" />
 		</copy>
+		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}/${ISE_C_COMPILER}/config.sh" if="${is_windows}" />
+		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}/config.sh"  unless="${is_windows}" />
 		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include/eif_confmagic.h" />
 		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />
 		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" />

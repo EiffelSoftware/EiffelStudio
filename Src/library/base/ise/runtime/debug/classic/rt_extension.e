@@ -13,7 +13,7 @@ inherit
 
 feature -- Notification
 
-	notify (a_id: INTEGER; a_data: TUPLE) is
+	notify (a_id: INTEGER; a_data: TUPLE)
 			-- Notify operation `a_id' with data `a_data'
 		local
 			retried: BOOLEAN
@@ -50,7 +50,7 @@ feature -- Notification
 			retry
 		end
 
-	notify_argument (a_id: INTEGER): TUPLE is
+	notify_argument (a_id: INTEGER): TUPLE
 			-- Empty argument container for operation `a_id'.
 		local
 			retried: BOOLEAN
@@ -76,103 +76,114 @@ feature -- Notification
 
 feature {NONE} -- Execution replay
 
-	events_feature_argument (t: TUPLE): TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level:INTEGER; fn: POINTER] is
+	events_feature_argument (t: TUPLE): TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level:INTEGER; fn: POINTER]
 			-- Argument for `process_*_feature'.
 		do
 			Result ?= t
 		end
 
-	exec_replay_argument (t: TUPLE): TUPLE [op: INTEGER; val: INTEGER] is
+	exec_replay_argument (t: TUPLE): TUPLE [op: INTEGER; val: INTEGER]
 			-- Argument for `process_execution_replay'
 		do
 			Result ?= t
 		end
 
-	process_enter_feature (a_data: like events_feature_argument) is
+	process_enter_feature (a_data: like events_feature_argument)
 			-- Execution enters a feature
 		require
-			execution_recording_not_void: execution_recording /= Void
+			execution_recording_not_void: execution_recorder /= Void
 		local
-			r: like execution_recording
+			r: like execution_recorder
 		do
-			r := execution_recording
+			r := execution_recorder
 			r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level, a_data.fn)
 		end
 
-	process_rescue_feature (a_data: like events_feature_argument) is
+	process_rescue_feature (a_data: like events_feature_argument)
 			-- Execution enters a feature
 		require
-			execution_recording_not_void: execution_recording /= Void
+			execution_recording_not_void: execution_recorder /= Void
 		local
-			r: like execution_recording
+			r: like execution_recorder
 		do
-			r := execution_recording
+			r := execution_recorder
 			r.enter_rescue (a_data.ref, a_data.level)
 		end
 
-	process_leave_feature (a_data: like events_feature_argument) is
+	process_leave_feature (a_data: like events_feature_argument)
 			-- Execution leaves a feature
 		require
-			execution_recording_not_void: execution_recording /= Void
+			execution_recording_not_void: execution_recorder /= Void
 		local
-			r: like execution_recording
+			r: like execution_recorder
 		do
-			r := execution_recording
+			r := execution_recorder
 			r.leave_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level)
 		end
 
-	process_execution_replay_record (a_data: like exec_replay_argument) is
+	process_execution_replay_record (a_data: like exec_replay_argument)
 			-- (De)Activate execution recording
 		local
-			r: like execution_recording
+			r: like execution_recorder
 		do
 			if a_data.op.to_boolean then --| True: 1; False: 0
-				check execution_recording = Void end
-				create r.make (5_000)
-				execution_recording_cell.replace (r)
+				check execution_recorder = Void end
+				r := new_execution_recorder
+				execution_recorder_cell.replace (r)
 				r.start_recording
 			else
-				r := execution_recording
+				r := execution_recorder
 				r.stop_recording
-				execution_recording_cell.replace (Void)
+				execution_recorder_cell.replace (Void)
 			end
 		ensure
-			recorder_if_on: a_data.op = 1 implies execution_recording /= Void
-			no_recorder_if_off: a_data.op /= 1 implies execution_recording = Void
+			recorder_if_on: a_data.op = 1 implies execution_recorder /= Void
+			no_recorder_if_off: a_data.op /= 1 implies execution_recorder = Void
 		end
 
-	process_execution_replay (a_data: like exec_replay_argument) is
+	process_execution_replay (a_data: like exec_replay_argument)
 			-- Replay execution
 		require
-			execution_recording_not_void: execution_recording /= Void
+			execution_recording_not_void: execution_recorder /= Void
 		local
-			r: like execution_recording
+			r: like execution_recorder
 		do
-			r := execution_recording
+			r := execution_recorder
 			r.replay (a_data.op, a_data.val)
 			if r.last_replay_operation_failed then
 				a_data.val := 0
 			end
 		end
 
-	process_execution_replay_query (a_data: like exec_replay_argument) is
+	process_execution_replay_query (a_data: like exec_replay_argument)
 			-- Query about available steps for execution replay
 		require
-			execution_recording_not_void: execution_recording /= Void
+			execution_recording_not_void: execution_recorder /= Void
 		local
-			r: like execution_recording
+			r: like execution_recorder
 		do
-			r := execution_recording
+			r := execution_recorder
 			a_data.val := r.replay_query (a_data.op)
 		end
 
-	execution_recording: RT_DBG_EXECUTION_RECORDER is
-			-- Once per thread record.
+	new_execution_recorder: like execution_recorder
+			-- New Execution recorder.
 		do
-			Result := execution_recording_cell.item
+			create Result.make
+				--| Uncomment on of the following lines if you want to set
+				--|		+ 10_000 as maximum number of records
+				--|		+ 0 for unlimited number of records.
+--			r.set_maximum_record_count (10_000) -- Limited to 10_000 records
+--			r.set_maximum_record_count (0)	-- No limit
 		end
 
-	execution_recording_cell: CELL [RT_DBG_EXECUTION_RECORDER] is
+	execution_recorder: RT_DBG_EXECUTION_RECORDER
+			-- Once per thread record.
+		do
+			Result := execution_recorder_cell.item
+		end
+
+	execution_recorder_cell: CELL [RT_DBG_EXECUTION_RECORDER]
 			-- Cell containing the once per thread recorder, if activated.
 		indexing
 			description: "Once per thread"
@@ -182,13 +193,13 @@ feature {NONE} -- Execution replay
 
 feature {NONE} -- Object storage
 
-	object_storage_argument (t: TUPLE): TUPLE [ref: ANY; fn: POINTER; succeed: BOOLEAN] is
+	object_storage_argument (t: TUPLE): TUPLE [ref: ANY; fn: POINTER; succeed: BOOLEAN]
 			-- Argument for `process_object_storage_save' and `process_object_storage_load'.
 		do
 			Result ?= t
 		end
 
-	process_object_storage_save (t: like object_storage_argument) is
+	process_object_storage_save (t: like object_storage_argument)
 			-- Process the object saving for `t' data
 		local
 			fn: STRING
@@ -197,7 +208,7 @@ feature {NONE} -- Object storage
 			t.succeed := saved_object_to (t.ref, fn) /= Void
 		end
 
-	process_object_storage_load (t: like object_storage_argument) is
+	process_object_storage_load (t: like object_storage_argument)
 			-- Process the object loading for `t' data
 		local
 			obj: ANY

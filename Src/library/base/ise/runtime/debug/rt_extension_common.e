@@ -10,12 +10,14 @@ deferred class
 
 feature -- Trace
 
-	dtrace_indent (n: INTEGER) is
+	dtrace_indent (n: INTEGER)
+			-- note: might be removed with 6.2
 		do
 			io.error.put_string (create {STRING}.make_filled (' ', 2 * n))
 		end
 
-	dtrace (m: STRING) is
+	dtrace (m: STRING)
+			-- note: might be be removed with 6.2	
 		do
 			io.error.put_string (m)
 		end

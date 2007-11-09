@@ -26,7 +26,7 @@ feature -- RT extension identifiers (check eif_debug.h uses the same values)
 
 feature -- Object storage Access
 
-	saved_object_to (r: ANY; fn: STRING): ANY is
+	saved_object_to (r: ANY; fn: STRING): ANY
 			-- Save object `r' into file `fn'
 		local
 			file: RAW_FILE
@@ -42,7 +42,7 @@ feature -- Object storage Access
 			end
 		end
 
-	object_loaded_from (r: ANY; fn: STRING): ANY is
+	object_loaded_from (r: ANY; fn: STRING): ANY
 			-- Loaded object from file `fn'.
 			-- if `r' is Void return a new object
 			-- else load into `r'

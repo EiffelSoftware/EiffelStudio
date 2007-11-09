@@ -15,48 +15,48 @@ inherit
 
 feature -- Properties
 
-	position: INTEGER assign set_position
+	position: INTEGER
 			-- Position of record.
 
-	type: INTEGER assign set_type
+	type: INTEGER
 			-- Type of record value.
 
-	backup: RT_DBG_RECORD assign set_backup
-			-- Backup value after restore operation
+	backup: RT_DBG_RECORD
+			-- Backup value after restore operation.
 
 feature -- Access
 
-	debug_output: STRING is
+	debug_output: STRING
 		do
 			Result := "#" + position.out + " = " + to_string
 		end
 
-	is_same_as (other: RT_DBG_RECORD): BOOLEAN is
+	is_same_as (other: RT_DBG_RECORD): BOOLEAN
 			-- Is Current same as `other' ?
 		do
 			Result := position = other.position
 			check same_type: Result implies type = other.type end
 		end
 
-	to_string: STRING is
+	to_string: STRING
 		deferred
 		end
 
 feature -- Change properties
 
-	set_position (v: like position) is
+	set_position (v: like position)
 			-- Set `position'
 		do
 			position := v
 		end
 
-	set_type (v: like type) is
+	set_type (v: like type)
 			-- Set `type'
 		do
 			type := v
 		end
 
-	set_backup (v: like backup) is
+	set_backup (v: like backup)
 			-- Set `backup'
 		do
 			backup := v
@@ -64,7 +64,7 @@ feature -- Change properties
 
 feature -- Runtime
 
-	restore (obj: ANY; bak: RT_DBG_RECORD) is
+	restore (obj: ANY; bak: RT_DBG_RECORD)
 			-- Restore Current on target `obj',
 			-- and associate the backup value to `bak'
 		require
@@ -72,7 +72,7 @@ feature -- Runtime
 		deferred
 		end
 
-	revert (obj: ANY) is
+	revert (obj: ANY)
 			-- Revert previous `restore' using the associated `backup' value
 		deferred
 		end

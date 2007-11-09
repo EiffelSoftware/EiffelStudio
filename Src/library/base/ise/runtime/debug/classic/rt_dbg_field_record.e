@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (i,t: INTEGER; v: like value) is
+	make (i,t: INTEGER; v: like value)
 			-- Make field record with index `i', type `t' an value `v'
 		do
 			index := i
@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	value: G assign set_value
+	value: G
 			-- Associated value.
 
 feature -- Access
 
-	is_same_as (other: RT_DBG_RECORD): BOOLEAN is
+	is_same_as (other: RT_DBG_RECORD): BOOLEAN
 		local
 			c: like Current
 		do
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end
 
-	to_string: STRING is
+	to_string: STRING
 			-- String representation
 		local
 			v: ANY
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Change properties
 
-	set_value (v: like value) is
+	set_value (v: like value)
 			-- Set `value'
 		do
 			value := v
@@ -80,7 +80,7 @@ feature -- Change properties
 
 feature -- Runtime
 
-	restore (obj: ANY; bak: RT_DBG_RECORD) is
+	restore (obj: ANY; bak: RT_DBG_RECORD)
 			-- Restore `value' on `obj', and associate `bak' as `backup'
 		do
 			debug ("RT_EXTENSION")
@@ -100,7 +100,7 @@ feature -- Runtime
 			end
 		end
 
-	revert (obj: ANY) is
+	revert (obj: ANY)
 			-- Revert previous change due to Current to `obj'
 		local
 			bak: like backup
@@ -120,7 +120,7 @@ feature -- Runtime
 
 feature {NONE} -- Internal Implementation
 
-	set_object_field (obj: ANY; r: RT_DBG_RECORD) is
+	set_object_field (obj: ANY; r: RT_DBG_RECORD)
 			-- Set object field defined by `r' on target `obj'
 		local
 			i: like index

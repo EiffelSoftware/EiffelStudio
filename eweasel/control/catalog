@@ -1866,3 +1866,4 @@ if DOTNET test system-object-remapped-in-mscorlib-only dotnet102	tcf pass dotnet
 if DOTNET test consumable-attribute-usage-in-eiffel dotnet103	tcf fail dotnet consumer consumable custom_attributes
 if DOTNET test generic-creation-with-external-ctor	dotnet104	tcf pass constructor generic external creation
 if DOTNET test overridden-cluster-namespace-preserved	dotnet105	tcf pass namespace
+if DOTNET test equal-on-dotnet-string-and-eiffel-string dotnet106	tcf pass dotnet

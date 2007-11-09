@@ -104,7 +104,6 @@ feature -- Settings
 	check_types (feat_tbl: FEATURE_TABLE) is
 			-- Check Result and argument types
 		local
-			t: like type
 			actual_type: TYPE_A
 			vqmc: VQMC
 		do

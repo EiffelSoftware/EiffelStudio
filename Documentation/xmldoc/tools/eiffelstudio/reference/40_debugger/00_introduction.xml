@@ -49,9 +49,6 @@
 					<label>breakpoints</label>
 				</link> on-the-fly, while the execution is running
 			</item>
-		</list>
-		<paragraph>And from 5.2 onwards, the following functionality is also available:</paragraph>
-		<list ordered="false">
 			<item>
 				<link>
 					<url>50_expression_evaluation/index.xml</url>
@@ -76,5 +73,18 @@
 					<label>debug_output interface</label>
 				</link> and have their objects display a string in the debugger
 			</item>
+			<item>Execution can be recorded to be replayed when execution is paused, use the 
+				<link>
+					<url>35_execution_replay.xml</url>
+					<label>execution replay mechanism</label>
+				</link> from the call stack tool interface, and have the debugging tools updated.
+			</item>			
+			<item>Debuggee objects can be stored/retrieved from the debugger, check the 
+				<link>
+					<url>52_debuggee_object_storage.xml</url>
+					<label>debuggee object storage mechanism</label>
+				</link> available from the objects tool, and watch tools' toolbar.
+			</item>			
+			
 		</list>
 	</paragraph></document>

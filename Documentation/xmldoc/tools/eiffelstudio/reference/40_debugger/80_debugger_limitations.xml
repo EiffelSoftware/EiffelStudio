@@ -4,8 +4,7 @@
 		<paragraph>General  limitations:</paragraph>
 		<list ordered="false" >
 			<item>Watch expression: Agent are not supported (for instance "agent my_function" is not supported".</item>
-			<item>You cannot yet create an instance of SPECIAL.</item>
-			<item>The debugger is not very helpful when the execution is stopped in an invariant.</item>
+			<item>The debugger is still not very helpful when the execution is stopped in an invariant.</item>
 		</list>
 		<paragraph>Limitations or known bugs for the Classic debugger:</paragraph>
 		<list ordered="false" >
@@ -16,13 +15,12 @@
 		<list ordered="false" >
 			<item>When stepping through disabled assertions or disabled debug clauses, the debugger may show incorrect current line.</item>
 			<item>When stepping through an inspect code, the debugger may show incorrect current line (especially if the inspect is not ordered)</item>
-			<item>Under dotnet v2.0 beta, the debugger may have difficulties to fetch the stack values, especially during first chance exception events</item>
 		</list>
 		
 		<paragraph>Various known bugs for classic system :</paragraph>
 		<list ordered="false" >
 			<item>Wrong assertion tag shown in debugger for precondition violation if violated during an exception rescue, indeed the tag remains the one from the exception</item>
-			<item>"Disable Assertion Handling" may be cancel if used in an exception rescue context</item>
+			<item>"Disable Assertion Handling" may be cancelled if used in an exception rescue context</item>
 		</list>		
 	</paragraph>
 </document>

@@ -1,30 +1,31 @@
 <document title="Preference window overview" output="studio">
 	<meta_data/>
-	<paragraph>The preferences dialog window is divided into two parts (plus a button bar at the bottom). 
+	<paragraph>The preferences dialog provide the main table, a filter bar, a the bottom tool bar. 
 		<paragraph>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/preferences_dialog.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The left part is used to display a tree that shows preference categories. A description of the contents of this tree, i.e. the different categories of preferences and preferences themselves, is available 
-			<link>
-				<url>eiffelstudio/index.xml</url>
-				<label>here</label>
-			</link>.
+		<paragraph>The table is used to display a grid with the preferences displayed in a tree or flat view.  
 		</paragraph>
-		<paragraph>The right part shows the preferences attached to the currently selected tree node. They appear in a table that has four columns. The first one contains the name of the preference, the second one contains its type, the third one shows if it is modified from its predefined default, and the last one one contains its value. To modify this value, select the preference by clicking on it. A floating widget appears on top of the preference value to let you change it.</paragraph>
-		<paragraph>The floating widget depends on the type of the preference that is modified. There are four kinds of preferences:</paragraph>
+		<paragraph>There are several kinds of preferences:</paragraph>
 		<list ordered="false">
-			<item>Boolean preferences : their possible values are "True" and "False". A combo box will allow you to choose between both.</item>
+			<item>Boolean preferences : their possible values are "True" and "False". A check box will allow you to choose between both.</item>
 			<item>Color preferences : Their value is represented by three integers, which are the RGB code of the color. You do not have to use RGB codes though. When you double-click such a preference a color chooser dialog will display, allowing you to change the color value.</item>
 			<item>Font preferences : A font selection window will appear if you double-click the value label.</item>
+			<item>Shortcut preferences : edit the value cell, and press the wanted shortcuts..</item>			
 			<item>Other preferences : They will be modified by typing their value directly into an editable text field.</item>
 		</list>If there is no message stating you need to restart EiffelStudio, changes will be taken into account immediately. 
 		<paragraph>
 			<tip>
-			<bold>Tip</bold>: Sub-categories and their contents are not displayed in the right area. To see the preferences that belong to a sub-category, you have to select it in the left part of the window.
+			<bold>Tip</bold>: below the table, you will find a text field with the internal name of the preference (for instance: <italic>editor.eiffel.auto-complete_...</italic>).
 			</tip>
 		</paragraph>
+		<paragraph>
+			<tip>
+			<bold>Tip</bold>: you can export preferences to xml file, and import from xml file, this can be convenient when reinstalling EiffelStudio).
+			</tip>
+		</paragraph>		
 		<warning>
 			<bold>Caution</bold>: You can restore preferences default values by clicking on the "Restore Default" button. ALL preferences will be reset.
 		</warning>

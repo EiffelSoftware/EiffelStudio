@@ -35,15 +35,47 @@
 			</link>.
 		</paragraph>
 		<paragraph>Right-clicking on any breakpoint pops up a context menu:</paragraph>
-		<paragraph>
+		<paragraph><alignment>center</alignment>
 			<image>
 				<url>../../../../../images/eiffelstudio/debugger/breakpoint_context_menu.png</url>
 			</image>
 		</paragraph>
-		<paragraph>Clicking one of the three first entries of the context menu changes the state of the breakpoint that was right-clicked. The last entry ( 
+		<paragraph>The first line provides the breakpoint slot index of the selected breakpoint(i.e: the one used in call stack or exception trace output).
+			<line_break/>
+			Clicking one of the three first entries of the context menu changes the state of the breakpoint that was right-clicked. The last entry ( 
 			<bold>Run to breakpoint</bold>) launches the debugged application so that it will stop as soon as the selected breakpoint is encountered, as if the breakpoint had been enabled.
 			<line_break/>
 		</paragraph>
+			<paragraph>		
+			"Edit condition" allows the user to set a condition for stopping.
+		</paragraph>
+			<paragraph>	<alignment>center</alignment>		
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoint_dialog_condition.png</url>
+			</image>			
+			</paragraph>
+
+			<paragraph>		
+			"Hit count" allows the user to set a condition on hitcount for stopping
+		</paragraph>
+			<paragraph><alignment>center</alignment>			
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoint_dialog_hit_count.png</url>
+			</image>	
+			</paragraph>		
+
+
+			<paragraph>		
+			"When hits ..." allows the user to do an action when we actually stopped on this breakpoint. This can be for instance `print message'.
+		</paragraph>
+			<paragraph>		<alignment>center</alignment>	
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoint_dialog_when_hits.png</url>
+			</image>			
+			
+			</paragraph>
+
+		
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/> 

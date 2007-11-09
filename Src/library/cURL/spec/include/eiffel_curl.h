@@ -58,51 +58,51 @@ typedef EIF_INTEGER (* EIF_CURL_DEBUG_PROC) (
 	EIF_POINTER  /* a_user_pointer */
 	);
 
-EIF_REFERENCE eiffel_function_object = NULL;
+static EIF_REFERENCE eiffel_function_object = NULL;
 	/* Address of Eiffel object CURL_FUNCTION */
 	
-EIF_CURL_PROGRESS_PROC eiffel_progress_function = NULL;
+static EIF_CURL_PROGRESS_PROC eiffel_progress_function = NULL;
 	/* Address of Eiffel CURL_FUNCTION.progress_function */
 
-EIF_CURL_WRITE_PROC eiffel_write_function = NULL;
+static EIF_CURL_WRITE_PROC eiffel_write_function = NULL;
 	/* Address of Eiffel CURL_FUNCTION.write_function */
 
-EIF_CURL_DEBUG_PROC eiffel_debug_function = NULL;
+static EIF_CURL_DEBUG_PROC eiffel_debug_function = NULL;
 	/* Address of Eiffel CURL_FUNCTION.debug_function */
 
 /* Set Eiffel CURL_FUNCTION object address */
-void c_set_object(EIF_REFERENCE a_address)
+static void c_set_object(EIF_REFERENCE a_address)
 {
 	eiffel_function_object = (EIF_REFERENCE) eif_adopt (a_address);
 }
 
 /* Release Eiffel CURL_FUNCTION object address */
-void c_release_object()
+static void c_release_object()
 {
 	eif_wean (eiffel_function_object);
 }
 
 /* Set CURL_FUNCTOIN.progress_function address */
-void c_set_progress_function_address( EIF_POINTER a_address)
+static void c_set_progress_function_address( EIF_POINTER a_address)
 {
 	eiffel_progress_function = (EIF_CURL_PROGRESS_PROC) a_address;
 }
 
 /* Set CURL_FUNCTOIN.write_function address */
-void c_set_write_function_address( EIF_POINTER a_address)
+static void c_set_write_function_address( EIF_POINTER a_address)
 {
 	eiffel_write_function = (EIF_CURL_WRITE_PROC) a_address;
 }
 
 /* Set CURL_FUNCTOIN.debug_function address */
-void c_set_debug_function_address (EIF_POINTER a_address)
+static void c_set_debug_function_address (EIF_POINTER a_address)
 {
 	eiffel_debug_function = (EIF_CURL_DEBUG_PROC) a_address;
 }
 
 /* 	Eiffel adapter function for CURLOPT_WRITEFUNCTION
 		We need this function since Eiffel function call need first parameter is EIF_REFERENCE. */
-size_t curl_write_function (void *ptr, size_t size, size_t nmemb, void *data)
+static size_t curl_write_function (void *ptr, size_t size, size_t nmemb, void *data)
 {
 	if (eiffel_function_object) {
 		return (size_t) ((eiffel_write_function) (
@@ -117,7 +117,7 @@ size_t curl_write_function (void *ptr, size_t size, size_t nmemb, void *data)
 
 /* 	Eiffel adapter function for CURLOPT_PROGRESSFUNCTION
 		We need this function since Eiffel function call need first parameter is EIF_REFERENCE. */
-size_t curl_progress_function (void * a_object_id, double a_dltotal, double a_dlnow, double a_ultotal, double a_ulnow)
+static size_t curl_progress_function (void * a_object_id, double a_dltotal, double a_dlnow, double a_ultotal, double a_ulnow)
  {
 	if (eiffel_function_object) {
 		return (size_t) ((eiffel_progress_function) (
@@ -133,7 +133,7 @@ size_t curl_progress_function (void * a_object_id, double a_dltotal, double a_dl
 
 /* 	Eiffel adapter function for CURLOPT_DEBUGFUNCTION
 		We need this function since Eiffel function call need first parameter is EIF_REFERENCE. */ 
-size_t curl_debug_function (CURL * a_curl_handle, curl_infotype a_curl_infotype, unsigned char * a_char_pointer, size_t a_size, void * a_object_id)
+static size_t curl_debug_function (CURL * a_curl_handle, curl_infotype a_curl_infotype, unsigned char * a_char_pointer, size_t a_size, void * a_object_id)
  {
 	if (eiffel_function_object) {
 		return (size_t) ((eiffel_debug_function) (

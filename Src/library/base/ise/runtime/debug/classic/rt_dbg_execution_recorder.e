@@ -16,15 +16,21 @@ create {RT_EXTENSION}
 
 feature {NONE} -- Initialization
 
-	make (nb: INTEGER) is
+	make
 			-- Creation of Current object
 		do
-			max_record_count := nb
+			set_maximum_record_count (Default_maximum_record_count)
 		end
 
-feature -- Status
+feature {RT_EXTENSION} -- Change
 
-	start_recording is
+ 	set_maximum_record_count (nb: INTEGER) is
+ 			-- Set `maximum_record_count'
+ 		do
+ 			maximum_record_count := nb
+ 		end
+
+	start_recording
 			-- Start recording
 		require
 			top_callstack_record_is_void: top_callstack_record = Void
@@ -32,7 +38,7 @@ feature -- Status
 			record_count := 0
 		end
 
-	stop_recording is
+	stop_recording
 			-- Stop recording (and clean data)
 		do
 			top_callstack_record := Void
@@ -59,8 +65,11 @@ feature -- Properties
 	record_count: INTEGER
 			-- Number of field records.
 
-	max_record_count: INTEGER
-			-- Maximum number of record
+	Default_maximum_record_count: INTEGER = 5_000
+			-- Default maximum number of records.			
+
+	maximum_record_count: INTEGER
+			-- Maximum number of records.
 			-- `0' stands for no limit.
 
 	top_callstack_record: RT_DBG_CALL_RECORD
@@ -72,13 +81,17 @@ feature -- Properties
 feature -- Constants from eif_debug.h
 
 	Direction_back: INTEGER = 1
+			-- previous call
 	Direction_forth: INTEGER = 2
+			-- next call
 	Direction_left: INTEGER = 3
+			-- previous instruction
 	Direction_right: INTEGER = 4
+			-- next intruction
 
 feature -- Access
 
-	enter_feature (ref: ANY; cid,fid: INTEGER; dep: INTEGER; fnp: POINTER) is
+	enter_feature (ref: ANY; cid,fid: INTEGER; dep: INTEGER; fnp: POINTER)
 			-- Enter feature `{cid}.fid' on object `ref', depth is `dep'
 			-- And if available, `fnp' is a C string representing the feature name.
 		require
@@ -118,7 +131,7 @@ feature -- Access
 			end
 		end
 
-	enter_rescue (ref: ANY; dep: INTEGER) is
+	enter_rescue (ref: ANY; dep: INTEGER)
 			-- Enter rescue on object `ref', depth is `dep'
 		local
 			r,pr,c: RT_DBG_CALL_RECORD
@@ -174,7 +187,7 @@ feature -- Access
 			end
 		end
 
-	leave_feature (ref: ANY; cid,fid: INTEGER; dep: INTEGER) is
+	leave_feature (ref: ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Leave feature `{cid}.fid' on object `ref', depth is `dep'
 		local
 			r: like top_callstack_record
@@ -212,7 +225,7 @@ feature -- Access
 			end
 		end
 
-	replay (dir: INTEGER; nb: INTEGER) is
+	replay (dir: INTEGER; nb: INTEGER)
 			-- Replay execution `nb' steps in direction `dir'
 		do
 			inspect dir
@@ -227,7 +240,7 @@ feature -- Access
 			end
 		end
 
-	replay_query (dir: INTEGER): INTEGER is
+	replay_query (dir: INTEGER): INTEGER
 			-- Replay execution `nb' steps in direction `dir'	
 		do
 			inspect dir
@@ -245,16 +258,16 @@ feature -- Access
 			end
 		end
 
-	monitor_record_count is
+	monitor_record_count
 			-- Monitor if record_count is not over `max_record_count'
 			-- if `max_record_count' is 0, then no limit
 		local
 			p: like bottom_callstack_record
 			c, n: INTEGER
 		do
-			if max_record_count > 0 then
+			if maximum_record_count > 0 then
 				c := record_count
-				if c > 1.1 * max_record_count then
+				if c > 1.1 * maximum_record_count then
 					from
 						p := top_callstack_record
 					until
@@ -270,7 +283,7 @@ feature -- Access
 					p.remove_parent
 					record_count := c - n
 					check record_count = bottom_callstack_record.record_count_but (Void) end
-					if record_count <= 0.9 * max_record_count then
+					if record_count <= 0.9 * maximum_record_count then
 							--| Could be optimized instead of recursively call this monitoring
 						monitor_record_count
 					end
@@ -287,7 +300,7 @@ feature -- Replay operation
 			-- Replay operation stacks.
 			-- useful to "revert" the replay steps.
 
-	replay_back is
+	replay_back
 			-- Replay execution back
 		local
 			n, r, p: like top_callstack_record
@@ -315,7 +328,7 @@ feature -- Replay operation
 			end
 		end
 
-	replay_forth is
+	replay_forth
 			-- Replay execution forth
 		require
 			replay_stack_not_empty: replay_stack /= Void and then not replay_stack.is_empty
@@ -342,7 +355,7 @@ feature -- Replay operation
 
 feature -- Queries
 
-	increment_records_count (n: INTEGER) is
+	increment_records_count (n: INTEGER)
 			-- Incremente `record_count' by `n'
 		do
 			record_count := record_count + n
@@ -350,7 +363,7 @@ feature -- Queries
 
 feature -- Internal helper
 
-	restore_records (chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]) is
+	restore_records (chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]])
 			-- Restore value related to records from `chgs'
 		require
 			chgs /= Void
@@ -368,7 +381,7 @@ feature -- Internal helper
 			end
 		end
 
-	revert_records (chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]) is
+	revert_records (chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]])
 			-- Revert previous restoring related to records from `chgs'
 		require
 			chgs /= Void

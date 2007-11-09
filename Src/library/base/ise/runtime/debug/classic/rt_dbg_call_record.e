@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (rec: like recorder; ref: ANY; cid,fid: INTEGER; dep: INTEGER) is
+	make (rec: like recorder; ref: ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Make as call `{cid}.fid' for object `ref' and depth `dep'
 		do
 			recorder := rec
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		end
 
 	recorder: RT_DBG_EXECUTION_RECORDER
-			-- Associated recorder
+			-- Associated recorder.
 
 feature -- Properties
 
@@ -67,7 +67,7 @@ feature -- Status
 
 feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 
-	attach_to (p: like Current) is
+	attach_to (p: like Current)
 			-- Attach Current call record to parent call record `c'
 		require
 			not_in_parent_records: parent = Void or else parent.call_records = Void
@@ -79,7 +79,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			in_parent_records: parent.call_records.has (Current)
 		end
 
-	add_record (c: like Current) is
+	add_record (c: like Current)
 			-- Add call record `c' to Current's sub call records
 		require
 			record_parented_to_current: c.parent = Current
@@ -93,13 +93,13 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			in_records: call_records.has (c)
 		end
 
-	remove_parent is
+	remove_parent
 			-- Unattach from `parent' call record
 		do
 			parent := Void
 		end
 
-	record_fields is
+	record_fields
 			-- Records fields of target `object'
 		require
 			object_not_void: object /= Void
@@ -125,7 +125,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			end
 		end
 
-	close is
+	close
 			-- Close current call
 			-- It will discard useless records, and flatten sub calls' records.
 		require
@@ -135,7 +135,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			flat_optimize
 		end
 
-	flatten is
+	flatten
 			-- Flatten record fields structure
 		require
 			not_flat: not is_flat
@@ -153,7 +153,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			flat_field_records_not_void: flat_field_records /= Void
 		end
 
-	flat_optimize is
+	flat_optimize
 			-- Optimize the flatten records to discard useless records
 		require
 			is_flat: is_flat
@@ -261,7 +261,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 
 feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 
-	field_records_count: INTEGER is
+	field_records_count: INTEGER
 			-- Count of `field_records'.
 		local
 			rcds: like field_records
@@ -272,7 +272,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			end
 		end
 
-	record_count_but (c: like Current): INTEGER is
+	record_count_but (c: like Current): INTEGER
 			-- Number of records contained by Current and sub calls
 			-- apart from the records contained by `c' (and sub calls)
 		local
@@ -302,7 +302,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			end
 		end
 
-	bottom: like Current is
+	bottom: like Current
 			-- Bottom's call record.
 		do
 			if parent = Void then
@@ -312,7 +312,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			end
 		end
 
-	available_calls_to_bottom: INTEGER is
+	available_calls_to_bottom: INTEGER
 			-- Number of available calls to reach the bottom record.
 		do
 			if parent /= Void then
@@ -323,7 +323,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 
 feature -- debug
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Debug output as string representation
 		do
 			if object /= Void then

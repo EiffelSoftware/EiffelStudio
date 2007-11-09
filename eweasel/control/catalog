@@ -80,6 +80,7 @@ test non-conforming-inheritance-conformance noncon002 tcf pass
 test non-conforming-inheritance-incrementality noncon003 tcf pass
 test non-conforming-inheritance-parent-incrementality noncon004 tcf pass
 test non-conforming-inheritance-is-not-selectable noncon005 tcf pass
+test non-conforming-parent-can-be-frozen noncon006 tcf pass
 
 -- For testing only
 

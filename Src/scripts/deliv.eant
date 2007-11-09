@@ -460,8 +460,6 @@
 		<copy to_directory="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include" dir="${EIFFEL_SRC}/C/run-time" >
 			<fileset include="@(*.h)" />
 		</copy>
-		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}/${ISE_C_COMPILER}/config.sh" if="${is_windows}" />
-		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}/config.sh"  unless="${is_windows}" />
 		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include/eif_confmagic.h" />
 		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />
 		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" />
@@ -486,6 +484,7 @@
 				exclude="@(**/.svn/**/*)"
 			/>
 		</copy>
+		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}/${ISE_C_COMPILER}/config.sh" />
 
 		<!-- Unix tools -->
 		<copy file="${EIFFEL_SRC}/C/shell/bin/rt_converter${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/rt_converter${exe}" />
@@ -505,6 +504,7 @@
 				exclude="@(**/.svn/**/*)"
 			/>
 		</copy>
+		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}/config.sh"  />
 		<exec executable="ln -s -f ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
 		<exec executable="ln -s -f ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
 	</target>

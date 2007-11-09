@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 				--| Classic
 			once_r := Once_request
 			if once_r.already_called (f) then
-				if f.is_function then
+				if f.is_function or else f.is_constant then
 					res := once_r.once_result (f)
 					if once_r.last_failed then
 						notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, once_r.last_exception_meaning))

@@ -1374,8 +1374,11 @@ feature -- Parent checking
 					end
 				end
 
-				if l_parent_class.is_frozen then
-						-- Error which occurs only during IL generation.
+				if
+					(l_parent_class.is_frozen and then
+					(l_parent_class.is_external or else (non_conforming_parents_classes = Void or else conforming_parents_classes.has (l_parent_class))))
+						-- We cannot inherit frozen external classes or frozen conforming classes.
+				then
 					create vifi1.make (Current)
 					vifi1.set_parent_class (l_parent_class)
 					fixme ("Shouldn't we be able to provide a location?")

@@ -1,0 +1,22 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name non-conforming-inheritance-is-not-selectable
+test_description Testing non-conforming inheritance path is not selectable.
+
+
+copy_sub Ace $TEST Ace
+
+copy_raw application.e $CLUSTER application.e
+copy_raw p1.e $CLUSTER p1.e
+copy_raw p2.e $CLUSTER p2.e
+
+compile_melted
+compile_result validity_error P1 NOTDEFINEDERROR
+
+test_end

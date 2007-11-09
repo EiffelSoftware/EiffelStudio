@@ -38,11 +38,11 @@ feature {NONE} -- Initialization
 
 	generic_make is
 		do
-			debugger_manager.reset_dbg_evaluator
-			get_dbg_evaluator
-
 			error := 0
 			create error_messages.make
+
+			debugger_manager.reset_dbg_evaluator
+			get_dbg_evaluator
 		end
 
 	get_dbg_evaluator is

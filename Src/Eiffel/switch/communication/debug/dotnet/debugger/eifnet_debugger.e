@@ -2385,7 +2385,7 @@ feature -- Specific function evaluation
 					end
 
 					if
-						a_feat.is_function
+						(a_feat.is_function or a_feat.is_constant)
 						and then not last_once_failed
 						and then l_result_token /= 0
 					then

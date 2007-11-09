@@ -144,7 +144,10 @@ feature -- Implementation
 				debug ("debugger_ipc")
 					print ("### feature is of type : " + once_routine.generating_type + "%N")
 				end
-				if once_routine.is_function and once_routine.type /= Void then
+				if
+					(once_routine.is_function or once_routine.is_constant) and 
+					once_routine.type /= Void
+				then
 					l_once_func ?= once_routine
 					if l_once_func /= Void then
 						l_type := l_once_func.type

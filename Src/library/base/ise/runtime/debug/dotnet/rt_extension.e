@@ -15,7 +15,7 @@ inherit
 
 feature -- Notification
 
-	notify (a_id: INTEGER; a_data: TUPLE) is
+	notify (a_id: INTEGER; a_data: TUPLE)
 			-- Notify operation `a_id' with data `a_data'
 		local
 			retried: BOOLEAN
@@ -47,7 +47,7 @@ feature -- Notification
 			retry
 		end
 
-	notify_argument (a_id: INTEGER): TUPLE is
+	notify_argument (a_id: INTEGER): TUPLE
 			-- Empty argument container for operation `a_id'.
 		local
 			retried: BOOLEAN
@@ -74,13 +74,13 @@ feature -- Notification
 
 feature {NONE} -- Object storage
 
-	object_storage_argument (t: TUPLE): TUPLE [ref: ANY; fn: POINTER; succeed: BOOLEAN] is
+	object_storage_argument (t: TUPLE): TUPLE [ref: ANY; fn: POINTER; succeed: BOOLEAN]
 			-- Argument for `process_object_storage_save' and `process_object_storage_load'.
 		do
 			Result ?= t
 		end
 
-	process_object_storage_save (t: like object_storage_argument) is
+	process_object_storage_save (t: like object_storage_argument)
 			-- Process the object saving for `t' data
 		local
 			fn: STRING
@@ -89,7 +89,7 @@ feature {NONE} -- Object storage
 			t.succeed := saved_object_to (t.ref, fn) /= Void
 		end
 
-	process_object_storage_load (t: like object_storage_argument) is
+	process_object_storage_load (t: like object_storage_argument)
 			-- Process the object loading for `t' data
 		local
 			obj: ANY

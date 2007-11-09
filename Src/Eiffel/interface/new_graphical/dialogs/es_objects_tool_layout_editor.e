@@ -73,7 +73,7 @@ feature {NONE} -- User interface initialization
 
 			a_container.extend (vb)
 
-			register_kamikaze_action (show_actions, agent on_reset)
+			register_kamikaze_action (show_actions, agent update)
 			register_action (show_actions, agent refresh)
 			register_action (dialog.resize_actions, agent refresh)
 		ensure then

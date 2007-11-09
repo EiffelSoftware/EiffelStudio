@@ -304,12 +304,14 @@ feature {NONE} -- Implementation
 			-- Set focus to editor when idle.
 		local
 			l_editor: EB_SMART_EDITOR
+			da: EV_DRAWING_AREA
 		do
 			if develop_window /= Void and then not develop_window.is_recycled then
 				l_editor := develop_window.editors_manager.current_editor
 				if l_editor /= Void then
 					develop_window.editors_manager.select_editor (l_editor, False)
-					if l_editor.editor_drawing_area.is_displayed then
+					da := l_editor.editor_drawing_area
+					if da.is_displayed and da.is_sensitive then
 						l_editor.editor_drawing_area.set_focus
 					end
 				end

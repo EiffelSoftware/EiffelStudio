@@ -58,6 +58,10 @@
 		<set name="OUTPUT_DIR" value="${cwd}${path_separator}bin" unless="${OUTPUT_DIR}"/>
 		<set name="EIFGENS_DIR" value="${cwd}${path_separator}EIFGENs" unless="${EIFGENS_DIR}"/>
 		<set name="build_es_logfile" value="${cwd}${path_separator}build_es.log" unless="$build_es_logfile" />
+		<!-- we support both location for Delivery, under Src, or under Trunk -->
+		<set name="DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}..${path_separator}Delivery" unless="${DELIVERY_DIR}"/>
+		<available resource="${DELIVERY_DIR}" variable="tmp_available"/>
+		<set name="DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" unless="${tmp_available}=true"/>
 	</target>
 
 	<target name="build_es" depend="init_deliv" >
@@ -334,7 +338,7 @@
 			<fileset include="@(*.exe)" />
 		</copy>
 		<mkdir directory="${tmp_install_dir}\..\etc"/>
-		<copy file="${EIFFEL_SRC}\..\Delivery\studio\spec\windows\compile_library.bat" to_file="${tmp_install_dir}${path_separator}bin${path_separator}compile_library.bat" />
+		<copy file="${DELIVERY_DIR}\studio\spec\windows\compile_library.bat" to_file="${tmp_install_dir}${path_separator}bin${path_separator}compile_library.bat" />
 		<set name="tmp_config_fn" value="windows-x86-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=windows" />
 		<set name="tmp_config_fn" value="windows-x86-64-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=win64" />
 		<copy file="${EIFFEL_SRC}\C\CONFIGS\${tmp_config_fn}" to_file="${INSTALL_DIR}\studio\config\${ISE_PLATFORM}\${ISE_C_COMPILER}\${tmp_config_fn}" />
@@ -429,7 +433,7 @@
 		<!-- platform independant -->
 		<set name="SVNURL" value="https://eiffelsoftware.origo.ethz.ch/svn/es/trunk" />
 		<echo message=" - Copy Delivery to ${cwd}"/>
-		<copy to_directory="${cwd}" dir="${EIFFEL_SRC}${path_separator}..${path_separator}Delivery" >
+		<copy to_directory="${cwd}" dir="${DELIVERY_DIR}" >
 			<fileset include="@(**/*)" />
 		</copy>
 		<mkdir directory="library"/>

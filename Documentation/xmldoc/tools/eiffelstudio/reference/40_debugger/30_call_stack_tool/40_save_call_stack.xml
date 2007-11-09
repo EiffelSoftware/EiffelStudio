@@ -1,7 +1,7 @@
 <document title="Save call stack" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>It is now possible to save the current call stack to a text file. This may be useful to indicate to other people of a team where an error occurred. After the button is clicked, a dialog is popped up that prompts for a place where to save the 
+		<paragraph>It is possible to copy the current call stack to the clipboard (<image><url>../../../../../images/eiffelstudio/icons/10x10/general_copy_icon.png</url></image>) or to a text file (<image><url>../../../../../images/eiffelstudio/icons/10x10/general_save_icon.png</url></image>). This may be useful to indicate to other people of a team where an error occurred. After the button is clicked, a dialog is popped up that prompts for a place where to save the 
 			<link>
 				<url>10_call_stack_tool.xml</url>
 				<label>call stack</label>

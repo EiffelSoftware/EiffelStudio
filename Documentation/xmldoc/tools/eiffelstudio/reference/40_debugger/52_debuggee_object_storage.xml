@@ -1,0 +1,22 @@
+<document title="Debuggee's Object Storage" output="studio">
+	<meta_data/>
+<paragraph>	
+	<paragraph>This command can be accessed through the context menu, and from the objects tool, and watches tools thanks to the tool bar's button [<image><url>../../../../images/eiffelstudio/icons/10x10/execution_object_storage_icon.png</url></image>].
+	</paragraph>
+		<paragraph>
+		By Pick-and-Dropping a debuggee object onto the button [<image><url>../../../../images/eiffelstudio/icons/10x10/execution_object_storage_icon.png</url></image>], you raise the "save" dialog. Then you need to choose the target filename where we'll store the debuggee object.
+		</paragraph>
+		<paragraph><alignment>center</alignment>
+		<image><url>../../../../images/eiffelstudio/debugger/debuggee_object_storage_save.png</url></image>
+		</paragraph>
+		
+		<paragraph>
+		By clicking on a watch tool's button [<image><url>../../../../images/eiffelstudio/icons/10x10/execution_object_storage_icon.png</url></image>], you raise the "load" dialog. Then you need to select the filename which contain the debuggee object's storage. If the loading is successful, the retrieved object will be added in the related watch tool. <line_break></line_break>
+		</paragraph>
+		<paragraph><alignment>center</alignment>
+		<image><url>../../../../images/eiffelstudio/debugger/debuggee_object_storage_load.png</url></image>
+		</paragraph>		
+		<tip>By Pick-and-Dropping an object onto the button, you can load the retrieved values into the dropped object (make sure it has same type).</tip>
+		<warning>For now this command is pretty basic, and provided as it is. The underlying implementation is using <code>{FILE}.independent_store and {FILE}.retrieved</code> for save and load operation, to load the value into an existing object, it is using <code>{ANY}.standard_copy (..)</code>. For details, you can have a look at the RT_EXTENSION_GENERAL code </warning>	
+ 	</paragraph>
+</document>

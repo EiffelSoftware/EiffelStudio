@@ -1,0 +1,25 @@
+<document title="Release notes for EiffelStudio 6.1 related to the debugger" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading><size>2</size>Graphical environment</heading>
+			<list ordered="false">
+				<item>Added debuggee object storage. This allow to store and retrieve debuggee's object.</item>
+				<item>Added basic execution replay mechanism. This allows to record the execution, and replay the recording in EiffelStudio and see/browse the recorded values.</item>
+				<item>Rename "debugging" into "execution" in EiffelStudio's message and title.</item>
+				<item>Better dialog to change the layout of the Objects tool grid. It is possible to easily change the order of 'Current, arguments, locals, ...'.</item>
+			</list>
+		<heading><size>2</size>Debugger engine</heading>
+			<list ordered="false">
+				<item>Added support for creation of SPECIAL instances.</item>
+				<item>Added support for creation of TYPE instances. (i.e: {FOO} will return a instance of TYPE [FOO])</item>
+			</list>
+			
+		<heading><size>2</size>Current restrictions and known issues</heading>
+			<list ordered="false">
+				<item>You will find a list <link><url>../80_debugger_limitations.xml</url><label>here</label></link></item>
+			</list>
+			
+	</paragraph>
+</document>

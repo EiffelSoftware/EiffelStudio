@@ -218,6 +218,8 @@ feature -- Implementation
 				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
 				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_question_arrow_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new (60) -- GDK_HAND2
 			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
 				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then

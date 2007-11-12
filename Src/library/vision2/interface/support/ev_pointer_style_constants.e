@@ -53,12 +53,15 @@ feature -- Enumeration
 	Header_sizewe_cursor: INTEGER is 14
 			-- Double-pointed arrow pointing west and east used for header column resizing.
 
+	Hyperlink_cursor: INTEGER is 15
+			-- Used for hyperlinks
+
 feature -- Query
 
 	is_valid (a_integer: INTEGER): BOOLEAN is
 			-- If `a_integer' is valid?
 		do
-			Result := (Busy_cursor |..| Header_sizewe_cursor).valid_index (a_integer)
+			Result := (Busy_cursor |..| Hyperlink_cursor).valid_index (a_integer)
 		end
 
 indexing

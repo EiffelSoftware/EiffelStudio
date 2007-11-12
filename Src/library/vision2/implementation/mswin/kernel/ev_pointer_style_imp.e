@@ -196,6 +196,8 @@ feature -- Query
 				Result := Idc_constants.Idc_wait
 			when {EV_POINTER_STYLE_CONSTANTS}.header_sizewe_cursor then
 				Result := Idc_constants.Idc_sizewe
+			when {EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor then
+				Result := Idc_constants.Idc_hand
 			end
 		end
 

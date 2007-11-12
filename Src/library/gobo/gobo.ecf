@@ -29,18 +29,10 @@
 		<cluster name="kernel" location="svn\library\kernel\" recursive="true">
 			<option namespace="Kernel">
 			</option>
-			<cluster name="kernel_spec" location="library\kernel\spec\" recursive="true">
-				<option namespace="Spec">
-				</option>
-			</cluster>
 		</cluster>
 		<cluster name="lexical" location="svn\library\lexical\" recursive="true">
 			<option namespace="Lexical">
 			</option>
-			<cluster name="lexical_generated" location="library\lexical\" recursive="true">
-				<option namespace="Generated">
-				</option>
-			</cluster>
 		</cluster>
 		<cluster name="math" location="svn\library\math\" recursive="true">
 			<option namespace="Math">
@@ -49,10 +41,6 @@
 		<cluster name="parse" location="svn\library\parse\" recursive="true">
 			<option namespace="Parse">
 			</option>
-			<cluster name="parse_generated" location="library\parse\" recursive="true">
-				<option namespace="Generated">
-				</option>
-			</cluster>
 		</cluster>
 		<cluster name="pattern" location="svn\library\pattern\" recursive="true">
 			<option namespace="Pattern">
@@ -77,10 +65,6 @@
 		<cluster name="tools" location="svn\library\tools\" recursive="true">
 			<option namespace="Tools">
 			</option>
-			<cluster name="tools_generated" location="library\tools\" recursive="true">
-				<option namespace="Generated">
-				</option>
-			</cluster>
 		</cluster>
 		<cluster name="utility" location="svn\library\utility\" recursive="true">
 			<option namespace="Utility">
@@ -92,10 +76,6 @@
 			<file_rule>
 				<exclude>/expat$</exclude>
 			</file_rule>
-			<cluster name="xml_generated" location="library\xml\" recursive="true">
-				<option namespace="Generated">
-				</option>
-			</cluster>
 		</cluster>
 	</target>
 </system>

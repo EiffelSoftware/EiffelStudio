@@ -153,6 +153,12 @@ feature -- Default cursors
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.header_sizewe_cursor)
 		end
 
+	Hyperlink_cursor: EV_POINTER_STYLE is
+			-- Cursor used when over a hyperlink.
+		once
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor)
+		end
+
 feature {NONE} -- Implementation
 
 	Implementation: EV_STOCK_PIXMAPS_IMP is

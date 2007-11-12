@@ -64,6 +64,12 @@
 			dir="${ISE_EIFFEL}_wkbench${path_separator}precomp${path_separator}spec${path_separator}dotnet" >
 			<fileset include="@(**/*)" />
 		</copy>
+		<copy to_directory="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
+			force="true"
+			unless="${is_windows}"
+			dir="${ISE_EIFFEL}_wkbench${path_separator}studio${path_separator}config${path_separator}unix" >
+			<fileset include="@(**/*)" />
+		</copy>
 		<mkdir directory="${ISE_EIFFEL}_wkbench${path_separator}dotnet" />
 	</target>
 

@@ -109,7 +109,11 @@ feature -- Prompts
 	prompt_sub_title_forground_color: EV_COLOR
 			-- Forground color for title text on prompt dialogs
 		once
-			create Result.make_with_8_bit_rgb (117, 143, 198)
+			if {PLATFORM}.is_windows then
+				create Result.make_with_8_bit_rgb (117, 143, 198)
+			else
+				create Result.make_with_8_bit_rgb (97, 123, 178)
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -117,7 +121,11 @@ feature -- Prompts
 	prompt_text_forground_color: EV_COLOR
 			-- Foreground color for all other text on prompt dialog
 		once
-			create Result.make_with_8_bit_rgb (107, 123, 138)
+			if {PLATFORM}.is_windows then
+				create Result.make_with_8_bit_rgb (107, 123, 138)
+			else
+				create Result.make_with_8_bit_rgb (77, 93, 108)
+			end
 		ensure
 			result_attached: Result /= Void
 		end

@@ -35,7 +35,7 @@ feature -- Prompts
 			-- Font for prompt text
 		once
 			Result := standard_label_font.twin
-			Result.set_height (14)
+			Result.set_height (Result.height + 3)
 			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 		ensure
 			result_attached: Result /= Void
@@ -45,7 +45,10 @@ feature -- Prompts
 			-- Font for prompt sub text
 		once
 			Result := standard_label_font.twin
-			Result.set_height (12)
+			--if {PLATFORM}.is_windows then
+					-- This cause a problem on Unix machines where is sets the font too small.
+				Result.set_height (Result.height + 1)
+			--end
 		ensure
 			result_attached: Result /= Void
 		end

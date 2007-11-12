@@ -201,10 +201,12 @@ feature  -- Agents
 			l_content: SD_CONTENT
 			l_zone: SD_ZONE
 		do
-			l_content := internal_docking_manager.property.last_focus_content
-			l_zone := internal_docking_manager.zones.zone_by_content (l_content)
-			if l_zone /= Void and then internal_docking_manager.main_container.has_recursive (l_zone) then
-				l_zone.set_non_focus_selection_color
+			if internal_docking_manager /= Void then
+				l_content := internal_docking_manager.property.last_focus_content
+				l_zone := internal_docking_manager.zones.zone_by_content (l_content)
+				if l_zone /= Void and then internal_docking_manager.main_container.has_recursive (l_zone) then
+					l_zone.set_non_focus_selection_color
+				end
 			end
 			debug ("docking")
 				print ("%NSD_DOCKING_MANAGER_AGENTS on_main_window_focus_out ")

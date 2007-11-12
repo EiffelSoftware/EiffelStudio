@@ -25,9 +25,5 @@
 			<option namespace="Test">
 			</option>
 		</cluster>
-		<cluster name="test_generated" location="library\test\" recursive="true">
-			<option namespace="Test">
-			</option>
-		</cluster>
 	</target>
 </system>

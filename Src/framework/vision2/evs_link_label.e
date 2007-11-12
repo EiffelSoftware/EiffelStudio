@@ -34,10 +34,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_LABEL}
 			create select_actions
-			pointer_leave_actions.extend (agent on_pointer_leave)
-			pointer_enter_actions.extend (agent on_pointer_enter)
 			pointer_button_press_actions.extend (agent on_pointer_press)
 			set_foreground_color ((create {EV_STOCK_COLORS}).blue)
+			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor))
 			enable_tabable_to
 			enable_tabable_from
 		end
@@ -108,22 +107,6 @@ feature {NONE} -- Query
 		end
 
 feature {NONE} -- Action handlers
-
-	on_pointer_enter
-			-- Called when the mouse pointer enters the label
-		local
-			l_font: like font
-		do
-			set_font (highlight_font)
-		end
-
-	on_pointer_leave
-			-- Called when the mouse pointer enters the label
-		local
-			l_font: like font
-		do
-			set_font (default_font)
-		end
 
 	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when a pointer action has been performed

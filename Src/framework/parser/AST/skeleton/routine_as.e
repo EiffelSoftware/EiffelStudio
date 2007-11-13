@@ -116,7 +116,7 @@ feature -- Attributes
 	end_keyword: KEYWORD_AS
 			-- Location for `end' keyword
 
-	object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]
+	object_test_locals: ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
 
 feature -- Location

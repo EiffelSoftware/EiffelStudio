@@ -68,6 +68,9 @@ feature -- Attributes
 	is_argument: BOOLEAN
 			-- Is the current entity an argument?
 
+	is_object_test_local: BOOLEAN
+			-- Is current entity an object test local?
+
 	class_id: INTEGER
 			-- The class id of the qualified call.
 
@@ -116,6 +119,12 @@ feature -- Setting
 			-- Set `is_local' to true.
 		do
 			is_local := True
+		end
+
+	enable_object_test_local is
+			-- Set `is_object_test_local' to true.
+		do
+			is_object_test_local := True
 		end
 
 	enable_argument is

@@ -4383,6 +4383,7 @@ feature -- Implementation
 			local_info: LOCAL_INFO
 			local_b: LOCAL_B
 			expr: EXPR_B
+			not_implemented: NOT_SUPPORTED
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -4406,6 +4407,25 @@ feature -- Implementation
 			if context.is_object_test_local_used (local_name_id) then
 					-- The object-test local is a name of a local of another object test
 				error_handler.insert_error (create {VUOT3}.make (context, l_as.name))
+			end
+			if is_checking_precondition then
+				debug ("to_implement")
+					to_implement ("Support code generation for object test in precondition when assertions are not monitored")
+				end
+				create not_implemented
+				context.init_error (not_implemented)
+				not_implemented.set_location (l_as.lcurly_symbol)
+				not_implemented.set_message ("Object test in precondition is not supported.")
+				error_handler.insert_error (not_implemented)
+			elseif is_checking_check then
+				debug ("to_implement")
+					to_implement ("Support code generation for object test in check instruction when assertions are not monitored")
+				end
+				create not_implemented
+				context.init_error (not_implemented)
+				not_implemented.set_location (l_as.lcurly_symbol)
+				not_implemented.set_message ("Object test in check instruction is not supported.")
+				error_handler.insert_error (not_implemented)
 			end
 			check_type (l_as.type)
 			local_type := last_type

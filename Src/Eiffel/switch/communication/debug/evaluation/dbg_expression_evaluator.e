@@ -147,15 +147,18 @@ feature -- Error notification
 	notify_error (a_code: INTEGER; a_tag, a_msg: STRING_GENERAL) is
 		require
 			valid_code: a_code /= 0
-			valid_message: a_msg /= Void
 		local
 			l_tag: STRING_32
+			l_msg: STRING_32
 		do
 			error := error | a_code
 			if a_tag /= Void then
 				l_tag := a_tag.as_string_32
 			end
-			error_messages.extend ([a_code, l_tag, a_msg.as_string_32])
+			if a_msg /= Void then
+				l_msg := a_msg.as_string_32
+			end
+			error_messages.extend ([a_code, l_tag, l_msg])
 		end
 
 	notify_error_evaluation (mesg: STRING_GENERAL) is

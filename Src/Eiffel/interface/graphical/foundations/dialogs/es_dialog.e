@@ -297,7 +297,7 @@ feature {NONE} -- Access
 			result_consistent: Result = dialog_window_buttons
 		end
 
-	frozen button_actions: DS_HASH_TABLE [like button_action, INTEGER]
+	frozen button_actions: DS_HASH_TABLE [TUPLE [action: like button_action; before_close: BOOLEAN], INTEGER]
 			-- Dialog button actions
 
 feature {NONE} -- Helpers
@@ -377,9 +377,26 @@ feature -- Element change
 			buttons_contains_a_id: buttons.has (a_id)
 			a_action_attached: a_action /= Void
 		do
-			button_actions.force (a_action, a_id)
+			button_actions.force ([a_action, False], a_id)
 		ensure
 			button_action_set: button_action (a_id) = a_action
+		end
+
+	set_button_action_before_close (a_id: INTEGER; a_action: PROCEDURE [ANY, TUPLE])
+			-- Assigns an action to a specific button to be called prior to closing.
+			-- Note: This routine can use `veto_close' to prevent the dialog from being closed.
+			--
+			-- `a_id': A button id corresponding to an actual dialog button.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+			-- `a_action': An action to be performed when the button is pressed.
+		require
+			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
+			buttons_contains_a_id: buttons.has (a_id)
+			a_action_attached: a_action /= Void
+		do
+			button_actions.force ([a_action, True], a_id)
+		ensure
+			button_action_set: button_action_before_close (a_id) = a_action
 		end
 
 feature -- Status report
@@ -409,6 +426,10 @@ feature {NONE} -- Status report
 			Result := True
 		end
 
+	is_close_vetoed: BOOLEAN
+			-- Indicates if the dialog's shutdown has been vetoed
+			-- Note: See `veto_close' for more information
+
 feature -- Status setting
 
 	set_is_modal (a_modal: BOOLEAN)
@@ -422,7 +443,7 @@ feature -- Status setting
 feature -- Query
 
 	button_action (a_id: INTEGER): PROCEDURE [ANY, TUPLE]
-			-- Button action for a specific button
+			-- Button action, called before the dialog is closed, for a specific button.
 			--
 			-- `a_id': A button id corresponding to an actual dialog button.
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
@@ -430,9 +451,34 @@ feature -- Query
 		require
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
+		local
+			l_action: TUPLE [action: PROCEDURE [ANY, TUPLE]; on_close: BOOLEAN]
 		do
 			if button_actions.has (a_id) then
-				Result := button_actions.item (a_id)
+				l_action := button_actions.item (a_id)
+				if l_action /= Void and then l_action.on_close = False then
+					Result := l_action.action
+				end
+			end
+		end
+
+	button_action_before_close (a_id: INTEGER): PROCEDURE [ANY, TUPLE]
+			-- Button action, called before the dialog is closed, for a specific button.
+			--
+			-- `a_id': A button id corresponding to an actual dialog button.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+			-- `Result': An action to be performed when the button is pressed.
+		require
+			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
+			buttons_contains_a_id: buttons.has (a_id)
+		local
+			l_action: TUPLE [action: PROCEDURE [ANY, TUPLE]; on_close: BOOLEAN]
+		do
+			if button_actions.has (a_id) then
+				l_action := button_actions.item (a_id)
+				if l_action /= Void and then l_action.on_close = True then
+					Result := l_action.action
+				end
 			end
 		end
 
@@ -613,6 +659,42 @@ feature {NONE} -- Basic operation
 			end
 		end
 
+    execute_with_busy_cursor (a_action: PROCEDURE [ANY, TUPLE])
+            -- Executes a action with a wait cursor
+            --
+            -- `a_action': An action to execute with a wait cursor displayed until the action has been completed
+        require
+            not_is_recycled: not is_recycled
+            is_initialized: is_initialized
+            a_action_attached: a_action /= Void
+        local
+            l_style: EV_POINTER_STYLE
+        do
+            if is_initialized then
+                l_style := dialog.pointer_style
+                dialog.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
+            end
+            a_action.call ([])
+            if l_style /= Void then
+                check is_initialized: is_initialized end
+                dialog.set_pointer_style (l_style)
+            end
+        rescue
+            if l_style /= Void then
+                check is_initialized: is_initialized end
+                dialog.set_pointer_style (l_style)
+            end
+        end
+
+	veto_close
+			-- Ensures dialog is not closed as a result of a button action.
+			-- Note: This routine should be called in a registered button action.
+		do
+			is_close_vetoed := True
+		ensure
+			is_close_vetoed: is_close_vetoed
+		end
+
 feature -- Actions
 
 	show_actions: EV_LITE_ACTION_SEQUENCE [TUPLE]
@@ -635,10 +717,20 @@ feature {NONE} -- Action handlers
 			l_action: like button_action
 		do
 			dialog_result := a_id
-			l_action := button_action (a_id)
+			l_action := button_action_before_close (a_id)
 			if l_action /= Void then
 				l_action.call ([])
 			end
+			if not is_close_vetoed then
+				on_close_requested (a_id)
+				l_action := button_action (a_id)
+				if l_action /= Void then
+					l_action.call ([])
+				end
+			end
+			is_close_vetoed := False
+		ensure
+			not_is_close_vetoed: not is_close_vetoed
 		end
 
 	on_close_requested (a_id: INTEGER)
@@ -650,9 +742,12 @@ feature {NONE} -- Action handlers
 		require
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_has_a_id: buttons.has (a_id)
+			not_is_close_vetoed: not is_close_vetoed
 		do
 			dialog.hide
 			close_actions.call ([])
+		ensure
+			not_is_close_vetoed: not is_close_vetoed
 		end
 
 	on_confirm_dialog
@@ -812,8 +907,6 @@ feature {NONE} -- Factory
 				l_id := l_buttons.item
 
 				l_button := create_dialog_button (l_id)
-					-- Add close action
-				register_action (l_button.select_actions, agent on_close_requested (l_id))
 					-- Add action to ensure the dialog result is set
 				register_action (l_button.select_actions, agent on_dialog_button_pressed (l_id))
 					-- Bind other actions

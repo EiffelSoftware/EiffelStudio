@@ -4,20 +4,11 @@
 # Commented because of the R_PPC_REL24 linking error for large executable.
 #(sh ./make_for_platform lisbon.ise manus linux-ppc) &
 
-#Let's compile for Solaris on mosis in background
-(
-rsh mosis "\rm -f ~/local/gtkinstall" ;
-rsh mosis "\ln -s ~/local/gtk24install ~/local/gtkinstall" ;
-sh ./make_for_platform mosis.ise manus solaris-sparc;
+#Let's compile for Solaris Sparc 64-bit on mosis in background
+(sh ./make_for_platform mosis.ise manus solaris-sparc-64) &
 
-rsh mosis "\rm -f ~/local/gtkinstall" ;
-rsh mosis "\ln -s ~/local/gtk269-64/gtkinstall ~/local/gtkinstall" ;
-sh ./make_for_platform mosis.ise manus solaris-sparc-64
-) &
-
-#Let's compile for Solaris Sparc
-# ssh -l spc04z3 ezqsgd01.network.com -L 2223:ezqspc04z3:22
-(sh ./make_for_platform localhost manus solaris-sparc 2223 ; sh ./make_for_platform localhost manus solaris-sparc-64 2223) &
+#Let's compile for Solaris Sparc 32-bit on sparc9 in background
+(sh ./make_for_platform sparc9.ise manus solaris-sparc) &
 
 #Let's compile for Solaris x86 in background
 (sh ./make_for_platform amsterdam.ise manus solaris-x86 ; sh ./make_for_platform amsterdam.ise manus solaris-x86-64) &

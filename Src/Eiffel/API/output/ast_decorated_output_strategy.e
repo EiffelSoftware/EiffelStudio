@@ -77,6 +77,7 @@ feature {NONE} -- Initialization
 		do
 			text_formatter_decorator := a_text_formatter
 			create locals_for_current_feature.make (10)
+			create object_test_locals_for_current_feature.make (0)
 			create error_message.make (5)
 		end
 
@@ -195,6 +196,7 @@ feature {AST_DECORATED_OUTPUT_STRATEGY} -- Access
 	last_actual_local_type: TYPE_A
 
 	locals_for_current_feature: HASH_TABLE [TYPE_A, STRING]
+	object_test_locals_for_current_feature: HASH_TABLE [TYPE_A, STRING]
 
 	processing_locals: BOOLEAN;
 
@@ -796,6 +798,10 @@ feature {NONE} -- Implementation
 				if not expr_type_visiting then
 					text_formatter_decorator.process_local_text (l_as.access_name)
 				end
+			elseif l_as.is_object_test_local then
+				if not expr_type_visiting then
+					text_formatter_decorator.process_local_text (l_as.access_name)
+				end
 			elseif l_as.is_tuple_access then
 				if not expr_type_visiting then
 					text_formatter_decorator.process_symbol_text (ti_dot)
@@ -951,6 +957,10 @@ feature {NONE} -- Implementation
 					if locals_for_current_feature.has_key (l_as.access_name) then
 						last_type := locals_for_current_feature.found_item
 					end
+				end
+			elseif l_as.is_object_test_local then
+				if object_test_locals_for_current_feature.has_key (l_as.access_name) then
+					last_type := object_test_locals_for_current_feature.found_item
 				end
 			elseif l_as.is_tuple_access then
 				if not has_error_internal then
@@ -1202,6 +1212,7 @@ feature {NONE} -- Implementation
 			is_inline_agent := current_feature.is_inline_agent
 
 			locals_for_current_feature.wipe_out
+			object_test_locals_for_current_feature.wipe_out
 			text_formatter_decorator.put_new_line
 			if not text_formatter_decorator.is_feature_short then
 				if l_as.obsolete_message /= Void then
@@ -1242,6 +1253,27 @@ feature {NONE} -- Implementation
 					l_as.precondition.process (Current)
 					text_formatter_decorator.set_not_in_assertion
 				end
+			end
+			if l_as.object_test_locals /= Void then
+					-- We do not need to remember the previous value of
+					-- expr_type_visiting, because there is an earlier check
+					-- statement stating that it should be False.
+					-- Here we enable it, because we don't want the object test
+					-- locals to be printed while evaluating their type.
+				expr_type_visiting := True
+				from
+					l_as.object_test_locals.start
+				until
+					l_as.object_test_locals.after
+				loop
+					l_as.object_test_locals.item.type.process (Current)
+					if last_type /= Void then
+						object_test_locals_for_current_feature.put (last_type,
+							l_as.object_test_locals.item.name.name)
+					end
+					l_as.object_test_locals.forth
+				end
+				expr_type_visiting := False
 			end
 			if not text_formatter_decorator.is_feature_short then
 				if l_as.locals /= Void then
@@ -1522,6 +1554,10 @@ feature {NONE} -- Implementation
 				elseif l_as.is_local then
 					if locals_for_current_feature.has_key (l_as.feature_name.internal_name.name) then
 						create {TYPED_POINTER_A} last_type.make_typed (locals_for_current_feature.found_item)
+					end
+				elseif l_as.is_object_test_local then
+					if object_test_locals_for_current_feature.has_key (l_as.feature_name.internal_name.name) then
+						create {TYPED_POINTER_A} last_type.make_typed (object_test_locals_for_current_feature.found_item)
 					end
 				else
 					l_feat := feature_in_class (current_class, l_as.routine_ids)
@@ -4288,6 +4324,8 @@ invariant
 	text_formatter_not_void: text_formatter_decorator /= Void
 	error_message_not_void: error_message /= Void
 	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
+	locals_for_current_feature_not_void: locals_for_current_feature /= Void
+	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -11,11 +11,111 @@ class
 inherit
 	AST_FEATURE_CHECKER_GENERATOR
 		redefine
-			process_un_old_as ,
-			check_type
+			reset,
+			process_un_old_as,
+			check_type,
+			feature_with_name_using
 		end
 
-feature {NONE} -- Implementation: type validation
+feature -- Settings
+
+	reset is
+			-- Reset all attributes to their default value
+		do
+			Precursor {AST_FEATURE_CHECKER_GENERATOR}
+			expression_context := Void
+		end
+
+
+feature -- Type checking
+
+	expression_context: AST_CONTEXT
+
+--	expression_context_current_class: CLASS_C
+--	expression_context_current_feature: FEATURE_I
+--	expression_context_current_written_class: CLASS_C
+
+	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS) is
+			-- Type check `an_exp' in the context of `a_feature'.
+		require
+			an_exp_not_void: an_exp /= Void
+		local
+			l_exp_call: EXPR_CALL_AS
+			l_instr_as: INSTR_CALL_AS
+			errlst: LIST [ERROR]
+			errcur: CURSOR
+			l_vkcn_error: VKCN
+			l_has_vkcn_error: BOOLEAN
+			l_error_level: NATURAL_32
+		do
+			l_error_level := error_level
+			expression_or_instruction_type_check_and_code (a_feature, an_exp)
+			if error_level /= l_error_level then
+					--| Check if any VKCN error
+				errlst := error_handler.error_list
+				errcur := errlst.cursor
+				from
+					errlst.start
+					l_has_vkcn_error := False
+				until
+					errlst.after or l_has_vkcn_error
+				loop
+					l_vkcn_error ?= errlst.item
+					l_has_vkcn_error := l_vkcn_error /= Void
+					errlst.forth
+				end
+				errlst.go_to (errcur)
+
+					--| If any VKCN .. then let's try to check it as an instruction
+				if l_has_vkcn_error then
+					l_exp_call ?= an_exp
+					if l_exp_call /= Void then
+						error_handler.wipe_out
+						create l_instr_as.initialize (l_exp_call.call)
+						expression_or_instruction_type_check_and_code (a_feature, l_instr_as)
+					end
+				end
+			end
+		end
+
+	expression_or_instruction_type_check_and_code (a_feature: FEATURE_I; an_ast: AST_EIFFEL) is
+			-- Type check `an_ast' in the context of `a_feature'.
+		require
+			an_ast_not_void: an_ast /= Void
+		local
+			l_cl, l_wc: CLASS_C
+			l_ft: FEATURE_TABLE
+			l_ctx: AST_CONTEXT
+		do
+			reset
+			is_byte_node_enabled := True
+			current_feature := a_feature
+
+			l_cl := context.current_class
+			if current_feature /= Void then
+				l_wc := current_feature.written_class
+				if l_wc /= l_cl then
+						--| The context's feature is an inherited feature
+						--| thus we need to first process in the ancestor to set specific 
+						--| data (after resolving in ancestor's context .. such as formal..)
+						--| then reprocess in current class, note `is_inherited' is set to True
+						--| to avoid recomputing (and lost) data computed in first processing.
+					l_ft := context.current_feature_table
+					l_ctx := context.twin
+					expression_context := l_ctx
+					context.initialize (l_wc, l_wc.actual_type, l_ft)
+					type_a_checker.init_for_checking (a_feature, l_wc, Void, error_handler)
+					an_ast.process (Current)
+					reset
+					is_inherited := True
+					context.restore (l_ctx)
+				end
+				type_a_checker.init_for_checking (a_feature, l_cl, Void, error_handler)
+			end
+			an_ast.process (Current)
+		end
+
+feature {NONE} -- Implementation
 
 	check_type (a_type: TYPE_AS) is
 			-- Evaluate `a_type' into a TYPE_A instance if valid.
@@ -30,7 +130,7 @@ feature {NONE} -- Implementation: type validation
 			l_error_level: NATURAL
 			context_hack_applied: BOOLEAN
 		do
-			l_error_level := error_handler.error_level
+			l_error_level := error_level
 			if is_inherited then
 					-- Convert TYPE_AS into TYPE_A.
 				l_type := type_a_generator.evaluate_type_if_possible (a_type, context.written_class)
@@ -86,15 +186,32 @@ feature {NONE} -- Implementation: type validation
 						-- Perform simple check that TYPE_A is valid.
 					l_type := type_a_checker.check_and_solved (l_type, a_type)
 				end
-					-- Check validity of type declaration
-				type_a_checker.check_type_validity (l_type, a_type)
+				if error_level = l_error_level then
+						-- Check validity of type declaration
+					type_a_checker.check_type_validity (l_type, a_type)
+						-- Update `last_type' with found type.
+					last_type := l_type
+				end
 			end
-				-- Update `last_type' with found type.
-			last_type := l_type
 
 				-- If there was an error, we simply throw an error.
-			if error_handler.error_level /= l_error_level then
+			if error_level /= l_error_level then
+				last_type := Void
 				error_handler.raise_error
+			end
+		end
+
+	feature_with_name_using (a_feature_name: ID_AS; a_feature_table: FEATURE_TABLE): FEATURE_I
+			-- Feature with feature_name `a_feature_name' using among other means `a_feature_table'
+		local
+			cl: CLASS_C
+		do
+			Result := Precursor {AST_FEATURE_CHECKER_GENERATOR} (a_feature_name, a_feature_table)
+			if Result = Void and then expression_context /= Void then
+				cl := expression_context.current_class
+				if cl /= Void then
+					Result := cl.feature_of_name_id (a_feature_name.name_id)
+				end
 			end
 		end
 

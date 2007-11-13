@@ -94,6 +94,9 @@ feature -- Attributes
 	is_argument: BOOLEAN
 			-- Is the current entity an argument?
 
+	is_object_test_local: BOOLEAN
+			-- Is the current entity an object test local?
+
 	is_tuple_access: BOOLEAN
 			-- Is the current entity an access to one of the TUPLE labels?
 
@@ -194,6 +197,15 @@ feature -- Setting
 		ensure
 			is_local_set: is_local
 		end
+
+	enable_object_test_local is
+			-- Set `is_object_test_local' to true.
+		do
+			is_object_test_local := True
+		ensure
+			is_object_test_local_set: is_object_test_local
+		end
+
 
 	enable_argument is
 			-- Set `is_argument' to true.

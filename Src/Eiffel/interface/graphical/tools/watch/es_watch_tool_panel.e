@@ -1325,7 +1325,7 @@ feature {NONE} -- Auto-completion
 	set_up_complete_possibilities_provider (a_item: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL) is
 			-- Set up code completion possibilities.
 		local
-			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+			l_provider: EB_DEBUGGER_EXPRESSION_COMPLETION_POSSIBILITIES_PROVIDER
 		do
 			create l_provider.make (Void, Void)
 			l_provider.set_dynamic_context_functions (

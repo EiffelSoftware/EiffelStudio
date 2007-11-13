@@ -280,7 +280,7 @@ feature -- Graphical changes
 		local
 			glab: EV_GRID_LABEL_ITEM
 			gedit: ES_OBJECTS_GRID_EXPRESSION_CELL
-			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+			l_provider: EB_DEBUGGER_EXPRESSION_COMPLETION_POSSIBILITIES_PROVIDER
 			l_class_c: CLASS_C
 			l_feature_as: FEATURE_AS
 		do

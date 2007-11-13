@@ -2423,6 +2423,10 @@ feature -- Implementation
 							l_local.set_position (l_local_info.position)
 							last_byte_node := l_local
 						end
+						if not is_inherited then
+							l_as.enable_object_test_local
+							l_as.set_class_id (class_id_of (l_type))
+						end
 					else
 							-- Look for a feature
 						l_feature := Void

@@ -11,17 +11,10 @@ class
 inherit
 	AST_SCOPE_MATCHER
 		redefine
-			process_bin_and_as,
 			process_bin_and_then_as
 		end
 
 feature {AST_EIFFEL} -- Visitor pattern
-
-	process_bin_and_as (l_as: BIN_AND_AS)
-		do
-			l_as.left.process (Current)
-			l_as.right.process (Current)
-		end
 
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 		do

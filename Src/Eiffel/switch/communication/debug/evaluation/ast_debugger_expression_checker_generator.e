@@ -26,14 +26,12 @@ feature -- Settings
 			expression_context := Void
 		end
 
-
-feature -- Type checking
+feature -- Properties
 
 	expression_context: AST_CONTEXT
+			-- Saved original Ast context when processing in the ancestor's context.
 
---	expression_context_current_class: CLASS_C
---	expression_context_current_feature: FEATURE_I
---	expression_context_current_written_class: CLASS_C
+feature -- Type checking
 
 	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS) is
 			-- Type check `an_exp' in the context of `a_feature'.
@@ -96,7 +94,7 @@ feature -- Type checking
 				l_wc := current_feature.written_class
 				if l_wc /= l_cl then
 						--| The context's feature is an inherited feature
-						--| thus we need to first process in the ancestor to set specific 
+						--| thus we need to first process in the ancestor to set specific
 						--| data (after resolving in ancestor's context .. such as formal..)
 						--| then reprocess in current class, note `is_inherited' is set to True
 						--| to avoid recomputing (and lost) data computed in first processing.

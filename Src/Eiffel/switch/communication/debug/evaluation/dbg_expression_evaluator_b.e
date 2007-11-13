@@ -1939,6 +1939,9 @@ feature {NONE} -- Implementation
 								l_cl := context_class
 							end
 							Ast_context.set_current_feature (context_feature)
+							if context_feature.written_class /= context_class then
+								Ast_context.set_written_class (context_feature.written_class)
+							end
 
 							fixme ("jfiat [2004/10/16] : Seems pretty heavy computing ..")
 							l_byte_code := context_feature.byte_server.item (context_feature.body_index)

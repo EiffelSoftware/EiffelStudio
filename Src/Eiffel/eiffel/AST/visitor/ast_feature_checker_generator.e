@@ -189,81 +189,6 @@ feature -- Type checking
 				end
 			end
 		end
-
-	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS) is
-			-- Type check `an_exp' in the context of `a_feature'.
-		require
-			an_exp_not_void: an_exp /= Void
-		local
-			l_exp_call: EXPR_CALL_AS
-			l_instr_as: INSTR_CALL_AS
-			errlst: LIST [ERROR]
-			errcur: CURSOR
-			l_vkcn_error: VKCN
-			l_has_vkcn_error: BOOLEAN
-			l_error_level: NATURAL_32
-		do
-			l_error_level := error_level
-			expression_or_instruction_type_check_and_code (a_feature, an_exp)
-			if error_level /= l_error_level then
-					--| Check if any VKCN error
-				errlst := error_handler.error_list
-				errcur := errlst.cursor
-				from
-					errlst.start
-					l_has_vkcn_error := False
-				until
-					errlst.after or l_has_vkcn_error
-				loop
-					l_vkcn_error ?= errlst.item
-					l_has_vkcn_error := l_vkcn_error /= Void
-					errlst.forth
-				end
-				errlst.go_to (errcur)
-
-					--| If any VKCN .. then let's try to check it as an instruction
-				if l_has_vkcn_error then
-					l_exp_call ?= an_exp
-					if l_exp_call /= Void then
-						error_handler.wipe_out
-						create l_instr_as.initialize (l_exp_call.call)
-						expression_or_instruction_type_check_and_code (a_feature, l_instr_as)
-					end
-				end
-			end
-		end
-
-	expression_or_instruction_type_check_and_code (a_feature: FEATURE_I; an_ast: AST_EIFFEL) is
-			-- Type check `an_ast' in the context of `a_feature'.
-		require
-			an_ast_not_void: an_ast /= Void
-		local
-			l_cl, l_wc: CLASS_C
-			l_ft: FEATURE_TABLE
-			l_ctx: AST_CONTEXT
-		do
-			reset
-			is_byte_node_enabled := True
-			current_feature := a_feature
-
-			l_cl := context.current_class
-			if current_feature /= Void then
-				l_wc := current_feature.written_class
-				if l_wc /= l_cl then
-					l_ft := context.current_feature_table
-					l_ctx := context.twin
-					context.initialize (l_wc, l_wc.actual_type, l_ft)
-					type_a_checker.init_for_checking (a_feature, l_wc, Void, error_handler)
-					an_ast.process (Current)
-					reset
-					is_inherited := True
-					context.restore (l_ctx)
-				end
-				type_a_checker.init_for_checking (a_feature, l_cl, Void, error_handler)
-			end
-			an_ast.process (Current)
-		end
-
 	invariant_type_check (a_feature: FEATURE_I; a_clause: INVARIANT_AS; a_generate_code: BOOLEAN) is
 			-- Type check `a_feature'.
 		require
@@ -1327,7 +1252,7 @@ feature -- Implementation
 								end
 							end
 						else
-							l_feature := l_last_feature_table.item_id  (l_feature_name.name_id)
+							l_feature := feature_with_name_using (l_feature_name, l_last_feature_table)
 						end
 					end
 				end
@@ -8122,6 +8047,15 @@ feature {NONE} -- Precursor handling
 		end
 
 feature {NONE} -- Implementation
+
+	feature_with_name_using (a_feature_name: ID_AS; a_feature_table: FEATURE_TABLE): FEATURE_I
+			-- Feature with feature_name `a_feature_name' using among other means `a_feature_table'
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+		do
+			Result := a_feature_table.item_id  (a_feature_name.name_id)
+		end
+
 	class_id_of (a_type: TYPE_A): INTEGER
 			-- Sets the class id of `a_type' in `a_as' if possible
 		require
@@ -8130,15 +8064,18 @@ feature {NONE} -- Implementation
 			l_class_id: INTEGER
 			l_formal: FORMAL_A
 			l_type_a: TYPE_A
+			cl: CLASS_C
 		do
 			l_type_a := a_type.actual_type
 			l_class_id := -1
 			if l_type_a.is_formal then
+				cl := context.current_class
+--				cl := last_type.associated_class
 				l_formal ?= l_type_a
-				if l_formal.is_multi_constrained (context.current_class) then
+				if l_formal.is_multi_constrained (cl) then
 					--	l_class_id := -1
 				else
-					l_type_a := l_formal.constrained_type (context.current_class)
+					l_type_a := l_formal.constrained_type (cl)
 					if not (l_type_a.is_none or l_type_a.is_void) then
 						l_class_id := l_type_a.associated_class.class_id
 					end

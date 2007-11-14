@@ -52,7 +52,7 @@ cd $EXPORT_DIR
 fullrd C
 bunzip2 -c c.tar.bz2 | tar -xf -
 cd C
-. quick_configure >> $COMPILE_LOG 2>&1
+. ./quick_configure >> $COMPILE_LOG 2>&1
 safe_md $EXPORT_DIR/runtimes
 cp run-time/*.so $EXPORT_DIR/runtimes
 cp run-time/*.a $EXPORT_DIR/runtimes
@@ -161,7 +161,7 @@ if [ ! -d C_library ]; then
 fi
 
 cd $EXPORT_DIR
-. compile_libraries
+. ./compile_libraries
 
 cd $INSTALL_DIR
 . $EXPORT_DIR/compile_libraries
@@ -267,7 +267,7 @@ untgz_ccode geyacc
 move geyacc $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/geyacc
 
 cd $EXPORT_DIR
-. compile_wizards
+. ./compile_wizards
 
 if [ ! -z "$MULTIPLE_EDITIONS" ]; then
 	fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/*.a

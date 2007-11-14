@@ -139,10 +139,8 @@ feature -- Output
 			st.process_symbol_text (ti_L_bracket)
 			if has_attached_mark then
 				st.process_symbol_text (ti_exclamation)
-				st.add_space
 			elseif has_detachable_mark then
 				st.process_symbol_text (ti_question)
-				st.add_space
 			end
 			st.process_keyword_text (ti_Like_keyword, Void)
 			st.add_space

@@ -295,6 +295,14 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (override_scan_cmd)
 			toolbarable_commands.extend (discover_melt_cmd)
 
+
+				-- command not included in toolbars
+				-- however let's initialize them for safety
+			create object_viewer_cmd.make
+			object_viewer_cmd.disable_sensitive
+			create object_storage_management_cmd.make
+			object_storage_management_cmd.disable_sensitive
+
 				-- Disable commands if no project is loaded
 			if not Eiffel_project.manager.is_project_loaded then
 				if Eiffel_project.manager.is_created then
@@ -1220,19 +1228,11 @@ feature -- Status setting
 			l_docking_manager := debugging_window.docking_manager
 
 				--| Before any objects and watches tools
-			if object_viewer_cmd = Void then
-				create object_viewer_cmd.make
-			end
 			object_viewer_cmd.enable_sensitive
-
-			if object_storage_management_cmd = Void then
-				create object_storage_management_cmd.make
-			end
 			object_storage_management_cmd.disable_sensitive
 
 				--| Grid Objects Tool
 			objects_tool.set_manager (debugging_window)
-
 			objects_tool.set_cleaning_delay (preferences.debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.request_update
 

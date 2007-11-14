@@ -8,7 +8,7 @@ fi
 ISE_PLATFORM=$1; export ISE_PLATFORM
 
 # Set up the environment
-. set_aliases
+. ./set_aliases
 OLD_PATH=$PATH
 INIT_DIR=`pwd`
 EIFFEL_SRC=$EXPORT_DIR; export EIFFEL_SRC

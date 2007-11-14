@@ -18,8 +18,8 @@ cd $EIFFEL_SRC
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_demo
 cd $EIFFEL_SRC/vision2_demo
 safe_md $EXPORT_DIR/vision2_demo
-. retrieve_build_files -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN >> $INSTALL_LOG 2>&1
-. retrieve_flat_short >> $INSTALL_LOG 2>&1
+. ./retrieve_build_files -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN >> $INSTALL_LOG 2>&1
+. ./retrieve_flat_short >> $INSTALL_LOG 2>&1
 cd $EIFFEL_SRC/vision2_demo
 clean_project
 finalize vision2_demo.ecf vision2_demo

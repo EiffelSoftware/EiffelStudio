@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			layout_constant.set_default_width_for_button (cancel)
 			l_horizontal_box.extend (cancel)
 			l_horizontal_box.disable_item_expand (cancel)
-			
+
 			set_default_push_button (submit)
 			-- We need following line to show top right close button.
 			set_default_cancel_button (cancel)
@@ -157,8 +157,13 @@ feature {NONE} -- Initialization
 		require
 			not_void: a_label /= Void
 			not_void: a_url /= Void
+		local
+			l_stock_pixmaps: EV_STOCK_PIXMAPS
 		do
 			a_label.set_foreground_color ((create {EV_STOCK_COLORS}).blue)
+			
+			create l_stock_pixmaps
+			a_label.set_pointer_style (l_stock_pixmaps.hyperlink_cursor)
 
 			a_label.pointer_button_press_actions.force_extend (agent open_url (a_url))
 			a_label.pointer_enter_actions.extend (agent (a_label_to_init: EV_LABEL)

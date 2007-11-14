@@ -1,4 +1,4 @@
-<document title="EiffelStudio 6.0 for Mac OS X" output="studio">
+<document title="EiffelStudio 6.1 for Mac OS X" output="studio">
 	<meta_data></meta_data>
 	<paragraph>
 		<heading><size>2</size>Requirements</heading>
@@ -15,7 +15,7 @@
 			</table>
 		</paragraph>
 		<heading><size>2</size>Prerequisites</heading>
-		<paragraph>Before installing EiffelStudio 6.0, it is necessary to install X11 for Mac OS X and the X11 SDK. They are available with the OS X CD. For more details check the Apple web site at:
+		<paragraph>Before installing EiffelStudio 6.1, it is necessary to install X11 for Mac OS X and the X11 SDK. They are available with the OS X CD. For more details check the Apple web site at:
 			<list ordered="false">
 				<item><link><url>http://www.apple.com/macosx/features/x11/</url><label>http://www.apple.com/macosx/features/x11/</label></link></item>
 			</list>
@@ -23,12 +23,12 @@
 		</paragraph>
 
 		<heading><size>2</size>Installing the Free Edition</heading>
-		<paragraph>After downloading the <bold>Eiffel60.dmg</bold> installation package, double click on it to mount the disk image. Then double click on the <bold>Eiffel60.pkg</bold> file to launch the installation procedure. Follow the steps indicated in the dialogs to complete the installation.</paragraph>
+		<paragraph>After downloading the <bold>Eiffel61.dmg</bold> installation package, double click on it to mount the disk image. Then double click on the <bold>Eiffel61.pkg</bold> file to launch the installation procedure. Follow the steps indicated in the dialogs to complete the installation.</paragraph>
 
 		<heading><size>2</size>Installing the Enterprise Edition</heading>
-		<paragraph>Insert the CD into your CD-ROM drive. Open the CD-ROM contents and double click on the <bold>Eiffel60.pkg</bold> file to launch the installation procedure. Follow the steps indicated in the dialogs to complete the installation.</paragraph>
+		<paragraph>Insert the CD into your CD-ROM drive. Open the CD-ROM contents and double click on the <bold>Eiffel61.pkg</bold> file to launch the installation procedure. Follow the steps indicated in the dialogs to complete the installation.</paragraph>
 		<paragraph><alignment>center</alignment><image><url>../../images/installation/56/mac_setup.png</url><alt_text>Setup dialog</alt_text></image></paragraph>
-			<paragraph>Run EiffelStudio, located at /Developers/Applications/Eiffel60/EiffelStudio. Enter the information located inside the box that contains your copy of the EiffelStudio Enterprise Edition. Once the information is correct, the <bold>Register</bold> button will be enabled. Click <bold>Register</bold> to actually register EiffelStudio.</paragraph>
+			<paragraph>Run EiffelStudio, located at /Developers/Applications/Eiffel61/EiffelStudio. Enter the information located inside the box that contains your copy of the EiffelStudio Enterprise Edition. Once the information is correct, the <bold>Register</bold> button will be enabled. Click <bold>Register</bold> to actually register EiffelStudio.</paragraph>
 
 			<paragraph>You now need to launch EiffelStudio to register your copy. Follow the instructions located in the <bold>Starting EiffelStudio</bold> section below. The first time you launch EiffelStudio, you will be asked for an activation key through the following dialog:</paragraph>
 			<paragraph><alignment>center</alignment><image><url>../../images/installation/56/mac_registration.png</url><alt_text>Registration dialog</alt_text></image></paragraph>
@@ -36,11 +36,11 @@
 			<paragraph>If no web broswer appears, it is most likely because Safari is not installed on your machine or is not in your path. Instead you should manually launch a new web browser and go to the page <link><url>http://activate.eiffel.com</url><label>http://activate.eiffel.com</label></link> and enter the information manually. Then follow the above instructions as if the browser had been properly launched.</paragraph>
 			<paragraph>You may receive the following dialog when launching EiffelStudio:</paragraph>
 			<paragraph><alignment>center</alignment><image><url>../../images/installation/56/mac_registration_error.png</url><alt_text>Registration incomplete</alt_text></image></paragraph>
-			<paragraph>This probably means that the <bold>register</bold> program was not launched or did not succeed in storing data to the following file <bold>/Developer/Applications/Eiffel60/EiffelStudio.app/Contents/Resources/Eiffel60/install/limand/.ec_license</bold>. To solve this, rerun the <bold>register</bold> program with a user account that has permissions to write at <bold>/Developer/Applications/Eiffel60/EiffelStudio.app/Contents/Resources/Eiffel60/install/limand</bold> and enter your <bold>Username</bold> and <bold>CD Key</bold>.</paragraph>
+			<paragraph>This probably means that the <bold>register</bold> program was not launched or did not succeed in storing data to the following file <bold>/Developer/Applications/Eiffel61/EiffelStudio.app/Contents/Resources/Eiffel61/install/limand/.ec_license</bold>. To solve this, rerun the <bold>register</bold> program with a user account that has permissions to write at <bold>/Developer/Applications/Eiffel61/EiffelStudio.app/Contents/Resources/Eiffel61/install/limand</bold> and enter your <bold>Username</bold> and <bold>CD Key</bold>.</paragraph>
 	
 
 		<heading><size>2</size>Starting EiffelStudio</heading>
-		<paragraph>Now everything should be properly installed and you should be able to run the compiler. You can now launch EiffelStudio from the Finder under <bold>/Developer/Applications/Eiffel60/</bold>. If you are a new user to EiffelStudio, we recommend that you follow <link><url>../../general/guided_tour/studio/index.xml</url><label>the guided tour</label></link>.</paragraph>
+		<paragraph>Now everything should be properly installed and you should be able to run the compiler. You can now launch EiffelStudio from the Finder under <bold>/Developer/Applications/Eiffel61/</bold>. If you are a new user to EiffelStudio, we recommend that you follow <link><url>../../general/guided_tour/studio/index.xml</url><label>the guided tour</label></link>.</paragraph>
 
 	</paragraph>
 </document>

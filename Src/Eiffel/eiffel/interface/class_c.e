@@ -900,6 +900,15 @@ feature {NONE} -- Private access
 			any_type_not_void: Result /= Void
 		end
 
+	Any_type_attached: CL_TYPE_A is
+			-- Default parent type when it is attached by default
+		once
+			create Result.make (System.any_id)
+			Result.set_is_attached
+		ensure
+			any_type_not_void: Result /= Void
+		end
+
 	Any_parent: PARENT_C is
 			-- Default compiled parent
 		once
@@ -1928,6 +1937,9 @@ feature -- Actual class type
 					actual_generic.put (formal, i)
 					i := i + 1
 				end
+			end
+			if lace_class.is_attached_by_default then
+				Result.set_is_attached
 			end
 		ensure
 			actual_type_not_void: Result /= Void

@@ -2633,6 +2633,10 @@ feature -- Implementation
 					-- Adapt `l_feature_i' to context of current class (e.g. if `l_parent_type' is
 					-- generic then we need to resolve formals used in `l_feature_i' but the one from
 					-- the instantiation `l_parent_type'.
+				if context.current_class.lace_class.is_attached_by_default and then not l_parent_type.is_attached then
+					l_parent_type := l_parent_type.twin
+					l_parent_type.set_is_attached
+				end
 				create l_instatiation_type
 				l_instatiation_type.set_actual_type (l_parent_type)
 				l_feature_i.instantiate (l_instatiation_type)
@@ -7573,6 +7577,10 @@ feature {NONE} -- Agents
 
 				-- Create open argument type tuple
 			create l_tuple.make (System.tuple_id, l_oargtypes)
+			if context.current_class.lace_class.is_void_safe and then l_oargtypes.count > 0 then
+					-- Type of an argument tuple is always attached.
+				l_tuple := l_tuple.as_attached
+			end
 				-- Insert it as second generic parameter of ROUTINE.
 			l_generics.put (l_tuple, 2)
 

@@ -572,7 +572,11 @@ feature {NONE} -- Initialization
 		do
 			l_any_tbl := system.any_class.compiled_class.feature_table
 			create any_parent_type
-			any_parent_type.set_actual_type (any_type)
+			if lace_class.is_attached_by_default then
+				any_parent_type.set_actual_type (any_type_attached)
+			else
+				any_parent_type.set_actual_type (any_type)
+			end
 			check
 				l_any_tbl_not_void: l_any_tbl /= Void
 			end

@@ -44,6 +44,7 @@ feature -- Access
 			-- Is the current type the same as `other' ?
 		do
 			Result := other.is_boolean
+					and then is_attached = other.is_attached
 		end
 
 	associated_class: CLASS_C is
@@ -61,7 +62,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

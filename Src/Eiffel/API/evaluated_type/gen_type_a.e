@@ -93,6 +93,8 @@ feature -- Access
 				and then other_gen_type.class_id = class_id
 				and then is_expanded = other_gen_type.is_expanded
 				and then is_separate = other_gen_type.is_separate
+				and then has_attached_mark = other_gen_type.has_attached_mark
+				and then has_detachable_mark = other_gen_type.has_detachable_mark
 			then
 				from
 					i := 1
@@ -1094,7 +1096,7 @@ invariant
 	generics_not_void: generics /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -540,11 +540,17 @@ end;
 				-- Inherited feature
 			parent_type: LIKE_CURRENT
 				-- "like Current" type of `parent_c'
+			actual_parent_type: CL_TYPE_A
 		do
 			from
 				parent := parent_c.parent
+				actual_parent_type := parent_c.parent_type
+				if a_class.lace_class.is_attached_by_default then
+					actual_parent_type := actual_parent_type.twin
+					actual_parent_type.set_is_attached
+				end
 				create parent_type
-				parent_type.set_actual_type (parent_c.parent_type)
+				parent_type.set_actual_type (actual_parent_type)
 					-- Look for the parent table on the disk
 				parent_table := parent.feature_table.features
 				check

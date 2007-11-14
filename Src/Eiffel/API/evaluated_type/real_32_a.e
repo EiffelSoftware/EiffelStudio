@@ -59,10 +59,11 @@ feature {COMPILER_EXPORTER}
 			-- Is the current type the same as `other' ?
 		do
 			Result := other.is_real_32
+				and then is_attached = other.is_attached
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -57,6 +57,8 @@ feature -- Access
 			if Result then
 				char ?= other
 				Result := is_character_32 = char.is_character_32
+					and then has_attached_mark = char.has_attached_mark
+					and then has_detachable_mark = char.has_detachable_mark
 			end
 		end
 
@@ -83,7 +85,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

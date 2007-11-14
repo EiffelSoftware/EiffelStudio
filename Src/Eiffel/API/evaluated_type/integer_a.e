@@ -60,6 +60,8 @@ feature -- Access
 			if Result then
 				i ?= other
 				Result := size = i.size
+						and then has_attached_mark = i.has_attached_mark
+						and then has_detachable_mark = i.has_detachable_mark
 			end
 		end
 
@@ -94,7 +96,7 @@ invariant
 	correct_size: size = 8 or size = 16 or size = 32 or size = 64
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -153,9 +153,15 @@ feature -- Output
 feature {COMPILER_EXPORTER} -- Modification
 
 	set_actual_type (a: TYPE_A) is
-			-- Assign `a' to `original_actual_type'.
+			-- Assign `a' to `conformance_type'.
 		do
-			conformance_type := a
+			if has_attached_mark then
+				conformance_type := a.as_attached
+			elseif has_detachable_mark then
+				conformance_type := a.as_detachable
+			else
+				conformance_type := a
+			end
 			actual_type := Current
 		end
 

@@ -8,7 +8,7 @@ fi
 export ISE_PLATFORM=$1
 
 # Set up the environment
-. set_aliases
+. ./set_aliases
 
 VERSION=6.0
 SRC_DIR=$2

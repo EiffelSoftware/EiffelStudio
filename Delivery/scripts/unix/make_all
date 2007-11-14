@@ -4,7 +4,7 @@
 # ie solaris, ppx, linux and linux RH9.
 
 # Let's initialize our environments variables
-. set_aliases
+. ./set_aliases
 
 # Let's create an enterprise package for Unix
 rm -rf PorterPackage

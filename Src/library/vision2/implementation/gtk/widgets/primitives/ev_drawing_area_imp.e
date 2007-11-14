@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	update_tooltip (a_show_tooltip: BOOLEAN) is
 			-- Set tooltip status to `a_show_tooltip'.
 		do
-			if tooltips_pointer /= default_pointer then
+			if needs_custom_tooltip_implementation and then tooltips_pointer /= default_pointer then
 				-- Tooltips have been initialized so activate them.
 				if a_show_tooltip then
 					show_tooltips_if_activated := True
@@ -126,37 +126,40 @@ feature {NONE} -- Implementation
 			l_screen: EV_SCREEN
 			gr: POINTER
 		do
-			a_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
-			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
-			if a_window = drawable and then show_tooltips_if_activated and then not has_capture then
-				if reset_tooltip_position then
-					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (a_window, $a_screen_x, $a_screen_y)
-					gr := reusable_requisition_struct.item
-					{EV_GTK_EXTERNALS}.gtk_widget_size_request (a_tip_win, gr)
-					l_width := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
-					l_height := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
-					create l_screen
-					tooltip_initial_x := a_screen_x + a_x
-					tooltip_initial_y := a_screen_y + a_y + tooltip_window_y_offset
-					if tooltip_initial_x + l_width > l_screen.width then
-						tooltip_initial_x := l_screen.width - l_width
+			if needs_custom_tooltip_implementation then
+				a_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
+				a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+				if a_window = drawable and then show_tooltips_if_activated and then not has_capture then
+					if reset_tooltip_position then
+						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (a_window, $a_screen_x, $a_screen_y)
+						gr := reusable_requisition_struct.item
+						{EV_GTK_EXTERNALS}.gtk_widget_size_request (a_tip_win, gr)
+						l_width := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
+						l_height := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
+						create l_screen
+						tooltip_initial_x := a_screen_x + a_x
+						tooltip_initial_y := a_screen_y + a_y + tooltip_window_y_offset
+						if tooltip_initial_x + l_width > l_screen.width then
+							tooltip_initial_x := l_screen.width - l_width
+						end
+						if tooltip_initial_y + l_height > l_screen.height then
+							tooltip_initial_y := a_screen_y + a_y - l_height - tooltip_window_y_offset
+						end
+						reset_tooltip_position := False
 					end
-					if tooltip_initial_y + l_height > l_screen.height then
-						tooltip_initial_y := a_screen_y + a_y - l_height - tooltip_window_y_offset
-					end
-					reset_tooltip_position := False
+					l_show_tooltips := True
+				else
+					show_tooltips_if_activated := False
+					tooltip_repeater.set_interval (0)
 				end
-				l_show_tooltips := True
-			else
-				show_tooltips_if_activated := False
-				tooltip_repeater.set_interval (0)
+				if l_show_tooltips and then not internal_tooltip.is_empty then
+					{EV_GTK_EXTERNALS}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y)
+					{EV_GTK_EXTERNALS}.gtk_widget_show (a_tip_win)
+				else
+					{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
+				end
 			end
-			if l_show_tooltips and then not internal_tooltip.is_empty then
-				{EV_GTK_EXTERNALS}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y)
-				{EV_GTK_EXTERNALS}.gtk_widget_show (a_tip_win)
-			else
-				{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
-			end
+
 		end
 
 	tooltip_initial_x, tooltip_initial_y: INTEGER
@@ -177,6 +180,13 @@ feature {NONE} -- Implementation
 	tooltips_pointer: POINTER
 		-- Tooltips pointer for `Current'.
 
+	needs_custom_tooltip_implementation: BOOLEAN
+			-- Does `Current' need a custom tooltip implementation?
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_maj_ver = 2 and then {EV_GTK_EXTERNALS}.gtk_min_ver < 12
+			--| FIXME Version when tooltips were fixed for 2.2.x needs to be investigated, 12 is a certainty.
+		end
+
 	set_tooltip (a_text: STRING_GENERAL) is
 			-- Set `tooltip' to `a_text'.
 		local
@@ -184,17 +194,20 @@ feature {NONE} -- Implementation
 			a_tip_win: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			internal_tooltip := a_text.twin
-			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
-				if tooltips_pointer = default_pointer then
-					-- The tooltips have not yet been initialized.
+			if tooltips_pointer = default_pointer then
+				if needs_custom_tooltip_implementation then
 					tooltips_pointer := {EV_GTK_EXTERNALS}.gtk_tooltips_new
 					{EV_GTK_EXTERNALS}.gtk_tooltips_force_window (tooltips_pointer)
 					a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
 					{EV_GTK_EXTERNALS}.gtk_window_set_position (a_tip_win, {EV_GTK_EXTERNALS}.gtk_win_pos_mouse_enum)
 					create tooltip_repeater
 					tooltip_repeater.actions.extend (agent update_tooltip_window)
+				else
+					tooltips_pointer := app_implementation.tooltips
 				end
+			end
+			if needs_custom_tooltip_implementation then
+				internal_tooltip := a_text.twin
 				a_cs := App_implementation.c_string_from_eiffel_string (internal_tooltip)
 				a_tip_label := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_label (tooltips_pointer)
 				a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
@@ -205,6 +218,8 @@ feature {NONE} -- Implementation
 				else
 					update_tooltip (False)
 				end
+			else
+				Precursor {EV_PRIMITIVE_IMP} (a_text)
 			end
 		end
 

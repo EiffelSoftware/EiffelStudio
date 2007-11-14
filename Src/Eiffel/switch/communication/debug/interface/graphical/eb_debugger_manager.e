@@ -1919,17 +1919,19 @@ feature {NONE} -- Implementation
 				enable_bkpt.enable_sensitive
 				disable_bkpt.enable_sensitive
 				bkpt_info_cmd.enable_sensitive
+				force_debug_mode_cmd.enable_sensitive
 
-				debug_cmd.enable_sensitive
-				no_stop_cmd.enable_sensitive
 				assertion_checking_handler_cmd.disable_sensitive
+				object_storage_management_cmd.enable_sensitive
 
 				options_cmd.enable_sensitive
 				exception_handler_cmd.enable_sensitive
+				
+				debug_cmd.enable_sensitive
+				no_stop_cmd.enable_sensitive
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
-				out_cmd.disable_sensitive
-
+				out_cmd.enable_sensitive
 			end
 		end
 

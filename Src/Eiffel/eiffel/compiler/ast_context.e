@@ -266,7 +266,10 @@ feature -- Setting
 			create current_class_type
 			current_class_type.set_actual_type (a_type)
 			if current_class.lace_class.is_void_safe then
-				current_class_type.set_attached_mark
+				if not current_class_type.is_attached then
+						-- Current is always attached
+					current_class_type.set_attached_mark
+				end
 				create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
 			else
 				create {AST_VARIABLE_CONTEXT} variables

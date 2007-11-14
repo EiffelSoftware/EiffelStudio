@@ -134,6 +134,11 @@ feature {TYPE_A} -- Visitors
 	process_formal_a (a_type: FORMAL_A) is
 			-- Process `a_type'.
 		do
+			if a_type.has_attached_mark then
+				text_formatter.process_symbol_text (ti_exclamation)
+			elseif a_type.has_detachable_mark then
+				text_formatter.process_symbol_text (ti_question)
+			end
 			text_formatter.process_generic_text (current_class.generics.i_th (a_type.position).name.name.as_upper)
 		end
 
@@ -142,10 +147,6 @@ feature {TYPE_A} -- Visitors
 		local
 			i, count: INTEGER
 		do
-			if a_type.is_separate then
-				text_formatter.process_symbol_text (ti_separate_keyword)
-				text_formatter.add_space
-			end
 			process_cl_type_a (a_type)
 				-- TUPLE may have zero generic parameters
 			count := a_type.generics.count

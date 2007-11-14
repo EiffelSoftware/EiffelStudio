@@ -9,7 +9,7 @@ deferred class
 	LIKE_TYPE_A
 
 inherit
-	TYPE_A
+	ATTACHABLE_TYPE_A
 		undefine
 			instantiation_in, same_as
 		redefine
@@ -49,18 +49,6 @@ feature -- Properties
 			elseif has_detachable_mark and then Result.is_attached then
 				Result := Result.as_detachable
 			end
-		end
-
-	has_attached_mark: BOOLEAN is
-			-- Is type explicitly marked as attached?
-		do
-			Result := attachment_bits & has_attached_mark_mask /= 0
-		end
-
-	has_detachable_mark: BOOLEAN is
-			-- Is type explicitly marked as attached?
-		do
-			Result := attachment_bits & has_detachable_mark_mask /= 0
 		end
 
 	has_associated_class: BOOLEAN is
@@ -123,7 +111,7 @@ feature -- Properties
 	is_attached: BOOLEAN is
 			-- Is type attached?
 		do
-			if has_attached_mark then
+			if Precursor then
 				Result := True
 			elseif not has_detachable_mark then
 				Result := conformance_type.is_attached
@@ -143,23 +131,13 @@ feature -- Primitives
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `actual_type'.
 		do
-			actual_type := a
-		end
-
-	set_attached_mark is
-			-- Mark type declaration as having an explicit attached mark.
-		do
-			attachment_bits := has_attached_mark_mask
-		ensure then
-			has_attached_mark
-		end
-
-	set_detachable_mark is
-			-- Set class type declaration as having an explicit detachable mark.
-		do
-			attachment_bits := has_detachable_mark_mask
-		ensure then
-			has_detachable_mark
+			if has_attached_mark then
+				actual_type := a.as_attached
+			elseif has_detachable_mark then
+				actual_type := a.as_detachable
+			else
+				actual_type := a
+			end
 		end
 
 	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A is
@@ -214,16 +192,25 @@ feature -- Primitives
 			Result := actual_type.meta_type
 		end
 
-feature {NONE} -- Attachment properties
+feature -- Modification
 
-	attachment_bits: NATURAL_8
-			-- Associated attachment flags
+	set_attached_mark is
+			-- Mark type declaration as having an explicit attached mark.
+		do
+			Precursor
+			if not actual_type.is_attached then
+				actual_type := actual_type.as_attached
+			end
+		end
 
-	has_detachable_mark_mask: NATURAL_8 is 1
-			-- Mask in `attachment_bits' that tells whether the type has an explicit detachanble mark
-
-	has_attached_mark_mask: NATURAL_8 is 2;
-			-- Mask in `attachment_bits' that tells whether the type has an explicit attached mark
+	set_detachable_mark is
+			-- Set class type declaration as having an explicit detachable mark.
+		do
+			Precursor
+			if actual_type.is_attached then
+				actual_type := actual_type.as_detachable
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

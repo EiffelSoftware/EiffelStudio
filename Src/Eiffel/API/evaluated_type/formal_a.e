@@ -212,7 +212,9 @@ feature -- Access
 		do
 			other_formal ?= other
 			if other_formal /= Void then
-				Result := is_equivalent (other_formal)
+				Result := is_equivalent (other_formal) and then
+					has_attached_mark = other_formal.has_attached_mark and then
+					has_detachable_mark = other_formal.has_detachable_mark
 			end
 		end
 
@@ -240,6 +242,11 @@ feature -- Output
 			s: STRING
 			l_class: CLASS_AS
 		do
+			if has_attached_mark then
+				st.process_symbol_text (ti_exclamation)
+			elseif has_detachable_mark then
+				st.process_symbol_text (ti_question)
+			end
 			if c /= Void then
 				l_class := c.ast
 				if l_class.generics /= Void and then l_class.generics.valid_index (position) then
@@ -380,6 +387,13 @@ feature {COMPILER_EXPORTER}
 			l_feat := a_descendant.generic_features.item (l_feat.rout_id_set.first)
 			check l_feat_not_void: l_feat /= Void end
 			Result := l_feat.type.actual_type
+			if has_attached_mark then
+				Result := Result.duplicate
+				Result.set_attached_mark
+			elseif has_detachable_mark then
+				Result := Result.duplicate
+				Result.set_detachable_mark
+			end
 		end
 
 	type_i: FORMAL_I is
@@ -401,7 +415,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

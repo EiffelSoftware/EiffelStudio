@@ -12,9 +12,8 @@ inherit
 		redefine
 			is_expanded, is_reference, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
-			has_expanded, is_valid, format, convert_to, is_attached,
-			is_full_named_type, is_external, is_enum, is_conformant_to,
-			set_attached_mark, set_detachable_mark
+			has_expanded, is_valid, format, convert_to,
+			is_full_named_type, is_external, is_enum, is_conformant_to
 		end
 
 	DEBUG_OUTPUT
@@ -75,18 +74,6 @@ feature -- Properties
 			definition: Result = (declaration_mark = separate_mark)
 		end
 
-	has_attached_mark: BOOLEAN is
-			-- Is type explicitly marked as attached?
-		do
-			Result := attachment_bits & has_attached_mark_mask /= 0
-		end
-
-	has_detachable_mark: BOOLEAN is
-			-- Is type explicitly marked as attached?
-		do
-			Result := attachment_bits & has_detachable_mark_mask /= 0
-		end
-
 	is_expanded: BOOLEAN is
 			-- Is the type expanded?
 		do
@@ -103,12 +90,6 @@ feature -- Properties
 			-- Is the type separate?
 		do
 			Result := has_separate_mark
-		end
-
-	is_attached: BOOLEAN is
-			-- Is the type attached?
-		do
-			Result := (attachment_bits & is_attached_mask /= 0) or else is_expanded
 		end
 
 	is_valid: BOOLEAN is
@@ -187,6 +168,8 @@ feature -- Access
 			Result := other_class_type /= Void and then class_id = other_class_type.class_id
 						and then is_expanded = other_class_type.is_expanded
 						and then is_separate = other_class_type.is_separate
+						and then has_attached_mark = other_class_type.has_attached_mark
+						and then has_detachable_mark = other_class_type.has_detachable_mark
 		end
 
 	associated_class: CLASS_C is
@@ -279,34 +262,6 @@ feature {COMPILER_EXPORTER} -- Settings
 			declaration_mark := separate_mark
 		ensure
 			has_separate_mark: has_separate_mark
-		end
-
-	set_attached_mark is
-			-- Mark class type declaration as having an explicit attached mark.
-		do
-			attachment_bits := has_attached_mark_mask | is_attached_mask
-		ensure then
-			has_attached_mark
-			is_attached
-		end
-
-	set_detachable_mark is
-			-- Set class type declaration as having an explicit detachable mark.
-		do
-			attachment_bits := has_detachable_mark_mask
-		ensure then
-			has_detachable_mark
-			not is_attached
-		end
-
-	set_is_attached is
-			-- Set attached type property.
-		require
-			not has_detachable_mark
-		do
-			attachment_bits := attachment_bits | is_attached_mask
-		ensure
-			is_attached
 		end
 
 	type_i: CL_TYPE_I is
@@ -637,20 +592,6 @@ feature {CL_TYPE_A, CL_TYPE_I, TUPLE_CLASS_B} --Class type declaration marks
 
 	separate_mark: NATURAL_8 is 3
 			-- Separate declaration mark
-
-feature {NONE} -- Attachment properties
-
-	attachment_bits: NATURAL_8
-			-- Associated attachment flags
-
-	has_detachable_mark_mask: NATURAL_8 is 1
-			-- Mask in `attachment_bits' that tells whether the type has an explicit detachanble mark
-
-	has_attached_mark_mask: NATURAL_8 is 2
-			-- Mask in `attachment_bits' that tells whether the type has an explicit attached mark
-
-	is_attached_mask: NATURAL_8 is 4
-			-- Mask in `attachment_bits' that tells whether the type is attached
 
 invariant
 	class_id_positive: class_id > 0

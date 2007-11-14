@@ -194,7 +194,7 @@ static  char    *names [] = {
 "BC_ALLOCATE_ONCE_STRINGS" ,
 "BC_CCLONE" ,
 "BC_CEQUAL" ,
-"BC_NOTUSED_148" ,
+"BC_OBJECT_TEST" ,
 "BC_BOX" ,
 "BC_UINT8" ,
 "BC_UINT16" ,
@@ -743,6 +743,13 @@ static  void    print_instructions ()
 				print_dtype (0,get_uint32(&ip));
 				/* Static type of target */
 				get_creation_type ();
+				break;
+			case  BC_OBJECT_TEST :
+				/* Object test */
+				/* local index */
+				fprintf (ofp,"%d ", (int) get_int16(&ip));
+				/* Static type of target */
+				get_creation_type();
 				break;
 /* Creation */
 			case  BC_RCREATE:

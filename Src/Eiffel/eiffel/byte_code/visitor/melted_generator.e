@@ -1256,15 +1256,11 @@ feature {NONE} -- Visitors
 					ba.append_boolean (False)
 				end
 			else
-					-- Target is a reference
-				ba.append (a_node.target.reverse_code)
-				melted_assignment_generator.generate_assignment (ba, a_node.target)
+					-- Target is a reference, source is a reference, or both
+				ba.append (bc_object_test)
+				ba.append_short_integer (a_node.target.position)
 					-- Generate type of target
 				a_node.info.make_byte_code (ba)
-					-- Check if the target is attached.
-				process_local_b (a_node.target)
-				ba.append (bc_void)
-				ba.append (bc_ne)
 			end
 		end
 

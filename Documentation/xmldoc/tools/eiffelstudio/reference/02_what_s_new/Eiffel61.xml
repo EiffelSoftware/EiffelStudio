@@ -1,0 +1,61 @@
+ <document title="Release notes for EiffelStudio 6.1" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading><size>2</size>Graphical environment</heading>
+		<heading><size>3</size>What's new</heading>
+		<list ordered="false">
+			<item></item>
+		</list>		
+		<heading><size>3</size>Improvements</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>Changes</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>Bug fixes</heading>
+		<list ordered="false">
+			<item></item>
+			<item>More bug fixes can be seen at <link><label>the EiffelStudio open source site</label><url>http://dev.eiffel.com/EiffelStudio_6.1_Releases</url></link>.</item>
+		</list>
+		<heading><size>2</size>Compiler</heading>
+		<list ordered="false">
+			<item>Click <link><url>../30_compiler/60_version_history/09_61_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
+		</list>
+		<heading><size>2</size>Debugger</heading>
+			<list ordered="false">
+				<item>Click <link><url>../40_debugger/80_version_history/Eiffel61.xml</url><label>here</label></link> for the EiffelStudio's debugger release notes.</item>
+			</list>
+		<heading><size>2</size>EiffelBuild</heading>
+			<list ordered="false">
+				<item>Click <link><url>../../../eiffelbuild/version_history/index.xml</url><label>here</label></link> for the EiffelBuild release notes.</item>
+			</list>
+		<heading><size>2</size>Libraries</heading>
+		<heading><size>3</size>EiffelBase</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>EiffelNet</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>EiffelThread</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>EiffelVision2</heading>
+		<list ordered="false">
+			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>
+		</list>
+		<heading><size>3</size>WEL</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<paragraph>
+			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,4 +1,4 @@
-<document title="EiffelStudio 6.0 for Windows" output="studio">
+<document title="EiffelStudio 6.1 for Windows" output="studio">
 	<meta_data></meta_data>
 	<paragraph>
 		<heading><size>2</size>Requirements</heading>
@@ -15,10 +15,10 @@
 			</table>
 		</paragraph>
 		<heading><size>2</size>Installing EiffelStudio from the Web</heading>
-			<paragraph>After downloading the <bold>Eiffel60.msi</bold> installation package, right click on it and select <bold>Install</bold>. This will launch the installation procedure. Follow the steps indicated in the dialogs to complete the installation.</paragraph>
+			<paragraph>After downloading the <bold>Eiffel61.msi</bold> installation package, right click on it and select <bold>Install</bold>. This will launch the installation procedure. Follow the steps indicated in the dialogs to complete the installation.</paragraph>
 		<heading><size>2</size>Installing the Enterprise Edition.</heading>
 			<paragraph>Insert the CD into your CD-ROM drive. If you have the autorun facility enabled, the installation process will automatically be launched. 
-			Otherwise you can launch it by executing <bold>Eiffel60.msi</bold> located at the root of the CD. 
+			Otherwise you can launch it by executing <bold>Eiffel61.msi</bold> located at the root of the CD. 
 			During the installation you will be asked for your <bold>Username</bold> and <bold>CD Key</bold></paragraph>
 			<paragraph>Enter the information located inside the box that contains your copy of the EiffelStudio Enterprise Edition, or that you will have received via email.
 			 Once the information is correct, the <bold>Next</bold> button will be enabled. Click <bold>Next</bold> and follow the steps indicated in the dialogs to complete the installation.</paragraph>

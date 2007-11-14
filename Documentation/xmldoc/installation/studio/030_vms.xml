@@ -1,4 +1,4 @@
-<document title="EiffelStudio 6.0 for HP OpenVMS" output="studio">
+<document title="EiffelStudio 6.1 for HP OpenVMS" output="studio">
 	<meta_data></meta_data>
 	<paragraph>
 		<heading><size>2</size>Requirements</heading>
@@ -15,26 +15,26 @@
 			</table>
 		</paragraph>
 		<heading><size>2</size>Checking your environment</heading>
-		<paragraph>EiffelStudio 6.0 requires GTK+ 1.2.10 or above to function properly. You can check that you have this installed correctly by typing the following command:<code_block>gtk-config --version</code_block>The command should succeed and the version number of GTK+ should appear. If it is not 1.2.10 or above then you cannot continue the installation of EiffelStudio. You first need to install GTK+ 1.2.10.</paragraph>
+		<paragraph>EiffelStudio 6.1 requires GTK+ 1.2.10 or above to function properly. You can check that you have this installed correctly by typing the following command:<code_block>gtk-config --version</code_block>The command should succeed and the version number of GTK+ should appear. If it is not 1.2.10 or above then you cannot continue the installation of EiffelStudio. You first need to install GTK+ 1.2.10.</paragraph>
 
 		<heading><size>2</size>Installing the Enterprise Edition</heading>
 		<heading><size>3</size>From the Web</heading>
-		<paragraph>After downloading the <bold>eif60vms.zip</bold> installation package, unzip the distribution into temp:[dir] where where temp:[dir] is the location of a temporary directory:</paragraph>
-		<code_block>unzip eif60vms.zip temp:[dir]</code_block>
+		<paragraph>After downloading the <bold>eif61vms.zip</bold> installation package, unzip the distribution into temp:[dir] where where temp:[dir] is the location of a temporary directory:</paragraph>
+		<code_block>unzip eif61vms.zip temp:[dir]</code_block>
 		<paragraph>And use the following commands to install the files into eiffel_installation_path where eiffel_installation_path is a device:[directory] on an ODS-5 volume:</paragraph>
-		<code_block>set file/attrib=(org:seq,rfm:fix,lrl:9216) temp:[dir]eif60vms.save
-backup temp:[dir]eif60vms.save/save eiffel_installation_path</code_block>
+		<code_block>set file/attrib=(org:seq,rfm:fix,lrl:9216) temp:[dir]eif61vms.save
+backup temp:[dir]eif61vms.save/save eiffel_installation_path</code_block>
 
 		<heading><size>3</size>From a CD</heading>
 		<paragraph>You must mount the installation CD-ROM volume with the following qualifier:</paragraph>
 		<code_block>mount cd_dev:/media_format=cdrom/undefined_fat=fixed:cr:9216</code_block>
 		<paragraph>where cd_dev: is the CD-ROM device. And use the following commands to install the files into eiffel_installation_path where eiffel_installation_path is a device:[directory] on an ODS-5 volume:</paragraph>
-		<code_block>backup cd_dev:[000000]eif60vms.save/save eiffel_installation_path</code_block>
+		<code_block>backup cd_dev:[000000]eif61vms.save/save eiffel_installation_path</code_block>
 
 		
 		<heading><size>3</size>Completing the installation</heading>		
 		<paragraph>You must define a system-wide rooted logical name to reference the installation directory, for instance:</paragraph>
-		<code_block>define/system EIFFEL60_0706 eiffel_installation_path:[directory.] /trans=conceal</code_block>
+		<code_block>define/system EIFFEL61_0706 eiffel_installation_path:[directory.] /trans=conceal</code_block>
 		<paragraph>To use EiffelStudio for VMS, run the setup procedure to define the environment:
 		<code_block>@eiffel_installation_path:[000000]setup</code_block>
 		This will define the logical names and DCL symbols required to run Eiffel.</paragraph>

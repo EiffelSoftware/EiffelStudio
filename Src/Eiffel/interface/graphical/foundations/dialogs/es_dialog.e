@@ -937,10 +937,12 @@ feature {NONE} -- Factory
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 		local
 			l_label: STRING_32
+			l_constants: EV_LAYOUT_CONSTANTS
 		do
+			create l_constants
 			l_label := dialog_button_label (a_id)
 			create Result.make_with_text (l_label)
-			Result.set_minimum_size ({ES_UI_CONSTANTS}.dialog_button_width, {ES_UI_CONSTANTS}.dialog_button_height)
+			Result.set_minimum_width ({ES_UI_CONSTANTS}.dialog_button_width)
 		ensure
 			result_attached: Result /= Void
 		end

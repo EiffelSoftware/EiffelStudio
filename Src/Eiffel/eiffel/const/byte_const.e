@@ -190,7 +190,7 @@ feature -- Access
 	Bc_cclone:		CHARACTER is '%/146/';
 	Bc_cequal:		CHARACTER is '%/147/';
 
-	bc_notused_148:		CHARACTER is '%/148/'
+	Bc_object_test:		CHARACTER is '%/148/'
 
 		-- Object reattachment
 	Bc_box:			CHARACTER is '%/149/';

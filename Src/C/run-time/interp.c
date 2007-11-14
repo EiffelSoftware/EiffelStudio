@@ -1533,6 +1533,32 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
+	 * Object test to an object test local.
+	 */
+	case BC_OBJECT_TEST:
+#ifdef DEBUG
+		dprintf(2)("BC_OBJECT_TEST\n");
+#endif
+		code = get_int16(&IC);			/* Get local number */
+		type = get_creation_type ();
+		last = otop();
+
+		if (RTRA(type, last->it_ref)) {
+				/* Perform reattachment. */
+			reverse_local (loc(code), type);
+				/* Put True on the stack. */
+			last = iget();
+			last->type = SK_BOOL;
+			last->it_char = EIF_TRUE;
+		}
+		else {
+				/* Replace expression value with False. */
+			last->type = SK_BOOL;
+			last->it_char = EIF_FALSE;
+		}
+		break;
+	
+	/*
 	 * Clone of a reference
 	 */
 	case BC_CLONE:

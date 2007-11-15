@@ -6,6 +6,9 @@ indexing
 		      
 		Help keep {ES_DIALOG_BUTTONS} tidy! Please do not pollute the buttons with tool/dialog specific buttons. This is a place
 		for heavly used button identifiers.
+		
+		Implementation Note: Currently we cannot use platform consistency as not all dialogs in EiffelStudio have been ported to
+		                     the new model. This means we have button layout inconsistencies.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -30,13 +33,13 @@ feature -- Access
 	frozen ok_cancel_buttons: DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
-			if {PLATFORM}.is_windows then
+--			if {PLATFORM}.is_windows then
 				Result.put_last (ok_button)
 				Result.put_last (cancel_button)
-			else
-				Result.put_last (cancel_button)
-				Result.put_last (ok_button)
-			end
+--			else
+--				Result.put_last (cancel_button)
+--				Result.put_last (ok_button)
+--			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -46,13 +49,13 @@ feature -- Access
 	frozen yes_no_buttons: DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
-			if {PLATFORM}.is_windows then
+--			if {PLATFORM}.is_windows then
 				Result.put_last (yes_button)
 				Result.put_last (no_button)
-			else
-				Result.put_last (no_button)
-				Result.put_last (yes_button)
-			end
+--			else
+--				Result.put_last (no_button)
+--				Result.put_last (yes_button)
+--			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -62,15 +65,15 @@ feature -- Access
 	frozen yes_no_cancel_buttons: DS_HASH_SET [INTEGER]
 		once
 			create Result.make (3)
-			if {PLATFORM}.is_windows then
+--			if {PLATFORM}.is_windows then
 				Result.put_last (yes_button)
 				Result.put_last (no_button)
 				Result.put_last (cancel_button)
-			else
-				Result.put_last (no_button)
-				Result.put_last (cancel_button)
-				Result.put_last (yes_button)
-			end
+--			else
+--				Result.put_last (no_button)
+--				Result.put_last (cancel_button)
+--				Result.put_last (yes_button)
+--			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -80,15 +83,15 @@ feature -- Access
 	frozen abort_retry_ignore_buttons: DS_HASH_SET [INTEGER]
 		once
 			create Result.make (3)
-			if {PLATFORM}.is_windows then
+--			if {PLATFORM}.is_windows then
 				Result.put_last (abort_button)
 				Result.put_last (retry_button)
 				Result.put_last (ignore_button)
-			else
-				Result.put_last (retry_button)
-				Result.put_last (ignore_button)
-				Result.put_last (abort_button)
-			end
+--			else
+--				Result.put_last (retry_button)
+--				Result.put_last (ignore_button)
+--				Result.put_last (abort_button)
+--			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -98,13 +101,13 @@ feature -- Access
 	frozen retry_cancel_buttons: DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)
-			if {PLATFORM}.is_windows then
+--			if {PLATFORM}.is_windows then
 				Result.put_last (retry_button)
 				Result.put_last (cancel_button)
-			else
-				Result.put_last (cancel_button)
-				Result.put_last (retry_button)
-			end
+--			else
+--				Result.put_last (cancel_button)
+--				Result.put_last (retry_button)
+--			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

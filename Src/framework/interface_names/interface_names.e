@@ -681,10 +681,10 @@ feature -- Accelerator, focus label and menu name
 
 feature -- Menu entries
 
-	m_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Go to next &error") end
-	m_go_to_previous_error: STRING_GENERAL is 			do Result := locale.translation ("Go to previous &error") end
-	m_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Go to next &warning") end
-	m_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to previous &warning") end
+	m_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Go to Next &Error") end
+	m_go_to_previous_error: STRING_GENERAL is 			do Result := locale.translation ("Go to Previous E&rror") end
+	m_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Go to Next &Warning") end
+	m_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to Previous War&ning") end
 
 feature -- Tool tips
 

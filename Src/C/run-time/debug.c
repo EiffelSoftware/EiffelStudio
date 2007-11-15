@@ -2126,9 +2126,11 @@ rt_public void rt_ext_notify_event (int op, char* curr, int cid, int fid, int de
 	EIF_GET_CONTEXT
 	if (exec_recording_enabled == 1 && is_inside_rt_eiffel_code != 1) {	
 		EIF_TYPED_VALUE rtd_arg;						
-		EIF_TYPED_VALUE rtd_op = {op, SK_INT32};		
+		EIF_TYPED_VALUE rtd_op;
 		EIF_REFERENCE rtd_str = NULL;					
 		RT_ENTER_EIFFELCODE;								
+		rtd_op.it_i4 = op;
+		rtd_op.type = SK_INT32;
 		rtd_arg = (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);	
 		((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r = ((EIF_REFERENCE) curr); 	
 		((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) cid); 	

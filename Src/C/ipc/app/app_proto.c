@@ -561,13 +561,17 @@ rt_shared void dnotify(int evt_type, int evt_data)
 
 rt_private EIF_TYPED_VALUE dinvoke_rt_extension_argument (int op)
 {
-	EIF_TYPED_VALUE rtd_op = {op, SK_INT32}; 
+	EIF_TYPED_VALUE rtd_op;
+	rtd_op.it_i4 = op;
+	rtd_op.type = SK_INT32; 
 	return (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);
 }
 
 rt_private void dinvoke_rt_extension (int op, EIF_TYPED_VALUE rtd_arg)
 {
-	EIF_TYPED_VALUE rtd_op = {op, SK_INT32};
+	EIF_TYPED_VALUE rtd_op;
+	rtd_op.it_i4 = op;
+	rtd_op.type = SK_INT32; 
 	(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);
 }
 

@@ -220,7 +220,7 @@ feature -- operation on conditions
 			d: EV_DIALOG
 			okb, removeb, cancelb: EV_BUTTON
 			tf: EB_CODE_COMPLETABLE_TEXT_FIELD
-			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+			l_provider: EB_DEBUGGER_EXPRESSION_COMPLETION_POSSIBILITIES_PROVIDER
 			lab: EV_LABEL
 			fr: EV_FRAME
 			vb, vb2: EV_VERTICAL_BOX

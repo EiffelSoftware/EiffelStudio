@@ -13,6 +13,7 @@ inherit
 		redefine
 			reset,
 			process_un_old_as,
+			process_access_feat_as,
 			check_type,
 			feature_with_name_using
 		end
@@ -224,6 +225,19 @@ feature {NONE} -- Implementation
 			Precursor (l_as)
 			if not b then
 				set_is_checking_postcondition (b)
+			end
+		end
+
+	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+		local
+			l_dbg_err: DBG_EXPRESSION_TYPE_CHECKER_ERROR
+		do
+			if last_type.actual_type.is_formal and not context.current_class.is_generic then
+				create l_dbg_err
+				context.init_error (l_dbg_err)
+				error_handler.insert_error (l_dbg_err)
+			else
+				Precursor {AST_FEATURE_CHECKER_GENERATOR} (l_as)
 			end
 		end
 

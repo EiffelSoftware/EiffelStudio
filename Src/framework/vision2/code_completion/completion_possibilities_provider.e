@@ -45,9 +45,15 @@ feature {CODE_COMPLETABLE} -- Basic operation
 		require
 			code_completable_attached: code_completable /= Void
 		do
-			is_prepared := true
+			is_prepared := True
 		ensure
 			is_prepared: is_prepared
+		end
+
+	reset is
+			-- Reset
+		do
+			is_prepared := False
 		end
 
 feature -- Status report
@@ -69,7 +75,7 @@ feature -- Element change
 			a_completable_attached: a_completable /= Void
 		do
 			code_completable := a_completable
-			is_prepared := false
+			is_prepared := False
 		ensure
 			code_completable_not_void: code_completable /= Void
 		end

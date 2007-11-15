@@ -234,18 +234,30 @@ feature -- Basic operation
 
 	complete_code is
 			-- Prepare auto complete and show choice window directly.
+		local
+			retried: BOOLEAN
 		do
-			if possibilities_provider /= Void then
-				precompletion_actions.call (Void)
-				prepare_auto_complete
-				if possibilities_provider.completion_possible then
-					block_focus_out_actions
-					show_completion_list
-				else
-					block_completion
+			if not retried then
+				if possibilities_provider /= Void then
+					precompletion_actions.call (Void)
+					prepare_auto_complete
+					if possibilities_provider.completion_possible then
+						block_focus_out_actions
+						show_completion_list
+					else
+						block_completion
+					end
 				end
+				block_completion
 			end
+		rescue
+			retried := True
+			if possibilities_provider /= Void then
+				possibilities_provider.reset
+			end
+			resume_focus_out_actions
 			block_completion
+			retry
 		end
 
 	position_completion_choice_window is

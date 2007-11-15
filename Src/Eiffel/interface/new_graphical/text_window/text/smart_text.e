@@ -36,7 +36,8 @@ inherit
 	EB_COMPLETION_POSSIBILITIES_PROVIDER
 		redefine
 			prepare_completion,
-			completion_possible
+			completion_possible,
+			reset
 		end
 
 create
@@ -729,6 +730,14 @@ feature {NONE} -- Possiblilities provider
 				prepare_auto_complete (False)
 			elseif provide_classes then
 				prepare_class_name_complete
+			end
+		end
+
+	reset is
+			-- Reset completion
+		do
+			if click_tool /= Void then
+				click_tool.reset_completion_list
 			end
 		end
 

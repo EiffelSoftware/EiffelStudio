@@ -18,6 +18,7 @@ inherit
 			code_completable as text_field,
 			cursor_token as cursor_token_provider
 		redefine
+			reset,
 			text_field,
 			prepare_completion,
 			cursor_token_provider
@@ -130,6 +131,17 @@ feature -- Basic operation
 					build_class_completion_list (current_token)
 				end
 			end
+		end
+
+	reset is
+		do
+			Precursor {EB_COMPLETE_INFO_ANALYZER}
+			Precursor {EB_COMPLETION_POSSIBILITIES_PROVIDER}
+			watching_line := Void
+			completion_possibilities := Void
+			class_completion_possibilities := Void
+			provide_features := False
+			provide_classes := False
 		end
 
 feature -- Element change
@@ -338,17 +350,6 @@ feature {NONE} -- Build completion possibilities
 	update is
 			-- Do nothing
 		do
-		end
-
-	reset is
-		do
-			Precursor
-			watching_line := Void
-			completion_possibilities := Void
-			class_completion_possibilities := Void
-			is_prepared := false
-			provide_features := false
-			provide_classes := false
 		end
 
 	cursor_token: EDITOR_TOKEN is

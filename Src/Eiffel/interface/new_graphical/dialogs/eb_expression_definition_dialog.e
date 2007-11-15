@@ -688,7 +688,7 @@ feature {NONE} -- Event handling
 
 feature {NONE} -- Code completion.
 
-	expression_field_provider : EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+	expression_field_provider : EB_DEBUGGER_EXPRESSION_COMPLETION_POSSIBILITIES_PROVIDER
 
 	class_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 

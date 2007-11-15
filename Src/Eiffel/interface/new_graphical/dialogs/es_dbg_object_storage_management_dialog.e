@@ -42,6 +42,8 @@ feature {NONE} -- Initialization
 			set_button_action (dialog_buttons.no_button, agent on_load)
 
 			button_load.hide -- by default load is disabled
+			button_save.hide -- by default save is disabled
+			path_field.disable_sensitive
 
 			check_fields
 		end
@@ -57,7 +59,7 @@ feature {NONE} -- User interface initialization
 		do
 			create path_field.make
 			a_container.extend (path_field)
-			path_field.set_browse_for_file (Void)
+--			path_field.set_browse_for_save_file (Void)
 			create ac.make (agent check_fields, 100)
 			path_field.field.change_actions.extend (agent ac.request_call)
 		end
@@ -86,7 +88,7 @@ feature -- Actions
 	on_load is
 			-- On load action
 		require
-			load_operation_enabled: load_operation_enabled
+			load_operation_enabled: load_operation_enabled or object_stone /= Void
 		do
 			if load_operation_enabled then
 				if debugger_manager.safe_application_is_stopped then
@@ -126,6 +128,9 @@ feature {NONE} -- Prompts
 feature -- Access
 
 	load_operation_enabled: BOOLEAN
+			-- Is Load operation enabled ?
+
+	save_operation_enabled: BOOLEAN
 			-- Is Load operation enabled ?
 
 	path_field: EV_PATH_FIELD
@@ -178,14 +183,38 @@ feature -- Change
 			-- Enable load operation
 		do
 			load_operation_enabled := True
+			if not save_operation_enabled then
+				path_field.set_browse_for_open_file (Void)
+			end
+			path_field.enable_sensitive
+
 			if button_load /= Void and then not button_load.is_destroyed then
 				button_load.show
+			end
+		end
+
+	enable_save_operation is
+			-- Enable save operation
+		do
+			-- It is possible to load file into existing object, if same type.
+			if button_load /= Void and then not button_load.is_destroyed then
+				button_load.show
+			end
+
+			save_operation_enabled := True
+			path_field.set_browse_for_save_file (Void)
+			path_field.enable_sensitive
+			if button_save /= Void and then not button_save.is_destroyed then
+				button_save.show
 			end
 		end
 
 	set_object_stone (st: OBJECT_STONE) is
 		do
 			object_stone := st
+			if object_stone /= Void and then object_stone.is_valid then
+				enable_save_operation
+			end
 			check_fields
 		end
 
@@ -200,17 +229,18 @@ feature -- Change
 				create f.make (path_field.path)
 			end
 			if
+				save_operation_enabled and then
 				f /= Void and then (not f.exists or else f.is_writable)
-				and object_stone /= Void
+				and object_stone /= Void and then object_stone.is_valid
 			then
 				button_save.enable_sensitive
 			else
 				button_save.disable_sensitive
 			end
 			if
-				load_operation_enabled and then
-				f /= Void and then
-				f.exists and then f.is_readable
+				(	(object_stone /= Void and then object_stone.is_valid) or else
+					(load_operation_enabled)	) and then
+				f /= Void and then f.exists and then f.is_readable
 			then
 				button_load.enable_sensitive
 			else

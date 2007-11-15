@@ -104,9 +104,25 @@ feature -- Settings
 	set_browse_for_file (filter: STRING_GENERAL) is
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
+		obsolete "Please use `set_browse_for_open_file' or `set_browse_for_save_file' ."
+		do
+			set_browse_for_open_file (filter)
+		end
+
+	set_browse_for_open_file (filter: STRING_GENERAL) is
+			-- Force file browsing dialog to appear when user
+			-- click on `browse_button'.
 		do
 			browse_button.select_actions.wipe_out
-			browse_button.select_actions.extend (agent browse_for_file (filter))
+			browse_button.select_actions.extend (agent browse_for_open_file (filter))
+		end
+
+	set_browse_for_save_file (filter: STRING_GENERAL) is
+			-- Force file browsing dialog to appear when user
+			-- click on `browse_button'.
+		do
+			browse_button.select_actions.wipe_out
+			browse_button.select_actions.extend (agent browse_for_save_file (filter))
 		end
 
 	set_browse_for_directory is
@@ -161,7 +177,6 @@ feature {NONE} -- GUI building
 			extend (l_hbox)
 		end
 
-
 	browse_button: EV_BUTTON
 			-- Browse for a file or a directory.
 
@@ -188,14 +203,29 @@ feature {NONE} -- GUI building
 			end
 		end
 
+	browse_for_save_file (filter: STRING_GENERAL) is
+			-- Popup a "select save file" dialog
+		do
+			browse_for_file (filter, True)
+		end
 
-	browse_for_file (filter: STRING_GENERAL) is
-			-- Popup a "select directory" dialog.
+	browse_for_open_file (filter: STRING_GENERAL) is
+			-- Popup a "select open file" dialog
+		do
+			browse_for_file (filter, False)
+		end
+
+	browse_for_file (filter: STRING_GENERAL; allow_new: BOOLEAN) is
+			-- Popup a open or save "select file" dialog according to `allow_new' value
 		local
-			fd: EV_FILE_OPEN_DIALOG
+			fd: EV_FILE_DIALOG
 			l_start_directory: STRING_32
 		do
-			create fd
+			if allow_new then
+				create {EV_FILE_SAVE_DIALOG} fd
+			else
+				create {EV_FILE_OPEN_DIALOG} fd
+			end
 			if filter /= Void then
 				fd.filters.extend ([filter.as_string_32, Label_files_of_type (filter)])
 				fd.filters.extend ([("*.*").as_string_32, Label_all_files.as_string_32])

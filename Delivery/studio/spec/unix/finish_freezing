@@ -2,6 +2,7 @@
 arg=none
 nologo=""
 ncpus=0
+prioritylevel="" # Default prority level
 
 if [ $# -gt 0 ]; then
 	while [ "$1" != "" ]; do
@@ -25,7 +26,7 @@ if [ $# -gt 0 ]; then
 				fi
 				;;
 			"-x86") ;; # No effect on Unix yet
-			"-low") ;; # No effect on Unix yet
+			"-low") prioritylevel="nice -n 19" ;; 
 			"-silent") ;; #Nothing anymore, kept for backward compatibility
 			"-nologo") nologo="nologo" ;;	# Keep or remove display of logo.
 			*)
@@ -126,7 +127,7 @@ sh Makefile.SH
 
 if [ "$arg"  = cecil -o "$arg" = "-cecil" ] ; then
 	echo Generating CECIL library ...
-	$make -s $make_args cecil && echo "C compilation completed"
+	$prioritylevel $make -s $make_args cecil && echo "C compilation completed"
 else
-	$make -s $make_args && echo "C compilation completed"
+	$prioritylevel $make -s $make_args && echo "C compilation completed"
 fi

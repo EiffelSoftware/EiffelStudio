@@ -414,9 +414,6 @@ feature {NONE} -- Implementation: State
 	is_target_of_creation_instruction: BOOLEAN
 			-- Are we type checking the call to the creation routine?
 
-	is_target_of_reverse_assignment: BOOLEAN
-			-- Is target of a reverse assignment being processed?
-
 	check_for_vaol: BOOLEAN
 			-- Is current checking for VAOL error?
 
@@ -584,7 +581,6 @@ feature -- Settings
 			is_in_rescue := False
 			is_in_creation_expression := False
 			is_target_of_creation_instruction := False
-			is_target_of_reverse_assignment := False
 			check_for_vaol := False
 			depend_unit_level := 0
 			last_access_writable := False
@@ -1658,10 +1654,8 @@ feature -- Implementation
 							if last_access_writable and then l_result_type.is_attached and then not l_result_type.is_expanded then
 									-- Take care only for non-self-initializing attributes.
 								if l_is_in_assignment or else l_is_target_of_creation_instruction then
-									if not is_target_of_reverse_assignment then
-											-- Mark that the attribute is initialized.
-										context.variables.set_attribute (l_feature.feature_id)
-									end
+										-- Mark that the attribute is initialized.
+									record_initialized_attribute (l_feature.feature_id)
 								elseif not is_checking_postcondition and then not context.variables.is_attribute_set (l_feature.feature_id) then
 										-- Attribute is not properly initialized.
 									error_handler.insert_error (create {VEVI}.make_attribute (l_feature, l_last_id, context, l_feature_name))
@@ -2130,10 +2124,8 @@ feature -- Implementation
 					if l_feat_type.is_attached and then not l_feat_type.is_expanded then
 							-- Take care only for non-self-initializing locals.
 						if is_in_assignment or else is_target_of_creation_instruction then
-							if not is_target_of_reverse_assignment then
-									-- Mark that Result is initialized.
-								context.variables.set_result
-							end
+								-- Mark that Result is initialized.
+							record_initialized_result
 						elseif not is_checking_postcondition and then not context.variables.is_result_set then
 								-- Result is not properly initialized.
 							error_handler.insert_error (create {VEVI}.make_result (context, l_as))
@@ -2394,10 +2386,8 @@ feature -- Implementation
 					elseif l_type.is_attached and then not l_type.is_expanded then
 							-- Take care only for non-self-initializing locals.
 						if is_in_assignment or else is_target_of_creation_instruction then
-							if not is_target_of_reverse_assignment then
-									-- Mark that the local is initialized.
-								context.variables.set_local (l_local_info.position)
-							end
+								-- Mark that the local is initialized.
+							record_initialized_local (l_local_info.position)
 						elseif not context.variables.is_local_set (l_local_info.position) then
 								-- Local is not properly initialized.
 							error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
@@ -4589,6 +4579,7 @@ feature -- Implementation
 			l_source_type, l_target_type: TYPE_A
 			l_vjar: VJAR
 			l_vncb: VNCB
+			l_initialized_variable: like last_initialized_variable
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -4600,6 +4591,8 @@ feature -- Implementation
 			last_access_writable := False
 			l_as.target.process (Current)
 			set_is_in_assignment (False)
+				-- Record initialized variable to commit it after the expression is processed.
+			l_initialized_variable := last_initialized_variable
 			l_target_type := last_type
 			if l_target_type /= Void then
 				current_target_type := l_target_type
@@ -4655,6 +4648,7 @@ feature -- Implementation
 						last_byte_node := l_assign
 					end
 				end
+				commit_initialized_variable (l_initialized_variable)
 			end
 		end
 
@@ -4845,9 +4839,7 @@ feature -- Implementation
 				-- Type check the target
 			last_access_writable := False
 			set_is_in_assignment (True)
-			is_target_of_reverse_assignment := True
 			l_as.target.process (Current)
-			is_target_of_reverse_assignment := False
 			set_is_in_assignment (False)
 			l_target_type := last_type
 			if l_target_type /= Void then
@@ -5358,6 +5350,7 @@ feature -- Implementation
 			l_vgcc7: VGCC7
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
+			l_initialized_variable: like last_initialized_variable
 		do
 			l_error_level := error_level
 			break_point_slot_count := break_point_slot_count + 1
@@ -5370,6 +5363,8 @@ feature -- Implementation
 			is_target_of_creation_instruction := True
 			last_access_writable := False
 			l_as.target.process (Current)
+				-- Record initialized variable to commit it after the call is processed.
+			l_initialized_variable := last_initialized_variable
 				-- Although it might be already reset when `target' is indeed
 				-- a feature of the current class, it is not reset when it is a local,
 				-- that's why we reset it.
@@ -5492,6 +5487,7 @@ feature -- Implementation
 						end
 					end
 				end
+				commit_initialized_variable (l_initialized_variable)
 			end
 			reset_types
 		end
@@ -8381,6 +8377,48 @@ feature {NONE} -- Implementation: checking locals
 			end
 			if l_warning /= Void then
 				error_handler.insert_warning (l_warning)
+			end
+		end
+
+feature {NONE} -- Variable initialization
+
+	last_initialized_variable: INTEGER
+			-- Last variable initialized by (reverse) assignment or creation instruction:
+			-- 0 - result
+			-- positive - local position
+			-- negative - feature id
+
+	record_initialized_attribute (feature_id: INTEGER)
+			-- Record that result is about to be set.
+		require
+			positive_feature_id: feature_id > 0
+		do
+			last_initialized_variable := - feature_id
+		end
+
+	record_initialized_local (position: INTEGER)
+			-- Record that result is about to be set.
+		require
+			positive_position: position > 0
+		do
+			last_initialized_variable := position
+		end
+
+	record_initialized_result
+			-- Record that result is about to be set.
+		do
+			last_initialized_variable := 0
+		end
+
+	commit_initialized_variable (initialized_variable: like last_initialized_variable)
+			-- Mark that a previously recorded variable is now properly set.
+		do
+			if initialized_variable = 0 then
+				context.variables.set_result
+			elseif initialized_variable < 0 then
+				context.variables.set_attribute (- initialized_variable)
+			else
+				context.variables.set_local (initialized_variable)
 			end
 		end
 

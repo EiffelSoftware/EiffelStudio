@@ -228,6 +228,8 @@ struct stchunk {
 	/*---------------------*/
 
 typedef union tag_EIF_VALUE {
+	EIF_REFERENCE  r;  /* SK_REF     - reference                */
+	EIF_POINTER    p;  /* SK_POINTER - pointer                  */
 	EIF_BOOLEAN    b;  /* SK_BOOL    - boolean                  */
 	EIF_CHARACTER  c1; /* SK_CHAR    - character                */
 	EIF_WIDE_CHAR  c4; /* SK_WCHAR   - unicode character        */
@@ -241,8 +243,6 @@ typedef union tag_EIF_VALUE {
 	EIF_NATURAL_64 n8; /* SK_UINT64  - 64 bits unsigned integer */
 	EIF_REAL_32    r4; /* SK_REAL32  - 32 bits real             */
 	EIF_REAL_64    r8; /* SK_REAL64  - 64 bits real             */
-	EIF_REFERENCE  r;  /* SK_REF     - reference                */
-	EIF_POINTER    p;  /* SK_POINTER - pointer                  */
 } EIF_VALUE;
 	
 typedef struct tag_EIF_TYPED_VALUE {

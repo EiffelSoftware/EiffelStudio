@@ -215,6 +215,52 @@
 				<cell>Yes</cell>
 			</row>
 		</table>
+		<heading><size>2</size>Void safety</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Attachment marks</cell>
+				<cell>
+					<code><local_variable>a</local_variable><symbol>:</symbol> <symbol>!</symbol><class_name>ANY</class_name></code>
+					<line_break/>
+					<code><local_variable>b</local_variable><symbol>:</symbol> <symbol>?</symbol><class_name>ANY</class_name></code>
+				</cell>
+				<cell>No</cell>
+				<cell>Yes, attached by default</cell>
+				<cell>Yes, default attachment status is controlled by option <italic>is_attached_by_default</italic></cell>
+			</row>
+			<row>
+				<cell>Object test</cell>
+				<cell><code><symbol>{</symbol><local_variable>o</local_variable><symbol>:</symbol> <symbol>!</symbol><class_name>STRING</class_name><symbol>}</symbol> <feature_name>e</feature_name></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes, all object tests should use different names for locals inside a feature, object tests are not permitted in preconditions and check instructions</cell>
+			</row>
+			<row>
+				<cell>Attached target of a call</cell>
+				<cell><code><feature_name>x</feature_name><symbol>.</symbol><feature_name>f</feature_name></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes, by option <italic>is_void_safe</italic></cell>
+			</row>
+			<row>
+				<cell>Properly set variable</cell>
+				<cell>
+					<code><feature_name>x</feature_name> <symbol>:=</symbol> <feature_name>value</feature_name></code>
+					<line_break/>
+					<code><feature_name>use</feature_name> <symbol>(</symbol><feature_name>x</feature_name><symbol>)</symbol></code>
+				</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes, by option <italic>is_void_safe</italic></cell>
+			</row>
+		</table>
 		<heading><size>2</size>Expressions</heading>
 		<table>
 			<row>

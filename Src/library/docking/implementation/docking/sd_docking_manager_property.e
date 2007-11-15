@@ -43,10 +43,13 @@ feature -- Properties
 	contents_by_click_order: ARRAYED_LIST [SD_CONTENT] is
 			-- All contents by user click order.
 		local
-			l_current_list: ARRAYED_LIST [SD_CONTENT]
+			l_current_list: ACTIVE_LIST [SD_CONTENT]
 			l_order_list: like internal_clicked_list
 		do
 			l_current_list := internal_docking_manager.contents.twin
+			l_current_list.add_actions.wipe_out
+			l_current_list.remove_actions.wipe_out
+			
 			l_order_list := internal_clicked_list
 			from
 				create Result.make (1)

@@ -395,23 +395,23 @@ feature -- Contract support
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			l_contents := internal_docking_manager.contents.twin
-			l_contents.start
-			l_contents.prune (a_content)
 
 			from
 				l_contents.start
 			until
 				l_contents.after or l_found
 			loop
-				l_container ?= l_contents.item.user_widget
-				if l_container /= Void then
-					if l_container.has_recursive (a_content.user_widget) then
+				if l_contents.item /= a_content then
+					l_container ?= l_contents.item.user_widget
+					if l_container /= Void then
+						if l_container.has_recursive (a_content.user_widget) then
+							l_found := True
+						end
+					end
+
+					if a_content.user_widget = l_contents.item.user_widget then
 						l_found := True
 					end
-				end
-
-				if a_content.user_widget = l_contents.item.user_widget then
-					l_found := True
 				end
 
 				l_contents.forth
@@ -427,8 +427,6 @@ feature -- Contract support
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			l_contents := internal_docking_manager.contents.twin
-			l_contents.start
-			l_contents.prune (a_content)
 			Result := True
 
 			from
@@ -436,7 +434,9 @@ feature -- Contract support
 			until
 				l_contents.after or not Result
 			loop
-				Result := not l_contents.item.unique_title.as_string_32.is_equal (a_content.unique_title.as_string_32)
+				if l_contents.item /= a_content then
+					Result := not l_contents.item.unique_title.as_string_32.is_equal (a_content.unique_title.as_string_32)
+				end
 				l_contents.forth
 			end
 		end

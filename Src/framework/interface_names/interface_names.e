@@ -691,7 +691,7 @@ feature -- Tool tips
 	f_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Navigates to the next error or the first error found if the end of the list is reached") end
 	f_go_to_previous_error: STRING_GENERAL is 			do Result := locale.translation ("Navigates to the previous error or the last error found if the start of the list is reached") end
 	f_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Navigates to the next warning or the first warning found if the end of the list is reached") end
-	f_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Navigates to the next warning or the last warning found if the start of the list is reached") end
+	f_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Navigates to the previous warning or the last warning found if the start of the list is reached") end
 	f_filter_warnings: STRING_GENERAL is 				do Result := locale.translation ("Filter shown and navigatable warnings") end
 	f_toogle_expand_errors: STRING_GENERAL is do Result := locale.translation("Automatically expands errors to reveal the full verbose error information.")	end
 

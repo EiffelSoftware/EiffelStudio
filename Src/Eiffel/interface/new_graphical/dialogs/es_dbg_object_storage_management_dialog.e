@@ -90,7 +90,10 @@ feature -- Actions
 		require
 			load_operation_enabled: load_operation_enabled or object_stone /= Void
 		do
-			if load_operation_enabled then
+			if
+				load_operation_enabled or
+				object_stone /= Void and then object_stone.is_valid
+			then
 				if debugger_manager.safe_application_is_stopped then
 					if object_stone /= Void then
 						object_value := debugger_manager.application.remotely_loaded_object (object_stone.object_address, path_field.path)

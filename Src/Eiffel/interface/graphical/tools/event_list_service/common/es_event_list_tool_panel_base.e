@@ -255,54 +255,107 @@ feature {NONE} -- Navigation
 			l_row: EV_GRID_ROW
 			l_item: EVENT_LIST_ITEM_I
 			l_found: BOOLEAN
+			l_valid_rows: BOOLEAN
 		do
 			l_grid := grid_events
 			l_row_count := l_grid.row_count
 			if l_row_count > 0 then
-				if l_grid.selected_rows.is_empty then
-					l_index := 0
-				else
-					l_row := l_grid.selected_rows.last
-					l_index := l_row.index + l_row.subrow_count_recursive
-				end
-				l_index := l_index + 1
-				if l_index > l_row_count then
-						-- Cycle index
-					l_index := 1
-				end
-
-				from
-					l_row := Void
-				until
-					l_found or
-					l_index = l_stop_index
-				loop
-					l_found := False
-
+					-- Check there are visible and selectable items
+				l_valid_rows := False
+				from l_index := 1 until l_index >= l_row_count or l_valid_rows loop
 					l_row := l_grid.row (l_index)
-					if l_row.is_show_requested and l_row.is_selectable then
-						l_item ?= l_row.data
-						l_found := l_item /= Void and then a_query_action.item ([l_item])
-					end
-
-					if l_stop_index = 0 then
-							-- Set stop index here so the active item gets a chance
-							-- to be the next item, which happens when there is only one error item
-						l_stop_index := l_index
-					end
-
-						-- Increment index
+					l_valid_rows := l_row.is_show_requested and l_row.is_selectable
 					l_index := l_index + l_row.subrow_count_recursive + 1
+				end
 
+				if l_valid_rows then
+						-- There are selectable rows
+					if l_grid.selected_rows.is_empty then
+							-- Fetch last row's root row
+						l_row := l_grid.row (l_row_count)
+						if l_row.parent_row /= Void then
+							l_row := l_row.parent_row_root
+						end
+					else
+							-- Fetch selected row's root row (as child may be selected)
+						l_row := l_grid.selected_rows.last
+						if l_row.parent_row /= Void then
+							l_row := l_row.parent_row_root
+						end
+					end
+
+						-- Ensure row is visible
+					if not l_row.is_show_requested and l_row.is_selectable then
+							-- Located row is not shown, find previous shown row
+						l_stop_index := l_row.index
+						from until l_row.is_show_requested and l_row.is_selectable loop
+							l_index := l_row.index + l_row.subrow_count_recursive + 1
+							if l_index = l_row_count then
+								l_index := 1
+							end
+							l_row := l_grid.row (l_index)
+						end
+					end
+
+						-- Set selected index and stop-index
+					l_index := l_row.index
+					l_stop_index := l_index
+					check
+						l_stop_index_is_root_row: l_grid.row (l_index).parent_row = Void
+					end
+
+						-- Shift index
+					l_index := l_index + l_row.subrow_count_recursive + 1
 					if l_index > l_row_count then
-							-- Cycle, if requested
+							-- Cycle index
 						l_index := 1
 					end
-				end
 
-				if l_found then
-					check l_row_attached: l_row /= Void end
-					move_to_row (l_row)
+						-- Iterate through the rows forwards
+					from
+						l_row := Void
+					until
+						l_found or
+						l_index = l_stop_index
+					loop
+						l_found := False
+
+						l_row := l_grid.row (l_index)
+						check
+							l_row_is_root: l_row.parent_row_root = Void or l_row.parent_row_root = l_row
+						end
+						if l_row.is_show_requested and l_row.is_selectable then
+							l_item ?= l_row.data
+							l_found := l_item /= Void and then a_query_action.item ([l_item])
+						end
+
+						if not l_found then
+								-- Increment index
+							l_index := l_index + l_row.subrow_count_recursive + 1
+							if l_index > l_row_count then
+									-- Cycle, if requested
+								l_index := 1
+							end
+
+								-- Retrieve index of root row
+							l_row := l_grid.row (l_index)
+						end
+					end
+
+					if not l_found and then l_stop_index > 0 then
+							-- The stopping index row might be the only selectable row, so we fake a match to ensure the move actions
+							-- are performed.
+						l_row := l_grid.row (l_stop_index)
+						check
+							l_row_is_root_row: l_row.parent_row = Void
+						end
+						l_found := True
+					end
+
+					if l_found then
+						check l_row_attached: l_row /= Void end
+						move_to_row (l_row)
+					end
 				end
 			end
 		end
@@ -321,69 +374,126 @@ feature {NONE} -- Navigation
 			l_row: EV_GRID_ROW
 			l_item: EVENT_LIST_ITEM_I
 			l_found: BOOLEAN
+			l_valid_rows: BOOLEAN
 		do
 			l_grid := grid_events
 			l_row_count := l_grid.row_count
 			if l_row_count > 0 then
-				if l_grid.selected_rows.is_empty then
-					l_index := l_row_count + 1
-				else
-					l_index := l_grid.selected_rows.first.index
-				end
-				l_index := l_index - 1
-				if l_index = 0 then
-						-- Cycle index
-					l_index := l_row_count
-				end
-
-					-- Retrieve index of root row
-				l_row := l_grid.row (l_index)
-				if l_row.parent_row_root /= Void then
-					l_row := l_row.parent_row_root
-					l_index := l_row.index
-				end
-
-				from
-					l_row := Void
-				until
-					l_found or
-					l_index = l_stop_index
-				loop
-					l_found := False
-
+					-- Check there are visible and selectable items
+				l_valid_rows := False
+				from l_index := 1 until l_index >= l_row_count or l_valid_rows loop
 					l_row := l_grid.row (l_index)
+					l_valid_rows := l_row.is_show_requested and l_row.is_selectable
+					l_index := l_index + l_row.subrow_count_recursive + 1
+				end
+
+				if l_valid_rows then
+						-- There are selectable rows
+
+					if l_grid.selected_rows.is_empty then
+							-- Fetch last row's root row
+						l_row := l_grid.row (1)
+					else
+							-- Fetch selected row's root row (as child may be selected)
+						l_row := l_grid.selected_rows.first
+						if l_row.parent_row /= Void then
+								-- There is parent row, which means the child was selected, skip to the next row (or first)
+								-- so the selected row's root row will be choosen as the previous row.
+							l_row := l_row.parent_row_root
+							if l_row.index + l_row.subrow_count_recursive + 1 <= l_row_count then
+								l_row := l_grid.row (l_row.index + l_row.subrow_count_recursive + 1)
+							else
+								l_row := l_grid.row (1)
+							end
+						end
+					end
+
+						-- Ensure row is visible
+					if not l_row.is_show_requested and l_row.is_selectable then
+							-- Located row is not shown, find previous shown row
+						l_stop_index := l_row.index
+						from until l_row.is_show_requested and l_row.is_selectable loop
+							l_index := l_row.index - 1
+							if l_index = 0 then
+								l_index := l_row_count
+							end
+							l_row := l_grid.row (l_index)
+							if l_row.parent_row /= Void then
+								l_row := l_row.parent_row_root
+							end
+						end
+					end
+
+						-- Set selected index and stop-index
+					l_index := l_row.index
+					l_stop_index := l_index
 					check
-						l_row_is_root: l_row.parent_row_root = Void or l_row.parent_row_root = l_row
-					end
-					if l_row.is_show_requested and l_row.is_selectable then
-						l_item ?= l_row.data
-						l_found := l_item /= Void and then a_query_action.item ([l_item])
+						l_stop_index_is_root_row: l_grid.row (l_index).parent_row = Void
 					end
 
-					if l_stop_index = 0 then
-							-- Set stop index here so the active item gets a chance
-							-- to be the next item, which happens when there is only one error item
-						l_stop_index := l_index
-					end
-
-						-- Increment index
+						-- Shift index
 					l_index := l_index - 1
 					if l_index = 0 then
-							-- Cycle, if requested
+							-- Cycle index
 						l_index := l_row_count
 					end
 
 						-- Retrieve index of root row
 					l_row := l_grid.row (l_index)
-					if l_row.parent_row_root /= Void then
-						l_row := l_row.parent_row_root
-						l_index := l_row.index
+					if l_row.parent_row /= Void then
+						l_index := l_row.parent_row_root.index
 					end
-				end
 
-				if l_found then
-					check l_row_attached: l_row /= Void end
-					move_to_row (l_row)
+						-- Iterate through the rows backwacks
+					from
+						l_row := Void
+					until
+						l_found or
+						l_index = l_stop_index
+					loop
+						l_found := False
+
+						l_row := l_grid.row (l_index)
+						check
+							l_row_is_root: l_row.parent_row_root = Void or l_row.parent_row_root = l_row
+						end
+						if l_row.is_show_requested and l_row.is_selectable then
+							l_item ?= l_row.data
+							l_found := l_item /= Void and then a_query_action.item ([l_item])
+						end
+
+						if not l_found then
+								-- Increment index
+							l_index := l_index - 1
+							if l_index = 0 then
+									-- Cycle, if requested
+								l_index := l_row_count
+							end
+
+								-- Retrieve index of root row
+							l_row := l_grid.row (l_index)
+							if l_row.parent_row_root /= Void then
+								l_row := l_row.parent_row_root
+								l_index := l_row.index
+							end
+						end
+					end
+
+					if not l_found and then l_stop_index > 0 then
+							-- The stopping index row might be the only selectable row, so we fake a match to ensure the move actions
+							-- are performed.
+						l_row := l_grid.row (l_stop_index)
+						check
+							l_row_is_root_row: l_row.parent_row = Void
+						end
+						l_found := True
+					end
+
+					if l_found then
+							-- Perform row actions
+						check l_row_attached: l_row /= Void end
+						move_to_row (l_row)
+					end
 				end
 			end
 		end

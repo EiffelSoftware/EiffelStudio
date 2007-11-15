@@ -10,7 +10,23 @@
 		<heading><size>2</size>What's new</heading>
 		<seealso>See also: <link><label>Differences between standard ECMA-367 and Eiffel Software implementation</label><url>../../10_ise_eiffel_specific/ecma.xml</url></link></seealso>
 		<list ordered="false">
-			<item></item>
+			<item>Attachment marks are supported. Now it's possible to specify whether an entity is attached or detachable:
+<code_block><local_variable>a</local_variable><symbol>:</symbol> <symbol>!</symbol><class_name>A</class_name> <comment>-- <local_variable>a</local_variable> cannot be used before it is attached</comment>
+<local_variable>b</local_variable><symbol>:</symbol> <symbol>?</symbol><class_name>A</class_name> <comment>-- <local_variable>b</local_variable> can be used before it is attached</comment></code_block>
+			Default attachment status (for types without an attachment mark) is controlled by the option <italic>is_attached_by_default</italic>.</item>
+			<item>Object test expression is a replacement for the reverse assignment construct with a new notion of scope:
+				<code_block><keyword>if</keyword> <symbol>{</symbol><local_variable>o</local_variable><symbol>:</symbol> <symbol>!</symbol><class_name>A</class_name><symbol>}</symbol> <feature_name>e</feature_name> <keyword>then</keyword> <feature_name>do_something_with</feature_name> <symbol>(</symbol><local_variable>o</local_variable><symbol>)</symbol> <keyword>end</keyword></code_block>
+			</item>
+			<item>Attached variables are subject to the new check that they are properly set before use, in particular, attached attributes must be set by a creation procedure and all attached local variables must be set before they are used. The checks are performed when the option <italic>is_void_safe</italic> is turned on.</item>
+			<item>A feature call can be performed only on an attached target if the option <italic>is_void_safe</italic> is turned on.</item>
+			<item>Certified attachment patterns (CAP) are used to identify additional cases when an entity is attached (controlled by the option <italic>is_void_safe</italic>). In particular, the following code is considered void-safe:
+<code_block><feature_name>f</feature_name> <symbol>(</symbol><local_variable>a</local_variable><symbol>:</symbol> <symbol>?</symbol><class_name>ANY</class_name><symbol>)</symbol>
+	<keyword>do</keyword>
+		<keyword>if</keyword> <local_variable>a</local_variable> <symbol>/=</symbol> <keyword>void</keyword> <keyword>then</keyword>
+			<feature_name>x</feature_name> <symbol>:=</symbol> <local_variable>a</local_variable><symbol>.</symbol><feature_name>out</feature_name>
+		<keyword>end</keyword>
+	<keyword>end</keyword></code_block>
+			</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
@@ -26,7 +42,9 @@
 		</list>
 		<heading><size>3</size>Compiler issues</heading>
 		<list ordered="false">
-			<item></item>
+			<item>The options <italic>is_void_safe</italic> and <italic>is_attached_by_default</italic> are not tracked during recompilation, so in order to take any changes in their settings, the project has to be recompiled from scratch.</item>
+			<item>Object test is not permitted inside a precondition or a check instruction.</item>
+			<item>Object tests inside a feature should use different names for the corresponding locals.</item>
 		</list>
 		<heading><size>3</size>Runtime/code generation issues</heading>
 		<list ordered="false">

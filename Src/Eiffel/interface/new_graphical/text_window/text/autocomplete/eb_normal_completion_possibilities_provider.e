@@ -402,10 +402,7 @@ feature {NONE} -- Build completion possibilities
 	group_callback: FUNCTION [ANY, TUPLE, CONF_GROUP]
 			-- Function to retrieve group
 
-invariant
-	invariant_clause: True -- Your invariant here
-
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

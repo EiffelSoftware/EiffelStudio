@@ -1908,6 +1908,9 @@ feature {NONE} -- Implementation
 			-- Enable commands when a new project has been created and compiled
 		do
 			enable_debugging_commands
+				-- Except those 2 commands, which are valid only during execution.
+			object_storage_management_cmd.disable_sensitive
+			assertion_checking_handler_cmd.disable_sensitive
 		end
 
 	enable_debugging_commands is
@@ -1926,7 +1929,7 @@ feature {NONE} -- Implementation
 
 				options_cmd.enable_sensitive
 				exception_handler_cmd.enable_sensitive
-				
+
 				debug_cmd.enable_sensitive
 				no_stop_cmd.enable_sensitive
 				step_cmd.enable_sensitive

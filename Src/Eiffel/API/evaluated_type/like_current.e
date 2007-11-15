@@ -156,9 +156,17 @@ feature {COMPILER_EXPORTER} -- Modification
 			-- Assign `a' to `conformance_type'.
 		do
 			if has_attached_mark then
-				conformance_type := a.as_attached
+				if not a.is_attached then
+					conformance_type := a.as_attached
+				else
+					conformance_type := a
+				end
 			elseif has_detachable_mark then
-				conformance_type := a.as_detachable
+				if a.is_attached then
+					conformance_type := a.as_detachable
+				else
+					conformance_type := a
+				end
 			else
 				conformance_type := a
 			end

@@ -132,9 +132,17 @@ feature -- Primitives
 			-- Assign `a' to `actual_type'.
 		do
 			if has_attached_mark then
-				actual_type := a.as_attached
+				if not a.is_attached then
+					actual_type := a.as_attached
+				else
+					actual_type := a
+				end
 			elseif has_detachable_mark then
-				actual_type := a.as_detachable
+				if a.is_attached then
+					actual_type := a.as_detachable
+				else
+					actual_type := a
+				end
 			else
 				actual_type := a
 			end

@@ -536,7 +536,7 @@ feature -- Basic Operations
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
 				-- First abort our previous actions.
-			if text_displayed / Void then
+			if text_displayed /= Void then
 				text_displayed.reset_text
 			end
 			editor_width := 100

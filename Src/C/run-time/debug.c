@@ -675,8 +675,10 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	   					* when the application is started from the command line
 	   					*/
 
-		if (!d_data.db_discard_breakpoints
-				&& !is_inside_rt_eiffel_code) 
+		if (
+				!d_data.db_discard_breakpoints
+				&& !is_inside_rt_eiffel_code
+			) 
 		{
 			BODY_INDEX bodyid = exvect->ex_bodyid;
 			DBGMTX_LOCK;	/* Enter critical section */
@@ -2124,7 +2126,12 @@ rt_public void c_wipe_out(register struct c_stochunk *chunk)
 rt_public void rt_ext_notify_event (int op, char* curr, int cid, int fid, int dep, char* pfn)
 {
 	EIF_GET_CONTEXT
-	if (exec_recording_enabled == 1 && is_inside_rt_eiffel_code != 1) {	
+	if (	
+			exec_recording_enabled == 1 &&
+			is_inside_rt_eiffel_code != 1 &&
+			rt_extension_obj != NULL
+		)
+	{	
 		EIF_TYPED_VALUE rtd_arg;						
 		EIF_TYPED_VALUE rtd_op;
 		EIF_REFERENCE rtd_str = NULL;					

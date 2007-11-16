@@ -322,13 +322,6 @@ feature {NONE} -- Implementation
 							else
 								l_new_name.set_is_binary
 							end
-							if
-								predefined_names.is_semi_strict_id (l_new_name.internal_alias_name_id) and then
-								a_feature_table.associated_class.original_class /= system.boolean_class
-							then
-									-- Semistrict operator alias name is declared in a class that is not BOOLEAN
-								create {VFAV4_SYNTAX} vfav.make (l_new_name)
-							end
 						elseif l_new_name.has_convert_mark then
 								-- Invalid convert mark
 							create {VFAV3_SYNTAX} vfav.make (l_new_name)

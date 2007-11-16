@@ -1486,10 +1486,12 @@ feature -- Implementation
 			create Result.make_with_size (1, line_height)
 		end
 
-	buffered_drawable_width: INTEGER is 32000
+	buffered_drawable_width: INTEGER is 15000
 
-	buffered_drawable_height: INTEGER is 32000
+	buffered_drawable_height: INTEGER is 15000
 		-- Default size of `drawable' used for scrolling purposes.
+		--| This value used to be 32000 but on gtk post 2.10.6 there seems to be some sort of 'fix' that gives odd results
+		--| with the line number code that means that they do not get displayed correctly
 
 	last_vertical_scroll_bar_value: INTEGER
 		-- Last value of `vertical_scroll_bar' used within `vertical_scroll_bar_changed'. See

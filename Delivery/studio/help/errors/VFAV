@@ -1,6 +1,6 @@
-VFAV, section 8.5.25 
+VFAV, ECMA-367, 2nd edition, section 8.5.26 
 
-     Alias validity
+     Alias validity rule
 
      An Alias clause is alias-valid for a feature f of a
      class C if and only if it satisfies the following
@@ -18,7 +18,3 @@ VFAV, section 8.5.25
 
         3 If it includes a convert mark: it lists an
           Operator and f has one argument.
-
-        4 If it lists one of the "semistrict" operators
-          "and then", "or else" and "implies": C is the
-          Kernel Library class BOOLEAN.

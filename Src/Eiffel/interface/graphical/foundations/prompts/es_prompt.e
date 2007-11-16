@@ -135,7 +135,13 @@ feature {NONE} -- User interface initialization
 				l_vbox.disable_item_expand (l_vbox.last)
 			end
 
-			a_container.propagate_background_color
+			if internal_dialog /= Void then
+				internal_dialog.lock_update
+			end
+			propagate_prompt_background_color (a_container, colors.prompt_banner_color)
+			if internal_dialog /= Void then
+				internal_dialog.unlock_update
+			end
 		end
 
 	build_prompt_interface (a_container: EV_VERTICAL_BOX)
@@ -363,6 +369,40 @@ feature -- Element change
 			default_cancel_button_set: default_cancel_button = a_id
 		end
 
+feature {NONE} -- Query
+
+	can_propagate_background_color_to_widget (a_widget: EV_WIDGET): BOOLEAN
+			-- Determines if a widget's background color can be altered as part of a background color propagation.
+			--
+			-- `a_widget': Widget to determine if a background color can be propagated to
+			-- `Result': True to indicate the widget's background color can be changed, False otherwise.
+		require
+			is_initialized: is_initialized or is_initializing
+			not_is_recycled: not is_recycled
+			a_widget_attached: a_widget /= Void
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
+		local
+			l_container: EV_CONTAINER
+			l_label: EV_LABEL
+			l_check: EV_CHECK_BUTTON
+			l_radio: EV_RADIO_BUTTON
+		do
+			l_container ?= a_widget
+			Result := l_container /= Void
+			if not Result then
+				l_label ?= a_widget
+				Result := l_label /= Void
+				if not Result then
+					l_check ?= a_widget
+					Result := l_check /= Void
+					if not Result then
+						l_radio ?= a_widget
+						Result := l_radio /= Void
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Helpers
 
 	frozen os_stock_pixmaps: EV_STOCK_PIXMAPS
@@ -509,6 +549,32 @@ feature {NONE} -- Basic operations
 					else
 						l_buttons.forth
 					end
+				end
+			end
+		end
+
+	propagate_prompt_background_color (a_source_widget: EV_WIDGET; a_color: EV_COLOR) is
+			-- Propagates a background color to a widget and any widgets contained within.
+			-- Note: Propagation can be vetoed in `can_propagate_background_color_to_widget'.
+			--
+			-- `a_source_widget': Widget to propagate a background color to.
+			-- `a_color': Color to propagate.
+		require
+			is_initialized: is_initialized or is_initializing
+			is_recycled: not is_recycled
+			a_source_widget_attached: a_source_widget /= Void
+			not_a_source_widget_is_destroyed: not a_source_widget.is_destroyed
+			a_source_widget_has_parent: a_source_widget.has_parent
+			a_color_attached: a_color /= Void
+			not_a_color_is_destroyed: not a_color.is_destroyed
+		local
+			l_widgets: EV_WIDGET_LIST
+		do
+			if can_propagate_background_color_to_widget (a_source_widget) then
+				a_source_widget.set_background_color (a_color)
+				l_widgets ?= a_source_widget
+				if l_widgets /= Void then
+					l_widgets.do_all (agent propagate_prompt_background_color (?, a_color))
 				end
 			end
 		end

@@ -371,19 +371,20 @@ feature {NONE} -- Line rendering
 			l_stop: BOOLEAN
 			l_len: INTEGER
 			l_size: TUPLE [width, height, left, right: INTEGER]
+			l_dummy: EV_LABEL
 		do
 			reset_minimum_height
 			reset_minimum_width
 
 			l_wrapped := is_text_wrapped
 			l_ellipsed := is_text_ellipsed
-			if l_wrapped or l_ellipsed then
+			if l_wrapped or l_ellipsed  then
 				l_text_lines := text_lines
 				l_text_sizes := text_sizes
+				l_font := font
 
 				if l_text_lines /= Void and l_text_sizes /= Void then
 						-- Reorganize text to ensure text fits to set maximum width
-					l_font := font
 					l_max_width := maximum_width
 					create l_text.make (text.count)
 					l_width := l_max_width.max (width)
@@ -484,7 +485,7 @@ feature {NONE} -- Line rendering
 						end
 
 							-- Set height
-						l_size := font.string_size (l_text)
+						l_size := l_font.string_size (l_text)
 						if is_maximum_height_set_by_user then
 							set_minimum_height (l_size.height.min (l_max_height))
 						else
@@ -493,7 +494,12 @@ feature {NONE} -- Line rendering
 					else
 						set_minimum_height (l_size.height)
 					end
-					set_minimum_width (l_size.width + l_size.right + l_size.left)
+
+						-- Create a dummy label so we can retrieve the label padding.
+					create l_dummy.make_with_text ("O")
+					l_dummy.set_font (l_font)
+
+					set_minimum_width (l_size.width + l_size.right + l_size.left + (l_dummy.width - l_font.string_width (l_dummy.text)))
 					set_label_text (l_text)
 				end
 			end

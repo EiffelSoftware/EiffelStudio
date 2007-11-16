@@ -58,6 +58,7 @@ feature -- Command
 			if item /= default_pointer then
 				create l_curl
 				l_curl.formfree (item)
+				item := default_pointer
 			end
 		end
 

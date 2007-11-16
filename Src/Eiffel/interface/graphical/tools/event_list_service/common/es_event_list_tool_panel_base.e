@@ -990,6 +990,8 @@ feature {NONE} -- Factory
 			Result.enable_row_separators
 			Result.set_separator_color (colors.grid_line_color)
 			Result.enable_default_tree_navigation_behavior (True, True, True, True)
+			Result.disable_vertical_scrolling_per_item
+
 			Result.pointer_double_press_item_actions.extend (agent on_grid_events_item_pointer_double_press)
 		end
 

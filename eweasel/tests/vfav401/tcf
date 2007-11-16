@@ -6,56 +6,92 @@ test_description Validity rules for semistrict operators.
 define EXCLUDE ""
 
 copy_sub Ace $TEST Ace
-copy_raw test.e $CLUSTER test.e
-copy_raw b.e    $CLUSTER b.e
 
 -- Operator "and then"
 
 define OPERATOR "and then"
 
+copy_sub test.e $CLUSTER test.e
+copy_sub b.e    $CLUSTER b.e
+
 copy_sub co01.e $CLUSTER c.e
-compile_melted
-compile_result validity_error C VFAV(4)
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+execute_work NONE exec_and01
+execute_result ok
+compare exec_and01 output_and
 
 copy_sub co02.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4)
+compile_melted
+compile_result ok
+execute_work NONE exec_and02
+execute_result ok
+compare exec_and02 output_and
 
 copy_sub co03.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4)
+compile_melted
+compile_result ok
+execute_work NONE exec_and03
+execute_result ok
+compare exec_and03 output_and
 
 -- Operator "or else"
 
 define OPERATOR "or else"
 
+copy_sub test.e $CLUSTER test.e
+copy_sub b.e    $CLUSTER b.e
+
 copy_sub co01.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4)
+compile_melted
+compile_result ok
+execute_work NONE exec_or01
+execute_result ok
+compare exec_or01 output_or
 
 copy_sub co02.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4)
+compile_melted
+compile_result ok
+execute_work NONE exec_or02
+execute_result ok
+compare exec_or02 output_or
 
 copy_sub co03.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4)
+compile_melted
+compile_result ok
+execute_work NONE exec_or03
+execute_result ok
+compare exec_or03 output_or
 
 -- Operator "implies"
 
-define OPERATOR "and then"
+define OPERATOR "implies"
+
+copy_sub test.e $CLUSTER test.e
+copy_sub b.e    $CLUSTER b.e
 
 copy_sub co01.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4)
+compile_melted
+compile_result ok
+execute_work NONE exec_implies01
+execute_result ok
+compare exec_implies01 output_implies
 
 copy_sub co02.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4)
+compile_melted
+compile_result ok
+execute_work NONE exec_implies02
+execute_result ok
+compare exec_implies02 output_implies
 
 copy_sub co03.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4)
+compile_melted
+compile_result ok
+execute_work NONE exec_implies03
+execute_result ok
+compare exec_implies03 output_implies
 
 -- Tests with non-frozen class BOOLEAN
 
@@ -67,7 +103,12 @@ copy_raw boolean.e $CLUSTER boolean.e
 -- Inheritance from BOOLEAN: error is reported twice because of implementation
 
 copy_raw ci01.e $CLUSTER c.e
-resume_compile
-compile_result validity_error C VFAV(4) VFAV(4) VFAV(4) VFAV(4) VFAV(4) VFAV(4)
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+execute_work NONE exec_implies
+execute_result ok
+compare exec_implies output_implies
 
 test_end

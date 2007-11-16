@@ -1,0 +1,10 @@
+test_name 	qualified-call-on-procedure-failure
+test_description An invalid call on a procedure should yield a VKCN(3) error but crashes instead.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error	TEST VKCN(3) VKCN(3)
+
+test_end

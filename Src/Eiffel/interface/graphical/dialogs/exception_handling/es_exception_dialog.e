@@ -72,9 +72,12 @@ feature {NONE} -- Initialize
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		local
 			l_box: EV_HORIZONTAL_BOX
+			l_layout: EV_LAYOUT_CONSTANTS
 		do
 			Precursor {ES_ERROR_PROMPT} (a_container)
 			a_container.set_padding ({ES_UI_CONSTANTS}.dialog_button_vertical_padding)
+
+			create l_layout
 
 				-- Trace message
 			create l_box
@@ -100,14 +103,14 @@ feature {NONE} -- Initialize
 
 				-- Report button
 			create submit_bug_button.make_with_text ("Submit Bug")
-			submit_bug_button.set_minimum_size (85, {ES_UI_CONSTANTS}.dialog_button_height)
+			l_layout.set_default_width_for_button (submit_bug_button)
 			register_action (submit_bug_button.select_actions, agent on_submit_bug)
 			l_box.extend (submit_bug_button)
 			l_box.disable_item_expand (submit_bug_button)
 
 				-- Save button
 			create save_button.make_with_text ("Save Trace")
-			save_button.set_minimum_size (85, {ES_UI_CONSTANTS}.dialog_button_height)
+			l_layout.set_default_width_for_button (save_button)
 			register_action (save_button.select_actions, agent on_save_trace)
 			l_box.extend (save_button)
 			l_box.disable_item_expand (save_button)

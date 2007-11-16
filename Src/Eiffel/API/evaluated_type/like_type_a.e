@@ -138,7 +138,7 @@ feature -- Primitives
 					actual_type := a
 				end
 			elseif has_detachable_mark then
-				if a.is_attached then
+				if not a.is_expanded and then a.is_attached then
 					actual_type := a.as_detachable
 				else
 					actual_type := a
@@ -215,7 +215,7 @@ feature -- Modification
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			Precursor
-			if actual_type.is_attached then
+			if not is_expanded and then actual_type.is_attached then
 				actual_type := actual_type.as_detachable
 			end
 		end

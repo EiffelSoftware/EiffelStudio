@@ -162,7 +162,7 @@ feature {COMPILER_EXPORTER} -- Modification
 					conformance_type := a
 				end
 			elseif has_detachable_mark then
-				if a.is_attached then
+				if not a.is_expanded and then a.is_attached then
 					conformance_type := a.as_detachable
 				else
 					conformance_type := a
@@ -186,7 +186,7 @@ feature {COMPILER_EXPORTER} -- Modification
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			Precursor
-			if conformance_type.is_attached then
+			if not is_expanded and then conformance_type.is_attached then
 				conformance_type := conformance_type.as_detachable
 			end
 		end

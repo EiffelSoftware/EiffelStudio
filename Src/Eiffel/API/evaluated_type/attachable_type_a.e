@@ -42,8 +42,8 @@ feature -- Modification
 		do
 			attachment_bits := has_attached_mark_mask | is_attached_mask
 		ensure then
-			has_attached_mark
-			is_attached
+			has_attached_mark: has_attached_mark
+			is_attached: is_attached
 		end
 
 	set_detachable_mark is
@@ -51,18 +51,18 @@ feature -- Modification
 		do
 			attachment_bits := has_detachable_mark_mask
 		ensure then
-			has_detachable_mark
-			not is_attached
+			has_detachable_mark: has_detachable_mark
+			not_is_attached: not is_expanded implies not is_attached
 		end
 
 	set_is_attached is
 			-- Set attached type property.
 		require
-			not has_detachable_mark
+			not_has_detachable_mark: is_expanded or else not has_detachable_mark
 		do
 			attachment_bits := attachment_bits | is_attached_mask
 		ensure
-			is_attached
+			is_attached: is_attached
 		end
 
 feature {NONE} -- Attachment properties

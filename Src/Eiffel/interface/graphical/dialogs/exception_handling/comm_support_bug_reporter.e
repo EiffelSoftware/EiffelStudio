@@ -18,7 +18,7 @@ create
 
 feature -- Query
 
-	supoprt_url (a_relative_url: STRING; a_secure: BOOLEAN): STRING
+	bug_reporting_url (a_relative_url: STRING; a_secure: BOOLEAN): STRING
 			-- Retrieve full URL for support site
 			--
 			-- `a_relative_url': Relative url to the support site
@@ -149,7 +149,7 @@ feature {NONE} -- Html contents
 			l_data: CURL_STRING
 		do
 			l_curl := curl
-			l_curl.setopt_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_url, supoprt_url ("/protected/problem_report_form.aspx", True))
+			l_curl.setopt_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_url, bug_reporting_url ("/protected/problem_report_form.aspx", True))
 			l_curl.setopt_integer (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_post, 0)
 
 			create l_data.make_empty

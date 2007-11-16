@@ -10,6 +10,7 @@
 		<heading><size>2</size>What's new</heading>
 		<seealso>See also: <link><label>Differences between standard ECMA-367 and Eiffel Software implementation</label><url>../../10_ise_eiffel_specific/ecma.xml</url></link></seealso>
 		<list ordered="false">
+			<item>Experimental support for Non-conforming Inheritance has been added (Classic only).  Classes may now be inherited (using inherit {NONE} but no conformance of that class is implied.</item>
 			<item>Attachment marks are supported. Now it's possible to specify whether an entity is attached or detachable:
 <code_block><local_variable>a</local_variable><symbol>:</symbol> <symbol>!</symbol><class_name>A</class_name> <comment>-- <local_variable>a</local_variable> cannot be used before it is attached</comment>
 <local_variable>b</local_variable><symbol>:</symbol> <symbol>?</symbol><class_name>A</class_name> <comment>-- <local_variable>b</local_variable> can be used before it is attached</comment></code_block>
@@ -48,7 +49,7 @@
 		</list>
 		<heading><size>3</size>Runtime/code generation issues</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Non-conforming inheritance dynamic conformance only works with Classic compilations, for .Net non-conforming inheritance has no effect on code generation</item>
 		</list>
 		<heading><size>3</size>.NET issues</heading>
 		<list ordered="false">

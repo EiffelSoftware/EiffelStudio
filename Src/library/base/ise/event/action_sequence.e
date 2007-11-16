@@ -46,7 +46,8 @@ inherit
 			{ACTION_SEQUENCE} same_items, subarray
 		redefine
 			default_create,
-			set_count
+			set_count,
+			prune
 		end
 
 create
@@ -257,7 +258,33 @@ feature -- Status report
 			Result = not is_aborted_stack.is_empty
 		end
 
-feature -- Element Change
+feature -- Removal
+
+	prune (v: like item) is
+			-- Remove first occurrence of `v', if any,
+			-- after cursor position.
+			-- Move cursor to right neighbor.
+			-- (or `after' if no right neighbor or `v' does not occur)
+		local
+			l_compare_objects: BOOLEAN
+			l_kamikazes: like kamikazes_internal
+		do
+			Precursor {ARRAYED_LIST}(v)
+			if kamikazes_internal /= Void then
+				if object_comparison then
+					l_kamikazes := kamikazes_internal
+					l_compare_objects := l_kamikazes.object_comparison
+					l_kamikazes.compare_objects
+					l_kamikazes.start
+					l_kamikazes.prune (v)
+					if not l_compare_objects then
+						l_kamikazes.compare_references
+					end
+				else
+					kamikazes_internal.prune (v)
+				end
+			end
+		end
 
 	prune_when_called (an_action: like item) is
 			-- Remove `an_action' after the next time it is called.

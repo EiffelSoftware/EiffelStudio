@@ -545,7 +545,7 @@ end;
 			from
 				parent := parent_c.parent
 				actual_parent_type := parent_c.parent_type
-				if a_class.lace_class.is_attached_by_default then
+				if a_class.lace_class.is_attached_by_default and then not actual_parent_type.is_attached then
 					actual_parent_type := actual_parent_type.twin
 					actual_parent_type.set_is_attached
 				end

@@ -2698,10 +2698,15 @@ end
 			end
 
 				-- Update servers
-			feature_server.take_control (tmp_feature_server)
-			feature_table_cache.wipe_out
 			Tmp_ast_server.finalize
 			Ast_server.take_control (Tmp_ast_server)
+				-- It is important to do `feature_server' after the AST server
+				-- because before processing them all the AST are in memory
+				-- and {FEATURE_SERVER}.take_control may increase the overall memory usage.
+				-- Therefore freeing some memory via the the AST server first
+				-- would most likely not cause a memory increase here.
+			feature_server.take_control (tmp_feature_server)
+			feature_table_cache.wipe_out
 			Depend_server.take_control (Tmp_depend_server)
 			M_feat_tbl_server.take_control (Tmp_m_feat_tbl_server)
 			M_feature_server.take_control (Tmp_m_feature_server)

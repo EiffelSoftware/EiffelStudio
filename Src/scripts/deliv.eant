@@ -145,10 +145,6 @@
 		<available resource="${OUTPUT_DIR}${path_separator}compile_all${exe}" variable="tmp_available"/>
 		<geant target="get_bin__compile_all" if="$tmp_available=false" />
 
-		<!-- espawn -->
-		<available resource="${OUTPUT_DIR}${path_separator}espawn${exe}" variable="tmp_available"/>
-		<geant target="get_bin__espawn" if="$tmp_available=false" />
-
 		<!-- es_cleaner -->
 		<available resource="${OUTPUT_DIR}${path_separator}escln${exe}" variable="tmp_available"/>
 		<geant target="get_bin__escln" if="$tmp_available=false" />
@@ -175,6 +171,10 @@
 		<!-- emake -->
 		<available resource="${OUTPUT_DIR}${path_separator}emake${exe}" variable="tmp_available"/>
 		<geant target="get_bin__emake" if="$tmp_available=false" />
+
+		<!-- espawn -->
+		<available resource="${OUTPUT_DIR}${path_separator}espawn${exe}" variable="tmp_available"/>
+		<geant target="get_bin__espawn" if="$tmp_available=false" />
 
 		<!-- dotnet consumer -->
 		<available resource="${OUTPUT_DIR}${path_separator}mdconsumer_is_compiled" variable="tmp_available"/>

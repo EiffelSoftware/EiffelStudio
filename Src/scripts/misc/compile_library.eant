@@ -70,7 +70,7 @@
 
 	<target name="compile_gobo_tools" depend="init" >
 		<echo message="Compile Gobo Eiffel tools" />
-		<set name="compile_dir" value="${CWD}" if="${compile_dir}="/>
+		<set name="compile_dir" value="${cwd}" if="${compile_dir}="/>
 
 		<set name="GOBO_LIB" value="${ISE_LIBRARY}/library/gobo" />
 		<set name="GOBO_BIN" value="${GOBO_LIB}/spec/$ISE_PLATFORM/bin" />

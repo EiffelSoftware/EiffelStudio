@@ -146,6 +146,7 @@ feature -- Basic operations
             create Result.make (Current)
             initialize_toolbar_item (Result, display_text)
             Result.select_actions.extend (agent execute)
+            auto_recycle (Result)
         end
 
     new_sd_toolbar_item (a_display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is

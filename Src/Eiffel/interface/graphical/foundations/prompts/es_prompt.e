@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (a_default_cancel)
 
 			make_dialog
+
 			set_text (a_text)
 
 				-- Prompts cannot be resized (can't do it here, there's a bug in EiffelVision2)
@@ -108,7 +109,6 @@ feature {NONE} -- User interface initialization
 			l_icon.set_minimum_size (l_large_icon.width, l_large_icon.height)
 			l_vbox.extend (l_icon)
 			l_vbox.disable_item_expand (l_icon)
-			--l_vbox.extend (create {EV_CELL})
 
 				-- Box for icon with room for expansion
 			l_hbox.set_padding ({ES_UI_CONSTANTS}.prompt_horizontal_icon_spacing)

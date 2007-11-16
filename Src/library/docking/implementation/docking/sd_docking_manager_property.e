@@ -43,13 +43,22 @@ feature -- Properties
 	contents_by_click_order: ARRAYED_LIST [SD_CONTENT] is
 			-- All contents by user click order.
 		local
-			l_current_list: ACTIVE_LIST [SD_CONTENT]
+			l_current_list, l_orignal_list: ARRAYED_LIST [SD_CONTENT]
 			l_order_list: like internal_clicked_list
 		do
-			l_current_list := internal_docking_manager.contents.twin
-			l_current_list.add_actions.wipe_out
-			l_current_list.remove_actions.wipe_out
-			
+
+			-- We don't copy add/prune actions in ACTIVE_LIST
+			from
+				l_orignal_list := internal_docking_manager.contents
+				l_orignal_list.start
+				create l_current_list.make (l_orignal_list.count)
+			until
+				l_orignal_list.after
+			loop
+				l_current_list.extend (l_orignal_list.item)
+				l_orignal_list.forth
+			end
+
 			l_order_list := internal_clicked_list
 			from
 				create Result.make (1)

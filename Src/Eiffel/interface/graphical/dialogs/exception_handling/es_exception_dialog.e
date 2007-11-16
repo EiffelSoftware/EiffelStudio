@@ -15,7 +15,9 @@ inherit
 		rename
 			make as make_prompt
 		redefine
+			initialize,
 			build_prompt_interface,
+			internal_recycle,
 			standard_buttons,
 			standard_default_button,
 			standard_default_confirm_button,
@@ -37,6 +39,7 @@ create
 feature {NONE} -- Initialize
 
 	make
+			-- Initializes the exception dialog prompt
 		do
 			make_standard ((create {WARNING_MESSAGES}).w_internal_error)
 			set_sub_title ("Internal EiffelStudio Exception")
@@ -53,6 +56,14 @@ feature {NONE} -- Initialize
 
 				-- Allow dialog to be resized so user is able to see the full trace.
 			dialog.enable_user_resize
+		end
+
+	initialize
+			-- Common initialization for any class attributes or other data structures.
+			-- Note: No user interface initialization should be done here! Use build_dialog_interface instead
+		do
+			Precursor {ES_ERROR_PROMPT}
+			create support_login.make
 		end
 
 	build_prompt_interface (a_container: EV_VERTICAL_BOX)
@@ -101,14 +112,34 @@ feature {NONE} -- Initialize
 			l_box.extend (save_button)
 			l_box.disable_item_expand (save_button)
 
+			if not support_login.is_support_accessible then
+					-- Do not have access to cURL
+				submit_bug_button.disable_sensitive
+			end
+
 			a_container.extend (l_box)
 			a_container.disable_item_expand (l_box)
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle
+			-- To be called when the button has became useless.
+		do
+			if is_initialized then
+				support_login.dispose
+				support_login := Void
+			end
+			Precursor {ES_ERROR_PROMPT}
 		end
 
 feature -- Access
 
 	trace: STRING_32
 			-- Exception trace message
+
+	support_login: COMM_SUPPORT_BUG_REPORTER
+			-- Support site login proxy communicator
 
 feature {NONE} -- Access
 
@@ -261,12 +292,13 @@ feature {NONE} -- Action handlers
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
+			support_login_attached: support_login /= Void
+			support_login_is_support_accessible: support_login.is_support_accessible
 		local
-			l_dialog: EB_EXCEPTION_SUBMIT_DIALOG
+			l_dialog: ES_EXCEPTION_SUBMIT_DIALOG
 		do
-			create l_dialog.make
-			l_dialog.set_exception_trace (trace)
-			l_dialog.show_modal_to_window (dialog)
+			create l_dialog.make (support_login)
+			l_dialog.show (dialog)
 		end
 
 feature -- Button constants
@@ -288,6 +320,9 @@ feature -- Button constants
 		once
 			Result := {ES_DIALOG_BUTTONS}.cancel_button
 		end
+
+invariant
+	support_login_attached: support_login /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

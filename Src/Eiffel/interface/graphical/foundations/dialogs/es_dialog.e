@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			initialize
 			build_interface
 
-			dialog_result := buttons.first
+			dialog_result := default_button
 			dialog.set_icon_pixmap (icon)
 			register_action (dialog.key_press_actions, agent on_key_pressed)
 			register_action (dialog.key_release_actions, agent on_key_release)
@@ -165,6 +165,8 @@ feature -- Access
 
 	icon: EV_PIXEL_BUFFER
 			-- The dialog's icon
+		require
+			not_is_recycled: not is_recycled
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -373,6 +375,7 @@ feature -- Element change
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `a_action': An action to be performed when the button is pressed.
 		require
+			not_is_recycled: not is_recycled
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
 			a_action_attached: a_action /= Void
@@ -390,6 +393,7 @@ feature -- Element change
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `a_action': An action to be performed when the button is pressed.
 		require
+			not_is_recycled: not is_recycled
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
 			a_action_attached: a_action /= Void
@@ -404,7 +408,9 @@ feature -- Status report
 	is_shown: BOOLEAN
 			-- Indicates if dialog is current visible
 		do
-			Result := dialog.is_show_requested
+			if is_initialized and then not is_recycled then
+				Result := dialog.is_show_requested
+			end
 		end
 
 	is_modal: BOOLEAN assign set_is_modal
@@ -937,12 +943,9 @@ feature {NONE} -- Factory
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 		local
 			l_label: STRING_32
-			l_constants: EV_LAYOUT_CONSTANTS
 		do
-			create l_constants
 			l_label := dialog_button_label (a_id)
 			create Result.make_with_text (l_label)
-			Result.set_minimum_width ({ES_UI_CONSTANTS}.dialog_button_width)
 		ensure
 			result_attached: Result /= Void
 		end

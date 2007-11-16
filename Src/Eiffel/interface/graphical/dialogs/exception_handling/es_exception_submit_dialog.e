@@ -577,7 +577,6 @@ feature {NONE} -- Reporting
 
 			if not is_initialized or else not is_synopsis_available then
 				create l_exceptions
-				Result.append ("Autoreport: ")
 				Result.append (l_exceptions.meaning (l_exceptions.exception))
 				Result.prune_all_trailing ('.')
 				Result.append_character (' ')

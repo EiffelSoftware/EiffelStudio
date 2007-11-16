@@ -136,6 +136,8 @@ feature -- Query
 
 	contents: ACTIVE_LIST [SD_CONTENT]
 			-- Client programmer's contents managed by Current.
+			-- Be careful when adding/pruning item in this list even after twined the list.
+			-- There are add/prune actions registered in the list.
 
 	has_content (a_content: SD_CONTENT): BOOLEAN is
 			-- If contents has a_content?

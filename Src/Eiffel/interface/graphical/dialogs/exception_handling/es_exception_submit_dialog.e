@@ -74,7 +74,9 @@ feature {NONE} -- Initialization
 			l_hbox.extend (l_user_label)
 			l_hbox.disable_item_expand (l_user_label)
 			create username_text
-			username_text.set_text (remembered_username.item)
+			if is_user_remembered.item then
+				username_text.set_text (remembered_username.item)
+			end
 			username_text.set_minimum_width (190)
 			register_action (username_text.change_actions, agent enable_login)
 			l_hbox.extend (username_text)
@@ -87,7 +89,9 @@ feature {NONE} -- Initialization
 			l_hbox.extend (l_pass_label)
 			l_hbox.disable_item_expand (l_pass_label)
 			create password_text
-			password_text.set_text (remembered_password.item)
+			if is_user_remembered.item then
+				password_text.set_text (remembered_password.item)
+			end
 			register_action (password_text.change_actions, agent enable_login)
 			password_text.set_minimum_width (190)
 			l_hbox.extend (password_text)
@@ -231,7 +235,7 @@ feature {NONE} -- Access
 	remembered_username: CELL [STRING_GENERAL]
 			-- Last remembered user name
 		once
-			create Result
+			create Result.put ("")
 		ensure
 			result_attached: Result /= Void
 			result_item_attached: Result.item /= Void
@@ -240,7 +244,7 @@ feature {NONE} -- Access
 	remembered_password: CELL [STRING_GENERAL]
 			-- Last remembered password
 		once
-			create Result
+			create Result.put ("")
 		ensure
 			result_attached: Result /= Void
 			result_item_attached: Result.item /= Void
@@ -338,10 +342,13 @@ feature {NONE} -- Action handlers
 					support_login.force_logout
 					support_login.attempt_logon (username_text.text, password_text.text, remember_me_check.is_selected)
 					if support_login.is_logged_in then
+						is_user_remembered.set_item (remember_me_check.is_selected)
 						if remember_me_check.is_selected then
-							is_user_remembered.set_item (True)
 							remembered_username.put (username_text.text)
 							remembered_password.put (password_text.text)
+						else
+							remembered_username.put ("")
+							remembered_password.put ("")
 						end
 						logged_in_label.set_text ("You are currently logged in as " + username_text.text + " ")
 						logged_in_label.show

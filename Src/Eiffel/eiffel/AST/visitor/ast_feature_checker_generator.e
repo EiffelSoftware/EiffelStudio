@@ -1164,6 +1164,7 @@ feature -- Implementation
 					end
 				end
 			end
+
 				-- Check for `NONE'
 			if
 				(l_last_constrained /= Void and then l_last_constrained.is_none) or
@@ -1173,7 +1174,8 @@ feature -- Implementation
 				context.init_error (l_vuex)
 				l_vuex.set_location (l_feature_name)
 				error_handler.insert_error (l_vuex)
-			else
+			elseif error_level = l_error_level then
+					-- When there is no error we can continue
 				l_parameters := a_params
 				if l_parameters /= Void then
 					l_actual_count := l_parameters.count

@@ -241,13 +241,6 @@ feature
 						end
 					else
 						alias_name_id := feature_i.alias_name_id
-						if
-							alias_name_id /= 0 and then is_semi_strict_id (alias_name_id) and then
-							system.current_class.original_class /= system.boolean_class
-						then
-								-- Semistrict operator alias in a class other than BOOLEAN
-							error_handler.insert_error (create {VFAV4_VHPR}.make (system.current_class, feature_i, next.parent.parent))
-						end
 						feat.forth
 					end
 				end

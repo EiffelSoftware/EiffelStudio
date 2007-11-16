@@ -217,13 +217,6 @@ feature -- Access
 						then
 							if argument_count = 1 then
 								feature_name.set_is_binary
-								if
-									is_semi_strict_id (feature_name.internal_alias_name_id) and then
-									system.current_class.original_class /= system.boolean_class
-								then
-										-- Semistrict operator alias name is declared in a class that is not BOOLEAN
-									create {VFAV4_SYNTAX} vfav.make (feature_name)
-								end
 							elseif feature_name.has_convert_mark then
 									-- Invalid convert mark
 								create {VFAV3_SYNTAX} vfav.make (feature_name)

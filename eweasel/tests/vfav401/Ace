@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="base" uuid="2769B2FC-9769-410C-B2D9-0383556691F8" library_target="base">
-	<target name="base">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="test" uuid="2769B2FC-9769-410C-B2D9-0383556691F8" library_target="test">
+	<target name="test">
 		<description>FreeELKS: Library of reusable components for Eiffel.
 Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
-		<root class="test" feature="make"/>
+		<root class="TEST" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>

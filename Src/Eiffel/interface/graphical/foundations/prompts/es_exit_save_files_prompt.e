@@ -60,6 +60,10 @@ feature {NONE} -- User interface initialization
 					l_tabbable.disable_tabable_to
 				end
 
+					-- Prevent selection
+				l_list.disable_selection_on_click
+				l_list.disable_always_selected
+
 					-- Size size info				
 				l_list.set_minimum_width (300)
 				l_list.set_column_count_to (1)

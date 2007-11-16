@@ -68,7 +68,13 @@ feature -- Formatting
 		local
 			f_name: STRING
 		do
-			if classi /= Void and then selected and then displayed and then actual_veto_format_result then
+			if
+				classi /= Void and then
+				selected and then
+				displayed and then
+				editor.is_initialized and then 
+				actual_veto_format_result
+			then
 				display_temp_header
 				setup_viewpoint
 				if not equal (classi.file_name, editor.file_name) then

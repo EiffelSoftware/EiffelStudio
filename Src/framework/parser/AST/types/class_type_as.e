@@ -182,7 +182,6 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 				else
 					Result.append_character ('?')
 				end
-				Result.append_character (' ')
 			end
 			Result.append (class_name.name)
 			if generics /= Void then

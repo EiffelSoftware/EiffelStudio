@@ -646,6 +646,7 @@ feature {NONE} -- Type factory
 								l_new_formal := ast_factory.new_formal_as (an_id, formal_type.is_reference,
 									formal_type.is_expanded, Void)
 								l_new_formal.set_position (formal_type.position)
+								l_new_formal.set_attachment_mark (attachment_mark)
 								Result := l_new_formal
 									-- Jump out of the loop.
 								formal_parameters.finish
@@ -661,8 +662,6 @@ feature {NONE} -- Type factory
 							suppliers.insert_supplier_id (class_name)
 						end
 						Result := class_type
-					elseif attachment_mark /= Void then
-						report_error ("Attachment mark in front of formal generic")
 					end
 				end
 			end

@@ -134,6 +134,17 @@ feature {NONE} -- Visitor implementation
 	process_formal_as (l_as: FORMAL_AS) is
 		do
 			create {FORMAL_A} last_type.make (l_as.is_reference, l_as.is_expanded, l_as.position)
+			if l_as.attachment_mark /= Void then
+				if l_as.attachment_mark.is_bang then
+					last_type.set_attached_mark
+					check last_type.is_attached end
+				else
+					last_type.set_detachable_mark
+				end
+			elseif current_class.lace_class.is_attached_by_default then
+					-- It's not clear yet whether ECMA-367 will mark such types as attached or not.
+				-- last_type.set_is_attached
+			end
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is

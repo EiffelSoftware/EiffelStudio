@@ -64,6 +64,16 @@ feature -- Properties
 	is_expanded: BOOLEAN
 			-- Is Current formal to be always instantiated as an expanded type?
 
+	attachment_mark: SYMBOL_AS
+			-- Attachment symbol (if any)
+
+feature -- Modification
+
+	set_attachment_mark (m: like attachment_mark)
+		do
+			attachment_mark := m
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -73,6 +83,8 @@ feature -- Roundtrip/Token
 				if a_list /= Void and then reference_expanded_keyword /= Void then
 						-- Roundtrip mode
 					Result := reference_expanded_keyword.first_token (a_list)
+				elseif a_list /= Void and then attachment_mark /= Void then
+					Result := attachment_mark.first_token (a_list)
 				else
 					Result := name.first_token (a_list)
 				end
@@ -92,15 +104,31 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := position = other.position and then is_reference = other.is_reference
-				and then is_expanded = other.is_expanded
+			if attachment_mark = Void then
+				Result := other.attachment_mark = Void
+			elseif other.attachment_mark /= Void then
+				Result := attachment_mark.is_equivalent (other.attachment_mark)
+			end
+			if Result then
+				Result := position = other.position and then is_reference = other.is_reference
+					and then is_expanded = other.is_expanded
+			end
 		end
 
 feature -- Output
 
 	dump: STRING is
 		do
-			create Result.make (3)
+			if attachment_mark /= Void then
+				create Result.make (4)
+				if attachment_mark.is_bang then
+					Result.append_character ('!')
+				else
+					Result.append_character ('?')
+				end
+			else
+				create Result.make (3)
+			end
 			Result.append ("G#")
 			Result.append_integer (position)
 		end
@@ -114,7 +142,7 @@ feature {COMPILER_EXPORTER} -- Settings
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -226,7 +226,11 @@ feature {NONE} -- Implementation
 	tooltip: STRING_32 is
 			-- Tooltip for `Current'.
 		do
-			Result := internal_tooltip.twin
+			if needs_custom_tooltip_implementation then
+				Result := internal_tooltip.twin
+			else
+				Result := Precursor
+			end
 		end
 
 	internal_tooltip: STRING_32

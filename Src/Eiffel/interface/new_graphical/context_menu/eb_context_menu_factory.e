@@ -463,31 +463,33 @@ feature -- Object tool, Object Viewer and Watch tool menus
 			l_line: ES_OBJECTS_GRID_LINE
 		do
 			l_cell := a_grid.last_picked_item
-			l_row ?= l_cell.row
-			if l_row /= Void then
-				l_line := l_row.associated_line
-				if l_line /= Void then
-					s := l_line.text_data_for_clipboard
-					if s /= Void and then not s.is_empty then
+			if l_cell /= Void then
+				l_row ?= l_cell.row
+				if l_row /= Void then
+					l_line := l_row.associated_line
+					if l_line /= Void then
+						s := l_line.text_data_for_clipboard
+						if s /= Void and then not s.is_empty then
+							if not l_sep_added then
+								extend_separator (a_menu)
+								l_sep_added := True
+							end
+							a_menu.extend (new_menu_item (names.m_Copy_row_to_clipboard))
+							a_menu.last.select_actions.extend (agent copy_to_clipboard (s))
+						end
+					end
+				end
+				l_label ?= l_cell
+				if l_label /= Void then
+					s := l_label.text
+					if not s.is_empty then
 						if not l_sep_added then
 							extend_separator (a_menu)
 							l_sep_added := True
 						end
-						a_menu.extend (new_menu_item (names.m_Copy_row_to_clipboard))
+						a_menu.extend (new_menu_item (names.m_Copy_cell_to_clipboard))
 						a_menu.last.select_actions.extend (agent copy_to_clipboard (s))
 					end
-				end
-			end
-			l_label ?= l_cell
-			if l_label /= Void then
-				s := l_label.text
-				if not s.is_empty then
-					if not l_sep_added then
-						extend_separator (a_menu)
-						l_sep_added := True
-					end
-					a_menu.extend (new_menu_item (names.m_Copy_cell_to_clipboard))
-					a_menu.last.select_actions.extend (agent copy_to_clipboard (s))
 				end
 			end
 		end

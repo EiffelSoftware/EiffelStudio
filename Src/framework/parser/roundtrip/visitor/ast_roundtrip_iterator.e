@@ -986,6 +986,7 @@ feature
 	process_formal_as (l_as: FORMAL_AS) is
 		do
 			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.attachment_mark)
 			safe_process (l_as.reference_expanded_keyword)
 			safe_process (l_as.name)
 			safe_process (l_as.rcurly_symbol)

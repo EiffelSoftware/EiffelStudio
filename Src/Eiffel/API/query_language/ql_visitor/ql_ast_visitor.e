@@ -1306,6 +1306,7 @@ feature{NONE} -- Implementation
 			if not is_matching_finished then
 				match_ast (formal)
 				safe_process (l_as.lcurly_symbol)
+				safe_process (l_as.attachment_mark)
 				safe_process (l_as.reference_expanded_keyword)
 				safe_process (l_as.name)
 				safe_process (l_as.rcurly_symbol)

@@ -22,7 +22,7 @@ feature -- Interactive with C
 			-- Set object and function addresses.
 			-- Call this feature before call `c_set_progress_function', `c_set_debug_function' and `c_set_write_function'.
 		do
-			c_set_object (Current)
+			c_set_object ($Current)
 			c_set_progress_function_address ($progress_function)
 			c_set_write_function_address ($write_function)
 			c_set_debug_function_address ($debug_function)
@@ -110,45 +110,43 @@ feature -- cURL curl_easy_setopt functions
 
 feature {NONE} -- Externals
 
-	c_set_object (a_object: like Current) is
+	c_set_object (a_object: POINTER) is
 			-- Set Current object address.
 		external
-			"C macro signature (EIF_OBJECT) use %"eiffel_curl.h%""
+			"C signature (EIF_REFERENCE) use %"eiffel_curl.h%""
 		end
 
 	c_release_object is
 			-- Release Current pointer in C
 		external
-			"C [macro %"eiffel_curl.h%"]"
+			"C use %"eiffel_curl.h%""
 		end
 
 	c_set_progress_function_address (a_address: POINTER) is
 			-- Set progress function address.
 		external
-			"C [macro %"eiffel_curl.h%"]"
+			"C use %"eiffel_curl.h%""
 		end
 
 	c_set_write_function_address (a_address: POINTER) is
 			-- Set write function address.
 		external
-			"C [macro %"eiffel_curl.h%"]"
+			"C use %"eiffel_curl.h%""
 		end
 
 	c_set_debug_function_address (a_address: POINTER) is
 			-- Set write function address.
 		external
-			"C [macro %"eiffel_curl.h%"]"
+			"C use %"eiffel_curl.h%""
 		end
 
 feature {NONE} -- Implementation
 
 	dispose is
 			-- Wean `Current'
-		local
-			default_object: like Current
 		do
 			c_release_object
-			c_set_object (default_object)
+			c_set_object (default_pointer)
 		end
 
 indexing

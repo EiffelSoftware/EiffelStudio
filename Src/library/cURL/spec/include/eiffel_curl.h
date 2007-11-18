@@ -58,7 +58,7 @@ typedef EIF_INTEGER (* EIF_CURL_DEBUG_PROC) (
 	EIF_POINTER  /* a_user_pointer */
 	);
 
-static EIF_REFERENCE eiffel_function_object = NULL;
+static EIF_OBJECT eiffel_function_object = NULL;
 	/* Address of Eiffel object CURL_FUNCTION */
 	
 static EIF_CURL_PROGRESS_PROC eiffel_progress_function = NULL;
@@ -73,7 +73,11 @@ static EIF_CURL_DEBUG_PROC eiffel_debug_function = NULL;
 /* Set Eiffel CURL_FUNCTION object address */
 static void c_set_object(EIF_REFERENCE a_address)
 {
-	eiffel_function_object = (EIF_REFERENCE) eif_adopt (a_address);
+	if (a_address) {
+		eiffel_function_object = eif_protect (a_address);
+	} else {
+		eiffel_function_object = NULL;
+	}
 }
 
 /* Release Eiffel CURL_FUNCTION object address */
@@ -112,6 +116,7 @@ static size_t curl_write_function (void *ptr, size_t size, size_t nmemb, void *d
 			(EIF_INTEGER) nmemb,
 			(EIF_POINTER) data));
 	} else {
+		return 0;
 	}  
 }
 
@@ -128,6 +133,7 @@ static size_t curl_progress_function (void * a_object_id, double a_dltotal, doub
 			(EIF_REAL_64) a_ultotal,
 			(EIF_REAL_64) a_ulnow));
 	} else {
+		return 0;
 	}   
  }
 
@@ -144,6 +150,7 @@ static size_t curl_debug_function (CURL * a_curl_handle, curl_infotype a_curl_in
 			(EIF_INTEGER) a_size,
 			(EIF_POINTER) a_object_id));
 	} else {
+		return 0;
 	}   
  }
  

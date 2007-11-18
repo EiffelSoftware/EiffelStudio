@@ -50,7 +50,7 @@ chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 
 remtrace Building GPL CD image
 mv Eiffel61 cdrom
-make_cd_image Eiffel61_gpl Eiffel61_gpl.iso cdrom
+./make_cd_image Eiffel61_gpl Eiffel61_gpl.iso cdrom
 bzip2 Eiffel61_gpl.iso
 mv Eiffel61_gpl.iso.bz2 Eiffel61_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
 mv cdrom/Eiffel61 Eiffel61

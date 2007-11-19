@@ -6,19 +6,26 @@
 		<heading><size>2</size>Graphical environment</heading>
 		<heading><size>3</size>What's new</heading>
 		<list ordered="false">
-			<item></item>
+			<item>New default layout for EiffelStudio tools to highlight the most common used tools whereas other tools are still available at the bottom or via the View menu.</item>
+			<item>New Errors and Warnings tool. It replaces the former Errors tool and Warnings tool and provides a nicer way to show errors and filtering them.</item>
+			<item>Revisited all the dialogs to provide a nicer and consistent look and feel.</item>
+			<item>Multiple errors are reported for each compilation degree.</item>
 		</list>		
 		<heading><size>3</size>Improvements</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Use the default OS font for displaying tooltips.</item>
+			<item>C compilation failure will now show up as an error in the new Errors and Warnins tool.</item>
+			<item>Completion list will now show immediately after pressing '.' when the completion list is active.</item>
+			<item>Added ability to submit a problem report within EiffelStudio when it quits unexpectedly.</item>
 		</list>
 		<heading><size>3</size>Changes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Support for the MinGW C compiler on Windows 32-bit. Borland is officially not supported anymore.</item>
+			<item>Completion list no longer shows obsolete items by default (set via a preference options).</item>
 		</list>
 		<heading><size>3</size>Bug fixes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed incorrect results when using the profiler with a finalized system.</item>
 			<item>More bug fixes can be seen at <link><label>the EiffelStudio open source site</label><url>http://dev.eiffel.com/EiffelStudio_6.1_Releases</url></link>.</item>
 		</list>
 		<heading><size>2</size>Compiler</heading>
@@ -36,23 +43,20 @@
 		<heading><size>2</size>Libraries</heading>
 		<heading><size>3</size>EiffelBase</heading>
 		<list ordered="false">
-			<item></item>
-		</list>
-		<heading><size>3</size>EiffelNet</heading>
-		<list ordered="false">
-			<item></item>
-		</list>
-		<heading><size>3</size>EiffelThread</heading>
-		<list ordered="false">
-			<item></item>
+			<item><class_name>BINARY_SEARCH_TREE</class_name>: Added <feature_name>tree_item</feature_name> which matches the item being searched.</item>
+			<item><class_name>LINEAR</class_name>: Added <feature_name>item_for_iteration</feature_name> as a synonym of <feature_name>item</feature_name>.</item>
+			<item><class_name>STRING_8</class_name> and <class_name>STRING_32</class_name>:
+				<list ordered="false">
+					<item>Improved speed of the <feature_name>to_xxx</feature_name> routines.</item>	
+					<item>Added <feature_name>starts_with</feature_name> and <feature_name>ends_with</feature_name>.</item>
+				</list>
+			</item>
+			<item><class_name>GC_INFO</class_name>: Fixed non working computation of CPU time usage on Windows and added two new queries (<feature_name>cpu_total_time</feature_name> and <feature_name>sys_total_time</feature_name>) to find out the total CPU execution time of the program at the last GC cycle.</item>
+			<item><class_name>MEMORY</class_name>: Added <feature_name>execute_without_collection</feature_name> to execute a procedure with no GC.</item>
 		</list>
 		<heading><size>3</size>EiffelVision2</heading>
 		<list ordered="false">
 			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>
-		</list>
-		<heading><size>3</size>WEL</heading>
-		<list ordered="false">
-			<item></item>
 		</list>
 		<paragraph>
 			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>

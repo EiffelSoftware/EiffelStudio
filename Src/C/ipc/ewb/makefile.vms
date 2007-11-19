@@ -57,7 +57,7 @@ all:: .FORCE_DEPEND
 #CINCLUDES   = /INCL=($(DECC_INCLUDES),[-.shared],[--.run-time],[--.run-time.include],[--.idrs])
 CINCLUDES = [C.IPC.SHARED]
 
-CDEFINES = EIF_IPC # "DEBUG=1"
+CDEFINES = EIF_IPC #,DEBUG=1
 
 #JCFLAGS = $(DPFLAGS) $(CDEFINES) $(DEBUG_CFLAGS)
 DPFLAGS  = $(CINCLUDES) $(CDEFINES)
@@ -67,18 +67,50 @@ CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
 include EIFFEL_SRC:[C.ipc]Makeinc.VMS	    # use ipc common definitions
 
 # Files used to build the daemon
-LSRC = ewb_proto.c eproto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
+#LSRC = ewb_proto.c eproto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
+LSRC = eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c ewb_child.c ewb_transfer.c ewb_proto.c
 
 # Derived object file names
 LOBJ = $(patsubst %.c,%.obj,$(LSRC))
+WOBJ = $(patsubst %.c,w%.obj,$(LSRC))
+MT_LOBJ = $(patsubst %.c,MT%.obj,$(LSRC))
+MT_WOBJ = $(patsubst %.c,MTw%.obj,$(LSRC))
 
 $(OBJECTS) : $(EXTRA_DEPENDENCIES)
 
+LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
+$(LISTINGS) : $(EXTRA_DEPENDENCIES)
+listings : $(LISTINGS)
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
 
 # Where shared archive is located (path and name)
-LIBDIR = [-.shared]
-LIBIDR = [--.idrs]
+LIB_SHARED = [-.shared]
+LIB_IDR = [--.idrs]
 RUN_TIME = [--.run-time]
+
+
+all :: ewb.olb
+
+ewb.olb : $(LOBJ)
+	libr/create $@ $^
+	-purge/nolog *.obj
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+all :: MTewb.olb
+MTewb.olb : $(MT_LOBJ)
+	libr/create $@ $^
+	-purge/nolog *.obj
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+show_local ::
+	@write sys$$output "*** in Makefile: $(firstword $(MAKEFILE_LIST)),  target: $@ ***"
+	@write sys$$output " $$(LOBJ) = ""$(LOBJ)"""
+	@write sys$$output " $$(WOBJ) = ""$(WOBJ)"""
+	@write sys$$output " $$(MT_LOBJ) = ""$(MT_LOBJ)"""
+	@write sys$$output " $$(MT_WOBJ) = ""$(MT_WOBJ)"""
+
+
 
 depend:: ../../mkdep
 
@@ -94,23 +126,8 @@ depend::
 	cp Makefile.new Makefile
 	$(RM) Makefile.new
 
-all :: ewb.olb
-
-LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
-$(LISTINGS) : $(EXTRA_DEPENDENCIES)
-listings : $(LISTINGS)
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
-
 local_realclean::
 	$(RM) ewb.olb;*
-
-ewb.olb : $(LOBJ)
-#	$(RM) $@
-#	$(AR) $@ $(LOBJ)
-#	$(RANLIB) $@
-	libr/create $@ $^
-	@-purge/nolog *.obj
-	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
 ########################################################################

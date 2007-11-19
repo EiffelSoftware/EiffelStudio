@@ -5,7 +5,7 @@
 		<paragraph>
 			<table>
 				<row><cell><bold>Computer/Processor</bold></cell><cell>UltraSparc.</cell></row>
-				<row><cell><bold>Operating System</bold></cell><cell>Solaris 8.0 or greater for Sparc, Solaris 10 or greater for x86 with either Gnome 2.6 or GTK+ 2.4.</cell></row>
+				<row><cell><bold>Operating System</bold></cell><cell>Solaris 9.0 or greater for Sparc, Solaris 10 or greater for x86 with either Gnome 2.6 or GTK+ 2.4.</cell></row>
 				<row><cell><bold>Memory</bold></cell><cell>512MB of RAM (1GB recommended).</cell></row>
 				<row><cell><bold>Hard Disk</bold></cell><cell>500MB of hard disk space (1GB recommended).</cell></row>
 				<row><cell><bold>Drive</bold></cell><cell>CD-ROM or DVD drive (not required when downloading EiffelStudio).</cell></row>

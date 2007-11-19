@@ -24,7 +24,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_DIALOG}
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create main_area
@@ -48,7 +48,7 @@ feature {NONE}-- Initialization
 			create ok_button
 			create l_ev_cell_4
 			create cancel_button
-			
+
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (main_area)
@@ -72,7 +72,7 @@ feature {NONE}-- Initialization
 			button_area.extend (ok_button)
 			button_area.extend (l_ev_cell_4)
 			button_area.extend (cancel_button)
-			
+
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -102,15 +102,12 @@ feature {NONE}-- Initialization
 			l_ev_frame_1.set_style (1)
 			l_ev_frame_2.set_style (1)
 			help_area.set_border_width (2)
-			button_area.set_minimum_height (25)
 			button_area.disable_item_expand (ok_button)
 			button_area.disable_item_expand (l_ev_cell_4)
 			button_area.disable_item_expand (cancel_button)
-			ok_button.set_minimum_width (100)
 			l_ev_cell_4.set_minimum_width (10)
-			cancel_button.set_minimum_width (100)
 			set_title ("Display window")
-			
+
 			set_all_attributes_using_constants
 
 				-- Call `user_initialization'.
@@ -145,12 +142,12 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is
@@ -170,7 +167,7 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants is
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -206,7 +203,7 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants is
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
@@ -224,7 +221,7 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants is
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
@@ -240,9 +237,9 @@ feature {NONE} -- Constant setting
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants is
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
@@ -260,7 +257,7 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants is
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -271,7 +268,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_GENERAL]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -284,7 +281,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER is
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

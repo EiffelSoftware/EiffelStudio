@@ -84,15 +84,19 @@ feature {NONE} -- Initialization
 			-- Default initialize.
 		local
 			l_sorting_status: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]
+			l_layout: EV_LAYOUT_CONSTANTS
 		do
+			create l_layout
 			set_minimum_size (600, 400)
 			empty_selection_label.set_minimum_width (350)
 
 			ok_button.set_text (interface_names.b_ok)
 			ok_button.select_actions.extend (agent on_ok)
+			l_layout.set_default_size_for_button (ok_button)
 
 			cancel_button.set_text (interface_names.b_cancel)
 			cancel_button.select_actions.extend (agent on_cancel)
+			l_layout.set_default_size_for_button (cancel_button)
 
 			add_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			add_button.select_actions.extend (agent on_add_item)

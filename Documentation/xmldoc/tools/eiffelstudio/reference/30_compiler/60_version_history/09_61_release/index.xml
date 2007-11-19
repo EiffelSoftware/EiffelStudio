@@ -10,6 +10,7 @@
 		<heading><size>2</size>What's new</heading>
 		<seealso>See also: <link><label>Differences between standard ECMA-367 and Eiffel Software implementation</label><url>../../10_ise_eiffel_specific/ecma.xml</url></link></seealso>
 		<list ordered="false">
+			<item>Multiple errors are reported for each compilation degree.</item>
 			<item>Experimental support for Non-conforming Inheritance has been added (Classic only).  Classes may now be inherited (using inherit {NONE} but no conformance of that class is implied.</item>
 			<item>Attachment marks are supported. Now it's possible to specify whether an entity is attached or detachable:
 <code_block><local_variable>a</local_variable><symbol>:</symbol> <symbol>!</symbol><class_name>A</class_name> <comment>-- <local_variable>a</local_variable> cannot be used before it is attached</comment>
@@ -31,15 +32,15 @@
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Improved speed of degree 3. Improvements is even more visible when the checking of inherited features in their descendants is enabled.</item>
 		</list>
 		<heading><size>2</size>Changes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>No major known changes.</item>
 		</list>
 		<heading><size>2</size>Bug fixes</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed an issue where the version of <feature_name>default_create</feature_name> from <class_name>ANY</class_name> would not yield a dynamic binding if statically it had an empty body (See test#exec280).</item>
 		</list>
 		<heading><size>3</size>Compiler issues</heading>
 		<list ordered="false">
@@ -50,14 +51,11 @@
 		<heading><size>3</size>Runtime/code generation issues</heading>
 		<list ordered="false">
 			<item>Non-conforming inheritance dynamic conformance only works with Classic compilations, for .Net non-conforming inheritance has no effect on code generation</item>
-		</list>
-		<heading><size>3</size>.NET issues</heading>
-		<list ordered="false">
-			<item></item>
+			<item>Implemented time accounting on Windows.</item>
 		</list>
 		<heading><size>3</size>Store/Retrieve issues</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed a potential dead lock when an exception occurs while retrieving an object in a multithreaded environment (See test#store012).</item>
 		</list>
 	</paragraph>
 </document>

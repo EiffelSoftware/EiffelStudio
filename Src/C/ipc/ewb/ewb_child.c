@@ -47,6 +47,7 @@
 #include "ewbio.h"
 #include "ewb_child.h"
 #include "select.h"
+#include "request.h"	/* for typedef struct{...} Request */
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -72,6 +73,9 @@
 
 #ifdef EIF_VMS
 #include "ipcvms.h"
+#include <lib$routines.h>
+#include <jpidef.h>
+#include <ssdef.h>
 #endif
 
 /* #define USE_ADD_LOG */

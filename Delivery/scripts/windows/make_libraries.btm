@@ -73,8 +73,6 @@ iff not defined NO_COMPILE then
 		cd %STUDIO_DIR\library\com\Clib_runtime
 		all_makes
 		cd %STUDIO_DIR\library\com
-		fullrd Clib
-		fullrd Clib_runtime
 	endiff
 	remtrace net
 	cd %STUDIO_DIR\library\net\Clib

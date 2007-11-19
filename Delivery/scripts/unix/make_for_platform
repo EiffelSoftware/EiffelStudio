@@ -27,7 +27,6 @@ if [ $# -ge 3 ]; then
 	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel61_gpl*bz2" .
 
 		#Upload to our ftp site
-	scp Eiffel61_enterprise*$platform.tar.bz2 manus@eiffel.com:builds/
 	scp Eiffel61_gpl*$platform.tar.bz2 manus@eiffel.com:builds/
 
 	echo Compilation for $platform is now done

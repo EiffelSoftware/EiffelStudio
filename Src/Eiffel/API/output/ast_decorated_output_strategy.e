@@ -2096,9 +2096,7 @@ feature {NONE} -- Implementation
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.process_symbol_text (ti_l_curly)
-			end
-			l_as.name.process (Current)
-			if not expr_type_visiting then
+				l_as.name.process (Current)
 				text_formatter_decorator.process_symbol_text (ti_colon)
 				text_formatter_decorator.put_space
 			end

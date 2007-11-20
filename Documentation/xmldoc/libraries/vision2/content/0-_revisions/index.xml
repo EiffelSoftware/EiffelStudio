@@ -8,7 +8,85 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>This document contains details of modifications and bug fixes to the Vision2 library listed by the release version of EiffelStudio. All bug fixes and modifications are relative to the previously released version.</paragraph>
+	
 
+	<heading>
+			<size>2</size> EiffelStudio 6.1
+		</heading>
+		<paragraph>
+			<bold>Interface modifications</bold>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>EV_APPLICATION</bold>- Added 'is_display_remote' for determining whether the graphical display is on the same machine as the running system.
+			</item>
+			<item>
+				<bold>EV_POINTER_STYLE_CONSTANTS</bold> - Added hyperlink_cursor constant so that hyperlink cursors may be used in applications
+			</item>
+			<item>
+				<bold>EV_POINTER_STYLE</bold> - Now pointer style objects may be twinned correctly to match the capability of pixmaps and cursor objects.
+			</item>
+			<item>
+				<bold>EV_DRAWABLE</bold> Added 'draw_sub_pixel_buffer' so that pixel buffer data may be rendered to a drawable.
+			</item>
+			<item>
+				<bold>EV_PIXEL_BUFFER</bold> Added draw_pixel_buffer_with_x_y so that a pixel buffer
+			</item>
+			<item>
+				<bold>EV_STOCK_PIXMAPS</bold> - Now pixel buffers are used for stock icons, this allows for alpha transparency information to be retained.
+			</item>
+			<item>
+				<bold>EV_POPUP_WINDOW</bold> - Added 'make_with_shadow' creation procedure to create a popup window with an alpha shadow (on platforms that support it).
+			</item>
+		</list>
+
+		<paragraph>
+			<bold>Bug fixes</bold>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>Platform independent</bold>
+				<list ordered="false">
+					<item><bold>EV_GRID</bold>
+						<list ordered="false">
+							<item>Fixed certain crashes when recomputing offsets</item>
+						</list>
+					</item>
+				</list>
+			</item>
+			<item>
+				<bold>Windows</bold>
+				<list ordered="false">
+					<item><bold>EV_STOCK_PIXMAPS</bold>
+						<list ordered="false">
+							<item>Now alpha information is correctly extracted for stock icons</item>
+						</list>
+					</item>
+				</list>
+			</item>	
+
+			<item>
+				<bold>Linux/Solaris</bold>
+				<list ordered="false">
+					<item><bold>EV_COMBO_BOX</bold>
+						<list ordered="false">
+							<item>Fixed calling of change_actions when items are selected via the drop down</item>
+						</list>
+					</item>
+					<item><bold>EV_POINTER_STYLE</bold>
+						<list ordered="false">
+							<item>Fixed issue when converting to a cursor object then reverting back would render a white square instead of the requested cursor</item>
+						</list>
+					</item>
+					<item><bold>EV_WINDOW</bold>
+						<list ordered="false">
+							<item>Fixed issues when calling disable/enable user resize in certain states</item>
+						</list>
+					</item>
+				</list>
+			</item>
+		
+		</list>
 
 		<heading>
 			<size>2</size> EiffelStudio 6.0

@@ -141,7 +141,6 @@ feature {NONE} -- Initialization
 			l_shrinkable.extend (login_frame)
 			shrink_widget := l_shrinkable
 
-			l_shrinkable.set_background_color (colors.prompt_banner_color)
 			l_shrinkable.resize_actions.extend (agent (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 				do
 					shrink_widget.set_item_size (login_frame, a_width, a_height)
@@ -354,6 +353,7 @@ feature {NONE} -- Action handlers
 						logged_in_label.show
 						log_out_link.show
 
+						login_frame.hide
 						create shrink_timer.make_with_interval (shrink_interval)
 						shrink_timer.actions.extend (agent on_shrink_interval_expired_for_collapse)
 					else
@@ -439,6 +439,7 @@ feature {NONE} -- Action handlers
 				shrink_timer.destroy
 				shrink_timer := Void
 				enable_login_content_widget (False)
+				login_frame.show
 			else
 				shrink_widget.set_minimum_height ((shrink_widget.height + 4).min (login_frame.height))
 			end

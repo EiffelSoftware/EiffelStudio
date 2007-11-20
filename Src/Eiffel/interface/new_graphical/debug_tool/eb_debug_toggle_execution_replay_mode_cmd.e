@@ -49,7 +49,10 @@ feature -- Execution
 	execute is
 			-- Pause the execution.
 		do
-			if eb_debugger_manager.safe_application_is_stopped then
+			if
+				eb_debugger_manager.safe_application_is_stopped and then
+				eb_debugger_manager.application_status.replay_recording
+			then
 				execution_replay_mode_activated := not execution_replay_mode_activated
 				set_select (execution_replay_mode_activated)
 				eb_debugger_manager.activate_execution_replay_mode (execution_replay_mode_activated)

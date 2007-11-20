@@ -53,6 +53,9 @@ feature -- Execution
 				execution_recording_activated := not execution_recording_activated
 				set_select (execution_recording_activated)
 				debugger_manager.application.activate_execution_replay_recording (execution_recording_activated)
+				if not execution_recording_activated then
+					debugger_manager.toggle_exec_replay_mode_cmd.disable_sensitive
+				end
 			end
 			update_graphical
 		end

@@ -371,7 +371,7 @@ feature {NONE} -- Line rendering
 			l_stop: BOOLEAN
 			l_len: INTEGER
 			l_size: TUPLE [width, height, left, right: INTEGER]
-			l_dummy: EV_LABEL
+--			l_dummy: EV_LABEL
 		do
 			reset_minimum_height
 			reset_minimum_width
@@ -495,11 +495,12 @@ feature {NONE} -- Line rendering
 						set_minimum_height (l_size.height)
 					end
 
-						-- Create a dummy label so we can retrieve the label padding.
-					create l_dummy.make_with_text ("O")
-					l_dummy.set_font (l_font)
+	-- For experimental purposes, this code is commented out.
+--						-- Create a dummy label so we can retrieve the label padding.
+--					create l_dummy.make_with_text ("O")
+--					l_dummy.set_font (l_font)
 
-					set_minimum_width (l_size.width + l_size.right + l_size.left + (l_dummy.width - l_font.string_width (l_dummy.text)))
+--					set_minimum_width (l_size.width + l_size.right + l_size.left + (l_dummy.width - l_font.string_width (l_dummy.text)))
 					set_label_text (l_text)
 				end
 			end

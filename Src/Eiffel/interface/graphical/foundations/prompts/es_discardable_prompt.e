@@ -107,8 +107,8 @@ feature {NONE} -- User interface initialization
 				create discard_check
 			end
 
-			discard_check.set_minimum_height (16)
 			a_container.extend (discard_check)
+			a_container.disable_item_expand (discard_check)
 		ensure then
 			discard_check_attached: discard_check /= Void
 		end

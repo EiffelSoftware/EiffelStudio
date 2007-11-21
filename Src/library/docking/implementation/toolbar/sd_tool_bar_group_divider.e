@@ -403,7 +403,12 @@ feature {NONE} -- Implementation
 						if not is_initialized_sub_group (l_max_group_info) then
 							-- Is not from a sub group info
 							-- Or from sub group info which item count = 1
-							insert_arrayed_list_to_group_info_sub_level (l_temp_algorithm.best_grouping_when (2), l_max_info.max_group_index, l_temp_algorithm.item_width)
+							if l_temp_algorithm.max_group_count < 2 then
+								-- `l_temp_algorithm' is maximum width group which only have one item, so we stop here.
+								l_stop := True
+							else
+								insert_arrayed_list_to_group_info_sub_level (l_temp_algorithm.best_grouping_when (2), l_max_info.max_group_index, l_temp_algorithm.item_width)
+							end
 						else
 							-- Is from a sub group info
 							l_max_group_info.start

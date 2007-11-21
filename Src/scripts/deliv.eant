@@ -313,12 +313,12 @@
 		<copy dir="${OUTPUT_DIR}" file="compile_all${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
 
-		<geant target="install_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
-		<geant target="install_es_unix" fork="false" reuse_variables="true" unless="${is_windows}" />
-
 		<available dir="${OUTPUT_DIR}" resource="esbuilder${exe}" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="esbuilder${exe}" to_directory="${INSTALL_DIR}${path_separator}esbuilder${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" 
 			if="${tmp_available}=true"/>
+
+		<geant target="install_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
+		<geant target="install_es_unix" fork="false" reuse_variables="true" unless="${is_windows}" />
 
 		<unset name="tmp_install_dir" />
 		<!-- end of install -->
@@ -328,7 +328,11 @@
 
 
 	<target name="install_es_unix" depend="init_deliv" unless="${is_windows}" >
-		<exec executable="chmod a+x ${tmp_install_dir}/bin/* " accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${tmp_install_dir}/bin/* " accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${INSTALL_DIR}/esbuilder/spec/${ISE_PLATFORM}/bin/* " accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${INSTALL_DIR}/make_install" accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${INSTALL_DIR}/library/vision2/implementation/gtk/Clib/vision2-gtk-config" accept_errors="true" exit_code_variable="return_code" />
+		<exec executable="chmod 755 ${INSTALL_DIR}/library/gobo/spec/${ISE_PLATFORM}/bin/*" accept_errors="true" exit_code_variable="return_code" />
 	</target>
 
 	<target name="install_es_windows" depend="init_deliv" if="${is_windows}" >

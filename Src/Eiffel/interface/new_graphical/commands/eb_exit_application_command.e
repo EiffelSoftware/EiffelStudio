@@ -153,9 +153,8 @@ feature {NONE} -- Callbacks
 			if Debugger_manager.application_is_executing then
 				already_confirmed := True
 				create l_confirm.make_standard (warning_messages.w_exiting_stops_debugger)
-				if l_confirm.dialog_result = dialog_buttons.yes_button then
-					confirm_and_exit
-				end
+				l_confirm.set_button_action (l_confirm.dialog_buttons.yes_button, agent confirm_and_exit)
+				l_confirm.show_on_active_window
 			else
 				confirm_and_exit
 			end

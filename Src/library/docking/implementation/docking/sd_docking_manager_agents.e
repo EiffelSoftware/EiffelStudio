@@ -186,14 +186,14 @@ feature  -- Agents
 		end
 
 	on_prune_content (a_content: SD_CONTENT) is
-				--  Handle prune a content from contents.
-			require
-				not_void: a_content /= Void
-			do
-				a_content.set_docking_manager (Void)
-			ensure
-				set: a_content.docking_manager = Void
-			end
+			--  Handle prune a content from contents.
+		require
+			not_void: a_content /= Void
+		do
+			a_content.set_docking_manager (Void)
+		ensure
+			set: a_content.docking_manager = Void
+		end
 
 	on_main_window_focus_out is
 			-- Handle window lost focus event.
@@ -374,7 +374,15 @@ feature -- Destory
 
 	destroy is
 			-- Destory all underline objects
+		local
+			l_viewport: EV_VIEWPORT
 		do
+			if internal_docking_manager /= Void then
+				l_viewport := internal_docking_manager.internal_viewport
+				check not_void: l_viewport /= Void end
+				l_viewport.resize_actions.wipe_out
+			end
+
 			ev_application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
 			ev_application.pick_actions.prune_all (pick_actions_handler)
 			ev_application.drop_actions.prune_all (drop_actions_handler)

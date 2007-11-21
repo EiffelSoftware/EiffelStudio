@@ -77,7 +77,7 @@ feature -- Widget intermediary agent routines
 			a_widget: EV_WIDGET_IMP
 		do
 			a_widget ?= eif_id_object (a_object_id)
-			if a_widget /= Void and then not a_widget.is_destroyed and then a_widget.is_displayed then
+			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
 			end
 		end

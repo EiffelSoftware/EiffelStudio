@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			application_right_click_agent := agent on_menu_area_click
 
 			create l_platform
-			-- We will use pointe release actions only in the future. Larry 2007-6-7
+			-- We will use pointer release actions only in the future. Larry 2007-6-7
 			if l_platform.is_windows then
 				ev_application.pointer_button_press_actions.extend (application_right_click_agent)
 			else
@@ -135,6 +135,7 @@ feature -- Command
 			-- Release hooks.
 		local
 			l_floating_tool_bars: like floating_tool_bars
+			l_platform: PLATFORM
 		do
 			from
 				l_floating_tool_bars := floating_tool_bars
@@ -145,7 +146,13 @@ feature -- Command
 				l_floating_tool_bars.item.destroy
 				l_floating_tool_bars.forth
 			end
-			ev_application.pointer_button_press_actions.prune_all (application_right_click_agent)
+			create l_platform
+			if l_platform.is_windows then
+				ev_application.pointer_button_press_actions.prune_all (application_right_click_agent)
+			else
+				ev_application.pointer_button_release_actions.prune_all (application_right_click_agent)
+			end
+
 			contents.do_all (agent (a_content: SD_TOOL_BAR_CONTENT)
 										do
 											a_content.destroy

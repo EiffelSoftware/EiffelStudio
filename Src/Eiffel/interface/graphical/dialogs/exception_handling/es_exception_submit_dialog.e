@@ -419,7 +419,10 @@ feature {NONE} -- Action handlers
 			not_is_recycled: not is_recycled
 			shrink_timer_attached: shrink_timer /= Void
 		do
-			if shrink_widget.height = 0 then
+			-- On Solaris, minimum height of `shrink_widget' is 1, not 0.
+			-- On Windows, minimum height of `shrink_widget' is 0.
+			if shrink_widget.height <= 1 then
+				shrink_widget.set_minimum_height (0)
 				shrink_timer.destroy
 				shrink_timer := Void
 				enable_login_content_widget (True)

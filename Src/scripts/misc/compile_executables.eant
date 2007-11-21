@@ -82,12 +82,6 @@
 		<echo message="Executable ec not found " unless="${ise_ec_available}" />
 		<exit code="1" unless="${ise_ec_available}" />
 
-		<exec executable="sed --version"  accept_errors="true" exit_code_variable="return_code" />
-		<echo message="-------" />
-		<echo message="sed is not found (${return_code})" unless="${return_code}=0" />
-		<exit code="${return_code}" unless="${return_code}=0" />
-		<set name="sed_available" value="true" />
-
 		<echo message="System Environment is valid" />
 	</target>
 

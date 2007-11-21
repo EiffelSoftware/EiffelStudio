@@ -18,8 +18,17 @@
 	</target>	
 
 	<!-- end of set_version -->
-	<target name="set_version" depend="set_version_windows,set_version_unix">
+	<target name="set_version">
 		<echo message="Set version of ec" />
+
+		<exec executable="sed --version"  accept_errors="true" exit_code_variable="return_code" if="${is_windows}"/>
+		<exec executable="sed -n -f /dev/null &lt; /dev/null"  accept_errors="true" exit_code_variable="return_code" unless="${is_windows}" />		
+		<echo message="Warning: sed is not found, thus the revision number won't be updated." unless="${return_code}=0" />
+		<set name="sed_available" value="true" if="${return_code}=0" />
+		<geant target="internal_set_version" if="$sed_available" />
+	</target>
+
+	<target name="internal_set_version">
 		<geant target="set_version_windows" if="$is_windows" />
 		<geant target="set_version_unix" unless="$is_windows" />
 	</target>

@@ -36,34 +36,35 @@
 	<target name="set_version_windows" depend="init" if="${is_windows}" >
 		<set name="set_version_fn" value="${cwd}\tmp_b_set_version.bat" />
 		<set name="tmp_target_dirname" value="${EIFFEL_SRC}\Eiffel\API\constants" />
-		<echo message="rem Set Version" 	to_file="${set_version_fn}" append="false" />
-		<echo message="@echo off" 			to_file="${set_version_fn}"  append="true"/>
-		<echo message="setlocal" 			to_file="${set_version_fn}"  append="true"/>
-		<echo message="svn info ${EIFFEL_SRC} > %1.tmp-rev" 
-											to_file="${set_version_fn}"  append="true"/>
-<!--
-		<echo message="svn info ${tmp_target_dirname} > %1.tmp-rev" 
-											to_file="${set_version_fn}"  append="true"/>
--->
-		<echo message="For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('findstr /L /B /C:&quot;Last Changed Rev&quot; %1.tmp-rev') do (set LASTREV=%%d)" 
-											to_file="${set_version_fn}"  append="true"/>
-		<echo message="del %1.tmp-rev"		to_file="${set_version_fn}"  append="true"/>
-		<echo message="svn revert %1"		to_file="${set_version_fn}"  append="true"/>
+		<echo to_file="${set_version_fn}" append="false" >
+@echo off
+rem Set Version
+rem %1 : svn wc path
+rem %2 : pattern to transform
+rem %3 : filename.e
+setlocal
+set SVNWCT=%1
+set EFILE=%3
+set EFILE_TMP=%EFILE%.tmp
 
-		<echo message="For /f &quot;tokens=2-4 delims=/ &quot; %%a in ('date /t') do (set TODAYDATE=%%c-%%a-%%b)" 
-											to_file="${set_version_fn}"  append="true"/>
+svn info %SVNWCT% &gt; %EFILE_TMP%
+For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('findstr /L /B /C:&quot;Last Changed Rev&quot; %EFILE_TMP%') do (set LASTREV=%%d)
+del %EFILE_TMP%
+svn revert %EFILE%
 
-		<echo message="sed -e &quot;s/create\ Result.make_version\ (\([0-9\ ]*\),\([0-9\ ]*\),\ *[0-9][0-9]*\ *,\([0-9\ ]*\))/create\ Result.make_version\ (\\1,\\2,\ %LASTREV%,\\3)/g&quot; %1 > %1.tmp" 
-											to_file="${set_version_fn}"  append="true"/>
-		<echo message="move %1.tmp %1" 		to_file="${set_version_fn}"  append="true"/>
+For /f &quot;tokens=2-4 delims=/ &quot; %%a in ('date /t') do (set TODAYDATE=%%c-%%a-%%b)
 
-		<echo message="sed -e &quot;s/Version_info:\ STRING\ is\ \&quot;[0-9a-zA-Z_\,\ \/\:()\.\=\-]*\&quot;/Version_info:\ STRING\ is\ \&quot;Revision:\ %LASTREV% , Compilation:\ %TODAYDATE%\ %TIME%\&quot;/g&quot; %1 > %1.tmp" 
-											to_file="${set_version_fn}"  append="true"/>
-		<echo message="move %1.tmp %1" 		to_file="${set_version_fn}"  append="true"/>
-		<echo message="endlocal" 			to_file="${set_version_fn}"  append="true"/>
-		<echo message="@echo on" 			to_file="${set_version_fn}"  append="true"/>
+sed -e &quot;s/:= 0000/:= %LASTREV%/&quot; %EFILE% &gt; %EFILE_TMP%
+move %EFILE_TMP% %EFILE%
 
-		<exec executable="${set_version_fn} system_constants.e" dir="${tmp_target_dirname}"
+rem update the version_info ...
+sed -e &quot;s/Version_info:\ STRING\ is\ \&quot;[0-9a-zA-Z_\,\ \/\:()\.\=\-]*\&quot;/Version_info:\ STRING\ is\ \&quot;Revision:\ %LASTREV% , Compilation:\ %TODAYDATE%\ %TIME%\&quot;/g&quot; %EFILE% &gt; %EFILE_TMP%
+move %EFILE_TMP% %EFILE%
+
+endlocal
+@echo on
+		</echo>
+		<exec executable="${set_version_fn} ${EIFFEL_SRC} 0000 system_constants.e" dir="${tmp_target_dirname}"
 			accept_errors="true" />
 		<unset name="tmp_target_dirname" />
 		<delete file="${set_version_fn}" />
@@ -71,12 +72,28 @@
 
 	<target name="set_version_unix" depend="init" unless="${is_windows}" >
 		<set name="set_version_fn" value="${cwd}/tmp_b_set_version.sh" />
-		<echo message="#!/bin/sh" 	to_file="${set_version_fn}" append="false" />
-		<exec executable="/bin/sh ${set_version_fn} system_constants.e" dir="${EIFFEL_SRC}/Eiffel/API/constants" 
+		<set name="tmp_target_dirname" value="${EIFFEL_SRC}/Eiffel/API/constants" />
+		<echo to_file="${set_version_fn}" append="false" >
+#!/bin/sh
+
+# set version number in $2 to the latest SVN repository version number.
+# $1 = SVN repository
+# $2 = file to process if any, otherwise display version on output
+
+computed_svn_revision=`until svn info $1; do echo &quot;&quot;; done | grep &quot;Last Changed Rev&quot; | sed -e &quot;s/Last Changed Rev: //&quot;`
+if [ '$2' = '' ]; then
+	echo $computed_svn_revision
+else
+	svn revert $2 #revert in case it was modification
+	sed -e 's/:= 0000/:= $computed_svn_revision/' $2 &gt; tmp
+	mv tmp $2
+fi
+		</echo>
+		<exec executable="/bin/sh ${set_version_fn} ${EIFFEL_SRC} system_constants.e" dir="${tmp_target_dirname}" 
 			accept_errors="true" />
+		<unset name="tmp_target_dirname" />
 		<delete file="${set_version_fn}" />
 	</target>
 
 	<!-- end of set_version -->
-
 </project>

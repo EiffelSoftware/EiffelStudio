@@ -85,14 +85,13 @@ if [ '$2' = '' ]; then
 	echo $computed_svn_revision
 else
 	svn revert $2 #revert in case it was modification
-	sed -e 's/:= 0000/:= $computed_svn_revision/' $2 &gt; tmp
+	sed -e "s/:= 0000/:= $computed_svn_revision/" $2 &gt; tmp
 	mv tmp $2
 fi
 		</echo>
 		<exec executable="/bin/sh ${set_version_fn} ${EIFFEL_SRC} system_constants.e" dir="${tmp_target_dirname}" 
 			accept_errors="true" />
 		<unset name="tmp_target_dirname" />
-		<delete file="${set_version_fn}" />
 	</target>
 
 	<!-- end of set_version -->

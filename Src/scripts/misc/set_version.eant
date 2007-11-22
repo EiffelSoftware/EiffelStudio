@@ -91,6 +91,7 @@ fi
 		</echo>
 		<exec executable="/bin/sh ${set_version_fn} ${EIFFEL_SRC} system_constants.e" dir="${tmp_target_dirname}" 
 			accept_errors="true" />
+		<delete file="${set_version_fn}" />
 		<unset name="tmp_target_dirname" />
 	</target>
 

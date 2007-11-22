@@ -2797,7 +2797,12 @@ feature -- Implementation
 				end
 
 				l_feat_type := current_feature.type
-				if l_feat_type.is_attached and then not l_feat_type.is_expanded and then not context.variables.is_result_initialized then
+				if
+					l_feat_type.is_attached and then
+					not l_feat_type.is_expanded and then
+					not context.variables.is_result_initialized and then
+					not current_feature.is_deferred
+				then
 						-- Result is not properly initialized.
 					error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
 				end

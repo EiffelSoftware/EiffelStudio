@@ -39,6 +39,12 @@
 			</item>
 			<item>
 				<link>
+					<url>35_execution_replay.xml</url>
+					<label>Execution replay mechanism</label>
+				</link>
+			</item>			
+			<item>
+				<link>
 					<url>40_object_tool/index.xml</url>
 					<label>Object state information</label>
 				</link>
@@ -49,6 +55,12 @@
 					<label>Dynamic evaluation of expressions</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>52_debuggee_object_storage.xml</url>
+					<label>Debuggee object storage</label>
+				</link>
+			</item>			
 			<item>
 				<link>
 					<url>55_threads_tool.xml</url>
@@ -74,7 +86,6 @@
 					<label>Debugging tips with the objects grid view</label>
 				</link>
 			</item>			
-			
 			<item>
 				<link>
 					<url>70_debugger_preferences.xml</url>

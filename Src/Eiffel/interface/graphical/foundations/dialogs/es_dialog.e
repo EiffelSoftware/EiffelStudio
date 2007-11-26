@@ -518,6 +518,10 @@ feature {NONE} -- Query
 				Result := interface_names.b_ignore
 			when {ES_DIALOG_BUTTONS}.close_button then
 				Result := interface_names.b_close
+			when {ES_DIALOG_BUTTONS}.reset_button then
+				Result := interface_names.b_reset
+			when {ES_DIALOG_BUTTONS}.apply_button then
+				Result := interface_names.b_apply
 			end
 		ensure
 			result_attached: Result /= Void

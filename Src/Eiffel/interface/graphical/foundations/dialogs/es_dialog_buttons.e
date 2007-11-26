@@ -114,6 +114,24 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
+	frozen reset_ok_cancel: DS_HASH_SET [INTEGER]
+		once
+			create Result.make (3)
+--			if {PLATFORM}.is_windows then
+				Result.put_last (reset_button)
+				Result.put_last (ok_button)
+				Result.put_last (cancel_button)
+--			else
+--				Result.put_last (cancel_button)
+--				Result.put_last (ok_button)
+--				Result.put_last (reset_button)
+--			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
+		end
+
 	frozen close_buttons: DS_HASH_SET [INTEGER]
 		once
 			create Result.make (1)
@@ -148,6 +166,8 @@ feature -- Result id's
 	retry_button: INTEGER = 6
 	ignore_button: INTEGER = 7
 	close_button: INTEGER = 8
+	reset_button: INTEGER = 9
+	apply_button: INTEGER = 10
 
 	button_id_mask: INTEGER
 			-- Button ID mask

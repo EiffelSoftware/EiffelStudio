@@ -5,9 +5,9 @@ indexing
 				%a class-related one, etc.)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
-	date: "$Date$"
-	revision: "$Revision$"
+	author: "$Author: jfiat $"
+	date: "$Date: 2007-11-03 11:16:36 +0100 (Sat, 03 Nov 2007) $"
+	revision: "$Revision: 71031 $"
 
 class
 	DBG_EXPRESSION
@@ -397,15 +397,17 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATOR} -- Expression analysis
 					check expression_not_void: expression /= Void end
 					s8 := expression.as_string_8
 					p.parse_from_string (once "check " + s8)
-					en := p.expression_node
-					if en /= Void then
-						expression_ast ?= p.expression_node
-
-						check
-							expression_ast /= Void
+					has_syntax_error := p.syntax_error
+					if not has_syntax_error then
+						en := p.expression_node
+						if en /= Void then
+							expression_ast ?= p.expression_node
+							check
+								expression_ast /= Void
+							end
+						else
+							has_syntax_error := True
 						end
-					else
-						has_syntax_error := True
 					end
 				end
 			else

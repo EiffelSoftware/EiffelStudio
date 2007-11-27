@@ -3,24 +3,24 @@
 	<paragraph>
 		<paragraph>General  limitations:</paragraph>
 		<list ordered="false" >
-			<item>Watch expression: Agent are not supported (for instance "agent my_function" is not supported".</item>
-			<item>The debugger is still not very helpful when the execution is stopped in an invariant.</item>
+			<item>Watch expression: Agents are not supported (for instance "agent my_function" is not supported").</item>
+			<item>The debugger is still not very helpful when the execution is stopped inside an invariant.</item>
 		</list>
 		<paragraph>Limitations or known bugs for the Classic debugger:</paragraph>
 		<list ordered="false" >
-			<item>Evaluate <code><keyword>Precursor</keyword></code> will result the current feature's result (not the precursor)</item>
-			<item>If you use any of the previous non supported expression in a breakpoint condition, the condition will always return True, and the debugger will stop on such condition breakpoint</item>
+			<item>Evaluating <code><keyword>Precursor</keyword></code> will produce the current feature's <code><keyword>Result</keyword></code> (not the precursor)</item>
+			<item>If you use any of the previous non supported expressions in a breakpoint condition, since the evaluation is failing the condition will always return True. In such case the debugger will stop.</item>
 		</list>
 		<paragraph>Limitations or known bugs for the .Net debugger:</paragraph>
 		<list ordered="false" >
-			<item>When stepping through disabled assertions or disabled debug clauses, the debugger may show incorrect current line.</item>
-			<item>When stepping through an inspect code, the debugger may show incorrect current line (especially if the inspect is not ordered)</item>
+			<item>It happens the debugger does not show the correct executed line, especially when dealing with disabled assertions or disabled debug clauses.</item>
+			<item>The same trouble occurs when stepping through an unordered inspect code.</item>
 		</list>
 		
-		<paragraph>Various known bugs for classic system :</paragraph>
+		<paragraph>Various known issues for classic system :</paragraph>
 		<list ordered="false" >
-			<item>Wrong assertion tag shown in debugger for precondition violation if violated during an exception rescue, indeed the tag remains the one from the exception</item>
-			<item>"Disable Assertion Handling" may be cancelled if used in an exception rescue context</item>
+			<item>If a precondition is violated inside a rescue, the debugger reports the assertion violation will the exception's tag.</item>
+			<item>If you use the "Disable Assertion Handling" functionality when the execution is stopped in a rescue, the effect might be cancelled as soon as the execution exits the rescue's associated feature.</item>
 		</list>		
 	</paragraph>
 </document>

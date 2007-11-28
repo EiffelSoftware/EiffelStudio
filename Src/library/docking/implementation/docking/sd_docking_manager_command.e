@@ -403,6 +403,16 @@ feature -- Commands
 				end
 			end
 
+	show_displayed_floating_windows_in_idle is
+			-- Show all displayed floating windows again for Solaris CDE.
+			-- This feature fix bug#13645
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			create l_env
+			l_env.application.do_once_on_idle (agent show_all_floating_zones)
+		end
+
 feature -- Query
 
 	orignal_editor_parent: EV_CONTAINER
@@ -485,6 +495,39 @@ feature {NONE}  -- Implementation
 					if not locked_windows.last.is_destroyed then
 						locked_windows.last.lock_update
 					end
+				end
+			end
+		end
+
+	show_all_floating_zones is
+			-- This fix bug#13645 which only happens on Solaris CDE.
+			-- The bug is a floating tool `is_displayed' is true but actually not displayed. We have to call show again in idle actions.
+		local
+			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
+			l_item: SD_FLOATING_ZONE
+			l_width, l_height: INTEGER
+			l_checker: SD_DEPENDENCY_CHECKER
+		do
+			create {SD_DEPENDENCY_CHECKER_IMP} l_checker
+			if l_checker.is_solaris_cde then
+
+				from
+					l_floating_zones := internal_docking_manager.query.floating_zones
+					l_floating_zones.start
+				until
+					l_floating_zones.after
+				loop
+					l_item := l_floating_zones.item
+					if not l_item.is_destroyed and then l_item.is_displayed then
+						l_width := l_item.width
+						l_height := l_item.height
+						l_item.hide
+
+						l_item.show
+						l_item.set_size (l_width, l_height)
+					end
+
+					l_floating_zones.forth
 				end
 			end
 		end

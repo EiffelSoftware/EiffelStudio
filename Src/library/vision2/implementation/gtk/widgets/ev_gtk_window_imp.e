@@ -281,6 +281,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			a_key_press: BOOLEAN
 			l_app_imp: like app_implementation
 			l_accel_list: EV_ACCELERATOR_LIST
+			l_accel_called: BOOLEAN
 			l_window_imp: EV_WINDOW_IMP
 			a_focus_widget: EV_WIDGET_IMP
 			l_block_events: BOOLEAN
@@ -298,7 +299,9 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 				create a_key.make_with_code (key_code_from_gtk (keyval))
 			end
 			if {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (a_key_event) = {EV_GTK_EXTERNALS}.gdk_key_press_enum then
+				a_key_press := True
 				l_window_imp ?= Current
+
 					-- Call accelerators if present.
 				if a_key /= Void and then l_window_imp /= Void then
 					l_accel_list := l_window_imp.accelerators_internal
@@ -309,38 +312,42 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 								-- We retrieve an accelerator implementation object to generate an accelerator id for hash table lookup.
 							l_accel := l_window_imp.accel_list.item (l_accel_imp.generate_accel_id (a_key, l_app_imp.ctrl_pressed, l_app_imp.alt_pressed, l_app_imp.shift_pressed))
 							if l_accel /= Void then
+								l_accel_called := True
 								l_app_imp.do_once_on_idle (agent (l_accel.actions).call (Void))
 							end
 						end
 					end
 				end
-				a_key_press := True
-				if keyval > 0 then
-					l_unicode_value := {EV_GTK_EXTERNALS}.gdk_keyval_to_unicode (keyval)
-					if l_unicode_value > 0 then
-						create a_key_string.make (0)
-						a_key_string.append_character (l_unicode_value.to_character_32)
-					end
-				end
-				if a_key_string /= Void and then a_key_string.valid_index (1) then
-					l_char := a_key_string @ 1
-					if l_char.is_character_8 then
-						if not l_char.to_character_8.is_printable and then l_char.code <= 127 then
-							a_key_string := Void
-								-- Non displayable characters
+
+				if not l_accel_called then
+						-- We only fire key_string actions if no accelerators were called.
+					if keyval > 0 then
+						l_unicode_value := {EV_GTK_EXTERNALS}.gdk_keyval_to_unicode (keyval)
+						if l_unicode_value > 0 then
+							create a_key_string.make (0)
+							a_key_string.append_character (l_unicode_value.to_character_32)
 						end
 					end
-				end
-				if a_key /= Void and then a_key.out.count /= 1 and then not a_key.is_numpad then
-					inspect a_key.code
-					when {EV_KEY_CONSTANTS}.key_space then
-						a_key_string := once " "
-					when {EV_KEY_CONSTANTS}.key_enter then
-						a_key_string := once "%N"
-					when {EV_KEY_CONSTANTS}.key_tab then
-						a_key_string := once "%T"
-					else
-						a_key_string := Void
+					if a_key_string /= Void and then a_key_string.valid_index (1) then
+						l_char := a_key_string @ 1
+						if l_char.is_character_8 then
+							if not l_char.to_character_8.is_printable and then l_char.code <= 127 then
+								a_key_string := Void
+									-- Non displayable characters
+							end
+						end
+					end
+					if a_key /= Void and then a_key.out.count /= 1 and then not a_key.is_numpad then
+						inspect a_key.code
+						when {EV_KEY_CONSTANTS}.key_space then
+							a_key_string := once " "
+						when {EV_KEY_CONSTANTS}.key_enter then
+							a_key_string := once "%N"
+						when {EV_KEY_CONSTANTS}.key_tab then
+							a_key_string := once "%T"
+						else
+							a_key_string := Void
+						end
 					end
 				end
 			end

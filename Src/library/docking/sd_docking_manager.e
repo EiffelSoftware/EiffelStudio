@@ -404,6 +404,13 @@ feature -- Command
 			command.restore_minimized_editors
 		end
 
+	show_displayed_floating_windows_in_idle is
+			-- Show all displayed floating windows again for Solaris CDE.
+			-- This feature fix bug#13645
+		do
+			command.show_displayed_floating_windows_in_idle
+		end
+
 	destroy is
 			-- Destroy all underline objects.
 		local

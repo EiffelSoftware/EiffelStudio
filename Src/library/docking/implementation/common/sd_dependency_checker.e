@@ -15,6 +15,11 @@ feature -- Command
 		deferred
 		end
 
+	is_solaris_cde: BOOLEAN is
+			-- If running in Solaris CDE desktop?
+		deferred
+		end
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

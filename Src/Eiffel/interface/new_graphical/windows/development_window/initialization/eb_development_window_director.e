@@ -53,7 +53,7 @@ feature -- Command
 			if l_debugger_manager /= Void then
 				l_debugger_manager.update_debugging_tools_menu_from (develop_window)
 			end
-
+			develop_window.docking_manager.show_displayed_floating_windows_in_idle
 			develop_window.window.unlock_update
 			develop_window.window.hide
 			develop_window.window.set_position (l_x, l_y)

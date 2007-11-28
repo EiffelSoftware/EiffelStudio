@@ -2405,9 +2405,6 @@ feature -- Element change
 					a_parent_row_i.update_parent_expanded_node_counts_recursively (expanded_rows_moved)
 				end
 			end
-			set_vertical_computation_required (i.min (j))
-			redraw_client_area
-
 			rows.move_items (i, j, n)
 			internal_row_data.move_items (i, j, n)
 				-- Update the changed indexes.

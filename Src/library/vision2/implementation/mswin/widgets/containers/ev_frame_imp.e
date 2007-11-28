@@ -36,7 +36,8 @@ inherit
 			interface,
 			enable_sensitive,
 			disable_sensitive,
-			initialize
+			initialize,
+			on_size
 		end
 
 	EV_FONTABLE_IMP
@@ -470,6 +471,14 @@ feature {NONE} -- WEL Implementation
 			memory_dc.unselect_all
 			memory_dc.delete
 			disable_default_processing
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Called when `Current' is resized.
+		do
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (size_type, a_width, a_height)
+				-- Force a redraw so that the control gets updated correctly.
+			invalidate_without_background
 		end
 
 	on_wm_theme_changed is

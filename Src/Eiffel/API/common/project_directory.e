@@ -359,7 +359,7 @@ feature -- Access
 			l_dir: DIRECTORY
 		do
 			create l_dir.make (path)
-			Result := l_dir.is_readable
+			Result := l_dir.exists and then l_dir.is_readable
 		end
 
 	is_path_writable: BOOLEAN is
@@ -368,7 +368,7 @@ feature -- Access
 			l_dir: DIRECTORY
 		do
 			create l_dir.make (path)
-			Result := l_dir.is_writable
+			Result := l_dir.exists and then l_dir.is_writable
 		end
 
 	path_exists: BOOLEAN is

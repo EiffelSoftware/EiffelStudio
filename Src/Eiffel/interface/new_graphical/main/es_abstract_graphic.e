@@ -194,6 +194,7 @@ feature {NONE} -- Services
 			a_container_attached: a_container /= Void
 		do
 			a_container.add_service_with_activator ({EVENT_LIST_SERVICE_S}, agent create_event_list_service, False)
+			a_container.add_service_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
 		end
 
 feature {NONE} -- Service factories
@@ -201,7 +202,13 @@ feature {NONE} -- Service factories
 	create_event_list_service: EVENT_LIST_SERVICE_S
 			-- Creates the event list service
 		do
-			create {EVENT_LIST_SERVICE}Result.make
+			create {EVENT_LIST_SERVICE} Result.make
+		end
+
+	create_session_manager_service: SESSION_MANAGER_S
+			-- Creates the session manager service
+		do
+			create {SESSION_MANAGER} Result
 		end
 
 feature {NONE} -- Exception handling

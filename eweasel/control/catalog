@@ -82,6 +82,7 @@ test non-conforming-inheritance-parent-incrementality noncon004 tcf pass
 test non-conforming-inheritance-is-not-selectable noncon005 tcf fail
 test non-conforming-parent-can-be-frozen noncon006 tcf pass
 test at-least-one-conforming-inheritance-path noncon007 tcf fail
+test non-conforming-inheritance-client-incrementality noncon008 tcf pass
 
 -- For testing only
 

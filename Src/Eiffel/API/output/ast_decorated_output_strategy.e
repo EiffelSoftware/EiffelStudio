@@ -861,7 +861,11 @@ feature {NONE} -- Implementation
 									-- So `last_type', last_class are the ones from "a" and
 									-- `l_rout_id_set' is the one of f
 								if not last_type.is_none then
-									last_class := system.class_of_id (l_as.class_id)
+									if l_as.class_id /= 0 then
+											-- Class ID may be zero if an incorrect compilation has occurred.
+											-- Protection prevents infinitely looping and memory usage (see bug#13300)
+										last_class := system.class_of_id (l_as.class_id)
+									end
 								end
 								if last_class /= Void then
 									l_feat := feature_in_class (last_class, l_rout_id_set)

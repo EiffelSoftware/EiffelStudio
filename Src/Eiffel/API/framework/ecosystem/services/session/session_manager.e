@@ -34,24 +34,23 @@ feature {NONE} -- Clean up
 		local
 			l_sessions: like internal_sessions
 		do
-			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
-			if a_disposing then
-					-- Store all unsaved session data
-				store_all
-				l_sessions := internal_sessions
-				if l_sessions /= Void then
-						-- Clean up sessions
-					l_sessions.do_all (agent (a_ia_session: SESSION_I)
-						local
-							l_disposable: DISPOSABLE
-						do
-							l_disposable ?= a_ia_session
-							if l_disposable /= Void then
-								l_disposable.dispose
-							end
-						end)
-				end
+				-- Store all unsaved session data
+			store_all
+			l_sessions := internal_sessions
+			if l_sessions /= Void then
+					-- Clean up sessions
+				l_sessions.do_all (agent (a_ia_session: SESSION_I)
+					local
+						l_disposable: DISPOSABLE
+					do
+						l_disposable ?= a_ia_session
+						if l_disposable /= Void then
+							l_disposable.dispose
+						end
+					end)
 			end
+
+			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
 		end
 
 feature {NONE} -- Access
@@ -95,7 +94,7 @@ feature {NONE} -- Query
 
 			l_workbench := (create {SHARED_WORKBENCH}).workbench
 			l_project_opened := l_workbench.project_location.is_path_writable
-			l_ver := eiffel_layout.major_version.out + " " + eiffel_layout.minor_version.out
+			l_ver := eiffel_layout.major_version.out + eiffel_layout.minor_version.out
 
 				-- Determine session type
 			l_kind := a_session.kind
@@ -131,7 +130,7 @@ feature {NONE} -- Query
 			l_fn := l_formatter.format (l_fn, [l_ver])
 
 				-- Create full path
-			create l_path.make_from_string (eiffel_layout.home.out)
+			create l_path.make_from_string (eiffel_layout.eiffel_home.out)
 			l_path.set_file_name (l_fn)
 			Result := l_path.out
 		ensure
@@ -192,7 +191,7 @@ feature -- Storage
 		ensure then
 			sessions_are_clean: internal_sessions /= Void implies internal_sessions.for_all (agent (a_ia_session: SESSION_I): BOOLEAN
 				do
-					Result := a_ia_session.is_dirty
+					Result := not a_ia_session.is_dirty
 				end)
 		end
 
@@ -399,10 +398,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	environment_file_name: STRING_8 = ".environment{1}.sess"
-	window_file_name: STRING_8 = ".window{1}.sess"
-	project_file_name: STRING_8 = ".project{1}.sess"
-	project_window_file_name: STRING_8 = ".window{1}.sess"
+	environment_file_name: STRING_8 = ".environment{1}"
+	window_file_name: STRING_8 = ".window{1}"
+	project_file_name: STRING_8 = ".project{1}"
+	project_window_file_name: STRING_8 = ".window{1}"
 
 feature {NONE} -- Internal implementation cache
 

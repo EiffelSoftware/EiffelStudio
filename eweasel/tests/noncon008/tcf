@@ -1,0 +1,35 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name non-conforming-inheritance-client-incrementality
+test_description Testing incrementality on client of child class with conforming, then non-conforming inheritance
+
+
+copy_sub Ace $TEST Ace
+
+copy_raw parent_class.e $CLUSTER parent_class.e
+copy_raw test.e $CLUSTER test.e
+
+-- Test initial conformance
+
+define INHERITANCE_CLAUSE "inherit"
+copy_sub child_class.e $CLUSTER child_class.e
+
+compile_melted
+compile_result OK
+
+-- Change inheritance to non-conformance
+
+define INHERITANCE_CLAUSE "inherit {NONE}"
+copy_sub child_class.e $CLUSTER child_class.e
+
+compile_melted
+compile_result OK
+
+
+test_end

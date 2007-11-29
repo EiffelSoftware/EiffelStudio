@@ -604,6 +604,10 @@ feature {NONE} -- Implementation
 						-- Losing an ancestor is considered to
 						-- be a status change.
 					cdi.propagators.add_changed_status (a_class.class_id)
+
+						-- Force a type check on the class.
+					cdi.set_need_type_check (True)
+
 					Degree_3.insert_new_class (cdi)
 					Degree_2.insert_new_class (cdi)
 					cdc.forth

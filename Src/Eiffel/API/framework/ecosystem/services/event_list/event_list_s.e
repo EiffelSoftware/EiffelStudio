@@ -13,7 +13,7 @@ indexing
 	revision: "$revision$"
 
 deferred class
-	EVENT_LIST_SERVICE_S
+	EVENT_LIST_S
 
 inherit
 	SERVICE_I
@@ -94,17 +94,17 @@ feature {NONE} -- Access
 
 feature -- Events
 
-	item_added_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
+	item_added_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is added
 		deferred
 		end
 
-	item_removed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
+	item_removed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is removed
 		deferred
 		end
 
-	item_changed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
+	item_changed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is changed
 		deferred
 		end

@@ -313,7 +313,7 @@ feature -- Actions
 	filter_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN; exclude: BOOLEAN]]
 			-- Action called when a filter has been changed.
 
-feature {ES_ERRORS_AND_WARNINGS_TOOL_PANEL} -- Action handlers
+feature {ES_ERROR_LIST_TOOL_PANEL} -- Action handlers
 
 	on_shown is
 			-- Called when widget is display

@@ -32,7 +32,7 @@ feature -- Value
 			Result := expand_errors_preferences.value
 		end
 
-feature {ES_ERRORS_AND_WARNINGS_TOOL_PANEL} -- Preference
+feature {ES_ERROR_LIST_TOOL_PANEL} -- Preference
 
 	expand_errors_preferences: BOOLEAN_PREFERENCE
 

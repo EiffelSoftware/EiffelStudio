@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		The ecosystem's default implementation for the {EVENT_LIST_SERVICE_S} interface.
+		The ecosystem's default implementation for the {EVENT_LIST_S} interface.
 		It performs the simple event of managing event items and raising the appropriate events to any and all subscribers.
 	]"
 	legal: "See notice at end of class."
@@ -9,10 +9,10 @@ indexing
 	revision: "$revision$"
 
 class
-	EVENT_LIST_SERVICE
+	EVENT_LIST
 
 inherit
-	EVENT_LIST_SERVICE_S
+	EVENT_LIST_S
 
 	SAFE_DISPOSABLE
 		redefine
@@ -175,13 +175,13 @@ feature -- Removal
 
 feature -- Events
 
-	item_added_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
+	item_added_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is added
 
-	item_removed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
+	item_removed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is removed
 
-	item_changed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
+	item_changed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is changed
 
 feature {NONE} -- Events

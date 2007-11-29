@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		An event list service {EVENT_LIST_SERVICE_S} tool to show all errors and warning event items in a single list in the EiffelStudio UI
+		An event list service {EVENT_LIST_S} tool to show all errors and warning event items in a single list in the EiffelStudio UI
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,7 +8,7 @@ indexing
 	revision: "$revision$"
 
 class
-	ES_ERRORS_AND_WARNINGS_TOOL_PANEL
+	ES_ERROR_LIST_TOOL_PANEL
 
 inherit
 	ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE
@@ -24,9 +24,9 @@ inherit
 			on_shown
 		end
 
-	ES_ERRORS_AND_WARNINGS_COMMANDER_I
+	ES_ERROR_LIST_COMMANDER_I
 		export
-			{ES_ERRORS_AND_WARNINGS_COMMAND} all
+			{ES_ERROR_LIST_COMMAND} all
 		end
 
 create
@@ -400,7 +400,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_event_added (a_service: EVENT_LIST_SERVICE_S; a_event_item: EVENT_LIST_ITEM_I)
+	on_event_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- Called when a event item is added to the event service.
 			--
 			-- `a_service': Event service where event was added.
@@ -432,7 +432,7 @@ feature {NONE} -- Events
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
-	on_event_removed (a_service: EVENT_LIST_SERVICE_S; a_event_item: EVENT_LIST_ITEM_I) is
+	on_event_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I) is
 			-- Called after a event item has been removed from the service `a_service'
 			--
 			-- `a_service': Event service where the event was removed.

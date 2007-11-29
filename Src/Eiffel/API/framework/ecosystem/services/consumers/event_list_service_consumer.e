@@ -11,7 +11,7 @@ class
 	EVENT_LIST_SERVICE_CONSUMER
 
 inherit
-	SERVICE_CONSUMER [EVENT_LIST_SERVICE_S]
+	SERVICE_CONSUMER [EVENT_LIST_S]
 		rename
 			service as event_list_service,
 			is_service_available as is_event_list_service_available,

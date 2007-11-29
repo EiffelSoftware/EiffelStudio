@@ -8,7 +8,7 @@ indexing
 	revision: "$revision$"
 
 deferred class
-	ES_ERRORS_AND_WARNINGS_COMMANDER_I
+	ES_ERROR_LIST_COMMANDER_I
 
 feature -- Basic operations
 

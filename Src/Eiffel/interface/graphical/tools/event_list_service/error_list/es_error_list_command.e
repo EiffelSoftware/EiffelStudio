@@ -8,7 +8,7 @@ indexing
 	revision: "$revision$"
 
 deferred class
-	ES_ERRORS_AND_WARNINGS_COMMAND
+	ES_ERROR_LIST_COMMAND
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -98,7 +98,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	tool_commander: ES_ERRORS_AND_WARNINGS_COMMANDER_I
+	tool_commander: ES_ERROR_LIST_COMMANDER_I
 			-- Tool commander interface for interacting with the errors and warnings tool
 
 feature {NONE} -- Internal implementation cache

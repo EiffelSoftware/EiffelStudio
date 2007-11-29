@@ -11,12 +11,12 @@ frozen class
 	ES_ERROR_LIST_TOOL
 
 inherit
-	ES_ERRORS_AND_WARNINGS_COMMANDER_I
+	ES_ERROR_LIST_COMMANDER_I
 		undefine
 			out
 		end
 
-	ES_TOOL [ES_ERRORS_AND_WARNINGS_TOOL_PANEL]
+	ES_TOOL [ES_ERROR_LIST_TOOL_PANEL]
 
 create {NONE}
 	default_create
@@ -100,7 +100,7 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	create_tool: ES_ERRORS_AND_WARNINGS_TOOL_PANEL
+	create_tool: ES_ERROR_LIST_TOOL_PANEL
 			-- Creates the tool for first use on the development `window'
 		do
 			create Result.make (window, Current)

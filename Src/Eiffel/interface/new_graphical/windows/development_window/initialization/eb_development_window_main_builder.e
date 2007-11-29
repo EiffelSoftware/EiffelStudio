@@ -388,7 +388,7 @@ feature -- Command
 			l_go_to_previous_error_cmd: ES_PREVIOUS_ERROR_COMMAND
 			l_go_to_next_warning_cmd: ES_NEXT_WARNING_COMMAND
 			l_go_to_previous_warning_cmd: ES_PREVIOUS_WARNING_COMMAND
-			l_ear_commander: ES_ERRORS_AND_WARNINGS_COMMANDER_I
+			l_ear_commander: ES_ERROR_LIST_COMMANDER_I
 			l_maximize_editor_area_command: EB_MAXIMIZE_EDITOR_AREA_COMMAND
 		do
 				-- Error navigation

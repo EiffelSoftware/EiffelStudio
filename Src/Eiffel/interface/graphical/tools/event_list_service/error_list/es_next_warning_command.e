@@ -11,7 +11,7 @@ class
 	ES_NEXT_WARNING_COMMAND
 
 inherit
-	ES_ERRORS_AND_WARNINGS_COMMAND
+	ES_ERROR_LIST_COMMAND
 		redefine
 			make
 		end
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
-			Precursor {ES_ERRORS_AND_WARNINGS_COMMAND} (a_commander)
+			Precursor {ES_ERROR_LIST_COMMAND} (a_commander)
 			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("go_to_next_warning")
 			check shortcut_attached: l_shortcut /= Void end
 			if l_shortcut /= Void then

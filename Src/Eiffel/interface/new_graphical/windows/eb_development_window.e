@@ -173,7 +173,15 @@ feature {NONE} -- Clean up
 
 	internal_recycle is
 			-- Recycle all.
+		local
+			l_session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
 		do
+				-- Persist session data
+			create l_session_manager
+			if l_session_manager.is_service_available then
+				l_session_manager.service.store_all
+			end
+
 			recycle_formatters
 			shortcut_manager.clear_actions (window)
 			agents.manager.remove_observer (agents)

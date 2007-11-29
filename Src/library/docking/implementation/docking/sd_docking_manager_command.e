@@ -309,6 +309,10 @@ feature -- Commands
 			l_editor_area: SD_MULTI_DOCK_AREA
 			l_has_maximized_zone: BOOLEAN
 		do
+			-- We have to restore minimized editors first if all editors minimized.
+			-- See bug#13648.
+			restore_minimized_editors_for_maximize_editor_area
+
 			l_editor_parent := internal_docking_manager.query.inner_container_main.editor_parent
 			l_editor_area := internal_docking_manager.query.inner_container_main
 
@@ -383,7 +387,7 @@ feature -- Commands
 			end
 		end
 
-	restore_minimized_editors IS
+	restore_minimized_editors is
 			-- Restore all minimized editors
 			local
 				l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
@@ -441,6 +445,31 @@ feature -- Contract Support
 		end
 
 feature {NONE}  -- Implementation
+
+	restore_minimized_editors_for_maximize_editor_area is
+			-- Restore all minimized editors if all editors minimized.
+			local
+				l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
+				l_all_editors_minimized: BOOLEAN
+			do
+				if not internal_docking_manager.is_editor_area_maximized then
+					from
+						l_all_editors_minimized := True
+						l_upper_zones := internal_docking_manager.zones.upper_zones
+						l_upper_zones.finish
+					until
+						l_upper_zones.before or not l_all_editors_minimized
+					loop
+						if not l_upper_zones.item.is_minimized then
+							l_all_editors_minimized := False
+						end
+						l_upper_zones.back
+					end
+				end
+				if l_all_editors_minimized then
+					restore_minimized_editors
+				end
+			end
 
 	internal_shared: SD_SHARED
 			-- All Singletons.

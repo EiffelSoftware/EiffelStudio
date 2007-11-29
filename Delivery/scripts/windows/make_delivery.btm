@@ -78,7 +78,12 @@ exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/studio studio
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 cdd %STUDIO_DIR\studio\spec
-if not "windows"=="%ISE_PLATFORM" move windows %ISE_PLATFORM
+iff "windows"=="%ISE_PLATFORM" then
+	fullrd win64
+else
+	move windows\compile_library.bat %ISE_PLATFORM\bin\
+	fullrd windows
+endiff
 cdd %STUDIO_DIR\studio\config
 if not "windows"=="%ISE_PLATFORM" move windows %ISE_PLATFORM
 cdd %STUDIO_DIR
@@ -154,8 +159,6 @@ md docs
 remtrace Create directories
 safe_md %STUDIO_DIR\studio\spec
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM
-safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
-move %STUDIO_DIR\studio\spec\%ISE_PLATFORM\compile_library.bat %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
 safe_md %STUDIO_DIR\esbuilder\spec
 safe_md %STUDIO_DIR\esbuilder\spec\%ISE_PLATFORM
 safe_md %STUDIO_DIR\esbuilder\spec\%ISE_PLATFORM\bin

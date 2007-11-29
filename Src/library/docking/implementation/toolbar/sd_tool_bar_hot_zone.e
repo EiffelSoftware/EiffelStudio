@@ -231,7 +231,9 @@ feature {NONE} -- Implementation functions.
 			-- Maybe parent is floating tool bar zone
 			if internal_dock_mediator.caller.tool_bar.parent /= Void then
 				check is_floating: internal_dock_mediator.caller.is_floating end
+				internal_dock_mediator.set_ignore_focus_out_actions (True)
 				internal_dock_mediator.caller.dock
+				internal_dock_mediator.set_ignore_focus_out_actions (False)
 			end
 		ensure
 			pruned: internal_dock_mediator.caller.row /= Void implies

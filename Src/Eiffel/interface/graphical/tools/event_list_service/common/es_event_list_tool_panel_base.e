@@ -22,11 +22,6 @@ inherit
 			internal_recycle
 		end
 
-	EVENT_LIST_SERVICE_CONSUMER
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Initialization
 
 	on_before_initialize
@@ -37,8 +32,8 @@ feature {NONE} -- Initialization
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
 				-- Retrieve event list service
-			if is_event_list_service_available then
-				l_service := event_list_service
+			if event_list.is_service_available then
+				l_service := event_list.service
 				l_service.item_added_events.subscribe (agent on_event_added)
 				l_service.item_changed_events.subscribe (agent on_event_changed)
 				l_service.item_removed_events.subscribe (agent on_event_removed)
@@ -61,10 +56,10 @@ feature {NONE} -- Clean up
 			-- Recycle tool.
 		local
 			l_agent: PROCEDURE [ANY, TUPLE [service: EVENT_LIST_SERVICE_S; event_item: EVENT_LIST_ITEM_I]]
-			l_service: like event_list_service
+			l_service: EVENT_LIST_SERVICE_S
 		do
-			if is_event_list_service_available then
-				l_service := event_list_service
+			if event_list.is_service_available then
+				l_service := event_list.service
 
 				l_agent := agent on_event_added
 				if l_service.item_added_events.is_subscribed (l_agent) then
@@ -110,6 +105,16 @@ feature {NONE} -- Access
 		ensure
 			result_attached: Result /= Void
 			result_consistent: Result = Result
+		end
+
+feature {NONE} -- Helpers
+
+	frozen event_list: SERVICE_CONSUMER [EVENT_LIST_SERVICE_S]
+			-- Access to an event list service {EVENT_LIST_SERVICE_S} consumer
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status report
@@ -230,12 +235,9 @@ feature {NONE} -- Basic operations
 		require
 			is_initialized: is_initialized
 			not_surpress_synchronization: not surpress_synchronization
-		local
-			l_service: like event_list_service
 		do
-			if is_event_list_service_available then
-				l_service := event_list_service
-				l_service.all_items.do_all (agent on_event_added (l_service, ?))
+			if event_list.is_service_available then
+				event_list.service.all_items.do_all (agent on_event_added (event_list.service, ?))
 			end
 		end
 

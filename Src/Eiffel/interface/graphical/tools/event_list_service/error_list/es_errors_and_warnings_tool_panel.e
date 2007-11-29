@@ -41,6 +41,7 @@ feature {NONE} -- Iniitalization
 			-- `a_widget': A widget to build the tool interface using.
 		local
 			l_col: EV_GRID_COLUMN
+			l_session: SESSION_I
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_widget)
 			a_widget.set_column_count_to (position_column)
@@ -82,8 +83,17 @@ feature {NONE} -- Iniitalization
 				-- Set UI based on initial state
 			update_content_applicable_navigation_buttons
 
-				-- Hook up events for preference data
-			register_action (preferences.error_list_tool_data.expand_errors_preferences.change_actions, agent on_expand_error_preference_change)
+				-- Hook up events for session data
+			if session_manager.is_service_available then
+				l_session := session_manager.service.retrieve (False)
+				l_session.value_changed_events.subscribe (agent on_session_value_changed)
+				expand_errors ?= l_session.value_or_default (expand_errors_session_id, False)
+				if expand_errors then
+					expand_errors_button.enable_select
+				else
+					expand_errors_button.disable_select
+				end
+			end
 		end
 
 feature {NONE} -- Clean up
@@ -98,7 +108,10 @@ feature {NONE} -- Clean up
 				errors_button.select_actions.prune (agent on_toogle_errors_button)
 				warnings_button.select_actions.prune (agent on_toogle_warnings_button)
 
-				preferences.error_list_tool_data.expand_errors_preferences.change_actions.prune (agent on_expand_error_preference_change)
+				if session_manager.is_service_available then
+					session_manager.service.retrieve (False).value_changed_events.unsubscribe (agent on_session_value_changed)
+				end
+
 			end
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 		end
@@ -264,11 +277,6 @@ feature -- Status report
 
 	expand_errors: BOOLEAN
 			-- Indicates if errors should be shown automatically
-		do
-			if is_initialized then
-				Result := preferences.error_list_tool_data.expand_errors
-			end
-		end
 
 feature {ES_ERROR_LIST_TOOL} -- Navigation
 
@@ -532,29 +540,36 @@ feature {NONE} -- Events
 			l_count, i: INTEGER
 		do
 			l_expand := expand_errors_button.is_selected
+			if expand_errors /= l_expand then
+				expand_errors := l_expand
+				if session_manager.is_service_available then
+					session_manager.service.retrieve (False).set_value (l_expand, expand_errors_session_id)
+				end
 
-			preferences.error_list_tool_data.expand_errors_preferences.set_value (l_expand)
-
-			l_grid := grid_events
-			from
-				i := 1
-				l_count := l_grid.row_count
-			until
-				i > l_count
-			loop
-				l_row := l_grid.row (i)
-				if l_row.is_expandable then
-					l_event_item ?= l_row.data
-					if l_event_item /= Void and then is_error_event (l_event_item) then
-						if l_expand then
-							l_row.expand
-						else
-							l_row.collapse
+					-- Set applicable grid items and open/closed because on expanded status
+				l_grid := grid_events
+				from
+					i := 1
+					l_count := l_grid.row_count
+				until
+					i > l_count
+				loop
+					l_row := l_grid.row (i)
+					if l_row.is_expandable then
+						l_event_item ?= l_row.data
+						if l_event_item /= Void and then is_error_event (l_event_item) then
+							if l_expand then
+								l_row.expand
+							else
+								l_row.collapse
+							end
 						end
 					end
+					i := i + 1
 				end
-				i := i + 1
 			end
+		ensure
+			expand_errors_set: expand_errors = expand_errors_button.is_selected
 		end
 
 	on_error_info
@@ -628,19 +643,28 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_expand_error_preference_change
-			-- Called when the expand error preference change
+	on_session_value_changed (a_id: STRING_8; a_value: ANY)
+			-- Called when the session changes
+		require
+			not_is_recycled: not is_recycled
+			is_session_manager_service_available: session_manager.is_service_available
 		local
-			l_expand: BOOLEAN
+			l_session: SESSION_I
+			l_boolean: BOOLEAN_REF
 		do
-			l_expand := expand_errors
-			if is_initialized and expand_errors_button.is_selected /= l_expand then
-				if l_expand then
-					expand_errors_button.enable_select
-				else
-					expand_errors_button.disable_select
+			if a_id.is_equal (expand_errors_session_id) then
+					-- Retrieve global session
+				l_session := session_manager.service.retrieve (False)
+				l_boolean ?= l_session.value_or_default (expand_errors_session_id, False)
+				if expand_errors /= l_boolean.item then
+					expand_errors := l_boolean.item
+					if expand_errors then
+						expand_errors_button.enable_select
+					else
+						expand_errors_button.disable_select
+					end
+					on_toggle_expand_errors_button
 				end
-				on_toggle_expand_errors_button
 			end
 		end
 
@@ -704,9 +728,6 @@ feature {NONE} -- Factory
 			expand_errors_button.set_tooltip (interface_names.f_toogle_expand_errors)
 			expand_errors_button.select_actions.extend (agent on_toggle_expand_errors_button)
 			expand_errors_button.select_actions.compare_objects
-			if preferences.error_list_tool_data.expand_errors then
-				expand_errors_button.enable_select
-			end
 			Result.put_last (expand_errors_button)
 
 			create error_info_command.make
@@ -980,6 +1001,8 @@ feature {NONE} -- Constants
 	error_column: INTEGER = 3
 	context_column: INTEGER = 4
 	position_column: INTEGER = 5
+
+	expand_errors_session_id: STRING_8 = "com.eiffel.error_list.expand_errors"
 
 invariant
 	errors_button_attached: is_initialized implies errors_button /= Void

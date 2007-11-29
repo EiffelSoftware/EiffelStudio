@@ -210,6 +210,10 @@ feature -- Command
 			destroy_container
 
 			manager.set_top (Current, a_direction)
+
+			is_visible := True
+		ensure
+			visible: is_visible = True
 		end
 
 	set_top_with (a_target_content: SD_TOOL_BAR_CONTENT) is
@@ -227,6 +231,10 @@ feature -- Command
 			destroy_container
 
 			manager.set_top_with (Current, a_target_content)
+			
+			is_visible := True
+		ensure
+			visible: is_visible = True
 		end
 
 	refresh is

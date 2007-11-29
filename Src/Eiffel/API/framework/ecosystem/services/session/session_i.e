@@ -55,8 +55,6 @@ feature {SESSION_MANAGER_S} -- Element change
 			a_object_attached: a_object /= Void
 			alternative_a_object: a_object /= session_object
 		deferred
-		ensure
-			session_object_set: session_object = a_object
 		end
 
 feature -- Query

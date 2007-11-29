@@ -51,7 +51,6 @@ feature -- Retrieval
 			result_attached: not a_per_project implies Result /= Void
 			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
 			not_result_is_per_window: Result /= Void implies (not Result.is_per_window)
-			result_is_clean: Result /= Void implies not Result.is_dirty
 		end
 
 	retrieve_per_window (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): SESSION_I
@@ -69,9 +68,8 @@ feature -- Retrieval
 			result_attached: not a_per_project implies Result /= Void
 			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
 			result_is_per_window: Result /= Void implies Result.is_per_window
---			result_window_id_set: Result /= Void implies (Result.window_id = a_window.window_id)
+			result_window_id_set: Result /= Void implies (Result.window_id = a_window.window_id)
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-			result_is_clean: Result /= Void implies not Result.is_dirty
 		end
 
 	reload (a_session: SESSION_I)

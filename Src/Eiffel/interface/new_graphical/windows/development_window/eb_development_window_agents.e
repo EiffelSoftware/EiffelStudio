@@ -248,33 +248,38 @@ feature -- Agents
 
 	on_focus is
 			-- Focus gained
+		require
+			not_is_recycled: not is_recycled
 		local
 			l_editor: EB_SMART_EDITOR
 			l_class_i_stone: CLASSI_STONE
 			l_editor_manager: EB_EDITORS_MANAGER
 		do
-			l_editor_manager := develop_window.editors_manager
-			if l_editor_manager /= Void then
-				l_editor := l_editor_manager.current_editor
-			end
-
-			if l_editor /= Void then
-					-- If the class currently being edited had its read-only status changed
-					-- we made sure that the editor is updated accordingly.
-				l_class_i_stone ?= develop_window.stone
-				if l_class_i_stone /= Void then
-					if l_editor.is_read_only and develop_window.selected_formatter.is_editable then
-							-- Only possible action is to go from a read-only class to a
-							-- non-readonly class.
-						l_editor.set_read_only (l_class_i_stone.class_i.is_read_only)
-					else
-							-- Here if the class is read-only and that there were
-							-- already some modification being done, we don't do anything.
-							-- The error will be reported only when trying to save our changes.
-							-- Therefore we don't change the `is_read_only' status of the `editor'.
-					end
+			if not is_recycled then
+					-- Have to protect because of bug#13672. This is a hack for now.
+				l_editor_manager := develop_window.editors_manager
+				if l_editor_manager /= Void then
+					l_editor := l_editor_manager.current_editor
 				end
-				l_editor.on_focus
+
+				if l_editor /= Void then
+						-- If the class currently being edited had its read-only status changed
+						-- we made sure that the editor is updated accordingly.
+					l_class_i_stone ?= develop_window.stone
+					if l_class_i_stone /= Void then
+						if l_editor.is_read_only and develop_window.selected_formatter.is_editable then
+								-- Only possible action is to go from a read-only class to a
+								-- non-readonly class.
+							l_editor.set_read_only (l_class_i_stone.class_i.is_read_only)
+						else
+								-- Here if the class is read-only and that there were
+								-- already some modification being done, we don't do anything.
+								-- The error will be reported only when trying to save our changes.
+								-- Therefore we don't change the `is_read_only' status of the `editor'.
+						end
+					end
+					l_editor.on_focus
+				end
 			end
 		end
 

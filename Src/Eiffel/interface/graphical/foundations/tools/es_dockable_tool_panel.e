@@ -380,6 +380,32 @@ feature {NONE} -- Access
             not_result_is_empty: not Result.is_empty
         end
 
+	frozen session_data: SESSION_I
+			-- Provides access to the environment session data
+		require
+			not_is_recycled: not is_recycled
+			is_session_manager_available: session_manager.is_service_available
+		do
+			Result := session_manager.service.retrieve (False)
+		ensure
+			result_attached: Result /= Void
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
+	frozen window_session_data: SESSION_I
+			-- Provides access to the hosted window session data
+		require
+			is_initialized: is_initialized or is_initializing
+			not_is_recycled: not is_recycled
+			is_session_manager_available: session_manager.is_service_available
+			develop_window_attached: develop_window /= Void
+		do
+			Result := develop_window.session_data
+		ensure
+			result_attached: Result /= Void
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
 feature {NONE} -- Helpers
 
     frozen stone_director: ES_TOOL_STONE_REDIRECT_HELPER
@@ -438,6 +464,14 @@ feature {NONE} -- Helpers
         ensure
             result_attached: Result /= Void
         end
+
+	frozen session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
+			-- Access to the session manager service {SESSION_MANAGER_S} consumer
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature {NONE} -- Concealed access
 

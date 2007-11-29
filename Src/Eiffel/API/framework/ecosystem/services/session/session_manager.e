@@ -231,7 +231,6 @@ feature -- Retrieval
 			sessions_has_result: Result /= Void implies sessions.has (Result)
 			result_consistent: Result /= Void implies Result = retrieve (a_per_project)
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-			result_is_clean: Result /= Void implies not Result.is_dirty
 		end
 
 	retrieve_per_window (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): SESSION_I is
@@ -268,7 +267,6 @@ feature -- Retrieval
 			sessions_has_result: Result /= Void implies sessions.has (Result)
 			result_consistent: Result /= Void implies Result = retrieve_per_window (a_window, a_per_project)
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-			result_is_clean: Result /= Void implies not Result.is_dirty
 		end
 
 	reload (a_session: SESSION_I) is
@@ -354,26 +352,45 @@ feature {NONE} -- Factory
 			not_a_window_is_recycled: a_window /= Void implies not a_window.is_recycled
 		local
 			l_session: SESSION
-			l_project_session: AGGREGATED_SESSION
+			l_inner_session: SESSION_I
 		do
+				-- Fetch inner session for aggregation. See {AGGREGATED_SESSION} for details on session aggregation.
 			if a_window /= Void then
-				create l_session.make_per_window (False, a_window, Current)
-			else
-				create l_session.make (False, Current)
-			end
-			Result := l_session
-			auto_dispose (Result)
-			set_session_object (Result)
-
-			if a_per_project then
-					-- Create an aggregated session so project session have read access to environment/window session data.
-				if a_window /= Void then
-					create l_project_session.make (True, Current, Result)
+					-- Retrieve higher level session for aggregation
+				if a_per_project then
+					l_inner_session := retrieve_per_window (a_window, False)
 				else
-					create l_project_session.make_per_window (True, a_window, Current, Result)
+					l_inner_session := retrieve (False)
 				end
-				Result := l_project_session
+			elseif a_per_project then
+				l_inner_session := retrieve (False)
 			end
+
+				-- Create session object
+			if l_inner_session /= Void then
+				if a_window = Void then
+						-- Must be a per-project session because there is no parent window
+					check a_per_project: a_per_project end
+
+					create {AGGREGATED_SESSION} Result.make (True, Current, l_inner_session)
+				else
+					create {AGGREGATED_SESSION} Result.make_per_window (a_per_project, a_window, Current, l_inner_session)
+				end
+			else
+					-- Project based session are always aggregated
+				check not_a_per_project: not a_per_project end
+
+				if a_window = Void then
+					create {SESSION} Result.make (False, Current)
+				else
+					create {SESSION} Result.make_per_window (False, a_window, Current)
+				end
+			end
+
+			check result_attached: Result /= Void end
+
+			set_session_object (Result)
+			auto_dispose (Result)
 		ensure
 			result_attached: not a_per_project implies Result /= Void
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable

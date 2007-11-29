@@ -12,6 +12,7 @@ remtrace Eiffel2Java
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java
 remtrace gobo
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/gobo gobo
+fullrd gobo\svn\work
 remtrace gobo_extension
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/gobo_extension gobo_extension
 remtrace graph
@@ -41,6 +42,7 @@ exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/vision vision
 remtrace vision2
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/vision2 vision2
 fullrd vision2\implementation\gtk
+fullrd vision2\implementation\carbon
 remtrace vision2_extension
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/library/vision2_extension vision2_extension
 remtrace uuid

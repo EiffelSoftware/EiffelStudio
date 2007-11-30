@@ -9,8 +9,6 @@ copy_raw 	multi.e $CLUSTER multi.e
 
 compile_melted
 compile_result validity_warning MULTI VJRV(2)
-c_compile_work
-c_compile_result ok
 execute_work NONE actual_output1
 execute_result ok
 compare actual_output1 output1

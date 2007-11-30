@@ -12,8 +12,6 @@ copy_raw 	expanded_class.e $CLUSTER expanded_class.e
 
 compile_melted
 compile_result ok
-c_compile_work
-c_compile_result ok
 execute_work NONE actual_output1
 execute_result ok
 compare actual_output1 output1

@@ -1401,14 +1401,14 @@ test	string-incorrect-hash-code	lib006	 tcf pass library
 test	ptf-file-go			lib007	 tcf pass library
 test	ptf-file-move			lib008	 tcf pass library
 test	ptf-file-nextline		lib009	 tcf pass library
-test	ptf-file-file-append		lib010	 tcf pass library manual
+test	ptf-file-file-append		lib010	 tcf pass library
 test	ptf-file-position		lib011	 tcf pass library
 test	ptf-file-read-character		lib012	 tcf pass library
 test	ptf-file-read-stream		lib013	 tcf pass library
 test	ptf-file-recede			lib014	 tcf pass library
 test	ptf-file-start			lib015	 tcf pass library
 test	ptf-file-read-line		lib016	 tcf pass library
-test	ptf-file-back			lib017	 tcf pass library manual
+test	ptf-file-back			lib017	 tcf pass library
 test	ptf-file-close			lib018	 tcf pass library
 test	ptf-file-count			lib019	 tcf pass library
 test	ptf-file-create			lib020	 tcf pass library

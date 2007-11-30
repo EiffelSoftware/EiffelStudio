@@ -23,7 +23,7 @@ inherit
 			destroy_item
 		end
 
-	WEL_OBJECT_ID_MANAGER
+	IDENTIFIED_ROUTINES
 		undefine
 			copy, is_equal
 		end

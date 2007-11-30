@@ -9,7 +9,7 @@ deferred class
 	WEL_REFERENCE_TRACKABLE
 
 inherit
-	WEL_OBJECT_ID_MANAGER
+	IDENTIFIED_ROUTINES
 
 feature -- Status Report
 
@@ -28,7 +28,7 @@ feature -- Status Report
 			-- Is `Current' valid?
 		deferred
 		end
-	
+
 	references_count: INTEGER
 			-- Number of object referring to current object.
 
@@ -67,7 +67,7 @@ feature -- Status Setting
 
 	decrement_reference is
 			-- Decrement number of references to current object.
-			-- When number of references reaches zero, 
+			-- When number of references reaches zero,
 			-- `delete' is called if object is not protected.
 		require
 			exists: exists
@@ -120,7 +120,7 @@ feature {NONE} -- Removal
 	dispose is
 			-- Destroy inner structure of `Current'.
 			--| Called by GC when object is collected,
-			--| developer should use `delete'. 
+			--| developer should use `delete'.
 		do
 			if exists and then not shared then
 				debug ("WEL_GDI_REFERENCES")

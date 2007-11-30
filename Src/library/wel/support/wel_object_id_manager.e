@@ -8,25 +8,11 @@ indexing
 class
 	WEL_OBJECT_ID_MANAGER
 
-feature {NONE} -- External
+obsolete
+	"Use IDENTIFIED_ROUTINES instead."
 
-	eif_id_object (an_id: INTEGER): ANY is
-			-- Object associated with `an_id'
-		external
-			"C | %"eif_object_id.h%""
-		end
-
-	eif_object_id (an_object: ANY): INTEGER is
-			-- New identifier for `an_object'
-		external
-			"C | %"eif_object_id.h%""
-		end
-
-	eif_object_id_free (an_id: INTEGER) is
-			-- Free the entry `an_id'
-		external
-			"C | %"eif_object_id.h%""
-		end
+inherit
+	IDENTIFIED_ROUTINES
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -39,8 +25,5 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_OBJECT_ID_MANAGER
+end
 

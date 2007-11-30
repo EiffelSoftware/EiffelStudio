@@ -8,7 +8,7 @@ copy_raw 	test.e $CLUSTER test.e
 compile_melted
 compile_result 	ok
 
-copy_raw	file.txt $EXEC_WORK file.txt
+copy_bin	file.txt $EXEC_WORK file.txt
 execute_work 	NONE exec_output1
 execute_result 	ok
 compare		exec_output1 output

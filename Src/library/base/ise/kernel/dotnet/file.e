@@ -1059,11 +1059,12 @@ feature -- Element change
 				st := internal_stream
 				ost := f.internal_stream
 				create buf.make (bs + 1)
-			until
-				f.after
-			loop
 				rd := ost.read (buf, 0, bs)
+			until
+				rd = 0
+			loop
 				st.write (buf, 0, rd)
+				rd := ost.read (buf, 0, bs)
 			end
 				-- Close both files.
 			close

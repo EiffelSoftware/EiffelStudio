@@ -9,6 +9,6 @@ define	KERNEL_DOTNET	"<override name="kernel_dotnet" location="$ISE_EIFFEL\libra
 define	SUPPORT_DOTNET	"<override name="support_dotnet" location="$ISE_EIFFEL\library\base\ise\support\dotnet"/>"
 
 -- Dotnet specific options
-define	EWEASEL_DOTNET_SETTING	"<setting name="msil_generation" value="True"/>"
+define	EWEASEL_DOTNET_SETTING	"<setting name="msil_generation" value="True"/><setting name="console_application" value="true"/>"
 -- If you need to specify a runtime version:
 -- define	EWEASEL_DOTNET_SETTING	"<setting name="msil_generation" value="True"/><setting name="msil_clr_version" value="v2.0.50727"/>"

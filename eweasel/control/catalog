@@ -1760,7 +1760,8 @@ test	expanded-formal-multiconstraint2				expanded005 tcf pass expanded
 
 test	filename-classname-mismatch-warning	warn001	tcf pass warning
 
-
+-- test for agents
+test	agent-optimization-failure		agent001 tcf pass agents
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

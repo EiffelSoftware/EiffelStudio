@@ -28,6 +28,7 @@ feature -- Initialization
 				file.close	
 				l_file.delete
 			end
+			io.put_new_line
 		end
 	
 feature -- Common

@@ -5,15 +5,7 @@
 --| Public License version 2.
 
 expanded class TEST2 [G]
-creation
-	default_create
-convert
-	to_reference: {ANY}
 feature
 	
-	to_reference: ANY is
-		do
-		end
-
 	x: TEST1 [TEST2 [G]]
 end

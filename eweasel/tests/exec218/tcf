@@ -7,8 +7,7 @@ copy_sub	Ace $TEST Ace
 
 compile_melted
 compile_result	ok
-c_compile_work
-c_compile_result ok
+
 execute_work	NONE exec_output
 execute_result	ok
 

@@ -81,7 +81,7 @@ feature {NONE} -- Clean up
 feature -- Access
 
 	kind: UUID
-			-- Kind of session
+			-- Kind of session. See {SESSION_KINDS} for all representations.
 		local
 			l_kinds: SESSION_KINDS
 		do
@@ -235,6 +235,23 @@ feature -- Query
 			end
 		ensure then
 			default_value_set: not data.has (a_id) implies Result = a_default_value
+		end
+
+	is_valid_session_value (a_value: ANY): BOOLEAN
+			-- Determines if `a_valud' is a valid session value
+		local
+			l_internal: like internal
+			l_codes: like type_codes
+			l_id: INTEGER
+		do
+			Result := a_value = Void
+			if not Result then
+				l_codes := type_codes
+				l_internal := internal
+				l_id := l_internal.dynamic_type (a_value)
+					-- Supporting basic types, reference types inheriting {SESSION_DATA_I} or other type wrapped in a {CELL} (for expanded)
+				Result := l_codes.has (l_id) or else {l_session_data: !SESSION_DATA_I} a_value or else {l_cell_data: !CELL [ANY]} a_value
+			end
 		end
 
 feature -- Status report

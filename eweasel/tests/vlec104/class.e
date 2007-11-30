@@ -5,13 +5,6 @@
 --| Public License version 2.
 
 $HEADER
-creation
-	make
 feature
-	
-	make is
-		do
-		end
-
 	$FEATURE
 end

@@ -630,9 +630,12 @@ feature {NONE} -- Event handling
 		local
 			wt: like Current
 		do
-			debugger_manager.create_new_watch_tool_inside_notebook (develop_window, Current)
+			debugger_manager.create_new_watch_tool_tabbed_with (develop_window, Current)
 			wt := debugger_manager.watch_tool_list.last
-			wt.update
+			if wt /= Void then
+				wt.show
+				wt.update
+			end
 		end
 
 	define_new_expression is

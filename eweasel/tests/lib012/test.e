@@ -13,20 +13,21 @@ feature -- Initialization
 	make is
 			-- 
 		do
-			create file.make_open_read (filename)			
+			create file.make_open_read (filename)
 			from
+				file.read_character
 			until
 				file.off
-			loop		
+			loop
+				io.put_character (file.last_character)
 				file.read_character
-				io.put_character (file.last_character)				
 			end
-			file.close			
+			file.close
 		end
 	
 feature -- Common
 
-	file: PLAIN_TEXT_FILE
+	file: RAW_FILE
 			-- File
 
 	filename: STRING is "file.txt"

@@ -17,7 +17,7 @@ inherit
 		redefine
 			is_plain_text, put_string, putstring,
 			read_character, readchar, read_stream, readstream,
-			put_new_line, new_line
+			put_new_line, new_line, put_character, putchar
 		end
 
 create
@@ -141,6 +141,16 @@ feature -- Output
 			-- Write ASCII value `d' at current position.
 		do
 			put_string (d.out)
+		end
+
+	put_character, putchar (c: CHARACTER) is
+			-- Write `c' at current position.
+		do
+			if c = '%N' then
+				put_new_line
+			else
+				internal_stream.write_byte (c.code.to_natural_8)
+			end
 		end
 
 feature -- Input

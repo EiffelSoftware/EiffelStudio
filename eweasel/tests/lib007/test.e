@@ -20,7 +20,7 @@ feature -- Initialization
 			from
 				cnt := 0				
 			until
-				cnt > file.count
+				cnt >= file.count
 			loop				
 				file.go (cnt)
 				io.put_character (file.item)
@@ -32,7 +32,7 @@ feature -- Initialization
 	
 feature -- Common
 
-	file: PLAIN_TEXT_FILE
+	file: RAW_FILE
 			-- File
 
 	filename: STRING is "file.txt"

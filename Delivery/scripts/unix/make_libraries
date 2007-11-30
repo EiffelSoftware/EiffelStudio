@@ -14,6 +14,7 @@ remtrace event
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/event event 
 remtrace gobo
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/gobo gobo
+fullrd gobo/svn/work
 remtrace gobo_extension
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/gobo_extension gobo_extension 
 remtrace graph
@@ -46,6 +47,8 @@ remtrace vision
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/vision vision 
 remtrace vision2
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/library/vision2 vision2 
+fullrd vision2/implementation/mswin
+fullrd vision2/implementation/carbon
 if [ "$1" = "gtk" ]; then
 	# TODO
 	# Copy GTK 1.2 implementation over gtk directory

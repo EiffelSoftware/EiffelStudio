@@ -1972,7 +1972,6 @@ feature -- Status report
 			Result := implementation.visible_row_indexes
 		ensure
 			result_not_void: Result /= Void
-			tree_not_enabled_implies_visible_rows_contiguous: row_count > 0 and then not is_tree_enabled implies Result.last - Result.first = Result.count - 1
 		end
 
 	viewable_row_indexes: ARRAYED_LIST [INTEGER] is

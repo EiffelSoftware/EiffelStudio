@@ -454,6 +454,9 @@ feature -- Object tool, Object Viewer and Watch tool menus
 
 	extend_objects_grid_menu (a_menu: EV_MENU; a_grid: ES_OBJECTS_GRID) is
 			-- Objects grid specific menu
+		require
+			a_menu_not_void: a_menu /= Void
+			a_grid_not_void: a_grid /= Void
 		local
 			l_cell: EV_GRID_ITEM
 			l_label: EV_GRID_LABEL_ITEM

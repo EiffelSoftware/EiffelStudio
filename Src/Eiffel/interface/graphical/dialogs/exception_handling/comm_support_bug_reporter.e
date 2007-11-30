@@ -96,7 +96,6 @@ feature {NONE} -- Basic operations
 		local
 			l_view_state: STRING_GENERAL
 			l_validation: STRING_GENERAL
-			l_event_target: STRING
 			l_form: CURL_FORM
 			l_memory: CURL_STRING
 		do
@@ -172,7 +171,6 @@ feature {NONE} -- Html contents
 		local
 			l_view_state: STRING_GENERAL
 			l_validation: STRING_GENERAL
-			l_event_target: STRING_GENERAL
 			l_result_string: STRING_GENERAL
 			l_form: CURL_FORM
 			l_result_html: CURL_STRING

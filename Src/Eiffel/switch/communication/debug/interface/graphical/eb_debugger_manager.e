@@ -809,25 +809,17 @@ feature -- tools management
 
 	create_and_show_new_watch_tool is
 			-- Create a new watch tool attached to current debugging window
-		local
-			t: EB_TOOL
-			l_wt_lst: like watch_tool_list
 		do
 			if debugging_window /= Void then
-				l_wt_lst := watch_tool_list
-				if not l_wt_lst.is_empty then
-					t := l_wt_lst.last
-				else
-					t := objects_tool
-				end
-				create_new_watch_tool_inside_notebook (debugging_window, t)
-					--| use `watch_tool_list' since this is a new list
+				create_new_watch_tool_tabbed_with (debugging_window, Void)
 				watch_tool_list.last.show
 			end
 		end
 
-	create_new_watch_tool_inside_notebook (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: EB_TOOL) is
-			-- Create a new watch tool.
+	create_new_watch_tool_tabbed_with (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: EB_TOOL) is
+			-- Create a new watch tool and set it tabbed with `a_tool'
+			-- if `a_tool' is not Void
+			-- Note: the new watch tool is not shown yet.
 		require
 			a_manager /= Void
 		local
@@ -836,6 +828,14 @@ feature -- tools management
 			if debugging_window /= Void then
 					--| IMPORTANT: The following call has the side affect of creating the tool, do not remove it!				
 				l_watch_tool ?= debugging_window.shell_tools.tool_next_available_edition ({ES_WATCH_TOOL}, False).panel
+				if
+					a_tool /= Void
+					and then a_tool.content /= Void
+					and then l_watch_tool.content /= Void
+					and then l_watch_tool.content.manager_has_content (a_tool.content)
+				then
+					l_watch_tool.content.set_tab_with (a_tool.content, False)
+				end
 				update_all_debugging_tools_menu
 			end
 		end
@@ -1255,7 +1255,7 @@ feature -- Status setting
 				until
 					watch_tool_list.count >= nwt --| Be sure to use `watch_tool_list' and not the cached list
 				loop
-					create_new_watch_tool_inside_notebook (debugging_window, l_tool)
+					create_new_watch_tool_tabbed_with (debugging_window, l_tool)
 				end
 					-- `watch_tool_list' has changed, so fetch a new cache
 				l_wt_lst := watch_tool_list

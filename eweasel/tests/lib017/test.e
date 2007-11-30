@@ -17,17 +17,18 @@ feature -- Initialization
 			from
 				file.finish
 			until
-				file.position = 1
+				file.position = 0
 			loop				
 				file.back
 				io.put_character (file.item)				
 			end
+			io.put_new_line
 			file.close			
 		end
 	
 feature -- Common
 
-	file: PLAIN_TEXT_FILE
+	file: RAW_FILE
 			-- File
 
 	filename: STRING is "file.txt"

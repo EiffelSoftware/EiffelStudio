@@ -19,7 +19,7 @@ inherit
 			destroy_item
 		end
 
-	WEL_OBJECT_ID_MANAGER
+	IDENTIFIED_ROUTINES
 
 	WEL_IDB_CONSTANTS
 		export

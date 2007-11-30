@@ -1730,7 +1730,7 @@ test	multi-constraint-tuples							multicon037 tcf pass multiconstraint
 test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint
 test	multi-constraint-rename-alias					multicon039 tcf pass multiconstraint
 test	multi-constraint-assigner						multicon040 tcf pass multiconstraint
-test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint manual
+test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint
 test	multi-constraint-rename-clause-crash			multicon042 tcf pass multiconstraint
 test	multi-constraint-order-affects-semantic			multicon043 tcf pass multiconstraint
 test	multi-constraint-rename-to-infix				multicon044 tcf pass multiconstraint

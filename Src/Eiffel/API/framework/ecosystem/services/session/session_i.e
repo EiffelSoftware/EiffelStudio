@@ -16,7 +16,7 @@ inherit
 feature -- Access
 
 	kind: UUID
-			-- Kind of session
+			-- Kind of session. See {SESSION_KINDS} for all representations.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -68,6 +68,8 @@ feature -- Query
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
 		deferred
+		ensure
+			result_is_valid_session_value: is_valid_session_value (Result)
 		end
 
 	value_or_default (a_id: STRING_8; a_default_value: ANY): ANY
@@ -78,6 +80,15 @@ feature -- Query
 			is_interface_usable: is_interface_usable
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
+		deferred
+		ensure
+			result_is_valid_session_value: is_valid_session_value (Result)
+		end
+
+	is_valid_session_value (a_value: ANY): BOOLEAN
+			-- Determines if `a_valud' is a valid session value
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 
@@ -92,6 +103,7 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
+			a_value_is_valid_session_value: is_valid_session_value (a_value)
 		deferred
 		ensure
 			value_set: equal (a_value, value (a_id))

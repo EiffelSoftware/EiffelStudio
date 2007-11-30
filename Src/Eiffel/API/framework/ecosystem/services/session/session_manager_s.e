@@ -2,6 +2,7 @@ indexing
 	description: "[
 		Abstract interface for a session persistance manager, for retrieving an storing sessions from a user's home profile.
 	]"
+	help: "http://dev.eiffel.com/Session_Manager_Service"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";

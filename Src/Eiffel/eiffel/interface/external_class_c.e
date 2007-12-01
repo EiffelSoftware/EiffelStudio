@@ -505,14 +505,14 @@ feature {NONE} -- Initialization
 				add_syntactical_supplier (any_type)
 			end
 		ensure
-			parents_not_void: parents /= Void
-			parents_filled:
+			conforming_parents_not_void: conforming_parents /= Void
+			conforming_parents_filled:
 				Current /= System.system_object_class.compiled_class
-					implies parents.count > 0
-			parents_classes_not_void: parents_classes /= Void
-			parents_classes_filled:
+					implies conforming_parents.count > 0
+			conforming_parents_classes_not_void: conforming_parents_classes /= Void
+			conformgin_parents_classes_filled:
 				Current /= System.system_object_class.compiled_class
-					implies parents_classes.count > 0
+					implies conforming_parents_classes.count > 0
 		end
 
 	process_syntax_features (a_features: ARRAYED_LIST [CONSUMED_ENTITY]) is

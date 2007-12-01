@@ -210,23 +210,29 @@ feature {NONE} -- Implementation
 			l_criterion: QL_CLASS_CRITERION
 		do
 			l_criterion := class_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_compiled, [])
-			l_domain_item := domain_item_from_stone (final_stone_from_stone (stone))
-			if l_domain_item.is_folder_item then
-				l_folder_item ?= l_domain_item
-				if browser.recursive_button.is_selected then
-					l_folder_item.enable_search_for_class_recursive
-				else
-					l_folder_item.disable_search_for_class_recursive
-				end
-			elseif l_domain_item.is_group_item then
-				if not browser.recursive_button.is_selected then
-					l_criterion := l_criterion and create {QL_CLASS_PATH_IN_CRI}.make_with_flag ("", False)
-				end
-			end
 			create l_domain_generator.make (l_criterion, True)
 			l_domain_generator.enable_optimization
 			l_domain_generator.disable_distinct_item
-			Result ?= l_domain_item.domain_without_scope.new_domain (l_domain_generator)
+			l_domain_item := domain_item_from_stone (final_stone_from_stone (stone))
+			if l_domain_item /= Void then
+				if l_domain_item.is_folder_item then
+					l_folder_item ?= l_domain_item
+					if browser.recursive_button.is_selected then
+						l_folder_item.enable_search_for_class_recursive
+					else
+						l_folder_item.disable_search_for_class_recursive
+					end
+				elseif l_domain_item.is_group_item then
+					if not browser.recursive_button.is_selected then
+						l_criterion := l_criterion and create {QL_CLASS_PATH_IN_CRI}.make_with_flag ("", False)
+					end
+				end
+				Result ?= l_domain_item.domain_without_scope.new_domain (l_domain_generator)
+			else
+					-- If domain item is Void this is likely due to an incomplete compilation
+					-- We return an empty domain to satisfy the post-condition.
+				Result := l_domain_generator.domain.twin
+			end
 		ensure
 			result_attached: Result /= Void
 		end

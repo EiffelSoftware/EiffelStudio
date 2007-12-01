@@ -34,7 +34,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	QL_SHARED_FEATURE_INVOKE_RELATION_TYPES
 
 	QL_SHARED
@@ -427,13 +427,16 @@ feature{NONE} -- Grid binding
 			l_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_domain_item: EB_DOMAIN_ITEM
 		do
-			l_domain_item := domain_item_from_stone (starting_element)
 			create l_grid_item
-			token_writer.new_line
-			l_grid_item.set_text_with_tokens (token_name_from_domain_item (l_domain_item))
-			l_grid_item.set_pixmap (pixmap_from_domain_item (l_domain_item))
-			l_grid_item.set_image (l_grid_item.text)
-			l_grid_item.set_stone (starting_element)
+			l_domain_item := domain_item_from_stone (starting_element)
+			if l_domain_item /= Void then
+					-- Sometimes domain item can be void after an incomplete compilation.
+				token_writer.new_line
+				l_grid_item.set_text_with_tokens (token_name_from_domain_item (l_domain_item))
+				l_grid_item.set_pixmap (pixmap_from_domain_item (l_domain_item))
+				l_grid_item.set_image (l_grid_item.text)
+				l_grid_item.set_stone (starting_element)
+			end
 			grid.insert_new_row (1)
 			grid.row (1).set_item (1, l_grid_item)
 		ensure

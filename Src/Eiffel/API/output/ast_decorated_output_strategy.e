@@ -835,7 +835,8 @@ feature {NONE} -- Implementation
 								-- We are processing something like: create l.make
 							if l_is_multiconstraint_formal then
 								l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
-								if not l_feat_result.is_empty then
+								if l_feat_result /= Void and then not l_feat_result.is_empty then
+										-- `l_feat_result' may be Void due to an incomplete compilation.
 										-- FIXME: We still can have more than feature.
 										-- See wiki topic multi constraints and flat view for more information.
 									l_feat := l_feat_result.first.feature_item
@@ -862,7 +863,7 @@ feature {NONE} -- Implementation
 									-- `l_rout_id_set' is the one of f
 								if not last_type.is_none then
 									if l_as.class_id /= 0 then
-											-- Class ID may be zero if an incorrect compilation has occurred.
+											-- Class ID may be zero if an incomplete compilation has occurred.
 											-- Protection prevents infinitely looping and memory usage (see bug#13300)
 										last_class := system.class_of_id (l_as.class_id)
 									end
@@ -873,7 +874,8 @@ feature {NONE} -- Implementation
 										-- last_class is void: it could be a multi constrained formal
 									if l_is_multiconstraint_formal then
 										l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
-										if not l_feat_result.is_empty then
+										if l_feat_result /= Void and then not l_feat_result.is_empty then
+												-- May be Void due to an incomplete compilation.
 											l_feat := l_feat_result.first.feature_item
 											last_type := l_feat_result.first.class_type
 											last_class := last_type.associated_class

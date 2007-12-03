@@ -97,7 +97,7 @@ feature {NONE} -- Iniitalization
 				-- Hook up events for session data
 			if session_manager.is_service_available then
 				l_session := session_manager.service.retrieve (False)
-				l_session.value_changed_events.subscribe (agent on_session_value_changed)
+				l_session.value_changed_event.subscribe (agent on_session_value_changed)
 				if {l_expand: !BOOLEAN_REF} l_session.value_or_default (expand_errors_session_id, False) then
 					expand_errors := l_expand.item
 					if expand_errors then
@@ -122,7 +122,7 @@ feature {NONE} -- Clean up
 				warnings_button.select_actions.prune (agent on_toogle_warnings_button)
 
 				if session_manager.is_service_available then
-					session_manager.service.retrieve (False).value_changed_events.unsubscribe (agent on_session_value_changed)
+					session_manager.service.retrieve (False).value_changed_event.unsubscribe (agent on_session_value_changed)
 				end
 
 			end

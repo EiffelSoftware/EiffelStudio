@@ -103,7 +103,7 @@ feature {NONE} -- Query
 			-- `Result': A list of event types paired with a associated action on the passed observer
 		do
 			create Result.make (1)
-			Result.put_last ([value_changed_events, agent a_observer.on_session_value_changed])
+			Result.put_last ([value_changed_event, agent a_observer.on_session_value_changed])
 		end
 
 feature -- Element change
@@ -161,7 +161,7 @@ feature {SESSION_MANAGER_S} -- Status setting
 
 feature -- Events
 
-	value_changed_events: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
 			-- `session': The session where the change occured.

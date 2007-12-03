@@ -13,6 +13,8 @@ deferred class
 inherit
 	USEABLE_I
 
+	EVENT_OBSERVER_CONNECTION_I [!SESSION_EVENT_OBSERVER]
+
 feature -- Access
 
 	kind: UUID
@@ -92,6 +94,18 @@ feature -- Query
 		deferred
 		end
 
+feature {NONE} -- Query
+
+	events (a_observer: !SESSION_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
+			-- List of events and associated action.
+			--
+			-- `a_observer': Event observer interface to bind agent actions to.
+			-- `Result': A list of event types paired with a associated action on the passed observer
+		do
+			create Result.make (1)
+			Result.put_last ([value_changed_events, agent a_observer.on_session_value_changed])
+		end
+
 feature -- Element change
 
 	set_value (a_value: ANY; a_id: STRING_8)
@@ -147,8 +161,11 @@ feature {SESSION_MANAGER_S} -- Status setting
 
 feature -- Events
 
-	value_changed_events: EVENT_TYPE [TUPLE [a_id: STRING_8; a_value: ANY]]
+	value_changed_events: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
+			--
+			-- `session': The session where the change occured.
+			-- `id': The session data identifier index that the value changed for
 		require
 			is_interface_usable: is_interface_usable
 		deferred

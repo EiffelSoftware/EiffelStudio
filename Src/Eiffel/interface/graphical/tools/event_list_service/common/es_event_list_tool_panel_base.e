@@ -7,7 +7,6 @@ indexing
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 deferred class
 	ES_EVENT_LIST_TOOL_PANEL_BASE

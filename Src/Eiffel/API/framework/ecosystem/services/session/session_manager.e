@@ -49,7 +49,6 @@ feature {NONE} -- Clean up
 						end
 					end)
 			end
-
 			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
 		end
 
@@ -280,14 +279,6 @@ feature -- Retrieval
 			set_session_object (a_session)
 		end
 
-feature -- Status report
-
-	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
-		do
-			Result := not is_zombie
-		end
-
 feature {NONE} -- Basic operation
 
 	set_session_object (a_session: SESSION_I)
@@ -350,7 +341,6 @@ feature {NONE} -- Factory
 		require
 			not_a_window_is_recycled: a_window /= Void implies not a_window.is_recycled
 		local
-			l_session: SESSION
 			l_inner_session: SESSION_I
 		do
 				-- Fetch inner session for aggregation. See {AGGREGATED_SESSION} for details on session aggregation.

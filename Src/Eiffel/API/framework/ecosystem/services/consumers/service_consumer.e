@@ -12,8 +12,28 @@ class
 
 inherit
 	SHARED_SERVICE_PROVIDER
+		rename
+			service_provider as global_service_provider
 		export
 			{NONE} all
+		end
+
+create
+	default_create,
+	make_with_provider
+
+feature {NONE} -- Initialization
+
+	make_with_provider (a_provider: like service_provider)
+			-- Initialize a service consumer using an alternative (local) service provider
+			--
+			-- `a_provider': A service provider to use when querying for a service
+		require
+			a_provider_attached: a_provider /= Void
+		do
+			internal_service_provider := a_provider
+		ensure
+			service_provider_set: service_provider = a_provider
 		end
 
 feature -- Access
@@ -33,6 +53,19 @@ feature -- Access
 			end
 		end
 
+feature {NONE} -- Access
+
+	service_provider: SERVICE_PROVIDER
+			-- Access to the service provider
+		do
+			Result := internal_service_provider
+			if Result = Void then
+				Result := global_service_provider
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
 	is_service_available: BOOLEAN
@@ -45,7 +78,11 @@ feature {NONE} -- Internal implementation cache
 
 	internal_service: like service
 			-- Cached version of `service'
-			-- Note: do not use directly!
+			-- Note: Do not use directly!
+
+	internal_service_provider: like service_provider
+			-- Cached version of `service_provider'
+			-- Note: Do not use directly!
 
 invariant
 	service_attached: is_service_available implies service /= Void

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			a_manager_is_interface_usable: a_manager.is_interface_usable
 		do
 			create data.make_default
-			create value_changed_events
+			create value_changed_event
 			is_per_project := a_per_project
 			manager := a_manager
 		ensure
@@ -79,7 +79,7 @@ feature {NONE} -- Clean up
 					manager.store (Current)
 				end
 				data.wipe_out
-				value_changed_events.dispose
+				value_changed_event.dispose
 			end
 		end
 
@@ -143,7 +143,7 @@ feature -- Element change
 			if not equal (l_value, a_value) then
 				is_dirty := True
 				data.force (box_value (a_value), a_id)
-				value_changed_events.publish ([Current, a_id])
+				value_changed_event.publish ([Current, a_id])
 			end
 		end
 
@@ -161,7 +161,7 @@ feature {SESSION_MANAGER_S} -- Element change
 			l_value: ANY
 			l_old_value: ANY
 			l_id: STRING_8
-			l_change_events: like value_changed_events
+			l_change_events: like value_changed_event
 		do
 			l_old_data := data
 
@@ -171,7 +171,7 @@ feature {SESSION_MANAGER_S} -- Element change
 			end
 
 			if l_data /= Void then
-				l_change_events := value_changed_events
+				l_change_events := value_changed_event
 				data := l_data.twin
 
 				if l_old_data.is_empty then
@@ -287,7 +287,7 @@ feature {NONE} -- Helpers
 
 feature -- Events
 
-	value_changed_events: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
 			-- `session': The session where the change occured.
@@ -410,7 +410,7 @@ invariant
 	manager_attached: manager /= Void
 	manager_is_zombie: not is_zombie implies manager.is_interface_usable
 	data_attached: data /= Void
-	value_changed_events_attached: value_changed_events /= Void
+	value_changed_events_attached: value_changed_event /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

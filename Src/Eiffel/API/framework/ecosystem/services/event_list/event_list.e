@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 			create internal_event_items_index.make (5)
 
 				-- Initialize events
-			create item_added_events
-			create item_removed_events
-			create item_changed_events
+			create item_added_event
+			create item_removed_event
+			create item_changed_event
 		end
 
 feature {NONE} -- Clean up
@@ -48,9 +48,9 @@ feature {NONE} -- Clean up
 		do
 			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
 
-			item_added_events.dispose
-			item_removed_events.dispose
-			item_changed_events.dispose
+			item_added_event.dispose
+			item_removed_event.dispose
+			item_changed_event.dispose
 		end
 
 feature -- Access
@@ -179,13 +179,13 @@ feature -- Removal
 
 feature -- Events
 
-	item_added_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_added_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is added
 
-	item_removed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_removed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is removed
 
-	item_changed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_changed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is changed
 
 feature {NONE} -- Events
@@ -198,8 +198,8 @@ feature {NONE} -- Events
 			a_event_attached: a_event_item /= Void
 			current_contains_a_event: all_items.has (a_event_item)
 		do
-			if not is_zombie and then not item_added_events.is_zombie then
-				item_added_events.publish ([Current, a_event_item])
+			if not is_zombie and then not item_added_event.is_zombie then
+				item_added_event.publish ([Current, a_event_item])
 			end
 		end
 
@@ -211,8 +211,8 @@ feature {NONE} -- Events
 			a_event_attached: a_event_item /= Void
 			not_current_contains_a_event: not all_items.has (a_event_item)
 		do
-			if not is_zombie and then not item_added_events.is_zombie then
-				item_removed_events.publish ([Current, a_event_item])
+			if not is_zombie and then not item_added_event.is_zombie then
+				item_removed_event.publish ([Current, a_event_item])
 			end
 		end
 
@@ -224,8 +224,8 @@ feature {NONE} -- Events
 			a_event_attached: a_event_item /= Void
 			current_contains_a_event: all_items.has (a_event_item)
 		do
-			if not is_zombie and then not item_changed_events.is_zombie then
-				item_changed_events.publish ([Current, a_event_item])
+			if not is_zombie and then not item_changed_event.is_zombie then
+				item_changed_event.publish ([Current, a_event_item])
 			end
 		end
 

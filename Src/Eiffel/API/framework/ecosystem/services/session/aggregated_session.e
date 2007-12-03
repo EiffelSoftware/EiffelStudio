@@ -88,12 +88,12 @@ feature {SESSION_MANAGER_S} -- Element change
 		do
 			if inner_session /= Void then
 					-- remove old event handler
-				inner_session.value_changed_events.unsubscribe (agent on_inner_session_value_changed)
+				inner_session.value_changed_event.unsubscribe (agent on_inner_session_value_changed)
 			end
 			inner_session := a_session
 			if a_session /= Void then
 					-- Set event handler for propagating value changed events
-				a_session.value_changed_events.subscribe (agent on_inner_session_value_changed)
+				a_session.value_changed_event.subscribe (agent on_inner_session_value_changed)
 			end
 		ensure
 			inner_session_set: inner_session = a_session
@@ -139,7 +139,7 @@ feature {NONE} -- Event handlers
 			if not data.has (a_id) then
 					-- There is no local version of data `a_id', so we have to propagated the event
 					-- to the aggregate client.
-				value_changed_events.publish ([Current, a_id])
+				value_changed_event.publish ([Current, a_id])
 			end
 		end
 

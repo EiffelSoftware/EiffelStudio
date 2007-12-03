@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 				-- Retrieve event list service
 			if event_list.is_service_available then
 				l_service := event_list.service
-				l_service.item_added_events.subscribe (agent on_event_added)
-				l_service.item_changed_events.subscribe (agent on_event_changed)
-				l_service.item_removed_events.subscribe (agent on_event_removed)
+				l_service.item_added_event.subscribe (agent on_event_added)
+				l_service.item_changed_event.subscribe (agent on_event_changed)
+				l_service.item_removed_event.subscribe (agent on_event_removed)
 			end
 		end
 
@@ -61,16 +61,16 @@ feature {NONE} -- Clean up
 				l_service := event_list.service
 
 				l_agent := agent on_event_added
-				if l_service.item_added_events.is_subscribed (l_agent) then
-					l_service.item_added_events.unsubscribe (l_agent)
+				if l_service.item_added_event.is_subscribed (l_agent) then
+					l_service.item_added_event.unsubscribe (l_agent)
 				end
 				l_agent := agent on_event_removed
-				if l_service.item_removed_events.is_subscribed (l_agent) then
-					l_service.item_removed_events.unsubscribe (l_agent)
+				if l_service.item_removed_event.is_subscribed (l_agent) then
+					l_service.item_removed_event.unsubscribe (l_agent)
 				end
 				l_agent := agent on_event_changed
-				if l_service.item_changed_events.is_subscribed (l_agent) then
-					l_service.item_changed_events.unsubscribe (l_agent)
+				if l_service.item_changed_event.is_subscribed (l_agent) then
+					l_service.item_changed_event.unsubscribe (l_agent)
 				end
 			end
 			internal_grid_wrapper := Void

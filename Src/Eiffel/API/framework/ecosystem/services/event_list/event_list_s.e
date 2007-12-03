@@ -103,24 +103,24 @@ feature {NONE} -- Query
 			-- `Result': A list of event types paired with a associated action on the passed observer
 		do
 			create Result.make (3)
-			Result.put_last ([item_added_events, agent a_observer.on_event_item_added])
-			Result.put_last ([item_removed_events, agent a_observer.on_event_item_removed])
-			Result.put_last ([item_changed_events, agent a_observer.on_event_item_changed])
+			Result.put_last ([item_added_event, agent a_observer.on_event_item_added])
+			Result.put_last ([item_removed_event, agent a_observer.on_event_item_removed])
+			Result.put_last ([item_changed_event, agent a_observer.on_event_item_changed])
 		end
 
 feature -- Events
 
-	item_added_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_added_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is added
 		deferred
 		end
 
-	item_removed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_removed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is removed
 		deferred
 		end
 
-	item_changed_events: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
+	item_changed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is changed
 		deferred
 		end
@@ -191,9 +191,9 @@ feature -- Query
 		end
 
 invariant
-	item_added_events_attached: item_added_events /= Void
-	item_removed_events_attached: item_removed_events /= Void
-	item_changed_events_attached: item_changed_events /= Void
+	item_added_events_attached: item_added_event /= Void
+	item_removed_events_attached: item_removed_event /= Void
+	item_changed_events_attached: item_changed_event /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -1,21 +1,31 @@
 indexing
 	description: "[
-		Provides cached access to the EiffelStudio event list service.
+		An observer for events implemented on a {SESSION_I} interface.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision $"
 
-class
-	EVENT_LIST_SERVICE_CONSUMER
+deferred class
+	SESSION_EVENT_OBSERVER
 
 inherit
-	SERVICE_CONSUMER [EVENT_LIST_S]
-		rename
-			service as event_list_service,
-			is_service_available as is_event_list_service_available,
-			internal_service as internal_event_list_service
+	EVENT_OBSERVER_I
+
+feature {SESSION_I} -- Event handlers
+
+	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
+			-- Called when a event item is added to the event service.
+			--
+			-- `a_session': The session where the value changed.
+			-- `a_id': The session data identifier of the changed value.
+		require
+			is_interface_usable: is_interface_usable
+			a_session_attached: a_session /= Void
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
+		do
 		end
 
 ;indexing

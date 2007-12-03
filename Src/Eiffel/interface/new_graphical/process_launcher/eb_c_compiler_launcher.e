@@ -30,13 +30,6 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
---inherit {NONE}
-
-	EVENT_LIST_SERVICE_CONSUMER
-		export
-			{NONE} all
-		end
-
 feature{NONE}	-- Initialization
 
 	make is
@@ -163,9 +156,12 @@ feature{NONE}  -- Actions
 
 	on_start is
 			-- Handler called before c compiler starts
+		local
+			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 		do
-			if is_event_list_service_available then
-				event_list_service.prune_event_items (c_compiiled_context)
+			create l_consumer
+			if l_consumer.is_service_available then
+				l_consumer.service.prune_event_items (c_compiiled_context)
 			end
 			synchronize_on_c_compilation_start
 			start_actions.call (Void)
@@ -175,6 +171,7 @@ feature{NONE}  -- Actions
 			-- Handler called when c compiler exits
 		local
 			l_error: C_COMPILER_ERROR
+			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 		do
 			if launched then
 				if exit_code /= 0 then
@@ -188,9 +185,10 @@ feature{NONE}  -- Actions
 				if exit_code /= 0 then
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
 					display_message_on_main_output (c_compilation_failed_msg, True)
-					if is_event_list_service_available then
+					create l_consumer
+					if l_consumer.is_service_available then
 						create l_error.make ("Please review the C Output Pane.")
-						event_list_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
+						l_consumer.service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 					end
 				else
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
@@ -211,14 +209,16 @@ feature{NONE}  -- Actions
 			-- Handler called when c compiler launch failed
 		local
 			l_error: C_COMPILER_ERROR
+			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
 		do
 			c_compilation_successful_cell.put (False)
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			display_message_on_main_output (c_compilation_launch_failed_msg, True)
-			if is_event_list_service_available then
+			create l_consumer
+			if l_consumer.is_service_available then
 				create l_error.make ("Could not launch C/C++ compiler.")
-				event_list_service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
+				l_consumer.service.put_event_item (c_compiiled_context, create {EVENT_LIST_ERROR_ITEM}.make ({ENVIRONMENT_CATEGORIES}.compilation, l_error.message, l_error))
 			end
 			launch_failed_actions.call (Void)
 			finished_actions.call (Void)

@@ -127,7 +127,7 @@ feature -- Query
 
 feature {NONE} -- Event handlers
 
-	on_inner_session_value_changed (a_id: STRING_8; a_value: ANY)
+	on_inner_session_value_changed (a_session: SESSION; a_id: STRING_8)
 			-- Called when a value changes in the inner session
 			--
 			-- `a_id': Id of changed value.
@@ -139,7 +139,7 @@ feature {NONE} -- Event handlers
 			if not data.has (a_id) then
 					-- There is no local version of data `a_id', so we have to propagated the event
 					-- to the aggregate client.
-				value_changed_events.publish ([a_id, a_value])
+				value_changed_events.publish ([Current, a_id])
 			end
 		end
 

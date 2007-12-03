@@ -14,10 +14,12 @@ class
 inherit
 	EVENT_LIST_S
 
-	SAFE_DISPOSABLE
+	EVENT_OBSERVER_CONNECTION [!EVENT_LIST_EVENT_OBSERVER]
 		redefine
 			safe_dispose
 		end
+
+	SAFE_DISPOSABLE
 
 create
 	make
@@ -44,6 +46,8 @@ feature {NONE} -- Clean up
 			--
 			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
 		do
+			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
+
 			item_added_events.dispose
 			item_removed_events.dispose
 			item_changed_events.dispose

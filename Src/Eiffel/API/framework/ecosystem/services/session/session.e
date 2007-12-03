@@ -15,7 +15,10 @@ class
 inherit
 	SESSION_I
 
-	SAFE_DISPOSABLE
+	EVENT_OBSERVER_CONNECTION [!SESSION_EVENT_OBSERVER]
+		redefine
+			safe_dispose
+		end
 
 create {SESSION_MANAGER_S}
 	make,
@@ -63,12 +66,14 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	safe_dispose (a_disposing: BOOLEAN) is
+	safe_dispose (a_disposing: BOOLEAN)
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 			--
 			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
 		do
+			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
+
 			if a_disposing then
 				if is_dirty and then manager.is_interface_usable then
 					manager.store (Current)
@@ -138,7 +143,7 @@ feature -- Element change
 			if not equal (l_value, a_value) then
 				is_dirty := True
 				data.force (box_value (a_value), a_id)
-				value_changed_events.publish ([a_id, a_value])
+				value_changed_events.publish ([Current, a_id])
 			end
 		end
 
@@ -173,7 +178,7 @@ feature {SESSION_MANAGER_S} -- Element change
 						-- Notify subscribers of all new changes
 					l_cursor := l_data.new_cursor
 					from l_cursor.start until l_cursor.after loop
-						l_change_events.publish ([l_cursor.key, unbox_value (l_cursor.item)])
+						l_change_events.publish ([Current, l_cursor.key])
 						l_cursor.forth
 					end
 				else
@@ -186,7 +191,7 @@ feature {SESSION_MANAGER_S} -- Element change
 							l_old_value := unbox_value (l_old_data.item (l_id))
 							if not equal (l_value, l_old_value) then
 									-- The value changed
-								l_change_events.publish ([l_id, l_value])
+								l_change_events.publish ([Current, l_id])
 							end
 
 								-- Remove old data so we can publish a events for removed data
@@ -198,7 +203,7 @@ feature {SESSION_MANAGER_S} -- Element change
 						-- Publish events for removed data
 					l_cursor := l_old_data.new_cursor
 					from l_cursor.start until l_cursor.after loop
-						l_change_events.publish ([l_cursor.key, Void])
+						l_change_events.publish ([Current, l_cursor.key])
 						l_cursor.forth
 					end
 				end
@@ -262,12 +267,6 @@ feature -- Status report
 	is_per_project: BOOLEAN
 			-- Indicates if the session is a per-project session object
 
-	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
-		do
-			Result := not is_zombie
-		end
-
 feature {SESSION_MANAGER_S} -- Status setting
 
 	reset_is_dirty
@@ -288,8 +287,11 @@ feature {NONE} -- Helpers
 
 feature -- Events
 
-	value_changed_events: EVENT_TYPE [TUPLE [a_id: STRING_8; a_value: ANY]]
+	value_changed_events: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
+			--
+			-- `session': The session where the change occured.
+			-- `id': The session data identifier index that the value changed for
 
 feature {NONE} -- Conversion
 

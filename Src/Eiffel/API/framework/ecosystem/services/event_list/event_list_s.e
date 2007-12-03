@@ -18,6 +18,8 @@ deferred class
 inherit
 	SERVICE_I
 
+	EVENT_OBSERVER_CONNECTION_I [!EVENT_LIST_EVENT_OBSERVER]
+
 feature -- Access
 
 	items (a_context_cookie: UUID): DS_BILINEAR [EVENT_LIST_ITEM_I]
@@ -90,6 +92,20 @@ feature {NONE} -- Access
 			create Result
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature {NONE} -- Query
+
+	events (a_observer: !EVENT_LIST_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			-- List of events and associated action.
+			--
+			-- `a_observer': Event observer interface to bind agent actions to.
+			-- `Result': A list of event types paired with a associated action on the passed observer
+		do
+			create Result.make (3)
+			Result.put_last ([item_added_events, agent a_observer.on_event_item_added])
+			Result.put_last ([item_removed_events, agent a_observer.on_event_item_removed])
+			Result.put_last ([item_changed_events, agent a_observer.on_event_item_changed])
 		end
 
 feature -- Events

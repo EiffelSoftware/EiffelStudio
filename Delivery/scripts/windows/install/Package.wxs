@@ -41,7 +41,7 @@
     <Property Id='ARPCOMMENTS'>$(var.ProductDescription)</Property>
     <Property Id='ARPCONTACT'>info@eiffel.com</Property>
     <Property Id='ARPHELPLINK'>http://support.eiffel.com</Property>
-    <Property Id='ARPURLINFOABOUT'>http://www.eifel.com</Property>
+    <Property Id='ARPURLINFOABOUT'>http://www.eiffel.com</Property>
     <Property Id='ARPPRODUCTICON'>app.ico</Property>
     <Property Id='ARPNOMODIFY'>1</Property>
     <!-- END ADD REMOVE PROGRAM -->

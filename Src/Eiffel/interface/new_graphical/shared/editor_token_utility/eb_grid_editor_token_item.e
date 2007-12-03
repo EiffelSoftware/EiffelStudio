@@ -72,6 +72,7 @@ feature{NONE} -- Initialization
 			set_top_border (1)
 			set_bottom_border (1)
 			set_spacing (2)
+			enable_full_select
 			expose_actions.extend (agent perform_redraw)
 			setting_change_actions.extend (agent safe_redraw)
 			initialize_item
@@ -138,6 +139,10 @@ feature -- Access
 
 feature -- Status report
 
+	is_full_select_enabled: BOOLEAN
+			-- Does selection highlighting fill complete area of `Current'?
+			-- If `False', highlighting is only applied to area of `text'.
+
 	is_component_adhesive_enabled: BOOLEAN
 			-- Is component adhesive?
 			-- component is adhesive means component appears right after text.
@@ -172,6 +177,28 @@ feature -- Status report
 		end
 
 feature -- Setting
+
+	enable_full_select
+			-- Ensure `is_full_select_enabled' is `True'.
+		do
+			lock_update
+			is_full_select_enabled := True
+			unlock_update
+			try_call_setting_change_actions
+		ensure
+			is_full_select_enabled: is_full_select_enabled
+		end
+
+	disable_full_select
+			-- Ensure `is_full_select_enabled' is `False'.
+		do
+			lock_update
+			is_full_select_enabled := False
+			unlock_update
+			try_call_setting_change_actions
+		ensure
+			not_is_full_select_enabled: not is_full_select_enabled
+		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Display image of `a_pixmap' on `Current'.
@@ -333,7 +360,7 @@ feature -- Setting
 		ensure
 			stone_function_set: stone_function = a_function
 		end
-		
+
 feature -- Searchable
 
 	set_image (a_image: like image) is
@@ -391,8 +418,10 @@ feature{NONE} -- Redraw
 				draw_pixmap (a_drawable, l_x_offset)
 				l_x_offset := pixmap.width + spacing
 			end
-				-- Calculate text position and component position.
 			l_token_text := editor_token_text
+			l_token_text.set_overriden_selection_colors (parent.focused_selection_color, parent.non_focused_selection_color)
+
+				-- Calculate text position and component position.
 			l_required_text_width := l_token_text.required_width
 			l_required_component_width := required_component_width
 			l_left_width := (width - l_x_offset - right_border - border_line_width).max (1)
@@ -459,12 +488,18 @@ feature{NONE} -- Redraw
 		require
 			a_drawable_attached: a_drawable /= Void
 		local
-			l_editor_data: EB_EDITOR_DATA
 			l_parent: EV_GRID
+			l_gap: INTEGER
 		do
+			if pixmap /= Void and then not is_full_select_enabled then
+					-- Determine selection render gap, and erase background
+				l_gap := pixmap.width + left_border + 2
+				a_drawable.set_foreground_color (parent.background_color)
+				a_drawable.fill_rectangle (0, 0, l_gap, height)
+			end
+
 			l_parent := parent
 			if is_selected then
-				l_editor_data := preferences.editor_data
 				if l_parent.has_focus then
 					a_drawable.set_foreground_color (parent.focused_selection_color)
 				else
@@ -479,7 +514,7 @@ feature{NONE} -- Redraw
 					a_drawable.set_foreground_color (parent.background_color)
 				end
 			end
-			a_drawable.fill_rectangle (0, 0, width, height)
+			a_drawable.fill_rectangle (l_gap, 0, width, height)
 		end
 
 feature{NONE} -- Implementation
@@ -509,12 +544,14 @@ feature{NONE} -- Implementation
 		require
 			not_destroyed: not is_destroyed
 		do
-			if editor_token_text_internal = Void then
-				create editor_token_text_internal
-			end
 			Result := editor_token_text_internal
+			if Result = Void then
+				create Result
+				editor_token_text_internal := Result
+			end
 		ensure
 			result_attached: Result /= Void
+			result_consistent: Result = editor_token_text
 		end
 
 feature -- Pick and drop

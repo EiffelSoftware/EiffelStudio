@@ -67,6 +67,17 @@ feature {NONE} -- Iniitalization
 			a_widget.enable_tree
 			a_widget.disable_row_height_fixed
 			a_widget.enable_auto_size_best_fit_column (error_column)
+			a_widget.enable_multiple_row_selection
+			a_widget.item_deactivate_actions.extend (agent (a_row: EV_GRID_ITEM)
+				do
+						-- Updates UI based on selection and row count.
+					update_content_applicable_widgets (grid_events.row_count > 0)
+				end)
+			a_widget.row_select_actions.extend (agent (a_row: EV_GRID_ROW)
+				do
+						-- Updates UI based on selection and row count.
+					update_content_applicable_widgets (grid_events.row_count > 0)
+				end)
 
 				-- Enable sorting
 			enable_sorting_on_columns (<<a_widget.column (category_column),
@@ -87,11 +98,13 @@ feature {NONE} -- Iniitalization
 			if session_manager.is_service_available then
 				l_session := session_manager.service.retrieve (False)
 				l_session.value_changed_events.subscribe (agent on_session_value_changed)
-				expand_errors ?= l_session.value_or_default (expand_errors_session_id, False)
-				if expand_errors then
-					expand_errors_button.enable_select
-				else
-					expand_errors_button.disable_select
+				if {l_expand: !BOOLEAN_REF} l_session.value_or_default (expand_errors_session_id, False) then
+					expand_errors := l_expand.item
+					if expand_errors then
+						expand_errors_button.enable_select
+					else
+						expand_errors_button.disable_select
+					end
 				end
 			end
 		end
@@ -643,27 +656,25 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_session_value_changed (a_id: STRING_8; a_value: ANY)
+	on_session_value_changed (a_session: SESSION; a_id: STRING_8) is
 			-- Called when the session changes
 		require
 			not_is_recycled: not is_recycled
-			is_session_manager_service_available: session_manager.is_service_available
-		local
-			l_session: SESSION_I
-			l_boolean: BOOLEAN_REF
+			a_session_attached: a_session /= Void
+			a_session_is_interface_usable: a_session.is_interface_usable
 		do
 			if a_id.is_equal (expand_errors_session_id) then
 					-- Retrieve global session
-				l_session := session_manager.service.retrieve (False)
-				l_boolean ?= l_session.value_or_default (expand_errors_session_id, False)
-				if expand_errors /= l_boolean.item then
-					expand_errors := l_boolean.item
-					if expand_errors then
-						expand_errors_button.enable_select
-					else
-						expand_errors_button.disable_select
+				if {l_expand: !BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) then
+					if expand_errors /= l_expand.item then
+						expand_errors := l_expand.item
+						if expand_errors then
+							expand_errors_button.enable_select
+						else
+							expand_errors_button.disable_select
+						end
+						on_toggle_expand_errors_button
 					end
-					on_toggle_expand_errors_button
 				end
 			end
 		end
@@ -831,7 +842,7 @@ feature {NONE} -- User interface manipulation
 			--
 			-- `a_enable': True to indicate there is content available, False otherwise
 		do
-			if a_enable then
+			if a_enable and grid_events.selected_rows.count = 1 then
 				error_info_command.enable_sensitive
 			else
 				error_info_command.disable_sensitive
@@ -888,6 +899,7 @@ feature {NONE} -- User interface manipulation
 
 					-- Set string data for pixmap index, so it can be sorted.
 				l_item.set_data (a_event_item.category.out)
+				l_item.disable_full_select
 			end
 			a_row.set_item (category_column, l_item)
 
@@ -902,6 +914,7 @@ feature {NONE} -- User interface manipulation
 				else
 					create l_editor_item.make_with_text ("No error message found!")
 				end
+				l_editor_item.disable_full_select
 				if is_error_event (a_event_item) then
 					l_editor_item.set_pixmap (stock_pixmaps.tool_error_icon)
 				elseif is_warning_event (a_event_item) then
@@ -927,6 +940,10 @@ feature {NONE} -- User interface manipulation
 						-- Sub row full error
 					a_row.insert_subrow (1)
 					l_row := a_row.subrow (1)
+					create l_item
+					l_item.disable_full_select
+					l_row.set_item (category_column, l_item)
+
 					l_editor_item := create_multiline_clickable_grid_item (l_lines, False)
 					l_row.set_height (l_tip.required_tooltip_height)
 					l_row.set_item (error_column, l_editor_item)

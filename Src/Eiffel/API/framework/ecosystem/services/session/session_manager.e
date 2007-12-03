@@ -78,6 +78,9 @@ feature {NONE} -- Query
 			-- `Result': Path to a session file, which may or may not exist yet.
 		require
 			is_interface_usable: is_interface_usable
+			a_session_attached: a_session /= Void
+			a_session_is_interface_usable: a_session.is_interface_usable
+			project_loaded: not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.eiffel_project.manager.is_project_loaded
 		local
 			l_formatter: STRING_FORMATTER
 			l_kinds: SESSION_KINDS
@@ -85,15 +88,9 @@ feature {NONE} -- Query
 			l_fn: STRING_8
 			l_path: FILE_NAME
 			l_ver: STRING_8
-			l_workbench: WORKBENCH_I
-			l_project_opened: BOOLEAN
 		do
 			create l_formatter
 			create l_kinds
-
-			l_workbench := (create {SHARED_WORKBENCH}).workbench
-			l_project_opened := l_workbench.project_location.is_path_writable
-			l_ver := eiffel_layout.major_version.out + eiffel_layout.minor_version.out
 
 				-- Determine session type
 			l_kind := a_session.kind
@@ -102,19 +99,11 @@ feature {NONE} -- Query
 			elseif l_kind.is_equal (l_kinds.window) then
 				l_fn := window_file_name
 			elseif l_kind.is_equal (l_kinds.project) then
-				if l_project_opened then
-					l_fn := project_file_name
-				else
-						-- Fall back to environment
-					l_fn := environment_file_name
-				end
+				l_fn := project_file_name
+				l_ver := (create {SHARED_WORKBENCH}).workbench.lace.target.system.uuid.out
 			elseif l_kind.is_equal (l_kinds.project_window) then
-				if l_project_opened then
-					l_fn := project_window_file_name
-				else
-						-- Fall back to window
-					l_fn := window_file_name
-				end
+				l_fn := project_window_file_name
+				l_ver := (create {SHARED_WORKBENCH}).workbench.lace.target.system.uuid.out
 			else
 					-- Unknown session kind
 				check False end
@@ -126,7 +115,9 @@ feature {NONE} -- Query
 			end
 
 				-- Format path using collected parts
-			l_fn := l_formatter.format (l_fn, [l_ver])
+			if l_ver /= Void then
+				l_fn := l_formatter.format (l_fn, [l_ver])
+			end
 
 				-- Create full path
 			create l_path.make_from_string (eiffel_layout.eiffel_home.out)
@@ -150,7 +141,8 @@ feature -- Storage
 			retried: BOOLEAN
 		do
 			if not retried then
-				if a_session.is_dirty then
+				if a_session.is_dirty and then (not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.eiffel_project.manager.is_project_loaded) then
+						-- Ensure the project is loaded for project sessions.
 					create l_sed_util
 					create l_file.make_open_write (session_file_path (a_session))
 					create l_writer.make (l_file)
@@ -281,7 +273,7 @@ feature -- Retrieval
 
 feature {NONE} -- Basic operation
 
-	set_session_object (a_session: SESSION_I)
+	set_session_object (a_session: SESSION_I) is
 			-- Sets a session's session object by reloading a session from disk.
 			--
 			-- `a_session': A session to set a session object for.
@@ -289,6 +281,7 @@ feature {NONE} -- Basic operation
 			is_interface_usable: is_interface_usable
 			a_session_attached: a_session /= Void
 			a_session_is_interface_usable: a_session.is_interface_usable
+			project_loaded: not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.eiffel_project.manager.is_project_loaded
 		local
 			l_sed_util: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
@@ -342,7 +335,12 @@ feature {NONE} -- Factory
 			not_a_window_is_recycled: a_window /= Void implies not a_window.is_recycled
 		local
 			l_inner_session: SESSION_I
+			l_shared: SHARED_EIFFEL_PROJECT
+			l_loader: EB_PROJECT_MANAGER
+			l_set_object: BOOLEAN
 		do
+			l_set_object := True
+
 				-- Fetch inner session for aggregation. See {AGGREGATED_SESSION} for details on session aggregation.
 			if a_window /= Void then
 					-- Retrieve higher level session for aggregation
@@ -365,6 +363,16 @@ feature {NONE} -- Factory
 				else
 					create {AGGREGATED_SESSION} Result.make_per_window (a_per_project, a_window, Current, l_inner_session)
 				end
+
+				if a_per_project then
+					create l_shared
+					l_loader := l_shared.eiffel_project.manager
+					l_set_object := l_loader.is_project_loaded
+					if not l_set_object then
+							-- No project is loaded so we have to initialize the project session once it is loaded.
+						l_loader.load_agents.extend (agent set_session_object (Result))
+					end
+				end
 			else
 					-- Project based session are always aggregated
 				check not_a_per_project: not a_per_project end
@@ -378,7 +386,9 @@ feature {NONE} -- Factory
 
 			check result_attached: Result /= Void end
 
-			set_session_object (Result)
+			if l_set_object then
+				set_session_object (Result)
+			end
 			auto_dispose (Result)
 		ensure
 			result_attached: not a_per_project implies Result /= Void
@@ -388,10 +398,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	environment_file_name: STRING_8 = ".environment{1}"
-	window_file_name: STRING_8 = ".window{1}"
-	project_file_name: STRING_8 = ".project{1}"
-	project_window_file_name: STRING_8 = ".window{1}"
+	environment_file_name: STRING_8 = ".environment.session"
+	window_file_name: STRING_8 = ".window.session"
+	project_file_name: STRING_8 = ".{1}.session"
+	project_window_file_name: STRING_8 = ".{1}.window.session"
 
 feature {NONE} -- Internal implementation cache
 

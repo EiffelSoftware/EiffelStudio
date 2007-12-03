@@ -69,16 +69,16 @@ standard: ewb.$lib wewb.$lib
 mtstandard: mtewb.$lib mtwewb.$lib
 
 ewb.$lib: $(OBJECTS)
-	$link_line
+	$alib_line
 
 mtewb.$lib: $(MT_OBJECTS)
-	$link_line
+	$alib_line
 
 wewb.$lib: $(WOBJECTS)
-	$link_line
+	$alib_line
 
 mtwewb.$lib: $(MT_WOBJECTS)
-	$link_line
+	$alib_line
 
 wewb_dumped.$obj: ewb_dumped.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 

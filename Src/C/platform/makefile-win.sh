@@ -24,10 +24,10 @@ standard: platform.$lib
 mtstandard: mtplatform.$lib
 
 platform.$lib: $(OBJECTS)
-	$link_line
+	$alib_line
 
 mtplatform.$lib: $(MT_OBJECTS)
-	$link_line
+	$alib_line
 
 MTnames.$obj: names.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 

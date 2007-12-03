@@ -41,10 +41,10 @@ standard: network.$lib
 mtstandard: mtnetwork.$lib
 
 network.$lib: $(OBJECTS) $(LIBDIR)$(DIR)$(LIBNAME)
-	$alib_line
+	$link_line
 
 mtnetwork.$lib: $(MT_OBJECTS) $(LIBDIR)$(DIR)$(LIBMTNAME)
-	$alib_line
+	$link_line
 
 MTapp_listen.$obj: app_listen.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 

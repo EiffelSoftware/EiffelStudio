@@ -42,16 +42,16 @@ meltdump.exe: ..$(DIR)run-time$(DIR)eif_interp.h
 bytedump.exe: ..$(DIR)run-time$(DIR)eif_interp.h
 
 compiler.$lib: $(OBJECTS)
-	$link_line
+	$alib_line
 
 wcompiler.$lib: $(WOBJECTS)
-	$link_line
+	$alib_line
 
 mtcompiler.$lib: $(MT_OBJECTS)
-	$link_line
+	$alib_line
 
 mtwcompiler.$lib: $(MT_WOBJECTS)
-	$link_line
+	$alib_line
 
 wpstore.$obj: pstore.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $?

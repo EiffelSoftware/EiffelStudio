@@ -32,8 +32,8 @@ output_libraries='standard mtstandard'
 #
 #Link Lines in non debug mode:
 #-----------------------------
-link_line='"$compiler_path/bin/ar" rc $@ $^'
-alib_line='"$compiler_path/bin/ld" -r -o $@ $^'
+link_line='"$compiler_path/bin/ld" -r -o $@ $^'
+alib_line='"$compiler_path/bin/ar" rc $@ $^'
 #
 #
 override_macros='-imacros eif_config.mingw.h'

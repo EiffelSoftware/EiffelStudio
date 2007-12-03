@@ -245,16 +245,16 @@ standard:: $(OUTDIR)finalized.$lib $(OUTDIR)wkbench.$lib
 mtstandard:: $(OUTDIR)mtfinalized.$lib $(OUTDIR)mtwkbench.$lib
 
 $(OUTDIR)finalized.$lib: $(OBJECTS)
-	$link_line
+	$alib_line
 
 $(OUTDIR)wkbench.$lib: $(WOBJECTS)
-	$link_line
+	$alib_line
 
 $(OUTDIR)mtfinalized.$lib: $(MT_OBJECTS)
-	$link_line
+	$alib_line
 
 $(OUTDIR)mtwkbench.$lib: $(MT_WOBJECTS)
-	$link_line
+	$alib_line
 
 dll:: $(OUTDIR)wkbench.dll $(OUTDIR)finalized.dll
 mtdll:: $(OUTDIR)mtwkbench.dll $(OUTDIR)mtfinalized.dll

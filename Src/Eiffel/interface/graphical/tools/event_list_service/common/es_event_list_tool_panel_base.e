@@ -993,6 +993,8 @@ feature {NONE} -- Factory
 			Result.set_separator_color (colors.grid_line_color)
 			Result.enable_default_tree_navigation_behavior (True, True, True, True)
 			Result.disable_vertical_scrolling_per_item
+			Result.set_focused_selection_color (colors.grid_focus_selection_color)
+			Result.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
 
 			Result.pointer_double_press_item_actions.extend (agent on_grid_events_item_pointer_double_press)
 		end

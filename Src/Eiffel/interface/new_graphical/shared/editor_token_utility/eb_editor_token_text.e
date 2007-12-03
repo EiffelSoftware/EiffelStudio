@@ -146,6 +146,31 @@ feature -- Setting
 			overriden_line_height_removed: overriden_line_height = 0 and not is_overriden_line_height_set
 		end
 
+	set_overriden_selection_colors (a_focus_color, a_unfocus_color: EV_COLOR)
+			-- Set override background colors for selection
+		require
+			a_focus_color_attached: a_focus_color /= Void
+			not_a_focus_color_is_destoryed: not a_focus_color.is_destroyed
+			a_unfocus_color_attached: a_unfocus_color /= Void
+			not_a_unfocus_color_is_destoryed: not a_unfocus_color.is_destroyed
+		do
+			focused_selection_color := a_focus_color
+			unfocused_selection_color := a_unfocus_color
+		ensure
+			focused_selection_color_set: focused_selection_color = a_focus_color
+			unfocused_selection_color_set: unfocused_selection_color = a_unfocus_color
+		end
+
+	remove_overriden_selection_colors
+			-- Removed any set overriden selection background colors
+		do
+			focused_selection_color := Void
+			unfocused_selection_color := Void
+		ensure
+			focused_selection_color_detached: focused_selection_color = Void
+			unfocused_selection_color_detached: unfocused_selection_color = Void
+		end
+
 	set_maximum_width (a_width: INTEGER) is
 			-- Set `maximum_width' with `a_width'.
 		require
@@ -473,6 +498,12 @@ feature -- Access
 	overriden_line_height: INTEGER
 			-- Line height in pixel
 
+	focused_selection_color: EV_COLOR
+			-- Overriden focused selection color
+
+	unfocused_selection_color: EV_COLOR
+			-- Overriden unfocused selection color
+
 	tokens: LINKED_LIST [EDITOR_TOKEN] is
 			-- `tokens' stored in list
 		do
@@ -700,12 +731,23 @@ feature{NONE} -- Display
 			a_drawable_attached: a_drawable /= Void
 		local
 			l_font: EV_FONT
+			l_color: EV_COLOR
 		do
 			if a_focus then
-				a_drawable.set_background_color (a_token.selected_background_color)
+				l_color := focused_selection_color
+				if l_color = Void then
+					a_drawable.set_background_color (a_token.selected_background_color)
+				else
+					a_drawable.set_background_color (l_color)
+				end
 				a_drawable.set_foreground_color (a_token.selected_text_color)
 			else
-				a_drawable.set_background_color (a_token.focus_out_selected_background_color)
+				l_color := unfocused_selection_color
+				if l_color = Void then
+					a_drawable.set_background_color (a_token.focus_out_selected_background_color)
+				else
+					a_drawable.set_background_color (l_color)
+				end
 				a_drawable.set_foreground_color (a_token.text_color)
 			end
 			l_font := actual_token_font (a_token)

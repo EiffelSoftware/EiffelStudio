@@ -509,8 +509,8 @@
 			/>
 		</copy>
 		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}/config.sh"  />
-		<exec executable="ln -s -f ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
-		<exec executable="ln -s -f ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
+		<exec executable="ln -f -s ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
+		<exec executable="ln -f -s ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
 	</target>
 
 </project>

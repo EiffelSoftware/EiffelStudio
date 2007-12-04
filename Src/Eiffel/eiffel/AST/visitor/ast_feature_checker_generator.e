@@ -6088,6 +6088,8 @@ feature -- Implementation
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_elsif: ELSIF_B
 			l_has_error: BOOLEAN
+			s: INTEGER
+			scope_matcher: AST_SCOPE_MATCHER
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -6114,6 +6116,9 @@ feature -- Implementation
 			end
 
 				-- Type check on compound
+			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
+			s := context.scope
+			scope_matcher.add_scopes (l_as.expr, context)
 			if l_as.compound /= Void then
 				process_compound (l_as.compound)
 				if not l_has_error and l_needs_byte_node then
@@ -6121,6 +6126,11 @@ feature -- Implementation
 					l_elsif.set_compound (l_list)
 				end
 			end
+			context.set_scope (s)
+
+				-- Add scopes for the parts that follow this one.
+			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
+			scope_matcher.add_scopes (l_as.expr, context)
 
 			if not l_has_error and l_needs_byte_node then
 				l_elsif.set_line_number (l_as.expr.start_location.line)

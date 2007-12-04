@@ -1119,7 +1119,6 @@ test	expanded-creation-correctness	exec278 tcf fail execution expanded
 test	special-base-address		exec279 tcf fail execution expanded
 test	default-create-not-called	exec280 tcf pass execution
 test	not-equal-operator-failure	exec281 tcf pass execution expanded
-test	object-test-semantics		exec282 tcf pass execution object_test expanded
 
 
 -- Compiler termination (exception trace, panic, etc.)
@@ -1762,6 +1761,10 @@ test	filename-classname-mismatch-warning	warn001	tcf pass warning
 
 -- test for agents
 test	agent-optimization-failure		agent001 tcf pass agents
+
+-- Tests for attached types and void-safe constructs
+test	object-test-semantics		attach001 tcf pass execution object_test expanded
+
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

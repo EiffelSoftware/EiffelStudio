@@ -955,19 +955,44 @@ feature {NONE} -- Docking
 		local
 			l_tool: ES_TOOL [EB_TOOL]
 			l_info: TUPLE [type: TYPE [ES_TOOL [EB_TOOL]]; edition: NATURAL_8]
+			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
+			l_ignore: BOOLEAN
+			l_internal: INTERNAL
 		do
-			l_info := tool_utils.tool_info (a_tool_id)
-			if l_info /= Void and then l_info.edition = 1 then
-					-- We only want to rebuild first edition tools! We might want to change this in the future.
-				l_tool := develop_window.shell_tools.tool_next_available_edition (l_info.type, True)
-				if l_tool /= Void then
-					check
-							-- This check is just for the future, if we support reinstantiation of multiple editions.
-						l_tool_is_supporting_multiple_instance: l_tool.edition > 1 implies l_tool.is_supporting_multiple_instances
-					end
+			l_eb_debugger_manager ?= develop_window.debugger_manager
+			check not_void: l_eb_debugger_manager /= Void end
+			if not l_eb_debugger_manager.raised then
+				-- We don't restore debug related tools for non-debug mode.
+				create l_internal
+				check exists: l_internal.dynamic_type_from_string ("ES_CALL_STACK_TOOL") /= -1 end
+				check exists: l_internal.dynamic_type_from_string ("ES_OBJECTS_TOOL") /= -1 end
+				check exists: l_internal.dynamic_type_from_string ("ES_OBJECT_VIEWER_TOOL") /= -1 end
+				check exists: l_internal.dynamic_type_from_string ("ES_WATCH_TOOL") /= -1 end
+				check exists: l_internal.dynamic_type_from_string ("ES_THREADS_TOOL") /= -1 end
+				check exists: l_internal.dynamic_type_from_string ("ES_BREAKPOINTS_TOOL") /= -1 end
+				if a_tool_id.as_string_8.is_equal ("ES_CALL_STACK_TOOL") or
+					a_tool_id.as_string_8.is_equal ("ES_OBJECTS_TOOL") or
+					a_tool_id.as_string_8.is_equal ("ES_OBJECT_VIEWER_TOOL") or
+					a_tool_id.as_string_8.has_substring  ("ES_WATCH_TOOL") or -- We use `has_substring' here since second watch tool's name is ES_WATCH_TOOL:2, 3rd tool's name is ES_WATCH_TOOL:3, ...
+					a_tool_id.as_string_8.is_equal ("ES_THREADS_TOOL") or
+					a_tool_id.as_string_8.is_equal ("ES_BREAKPOINTS_TOOL") then
+					l_ignore := True
+				end
+			end
+			if not l_ignore then
+				l_info := tool_utils.tool_info (a_tool_id)
+				if l_info /= Void and then l_info.edition = 1 then
+						-- We only want to rebuild first edition tools! We might want to change this in the future.
+					l_tool := develop_window.shell_tools.tool_next_available_edition (l_info.type, True)
+					if l_tool /= Void then
+						check
+								-- This check is just for the future, if we support reinstantiation of multiple editions.
+							l_tool_is_supporting_multiple_instance: l_tool.edition > 1 implies l_tool.is_supporting_multiple_instances
+						end
 
-						-- The following initialize the tool and attached it to the docking manager.
-					Result := l_tool.panel.content
+							-- The following initialize the tool and attached it to the docking manager.
+						Result := l_tool.panel.content
+					end
 				end
 			end
 		end

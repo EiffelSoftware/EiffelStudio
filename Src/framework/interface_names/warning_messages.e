@@ -82,7 +82,7 @@ feature -- Project file/directory warnings
 			valid_incomp_version: incomp_version /= Void
 		do
 			Result := locale.formatted_string (locale.translation (
-			"Incompatible version for project compiled in: $1.%N$2 version is $3.%NProject was compiled with version $4.%N%NClick OK to convert this project to version $5.%N"),
+			"Incompatible version for project compiled in: $1.%N$2 version is $3.%NProject was compiled with version $4.%N%NClick Yes to convert this project to version $5.%N"),
 			[dir_name, workbench_name, comp_version, incomp_version, comp_version])
 		end
 

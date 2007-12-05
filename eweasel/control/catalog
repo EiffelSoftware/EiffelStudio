@@ -1763,7 +1763,10 @@ test	filename-classname-mismatch-warning	warn001	tcf pass warning
 test	agent-optimization-failure		agent001 tcf pass agents
 
 -- Tests for attached types and void-safe constructs
-test	object-test-semantics		attach001 tcf pass execution object_test expanded
+test	object-test-semantics						attach001 tcf pass execution object_test expanded
+test	like-current-object-test-no-defaults		attach003 tcf fail object_test attached_types
+test	object-test-with-local-use-failure			attach004 tcf pass object_test
+test	current-is_attached-no-defaults				attach005 tcf fail attached_types
 
 
 -- .NET specific test

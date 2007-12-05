@@ -1,0 +1,10 @@
+test_name 	 current-is_attached-no-defaults
+test_description Current should always be an attached type when used in an expression.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

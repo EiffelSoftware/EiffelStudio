@@ -77,7 +77,9 @@ feature -- AST visiting
 		do
 			is_updated := True
 			if l_as.lbang_symbol /= Void then
-					-- Process the previous white spaces and ignore the !
+					-- If previous token is a text, we need to insert a space.
+				add_white_space_if_necessary
+					-- Process the previous white spaces if any and ignore the !
 				process_leading_leaves (l_as.lbang_symbol.index)
 				last_index := l_as.lbang_symbol.index
 			end

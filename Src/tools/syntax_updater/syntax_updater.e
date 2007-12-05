@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			outfile: KL_BINARY_OUTPUT_FILE
 			count, nb: INTEGER
 		do
-			if equal (file_name.substring (file_name.count - 1, file_name.count), ".e") then
+			if file_name.substring (file_name.count - 1, file_name.count).is_case_insensitive_equal (".e") then
 				create file.make (file_name)
 				count := file.count
 				file.open_read

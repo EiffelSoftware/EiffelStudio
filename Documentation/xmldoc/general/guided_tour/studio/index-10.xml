@@ -202,7 +202,7 @@
 				<size>2</size>
 				<content>What happens to my feature through the inheritance hierarchy?</content>
 			</heading>
-			<paragraph>After the caller/caller views, the next view button is 
+			<paragraph>After the caller/callee views, the next view button is 
 				<code>
 					<keyword>Implementers</keyword>.
 				</code>

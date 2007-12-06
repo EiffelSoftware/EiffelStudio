@@ -1,7 +1,7 @@
 <document title="Console tool" output="studio">
 	<meta_data/>
 	<paragraph>
-		Console tool lets you run external commands from within EiffelStudio. Console tool is shown in the following figure:
+		The Console tool lets you run external commands from within EiffelStudio. The Console tool is shown in the following figure:
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/console_tool/console1.png</url>
@@ -14,7 +14,7 @@
 			<alt_text>Launch Command</alt_text>
 		</image>
 
-	Run button to launch that command. When a command is runing, you can type input data to that command in "Input" region if necessary. And you can press 
+	Run button to launch that command. When a command is running, you can type input data to that command in the "Input" region if necessary. And you can press the
 		<image>
 			<url>../../../../images/eiffelstudio/metrics_tool/debug_stop_icon.png</url>
 			<alt_text>Stop Command</alt_text>

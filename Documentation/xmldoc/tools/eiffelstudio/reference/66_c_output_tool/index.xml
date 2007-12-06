@@ -1,19 +1,19 @@
 <document title="C Output tool" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>The C Output tool is where it C compilation output is shown.</paragraph>
+		<paragraph>The C Output tool is where C compilation output is shown.</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../images/eiffelstudio/c_output_tool/coutput1.png</url>
 				<alt_text>C output tool</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>If the C compiler uses a different locale than you default locale, you can select that particular locale in the "Locale" region.</paragraph>
+		<paragraph>If the C compiler uses a different locale than your default locale, you can select that particular locale in the "Locale" region.</paragraph>
 		<heading>
 			<size>2</size>
-			<content>Open a file mentioned in C output</content>
+			<content>Open a file mentioned in the C output</content>
 		</heading>			
-		<paragraph>You can open a file mentioned in C output in specified external editor by select the file name and then click the 
+		<paragraph>You can open a file mentioned in the C output in a specified external editor by selecting the file name and then clicking the 
 			<image>
 				<url>../../../../images/eiffelstudio/metrics_tool/command_send_to_external_editor_icon.png</url>
 				<alt_text>C output tool</alt_text>
@@ -30,16 +30,16 @@
 			<size>2</size>
 			<content>Find C code for a class/feature</content>
 		</heading>	
-		<paragraph>Pick the class or feature whose related C code you want to see and drop it into
+		<paragraph>Pick the class or feature whose related C code you want to see and drop it into the 
 			<image>
 				<url>../../../../images/eiffelstudio/c_output_tool/coutput4.png</url>
 				<alt_text>C output tool</alt_text>
-			</image>button or 
+			</image>button or the 
 			<image>
 				<url>../../../../images/eiffelstudio/c_output_tool/coutput5.png</url>
 				<alt_text>C output tool</alt_text>
 			</image>		
-			button, the related C code will be shown in specified editor.
+			button. The related C code will be shown in specified editor.
 		</paragraph>
 		<paragraph>
 			<image>

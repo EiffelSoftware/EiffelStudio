@@ -14,14 +14,14 @@
 		<heading><size>3</size>Improvements</heading>
 		<list ordered="false">
 			<item>Use the default OS font for displaying tooltips.</item>
-			<item>C compilation failure will now show up as an error in the new Errors and Warnins tool.</item>
+			<item>C compilation failure will now show up as an error in the new Errors and Warnings tool.</item>
 			<item>Completion list will now show immediately after pressing '.' when the completion list is active.</item>
 			<item>Added ability to submit a problem report within EiffelStudio when it quits unexpectedly.</item>
 		</list>
 		<heading><size>3</size>Changes</heading>
 		<list ordered="false">
 			<item>Support for the MinGW C compiler on Windows 32-bit. Borland is officially not supported anymore.</item>
-			<item>Completion list no longer shows obsolete items by default (set via a preference options).</item>
+			<item>Completion list no longer shows obsolete items by default (set via a preference option).</item>
 		</list>
 		<heading><size>3</size>Bug fixes</heading>
 		<list ordered="false">
@@ -34,7 +34,7 @@
 		</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
-				<item>Click <link><url>../40_debugger/80_version_history/Eiffel61.xml</url><label>here</label></link> for the EiffelStudio's debugger release notes.</item>
+				<item>Click <link><url>../40_debugger/80_version_history/Eiffel61.xml</url><label>here</label></link> for the EiffelStudio debugger release notes.</item>
 			</list>
 		<heading><size>2</size>EiffelBuild</heading>
 			<list ordered="false">

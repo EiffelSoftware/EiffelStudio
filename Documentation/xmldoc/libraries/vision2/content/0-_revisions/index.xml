@@ -18,7 +18,7 @@
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<bold>EV_APPLICATION</bold>- Added 'is_display_remote' for determining whether the graphical display is on the same machine as the running system.
+				<bold>EV_APPLICATION</bold> - Added 'is_display_remote' for determining whether the graphical display is on the same machine as the running system.
 			</item>
 			<item>
 				<bold>EV_POINTER_STYLE_CONSTANTS</bold> - Added hyperlink_cursor constant so that hyperlink cursors may be used in applications
@@ -27,16 +27,13 @@
 				<bold>EV_POINTER_STYLE</bold> - Now pointer style objects may be twinned correctly to match the capability of pixmaps and cursor objects.
 			</item>
 			<item>
-				<bold>EV_DRAWABLE</bold> Added 'draw_sub_pixel_buffer' so that pixel buffer data may be rendered to a drawable.
+				<bold>EV_DRAWABLE</bold> - Added 'draw_sub_pixel_buffer' so that pixel buffer data may be rendered to a drawable.
 			</item>
 			<item>
-				<bold>EV_PIXEL_BUFFER</bold> Added draw_pixel_buffer_with_x_y so that a pixel buffer
+				<bold>EV_PIXEL_BUFFER</bold> - Added 'draw_pixel_buffer_with_x_y'.
 			</item>
 			<item>
-				<bold>EV_STOCK_PIXMAPS</bold> - Now pixel buffers are used for stock icons, this allows for alpha transparency information to be retained.
-			</item>
-			<item>
-				<bold>EV_POPUP_WINDOW</bold> - Added 'make_with_shadow' creation procedure to create a popup window with an alpha shadow (on platforms that support it).
+				<bold>EV_STOCK_PIXMAPS</bold> - Now pixel buffers are used for stock icons; this allows for alpha transparency information to be retained.
 			</item>
 		</list>
 
@@ -135,7 +132,9 @@
 			<item>
 				<bold>EV_TEXT_FIELD</bold> - Added inheritance from EV_TEXT_ALIGNABLE
 			</item>
-
+			<item>
+				<bold>EV_POPUP_WINDOW</bold> - Added 'make_with_shadow' creation procedure to create a popup window with an alpha shadow (on platforms that support it).
+			</item>
 		</list>
 
 		<paragraph>

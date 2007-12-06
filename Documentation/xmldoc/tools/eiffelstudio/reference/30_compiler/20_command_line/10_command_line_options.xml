@@ -23,6 +23,7 @@
 		<table>
 			<row><cell><bold>OPTION</bold></cell> <cell><bold>ARGUMENTS</bold></cell> <cell><bold>EFFECT</bold></cell></row>
 			<row> <cell><italic>Operation options</italic></cell> </row>
+			<row><cell>-melt</cell> <cell></cell> <cell>Normal compilation, except on an incremental recompilation where added/removed classes (of classes not in system) will be detected.</cell></row>
 			<row><cell>-freeze</cell> <cell></cell> <cell>Freeze system.</cell></row>
 			<row><cell>-finalize</cell> <cell></cell> <cell>Produce a finalized system. See below.</cell></row>
 			<row><cell>-precompile</cell> <cell></cell> <cell>Precompile a system, treating it as a library.</cell></row>
@@ -39,8 +40,9 @@
 			<row><cell>-short</cell> <cell>class_name</cell> <cell>Print the Contract view (previously called short form) of the class.</cell></row>
 			<row><cell>-suppliers</cell> <cell>class_name, feature_name</cell> <cell>Print all the suppliers of the class.</cell></row>
 			<row><cell><italic>Other options</italic></cell></row>
-			<row><cell>-config</cell> <cell>file_name</cell> <cell>Use the file as configuration.</cell></row>
 			<row><cell>-batch</cell> <cell></cell> <cell>Launch the compilation without user request.</cell></row>
+			<row><cell>-clean</cell> <cell></cell> <cell>Delete project if already compiled and compile project as if it was the first time.</cell></row>
+			<row><cell>-config</cell> <cell>file_name</cell> <cell>Use the file as configuration.</cell></row>
 			<row><cell>-c_compile</cell> <cell></cell> <cell>Launch C compilation, if needed, after Eiffel compilation.</cell></row>
 			<row><cell>-file</cell> <cell>file_name</cell> <cell>Save the output to the file.</cell></row>
 			<row><cell>-filter</cell> <cell>filter_file_name</cell> <cell>Print text as processed by the filter.</cell></row>

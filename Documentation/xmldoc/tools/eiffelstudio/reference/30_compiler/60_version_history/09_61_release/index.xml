@@ -32,7 +32,7 @@
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
-			<item>Improved speed of degree 3. Improvements is even more visible when the checking of inherited features in their descendants is enabled.</item>
+			<item>Improved speed of degree 3. Improvements are even more visible when the checking of inherited features in their descendants is enabled.</item>
 		</list>
 		<heading><size>2</size>Changes</heading>
 		<list ordered="false">

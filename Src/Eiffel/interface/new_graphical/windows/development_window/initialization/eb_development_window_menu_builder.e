@@ -1059,8 +1059,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_BREAKPOINTS_TOOL})
-			Result.extend (create {EV_MENU_SEPARATOR})
-			insert_show_tool_menu_item (Result, {ES_MEMORY_TOOL})
 
 			l_customized_tools := develop_window.tools.customized_tools
 			if not l_customized_tools.is_empty then

@@ -837,7 +837,7 @@ feature {NONE} -- Action handlers
 			if not is_gc_collecting then
 				create l_buttons
 				create l_warning.make (
-					"The garbage collector is not collecting. Attempting to refresh the memory map with the GC running may causes the system to expend its memory.",
+					"The garbage collector is not collecting. Attempting to refresh the memory map with the GC running may causes the system to expand its memory usage or even deplete the available memory.",
 					l_buttons.yes_no_cancel_buttons,
 					l_buttons.no_button,
 					l_buttons.no_button,
@@ -895,9 +895,6 @@ feature {NONE} -- Action handlers
 			l_content: STRING
 		do
 			if memory_stats_text.is_displayed then
-					-- Preform collection
-				on_collect
-
 					-- Fetch stats
 				l_eiffel_info := memory.memory_statistics ({MEM_CONST}.eiffel_memory)
 				l_c_info := memory.memory_statistics ({MEM_CONST}.c_memory)
@@ -1248,7 +1245,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	memory_update_timer_interval: INTEGER = 500
+	memory_update_timer_interval: INTEGER = 1000
 	filter_update_timer_interval: INTEGER = 500
 	object_column_index: INTEGER = 1
 	count_column_index: INTEGER = 2

@@ -34,6 +34,7 @@
 			</item>
 		</list>
 		<paragraph>Generally, you should use these types when implementing external C functions bound to be used from Eiffel or when you want to manipulate Eiffel objects from the C side. EIF_REFERENCE, EIF_OBJECT, EIF_POINTER all correspond in C to a (char *), but their semantic remains different in Eiffel. </paragraph>
+		<note><bold>Note:</bold> In the following code samples, the class <class_name>OBJECT</class_name> is a placeholder for one of your type that you wish to use via CECIL.</note>
 		<sample>
 			<bold>Sample</bold>: Calling C external `foo' from Eiffel, which takes a pointer and an eiffel object of type OBJECT as arguments and returns an INTEGER. 
 		</sample>

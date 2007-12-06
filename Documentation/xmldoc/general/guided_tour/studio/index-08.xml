@@ -107,10 +107,10 @@
 		<paragraph>Next to 
 			<code>
 				<keyword>Ancestors</keyword>
-			</code> is 
+			</code> button is 
 			<code>
-				<keyword>Descendants</keyword>
-			</code>, which will give you the descendants of a class in a similar format:
+				<keyword>Descendants</keyword>,
+			</code>which will give you the descendants of a class in a similar format:
 		</paragraph>
 		<image_link>
 			<url>index-30.png</url>

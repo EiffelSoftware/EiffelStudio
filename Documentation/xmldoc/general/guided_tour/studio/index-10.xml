@@ -196,14 +196,16 @@
 					</code>.
 				</item>
 			</list>
+			<paragraph>The following five view buttons are similar except that they let you precise what kind of callers you are looking for, or what is being called by the currently selected feature.
+			</paragraph>
 			<heading>
 				<size>2</size>
 				<content>What happens to my feature through the inheritance hierarchy?</content>
 			</heading>
-			<paragraph>Now click the next view button, 
+			<paragraph>After the caller/caller views, the next view button is 
 				<code>
-					<keyword>Implementers</keyword>
-				</code>. 
+					<keyword>Implementers</keyword>.
+				</code>
 			</paragraph>
 			<paragraph>This is a very useful view, showing all the ancestors and descendants of 
 				<code>
@@ -223,13 +225,13 @@
 				</code>.
 			</paragraph>
 			<paragraph>Since all class and feature names on these views are hyperlinks, you can display any of the listed versions in a new Development Window by control-right-clicking it (we will see shortly how to display it in the 
-				<span>same</span> tool). Control-right-click on the feature name 
+				<span>same</span> tool). Right-click on the feature name 
 				<code>
 					<string>forth</string>
 				</code> on the line that reads 
 				<code>
-					<string>forth MULTI_ARRAY_LIST</string>
-				</code> (line 4). This brings up a tool targeted to the routine 
+					<string>MULTI_ARRAY_LIST forth</string>
+				</code>. This brings up a context menu and chose `Show->Text'. The tool is now targeted to the routine 
 				<code>
 					<string>forth</string>
 				</code> from 
@@ -237,7 +239,7 @@
 					<string>MULTI_ARRAY_LIST</string>
 				</code>, so that you can see the implementation of the routine in that class.
 			</paragraph>
-			<paragraph>You can get rid of this new Development Window (just close it, but don't exit EiffelStudio!) and come back to the original Development Window, where we still have two unexplored views, 
+			<paragraph>We still have two unexplored views, 
 				<code>
 					<keyword>Ancestor versions</keyword>
 				</code> and 
@@ -248,15 +250,15 @@
 					<string>forth</string>
 				</code> from 
 				<code>
-					<string>LIST</string>
+					<string>MULTI_ARRAY_LIST</string>
 				</code>.
 			</paragraph>
 			<paragraph>The format is self-explanatory: for each ancestor of 
 				<code>
-					<string>LIST</string>
+					<string>MULTI_ARRAY_LIST</string>
 				</code> that has a version of 
 				<code>
-					<string>LIST</string>
+					<string>MULTI_ARRAY_LIST</string>
 				</code> 's 
 				<code>
 					<string>forth</string>
@@ -265,10 +267,11 @@
 					<string>forth</string>
 				</code> as a result of renaming, although here this happens only in descendants, not ancestors -- and the version of the feature applicable to the given class.
 			</paragraph>
-			<paragraph>The list is labeled 
+			<paragraph>In the case of feature merging (combining several features inherited from different parents, 
+				in conformance with the rules of the language) there could be more than one history branch, in this case each branch is labeled 
 				<code>
-					<keyword>History branch #1</keyword>
-				</code> because in the case of feature merging (combining several features inherited from different parents, in conformance with the rules of the language) there could be more than one history branch.
+					<keyword>Branch #X</keyword>.
+				</code>
 			</paragraph>
 			<paragraph>The next button, 
 				<code>

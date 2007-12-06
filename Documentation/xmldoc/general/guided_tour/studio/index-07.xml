@@ -101,19 +101,19 @@
 		</div>
 		<paragraph>Let's use one of the most basic classes, 
 			<code>
-				<string>STRING</string>
+				<string>ARRAY</string>
 			</code> from the Kernel Library of EiffelBase. Bring the cursor to the Class Field, click to make it active, type 
 			<code>
-				<string>string</string>
+				<string>array</string>
 			</code> (or 
 			<code>
-				<string>STRING</string>
+				<string>ARRAY</string>
 			</code> ) and the Enter key. As shown on the next figure, this retargets the tool to class 
 			<code>
-				<string>STRING</string>
+				<string>ARRAY</string>
 			</code>. Note that you didn't have to worry about where the class resides in the files of your computer. Also, the Class Field will now show the target's class name, 
 			<code>
-				<string>STRING</string>
+				<string>ARRAY</string>
 			</code>, in upper case, since that is the standard Eiffel convention for class names. It doesn't matter, when you enter the name into the field, whether you use lower or upper case, or some mix; EiffelStudio will show the name back in all upper case.
 		</paragraph>
 		<div>
@@ -128,7 +128,7 @@
 		</div>
 		<paragraph>The Development Window is now targeted to class 
 			<code>
-				<string>STRING</string>
+				<string>ARRAY</string>
 			</code>. Each of the four panes contains a tool:
 		</paragraph>
 		<list ordered="false">
@@ -143,7 +143,7 @@
 			</item>
 			<item>Editing Tool, top-right: the source text of the class, editable. For the moment the pane is too small to display much of interest -- it only shows the very first few lines -- but we'll enlarge it when we need to modify class texts. (Not 
 				<code>
-					<string>STRING</string>
+					<string>ARRAY</string>
 				</code>, though, as it's not the kind of class you want to change during your first session with EiffelStudio, so just wait a bit.)
 			</item>
 			<item>Cluster Tree, bottom-left: a tree view of the clusters of the system.</item>
@@ -289,8 +289,8 @@
 		<paragraph>An Eiffel system, as you know, is organized into clusters and libraries (and assemblies on some .NET systems), clusters can be structured hierarchically into subclusters. Here we see one cluster: 
 			<code>
 				<string>root_cluster</string>
-			</code>, containing the few classes specific to our Guided Tour system. There are also two libraries <code><string>precompile</string></code> which does not provide any classes and <code><string>base</string></code> 
-			which provides the base classes. 	Let's go into 
+			</code>, containing the few classes specific to our Guided Tour system. There are also two libraries: <code><string>base</string></code> which provides the base classes 
+			and <code><string>precompile</string></code> which does not provide any classes directly (precompiles are present to speed up compilation time by precompiling classes). Let's go into 
 			<code>
 				<string>base</string>
 			</code>, ISE's open-source library of fundamental reusable mechanisms. Click the little 
@@ -547,7 +547,7 @@
 			<size>2</size>
 			<content>Starting a new tool</content>
 		</heading>
-		<paragraph>With all the techniques seen so far, you were able to retarget the current Development Window to a new class. As noted, you may also wish to have two or more Development Windows targeted to different classes; this is useful to keep track of several things at one. A simple way to start a new tool on a class is to find the class somewhere in the interface and 
+		<paragraph>With all the techniques seen so far, you were able to retarget the current Development Window to a new class. As noted, you may also wish to have two or more Development Windows targeted to different classes; this is useful to keep track of several things at once. A simple way to start a new tool on a class is to find the class somewhere in the interface and 
 			<bold>control-right-click</bold> it.
 		</paragraph>
 		<paragraph>Here, for example, the editor lists 

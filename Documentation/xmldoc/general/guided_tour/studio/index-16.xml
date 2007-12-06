@@ -385,7 +385,7 @@
 					<string>Access</string>
 				</code> and 
 				<code>
-					<string>change Element</string>
+					<string>Element change</string>
 				</code>, observing the Eiffel standard for common feature clauses in libraries.
 			</paragraph>
 			<paragraph>If you look at the end of the class, you will see an 

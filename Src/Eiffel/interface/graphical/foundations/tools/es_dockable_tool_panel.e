@@ -31,7 +31,7 @@ inherit
             build_docking_content
         end
 
--- inherit {NONE}
+inherit {NONE}
 
     EV_SHARED_APPLICATION
         export

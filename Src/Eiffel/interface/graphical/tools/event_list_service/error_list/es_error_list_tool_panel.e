@@ -685,7 +685,7 @@ feature {NONE} -- Factory
 			-- Available tool bar items
 		do
 			create errors_button.make
-			errors_button.set_text ("0 Errors")
+			errors_button.set_text (("0 ").as_string_32 + interface_names.b_errors.as_string_32)
 			errors_button.set_pixmap (stock_pixmaps.tool_error_icon)
 			errors_button.set_pixel_buffer (stock_pixmaps.tool_error_icon_buffer)
 			errors_button.enable_select
@@ -693,7 +693,7 @@ feature {NONE} -- Factory
 			errors_button.select_actions.compare_objects
 
 			create warnings_button.make
-			warnings_button.set_text ("0 Warnings")
+			warnings_button.set_text (("0 ").as_string_32 + interface_names.b_warnings.as_string_32)
 			warnings_button.set_pixmap (stock_pixmaps.tool_warning_icon)
 			warnings_button.set_pixel_buffer (stock_pixmaps.tool_warning_icon_buffer)
 			warnings_button.enable_select

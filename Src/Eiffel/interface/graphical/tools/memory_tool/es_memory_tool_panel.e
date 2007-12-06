@@ -32,9 +32,33 @@ feature {NONE} -- Initialization
 
 	on_after_initialized
 			-- Use to perform additional creation initializations, after the UI has been created.
+		local
+			l_bool: BOOLEAN_REF
+			l_filter: STRING_GENERAL
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 			enable_sorting_on_columns (<<memory_map_grid.column (object_column_index), memory_map_grid.column (count_column_index), memory_map_grid.column (delta_column_index)>>)
+
+				-- Set button states based on session data
+			if session_manager.is_service_available then
+				l_bool ?= window_session_data.value_or_default (show_memory_usage_session_id, False)
+				if l_bool.item then
+					show_memory_usage_button.enable_select
+					on_toggle_memory_stats
+				end
+
+				l_bool ?= window_session_data.value_or_default (show_deltas_only_session_id, True)
+				if l_bool.item then
+					show_deltas_button.enable_select
+					on_toogle_show_deltas
+				end
+
+				l_filter ?= window_session_data.value (filter_session_id)
+				if l_filter /= Void then
+					filter_combo.set_text (l_filter)
+					on_filter_changed
+				end
+			end
 		end
 
 feature {NONE} -- User interface initialization
@@ -100,6 +124,7 @@ feature {NONE} -- User interface initialization
 			memory_stats_text.set_font (preferences.editor_data.editor_font_preference.value)
 			stone_director.bind (memory_stats_text)
 			a_widget.extend (memory_stats_text)
+			a_widget.disable_item_expand (memory_stats_text)
 
 			memory_stats_separator.hide
 			memory_stats_text.hide
@@ -859,6 +884,11 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 		do
+			if session_manager.is_service_available then
+					-- Set session data
+				window_session_data.set_value (show_deltas_button.is_selected, show_deltas_only_session_id)
+			end
+
 				-- Refilter
 			on_filter_update_timeout
 		end
@@ -870,6 +900,11 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 		do
+			if session_manager.is_service_available then
+					-- Set session data
+				window_session_data.set_value (show_memory_usage_button.is_selected, show_memory_usage_session_id)
+			end
+
 			if show_memory_usage_button.is_selected then
 				memory_stats_separator.show
 				memory_stats_text.show
@@ -934,6 +969,11 @@ feature {NONE} -- Action handlers
 			-- Called when the filter combo box text changes.
 			-- Note: Connected to `filter_combo'.
 		do
+			if session_manager.is_service_available then
+					-- Set session data
+				window_session_data.set_value (filter_combo.text, filter_session_id)
+			end
+
 			filter_update_timer.set_interval (0)
 			filter_update_timer.set_interval (filter_update_timer_interval)
 		end
@@ -1227,7 +1267,6 @@ feature {NONE} -- Factory
 
 			create show_deltas_button.make
 			show_deltas_button.set_text ("Deltas Only")
-			show_deltas_button.enable_select
 			register_action (show_deltas_button.select_actions, agent on_toogle_show_deltas)
 			Result.put_last (show_deltas_button)
 
@@ -1250,6 +1289,10 @@ feature {NONE} -- Constants
 	object_column_index: INTEGER = 1
 	count_column_index: INTEGER = 2
 	delta_column_index: INTEGER = 3
+
+	filter_session_id: STRING_8 = "com.eiffel.memory_tool.filter"
+	show_deltas_only_session_id: STRING_8 = "com.eiffel.memory_tool.show_deltas_only"
+	show_memory_usage_session_id: STRING_8 = "com.eiffel.memory_tool.show_memory_usage"
 
 feature {NONE} -- Internal implementation cache
 

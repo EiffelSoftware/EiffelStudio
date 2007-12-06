@@ -1,26 +1,26 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class 
-	SET_UP 
+class
+	SET_UP
 
 feature {NONE}
-	
+
 	interface: INTERFACE
 	index: INTEGER
 	keys: ARRAY [STRING]
 
-feature 
-    
+feature
+
 	associated_operator: HASH_TABLE [INTERFACE, STRING] is
 			-- Hash-table of operations with name and help messages.
 		once
 				-- Hash-tables are resizable anyway.
 			create Result.make (10)
 		end
-	
+
 	enter_operator (k, m: STRING; c: STATE) is
-			-- Enter a command `c' associated with a key `k' 
+			-- Enter a command `c' associated with a key `k'
 			-- and an help message `m'.
 		do
 			create interface
@@ -34,9 +34,9 @@ feature {NONE}
 			-- Start printing available operations.
 		do
 			io.putstring ("Allowable operations are: %N")
-         		keys := associated_operator.current_keys
-         		index := 1
-		end; 
+			keys := associated_operator.current_keys
+			index := 1
+		end;
 
 	help_next is
 		do

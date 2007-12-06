@@ -1,19 +1,19 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class 
-	CALCULATOR 
+class
+	CALCULATOR
 
 inherit
-	SET_UP 
+	SET_UP
 
 create
 	make
 
 feature -- creation
 
-	make is 
-		do 
+	make is
+		do
 			io.putstring ("%N*********************************%N")
 			io.putstring ("Calculator in reverse Polish form%N")
 			io.putstring ("*********************************%N")
@@ -21,20 +21,20 @@ feature -- creation
 			session
 		end
 
-feature {NONE}  -- Attributes 
+feature {NONE}  -- Attributes
 
 	current_state: STATE
 		-- The current state.
 
 	quit_state: QUIT
-		
+
 	help_state: HELP
 
 	qst: QUESTION
 
 	remove: EMPTY
 		-- Reset operation.
-	
+
 	pls: PLUS
 		-- Addition operation.
 
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 				next
 			end
 		end
-	
+
 	start is
 			-- Start session
 		do
@@ -74,7 +74,9 @@ feature {NONE} -- Implementation
 	over: BOOLEAN is
 			-- Is session over?
 		do
-			Result := current_state /= Void and then current_state.is_equal (quit_state)
+			Result := current_state /= Void and then
+				current_state.same_type (quit_state) and then
+				current_state.is_equal (quit_state)
 		end
 
 	action is
@@ -97,9 +99,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize is 
-			-- Build operator states. 
-		do 
+	initialize is
+			-- Build operator states.
+		do
 			create qst
 			enter_operator ("a", "Enter operand onto stack.", qst)
 			create pls
@@ -117,7 +119,7 @@ feature {NONE} -- Implementation
 			create help_state
 			enter_operator ("?", "Help.", help_state)
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -130,5 +132,5 @@ indexing
 		]"
 
 
-end -- class CALCULATOR 
+end -- class CALCULATOR
 

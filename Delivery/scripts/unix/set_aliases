@@ -19,7 +19,7 @@ DOCUMENT_DIR=`pwd`
 EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
 DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
-DEFAULT_ORIGO_SVN=https://svn.origo.ethz.ch/eiffelstudio/trunk
+DEFAULT_ORIGO_SVN=svn://$LOGNAME@svn.ise/origo.eiffelstudio/trunk
 if [ ! "$ORIGO_SVN_REVISION" ]; then
 	ORIGO_SVN_REVISION=HEAD
 fi

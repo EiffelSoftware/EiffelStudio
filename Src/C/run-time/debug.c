@@ -504,7 +504,7 @@ rt_shared void dbg_clear_exception_traces(void)
 	int i;
 
 	for (i = 0; i < DBG_EXCEPTION_TRACE_MAX; i = i + 1) {
-		if (dbg_exception_traces[i] == NULL) {
+		if (dbg_exception_traces[i] != NULL) {
 			s = dbg_exception_traces[i];
 			free(s);
 			dbg_exception_traces[i] = NULL;
@@ -1029,7 +1029,11 @@ rt_public void dbreak_clear_table(void)
 	struct db_bpinfo 	*curr_bpinfo;
 	int hash_code;
 
-	for (hash_code = 1; hash_code < BP_TABLE_SIZE; hash_code = hash_code + 1) {
+	/* Note: hash_code comes from `body_id%BP_TABLE_SIZE'
+	 * and the `body_id' value comes from the Eiffel debugger's `real_body_id - 1'
+	 * that's why the loop start at `0'
+	 */
+	for (hash_code = 0; hash_code < BP_TABLE_SIZE; hash_code = hash_code + 1) {
 
 		curr_bpinfo = d_globaldata.db_bpinfo[hash_code];
 		if (curr_bpinfo != NULL) {

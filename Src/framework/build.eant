@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<project name="build_framework" default="help">
+	<description>
+		description: "EiffelStudio's framework compilation"
+	</description>
+	
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<echo message="- Compile framework" />
+		<geant target="_build_tpl_" arguments="compile" />
+	</target>
+	
+	<target name="clean" >
+		<echo message="- Clean framework" />
+		<geant target="_build_tpl_" arguments="clean" />
+	</target>
+
+	<target name="clobber" depend="clean" >
+		<echo message="- Clobber framework" />
+		<geant target="_build_tpl_" arguments="clobber" />
+	</target>
+
+	<target name="_build_tpl_" >
+		<argument name="_target_name" />
+		<geant target="${_target_name}" dir="cli_debugger" file="build.eant" reuse_variables="true" if="${is_windows}"/>
+		<geant target="${_target_name}" dir="cli_writer" file="build.eant" reuse_variables="true" if="${is_windows}"/>
+	</target>
+	
+</project>

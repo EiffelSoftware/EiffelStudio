@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<project name="build_c_library" default="help">
+	<description>
+		description: "Eiffel's C_library compilation"
+	</description>
+	
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<geant target="compile" dir="zlib" file="build.eant" reuse_variables="true" if="${is_windows}" />
+		<geant target="compile" dir="libpng" file="build.eant" reuse_variables="true" if="${is_windows}" />
+	</target>
+	
+	<target name="clean" >
+		<geant target="clean" dir="zlib" file="build.eant" reuse_variables="true" if="${is_windows}" />
+		<geant target="clean" dir="libpng" file="build.eant" reuse_variables="true" if="${is_windows}" />
+	</target>
+
+	<target name="clobber" depend="clean" >
+		<geant target="clobber" dir="zlib" file="build.eant" reuse_variables="true" if="${is_windows}" />
+		<geant target="clobber" dir="libpng" file="build.eant" reuse_variables="true" if="${is_windows}" />
+	</target>
+	
+</project>

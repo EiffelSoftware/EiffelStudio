@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<project name="build_library" default="help">
+	<description>
+		description: "Eiffel's libraries compilation"
+	</description>
+	
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant check_setup"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant prepare"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+
+<!-- Targets -->
+	<target name="check_setup" >
+		<set name="check_setup_script" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}check_setup.eant" />
+		<available resource="$check_setup_script" variable="tmp_available"/>
+		<geant target="check_setup" file="$check_setup_script"
+			reuse_variables="true" fork="false"
+			if="$tmp_available=true" 
+		/>
+		<echo message="Error: can not found [$check_setup_script]" if="$tmp_available=false" />
+		<unset name="tmp_available" />
+	</target>
+
+	<target name="compile" depend="prepare" >
+	</target>
+
+	<target name="prepare" >
+		<echo message="Prepare everything for development on `ec'" />
+		<geant target="_target_template_" arguments="compile" reuse_variables="true" />
+	</target>
+
+	<target name="clean" >
+		<geant target="_target_template_" arguments="clean" reuse_variables="true" />
+	</target>
+
+	<target name="clobber" >
+		<geant target="_target_template_" arguments="clobber" reuse_variables="true" />
+	</target>
+
+<!-- Implementation -->
+	<target name="_target_template_" >
+		<argument name="_target_name_" />
+
+		<!-- Classic runtime -->
+		<geant target="$_target_name_" dir ="C" file="build.eant" reuse_variables="true" fork="false" />
+		<!-- IL runtime -->
+		<geant target="$_target_name_" dir ="Eiffel\eiffel\com_il_generation\Core\run-time" file="build.eant" 
+			reuse_variables="true" fork="false" if="${is_windows}" />
+		<!-- C_library -->
+		<geant target="$_target_name_" dir ="C_library" file="build.eant" reuse_variables="true" fork="false" />
+		<!-- library -->
+		<geant target="$_target_name_" dir ="library" file="build.eant" reuse_variables="true" fork="false" />
+		<!-- framework -->
+		<geant target="$_target_name_" dir ="framework" file="build.eant" reuse_variables="true" fork="false" />
+	</target>
+
+</project>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="build_eiffelsoftware_il_runtime" default="help">
+
+	<description>
+		description: "EiffelSoftware IL runtime compilation: EiffelSoftware.Runtime.dll"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant install"/>
+		<echo message=" ---- "/>
+		<echo message=" geant compile_10"/>
+		<echo message=" geant compile_20"/>
+		<echo message=" ---- "/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<echo message="- Compile [EiffelSoftware.Runtime.dll]" />
+		<exec executable="nmake" />
+	</target>
+	<target name="install" depend="compile">
+		<echo message="- Install [EiffelSoftware.Runtime.dll]" />
+		<exec executable="nmake install" />
+	</target>
+
+	<target name="compile_10" >
+		<exec executable="nmake dotnet_10" />
+	</target>
+	<target name="compile_20" >
+		<exec executable="nmake dotnet_20" />
+	</target>
+	<target name="clean" >
+		<echo message="- Clean [EiffelSoftware.Runtime.dll]" />
+		<delete>
+			<fileset directory="." include="@(**/*.dll)"/>
+		</delete>
+	</target>
+
+	<target name="clobber" depend="clean" />
+	
+</project>

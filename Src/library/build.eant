@@ -34,8 +34,8 @@
 		<geant target="${_target_name}" dir="vision2" file="build.eant" reuse_variables="true" />
 
 		<!-- cURL is not an official library, so it might not exists in Delivery -->
-		<available dir="curl" resource="build.eant" variable="tmp_available"/>
-		<geant target="${_target_name}" dir="curl" file="build.eant" reuse_variables="true" if="${tmp_available}=true" />
+		<available resource="cURL${path_separator}build.eant" variable="tmp_available"/>
+		<geant target="${_target_name}" dir="cURL" file="build.eant" reuse_variables="true" if="${tmp_available}=true" />
 		<unset name="tmp_available" />
 	</target>
 	

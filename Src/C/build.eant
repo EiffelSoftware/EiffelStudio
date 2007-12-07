@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<project name="build_runtime" default="help">
+
+	<description>
+		description: "Eiffel Runtime compilation"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant compile_runtime"/>
+		<echo message=" geant compile_runtime_dll"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+		<echo>
+Note: compile = compile_runtime
+when switching from non dll to dll, don't forget to clean
+		</echo>
+	</target>
+
+	<target name="compile">
+		<geant target="compile_runtime" />
+	</target>
+	<target name="compile_runtime">
+		<geant target="_compile_runtime" arguments=" " />
+	</target>
+	<target name="compile_runtime_dll">
+		<geant target="_compile_runtime" arguments="dll" />
+	</target>
+	
+	<target name="clean">
+		<echo message="- Clean Runtime" />
+		<exec executable=".\configure.bat clean" accept_errors="true" exit_code_variable="return_code" 
+			if="${is_windows}"
+			/>
+		<exec executable="make clean" accept_errors="true" exit_code_variable="return_code" 
+			unless="${is_windows}"
+			/>
+	</target>
+
+	<target name="clobber" >
+		<echo message="- Clobber Runtime" />
+		<exec executable=".\configure.bat clean" accept_errors="true" exit_code_variable="return_code" 
+			if="${is_windows}"
+			/>
+		<exec executable="make clobber" accept_errors="true" exit_code_variable="return_code" 
+			unless="${is_windows}"
+			/>
+	</target>
+
+	<!-- Implementation -->
+	<target name="_compile_runtime">
+		<argument name="_rt_type_" /><!-- ' ' or 'dll' -->
+
+		<echo message="- Compile Runtime ${_rt_type_}" />
+		<!-- Windows -->
+		<set name="runtime_c_compiler" value="m" if="-${ISE_C_COMPILER}-=--" />
+		<set name="runtime_c_compiler" value="m" if="${ISE_C_COMPILER}=msc" />
+		<set name="runtime_c_compiler" value="b" if="${ISE_C_COMPILER}=bcb" />
+		<set name="runtime_c_compiler" value="g" if="${ISE_C_COMPILER}=mingw" />
+		<exec executable="configure.bat win32 ${runtime_c_compiler} ${_rt_type_} " if="${ISE_PLATFORM}=windows" 
+			accept_errors="true" exit_code_variable="return_code" 
+			/>
+		<exec executable="configure.bat win64 ${runtime_c_compiler} ${_rt_type_} " if="${ISE_PLATFORM}=win64" 
+			accept_errors="true" exit_code_variable="return_code" 
+			/>
+		<unset name="runtime_c_compiler" />
+
+		<!-- unices -->
+		<exec executable="echo 'y\n' | ./quick_configure" unless="${is_windows}" 
+			accept_errors="true" exit_code_variable="return_code" 
+			/>
+		<!-- or "echo 'n\nn\nn\n' |..." to recompile -->
+	</target>
+	
+</project>

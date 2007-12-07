@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<project name="build_library" default="help">
+	<description>
+		description: "Eiffel's libraries compilation"
+	</description>
+	
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<echo message="- Compile library" />
+		<geant target="_build_tpl_" arguments="compile" />
+	</target>
+	
+	<target name="clean" >
+		<echo message="- Clean library" />
+		<geant target="_build_tpl_" arguments="clean" />
+	</target>
+
+	<target name="clobber" depend="clean" >
+		<echo message="- Clobber library" />
+		<geant target="_build_tpl_" arguments="clobber" />
+	</target>
+
+	<target name="_build_tpl_" >
+		<argument name="_target_name" />
+		<geant target="${_target_name}" dir="net" file="build.eant" reuse_variables="true" />
+		<geant target="${_target_name}" dir="wel" file="build.eant" reuse_variables="true" if="${is_windows}" />
+		<geant target="${_target_name}" dir="vision2" file="build.eant" reuse_variables="true" />
+
+		<!-- cURL is not an official library, so it might not exists in Delivery -->
+		<available dir="curl" resource="build.eant" variable="tmp_available"/>
+		<geant target="${_target_name}" dir="curl" file="build.eant" reuse_variables="true" if="${tmp_available}=true" />
+		<unset name="tmp_available" />
+	</target>
+	
+</project>

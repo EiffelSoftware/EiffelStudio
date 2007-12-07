@@ -13,6 +13,7 @@
 	</target>
 	
 	<target name="compile" >
+		<echo message=" - Compile Vision2 C lib" />
 		<exec executable="finish_freezing -library" />
 	</target>
 	

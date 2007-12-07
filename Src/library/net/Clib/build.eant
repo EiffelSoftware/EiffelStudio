@@ -13,7 +13,7 @@
 	</target>
 	
 	<target name="compile" >
-		<exec executable="finish_freezing -library" if="${is_windows}" />
+		<exec executable="finish_freezing -library" />
 	</target>
 	
 	<target name="clean" >

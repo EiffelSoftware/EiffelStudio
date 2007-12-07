@@ -870,9 +870,9 @@ feature {NONE} -- Implementation (`type_from')
 					end
 					l_list.forth
 				end
-			else
+			elseif last_target_type /= Void then
 				check
-					has_associated_class: last_target_type /= Void and then last_target_type.has_associated_class
+					has_associated_class: last_target_type.has_associated_class
 				end
 				if last_target_type.associated_class.has_feature_table then
 					l_feature := last_target_type.associated_class.feature_table.alias_item (bracket_str)

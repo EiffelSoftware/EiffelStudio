@@ -6,7 +6,9 @@ co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 
 remtrace Compiling additional libraries
 cd $EIFFEL_SRC/library
-cd vision2/Clib
+cd cURL/Clib
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
+cd ../../vision2/Clib
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG
 cd ../implementation/gtk/Clib
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG

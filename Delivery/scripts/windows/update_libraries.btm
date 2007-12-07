@@ -12,6 +12,9 @@ default_make
 remtrace com run-time
 cd %EIFFEL_SRC\library\com\Clib_runtime
 default_make
+remtrace curl
+cd %EIFFEL_SRC\library\cURL\Clib
+default_make
 remtrace encryption
 cd %EIFFEL_SRC\library\encryption\Clib
 default_make

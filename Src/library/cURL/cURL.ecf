@@ -23,6 +23,38 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
+		<external_object location="$(ISE_LIBRARY)/library/cURL/spec/$(ISE_PLATFORM)/lib/eiffel_curl.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)/library/cURL/spec/$(ISE_PLATFORM)/lib/MTeiffel_curl.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mteiffel_curl.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ileiffel_curl.lib">
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="true"/>
+			</condition>
+		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="framework" location="$ISE_LIBRARY\framework\framework.ecf"/>
 		<cluster name="curl" location=".\" recursive="true"/>

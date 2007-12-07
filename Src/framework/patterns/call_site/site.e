@@ -48,12 +48,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	site: G
+	site: G assign set_site
 			-- Access to sited object instance (Void if unsited)
 
 feature {NONE} -- Access
 
-	siteable_entities: ARRAYED_LIST [SITE [G]] is
+	siteable_entities: ARRAYED_LIST [SITE [G]]
 			-- List of siteable entities to automatically site when `Current' is sited
 		do
 			create Result.make (0)
@@ -63,7 +63,7 @@ feature {NONE} -- Access
 
 feature -- Query
 
-	is_valid_site (a_site: ANY): BOOLEAN is
+	is_valid_site (a_site: ANY): BOOLEAN
 			-- Determines if `a_site' is a valid site object
 		local
 			l_ot: G

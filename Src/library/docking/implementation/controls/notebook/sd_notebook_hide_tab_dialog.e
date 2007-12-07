@@ -369,6 +369,9 @@ feature {NONE} -- Implementation functions.
 		local
 			l_max_height: INTEGER
 			l_screen: EV_SCREEN
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_item_height: INTEGER
+			l_item_count: INTEGER
 		do
 			create l_screen
 			l_max_height := (l_screen.height * max_screen_height_proportion).ceiling
@@ -378,9 +381,17 @@ feature {NONE} -- Implementation functions.
 				set_height (minimum_height + internal_tool_bar.minimum_height)
 				internal_scroll_area.hide_vertical_scroll_bar
 			else
-				set_height (l_max_height)
+				l_items := internal_tool_bar.items
+				check at_least_one: not l_items.is_empty end
+				l_item_height := l_items.first.height
+				-- We should calculate a precise maximum height for the last item showing.
+				-- See bug#12618
+				l_item_count := (l_max_height - minimum_height) // l_item_height
+				set_height (l_item_count * l_item_height + minimum_height)
+
 				internal_scroll_area.show_vertical_scroll_bar
 			end
+
 			-- FIXIT: How to get border width of a window? Why uncommnet follow 3 line, exceptions happen?
 --			create l_popup_window
 --			l_popup_window.enable_border

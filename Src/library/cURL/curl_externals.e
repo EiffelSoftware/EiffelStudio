@@ -120,8 +120,8 @@ feature {NONE} -- C externals
 			"[
 			{
 				(FUNCTION_CAST(void, (struct curl_httppost **, struct curl_httppost **, int, char *, int, char *, int)) $a_api)
-																						((struct curl_httppost *)$a_form,
-																						(struct curl_httppost *)$a_last_pointer,
+																						((struct curl_httppost **)$a_form,
+																						(struct curl_httppost **)$a_last_pointer,
 																						(int)$a_arg_1,
 																						(char *)$a_arg_1_value,
 																						(int)$a_arg_2,

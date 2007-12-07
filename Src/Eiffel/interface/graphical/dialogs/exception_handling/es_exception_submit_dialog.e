@@ -662,7 +662,7 @@ feature {NONE} -- Reporting
 
 			support_login.report_bug (l_report)
 
-			create l_thanks.make_standard ("The submitted report is not available at http://support.eiffel.com.")
+			create l_thanks.make_standard ("The submitted report is now available at http://support.eiffel.com.")
 			l_thanks.set_sub_title ("Thank you for the bug report")
 			l_thanks.show (dialog)
 		end

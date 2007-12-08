@@ -18,7 +18,7 @@ inherit
 			{NONE} all
 		end
 
-	USEABLE_I
+	USABLE_I
 
 feature {NONE} -- Clean Up
 

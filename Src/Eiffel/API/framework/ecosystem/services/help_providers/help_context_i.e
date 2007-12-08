@@ -11,7 +11,7 @@ deferred class
 	HELP_CONTEXT_I
 
 inherit
-	USEABLE_I
+	USABLE_I
 
 feature -- Access
 

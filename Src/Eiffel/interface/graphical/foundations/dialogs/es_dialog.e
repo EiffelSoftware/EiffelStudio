@@ -13,7 +13,7 @@ deferred class
 inherit
 	EB_RECYCLABLE
 
--- inherit {NONE}
+inherit {NONE}
 
 	ES_SHARED_DIALOG_BUTTONS
 
@@ -302,6 +302,18 @@ feature {NONE} -- Access
 	frozen button_actions: DS_HASH_TABLE [TUPLE [action: like button_action; before_close: BOOLEAN], INTEGER]
 			-- Dialog button actions
 
+	frozen session_data: SESSION_I
+			-- Provides access to the environment session data
+		require
+			not_is_recycled: not is_recycled
+			is_session_manager_available: session_manager.is_service_available
+		do
+			Result := session_manager.service.retrieve (False)
+		ensure
+			result_attached: Result /= Void
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
 feature {NONE} -- Helpers
 
 	frozen interface_names: INTERFACE_NAMES
@@ -339,6 +351,22 @@ feature {NONE} -- Helpers
 
 	frozen helpers: EVS_HELPERS
 			-- Helpers to extend the operations of EiffelVision2
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+	frozen session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
+			-- Access to the session manager service {SESSION_MANAGER_S} consumer
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+	frozen help_providers: SERVICE_CONSUMER [HELP_PROVIDERS_S]
+			-- Access to the help providers service {HELP_PROVIDERS_S} consumer
 		once
 			create Result
 		ensure
@@ -705,6 +733,19 @@ feature {NONE} -- Basic operation
 			is_close_vetoed: is_close_vetoed
 		end
 
+	show_help
+			-- Attempts to show help given the current help context implemented on Current.
+			-- Note: Descendents should implement {HELP_CONTEXT_I} or use the base implementation {HELP_CONTEXT}
+			--       in order for help to be displayed
+		do
+			if help_providers.is_service_available then
+					-- Add a help button, if help is available
+				if {l_help_context: !HELP_CONTEXT_I} Current and then l_help_context.is_help_available then
+					on_help_requested (l_help_context)
+				end
+			end
+		end
+
 feature -- Actions
 
 	show_actions: EV_LITE_ACTION_SEQUENCE [TUPLE]
@@ -714,6 +755,31 @@ feature -- Actions
 			-- Actions performed when the dialog is closed
 
 feature {NONE} -- Action handlers
+
+	on_before_show
+			-- Called prior to the dialog being shown
+		do
+			adjust_dialog_button_widths
+			dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
+			dialog.set_default_push_button (dialog_window_buttons.item (default_button))
+		end
+
+	on_close_requested (a_id: INTEGER)
+			-- Called when a dialog button is pressed and a close is requested.
+			-- Note: Redefine to veto a close request.
+			--
+			-- `a_id': A button id corrsponding to the button pressed to close the dialog.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+		require
+			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
+			buttons_has_a_id: buttons.has (a_id)
+			not_is_close_vetoed: not is_close_vetoed
+		do
+			dialog.hide
+			close_actions.call ([])
+		ensure
+			not_is_close_vetoed: not is_close_vetoed
+		end
 
 	on_dialog_button_pressed (a_id: INTEGER)
 			-- Called when a dialog button is pressed
@@ -739,23 +805,6 @@ feature {NONE} -- Action handlers
 				end
 			end
 			is_close_vetoed := False
-		ensure
-			not_is_close_vetoed: not is_close_vetoed
-		end
-
-	on_close_requested (a_id: INTEGER)
-			-- Called when a dialog button is pressed and a close is requested.
-			-- Note: Redefine to veto a close request.
-			--
-			-- `a_id': A button id corrsponding to the button pressed to close the dialog.
-			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
-		require
-			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
-			buttons_has_a_id: buttons.has (a_id)
-			not_is_close_vetoed: not is_close_vetoed
-		do
-			dialog.hide
-			close_actions.call ([])
 		ensure
 			not_is_close_vetoed: not is_close_vetoed
 		end
@@ -835,12 +884,17 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_before_show
-			-- Called prior to the dialog being shown
+	on_help_requested (a_context: !HELP_CONTEXT_I) is
+			-- Called when help is requested for the dialog.
+			--
+			-- `a_context': The help context to show help for
+		require
+			a_context_is_interface_usable: a_context.is_interface_usable
+			a_context_is_help_available: a_context.is_help_available
 		do
-			adjust_dialog_button_widths
-			dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
-			dialog.set_default_push_button (dialog_window_buttons.item (default_button))
+			if help_providers.is_service_available then
+				help_providers.service.show_help (a_context)
+			end
 		end
 
 feature -- Conversion
@@ -883,6 +937,17 @@ feature {NONE} -- Factory
 		do
 			create l_container
 			l_container.set_padding ({ES_UI_CONSTANTS}.dialog_button_horizontal_padding)
+
+			if help_providers.is_service_available then
+					-- Add a help button, if help is available
+				if {l_help_context: !HELP_CONTEXT_I} Current and then l_help_context.is_help_available then
+					if {l_help_widget: !EV_WIDGET} create_help_widget then
+						l_container.extend (l_help_widget)
+						l_container.disable_item_expand (l_help_widget)
+					end
+				end
+			end
+
 			l_container.extend (create {EV_CELL})
 
 				-- Add buttons in the order in which they were originally set.
@@ -952,6 +1017,40 @@ feature {NONE} -- Factory
 			create Result.make_with_text (l_label)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	create_help_widget: EV_WIDGET
+			-- Creates a help widget for use in the dialog button ribbon for recieving help
+		local
+			l_pixmap: EV_PIXMAP
+		do
+			l_pixmap := stock_pixmaps.command_system_info_icon
+			l_pixmap.set_tooltip ("Click to show the help documentation.")
+
+				-- Set click action
+			register_action (l_pixmap.pointer_button_release_actions, agent (a_ia_x, a_ia_y, a_ia_button: INTEGER_32; a_ia_x_tilt, a_ia_y_tilt, a_ia_pressure: REAL_64; a_ia_screen_x, a_ia_screen_y: INTEGER_32)
+				do
+					if a_ia_button = {EV_POINTER_CONSTANTS}.left then
+						show_help
+					end
+				end)
+
+				-- Set enter action (change cursor)
+			register_action (l_pixmap.pointer_enter_actions, agent (a_ia_pixmap: EV_PIXMAP)
+				do
+					a_ia_pixmap.set_pointer_style ((create {EV_STOCK_PIXMAPS}).hyperlink_cursor)
+				end (l_pixmap))
+
+				-- Set leave action (change cursor)
+			register_action (l_pixmap.pointer_leave_actions, agent (a_ia_pixmap: EV_PIXMAP)
+				do
+					a_ia_pixmap.set_pointer_style (dialog.pointer_style)
+				end (l_pixmap))
+
+			Result := l_pixmap
+			Result.set_minimum_size (l_pixmap.width, l_pixmap.height)
+		ensure
+			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
 		end
 
 feature {NONE} -- Internal implementation cache

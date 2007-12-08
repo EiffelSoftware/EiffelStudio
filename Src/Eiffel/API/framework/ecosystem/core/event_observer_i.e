@@ -11,7 +11,7 @@ deferred class
 	EVENT_OBSERVER_I
 
 inherit
-	USEABLE_I
+	USABLE_I
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -1,7 +1,7 @@
 indexing
 	description: "[
 		Abstract interface for defining and using an help provider retrieved through the help providers service {HELP_PROVIDER_S}
-	]"	
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -11,7 +11,7 @@ deferred class
 	HELP_PROVIDER_I
 
 inherit
-	USEABLE_I
+	USABLE_I
 
 feature -- Basic operations
 

@@ -14,7 +14,7 @@ deferred class
 inherit
 	SERVICE_I
 
-	USEABLE_I
+	USABLE_I
 
 feature -- Query
 

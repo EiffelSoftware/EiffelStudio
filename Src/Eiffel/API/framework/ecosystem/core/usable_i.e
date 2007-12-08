@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision $"
 
 deferred class
-	USEABLE_I
+	USABLE_I
 
 feature -- Status report
 

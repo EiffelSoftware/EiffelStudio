@@ -13,7 +13,7 @@ deferred class
 	EVENT_OBSERVER_CONNECTION_I [G -> !EVENT_OBSERVER_I]
 
 inherit
-	USEABLE_I
+	USABLE_I
 
 feature -- Event connection
 

@@ -212,7 +212,6 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_SEARCH_REPORT_TOOL})
 			l_tools.put_last ({ES_SEARCH_TOOL})
 			l_tools.put_last ({ES_WINDOWS_TOOL})
-			l_tools.put_last ({ES_RUNNING_DOCUMENTS_TOOL})
 
 				-- Custom formatter tools
 				-- FIXME: Custom formatter tools have been tricking to adapt for 6.1. Given the time-frame

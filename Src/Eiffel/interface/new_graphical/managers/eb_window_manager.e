@@ -418,6 +418,28 @@ feature -- Status report
 			managed_windows.go_i_th (l_index)
 		end
 
+feature -- Query
+
+	development_window_from_id (a_window_id: NATURAL_32): EB_DEVELOPMENT_WINDOW is
+			-- Retrieve a development window using a window id matched to {EB_DEVELOPMENT_WINDOW}.window_id
+		require
+			a_window_id_positive: a_window_id > 0
+		local
+			l_windows: like managed_windows
+			i: INTEGER
+		do
+			l_windows := managed_windows
+			i := l_windows.index
+			from l_windows.start until l_windows.after or Result /= Void loop
+				Result ?= l_windows.item
+				if Result /= Void and then Result.window_id /= a_window_id then
+					Result := Void
+					l_windows.forth
+				end
+			end
+			l_windows.go_i_th (i)
+		end
+
 feature -- Actions on a given window
 
 	show_window (a_window: EB_WINDOW)  is

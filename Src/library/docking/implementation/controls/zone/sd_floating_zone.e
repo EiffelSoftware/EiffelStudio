@@ -26,7 +26,9 @@ inherit
 		redefine
 			type,
 			state,
-			hide
+			hide,
+			screen_y,
+			screen_x
 		end
 
 	SD_DOCKER_SOURCE
@@ -46,7 +48,10 @@ inherit
 			{SD_DOCKING_STATE} set_width, set_height
 			{SD_DOCKING_MANAGER_COMMAND} hide
 		redefine
-			hide
+			hide,
+			screen_y,
+			screen_x,
+			set_position
 		select
 			implementation,
 			show_allow_to_back
@@ -260,6 +265,17 @@ feature -- Query
 			-- On GTK, `width', `height', `screen_x' and `screen_y' are 0 if Current hidden.
 			-- See bug#13685 which only happens on GTK.
 
+	set_position (a_screen_x, a_screen_y: INTEGER) is
+			-- Set `last_screen_y' with `a_int'
+		do
+			last_screen_x := a_screen_x
+			last_screen_y := a_screen_y
+			Precursor {SD_SIZABLE_POPUP_WINDOW}(a_screen_x, a_screen_y)
+		ensure then
+			set: last_screen_x = a_screen_x
+			set: last_screen_y = a_screen_y
+		end
+
 	is_last_sizes_record: BOOLEAN is
 			-- If `last_width', `last_height', `last_screen_x' and `last_screen_y' have been set?
 		do
@@ -267,6 +283,26 @@ feature -- Query
 						last_height /= 0 or
 						last_screen_x /= 0 or
 						last_screen_y /= 0
+		end
+
+	screen_y: INTEGER is
+			-- Redefine
+		do
+			if not is_displayed and then is_last_sizes_record  then
+				Result := last_screen_y
+			else
+				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
+			end
+		end
+
+	screen_x: INTEGER is
+			-- Redefine
+		do
+			if not is_displayed and then is_last_sizes_record  then
+				Result := last_screen_x
+			else
+				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
+			end
 		end
 
 feature {NONE} -- Implementation

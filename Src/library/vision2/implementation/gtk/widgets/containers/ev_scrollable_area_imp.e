@@ -46,7 +46,9 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrolled_window, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
+
+				-- Remove shadow so that the scrollable area looks like any other container.
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrolled_window, {EV_GTK_EXTERNALS}.gtk_shadow_none_enum)
 			set_c_object (scrolled_window)
 			set_scrolling_policy ({EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM, {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM)
 			viewport := {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)

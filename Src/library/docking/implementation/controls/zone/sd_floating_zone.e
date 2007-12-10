@@ -28,7 +28,9 @@ inherit
 			state,
 			hide,
 			screen_y,
-			screen_x
+			screen_x,
+			width,
+			height
 		end
 
 	SD_DOCKER_SOURCE
@@ -51,7 +53,10 @@ inherit
 			hide,
 			screen_y,
 			screen_x,
-			set_position
+			width,
+			height,
+			set_position,
+			set_size
 		select
 			implementation,
 			show_allow_to_back
@@ -266,7 +271,7 @@ feature -- Query
 			-- See bug#13685 which only happens on GTK.
 
 	set_position (a_screen_x, a_screen_y: INTEGER) is
-			-- Set `last_screen_y' with `a_int'
+			-- Redefine
 		do
 			last_screen_x := a_screen_x
 			last_screen_y := a_screen_y
@@ -274,6 +279,14 @@ feature -- Query
 		ensure then
 			set: last_screen_x = a_screen_x
 			set: last_screen_y = a_screen_y
+		end
+
+	set_size (a_width, a_height: INTEGER) is
+			-- Redefine
+		do
+			last_width := a_width
+			last_height := a_height
+			Precursor {SD_SIZABLE_POPUP_WINDOW}(a_width, a_height)
 		end
 
 	is_last_sizes_record: BOOLEAN is
@@ -288,7 +301,7 @@ feature -- Query
 	screen_y: INTEGER is
 			-- Redefine
 		do
-			if not is_displayed and then is_last_sizes_record  then
+			if not is_displayed and then is_last_sizes_record then
 				Result := last_screen_y
 			else
 				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
@@ -298,8 +311,28 @@ feature -- Query
 	screen_x: INTEGER is
 			-- Redefine
 		do
-			if not is_displayed and then is_last_sizes_record  then
+			if not is_displayed and then is_last_sizes_record then
 				Result := last_screen_x
+			else
+				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
+			end
+		end
+
+	width: INTEGER is
+			-- Redefine
+		do
+			if not is_displayed and then is_last_sizes_record then
+				Result := last_width
+			else
+				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
+			end
+		end
+
+	height: INTEGER is
+			-- Redefine
+		do
+			if not is_displayed and then is_last_sizes_record then
+				Result := last_height
 			else
 				Result := Precursor {SD_SIZABLE_POPUP_WINDOW}
 			end

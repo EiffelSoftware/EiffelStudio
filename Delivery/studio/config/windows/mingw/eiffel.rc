@@ -1,3 +1,6 @@
 #include <windows.h>
 
-GNU ICON "gnu.ico"
+STRINGTABLE
+BEGIN
+	1 "This Program was made using EiffelStudio using GCC"
+END

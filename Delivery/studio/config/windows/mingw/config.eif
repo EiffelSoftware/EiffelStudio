@@ -91,7 +91,6 @@ appl_make: "$appl.exe: E1/emain.o $(OBJECTS) $appl.res %N%
 %$appl.res $(OBJECTS) $(EXTERNALS) $(EIFLIB) $sharedlibs%N%
 %%N%
 %../../../$appl.rc:%N%
-%%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico%" ../../../gnu.ico ; fi %N%
 %%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc%" ../../../$appl.rc ; fi %N%
 %%N%
 %$appl.res: ../../../$appl.rc Makefile%N%
@@ -111,10 +110,8 @@ precompile: "driver.exe: E1/emain.o $(OBJECTS) driver.res precomp.lib%N%
 %%N%
 %driver.res: %N%
 %%T$(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc%" driver.rc%N%
-%%T$(MV) %"$(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico%" gnu.ico%N%
 %%T%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/windres%" --preprocessor='%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/bin/cpp.exe%"' driver.rc -O coff -o driver.res%N%
 %%T$(RM) driver.rc%N%
-%%T$(RM) gnu.ico%N%
 %%N%
 %precomp.lib: $(OBJECTS)%N%
 %%T$(RM) $@%N%

@@ -248,8 +248,8 @@ feature {NONE} -- Help registration
 			l_kinds: HELP_PROVIDER_KINDS
 		do
 			create l_kinds
-			
-			--a_service.register_provider (l_kinds.wiki, {WIKI_HELP_PROVIDER})
+
+			a_service.register_provider (l_kinds.wiki, {WIKI_HELP_PROVIDER})
 		end
 
 feature {NONE} -- Exception handling

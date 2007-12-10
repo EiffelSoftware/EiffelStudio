@@ -32,6 +32,10 @@ inherit
         end
 
 inherit {NONE}
+	ES_HELP_PROVIDER
+		export
+			{NONE} all
+		end
 
     EV_SHARED_APPLICATION
         export
@@ -101,7 +105,12 @@ feature {NONE} -- Initialization
 
     on_after_initialized
             -- Use to perform additional creation initializations, after the UI has been created.
+        require
+        	is_initialized: is_initialized
         do
+        	if {l_window: !EV_WINDOW} content then
+        		bind_help_shortcut (l_window)
+        	end
         end
 
 feature {NONE} -- Clean up
@@ -682,6 +691,20 @@ feature {NONE} -- Factory
         ensure
             result_attached: Result /= Void
         end
+
+	create_help_button: SD_TOOL_BAR_BUTTON is
+			-- Creates a help tool bar button for use in the mini tool bar
+		require
+			is_help_providers_service_available:
+		do
+			create Result.make
+			Result.set_pixel_buffer (stock_mini_pixmaps.callstack_send_to_external_editor_icon_buffer)
+			Result.set_pixmap (stock_mini_pixmaps.callstack_send_to_external_editor_icon)
+			Result.set_tooltip ("Click to show the help documentation.")
+			register_action (Result.select_actions, agent show_help)
+		ensure
+			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
+		end
 
 feature {NONE} -- Internal implementation cache
 

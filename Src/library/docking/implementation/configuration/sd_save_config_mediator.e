@@ -421,6 +421,7 @@ feature {NONE} -- Implementation
 				l_tool_bar_data.set_floating (True)
 				l_tool_bar_data.set_title (l_tool_bar_zone.content.unique_title)
 				l_tool_bar_data.set_screen_x_y (l_float_tool_bars_item.screen_x, l_float_tool_bars_item.screen_y)
+				l_tool_bar_zone.assistant.save_items_layout (Void)
 				l_tool_bar_data.set_last_state (l_tool_bar_zone.assistant.last_state)
 				l_tool_bar_data.set_visible (l_tool_bar_zone.content.is_visible)
 				a_tool_bar_data.extend (l_tool_bar_data)

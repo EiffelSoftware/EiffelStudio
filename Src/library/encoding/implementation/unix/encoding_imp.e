@@ -209,30 +209,31 @@ feature {NONE} -- Implementation
 							res = tres;
 						}
 						else if (errno == EILSEQ) {
-							perror ("EILSEQ error. Input conversion stopped due to an input byte that does not belong to the input codeset");
+							/* perror ("EILSEQ error. Input conversion stopped due to an input byte that does not belong to the input codeset"); */
 							*$a_b = 0;
 							break;
 						}
 						else if (errno == EINVAL){
-							perror ("EINVAL error. Input conversion stopped due to an incomplete character or shift sequence at the end of the input buffer.");
+							/* perror ("EINVAL error. Input conversion stopped due to an incomplete character or shift sequence at the end of the input buffer."); */
 							*$a_b = 0;
 							break;
 						}
 						else if (errno == EBADF){
-							perror ("EBADF error. The cd argument is not a valid open conversion descriptor.");
+							/* perror ("EBADF error. The cd argument is not a valid open conversion descriptor."); */
 							*$a_b = 0;
 							break;
 						}
 						else{
-							perror ("Unexpected error.");
+							/* perror ("Unexpected error."); */
 							*$a_b = 0;
 							break;
 						}
 					}
 				} while (insize);
 
-				if (iconv_close(cd))
+				if (iconv_close(cd)) {
 					perror("iconv_close");
+				}
 
 				*$a_out_count = alloc - avail;
 				

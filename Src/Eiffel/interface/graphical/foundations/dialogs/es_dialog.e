@@ -14,6 +14,10 @@ inherit
 	EB_RECYCLABLE
 
 inherit {NONE}
+	ES_HELP_PROVIDER
+		export
+			{NONE} all
+		end
 
 	ES_SHARED_DIALOG_BUTTONS
 
@@ -37,7 +41,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make
+	frozen make
 			-- Initialize dialog
 		local
 			l_init: BOOLEAN
@@ -47,7 +51,12 @@ feature {NONE} -- Initialization
 
 			is_modal := True
 
-			initialize
+				-- Create action lists
+			create show_actions
+			create close_actions
+			create button_actions.make_default
+
+			on_before_initialize
 			build_interface
 
 			dialog_result := default_button
@@ -58,6 +67,8 @@ feature {NONE} -- Initialization
 
 			is_initialized := True
 			is_initializing := l_init
+
+			on_after_initialized
 		ensure
 			is_initialized: is_initialized
 		end
@@ -74,14 +85,19 @@ feature {NONE} -- Initialization
 			development_window_set: development_window = a_window
 		end
 
-	initialize
-			-- Common initialization for any class attributes or other data structures.
+    on_before_initialize
+            -- Use to perform additional creation initializations, before the UI has been created.
 			-- Note: No user interface initialization should be done here! Use `build_dialog_interface' instead
 		do
-			create show_actions
-			create close_actions
-			create button_actions.make_default
-		end
+        end
+
+    on_after_initialized
+            -- Use to perform additional creation initializations, after the UI has been created.
+        require
+        	is_initialized: is_initialized
+        do
+       		bind_help_shortcut (dialog)
+        end
 
 feature {NONE} -- User interface initialization
 
@@ -359,14 +375,6 @@ feature {NONE} -- Helpers
 
 	frozen session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
 			-- Access to the session manager service {SESSION_MANAGER_S} consumer
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen help_providers: SERVICE_CONSUMER [HELP_PROVIDERS_S]
-			-- Access to the help providers service {HELP_PROVIDERS_S} consumer
 		once
 			create Result
 		ensure
@@ -733,19 +741,6 @@ feature {NONE} -- Basic operation
 			is_close_vetoed: is_close_vetoed
 		end
 
-	show_help
-			-- Attempts to show help given the current help context implemented on Current.
-			-- Note: Descendents should implement {HELP_CONTEXT_I} or use the base implementation {HELP_CONTEXT}
-			--       in order for help to be displayed
-		do
-			if help_providers.is_service_available then
-					-- Add a help button, if help is available
-				if {l_help_context: !HELP_CONTEXT_I} Current and then l_help_context.is_help_available then
-					on_help_requested (l_help_context)
-				end
-			end
-		end
-
 feature -- Actions
 
 	show_actions: EV_LITE_ACTION_SEQUENCE [TUPLE]
@@ -881,19 +876,6 @@ feature {NONE} -- Action handlers
 						Result := False
 					end
 				end
-			end
-		end
-
-	on_help_requested (a_context: !HELP_CONTEXT_I) is
-			-- Called when help is requested for the dialog.
-			--
-			-- `a_context': The help context to show help for
-		require
-			a_context_is_interface_usable: a_context.is_interface_usable
-			a_context_is_help_available: a_context.is_help_available
-		do
-			if help_providers.is_service_available then
-				help_providers.service.show_help (a_context)
 			end
 		end
 

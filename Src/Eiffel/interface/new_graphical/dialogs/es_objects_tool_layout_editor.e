@@ -11,8 +11,7 @@ class
 inherit
 	ES_TOOL_DIALOG
 		redefine
-			on_close_requested,
-			make
+			on_after_initialized
 		end
 
 	ES_OBJECTS_GRID_SPECIFIC_LINE_CONSTANTS
@@ -35,8 +34,8 @@ convert
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize dialog		
+	on_after_initialized is
+            -- Use to perform additional creation initializations, after the UI has been created.		
 		do
 			Precursor {ES_TOOL_DIALOG}
 
@@ -377,18 +376,6 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Action handlers
 
-	on_close_requested (a_id: INTEGER)
-			-- Called when a dialog button is pressed and a close is requested.
-			-- Note: Redefine to veto a close request.
-			--
-			-- `a_id': A button id corrsponding to the button pressed to close the dialog.
-			--         Use ES_DIALOG_BUTTONS or Dialog_buttons to determine the id's correspondance.
-		do
-			if a_id = dialog_buttons.cancel_button then
-				Precursor {ES_TOOL_DIALOG} (a_id)
-			end
-		end
-
 	on_apply is
 			-- Called when the Apply button is pressed.
 		require
@@ -448,6 +435,11 @@ feature {NONE} -- Action handlers
 				i := i + 1
 			end
 			objects_tool.panel.change_objects_layout_preference_value (ar)
+
+				-- Prevents dialog from being closed
+			veto_close
+		ensure then
+			is_close_vetoed: is_close_vetoed
 		end
 
 	on_reset is
@@ -458,6 +450,11 @@ feature {NONE} -- Action handlers
 		do
 			objects_tool.panel.reset_objects_grids_contents_to_default
 			update
+
+				-- Prevents dialog from being closed
+			veto_close
+		ensure then
+			is_close_vetoed: is_close_vetoed
 		end
 
 	on_cancel is

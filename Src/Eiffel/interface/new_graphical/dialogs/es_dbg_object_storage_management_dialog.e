@@ -11,7 +11,7 @@ class
 inherit
 	ES_DIALOG
 		redefine
-			make
+			on_after_initialized
 		end
 
 	SHARED_DEBUGGER_MANAGER
@@ -28,14 +28,11 @@ convert
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize dialog		
+	on_after_initialized is
+            -- Use to perform additional creation initializations, after the UI has been created.	
 		do
-			buttons := dialog_buttons.yes_no_cancel_buttons
-			default_button := dialog_buttons.yes_button
-			default_cancel_button := dialog_buttons.cancel_button
-			default_confirm_button := dialog_buttons.yes_button
 			Precursor {ES_DIALOG}
+
 			set_button_text (dialog_buttons.yes_button, interface_names.b_save_object)
 			set_button_text (dialog_buttons.no_button, interface_names.b_load_object)
 			set_button_action (dialog_buttons.yes_button, agent on_save)
@@ -157,25 +154,36 @@ feature -- Access
 	buttons: DS_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
-
+		once
+			Result := dialog_buttons.yes_no_cancel_buttons
+		end
 
 	default_button: INTEGER
 			-- The dialog's default action button
+		once
+			Result := dialog_buttons.yes_button
+		end
 
 	default_cancel_button: INTEGER
 			-- The dialog's default cancel button
+		once
+			Result := dialog_buttons.cancel_button
+		end
 
 	default_confirm_button: INTEGER
 			-- The dialog's default confirm button
+		once
+			Result := dialog_buttons.yes_button
+		end
 
 	button_save: EV_BUTTON is
-			--
+			-- Save object button
 		do
 			Result := dialog_window_buttons.item (dialog_buttons.yes_button)
 		end
 
 	button_load: EV_BUTTON is
-			--
+			-- Load object button
 		do
 			Result := dialog_window_buttons.item (dialog_buttons.no_button)
 		end

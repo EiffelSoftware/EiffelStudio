@@ -71,6 +71,7 @@ feature -- Basic operations
 							-- Set site, if applicable
 						l_site.site := a_ia_service
 					end
+					Result := l_provider
 				end (?, a_type))
 		ensure
 			a_kind_is_provider_available: is_provider_available (a_kind)

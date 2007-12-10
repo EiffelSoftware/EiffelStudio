@@ -894,10 +894,15 @@ feature {NONE} -- Implementation
 
 				create l_tool_bar.make (False, internal_docking_manager, False)
 				l_tool_bar.extend (l_content)
-				l_tool_bar.float (l_data.screen_x, l_data.screen_y, l_data.is_visible)
-				l_content.set_visible (l_data.is_visible)
 				l_state := l_data.last_state
 				l_tool_bar.assistant.set_last_state (l_state)
+				if l_state /= Void and then l_state.items_layout /= Void then
+					l_tool_bar.assistant.open_items_layout
+				end
+
+				l_tool_bar.float (l_data.screen_x, l_data.screen_y, l_data.is_visible)
+				l_content.set_visible (l_data.is_visible)
+				
 				if l_state.floating_group_info /= Void then
 					l_tool_bar.floating_tool_bar.assistant.position_groups (l_state.floating_group_info)
 				end

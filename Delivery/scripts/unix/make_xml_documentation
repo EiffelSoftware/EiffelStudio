@@ -21,6 +21,7 @@ rm -rf EIFGENs
 
 remtrace Compile all required libraries and generate XML documentation
 cd $EIFFEL_SRC/tools/doc_builder/resources/xml
+ec -local -config all_libs.ecf >> $INSTALL_LOG 2>&1
 ec -local -flatshort -filter xml -all -config all_libs.ecf >> $INSTALL_LOG 2>&1
 
 remtrace Copy XML docs into appropriate written docs location

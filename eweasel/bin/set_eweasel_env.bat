@@ -4,6 +4,7 @@ if not defined ISE_PLATFORM (
 	exit 1
 )
 
+if "%EWEASEL_PLATFORM%" == "" (
 if "%ISE_PLATFORM%" == "dotnet" (
 	set EWEASEL_PLATFORM=DOTNET
 ) else if "%ISE_PLATFORM%" == "windows" (
@@ -14,6 +15,7 @@ if "%ISE_PLATFORM%" == "dotnet" (
 	echo Error: Environment variable ISE_PLATFORM is assigned an invalid value:
 	echo "%ISE_PLATFORM%". Supported values: "dotnet", "windows", "win64".
 	exit 1
+)
 )
 
 if not defined EWEASEL set EWEASEL=%~dp0..

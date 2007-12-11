@@ -88,6 +88,7 @@ feature -- Visit nodes
 			-- Visit `a_group'.
 		local
 			l_cluster, l_cluster_new: CONF_CLUSTER
+			l_lib, l_lib_new: CONF_LIBRARY
 		do
 			if not is_error then
 				a_group.set_description (new_group.description)
@@ -99,6 +100,10 @@ feature -- Visit nodes
 					l_cluster ?= a_group
 					l_cluster_new ?= new_group
 					l_cluster.set_file_rule (l_cluster_new.internal_file_rule)
+				elseif a_group.is_library then
+					l_lib ?= a_group
+					l_lib_new ?= new_group
+					l_lib.set_use_application_options (l_lib_new.use_application_options)
 				end
 			end
 		end

@@ -366,7 +366,7 @@ feature -- Basic operation
 			a_idle_action_not_void: a_idle_action /= Void
 		do
 			lock
-			if not idle_actions_internal.has (a_idle_action) then
+			if not idle_actions.has (a_idle_action) then
 				idle_actions_internal.extend (a_idle_action)
 			end
 			unlock
@@ -382,7 +382,7 @@ feature -- Basic operation
 			l_idle_actions: like idle_actions
 		do
 			lock
-			l_idle_actions := idle_actions_internal
+			l_idle_actions := idle_actions
 			l_cursor := l_idle_actions.cursor
 			l_idle_actions.prune_all (a_idle_action)
 			if l_idle_actions.valid_cursor (l_cursor) then
@@ -412,7 +412,7 @@ feature -- Events
 			-- Perform `an_action' one time only on idle.
 		do
 			lock
-			if not idle_actions_internal.has (an_action) then
+			if not idle_actions.has (an_action) then
 				idle_actions_internal.extend_kamikaze (an_action)
 			end
 			unlock

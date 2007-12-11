@@ -21,7 +21,8 @@ inherit
 			on_event_added,
 			on_event_removed,
 			update_content_applicable_widgets,
-			on_shown
+			on_shown,
+			show
 		end
 
 	ES_ERROR_LIST_COMMANDER_I
@@ -765,6 +766,25 @@ feature {NONE} -- Factory
 		end
 
 feature {NONE} -- User interface manipulation
+
+	show is
+			-- Redefine
+		local
+			l_width: INTEGER
+			l_platform: PLATFORM
+			l_grid: ES_GRID
+		do
+			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
+
+			create l_platform
+			if l_platform.is_unix then
+				-- This is hack for bug#13604
+				l_grid := grid_events
+				if l_grid /= Void and then not l_grid.is_destroyed then
+					l_width := l_grid.width
+				end
+			end
+		end
 
 	set_error_count (a_count: like error_count)
 			-- Sets `error_count' to `a_count'

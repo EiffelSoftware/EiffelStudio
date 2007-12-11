@@ -1,0 +1,47 @@
+test_name 	use-application-options-assertions
+test_description After disabling assertion checking on a library we force the library to use the settings of the project, but instead of reporting a precondition violation nothing is reported, that is to say not taking into accounts the config change.
+
+define OPTION ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define OPTION "use_application_options="true""
+copy_sub 	Ace $TEST Ace
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	failed
+
+-- Restart but this time with quick_melt.
+cleanup_compile
+
+define OPTION ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_quick_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define OPTION "use_application_options="true""
+copy_sub 	Ace $TEST Ace
+
+compile_quick_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	failed
+
+test_end

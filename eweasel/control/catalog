@@ -1686,7 +1686,9 @@ test	generic-constraint-to-none	fixed133 tcf pass fixed
 test	roundtrip-test rdtp001 tcf pass fixed
 test	roundtrip-number-denoted-character rdtp002 tcf pass fixed
 
-test	supplier-preconditions assert001 tcf pass execution
+-- Tests for assertion monitoring
+test	supplier-preconditions assert001 tcf pass assertions execution
+test	use-application-options-assertions	assert002 tcf pass assertions execution
 
 -- Multi Constraint Tests
 test	multi-constraint-basics							multicon001 tcf pass multiconstraint

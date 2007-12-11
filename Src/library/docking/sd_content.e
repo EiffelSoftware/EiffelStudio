@@ -336,7 +336,7 @@ feature -- Set
 			end
 		end
 
-	set_focus_no_maximzied (a_zone: EV_WIDGET) is
+	set_focus_no_maximized (a_zone: EV_WIDGET) is
 			-- Same as `set_focus', but only do things when no maximized zone in dock area which has `a_zone'
 		require
 			not_destroyed: not is_destroyed

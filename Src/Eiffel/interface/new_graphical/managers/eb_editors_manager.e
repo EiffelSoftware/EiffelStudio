@@ -790,7 +790,7 @@ feature -- Basic operations
 					if a_force_focus then
 						a_editor.docking_content.set_focus
 					else
-						a_editor.docking_content.set_focus_no_maximzied (a_editor.docking_content.user_widget)
+						a_editor.docking_content.set_focus_no_maximized (a_editor.docking_content.user_widget)
 					end
 					if a_editor.editor_drawing_area.is_sensitive and a_editor.editor_drawing_area.is_displayed then
 						a_editor.editor_drawing_area.set_focus

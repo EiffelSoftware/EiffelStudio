@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_estudio" default="help">
+	<description>
+		description: "estudio compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_estudio.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+			<redefine target="prepare"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 	
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}estudio${path_separator}config${path_separator}estudio.ecf" />
+		<geant target="set_TARGET" 	arguments="estudio" />
+		<geant target="set_NAME" 	arguments="estudio" />
+	</target>
+
+	<target name="prepare" if="$is_windows">
+		<precursor/>
+		<set name="_ecf_dir" value="${EIFFEL_SRC}${path_separator}tools${path_separator}estudio${path_separator}config" />
+		<copy dir="$_ecf_dir" file="estudio.rc" to_directory="$_COMP_DIR" />
+		<copy dir="$_ecf_dir" file="estudio.ico" to_directory="$_COMP_DIR" />
+		<copy dir="$_ecf_dir" file="estudio_e.ico" to_directory="$_COMP_DIR" />
+		<copy dir="$_ecf_dir" file="estudio_ecf.ico" to_directory="$_COMP_DIR" />
+		<unset name="_ecf_dir" />
+	</target>
+
+</project>

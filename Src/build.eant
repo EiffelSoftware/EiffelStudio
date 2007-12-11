@@ -7,26 +7,53 @@
 	
 	<target name="help">
 		<echo message="usage:"/>
-		<echo message=" geant check_setup"/>
-		<echo message=" geant compile"/>
-		<echo message=" geant prepare"/>
-		<echo message=" geant clean"/>
-		<echo message=" geant clobber"/>
+		<echo message=" geant check_setup		Check if your setup is ok for compilation " />
+		<echo message=" geant prepare			Prepare everything for development on `ec'"/>
+		<echo message=" geant compile			Compile `ec'" />
+		<echo message=" geant clean				Clean up the folders" />
+		<echo message=" geant clobber			Clean, and delete generated files"/>
+		<echo message=" ---- "/>
+		<echo message=" geant build_delivery	Build a complete delivery " />
+		<echo message="" />
+		<echo message="defines:" />
+		<!--
+		<echo message="  -Dclean_after_compile    Clean after compilation (to save disk space)"/>
+		<echo message="  -Dgobo_using_gec         Build GOBO tools using GEC"/>
+		-->
+		<echo message="  -Dcompile_dir=PATH       Build intermediate binaries in PATH"/>
 	</target>
 
 <!-- Targets -->
 	<target name="check_setup" >
-		<set name="check_setup_script" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}check_setup.eant" />
-		<available resource="$check_setup_script" variable="tmp_available"/>
-		<geant target="check_setup" file="$check_setup_script"
+		<set name="L_check_setup_script" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}check_setup.eant" />
+		<available resource="$L_check_setup_script" variable="tmp_available"/>
+		<geant target="check_setup" file="$L_check_setup_script"
 			reuse_variables="true" fork="false"
 			if="$tmp_available=true" 
 		/>
-		<echo message="Error: can not found [$check_setup_script]" if="$tmp_available=false" />
+		<echo message="Error: can not found [$L_check_setup_script]" if="$tmp_available=false" />
 		<unset name="tmp_available" />
 	</target>
 
-	<target name="compile" depend="prepare" >
+	<target name="init_compilation" >
+		<set name="L_comp_dir" value="$compile_dir" if="$compile_dir" />
+		<set name="L_comp_dir" value="$cwd" 		if="-$compile_dir-=--" />
+		<set name="L_comp_dir" value="$cwd" 		unless="$compile_dir" />
+	</target>
+
+	<target name="compile" depend="init_compilation" >
+		<echo message="Compile `ec' in [$L_comp_dir]" />
+
+		<geant target="compile" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+			dir="$L_comp_dir"
+			reuse_variables="true" fork="false" />
+	</target>
+	<target name="clean_compilation" depend="init_compilation" >
+		<echo message="Clean `ec' compilation from [$L_comp_dir]" />
+
+		<geant target="clean" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+			dir="$L_comp_dir"
+			reuse_variables="true" fork="false" />
 	</target>
 
 	<target name="prepare" >
@@ -36,10 +63,16 @@
 
 	<target name="clean" >
 		<geant target="_target_template_" arguments="clean" reuse_variables="true" />
+		<geant target="clean_compilation" reuse_variables="true" />
 	</target>
 
-	<target name="clobber" >
+	<target name="clobber" depend="clean" >
 		<geant target="_target_template_" arguments="clobber" reuse_variables="true" />
+	</target>
+
+	<target name="build_delivery" >
+		<geant target="build_es" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}deliv.eant"
+			reuse_variables="true" fork="false" />
 	</target>
 
 <!-- Implementation -->
@@ -47,16 +80,20 @@
 		<argument name="_target_name_" />
 
 		<!-- Classic runtime -->
-		<geant target="$_target_name_" dir ="C" file="build.eant" reuse_variables="true" fork="false" />
+		<geant target="$_target_name_" dir="C" file="build.eant" 
+			reuse_variables="true" fork="false" />
 		<!-- IL runtime -->
-		<geant target="$_target_name_" dir ="Eiffel\eiffel\com_il_generation\Core\run-time" file="build.eant" 
+		<geant target="$_target_name_" dir="Eiffel\eiffel\com_il_generation\Core\run-time" file="build.eant" 
 			reuse_variables="true" fork="false" if="${is_windows}" />
 		<!-- C_library -->
-		<geant target="$_target_name_" dir ="C_library" file="build.eant" reuse_variables="true" fork="false" />
+		<geant target="$_target_name_" dir="C_library" file="build.eant"
+			reuse_variables="true" fork="false" />
 		<!-- library -->
-		<geant target="$_target_name_" dir ="library" file="build.eant" reuse_variables="true" fork="false" />
+		<geant target="$_target_name_" dir="library" file="build.eant" 
+			reuse_variables="true" fork="false" />
 		<!-- framework -->
-		<geant target="$_target_name_" dir ="framework" file="build.eant" reuse_variables="true" fork="false" />
+		<geant target="$_target_name_" dir="framework" file="build.eant"
+			reuse_variables="true" fork="false" />
 	</target>
 
 </project>

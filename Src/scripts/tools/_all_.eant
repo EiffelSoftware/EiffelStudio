@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT__all_" default="help">
+	<description>
+		description: "compile all tools"
+	</description>
+
+
+	<target name="help" >
+		<echo message="usage:" />
+		<echo message="  compile_all" />
+		<echo message="  clean_all" />
+	</target>
+	<target name="compile_all" >
+		<geant target="_tpl_all_" arguments="compile" />
+	</target>
+	<target name="clean_all" >
+		<geant target="_tpl_all_" arguments="clean" />
+	</target>
+	<target name="test_all" >
+		<geant target="_tpl_all_" arguments="test" />
+	</target>
+	<target name="_tpl_all_" >
+		<argument name="A_op" />
+		<geant target="_tpl_" arguments="$A_op" reuse_variables="true" >
+			<fileset
+				dir="${PROJECT__all_.dir}"
+				include="@(*.eant)"
+				exclude="@(_*.eant)"
+				filename_variable="FS_GEANT_FILE"
+			/>
+		</geant>
+	</target>
+
+	<target name="_tpl_" >
+		<argument name="A_op" />
+		<geant target="$A_op" file="$FS_GEANT_FILE" reuse_variables="true" />
+	</target>
+
+</project>

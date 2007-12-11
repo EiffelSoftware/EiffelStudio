@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+
+<project name="GOBO_TOOLS" default="help">
+
+	<description>
+		description: "Gobo tools compilation"
+		author: "Jocelyn Fiat and others"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO_TOOLS.dir}${path_separator}misc${path_separator}_common_.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+	
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant  compile" />
+		<echo message=" geant  compile_from -A{compile_dir}" />
+	</target>	
+
+	<target name="init" >
+		<precursor/>
+		<set name="_GOBO_LIB" value="${ISE_LIBRARY}${path_separator}library${path_separator}gobo" />
+	</target>
+
+	<target name="compile" depend="init" >
+		<set name="_COMP_DIR" value="" unless="${_COMP_DIR}" />
+		<set name="_COMP_DIR" value="$cwd" if="-${_COMP_DIR}-=--" />
+		<geant target="compile_from" arguments="$_COMP_DIR" reuse_variables="true" />
+	</target>
+
+	<target name="compile_from" depend="init" >
+		<argument name="A_comp_dir" />
+
+		<echo message="Compile Gobo Eiffel tools" />
+
+		<set name="L_out_dir" value="${_GOBO_LIB}${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
+		<mkdir directory="${L_out_dir}" accept_errors="true" exit_code_variable="return_code" />
+
+		<set name="L_comp_dir" value="${A_comp_dir}${path_separator}gobo" />
+		<mkdir directory="${L_comp_dir}" />
+
+		<!-- geant -->
+		<geant target="get_bin__gobo_exec" arguments="geant,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<!-- gec -->
+		<geant target="get_bin__gobo_exec" arguments="gec,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<!-- gelex -->
+		<geant target="get_bin__gobo_exec" arguments="gelex,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<!-- geyacc -->
+		<geant target="get_bin__gobo_exec" arguments="geyacc,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<!-- gelint -->
+		<geant target="get_bin__gobo_exec" arguments="gelint,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<!-- gepp -->
+		<geant target="get_bin__gobo_exec" arguments="gepp,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<!-- getest -->
+		<geant target="get_bin__gobo_exec" arguments="getest,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<!-- gexace -->
+		<geant target="get_bin__gobo_exec" arguments="gexace,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<!-- gexslt -->
+		<geant target="get_bin__gobo_exec" arguments="gexslt,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+
+		<delete directory="${L_comp_dir}" />
+		<unset name="L_comp_dir" />
+		<unset name="L_out_dir" />
+		<unset name="_GOBO_LIB" />
+	</target>
+
+	<target name="get_bin__gobo_exec" depend="init" >
+		<argument name="A_name" />
+		<argument name="A_comp_dir" />
+		<argument name="A_out_dir" />
+		<available resource="${A_out_dir}${path_separator}${A_name}${exe}" variable="tmp_available" />
+		<set name="return_code" value="0" 							if="${tmp_available}=true" />
+		<geant dir="${GOBO_TOOLS.dir}" 	if="${tmp_available}=false"
+			file="ise_eiffel_compiler.eant" target="finalize" 
+			reuse_variables="true" fork="false">
+			<argument name="a_ecf" value="${_GOBO_LIB}${path_separator}src${path_separator}${A_name}.ecf" />
+			<argument name="a_target" value="${A_name}" />
+			<argument name="a_name" value="${A_name}" />
+			<argument name="a_comp_dir" value="${A_comp_dir}" />
+			<argument name="a_output_dir" value="${A_out_dir}" />
+		</geant>
+		<echo message="Error occurred during building of wizard ${A_name}' (${return_code})" unless="${return_code}=0" />
+	</target>
+	
+</project>

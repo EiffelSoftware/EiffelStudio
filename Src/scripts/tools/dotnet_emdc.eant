@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_dotnet_emdc" default="help">
+	<description>
+		description: "dotnet_emdc compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_dotnet_emdc.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 	
+			arguments="${EIFFEL_SRC}${path_separator}dotnet${path_separator}consumer${path_separator}consumer.ecf" />
+		<geant target="set_TARGET" 	arguments="emdc" />
+		<geant target="set_NAME" 	arguments="emdc" />
+
+		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="This is a Windows-only application" unless="${is_windows}"/>
+	</target>
+
+</project>

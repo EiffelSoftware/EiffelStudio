@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_compile_all" default="help">
+	<description>
+		description: "compile_all compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_compile_all.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}compile_all${path_separator}compile_all.ecf" />
+		<geant target="set_TARGET" 	arguments="compile_all" />
+		<geant target="set_NAME" 	arguments="compile_all" />
+	</target>
+
+</project>

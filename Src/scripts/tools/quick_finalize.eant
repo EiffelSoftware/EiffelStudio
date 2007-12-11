@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_quick_finalize" default="help">
+	<description>
+		description: "quick_finalize compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_quick_finalize.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}quick_finalize${path_separator}quick_finalize.ecf" />
+		<geant target="set_TARGET" 	arguments="quick_finalize" />
+		<geant target="set_NAME" 	arguments="quick_finalize" />
+	</target>
+
+</project>

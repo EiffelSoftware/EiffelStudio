@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+
+<project name="_EIFFEL_TOOLS_COMPILATION" default="help">
+	<description>
+		description: "generic Eiffel tool compilation"
+		author: "Jocelyn Fiat and others"
+	</description>
+	<target name="help" depend="init" >
+		<echo message="Usage: * Project: $_TARGET *" 			if="$_TARGET=$_NAME"/>
+		<echo message="Usage: * Project: $_TARGET -> $_NAME *" 	unless="$_TARGET=$_NAME"/>
+		<echo message=" geant compile" />
+		<echo message=" geant finalize" />
+		<echo message=" geant freeze" />
+		<echo message=" geant melt" />
+		<echo message=" geant precompile" />
+		<echo message=" geant clean" />
+		<echo message="" />
+		<echo message="defines:" />
+		<echo message=" -Dforce_batch={true|false}		(default=true)"  />
+		<echo message=" -Dforce_clean={true|false}		(default=false)" />
+	</target>
+
+	<target name="init">
+		<set name="_COMP_DIR" value="$cwd" unless="${_COMP_DIR}" />
+		<set name="_OUT_DIR" value="$_COMP_DIR" unless="${_OUT_DIR}" />
+		<!-- You have to set the following values
+		<geant target="set_ECF"		arguments="path_to_ecf" />
+		<geant target="set_TARGET"	arguments="target_name" />
+		<geant target="set_NAME"	arguments="executable_name_without_extension" />
+		-->
+	</target>
+
+	<target name="init_skip" depend="init" if="$_SKIP=true" >
+		<echo message="$_SKIP_MESSAGE" if="$_SKIP_MESSAGE" />
+		<echo message="Skipped: no message" unless="$_SKIP_MESSAGE" />
+	</target>
+
+	<target name="prepare" depend="init">
+	</target>
+
+	<target name="require">
+		<argument name="A_exit_on_failure" />
+		<description>Checking requirement for compilation.</description>
+		<set name="_error" value="0" />
+		<available resource="$_ECF" variable="tmp_available" />
+		<echo message="==================================" if="$tmp_available=false" />
+		<echo message="! ERROR: invalid ecf path [_ECF] !" if="$tmp_available=false" />
+		<echo message="==================================" if="$tmp_available=false" />
+		<set name="_error" value="-1" if="$tmp_available=false" />
+		<unset name="tmp_available" />
+
+		<set name="_final_error" value="0" if="${A_exit_on_failure}=false" />
+		<set name="_final_error" value="$_error" unless="${A_exit_on_failure}=false" />
+		<exit code="-1" unless="$_final_error=0" />
+		<unset name="_final_error" />
+	</target>
+
+	<target name="compile" depend="finalize" />
+	<target name="debug" depend="freeze" />
+
+	<target name="finalize" depend="init">
+		<geant target="_tpl_compile_" arguments="finalize" />
+	</target>
+	
+	<target name="freeze" depend="init">
+		<geant target="_tpl_compile_" arguments="freeze" />
+	</target>
+
+	<target name="melt" depend="init">
+		<geant target="_tpl_compile_" arguments="melt" />
+	</target>
+
+	<target name="precompile" depend="init">
+		<geant target="_tpl_compile_" arguments="precompile" />
+	</target>
+
+	<target name="clean" depend="init_skip" unless="$_SKIP=true">
+		<geant dir="${_EIFFEL_TOOLS_COMPILATION.dir}${path_separator}..${path_separator}.." 
+			file="ise_eiffel_compiler.eant"
+			target="clean" 
+			fork="false"
+			>
+			<argument name="a_target" value="$_TARGET"/>
+			<argument name="a_comp_dir" value="$_COMP_DIR"/>
+		</geant>
+	</target>
+
+	<target name="test" depend="init" >
+		<echo message="Testing  [$_TARGET,$_NAME]" />
+		<echo message="         [$_ECF]" />
+		<set name="_SKIP_MESSAGE" value="" unless="${_SKIP_MESSAGE}" />
+		<echo message="         [Skipped:${_SKIP_MESSAGE}]" if="${_SKIP}=true" />
+		<geant target="require" arguments="false" reuse_variables="true" />
+		<echo message="         -> Ok." if="$_error=0" />
+		<echo message="         -> Error." unless="$_error=0" />
+		<echo message="" />
+	</target>
+
+<!-- advanced usage -->
+	<target name="process_with_args" depend="init" >
+		<argument name="a_comp_mode" />
+		<argument name="a_comp_dir" />
+		<argument name="a_out_dir" />
+		<set name="_COMP_DIR" value="$a_comp_dir" unless="-$a_comp_dir-=--" />
+		<set name="_OUT_DIR" value="$a_out_dir" unless="-$a_out_dir-=--" />
+		<geant target="_tpl_compile_" arguments="$a_comp_mode" />
+	</target>
+
+<!-- Implementation -->
+
+	<!-- using the set_XXX procedure, to be independant of the variable name -->
+	<target name="set_ECF" > <!-- Set $_ECF -->
+		<argument name="a_value" />
+		<set name="_ECF" value="$a_value" />
+	</target>
+
+	<target name="set_TARGET" > <!-- Set $_TARGET -->
+		<argument name="a_value" />
+		<set name="_TARGET" value="$a_value" />
+	</target>
+
+	<target name="set_NAME" > <!-- Set $_NAME -->
+		<argument name="a_value" />
+		<set name="_NAME" value="$a_value" />
+	</target>
+
+	<target name="set_SKIP" > <!-- Set $_SKIP -->
+		<argument name="a_value" />
+		<set name="_SKIP" value="$a_value" />
+	</target>
+	<target name="set_SKIP_MESSAGE" > <!-- Set $_SKIP_MESSAGE -->
+		<argument name="a_mesg" />
+		<set name="_SKIP_MESSAGE" value="$a_mesg" />
+	</target>
+
+	<target name="_tpl_compile_" depend="init_skip" unless="$_SKIP=true">
+		<argument name="a_mode" />
+		<geant target="require" arguments="true" />
+		<geant target="prepare" />
+
+		<!-- Debug purpose
+		<echo message="_ECF=$_ECF" />
+		<echo message="_TARGET=$_TARGET" />
+		<echo message="_NAME=$_NAME" />
+		<echo message="_COMP_DIR=$_COMP_DIR" />
+		<echo message="_OUT_DIR=$_OUT_DIR" />
+		<exit code="-1" />
+		-->
+
+		<geant dir="${_EIFFEL_TOOLS_COMPILATION.dir}${path_separator}..${path_separator}.." 
+			file="ise_eiffel_compiler.eant"
+			target="$a_mode" 
+			fork="false"
+			reuse_variables="true"
+			>
+			<argument name="a_ecf" value="$_ECF"/>
+			<argument name="a_target" value="$_TARGET"/>
+			<argument name="a_name" value="$_NAME"/>
+			<argument name="a_comp_dir" value="$_COMP_DIR"/>
+			<argument name="a_output_dir" value="$_OUT_DIR"/>
+		</geant>
+	</target>
+
+</project>

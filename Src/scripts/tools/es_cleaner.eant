@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_es_cleaner" default="help">
+	<description>
+		description: "es_cleaner compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_es_cleaner.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}es_cleaner${path_separator}escln.ecf" />
+		<geant target="set_TARGET" 	arguments="escln_graphical" />
+		<geant target="set_NAME" 	arguments="escln_graphical" />
+	</target>
+
+</project>

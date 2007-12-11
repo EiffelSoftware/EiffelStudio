@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+
+<project name="COMPILE_WIZARDS" default="help">
+
+	<description>
+		description: "Wizards compilation"
+		author: "Jocelyn Fiat and others"
+	</description>
+
+	<inherit>
+		<parent location="${COMPILE_WIZARDS.dir}${path_separator}misc${path_separator}_common_.eant">
+		</parent>
+	</inherit>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant  compile_all" />
+		<echo message=" geant  compile_all_from -A{compile_dir}" />
+	</target>	
+
+	<target name="compile_all" depend="init">
+		<set name="_COMP_DIR" value="" unless="${_COMP_DIR}" />
+		<set name="_COMP_DIR" value="$cwd" if="-${_COMP_DIR}-=--" />
+		<geant target="compile_all_from" arguments="$_COMP_DIR" reuse_variables="true" />
+	</target>
+
+	<target name="compile_all_from" depend="init">
+		<argument name="A_comp_dir"/>
+		<set name="L_wizards_comp_dir" value="${A_comp_dir}${path_separator}wizards" />
+		<mkdir directory="${L_wizards_comp_dir}" />
+		<!-- <geant target="compile_a_wizard" arguments="new_projects,wizard,wizard_wizard"/> -->
+		<geant target="get_a_wizard" arguments="new_projects,vision2,vision2_wizard,${L_wizards_comp_dir}"/>
+		<geant target="get_a_wizard" arguments="others,precompile,precompile_wizard,${L_wizards_comp_dir}"/>
+		<geant target="get_a_wizard" arguments="new_projects,wel,wel_wizard,${L_wizards_comp_dir}" if="${is_windows}" />
+		<geant target="get_a_wizard" arguments="new_projects,dotnet,dotnet_wizard,${L_wizards_comp_dir}" if="${is_windows}" />
+	</target>
+
+	<target name="get_a_wizard" depend="init">
+		<argument name="a_type"/>
+		<argument name="a_name"/>
+		<argument name="a_wizard_name"/>
+		<argument name="a_output_dir"/>
+
+		<set name="tmp_output" value="${a_output_dir}${path_separator}${a_type}${path_separator}${a_name}${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+		<mkdir directory="${tmp_output}" />
+
+		<set name="tmp_comp_dir" value="${a_output_dir}${path_separator}${a_wizard_name}" />
+
+		<available resource="${tmp_output}${path_separator}wizard${exe}" variable="tmp_available" />
+		<mkdir directory="$tmp_comp_dir" if="${tmp_available}=false"/>
+		<geant target="compile_a_wizard" arguments="$a_name,$a_wizard_name,$tmp_comp_dir,$tmp_output" if="${tmp_available}=false"/>
+		<echo message=" -> Wizard [$a_type:$a_wizard_name] already available" if="${tmp_available}=true"/>
+
+		<unset name="tmp_comp_dir" />
+		<unset name="tmp_output" />
+		<unset name="tmp_available" />
+	</target>
+
+	<target name="compile_a_wizard" depend="init">
+		<argument name="a_name"/>
+		<argument name="a_wizard_name"/>
+		<argument name="a_comp_dir"/>
+		<argument name="a_output_dir"/>
+
+		<copy file="wizard.ico"
+			dir="${EIFFEL_SRC}${path_separator}help${path_separator}wizards"
+			to_directory="$a_comp_dir" force="true" 
+			/>
+		<copy file="wizard.rc"
+			dir="${EIFFEL_SRC}${path_separator}help${path_separator}wizards"
+			to_directory="$a_comp_dir" force="true" 
+			/>
+		<geant dir="${COMPILE_WIZARDS.dir}" file="ise_eiffel_compiler.eant" target="finalize" reuse_variables="true" fork="false">
+			<argument name="a_ecf" value="${EIFFEL_SRC}${path_separator}help${path_separator}wizards${path_separator}${a_wizard_name}.ecf"/>
+			<argument name="a_target" value="wizard"/>
+			<argument name="a_name" value="$a_name"/>
+			<argument name="a_comp_dir" value="$a_comp_dir"/>
+			<argument name="a_output_dir" value="$a_output_dir"/>
+		</geant>
+		<echo message="Error occurred during building of wizard ${a_wizard_name}' (${return_code})" unless="${return_code}=0" />
+		<delete directory="${a_comp_dir}" />
+	</target>
+</project>

@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 
-<project name="_common_" default="help">
+<project name="_common_" default="do_not_call">
 
 	<description>
 		description: "Common script code"
 		author: "Jocelyn Fiat and others"
 	</description>
 
-	<target name="help">
+	<target name="do_not_call">
 		<echo message="usage:"/>
 		<echo message=" Do not call this script directly" />
 	</target>	
@@ -30,7 +30,7 @@
 		<echo message="var ISE_PLATFORM is not defined" unless="${ISE_PLATFORM}" />
 		<set name="environment_valid" value="false" unless="${ISE_PLATFORM}" />
 
-		<geant target="check_environment_windows" if="${is_windows}" reuse_variables="true" />
+		<geant target="check_environment_windows" if="${is_windows}" />
 	</target>
 
 	<!-- 
@@ -40,15 +40,16 @@
 	-->
 
 	<target name="init" >
+		<echo message="- Check environment" />
 		<set name="environment_valid" value="true" />
-		<geant target="check_environment" reuse_variables="true" />
-		<geant target="check_environment_windows" if="${is_windows}" reuse_variables="true" />
-		<exit code="1" if="${environment_valid}=false" />
+		<geant target="check_environment" />
+		<exit code="-1" if="${environment_valid}=false" />
 		<unset name="environment_valid" />
+	</target>
 
-		<!-- scripts and compilation related -->
-		<set name="scripts_dir" value="${EIFFEL_SRC}${path_separator}scripts" />
-		<set name="misc_dir" value="${scripts_dir}${path_separator}misc" />
+	<target name="_log" >
+		<argument name="a_msg" />
+		<echo message="$a_msg" />
 	</target>
 
 </project>

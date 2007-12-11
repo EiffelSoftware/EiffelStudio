@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_emake" default="help">
+	<description>
+		description: "emake compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_emake.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}eiffel_make${path_separator}emake.ecf" />
+		<geant target="set_TARGET" 	arguments="emake" />
+		<geant target="set_NAME" 	arguments="emake" />
+	</target>
+
+</project>

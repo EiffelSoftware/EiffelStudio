@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_ec_bench_unix" default="help">
+	<description>
+		description: "ec bench unix compilation"
+	</description>
+	<inherit>
+		<parent location="${PROJECT_ec_bench_unix.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<setenv name="ISE_PLATFORM" value="linux-x86" />
+		<set name="ISE_PLATFORM" value="linux-x86" />
+		<geant target="set_ECF" arguments="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace${path_separator}ec.ecf" />
+		<geant target="set_TARGET" arguments="bench_unix" />
+		<geant target="set_NAME" arguments="ec" />
+	</target>
+
+</project>

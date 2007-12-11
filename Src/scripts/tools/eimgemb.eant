@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_eimgemb" default="help">
+	<description>
+		description: "eimgemb compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_eimgemb.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}eiffel_image_embedder${path_separator}eimgemb.ecf" />
+		<geant target="set_TARGET" 	arguments="eiffel_image_embedder" />
+		<geant target="set_NAME" 	arguments="eimgemb" />
+	</target>
+
+</project>

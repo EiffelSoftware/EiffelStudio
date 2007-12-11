@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_espawn" default="help">
+	<description>
+		description: "espawn compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_espawn.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 	
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}espawn${path_separator}espawn.ecf" />
+		<geant target="set_TARGET" 	arguments="espawn" />
+		<geant target="set_NAME" 	arguments="espawn" />
+
+		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="This is a Windows-only application" unless="${is_windows}"/>
+	</target>
+
+</project>

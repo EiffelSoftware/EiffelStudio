@@ -8,7 +8,7 @@
 
 	<target name="menu">
 		<set name="debug_mode" value="false" unless="${debug_mode}=true" />
-		<set name="runtimeversion" value="" unless="${runtimeversion}=" />
+		<set name="runtimeversion" value="" unless="-${runtimeversion}-=--" />
 		<echo message=" -> debug_mode=${debug_mode}" />
 		<echo message=" -> runtimeversion=${runtimeversion}" />
 		<geant target="update_wkbench" reuse_variables="true" />

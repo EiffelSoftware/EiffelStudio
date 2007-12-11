@@ -1,50 +1,59 @@
 <?xml version="1.0"?>
 
-<project name="set_version" default="help">
+<project name="EIFFELSOFTWARE_SET_VERSION" default="help">
 	<description>
 		description: "set version in CONSTANTS class for EiffelStudio"
 		author: "Jocelyn Fiat and others"
 		note: "This script could be split into severals scripts, one for each product"
 	</description>
 	<inherit>
-		<parent location="${EIFFEL_SRC}/scripts/misc/_common_.eant">
-			<redefine target="help"/>
+		<parent location="${EIFFELSOFTWARE_SET_VERSION.dir}${path_separator}misc${path_separator}_common_.eant">
 		</parent>
 	</inherit>
 
 	<target name="help">
 		<echo message="usage:"/>
-		<echo message=" geant  set_version" />
+		<echo message=" geant  set_version -AA_filename={filename}" />
 	</target>	
 
 	<!-- end of set_version -->
 	<target name="set_version">
-		<echo message="Set version of ec" />
+		<argument name="A_filename" />
+		<geant target="set_version_from" arguments="$cwd,$A_filename" />
+	</target>
+
+	<target name="set_version_from">
+		<argument name="A_dir" />
+		<argument name="A_filename" />
+		<echo message="Set version of ${A_filename} from ${A_dir}" />
 
 		<exec executable="sed --version"  accept_errors="true" exit_code_variable="return_code" if="${is_windows}"/>
 		<exec executable="sed -n -f /dev/null &lt; /dev/null"  accept_errors="true" exit_code_variable="return_code" unless="${is_windows}" />		
 		<echo message="Warning: sed is not found, thus the revision number won't be updated." unless="${return_code}=0" />
 		<set name="sed_available" value="true" if="${return_code}=0" />
-		<geant target="internal_set_version" if="$sed_available" />
+
+		<geant target="internal_set_version" arguments="$A_dir,$A_filename" if="$sed_available" />
 	</target>
 
 	<target name="internal_set_version">
-		<geant target="set_version_windows" if="$is_windows" />
-		<geant target="set_version_unix" unless="$is_windows" />
+		<argument name="A_dir" />
+		<argument name="A_filename" />
+		<geant target="set_version_windows" arguments="$A_dir,$A_filename" if="$is_windows" />
+		<geant target="set_version_unix" arguments="$A_dir,$A_filename" unless="$is_windows" />
 	</target>
 
 	<target name="set_version_windows" depend="init" if="${is_windows}" >
+		<argument name="A_dir" />
+		<argument name="A_filename" />
 		<set name="set_version_fn" value="${cwd}\tmp_b_set_version.bat" />
-		<set name="tmp_target_dirname" value="${EIFFEL_SRC}\Eiffel\API\constants" />
 		<echo to_file="${set_version_fn}" append="false" >
 @echo off
 rem Set Version
 rem %1 : svn wc path
-rem %2 : pattern to transform
-rem %3 : filename.e
+rem %2 : filename.e
 setlocal
 set SVNWCT=%1
-set EFILE=%3
+set EFILE=%2
 set EFILE_TMP=%EFILE%.tmp
 
 svn info %SVNWCT% &gt; %EFILE_TMP%
@@ -64,15 +73,15 @@ move %EFILE_TMP% %EFILE%
 endlocal
 @echo on
 		</echo>
-		<exec executable="${set_version_fn} ${EIFFEL_SRC} 0000 system_constants.e" dir="${tmp_target_dirname}"
+		<exec executable="${set_version_fn} ${EIFFEL_SRC} ${A_filename}" dir="${A_dir}"
 			accept_errors="true" />
-		<unset name="tmp_target_dirname" />
 		<delete file="${set_version_fn}" />
 	</target>
 
 	<target name="set_version_unix" depend="init" unless="${is_windows}" >
+		<argument name="A_dir" />
+		<argument name="A_filename" />
 		<set name="set_version_fn" value="${cwd}/tmp_b_set_version.sh" />
-		<set name="tmp_target_dirname" value="${EIFFEL_SRC}/Eiffel/API/constants" />
 		<echo to_file="${set_version_fn}" append="false" >
 #!/bin/sh
 
@@ -89,10 +98,9 @@ else
 	mv tmp $2
 fi
 		</echo>
-		<exec executable="/bin/sh ${set_version_fn} ${EIFFEL_SRC} system_constants.e" dir="${tmp_target_dirname}" 
+		<exec executable="/bin/sh ${set_version_fn} ${EIFFEL_SRC} ${A_filename}" dir="${A_dir}" 
 			accept_errors="true" />
 		<delete file="${set_version_fn}" />
-		<unset name="tmp_target_dirname" />
 	</target>
 
 	<!-- end of set_version -->

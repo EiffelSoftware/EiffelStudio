@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_h2e" default="help">
+	<description>
+		description: "h2e compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_h2e.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 	
+			arguments="${EIFFEL_SRC}${path_separator}library${path_separator}wel${path_separator}extra${path_separator}h2e.ecf" />
+		<geant target="set_TARGET" 	arguments="h2e" />
+		<geant target="set_NAME" 	arguments="h2e" />
+
+		<geant target="set_SKIP" 	arguments="true" unless="${is_windows}" />
+		<geant target="set_SKIP_MESSAGE" arguments="Impossible to process: this is a Windows only application" unless="${is_windows}"/>
+		
+	</target>
+
+</project>

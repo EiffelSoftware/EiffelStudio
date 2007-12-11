@@ -1,0 +1,281 @@
+<?xml version="1.0"?>
+
+<project name="ise_eiffel_compiler">
+	<description>
+		description: "Eiffel compilation"
+		author: "Jocelyn Fiat"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant finalize"/>
+		<echo message="   geant melt"/>
+		<echo message="   geant freeze"/>
+		<echo message="   geant precompile"/>
+	</target>
+
+	<target name="check_system" once="true">
+		<echo message="var [ISE_EIFFEL] is missing !" unless="$ISE_EIFFEL" />
+		<set name="l_env_ok" value="false" unless="${ISE_EIFFEL}" />
+		<echo message="var [ISE_PLATFORM] is missing !" unless="$ISE_PLATFORM" />
+		<set name="l_env_ok" value="false" unless="${ISE_PLATFORM}" />
+		<geant target="check_system_windows" reuse_variables="true" />
+		<exit code="-1" if="${l_env_ok}=true" />
+		<unset name="l_env_ok" />
+	</target>
+	<target name="check_system_windows" if="$is_windows" once="true">
+		<echo message="var [ISE_C_COMPILER] is missing !" unless="$ISE_C_COMPILER" /> 
+		<set name="l_env_ok" value="false" unless="${ISE_C_COMPILER}" />
+	</target>
+	
+	<target name="init" >
+		<geant target="check_system" />
+		<set name="force_clean" value="false" unless="$force_clean"/>
+		<set name="force_batch" value="true"  unless="$force_batch"/>
+		<set name="c_compile" value="true"  unless="$c_compile"/>
+		<set name="use_settings" value="false"  unless="$use_settings"/>
+	</target>
+	<target name="check_available">
+		<argument name="a_res"  />
+		<argument name="a_msg"  />
+		<argument name="a_var"  />
+		<available resource="$a_res" variable="tmp_available"/>
+
+		<unset name="check_available__message" />
+		<set name="check_available__message" value="$a_msg" unless="-${a_msg}-=--" />
+		<unset name="check_available__message" if="${tmp_available}=true" />
+		<echo message="$check_available__message" if="${check_available__message}" />
+		<unset name="check_available__message" />
+
+		<set name="$a_var" value="${tmp_available}" unless="-${a_var}-=--"/>
+		<unset name="tmp_available" />
+	</target>
+	<target name="copy_to_output_dir" >
+		<argument name="a_exec_name" />
+		<argument name="a_dir" />
+		<argument name="a_output_dir" />
+		<argument name="a_from_f_code" />
+
+		<echo message=" -> Copy `${a_exec_name}' from [$a_dir${path_separator}...] to [$a_output_dir]" />
+
+		<geant target="check_available" >
+			<argument name="a_res" value="$a_output_dir" />
+			<argument name="a_msg" value=" .. Creating [$a_output_dir]" />
+			<argument name="a_var" value="tmp_ok" />
+		</geant>
+		<mkdir directory="$a_output_dir" if="${tmp_ok}=false"/>
+
+		<set name="tmp_dir" value="$a_dir${path_separator}F_code" if="${a_from_f_code}=true" />
+		<set name="tmp_dir" value="$a_dir${path_separator}W_code" unless="${a_from_f_code}=true" />
+
+		<available resource="${tmp_dir}${path_separator}${a_exec_name}${exe}" variable="tmp_available" />
+		<copy file="$a_exec_name${exe}" to_directory="$a_output_dir" dir="$tmp_dir" if="${tmp_available}=true"/>
+		<unset name="tmp_available" />
+
+		<available resource="$tmp_dir${path_separator}${a_exec_name}.melted" variable="tmp_available" unless="${a_from_f_code}=true" />
+		<copy file="${a_exec_name}.melted" to_directory="$a_output_dir" dir="$tmp_dir" if="${tmp_available}=true"/>
+		<unset name="tmp_available" />
+
+		<available resource="$tmp_dir${path_separator}${a_exec_name}.dll" variable="tmp_available" if="${is_windows}" />
+		<copy file="${a_exec_name}.dll" to_directory="$a_output_dir" dir="$tmp_dir" if="${tmp_available}=true"/>
+		<unset name="tmp_available" />
+
+		<available resource="$tmp_dir${path_separator}lib${a_exec_name}.dll" variable="tmp_available" if="${is_windows}" />
+		<copy file="lib${a_exec_name}.dll" to_directory="$a_output_dir" dir="$tmp_dir" if="${tmp_available}=true"/>
+		<unset name="tmp_available" />
+
+		<unset name="tmp_dir" />
+		<unset name="tmp_ok" />
+	</target>
+
+	<target name="_tpl_compile" depend="check_system">
+		<argument name="a_compilation_mode" />
+		<argument name="a_ecf" />
+		<argument name="a_target" />
+		<argument name="a_name" />
+		<argument name="a_comp_dir" />
+		<argument name="a_output_dir" />
+		<argument name="a_c_compile" />
+		<argument name="a_clean" />
+		<argument name="a_batch" />
+		<argument name="a_use_settings" />
+
+		<echo message="Compilation [$a_compilation_mode] of [$a_ecf]:" />
+
+		<geant target="check_available" >
+			<argument name="a_res" value="$a_ecf" />
+			<argument name="a_msg" value=" .. Config file [$a_ecf] is not available!" />
+			<argument name="a_var" value="tmp_ok" />
+		</geant>
+		<exit code="-1" if="${tmp_ok}=false" />
+
+		<set name="eccmd" value="ec${exe} " />
+		<set name="eccmd" value="${eccmd} -config $a_ecf" />
+		<set name="eccmd" value="${eccmd} -target $a_target" />
+		<set name="eccmd" value="${eccmd} -project_path $a_comp_dir" />
+		<set name="eccmd" value="${eccmd} -freeze " if="${a_compilation_mode}=freeze" />
+		<set name="eccmd" value="${eccmd} -finalize " if="${a_compilation_mode}=finalize" />
+		<set name="eccmd" value="${eccmd} -melt " if="${a_compilation_mode}=melt" />
+		<set name="eccmd" value="${eccmd} -precompile " if="${a_compilation_mode}=precompile" />
+		<set name="eccmd" value="${eccmd} -c_compile" if="$c_compile=true" />
+		<set name="eccmd" value="${eccmd} -clean" if="$force_clean=true" />
+		<set name="eccmd" value="${eccmd} -batch" if="$force_batch=true" />
+		<set name="eccmd" value="${eccmd} -use_settings" if="$use_settings=true" />
+
+		<echo message=" DIR=${a_comp_dir}" />
+		<echo message=" CMD=${eccmd}" />
+
+		<geant target="check_available" >
+			<argument name="a_res" value="$a_comp_dir" />
+			<argument name="a_msg" value=" .. Creating [$a_comp_dir]" />
+			<argument name="a_var" value="tmp_ok" />
+		</geant>
+		<mkdir directory="$a_comp_dir" if="${tmp_ok}=false"/>
+		<unset name="tmp_ok" />
+
+		<exec executable="${eccmd}"
+			dir="${a_comp_dir}" 
+			accept_errors="true"
+			exit_code_variable="return_code" 
+		/>
+		<unset name="eccmd" />
+		<echo message=" -> compilation failed!" 			unless="${return_code}=0" />
+		<echo message=" -> compilation succeed!" 			if="${return_code}=0" />
+		<set name="tmp_output_dir" value="$a_output_dir" 	if="${return_code}=0" />
+		<geant target="copy_to_output_dir" 					unless="-${tmp_output_dir}-=--" >
+			<argument name="a_exec_name" 	value="$a_name" />
+			<argument name="a_dir" 			value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target" />
+			<argument name="a_output_dir" 	value="$a_output_dir" />
+			<argument name="a_from_f_code" 	value="true" 	if="${a_compilation_mode}=finalize" />
+		</geant>
+		<unset name="tmp_output_dir" />
+	</target>
+
+	<target name="clean" >
+		<argument name="a_target" />
+		<argument name="a_comp_dir" />
+		<echo message="Clean [$a_target] from [$a_comp_dir]." />
+		<set name="a_dir" value="${a_comp_dir}${path_separator}EIFGENs${path_separator}${a_target}" />
+		<available resource="$a_dir" variable="tmp_available"/>
+		<delete directory="$a_dir" if="${tmp_available}=true" />
+		<unset name="a_dir" />
+		<unset name="tmp_available" />
+	</target>
+
+	<target name="finalize" depend="init">
+		<argument name="a_ecf" />
+		<argument name="a_target" />
+		<argument name="a_name" />
+		<argument name="a_comp_dir" />
+		<argument name="a_output_dir" />
+
+		<geant target="finalize_with_options" >
+			<argument name="a_ecf" value="$a_ecf" />
+			<argument name="a_target" value="$a_target" />
+			<argument name="a_name" value="$a_name" />
+			<argument name="a_comp_dir" value="$a_comp_dir" />
+			<argument name="a_output_dir" value="$a_output_dir" />
+			<argument name="a_clean" value="$force_clean" />
+			<argument name="a_batch" value="$force_batch" />
+		</geant>
+	</target>
+
+	<target name="finalize_with_options" depend="init">
+		<argument name="a_ecf" />
+		<argument name="a_target" />
+		<argument name="a_name" />
+		<argument name="a_comp_dir" />
+		<argument name="a_output_dir" />
+		<argument name="a_clean" />
+		<argument name="a_batch" />
+
+		<set name="l_clean" value="$force_clean" if="-$a_clean-=--" />
+		<set name="l_batch" value="$force_batch" if="-$a_batch-=--" />
+
+		<geant target="_tpl_compile" >
+			<argument name="a_compilation_mode" value="finalize" />
+
+			<argument name="a_ecf" value="$a_ecf" />
+			<argument name="a_target" value="$a_target" />
+			<argument name="a_name" value="$a_name" />
+			<argument name="a_comp_dir" value="$a_comp_dir" />
+			<argument name="a_output_dir" value="$a_output_dir" />
+
+			<argument name="a_c_compile" value="$c_compile" if="$c_compile=true"/>
+			<argument name="a_clean" value="$l_clean" />
+			<argument name="a_batch" value="$l_batch" />
+			<argument name="a_use_settings" value="$use_settings" />
+		</geant>
+		<unset name="l_clean" />
+		<unset name="l_batch" />
+	</target>
+
+	<!-- copy content from `finalize' for the following target -->
+	<target name="melt" depend="init">
+		<argument name="a_ecf" />
+		<argument name="a_target" />
+		<argument name="a_name" />
+		<argument name="a_comp_dir" />
+		<argument name="a_output_dir" />
+
+		<geant target="_tpl_compile" >
+			<argument name="a_compilation_mode" value="melt" />
+
+			<argument name="a_ecf" value="$a_ecf" />
+			<argument name="a_target" value="$a_target" />
+			<argument name="a_name" value="$a_name" />
+			<argument name="a_comp_dir" value="$a_comp_dir" />
+			<argument name="a_output_dir" value="$a_output_dir" />
+
+			<argument name="a_c_compile" value="false" />
+			<argument name="a_clean" value="$force_clean" />
+			<argument name="a_batch" value="$force_batch" />
+			<argument name="a_use_settings" value="$use_settings" />
+		</geant>
+	</target>
+	<target name="freeze" depend="init">
+		<argument name="a_ecf" />
+		<argument name="a_target" />
+		<argument name="a_name" />
+		<argument name="a_comp_dir" />
+		<argument name="a_output_dir" />
+
+		<geant target="_tpl_compile" >
+			<argument name="a_compilation_mode" value="freeze" />
+
+			<argument name="a_ecf" value="$a_ecf" />
+			<argument name="a_target" value="$a_target" />
+			<argument name="a_name" value="$a_name" />
+			<argument name="a_comp_dir" value="$a_comp_dir" />
+			<argument name="a_output_dir" value="$a_output_dir" />
+
+			<argument name="a_c_compile" value="$c_compile" />
+			<argument name="a_clean" value="$force_clean" />
+			<argument name="a_batch" value="$force_batch" />
+			<argument name="a_use_settings" value="$use_settings" />
+		</geant>
+	</target>
+	<target name="precompile" depend="init">
+		<argument name="a_ecf" />
+		<argument name="a_target" />
+		<argument name="a_name" />
+		<argument name="a_comp_dir" />
+		<argument name="a_output_dir" />
+
+		<geant target="_tpl_compile" >
+			<argument name="a_compilation_mode" value="precompile" />
+
+			<argument name="a_ecf" value="$a_ecf" />
+			<argument name="a_target" value="$a_target" />
+			<argument name="a_name" value="$a_name" />
+			<argument name="a_comp_dir" value="$a_comp_dir" />
+			<argument name="a_output_dir" value="$a_output_dir" />
+
+			<argument name="a_c_compile" value="$c_compile" if="$c_compile"/>
+			<argument name="a_clean" value="$force_clean" />
+			<argument name="a_batch" value="$force_batch" />
+			<argument name="a_use_settings" value="$use_settings" />
+		</geant>
+	</target>
+
+</project>

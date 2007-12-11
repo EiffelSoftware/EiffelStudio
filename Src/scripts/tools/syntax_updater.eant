@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_syntax_updater" default="help">
+	<description>
+		description: "syntax_updater compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_syntax_updater.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}syntax_updater${path_separator}syntax_updater.ecf" />
+		<geant target="set_TARGET" 	arguments="syntax_updater" />
+		<geant target="set_NAME" 	arguments="syntax_updater" />
+	</target>
+
+</project>

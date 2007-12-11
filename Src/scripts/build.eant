@@ -1,16 +1,20 @@
 <?xml version="1.0"?>
 
-<project name="es_compile" default="help">
+<project name="EIFFELSOFTWARE_BUILD" default="help">
 	<description>
-		description: "ec compilation"
+		description: "EiffelSoftware products compilation and others ..."
 		author: "Jocelyn Fiat and others"
-		note: "This script could be split into severals scripts, one for each product"
 	</description>
 	<inherit>
-		<parent location="${EIFFEL_SRC}/scripts/misc/_common_.eant">
-			<redefine target="help"/>
+		<parent location="${EIFFELSOFTWARE_BUILD.dir}${path_separator}misc${path_separator}_common_.eant">
+			<redefine target="init"/>
 		</parent>
 	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<set name="misc_dir" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}misc" />
+	</target>
 	
 	<target name="help">
 		<echo message="usage:"/>
@@ -19,51 +23,35 @@
 		<echo message=" geant clean          : display help with -Dforce_clean=true " unless="${opt}"/>
 		<echo message="       ----------" unless="${opt}" />
 		<set name="opt" value="" unless="${opt}" />
+
 		<echo message=" geant compile_runtime" />
 		<echo message=" geant compile_library" />
+		<echo message=" geant compile_gobo_tools" />
+		<echo message=" geant compile_wizards" />
 		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_ec"/>
-		<echo message=" geant ${opt} compile_ec"/>
-		<echo message=" geant ${opt} finalize_ec"/>
+		<echo message=" geant set_ec_version"/>
+		<echo message=" geant set_esbuilder_version"/>
 		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_ec_batch"/>
-		<echo message=" geant ${opt} compile_ec_batch"/>
-		<echo message=" geant ${opt} finalize_ec_batch"/>
+		<geant target="_help_tpl" arguments="ec_bench" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="ec_batch" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="ec_bench_unix" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="estudio" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="finish_freezing" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="h2e" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="quick_finalize" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="emake" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="dotnet_consumer" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="dotnet_emdc" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="esbuilder" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="compile_all" reuse_variables="true" />
+		<geant target="_help_tpl" arguments="es_cleaner" reuse_variables="true" />
+	</target>
+	<target name="_help_tpl">
+		<argument name="A_name" />
+		<echo message=" geant ${opt} clean_${A_name}"/>
+		<echo message=" geant ${opt} compile_${A_name}"/>
+		<echo message=" geant ${opt} finalize_${A_name}"/>
 		<echo message="       ----------"/>
-		<echo message=" geant ${opt} compile_ec_unix_on_windows"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_estudio"/>
-		<echo message=" geant ${opt} finalize_estudio"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_finish_freezing"/>
-		<echo message=" geant ${opt} finalize_finish_freezing"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_quick_finalize"/>
-		<echo message=" geant ${opt} finalize_quick_finalize"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_h2e"/>
-		<echo message=" geant ${opt} finalize_h2e"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_emake"/>
-		<echo message=" geant ${opt} finalize_emake"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_mdconsumer"/>
-		<echo message=" geant ${opt} compile_mdconsumer"/>
-		<echo message=" geant ${opt} finalize_mdconsumer"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_emdc"/>
-		<echo message=" geant ${opt} finalize_emdc"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_ebuild"/>
-		<echo message=" geant ${opt} compile_ebuild"/>
-		<echo message=" geant ${opt} finalize_ebuild"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} clean_compile_all"/>
-		<echo message=" geant ${opt} finalize_compile_all"/>
-		<echo message=" geant ${opt} clean_es_cleaner"/>
-		<echo message=" geant ${opt} finalize_es_cleaner"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} build_es"/>
 	</target>
 	<target name="clean">
 		<set name="opt" value=" -Dforce_clean=true " />
@@ -110,202 +98,165 @@
 	</target>	
 
 	<!--
-	**************************************************************************************
-	***  COMPILE : ec, batch, unix ...   ********************************************
-	**************************************************************************************
+	********************************************************************************
+	***  COMPILE : ...................  ********************************************
+	********************************************************************************
 	-->
 
-	<!-- templates -->
-	<target name="tmp_clean_executable" depend="init">
-		<argument name="executable_target" />
-		<geant file="${misc_dir}${path_separator}compile_executables.eant" target="clean_${executable_target}" reuse_variables="true" dir="${cwd}" fork="false"/>
-	</target>
-	<target name="tmp_compile_executable" depend="init" >
-		<argument name="executable_target" />
-		<set name="use_settings" value="true" />
-		<geant file="${misc_dir}${path_separator}compile_executables.eant" target="compile_${executable_target}" reuse_variables="true" dir="${cwd}" fork="false"/>
-		<unset name="use_settings" />
-	</target>
-	<target name="tmp_finalize_executable" depend="init">
-		<argument name="executable_target" />
-		<geant file="${misc_dir}${path_separator}compile_executables.eant" target="finalize_${executable_target}" reuse_variables="true" dir="${cwd}" fork="false"/>
+	<!-- _template_ -->
+	<target name="_tpl_process_" depend="init" >
+		<argument name="a_product" />
+		<argument name="a_mode" />
+		<argument name="a_comp_dir" />
+		<geant target="process_with_args" 
+			arguments="${a_mode},$_COMPILE_DIR,$a_output_dir"
+			file="${a_product}.eant" dir="${EIFFELSOFTWARE_BUILD.absdir}${path_separator}tools"
+		/>
 	</target>
 
-	<!-- bench ec -->
-	<target name="clean_ec" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="ec" />
-		</geant>
+	<!-- ec_bench -->
+	<target name="clean_ec_bench" depend="init" >
+		<geant target="_tpl_process_" arguments="ec_bench,clean,$cwd" />
 	</target>
-	<target name="compile_ec" depend="init">
-		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="ec" />
-		</geant>
+	<target name="compile_ec_bench" depend="init">
+		<geant target="_tpl_process_" arguments="ec_bench,compile,$cwd" />
 	</target>
-	<target name="finalize_ec" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="ec" />
-		</geant>
+	<target name="finalize_ec_bench" depend="init">
+		<geant target="_tpl_process_" arguments="ec_bench,finalize,$cwd" />
 	</target>
 
-	<!-- batch ec -->
-	<target name="clean_ec_batch" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="ec_batch" />
-		</geant>
+	<!-- ec_batch -->
+	<target name="clean_ec_batch" depend="init" >
+		<geant target="_tpl_process_" arguments="ec_batch,clean,$cwd" />
 	</target>
 	<target name="compile_ec_batch" depend="init">
-		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="ec_batch" />
-		</geant>
+		<geant target="_tpl_process_" arguments="ec_batch,compile,$cwd" />
 	</target>
 	<target name="finalize_ec_batch" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="ec_batch" />
-		</geant>
+		<geant target="_tpl_process_" arguments="ec_batch,finalize,$cwd" />
 	</target>
 
-	<!-- final estudio -->
-	<target name="clean_estudio" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="estudio" />
-		</geant>
+	<!-- ec_bench_unix -->
+	<target name="clean_ec_bench_unix" depend="init" >
+		<geant target="_tpl_process_" arguments="ec_bench_unix,clean,$cwd" />
+	</target>
+	<target name="compile_ec_bench_unix" depend="init">
+		<geant target="_tpl_process_" arguments="ec_bench_unix,compile,$cwd" />
+	</target>
+	<target name="finalize_ec_bench_unix" depend="init">
+		<geant target="_tpl_process_" arguments="ec_bench_unix,finalize,$cwd" />
+	</target>
+
+	<!-- estudio -->
+	<target name="clean_estudio" depend="init" >
+		<geant target="_tpl_process_" arguments="estudio,clean,$cwd" />
+	</target>
+	<target name="compile_estudio" depend="init">
+		<geant target="_tpl_process_" arguments="estudio,compile,$cwd" />
 	</target>
 	<target name="finalize_estudio" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="estudio" />
-		</geant>
+		<geant target="_tpl_process_" arguments="estudio,finalize,$cwd" />
 	</target>
 
 	<!-- finish_freezing -->
-	<target name="clean_finish_freezing" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="finish_freezing" />
-		</geant>
+	<target name="clean_finish_freezing" depend="init" >
+		<geant target="_tpl_process_" arguments="finish_freezing,clean,$cwd" />
+	</target>
+	<target name="compile_finish_freezing" depend="init">
+		<geant target="_tpl_process_" arguments="finish_freezing,compile,$cwd" />
 	</target>
 	<target name="finalize_finish_freezing" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="finish_freezing" />
-		</geant>
+		<geant target="_tpl_process_" arguments="finish_freezing,finalize,$cwd" />
 	</target>
 
 	<!-- h2e -->
-	<target name="clean_h2e" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="h2e" />
-		</geant>
+	<target name="clean_h2e" depend="init" >
+		<geant target="_tpl_process_" arguments="h2e,clean,$cwd" />
+	</target>
+	<target name="compile_h2e" depend="init">
+		<geant target="_tpl_process_" arguments="h2e,compile,$cwd" />
 	</target>
 	<target name="finalize_h2e" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="h2e" />
-		</geant>
+		<geant target="_tpl_process_" arguments="h2e,finalize,$cwd" />
 	</target>
 
 	<!-- quick_finalize -->
-	<target name="clean_quick_finalize" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="quick_finalize" />
-		</geant>
+	<target name="clean_quick_finalize" depend="init" >
+		<geant target="_tpl_process_" arguments="quick_finalize,clean,$cwd" />
+	</target>
+	<target name="compile_quick_finalize" depend="init">
+		<geant target="_tpl_process_" arguments="quick_finalize,compile,$cwd" />
 	</target>
 	<target name="finalize_quick_finalize" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="quick_finalize" />
-		</geant>
+		<geant target="_tpl_process_" arguments="quick_finalize,finalize,$cwd" />
 	</target>
 
 	<!-- emake -->
-	<target name="clean_emake" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="emake" />
-		</geant>
+	<target name="clean_emake" depend="init" >
+		<geant target="_tpl_process_" arguments="emake,clean,$cwd" />
+	</target>
+	<target name="compile_emake" depend="init">
+		<geant target="_tpl_process_" arguments="emake,compile,$cwd" />
 	</target>
 	<target name="finalize_emake" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="emake" />
-		</geant>
+		<geant target="_tpl_process_" arguments="emake,finalize,$cwd" />
 	</target>
 
-	<!-- unix ec -->
-	<target name="compile_ec_unix_on_windows" depend="init">
-		<setenv name="ISE_PLATFORM" value="linux-x86" />
-		<set name="c_compile" value="false" />
-		<set name="finalize" value="false" />
-		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="ec_unix_on_windows" />
-		</geant>
+	<!-- dotnet_consumer -->
+	<target name="clean_dotnet_consumer" depend="init" >
+		<geant target="_tpl_process_" arguments="dotnet_consumer,clean,$cwd" />
+	</target>
+	<target name="compile_dotnet_consumer" depend="init">
+		<geant target="_tpl_process_" arguments="dotnet_consumer,compile,$cwd" />
+	</target>
+	<target name="finalize_dotnet_consumer" depend="init">
+		<geant target="_tpl_process_" arguments="dotnet_consumer,finalize,$cwd" />
 	</target>
 
-
-	<!-- Consumer -->
-	<target name="clean_mdconsumer" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="mdconsumer" />
-		</geant>
+	<!-- dotnet_emdc -->
+	<target name="clean_dotnet_emdc" depend="init" >
+		<geant target="_tpl_process_" arguments="dotnet_emdc,clean,$cwd" />
 	</target>
-	<target name="compile_mdconsumer" depend="init">
-		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="mdconsumer" />
-		</geant>
+	<target name="compile_dotnet_emdc" depend="init">
+		<geant target="_tpl_process_" arguments="dotnet_emdc,compile,$cwd" />
 	</target>
-	<target name="finalize_mdconsumer" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="mdconsumer" />
-		</geant>
-	</target>	
-
-	<!-- emdc -->
-	<target name="clean_emdc" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="emdc" />
-		</geant>
-	</target>
-	<target name="finalize_emdc" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="emdc" />
-		</geant>
+	<target name="finalize_dotnet_emdc" depend="init">
+		<geant target="_tpl_process_" arguments="dotnet_emdc,finalize,$cwd" />
 	</target>
 
-	<!-- eBuild -->
-	<target name="clean_esbuilder" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="esbuilder" />
-		</geant>
+	<!-- esbuilder -->
+	<target name="clean_esbuilder" depend="init" >
+		<geant target="_tpl_process_" arguments="esbuilder,clean,$cwd" />
 	</target>
 	<target name="compile_esbuilder" depend="init">
-		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="esbuilder" />
-		</geant>
+		<geant target="_tpl_process_" arguments="esbuilder,compile,$cwd" />
 	</target>
 	<target name="finalize_esbuilder" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="esbuilder" />
-		</geant>
+		<geant target="_tpl_process_" arguments="esbuilder,finalize,$cwd" />
 	</target>
 
 	<!-- compile_all -->
-	<target name="clean_compile_all" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="compile_all" />
-		</geant>
+	<target name="clean_compile_all" depend="init" >
+		<geant target="_tpl_process_" arguments="compile_all,clean,$cwd" />
+	</target>
+	<target name="compile_compile_all" depend="init">
+		<geant target="_tpl_process_" arguments="compile_all,compile,$cwd" />
 	</target>
 	<target name="finalize_compile_all" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="compile_all" />
-		</geant>
+		<geant target="_tpl_process_" arguments="compile_all,finalize,$cwd" />
 	</target>
 
 	<!-- es_cleaner -->
-	<target name="clean_es_cleaner" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="es_cleaner" />
-		</geant>
+	<target name="clean_es_cleaner" depend="init" >
+		<geant target="_tpl_process_" arguments="es_cleaner,clean,$cwd" />
+	</target>
+	<target name="compile_es_cleaner" depend="init">
+		<geant target="_tpl_process_" arguments="es_cleaner,compile,$cwd" />
 	</target>
 	<target name="finalize_es_cleaner" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="es_cleaner" />
-		</geant>
+		<geant target="_tpl_process_" arguments="es_cleaner,finalize,$cwd" />
 	</target>
-	
+
 	<!--
 	**************************************************************************************
 	***  Third party and C code preparation (compilation ...)   **************************
@@ -313,27 +264,56 @@
 	-->
 
 	<target name="compile_runtime" depend="init">
-		<geant file="${misc_dir}/compile_runtime.eant" target="compile_runtime" reuse_variables="true"  fork="false"/>
-	</target>
-	<target name="clean_runtime" depend="init">
-		<geant file="${misc_dir}/compile_runtime.eant" target="clean_runtime" reuse_variables="true"  fork="false"/>
+		<geant dir="${EIFFEL_SRC}/C" file="build.eant" target="compile_runtime" reuse_variables="true"  fork="false"/>
 	</target>
 	<target name="compile_runtime_dll" depend="init">
-		<geant file="${misc_dir}/compile_runtime.eant" target="compile_runtime_dll" reuse_variables="true"  fork="false"/>
+		<geant dir="${EIFFEL_SRC}/C/" file="uild.eant" target="compile_runtime_dll" reuse_variables="true"  fork="false"/>
+	</target>
+	<target name="clean_runtime" depend="init">
+		<geant dir="${EIFFEL_SRC}/C/" file="uild.eant" target="clean" reuse_variables="true"  fork="false"/>
 	</target>
 	<target name="compile_library" depend="init">
-		<geant file="${misc_dir}/compile_library.eant" target="compile_all" reuse_variables="true"  fork="false"/>
+		<geant dir="${EIFFEL_SRC}/library" file="build.eant" target="compile" reuse_variables="true"  fork="false"/>
 	</target>
 
-	<!--
-	Helper scripts
-	-->
-	<target name="set_version" depend="init">
-		<geant file="${misc_dir}/set_version.eant" target="set_version" reuse_variables="true"  fork="false"/>
+	<target name="compile_gobo_tools" depend="init">
+		<geant file="${EIFFELSOFTWARE_BUILD.dir}${path_separator}gobo_tools.eant" target="compile" reuse_variables="true"  fork="false"/>
 	</target>
-
+	<target name="compile_wizards" depend="init">
+		<geant file="${EIFFELSOFTWARE_BUILD.dir}${path_separator}es_wizards.eant" target="compile_all" reuse_variables="true"  fork="false"/>
+	</target>
+	<target name="set_ec_version" depend="init">
+		<geant file="${EIFFELSOFTWARE_BUILD.dir}${path_separator}set_version.eant" target="set_version" 
+			arguments="system_constants.e"
+			dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}API${path_separator}constants"
+			reuse_variables="true"  fork="false" />
+	</target>
+	<target name="set_esbuilder_version" depend="init">
+		<geant file="${EIFFELSOFTWARE_BUILD.dir}${path_separator}set_version.eant" target="set_version" 
+			arguments="gb_about_dialog_constants.e"
+			dir="${EIFFEL_SRC}${path_separator}build${path_separator}Constants"
+			reuse_variables="true"  fork="false" />
+	</target>
 	<target name="build_es" depend="init">
-		<geant file="${scripts_dir}/deliv.eant" target="build_es" reuse_variables="true"  fork="false"/>
+		<geant file="${EIFFELSOFTWARE_BUILD}${path_separator}deliv.eant" target="build_es"
+			reuse_variables="true"  fork="false"/>
 	</target>
+
+<!-- Implementation + helpers -->
+
+	<!-- _PRODUCT_TPL_ -->
+	<target name="clean_XYZ" depend="init" >
+		<geant target="_tpl_process_" arguments="XYZ,clean,$cwd" />
+	</target>
+	<target name="compile_XYZ" depend="init">
+		<geant target="_tpl_process_" arguments="XYZ,compile,$cwd" />
+	</target>
+	<target name="finalize_XYZ" depend="init">
+		<geant target="_tpl_process_" arguments="XYZ,finalize,$cwd" />
+	</target>
+	<!-- /_PRODUCT_TPL_ -->
+	<!-- vim macro: 
+	:map _t 0/-<CR>wve"1yma?^\\s- _PRODUCT_TPL_<CR>jV/- \/_PRODUCT_TPL_<CR>ky'ao<C-R>"<ESC>mbV'a=V'b:s/XYZ/<C-R>1/g<CR>'bj
+	-->
 
 </project>

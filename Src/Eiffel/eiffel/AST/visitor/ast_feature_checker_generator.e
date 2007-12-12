@@ -137,7 +137,7 @@ feature -- Type checking
 			end
 			if a_code_inherited then
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
-				if not a_feature.is_deferred then
+				if not a_feature.is_deferred and not a_feature.is_il_external then
 					is_inherited := True
 					a_feature.body.process (Current)
 					is_inherited := False

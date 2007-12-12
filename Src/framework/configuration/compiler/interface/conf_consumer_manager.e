@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_valid: Result /= Void and then Result.is_valid
 			Result_computed: Result.classes_set
-			Result_date_valid: Result.date > 0 and then not Result.has_date_changed
+			Result_date_valid: Result.date > 0
 		end
 
 	build_assembly (a_assembly: CONF_ASSEMBLY) is

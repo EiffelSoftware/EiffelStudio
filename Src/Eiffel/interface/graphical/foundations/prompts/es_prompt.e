@@ -22,6 +22,26 @@ inherit
 			on_handle_key
 		end
 
+	HELP_CONTEXT
+		redefine
+			help_context_section
+		end
+
+feature
+
+feature {NONE} -- Access
+
+	help_context: STRING_GENERAL
+			-- A contextual identifer to link an associated help through.
+		do
+			Result := "Session_Manager_Service"
+		end
+
+	help_context_section: STRING_GENERAL
+		do
+			Result := "Preferences Vs. Session Data"
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_text: like text; a_buttons: like buttons; a_default: like default_button; a_default_confirm: like default_confirm_button; a_default_cancel: like default_cancel_button)
@@ -53,6 +73,8 @@ feature {NONE} -- Initialization
 			set_default_confirm_button (a_default_confirm)
 			set_default_cancel_button (a_default_cancel)
 
+				-- Prompts should not remember size and position information.
+			is_size_and_position_remembered := False
 			make_dialog
 
 			set_text (a_text)
@@ -653,6 +675,7 @@ feature {NONE} -- Constants
 invariant
 	prompt_sub_title_label_attached: prompt_sub_title_label /= Void
 	prompt_text_attached: prompt_text /= Void
+	not_is_size_and_position_remembered: not is_size_and_position_remembered
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

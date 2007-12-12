@@ -1,6 +1,9 @@
 indexing
 	description: "[
 		A base dialog implementation for all dialogs resident in EiffelStudio.
+		
+		Note: Dialogs a becoming quite complex. As of 6.2 the dialogs now use the session manager service ({SESSION_MANAGER_S})
+		      to store size/position information. This can be vetoed by setting `is_size_and_position_remembered' to False.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -50,6 +53,7 @@ feature {NONE} -- Initialization
 			is_initializing := True
 
 			is_modal := True
+			is_size_and_position_remembered := True
 
 				-- Create action lists
 			create show_actions
@@ -95,8 +99,43 @@ feature {NONE} -- Initialization
             -- Use to perform additional creation initializations, after the UI has been created.
         require
         	is_initialized: is_initialized
+        local
+        	l_sp_info: TUPLE [x, y, width, height: INTEGER]
+        	l_screen: EV_SCREEN
         do
        		bind_help_shortcut (dialog)
+
+			if is_size_and_position_remembered then
+	       		if session_manager.is_service_available then
+
+	       				-- Retrieve persisted session data size/position information
+	       			l_sp_info ?= session_data.value (dialog_session_id)
+	       			if l_sp_info /= Void then
+	       					-- Previous session data is available
+	       				create l_screen
+	       				if (l_sp_info.x >= 0 and then l_sp_info.x < l_screen.width) and (l_sp_info.y >= 0 and then l_sp_info.y < l_screen.height) then
+	       						-- Ensure dialog is not off-screen
+	       					dialog.set_position (l_sp_info.x, l_sp_info.y)
+	       				end
+	       				dialog.set_size (l_sp_info.width, l_sp_info.height)
+	       			end
+
+	       				-- Hook up close action to store session size/position data
+	       			register_action (close_actions, (agent (a_ia_session: SESSION_I)
+	       				do
+	       					if is_size_and_position_remembered and then dialog_result /= default_cancel_button or else buttons.count = 1 then
+	       							-- Only persist data if a cancel button wasn't selected
+		       					if a_ia_session.is_interface_usable then
+		       							-- Store session data
+									a_ia_session.set_value ([dialog.x_position.max (0), dialog.y_position.max (0), dialog.width, dialog.height], dialog_session_id)
+		       					end
+	       					end
+	       				end (session_data)))
+	       		else
+	       				-- No session manager service, no persistance
+	       			is_size_and_position_remembered := False
+	       		end
+			end
         end
 
 feature {NONE} -- User interface initialization
@@ -330,6 +369,17 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
+	dialog_session_id: !STRING_8
+			-- Dialog session ID for storing size/position information
+		require
+			is_interface_usable: is_interface_usable
+		do
+			create Result.make (30)
+			Result.append (generating_type)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature {NONE} -- Helpers
 
 	frozen interface_names: INTERFACE_NAMES
@@ -471,6 +521,9 @@ feature {NONE} -- Status report
 	is_close_vetoed: BOOLEAN
 			-- Indicates if the dialog's shutdown has been vetoed
 			-- Note: See `veto_close' for more information
+
+	is_size_and_position_remembered: BOOLEAN
+			-- Indicates if the size and position information is remembered for the dialog
 
 feature -- Status setting
 

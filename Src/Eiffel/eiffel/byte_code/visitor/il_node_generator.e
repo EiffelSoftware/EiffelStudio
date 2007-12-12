@@ -340,7 +340,7 @@ feature -- Generation
 				target_type.type_a.associated_class.is_interface or else
 				not source_type.is_external and then
 				not source_type.is_generated_as_single_type and then
-				not source_type.type_a.associated_class.is_optimized_as_frozen)
+				not source_type.is_optimized_as_frozen)
 			then
 					-- Generate code to copy object at run-time
 					-- depending on its dynamic type

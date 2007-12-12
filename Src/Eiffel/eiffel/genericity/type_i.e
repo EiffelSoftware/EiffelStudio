@@ -233,6 +233,12 @@ feature -- Status report
 			-- Do nothing
 		end
 
+	is_optimized_as_frozen: BOOLEAN is
+			-- Is current type optimizable as a frozen one in .NET code generation?
+		do
+
+		end
+
 	is_generated_as_single_type: BOOLEAN is
 			-- Is associated type generated as a single type or as an interface type and
 			-- an implementation type.

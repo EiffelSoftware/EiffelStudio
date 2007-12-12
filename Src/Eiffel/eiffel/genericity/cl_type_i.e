@@ -30,6 +30,7 @@ inherit
 			is_explicit,
 			is_external,
 			is_frozen,
+			is_optimized_as_frozen,
 			is_generated_as_single_type,
 			is_reference,
 			is_separate,
@@ -441,6 +442,11 @@ feature -- Status
 			-- Is current type based on a frozen class?
 		do
 			Result := base_class.is_frozen
+		end
+
+	is_optimized_as_frozen: BOOLEAN is
+		do
+			Result := base_class.is_optimized_as_frozen
 		end
 
 	is_generated_as_single_type: BOOLEAN is

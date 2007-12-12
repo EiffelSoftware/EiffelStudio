@@ -1146,7 +1146,6 @@ feature {NONE} -- Implementation
 		local
 			l_rout_id_set: ROUT_ID_SET
 			l_feat: FEATURE_I
-			l_parent_class: CLASS_C
 			l_parents: FIXED_LIST [CL_TYPE_A]
 		do
 				-- We need to look up parents of current class to find if some routine IDs
@@ -1173,6 +1172,12 @@ feature {NONE} -- Implementation
 						l_feat_not_void: l_feat /= Void
 					end
 					l_rout_id_set.merge (l_feat.rout_id_set)
+					if l_feat.written_in = a_feat.written_in then
+							-- Inherited feature is written in same class as `a_feat'
+							-- therefore we can safely store inherited `written_feature_id'
+							-- into `a_feat'.
+						a_feat.set_written_feature_id (l_feat.written_feature_id)
+					end
 				end
 			else
 					-- It is virtual, we need to find out from where we are coming.
@@ -1184,29 +1189,8 @@ feature {NONE} -- Implementation
 				until
 					l_parents.after
 				loop
-					if l_parents.item.associated_class.is_interface then
-						l_feat := matching_external_feature_in (a_feat,
-							l_parents.item.associated_class, a_member)
-						if l_feat /= Void then
-							l_rout_id_set.merge (l_feat.rout_id_set)
-							if l_feat.written_in = a_feat.written_in then
-									-- Inherited feature is written in same class as `a_feat'
-									-- therefore we can safely store inherited `written_feature_id'
-									-- into `a_feat'.
-								a_feat.set_written_feature_id (l_feat.written_feature_id)
-							end
-						end
-					else
-						check
-							no_parent_found_yet: l_parent_class = Void
-						end
-						l_parent_class := l_parents.item.associated_class
-					end
-					l_parents.forth
-				end
-				if l_rout_id_set.is_empty and l_parent_class /= Void then
-						-- Let's check the main parent now.
-					l_feat := matching_external_feature_in (a_feat, l_parent_class, a_member)
+					l_feat := matching_external_feature_in (a_feat,
+						l_parents.item.associated_class, a_member)
 					if l_feat /= Void then
 						l_rout_id_set.merge (l_feat.rout_id_set)
 						if l_feat.written_in = a_feat.written_in then
@@ -1216,6 +1200,7 @@ feature {NONE} -- Implementation
 							a_feat.set_written_feature_id (l_feat.written_feature_id)
 						end
 					end
+					l_parents.forth
 				end
 			end
 
@@ -1246,6 +1231,7 @@ feature {NONE} -- Implementation
 --			not_already_inserted:
 --				not a_feat.rout_id_set.linear_representation.there_exists (
 --					agent (a_feat_tbl.origin_table).has)
+			a_feat_written_feature_id_set: a_feat.written_feature_id /= 0
 		end
 
 	matching_external_feature_in (

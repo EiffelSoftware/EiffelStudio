@@ -163,6 +163,7 @@ feature -- Element Change
 			rout_id: INTEGER
 			basic_i: BASIC_I
 			i: INTEGER
+			l_byte_context: like byte_context
 		do
 			if used then
 					-- Generation of a routine to access the attribute
@@ -171,13 +172,14 @@ feature -- Element Change
 				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 				add_in_log (class_type, internal_name)
 
-				if byte_context.workbench_mode then
+				l_byte_context := byte_context
+				if l_byte_context.workbench_mode then
 					return_type_name := once "EIF_TYPED_VALUE"
 				else
 					return_type_name := result_type.c_type.c_string
 				end
 				buffer.generate_function_signature (return_type_name,
-					internal_name, True, Byte_context.header_buffer,
+					internal_name, True, l_byte_context.header_buffer,
 					<<"Current">>, <<"EIF_REFERENCE">>)
 				buffer.indent
 				if byte_context.workbench_mode then
@@ -198,7 +200,7 @@ feature -- Element Change
 				buffer.put_character (';')
 				buffer.put_new_line
 
-				if byte_context.workbench_mode then
+				if l_byte_context.workbench_mode then
 					buffer.put_string ("return r;")
 					buffer.put_new_line
 				end
@@ -220,7 +222,7 @@ feature -- Element Change
 								-- Generate generic wrapper.
 							buffer.generate_pure_function_signature
 								("EIF_REFERENCE", internal_name + "1", True,
-								 Byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
+								 l_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
 							buffer.put_character ('{')
 							buffer.put_new_line
 							buffer.indent
@@ -246,7 +248,7 @@ feature -- Element Change
 							buffer.exdent
 							buffer.put_character ('}')
 							buffer.put_new_line
-							byte_context.clear_feature_data
+							l_byte_context.clear_feature_data
 								-- Only 1 wrapper is generated.
 							i := 1
 						end

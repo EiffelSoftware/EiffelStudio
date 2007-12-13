@@ -620,11 +620,6 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 	eif_free (rt_globals);
 }
 
-/* The following routine is obsolete, it should be removed in release 6.1 or later. */
-rt_public void eif_thr_create (EIF_OBJECT thr_root_obj, EIF_POINTER init_func) {
-	eif_thr_create_with_args (thr_root_obj, init_func, EIF_DEFAULT_PRIORITY, 0, EIF_TRUE);
-}
-
 rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj, 
 										 EIF_POINTER init_func,
 										 EIF_INTEGER priority,

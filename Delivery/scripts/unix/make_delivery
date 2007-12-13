@@ -97,9 +97,11 @@ fullrd net
 fullrd net-mt
 fullrd parse
 fullrd vision
-cd $INSTALL_DIR
 remtrace C_library
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library C_library 
+safe_md $INSTALL_DIR/C_library
+cd $INSTALL_DIR/C_library
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/libpng libpng
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib 
 cd $INSTALL_DIR
 remtrace root
 exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery Delivery

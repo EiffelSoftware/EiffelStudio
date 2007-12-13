@@ -15,7 +15,8 @@ inherit
 		rename
 			make as make_question_prompt
 		redefine
-			build_prompt_interface
+			build_prompt_interface,
+			is_size_and_position_remembered
 		end
 
 create
@@ -105,6 +106,15 @@ feature {NONE} -- User interface initialization
 			l_item.set_left_border (25)
 
 			a_row.set_item (1, l_item)
+		end
+
+feature {NONE} -- Status report
+
+	is_size_and_position_remembered: BOOLEAN
+			-- Indicates if the size and position information is remembered for the dialog
+		do
+				-- Prompts should not remember size and position information.
+			Result := True
 		end
 
 feature -- Access

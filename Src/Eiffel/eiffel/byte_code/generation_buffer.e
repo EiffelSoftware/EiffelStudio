@@ -616,14 +616,19 @@ feature {NONE} -- Implementation: Status report
 
 	count: INTEGER is
 			-- Number of characters in current.
+		local
+			l_buffers: like buffers
+			l_index: INTEGER
+			l_count: INTEGER
 		do
 			from
-				buffers.start
+				l_buffers := buffers
+				l_index := l_buffers.count
 			until
-				buffers.after
+				l_index = 0
 			loop
-				Result := Result + buffers.item.count
-				buffers.forth
+				Result := Result + l_buffers [l_index].count
+				l_index := l_index - 1
 			end
 			Result := Result + current_buffer.count
 		ensure

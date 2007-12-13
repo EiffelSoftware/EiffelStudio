@@ -38,7 +38,8 @@ X		([a-z]|[A-Z]|[0-9]|_)
 
 <IN_CLASS>{A}{X}*		{
 				classname := text
-				last_token := TE_ID
+					-- Class name has been found so we terminate parser
+				terminate
 			}
 
 [^pPcC"\n-]*		-- Ignore

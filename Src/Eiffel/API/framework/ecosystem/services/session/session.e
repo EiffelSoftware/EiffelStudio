@@ -258,8 +258,9 @@ feature -- Query
 				Result := l_codes.has (l_id) or else
 					{l_string: !STRING_GENERAL} a_value or else
 					{l_session_data: !SESSION_DATA_I} a_value or else
-					{l_cell_data: !CELL [ANY]} a_value or else
-					({TUPLE}) #? a_value /= Void -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
+					({TUPLE}) #? a_value /= Void or else -- TUPLE cannot be used with explict attachment mark (6.1.7.1179)
+					{l_cell: !CELL [ANY]} a_value or else
+					{l_array: !ARRAY [ANY]} a_value
 			end
 		end
 

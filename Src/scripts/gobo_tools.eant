@@ -8,7 +8,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO_TOOLS.dir}${path_separator}misc${path_separator}_common_.eant">
+		<parent location="${GOBO_TOOLS.absdir}${path_separator}misc${path_separator}_common_.eant">
 			<redefine target="init"/>
 		</parent>
 	</inherit>
@@ -72,7 +72,7 @@
 		<argument name="A_out_dir" />
 		<available resource="${A_out_dir}${path_separator}${A_name}${exe}" variable="tmp_available" />
 		<set name="return_code" value="0" 							if="${tmp_available}=true" />
-		<geant dir="${GOBO_TOOLS.dir}" 	if="${tmp_available}=false"
+		<geant dir="${GOBO_TOOLS.absdir}" 	if="${tmp_available}=false"
 			file="ise_eiffel_compiler.eant" target="finalize" 
 			reuse_variables="true" fork="false">
 			<argument name="a_ecf" value="${_GOBO_LIB}${path_separator}src${path_separator}${A_name}.ecf" />

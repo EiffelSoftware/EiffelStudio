@@ -7,7 +7,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${_HELPERS_.dir}${path_separator}_common_.eant" />
+		<parent location="${_HELPERS_.absdir}${path_separator}_common_.eant" />
 	</inherit>
 
 	<target name="get_bin__xyz" >

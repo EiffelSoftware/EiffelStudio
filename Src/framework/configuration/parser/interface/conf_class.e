@@ -48,9 +48,7 @@ feature {NONE} -- Initialization
 			group := a_group
 			path := a_path
 			is_valid := True
-			--check_changed
---			is_modified := False
-			name := file_name.split ('.').first.as_upper
+			check_changed
 
 			if not is_error then
 				check

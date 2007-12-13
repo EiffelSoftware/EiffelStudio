@@ -1365,7 +1365,7 @@ end
 			generate_invariant_before
 			if have_assert then
 				buf := buffer
-				buf.put_string ("if (RTAL & CK_REQUIRE | RTAC) {")
+				buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
 				buf.put_new_line
 				buf.indent
 

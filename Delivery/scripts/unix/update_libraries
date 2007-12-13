@@ -1,9 +1,5 @@
 #!/bin/sh
 
-remtrace free_add_ons
-cd $EIFFEL_SRC
-co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
-
 remtrace Compiling additional libraries
 cd $EIFFEL_SRC/library
 cd cURL/Clib

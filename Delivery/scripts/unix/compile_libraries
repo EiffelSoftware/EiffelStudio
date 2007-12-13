@@ -50,6 +50,9 @@ make
 
 
 remtrace Compile the Eiffel libraries C code
+remtrace cURL
+cd $INITIAL_DIR/library/cURL/Clib
+default_make
 remtrace net
 cd $INITIAL_DIR/library/net/Clib
 default_make

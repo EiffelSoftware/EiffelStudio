@@ -12,7 +12,6 @@
 		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="pe_reader" location=".\" recursive="true">
 			<file_rule>

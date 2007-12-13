@@ -46,6 +46,14 @@ feature -- General colors
 			result_attached: Result /= Void
 		end
 
+	disabled_foreground_color: EV_COLOR
+			-- Color for disabled text
+		once
+			Result := stock_colors.gray
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Grids
 
 	grid_line_color: EV_COLOR

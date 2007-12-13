@@ -38,7 +38,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	frozen show_help
+	show_help
 			-- Attempts to show help given the current help context implemented on Current.
 		do
 			if help_providers.is_service_available then

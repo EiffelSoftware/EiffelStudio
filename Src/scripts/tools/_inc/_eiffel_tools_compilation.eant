@@ -75,7 +75,7 @@
 	</target>
 
 	<target name="clean" depend="init_skip" unless="$_SKIP=true">
-		<geant dir="${_EIFFEL_TOOLS_COMPILATION.dir}${path_separator}..${path_separator}.." 
+		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}${path_separator}..${path_separator}.." 
 			file="ise_eiffel_compiler.eant"
 			target="clean" 
 			fork="false"
@@ -147,7 +147,7 @@
 		<exit code="-1" />
 		-->
 
-		<geant dir="${_EIFFEL_TOOLS_COMPILATION.dir}${path_separator}..${path_separator}.." 
+		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}${path_separator}..${path_separator}.." 
 			file="ise_eiffel_compiler.eant"
 			target="$a_mode" 
 			fork="false"

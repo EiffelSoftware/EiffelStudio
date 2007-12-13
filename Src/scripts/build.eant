@@ -6,7 +6,7 @@
 		author: "Jocelyn Fiat and others"
 	</description>
 	<inherit>
-		<parent location="${EIFFELSOFTWARE_BUILD.dir}${path_separator}misc${path_separator}_common_.eant">
+		<parent location="${EIFFELSOFTWARE_BUILD.absdir}${path_separator}misc${path_separator}_common_.eant">
 			<redefine target="init"/>
 		</parent>
 	</inherit>
@@ -277,19 +277,19 @@
 	</target>
 
 	<target name="compile_gobo_tools" depend="init">
-		<geant file="${EIFFELSOFTWARE_BUILD.dir}${path_separator}gobo_tools.eant" target="compile" reuse_variables="true"  fork="false"/>
+		<geant file="${EIFFELSOFTWARE_BUILD.absdir}${path_separator}gobo_tools.eant" target="compile" reuse_variables="true"  fork="false"/>
 	</target>
 	<target name="compile_wizards" depend="init">
-		<geant file="${EIFFELSOFTWARE_BUILD.dir}${path_separator}es_wizards.eant" target="compile_all" reuse_variables="true"  fork="false"/>
+		<geant file="${EIFFELSOFTWARE_BUILD.absdir}${path_separator}es_wizards.eant" target="compile_all" reuse_variables="true"  fork="false"/>
 	</target>
 	<target name="set_ec_version" depend="init">
-		<geant file="${EIFFELSOFTWARE_BUILD.dir}${path_separator}set_version.eant" target="set_version" 
+		<geant file="${EIFFELSOFTWARE_BUILD.absdir}${path_separator}set_version.eant" target="set_version" 
 			arguments="system_constants.e"
 			dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}API${path_separator}constants"
 			reuse_variables="true"  fork="false" />
 	</target>
 	<target name="set_esbuilder_version" depend="init">
-		<geant file="${EIFFELSOFTWARE_BUILD.dir}${path_separator}set_version.eant" target="set_version" 
+		<geant file="${EIFFELSOFTWARE_BUILD.absdir}${path_separator}set_version.eant" target="set_version" 
 			arguments="gb_about_dialog_constants.e"
 			dir="${EIFFEL_SRC}${path_separator}build${path_separator}Constants"
 			reuse_variables="true"  fork="false" />

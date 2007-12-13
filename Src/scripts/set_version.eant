@@ -7,7 +7,7 @@
 		note: "This script could be split into severals scripts, one for each product"
 	</description>
 	<inherit>
-		<parent location="${EIFFELSOFTWARE_SET_VERSION.dir}${path_separator}misc${path_separator}_common_.eant">
+		<parent location="${EIFFELSOFTWARE_SET_VERSION.absdir}${path_separator}misc${path_separator}_common_.eant">
 		</parent>
 	</inherit>
 

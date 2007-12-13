@@ -8,7 +8,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${COMPILE_WIZARDS.dir}${path_separator}misc${path_separator}_common_.eant">
+		<parent location="${COMPILE_WIZARDS.absdir}${path_separator}misc${path_separator}_common_.eant">
 		</parent>
 	</inherit>
 
@@ -70,7 +70,7 @@
 			dir="${EIFFEL_SRC}${path_separator}help${path_separator}wizards"
 			to_directory="$a_comp_dir" force="true" 
 			/>
-		<geant dir="${COMPILE_WIZARDS.dir}" file="ise_eiffel_compiler.eant" target="finalize" reuse_variables="true" fork="false">
+		<geant dir="${COMPILE_WIZARDS.absdir}" file="ise_eiffel_compiler.eant" target="finalize" reuse_variables="true" fork="false">
 			<argument name="a_ecf" value="${EIFFEL_SRC}${path_separator}help${path_separator}wizards${path_separator}${a_wizard_name}.ecf"/>
 			<argument name="a_target" value="wizard"/>
 			<argument name="a_name" value="$a_name"/>

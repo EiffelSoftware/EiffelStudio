@@ -8,7 +8,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${DELIV_SCRIPT.dir}${path_separator}misc${path_separator}_helpers_.eant">
+		<parent location="${DELIV_SCRIPT.absdir}${path_separator}misc${path_separator}_helpers_.eant">
 			<redefine target="check_environment"/>
 			<redefine target="init"/>
 			<redefine target="_log"/>
@@ -281,23 +281,23 @@
 	</target>
 
 	<target name="set_ec_version" depend="init">
-		<geant file="${DELIV_SCRIPT.dir}${path_separator}set_version.eant" target="set_version" 
+		<geant file="${DELIV_SCRIPT.absdir}${path_separator}set_version.eant" target="set_version" 
 			arguments="system_constants.e"
 			dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}API${path_separator}constants"
 			reuse_variables="true"  fork="false" />
 	</target>
 	<target name="set_esbuilder_version" depend="init">
-		<geant file="${DELIV_SCRIPT.dir}${path_separator}set_version.eant" target="set_version" 
+		<geant file="${DELIV_SCRIPT.absdir}${path_separator}set_version.eant" target="set_version" 
 			arguments="gb_about_dialog_constants.e"
 			dir="${EIFFEL_SRC}${path_separator}build${path_separator}Constants"
 			reuse_variables="true"  fork="false" />
 	</target>
 	<target name="compile_wizards" depend="init">
-		<geant dir="${DELIV_SCRIPT.dir}" file="es_wizards.eant" target="compile_all_from" arguments="$_COMPILE_DIR" 
+		<geant dir="${DELIV_SCRIPT.absdir}" file="es_wizards.eant" target="compile_all_from" arguments="$_COMPILE_DIR" 
 			reuse_variables="true"  fork="false" />
 	</target>
 	<target name="compile_gobo" depend="init">
-		<geant dir="${DELIV_SCRIPT.dir}" file="gobo_tools.eant" target="compile_from" arguments="$_COMPILE_DIR"
+		<geant dir="${DELIV_SCRIPT.absdir}" file="gobo_tools.eant" target="compile_from" arguments="$_COMPILE_DIR"
 			reuse_variables="true"  fork="false" />
 	</target>
 

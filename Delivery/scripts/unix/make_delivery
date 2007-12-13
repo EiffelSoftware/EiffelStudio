@@ -214,13 +214,6 @@ remtrace "Putting the Eiffel libraries in the delivery"
 . ./make_libraries $GTK_DIR
 cd $INIT_DIR
 
-cd $INSTALL_DIR
-remtrace Free add ons
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/free_add_ons free_add_ons 
-cd $INSTALL_DIR
-fullrd free_add_ons
-cd $INIT_DIR
-
 if [ ! "$NO_INSTALL" ]; then
 	remtrace Compress everything
 	if [ ! "$NO_COMPILE" ]; then

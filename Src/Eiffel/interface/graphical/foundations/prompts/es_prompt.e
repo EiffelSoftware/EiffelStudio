@@ -23,26 +23,6 @@ inherit
 			on_handle_key
 		end
 
-	HELP_CONTEXT
-		redefine
-			help_context_section
-		end
-
-feature
-
-feature {NONE} -- Access
-
-	help_context: STRING_GENERAL
-			-- A contextual identifer to link an associated help through.
-		do
-			Result := "Session_Manager_Service"
-		end
-
-	help_context_section: STRING_GENERAL
-		do
-			Result := "Preferences Vs. Session Data"
-		end
-
 feature {NONE} -- Initialization
 
 	make (a_text: like text; a_buttons: like buttons; a_default: like default_button; a_default_confirm: like default_confirm_button; a_default_cancel: like default_cancel_button)

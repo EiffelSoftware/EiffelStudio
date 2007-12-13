@@ -965,6 +965,7 @@ feature {NONE} -- Factory
 			is_initializing: is_initializing
 		local
 			l_container: EV_HORIZONTAL_BOX
+			l_tool_bar: SD_TOOL_BAR
 			l_buttons: like dialog_window_buttons
 			l_button: EV_BUTTON
 			l_ids: DS_SET_CURSOR [INTEGER]
@@ -975,10 +976,11 @@ feature {NONE} -- Factory
 			if help_providers.is_service_available then
 					-- Add a help button, if help is available
 				if {l_help_context: !HELP_CONTEXT_I} Current and then l_help_context.is_help_available then
-					if {l_help_widget: !EV_WIDGET} create_help_widget then
-						l_container.extend (l_help_widget)
-						l_container.disable_item_expand (l_help_widget)
-					end
+					create l_tool_bar.make
+					l_tool_bar.extend (create_help_button)
+					l_tool_bar.compute_minimum_size
+					l_container.extend (l_tool_bar)
+					l_container.disable_item_expand (l_tool_bar)
 				end
 			end
 
@@ -1053,36 +1055,34 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
-	create_help_widget: EV_WIDGET
+	create_help_button: SD_TOOL_BAR_BUTTON
 			-- Creates a help widget for use in the dialog button ribbon for recieving help
+		require
+			not_is_recyled: not is_recycled
+			is_initializing: is_initializing
+			help_providers_is_service_available: help_providers.is_service_available
 		local
 			l_pixmap: EV_PIXMAP
+			l_enable_help: BOOLEAN
 		do
-			l_pixmap := stock_pixmaps.command_system_info_icon
-			l_pixmap.set_tooltip ("Click to show the help documentation.")
+			create Result.make
+			Result.set_pixel_buffer (stock_pixmaps.command_system_info_icon_buffer)
+			Result.set_pixmap (stock_pixmaps.command_system_info_icon)
 
-				-- Set click action
-			register_action (l_pixmap.pointer_button_release_actions, agent (a_ia_x, a_ia_y, a_ia_button: INTEGER_32; a_ia_x_tilt, a_ia_y_tilt, a_ia_pressure: REAL_64; a_ia_screen_x, a_ia_screen_y: INTEGER_32)
-				do
-					if a_ia_button = {EV_POINTER_CONSTANTS}.left then
-						show_help
-					end
-				end)
+			l_enable_help := True
+			if {l_context: !HELP_CONTEXT_I} Current then
+				l_enable_help := l_context.is_interface_usable and then help_providers.service.is_provider_available (l_context.help_provider)
+			end
 
-				-- Set enter action (change cursor)
-			register_action (l_pixmap.pointer_enter_actions, agent (a_ia_pixmap: EV_PIXMAP)
-				do
-					a_ia_pixmap.set_pointer_style ((create {EV_STOCK_PIXMAPS}).hyperlink_cursor)
-				end (l_pixmap))
+			if l_enable_help then
+				Result.set_tooltip ("Click to show the help documentation.")
 
-				-- Set leave action (change cursor)
-			register_action (l_pixmap.pointer_leave_actions, agent (a_ia_pixmap: EV_PIXMAP)
-				do
-					a_ia_pixmap.set_pointer_style (dialog.pointer_style)
-				end (l_pixmap))
-
-			Result := l_pixmap
-			Result.set_minimum_size (l_pixmap.width, l_pixmap.height)
+					-- Set click action
+				register_action (Result.select_actions, agent show_help)
+			else
+				Result.disable_sensitive
+				Result.set_tooltip ("No help provider is available to show help for this dialog!")
+			end
 		ensure
 			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
 		end

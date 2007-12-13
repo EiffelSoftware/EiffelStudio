@@ -36,7 +36,10 @@ feature -- Processing
 			i, cnt: INTEGER
 			l_name: STRING
 			l_path: STRING
+			l_cluster_separator: STRING
+			l_full_path: STRING
 		do
+			l_cluster_separator := "/"
 			on_process_directory (a_cluster, a_path)
 			l_path := a_cluster.location.build_path (a_path, "")
 			create l_dir.make (l_path)
@@ -55,8 +58,8 @@ feature -- Processing
 					until
 						i > cnt
 					loop
-						l_name := l_files.item (i)
-						if a_file_rule.is_included (a_path+"/"+l_name) then
+						l_name := l_files [i]
+						if a_file_rule.is_included (a_path + l_cluster_separator + l_name) then
 							handle_class (l_name, a_path, a_cluster)
 						end
 						i := i + 1
@@ -71,11 +74,11 @@ feature -- Processing
 						until
 							i > cnt
 						loop
-							l_name := l_subdirs.item (i)
-							if a_file_rule.is_included (a_path+"/"+l_name) then
-								process_cluster_recursive (a_path+"/"+l_name, a_cluster, a_file_rule)
+							l_full_path := a_path + l_cluster_separator + l_subdirs [i]
+							if a_file_rule.is_included (l_full_path) then
+								process_cluster_recursive (l_full_path, a_cluster, a_file_rule)
 							end
-							i := i +1
+							i := i + 1
 						end
 					end
 				end

@@ -757,6 +757,7 @@ test	invariant-check-melted-agent-callee melt076  tcf pass execution
 test	dollar-with-tuple		melt077  tcf pass execution
 test	dollar-with-expanded-attribute	melt078  tcf pass execution
 test	runtime-stack-corruption	melt079  tcf pass execution
+test	nan-comparison			melt080  tcf pass execution
 
 -- Freezing
 

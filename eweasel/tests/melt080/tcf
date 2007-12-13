@@ -1,0 +1,35 @@
+test_name 	nan-comparison
+test_description When you compare 2 NaNs it returns True instead of False in melted mode. It works fine in frozen or finalized mode.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+execute_final 	NONE exec_output3
+execute_result 	ok
+compare		exec_output3 output
+
+
+test_end

@@ -1413,14 +1413,16 @@ end;
 			-- validity of joins; check assigner command validity.
 		local
 			f: FEATURE_I
+			l_adaptations: like adaptations
 		do
 			from
-				adaptations.start
+				l_adaptations := adaptations
+				l_adaptations.start
 			until
-				adaptations.after
+				l_adaptations.after
 			loop
-				adaptations.item.check_adaptation (resulting_table)
-				adaptations.forth
+				l_adaptations.item.check_adaptation (resulting_table)
+				l_adaptations.forth
 			end
 			from
 				resulting_table.start
@@ -1437,15 +1439,17 @@ end;
 
 	check_redeclarations (resulting_table: FEATURE_TABLE) is
 			-- Check redeclarations into an attribute.
+		local
+			l_adaptations: like adaptations
 		do
 			from
-				adaptations.start;
+				l_adaptations := adaptations
+				l_adaptations.start;
 			until
-				adaptations.after
+				l_adaptations.after
 			loop
-				adaptations.item.check_redeclaration
-					(resulting_table, feature_table, origins, Origin_table);
-				adaptations.forth;
+				l_adaptations.item.check_redeclaration (resulting_table, feature_table, origins, Origin_table);
+				l_adaptations.forth;
 			end;
 		end;
 

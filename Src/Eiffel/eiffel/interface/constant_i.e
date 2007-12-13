@@ -237,7 +237,7 @@ feature -- C code generation
 				end
 
 					-- Generation of function's header
-				if byte_context.workbench_mode then
+				if local_byte_context.workbench_mode then
 					return_type_name := once "EIF_TYPED_VALUE"
 				else
 					return_type_name := type_c.c_string
@@ -267,7 +267,7 @@ feature -- C code generation
 					value.generate (buffer)
 					buffer.put_character (')')
 				else
-					if byte_context.workbench_mode then
+					if local_byte_context.workbench_mode then
 						buffer.put_string ("EIF_TYPED_VALUE r;")
 						buffer.put_new_line
 						buffer.put_string ("r.")
@@ -282,7 +282,7 @@ feature -- C code generation
 					end
 					type_c.generate_cast (buffer)
 					value.generate (buffer)
-					if byte_context.workbench_mode then
+					if local_byte_context.workbench_mode then
 						buffer.put_character (';')
 						buffer.put_new_line
 						buffer.put_string ("return r")
@@ -290,7 +290,7 @@ feature -- C code generation
 				end
 				buffer.exdent
 				buffer.put_string (";%N}%N")
-				if byte_context.final_mode then
+				if local_byte_context.final_mode then
 							-- Generate generic wrappers if required.
 					from
 						rout_ids := rout_id_set
@@ -304,7 +304,7 @@ feature -- C code generation
 							if local_is_once then
 								buffer.generate_function_signature
 									("EIF_REFERENCE", internal_name + "1", True,
-									 Byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
+									 local_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
 								buffer.indent
 								if System.has_multithreaded then
 									buffer.put_string ("RTOUC (")
@@ -319,7 +319,7 @@ feature -- C code generation
 							else
 								buffer.generate_pure_function_signature
 									("EIF_REFERENCE", internal_name + "1", True,
-									 Byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
+									 local_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
 								buffer.put_character ('{')
 								buffer.put_new_line
 								buffer.indent
@@ -349,7 +349,7 @@ feature -- C code generation
 							buffer.put_character ('}')
 							buffer.put_new_line
 							buffer.put_new_line
-							byte_context.clear_feature_data
+							local_byte_context.clear_feature_data
 								-- Only 1 wrapper is generated.
 							i := 1
 						end
@@ -397,9 +397,11 @@ feature -- IL Code generation
 			-- Generate IL code for constant.
 		local
 			type_i: TYPE_I
+			l_byte_context: like byte_context
 		do
-			Byte_context.set_byte_code (create {STD_BYTE_CODE})
-			Byte_context.set_current_feature (Current)
+			l_byte_context := byte_context
+			l_byte_context.set_byte_code (create {STD_BYTE_CODE})
+			l_byte_context.set_current_feature (Current)
 			type_i := type.type_i
 			if is_once then
 				il_generator.generate_once_prologue
@@ -411,7 +413,7 @@ feature -- IL Code generation
 				value.generate_il
 				il_generator.generate_return (True)
 			end
-			Byte_context.clear_feature_data
+			l_byte_context.clear_feature_data
 		end
 
 feature -- Byte code generation

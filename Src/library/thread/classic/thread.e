@@ -57,16 +57,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	create_thread (current_obj: THREAD; init_func: POINTER) is
-			-- Initialize and start thread.
-		obsolete
-			"Use `launch' instead."
-		external
-			"C signature (EIF_OBJECT, EIF_POINTER) use %"eif_threads.h%""
-		alias
-			"eif_thr_create"
-		end
-
 	create_thread_with_args (current_obj: THREAD; init_func: POINTER;
 					priority, policy: INTEGER; detach: BOOLEAN) is
 			-- Initialize and start thread, after setting its priority

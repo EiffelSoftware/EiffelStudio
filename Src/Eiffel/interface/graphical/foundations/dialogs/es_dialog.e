@@ -3,7 +3,7 @@ indexing
 		A base dialog implementation for all dialogs resident in EiffelStudio.
 		
 		Note: Dialogs a becoming quite complex. As of 6.2 the dialogs now use the session manager service ({SESSION_MANAGER_S})
-		      to store size/position information. This can be vetoed by setting `is_size_and_position_remembered' to False.
+		      to store size/position information. This can be vetoed by redefining `is_size_and_position_remembered' to return False.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			is_initializing := True
 
 			is_modal := True
-			is_size_and_position_remembered := True
 
 				-- Create action lists
 			create show_actions
@@ -123,7 +122,7 @@ feature {NONE} -- Initialization
 	       				-- Hook up close action to store session size/position data
 	       			register_action (close_actions, (agent (a_ia_session: SESSION_I)
 	       				do
-	       					if is_size_and_position_remembered and then dialog_result /= default_cancel_button or else buttons.count = 1 then
+	       					if is_size_and_position_remembered then
 	       							-- Only persist data if a cancel button wasn't selected
 		       					if a_ia_session.is_interface_usable then
 		       							-- Store session data
@@ -131,9 +130,6 @@ feature {NONE} -- Initialization
 		       					end
 	       					end
 	       				end (session_data)))
-	       		else
-	       				-- No session manager service, no persistance
-	       			is_size_and_position_remembered := False
 	       		end
 			end
         end
@@ -524,6 +520,9 @@ feature {NONE} -- Status report
 
 	is_size_and_position_remembered: BOOLEAN
 			-- Indicates if the size and position information is remembered for the dialog
+		do
+			Result := session_manager.is_service_available
+		end
 
 feature -- Status setting
 

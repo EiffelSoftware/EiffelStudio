@@ -18,6 +18,7 @@ inherit
 			{NONE} set_is_modal, is_modal, icon
 		redefine
 			dialog_border_width,
+			is_size_and_position_remembered,
 			on_before_show,
 			on_handle_key
 		end
@@ -73,8 +74,6 @@ feature {NONE} -- Initialization
 			set_default_confirm_button (a_default_confirm)
 			set_default_cancel_button (a_default_cancel)
 
-				-- Prompts should not remember size and position information.
-			is_size_and_position_remembered := False
 			make_dialog
 
 			set_text (a_text)
@@ -389,6 +388,15 @@ feature -- Element change
 			dialog.set_default_cancel_button (dialog_window_buttons.item (a_id))
 		ensure
 			default_cancel_button_set: default_cancel_button = a_id
+		end
+
+feature {NONE} -- Status report
+
+	is_size_and_position_remembered: BOOLEAN
+			-- Indicates if the size and position information is remembered for the dialog
+		do
+				-- Prompts should not remember size and position information.
+			Result := False
 		end
 
 feature {NONE} -- Query

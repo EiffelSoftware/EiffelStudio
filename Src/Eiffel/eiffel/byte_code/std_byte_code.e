@@ -244,6 +244,7 @@ feature -- Analyzis
 			suffix: STRING
 			suffixes: LIST [STRING]
 			inline_agent_feature: FEATURE_I
+			l_context: like context
 		do
 			buf := buffer
 			l_is_once := is_once
@@ -263,8 +264,10 @@ feature -- Analyzis
 				generate_once_declaration (internal_name, type_c)
 			end
 
+			l_context := context
+
 				-- Generate reference to once manifest string field
-			context.generate_once_manifest_string_import (once_manifest_string_count)
+			l_context.generate_once_manifest_string_import (once_manifest_string_count)
 
 			if rescue_clause /= Void then
 				buf.put_string ("#undef EIF_VOLATILE")
@@ -276,7 +279,7 @@ feature -- Analyzis
 				-- Generate function signature
 			extern := True
 			name := internal_name
-			if l_is_once and then context.is_once_call_optimized then
+			if l_is_once and then l_context.is_once_call_optimized then
 					-- Once routines should be protected against exceptions.
 					-- C compiler generates inefficient code for functions that catch exceptions.
 					-- Therefore two functions are generated instead of one
@@ -290,14 +293,14 @@ feature -- Analyzis
 				extern := False
 			end
 			args := argument_names
-			if not type_c.is_void and then context.workbench_mode then
+			if not type_c.is_void and then l_context.workbench_mode then
 				return_type_name := once "EIF_TYPED_VALUE"
 			else
 				return_type_name := type_c.c_string
 			end
 			buf.generate_function_signature
 				(return_type_name, name, extern,
-				 Context.header_buffer, args, argument_types)
+				 l_context.header_buffer, args, argument_types)
 
 				-- Starting body of C routine
 			buf.indent
@@ -318,7 +321,7 @@ feature -- Analyzis
 
 				-- Before entering in the code generate GC hooks, i.e. pass
 				-- the addresses of all the reference variables.
-			context.generate_gc_hooks (False)
+			l_context.generate_gc_hooks (False)
 
 				-- Record the locals, arguments and Current address for debugging.
 			generate_push_db
@@ -333,7 +336,7 @@ feature -- Analyzis
 			generate_profile_start
 
 				-- Generate GC synchronization macro
-			if not is_external and context.need_gc_hook then
+			if not is_external and l_context.need_gc_hook then
 					-- No need to generate a synchronization point before
 					-- calling an external or a small routine that does not
 					-- have GC hooks as it could mess up the references to
@@ -345,7 +348,7 @@ feature -- Analyzis
 			end
 
 				-- Allocate memory for once manifest strings if required
-			context.generate_once_manifest_string_allocation (once_manifest_string_count)
+			l_context.generate_once_manifest_string_allocation (once_manifest_string_count)
 
 				-- Generate the saving of the assertion level
 			if keep then
@@ -354,9 +357,9 @@ feature -- Analyzis
 
 				-- Precondition check generation
 			generate_precondition
-			if Context.has_chained_prec then
+			if l_context.has_chained_prec then
 					-- For chained precondition (to implement or else...)
-				Context.generate_body_label
+				l_context.generate_body_label
 			end
 
 				-- If necessary, generate the once stuff (i.e. check if
@@ -427,7 +430,7 @@ feature -- Analyzis
 				buf.put_string ("#undef Result")
 				buf.put_new_line
 			end
-			if context.workbench_mode then
+			if l_context.workbench_mode then
 				from
 					i := argument_count
 				until
@@ -450,16 +453,16 @@ feature -- Analyzis
 				buf.put_new_line
 			end
 
-			if l_is_once and then context.is_once_call_optimized then
+			if l_is_once and then l_context.is_once_call_optimized then
 					-- Generate optimized stub for once routine.
 				buf.generate_function_signature
 					(return_type_name, internal_name, True,
-					 Context.header_buffer, args, argument_types)
+					 l_context.header_buffer, args, argument_types)
 				buf.indent
 				if not type_c.is_void then
 					buf.put_string ("return ")
 				end
-				context.generate_once_optimized_call_start (type_c, body_index, is_global_once, buf)
+				l_context.generate_once_optimized_call_start (type_c, body_index, is_global_once, buf)
 				buf.put_string (name)
 				buf.put_string (",(")
 				from
@@ -478,17 +481,17 @@ feature -- Analyzis
 			end
 
 				-- Generate generic wrappers if required.
-			if context.final_mode then
+			if l_context.final_mode then
 				from
-					if context.current_feature.is_inline_agent then
-						inline_agent_feature := context.current_feature
+					if l_context.current_feature.is_inline_agent then
+						inline_agent_feature := l_context.current_feature
 					end
-					rout_id_set := context.generic_wrapper_ids (body_index)
+					rout_id_set := l_context.generic_wrapper_ids (body_index)
 					if rout_id_set /= Void then
 						rout_id_set := rout_id_set.twin
-						rout_id_set.merge (context.current_feature.rout_id_set)
+						rout_id_set.merge (l_context.current_feature.rout_id_set)
 					else
-						rout_id_set := context.current_feature.rout_id_set
+						rout_id_set := l_context.current_feature.rout_id_set
 					end
 					j := rout_id_set.count
 				until
@@ -548,7 +551,7 @@ feature -- Analyzis
 							end
 							buf.generate_pure_function_signature
 								(type_c.c_string, internal_name + suffix, True,
-								 Context.header_buffer, args, seed_types)
+								 l_context.header_buffer, args, seed_types)
 							buf.put_character ('{')
 							buf.put_new_line
 							buf.indent
@@ -568,9 +571,9 @@ feature -- Analyzis
 									end
 								else
 										-- "Box" result value.
-									context.mark_result_used
+									l_context.mark_result_used
 									type_c.generate (buf)
-									context.result_register.print_register
+									l_context.result_register.print_register
 									buf.put_character (';')
 									buf.put_new_line
 									basic_i.c_type.generate (buf)
@@ -614,11 +617,11 @@ feature -- Analyzis
 							buf.put_string (gc_rparan_semi_c)
 							buf.put_new_line
 							if not seed_type.is_void and then basic_i /= Void then
-								basic_i.metamorphose (context.result_register, create {NAMED_REGISTER}.make ("r", basic_i.c_type), buf)
+								basic_i.metamorphose (l_context.result_register, create {NAMED_REGISTER}.make ("r", basic_i.c_type), buf)
 								buf.put_character (';')
 								buf.put_new_line
 								buf.put_string ("return ")
-								context.result_register.print_register
+								l_context.result_register.print_register
 								buf.put_character (';')
 								buf.put_new_line
 							end
@@ -630,7 +633,7 @@ feature -- Analyzis
 				end
 			end
 
-			Context.inherited_assertion.wipe_out
+			l_context.inherited_assertion.wipe_out
 
 debug ("DEBUGGER_HOOK")
 		-- ASSERTION TO CHECK THAT `number_of_breakpoint_slots' is correct

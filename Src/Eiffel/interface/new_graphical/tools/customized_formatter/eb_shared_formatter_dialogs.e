@@ -83,10 +83,16 @@ feature{NONE} -- Implementation
 			-- If `a_force' is True, load customized formatters even if they are already loaded.
 		local
 			l_manager: like customized_formatter_manager
+			l_dev_window: EB_WINDOW
+			l_window: EV_WINDOW
 		do
 			l_manager := customized_formatter_manager
 			if a_force or else not l_manager.is_loaded then
-				l_manager.load (agent show_error_message (agent l_manager.last_error, agent l_manager.clear_last_error, window_manager.last_focused_development_window.window))
+				l_dev_window := window_manager.last_focused_development_window
+				if l_dev_window /= Void then
+					l_window := l_dev_window.window
+				end
+				l_manager.load (agent show_error_message (agent l_manager.last_error, agent l_manager.clear_last_error, l_window))
 			end
 		end
 
@@ -95,10 +101,16 @@ feature{NONE} -- Implementation
 			-- If `a_force' is True, load customized tools even if they are already loaded.
 		local
 			l_manager: like customized_tool_manager
+			l_dev_window: EB_WINDOW
+			l_window: EV_WINDOW
 		do
 			l_manager := customized_tool_manager
 			if a_force or else not l_manager.is_loaded then
-				l_manager.load (agent show_error_message (agent l_manager.last_error, agent l_manager.clear_last_error, window_manager.last_focused_development_window.window))
+				l_dev_window := window_manager.last_focused_development_window
+				if l_dev_window /= Void then
+					l_window := l_dev_window.window
+				end
+				l_manager.load (agent show_error_message (agent l_manager.last_error, agent l_manager.clear_last_error, l_window))
 			end
 		end
 

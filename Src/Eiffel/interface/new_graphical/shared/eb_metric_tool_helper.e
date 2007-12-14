@@ -37,7 +37,6 @@ feature -- Access
 		require
 			a_error_agent_attached: a_error_agent /= Void
 			a_clear_error_agent_attached: a_clear_error_agent /= Void
-			a_window_attached: a_window /= Void
 		local
 			l_error: EB_METRIC_ERROR
 		do
@@ -54,7 +53,6 @@ feature -- Access
 		require
 			a_msg_attached: a_msg /= Void
 			a_agent_attached: a_agent /= Void
-			a_window_attached: a_window /= Void
 		do
 			a_window.status_bar.display_message (a_msg)
 			a_agent.call (Void)

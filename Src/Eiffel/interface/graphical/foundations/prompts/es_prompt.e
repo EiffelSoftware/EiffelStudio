@@ -94,6 +94,7 @@ feature {NONE} -- User interface initialization
 			l_cell: EV_CELL
 			l_icon: EV_PIXMAP
 			l_large_icon: EV_PIXEL_BUFFER
+			l_can_lock: BOOLEAN
 		do
 			create l_vbox
 			create l_hbox
@@ -136,11 +137,13 @@ feature {NONE} -- User interface initialization
 				l_vbox.disable_item_expand (l_vbox.last)
 			end
 
-			if internal_dialog /= Void then
+			l_can_lock := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
+
+			if internal_dialog /= Void and l_can_lock then
 				internal_dialog.lock_update
 			end
 			propagate_prompt_background_color (a_container, colors.prompt_banner_color)
-			if internal_dialog /= Void then
+			if internal_dialog /= Void and l_can_lock then
 				internal_dialog.unlock_update
 			end
 		end

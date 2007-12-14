@@ -103,7 +103,7 @@ feature
 
 	frozen gdk_x11_screen_get_window_manager_name (a_screen: POINTER): POINTER is
 		external
-			"C inline use <gtk/gtk.h>"
+			"C inline use <gdk/gdkx.h>"
 		alias
 			"[
 				#if GTK_MAJOR_VERSION == 2

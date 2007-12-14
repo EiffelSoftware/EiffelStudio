@@ -72,7 +72,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 
 	remtrace Building Enterprise CD image
 	mv Eiffel61 cdrom
-	make_cd_image Eiffel61_enterprise Eiffel61_enterprise.iso cdrom
+	./make_cd_image Eiffel61_enterprise Eiffel61_enterprise.iso cdrom
 	bzip2 Eiffel61_enterprise.iso
 	mv Eiffel61_enterprise.iso.bz2 Eiffel61_enterprise_$FILE_SVN_REVISION-$ISE_PLATFORM.iso.bz2
 	mv cdrom/Eiffel61 Eiffel61

@@ -49,7 +49,7 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	full_url (a_context_id: !STRING_GENERAL; a_section: STRING_GENERAL): !STRING_8
+	full_url (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL): !STRING_8
 			-- Full URL to navigate to, base on the help content context.
 		require
 			not_a_context_id_is_empty: not a_context_id.is_empty
@@ -68,7 +68,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: STRING_GENERAL)
+	show_help (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL)
 			-- Attempts to show help for a specific context using the current help provider.
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
@@ -85,12 +85,11 @@ feature {NONE} -- Basic operations
 			-- `a_url': The URL to launch in a web-browser.
 		require
 			not_a_url_is_empty: not a_url.is_empty
-		local
-			l_process: PROCESS
 		do
-			l_process := (create {PROCESS_FACTORY}).process_launcher ("cmd /C start " + a_url, Void, Void)
-			l_process.set_hidden (True)
-			l_process.launch
+			if {l_process: !PROCESS} (create {PROCESS_FACTORY}).process_launcher ("cmd /C start " + a_url, Void, Void) then
+				l_process.set_hidden (True)
+				l_process.launch
+			end
 		end
 
 feature {NONE} -- Formatting

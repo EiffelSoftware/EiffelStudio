@@ -25,7 +25,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	help_context_section: STRING_GENERAL
+	help_context_section: ?STRING_GENERAL
 			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
 		require
 			is_interface_usable: is_interface_usable

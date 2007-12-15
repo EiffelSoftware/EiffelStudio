@@ -16,7 +16,7 @@ feature -- Access
 			-- Default help system.
 		once
 				-- Compiled HTML help system is the default help for now.
-			Result := chm
+			Result := wiki
 		end
 
 	frozen chm: !UUID

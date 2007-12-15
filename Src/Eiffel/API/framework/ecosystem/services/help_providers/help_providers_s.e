@@ -16,6 +16,15 @@ inherit
 
 	USABLE_I
 
+feature -- Access
+
+	help_providers: !DS_BILINEAR [!HELP_PROVIDER_I]
+			-- List of registered help providers.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
 feature -- Query
 
 	help_provider (a_kind: !UUID): !HELP_PROVIDER_I
@@ -62,7 +71,7 @@ feature -- Basic operations
 			register_provider_with_activator (a_kind, agent (a_ia_service: !HELP_PROVIDERS_S; a_ia_type: TYPE [HELP_PROVIDER_I]): !HELP_PROVIDER_I
 					-- Add
 				local
-					l_internal: INTERNAL
+					l_internal: !INTERNAL
 					l_provider: !HELP_PROVIDER_I
 				do
 					create l_internal

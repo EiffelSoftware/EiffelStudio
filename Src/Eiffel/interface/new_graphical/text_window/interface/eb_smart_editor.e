@@ -57,6 +57,16 @@ inherit
 			prepare_auto_complete
 		end
 
+inherit {NONE}
+	ES_HELP_REQUEST_BINDER
+		export
+			{NONE} all
+		undefine
+			default_create
+		redefine
+			show_help
+		end
+
 create
 	make
 
@@ -73,7 +83,56 @@ feature {NONE} -- Initialize
 			initialize_code_complete
 			set_completion_possibilities_provider (text_displayed)
 			text_displayed.set_code_completable (Current)
+
+			if {l_window: !EV_WINDOW} a_dev_window then
+				bind_help_shortcut (l_window)
+			end
 		end
+
+feature {NONE} -- Access
+
+	help_uri_scavenger: !ES_HELP_CONTEXT_SCAVENGER [!EB_SMART_EDITOR]
+			-- Scavenger used to local help contexts within the editor
+		require
+			help_providers_is_service_available: help_providers.is_service_available
+		once
+			Result ?= create {!ES_EDITOR_HELP_CONTEXT_SCAVENGER}
+		ensure
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
+feature {NONE} -- Basic operations
+
+	show_help
+			-- Attempts to show help given the current help context implemented on Current.
+		local
+			l_uri_scavenger: like help_uri_scavenger
+			l_contexts: !DS_BILINEAR [!HELP_CONTEXT_I]
+			l_dialog: ES_HELP_SELECTOR_DIALOG
+		do
+			if help_providers.is_service_available and then has_focus then
+					-- Look for help contexts
+				l_uri_scavenger := help_uri_scavenger
+				if {l_editor: !EB_SMART_EDITOR} Current then
+					l_uri_scavenger.probe (l_editor)
+					if l_uri_scavenger.has_probed then
+						l_contexts := l_uri_scavenger.scavenged_contexts
+						if not l_contexts.is_empty then
+							if l_contexts.count > 1 then
+									-- Multiple pieces of help available, show dialog
+								create l_dialog.make
+								l_dialog.set_links (l_contexts)
+								l_dialog.show_on_active_window
+							else
+									-- Only one piece of help available.
+								on_help_requested (l_contexts.first)
+							end
+						end
+					end
+				end
+			end
+		end
+
 
 feature -- Content change
 
@@ -661,7 +720,12 @@ feature {NONE} -- Autocomplete implementation
 	on_key_down (ev_key: EV_KEY)is
 		do
 			completion_timeout.actions.block
-			Precursor (ev_key)
+			if ev_key.code = {EV_KEY_CONSTANTS}.key_f1 then
+				show_help
+			else
+				Precursor (ev_key)
+			end
+
 		end
 
 	auto_point: BOOLEAN

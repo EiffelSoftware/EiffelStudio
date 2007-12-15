@@ -1,0 +1,15 @@
+test_name	freezing-like-current
+test_description A routine using `like' in its signature when redefined should be able to use the deanchored form of the type from the parent it comes from. This is also known as freezing like Current.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

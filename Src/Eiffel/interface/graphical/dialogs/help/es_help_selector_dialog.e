@@ -18,8 +18,7 @@ inherit
 		end
 
 create
-	make,
-	make_with_window
+	make
 
 feature {NONE} -- User interface initialization
 
@@ -125,6 +124,11 @@ feature {NONE} -- User interface initialization
 			populate_help_documents
 		end
 
+feature -- Access
+
+	links: DS_BILINEAR [!HELP_CONTEXT_I]
+			-- Help context links
+
 feature {NONE} -- Access
 
 	icon: EV_PIXEL_BUFFER
@@ -166,11 +170,6 @@ feature {NONE} -- Access
 		do
 			Result := dialog_buttons.cancel_button
 		end
-
-feature -- Access
-
-	links: DS_BILINEAR [!HELP_CONTEXT_I]
-			-- Help context links
 
 feature -- Element change
 

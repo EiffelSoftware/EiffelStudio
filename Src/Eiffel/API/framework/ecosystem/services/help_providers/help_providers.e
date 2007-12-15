@@ -49,12 +49,34 @@ feature {NONE} -- Clean up
 			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
 		end
 
+feature -- Access
+
+	help_providers: !DS_BILINEAR [!HELP_PROVIDER_I]
+			-- List of registered help providers.
+		local
+			l_result: !DS_ARRAYED_LIST [!HELP_PROVIDER_I]
+			l_providers: like providers
+		do
+			l_providers := providers
+			create l_result.make (l_providers.count)
+			Result ?= l_result
+			if {l_keys: !DS_BILINEAR_CURSOR [!UUID]} l_providers.keys.new_cursor then
+				from l_keys.start until l_keys.after loop
+					check
+						is_provider_available: is_provider_available (l_keys.item)
+					end
+					l_result.put_last (help_provider (l_keys.item))
+					l_keys.forth
+				end
+			end
+		end
+
 feature {NONE} -- Access
 
-	providers: DS_HASH_TABLE [FUNCTION [ANY, TUPLE [providers: !HELP_PROVIDERS_S], !HELP_PROVIDER_I], !UUID]
+	providers: !DS_HASH_TABLE [FUNCTION [ANY, TUPLE [providers: !HELP_PROVIDERS_S], !HELP_PROVIDER_I], !UUID]
 			-- Table of registered help providers
 
-	activate_providers: DS_HASH_TABLE [!HELP_PROVIDER_I, !UUID]
+	activate_providers: !DS_HASH_TABLE [!HELP_PROVIDER_I, !UUID]
 			-- Table of registered help providers, which have been requested
 
 feature -- Query
@@ -75,10 +97,12 @@ feature -- Query
 			else
 				l_service ?= Current
 				Result := providers.item (a_kind).item ([l_service])
+				Result.set_kind (a_kind)
 				activate_providers.force_last (Result, a_kind)
 			end
 		ensure then
 			activate_providers_has_a_kind: activate_providers.has (a_kind)
+			result_kind_set: Result.kind.is_equal (a_kind)
 		end
 
 	is_provider_available (a_kind: !UUID): BOOLEAN
@@ -113,13 +137,11 @@ feature -- Basic operations
 			--           {HELP_PROVIDER_KINDS}, please see respective documentation related to extended third-party
 			--           help providers.
 		local
-			l_disposable: DISPOSABLE
 		do
 			providers.remove (a_kind)
 			if activate_providers.has (a_kind) then
 					-- Clean up provider
-				l_disposable ?= activate_providers.item (a_kind)
-				if l_disposable /= Void then
+				if {l_disposable: !DISPOSABLE} activate_providers.item (a_kind) then
 					l_disposable.dispose
 				end
 
@@ -129,10 +151,6 @@ feature -- Basic operations
 		ensure then
 			not_activate_providers_has_a_kind: not activate_providers.has (a_kind)
 		end
-
-invariant
-	providers_attached: providers /= Void
-	activate_providers_attached: activate_providers /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

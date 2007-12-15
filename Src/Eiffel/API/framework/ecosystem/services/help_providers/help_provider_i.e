@@ -13,9 +13,42 @@ deferred class
 inherit
 	USABLE_I
 
+feature -- Access
+
+	document_protocol: !STRING_GENERAL
+			-- Document protocol used by a URI to navigate to the help accessible from the provider.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	document_description: !STRING_GENERAL
+			-- Document short description
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	frozen kind: !UUID
+			-- Help provider id, assigned to by the help providers service
+
+feature {HELP_PROVIDERS_S} -- Element change
+
+	frozen set_kind (a_kind: !UUID)
+			-- Set's help provider's kind ID.
+		do
+			kind := a_kind
+		ensure
+			kind_set: kind = a_kind
+		end
+
 feature -- Basic operations
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: STRING_GENERAL)
+	show_help (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL)
 			-- Attempts to show help for a specific context using the current help provider
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.

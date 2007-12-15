@@ -32,7 +32,7 @@ inherit
         end
 
 inherit {NONE}
-	ES_HELP_PROVIDER
+	ES_HELP_REQUEST_BINDER
 		export
 			{NONE} all
 		end

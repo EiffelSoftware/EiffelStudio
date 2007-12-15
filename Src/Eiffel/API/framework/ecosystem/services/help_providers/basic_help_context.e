@@ -1,47 +1,55 @@
 indexing
 	description: "[
-		Bulk implementation for {HELP_CONTEXT_I} making it easy to identify if help is available using Void-safe attached types.
+		Basic help provider context, providing contextual information through external parameters.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class
-	HELP_CONTEXT
+class
+	BASIC_HELP_CONTEXT
 
 inherit
 	HELP_CONTEXT_I
 		redefine
+			help_provider,
 			is_help_available
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_context: like help_context_id; a_section: like help_context_section; a_provider: like help_provider)
+			-- Initialize a help context using a set of help context information.
+		require
+			not_a_context_is_empty: not a_context.is_empty
+			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
+		do
+			help_context_id := a_context
+			help_context_section := a_section
+			internal_help_provider := a_provider
+		ensure
+			help_context_id_set: help_context_id = a_context
+			help_context_section_set: help_context_section = a_section
+			internal_help_provider: internal_help_provider_set = a_provider
 		end
 
 feature -- Access
 
-	frozen help_context_id: !STRING_GENERAL
+	help_context_id: !STRING_GENERAL
 			-- A contextual identifer to link an associated help through.
-		do
-			create {!STRING_8} Result.make_empty
-			if {l_result: !STRING_GENERAL} help_context then
-				Result.append (l_result)
-			end
-		end
 
 	help_context_section: ?STRING_GENERAL
 			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
+
+	help_provider: !UUID
+			-- Help provider kind best used for the help context.
+			-- See {HELP_PROVIDER_KINDS} for a list of built-in help providers.
 		do
-			--| Dummy implementation descendents can override to support a sub-section.
-		end
-
-feature {NONE} -- Access
-
-	help_context: ?STRING_GENERAL
-			-- A contextual identifer to link an associated help through.
-		require
-			is_interface_usable: is_interface_usable
-		deferred
-		ensure
-			not_result_is_empty: Result /= Void implies not Result.is_empty
+			Result := internal_help_provider
 		end
 
 feature -- Status report
@@ -49,10 +57,19 @@ feature -- Status report
 	is_help_available: BOOLEAN
 			-- Indicates if any help context is available
 		do
-			Result := Precursor {HELP_CONTEXT_I} and then help_context /= Void
-		ensure then
-			help_context_attached: Result implies help_context /= Void
+			Result := True
 		end
+
+	is_interface_usable: BOOLEAN
+			-- Dtermines if the interface was usable
+		do
+			Result := True
+		end
+
+feature {NONE} -- Internal implementation cache
+
+	internal_help_provider: like help_provider
+			-- Mutable version of `help_provider'
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

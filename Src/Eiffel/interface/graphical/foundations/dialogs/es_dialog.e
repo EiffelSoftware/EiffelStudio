@@ -17,7 +17,7 @@ inherit
 	EB_RECYCLABLE
 
 inherit {NONE}
-	ES_HELP_PROVIDER
+	ES_HELP_REQUEST_BINDER
 		export
 			{NONE} all
 		end
@@ -1062,7 +1062,6 @@ feature {NONE} -- Factory
 			is_initializing: is_initializing
 			help_providers_is_service_available: help_providers.is_service_available
 		local
-			l_pixmap: EV_PIXMAP
 			l_enable_help: BOOLEAN
 		do
 			create Result.make

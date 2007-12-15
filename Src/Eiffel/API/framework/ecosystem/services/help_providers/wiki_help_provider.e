@@ -16,6 +16,22 @@ inherit
 			format_context
 		end
 
+feature -- Access
+
+	document_protocol: !STRING_GENERAL
+			-- Document protocol used by a URI to navigate to the help accessible from the provider.
+		once
+			create {!STRING_8} Result.make_empty
+			Result.append ("wiki")
+		end
+
+	document_description: !STRING_GENERAL
+			-- Document short description
+		once
+			create {!STRING_8} Result.make_empty
+			Result.append ("Wiki")
+		end
+
 feature {NONE} -- Access
 
 	base_url: !STRING_8

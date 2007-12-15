@@ -1892,7 +1892,6 @@ end
 			vdrd6: VDRD6
 			vdrd7: VDRD7
 			ve02: VE02
-			ve02a: VE02A
 		do
 debug ("ACTIVITY")
 	io.error.put_string ("Check signature of ")
@@ -1952,13 +1951,9 @@ end
 				create vdrd51
 				vdrd51.init (old_feature, Current)
 				Error_handler.insert_error (vdrd51)
-			elseif
-				new_type.is_expanded /= old_type.is_expanded
-			then
+			elseif is_attribute and then new_type.is_expanded /= old_type.is_expanded then
 				create ve02
 				ve02.init (old_feature, Current)
---				ve02.set_type (new_type)
---				ve02.set_precursor_type (old_type)
 				Error_handler.insert_error (ve02)
 			end
 
@@ -1997,15 +1992,6 @@ end
 						create vdrd53
 						vdrd53.init (old_feature, Current)
 						Error_handler.insert_error (vdrd53)
-					elseif
-						new_type.is_expanded /= old_type.is_expanded
-					then
-						create ve02a
-						ve02a.init (old_feature, Current)
---						ve02a.set_type (new_type)
---						ve02a.set_precursor_type (old_type)
-						ve02a.set_argument_number (i)
-						Error_handler.insert_error (ve02a)
 					end
 
 					i := i + 1

@@ -221,8 +221,18 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
+		local
+			l_like: like Current
 		do
 			Result := class_type
+			if Result.is_like_current then
+					-- We cannot allow aliasing as otherwise we might end up updating
+					-- `like Current' type that should not be updated (Allowing the
+					-- aliasing would break eweasel test#valid218).
+				create l_like
+				l_like.set_actual_type (class_type.conformance_type)
+				Result := l_like
+			end
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_CURRENT is

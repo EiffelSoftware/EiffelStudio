@@ -83,15 +83,7 @@ feature -- Checking
 				feats.after
 			loop
 				feature_i := feats.item.a_feature
-
-					-- Evaluates signature of the old feature in the
-					-- context of `feat_tbl' and take care of possible
-					-- redeclarations of anchored types.
-				feature_i.solve_types (tbl)
-
-					-- Signature checking
 				new_feature.check_signature (feature_i, tbl)
-
 				feats.forth
 			end
 		end

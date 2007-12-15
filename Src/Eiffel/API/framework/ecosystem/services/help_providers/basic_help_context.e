@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		ensure
 			help_context_id_set: help_context_id = a_context
 			help_context_section_set: help_context_section = a_section
-			internal_help_provider: internal_help_provider_set = a_provider
+			internal_help_provider_set: internal_help_provider = a_provider
 		end
 
 feature -- Access

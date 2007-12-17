@@ -23,6 +23,11 @@ inherit
 			on_handle_key
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make (a_text: like text; a_buttons: like buttons; a_default: like default_button; a_default_confirm: like default_confirm_button; a_default_cancel: like default_cancel_button)
@@ -137,7 +142,7 @@ feature {NONE} -- User interface initialization
 				l_vbox.disable_item_expand (l_vbox.last)
 			end
 
-			l_can_lock := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
+			l_can_lock := (ev_application.locked_window = Void)
 
 			if internal_dialog /= Void and l_can_lock then
 				internal_dialog.lock_update

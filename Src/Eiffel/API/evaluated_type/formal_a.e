@@ -312,8 +312,16 @@ feature {COMPILER_EXPORTER}
 			-- Does Current conform to `other'?
 		local
 			l_constraints: TYPE_SET_A
+			c: like Current
 		do
 			Result := same_as (other.conformance_type)
+			if not Result then
+				c ?= other
+				if c /= Void then
+					Result := is_equivalent (c) and then
+						(c.is_attached implies is_attached)
+				end
+			end
 			if not Result then
 					-- We do not treat the case `is_expanded' as if it is an
 					-- expanded then it does not conform to anything but itself

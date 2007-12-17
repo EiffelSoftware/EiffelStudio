@@ -1,0 +1,14 @@
+test_name 	 attached-formal-generic
+test_description Explicitly attached formal generic should conform to a plain one.
+
+copy_raw	a.e    $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

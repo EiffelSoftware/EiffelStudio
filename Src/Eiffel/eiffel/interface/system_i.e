@@ -438,6 +438,9 @@ feature -- Properties
 			local_workbench.change_class (character_32_class)
 			local_workbench.change_class (boolean_class)
 
+				-- Exception manager
+			local_workbench.change_class (exception_manager_class)
+
 			protected_classes_level := boolean_class.compiled_class.class_id
 				-- The root class is not protected
 				-- Godammit.
@@ -485,6 +488,9 @@ feature -- Properties
 			if rt_extension_class /= Void and then rt_extension_class.is_compiled then
 				rt_extension_class.compiled_class.record_precompiled_class_in_system
 			end
+
+				-- Exception manager
+			exception_manager_class.compiled_class.record_precompiled_class_in_system
 
 			if il_generation then
 				native_array_class.compiled_class.record_precompiled_class_in_system
@@ -2138,7 +2144,7 @@ end
 			predicate_class.compiled_class.mark_class (marked_classes)
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
 			type_class.compiled_class.mark_class (marked_classes)
-
+			exception_manager_class.compiled_class.mark_class (marked_classes)
 			if rt_extension_class /= Void and then rt_extension_class.is_compiled then
 				rt_extension_class.compiled_class.mark_class (marked_classes)
 			end
@@ -3516,6 +3522,7 @@ feature -- Dead code removal
 			l_class: CLASS_C
 			root_feat: FEATURE_I
 			ct: CLASS_TYPE
+			l_feature_table: FEATURE_TABLE
 		do
 				-- Note: To have dead code removal working when assertions are enabled
 				-- we need to perform two things:
@@ -3581,18 +3588,30 @@ feature -- Dead code removal
 
 				-- Protection of ROUTINE class features
 			l_class := routine_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_final_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.rout_disp_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.calc_rout_addr_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.closed_operands_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.class_id_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.feature_id_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.is_precompiled_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.is_basic_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.open_map_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.open_count_name_id), l_class)
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.closed_count_name_id), l_class)
+			l_feature_table := l_class.feature_table
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_final_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.rout_disp_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.calc_rout_addr_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.closed_operands_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.class_id_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.feature_id_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.is_precompiled_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.is_basic_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.open_map_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.open_count_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.closed_count_name_id), l_class)
+
+				-- Protection of EXCEPTION_MANAGER class features
+			l_class := exception_manager_class.compiled_class
+			l_feature_table := l_class.feature_table
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.last_exception_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_last_exception_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_exception_data_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.is_code_ignored_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.once_raise_name_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.init_exception_manager_id), l_class)
+			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.free_preallocated_trace_id), l_class)
 
 				-- Protection of FUNCTION class features
 			l_class := function_class.compiled_class
@@ -4955,6 +4974,9 @@ feature -- Pattern table generation
 				buffer.put_string ("%T};")
 				buffer.put_new_line
 			end
+
+				-- Initialize exception manager.
+			buffer.put_string ("%Tinit_emnger();%N")
 
 			if final_mode then
 				if root_creation_name /= Void then

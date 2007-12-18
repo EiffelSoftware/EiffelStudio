@@ -282,6 +282,7 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
  * top pointer on the stack. The STACK_PRESERVE declares the variables ``dcur''
  * and ``dtop'' for the debbuger stack and ``scur'' / ``stop'' for the
  * interpreter operational stack.
+ * STACK_PRESERVE_FOR_OLD is used for preservation at old evaluation in case of exception.
  * There is always a wrapper to the function interpret() (which is private), and
  * that wrapper is responsible for getting calling context, setting an exception
  * trap (to clean up the stacks when an exception occurs) and removing all that
@@ -292,6 +293,13 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
 	struct stdchunk * volatile dcur;			\
 	EIF_TYPED_VALUE * volatile stop;				\
 	struct stochunk * volatile scur
+
+#define STACK_PRESERVE_FOR_OLD \
+	struct dcall * volatile dtop_o;				\
+	struct stdchunk * volatile dcur_o;			\
+	EIF_TYPED_VALUE * volatile stop_o;				\
+	struct stochunk * volatile scur_o
+
 
 #define SAVE(x,y,z) \
 	{								\
@@ -502,6 +510,12 @@ rt_private void interpret(int flag, int where)
 	int16 volatile saved_caller_assertion_level = caller_assertion_level;	/* Saves the assertion level of the caller*/
 	unsigned char * volatile rescue;		/* Location of rescue clause */
 	jmp_buf exenv;							/* In case we have to setjmp() */
+	EIF_REFERENCE saved_except;				/* Saved exception object for rescue clause */
+	EIF_REFERENCE saved_except_for_old;		/* Saved exception object for old expression evaluation */
+	struct ex_vect exvect_t;	/* Save the vector content to avoid messing up by Eiffel calls i.e last_exception/set_last_exception */		
+	int ex_pos;								/* Exception object local position */
+	unsigned char *IC_O;						/* Backup IC for old evaluation */
+	long volatile offset_o;					/* Offset for jump to the next BC_OLD/BC_END_OLD_EVAL */
 	RTEX;									/* Routine's execution vector and debugger
 											   level depth */
 	EIF_TYPED_VALUE * volatile stop;			/* To save stack context */
@@ -529,6 +543,7 @@ rt_private void interpret(int flag, int where)
 	int  volatile is_once;			/* Is it a once routine? */
 	int  volatile is_process_once;		/* Is once routine process-relative? */
 	RTSN;							/* Save nested flag */
+	STACK_PRESERVE_FOR_OLD;
  
 	saved_assertion = in_assertion;
 	is_once = 0;
@@ -764,6 +779,9 @@ rt_private void interpret(int flag, int where)
 #endif
 				current_trace_level = trace_call_level;	/* Save trace call level */
 				if (prof_stack) saved_prof_top = prof_stack->st_top;
+				memcpy (&exvect_t, exvect, sizeof (exvect_t)); /* Protect the vector, so that the following Eiffel call does not wipe it */
+				saved_except = RTLA; /* Save `last_exception' */
+				memcpy (exvect, &exvect_t, sizeof (exvect_t));
 			}
 
 		}
@@ -3048,6 +3066,8 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_RETRIEVE_OLD\n");
 #endif
 		code = get_int16(&IC);             /* Get number (from 1 to locnum) */
+		ex_pos = get_int16(&IC);			/* Get exception local position */
+		RTCO(loc(ex_pos)->it_r);
 		last = iget();
 		memcpy (last, loc(code), ITEM_SZ);
 		break;
@@ -3063,6 +3083,22 @@ rt_private void interpret(int flag, int where)
 		offset = get_int32(&IC);		/* Get offset for skipping old evaluation block */
 		if (~in_assertion & WASC(icur_dtype) & CK_ENSURE) {
 			in_assertion = ~0;
+			offset_o = get_int32(&IC);		/* Get position of the next BC_OLD */
+			{
+				RTE_OTD;
+				SAVE(db_stack, dcur_o, dtop_o);
+				SAVE(op_stack, scur_o, stop_o);
+				saved_except_for_old = NULL;
+				IC_O = IC;
+				if (setjmp(exenv_o)) {
+					RESTORE(op_stack,scur_o,stop_o);
+					RESTORE(db_stack,dcur_o,dtop_o);
+					saved_except_for_old = RTLA;
+					exold (); /* Push an empty vector to pair the following poping */
+					sync_registers(MTC scur_o, stop_o); 
+					IC = IC_O + offset_o; /* Jump to the next BC_OLD */
+				}
+			}
 		} else {
 			IC += offset;			/* Skip old evaulation */
 		}	
@@ -3075,7 +3111,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_END_EVAL_OLD\n");
 #endif
-		
+		RTE_OP; /* Whenever the it reaches here, the old vector should be put. */
 		in_assertion = 0;
 		break;
 
@@ -3086,13 +3122,46 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_OLD\n");
 #endif
-		last = opop();
-		code = get_int16(&IC);     /* Get the local number (from 1 to locnum) */
-		if ((last->type & SK_HEAD) == SK_EXP) {
-				/* Case of an expanded, then we need to copy its original value. */
-			eif_std_ref_copy(last->it_ref, loc(code)->it_ref);
-		} else {
-			memcpy (loc(code), last, ITEM_SZ);
+		if (!saved_except_for_old) 
+			/* If there was an exception, op_stack was not pushed the old value */
+			/* Only read the position forward in IC */
+		{
+			last = opop();
+			code = get_int16(&IC);     /* Get the local number (from 1 to locnum) */
+			if ((last->type & SK_HEAD) == SK_EXP) {
+					/* Case of an expanded, then we need to copy its original value. */
+				eif_std_ref_copy(last->it_ref, loc(code)->it_ref);
+			} else {
+				memcpy (loc(code), last, ITEM_SZ);
+			}
+		}else{
+			code = get_int16(&IC);     /* Get the local number (from 1 to locnum) */
+		}
+		code = get_int16(&IC);		/* Get the local number for exception object */
+		offset_o = get_int32(&IC);		/* Get position of the next BC_OLD */
+		if (saved_except_for_old)
+			loc(code)->it_r = saved_except_for_old;
+			//memcpy (loc(code), saved_except_for_old, sizeof (saved_except_for_old));
+		else
+			loc(code)->it_r = NULL;
+			//memset (loc(code), 0, sizeof(EIF_TYPED_VALUE));
+
+		RTE_OP; /* Pop last old evaluation vector in the stack. */
+		/* Rescue next old expression evaluation */
+		{
+			RTE_OTD;
+			SAVE(db_stack, dcur_o, dtop_o);
+			SAVE(op_stack, scur_o, stop_o);
+			saved_except_for_old = NULL;
+			IC_O = IC;
+			if (setjmp(exenv_o)) {
+				RESTORE(op_stack,scur_o,stop_o);
+				RESTORE(db_stack,dcur_o,dtop_o);
+				saved_except_for_old = RTLA;
+				exold (); /* Push an empty vector to pair the following poping */
+				sync_registers(MTC scur_o, stop_o); 
+				IC = IC_O + offset_o; /* Jump to the next BC_OLD */
+			}
 		}
 		break;
 
@@ -3384,6 +3453,7 @@ rt_private void interpret(int flag, int where)
 #endif /* EIF_THREADS */
 		}
 		if (rescue) {
+			set_last_exception (saved_except);
 			RTEOK;	/* end routine with rescue clause by cleaning the trace stack */
 		} else {
 			RTEE;	/* remove execution vector from stack */
@@ -3409,6 +3479,10 @@ rt_private void interpret(int flag, int where)
 		EIF_BOOLEAN was_executed = EIF_FALSE;
 #ifdef EIF_THREADS
 		if (is_process_once) {
+			if (!POResult -> mutex){
+				/* Create the mutex */
+				POResult -> mutex = eif_thr_mutex_create ();
+			}
 				/* Try to lock a mutex. */
 			if (RTOPLT (POResult -> mutex)) {
 					/* Mutex has been locked.                       */
@@ -3444,10 +3518,17 @@ rt_private void interpret(int flag, int where)
 			/* Check if once routine was executed earlier. */
 		if (was_executed) {
 				/* Yes, it was executed.      */
+#ifdef EIF_THREADS
+			if (is_process_once) {
+					/* Per thread pointer point to the process exception */
+				MTOE(OResult, &(POResult -> exception));
+			}
+#endif
 				/* Ckeck if it failed or not. */
 			if (MTOF(OResult)) {
 					/* Raise its exception. */
-				xraise (MTOF(OResult));
+				if (*MTOF(OResult))
+					oraise (*MTOF(OResult));
 			}
 				/* Retrieve once result. */
 			get_once_result (OResult, rtype, iresult);
@@ -3492,6 +3573,15 @@ rt_private void interpret(int flag, int where)
 					MTOP(EIF_REFERENCE, OResult, RTOC(0));
 					break;
 				}
+						/* Register exception object for GC. */
+#ifdef EIF_THREADS
+				if (is_process_once){
+					MTOE(OResult, &(POResult -> exception));
+					RTOC_GLOBAL(*MTOF(OResult));
+				}else
+#endif
+				MTOE(OResult, RTOC(0));
+
 				create_expanded_locals (scur, stop);
 					/* Initialize permanent storage */
 				put_once_result (iresult, rtype, OResult);
@@ -3500,7 +3590,7 @@ rt_private void interpret(int flag, int where)
 			} else {
 					/* Exception occurred. */
 					/* Record it for future use. */
-				MTOE(OResult, echval);
+					MTOEV(OResult, RTLA);
 #ifdef EIF_THREADS
 				if (is_process_once) {
 						/* Clear field that holds locking thread id. */
@@ -3514,7 +3604,7 @@ rt_private void interpret(int flag, int where)
 				}
 #endif /* EIF_THREADS */
 					/* Raise the exception. */
-				xraise (echval);
+				oraise (*MTOF(OResult));
 			}
 		}
 	} else {
@@ -3541,6 +3631,9 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_V
 	/* Check invariant on non-void object `obj' */
 	unsigned char *OLD_IC;		/* IC backup */
 	int dtype = Dtype(obj);
+
+	/* Store the `where' infomation for later use */
+	echentry = !where;
 
 	if (inv_mark_table == (char *) 0)
 		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)

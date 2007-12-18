@@ -37,11 +37,30 @@ feature
 			position := i
 		end;
 
+	exception_position: INTEGER
+			-- Position of saved exception object in local declaration.
+
+	set_exception_position (i: INTEGER) is
+			-- Assign `i' to `exception_position'
+		do
+			exception_position := i
+		end
+
 	type: TYPE_I is
 			-- Type of the expression
 		do
 			Result := expr.type;
 		end; -- type
+
+	exception_type: TYPE_I
+			-- Type of the saved exception
+		once
+			if system.il_generation then
+				Result := system.system_exception_type_class.compiled_class.types.first.type
+			else
+				Result := reference_c_type
+			end
+		end
 
 	enlarged: UN_OLD_BL is
 		require else

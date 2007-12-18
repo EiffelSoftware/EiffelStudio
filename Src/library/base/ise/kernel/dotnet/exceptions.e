@@ -20,38 +20,44 @@ feature -- Status report
 
 	meaning (except: INTEGER): STRING is
 			-- A message in English describing what `except' is
+		local
+			l_exception: EXCEPTION
 		do
-			if valid_code (except) then
-				Result := exception_names @ except
+			l_exception := exception_manager.exception_from_code (except)
+			if l_exception /= Void then
+				Result := l_exception.meaning
 			end
 		end
 
 	assertion_violation: BOOLEAN is
 			-- Is last exception originally due to a violated
 			-- assertion or non-decreasing variant?
+		local
+			l_exception: ASSERTION_VIOLATION
 		do
-			Result :=
-				(original_exception = Check_instruction) or else
-				(original_exception = Class_invariant) or else
-				(original_exception = Loop_invariant) or else
-				(original_exception = Loop_variant) or else
-				(original_exception = Postcondition) or else
-				(original_exception = Precondition)
+			l_exception ?= exception_manager.last_exception
+			Result := (l_exception /= Void)
 		end
 
 	is_developer_exception: BOOLEAN is
 			-- Is the last exception originally due to
 			-- a developer exception?
+		local
+			l_exception: DEVELOPER_EXCEPTION
 		do
-			Result := (original_exception = Developer_exception)
+			l_exception ?= exception_manager.last_exception
+			Result := (l_exception /= Void)
 		end
 
 	is_developer_exception_of_name (name: STRING): BOOLEAN is
 			-- Is the last exception originally due to a developer
 			-- exception of name `name'?
+		local
+			l_exception: DEVELOPER_EXCEPTION
 		do
+			l_exception ?= exception_manager.last_exception
 			Result := is_developer_exception and then
-						equal (name, developer_exception_name)
+						equal (name, l_exception.message)
 		end
 
 	developer_exception_name: STRING is
@@ -59,44 +65,47 @@ feature -- Status report
 		require
 			applicable: is_developer_exception
 		local
-			conv_de: EIFFEL_EXCEPTION
+			l_exception: DEVELOPER_EXCEPTION
 		do
-			conv_de ?= {ISE_RUNTIME}.last_exception
-			Result := conv_de.tag
+			l_exception ?= exception_manager.last_exception
+			Result := l_exception.message
 		end
 
 	is_signal: BOOLEAN is
 			-- Is last exception originally due to an external
 			-- event (operating system signal)?
+		local
+			l_exception: OPERATING_SYSTEM_SIGNAL_FAILURE
 		do
-			Result := (original_exception = Signal_exception)
+			l_exception ?= exception_manager.last_exception
+			Result := (l_exception /= Void)
 		end
 
 	is_system_exception: BOOLEAN is
 			-- Is last exception originally due to an
 			-- external event (operating system error)?
+		local
+			l_external: EXTERNAL_FAILURE
+			l_system_failure: SYS_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			Result :=
-				(original_exception = External_exception) or else
-				(original_exception = Operating_system_exception)
+			l_exception := exception_manager.last_exception
+			l_external ?= l_exception
+			Result := (l_external /= Void)
+			if not Result then
+				l_system_failure ?= l_exception
+				Result := (l_system_failure /= Void)
+			end
 		end
 
 	tag_name: STRING is
 			-- Tag of last violated assertion clause
 		local
-			conv_fl: EIFFEL_EXCEPTION
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				conv_fl ?= le
-				if conv_fl /= Void then
-					Result := conv_fl.tag
-				else
-					create Result.make_from_cil (le.message)
-				end
-			else
-				create Result.make (0)
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.message
 			end
 		end
 
@@ -104,13 +113,11 @@ feature -- Status report
 			-- Name of the routine whose execution was
 			-- interrupted by last exception
 		local
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				create Result.make_from_cil (le.target_site.name)
-			else
-				create Result.make (0)
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.recipient_name
 			end
 		end
 
@@ -118,39 +125,33 @@ feature -- Status report
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		local
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				create Result.make_from_cil (le.target_site.reflected_type.full_name)
-			else
-				create Result.make (0)
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.type_name
 			end
 		end
 
 	exception: INTEGER is
 			-- Code of last exception that occurred
 		local
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				Result := exception_to_code (le)
-			else
-				Result := 0
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.code
 			end
 		end
 
 	exception_trace: STRING is
 			-- String representation of the exception trace
 		local
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				create Result.make_from_cil (le.stack_trace)
-			else
-				create Result.make (0)
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.exception_trace
 			end
 		end
 
@@ -158,22 +159,11 @@ feature -- Status report
 			-- Assertion tag for original form of last
 			-- assertion violation.
 		local
-			conv_fl: EIFFEL_EXCEPTION
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				from until le.inner_exception = Void loop
-					le := le.inner_exception
-				end
-				conv_fl ?= le
-				if conv_fl /= Void then
-					Result := conv_fl.tag
-				else
-					create Result.make_from_cil (le.message)
-				end
-			else
-				create Result.make (0)
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.original.message
 			end
 		end
 
@@ -181,16 +171,11 @@ feature -- Status report
 			-- Original code of last exception that triggered
 			-- current exception
 		local
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				from until le.inner_exception = Void loop
-					le := le.inner_exception
-				end
-				Result := exception_to_code (le)
-			else
-				Result := 0
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.original.code
 			end
 		end
 
@@ -198,16 +183,11 @@ feature -- Status report
 			-- Name of the routine whose execution was
 			-- interrupted by original form of last exception
 		local
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				from until le.inner_exception = Void loop
-					le := le.inner_exception
-				end
-				create Result.make_from_cil (le.target_site.name)
-			else
-				create Result.make (0)
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.original.recipient_name
 			end
 		end
 
@@ -215,16 +195,11 @@ feature -- Status report
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		local
-			le: NATIVE_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			le := {ISE_RUNTIME}.last_exception
-			if le /= Void then
-				from until le.inner_exception = Void loop
-					le := le.inner_exception
-				end
-				create Result.make_from_cil (le.target_site.reflected_type.full_name)
-			else
-				create Result.make (0)
+			l_exception ?= exception_manager.last_exception
+			if l_exception /= Void then
+				Result := l_exception.original.type_name
 			end
 		end
 
@@ -233,39 +208,45 @@ feature -- Status setting
 	catch (code: INTEGER) is
 			-- Make sure that any exception of code `code' will be
 			-- caught. This is the default.
+		local
+			l_type: TYPE [EXCEPTION]
 		do
-			check
-				False
-				--| Not supported.
+			l_type := exception_manager.type_of_code (code)
+			if l_type /= Void then
+				exception_manager.catch (l_type)
 			end
 		end
 
 	ignore (code: INTEGER) is
 			-- Make sure that any exception of code `code' will be
 			-- ignored. This is not the default.
+		local
+			l_type: TYPE [EXCEPTION]
 		do
-			check
-				False
-				--| Not supported.
+			l_type := exception_manager.type_of_code (code)
+			if l_type /= Void then
+				exception_manager.ignore (l_type)
 			end
 		end
 
 	raise (name: STRING) is
 			-- Raise a developer exception of name `name'.
 		local
-			fle: EIFFEL_EXCEPTION
+			l_exception: DEVELOPER_EXCEPTION
 		do
-			create fle.make (Developer_exception, name)
-			{ISE_RUNTIME}.raise (fle)
+			create l_exception
+			l_exception.set_message (name)
+			l_exception.raise
 		end
 
 	raise_retrieval_exception (name: STRING) is
 			-- Raise a retrieval exception of name `name'.
 		local
-			fle: EIFFEL_EXCEPTION
+			l_exception: SERIALIZATION_FAILURE
 		do
-			create fle.make (Retrieve_exception, name)
-			{ISE_RUNTIME}.raise (fle)
+			create l_exception
+			l_exception.set_message (name)
+			l_exception.raise
 		end
 
 	die (code: INTEGER) is
@@ -305,72 +286,11 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	exception_to_code (ex: NATIVE_EXCEPTION): INTEGER is
-			-- Return the Eiffel code corresponding to exception `ex'.
-		require
-			valid_ex: ex /= Void
-		local
-			conv_io: IO_EXCEPTION
-			conv_sys: SYSTEM_EXCEPTION
-			conv_acc: UNAUTHORIZED_ACCESS_EXCEPTION
-			conv_sec: SECURITY_EXCEPTION
-			conv_fl: EIFFEL_EXCEPTION
-		do
-			conv_fl ?= ex
-			if conv_fl /= Void then
-				Result := conv_fl.code
-			else
-				conv_sys ?= ex
-				if conv_sys /= Void then
-					Result := Operating_system_exception
-				else
-					conv_acc ?= ex
-					conv_sec ?= ex
-					conv_io ?= ex
-					if conv_io /= Void or conv_sec /= Void or conv_acc /= Void then
-						Result := Io_exception
-					else
-						Result := Signal_exception
-					end
-				end
-			end
-		ensure
-			valid_code: valid_code (Result)
-		end
-
-	exception_names: ARRAY [STRING] is
-			-- Names describing each type of exception.
+	exception_manager: EXCEPTION_MANAGER is
+			-- Exception manager
 		once
-			create Result.make (1, number_of_codes)
-			Result.put ("Feature call on void target.", Void_call_target)
-			Result.put ("No more memory.", No_more_memory)
-			Result.put ("Precondition violated.", Precondition)
-			Result.put ("Postcondition violated.", Postcondition)
-			Result.put ("Floating point exception.", Floating_point_exception)
-			Result.put ("Class invariant violated.", Class_invariant)
-			Result.put ("Assertion violated.", Check_instruction)
-			Result.put ("Routine failure.", Routine_failure)
-			Result.put ("Unmatched inspect value.", Incorrect_inspect_value)
-			Result.put ("Non-decreasing loop variant.", Loop_variant)
-			Result.put ("Loop invariant violated.", Loop_invariant)
-			Result.put ("Operating system signal.", Signal_exception)
-			Result.put ("Eiffel run-time panic.", 13)
-			Result.put ("Exception in rescue clause.", Rescue_exception)
-			Result.put ("Out of memory.", 15)
-			Result.put ("Resumption attempt failed.", 16)
-			Result.put ("Create on deferred.", 17)
-			Result.put ("External event.", External_exception)
-			Result.put ("Void assigned to expanded.", Void_assigned_to_expanded)
-			Result.put ("Exception in signal handler.", 20)
-			Result.put ("I/O error.", Io_exception)
-			Result.put ("Operating system error.", Operating_system_exception)
-			Result.put ("Retrieval error.", Retrieve_exception)
-			Result.put ("Developer exception.", Developer_exception)
-			Result.put ("Eiffel run-time fatal error.", 25)
-			Result.put ("CECIL cannot call melted code", 26)
-			Result.put ("Runtime I/O error.", Runtime_io_exception)
-			Result.put ("COM error.", Com_exception)
-  		end
+			create Result
+		end
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."

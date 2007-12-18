@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- The enlarged "old" operator
 
-class UN_OLD_BL 
+class UN_OLD_BL
 
 inherit
 
@@ -13,13 +13,16 @@ inherit
 			generate, unanalyze, analyze,
 			print_register, free_register
 		end;
-	
-feature 
+
+feature
 
 	register: REGISTRABLE;
 			-- Register which stores the old value.
 			-- This register is never freed, of course.
-	
+
+	exception_register: REGISTRABLE;
+			-- Register which stores the exception object if any.
+
 	set_register (r: REGISTRABLE) is
 			-- Assign `r' to `register'
 		do
@@ -37,6 +40,8 @@ feature
 			get_register;
 			expr.analyze;
 			expr.free_register;
+				-- Create exception register
+			create {REGISTER}exception_register.make (exception_type.c_type)
 		end;
 
 	initialize is
@@ -46,6 +51,11 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
+
+				-- Start try block of old expression evaluation
+			buf.put_string ("RTE_OT")
+			buf.put_new_line
+
 			expr.generate;
 			target_type := Context.real_type (type);
 			register.print_register;
@@ -57,7 +67,29 @@ feature
 			else
 				expr.print_register;
 			end
-			buf.put_character (';');
+			buf.put_character (';')
+			buf.put_new_line
+
+				-- Clean the exception recording local.
+			exception_register.print_register
+			buf.put_string (" = ")
+			buf.put_string ("NULL;")
+			buf.put_new_line
+
+				-- End try block of old expression evaluation
+			buf.put_string ("RTE_O")
+			buf.put_new_line
+
+				-- Save possible exception object.
+			exception_register.print_register
+			buf.put_string (" = ")
+			buf.put_string ("RTLA;")
+			buf.put_new_line
+
+				-- End of local rescue
+			buf.put_string ("RTE_OE")
+			buf.put_new_line
+
 			buf.put_new_line;
 		end;
 
@@ -76,10 +108,18 @@ feature
 		end;
 
 	generate is
-			-- Do nothing
+			-- We always check that the corresponding recorded exception object exists,
+			-- and raise an OLD_VIOLATION if so.
+		local
+			buf: GENERATION_BUFFER
 		do
+			buf := buffer
+			buf.put_string ("RTCO(")
+			exception_register.print_register
+			buf.put_string (gc_rparan_semi_c)
+			buf.put_new_line
 		end;
-	
+
 	print_register is
 			-- Print the value of the old variable
 		do

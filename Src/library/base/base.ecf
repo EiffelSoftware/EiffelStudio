@@ -87,6 +87,12 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/classic$</exclude>
+				<exclude>/kernel/exceptions/io_failure.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/exception_manager.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/exception.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/void_target.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/operating_system_signal_failure.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/operating_system_failure.e$</exclude>
 				<condition>
 					<dotnet value="true"/>
 				</condition>

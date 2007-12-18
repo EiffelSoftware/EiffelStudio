@@ -74,18 +74,16 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 #define echval		exdata.ex_val
 #define echsig		exdata.ex_nsig
 #define echlvl		exdata.ex_level
-#define echorg		exdata.ex_org
-#define echotag		exdata.ex_otag
 #define echrt		exdata.ex_rt
-#define echort		exdata.ex_ort
 #define echclass	exdata.ex_class
-#define echoclass	exdata.ex_oclass
+#define echentry	exdata.ex_entry
 
 /* Flags for ex_nomem */
 #define MEM_FULL	0x01	/* A simple "Out of memory" condition */
 #define MEM_FSTK	0x02	/* The exception trace stack is full */
 #define MEM_PANIC	0x04	/* We are in panic mode */
 #define MEM_FATAL	0x08	/* Fatal error has occurred */
+#define MEM_RECU	0x10	/* Flag infinit calls when no memory to raise NO_MORE_MEMERY exception. */
 #define MEM_SPEC	(MEM_PANIC | MEM_FATAL)		/* Disable longjmp flag */
 
 /* Available types for execution vector. They start at EX_START and must NOT
@@ -105,6 +103,7 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 #define EX_HDLR		109			/* In signal handler routine */
 #define EX_INVC		110			/* Invariant checking (routine entrance) */
 #define EX_OSTK		111			/* Run-time exception catching */
+#define EX_OLD		112			/* Old expression evaluation at entry of routines */
 
 /* Predefined exception numbers. Value cannot start at 0 because this may need
  * a propagation via longjmp and USG implementations turn out a 0 to be 1.
@@ -138,10 +137,14 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 #define EN_ISE_IO	27			/* I/O error raised by the ISE Eiffel runtime */
 #define EN_COM		28			/* COM error raised by EiffelCOM runtime */
 #define EN_RT_CHECK	29			/* Runtime check error such as out-of-bound array access */
+#define EN_OLD		30			/* Old violation */
+#define EN_SEL		31			/* Serialization failure */
 
 #define EN_OSTK		97			/* Run-time exception catching */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */
 #define EN_OLVL		99			/* Out level: pseudo-type for execution trace */
+
+#define TRACE_SZ	4096		/* Preallocated size for trace string */
 
 /* Exported routines (used by the generated C code or run-time) */
 RT_LNK void expop(struct xstack *stk);	/* Pops an execution vector off */
@@ -182,20 +185,16 @@ RT_LNK struct ex_vect *new_exset(EIF_CONTEXT char *name, int origin, char *objec
 RT_LNK void esdie(int code);
 
 /* Eiffel interface with class EXCEPTIONS */
-RT_LNK long eeocode(EIF_CONTEXT_NOARG);			/* Original exception code */
-RT_LNK char *eeotag(EIF_CONTEXT_NOARG);			/* Original exception tag */
-RT_LNK char *eeoclass(EIF_CONTEXT_NOARG);		/* Original class where exception occurred */
-RT_LNK char *eeorout(EIF_CONTEXT_NOARG);			/* Original routine where exception occurred */
-RT_LNK long eelcode(EIF_CONTEXT_NOARG);			/* Last exception code */
-RT_LNK char *eeltag(EIF_CONTEXT_NOARG);			/* Last exception tag */
-RT_LNK char *eelclass(EIF_CONTEXT_NOARG);		/* Last class where exception occurred */
-RT_LNK char *eelrout(EIF_CONTEXT_NOARG);			/* Last routine where exception occurred */
 RT_LNK void eetrace(EIF_CONTEXT char b);			/* Print/No Print of exception history table */
-RT_LNK void eecatch(EIF_CONTEXT long ex);			/* Catch exception */
-RT_LNK void eeignore(EIF_CONTEXT long ex);			/* Ignore exception */
-RT_LNK char *eename(long ex);			/* Exception description */
 
 RT_LNK EIF_REFERENCE stack_trace_string(EIF_CONTEXT_NOARG);		/* Exception stack as an Eiffel string */
+RT_LNK EIF_REFERENCE last_exception (EIF_CONTEXT_NOARG);		/* Get `last_exception' of EXCEPTION_MANAGER */
+RT_LNK void oraise(EIF_REFERENCE ex);							/* Called by EXCEPTION_MANAGER to raise an existing exception */
+RT_LNK void draise(long code, char *meaning, char *message);	/* Called by Eiffel code to raise an existing exception object*/
+RT_LNK void set_last_exception (EIF_REFERENCE ex);				/* Set `last_exception' of EXCEPTION_MANAGER with `ex'. */
+RT_LNK void chk_old(EIF_REFERENCE ex);							/* Check if ex is NULL, if not raise an OLD_VIOLATION */
+RT_LNK struct ex_vect *exold(void);								/* Push excution stack at entrance of old expression evaluation */
+RT_LNK void init_emnger (void);									/* Initialize once object and preallocate trace string */
 
 #ifdef __cplusplus
 }

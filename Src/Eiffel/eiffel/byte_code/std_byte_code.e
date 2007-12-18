@@ -1179,6 +1179,12 @@ end
 				end
 			end
 
+				-- Generate local declaration for storing exception object.
+			if has_rescue then
+				buf.put_string ("EIF_REFERENCE EIF_VOLATILE saved_except = (EIF_REFERENCE) 0;")
+				context.set_local_index ("saved_except", create {NAMED_REGISTER}.make ("saved_except", reference_c_type))
+			end
+
 			generate_expanded_arguments
 
 				-- Generate temporary locals under the control of the GC
@@ -1761,6 +1767,9 @@ feature -- Byte code generation
 			has_old := (old_expressions /= Void) or else (inh_assert.has_old_expression)
 			if has_old then
 				ba.append (Bc_start_eval_old)
+					-- Mark offset for the end of old expression evaluation.
+				ba.mark_forward
+					-- Mark offset for next BC_OLD
 				ba.mark_forward
 			end
 
@@ -1788,6 +1797,8 @@ feature -- Byte code generation
 			end
 
 			if has_old then
+					-- Write position for the last old expression evaluation.
+				ba.write_forward
 				ba.append (Bc_end_eval_old)
 				ba.write_forward
 			end

@@ -260,7 +260,7 @@ feature {NONE} -- Exception handling
 				-- Attempt to salvage any open files
 			try_to_save_files
 				-- Raise exception dialog
-			clean_exit (a_exception.trace_as_string)
+			clean_exit (a_exception.exception_trace)
 		end
 
 	parent_for_dialog: EV_WINDOW is

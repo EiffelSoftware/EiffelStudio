@@ -85,8 +85,9 @@ feature -- Generation
 			class_c: CLASS_C
 			end_of_assertion: IL_LABEL
 			end_of_routine: IL_LABEL
-			l_saved_in_assertion, l_saved_supplier_precondition: INTEGER
+			l_saved_in_assertion, l_saved_supplier_precondition, l_saved_in_precondition: INTEGER
 			l_nb_precond: INTEGER
+			l_old_expr_count: INTEGER
 			keep: BOOLEAN
 		do
 			il_generator := a_code_generator
@@ -149,6 +150,20 @@ feature -- Generation
 				il_generator.generate_in_assertion_status
 				il_generator.generate_local_assignment (l_saved_in_assertion)
 
+					-- Generate local variable to save in precondition status.
+				context.add_local (Boolean_c_type)
+				l_saved_in_precondition := context.local_list.count
+				il_generator.put_dummy_local_info (Boolean_c_type, l_saved_in_precondition)
+				il_generator.generate_in_precondition_status
+				il_generator.generate_local_assignment (l_saved_in_precondition)
+
+					-- Generate local variable to save `last_exception' object.
+				context.add_local (system_exception_type)
+				saved_last_exception := context.local_list.count
+				il_generator.put_dummy_local_info (system_exception_type, saved_last_exception)
+				il_generator.generate_last_exception
+				il_generator.generate_local_assignment (saved_last_exception)
+
 					-- Create retry label.
 				retry_label := il_generator.create_label
 				il_generator.mark_label (cil_node_generator.retry_label)
@@ -190,6 +205,16 @@ feature -- Generation
 				il_generator.branch_on_false (end_of_assertion)
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
+
+					-- Calculate how many try/catch blocks are needed for old expression evaluation.
+				if a_body.old_expressions /= Void then
+					l_old_expr_count := a_body.old_expressions.count
+				end
+				if inh_assert.has_postcondition	then
+					l_old_expr_count := l_old_expr_count + inh_assert.old_expression_count
+				end
+				il_generator.prepare_old_expresssion_blocks (l_old_expr_count)
+
 				if a_body.old_expressions /= Void then
 					from
 						a_body.old_expressions.start
@@ -258,7 +283,15 @@ feature -- Generation
 			end
 
 			if a_body.rescue_clause /= Void then
+					-- Restore last exception at the end of normal exit of the routine.
+				il_generator.generate_local (saved_last_exception)
+				il_generator.generate_restore_last_exception
+
 				il_generator.generate_start_rescue
+					-- Restore precondition status.
+				il_generator.generate_local (l_saved_in_precondition)
+				il_generator.generate_in_precondition_status
+
 					-- Restore assertion level.
 				il_generator.generate_local (l_saved_in_assertion)
 				il_generator.generate_set_assertion_status
@@ -383,8 +416,10 @@ feature -- Generation
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 		do
+			il_generator.generate_start_old_try_block (a_node.exception_position)
 			a_node.expr.process (Current)
 			il_generator.generate_local_assignment (a_node.position)
+			il_generator.generate_catch_old_exception_block (a_node.exception_position)
 		end
 
 	generate_il_precondition_node (a_node: ASSERT_B; a_failure_block: IL_LABEL) is
@@ -473,6 +508,8 @@ feature {NONE} -- Implementation
 			il_generator.branch_on_false (end_of_assertion)
 			il_generator.put_boolean_constant (True)
 			il_generator.generate_set_assertion_status
+			il_generator.put_boolean_constant (True)
+			il_generator.generate_set_precondition_status
 			if l_prec /= Void then
 				from
 					need_end_label := True
@@ -505,6 +542,8 @@ feature {NONE} -- Implementation
 					il_generator.mark_label (success_block)
 				end
 			end
+			il_generator.put_boolean_constant (False)
+			il_generator.generate_set_precondition_status
 			il_generator.put_boolean_constant (False)
 			il_generator.generate_set_assertion_status
 			il_generator.mark_label (end_of_assertion)
@@ -702,6 +741,11 @@ feature -- Access
 
 	retry_label: IL_LABEL
 			-- Label used for `retry' clause.
+
+feature {NONE} -- Access
+
+	saved_last_exception: INTEGER
+			-- Number of local to store `last_exception'
 
 feature {NONE} -- Visitors
 
@@ -2750,6 +2794,7 @@ feature {NONE} -- Visitors
 	process_un_old_b (a_node: UN_OLD_B) is
 			-- Process `a_node'.
 		do
+			il_generator.generate_raising_old_exception (a_node.exception_position)
 			il_generator.generate_local (a_node.position)
 		end
 
@@ -3667,8 +3712,9 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_il_call_invariant (cl_type: CL_TYPE_I) is
+	generate_il_call_invariant (cl_type: CL_TYPE_I; entry: BOOLEAN) is
 			-- Generate IL code for calling invariant feature on class type `cl_type'.
+			-- Is the invariant checking `entry'?
 		require
 			is_valid: is_valid
 			cl_type_not_void: cl_type /= Void
@@ -3680,7 +3726,7 @@ feature {NONE} -- Implementation: Feature calls
 				end
 				il_generator.generate_metamorphose (cl_type)
 			end
-			il_generator.generate_invariant_checking (cl_type)
+			il_generator.generate_invariant_checking (cl_type, entry)
 		end
 
 	generate_il_call_invariant_leading (cl_type: CL_TYPE_I; is_checked_before_call: BOOLEAN) is
@@ -3699,7 +3745,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_generator.duplicate_top
 			if is_checked_before_call then
 				il_generator.duplicate_top
-				generate_il_call_invariant (cl_type)
+				generate_il_call_invariant (cl_type, True)
 			end
 		end
 
@@ -3716,7 +3762,7 @@ feature {NONE} -- Implementation: Feature calls
 			local_number: INTEGER
 		do
 			if a_return_type.is_void then
-				generate_il_call_invariant (cl_type)
+				generate_il_call_invariant (cl_type, False)
 			else
 					-- It is a function and we need to save the result onto
 					-- a local variable.
@@ -3724,7 +3770,7 @@ feature {NONE} -- Implementation: Feature calls
 				local_number := context.local_list.count
 				il_generator.put_dummy_local_info (a_return_type, local_number)
 				il_generator.generate_local_assignment (local_number)
-				generate_il_call_invariant (cl_type)
+				generate_il_call_invariant (cl_type, False)
 				il_generator.generate_local (local_number)
 			end
 		end
@@ -4341,6 +4387,17 @@ feature {NONE} -- Convenience
 			Result := system.system_string_class.compiled_class.actual_type.type_i
 		ensure
 			system_string_type_not_void: Result /= Void
+		end
+
+	system_exception_type: CL_TYPE_I is
+			-- Actual type of SYSTEM_EXCEPTION
+		require
+			has_system_string: system.system_exception_type_class /= Void
+			has_system_string_compiled: system.system_exception_type_class.is_compiled
+		once
+			Result := system.system_exception_type_class.compiled_class.actual_type.type_i
+		ensure
+			system_exception_type_not_void: Result /= Void
 		end
 
 indexing

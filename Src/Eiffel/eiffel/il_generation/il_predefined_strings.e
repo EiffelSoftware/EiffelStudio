@@ -13,6 +13,7 @@ feature -- Access
 	runtime_namespace: STRING is "EiffelSoftware.Runtime"
 	runtime_class_name: STRING is "EiffelSoftware.Runtime.ISE_RUNTIME"
 	assertions_class_name: STRING is "EiffelSoftware.Runtime.ASSERTIONS"
+	exception_manager_interface_name: STRING is "EiffelSoftware.Runtime.RT_EXCEPTION_MANAGER"
 	rt_extension_interface_name: STRING is "EiffelSoftware.Runtime.RT_EXTENSION_I"
 	type_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_TYPE"
 	type_array_class_name: STRING is "EiffelSoftware.Runtime.Types.RT_TYPE[]"
@@ -36,7 +37,6 @@ feature -- Access
 	class_type_mark_enum_class_name: STRING is "EiffelSoftware.Runtime.Enums.CLASS_TYPE_MARK_ENUM"
 	class_type_mark_attribute_name: STRING is "EiffelSoftware.Runtime.CA.EIFFEL_CLASS_TYPE_MARK_ATTRIBUTE"
 	eiffel_consumable_attribute: STRING is "EiffelSoftware.Runtime.CA.EIFFEL_CONSUMABLE_ATTRIBUTE"
-	eiffel_exception_class_name: STRING is "EiffelSoftware.Runtime.EIFFEL_EXCEPTION"
 			-- Type used by code generation.
 
 	override_prefix: STRING is "__"

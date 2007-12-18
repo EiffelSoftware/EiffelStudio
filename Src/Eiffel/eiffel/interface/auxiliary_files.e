@@ -385,7 +385,7 @@ feature -- Plug and Makefile file
 	generate_plug is
 			-- Generate plug with run-time
 		local
-			any_cl, string_cl, bit_cl, array_cl, rout_cl: CLASS_C
+			any_cl, string_cl, bit_cl, array_cl, rout_cl, exception_data_cl, exception_manager_cl: CLASS_C
 			arr_type_id, str_type_id, type_id: INTEGER
 			id: INTEGER
 			str_make_feat, set_count_feat: FEATURE_I
@@ -396,6 +396,10 @@ feature -- Plug and Makefile file
 			dispose_name, str_make_name, init_name, exp_init_name,
 			set_count_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
+			set_exception_data_name, is_code_ignored_name: STRING
+			last_exception_name, set_last_exception_name: STRING
+			init_exception_manager_name, free_preallocated_trace_name: STRING
+			once_raise_name: STRING
 			correct_mismatch_name: STRING
 			equal_name: STRING
 			twin_name: STRING
@@ -529,8 +533,56 @@ feature -- Plug and Makefile file
 				buffer.put_string ("();%N")
 			end
 
+				-- Make exception manager declaration
+			exception_manager_cl := system.class_of_id (system.exception_manager_class_id)
+			if exception_manager_cl.types /= Void and then not exception_manager_cl.types.is_empty then
+				exception_manager_cl := system.exception_manager_class.compiled_class
+				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_exception_data_name_id)
+				id := exception_manager_cl.types.first.static_type_id
+				set_exception_data_name := Encoder.feature_name (id, feat.body_index).twin
+				buffer.put_string ("extern void ")
+				buffer.put_string (set_exception_data_name)
+				buffer.put_string ("();%N")
+
+				feat := exception_manager_cl.feature_table.item_id (Names_heap.last_exception_name_id)
+				last_exception_name := Encoder.feature_name (id, feat.body_index).twin
+				buffer.put_string ("extern EIF_REFERENCE ")
+				buffer.put_string (last_exception_name)
+				buffer.put_string ("();%N")
+
+				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_last_exception_name_id)
+				set_last_exception_name := Encoder.feature_name (id, feat.body_index).twin
+				buffer.put_string ("extern EIF_BOOLEAN ")
+				buffer.put_string (set_last_exception_name)
+				buffer.put_string ("();%N")
+
+				feat := exception_manager_cl.feature_table.item_id (Names_heap.is_code_ignored_name_id)
+				is_code_ignored_name := Encoder.feature_name (id, feat.body_index).twin
+				buffer.put_string ("extern EIF_BOOLEAN ")
+				buffer.put_string (is_code_ignored_name)
+				buffer.put_string ("();%N")
+
+				feat := exception_manager_cl.feature_table.item_id (Names_heap.once_raise_name_id)
+				once_raise_name := Encoder.feature_name (id, feat.body_index).twin
+				buffer.put_string ("extern void ")
+				buffer.put_string (once_raise_name)
+				buffer.put_string ("();%N")
+
+				feat := exception_manager_cl.feature_table.item_id (Names_heap.init_exception_manager_id)
+				init_exception_manager_name := Encoder.feature_name (id, feat.body_index).twin
+				buffer.put_string ("extern void ")
+				buffer.put_string (init_exception_manager_name)
+				buffer.put_string ("();%N")
+
+				feat := exception_manager_cl.feature_table.item_id (Names_heap.free_preallocated_trace_id)
+				free_preallocated_trace_name := Encoder.feature_name (id, feat.body_index).twin
+				buffer.put_string ("extern void ")
+				buffer.put_string (free_preallocated_trace_name)
+				buffer.put_string ("();%N")
+			end
+
 				-- RT_EXTENSION declaration
-			if 
+			if
 				not final_mode and then
 				system.rt_extension_class /= Void and then system.rt_extension_class.is_compiled
 			then
@@ -670,6 +722,75 @@ feature -- Plug and Makefile file
 					buffer.put_string ("%Tegc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
 				end
 				buffer.put_string (set_rout_disp_name)
+				buffer.put_string (";%N")
+			end
+
+				-- Pointer on `set_exception_data' of class EXCEPTION_MANAGER.
+			if set_exception_data_name /= Void then
+				if final_mode then
+					buffer.put_string ("%Tegc_set_exception_data = (void (*)(EIF_REFERENCE, EIF_INTEGER, EIF_BOOLEAN, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_BOOLEAN)) ")
+				else
+					buffer.put_string ("%Tegc_set_exception_data = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
+				end
+				buffer.put_string (set_exception_data_name)
+				buffer.put_string (";%N")
+			end
+
+				-- Pointer on `set_last_exception' of class EXCEPTION_MANAGER.
+			if set_last_exception_name /= Void then
+				if final_mode then
+					buffer.put_string ("%Tegc_set_last_exception = (void (*)(EIF_REFERENCE, EIF_REFERENCE)) ")
+				else
+					buffer.put_string ("%Tegc_set_last_exception = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
+				end
+				buffer.put_string (set_last_exception_name)
+				buffer.put_string (";%N")
+			end
+
+				-- Pointer on `last_exception' of class EXCEPTION_MANAGER.
+			if last_exception_name /= Void then
+				if final_mode then
+					buffer.put_string ("%Tegc_last_exception = (EIF_REFERENCE (*)(EIF_REFERENCE)) ")
+				else
+					buffer.put_string ("%Tegc_last_exception = (EIF_TYPED_VALUE (*)(EIF_REFERENCE)) ")
+				end
+				buffer.put_string (last_exception_name)
+				buffer.put_string (";%N")
+			end
+
+				-- Pointer on `is_code_ignored' of class EXCEPTION_MANAGER.
+			if is_code_ignored_name /= Void then
+				if final_mode then
+					buffer.put_string ("%Tegc_is_code_ignored = (EIF_BOOLEAN (*)(EIF_REFERENCE, EIF_INTEGER)) ")
+				else
+					buffer.put_string ("%Tegc_is_code_ignored = (EIF_TYPED_VALUE (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
+				end
+				buffer.put_string (is_code_ignored_name)
+				buffer.put_string (";%N")
+			end
+
+				-- Pointer on `raise' of class EXCEPTION_MANAGER.
+			if once_raise_name /= Void then
+				if final_mode then
+					buffer.put_string ("%Tegc_once_raise = (void (*)(EIF_REFERENCE, EIF_REFERENCE)) ")
+				else
+					buffer.put_string ("%Tegc_once_raise = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
+				end
+				buffer.put_string (once_raise_name)
+				buffer.put_string (";%N")
+			end
+
+				-- Pointer on `init_exception_manager' of class EXCEPTION_MANAGER.
+			if init_exception_manager_name /= Void then
+				buffer.put_string ("%Tegc_init_exception_manager = (void (*)(EIF_REFERENCE)) ")
+				buffer.put_string (init_exception_manager_name)
+				buffer.put_string (";%N")
+			end
+
+				-- Pointer on `free_preallocated_trace_name' of class EXCEPTION_MANAGER.
+			if free_preallocated_trace_name /= Void then
+				buffer.put_string ("%Tegc_free_preallocated_trace = (void (*)(EIF_REFERENCE)) ")
+				buffer.put_string (free_preallocated_trace_name)
 				buffer.put_string (";%N")
 			end
 
@@ -813,7 +934,7 @@ feature -- Plug and Makefile file
 			buffer.put_new_line
 
 				--| RT_EXTENSION and co...
-			if 
+			if
 				not final_mode and then
 				system.rt_extension_class /= Void and then system.rt_extension_class.is_compiled
 			then
@@ -964,8 +1085,11 @@ feature -- Plug and Makefile file
 			buffer.put_type_id (real64_c_type.type_id)
 			buffer.put_string (";%N%Tegc_point_dtype = ")
 			buffer.put_type_id (pointer_c_type.type_id)
-			buffer.put_string (";%N");
 
+				-- Exceptions
+			buffer.put_string (";%N%Tegc_except_emnger_dtype = ")
+			buffer.put_type_id (system.exception_manager_type_id)
+			buffer.put_string (";%N")
 		end
 
 	generate_make_file is

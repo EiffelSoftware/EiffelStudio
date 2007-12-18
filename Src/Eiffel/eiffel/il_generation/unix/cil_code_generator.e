@@ -42,7 +42,7 @@ feature -- Generation type
 			-- Current generated application is a DLL.
 		do
 		end
-		
+
 	set_32bits is
 			-- Current generated application is a 32bit application
 		do
@@ -217,7 +217,7 @@ feature -- Variables access
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		do
 		end
-	
+
 	put_impl_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		do
@@ -353,10 +353,10 @@ feature -- Assignments
 		do
 		end
 
-	generate_argument_assignment (n: INTEGER) is 
-			-- Generate assignment to `n'-th argument of current feature. 
+	generate_argument_assignment (n: INTEGER) is
+			-- Generate assignment to `n'-th argument of current feature.
 		do
-		end 
+		end
 
 	generate_local_assignment (n: INTEGER) is
 			-- Generate assignment to `n'-th local variable of current feature.
@@ -549,6 +549,37 @@ feature -- Exception handling
 		do
 		end
 
+	generate_last_exception is
+			-- Generate value of `last_exception' on stack.
+		do
+		end
+
+	generate_restore_last_exception is
+			-- Restores `get_last_exception' using the local.
+		do
+		end
+
+	generate_start_old_try_block (a_ex_local: INTEGER) is
+			-- Generate start of try block at entry to evaluate old expression.
+			-- `a_ex_local' is the local declaration position for the exception.
+		do
+		end
+
+	generate_catch_old_exception_block (a_ex_local: INTEGER) is
+			-- Generate catch block for old expression evaluatation
+		do
+		end
+
+	prepare_old_expresssion_blocks (a_count: INTEGER) is
+			-- Prepare to generate `a_count' blocks for old expression evaluation
+		do
+		end
+
+	generate_raising_old_exception (a_ex_local: INTEGER) is
+			-- Generate raising old violation exception when there was exception saved
+		do
+		end
+
 feature -- Assertions
 
 	generate_in_assertion_status is
@@ -563,6 +594,16 @@ feature -- Assertions
 
 	generate_restore_supplier_precondition is
 			-- Restores the supplier precondition flag using the local.
+		do
+		end
+
+	generate_in_precondition_status is
+			-- Generate value of `in_precondition' on stack.
+		do
+		end
+
+	generate_set_precondition_status is
+			-- Set `in_precondition' flag with top of stack.
 		do
 		end
 
@@ -609,7 +650,7 @@ feature -- Assertions
 		do
 		end
 
-	generate_invariant_checking (type_i: TYPE_I) is
+	generate_invariant_checking (type_i: TYPE_I; entry: BOOLEAN) is
 			-- Generate an invariant check after routine call
 		do
 		end
@@ -854,7 +895,7 @@ feature -- Line info
 			-- Set debug document to `a_doc'.
 		do
 		end
-		
+
 feature -- Convenience
 
 	generate_call_on_void_target_exception is

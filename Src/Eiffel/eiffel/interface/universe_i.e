@@ -404,6 +404,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			if system.il_generation then
 				l_actions.put (agent system.set_system_object_class, "SYSTEM_OBJECT")
 				l_actions.put (agent system.set_system_value_type_class, "VALUE_TYPE")
+				l_actions.put (agent system.set_system_exception_type_class, "NATIVE_EXCEPTION")
 			end
 
 			l_actions.put (agent system.set_any_class, "ANY")
@@ -455,6 +456,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_real_ref_class (?, 32), "REAL_32_REF")
 			l_actions.put (agent system.set_real_ref_class (?, 64), "REAL_64_REF")
 			l_actions.put (agent system.set_pointer_ref_class, "POINTER_REF")
+
+				-- Exception manager
+			l_actions.put (agent system.set_exception_manager_class, "EXCEPTION_MANAGER")
 
 			if system.il_generation then
 				l_actions.put (agent system.set_system_string_class, "SYSTEM_STRING")

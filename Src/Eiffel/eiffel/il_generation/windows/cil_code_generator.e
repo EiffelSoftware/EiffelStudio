@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	IL_CODE_GENERATOR
+		rename
+			generate_last_exception as generate_get_last_exception
+		end
 
 	IL_CONST
 
@@ -5497,6 +5500,8 @@ feature -- Once management
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
 			branch_on_false (return_label)
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
+				-- Only System.Exception can be saved. The type saved exception object could be changed to System.Exception.
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass, current_module.system_exception_token)
 			method_body.put_throw
 			mark_label (return_label)
 
@@ -5802,6 +5807,9 @@ feature -- Exception handling
 	rescue_label: INTEGER
 			-- Label used for rescue clauses to mark end of `try-catch'.
 
+	old_label: IL_LABEL
+			-- Label used for marking the end of `try-catch' of old expression evaluation
+
 	generate_start_exception_block is
 			-- Mark starting point for a routine that has
 			-- a rescue clause.
@@ -5820,8 +5828,7 @@ feature -- Exception handling
 				-- puts the exception object on top of stack and there is no automatic
 				-- way to add it.
 			method_body.update_stack_depth (1)
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld,
-				current_module.ise_last_exception_token)
+			method_body.put_static_call (current_module.ise_set_last_exception_token, 1, False)
 		end
 
 	generate_leave_to (a_label: IL_LABEL) is
@@ -5835,14 +5842,85 @@ feature -- Exception handling
 	generate_end_exception_block is
 			-- Mark end of rescue clause.
 		do
-			put_integer_32_constant ({EXCEP_CONST}.routine_failure)
-			put_void
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld,
-				current_module.ise_last_exception_token)
-			method_body.put_newobj (current_module.ise_eiffel_exception_chained_ctor_token, 3)
-			method_body.put_throw
+			put_boolean_constant (False)
+			method_body.put_static_call (current_module.ise_rethrow_token, 0, False)
+				-- Never invoked, but the CLI standards need this to terminate the catch block.
+			method_body.put_opcode_label ({MD_OPCODES}.Leave, rescue_label)
 			method_body.exception_block.set_end_position (method_body.count)
 			method_body.mark_label (rescue_label)
+		end
+
+	generate_get_last_exception is
+			-- Generate value of `get_last_exception' on stack.
+		do
+			method_body.put_static_call (current_module.ise_get_last_exception_token, 0, True)
+		end
+
+	generate_restore_last_exception is
+			-- Restores `last_exception' using the local.
+		do
+			method_body.put_static_call (current_module.ise_restore_last_exception_token, 1, False)
+		end
+
+	generate_start_old_try_block (a_ex_local: INTEGER) is
+			-- Generate start of try block at entry to evaluate old expression.
+			-- `a_ex_local' is the local declaration position for the exception.
+		do
+			check
+				current_old_exception_catch_block_not_void: method_body.current_old_exception_catch_block /= Void
+			end
+			old_label := create_label
+			method_body.current_old_exception_catch_block.set_start_position (method_body.count)
+			put_void
+			generate_local_assignment (a_ex_local)
+		end
+
+	generate_catch_old_exception_block (a_ex_local: INTEGER) is
+			-- Generate catch block for old expression evaluatation
+			-- `a_ex_local' is the local declaration position for the exception.
+		do
+			check
+				current_old_exception_catch_block_not_void: method_body.current_old_exception_catch_block /= Void
+			end
+			generate_leave_to (old_label)
+			method_body.current_old_exception_catch_block.set_type_token (current_module.system_exception_token)
+			method_body.current_old_exception_catch_block.set_catch_position (method_body.count)
+
+				---- Generate catch block to save possible exception occurs at old expression evaluation.
+				-- We need to increment stack depth of 1 because CLI runtime automatically
+				-- puts the exception object on top of stack and there is no automatic
+				-- way to add it.
+			method_body.update_stack_depth (1)
+			generate_local_assignment (a_ex_local)
+			generate_leave_to (old_label)
+
+			method_body.current_old_exception_catch_block.set_end_position (method_body.count)
+			mark_label (old_label)
+			method_body.forth_old_expression_exception_block
+		end
+
+	prepare_old_expresssion_blocks (a_count: INTEGER) is
+			-- Prepare to generate `a_count' blocks for old expression evaluation
+		do
+			method_body.create_old_exception_catch_blocks (a_count)
+		end
+
+	generate_raising_old_exception (a_ex_local: INTEGER) is
+			-- Generate raising old violation exception when there was exception saved
+		local
+			l_label: IL_LABEL
+		do
+			generate_local (a_ex_local)
+			put_void
+			l_label := create_label
+			method_body.put_opcode ({MD_OPCODES}.Ceq)
+			branch_on_true (l_label)
+
+				-- Raise old violation
+			generate_local (a_ex_local)
+			method_body.put_static_call (current_module.ise_raise_old_token, 1, False)
+
+			mark_label (l_label)
 		end
 
 feature -- Assertions
@@ -5903,6 +5981,18 @@ feature -- Assertions
 			method_body.put_static_call (current_module.ise_set_in_assertion_token, 1, False)
 		end
 
+	generate_in_precondition_status is
+			-- Generate value of `in_assertion' on stack.
+		do
+			method_body.put_static_call (current_module.ise_in_precondition_token, 0, True)
+		end
+
+	generate_set_precondition_status is
+			-- Set `in_precondition' flag with top of stack.
+		do
+			method_body.put_static_call (current_module.ise_set_in_precondition_token, 1, False)
+		end
+
 	generate_assertion_check (assert_type: INTEGER; tag: STRING) is
 			-- Generate test after an assertion is being generated.
 			-- If result of test is False, we raise an exception.
@@ -5960,12 +6050,13 @@ feature -- Assertions
 			-- Has to be a specific one because preconditions can be weaken.
 		do
 			put_boolean_constant (False)
+			generate_set_precondition_status
+			put_boolean_constant (False)
 			generate_set_assertion_status
 			put_integer_32_constant ({EXCEP_CONST}.precondition)
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld,
 				current_module.ise_assertion_tag_token)
-			method_body.put_newobj (current_module.ise_eiffel_exception_ctor_token, 2)
-			method_body.put_throw
+			method_body.put_static_call (current_module.ise_raise_code_token, 2, False)
 		end
 
 	generate_raise_exception (a_code: INTEGER; a_tag: STRING) is
@@ -5980,8 +6071,7 @@ feature -- Assertions
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldstr,
 					md_emit.define_string (uni_string))
 			end
-			method_body.put_newobj (current_module.ise_eiffel_exception_ctor_token, 2)
-			method_body.put_throw
+			method_body.put_static_call (current_module.ise_raise_code_token, 2, False)
 		end
 
 	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
@@ -6111,11 +6201,13 @@ feature -- Assertions
 			branch_on_true (a_label)
 		end
 
-	generate_invariant_checking (type_i: TYPE_I) is
+	generate_invariant_checking (type_i: TYPE_I; entry: BOOLEAN) is
 			-- Generate an invariant check after routine call, it assumes that
 			-- target has already been pushed onto evaluation stack.
+			-- Is the invariant checking `entry'?
 		do
-			method_body.put_static_call (current_module.ise_check_invariant_token, 1, False)
+			put_boolean_constant (entry)
+			method_body.put_static_call (current_module.ise_check_invariant_token, 2, False)
 		end
 
 feature -- Constants generation

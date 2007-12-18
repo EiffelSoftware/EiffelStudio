@@ -7,7 +7,7 @@ indexing
 
 class
 	MD_METHOD_BODY
-	
+
 inherit
 	MD_SHARED_OPCODES
 
@@ -64,6 +64,8 @@ feature -- Reset
 			exception_block.reset
 			once_catch_block.reset
 			once_finally_block.reset
+			old_exception_catch_blocks := Void
+			current_old_expression_block_position := 0
 			is_written := False
 		ensure
 			current_position_set: current_position = 0
@@ -83,16 +85,16 @@ feature -- Access
 		do
 			Result := current_position
 		end
-		
+
 	item: MANAGED_POINTER
 			-- Hold data for current method_body.
-		
+
 	current_stack_depth: INTEGER
 			-- Current stack depth.
-			
+
 	max_stack: INTEGER
 			-- Max stack of current feature.
-	
+
 	method_token: INTEGER
 			-- Associated method token to current body.
 
@@ -109,6 +111,15 @@ feature -- Access
 	once_finally_block: MD_EXCEPTION_FINALLY
 			-- Exception clause for finally wrapper of once feature.
 
+	old_exception_catch_blocks: ARRAY [MD_EXCEPTION_CATCH]
+			-- Exception clause for catching exception for old expression evaluation.
+
+	current_old_exception_catch_block: MD_EXCEPTION_CATCH is
+			-- Current old exception catch block
+		do
+			Result := old_exception_catch_blocks.item (current_old_expression_block_position)
+		end
+
 feature -- Status report
 
 	has_locals: BOOLEAN is
@@ -116,19 +127,47 @@ feature -- Status report
 		do
 			Result := local_token /= 0
 		end
-		
+
 	has_exceptions_handling: BOOLEAN is
 			-- Has an exception block completely defined?
 		do
-			Result := exception_block.is_defined or else once_catch_block.is_defined or else once_finally_block.is_defined
+			Result := exception_block.is_defined or else
+					once_catch_block.is_defined or else
+					once_finally_block.is_defined or else
+					is_old_exception_catch_blocks_defined
 		end
-		
+
+	is_old_exception_catch_blocks_defined: BOOLEAN is
+			-- Has old expression evaluation exception block defined?
+		local
+			i: INTEGER
+		do
+			if old_exception_catch_blocks /= Void and then
+				old_exception_catch_blocks.count /= 0
+			then
+				from
+					i := old_exception_catch_blocks.lower
+				until
+					i > old_exception_catch_blocks.upper or Result
+				loop
+					Result := Result or old_exception_catch_blocks.item (i).is_defined
+					i := i + 1
+				end
+			end
+		end
+
 	is_written: BOOLEAN
 			-- Has current body been already written into memory?
 			-- If yes, no further update operations are allowed.
 
 	nb_labels: INTEGER
 			-- Current number of defined labels for current body.
+
+	is_last_old_expression_exception_block: BOOLEAN is
+			-- Is `current_old_exception_catch_block' the last one?
+		do
+			Result := (current_old_expression_block_position = old_exception_catch_blocks.upper)
+		end
 
 feature -- Savings
 
@@ -145,7 +184,7 @@ feature -- Savings
 		ensure
 			is_written_set: is_written
 		end
-		
+
 feature -- Settings
 
 	set_local_token (token: like local_token) is
@@ -157,7 +196,7 @@ feature -- Settings
 		ensure
 			local_token_set: local_token = token
 		end
-		
+
 	update_stack_depth (delta: INTEGER) is
 			-- Update `max_stack' and `current_stack_depth' according to
 			-- new `delta' depth change.
@@ -174,7 +213,36 @@ feature -- Settings
 			current_stack_depth_set: current_stack_depth = old current_stack_depth + delta
 			max_stack_set: max_stack >= current_stack_depth
 		end
-		
+
+	create_old_exception_catch_blocks (a_count: INTEGER) is
+			-- Create `a_count' old exception catch blocks
+		local
+			l_block: MD_EXCEPTION_CATCH
+			i: INTEGER
+		do
+			create old_exception_catch_blocks.make (0, a_count - 1)
+			from
+				i := 0
+			until
+				i = a_count
+			loop
+				create l_block.make
+				old_exception_catch_blocks.put (l_block, i)
+				i := i + 1
+			end
+		ensure
+			old_exception_catch_blocks_not_void: old_exception_catch_blocks /= Void
+			old_exception_catch_blocks_created: old_exception_catch_blocks.count = a_count
+		end
+
+	forth_old_expression_exception_block is
+			-- Go to next old expression exception block
+		require
+			old_expression_exception_block_not_last: not is_last_old_expression_exception_block
+		do
+			current_old_expression_block_position := current_old_expression_block_position + 1
+		end
+
 feature -- Opcode insertion
 
 	put_nop is
@@ -185,7 +253,7 @@ feature -- Opcode insertion
 			internal_put ({MD_OPCODES}.nop.to_integer_8, current_position)
 			current_position := current_position + 1
 		end
-		
+
 	put_throw is
 			-- Insert `throw' opcode.
 		require
@@ -203,7 +271,7 @@ feature -- Opcode insertion
 			put_opcode ({MD_OPCODES}.rethrow)
 			last_current_stack_depth := -1
 		end
-		
+
 	put_opcode (opcode: INTEGER_16) is
 			-- Insert `opcode'.
 		require
@@ -216,11 +284,11 @@ feature -- Opcode insertion
 		do
 			l_opcodes := opcodes
 			l_stack_transition := opcodes.item (opcode).stack_depth_transition
-			
+
 			if l_stack_transition /= 0xFF000000 then
 				update_stack_depth (l_stack_transition)
 			end
-			
+
 			l_pos := current_position
 			if (opcode & 0xFF00) = 0xFE00 then
 					-- Two bytes opcodes.
@@ -242,7 +310,7 @@ feature -- Opcode insertion
 			put_opcode ({MD_OPCODES}.Ldstr)
 			add_integer (string_token)
 		end
-	
+
 	put_opcode_mdtoken (opcode: INTEGER_16; token: INTEGER) is
 			-- Insert `opcode' manipulating a metadata token.
 		require
@@ -368,7 +436,7 @@ feature -- Labels manipulation
 			labels_stack_depth.force (-1, nb_labels)
 			Result := nb_labels
 		end
-		
+
 	mark_label (label_id: INTEGER) is
 			-- Set position of `label_id' to `current_position' in
 			-- stream.
@@ -380,7 +448,7 @@ feature -- Labels manipulation
 		do
 			l_label := labels.item (label_id)
 			l_label.mark_position (current_position, Current)
-	
+
 				-- Restore current stack depth for this label, which
 				-- is the depth we computed when we did a branch to it,
 				-- if no branching has been done yet, then we simply
@@ -395,7 +463,7 @@ feature -- Labels manipulation
 				current_stack_depth := l_new_depth
 			end
 		end
-		
+
 	put_opcode_label (opcode: INTEGER_16; label_id: INTEGER) is
 			-- Insert `opcode' branching to `label'
 		require
@@ -418,7 +486,7 @@ feature -- Labels manipulation
 			if l_label.is_position_set then
 				l_jmp := l_label.position - current_position
 			else
-					-- Store current location so that we can 
+					-- Store current location so that we can
 					-- update with correct offset as soon as we
 					-- know about `l_label' position.
 				l_label.mark_branch_position (current_position)
@@ -447,7 +515,7 @@ feature -- Labels manipulation
 		do
 			item.put_integer_32_le (item.read_integer_32_le (branch_inst_pos) + jump_offset, branch_inst_pos)
 		end
-		
+
 feature -- Opcode insertion with manual update of `current_stack_depth'.
 
 	put_static_call (feature_token, nb_arguments: INTEGER; is_function: BOOLEAN) is
@@ -458,7 +526,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 			internal_put_call ({MD_OPCODES}.call, feature_token,
 				nb_arguments, is_function, False)
 		end
-		
+
 	put_call (opcode: INTEGER_16; feature_token, nb_arguments: INTEGER; is_function: BOOLEAN) is
 			-- Perform call to `feature_token' with proper stack size computation.
 		require
@@ -467,7 +535,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 		do
 			internal_put_call (opcode, feature_token, nb_arguments, is_function, True)
 		end
-	
+
 	put_newobj (constructor_token: INTEGER; nb_arguments: INTEGER) is
 			-- Perform creation of object through `constructor_token'
 			-- with proper stack size computation.
@@ -542,7 +610,7 @@ feature {NONE} -- Opcode insertion helpers
 			end
 			current_position := l_pos
 		end
-		
+
 	add_natural_64 (val: NATURAL_64) is
 			-- Add `val' to current.
 		require
@@ -566,7 +634,7 @@ feature {NONE} -- Opcode insertion helpers
 			end
 			current_position := l_pos
 		end
-	
+
 	add_integer_16 (val: INTEGER_16) is
 			-- Add `val' to current.
 		require
@@ -605,7 +673,7 @@ feature {NONE} -- Opcode insertion helpers
 			end
 			current_position := l_pos
 		end
-		
+
 	add_integer_64 (val: INTEGER_64) is
 			-- Add `val' to current.
 		require
@@ -629,7 +697,7 @@ feature {NONE} -- Opcode insertion helpers
 			end
 			current_position := l_pos
 		end
-	
+
 	add_real_32 (val: REAL) is
 			-- Add `val' to current.
 		require
@@ -680,11 +748,14 @@ feature {NONE} -- Stack depth management
 		ensure
 			enough_size: item.count >= new_size
 		end
-		
+
 feature {NONE} -- Implementation
 
 	current_position: INTEGER
 			-- Current position in `item' for next insertion.
+
+	current_old_expression_block_position: INTEGER
+			-- Current position of `old_exception_catch_blocks'
 
 	last_current_stack_depth: INTEGER
 			-- Depth at the previous IL offset. Used for checking that
@@ -698,7 +769,7 @@ feature {NONE} -- Implementation
 
 	labels_stack_depth: ARRAY [INTEGER]
 			-- List of depth associated for each label.
-			
+
 invariant
 	item_not_void: item /= Void
 	current_position_valid: current_position >= 0 and current_position <= item.count

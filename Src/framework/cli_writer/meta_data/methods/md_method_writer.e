@@ -130,6 +130,8 @@ feature -- Settings
 			l_m: like item
 			l_ex: MD_EXCEPTION_CLAUSE
 			is_fat_seh: BOOLEAN
+			i: INTEGER
+			l_old_exceptions: ARRAY [MD_EXCEPTION_CATCH]
 		do
 			l_meth := internal_method_body
 			l_pos := current_position
@@ -166,6 +168,20 @@ feature -- Settings
 			if l_meth.has_exceptions_handling then
 				l_pos := pad_up (l_pos, 4)
 				Exception_header.reset
+				l_old_exceptions := l_meth.old_exception_catch_blocks
+				if l_old_exceptions /= Void then
+					from
+						i := l_old_exceptions.lower
+					until
+						i > l_old_exceptions.upper
+					loop
+						l_ex := l_old_exceptions.item (i)
+						if l_ex.is_defined then
+							Exception_header.register_exception_clause (l_ex)
+						end
+						i := i + 1
+					end
+				end
 				l_ex := l_meth.exception_block
 				if l_ex.is_defined then
 					Exception_header.register_exception_clause (l_ex)
@@ -178,10 +194,25 @@ feature -- Settings
 				if l_ex.is_defined then
 					Exception_header.register_exception_clause (l_ex)
 				end
+
 				update_size (l_pos + Exception_header.count)
 				Exception_header.write_to_stream (l_m, l_pos)
 				l_pos := l_pos + Exception_header.count
 				is_fat_seh := Exception_header.is_fat
+				if l_old_exceptions /= Void then
+					from
+						i := l_old_exceptions.lower
+					until
+						i > l_old_exceptions.upper
+					loop
+						l_ex := l_old_exceptions.item (i)
+						if l_ex.is_defined then
+							l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
+							l_pos := l_pos + l_ex.count (is_fat_seh)
+						end
+						i := i + 1
+					end
+				end
 				l_ex := l_meth.exception_block
 				if l_ex.is_defined then
 					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)

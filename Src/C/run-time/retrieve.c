@@ -985,7 +985,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(int (*char_read_function)(
 	char rt_type = (char) 0;
 	EIF_BOOLEAN recoverable_tables = EIF_FALSE;
 
-#if EIF_OS == EIF_ALPHA
+#if EIF_OS == EIF_OS_ALPHA
 		/* The conversion from a FILE pointer to a file descriptor
 		 * does not keep the position correctly in the stream, one has
 		 * to call `fflush' to ensure the validity of the position in
@@ -1172,7 +1172,7 @@ rt_shared EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a
 
 	rt_kind = BASIC_STORE;
 	r_fides = f_desc;
-#if EIF_OS == EIF_ALPHA
+#if EIF_OS == EIF_OS_ALPHA
 		/* The conversion from a FILE pointer to a file descriptor
 		 * does not keep the position correctly in the stream, one has
 		 * to call `fflush' to ensure the validity of the position in

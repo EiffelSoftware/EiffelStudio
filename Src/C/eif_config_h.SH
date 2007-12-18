@@ -683,34 +683,35 @@ $inttypes_include
 
 /* Define EIF_OS Constants */
 
-#define EIF_WINNT 	1
-#define EIF_LINUX 	2
-#define EIF_SUNOS	3
-#define EIF_DARWIN 	4
-#define EIF_ALPHA 	5
-#define EIF_FREEBSD 	6
-#define EIF_HPUX 	7
-#define EIF_IRIX 	8
-#define EIF_OPENBSD 	9
-#define EIF_UNICOS 	10
-#define EIF_VXWORKS	11
+#define EIF_OS_WINNT 	1
+#define EIF_OS_LINUX 	2
+#define EIF_OS_SUNOS	3
+#define EIF_OS_DARWIN 	4
+#define EIF_OS_ALPHA 	5
+#define EIF_OS_FREEBSD 	6
+#define EIF_OS_HPUX 	7
+#define EIF_OS_IRIX 	8
+#define EIF_OS_OPENBSD 	9
+#define EIF_OS_UNICOS 	10
+#define EIF_OS_VXWORKS	11
+#define EIF_OS_VMS		12
 
 /* Define EIF_OS value */
 #define EIF_OS $eif_os
 
 /* Define EIF_ARCH Constants */
 
-#define EIF_X86 	1
-#define EIF_X86_64 	2
-#define EIF_SPARC 	3
-#define EIF_SPARC_64 	4
-#define EIF_PPC		5
-#define EIF_PPC_64	6
-#define EIF_C90		7
-#define EIF_T3D		8
-#define EIF_HPPA	9
-#define EIF_MIPS	10
-#define EIF_MIPS_64	11
+#define EIF_ARCH_X86 	1
+#define EIF_ARCH_X86_64 	2
+#define EIF_ARCH_SPARC 	3
+#define EIF_ARCH_SPARC_64 	4
+#define EIF_ARCH_PPC		5
+#define EIF_ARCH_PPC_64	6
+#define EIF_ARCH_C90		7
+#define EIF_ARCH_T3D		8
+#define EIF_ARCH_HPPA	9
+#define EIF_ARCH_MIPS	10
+#define EIF_ARCH_MIPS_64	11
 
 /* Define EIF_ARCH value */
 #define EIF_ARCH $eif_arch

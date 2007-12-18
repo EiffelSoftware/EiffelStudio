@@ -539,7 +539,7 @@ feature {NONE} --Implementation
 			"C inline use <eif_eiffel.h>"
 		alias
 			"[
-				#if EIF_OS == EIF_SUNOS
+				#if EIF_OS == EIF_OS_SUNOS
 					return (EIF_BOOLEAN)1;
 				#else
 					return (EIF_BOOLEAN)0;

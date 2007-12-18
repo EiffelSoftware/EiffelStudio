@@ -69,10 +69,33 @@ extern "C" {
 							    EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE, EIF_INTEGER); 	/* ROUTINE `set_rout_disp' feature */
 #ifdef WORKBENCH
 	RT_LNK void (*egc_routdisp_wb)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE,
-		EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); 	/* ROUTINE `set_rout_disp' feature */
+		EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); 	/* ROUTINE `set_rout_disp_wb' feature */
 #else
 	RT_LNK void (*egc_routdisp_fl)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER); /* ROUTINE `set_rout_disp_final' feature */
 #endif
+
+#ifdef WORKBENCH
+	RT_LNK void (*egc_set_exception_data)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, 
+													EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* EXCEPTION_MANAGER `set_exception_data' feature */
+#else
+	RT_LNK void (*egc_set_exception_data)(EIF_REFERENCE, EIF_INTEGER, EIF_BOOLEAN, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, 
+													EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_BOOLEAN); /* EXCEPTION_MANAGER `set_exception_data' feature */
+#endif
+
+#ifdef WORKBENCH
+	RT_LNK void (*egc_set_last_exception)(EIF_REFERENCE, EIF_TYPED_VALUE); /* EXCEPTION_MANAGER `set_last_exception' feature */
+	RT_LNK EIF_TYPED_VALUE (*egc_last_exception)(EIF_REFERENCE); /* EXCEPTION_MANAGER `last_exception' feature */
+	RT_LNK EIF_TYPED_VALUE (*egc_is_code_ignored)(EIF_REFERENCE, EIF_TYPED_VALUE); /* EXCEPTION_MANAGER `is_code_ignored' feature */
+	RT_LNK void (*egc_once_raise)(EIF_REFERENCE, EIF_TYPED_VALUE); /* EXCEPTION_MANAGER `once_raise' feature */
+#else
+	RT_LNK void (*egc_set_last_exception)(EIF_REFERENCE, EIF_REFERENCE); /* EXCEPTION_MANAGER `set_last_exception' feature */
+	RT_LNK EIF_REFERENCE (*egc_last_exception)(EIF_REFERENCE); /* EXCEPTION_MANAGER `last_exception' feature */
+	RT_LNK EIF_BOOLEAN (*egc_is_code_ignored)(EIF_REFERENCE, EIF_INTEGER); /* EXCEPTION_MANAGER `is_code_ignored' feature */
+	RT_LNK void (*egc_once_raise)(EIF_REFERENCE, EIF_REFERENCE); /* EXCEPTION_MANAGER `once_raise' feature */
+#endif
+	RT_LNK void (*egc_init_exception_manager)(EIF_REFERENCE); /* EXCEPTION_MANAGER `init_exception_manager' feature */
+	RT_LNK void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
+
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */
 	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
@@ -127,6 +150,7 @@ extern "C" {
 	RT_LNK int egc_wchar_dtype;	/* Dynamic type of WIDE_CHARACTER */
 	RT_LNK int egc_point_dtype;	/* Dynamic type of POINTER */
 
+	RT_LNK int egc_except_emnger_dtype;	/* Dynamic type of EXCEPTION_MANAGER */
 
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
 	RT_LNK struct ctable egc_ce_exp_type;		/* Class name -> type ID for expanded types */

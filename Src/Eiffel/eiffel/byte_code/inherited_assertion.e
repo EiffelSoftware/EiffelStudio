@@ -488,6 +488,21 @@ feature -- inherited postcondition
 			end
 		end
 
+	old_expression_count: INTEGER is
+			-- Total number of old expression
+		do
+			from
+				old_expression_list.start
+			until
+				old_expression_list.after
+			loop
+				if old_expression_list.item /= Void then
+					Result := Result + old_expression_list.item.count
+				end
+				old_expression_list.forth
+			end
+		end
+
 	analyze_old_expressions is
 			-- Analyze inherited old expressions
 		require
@@ -642,6 +657,7 @@ feature -- inherited postcondition
 			old_expressions: LINKED_LIST [UN_OLD_B]
 			item: UN_OLD_B
 			position: INTEGER
+			l_il_generation: BOOLEAN
 		do
 			position := pos
 			from
@@ -662,6 +678,9 @@ feature -- inherited postcondition
 						Context.add_local
 								(context.real_type (item.type))
 						item.set_position (position)
+						position := position + 1
+						Context.add_local (item.exception_type)
+						item.set_exception_position (position)
 						position := position + 1
 						old_expressions.forth
 					end

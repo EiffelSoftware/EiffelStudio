@@ -231,19 +231,35 @@ feature -- Access: tokens
 	ise_runtime_token: INTEGER
 			-- Token for `ise_runtime' assembly
 
-	ise_eiffel_exception_ctor_token: INTEGER
-			-- Token for `ISE.Runtime.EIFFEL_EXCEPTION.ctor (int, string)'.
+	ise_set_last_exception_token: INTEGER
+			-- Token for `ISE.Runtime.set_last_exception' that passes excepton object
+			-- we got from `catch' to exception manager.
 
-	ise_eiffel_exception_chained_ctor_token: INTEGER
-			-- Token for `ISE.Runtime.EIFFEL_EXCEPTION.ctor (int, string, Exception)'.
+	ise_get_last_exception_token: INTEGER
+			-- Token for `ISE.Runtime.get_last_exception' that returns excepton object
+			-- from exception manager.
 
-	ise_last_exception_token: INTEGER
-			-- Token for `ISE.Runtime.last_exception' static field that holds
-			-- exception object we got from `catch'.
+	ise_restore_last_exception_token: INTEGER
+			-- Token for `ISE.Runtime.restore_last_exception' that restore `last_exception'
+			-- at the end of a rescue clause.
+
+	ise_raise_code_token: INTEGER
+			-- Token for `ISE.Runtime.raise_code' that raises exception of a given code.
+
+	ise_rethrow_token: INTEGER
+			-- Token for `ISE.Runtime.rethrow' that raises exception at the end of rescue clause.
+
+	ise_raise_old_token: INTEGER
+			-- Token for `ISE.Runtime.raise_old' that raise old violation when there was exception
+			-- during old expression evaluation
 
 	ise_in_assertion_token, ise_set_in_assertion_token: INTEGER
 			-- Token for `ISE.Runtime.in_assertion' and `ISE.Runtime.set_in_assertion'
 			-- static members that holds status of assertion checking.
+
+	ise_in_precondition_token, ise_set_in_precondition_token: INTEGER
+			-- Token for `ISE.Runtime.in_precondition' and `ISE.Runtime.set_in_precondition'
+			-- static members that holds status of precondition checking.
 
 	ise_caller_supplier_precondition_token: INTEGER
 			-- Token for `ISE.Runtime.caller_supplier_precondition'
@@ -266,6 +282,7 @@ feature -- Access: tokens
 
 	ise_eiffel_type_info_type_token,
 	ise_runtime_type_token,
+	ise_exception_manager_type_token,
 	ise_rt_extension_type_token,
 	ise_type_token,
 	ise_generic_conformance_token,
@@ -900,9 +917,10 @@ feature -- Code generation
 		local
 			l_entry_type_token: INTEGER
 			l_root_creator_token: INTEGER
+			l_exception_manager_token: INTEGER
 			l_rt_extension_object_token: INTEGER
-			l_field_sig: like field_sig
 			l_sig: like method_sig
+			l_field_sig: like field_sig
 			l_type_id: INTEGER
 			l_nb_args: INTEGER
 			l_creation_type: CREATE_TYPE
@@ -946,6 +964,18 @@ feature -- Code generation
 					{SHARED_IL_CONSTANTS}.static_type, <<type_handle_class_name>>,
 					Void, False)
 			end
+
+				-- Create EXCEPTION_MANAGER object and assign it to ISE_RUNTIME.
+			il_code_generator.create_object (exception_manager_type_id)
+			l_field_sig := field_sig
+			l_field_sig.reset
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				ise_exception_manager_type_token)
+			l_exception_manager_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("exception_manager"),
+				ise_runtime_type_token,
+				l_field_sig)
+			il_code_generator.method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, l_exception_manager_token)
 
 			if
 				not System.in_final_mode and then
@@ -2794,6 +2824,7 @@ feature {NONE} -- Once per modules being generated.
 			value_type_token := 0
 			math_type_token := 0
 			system_exception_token := 0
+			ise_exception_manager_type_token := 0
 			ise_rt_extension_type_token := 0
 			compute_mscorlib_token
 			compute_mscorlib_type_tokens
@@ -3006,7 +3037,6 @@ feature {NONE} -- Once per modules being generated.
 		local
 			l_ass_info: MD_ASSEMBLY_INFO
 			l_pub_key: MD_PUBLIC_KEY_TOKEN
-			l_token: INTEGER
 			l_sig: like field_sig
 			l_meth_sig: like method_sig
 			l_ise_eiffel_name_attr_token: INTEGER
@@ -3032,21 +3062,75 @@ feature {NONE} -- Once per modules being generated.
 			ise_runtime_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (runtime_class_name), ise_runtime_token)
 
+			ise_exception_manager_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (exception_manager_interface_name), ise_runtime_token)
+
 			ise_rt_extension_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (rt_extension_interface_name), ise_runtime_token)
 
-				-- Define `ise_last_exception_token'.
-			l_sig := field_sig
-			l_sig.reset
-			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
-				system_exception_token)
+				-- Define `ise_set_last_exception_token'.
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, system_exception_token)
 
-			ise_last_exception_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("last_exception"), ise_runtime_type_token,
-				l_sig)
+			ise_set_last_exception_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("set_last_exception"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_get_last_exception_token'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, system_exception_token)
+
+			ise_get_last_exception_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("get_last_exception"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_restore_last_exception_token'.
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, system_exception_token)
+
+			ise_restore_last_exception_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("restore_last_exception"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_raise_code_token'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (2)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+
+			ise_raise_code_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("raise_code"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_raise_old_token'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, system_exception_token)
+
+			ise_raise_old_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("raise_old"), ise_runtime_type_token, l_meth_sig)
+
+				-- Define `ise_rethrow_token'.
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+
+			ise_rethrow_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("rethrow"), ise_runtime_type_token, l_meth_sig)
 
 				-- Define `ise_in_assertion_token'.
-			l_meth_sig := method_sig
 			l_meth_sig.reset
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (0)
@@ -3064,32 +3148,26 @@ feature {NONE} -- Once per modules being generated.
 			ise_set_in_assertion_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("set_in_assertion"), ise_runtime_type_token, l_meth_sig)
 
-				-- Define `.ctor' from `ISE.Runtime.EIFFEL_EXCEPTION'.
-			l_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (eiffel_exception_class_name),
-				ise_runtime_token)
-
-			l_meth_sig := method_sig
+				-- Define `ise_in_precondition_token'.
 			l_meth_sig.reset
-			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_meth_sig.set_parameter_count (2)
-			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-			ise_eiffel_exception_ctor_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make (".ctor"), l_token, l_meth_sig)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (0)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+
+			ise_in_precondition_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("in_precondition"), ise_runtime_type_token, l_meth_sig)
 
 			l_meth_sig.reset
-			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-			l_meth_sig.set_parameter_count (3)
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_i4, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, system_exception_token)
-			ise_eiffel_exception_chained_ctor_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make (".ctor"), l_token, l_meth_sig)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+
+			ise_set_in_precondition_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("set_in_precondition"), ise_runtime_type_token, l_meth_sig)
 
 				-- Define `ise_assertion_tag_token'
+			l_sig := field_sig
 			l_sig.reset
 			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
 
@@ -3140,9 +3218,11 @@ feature {NONE} -- Once per modules being generated.
 				-- Define `ise_check_invariant_token'.
 			l_meth_sig.reset
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_parameter_count (2)
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+
 			ise_check_invariant_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("check_invariant"), ise_runtime_type_token, l_meth_sig)
 
@@ -3307,6 +3387,12 @@ feature {NONE} -- Convenience
 			Result := System.typed_pointer_class.compiled_class.class_id
 		ensure
 			typed_pointer_class_id_positive: Result > 0
+		end
+
+	exception_manager_type_id: INTEGER is
+			-- Type id of EXCEPTION_MANAGER
+		once
+			Result := system.exception_manager_class.compiled_class.types.first.type.implementation_id
 		end
 
 	rt_extension_type_implementation_id: INTEGER is

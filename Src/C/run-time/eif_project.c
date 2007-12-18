@@ -199,6 +199,98 @@ doc:	</attribute>
 #endif
 rt_public void (*egc_correct_mismatch)(EIF_REFERENCE); 
 
+/*
+doc:	<attribute name="egc_init_exception_data" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.init_exception which is used to init the exception object.</summary>
+doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTION_MANAGER</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public void (*egc_set_exception_data)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, 
+													EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* EXCEPTION_MANAGER `set_exception_data' feature */
+#else
+rt_public void (*egc_set_exception_data)(EIF_REFERENCE, EIF_INTEGER, EIF_BOOLEAN, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, 
+												EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_BOOLEAN); /* EXCEPTION_MANAGER `set_exception_data' feature */
+#endif
+
+/*
+doc:	<attribute name="egc_set_last_exception" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.set_last_exception which is simply used to restore the exception object from runtime as `last_exception'.</summary>
+doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTION_MANAGER</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+	rt_public void (*egc_set_last_exception)(EIF_REFERENCE, EIF_TYPED_VALUE); /* EXCEPTION_MANAGER `set_last_exception' feature */
+#else
+	rt_public void (*egc_set_last_exception)(EIF_REFERENCE, EIF_REFERENCE); /* EXCEPTION_MANAGER `set_last_exception' feature */
+#endif
+
+/*
+doc:	<attribute name="egc_last_exception" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.last_exception which is used to get current last exception object.</summary>
+doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTION_MANAGER</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+	rt_public EIF_TYPED_VALUE (*egc_last_exception)(EIF_REFERENCE); /* EXCEPTION_MANAGER `last_exception' feature */
+#else
+	rt_public EIF_REFERENCE (*egc_last_exception)(EIF_REFERENCE); /* EXCEPTION_MANAGER `last_exception' feature */
+#endif
+
+/*
+doc:	<attribute name="egc_init_exception_data" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.is_code_ignored. By querying this runtime knows from the manager if exception of the code should be ignored.</summary>
+doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTION_MANAGER</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+	rt_public EIF_TYPED_VALUE (*egc_is_code_ignored)(EIF_REFERENCE, EIF_TYPED_VALUE); /* EXCEPTION_MANAGER `is_code_ignored' feature */
+#else
+	rt_public EIF_BOOLEAN (*egc_is_code_ignored)(EIF_REFERENCE, EIF_INTEGER); /* EXCEPTION_MANAGER `is_code_ignored' feature */
+#endif
+
+/*
+doc:	<attribute name="egc_raise" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.raise which is used to raise an existing exception object. This is called by runtime to raise the saved exception object by once routines.</summary>
+doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTION_MANAGER</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+	rt_public void (*egc_once_raise)(EIF_REFERENCE, EIF_TYPED_VALUE); /* EXCEPTION_MANAGER `once_raise' feature */
+#else
+	rt_public void (*egc_once_raise)(EIF_REFERENCE, EIF_REFERENCE); /* EXCEPTION_MANAGER `once_raise' feature */
+#endif
+
+/*
+doc:	<attribute name="egc_init_exception_manager" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.init_exception_manager which is called by generated code to initialize objects beforehand.</summary>
+doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTION_MANAGER</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public void (*egc_init_exception_manager)(EIF_REFERENCE); /* EXCEPTION_MANAGER `init_exception_manager' feature */
+
+/*
+doc:	<attribute name="egc_free_preallocated_trace" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine {EXCEPTION_MANAGER}.free_preallocated_trace. </summary>
+doc:		<thread_safety>Safe, per thread data is manipulated.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTION_MANAGER</eiffel_classes>
+doc:	</attribute>
+*/
+rt_public void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
+
 rt_public int egc_str_dtype;
 rt_public int egc_arr_dtype;
 rt_public int egc_tup_dtype;
@@ -249,7 +341,9 @@ rt_public int egc_real32_dtype;
 rt_public int egc_real64_dtype;	
 rt_public int egc_char_dtype;	
 rt_public int egc_wchar_dtype;	
-rt_public int egc_point_dtype;	
+rt_public int egc_point_dtype;
+
+rt_public int egc_except_emnger_dtype;
 
 rt_public struct ctable egc_ce_type;
 rt_public struct ctable egc_ce_exp_type;

@@ -127,7 +127,7 @@ end
 		local
 			out_file_name: FILE_NAME
 			file: RAW_FILE
-			a: ANY
+			io_except: IO_FAILURE
 		do
 			redo_cyclics
 
@@ -164,8 +164,9 @@ debug("PROFILE_CONVERT")
 end
 				file.close
 			else
-				a := ("write permission failure").to_c
-				eraise ($a, Io_exception)
+				create io_except
+				io_except.set_message ("write permission failure")
+				io_except.raise
 			end
 
 			is_conversion_ok := True

@@ -1203,15 +1203,23 @@ static  void    print_instructions ()
 			case  BC_RETRIEVE_OLD :
 				/* Old expression */
 				/* Local index */
+				fprintf (ofp,"%d ", (int) get_int16(&ip));
+				/* Local index for exception object */
 				fprintf (ofp,"%d", (int) get_int16(&ip));
 				break;
 			case  BC_OLD :
 				/* Old expression */
 				/* Local index */
-				fprintf (ofp,"%d", (int) get_int16(&ip));
+				fprintf (ofp,"%d ", (int) get_int16(&ip));
+				/* Local index for exception */
+				fprintf (ofp,"%d ", (int) get_int16(&ip));
+				/* Start of next BC_OLD */
+				fprintf (ofp,"%d", get_int32(&ip));
 				break;
 			case  BC_START_EVAL_OLD :
 				/* Offset if not enabled */
+				fprintf (ofp,"%d ", get_int32(&ip));
+				/* Start of next BC_OLD */
 				fprintf (ofp,"%d", get_int32(&ip));
 				break;
 			case  BC_END_EVAL_OLD :

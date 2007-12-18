@@ -67,7 +67,7 @@ extern "C" {
 	/*------------*/
 	/*  except.h  */
 	/*------------*/
-#define EN_NEX		29			/* Number of internal exceptions */
+#define EN_NEX		31			/* Number of internal exceptions */
 
 	/*-------------*/
  	/*  pattern.c  */

@@ -728,7 +728,7 @@ feature -- Implementation
 			else
 				if show_exception_dialog then
 						-- Show a basic exception dialog so that exception doesn't get lost if undealt with.
-					l_exception_string := an_exception.trace_as_string
+					l_exception_string := an_exception.exception_trace.twin
 					l_exception_string.prune_all ('%R')
 					create exception_dialog
 					create l_label
@@ -777,7 +777,7 @@ feature -- Implementation
 					l_hbox.disable_item_expand (l_quit)
 					l_hbox.set_border_width (5)
 					l_hbox.set_padding (5)
-					exception_dialog.set_title ("Uncaught Exception: " + an_exception.tag)
+					exception_dialog.set_title ("Uncaught Exception: " + an_exception.message)
 					exception_dialog.set_minimum_height (350)
 					exception_dialog.set_size (500, 300)
 					exception_dialog.raise
@@ -801,21 +801,8 @@ feature -- Implementation
 
 	new_exception: EXCEPTION is
 			-- New exception object representating the last exception caught in Current
-		local
-			l_exceptions: EXCEPTIONS
-			l_tag: STRING
-			l_trace: STRING
 		do
-			create l_exceptions
-			l_tag := l_exceptions.tag_name
-			if l_tag = Void then
-				l_tag := "No tag"
-			end
-			l_trace := l_exceptions.exception_trace
-			if l_trace = Void then
-				l_trace := "No trace"
-			end
-			create Result.make_with_tag_and_trace (l_tag, l_trace)
+			Result := (create {EXCEPTION_MANAGER}).last_exception
 		ensure
 			new_exception_not_void: Result /= Void
 		end

@@ -682,6 +682,37 @@ feature -- Exception handling
 		deferred
 		end
 
+	generate_last_exception is
+			-- Generate value of `last_exception' on stack.
+		deferred
+		end
+
+	generate_restore_last_exception is
+			-- Restores `get_last_exception' using the local.
+		deferred
+		end
+
+	generate_start_old_try_block (a_ex_local: INTEGER) is
+			-- Generate start of try block at entry to evaluate old expression.
+			-- `a_ex_local' is the local declaration position for the exception.
+		deferred
+		end
+
+	generate_catch_old_exception_block (a_ex_local: INTEGER) is
+			-- Generate catch block for old expression evaluatation
+		deferred
+		end
+
+	prepare_old_expresssion_blocks (a_count: INTEGER) is
+			-- Prepare to generate `a_count' blocks for old expression evaluation
+		deferred
+		end
+
+	generate_raising_old_exception (a_ex_local: INTEGER) is
+			-- Generate raising old violation exception when there was exception saved
+		deferred
+		end
+
 feature -- Assertions
 
 	generate_in_assertion_status is
@@ -713,6 +744,16 @@ feature -- Assertions
 
 	generate_set_assertion_status is
 			-- Set `in_assertion' flag with top of stack.
+		deferred
+		end
+
+	generate_in_precondition_status is
+			-- Generate value of `in_precondition' on stack.
+		deferred
+		end
+
+	generate_set_precondition_status is
+			-- Set `in_precondition' flag with top of stack.
 		deferred
 		end
 
@@ -751,8 +792,9 @@ feature -- Assertions
 		deferred
 		end
 
-	generate_invariant_checking (type_i: TYPE_I) is
+	generate_invariant_checking (type_i: TYPE_I; entry: BOOLEAN) is
 			-- Generate an invariant check after routine call
+			-- Is the invariant checking `entry'?
 		require
 			type_i_not_void: type_i /= Void
 		deferred

@@ -155,13 +155,10 @@ struct eif_exception {
 	unsigned char ex_nomem;	/* An "Out of memory" exception occurred */
 	unsigned char ex_nsig;	/* Number of last signal received */
 	unsigned int ex_level;	/* Exception level (rescue branches) */
-	unsigned char ex_org;	/* Original exception at this level */
  	char *ex_tag;			/* Assertion tag */
-	char *ex_otag;			/* Tag associated with original exception */
 	char *ex_rt;			/* Routine associated with current exception */
-	char *ex_ort;			/* Routine associated with original exception */
 	int ex_class;			/* Class associated with current exception */
-	int ex_oclass;			/* Class associated with original exception */
+	int ex_entry;			/* Is entry or exit of a routine when evaluating invariant. */
 };
 
 

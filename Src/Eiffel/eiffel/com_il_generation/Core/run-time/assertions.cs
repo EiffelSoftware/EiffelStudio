@@ -51,7 +51,7 @@ public class ASSERTIONS	{
 		// Throw a precondition violation if `expression' is not true.
 	{
 		if (!expression) {
-			throw new Exception ("Precondition violation: " + msg);
+            ISE_RUNTIME.raise_precondition(msg);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class ASSERTIONS	{
 		// Throw a postcondition violation if `expression' is not true.
 	{
 		if (!expression) {
-			throw new Exception ("Postcondition violation: " + msg);
+            ISE_RUNTIME.raise_postcondition(msg);
 		}
 	}
 
@@ -67,7 +67,7 @@ public class ASSERTIONS	{
 		// Throw a check violation if `expression' is not true.
 	{
 		if (!expression) {
-			throw new Exception ("Check violation: " + msg);
+            ISE_RUNTIME.raise_check(msg);
 		}
 	}
 

@@ -771,6 +771,9 @@ end
 					Context.add_local (l_type)
 					item.set_position (position)
 					position := position + 1
+					Context.add_local (item.exception_type)
+					item.set_exception_position (position)
+					position := position + 1
 					l_old_expressions.forth
 					i := i + 1
 				end

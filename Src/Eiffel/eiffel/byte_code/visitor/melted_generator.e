@@ -66,8 +66,13 @@ feature -- Initialize
 		do
 			ba := a_ba
 			a_node.expr.process (Current)
+				-- Write the end of last old expression evaluation.
+			ba.write_forward
 			ba.append (bc_old)
 			ba.append_short_integer (a_node.position)
+			ba.append_short_integer (a_node.exception_position)
+				-- Mark start of next old expression evaluation.
+			ba.mark_forward
 			ba := Void
 		end
 
@@ -1574,6 +1579,7 @@ feature {NONE} -- Visitors
 		do
 			ba.append (Bc_retrieve_old)
 			ba.append_short_integer (a_node.position)
+			ba.append_short_integer (a_node.exception_position)
 		end
 
 	process_un_plus_b (a_node: UN_PLUS_B) is

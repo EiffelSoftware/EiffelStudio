@@ -337,8 +337,15 @@ feature {NONE} -- Implementation: access
 			put ("floor_real_32") check found_item = floor_real_32_name_id end
 			put ("floor_real_64") check found_item = floor_real_64_name_id end
 			put ("is_deep_equal") check found_item = is_deep_equal_name_id end
+			put ("set_exception_data") check found_item = set_exception_data_name_id end
+			put ("last_exception") check found_item = last_exception_name_id end
+			put ("set_last_exception") check found_item = set_last_exception_name_id end
+			put ("is_code_ignored") check found_item = is_code_ignored_name_id end
+			put ("once_raise") check found_item = once_raise_name_id end
 			put ("notify") check found_item = notify_name_id end
 			put ("notify_argument") check found_item = notify_argument_name_id end
+			put ("init_exception_manager") check found_item = init_exception_manager_id end
+			put ("free_preallocated_trace") check found_item = free_preallocated_trace_id end
 		end
 
 invariant

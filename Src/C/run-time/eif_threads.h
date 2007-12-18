@@ -471,7 +471,7 @@ typedef struct tag_EIF_once_value_t {
 		EIF_REFERENCE * EIF_REFERENCE_result;
 		EIF_POINTER     EIF_POINTER_result;
 	} result;                  /* Result of a once function (if any) */
-	unsigned char   failed;    /* Associated exception code (if any) */
+	EIF_REFERENCE   *exception;    /* Associated exception object (if any) */
 	EIF_BOOLEAN     done;      /* Can result be used?                */
 #ifndef WORKBENCH
 	EIF_BOOLEAN     succeeded; /* Is feature succesfully evaluated?  */
@@ -482,6 +482,7 @@ typedef struct tag_EIF_once_value_t {
 typedef struct tag_EIF_process_once_value_t {
 	EIF_once_value_t value;  /* Once data */
 	EIF_REFERENCE reference; /* Reference result (if any) */
+	EIF_REFERENCE exception; /* Exception (if any) */
 	EIF_MUTEX_TYPE * mutex;  /* Mutex to synchronize access to data */
 	EIF_POINTER thread_id;   /* ID of a thread that owns a mutex */
 	EIF_BOOLEAN completed;   /* Has execution been completed? */
@@ -495,7 +496,8 @@ typedef struct tag_EIF_process_once_value_t {
  *  MTOR(t,i) - retrieve result of type "t" for a once routine "i"
  *  MTOP(t,i,v) - put result value of type "t" for a once routine "i"
  *  MTOM(i) - flag that a once routine "i" is executed
- *  MTOE(i,e) - record that once routine "i" has failed with exception "e"
+ *  MTOE(i,e) - record that once routine "i" has failed with exception "e". Copy pointer of EIF_REFERENCE.
+ *  MTOEV(i,e) - record that once routine "i" has failed with exception "e", Copy value of EIF_REFERENCE.
  *  MTOF(i) - get an exception raised in once routine "i"
  */
 #define MTOT EIF_once_value_t*
@@ -504,8 +506,9 @@ typedef struct tag_EIF_process_once_value_t {
 #define MTOR(result_type,item) ((item)->result.CAT2(result_type,_result))
 #define MTOP(result_type,item,value) ((item)->result.CAT2(result_type,_result)) = (value)
 #define MTOM(item)      (item)->done = EIF_TRUE
-#define MTOE(item,code) (item)->failed = (code)
-#define MTOF(item)      (item)->failed
+#define MTOE(item,ex_obj) (item)->exception = (ex_obj)
+#define MTOEV(item,ex_obj) *((item)->exception) = (ex_obj)
+#define MTOF(item)      (item)->exception
 
 #ifdef __cplusplus
 }

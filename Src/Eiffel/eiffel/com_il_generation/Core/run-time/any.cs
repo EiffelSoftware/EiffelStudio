@@ -587,10 +587,10 @@ feature -- Output
 feature {NONE} -- Implementation
 */
 	private static void generate_call_on_void_target_exception ()
-		// Throw System.NullReferenceException to simulate a call on void target exception
+		// Throw VOID_EXCEPTION
 		// when first argument of static routine of ANY is Void.
 	{
-		throw new System.NullReferenceException ();
+        ISE_RUNTIME.generate_call_on_void_target_exception();
 	}
 
 /*

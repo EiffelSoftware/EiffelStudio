@@ -87,11 +87,30 @@ feature -- Assertions
 		return (internal_is_assertion_skipped || internal_in_assertion);
 	}
 
+
 	public static void set_in_assertion (bool val)
 		// Set `internal_in_assertion' with `val'.
 	{
 		internal_in_assertion = val;
 	}
+
+    public static bool in_precondition()
+        // Is checking precondition?
+    {
+        return internal_in_precondition;
+    }
+
+    public static void set_in_precondition(bool val)
+       // set `in_precondition' with `val'
+    {
+        internal_in_precondition = val;
+    }
+
+    public static bool invariant_entry ()
+        // Is entry invariant checking?
+    {
+        return internal_invariant_entry;
+    }
 
 	public static bool check_assert (bool val)
 		// Enable or disable checking of assertions?
@@ -103,29 +122,35 @@ feature -- Assertions
 
 	[System.Diagnostics.DebuggerHiddenAttribute]
   	[System.Diagnostics.DebuggerStepThroughAttribute]
-	public static void check_invariant (object o)
+	public static void check_invariant (object o, bool entry)
 		// Given object `o' if it has some invariant to be checked, make
 		// sure that they are checked and recursively goes to inherited
 		// invariants and check them too.
 	{
-		EIFFEL_TYPE_INFO target;
+        EIFFEL_TYPE_INFO target;
+        bool o_entry;
 
-		if (
-			(!in_assertion ()) &&
-			(o != null && is_assertion_checked (o.GetType (), ASSERTION_LEVEL_ENUM.invariant, false))
-		) {
-			target = o as EIFFEL_TYPE_INFO;
-			if (target != null) {
-				set_in_assertion (true);
+        o_entry = internal_invariant_entry;
+        internal_invariant_entry = entry;
+        if (
+            (!in_assertion()) &&
+            (o != null && is_assertion_checked(o.GetType(), ASSERTION_LEVEL_ENUM.invariant, false))
+        )
+        {
+            target = o as EIFFEL_TYPE_INFO;
+            if (target != null)
+            {
+                set_in_assertion(true);
 
-				invariant_checked_table = new Hashtable (10);
+                invariant_checked_table = new Hashtable(10);
 
-					// Check current invariant defined in `target'.
-				target._invariant ();
+                // Check current invariant defined in `target'.
+                target._invariant();
 
-				set_in_assertion (false);
-			}
-		}
+                set_in_assertion(false);
+            }
+        }
+        internal_invariant_entry = o_entry;
 	}
 
 	public static bool is_invariant_checked_for (RuntimeTypeHandle type_handle)
@@ -274,9 +299,33 @@ feature -- Assertions
 /*
 feature -- Exceptions
 */
-	[ThreadStatic]
-	public static Exception last_exception;
-		// Last raised exception in `rescue' clause.
+
+    public static Exception last_exception
+      // Last raised exception in `rescue' clause.
+    {
+        get
+        {
+            return _last_exception;
+        }
+        set
+        {
+            _last_exception = exception_manager.compute_last_exception(value);
+        }
+    }
+
+    public static void restore_last_exception(Exception ex)
+        // Restore value of `last_exception'.
+    {
+        _last_exception = ex;
+    }
+
+    [ThreadStatic]
+    private static Exception _last_exception;
+        // Store exception object per thread.
+
+    [EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+    public static RT_EXCEPTION_MANAGER exception_manager;
+        // Exception manager
 
 	public static void raise (Exception e)
 		// Throw an exception `e'.
@@ -285,11 +334,55 @@ feature -- Exceptions
 	}
 
 	public static void generate_call_on_void_target_exception ()
-		// Throw System.NullReferenceException to simulate a call on void target exception
+		// Throw VOID_TARGET
 		// when first argument of static routine of ANY is Void.
 	{
-		throw new System.NullReferenceException ();
+        raise_code(exception_manager.Void_call_target(), "");
 	}
+
+    [EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+    internal static void raise_precondition(string msg)
+		// Throw PRECONDITION_VIOLATION
+		// when first argument of static routine of ANY is Void.
+	{
+        raise_code(exception_manager.Precondition(), msg);
+	}
+
+    [EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+    internal static void raise_postcondition(string msg)
+		// Throw POSTCONDITION_VIOLATION
+		// when first argument of static routine of ANY is Void.
+	{
+        raise_code(exception_manager.Postcondition(), msg);
+	}
+
+    [EIFFEL_CONSUMABLE_ATTRIBUTE (false)]
+    internal static void raise_check(string msg)
+		// Throw CHECK_VIOLATION
+		// when first argument of static routine of ANY is Void.
+	{
+        raise_code(exception_manager.Check_instruction(), msg);
+	}
+
+    [EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+    public static void raise_code(int e_code, string msg)
+        // Raise Eiffel code exception of code `e_code'.
+    {
+        exception_manager.internal_raise(e_code, msg);
+    }
+
+    public static void raise_old(Exception ex)
+        // Raise Eiffel code exception of code `e_code'.
+    {
+        exception_manager.internal_raise_old(ex);
+    }
+
+    [EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+    public static void rethrow (bool for_once)
+        //Throw unhandled exception at the end of rescue clause.
+    {
+        exception_manager.throw_last_exception(_last_exception, for_once);
+    }
 
 /*
 feature {NONE} -- RT Extension
@@ -324,6 +417,14 @@ feature {NONE} -- Implementations: Assertions
 		// Flag used during assertion checking to make sure
 		// that assertions are not checked within an assertion
 		// checking.
+
+    [ThreadStatic]
+    private static bool internal_invariant_entry = false;
+        // Flag if invariant checking is the entry of a routine.
+
+    [ThreadStatic]
+    private static bool internal_in_precondition = false;
+    // Flag if in precondition checking.
 	
 	[ThreadStatic]
 	private static bool caller_supplier_precondition = false;

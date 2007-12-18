@@ -191,22 +191,10 @@ feature {NONE} -- Implementation
 	new_exception: EXCEPTION is
 			-- New exception object representating the last exception caught in Current
 		local
-			l_exceptions: EXCEPTIONS
-			l_tag: STRING
-			l_trace: STRING
+			l_mnger: EXCEPTION_MANAGER
 		do
-			create l_exceptions
-			l_tag := l_exceptions.tag_name
-			l_trace := l_exceptions.exception_trace
-			if l_tag = Void and l_trace = Void then
-				create Result.make_with_tag_and_trace ("No tag", "No trace")
-			elseif l_tag = Void then
-				create Result.make_with_tag_and_trace ("No tag", l_trace)
-			elseif l_trace = Void then
-				create Result.make_with_tag_and_trace (l_tag, "No trace")
-			else
-				create Result.make_with_tag_and_trace (l_tag, l_trace)
-			end
+			create l_mnger
+			Result := l_mnger.last_exception
 		ensure
 			new_exception_not_void: Result /= Void
 		end

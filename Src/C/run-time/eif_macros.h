@@ -450,7 +450,7 @@ RT_LNK int fcount;
 
 #define RTOSHP(code_index)                                                   \
 	extern EIF_BOOLEAN RTOFN(code_index,_done);                          \
-	extern unsigned char RTOFN(code_index,_failed);                      \
+	extern EIF_OBJECT RTOFN(code_index,_failed);                      \
 	extern EIF_BOOLEAN RTOFN(code_index,_succeeded);
 
 #define RTOSHF(type, code_index)                                             \
@@ -459,7 +459,7 @@ RT_LNK int fcount;
 
 #define RTOSDP(code_index)                                                   \
 	EIF_BOOLEAN RTOFN(code_index,_done) = EIF_FALSE;                     \
-	unsigned char RTOFN(code_index,_failed) = 0;                         \
+	EIF_OBJECT RTOFN(code_index,_failed) = NULL;                         \
 	EIF_BOOLEAN RTOFN(code_index,_succeeded) = EIF_FALSE;
 
 #define RTOSDF(type, code_index)                                             \
@@ -489,11 +489,12 @@ RT_LNK int fcount;
 			RTO_EXCEPT                                           \
 				/* Handle exception.                */       \
 				/* Record exception for future use. */       \
-			RTOFN(code_index,_failed) = echval;                  \
+			RTOFN(code_index,_failed) = eif_protect(RTLA);                  \
 			RTO_END_EXCEPT                                       \
 		}                                                            \
 		if (RTOFN(code_index,_failed)) {                             \
-			xraise (RTOFN(code_index,_failed));                  \
+			if (eif_access(RTOFN(code_index,_failed)))							\
+				oraise (eif_access(RTOFN(code_index,_failed)));                  \
 		}                                                            \
 	}
 
@@ -539,6 +540,7 @@ RT_LNK int fcount;
 	RTOTDV(name)                                                         \
 	if (!MTOD(OResult)) {                                                \
 		MTOP(EIF_REFERENCE, OResult, RTOC(0));                       \
+		MTOE(OResult, RTOC(0));										\
 	}
 
 #define RTOTW(body_id)
@@ -553,6 +555,7 @@ RT_LNK int fcount;
 		return r;                                                    \
 	}                                                                    \
 	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
+	MTOE(OResult, RTOC(0));												\
 	MTOM(OResult);                                                       \
 	r.it_r = RTOTRR = v;                                                 \
 	return r;
@@ -580,6 +583,7 @@ RT_LNK int fcount;
 	RTOUDV(once_index)                                                   \
 	if (!MTOD(OResult)) {                                                \
 		MTOP(EIF_REFERENCE, OResult, RTOC(0));                       \
+		MTOE(OResult, RTOC(0));										\
 	}
 
 #define RTOUC(once_index, value)                                             \
@@ -621,12 +625,14 @@ RT_LNK int fcount;
 		RTO_EXCEPT                                                   \
 			/* Handle exception. */                              \
 			/* Record exception for future use. */               \
-		MTOE(OResult, echval);                                       \
+		MTOE(OResult, RTOC(0));									\
+		MTOEV(OResult, RTLA);                                       \
 		RTO_END_EXCEPT                                               \
-	}                                                                    \
+	}																	\
 	if (MTOF(OResult)) {                                                 \
-		xraise (MTOF(OResult));                                      \
-	}                                                                    
+		if (*MTOF(OResult))												\
+			oraise (*MTOF(OResult));                                      \
+	}
 
 #ifdef EIF_THREADS
 
@@ -690,7 +696,8 @@ RT_LNK int fcount;
 		RTO_EXCEPT                                                   \
 			/* Handle exception.                */               \
 			/* Record exception for future use. */               \
-		failed = echval;                                             \
+		RTOC_GLOBAL(failed);										\
+		failed = RTLA;												\
 		RTO_END_EXCEPT                                               \
 			/* Clear field that holds locking thread id. */      \
 		thread_id = NULL;                                            \
@@ -702,7 +709,7 @@ RT_LNK int fcount;
 
 #define RTOPRE(failed)                                                       \
 	if (failed) {                                                        \
-		xraise (failed);                                             \
+		oraise (failed);                                             \
 	}
 
 #ifdef EIF_HAS_MEMORY_BARRIER
@@ -773,14 +780,15 @@ RT_LNK int fcount;
 #define RTOQDV(name)                                                         \
 	EIF_process_once_value_t * POResult =                                \
 		EIF_process_once_values + RTOIN(name);                       \
-	MTOT OResult = &(POResult -> value);
+	MTOT OResult = &(POResult -> value);							\
+	MTOE(OResult, &(POResult -> exception));
 
 #define RTOQDB(type, name)                                                   \
 	RTOQDV(name)
 
 #define RTOQDR(name)                                                         \
 	RTOQDV(name)                                                         \
-	MTOP(EIF_REFERENCE, OResult, &(POResult -> reference));
+	MTOP(EIF_REFERENCE, OResult, &(POResult -> reference));				\
 
 #define RTOQRB(type) MTOR(type,OResult)
 #define RTOQRR (*MTOR(EIF_REFERENCE,OResult))
@@ -796,7 +804,7 @@ RT_LNK int fcount;
 #define RTOQE                                                                \
 	RTOFE (                                                              \
 		POResult -> completed,                                       \
-		POResult -> value.failed,                                    \
+		*(POResult -> value.exception),                                    \
 		POResult -> mutex,                                           \
 		POResult -> thread_id                                        \
 	)
@@ -816,7 +824,7 @@ RT_LNK int fcount;
 #define RTOPHP(code_index)                                                   \
 	extern EIF_BOOLEAN RTOFN(code_index,_started);                       \
 	extern EIF_BOOLEAN RTOFN(code_index,_completed);                     \
-	extern unsigned char RTOFN(code_index,_failed);                      \
+	extern EIF_REFERENCE RTOFN(code_index,_failed);                      \
 	extern EIF_MUTEX_TYPE * RTOFN(code_index,_mutex);                    \
 	extern EIF_POINTER RTOFN(code_index,_thread_id);
 
@@ -827,7 +835,7 @@ RT_LNK int fcount;
 #define RTOPDP(code_index)                                                   \
 	volatile EIF_BOOLEAN RTOFN(code_index,_started) = EIF_FALSE;         \
 	volatile EIF_BOOLEAN RTOFN(code_index,_completed) = EIF_FALSE;       \
-	volatile unsigned char RTOFN(code_index,_failed) = 0;                \
+	volatile EIF_REFERENCE RTOFN(code_index,_failed) = NULL;                \
 	volatile EIF_MUTEX_TYPE * RTOFN(code_index,_mutex) = NULL;           \
 	volatile EIF_POINTER RTOFN(code_index,_thread_id) = NULL;
 
@@ -859,7 +867,7 @@ RT_LNK int fcount;
 #define RTOPCP(code_index,c,a)                                               \
 	EIF_MEMORY_READ_BARRIER;                                             \
 	RTO_CP(                                                              \
-		RTOFN(code_index,_completed) && !RTOFN(code_index,_failed),  \
+		RTOFN(code_index,_completed) && (!RTOFN(code_index,_failed)),  \
 		c,                                                           \
 		a                                                            \
 	)
@@ -867,7 +875,7 @@ RT_LNK int fcount;
 #define RTOPCF(code_index,c,a)                                               \
 	((void) EIF_MEMORY_READ_BARRIER,                                     \
 	RTO_CF(                                                              \
-		RTOFN(code_index,_completed) && !RTOFN(code_index,_failed),  \
+		RTOFN(code_index,_completed) && (!RTOFN(code_index,_failed)),  \
 		RTOPR(code_index),                                           \
 		c,                                                           \
 		a                                                            \
@@ -940,7 +948,7 @@ RT_LNK int fcount;
 
 /* Macros for exception handling:
  *  RTEX declares the exception vector variable for current routine
- *  RTED declares the setjmp buffer
+ *  RTED declares the setjmp buffer, saved_assertion and saved_except
  *  RTES issues the setjmp call for remote control transfer via longjmp
  *  RTEJ sets the exception handling mechanism (must appear only once)
  *  RTEA(x,y,z) signal entry in routine 'x', origin 'y', object ID 'z'
@@ -957,10 +965,16 @@ RT_LNK int fcount;
  *  RTXS(x) resynchronizes the run-time stacks in a rescue clause
  *  RTEOK ends a routine with a rescue clause by cleaning the trace stack
  *  RTSO stops the tracing as well as the profiling
+ *	RTLA Last exception from EXCEPTION_MANAGER
+ *	RTCO(x) Check if x is NULL, if not raise an OLD_VIOLATION
  *  RTE_T start try block (for body)
  *  RTE_E start except block (for rescue)
  *  RTE_EE end except block
- *
+ *	RTE_OT start try block of old expression evaluation
+ *	RTE_O end of try block of old expression evaluation
+ *	RTE_OE local rescue, recording possible exception for later use
+ *	RTE_OTD Declare old stack vector and push it.
+ *  RTE_OP Pop old stack vector.
  *  RTDBGE,RTDBGL are declared in eif_debug.h
  */
 #define RTED		jmp_buf exenv; int EIF_VOLATILE saved_assertion = in_assertion
@@ -970,6 +984,8 @@ RT_LNK int fcount;
 #define RTET(t,x)	eraise(t,x)
 #define RTEC(x)		RTET((EIF_REFERENCE) 0,x)
 #define RTSO		check_options_stop()
+#define RTLA		last_exception()
+#define RTCO(x)		chk_old(x)
 
 #ifdef WORKBENCH
 #define RTEX		struct ex_vect * EIF_VOLATILE exvect; uint32 EIF_VOLATILE db_cstack
@@ -989,6 +1005,7 @@ RT_LNK int fcount;
 #define RTE_T \
 	current_call_level = trace_call_level; \
 	if (prof_stack) saved_prof_top = prof_stack->st_top; \
+	saved_except = RTLA; \
 	start: exvect->ex_jbuf = &exenv; \
 	if (!setjmp(exenv)) {
 
@@ -1001,6 +1018,7 @@ RT_LNK int fcount;
 #define RTEU		exresc(MTC exvect)
 
 #define RTE_T \
+	saved_except = RTLA; \
 	start: exvect->ex_jbuf = &exenv; \
 	if (!setjmp(exenv)) {
 
@@ -1019,7 +1037,9 @@ RT_LNK int fcount;
 		RTEU;
 #define RTE_EE \
 		RTEF; \
-	}
+	}			\
+	set_last_exception (saved_except);
+	
 
 /* new debug */
 #ifdef WORKBENCH
@@ -1034,7 +1054,24 @@ RT_LNK int fcount;
 #define RTNHOOK(n)
 #endif
 
+/* Old expression evaluation */
+#define RTE_OT { \
+					RTE_OTD; \
+					if (!setjmp(exenv_o)) {
+#define RTE_O	\
+					RTE_OP; \
+					} else {
+#define RTE_OE	\
+					} \
+				}
 
+#define RTE_OTD \
+					jmp_buf exenv_o; \
+					struct ex_vect * EIF_VOLATILE exvect_o; \
+					exvect_o = exold (); \
+					exvect_o->ex_jbuf = &exenv_o
+#define RTE_OP \
+					expop(&eif_stack)
 
 /* Accessing of bits in a bit field is done via macros.
  * Bits are stored from left to right. If the size of an int is I (in bits),
@@ -1305,8 +1342,6 @@ RT_LNK int fcount;
  * removal process; so we need a funciton pointer trigeering an exception
  */
 #define RTNR rt_norout
-
-
 
 /* In final mode, we have two macros for E-TRACE called RTTR (start trace) and RTXT (stop trace).
  * We have also two macros for E-PROFILE in final mode, called RTPR (start profile) and RTXP (stop profile).

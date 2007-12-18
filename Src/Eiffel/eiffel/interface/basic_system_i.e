@@ -22,6 +22,9 @@ feature -- Access
 	system_value_type_class: EXTERNAL_CLASS_I
 			-- Class System.ValueType
 
+	system_exception_type_class: EXTERNAL_CLASS_I
+			-- Class System.Exception
+
 	boolean_class: CLASS_I
 			-- Class BOOLEAN
 
@@ -110,6 +113,11 @@ feature -- Access: XX_REF classes
 
 	pointer_ref_class: CLASS_I
 			-- Class POINTER_REF
+
+feature -- Access: Exceptions
+
+	exception_manager_class: CLASS_I
+			-- Class EXCEPTION_MANAGER
 
 feature -- Access
 
@@ -289,6 +297,17 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
+	exception_manager_class_id: INTEGER is
+			-- Id of class EXCEPTION_MANAGER
+		require
+			type_class_exists: exception_manager_class /= Void
+			compiled: exception_manager_class.is_compiled
+		do
+			Result := exception_manager_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
 	rt_extension_type_id: INTEGER is
 			-- Id of type RT_EXTENSION
 		require
@@ -412,6 +431,19 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
+feature -- Status report
+
+	exception_manager_type_id: INTEGER is
+			-- Dynamic type_id of class EXCEPTION_MANAGER
+		require
+			exception_manager_class_exist: exception_manager_class /= Void
+			compiled: exception_manager_class.is_compiled
+		do
+			Result := exception_manager_class.compiled_class.types.first.type_id
+		ensure
+			valid_result: Result > 0
+		end
+
 feature -- Settings
 
 	set_any_class (c: CLASS_I) is
@@ -452,6 +484,21 @@ feature -- Settings
 			end
 		ensure
 			system_object_class_set: c.is_external_class implies system_value_type_class = c
+		end
+
+	set_system_exception_type_class (c: CLASS_I) is
+			-- Assign `c' to `set_system_exception_type_class'
+		require
+			c_not_void: c /= Void
+		local
+			l_ext: EXTERNAL_CLASS_I
+		do
+			l_ext ?= c
+			if l_ext /= Void then
+				system_exception_type_class := l_ext
+			end
+		ensure
+			system_exception_class_set: c.is_external_class implies system_exception_type_class = c
 		end
 
 	set_boolean_class (c: CLASS_I) is
@@ -808,6 +855,18 @@ feature -- Settings: XX_REF classes
 			pointer_ref_class := c
 		ensure
 			pointer_ref_class_set: pointer_ref_class = c
+		end
+
+feature -- Settings: Exception
+
+	set_exception_manager_class (c: CLASS_I) is
+			-- Assign `c' to `exception_manager_class'.
+		require
+			c_not_void: c /= Void
+		do
+			exception_manager_class := c
+		ensure
+			exception_manager_class_set: exception_manager_class = c
 		end
 
 indexing

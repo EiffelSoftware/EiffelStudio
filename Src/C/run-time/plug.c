@@ -457,8 +457,13 @@ rt_public void chkinv (EIF_REFERENCE obj, int where)
 {
 	/* Check invariant on object `obj'. Assumes that `obj' is not null */
 	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+	
 	  /*	union overhead *zone = HEADER(obj);    (not used in this fct) */
 	int dtype = Dtype(obj);
+
+	/* Store the `where' infomation for later use */
+	echentry = !where;
 
 	if (inv_mark_tablep == (char *) 0)
 		if ((inv_mark_tablep = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)

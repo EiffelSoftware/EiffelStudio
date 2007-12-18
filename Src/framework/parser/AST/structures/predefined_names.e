@@ -186,8 +186,15 @@ feature -- Constants
 	floor_real_32_name_id: INTEGER is 173
 	floor_real_64_name_id: INTEGER is 174
 	is_deep_equal_name_id: INTEGER is 175
-	notify_name_id: INTEGER is 176
-	notify_argument_name_id: INTEGER is 177
+	set_exception_data_name_id: INTEGER is 176
+	last_exception_name_id: INTEGER is 177
+	set_last_exception_name_id: INTEGER is 178
+	is_code_ignored_name_id: INTEGER is 179
+	once_raise_name_id: INTEGER is 180
+	notify_name_id: INTEGER is 181
+	notify_argument_name_id: INTEGER is 182
+	init_exception_manager_id: INTEGER is 183
+	free_preallocated_trace_id: INTEGER is 184
 
 feature -- Classification
 

@@ -644,6 +644,15 @@ rt_public EIF_REFERENCE rt_extension_obj = NULL;
 #endif
 
 /*
+doc:	<attribute name="except_mnger" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Pointer to EXCEPTION_MANAGER object of current system. Initialized by generated C code.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REFERENCE except_mnger = NULL;
+
+/*
 doc:	<attribute name="has_reclaim_been_called" return_type="EIF_BOOLEAN" export="private">
 doc:		<summary>Flag to prevent multiple calls to `reclaim' which could occur if for some reasons `reclaim´ failed, then the `main' routine of the Eiffel program will call `failure' which calls `reclaim' again. So if it failed the first time around it is going to fail a second time and therefore it is useless to call `reclaim' again.</summary>
 doc:		<thread_safety>Safe</thread_safety>
@@ -1292,6 +1301,8 @@ rt_public void reclaim(void)
 #ifdef WORKBENCH
 			rt_extension_obj = NULL;
 #endif
+			except_mnger = NULL;
+
 			plsc ();
 
 #endif
@@ -1426,6 +1437,7 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 		rt_extension_obj = MARK_SWITCH(&rt_extension_obj);	/* Primary root */
 	}
 #endif
+	except_mnger = MARK_SWITCH(&except_mnger);	/* EXCEPTION_MANAGER */
 
 		/* Deal with once manifest strings. */
 #ifndef EIF_THREADS
@@ -3641,6 +3653,8 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	if (rt_extension_obj && !(HEADER(rt_extension_obj)->ov_flags & EO_OLD))
 		rt_extension_obj = GEN_SWITCH(&rt_extension_obj);
 #endif
+	if (except_mnger && !(HEADER(except_mnger)->ov_flags & EO_OLD))
+		except_mnger = GEN_SWITCH(&except_mnger);
 
 	/* Deal with remembered set, which records the addresses of all the
 	 * old objects pointing to new ones.

@@ -11,8 +11,6 @@ feature
 		do
 			if not retried then
 				g        -- 2. Exception of ROUTINE_FAILURE
-			else
-				x := 0
 			end
 		rescue
 			retried := True
@@ -31,22 +29,21 @@ feature
 
 	g is
 		local
-			l_exception: INVARIANT_VIOLATION
+			l_exception: CHECK_VIOLATION
 		do
-			x := -1
-				-- 1. Exception of INVARIANT_VIOLATION
+			check
+				check_fail: False
+			end
+				-- 1. Exception of CHECK_VIOLATION
 		rescue
-			x := 1
 			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
-			if l_exception /= Void and then not l_exception.is_entry then
+			if l_exception /= Void then
 				print ("True%N")
 				print_exception (l_exception, False)
 			else
 				print ("False%N")
 			end
 		end
-
-	x: INTEGER
 
 	s: STRING
 
@@ -59,8 +56,5 @@ feature
 				print (a_ex.message + "%N")
 			end
 		end
-
-invariant
-	invari: x >= 0
 
 end

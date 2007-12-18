@@ -10,7 +10,8 @@ compile_result 	ok
 c_compile_work
 execute_work	NONE exec_output
 execute_result ok
-compare		exec_output output
+if DOTNET compare		exec_output output1
+if not DOTNET compare		exec_output output
 
 cleanup_compile
 compile_frozen
@@ -18,7 +19,8 @@ compile_result 	ok
 c_compile_work
 execute_work	NONE exec_output1
 execute_result 	ok
-compare		exec_output1 output
+if DOTNET compare		exec_output output1
+if not DOTNET compare		exec_output output
 
 cleanup_compile
 compile_final_keep

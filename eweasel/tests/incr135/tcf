@@ -10,7 +10,7 @@ test_name 	cast-external-add-white-space
 test_description A class has an external function which specifies a cast of the return type (i.e., `external "C :EIF_INTEGER"').  After initial compilation where the system is frozen, system execution works but produces the wrong result.  Then some white space is added inside the Language_name portion of the external, leaving its semantics unchanged and the system is melted.  System execution then ends with a segmentation fault.
 
 copy_sub 	Ace $TEST Ace
-define		EXTERNAL_STRING "C :EIF_INTEGER | %"eif_except.h%""
+define		EXTERNAL_STRING "C :EIF_INTEGER | %"eif_main.h%""
 copy_sub 	test.e $CLUSTER test.e
 copy_raw 	test.h $CLUSTER test.h
 compile_frozen
@@ -23,7 +23,7 @@ execute_work	NONE exec_output1
 execute_result	ok
 compare		exec_output1 output
 
-define		EXTERNAL_STRING "C     :EIF_INTEGER | %"eif_except.h%""
+define		EXTERNAL_STRING "C     :EIF_INTEGER | %"eif_main.h%""
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
 compile_result 	ok

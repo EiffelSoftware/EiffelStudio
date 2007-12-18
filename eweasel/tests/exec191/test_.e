@@ -54,9 +54,8 @@ feature {NONE} -- Test
 					ba /= action_nothing and then
 					ra /= action_nothing
 				then
-						-- Exceptions in rescue are
-						-- flagged as such
-					a := action_exception
+						-- Exceptions in rescue are obselete
+					a := ra
 				end
 
 					-- Run real test

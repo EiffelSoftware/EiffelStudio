@@ -23,7 +23,7 @@ feature
      
    	try: INTEGER is
 		external "$EXTERNAL_STRING"
-		alias "eeocode"
+		alias "is_debug_mode"
       		end;
      
 end

@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	document_protocol: !STRING_GENERAL
+	document_protocol: !STRING_32
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		require
 			is_interface_usable: is_interface_usable
@@ -24,7 +24,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	document_description: !STRING_GENERAL
+	document_description: !STRING_32
 			-- Document short description
 		require
 			is_interface_usable: is_interface_usable
@@ -59,6 +59,29 @@ feature -- Basic operations
 			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
 			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
 		deferred
+		end
+
+	help_title (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL): !STRING_32
+			-- A human readable title for a help document, given a context id and section.
+			--
+			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
+			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
+		require
+			is_interface_usable: is_interface_usable
+			not_a_context_id_is_empty: not a_context_id.is_empty
+			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
+			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
+		local
+			l_result: STRING_32
+		do
+			create Result.make (50)
+			Result.append (a_context_id.as_string_32)
+			if {l_section: !STRING_GENERAL} a_section then
+				Result.append ((", ").as_string_32)
+				Result.append (l_section.as_string_32)
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
 		end
 
 feature -- Query

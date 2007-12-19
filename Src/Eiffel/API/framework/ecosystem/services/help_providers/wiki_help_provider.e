@@ -16,19 +16,22 @@ inherit
 			format_context
 		end
 
+create
+	make
+
 feature -- Access
 
-	document_protocol: !STRING_GENERAL
+	document_protocol: !STRING_32
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		once
-			create {!STRING_8} Result.make_empty
+			create Result.make_empty
 			Result.append ("wiki")
 		end
 
-	document_description: !STRING_GENERAL
+	document_description: !STRING_32
 			-- Document short description
 		once
-			create {!STRING_8} Result.make_empty
+			create Result.make_empty
 			Result.append ("Wiki")
 		end
 

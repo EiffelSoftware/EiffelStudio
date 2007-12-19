@@ -12,6 +12,31 @@ deferred class
 
 inherit
 	HELP_PROVIDER_I
+		redefine
+			help_title
+		end
+
+inherit {NONE}
+	CURL_ACCESS
+		export
+			{NONE} all
+		end
+
+feature -- Access
+
+	help_title (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL): !STRING_32
+			-- A human readable title for a help document, given a context id and section.
+			--
+			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
+			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
+		do
+			if is_accessible and then {l_title: !STRING_32} document_title (full_url (a_context_id, a_section), True) then
+					-- `is_accessible' require calling {CURL_ACCESS}.make
+				Result := l_title
+			else
+				Result := Precursor {HELP_PROVIDER_I} (a_context_id, a_section)
+			end
+		end
 
 feature {NONE} -- Access
 
@@ -60,10 +85,53 @@ feature {NONE} -- Query
 			Result.append (format_context_id (a_context_id).as_string_8)
 			if {l_section: !STRING_GENERAL} a_section and then not l_section.is_empty then
 				Result.append_character (section_url_separator)
-				Result.append (format_context_session (l_section).as_string_8)
+				Result.append (format_context_section (l_section).as_string_8)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
+		end
+
+	document_title (a_url: !STRING_GENERAL; a_trim: BOOLEAN): ?STRING_32
+			-- Attempts to retrieve a document title from a URL
+			--
+			-- `a_url': URL to fetch a document title from
+			-- `a_trim': True to remove any trailing hiephenated info text from the title " - Info Text".
+			-- `Result': A title, or Void if not title coule be retrieved from a URL.
+		require
+			is_accessible: is_accessible -- Need to call `make' from {CURL_ACCESS}.
+		local
+			l_curl: like curl
+			l_data: !CURL_STRING
+			l_result: ?STRING_GENERAL
+			l_regex: like title_extract_regex
+			i: INTEGER
+		do
+			l_curl := curl
+			l_curl.setopt_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_url, a_url)
+			l_curl.setopt_integer (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_post, 0)
+
+			create l_data.make_empty
+			curl.setopt_curl_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_data)
+
+			perform
+
+			l_result := l_data.string
+			if l_result /= Void and then not l_result.is_empty then
+				l_regex := title_extract_regex
+				l_regex.match (l_result.as_string_8)
+				if l_regex.has_matched then
+					Result := l_regex.captured_substring (1).as_string_32
+					if a_trim then
+						i := Result.last_index_of ('-', Result.count)
+						if i > 1 then
+							Result.keep_head (i - 1)
+							Result.prune_all_trailing (' ')
+						end
+					end
+				end
+			end
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
 feature -- Basic operations
@@ -85,8 +153,17 @@ feature {NONE} -- Basic operations
 			-- `a_url': The URL to launch in a web-browser.
 		require
 			not_a_url_is_empty: not a_url.is_empty
+		local
+			l_cmd: STRING_8
 		do
-			if {l_process: !PROCESS} (create {PROCESS_FACTORY}).process_launcher ("cmd /C start " + a_url, Void, Void) then
+			if {PLATFORM}.is_windows then
+					-- Use start command to open a URL
+				l_cmd := "cmd /C start " + a_url
+			else
+					-- Simple python script to open a URL, for now.
+				l_cmd := "python -c %"import webbrowser; webbrowser.open ('" + a_url + "')%""
+			end
+			if {l_process: !PROCESS} (create {PROCESS_FACTORY}).process_launcher (l_cmd, Void, Void) then
 				l_process.set_hidden (True)
 				l_process.launch
 			end
@@ -94,7 +171,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Formatting
 
-	format_context_id (a_context_id: !STRING_GENERAL): !STRING_GENERAL
+	format_context_id (a_context_id: !STRING_GENERAL): !STRING_8
 			-- Formats the context id so it may be used in a URL.
 			--
 			-- `a_context_id': A help content context identifier to format
@@ -107,7 +184,7 @@ feature {NONE} -- Formatting
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context_session (a_section: !STRING_GENERAL): !STRING_GENERAL
+	format_context_section (a_section: !STRING_GENERAL): !STRING_8
 			-- Formats the context section so it may be used in a URL.
 			--
 			-- `a_section': A help content context section to format
@@ -120,7 +197,7 @@ feature {NONE} -- Formatting
 			not_result_id_is_empty: not Result.is_empty
 		end
 
-	format_context (a_context: !STRING_GENERAL): !STRING_GENERAL
+	format_context (a_context: !STRING_GENERAL): !STRING_8
 			-- Formats the context so it may be used in a URL.
 			--
 			-- `a_context': A help content context of session context identifier to format
@@ -128,9 +205,28 @@ feature {NONE} -- Formatting
 		require
 			not_a_context_id_is_empty: not a_context.is_empty
 		do
-			Result := a_context.twin
+			Result ?= a_context.as_string_8
+			if Result = a_context then
+				Result := Result.twin
+			end
 		ensure
 			not_result_id_is_empty: not Result.is_empty
+		end
+
+feature {NONE} -- Regular expressions
+
+	title_extract_regex: !RX_PATTERN_MATCHER
+			-- Regular expression to extract an HTML title
+		local
+			l_regex: !RX_PCRE_MATCHER
+		once
+			create l_regex.make
+			l_regex.set_caseless (True)
+			l_regex.compile ("\<TITLE\>([^<]*)\<\/TITLE\>")
+
+			Result ?= l_regex
+		ensure
+			result_is_compiled: Result.is_compiled
 		end
 
 ;indexing

@@ -223,11 +223,15 @@ feature {NONE} -- Query
 		require
 			is_context_valid: is_context_valid (a_context)
 		do
-			create {!STRING_32} Result.make (100)
-			Result.append (a_context.help_context_id)
-			if {l_section: !STRING_GENERAL} a_context.help_context_section then
-				Result.append (", ")
-				Result.append (l_section)
+			if {l_provider: !HELP_PROVIDER_I} help_providers.service.help_provider (a_context.help_provider) then
+				Result := l_provider.help_title (a_context.help_context_id, a_context.help_context_section)
+			else
+				create {!STRING_32} Result.make (100)
+				Result.append (a_context.help_context_id)
+				if {l_section: !STRING_GENERAL} a_context.help_context_section then
+					Result.append (", ")
+					Result.append (l_section)
+				end
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

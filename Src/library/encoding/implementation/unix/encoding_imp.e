@@ -249,7 +249,13 @@ feature {NONE} -- Implementation
 			"[
 				iconv_t cd;
 				cd = iconv_open ($a_to_codeset, $a_from_codeset);
-				return (EIF_BOOLEAN) (cd != (iconv_t)(-1));
+				if (cd != (iconv_t)(-1)){
+					if (iconv_close(cd)) {
+						perror("iconv_close");
+					}
+					return EIF_TRUE;
+				}else
+					return EIF_FALSE;
 			]"
 		end
 

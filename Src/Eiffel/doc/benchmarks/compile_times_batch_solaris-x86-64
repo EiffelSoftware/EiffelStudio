@@ -36,6 +36,10 @@ intermediate result:
 275.33u 9.15s 5:58.79 79.2%
 275.02u 9.09s 6:01.48 78.5%
 
+6.0.0813 RTEA (2439 classes):
+271.81u 9.13s 5:36.48 83.4%
+271.82u 9.09s 5:29.79 85.1%
+
 #Normal compilation:
 6.0.0527 RTEA (new EiffelBase):
 262.98u 8.02s 5:04.18 89.0%

@@ -58,8 +58,8 @@ feature -- Basic operations
 				end
 			end
 		ensure
-			result_is_interface_usable: Result.is_interface_usable
-			result_is_help_available: Result.is_help_available
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_is_help_available: Result /= Void implies Result.is_help_available
 		end
 
 feature {NONE} -- Helpers

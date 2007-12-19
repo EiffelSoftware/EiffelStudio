@@ -1340,8 +1340,9 @@ feature -- Metadata description
 					l_list.force (id)
 					l_parent_class := l_parent_type.associated_class
 					if
-						not l_parent_class.is_single and
-						(not l_parent_class.is_external or else l_parent_class.is_interface)
+						l_parent_class.is_interface or else
+						not l_parent_type.is_generated_as_single_type and then
+						not l_parent_type.is_external
 					then
 							-- Add parent interfaces only.
 						l_parents.put (actual_class_type_token (l_parent_type.static_type_id), i)

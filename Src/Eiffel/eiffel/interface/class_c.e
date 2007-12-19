@@ -1352,11 +1352,14 @@ feature -- Parent checking
 			loop
 				parent_actual_type := l_area.item (i)
 				l_parent_class := parent_actual_type.associated_class
-				l_has_external_parent := l_parent_class.is_external and then not l_parent_class.is_interface
+				l_has_external_parent := l_parent_class.is_external and then not l_parent_class.is_interface and then not l_parent_class.is_basic
 				if l_has_external_parent then
 					has_external_main_parent := True
 				end
-				if l_has_external_parent or l_parent_class.is_single then
+					-- Class type is generated as single if it has an external parent
+					-- or its parent is a single reference type (parent class may be single
+					-- in case it is expanded, but parent type is always reference)
+				if l_has_external_parent or else l_parent_class.is_single then
 					if l_single_classes = Void then
 						create l_single_classes.make
 					end

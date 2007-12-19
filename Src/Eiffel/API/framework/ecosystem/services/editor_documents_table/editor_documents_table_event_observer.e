@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		A specialized editor document used to handle Eiffel classes.
+		An observer for events implemented on a {EDITOR_DOCUMENTS_TABLE_S} session interface.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,26 +8,47 @@ indexing
 	revision: "$Revision $"
 
 deferred class
-	EIFFEL_CLASS_EDITOR_DOCUMENT_I
+	EDITOR_DOCUMENTS_TABLE_EVENT_OBSERVER
 
 inherit
-	EDITOR_DOCUMENT_I
+	EVENT_OBSERVER_I
 
-feature -- Access
+feature {EDITOR_DOCUMENTS_TABLE_S} -- Event handlers
 
-	moniker: STRING_32
-			-- Document moniker
-		do
-			Result := class_i.file_name.out.as_string_32
-		end
-
-	class_i: CLASS_I
-			-- Class associated with open document
+	on_document_opened (a_document: EDITOR_DOCUMENT_I)
+			-- Events called when a document is opened in the editor.
 		require
 			is_interface_usable: is_interface_usable
-		deferred
-		ensure
-			result_attached: Result /= Void
+			a_document_attached: a_document /= Void
+			a_document_is_interface_usable: a_document.is_interface_usable
+		do
+		end
+
+	on_document_closed (a_document: EDITOR_DOCUMENT_I)
+			-- Events called when a document is closed in the editor.
+		require
+			is_interface_usable: is_interface_usable
+			a_document_attached: a_document /= Void
+			a_document_is_interface_usable: a_document.is_interface_usable
+		do
+		end
+
+	on_document_activated (a_document: EDITOR_DOCUMENT_I)
+			-- Events called when a document is switched to in the editor.
+		require
+			is_interface_usable: is_interface_usable
+			a_document_attached: a_document /= Void
+			a_document_is_interface_usable: a_document.is_interface_usable
+		do
+		end
+
+	on_document_deactivated (a_document: EDITOR_DOCUMENT_I)
+			-- Events called when a document is switched from in the editor.
+		require
+			is_interface_usable: is_interface_usable
+			a_document_attached: a_document /= Void
+			a_document_is_interface_usable: a_document.is_interface_usable
+		do
 		end
 
 ;indexing

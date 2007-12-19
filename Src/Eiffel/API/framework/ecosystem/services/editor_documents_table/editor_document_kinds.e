@@ -1,34 +1,27 @@
 indexing
 	description: "[
-		A specialized editor document used to handle Eiffel classes.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class
-	EIFFEL_CLASS_EDITOR_DOCUMENT_I
-
-inherit
-	EDITOR_DOCUMENT_I
+class
+	EDITOR_DOCUMENT_KINDS
 
 feature -- Access
 
-	moniker: STRING_32
-			-- Document moniker
-		do
-			Result := class_i.file_name.out.as_string_32
-		end
-
-	class_i: CLASS_I
-			-- Class associated with open document
-		require
-			is_interface_usable: is_interface_usable
-		deferred
+	frozen eiffel_class_editor_kind: UUID
+		once
+			create Result.make_from_string (eiffel_class_editor_string)
 		ensure
 			result_attached: Result /= Void
 		end
+
+feature -- Constants
+
+	eiffel_class_editor_string: STRING_8 = "E1FFE1CE-0E74-4DEB-B363-BAA6AC8E8E1A"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

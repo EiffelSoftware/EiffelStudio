@@ -11,7 +11,9 @@ deferred class
 	EDITOR_DOCUMENTS_TABLE_S
 
 inherit
-	USEABLE_I
+	SERVICE_I
+
+	EVENT_OBSERVER_CONNECTION_I [!EDITOR_DOCUMENTS_TABLE_EVENT_OBSERVER]
 
 feature -- Access
 
@@ -40,6 +42,17 @@ feature -- Access
 	last_active_document: EDITOR_DOCUMENT_I
 			-- Last active document in last active window.
 			-- Note: There may not be a document open in the editor, in which case Void will be returned.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			last_opened_document_set: Result /= Void implies last_opened_document = Result
+		end
+
+	last_opened_document: EDITOR_DOCUMENT_I
+			-- Last opened document
+			-- Note: Will be Void when no documents have been opened or all documents are closed.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -114,6 +127,21 @@ feature -- Query
 		deferred
 		end
 
+feature {NONE} -- Query
+
+	events (a_observer: !EDITOR_DOCUMENTS_TABLE_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
+			-- List of events and associated action.
+			--
+			-- `a_observer': Event observer interface to bind agent actions to.
+			-- `Result': A list of event types paired with a associated action on the passed observer
+		do
+			create Result.make (4)
+			Result.put_last ([document_activated_event, agent a_observer.on_document_activated])
+			Result.put_last ([document_closed_event, agent a_observer.on_document_closed])
+			Result.put_last ([document_deactivated_event, agent a_observer.on_document_deactivated])
+			Result.put_last ([document_opened_event, agent a_observer.on_document_opened])
+		end
+
 feature -- Basic operation
 
 	open_document_via_stone (a_stone: STONE; a_window: EB_DEVELOPMENT_WINDOW)
@@ -132,7 +160,7 @@ feature -- Basic operation
 
 feature -- Events
 
-	document_opened_event: EVENT_TYPE [TUPLE [EDITOR_DOCUMENT_I]]
+	document_opened_event: EVENT_TYPE [TUPLE [document: EDITOR_DOCUMENT_I]]
 			-- Events called when a document is opened in the editor.
 		require
 			is_interface_usable: is_interface_usable
@@ -141,7 +169,7 @@ feature -- Events
 			result_attached: Result /= Void
 		end
 
-	document_closed_event: EVENT_TYPE [TUPLE [EDITOR_DOCUMENT_I]]
+	document_closed_event: EVENT_TYPE [TUPLE [document: EDITOR_DOCUMENT_I]]
 			-- Events called when a document is closed in the editor.
 		require
 			is_interface_usable: is_interface_usable
@@ -150,7 +178,7 @@ feature -- Events
 			result_attached: Result /= Void
 		end
 
-	document_activated_event: EVENT_TYPE [TUPLE [EDITOR_DOCUMENT_I]]
+	document_activated_event: EVENT_TYPE [TUPLE [document: EDITOR_DOCUMENT_I]]
 			-- Events called when a document is switched to in the editor.
 		require
 			is_interface_usable: is_interface_usable
@@ -159,7 +187,7 @@ feature -- Events
 			result_attached: Result /= Void
 		end
 
-	document_deactivated_event: EVENT_TYPE [TUPLE [EDITOR_DOCUMENT_I]]
+	document_deactivated_event: EVENT_TYPE [TUPLE [document: EDITOR_DOCUMENT_I]]
 			-- Events called when a document is switched from in the editor.
 		require
 			is_interface_usable: is_interface_usable

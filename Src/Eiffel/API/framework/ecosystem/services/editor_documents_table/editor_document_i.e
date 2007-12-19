@@ -13,7 +13,7 @@ deferred class
 	EDITOR_DOCUMENT_I
 
 inherit
-	USEABLE_I
+	USABLE_I
 
 feature -- Access
 
@@ -36,13 +36,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	data: ANY
-			-- Document custom data
-		require
-			is_interface_usable: is_interface_usable
-		deferred
-		end
-
 	window: EB_DEVELOPMENT_WINDOW
 			-- Document's host window
 		require
@@ -53,7 +46,32 @@ feature -- Access
 			not_result_is_recycled: not Result.is_recycled
 		end
 
-feature {NONE} -- Status report
+	current_editor: ANY
+			-- Active editor of document, which may be Void in the case of no editor
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+	editors: DS_BILINEAR [ANY]
+			-- List of editors modifying the document
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
+			result_has_current_editor: Result.has (current_editor)
+		end
+
+	data: ANY
+			-- Document custom data
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+feature -- Status report
 
 	is_dirty: BOOLEAN
 			-- Indicates if the document has been modified

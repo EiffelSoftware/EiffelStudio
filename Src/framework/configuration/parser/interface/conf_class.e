@@ -49,6 +49,9 @@ feature {NONE} -- Initialization
 			path := a_path
 			is_valid := True
 			check_changed
+				--| FIXME IEK Optimize `name' retrieval by estimating class name based on file name
+				-- instead of parsing EVERY single class in the universe.
+			--name := a_file_name.split ('.').first.as_upper
 
 			if not is_error then
 				check
@@ -360,7 +363,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			path := a_path
 			check_changed
 
-				-- do not loose information if we where renamed as we build a new class if we were renamed and we want the old information
+				-- do not lose information if we were renamed as we build a new class if we are renamed and we want the old information
 				-- to deal with removed overrides
 			if not is_renamed then
 				if not is_error then
@@ -402,14 +405,16 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_name: like name
+			l_classname_finder: like classname_finder
 		do
 			reset_error
 			create l_file.make (full_file_name)
 			if l_file.exists then
+				l_classname_finder := classname_finder
 				l_file.open_read
-				classname_finder.parse (l_file)
+				l_classname_finder.parse (l_file)
 				l_file.close
-				l_name := classname_finder.classname
+				l_name := l_classname_finder.classname
 				if l_name = Void then
 					date := -1
 					set_error (create {CONF_ERROR_CLASSN}.make (full_file_name, group.target.system.file_name))

@@ -111,9 +111,9 @@ feature {NONE} -- Implementation
 		do
 				-- The contract in the editor library is insuficient.
 				-- Ideally `is_initialized' is needed as precondition of almost each call.
-				-- Here `is_recycled' is not contract driven protection in the case that
+				-- Here `is_initialized' is not contract driven protection in the case that
 				-- the editor has been recycled.
-			if editor /= Void and then not editor.is_initialized  then
+			if editor /= Void and then editor.is_initialized  then
 				editor.clear_window
 			end
 		end

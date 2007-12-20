@@ -14,7 +14,7 @@
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
-		<library name="parser" location="C:\work\61dev\framework\parser\parser.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<library name="printer" location="$EIFFEL_SRC\framework\patterns\printer\printer.ecf" readonly="true"/>
 		<cluster name="visitor_factory" location=".\" recursive="true">
 			<file_rule>

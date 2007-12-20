@@ -101,9 +101,9 @@ feature -- Metric element output
 				writer.add (a_metric_name)
 			else
 				if a_metric_name.is_empty then
-					writer.add_error (create{SYNTAX_ERROR}.init, metric_names.te_no_metric)
+					writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), metric_names.te_no_metric)
 				else
-					writer.add_error (create{SYNTAX_ERROR}.init, a_metric_name)
+					writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), a_metric_name)
 				end
 			end
 		end
@@ -120,9 +120,9 @@ feature -- Metric element output
 				end
 			else
 				if a_criterion.name.is_empty then
-					writer.add_error (create{SYNTAX_ERROR}.init, metric_names.te_no_metric)
+					writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), metric_names.te_no_metric)
 				else
-					writer.add_error (create{SYNTAX_ERROR}.init, a_criterion.name)
+					writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), a_criterion.name)
 				end
 
 			end
@@ -171,7 +171,7 @@ feature -- Metric element output
 	put_error (a_error_msg: STRING_GENERAL) is
 			-- Display error message `a_error_msg'.
 		do
-			writer.add_error (create{SYNTAX_ERROR}.init, a_error_msg.as_string_8)
+			writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), a_error_msg.as_string_8)
 		end
 
 	put_normal_text (a_text: STRING_GENERAL) is
@@ -188,7 +188,7 @@ feature -- Metric element output
 		do
 			prepare_output
 			if not a_domain_item.is_valid then
-				writer.add_error (create{SYNTAX_ERROR}.init, a_domain_item.string_representation)
+				writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), a_domain_item.string_representation)
 			else
 				writer.add_editor_tokens (token_name_from_domain_item (a_domain_item))
 			end

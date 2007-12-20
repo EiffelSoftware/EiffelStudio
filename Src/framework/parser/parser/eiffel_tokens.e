@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.6"
+	generator: "geyacc version 3.7"
 
 class EIFFEL_TOKENS
 

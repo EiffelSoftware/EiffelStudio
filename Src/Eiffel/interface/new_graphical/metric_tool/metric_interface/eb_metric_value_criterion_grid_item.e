@@ -211,9 +211,9 @@ feature{NONE} -- Implementation
 				if metric_manager.is_metric_calculatable (l_metric_name) then
 					l_writer.add (ti_double_quote + l_metric_name + ti_double_quote)
 				elseif l_metric_name.is_empty then
-				l_writer.add_error (create {SYNTAX_ERROR}.init, metric_names.te_no_metric)
+				l_writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), metric_names.te_no_metric)
 				else
-					l_writer.add_error (create {SYNTAX_ERROR}.init, ti_double_quote + l_metric_name + ti_double_quote)
+					l_writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), ti_double_quote + l_metric_name + ti_double_quote)
 				end
 				if not domain.is_empty then
 					l_writer.add (ti_comma)

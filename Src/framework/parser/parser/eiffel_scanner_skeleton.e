@@ -218,7 +218,7 @@ feature {NONE} -- Error handling
 			-- A fatal error occurred.
 			-- Log `a_message' and raise an exception.
 		do
-			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, a_message, False))
+			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, a_message))
 		end
 
 	report_character_missing_quote_error (char: STRING) is
@@ -226,7 +226,7 @@ feature {NONE} -- Error handling
 		require
 			char_not_void: char /= Void
 		do
-			report_one_error (create {BAD_CHARACTER}.make (line, column, filename, "", False))
+			report_one_error (create {BAD_CHARACTER}.make (line, column, filename, ""))
 
 				-- Dummy code (for error recovery) follows:
 			token_buffer.append_character ('a')
@@ -236,7 +236,7 @@ feature {NONE} -- Error handling
 	report_string_bad_special_character_error is
 			-- Invalid special character after % in manisfest string.
 		do
-			report_one_error (create {STRING_EXTENSION}.make (line, column, filename, "", False))
+			report_one_error (create {STRING_EXTENSION}.make (line, column, filename, ""))
 
 				-- Dummy code (for error recovery) follows:
 			token_buffer.append_character ('a')
@@ -245,7 +245,7 @@ feature {NONE} -- Error handling
 	report_string_invalid_code_error (a_code: INTEGER) is
 			-- Invalid character code after % in manisfest string.
 		do
-			report_one_error (create {STRING_EXTENSION}.make (line, column, filename, "", False))
+			report_one_error (create {STRING_EXTENSION}.make (line, column, filename, ""))
 
 				-- Dummy code (for error recovery) follows:
 			token_buffer.append_character ('a')
@@ -256,7 +256,7 @@ feature {NONE} -- Error handling
 		require
 			a_string_not_void: a_string /= Void
 		do
-			report_one_error (create {STRING_UNCOMPLETED}.make (line, column, filename, "", False))
+			report_one_error (create {STRING_UNCOMPLETED}.make (line, column, filename, ""))
 
 				-- Dummy code (for error recovery) follows:
 			if a_string.is_empty then
@@ -271,7 +271,7 @@ feature {NONE} -- Error handling
 		require
 			a_string_not_void: a_string /= Void
 		do
-			report_one_error (create {VERBATIM_STRING_UNCOMPLETED}.make (line, column, filename, "", False))
+			report_one_error (create {VERBATIM_STRING_UNCOMPLETED}.make (line, column, filename, ""))
 
 				-- Dummy code (for error recovery) follows:
 			if a_string.is_empty then
@@ -291,20 +291,19 @@ feature {NONE} -- Error handling
 			report_one_error (
 				create {SYNTAX_ERROR}.make (line, column, filename,
 					"Identifier, manifest string or free operator is " + a_text.count.out +
-					" characters long that exceeds limit of " + maximum_string_length.out + " characters.",
-					False))
+					" characters long that exceeds limit of " + maximum_string_length.out + " characters."))
 		end
 
 	report_unknown_token_error (a_token: CHARACTER) is
 			-- Unknown token.
 		do
-			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "", False))
+			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, ""))
 		end
 
 	report_invalid_integer_error (a_text: STRING) is
 			-- Invalid integer
 		do
-			report_one_error (create {VIIN}.make (line, column, filename, "", False))
+			report_one_error (create {VIIN}.make (line, column, filename, ""))
 		end
 
 feature {NONE} -- Implementation

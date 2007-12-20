@@ -10,23 +10,24 @@ class
 
 inherit
 	ERROR
+		redefine
+			file_name
+		end
 
-create {ERROR_HANDLER}
-	init
+	SYNTAX_MESSAGE
 
 create
-	make
+	make, init
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: STRING; m: STRING; u: BOOLEAN) is
+	make (s, e: INTEGER; f: like file_name; m: STRING) is
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void
 			m_not_void: m /= Void
 		do
-			line := s
-			column := e
+			set_position (s, e)
 			file_name := f
 			error_message := m
 		ensure
@@ -36,33 +37,35 @@ feature {NONE} -- Initialization
 			error_message_set: error_message = m
 		end
 
-	init is
-			-- Dummy implementation, kept for backward compatibility.
+	init (a_parser: EIFFEL_PARSER) is
+			-- Initialize `line' and `column' from `a_parser'.
+		require
+			a_parser_not_void: a_parser /= Void
+		local
+			a_filename: FILE_NAME
 		do
-			file_name := ""
-			error_message := ""
+			create a_filename.make_from_string (a_parser.filename)
+			make (a_parser.line, a_parser.column, a_filename, a_parser.error_message)
 		end
 
-feature -- Access
-
-	line: INTEGER
-			-- Line number
-
-	column: INTEGER
-			-- Column number
-
-	file_name: STRING
-			-- File name containing text with syntax error
+feature -- Properties
 
 	error_message: STRING
-			-- Syntax error message
+			-- Specify syntax issue message.
 
-feature {NONE} -- Implementation
+	file_name: STRING
+			-- Path to file where syntax issue happened
+
+	code: STRING is "Syntax Error"
+			-- Error code
 
 	syntax_message: STRING is
-			-- Syntax error message, kept for backward compatibility.
+			-- Specific syntax message.
+			-- (By default, it is empty)
 		do
-			Result := error_message
+			Result := ""
+		ensure
+			non_void_result: Result /= Void
 		end
 
 invariant

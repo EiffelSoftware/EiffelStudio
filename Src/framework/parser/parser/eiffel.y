@@ -908,9 +908,9 @@ Inheritance: -- Empty
 				else
 						-- Raise error as conforming inheritance has already been specified
 					if non_conforming_inheritance_flag then
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Conforming inheritance clause must come before non conforming inheritance clause", False))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Conforming inheritance clause must come before non conforming inheritance clause"))
 					else
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one conforming inheritance clause allowed per class", False))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one conforming inheritance clause allowed per class"))
 					end
 				end
 			}
@@ -925,9 +925,9 @@ Inheritance: -- Empty
 				else
 						-- Raise error as conforming inheritance has already been specified
 					if non_conforming_inheritance_flag then
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Conforming inheritance clause must come before non conforming inheritance clause", False))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Conforming inheritance clause must come before non conforming inheritance clause"))
 					else
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one conforming inheritance clause allowed per class", False))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one conforming inheritance clause allowed per class"))
 					end
 				end
 			}
@@ -941,7 +941,7 @@ Inheritance: -- Empty
 					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type ($3, Void, Void))
 				else
 						-- Raise error as non conforming inheritance has already been specified
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one non-conforming inheritance clause allowed per class", False))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one non-conforming inheritance clause allowed per class"))
 				end
 			}
 		Add_counter Parent_list Remove_counter
@@ -1013,7 +1013,7 @@ Rename: TE_RENAME
 				if is_constraint_renaming then
 					report_one_error (
 						create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
-						"Empty rename clause.", False))
+						"Empty rename clause."))
 				else
 					error_handler.insert_warning (
 							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
@@ -1385,7 +1385,7 @@ Instruction_impl: Creation
 					-- but this complicates the grammar.
 				if has_type then
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
-						filename, "Expression cannot be used as an instruction", False))
+						filename, "Expression cannot be used as an instruction"))
 				elseif $1 /= Void then
 					$$ := new_call_instruction_from_expression ($1)
 				end

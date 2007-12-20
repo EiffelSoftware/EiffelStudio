@@ -43,6 +43,7 @@ feature -- Processing
 			on_process_directory (a_cluster, a_path)
 			l_path := a_cluster.location.build_path (a_path, "")
 			create l_dir.make (l_path)
+			create l_full_path.make (128)
 
 			if not l_dir.is_readable then
 				add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
@@ -59,7 +60,12 @@ feature -- Processing
 						i > cnt
 					loop
 						l_name := l_files [i]
-						if a_file_rule.is_included (a_path + l_cluster_separator + l_name) then
+							-- Reuse `l_full_path' string buffer.
+						l_full_path.keep_head (0)
+						l_full_path.append (a_path)
+						l_full_path.append (l_cluster_separator)
+						l_full_path.append (l_name)
+						if a_file_rule.is_included (l_full_path) then
 							handle_class (l_name, a_path, a_cluster)
 						end
 						i := i + 1
@@ -74,9 +80,14 @@ feature -- Processing
 						until
 							i > cnt
 						loop
-							l_full_path := a_path + l_cluster_separator + l_subdirs [i]
+								-- Reuse `l_full_path' string buffer.
+							l_full_path.keep_head (0)
+							l_full_path.append (a_path)
+							l_full_path.append (l_cluster_separator)
+							l_full_path.append (l_subdirs [i])
 							if a_file_rule.is_included (l_full_path) then
-								process_cluster_recursive (l_full_path, a_cluster, a_file_rule)
+									-- We need a copy of the string as it is stored as a reference indirectly from this routine.
+								process_cluster_recursive (l_full_path.string, a_cluster, a_file_rule)
 							end
 							i := i + 1
 						end

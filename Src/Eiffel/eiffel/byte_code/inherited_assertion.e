@@ -657,7 +657,6 @@ feature -- inherited postcondition
 			old_expressions: LINKED_LIST [UN_OLD_B]
 			item: UN_OLD_B
 			position: INTEGER
-			l_il_generation: BOOLEAN
 		do
 			position := pos
 			from

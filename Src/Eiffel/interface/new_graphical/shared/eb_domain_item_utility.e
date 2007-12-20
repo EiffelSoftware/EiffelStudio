@@ -16,7 +16,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_ID_SOLUTION
 
 	EB_SHARED_EDITOR_TOKEN_UTILITY
@@ -192,7 +192,7 @@ feature -- Access
 					-- For invalid item, we display its name in error style.
 				l_writer := token_writer
 				l_writer.new_line
-				l_writer.add_error (create{SYNTAX_ERROR}.init, a_item.string_representation)
+				l_writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), a_item.string_representation)
 				Result := l_writer.last_line.content
 			end
 		ensure

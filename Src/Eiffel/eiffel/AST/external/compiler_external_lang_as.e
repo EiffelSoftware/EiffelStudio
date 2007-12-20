@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 		local
 			ext_error: EXTERNAL_SYNTAX_ERROR
 		do
-			create ext_error.init
+			create ext_error.init (eiffel_parser)
 			ext_error.set_column (start_p)
 			ext_error.set_external_error_message (msg)
 			Error_handler.insert_error (ext_error)

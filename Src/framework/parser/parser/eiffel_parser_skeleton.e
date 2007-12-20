@@ -698,7 +698,7 @@ feature {NONE} -- Instruction factory
 			end
 			if call = Void then
 					-- Report error.
-				report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
+				report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction"))
 			else
 					-- Make a call instruction.
 				Result := ast_factory.new_instr_call_as (call)
@@ -712,7 +712,7 @@ feature {AST_FACTORY} -- Error handling
 		local
 			an_error: BASIC_GEN_TYPE_ERR
 		do
-			create an_error.make (line, column, filename, "", False)
+			create an_error.make (line, column, filename, "")
 			report_one_error (an_error)
 		end
 
@@ -726,7 +726,7 @@ feature {AST_FACTORY} -- Error handling
 		do
 			create an_error.make (line, column, filename,
 				"Specified type %"" + a_type.dump +
-					"%" is not a valid type for real constant %"" + a_real + "%"", False)
+					"%" is not a valid type for real constant %"" + a_real + "%"")
 			report_one_error (an_error)
 		end
 
@@ -740,7 +740,7 @@ feature {AST_FACTORY} -- Error handling
 		do
 			create an_error.make (line, column, filename,
 				"Specified type %"" + a_type.dump +
-					"%" is not a valid type for integer constant %"" + an_int + "%"", False)
+					"%" is not a valid type for integer constant %"" + an_int + "%"")
 			report_one_error (an_error)
 		end
 
@@ -759,7 +759,7 @@ feature {AST_FACTORY} -- Error handling
 			else
 				l_message := "Integer value " + an_int + " is too large for any integer type."
 			end
-			create an_error.make (line, column, filename, l_message, False)
+			create an_error.make (line, column, filename, l_message)
 			report_one_error (an_error)
 		end
 
@@ -778,7 +778,7 @@ feature {AST_FACTORY} -- Error handling
 			else
 				l_message := "Integer value " + an_int + " is too small for any integer type."
 			end
-			create an_error.make (line, column, filename, l_message, False)
+			create an_error.make (line, column, filename, l_message)
 			report_one_error (an_error)
 		end
 
@@ -791,7 +791,7 @@ feature {AST_FACTORY} -- Error handling
 			an_error: BAD_CHARACTER
 		do
 			l_message := "Character code " + a_code + " is too large for CHARACTER_32."
-			create an_error.make (line, column, filename, l_message, False)
+			create an_error.make (line, column, filename, l_message)
 			report_one_error (an_error)
 		end
 
@@ -808,7 +808,7 @@ feature {AST_FACTORY} -- Error handling
 			-- A syntax error has been detected.
 			-- Print error message.
 		do
-			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "", False))
+			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, ""))
 		end
 
 feature{NONE} -- Roundtrip

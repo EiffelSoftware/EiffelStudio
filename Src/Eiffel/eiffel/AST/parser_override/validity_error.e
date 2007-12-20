@@ -19,31 +19,18 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: like file_name; error_mssage: STRING; u: BOOLEAN) is
+	make (s, e: INTEGER; f: like file_name; error_mssage: STRING) is
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void
 		do
 			set_position (s, e)
 			file_name := f
-			is_in_use_file := u
 			associated_class := system.current_class
 		ensure
 			line_set: line = s
 			column_set: column = e
 			file_name_set: file_name = f
-			is_in_use_file_set: is_in_use_file = u
-		end
-
-	init is
-			-- Initialize `line' and `column'.
-		local
-			p: like Eiffel_parser
-			a_filename: FILE_NAME
-		do
-			p := Eiffel_parser
-			create a_filename.make_from_string (p.filename)
-			make (p.line, p.column, a_filename, "", False)
 		end
 
 feature -- Properties
@@ -59,9 +46,6 @@ feature -- Properties
 		ensure
 			non_void_result: Result /= Void
 		end
-
-	is_in_use_file: BOOLEAN
-			-- Did error occurred when parsing `Use' clause of an Ace file.
 
 	associated_class: CLASS_C
 			-- Associate class, if any

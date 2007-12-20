@@ -83,7 +83,7 @@ feature -- Access
 
 	filename: STRING
 			-- Current parsed file.
-	
+
 	root_node: EXTERNAL_EXTENSION_AS
 			-- Result of parsing
 
@@ -92,7 +92,7 @@ feature -- Access
 
 	external_syntax_error: SYNTAX_ERROR
 			-- Current syntax error if any.
-			
+
 	has_error: BOOLEAN is
 			-- Did an error occcur at last parsing?	
 		do
@@ -126,8 +126,7 @@ feature {NONE} -- Error handling
 	report_error (a_message: STRING) is
 			-- A syntax error has been detected.
 		do
-			create external_syntax_error.make (file_line,
-				 position, filename, "", False)
+			create external_syntax_error.make (file_line, position, filename, "")
 		ensure then
 			has_error: has_error
 		end

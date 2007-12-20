@@ -55,6 +55,14 @@ inherit
 			{NONE} all
 		end
 
+		-- FIXME: we are only using it to generate the errors in `new_expr_address_as' and `new_class_as'
+		-- for reporting unsupported constructs. Ideally we need a different way of generating errors,
+		-- for example, by making the parser aware of such limitations.
+	SHARED_EIFFEL_PARSER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	new_array_as (exp: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): COMPILER_ARRAY_AS is
@@ -104,7 +112,7 @@ feature -- Access
 
 					-- Check for Concurrent Eiffel which is not yet supported
 				if Result.is_separate then
-					error_handler.insert_error (create {SEPARATE_SYNTAX_ERROR}.init)
+					error_handler.insert_error (create {SEPARATE_SYNTAX_ERROR}.init (eiffel_parser))
 				end
 			end
 		end
@@ -153,7 +161,7 @@ feature -- Access
 	new_expr_address_as (e: EXPR_AS; a_as, l_as, r_as: SYMBOL_AS): EXPR_ADDRESS_AS is
 		do
 			if not system.address_expression_allowed then
-				error_handler.insert_error (create {SYNTAX_ERROR}.init)
+				error_handler.insert_error (create {SYNTAX_ERROR}.init (eiffel_parser))
 			elseif e /= Void then
 				create Result.initialize (e, a_as, l_as, r_as)
 			end
@@ -359,7 +367,7 @@ feature {NONE} -- Validation
 			l_none_type_as ?= a_type
 			if l_none_type_as = Void then
 					-- Raise error.
-				create l_syntax_error.make (a_psr.line, a_psr.column, a_psr.filename, "Use 'inherit {NONE}' to specify non-conforming inheritance", False)
+				create l_syntax_error.make (a_psr.line, a_psr.column, a_psr.filename, "Use 'inherit {NONE}' to specify non-conforming inheritance")
 				a_psr.report_one_error (l_syntax_error)
 			end
 		end

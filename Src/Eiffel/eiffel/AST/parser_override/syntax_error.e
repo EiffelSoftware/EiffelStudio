@@ -19,14 +19,12 @@ inherit
 
 	SHARED_WORKBENCH
 
-	SHARED_EIFFEL_PARSER
-
 create
 	make, init
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: like file_name; m: STRING; u: BOOLEAN) is
+	make (s, e: INTEGER; f: like file_name; m: STRING) is
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void
@@ -35,25 +33,23 @@ feature {NONE} -- Initialization
 			set_position (s, e)
 			file_name := f
 			error_message := m
-			is_in_use_file := u
 			associated_class := system.current_class
 		ensure
 			line_set: line = s
 			column_set: column = e
 			file_name_set: file_name = f
 			error_message_set: error_message = m
-			is_in_use_file_set: is_in_use_file = u
 		end
 
-	init is
-			-- Initialize `line' and `column'.
+	init (a_parser: EIFFEL_PARSER) is
+			-- Initialize `line' and `column' from `a_parser'.
+		require
+			a_parser_not_void: a_parser /= Void
 		local
-			p: like Eiffel_parser
 			a_filename: FILE_NAME
 		do
-			p := Eiffel_parser
-			create a_filename.make_from_string (p.filename)
-			make (p.line, p.column, a_filename, p.error_message, False)
+			create a_filename.make_from_string (a_parser.filename)
+			make (a_parser.line, a_parser.column, a_filename, a_parser.error_message)
 		end
 
 feature -- Properties
@@ -75,9 +71,6 @@ feature -- Properties
 		ensure
 			non_void_result: Result /= Void
 		end
-
-	is_in_use_file: BOOLEAN
-			-- Did error occurred when parsing `Use' clause of an Ace file.
 
 	associated_class: CLASS_C
 			-- Associate class, if any

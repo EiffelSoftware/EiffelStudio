@@ -265,7 +265,7 @@ feature -- Access for Errors
 			end
 			check l_identifier_not_void: l_identifier /= Void end
 
-			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Errog VTGC1: Anchored types is are not allowed as a constraint:%N  %"like " + l_identifier + "%"", false)
+			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Errog VTGC1: Anchored types is are not allowed as a constraint:%N  %"like " + l_identifier + "%"")
 		end
 
 feature -- Value AST creation

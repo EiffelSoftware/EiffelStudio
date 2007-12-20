@@ -7,15 +7,52 @@ indexing
 class
 	SYNTAX_WARNING
 
+inherit
+	WARNING
+		redefine
+			file_name, has_associated_file
+		end
+
+	SYNTAX_MESSAGE
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: STRING; m: STRING) is
+	make (s, e: INTEGER; f: like file_name; m: STRING) is
 			-- Create a new SYNTAX_WARNING instance.
+		require
+			f_not_void: f /= Void
+			m_not_void: m /= Void
 		do
+			set_position (s, e)
+			warning_message := m
+			file_name := f
+		ensure
+			line_set: line = s
+			column_set: column = e
+			warning_message_set: warning_message = m
+			file_name_set: file_name = f
 		end
+
+feature -- Properties
+
+	warning_message: STRING
+			-- Specify syntax issue message.
+
+	file_name: STRING
+			-- Path to file where syntax issue happened
+
+	code: STRING is "Syntax Warning"
+			-- Error code
+
+	has_associated_file: BOOLEAN = True
+			-- Current is associated to a file/class
+
+
+invariant
+	warning_message_not_void: warning_message /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

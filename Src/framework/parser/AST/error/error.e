@@ -5,10 +5,142 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-class
+deferred class
 	ERROR
 
-feature
+feature -- Properties
+
+	line: INTEGER
+			-- Line number involved in error
+
+	column: INTEGER
+			-- Column number involved in error
+
+	file_name: STRING is
+			-- Path to file involved in error.
+			-- Could be Void if not a file specific error.
+		require
+			has_associated_file: has_associated_file
+		deferred
+		ensure
+			file_name_not_void: has_associated_file
+		end
+
+	code: STRING is
+			-- Code error
+		deferred
+		ensure
+			code_not_void: Result /= Void
+		end
+
+	subcode: INTEGER is
+			-- Subcode of error. `0' if none.
+		do
+		end
+
+	help_file_name: STRING is
+			-- Associated file name where error explanation is located.
+		do
+			Result := code
+		ensure
+			help_file_name_not_void: Result /= Void
+		end;
+
+	Error_string: STRING is
+		do
+			Result := "Error"
+		ensure
+			error_string_not_void: Result /= Void
+		end
+
+	has_associated_file: BOOLEAN is
+			-- Is current relative to a file?
+		do
+		end
+
+feature -- Access
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
+		do
+			Result := True
+		end
+
+feature -- Set position
+
+	set_location (a_location: LOCATION_AS) is
+			-- Initialize `line' and `column' from `a_location'
+		require
+			a_location_not_void: a_location /= Void
+		do
+			line := a_location.line
+			column := a_location.column
+		ensure
+			line_set: line = a_location.line
+			column_set: column = a_location.column
+		end
+
+	set_position (l, c: INTEGER) is
+			-- Set `line' and `column' with `l' and `c'.
+		require
+			l_non_negative: l >= 0
+			c_non_negative: c >= 0
+		do
+			line := l
+			column := c
+		ensure
+			line_set: line = l
+			column_set: column = c
+		end
+
+feature {NONE} -- Compute surrounding text around error
+
+	previous_line, current_line, next_line: STRING
+			-- Surrounding lines where error occurs.
+
+	has_source_text: BOOLEAN is
+			-- Did we get the source text?
+		do
+			Result := current_line /= Void
+		end
+
+	initialize_output is
+			-- Set `previous_line', `current_line' and `next_line' with their proper values
+			-- taken from file `file_name'.
+		require
+			file_name_not_void: file_name /= Void
+		local
+			file: PLAIN_TEXT_FILE
+			nb: INTEGER
+		do
+			current_line := Void
+			create file.make (file_name)
+			if file.exists then
+				file.open_read
+				from
+					nb := 1
+				until
+					nb > line or else file.end_of_file
+				loop
+					if nb >= line - 1 then
+						previous_line := current_line
+					end
+					file.read_line
+					nb := nb + 1
+					if nb >= line - 1 then
+						current_line := file.last_string.twin
+					end
+				end
+				if not file.end_of_file then
+					file.read_line
+					next_line := file.last_string.twin
+				end
+				file.close
+				check
+					current_line_not_void: current_line /= Void
+				end
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

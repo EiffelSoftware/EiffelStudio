@@ -207,15 +207,18 @@ feature -- Parsing
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+		local
+			l_ast_factory: like ast_factory
 		do
 			reset_nodes
 			File_buffer.set_file (a_file)
 			input_buffer := File_buffer
 			yy_load_input_buffer
 			filename := a_file.name
-			ast_factory.create_match_list (initial_match_list_size)
+			l_ast_factory := ast_factory
+			l_ast_factory.create_match_list (initial_match_list_size)
 			yyparse
-			match_list := ast_factory.match_list
+			match_list := l_ast_factory.match_list
 			reset
 		rescue
 			reset
@@ -227,13 +230,16 @@ feature -- Parsing
 			-- An exception is raised if a syntax error is found.
 		require
 			a_string_not_void: a_string /= Void
+		local
+			l_ast_factory: like ast_factory
 		do
 			reset_nodes
 			create input_buffer.make (a_string)
 			yy_load_input_buffer
-			ast_factory.create_match_list (initial_match_list_size)
+			l_ast_factory := ast_factory
+			l_ast_factory.create_match_list (initial_match_list_size)
 			yyparse
-			match_list := ast_factory.match_list
+			match_list := l_ast_factory.match_list
 			reset
 		rescue
 			reset

@@ -340,9 +340,13 @@ feature -- Visit nodes
 			l_pre: STRING
 			l_old_library: CONF_LIBRARY
 			l_cl: CONF_CLASS
+			l_current_classes: like current_classes
+			l_partly_removed_classes: like partly_removed_classes
+			l_current_system: CONF_SYSTEM
 		do
 			on_process_group (a_library)
 			l_old_library ?= old_group
+
 			check
 				old_group_implies_old_library: old_group /= Void implies l_old_library /= Void
 			end
@@ -369,6 +373,12 @@ feature -- Visit nodes
 			end
 
 			create current_classes.make (Classes_per_cluster)
+
+			l_current_classes := current_classes
+			l_partly_removed_classes := partly_removed_classes
+
+			l_current_system := current_system
+
 			l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent (a_cluster: CONF_CLUSTER): BOOLEAN
 				do
 					Result := a_cluster.classes_set and then not a_cluster.is_hidden
@@ -378,15 +388,15 @@ feature -- Visit nodes
 				-- if the renaming/prefix changed we have to add the classes to the partly_removed_classes list
 			if l_old_library /= Void and then not (equal (l_old_library.name_prefix, a_library.name_prefix) and equal (l_old_library.renaming, a_library.renaming)) then
 				from
-					current_classes.start
+					l_current_classes.start
 				until
-					current_classes.after
+					l_current_classes.after
 				loop
-					l_cl := current_classes.item_for_iteration
+					l_cl := l_current_classes.item_for_iteration
 					if l_cl.is_compiled then
-						partly_removed_classes.force ([l_cl, current_system])
+						l_partly_removed_classes.force ([l_cl, l_current_system])
 					end
-					current_classes.forth
+					l_current_classes.forth
 				end
 			end
 
@@ -398,24 +408,24 @@ feature -- Visit nodes
 				until
 					l_ren.after
 				loop
-					current_classes.replace_key (l_ren.item_for_iteration, l_ren.key_for_iteration)
+					l_current_classes.replace_key (l_ren.item_for_iteration, l_ren.key_for_iteration)
 					l_ren.forth
 				end
 			end
 			l_pre := a_library.name_prefix
 			if l_pre /= Void and then not l_pre.is_empty then
-				create l_prefixed_classes.make (current_classes.count)
+				create l_prefixed_classes.make (l_current_classes.count)
 				from
-					current_classes.start
+					l_current_classes.start
 				until
-					current_classes.after
+					l_current_classes.after
 				loop
-					l_prefixed_classes.put (current_classes.item_for_iteration, l_pre+current_classes.key_for_iteration)
-					current_classes.forth
+					l_prefixed_classes.put (current_classes.item_for_iteration, l_pre+l_current_classes.key_for_iteration)
+					l_current_classes.forth
 				end
 				a_library.set_classes (l_prefixed_classes)
 			else
-				a_library.set_classes (current_classes)
+				a_library.set_classes (l_current_classes)
 			end
 
 				-- update visibility
@@ -440,13 +450,19 @@ feature -- Visit nodes
 		local
 			l_old_cluster: CONF_CLUSTER
 			l_class: CONF_CLASS
+			l_current_classes: like current_classes
+			l_modified_classes: like modified_classes
 		do
 			on_process_group (a_cluster)
 			a_cluster.wipe_class_cache
 			current_cluster := a_cluster
 			create current_classes.make (Classes_per_cluster)
+			l_current_classes := current_classes
+
+			l_modified_classes := modified_classes
+
 			create current_classes_by_filename.make (Classes_per_cluster)
-			a_cluster.set_classes (current_classes)
+			a_cluster.set_classes (l_current_classes)
 			a_cluster.set_classes_by_filename (current_classes_by_filename)
 
 			process_cluster_recursive ("", a_cluster, a_cluster.active_file_rule (state))
@@ -460,15 +476,15 @@ feature -- Visit nodes
 			l_old_cluster ?= old_group
 			if l_old_cluster /= Void and then not l_old_cluster.mapping.is_equal (a_cluster.mapping) then
 				from
-					current_classes.start
+					l_current_classes.start
 				until
-					current_classes.after
+					l_current_classes.after
 				loop
-					l_class := current_classes.item_for_iteration
+					l_class := l_current_classes.item_for_iteration
 					if l_class.is_compiled then
-						modified_classes.force (l_class)
+						l_modified_classes.force (l_class)
 					end
-					current_classes.forth
+					l_current_classes.forth
 				end
 			end
 
@@ -621,18 +637,31 @@ feature {NONE} -- Implementation
 			l_file_name: STRING
 			l_done: BOOLEAN
 			l_suggested_filename: STRING
+			l_current_classes: like current_classes
+			l_old_group: like old_group
+			l_old_group_classes_by_filename: HASH_TABLE [CONF_CLASS, STRING_8]
+			l_classname_finder: like classname_finder
 		do
+			l_current_classes := current_classes
+			l_old_group := old_group
+			if l_old_group /= Void then
+				l_old_group_classes_by_filename := l_old_group.classes_by_filename
+			end
+			l_classname_finder := classname_finder
 			check
-				current_classes_not_void: current_classes /= Void
-				old_group_classes_set: old_group /= Void implies old_group.classes_set
+				current_classes_not_void: l_current_classes /= Void
+				old_group_classes_set: l_old_group /= Void implies l_old_group.classes_set
 			end
 			if valid_eiffel_extension (a_file) then
-				l_file_name := a_path+"/"+a_file
+				create l_file_name.make (a_path.count + 1 + a_file.count)
+				l_file_name.append (a_path)
+				l_file_name.append (once "/")
+				l_file_name.append (a_file)
 					-- try to get it directly from old_group by filename
 				if
-					old_group /= Void and then old_group.classes_by_filename.has_key (l_file_name)
+					l_old_group /= Void and then l_old_group_classes_by_filename.has_key (l_file_name)
 				then
-					l_class := old_group.classes_by_filename.found_item
+					l_class := l_old_group_classes_by_filename.found_item
 						-- update class
 					l_class.rebuild (a_file, a_cluster, a_path)
 					if l_class.is_error then
@@ -645,10 +674,10 @@ feature {NONE} -- Implementation
 						end
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
-						if current_classes.has_key (l_name) then
-							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
+						if l_current_classes.has_key (l_name) then
+							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 						else
-							current_classes.force (l_class, l_name)
+							l_current_classes.force (l_class, l_name)
 							current_classes_by_filename.force (l_class, l_file_name)
 						end
 						l_done := True
@@ -663,9 +692,10 @@ feature {NONE} -- Implementation
 						add_and_raise_error (create {CONF_ERROR_FILE}.make (l_full_file))
 					else
 							-- get class name
-						classname_finder.parse (l_file)
+						l_classname_finder := classname_finder
+						l_classname_finder.parse (l_file)
 						l_file.close
-						l_name := classname_finder.classname
+						l_name := l_classname_finder.classname
 						if l_name = Void then
 							add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file, a_cluster.target.system.file_name))
 						elseif l_name.is_case_insensitive_equal ("NONE") then
@@ -674,7 +704,7 @@ feature {NONE} -- Implementation
 							l_name.to_upper
 
 								-- partial classes					
-							if classname_finder.is_partial_class then
+							if l_classname_finder.is_partial_class then
 								if partial_classes = Void then
 									create partial_classes.make (1)
 								end
@@ -692,10 +722,10 @@ feature {NONE} -- Implementation
 									add_and_raise_error (l_class.last_error)
 								end
 								added_classes.force (l_class)
-								if current_classes.has_key (l_name) then
-									add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
+								if l_current_classes.has_key (l_name) then
+									add_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 								else
-									current_classes.force (l_class, l_name)
+									l_current_classes.force (l_class, l_name)
 									current_classes_by_filename.force (l_class, l_file_name)
 								end
 							end

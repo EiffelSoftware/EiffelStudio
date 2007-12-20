@@ -195,6 +195,7 @@ feature -- Constants
 	notify_argument_name_id: INTEGER is 182
 	init_exception_manager_id: INTEGER is 183
 	free_preallocated_trace_id: INTEGER is 184
+	any_name_id: INTEGER is 185
 
 feature -- Classification
 

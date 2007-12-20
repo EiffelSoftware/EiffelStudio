@@ -346,6 +346,7 @@ feature {NONE} -- Implementation: access
 			put ("notify_argument") check found_item = notify_argument_name_id end
 			put ("init_exception_manager") check found_item = init_exception_manager_id end
 			put ("free_preallocated_trace") check found_item = free_preallocated_trace_id end
+			put ("any") check found_item = any_name_id end
 		end
 
 invariant

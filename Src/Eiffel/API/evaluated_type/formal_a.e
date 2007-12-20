@@ -17,7 +17,6 @@ inherit
 			instantiated_in,
 			evaluated_type_in_descendant,
 			same_as,
-			format,
 			is_full_named_type,
 			convert_to,
 			check_const_gen_conformance,
@@ -414,12 +413,6 @@ feature {COMPILER_EXPORTER}
 			-- Create formal type info.
 		do
 			create Result.make (type_i)
-		end
-
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-			-- reconstitute text
-		do
-			ctxt.process_generic_text (ctxt.formal_name (position))
 		end
 
 indexing

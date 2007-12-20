@@ -1,6 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class EXPORT_NONE_I
 
 inherit
@@ -65,16 +66,6 @@ feature {COMPILER_EXPORTER}
 			-- Debug purpose
 		do
 			io.error.put_string ("NONE");
-		end;
-
-feature {COMPILER_EXPORTER}
-
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-		do
-			ctxt.process_symbol_text (ti_l_curly)
-			ctxt.add ("NONE");
-			ctxt.set_without_tabs
-			ctxt.process_symbol_text (ti_r_curly)
 		end;
 
 indexing

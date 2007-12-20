@@ -12,11 +12,16 @@ indexing
 class FEATURE_CLAUSE_EXPORT
 
 inherit
-
 	PART_COMPARABLE
 		undefine
 			is_equal
-		end;
+		end
+
+	EXPORT_FORMATTER
+		rename
+			format as format_export
+		end
+
 	SHARED_FORMAT_INFO;
 	SHARED_TEXT_ITEMS;
 	COMPILER_EXPORTER
@@ -110,7 +115,7 @@ feature -- Context output
 			ctxt.process_keyword_text (ti_Feature_keyword, Void);
 			ctxt.put_space;
 			if not export_status.is_all then
-				export_status.format (ctxt);
+				format_export (ctxt, export_status)
 				ctxt.put_space;
 			end;
 			if comments = Void or else comments.is_empty then

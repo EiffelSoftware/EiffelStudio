@@ -15,6 +15,11 @@ inherit
 			put_origin_comment, chained_assertion
 		end
 
+	EXPORT_FORMATTER
+		rename
+			format as format_export
+		end
+
 	FAKE_AST_ASSEMBLER
 
 create
@@ -129,7 +134,7 @@ feature -- Element change
 				process_comment_text (ti_Dashdash, Void)
 				put_space;
 				process_comment_text ("(export status ", Void);
-				export_status.format (Current);
+				format_export (Current, export_status)
 				process_comment_text (")", Void);
 				put_new_line
 			end;

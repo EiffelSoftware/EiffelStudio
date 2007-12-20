@@ -445,7 +445,9 @@ feature {NONE} -- Element Change
 			l_char_count: INTEGER
 			l_ext: EXTERNAL_CLASS_C
 			l_type_a: CL_TYPE_A
+			l_formatter: TYPE_A_FORMATTER
 		do
+			create l_formatter
 			if not (arguments = Void or arguments.is_empty) then
 				begin
 				set_separator (ti_comma)
@@ -473,7 +475,7 @@ feature {NONE} -- Element Change
 					if class_i.is_compiled then
 						l_ext ?= class_i.compiled_class
 						l_type_a := l_ext.type_from_consumed_type (l_c_arg.type)
-						l_type_a.format (Current)
+						l_formatter.format (Current, l_type_a)
 					else
 						text_formatter.add_class (l_c_class)
 					end
@@ -498,7 +500,7 @@ feature {NONE} -- Element Change
 				if 	class_i.is_compiled then
 					l_ext ?= class_i.compiled_class
 					l_type_a := l_ext.type_from_consumed_type (return_type)
-					l_type_a.format (Current)
+					l_formatter.format (Current, l_type_a)
 				else
 					text_formatter.add_class (l_c_class)
 				end

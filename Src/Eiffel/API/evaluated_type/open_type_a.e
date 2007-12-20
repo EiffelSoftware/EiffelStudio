@@ -20,8 +20,7 @@ inherit
 			dump,
 			type_i,
 			good_generics,
-			conform_to,
-			format
+			conform_to
 		end
 
 feature -- Visitor
@@ -114,14 +113,6 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 			-- Byte code information for entity type creation
 		do
 			-- Not creatable
-		end
-
-feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
-
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-
-		do
-			ctxt.process_string_text ("?", Void)
 		end
 
 indexing

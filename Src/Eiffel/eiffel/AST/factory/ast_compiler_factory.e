@@ -11,6 +11,7 @@ class
 inherit
 	AST_FACTORY
 		redefine
+			new_array_as,
 			new_bits_as,
 			new_class_as,
 			new_class_type_as,
@@ -55,6 +56,14 @@ inherit
 		end
 
 feature -- Access
+
+	new_array_as (exp: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): COMPILER_ARRAY_AS is
+			-- New COMPILER_ARRAY_AS
+		do
+			if exp /= Void then
+				create Result.initialize (exp, l_as, r_as)
+			end
+		end
 
 	new_bits_as (v: INTEGER_AS; b_as: KEYWORD_AS): BITS_AS is
 			-- New BITS AST node

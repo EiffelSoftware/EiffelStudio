@@ -1790,7 +1790,7 @@ feature -- Implementation
 			end
 		end
 
-	process_array_as (l_as: ARRAY_AS) is
+	process_array_as (l_as: COMPILER_ARRAY_AS) is
 		local
 			i, nb: INTEGER
 			l_array_type: GEN_TYPE_A

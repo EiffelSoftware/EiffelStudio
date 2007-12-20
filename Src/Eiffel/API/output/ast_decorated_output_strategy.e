@@ -593,7 +593,7 @@ feature {NONE} -- Implementation
 			create {BITS_A} last_type.make (l_as.value.name.count)
 		end
 
-	process_array_as (l_as: ARRAY_AS) is
+	process_array_as (l_as: COMPILER_ARRAY_AS) is
 		do
 			reset_last_class_and_type
 			if not expr_type_visiting then

@@ -166,19 +166,21 @@ feature -- Access
 			target_not_void: target /= Void
 		local
 			l_vis: CONF_FIND_CLASS_VISITOR
+			l_buffered_classes: like buffered_classes
 		do
-			buffered_classes.search (a_class_name)
-			if not buffered_classes.found then
+			l_buffered_classes := buffered_classes
+			l_buffered_classes.search (a_class_name)
+			if not l_buffered_classes.found then
 				create l_vis.make (conf_state)
 				l_vis.set_name (a_class_name)
 				target.process (l_vis)
 				Result := l_vis.found_classes
 				if Result.count = 1 then
-					buffered_classes.put (Result.first, a_class_name)
+					l_buffered_classes.put (Result.first, a_class_name)
 				end
 			else
 				Result := create {ARRAYED_LIST [CLASS_I]}.make (1)
-				Result.extend (buffered_classes.found_item)
+				Result.extend (l_buffered_classes.found_item)
 			end
 		ensure
 			classes_with_name_not_void: Result /= Void

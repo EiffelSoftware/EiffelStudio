@@ -63,6 +63,13 @@ feature -- Access
 		deferred
 		end
 
+	generate_process_routines: BOOLEAN is
+			-- Should we generate `process' routines for each class being added to the visitor?
+		require
+			is_readable: is_readable
+		deferred
+		end
+
 	recurse_directories: BOOLEAN is
 			-- Inidicates if user specified to recursively scan included directories
 		require

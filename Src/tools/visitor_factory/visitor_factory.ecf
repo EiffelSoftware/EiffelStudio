@@ -1,19 +1,20 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="visitor_factory" uuid="2B32C8AB-5F13-48FF-8F2C-97BD6AB67453">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="visitor_factory" uuid="2B32C8AB-5F13-48FF-8F2C-97BD6AB67453">
 	<description>A tools used to generate visitor patterns in Eiffel uses classes locatable in a directory structure.</description>
 	<target name="visitor_factory">
 		<root cluster="visitor_factory" class="APPLICATION" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="vfact"/>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="parser" location="C:\work\61dev\framework\parser\parser.ecf"/>
 		<library name="printer" location="$EIFFEL_SRC\framework\patterns\printer\printer.ecf" readonly="true"/>
 		<cluster name="visitor_factory" location=".\" recursive="true">
 			<file_rule>

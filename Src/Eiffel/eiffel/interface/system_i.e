@@ -82,6 +82,9 @@ feature {NONE} -- Initialization
 		do
 			set_compilation_id (1)
 
+				-- Names heap creation
+			create names.make
+
 				-- Set up working environment to use current as SYSTEM_I instance.
 			Workbench.set_system (Current)
 
@@ -131,9 +134,6 @@ feature {NONE} -- Initialization
 
 				-- Address table
 			create address_table.make
-
-				-- Names heap creation
-			create names.make
 
 				-- Real removed classes
 			create real_removed_classes.make (10)

@@ -33,6 +33,11 @@ inherit
 
 	SYSTEM_CONSTANTS
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 feature -- Status
 
 	is_changed: BOOLEAN
@@ -133,6 +138,8 @@ feature -- Update from retrieved object.
 			standard_copy (other)
 			lace := l_lace
 			lace.update_from_retrieved_project (other.lace)
+				-- Initialize SHARED_NAMES_HEAP with the heap of SYSTEM_I.
+			set_names_heap (system.names)
 		ensure
 			lace_preserved: lace = old lace
 		end
@@ -185,10 +192,14 @@ feature -- Conveniences
 			-- Assign `s' to `system'.
 		require
 			valid_s: s /= Void
+			valid_heap: s.names /= Void
 		do
 			system := s
+				-- Initialize SHARED_NAMES_HEAP with the heap of SYSTEM_I.
+			set_names_heap (system.names)
 		ensure
 			system_set: system = s
+			names_heap_set: names_heap = system.names
 		end
 
 	set_compilation_started is

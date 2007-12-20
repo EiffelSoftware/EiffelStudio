@@ -290,6 +290,28 @@ feature -- Access
 			Result := progress_bar.value
 		end
 
+	current_project_name: STRING_32 is
+			-- Current project name
+		local
+			l_name: STRING
+		do
+			if eiffel_project.initialized and then eiffel_project.system_defined then
+				l_name := eiffel_system.name
+				if l_name.is_equal (eiffel_ace.lace.target_name) then
+					Result := l_name
+				else
+					create Result.make (l_name.count + 1 + eiffel_ace.lace.target_name.count)
+					Result.append (l_name)
+					Result.append_character (':')
+					Result.append (eiffel_ace.lace.target_name)
+				end
+			else
+				Result := interface_names.l_no_project
+			end
+		ensure
+			current_project_name_not_void: Result /= Void
+		end
+
 feature {EIFFEL_WORLD, EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 	label: EV_LABEL
@@ -380,7 +402,7 @@ feature {NONE} -- Implementation: event handling
 	on_project_loaded (dbg: DEBUGGER_MANAGER) is
 			-- The project has been loaded.
 		do
-			set_project_name (eiffel_system.name)
+			set_project_name (current_project_name)
 			if eiffel_project.manager.has_edited_classes then
 				on_project_edited
 			else
@@ -436,9 +458,7 @@ feature {NONE} -- Implementation: event handling
 		local
 			p: EV_PIXMAP
 		do
-			if eiffel_project.initialized and then eiffel_project.system_defined then
-				set_project_name (eiffel_system.name)
-			end
+			set_project_name (current_project_name)
 			compiling_timer.set_interval (0)
 			if eiffel_project.workbench.successful then
 				p := pixmaps.icon_pixmaps.compile_success_icon

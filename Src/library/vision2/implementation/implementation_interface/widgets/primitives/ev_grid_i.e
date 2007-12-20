@@ -2674,6 +2674,8 @@ feature -- Removal
 			current_column_count: INTEGER
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
+				-- Set 'displayed_column_count' immediately to zero to satisfy invariant.
+			displayed_column_count := 0
 			if currently_active_item /= Void and then currently_active_item.parent = interface then
 				currently_active_item.deactivate
 			end
@@ -2755,7 +2757,6 @@ feature -- Removal
 			create physical_column_indexes_internal.make (0)
 			last_vertical_scroll_bar_value := 0
 			last_horizontal_scroll_bar_value := 0
-			displayed_column_count := 0
 			last_selected_item := Void
 			last_selected_row := Void
 			shift_key_start_item := Void

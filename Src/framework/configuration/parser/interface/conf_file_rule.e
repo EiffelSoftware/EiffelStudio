@@ -144,17 +144,21 @@ feature -- Basic operation
 	is_included (a_location: STRING): BOOLEAN is
 			-- Test if `a_location' is included according to the exclude/include rules.
 			-- That means it is either not excluded or it is included.
+		local
+			l_exclude_regexp: like exclude_regexp
+			l_include_regexp: like include_regexp
 		do
 			Result := True
-
-			if exclude_regexp /= Void then
-				exclude_regexp.match (a_location)
-				if exclude_regexp.has_matched then
+			l_exclude_regexp := exclude_regexp
+			if l_exclude_regexp /= Void then
+				l_exclude_regexp.match (a_location)
+				if l_exclude_regexp.has_matched then
 					Result := False
-					if include_regexp /= Void then
+					l_include_regexp := include_regexp
+					if l_include_regexp /= Void then
 							-- it's excluded, check if there is an include that matches
-						include_regexp.match (a_location)
-						Result := include_regexp.has_matched
+						l_include_regexp.match (a_location)
+						Result := l_include_regexp.has_matched
 					end
 				end
 			end
@@ -173,23 +177,24 @@ feature {NONE} -- Implementation
 			-- Compile `a_list' into a regular expression.
 		local
 			l_regexp_str: STRING
+			l_left_paren, l_right_paren_and_bar: STRING
 		do
 			if a_list /= Void and then not a_list.is_empty then
 				create l_regexp_str.make (50)
 				from
+					l_left_paren := "("
+					l_right_paren_and_bar := ")|"
 					a_list.start
 				until
 					a_list.after
 				loop
-					l_regexp_str.append ("("+a_list.item_for_iteration+")|")
+					l_regexp_str.append (l_left_paren + a_list.item_for_iteration + l_right_paren_and_bar)
 					a_list.forth
 				end
 				l_regexp_str.remove_tail (1)
 
 				create Result.make
-				if {PLATFORM}.is_windows then
-					Result.set_caseless (True)
-				end
+				Result.set_caseless ({PLATFORM}.is_windows)
 				Result.compile (l_regexp_str)
 				check
 					correct_regexp: Result.is_compiled

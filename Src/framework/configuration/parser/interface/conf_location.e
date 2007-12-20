@@ -65,20 +65,24 @@ feature -- Access queries
 
 	evaluated_path: STRING is
 			-- The fully resolved path with file name.
+		local
+			l_file_system: like file_system
 		do
-			Result := file_system.pathname_from_file_system (internal_evaluated_path, windows_file_system)
-			Result := file_system.canonical_pathname (Result)
+			l_file_system := file_system
+			Result := l_file_system.canonical_pathname (l_file_system.pathname_from_file_system (internal_evaluated_path, windows_file_system))
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	evaluated_directory: STRING is
 			-- The directory part of `evaluated_path' (without trailing '\' or '/').
+		local
+			l_file_system: like file_system
 		do
-			Result := file_system.pathname_from_file_system(directory (internal_evaluated_path), windows_file_system)
-				-- if we have an empty result that means we only got a '\' or '/' which got removed because we remove
+			l_file_system := file_system
+				-- If call to 'pathname_from_file_system' is empty that means we only got a '\' or '/' which got removed because we remove
 				-- trailing separators
-			Result := file_system.canonical_pathname (Result)
+			Result := l_file_system.canonical_pathname (l_file_system.pathname_from_file_system (directory (internal_evaluated_path), windows_file_system))
 			if Result.is_empty then
 				Result := operating_environment.directory_separator.out
 			end
@@ -112,24 +116,26 @@ feature -- Access queries
 			a_file_not_void: a_file /= Void
 		local
 			l_dir: STRING
+			l_cluster_separator: CHARACTER_8
 		do
+			l_cluster_separator := '\'
 			Result := evaluated_directory
 			if Result.is_empty then
 				Result.append_character (operating_environment.directory_separator)
 			end
 			if not a_directory.is_empty then
 				l_dir := windows_file_system.pathname_from_file_system (a_directory, unix_file_system)
-				if l_dir.item (1) /= '\' then
-					l_dir.prepend_character ('\')
+				if l_dir.item (1) /= l_cluster_separator then
+					l_dir.prepend_character (l_cluster_separator)
 				end
 			else
 				create l_dir.make_empty
 			end
-			if a_file.is_empty and not l_dir.is_empty and then l_dir.item (l_dir.count) = '\' then
+			if a_file.is_empty and then not l_dir.is_empty and then l_dir.item (l_dir.count) = l_cluster_separator then
 				l_dir.remove_tail (1)
 			end
 			if not a_file.is_empty then
-				l_dir.append ("\"+a_file)
+				l_dir.append (l_cluster_separator.out + a_file)
 			end
 			l_dir := file_system.pathname_from_file_system (l_dir, windows_file_system)
 			Result.append (l_dir)
@@ -213,12 +219,20 @@ feature {NONE} -- Implementation
 			l_relative_base: STRING
 			l_offset: INTEGER
 			l_stop: BOOLEAN
+			l_space, l_left_paren, l_right_paren, l_backslash, l_dollar, l_left_bracket, l_right_bracket: CHARACTER_8
 		do
+			l_space := ' '
+			l_left_paren := '('
+			l_left_bracket := '{'
+			l_right_paren := ')'
+			l_right_bracket := '}'
+			l_dollar := '$'
+			l_backslash := '\'
 			Result := original_path.twin
 
 				-- replace $| with parent path
 			if parent /= Void then
-				if Result.count >= 2 and then Result.item (1) = '$' and then Result.item (2) = '|' then
+				if Result.count >= 2 and then Result.item (1) = l_dollar and then Result.item (2) = '|' then
 					Result.replace_substring (parent.evaluated_directory+"\", 1, 2)
 				end
 			end
@@ -226,7 +240,7 @@ feature {NONE} -- Implementation
 				-- replace $ABC and ${ABC} with user defined or environment variables
 			from
 				l_offset := 1
-				i := Result.index_of ('$', l_offset)
+				i := Result.index_of (l_dollar, l_offset)
 			until
 				i = 0 or l_stop
 			loop
@@ -234,16 +248,16 @@ feature {NONE} -- Implementation
 				l_old_i := i
 
 					-- in each loop we decrease the number of $ by 1, except if it is a $(ABC), then we increase the offset
-				if i /= 0 and then Result.item (i+1) = '{' then
-					j := Result.index_of ('}', i)
+				if i /= 0 and then Result.item (i+1) = l_left_bracket then
+					j := Result.index_of (l_right_bracket, i)
 					if j /= 0 and j > i+2 then
 						l_key := Result.substring (i+2, j-1)
 					end
-				elseif i /= 0 and then Result.item (i+1) = '(' then
-					l_offset := Result.index_of (')', i) + 2
+				elseif i /= 0 and then Result.item (i+1) = l_left_paren then
+					l_offset := Result.index_of (l_right_paren, i) + 2
 				elseif i /= 0 then
-					j := Result.index_of (' ', i) - 1
-					k := Result.index_of ('\', i) - 1
+					j := Result.index_of (l_space, i) - 1
+					k := Result.index_of (l_backslash, i) - 1
 					if j < i then
 						j := Result.count
 					end
@@ -258,7 +272,7 @@ feature {NONE} -- Implementation
 					if l_value = Void then
 						l_value := execution_environment.variable_value (l_key)
 						if l_value = Void then
-							l_value := ""
+							l_value := once ""
 						end
 							-- we don't want to update stored values, this is done when the project is loaded
 						target.environ_variables.put (l_value, l_key)
@@ -266,7 +280,7 @@ feature {NONE} -- Implementation
 					Result.replace_substring (to_internal (l_value), i, j)
 				end
 
-				i := Result.index_of ('$', l_offset)
+				i := Result.index_of (l_dollar, l_offset)
 				if i > 0 then
 						-- Check if last variable was extracted correctly
 					l_stop := l_old_i = i

@@ -72,7 +72,8 @@ feature -- Formatting
 				classi /= Void and then
 				selected and then
 				displayed and then
-				editor.is_initialized and then 
+				editor /= Void and then
+				editor.is_initialized and then
 				actual_veto_format_result
 			then
 				display_temp_header
@@ -99,7 +100,7 @@ feature -- Formatting
 				end
 				display_header
 				stone.set_pos_container (Current)
-				if editor /= Void and then editor.stone /= Void then
+				if editor.stone /= Void then
 					editor.stone.set_pos_container (Current)
 				end
 			end

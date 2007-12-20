@@ -49,10 +49,17 @@ feature -- Initialization
 			text_valid: a_text /= Void
 			ch_num_valid: ch_num >= 1
 			y_valid: y >= 1
+		local
+			l_y: INTEGER
 		do
 			text := a_text
-			y_in_lines := y
-			line := text.line (y)
+			if y > text.number_of_lines then
+				l_y := text.number_of_lines
+			else
+				l_y := y
+			end
+			y_in_lines := l_y
+			line := text.line (l_y)
 			set_x_in_characters (ch_num)
 		end
 
@@ -342,11 +349,18 @@ feature -- Element change
 			-- Change `line' accordingly.
 		require
 			y_valid: y >= 1
+		local
+			l_y: INTEGER
 		do
-			y_in_lines := y
+			if y > text.number_of_lines then
+				l_y := text.number_of_lines
+			else
+				l_y := y
+			end
+			y_in_lines := l_y
 
 				-- Update the line attribute.
-			line := text.line (y)
+			line := text.line (l_y)
 			update_current_char
 		end
 

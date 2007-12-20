@@ -71,7 +71,14 @@ feature -- Formatting
 	format is
 			-- Refresh `widget'.
 		do
-			if associated_class /= Void and then selected and then displayed and then actual_veto_format_result then
+			if
+				associated_class /= Void and then
+				selected and then
+				displayed and then
+				editor /= Void and then
+				editor.is_initialized and then
+				actual_veto_format_result
+			then
 				display_temp_header
 				reset_display
 				setup_viewpoint
@@ -91,7 +98,7 @@ feature -- Formatting
 				end
 				display_header
 				stone.set_pos_container (Current)
-				if editor /= Void and then editor.stone /= Void then
+				if editor.stone /= Void then
 					editor.stone.set_pos_container (Current)
 				end
 			end
@@ -102,7 +109,13 @@ feature {NONE} -- Implementation
 	reset_display is
 			-- Clear all graphical output.
 		do
-			editor.clear_window
+				-- The contract in the editor library is insuficient.
+				-- Ideally `is_initialized' is needed as precondition of almost each call.
+				-- Here `is_recycled' is not contract driven protection in the case that
+				-- the editor has been recycled.
+			if editor /= Void and then not editor.is_initialized  then
+				editor.clear_window
+			end
 		end
 
 	generate_text is

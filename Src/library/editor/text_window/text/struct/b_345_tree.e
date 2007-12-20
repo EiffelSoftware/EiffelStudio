@@ -34,6 +34,8 @@ feature -- Access
 	last_data: like first_data
 
 	item (i: INTEGER): like first_data is
+		require
+			i_is_valid: i >= 1 and i <= count
 		do
 			Result := root_node.item (i).data
 		end

@@ -319,28 +319,30 @@ feature {TEXT_PANEL} -- Display functions
  			l_line_height: INTEGER
  			l_text_displayed: like text_displayed_type
 		do
-			updating_line := True
 			l_text_displayed := text_panel.text_displayed
-			l_text_displayed.go_i_th (first)
-			l_line_height := text_panel.line_height
+			if l_text_displayed /= Void and then last <= l_text_displayed.number_of_lines then
+				updating_line := True
+				l_text_displayed.go_i_th (first)
+				l_line_height := text_panel.line_height
 
-			from
- 				curr_line := first
- 				y_offset := margin_viewport.y_offset + ((curr_line - first_line_displayed) * l_line_height)
- 			until
- 				curr_line > last or else l_text_displayed.after
- 			loop
- 				if buffered then
- 					-- We do not currently buffer for the margin
-				else
-					draw_line_to_screen (0, y_offset, l_text_displayed.line (curr_line), curr_line)
-				end
- 				curr_line := curr_line + 1
-				y_offset := y_offset + l_line_height
- 				l_text_displayed.forth
- 			end
+				from
+	 				curr_line := first
+	 				y_offset := margin_viewport.y_offset + ((curr_line - first_line_displayed) * l_line_height)
+	 			until
+	 				curr_line > last or else l_text_displayed.after
+	 			loop
+	 				if buffered then
+	 					-- We do not currently buffer for the margin
+					else
+						draw_line_to_screen (0, y_offset, l_text_displayed.line (curr_line), curr_line)
+					end
+	 				curr_line := curr_line + 1
+					y_offset := y_offset + l_line_height
+	 				l_text_displayed.forth
+	 			end
 
- 			updating_line := False
+	 			updating_line := False
+			end
 		end
 
 	draw_line_to_screen (x, y: INTEGER; a_line: EDITOR_LINE; xline: INTEGER) is

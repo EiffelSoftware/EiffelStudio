@@ -418,9 +418,11 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 		local
 			wdth: INTEGER
 		do
-			wdth := text_displayed.line (line_number).width + left_margin_width + 50
-			if editor_width < wdth then
-				set_editor_width (wdth)
+			if line_number >= 1 and line_number <= number_of_lines then
+				wdth := text_displayed.line (line_number).width + left_margin_width + 50
+				if editor_width < wdth then
+					set_editor_width (wdth)
+				end
 			end
 		end
 
@@ -445,11 +447,13 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 		local
 			wdth: INTEGER
 		do
-			wdth := text_displayed.line (line_number).width + left_margin_width + 50
-			if editor_width < wdth then
-				set_editor_width (wdth)
+			if line_number >= 1 and then line_number <= number_of_lines then
+				wdth := text_displayed.line (line_number).width + left_margin_width + 50
+				if editor_width < wdth then
+					set_editor_width (wdth)
+				end
+				update_vertical_scrollbar
 			end
-			update_vertical_scrollbar
 		end
 
 feature -- Text selection access

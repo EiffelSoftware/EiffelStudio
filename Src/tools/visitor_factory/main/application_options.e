@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 				-- Set generation options
 			generate_stub := l_stub
 			generate_interface := l_interface
+			generate_process_routines := a_params.generate_process_routines
 
 				-- Set class name
 			if a_params.use_user_data then
@@ -64,9 +65,13 @@ feature {NONE} -- Initialization
 
 				-- Calculate files
 			calcuate_files (a_params)
+
+			create universe.make (files)
 		end
 
 feature -- Access
+
+	universe: APPLICATION_UNIVERSE
 
 	files: LIST [STRING_8]
 			-- Files to include in generation of factory
@@ -87,10 +92,13 @@ feature -- Access
 			-- User data class name
 
 	generate_stub: BOOLEAN
-			-- Indiciates if a stub class should be generated
+			-- Indicates if a stub class should be generated
 
 	generate_interface: BOOLEAN
-			-- Indiciates if an interface class should be generated
+			-- Indicates if an interface class should be generated
+
+	generate_process_routines: BOOLEAN
+			-- Should we generate `process' routines for each class being added to the visitor?
 
 feature -- Status report
 
@@ -268,21 +276,23 @@ feature {NONE} -- Contants
 
 invariant
 	files_attached: files /= Void
+	generate_stub_and_or_interface: generate_stub or generate_interface
+
 	stub_class_name_name_attached: generate_stub implies stub_class_name /= Void
 	not_stub_class_name_is_empty: stub_class_name /= Void implies not stub_class_name.is_empty
+
 	interface_class_name_name_attached: interface_class_name /= Void
 	not_interface_class_name_is_empty: not interface_class_name.is_empty
+
 	stub_output_file_name_attached: generate_stub implies stub_output_file_name /= Void
 	not_stub_output_file_name_is_empty: stub_output_file_name /= Void implies not stub_output_file_name.is_empty
+
 	interface_output_file_name_attached: generate_interface implies interface_output_file_name /= Void
 	not_interface_output_file_name_is_empty: interface_output_file_name /= Void implies not interface_output_file_name.is_empty
+
 	user_data_class_name_attached: use_user_data implies user_data_class_name /= Void
 	not_user_data_class_name_is_empty: user_data_class_name /= Void implies not user_data_class_name.is_empty
-	generate_stub_and_or_interface: generate_stub or generate_interface
-	stub_output_file_name_attached: generate_stub implies stub_output_file_name /= Void
-	not_stub_output_file_name_is_empty: stub_output_file_name /= Void implies not stub_output_file_name.is_empty
-	interface_output_file_name_attached: generate_interface implies interface_output_file_name /= Void
-	not_interface_output_file_name_is_empty: interface_output_file_name /= Void implies not interface_output_file_name.is_empty
+
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

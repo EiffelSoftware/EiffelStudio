@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			make_parser (False, False)
 			set_use_separated_switch_values (True)
 			set_show_switch_arguments_inline (True)
+			display_usage_on_error := True
 		end
 
 feature -- Access
@@ -87,6 +88,11 @@ feature -- Access
 			Result := has_option (interface_switch) or else not has_option (stub_switch)
 		end
 
+	generate_process_routines: BOOLEAN is
+		once
+			Result := has_option (routines_switch)
+		end
+
 feature -- Status report
 
 	has_class_name: BOOLEAN is
@@ -133,6 +139,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_EIFFEL_CLASS_SWITCH}.make (user_data_switch, "Specifies visitor should be passed a piece of user data.", True, False, "name", "An Eiffel class name the user data should conform to", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (stub_switch, "Use to generate a stub visitor only.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (interface_switch, "Use to generate an interface visitor only.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (routines_switch, "Use to generate `process' routines in visited classes.", True, False))
 		end
 
 feature {NONE} -- Switch names
@@ -144,6 +151,7 @@ feature {NONE} -- Switch names
 	recurse_switch: STRING = "r"
 	stub_switch: STRING = "stub"
 	interface_switch: STRING = "interface"
+	routines_switch: STRING = "routines"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

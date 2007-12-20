@@ -74,6 +74,7 @@ feature -- Basic operations
 			Result.append (once "end -- class {")
 			Result.append (l_name)
 			Result.append (once "}")
+			Result.append ("%N")
 		end
 
 ;indexing

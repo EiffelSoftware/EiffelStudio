@@ -16,7 +16,7 @@ inherit
 			has_like, has_like_argument, is_loose, duplicate, type_i, good_generics,
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
-			same_as, format, is_equivalent,
+			same_as, is_equivalent,
 			deep_actual_type, instantiation_in,
 			actual_argument_type, update_dependance, hash_code,
 			is_full_named_type, process, evaluated_type_in_descendant
@@ -1060,33 +1060,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 					Result := gen_param.valid_expanded_creation (a_class)
 				end
 				i := i + 1
-			end
-		end
-
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-		local
-			i, count: INTEGER
-		do
-			ctxt.put_classi (associated_class.lace_class)
-			count := generics.count
-
-				-- TUPLE may have zero generic parameters
-			if count > 0 then
-				ctxt.put_space
-				ctxt.process_symbol_text (ti_L_bracket)
-				from
-					i := 1
-				until
-					i > count
-				loop
-					generics.item (i).format (ctxt)
-					if i /= count then
-						ctxt.process_symbol_text (ti_Comma)
-						ctxt.put_space
-					end
-					i := i + 1
-				end
-				ctxt.process_symbol_text (ti_R_bracket)
 			end
 		end
 

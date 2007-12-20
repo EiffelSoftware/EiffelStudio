@@ -270,26 +270,6 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			end
 		end
 
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-		do
-			from
-				start
-			until
-				after
-			loop
-				if
-					not (item.clients.count = 1 and then
-					names_heap.item (item.clients.first).is_equal ("any"))
-				then
-					ctxt.process_symbol_text (Ti_l_curly)
-					item.format (ctxt)
-					ctxt.set_without_tabs
-					ctxt.process_symbol_text (Ti_r_curly)
-				end
-				forth
-			end
-		end
-
 feature {EXPORT_SET_I} -- Implementation
 
 	duplicate_internal (a_count: INTEGER): like Current is

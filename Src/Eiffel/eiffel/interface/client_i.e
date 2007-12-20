@@ -204,37 +204,6 @@ feature -- formatter
 			end
 		end
 
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-		local
-			temp: STRING
-			group: CONF_GROUP
-			client_classi: CLASS_I
-			l_names_heap: like names_heap
-			i, nb: INTEGER
-		do
-			l_names_heap := names_heap
-			group := System.class_of_id (written_in).group
-			from
-				i := 1
-				nb := clients.count
-			until
-				i > nb
-			loop
-				temp := l_names_heap.item (clients.item (i))
-				client_classi := Universe.class_named (temp, group)
-				if client_classi /= Void then
-					ctxt.put_classi (client_classi)
-				else
-					ctxt.process_string_text (temp.as_upper, Void)
-				end
-				i := i + 1
-				if i <= nb then
-					ctxt.process_symbol_text (Ti_comma)
-					ctxt.put_space
-				end
-			end
-		end
-
 invariant
 	clients_not_void: clients /= Void
 	written_in_positive: written_in > 0

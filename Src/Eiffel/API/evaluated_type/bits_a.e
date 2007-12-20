@@ -15,7 +15,7 @@ inherit
 			is_bits, is_valid, conform_to,
 			associated_class, dump,
 			same_as, ext_append_to,
-			format, is_equivalent, process
+			is_equivalent, process
 		end
 
 create
@@ -129,12 +129,6 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		do
 			create Result.make (bit_count)
-		end
-
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-		do
-			ctxt.process_string_text ("BIT ", Void)
-			ctxt.process_string_text (bit_count.out, Void)
 		end
 
 invariant

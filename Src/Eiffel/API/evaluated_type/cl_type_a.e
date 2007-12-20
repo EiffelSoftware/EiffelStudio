@@ -12,7 +12,7 @@ inherit
 		redefine
 			is_expanded, is_reference, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
-			has_expanded, is_valid, format, convert_to,
+			has_expanded, is_valid, convert_to,
 			is_full_named_type, is_external, is_enum, is_conformant_to
 		end
 
@@ -541,12 +541,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			-- Byte code information for entity type creation
 		do
 			create Result.make (type_i)
-		end
-
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-			-- Format current.
-		do
-			ctxt.put_classi (associated_class.lace_class)
 		end
 
 feature -- Debugging

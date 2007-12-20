@@ -781,14 +781,6 @@ feature {COMPILER_EXPORTER} -- Access
 		do
 		end
 
-feature {COMPILER_EXPORTER}
-
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
-			-- Reconstitute text
-		do
-			ctxt.process_string_text (dump, Void)
-		end
-
 feature {NONE} -- Implementation
 
 	delayed_convert_constraint_check (

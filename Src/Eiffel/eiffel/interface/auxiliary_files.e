@@ -385,7 +385,7 @@ feature -- Plug and Makefile file
 	generate_plug is
 			-- Generate plug with run-time
 		local
-			any_cl, string_cl, bit_cl, array_cl, rout_cl, exception_data_cl, exception_manager_cl: CLASS_C
+			any_cl, string_cl, bit_cl, array_cl, rout_cl, exception_manager_cl: CLASS_C
 			arr_type_id, str_type_id, type_id: INTEGER
 			id: INTEGER
 			str_make_feat, set_count_feat: FEATURE_I

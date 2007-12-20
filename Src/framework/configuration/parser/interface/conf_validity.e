@@ -64,10 +64,12 @@ feature -- Basic validity queries
 			-- Does `a_file' have a correct eiffel file extension?
 		local
 			l_ext: CHARACTER
+			l_file_count: INTEGER
 		do
-			if a_file.count > 1 and then a_file.item (a_file.count -1 ) = '.' then
-				l_ext := a_file.item (a_file.count)
-				Result := l_ext = 'e' or l_ext = 'E'
+			l_file_count := a_file.count
+			if l_file_count > 2 and then a_file.item (l_file_count - 1 ) = '.' then
+				l_ext := a_file.item (l_file_count)
+				Result := l_ext = 'e' or else l_ext = 'E'
 			end
 		end
 

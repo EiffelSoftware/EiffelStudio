@@ -124,9 +124,9 @@ feature {NONE} -- Implementation
 					if fast_parser.error_handler.has_error then
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
-							parser.error_handler.wipe_out
-							io.error.put_string ("Syntax error in file: " + file_name)
-							io.error.put_new_line
+						parser.error_handler.wipe_out
+						io.error.put_string ("Syntax error in file: " + file_name)
+						io.error.put_new_line
 					elseif fast_factory.has_obsolete_constructs then
 							-- Slow parsing to rewrite the class using the new constructs.
 						parser.parse_from_string (string_buffer)

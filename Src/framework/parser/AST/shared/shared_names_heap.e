@@ -11,12 +11,32 @@ class
 feature -- Access
 
 	names_heap: NAMES_HEAP is
-			-- Unique instance of NAMES_HEAP in system,
-			-- ie SYSTEM_I.names.
-		once
-			Result := (create {SHARED_WORKBENCH}).System.names
+			-- Unique instance of NAMES_HEAP.
+		do
+			Result := names_heap_cell.item
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	set_names_heap (a_heap: like names_heap) is
+			-- Set `names_heap' with `a_heap'.
+		require
+			a_heap_not_void: a_heap /= Void
+		do
+			names_heap_cell.put (a_heap)
+		ensure
+			names_heap_set: names_heap = a_heap
+		end
+
+feature {NONE} -- Implementation
+
+	names_heap_cell: CELL [NAMES_HEAP] is
+			-- Storage for `names_heap'.
+		once
+			create Result.put (create {NAMES_HEAP}.make)
+		ensure
+			names_heap_cell_not_void: Result /= Void
+			names_heap_not_void: Result.item /= Void
 		end
 
 indexing

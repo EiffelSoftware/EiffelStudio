@@ -50,9 +50,6 @@ feature -- Attributes
 	expressions: EIFFEL_LIST [EXPR_AS]
 			-- Expression list symbolizing the manifest array
 
-	array_type: TYPE_A
-			-- Type of manifest array
-
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -84,17 +81,6 @@ feature -- Comparison
 feature {AST_EIFFEL} -- Output
 
 	string_value: STRING is ""
-
-feature -- Settings
-
-	set_array_type (t: like array_type) is
-		require
-			t_not_void: t /= Void
-		do
-			array_type := t
-		ensure
-			array_type_set: array_type = t
-		end
 
 invariant
 	expressions_not_void: expressions /= Void

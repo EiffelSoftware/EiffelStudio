@@ -15,6 +15,7 @@ class
 inherit
 	AST_ROUNDTRIP_FACTORY
 		undefine
+			new_array_as,
 			new_integer_as,
 			new_integer_hexa_as,
 			new_integer_octal_as,

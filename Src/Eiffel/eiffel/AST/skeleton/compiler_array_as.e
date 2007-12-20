@@ -1,10 +1,42 @@
 indexing
-	description: "Dummy class to be able to compile without including the entire Eiffel compiler"
+	description: "AST representation of manifest array for the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class
-	TYPE_A
+class
+	COMPILER_ARRAY_AS
+
+inherit
+	ARRAY_AS
+
+create
+	initialize
+
+feature -- Visitor
+
+--	process (v: AST_VISITOR) is
+--			-- process current element.
+--		do
+--			v.process_array_as (Current)
+--		end
+
+feature -- Attributes
+
+	array_type: TYPE_A
+			-- Type of manifest array
+
+feature -- Settings
+
+	set_array_type (t: like array_type) is
+		require
+			t_not_void: t /= Void
+		do
+			array_type := t
+		ensure
+			array_type_set: array_type = t
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -530,14 +530,19 @@ feature -- Basic operations
     show
             -- Show the tool, if possible
         do
-            if not is_initialized then
-                    -- Delayed initialization may mean the user interface has not been shown yet.
-                    -- Call to user_widget should create the widget
-                initialize
-            end
-            Precursor {EB_TOOL}
+        	if develop_window/= Void and then not develop_window.is_recycling and not develop_window.is_recycled then
+        			-- The check here is to prevent a docking library bug from activating the tool.
+	            if not is_initialized then
+	                    -- Delayed initialization may mean the user interface has not been shown yet.
+	                    -- Call to user_widget should create the widget
+	                initialize
+	            end
+	            Precursor {EB_TOOL}
+	        else
+	        	check False end
+        	end
         ensure then
-            is_initialized: is_initialized
+            is_initialized: (develop_window/= Void and then not develop_window.is_recycling and not develop_window.is_recycled) implies is_initialized
         end
 
 feature {NONE} -- Basic operations

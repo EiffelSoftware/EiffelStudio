@@ -71,8 +71,6 @@ feature -- Basic operations
 			not_a_context_id_is_empty: not a_context_id.is_empty
 			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
 			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
-		local
-			l_result: STRING_32
 		do
 			create Result.make (50)
 			Result.append (a_context_id.as_string_32)

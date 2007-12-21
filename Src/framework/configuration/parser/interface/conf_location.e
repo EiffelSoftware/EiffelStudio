@@ -219,20 +219,12 @@ feature {NONE} -- Implementation
 			l_relative_base: STRING
 			l_offset: INTEGER
 			l_stop: BOOLEAN
-			l_space, l_left_paren, l_right_paren, l_backslash, l_dollar, l_left_bracket, l_right_bracket: CHARACTER_8
 		do
-			l_space := ' '
-			l_left_paren := '('
-			l_left_bracket := '{'
-			l_right_paren := ')'
-			l_right_bracket := '}'
-			l_dollar := '$'
-			l_backslash := '\'
 			Result := original_path.twin
 
 				-- replace $| with parent path
 			if parent /= Void then
-				if Result.count >= 2 and then Result.item (1) = l_dollar and then Result.item (2) = '|' then
+				if Result.count >= 2 and then Result.item (1) = '$' and then Result.item (2) = '|' then
 					Result.replace_substring (parent.evaluated_directory+"\", 1, 2)
 				end
 			end
@@ -240,7 +232,7 @@ feature {NONE} -- Implementation
 				-- replace $ABC and ${ABC} with user defined or environment variables
 			from
 				l_offset := 1
-				i := Result.index_of (l_dollar, l_offset)
+				i := Result.index_of ('$', l_offset)
 			until
 				i = 0 or l_stop
 			loop
@@ -248,16 +240,16 @@ feature {NONE} -- Implementation
 				l_old_i := i
 
 					-- in each loop we decrease the number of $ by 1, except if it is a $(ABC), then we increase the offset
-				if i /= 0 and then Result.item (i+1) = l_left_bracket then
-					j := Result.index_of (l_right_bracket, i)
+				if i /= 0 and then Result.item (i+1) = '{' then
+					j := Result.index_of ('}', i)
 					if j /= 0 and j > i+2 then
 						l_key := Result.substring (i+2, j-1)
 					end
-				elseif i /= 0 and then Result.item (i+1) = l_left_paren then
-					l_offset := Result.index_of (l_right_paren, i) + 2
+				elseif i /= 0 and then Result.item (i+1) = '(' then
+					l_offset := Result.index_of (')', i) + 2
 				elseif i /= 0 then
-					j := Result.index_of (l_space, i) - 1
-					k := Result.index_of (l_backslash, i) - 1
+					j := Result.index_of (' ', i) - 1
+					k := Result.index_of ('\', i) - 1
 					if j < i then
 						j := Result.count
 					end
@@ -280,7 +272,7 @@ feature {NONE} -- Implementation
 					Result.replace_substring (to_internal (l_value), i, j)
 				end
 
-				i := Result.index_of (l_dollar, l_offset)
+				i := Result.index_of ('$', l_offset)
 				if i > 0 then
 						-- Check if last variable was extracted correctly
 					l_stop := l_old_i = i

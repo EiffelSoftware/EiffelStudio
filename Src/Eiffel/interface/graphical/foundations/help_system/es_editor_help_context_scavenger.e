@@ -312,13 +312,18 @@ feature {NONE} -- Formatting
 
 						l_start_i := 1
 						l_end_i := l_vars.first.start_i - 1
-						from l_vars.start until l_vars.after or l_start_i > l_uri.count loop
-							if l_start_i < l_end_i then
+						from
+							l_vars.start
+							l_var := l_vars.item_for_iteration
+						until
+							l_vars.after or
+							l_start_i > l_uri.count
+						loop
+							if l_start_i <= l_end_i then
 									-- Append leading text
 								l_new_uri.append (l_uri.substring (l_start_i, l_end_i))
 							end
 
-							l_var := l_vars.item_for_iteration
 							if l_context_vars.has (l_var.var) then
 									-- Append variable value
 								l_new_uri.append (l_context_vars.item (l_var.var))
@@ -328,13 +333,14 @@ feature {NONE} -- Formatting
 							l_start_i := l_var.end_i + 1
 							l_vars.forth
 							if not l_vars.after then
+								l_var := l_vars.item_for_iteration
 								l_end_i := l_var.start_i - 1
 							else
 								l_end_i := l_uri.count
 							end
 						end
 
-						if l_start_i < l_uri.count then
+						if l_start_i <= l_uri.count then
 								-- Append trailing text
 							l_new_uri.append (l_uri.substring (l_start_i, l_end_i))
 						end

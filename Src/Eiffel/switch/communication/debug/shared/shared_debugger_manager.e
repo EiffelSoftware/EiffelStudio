@@ -22,9 +22,15 @@ feature -- Access
 			debugger_manager_not_void: Result /= Void
 		end
 
+	Breakpoints_manager: BREAKPOINTS_MANAGER is
+		do
+			Result := debugger_manager.breakpoints_manager
+		end
+
 	set_debugger_manager (v: like debugger_manager) is
 		do
 			Debugger_manager_cell.replace (v)
+			debugger_manager_change_actions.call ([v])
 		ensure
 			Debugger_manager_is_set: Debugger_manager = v
 		end
@@ -36,6 +42,12 @@ feature {NONE} -- Cell
 		once
 			create Result.put (Void)
 		end
+
+	debugger_manager_change_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]] is
+		once
+			create Result
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

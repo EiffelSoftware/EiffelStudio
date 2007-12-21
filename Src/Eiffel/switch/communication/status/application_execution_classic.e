@@ -145,6 +145,7 @@ feature -- Execution
 	continue_ignoring_kept_objects is
 		do
 			cont_request.send_breakpoints
+			debugger_manager.breakpoints_manager.reset_breakpoints_changed
 			status.set_is_stopped (False)
 			cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
 		end

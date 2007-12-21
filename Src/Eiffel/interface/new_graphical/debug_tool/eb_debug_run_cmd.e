@@ -206,6 +206,7 @@ feature -- Execution
 			body_index: INTEGER
 			bp_exists: BOOLEAN
 			dbg: DEBUGGER_MANAGER
+			bm: BREAKPOINTS_MANAGER
 			bp: BREAKPOINT
 		do
 			if Eiffel_project.successful then
@@ -215,15 +216,16 @@ feature -- Execution
 					body_index := bs.body_index
 						-- Remember the status of the breakpoint
 					dbg := Debugger_manager
-					if dbg.is_breakpoint_set (f, index) then
-						bp := dbg.breakpoint (f, index)
+					bm := debugger_manager.breakpoints_manager
+					if bm.is_breakpoint_set (f, index) then
+						bp := bm.breakpoint (f, index)
 						bp_exists := bp /= Void
 					end
 
 					if bp_exists then
 						bp.enable_run_to_cursor_mode
 					else
-						dbg.enable_breakpoint (f, index)
+						bm.enable_breakpoint (f, index)
 					end
 						-- Run the program
 					execute
@@ -242,7 +244,7 @@ feature -- Execution
 						dbg.add_on_stopped_action (
 								agent (a_dbg: DEBUGGER_MANAGER; a_f: E_FEATURE; a_index: INTEGER)
 									do
-										a_dbg.remove_breakpoint (a_f, a_index)
+										a_dbg.breakpoints_manager.remove_breakpoint (a_f, a_index)
 									end (?, f, index)
 								, True
 							)
@@ -250,7 +252,7 @@ feature -- Execution
 					dbg.add_on_stopped_action (
 							agent (a_dbg: DEBUGGER_MANAGER)
 								do
-									a_dbg.notify_breakpoints_changes
+									a_dbg.breakpoints_manager.notify_breakpoints_changes
 								end (?)
 							, True
 						)

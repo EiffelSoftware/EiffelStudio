@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 					manager.remove_class (class_i)
 					could_not_delete := False
 				end
-				Debugger_manager.resynchronize_breakpoints
+				Debugger_manager.breakpoints_manager.resynchronize_breakpoints
 				window_manager.synchronize_all
 			end
 			if could_not_delete then

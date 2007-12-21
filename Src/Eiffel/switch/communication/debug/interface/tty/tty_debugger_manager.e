@@ -123,7 +123,7 @@ feature -- output
 			s: STRING
 			arr: ARRAY [BREAKPOINT]
 		do
-			bl := debugger_data.breakpoints
+			bl := breakpoints_manager.breakpoints
 			from
 				i := 1
 				if on_select_proc /= Void then
@@ -403,7 +403,7 @@ feature -- Breakpoints management
 					end
 				else
 					if s.item (1) = '*' then
-						debugger_data.enable_first_breakpoints_in_class (cc)
+						breakpoints_manager.enable_first_breakpoints_in_class (cc)
 						l_added := True
 						localized_print (debugger_names.m_added_breakpoints_in_class (cc.name_in_upper))
 					else
@@ -442,7 +442,7 @@ feature -- Breakpoints management
 						elseif i > fe.number_of_breakpoint_slots then
 							i := fe.number_of_breakpoint_slots
 						end
-						debugger_data.enable_breakpoint (fe, i)
+						breakpoints_manager.enable_breakpoint (fe, i)
 						l_added := True
 						localized_print (debugger_names.m_added_breakpoint_detailed (cc.name_in_upper, fe.name, i.out))
 					end
@@ -469,10 +469,12 @@ feature -- Breakpoints management
 				s.append_string_general (bp.condition.expression)
 				m.add_separator (s)
 			end
-			if bp.has_message then
-				s := "Message = "
-				s.append_string_general (bp.message)
-				m.add_separator (s)
+			if bp.has_when_hits_action_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}) then
+				if {x: !BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE} bp.when_hits_actions_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}).first then
+					s := "Message = "
+					s.append_string_general (x.message)
+					m.add_separator (s)
+				end
 			end
 			m.add_separator ("----")
 			if not bp.is_enabled then
@@ -552,12 +554,12 @@ feature -- Breakpoints management
 		local
 			s: STRING
 			d: STRING
+			wha: BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE
 		do
-			if bp.has_message then
-				s := bp.message
+			if bp.has_when_hits_action_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}) then
+				wha ?= bp.when_hits_actions_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}).first
+				s := wha.message
 				localized_print (debugger_names.m_current_bp_message(s))
-			end
-			if bp.has_message then
 				d := "y"
 			else
 				d := "n"
@@ -566,18 +568,22 @@ feature -- Breakpoints management
 			if s.is_equal ("y") then
 				localized_print (debugger_names.e_enter_print_message)
 				s := adjusted_answer
-				if s.is_empty and bp.has_message then
+				if s.is_empty and wha /= Void then
 					if confirmation_answer (debugger_names.m_remove_or_use_current_bp_message_question ("1", "2"), << "1", "2">>, "2", True).is_equal ("1") then
-						bp.set_message (Void)
+						bp.remove_when_hits_action (wha)
+						wha := Void
 					else
 						--| Do nothing
 					end
 					-- do you want to keep existing message
 				else
-					if bp.has_message then
+					if wha = Void then
+						create wha.make (s)
+						bp.add_when_hits_action (wha)
 						bp.set_continue_execution (True)
+					else
+						wha.set_message (s)
 					end
-					bp.set_message (s)
 				end
 			end
 			if bp.continue_execution then

@@ -73,6 +73,20 @@ feature -- Properties
 
 feature -- Access
 
+	to_tag_path: STRING_32
+			-- Tag path representation of Current.
+			-- Group_name.class_name.feature_name.index
+		local
+			bpm: BREAKPOINTS_MANAGER
+			bp: BREAKPOINT
+		do
+			bpm := breakpoints_manager
+			if bpm.is_breakpoint_set (routine, index) then
+				bp := bpm.breakpoint (routine, index)
+				Result := bp.to_tag_path
+			end
+		end
+
 	stone_cursor: EV_POINTER_STYLE is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
@@ -121,7 +135,7 @@ feature -- Basic operations
 			bpm: BREAKPOINTS_MANAGER
 			bp: BREAKPOINT
 		do
-			bpm := Debugger_manager
+			bpm := breakpoints_manager
 			if bpm.is_breakpoint_set (routine, index) then
 				bp := bpm.breakpoint (routine, index)
 			end
@@ -129,14 +143,21 @@ feature -- Basic operations
 			create menu
 			create item.make_with_text (Interface_names.m_Breakpoint_index)
 			item.set_text (item.text + index.out)
-			item.disable_sensitive
+			item.select_actions.extend (agent (abp: BREAKPOINT)
+					do
+						if abp /= Void then
+							(create {EV_SHARED_APPLICATION}).ev_application.clipboard.set_text (abp.to_tag_path)
+						end
+					end(bp)
+				)
+--			item.disable_sensitive
 			menu.extend (item)
 			menu.extend (create {EV_MENU_SEPARATOR})
 
 				-- "Enable"
 			create item.make_with_text (Interface_names.m_Enable_this_bkpt)
 			item.select_actions.extend (agent bpm.enable_breakpoint (routine, index))
-			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+			item.select_actions.extend (agent bpm.notify_breakpoints_changes)
 
 			if bp /= Void and then bp.is_enabled then
 				item.disable_sensitive
@@ -146,7 +167,7 @@ feature -- Basic operations
 				-- "Disable"
 			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
 			item.select_actions.extend (agent bpm.disable_breakpoint (routine, index))
-			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+			item.select_actions.extend (agent bpm.notify_breakpoints_changes)
 			if bp /= Void and then bp.is_disabled then
 				item.disable_sensitive
 			end
@@ -156,18 +177,25 @@ feature -- Basic operations
 					-- "Remove"
 				create item.make_with_text (Interface_names.m_Remove_this_bkpt)
 				item.select_actions.extend (agent bpm.remove_breakpoint (routine, index))
-				item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+				item.select_actions.extend (agent bpm.notify_breakpoints_changes)
 				menu.extend (item)
 			end
 
 				--| Conditional breakpoint
 			menu.extend (create {EV_MENU_SEPARATOR})
+			if bp /= Void then
+					-- "Edit"
+				create item.make_with_text (Interface_names.m_Edit_this_bkpt)
+				item.select_actions.extend (agent open_breakpoint_dialog (routine, index))
+				menu.extend (item)
+			end
+
 			if bp = Void then
 				create item.make_with_text (Interface_names.m_Set_conditional_breakpoint)
 			else
 				create item.make_with_text (Interface_names.m_Edit_condition)
 			end
-			item.select_actions.extend (agent set_conditional_breakpoint (routine, index))
+			item.select_actions.extend (agent edit_conditional_breakpoint (routine, index))
 			menu.extend (item)
 
 			if bp /= Void and then bp.has_condition then
@@ -190,7 +218,7 @@ feature -- Basic operations
 					--| When hits breakpoint
 				create cmi.make_with_text (Interface_names.m_When_hits)
 				cmi.select_actions.extend (agent edit_when_hits_breakpoint (bp))
-				if bp.has_message then
+				if bp.has_when_hits_action then
 					cmi.enable_select
 				end
 				menu.extend (cmi)
@@ -212,463 +240,67 @@ feature -- Basic operations
 			menu.show
 		end
 
-feature -- operation on conditions
+feature -- operation on breakpoint
 
-	set_conditional_breakpoint (f: E_FEATURE; pos: INTEGER) is
-			-- Prompt the user for a condition and create a new breakpoint with that condition at coordinates (`f',`pos').
-		local
-			d: EV_DIALOG
-			okb, removeb, cancelb: EV_BUTTON
-			tf: EB_CODE_COMPLETABLE_TEXT_FIELD
-			l_provider: EB_DEBUGGER_EXPRESSION_COMPLETION_POSSIBILITIES_PROVIDER
-			lab: EV_LABEL
-			fr: EV_FRAME
-			vb, vb2: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
-			rb_is_true, rb_has_changed: EV_RADIO_BUTTON
-			cb_cont_on_cond_failure: EV_CHECK_BUTTON
-			bp: BREAKPOINT
-		do
-				-- Create all widgets.
-			create d
-			d.set_title (Interface_names.t_Enter_condition)
-			d.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			create fr.make_with_text (Interface_names.l_Condition)
-			create vb
-			vb.set_padding (Layout_constants.Default_padding_size)
-			vb.set_border_width (Layout_constants.Small_border_size)
-
-			create okb.make_with_text (Interface_names.b_Ok)
-			create cancelb.make_with_text (Interface_names.b_Cancel)
-			create removeb.make_with_text (Interface_names.b_Remove)
-
-			Layout_constants.set_default_width_for_button (okb)
-			Layout_constants.set_default_width_for_button (cancelb)
-			Layout_constants.set_default_width_for_button (removeb)
-			create tf.make
-			tf.set_parent_window (d)
-			create rb_is_true.make_with_text (Interface_names.l_Is_true)
-			create rb_has_changed.make_with_text (Interface_names.l_Has_changed)
-			create cb_cont_on_cond_failure.make_with_text (Interface_names.b_Continue_on_condition_failure)
-
-			create lab
-
-				-- Code completion
-			create l_provider.make (f.associated_class, f.ast)
-			tf.set_completion_possibilities_provider (l_provider)
-			l_provider.set_code_completable (tf)
-
-			if Debugger_manager.is_breakpoint_set (f, pos) then
-				bp := Debugger_manager.breakpoint (f, pos)
-			end
-
-				-- Layout all widgets
-
-			create vb2
---			vb2.set_padding (Layout_constants.Small_padding_size)
-			vb2.set_border_width (Layout_constants.Small_border_size)
-			fr.extend (vb2)
-			vb2.extend (tf)
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			hb.extend (create {EV_CELL})
-			hb.extend (rb_is_true)
-			hb.disable_item_expand (rb_is_true)
-			hb.extend (rb_has_changed)
-			hb.disable_item_expand (rb_has_changed)
-			vb2.extend (hb)
-			vb2.disable_item_expand (hb)
-
-			vb2.extend (create {EV_HORIZONTAL_SEPARATOR})
-			vb2.disable_item_expand (vb2.last)
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			hb.extend (create {EV_CELL})
-			hb.extend (cb_cont_on_cond_failure)
-			hb.disable_item_expand (cb_cont_on_cond_failure)
-			vb2.extend (hb)
-			vb2.disable_item_expand (hb)
-
-			vb.extend (fr)
-			vb.disable_item_expand (fr)
-			vb.extend (lab)
-
-				--| Buttons
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			hb.extend (create {EV_CELL})
-			hb.extend (okb)
-			hb.disable_item_expand (okb)
-			if bp /= Void then
-				hb.extend (removeb)
-				hb.disable_item_expand (removeb)
-			end
-			hb.extend (cancelb)
-			hb.disable_item_expand (cancelb)
-			vb.extend (hb)
-
-				--| Dialog
-			d.extend (vb)
-			d.set_maximum_height (d.minimum_height)
-
-			if bp /= Void and then bp.has_condition then
-					-- Update widgets.
-				tf.set_text (bp.condition.expression)
-				if bp.condition_as_has_changed then
-					rb_has_changed.enable_select
-				else
-					rb_is_true.enable_select
-				end
-				if bp.continue_on_condition_failure then
-					cb_cont_on_cond_failure.enable_select
-				else
-					cb_cont_on_cond_failure.disable_select
-				end
-			end
-
-				-- Set up actions
-			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, rb_is_true, rb_has_changed, cb_cont_on_cond_failure, tf, lab))
-			if bp /= Void then
-				removeb.select_actions.extend (agent remove_condition_from_breakpoint (f, pos))
-				removeb.select_actions.extend (agent d.destroy)
-			end
-			cancelb.select_actions.extend (agent d.destroy)
-			d.set_default_push_button (okb)
-			d.set_default_cancel_button (cancelb)
-			d.show_actions.extend (agent tf.set_focus)
-			d.show_modal_to_window (Window_manager.last_focused_window.window)
+	last_dialogs: LINKED_LIST [ES_BREAKPOINT_DIALOG] is
+		once
+			create Result.make
 		end
+
+	new_breakpoint_dialog: ES_BREAKPOINT_DIALOG is
+			-- New breakpoint dialog.
+ 		do
+ 			create Result.make
+ 			Result.set_stone (Current)
+ 			Result.set_is_modal (False)
+ 			last_dialogs.extend (Result)
+ 			breakpoints_manager.update_breakpoints_tags_provider
+ 			Result.close_actions.extend_kamikaze (agent last_dialogs.prune_all (Result))
+ 		ensure
+ 			Result_not_void: Result /= Void
+		end
+
+ 	open_breakpoint_dialog (a_feat: E_FEATURE; a_index: INTEGER) is
+ 		do
+ 			new_breakpoint_dialog.show_on_active_window
+ 		end
 
 	remove_condition_from_breakpoint (f: E_FEATURE; pos: INTEGER) is
-		do
-			Debugger_manager.remove_condition (f, pos)
-			Debugger_manager.notify_breakpoints_changes
-		end
-
-	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG;
-				a_rb_is_true, a_rb_has_changed: EV_SELECTABLE;
-				a_cb_cont_on_cond_failure: EV_SELECTABLE;
-			a_input: EV_TEXTABLE; a_output: EV_LABEL) is
-			-- Attempt to create a conditional breakpoint.
 		local
-			expr: DBG_EXPRESSION
 			bpm: BREAKPOINTS_MANAGER
-			bp: BREAKPOINT
 		do
-			create expr.make_for_context (a_input.text)
-			if not expr.syntax_error_occurred then
-				bpm := Debugger_manager
-				if a_rb_is_true.is_selected then
-					if expr.is_boolean_expression (f) then
-						if not bpm.is_breakpoint_set (f, pos) then
-							bpm.enable_breakpoint (f, pos)
-						end
-						bp := bpm.breakpoint (f, pos)
-						check bp /= Void end
-						bp.set_condition_as_is_true
-						bp.set_condition (expr)
-						Debugger_manager.notify_breakpoints_changes
-						d.destroy
-					else
-						a_output.set_text (Warning_messages.w_not_a_condition (a_input.text))
-					end
-				elseif a_rb_has_changed.is_selected then
-					if not bpm.is_breakpoint_set (f, pos) then
-						bpm.enable_breakpoint (f, pos)
-					end
-					bp := bpm.breakpoint (f, pos)
-					check bp /= Void end
-					bp.set_condition_as_has_changed
-					bp.set_condition (expr)
-					Debugger_manager.notify_breakpoints_changes
-					d.destroy
-				else
-					check should_not_occur: False end
-				end
-				if bp /= Void then
-					bp.set_continue_on_condition_failure (a_cb_cont_on_cond_failure.is_selected)
-				end
-			else
-				a_output.set_text (Warning_messages.w_syntax_error_in_expression (a_input.text))
-			end
+			bpm := breakpoints_manager
+			bpm.remove_condition (f, pos)
+			bpm.notify_breakpoints_changes
 		end
 
-feature -- operation on message
-
-	edit_when_hits_breakpoint (bp: BREAKPOINT) is
+	edit_conditional_breakpoint (f: E_FEATURE; pos: INTEGER) is
+			-- Prompt the user for a condition and create a new breakpoint with that condition at coordinates (`f',`pos').
 		local
-			d: EV_DIALOG
-			okb, cancelb: EV_BUTTON
-			tf: EV_TEXT_FIELD
-			fr: EV_FRAME
-			lab: EV_LABEL
-			mesg_cb: EV_CHECK_BUTTON
-			cont_cb: EV_CHECK_BUTTON
-			vb, vb2: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
-		do
-				-- Create all widgets.
-			create d
-			d.set_title (Interface_names.m_When_hits)
-			d.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			create vb
-			vb.set_padding (Layout_constants.Default_padding_size)
-			vb.set_border_width (Layout_constants.Small_border_size)
-
-			create mesg_cb.make_with_text (Interface_names.l_Print_message)
-			create tf
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			hb.extend (mesg_cb)
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
-
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			create fr
-			hb.extend (fr)
-			create vb2
-			vb2.set_padding (Layout_constants.Small_padding_size)
-			fr.extend (vb2)
-			vb2.extend (tf)
-			tf.set_minimum_width_in_characters (20)
-			vb2.disable_item_expand (tf)
-
-			create lab.make_with_text (Interface_names.l_Print_message_help)
-			lab.align_text_left
-			vb2.extend (lab)
-			vb2.disable_item_expand (lab)
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
-
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			create cont_cb.make_with_text (Interface_names.l_Continue_execution)
-			if bp.continue_execution then
-				cont_cb.enable_select
-			end
-			hb.extend (cont_cb)
-			hb.disable_item_expand (cont_cb)
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
-
-			create okb.make_with_text (Interface_names.B_ok)
-			create cancelb.make_with_text (Interface_names.B_cancel)
-			Layout_constants.set_default_width_for_button (okb)
-			Layout_constants.set_default_width_for_button (cancelb)
-
-				-- Data and behavior
-			if bp.has_message then
-				mesg_cb.enable_select
-				tf.set_text (bp.message)
-				fr.enable_sensitive
-			else
-				fr.disable_sensitive
-			end
-			mesg_cb.select_actions.extend (agent (a_mesg_cb, a_cont_cb: EV_CHECK_BUTTON; a_frame: EV_FRAME;)
-					do
-						if a_mesg_cb.is_selected then
-							a_frame.enable_sensitive
-							a_cont_cb.enable_select
-						else
-							a_frame.disable_sensitive
-							a_cont_cb.disable_select
-						end
-					end (mesg_cb, cont_cb, fr)
-				)
-
-				-- Layout all widgets
-			create hb
-			hb.extend (create {EV_CELL})
-			hb.extend (okb)
-			hb.disable_item_expand (okb)
-			hb.extend (cancelb)
-			hb.disable_item_expand (cancelb)
-			vb.extend (hb)
-			d.extend (vb)
-			d.set_maximum_height (d.minimum_height)
-
-				-- Set up actions
-			okb.select_actions.extend (agent (a_bp: BREAKPOINT; a_mesg_cb, a_cont_cb: EV_CHECK_BUTTON; a_tf: EV_TEXT_FIELD)
-					do
-						if a_mesg_cb.is_selected then
-							a_bp.set_message (a_tf.text)
-						else
-							a_bp.set_message (Void)
-						end
-						a_bp.set_continue_execution (a_cont_cb.is_selected)
-					end(bp, mesg_cb, cont_cb, tf)
-				)
-			okb.select_actions.extend (agent d.destroy)
-			cancelb.select_actions.extend (agent d.destroy)
-			d.set_default_push_button (okb)
-			d.set_default_cancel_button (cancelb)
-			d.show_actions.extend (agent mesg_cb.set_focus)
-			d.show_modal_to_window (Window_manager.last_focused_window.window)
+			dlg: like new_breakpoint_dialog
+ 		do
+ 			dlg := new_breakpoint_dialog
+			dlg.show_actions.extend_kamikaze (agent dlg.focus_condition_panel)
+			dlg.show_on_active_window
 		end
 
 	edit_hit_count_breakpoint (bp: BREAKPOINT) is
 		local
-			d: EV_DIALOG
-			okb, cancelb, resetb: EV_BUTTON
-			combo: EV_COMBO_BOX
-			tf: EV_TEXT_FIELD
-			lab: EV_LABEL
-			vb: EV_VERTICAL_BOX
-			hb: EV_HORIZONTAL_BOX
-			li: EV_LIST_ITEM
-			hcc: TUPLE [mode: INTEGER; value:INTEGER]
-		do
-				-- Create all widgets.
-			create d
-			d.set_title (Interface_names.m_Hit_count)
-			d.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			create vb
-			vb.set_padding (Layout_constants.Default_padding_size)
-			vb.set_border_width (Layout_constants.Small_border_size)
+			dlg: like new_breakpoint_dialog
+ 		do
+ 			dlg := new_breakpoint_dialog
+			dlg.show_actions.extend_kamikaze (agent dlg.focus_hit_count_panel)
+			dlg.show_on_active_window
+ 		end
 
-			create lab.make_with_text (Interface_names.l_When_breakpoint_is_hit)
-			vb.extend (lab)
-			vb.disable_item_expand (lab)
-
-			create combo
-			create tf
-			combo.disable_edit
-			combo.set_minimum_width_in_characters (20)
-			tf.set_minimum_width_in_characters (5)
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			hb.extend (combo)
-			hb.extend (tf)
-			hb.disable_item_expand (tf)
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
-
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
-			create lab.make_with_text (Interface_names.l_Current_hit_count)
-			hb.extend (lab)
-			hb.disable_item_expand (lab)
-			create lab.make_with_text (bp.hits_count.out)
-			lab.align_text_left
-			hb.extend (lab)
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
-
-			create resetb.make_with_text (Interface_names.b_Reset)
-			create okb.make_with_text (Interface_names.B_ok)
-			create cancelb.make_with_text (Interface_names.B_cancel)
-			Layout_constants.set_default_width_for_button (resetb)
-			Layout_constants.set_default_width_for_button (okb)
-			Layout_constants.set_default_width_for_button (cancelb)
-
-				-- Layout all widgets
-			create hb
-			hb.extend (resetb)
-			hb.disable_item_expand (resetb)
-			hb.extend (create {EV_CELL})
-			hb.extend (okb)
-			hb.disable_item_expand (okb)
-			hb.extend (cancelb)
-			hb.disable_item_expand (cancelb)
-			vb.extend (hb)
-			d.extend (vb)
-			d.set_maximum_height (d.minimum_height)
-
-				--| Fill data
-			hcc := bp.hits_count_condition
-			if hcc = Void then
-				hcc := [{BREAKPOINT}.Hits_count_condition_always, 0]
-			end
-			tf.set_text (hcc.value.out)
-
-			create li.make_with_text (Interface_names.m_Break_always)
-			combo.extend (li)
-			li.select_actions.extend (agent tf.hide)
-			li.set_data ({BREAKPOINT}.Hits_count_condition_always)
-			if hcc.mode = {BREAKPOINT}.Hits_count_condition_always then
-				li.enable_select
-				tf.hide
-			end
-
-			create li.make_with_text (Interface_names.m_Break_when_hit_count_equal)
-			combo.extend (li)
-			li.select_actions.extend (agent tf.show)
-			li.set_data ({BREAKPOINT}.Hits_count_condition_equal)
-			if hcc.mode = {BREAKPOINT}.Hits_count_condition_equal then
-				li.enable_select
-			end
-
-			create li.make_with_text (Interface_names.m_Break_when_hit_count_multiple_of)
-			combo.extend (li)
-			li.select_actions.extend (agent tf.show)
-			li.set_data ({BREAKPOINT}.Hits_count_condition_multiple)
-			if hcc.mode = {BREAKPOINT}.Hits_count_condition_multiple then
-				li.enable_select
-			end
-
-			create li.make_with_text (Interface_names.m_Break_when_hit_count_greater)
-			combo.extend (li)
-			li.select_actions.extend (agent tf.show)
-			li.set_data ({BREAKPOINT}.Hits_count_condition_greater)
-			if hcc.mode = {BREAKPOINT}.Hits_count_condition_greater then
-				li.enable_select
-			end
-
-			create li.make_with_text (Interface_names.m_Break_when_hit_count_continue_execution)
-			combo.extend (li)
-			li.select_actions.extend (agent tf.hide)
-			li.set_data ({BREAKPOINT}.Hits_count_condition_continue_execution)
-			if hcc.mode = {BREAKPOINT}.Hits_count_condition_continue_execution then
-				li.enable_select
-			end
-
-				-- Set up actions
-			okb.select_actions.extend (agent (a_dlg:EV_DIALOG; a_bp: BREAKPOINT; a_combo: EV_COMBO_BOX; a_tf: EV_TEXT_FIELD)
-					local
-						s: STRING_32
-						mr: INTEGER_REF
-						m,v: INTEGER
-						l_invalid: BOOLEAN
-					do
-						mr ?= a_combo.selected_item.data
-						if mr /= Void then
-							m := mr.item
-						end
-						s := a_tf.text
-
-						if s.is_integer then
-							v := s.to_integer
-							if m = {BREAKPOINT}.Hits_count_condition_multiple and v = 0 then
-								l_invalid := True
-							else
-								a_bp.set_hits_count_condition (m, v)
-								a_dlg.destroy
-							end
-						else
-							l_invalid := True
-						end
-						if l_invalid then
-							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (debugger_names.w_Invalid_hit_count_condition_target, a_dlg, Void)
-							a_tf.set_focus
-						end
-					end(d, bp, combo, tf)
-				)
-
-			cancelb.select_actions.extend (agent d.destroy)
-			resetb.select_actions.extend (agent (a_bp: BREAKPOINT; a_lab: EV_LABEL)
-					do
-						a_bp.reset_hits_count
-						a_lab.set_text (a_bp.hits_count.out)
-						a_lab.refresh_now
-						debugger_manager.notify_breakpoints_changes
-					end(bp, lab)
-				)
-			d.set_default_push_button (okb)
-			d.set_default_cancel_button (cancelb)
-			d.show_actions.extend (agent combo.set_focus)
-			d.show_modal_to_window (Window_manager.last_focused_window.window)
-		end
+	edit_when_hits_breakpoint (bp: BREAKPOINT) is
+		local
+			dlg: like new_breakpoint_dialog
+ 		do
+ 			dlg := new_breakpoint_dialog
+			dlg.show_actions.extend_kamikaze (agent dlg.focus_when_hits_panel)
+			dlg.show_on_active_window
+ 		end
 
 feature -- state of breakpoint		
 
@@ -678,13 +310,13 @@ feature -- state of breakpoint
 		local
 			bpm: BREAKPOINTS_MANAGER
 		do
-			bpm := Debugger_manager
+			bpm := breakpoints_manager
 			if bpm.is_breakpoint_enabled (routine, index) then
 				bpm.remove_breakpoint (routine, index)
 			else
 				bpm.enable_breakpoint (routine, index)
 			end
-			Debugger_manager.notify_breakpoints_changes
+			bpm.notify_breakpoints_changes
 		end
 
 indexing

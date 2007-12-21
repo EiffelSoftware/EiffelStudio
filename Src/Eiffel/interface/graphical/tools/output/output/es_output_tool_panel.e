@@ -234,13 +234,13 @@ feature {NONE} -- Implementation
 		local
 			bpm: BREAKPOINTS_MANAGER
 		do
-			bpm := Debugger_manager
+			bpm := Debugger_manager.breakpoints_manager
 			if bpm.is_breakpoint_enabled (st.routine, st.index) then
 				bpm.remove_breakpoint (st.routine, st.index)
 			else
 				bpm.set_breakpoint (st.routine, st.index)
 			end
-			Debugger_manager.notify_breakpoints_changes
+			bpm.notify_breakpoints_changes
 		end
 
 	drop_class (st: CLASSI_STONE) is

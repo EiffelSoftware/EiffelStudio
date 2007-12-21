@@ -86,15 +86,15 @@ feature {NONE} -- Redirects
 			not_is_recycled: not is_recycled
 			a_stone_attached: a_stone /= Void
 		local
-			l_manager: BREAKPOINTS_MANAGER
+			bpm: BREAKPOINTS_MANAGER
 		do
-			l_manager := development_window.debugger_manager
-			if l_manager.is_breakpoint_enabled (a_stone.routine, a_stone.index) then
-				l_manager.remove_breakpoint (a_stone.routine, a_stone.index)
+			bpm := development_window.debugger_manager.breakpoints_manager
+			if bpm.is_breakpoint_enabled (a_stone.routine, a_stone.index) then
+				bpm.remove_breakpoint (a_stone.routine, a_stone.index)
 			else
-				l_manager.set_breakpoint (a_stone.routine, a_stone.index)
+				bpm.set_breakpoint (a_stone.routine, a_stone.index)
 			end
-			development_window.debugger_manager.notify_breakpoints_changes
+			bpm.notify_breakpoints_changes
 		end
 
 	drop_class (a_stone: CLASSI_STONE) is

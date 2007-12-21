@@ -10,6 +10,7 @@ class
 	DEBUGGER_MANAGER
 
 inherit
+	BREAKPOINTS_OBSERVER
 
 	SHARED_EIFFEL_PROJECT
 
@@ -18,11 +19,6 @@ inherit
 	SYSTEM_CONSTANTS
 
 	EXECUTION_ENVIRONMENT
-
-	BREAKPOINTS_MANAGER
-		redefine
-			clear_breakpoints
-		end
 
 	SHARED_BENCH_NAMES
 
@@ -39,8 +35,9 @@ feature {NONE} -- Initialization
 			create controller.make (Current)
 			create application_quit_actions
 			create application_prelaunching_actions
-			create debugger_data.make
 			create implementation.make (Current)
+			create breakpoints_manager.make (Void)
+			breakpoints_manager.add_observer (Current)
 		end
 
 	is_initialized: BOOLEAN
@@ -94,9 +91,9 @@ feature -- Application execution
 			application_not_void: application /= Void
 		do
 			if is_dotnet_project then
-				create {DBG_EVALUATOR_DOTNET} dbg_evaluator.make
+				create {DBG_EVALUATOR_DOTNET} dbg_evaluator.make (Current)
 			else
-				create {DBG_EVALUATOR_CLASSIC} dbg_evaluator.make
+				create {DBG_EVALUATOR_CLASSIC} dbg_evaluator.make (Current)
 			end
 		end
 
@@ -119,12 +116,16 @@ feature -- Application execution
 		end
 
 	application_initialized: BOOLEAN
+			-- Is application execution initialized ?
 
 	application_launching_in_progress: BOOLEAN
+			-- Is application launching in progress ?
 
 	application: APPLICATION_EXECUTION
+			-- Application associated to current execution.
 
 	dbg_evaluator: DBG_EVALUATOR
+			-- Debugger expression evaluator.
 
 feature -- Output helpers
 
@@ -194,29 +195,112 @@ feature -- Debug info access
 		end
 
 	load_debugger_data is
-			-- Load debug information (so far only the breakpoints)
+			-- Load debug information from the file `raw_filename'
+		local
+			raw_file: RAW_FILE
+			bplst: BREAK_LIST
+			loading_rescued: BOOLEAN
+			full_load_rescued: BOOLEAN
+			obj: TUPLE [breakpoints: BREAK_LIST; exceptions_handler: like exceptions_handler]
 		do
-			if debugger_data = Void then
-				create debugger_data.make
+			if not full_load_rescued then
+				if not loading_rescued then
+					check
+						valid_filename: debug_info_filename /= Void and then
+										not debug_info_filename.is_empty
+					end
+					create raw_file.make (debug_info_filename)
+					if raw_file.exists and then raw_file.is_readable then
+						raw_file.open_read
+						obj ?= raw_file.retrieved
+						raw_file.close
+						if obj /= Void then
+							bplst := obj.breakpoints
+							internal_exceptions_handler := obj.exceptions_handler
+						end
+					end
+
+					breakpoints_manager.set_breakpoints (bplst)
+							-- Reset information about the application
+							-- contained in the breakpoints (if any).
+					breakpoints_manager.restore
+					breakpoints_manager.breakpoints.reload
+				end
+
+					--| Effective file loading done, now process the applicative loading
+				implementation.load_system_dependent_debug_info
+				breakpoints_manager.update_breakpoints_tags_provider
+				breakpoints_manager.resynchronize_breakpoints
+			else
+				-- Issue !
 			end
-			debugger_data.load (debug_info_filename)
-			implementation.load_system_dependent_debug_info
-			resynchronize_breakpoints
+		rescue
+			bplst := Void
+			if not loading_rescued then
+				loading_rescued := True
+			else
+				full_load_rescued := True
+			end
+			retry
 		end
 
 	save_debugger_data is
-			-- Save debug information (so far only the breakpoints)
+			-- Save debug informations into the file `raw_filename'.
+		local
+			raw_file: RAW_FILE
+			retried: BOOLEAN
+			bplst: BREAK_LIST
+			old_bplist: BREAK_LIST
 		do
-			if debugger_data = Void then
-				create debugger_data.make
+			if not retried then
+				check
+					valid_filename: debug_info_filename /= Void and then
+									not debug_info_filename.is_empty
+				end
+				create raw_file.make (debug_info_filename)
+				if not raw_file.exists or else raw_file.is_writable then
+						-- backup current list
+					old_bplist := breakpoints_manager.breakpoints
+					create bplst.make_copy_for_saving (old_bplist)
+					breakpoints_manager.set_breakpoints (bplst)
+
+						-- Reset information about the application
+						-- contained in the breakpoints.
+					bplst.restore
+
+						-- Effective saving
+					raw_file.open_write
+					raw_file.independent_store ([bplst, exceptions_handler])
+					raw_file.close
+					bplst := Void
+				else
+					set_error_message ("Unable to save debugger's properties%N%
+							%Cause: Unable to open " + debug_info_filename + " for writing")
+				end
+
+				breakpoints_manager.set_breakpoints (old_bplist)
+			else
+				set_error_message ("Unable to save debugger's properties%N")
 			end
-			debugger_data.save (debug_info_filename)
 		rescue
-			set_error_message ("Unable to save project properties%N%
-					%Cause: Unable to open " + debug_info_filename + " for writing")
+			if old_bplist /= Void then
+				breakpoints_manager.set_breakpoints (old_bplist)
+				old_bplist := Void
+			end
+			retried := True
+			retry
+		end
+
+	restore_debugger_data is
+			-- Restore debugger data
+		do
+			breakpoints_manager.restore
 		end
 
 feature -- Breakpoints management
+
+	breakpoints_manager: BREAKPOINTS_MANAGER
+			-- Breakpoints manager.
 
 	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
 			-- Process `bp'
@@ -260,18 +344,18 @@ feature -- Breakpoints management
 					end
 				end
 
-				if bp_reached and bp.has_message then
-					debugger_message (computed_breakpoint_message (bp))
+				if bp_reached and bp.has_when_hits_action then
+					bp.when_hits_actions.do_all (agent {BREAKPOINT_WHEN_HITS_ACTION_I}.execute (bp, Current))
 				end
 			end
 			Result := bp_reached and not bp_continue
 		end
 
-	computed_breakpoint_message (bp: BREAKPOINT): STRING is
+	computed_breakpoint_message (bp: BREAKPOINT; a_msg: STRING): STRING is
 			-- Computed message from breakpoint message `bp.message'.
 		require
 			bp_not_void: bp /= Void
-			bp_message_not_void: bp.message /= Void
+			bp_message_not_void: a_msg /= Void
 		local
 			m: STRING
 			m_area: SPECIAL [CHARACTER]
@@ -288,7 +372,7 @@ feature -- Breakpoints management
 			retried: BOOLEAN
 		do
 			if not retried then
-				m := bp.message
+				m := a_msg
 				from
 					i := 0 --| iterate on SPECIAL
 					s := character_routines.unescaped_string (m)
@@ -397,13 +481,20 @@ feature -- Breakpoints management
 					-- Need to individually remove the breakpoints
 					-- since the sent_bp must be updated to
 					-- not stop.
-				Precursor {BREAKPOINTS_MANAGER}
+				breakpoints_manager.clear_breakpoints
 			else
-				debugger_data.wipe_out_all_breakpoints
+				breakpoints_manager.clear_breakpoints_at_once
 			end
+			breakpoints_manager.notify_breakpoints_changes
 		end
 
-	notify_newbreakpoint is
+feature {NONE} -- Breakpoints events
+
+	on_breakpoints_change_event is
+		do
+		end
+
+	on_new_breakpoint_event is
 		do
 			if application_is_executing and then not application_is_stopped then
 				-- If the application is running (and not stopped), we
@@ -413,9 +504,6 @@ feature -- Breakpoints management
 		end
 
 feature -- Properties
-
-	debugger_data: DEBUGGER_DATA
-			-- Debugger information (mainly breakpoints).
 
 	object_manager: DEBUGGED_OBJECT_MANAGER
 			-- Debugged object manager
@@ -544,10 +632,10 @@ feature -- Exception handling
 			end
 		end
 
-	exceptions_handler: DBG_EXCEPTION_HANDLER is
+	exceptions_handler: DBG_EXCEPTION_HANDLER assign set_internal_exceptions_handler is
 			-- Exception handler used during debugging.
 		do
-			Result := debugger_data.exceptions_handler
+			Result := internal_exceptions_handler
 			if Result = Void then
 				if is_classic_project then
 					create Result.make_handling_by_code
@@ -556,11 +644,21 @@ feature -- Exception handling
 				else
 					check False end
 				end
-				debugger_data.set_exceptions_handler (Result)
+				internal_exceptions_handler := Result
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+feature {NONE} -- Internal data
+
+	set_internal_exceptions_handler (v: like internal_exceptions_handler) is
+		do
+			internal_exceptions_handler := v
+		end
+
+	internal_exceptions_handler: like exceptions_handler
+			-- Once perobject: exceptions_handler
 
 feature -- Events/Timers helpers
 
@@ -898,10 +996,6 @@ feature -- Change
 			max_evaluation_duration_set: max_evaluation_duration = v
 		end
 
-	notify_breakpoints_changes is
-		do
-		end
-
 	enable_debug is
 			-- Allow debugging.
 		do
@@ -916,6 +1010,27 @@ feature -- Change
 			can_debug := False
 		ensure
 			not can_debug
+		end
+
+	activate_execution_replay_recording (a_mode: BOOLEAN) is
+		require
+			safe_application_is_stopped: safe_application_is_stopped
+		do
+			application.activate_execution_replay_recording (a_mode)
+		end
+
+feature -- Compilation events
+
+	on_project_recompiled (is_successful: BOOLEAN) is
+		do
+			if is_successful then
+				if breakpoints_manager /= Void and then breakpoints_manager.has_breakpoints then
+					Degree_output.put_resynchronizing_breakpoints_message
+					breakpoints_manager.resynchronize_breakpoints
+				end
+					-- Save breakpoint status and command line.
+				save_debugger_data
+			end
 		end
 
 feature -- Debugging events
@@ -938,7 +1053,7 @@ feature -- Debugging events
 			debugging_operation_id := 0
 			compute_class_c_data
 			from
-				bl := debugger_data.breakpoints
+				bl := breakpoints_manager.breakpoints
 				bl.start
 			until
 				bl.after
@@ -1069,10 +1184,22 @@ feature -- Debugging events
 	on_debugging_terminated (was_executing: BOOLEAN) is
 			-- Called at the very end of debuggging session
 			-- after `on_application_quit'
+		local
+			bl: BREAK_LIST
 		do
 			-- do_nothing
 			application_quit_actions.call (Void)
 			rt_extension_available := False
+
+			from
+				bl := breakpoints_manager.breakpoints
+				bl.start
+			until
+				bl.after
+			loop
+				bl.item_for_iteration.revert_session_data
+				bl.forth
+			end
 		end
 
 feature -- Actions
@@ -1147,12 +1274,11 @@ feature {APPLICATION_EXECUTION} -- specific implementation
 
 invariant
 
-	implementation /= Void
-	controller /= Void
+	implementation_not_void: implementation /= Void
+	controller_not_void: controller /= Void
 
 	application_initialized_not_void: application_initialized implies application /= Void
-	application /= Void implies application.debugger_manager = Current
-	debugger_data /= Void
+	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

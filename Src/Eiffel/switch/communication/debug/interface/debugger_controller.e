@@ -148,7 +148,7 @@ feature -- Debug Operation
 								if_confirmed_do (Warning_messages.w_Makefile_more_recent (makefile_sh_name), agent c_compile)
 							else
 								launch_program := True
-								if manager.has_breakpoints and then a_execution_mode = {EXEC_MODES}.no_stop_points then
+								if manager.breakpoints_manager.has_breakpoints and then a_execution_mode = {EXEC_MODES}.no_stop_points then
 									if preferences.dialog_data /= Void then
 										prefstr := preferences.dialog_data.confirm_ignore_all_breakpoints_string
 									else

@@ -1,45 +1,54 @@
 indexing
-	description: "Objects that ..."
-	legal: "See notice at end of class."
+	description: "When breakpoint hits start or stop execution recording..."
 	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	DEBUGGER_MANAGER
+	BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING
+
+inherit
+	BREAKPOINT_WHEN_HITS_ACTION_I
 
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make is
+	make (a_status: BOOLEAN) is
 		do
+			set_status (a_status)
 		end
 
-feature -- File access
+feature -- Access
 
-	load_debugger_data is
-			-- Load debug information (so far only the breakpoints)
+	status: BOOLEAN
+		-- True  -> start recording
+		-- False -> stop recording
+
+feature -- Change
+
+	set_status (a_status: BOOLEAN) is
+			-- Set `status' with `a_status'
 		do
+			status := a_status
 		end
 
-	save_debugger_data is
-			-- Save debug information (so far only the breakpoints)
-		do
-		end
+feature -- Execute
 
-feature -- Events
-
-	on_project_recompiled (is_successful: BOOLEAN) is
+	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER) is
 		do
+			if a_dm.application_status.replay_recording /= status then
+				a_dm.activate_execution_replay_recording (status)
+			end
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -50,15 +59,15 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software

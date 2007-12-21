@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 					manager.remove_class (class_i)
 					could_not_delete := False
 				end
-				Debugger_manager.resynchronize_breakpoints
+				Debugger_manager.breakpoints_manager.resynchronize_breakpoints
 				Window_manager.synchronize_all
 			end
 			if could_not_delete then
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			end
 			Debugger_manager.disable_debug
 			manager.remove_group (group, path)
-			Debugger_manager.resynchronize_breakpoints
+			Debugger_manager.breakpoints_manager.resynchronize_breakpoints
 			Window_manager.synchronize_all
 			could_not_delete := False
 		end

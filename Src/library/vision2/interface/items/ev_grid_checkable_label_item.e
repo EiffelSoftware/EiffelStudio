@@ -45,6 +45,36 @@ feature -- Change
 			end
 		end
 
+feature -- Status
+
+	is_sensitive: BOOLEAN is
+			-- Is current sensitive ?
+		do
+			Result := implementation.is_sensitive
+		end
+
+feature -- Status setting
+
+	enable_sensitive is
+			-- Make object sensitive to user input
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_sensitive
+		ensure
+			is_sensitive: (parent = Void or parent.is_sensitive) implies is_sensitive
+		end
+
+	disable_sensitive is
+			-- Make object non-sensitive to user input
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_sensitive
+		ensure
+			is_unsensitive: not is_sensitive
+		end
+
 feature -- Actions
 
 	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [like Current]] is

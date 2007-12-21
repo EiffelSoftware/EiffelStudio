@@ -26,8 +26,36 @@ feature {EV_ANY} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_GRID_LABEL_ITEM_I}
+			is_sensitive := True
 			create checked_changed_actions
 			pointer_button_press_actions.extend (agent checkbox_handled)
+		end
+
+feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Status
+
+	is_sensitive: BOOLEAN
+			-- Is current sensitive ?
+
+feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Status setting
+
+	enable_sensitive is
+			-- Make object sensitive to user input
+		require
+			not_destroyed: not is_destroyed
+		do
+			is_sensitive := True
+		ensure
+			is_sensitive: (parent = Void or parent.is_sensitive) implies is_sensitive
+		end
+
+	disable_sensitive is
+			-- Make object non-sensitive to user input
+		require
+			not_destroyed: not is_destroyed
+		do
+			is_sensitive := False
+		ensure
+			is_unsensitive: not is_sensitive
 		end
 
 feature {EV_GRID_LABEL_ITEM} -- Status Report
@@ -250,7 +278,7 @@ feature {NONE} -- Implementation
 	checkbox_handled (a_x, a_y, a_but: INTEGER; r1,r2,r3: REAL_64; a_screen_x, a_screen_y: INTEGER_32) is
 			-- Checkbox clicked
 		do
-			if a_but = 1 then
+			if a_but = 1 and is_sensitive then
 				if a_x <= check_figure_size then
 					toggle_is_checked
 				end

@@ -39,11 +39,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (dm: like debugger_manager) is
 		require else
-			is_classic_project: debugger_manager.is_classic_project
+			is_classic_project: dm.is_classic_project
 		do
-			Precursor {DBG_EVALUATOR}
+			Precursor {DBG_EVALUATOR} (dm)
 		end
 
 feature {NONE} -- Implementation

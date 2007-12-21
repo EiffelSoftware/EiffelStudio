@@ -14,8 +14,6 @@ inherit
 
 	REFACTORING_HELPER
 
-	SHARED_DEBUGGER_MANAGER
-
 	SHARED_BENCH_NAMES
 
 	SHARED_WORKBENCH
@@ -42,9 +40,12 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make (dm: like debugger_manager) is
 			-- Initialize `Current'.
+		require
+			dm_not_void: dm /= Void
 		do
+			debugger_manager := dm
 			create error_messages.make
 		end
 
@@ -62,6 +63,10 @@ feature {DEBUGGER_MANAGER, DBG_EXPRESSION_EVALUATOR} -- Init
 			last_result_value := Void
 			last_result_static_type := Void
 		end
+
+feature {NONE} -- Internal properties
+
+	debugger_manager: DEBUGGER_MANAGER
 
 feature {DBG_EXPRESSION_EVALUATOR} -- Variables
 

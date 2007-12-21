@@ -34,14 +34,14 @@ create
 
 feature -- Concrete initialization
 
-	make is
+	make (dm: like debugger_manager) is
 			-- Retrieve new value for evaluation mecanism.
 		require else
-			is_dotnet_project: debugger_manager.is_dotnet_project
+			is_dotnet_project: dm.is_dotnet_project
 		local
 			app: APPLICATION_EXECUTION_DOTNET
 		do
-			Precursor
+			Precursor {DBG_EVALUATOR} (dm)
 			app ?= debugger_manager.application
 			eifnet_debugger := app.eifnet_debugger
 			eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator

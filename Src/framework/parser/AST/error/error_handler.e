@@ -5,7 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-class ERROR_HANDLER
+class
+	ERROR_HANDLER
 
 inherit
 	EXCEPTIONS
@@ -15,7 +16,6 @@ inherit
 	REFACTORING_HELPER
 
 create {SHARED_ERROR_HANDLER}
-
 	make
 
 feature {NONE} -- Initialization
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			create warning_list.make
 		end
 
-feature -- Properties
+feature -- Properties		
 
 	error_displayer: ERROR_DISPLAYER
 			-- Displays warning and error messages when they occur
@@ -43,6 +43,66 @@ feature -- Properties
 			Result := error_list.count.as_natural_32
 		end
 
+feature -- Error handling primitives
+
+	insert_error (e: ERROR) is
+			-- Insert `e' in `error_list'.
+		require
+			good_argument: e /= Void
+		do
+			fixme ("[
+				Callers should set the error position. We have checked this for most errors
+				but some may not be correct, this is why there is still a fixme.
+				]")
+			error_list.extend (e)
+			error_list.finish
+		end
+
+	insert_warning (w: ERROR) is
+			-- Insert `w' in `warning_list'.
+		require
+			good_argument: w /= Void
+		do
+			warning_list.extend (w)
+			warning_list.finish
+		end
+
+	raise_error is
+			-- Raise an exception that needs to be caught for processing.
+		require
+			non_void_error_displayer: error_displayer /= Void
+			has_error: has_error
+		do
+			Rescue_status.set_is_error_exception (True)
+			raise ("Compiler error")
+		end
+
+	checksum is
+			-- Check if there are new errors in `error_list' and raise
+			-- an error if needed.
+		require
+			non_void_error_displayer: error_displayer /= Void
+		do
+			if has_error then
+				raise_error
+			end
+		end
+
+	force_display is
+			-- Make sure the user can see the messages we send.
+		do
+			if error_displayer /= Void then
+				error_displayer.force_display
+			end
+		end
+
+	wipe_out is
+			-- Empty `error_list' and `warning_list'.
+		do
+			error_list.wipe_out
+			warning_list.wipe_out
+		end
+
 feature -- Status
 
 	has_error: BOOLEAN is
@@ -51,24 +111,13 @@ feature -- Status
 			Result := not error_list.is_empty
 		end
 
-feature {E_PROJECT, COMPILER_EXPORTER, SHARED_ERROR_HANDLER} -- Element change
-
-	insert_interrupt_error (is_during_comp: BOOLEAN) is
-			-- Insert an `interrup_error' so that the compilation
-			-- can be stopped. `is_during_comp' indicates if it was
-			-- done during a compilation.
-		local
-			interrupt_error: INTERRUPT_ERROR
+	has_warning: BOOLEAN is
+			-- Has error handler detected a warning so far?
 		do
-			create interrupt_error
-			if is_during_comp then
-				interrupt_error.set_during_compilation
-			end
-			insert_error (interrupt_error)
-			raise_error
+			Result := not warning_list.is_empty
 		end
 
-feature {COMPILER_EXPORTER, E_PROJECT} -- Output
+feature {COMPILER_EXPORTER} -- Output
 
 	clear_display
 			-- Clears any error handler display
@@ -102,74 +151,8 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 			end
 		end
 
-feature {COMPILER_EXPORTER} -- Error handling primitives
 
-	insert_error (e: ERROR) is
-			-- Insert `e' in `error_list'.
-		require
-			good_argument: e /= Void
-		do
-			fixme ("[
-				Callers should set the error position. We have checked this for most errors
-				but some may not be correct, this is why there is still a fixme.
-				]")
-			error_list.extend (e)
-			error_list.finish
-		end
-
-	insert_warning (w: ERROR) is
-			-- Insert `w' in `warning_list'.
-		require
-			good_argument: w /= Void
-		do
-			warning_list.extend (w)
-			warning_list.finish
-		end
-
-	has_warning: BOOLEAN is
-			-- Has error handler detected a warning so far?
-		do
-			Result := not warning_list.is_empty
-		end
-
-	raise_error is
-			-- Raise an exception retrieved by routine `recompile'
-			-- of class SYSTEM_I
-		require
-			non_void_error_displayer: error_displayer /= Void
-			has_error: has_error
-		do
-			Rescue_status.set_is_error_exception (True)
-			raise ("Compiler error")
-		end
-
-	checksum is
-			-- Check if there are new errors in `error_list' and raise
-			-- an error if needed.
-		require
-			non_void_error_displayer: error_displayer /= Void
-		do
-			if has_error then
-				raise_error
-			end
-		end
-
-	force_display is
-			-- Make sure the user can see the messages we send.
-		do
-			if error_displayer /= Void then
-				error_displayer.force_display
-			end
-		end
-
-	wipe_out is
-			-- Empty `error_list'.
-		do
-			error_list.wipe_out
-			warning_list.wipe_out
-		end
-
-feature {E_PROJECT, COMPILER_EXPORTER} -- Setting
+feature {COMPILER_EXPORTER} -- Setting
 
 	set_error_displayer (ed: like error_displayer) is
 			-- Set `error_displayer' to `ed'.
@@ -182,7 +165,6 @@ feature {E_PROJECT, COMPILER_EXPORTER} -- Setting
 		end
 
 invariant
-
 	error_list_exists: error_list /= Void
 	warning_list_exists: warning_list /= Void
 

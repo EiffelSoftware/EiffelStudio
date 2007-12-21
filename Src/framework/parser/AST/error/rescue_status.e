@@ -1,76 +1,32 @@
 indexing
-	description: "Error handler that manages warning and error messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
-	ERROR_HANDLER
+class RESCUE_STATUS
 
-create {SHARED_ERROR_HANDLER}
-	make
+feature -- Access
 
-feature {NONE} -- Initialization
+	is_error_exception: BOOLEAN
 
-	make is
-			-- Initialization
+	is_like_exception: BOOLEAN
+
+feature -- Modification
+
+	set_is_error_exception (b: BOOLEAN) is
 		do
-			create error_list.make
-			create warning_list.make
+			is_error_exception := b
 		end
 
-feature -- Properties		
-
-	error_list: LINKED_LIST [ERROR]
-			-- Error list
-
-	warning_list: LINKED_LIST [SYNTAX_WARNING]
-			-- Warning list
-
-feature -- Error handling primitives
-
-	insert_error (e: ERROR) is
-			-- Insert `e' in `error_list'.
-		require
-			good_argument: e /= Void
+	set_is_like_exception (b: BOOLEAN) is
 		do
-			error_list.extend (e)
-			error_list.finish
+			is_like_exception := b
 		end
 
-	insert_warning (w: SYNTAX_WARNING) is
-			-- Insert `w' in `warning_list'.
-		require
-			good_argument: w /= Void
+	is_unexpected_exception: BOOLEAN is
 		do
-			warning_list.extend (w)
-			warning_list.finish
-		end
-
-	raise_error is
-		do
-		end
-
-	wipe_out is
-			-- Empty `error_list' and `warning_list'.
-		do
-			error_list.wipe_out
-			warning_list.wipe_out
-		end
-
-feature -- Status
-
-	has_error: BOOLEAN is
-			-- Has error handler detected an error so far?
-		do
-			Result := not error_list.is_empty
-		end
-
-	has_warning: BOOLEAN is
-			-- Has error handler detected a warning so far?
-		do
-			Result := not warning_list.is_empty
+			Result := not (is_error_exception or is_like_exception)
 		end
 
 indexing
@@ -105,4 +61,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class ERROR_HANDLER
+end

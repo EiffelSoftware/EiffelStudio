@@ -40,7 +40,8 @@ feature
 				project := project_eif.retrieved_project
 				if project_eif.error then
 					if project_eif.is_interrupted then
-						Error_handler.insert_interrupt_error (True)
+						Error_handler.insert_error (create {INTERRUPT_ERROR}.make (True))
+						Error_handler.raise_error
 					elseif project_eif.is_corrupted then
 						create vd41;
 						vd41.set_path (project_dir.name)
@@ -155,7 +156,8 @@ feature {NONE} -- Implementation
 				info := project_eif.retrieved_precompile
 				if project_eif.error then
 					if project_eif.is_interrupted then
-						Error_handler.insert_interrupt_error (True)
+						Error_handler.insert_error (create {INTERRUPT_ERROR}.make (True))
+						Error_handler.raise_error
 					elseif project_eif.is_corrupted then
 						create vd41;
 						vd41.set_path (project_dir.name)

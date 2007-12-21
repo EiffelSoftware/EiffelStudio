@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		A shim, allowing a context stone to be pushed, for EiffelStudio tools, providing access to information required without having to actually initialize the tool.
+		Abstract inferface for tools/UI where stones can set and synchronized.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,22 +8,19 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ES_STONABLE_TOOL [G -> {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET], ES_STONABLE_I}]
+	ES_STONABLE_I
 
 inherit
-	ES_TOOL [G]
-
-	ES_STONABLE_I
-		undefine
-			out
-		redefine
-			set_stone
-		end
+	USABLE_I
 
 feature -- Access
 
 	stone: STONE assign set_stone
 			-- Last set stone
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
 
 feature -- Element change
 
@@ -31,22 +28,38 @@ feature -- Element change
 			-- Sets last stone.
 			--
 			-- `a_stone': Stone to set.
-		do
-			stone := a_stone
-			if is_tool_instantiated then
-				panel.set_stone (a_stone)
-			end
+		require
+			is_interface_usable: is_interface_usable
+			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
+		deferred
+		ensure
+			stone_set: stone = a_stone
+		end
+
+feature -- Query
+
+	is_stone_usable (a_stone: STONE): BOOLEAN
+			-- Determines if a stone can be used by Current.
+			--
+			-- `a_stone': Stone to determine usablity.
+			-- `Result': True if the stone can be used, False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			a_stone_attached: a_stone /= Void
+		deferred
 		end
 
 feature -- Synchronization
 
 	synchronize
 			-- Synchronizes any new data (compiled or other wise)
-		do
-			if is_tool_instantiated then
-				panel.synchronize
-			end
+		require
+			is_interface_usable: is_interface_usable
+		deferred
 		end
+
+invariant
+	stone_is_stone_usable: stone /= Void implies is_stone_usable (stone)
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

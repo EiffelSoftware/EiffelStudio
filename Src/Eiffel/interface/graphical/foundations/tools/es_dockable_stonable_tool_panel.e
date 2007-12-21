@@ -13,7 +13,7 @@ deferred class
 inherit
 	ES_DOCKABLE_TOOL_PANEL [G]
 		redefine
-			on_shown
+			on_show
 		end
 
 	ES_STONABLE_I
@@ -28,7 +28,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Access
 	frozen stone: STONE
 			-- Last set stone
 		do
-			if {l_stonable: !ES_STONABLE_I} Current then
+			if {l_stonable: !ES_STONABLE_I} tool_descriptor then
 				Result := l_stonable.stone
 			end
 		end
@@ -44,7 +44,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 					-- Client is setting the stone directly, and not through {ES_STONABLE_TOOL}
 					-- This is normal because of the transistion of tool development to ESF.
 					-- See notes for `stone_change_notified'.
-				if {l_stonable: !ES_STONABLE_I} Current then
+				if {l_stonable: !ES_STONABLE_I} tool_descriptor then
 					l_stonable.set_stone (a_stone)
 				end
 			else
@@ -52,12 +52,14 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 			end
 
 			if is_initialized and not stone_change_notified then
-				on_stone_changed
-				stone_change_notified := True
+				internal_on_stone_changed
 			end
 		end
 
 feature {NONE} -- Status report
+
+	is_in_stone_synchoronization: BOOLEAN
+			-- Indicates if a stone synchronization is taking place instead of a simple change of stone
 
 	stone_change_notified: BOOLEAN
 			-- Status flag to ensure stone change notifications are performed.
@@ -66,35 +68,58 @@ feature {NONE} -- Status report
 			--       as ESF dictates that no interaction should be perform with the panel (Current) but
 			--       the tool descritor (`tool_descriptor').
 
+feature -- Synchronization
+
+	synchronize
+			-- Synchronizes any new data (compiled or other wise)
+		local
+			l_new_stone: STONE
+		do
+			if is_initialized then
+				l_new_stone := stone
+				if l_new_stone /= Void then
+						-- Force recomputation
+					stone_change_notified := False
+					is_in_stone_synchoronization := True
+					set_stone (l_new_stone.synchronized_stone)
+					is_in_stone_synchoronization := False
+				end
+			end
+		rescue
+			is_in_stone_synchoronization := False
+		end
+
 feature {NONE} -- Action handlers
 
-	on_shown
+	on_show
 			-- Called when the tool is brought into view
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
-        	if not stone_change_notified and is_stone_usable (stone) then
-        			-- Synchronize stone
-        		internal_on_stone_changed
-        		stone_change_notified := True
+        	if not stone_change_notified and (stone = Void or else is_stone_usable (stone)) then
+        			-- Synchronize stone and by-pass display checks because the UI is shown.
+				on_stone_changed
+				stone_change_notified := True
         	end
 		end
 
 	on_stone_changed
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' if Void.
+			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit
+			--       setting or through compile synchronization.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			not_stone_change_notified: not stone_change_notified
-			shown: shown
+			shown: shown or is_auto_hide
 		deferred
 		ensure
 				-- This change is handled by the callee
 			not_stone_change_notified: not stone_change_notified
 		end
 
-	internal_on_stone_changed
+	frozen internal_on_stone_changed
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' if Void.
 		require
@@ -108,12 +133,14 @@ feature {NONE} -- Action handlers
 			end
 		ensure
 			stone_change_notified: shown implies stone_change_notified
+		rescue
+			stone_change_notified := True
 		end
 
 invariant
-	tool_descriptor_is_stonable: {l_stonable: !ES_STONABLE_I} tool_descriptor
+--	tool_descriptor_is_stonable: {l_stonable: !ES_STONABLE_I} tool_descriptor
 
-;indexing
+indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

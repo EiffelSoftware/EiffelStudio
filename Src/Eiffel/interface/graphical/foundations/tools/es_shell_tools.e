@@ -184,6 +184,35 @@ feature -- Access
 			result_consistent: Result = all_tools
 		end
 
+	frozen all_requested_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
+			-- List of all tools requested and initialized. The resulting list may contain multiple editions of the same tool.
+		require
+			not_is_recycled: not is_recycled
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
+			l_tools: like requested_tools
+			l_editions: ARRAY [ES_TOOL [EB_TOOL]]
+			l_count, i: INTEGER
+		do
+			l_tools := requested_tools
+			l_cursor := l_tools.new_cursor
+			create Result.make (l_tools.count)
+			from l_cursor.start until l_cursor.after loop
+				l_editions := l_cursor.item
+				from
+					i := 1
+					l_count := l_editions.count
+				until i > l_count loop
+					Result.force_last (l_editions [i])
+					i := i + 1
+				end
+				l_cursor.forth
+			end
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
+		end
+
 feature {NONE} -- Access
 
 	tool_types: DS_BILINEAR [TYPE [ES_TOOL [EB_TOOL]]]

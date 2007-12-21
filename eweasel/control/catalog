@@ -1777,6 +1777,7 @@ test	object-test-with-local-use-failure			attach004 tcf pass object_test
 test	current-is_attached-no-defaults				attach005 tcf fail attached_types
 test	anchored-attached-type-failure-no-defaults	attach006 tcf fail attached_types anchored_types
 test	attached-formal-generic						attach007 tcf pass execution attached_types
+test	object-test-in-invariant					attach008 tcf fail object_test
 
 
 -- .NET specific test

@@ -613,8 +613,8 @@ feature -- Control execution
 				print ("%N%N")
 			end
 
-			bpm := Debugger_manager
-			bpm.update_debugger_data
+			bpm := Debugger_manager.breakpoints_manager
+			bpm.update
 			inspect execution_mode
 			when {EXEC_MODES}.no_stop_points then
 				send_no_breakpoints
@@ -822,7 +822,7 @@ feature -- Breakpoints controller
 			debug ("debugger_trace_breakpoint")
 				print (generator + ".send_breakpoints %N")
 			end
-			l_bp_list := Debugger_manager.breakpoints
+			l_bp_list := Debugger_manager.breakpoints_manager.breakpoints
 
 			from
 				l_bp_list.start
@@ -852,6 +852,7 @@ feature -- Breakpoints controller
 				end
 				l_bp_list.forth
 			end
+			debugger_manager.breakpoints_manager.reset_breakpoints_changed
 		end
 
 	send_no_breakpoints is
@@ -861,7 +862,7 @@ feature -- Breakpoints controller
 			l_bp_list: BREAK_LIST
 			l_bp_item: BREAKPOINT
 		do
-			l_bp_list := Debugger_manager.breakpoints
+			l_bp_list := Debugger_manager.breakpoints_manager.breakpoints
 
 			from
 				l_bp_list.start

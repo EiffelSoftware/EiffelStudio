@@ -20,11 +20,6 @@ inherit
 			editor_preferences
 		end
 
-	EB_CONSTANTS
-		rename
-			Pixmaps as Shared_pixmaps
-		end
-
 	SHARED_DEBUGGER_MANAGER
 
 	EB_EDITOR_TOKEN_IDS
@@ -118,49 +113,13 @@ feature -- Miscellaneous
 
 	pixmap: EV_PIXMAP is
 			-- Graphical representation of the breakable mark.
-			-- 10 different representations whether the breakpoint
-			-- is enabled, disabled or not set , whether it has a condition or not,
-			-- and whether the application is stopped at this point or not.
-		local
-			pixmaps: ARRAY [EV_PIXMAP]
-			status: APPLICATION_STATUS
-			pebble_routine: E_FEATURE
-			pebble_index: INTEGER
-			index: INTEGER 	-- index in the pixmap array.
-							--  1 = not stopped version
-							--  2 = stopped version.
 		do
-			pebble_routine := pebble.routine
-			pebble_index := pebble.index
+			Result := Breakpoint_pixmaps_factory.pixmap_for_routine_index (Debugger_manager, pebble.routine, pebble.index, True)
+		end
 
-			if debugger_manager.safe_application_is_stopped then
-				status := Debugger_manager.application_status
-				if status.is_top (pebble_routine.body_index, pebble_index) then
-					index := 2
-				elseif status.is_at (pebble_routine.body_index, pebble_index) then
-					index := 3
-				else
-					index := 1
-				end
-			else
-				index := 1
-			end
-
-			inspect Debugger_manager.breakpoint_status (pebble_routine, pebble_index)
-
-			when {DEBUGGER_DATA}.breakpoint_not_set then
-				pixmaps := icon_group_bp_slot
-			when {DEBUGGER_DATA}.breakpoint_set then
-				pixmaps := icon_group_bp_enabled
-			when {DEBUGGER_DATA}.breakpoint_disabled then
-				pixmaps := icon_group_bp_disabled
-			when {DEBUGGER_DATA}.breakpoint_condition_set then
-				pixmaps := icon_group_bp_enabled_condition
-			when {DEBUGGER_DATA}.breakpoint_condition_disabled then
-				pixmaps := icon_group_bp_disabled_condition
-			end
-
-			Result := pixmaps @ index
+	Breakpoint_pixmaps_factory: BREAKPOINT_PIXMAPS_FACTORY is
+		once
+			create Result
 		end
 
 	editor_preferences: EB_EDITOR_DATA is
@@ -182,56 +141,6 @@ feature -- Visitor
 			-- Visitor
 		do
 			a_visitor.process_editor_token_breakpoint (Current)
-		end
-
-feature {NONE} -- Implementation
-
-	frozen icons: ES_PIXMAPS_12X12 is
-			-- Breakpoint icon resources
-		once
-			Result := shared_pixmaps.small_pixmaps
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	icon_group_bp_slot: ARRAY [EV_PIXMAP] is
-			-- Regular (no modifiers) breakpoint icon group.
-		once
-			Result := <<icons.bp_slot_icon, icons.bp_slot_other_frame_icon, icons.bp_slot_current_line_icon>>
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	icon_group_bp_enabled: ARRAY [EV_PIXMAP] is
-			-- Enabled breakpoint icon group.
-		once
-			Result := <<icons.bp_enabled_icon, icons.bp_enabled_other_frame_icon, icons.bp_enabled_current_line_icon>>
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	icon_group_bp_disabled: ARRAY [EV_PIXMAP] is
-			-- Disabled breakpoint icon group.
-		once
-			Result := <<icons.bp_disabled_icon, icons.bp_disabled_other_frame_icon, icons.bp_disabled_current_line_icon>>
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	icon_group_bp_enabled_condition: ARRAY [EV_PIXMAP] is
-			-- Conditional, enabled breakpoint icon group.
-		once
-			Result := <<icons.bp_enabled_conditional_icon, icons.bp_enabled_other_frame_icon, icons.bp_enabled_current_line_icon>>
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	icon_group_bp_disabled_condition: ARRAY [EV_PIXMAP] is
-			-- Conditional, disabled breakpoint icon group.
-		once
-			Result := <<icons.bp_disabled_conditional_icon, icons.bp_disabled_other_frame_icon, icons.bp_disabled_current_line_icon>>
-		ensure
-			result_not_void: Result /= Void
 		end
 
 invariant

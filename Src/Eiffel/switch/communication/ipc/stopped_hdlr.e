@@ -192,21 +192,22 @@ feature -- Execution
 
 							--| Check if this is a Conditional Breakpoint
 						cse := l_status.current_call_stack.i_th (1)
-
-						if
-							cse = Void
-							or else cse.is_not_valid
-							or else cse.routine = Void
-						then
-							need_to_stop := True
-							need_to_resend_bp := True
-						elseif Debugger_manager.debugger_data.is_breakpoint_set (cse.routine, cse.break_index) then
-							bp := Debugger_manager.debugger_data.breakpoint (cse.routine, cse.break_index)
-							need_to_stop := debugger_manager.process_breakpoint (bp)
-							need_to_resend_bp := need_to_stop
-						else
-							need_to_stop := False
-							need_to_resend_bp := True
+						if {bm: !BREAKPOINTS_MANAGER} debugger_manager.breakpoints_manager then
+							if
+								cse = Void
+								or else cse.is_not_valid
+								or else cse.routine = Void
+							then
+								need_to_stop := True
+								need_to_resend_bp := True
+							elseif bm.is_breakpoint_set (cse.routine, cse.break_index) then
+								bp := bm.breakpoint (cse.routine, cse.break_index)
+								need_to_stop := Debugger_manager.process_breakpoint (bp)
+								need_to_resend_bp := need_to_stop or bm.breakpoints_changed
+							else
+								need_to_stop := False
+								need_to_resend_bp := True
+							end
 						end
 					else
 						--| Nothing
@@ -233,6 +234,7 @@ feature -- Execution
 								--| we won't send again the breakpoints
 								--| since they didn't changed, and a "go to this point" may be enabled
 							Cont_request.send_breakpoints
+							debugger_manager.breakpoints_manager.reset_breakpoints_changed
 						end
 						l_status.set_is_stopped (False)
 						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)

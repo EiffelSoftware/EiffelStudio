@@ -204,7 +204,7 @@ feature {DEAD_HDLR, STOPPED_HDLR, SHARED_DEBUGGER_MANAGER, APPLICATION_EXECUTION
 		require
 			is_running: is_running
 		do
-			Debugger_manager.debugger_data.restore
+			Debugger_manager.restore_debugger_data
 
 			clean_on_process_termination
 
@@ -328,9 +328,8 @@ feature -- Execution
 
 	activate_execution_replay_recording (b: BOOLEAN) is
 			-- Activate or Deactivate execution recording mode
-		require
-			execution_replay_not_recording: b /= status.replay_recording
 		do
+			check execution_replay_recording_not_b: b /= status.replay_recording end
 			status.set_replay_recording (b)
 			check status.replay_recording = b end
 		ensure

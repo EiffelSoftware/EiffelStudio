@@ -179,6 +179,8 @@ feature -- Button texts
 	b_Ok: STRING_GENERAL is								do Result := locale.translation("OK")	end
 	b_Cancel: STRING_GENERAL is							do Result := locale.translation("Cancel")	end
 	b_Reset: STRING_GENERAL is							do Result := locale.translation("Reset") end
+	b_start: STRING_GENERAL is							do Result := locale.translation("Start") end
+	b_stop: STRING_GENERAL is							do Result := locale.translation("Stop") end
 	b_overwrite: STRING_GENERAL is						do Result := locale.translation("Overwrite") end
 	b_append: STRING_GENERAL is							do Result := locale.translation("Append") end
 	b_ignore: STRING_GENERAL is							do Result := locale.translation("Ignore") end
@@ -202,6 +204,17 @@ feature -- Button texts
 	b_Save_object: STRING_GENERAL is					do Result := locale.translation("Save Object")	end
 	b_Load_object: STRING_GENERAL is					do Result := locale.translation("Load Object")	end
 
+	b_keep_dialog_open: STRING_GENERAL is		do Result := locale.translation("Keep Dialog Open")	end
+	b_bp_enable_disable_breakpoints: STRING_GENERAL is do Result := locale.translation("Enable/Disable Breakpoints")	end
+	b_bp_reset_hits_count: STRING_GENERAL is do Result := locale.translation("Reset Hits Count")	end
+	b_bp_activate_execution_recording: STRING_GENERAL is do Result := locale.translation("Record Execution")	end
+	b_bp_print_message: STRING_GENERAL is			do Result := locale.translation("Print Message")	end
+
+	b_bp_add_when_hits_action: STRING_GENERAL is do Result := locale.translation("Add When Hits Action ...")	end
+	b_bp_insert_keywords: STRING_GENERAL is			do Result := locale.translation("Insert special keywords")	end
+	b_bp_custom_expression: STRING_GENERAL is			do Result := locale.translation("Custom Expression")	end
+	b_bp_context_title: STRING_GENERAL is			do Result := locale.translation("Context")	end
+	b_bp_when_hits_title: STRING_GENERAL is			do Result := locale.translation("When Hits ...")	end
 
 feature -- Choices
 
@@ -811,6 +824,7 @@ feature -- Menu mnenomics
 	m_Remove_exported_feature: STRING_GENERAL is	do Result := locale.translation("&Remove")	end
 	m_Remove_condition: STRING_GENERAL is		do Result := locale.translation("Remove Condition")	end
 	m_Remove_this_bkpt: STRING_GENERAL is		do Result := locale.translation("&Remove This Breakpoint")	end
+	m_Edit_this_bkpt: STRING_GENERAL is		do Result := locale.translation("&Edit This Breakpoint")	end
 	m_Run_to_this_point: STRING_GENERAL is		do Result := locale.translation("&Run to This Point")	end
 	m_Send_stone_to_context: STRING_GENERAL is	do Result := locale.translation("S&ynchronize Context Tool")	end
 	m_Set_conditional_breakpoint: STRING_GENERAL is do Result := locale.translation("Set &Conditional Breakpoint")	end
@@ -822,6 +836,7 @@ feature -- Menu mnenomics
 	m_Unify_stone: STRING_GENERAL is			do Result := locale.translation("Lin&k Context Tool")	end
 
 	m_When_hits: STRING_GENERAL is				do Result := locale.translation("When Hits ...")	end
+
 	m_Window: STRING_GENERAL is					do Result := locale.translation("&Window")	end
 	m_Refactoring: STRING_GENERAL is			do Result := locale.translation("&Refactoring")	end
 
@@ -1339,6 +1354,7 @@ feature -- Label texts
 	l_Specify_arguments: STRING_GENERAL is		do Result := locale.translation("Specify arguments")	end
 	l_Stack_information: STRING_GENERAL is		do Result := locale.translation("Stack information")	end
 	l_status: STRING_GENERAL is					do Result := locale.translation ("Status") end
+	l_tags: STRING_GENERAL is					do Result := locale.translation ("Tags") end
 	l_Stepped: STRING_GENERAL is				do Result := locale.translation("Step completed")	end
 	l_stiffness_value (a_value: STRING_GENERAL): STRING_GENERAL is	do Result := locale.formatted_string (locale.translation("Stiffness ($1%%)"), [a_value])	end
 	l_Stop_point_reached: STRING_GENERAL is		do Result := locale.translation("Breakpoint reached")	end
@@ -1373,6 +1389,7 @@ feature -- Label texts
 		do
 			Result := locale.formatted_string (locale.translation ("Target `$1' does not exist or is not compilable.%NChoose one target among:"), [a_target])
 		end
+	l_tags_colon: STRING_GENERAL is			do Result := locale.translation("Tags:")	end
 	l_Text_loaded: STRING_GENERAL is			do Result := locale.translation("Text finished loading")	end
 	l_Text_saved: STRING_GENERAL is				do Result := locale.translation("Text was saved")	end
 	l_the_feature_name_is_not_valid: STRING_GENERAL is 	do Result := locale.translation("The feature name is not valid.")	end
@@ -1760,6 +1777,9 @@ feature -- Label texts
 	l_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to previous warning") end
 
 	l_always_compile_before_debug:STRING_GENERAL is 	do Result := locale.translation ("always compile before executing.") end
+
+	l_show_help:STRING_GENERAL is 	do Result := locale.translation ("Show Help...") end
+	l_hide_help:STRING_GENERAL is 	do Result := locale.translation ("Hide Help...") end
 
 feature -- Label text, no translation (for the editor)
 

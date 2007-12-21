@@ -187,7 +187,7 @@ feature -- Basic Operations / Information message
 				-- Build text.
 			clear_general
 			start_processing (true)
-			bpm := Debugger_manager
+			bpm := Debugger_manager.breakpoints_manager
 			if  not bpm.has_breakpoints then
 				add ("No breakpoints.")
 				add_new_line
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation
 				stwl.extend (f)
 				routine_list.forth
 			end
-			bpm := Debugger_manager
+			bpm := Debugger_manager.breakpoints_manager
 			from
 				table.start
 			until

@@ -45,12 +45,12 @@ feature -- Update
 			debug("debugger_trace_breakpoint")
 				io.put_string("sending new breakpoint to the application%N")
 			end
-			bpts := Debugger_manager.breakpoints
+			bpts := Debugger_manager.breakpoints_manager.breakpoints
 			app := Debugger_manager.application
 			status := app.status
 
 				-- remove breakpoint that are now useless.
-			Debugger_manager.update_debugger_data
+			Debugger_manager.breakpoints_manager.update
 
 			inspect app.execution_mode
 			when {EXEC_MODES}.No_stop_points then
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 		do
 			send_rqst_0 (rqst_clear_breakpoints)
 
-			bpts := Debugger_manager.breakpoints
+			bpts := Debugger_manager.breakpoints_manager.breakpoints
 			from
 				bpts.start
 			until

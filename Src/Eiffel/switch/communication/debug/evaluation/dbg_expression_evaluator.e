@@ -11,15 +11,13 @@ deferred class
 
 inherit
 
-	SHARED_DEBUGGER_MANAGER
-
 	SHARED_BENCH_NAMES
 
 feature {NONE} -- Initialization
 
-	make_as_object (addr: like context_address) is
+	make_as_object (dm: like debugger_manager; addr: like context_address) is
 		do
-			generic_make
+			generic_make (dm)
 			set_context_address (addr)
 			set_as_object  (True)
 			set_on_object  (True)
@@ -27,17 +25,20 @@ feature {NONE} -- Initialization
 			set_on_class   (False)
 		end
 
-	make_with_expression (expr: like dbg_expression) is
+	make_with_expression (dm: like debugger_manager; expr: like dbg_expression) is
 			-- Create Current from `expr'.
 		require
 			expr_not_void: expr /= Void
 		do
-			generic_make
+			generic_make (dm)
 			dbg_expression := expr
 		end
 
-	generic_make is
+	generic_make (dm: like debugger_manager) is
+		require
+			dm_not_void: dm /= Void
 		do
+			debugger_manager := dm
 			error := 0
 			create error_messages.make
 
@@ -52,6 +53,11 @@ feature {NONE} -- Initialization
 				dbg_evaluator := debugger_manager.dbg_evaluator
 			end
 		end
+
+feature {DBG_EXPRESSION} -- Properties
+
+	debugger_manager: DEBUGGER_MANAGER
+			-- Associated debugger manager.
 
 	dbg_evaluator: DBG_EVALUATOR
 			-- cached dbg evaluator

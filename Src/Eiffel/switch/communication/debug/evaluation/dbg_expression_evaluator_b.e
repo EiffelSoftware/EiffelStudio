@@ -62,7 +62,7 @@ create
 	make_with_expression,
 	make_as_object
 
-feature -- helpers
+feature {NONE} -- helpers
 
 	application_status: APPLICATION_STATUS is
 		require

@@ -88,6 +88,7 @@ feature {NONE} -- Initialization
 		local
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
+			cb: EV_CHECK_BUTTON
 			b: EV_BUTTON
 			lab: EV_LABEL
 			cmd: EB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -103,6 +104,12 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
 
+			create cb.make_with_text (interface_names.b_keep_dialog_open)
+			cb.disable_select
+			vbox.extend (cb)
+			vbox.disable_item_expand (cb)
+			keep_opened_check_button := cb
+
 			create b.make_with_text (interface_names.b_close)
 			vbox.extend (b)
 			Layout_constants.set_default_width_for_button (b)
@@ -115,13 +122,6 @@ feature {NONE} -- Initialization
 				Layout_constants.set_default_width_for_button (run_button)
 				vbox.disable_item_expand (run_button)
 				run_button.select_actions.extend (agent execute)
-
-				create run_and_close_button.make_with_text (interface_names.b_run_and_close)
-				vbox.extend (run_and_close_button)
-				Layout_constants.set_default_width_for_button (run_and_close_button)
-				vbox.disable_item_expand (run_and_close_button)
-				run_and_close_button.select_actions.extend (agent execute_and_close)
-				run_and_close_button.key_press_actions.extend (agent on_run_button_key_press)
 
 				vbox.extend (create {EV_CELL})
 				create lab.make_with_text (interface_names.l_outside_ide)
@@ -156,11 +156,12 @@ feature {NONE} -- Initialization
 
 feature -- GUI
 
+	keep_opened_check_button: EV_CHECK_BUTTON
+
 	execution_frame: EV_HORIZONTAL_BOX
 			-- Frame containing all execution option
 
-	run_button,
-	run_and_close_button: EV_BUTTON
+	run_button: EV_BUTTON
 			-- Button to run system.
 
 	start_wb_button, start_final_button: EV_BUTTON
@@ -223,7 +224,19 @@ feature {NONE} -- Implementation
 
 	execute_operation (op: PROCEDURE [ANY, TUPLE]) is
 			-- Execute operation `op'
+		local
+			l_op: PROCEDURE [ANY, TUPLE]
 		do
+			if keep_opened_check_button.is_selected then
+				l_op := op
+			else
+				l_op := agent (aop: PROCEDURE [ANY, TUPLE]; adlg: EV_WINDOW)
+						do
+							adlg.hide;
+							aop.call (Void)
+						end(op, Current)
+			end
+
 			if debugging_options_control.has_changed then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt_with_cancel (
 					warning_messages.w_apply_debugger_profiles_before_continuing, Current,
@@ -231,18 +244,18 @@ feature {NONE} -- Implementation
 								do
 									debugging_options_control.apply_changes
 									a_op.call (Void)
-								end (op),
+								end (l_op),
 							agent (a_op: PROCEDURE [ANY, TUPLE])
 								do
 									debugging_options_control.validate_and_store
 									debugging_options_control.reset_changes
 									a_op.call (Void)
-								end (op),
+								end (l_op),
 							Void
 						)
 			else
 				debugging_options_control.validate_and_store
-				op.call (Void)
+				l_op.call (Void)
 			end
 		end
 
@@ -253,7 +266,8 @@ feature {NONE} -- Implementation
 
 	execute_and_close is
 		do
-			execute_operation (agent do hide; run.call (Void) end)
+			keep_opened_check_button.disable_select
+			execute
 		end
 
 feature {NONE} -- Observing event handling.
@@ -262,7 +276,6 @@ feature {NONE} -- Observing event handling.
 			-- Action to take when the application is killed.
 		do
 			run_button.enable_sensitive
-			run_and_close_button.enable_sensitive
 		end
 
 	on_application_launched (dbg: DEBUGGER_MANAGER) is
@@ -275,14 +288,12 @@ feature {NONE} -- Observing event handling.
 			-- Action to take when the application is resumed.
 		do
 			run_button.disable_sensitive
-			run_and_close_button.disable_sensitive
 		end
 
 	on_application_stopped (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is stopped.
 		do
 			run_button.enable_sensitive
-			run_and_close_button.enable_sensitive
 		end
 
 invariant

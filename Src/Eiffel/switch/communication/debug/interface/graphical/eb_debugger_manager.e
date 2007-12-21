@@ -20,6 +20,8 @@ inherit
 			classic_close_dbg_daemon_on_end_of_debugging,
 			dotnet_keep_stepping_info_non_eiffel_feature_pref,
 			change_current_thread_id,
+			activate_execution_replay_recording,
+			on_project_recompiled,
 			on_application_before_launching,
 			on_application_launched,
 			on_application_before_resuming,
@@ -27,10 +29,10 @@ inherit
 			on_application_before_stopped,
 			on_application_just_stopped,
 			on_debugging_terminated,
+			on_breakpoints_change_event,
 			process_breakpoint,
 			set_default_parameters,
 			set_maximum_stack_depth,
-			notify_breakpoints_changes,
 			debugger_output_message, debugger_warning_message, debugger_status_message,
 			display_application_status, display_system_info, display_debugger_info,
 			set_error_message
@@ -977,13 +979,6 @@ feature -- Change
 			end
 		end
 
-	notify_breakpoints_changes is
-		do
-			Precursor
-			display_breakpoints (False)
-			window_manager.synchronize_all_about_breakpoints
-		end
-
 	refresh_commands (a_window: EB_DEVELOPMENT_WINDOW) is
 			-- Refresh commands with their interfaces/shortcuts.
 		require
@@ -1483,10 +1478,23 @@ feature {NONE} -- Raise/unraise notification
 		do
 			if switching_mode_popup /= Void then
 				switching_mode_popup.destroy
+				switching_mode_popup := Void
 			end
 		end
 
 	switching_mode_popup: EV_POPUP_WINDOW
+			-- Popup used when switching to or from debug mode.
+
+feature -- Compilations events
+
+	on_project_recompiled (is_successful: BOOLEAN) is
+		do
+			if is_successful and breakpoints_manager.has_breakpoints then
+				Degree_output.put_resynchronizing_breakpoints_message
+			end
+
+			Precursor {DEBUGGER_MANAGER} (is_successful)
+		end
 
 feature -- Debugging events
 
@@ -1518,6 +1526,13 @@ feature -- Debugging events
 			end
 		end
 
+	activate_execution_replay_recording (a_mode: BOOLEAN) is
+			--
+		do
+			Precursor {DEBUGGER_MANAGER} (a_mode)
+			toggle_exec_replay_recording_mode_cmd.set_select (a_mode)
+		end
+
 	launch_stone (st: STONE) is
 			-- Set `st' in the debugging window as the new stone.
 		local
@@ -1536,9 +1551,10 @@ feature -- Debugging events
 			-- Application is about to be launched.
 		do
 			Precursor
-			disable_debugging_commands (False)
+			toggle_exec_replay_recording_mode_cmd.reset
 			assertion_checking_handler_cmd.reset
-			notify_breakpoints_changes
+			disable_debugging_commands (False)
+			breakpoints_manager.notify_breakpoints_changes
 		end
 
 	on_application_launched is
@@ -1817,6 +1833,15 @@ feature -- Debugging events
 			end
 		ensure
 			result_is_valid: Result /= Void implies Result.is_valid
+		end
+
+feature {NONE} -- Breakpoints events
+
+	on_breakpoints_change_event is
+		do
+			Precursor {DEBUGGER_MANAGER}
+			display_breakpoints (False)
+			window_manager.synchronize_all_about_breakpoints
 		end
 
 feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation

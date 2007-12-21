@@ -105,15 +105,17 @@ feature {NONE} -- Implementation functions
 
 	handle_break_error_ace_external_file_stone (a_stone: STONE) is
 			-- Handle `conv_brkstone', `conv_errst', `ef_stone' and `target_stone' if eixst.
+		local
+			bpm: BREAKPOINTS_MANAGER
 		do
 			if conv_brkstone /= Void then
-				bpm := develop_window.Debugger_manager
+				bpm := develop_window.Debugger_manager.breakpoints_manager
 				if bpm.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
 					bpm.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				else
 					bpm.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
-				develop_window.Debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			elseif ef_stone /= Void then
 				if not text_loaded and then current_editor /= Void then
 					f := ef_stone.file
@@ -969,9 +971,6 @@ feature {NONE} -- Implementation attributes
 
 	formatter: EB_FORMATTER
 			-- Formatter
-
-	bpm: BREAKPOINTS_MANAGER
-			-- Breakpoints manager
 
 	old_cur: EV_POINTER_STYLE
 			-- Cursor saved while displaying the hourglass cursor.

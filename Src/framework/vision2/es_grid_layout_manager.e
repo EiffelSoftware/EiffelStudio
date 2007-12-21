@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".delayed_restore_row_layout : " + a_row.index.out + " -> " + string_id_for_lay (lay) +"%N")
 			end
-			if a_row.parent /= Void and lay /= Void then
+			if a_row.parent /= Void and lay /= Void and row_is_ready_for_identification (a_row) then
 					--| `lay' should not be Void, but issue bug#10172 still occurs
 				restore_row_layout (a_row, lay, True, l_curr_pid)
 			else

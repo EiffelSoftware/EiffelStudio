@@ -131,14 +131,14 @@ feature -- Execution
 		local
 			bpm: BREAKPOINTS_MANAGER
 		do
-			bpm := Debugger_manager
+			bpm := Debugger_manager.breakpoints_manager
 			if bpm.has_breakpoints then
 				bpm.disable_all_breakpoints
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
-				Debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -156,13 +156,13 @@ feature -- Update
 			if f.is_debuggable then
 				index := bs.index
 				body_index := bs.body_index
-				bpm := Debugger_manager
+				bpm := Debugger_manager.breakpoints_manager
 				bpm.disable_breakpoint (f, index)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
-				Debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -173,14 +173,14 @@ feature -- Update
 			bpm: BREAKPOINTS_MANAGER
 		do
 			f := fs.e_feature
-			bpm := Debugger_manager
+			bpm := Debugger_manager.breakpoints_manager
 			if f /= Void and then f.is_debuggable and then bpm.has_breakpoint_set(f) then
 				bpm.disable_breakpoints_in_feature (f)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
-				Debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -204,13 +204,13 @@ feature -- Update
 		do
 			conv_fst ?= cs
 			if conv_fst = Void then
-				bpm := Debugger_manager
+				bpm := Debugger_manager.breakpoints_manager
 				bpm.disable_breakpoints_in_class (cs.e_class)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
-				Debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 

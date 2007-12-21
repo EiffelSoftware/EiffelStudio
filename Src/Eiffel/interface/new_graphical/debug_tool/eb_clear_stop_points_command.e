@@ -139,12 +139,12 @@ feature -- Events
 			if f.is_debuggable then
 				body_index := bs.body_index
 				index := bs.index
-				bpm := Debugger_manager
+				bpm := Debugger_manager.breakpoints_manager
 				bpm.remove_breakpoint (f, index)
 				show_message_on_error (bpm)
 
 					-- Update output tools
-				debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -155,13 +155,13 @@ feature -- Events
 			bpm: BREAKPOINTS_MANAGER
 		do
 			f := fs.e_feature
-			bpm := Debugger_manager
+			bpm := Debugger_manager.breakpoints_manager
 			if f /= Void and then f.is_debuggable and then bpm.has_breakpoint_set (f) then
 				bpm.remove_breakpoints_in_feature (f)
 				show_message_on_error (bpm)
 
 					-- Update output tools
-				debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -173,12 +173,12 @@ feature -- Events
 		do
 			conv_fst ?= cs
 			if conv_fst = Void then
-				bpm := Debugger_manager
+				bpm := Debugger_manager.breakpoints_manager
 				bpm.remove_breakpoints_in_class (cs.e_class)
 				show_message_on_error (bpm)
 
 					-- Update output tools
-				debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -190,7 +190,7 @@ feature -- Execution
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 			bpm: BREAKPOINTS_MANAGER
 		do
-			bpm := Debugger_manager
+			bpm := Debugger_manager.breakpoints_manager
 			if bpm.has_breakpoints then
 				create l_question.make_standard (warning_messages.w_clear_breakpoints, "", preferences.dialog_data.confirm_clear_breakpoints_string)
 				l_question.set_title (interface_names.t_debugger_question)
@@ -198,7 +198,7 @@ feature -- Execution
 				l_question.show_on_active_window
 
 					-- Update output tools
-				debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -218,15 +218,9 @@ feature {NONE} -- Implementation
 
 	clear_breakpoints is
 			-- Execute with confirmation dialog.
-		local
-			bpm: BREAKPOINTS_MANAGER
 		do
-			bpm := Debugger_manager
-			bpm.clear_breakpoints
-			show_message_on_error (bpm)
-
-				-- Update output tools
-			Debugger_manager.notify_breakpoints_changes
+			debugger_manager.clear_breakpoints
+			show_message_on_error (debugger_manager.breakpoints_manager)
 		end
 
 	show_message_on_error (a_manager: BREAKPOINTS_MANAGER)

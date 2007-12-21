@@ -21,6 +21,11 @@ inherit
 			names as interface_names
 		end
 
+	SHARED_DEBUGGER_MANAGER
+		export
+			{NONE} all
+		end
+
 --	COMPILER_EXPORTER
 --			--| Just to be able to access E_FEATURE::associated_feature_i :(
 --			--| and other expression evaluation purpose
@@ -335,7 +340,7 @@ feature -- Basic operations
 		do
 			Result := internal_evaluator
 			if Result = Void then
-				create_internal_evaluator
+				create_internal_evaluator (debugger_manager)
 				Result := internal_evaluator
 			end
 		end
@@ -427,14 +432,14 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATOR} -- Expression analysis
 			retry
 		end
 
-	create_internal_evaluator is
+	create_internal_evaluator (dm: DEBUGGER_MANAGER) is
 			-- Create internal_evaluator
 		do
 			if internal_evaluator = Void then
 				if as_object then
-					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_as_object (context_address)
+					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_as_object (dm, context_address)
 				else
-					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (Current)
+					create {DBG_EXPRESSION_EVALUATOR_B} internal_evaluator.make_with_expression (dm, Current)
 					internal_evaluator.set_context_class (context_class)
 					internal_evaluator.set_context_address (context_address)
 					internal_evaluator.set_on_class (on_class)

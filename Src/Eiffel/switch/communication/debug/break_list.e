@@ -22,7 +22,7 @@ inherit
 create
 	make
 
-create {DEBUGGER_DATA}
+create {DEBUGGER_MANAGER}
 	make_copy_for_saving
 
 feature {NONE} -- Initialization
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {DEBUGGER_DATA} -- Update after loading
+feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 
 	reload is
 			-- Reload after loading breakpoints
@@ -61,6 +61,56 @@ feature {DEBUGGER_DATA} -- Update after loading
 			loop
 				item_for_iteration.reload
 				forth
+			end
+		end
+
+	restore is
+			-- reset information about breakpoints set/removed during execution
+		do
+				-- loop on the entire list, and reset the application status of the breakpoint
+			from
+				start
+			until
+				after
+			loop
+				item_for_iteration.set_application_not_set
+				forth
+			end
+			update
+		end
+
+	update is
+			-- remove breakpoint that no more useful from the hash_table
+			-- see BREAKPOINT/is_not_useful for further comments
+		local
+			bp: BREAKPOINT
+			newlst: ARRAYED_LIST [BREAKPOINT]
+		do
+			if not is_empty then
+					--| remove useless breakpoints
+				from
+					create newlst.make (count)
+					start
+				until
+					after
+				loop
+					bp := item_for_iteration
+					if not bp.is_not_useful and then bp.is_valid then
+						newlst.force (bp)
+					end
+					forth
+				end
+				wipe_out
+					--| Readding the breakpoints ensures us to have fresh hash_code ...
+				from
+					newlst.start
+				until
+					newlst.after
+				loop
+					bp := newlst.item
+					force (bp, bp)
+					newlst.forth
+				end
 			end
 		end
 

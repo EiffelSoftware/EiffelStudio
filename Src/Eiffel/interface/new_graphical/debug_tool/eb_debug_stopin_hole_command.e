@@ -137,14 +137,14 @@ feature -- Update
 			if f.is_debuggable then
 				index := bs.index
 				body_index := bs.body_index
-				bpm := Debugger_manager
+				bpm := Debugger_manager.breakpoints_manager
 				bpm.enable_breakpoint (f, index)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
 
-				Debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -163,7 +163,7 @@ feature -- Update
 		do
 			f := fs.e_feature
 			if f.is_debuggable then
-				bpm := Debugger_manager
+				bpm := Debugger_manager.breakpoints_manager
 				if bpm.has_disabled_breakpoints then
 					bpm.enable_breakpoints_in_feature (f)
 				end
@@ -172,7 +172,7 @@ feature -- Update
 				if bpm.error_in_bkpts then
 					prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
-				Debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -185,14 +185,14 @@ feature -- Update
 			conv_fst ?= cs
 				-- If a feature stone was dropped, it is handled by the drop_feature feature.
 			if conv_fst = Void then
-				bpm := Debugger_manager
+				bpm := Debugger_manager.breakpoints_manager
 				bpm.enable_first_breakpoints_in_class (cs.e_class)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
 				end
 
-				Debugger_manager.notify_breakpoints_changes
+				bpm.notify_breakpoints_changes
 			end
 		end
 
@@ -200,9 +200,12 @@ feature -- Execution
 
 	execute is
 			-- Enable all breakpoints in the application.
+		local
+			bpm: BREAKPOINTS_MANAGER
 		do
-			Debugger_manager.enable_all_breakpoints
-			Debugger_manager.notify_breakpoints_changes
+			bpm := debugger_manager.breakpoints_manager
+			bpm.enable_all_breakpoints
+			bpm.notify_breakpoints_changes
 		end
 
 feature {NONE} -- Implementation
@@ -216,7 +219,7 @@ feature {NONE} -- Implementation
 --		local
 --			body_index: INTEGER
 		do
-			Debugger_manager.enable_breakpoints_in_feature (f)
+			Debugger_manager.breakpoints_manager.enable_breakpoints_in_feature (f)
 --| FIXME ARNAUD
 --			body_index := f.body_index
 --			tool_supervisor.feature_tool_mgr.show_stoppoint (body_index, 1)

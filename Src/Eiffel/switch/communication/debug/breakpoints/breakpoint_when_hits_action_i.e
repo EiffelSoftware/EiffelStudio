@@ -1,45 +1,25 @@
 indexing
-	description: "Objects that ..."
-	legal: "See notice at end of class."
+	description: "When breakpoint hits do ..."
 	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
+deferred
 class
-	DEBUGGER_MANAGER
+	BREAKPOINT_WHEN_HITS_ACTION_I
 
-create
-	make
+feature
 
-feature -- Initialization
-
-	make is
-		do
-		end
-
-feature -- File access
-
-	load_debugger_data is
-			-- Load debug information (so far only the breakpoints)
-		do
-		end
-
-	save_debugger_data is
-			-- Save debug information (so far only the breakpoints)
-		do
-		end
-
-feature -- Events
-
-	on_project_recompiled (is_successful: BOOLEAN) is
-		do
+	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER) is
+		deferred
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -50,15 +30,15 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software

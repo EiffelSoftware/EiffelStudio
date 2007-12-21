@@ -737,7 +737,8 @@ feature -- Update
 		do
 			exit_on_error := True
 			exit_agent := ag
-			error_handler.insert_interrupt_error (True)
+			error_handler.insert_error (create {INTERRUPT_ERROR}.make (True))
+			error_handler.raise_error
 		end
 
 feature -- Output

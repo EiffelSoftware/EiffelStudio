@@ -10,10 +10,22 @@ indexing
 class INTERRUPT_ERROR
 
 inherit
-
 	ERROR
 		redefine
 			help_file_name
+		end
+
+create
+	make
+
+feature -- Initialization
+
+	make (a_during: like is_during_compilation) is
+			-- Initialize current with `a_during'.
+		do
+			is_during_compilation := a_during
+		ensure
+			is_during_compilation_set: is_during_compilation = a_during
 		end
 
 feature -- Status report
@@ -22,16 +34,6 @@ feature -- Status report
 			-- Was the interrupt called during an eiffel compilation?
 			-- (False implies that it was interrupted during Reverse
 			-- engineering)
-
-feature -- Status setting
-
-	set_during_compilation is
-			-- Set `is_during_compilation' to `True'.
-		do
-			is_during_compilation := True
-		ensure
-			is_during_compilation: is_during_compilation
-		end
 
 feature -- Output
 
@@ -99,4 +101,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class INTERRUPT_ERROR
+end

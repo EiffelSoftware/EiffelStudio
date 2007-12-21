@@ -250,7 +250,8 @@ feature -- Actions
 			ev_application.process_events
 			if cancel_compilation_requested then
 				cancel_compilation_requested := False
-				Error_handler.insert_interrupt_error (True)
+				Error_handler.insert_error (create {INTERRUPT_ERROR}.make (True))
+				Error_handler.raise_error
 			end
 		end
 

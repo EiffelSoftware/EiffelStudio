@@ -464,7 +464,8 @@ feature {NONE} -- Display implementation for redefinition by descendants.
 			if cancel_compilation_requested and then is_compilation_cancellable then
 					-- The user has requested cancellation of compilation.
 				cancel_compilation_requested := False
-				Error_handler.insert_interrupt_error (True)
+				Error_handler.insert_error (create {INTERRUPT_ERROR}.make (True))
+				Error_handler.raise_error
 			end
 			if not is_output_quiet then
 				display_message (percentage_output (to_go) + deg_nbr + a_name);

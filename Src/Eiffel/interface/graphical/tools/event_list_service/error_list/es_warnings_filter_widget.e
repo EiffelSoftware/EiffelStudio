@@ -14,7 +14,7 @@ inherit
 	EV_VERTICAL_BOX
 		export
 			{NONE} all
-			{ANY} is_show_requested
+			{ANY} is_displayed
 		end
 
 	EB_CONSTANTS
@@ -318,7 +318,7 @@ feature {ES_ERROR_LIST_TOOL_PANEL} -- Action handlers
 	on_shown is
 			-- Called when widget is display
 		require
-			is_show_requested: is_show_requested
+			is_displayed: is_displayed
 		do
 			grid_warnings.set_focus
 		end

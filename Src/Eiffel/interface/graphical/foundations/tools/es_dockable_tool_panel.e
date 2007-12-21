@@ -28,7 +28,8 @@ inherit
             icon_pixmap,
             title,
             show,
-            build_docking_content
+            build_docking_content,
+            on_shown
         end
 
 inherit {NONE}
@@ -72,6 +73,12 @@ feature {NONE} -- Initialization
                 is_initialized := True
 
                 on_after_initialized
+
+					-- Ensure on_shown is always called.
+                register_action (content.show_actions, agent on_shown)
+                if content.is_visible then
+                	on_shown
+                end
             end
         ensure
             is_initialized: not is_initializing implies is_initialized
@@ -415,6 +422,11 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
+	show_polling_timer: EV_TIMEOUT
+			-- A timer used to poll the true display of a user widget.
+			-- See `on_shown' for usage.
+			-- Note: Please not use this timer for anything else
+
 feature {NONE} -- Helpers
 
     frozen stone_director: ES_TOOL_STONE_REDIRECT_HELPER
@@ -602,6 +614,46 @@ feature {NONE} -- Status report
         do
             Result := False
         end
+
+feature {NONE} -- Action handlers
+
+	frozen on_shown
+			-- Perform update actions when the tool is displayed.
+			-- Note: This implementation takes into account that auto-hide tools may recieve a show action
+			--       yet the user widget is not shown. In this case a timer is used to poll the user widget's
+			--       shown state.
+		do
+			check
+				is_initialized: is_initialized
+			end
+			
+			if shown then
+				on_show
+			else
+					-- May be auto-hidden or some other state that does not indicate being shown.
+					-- Use a polling timer to determine when `shown' returns true and `on_show' can be called.
+				if show_polling_timer = Void then
+					create show_polling_timer
+					register_action (show_polling_timer.actions, agent
+						do
+							if is_interface_usable and is_initialized and then shown then
+								on_show
+							end
+						end)
+				end
+				show_polling_timer.set_interval (100)
+			end
+		end
+
+	on_show is
+			-- Performs actions when the user widget is displayed.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			shown: shown
+			user_widget_is_displayed: user_widget.is_displayed
+		do
+		end
 
 feature {NONE} -- Factory
 

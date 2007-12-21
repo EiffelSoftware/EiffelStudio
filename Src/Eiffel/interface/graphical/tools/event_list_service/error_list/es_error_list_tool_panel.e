@@ -21,7 +21,6 @@ inherit
 			on_event_added,
 			on_event_removed,
 			update_content_applicable_widgets,
-			on_shown,
 			show
 		end
 
@@ -404,15 +403,6 @@ feature {NONE} -- Basic operations
 		end
 
 feature {NONE} -- Events
-
-	on_shown
-			-- Perform update actions when the tool is displayed.
-		do
-			Precursor
-			if filter_widget /= Void then
-				filter_widget.on_shown
-			end
-		end
 
 	on_event_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- Called when a event item is added to the event service.

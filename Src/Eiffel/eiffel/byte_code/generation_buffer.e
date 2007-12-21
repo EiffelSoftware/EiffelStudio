@@ -619,7 +619,6 @@ feature {NONE} -- Implementation: Status report
 		local
 			l_buffers: like buffers
 			l_index: INTEGER
-			l_count: INTEGER
 		do
 			from
 				l_buffers := buffers

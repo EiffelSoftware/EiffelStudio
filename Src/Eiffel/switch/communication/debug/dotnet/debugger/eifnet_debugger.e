@@ -878,7 +878,6 @@ feature {NONE} -- Callback actions
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do
 			dbg_info := info
-			l_current_stack_info := dbg_info.current_stack_info
 
 				--| If we were stepping ...
 			debug ("DEBUGGER_TRACE_STEPPING")
@@ -900,22 +899,28 @@ feature {NONE} -- Callback actions
 				-- FIXME jfiat: special case for Stop now ...
 				Result := True
 			else
-				l_il_debug_info := Il_debug_info_recorder
-				l_class_token := l_current_stack_info.current_class_token
-				l_module_name := l_current_stack_info.current_module_name
-				check
-					module_name_valid: l_module_name /= Void and then not l_module_name.is_empty
-				end
-				if l_module_name = Void
-					or else l_module_name.is_empty
-					or else not l_il_debug_info.has_info_about_module (l_module_name)
-				then
-					unknown_eiffel_info_for_call_stack_stop := True
-				else
-					unknown_eiffel_info_for_call_stack_stop := l_class_token <= 0
-						or else not l_il_debug_info.has_class_info_about_module_class_token (l_module_name, l_class_token)
-				end
+				l_current_stack_info := dbg_info.current_stack_info
+				if l_current_stack_info.is_synchronized then
+					l_class_token := l_current_stack_info.current_class_token
+					l_module_name := l_current_stack_info.current_module_name
 
+					check
+						module_name_valid: l_module_name /= Void and then not l_module_name.is_empty
+					end
+
+					l_il_debug_info := Il_debug_info_recorder
+					if l_module_name = Void
+						or else l_module_name.is_empty
+						or else not l_il_debug_info.has_info_about_module (l_module_name)
+					then
+						unknown_eiffel_info_for_call_stack_stop := True
+					else
+						unknown_eiffel_info_for_call_stack_stop := l_class_token <= 0
+							or else not l_il_debug_info.has_class_info_about_module_class_token (l_module_name, l_class_token)
+					end
+				else
+					unknown_eiffel_info_for_call_stack_stop := True
+				end
 				if unknown_eiffel_info_for_call_stack_stop then
 					debug ("debugger_trace_stepping")
 						print ("[!] Unknown Eiffel info: %N")

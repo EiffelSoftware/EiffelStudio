@@ -147,6 +147,7 @@ feature -- Current CallStack
 			l_module : ICOR_DEBUG_MODULE
 			l_class : ICOR_DEBUG_CLASS
 			l_il_code : ICOR_DEBUG_CODE
+			l_curr_stk_info: like current_stack_info
 		do
 			if not current_callstack_initialized then
 				debug ("_jfiat")
@@ -156,7 +157,8 @@ feature -- Current CallStack
 				if current_stack_info = Void then
 					create current_stack_info
 				end
-				current_stack_info.set_synchronized (False)
+				l_curr_stk_info := current_stack_info
+				l_curr_stk_info.set_synchronized (False)
 
 				debug ("debugger_trace_eifnet")
 					io.error.put_string ("[!] Initialize Current Stack in EIFNET_DEBUGGER_INFO.%N")
@@ -176,7 +178,7 @@ feature -- Current CallStack
 					else
 						l_il_frame := l_frame.query_interface_icor_debug_il_frame
 						if l_il_frame /= Void then
-							current_stack_info.set_synchronized (True)
+							l_curr_stk_info.set_synchronized (True)
 -- FIXME jfiat 2004-07-07: check if we should not use directly external on pointer here
 -- this would reduce the burden on GC
 -- NOTA jfiat 2004-07-07: maybe we should redesign this part and try to find a better way to handle stack_info ...
@@ -188,24 +190,24 @@ feature -- Current CallStack
 							l_class := l_func.get_class
 							l_il_code := l_func.get_il_code
 
-							current_stack_info.set_current_stack_pseudo_depth (l_frames.count)
-							current_stack_info.set_current_module_name        (l_module.get_name)
-							current_stack_info.set_current_class_token        (l_class.get_token)
-							current_stack_info.set_current_feature_token      (l_func.get_token)
-							current_stack_info.set_current_il_code_size       (l_il_code.get_size)
-							current_stack_info.set_current_il_offset          (l_il_frame.get_ip)
-							current_stack_info.set_current_stack_address      (l_code.get_address.to_hex_string)
+							l_curr_stk_info.set_current_stack_pseudo_depth (l_frames.count)
+							l_curr_stk_info.set_current_module_name        (l_module.get_name)
+							l_curr_stk_info.set_current_class_token        (l_class.get_token)
+							l_curr_stk_info.set_current_feature_token      (l_func.get_token)
+							l_curr_stk_info.set_current_il_code_size       (l_il_code.get_size)
+							l_curr_stk_info.set_current_il_offset          (l_il_frame.get_ip)
+							l_curr_stk_info.set_current_stack_address      (l_code.get_address.to_hex_string)
 
 							debug("debugger_trace_callback")
 								io.error.put_string (generator + ".init_current_callstack: "
 									+ " chain: " + l_chain.get_reason_to_string
 									+ " frame: " + l_il_frame.last_cordebugmapping_result_to_string
 									+ "%N  ->"
-									+ "#" + current_stack_info.current_stack_pseudo_depth.out + " : "
-									+ "<0x" + current_stack_info.current_stack_address + "> "
-									+ "{" + l_module.md_type_name (current_stack_info.current_class_token) + "}."
-									+ l_module.md_member_name (current_stack_info.current_feature_token)
-									+ " -> 0x"+ current_stack_info.current_il_offset.to_hex_string
+									+ "#" + l_curr_stk_info.current_stack_pseudo_depth.out + " : "
+									+ "<0x" + l_curr_stk_info.current_stack_address + "> "
+									+ "{" + l_module.md_type_name (l_curr_stk_info.current_class_token) + "}."
+									+ l_module.md_member_name (l_curr_stk_info.current_feature_token)
+									+ " -> 0x"+ l_curr_stk_info.current_il_offset.to_hex_string
 									+ "%N")
 							end
 

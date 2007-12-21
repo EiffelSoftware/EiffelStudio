@@ -3,7 +3,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
 	ERROR
@@ -44,7 +44,7 @@ feature -- Properties
 			Result := code
 		ensure
 			help_file_name_not_void: Result /= Void
-		end;
+		end
 
 	Error_string: STRING is
 		do
@@ -174,4 +174,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class SYNTAX_ERROR
+end

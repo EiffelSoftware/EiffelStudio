@@ -83,6 +83,11 @@ feature -- AST visiting
 					context.add_string ("%T%T%Tprocess")
 					context.add_string (new_line)
 					l_has_redefine := True
+				else
+					safe_process (l_as.internal_redefining)
+					context.add_string (",")
+					context.add_string (new_line)
+					context.add_string ("%T%T%Tprocess")
 				end
 			else
 				safe_process (l_as.internal_redefining)
@@ -90,9 +95,7 @@ feature -- AST visiting
 			safe_process (l_as.internal_selecting)
 			if l_has_redefine and then l_as.end_keyword = Void then
 				context.add_string ("%T%Tend")
-				remove_following_white_spaces
-				context.add_string (new_line)
-				context.add_string (new_line)
+				process_following_breaks
 			else
 				safe_process (l_as.end_keyword)
 			end
@@ -110,9 +113,8 @@ feature {NONE} -- Implementation
 
 	generate_process_routine is
 		do
-			remove_following_white_spaces
-			context.add_string (new_line)
-			context.add_string (new_line)
+			process_following_breaks
+			add_new_line_if_necessary
 			context.add_string ("feature -- Visitor")
 			context.add_string (new_line)
 			context.add_string (new_line)
@@ -141,38 +143,75 @@ feature {NONE} -- Implementation
 			context.add_string (new_line)
 		end
 
-	remove_following_white_spaces is
-			-- Remove all white spaces..
+	process_following_breaks is
+			-- Process all breaks until a non-break is encountered.
+		local
+			i: INTEGER
+			stop: BOOLEAN
+			l_break: BREAK_AS
+			l_symbol: SYMBOL_STUB_AS
+		do
+			from
+				i := last_index + 1
+			until
+				stop
+			loop
+				if match_list.valid_index (i) then
+					l_break ?= match_list.i_th (i)
+					if l_break /= Void then
+						l_break.process (Current)
+						i := i + 1
+					else
+						l_symbol ?= match_list.i_th (i)
+						if l_symbol /= Void then
+							l_symbol.process (Current)
+							i := i + 1
+						else
+							stop := True
+						end
+					end
+				else
+					stop := True
+				end
+			end
+			last_index := i - 1
+		end
+
+	add_new_line_if_necessary is
+			-- Add a newline if previous is not an empty break line or if is not a break.
 		local
 			l_break_as: BREAK_AS
-			l_index: INTEGER
-			l_string: STRING
-			l_done: BOOLEAN
+			l_index, i: INTEGER
+			l_text: STRING
+			l_has_new_line: BOOLEAN
 		do
-			l_index := last_index + 1
+			l_index := last_index
 			if match_list.valid_index (l_index) then
-				l_break_as ?= match_list.i_th (last_index + 1)
-				if l_break_as /= Void then
-					l_string := l_break_as.literal_text (match_list)
-					if l_string /= Void then
-						l_string := l_string.twin
-						from
-						until
-							l_done
-						loop
-							if not l_string.is_empty then
-								inspect
-									l_string.item (1)
-								when ' ', '%T', '%N', '%R' then l_string.remove (1)
-								else
-									l_done := True
-								end
-							else
-								l_done := True
-							end
+				l_break_as ?= match_list.i_th (l_index)
+				if l_break_as = Void then
+					context.add_string (new_line)
+				else
+					l_text := l_break_as.literal_text (match_list)
+					from
+						i := l_text.count
+					until
+						i = 0
+					loop
+						inspect l_text.item (i)
+						when '%N' then
+							l_has_new_line := True
+							i := 0
+						when ' ', '%T', '%R' then
+								-- We can ignore those characters.
+							i := i - 1
+						else
+								-- We hit some text, we should stop the loop here.
+							i := 0
 						end
-						context.add_string (l_string)
-						last_index := l_index
+					end
+					if not l_has_new_line then
+							--
+						context.add_string (new_line)
 					end
 				end
 			end

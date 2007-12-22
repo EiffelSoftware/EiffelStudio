@@ -16,7 +16,9 @@ inherit
 			name, menu_name,
 			perform_compilation,
 			is_precompiling,
-			make, tooltext
+			make, tooltext,
+			pixmap,
+			pixel_buffer
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -127,6 +129,18 @@ feature {NONE} -- Implementation
 		do
 			l_value := lace.target.settings.item ("msil_generation")
 			Result := l_value /= Void and then l_value.is_case_insensitive_equal ("true")
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.project_melt_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.project_melt_icon_buffer
 		end
 
 indexing

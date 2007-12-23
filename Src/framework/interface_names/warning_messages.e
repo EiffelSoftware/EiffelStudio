@@ -1060,7 +1060,7 @@ feature -- Warning messages
 									%Would you like to create a finalized version?") end
 
 	w_Replace_all: STRING_GENERAL is do Result := locale.translation ("This operation cannot be undone for files not loaded into the EiffelStudio editor.%N%
-									%Are you sure your would like to continue replacing all occurences?") end
+									%Are you sure your would like to continue replacing all occurrences?") end
 
 	w_No_system_defined: STRING_GENERAL is do Result := locale.translation ("No project has been loaded.") end
 

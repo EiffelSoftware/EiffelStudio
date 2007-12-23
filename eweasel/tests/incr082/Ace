@@ -34,16 +34,17 @@
 		<cluster name="cursors" location="$CURSORS\"/>
 		<cluster name="dispenser" location="$DISPENSER\"/>
 		<cluster name="iteration" location="$ITERATION\"/>
-		<cluster name="kernel" location="$KERNEL\">
+		<cluster name="kernel" location="$KERNEL\" recursive="True">
 			<file_rule>
 				$DOTNET_EXCLUDE
 				$EXCLUDE
 			</file_rule>
 		</cluster>
-		$KERNEL_DOTNET
+		<cluster name="exceptions_ise" location="$EXCEPTIONS_ISE\" recursive="True"/>
+		$KERNEL_DOTNET_NO_EXCEPTION
 		<cluster name="list" location="$LIST\"/>
 		<cluster name="refactoring" location="$REFACTORING\"/>
-		<cluster name="root_cluster" location="$CLUSTER\"/>
+		<override name="root_cluster" location="$CLUSTER\"/>
 		<cluster name="set" location="$SET\"/>
 		<cluster name="sort" location="$SORT\"/>
 		<cluster name="storage" location="$STORAGE\"/>

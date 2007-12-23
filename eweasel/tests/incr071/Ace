@@ -30,8 +30,8 @@
 		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		$KERNEL_CLASSIC
-		$KERNEL_DOTNET
-		<cluster name="root_cluster" location="$CLUSTER\"/>
+		$KERNEL_DOTNET_NO_EXCEPTION
+		<override name="root_cluster" location="$CLUSTER\"/>
 		<cluster name="refactoring" location="$REFACTORING\"/>
 		</target>
 </system>

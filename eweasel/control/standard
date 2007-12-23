@@ -11,6 +11,8 @@
 define_directory	BASE	 	$ISE_EIFFEL library base elks
 define_directory	BASE_ISE 	$ISE_EIFFEL library base ise
 define_directory	KERNEL		$BASE kernel
+define_directory	EXCEPTIONS	$BASE kernel exceptions
+define_directory	EXCEPTIONS_ISE	$BASE_ISE kernel exceptions
 define_directory	REFACTORING	$BASE refactoring
 define_directory	SERIALIZATION	$BASE_ISE serialization
 define_directory	SUPPORT		$BASE support

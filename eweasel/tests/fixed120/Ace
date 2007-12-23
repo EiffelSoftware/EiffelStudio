@@ -39,7 +39,7 @@
 		<cluster name="list" location="$LIST\"/>
 		<cluster name="refactoring" location="$REFACTORING\"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
-		<cluster name="set" location="$SET\"/>
+		<cluster name="set" location="$SET\" recursive="True"/>
 		<cluster name="sort" location="$SORT\"/>
 		<cluster name="storage" location="$STORAGE\"/>
 		<cluster name="support" location="$SUPPORT\"/>

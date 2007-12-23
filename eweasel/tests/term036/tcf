@@ -111,6 +111,8 @@ copy_raw	type.e $CLUSTER type.e
 copy_raw	typed_pointer.e $CLUSTER typed_pointer.e 
 copy_raw	unbounded.e $CLUSTER unbounded.e 
 copy_raw	unix_file_info.e $CLUSTER unix_file_info.e 
+copy_raw	exception.e $CLUSTER exception.e 
+copy_raw	exception_manager.e $CLUSTER exception_manager.e 
 
 compile_melted
 compile_result 	 ok

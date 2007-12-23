@@ -83,6 +83,12 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 			</file_rule>
 			<file_rule>
 				<exclude>/classic$</exclude>
+				<exclude>/kernel/exceptions/io_failure.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/exception.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/exception_manager.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/operating_system_failure.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/operating_system_signal_failure.e$</exclude>
+				<exclude>/kernel/exceptions/elks_exceptions/void_target.e$</exclude>
 				<condition>
 					<dotnet value="true"/>
 				</condition>

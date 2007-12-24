@@ -898,35 +898,35 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 		if (init) {
 			if (cp) {
 				RT_GC_PROTECT(obj);
-				for (i = lower; i <= upper; i++) {
-					offset = elem_size * i;
+				for (i = lower, offset = elem_size * i; i <= upper; i++) {
 					zone = (union overhead *) (obj + offset);
 					zone->ov_size = OVERHEAD + offset;	/* For GC */
 					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
 					(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
 					(cp) (obj + OVERHEAD + offset);
+					offset += elem_size;
 				}
 				RT_GC_WEAN(obj);
 			} else {
 				RT_GC_PROTECT(obj);
-				for (i = lower; i <= upper; i++) {
-					offset = elem_size * i;
+				for (i = lower, offset = elem_size * i; i <= upper; i++) {
 					zone = (union overhead *) (obj + offset);
 					zone->ov_size = OVERHEAD + offset;	/* For GC */
 					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
 					(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
+					offset += elem_size;
 				}
 				RT_GC_WEAN(obj);
 			}
 		} else {
 			if (cp) {
 				RT_GC_PROTECT(obj);
-				for (i = lower; i <= upper; i++) {
-					offset = elem_size * i;
+				for (i = lower, offset = elem_size * i; i <= upper; i++) {
 					zone = (union overhead *) (obj + offset);
 					zone->ov_size = OVERHEAD + offset;	/* For GC */
 					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
 					(cp) (obj + OVERHEAD + offset);
+					offset += elem_size;
 				}
 				RT_GC_WEAN(obj);
 			} else {
@@ -942,9 +942,9 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 	} else {
 		if (cp) {
 			RT_GC_PROTECT(obj);
-			for (i = lower; i <= upper; i++) {
-				offset = elem_size * i;
+			for (i = lower, offset = elem_size * i; i <= upper; i++) {
 				cp (obj + offset);
+				offset += elem_size;
 			}
 			RT_GC_WEAN(obj);
 		}

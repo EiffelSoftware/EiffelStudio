@@ -1,152 +1,37 @@
 indexing
-	description: "Error object sent by the compiler to the workbench."
+	description: "[
+		Ancestor to all errors/warnings defined in the compiler.
+		
+		All the nodes defined by the Eiffel compiler are descendants of COMPILER_ERROR and are using dynamic binding
+		for visiting. This is why there is some code duplication between the code in COMPILER_ERROR and in ERROR_TRACER
+		for the display routines defined in COMPILER_ERROR.
+		
+		When a complete redesign of the error handling is done in the compiler, this code duplication should disappear.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ERROR
+deferred class
+	COMPILER_ERROR
 
 inherit
-	ANY
+	USER_DEFINED_ERROR
 
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
 
-feature -- Properties
+feature {ERROR_TRACER} -- Formatting
 
-	line: INTEGER
-			-- Line number involved in error
-
-	column: INTEGER
-			-- Column number involved in error
-
-	file_name: STRING is
-			-- Path to file involved in error.
-			-- Could be Void if not a file specific error.
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
+			-- Build specific explanation image for current error
+			-- in `error_window'.
 		require
-			has_associated_file: has_associated_file
+			valid_st: a_text_formatter /= Void
 		deferred
-		ensure
-			file_name_not_void: has_associated_file
-		end
-
-	code: STRING is
-			-- Code error
-		deferred
-		ensure
-			code_not_void: Result /= Void
-		end
-
-	subcode: INTEGER is
-			-- Subcode of error. `0' if none.
-		do
-		end
-
-	help_file_name: STRING is
-			-- Associated file name where error explanation is located.
-		do
-			Result := code
-		ensure
-			help_file_name_not_void: Result /= Void
-		end;
-
-	Error_string: STRING is
-		do
-			Result := "Error"
-		ensure
-			error_string_not_void: Result /= Void
-		end
-
-	has_associated_file: BOOLEAN is
-			-- Is current relative to a file?
-		do
-		end
-
-feature -- Access
-
-	is_defined: BOOLEAN is
-			-- Is the error fully defined?
-		do
-			Result := True
-		end
-
-feature -- Set position
-
-	set_location (a_location: LOCATION_AS) is
-			-- Initialize `line' and `column' from `a_location'
-		require
-			a_location_not_void: a_location /= Void
-		do
-			line := a_location.line
-			column := a_location.column
-		ensure
-			line_set: line = a_location.line
-			column_set: column = a_location.column
-		end
-
-	set_position (l, c: INTEGER) is
-			-- Set `line' and `column' with `l' and `c'.
-		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-		do
-			line := l
-			column := c
-		ensure
-			line_set: line = l
-			column_set: column = c
-		end
-
-feature {NONE} -- Compute surrounding text around error
-
-	previous_line, current_line, next_line: STRING
-			-- Surrounding lines where error occurs.
-
-	has_source_text: BOOLEAN is
-			-- Did we get the source text?
-		do
-			Result := current_line /= Void
-		end
-
-	initialize_output is
-			-- Set `previous_line', `current_line' and `next_line' with their proper values
-			-- taken from file `file_name'.
-		require
-			file_name_not_void: file_name /= Void
-		local
-			file: PLAIN_TEXT_FILE
-			nb: INTEGER
-		do
-			current_line := Void
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				from
-					nb := 1
-				until
-					nb > line or else file.end_of_file
-				loop
-					if nb >= line - 1 then
-						previous_line := current_line
-					end
-					file.read_line
-					nb := nb + 1
-					if nb >= line - 1 then
-						current_line := file.last_string.twin
-					end
-				end
-				if not file.end_of_file then
-					file.read_line
-					next_line := file.last_string.twin
-				end
-				file.close
-				check
-					current_line_not_void: current_line /= Void
-				end
-			end
 		end
 
 feature -- Output
@@ -287,7 +172,7 @@ feature {NONE} -- Print for multiple lines
 			print_short_help (a_text_formatter);
 		end;
 
-	print_short_help (a_text_formatter: TEXT_FORMATTER) is
+	frozen print_short_help (a_text_formatter: TEXT_FORMATTER) is
 			-- Display help in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void
@@ -332,17 +217,9 @@ feature {NONE} -- Print for multiple lines
 			end;
 		end;
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
-			-- Build specific explanation image for current error
-			-- in `error_window'.
-		require
-			valid_st: a_text_formatter /= Void
-		deferred
-		end;
-
 feature {NONE} -- Implementation
 
-	print_context_of_error (a_context_class: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
+	frozen print_context_of_error (a_context_class: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
 			-- Display the line number in `a_text_formatter'.
 		require
 			valid_line: line > 0
@@ -385,10 +262,91 @@ feature {NONE} -- Implementation
 			end
 		end
 
-invariant
-	non_void_code: code /= Void
-	non_void_error_message: error_string /= Void
-	non_void_help_file_name: help_file_name /= Void
+feature {NONE} -- Output
+
+	display_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING) is
+			-- Display `a_line' in `a_text_formatter'. It translates `%T' accordingly to `a_text_formatter' specification
+			-- which is to call `add_indent'.
+		require
+			st_not_void: a_text_formatter /= Void
+		local
+			i: INTEGER
+			nb: INTEGER
+			c: CHARACTER
+		do
+			if a_line /= Void then
+				from
+					nb := a_line.count
+				until
+					i = nb
+				loop
+					i := i + 1
+					c := a_line.item (i)
+					if c = '%T' then
+						a_text_formatter.add (" ")
+						a_text_formatter.add (" ")
+						a_text_formatter.add (" ")
+						a_text_formatter.add (" ")
+					else
+						a_text_formatter.add (c.out)
+					end
+				end
+				a_text_formatter.add_new_line
+			end
+		end
+
+	display_syntax_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING) is
+			-- Display `a_line' which does like `display_line' but with an additional
+			-- arrowed line that points out to `column' where syntax issue is located.
+		require
+			st_not_void: a_text_formatter /= Void
+			a_line_not_void: a_line /= Void
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+			position, nb_tab: INTEGER
+		do
+			from
+				nb := a_line.count
+			until
+				i = nb
+			loop
+				i := i + 1
+				c := a_line.item (i)
+				if c = '%T' then
+					a_text_formatter.add (" ")
+					a_text_formatter.add (" ")
+					a_text_formatter.add (" ")
+					a_text_formatter.add (" ")
+					if i <= column then
+						nb_tab := nb_tab + 1
+					end
+				else
+					a_text_formatter.add (c.out)
+				end
+			end
+			a_text_formatter.add_new_line
+			if column > 0 then
+				position := (column - 1) + 3 * nb_tab
+			else
+				position := 3 * nb_tab
+			end
+			if position = 0 then
+				a_text_formatter.add ("^---------------------------")
+				a_text_formatter.add_new_line
+			else
+				from
+					i := 1
+				until
+					i > position
+				loop
+					a_text_formatter.add ("-")
+					i := i + 1
+				end
+				a_text_formatter.add ("^")
+				a_text_formatter.add_new_line
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -422,4 +380,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class ERROR
+end

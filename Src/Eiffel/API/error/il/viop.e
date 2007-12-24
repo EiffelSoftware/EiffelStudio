@@ -13,7 +13,7 @@ class
 	VIOP
 
 inherit
-	WARNING
+	COMPILER_WARNING
 
 create
 	make

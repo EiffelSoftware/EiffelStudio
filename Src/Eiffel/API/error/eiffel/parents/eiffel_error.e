@@ -10,7 +10,7 @@ indexing
 deferred class EIFFEL_ERROR
 
 inherit
-	ERROR
+	COMPILER_ERROR
 		redefine
 			trace, is_defined, has_associated_file,
 			trace_primary_context
@@ -70,7 +70,7 @@ feature -- Output
 			-- Build the primary context string so errors can be navigated to
 		do
 			if class_c = Void then
-				Precursor {ERROR} (a_text_formatter)
+				Precursor (a_text_formatter)
 			else
 				a_text_formatter.add_group (class_c.group, class_c.group.name)
 				a_text_formatter.add (".")

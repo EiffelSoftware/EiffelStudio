@@ -266,7 +266,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ID
 				process_id_as
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of `attribute', possibly a new keyword in future definition of `Eiffel'."))
 				end
@@ -275,7 +275,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_BIT, Current)
 				last_token := TE_BIT
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "The `bit' keyword will be removed in the future according to ECMA Eiffel and should not be used."))
 				end
@@ -412,7 +412,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ID
 				process_id_as
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of `note', possibly a new keyword in future definition of `Eiffel'."))
 				end
@@ -456,7 +456,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ID
 				process_id_as
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of `only', possibly a new keyword in future definition of `Eiffel'."))
 				end
@@ -573,7 +573,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_id_as_value := ast_factory.new_filled_bit_id_as (Current)
 
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of bit syntax will be removed in the future according to ECMA Eiffel and should not be used."))
 				end
@@ -975,7 +975,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 							align_left (token_buffer)
 						end
 						if has_old_verbatim_strings_warning then
-							Error_handler.insert_warning (
+							report_one_warning (
 								create {SYNTAX_WARNING}.make (line, column, filename,
 									once "Default verbatim string handling is changed to follow standard semantics %
 									%with alignment instead of previous non-standard one without alignment."))

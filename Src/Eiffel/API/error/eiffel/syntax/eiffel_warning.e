@@ -9,9 +9,9 @@ deferred class
 	EIFFEL_WARNING
 
 inherit
-	WARNING
+	COMPILER_WARNING
 		redefine
-			has_associated_file, trace_primary_context
+			has_associated_file, trace_primary_context, associated_class
 		end
 
 feature -- Properties
@@ -34,7 +34,7 @@ feature -- Output
 			-- Build the primary context string so errors can be navigated to
 		do
 			if associated_class = Void then
-				Precursor {WARNING} (a_text_formatter)
+				Precursor (a_text_formatter)
 			else
 				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
 				a_text_formatter.add (".")

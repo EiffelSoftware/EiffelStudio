@@ -167,6 +167,7 @@ feature -- Initialization
 			object_test_locals := Void
 			counters.wipe_out
 			last_rsqure.wipe_out
+			current_class := Void
 		end
 
 feature -- Status report
@@ -207,6 +208,17 @@ feature -- Parsing
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+		do
+			parse_class (a_file, Void)
+		end
+
+	parse_class (a_file: KL_BINARY_INPUT_FILE; a_class: ABSTRACT_CLASS_C) is
+			-- Parse Eiffel class text from `a_file'.
+			-- Make result available in appropriate result node.
+			-- An exception is raised if a syntax error is found.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
 		local
 			l_ast_factory: like ast_factory
 		do
@@ -217,6 +229,7 @@ feature -- Parsing
 			filename := a_file.name
 			l_ast_factory := ast_factory
 			l_ast_factory.create_match_list (initial_match_list_size)
+			current_class := a_class
 			yyparse
 			match_list := l_ast_factory.match_list
 			reset

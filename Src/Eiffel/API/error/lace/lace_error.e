@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error detected when parsing the Ace file specified in LACE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,7 +10,7 @@ indexing
 deferred class LACE_ERROR
 
 inherit
-	ERROR
+	COMPILER_ERROR
 
 	REFACTORING_HELPER
 		export
@@ -30,7 +30,7 @@ feature -- Property
 		do
 			to_implement ("May be we will never implement this when we go away from Lace?")
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

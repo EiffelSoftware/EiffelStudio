@@ -13,7 +13,7 @@ class
 	VIAC
 
 inherit
-	WARNING
+	COMPILER_WARNING
 
 feature -- Properties
 

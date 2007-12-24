@@ -1,27 +1,20 @@
 indexing
-
-	description: 
-		"Error for bad character recognition."
+	description: "Error for bad character recognition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class BAD_CHARACTER
 
 inherit
-
 	SYNTAX_ERROR
 		redefine
-			syntax_message
+			syntax_message,
+			process
 		end
 
-create {ERROR_HANDLER}
-
-	init
-
 create
-
 	make
 
 feature -- Property
@@ -30,6 +23,13 @@ feature -- Property
 			-- Specific syntax message
 		do
 			Result := "invalid character"
+		end
+
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR) is
+		do
+			a_visitor.process_bad_character (Current)
 		end
 
 indexing
@@ -64,4 +64,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class BAD_CHARACTER
+end

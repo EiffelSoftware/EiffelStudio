@@ -10,8 +10,17 @@ deferred class
 	DBG_EXPRESSION_EVALUATOR
 
 inherit
+	ANY
 
 	SHARED_BENCH_NAMES
+		export
+			{NONE} all
+		end
+
+	SHARED_ERROR_TRACER
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 
@@ -287,7 +296,7 @@ feature {NONE} -- Utility Implementation
 			yw: YANK_STRING_WINDOW
 		do
 			create yw.make
-			e.trace (yw)
+			tracer.trace (yw, e, {ERROR_TRACER}.normal)
 			Result := yw.stored_output
 		end
 

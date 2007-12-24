@@ -590,7 +590,7 @@ end
 				last_token := TE_ID
 				process_id_as
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of `attribute', possibly a new keyword in future definition of `Eiffel'."))
 				end
@@ -606,7 +606,7 @@ end
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_BIT, Current)
 				last_token := TE_BIT
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "The `bit' keyword will be removed in the future according to ECMA Eiffel and should not be used."))
 				end
@@ -974,7 +974,7 @@ end
 				last_token := TE_ID
 				process_id_as
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of `note', possibly a new keyword in future definition of `Eiffel'."))
 				end
@@ -1049,7 +1049,7 @@ end
 				last_token := TE_ID
 				process_id_as
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of `only', possibly a new keyword in future definition of `Eiffel'."))
 				end
@@ -1341,7 +1341,7 @@ end
 				last_id_as_value := ast_factory.new_filled_bit_id_as (Current)
 
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of bit syntax will be removed in the future according to ECMA Eiffel and should not be used."))
 				end
@@ -2180,7 +2180,7 @@ end
 							align_left (token_buffer)
 						end
 						if has_old_verbatim_strings_warning then
-							Error_handler.insert_warning (
+							report_one_warning (
 								create {SYNTAX_WARNING}.make (line, column, filename,
 									once "Default verbatim string handling is changed to follow standard semantics %
 									%with alignment instead of previous non-standard one without alignment."))
@@ -2703,8 +2703,19 @@ end
 feature {NONE} -- Table templates
 
 	yy_nxt_template: SPECIAL [INTEGER] is
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yy_fixed_array (<<
+			create an_array.make (0, 2002)
+			yy_nxt_template_1 (an_array)
+			yy_nxt_template_2 (an_array)
+			yy_nxt_template_3 (an_array)
+			Result := yy_fixed_array (an_array)
+		end
+
+	yy_nxt_template_1 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
 			    0,   14,   15,   16,   15,   17,   18,   19,   20,   14,
 			   19,   21,   22,   23,   24,   25,   26,   27,   28,   29,
 			   30,   31,   32,   32,   33,   34,   35,   36,   37,   38,
@@ -2813,8 +2824,13 @@ feature {NONE} -- Table templates
 			  352,  463,  378,   75,  450,  451,  464,  445,  453,  453,
 			  453,  453,  447,  371,  371,  371,  371,  461,  465,  215,
 			  103,  462,  103,  261,  466,  467,  452,  103,  371,  371,
-			  371,  371,  468,  463,  103,  103,  450,  451,  464,  445,
+			  371,  371,  468,  463,  103,  103,  450,  451,  464,  445, yy_Dummy>>,
+			1, 1000, 0)
+		end
 
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
 			  375,  375,  375,  375,  447,  455,  455,  455,  455,  454,
 			  465,  215,  103,  655,  103,  261,  466,  467,  452,  103,
 			  373,  655,  655,  456,  468,  456,  103,  103,  457,  457,
@@ -2923,14 +2939,31 @@ feature {NONE} -- Table templates
 			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655,
 			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655,
 			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655,
-			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655,
+			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655, yy_Dummy>>,
+			1, 1000, 1000)
+		end
 
-			  655,  655,  655, yy_Dummy>>)
+	yy_nxt_template_3 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
+			  655,  655,  655, yy_Dummy>>,
+			1, 3, 2000)
 		end
 
 	yy_chk_template: SPECIAL [INTEGER] is
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yy_fixed_array (<<
+			create an_array.make (0, 2002)
+			yy_chk_template_1 (an_array)
+			yy_chk_template_2 (an_array)
+			yy_chk_template_3 (an_array)
+			Result := yy_fixed_array (an_array)
+		end
+
+	yy_chk_template_1 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -3039,8 +3072,13 @@ feature {NONE} -- Table templates
 			  352,  388,  378,    7,  351,  351,  389,  339,  369,  369,
 			  369,  369,  341,  370,  370,  370,  370,  386,  390,  334,
 			  338,  387,  339,  369,  391,  392,  351,  340,  371,  371,
-			  371,  371,  393,  388,  341,  343,  351,  351,  389,  339,
+			  371,  371,  393,  388,  341,  343,  351,  351,  389,  339, yy_Dummy>>,
+			1, 1000, 0)
+		end
 
+	yy_chk_template_2 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
 			  374,  374,  374,  374,  341,  372,  372,  372,  372,  369,
 			  390,  334,  338,    0,  339,  369,  391,  392,  351,  340,
 			  372,    0,    0,  373,  393,  373,  341,  343,  373,  373,
@@ -3149,9 +3187,15 @@ feature {NONE} -- Table templates
 			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655,
 			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655,
 			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655,
-			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655,
+			  655,  655,  655,  655,  655,  655,  655,  655,  655,  655, yy_Dummy>>,
+			1, 1000, 1000)
+		end
 
-			  655,  655,  655, yy_Dummy>>)
+	yy_chk_template_3 (an_array: ARRAY [INTEGER]) is
+		do
+			yy_array_subcopy (an_array, <<
+			  655,  655,  655, yy_Dummy>>,
+			1, 3, 2000)
 		end
 
 	yy_base_template: SPECIAL [INTEGER] is

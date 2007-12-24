@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ERROR_TRACER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	display_error_error (st: TEXT_FORMATTER) is
@@ -43,7 +48,7 @@ feature -- Access
 			loop
 				display_separation_line (st)
 				st.add_new_line
-				error_list.item.trace (st)
+				tracer.trace (st, error_list.item, {ERROR_TRACER}.normal)
 				st.add_new_line
 
 					-- prepare next iterations.
@@ -61,7 +66,7 @@ feature -- Access
 			loop
 				display_separation_line (st)
 				st.add_new_line
-				warning_list.item.trace (st)
+				tracer.trace (st, warning_list.item, {ERROR_TRACER}.normal)
 				st.add_new_line
 
 					-- prepare next iterations.

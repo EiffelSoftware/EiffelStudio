@@ -10,12 +10,12 @@ deferred class WARNING
 inherit
 	ERROR
 		redefine
-			Error_string
+			error_string
 		end
 
 feature -- Property
 
-	Error_string: STRING is
+	error_string: STRING is
 		do
 			Result := "Warning"
 		end

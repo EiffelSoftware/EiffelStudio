@@ -3,7 +3,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	SYNTAX_ERROR
@@ -11,10 +11,9 @@ class
 inherit
 	ERROR
 		redefine
-			file_name
+			file_name,
+			process
 		end
-
-	SYNTAX_MESSAGE
 
 create
 	make, init
@@ -46,6 +45,7 @@ feature {NONE} -- Initialization
 		do
 			create a_filename.make_from_string (a_parser.filename)
 			make (a_parser.line, a_parser.column, a_filename, a_parser.error_message)
+			set_associated_class (a_parser.current_class)
 		end
 
 feature -- Properties
@@ -68,13 +68,20 @@ feature -- Properties
 			non_void_result: Result /= Void
 		end
 
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR) is
+		do
+			a_visitor.process_syntax_error (Current)
+		end
+
 invariant
 	attached_file_name: file_name /= Void
 	attached_error_message: error_message /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

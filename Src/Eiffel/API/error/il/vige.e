@@ -9,7 +9,7 @@ class
 	VIGE
 
 inherit
-	ERROR
+	COMPILER_ERROR
 		redefine
 			error_string,
 			print_error_message
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 				%are properly installed%N%N%
 				%See http://docs.eiffel.com/technologies/dotnet for more details.%N"
 		end
-		
+
 	make_output_in_use (t: STRING) is
 			-- Error when trying to delete file `t'.
 		require
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			internal_error_string := "Cannot create PDB file associated to module:%N" +
 				module_name + ".%NSystem compilation aborted.%N"
 		end
-		
+
 feature -- Properties
 
 	code: STRING is
@@ -68,18 +68,18 @@ feature -- Properties
 		once
 			Result := "VIGE"
 		end
-	
+
 	Error_string: STRING is
 			-- Error description
 		do
 			Result := internal_error_string
 		end
-		
+
 	file_name: STRING is
 			-- No associated file
 		do
 		end
-		
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 
 	internal_error_string: STRING
 			-- Internal copy of error description
-			
+
 invariant
 	internal_error_string_not_void: internal_error_string /= Void
 

@@ -14,6 +14,11 @@ inherit
 
 	SHARED_CONFIGURE_RESOURCES
 
+	SHARED_ERROR_TRACER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -56,7 +61,7 @@ feature -- Output
 				loop
 					display_separation_line (a_text_formatter);
 					a_text_formatter.add_new_line;
-					warning_list.item.trace (a_text_formatter);
+					tracer.trace (a_text_formatter, warning_list.item, {ERROR_TRACER}.normal)
 					a_text_formatter.add_new_line;
 					warning_list.forth;
 				end;
@@ -95,7 +100,7 @@ feature -- Output
 				loop
 					display_separation_line (a_text_formatter)
 					a_text_formatter.add_new_line
-					error_list.item.trace (a_text_formatter)
+					tracer.trace (a_text_formatter, error_list.item, {ERROR_TRACER}.normal)
 					a_text_formatter.add_new_line
 					error_list.forth
 				end

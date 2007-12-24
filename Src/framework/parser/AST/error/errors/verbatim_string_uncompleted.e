@@ -12,7 +12,8 @@ inherit
 
 	SYNTAX_ERROR
 		redefine
-			syntax_message
+			syntax_message,
+			process
 		end
 
 create {ERROR_HANDLER}
@@ -29,6 +30,13 @@ feature -- Access
 			-- Specific syntax message
 		do
 			Result := "incomplete verbatim string: missing Verbatim_string_closer"
+		end
+
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR) is
+		do
+			a_visitor.process_verbatim_string_uncompleted (Current)
 		end
 
 indexing

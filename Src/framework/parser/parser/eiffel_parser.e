@@ -3665,7 +3665,7 @@ end
 
 				yyval57 := ast_factory.new_index_as (Void, yyvs85.item (yyvsp85), Void)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs85.item (yyvsp85)), token_column (yyvs85.item (yyvsp85)), filename,
 						once "Missing `Index' part of `Index_clause'."))
 				end
@@ -6128,7 +6128,7 @@ end
 				if not conforming_inheritance_flag then
 						-- Conforming inheritance
 					if has_syntax_warning then
-						Error_handler.insert_warning (
+						report_one_warning (
 							create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 							once "Use `inherit ANY' or do not specify an empty inherit clause"))
 					end
@@ -6644,7 +6644,7 @@ end
 						create {SYNTAX_ERROR}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 						"Empty rename clause."))
 				else
-					error_handler.insert_warning (
+					report_one_warning (
 							create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 							"Remove empty rename clauses."))
 				end
@@ -9925,7 +9925,7 @@ end
 				yyval79 := yyvs79.item (yyvsp79)
 				ast_factory.set_expanded_class_type (yyval79, True, yyvs12.item (yyvsp12))
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 						once "Make an expanded version of the base class associated with this type."))
 				end
@@ -14307,7 +14307,7 @@ end
 
 				yyval41 := ast_factory.new_create_as (Void, Void, yyvs12.item (yyvsp12))
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 						once "Use keyword `create' instead."))
 				end
@@ -14348,7 +14348,7 @@ end
 
 				yyval41 := ast_factory.new_create_as (yyvs38.item (yyvsp38), yyvs96.item (yyvsp96), yyvs12.item (yyvsp12))
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 						once "Use keyword `create' instead."))
 				end
@@ -14391,7 +14391,7 @@ end
 
 				yyval41 := ast_factory.new_create_as (ast_factory.new_client_as (yyvs102.item (yyvsp102)), Void, yyvs12.item (yyvsp12))
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 						once "Use keyword `create' instead."))
 				end
@@ -14622,7 +14622,7 @@ end
 			if yyvs77.item (yyvsp77) /= Void then
 				yyval75 := yyvs77.item (yyvsp77).first
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs77.item (yyvsp77).first), token_column (yyvs77.item (yyvsp77).first),
 						filename, once "Use keyword `agent' instead."))
 				end
@@ -15587,7 +15587,7 @@ end
 
 				yyval42 := ast_factory.new_bang_creation_as (Void, yyvs25.item (yyvsp25), yyvs27.item (yyvsp27), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)),
 						filename, "Use keyword `create' instead."))
 				end
@@ -15630,7 +15630,7 @@ end
 
 				yyval42 := ast_factory.new_bang_creation_as (yyvs79.item (yyvsp79), yyvs25.item (yyvsp25), yyvs27.item (yyvsp27), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)),
 						filename, "Use keyword `create' instead."))
 				end
@@ -15786,7 +15786,7 @@ end
 
 				yyval43 := ast_factory.new_bang_creation_expr_as (yyvs79.item (yyvsp79), yyvs27.item (yyvsp27), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)),
 						filename, "Use keyword `create' instead."))
 				end
@@ -17831,7 +17831,7 @@ end
 
 				yyval68 := ast_factory.new_static_access_as (yyvs79.item (yyvsp79), yyvs2.item (yyvsp2), yyvs93.item (yyvsp93), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4));
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)),
 							filename, once "Remove the `feature' keyword."))
 				end
@@ -18633,7 +18633,7 @@ end
 					-- Keyword used as identifier
 				process_id_as_with_existing_stub (last_keyword_as_id_index)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
@@ -18722,7 +18722,7 @@ end
 					-- Keyword used as identifier
 				process_id_as_with_existing_stub (last_keyword_as_id_index)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename,
 							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end

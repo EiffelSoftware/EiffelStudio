@@ -105,6 +105,10 @@ feature -- Access
 	ast_factory: AST_FACTORY
 			-- Abstract Syntax Tree factory
 
+	current_class: ABSTRACT_CLASS_C
+			-- Current class being parsed.
+			-- It can be Void in a parsing that does not involve compilation
+
 	filename: STRING
 			-- Name of file being parsed
 
@@ -208,10 +212,20 @@ feature {NONE} -- Error handling
 		require
 			a_error_not_void: a_error /= Void
 		do
+			a_error.set_associated_class (current_class)
 			error_handler.insert_error (a_error)
 				-- To avoid reporting more than one error for the same lexical error
 				-- we simply abort the scanning.
 			terminate
+		end
+
+	report_one_warning (a_error: ERROR) is
+			-- Log `a_error'.
+		require
+			a_error_not_void: a_error /= Void
+		do
+			a_error.set_associated_class (current_class)
+			error_handler.insert_warning (a_error)
 		end
 
 	fatal_error (a_message: STRING) is

@@ -1,12 +1,28 @@
 indexing
-	description: "Export class for documentation."
+	description: "[
+		Base class for user defined errors (for example errors from a compiler should inherit
+		from this class).
+		]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	status: "See notice at end of class.";
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	CLASS_C_EXPORT
+deferred class
+	USER_DEFINED_ERROR
+
+inherit
+	ERROR
+		redefine
+			process
+		end
+
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR) is
+		do
+			a_visitor.process_user_defined_error (Current)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -39,4 +55,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end

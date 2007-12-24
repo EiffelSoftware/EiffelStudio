@@ -278,7 +278,7 @@ feature -- Action
 					parser.set_has_old_verbatim_strings_warning (False)
 				end
 				Inst_context.set_group (cluster)
-				parser.parse (file)
+				parser.parse_class (file, Current)
 				Result := parser.root_node
 				if Result /= Void then
 						-- Update `date' attribute.

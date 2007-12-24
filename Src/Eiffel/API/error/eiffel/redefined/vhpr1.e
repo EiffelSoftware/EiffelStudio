@@ -1,16 +1,16 @@
 indexing
 
-	description: 
+	description:
 		"Error when the topological sort on classes finds a cycle."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VHPR1 
+class VHPR1
 
 inherit
-	ERROR
+	COMPILER_ERROR
 		redefine
 			build_explain, subcode
 		end

@@ -313,7 +313,7 @@ Class_declaration:
 				end
 				
 				if $5 /= Void and then $5.count > 65536 then
-					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Number of formal generic parameters exceeds 65536", False))
+					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Number of formal generic parameters exceeds 65536"))
 				else
 					root_node := new_class_description ($4, temp_string_as1,
 						is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
@@ -977,7 +977,7 @@ Rename: TE_RENAME
 				$$ := ast_factory.new_rename_clause_as (Void, $1)
 				if is_constraint_renaming then
 					report_one_error (
-						create {SYNTAX_ERROR}.make (line, column, filename, "Empty rename clause.", False))
+						create {SYNTAX_ERROR}.make (line, column, filename, "Empty rename clause."))
 				else
 					error_handler.insert_warning (
 							create {SYNTAX_WARNING}.make (line, column, filename,
@@ -1347,7 +1347,7 @@ Instruction_impl: Creation
 					-- Call production should be used instead,
 					-- but this complicates the grammar.
 				if has_type then
-					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
+					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction"))
 				elseif $1 /= Void then
 					$$ := new_call_instruction_from_expression ($1)
 				end

@@ -291,7 +291,7 @@ feature -- Process
 		deferred
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
 			-- Process class syntax text.
 		require
 			text_not_void: text /= Void
@@ -537,7 +537,7 @@ feature -- Text operator
 			process_indentation (nr)
 		end
 
-	add_class_syntax (syn: SYNTAX_MESSAGE; e_class: CLASS_C; str: STRING_GENERAL) is
+	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: STRING_GENERAL) is
 			-- Put `syn' for `e_class'.
 		do
 			process_cl_syntax (str, syn, e_class)

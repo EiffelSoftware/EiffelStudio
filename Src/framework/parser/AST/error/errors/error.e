@@ -1,5 +1,5 @@
 indexing
-	description: "Dummy class used to reflect hierarchy of ERROR classes in compiler."
+	description: "Representation of a compiler error (either syntax or semantics)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -8,7 +8,7 @@ indexing
 deferred class
 	ERROR
 
-feature -- Properties
+feature -- Access
 
 	line: INTEGER
 			-- Line number involved in error
@@ -23,8 +23,21 @@ feature -- Properties
 			has_associated_file: has_associated_file
 		deferred
 		ensure
-			file_name_not_void: has_associated_file
+			file_name_not_void: Result /= Void
 		end
+
+	associated_class: ABSTRACT_CLASS_C
+			-- Associate class, if any
+
+	help_file_name: STRING is
+			-- Associated file name where error explanation is located.
+		do
+			Result := code
+		ensure
+			help_file_name_not_void: Result /= Void
+		end
+
+feature -- Properties
 
 	code: STRING is
 			-- Code error
@@ -38,14 +51,6 @@ feature -- Properties
 		do
 		end
 
-	help_file_name: STRING is
-			-- Associated file name where error explanation is located.
-		do
-			Result := code
-		ensure
-			help_file_name_not_void: Result /= Void
-		end
-
 	Error_string: STRING is
 		do
 			Result := "Error"
@@ -53,12 +58,12 @@ feature -- Properties
 			error_string_not_void: Result /= Void
 		end
 
+feature -- Status report
+
 	has_associated_file: BOOLEAN is
 			-- Is current relative to a file?
 		do
 		end
-
-feature -- Access
 
 	is_defined: BOOLEAN is
 			-- Is the error fully defined?
@@ -66,7 +71,7 @@ feature -- Access
 			Result := True
 		end
 
-feature -- Set position
+feature -- Setting
 
 	set_location (a_location: LOCATION_AS) is
 			-- Initialize `line' and `column' from `a_location'
@@ -93,7 +98,15 @@ feature -- Set position
 			column_set: column = c
 		end
 
-feature {NONE} -- Compute surrounding text around error
+	set_associated_class (a_class: like associated_class) is
+			-- Set `associated_class' with `a_class'
+		do
+			associated_class := a_class
+		ensure
+			associated_class_set: associated_class = a_class
+		end
+
+feature {ERROR_VISITOR} -- Compute surrounding text around error
 
 	previous_line, current_line, next_line: STRING
 			-- Surrounding lines where error occurs.
@@ -142,9 +155,23 @@ feature {NONE} -- Compute surrounding text around error
 			end
 		end
 
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR) is
+			-- Process Current using `a_visitor'.
+		require
+			a_visitor_not_void: a_visitor /= Void
+		deferred
+		end
+
+invariant
+	non_void_code: code /= Void
+	non_void_error_message: error_string /= Void
+	non_void_help_file_name: help_file_name /= Void
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

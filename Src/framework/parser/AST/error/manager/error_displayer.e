@@ -1,12 +1,11 @@
 indexing
-
 	description:
 		"Displays warning and error messages from Error handler%
 		%during a compilation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
 	ERROR_DISPLAYER
@@ -91,4 +90,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class ERROR_DISPLAYER
+end

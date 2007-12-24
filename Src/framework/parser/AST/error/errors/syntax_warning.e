@@ -1,8 +1,9 @@
 indexing
-	description: "Not implemented yet."
+	description: "Generate a warning for an obsolete syntax."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SYNTAX_WARNING
@@ -10,10 +11,9 @@ class
 inherit
 	WARNING
 		redefine
-			file_name, has_associated_file
+			file_name, has_associated_file,
+			process
 		end
-
-	SYNTAX_MESSAGE
 
 create
 	make
@@ -50,8 +50,15 @@ feature -- Properties
 	has_associated_file: BOOLEAN = True
 			-- Current is associated to a file/class
 
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR) is
+		do
+			a_visitor.process_syntax_warning (Current)
+		end
 
 invariant
+	associated_class_not_void: associated_class /= Void
 	warning_message_not_void: warning_message /= Void
 
 indexing

@@ -17,7 +17,8 @@ inherit
 		end
 
 create
-	make
+	default_create,
+	make -- Use to access page title, if needed!
 
 feature -- Access
 

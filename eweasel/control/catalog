@@ -837,6 +837,7 @@ test	dead-code-catcall			final040 tcf pass finalizing
 test	gc-tracking-001		runtime001	tcf pass runtime
 test	gc-tracking-002		runtime002	tcf pass runtime
 test	gc-expanded-in-special	runtime003	tcf pass runtime expanded special
+test	gc-expanded-allocating-memory-in-special runtime004	tcf pass runtime expanded special
 
 -- Execution
 

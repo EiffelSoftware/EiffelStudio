@@ -127,7 +127,6 @@
 			<file_rule>
 				<exclude>/Core$</exclude>
 				<exclude>/kernel$</exclude>
-				<exclude>/parser_override$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/com_il_generation$</exclude>
@@ -177,7 +176,6 @@
 			<cluster name="interface_shell" location="$|no_communication\shell\"/>
 			<cluster name="interface_switch" location="$|interface\batch_only\"/>
 		</cluster>
-		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
 	</target>
 	<target name="ecdpc" extends="batch">
 		<setting name="executable_name" value="ecdpc"/>
@@ -259,7 +257,6 @@
 			<file_rule>
 				<exclude>/kernel$</exclude>
 				<exclude>/Core$</exclude>
-				<exclude>/parser_override$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/windows$</exclude>
@@ -372,7 +369,6 @@
 		</cluster>
 		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>
 		<override name="graphical_overrides" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\" recursive="true"/>
-		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
 	</target>
 	<target name="bench_unix" extends="bench">
 		<description>Compiling UNIX bench compiler on other platforms than Windows</description>

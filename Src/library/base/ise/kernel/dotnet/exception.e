@@ -16,15 +16,7 @@ inherit
 		rename
 			message as dotnet_message
 		redefine
-			default_create
-		end
-
-feature {NONE} -- Initialization
-
-	default_create is
-			-- Initialization
-		do
-			make_from_message (exception_message)
+			dotnet_message
 		end
 
 feature -- Raise
@@ -65,7 +57,7 @@ feature -- Access
 		ensure
 			original_not_void: Result /= Void
 		end
-		
+
 	code: INTEGER is
 			-- Code of the exception.
 		do
@@ -188,7 +180,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 		do
 			recipient_name := a_name
 		end
-		
+
 	frozen set_line_number (a_number: like line_number) is
 			-- Set `line_number' with `a_number'.
 		do
@@ -215,6 +207,12 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			if message /= Void then
 				Result := Result + " Tag: " + message
 			end
+		end
+
+	frozen dotnet_message: SYSTEM_STRING is
+			-- Message for the .NET runtime.
+		do
+			Result := exception_message
 		end
 
 end

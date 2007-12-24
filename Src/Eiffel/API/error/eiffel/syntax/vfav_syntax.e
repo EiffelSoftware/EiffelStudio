@@ -20,8 +20,6 @@ inherit
 			{NONE} all
 		end
 
-	SYNTAX_MESSAGE
-
 feature {NONE} -- Creation
 
 	make (f: FEATURE_NAME) is

@@ -95,7 +95,7 @@ inherit
 			{NONE} all
 		end
 
-	CLASS_C_EXPORT
+	ABSTRACT_CLASS_C
 
 	REFACTORING_HELPER
 		export

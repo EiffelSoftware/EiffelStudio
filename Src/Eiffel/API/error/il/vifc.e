@@ -9,7 +9,7 @@ class
 	VIFC
 
 inherit
-	ERROR
+	COMPILER_ERROR
 
 create
 	make
@@ -41,14 +41,14 @@ feature -- Access
 	file_name: STRING is
 			-- No associated file name
 		do
-			
+
 		end
-		
+
 feature -- Properties
 
 	code: STRING is "VIFC"
 		-- Error code
-	
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is

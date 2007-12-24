@@ -12,6 +12,9 @@ class VIIN
 inherit
 
 	VALIDITY_ERROR
+		redefine
+			process
+		end
 
 create
 	make
@@ -20,6 +23,13 @@ feature -- Properties
 
 	code: STRING is "VIIN";
 			-- Error code
+
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR) is
+		do
+			a_visitor.process_viin (Current)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

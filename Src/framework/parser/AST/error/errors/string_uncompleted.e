@@ -1,27 +1,20 @@
 indexing
-
-	description: 
-		"Syntax error for uncompleted string (final quote is missing)."
+	description: "Syntax error for uncompleted string (final quote is missing)."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class STRING_UNCOMPLETED
 
 inherit
-
 	SYNTAX_ERROR
 		redefine
-			syntax_message
+			syntax_message,
+			process
 		end
 
-create {ERROR_HANDLER}
-
-	init
-
 create
-
 	make
 
 feature -- Property
@@ -31,6 +24,13 @@ feature -- Property
         do
 			Result := "incomplete string: missing final quote"
         end
+
+feature -- Visitor
+
+	process (a_visitor: ERROR_VISITOR) is
+		do
+			a_visitor.process_string_uncompleted (Current)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -64,4 +64,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class STRING_UNCOMPLETED
+end

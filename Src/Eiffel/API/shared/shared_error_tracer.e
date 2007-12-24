@@ -1,28 +1,20 @@
 indexing
-	description: "To represent a message related to syntax."
+	description: "Unique instance of ERROR_TRACER"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	status: "See notice at end of class.";
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SYNTAX_MESSAGE
+class
+	SHARED_ERROR_TRACER
 
-feature -- Properties
+feature -- Access
 
-	file_name: STRING is
-			-- Path to file where syntax issue happened
-		deferred
-		end
-
-	line: INTEGER is
-			-- Line number of token involved in syntax issue
-		deferred
-		end
-
-	column: INTEGER is
-			-- Column number of token involved in syntax issue
-		deferred
+	tracer: ERROR_TRACER is
+		once
+			create Result
+		ensure
+			tracer_not_void: Result /= Void
 		end
 
 indexing

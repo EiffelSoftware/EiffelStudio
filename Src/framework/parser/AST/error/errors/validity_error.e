@@ -3,15 +3,13 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
 	VALIDITY_ERROR
 
 inherit
 	ERROR
-
-	SYNTAX_MESSAGE
 
 feature {NONE} -- Initialization
 
@@ -44,7 +42,7 @@ feature -- Properties
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -74,4 +72,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class SYNTAX_ERROR
+end

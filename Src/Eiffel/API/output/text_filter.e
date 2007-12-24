@@ -772,7 +772,7 @@ feature -- Text processing
 			escaped_text_in_buffer (str, image)
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
 			-- Process class syntax text.
 		do
 			process_basic_text (text)

@@ -12,15 +12,15 @@ class
 	VICF
 
 inherit
-	WARNING
+	COMPILER_WARNING
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_source_file_name: like source_file_name; a_target_file_name: like target_file_name) is
-			-- 
+			--
 		require
 			non_void_source_file_name: a_source_file_name /= Void
 			valid_source_file_name: not a_source_file_name.is_empty
@@ -46,16 +46,16 @@ feature -- Properties
 
 	code: STRING is "VICF"
 		-- Error code
-	
+
 	source_file_name: STRING
 			-- Source file to copy from
-			
+
 	target_file_name: STRING
 			-- Target attempted to copy to
-			
+
 	is_missing_source: BOOLEAN
 			-- indicates that warning is due to a missing source file
-			
+
 	is_unreadable_source: BOOLEAN
 			-- indicates that warning to due to an unreadable source file
 
@@ -79,7 +79,7 @@ feature -- Output
 			a_text_formatter.add (target_file_name)
 			a_text_formatter.add_new_line
 		end
-		
+
 feature {NONE} -- Implementation
 
 	retrieve_reason: STRING is
@@ -102,7 +102,7 @@ invariant
 	valid_source_file_name: not source_file_name.is_empty
 	non_void_target_file_name: target_file_name /= Void
 	valid_target_file_name: not target_file_name.is_empty
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

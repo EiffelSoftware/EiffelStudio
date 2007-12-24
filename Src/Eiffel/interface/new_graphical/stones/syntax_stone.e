@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	syntax_message: SYNTAX_MESSAGE
+	syntax_message: ERROR
 			-- Associated message about syntax issue.
 
 feature -- Access

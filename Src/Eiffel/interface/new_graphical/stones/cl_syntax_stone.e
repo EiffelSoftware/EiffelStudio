@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_syntax_message: SYNTAX_MESSAGE; c: CLASS_C) is
+	make (a_syntax_message: ERROR; c: CLASS_C) is
 		do
 			syntax_message := a_syntax_message
 			cl_make (c)

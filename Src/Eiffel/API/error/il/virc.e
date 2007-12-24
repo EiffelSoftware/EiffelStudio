@@ -13,8 +13,8 @@ class
 	VIRC
 
 inherit
-	WARNING
-	
+	COMPILER_WARNING
+
 create
 	make_rc_not_found,
 	make_resource_file_not_found,
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		ensure
 			resource_file_set: resource_file = a_file
 		end
-		
+
 feature -- Properties
 
 	code: STRING is "VIRC"
@@ -60,13 +60,13 @@ feature -- Access
 
 	has_resource_compiler: BOOLEAN
 			-- Do we have a resource compiler available?
-			
+
 	has_resource_file: BOOLEAN
 			-- Does `resource_file' exist?
-			
+
 	resource_compiler: STRING
 			-- Name of resource compiler.
-			
+
 	resource_file: STRING
 			-- Name of file being processed.
 

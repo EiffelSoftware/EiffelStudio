@@ -84,7 +84,7 @@ feature -- Status report
 				end
 				if l_file /= Void then
 					check l_file_is_open_read: l_file.is_open_read end
-					l_parser.parse (l_file)
+					l_parser.parse_class (l_file, current_class)
 					l_class_as := l_parser.root_node
 					l_file.close
 					if l_class_as /= Void then

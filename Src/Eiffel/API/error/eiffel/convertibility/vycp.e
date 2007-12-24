@@ -15,8 +15,6 @@ inherit
 			build_explain
 		end
 
-	SYNTAX_MESSAGE
-
 create
 	make
 

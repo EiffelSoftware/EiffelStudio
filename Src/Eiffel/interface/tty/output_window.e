@@ -171,7 +171,7 @@ feature -- Text processing
 			put_error (a_error, text)
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
 			-- Process class syntax text.
 		do
 			put_class_syntax (a_syntax_message, a_class, text)
@@ -319,7 +319,7 @@ feature -- Output
 			put_string (address)
 		end
 
-	put_class_syntax (syn: SYNTAX_MESSAGE; eclass: CLASS_C; str: STRING_GENERAL) is
+	put_class_syntax (syn: ERROR; eclass: CLASS_C; str: STRING_GENERAL) is
 			-- Put `syn' for `e_class' with `str' as representation.
 		require
 			valid_syn: syn /= Void

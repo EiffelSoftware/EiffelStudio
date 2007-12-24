@@ -9,7 +9,7 @@ class
 	VIIK
 
 inherit
-	WARNING
+	COMPILER_WARNING
 
 feature -- Properties
 
@@ -20,7 +20,7 @@ feature -- Properties
 			-- No associated file name
 		do
 		end
-	
+
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is

@@ -11,7 +11,7 @@ class
 	C_COMPILER_ERROR
 
 inherit
-	ERROR
+	COMPILER_ERROR
 		redefine
 			help_file_name, has_associated_file, print_single_line_error_message
 		end

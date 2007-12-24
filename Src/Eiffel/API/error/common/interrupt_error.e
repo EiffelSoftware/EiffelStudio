@@ -10,7 +10,7 @@ indexing
 class INTERRUPT_ERROR
 
 inherit
-	ERROR
+	COMPILER_ERROR
 		redefine
 			help_file_name
 		end

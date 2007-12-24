@@ -8,8 +8,8 @@ indexing
 deferred class LACE_WARNING
 
 inherit
-	WARNING
-	
+	COMPILER_WARNING
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -28,7 +28,7 @@ feature -- Property
 		do
 			to_implement ("May be we will never implement this when we go away from Lace?")
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

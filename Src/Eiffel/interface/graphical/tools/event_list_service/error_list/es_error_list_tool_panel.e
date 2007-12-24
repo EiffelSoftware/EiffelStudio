@@ -29,6 +29,11 @@ inherit
 			{ES_ERROR_LIST_COMMAND} all
 		end
 
+	SHARED_ERROR_TRACER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -917,7 +922,7 @@ feature {NONE} -- User interface manipulation
 			l_error ?= a_event_item.data
 			if l_error /= Void then
 				create l_gen.make
-				l_error.trace_single_line (l_gen)
+				tracer.trace (l_gen, l_error, {ERROR_TRACER}.single_line)
 
 				if l_gen.last_line /= Void and then l_gen.last_line.count > 0 then
 					l_editor_item := create_clickable_grid_item (l_gen.last_line)
@@ -941,7 +946,7 @@ feature {NONE} -- User interface manipulation
 					-- Build full error text
 				create l_gen.make
 				l_gen.enable_multiline
-				l_error.trace (l_gen)
+				tracer.trace (l_gen, l_error, {ERROR_TRACER}.normal)
 				l_lines := l_gen.lines
 				if not l_lines.is_empty then
 					l_tip := create_clickable_tooltip (l_lines, l_editor_item, a_row)
@@ -960,7 +965,7 @@ feature {NONE} -- User interface manipulation
 				end
 
 					-- Context
-				l_error.trace_primary_context (l_gen)
+				tracer.trace (l_gen, l_error, {ERROR_TRACER}.context)
 				if l_gen.last_line /= Void then
 					l_editor_item := create_clickable_grid_item (l_gen.last_line)
 					a_row.set_item (context_column, l_editor_item)

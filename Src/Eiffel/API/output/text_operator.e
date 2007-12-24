@@ -245,7 +245,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_class_syntax (syn: SYNTAX_MESSAGE; e_class: CLASS_C; str: STRING_GENERAL) is
+	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: STRING_GENERAL) is
 			-- Put `syn' for `e_class'.
 		require
 			valid_syn: syn /= Void

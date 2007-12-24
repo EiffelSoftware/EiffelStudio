@@ -412,7 +412,7 @@ Index_clause_impl: Identifier_as_lower TE_COLON Index_terms ASemi
 			{
 				$$ := ast_factory.new_index_as (Void, $1, Void)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Missing `Index' part of `Index_clause'."))
 				end
@@ -897,7 +897,7 @@ Inheritance: -- Empty
 				if not conforming_inheritance_flag then
 						-- Conforming inheritance
 					if has_syntax_warning then
-						Error_handler.insert_warning (
+						report_one_warning (
 							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 							once "Use `inherit ANY' or do not specify an empty inherit clause"))
 					end
@@ -1015,7 +1015,7 @@ Rename: TE_RENAME
 						create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
 						"Empty rename clause."))
 				else
-					error_handler.insert_warning (
+					report_one_warning (
 							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 							"Remove empty rename clauses."))
 				end
@@ -1531,7 +1531,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 				$$ := $2
 				ast_factory.set_expanded_class_type ($$, True, $1)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Make an expanded version of the base class associated with this type."))
 				end
@@ -2220,7 +2220,7 @@ Creation_clause:
 			{
 				$$ := ast_factory.new_create_as (Void, Void, $1)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Use keyword `create' instead."))
 				end
@@ -2229,7 +2229,7 @@ Creation_clause:
 			{
 				$$ := ast_factory.new_create_as ($2, $3, $1)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Use keyword `create' instead."))
 				end
@@ -2238,7 +2238,7 @@ Creation_clause:
 			{
 				$$ := ast_factory.new_create_as (ast_factory.new_client_as ($2), Void, $1)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Use keyword `create' instead."))
 				end
@@ -2283,7 +2283,7 @@ Agent_call:
 			if $1 /= Void then
 				$$ := $1.first
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1.first), token_column ($1.first),
 						filename, once "Use keyword `agent' instead."))
 				end
@@ -2429,7 +2429,7 @@ Creation: TE_BANG TE_BANG Creation_target Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_as (Void, $3, $4, $1, $2)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
 						filename, "Use keyword `create' instead."))
 				end
@@ -2438,7 +2438,7 @@ Creation: TE_BANG TE_BANG Creation_target Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_as ($2, $4, $5, $1, $3)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
 						filename, "Use keyword `create' instead."))
 				end
@@ -2455,7 +2455,7 @@ Creation_expression: TE_CREATE Typed Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_expr_as ($2, $4, $1, $3)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
 						filename, "Use keyword `create' instead."))
 				end
@@ -2686,7 +2686,7 @@ Old_a_static_call:
 			{
 				$$ := ast_factory.new_static_access_as ($2, $4, $5, $1, $3);
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
 							filename, once "Remove the `feature' keyword."))
 				end
@@ -2805,7 +2805,7 @@ Class_identifier: TE_ID
 					-- Keyword used as identifier
 				process_id_as_with_existing_stub (last_keyword_as_id_index)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
@@ -2836,7 +2836,7 @@ Identifier_as_lower: TE_ID
 					-- Keyword used as identifier
 				process_id_as_with_existing_stub (last_keyword_as_id_index)
 				if has_syntax_warning then
-					Error_handler.insert_warning (
+					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end

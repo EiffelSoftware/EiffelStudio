@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
         	is_initialized: is_initialized
         local
         	l_sp_info: TUPLE [x, y, width, height: INTEGER]
-        	l_screen: EV_SCREEN
+        	l_screen: SD_SCREEN
         do
        		bind_help_shortcut (dialog)
 
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 	       			if l_sp_info /= Void then
 	       					-- Previous session data is available
 	       				create l_screen
-	       				if (l_sp_info.x >= 0 and then l_sp_info.x < l_screen.width) and (l_sp_info.y >= 0 and then l_sp_info.y < l_screen.height) then
+	       				if (l_sp_info.x >= 0 and then l_sp_info.x < l_screen.virtual_width) and (l_sp_info.y >= 0 and then l_sp_info.y < l_screen.virtual_height) then
 	       						-- Ensure dialog is not off-screen
 	       					dialog.set_position (l_sp_info.x, l_sp_info.y)
 	       				end
@@ -868,6 +868,28 @@ feature {NONE} -- Action handlers
 			on_dialog_button_pressed (default_cancel_button)
 		end
 
+	on_reset_dialog_size_and_position
+			-- Called when the user presses CTRL+F12 to reset the size and position information for the dialog
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			is_size_and_position_remembered: is_size_and_position_remembered
+		local
+			l_window: EV_WINDOW
+			l_width: INTEGER
+			l_height: INTEGER
+		do
+			l_width := dialog.minimum_width
+			l_height := dialog.minimum_height
+
+			l_window := dialog.blocking_window
+			if l_window /= Void then
+				dialog.set_position (l_window.x_position + ((l_window.width - l_width) / 2).floor, l_window.y_position + ((l_window.height - l_height) / 2).floor)
+			end
+
+			dialog.set_size (l_width, l_height)
+		end
+
 	frozen on_key_pressed (a_key: EV_KEY)
 			-- Called when the dialog recieves a key press
 			--
@@ -910,22 +932,29 @@ feature {NONE} -- Action handlers
 		do
 			if a_released then
 				if not a_alt and not a_ctrl and not a_shift then
-					Result := True
 					inspect a_key.code
 					when {EV_KEY_CONSTANTS}.key_escape then
 						on_cancel_dialog
+						Result := True
 					else
-						Result := False
+					end
+				elseif a_ctrl and not a_alt and not a_shift then
+					inspect a_key.code
+					when {EV_KEY_CONSTANTS}.key_f12 then
+						if is_size_and_position_remembered then
+							on_reset_dialog_size_and_position
+							Result := True
+						end
+					else
 					end
 				end
 
 				if not Result and then a_ctrl and not a_alt and not a_shift then
-					Result := True
 					inspect a_key.code
 					when {EV_KEY_CONSTANTS}.key_enter then
 						on_confirm_dialog
+						Result := True
 					else
-						Result := False
 					end
 				end
 			end

@@ -10,3 +10,4 @@ define	SUPPORT_DOTNET	""
 
 -- Dotnet specific options
 define	EWEASEL_DOTNET_SETTING	""
+define	KERNEL_DOTNET_NO_EXCEPTION ""

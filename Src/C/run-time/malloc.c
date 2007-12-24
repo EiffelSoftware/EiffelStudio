@@ -941,10 +941,12 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 #ifndef WORKBENCH
 	} else {
 		if (cp) {
+			RT_GC_PROTECT(obj);
 			for (i = lower; i <= upper; i++) {
 				offset = elem_size * i;
 				cp (obj + offset);
 			}
+			RT_GC_WEAN(obj);
 		}
 	}
 #endif

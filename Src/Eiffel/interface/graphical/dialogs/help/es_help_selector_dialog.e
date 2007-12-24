@@ -121,7 +121,7 @@ feature {NONE} -- User interface initialization
 				end
 			end
 
-			populate_help_documents
+			execute_with_busy_cursor (agent populate_help_documents)
 		end
 
 feature -- Access
@@ -222,8 +222,11 @@ feature {NONE} -- Query
 			-- `Result': A help document title for the given help context.
 		require
 			is_context_valid: is_context_valid (a_context)
+		local
+			l_provider: !HELP_PROVIDER_I
 		do
-			if {l_provider: !HELP_PROVIDER_I} help_providers.service.help_provider (a_context.help_provider) then
+			if help_providers.is_service_available and help_providers.service.is_provider_available (a_context.help_provider) then
+				l_provider := help_providers.service.help_provider (a_context.help_provider)
 				Result := l_provider.help_title (a_context.help_context_id, a_context.help_context_section)
 			else
 				create {!STRING_32} Result.make (100)

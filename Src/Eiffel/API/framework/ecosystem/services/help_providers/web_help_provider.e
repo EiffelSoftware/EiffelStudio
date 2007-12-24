@@ -30,8 +30,8 @@ feature -- Access
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
 			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
 		do
-			if is_accessible and then {l_title: !STRING_32} document_title (full_url (a_context_id, a_section), True) then
-					-- `is_accessible' require calling {CURL_ACCESS}.make
+			if is_accessible and then {l_title: !STRING_32} document_title (full_url (a_context_id, a_section), False) then
+					-- `is_accessible' requires calling {CURL_ACCESS}.make
 				Result := l_title
 			else
 				Result := Precursor {HELP_PROVIDER_I} (a_context_id, a_section)

@@ -196,6 +196,7 @@ feature -- Constants
 	init_exception_manager_id: INTEGER is 183
 	free_preallocated_trace_id: INTEGER is 184
 	any_name_id: INTEGER is 185
+	system_void_name_id: INTEGER is 186
 
 feature -- Classification
 

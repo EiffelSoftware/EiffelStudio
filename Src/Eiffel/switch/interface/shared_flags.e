@@ -1,8 +1,7 @@
 indexing
-	description: "Objects that ..."
+	description: "Collection of statuses for various processing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

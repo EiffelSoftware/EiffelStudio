@@ -38,7 +38,6 @@
 		<cluster name="classic_unix" location="classic\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
-				<multithreaded value="true"/>
 				<dotnet value="false"/>
 			</condition>
 			<file_rule>

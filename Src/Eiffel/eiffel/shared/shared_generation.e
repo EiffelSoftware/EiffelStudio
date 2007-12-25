@@ -32,25 +32,25 @@ feature
 
 	generation_buffer: GENERATION_BUFFER is
 			-- String where all the generation will happen
-			-- Default size is 600Ko, it will be resized when
+			-- Default size is 600KB, it will be resized when
 			-- needed.
 		once
-			create Result.make (600000)
+			create Result.make (614400)
 		end
 
 	generation_ext_inline_buffer: GENERATION_BUFFER is
 			-- Buffer used for the generation of inlined externals
-			-- Default size is 2Ko, it will be rezized when needed.
+			-- Default size is 2KB, it will be rezized when needed.
 		once
-			create Result.make (2000)
+			create Result.make (2048)
 		end
 
 	header_generation_buffer: GENERATION_BUFFER is
 			-- String where all the generation for the header
-			-- file will happen. Default size is 50Ko, it will
+			-- file will happen. Default size is 50KB, it will
 			-- be resized when needed.
 		once
-			create Result.make (50000)
+			create Result.make (51200)
 		end
 
 	Encoder: ENCODER is

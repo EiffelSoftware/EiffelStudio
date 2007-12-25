@@ -54,24 +54,10 @@ feature -- Get the C extension
 			Result.set_base_class (base_class)
 			if sig /= Void then
 				Result.set_argument_types (sig.arguments_id_array)
-				if sig.return_type_id /= 0 and sig.return_type_id /= Void_name_id then
+				if sig.return_type_id /= 0 and sig.return_type_id /= {PREDEFINED_NAMES}.system_void_name_id then
 					Result.set_return_type (sig.return_type_id)
 				end
 			end
-		end
-
-feature {NONE} -- Constants
-
-	void_name_id: INTEGER is
-			-- Value for `System.Void'.
-		local
-			l_names_heap: like names_heap
-		once
-			l_names_heap := names_heap
-			l_names_heap.put ("System.Void")
-			Result := l_names_heap.found_item
-		ensure
-			result_not_null: Result > 0
 		end
 
 indexing

@@ -347,6 +347,7 @@ feature {NONE} -- Implementation: access
 			put ("init_exception_manager") check found_item = init_exception_manager_id end
 			put ("free_preallocated_trace") check found_item = free_preallocated_trace_id end
 			put ("any") check found_item = any_name_id end
+			put ("System.Void") check found_item = system_void_name_id end
 		end
 
 invariant

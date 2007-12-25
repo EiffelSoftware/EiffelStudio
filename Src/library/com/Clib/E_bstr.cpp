@@ -20,8 +20,6 @@ EIF_OBJ bstr_to_eif_obj (BSTR BstrName)
 {
   EIF_GET_CONTEXT
   EIF_OBJ name;
-  EIF_TYPE_ID eif_string_id;
-  EIF_PROC string_make;
   size_t bstr_size;
   char * str_name;
 

@@ -36,12 +36,28 @@
 			<condition>
 				<platform excluded_value="windows"/>
 				<build value="finalize"/>
+				<multithreaded value="true"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)/C/bench/libmtwcompiler.a">
 			<condition>
 				<platform excluded_value="windows"/>
 				<build value="workbench"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)/C/bench/libcompiler.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<build value="finalize"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)/C/bench/libwcompiler.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<build value="workbench"/>
+				<multithreaded value="false"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)/C/platform/libplatform.a">
@@ -53,12 +69,28 @@
 			<condition>
 				<platform value="windows"/>
 				<build value="finalize"/>
+				<multithreaded value="true"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)\C\bench\mtwcompiler.lib">
 			<condition>
 				<platform value="windows"/>
 				<build value="workbench"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)\C\bench\compiler.lib">
+			<condition>
+				<platform value="windows"/>
+				<build value="finalize"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)\C\bench\wcompiler.lib">
+			<condition>
+				<platform value="windows"/>
+				<build value="workbench"/>
+				<multithreaded value="false"/>
 			</condition>
 		</external_object>
 		<external_object location="$(EIFFEL_SRC)\C\platform\platform.lib">

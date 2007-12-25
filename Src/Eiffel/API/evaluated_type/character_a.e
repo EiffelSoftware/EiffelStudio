@@ -57,8 +57,7 @@ feature -- Access
 			if Result then
 				char ?= other
 				Result := is_character_32 = char.is_character_32
-					and then has_attached_mark = char.has_attached_mark
-					and then has_detachable_mark = char.has_detachable_mark
+					and then has_same_attachment_marks (char)
 			end
 		end
 

@@ -60,8 +60,7 @@ feature -- Access
 			if Result then
 				i ?= other
 				Result := size = i.size
-						and then has_attached_mark = i.has_attached_mark
-						and then has_detachable_mark = i.has_detachable_mark
+						and then has_same_attachment_marks (i)
 			end
 		end
 

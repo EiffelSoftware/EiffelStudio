@@ -85,9 +85,7 @@ feature -- Properties
 		do
 			if other.is_like_current then
 				l ?= other
-				Result :=
-					has_attached_mark = l.has_attached_mark and then
-					has_detachable_mark = l.has_detachable_mark
+				Result := has_same_attachment_marks (l)
 			end
 		end
 

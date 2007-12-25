@@ -52,8 +52,7 @@ feature -- Access
 			other_like_arg ?= other
 			if other_like_arg /= Void then
 				Result := other_like_arg.position = position and then
-					has_attached_mark = other_like_arg.has_attached_mark and then
-					has_detachable_mark = other_like_arg.has_detachable_mark
+					has_same_attachment_marks (other_like_arg)
 			end
 		end
 

@@ -212,8 +212,7 @@ feature -- Access
 			other_formal ?= other
 			if other_formal /= Void then
 				Result := is_equivalent (other_formal) and then
-					has_attached_mark = other_formal.has_attached_mark and then
-					has_detachable_mark = other_formal.has_detachable_mark
+					has_same_attachment_marks (other_formal)
 			end
 		end
 

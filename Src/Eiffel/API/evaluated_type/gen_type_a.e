@@ -93,8 +93,7 @@ feature -- Access
 				and then other_gen_type.class_id = class_id
 				and then is_expanded = other_gen_type.is_expanded
 				and then is_separate = other_gen_type.is_separate
-				and then has_attached_mark = other_gen_type.has_attached_mark
-				and then has_detachable_mark = other_gen_type.has_detachable_mark
+				and then has_same_attachment_marks (other_gen_type)
 			then
 				from
 					i := 1

@@ -88,8 +88,7 @@ feature -- Access
 				Result :=
 					other_like_feat.routine_id = routine_id and then
 					other_like_feat.feature_id = feature_id and then
-					other_like_feat.has_attached_mark = has_attached_mark and then
-					other_like_feat.has_detachable_mark = has_detachable_mark
+					has_same_attachment_marks (other_like_feat)
 			end
 		end
 

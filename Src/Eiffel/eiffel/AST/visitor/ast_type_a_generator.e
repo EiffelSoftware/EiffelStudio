@@ -187,6 +187,11 @@ feature {NONE} -- Visitor implementation
 				end
 				if l_type /= Void then
 					if l_as.attachment_mark /= Void then
+						if l_type.is_basic then
+								-- Avoid modifying once values
+							l_type := l_type.duplicate
+							last_type := l_type
+						end
 						if l_as.attachment_mark.is_bang then
 							l_type.set_attached_mark
 							check l_type.is_attached end
@@ -194,6 +199,11 @@ feature {NONE} -- Visitor implementation
 							l_type.set_detachable_mark
 						end
 					elseif current_class.lace_class.is_attached_by_default then
+						if l_type.is_basic then
+								-- Avoid modifying once values
+							l_type := l_type.duplicate
+							last_type := l_type
+						end
 						l_type.set_is_attached
 					end
 				end

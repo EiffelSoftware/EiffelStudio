@@ -65,6 +65,18 @@ feature -- Modification
 			is_attached: is_attached
 		end
 
+feature -- Comparison
+
+	has_same_attachment_marks (other: ATTACHABLE_TYPE_A): BOOLEAN
+			-- Are attachment marks of `Current' and `other' the same?
+		require
+			other_attached: other /= Void
+		do
+			Result :=
+				has_attached_mark = other.has_attached_mark and then
+				has_detachable_mark = other.has_detachable_mark
+		end
+
 feature {NONE} -- Attachment properties
 
 	attachment_bits: NATURAL_8

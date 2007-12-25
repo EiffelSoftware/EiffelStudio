@@ -125,14 +125,12 @@ feature {NONE} -- Implementation
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		local
-			l_other: like Current
+			o: UNEVALUATED_LIKE_TYPE
 		do
-			l_other ?= other
-			if l_other /= Void then
-				Result := anchor_name_id = l_other.anchor_name_id and then
-					has_attached_mark = l_other.has_attached_mark and then
-					has_detachable_mark = l_other.has_detachable_mark
-			end
+			o ?= other
+			Result := o /= Void	and then
+				anchor_name_id = o.anchor_name_id and then
+				has_same_attachment_marks (o)
 		end
 
 	create_info: CREATE_INFO is

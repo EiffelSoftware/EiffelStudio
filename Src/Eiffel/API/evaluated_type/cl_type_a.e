@@ -168,8 +168,7 @@ feature -- Access
 			Result := other_class_type /= Void and then class_id = other_class_type.class_id
 						and then is_expanded = other_class_type.is_expanded
 						and then is_separate = other_class_type.is_separate
-						and then has_attached_mark = other_class_type.has_attached_mark
-						and then has_detachable_mark = other_class_type.has_detachable_mark
+						and then has_same_attachment_marks (other_class_type)
 		end
 
 	associated_class: CLASS_C is

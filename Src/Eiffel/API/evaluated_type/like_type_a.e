@@ -204,19 +204,25 @@ feature -- Modification
 
 	set_attached_mark is
 			-- Mark type declaration as having an explicit attached mark.
+		local
+			a: like actual_type
 		do
 			Precursor
-			if not actual_type.is_attached then
-				actual_type := actual_type.as_attached
+			a := actual_type
+			if a /= Void and then not a.is_attached then
+				actual_type := a.as_attached
 			end
 		end
 
 	set_detachable_mark is
 			-- Set class type declaration as having an explicit detachable mark.
+		local
+			a: like actual_type
 		do
 			Precursor
-			if not is_expanded and then actual_type.is_attached then
-				actual_type := actual_type.as_detachable
+			a := actual_type
+			if not is_expanded and then a /= Void and then actual_type.is_attached then
+				actual_type := a.as_detachable
 			end
 		end
 

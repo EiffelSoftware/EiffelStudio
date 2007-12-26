@@ -22,10 +22,8 @@ feature {NONE} -- Initialization
 			n_positive: n >= 0
 		do
 			create current_buffer.make (n)
+			current_buffer_size := n
 			create buffers.make (10)
-			chunk_size := n
-		ensure
-			chunk_size_set: chunk_size = n
 		end
 
 feature -- Status report
@@ -38,15 +36,18 @@ feature -- Status report
 
 	as_string: STRING is
 			-- Representation of Current as a STRING.
+		local
+			l_buffers: like buffers
 		do
 			create Result.make (count)
 			from
-				buffers.start
+				l_buffers := buffers
+				l_buffers.start
 			until
-				buffers.after
+				l_buffers.after
 			loop
-				Result.append (buffers.item)
-				buffers.forth
+				Result.append (l_buffers.item)
+				l_buffers.forth
 			end
 			Result.append (current_buffer)
 		ensure
@@ -61,7 +62,7 @@ feature -- Open, close buffer operations
 			tabs := 0
 			old_tabs := 0
 			emitted := True
-				-- We reuse the first buffer allocated with `chunk_size' characters.
+				-- We reuse the first buffer allocated with the creation procedure.
 				-- If `buffers' is not empty, then the first buffer is at the first
 				-- entry of `buffers', otherwise we simply reset `count' of
 				-- current_buffer.
@@ -87,7 +88,7 @@ feature -- Open, close buffer operations
 		end
 
 	flush_buffer (file: INDENT_FILE) is
-			-- Flush buffer if `buffer.count' is about `chunk_size'.
+			-- Flush buffer to `file' if more than one buffer has been allocated.
 		require
 			file_not_void: file /= Void
 			file_exists: file.exists
@@ -102,18 +103,22 @@ feature -- Open, close buffer operations
 		end
 
 	put_in_file (file: FILE) is
+			-- Write Current into `file'
 		require
 			file_not_void: file /= Void
 			file_exists: file.exists
 			file_opened_write: file.is_open_write
+		local
+			l_buffers: like buffers
 		do
 			from
-				buffers.start
+				l_buffers := buffers
+				l_buffers.start
 			until
-				buffers.after
+				l_buffers.after
 			loop
-				file.put_string (buffers.item)
-				buffers.forth
+				file.put_string (l_buffers.item)
+				l_buffers.forth
 			end
 			file.put_string (current_buffer)
 			clear_all
@@ -233,14 +238,18 @@ feature -- Automatically indented output
 	put_character (c: CHARACTER) is
 			-- Write char `c'.
 		do
-			emit_tabs
+			if not emitted and tabs > 0 then
+				emit_tabs
+			end
 			current_buffer.append_character (c)
 		end
 
 	put_integer (i: INTEGER) is
 			-- Write int `i'.
 		do
-			emit_tabs
+			if not emitted and tabs > 0 then
+				emit_tabs
+			end
 			current_buffer.append_integer (i)
 		end
 
@@ -249,7 +258,9 @@ feature -- Automatically indented output
 		require
 			s_not_void: s /= Void
 		do
-			emit_tabs
+			if not emitted and tabs > 0 then
+				emit_tabs
+			end
 			append (s)
 		end
 
@@ -341,7 +352,9 @@ feature -- Automatically indented output
 			loc_name_not_void: loc_name /= Void
 			loc_name_not_empty: not loc_name.is_empty
 		do
-			emit_tabs
+			if not emitted and tabs > 0 then
+				emit_tabs
+			end
 			append (rtlr_string)
 			current_buffer.append_integer (i)
 			current_buffer.append_character (',')
@@ -395,7 +408,9 @@ feature -- Automatically indented output
 						n := i
 					end
 					put_new_line
-					emit_tabs
+					if not emitted and tabs > 0 then
+						emit_tabs
+					end
 					current_buffer.append_character ('"')
 					string_converter.escape_substring (current_buffer, s, j, j + n - 1)
 					current_buffer.append_character ('"')
@@ -416,7 +431,9 @@ feature -- Automatically indented output
 		local
 			l_buffer: like current_buffer
 		do
-			emit_tabs
+			if not emitted and tabs > 0 then
+				emit_tabs
+			end
 			l_buffer := current_buffer
 			l_buffer.append_character ('"')
 			string_converter.escape_string (l_buffer, s)
@@ -482,7 +499,9 @@ feature -- prototype code generation
 			i, nb: INTEGER
 			l_sep: STRING
 		do
-			emit_tabs
+			if not emitted and tabs > 0 then
+				emit_tabs
+			end
 			if extern_header /= Void then
 				extern_header.generate_function_declaration (type, f_name, extern, arg_types)
 			end
@@ -560,7 +579,9 @@ feature {GENERATION_BUFFER} -- prototype code generation
 			i, nb: INTEGER
 			l_sep: STRING
 		do
-			emit_tabs
+			if not emitted and tabs > 0 then
+				emit_tabs
+			end
 			if extern then
 				if is_il_generation then
 					append (rtil_string)
@@ -608,7 +629,7 @@ feature {NONE} -- Implementation: Status report
 	old_tabs: INTEGER
 			-- Saved indentation value
 
-	chunk_size: INTEGER
+	current_buffer_size: INTEGER
 			-- Size of buffers we will create.
 
 	max_chunk_size: INTEGER is 262144
@@ -626,7 +647,7 @@ feature {NONE} -- Implementation: Status report
 			until
 				l_index = 0
 			loop
-				Result := Result + l_buffers [l_index].count
+				Result := Result + l_buffers.i_th (l_index).count
 				l_index := l_index - 1
 			end
 			Result := Result + current_buffer.count
@@ -643,7 +664,7 @@ feature {NONE} -- Implementation: Access
 	current_buffer: STRING
 			-- Currently used buffer.
 
-	buffers: ARRAYED_LIST [STRING]
+	buffers: ARRAYED_LIST [like current_buffer]
 			-- Store buffers when they become too large.
 
 	string_converter: STRING_CONVERTER is
@@ -659,15 +680,13 @@ feature {NONE} -- Implementation: Element change
 		require
 			s_not_void: s /= Void
 		local
-			l_count: INTEGER
 			l_buffer: like current_buffer
 		do
 			l_buffer := current_buffer
-			if (l_buffer.count + s.count) > l_buffer.capacity then
-				l_count := count
+			if (l_buffer.count + s.count) > current_buffer_size then
 				buffers.extend (l_buffer)
-				create current_buffer.make (max_chunk_size.min (l_count * 2))
-				l_buffer := current_buffer
+				create l_buffer.make (max_chunk_size.max (s.count))
+				current_buffer := l_buffer
 			end
 			l_buffer.append (s)
 		ensure
@@ -676,24 +695,25 @@ feature {NONE} -- Implementation: Element change
 
 	emit_tabs is
 			-- Emit the `tabs' leading tabs
+		require
+			not_emitted: not emitted
+			has_tabs: tabs > 0
 		local
 			i: INTEGER
-			l_tabs: like tabs
 			l_buffer: like current_buffer
 		do
-			if not emitted then
-				from
-					i := 1
-					l_buffer := current_buffer
-					l_tabs := tabs
-				until
-					i > l_tabs
-				loop
-					l_buffer.append_character ('%T')
-					i := i + 1
-				end
-				emitted := True
+			emitted := True
+			l_buffer := current_buffer
+			from
+				i := tabs
+			until
+				i = 0
+			loop
+				l_buffer.append_character ('%T')
+				i := i - 1
 			end
+		ensure
+			emitted: emitted
 		end
 
 feature {NONE} -- Constants

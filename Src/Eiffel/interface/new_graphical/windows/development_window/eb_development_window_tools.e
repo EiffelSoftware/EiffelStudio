@@ -99,16 +99,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	features_tool: ES_FEATURES_TOOL_PANEL
-			-- Features tool.
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL}).panel
-		ensure
-			result_attached: Result /= Void
-		end
-
 	features_relation_tool: ES_FEATURES_RELATION_TOOL_PANEL
 			-- Features relation tool
 			-- This tool was orignal belong to context_tool

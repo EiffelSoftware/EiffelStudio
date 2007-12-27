@@ -1,67 +1,17 @@
 indexing
 	description: "[
-		Tool descriptor for EiffelStudio's features tool.
+		A commander interface for interacting with the features tool.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
-frozen class
-	ES_FEATURES_TOOL
+deferred class
+	ES_FEATURES_TOOL_COMMANDER_I
 
 inherit
-	ES_STONABLE_TOOL [ES_FEATURES_TOOL_PANEL]
-
-	ES_FEATURES_TOOL_COMMANDER_I
-		undefine
-			out
-		end
-
-create {NONE}
-	default_create
-
-feature -- Access
-
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
-		do
-			Result := stock_pixmaps.tool_features_icon_buffer
-		end
-
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
-		do
-			Result := stock_pixmaps.tool_features_icon
-		end
-
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
-		do
-			Result := interface_names.t_features_tool
-		end
-
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
-			Result := "show_features_tool"
-		end
-
-feature -- Query
-
-	is_stone_usable (a_stone: STONE): BOOLEAN
-			-- Determines if a stone can be used by Current.
-			--
-			-- `a_stone': Stone to determine usablity.
-			-- `Result': True if the stone can be used, False otherwise.
-		do
-			Result := {l_stone: !CLASSC_STONE} a_stone
-		end
+	USABLE_I
 
 feature -- Basic operations
 
@@ -69,28 +19,19 @@ feature -- Basic operations
 			-- Selects a feature in the feature tree
 			--
 			-- `a_feature': The feature to select an assocated node in the feature tree.
-		do
-			if is_tool_instantiated then
-				panel.select_feature_item (a_feature)
-			end
+		require
+			is_interface_usable: is_interface_usable
+		deferred
 		end
 
 	select_feature_item_by_name (a_feature: !STRING_GENERAL)
 			-- Selects a feature in the feature tree, using a string name
 			--
 			-- `a_feature': The name of a feature to select an assocated node in the feature tree.
-		do
-			if is_tool_instantiated then
-				panel.select_feature_item_by_name (a_feature)
-			end
-		end
-
-feature {NONE} -- Factory
-
-	create_tool: ES_FEATURES_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
-		do
-			create Result.make (window, Current)
+		require
+			is_interface_usable: is_interface_usable
+			not_a_feature_is_empty: not a_feature.is_empty
+		deferred
 		end
 
 ;indexing

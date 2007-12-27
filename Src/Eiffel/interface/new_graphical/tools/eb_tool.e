@@ -196,15 +196,18 @@ feature -- Status report
 	shown: BOOLEAN is
 			-- Is Current shown on the screen?
 		do
-			if content /= Void and then not is_recycled then
+			if is_interface_usable and then content /= Void and then not is_recycled then
 				Result := content.is_visible and then widget.is_displayed
 			end
+		ensure
+			content_is_visible: Result implies content.is_visible
+			widget_is_displayed: Result implies widget.is_displayed
 		end
 
 	is_auto_hide: BOOLEAN is
 			-- Is current auto hide status and content visible?
 		do
-			if content /= Void and then content.is_visible then
+			if is_interface_usable and then content /= Void and then content.is_visible then
 				Result := content.state_value = {SD_ENUMERATION}.auto_hide
 			end
 		end
@@ -257,18 +260,6 @@ feature {ES_TOOL} -- Event handlers
 		end
 
 feature {NONE} -- Implementation
-
-	on_bar_item_shown is
-			-- The explorer bar item is now displayed.
-			-- Call `on_shown' if necessary.
-		do
-			on_shown
-		end
-
-	on_shown is
-			-- Perform update actions when the tool is displayed.
-		do
-		end
 
 	has_focus_on_widgets_internal (a_widget: EV_WIDGET): BOOLEAN is
 			-- Any widget has focus.

@@ -12,7 +12,6 @@ class
 inherit
 	EB_TOOL
 		redefine
-			on_shown,
 			attach_to_docking_manager,
 			mini_toolbar,
 			build_mini_toolbar,

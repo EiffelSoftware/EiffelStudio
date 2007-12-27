@@ -127,6 +127,8 @@ inherit
 			{NONE} all
 		end
 
+	HASHABLE
+
 create {EB_DEVELOPMENT_WINDOW_DIRECTOR}
 	make
 
@@ -300,6 +302,12 @@ feature -- Access
 
 	frozen window_id: NATURAL_32
 			-- Unique window identifier, used to reference a window without having to hold a reference to it
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := window_id.as_integer_32
+		end
 
 feature {NONE} -- Access
 
@@ -478,8 +486,16 @@ feature -- Update
 
 			tools.cluster_tool.synchronize
 			history_manager.synchronize
-			tools.features_tool.synchronize
 			tools.breakpoints_tool.synchronize
+
+				-- Synchronizes all stonable tools
+			shell_tools.all_requested_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL])
+				do
+					if a_tool.is_interface_usable and then {l_stonable: !ES_STONABLE_I} a_tool then
+							-- Synchronize stonable tool
+						l_stonable.synchronize
+					end
+				end)
 
 				-- Update main views
 			from
@@ -585,8 +601,10 @@ feature -- Stone process
 		local
 			l_checker: EB_STONE_FIRST_CHECKER
 		do
-			create l_checker.make (Current)
-			l_checker.set_stone_after_first_check (a_stone)
+			if a_stone /= Void then
+				create l_checker.make (Current)
+				l_checker.set_stone_after_first_check (a_stone)
+			end
 		end
 
 	force_stone (s: STONE) is
@@ -926,7 +944,10 @@ feature -- Resource Update
 			end
 			update_formatters
 			lock_update
-			tools.features_tool.synchronize
+			if {l_features_tool: !ES_FEATURES_TOOL} shell_tools.tool ({ES_FEATURES_TOOL}) then
+					-- Update features tool.
+				l_features_tool.synchronize
+			end
 			refresh_cursor_position
 			refresh_context_info
 			unlock_update
@@ -1081,6 +1102,7 @@ feature -- Window management
 			l_last_tool: EB_TOOL
 			l_tool_bar_content, l_tool_bar_content_2: SD_TOOL_BAR_CONTENT
 			l_no_locked_window: BOOLEAN
+			l_features_tool: ES_FEATURES_TOOL
 		do
 			l_no_locked_window := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
 			if l_no_locked_window then
@@ -1108,12 +1130,14 @@ feature -- Window management
 			l_tool.content.set_split_proportion (0.6)
 
 			-- Right tools
+			l_features_tool ?= shell_tools.tool ({ES_FEATURES_TOOL})
+
 			l_tool := tools.favorites_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.right)
-			l_tool := tools.features_tool
+			l_tool := l_features_tool.panel
 			l_tool.content.set_tab_with (tools.favorites_tool.content, True)
 			l_tool := tools.cluster_tool
-			l_tool.content.set_tab_with (tools.features_tool.content, True)
+			l_tool.content.set_tab_with (l_features_tool.panel.content, True)
 			l_tool.content.set_split_proportion (0.73)
 
 			-- Auto hide tools
@@ -1540,7 +1564,14 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 		do
 			if editors_manager.editors.count <= 0 then
 				disable_editors_command
-				tools.features_tool.set_stone (Void)
+
+				if shell_tools.is_interface_usable then
+						-- Remove stone from tool.
+					if {l_stonable: !ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) then
+						l_stonable.set_stone (Void)
+					end
+				end
+
 				set_title (window_manager.new_title)
 				if not window.is_destroyed and window.is_displayed and window.is_sensitive then
 					window.set_focus
@@ -2033,6 +2064,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			l_efeature: E_FEATURE
 			l_class_i: CLASS_I
 			l_classc: CLASS_C
+			l_commander: ES_FEATURES_TOOL_COMMANDER_I
 		do
 			if a_feature_name /= Void then
 				address_manager.set_feature_text_simply (a_feature_name.internal_name.name)
@@ -2051,7 +2083,11 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 				if l_efeature /= Void then
 					seek_item_in_feature_tool (l_efeature)
 				else
-					tools.features_tool.seek_ast_item_in_feature_tool (a_feature_name.internal_name.name)
+					l_commander ?= shell_tools.tool ({ES_FEATURES_TOOL})
+					check l_commander_attached: l_commander /= Void end
+					if l_commander /= Void and {l_name: !STRING_GENERAL} a_feature_name.internal_name.name then
+						l_commander.select_feature_item_by_name (l_name)
+					end
 				end
 			else
 				address_manager.set_feature_text_simply (once "")
@@ -2063,7 +2099,11 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			-- Seek and select item contains data of `a_feature' in features tool.
 			-- If `a_feature' is void, deselect item in features tool.
 		do
-			tools.features_tool.seek_item_in_feature_tool (a_feature)
+			if {l_commander: !ES_FEATURES_TOOL_COMMANDER_I} shell_tools.tool ({ES_FEATURES_TOOL}) then
+				l_commander.select_feature_item (a_feature)
+			else
+				check False end
+			end
 		end
 
 	search is

@@ -1,449 +1,402 @@
 indexing
-	description: "Tool to view features for current edited class."
+	description: "[
+		Tool for viewing the active editor's list of feature clauses and features.
+	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
+	status: "See notice at end of class.";
+	date: "$Date$";
 	revision: "$Revision$"
 
 class
 	ES_FEATURES_TOOL_PANEL
 
 inherit
-	EB_STONABLE_TOOL
+	ES_DOCKABLE_STONABLE_TOOL_PANEL [EB_FEATURES_TREE]
 		rename
-			stone as current_stone
+			user_widget as features_tree
 		redefine
-			on_shown,
-			widget,
-			make,
-			attach_to_docking_manager,
-			mini_toolbar,
-			build_mini_toolbar,
 			internal_recycle,
-			show,
-			force_last_stone
+			create_mini_tool_bar_items
 		end
 
-	EB_SHARED_PREFERENCES
+	ES_FEATURES_TOOL_COMMANDER_I
 		export
-			{NONE} all
+			{ES_TOOL} all
 		end
 
-	SHARED_EIFFEL_PROJECT
-
-create
+create {ES_FEATURES_TOOL}
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- User interface initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
-			-- Make a new features tool.
+    build_tool_interface (a_widget: EB_FEATURES_TREE) is
+            -- Builds the tools user interface elements.
+            -- Note: This function is called prior to showing the tool for the first time.
+            --
+            -- `a_widget': A widget to build the tool interface using.
+        local
+        	l_session: like session_data
 		do
-			develop_window ?= a_manager
-			is_signature_enabled := Preferences.feature_tool_data.is_signature_enabled
-			is_alias_enabled := Preferences.feature_tool_data.is_alias_enabled
-			is_assigner_enabled := Preferences.feature_tool_data.is_assigner_enabled
-			Precursor (a_manager, a_tool)
-		end
+			if session_manager.is_service_available then
+					-- Hook up events
+				l_session := session_data
+				l_session.value_changed_event.subscribe (agent on_session_value_changed)
 
-	build_interface is
-			-- Build all the tool's widgets.
-		do
-			create tree.make (Current, True)
-			create widget
-			widget.set_background_color ((create {EV_STOCK_COLORS}).White)
-			widget.extend (tree)
-		end
-
-	build_mini_toolbar is
-			-- Build the associated toolbar
-		do
-			create mini_toolbar.make
-			mini_toolbar.extend (develop_window.commands.new_feature_cmd.new_mini_sd_toolbar_item)
-			mini_toolbar.extend (develop_window.commands.toggle_feature_alias_cmd.new_mini_sd_toolbar_item)
-			mini_toolbar.extend (develop_window.commands.toggle_feature_signature_cmd.new_mini_sd_toolbar_item)
-			mini_toolbar.extend (develop_window.commands.toggle_feature_assigner_cmd.new_mini_sd_toolbar_item)
-
-			mini_toolbar.compute_minimum_size
-
-			develop_window.commands.toggle_feature_signature_cmd.set_select (is_signature_enabled)
-			develop_window.commands.toggle_feature_alias_cmd.set_select (is_alias_enabled)
-			develop_window.commands.toggle_feature_assigner_cmd.set_select (is_assigner_enabled)
-		ensure then
-			mini_toolbar_exists: mini_toolbar /= Void
-		end
-
-feature
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
-			-- Attach to docking manager
-		do
-			build_docking_content (a_docking_manager)
-
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
-		end
-
-feature -- Access
-
-	mini_toolbar: SD_TOOL_BAR
-			-- Bar containing a button for a new feature.
-
-	widget: EV_CELL
-			-- Container.
-
-	tree: EB_FEATURES_TREE
-			-- Widget corresponding to the tree of features.
-
-feature -- Command
-
-	show is
-			-- Show tool.
-		do
-			Precursor {EB_STONABLE_TOOL}
-			if tree.is_displayed then
-				tree.set_focus
+					-- Retrieve session data and set button states
+				if {l_toggle1: !BOOLEAN_REF} l_session.value_or_default (show_alias_session_id, False) then
+					if l_toggle1.item then
+						show_alias_button.enable_select
+					else
+						show_alias_button.disable_select
+					end
+				end
+				if {l_toggle2: !BOOLEAN_REF} l_session.value_or_default (show_assigners_session_id, False) then
+					if l_toggle2.item then
+						show_assigners_button.enable_select
+					else
+						show_assigners_button.disable_select
+					end
+				end
+				if {l_toggle3: !BOOLEAN_REF} l_session.value_or_default (show_signatures_session_id, False) then
+					if l_toggle3.item then
+						show_signatures_button.enable_select
+					else
+						show_signatures_button.disable_select
+					end
+				end
 			end
 		end
 
-feature -- Behavior
-
-	is_assigner_enabled: BOOLEAN
-			-- Is assigner command shown?
-
-	is_alias_enabled: BOOLEAN
-			-- Is alias name shown?
-
-	is_signature_enabled: BOOLEAN
-			-- Do we display signature of feature ?
-
-	update_tree is
-			-- Update tree.
-		do
-			if tree /= Void then
-				tree.update_all
-			end
-		end
-
-	toggle_signatures is
-			-- Toggle signature on/off
-		do
-			is_signature_enabled := not is_signature_enabled
-			if tree /= Void then
-				tree.update_all
-			end
-		end
-
-	toggle_alias is
-			-- Toggle alias name on/off
-		do
-			is_alias_enabled := not is_alias_enabled
-			if tree /= Void then
-				tree.update_all
-			end
-		end
-
-	toggle_assigner is
-			-- Toggle assigner command on/off
-		do
-			is_assigner_enabled := not is_assigner_enabled
-			if tree /= Void then
-				tree.update_all
-			end
-		end
-
-feature {NONE} -- Memory management
+feature {NONE} -- Clean up
 
 	internal_recycle is
-			-- Recycle `Current', but leave `Current' in an unstable state,
-			-- so that we know whether we're still referenced or not.
+			-- Recycle tool.
 		do
-			widget.destroy
-			widget := Void
-			tree := Void
-			Precursor {EB_STONABLE_TOOL}
-		end
-
-feature -- Element change
-
-	seek_item_in_feature_tool (a_feature: E_FEATURE) is
-			-- Seek and select item contains data of `a_feature' in features tool.
-			-- If `a_feature' is void, deselect item in features tool.
-		local
-			l_node: EV_TREE_NODE
-			l_selected_node: EV_TREE_NODE
-		do
-			if tree /= Void then
-				l_selected_node := tree.selected_item
-				if a_feature /= Void then
-					l_node := tree.retrieve_item_recursively_by_data (a_feature, true)
-					if l_node /= Void then
-						l_node.enable_select
-						if tree.is_displayed then
-							tree.ensure_item_visible (l_node)
-						end
-					else
-						if l_selected_node /= Void then
-							l_selected_node.disable_select
-						end
-					end
-				else
-					if l_selected_node /= Void then
-						l_selected_node.disable_select
-					end
+			if is_initialized then
+				if session_manager.is_service_available then
+					session_data.value_changed_event.unsubscribe (agent on_session_value_changed)
 				end
 			end
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
-	seek_ast_item_in_feature_tool (a_feature: STRING) is
-			-- Seek item with `a_feature' in feature tree.
-		local
-			l_node: EV_TREE_NODE
-			l_selected_node: EV_TREE_NODE
-		do
-			if tree /= Void then
-				l_selected_node := tree.selected_item
-				l_node := tree.retrieve_item_recursively_by_data (a_feature, True)
-				if l_node /= Void then
-					l_node.enable_select
-					if tree.is_displayed then
-						tree.ensure_item_visible (l_node)
-					end
-				else
-					if l_selected_node /= Void then
-						l_selected_node.disable_select
-					end
-				end
-			end
-		end
+feature {NONE} -- User interface elements
 
-	synchronize is
-			-- Should be called after recompilations.
-		local
-			st: CLASSI_STONE
-		do
-			if current_stone /= Void then
-				st := current_stone.synchronized_stone
-				current_stone := Void
-				current_compiled_class := Void
-				set_stone (st)
-			end
-		end
+	show_alias_button: SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Are alias' to be shown in the feature tree?
 
-	set_stone (c: STONE) is
-			-- Set `current_class' if c is instance of CLASSC_STONE, `Void' otherwise.
-		do
-			set_last_stone (c)
-			if widget.is_displayed or else is_auto_hide then
-				force_last_stone
-			end
-		end
+	show_assigners_button: SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Are assigners to be shown in the features tree?
 
-feature {EB_FEATURES_TREE, EB_CONTEXT_MENU_FACTORY} -- Status setting
+	show_signatures_button: SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Are signatures to be shown in the features tree?	
 
-	go_to (a_feature: E_FEATURE) is
-			-- `a_feature' has been selected, the associated class
-			-- window should load corresponding feature.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			feature_stone: FEATURE_STONE
-		do
-			create feature_stone.make (a_feature)
-			develop_window.set_feature_locating (true)
-			develop_window.set_stone (feature_stone)
-			develop_window.set_feature_locating (false)
-		end
-
-	go_to_clause (a_clause: FEATURE_CLAUSE_AS; a_focus: BOOLEAN) is
-			-- `a_clause' has been selected, the associated class
-			-- window should display the corresponding feature clause.
-			-- the premise is that basic view is being used.
-			-- `a_focus' means if set focus to current editor.
-		local
-			s: STRING
-			l_formatter: EB_BASIC_TEXT_FORMATTER
-			l_current_editor:  EB_SMART_EDITOR
-			l_line, l_pos: INTEGER
-		do
-			if a_clause.start_position > 0 and then develop_window.editors_manager.current_editor /= Void then
-				s := current_compiled_class.text
-				l_current_editor := develop_window.editors_manager.current_editor
-				if s = Void then
-					s := l_current_editor.text
-				end
-				check
-					s_not_void: s /= Void
-				end
-				l_formatter ?= develop_window.pos_container
-				if l_formatter /= Void then
-					l_pos := a_clause.start_position
-					l_line := character_line (l_pos, s)
-					if not a_focus then
-						l_current_editor.display_line_at_top_when_ready  (l_line, 0)
-					else
-						l_current_editor.docking_content.set_focus
-						l_current_editor.set_focus
-						l_current_editor.scroll_to_start_of_line_when_ready_if_top (l_line, 0, False, True)
-					end
-				end
-			end
-		end
-
-	go_to_line (a_line: INTEGER) is
-			-- Text at `a_line' has been selected, the associated class
-			-- window should display the corresponding line.
-		local
-			l_formatter: EB_BASIC_TEXT_FORMATTER
-		do
-			if a_line > 0 and then develop_window.editors_manager.current_editor /= Void then
-				l_formatter ?= develop_window.pos_container
-				if l_formatter = Void then
-					develop_window.managed_main_formatters.first.execute
-				end
-				develop_window.editors_manager.current_editor.display_line_at_top_when_ready (
-					a_line, 0)
-			end
-		end
-
-	go_to_feature_with_name (a_name: STRING) is
-			-- Go to feature with `a_name'
-			-- We use this to loacte a feature which is only parsed.
-		require
-			a_name_not_void: a_name /= Void
-		local
-			l_formatter: EB_BASIC_TEXT_FORMATTER
-		do
-			if develop_window.editors_manager.current_editor /= Void then
-				l_formatter ?= develop_window.pos_container
-				if l_formatter = Void then
-					develop_window.managed_main_formatters.first.execute
-				end
-				develop_window.editors_manager.current_editor.find_feature_named (a_name)
-			end
-		end
-
-feature {EB_FEATURES_TREE} -- Implementation
-
-	current_class: CLASS_AS
-			-- Class currently opened.	
+feature {NONE} -- Access
 
 	current_compiled_class: CLASS_C
-			-- Class currently opened.
+			-- Last synchonrized class
 
-feature {NONE} -- Implementation	
+feature {EB_FEATURES_TREE} -- Status report
 
-	current_stone: CLASSI_STONE
-			-- Classc stone that was last dropped into `Current'.
-
-	force_last_stone is
-			-- Set `current_class' if `last_stone' is instance of CLASSC_STONE, `Void' otherwise.
-		local
-			classc_stone: CLASSC_STONE
-			external_classc: EXTERNAL_CLASS_C
-			feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			conv_cst: CLASSI_STONE
+	is_showing_alias: BOOLEAN
+			-- Are alias' to be shown in the feature tree?
 		do
-			if not is_last_stone_processed then
-				debug ("docking_integration")
-					print ("%N EB_FEATURES_TOOL set_stone")
-				end
-				conv_cst ?= last_stone
-				if conv_cst /= Void then
-					current_stone := conv_cst
-				end
-				classc_stone ?= last_stone
+			if is_initialized then
+				Result := show_alias_button.is_selected
+			end
+		end
 
-					-- We put the tree off-screen to optimize performance only when something
-					-- will happen to the tree (check calls to `widget.wipe_out' and
-					-- `widget.extend (tree)'.
-				if classc_stone /= Void then
-					if
-						not classc_stone.e_class.is_external and then
-						classc_stone.e_class.has_ast
-					then
-						if classc_stone.e_class /= current_compiled_class then
-							widget.wipe_out
-							Eiffel_system.System.set_current_class (classc_stone.e_class)
-							if classc_stone.e_class.is_precompiled then
-								current_class := classc_stone.e_class.ast
-							elseif classc_stone.e_class.eiffel_class_c.file_is_readable then
-								current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)
-							end
-							if current_class /= Void then
-								feature_clauses := current_class.features
-									-- Build the tree
-								if tree.selected_item /= Void then
-									tree.selected_item.disable_select
-								end
-								tree.wipe_out
-								current_compiled_class := classc_stone.e_class
-								if feature_clauses /= Void then
-									tree.build_tree (feature_clauses)
-								else
-									tree.extend (create {EV_TREE_ITEM}.make_with_text
-										(Warning_messages.W_no_feature_to_display))
-								end
-								Eiffel_system.System.set_current_class (Void)
-								widget.extend (tree)
-								if not tree.is_empty and then tree.is_displayed then
-									tree.ensure_item_visible (tree.first)
-								end
-							end
+	is_showing_assigners: BOOLEAN
+			-- Are assigners to be shown in the features tree?
+		do
+			if is_initialized then
+				Result := show_assigners_button.is_selected
+			end
+		end
+
+	is_showing_signatures: BOOLEAN
+			-- Are signatures to be shown in the features tree?
+		do
+			if is_initialized then
+				Result := show_signatures_button.is_selected
+			end
+		end
+
+feature {ES_TOOL} -- Basic operations
+
+	select_feature_item (a_feature: ?E_FEATURE)
+			-- Selects a feature in the feature tree
+			--
+			-- `a_feature': The feature to select an assocated node in the feature tree.
+		do
+			if is_initialized then
+				select_feature_item_by_data (a_feature, True)
+			end
+		end
+
+	select_feature_item_by_name (a_feature: !STRING_GENERAL)
+			-- Selects a feature in the feature tree, using a string name
+			--
+			-- `a_feature': The name of a feature to select an assocated node in the feature tree.
+		do
+			if is_initialized then
+				select_feature_item_by_Data (a_feature, True)
+			end
+		end
+
+feature {NONE} -- Basic operations
+
+	select_feature_item_by_Data (a_data: ?ANY; a_compare_object: BOOLEAN)
+			-- Selects a feature in the feature tree
+			--
+			-- `a_feature': The feature to select an assocated node in the feature tree.
+			-- `a_compare_object': Indicates if an object comparison should be peform for tree-node matching.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_tree: like features_tree
+		do
+			l_tree := features_tree
+			if a_data /= Void and then {l_node: !EV_TREE_NODE} l_tree.retrieve_item_recursively_by_data (a_data, a_compare_object) then
+				l_node.enable_select
+				if l_tree.is_displayed then
+					l_tree.ensure_item_visible (l_node)
+				end
+			elseif {l_selected_node: !EV_TREE_NODE} l_tree.selected_item then
+					-- No node located so deselect any selected node.
+				l_selected_node.disable_select
+			end
+		end
+
+feature -- Query
+
+	is_stone_usable (a_stone: STONE): BOOLEAN
+			-- Determines if a stone can be used by Current.
+			--
+			-- `a_stone': Stone to determine usablity.
+			-- `Result': True if the stone can be used, False otherwise.
+		do
+			Result := True and True
+		end
+
+feature {NONE} -- Event handlers
+
+	on_session_value_changed (a_session: SESSION; a_id: STRING_8) is
+			-- Called when the session changes
+			--
+			-- `a_session': Session object which the change occured in.
+			-- `a_id': The identifier of the changed session value.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_session_attached: a_session /= Void
+			a_session_is_interface_usable: a_session.is_interface_usable
+		local
+			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
+		do
+			if a_id.is_equal (show_alias_session_id) then
+				l_button := show_alias_button
+			elseif a_id.is_equal (show_assigners_session_id) then
+				l_button := show_assigners_button
+			elseif a_id.is_equal (show_signatures_session_id) then
+				l_button := show_signatures_button
+			end
+
+			if l_button /= Void then
+				if {l_toggle: !BOOLEAN_REF} a_session.value_or_default (a_id, False) then
+					if l_toggle.item then
+						l_button.enable_select
+					else
+						l_button.disable_select
+					end
+					l_button.select_actions.call ([])
+				end
+			end
+		end
+
+feature {NONE} -- Action handlers
+
+	on_show_alias_toggled
+			-- Called when the show alias mini tool bar button is toggled
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+				-- Set session data
+			if session_manager.is_service_available then
+				session_data.set_value (show_alias_button.is_selected, show_alias_session_id)
+			end
+			features_tree.update_all
+		end
+
+	on_show_assigner_toggled
+			-- Called when the show assigner mini tool bar button is toggled
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+				-- Set session data
+			if session_manager.is_service_available then
+				session_data.set_value (show_assigners_button.is_selected, show_assigners_session_id)
+			end
+			features_tree.update_all
+		end
+
+	on_show_signature_toggled
+			-- Called when the show signature mini tool bar button is toggled
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+				-- Set session data
+			if session_manager.is_service_available then
+				session_data.set_value (show_signatures_button.is_selected, show_signatures_session_id)
+			end
+			features_tree.update_all
+		end
+
+	on_stone_changed
+			-- Called when the set stone changes.
+			-- Note: This routine can be called when `stone' if Void.
+		local
+			l_class: CLASS_C
+			l_tree: like features_tree
+--			l_system: SYSTEM_I
+			l_class_ast: CLASS_AS
+			l_container: EV_CONTAINER
+		do
+			l_tree := features_tree
+
+			if {l_class_stone: !CLASSC_STONE} stone then
+--				l_system := (create {SHARED_EIFFEL_PROJECT}).eiffel_system.system
+				l_class := l_class_stone.e_class
+
+				if l_class /= current_compiled_class or is_in_stone_synchoronization then
+						-- Removes the tree from the parent to perform off-screen drawing.
+					l_container := l_tree.parent
+					l_container.prune (l_tree)
+
+					l_tree.wipe_out
+					if not l_class.is_external and then l_class.has_ast then
+						current_compiled_class := l_class
+--						l_system.set_current_class (l_class)
+
+						if l_class.is_precompiled then
+							l_class_ast := l_class.ast
+						elseif l_class.eiffel_class_c.file_is_readable then
+							l_class_ast := l_class.eiffel_class_c.parsed_ast (False)
 						end
-					elseif classc_stone.class_i.is_external_class then
+
+						if l_class_ast /= Void then
+							if l_tree.selected_item /= Void then
+								l_tree.selected_item.disable_select
+							end
+
+							if {l_clauses: !EIFFEL_LIST [FEATURE_CLAUSE_AS]} l_class_ast.features then
+									-- Build tree from AST nodes
+								l_tree.build_tree (l_clauses, l_class)
+							else
+									-- No items
+								l_tree.extend (create {EV_TREE_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
+							end
+--							l_system.set_current_class (Void)
+						end
+					elseif {l_external_classc: !EXTERNAL_CLASS_C} l_class then
 							-- Special processing for a .NET type since has no 'ast' in the normal
 							-- sense.
-						external_classc ?= classc_stone.e_class
-						if
-							external_classc /= current_compiled_class and external_classc /= Void
-						then
-							Eiffel_system.System.set_current_class (classc_stone.e_class)
-									-- Build the tree
-							if tree.selected_item /= Void then
-								tree.selected_item.disable_select
-							end
-							tree.wipe_out
-							current_compiled_class := classc_stone.e_class
-							tree.build_tree_for_external (current_compiled_class)
+--						Eiffel_system.System.set_current_class (classc_stone.e_class)
+						current_compiled_class := l_class
+
+						if l_tree.selected_item /= Void then
+							l_tree.selected_item.disable_select
 						end
-					else
-						tree.wipe_out
-						current_compiled_class := Void
+						l_tree.wipe_out
+						l_tree.build_tree_for_external (l_external_classc)
 					end
-				else
-						-- Invalid stone, wipe out window content.
-					tree.wipe_out
-					current_compiled_class := Void
+
+						-- Add tree back to the container
+					l_container.extend (l_tree)
+
+					if not l_tree.is_empty and then l_tree.is_displayed then
+						l_tree.ensure_item_visible (l_tree.first)
+					end
 				end
-				Precursor
-			end
-		end
-
-	character_line (pos: INTEGER; s: STRING): INTEGER is
-			-- Line number of character number `pos' in `s'.
-		require
-			valid_pos: pos > 0
-			valid_string: s /= Void
-		local
-			s2: STRING
-		do
-			if pos <= s.count then
-				s2 := s.substring (1, pos)
 			else
-				s2 := s
+				l_tree.wipe_out
+				current_compiled_class := Void
 			end
-			Result := s2.occurrences ('%N')
 		end
 
-	on_shown is
-			-- Update the display just before the tool is shown.
+feature {NONE} -- Factory
+
+    create_widget: EB_FEATURES_TREE
+            -- Create a new container widget upon request.
+            -- Note: You may build the tool elements here or in `build_tool_interface'
 		do
-			set_stone (current_stone)
+			create Result.make (Current, True)
 		end
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+    create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            -- Retrieves a list of tool bar items to display at the top of the tool.
+		do
+			--| No tool bar
+		end
+
+    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            -- Retrieves a list of tool bar items to display on the window title
+		local
+			l_window: like develop_window
+			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
+        do
+        	l_window := develop_window
+
+        	create Result.make (4)
+
+        	Result.put_last (l_window.commands.new_feature_cmd.new_mini_sd_toolbar_item)
+
+        	create l_button.make
+        	l_button.set_pixel_buffer (stock_mini_pixmaps.completion_show_alias_icon_buffer)
+        	l_button.set_pixmap (stock_mini_pixmaps.completion_show_alias_icon)
+        	l_button.set_tooltip (interface_names.f_show_alias)
+        	register_action (l_button.select_actions, agent on_show_alias_toggled)
+        	Result.put_last (l_button)
+        	show_alias_button := l_button
+
+        	create l_button.make
+        	l_button.set_pixel_buffer (stock_mini_pixmaps.completion_show_assigner_icon_buffer)
+        	l_button.set_pixmap (stock_mini_pixmaps.completion_show_assigner_icon)
+        	l_button.set_tooltip (interface_names.f_show_assigner)
+        	register_action (l_button.select_actions, agent on_show_assigner_toggled)
+        	Result.put_last (l_button)
+        	show_assigners_button := l_button
+
+        	create l_button.make
+        	l_button.set_pixel_buffer (stock_mini_pixmaps.completion_show_signature_icon_buffer)
+        	l_button.set_pixmap (stock_mini_pixmaps.completion_show_signature_icon)
+        	l_button.set_tooltip (interface_names.f_show_signature)
+        	register_action (l_button.select_actions, agent on_show_signature_toggled)
+        	Result.put_last (l_button)
+        	show_signatures_button := l_button
+        end
+
+feature {NONE} -- Constants
+
+	show_alias_session_id: STRING_8 = "com.eiffel.features_tool.show_alias"
+	show_assigners_session_id: STRING_8 = "com.eiffel.features_tool.show_assigners"
+	show_signatures_session_id: STRING_8 = "com.eiffel.features_tool.show_signature"
+			-- Session IDs
+
+invariant
+	show_assigners_button_attached: is_initialized and is_interface_usable implies
+		show_assigners_button /= Void
+	show_alias_button_attached: is_initialized and is_interface_usable implies
+		show_alias_button /= Void
+	show_signatures_button_attached: is_initialized and is_interface_usable implies
+		show_signatures_button /= Void
+
+;indexing
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -474,4 +427,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FEATURES_TOOL
+end

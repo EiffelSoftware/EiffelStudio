@@ -28,8 +28,7 @@ inherit
             icon_pixmap,
             title,
             show,
-            build_docking_content,
-            on_shown
+            build_docking_content
         end
 
 inherit {NONE}
@@ -626,7 +625,7 @@ feature {NONE} -- Action handlers
 			check
 				is_initialized: is_initialized
 			end
-			
+
 			if shown then
 				on_show
 			else

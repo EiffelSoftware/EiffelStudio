@@ -75,7 +75,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_features_tool: ES_FEATURES_TOOL_PANEL; clickable: BOOLEAN) is
+	make (a_features_tool: like features_tool; clickable: BOOLEAN) is
 			-- Initialization: build the widget and the tree.
 		do
 			is_clickable := clickable
@@ -94,33 +94,12 @@ feature -- Status report
 			-- Is the class corresponding to the item loaded in the tool when
 			-- the user left-click on it.
 
-feature -- Access
+feature {NONE} -- Acess
 
-	update_states is
-			-- Update command states
-		do
-			is_signature_enabled := features_tool.is_signature_enabled
-			is_alias_enabled := features_tool.is_alias_enabled
-			is_assigner_enabled := features_tool.is_assigner_enabled
-		end
+	features_tool: ES_FEATURES_TOOL_PANEL
+			-- Associated features tool.
 
-	update_all is
-			-- Update feature tree
-		do
-			update_states
-			recursive_do_all (agent update_node)
-		end
-
-	update_node (n: EV_TREE_NODE) is
-			-- Update node alias name and signature
-		local
-			ef: E_FEATURE
-		do
-			ef ?= n.data
-			if ef /= Void then
-				n.set_text (feature_name (ef))
-			end
-		end
+feature {NONE} -- Status report
 
 	is_signature_enabled: BOOLEAN
 			-- Do we display signature of feature ?
@@ -131,59 +110,135 @@ feature -- Access
 	is_assigner_enabled: BOOLEAN
 			-- Is assigner command shown?
 
-feature {ES_FEATURES_TOOL_PANEL} -- Implementation
+feature {NONE} -- Status setting
 
-	feature_name (a_ef: E_FEATURE): STRING is
-			-- Feature name of `a_ef' depending of the signature displayed or not.
-		require
-			a_ef_not_void: a_ef /= Void
-		local
-			alias_name: STRING
-			assigner_name: STRING
+	update_states
+			-- Update command states
 		do
-			Result := a_ef.name.twin
-			if is_alias_enabled and then not a_ef.is_prefix and then not a_ef.is_infix then
-				alias_name := a_ef.alias_name
-				if alias_name /= Void then
-					Result.append_string (" alias %"")
-					Result.append_string (eiffel_string (extract_alias_name (alias_name)))
-					Result.append_character ('%"')
+			is_signature_enabled := features_tool.is_showing_signatures
+			is_alias_enabled := features_tool.is_showing_alias
+			is_assigner_enabled := features_tool.is_showing_assigners
+		end
+
+feature -- Basic operations
+
+	update_all
+			-- Updates all feature tree nodes
+		do
+			update_states
+			recursive_do_all (agent update_node)
+		end
+
+feature -- Basic operations
+
+	nagivate_to_feature (a_feature: !E_FEATURE)
+			-- Navigates to a feature in using a default view.
+			--
+			-- `a_feature': A feature to navigate to.
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
+		do
+			l_window := features_tool.develop_window
+			l_window.set_feature_locating (true)
+			l_window.set_stone (create {!FEATURE_STONE}.make (a_feature))
+			l_window.set_feature_locating (false)
+		end
+
+	nagivate_to_feature_by_name (a_feature: !STRING) is
+			-- Navigates to a feature in using a default view.
+			--
+			-- `a_feature': A feature name used to navigate to a feature.
+		require
+			not_a_feature_is_empty: not a_feature.is_empty
+		local
+			l_window: EB_DEVELOPMENT_WINDOW
+		do
+			l_window := features_tool.develop_window
+			if {l_editor: !EB_SMART_EDITOR} l_window.editors_manager.current_editor then
+				if {l_formatter: !EB_BASIC_TEXT_FORMATTER} l_window.pos_container then
+					l_window.managed_main_formatters.first.execute
 				end
+				l_editor.find_feature_named (a_feature)
 			end
-			if is_signature_enabled then
-				a_ef.append_arguments_to (Result)
-				if a_ef.type /= Void then
-					Result.append (": " + a_ef.type.dump)
+		end
+
+	nagivate_to_feature_clause (a_clause: !FEATURE_CLAUSE_AS; a_focus: BOOLEAN)
+			-- Navigates to a feature clause in the default view.
+			--
+			-- `a_clause': The feature clause to navigate too.
+			-- `a_focus': True to set focus, False otherwise.
+		local
+			l_text: STRING_8
+			l_line, l_pos: INTEGER
+			l_window: EB_DEVELOPMENT_WINDOW
+		do
+			check
+				a_clause_is_valid: a_clause.start_position > 0
+			end
+			l_window := features_tool.develop_window
+			if {l_editor: !EB_SMART_EDITOR} l_window.editors_manager.current_editor then
+				l_text := "class"
+				if l_text = Void then
+					l_text := l_editor.text
 				end
-			end
-			if is_assigner_enabled then
-				assigner_name := a_ef.assigner_name
-				if assigner_name /= Void then
-					Result.append_string (" assign ")
-					Result.append_string (assigner_name)
+				check
+					l_text_attached: l_text /= Void
+				end
+
+				if {l_formatter: !EB_BASIC_TEXT_FORMATTER} l_window.pos_container then
+						-- Ensure we are in edit mode in the editor.
+
+						-- Fetch line number
+					l_pos := a_clause.start_position
+					if l_pos <= l_text.count then
+						l_line := l_text.substring (1, l_pos).occurrences ('%N')
+					else
+						l_line := l_text.occurrences ('%N')
+					end
+
+					if not a_focus then
+						l_editor.display_line_at_top_when_ready  (l_line, 0)
+					else
+						l_editor.docking_content.set_focus
+						l_editor.set_focus
+						l_editor.scroll_to_start_of_line_when_ready_if_top (l_line, 0, False, True)
+					end
 				end
 			end
 		end
 
-	build_tree (fcl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
+feature {NONE} -- Basic operations
+
+	update_node (a_node: EV_TREE_NODE) is
+			-- Update node alias name and signature
+		require
+			a_node_attached: a_node /= Void
+		do
+			if {l_ef: !E_FEATURE} a_node.data then
+				a_node.set_text (feature_name (l_ef))
+			end
+		end
+
+feature -- Tree construction
+
+	build_tree (fcl: EIFFEL_LIST [FEATURE_CLAUSE_AS]; a_class: CLASS_C) is
 			-- Build the feature tree corresponding to current class.
 		require
 			feature_clause_list_not_void: fcl /= Void
+			a_class_attached: a_class /= Void
 		local
 			features: EIFFEL_LIST [FEATURE_AS]
 			tree_item: EV_TREE_ITEM
 			name: STRING
 			expand_tree: BOOLEAN
 			retried: BOOLEAN
-			l_class: CLASS_C
 			l_export_status: EXPORT_I
 			l_match_list: LEAF_AS_LIST
 			l_comments: EIFFEL_COMMENTS
 		do
 			if not retried then
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
-				l_class := features_tool.current_compiled_class
-				l_match_list := match_list_server.item (l_class.class_id)
+				l_match_list := match_list_server.item (a_class.class_id)
 					--| Features
 				from
 					fcl.start
@@ -203,9 +258,9 @@ feature {ES_FEATURES_TOOL_PANEL} -- Implementation
 						end
 						name.right_adjust
 					end
-					tree_item := build_tree_folder (name, features, l_class)
+					tree_item := build_tree_folder (name, features, a_class)
 					l_export_status := export_status_generator.
-						feature_clause_export_status (system, l_class, fcl.item)
+						feature_clause_export_status (system, a_class, fcl.item)
 					if l_export_status.is_none then
 						tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_none_icon)
 					elseif l_export_status.is_set then
@@ -271,7 +326,7 @@ feature {ES_FEATURES_TOOL_PANEL} -- Implementation
 					loop
 						name := l_clauses.item.name
 						name.right_adjust
-						tree_item := build_tree_folder_for_external (name, l_clauses.item)
+						tree_item := build_tree_folder_for_external (name, l_clauses.item, a_class)
 						if not l_clauses.item.is_exported then
 							tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_none_icon)
 						else
@@ -305,6 +360,40 @@ feature {ES_FEATURES_TOOL_PANEL} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+feature {NONE} -- Implementation
+
+	feature_name (a_ef: E_FEATURE): STRING is
+			-- Feature name of `a_ef' depending of the signature displayed or not.
+		require
+			a_ef_not_void: a_ef /= Void
+		local
+			alias_name: STRING
+			assigner_name: STRING
+		do
+			Result := a_ef.name.twin
+			if is_alias_enabled and then not a_ef.is_prefix and then not a_ef.is_infix then
+				alias_name := a_ef.alias_name
+				if alias_name /= Void then
+					Result.append_string (" alias %"")
+					Result.append_string (eiffel_string (extract_alias_name (alias_name)))
+					Result.append_character ('%"')
+				end
+			end
+			if is_signature_enabled then
+				a_ef.append_arguments_to (Result)
+				if a_ef.type /= Void then
+					Result.append (": " + a_ef.type.dump)
+				end
+			end
+			if is_assigner_enabled then
+				assigner_name := a_ef.assigner_name
+				if assigner_name /= Void then
+					Result.append_string (" assign ")
+					Result.append_string (assigner_name)
+				end
+			end
 		end
 
 feature {NONE} -- Context menu handler
@@ -341,8 +430,6 @@ feature {NONE} -- Implementation
 			a_key_not_void: a_key /= Void
 		local
 			l_data: ANY
-			l_feature: E_FEATURE
-			l_clause: FEATURE_CLAUSE_AS
 		do
 				-- When features tree is created, there is no element and therefore
 				-- no selected items.
@@ -350,14 +437,10 @@ feature {NONE} -- Implementation
 				l_data := selected_item.data
 			end
 			if a_key.code = {EV_KEY_CONSTANTS}.Key_enter and then l_data /= Void then
-				l_feature ?= l_data
-				if l_feature /= Void then
-					features_tool.go_to (l_feature)
-				else
-					l_clause ?= l_data
-					if l_clause /= Void then
-						features_tool.go_to_clause (l_clause, True)
-					end
+				if {l_feature: !E_FEATURE} l_data then
+					nagivate_to_feature (l_feature)
+				elseif {l_clause: !FEATURE_CLAUSE_AS} l_data then
+					nagivate_to_feature_clause (l_clause, True)
 				end
 			end
 		end
@@ -369,8 +452,8 @@ feature {NONE} -- Implementation
 		require
 			ef_not_void: ef /= Void
 		do
-			if a_button = 1 then
-				features_tool.go_to (ef)
+			if a_button = 1 and then {l_ef: !E_FEATURE} ef then
+				nagivate_to_feature (l_ef)
 			end
 		end
 
@@ -381,13 +464,10 @@ feature {NONE} -- Implementation
 		require
 			fclause_not_void: fclause /= Void
 		do
-			if a_button = 1 then
-				features_tool.go_to_clause (fclause, False)
+			if a_button = 1 and {l_clause: !FEATURE_CLAUSE_AS} fclause then
+				nagivate_to_feature_clause (l_clause, False)
 			end
 		end
-
-	features_tool: ES_FEATURES_TOOL_PANEL
-			-- Associated features tool.
 
 	build_tree_folder (n: STRING; fl: EIFFEL_LIST [FEATURE_AS]; a_class: CLASS_C): EV_TREE_ITEM is
 			-- Build the tree node corresponding to feature clause named `n'.
@@ -446,11 +526,13 @@ feature {NONE} -- Implementation
 							tree_item.set_text (f_item_name)
 							tree_item.set_data (f_item_name)
 							if is_clickable then
-								tree_item.pointer_button_press_actions.force_extend (
-									agent features_tool.go_to_feature_with_name (l_first_item_name))
-								tree_item.set_pixmap (pixmap_from_feature_ast (l_external, fa, f_names.index))
-								tree_item.set_configurable_target_menu_mode
-								tree_item.set_configurable_target_menu_handler (agent feature_item_handler (?, ?, ?, ?, False, l_first_item_name))
+								if {l_feature_name: !STRING_8} l_first_item_name then
+									tree_item.pointer_button_press_actions.force_extend (
+										agent nagivate_to_feature_by_name (l_feature_name))
+									tree_item.set_pixmap (pixmap_from_feature_ast (l_external, fa, f_names.index))
+									tree_item.set_configurable_target_menu_mode
+									tree_item.set_configurable_target_menu_handler (agent feature_item_handler (?, ?, ?, ?, False, l_feature_name))
+								end
 							end
 						else
 							tree_item.set_data (ef)
@@ -475,8 +557,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_tree_folder_for_external (n: STRING; fl: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]): EV_TREE_ITEM is
+	build_tree_folder_for_external (n: STRING; fl: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]; a_class: CLASS_C): EV_TREE_ITEM is
 			-- Build the tree node corresponding to feature clause named `n'.
+		require
+			a_class_attached: a_class /= Void
 		local
 			tree_item: EV_TREE_ITEM
 			ef: E_FEATURE
@@ -498,19 +582,16 @@ feature {NONE} -- Implementation
 						warning_messages.w_short_internal_error ("Void feature")))
 				else
 					if is_clickable then
-						if
-							features_tool.current_compiled_class /= Void and then
-							features_tool.current_compiled_class.has_feature_table
-						then
-							ef := features_tool.current_compiled_class.feature_with_name (
+						if a_class.has_feature_table then
+							ef := a_class.feature_with_name (
 								fl.item.eiffel_name)
 							if ef = Void then
 									-- Check for infix feature
-								ef := features_tool.current_compiled_class.feature_with_name (
+								ef := a_class.feature_with_name (
 									"infix %"" + fl.item.eiffel_name + "%"")
 								if ef = Void then
 										-- Check for prefix feature
-									ef := features_tool.current_compiled_class.feature_with_name (
+									ef := a_class.feature_with_name (
 										"prefix %"" + fl.item.eiffel_name + "%"")
 								end
 							end

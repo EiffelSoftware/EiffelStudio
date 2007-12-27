@@ -129,9 +129,6 @@ feature -- Command
 			l_new_class_cmd: EB_NEW_CLASS_COMMAND
 			l_delete_class_cluster_cmd: EB_DELETE_CLASS_CLUSTER_COMMAND
 			l_new_feature_cmd: EB_NEW_FEATURE_COMMAND
-			l_toggle_feature_alias_cmd: EB_TOGGLE_FEATURE_ALIAS_COMMAND
-			l_toggle_feature_signature_cmd: EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
-			l_toggle_feature_assigner_cmd: EB_TOGGLE_FEATURE_ASSIGNER_COMMAND
 			l_toggle_stone_cmd: EB_UNIFY_STONE_CMD
 			l_send_stone_to_context_cmd: EB_STANDARD_CMD
 
@@ -280,21 +277,6 @@ feature -- Command
 			develop_window.commands.set_new_feature_cmd (l_new_feature_cmd)
 			develop_window.commands.toolbarable_commands.extend (l_new_feature_cmd)
 
-			create l_toggle_feature_alias_cmd.make (develop_window)
-			auto_recycle (l_toggle_feature_alias_cmd)
-			develop_window.commands.set_toggle_feature_alias_cmd (l_toggle_feature_alias_cmd)
-			develop_window.commands.toolbarable_commands.extend (l_toggle_feature_alias_cmd)
-
-			create l_toggle_feature_signature_cmd.make (develop_window)
-			auto_recycle (l_toggle_feature_signature_cmd)
-			develop_window.commands.set_toggle_feature_signature_cmd (l_toggle_feature_signature_cmd)
-			develop_window.commands.toolbarable_commands.extend (l_toggle_feature_signature_cmd)
-
-			create l_toggle_feature_assigner_cmd.make (develop_window)
-			auto_recycle (l_toggle_feature_assigner_cmd)
-			develop_window.commands.set_toggle_feature_assigner_cmd (l_toggle_feature_assigner_cmd)
-			develop_window.commands.toolbarable_commands.extend (l_toggle_feature_assigner_cmd)
-
 			create l_toggle_stone_cmd.make (develop_window)
 			auto_recycle (l_toggle_stone_cmd)
 			develop_window.commands.set_toggle_stone_cmd (l_toggle_stone_cmd)
@@ -336,9 +318,6 @@ feature -- Command
 			develop_window.commands.set_show_shell_tool_commands (create {HASH_TABLE [ES_SHOW_TOOL_COMMAND, ES_TOOL [EB_TOOL]]}.make (1))
 
 			develop_window.commands.new_feature_cmd.disable_sensitive
-			develop_window.commands.toggle_feature_alias_cmd.disable_sensitive
-			develop_window.commands.toggle_feature_signature_cmd.disable_sensitive
-			develop_window.commands.toggle_feature_assigner_cmd.disable_sensitive
 
 			create l_reset_command.make (develop_window)
 			develop_window.commands.set_reset_layout_command (l_reset_command)
@@ -671,16 +650,16 @@ feature -- Command
 			check
 				l_undo_redo_observer /= Void
 			end
-			develop_window.editors_manager.editor_switched_actions.extend (agent l_undo_redo_observer.on_changed)
-			l_undo_redo_observer := Void
+			develop_window.editors_manager.editor_switched_actions.extend (agent (a_editor: EB_SMART_EDITOR; a_observer: UNDO_REDO_OBSERVER) do a_observer.on_changed end (?, l_undo_redo_observer))
+
 			l_undo_redo_observer ?= develop_window.commands.redo_cmd
 			check
 				l_undo_redo_observer /= Void
 			end
-			develop_window.editors_manager.editor_switched_actions.extend (agent l_undo_redo_observer.on_changed)
+			develop_window.editors_manager.editor_switched_actions.extend (agent (a_editor: EB_SMART_EDITOR; a_observer: UNDO_REDO_OBSERVER) do a_observer.on_changed end (?, l_undo_redo_observer))
 
 				-- Refresh cursor position.
-			develop_window.editors_manager.editor_switched_actions.extend (agent develop_window.refresh_cursor_position)
+			develop_window.editors_manager.editor_switched_actions.extend (agent (a_editor: EB_SMART_EDITOR) do develop_window.refresh_cursor_position end)
 
 				-- Following comments arr from non-docking Eiffel Studio
 				-- The minimim height masks a bug on windows to do with the sizing of the editors
@@ -1116,7 +1095,7 @@ feature{NONE} -- Implementation
 			-- Setup editor commands in editors manager.
 			-- so that they are correctly disable when there is no editor open.
 		do
-			develop_window.editors_manager.editor_closed_actions.extend (agent develop_window.all_editor_closed)
+			develop_window.editors_manager.editor_closed_actions.extend (agent (a_editor: EB_SMART_EDITOR) do develop_window.all_editor_closed end)
 		end
 
 	setup_focus_editor_accelerators is

@@ -6,6 +6,39 @@ CG = Code Generation
 6.2
 ===
 
+6.2.7.1639 non-RTEA non-multithreaded, optimized GENERATION_BUFFER, no check for Void (exe size: 17234824 bytes):
+348.65u 13.38s 6:50.28 88.2%
+213.60u 12.57s 4:20.44 86.8%
+213.46u 12.48s 5:50.98 64.3%
+
+6.2.7.1639 non-RTEA non-multithreaded, optimized GENERATION_BUFFER (exe size: 17234824 bytes):
+348.14u 13.19s 8:11.50 73.5%
+223.88u 12.71s 4:33.20 86.5% (this time less I/O thus the time improvement)
+222.39u 12.62s 4:30.26 86.9%
+
+6.2.7.1639 non-RTEA non-multithreaded (exe size: 17236408 bytes):
+349.77u 13.12s 6:14.28 96.9%
+224.17u 12.21s 5:39.51 69.6% (again I/O seems to slow the all things down.)
+224.41u 12.23s 5:34.00 70.8% (again I/O seems to slow the all things down.)
+
+6.2.7.1639 non-RTEA (exe size: 18026240 bytes):
+346.95u 13.23s 6:32.51 91.7% (doesn't change much to not generate the RTEA macros)
+274.33u 12.58s 6:19.02 75.6% (uses less CPU time for sure (72s less) but now the burden seems to be I/O?)
+271.49u 12.91s 5:22.24 88.2% (this it shows, so maybe before there was some other things slowing us down)
+
+6.2.7.1639 RTEA (exe size: 20796632 bytes):
+350.89u 12.54s 6:39.73 90.9%
+348.05u 13.26s 6:38.17 90.7%
+348.78u 13.23s 6:41.43 90.1%
+
+6.2.7.1577 RTEA (old compiler, new code generation):
+350.32u 12.33s 6:39.27 90.8%
+359.84u 13.01s 6:50.18 90.8%
+
+6.2.7.1577 RTEA (old compiler):
+339.40u 13.20s 6:42.98 87.4%
+341.17u 13.61s 6:28.65 91.2%
+
 6.2.7.1539 RTEA:
 336.10u 13.10s 6:26.60 90.3%
 339.31u 12.42s 6:25.32 91.2%

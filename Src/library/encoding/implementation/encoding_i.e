@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	multi_byte_to_pointer (a_string: STRING_8): POINTER is
+	multi_byte_to_pointer (a_string: STRING_8): MANAGED_POINTER is
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -165,12 +165,12 @@ feature {NONE} -- Implementation
 				i := i +  1
 			end
 			l_managed_data.put_natural_8 (0, new_size - 1)
-			Result := l_managed_data.item
+			Result := l_managed_data
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	wide_string_to_pointer (a_string: STRING_32): POINTER is
+	wide_string_to_pointer (a_string: STRING_32): MANAGED_POINTER is
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 				i := i +  1
 			end
 			l_managed_data.put_natural_16 (0, i * 2)
-			Result := l_managed_data.item
+			Result := l_managed_data
 		end
 
 	pointer_to_multi_byte (a_multi_string: POINTER; a_count: INTEGER): STRING_8 is

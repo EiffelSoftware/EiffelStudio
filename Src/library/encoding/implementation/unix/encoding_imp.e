@@ -18,7 +18,7 @@ feature -- String encoding convertion
 	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING): STRING_GENERAL is
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
-			l_managed_pointer: MANAGED_POINTER
+			l_managed_pointer, l_fp, l_tp: MANAGED_POINTER
 			l_count, l_size, i: INTEGER
 			l_pointer: POINTER
 			l_out_count: INTEGER
@@ -26,28 +26,39 @@ feature -- String encoding convertion
 			l_string_32: STRING_32
 			l_big_endian: BOOLEAN
 			l_no_endian: BOOLEAN
+			l_error: INTEGER
+			l_failure: CONVERSION_FAILURE
+			l_retried: BOOLEAN
 		do
-			l_big_endian := big_endian_codesets.has (a_from_code_page) or else (not is_little_endian and not little_endian_codesets.has (a_from_code_page))
-			if four_byte_codesets.has (a_from_code_page) then
-				l_string_32 := a_from_string.twin
-				if not l_big_endian then
-					l_string_32.precede (byte_order_mark)
+			if not l_retried then
+				l_big_endian := big_endian_codesets.has (a_from_code_page) or else (not is_little_endian and not little_endian_codesets.has (a_from_code_page))
+				if four_byte_codesets.has (a_from_code_page) then
+					l_string_32 := a_from_string.twin
+					if not l_big_endian then
+						l_string_32.precede (byte_order_mark)
+					end
+					l_managed_pointer := string_32_to_pointer (l_string_32)
+					l_count := (l_string_32.count) * 4
+				elseif two_byte_codesets.has (a_from_code_page) then
+					l_string_32 := a_from_string.twin
+					if not l_big_endian then
+						l_string_32.precede (byte_order_mark)
+					end
+					l_managed_pointer := wide_string_to_pointer (l_string_32)
+					l_count := (l_string_32.count) * 2
+				else
+					l_managed_pointer := multi_byte_to_pointer (a_from_string.as_string_8)
+					l_count := a_from_string.count
 				end
-				l_pointer := string_32_to_pointer (l_string_32)
-				l_count := (l_string_32.count) * 4
-			elseif two_byte_codesets.has (a_from_code_page) then
-				l_string_32 := a_from_string.twin
-				if not l_big_endian then
-					l_string_32.precede (byte_order_mark)
+				l_fp := multi_byte_to_pointer (a_from_code_page)
+				l_tp := multi_byte_to_pointer (a_to_code_page)
+				l_pointer := c_iconv (l_fp.item, l_tp.item, l_managed_pointer.item, l_count, $l_out_count, $l_error)
+				if l_error /= 0 then
+					last_conversion_successful := False
+					conversion_exception (l_error).raise
+				else
+					last_conversion_successful := True
 				end
-				l_pointer := wide_string_to_pointer (l_string_32)
-				l_count := (l_string_32.count) * 2
-			else
-				l_pointer := multi_byte_to_pointer (a_from_string.as_string_8)
-				l_count := a_from_string.count
-			end
-			l_pointer := c_iconv (multi_byte_to_pointer (a_from_code_page), multi_byte_to_pointer (a_to_code_page), l_pointer, l_count, $l_out_count, $last_conversion_successful)
-			if last_conversion_successful then
 				if l_pointer /= Void then
 					l_no_endian := not big_endian_codesets.has (a_to_code_page) and not little_endian_codesets.has (a_to_code_page)
 					if four_byte_codesets.has (a_to_code_page) then
@@ -88,6 +99,21 @@ feature -- String encoding convertion
 						l_pointer_not_void: l_pointer /= Void
 					end
 				end
+				if l_pointer /= Void then
+					l_pointer.memory_free
+				end
+			end
+		rescue
+			l_retried := True
+			if l_pointer /= Void then
+				l_pointer.memory_free
+			end
+			l_failure ?= (create {EXCEPTION_MANAGER}).last_exception.original
+			if l_failure /= Void then
+					-- In the future, a proper mechanism should be worked out
+					-- to reflect such internal errors. For now the rescue
+					-- is mostly for debugging.
+				retry
 			end
 		end
 
@@ -103,11 +129,25 @@ feature -- Status report
 	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING_8): BOOLEAN
 			-- Is `a_from_code_page' convertable to `a_to_code_page'.
 		local
-			l_from_pointer, l_to_pointer: POINTER
+			l_from_pointer, l_to_pointer: MANAGED_POINTER
+			l_error: INTEGER
+			l_retried: BOOLEAN
 		do
-			l_from_pointer := multi_byte_to_pointer (a_from_code_page)
-			l_to_pointer := multi_byte_to_pointer (a_to_code_page)
-			Result := is_codeset_convertable (l_from_pointer, l_to_pointer)
+			if not l_retried then
+				l_from_pointer := multi_byte_to_pointer (a_from_code_page)
+				l_to_pointer := multi_byte_to_pointer (a_to_code_page)
+				Result := is_codeset_convertable (l_from_pointer.item, l_to_pointer.item, $l_error)
+				if l_error /= 0 then
+					conversion_exception (l_error).raise
+				end
+			end
+		rescue
+				-- In the future, a proper mechanism should be worked out
+				-- to reflect such internal errors. For now the rescue
+				-- is mostly for debugging.
+			Result := False
+			l_retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation
@@ -124,7 +164,7 @@ feature {NONE} -- Implementation
 			Result := code = 0xFFFE or code = 0xFFFE0000
 		end
 
-	string_32_to_pointer (a_string: STRING_32): POINTER is
+	string_32_to_pointer (a_string: STRING_32): MANAGED_POINTER is
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -153,7 +193,7 @@ feature {NONE} -- Implementation
 				i := i +  1
 			end
 			l_managed_data.put_natural_32 (0, i * 4)
-			Result := l_managed_data.item
+			Result := l_managed_data
 		end
 
 	byte_order_mark: CHARACTER_32 is
@@ -162,7 +202,36 @@ feature {NONE} -- Implementation
 			Result := (0xFEFF).to_character_32
 		end
 
-	c_iconv (a_from_codeset, a_to_codeset: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count: TYPED_POINTER [INTEGER]; a_b: TYPED_POINTER [BOOLEAN]): POINTER is
+	conversion_exception (a_error:INTEGER): CONVERSION_FAILURE
+			-- Create exception by `a_error'
+		do
+			inspect a_error
+			when 1 then
+				create Result.make_message ("`malloc' error")
+			when 2 then
+				create Result.make_message ("`realloc' error")
+			when 3 then
+				create Result.make_message ("`iconv_open' error")
+			when 4 then
+				create Result.make_message ("EILSEQ error in `iconv'. Input conversion stopped due to an input byte that does not belong to the input codeset.")
+			when 5 then
+				create Result.make_message ("EINVAL error in `iconv'. Input conversion stopped due to an incomplete character or shift sequence at the end of the input buffer.")
+			when 6 then
+				create Result.make_message ("EBADF error in `iconv'. The cd argument is not a valid open conversion descriptor.")
+			when 7 then
+				create Result.make_message ("Unexpected error in `iconv'")
+			when 8 then
+				create Result.make_message ("`iconv_close' error")
+			else
+				create Result.make_message ("Unexpected error")
+			end
+		ensure
+			conversion_exception_not_void: Result /= Void
+		end
+
+	c_iconv (a_from_codeset, a_to_codeset: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count, a_b: TYPED_POINTER [INTEGER]): POINTER is
+			-- Code `a_b' could be set when error occurs.
+			-- See `conversion_exception' for the meaning.
 		external
 			"C inline use <iconv.h>"
 		alias
@@ -174,11 +243,10 @@ feature {NONE} -- Implementation
 				
 				insize = (size_t)$a_size;
 				alloc = avail = insize + insize/4;
-				*$a_b = 1;
+				*$a_b = 0;
 				
 				if (!(res = malloc(alloc))) {
-					perror("malloc");
-					*$a_b = 0;
+					*$a_b = 1;
 					return NULL;
 				}
 
@@ -187,8 +255,7 @@ feature {NONE} -- Implementation
 
 				cd = iconv_open ($a_to_codeset, $a_from_codeset);
 				if (cd == (iconv_t)(-1)) {
-					*$a_b = 0;
-					perror("iconv_open");
+					*$a_b = 3;
 					free(res);
 					return NULL;
 				}
@@ -201,38 +268,33 @@ feature {NONE} -- Implementation
 							tres = realloc(res, alloc += 20);
 							avail += 20;
 							if (!tres) {
-								perror("realloc");
-								*$a_b = 0;
+								*$a_b = 2;
 								break;
 							}
 							wrptr = tres + (wrptr - res);
 							res = tres;
 						}
 						else if (errno == EILSEQ) {
-							/* perror ("EILSEQ error. Input conversion stopped due to an input byte that does not belong to the input codeset"); */
-							*$a_b = 0;
+							*$a_b = 4;
 							break;
 						}
 						else if (errno == EINVAL){
-							/* perror ("EINVAL error. Input conversion stopped due to an incomplete character or shift sequence at the end of the input buffer."); */
-							*$a_b = 0;
+							*$a_b = 5;
 							break;
 						}
 						else if (errno == EBADF){
-							/* perror ("EBADF error. The cd argument is not a valid open conversion descriptor."); */
-							*$a_b = 0;
+							*$a_b = 6;
 							break;
 						}
 						else{
-							/* perror ("Unexpected error."); */
-							*$a_b = 0;
+							*$a_b = 7;
 							break;
 						}
 					}
 				} while (insize);
 
 				if (iconv_close(cd)) {
-					perror("iconv_close");
+					*$a_b = 8;
 				}
 
 				*$a_out_count = alloc - avail;
@@ -241,7 +303,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	is_codeset_convertable (a_from_codeset, a_to_codeset: POINTER): BOOLEAN is
+	is_codeset_convertable (a_from_codeset, a_to_codeset: POINTER; a_error: TYPED_POINTER [INTEGER]): BOOLEAN is
 			-- Is `a_from_codeset' and `a_to_codeset' convertable?
 		external
 			"C inline use <iconv.h>"
@@ -251,7 +313,7 @@ feature {NONE} -- Implementation
 				cd = iconv_open ($a_to_codeset, $a_from_codeset);
 				if (cd != (iconv_t)(-1)){
 					if (iconv_close(cd)) {
-						perror("iconv_close");
+						*$a_error = 8;
 					}
 					return EIF_TRUE;
 				}else

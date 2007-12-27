@@ -18,7 +18,6 @@ feature -- String encoding convertion
 	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING): STRING_GENERAL is
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
-			l_pointer, l_o_pointer: POINTER
 			l_m_t_w: BOOLEAN
 			l_count: INTEGER
 			l_code_page: STRING
@@ -103,7 +102,7 @@ feature -- String encoding convertion
 			l_pointer: POINTER
 			l_count: INTEGER
 		do
-			l_pointer := cwin_wide_char_to_multi_byte (a_code_page.to_integer, wide_string_to_pointer (a_string), $l_count, $last_conversion_successful)
+			l_pointer := cwin_wide_char_to_multi_byte (a_code_page.to_integer, wide_string_to_pointer (a_string).item, $l_count, $last_conversion_successful)
 			Result := pointer_to_multi_byte (l_pointer, l_count - 1)
 			l_pointer.memory_free
 		end
@@ -114,7 +113,7 @@ feature -- String encoding convertion
 			l_pointer: POINTER
 			l_count: INTEGER
 		do
-			l_pointer := cwin_multi_byte_to_wide_char (a_code_page.to_integer, multi_byte_to_pointer (a_string), $l_count, $last_conversion_successful)
+			l_pointer := cwin_multi_byte_to_wide_char (a_code_page.to_integer, multi_byte_to_pointer (a_string).item, $l_count, $last_conversion_successful)
 			Result := pointer_to_wide_string (l_pointer, (l_count - 1) * 2)
 			l_pointer.memory_free
 		end

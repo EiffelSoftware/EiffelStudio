@@ -262,14 +262,12 @@ feature {NONE} -- Action handlers
 		local
 			l_class: CLASS_C
 			l_tree: like features_tree
---			l_system: SYSTEM_I
 			l_class_ast: CLASS_AS
 			l_container: EV_CONTAINER
 		do
 			l_tree := features_tree
 
 			if {l_class_stone: !CLASSC_STONE} stone then
---				l_system := (create {SHARED_EIFFEL_PROJECT}).eiffel_system.system
 				l_class := l_class_stone.e_class
 
 				if l_class /= current_compiled_class or is_in_stone_synchoronization then
@@ -280,7 +278,6 @@ feature {NONE} -- Action handlers
 					l_tree.wipe_out
 					if not l_class.is_external and then l_class.has_ast then
 						current_compiled_class := l_class
---						l_system.set_current_class (l_class)
 
 						if l_class.is_precompiled then
 							l_class_ast := l_class.ast
@@ -300,12 +297,10 @@ feature {NONE} -- Action handlers
 									-- No items
 								l_tree.extend (create {EV_TREE_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
 							end
---							l_system.set_current_class (Void)
 						end
 					elseif {l_external_classc: !EXTERNAL_CLASS_C} l_class then
 							-- Special processing for a .NET type since has no 'ast' in the normal
 							-- sense.
---						Eiffel_system.System.set_current_class (classc_stone.e_class)
 						current_compiled_class := l_class
 
 						if l_tree.selected_item /= Void then

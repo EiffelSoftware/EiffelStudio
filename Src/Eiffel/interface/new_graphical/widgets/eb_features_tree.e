@@ -237,6 +237,8 @@ feature -- Tree construction
 			l_comments: EIFFEL_COMMENTS
 		do
 			if not retried then
+				update_states
+
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
 				l_match_list := match_list_server.item (a_class.class_id)
 					--| Features
@@ -311,6 +313,8 @@ feature -- Tree construction
 			l_clauses: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
 		do
 			if not retried then
+				update_states
+
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
 				l_dev_win := Window_manager.last_focused_development_window
 				if l_dev_win /= Void then

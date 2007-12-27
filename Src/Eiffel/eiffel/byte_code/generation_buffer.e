@@ -140,7 +140,7 @@ feature -- Ids generation
 			-- Generate textual representation of class id
 			-- in generated C code
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (class_id)
 		end
@@ -149,7 +149,7 @@ feature -- Ids generation
 			-- Generate textual representation of real body id
 			-- in generated C code
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (real_body_id - 1)
 		end
@@ -158,7 +158,7 @@ feature -- Ids generation
 			-- Generate textual representation of real body index
 			-- in generated C code
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (real_body_index - 1)
 		end
@@ -167,7 +167,7 @@ feature -- Ids generation
 			-- Generate textual representation of static type id
 			-- in generated C code
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (type_id - 1)
 		end
@@ -176,7 +176,7 @@ feature -- Ids generation
 			-- Generate textual representation of type id
 			-- in generated C code
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (static_type_id - 1)
 		end
@@ -186,7 +186,7 @@ feature -- Fast output
 	put_fast_character (c: CHARACTER) is
 			-- Write char `c' assuming no calls to `put_new_line' were done prior to this call.
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_character (c)
 		end
@@ -194,7 +194,7 @@ feature -- Fast output
 	put_two_character (a, b: CHARACTER) is
 			-- Write char `a' and `b' assuming no calls to `put_new_line' were done prior to this call.
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		local
 			l_buffer: like current_buffer
 		do
@@ -206,7 +206,7 @@ feature -- Fast output
 	put_three_character (a, b, c: CHARACTER) is
 			-- Write char `a', `b' and `c' assuming no calls to `put_new_line' were done prior to this call.
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		local
 			l_buffer: like current_buffer
 		do
@@ -219,7 +219,7 @@ feature -- Fast output
 	put_fast_integer (i: INTEGER) is
 			-- Write integer `i' assuming no calls to `put_new_line' were done prior to this call.
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (i)
 		end
@@ -227,7 +227,7 @@ feature -- Fast output
 	put_fast_string (s: STRING) is
 			-- Write string `s' assuming no calls to `put_new_line' were done prior to this call.
 		require
-			emitted: emitted
+			emitted: emitted or tabs = 0
 			s_not_void: s /= Void
 		do
 			append (s)

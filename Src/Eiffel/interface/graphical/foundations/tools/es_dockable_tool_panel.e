@@ -398,7 +398,8 @@ feature {NONE} -- Access
 	frozen session_data: SESSION_I
 			-- Provides access to the environment session data
 		require
-			not_is_recycled: not is_recycled
+			is_initialized: is_initialized or is_initializing
+			not_is_recycled: not is_recycled or is_recycling
 			is_session_manager_available: session_manager.is_service_available
 		do
 			Result := session_manager.service.retrieve (False)
@@ -411,7 +412,7 @@ feature {NONE} -- Access
 			-- Provides access to the hosted window session data
 		require
 			is_initialized: is_initialized or is_initializing
-			not_is_recycled: not is_recycled
+			not_is_recycled: not is_recycled or is_recycling
 			is_session_manager_available: session_manager.is_service_available
 			develop_window_attached: develop_window /= Void
 		do

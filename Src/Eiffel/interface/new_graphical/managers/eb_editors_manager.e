@@ -9,18 +9,28 @@ class
 	EB_EDITORS_MANAGER
 
 inherit
-	EB_CONSTANTS
-
 	EB_RECYCLABLE
 
+inherit {NONE}
 	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
+		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		export
 			{NONE} all
 		end
 
-	EB_SHARED_ID_SOLUTION
+	EB_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -32,8 +42,18 @@ feature -- Initialization
 		require
 			a_dev_win_attached: a_dev_win /= Void
 		do
+				-- Set editor manager on the window
+			a_dev_win.set_editors_manager (Current)
+
+				-- Ensure the editor manager is recycled when the development window is
+			a_dev_win.auto_recycle (Current)
+
 			create editors_internal.make (0)
+
+				-- Action sequences
 			create editor_switched_actions
+			create editor_created_actions
+			create editor_closed_actions
 
 			editor_switched_actions.extend (agent on_editor_switched)
 
@@ -82,9 +102,6 @@ feature -- Access
 				l_editors.forth
 			end
 		end
-
-	docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager
 
 	current_editor: EB_SMART_EDITOR is
 			-- Current editor
@@ -353,31 +370,34 @@ feature -- Access
 			editors_unmoved: editors.cursor.is_equal (editors.cursor)
 		end
 
-feature -- Access actions
+feature {NONE} -- Access
 
-	editor_switched_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions after editor switched
+	docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager, containing the editors
 
-	editor_closed_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions invoked when an editor is closed
+feature -- Actions
+
+	editor_created_actions: ACTION_SEQUENCE [TUPLE [editor: EB_SMART_EDITOR]]
+			-- Actions call when a new editor is created.
+
+	editor_closed_actions: ACTION_SEQUENCE [TUPLE [editor: EB_SMART_EDITOR]]
+			-- Actions call when a new editor is created.
+
+	editor_switched_actions: ACTION_SEQUENCE [TUPLE [editor: EB_SMART_EDITOR]]
+			-- Actions after editor switched from one document to another
+
+feature {NONE} -- Action handlers
+
+	on_editor_switched (a_editor: EB_SMART_EDITOR) is
+			-- Editor is switched.
+		require
+			a_editor_attached: a_editor /= Void
+			not_a_editor_is_recycled: not a_editor.is_recycled
 		do
-			if editor_closed_actions_internal = Void then
-				create editor_closed_actions_internal
+			if development_window.editors_manager /= Void then
+					-- During initialization of Current, the editor manager will be Void for the development window
+				development_window.set_stone (a_editor.stone)
 			end
-			Result := editor_closed_actions_internal
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	editor_created_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions invoked when an editor is created
-		do
-			if editor_created_actions_internal = Void then
-				create editor_created_actions_internal
-			end
-			Result := editor_created_actions_internal
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -594,12 +614,11 @@ feature -- Element change
 			until
 				l_editors.after
 			loop
-				l_editors.item.docking_content.close
-				l_editors.item.recycle
+				close_editor_perform (l_editors.item)
 				l_editors.forth
 			end
+				-- Not sure if this is needed!
 			create editors_internal.make (5)
-			editor_closed_actions.call (Void)
 		end
 
 	set_veto_pebble_function (a_func: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]) is
@@ -875,12 +894,6 @@ feature -- Memory management
 
 feature {NONE} -- Access
 
-	editor_closed_actions_internal: like editor_closed_actions
-			-- Actions invoked when an editor is closed
-
-	editor_created_actions_internal: like editor_created_actions
-			-- Actions invoked when an editor is created
-
 	editors_internal: ARRAYED_LIST [like current_editor]
 			-- Actual list of editors.
 
@@ -1087,7 +1100,7 @@ feature {NONE} -- Implementation
 			editors_internal.prune_all (a_editor)
 			editor_number_factory.remove_editor_name (a_editor.docking_content.unique_title)
 			a_editor.docking_content.close
-			editor_closed_actions.call (Void)
+			editor_closed_actions.call ([a_editor])
 			a_editor.recycle
 			if editors_internal.is_empty then
 				last_created_editor := Void
@@ -1244,15 +1257,6 @@ feature {NONE} -- Implementation
 														l_class_name.last_index_of ('.', l_class_name.count) - 1)
 			end
 			Result.to_upper
-		end
-
-	on_editor_switched (a_editor: EB_SMART_EDITOR) is
-			-- Editor is switched.
-		do
-			-- When making Current, development_window.editors_manager is void.
-			if development_window.editors_manager /= Void then
-				development_window.set_stone (a_editor.stone)
-			end
 		end
 
 	back_up_editor (a_editor: like current_editor) is

@@ -135,15 +135,14 @@ feature {NONE} -- Implementation functions
 	handle_all_class_stones (a_stone: STONE) is
 			-- Handle all class stones.
 			-- `a_stone' can be new class stone or exists class stone.
+		local
+			l_stonable: ES_STONABLE_I
 		do
 				-- Remember previous stone.
 			old_stone := develop_window.stone
 			old_cluster_st ?= develop_window.stone
 
 			develop_window.commands.new_feature_cmd.disable_sensitive
-			develop_window.commands.toggle_feature_alias_cmd.disable_sensitive
-			develop_window.commands.toggle_feature_signature_cmd.disable_sensitive
-			develop_window.commands.toggle_feature_assigner_cmd.disable_sensitive
 
 				-- We update the state of the `Add to Favorites' command.
 			if new_class_stone /= Void then
@@ -170,7 +169,13 @@ feature {NONE} -- Implementation functions
 			end
 
 				-- Refresh the tools.
-			develop_window.tools.features_tool.set_stone (a_stone)
+-- Bug in frozen code generation that prevents this object test for working correctly.
+--			if {l_stonable: !ES_STONABLE_I} develop_window.shell_tools.tool ({ES_FEATURES_TOOL}) then
+			l_stonable ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
+			if l_stonable /= Void then
+				l_stonable.set_stone (a_stone)
+			end
+
 			develop_window.tools.cluster_tool.set_stone (a_stone)
 				-- Update the context tool.
 			if develop_window.unified_stone then
@@ -448,9 +453,9 @@ feature {NONE} -- Implementation functions
 					develop_window.Eiffel_project.Workbench.last_reached_degree <= 2
 				then
 					develop_window.commands.new_feature_cmd.enable_sensitive
-					develop_window.commands.toggle_feature_alias_cmd.enable_sensitive
-					develop_window.commands.toggle_feature_signature_cmd.enable_sensitive
-					develop_window.commands.toggle_feature_assigner_cmd.enable_sensitive
+--					develop_window.commands.toggle_feature_alias_cmd.enable_sensitive
+--					develop_window.commands.toggle_feature_signature_cmd.enable_sensitive
+--					develop_window.commands.toggle_feature_assigner_cmd.enable_sensitive
 				end
 
 				--address_manager.enable_formatters

@@ -37,15 +37,6 @@ feature -- Query
 	new_feature_cmd: EB_NEW_FEATURE_COMMAND
 			-- Command to execute the feature wizard.
 
-	toggle_feature_alias_cmd: EB_TOGGLE_FEATURE_ALIAS_COMMAND
-			-- Show/Hide alias name of feature node in eb_feature_tool
-
-	toggle_feature_signature_cmd: EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
-			-- Show/Hide signature of feature node in eb_feature_tool
-
-	toggle_feature_assigner_cmd: EB_TOGGLE_FEATURE_ASSIGNER_COMMAND
-			-- Show/Hide assigner name of feature node in eb_feature_tool
-
 	toggle_stone_cmd: EB_UNIFY_STONE_CMD
 			-- Command to toggle between the stone management modes.
 
@@ -321,30 +312,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: new_feature_cmd = a_cmd
 		end
 
-	set_toggle_feature_alias_cmd (a_cmd: like toggle_feature_alias_cmd) is
-			-- Set `toggle_feature_alias_cmd'
-		do
-			toggle_feature_alias_cmd := a_cmd
-		ensure
-			set: toggle_feature_alias_cmd = a_cmd
-		end
-
-	set_toggle_feature_signature_cmd (a_cmd: like toggle_feature_signature_cmd) is
-			-- Set `toggle_feature_signature_cmd'
-		do
-			toggle_feature_signature_cmd := a_cmd
-		ensure
-			set: toggle_feature_signature_cmd = a_cmd
-		end
-
-	set_toggle_feature_assigner_cmd (a_cmd: like toggle_feature_assigner_cmd) is
-			-- Set `toggle_feature_assigner_cmd'
-		do
-			toggle_feature_assigner_cmd := a_cmd
-		ensure
-			set: toggle_feature_assigner_cmd = a_cmd
-		end
-
 	set_toggle_stone_cmd (a_cmd: like toggle_stone_cmd) is
 			-- Set `toggle_stone_cmd'
 		do
@@ -567,9 +534,6 @@ feature -- Recycle
 			new_assembly_cmd.recycle
 			new_feature_cmd.recycle
 			shell_cmd.recycle
-			toggle_feature_alias_cmd.recycle
-			toggle_feature_assigner_cmd.recycle
-			toggle_feature_signature_cmd.recycle
 			undo_cmd.recycle
 			redo_cmd.recycle
 			toggle_stone_cmd.recycle
@@ -633,9 +597,6 @@ feature -- Recycle
 			new_cluster_cmd := Void
 			new_feature_cmd := Void
 			shell_cmd := Void
-			toggle_feature_alias_cmd := Void
-			toggle_feature_assigner_cmd := Void
-			toggle_feature_signature_cmd := Void
 			undo_cmd := Void
 			redo_cmd := Void
 			toggle_stone_cmd := Void

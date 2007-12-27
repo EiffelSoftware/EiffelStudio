@@ -252,14 +252,7 @@ feature -- Feature tree
 		require
 			a_name_not_void: a_name /= Void
 			a_menu_not_void: a_menu /= Void
-		local
-			l_feature_tool: ES_FEATURES_TOOL_PANEL
 		do
-			if menu_displayable (a_pebble) then
-				l_feature_tool := dev_window.tools.features_tool
-				a_menu.extend (new_menu_item (names.m_go_to))
-				a_menu.last.select_actions.extend (agent l_feature_tool.go_to_feature_with_name (a_name))
-			end
 		end
 
 	feature_clause_item_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_clause: FEATURE_CLAUSE_AS) is
@@ -267,14 +260,7 @@ feature -- Feature tree
 		require
 			a_clause_not_void: a_clause /= Void
 			a_menu_not_void: a_menu /= Void
-		local
-			l_feature_tool: ES_FEATURES_TOOL_PANEL
 		do
-			if menu_displayable (a_pebble) then
-				l_feature_tool := dev_window.tools.features_tool
-				a_menu.extend (new_menu_item (names.m_go_to))
-				a_menu.last.select_actions.extend (agent l_feature_tool.go_to_clause (a_clause, False))
-			end
 		end
 
 feature -- Favorites menus

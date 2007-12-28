@@ -344,6 +344,7 @@ rt_public int egc_wchar_dtype;
 rt_public int egc_point_dtype;
 
 rt_public int egc_except_emnger_dtype;
+rt_public int egc_exception_dtype;
 
 rt_public struct ctable egc_ce_type;
 rt_public struct ctable egc_ce_exp_type;

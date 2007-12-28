@@ -196,8 +196,8 @@ rt_private char *extag(struct ex_vect *trace);			/* Recompute exception tag */
 rt_public void set_last_exception (EIF_REFERENCE ex);	/* Set `last_exception' of EXCEPTION_MANAGER with `ex'. */
 rt_public EIF_REFERENCE last_exception (void);			/* Get `last_exception' of EXCEPTION_MANAGER */
 rt_public void draise(long code, char *meaning, char *message); /* Called by EXCEPTION_MANAGER to raise an existing exception */
-rt_private struct ex_vect *topcall(struct xstack *stk);	/* Get the topest call vector from the stack */
-rt_private struct ex_vect *seccall(struct xstack *stk);	/* Get the second topest call vector from the stack */
+rt_private struct ex_vect *top_n_call(struct xstack *stk, int n);	/* Get the n-th topest call vector from the stack */
+rt_private struct ex_vect *draise_recipient_call (struct xstack *stk); /* Get the second topest call vector from the stack, used by `draise' */
 rt_private int is_ex_ignored (int ex_code);				/* Check exception of `ex_code' should be ignored or not*/
 rt_private void make_exception (long except_code, int signal_code, int eno, char *t_name, char *reci_name, 
 								char *eclass, char *rf_routine, char *rf_class, int line_num, int is_inva_entry, int new_obj); /* Notify the EXCEPTION_MANAGER to create exception object if `new_obj', or update current exception object with necessary info when not `new_obj' */
@@ -951,13 +951,13 @@ rt_public void exfail(void)
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
-	vector_call = topcall(&eif_stack);
+	vector_call = top_n_call(&eif_stack, 1);
 	if (vector_call != (struct ex_vect *) 0) {
 		failed_class = vector_call->ex_orig;
 		failed_routine = vector_call->ex_rout;
 	}
 
-	vector_call = seccall(&eif_stack);
+	vector_call = top_n_call(&eif_stack, 2);
 	if (vector_call != (struct ex_vect *) 0) {
 		eclass = vector_call->ex_orig;
 		reci_name = vector_call->ex_rout;
@@ -1142,7 +1142,7 @@ rt_public void eraise(char *tag, long num)
 		echtg = tag;
 	}
 
-	vector_call = topcall(&eif_stack);
+	vector_call = top_n_call(&eif_stack, 1);
 	if (vector_call != (struct ex_vect *) 0) {
 		eclass = vector_call->ex_orig;
 		reci_name = vector_call->ex_rout;
@@ -1161,7 +1161,7 @@ rt_public void eraise(char *tag, long num)
 				obj = vector->ex_oid;
 			if (type == EX_CINV && echentry || type == EX_PRE)
 			{
-				vector_call = seccall(&eif_stack);
+				vector_call = top_n_call(&eif_stack, 2);
 				if (vector_call != (struct ex_vect *) 0) {
 					eclass = vector_call->ex_orig;
 					reci_name = vector_call->ex_rout;
@@ -1295,7 +1295,7 @@ rt_public void com_eraise(char *tag, long num)
 		echtg = tag;
 	}
 
-	vector_call = topcall(&eif_stack);
+	vector_call = top_n_call(&eif_stack, 1);
 	if (vector_call != (struct ex_vect *) 0) {
 		eclass = vector_call->ex_orig;
 		reci_name = vector_call->ex_rout;
@@ -1313,7 +1313,7 @@ rt_public void com_eraise(char *tag, long num)
 				obj = vector->ex_oid;
 			if (type == EX_CINV && echentry || type == EX_PRE)
 			{
-				vector_call = seccall(&eif_stack);
+				vector_call = top_n_call(&eif_stack, 2);
 				if (vector_call != (struct ex_vect *) 0) {
 					eclass = vector_call->ex_orig;
 					reci_name = vector_call->ex_rout;
@@ -1409,9 +1409,9 @@ rt_public void eviol(void)
 		obj = vector->ex_oid;   /*	  record object */
 
 	if (type == EX_CINV && echentry || type == EX_PRE)
-		vector_call = seccall(&eif_stack); /* Get the caller */
+		vector_call = top_n_call(&eif_stack, 2); /* Get the caller */
 	else
-		vector_call = topcall(&eif_stack);
+		vector_call = top_n_call(&eif_stack, 1);
 	if (vector_call != (struct ex_vect *) 0) {
 		eclass = vector_call->ex_orig;
 		reci_name = vector_call->ex_rout;
@@ -3199,34 +3199,34 @@ rt_public void eetrace(char b)	/* %%zmt never called in C dir. */
 		print_history_table = 0;
 }
 
-rt_shared struct ex_vect *topcall(struct xstack *stk)
+rt_shared struct ex_vect *top_n_call(struct xstack *stk, int n)
 {
-	/* Get first EX_CALL, EX_RETY or EX_RESC vector from eif_stack.
-	 * If not found, return 0.
+	/* Get the n-th top EX_CALL, EX_RETY or EX_RESC vector from `stk'.
+	 * If not found, return 0. `n' should be greater than zero.
 	 */
-
 	struct ex_vect *top = stk->st_top;	/* Top of stack */
 	struct stxchunk *cur;
+	int found = 0;
 
 	if (top == (struct ex_vect *) 0)	{		/* No stack yet? */
 		return top;
 	}
 	cur = stk->st_cur;
-	while (top--)
-	{
-		if (top >= cur->sk_arena) /* We are still in current chunk */
-		{
-			if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC)
-				return top;
-		}
-		else /* We are out of current chunk */
-		{
-			cur = cur->sk_prev;
-			if (cur) /* There is a previous chunk. */
-			{
-				top = cur->sk_arena;
-				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC)
+	while (top--){
+		if (top >= cur->sk_arena){ /* We are still in current chunk */
+			if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
+				if (++found >= n)
 					return top;
+			}
+		}
+		else{ /* We are out of current chunk */
+			cur = cur->sk_prev;
+			if (cur){ /* There is a previous chunk. */
+				top = cur->sk_arena;
+				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
+					if (++found >= n)
+						return top;
+				}
 			}
 			else	/* It is already bottom of the stack. */
 				return (struct ex_vect *)0;
@@ -3235,41 +3235,37 @@ rt_shared struct ex_vect *topcall(struct xstack *stk)
 	return (struct ex_vect *)0; /* Should never reach, just to make the c compiler happy. */
 }
 
-rt_shared struct ex_vect *seccall(struct xstack *stk)
+rt_shared struct ex_vect *draise_recipient_call (struct xstack *stk)
 {
-	/* Get second top EX_CALL, EX_RETY or EX_RESC vector from eif_stack.
-	 * If not found, return 0.
+	/* The top most call of EX_CALL, EX_RETY or EX_RESC vector from `stk'.
+	 * If not found, return 0. `n' should be greater than zero.
+	 * Calls from EXCEPTION_MANAGER are ignored. And if {EXCEPTION}.raise is,
+	 * enclosing, also ignore it.
+	 * Only used by `draise', since `draise' ensures the call is from 
+	 * EXCEPTION_MANAGER.raise.
 	 */
-
 	struct ex_vect *top = stk->st_top;	/* Top of stack */
 	struct stxchunk *cur;
-	int first_found = 0;
 
 	if (top == (struct ex_vect *) 0)	{		/* No stack yet? */
 		return top;
 	}
 	cur = stk->st_cur;
-	while (top--)
-	{
-		if (top >= cur->sk_arena) /* We are still in current chunk */
-		{
-			if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC)
-				if (first_found)
+	while (top--){
+		if (top >= cur->sk_arena){ /* We are still in current chunk */
+			if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
+				if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise")))
 					return top;
-				else
-					first_found = 1;
+			}
 		}
-		else /* We are out of current chunk */
-		{
+		else{ /* We are out of current chunk */
 			cur = cur->sk_prev;
-			if (cur) /* There is a previous chunk. */
-			{
+			if (cur){ /* There is a previous chunk. */
 				top = cur->sk_arena;
-				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC)
-					if (first_found)
+				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
+					if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise")))
 						return top;
-					else
-						first_found = 1;
+				}
 			}
 			else	/* It is already bottom of the stack. */
 				return (struct ex_vect *)0;
@@ -3357,7 +3353,7 @@ rt_public void draise(long code, char *meaning, char *message)
 	 */
 	echtg = tag;
 
-	vector_call = topcall(&eif_stack);
+	vector_call = draise_recipient_call(&eif_stack);
 	if (vector_call != (struct ex_vect *) 0) {
 		eclass = vector_call->ex_orig;
 		reci_name = vector_call->ex_rout;
@@ -3376,7 +3372,7 @@ rt_public void draise(long code, char *meaning, char *message)
 				obj = vector->ex_oid;
 			if (type == EX_CINV && echentry || type == EX_PRE)
 			{
-				vector_call = seccall(&eif_stack);
+				vector_call = top_n_call(&eif_stack, 2);
 				if (vector_call != (struct ex_vect *) 0) {
 					eclass = vector_call->ex_orig;
 					reci_name = vector_call->ex_rout;

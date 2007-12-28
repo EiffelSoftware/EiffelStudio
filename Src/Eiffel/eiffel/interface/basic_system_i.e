@@ -89,6 +89,12 @@ feature -- Access
 
 	rt_extension_class: CLASS_I
 
+	exception_manager_class: CLASS_I
+			-- Class EXCEPTION_MANAGER
+
+	exception_class: CLASS_I
+			-- Class EXCEPTION
+
 feature -- Access: XX_REF classes
 
 	character_8_ref_class, character_32_ref_class: CLASS_I
@@ -113,11 +119,6 @@ feature -- Access: XX_REF classes
 
 	pointer_ref_class: CLASS_I
 			-- Class POINTER_REF
-
-feature -- Access: Exceptions
-
-	exception_manager_class: CLASS_I
-			-- Class EXCEPTION_MANAGER
 
 feature -- Access
 
@@ -308,6 +309,17 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
+	exception_class_id: INTEGER is
+			-- Id of type EXCEPTION
+		require
+			exception_class_exists: exception_class /= Void
+			compiled: exception_class.is_compiled
+		do
+			Result := exception_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
 	rt_extension_type_id: INTEGER is
 			-- Id of type RT_EXTENSION
 		require
@@ -440,6 +452,17 @@ feature -- Status report
 			compiled: exception_manager_class.is_compiled
 		do
 			Result := exception_manager_class.compiled_class.types.first.type_id
+		ensure
+			valid_result: Result > 0
+		end
+
+	exception_type_id: INTEGER is
+			-- Dynamic type_id of class EXCEPTION
+		require
+			exception_class_exist: exception_class /= Void
+			compiled: exception_class.is_compiled
+		do
+			Result := exception_class.compiled_class.types.first.type_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -755,6 +778,16 @@ feature -- Settings
 			system_type_class := c
 		ensure
 			system_type_class_set: system_type_class = c
+		end
+
+	set_exception_class (c: CLASS_I) is
+			-- Assign `c' to `exception_class'.
+		require
+			c_not_void: c /= Void
+		do
+			exception_class := c
+		ensure
+			exception_class_set: exception_class = c
 		end
 
 	set_rt_extension_class (c: CLASS_I) is

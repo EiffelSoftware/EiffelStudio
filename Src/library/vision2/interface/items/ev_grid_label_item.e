@@ -73,11 +73,14 @@ feature -- Status Setting
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
+		local
+			l_parent: like parent
 		do
 			text := a_text
 			implementation.string_size_changed
-			if parent /= Void and then not parent.is_destroyed then
-				parent.implementation.redraw_item (implementation)
+			l_parent := parent
+			if l_parent /= Void and then not l_parent.is_destroyed then
+				l_parent.implementation.redraw_item (implementation)
 			end
 		ensure
 			text_set: (text.same_type (a_text) implies text = a_text) or else

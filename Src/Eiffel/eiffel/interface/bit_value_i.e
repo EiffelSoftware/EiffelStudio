@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class BIT_VALUE_I 
+class BIT_VALUE_I
 
 inherit
 	VALUE_I
@@ -59,10 +59,7 @@ feature -- Status Report
 			class_type: BITS_A
 		do
 			class_type ?= t
-			check
-				class_type_not_void: class_type /= Void
-			end
-			Result := class_type /= Void and then bit_count <= class_type.bit_count 
+			Result := class_type /= Void and then bit_count <= class_type.bit_count
 		end
 
 feature -- Settings
@@ -108,11 +105,11 @@ feature -- Code generation
 
 	dump: STRING is
 		do
-			Result := bit_value			
+			Result := bit_value
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

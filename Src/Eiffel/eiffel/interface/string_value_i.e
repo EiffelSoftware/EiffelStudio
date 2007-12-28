@@ -78,9 +78,6 @@ feature -- Status Report
 			class_type: CL_TYPE_A
 		do
 			class_type ?= t
-			check
-				class_type /= Void
-			end
 			Result := class_type /= Void and then
 				(class_type.class_id = System.string_8_id or
 				class_type.class_id = system_string_id)
@@ -166,7 +163,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -150,19 +150,24 @@ feature -- C code generation
 			target_register.print_register
 
 				-- 1. Dynamic type with flags
-			buffer.put_string (" = RTLNSP(")
+			buffer.put_string (" = RTLNSP2(")
 			info.generate_type_id (buffer, final_mode)
+			buffer.put_character (',')
 			if gen_param.is_reference or else l_exp_has_references or else gen_param.is_bit then
-				buffer.put_string (" | EO_REF")
+				buffer.put_string ("EO_REF")
+				if l_param_is_expanded then
+					buffer.put_string (" | EO_COMP")
+				end
+			elseif l_param_is_expanded then
+				buffer.put_string ("EO_COMP")
+			else
+				buffer.put_character ('0')
 			end
-			if l_param_is_expanded then
-				buffer.put_string (" | EO_COMP")
-			end
-			buffer.put_string (", ")
+			buffer.put_character (',')
 
 				-- 2. Number of elements
 			nb_register.print_immediate_register
-			buffer.put_string (", ")
+			buffer.put_character (',')
 
 				-- 3. Element size
 			if l_param_is_expanded then

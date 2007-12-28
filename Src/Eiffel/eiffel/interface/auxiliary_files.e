@@ -1087,6 +1087,11 @@ feature -- Plug and Makefile file
 			buffer.put_type_id (pointer_c_type.type_id)
 
 				-- Exceptions
+			if system.exception_class /= Void and then system.exception_class.is_compiled then
+				buffer.put_string (";%N%Tegc_exception_dtype = ")
+				buffer.put_type_id (system.exception_type_id)
+			end
+
 			buffer.put_string (";%N%Tegc_except_emnger_dtype = ")
 			buffer.put_type_id (system.exception_manager_type_id)
 			buffer.put_string (";%N")

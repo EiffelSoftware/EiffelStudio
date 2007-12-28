@@ -37,7 +37,7 @@ feature -- Access
 		do
 			Result := internal_trace
 		end
-		
+
 	code: INTEGER is
 			-- Code of the exception.
 		do
@@ -166,7 +166,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 		do
 			recipient_name := a_name
 		end
-		
+
 	frozen set_line_number (a_number: like line_number) is
 			-- Set `line_number' with `a_number'.
 		do
@@ -192,7 +192,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 		once
 			create Result
 		end
-		
+
 	frozen set_exception_trace (a_trace: like exception_trace) is
 			-- Set `exception_trace' with `a_trace'.
 		do
@@ -201,11 +201,5 @@ feature {EXCEPTION_MANAGER} -- Implementation
 
 	internal_trace: STRING
 			-- String representation of the exception trace
---		external
---			"C use %"eif_except.h%""
---		alias
---			"stack_trace_string"
---		end
-
 
 end

@@ -440,6 +440,9 @@ feature -- Properties
 
 				-- Exception manager
 			local_workbench.change_class (exception_manager_class)
+			if exception_class /= Void then
+				local_workbench.change_class (exception_class)
+			end
 
 			protected_classes_level := boolean_class.compiled_class.class_id
 				-- The root class is not protected
@@ -491,6 +494,9 @@ feature -- Properties
 
 				-- Exception manager
 			exception_manager_class.compiled_class.record_precompiled_class_in_system
+			if exception_class /= Void and then exception_class.is_compiled then
+				exception_class.compiled_class.record_precompiled_class_in_system
+			end
 
 			if il_generation then
 				native_array_class.compiled_class.record_precompiled_class_in_system
@@ -2145,6 +2151,9 @@ end
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
 			type_class.compiled_class.mark_class (marked_classes)
 			exception_manager_class.compiled_class.mark_class (marked_classes)
+			if exception_class /= Void and then exception_class.is_compiled then
+				exception_class.compiled_class.mark_class (marked_classes)
+			end
 			if rt_extension_class /= Void and then rt_extension_class.is_compiled then
 				rt_extension_class.compiled_class.mark_class (marked_classes)
 			end

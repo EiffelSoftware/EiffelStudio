@@ -151,6 +151,7 @@ extern "C" {
 	RT_LNK int egc_point_dtype;	/* Dynamic type of POINTER */
 
 	RT_LNK int egc_except_emnger_dtype;	/* Dynamic type of EXCEPTION_MANAGER */
+	RT_LNK int egc_exception_dtype; /* Dynamic type of EXCEPTION. Could not be initialized if not exist. */
 
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
 	RT_LNK struct ctable egc_ce_exp_type;		/* Class name -> type ID for expanded types */

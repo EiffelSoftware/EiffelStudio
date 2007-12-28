@@ -461,6 +461,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 
 				-- Exception manager
 			l_actions.put (agent system.set_exception_manager_class, "EXCEPTION_MANAGER")
+			l_exceptions.put ("EXCEPTION")
+			l_actions.put (agent system.set_exception_class, "EXCEPTION")
 
 			if system.il_generation then
 				l_actions.put (agent system.set_system_string_class, "SYSTEM_STRING")

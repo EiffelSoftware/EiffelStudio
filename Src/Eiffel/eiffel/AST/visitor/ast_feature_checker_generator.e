@@ -3125,9 +3125,11 @@ feature -- Implementation
 			l_expr: EXPR_B
 		do
 			l_as.expr.process (Current)
-			if is_byte_node_enabled and last_byte_node /= Void then
+			if is_byte_node_enabled then
 				l_expr ?= last_byte_node
-				create {PARAN_B} last_byte_node.make (l_expr)
+				if l_expr /= Void then
+					create {PARAN_B} last_byte_node.make (l_expr)
+				end
 			end
 		end
 

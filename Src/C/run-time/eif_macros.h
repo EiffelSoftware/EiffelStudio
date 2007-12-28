@@ -189,6 +189,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNRF(a,b,c,d,e,f,g) rout_obj_create_fl((a),(b),(c),(d),(e),(f), (g))
 #define RTLNC(x)			eclone(x)
 #define RTLNSP(t,n,e,b)		special_malloc(t,n,e,b)
+#define RTLNSP2(t,f,n,e,b)	special_malloc(t | f,n,e,b)
 #define RTLB(x)				bmalloc(x)
 #define RTMB(x,y)			makebit(x,y)
 #define RTXB(x,y)			b_copy(x,y)

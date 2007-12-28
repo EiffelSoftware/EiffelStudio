@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 				old_parse
 			end
 		ensure
-			extension_set: extension /= Void
+			extension_set: error_handler.error_level = old error_handler.error_level implies extension /= Void
 		end
 
 	old_parse is

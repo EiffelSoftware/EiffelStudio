@@ -12,7 +12,7 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			actual_type, associated_class, conform_to, conformance_type, convert_to,
-			generics, has_associated_class, instantiated_in,
+			generics, has_associated_class, instantiated_in, duplicate,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
 			meta_type, set_actual_type, type_i, evaluated_type_in_descendant, is_tuple,
 			set_attached_mark, set_detachable_mark
@@ -189,6 +189,17 @@ feature {COMPILER_EXPORTER} -- Modification
 			end
 		end
 
+feature {COMPILER_EXPORTER} -- Duplication
+
+	duplicate: LIKE_CURRENT
+			-- Duplication
+		do
+			Result := Precursor
+				-- Ensure `Result.actual_type = Result'
+				-- that is expected when working with attachment properties
+			Result.set_actual_type (conformance_type)
+		end
+
 feature {COMPILER_EXPORTER} -- Primitives
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
@@ -213,6 +224,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- or
 				-- i16 := (0x00FF & i8).to_integer_16
 			Result := type.intrinsic_type
+			if has_attached_mark then
+				if not Result.is_attached then
+					Result := Result.as_attached
+				end
+			elseif has_detachable_mark then
+				if not Result.is_expanded and then Result.is_attached then
+					Result := Result.as_detachable
+				end
+			end
 		end
 
 	instantiated_in (class_type: TYPE_A): TYPE_A is
@@ -230,6 +250,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 				create l_like
 				l_like.set_actual_type (class_type.conformance_type)
 				Result := l_like
+			end
+			if has_attached_mark then
+				if not Result.is_attached then
+					Result := Result.as_attached
+				end
+			elseif has_detachable_mark then
+				if not Result.is_expanded and then Result.is_attached then
+					Result := Result.as_detachable
+				end
 			end
 		end
 

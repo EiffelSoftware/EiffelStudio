@@ -184,6 +184,28 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_referer: INTEGER is
+			-- Declared as CURLOPT_REFERER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_REFERER;
+			]"
+		end
+
+	curlopt_httpget: INTEGER is
+			-- Declared as CURLOPT_HTTPGET
+			-- Pass a long. If the long is non-zero, this forces the HTTP request to get back to GET. usable if a POST, HEAD, PUT or a custom request have been used previously using the same curl handle.
+			-- When setting CURLOPT_HTTPGET to a non-zero value, it will automatically set CURLOPT_NOBODY to 0 (since 7.14.1).
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_HTTPGET;
+			]"
+		end
+
 	is_valid (a_integer: INTEGER): BOOLEAN is
 			-- If `a_integer' value vaild?
 		do
@@ -203,7 +225,9 @@ feature -- Enumerations.
 						a_integer = curlopt_writefunction or
 						a_integer = curlopt_progressfunction or
 						a_integer = curlopt_progressdata or
-						a_integer = curlopt_noprogress
+						a_integer = curlopt_noprogress or
+						a_integer = curlopt_referer or
+						a_integer = curlopt_httpget
 		end
 
 indexing

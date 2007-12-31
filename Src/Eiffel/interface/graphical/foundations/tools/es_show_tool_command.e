@@ -129,17 +129,23 @@ feature -- Execution
 			l_shared: SD_SHARED
 			l_x, l_y: INTEGER
 			l_window: EV_WINDOW
+			l_content: SD_CONTENT
 		do
-			if not tool.panel.shown then
-				create l_shared
-				l_window := tool.window.window
-				l_x := l_window.screen_x + l_window.width // 2 - l_shared.default_floating_window_width // 2
-				l_y := l_window.screen_y + l_window.height // 2 - l_shared.default_floating_window_height // 2
+			-- We have to check whether docking manager has Current tool's SD_CONTENT since debugger related tools not exist in normal mode.
+			-- They only exist in debug mode. See bug#13826.
+			l_content := tool.panel.content
+			if l_content /= Void and then l_content.is_docking_manager_attached  then
+				if not tool.panel.shown then
+					create l_shared
+					l_window := tool.window.window
+					l_x := l_window.screen_x + l_window.width // 2 - l_shared.default_floating_window_width // 2
+					l_y := l_window.screen_y + l_window.height // 2 - l_shared.default_floating_window_height // 2
 
-				l_shared.set_default_screen_x (l_x)
-				l_shared.set_default_screen_y (l_y)
+					l_shared.set_default_screen_x (l_x)
+					l_shared.set_default_screen_y (l_y)
 
-				tool.show (True)
+					tool.show (True)
+				end
 			end
 		end
 

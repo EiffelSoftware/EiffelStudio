@@ -383,6 +383,7 @@ feature -- Set Position
 			-- Set `Current' to dock at `a_direction' side of `a_relative'.
 		require
 			a_relative_not_void: a_relative /= Void
+			attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			manager_has_content: manager_has_content (a_relative)
 			a_direction_valid: four_direction (a_direction)
@@ -397,6 +398,7 @@ feature -- Set Position
 	set_top (a_direction: INTEGER) is
 			-- Set `Current' dock at top level of a main docking area at `a_direction' side.
 		require
+			attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 			not_destroyed: not is_destroyed
@@ -410,6 +412,7 @@ feature -- Set Position
 	set_auto_hide (a_direction: INTEGER) is
 			-- Set `Current' dock at main container's `a_direction' auto hide bar.
 		require
+			attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 			not_destroyed: not is_destroyed
@@ -422,6 +425,7 @@ feature -- Set Position
 	set_floating (a_screen_x, a_screen_y: INTEGER) is
 			-- Set `Current' floating at position `a_screen_x', `a_screen_y'.
 		require
+			attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			not_destroyed: not is_destroyed
 		do
@@ -434,6 +438,7 @@ feature -- Set Position
 			-- Set `Current' tab with `a_content'.
 			-- If `a_left' then put new tab at left, otherwise put new tab at right
 		require
+			attached: is_docking_manager_attached
 			manager_has_current_content: manager_has_content (Current)
 			manager_has_a_content: manager_has_content (a_content)
 			target_content_zone_parent_exist: target_content_zone_parent_exist (a_content)
@@ -463,6 +468,7 @@ feature -- Set Position
 	set_default_editor_position is
 			-- Set editor to default editor position.
 		require
+			attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			editor_place_holder_in: manager_has_place_holder
 			is_editor: type = {SD_ENUMERATION}.editor
@@ -479,6 +485,7 @@ feature -- Set Position
 	set_split_proportion (a_proportion: REAL) is
 			-- If current content is docking or tabbed, set parent splitter proportion to `a_proportion'.
 		require
+			attached: is_docking_manager_attached
 			valid: 0 <= a_proportion and a_proportion <= 1
 			not_destroyed: not is_destroyed
 		do
@@ -532,18 +539,19 @@ feature -- Command
 			not_destroyed: not is_destroyed
 		do
 			state.close
-			docking_manager.property.remove_from_clicked_list (Current)
-			if docking_manager.property.last_focus_content = Current then
-				docking_manager.property.set_last_focus_content (Void)
+			if is_docking_manager_attached then
+				internal_clear_docking_manager_property
+
+				docking_manager.contents.start
+				docking_manager.contents.prune (Current)
 			end
-			docking_manager.contents.start
-			docking_manager.contents.prune (Current)
 		end
 
 	hide is
 			-- Hide zone which has `Current'.
 		require
 			not_destroyed: not is_destroyed
+			attached: is_docking_manager_attached
 		do
 			state.hide
 			is_visible := False
@@ -556,6 +564,7 @@ feature -- Command
 			-- Show zone which has `Current'.
 		require
 			not_destroyed: not is_destroyed
+			attached: is_docking_manager_attached
 		do
 			state.show
 			is_visible := True
@@ -565,6 +574,7 @@ feature -- Command
 			-- Minimize if possible
 		require
 			not_destroyed: not is_destroyed
+			attached: is_docking_manager_attached
 		do
 			state.minimize
 		end
@@ -573,6 +583,7 @@ feature -- Command
 			-- Update mini tool bar size
 		require
 			not_destroyed: not is_destroyed
+			attached: is_docking_manager_attached
 		local
 			l_zone: SD_ZONE
 		do
@@ -626,12 +637,15 @@ feature -- States report
 			-- If docking manager has `a_content'.
 		require
 			a_content_not_void: a_content /= Void
+			attached: is_docking_manager_attached
 		do
 			Result := docking_manager.has_content (a_content)
 		end
 
 	manager_has_place_holder: BOOLEAN is
 			-- If docking manager has editor place holder?
+		require
+			attached: is_docking_manager_attached
 		do
 			Result := docking_manager.has_content (docking_manager.zones.place_holder_content)
 		end
@@ -665,7 +679,14 @@ feature -- States report
 		end
 
 	is_destroyed: BOOLEAN
-			-- If Curernt destroyed? Not useable anymore?
+			-- If Current destroyed? Not useable anymore?
+
+	is_docking_manager_attached: BOOLEAN
+			-- If Current has related docking manager?
+			-- If {SD_DOCKING_MANAGER}.contents has Current, Result is True. Otherwise, Result is False.
+		do
+			Result := docking_manager /= Void
+		end
 
 feature {SD_STATE, SD_HOT_ZONE, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR, SD_ZONE,
 		 SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR, SD_TAB_STUB, SD_DOCKING_MANAGER_AGENTS,
@@ -688,6 +709,9 @@ feature {SD_DOCKING_MANAGER_AGENTS}
 		local
 			l_state_void: SD_STATE_VOID
 		do
+			if a_docking_manager = Void and is_docking_manager_attached then
+				internal_clear_docking_manager_property
+			end
 			docking_manager := a_docking_manager
 			l_state_void ?= state
 			if l_state_void /= Void then
@@ -710,7 +734,7 @@ feature {SD_STATE} -- implementation
 	internal_state: SD_STATE
 			-- SD_STATE instacne, which will changed base on different states.
 
-feature {SD_STATE, SD_DOCKING_MANAGER, SD_TAB_STATE_ASSISTANT} -- Change the SD_STATE base on the states
+feature {SD_STATE, SD_DOCKING_MANAGER, SD_TAB_STATE_ASSISTANT, SD_OPEN_CONFIG_MEDIATOR} -- Change the SD_STATE base on the states
 
 	change_state (a_state: SD_STATE) is
 			-- Called by SD_RESOTRE, change current state object.
@@ -767,6 +791,17 @@ feature {NONE}  -- Implemention.
 
 	internal_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Mouse focus out actions.
+
+	internal_clear_docking_manager_property is
+			-- Clear stuffs related with Current in {SD_DOCKING_MANAGER_PROPERTY}.
+		require
+			attached: is_docking_manager_attached
+		do
+			docking_manager.property.remove_from_clicked_list (Current)
+			if docking_manager.property.last_focus_content = Current then
+				docking_manager.property.set_last_focus_content (Void)
+			end
+		end
 
 feature {SD_TAB_ZONE}  -- Actions for SD_TAB_ZONE
 

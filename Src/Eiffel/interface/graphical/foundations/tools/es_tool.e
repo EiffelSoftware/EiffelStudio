@@ -65,7 +65,9 @@ feature {NONE} -- Clean up
 			if internal_panel /= Void then
 					-- Clean up tool
 				check is_tool_instantiated: is_tool_instantiated end
-				internal_panel.content.close
+				if internal_panel.content.is_docking_manager_attached then
+					internal_panel.content.close
+				end
 				internal_panel.recycle
 				internal_panel := Void
 			end

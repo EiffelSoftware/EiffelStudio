@@ -1779,7 +1779,8 @@ test	current-is_attached-no-defaults				attach005 tcf fail attached_types
 test	anchored-attached-type-failure-no-defaults	attach006 tcf fail attached_types anchored_types
 test	attached-formal-generic						attach007 tcf pass conformance attached_types
 test	object-test-in-invariant					attach008 tcf fail object_test
-test	attached-basic-type							attach009 tcf pass basic_types attached_types
+test	attached-basic-type							attach009 tcf pass conformance basic_types attached_types
+test	attached-generic-type-conformance			attach010 tcf fail conformance attached_types
 
 
 -- .NET specific test

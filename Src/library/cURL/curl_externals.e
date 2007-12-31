@@ -52,6 +52,22 @@ feature -- Command
 			end
 		end
 
+	slist_append (a_list: POINTER; a_string: STRING_GENERAL): POINTER is
+			-- Declared as curl_slist_append ().
+		require
+			exists: a_list /= default_pointer
+			not_void: a_string /= Void
+		local
+			l_c_string: C_STRING
+			l_api: POINTER
+		do
+			l_api := api_loader.safe_load_api (module_name, "curl_slist_append")
+			if l_api /= default_pointer then
+				create l_c_string.make (a_string)
+				Result := c_slist_append (l_api, a_list, l_c_string.item)
+			end
+		end
+
 feature -- Query
 
 	is_dynamic_library_exists: BOOLEAN is
@@ -64,6 +80,9 @@ feature {CURL_FORM} -- Internal command
 
 	formfree (a_curl_form: POINTER) is
 			-- Declared as curl_formfree ().
+			-- See: http://curl.askapache.com/libcurl/c/curl_formfree.html
+			-- curl_formfree() is used to clean up data previously built/appended with curl_formadd(3).
+			-- This must be called when the data has been used, which typically means after the curl_easy_perform(3) has been called.
 		require
 			exists: a_curl_form /= default_pointer
 		local

@@ -35,7 +35,7 @@ feature -- Command
 			-- Redefine
 		local
 			l_c_string: C_STRING
-			l_string: STRING
+			l_string: CURL_STRING
 			l_identified: IDENTIFIED
 		do
 			Result := a_size * a_nmemb
@@ -85,9 +85,8 @@ feature {NONE} -- Implementation
 		local
 			l_c_string: C_STRING
 		do
-			print ("%N" + a_text)
 			create l_c_string.share_from_pointer_and_count (a_char_pointer, a_size)
-			print ("%N" + l_c_string.string)
+			print ("%N" + a_text + "%N" + l_c_string.string)
 		end
 
 indexing

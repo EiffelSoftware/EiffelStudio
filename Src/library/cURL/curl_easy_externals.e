@@ -54,6 +54,16 @@ feature -- Command
 			setopt_void_star (a_curl_handle, a_opt, a_form.item)
 		end
 
+	setopt_slist (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_slist: POINTER) is
+			-- Declared as curl_easy_setopt().
+		require
+			exists: a_curl_handle /= default_pointer
+			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_httpheader
+			exists: a_curl_slist /= default_pointer
+		do
+			setopt_void_star (a_curl_handle, a_opt, a_curl_slist)
+		end
+
 	setopt_curl_string (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_string: CURL_STRING) is
 			-- Declared as curl_easy_setopt().
 		require

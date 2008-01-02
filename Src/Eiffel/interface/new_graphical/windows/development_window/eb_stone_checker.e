@@ -172,7 +172,7 @@ feature {NONE} -- Implementation functions
 -- Bug in frozen code generation that prevents this object test for working correctly.
 --			if {l_stonable: !ES_STONABLE_I} develop_window.shell_tools.tool ({ES_FEATURES_TOOL}) then
 			l_stonable ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
-			if l_stonable /= Void then
+			if l_stonable /= Void and then l_stonable.is_stone_usable (a_stone) then
 				l_stonable.set_stone (a_stone)
 			end
 

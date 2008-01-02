@@ -131,13 +131,26 @@ feature {NONE} -- Actions
 
 	on_ok is
 			-- Ok button has been pressed
+		local
+			l_pointer: EV_POINTER_STYLE
+			retried: BOOLEAN
 		do
-			update_preferences
-				-- Open an existing project
-			if open_project.has_selected_item and not open_project.has_error then
-				open_project.open_project
+			if not retried then
+				l_pointer := dialog.pointer_style
+				dialog.set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+
+				update_preferences
+
+					-- Open an existing project
+				if open_project.has_selected_item and not open_project.has_error then
+					open_project.open_project
+				else
+					check no_item_selected: False end
+				end
 			else
-				check no_item_selected: False end
+				if l_pointer /= Void then
+					dialog.set_pointer_style (l_pointer)
+				end
 			end
 		end
 

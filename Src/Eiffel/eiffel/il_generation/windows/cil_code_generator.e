@@ -5806,6 +5806,11 @@ feature -- Exception handling
 
 	rescue_label: INTEGER
 			-- Label used for rescue clauses to mark end of `try-catch'.
+			-- Used at entry of the `try-catch' block.
+
+	catch_label: INTEGER
+			-- The second label used for rescue clauses to mark end of `try-catch'.
+			-- Used in `catch' block.
 
 	old_label: IL_LABEL
 			-- Label used for marking the end of `try-catch' of old expression evaluation
@@ -5815,6 +5820,7 @@ feature -- Exception handling
 			-- a rescue clause.
 		do
 			rescue_label := method_body.define_label
+			catch_label := method_body.define_label
 			method_body.exception_block.set_start_position (method_body.count)
 		end
 
@@ -5843,11 +5849,12 @@ feature -- Exception handling
 			-- Mark end of rescue clause.
 		do
 			put_boolean_constant (False)
-			method_body.put_static_call (current_module.ise_rethrow_token, 0, False)
+			method_body.put_static_call (current_module.ise_rethrow_token, 1, False)
 				-- Never invoked, but the CLI standards need this to terminate the catch block.
-			method_body.put_opcode_label ({MD_OPCODES}.Leave, rescue_label)
+			method_body.put_opcode_label ({MD_OPCODES}.Leave, catch_label)
 			method_body.exception_block.set_end_position (method_body.count)
 			method_body.mark_label (rescue_label)
+			method_body.mark_label (catch_label)
 		end
 
 	generate_get_last_exception is
@@ -5883,8 +5890,8 @@ feature -- Exception handling
 				current_old_exception_catch_block_not_void: method_body.current_old_exception_catch_block /= Void
 			end
 			generate_leave_to (old_label)
-			method_body.current_old_exception_catch_block.set_type_token (current_module.system_exception_token)
 			method_body.current_old_exception_catch_block.set_catch_position (method_body.count)
+			method_body.current_old_exception_catch_block.set_type_token (current_module.system_exception_token)
 
 				---- Generate catch block to save possible exception occurs at old expression evaluation.
 				-- We need to increment stack depth of 1 because CLI runtime automatically
@@ -5896,7 +5903,9 @@ feature -- Exception handling
 
 			method_body.current_old_exception_catch_block.set_end_position (method_body.count)
 			mark_label (old_label)
-			method_body.forth_old_expression_exception_block
+			if not method_body.is_last_old_expression_exception_block then
+				method_body.forth_old_expression_exception_block
+			end
 		end
 
 	prepare_old_expresssion_blocks (a_count: INTEGER) is

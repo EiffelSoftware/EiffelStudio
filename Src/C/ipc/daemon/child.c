@@ -318,7 +318,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	}
 	argv = ipc_shword(cmdline);					/* Split command into words */
 
-	CHECK("Valid argv[0] = exe_path", strnicmp (quoted_exe_path, argv[0], strlen(quoted_exe_path)) == 0);
+	CHECK("Valid argv[0] = exe_path", strncmp (quoted_exe_path, argv[0], strlen(quoted_exe_path)) == 0);
 #endif
 
 		/* Set MELT_PATH */

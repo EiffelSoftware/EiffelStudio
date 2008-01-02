@@ -290,7 +290,7 @@ feature -- Generation
 				il_generator.generate_start_rescue
 					-- Restore precondition status.
 				il_generator.generate_local (l_saved_in_precondition)
-				il_generator.generate_in_precondition_status
+				il_generator.generate_set_precondition_status
 
 					-- Restore assertion level.
 				il_generator.generate_local (l_saved_in_assertion)

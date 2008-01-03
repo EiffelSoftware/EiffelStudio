@@ -73,10 +73,10 @@
 #endif
 
 /* Do not compile with assertions, by default. */
-/*
+#ifdef ISE_USE_ASSERT
 #define EIF_EXPENSIVE_ASSERTIONS
 #define EIF_ASSERTIONS
-*/
+#endif
 
 #ifndef EIF_ASSERTIONS
 #define NDEBUG

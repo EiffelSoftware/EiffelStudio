@@ -52,9 +52,8 @@ feature -- Extension
 		end
 
 	add_service_with_activator (a_type: TYPE [ANY]; a_activator: FUNCTION [ANY, TUPLE, SERVICE_I]) is
-			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instaiates
+			-- Adds a delayed activated service for type `a_type', which uses function `a_activator' to instanciate
 			-- an instance of service when requested.
-
 		require
 			a_type_attached: a_type /= Void
 			a_activator_attached: a_activator /= Void

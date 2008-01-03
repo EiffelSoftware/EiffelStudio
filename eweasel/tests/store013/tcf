@@ -28,36 +28,37 @@ copy_bin	data_60 $WCODE data_60
 copy_bin	data_61 $WCODE data_61
 copy_bin	data_62 $WCODE data_62
 
-execute_work   NONE exec_output data_52
-execute_result ok
-compare        exec_output output
+-- 5.2 has a known bug 
+execute_work   NONE exec_output_52 data_52
+execute_result failed
+compare        exec_output_52 output
 
-execute_work   NONE exec_output data_54
+execute_work   NONE exec_output_54 data_54
 execute_result ok
-compare        exec_output output
+compare        exec_output_54 output
 
-execute_work   NONE exec_output data_55
+execute_work   NONE exec_output_55 data_55
 execute_result ok
-compare        exec_output output
+compare        exec_output_55 output
 
-execute_work   NONE exec_output data_56
+execute_work   NONE exec_output_56 data_56
 execute_result ok
-compare        exec_output output
+compare        exec_output_56 output
 
-execute_work   NONE exec_output data_57
+execute_work   NONE exec_output_57 data_57
 execute_result ok
-compare        exec_output output
+compare        exec_output_57 output
 
-execute_work   NONE exec_output data_60
+execute_work   NONE exec_output_60 data_60
 execute_result ok
-compare        exec_output output
+compare        exec_output_60 output
 
-execute_work   NONE exec_output data_61
+execute_work   NONE exec_output_61 data_61
 execute_result ok
-compare        exec_output output
+compare        exec_output_61 output
 
-execute_work   NONE exec_output data_62
+execute_work   NONE exec_output_62 data_62
 execute_result ok
-compare        exec_output output
+compare        exec_output_62 output
 
 test_end

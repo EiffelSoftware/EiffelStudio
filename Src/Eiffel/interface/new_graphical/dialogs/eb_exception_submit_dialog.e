@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 				l_filler.fill_report (prepare_data)
 
 				if not is_failed and then l_filler.last_result = {CURL_CODES}.curle_ok then
-					create l_dialog.make_standard ("Your bug report successes committed.")
+					create l_dialog.make_standard ("Your bug report is submitted.")
 					l_dialog.show (Current)
 					destroy
 				end
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			l_dialog: ES_WARNING_PROMPT
 		do
 			is_failed := True
-			create l_dialog.make_standard ("Login failed. Please make sure your username and password correct.")
+			create l_dialog.make_standard ("Login failed. Please make sure your username and password are correct.")
 			l_dialog.show (Current)
 			destroy
 		end

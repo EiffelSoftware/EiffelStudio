@@ -1381,6 +1381,7 @@ test	store-expanded-as-reference	store009 tcf pass storable expanded
 test	store-expanded-class-type	store010 tcf pass storable expanded
 test	tuple-57-unretrievable		store011 tcf pass storable
 test	retrieve-corrupted-file-thread-freezes	store012 tcf pass storable thread
+test	storable-formats			store013 tcf pass storable thread
 
 
 -- Flat, short, flatshort tests

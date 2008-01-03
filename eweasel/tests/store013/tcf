@@ -16,14 +16,47 @@ copy_raw	storable_e55.e $CLUSTER storable_e55.e
 compile_melted
 compile_result ok
 
+c_compile_work
+c_compile_result	ok
+
+copy_bin	data_52 $WCODE data_52
 copy_bin	data_54 $WCODE data_54
 copy_bin	data_55 $WCODE data_55
 copy_bin	data_56 $WCODE data_56
 copy_bin	data_57 $WCODE data_57
 copy_bin	data_60 $WCODE data_60
 copy_bin	data_61 $WCODE data_61
+copy_bin	data_62 $WCODE data_62
 
-execute_work   NONE exec_output
+execute_work   NONE exec_output data_52
+execute_result ok
+compare        exec_output output
+
+execute_work   NONE exec_output data_54
+execute_result ok
+compare        exec_output output
+
+execute_work   NONE exec_output data_55
+execute_result ok
+compare        exec_output output
+
+execute_work   NONE exec_output data_56
+execute_result ok
+compare        exec_output output
+
+execute_work   NONE exec_output data_57
+execute_result ok
+compare        exec_output output
+
+execute_work   NONE exec_output data_60
+execute_result ok
+compare        exec_output output
+
+execute_work   NONE exec_output data_61
+execute_result ok
+compare        exec_output output
+
+execute_work   NONE exec_output data_62
 execute_result ok
 compare        exec_output output
 

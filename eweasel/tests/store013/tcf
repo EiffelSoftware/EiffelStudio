@@ -28,13 +28,14 @@ copy_bin	data_60 $WCODE data_60
 copy_bin	data_61 $WCODE data_61
 copy_bin	data_62 $WCODE data_62
 
--- 5.2 has a known bug 
+-- 5.2 and 5.4 have a known bug which does not store enough information
+-- for generic expanded types.
 execute_work   NONE exec_output_52 data_52
 execute_result failed
 compare        exec_output_52 output
 
 execute_work   NONE exec_output_54 data_54
-execute_result ok
+execute_result failed
 compare        exec_output_54 output
 
 execute_work   NONE exec_output_55 data_55

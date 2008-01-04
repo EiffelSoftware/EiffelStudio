@@ -85,7 +85,12 @@ feature {NONE} -- Initialization
 				(t.base_class.original_class /= system.native_array_class and then
 				t.base_class.original_class /= system.typed_pointer_class) implies
 				not t.has_formal
+		local
+			l_system: like system
+			l_static_type_id_counter: like static_type_id_counter
 		do
+			l_system := system
+			l_static_type_id_counter := static_type_id_counter
 			if t.is_basic then
 				basic_type ?= t
 			end
@@ -98,25 +103,25 @@ feature {NONE} -- Initialization
 			end
 			type.set_cr_info (create_current)
 			is_changed := True
-			type_id := System.type_id_counter.next
-			static_type_id := Static_type_id_counter.next_id
-			if System.il_generation then
+			type_id := l_system.type_id_counter.next
+			static_type_id := l_static_type_id_counter.next_id
+			if l_system.il_generation then
 				if t.is_generated_as_single_type then
 					implementation_id := static_type_id
 				else
 						-- Only Eiffel types that are generated with an interface
 						-- and an implementation get a different `implementation_id'.
-					implementation_id := Static_type_id_counter.next_id
+					implementation_id := l_static_type_id_counter.next_id
 				end
 					-- Set `external_id'.
 				if basic_type /= Void and then associated_class.is_external and then not associated_class.is_typed_pointer then
 						-- Basic types have a specific ID for external counterparts.
-					external_id := Static_type_id_counter.next_id
+					external_id := l_static_type_id_counter.next_id
 				else
 					external_id := static_type_id
 				end
 			end
-			System.reset_melted_conformance_table
+			l_system.reset_melted_conformance_table
 		end
 
 feature -- Access
@@ -609,19 +614,25 @@ feature -- Generation
 			-- Generation of the C file
 		local
 			l_feature_table: COMPUTED_FEATURE_TABLE
+			l_feature_table_area: SPECIAL [FEATURE_I]
 			current_class: CLASS_C
 			current_eiffel_class: EIFFEL_CLASS_C
-			feature_i: FEATURE_I
+			l_feature_i: FEATURE_I
 			file, extern_decl_file: INDENT_FILE
 			inv_byte_code: INVARIANT_B
 			final_mode: BOOLEAN
 			generate_c_code: BOOLEAN
 			tmp, buffer, ext_inline_buffer, header_buffer, headers: GENERATION_BUFFER
+			l_inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER]
+			i, l_count: INTEGER
+			l_byte_context: like byte_context
 		do
 			final_mode := byte_context.final_mode
 
 			current_class := associated_class
 			current_eiffel_class ?= current_class
+
+			l_byte_context := byte_context
 
 				-- Clear buffers for the new generation
 			buffer := generation_buffer
@@ -631,30 +642,31 @@ feature -- Generation
 			ext_inline_buffer.open_write_c
 			header_buffer := header_generation_buffer
 			header_buffer.clear_all
-			byte_context.generated_inlines.wipe_out
+			l_byte_context.generated_inlines.wipe_out
 
 			if final_mode then
 				create headers.make (100)
 			end
 
 			l_feature_table := current_class.feature_table.features
+			l_feature_table_area := l_feature_table.area
 			if final_mode then
 					-- Check to see if there is really something to generate
 
 				generate_c_code := has_creation_routine or else
 						(current_class.has_invariant and then
 						 system.keep_assertions)
-
 				from
-					l_feature_table.start
+					i := 0
+					l_count := l_feature_table_area.count
 				until
-					generate_c_code or else l_feature_table.after
+					generate_c_code or else i = l_count
 				loop
-					feature_i := l_feature_table.item_for_iteration
-					if feature_i.to_generate_in (current_class) then
-						generate_c_code := feature_i.used
+					l_feature_i := l_feature_table_area [i]
+					if l_feature_i.to_generate_in (current_class) then
+						generate_c_code := l_feature_i.used
 					end
-					l_feature_table.forth
+					i := i + 1
 				end
 			else
 				generate_c_code := is_modifiable
@@ -664,9 +676,9 @@ feature -- Generation
 					-- First, we reset the `has_cpp_externals_calls' of `BYTE_CONTEXT'
 					-- which will enable us to know wether or not a C++ call has been
 					-- generated
-				byte_context.set_has_cpp_externals_calls (False)
+				l_byte_context.set_has_cpp_externals_calls (False)
 					-- Clear class type data.
-				byte_context.clear_class_type_data
+				l_byte_context.clear_class_type_data
 
 				if final_mode then
 					tmp := headers
@@ -702,9 +714,9 @@ feature -- Generation
 
 				buffer.open_write_c
 
-				byte_context.set_buffer (buffer)
-				byte_context.set_header_buffer (header_buffer)
-				byte_context.init (Current)
+				l_byte_context.set_buffer (buffer)
+				l_byte_context.set_header_buffer (header_buffer)
+				l_byte_context.init (Current)
 
 				if final_mode and then has_creation_routine then
 						-- Generate the creation routine in final mode
@@ -712,28 +724,30 @@ feature -- Generation
 				end
 
 				from
-					l_feature_table.start
+					i := 0
+					l_count := l_feature_table_area.count
 				until
-					l_feature_table.after
+					i = l_count
 				loop
-					feature_i := l_feature_table.item_for_iteration
-					if feature_i.to_generate_in (current_class) then
+					l_feature_i := l_feature_table_area [i]
+					if l_feature_i.to_generate_in (current_class) then
 							-- Generate the C code of `feature_i'
-						generate_feature (feature_i, buffer)
+						generate_feature (l_feature_i, buffer)
 					end
-					l_feature_table.forth
+					i := i + 1
 				end
 
-				if current_eiffel_class /= Void then
+				if current_eiffel_class /= Void and then current_eiffel_class.has_inline_agents then
 					from
-						current_eiffel_class.inline_agent_table.start
+						l_inline_agent_table := current_eiffel_class.inline_agent_table
+						l_inline_agent_table.start
 					until
-						current_eiffel_class.inline_agent_table.after
+						l_inline_agent_table.after
 					loop
-						feature_i := current_eiffel_class.inline_agent_table.item_for_iteration
+						l_feature_i := l_inline_agent_table.item_for_iteration
 							-- Generate the C code of `feature_i'
-						generate_feature (feature_i, buffer)
-						current_eiffel_class.inline_agent_table.forth
+						generate_feature (l_feature_i, buffer)
+						l_inline_agent_table.forth
 					end
 				end
 
@@ -743,9 +757,9 @@ feature -- Generation
 					system.keep_assertions)
 				then
 					inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
-					byte_context.set_byte_code (create {STD_BYTE_CODE})
+					l_byte_context.set_byte_code (create {STD_BYTE_CODE})
 					inv_byte_code.generate_invariant_routine
-					byte_context.clear_feature_data
+					l_byte_context.clear_feature_data
 				end
 
 					-- Create module initialization procedure
@@ -754,9 +768,9 @@ feature -- Generation
 				buffer.indent
 
 					-- Initialize once data
-				byte_context.generate_module_once_data_initialization (static_type_id)
+				l_byte_context.generate_module_once_data_initialization (static_type_id)
 					-- Initialize once manifest strings
-				byte_context.generate_once_manifest_string_initialization
+				l_byte_context.generate_once_manifest_string_initialization
 
 				buffer.exdent
 				buffer.put_character ('}')
@@ -788,10 +802,10 @@ feature -- Generation
 						-- C generate file type (either .c/.x or .cpp/.xpp)
 						-- This information is used later to create the `file_to_compile'
 						-- file in each sudirectories of the W_code.
-					set_has_cpp_externals (byte_context.has_cpp_externals_calls)
+					set_has_cpp_externals (l_byte_context.has_cpp_externals_calls)
 					file := open_generation_file (has_cpp_externals)
 				else
-					file := open_generation_file (byte_context.has_cpp_externals_calls)
+					file := open_generation_file (l_byte_context.has_cpp_externals_calls)
 				end
 
 				if not final_mode then

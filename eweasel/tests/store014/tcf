@@ -1,0 +1,63 @@
+test_name        storable-formats-2
+test_description Check that we can retrieve old storable formats without any problem.
+
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	storable_a55.e $CLUSTER storable_a55.e
+copy_raw	storable_b55.e $CLUSTER storable_b55.e
+copy_raw	storable_c55.e $CLUSTER storable_c55.e
+copy_raw	storable_d55.e $CLUSTER storable_d55.e
+copy_raw	storable_e55.e $CLUSTER storable_e55.e
+
+compile_melted
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+copy_bin	data_52 $WCODE data_52
+copy_bin	data_54 $WCODE data_54
+copy_bin	data_55 $WCODE data_55
+copy_bin	data_56 $WCODE data_56
+copy_bin	data_57 $WCODE data_57
+copy_bin	data_60 $WCODE data_60
+copy_bin	data_61 $WCODE data_61
+copy_bin	data_62 $WCODE data_62
+
+execute_work   NONE exec_output_52 data_52
+execute_result ok
+compare        exec_output_52 output
+
+execute_work   NONE exec_output_54 data_54
+execute_result ok
+compare        exec_output_54 output
+
+execute_work   NONE exec_output_55 data_55
+execute_result ok
+compare        exec_output_55 output
+
+execute_work   NONE exec_output_56 data_56
+execute_result ok
+compare        exec_output_56 output
+
+execute_work   NONE exec_output_57 data_57
+execute_result ok
+compare        exec_output_57 output
+
+execute_work   NONE exec_output_60 data_60
+execute_result ok
+compare        exec_output_60 output
+
+execute_work   NONE exec_output_61 data_61
+execute_result ok
+compare        exec_output_61 output
+
+execute_work   NONE exec_output_62 data_62
+execute_result ok
+compare        exec_output_62 output
+
+test_end

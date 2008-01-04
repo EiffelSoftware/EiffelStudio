@@ -285,25 +285,27 @@ feature -- Byte code generation
 		local
 			buf: GENERATION_BUFFER
 			return_type: TYPE_C
+			l_context: like context
 		do
 			buf := buffer
+			l_context := context
 			return_type := c_type
 			if return_type.is_pointer then
 					-- Return value might be unboxed.
 					-- It should be boxed now.
 					-- The type of the result register has to be preserved.
 				buf.put_string ("), ((")
-				context.print_argument_register (result_register, buf)
+				l_context.print_argument_register (result_register, buf)
 				buf.put_string (".type == SK_REF)? (EIF_REFERENCE) 0: (")
-				context.print_argument_register (result_register, buf)
+				l_context.print_argument_register (result_register, buf)
 				buf.put_character ('.')
 				return_type.generate_typed_field (buf)
 				buf.put_string (" = RTBU(")
-				context.print_argument_register (result_register, buf)
+				l_context.print_argument_register (result_register, buf)
 				buf.put_string ("))), (")
-				context.print_argument_register (result_register, buf)
+				l_context.print_argument_register (result_register, buf)
 				buf.put_string (".type = SK_POINTER), ")
-				context.print_argument_register (result_register, buf)
+				l_context.print_argument_register (result_register, buf)
 				buf.put_character ('.')
 				return_type.generate_typed_field (buf)
 				buf.put_character (')')

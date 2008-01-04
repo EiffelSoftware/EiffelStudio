@@ -11,7 +11,7 @@ class
 inherit
 	CLASS_C
 		rename
-			group as cluster, make as init_class_c
+			group as cluster
 		redefine
 			apply_msil_application_optimizations,
 			cluster, original_class,
@@ -40,17 +40,6 @@ inherit
 create
 	make
 
-feature -- Initialization
-
-	make (l: like original_class) is
-			-- Creation of Current class
-		require
-			good_argument: l /= Void
-		do
-			create inline_agent_table.make (0)
-			init_class_c (l)
-		end
-
 feature -- Access
 
 	new_byte_code_needed: BOOLEAN
@@ -76,29 +65,49 @@ feature -- Access
 		end
 
 	inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER]
-			-- Table of inline agents indexed by their alias names
+			-- Table of inline agents indexed by their alias names.
+		do
+			if internal_inline_agent_table = Void then
+					--| FIXME IEK Replace when we have initializers.
+				create internal_inline_agent_table.make (0)
+			end
+			Result := internal_inline_agent_table
+		end
+
+	has_inline_agents: BOOLEAN
+			-- Does `Current' have inline agents?
+		local
+			l_internal_inline_agent_table: like internal_inline_agent_table
+		do
+			l_internal_inline_agent_table := internal_inline_agent_table
+			Result := l_internal_inline_agent_table /= Void and then l_internal_inline_agent_table.count > 0
+		end
 
 	remove_inline_agents_of_feature (body_id: INTEGER; a_removed: HASH_TABLE [FEATURE_I, INTEGER]) is
 			-- Removes all the inline agents of a given feature
 		local
 			l_feat: FEATURE_I
+			l_inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER]
 		do
-			from
-				inline_agent_table.start
-			until
-				inline_agent_table.after
-			loop
-				l_feat := inline_agent_table.item_for_iteration
-				if l_feat.enclosing_body_id = body_id then
-					if a_removed /= Void then
-							-- for each removed inline-agent feature we safe its
-							-- routine id along with its inline_agent_nr
-						a_removed.force (l_feat, l_feat.inline_agent_nr)
+			l_inline_agent_table := internal_inline_agent_table
+			if l_inline_agent_table /= Void and then l_inline_agent_table.count > 0 then
+				from
+					l_inline_agent_table.start
+				until
+					l_inline_agent_table.after
+				loop
+					l_feat := l_inline_agent_table.item_for_iteration
+					if l_feat.enclosing_body_id = body_id then
+						if a_removed /= Void then
+								-- for each removed inline-agent feature we safe its
+								-- routine id along with its inline_agent_nr
+							a_removed.force (l_feat, l_feat.inline_agent_nr)
+						end
+						l_inline_agent_table.remove (l_inline_agent_table.key_for_iteration)
+						system.execution_table.add_dead_function (l_feat.body_index)
+					else
+						l_inline_agent_table.forth
 					end
-					inline_agent_table.remove (inline_agent_table.key_for_iteration)
-					system.execution_table.add_dead_function (l_feat.body_index)
-				else
-					inline_agent_table.forth
 				end
 			end
 		end
@@ -121,8 +130,10 @@ feature -- Access
 		do
 			Result := Precursor (rout_id)
 			if Result = Void then
-					--Might be an inline agent
-				feat := inline_agent_of_rout_id (rout_id)
+					-- Might be an inline agent
+				if internal_inline_agent_table /= Void then
+					feat := inline_agent_of_rout_id (rout_id)
+				end
 				if feat /= Void then
 					Result := feat.api_feature (class_id)
 				end
@@ -250,6 +261,7 @@ feature -- Action
 			l_dummy_file_name: FILE_NAME
 			l_uuid: STRING
 			l_system: CONF_SYSTEM
+			l_lace_class: like lace_class
 		do
 			create file.make (file_name)
 			file.open_read
@@ -267,7 +279,8 @@ feature -- Action
 
 					-- Call Eiffel parser
 				parser := Eiffel_parser
-				l_options := lace_class.options
+				l_lace_class := lace_class
+				l_options := l_lace_class.options
 				if is_warning_generated then
 					parser.set_has_syntax_warning (l_options.is_warning_enabled (w_syntax))
 					parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
@@ -282,22 +295,22 @@ feature -- Action
 				Result := parser.root_node
 				if Result /= Void then
 						-- Update `date' attribute.
-					Result.set_date (lace_class.file_date)
+					Result.set_date (l_lace_class.file_date)
 				end
 
-					-- we need to readd the type informations to the ast
-				set_need_type_check (True)
+					-- We need to readd the type information to the ast
+				need_type_check := True
 
 				file.close
 
 					-- Save the source class in a Backup directory
-				if save_copy and system.automatic_backup then
+				if save_copy and then system.automatic_backup then
 						-- check if the directory for the system has been created
 					create l_dir_name.make_from_string (workbench.backup_subdirectory)
 
 						-- if this is the system of the application target, create an empty file with
 						-- the uuid to make it easier to find the application configuration file.
-					l_system := lace_class.cluster.target.system
+					l_system := l_lace_class.cluster.target.system
 					l_uuid := l_system.uuid.out
 					if l_system = l_system.application_target.system then
 						create l_dummy_file_name.make_from_string (workbench.backup_subdirectory)
@@ -317,7 +330,7 @@ feature -- Action
 					end
 
 						-- copy class
-					copy_class (lace_class, l_dir_name)
+					copy_class (l_lace_class, l_dir_name)
 				end
 			end
 		rescue
@@ -349,7 +362,7 @@ feature -- Action
 			old_syntactical_suppliers := syntactical_suppliers
 			create syntactical_suppliers.make (old_syntactical_suppliers.count)
 			supplier_list := ast_b.suppliers.supplier_ids
-			if not supplier_list.is_empty then
+			if supplier_list.count > 0 then
 				check_suppliers (supplier_list, False)
 			end
 			if lace_class.options.is_warning_enabled (w_export_class_missing) then
@@ -515,7 +528,9 @@ feature -- Third pass: byte code production and type check
 
 			feature_checker.init (ast_context)
 
-			old_inline_agent_table := inline_agent_table.twin
+			if has_inline_agents then
+				old_inline_agent_table := internal_inline_agent_table.twin
+			end
 
 				-- Check validity of the types in signatures.
 			l_error_level := Error_handler.error_level
@@ -926,7 +941,7 @@ feature -- Third pass: byte code production and type check
 					-- next compilation.
 				ast_context.clear_feature_context
 				tmp_ast_server.cache.wipe_out
-				inline_agent_table := old_inline_agent_table
+				internal_inline_agent_table := old_inline_agent_table
 			end
 		rescue
 			if Rescue_status.is_error_exception then
@@ -934,7 +949,7 @@ feature -- Third pass: byte code production and type check
 					-- next compilation.
 				ast_context.clear_feature_context
 				Tmp_ast_server.cache.wipe_out
-				inline_agent_table := old_inline_agent_table
+				internal_inline_agent_table := old_inline_agent_table
 			end
 		end
 
@@ -1891,13 +1906,16 @@ feature -- Supplier checking
 		local
 			supplier_class: CLASS_I
 			comp_class: CLASS_C
+			l_none: STRING
+			l_syntactical_suppliers: like syntactical_suppliers
 		do
 				-- 1.	Check if the supplier class is in the universe
 				--		associated to `cluster'.
 				-- 2.	Check if the supplier class is a new class
 				--		for the system.
 			supplier_class := Universe.class_named (cl_name, cluster)
-			if supplier_class /= Void and then not cl_name.is_equal ("NONE") then
+			l_none := once "NONE"
+			if supplier_class /= Void and then not cl_name.is_equal (l_none) then
 					-- The supplier class is in the universe associated
 					-- to `cluster'.
 				if not a_light_supplier then
@@ -1923,14 +1941,15 @@ feature -- Supplier checking
 					not_light_implies_compiled: not a_light_supplier implies comp_class /= Void
 				end
 				if comp_class /= Current and comp_class /= Void then
-					syntactical_suppliers.start
-					syntactical_suppliers.search (comp_class)
-					if syntactical_suppliers.after then
-						syntactical_suppliers.extend (comp_class)
+					l_syntactical_suppliers := syntactical_suppliers
+					l_syntactical_suppliers.start
+					l_syntactical_suppliers.search (comp_class)
+					if l_syntactical_suppliers.after then
+						l_syntactical_suppliers.extend (comp_class)
 					end
 				end
 			elseif a_light_supplier then
-				if not cl_name.is_equal ("NONE") then
+				if not cl_name.is_equal (l_none) then
 					system.record_potential_vtcm_warning (Current, cl_name)
 				end
 			else
@@ -1957,8 +1976,13 @@ feature -- Inline agents
 			-- Returns the inline agent with the given `a_feature_name_id'.
 		require
 			valid_feature_name_id: a_feature_name_id > 0
+		local
+			l_inline_agent_table: like inline_agent_table
 		do
-			Result := inline_agent_table.item (a_feature_name_id)
+			l_inline_agent_table := internal_inline_agent_table
+			if l_inline_agent_table /= Void and then l_inline_agent_table.count > 0 then
+				Result := l_inline_agent_table.item (a_feature_name_id)
+			end
 		ensure
 			valid_agent_found: Result /= Void implies Result.feature_name_id = a_feature_name_id
 		end
@@ -1970,22 +1994,26 @@ feature -- Inline agents
 		local
 			feat: FEATURE_I
 			old_cursor: CURSOR
+			l_inline_agent_table: like inline_agent_table
 		do
-			from
-				old_cursor := inline_agent_table.cursor
-				inline_agent_table.start
-			until
-				Result /= Void or else inline_agent_table.after
-			loop
-				feat := inline_agent_table.item_for_iteration
-				if feat.feature_id = a_feature_id  then
-					Result := feat
-				else
-					inline_agent_table.forth
+			l_inline_agent_table := internal_inline_agent_table
+			if l_inline_agent_table /= Void and then l_inline_agent_table.count > 0 then
+				from
+					old_cursor := l_inline_agent_table.cursor
+					l_inline_agent_table.start
+				until
+					Result /= Void or else l_inline_agent_table.after
+				loop
+					feat := l_inline_agent_table.item_for_iteration
+					if feat.feature_id = a_feature_id  then
+						Result := feat
+					else
+						l_inline_agent_table.forth
+					end
 				end
-			end
-			if inline_agent_table.valid_cursor (old_cursor) then
-				inline_agent_table.go_to (old_cursor)
+				if l_inline_agent_table.valid_cursor (old_cursor) then
+					l_inline_agent_table.go_to (old_cursor)
+				end
 			end
 		ensure
 			valid_agent_found: Result /= Void implies Result.feature_id = a_feature_id
@@ -1998,25 +2026,29 @@ feature -- Inline agents
 		local
 			feat: FEATURE_I
 			old_cursor: CURSOR
+			l_inline_agent_table: like internal_inline_agent_table
 		do
-			from
-				old_cursor := inline_agent_table.cursor
-				inline_agent_table.start
-			until
-				Result /= Void or else inline_agent_table.after
-			loop
-				feat := inline_agent_table.item_for_iteration
-				check
-					feat.rout_id_set.count = 1
+			l_inline_agent_table := internal_inline_agent_table
+			if l_inline_agent_table /= Void and then l_inline_agent_table.count > 0 then
+				from
+					old_cursor := l_inline_agent_table.cursor
+					l_inline_agent_table.start
+				until
+					Result /= Void or else l_inline_agent_table.after
+				loop
+					feat := l_inline_agent_table.item_for_iteration
+					check
+						feat.rout_id_set.count = 1
+					end
+					if feat.rout_id_set.first = a_rout_id then
+						Result := feat
+					else
+						l_inline_agent_table.forth
+					end
 				end
-				if feat.rout_id_set.first = a_rout_id then
-					Result := feat
-				else
-					inline_agent_table.forth
+				if l_inline_agent_table.valid_cursor (old_cursor) then
+					l_inline_agent_table.go_to (old_cursor)
 				end
-			end
-			if inline_agent_table.valid_cursor (old_cursor) then
-				inline_agent_table.go_to (old_cursor)
 			end
 		ensure
 			valid_agent_found: Result /= Void implies Result.rout_id_set.first = a_rout_id
@@ -2026,18 +2058,17 @@ feature -- Inline agents
 		require
 			valid_body_index: body_index > 0
 		local
-			feat: FEATURE_I
+			l_inline_agent_table: like internal_inline_agent_table
 		do
-			from
-				inline_agent_table.start
-			until
-				Result or else inline_agent_table.after
-			loop
-				feat := inline_agent_table.item_for_iteration
-				if feat.body_index = body_index  then
-					Result := True
-				else
-					inline_agent_table.forth
+			l_inline_agent_table := internal_inline_agent_table
+			if l_inline_agent_table /= Void and then l_inline_agent_table.count > 0 then
+				from
+					l_inline_agent_table.start
+				until
+					Result or else l_inline_agent_table.after
+				loop
+					Result := l_inline_agent_table.item_for_iteration.body_index = body_index
+					l_inline_agent_table.forth
 				end
 			end
 		end
@@ -2047,22 +2078,26 @@ feature -- Inline agents
 		local
 			l_feat: FEATURE_I
 			l_old_cursor: CURSOR
+			l_inline_agent_table: like internal_inline_agent_table
 		do
-			from
-				l_old_cursor := inline_agent_table.cursor
-				inline_agent_table.start
-			until
-				Result /= Void or else inline_agent_table.after
-			loop
-				l_feat := inline_agent_table.item_for_iteration
-				if l_feat.enclosing_body_id = a_enclosing_body_id and then l_feat.inline_agent_nr = a_inline_agent_nr then
-					Result := l_feat
-				else
-					inline_agent_table.forth
+			l_inline_agent_table := internal_inline_agent_table
+			if l_inline_agent_table /= Void and then l_inline_agent_table.count > 0 then
+				from
+					l_old_cursor := l_inline_agent_table.cursor
+					l_inline_agent_table.start
+				until
+					Result /= Void or else l_inline_agent_table.after
+				loop
+					l_feat := l_inline_agent_table.item_for_iteration
+					if l_feat.enclosing_body_id = a_enclosing_body_id and then l_feat.inline_agent_nr = a_inline_agent_nr then
+						Result := l_feat
+					else
+						l_inline_agent_table.forth
+					end
 				end
-			end
-			if inline_agent_table.valid_cursor (l_old_cursor) then
-				inline_agent_table.go_to (l_old_cursor)
+				if l_inline_agent_table.valid_cursor (l_old_cursor) then
+					l_inline_agent_table.go_to (l_old_cursor)
+				end
 			end
 		ensure
 			valid_agent_found: Result /= Void implies
@@ -2179,6 +2214,11 @@ feature {NONE} -- Backup implementation
 				l_system.store
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	internal_inline_agent_table: like inline_agent_table
+			-- Internal storage for 'inline_agent_table'.
 
 invariant
 	inline_agent_table_not_void: inline_agent_table /= Void

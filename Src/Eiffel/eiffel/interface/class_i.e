@@ -149,9 +149,11 @@ feature -- Access
 			-- Debug level
 		local
 			l_d: HASH_TABLE [BOOLEAN, STRING]
+			l_options: like options
 		do
-			l_d := options.debugs
-			if options.is_debug and then l_d /= Void and then not l_d.is_empty then
+			l_options := options
+			l_d := l_options.debugs
+			if l_options.is_debug and then l_d /= Void and then not l_d.is_empty then
 				create Result
 				from
 					l_d.start
@@ -260,6 +262,9 @@ feature -- Access
 			-- Is class defined outside current system.
 		do
 		end
+
+	is_basic_class: BOOLEAN
+			-- Is `Current' a basic class referenced in BASIC_SYSTEM_I?
 
 	file_date: INTEGER is
 			-- Date of last modification date of Current.
@@ -419,6 +424,16 @@ feature {COMPILER_EXPORTER} -- Compiled class
 		deferred
 		ensure
 			Result_exists: Result /= Void
+		end
+
+feature {BASIC_SYSTEM_I} -- Setting
+
+	set_as_basic_class is
+			-- Set `is_basic_class' to True.
+		do
+			is_basic_class := True
+		ensure
+			is_basic_class_set: is_basic_class
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

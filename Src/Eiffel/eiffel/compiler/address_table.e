@@ -429,28 +429,27 @@ feature -- Generation
 
 	calc_function_name (a_is_for_agent: BOOLEAN; a_feature_id, a_static_type_id: INTEGER;
 						a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN): STRING is
-	 	local
-	 		sep: STRING
 		do
+			create Result.make (12)
+				-- 12 covers most cases without the need for a resize.
 			if a_is_for_agent then
 				if a_oargs_encapsulated then
-					Result := "_f"
+					Result.append ("_f")
 				else
-					Result := "__f"
+					Result.append ("__f")
 				end
 			else
-				Result := "f"
+				Result.extend ('f')
 			end
 
 			Result.append (Encoder.address_table_name (a_feature_id, a_static_type_id))
 			if a_omap /= Void then
 				from
 					a_omap.start
-					sep := "_"
 				until
 					a_omap.after
 				loop
-					Result.append (sep)
+					Result.extend ('_')
 					Result.append (a_omap.item.out)
 					a_omap.forth
 				end
@@ -476,23 +475,30 @@ feature -- Generation helpers
 			i, nb: INTEGER
 			t: STRING
 			type_i: TYPE_I
+			l_eif_reference_str, l_eif_typed_value_str: STRING
+			l_is_for_agent_and_workbench_mode: BOOLEAN
 		do
 			from
 				i := 1
 				nb := args.count
 				create Result.make (1, nb + 1)
-				Result.put ("EIF_REFERENCE", 1)
+				l_eif_reference_str := once "EIF_REFERENCE"
+				l_is_for_agent_and_workbench_mode := is_for_agent and then system.byte_context.workbench_mode
+				if l_is_for_agent_and_workbench_mode then
+					l_eif_typed_value_str := once "EIF_TYPED_VALUE"
+				end
+				Result.put (l_eif_reference_str, 1)
 			until
 				i > nb
 			loop
-				if is_for_agent and then system.byte_context.workbench_mode then
-					t := "EIF_TYPED_VALUE"
+				if l_is_for_agent_and_workbench_mode then
+					t := l_eif_typed_value_str
 				elseif seed /= Void then
 					type_i := seed.arguments.i_th (i).type_i
 					if type_i.is_anchored then
-						t := "EIF_REFERENCE"
+						t := l_eif_reference_str
 					elseif type_i.is_formal then
-						t := "EIF_REFERENCE"
+						t := l_eif_reference_str
 					else
 						t := type_i.c_type.c_string
 					end
@@ -569,19 +575,23 @@ feature {NONE} -- Generation
 			-- Names of the arguments
 		local
 			i: INTEGER
-			temp: STRING
+			temp, l_arg: STRING
 		do
-			from
-				create Result.make (1, nb + 1)
-				Result.put ("Current", 1)
-				i := 1
-			until
-				i > nb
-			loop
-				temp := "arg"
-				temp.append_integer (i)
-				Result.put (temp, i + 1)
-				i := i + 1
+			create Result.make (1, nb + 1)
+			Result.put ("Current", 1)
+			if nb > 0 then
+				from
+					i := 1
+					l_arg := "arg"
+				until
+					i > nb
+				loop
+					create temp.make (4)
+					temp.append (l_arg)
+					temp.append_integer (i)
+					Result.put (temp, i + 1)
+					i := i + 1
+				end
 			end
 		end
 
@@ -589,17 +599,22 @@ feature {NONE} -- Generation
 			-- Generate declaration of `n' arguments.
 		local
 			i: INTEGER
+			l_arg_str: STRING
 		do
-			from
-				buffer.put_string (current_name)
-				i := 1
-			until
-				i > nb
-			loop
-				buffer.put_string (", arg")
-				buffer.put_integer (i)
-				i := i + 1
+			buffer.put_string (current_name)
+			if nb > 0 then
+				from
+					i := 1
+					l_arg_str := ", arg"
+				until
+					i > nb
+				loop
+					buffer.put_string (l_arg_str)
+					buffer.put_integer (i)
+					i := i + 1
+				end
 			end
+
 		end
 
 	generate_workbench_arg_list (buffer: GENERATION_BUFFER; current_name: STRING; context_type: CLASS_TYPE; args: FEAT_ARG) is
@@ -673,6 +688,8 @@ feature {NONE} -- Generation
 			names: ARRAY [STRING]
 			basic_i: BASIC_I
 			i: INTEGER
+			l_tabbed_open_c_comment_str, l_space_str, l_close_c_comment_str: STRING
+			l_arg_str: STRING
 		do
 			feature_id := a_feature.feature_id
 			rout_id := a_feature.rout_id_set.first
@@ -725,6 +742,9 @@ feature {NONE} -- Generation
 			from
 				types := a_class.types
 				types.start
+				l_tabbed_open_c_comment_str := "%T/* "
+				l_space_str := " "
+				l_close_c_comment_str := " */%N"
 			until
 				types.after
 			loop
@@ -734,11 +754,11 @@ feature {NONE} -- Generation
 				function_name := calc_function_name (is_for_agent, feature_id, l_type.static_type_id,
 													 omap, a_oargs_encapsulated)
 
-				buffer.put_string ("%T/* ")
+				buffer.put_string (l_tabbed_open_c_comment_str)
 				l_type.type.dump (buffer)
-				buffer.put_string (" ")
+				buffer.put_string (l_space_str)
 				buffer.put_string (a_feature.feature_name)
-				buffer.put_string (" */%N")
+				buffer.put_string (l_close_c_comment_str)
 
 				c_return_type := solved_type (l_type, return_type)
 				return_type_string := c_return_type.c_string
@@ -916,12 +936,13 @@ feature {NONE} -- Generation
 						buffer.put_string (l_current_name)
 						from
 							i := 1
+							l_arg_str := "arg"
 						until
 							i > args_count
 						loop
 							buffer.put_string (gc_comma)
 							if formal_arg [i] and then not reference_arg [i] then
-								buffer.put_string ("arg")
+								buffer.put_string (l_arg_str)
 								buffer.put_integer (i)
 							else
 								buffer.put_string (names [i + 1])
@@ -958,12 +979,13 @@ feature {NONE} -- Generation
 							buffer.put_string (l_current_name)
 							from
 								i := 1
+								l_arg_str := "arg"
 							until
 								i > args_count
 							loop
 								buffer.put_string (gc_comma)
 								if formal_arg [i] and then not reference_arg [i] then
-									buffer.put_string ("arg")
+									buffer.put_string (l_arg_str)
 									buffer.put_integer (i)
 								else
 									buffer.put_string (names [i + 1])
@@ -1078,6 +1100,7 @@ feature {NONE} -- Generation
 			l_rout_info: ROUT_INFO
 			l_types: ARRAY [STRING]
 			i: INTEGER
+			l_eif_typed_value_str: STRING
 		do
 			buffer.put_character ('(')
 			l_rout_id := a_feature.rout_id_set.first
@@ -1085,10 +1108,11 @@ feature {NONE} -- Generation
 			l_types [1] := a_types [1]
 			from
 				i := l_types.count
+				l_eif_typed_value_str := "EIF_TYPED_VALUE"
 			until
 				i < 2
 			loop
-				l_types [i] := "EIF_TYPED_VALUE"
+				l_types [i] := l_eif_typed_value_str
 				i := i - 1
 			end
 			c_return_type.generate_function_cast (buffer, l_types)

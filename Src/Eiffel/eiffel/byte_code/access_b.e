@@ -37,24 +37,27 @@ feature -- Access
 			-- Context type of the access (properly instantiated)
 		local
 			a_parent: NESTED_B
+			l_context: like context
 		do
 			if parent = Void then
 				Result := context.context_class_type.type
 			elseif is_message then
-				Result := context.real_type (parent.target.type)
+				l_context := context
+				Result := l_context.real_type (parent.target.type)
 				if Result.is_multi_constrained then
 					check has_multi_constraint_static: has_multi_constraint_static end
-					Result := context.real_type (multi_constraint_static)
+					Result := l_context.real_type (multi_constraint_static)
 				end
 			else
 				a_parent := parent.parent
 				if a_parent = Void then
 					Result := context.context_class_type.type
 				else
-					Result := context.real_type (a_parent.target.type)
+					l_context := context
+					Result := l_context.real_type (a_parent.target.type)
 					if Result.is_multi_constrained then
 						check has_multi_constraint_static: has_multi_constraint_static end
-						Result := context.real_type (multi_constraint_static)
+						Result := l_context.real_type (multi_constraint_static)
 					end
 				end
 			end

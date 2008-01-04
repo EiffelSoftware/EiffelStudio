@@ -126,18 +126,18 @@ feature -- Access
 	feature_with_name (n: INTEGER): FEATURE_AS is
 			-- Feature ast with internal name `n'
 		local
-			saved: INTEGER
+			l_area: SPECIAL [FEATURE_AS]
+			i, l_count: INTEGER
 		do
-			saved := features.index
 			from
-				features.start
+				l_area := features.area
+				l_count := l_area.count
 			until
-				features.after or else Result /= Void
+				Result /= Void or else i = l_count
 			loop
-				Result := features.item.feature_with_name (n)
-				features.forth
+				Result := l_area [i].feature_with_name (n)
+				i := i + 1
 			end
-			features.go_i_th (saved)
 		end
 
 	has_feature (f: FEATURE_AS): BOOLEAN is

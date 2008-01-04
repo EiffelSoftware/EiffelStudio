@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged byte code for Eiffel string (allocated each time).
 
-class STRING_BL 
+class STRING_BL
 
 inherit
 	STRING_B
@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	register: REGISTRABLE
 			-- Where string is kept to ensure it is GC safe
@@ -84,15 +84,17 @@ feature
 			-- Generate the string (created Eiffel object)
 		local
 			buf: GENERATION_BUFFER
+			l_value: like value
 		do
 				-- RTMS_EX is the macro used to create Eiffel strings from C ones
 			buf := buffer
+			l_value := value
 			buf.put_string ("RTMS_EX_H(")
-			buf.put_string_literal (value)
+			buf.put_string_literal (l_value)
 			buf.put_character(',')
-			buf.put_integer(value.count)
+			buf.put_integer(l_value.count)
 			buf.put_character(',')
-			buf.put_integer (value.hash_code)
+			buf.put_integer (l_value.hash_code)
 			buf.put_character(')')
 		end
 

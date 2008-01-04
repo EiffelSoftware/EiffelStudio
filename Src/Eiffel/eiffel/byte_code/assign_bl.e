@@ -382,10 +382,12 @@ feature
 			target_type: TYPE_I
 			source_type: TYPE_I
 			buf: GENERATION_BUFFER
+			l_context: like context
 		do
 			buf := buffer
-			target_type := context.real_type (target.type)
-			source_type := context.real_type (source.type)
+			l_context := context
+			target_type := l_context.real_type (target.type)
+			source_type := l_context.real_type (source.type)
 			if target_type.is_expanded and source_type.is_none then
 					-- Assigning Void to expanded.
 				buf.put_string ("RTEC(EN_VEXP);")

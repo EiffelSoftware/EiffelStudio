@@ -83,7 +83,7 @@ feature -- Access queries
 				-- If call to 'pathname_from_file_system' is empty that means we only got a '\' or '/' which got removed because we remove
 				-- trailing separators
 			Result := l_file_system.canonical_pathname (l_file_system.pathname_from_file_system (directory (internal_evaluated_path), windows_file_system))
-			if Result.is_empty then
+			if Result.count = 0 then
 				Result := operating_environment.directory_separator.out
 			end
 		ensure

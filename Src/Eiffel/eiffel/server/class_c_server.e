@@ -71,15 +71,19 @@ feature -- Element change
 			id_not_void: id > 0
 			not_has_id: not has (id)
 		local
-			class_id: INTEGER
+			l_sorted_classes: like sorted_classes
+			l_new_size: INTEGER
 		do
- 			class_id := id
- 			if upper < class_id then
- 				conservative_resize (1, class_id + Chunk)
-				sorted_classes.conservative_resize (1, class_id + Chunk)
+			l_sorted_classes := sorted_classes
+ 			if upper < id then
+ 				l_new_size := id + Chunk
+ 				conservative_resize (1, l_new_size)
+				l_sorted_classes.conservative_resize (1, l_new_size)
  			end
- 			array_put (class_c, class_id)
-			sorted_classes.put (class_c, class_c.topological_id)
+ 				-- `Current' and 'sorted_classes' arrays both have a lower of '1' so we can optimize
+ 				-- accordingly by accessing their SPECIAL directly (and decrementing insertion index by 1)
+ 			area.put (class_c, id - 1)
+			l_sorted_classes.area.put (class_c, class_c.topological_id - 1)
  			count := count + 1
 		ensure
 			inserted: item (id) = class_c
@@ -110,25 +114,38 @@ feature -- Sort
 		local
 			i, nb: INTEGER
 			a_class: CLASS_C
+			l_sorted_classes: like sorted_classes
+			l_class_c_server_area, l_sorted_classes_area: SPECIAL [CLASS_C]
 		do
+				-- 'lower' for both `Current' and 'sorted_classes' arrays is '1' so we can optimize accordingly.
+			l_sorted_classes := sorted_classes
+
+				-- Wipe out 'sorted_classes'.
+				-- This could also be performed with 'discard_item' but this creates another SPECIAL which may be costlier
+				-- in the long run due to increased memory usage.
 			from
-				i := 1
-				nb := sorted_classes.upper
+				i := l_sorted_classes.upper
+				l_sorted_classes_area := l_sorted_classes.area
 			until
-				i > nb
+				i = 0
 			loop
-				sorted_classes.put (Void, i)
-				i := i + 1
+					-- 'i' is decremented before the action so that the exit loop can be compared against zero
+					-- which is always faster than comparing against an arbitrary register value.
+				i := i - 1
+				l_sorted_classes_area.put (Void, i)
 			end
+
 			from
-				i := 1
+				i := 0
+				l_class_c_server_area := area
 				nb := count
 			until
 				nb = 0
 			loop
-				a_class := item (i)
+				a_class := l_class_c_server_area [i]
 				if a_class /= Void then
-					sorted_classes.put (a_class, a_class.topological_id)
+						-- Add sorted class at the index of its topological id (taking off 1 for zero based indexing)
+					l_sorted_classes_area.put (a_class, a_class.topological_id - 1)
 					nb := nb - 1
 				end
 				i := i + 1

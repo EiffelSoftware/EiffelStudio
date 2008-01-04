@@ -140,7 +140,8 @@ feature -- C code generation
 					buf.put_string ("NULL")
 
 				elseif array_index >= 0 then
-					table_name := "f"
+					create table_name.make (12)
+					table_name.append ("f")
 					table_name.append (Encoder.address_table_name (feature_id,
 								class_type.static_type_id))
 

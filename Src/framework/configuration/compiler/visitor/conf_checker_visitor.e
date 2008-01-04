@@ -35,15 +35,17 @@ feature -- Visit nodes
 			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
 			l_map: HASH_TABLE [STRING, STRING]
 			l_vg: CONF_VIRTUAL_GROUP
+			l_options: CONF_OPTION
 		do
 			l_classes := a_group.classes
 			check
 				l_classes_not_void: l_classes /= Void
 			end
 			l_map := a_group.mapping
+			l_options := a_group.options
 
 				-- check renamings
-			if a_group.options.is_warning_enabled (w_renaming_unknown_class) then
+			if l_options.is_warning_enabled (w_renaming_unknown_class) then
 				l_vg ?= a_group
 				if l_vg /= Void then
 					l_ren := l_vg.renaming
@@ -65,7 +67,7 @@ feature -- Visit nodes
 				end
 			end
 				-- check class options
-			if a_group.options.is_warning_enabled (w_option_unknown_class) then
+			if l_options.is_warning_enabled (w_option_unknown_class) then
 				l_c_opt := a_group.class_options
 				if l_c_opt /= Void then
 					from

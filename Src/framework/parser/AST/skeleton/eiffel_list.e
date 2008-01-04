@@ -30,15 +30,22 @@ feature {NONE} -- Initialization
 	make (n: INTEGER) is
 			-- Creation of the list with the comparison set on object
 		do
-			Precursor {CONSTRUCT_LIST} (n)
-			compare_objects
+				-- We always use 1 for lower so we can optimize array setup.
+			lower := 1
+			upper := n
+			create area.make (n)
+			object_comparison := True
 		end
 
 	make_filled (n: INTEGER) is
 			-- Creation of the list with the comparison set on object
 		do
-			Precursor {CONSTRUCT_LIST} (n)
-			compare_objects
+				-- We always use 1 for lower so we can optimize array setup.
+			lower := 1
+			upper := n
+			count := n
+			create area.make (n)
+			object_comparison := True
 		end
 
 feature -- Roundtrip

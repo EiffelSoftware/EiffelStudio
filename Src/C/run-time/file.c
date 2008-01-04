@@ -1750,10 +1750,18 @@ rt_public EIF_REFERENCE file_owner(int uid)
 
 	char str[NAME_MAX];
 #ifdef HAS_GETPWUID
+#if defined(EIF_VMS) && defined(__USE_64BIT_FUNCS)
+	struct __passwd64 *pp;	/* %%ss moved frm above */
+#else
 	struct passwd *pp; /* %%ss moved frm above */
+#endif
 
 	pp = getpwuid(uid);
+#ifdef EIF_VMS
+	if (pp == NULL)
+#else
 	if (pp == (struct passwd *) 0)
+#endif
 		sprintf(str, "%d", uid);		/* Not available: use UID */
 	else
 		strcpy(str, pp->pw_name);		/* Available: fetch login name */

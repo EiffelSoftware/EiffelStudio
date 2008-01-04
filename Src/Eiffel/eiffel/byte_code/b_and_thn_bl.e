@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged byte code for "and then"
 
-class B_AND_THN_BL 
+class B_AND_THN_BL
 
 inherit
 	B_AND_THEN_B
@@ -12,7 +12,7 @@ inherit
 			c_type, register, set_register
 		end;
 
-feature 
+feature
 
 	register: REGISTRABLE;
 			-- Where result of expression should be stored
@@ -68,17 +68,26 @@ feature
 
 	analyze is
 			-- Analyze expression
+		local
+			l_context: like context
+			l_left: like left
+			l_right: like right
+			l_no_register: like no_register
 		do
 			if has_call then
 				get_register;
-				context.init_propagation;
-				left.propagate (No_register);
-				context.init_propagation;
-				right.propagate (No_register);
-				left.analyze;
-				left.free_register;
-				right.analyze;
-				right.free_register;
+				l_context := context
+				l_context.init_propagation;
+				l_left := left
+				l_right := right
+				l_no_register := no_register
+				l_left.propagate (l_no_register);
+				l_context.init_propagation;
+				l_right.propagate (l_no_register);
+				l_left.analyze;
+				l_left.free_register;
+				l_right.analyze;
+				l_right.free_register;
 			else
 				Precursor {B_AND_THEN_B};
 			end;

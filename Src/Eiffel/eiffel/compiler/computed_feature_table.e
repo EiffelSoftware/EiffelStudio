@@ -10,6 +10,9 @@ class
 
 inherit
 	ARRAYED_LIST [FEATURE_I]
+		export {CLASS_TYPE, SELECT_TABLE}
+			area
+		end
 
 	IDABLE
 		undefine

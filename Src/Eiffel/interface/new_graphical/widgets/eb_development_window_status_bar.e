@@ -418,7 +418,7 @@ feature {NONE} -- Implementation: event handling
 				on_application_quit (dbg)
 			end
 			if not eiffel_project.workbench.is_compiling then
-				on_project_compiled
+				on_project_compiled (eiffel_project.workbench.successful)
 			end
 		end
 
@@ -453,14 +453,14 @@ feature {NONE} -- Implementation: event handling
 			end
 		end
 
-	on_project_compiled is
+	on_project_compiled (is_successful: BOOLEAN) is
 			-- The project has finished compiling.
 		local
 			p: EV_PIXMAP
 		do
 			set_project_name (current_project_name)
 			compiling_timer.set_interval (0)
-			if eiffel_project.workbench.successful then
+			if is_successful then
 				p := pixmaps.icon_pixmaps.compile_success_icon
 				compilation_icon.set_tooltip (Interface_names.E_compilation_succeeded)
 				on_project_updated
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation: event handling
 	compile_start_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
 			-- Agent called when the project is compiled.
 
-	compile_stop_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
+	compile_stop_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE [BOOLEAN]]
 			-- Agent called when the project's compilation is over.
 
 feature {NONE} -- Implementation

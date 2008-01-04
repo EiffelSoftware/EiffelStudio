@@ -10,8 +10,6 @@ class
 	EB_PROJECT_MANAGER
 
 inherit
-	SHARED_DEBUGGER_MANAGER
-
 	EB_SHARED_INTERFACE_TOOLS
 
 create
@@ -103,8 +101,6 @@ feature -- Basic operations
 		local
 			l_load_agents: like load_agents
 		do
-				-- Load application context (command line and breakpoints)
-			Debugger_manager.load_debugger_data
 			is_project_loaded := True
 
 			from
@@ -153,8 +149,6 @@ feature -- Basic operations
 			project.project_directory.delete_lock_file
 			is_project_loaded := False
 			is_created := False
-				-- Save breakpoint status and command line.
-			Debugger_manager.save_debugger_data
 
 			from
 					-- We need to twin the list as items may be removed as a result or iteration.
@@ -194,14 +188,8 @@ feature -- Basic operations
 			until
 				compile_stop_agents.after
 			loop
-				compile_stop_agents.item.call (Void)
+				compile_stop_agents.item.call ([is_successful])
 				compile_stop_agents.forth
-			end
-
-			if is_successful then
-				if debugger_manager /= Void then
-					debugger_manager.on_project_recompiled (is_successful)
-				end
 			end
 		end
 

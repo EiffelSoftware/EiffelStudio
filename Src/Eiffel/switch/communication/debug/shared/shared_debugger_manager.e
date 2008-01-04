@@ -8,6 +8,9 @@ indexing
 class
 	SHARED_DEBUGGER_MANAGER
 
+inherit
+	SHARED_EIFFEL_PROJECT
+
 feature -- Access
 
 	Debugger_manager: DEBUGGER_MANAGER is
@@ -24,7 +27,7 @@ feature -- Access
 
 	Breakpoints_manager: BREAKPOINTS_MANAGER is
 		do
-			Result := debugger_manager.breakpoints_manager
+			Result := Debugger_manager.breakpoints_manager
 		end
 
 	set_debugger_manager (v: like debugger_manager) is
@@ -37,17 +40,60 @@ feature -- Access
 
 feature {NONE} -- Cell
 
-	Debugger_manager_cell: CELL [DEBUGGER_MANAGER] is
-			-- Manager in charge of debugging operations.
-		once
-			create Result.put (Void)
-		end
-
-	debugger_manager_change_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]] is
+	Debugger_manager_change_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]] is
+			-- Actions executed when current active shared debugger_manager is changed.
 		once
 			create Result
 		end
 
+	Debugger_manager_cell: CELL [DEBUGGER_MANAGER] is
+			-- Manager in charge of debugging operations.
+		once
+			create Result.put (Void)
+
+			--| FIXME:jfiat:2008-01-04: find a better place for those agents setting
+			Eiffel_project.Manager.load_agents.extend (agent debugger_on_project_loaded)
+			Eiffel_project.Manager.close_agents.extend (agent debugger_on_project_closed)
+			Eiffel_project.Manager.compile_stop_agents.extend (agent debugger_on_project_recompiled)
+			if Eiffel_project.manager.is_project_loaded then
+				debugger_on_project_loaded
+			end
+		end
+
+	debugger_on_project_loaded is
+			-- Propagate `Project loaded' event to `debugger_manager'
+		local
+			dm: like Debugger_manager
+		do
+				-- Load application context (command line and breakpoints)
+			dm := Debugger_manager_cell.item
+			if dm /= Void then
+				dm.load_debugger_data
+			end
+		end
+
+	debugger_on_project_closed is
+			-- Propagate `Project closed' event to `debugger_manager'
+		local
+			dm: like Debugger_manager
+		do
+				-- Save application context (command line and breakpoints)
+			dm := Debugger_manager_cell.item
+			if dm /= Void then
+				dm.save_debugger_data
+			end
+		end
+
+	debugger_on_project_recompiled (is_successful: BOOLEAN) is
+			-- Propagate `Project recompiled' event to `debugger_manager'
+		local
+			dm: like Debugger_manager
+		do
+			dm := Debugger_manager_cell.item
+			if dm /= Void then
+				dm.on_project_recompiled (is_successful)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

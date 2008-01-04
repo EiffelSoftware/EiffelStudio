@@ -57,11 +57,21 @@ feature -- Parsing
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+		local
+			l_input_buffer: YY_FILE_BUFFER
 		do
 			classname := Void
-			File_buffer.set_file (a_file)
-			input_buffer := File_buffer
-			yy_load_input_buffer
+			l_input_buffer := File_buffer
+			l_input_buffer.set_file (a_file)
+				-- Abstracted from 'yy_load_input_buffer' to reuse local.
+			yy_set_content (l_input_buffer.content)
+			yy_end := l_input_buffer.index
+			yy_start := yy_end
+			yy_line := l_input_buffer.line
+			yy_column := l_input_buffer.column
+			yy_position := l_input_buffer.position
+
+			input_buffer := l_input_buffer
 			read_token
 			reset
 		rescue

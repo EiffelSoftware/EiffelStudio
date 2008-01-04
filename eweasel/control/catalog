@@ -1122,6 +1122,7 @@ test	expanded-creation-correctness	exec278 tcf fail execution expanded
 test	special-base-address		exec279 tcf fail execution expanded
 test	default-create-not-called	exec280 tcf pass execution
 test	not-equal-operator-failure	exec281 tcf pass execution expanded
+test	all-defaults-failure		exec282 tcf fail execution expanded
 
 
 -- Compiler termination (exception trace, panic, etc.)

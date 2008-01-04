@@ -1,0 +1,28 @@
+test_name 	 all-defaults-failure
+test_description When creating an expanded object which is generic used as actual generic parameter of a generic class, we create the wrong object type (sometime causing a segfault). This can be shown by creating an ARRAY [B [STRING]] and checking that the postcondition `all_default' is satisfied.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	b.e $CLUSTER b.e
+
+compile_melted
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+compile_final_keep
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

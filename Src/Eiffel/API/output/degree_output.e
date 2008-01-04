@@ -485,34 +485,39 @@ feature {NONE} -- Display implementation for redefinition by descendants.
 		require
 			positive_total_nbr: total_number > 0
 		local
-			nbr_spaces, perc: INTEGER;
+			perc: INTEGER;
 			to_go_out, total_nbr_out: STRING
+			l_two_spaces: STRING
 		do
+			l_two_spaces := once "  "
 			total_nbr_out := total_number.out;
 			create Result.make (7);
-			Result.append (once "[");
+			Result.extend ('[');
 			perc := percentage_calculation (nbr_to_go);
 			if perc < 10 then
-				Result.append (once "  ");
+				Result.append (l_two_spaces);
 			else
 				Result.extend (' ')
 			end;
 			Result.append_integer (perc);
 			Result.append_string (once "%% - ");
 			to_go_out := nbr_to_go.out;
-			nbr_spaces := total_nbr_out.count - to_go_out.count;
-			inspect nbr_spaces
+			inspect
+				total_nbr_out.count - to_go_out.count
 			when 1 then
 				Result.extend (' ')
 			when 2 then
-				Result.append (once "  ")
+				Result.append (l_two_spaces)
 			when 3 then
 					-- Limit is about 99000
-				Result.append (once "   ")
+				Result.append (l_two_spaces)
+				Result.extend (' ')
 			else
 			end;
+
 			Result.append (to_go_out)
-			Result.append (once "] ")
+			Result.extend (']')
+			Result.extend (' ')
 		end
 
 	percentage_calculation (to_go: INTEGER): INTEGER is

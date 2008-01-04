@@ -221,11 +221,21 @@ feature -- Parsing
 			a_file_open_read: a_file.is_open_read
 		local
 			l_ast_factory: like ast_factory
+			l_input_buffer: YY_FILE_BUFFER
 		do
 			reset_nodes
-			File_buffer.set_file (a_file)
-			input_buffer := File_buffer
-			yy_load_input_buffer
+			l_input_buffer := File_buffer
+			l_input_buffer.set_file (a_file)
+			input_buffer := l_input_buffer
+
+				-- Abstracted from 'yy_load_input_buffer' to reuse local.
+			yy_set_content (l_input_buffer.content)
+			yy_end := l_input_buffer.index
+			yy_start := yy_end
+			yy_line := l_input_buffer.line
+			yy_column := l_input_buffer.column
+			yy_position := l_input_buffer.position
+
 			filename := a_file.name
 			l_ast_factory := ast_factory
 			l_ast_factory.create_match_list (initial_match_list_size)
@@ -245,10 +255,21 @@ feature -- Parsing
 			a_string_not_void: a_string /= Void
 		local
 			l_ast_factory: like ast_factory
+			l_input_buffer: YY_BUFFER
 		do
 			reset_nodes
-			create input_buffer.make (a_string)
-			yy_load_input_buffer
+
+			create l_input_buffer.make (a_string)
+			input_buffer := l_input_buffer
+
+				-- Abstracted from 'yy_load_input_buffer' to reuse local
+			yy_set_content (l_input_buffer.content)
+			yy_end := l_input_buffer.index
+			yy_start := yy_end
+			yy_line := l_input_buffer.line
+			yy_column := l_input_buffer.column
+			yy_position := l_input_buffer.position
+
 			l_ast_factory := ast_factory
 			l_ast_factory.create_match_list (initial_match_list_size)
 			yyparse

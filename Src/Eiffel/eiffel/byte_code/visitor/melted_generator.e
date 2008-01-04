@@ -1023,8 +1023,10 @@ feature {NONE} -- Visitors
 		local
 			l_local_list: LINKED_LIST [TYPE_I]
 			l_tmp_ba: BYTE_ARRAY
+			l_context: like context
 		do
-			l_local_list := context.local_list
+			l_context := context
+			l_local_list := l_context.local_list
 			l_local_list.wipe_out
 
 			create l_tmp_ba.make
@@ -1051,12 +1053,12 @@ feature {NONE} -- Visitors
 
 				-- No rescue
 			ba.append ('%U')
-			context.set_assertion_type ({ASSERT_TYPE}.in_invariant)
+			l_context.set_assertion_type ({ASSERT_TYPE}.in_invariant)
 
-			context.set_original_body_index (a_node.associated_class.invariant_feature.body_index)
+			l_context.set_original_body_index (a_node.associated_class.invariant_feature.body_index)
 
 				-- Allocate memory for once manifest strings if required
-			context.make_once_string_allocation_byte_code (ba, a_node.once_manifest_string_count)
+			l_context.make_once_string_allocation_byte_code (ba, a_node.once_manifest_string_count)
 
 			a_node.byte_list.process (Current)
 			ba.append (Bc_inv_null)
@@ -1071,7 +1073,7 @@ feature {NONE} -- Visitors
 				l_local_list.forth
 			end
 
-			context.byte_prepend (ba, l_tmp_ba)
+			l_context.byte_prepend (ba, l_tmp_ba)
 		end
 
 	process_local_b (a_node: LOCAL_B) is
@@ -1088,7 +1090,9 @@ feature {NONE} -- Visitors
 			variant_local_number: INTEGER
 			invariant_breakpoint_slot: INTEGER
 			body_breakpoint_slot: INTEGER
+			l_context: like context
 		do
+			l_context := context
 			if a_node.from_part /= Void then
 					-- Generate byte code for the from part
 				a_node.from_part.process (Current)
@@ -1096,19 +1100,19 @@ feature {NONE} -- Visitors
 
 			if a_node.variant_part /= Void then
 					-- Initialization of the variant control variable
-				local_list := context.local_list
-				context.add_local (int32_c_type)
+				local_list := l_context.local_list
+				l_context.add_local (int32_c_type)
 				variant_local_number := local_list.count
 				ba.append (Bc_init_variant)
 				ba.append_short_integer (variant_local_number)
 			end
 
 				-- Record context.
-			invariant_breakpoint_slot := context.get_breakpoint_slot
+			invariant_breakpoint_slot := l_context.get_breakpoint_slot
 
 			if not (a_node.invariant_part = Void and then a_node.variant_part = Void) then
 					-- Set the assertion type
-				context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+				l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
 
 				ba.append (Bc_loop)
 					-- In case the loop assertion are not checked, we
@@ -1117,12 +1121,12 @@ feature {NONE} -- Visitors
 
 					-- Invariant loop byte code
 				if a_node.invariant_part /= Void then
-					context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
 					a_node.invariant_part.process (Current)
 				end
 					-- Variant loop byte code
 				if a_node.variant_part /= Void then
-					context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
 					a_node.variant_part.process (Current)
 					ba.append_short_integer (variant_local_number)
 				end
@@ -1147,12 +1151,12 @@ feature {NONE} -- Visitors
 			end
 
 				-- Save hook context & restore recorded context.
-			body_breakpoint_slot := context.get_breakpoint_slot
-			context.set_breakpoint_slot (invariant_breakpoint_slot)
+			body_breakpoint_slot := l_context.get_breakpoint_slot
+			l_context.set_breakpoint_slot (invariant_breakpoint_slot)
 
 			if not (a_node.invariant_part = Void and then a_node.variant_part = Void) then
 					-- Set the assertion type
-				context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+				l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
 
 				ba.append (Bc_loop)
 					-- In case the loop assertion are not checked, we
@@ -1161,12 +1165,12 @@ feature {NONE} -- Visitors
 
 					-- Invariant loop byte code
 				if a_node.invariant_part /= Void then
-					context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
 					a_node.invariant_part.process (Current)
 				end
 					-- Variant loop byte code
 				if a_node.variant_part /= Void then
-					context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
 					a_node.variant_part.process (Current)
 					ba.append_short_integer (variant_local_number)
 				end
@@ -1176,7 +1180,7 @@ feature {NONE} -- Visitors
 			end
 
 				-- Restore hook context
-			context.set_breakpoint_slot (body_breakpoint_slot)
+			l_context.set_breakpoint_slot (body_breakpoint_slot)
 
 				-- Generate an unconditional jump
 			ba.append (Bc_jmp)
@@ -1709,39 +1713,44 @@ feature {NONE} -- Implementation
 
 	make_precondition_byte_code (a_node: ASSERT_B) is
 			-- Generate byte code for a precondition.
+		local
+			l_context: like context
+			l_ba: like ba
 		do
-			if Context.is_new_precondition_block then
-				Context.set_new_precondition_block (False)
-				if Context.is_first_precondition_block_generated then
+			l_context := context
+			l_ba := ba
+			if l_context.is_new_precondition_block then
+				l_context.set_new_precondition_block (False)
+				if l_context.is_first_precondition_block_generated then
 					from
 					until
-						ba.forward_marks4.count = 0
+						l_ba.forward_marks4.count = 0
 					loop
-						ba.write_forward4
+						l_ba.write_forward4
 					end
-					ba.append (Bc_goto_body)
+					l_ba.append (Bc_goto_body)
 					ba.mark_forward
 				else
-					Context.set_first_precondition_block_generated (True)
+					l_context.set_first_precondition_block_generated (True)
 				end
 			end
 
 				-- generate a debugger hook
 			generate_melted_debugger_hook
 
-			ba.append (Bc_assert)
-			ba.append (Bc_pre)
+			l_ba.append (Bc_assert)
+			l_ba.append (Bc_pre)
 			if a_node.tag = Void then
-				ba.append (Bc_notag)
+				l_ba.append (Bc_notag)
 			else
-				ba.append (Bc_tag)
-				ba.append_raw_string (a_node.tag)
+				l_ba.append (Bc_tag)
+				l_ba.append_raw_string (a_node.tag)
 			end
 
 				-- Assertion byte code
 			a_node.expr.process (Current)
-			ba.append (Bc_end_pre)
-			ba.mark_forward4
+			l_ba.append (Bc_end_pre)
+			l_ba.mark_forward4
 		end
 
 	make_protected_byte_code (a_node: HECTOR_B; a_pos: INTEGER) is

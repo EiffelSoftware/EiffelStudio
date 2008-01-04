@@ -58,10 +58,13 @@ feature -- Access
 		require
 			s_not_void: s /= Void
 			s_valid_type: s.same_type (string_type)
+		local
+			l_lookup_table: like lookup_table
 		do
-			lookup_table.search (s)
-			if lookup_table.found then
-				Result := lookup_table.found_item
+			l_lookup_table := lookup_table
+			l_lookup_table.search (s)
+			if l_lookup_table.found then
+				Result := l_lookup_table.found_item
 				check
 					valid_result: Result > 0
 				end
@@ -100,21 +103,28 @@ feature -- Element change
 			s_valid_type: s.same_type (string_type)
 		local
 			l_s: STRING
+			l_lookup_table: like lookup_table
+			l_area: like area
+			l_top_index: INTEGER
 		do
-			lookup_table.search (s)
-			if lookup_table.found then
-				found_item := lookup_table.found_item
+			l_lookup_table := lookup_table
+			l_lookup_table.search (s)
+			if l_lookup_table.found then
+				found_item := l_lookup_table.found_item
 			else
-				found_item := top_index
-				if area.count <= top_index then
-					area := area.resized_area (top_index + (top_index // 2).max (Chunk))
+				l_top_index := top_index
+				found_item := l_top_index
+				l_area := area
+				if l_area.count <= l_top_index then
+					l_area := l_area.resized_area (l_top_index + (l_top_index // 2).max (Chunk))
+					area := l_area
 				end
 					-- Twin string as the heap cannot work if `s' is externally
 					-- modified.
 				l_s := s.twin
-				area.put (l_s, top_index)
-				lookup_table.put (top_index, l_s)
-				top_index := top_index + 1
+				l_area.put (l_s, l_top_index)
+				l_lookup_table.put (l_top_index, l_s)
+				top_index := l_top_index + 1
 			end
 		ensure
 			elemented_inserted: equal (item (found_item), s)

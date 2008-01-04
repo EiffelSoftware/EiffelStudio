@@ -76,13 +76,14 @@ feature
 			buf: GENERATION_BUFFER
 			sep: STRING
 			wb_mode: BOOLEAN
+			l_context: like context
 		do
 			check
 				address_table_record_generated: not System.address_table.is_lazy (class_id, feature_id, is_target_closed, omap)
 			end
-
+			l_context := context
 			sep := once ", "
-			wb_mode := not context.final_mode
+			wb_mode := not l_context.final_mode
 			if arguments /= Void then
 				arguments.generate
 			end
@@ -92,10 +93,10 @@ feature
 			end
 
 			buf := buffer
-			agent_type ?= context.real_type (type)
+			agent_type ?= l_context.real_type (type)
 			gen_type  ?= agent_type
 			generate_block_open
-			context.generate_gen_type_conversion (gen_type)
+			l_context.generate_gen_type_conversion (gen_type)
 			print_register
 			buf.put_string (once " = ")
 			if wb_mode then
@@ -132,7 +133,7 @@ feature
 					buf.put_string (sep)
 				else
 						-- class_id
-					feat_cl_type ?= context.real_type (class_type)
+					feat_cl_type ?= l_context.real_type (class_type)
 					buf.put_integer (feat_cl_type.associated_class_type.static_type_id - 1)
 					buf.put_string (sep)
 						-- feature_id
@@ -210,14 +211,16 @@ feature
 			buf			: GENERATION_BUFFER
 			array_index: INTEGER
 			l_omap: like omap
+			l_context: like context
 		do
 			buf := buffer
 			if optimized then
 				l_omap := omap
 			end
-			cl_type ?= context.real_type (class_type)
+			l_context := context
+			cl_type ?= l_context.real_type (class_type)
 
-			if not context.workbench_mode and then not is_inline_agent then
+			if not l_context.workbench_mode and then not is_inline_agent then
 				array_index := Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True)
 			end
 
@@ -226,7 +229,7 @@ feature
 					-- any implementation
 				buf.put_string ("NULL")
 			else
-				cl_type ?= context.real_type (class_type)
+				cl_type ?= l_context.real_type (class_type)
 				check
 					system.address_table.has_agent (
 						cl_type.associated_class_type.associated_class.class_id, feature_id, is_target_closed, omap)
@@ -240,7 +243,7 @@ feature
 					-- Remember extern declarations
 				Extern_declarations.add_routine (type.c_type, table_name)
 
-				if not context.workbench_mode and then
+				if not l_context.workbench_mode and then
 				   not is_inline_agent and then
 				   array_index >= 0
 				then
@@ -271,30 +274,34 @@ feature
 			l_args: ARRAY [STRING_8]
 			l_seed: FEATURE_I
 			l_return_type_string: STRING
+			l_buffer: like buffer
+			l_context: like context
 		do
-			buffer.put_string ("(EIF_POINTER)")
-			buffer.put_character ('(')
-			if is_inline_agent or context.workbench_mode then
-				buffer.put_string ("0),")
+			l_buffer := buffer
+			l_context := context
+			l_buffer.put_string ("(EIF_POINTER)")
+			l_buffer.put_character ('(')
+			if is_inline_agent or else l_context.workbench_mode then
+				l_buffer.put_string ("0),")
 			else
-				l_cl_type ?= context.real_type (class_type)
+				l_cl_type ?= l_context.real_type (class_type)
 				l_class_type := l_cl_type.associated_class_type
 				l_entry :=  Eiffel_table.poly_table (rout_id)
 
 				if l_entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-					buffer.put_string ("0),")
+					l_buffer.put_string ("0),")
 				else
 					l_type_id := l_class_type.type_id
 					if l_entry.is_polymorphic (l_type_id) then
 						l_table_name := Encoder.routine_table_name (rout_id)
-						buffer.put_string (l_table_name)
-						buffer.put_string ("[Dtype((")
+						l_buffer.put_string (l_table_name)
+						l_buffer.put_string ("[Dtype((")
 						generate_current
-						buffer.put_string (")) - ")
-						buffer.put_type_id (l_entry.min_used)
-						buffer.put_string ("]),")
+						l_buffer.put_string (")) - ")
+						l_buffer.put_type_id (l_entry.min_used)
+						l_buffer.put_string ("]),")
 							-- Remember extern declarations
 						Extern_declarations.add_routine_table (l_table_name)
 							-- Mark table used.
@@ -310,15 +317,15 @@ feature
 						else
 							l_c_return_type := system.address_table.solved_type (l_class_type, l_feat.type)
 						end
-						if context.workbench_mode then
+						if l_context.workbench_mode then
 							l_return_type_string := "EIF_TYPED_VALUE"
 						else
 							l_return_type_string := l_c_return_type.c_string
 						end
 						if l_rout_table.is_implemented then
 							l_function_name := l_rout_table.feature_name + system.seed_of_routine_id (rout_id).generic_fingerprint
-							buffer.put_string (l_function_name)
-							buffer.put_string ("),")
+							l_buffer.put_string (l_function_name)
+							l_buffer.put_string ("),")
 							if l_feat.has_arguments then
 								l_args := system.address_table.arg_types (l_class_type, l_feat.arguments, True, l_seed)
 							else
@@ -331,8 +338,8 @@ feature
 								-- without any implementation. We mark `l_is_implemented'
 								-- to False to not generate the argument list since
 								-- RTNR takes only one argument.
-							l_c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
-							buffer.put_string ("RTNR),")
+							l_c_return_type.generate_function_cast (l_buffer, <<"EIF_REFERENCE">>)
+							l_buffer.put_string ("RTNR),")
 						end
 					end
 				end

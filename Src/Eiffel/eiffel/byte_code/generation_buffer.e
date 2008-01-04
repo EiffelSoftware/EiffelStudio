@@ -387,12 +387,16 @@ feature -- Automatically indented output
 			i: INTEGER
 			j: INTEGER
 			n: INTEGER
+			l_current_buffer: like current_buffer
+			l_string_converter: like string_converter
 		do
 			i := s.count
 			if i > maximum_string_literal_count then
 					-- Put string in several chunks
 				indent
 				from
+					l_current_buffer := current_buffer
+					l_string_converter := string_converter
 					j := 1
 				invariant
 					i >= 0
@@ -411,9 +415,9 @@ feature -- Automatically indented output
 					if not emitted and tabs > 0 then
 						emit_tabs
 					end
-					current_buffer.append_character ('"')
-					string_converter.escape_substring (current_buffer, s, j, j + n - 1)
-					current_buffer.append_character ('"')
+					l_current_buffer.append_character ('"')
+					l_string_converter.escape_substring (l_current_buffer, s, j, j + n - 1)
+					l_current_buffer.append_character ('"')
 					i := i - n
 					j := j + n
 				end

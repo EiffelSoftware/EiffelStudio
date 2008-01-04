@@ -475,6 +475,7 @@ feature -- Settings
 			c_not_void: c /= Void
 		do
 			any_class := c
+			c.set_as_basic_class
 		ensure
 			any_class_set: any_class = c
 		end
@@ -486,6 +487,7 @@ feature -- Settings
 		local
 			l_ext: EXTERNAL_CLASS_I
 		do
+			c.set_as_basic_class
 			l_ext ?= c
 			if l_ext /= Void then
 				system_object_class := l_ext
@@ -501,6 +503,7 @@ feature -- Settings
 		local
 			l_ext: EXTERNAL_CLASS_I
 		do
+			c.set_as_basic_class
 			l_ext ?= c
 			if l_ext /= Void then
 				system_value_type_class := l_ext
@@ -516,6 +519,7 @@ feature -- Settings
 		local
 			l_ext: EXTERNAL_CLASS_I
 		do
+			c.set_as_basic_class
 			l_ext ?= c
 			if l_ext /= Void then
 				system_exception_type_class := l_ext
@@ -529,6 +533,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			boolean_class := c
 		ensure
 			boolean_class_set: boolean_class = c
@@ -540,6 +545,7 @@ feature -- Settings
 			c_not_void: c /= Void
 			n_valid: n = 8 or n = 32
 		do
+			c.set_as_basic_class
 			if n = 32 then
 				character_32_class := c
 			else
@@ -556,6 +562,7 @@ feature -- Settings
 			c_not_void: c /= Void
 			n_valid: n = 8 or n = 16 or n = 32 or n = 64
 		do
+			c.set_as_basic_class
 			inspect n
 			when 8 then integer_8_class := c
 			when 16 then integer_16_class := c
@@ -575,6 +582,7 @@ feature -- Settings
 			c_not_void: c /= Void
 			n_valid: n = 8 or n = 16 or n = 32 or n = 64
 		do
+			c.set_as_basic_class
 			inspect n
 			when 8 then natural_8_class := c
 			when 16 then natural_16_class := c
@@ -594,6 +602,7 @@ feature -- Settings
 			c_not_void: c /= Void
 			n_valid: n = 32 or n = 64
 		do
+			c.set_as_basic_class
 			if n = 32 then
 				real_32_class := c
 			else
@@ -609,6 +618,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			pointer_class := c
 		ensure
 			pointer_class_set: pointer_class = c
@@ -620,6 +630,7 @@ feature -- Settings
 			c_not_void: c /= Void
 			n_valid: n = 8 or n = 32
 		do
+			c.set_as_basic_class
 			if n = 32 then
 				string_32_class := c
 			else
@@ -635,6 +646,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			system_string_class := c
 		ensure
 			system_string_class_set: system_string_class = c
@@ -645,6 +657,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			array_class := c
 		ensure
 			array_class_set: array_class = c
@@ -655,6 +668,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			special_class := c
 		ensure
 			special_class_set: special_class = c
@@ -665,6 +679,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			native_array_class := c
 		ensure
 			native_array_class_set: native_array_class = c
@@ -675,6 +690,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			typed_pointer_class := c
 		ensure
 			typed_pointer_class_set: typed_pointer_class = c
@@ -685,6 +701,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			bit_class := c
 		ensure
 			bit_class_set: bit_class = c
@@ -695,6 +712,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			disposable_class := c
 		ensure
 			disposable_class_set: disposable_class = c
@@ -705,6 +723,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			tuple_class := c
 		ensure
 			tuple_class_set: tuple_class = c
@@ -715,6 +734,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			routine_class := c
 		ensure
 			routine_class_set: routine_class = c
@@ -725,6 +745,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			procedure_class := c
 		ensure
 			procedure_class_set: procedure_class = c
@@ -735,6 +756,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			function_class := c
 		ensure
 			function_class_set: function_class = c
@@ -745,6 +767,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			predicate_class := c
 		ensure
 			predicate_class_set: predicate_class = c
@@ -755,6 +778,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			arguments_class := c
 		ensure
 			arguments_class: arguments_class = c
@@ -765,6 +789,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			type_class := c
 		ensure
 			type_class_set: type_class = c
@@ -775,6 +800,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			system_type_class := c
 		ensure
 			system_type_class_set: system_type_class = c
@@ -795,6 +821,7 @@ feature -- Settings
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			rt_extension_class := c
 		ensure
 			rt_extension_class_set: rt_extension_class = c
@@ -808,6 +835,7 @@ feature -- Settings: XX_REF classes
 			c_not_void: c /= Void
 			n_valid: n = 8 or n = 32
 		do
+			c.set_as_basic_class
 			if n = 32 then
 				character_32_ref_class := c
 			else
@@ -823,6 +851,7 @@ feature -- Settings: XX_REF classes
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			boolean_ref_class := c
 		ensure
 			boolean_ref_class_set: boolean_ref_class = c
@@ -833,6 +862,7 @@ feature -- Settings: XX_REF classes
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			inspect n
 			when 8 then integer_8_ref_class := c
 			when 16 then integer_16_ref_class := c
@@ -851,6 +881,7 @@ feature -- Settings: XX_REF classes
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			inspect n
 			when 8 then natural_8_ref_class := c
 			when 16 then natural_16_ref_class := c
@@ -870,6 +901,7 @@ feature -- Settings: XX_REF classes
 			c_not_void: c /= Void
 			n_valid: n = 32 or n = 64
 		do
+			c.set_as_basic_class
 			if n = 32 then
 				real_32_ref_class := c
 			else
@@ -885,6 +917,7 @@ feature -- Settings: XX_REF classes
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			pointer_ref_class := c
 		ensure
 			pointer_ref_class_set: pointer_ref_class = c
@@ -897,6 +930,7 @@ feature -- Settings: Exception
 		require
 			c_not_void: c /= Void
 		do
+			c.set_as_basic_class
 			exception_manager_class := c
 		ensure
 			exception_manager_class_set: exception_manager_class = c

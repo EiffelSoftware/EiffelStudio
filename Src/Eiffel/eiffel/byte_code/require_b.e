@@ -27,10 +27,13 @@ feature
 			-- Initialization
 		require
 			good_argument: not (a = Void)
+		local
+			l_expr: like expr
 		do
-			expr := a.expr.enlarged
+			l_expr := a.expr.enlarged
 				-- Make sure the expression has never been analyzed before
-			expr.unanalyze
+			expr := l_expr
+			l_expr.unanalyze
 			tag := a.tag
 		end
 
@@ -39,24 +42,27 @@ feature
 		local
 			buf: GENERATION_BUFFER
 			first_generated: BOOLEAN
+			l_context: like context
+			l_expr: like expr
 		do
 			buf := buffer
+			l_context := context
 
-			if Context.is_new_precondition_block then
-				first_generated := Context.is_first_precondition_block_generated
+			if l_context.is_new_precondition_block then
+				first_generated := l_context.is_first_precondition_block_generated
 				if first_generated then
 					buf.put_string ("RTJB;")
 					buf.put_new_line
 				end
-				Context.generate_current_label_definition
-				Context.inc_label
+				l_context.generate_current_label_definition
+				l_context.inc_label
 				if first_generated then
 					buf.put_string ("RTCK;")
 					buf.put_new_line
 				else
-					Context.set_first_precondition_block_generated (True)
+					l_context.set_first_precondition_block_generated (True)
 				end
-				Context.set_new_precondition_block (False)
+				l_context.set_new_precondition_block (False)
 			end
 
 				-- generate a debugger hook
@@ -72,16 +78,17 @@ feature
 			else
 				buf.put_string ("RTCS(")
 			end
-			generate_assertion_code (context.assertion_type)
+			generate_assertion_code (l_context.assertion_type)
 			buf.put_string (gc_rparan_semi_c)
 			buf.put_new_line
 
 				-- Now evaluate the expression
-			expr.generate
+			l_expr := expr
+			l_expr.generate
 			buf.put_string ("RTTE(")
-			expr.print_register
+			l_expr.print_register
 			buf.put_string (gc_comma)
-			context.print_current_label
+			l_context.print_current_label
 			buf.put_string (gc_rparan_semi_c)
 			buf.put_new_line
 			buf.put_string ("RTCK;")

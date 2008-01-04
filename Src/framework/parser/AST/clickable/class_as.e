@@ -458,19 +458,21 @@ feature -- Access
 	feature_with_name (n: INTEGER): FEATURE_AS is
 			-- Feature AST with internal name `n'.
 		local
-			cur: CURSOR
+			l_features: like features
+			i, l_count: INTEGER
+			l_area: SPECIAL [FEATURE_CLAUSE_AS]
 		do
-			if features /= Void then
-				cur := features.cursor
+			l_features := features
+			if l_features /= Void then
 				from
-					features.start
+					l_area := l_features.area
+					l_count := l_area.count
 				until
-					features.after or else Result /= Void
+					i = l_count or else Result /= Void
 				loop
-					Result := features.item.feature_with_name (n)
-					features.forth
+					Result := l_area [i].feature_with_name (n)
+					i := i + 1
 				end
-				features.go_to (cur)
 			end
 		end
 

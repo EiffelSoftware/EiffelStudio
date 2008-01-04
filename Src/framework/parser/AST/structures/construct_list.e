@@ -11,6 +11,8 @@ inherit
 	ARRAYED_LIST [T]
 		export
 			{ANY} all_default
+		redefine
+			make, make_filled
 		end
 
 create
@@ -19,15 +21,39 @@ create
 create {CONSTRUCT_LIST}
 	make_filled
 
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+			-- Creation of the list.
+		do
+				-- We always use 1 for lower so we can optimize array setup.
+			lower := 1
+			upper := n
+			create area.make (n)
+		end
+
+	make_filled (n: INTEGER) is
+			-- Creation of the list.
+		do
+				-- We always use 1 for lower so we can optimize array setup.
+			lower := 1
+			upper := n
+			count := n
+			create area.make (n)
+		end
+
 feature -- Special insertion
 
 	reverse_extend (v: T) is
 			-- Add `v' to `Current'
 		require
 			extendible: extendible
+		local
+			l_count: INTEGER
 		do
-			area.put (v, capacity - count - 1)
-			set_count (count + 1)
+			l_count := count
+			area.put (v, capacity - l_count - 1)
+			count := l_count + 1
 		end
 
 indexing

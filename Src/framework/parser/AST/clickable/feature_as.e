@@ -256,24 +256,24 @@ feature -- Access
 	feature_with_name (n: INTEGER): FEATURE_AS is
 			-- Feature ast with internal name `n'
 		local
-			cur: CURSOR
+			l_area: SPECIAL [FEATURE_NAME]
+			i, l_count: INTEGER
 		do
-			cur := feature_names.cursor
 			from
-				feature_names.start
+				l_area := feature_names.area
+				l_count := l_area.count
 			until
-				feature_names.after or else Result /= Void
+				Result /= Void or else i = l_count
 			loop
-				if n.is_equal (feature_names.item.internal_name.name_id) then
+				if n = l_area [i].internal_name.name_id then
 					Result := Current
 				end
-				feature_names.forth
+				i := i + 1
 			end
-			feature_names.go_to (cur)
 		end
 
 	has_feature_name (n: FEATURE_NAME): BOOLEAN is
-			-- Does this feature has the name `n'?
+			-- Does this feature have the name `n'?
 		local
 			cur: CURSOR
 		do

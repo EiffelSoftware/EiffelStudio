@@ -62,18 +62,20 @@ feature -- Analyzis
 			have_precond, have_postcond, has_invariant: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 			old_exp: UN_OLD_BL
+			l_context: like context
 		do
-			workbench_mode := context.workbench_mode
-			keep_assertions := workbench_mode or else context.system.keep_assertions
-			feat := Context.current_feature
-			inh_assert := Context.inherited_assertion
+			l_context := context
+			workbench_mode := l_context.workbench_mode
+			keep_assertions := workbench_mode or else l_context.system.keep_assertions
+			feat := l_context.current_feature
+			inh_assert := l_context.inherited_assertion
 			inh_assert.init
-			Context.set_origin_has_precondition (True)
-			if not Context.associated_class.is_basic and then feat.assert_id_set /= Void then
+			l_context.set_origin_has_precondition (True)
+			if not l_context.associated_class.is_basic and then feat.assert_id_set /= Void then
 					--! Do not get inherited pre & post for basic types
 				formulate_inherited_assertions (feat.assert_id_set)
 			end
-			context.set_assertion_type (0)
+			l_context.set_assertion_type (0)
 
 				-- Enlarge the tree to get some attribute where we
 				-- can store information gathered by analyze.
@@ -85,13 +87,13 @@ feature -- Analyzis
 			has_invariant := keep_assertions
 
 				-- Compute presence or not of pre/postconditions
-			if Context.origin_has_precondition then
+			if l_context.origin_has_precondition then
 				have_precond := (precondition /= Void or else inh_assert.has_precondition) and then keep_assertions
 			end
 			have_postcond := (postcondition /= Void or else inh_assert.has_postcondition) and then keep_assertions
 
 				-- Check if we need GC hooks for current body.
-			Context.compute_need_gc_hooks (have_precond or have_postcond or has_invariant)
+			l_context.compute_need_gc_hooks (have_precond or have_postcond or has_invariant)
 
 				-- Analyze arguments
 			analyze_arguments
@@ -99,7 +101,7 @@ feature -- Analyzis
 				-- Analyze preconditions
 			if have_precond then
 				if workbench_mode then
-					context.add_dt_current
+					l_context.add_dt_current
 				end
 				if inh_assert.has_precondition then
 					inh_assert.analyze_precondition
@@ -112,7 +114,7 @@ feature -- Analyzis
 				-- Analyze postconditions
 			if have_postcond then
 				if workbench_mode then
-					context.add_dt_current
+					l_context.add_dt_current
 				end
 				if old_expressions /= Void then
 					from
@@ -135,9 +137,9 @@ feature -- Analyzis
 
 				-- If result is expanded or a bit, we need to create it anyway
 			if not result_type.is_void then
-				type_i := context.real_type (result_type)
+				type_i := l_context.real_type (result_type)
 				if type_i.is_true_expanded or else type_i.is_bit then
-					context.mark_result_used
+					l_context.mark_result_used
 				end
 			end
 
@@ -155,7 +157,7 @@ feature -- Analyzis
 				-- Analyze postconditions
 			if have_postcond then
 				if workbench_mode then
-					context.add_dt_current
+					l_context.add_dt_current
 				end
 				if postcondition /= Void then
 					postcondition.analyze
@@ -169,17 +171,17 @@ feature -- Analyzis
 			end
 			if exception_stack_managed then
 					-- For RTEA call
-				context.mark_current_used
+				l_context.mark_current_used
 			end
 			if trace_enabled then
 					-- For RTTR and RTXT
-				context.add_dt_current
-				context.add_dt_current
+				l_context.add_dt_current
+				l_context.add_dt_current
 			end
 			if profile_enabled then
 					-- For RTPR and RTXP
-				context.add_dt_current
-				context.add_dt_current
+				l_context.add_dt_current
+				l_context.add_dt_current
 			end
 
 		end
@@ -248,7 +250,8 @@ feature -- Analyzis
 		do
 			buf := buffer
 			l_is_once := is_once
-			keep := context.workbench_mode or else context.system.keep_assertions
+			l_context := context
+			keep := l_context.workbench_mode or else l_context.system.keep_assertions
 
 				-- Generate the header "int foo(Current, args)"
 			type_c := real_type (result_type).c_type
@@ -264,7 +267,7 @@ feature -- Analyzis
 				generate_once_declaration (internal_name, type_c)
 			end
 
-			l_context := context
+
 
 				-- Generate reference to once manifest string field
 			l_context.generate_once_manifest_string_import (once_manifest_string_count)

@@ -31,29 +31,33 @@ feature -- Processing
 			-- tables.
 		local
 			i, nb: INTEGER
-			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			eif_class: EIFFEL_CLASS_C
+			l_area: SPECIAL [CLASS_C]
+			l_degree_output: like degree_output
 		do
-			nb := count
-			Degree_output.put_start_degree (Degree_number, nb)
-			classes := System.classes.sorted_classes
-			from i := 1 until nb = 0 loop
-				a_class := classes.item (i)
+			l_degree_output := Degree_output
+			from
+				nb := count
+				l_degree_output.put_start_degree (Degree_number, nb)
+				l_area := System.classes.sorted_classes.area
+			until
+				nb = 0
+			loop
+				a_class := l_area [i]
 				if a_class /= Void and then a_class.degree_1_needed then
 						-- only eiffel classes have degree1
 					check
 						eiffel_class: a_class.is_eiffel_class_c
 					end
 					eif_class := a_class.eiffel_class_c
-
-					Degree_output.put_degree_1 (eif_class, nb)
+					l_degree_output.put_degree_1 (eif_class, nb)
 					eif_class.melt_feature_and_descriptor_tables
 					nb := nb - 1
 				end
 				i := i + 1
 			end
-			Degree_output.put_end_degree
+			l_degree_output.put_end_degree
 		end
 
 feature -- Status report
@@ -92,17 +96,16 @@ feature -- Removal
 			-- Remove all classes.
 		local
 			i, nb: INTEGER
-			classes: ARRAY [CLASS_C]
+			l_area: SPECIAL [CLASS_C]
 			a_class: CLASS_C
 		do
 			from
-				i := 1
 				nb := count
-				classes := System.classes.sorted_classes
+				l_area := System.classes.sorted_classes.area
 			until
 				nb = 0
 			loop
-				a_class := classes.item (i)
+				a_class := l_area [i]
 				if a_class /= Void and then a_class.degree_1_needed then
 					a_class.remove_from_degree_1
 					nb := nb - 1

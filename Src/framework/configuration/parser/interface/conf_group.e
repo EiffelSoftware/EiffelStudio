@@ -233,7 +233,7 @@ feature -- Access queries
 			end
 			l_class_options := class_options
 			if l_class_options /= Void then
-				Result := class_options.item (l_name)
+				Result := l_class_options.item (l_name)
 				if Result /= Void then
 					Result := Result.twin
 					Result.merge (options)

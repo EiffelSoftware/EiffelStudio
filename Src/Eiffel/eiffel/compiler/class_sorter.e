@@ -183,7 +183,7 @@ feature {NONE} -- Filling
 		end
 
 	perform_sort is
-			-- Preform topological sort
+			-- Perform topological sort
 		require
 			good_context: count > 0
 		local

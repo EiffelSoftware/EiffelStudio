@@ -73,17 +73,21 @@ feature -- Line number setting
 
 	analyze is
 			-- Analyze assertion
+		local
+			l_expr: like expr
 		do
 			context.init_propagation
-			expr.propagate (No_register)
-			expr.analyze
-			expr.free_register
+			l_expr := expr
+			l_expr.propagate (No_register)
+			l_expr.analyze
+			l_expr.free_register
 		end
 
 	generate is
 			-- Generate assertion C code.
 		local
 			buf: GENERATION_BUFFER
+			l_expr: like expr
 		do
 			buf := buffer
 
@@ -104,9 +108,10 @@ feature -- Line number setting
 			buf.put_string (gc_rparan_semi_c)
 			buf.put_new_line
 				-- Now evaluate the expression
-			expr.generate
+			l_expr := expr
+			l_expr.generate
 			buf.put_string (gc_if_l_paran)
-			expr.print_register
+			l_expr.print_register
 			buf.put_string (") {")
 			generate_success (buf)
 			buf.put_string (gc_lacc_else_r_acc)

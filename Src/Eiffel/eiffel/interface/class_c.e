@@ -926,6 +926,7 @@ feature
 		local
 			a_class: CLASS_C
 			supplier_clients: like syntactical_clients
+			l_syntactical_suppliers: like syntactical_suppliers
 		do
 				-- Remove old syntactical supplier/client relations
 			from
@@ -947,16 +948,17 @@ feature
 			end
 				-- Add new syntactical supplier/client relations
 			from
-				syntactical_suppliers.start
+				l_syntactical_suppliers := syntactical_suppliers
+				l_syntactical_suppliers.start
 			until
-				syntactical_suppliers.off
+				l_syntactical_suppliers.off
 			loop
-				a_class := syntactical_suppliers.item
+				a_class := l_syntactical_suppliers.item
 				if a_class /= Current then
 					supplier_clients := a_class.syntactical_clients
 					supplier_clients.extend (Current)
 				end
-				syntactical_suppliers.forth
+				l_syntactical_suppliers.forth
 			end
 		end
 
@@ -996,10 +998,12 @@ feature
 			l_area: SPECIAL [CLASS_C]
 			i, nb: INTEGER
 			c: CLASS_C
+			l_parents_classes: like parents_classes
 		do
 			from
-				l_area := parents_classes.area
-				nb := parents_classes.count
+				l_parents_classes := parents_classes
+				l_area := l_parents_classes.area
+				nb := l_parents_classes.count
 			until
 				i = nb
 			loop
@@ -1876,7 +1880,7 @@ feature -- Convenience features
 		end
 
 	is_full_class_checking: BOOLEAN is
-			-- Do we perform a flat checking on the calss, i.e. checking
+			-- Do we perform a flat checking on the class, i.e. checking
 			-- inherited routines in the context of the descendant class?
 		do
 			Result := lace_class.is_full_class_checking
@@ -2181,6 +2185,7 @@ end
 				not data.has_formal
 		local
 			new_class_type: CLASS_TYPE
+			l_parents_classes: like parents_classes
 		do
 			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
@@ -2205,12 +2210,13 @@ end
 						-- all the required class types are registered
 						-- for generating this expanded class type
 					from
-						parents_classes.start
+						l_parents_classes := parents_classes
+						l_parents_classes.start
 					until
-						parents_classes.after
+						l_parents_classes.after
 					loop
-						parents_classes.item.update_filter_anchored_types (new_class_type)
-						parents_classes.forth
+						l_parents_classes.item.update_filter_anchored_types (new_class_type)
+						l_parents_classes.forth
 					end
 				end
 			end
@@ -2663,8 +2669,10 @@ feature -- Initialization
 			l.set_compiled_class (Current)
 
 				-- Set `is_class_any' and `is_class_none'
-			is_class_any := name.is_equal ("ANY")
-			is_class_none := name.is_equal ("NONE")
+
+				--| FIXME IEK Perhaps a 'NONE_B' and 'ANY_B' where these were redefinable functions would be better.
+			is_class_any := name.is_equal (once "ANY")
+			is_class_none := name.is_equal (once "NONE")
 				-- Creation of the descendant list
 			create direct_descendants.make (10)
 				-- Creation of the supplier list

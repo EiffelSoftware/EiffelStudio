@@ -886,6 +886,7 @@ feature {NONE} -- Implementation
 			old_group_void: old_group = Void
 		local
 			l_group: CONF_GROUP
+			l_old_group: like old_group
 		do
 			from
 				a_new_groups.start
@@ -893,26 +894,24 @@ feature {NONE} -- Implementation
 				a_new_groups.after
 			loop
 				l_group := a_new_groups.item_for_iteration
-
 				if l_group.is_enabled (state) then
-						-- look for a group in old groups with the same name
+						-- Look for a group in old groups with the same name
 						-- this should work in most situations, in the rest of
 						-- the situations we don't find the old classes and have
 						-- to start with them from scratch, but it works anyway.
 					if an_old_groups /= Void then
-						old_group := an_old_groups.item (l_group.name)
-						if old_group /= Void and then not old_group.classes_set then
-							old_group := Void
-						end
-						check
-							old_group_computed: old_group /= Void implies old_group.classes_set
-						end
-						if old_group /= Void then
-							handled_groups.force (old_group)
-							if old_group /= l_group then
-								old_group.invalidate
+						l_old_group := an_old_groups.item (l_group.name)
+						if l_old_group /= Void then
+							if l_old_group.classes /= Void then
+								handled_groups.force (l_old_group)
+								if l_old_group /= l_group then
+									l_old_group.invalidate
+									old_group := l_old_group
+								else
+									old_group := l_old_group.twin
+								end
 							else
-								old_group := old_group.twin
+								old_group := Void
 							end
 						end
 					end

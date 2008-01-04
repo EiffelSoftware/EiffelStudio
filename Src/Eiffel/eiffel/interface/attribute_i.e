@@ -372,7 +372,9 @@ feature -- Element Change
 			current_type: CLASS_TYPE
 			r_id: INTEGER
 			rout_info: ROUT_INFO
+			l_byte_context: like byte_context
 		do
+			l_byte_context := byte_context
 			ba := Byte_array
 			ba.clear
 
@@ -385,7 +387,7 @@ feature -- Element Change
 				-- Real body id ( -1 because it's an attribute. We can't set a breakpoint )
 			ba.append_integer (-1)
 				-- Meta-type of Result
-			result_type := byte_context.real_type (type.type_i)
+			result_type := l_byte_context.real_type (type.type_i)
 			ba.append_integer (result_type.sk_value)
 				-- Argument count
 			ba.append_short_integer (0)
@@ -399,7 +401,7 @@ feature -- Element Change
 				-- Feature name
 			ba.append_raw_string (feature_name)
 				-- Type where the feature is written in
-			current_type := byte_context.class_type
+			current_type := l_byte_context.class_type
 			ba.append_short_integer (current_type.type_id - 1)
 
 				-- No rescue

@@ -30,19 +30,27 @@ feature -- Processing
 			-- Melt features (write feature byte code on disk).
 		local
 			i, nb: INTEGER
-			classes: ARRAY [CLASS_C]
+			l_area: SPECIAL [CLASS_C]
 			a_class: CLASS_C
+			l_degree_output: like degree_output
+			l_system: like system
 		do
 			nb := count
-			Degree_output.put_start_degree (Degree_number, nb)
-			classes := System.classes.sorted_classes
-			if System.freeze or System.il_generation or lace.compile_all_classes then
-				from i := 1 until nb = 0 loop
-					a_class := classes.item (i)
+			l_degree_output := degree_output
+			l_system := system
+			l_degree_output.put_start_degree (Degree_number, nb)
+			l_area := l_system.classes.sorted_classes.area
+
+			if l_system.freeze or else l_system.il_generation or else lace.compile_all_classes then
+				from
+				until
+					nb = 0
+				loop
+					a_class := l_area [i]
 					if a_class /= Void and then a_class.degree_2_needed then
-						System.set_current_class (a_class)
+						l_system.set_current_class (a_class)
 						if a_class.has_features_to_melt then
-							Degree_output.put_degree_2 (a_class, nb)
+							l_degree_output.put_degree_2 (a_class, nb)
 							a_class.update_execution_table
 						end
 						a_class.remove_from_degree_2
@@ -51,13 +59,17 @@ feature -- Processing
 					i := i + 1
 				end
 			else
-				from i := 1 until nb = 0 loop
-					a_class := classes.item (i)
+				from
+					i := 0
+				until
+					nb = 0
+				loop
+					a_class := l_area [i]
 					if a_class /= Void and then a_class.degree_2_needed then
-						System.set_current_class (a_class)
+						l_system.set_current_class (a_class)
 						a_class.feature_table.melt
 						if a_class.has_features_to_melt then
-							Degree_output.put_degree_2 (a_class, nb)
+							l_degree_output.put_degree_2 (a_class, nb)
 							a_class.melt
 						end
 						a_class.remove_from_degree_2
@@ -67,20 +79,20 @@ feature -- Processing
 				end
 			end
 			count := 0
-			System.set_current_class (Void)
-			Degree_output.put_end_degree
+			l_system.set_current_class (Void)
+			l_degree_output.put_end_degree
 		end
 
 	initialize_non_generic_types is
 			-- Initialize types of non-generic classes.
 		local
 			i, nb: INTEGER
-			classes: ARRAY [CLASS_C]
+			classes: SPECIAL [CLASS_C]
 			a_class: CLASS_C
 		do
 			nb := count
-			classes := System.classes.sorted_classes
-			from i := 1 until nb = 0 loop
+			classes := System.classes.sorted_classes.area
+			from i := 0 until nb = 0 loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_2_needed then
 					if a_class.changed and then a_class.generics = Void then

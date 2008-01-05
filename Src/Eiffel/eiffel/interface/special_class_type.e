@@ -283,7 +283,9 @@ feature {NONE} -- C code generation
 			index_type_name: STRING
 			value_arg_name: STRING
 			index_arg_name: STRING
+			l_byte_context: like byte_context
 		do
+			l_byte_context := byte_context
 			gen_param := first_generic
 			l_param_is_expanded := gen_param.is_true_expanded
 			type_c := gen_param.c_type
@@ -293,7 +295,7 @@ feature {NONE} -- C code generation
 
 			System.used_features_log_file.add (Current, "put", encoded_name)
 
-			final_mode := byte_context.final_mode
+			final_mode := l_byte_context.final_mode
 
 			if final_mode then
 				value_type_name := type_c.c_string
@@ -308,7 +310,7 @@ feature {NONE} -- C code generation
 			end
 
 			buffer.generate_function_signature ("void", encoded_name, True,
-				Byte_context.header_buffer, <<"Current", value_arg_name, index_arg_name>>,
+				l_byte_context.header_buffer, <<"Current", value_arg_name, index_arg_name>>,
 				<<"EIF_REFERENCE", value_type_name, index_type_name>>)
 
 			buffer.indent
@@ -385,7 +387,7 @@ feature {NONE} -- C code generation
 			if final_mode then
 					-- Generate generic wrapper.
 				buffer.generate_pure_function_signature ("void", encoded_name + "2", True,
-					Byte_context.header_buffer, <<"Current", "arg1", "arg2">>,
+					l_byte_context.header_buffer, <<"Current", "arg1", "arg2">>,
 					<<"EIF_REFERENCE", "EIF_REFERENCE", "EIF_INTEGER">>)
 				buffer.put_character ('{')
 				buffer.put_new_line
@@ -416,7 +418,7 @@ feature {NONE} -- C code generation
 
 			buffer.put_new_line
 
-			byte_context.clear_feature_data
+			l_byte_context.clear_feature_data
 		end
 
 	generate_item (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
@@ -615,7 +617,9 @@ feature {NONE} -- C code generation
 			result_type_name: STRING
 			index_type_name: STRING
 			index_arg_name: STRING
+			l_byte_context: like byte_context
 		do
+			l_byte_context := byte_context
 			gen_param := first_generic
 			l_param_is_expanded := gen_param.is_true_expanded
 			type_c := gen_param.c_type
@@ -628,7 +632,7 @@ feature {NONE} -- C code generation
 
 			System.used_features_log_file.add (Current, "item_address", encoded_name)
 
-			if byte_context.workbench_mode then
+			if l_byte_context.workbench_mode then
 				result_type_name := "EIF_TYPED_VALUE"
 				index_type_name := "EIF_TYPED_VALUE"
 				index_arg_name := "arg1x"
@@ -639,12 +643,12 @@ feature {NONE} -- C code generation
 			end
 
 			buffer.generate_function_signature (result_type_name, encoded_name, True,
-				byte_context.header_buffer,
+				l_byte_context.header_buffer,
 				<<"Current", index_arg_name>>, <<"EIF_REFERENCE", index_type_name>>)
 
 			buffer.indent
 
-			if byte_context.workbench_mode then
+			if l_byte_context.workbench_mode then
 				buffer.put_string ("EIF_TYPED_VALUE r;")
 				buffer.put_new_line
 				buffer.put_string ("r.")
@@ -659,9 +663,9 @@ feature {NONE} -- C code generation
 				buffer.restore_margin
 			end
 
-			generate_precondition (buffer, byte_context.final_mode, "arg1")
+			generate_precondition (buffer, l_byte_context.final_mode, "arg1")
 
-			if byte_context.workbench_mode then
+			if l_byte_context.workbench_mode then
 				buffer.put_string ("r.")
 				result_type.c_type.generate_typed_field (buffer)
 				buffer.put_string (" = ")
@@ -671,7 +675,7 @@ feature {NONE} -- C code generation
 			result_type.c_type.generate_cast (buffer)
 			buffer.put_string ("(Current + ")
 			if l_param_is_expanded then
-				if byte_context.final_mode then
+				if l_byte_context.final_mode then
 					expanded_type ?= gen_param
 					l_exp_class_type := expanded_type.associated_class_type
 						-- It is set to True because at the moment we need a header in
@@ -696,18 +700,18 @@ feature {NONE} -- C code generation
 				type_c.generate (buffer)
 				buffer.put_string ("));")
 			end
-			if byte_context.workbench_mode then
+			if l_byte_context.workbench_mode then
 				buffer.put_new_line
 				buffer.put_string ("return r;")
 			end
 			buffer.exdent
-			if byte_context.workbench_mode then
+			if l_byte_context.workbench_mode then
 				buffer.put_new_line
 				buffer.put_string ("#undef arg1")
 			end
 			buffer.put_string ("%N}%N%N")
 
-			byte_context.clear_feature_data
+			l_byte_context.clear_feature_data
 		end
 
 	generate_base_address (feat: FEATURE_I; buffer: GENERATION_BUFFER) is

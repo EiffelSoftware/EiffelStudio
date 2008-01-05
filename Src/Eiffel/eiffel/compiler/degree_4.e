@@ -89,9 +89,15 @@ feature -- Processing
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			l_error_level: NATURAL
+			l_system: like system
+			l_degree_output: like degree_output
+			l_error_handler: like error_handler
 		do
-			Degree_output.put_start_degree (Degree_number, count)
-			classes := System.classes.sorted_classes
+			l_system := system
+			l_degree_output := degree_output
+			l_error_handler := error_handler
+			l_degree_output.put_start_degree (Degree_number, count)
+			classes := l_system.classes.sorted_classes
 			ignored_classes.wipe_out
 
 				-- We need to clean the cache of feature tables since we would not know how
@@ -100,7 +106,7 @@ feature -- Processing
 
 				-- Reset routine IDs for `ANY.default_create', `ANY.default_rescue' and `SPECIAL.make'
 				-- as they might change if they go again through degree 4.
-			system.reset_routine_ids
+			l_system.reset_routine_ids
 
 				-- Check that the constraint class is a valid class.
 				-- I.e. we cannot have [G -> like t] or others.
@@ -111,7 +117,7 @@ feature -- Processing
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed then
 						if a_class.changed and then a_class.generics /= Void then
-							System.set_current_class (a_class)
+							l_system.set_current_class (a_class)
 							a_class.check_constraint_genericity
 							if constraint_error_list /= Void and then not constraint_error_list.is_empty then
 								insert_class (a_class)
@@ -137,12 +143,12 @@ feature -- Processing
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed and not ignored_classes.has (a_class) then
-						Degree_output.put_degree_4 (a_class, count - nb)
-						System.set_current_class (a_class)
+						l_degree_output.put_degree_4 (a_class, count - nb)
+						l_system.set_current_class (a_class)
 							-- Adds future checks to the `remaining_validity_checking_list'
-						l_error_level := error_handler.error_level
+						l_error_level := l_error_handler.error_level
 						process_class (a_class)
-						if error_handler.error_level = l_error_level then
+						if l_error_handler.error_level = l_error_level then
 								-- We only merge the remaining checks if the class did not produce any other errors
 							merge_remaining_validity_checks_into_global_list
 							a_class.set_degree_4_processed
@@ -161,8 +167,8 @@ feature -- Processing
 			end
 
 				-- No need to continue if we have found some errors.
-			if error_handler.has_error then
-				error_handler.raise_error
+			if l_error_handler.has_error then
+				l_error_handler.raise_error
 			end
 
 				-- Check now the validity on creation constraint, i.e. that the
@@ -174,11 +180,11 @@ feature -- Processing
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
 					if a_class.changed and then a_class.generics /= Void then
-						System.set_current_class (a_class)
-						l_error_level := error_handler.error_level
+						l_system.set_current_class (a_class)
+						l_error_level := l_error_handler.error_level
 						a_class.check_constraint_renaming
-							-- We only check the creation constraitns if the renaming was valid.
-						if error_handler.error_level = l_error_level then
+							-- We only check the creation constraints if the renaming was valid.
+						if l_error_handler.error_level = l_error_level then
 							a_class.check_creation_constraint_genericity
 						end
 					end
@@ -189,24 +195,24 @@ feature -- Processing
 
 				-- We cannot go on here as the creation constraints are not guaranteed to be valid.
 				-- The remaining_validity_check_list will be kept. All checks will be done once we have no mroe errors.
-			if error_handler.has_error then
-				error_handler.raise_error
+			if l_error_handler.has_error then
+				l_error_handler.raise_error
 			end
 
 				-- Check now that all the instances of a generic class are
 				-- valid for the creation constraint if there is one. The
 				-- checks have been stored in `remaining_validity_checking_list'.
-			check_creation_constraint_instances (error_handler.has_error)
+			check_creation_constraint_instances (l_error_handler.has_error)
 
-			if System.has_expanded and then not is_empty then
-				System.check_vtec
+			if l_system.has_expanded and then not is_empty then
+				l_system.check_vtec
 			end
 
 			wipe_out
 
 			changed_status.wipe_out
-			System.set_current_class (Void)
-			Degree_output.put_end_degree
+			l_system.set_current_class (Void)
+			l_degree_output.put_end_degree
 		end
 
 feature -- Element change

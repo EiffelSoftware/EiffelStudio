@@ -44,49 +44,65 @@ feature -- Processing
 			-- Process all classes.
 		local
 			i, nb_errors: INTEGER
-			classes: ARRAY [CLASS_C]
-			class_counter: CLASS_COUNTER
-			a_class: CLASS_C
+			l_classes: ARRAY [CLASS_C]
+			l_class: CLASS_C
 			l_error_level: NATURAL
 			l_classes_with_error: ARRAY [BOOLEAN]
+			l_degree_output: like degree_output
+			l_system: like system
+			l_error_handler: like error_handler
+			l_class_counter: CLASS_COUNTER
+			l_error_found: BOOLEAN
 		do
-			Degree_output.put_start_degree (Degree_number, count)
-			classes := System.classes
+			l_degree_output := Degree_output
+			l_degree_output.put_start_degree (Degree_number, count)
+
+			l_system := system
+			l_error_handler := error_handler
+			l_classes := l_system.classes
 				-- We do not process more than once classes that had an error.
-			create l_classes_with_error.make (classes.lower, classes.lower - 1)
-			class_counter := System.class_counter
+			create l_classes_with_error.make (l_classes.lower, l_classes.lower - 1)
 			Workbench.set_compilation_started
 				-- We loop until we reached the number of classes with an error or found more errors
 				-- than classes to process.
-			from until count <= nb_errors loop
+			from
+				l_class_counter := l_system.class_counter
+			until
+				count <= nb_errors
+			loop
 					-- Traverse several times the list of classes
 					-- because syntactical clients may be added to
 					-- Degree 5 before the current cursor position
 					-- during the process.
-				from i := 1 until i > class_counter.count loop
-					a_class := classes.item (i)
+				from
+					i := 1
+				until
+					i > l_class_counter.count
+				loop
+					l_class := l_classes.item (i)
 					if
-						a_class /= Void and then a_class.degree_5_needed and
-						(not l_classes_with_error.valid_index (i) or else not l_classes_with_error [i])
+						l_class /= Void and then l_class.degree_5_needed and then
+						l_error_found implies (not l_classes_with_error.valid_index (i) or else not l_classes_with_error [i])
 					then
-						Degree_output.put_degree_5 (a_class, count)
-						System.set_current_class (a_class)
-						l_error_level := error_handler.error_level
-						process_class (a_class)
-						if error_handler.error_level /= l_error_level then
-							l_classes_with_error.force (True, i)
+						l_degree_output.put_degree_5 (l_class, count)
+						l_system.set_current_class (l_class)
+						l_error_level := l_error_handler.error_level
+						process_class (l_class)
+						if l_error_handler.error_level /= l_error_level then
+							l_error_found := True
+							l_classes_with_error.force (l_error_found, i)
 							nb_errors := nb_errors + 1
-						elseif a_class.degree_5_needed then
+						elseif l_class.degree_5_needed then
 								-- Remove class if not already done.
-							a_class.remove_from_degree_5
+							l_class.remove_from_degree_5
 							count := count - 1
 						end
 					end
 					i := i + 1
 				end
 			end
-			error_handler.checksum
-			Degree_output.put_end_degree
+			l_error_handler.checksum
+			l_degree_output.put_end_degree
 		end
 
 	post_degree_5_execute is

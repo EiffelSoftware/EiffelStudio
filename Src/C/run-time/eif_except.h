@@ -60,6 +60,7 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 #define ex_id		exu.exur.exur_id
 #define ex_rout		exu.exur.exur_rout
 #define ex_orig		exu.exur.exur_orig
+#define ex_dtype	exu.exur.exur_dtype
 #define ex_sig		exu.exu_sig
 #define ex_errno	exu.exu_errno
 #define ex_lvl		exu.exu_lvl
@@ -178,8 +179,8 @@ RT_LNK void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */
 #ifndef WORKBENCH
 RT_LNK struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif
-RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object); /* Set execution stack on routine entrance */
-RT_LNK struct ex_vect *new_exset(EIF_CONTEXT char *name, int origin, char *object, uint32 loc_nb, uint32 arg_nb, BODY_INDEX bid); /* Set execution stack on routine entrance */
+RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, EIF_TYPE_INDEX origin, char *object); /* Set execution stack on routine entrance */
+RT_LNK struct ex_vect *new_exset(EIF_CONTEXT char *name, EIF_TYPE_INDEX origin, char *object, uint32 loc_nb, uint32 arg_nb, BODY_INDEX bid); /* Set execution stack on routine entrance */
 
 /* Routines for run-time usage only */
 RT_LNK void esdie(int code);

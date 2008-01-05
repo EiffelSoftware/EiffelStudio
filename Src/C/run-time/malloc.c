@@ -121,10 +121,13 @@ doc:	</description>
 #define NEXT(zone)			(zone)->ov_next
 #define PREVIOUS(zone)		(*(union overhead **) (zone + 1))
 
+/* Objects of tiny size 0, 4 are very expensive to manage in the free-list, thus we make them not small,
+ * but large enough to hold a pointer to the previous block (see PREVIOUS for where it is used). */
+#define MIN_OBJECT_SIZE(n) ((n) > sizeof(union overhead *) ? (n) : sizeof(union overhead *))
+
 /* Fast access to `hlist'. All sizes between `0' and HLIST_SIZE_LIMIT - ALIGNMAX
  * with their own padding which is a multiple of ALIGNMAX
  * have their own entry in the `hlist'.
- *  E.g.: 0,  4,  8, ...., 252 in case where ALIGNMAX = 4
  *  E.g.: 0,  8, 16, ...., 504 in case where ALIGNMAX = 8
  *  E.g.: 0, 16, 32, ...., 1008 in case where ALIGNMAX = 16
  
@@ -415,7 +418,7 @@ rt_public void sc_stop(void);					/* Stop the scavenging process */
 #endif
 
 /* Eiffel object setting */
-rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dtype);					/* Set Eiffel object prior use */
+rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX dtype);					/* Set Eiffel object prior use */
 rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge);				/* Set special Eiffel object */
 
 #ifdef ISE_GC
@@ -465,9 +468,7 @@ doc:	</routine>
 rt_private void boehm_dispose (union overhead *header, GC_PTR cd)
 	/* Record `dispose' routine fro Boehm GC. */
 {
-	uint32 dtype;
-	dtype = Deif_bid(header->ov_flags);
-	DISP(dtype, (EIF_REFERENCE) (header + 1));
+	DISP(header->ov_dtype, (EIF_REFERENCE) (header + 1));
 }
 #endif
 
@@ -638,7 +639,7 @@ rt_shared EIF_LW_MUTEX_TYPE *trigger_gc_mutex = NULL;
 /*
 doc:	<routine name="smart_emalloc" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Perform smart allocation of either a TUPLE object or a normal object. It does not take into account SPECIAL or BIT creation as a size is required for those. See `emalloc' comments for me details.</summary>
-doc:		<param name="ftype" type="uint32">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
+doc:		<param name="ftype" type="EIF_TYPE_INDEX">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
 doc:		<return>A newly allocated object if successful, otherwise throw an exception</return>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
@@ -646,9 +647,9 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE smart_emalloc (uint32 ftype)
+rt_public EIF_REFERENCE smart_emalloc (EIF_TYPE_INDEX ftype)
 {
-	int32 type = (int32) Deif_bid(ftype);
+	EIF_TYPE_INDEX type = To_dtype(ftype);
 	if (type == egc_tup_dtype) {
 		return tuple_malloc (ftype);
 	} else {
@@ -667,17 +668,17 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE emalloc (uint32 ftype)
+rt_public EIF_REFERENCE emalloc (EIF_TYPE_INDEX ftype)
 {
-	uint32 type = (uint32) Deif_bid(ftype);
+	EIF_TYPE_INDEX type = To_dtype(ftype);
 	return emalloc_size (ftype, type, EIF_Size(type));
 }
 
 /*
 doc:	<routine name="emalloc_size" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Memory allocation for a normal Eiffel object (i.e. not BIT, SPECIAL or TUPLE).</summary>
-doc:		<param name="ftype" type="uint32">Full dynamic type used to initialize full dynamic type overhead part of Eiffel object.</param>
-doc:		<param name="type" type="uint32">Dynamic type used to initialize flags overhead part of Eiffel object, mostly used if type is a deferred one, or if it is an expanded one, or if it has a dispose routine.</param>
+doc:		<param name="ftype" type="EIF_TYPE_INDEX">Full dynamic type used to initialize full dynamic type overhead part of Eiffel object.</param>
+doc:		<param name="type" type="EIF_TYPE_INDEX">Dynamic type used to initialize flags overhead part of Eiffel object, mostly used if type is a deferred one, or if it is an expanded one, or if it has a dispose routine.</param>
 doc:		<param name="nbytes" type="uint32">Number of bytes to allocate for this type.</param>
 doc:		<return>A newly allocated object holding at least `nbytes' if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
@@ -686,7 +687,7 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
+rt_public EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX type, uint32 nbytes)
 {
 	EIF_REFERENCE object;				/* Pointer to the freshly created object */
 #ifdef ISE_GC
@@ -703,7 +704,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #if defined(BOEHM_GC) || defined(NO_GC)
 	object = external_allocation (References(type) == 0, (int) Disp_rout(type), nbytes);
 	if (object != NULL) {
-		return eif_set(object, ftype | EO_NEW, type);
+		return eif_set(object, EO_NEW, ftype, type);
 	} else {
 		eraise("object allocation", EN_MEM);	/* Signals no more memory */
 		return NULL;
@@ -711,10 +712,8 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #endif
 
 #ifdef ISE_GC
-		/* Objects of size 0 are very expensive to manage in the free-list, thus we make them not 0. */
-	if (nbytes == 0) {
-		nbytes = OVERHEAD;
-	}
+		/* Objects of tiny size are very expensive to manage in the free-list, thus we make them not tiny. */
+	nbytes = MIN_OBJECT_SIZE(nbytes); 
 
 		/* We really use at least ALIGNMAX, to avoid alignement problems.
 		 * So even if nbytes is 0, some memory will be used (the header), he he !!
@@ -736,14 +735,14 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	if ((gen_scavenge == GS_ON) && (nbytes <= (unsigned int) eif_gs_limit)) {
 		object = malloc_from_zone(nbytes);
 		if (object) {
-			return eif_set(object, ftype, type);	/* Set for Eiffel use */
+			return eif_set(object, 0, ftype, type);	/* Set for Eiffel use */
 		} else if (trigger_smart_gc_cycle()) {
 				/* First allocation in scavenge zone failed. If `trigger_smart_gc_cycle' was
 				 * successful, let's try again as this is a more efficient way to allocate
 				 * in the scavenge zone. */
 			object = malloc_from_zone (nbytes);
 			if (object) {
-				return eif_set(object, ftype, type);	/* Set for Eiffel use */
+				return eif_set(object, 0, ftype, type);	/* Set for Eiffel use */
 			}
 		}
 	}
@@ -752,7 +751,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	CHECK("Not too big", !(nbytes & ~B_SIZE));
 	object = malloc_from_eiffel_list (nbytes);
 	if (object) {
-		return eif_set(object, ftype | EO_NEW, type);		/* Set for Eiffel use */
+		return eif_set(object, EO_NEW, ftype, type);		/* Set for Eiffel use */
 	} else {
 			/*
 			 * Allocation failed even if GC was requested. We can only make some space
@@ -766,7 +765,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 		object = malloc_from_eiffel_list_no_gc (nbytes);		/* Retry with GC off this time */
 
 		if (object) {
-			return eif_set(object, ftype | EO_NEW, type);		/* Set for Eiffel use */
+			return eif_set(object, EO_NEW, ftype, type);		/* Set for Eiffel use */
 		}
 	}
 
@@ -789,10 +788,10 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE emalloc_as_old(uint32 ftype)
+rt_public EIF_REFERENCE emalloc_as_old(EIF_TYPE_INDEX ftype)
 {
 	EIF_REFERENCE object;				/* Pointer to the freshly created object */
-	uint32 type = (uint32) Deif_bid(ftype);
+	EIF_TYPE_INDEX type = To_dtype(ftype);
 	uint32 nbytes = EIF_Size(type);
 
 #ifdef ISE_GC
@@ -809,7 +808,7 @@ rt_public EIF_REFERENCE emalloc_as_old(uint32 ftype)
 #if defined(BOEHM_GC) || defined(NO_GC)
 	object = external_allocation (References(type) == 0, (int) Disp_rout(type), nbytes);
 	if (object != NULL) {
-		return eif_set(object, ftype | EO_OLD, type);
+		return eif_set(object, EO_OLD, ftype, type);
 	} else {
 		eraise("object allocation", EN_MEM);	/* Signals no more memory */
 		return NULL;
@@ -828,7 +827,7 @@ rt_public EIF_REFERENCE emalloc_as_old(uint32 ftype)
 	CHECK("Not too big", !(nbytes & ~B_SIZE));
 	object = malloc_from_eiffel_list (nbytes);
 	if (object) {
-		return eif_set(object, ftype | EO_OLD, type);		/* Set for Eiffel use */
+		return eif_set(object, EO_OLD, ftype, type);		/* Set for Eiffel use */
 	} else {
 			/*
 			 * Allocation failed even if GC was requested. We can only make some space
@@ -842,7 +841,7 @@ rt_public EIF_REFERENCE emalloc_as_old(uint32 ftype)
 		object = malloc_from_eiffel_list_no_gc (nbytes);		/* Retry with GC off this time */
 
 		if (object) {
-			return eif_set(object, ftype | EO_OLD, type);		/* Set for Eiffel use */
+			return eif_set(object, EO_OLD, ftype, type);		/* Set for Eiffel use */
 		}
 	}
 
@@ -857,7 +856,7 @@ rt_public EIF_REFERENCE emalloc_as_old(uint32 ftype)
 doc:	<routine name="sp_init" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Initialize special object of expanded `obj' from `lower' position to `upper' position. I.e. creating new instances of expanded objects and assigning them from `obj [lower]' to `obj [upper]'.</summary>
 doc:		<param name="obj" type="EIF_REFERENCE">Special object of expanded which will be initialized.</param>
-doc:		<param name="dftype" type="uint32">Dynamic type of expanded object to create for each entry of special object `obj'.</param>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Dynamic type of expanded object to create for each entry of special object `obj'.</param>
 doc:		<param name="lower" type="EIF_INTEGER">Lower bound of `obj'.</param>
 doc:		<param name="upper" type="EIF_INTEGER">Upper bound of `obj'.</param>
 doc:		<return>New address of `obj' in case a GC collection was performed.</return>
@@ -866,13 +865,13 @@ doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper)
+rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_INTEGER lower, EIF_INTEGER upper)
 {
 	EIF_GET_CONTEXT
 
 	EIF_INTEGER elem_size, i;
 	union overhead *zone;
-	uint32 dtype = Deif_bid(dftype);
+	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 	EIF_INTEGER offset;
 	void *(*cp) (EIF_REFERENCE);
 	void *(*init) (EIF_REFERENCE, EIF_REFERENCE);
@@ -901,7 +900,9 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 				for (i = lower, offset = elem_size * i; i <= upper; i++) {
 					zone = (union overhead *) (obj + offset);
 					zone->ov_size = OVERHEAD + offset;	/* For GC */
-					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+					zone->ov_flags = EO_EXP;	/* Expanded type */
+					zone->ov_dftype = dftype;
+					zone->ov_dtype = dtype;
 					(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
 					(cp) (obj + OVERHEAD + offset);
 					offset += elem_size;
@@ -912,7 +913,9 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 				for (i = lower, offset = elem_size * i; i <= upper; i++) {
 					zone = (union overhead *) (obj + offset);
 					zone->ov_size = OVERHEAD + offset;	/* For GC */
-					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+					zone->ov_flags = EO_EXP;	/* Expanded type */
+					zone->ov_dftype = dftype;
+					zone->ov_dtype = dtype;
 					(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
 					offset += elem_size;
 				}
@@ -924,7 +927,9 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 				for (i = lower, offset = elem_size * i; i <= upper; i++) {
 					zone = (union overhead *) (obj + offset);
 					zone->ov_size = OVERHEAD + offset;	/* For GC */
-					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+					zone->ov_flags = EO_EXP;	/* Expanded type */
+					zone->ov_dftype = dftype;
+					zone->ov_dtype = dtype;
 					(cp) (obj + OVERHEAD + offset);
 					offset += elem_size;
 				}
@@ -934,7 +939,9 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 				for (i = lower; i <= upper; i++, exp += elem_size) {
 					zone = (union overhead *) exp;
 					zone->ov_size = OVERHEAD + elem_size * i;	/* For GC */
-					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
+					zone->ov_flags = EO_EXP;	/* Expanded type */
+					zone->ov_dftype = dftype;
+					zone->ov_dtype = dtype;
 				}
 			}
 		}
@@ -957,7 +964,8 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 /*
 doc:	<routine name="special_malloc" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Allocated new SPECIAL object with flags `flags' (flags includes the full dynamic type). Elements are zeroed, It initializes elements of a special of expanded.</summary>
-doc:		<param name="flags" type="uint32">Dynamic type of TUPLE object to create along with flags.</param>
+doc:		<param name="flags" type="uint16">Flags of SPECIAL.</param>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Full dynamic type of SPECIAL.</param>
 doc:		<param name="nb" type="EIF_INTEGER">Number of element in special.</param>
 doc:		<param name="element_size" type="uint32">Size of element in special.</param>
 doc:		<param name="atomic" type="EIF_BOOLEAN">Is this a special of basic types?</param>
@@ -968,7 +976,7 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic)
+rt_public EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic)
 {
 	EIF_REFERENCE result = NULL;
 	EIF_REFERENCE offset;
@@ -982,6 +990,8 @@ rt_public EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 ele
 
 	zone = HEADER(result);
 	zone->ov_flags |= flags;
+	zone->ov_dftype = dftype;
+	zone->ov_dtype = To_dtype(dftype);
 
 	offset = RT_SPECIAL_INFO_WITH_ZONE(result, zone);
 
@@ -991,8 +1001,7 @@ rt_public EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 ele
 	if (flags & EO_COMP) {
 			/* It is a composite object, that is to say a special of expanded,
 			 * we need to initialize every entry properly. */
-		uint32 exp_dtype = eif_gen_param_id (-1, (int16) (flags & EO_TYPE), 1);
-		result = sp_init (result, exp_dtype, 0, nb - 1);
+		result = sp_init (result, eif_gen_param_id(INVALID_DTYPE, dftype, 1), 0, nb - 1);
 	}
 	return result;
 }
@@ -1000,7 +1009,7 @@ rt_public EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 ele
 /*
 doc:	<routine name="tuple_malloc" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Allocated new TUPLE object of type `ftype'. It internally calls `tuple_malloc_specific' therefore it computes `count' of TUPLE to create as wekl as determines if TUPLE is atomic or not.</summary>
-doc:		<param name="ftype" type="uint32">Dynamic type of TUPLE object to create.</param>
+doc:		<param name="ftype" type="EIF_TYPE_INDEX">Dynamic type of TUPLE object to create.</param>
 doc:		<return>A newly allocated TUPLE object of type `ftype' if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
@@ -1008,24 +1017,23 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE tuple_malloc (uint32 ftype)
+rt_public EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype)
 {
-	unsigned int i, count;
+	uint32 i, count;
 	EIF_BOOLEAN is_atomic = EIF_TRUE;
-	int16 dftype = (int16) ftype;
 
-	REQUIRE("Is a tuple type", Deif_bid(ftype) == egc_tup_dtype);
+	REQUIRE("Is a tuple type", To_dtype(ftype) == egc_tup_dtype);
 
 		/* We add + 1 since TUPLE objects have `count + 1' element
 		 * to avoid doing -1 each time we try to access an item at position `pos'.
 		 */
-	count = eif_gen_count_with_dftype (dftype) + 1;
+	count = eif_gen_count_with_dftype (ftype) + 1;
 
 		/* Let's find out if this is a tuple which contains some reference
 		 * when there is no reference then `is_atomic' is True which enables
 		 * us to do some optimization at the level of the GC */
 	for (i = 1; (i < count) && (is_atomic); i++) {
-		if (eif_gen_typecode_with_dftype(dftype, i) == EIF_REFERENCE_CODE) {
+		if (eif_gen_typecode_with_dftype(ftype, i) == EIF_REFERENCE_CODE) {
 			is_atomic = EIF_FALSE;
 		}
 	}
@@ -1036,7 +1044,7 @@ rt_public EIF_REFERENCE tuple_malloc (uint32 ftype)
 /*
 doc:	<routine name="tuple_malloc_specific" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Allocated new TUPLE object of type `ftype', of count `count' and `atomic'. TUPLE is alloated through `spmalloc', but the element size is the one of TUPLE element, i.e. sizeof (EIF_TYPED_VALUE).</summary>
-doc:		<param name="ftype" type="uint32">Dynamic type of TUPLE object to create.</param>
+doc:		<param name="ftype" type="EIF_TYPE_INDEX">Dynamic type of TUPLE object to create.</param>
 doc:		<param name="count" type="uint32">Number of elements in TUPLE object to create.</param>
 doc:		<param name="atomic" type="EIF_BOOLEAN">Does current TUPLE object to create has reference or not? True means no.</param>
 doc:		<return>A newly allocated TUPLE object if successful, otherwise throw an exception.</return>
@@ -1046,11 +1054,11 @@ doc:		<synchronization>Done by different allocators to whom we request memory</s
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic)
+rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 count, EIF_BOOLEAN atomic)
 {
 	EIF_REFERENCE object;
 	uint32 t;
-	REQUIRE("Is a tuple type", Deif_bid(ftype) == egc_tup_dtype);
+	REQUIRE("Is a tuple type", To_dtype(ftype) == egc_tup_dtype);
 
 	object = spmalloc (count * sizeof(EIF_TYPED_VALUE) + LNGPAD_2, atomic);
 
@@ -1066,7 +1074,8 @@ rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_B
 		RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref) = sizeof(EIF_TYPED_VALUE);
 			/* Mark it is a tuple object */
 		zone->ov_flags |= EO_TUPLE;
-		zone->ov_flags |= ftype;
+		zone->ov_dftype = ftype;
+		zone->ov_dtype = To_dtype(ftype);
 		if (!atomic) {
 			zone->ov_flags |= EO_REF;
 		}
@@ -1092,6 +1101,7 @@ rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_B
 				case EIF_REAL_64_CODE:    t = SK_REAL64; break;
 				case EIF_POINTER_CODE:    t = SK_POINTER; break;
 				case EIF_REFERENCE_CODE:  t = SK_REF; break;
+				default: t = 0;
 			}
 			eif_tuple_item_sk_type(l_item) = t;
 		}
@@ -1130,10 +1140,8 @@ rt_public EIF_REFERENCE spmalloc(rt_uint_ptr nbytes, EIF_BOOLEAN atomic)
 #endif
 
 #ifdef ISE_GC
-		/* Objects of size 0 are very expensive to manage in the free-list, thus we make them not 0. */
-	if (nbytes == 0) {
-		nbytes = OVERHEAD;
-	}
+		/* Objects of tiny size are very expensive to manage in the free-list, thus we make them not tiny. */
+	nbytes = MIN_OBJECT_SIZE(nbytes); 
 
 		/* We really use at least ALIGNMAX, to avoid alignement problems.
 		 * So even if nbytes is 0, some memory will be used (the header), he he !!
@@ -1319,7 +1327,9 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 				/* Copy only dynamic type and object nature and age from old object
 				 * We cannot copy HEADER(ptr)->ov_flags because `ptr' might have
 				 * moved outside the GSZ during reallocation of `object'. */
-		zone->ov_flags |= HEADER(ptr)->ov_flags & (EO_TYPE | EO_REF | EO_COMP);
+		zone->ov_flags |= HEADER(ptr)->ov_flags & (EO_REF | EO_COMP);
+		zone->ov_dftype = HEADER(ptr)->ov_dftype;
+		zone->ov_dtype = HEADER(ptr)->ov_dtype;
 
 			/* Update flags of new object */
 		if ((zone->ov_flags & EO_NEW) && (zone->ov_flags & (EO_REF | EO_COMP))) 
@@ -1372,8 +1382,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	if (need_expanded_initialization) {
 	   		/* Case of a special object of expanded structures. */
 			/* Initialize remaining items. */
-		uint32 exp_dftype = eif_gen_param_id (-1, (int16) Dftype(object), 1);
-		object = sp_init(object, exp_dftype, count, nbitems - 1);
+		object = sp_init(object, eif_gen_param_id (INVALID_DTYPE, (int16) Dftype(object), 1), count, nbitems - 1);
 	}
 
 #ifdef ISE_GC
@@ -1430,7 +1439,7 @@ doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE bmalloc(long int size)
+rt_public EIF_REFERENCE bmalloc(uint16 size)
 {
 	EIF_REFERENCE object;			/* Pointer to the freshly created bit object */
 	unsigned int nbytes;			/* Object's size */
@@ -1468,8 +1477,8 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 		 */
 	if (object) {
 		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
-		object = eif_set(object, egc_bit_dtype | EO_NEW, egc_bit_dtype);
-		LENGTH(object) = (uint32) size;				/* Record size */
+		object = eif_set(object, EO_NEW, egc_bit_dtype, egc_bit_dtype);
+		LENGTH(object) = size;				/* Record size */
 		return object;
 	}
   
@@ -2611,8 +2620,11 @@ rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r)
 	 */
 	
 #ifndef EIF_MALLOC_OPTIMIZATION
-	while ((size = coalesc(zone)))	/* Perform coalescing as long as possible */
-		r += size;					/* And upadte size of block */
+	size = coalesc(zone);
+	while (size) {		/* Perform coalescing as long as possible */
+		r += size;		/* And upadte size of block */
+		size = coalesc(zone);
+	}
 #endif	/* EIF_MALLOC_OPTIMIZATION */
 		
 	/* Now 'zone' points to the block to be freed, and 'r' is the
@@ -2762,8 +2774,10 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	size_gain = 0;
 #else	/* EIF_MALLOC_OPTIMIZATION */
 	size_gain = 0;
-	while ((size = coalesc(zone))) {	/* Perform coalescing as long as possible */
+	size = coalesc(zone);
+	while (size) {	/* Perform coalescing as long as possible */
 		size_gain += size;
+		size = coalesc(zone);
 	}
 		/* Update memory statistic. No need to handle the overheads,
 		 * it was already done in `coalesc'. */
@@ -2878,6 +2892,8 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	if (zone != (union overhead *) 0) {
 		memcpy (zone, ptr, r & B_SIZE);	/* Move to new location */
 		HEADER(zone)->ov_flags = HEADER(ptr)->ov_flags;		/* Keep Eiffel flags */
+		HEADER(zone)->ov_dftype = HEADER(ptr)->ov_dftype;
+		HEADER(zone)->ov_dtype = HEADER(ptr)->ov_dtype;
 		if (!(gc_flag & GC_FREE))		/* Will GC take care of free? */
 			eif_rt_xfree(ptr);					/* Free old location */
 	} else if (i == EIFFEL_T)			/* Could not reallocate object */
@@ -2953,7 +2969,7 @@ rt_shared rt_uint_ptr eif_rt_split_block(register union overhead *selected, regi
 	 *       assumes that reallocation does not change the size of objects.
 	 */
 	if (r < OVERHEAD)
-		return -1;				/* Not enough space to split */
+		return (rt_uint_ptr) -1;				/* Not enough space to split */
 
 	/* Check wether the block we split was the last one in a
 	 * chunk. If so, then the remaining will be the last, but
@@ -3216,7 +3232,7 @@ rt_private void disconnect_free_list(register union overhead *zone, register rt_
 #ifndef EIF_SORTED_FREE_LIST
 	union overhead *p, *n;		/* To walk along free list */
 
-	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union oveyrhead *)));
+	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union overhead *)));
 
 	if (i != 0) {
 			/* Get previous element of the list. */
@@ -3460,7 +3476,7 @@ rt_private rt_uint_ptr full_coalesc_unsafe(int chunk_type)
 		c = cklst.ck_head;
 		break;
 	default:
-		return -1;					/* Invalid request */
+		return (rt_uint_ptr) -1;					/* Invalid request */
 	}
  
 	for (
@@ -3888,15 +3904,16 @@ rt_public EIF_REFERENCE eif_box (EIF_TYPED_VALUE v)
 doc:	<routine name="eif_set" return_type="EIF_REFERENCE" export="private">
 doc:		<summary>Set an Eiffel object for use: reset the zone with zeros, and try to record the object inside the moved set, if necessary. The function returns the address of the object (it may move if a GC cycle is raised).</summary>
 doc:		<param name="object" type="EIF_REFERENCE">Object to setup.</param>
-doc:		<param name="dftype" type="uint32">Full dynamic type of object to setup.</param>
-doc:		<param name="dtype" type="uint32">Dynamic type of object to setup.</param>
+doc:		<param name="flags" type="uint16">Full dynamic type of object to setup.</param>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Full dynamic type of object to setup.</param>
+doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type of object to setup.</param>
 doc:		<return>New value of `object' as this routine can trigger a GC cycle</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dtype)
+rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX dtype)
 {
 	RT_GET_CONTEXT
 	union overhead *zone = HEADER(object);		/* Object's header */
@@ -3914,18 +3931,20 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 #endif  /* EIF_TID */
 
 	zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
-	zone->ov_flags = dftype;		/* Set dynamic type */
-	if (EIF_IS_EXPANDED_TYPE(System (dtype & EO_TYPE))) {
+	zone->ov_flags = flags;
+	zone->ov_dftype = dftype;	/* Set Full dynamic type */
+	zone->ov_dtype = dtype;		/* Set dynamic type */
+	if (EIF_IS_EXPANDED_TYPE(System (dtype))) {
 		zone->ov_flags |= EO_EXP | EO_REF;
 	}
 
 #ifdef ISE_GC
-	if (dftype & EO_NEW) {					/* New object outside scavenge zone */
+	if (flags & EO_NEW) {					/* New object outside scavenge zone */
 		object = add_to_moved_set (object);
 	}
 	if (Disp_rout(dtype)) {
 			/* Special marking of MEMORY object allocated in scavenge zone */
-		if (!(dftype & EO_NEW)) {
+		if (!(flags & EO_NEW)) {
 			object = add_to_stack (object, &memory_set);
 		}
 		zone->ov_flags |= EO_DISP;
@@ -3952,7 +3971,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 
 #ifdef DEBUG
 	dprintf(256)("eif_set: %d bytes for DT %d at 0x%lx%s\n",
-		zone->ov_size & B_SIZE, dftype & EO_TYPE, object, dftype & EO_NEW ? " (new)" : "");
+		zone->ov_size & B_SIZE, dftype, object, dftype & EO_NEW ? " (new)" : "");
 	flush;
 #endif
 

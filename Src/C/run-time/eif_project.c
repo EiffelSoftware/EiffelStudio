@@ -291,67 +291,67 @@ doc:	</attribute>
 */
 rt_public void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
 
-rt_public int egc_str_dtype;
-rt_public int egc_arr_dtype;
-rt_public int egc_tup_dtype;
+rt_public EIF_TYPE_INDEX egc_str_dtype;
+rt_public EIF_TYPE_INDEX egc_arr_dtype;
+rt_public EIF_TYPE_INDEX egc_tup_dtype;
 rt_public int32 egc_disp_rout_id;
-rt_public int egc_bit_dtype;
+rt_public EIF_TYPE_INDEX egc_bit_dtype;
 
-rt_public uint32 egc_sp_bool;
-rt_public uint32 egc_sp_char;
-rt_public uint32 egc_sp_wchar;
-rt_public uint32 egc_sp_uint8;
-rt_public uint32 egc_sp_uint16;
-rt_public uint32 egc_sp_uint32;
-rt_public uint32 egc_sp_uint64;
-rt_public uint32 egc_sp_int8;
-rt_public uint32 egc_sp_int16;
-rt_public uint32 egc_sp_int32;
-rt_public uint32 egc_sp_int64;
-rt_public uint32 egc_sp_real32;
-rt_public uint32 egc_sp_real64;
-rt_public uint32 egc_sp_pointer;
-rt_public uint32 egc_sp_ref;
+rt_public EIF_TYPE_INDEX egc_sp_bool;
+rt_public EIF_TYPE_INDEX egc_sp_char;
+rt_public EIF_TYPE_INDEX egc_sp_wchar;
+rt_public EIF_TYPE_INDEX egc_sp_uint8;
+rt_public EIF_TYPE_INDEX egc_sp_uint16;
+rt_public EIF_TYPE_INDEX egc_sp_uint32;
+rt_public EIF_TYPE_INDEX egc_sp_uint64;
+rt_public EIF_TYPE_INDEX egc_sp_int8;
+rt_public EIF_TYPE_INDEX egc_sp_int16;
+rt_public EIF_TYPE_INDEX egc_sp_int32;
+rt_public EIF_TYPE_INDEX egc_sp_int64;
+rt_public EIF_TYPE_INDEX egc_sp_real32;
+rt_public EIF_TYPE_INDEX egc_sp_real64;
+rt_public EIF_TYPE_INDEX egc_sp_pointer;
+rt_public EIF_TYPE_INDEX egc_sp_ref;
 
-rt_public int egc_uint8_ref_dtype;	
-rt_public int egc_uint16_ref_dtype;	
-rt_public int egc_uint32_ref_dtype;	
-rt_public int egc_uint64_ref_dtype;	
-rt_public int egc_int8_ref_dtype;	
-rt_public int egc_int16_ref_dtype;	
-rt_public int egc_int32_ref_dtype;	
-rt_public int egc_int64_ref_dtype;	
-rt_public int egc_bool_ref_dtype;	
-rt_public int egc_real32_ref_dtype;	
-rt_public int egc_real64_ref_dtype;	
-rt_public int egc_char_ref_dtype;	
-rt_public int egc_wchar_ref_dtype;	
-rt_public int egc_point_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_uint8_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_uint16_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_uint32_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_uint64_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_int8_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_int16_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_int32_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_int64_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_bool_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_real32_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_real64_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_char_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_wchar_ref_dtype;	
+rt_public EIF_TYPE_INDEX egc_point_ref_dtype;	
 
-rt_public int egc_uint8_dtype;
-rt_public int egc_uint16_dtype;	
-rt_public int egc_uint32_dtype;	
-rt_public int egc_uint64_dtype;	
-rt_public int egc_int8_dtype;	
-rt_public int egc_int16_dtype;	
-rt_public int egc_int32_dtype;	
-rt_public int egc_int64_dtype;	
-rt_public int egc_bool_dtype;	
-rt_public int egc_real32_dtype;	
-rt_public int egc_real64_dtype;	
-rt_public int egc_char_dtype;	
-rt_public int egc_wchar_dtype;	
-rt_public int egc_point_dtype;
+rt_public EIF_TYPE_INDEX egc_uint8_dtype;
+rt_public EIF_TYPE_INDEX egc_uint16_dtype;	
+rt_public EIF_TYPE_INDEX egc_uint32_dtype;	
+rt_public EIF_TYPE_INDEX egc_uint64_dtype;	
+rt_public EIF_TYPE_INDEX egc_int8_dtype;	
+rt_public EIF_TYPE_INDEX egc_int16_dtype;	
+rt_public EIF_TYPE_INDEX egc_int32_dtype;	
+rt_public EIF_TYPE_INDEX egc_int64_dtype;	
+rt_public EIF_TYPE_INDEX egc_bool_dtype;	
+rt_public EIF_TYPE_INDEX egc_real32_dtype;	
+rt_public EIF_TYPE_INDEX egc_real64_dtype;	
+rt_public EIF_TYPE_INDEX egc_char_dtype;	
+rt_public EIF_TYPE_INDEX egc_wchar_dtype;	
+rt_public EIF_TYPE_INDEX egc_point_dtype;
 
-rt_public int egc_except_emnger_dtype;
-rt_public int egc_exception_dtype;
+rt_public EIF_TYPE_INDEX egc_except_emnger_dtype;
+rt_public EIF_TYPE_INDEX egc_exception_dtype;
 
 rt_public struct ctable egc_ce_type;
 rt_public struct ctable egc_ce_exp_type;
 rt_public struct cnode *egc_fsystem;	
 rt_public struct conform **egc_fco_table;  
 rt_public struct eif_par_types **egc_partab;
-rt_public int egc_partab_size;
+rt_public EIF_TYPE_INDEX egc_partab_size;
 rt_public void (*egc_system_mod_init) (void);	
 rt_public int egc_type_of_gc;
 rt_public struct eif_opt *egc_foption;	
@@ -367,7 +367,7 @@ rt_public void (*egc_einit)(void);
 rt_public void (*egc_tabinit)(void);	
 rt_public int32 **egc_fcall;
 rt_public struct rout_info *egc_forg_table;
-rt_public int16 *egc_fdtypes;
+rt_public EIF_TYPE_INDEX *egc_fdtypes;
 
 #else
 rt_public void (**egc_edispose)(void);
@@ -421,7 +421,7 @@ doc:		<eiffel_classes>RT_EXTENSION</eiffel_classes>
 doc:	</attribute>
 */
 #ifdef WORKBENCH
-rt_public int32 egc_rt_extension_dt;				/* E1/einit.c */
+rt_public EIF_TYPE_INDEX egc_rt_extension_dt;				/* E1/einit.c */
 rt_public void (*egc_rt_extension_notify)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
 rt_public EIF_TYPED_VALUE (*egc_rt_extension_notify_argument)(EIF_REFERENCE, EIF_TYPED_VALUE);
 #endif

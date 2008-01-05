@@ -144,10 +144,10 @@ feature
 
 feature -- Generic conformance
 
-	generated_id (final_mode : BOOLEAN) : INTEGER is
+	generated_id (final_mode : BOOLEAN) : NATURAL_16 is
 			-- Id corresponding to current type.
 		do
-			Result := None_type
+			Result := {SHARED_GEN_CONF_LEVEL}.none_type
 		end
 
 feature -- Generic conformace for IL

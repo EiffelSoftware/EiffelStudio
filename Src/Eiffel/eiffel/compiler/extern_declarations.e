@@ -233,10 +233,10 @@ feature -- Settings
 			until
 				local_type_tables.after
 			loop
-				buffer.put_string ("%Nextern int16 ")
+				buffer.put_string ("%Nextern EIF_TYPE_INDEX ")
 				buffer.put_string (local_type_tables.item_for_iteration)
 				buffer.put_string ("[];")
-				buffer.put_string ("%Nextern int16 *")
+				buffer.put_string ("%Nextern EIF_TYPE_INDEX *")
 				buffer.put_string (local_type_tables.item_for_iteration)
 				buffer.put_string ("_gen_type [];")
 				local_type_tables.forth

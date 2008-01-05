@@ -456,7 +456,8 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 	 * returned since then--RAM.
 	 */
 
-	while ((sig = spop())) {		/* While there are some buffered signals */
+	sig = spop();
+	while (sig) {					/* While there are some buffered signals */
 		handler = esig[sig];		/* Fetch signal handler's address */
 		if (handler) {				/* There is a signal handler */
 			esigblk++;				/* Queue further signals */
@@ -470,6 +471,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 				eraise(NULL, EN_SIG);			/* Operating system signal */
 			}
 		}
+		sig = spop();
 	}
 }
 

@@ -848,7 +848,7 @@ feature {NONE} -- Generation
 							end
 							i := i - 1
 						end
-						buffer.put_string ("	GTCX")
+						buffer.put_string ("GTCX")
 						buffer.put_new_line
 						buffer.put_string ("RTLD;")
 						buffer.put_new_line

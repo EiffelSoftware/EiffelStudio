@@ -47,17 +47,18 @@ extern "C" {
 /* Constant values for special type                                 */
 /* You must also update SHARED_GEN_CONF_LEVEL after adding          */
 /* new codes!!                                                      */
+/* Also see INVALID_DTYPE in eif_gen_conf.h                         */
 /*------------------------------------------------------------------*/
 
-#define TERMINATOR			(int16) 0xFFFF
-#define NONE_TYPE			(int16) 0xFFFE
-#define LIKE_ARG_TYPE		(int16) 0xFFFD
-#define LIKE_CURRENT_TYPE	(int16) 0xFFFC
-#define LIKE_PFEATURE_TYPE	(int16) 0xFFFB
-#define LIKE_FEATURE_TYPE	(int16) 0xFFFA
-#define TUPLE_TYPE			(int16) 0xFFF9
-#define FORMAL_TYPE			(int16) 0xFFF8
-#define MAX_DFTYPE			(uint16) 0xFFF7
+#define TERMINATOR			0xFFFF
+#define NONE_TYPE			0xFFFE
+#define LIKE_ARG_TYPE		0xFFFD
+#define LIKE_CURRENT_TYPE	0xFFFC
+#define LIKE_PFEATURE_TYPE	0xFFFB
+#define LIKE_FEATURE_TYPE	0xFFFA
+#define TUPLE_TYPE			0xFFF9
+#define FORMAL_TYPE			0xFFF8
+#define MAX_DTYPE			0xFFF7
 
 /* Offset that needs to be skipped when finding TUPLE_TYPE. It corresponds
  * to TUPLE_TYPE and nb generic parameters in current tuple type definition. */
@@ -92,8 +93,18 @@ extern "C" {
 
 /*------------------------------------------------------------------*/
 
-extern char *eif_typename (int16);
-extern char eif_gen_typecode_with_dftype (int16 dftype, int pos);
+extern char *eif_typename (EIF_TYPE_INDEX);
+extern char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos);
+
+#ifdef EIF_ASSERTIONS
+rt_private int rt_valid_type_index(int dftype) {
+	if (dftype < (int) MAX_DTYPE) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+#endif
 
 #ifdef __cplusplus
 }

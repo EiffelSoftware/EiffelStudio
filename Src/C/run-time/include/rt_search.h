@@ -49,7 +49,7 @@ extern "C" {
 
 #define EIF_SEARCH_OK		0		/* No conflict result value of `s_put' */
 #define EIF_SEARCH_CONFLICT	1		/* Conflict result value of `s_put' */
-#define EIF_SEARCH_FOUND	-1		/* Object found by `s_search' */
+#define EIF_SEARCH_FOUND	(size_t) -1		/* Object found by `s_search' */
 
 /*
  * Search table interface.

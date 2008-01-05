@@ -229,6 +229,9 @@ typedef double			EIF_REAL_64;
 typedef char *			EIF_REFERENCE;
 typedef void *			EIF_POINTER;
 
+/* C type for underlying integer type identifying object's dynamic type. */
+typedef uint16		EIF_TYPE_INDEX;
+
 /* For workbench mode only. */
 typedef uint32		BODY_INDEX;
 

@@ -2131,7 +2131,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 	 * It also prevents stack overflow with the `overflow_stack_set'.
 	 */
 	union overhead *zone;		/* Malloc info zone fields */
-	uint32 flags;				/* Eiffel flags */
+	uint16 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
 	rt_uint_ptr size;				/* Size of an item (for array of expanded) */
 	EIF_REFERENCE *object;				/* Sub-objects scanned */
@@ -2171,7 +2171,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 		dprintf(16)("hybrid_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
 			current,
 			zone->ov_fwd,
-			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
+			HEADER(zone->ov_fwd)->ov_dftype,
 			zone->ov_size & B_SIZE);
 	} else {
 		dprintf(16)("hybrid_mark: 0x%lx %s%s%s(DT %d, %d bytes)\n",
@@ -2179,7 +2179,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 			zone->ov_flags & EO_MARK ? "marked " : "",
 			zone->ov_flags & EO_OLD ? "old " : "",
 			zone->ov_flags & EO_REM ? "remembered " : "",
-			zone->ov_flags & EO_TYPE,
+			zone->ov_dftype,
 			zone->ov_size & B_SIZE);
 	}
 	flush;
@@ -2365,8 +2365,9 @@ marked: /* Goto label needed to avoid code duplication */
 					goto done;		/* End of iteration; exit procedure */
 			}
 
-		} else
-			count = offset = References(Deif_bid(flags));	/* # items */
+		} else {
+			count = offset = References(zone->ov_dtype);	/* # items */
+		}
 
 #ifdef DEBUG
 	dprintf(16)("hybrid_mark: %d references for 0x%lx\n", offset, current);
@@ -2413,7 +2414,7 @@ rt_private void full_sweep(void)
 	union overhead *zone;		/* Malloc info zone */
 	rt_uint_ptr size;				/* Object's size in bytes */
 	EIF_REFERENCE end;				/* First address beyond chunk */
-	uint32 flags;				/* Eiffel flags */
+	uint16 flags;				/* Eiffel flags */
 	struct chunk *chunk;		/* Current chunk */
 	EIF_REFERENCE arena;				/* Arena in chunk */
 
@@ -2506,7 +2507,7 @@ rt_private void full_sweep(void)
 #ifdef FULL_SWEEP_DEBUG
 		printf("FULL_SWEEP: Removing 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, age %ld\n",
 			(union overhead *) zone + 1,
-			HEADER( (union overhead *) zone + 1 )->ov_flags & EO_TYPE,
+			HEADER( (union overhead *) zone + 1 )->ov_dftype,
 			zone->ov_size & B_SIZE,
 			((union overhead *) zone + 1),
 			zone->ov_size & B_FWD ? "forwarded" : "",
@@ -2866,7 +2867,7 @@ rt_private int sweep_from_space(void)
 	union overhead *next;		/* Address of next block */
 	rt_uint_ptr flags;				/* Malloc flags and size infos */
 	EIF_REFERENCE end;				/* First address beyond from space */
-	uint32 dtype;				/* Dynamic type of object */
+	EIF_TYPE_INDEX dtype;				/* Dynamic type of object */
 	EIF_REFERENCE base;							/* First address of 'from' space */
 	rt_uint_ptr size;							/* Size of current object */
 	char gc_status;						/* Saved GC status */
@@ -2956,7 +2957,7 @@ rt_private int sweep_from_space(void)
 
 			if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
 				if (zone->ov_flags & EO_DISP) {			/* Exists ? */
-					dtype = Deif_bid(zone->ov_flags);		/* Dispose ptr */
+					dtype = zone->ov_dtype;				/* Dispose ptr */
 					gc_status = rt_g_data.status;			/* Save GC current status */
 					rt_g_data.status |= GC_STOP;			/* Stop GC */
 					DISP(dtype, (EIF_REFERENCE) (zone + 1));	/* Call it */
@@ -3027,8 +3028,8 @@ rt_private int sweep_from_space(void)
 				 */
 
 				if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-					if (next->ov_flags & EO_DISP) {				/* Exists ? */
-						dtype = Deif_bid(next->ov_flags);	/* Dispose ptr */
+					if (next->ov_flags & EO_DISP) {			/* Exists ? */
+						dtype = next->ov_dtype;				/* Dispose ptr */
 						gc_status = rt_g_data.status;		/* Save GC current status */
 						rt_g_data.status |= GC_STOP;		/* Stop GC */
 						DISP(dtype,(EIF_REFERENCE) (next + 1));/* Call it */
@@ -3674,7 +3675,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 	 * It also prevents stack overflow with the `overflow_stack_set'.
 	 */
 	union overhead *zone;		/* Malloc info zone fields */
-	uint32 flags;				/* Eiffel flags */
+	uint16 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
 	uint32 size;				/* Size of items (for array of expanded) */
 	EIF_REFERENCE *object;				/* Sub-objects scanned */
@@ -3714,7 +3715,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 		dprintf(16)("hybrid_gen_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
 			current,
 			zone->ov_fwd,
-			HEADER(zone->ov_fwd)->ov_flags & EO_TYPE,
+			HEADER(zone->ov_fwd)->ov_dftype,
 			zone->ov_size & B_SIZE);
 	 } else {
 		dprintf(16)("hybrid_gen_mark: 0x%lx %s%s%s%s(DT %d, %d bytes)\n",
@@ -3723,7 +3724,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 			zone->ov_flags & EO_OLD ? "old " : "",
 			zone->ov_flags & EO_NEW ? "new " : "",
 			zone->ov_flags & EO_REM ? "remembered " : "",
-			zone->ov_flags & EO_TYPE,
+			zone->ov_dftype,
 			zone->ov_size & B_SIZE);
 	}
 	flush;
@@ -3861,8 +3862,9 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 				} else
 					goto done;		/* End of iteration; exit procedure */
 			}
-		} else
-			count = offset = References(Deif_bid(flags)); /* # of references */
+		} else {
+			count = offset = References(zone->ov_dtype); /* # of references */
+		}
 
 #ifdef DEBUG
 	dprintf(16)("hybrid_gen_mark: %d references for 0x%lx\n", offset, current);
@@ -3907,14 +3909,17 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 	 * scavenging is to be done without tenuring.
 	 */
 	union overhead *zone;		/* Malloc header zone */
-	int age;				/* Object's age */
-	uint32 flags;				/* Eiffel flags */
+	uint16 age;				/* Object's age */
+	uint16 flags;				/* Eiffel flags */
+	EIF_TYPE_INDEX dftype, dtype;
 	EIF_REFERENCE new;							/* Address of new object (tenured) */ 
 	rt_uint_ptr size;							/* Size of scavenged object */
 	int ret;							/* status returned by "epush" */
 
 	zone = HEADER(root);				/* Info header */
 	flags = zone->ov_flags;				/* Eiffel flags */
+	dftype = zone->ov_dftype;
+	dtype = zone->ov_dtype;
 
 	if (gen_scavenge & GS_STOP)			/* Generation scavenging was stopped */
 		if (!(flags & EO_NEW))			/* Object inside scavenge zone */
@@ -4028,6 +4033,8 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			zone->ov_fwd = new;			/* Leave forwarding pointer */
 			zone = HEADER(new);			/* New info zone */
 			zone->ov_flags = flags;		/* Copy flags for new object */
+			zone->ov_dftype = dftype;
+			zone->ov_dtype = dtype;
 			zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 
 				/* If it was not exactly the same size, we would be in trouble
@@ -4241,7 +4248,7 @@ rt_private void update_rem_set(void)
 				current,
 				HEADER(
 					zone->ov_size & B_FWD ? zone->ov_fwd : current
-				)->ov_flags & EO_TYPE,
+				)->ov_ov_dftype,
 				zone->ov_size & B_SIZE,
 				zone->ov_size & B_FWD ? "forwarded" : "",
 				zone->ov_flags & EO_MARK ? "marked" : ""
@@ -4289,7 +4296,7 @@ rt_private void update_rem_set(void)
 			dprintf(4)("update_rem_set: %s object %lx (type %d, %d bytes) %s\n",
 				HEADER(current)->ov_flags & EO_OLD ? "old" :
 					HEADER(current)->ov_flags & EO_NEW ? "new" : "gen",
-				current, HEADER(current)->ov_flags & EO_TYPE,
+				current, HEADER(current)->ov_dftype,
 				HEADER(current)->ov_size & B_SIZE,
 				HEADER(current)->ov_flags & EO_REM ? "remembered":"forgotten");
 			flush;
@@ -4337,7 +4344,7 @@ rt_private void update_memory_set ()
 	struct stchunk *s;	/* To walk through each stack's chunk */
 	int saved_in_assertion;			/* Saved assertion level.	*/
 	char gc_status;					/* Saved GC status.	*/
-	int dtype;						/* Dynamic type of Current object.	*/
+	EIF_TYPE_INDEX dtype;			/* Dynamic type of Current object.	*/
 	int done = 0;					/* Top of stack not reached yet */
 
 	REQUIRE ("GC is not stopped", !(rt_g_data.status & GC_STOP));
@@ -4378,7 +4385,7 @@ rt_private void update_memory_set ()
 				current,
 				HEADER(
 					zone->ov_size & B_FWD ? zone->ov_fwd : current
-				)->ov_flags & EO_TYPE,
+				)->ov_dftype,
 				zone->ov_size & B_SIZE,
 				zone->ov_size & B_FWD ? "forwarded" : "dead"
 			);
@@ -4392,7 +4399,7 @@ rt_private void update_memory_set ()
 			 * dispose routine on it and remove it from the stack. 
 			 */
 
-			CHECK ("Objects not in GSZ", !(zone->ov_size & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
+			CHECK ("Objects not in GSZ", !(zone->ov_flags & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
 
 			if (zone->ov_size & B_FWD)	/* Object survived GS collection. */
 			{
@@ -4407,7 +4414,7 @@ rt_private void update_memory_set ()
 			}
 			else 									/* Object is dead. */
 			{										/* Call dispose routine.*/
-				dtype = Deif_bid(zone->ov_flags);	/* Need it for dispose.	*/ 
+				dtype = zone->ov_dtype;	/* Need it for dispose.	*/ 
 
 				CHECK ("Has with dispose routine", Disp_rout (dtype));
 
@@ -4430,7 +4437,7 @@ rt_private void update_memory_set ()
 
 #ifdef DEBUG_UPDATE_MEMORY_SET
 			printf("update_memory_set: object %lx (type %d, %d bytes) %s\n",
-				current, HEADER(current)->ov_flags & EO_TYPE,
+				current, HEADER(current)->ov_dftype,
 				HEADER(current)->ov_size & B_SIZE,
 				HEADER(current)->ov_size & B_FWD ? "updated":"disposed");
 #endif	/* DEBUG_UPDATE_MEMORY_SET	*/
@@ -4519,8 +4526,9 @@ rt_shared int refers_new_object(register EIF_REFERENCE object)
 			return 0;		/* Object does not reference any new object */
 		} else
 			size = REFSIZ;		/* Usual item size */
-	} else
-		refs = References(Deif_bid(flags));	/* Number of references */
+	} else {
+		refs = References(Dtype(object));	/* Number of references */
+	}
 
 	/* Loop over the referenced objects to see if there is a new one. If the
 	 * reference is on an expanded object, recursively explore that object.
@@ -4596,7 +4604,7 @@ rt_public void eremb(EIF_REFERENCE obj)
 #ifdef DEBUG
 	dprintf(4)("eremb: remembering object %lx (type %d, %d bytes) at age %d\n",
 		obj,
-		HEADER(obj)->ov_flags & EO_TYPE,
+		HEADER(obj)->ov_dftype,
 		HEADER(obj)->ov_size & B_SIZE,
 		(HEADER(obj)->ov_flags & EO_AGE) >> AGE_OFFSET);
 	flush;
@@ -4647,9 +4655,9 @@ rt_shared void gfree(register union overhead *zone)
 	 */
 
 	EIF_GET_CONTEXT
-	char gc_status;					/* Saved GC status */
+	char gc_status;				/* Saved GC status */
 	int saved_in_assertion;		/* Saved in_assertion value */
-	uint32 dtype;			/* Dynamic type of object */
+	EIF_TYPE_INDEX dtype;		/* Dynamic type of object */
 
 	REQUIRE("Busy", zone->ov_size & B_BUSY);
 							
@@ -4657,7 +4665,7 @@ rt_shared void gfree(register union overhead *zone)
 									then call the dispose routine */
 		if (zone->ov_flags & EO_DISP) { 
 			RT_GET_CONTEXT
-			dtype = Deif_bid(zone->ov_flags);
+			dtype = zone->ov_dtype;
 			EIF_G_DATA_MUTEX_LOCK;
 			gc_status = rt_g_data.status;			/* Save GC status */
 			rt_g_data.status |= GC_STOP;			/* Stop GC */

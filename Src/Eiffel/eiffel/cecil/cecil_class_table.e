@@ -209,9 +209,9 @@ feature {NONE} -- C code generation
 						buffer.put_string ("(int32) SK_INVALID%N};%N%N")
 
 						if for_expanded then
-							buffer.put_string ("static int16 exp_dyn_types")
+							buffer.put_string ("static EIF_TYPE_INDEX exp_dyn_types")
 						else
-							buffer.put_string ("static int16 dyn_types")
+							buffer.put_string ("static EIF_TYPE_INDEX dyn_types")
 						end
 						buffer.put_integer (l_class.class_id)
 						buffer.put_string (" [] = {%N")
@@ -248,24 +248,24 @@ feature {NONE} -- C code generation
 			loop
 				l_class := l_values.item (i)
 				if l_class = Void then
-					buffer.put_string ("{(int) 0, (int16) 0, NULL, NULL}")
+					buffer.put_string ("{(int) 0, (EIF_TYPE_INDEX) 0, NULL, NULL}")
 				else
 					buffer.put_string ("{(int) ")
 					if l_class.is_generic then
 						buffer.put_integer (l_class.generics.count)
 						if for_expanded then
-							buffer.put_string (", (int16) 0, exp_patterns")
+							buffer.put_string (", (EIF_TYPE_INDEX) 0, exp_patterns")
 							buffer.put_integer (l_class.class_id)
 							buffer.put_string (", exp_dyn_types")
 							buffer.put_integer (l_class.class_id)
 						else
-							buffer.put_string (", (int16) 0, patterns")
+							buffer.put_string (", (EIF_TYPE_INDEX) 0, patterns")
 							buffer.put_integer (l_class.class_id)
 							buffer.put_string (", dyn_types")
 							buffer.put_integer (l_class.class_id)
 						end
 					else
-						buffer.put_string ("0, (int16) ")
+						buffer.put_string ("0, (EIF_TYPE_INDEX) ")
 							-- Although it is a loop, only one iteration of it will produce
 							-- an ID because we are in a non generic class and it can only
 							-- have at most 2 types: a non-expanded one and an expanded one.

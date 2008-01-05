@@ -58,6 +58,7 @@ doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update ru
 #include "rt_err_msg.h"
 #include "rt_main.h"
 #include "rt_gen_conf.h"
+#include "rt_gen_types.h"
 #include "rt_error.h"					/* for error_tag() */
 #include "rt_malloc.h"
 #include "rt_garcol.h"
@@ -78,7 +79,7 @@ rt_private void wread(char *buffer, size_t nbytes);
 rt_private EIF_INTEGER_16 wshort(void);
 rt_private int32 wint32(void);
 rt_private uint32 wuint32(void);
-rt_private int16 *wtype_array(int16 *);
+rt_private EIF_TYPE_INDEX *wtype_array(EIF_TYPE_INDEX *);
 rt_private char *wclass_name(void);
 
 /* Writing constants (same as in interp.c!)*/
@@ -113,7 +114,7 @@ rt_public void update(char ignore_updt, char *argv0)
 	char *app_path;	/*command line of this eiffel system, path included*/
 	char *app_name;	/*name of this eiffel system*/
 	int melted_exists;	/*flag indicating whether we have found melted file*/
-	long count;								/* New size for `esystem' */
+	EIF_TYPE_INDEX count;					/* New size for `esystem' */
 	BODY_INDEX body_id, once_body_id;		/* Last body id */
 	unsigned char *bcode;					/* Last byte code */
 	long bsize;								/* Last byte code size */
@@ -298,7 +299,7 @@ rt_public void update(char ignore_updt, char *argv0)
 		return;
 	}
 
-	count = wint32();			/* Read the count of class types */
+	count = (EIF_TYPE_INDEX) wint32();	/* Read the count of class types */
 	ccount = wint32();			/* Read the count of classes */
 	eif_nb_org_routines = wint32();		/* Read the number of original routine bodies */
 	ALLOC_ONCE_INDEXES; 			/* Allocate array of once indexes. */
@@ -335,7 +336,7 @@ rt_public void update(char ignore_updt, char *argv0)
 
 	scount = count;
 		/* Feature table update */
-	count = wint32();
+	count = (EIF_TYPE_INDEX) wint32();
 #ifdef DEBUG
 	dprintf(1)("Number of feature tables to update: %d\n", count);
 #endif
@@ -470,9 +471,9 @@ rt_public void cnode_updt(void)
 	struct cnode *node;		/* Structure to update */
 	char **names;			/* Name array */
 	uint32 *types;			/* Attribute meta-type array */
-	int16 **gtypes;			/* Attribute full-type array */
+	EIF_TYPE_INDEX **gtypes;/* Attribute full-type array */
 	short nbparents;		/* Parent count */
-	int *parents;			/* Parent dynmaic type array */
+	EIF_TYPE_INDEX *parents;/* Parent dynmaic type array */
 	int32 *rout_ids;		/* Routine id array */
 	int i;
 
@@ -508,7 +509,7 @@ rt_public void cnode_updt(void)
 		node->cn_names = names;
 		SAFE_ALLOC(types, uint32, nbattr);
 		node->cn_types = types;
-		SAFE_ALLOC(gtypes, int16 *, nbattr);
+		SAFE_ALLOC(gtypes, EIF_TYPE_INDEX *, nbattr);
 		node->cn_gtypes = gtypes;
 #ifdef DEBUG
 	dprintf(4)("\tattribute names = ");
@@ -535,31 +536,31 @@ rt_public void cnode_updt(void)
 		for (i=0; i<nbattr; i++)
 		{
 			if (wshort ())
-				gtypes[i] = wtype_array((int16 *)0);
+				gtypes[i] = wtype_array(NULL);
 			else
-				gtypes[i] = (int16 *)0;
+				gtypes[i] = NULL;
 		}
 
 	} else {
-		node->cn_names = (char **) 0;
-		node->cn_types = (uint32 *) 0;
-		node->cn_gtypes = (int16 **) 0;
+		node->cn_names = NULL;
+		node->cn_types = NULL;
+		node->cn_gtypes = NULL;
 	}
 
 		/* 5. Parent dynamic type array */
 	nbparents = wshort();
-	SAFE_ALLOC(parents, int, nbparents + 1);
+	SAFE_ALLOC(parents, EIF_TYPE_INDEX, nbparents + 1);
 	node->cn_parents = parents;
 #ifdef DEBUG
 	dprintf(4)("\n\tparents = ");
 #endif
 	for (i=0; i<nbparents; i++) {
-		parents[i] = (int) wshort();
+		parents[i] = (EIF_TYPE_INDEX) wshort();
 #ifdef DEBUG
 	dprintf(4)("%d ", parents[i]);
 #endif
 	}
-	parents[nbparents] = -1;
+	parents[nbparents] = TERMINATOR;
 
 		/* 6.: Skeleton flags */
 	node->cn_flags = (uint16) wshort();
@@ -652,20 +653,20 @@ rt_public void routid_updt(void)
 
 rt_private void parents_updt(void)
 {
-	short dtype, max_dtype;
-	long tsize, i;
+	EIF_TYPE_INDEX dtype, max_dtype;
+	EIF_TYPE_INDEX tsize, i;
 	struct eif_par_types *pt, **pt2, **pt1;
-	int16 *parents_id;
-	int16 *empty_parents;
+	EIF_TYPE_INDEX *parents_id;
+	EIF_TYPE_INDEX *empty_parents;
 
 		/* Initialize empty parents list */
-	SAFE_ALLOC(empty_parents, int16, 1);
-	empty_parents [0] = -1;
+	SAFE_ALLOC(empty_parents, EIF_TYPE_INDEX, 1);
+	empty_parents [0] = TERMINATOR;
 
-		/* Dynamic types are coded on 2 bytes so we are sure
-		 * we are not loosing any data by casting it to a short */
-	max_dtype = (short) eif_par_table_size;
+	max_dtype = eif_par_table_size;
 	tsize = max_dtype + 32;
+		/* To check that the code above does not cause an overflow. */
+	CHECK("correct size", tsize > max_dtype);
 
 	SAFE_ALLOC(eif_par_table2, struct eif_par_types *, tsize);
 
@@ -683,7 +684,7 @@ rt_private void parents_updt(void)
 
 	pt2 = eif_par_table2;
 
-	while ((dtype = wshort()) != -1)
+	while ((dtype = wshort()) != TERMINATOR)
 	{
 		SAFE_ALLOC(pt, struct eif_par_types, 1);
 
@@ -707,7 +708,7 @@ rt_private void parents_updt(void)
 			/* We cannot have a Void parents lists in
 			 * melted mode since the code expect an
 			 * array with one element of value -1. */
-		parents_id = wtype_array ((int16 *)0);
+		parents_id = wtype_array (NULL);
 		if (parents_id) {
 			pt->parents = parents_id;
 		} else {
@@ -759,7 +760,7 @@ rt_private void cecil_updt(void)
 	long n;
 	struct cecil_info *type_val;
 	int32 *patterns;
-	int16 *dynamic_types;
+	EIF_TYPE_INDEX *dynamic_types;
 	struct ctable *ce_table = &egc_ce_type;
 
 		/* We first initialize `egc_ce_type' and then we do `egc_ce_exp_type'. */
@@ -785,8 +786,8 @@ rt_private void cecil_updt(void)
 				wread((char *) patterns, n * sizeof(int32));	/* Read meta type desc */
 				patterns[n] = SK_INVALID;
 				type_val->patterns = patterns;
-				SAFE_ALLOC(dynamic_types, int16, nb_types);
-				wread((char *) dynamic_types, nb_types * sizeof(int16));
+				SAFE_ALLOC(dynamic_types, EIF_TYPE_INDEX, nb_types);
+				wread((char *) dynamic_types, nb_types * sizeof(EIF_TYPE_INDEX));
 				type_val->dynamic_types = dynamic_types;
 			}
 		}
@@ -931,7 +932,7 @@ rt_public void desc_updt(void)
 					desc_ptr[i].offset = wuint32();
 					desc_ptr[i].type = wshort();
 /* GENCONF */
-					desc_ptr[i].gen_type = wtype_array((int16 *)0);
+					desc_ptr[i].gen_type = wtype_array(NULL);
 				}
 #ifdef DEBUG
 	dprintf(4)("Melted descriptor\n\torigin = %d, dtype = %d, RTUD = %d, size = %d\n",
@@ -997,40 +998,42 @@ rt_private uint32 wuint32(void)
 	return result;
 }
 
-rt_private int16 *wtype_array(int16 *target)
+rt_private EIF_TYPE_INDEX *wtype_array(EIF_TYPE_INDEX *target)
 {
 	/* Next array of type id's */
 	/* If `target?is null, create new array */
-	int16 *tp, cid [MAX_CID_SIZE+1], last;
+	EIF_TYPE_INDEX *tp, cid [MAX_CID_SIZE+1], last;
 	int cnt;
 
-	if (target == (int16 *)0)
-		tp = cid;
-	else
+	if (target) {
 		tp = target;
+	} else {
+		tp = cid;
+	}
 
 	cnt = 0;
 
-	/* Read entries upto and including the terminator `-1'*/
+	/* Read entries upto and including the terminator */
 	do
 	{
-		*(tp++) = last = (int16) wshort ();
+		*(tp++) = last = (EIF_TYPE_INDEX) wshort ();
 		++cnt;
 		if (cnt > MAX_CID_SIZE)
 			eif_panic(MTC "too many parameters in compound type id");
 
-	} while (last != -1);
+	} while (last != TERMINATOR);
 
-	if (target != (int16 *)0)
+	if (target) {
 		return target;
+	}
 
 	/* Do not create an array if id list is actually empty */
 	if (cnt == 1)
-		return (int16 *)0;
+		return NULL;
 
-	SAFE_ALLOC(tp, int16, cnt);
+	SAFE_ALLOC(tp, EIF_TYPE_INDEX, cnt);
 
-	memcpy (tp,cid,cnt*sizeof(int16));
+	memcpy (tp,cid,cnt*sizeof(EIF_TYPE_INDEX));
 
 	return tp;
 }

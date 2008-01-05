@@ -59,6 +59,7 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #include <string.h>
 #include "rt_assert.h"		/* For assertions checkings. */
 #include "rt_gen_conf.h"
+#include "rt_gen_types.h"
 #include "rt_garcol.h"
 #include "rt_globals.h"
 
@@ -80,7 +81,7 @@ rt_public int nstcall = 0;
 rt_public int16 caller_assertion_level = 0;
 #endif /* EIF_THREADS */
 
-rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where);		/* Internal invariant control loop */
+rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int where);		/* Internal invariant control loop */
 
 /*
  * ARRAY [STRING] creation for initialization of argument of root's
@@ -94,15 +95,15 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 	 */
 	EIF_GET_CONTEXT
 	EIF_REFERENCE array, sp;
-	int16 typres;
+	EIF_TYPE_INDEX typres;
 	int i;
 
 	/*
 	 * Create the array
 	 */
 
-	typres = eif_typeof_array_of ((int16)egc_str_dtype);
-	array = emalloc((uint32)typres);		/* If we return, it succeeded */
+	typres = eif_typeof_array_of (egc_str_dtype);
+	array = emalloc(typres);		/* If we return, it succeeded */
 	RT_GC_PROTECT(array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
 #ifdef WORKBENCH
@@ -168,7 +169,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	char found;
 	uint32 type, *types;
 	long offset_bis = 0;					/* offset already taken :-) */
-	int16   typres;
+	EIF_TYPE_INDEX   typres;
 #ifdef WORKBENCH
 	int16 curr_dtype;
 
@@ -196,7 +197,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	stripped_nbr = nbr_attr - nbr;
 
 	typres = eif_typeof_array_of(egc_any_dtype);
-	array = emalloc((uint32)typres);	/* If we return, it succeeded */
+	array = emalloc(typres);	/* If we return, it succeeded */
 	nstcall = 0;
 #ifdef WORKBENCH
 	{
@@ -459,9 +460,6 @@ rt_public void chkinv (EIF_REFERENCE obj, int where)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	
-	  /*	union overhead *zone = HEADER(obj);    (not used in this fct) */
-	int dtype = Dtype(obj);
-
 	/* Store the `where' infomation for later use */
 	echentry = !where;
 
@@ -471,7 +469,7 @@ rt_public void chkinv (EIF_REFERENCE obj, int where)
 
 	memset  (inv_mark_tablep, 0, scount);
 
-	recursive_chkinv(MTC dtype, obj, where);	/* Recurive invariant check */
+	recursive_chkinv(MTC Dtype(obj), obj, where);	/* Recurive invariant check */
 }
 
 rt_public void chkcinv(EIF_REFERENCE obj)
@@ -482,7 +480,7 @@ rt_public void chkcinv(EIF_REFERENCE obj)
 		chkinv(MTC obj,1);}
 }
 
-rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
+rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int where)
 		  
 		  
 		  		/* Invariant is being checked before or after compound? */
@@ -491,11 +489,11 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 	EIF_GET_CONTEXT
 	/* Recursive invariant check. */
 	struct cnode *node = esystem + dtype;
-	int *cn_parents;
-	int p_type;
+	EIF_TYPE_INDEX *cn_parents;
+	EIF_TYPE_INDEX p_type;
 	jmp_buf exenv;
 
-	if (dtype <= 0) return;		/* ANY does not have invariants */
+	if (dtype == 0) return;		/* ANY does not have invariants */
 
 	if ((char) 0 != inv_mark_tablep[dtype]) {/* Already checked */
 		return;
@@ -515,7 +513,7 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 	/* The list of parent dynamic types is always terminated by a
 	 * -1 value. -- FREDD
 	 */
-	while ((p_type = *cn_parents++) != -1)
+	while ((p_type = *cn_parents++) != TERMINATOR)
 		/* Call to potential parent invariant */
 		recursive_chkinv(MTC p_type, obj, where);
 
@@ -560,13 +558,13 @@ rt_private void recursive_chkinv(int dtype, EIF_REFERENCE obj, int where)
 /*
 doc:	<routine name="cr_exp" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Create a new expanded object of type `type' and call its associated creation procedure.</summary>
-doc:		<param name="type" type="uint32">An Eiffel expanded object type.</param>
+doc:		<param name="type" type="EIF_TYPE_INDEX">An Eiffel expanded object type.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>
 doc:	</routine>
 */
 
-EIF_REFERENCE cr_exp(uint32 type)
+rt_public EIF_REFERENCE cr_exp(EIF_TYPE_INDEX type)
 	/* Create an instance of expanded object of dynamic type id `type'. */
 {
 	EIF_GET_CONTEXT
@@ -599,7 +597,7 @@ void init_exp (EIF_REFERENCE obj)
 		creation_procedure (obj);
 	}
 #else
-	int dtype = Dtype(obj);
+	EIF_TYPE_INDEX dtype = Dtype(obj);
 	struct cnode *exp_desc;	/* Expanded object description */
 	exp_desc = &System(Dtype(obj));
 
@@ -638,7 +636,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	/* Initialize composite object `obj' */
 
 	EIF_GET_CONTEXT
-	int dtype;						/* Dunamic type of `obj' */
+	EIF_TYPE_INDEX dtype;						/* Dunamic type of `obj' */
 	union overhead *zone = HEADER(obj);
 	long i; /* %%ss removed , nb; */
 	long nb_exp = 0L;
@@ -646,7 +644,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	uint32 type;
 	int32 *cn_attr;
 	uint32 *cn_types;
-	int16 **cn_gtypes;
+	EIF_TYPE_INDEX **cn_gtypes;
 	long nb_attr;
 	struct cnode *desc;
 	RTLD;
@@ -676,26 +674,29 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			struct cnode *exp_desc;			/* Expanded object description */
 			/* char *OLD_IC; */ /* %%ss removed */
 			uint32 exp_offset;				/* Attribute offset */
-			int orig_exp_dtype, exp_dtype;	/* Expanded dynamic type */
-			int16 *cid, dftype;
+			EIF_TYPE_INDEX orig_exp_dtype, exp_dtype;	/* Expanded dynamic type */
+			EIF_TYPE_INDEX *cid, dftype;
 
 			CAttrOffs(exp_offset,cn_attr[i],dtype);
-			orig_exp_dtype = exp_dtype = (int) (type & SK_DTYPE);
+			orig_exp_dtype = exp_dtype = (EIF_TYPE_INDEX) (type & SK_DTYPE);
 			exp_desc = &System(exp_dtype);
 			/* Set the expanded reference */
 			*(EIF_REFERENCE *) (obj + REFACS(nb_ref - ++nb_exp)) = obj + exp_offset;
 
 			cid = cn_gtypes [i];
 
-			if ((cid != (int16 *) 0) && (cid [1] != -1)) {
-				dftype = eif_compound_id ((int16 *)0, (int16) Dftype (obj),(int16) (exp_dtype & EO_TYPE), cid);
-				exp_dtype = (exp_dtype & EO_UPPER) | dftype;
+			if (cid && (cid [1] != TERMINATOR)) {
+				dftype = eif_compound_id (NULL, Dftype (obj), exp_dtype, cid);
+				exp_dtype = To_dtype(dftype);
+			} else {
+				dftype = exp_dtype;
 			}
 
 			/* Set the flags of the expanded object */
 			zone = HEADER(obj + exp_offset);
-			zone->ov_flags = exp_dtype;
-			zone->ov_flags |= EO_EXP;
+			zone->ov_flags = EO_EXP;
+			zone->ov_dftype = dftype;
+			zone->ov_dtype = exp_dtype;
 			CHECK("valid offset", (obj - parent) <= 0x7FFFFFFF);
 			zone->ov_size = exp_offset + (uint32) (obj - parent);
 
@@ -730,7 +731,8 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			/* Set dynamic type for bit expanded object */	
 			CAttrOffs(offset,cn_attr[i],dtype);
 			zone = HEADER(obj + offset);
-			zone->ov_flags = egc_bit_dtype;
+			zone->ov_dftype = egc_bit_dtype;
+			zone->ov_dtype = egc_bit_dtype;
 			zone->ov_flags |= EO_EXP;
 			CHECK("valid offset", (obj - parent) <= 0x7FFFFFFF);
 			zone->ov_size = offset + (uint32) (obj - parent);

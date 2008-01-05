@@ -74,7 +74,7 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 #define eif_bit_shift_left(i,n)		((i)<<(n))
 #define eif_bit_shift_right(i,n)	((i)>>(n))
 #define eif_bit_test(t,i,n)	(EIF_TEST((i)&((t)1 << (n))))
-#define eif_set_bit(t,i,b,n)			(b ? (i) | ((t)1<< (n)) : (i) & ~((t)1 << (n)))
+#define eif_set_bit(t,i,b,n)			(b ? (i) | (t)((t)1<< (n)) : (i) & (t)(~((t)1 << (n))))
 #define eif_set_bit_with_mask(i,b,m)	(b ? (i) | (m) : (i) & ~(m))
 
 

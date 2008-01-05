@@ -151,9 +151,9 @@ rt_private void check_ref(char *object)
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 
-	if (Deif_bid(flags) > max_dtype) {
+	if (zone->ov_dtype > max_dtype) {
 		printf("memck: object 0x%lx exceeds maximum dtype (%d), skipped.\n",
-			object, flags & EO_TYPE);
+			object, zone->ov_dftype);
 		mempanic;
 		return;
 	}
@@ -167,7 +167,7 @@ rt_private void check_ref(char *object)
 		else
 			size = REFSIZ;
 	} else
-		refs = References(Deif_bid(flags));
+		refs = References(zone->ov_dtype);
 	
 	for (; refs != 0; refs--, object += size) {
 		root = *(EIF_REFERENCE *) object;
@@ -202,13 +202,12 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 	 */
 	EIF_GET_CONTEXT
 
-	int dtype, dftype;
+	int dtype;
 	uint32 flags;
 	int num = 0;
 
 	flags  = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
-	dftype = flags & EO_TYPE;
-	dtype  = Deif_bid(dftype);
+	dtype = Dtype(object);
 
 	if (flags & EO_C)						/* Not an Eiffel object */
 		return;;
@@ -223,7 +222,7 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 		printf("memck: object 0x%lx exceeds maximum dynamic type (%d).\n",
 			object, dtype);
 	} else if (from == (char *) 0)
-		obj_use[Deif_bid(flags)]++;
+		obj_use[dtype]++;
 
 	if (dtype <= max_dtype && !(flags & EO_SPEC) && !eif_is_nested_expanded(flags)) {
 		int mod;
@@ -593,7 +592,7 @@ rt_private void check_obj(char *object)
 	uint32 mflags;
 
 	flags = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
-	dtype = Deif_bid(flags);
+	dtype = Dtype(object);
 
 	if (flags & EO_C) {						/* Not an Eiffel object */
 		mflags = HEADER(object)->ov_size;
@@ -602,7 +601,7 @@ rt_private void check_obj(char *object)
 	}
 
 	if (dtype <= scount)
-		type_use[Deif_bid(flags)]++;
+		type_use[dtype]++;
 
 }
 

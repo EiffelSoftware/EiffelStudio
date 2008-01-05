@@ -839,17 +839,17 @@ end
 							l_class_type.skeleton.generate_size (buf)
 						end
 						l_class_type.generate_expanded_overhead_size (buf)
+							-- We reset the flags since now we have an expanded on the C stack,
+							-- thus it cannot move hence the EO_C flag.
 						buf.put_string (");")
 						buf.put_new_line
 						buf.put_string ("((union overhead *) sarg")
 						buf.put_integer (i)
-						buffer.put_string (".data)->ov_size = ")
-						if context.workbench_mode then
-							l_class_type.skeleton.generate_workbench_size (buf)
-						else
-							l_class_type.skeleton.generate_size (buf)
-						end
-						buffer.put_character (';')
+						buffer.put_string (".data)->ov_flags = EO_EXP | EO_C;")
+						buf.put_new_line
+						buf.put_string ("((union overhead *) sarg")
+						buf.put_integer (i)
+						buffer.put_string (".data)->ov_size = 0;")
 						buf.put_new_line
 					end
 					i := i + 1

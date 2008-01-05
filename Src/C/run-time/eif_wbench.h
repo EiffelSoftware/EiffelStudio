@@ -51,13 +51,13 @@ RT_LNK EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, char 
 RT_LNK EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *name, EIF_REFERENCE object);/* Nested precompiled feature call */
 RT_LNK void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFERENCE object);						/* Creation call for expanded types */
 RT_LNK void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE object);			/* Creation call for precomp expanded types */
-RT_LNK EIF_REFERENCE_FUNCTION wdisp(int dyn_type); /* Feature call for dispose routine */ 
+RT_LNK EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type); /* Feature call for dispose routine */ 
 RT_LNK long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attribute access */
 RT_LNK long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
 RT_LNK long wattr_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object);				/* Nested attribute access */
 RT_LNK long wpattr_inv(int32 origin, int32 offset, char *name, EIF_REFERENCE object);				/* Nested precompiled attribute access*/
-RT_LNK int wtype_gen(int static_type, int32 feature_id, EIF_REFERENCE object);						/* Creation type (generic) */
-RT_LNK int wptype_gen(int static_type, int32 origin, int32 offset, EIF_REFERENCE object);						/* Creation type of a precomp generic feature */
+RT_LNK EIF_TYPE_INDEX wtype_gen(EIF_TYPE_INDEX static_type, int32 feature_id, EIF_REFERENCE object);						/* Creation type (generic) */
+RT_LNK EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_REFERENCE object);						/* Creation type of a precomp generic feature */
 
 
 RT_LNK void init_desc(void);				/* Call structure initialization */

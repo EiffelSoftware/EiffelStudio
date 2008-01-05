@@ -44,10 +44,10 @@ extern "C" {
 #endif
 
 /* Returns the number of logical fields in `object'. */
-#define ei_count_field_of_type(type_id)		(System(Deif_bid(type_id)).cn_nbattr)
+#define ei_count_field_of_type(type_id)		(System(To_dtype(type_id)).cn_nbattr)
 
 /* Returns name of the i_th logical field of `object'. */
-#define ei_field_name_of_type(i,type_id)	(System(Deif_bid(type_id)).cn_names[i])
+#define ei_field_name_of_type(i,type_id)	(System(To_dtype(type_id)).cn_names[i])
 
 RT_LNK char *ei_field (long i, EIF_REFERENCE object);
 RT_LNK long ei_field_type_of_type(long i, EIF_INTEGER type_id);
@@ -61,9 +61,9 @@ RT_LNK EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype);
 
 #define ei_special(obj)	(EIF_TEST((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == EO_SPEC))
 #define ei_tuple(obj)	(EIF_TEST((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == (EO_SPEC | EO_TUPLE)))
-#define eif_is_tuple_type(dftype) (EIF_TEST(Deif_bid(dftype) == egc_tup_dtype))
+#define eif_is_tuple_type(dftype) (EIF_TEST(To_dtype(dftype) == egc_tup_dtype))
 
-#define eif_special_any_type(dftype) (EIF_TEST((uint32) Deif_bid(dftype) == (uint32) egc_sp_ref))
+#define eif_special_any_type(dftype) (EIF_TEST((uint32) To_dtype(dftype) == (uint32) egc_sp_ref))
 
 #define	ei_offset(i,object)			(EIF_INTEGER) ((EIF_REFERENCE) ei_oref(i, (EIF_REFERENCE) (object)) - (EIF_REFERENCE) (object))
 

@@ -289,13 +289,14 @@ feature
 				entry := array_item (index)
 				if i = entry.type_id then
 					if entry.is_generic then
-						buffer.put_string ("static int16 ")
+						buffer.put_string ("static EIF_TYPE_INDEX ")
 						buffer.put_string (l_table_name)
 						buffer.put_string ("_pgtype")
 						buffer.put_integer (j)
 						buffer.put_string ("[] = {0,")
 						entry.generate_cid (buffer, True);
-						buffer.put_string ("-1};");
+						buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+						buffer.put_string ("};");
 						buffer.put_new_line
 						j := j + 1
 					end
@@ -306,14 +307,14 @@ feature
 
 				-- Generate pointer table
 			nb := max_type_id - min_type_id + 1
-			buffer.put_string ("int16 *")
+			buffer.put_string ("EIF_TYPE_INDEX *")
 			buffer.put_string (l_table_name)
 			buffer.put_string ("_gen_type [")
 			buffer.put_integer (nb)
 			buffer.put_string ("];");
 			buffer.put_new_line
 
-			buffer.put_string ("int16 ")
+			buffer.put_string ("EIF_TYPE_INDEX ")
 			buffer.put_string (l_table_name)
 			buffer.put_string (" [")
 			buffer.put_integer (nb)

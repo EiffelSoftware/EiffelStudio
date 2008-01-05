@@ -241,12 +241,13 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 		case EX_CALL:
 			return idr_eif_reference (idrs, &exv->exu.exur.exur_id)
 				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_FEATURE_LEN)
-				&& idr_int (idrs, &exv -> exu.exur.exur_orig)
+				&& idr_type_index (idrs, &exv -> exu.exur.exur_orig)
+				&& idr_type_index (idrs, &exv -> exu.exur.exur_dtype)
 				&& idr_int (idrs, &exv->ex_linenum);
 		default:
 			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
 				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)
-				&& idr_int (idrs, &exv->exu.exua.exua_from)
+				&& idr_type_index (idrs, &exv->exu.exua.exua_from)
 				&& idr_eif_reference (idrs, &exv->exu.exua.exua_oid);
 		}
 	case DMP_EXCEPTION_TRACE:

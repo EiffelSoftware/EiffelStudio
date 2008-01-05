@@ -161,7 +161,7 @@ typedef struct tag_rt_globals
 	type_table *type_conversions_cx;
 	mismatch_table *mismatches_cx;
 	int **dattrib_cx;
-	int *dtypes_cx;
+	EIF_TYPE_INDEX *dtypes_cx;
 	uint32 *spec_elm_size_cx;
 	uint32 old_overhead_cx;
 	char *r_buffer_cx;
@@ -205,13 +205,13 @@ typedef struct tag_rt_globals
 	int s_fides_cx;
 	void (*store_write_func_cx)(size_t);
 	void (*flush_buffer_func_cx)(void);
-	void (*st_write_func_cx)(EIF_REFERENCE, uint32);
+	void (*st_write_func_cx)(EIF_REFERENCE);
 	void (*make_header_func_cx)(void);
 	int (*char_write_func_cx)(char *, int);
 	void (*old_store_write_func_cx)(size_t);
 	int (*old_char_write_func_cx)(char *, int);
 	void (*old_flush_buffer_func_cx)(void);
-	void (*old_st_write_func_cx)(EIF_REFERENCE, uint32);
+	void (*old_st_write_func_cx)(EIF_REFERENCE);
 	void (*old_make_header_func_cx)(void);
 	int accounting_cx;
 	int old_accounting_cx;

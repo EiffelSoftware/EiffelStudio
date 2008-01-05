@@ -29,11 +29,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_GEN_CONF_LEVEL
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -271,9 +266,9 @@ feature -- Genericity
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
-					buffer.put_integer (terminator_type)
+					buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 					buffer.put_character (',')
-					buffer.put_integer (terminator_type)
+					buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 					buffer.put_character (',')
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
@@ -350,9 +345,9 @@ feature -- Genericity
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
-					buffer.put_integer (terminator_type)
+					buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 					buffer.put_character (',')
-					buffer.put_integer (terminator_type)
+					buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 					buffer.put_character (',')
 					dummy := idx_cnt.next
 					dummy := idx_cnt.next
@@ -470,13 +465,13 @@ feature -- Genericity
 			rout_info: ROUT_INFO
 		do
 			if context.current_type.base_class.is_precompiled then
-				ba.append_short_integer (Like_pfeature_type)
+				ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.like_pfeature_type)
 				ba.append_short_integer (context.class_type.static_type_id-1)
 				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
-				ba.append_short_integer (Like_feature_type)
+				ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.like_feature_type)
 				ba.append_short_integer (context.class_type.static_type_id - 1)
 				ba.append_integer (feature_id)
 			end

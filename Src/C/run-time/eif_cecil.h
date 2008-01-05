@@ -244,10 +244,10 @@ struct ctable {
  * gt_gen is associated to the same index i in gt_type).
  */
 struct cecil_info {
-	uint32 nb_param;			/* Number of generic parameters, 0 if none*/
-	int16 dynamic_type;		/* Dynamic type when no generics. */
+	uint16 nb_param;			/* Number of generic parameters, 0 if none*/
+	EIF_TYPE_INDEX dynamic_type;		/* Dynamic type when no generics. */
 	int32 *patterns;		/* Generic parameters patterns, if generics, otherwise NULL. */
-	int16 *dynamic_types;	/* Dynamic type for each meta-type, if generics, otherwise NULL. */
+	EIF_TYPE_INDEX *dynamic_types;	/* Dynamic type for each meta-type, if generics, otherwise NULL. */
 };
 
 /*

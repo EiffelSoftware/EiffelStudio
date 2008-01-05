@@ -89,21 +89,22 @@ rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 {
 	/* Clone an of Eiffel object `source'. Might move `source' */
 
-	register uint32 flags = HEADER(source)->ov_flags;
+	register uint16 flags = HEADER(source)->ov_flags;
+	EIF_TYPE_INDEX dftype = Dftype(source);
 
   	REQUIRE ("source not null", source);
 
 	if (flags & EO_SPEC) {
 		if (flags & EO_TUPLE) {
 				/* We simply create a new instance of the same type */
-			return RTLNT(flags & EO_TYPE);
+			return RTLNT(dftype);
 		} else {
 			return spclone (source);
 		}
-	} else if ((int16)(flags & EO_TYPE) == (int16) egc_bit_dtype) {
+	} else if (dftype == egc_bit_dtype) {
 		return b_clone(source);
 	} else {
-		return emalloc(flags & EO_TYPE);
+		return emalloc(dftype);
 	}
 }
 
@@ -114,7 +115,7 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 	 * because the garbage collector needs to explore those references.
 	 */
 
-	register uint32 flags = HEADER(source)->ov_flags;
+	register uint16 flags = HEADER(source)->ov_flags;
 
 	REQUIRE ("source_not_null", source);
 	REQUIRE ("target_not_null", target);
@@ -126,7 +127,7 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 		} else {
 			spcopy(source, target);
 		}
-	} else if ((int16)(flags & EO_TYPE) == (int16) egc_bit_dtype) {
+	} else if (Dftype(source) == egc_bit_dtype) {
 		b_copy(source, target);
 	} else {
 		eif_std_ref_copy(source, target);
@@ -144,8 +145,8 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	EIF_GET_CONTEXT
 	EIF_REFERENCE result;		/* Clone pointer */
 	union overhead *zone;		/* Pointer on source header */
-	uint32 flags;				/* Source object flags */
-	rt_uint_ptr size;				/* Source object size */
+	uint16 flags;				/* Source object flags */
+	EIF_TYPE_INDEX dtype, dftype;
 	EIF_REFERENCE s_ref, r_ref;
 
 	if ((EIF_REFERENCE) 0 == source)
@@ -155,14 +156,14 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 
 	zone = HEADER(source);				/* Allocation of a new object */
 	flags = zone->ov_flags;
-	size = zone->ov_size & B_SIZE;
-	if (!(flags & EO_REF))
-		result = spmalloc(size, EIF_TRUE);	/* Special object without references in it */
-	else
-		result = spmalloc(size, EIF_FALSE);	/* Special object with references */
+	dtype = zone->ov_dtype;
+	dftype = zone->ov_dftype;
+	result = spmalloc(zone->ov_size & B_SIZE, EIF_TEST(!(flags & EO_REF)));
 
 		/* Keep the reference flag and the composite one and the type */
-	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP | EO_TYPE);
+	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP);
+	HEADER(result)->ov_dtype = dtype;
+	HEADER(result)->ov_dftype = dftype;
 		/* Keep the count and the element size */
 	r_ref = RT_SPECIAL_INFO(result);
 	s_ref = RT_SPECIAL_INFO(source);
@@ -216,7 +217,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	 */
 
 	{
-	RTXD;							/* Save stack contexts */
+	RTYD;							/* Save stack contexts */
 	EIF_EO_STORE_LOCK;				/* Because we perform a traversal that marks
 									   objects, we need to be sure we are the
 									   only one doing it. */
@@ -310,7 +311,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 
 	RT_GET_CONTEXT
 	union overhead *zone;			/* Malloc info zone */
-	uint32 flags;					/* Object's flags */
+	uint16 flags;					/* Object's flags */
 	rt_uint_ptr size;					/* Object's size */
 	EIF_REFERENCE *hash_zone;				/* Hash table entry recording duplication */
 	EIF_REFERENCE clone;					/* Where clone is allocated */
@@ -326,7 +327,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	 * its dynamic type.
 	 */
 	if (eif_is_nested_expanded(flags))						/* Object is expanded */
-		size = EIF_Size(Deif_bid(flags));		/* Get its size though skeleton */
+		size = EIF_Size(zone->ov_dtype);		/* Get its size though skeleton */
 	else
 		size = zone->ov_size & B_SIZE;		/* Size encoded in header */
 
@@ -378,15 +379,13 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 
 	RT_GET_CONTEXT
 	EIF_REFERENCE clone, c_ref, c_field;
-	uint32 flags;
-	union overhead *zone;
+	uint16 flags;
 	EIF_INTEGER count, elem_size;
 
 	REQUIRE("source not null", source);
 	REQUIRE("enclsoing not null", enclosing);
 
-	zone = HEADER(source);
-	flags = zone->ov_flags;
+	flags = HEADER(source)->ov_flags;
 
 	if (!(flags & EO_STORE)) {		/* Object has already been cloned */
 
@@ -470,14 +469,15 @@ doc:	<routine name="eif_std_field_copy" return_type="void" export="private">
 doc:		<summary>Copy `source' into `target' field by field. And recurse on expanded field if any.</summary>
 doc:		<param name="source" type="EIF_REFERENCE">Object from which fields will be copied onto target.</param>
 doc:		<param name="target" type="EIF_REFERENCE">Object on which fields of `source' will be copied into.</param>
-doc:		<param name="dtype" type="int16">Dynamic type of `source' and `target'.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None as we only manipulate data of `source' and `target'.</synchronization>
 doc:	</routine>
 */
 
-rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target, int16 dtype)
+rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target)
 {
+	EIF_TYPE_INDEX dtype = Dtype(target);	/* Doesn't matter to take target or source
+											   since they are supposed to be the same type.*/
 	struct cnode *skeleton = &System(dtype);
 	long index;		/* Target attribute index */
 	long offset;
@@ -488,6 +488,7 @@ rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target, 
 	int32 *cn_attr = skeleton->cn_attr;		/* Array of attribute keys for target object */
 	int32 attr_key;	/* Attribute key */
 #endif
+
 	for (index = skeleton->cn_nbattr - 1; index >= 0; index--) {
 #ifndef WORKBENCH
 		offset = offsets[index];
@@ -535,53 +536,49 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 	 * because the garbage collector needs to explore those references.
 	 */
 
-	uint32 s_flags;			/* Source object flags */
-	uint32 t_flags;			/* Source target flags */
+	uint16 flags;			/* Source object flags */
 	union overhead *s_zone;	/* Source object header */
 	union overhead *t_zone;	/* Target object header */
+#ifdef ISE_GC
 	EIF_REFERENCE enclosing;					/* Enclosing target object */
+#endif
 	rt_uint_ptr size;
 
 	s_zone = HEADER(source);
-	s_flags = s_zone->ov_flags;
+	flags = s_zone->ov_flags;
 	t_zone = HEADER(target);
-	t_flags = t_zone->ov_flags;
 	
-	/* Precompute the enclosing target object */
-	enclosing = target;					/* By default */
-	if (eif_is_nested_expanded(t_flags) || eif_is_nested_expanded(s_flags)) {
-		if (eif_is_nested_expanded(t_flags)) {
-			enclosing -= t_zone->ov_size & B_SIZE;
-		}
-		size = EIF_Size(Deif_bid(t_flags));
-	} else {
-		size = s_zone->ov_size & B_SIZE;
-	}
+	if (s_zone->ov_dftype == t_zone->ov_dftype) {
 
-	if ((s_flags & EO_TYPE) == (t_flags & EO_TYPE)) {
-
-		if (s_flags & EO_COMP) {
-			/* Case of composite object: updating of references on expanded
-			 * objects.
-			 */
-			eif_std_field_copy (source, target, Deif_bid(s_flags & EO_TYPE));
+		if (flags & EO_COMP) {
+			/* Case of composite object: updating of references on expanded objects. */
+			eif_std_field_copy (source, target);
 		} else {
-			/* Copy of source object into target object
-			* with same dynamic type. Block copy here.
-			*/
+			/* Copy of source object into target object with same dynamic type. Block copy here. */
+			if (eif_is_expanded(flags)) {
+				size = EIF_Size(s_zone->ov_dtype);
+			} else {
+				size = s_zone->ov_size & B_SIZE;
+			}
 			memmove(target, source, size);
 		}
 
 #ifdef ISE_GC
+		/* Precompute the enclosing target object */
+		enclosing = target;					/* By default */
+		if (eif_is_nested_expanded(t_zone->ov_flags)) {
+			enclosing -= t_zone->ov_size & B_SIZE;
+		}
+
 		/* Perform aging tests. We need the address of the enclosing object to
 		 * update the flags there, in case the target is to be memorized.
 		 */
-		t_flags = HEADER(enclosing)->ov_flags;
+		flags = HEADER(enclosing)->ov_flags;
 		CHECK ("Not forwarded", !(HEADER (enclosing)->ov_size & B_FWD));
 
 		if (
-			t_flags & EO_OLD &&			/* Object is old */
-			!(t_flags & EO_REM)	&&		/* Not remembered */
+			flags & EO_OLD &&			/* Object is old */
+			!(flags & EO_REM)	&&		/* Not remembered */
 			refers_new_object(target)	/* And copied refers to new objects */
 		)
 			erembq(enclosing);			/* Then remember the enclosing object */
@@ -598,7 +595,7 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 
 	rt_uint_ptr field_size;
 #ifdef ISE_GC
-	uint32 flags;
+	uint16 flags;
 #endif
 
 	REQUIRE ("source not null", source);
@@ -641,7 +638,7 @@ rt_private void tuple_copy(register EIF_REFERENCE source, register EIF_REFERENCE
 
 	rt_uint_ptr field_size;
 #ifdef ISE_GC
-	uint32 flags;
+	uint16 flags;
 #endif
 
 	REQUIRE ("source not null", source);
@@ -691,7 +688,7 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 
 	union overhead *zone;			/* Target Object header */
 	long nb_ref;					/* Number of references */
-	uint32 flags;					/* Target flags */
+	uint16 flags;					/* Target flags */
 	EIF_REFERENCE t_reference;			/* Target reference */
 	EIF_REFERENCE s_reference;			/* Source reference */
 	EIF_REFERENCE t_enclosing;						/* Enclosing object */
@@ -726,7 +723,7 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 		s_enclosing = source - s_offset;		/* Address of enclosing object */
 	}
 
-	nb_ref = References(Deif_bid(flags));		/* References in target */
+	nb_ref = References(zone->ov_dtype);	/* References in target */
 
 	/* Iteration on the references of the object */
 	for (
@@ -873,9 +870,8 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	memset (spobj, 0, count * elem_size);
 	if (zone->ov_flags & EO_COMP) {
 			/* case of a special object of expanded structures */
-		uint32 exp_dftype = eif_gen_param_id (-1, (int16) Dftype(spobj), 1);
 			/* Initialize new expanded elements, if any */
-		sp_init (spobj, exp_dftype, 0, count - 1);
+		sp_init (spobj, eif_gen_param_id (INVALID_DTYPE, Dftype(spobj), 1), 0, count - 1);
 	}
 }
 

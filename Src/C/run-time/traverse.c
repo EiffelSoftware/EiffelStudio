@@ -58,6 +58,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
 #include "rt_struct.h"
+#include "rt_interp.h"
 #include "x2c.h"		/* For LNGPAD macros... */
 #include <string.h>				/* For memset() */
 #include "rt_assert.h"
@@ -106,10 +107,13 @@ rt_shared uint32 nomark(char *);
 rt_private uint32 chknomark(char *, struct htable *, long);
 #endif
 
-rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), int result_type);
+rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), EIF_TYPE_INDEX result_type);
 rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
 rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
 rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
+#ifdef WORKBENCH
+rt_private void match_op_stack(struct opstack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
+#endif
 
 rt_private void internal_find_all_instances (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
 rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
@@ -144,21 +148,21 @@ rt_public void eif_unlock_marking (void)
 /*
 doc:	<routine name="account_attributes" export="private">
 doc:		<summary>Account for types of attributes of dynamic type `dtype'.</summary>
-doc:		<param name="dtype" type="int16">Dynamic type from which we want to know the types of its attributes.</param>
+doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type from which we want to know the types of its attributes.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
-rt_private void account_attributes (int16 dtype)
+rt_private void account_attributes (EIF_TYPE_INDEX dtype)
 {
 	RT_GET_CONTEXT
 	long num_attrib = System (dtype).cn_nbattr;
 	long i, k;
 	for (i=0; i<num_attrib; i++) {
-		int16 *gtypes = System (dtype).cn_gtypes[i] + 1;
+		EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[i] + 1;
 		for (k=0; gtypes[k] != TERMINATOR; k++) {
-			int gtype = gtypes[k];
+			EIF_TYPE_INDEX gtype = gtypes[k];
 			if (gtype == TUPLE_TYPE) {
 				k = k + TUPLE_OFFSET;
 				gtype = gtypes[k];
@@ -181,18 +185,19 @@ rt_private void account_attributes (int16 dtype)
 /*
 doc:	<routine name="account_type" export="private">
 doc:		<summary>Account for type of object found.</summary>
-doc:		<param name="dftype" type="int16">Full dynamic type from which we want to know the types of its attributes.</param>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Full dynamic type from which we want to know the types of its attributes.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
-rt_private void account_type (uint32 dftype, int p_accounting)
+rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 {
 	RT_GET_CONTEXT
-	int16  *l_cidarr, dtype, i;
+	EIF_TYPE_INDEX  *l_cidarr, i;
+	EIF_TYPE_INDEX dtype;
 
-	dtype = Deif_bid(dftype);
+	dtype = To_dtype(dftype);
 
 # ifdef RECOVERABLE_DEBUG
 	if ((account[dtype] & ACCOUNT_TYPE) == 0) {
@@ -213,9 +218,9 @@ rt_private void account_type (uint32 dftype, int p_accounting)
 			account_attributes (dtype);
 		}
 
-	if (dftype != (uint32) dtype) {
+	if (dftype != dtype) {
 		/* Now insert generics if any */
-		l_cidarr = eif_gen_cid ((int16) dftype);
+		l_cidarr = eif_gen_cid (dftype);
 		i = *(l_cidarr++); /* count */
 
 		while (i--)
@@ -261,7 +266,7 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 	char *object_ref, *reference;
 	EIF_INTEGER count, elem_size;
 	union overhead *zone;		/* Object header */
-	uint32 flags;				/* Object flags */
+	uint16 flags;				/* Object flags */
 	char *new;					/* Mapped object */
 	EIF_OBJECT mapped;				/* Mapped object protection */
 	int mapped_object = 0;		/* True if maping occurred */
@@ -309,12 +314,12 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 
 #if !defined CUSTOM || defined NEED_STORE_H
 	if (p_accounting & TR_ACCOUNT) {	/* Possible accounting */
-		account_type (flags & EO_TYPE, p_accounting);
+		account_type (zone->ov_dftype, p_accounting);
 # ifdef RECOVERABLE_DEBUG
 		if (eif_is_nested_expanded(flags))
-			printf ("      expanded %s [%p]\n", eif_typename ((int16) (flags & EO_TYPE)), object);
+			printf ("      expanded %s [%p]\n", eif_typename (zone->ov_dftype), object);
 		else
-			printf ("%2ld: %s [%p]\n", obj_nb, eif_typename ((int16) (flags & EO_TYPE)), object);
+			printf ("%2ld: %s [%p]\n", obj_nb, eif_typename (zone->ov_dftype), object);
 # endif
 
 	}
@@ -368,8 +373,7 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 		}
 	} else {
 		/* Normal object */
-		count = Deif_bid(flags);
-		count = References(count);
+		count = References(zone->ov_dtype);
 
 		/* Traversal of references of `object' */
 		for (i = 0; i < count; i++) {
@@ -516,12 +520,12 @@ rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_
 #ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	referers_target = target;
-	result = matching (internal_find_referers, result_type);
+	result = matching (internal_find_referers, (EIF_TYPE_INDEX) result_type);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 #else
 	EIF_EO_STORE_LOCK;
 	referers_target = target;
-	result = matching (internal_find_referers, result_type);
+	result = matching (internal_find_referers, (EIF_TYPE_INDEX) result_type);
 	EIF_EO_STORE_UNLOCK;
 #endif
 	return result;
@@ -544,12 +548,12 @@ rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_t
 #ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	instance_type = type;
-	result = matching (internal_find_instance_of, result_type);
+	result = matching (internal_find_instance_of, (EIF_TYPE_INDEX) result_type);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 #else
 	EIF_EO_STORE_LOCK;
 	instance_type = type;
-	result = matching (internal_find_instance_of, result_type);
+	result = matching (internal_find_instance_of, (EIF_TYPE_INDEX) result_type);
 	EIF_EO_STORE_UNLOCK;
 #endif
 	return result;
@@ -570,11 +574,11 @@ rt_public EIF_REFERENCE find_all_instances (EIF_INTEGER result_type)
 	EIF_REFERENCE result = NULL;
 #ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
-	result = matching (internal_find_all_instances, result_type);
+	result = matching (internal_find_all_instances, (EIF_TYPE_INDEX) result_type);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 #else
 	EIF_EO_STORE_LOCK;
-	result = matching (internal_find_all_instances, result_type);
+	result = matching (internal_find_all_instances, (EIF_TYPE_INDEX) result_type);
 	EIF_EO_STORE_UNLOCK;
 #endif
 	return result;
@@ -637,7 +641,7 @@ rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENC
 {
 	if
 		((enclosing == compare_to) &&
-		((EIF_INTEGER) ((HEADER(enclosing)->ov_flags) & EO_TYPE) == instance_type ? 1 : 0) &&
+		((EIF_INTEGER) (HEADER(enclosing)->ov_dftype) == instance_type ? 1 : 0) &&
 		(!((HEADER(enclosing)->ov_flags) & EO_STORE)))
 	{
 		obj_array_extend (enclosing, found_collection);
@@ -685,19 +689,19 @@ rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE c
 doc:	<routine name="matching" return_type="EIF_REFERENCE" export="private">
 doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object. Return a SPECIAL [ANY] of type `result_type' with all found references.</summary>
 doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
-doc:		<param name="result_type" type="int">Full dynamic type of SPECIAL [ANY].</param>
+doc:		<param name="result_type" type="EIF_TYPE_INDEX">Full dynamic type of SPECIAL [ANY].</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), int result_type)
+rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), EIF_TYPE_INDEX result_type)
 {
 	int i = 0;
 	char gc_stopped;
 	struct obj_array l_found, l_marked;
 	union overhead *zone;
-	uint32 flags;
+	uint16 flags;
 	EIF_REFERENCE Result;
 	EIF_REFERENCE ref;
 	
@@ -727,6 +731,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	match_stack (&loc_stack, action_fnptr);
 #endif
 #ifdef WORKBENCH
+	match_op_stack (&op_stack, action_fnptr);
 	match_simple_stack (&once_set, action_fnptr);
 #else
 	match_stack (&once_set, action_fnptr);
@@ -747,6 +752,10 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 
 	for (i = 0; i < once_set_list.count; i++)
 		match_simple_stack(once_set_list.threads.sstack[i], action_fnptr);
+#ifdef WORKBENCH
+	for (i = 0; i < once_set_list.count; i++)
+		match_op_stack(opstack_list.threads.opstack[i], action_fnptr);
+#endif
 #endif
 #endif
 
@@ -758,7 +767,9 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	Result = spmalloc (CHRPAD ((rt_uint_ptr) l_found.count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
 	zone = HEADER (Result);
 	ref = Result + (zone->ov_size & B_SIZE) - LNGPAD (2);
-	zone->ov_flags |= result_type | EO_REF;
+	zone->ov_flags |= EO_REF;
+	zone->ov_dftype = result_type;
+	zone->ov_dtype = To_dtype(result_type);
 	*(EIF_INTEGER *) ref = l_found.count;
 	*(EIF_INTEGER *) (ref + sizeof (EIF_INTEGER)) = sizeof (EIF_REFERENCE);
 
@@ -857,6 +868,54 @@ rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERE
 }
 
 /*
+doc:	<routine name="match_op_stack" export="private">
+doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object for objects located in opstack.</summary>
+doc:		<param name="stk" type="struct opstack *">Stack in which we are searching.</param>
+doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
+#ifdef WORKBENCH
+rt_private void match_op_stack(struct opstack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
+{
+	/* Loop over the operational stack (the one used by the interpreter) and
+	 * mark all the references found.
+	 */
+
+	EIF_TYPED_VALUE *last;	/* For looping over subsidiary roots */
+	rt_uint_ptr roots;			/* Number of roots in each chunk */
+	struct stochunk *s;	/* To walk through each stack's chunk */
+	int done = 0;					/* Top of stack not reached yet */
+
+	REQUIRE ("stk not null", stk);
+	REQUIRE ("action_fnptr not null", action_fnptr);
+
+	for (s = stk->st_hd; s && !done; s = s->sk_next) {
+		last = s->sk_arena;						/* Start of stack */
+		if (s != stk->st_cur)				/* Before current pos? */
+			roots = s->sk_end - last;			/* The whole chunk */
+		else {
+			roots = stk->st_top - last;		/* Stop at the top */
+			done = 1;							/* Reached end of stack */
+		}
+
+		for (; roots > 0; roots--, last++)		/* Objects may be moved */
+			switch (last->type & SK_HEAD) {		/* Type in stack */
+			case SK_REF:						/* Reference */
+			case SK_EXP:
+			case SK_BIT:
+				if (last->it_ref) {
+					match_object (last->it_ref, action_fnptr);
+				}
+				break;
+			}
+	}
+}
+#endif
+
+/*
 doc:	<routine name="match_object" export="private">
 doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object for objects located in stacks. Performs a recursive call for every references found in `object'.</summary>
 doc:		<param name="object" type="EIF_REFERENCE">Object we use for comparison.</param>
@@ -871,7 +930,7 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 	EIF_REFERENCE *o_ref;
 	EIF_INTEGER count;
 	union overhead *zone;
-	uint32 flags;
+	uint16 flags;
 
 	zone = HEADER(object);
 	flags = zone->ov_flags;
@@ -914,7 +973,7 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 			count = *(EIF_INTEGER *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		}
 	} else {
-		count = References(Deif_bid(flags));
+		count = References(zone->ov_dtype);
 	}
 
 		/* Perform recursion on enclosed references */
@@ -956,7 +1015,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 	char *object_ref, *reference;
 	EIF_INTEGER count, elem_size;
 	union overhead *zone = HEADER(object);		/* Object header */
-	uint32 flags;								/* Object flags */
+	uint16 flags;								/* Object flags */
 	unsigned long key = ((unsigned long) object) - 1;
 
 	flags = zone->ov_flags;
@@ -1028,7 +1087,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 		}
 	} else {
 		/* Normal object */
-		count = References(Deif_bid(flags));
+		count = References(zone->ov_dtype);
 
 		/* Traversal of references of `object' */
 		for (;  count > 0;

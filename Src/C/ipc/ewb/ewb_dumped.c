@@ -82,7 +82,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
  *	ie. the trace of a routine call, fill the CALL_INFO instance (target)
  *	accordingly. If an aknowledge is recieved, signal the CALL_INFO that
  *	the call stack is exhausted. If something else comes, signal an error
- *  if the request is nether a DUMPED nor an AKNOLEDGE, signal an error and
+ *  if the request is nether a DUMPED nor an ACKNOWLEDGE, signal an error and
  *	treat the incoming request as a normal asynchonous request.
  */
 
@@ -94,7 +94,6 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 	char *c_rout_name;
 	char string [128], *ptr = string;
 	EIF_REFERENCE eif_rout_name, obj_addr;
-	uint32 hack;		/* Temporary solution: 2 integers sent in one */
 	uint32 orig, dtype;
 	int line_number;	/* line number (i.e. break index) where application is stopped within feature */
 
@@ -124,10 +123,8 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 
 						line_number = dump.dmp_vect->ex_linenum;
 
-						hack = (uint32) dump.dmp_vect -> ex_orig;
-						orig = hack >> 16;
-						dtype = hack << 16;
-						dtype >>= 16;
+						orig = dump.dmp_vect->ex_orig;
+						dtype = dump.dmp_vect->ex_dtype;
 
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
 											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER)) set_rout)

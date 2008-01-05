@@ -62,6 +62,7 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include "rt_dir.h"
 #include "rt_threads.h"
 #include "rt_struct.h"
+#include "rt_gen_types.h"
 #include "x2c.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
@@ -271,6 +272,11 @@ rt_public char * eif_getenv (char * k)
 #endif
 }
 
+rt_shared union overhead * eif_header (EIF_REFERENCE object) {
+	REQUIRE("object not null", object);
+
+	return HEADER(object);
+}
 /***************************************/
 
 rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
@@ -282,7 +288,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	char *new_area, *ref;
 	long elem_size;			/* Size of each item within area */
 	long old_count;
-	uint32 exp_dftype;		/* Full dynamic type of the first expanded object */
+	EIF_TYPE_INDEX exp_dftype;		/* Full dynamic type of the first expanded object */
 	int n;					/* Counter for initialization of expanded */
 
 	REQUIRE ("Must be special", HEADER (area)->ov_flags & EO_SPEC);
@@ -336,13 +342,13 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * OVERHEAD bytes in the computation of 'dtype'--RAM.
 	 */
 
-	exp_dftype = eif_gen_param_id (-1, (int16) Dftype(new_area), 1);
+	exp_dftype = eif_gen_param_id (INVALID_DTYPE, Dftype(new_area), 1);
 
 		/* Initialize expanded objects from 0 to (j - 1) */
 	new_area = sp_init(new_area, exp_dftype, 0, j - 1);
 
 #ifndef WORKBENCH
-	if (References(Deif_bid(exp_dftype)) > 0) {
+	if (References(To_dtype(exp_dftype)) > 0) {
 #endif
 		/* If there is a header for each expanded in the special, then update expanded
 		 * offsets for k objects starting at j. */

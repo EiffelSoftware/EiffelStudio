@@ -741,7 +741,7 @@ rt_public EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER s
 	while (amount-- > 0) {
 		if ((c = getc(f)) == '\n' || c == EOF)
 			break;
-		*s++ = c;
+		*s++ = (char) c;
 		read++;
 	}
 	
@@ -786,7 +786,7 @@ rt_public EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound)
 		c = getc(f);
 		if (c == EOF)
 			break;
-		*s++ = c;
+		*s++ = (char) c;
 	}
 
 	if (c == EOF && ferror(f))	/* An I/O error occurred */
@@ -835,7 +835,7 @@ rt_public EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER s
 				eise_io("FILE: unable to read word.");
 			break;
 		}
-		*s++ = c;
+		*s++ = (char) c;
 	}
 	
 	if (c == EOF && ferror(f))	/* An I/O error occurred */
@@ -1281,23 +1281,33 @@ rt_public void file_rename(char *from, char *to)
 				remove (to);
 			} else {
 				BOOL success = GetFileInformationByHandle (l_from_file, &l_from_info);
-				success = success && GetFileInformationByHandle (l_to_file, &l_to_info);
-					/* We do not need the handles anymore, simply close them. */
-				CloseHandle(l_from_file);
-				CloseHandle(l_to_file);
 				if (success) {
-						/* Check that `from' and `to' do not represent the same file. */
-					if
-						((l_from_info.dwVolumeSerialNumber != l_to_info.dwVolumeSerialNumber) ||
-						(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
-						(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
-					{
-						remove (to);
+					success = GetFileInformationByHandle (l_to_file, &l_to_info);
+						/* We do not need the handles anymore, simply close them. */
+					CloseHandle(l_from_file);
+					CloseHandle(l_to_file);
+					if (success) {
+							/* Check that `from' and `to' do not represent the same file. */
+						if
+							((l_from_info.dwVolumeSerialNumber != l_to_info.dwVolumeSerialNumber) ||
+							(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
+							(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
+						{
+							remove (to);
+						} else {
+								/* Files are identical, nothing to be done apart from */
+							break;
+						}
 					} else {
-							/* Files are identical, nothing to be done apart from */
-						break;
+							/* An error occurred while retrieving the information about `from' and `to'. Like
+							 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
+							 * the file. */
+						remove (to);
 					}
 				} else {
+						/* We do not need the handles anymore, simply close them. */
+					CloseHandle(l_from_file);
+					CloseHandle(l_to_file);
 						/* An error occurred while retrieving the information about `from' and `to'. Like
 						 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
 						 * the file. */

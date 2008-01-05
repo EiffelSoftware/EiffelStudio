@@ -67,6 +67,11 @@ doc:<file name="idrs.h" version="$Id$" summary="Header file for `idrs.c'">
 	} \
 	idrs->i_ptr += sizeof(a_data_type); 
 
+rt_private bool_t idr_type_index(IDR* idrs, EIF_TYPE_INDEX *val) {
+	CHK_SIZE(idrs,sizeof(EIF_TYPE_INDEX));
+	EIF_IDR_SERIALIZER(idrs,val,EIF_TYPE_INDEX);
+	return TRUE;
+}
 rt_private bool_t idr_int(IDR* idrs, int *val) {
 	CHK_SIZE(idrs,sizeof(int));
 	EIF_IDR_SERIALIZER(idrs,val,int);

@@ -227,7 +227,6 @@ rt_private struct dump *get_next_execution_vector(void)
 	struct ex_vect *top;		/* Exception vector */
 	static struct ex_vect copy;	/* copy of the exception vector */
 	static struct dump dumped;	/* Item returned */
-	long hack;					/* Temporary solution: 2 integers sent in one */
 	struct dcall *dc;			/* Debugger's calling context */
 
 	/* We either finished dealing with previous vector, or it was simply
@@ -269,19 +268,9 @@ rt_private struct dump *get_next_execution_vector(void)
 	copy = *top;
 	dumped.dmp_vect = &copy; /* static variable  -- Didier */
 
-	/* Temporary hack:
-	 * With the time constraints we had it was not an option to change the
-	 * protocol in order to send the origin type and the dynamic type
-	 * so we use the same integer to send both values with a 16 bit shift
-	 */
-
-	if (dumped.dmp_vect -> ex_type)
-		{
-		hack = dumped.dmp_vect -> exu.exur.exur_orig;
-		hack <<= 16;
-		hack += Dtype(dumped.dmp_vect -> exu.exur.exur_id);
-		dumped.dmp_vect -> exu.exur.exur_orig = hack;
-		}
+	if (dumped.dmp_vect->ex_type) {
+		dumped.dmp_vect->exu.exur.exur_dtype = Dtype(dumped.dmp_vect->exu.exur.exur_id);
+	}
 	
 	return &dumped;			/* Pointer to static data */
 	}
@@ -457,7 +446,7 @@ rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
 	dumped.dmp_item = &(ip.value);
 
 	/* Because the interpreter (from time to time) does not care about the
-	 * consistency between SK_DTYPE of an item and EO_TYPE of its referenced
+	 * consistency between SK_DTYPE of an item and the dynamic type of its referenced
 	 * object, we have to resynchronize these two entities before sending
 	 * that item to ewb (which relies on that consistency).
 	 */
@@ -510,7 +499,7 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 	dumped.dmp_item = &ip;
 
 	/* Because the interpreter (from time to time) does not care about the
-	 * consistency between SK_DTYPE of an item and EO_TYPE of its referenced
+	 * consistency between SK_DTYPE of an item and the dynamic type of its referenced
 	 * object, we have to resynchronize these two entities before sending
 	 * that item to ewb (which relies on that consistency).
 	 */

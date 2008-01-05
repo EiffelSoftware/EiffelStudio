@@ -165,15 +165,15 @@ feature -- Comparison
 
 feature -- Generic conformance
 
-	generated_id (final_mode: BOOLEAN): INTEGER is
+	generated_id (final_mode: BOOLEAN): NATURAL_16 is
 			-- Id of a generic formal parameter.
 		do
-			Result := Formal_type
+			Result := {SHARED_GEN_CONF_LEVEL}.formal_type
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN) is
 		do
-			buffer.put_integer (Formal_type)
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
 			buffer.put_character (',')
 			buffer.put_integer (position)
 			buffer.put_character (',')
@@ -181,7 +181,7 @@ feature -- Generic conformance
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN) is
 		do
-			ba.append_short_integer (formal_type)
+			ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.formal_type)
 			ba.append_short_integer (position)
 		end
 
@@ -189,7 +189,7 @@ feature -- Generic conformance
 		local
 			dummy: INTEGER
 		do
-			buffer.put_integer (Formal_type)
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
 			buffer.put_character (',')
 			buffer.put_integer (position)
 			buffer.put_character (',')

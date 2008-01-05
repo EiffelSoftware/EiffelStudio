@@ -126,7 +126,7 @@ feature -- Generation
 			end
 			buffer.put_string (", (BODY_INDEX) ")
 			buffer.put_integer (Invalid_index)
-			buffer.put_string (", (int16) -1, (int16 *) 0},%N")
+			buffer.put_string (", INVALID_DTYPE, NULL},%N")
 
 			from
 				create cnt
@@ -192,9 +192,9 @@ feature -- Generation
 			buffer.put_integer (Invalid_index)
 			buffer.put_string (");%N%T")
 			buffer.put_string (entry_name)
-			buffer.put_string ("[0].type = (int16) -1;%N%T")
+			buffer.put_string ("[0].type = INVALID_DTYPE;%N%T")
 			buffer.put_string (entry_name)
-			buffer.put_string ("[0].gen_type = (int16 *) 0;%N")
+			buffer.put_string ("[0].gen_type = NULL;%N")
 
 			from
 				create cnt

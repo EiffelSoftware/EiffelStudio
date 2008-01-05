@@ -49,14 +49,14 @@ extern "C" {
 #ifndef EIF_THREADS
 extern char *account;			/* Array of traversed dyn types */
 #endif
-extern long get_alpha_offset(uint32 o_type, uint32 attrib_num);
+extern long get_alpha_offset(EIF_TYPE_INDEX o_type, uint32 attrib_num);
 RT_LNK void allocate_gen_buffer(void);
 RT_LNK void buffer_write(char *data, size_t size);
 
 
 extern int char_write(char *pointer, int size);
 
-extern long get_offset(uint32 o_type, uint32 attrib_num);          /* get offset of attrib in object*/
+extern long get_offset(EIF_TYPE_INDEX o_type, uint32 attrib_num);          /* get offset of attrib in object*/
 
 	/* General store utilities (3.3 and later) */
 #ifndef EIF_THREADS

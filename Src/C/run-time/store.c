@@ -104,6 +104,9 @@ extern void print_object (EIF_REFERENCE object);
 #define EIF_BUFFER_ALLOCATED_SIZE EIF_DCMPS_OUT_SIZE
 #define EIF_CMPS_BUFFER_ALLOCATED_SIZE EIF_CMPS_OUT_SIZE
 
+/* Convenience for backward compatibility, merged flags and dtype into a 32-bit integer. */
+#define Merged_flags_dtype(flags,dtype)	((((uint32) flags) << 16) | (uint32) dtype)
+
 #ifndef EIF_THREADS
 /*
 doc:	<attribute name="cmps_general_buffer" return_type="char *" export="shared">
@@ -184,19 +187,19 @@ rt_private void st_store(char *object);				/* Second pass of the store */
 rt_public void make_header(void);				/* Make header */
 rt_public void rmake_header(void);
 rt_public void imake_header(void);				/* Make header */
-rt_private void object_write (char *object, uint32);
-rt_private void gen_object_write (char *object, uint32);
-rt_private void st_write_cid (uint32);
-rt_private void ist_write_cid (uint32);
-rt_public long get_offset (uint32 o_type, uint32 attrib_num);
-rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
+rt_private void object_write (char *object, uint16, EIF_TYPE_INDEX);
+rt_private void gen_object_write (char *object, uint16, EIF_TYPE_INDEX);
+rt_private void st_write_cid (EIF_TYPE_INDEX);
+rt_private void ist_write_cid (EIF_TYPE_INDEX);
+rt_public long get_offset (EIF_TYPE_INDEX dtype, uint32 attrib_num);
+rt_public long get_alpha_offset (EIF_TYPE_INDEX dtype, uint32 attrib_num);
 rt_public void free_sorted_attributes(void);
 rt_public void allocate_gen_buffer(void);
 rt_shared void buffer_write(char *data, size_t size);
 
 rt_public void rt_reset_store (void);
 
-rt_private struct cecil_info * cecil_info_for_dynamic_type (uint32 dtype);
+rt_private struct cecil_info * cecil_info_for_dynamic_type (EIF_TYPE_INDEX dtype);
 
 #ifndef EIF_THREADS
 /*
@@ -220,14 +223,14 @@ doc:	</attribute>
 rt_private void (*flush_buffer_func)(void);
 
 /*
-doc:	<attribute name="st_write_func" return_type="void (*)(EIF_REFERENCE, uint32)" export="private">
+doc:	<attribute name="st_write_func" return_type="void (*)(EIF_REFERENCE)" export="private">
 doc:		<summary>Action called to store an Eiffel object.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*st_write_func)(EIF_REFERENCE, uint32);
+rt_private void (*st_write_func)(EIF_REFERENCE);
 
 /*
 doc:	<attribute name="make_header_func" return_type="void (*)(void)" export="private">
@@ -280,14 +283,14 @@ doc:	</attribute>
 rt_private void (*old_flush_buffer_func)(void);
 
 /*
-doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE, uint32)" export="private">
+doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE)" export="private">
 doc:		<summary>Store default version of `st_write_func'.</summary>
 doc:		<access>Read/Write</access> 
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*old_st_write_func)(EIF_REFERENCE, uint32);
+rt_private void (*old_st_write_func)(EIF_REFERENCE);
 
 /*
 doc:	<attribute name="old_make_header_func" return_type="void (*)()" export="private">
@@ -421,7 +424,7 @@ rt_public void rt_init_store(
 	void (*store_function) (size_t),
 	int (*char_write_function)(char *, int),
 	void (*flush_buffer_function) (void),
-	void (*st_write_function) (EIF_REFERENCE, uint32),
+	void (*st_write_function) (EIF_REFERENCE),
 	void (*make_header_function) (void),
 	int accounting_type)
 {
@@ -838,9 +841,9 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	}
 	/* Write the count of stored objects */
 	if (accounting == INDEPEND_ACCOUNT)
-		widr_multi_int32 (&obj_nb, 1);
+		widr_multi_uint32 (&obj_nb, 1);
 	else if (accounting == RECOVER_ACCOUNT) {
-		widr_multi_int32 (&obj_nb, 1);
+		widr_multi_uint32 (&obj_nb, 1);
 #ifdef RECOVERABLE_DEBUG
 		printf ("-- Storing %d objects\n", obj_nb);
 		object_count = 0;
@@ -874,7 +877,7 @@ rt_private void st_store(EIF_REFERENCE object)
 	EIF_REFERENCE o_ptr;
 	long nb_references;
 	union overhead *zone = HEADER(object);
-	uint32 flags;
+	uint16 flags;
 	int is_expanded;
 
 	flags = zone->ov_flags;
@@ -883,9 +886,6 @@ rt_private void st_store(EIF_REFERENCE object)
 		return;		/* Unmarked means already stored */
 
 	zone->ov_flags = flags & ~EO_STORE;		/* Unmark it */
-
-	/* Map generic type id to its base id */
-	flags = Mapped_flags(flags);
 
 	/* Evaluation of the number of references of the object */
 	if (flags & EO_SPEC) {					/* Special object */
@@ -926,7 +926,7 @@ rt_private void st_store(EIF_REFERENCE object)
 			}
 		}
 	} else {								/* Normal object */
-		nb_references = References(flags & EO_TYPE);
+		nb_references = References(zone->ov_dtype);
 
 		/* Traversal of references of `object' */
 		for (
@@ -941,27 +941,32 @@ rt_private void st_store(EIF_REFERENCE object)
 	}
 
 	if (!is_expanded)
-		st_write_func(object, HEADER(object)->ov_flags);		/* write the object */
+		st_write_func(object);		/* write the object */
 
 }
 
-rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
+rt_public void st_write(EIF_REFERENCE object)
 {
 	/* Write an object'.
 	 * Use for basic and general (before 3.3) store
 	 */
 
 	union overhead *zone;
-	uint32 flags, size;
+	uint32 size;
+	uint16 flags;
+	EIF_TYPE_INDEX dtype;
 	rt_uint_ptr nb_char;
 
-	flags = Mapped_flags(fflags);
+	zone = HEADER(object);
+	flags = zone->ov_flags;
+	dtype = zone->ov_dtype;
 
 	/* Write address */
 
 	buffer_write((char *)(&object), sizeof(char *));
-	buffer_write((char *)(&flags), sizeof(uint32));
-	st_write_cid (fflags & EO_TYPE);
+	buffer_write((char *)(&flags), sizeof(uint16));
+	buffer_write((char *)(&dtype), sizeof(uint16));
+	st_write_cid (Dftype(object));
 
 #if DEBUG & 2
 		printf ("\n %lx", object);
@@ -969,9 +974,6 @@ rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 #endif
 
 	if (flags & EO_SPEC) {
-			/* It is safe to query the header here, since a special always have
-			 * a header. */
-		zone = HEADER(object);
 		/* We have to save the size of the special object */
 		size = (uint32) zone->ov_size;
 		buffer_write((char *)(&size), sizeof(uint32));
@@ -982,9 +984,10 @@ rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 
 		/* Evaluation of the size of a special object */
 		nb_char = (zone->ov_size & B_SIZE) * sizeof(char);
-	} else
+	} else {
 		/* Evaluation of the size of a normal object */
-		nb_char = EIF_Size((uint16)(flags & EO_TYPE));
+		nb_char = EIF_Size(dtype);
+	}
 	if (nb_char > 0) {
 		/* Write the body of the object */
 		buffer_write(object, (sizeof(char) * nb_char));
@@ -1003,22 +1006,26 @@ rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 
 }
 
-rt_public void gst_write(EIF_REFERENCE object, uint32 fflags)
+rt_public void gst_write(EIF_REFERENCE object)
 {
 	/* Write an object.
 	 * used for general store
 	 */
 
 	union overhead *zone;
-	uint32 flags;
+	uint32 store_flags;
+	uint16 flags;
 
-	flags = Mapped_flags(fflags);
+	zone = HEADER(object);
+	flags = zone->ov_flags;
 
 	/* Write address */
 
 	buffer_write((char *)(&object), sizeof(char *));
-	buffer_write((char *)(&flags), sizeof(uint32));
-	st_write_cid (fflags & EO_TYPE);
+
+	store_flags = Merged_flags_dtype(flags,zone->ov_dtype);
+	buffer_write((char *)(&store_flags), sizeof(uint32));
+	st_write_cid (Dftype(object));
 
 #if DEBUG & 1
 		printf ("\n %lx", object);
@@ -1028,9 +1035,6 @@ rt_public void gst_write(EIF_REFERENCE object, uint32 fflags)
 	if (flags & EO_SPEC) {
 		EIF_REFERENCE o_ptr;
 		uint32 count, elm_size;
-			/* It is safe to query the header here, since a special always have
-			 * a header. */
-		zone = HEADER(object);
 		o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		count = (uint32) (RT_SPECIAL_COUNT_WITH_INFO(o_ptr));
 		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr));
@@ -1047,29 +1051,32 @@ rt_public void gst_write(EIF_REFERENCE object, uint32 fflags)
 
 	} 
 	/* Write the body of the object */
-	gen_object_write(object, fflags);
+	gen_object_write(object, flags, Dftype(object));
 
 }
 
-rt_public void ist_write(EIF_REFERENCE object, uint32 fflags)
+rt_public void ist_write(EIF_REFERENCE object)
 {
 	/* Write an object.
 	 * used for independent store
 	 */
 
-	uint32 flags;
+	union overhead *zone;
+	uint32 store_flags;
+	uint16 flags;
 
 #ifdef RECOVERABLE_DEBUG
-	printf ("%2ld: %s [%p]\n", ++object_count, eif_typename ((int16) (fflags & EO_TYPE)), object);
+	printf ("%2ld: %s [%p]\n", ++object_count, eif_typename (Dftype(object)), object);
 #endif
 
-	flags = Mapped_flags(fflags);
+	zone = HEADER(object);
+	flags = zone->ov_flags;
 
 	/* Write address */
-
 	widr_multi_any ((char *)(&object), 1);
-	widr_norm_int (&flags);
-	ist_write_cid (fflags & EO_TYPE);
+	store_flags = Merged_flags_dtype(flags,zone->ov_dtype);
+	widr_norm_int (&store_flags);
+	ist_write_cid (Dftype(object));
 
 #if DEBUG & 1
 		printf ("\n %lx", object);
@@ -1078,11 +1085,7 @@ rt_public void ist_write(EIF_REFERENCE object, uint32 fflags)
 
 	if (flags & EO_SPEC) {
 		EIF_REFERENCE o_ptr;
-		union overhead *zone;
 		uint32 count, elm_size;
-			/* It is safe to access, object's header because a special always
-			 * has a header. */
-		zone = HEADER(object);
 		o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		count = (uint32)(RT_SPECIAL_COUNT_WITH_INFO(o_ptr));
 		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr));
@@ -1099,25 +1102,25 @@ rt_public void ist_write(EIF_REFERENCE object, uint32 fflags)
 
 	} 
 	/* Write the body of the object */
-	object_write(object, fflags);
+	object_write(object, flags, Dftype(object));
 
 }
 
-rt_public long get_offset(uint32 o_type, uint32 attrib_num)
+rt_public long get_offset(EIF_TYPE_INDEX dtype, uint32 attrib_num)
 {
 #ifndef WORKBENCH
-	return (System(o_type).cn_offsets[attrib_num]);
+	return (System(dtype).cn_offsets[attrib_num]);
 #else
 	int32 rout_id;				/* Attribute routine id */
 	long offset;
 
-	rout_id = System(o_type).cn_attr[attrib_num];
-	CAttrOffs(offset,rout_id,o_type);
+	rout_id = System(dtype).cn_attr[attrib_num];
+	CAttrOffs(offset,rout_id,dtype);
 	return offset;
 #endif
 }
 
-rt_public long get_alpha_offset(uint32 o_type, uint32 attrib_num)
+rt_public long get_alpha_offset(EIF_TYPE_INDEX dtype, uint32 attrib_num)
 {
 	/* Get the offset for attribute number `attrib_num' (after alphabetical sort) */
 	RT_GET_CONTEXT
@@ -1127,7 +1130,7 @@ rt_public long get_alpha_offset(uint32 o_type, uint32 attrib_num)
 #endif
 	uint32 alpha_attrib_num;
 
-	unsigned int *attr_types = sorted_attributes[o_type];
+	unsigned int *attr_types = sorted_attributes[dtype];
 
 	if (attr_types == (unsigned int *)0) {
 		alpha_attrib_num = attrib_num;
@@ -1135,10 +1138,10 @@ rt_public long get_alpha_offset(uint32 o_type, uint32 attrib_num)
 		alpha_attrib_num = attr_types[attrib_num];
 	}
 #ifndef WORKBENCH
-	return (System(o_type).cn_offsets[alpha_attrib_num]);
+	return (System(dtype).cn_offsets[alpha_attrib_num]);
 #else
-	rout_id = System(o_type).cn_attr[alpha_attrib_num];
-	CAttrOffs(offset,rout_id,o_type);
+	rout_id = System(dtype).cn_attr[alpha_attrib_num];
+	CAttrOffs(offset,rout_id,dtype);
 	return offset;
 #endif
 }
@@ -1146,14 +1149,15 @@ rt_public long get_alpha_offset(uint32 o_type, uint32 attrib_num)
 /*
 doc:	<routine name="gen_object_write" export="private">
 doc:		<summary>Store object using platform general format.</summary>
-doc:		<param name="object" type="char *">Pointer to the object being stored. It is a `char *' and not an `EIF_REFERENCE' because some time `object' may not have an object header (car of an expanded without references in a SPECIAL instance.</param>
-doc:		<param name="fflags" type="uint32">Flags associated to the type of object pointed by `object'.</param>
+doc:		<param name="object" type="char *">Pointer to the object being stored. It is a `char *' and not an `EIF_REFERENCE' because some time `object' may not have an object header (case of an expanded without references in a SPECIAL instance.</param>
+doc:		<param name="flags" type="uint16">Flags associated to the type of object pointed by `object'.</param>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Full dynamic type of `object'.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_eo_store_mutex</synchronization>
 doc:	</routine>
 */
 
-rt_private void gen_object_write(char *object, uint32 fflags)
+rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 {
 		/* Writes an object to disk (used by the new (3.3) general store)
 		 * It uses the same algorithm as `object_write' and should be updated
@@ -1161,19 +1165,17 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 		 */
 
 	long attrib_offset;
-	/* int z;*/ /* %%ss removed */
-	uint32 o_type;
+	EIF_TYPE_INDEX dtype = To_dtype(dftype);
+	EIF_TYPE_INDEX exp_dftype;
 	uint32 num_attrib;
-	uint32 flags, hflags, hfflags;
+	uint32 store_flags;
 
-	flags = Mapped_flags(fflags);
-	o_type = flags & EO_TYPE;
-	num_attrib = System(o_type).cn_nbattr;
+	num_attrib = System(dtype).cn_nbattr;
 
 	if (num_attrib > 0) {
 		for (; num_attrib > 0;) {
-			attrib_offset = get_alpha_offset(o_type, --num_attrib);
-			switch (*(System(o_type).cn_types + num_attrib) & SK_HEAD) {
+			attrib_offset = get_alpha_offset(dtype, --num_attrib);
+			switch (*(System(dtype).cn_types + num_attrib) & SK_HEAD) {
 				case SK_UINT8: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_8)); break;
 				case SK_UINT16: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_16)); break;
 				case SK_UINT32: buffer_write(object + attrib_offset, sizeof(EIF_NATURAL_32)); break;
@@ -1187,17 +1189,15 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 				case SK_CHAR: buffer_write(object + attrib_offset, sizeof(EIF_CHARACTER)); break;
 				case SK_REAL32: buffer_write(object + attrib_offset, sizeof(EIF_REAL_32)); break;
 				case SK_REAL64: buffer_write(object + attrib_offset, sizeof(EIF_REAL_64)); break;
-				case SK_EXP: gst_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags); break;
+				case SK_EXP: gst_write (object + attrib_offset); break;
 				case SK_REF:
 				case SK_POINTER: buffer_write(object + attrib_offset, sizeof(EIF_REFERENCE)); break;
 				case SK_BIT:
 					{
-						/* int q;*/ /* %%ss removed unused */
 						struct bit *bptr = (struct bit *)(object + attrib_offset);
-						hfflags = HEADER(bptr)->ov_flags;
-						hflags = Mapped_flags(hfflags);
-						buffer_write((char *)(&hflags), sizeof(uint32));
-						st_write_cid (hfflags & EO_TYPE);
+						store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
+						buffer_write((char *)(&store_flags), sizeof(uint32));
+						st_write_cid (HEADER(bptr)->ov_dftype);
 						buffer_write((char *)(&(bptr->b_length)), sizeof(uint32));
 						buffer_write((char *) (bptr->b_value), bptr->b_length);
 					}
@@ -1218,12 +1218,12 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 				buffer_write (object, count * sizeof(EIF_TYPED_VALUE));
 			} else {
 				uint32 dgen;
-				int16 *dynamic_types;
+				EIF_TYPE_INDEX *dynamic_types;
 				int32 *patterns;
-				int nb_gen;
+				uint16 nb_gen;
 				struct cecil_info *info;
 
-				info = cecil_info_for_dynamic_type (o_type);
+				info = cecil_info_for_dynamic_type (dtype);
 				CHECK ("Must be a generic type", (info != NULL) && (info->nb_param > 0));
 
 				/* Generic type, write in file:
@@ -1233,7 +1233,7 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 				nb_gen = info->nb_param;
 
 				for (;;) {
-					if ((*dynamic_types++ & SK_DTYPE) == (int16) o_type)
+					if ((*dynamic_types++) == dtype)
 						break;
 				}
 				dynamic_types--;
@@ -1265,14 +1265,10 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-								/* Built `hfflags' contains the full dynamic type and the
-								 * fact it is an expanded, so that it can be correctly
-								 * processed at retrieval time. */
-							hfflags = eif_gen_param_id(-1, (int16) o_type, 1) | EO_EXP;
-							hflags = Mapped_flags(hfflags);
-							buffer_write((char *) (&hflags), sizeof(uint32));
-							st_write_cid (hfflags & EO_TYPE);
-
+							exp_dftype = eif_gen_param_id(INVALID_DTYPE, dftype, 1);
+							store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
+							buffer_write((char *) (&store_flags), sizeof(uint32));
+							st_write_cid (exp_dftype);
 #ifdef WORKBENCH
 							ref = object + OVERHEAD;
 #else
@@ -1281,7 +1277,7 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 							ref = object;
 #endif
 							for (; count > 0; count --, ref += elem_size) {
-								gen_object_write(ref, hfflags);
+								gen_object_write(ref, EO_EXP, exp_dftype);
 							}
 							break;
 						default:
@@ -1292,16 +1288,13 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 					if (!(flags & EO_COMP)) {	/* Special of references */
 						buffer_write(object, count*sizeof(EIF_REFERENCE));
 					} else {			/* Special of composites */
-							/* Built `hfflags' contains the full dynamic type and the
-							 * fact it is an expanded, so that it can be correctly
-							 * processed at retrieval time. */
-						hfflags = eif_gen_param_id(-1, (int16) o_type, 1) | EO_EXP;
-						hflags = Mapped_flags(hfflags);
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-						buffer_write((char *)(&hflags), sizeof(uint32));
-						st_write_cid (hfflags & EO_TYPE);
+						exp_dftype = eif_gen_param_id(INVALID_DTYPE, dftype, 1);
+						store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
+						buffer_write((char *)(&store_flags), sizeof(uint32));
+						st_write_cid (exp_dftype);
 						for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
-							gen_object_write(ref, hfflags);
+							gen_object_write(ref, EO_EXP, exp_dftype);
 						}
 					}
 				}
@@ -1316,7 +1309,7 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 {
 	EIF_TYPED_VALUE * l_item = (EIF_TYPED_VALUE *) object;
 	unsigned int count = RT_SPECIAL_COUNT(object);
-	char l_type;
+	EIF_CHARACTER l_type;
 
 	REQUIRE ("TUPLE object", HEADER(object)->ov_flags & EO_TUPLE);
 
@@ -1348,16 +1341,16 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 			case EIF_CHARACTER_CODE: widr_multi_char (&eif_character_tuple_item(l_item), 1); break;
 			case EIF_REAL_64_CODE: widr_multi_double (&eif_real_64_tuple_item(l_item), 1); break;
 			case EIF_REAL_32_CODE: widr_multi_float (&eif_real_32_tuple_item(l_item), 1); break;
-			case EIF_NATURAL_8_CODE: widr_multi_int8 (&eif_natural_8_tuple_item(l_item), 1); break;
-			case EIF_NATURAL_16_CODE: widr_multi_int16 (&eif_natural_16_tuple_item(l_item), 1); break;
-			case EIF_NATURAL_32_CODE: widr_multi_int32 (&eif_natural_32_tuple_item(l_item), 1); break;
-			case EIF_NATURAL_64_CODE: widr_multi_int64 (&eif_natural_64_tuple_item(l_item), 1); break;
+			case EIF_NATURAL_8_CODE: widr_multi_uint8 (&eif_natural_8_tuple_item(l_item), 1); break;
+			case EIF_NATURAL_16_CODE: widr_multi_uint16 (&eif_natural_16_tuple_item(l_item), 1); break;
+			case EIF_NATURAL_32_CODE: widr_multi_uint32 (&eif_natural_32_tuple_item(l_item), 1); break;
+			case EIF_NATURAL_64_CODE: widr_multi_uint64 (&eif_natural_64_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_8_CODE: widr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_16_CODE: widr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_32_CODE: widr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_64_CODE: widr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
 			case EIF_POINTER_CODE: widr_multi_ptr ((char *) &eif_pointer_tuple_item(l_item), 1); break;
-			case EIF_WIDE_CHAR_CODE: widr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
+			case EIF_WIDE_CHAR_CODE: widr_multi_uint32 (&eif_wide_character_tuple_item(l_item), 1); break;
 			default:
 				eise_io("Independent store: unexpected tuple element type");
 		}
@@ -1367,48 +1360,45 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 /*
 doc:	<routine name="object_write" export="private">
 doc:		<summary>Store object using platform independent format.</summary>
-doc:		<param name="object" type="char *">Pointer to the object being stored. It is a `char *' and not an `EIF_REFERENCE' because some time `object' may not have an object header (car of an expanded without references in a SPECIAL instance.</param>
-doc:		<param name="fflags" type="uint32">Flags associated to the type of object pointed by `object'.</param>
+doc:		<param name="object" type="char *">Pointer to the object being stored. It is a `char *' and not an `EIF_REFERENCE' because some time `object' may not have an object header (case of an expanded without references in a SPECIAL instance.</param>
+doc:		<param name="flags" type="uint16">Flags associated to the type of object pointed by `object'.</param>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Full dynamic type of `object'.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_eo_store_mutex</synchronization>
 doc:	</routine>
 */
 
-rt_private void object_write(char * object, uint32 fflags)
+rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 {
 	long attrib_offset;
-#if DEBUG &1
-	int z; /* %%ss added #if .. #endif */
-#endif
-	uint32 o_type;
+	EIF_TYPE_INDEX dtype = To_dtype(dftype);
+	EIF_TYPE_INDEX exp_dftype;
 	uint32 num_attrib;
-	uint32 flags, hflags, hfflags;
+	uint32 store_flags;
 
-	flags = Mapped_flags(fflags);
-	o_type = flags & EO_TYPE;
-	num_attrib = System(o_type).cn_nbattr;
+	num_attrib = System(dtype).cn_nbattr;
 
 	if (num_attrib > 0) {
 		for (; num_attrib > 0;) {
-			attrib_offset = get_offset(o_type, --num_attrib);
-			switch (*(System(o_type).cn_types + num_attrib) & SK_HEAD) {
+			attrib_offset = get_offset(dtype, --num_attrib);
+			switch (*(System(dtype).cn_types + num_attrib) & SK_HEAD) {
 					/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
 					 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
 					 * unsigned SK_UINTXX too. */
-				case SK_UINT8: widr_multi_int8 ((EIF_NATURAL_8 *)(object + attrib_offset), 1); break;
-				case SK_UINT16: widr_multi_int16 ((EIF_NATURAL_16 *)(object + attrib_offset), 1); break;
-				case SK_UINT32: widr_multi_int32 ((EIF_NATURAL_32 *)(object + attrib_offset), 1); break;
-				case SK_UINT64: widr_multi_int64 ((EIF_NATURAL_64 *)(object + attrib_offset), 1); break;
+				case SK_UINT8: widr_multi_uint8 ((EIF_NATURAL_8 *)(object + attrib_offset), 1); break;
+				case SK_UINT16: widr_multi_uint16 ((EIF_NATURAL_16 *)(object + attrib_offset), 1); break;
+				case SK_UINT32: widr_multi_uint32 ((EIF_NATURAL_32 *)(object + attrib_offset), 1); break;
+				case SK_UINT64: widr_multi_uint64 ((EIF_NATURAL_64 *)(object + attrib_offset), 1); break;
 				case SK_INT8: widr_multi_int8 ((EIF_INTEGER_8 *)(object + attrib_offset), 1); break;
 				case SK_INT16: widr_multi_int16 ((EIF_INTEGER_16 *)(object + attrib_offset), 1); break;
 				case SK_INT32: widr_multi_int32 ((EIF_INTEGER_32 *)(object + attrib_offset), 1); break;
 				case SK_INT64: widr_multi_int64 ((EIF_INTEGER_64 *)(object + attrib_offset), 1); break;
 				case SK_BOOL:
 				case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1); break;
-				case SK_WCHAR: widr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1); break;
+				case SK_WCHAR: widr_multi_uint32 ((EIF_WIDE_CHAR *) (object + attrib_offset), 1); break;
 				case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)(object + attrib_offset), 1); break;
 				case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)(object + attrib_offset), 1); break;
-				case SK_EXP: ist_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags); break;
+				case SK_EXP: ist_write (object + attrib_offset); break;
 				case SK_REF: widr_multi_any (object + attrib_offset, 1); break;
 				case SK_POINTER: widr_multi_ptr (object + attrib_offset, 1); break;
 				case SK_BIT:
@@ -1424,10 +1414,9 @@ rt_private void object_write(char * object, uint32 fflags)
 								printf ("\n");
 						}
 #endif
-						hfflags = HEADER(bptr)->ov_flags;
-						hflags = Mapped_flags(hfflags);
-						widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */
-						ist_write_cid (hfflags & EO_TYPE);
+						store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
+						widr_norm_int(&store_flags);
+						ist_write_cid (HEADER(bptr)->ov_dftype);
 						widr_multi_bit (bptr, 1, bptr->b_length, 0);
 					}
 
@@ -1448,12 +1437,12 @@ rt_private void object_write(char * object, uint32 fflags)
 				object_tuple_write (object);
 			} else {
 				uint32 dgen, dgen_typ;
-				int16 *dynamic_types;
+				EIF_TYPE_INDEX *dynamic_types;
 				int32 *patterns;
-				int nb_gen;
+				uint16 nb_gen;
 				struct cecil_info *info;
 
-				info = cecil_info_for_dynamic_type (o_type);
+				info = cecil_info_for_dynamic_type (dtype);
 				CHECK ("Must be a generic type", (info != NULL) && (info->nb_param > 0));
 
 				/* Generic type, write in file:
@@ -1464,7 +1453,7 @@ rt_private void object_write(char * object, uint32 fflags)
 
 				for (;;) {
 					CHECK("Not invalid", *dynamic_types != SK_INVALID);
-					if ((*dynamic_types++ & SK_DTYPE) == (int16) o_type)
+					if ((*dynamic_types++) == dtype)
 						break;
 				}
 				dynamic_types--;
@@ -1476,16 +1465,16 @@ rt_private void object_write(char * object, uint32 fflags)
 							/* FIXME: Manu: the following 4 entries are meaningless but are there for consistency,
 							 * that is to say each time we manipulate the signed SK_INTXX we need to manipulate the
 							 * unsigned SK_UINTXX too. */
-						case SK_UINT8: widr_multi_int8 ((EIF_NATURAL_8 *)object, count); break;
-						case SK_UINT16: widr_multi_int16 ((EIF_NATURAL_16 *)object, count); break;
-						case SK_UINT32: widr_multi_int32 ((EIF_NATURAL_32 *)object, count); break;
-						case SK_UINT64: widr_multi_int64 ((EIF_NATURAL_64 *)object, count); break;
+						case SK_UINT8: widr_multi_uint8 ((EIF_NATURAL_8 *)object, count); break;
+						case SK_UINT16: widr_multi_uint16 ((EIF_NATURAL_16 *)object, count); break;
+						case SK_UINT32: widr_multi_uint32 ((EIF_NATURAL_32 *)object, count); break;
+						case SK_UINT64: widr_multi_uint64 ((EIF_NATURAL_64 *)object, count); break;
 						case SK_INT8: widr_multi_int8 (((EIF_INTEGER_8 *)object), count); break;
 						case SK_INT16: widr_multi_int16 (((EIF_INTEGER_16 *)object), count); break;
 						case SK_INT32: widr_multi_int32 (((EIF_INTEGER_32 *)object), count); break;
 						case SK_INT64: widr_multi_int64 (((EIF_INTEGER_64 *)object), count); break;
 						case SK_POINTER: widr_multi_ptr (object, count); break;
-						case SK_WCHAR: widr_multi_int32 ((EIF_INTEGER_32 *) object, count); break;
+						case SK_WCHAR: widr_multi_uint32 ((EIF_WIDE_CHAR *) object, count); break;
 						case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)object, count); break;
 						case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)object, count); break;
 						case SK_BOOL:
@@ -1497,14 +1486,10 @@ rt_private void object_write(char * object, uint32 fflags)
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-								/* Built `hfflags' contains the full dynamic type and the
-								 * fact it is an expanded, so that it can be correctly
-								 * processed at retrieval time. */
-							hfflags = eif_gen_param_id(-1, (int16) o_type, 1) | EO_EXP;
-							hflags = Mapped_flags(hfflags);
-							widr_norm_int (&hflags);
-							ist_write_cid (hfflags & EO_TYPE);
-
+							exp_dftype = eif_gen_param_id(INVALID_DTYPE, dftype, 1);
+							store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
+							widr_norm_int(&store_flags);
+							ist_write_cid (exp_dftype);
 #ifdef WORKBENCH
 							ref = object + OVERHEAD;
 #else
@@ -1513,10 +1498,9 @@ rt_private void object_write(char * object, uint32 fflags)
 							ref = object;
 #endif
 							for (; count > 0; count --, ref += elem_size) {
-								object_write(ref, hfflags);
+								object_write(ref, EO_EXP, exp_dftype);
 							}
 							break;
-
 						default:
 							eise_io("Basic store: not an Eiffel object.");
 							break;
@@ -1526,16 +1510,12 @@ rt_private void object_write(char * object, uint32 fflags)
 						widr_multi_any (object, count);
 					} else {			/* Special of composites */
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-							/* Built `hfflags' contains the full dynamic type and the
-							 * fact it is an expanded, so that it can be correctly
-							 * processed at retrieval time. */
-						hfflags = eif_gen_param_id(-1, (int16) o_type, 1) | EO_EXP;
-						hflags = Mapped_flags(hfflags);
-						widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */
-						ist_write_cid (hflags & EO_TYPE);
-
+						exp_dftype = eif_gen_param_id(INVALID_DTYPE, dftype, 1);
+						store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
+						widr_norm_int(&store_flags);
+						ist_write_cid (exp_dftype);
 						for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
-							object_write(ref, hfflags);
+							object_write(ref, EO_EXP, exp_dftype);
 						}
 					}
 				}
@@ -1551,14 +1531,14 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	int i;
+	EIF_TYPE_INDEX i;
 	char *vis_name;			/* Visible name of a class */
 	char *s_buffer = NULL;
 	struct cecil_info *info;
 	volatile int nb_line = 0;
 	volatile size_t bsize = 80;
 	jmp_buf exenv;
-	RTXD;
+	RTYD;
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
@@ -1611,9 +1591,9 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-			int16 *dynamic_types = info->dynamic_types;
+			EIF_TYPE_INDEX *dynamic_types = info->dynamic_types;
 			int32 *patterns;
-			int nb_gen = info->nb_param;
+			uint16 nb_gen = info->nb_param;
 			int j;
 
 			if (0 > sprintf(s_buffer, "%d %s %ld %d", i, vis_name, EIF_Size(i), nb_gen)) {
@@ -1623,11 +1603,7 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 			buffer_write(s_buffer, (strlen (s_buffer)));
 
 			for (;;) {
-#if DEBUG &1
-				if (*dynamic_types == SK_INVALID)
-					eif_panic("corrupted cecil table");
-#endif
-				if ((*dynamic_types++ & SK_DTYPE) == (int16) i)
+				if ((*dynamic_types++) == i)
 					break;
 			}
 			dynamic_types--;
@@ -1730,7 +1706,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	int i;
+	EIF_TYPE_INDEX i;
 	char *vis_name;			/* Visible name of a class */
 	char *s_buffer = NULL;
 	struct cecil_info *info;
@@ -1738,7 +1714,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	volatile size_t bsize = 600;
 	uint32 num_attrib;
 	jmp_buf exenv;
-	RTXD;
+	RTYD;
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
@@ -1794,9 +1770,9 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
-			int16 *dynamic_types = info->dynamic_types;
+			EIF_TYPE_INDEX *dynamic_types = info->dynamic_types;
 			int32 *patterns;
-			int nb_gen = info->nb_param;
+			uint16 nb_gen = info->nb_param;
 			int j;
 
 			if (0 > sprintf(s_buffer, "%d %s %d", i, vis_name, nb_gen)) {
@@ -1806,11 +1782,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 
 			for (;;) {
-#if DEBUG &1
-				if (*dynamic_types == SK_INVALID)
-					eif_panic("Corrupted cecil table");
-#endif
-				if ((*dynamic_types++ & SK_DTYPE) == (int16) i)
+				if ((*dynamic_types++) == i)
 					break;
 			}
 			dynamic_types--;
@@ -1869,7 +1841,7 @@ doc:		<synchronization>GC mutex</synchronization>
 doc:	</routine>
 */
 
-rt_private struct cecil_info * cecil_info_for_dynamic_type (uint32 dtype)
+rt_private struct cecil_info * cecil_info_for_dynamic_type (EIF_TYPE_INDEX dtype)
 {
 	struct cecil_info *result;
 	struct cnode node = System(dtype);
@@ -1887,7 +1859,7 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 {
 	char *name = System (dtype).cn_names[attrib_index];
 	int16 name_length = (int16) strlen (name);
-	int16 *gtypes = System (dtype).cn_gtypes[attrib_index] + 1;
+	EIF_TYPE_INDEX *gtypes = System (dtype).cn_gtypes[attrib_index] + 1;
 	int16 num_gtypes;
 	int16 i;
 	unsigned char basic_type;
@@ -1906,14 +1878,14 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 	/* Write name information: "name_length name" */
 	widr_multi_int16 (&name_length, 1);
 	widr_multi_char ((EIF_CHARACTER *) name, strlen (name));
-	basic_type = (System(dtype).cn_types[attrib_index] & SK_HEAD) >> 24;
+	basic_type = (unsigned char) (((System(dtype).cn_types[attrib_index] & SK_HEAD) >> 24) & 0x000000FF);
 	widr_multi_char (&basic_type, 1);
 
 	/* Write type information: "num_gtypes attribute_type {gen_types}*" */
 	widr_multi_int16 (&num_gtypes, 1);
 	/* Write type array */
 	for (i=0; i<num_gtypes; i++) {
-		int16 gtype = gtypes[i];
+		EIF_TYPE_INDEX gtype = gtypes[i];
 #ifdef RECOVERABLE_DEBUG
 		rt_shared char *name_of_attribute_type (int16 **type);
 		printf ("%s%s", i==0 ? " " : i==1 ? " [" : ", ", name_of_attribute_type (&typearr));
@@ -1921,19 +1893,19 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 #endif
 		if (gtype == TUPLE_TYPE) {
 				/* Write TUPLE_TYPE, nb generic parames */
-			widr_multi_int16 (gtypes + i, TUPLE_OFFSET);
+			widr_multi_uint16 (gtypes + i, TUPLE_OFFSET);
 			i += TUPLE_OFFSET;
 			gtype = gtypes [i];
 		}
 		if (gtype == FORMAL_TYPE) {
 				/* Write FORMAL_TYPE and formal position */
-			widr_multi_int16 (gtypes + i, 2);
+			widr_multi_uint16 (gtypes + i, 2);
 			i += 1;
 		} else {
 			if (gtype >= 0) {
 				gtype = RTUD (gtype);
 			}
-			widr_multi_int16 (&gtype, 1);
+			widr_multi_uint16 (&gtype, 1);
 		}
 	}
 #ifdef RECOVERABLE_DEBUG
@@ -1953,7 +1925,7 @@ rt_private void widr_type_attributes (int16 dtype)
 		widr_type_attribute (dtype, i);
 }
 
-rt_private void widr_type_generics (int16 dtype)
+rt_private void widr_type_generics (EIF_TYPE_INDEX dtype)
 {
 	/* Write generic information: "nb_generics {meta_type}*" */
 	struct cecil_info *info;
@@ -1965,12 +1937,12 @@ rt_private void widr_type_generics (int16 dtype)
 		widr_multi_int16 (&zero, 1);
 	} else {
 			/* Generic case */
-		int16 *dynamic_types = info->dynamic_types;
+		EIF_TYPE_INDEX *dynamic_types = info->dynamic_types;
 		int32 *patterns;
-		int16 nb_gen = info->nb_param;
+		uint16 nb_gen = info->nb_param;
 		int32 i;
 
-		widr_multi_int16 (&nb_gen, 1);
+		widr_multi_uint16 (&nb_gen, 1);
 		for (i = 0 ;; i++) {
 			if (dynamic_types[i] == dtype) {
 				patterns = info->patterns + (i * nb_gen);
@@ -2018,11 +1990,11 @@ rt_public void rmake_header(EIF_CONTEXT_NOARG)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	int16 ohead = OVERHEAD;
-	int16 max_types = scount;
+	int16 max_types = scount;	/* Here there is a problem if `scount' is more than 2^16.*/
 	int16 type_count;
 	int16 i;
 	jmp_buf exenv;
-	RTXD;
+	RTYD;
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
@@ -2201,29 +2173,29 @@ void store_write(size_t cmps_in_size)
 	}
 }
 
-rt_private void st_write_cid (uint32 dftype)
+rt_private void st_write_cid (EIF_TYPE_INDEX dftype)
 
 {
-	int16 *l_cidarr, count;
+	EIF_TYPE_INDEX *l_cidarr, count;
 
-	l_cidarr = eif_gen_cid ((int16) dftype);
+	l_cidarr = eif_gen_cid (dftype);
 	count  = *l_cidarr;
 
-	buffer_write ((char *) (&count), sizeof (int16));
+	buffer_write ((char *) (&count), sizeof (EIF_TYPE_INDEX));
 
 	/* If count = 1 then we don't need to write more data */
 
 	if (count > 1)
-		buffer_write ((char *) (l_cidarr+1), count * sizeof (int16));
+		buffer_write ((char *) (l_cidarr+1), count * sizeof (EIF_TYPE_INDEX));
 }
 
-rt_private void ist_write_cid (uint32 dftype)
+rt_private void ist_write_cid (EIF_TYPE_INDEX dftype)
 
 {
-	int16 *l_cidarr;
+	EIF_TYPE_INDEX *l_cidarr;
 	uint32 count, i, val;
 
-	l_cidarr = eif_gen_cid ((int16) dftype);
+	l_cidarr = eif_gen_cid (dftype);
 	count  = (uint32) *l_cidarr;
 
 	widr_norm_int (&count);

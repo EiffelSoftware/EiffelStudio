@@ -130,7 +130,7 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item);
 rt_private EIF_TYPED_VALUE *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
-rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, int typeid);
+rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, EIF_TYPE_INDEX typeid);
 rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp);
 rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
 extern EIF_TYPED_VALUE *dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
@@ -248,7 +248,7 @@ static int curr_modify = NO_CURRMODIF;
 		}
 		break;
 	case NEW_INSTANCE:
-		dbg_new_instance_of_type (sp, (int) arg_1);
+		dbg_new_instance_of_type (sp, (EIF_TYPE_INDEX) arg_1);
 		break;
 	case DBG_EXCEPTION_TRACE:
 		dbg_exception_trace(sp, (int) arg_1);
@@ -653,10 +653,9 @@ rt_private void dobjectstorage_save (EIF_PSTREAM sp)
 {
 	EIF_TYPED_VALUE *ip = NULL;
 	Request rqst;			/* Loading request */
-	char *s;
+	char *s = NULL;
 	EIF_TYPED_VALUE *pv = NULL;
 
-	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 		/* Get and pop last value */
@@ -707,13 +706,11 @@ rt_private void dobjectstorage_load (EIF_PSTREAM sp)
 {
 	EIF_TYPED_VALUE *ip = NULL;
 	Request rqst;			/* Loading request */
-	char *s;
+	char *s = NULL;
 	EIF_TYPED_VALUE *pv = NULL;
 	struct dump dumped;			/* Item returned */
 	EIF_REFERENCE tmp = NULL;
 
-
-	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 		/* Get and pop last value */
@@ -747,7 +744,6 @@ rt_private void dobjectstorage_load (EIF_PSTREAM sp)
 	} else {
 		/* Call RT_EXTENSION */
 		EIF_TYPED_VALUE rtd_arg;						
-		EIF_BOOLEAN b = EIF_FALSE;
 		send_ack(sp, AK_OK);
 		RT_ENTER_EIFFELCODE; /* Stop the recording */
 		rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_OBJECT_STORAGE_LOAD);	/* Obj Storage Load */
@@ -1138,7 +1134,7 @@ rt_private void rec_tinspect(EIF_REFERENCE object);
 
 rt_private void obj_inspect(EIF_OBJ object)
 {
-	uint32 flags;		/* Object flags */
+	uint32 flags;		/* Object lags */
 	EIF_BOOLEAN is_special, is_tuple;
 	int32 dtype;
 	EIF_REFERENCE ref = eif_access(object);
@@ -1158,7 +1154,7 @@ rt_private void obj_inspect(EIF_OBJ object)
 	app_twrite (&is_special, sizeof(EIF_BOOLEAN));
 	app_twrite (&is_tuple, sizeof(EIF_BOOLEAN));
 		/* Send class dynamic id */
-	dtype = Deif_bid(flags);
+	dtype = Dtype(ref);
 	app_twrite (&dtype, sizeof(int32));
 					
 	if (is_special) {
@@ -1183,7 +1179,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 	uint32 *types;				/* Attribute types */
 	int32 *cn_attr;				/* Attribute keys */
 	long offset;
-	int16 dtype;				/* Object dynamic type */
+	EIF_TYPE_INDEX dtype;				/* Object dynamic type */
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE reference;				/* Reference attribute */
 	char **names;					/* Attribute names */
@@ -1313,7 +1309,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 	count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
 	flags = zone->ov_flags;
-	dtype = Deif_bid(flags);
+	dtype = Dtype(object);
 
 		/* Send the capacity of the special object */
 	app_twrite (&count, sizeof(int32));
@@ -1391,7 +1387,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 				else if (dtype == egc_sp_pointer)
 					sk_type = SK_POINTER;
 				else {
-					CHECK("Must be a bit", 1);	/* We cannot check that at the moment */
+					CHECK("Must be a bit", dtype == egc_bit_dtype);
 					sk_type = SK_BIT;
 				}
 
@@ -1677,7 +1673,7 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 	count = RT_SPECIAL_COUNT_WITH_INFO (o_ref);
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ref);
 	flags = zone->ov_flags;
-	dtype = (int) Deif_bid(flags);
+	dtype = Dtype(object);
 
 	/* Send the items within the bounds */
 	if (!(flags & EO_REF)) {
@@ -1743,7 +1739,7 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 	uint32 *types;				/* Attribute types */
 	int32 *cn_attr;				/* Attribute keys */
 	long offset;				/* Offset of the attribute within object structure */
-	int16 dtype;				/* Object dynamic type */
+	EIF_TYPE_INDEX dtype;			/* Object dynamic type */
 	char *o_ref;				/* Attribute address */
 	uint32 type;				/* Dynamic type of the attribute */
 	char *new_object_attr;		/* new value for the attribute (if new value is a reference) */
@@ -1908,7 +1904,7 @@ rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp)
 	app_send_packet(sp, &rqst);		/* Send to network */
 }
 
-rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
+rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 {
 	/* Must be the typeid of a Reference class */
 
@@ -1951,7 +1947,8 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, int typeid)
 	if (s != NULL) {
 		tid = eif_type_id(s);
 		if (tid != -1) {
-			tmp = RTLNSMART(tid);
+			CHECK("valid tid", rt_valid_type_index(tid));
+			tmp = RTLNSMART((EIF_TYPE_INDEX) tid);
 		}
 	} else {
 		tmp = RTLN(RTUD(typeid));

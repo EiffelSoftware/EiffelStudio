@@ -57,6 +57,7 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include "rt_lmalloc.h"		/* for eif_free, eif_realloc */
 #include "rt_malloc.h"
 #include "rt_assert.h"
+#include "rt_gen_types.h"
 #include "rt_globals.h"
 
 #ifdef EIF_WINDOWS
@@ -180,8 +181,8 @@ rt_public void exfail(void);			/* Signals: reached end of a rescue clause */
 rt_public void eif_panic(char *msg);			/* Run-time raised panic */
 rt_public void fatal_error(char *msg);			/* Run-time raised fatal errors */
 rt_public void xraise(int code);			/* Raises an exception with no tag */
-rt_public struct ex_vect *exset(char *name, int origin, char *object);	/* Set execution stack on routine entrance */
-rt_public struct ex_vect *new_exset(char *name, int origin, char *object, uint32 loc_nb, uint32 arg_nb, BODY_INDEX bid);	/* Set execution stack on routine entrance */
+rt_public struct ex_vect *exset(char *name, EIF_TYPE_INDEX origin, char *object);	/* Set execution stack on routine entrance */
+rt_public struct ex_vect *new_exset(char *name, EIF_TYPE_INDEX origin, char *object, uint32 loc_nb, uint32 arg_nb, BODY_INDEX bid);	/* Set execution stack on routine entrance */
 #ifndef WORKBENCH
 rt_public struct ex_vect *exft(void);	/* Entry in feature with rescue clause */
 #endif
@@ -412,12 +413,12 @@ rt_public void enomem(void)
 }
 
 /* wrapper to the new function (for EIFFEL COM....) */
-rt_public struct ex_vect *exset(char *name, int origin, char *object)
+rt_public struct ex_vect *exset(char *name, EIF_TYPE_INDEX origin, char *object)
 {
 	return new_exset(name, origin, object, 0, 0, 0);
 }
 
-rt_public struct ex_vect *new_exset(char *name, int origin, char *object, uint32 loc_nb, uint32 arg_nb, BODY_INDEX bid)
+rt_public struct ex_vect *new_exset(char *name, EIF_TYPE_INDEX origin, char *object, uint32 loc_nb, uint32 arg_nb, BODY_INDEX bid)
 			/* The routine name */
 			/* The origin of the routine */
 			/* The object on which the routine is applied */
@@ -843,7 +844,7 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 #ifdef ISE_GC
 	char volatile gc_status;							/* Saved GC status */
 #endif
-	RTXD;									/* Save stack contexts */
+	RTYD;									/* Save stack contexts */
 
 	/* There is no need to protect against signals here, as this routine can
 	 * only be called via the signal handler, which takes care of blocking
@@ -945,8 +946,8 @@ rt_public void exfail(void)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
-	int				eclass, failed_class = 0;
-	char			*reci_name, *failed_routine = NULL;
+	EIF_TYPE_INDEX	eclass = 0, failed_class = 0;
+	char			*reci_name=NULL, *failed_routine = NULL;
 	struct ex_vect	*vector_call;	/* The stack trace entry */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
@@ -1092,7 +1093,7 @@ rt_public void eraise(char *tag, long num)
 		return;			/* Exception is ignored */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
-	echval = (unsigned char) num;		/* Set exception number */
+	echval = (int) num;		/* Set exception number */
 
 
 	/* Save the exception on the exception trace stack, if possible. If that
@@ -1248,7 +1249,7 @@ rt_public void com_eraise(char *tag, long num)
 		return;			/* Exception is ignored */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
-	echval = (unsigned char) num;		/* Set exception number */
+	echval = (int) num;		/* Set exception number */
 
 	/* Save the exception on the exception trace stack, if possible. If that
 	 * stack is full, raise the EN_OMEM memory exception if not currently done.
@@ -1488,7 +1489,6 @@ rt_private jmp_buf *backtrack(void)
 	 * There is no real concern for being really fast here, so I've chosen to
 	 * rely on existing interface functions instead of hardwiring a loop--RAM.
 	 */
-	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *top;		/* Top of calling stack */
 
@@ -2274,7 +2274,7 @@ rt_private void find_call(void)
 			eif_except.from = Dtype(root_obj);
 		} else {
 			eif_except.rname = "root's set-up";	/* Root object not created */
-			eif_except.from = -1;				/* Signals: no valid object */
+			eif_except.from = INVALID_DTYPE;	/* Signals: no valid object */
 		}
 		eif_except.obj_id = root_obj;			/* Null address if early */
 		eif_except.last = 1;					/* Must be the last record */
@@ -2689,7 +2689,7 @@ rt_private void print_top(void (*append_trace)(char *))
 
 	if (eif_except.from >= 0) {
 		if (eif_except.obj_id) {
-			int obj_dtype = Dtype(eif_except.obj_id);
+			EIF_TYPE_INDEX obj_dtype = Dtype(eif_except.obj_id);
 
 			if (obj_dtype>=0 && obj_dtype < scount) {
 				print_class_feature_tag (append_trace, Class(eif_except.obj_id), rout_name_buffer, buf);
@@ -2717,7 +2717,7 @@ rt_private void print_top(void (*append_trace)(char *))
 			/* We limit ourself to the first 1000 characters of class name
 			 * to avoir buffer overflow. */
 		if (eif_except.obj_id) {
-			if (eif_except.from != (int)Dtype(eif_except.obj_id))
+			if (eif_except.from != Dtype(eif_except.obj_id))
 				sprintf(buf, "(From %.1000s)", Origin(eif_except.from));
 		} else
 			sprintf(buf, "(From %.1000s)", Origin(eif_except.from));
@@ -3183,6 +3183,7 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector)
 		printf("\texur_id = 0x%lx\n", vector->ex_id);
 		printf("\texur_rout = \"%s\"\n", vector->ex_rout);
 		printf("\texur_orig = %d\n", vector->ex_orig);
+		printf("\texur_dtype = %d\n", vector->ex_dtype);
 		break;
 	}
 }
@@ -3308,8 +3309,8 @@ rt_public void draise(long code, char *meaning, char *message)
 	int				num;
 	char			*tag;
 	struct ex_vect	*vector_call;
-	char			*reci_name;
-	int				eclass;
+	char			*reci_name = NULL;
+	EIF_TYPE_INDEX	eclass = 0;
 
 	num = code;
 	tag = message;
@@ -3444,8 +3445,8 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 	{
 				/* Make the dynamic type of exception here */
 		EIF_REFERENCE _reci, _tag, _eclass, _rf_routine, _rf_class, _trace;
-		EIF_INTEGER _eco, _signal_code, _eno, _line_num, _is_inva_entry;
-		EIF_BOOLEAN _new_obj;
+		EIF_INTEGER _eco, _signal_code, _eno, _line_num;
+		EIF_BOOLEAN _is_inva_entry, _new_obj;
 
 #ifdef WORKBENCH
 		EIF_TYPED_VALUE __reci, __tag, __eco, __signal_code, __eno, __eclass, __rf_routine, __rf_class, __trace, __line_num, __new_obj, __is_inva_entry;
@@ -3573,8 +3574,6 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 rt_public void set_last_exception (EIF_REFERENCE ex)
 /* Call `set_last_exception' in EXCEPTION_MANAGER */
 {
-	EIF_GET_CONTEXT
-
 	if (except_mnger) /* In case get called in `dispose' */
 	{
 #ifdef WORKBENCH
@@ -3599,8 +3598,6 @@ rt_public void set_last_exception (EIF_REFERENCE ex)
 rt_public EIF_REFERENCE last_exception (void)
 /* Eiffel instance of last exception from EXCEPTION_MANAGER */
 {
-	EIF_GET_CONTEXT
-
 #ifdef WORKBENCH
 	EIF_TYPED_VALUE _re;
 #else

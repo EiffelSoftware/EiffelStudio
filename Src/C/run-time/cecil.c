@@ -51,6 +51,7 @@ doc:<file name="cecil.c" header="eif_cecil.h" version="$Id$" summary="C-Eiffel C
 #include "eif_project.h"
 #include "rt_except.h"
 #include "rt_threads.h"
+#include "rt_gen_types.h"
 #include "rt_assert.h"
 #include <string.h>
 #ifdef I_STDARG
@@ -104,7 +105,7 @@ rt_shared  void eif_cecil_init ();
 #endif	/* EIF_THREADS */
 
 /* Function declarations */
-rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
+rt_private EIF_TYPE_INDEX cid_to_dftype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
 rt_private int locate(EIF_REFERENCE object, char *name);			/* Locate attribute by name in skeleton */
 rt_public int eiflocate (EIF_OBJECT object, char *name);
 
@@ -152,7 +153,7 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
         eif_panic ("Unknown dynamic type\n");  /* Check if dynamic exists */
 
 
-    sk = &System(Deif_bid(cid_to_dtype(cid)));    /* Fetch skeleton entry */
+    sk = &System(To_dtype(cid_to_dftype(cid)));    /* Fetch skeleton entry */
     nb_attr = sk->cn_nbattr;        /* Number of attributes */
 
 
@@ -200,10 +201,10 @@ rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID cid)
 	 */
 
 	EIF_REFERENCE object;					/* Eiffel object's physical address */
-	int dtype;						/* Dynamic type associated with class ID */
+	EIF_TYPE_INDEX dtype;						/* Dynamic type associated with class ID */
 	
-	dtype = cid_to_dtype(cid);		/* Convert class ID to dynamic type */
-	if (dtype < 0)					/* Was not a valid reference type */
+	dtype = cid_to_dftype(cid);		/* Convert class ID to dynamic type */
+	if (dtype == INVALID_DTYPE)/* Was not a valid reference type */
 		return (EIF_OBJECT) 0;			/* No creation, return null pointer */
 
 	object = emalloc(dtype);		/* Create object */
@@ -222,7 +223,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 	 * null pointer if the routine does not exist.
 	 */
 
-	int dtype = Deif_bid(cid_to_dtype(cid));		/* Compute dynamic type from class ID */
+	EIF_TYPE_INDEX dtype = To_dtype(cid_to_dftype(cid));		/* Compute dynamic type from class ID */
 	struct ctable *ptr_table;			/* H table holding function pointers */
 	EIF_REFERENCE_FUNCTION *ref;
 
@@ -272,15 +273,15 @@ rt_public char *eifname(EIF_TYPE_ID cid)
 	 */
 
 
-	int dtype = Deif_bid(cid_to_dtype(cid));		/* Convert to dynamic type */
+	EIF_TYPE_INDEX dtype = To_dtype(cid_to_dftype(cid));		/* Convert to dynamic type */
 
-	if ((dtype < 0) || (cid == EIF_NO_TYPE))						/* Not a reference type */
+	if ((dtype == INVALID_DTYPE) || (cid == EIF_NO_TYPE))						/* Not a reference type */
 		return (char *) 0;
 
 	return System(dtype).cn_generator;	/* Pointer to static data */
 }
 
-rt_private int cid_to_dtype(EIF_TYPE_ID cid)
+rt_private EIF_TYPE_INDEX cid_to_dftype(EIF_TYPE_ID cid)
 {
 	/* Converts a class ID to a dynamic type. Returns -1 if the class ID is not
 	 * that of a reference type. Expanded types are ignored, of course, for the
@@ -288,9 +289,9 @@ rt_private int cid_to_dtype(EIF_TYPE_ID cid)
 	 */
 
 	if ((uint32) cid & SK_SIMPLE)		/* Type is a simple type */
-		return -1;						/* No valid dynamic type */
+		return INVALID_DTYPE;						/* No valid dynamic type */
 	
-	return (uint32) cid & SK_DTYPE;		/* Return the dynamic type part */
+	return (EIF_TYPE_INDEX) (cid & SK_DTYPE);		/* Return the dynamic type part */
 }
 
 /*
@@ -342,7 +343,7 @@ rt_public EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * con
 	int i;							/* Index in skeleton */
 #ifdef WORKBENCH
 	int32 rout_id;					/* Attribute routine id */
-	int16 dtype;					/* Object dynamic type */
+	EIF_TYPE_INDEX dtype;			/* Object dynamic type */
 	long offset;
 #endif
 
@@ -434,7 +435,7 @@ rt_public EIF_BIT eifgbit(EIF_REFERENCE object, char *name)
 	int i;							/* Index in skeleton structure */
 #ifdef WORKBENCH
 	int32 rout_id;					/* Bit attribute routine id */
-	int16 dtype;					/* Object dynamic type */
+	EIF_TYPE_INDEX dtype;			/* Object dynamic type */
 	long offset;					/* Bit attribute offset */
 #else
 	struct cnode *sk;				/* Skeleton entry in system */

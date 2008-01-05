@@ -1030,8 +1030,9 @@ feature -- Generation
 				buffer.put_character (';')
 				buffer.put_new_line
 					-- Initialize dynamic type of the bit attribute
-				buffer.put_string ("HEADER(Current + offset_position")
-				buffer.put_string(")->ov_flags = egc_bit_dtype | EO_EXP;")
+				buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
+				buffer.put_new_line
+				buffer.put_string ("RT_DFS(HEADER(Current + offset_position), egc_bit_dtype);")
 				buffer.put_new_line
 				bits_desc ?= skeleton.item; 	-- Cannot fail
 				buffer.put_string ("*(uint32 *) (Current + offset_position")
@@ -1071,8 +1072,15 @@ feature -- Generation
 					-- Initialize dynaminc type of the expanded object
 				gen_type ?= exp_desc.type_i
 
+					-- The dynamic type has to be set after setting the flags.
+				buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
+				buffer.put_new_line
+
+				if gen_type /= Void then
+					generate_typres_computation_start (buffer, gen_type)
+				end
+				buffer.put_string ("RT_DFS(HEADER(Current + offset_position), ")
 				if gen_type = Void then
-					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = ")
 					l_formal ?= exp_desc.type_i
 					if l_formal /= Void then
 						create l_formal_type.make (l_formal)
@@ -1081,14 +1089,14 @@ feature -- Generation
 							-- Not an expanded generic
 						buffer.put_type_id (exp_desc.type_id)
 					end
-					buffer.put_string (" | EO_EXP;")
-					buffer.put_new_line
 				else
-						-- Expanded generic
-					generate_ov_flags_start (buffer, gen_type)
-					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = typres | EO_EXP")
-					generate_ov_flags_finish (buffer)
-					buffer.put_new_line
+					buffer.put_string ("typres")
+				end
+				buffer.put_character (')')
+				buffer.put_character (';')
+				buffer.put_new_line
+				if gen_type /= Void then
+					generate_typres_computation_end (buffer)
 				end
 
 					-- Mark expanded object
@@ -1108,8 +1116,8 @@ feature -- Generation
 			buffer.exdent
 		end
 
-	generate_ov_flags_start (buffer: GENERATION_BUFFER; gen_type: GEN_TYPE_I) is
-			-- Start creation of generic type for ov_flags.
+	generate_typres_computation_start (buffer: GENERATION_BUFFER; gen_type: GEN_TYPE_I) is
+			-- Start computation of generic type.
 		require
 			buffer_exists: buffer /= Void
 			type_exists: gen_type /= Void
@@ -1132,7 +1140,7 @@ feature -- Generation
 			if not System.has_multithreaded or else not use_init then
 				buffer.put_string ("static ")
 			end
-			buffer.put_string ("int16 typarr [] = {")
+			buffer.put_string ("EIF_TYPE_INDEX typarr [] = {")
 
 			buffer.put_integer (type.generated_id (final_mode))
 			buffer.put_string (", ")
@@ -1145,12 +1153,13 @@ feature -- Generation
 				gen_type.generate_cid (buffer, final_mode, False)
 			end
 
-			buffer.put_string ("-1};")
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+			buffer.put_string ("};")
 			buffer.put_new_line
-			buffer.put_string ("int16 typres;")
+			buffer.put_string ("EIF_TYPE_INDEX typres;")
 			buffer.put_new_line
 			if not use_init then
-				buffer.put_string ("static int16 typcache = -1;")
+				buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
 				buffer.put_new_line
 			end
 			buffer.put_new_line
@@ -1169,13 +1178,11 @@ feature -- Generation
 			buffer.put_new_line
 		end
 
-	generate_ov_flags_finish (buffer: GENERATION_BUFFER) is
-			-- Finish creation of generic type for ov_flags.
+	generate_typres_computation_end (buffer: GENERATION_BUFFER) is
+			-- Finish setting of dynamic type.
 		require
 			buffer_exists: buffer /= Void
 		do
-			buffer.put_character (';')
-			buffer.put_new_line
 			buffer.exdent
 			buffer.put_character ('}')
 			buffer.put_new_line
@@ -1392,7 +1399,7 @@ feature -- Skeleton generation
 
 				-- Generate parent dynamic type array
 			parent_list := parent_types
-			buffer.put_string ("static int cn_parents")
+			buffer.put_string ("static EIF_TYPE_INDEX cn_parents")
 			buffer.put_integer (type_id)
 			buffer.put_string (" [] = {")
 			from
@@ -1404,7 +1411,8 @@ feature -- Skeleton generation
 				buffer.put_string (", ")
 				parent_list.forth
 			end
-			buffer.put_string ("-1};%N%N")
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+			buffer.put_string ("};%N%N")
 
 			if
 				byte_context.final_mode and
@@ -1453,8 +1461,8 @@ feature -- Skeleton generation
 				buffer.put_integer (type_id)
 				buffer.put_string (",%N")
 			else
-				buffer.put_string ("(uint32 *) 0,%N")
-				buffer.put_string ("(int16 **) 0,%N")
+				buffer.put_string ("NULL,%N")
+				buffer.put_string ("NULL,%N")
 			end
 
 				-- Store Skeleton flag associated to Current type
@@ -1604,7 +1612,7 @@ feature -- Structure generation
 		end
 
 	generate_expanded_type_initialization (buffer: GENERATION_BUFFER; a_name: STRING; a_type: CL_TYPE_I) is
-			-- Generate initialization of expanded variable `a_name'.
+			-- Generate initialization of expanded local variable `a_name'.
 		require
 			is_expanded: is_expanded
 			buffer_not_void: buffer /= Void
@@ -1619,25 +1627,36 @@ feature -- Structure generation
 			l_gen_type ?= a_type
 			l_workbench_mode := byte_context.workbench_mode
 --			if l_workbench_mode or else (skeleton.has_references or l_gen_type /= Void) then
+					-- The dynamic type has to be set after setting the flags.
+					-- Also note that we use EO_C as those expanded cannot move.
+				buffer.put_string ("((union overhead *) ")
+				buffer.put_string (a_name)
+				buffer.put_string (".data)->ov_flags = EO_EXP | EO_C;")
+				buffer.put_new_line
+
+				if l_gen_type /= Void then
+					generate_typres_computation_start (buffer, l_gen_type)
+				end
+				buffer.put_string ("RT_DFS((union overhead *) ")
+				buffer.put_string (a_name)
+				buffer.put_string (".data, ")
 				if l_gen_type = Void then
 						-- Not a generic type.
-					buffer.put_string ("((union overhead *) ")
-					buffer.put_string (a_name)
-					buffer.put_string (".data)->ov_flags = EO_EXP | ")
 					if l_workbench_mode then
 						buffer.put_string ("RTUD(")
 						buffer.put_integer (a_type.generated_id (False))
-						buffer.put_string (");")
+						buffer.put_character (')')
 					else
 						buffer.put_integer (a_type.generated_id (True))
-						buffer.put_character (';')
 					end
 				else
-					generate_ov_flags_start (buffer, l_gen_type)
-					buffer.put_string ("((union overhead *) ")
-					buffer.put_string (a_name)
-					buffer.put_string (".data)->ov_flags = EO_EXP | typres;")
-					generate_ov_flags_finish (buffer)
+					buffer.put_string ("typres")
+				end
+				buffer.put_character (')')
+				buffer.put_character (';')
+				buffer.put_new_line
+				if l_gen_type /= Void then
+					generate_typres_computation_end (buffer)
 				end
 --			end
 			buffer.put_new_line
@@ -1671,10 +1690,12 @@ feature -- Structure generation
 				end
 				buffer.put_string (");")
 			else
-				generate_ov_flags_start (buffer, l_gen_type)
+				generate_typres_computation_start (buffer, l_gen_type)
 				buffer.put_string (a_target_name)
-				buffer.put_string ("= RTLN(typres);")
-				generate_ov_flags_finish (buffer)
+				buffer.put_string ("= RTLN(typres)")
+				buffer.put_character (';')
+				buffer.put_new_line
+				generate_typres_computation_end (buffer)
 			end
 			buffer.put_new_line
 		end

@@ -10,14 +10,15 @@ class
 
 feature -- Generic conformance access
 
-	Terminator_type: INTEGER_16 is 0xFFFF
-	None_type: INTEGER_16 is 0xFFFE
-	Like_arg_type: INTEGER_16 is 0xFFFD
-	Like_current_type: INTEGER_16 is 0xFFFC
-	Like_pfeature_type: INTEGER_16 is 0xFFFB
-	Like_feature_type: INTEGER_16 is 0xFFFA
-	Tuple_type: INTEGER_16 is 0xFFF9
-	Formal_type: INTEGER_16 is 0xFFF8
+	Terminator_type, invalid_dtype: NATURAL_16 is 0xFFFF
+	None_type: NATURAL_16 is 0xFFFE
+	Like_arg_type: NATURAL_16 is 0xFFFD
+	Like_current_type: NATURAL_16 is 0xFFFC
+	Like_pfeature_type: NATURAL_16 is 0xFFFB
+	Like_feature_type: NATURAL_16 is 0xFFFA
+	Tuple_type: NATURAL_16 is 0xFFF9
+	Formal_type: NATURAL_16 is 0xFFF8
+	Max_dtype: NATURAL_16 is 0xFFF7
 
 feature -- TUPLE code
 

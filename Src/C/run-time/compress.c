@@ -189,7 +189,7 @@ rt_public void eif_compress (unsigned char* in_buf, unsigned long in_size, unsig
 			} else {
 				out_octet |= in_octet >> (8 - bit_nb);
 				*out_ptr ++ = out_octet;
-				out_octet = in_octet << bit_nb;
+				out_octet = (unsigned char) (in_octet << bit_nb);
 				bit_nb --;
 			}
 		}
@@ -294,7 +294,7 @@ void eif_decompress (unsigned char* in_buf, unsigned long in_size, unsigned char
 				} else {
 					if (in_octet & 0x01 << bit_nb) {
 						state_octet = 1;
-						out_octet = in_octet << (8 - bit_nb);
+						out_octet = (unsigned char) (in_octet << (8 - bit_nb));
 						not_stop = 0;
 					} else {
 						*out_ptr ++ = 0x00;

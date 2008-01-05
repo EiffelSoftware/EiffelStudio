@@ -42,36 +42,36 @@ extern "C" {
 #endif
 
 /* Creation type of a gen. feat. in final mode */
-RT_LNK int16 eif_final_id (int16, int16 *ttable, int16 **gttable, int16 dftype, int offset);
+RT_LNK EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **gttable, EIF_TYPE_INDEX dftype, int offset);
 
 /* Converts an array of type ids to a single id */
-RT_LNK int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 dyn_type, int16 *typearr);
+RT_LNK EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX *cache, EIF_TYPE_INDEX current_dftype, EIF_TYPE_INDEX dyn_type, EIF_TYPE_INDEX *typearr);
 
 /* Number of generic parameters of an object */
-RT_LNK int eif_tuple_count (EIF_REFERENCE tuple);
-RT_LNK int eif_gen_count_with_dftype (int16 dftype);
+RT_LNK uint32 eif_tuple_count (EIF_REFERENCE tuple);
+RT_LNK uint32 eif_gen_count_with_dftype (EIF_TYPE_INDEX dftype);
 
 /* New object with same type as i-th (`pos') generic of `object' */
-RT_LNK EIF_REFERENCE eif_gen_create (EIF_REFERENCE object, int pos);
+RT_LNK EIF_REFERENCE eif_gen_create (EIF_REFERENCE object, uint32 pos);
 
 /* Full type name of an object as STRING object */
-RT_LNK EIF_REFERENCE eif_gen_typename_of_type (int16 current_dftype);
-#define eif_gen_typename(obj)	((obj) ? eif_gen_typename_of_type ((int16) Dftype (obj)) : eif_gen_typename_of_type ((int16) 0))
+RT_LNK EIF_REFERENCE eif_gen_typename_of_type (EIF_TYPE_INDEX current_dftype);
+#define eif_gen_typename(obj)	((obj) ? eif_gen_typename_of_type (Dftype (obj)) : eif_gen_typename_of_type (0))
 
 /* Conformance test */
-RT_LNK int eif_gen_conf (int16, int16);
+RT_LNK int eif_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 
 /* Type of the i-th generic parameter */
-RT_LNK int16 eif_gen_param_id (int16 stype, int16 dftype, int pos);
+RT_LNK EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX dftype, uint32 pos);
 
 /* Id to be used in workbench mode */
-RT_LNK int16 eif_id_for_typarr (int16 x);
+RT_LNK EIF_TYPE_INDEX eif_id_for_typarr (EIF_TYPE_INDEX x);
 
 
 /* TUPLEs */
 
 /* Typecode for generic parameter */
-RT_LNK char eif_gen_typecode (EIF_REFERENCE obj, int pos);
+RT_LNK char eif_gen_typecode (EIF_REFERENCE obj, uint32 pos);
 
 
 /* ROUTINEs */
@@ -83,7 +83,10 @@ RT_LNK EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj);
 RT_LNK EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj);
 
 /* Type map: compound->compiler generated id */
-RT_LNK int16 *eif_cid_map;
+RT_LNK EIF_TYPE_INDEX *eif_cid_map;
+
+/* Basic constants. */
+#define INVALID_DTYPE	0xFFFF
 
 #ifdef __cplusplus
 }

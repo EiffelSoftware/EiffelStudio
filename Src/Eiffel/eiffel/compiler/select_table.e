@@ -240,7 +240,9 @@ feature -- Generation
 			l_feature_i: FEATURE_I
 			l_table: COMPUTED_FEATURE_TABLE
 			l_id_set: ROUT_ID_SET
-			i, nb: INTEGER
+			i, j, nb, l_count: INTEGER
+			l_inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER_32]
+			l_area: SPECIAL [FEATURE_I]
 		do
 			create Result.make (c, count)
 			if c.has_invariant then
@@ -249,37 +251,39 @@ feature -- Generation
 
 			from
 				l_table := feature_table.features
-				l_table.start
+				l_area := l_table.area
+				l_count := l_area.count
 			until
-				l_table.after
+				i = l_count
 			loop
-				l_feature_i := l_table.item_for_iteration
+				l_feature_i := l_area [i]
 				l_id_set := l_feature_i.rout_id_set
 				Result.put (l_id_set.first, l_feature_i)
 				nb := l_id_set.count
 				if nb > 1 then
 					from
-						i := 2
+						j := 2
 					until
-						i > nb
+						j > nb
 					loop
-						Result.put (l_id_set.item (i), l_feature_i)
-						i := i + 1
+						Result.put (l_id_set.item (j), l_feature_i)
+						j := j + 1
 					end
 				end
-				l_table.forth
+				i := i + 1
 			end
 
 			eiffel_class ?= c
-			if eiffel_class /= Void then
+			if eiffel_class /= Void and then eiffel_class.has_inline_agents then
 				from
-					eiffel_class.inline_agent_table.start
+					l_inline_agent_table := eiffel_class.inline_agent_table
+					l_inline_agent_table.start
 				until
-					eiffel_class.inline_agent_table.after
+					l_inline_agent_table.after
 				loop
-					l_feature_i := eiffel_class.inline_agent_table.item_for_iteration
+					l_feature_i := l_inline_agent_table.item_for_iteration
 					Result.put (l_feature_i.rout_id_set.first, l_feature_i)
-					eiffel_class.inline_agent_table.forth
+					l_inline_agent_table.forth
 				end
 			end
 		end
@@ -290,20 +294,21 @@ feature -- Generation
 		require
 			c_not_void: c /= Void
 		local
-			desc_list: DESC_LIST
+			l_desc_list_area: SPECIAL [DESCRIPTOR]
+			i, l_count: INTEGER
 			desc: DESCRIPTOR
 		do
 			from
-				desc_list := descriptors (c)
-				desc_list.start
+				l_desc_list_area := descriptors (c).area
+				l_count := l_desc_list_area.count
 			until
-				desc_list.after
+				i = l_count
 			loop
-				desc := desc_list.item
+				desc := l_desc_list_area [i]
 				if desc.class_type.is_modifiable then
 					desc.generate
 				end
-				desc_list.forth
+				i := i + 1
 			end
 		end
 

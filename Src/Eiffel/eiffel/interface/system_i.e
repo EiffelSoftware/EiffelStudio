@@ -1317,8 +1317,6 @@ end
 			l_vis_modified: CONF_MODIFIED_VISITOR
 			l_classes: ARRAYED_LIST [CONF_CLASS]
 			l_class: CLASS_I
-			l_conf_class: CONF_CLASS
-			l_grp: CONF_GROUP
 			l_vis_check: CONF_CHECKER_VISITOR
 			l_errors: LIST [CONF_ERROR]
 			vd80: VD80
@@ -1365,9 +1363,7 @@ end
 						until
 							l_classes.after
 						loop
-							l_conf_class := l_classes.item
-							l_grp := l_conf_class.group
-							l_class ?= l_conf_class
+							l_class ?= l_classes.item
 							check
 								class_i: l_class /= Void
 							end
@@ -1688,6 +1684,8 @@ feature -- Recompilation
 				l_il_env.register_environment_variable
 			end
 
+
+
 				-- Recompilation initialization
 			init_recompilation
 			if Compilation_modes.is_precompiling and il_generation then
@@ -1729,6 +1727,7 @@ feature -- Recompilation
 				has_compilation_started := True
 
 				recheck_missing_classes
+
 
 					-- Perform parsing of Eiffel code
 				debug ("timing")
@@ -1969,32 +1968,32 @@ end
 			-- Syntax analysis: This may add new classes to system.
 			-- Unref classes analyzis: This may add new classes to system.
 		local
-			class_i: CLASS_I
+			l_class_i: CLASS_I
+			l_unref_classes: like unref_classes
+			l_workbench: like workbench
 		do
 				-- Force unref classes to be compiled with Current system.
 			from
-				unref_classes.start
+				l_unref_classes := unref_classes
+				l_workbench := workbench
+				l_unref_classes.start
 			until
-				unref_classes.after
+				l_unref_classes.after
 			loop
-				class_i := unref_classes.item
+				l_class_i := l_unref_classes.item
 					-- remove class if it has become invalid
-				if not class_i.is_valid then
-					unref_classes.remove
+				if not l_class_i.is_valid then
+					l_unref_classes.remove
 				else
-					if class_i.compiled_class = Void then
-						if class_i.config_class.does_override then
-							class_i ?= class_i.config_class.overrides.first
-							unref_classes.remove
-							unref_classes.force (class_i)
-							if not class_i.is_compiled then
-								Workbench.change_class (class_i)
-							end
-						else
-							Workbench.change_class (class_i)
+					if l_class_i.compiled_class = Void then
+						if l_class_i.config_class.does_override then
+							l_class_i ?= l_class_i.config_class.overrides.first
+							l_unref_classes.remove
+							l_unref_classes.force (l_class_i)
 						end
+						l_workbench.change_class (l_class_i)
 					end
-					unref_classes.forth
+					l_unref_classes.forth
 				end
 			end
 
@@ -4031,10 +4030,17 @@ feature -- Generation
 			l_table_name: STRING
 			l_poly_file: INDENT_FILE
 			l_rout_ids: ARRAYED_LIST [INTEGER]
+			l_tmp_poly_server: like tmp_poly_server
+			l_encoder: like encoder
 		do
+			l_buf := generation_buffer
+			l_header_buf := header_generation_buffer
+			l_tmp_poly_server := tmp_poly_server
+			l_encoder := encoder
+
 				-- Generate tables and their initialization routines.
-			Attr_generator.init (generation_buffer)
-			Rout_generator.init (header_generation_buffer)
+			Attr_generator.init (l_buf)
+			Rout_generator.init (l_header_buf)
 
 			from
 				used := Eiffel_table.used
@@ -4044,7 +4050,7 @@ feature -- Generation
 			until
 				used.after
 			loop
-				table := Tmp_poly_server.item (used.item_for_iteration)
+				table := l_tmp_poly_server.item (used.item_for_iteration)
 				if table.has_type_table and then not table.has_one_type then
 					l_rout_ids.extend (used.item_for_iteration)
 				end
@@ -4060,9 +4066,8 @@ feature -- Generation
 			Rout_generator.finish
 
 				-- Call initialization routines for all tables used in system.
-			l_buf := generation_buffer
+
 			l_buf.clear_all
-			l_header_buf := header_generation_buffer
 			l_header_buf.clear_all
 
 			l_header_buf.put_string ("#include %"eif_eiffel.h%"")
@@ -4083,9 +4088,9 @@ feature -- Generation
 				used.after
 			loop
 				l_rout_id := used.item_for_iteration
-				table := Tmp_poly_server.item (l_rout_id)
+				table := l_tmp_poly_server.item (l_rout_id)
 				if table.is_routine_table then
-					l_table_name := Encoder.routine_table_name (l_rout_id)
+					l_table_name := l_encoder.routine_table_name (l_rout_id)
 						-- Declare initialization routine for table
 					l_header_buf.put_string ("extern void ")
 					l_header_buf.put_string (l_table_name)
@@ -4097,7 +4102,7 @@ feature -- Generation
 					l_buf.put_new_line
 				end
 				if table.is_attribute_table then
-					l_table_name := Encoder.attribute_table_name (l_rout_id)
+					l_table_name := l_encoder.attribute_table_name (l_rout_id)
 						-- Declare initialization routine for table
 					l_header_buf.put_string ("extern void ")
 					l_header_buf.put_string (l_table_name)
@@ -4118,7 +4123,7 @@ feature -- Generation
 				l_rout_ids.after
 			loop
 				l_rout_id := l_rout_ids.item
-				l_table_name := Encoder.type_table_name (l_rout_id)
+				l_table_name := l_encoder.type_table_name (l_rout_id)
 					-- Declare initialization routine for table
 				l_header_buf.put_string ("extern void ")
 				l_header_buf.put_string (l_table_name)
@@ -4143,7 +4148,7 @@ feature -- Generation
 				l_rout_ids.after
 			loop
 				l_rout_id := l_rout_ids.item
-				l_table_name := Encoder.routine_table_name (l_rout_id)
+				l_table_name := l_encoder.routine_table_name (l_rout_id)
 					-- Declare initialization routine for table
 				l_header_buf.put_string ("extern void ")
 				l_header_buf.put_string (l_table_name)

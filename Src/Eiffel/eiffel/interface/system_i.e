@@ -4521,7 +4521,7 @@ end
 				buffer.put_string ("};%N%N")
 					-- Generate the correspondances stable between original
 					-- dynamic types and new dynamic types
-				buffer.put_string ("int16 egc_fdtypes_init[] = {%N")
+				buffer.put_string ("EIF_TYPE_INDEX egc_fdtypes_init[] = {%N")
 				from
 					i := 1
 				until
@@ -4529,7 +4529,6 @@ end
 				loop
 					buffer.flush_buffer (skeleton_file)
 					cl_type := cltype_array.item (i)
-					buffer.put_string ("(int16) ")
 					if cl_type /= Void then
 						buffer.put_type_id (cl_type.type_id)
 					else
@@ -4988,7 +4987,7 @@ feature -- Pattern table generation
 			buffer.put_string ("egc_rcdt")
 			buffer.put_string (");%N")
 			if not final_mode then
-				buffer.put_string ("%Tif (egc_rt_extension_dt != -1) {")
+				buffer.put_string ("%Tif (egc_rt_extension_dt != INVALID_DTYPE) {")
 				buffer.put_new_line
 				buffer.put_string ("%T%Trt_extension_obj = RTLNSMART(")
 				buffer.put_string ("egc_rt_extension_dt")

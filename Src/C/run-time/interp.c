@@ -224,11 +224,11 @@ rt_private void eif_interp_basic_operations (void);	/* execute basic operations 
 
 /* Assertion checking */
 rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where);				/* Invariant check */
-rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where);		/* Recursive invariant check */
+rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
-rt_shared short get_compound_id(EIF_REFERENCE obj, short dtype);			/* Get a compound type id */
-rt_private int get_creation_type(void);		/* Get a creation type id */
+rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj, EIF_TYPE_INDEX dtype);			/* Get a compound type id */
+rt_private EIF_TYPE_INDEX get_creation_type(void);		/* Get a creation type id */
 
 /* Interpreter interface */
 rt_public void exp_call(void);				/* Sets IC before calling interpret */ /* %%ss undefine */
@@ -392,7 +392,7 @@ rt_public void xinterp(unsigned char *icval)
 	EIF_GET_CONTEXT
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	STACK_PRESERVE;			/* Stack contextual informations */
-	RTXD;					/* Store stack contexts */
+	RTYD;					/* Store stack contexts */
 
 	IC = icval;				/* Where interpretation starts */
 	tagval++;				/* One more call to interpreter */
@@ -454,7 +454,7 @@ rt_public void xiinv(unsigned char *icval, int where)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
-	RTXD;					/* Save stack contexts */
+	RTYD;					/* Save stack contexts */
 	STACK_PRESERVE;			/* Stack contextual informations */
 
 	IC = icval;					/* Where interpretation starts */
@@ -503,50 +503,52 @@ rt_private void interpret(int flag, int where)
 	EIF_GET_CONTEXT
 	int volatile code;			/* Current intepreted byte code */
 	EIF_TYPED_VALUE * volatile last;	/* Last pushed value */
-	long volatile offset;			/* Offset for jumps and al */
+	long volatile offset = 0;			/* Offset for jumps and al */
 	unsigned char * volatile string;		/* Strings for assertions tag */
-	int volatile type;						/* Often used to hold type values */
+	EIF_TYPE_INDEX volatile type;			/* Often used to hold type values */
+	uint32 sk_type;
 	int volatile saved_assertion;
 	int16 volatile saved_caller_assertion_level = caller_assertion_level;	/* Saves the assertion level of the caller*/
-	unsigned char * volatile rescue;		/* Location of rescue clause */
+	unsigned char * volatile rescue = NULL;	/* Location of rescue clause */
 	jmp_buf exenv;							/* In case we have to setjmp() */
-	EIF_REFERENCE saved_except;				/* Saved exception object for rescue clause */
-	EIF_REFERENCE saved_except_for_old;		/* Saved exception object for old expression evaluation */
-	struct ex_vect exvect_t;	/* Save the vector content to avoid messing up by Eiffel calls i.e last_exception/set_last_exception */		
+	EIF_REFERENCE saved_except = NULL;		/* Saved exception object for rescue clause */
+	EIF_REFERENCE saved_except_for_old = NULL;	/* Saved exception object for old expression evaluation */
+	struct ex_vect exvect_t;				/* Save the vector content to avoid messing up by Eiffel calls i.e last_exception/set_last_exception */		
 	int ex_pos;								/* Exception object local position */
 	unsigned char *IC_O;						/* Backup IC for old evaluation */
 	long volatile offset_o;					/* Offset for jump to the next BC_OLD/BC_END_OLD_EVAL */
 	RTEX;									/* Routine's execution vector and debugger
 											   level depth */
-	EIF_TYPED_VALUE * volatile stop;			/* To save stack context */
-	struct stochunk * volatile scur;		/* Current chunk (stack context) */
+	EIF_TYPED_VALUE * volatile stop = NULL;	/* To save stack context */
+	struct stochunk * volatile scur = NULL;	/* Current chunk (stack context) */
 #ifdef ISE_GC
-	char ** volatile l_top;					/* Local top */
-	struct stchunk * volatile l_cur;		/* Current local chunk */
-	char ** volatile ls_top;				/* loc_stack top */
-	struct stchunk * volatile ls_cur;		/* Current loc_stack chunk */
-	char ** volatile h_top;					/* Hector stack top */
-	struct stchunk * volatile h_cur;		/* Current hector stack chunk */
+	char ** volatile l_top = NULL;			/* Local top */
+	struct stchunk * volatile l_cur = NULL;	/* Current local chunk */
+	char ** volatile ls_top = NULL;			/* loc_stack top */
+	struct stchunk * volatile ls_cur = NULL;/* Current loc_stack chunk */
+	char ** volatile h_top = NULL;			/* Hector stack top */
+	struct stchunk * volatile h_cur = NULL;	/* Current hector stack chunk */
 #endif
-	int volatile assert_type;				/* Assertion type */
-	char volatile pre_success;				/* Flag for precondition success */ 
-	long volatile rtype;					/* Result type */
+	int volatile assert_type = 0;			/* Assertion type */
+	char volatile pre_success = (char) 0;	/* Flag for precondition success */ 
+	long volatile rtype = 0;				/* Result type */
 	MTOT OResult = (MTOT) 0;				/* Item for once data */
 #ifdef EIF_THREADS
 	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
 #endif
 	int32 volatile rout_id;					/* Routine id */
 	BODY_INDEX volatile body_id = 0;		/* Body id of routine */
-	int volatile current_trace_level;		/* Saved call level for trace, only needed when routine is retried */
-	char ** volatile saved_prof_top;		/* Saved top of `prof_stack' */
-	long volatile once_key;			/* Index in once table */
-	int  volatile is_once;			/* Is it a once routine? */
-	int  volatile is_process_once;		/* Is once routine process-relative? */
+	int volatile current_trace_level = 0;	/* Saved call level for trace, only needed when routine is retried */
+	char ** volatile saved_prof_top = NULL;	/* Saved top of `prof_stack' */
+	long volatile once_key = 0;				/* Index in once table */
+	int  volatile is_once = 0;				/* Is it a once routine? */
+	int  volatile is_process_once = 0;		/* Is once routine process-relative? */
 	RTSN;							/* Save nested flag */
 	STACK_PRESERVE_FOR_OLD;
  
 	saved_assertion = in_assertion;
-	is_once = 0;
+	exvect = NULL;
+	db_cstack = 0;
 
 	switch (*IC++)
 	{
@@ -600,7 +602,7 @@ rt_private void interpret(int flag, int where)
 						xraise(EN_VEXP);	/* Void assigned to expanded */
 					RT_GC_PROTECT(ref);
 					type = get_int16(&IC);
-					type = get_compound_id(MTC icurrent->it_ref, (short) type);
+					type = get_compound_id(MTC icurrent->it_ref, type);
 					last->it_ref = RTLN(type);
 					RT_GC_WEAN(ref);
 					last->type = SK_EXP;
@@ -610,7 +612,7 @@ rt_private void interpret(int flag, int where)
 					if (ref == NULL)
 						xraise(EN_VEXP);	/* Void assigned to expanded */
 					RT_GC_PROTECT(ref);
-					last->it_bit = RTLB(get_int32(&IC));
+					last->it_bit = RTLB((uint16)get_int32(&IC));
 					RT_GC_WEAN(ref);
 					b_copy(ref, last->it_bit);
 					break;
@@ -721,7 +723,7 @@ rt_private void interpret(int flag, int where)
 		switch(flag) {				/* What are we interpreting? */
 		case INTERP_CMPD:			/* A compound (i.e. Eiffel feature) */
 			string = get_string8(&IC, -1);
-			code = get_int16(&IC);		/* Dynamic type where feature is written */
+			type = get_int16(&IC);		/* Dynamic type where feature is written */
 
 			/* Get an execution vector for the current feature, and link it
 			 * with the current debugging calling context. It is important to
@@ -731,7 +733,7 @@ rt_private void interpret(int flag, int where)
 			 * calling context wrt the global execution flow in the Eiffel
 			 * stack).
 			 */
-			RTEAA((char *) string, code, (icurrent->it_ref), (unsigned char)locnum, (unsigned char)argnum, body_id);
+			RTEAA((char *) string, type, (icurrent->it_ref), (unsigned char)locnum, (unsigned char)argnum, body_id);
 			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
 			scur = op_stack.st_cur;		/* Save stack context */
@@ -742,7 +744,7 @@ rt_private void interpret(int flag, int where)
 
 #ifdef DEBUG
 			dprintf(1)("\tFeature %s written in %s on 0x%lx [%s]\n",
-				string, System(code).cn_generator,
+				string, System(type).cn_generator,
 				icurrent->it_ref, System(Dtype(icurrent->it_ref)).cn_generator);
 #endif
 			break;
@@ -1427,7 +1429,7 @@ rt_private void interpret(int flag, int where)
 				xraise(EN_VEXP);		/* Void assigned to expanded */
 			offset = get_int32(&IC);		/* Get the feature id */
 			code = get_int16(&IC);			/* Get the static type */
-			type = get_uint32(&IC);		/* Get attribute meta-type */
+			sk_type = get_uint32(&IC);		/* Get attribute meta-type */
 			offset = RTWA(code, offset, icur_dtype);
 			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
@@ -1450,7 +1452,7 @@ rt_private void interpret(int flag, int where)
 				xraise(EN_VEXP);		/* Void assigned to expanded */
 			origin = get_int32(&IC);		/* Get the origin class id */
 			ooffset = get_int32(&IC);		/* Get the offset in origin */
-			type = get_uint32(&IC);		/* Get attribute meta-type */
+			sk_type = get_uint32(&IC);		/* Get attribute meta-type */
 			offset = RTWPA(origin, ooffset, icur_dtype);
 			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
@@ -1935,7 +1937,7 @@ rt_private void interpret(int flag, int where)
 			++IC;
 			last = iget();
 			realcount = get_uint32(&IC);
-			new_obj = RTLB(realcount);			/* Creation */
+			new_obj = RTLB((uint16)realcount);			/* Creation */
 			last->type = SK_BIT + realcount;
 			last->it_bit = new_obj;
 			break;
@@ -1982,7 +1984,7 @@ rt_private void interpret(int flag, int where)
 			EIF_REFERENCE new_obj;						/* New object */
 			EIF_BOOLEAN is_ref, is_basic, is_expanded, is_bit;
 			uint32 elem_size = 0, bit_size = 0, i = 0;
-			uint32 flags = 0;
+			uint16 flags = 0;
 			EIF_TYPED_VALUE *nb_item;
 			int16 exp_type;
 			uint32 nb = 0;
@@ -2029,7 +2031,7 @@ rt_private void interpret(int flag, int where)
 			} else if (is_ref || is_bit) {
 				flags = EO_REF;
 			}
-			new_obj = RTLNSP(type | flags, nb, elem_size, is_basic);	/* Create new object */
+			new_obj = special_malloc (flags, type, nb, elem_size, is_basic);	/* Create new object */
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;	
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
@@ -2038,7 +2040,7 @@ rt_private void interpret(int flag, int where)
 			if (is_bit) {
 				bit_size = get_uint32(&IC);
 				for (i = 0; i < nb; i++) {
-					*((EIF_REFERENCE *) new_obj + i) = RTLB(bit_size);
+					*((EIF_REFERENCE *) new_obj + i) = RTLB((uint16)bit_size);
 					RTAR(new_obj, *((EIF_REFERENCE *) new_obj + i));
 				}
 			}
@@ -2701,7 +2703,7 @@ rt_private void interpret(int flag, int where)
 					is_attribute = EIF_TRUE;
 					offset = get_int32(&IC);		/* Get feature id */
 					code = get_int16(&IC);			/* Get static type */
-					type = get_uint32(&IC);		/* Get attribute meta-type */
+					(void) get_uint32(&IC);		/* Get attribute meta-type */
 					offset = RTWA(code, (int)offset, Dtype(icurrent->it_ref));
 					break;
 				case BC_PATTRIBUTE:
@@ -2711,7 +2713,7 @@ rt_private void interpret(int flag, int where)
 					is_attribute = EIF_TRUE;
 					origin = get_int32(&IC);		/* Get the origin class id */
 					ooffset = get_int32(&IC);		/* Get the offset in origin */
-					type = get_uint32(&IC);		/* Get attribute meta-type */
+					(void) get_uint32(&IC);		/* Get attribute meta-type */
 					offset = RTWPA(origin, ooffset, Dtype(icurrent->it_ref));
 					break;
 					}
@@ -3314,7 +3316,7 @@ rt_private void interpret(int flag, int where)
 			last = iget();
 			realcount = get_uint32(&IC);
 			bcount = get_uint32(&IC);			/* Read bit count */
-			new_obj = RTLB(realcount);			/* Creation */
+			new_obj = RTLB((uint16)realcount);			/* Creation */
 			addr = ARENA(new_obj);
 			nb_uint32 = BIT_NBPACK(bcount);
 			while (nb_uint32--)	/* Write bit count and value in `new_obj' */ 
@@ -3630,7 +3632,7 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_V
 	EIF_GET_CONTEXT
 	/* Check invariant on non-void object `obj' */
 	unsigned char *OLD_IC;		/* IC backup */
-	int dtype = Dtype(obj);
+	EIF_TYPE_INDEX dtype = Dtype(obj);
 
 	/* Store the `where' infomation for later use */
 	echentry = !where;
@@ -3648,7 +3650,7 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_V
 	}
 }
 
-rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where)
+rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where)
 		  
 		  
 					  		/* Current chunk (stack context) */
@@ -3660,10 +3662,10 @@ rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct cnode *node = esystem + dtype;
-	int *cn_parents;
-	int p_type;
+	EIF_TYPE_INDEX *cn_parents;
+	EIF_TYPE_INDEX p_type;
 
-	if (dtype <= 0) return;		/* ANY does not have invariants */
+	if (dtype == 0) return;		/* ANY does not have invariants */
 
 	if ((char) 0 != inv_mark_table[dtype])	/* Already checked */
 		return;
@@ -3679,7 +3681,7 @@ rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk 
 	/* The list of parent dynamic types is always terminated by a
 	 * -1 value. -- FREDD
 	 */
-	while ((p_type = *cn_parents++) != -1)
+	while ((p_type = *cn_parents++) != TERMINATOR)
 		/* Call to potential parent invariant */
 		irecursive_chkinv(MTC p_type, obj, scur, stop, where);
 
@@ -3862,7 +3864,7 @@ rt_private void diadic_op(int code)
 			/* Special case for `-' from CHARACTER_8 and CHARACTER_32 class. */
 		if ((f->type & SK_HEAD) == SK_CHAR) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
-			f->it_char = f->it_char - s->it_int32;
+			f->it_char = f->it_char - (EIF_CHARACTER) s->it_int32;
 		} else if ((f->type & SK_HEAD) == SK_WCHAR) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
 			f->it_wchar = f->it_wchar - s->it_int32;
@@ -3892,7 +3894,7 @@ rt_private void diadic_op(int code)
 			/* Special case for `+' from CHARACTER_8 and CHARACTER_32 class. */
 		if ((f->type & SK_HEAD) == SK_CHAR) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
-			f->it_char = f->it_char + s->it_int32;
+			f->it_char = f->it_char + (EIF_CHARACTER) s->it_int32;
 		} else if ((f->type & SK_HEAD) == SK_WCHAR) {
 			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
 			f->it_wchar = f->it_wchar + s->it_int32;
@@ -4028,18 +4030,18 @@ rt_private void diadic_op(int code)
 
 rt_private void eif_interp_gt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
-		case SK_CHAR: f->it_char = f->it_char > s->it_char; break;
-		case SK_WCHAR: f->it_char = f->it_wchar > s->it_wchar; break;
-		case SK_UINT8: f->it_char = f->it_uint8 > s->it_uint8; break;
-		case SK_UINT16: f->it_char = f->it_uint16 > s->it_uint16; break;
-		case SK_UINT32: f->it_char = f->it_uint32 > s->it_uint32; break;
-		case SK_UINT64: f->it_char = f->it_uint64 > s->it_uint64; break;
-		case SK_INT8: f->it_char = f->it_int8 > s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int16 > s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_int32 > s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_int64 > s->it_int64; break;
-		case SK_REAL32: f->it_char = f->it_real32 > s->it_real32; break;
-		case SK_REAL64: f->it_char = f->it_real64 > s->it_real64; break;
+		case SK_CHAR: f->it_char = EIF_TEST(f->it_char > s->it_char); break;
+		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar > s->it_wchar); break;
+		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 > s->it_uint8); break;
+		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 > s->it_uint16); break;
+		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 > s->it_uint32); break;
+		case SK_UINT64: f->it_char = EIF_TEST(f->it_uint64 > s->it_uint64); break;
+		case SK_INT8: f->it_char = EIF_TEST(f->it_int8 > s->it_int8); break;
+		case SK_INT16: f->it_char = EIF_TEST(f->it_int16 > s->it_int16); break;
+		case SK_INT32: f->it_char = EIF_TEST(f->it_int32 > s->it_int32); break;
+		case SK_INT64: f->it_char = EIF_TEST(f->it_int64 > s->it_int64); break;
+		case SK_REAL32: f->it_char = EIF_TEST(f->it_real32 > s->it_real32); break;
+		case SK_REAL64: f->it_char = EIF_TEST(f->it_real64 > s->it_real64); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	f->type = SK_BOOL;		/* Result is a boolean */
@@ -4047,18 +4049,18 @@ rt_private void eif_interp_gt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 
 rt_private void eif_interp_lt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
-		case SK_CHAR: f->it_char = f->it_char < s->it_char; break;
-		case SK_WCHAR: f->it_char = f->it_wchar < s->it_wchar; break;
-		case SK_UINT8: f->it_char = f->it_uint8 < s->it_uint8; break;
-		case SK_UINT16: f->it_char = f->it_uint16 < s->it_uint16; break;
-		case SK_UINT32: f->it_char = f->it_uint32 < s->it_uint32; break;
-		case SK_UINT64: f->it_char = f->it_uint64 < s->it_uint64; break;
-		case SK_INT8: f->it_char = f->it_int8 < s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int16 < s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_int32 < s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_int64 < s->it_int64; break;
-		case SK_REAL32: f->it_char = f->it_real32 < s->it_real32; break;
-		case SK_REAL64: f->it_char = f->it_real64 < s->it_real64; break;
+		case SK_CHAR: f->it_char = EIF_TEST(f->it_char < s->it_char); break;
+		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar < s->it_wchar); break;
+		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 < s->it_uint8); break;
+		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 < s->it_uint16); break;
+		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 < s->it_uint32); break;
+		case SK_UINT64: f->it_char = EIF_TEST(f->it_uint64 < s->it_uint64); break;
+		case SK_INT8: f->it_char = EIF_TEST(f->it_int8 < s->it_int8); break;
+		case SK_INT16: f->it_char = EIF_TEST(f->it_int16 < s->it_int16); break;
+		case SK_INT32: f->it_char = EIF_TEST(f->it_int32 < s->it_int32); break;
+		case SK_INT64: f->it_char = EIF_TEST(f->it_int64 < s->it_int64); break;
+		case SK_REAL32: f->it_char = EIF_TEST(f->it_real32 < s->it_real32); break;
+		case SK_REAL64: f->it_char = EIF_TEST(f->it_real64 < s->it_real64); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	f->type = SK_BOOL;		/* Result is a boolean */
@@ -4067,22 +4069,22 @@ rt_private void eif_interp_lt(EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	switch(f->type & SK_HEAD) {
 		case SK_BOOL:
-		case SK_CHAR: f->it_char = f->it_char == s->it_char; break;
-		case SK_WCHAR: f->it_char = f->it_wchar == s->it_wchar; break;
-		case SK_UINT8: f->it_char = f->it_uint8 == s->it_uint8; break;
-		case SK_UINT16: f->it_char = f->it_uint16 == s->it_uint16; break;
-		case SK_UINT32: f->it_char = f->it_uint32 == s->it_uint32; break;
-		case SK_UINT64: f->it_char = f->it_uint64 == s->it_uint64; break;
-		case SK_INT8: f->it_char = f->it_int8 == s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_int16 == s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_int32 == s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_int64 == s->it_int64; break;
-		case SK_REAL32: f->it_char = f->it_real32 == s->it_real32; break;
-		case SK_REAL64: f->it_char = f->it_real64 == s->it_real64; break;
-		case SK_POINTER: f->it_char = f->it_ptr == s->it_ptr; break;
+		case SK_CHAR: f->it_char = EIF_TEST(f->it_char == s->it_char); break;
+		case SK_WCHAR: f->it_char = EIF_TEST(f->it_wchar == s->it_wchar); break;
+		case SK_UINT8: f->it_char = EIF_TEST(f->it_uint8 == s->it_uint8); break;
+		case SK_UINT16: f->it_char = EIF_TEST(f->it_uint16 == s->it_uint16); break;
+		case SK_UINT32: f->it_char = EIF_TEST(f->it_uint32 == s->it_uint32); break;
+		case SK_UINT64: f->it_char = EIF_TEST(f->it_uint64 == s->it_uint64); break;
+		case SK_INT8: f->it_char = EIF_TEST(f->it_int8 == s->it_int8); break;
+		case SK_INT16: f->it_char = EIF_TEST(f->it_int16 == s->it_int16); break;
+		case SK_INT32: f->it_char = EIF_TEST(f->it_int32 == s->it_int32); break;
+		case SK_INT64: f->it_char = EIF_TEST(f->it_int64 == s->it_int64); break;
+		case SK_REAL32: f->it_char = EIF_TEST(f->it_real32 == s->it_real32); break;
+		case SK_REAL64: f->it_char = EIF_TEST(f->it_real64 == s->it_real64); break;
+		case SK_POINTER: f->it_char = EIF_TEST(f->it_ptr == s->it_ptr); break;
 		case SK_BIT:
 		case SK_EXP:
-		case SK_REF: f->it_char = f->it_ref == s->it_ref; break;
+		case SK_REF: f->it_char = EIF_TEST(f->it_ref == s->it_ref); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	f->type = SK_BOOL;		/* Result is a boolean */
@@ -4384,26 +4386,26 @@ rt_private void eif_interp_bit_operations (void)
 			break;
 		case BC_INT_BIT_SHIFT_LEFT:
 			switch (first->type & SK_HEAD) {
-				case SK_UINT8: first->it_uint8 = eif_bit_shift_left (first->it_uint8, second->it_int32); break;
-				case SK_UINT16: first->it_uint16 = eif_bit_shift_left (first->it_uint16, second->it_int32); break;
-				case SK_UINT32: first->it_uint32 = eif_bit_shift_left (first->it_uint32, second->it_int32); break;
-				case SK_UINT64: first->it_uint64 = eif_bit_shift_left (first->it_uint64, second->it_int32); break;
-				case SK_INT8: first->it_int8 = eif_bit_shift_left (first->it_int8, second->it_int32); break;
-				case SK_INT16: first->it_int16 = eif_bit_shift_left (first->it_int16, second->it_int32); break;
-				case SK_INT32: first->it_int32 = eif_bit_shift_left (first->it_int32, second->it_int32); break;
-				case SK_INT64: first->it_int64 = eif_bit_shift_left (first->it_int64, second->it_int32); break;
+				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) eif_bit_shift_left (first->it_uint8, second->it_int32); break;
+				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) eif_bit_shift_left (first->it_uint16, second->it_int32); break;
+				case SK_UINT32: first->it_uint32 = (EIF_NATURAL_32) eif_bit_shift_left (first->it_uint32, second->it_int32); break;
+				case SK_UINT64: first->it_uint64 = (EIF_NATURAL_64) eif_bit_shift_left (first->it_uint64, second->it_int32); break;
+				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) eif_bit_shift_left (first->it_int8, second->it_int32); break;
+				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) eif_bit_shift_left (first->it_int16, second->it_int32); break;
+				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) eif_bit_shift_left (first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) eif_bit_shift_left (first->it_int64, second->it_int32); break;
 				}
 			break;
 		case BC_INT_BIT_SHIFT_RIGHT:
 			switch (first->type & SK_HEAD) {
-				case SK_UINT8: first->it_uint8 = eif_bit_shift_right (first->it_uint8, second->it_int32); break;
-				case SK_UINT16: first->it_uint16 = eif_bit_shift_right (first->it_uint16, second->it_int32); break;
-				case SK_UINT32: first->it_uint32 = eif_bit_shift_right (first->it_uint32, second->it_int32); break;
-				case SK_UINT64: first->it_uint64 = eif_bit_shift_right (first->it_uint64, second->it_int32); break;
-				case SK_INT8: first->it_int8 = eif_bit_shift_right (first->it_int8, second->it_int32); break;
-				case SK_INT16: first->it_int16 = eif_bit_shift_right (first->it_int16, second->it_int32); break;
-				case SK_INT32: first->it_int32 = eif_bit_shift_right (first->it_int32, second->it_int32); break;
-				case SK_INT64: first->it_int64 = eif_bit_shift_right (first->it_int64, second->it_int32); break;
+				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) eif_bit_shift_right (first->it_uint8, second->it_int32); break;
+				case SK_UINT16: first->it_uint16 = (EIF_NATURAL_16) eif_bit_shift_right (first->it_uint16, second->it_int32); break;
+				case SK_UINT32: first->it_uint32 = (EIF_NATURAL_32) eif_bit_shift_right (first->it_uint32, second->it_int32); break;
+				case SK_UINT64: first->it_uint64 = (EIF_NATURAL_64) eif_bit_shift_right (first->it_uint64, second->it_int32); break;
+				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) eif_bit_shift_right (first->it_int8, second->it_int32); break;
+				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) eif_bit_shift_right (first->it_int16, second->it_int32); break;
+				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) eif_bit_shift_right (first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) eif_bit_shift_right (first->it_int64, second->it_int32); break;
 				}
 			break;
 		case BC_INT_BIT_TEST:
@@ -4480,7 +4482,7 @@ rt_public EIF_TYPED_VALUE * dynamic_eval_dbg(int fid_or_offset, int stype_or_ori
 	EIF_TYPED_VALUE 	*result = NULL;		/* Result of the function (NULL if none) */
 	uint32 EIF_VOLATILE db_cstack;
  	STACK_PRESERVE;
-	RTXD; /* declares the variables used to save the run-time stacks context */
+	RTYD; /* declares the variables used to save the run-time stacks context */
 	RTLXD;
 
 	RTLXL;
@@ -4556,7 +4558,7 @@ rt_public void dynamic_eval(int fid_or_offset, int stype_or_origin, int dtype, i
 	EIF_TYPED_VALUE *previous_stop = saved_stop;
 	uint32 EIF_VOLATILE db_cstack;
 	STACK_PRESERVE;
-	RTXD; /* declares the variables used to save the run-time stacks context */
+	RTYD; /* declares the variables used to save the run-time stacks context */
 	RTLXD;
 
 	RTLXL;
@@ -4976,7 +4978,7 @@ rt_private void reverse_local(EIF_TYPED_VALUE * it, uint32 type) {
 		it->it_ref = last->it_ref;
 }
 
-rt_shared void call_disp(uint32 dtype, EIF_REFERENCE object)
+rt_shared void call_disp(EIF_TYPE_INDEX dtype, EIF_REFERENCE object)
 {
 	/* Save the interpreter counter and restore it after the dispose
 	 * routine for `object' with dynamic type `dtype'.
@@ -5004,12 +5006,12 @@ rt_private void address(int32 aid)
 	last->it_ptr = (EIF_POINTER) RTWPP(aid);
 }
 
-rt_shared short get_compound_id(EIF_REFERENCE Current, short dtype)
+rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current, EIF_TYPE_INDEX dtype)
 {
 	/* Get array of short ints and convert it to a compound id. */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	int16   gen_types [MAX_CID_SIZE+1], *gp, last;
+	EIF_TYPE_INDEX   gen_types [MAX_CID_SIZE+1], *gp, last;
 	int     cnt, pos;
 
 	gp  = gen_types;
@@ -5017,7 +5019,7 @@ rt_shared short get_compound_id(EIF_REFERENCE Current, short dtype)
 
 	do
 	{
-		*(gp++) = last = (int16) get_int16(&IC);
+		*(gp++) = last = (EIF_TYPE_INDEX) get_int16(&IC);
 		++cnt;
 
 		/* Check for anchors */
@@ -5059,22 +5061,22 @@ rt_shared short get_compound_id(EIF_REFERENCE Current, short dtype)
 		if (cnt >= MAX_CID_SIZE)
 			eif_panic(MTC "Too many generic parameters in compound type");
 
-	} while (last != -1);
+	} while (last != TERMINATOR);
 
 	/* If not generic then return dtype */
 
 	if (cnt <= 2)
 		return dtype;
 	
-	return (short) eif_compound_id((int16 *)0, (int16) Dftype (Current), (int16) dtype, gen_types);
+	return eif_compound_id(NULL, Dftype (Current), dtype, gen_types);
 }
 
-rt_private int get_creation_type (void)
+rt_private EIF_TYPE_INDEX get_creation_type (void)
 {
 	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
-	int type;			/* Often used to hold type values */
-	int code;			/* Current intepreted byte code */
+	EIF_TYPE_INDEX type;/* Often used to hold type values */
+	EIF_TYPE_INDEX code;			/* Current intepreted byte code */
 	long offset;		/* Offset for jumps and al */
 	
 	switch (*IC++) {
@@ -5086,13 +5088,13 @@ rt_private int get_creation_type (void)
 	case BC_CARG:				/* Like argument creation type */
 		if (*IC++ == BC_GEN_PARAM_CREATE) {
 				/* Anchor is based on a formal generic parameter. */
-			short current_type;
+			EIF_TYPE_INDEX current_type;
 			int32 formal_position;
 
 			current_type = get_int16(&IC);		/* Get static type of caller */
 			formal_position = get_int32(&IC);	/* Get position of formal generic
 											   we want to create */
-			type = (int) RTGPTID(current_type, icurrent->it_ref, formal_position);
+			type = RTGPTID(current_type, icurrent->it_ref, formal_position);
 		} else {
 				/* Anchor is based on a class type. */
 			type = get_int16(&IC);		/* Default creation type if void arg.  */
@@ -5109,7 +5111,7 @@ rt_private int get_creation_type (void)
 		break;
 	case BC_PCLIKE:				/* Like feature creation type */
 		{
-		short stype;
+		EIF_TYPE_INDEX stype;
 		int32 origin, ooffset;
 
 		stype = get_int16(&IC);			/* Get static type of caller */
@@ -5124,13 +5126,13 @@ rt_private int get_creation_type (void)
 		break;
 	case BC_GEN_PARAM_CREATE:
 		{
-		short current_type;
+		EIF_TYPE_INDEX current_type;
 		int32 formal_position;
 
 		current_type = get_int16(&IC);		/* Get static type of caller */
 		formal_position = get_int32(&IC);	/* Get position of formal generic
 										   we want to create */
-		type = (int) RTGPTID(current_type, icurrent->it_ref, formal_position);
+		type = RTGPTID(current_type, icurrent->it_ref, formal_position);
 		}
 		break;
 	default:
@@ -5172,7 +5174,7 @@ rt_private void init_var(EIF_TYPED_VALUE *ptr, long int type, EIF_REFERENCE curr
 	case SK_BIT:		ptr->it_ref = (EIF_REFERENCE)0; break;
 	case SK_EXP:		dtype = get_int16(&IC);
 						dtype = get_compound_id(MTC current_ref, (short) dtype);
-						ptr->type = (type & EO_UPPER) | ((uint32) dtype);
+						ptr->type = (type & SK_HEAD) | ((uint32) dtype);
 						ptr->it_ref = (EIF_REFERENCE) 0;
 						break;
 	case SK_REF:		ptr->it_ref = (EIF_REFERENCE) 0; break;
@@ -5463,7 +5465,7 @@ rt_private void create_expanded_locals (
 		case SK_EXP:
 			stagval = tagval;
 			last->type = SK_POINTER;	/* GC: wait for malloc */
-			last->it_ref = RTLX(type & SK_DTYPE);
+			last->it_ref = RTLX((EIF_TYPE_INDEX) (type & SK_DTYPE));
 			last->type = SK_EXP;
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop);
@@ -5471,7 +5473,7 @@ rt_private void create_expanded_locals (
 		case SK_BIT:
 			stagval = tagval;
 			last->type = SK_POINTER;	/* GC: wait for malloc */
-			last->it_bit = RTLB(type & SK_BMASK);
+			last->it_bit = RTLB((EIF_TYPE_INDEX) (type & SK_BMASK));
 			last->type = SK_BIT;
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop);
@@ -5484,7 +5486,7 @@ rt_private void create_expanded_locals (
 	case SK_EXP:
 		stagval = tagval;
 		last->type = SK_POINTER;		/* For GC */
-		last->it_ref = RTLX(type & SK_DTYPE);	
+		last->it_ref = RTLX((EIF_TYPE_INDEX) (type & SK_DTYPE));
 		last->type = SK_EXP;
 		if (tagval != stagval)
 			sync_registers(MTC scur, stop);
@@ -5492,7 +5494,7 @@ rt_private void create_expanded_locals (
 	case SK_BIT:
 		stagval = tagval;
 		last->type = SK_POINTER;    /* GC: wait for malloc */
-		last->it_bit = RTLB(type & SK_BMASK);
+		last->it_bit = RTLB((EIF_TYPE_INDEX) (type & SK_BMASK));
 		last->type = SK_BIT;
 		if (tagval != stagval)
 			sync_registers(MTC scur, stop);
@@ -5759,7 +5761,6 @@ rt_private EIF_TYPED_VALUE *oitem(uint32 n)
 	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */ 
 	/* stack is empty. It assumes a value has already been pushed (i.e. the stack has been created). */
 	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE	*access_item;	/* Address of item we try to access */
 	struct stochunk	*prev;			/* Previous chunk in stack */
 	struct stochunk	*curr;			/* Current chunk in stack */

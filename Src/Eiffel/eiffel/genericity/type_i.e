@@ -18,8 +18,6 @@ inherit
 
 	SK_CONST
 	COMPILER_EXPORTER
-	SHARED_GEN_CONF_LEVEL
-
 	DEBUG_OUTPUT
 		export
 			{NONE} all
@@ -527,10 +525,10 @@ feature -- Generic conformance
 			ba.append_short_integer (generated_id (False))
 		end
 
-	generated_id (final_mode : BOOLEAN) : INTEGER is
+	generated_id (final_mode : BOOLEAN) : NATURAL_16 is
 			-- Mode dependent type id - just for convenience
 		do
-			Result := terminator_type       -- Invalid type id.
+			Result := {SHARED_GEN_CONF_LEVEL}.terminator_type       -- Invalid type id.
 			check
 				not_called: False
 			end

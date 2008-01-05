@@ -126,7 +126,7 @@ feature -- Generic conformance
 				-- It's an ancored type
 				cr_info.generate_cid (buffer, final_mode)
 			else
-				buffer.put_integer (Tuple_type)
+				buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
 				buffer.put_character (',')
 				buffer.put_integer (true_generics.count)
 				buffer.put_character (',')
@@ -154,7 +154,7 @@ feature -- Generic conformance
 				-- It's an ancored type
 				cr_info.make_gen_type_byte_code (ba)
 			else
-				ba.append_short_integer (Tuple_type)
+				ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.tuple_type)
 				ba.append_short_integer (true_generics.count)
 				ba.append_short_integer (generated_id (False))
 
@@ -179,7 +179,7 @@ feature -- Generic conformance
 					-- It's an anchored type
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
-				buffer.put_integer (Tuple_type)
+				buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
 				buffer.put_character (',')
 				buffer.put_integer (true_generics.count)
 				buffer.put_character (',')

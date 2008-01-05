@@ -340,7 +340,7 @@ rt_public long wpattr_inv (int32 origin, int32 offset, char *name, EIF_REFERENCE
 
 /* GENERIC CONFORMANCE */
 
-rt_public int wtype_gen(int static_type, int32 feature_id, EIF_REFERENCE object)
+rt_public EIF_TYPE_INDEX wtype_gen(EIF_TYPE_INDEX static_type, int32 feature_id, EIF_REFERENCE object)
 {
 	/* Type of a generic feature of routine id `rout_id' in the class of
 	 * dynamic type of `object'. Replaces formal generics by actual gen.
@@ -348,39 +348,41 @@ rt_public int wtype_gen(int static_type, int32 feature_id, EIF_REFERENCE object)
 	 */ 
 
 	int32   rout_id;
-	int     dyn_type;
-	int16   type, *gen_type;
+	EIF_TYPE_INDEX dyn_type;
+	EIF_TYPE_INDEX type, *gen_type;
 
 	dyn_type = Dtype(object);
 	rout_id = Routids(static_type)[feature_id];
 	CGENFeatType(type,gen_type,rout_id,dyn_type);
 
-	if (gen_type != (int16 *) 0)
-		*gen_type = (int16) eif_id_for_typarr ((int16)dyn_type);
+	if (gen_type) {
+		*gen_type = eif_id_for_typarr ((int16)dyn_type);
+	}
 
-	return (int) eif_compound_id ((int16 *)0, (int16) Dftype (object), type, gen_type);
+	return eif_compound_id (NULL, Dftype (object), type, gen_type);
 }
 
-rt_public int wptype_gen(int static_type, int32 origin, int32 offset, EIF_REFERENCE object)
+rt_public EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, int32 offset, EIF_REFERENCE object)
 {
 	/* Type of a generic feature of routine identified by `offset' in 
 	 * its origin class `origin' and to be applied on `object'. Replaces
 	 * formal generics by actual gen. of `object'. Returns an integer.
 	 */ 
 
-	struct desc_info    *desc;
-	int                 dyn_type;
+	struct desc_info *desc;
+	EIF_TYPE_INDEX dyn_type;
 
 	dyn_type = Dtype(object);
 	desc = desc_tab[origin][dyn_type] + offset;
 
-	if (desc->gen_type != (int16 *) 0)
-		*(desc->gen_type) = (int16) eif_id_for_typarr ((int16)dyn_type);
+	if (desc->gen_type) {
+		*(desc->gen_type) = eif_id_for_typarr (dyn_type);
+	}
 
-	return (int) eif_compound_id ((int16 *) 0, (int16) Dftype (object), desc->type, desc->gen_type);
+	return eif_compound_id (NULL, Dftype (object), desc->type, desc->gen_type);
 }
 
-rt_public EIF_REFERENCE_FUNCTION wdisp(int dyn_type)
+rt_public EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type)
 {
 	/* Function pointer associated to Eiffel feature of routine id
 	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.
@@ -578,8 +580,7 @@ rt_public void create_desc(void)
 	/* Allocation of the global descriptor table.
 	 */
 
-	desc_tab = (struct desc_info ***) 
-			cmalloc (sizeof(struct desc_info **) * (upper + 1));
+	desc_tab = (struct desc_info ***) cmalloc (sizeof(struct desc_info **) * (upper + 1));
 	if ((struct desc_info ***) 0 == desc_tab)
 		enomem(MTC_NOARG);
 

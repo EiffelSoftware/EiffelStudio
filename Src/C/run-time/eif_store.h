@@ -68,6 +68,7 @@ extern "C" {
 #define INTERMEDIATE_STORE_5_5	0x0D
 #define INDEPENDENT_STORE_5_5	0x0E
 #define INDEPENDENT_STORE_6_0	0x0F
+#define INDEPENDENT_STORE_6_2	0x10
 
 /* Setting of `eif_is_new_independent_format' */
 RT_LNK void eif_set_new_independent_format(EIF_BOOLEAN v);
@@ -97,14 +98,14 @@ RT_LNK void rt_init_store(
 	void (*store_function) (size_t),
 	int (*char_write_function)(char *, int),
 	void (*flush_buffer_function) (void),
-	void (*st_write_function) (EIF_REFERENCE, uint32),
+	void (*st_write_function) (EIF_REFERENCE),
 	void (*make_header_function) (void),
 	int accounting_type);
 RT_LNK void rt_reset_store(void);
 RT_LNK void flush_st_buffer(void);
-RT_LNK void st_write(EIF_REFERENCE object, uint32);		/* Write an object in file */
-RT_LNK void ist_write(EIF_REFERENCE object, uint32);
-RT_LNK void gst_write(EIF_REFERENCE object, uint32);
+RT_LNK void st_write(EIF_REFERENCE object);		/* Write an object in file */
+RT_LNK void ist_write(EIF_REFERENCE object);
+RT_LNK void gst_write(EIF_REFERENCE object);
 RT_LNK void store_write(size_t);
 RT_LNK void make_header(void);				/* Make header */
 RT_LNK void rmake_header(void);				/* Make header */

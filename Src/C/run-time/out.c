@@ -127,7 +127,7 @@ rt_public EIF_REFERENCE c_generator_of_type (EIF_INTEGER dftype)
 	 */
 {
 	char *generator;
-	generator = System (Deif_bid(dftype)).cn_generator;
+	generator = System (To_dtype(dftype)).cn_generator;
 	return makestr (generator, strlen (generator));
 }
 
@@ -158,7 +158,7 @@ rt_shared char *build_out(EIF_REFERENCE object)
 {
 	/* Build up tagged out representation in a private global buffer */
 	RT_GET_CONTEXT
-	uint32 flags;		/* Object flags */
+	uint16 flags;		/* Object flags */
 
 	buffer_allocate();	/* Allocation of `tagged_out' */
 
@@ -178,7 +178,7 @@ rt_shared char *build_out(EIF_REFERENCE object)
 		}
 	} else {
 		/* Print instance class name and object id */
-		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", System(Deif_bid(flags)).cn_generator,
+		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", System(Dtype(object)).cn_generator,
 			(rt_uint_ptr) object);
 		write_out();
 		/* Print recursively in `tagged_out' */
@@ -216,7 +216,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 	int32 *cn_attr;			   /* Attribute keys */
 	long offset;
 #endif
-	int16 dyn_type;			   /* Object dynamic type */
+	EIF_TYPE_INDEX dyn_type;			   /* Object dynamic type */
 	EIF_REFERENCE o_ref;
 	char **names;				 /* Attribute names */
 	EIF_REFERENCE reference;						/* Reference attribute */
@@ -411,20 +411,20 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 	/* Print special object */
 	RT_GET_CONTEXT
 	union overhead *zone;		/* Object header */
-	uint32 flags;		/* Object flags */
+	uint16 flags;		/* Object flags */
 	EIF_INTEGER count;		/* Element count */
 	EIF_INTEGER elem_size;	/* Element size */
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE reference;
 	EIF_INTEGER old_count;
-	uint32 dtype;
+	EIF_TYPE_INDEX dtype;
 
 	zone = HEADER(object);
 	o_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 	old_count = count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);
 	flags = zone->ov_flags;
-	dtype = (int) Deif_bid(flags);
+	dtype = zone->ov_dtype;
 
 	if (!(flags & EO_REF)) 
 		if (flags & EO_COMP) 

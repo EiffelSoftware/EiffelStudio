@@ -111,14 +111,14 @@ rt_public int cc_for_speed = 1;			/* Fast memory allocation */
 #endif	/* VXWORKS */
 
 /*
-doc:	<attribute name="scount" return_type="int" export="public">
+doc:	<attribute name="scount" return_type="EIF_TYPE_INDEX" export="public">
 doc:		<summary>Number of dynamic types in system.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `eplug.c' from generated C code.</synchronization>
 doc:	</attribute>
 */
-rt_public int scount;						/* Number of dynamic types */
+rt_public EIF_TYPE_INDEX scount;						/* Number of dynamic types */
 
 /*
 doc:	<attribute name="esystem" return_type="struct cnode *" export="public">
@@ -165,14 +165,14 @@ doc:	</attribute>
 rt_public int ccount;
 
 /*
-doc:	<attribute name="fcount" return_type="int" export="public">
+doc:	<attribute name="fcount" return_type="EIF_TYPE_INDEX" export="public">
 doc:		<summary>Number of frozen dynamic types. Same as `scount' when system is completely frozen.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `main.c'.</synchronization>
 doc:	</attribute>
 */
-rt_public int fcount;
+rt_public EIF_TYPE_INDEX fcount;
 
 /*
 doc:	<attribute name="ecall" return_type="int32 **" export="shared">

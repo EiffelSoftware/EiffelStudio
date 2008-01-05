@@ -112,7 +112,7 @@ rt_public EIF_INTEGER b_count(EIF_REFERENCE bit)
 	return ((struct bit *) bit)->b_length;		/* Size of a BIT object */
 }
 
-EIF_REFERENCE makebit(EIF_REFERENCE bit, long int bit_count)
+EIF_REFERENCE makebit(EIF_REFERENCE bit, uint16 bit_count)
 {
 	/* Returns a new bit object with value `s' */
 	uint32 val;
@@ -121,7 +121,7 @@ EIF_REFERENCE makebit(EIF_REFERENCE bit, long int bit_count)
 	uint32 *arena;
 	long blength = bit_count;
 	
-	result = bmalloc(blength);		/* Creates bit object */
+	result = bmalloc(bit_count);		/* Creates bit object */
 	arena = ARENA(result);
 	nb_packs = BIT_NBPACK(blength);
 	for (i=0; i<nb_packs-1; i++) {
@@ -147,8 +147,9 @@ rt_public EIF_BOOLEAN b_equal(EIF_REFERENCE a, EIF_REFERENCE b)
 {
 	/* Standard equality between two bits */
 
-	uint32 len_a;		/* Length of the bit field a */
-	uint32 len_b;		/* Length of the bit field b */
+	uint16 len_a;		/* Length of the bit field a */
+	uint16 len_b;		/* Length of the bit field b */
+	uint32 l_mask;		/* Mask for remaining bits in comparison. */
 	uint32 *addr_a;	/* Pointer into the arena of 'a' */
 	uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	uint32 *last;		/* Last bit unit in 'a' */
@@ -197,12 +198,12 @@ rt_public EIF_BOOLEAN b_equal(EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 	len_b = len_a % BIT_UNIT;
-	if (len_b == 0)
+	if (len_b == 0) {
 		return (*addr_a == *addr_b) ? EIF_TRUE : EIF_FALSE;
-	else
-		len_b = ((1 << len_b) - 1) << (BIT_UNIT - len_b);
-
-	return ((*addr_a & len_b) == (*addr_b & len_b)) ? EIF_TRUE : EIF_FALSE;
+	} else {
+		l_mask = ((1 << len_b) - 1) << (BIT_UNIT - len_b);
+		return ((*addr_a & l_mask) == (*addr_b & l_mask)) ? EIF_TRUE : EIF_FALSE;
+	}
 }
 
 rt_public void b_copy(EIF_REFERENCE a, EIF_REFERENCE b)
@@ -357,7 +358,7 @@ rt_private EIF_REFERENCE b_right_shift(EIF_REFERENCE bit, long int s)
 	/* Shifts `bit' by `s' positions to the right */
 
 	EIF_GET_CONTEXT
-	int len;					/* Length of the bit field */
+	uint16 len;					/* Length of the bit field */
 	int i;						/* Loop over the bit field */
 	int units;					/* Number of bit units */
 	int bshift;		/* Byte/bit shifting amount */
@@ -415,7 +416,7 @@ rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s)
 	/* Shifts `bit' by `s' positions to the left */
 
 	EIF_GET_CONTEXT
-	int len;					/* Length of the bit field */
+	uint16 len;					/* Length of the bit field */
 	int i;						/* Loop over the bit field */
 	int units;					/* Number of bit units */
 	int bshift;		/* Byte/bit shifting amount */
@@ -497,7 +498,7 @@ rt_private EIF_REFERENCE b_right_rotate(EIF_REFERENCE bit, long int s)
 	/* Rotates `bit' by `s' positions to the right */
 
 	EIF_GET_CONTEXT
-	int len;				/* Length of the bit field */
+	uint16 len;				/* Length of the bit field */
 	int i;					/* Loop over the bit field */
 	int units;				/* Number of bit units */
 	int idx;				/* Index of bit unit where garbage bits arrived */
@@ -603,7 +604,7 @@ rt_private EIF_REFERENCE b_left_rotate(EIF_REFERENCE bit, long int s)
 	/* Rotates `bit' by `s' positions to the left */
 
 	EIF_GET_CONTEXT
-	int len;				/* Length of the bit field */
+	uint16 len;				/* Length of the bit field */
 	int i;					/* Loop over the bit field */
 	int units;				/* Number of bit units */
 	int idx;				/* Index of bit unit where garbage bits arrived */

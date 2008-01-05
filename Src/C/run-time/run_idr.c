@@ -875,6 +875,46 @@ rt_public void widr_multi_int64 (EIF_INTEGER_64 *obj, size_t num)
 	}
 }
 
+rt_public void ridr_multi_uint8 (EIF_NATURAL_8 *obj, size_t num) {
+	EIF_INTEGER_8 *data = (EIF_INTEGER_8 *) obj;
+	ridr_multi_int8 (data, num);
+}
+
+rt_public void widr_multi_uint8 (EIF_NATURAL_8 *obj, size_t num) {
+	EIF_INTEGER_8 *data = (EIF_INTEGER_8 *) obj;
+	widr_multi_int8 (data, num);
+}
+
+rt_public void ridr_multi_uint16 (EIF_NATURAL_16 *obj, size_t num) {
+	EIF_INTEGER_16 *data = (EIF_INTEGER_16 *) obj;
+	ridr_multi_int16 (data, num);
+}
+
+rt_public void widr_multi_uint16 (EIF_NATURAL_16 *obj, size_t num) {
+	EIF_INTEGER_16 *data = (EIF_INTEGER_16 *) obj;
+	widr_multi_int16 (data, num);
+}
+
+rt_public void ridr_multi_uint32 (EIF_NATURAL_32 *obj, size_t num) {
+	EIF_INTEGER_32 *data = (EIF_INTEGER_32 *) obj;
+	ridr_multi_int32 (data, num);
+}
+
+rt_public void widr_multi_uint32 (EIF_NATURAL_32 *obj, size_t num) {
+	EIF_INTEGER_32 *data = (EIF_INTEGER_32 *) obj;
+	widr_multi_int32 (data, num);
+}
+
+rt_public void ridr_multi_uint64 (EIF_NATURAL_64 *obj, size_t num) {
+	EIF_INTEGER_64 *data = (EIF_INTEGER_64 *) obj;
+	ridr_multi_int64 (data, num);
+}
+
+rt_public void widr_multi_uint64 (EIF_NATURAL_64 *obj, size_t num) {
+	EIF_INTEGER_64 *data = (EIF_INTEGER_64 *) obj;
+	widr_multi_int64 (data, num);
+}
+
 rt_public void ridr_multi_float (EIF_REAL_32 *obj, size_t num)
 {
 	RT_GET_CONTEXT
@@ -1030,13 +1070,14 @@ rt_public void ridr_multi_bit (struct bit *obj, size_t num, size_t elm_siz)
 
 
 	run_int (&idrf.i_decode, (uint32 *) (&number_of_bits), 1);
+	CHECK("valid number of bits", number_of_bits <= 0x000FFFF);
 	siz = BIT_NBPACK (number_of_bits);
 	cap = idrf_buffer_size / (siz * sizeof (uint32));
 
 
 	if (cap != 0) {
 		while (num > i) {
-			LENGTH ((((char *)obj) + (elm_siz * i++))) = number_of_bits;
+			LENGTH ((((char *)obj) + (elm_siz * i++))) = (uint16) number_of_bits;
 			run_int (&idrf.i_decode, iptr, siz);
 			iptr = ARENA ((((char *)obj) + (elm_siz * i)));
 		}

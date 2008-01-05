@@ -48,7 +48,10 @@ extern "C" {
  * Useful shortcuts for accessing fields.
  */
 #define ov_next		ov_head.ovu.ovu_next
-#define ov_flags	ov_head.ovu.ovu_flags
+#define ov_flags	ov_head.ovu.ovs.flags
+#define ov_dtype	ov_head.ovu.ovs.dtype
+#define ov_dftype	ov_head.ovu.ovs.dftype
+/* #define ov_dftype	(ov_head.ovu.ovs.dftype_inc + fcount) */
 #define ov_fwd		ov_head.ovu.ovu_fwd
 #define ov_size		ov_head.ovs_size
 #ifdef EIF_TID
@@ -85,16 +88,16 @@ extern "C" {
 /*
  * Functions return type.
  */
-RT_LNK EIF_REFERENCE emalloc(uint32 type);				/* Allocate an Eiffel object */
-RT_LNK EIF_REFERENCE emalloc_as_old(uint32 type);			/* Allocate an Eiffel object as an old object */
-RT_LNK EIF_REFERENCE emalloc_size(uint32 ftype, uint32 dtype, uint32 size);	/* Allocate an Eiffel object */
-RT_LNK EIF_REFERENCE bmalloc(long int size);			/* Bit object creation */
-RT_LNK EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic);
-RT_LNK EIF_REFERENCE tuple_malloc (uint32 ftype);	/* Allocated tuple object */
-RT_LNK EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic);	/* Allocated tuple object */
-RT_LNK EIF_REFERENCE smart_emalloc (uint32 ftype);
+RT_LNK EIF_REFERENCE emalloc(EIF_TYPE_INDEX type);				/* Allocate an Eiffel object */
+RT_LNK EIF_REFERENCE emalloc_as_old(EIF_TYPE_INDEX type);			/* Allocate an Eiffel object as an old object */
+RT_LNK EIF_REFERENCE emalloc_size(EIF_TYPE_INDEX ftype, EIF_TYPE_INDEX dtype, uint32 size);	/* Allocate an Eiffel object */
+RT_LNK EIF_REFERENCE bmalloc(uint16 size);			/* Bit object creation */
+RT_LNK EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF_INTEGER nb, uint32 element_size, EIF_BOOLEAN atomic);
+RT_LNK EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype);	/* Allocated tuple object */
+RT_LNK EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 count, EIF_BOOLEAN atomic);	/* Allocated tuple object */
+RT_LNK EIF_REFERENCE smart_emalloc (EIF_TYPE_INDEX ftype);
 RT_LNK EIF_REFERENCE spmalloc(rt_uint_ptr nbytes, EIF_BOOLEAN atomic);			/* Allocate an Eiffel special object */
-RT_LNK EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper);	/* Initialize special object of expanded */
+RT_LNK EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_INTEGER lower, EIF_INTEGER upper);	/* Initialize special object of expanded */
 
 RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */
 						/* Set the string header. */

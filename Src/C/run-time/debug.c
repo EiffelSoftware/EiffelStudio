@@ -2138,7 +2138,6 @@ rt_public void rt_ext_notify_event (int op, char* curr, int cid, int fid, int de
 	{	
 		EIF_TYPED_VALUE rtd_arg;						
 		EIF_TYPED_VALUE rtd_op;
-		EIF_REFERENCE rtd_str = NULL;					
 		RT_ENTER_EIFFELCODE;								
 		rtd_op.it_i4 = op;
 		rtd_op.type = SK_INT32;

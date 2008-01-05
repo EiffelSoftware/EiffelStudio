@@ -1106,7 +1106,7 @@ feature -- Skeleton byte code
 				i := i + 1;
 			end;
 			buffer.put_new_line;
-			buffer.put_string ("static int16 *gtypes")
+			buffer.put_string ("static EIF_TYPE_INDEX *gtypes")
 			buffer.put_integer (code)
 			buffer.put_string (" [] = {%N")
 

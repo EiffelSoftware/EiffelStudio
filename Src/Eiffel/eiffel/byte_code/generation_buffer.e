@@ -253,6 +253,49 @@ feature -- Automatically indented output
 			current_buffer.append_integer (i)
 		end
 
+	put_hex_natural_16 (v: NATURAL_16) is
+			-- Write int `i' as an hexadecimal value.
+		local
+			i, nb, val: INTEGER
+			a_digit: INTEGER
+			l_buffer: like current_buffer
+		do
+			if not emitted and tabs > 0 then
+				emit_tabs
+			end
+			l_buffer := current_buffer
+			l_buffer.append_character ('0')
+			l_buffer.append_character ('x')
+				-- Complicated part: we estimate the required size depending
+				-- on the size of the integer we are given. If it is too big
+				-- to fit the `current_buffer', we resize it. We write the hex
+				-- numbers by pair.
+			if v <= 0xFF then
+				nb := 2
+			else
+				nb := 4
+			end
+			i := nb + l_buffer.count
+			if i > current_buffer_size then
+				buffers.extend (l_buffer)
+				create l_buffer.make (max_chunk_size)
+				current_buffer := l_buffer
+				i := nb
+			end
+			l_buffer.set_count (i)
+			from
+				val := v
+			until
+				nb = 0
+			loop
+				a_digit := (val & 0xF)
+				l_buffer.put (a_digit.to_hex_character, i)
+				val := val |>> 4
+				i := i - 1
+				nb := nb - 1
+			end
+		end
+
 	put_string (s: STRING) is
 			-- Write string `s'.
 		require

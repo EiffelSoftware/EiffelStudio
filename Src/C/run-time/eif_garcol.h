@@ -62,21 +62,19 @@ RT_LNK struct stack oms_set;	/* Once manifest strings */
 /*
  * Eiffel flags -- edit with care.
  */
-#define EO_MARK		0x80000000		/* Garbage collector's mark */
-#define EO_TUPLE	0x40000000		/* Assertion loop control flag: in creation routine */
-#define EO_DISP		0x20000000		/* Does object's associated class define `dispose' */
-#define EO_AGE		0x1e000000		/* Object's age before immortality */
-#define EO_SPEC		0x01000000		/* Object is special (C area) */
-#define EO_REF		0x00800000		/* Special object is full of references */
-#define EO_STORE	0x00400000		/* Mark for objects to be stored */
-#define EO_OLD		0x00200000		/* Object belongs to the old generation */
-#define EO_REM		0x00100000		/* Object belongs to the remembered set */
-#define EO_NEW		0x00080000		/* Object is new, outside scavenge zone */
-#define EO_C		0x00040000		/* Object is a C one (malloc'ed) */
-#define EO_EXP		0x00020000		/* Object is an expanded one */
-#define EO_COMP		0x00010000		/* Composite (has expanded or special) */
-#define EO_TYPE		0x0000ffff		/* Mask to get the dynamic type */
-#define EO_UPPER	0xffff0000		/* Mask to get upper half of flags */
+#define EO_MARK		0x8000		/* Garbage collector's mark */
+#define EO_TUPLE	0x4000		/* Assertion loop control flag: in creation routine */
+#define EO_DISP		0x2000		/* Does object's associated class define `dispose' */
+#define EO_AGE		0x1e00		/* Object's age before immortality */
+#define EO_SPEC		0x0100		/* Object is special (C area) */
+#define EO_REF		0x0080		/* Special object is full of references */
+#define EO_STORE	0x0040		/* Mark for objects to be stored */
+#define EO_OLD		0x0020		/* Object belongs to the old generation */
+#define EO_REM		0x0010		/* Object belongs to the remembered set */
+#define EO_NEW		0x0008		/* Object is new, outside scavenge zone */
+#define EO_C		0x0004		/* Object is a C one (malloc'ed) */
+#define EO_EXP		0x0002		/* Object is an expanded one */
+#define EO_COMP		0x0001		/* Composite (has expanded or special) */
 #define EO_MOVED	(EO_NEW | EO_MARK)
 
 /*

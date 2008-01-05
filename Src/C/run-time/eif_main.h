@@ -63,7 +63,7 @@ RT_LNK long EIF_once_count;			/* Nr. of once routines */
 #ifdef EIF_THREADS
 RT_LNK long EIF_process_once_count;		/* Nr. of process-relative once routines */
 #endif
-RT_LNK int scount;					/* Maximum dtype */
+RT_LNK EIF_TYPE_INDEX scount;					/* Maximum dtype */
 RT_LNK void eif_alloc_init(void);
 
 #ifdef EIF_WINDOWS

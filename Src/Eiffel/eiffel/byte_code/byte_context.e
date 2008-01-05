@@ -282,7 +282,7 @@ feature -- Code generation
 			if not System.has_multithreaded or else not use_init then
 				l_buffer.put_string ("static ")
 			end
-			l_buffer.put_string ("int16 typarr [] = {")
+			l_buffer.put_string ("EIF_TYPE_INDEX typarr [] = {")
 
 			l_buffer.put_integer (current_type.generated_id (final_mode))
 			l_buffer.put_character (',')
@@ -294,12 +294,13 @@ feature -- Code generation
 			else
 				gtype.generate_cid (l_buffer, final_mode, True)
 			end
-			l_buffer.put_string ("-1};")
+			l_buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+			l_buffer.put_string ("};")
 			l_buffer.put_new_line
-			l_buffer.put_string ("int16 typres;")
+			l_buffer.put_string ("EIF_TYPE_INDEX typres;")
 			l_buffer.put_new_line
 			if not use_init then
-				l_buffer.put_string ("static int16 typcache = -1;")
+				l_buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
 				l_buffer.put_new_line
 			end
 			l_buffer.put_new_line

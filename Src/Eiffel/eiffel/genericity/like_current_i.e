@@ -133,10 +133,10 @@ feature -- Comparison
 
 feature -- Generic conformance
 
-	generated_id (final_mode: BOOLEAN): INTEGER is
+	generated_id (final_mode: BOOLEAN): NATURAL_16 is
 			-- Id of a "like Current" parameter.
 		do
-			Result := Like_current_type
+			Result := {SHARED_GEN_CONF_LEVEL}.like_current_type
 		end
 
 feature -- Generic conformance for IL

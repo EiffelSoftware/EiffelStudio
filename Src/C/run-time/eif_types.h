@@ -89,14 +89,15 @@ struct ex_vect {
 		struct {
 			char *exua_name;	/* The assertion tag */
 			char *exua_where;	/* The routine name where assertion was found */
-			int exua_from;		/* And its origin (where it was written) */
+			EIF_TYPE_INDEX exua_from;		/* And its origin (where it was written) */
 			EIF_REFERENCE exua_oid;		/* Value of Current */
 		} exua;					/* Used by assertions */
 		struct {
-			jmp_buf *exur_jbuf;	/* Execution buffer address, null if none */
+			jmp_buf *exur_jbuf;			/* Execution buffer address, null if none */
 			EIF_REFERENCE exur_id;		/* Value of Current */
-			char *exur_rout;	/* The routine name */
-			int exur_orig;		/* Origin of the routine */
+			char *exur_rout;			/* The routine name */
+			EIF_TYPE_INDEX exur_orig;	/* Origin of the routine */
+			EIF_TYPE_INDEX exur_dtype;	/* Origin of the routine */
 		} exur;					/* Used by routines */
 	} exu;
 };
@@ -134,7 +135,7 @@ struct exprint {
 	char *rname;			/* Routine name of enclosing call */
 	char *tag;				/* Exception tag of current exception */
 	char *obj_id;			/* Object's ID */
-	int from;				/* Where the routine comes from */
+	EIF_TYPE_INDEX from;	/* Where the routine comes from */
 };
 
 /* Improved string structure (with number of bytes used and length)
@@ -151,13 +152,13 @@ typedef struct _smart_string {
  * stack yet if manually or system raised.
  */
 struct eif_exception {
-	unsigned char ex_val;	/* Exception code (raised) */
+	int ex_val;				/* Exception code (raised) */
 	unsigned char ex_nomem;	/* An "Out of memory" exception occurred */
-	unsigned char ex_nsig;	/* Number of last signal received */
+	int ex_nsig;			/* Number of last signal received */
 	unsigned int ex_level;	/* Exception level (rescue branches) */
  	char *ex_tag;			/* Assertion tag */
 	char *ex_rt;			/* Routine associated with current exception */
-	int ex_class;			/* Class associated with current exception */
+	EIF_TYPE_INDEX ex_class;/* Class associated with current exception */
 	int ex_entry;			/* Is entry or exit of a routine when evaluating invariant. */
 };
 
@@ -321,8 +322,12 @@ union overhead {
 	struct {
 		union {
 			union overhead *ovu_next;	/* Next block with same size */
-			uint32 ovu_flags;			/* Eiffel flags */
-			char *ovu_fwd;				/* Forwarding pointer */
+			char *ovu_fwd;		/* Forwarding pointer */
+			struct {
+				EIF_TYPE_INDEX dtype;
+				EIF_TYPE_INDEX dftype;
+				uint16 flags;
+			} ovs;
 		} ovu;
 		rt_uint_ptr ovs_size;
 #ifdef EIF_TID

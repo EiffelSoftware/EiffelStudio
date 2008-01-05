@@ -57,7 +57,7 @@ doc:	</struct>
 struct rt_type {
 	char *type_name;
 	struct rt_type **generics;
-	uint32 count;
+	uint32 count; 	/* Should fit into EIF_TYPE_INDEX. */
 	int is_expanded;
 	int is_reference;
 };
@@ -69,8 +69,8 @@ doc:	</struct>
 */
 struct rt_global_data {
 	int has_error;
-	int16 *typearr;
-	uint32 count;
+	EIF_TYPE_INDEX *typearr;
+	uint32 count; 	/* Should fit into EIF_TYPE_INDEX. */
 	uint32 position;
 };
 
@@ -721,21 +721,21 @@ rt_private EIF_TYPE_ID compute_eif_type_id (struct rt_type *a_type)
 		sdata.count = 2 + l_cecil_type.nb_param + 1;
 
 			/* Allocate the typearr structures and do the basic
-			 * initialization, the first element is set to `-1' since
+			 * initialization, the first element is set to `INVALID_DTYPE' since
 			 * there is no static call context, the last one too as a terminator
 			 * for other generic conformance routines
 			 */
-		sdata.typearr = (int16 *) eif_malloc (sdata.count * sizeof (int16));
+		sdata.typearr = (EIF_TYPE_INDEX *) eif_malloc (sdata.count * sizeof (EIF_TYPE_INDEX));
 		if (sdata.typearr) {
-			sdata.typearr [0] = -1;
-			sdata.typearr [sdata.count - 1] = -1;
+			sdata.typearr [0] = INVALID_DTYPE;
+			sdata.typearr [sdata.count - 1] = TERMINATOR;
 			sdata.position = 1;
 
 				/* There is a generic type, so we need to analyze the generic parameter
 				 * before finding out the real type */
 			eif_gen_type_id (&l_cecil_type, a_type, data);
 			if (sdata.has_error == 0) {
-				result = (EIF_TYPE_ID) eif_compound_id (NULL, (int16) 0,(int16) sdata.typearr[1], sdata.typearr);
+				result = (EIF_TYPE_ID) eif_compound_id (NULL, 0, sdata.typearr[1], sdata.typearr);
 			}
 			eif_free (sdata.typearr);
 		}
@@ -749,23 +749,23 @@ rt_private EIF_TYPE_ID compute_eif_type_id (struct rt_type *a_type)
 			sdata.has_error = 1;	
 		} else {
 				/* Allocate the typearr structures and do the basic
-				 * initialization, the first element is set to `-1' since
+				 * initialization, the first element is set to `INVALID_DTYPE' since
 				 * there is no static call context, the last one too as a terminator
 				 * for other generic conformance routines
 				 */
-			sdata.typearr = (int16 *) eif_malloc (sdata.count * sizeof (int16));
+			sdata.typearr = (EIF_TYPE_INDEX *) eif_malloc (sdata.count * sizeof (EIF_TYPE_INDEX));
 			if (sdata.typearr) {
-				sdata.typearr [0] = -1;
+				sdata.typearr [0] = INVALID_DTYPE;
 				sdata.typearr [1] = TUPLE_TYPE;
-				sdata.typearr [2] = a_type->count;
-				sdata.typearr [3] = eif_id_for_typarr ((int16) l_cecil_id);
-				sdata.typearr [sdata.count - 1] = -1;
+				sdata.typearr [2] = (EIF_TYPE_INDEX) a_type->count;
+				sdata.typearr [3] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
+				sdata.typearr [sdata.count - 1] = TERMINATOR;
 				sdata.position =  1 + TUPLE_OFFSET + 1;
 
 					/* Analyze TUPLE type before finding its real type. */
 				eif_tuple_type_id (a_type, data);
 				if (sdata.has_error == 0) {
-					result = (EIF_TYPE_ID) eif_compound_id (NULL, (int16) 0,(int16) sdata.typearr[1], sdata.typearr);
+					result = (EIF_TYPE_ID) eif_compound_id (NULL, 0, sdata.typearr[1], sdata.typearr);
 				}
 				eif_free (sdata.typearr);
 			}
@@ -811,11 +811,11 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 
 			if (is_generic (&l_cecil_type, l_type) == 1) {
 				data->count += l_type->count;
-				data->typearr = (int16 *) eif_realloc (data->typearr, data->count * sizeof(int16));
+				data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 				if (data->typearr == NULL) {
 					data->has_error = 1;
 				} else {
-					data->typearr [data->count - 1] = -1;
+					data->typearr [data->count - 1] = TERMINATOR;
 					eif_gen_type_id (&l_cecil_type, l_type, data);
 				}
 			} else if (is_tuple (l_type)) {
@@ -825,14 +825,14 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 						/* Could not find type. This is an error. */
 					data->has_error = 1;
 				} else {
-					data->typearr = (int16 *) eif_realloc (data->typearr, data->count * sizeof(int16));
+					data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 					if (data->typearr == NULL) {
 						data->has_error = 1;
 					} else {
 						data->typearr [data->position] = TUPLE_TYPE;
-						data->typearr [data->position + 1] = l_type->count;
-						data->typearr [data->position + 2] = eif_id_for_typarr ((int16) l_cecil_id);
-						data->typearr [data->count - 1] = -1;
+						data->typearr [data->position + 1] = (EIF_TYPE_INDEX) l_type->count;
+						data->typearr [data->position + 2] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
+						data->typearr [data->count - 1] = TERMINATOR;
 						data->position = data->position + TUPLE_OFFSET + 1;
 						eif_tuple_type_id (l_type, data);
 					}
@@ -843,7 +843,7 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 						/* Could not find type. This is an error. */
 					data->has_error = 1;
 				} else {
-					data->typearr [data->position] = eif_id_for_typarr ((int16) l_cecil_id);
+					data->typearr [data->position] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
 					data->position++;
 				}
 			}
@@ -897,11 +897,11 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 				l_type = a_type->generics [i];
 				if ((is_generic (&l_cecil_type, l_type) == 1)) {
 					data->count += l_type->count;
-					data->typearr = (int16 *) eif_realloc (data->typearr, data->count * sizeof(int16));
+					data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 					if (data->typearr == NULL) {
 						data->has_error = 1;
 					} else {
-						data->typearr [data->count - 1] = -1;
+						data->typearr [data->count - 1] = TERMINATOR;
 						l_previous_pos = data->position;
 						eif_gen_type_id (&l_cecil_type, l_type, data);
 							/* Extract from computed type, the associated `SK_xx' value.
@@ -910,7 +910,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 					}
 				} else if (is_tuple (l_type)) {
 					data->count += TUPLE_OFFSET + l_type->count;
-					data->typearr = (int16 *) eif_realloc (data->typearr, data->count * sizeof(int16));
+					data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 					if (data->typearr == NULL) {
 						data->has_error = 1;
 					} else {
@@ -923,9 +923,9 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 							CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
 
 							data->typearr [data->position] = TUPLE_TYPE;
-							data->typearr [data->position + 1] = l_type->count;
-							data->typearr [data->position + 2] = eif_id_for_typarr ((int16) l_cecil_id);
-							data->typearr [data->count - 1] = -1;
+							data->typearr [data->position + 1] = (EIF_TYPE_INDEX) l_type->count;
+							data->typearr [data->position + 2] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
+							data->typearr [data->count - 1] = TERMINATOR;
 							data->position = data->position + TUPLE_OFFSET + 1;
 							eif_tuple_type_id (l_type, data);
 						}
@@ -938,7 +938,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 					} else {
 						gtype [i]  = sk_type (l_cecil_id);
 						CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
-						data->typearr [data->position] = eif_id_for_typarr ((int16) l_cecil_id);
+						data->typearr [data->position] = eif_id_for_typarr ((EIF_TYPE_INDEX) l_cecil_id);
 						data->position++;
 					}
 				}
@@ -977,14 +977,6 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 					}
 				}
 
-				/* To compute the index in the dynamic_types array where we can find the type ID,
-				 * we have to count how many items we inspected and divide by the number
-				 * of generic parameters. The 't' variable points one location after the
-				 * match, hence the '-1' in the formula below.
-				 * No it doesn't, the instruction  "t -= l_generic_count" brings it back
-				 * exactly where it should be -- FRED
-				 */
-				
 				if (matched == 1) {
 					CHECK("not too big", (t - type->patterns) <= 0x7FFFFFFF);
 					i = (uint32) (t - type->patterns) / l_generic_count;

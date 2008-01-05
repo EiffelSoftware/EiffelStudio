@@ -188,8 +188,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNRW(a,b,c,d,e,f,g,h,i,j,k,l,m) rout_obj_create_wb((a),(b),(c),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNRF(a,b,c,d,e,f,g) rout_obj_create_fl((a),(b),(c),(d),(e),(f), (g))
 #define RTLNC(x)			eclone(x)
-#define RTLNSP(t,n,e,b)		special_malloc(t,n,e,b)
-#define RTLNSP2(t,f,n,e,b)	special_malloc(t | f,n,e,b)
+#define RTLNSP2(t,f,n,e,b)	special_malloc(f,t,n,e,b)
+#define RTLNSP(t,f,n,e,b)	special_malloc(t | f,n,e,b)
 #define RTLB(x)				bmalloc(x)
 #define RTMB(x,y)			makebit(x,y)
 #define RTXB(x,y)			b_copy(x,y)
@@ -206,7 +206,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 	}
 #endif
 #ifdef WORKBENCH
-RT_LNK int fcount;
+RT_LNK EIF_TYPE_INDEX fcount;
 #define RTUD(x)				((x)>=fcount?(x):egc_fdtypes[x])  /* Updated dynamic type */
 #else
 #define RTUD(x)				(x) /* For convenience */
@@ -272,7 +272,7 @@ RT_LNK int fcount;
  *  RTOB(t,x,y,z,v) assigns value of basic type 't' of 'y' to 'z' if 'y' conforms to type 'x' and sets boolean value to `v' accordingly
  *  RTOE(x,y,z,v)   copies 'y' to 'z' if 'y' conforms to type 'x' and sets boolean value to `v' accordingly
  */
-#define RTRC(x,y)		eif_gen_conf ((int16) (y), (int16) (x))
+#define RTRC(x,y)		eif_gen_conf ((y), (x))
 #define RTRA(x,y)		((y) == (EIF_REFERENCE) 0 ? 0 : RTRC((x),Dftype(y)))
 #define RTRB(x,y,z,t)		{ if (RTRA((x),(y))) { z = t (y); } }
 #define RTRE(x,y,z)		{ if (RTRA((x),(y))) { RTXA ((y), z); } }
@@ -897,17 +897,17 @@ RT_LNK int fcount;
 /* Macro used for object information:
  * Dtype:		Dynamic type of object. The name is not RTDT for historical reasons.
  * Dftype:		Full dynamic type of object - for generic conformance
- * Deif_bif:	Dynamic (base) type (mapped through `eif_cid_map'
- * Mapped_flags:Header flags with type mapped through `eif_cid_map'
+ * RT_DFS(x,y):	Set dynamic type and full dynamic type `y' to overhead `x'.
+ * To_dtype:	Convert a Full dynamic type to a dynamic type
  * RTCDT:		Compute `dtype' of Current
  * RTCDD:		Declare `dtype' for later computation of Dtype of Current.
  */
 
-#define Dftype_flags(x)	((int16) ((x) & EO_TYPE))
-#define Dftype(x) 		Dftype_flags(HEADER(x)->ov_flags)
-#define Dtype(x) 		(eif_cid_map[Dftype(x)])
-#define Deif_bid(x)		(eif_cid_map[Dftype_flags(x)])
-#define Mapped_flags(x) (((x) & EO_UPPER) | ((uint32) Deif_bid(x)))
+#define Dftype(x) 		(HEADER(x)->ov_dftype)
+#define Dtype(x) 		(HEADER(x)->ov_dtype)
+#define To_dtype(t) 	(eif_cid_map[t])
+
+#define RT_DFS(x,y)		((x)->ov_dftype = y, (x)->ov_dtype = To_dtype(y))
 #define RTCDT			int EIF_VOLATILE dtype = Dtype(Current)
 #define RTCDD			int EIF_VOLATILE dtype
 #define RTCFDT			int EIF_VOLATILE dftype = Dftype(Current)
@@ -1205,7 +1205,7 @@ RT_LNK int fcount;
 #define	RTST(c,d,i,n)	striparr(c,d,i,n);
 #define RTXA(x,y)		eif_xcopy(x, y)
 #define RTEQ(x,y)		eif_xequal((x),(y))
-#define RTCEQ(x,y)		(((x) && eif_is_boxed_expanded(HEADER(x)->ov_flags) && (y) && eif_is_boxed_expanded(HEADER(y)->ov_flags) && eif_gen_conf((int16) Dftype(x), (int16) Dftype(y)))? eif_xequal((x),(y)): (x)==(y))
+#define RTCEQ(x,y)		(((x) && eif_is_boxed_expanded(HEADER(x)->ov_flags) && (y) && eif_is_boxed_expanded(HEADER(y)->ov_flags) && eif_gen_conf(Dftype(x), Dftype(y)))? eif_xequal((x),(y)): (x)==(y))
 #define RTIE(x)			((x) != (EIF_REFERENCE) 0 ? eif_is_nested_expanded(HEADER(x)->ov_flags) : 0)
 #define RTOF(x)			(HEADER(x)->ov_size & B_SIZE)
 #define RTEO(x)			((x) - RTOF(x))
@@ -1244,15 +1244,15 @@ RT_LNK int fcount;
 */
 
 #define RTCID(tp,x,y,z)	\
-		((x) ? eif_compound_id((tp), (int16) Dftype(x),(y),(z)) : \
-		 eif_compound_id ((tp), (int16) 0, (y), (z)))
+		((x) ? eif_compound_id((tp), Dftype(x),(y),(z)) : \
+		 eif_compound_id ((tp), 0, (y), (z)))
 #define RTCID2(tp,x,y,z)	\
-		eif_compound_id((tp), (int16) (x),(y),(z))
-#define RTFCID(ct,x,y,z,u)	eif_final_id((ct),(x),(y), (int16) Dftype(z),(u))
-#define RTFCID2(ct,x,y,z,u)	eif_final_id((ct),(x),(y),(int16) (z),(u))
-#define RTGPTID(st,x,y)		eif_gen_param_id ((st),(int16) Dftype(x),(y))
+		eif_compound_id((tp), (x),(y),(z))
+#define RTFCID(ct,x,y,z,u)	eif_final_id(x),(y), Dftype(z),(u))
+#define RTFCID2(ct,x,y,z,u)	eif_final_id((x),(y),(z),(u))
+#define RTGPTID(st,x,y)		eif_gen_param_id ((st), Dftype(x),(y))
 #ifdef WORKBENCH
-#define RTID(x)	eif_id_for_typarr((int16) x)
+#define RTID(x)	eif_id_for_typarr(x)
 #else
 #define RTID(x) (x)
 #endif

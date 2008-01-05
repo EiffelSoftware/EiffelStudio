@@ -57,7 +57,7 @@ RT_LNK int nstcall;	/* Nested call global variable: signals a nested call and
  */
 
 struct bit {
-	uint32 b_length;				/* Length of the bit field */
+	uint16 b_length;				/* Length of the bit field */
 	uint32 b_value[1];				/* Array long integers holding value */
 };
 
@@ -70,7 +70,7 @@ struct bit {
 RT_LNK EIF_REFERENCE makestr_with_hash(register char *s, register size_t len, register int a_hash);
 RT_LNK EIF_REFERENCE makestr_with_hash_as_old(register char *s, register size_t len, register int a_hash);
 RT_LNK EIF_REFERENCE makestr(register char *s, register size_t len);
-RT_LNK EIF_REFERENCE makebit(char *bit, long int bit_count);		/* Build an Eiffel bit object */
+RT_LNK EIF_REFERENCE makebit(char *bit, uint16 bit_count);		/* Build an Eiffel bit object */
 extern EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, EIF_REFERENCE *items, long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 
 RT_LNK EIF_REFERENCE argarr(int argc, char **argv);		/* ARRAY[STRING] creation from command line arguments */
@@ -78,7 +78,7 @@ RT_LNK EIF_REFERENCE argarr(int argc, char **argv);		/* ARRAY[STRING] creation f
 extern long *eif_lower_table;		/* ARRAY `lower' (array optimization) */
 extern long *eif_area_table;		/* ARRAY `area' (array optimization) */
 
-RT_LNK EIF_REFERENCE cr_exp(uint32 type);				/* Creation of expanded objects */
+RT_LNK EIF_REFERENCE cr_exp(EIF_TYPE_INDEX type);	/* Creation of expanded objects */
 RT_LNK void init_exp(EIF_REFERENCE obj);		/* Initialization of expanded objects */
 
 #ifdef WORKBENCH

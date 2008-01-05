@@ -57,7 +57,7 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 	 */
 
 	struct cnode *obj_desc;
-	int dtype = Dtype(object);
+	EIF_TYPE_INDEX dtype = Dtype(object);
 	uint32 field_type;
 	EIF_REFERENCE o_ref, new_obj;
 #ifdef WORKBENCH
@@ -199,8 +199,10 @@ rt_public long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
 	/* Returns dynamic type of i-th logical field of `type_id' as
 	 * declared in associated class of `type_id'. */
 
-	int16 *typearr = System(Deif_bid(type_id)).cn_gtypes[i];
-	return eif_compound_id (0, (int16) type_id, typearr [1], typearr);
+	EIF_TYPE_INDEX *typearr = System(To_dtype(type_id)).cn_gtypes[i];
+	
+	REQUIRE("valid type_id", rt_valid_type_index(type_id));
+	return eif_compound_id (0, (EIF_TYPE_INDEX) type_id, typearr [1], typearr);
 }
 
 rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
@@ -208,7 +210,7 @@ rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
 	/* Returns type of i-th logical field of `object'. */
 	/* Look at `eif_cecil.h' for constants definitions */
 
-	uint32 field_type = System(Deif_bid(type_id)).cn_types[i];
+	uint32 field_type = System(To_dtype(type_id)).cn_types[i];
 
 	switch (field_type & SK_HEAD) {
 	case SK_REF:	return EIF_REFERENCE_TYPE;
@@ -234,11 +236,9 @@ rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
 rt_public char *ei_exp_type(long i, EIF_REFERENCE object)
 {
 	/* Returns the class name of the i-th expanded field of `object'. */
-
-	int dtype = Deif_bid(HEADER(ei_oref(i,object))->ov_flags);
 	char *s;
 
-	s = System(dtype).cn_generator;
+	s = System(HEADER(ei_oref(i,object))->ov_dtype).cn_generator;
 	return makestr(s,strlen(s));
 }
 
@@ -264,7 +264,7 @@ rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
 	/* Does `dtype' represent a SPECIAL [XX] where XX can be a basic type
 	 * or a reference type? */
 {
-	uint32 dtype = Deif_bid(dftype);
+	EIF_TYPE_INDEX dtype = To_dtype(dftype);
 	return EIF_TEST(
 		(dtype == egc_sp_bool) ||
 		(dtype == egc_sp_char) ||
@@ -284,21 +284,19 @@ rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
 		);
 }
 
-rt_public void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dtype)
-	/* Set object type to be `dtype'. To be used very carefully as one might
+rt_public void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dftype)
+	/* Set object type to be `dftype'. To be used very carefully as one might
 	 * mess up object structure.
 	 */
 {
-	uint32 flags;
-
 	REQUIRE ("object not null", object);
-	REQUIRE ("dtype valid", dtype > 0);
+	REQUIRE ("dftype valid", dftype > 0);
+	REQUIRE ("dftype not too big", rt_valid_type_index(dftype));
 
-	flags = HEADER(object)->ov_flags;
-	flags = (flags & 0xFFFF0000) | (dtype & 0x0000FFFF);
-	HEADER(object)->ov_flags = flags;
+	Dftype(object)=(EIF_TYPE_INDEX) dftype;
+	Dtype(object)=To_dtype(dftype);
 
-	ENSURE ("dtype set", (EIF_INTEGER) Dftype(object) == dtype);
+	ENSURE ("dftype set", (EIF_INTEGER) Dftype(object) == dftype);
 }
 
 rt_public void * ei_oref(long i, EIF_REFERENCE object)
@@ -306,7 +304,7 @@ rt_public void * ei_oref(long i, EIF_REFERENCE object)
 	/* Returns character value of i-th value */
 
 	struct cnode *obj_desc;
-	int dtype = Dtype(object);
+	EIF_TYPE_INDEX dtype = Dtype(object);
 	void * o_ref;
 #ifdef WORKBENCH
 	long offset;

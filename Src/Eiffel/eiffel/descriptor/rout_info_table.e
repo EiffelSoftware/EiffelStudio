@@ -179,9 +179,9 @@ feature -- Generation
 			buffer.put_string ("struct rout_info egc_forg_table_init[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
-			buffer.put_string ("%T{(int16) -1, (int16) -1},%N")
+			buffer.put_string ("%T{INVALID_DTYPE, 0},%N")
 				-- Entry for the invariant "routine"
-			buffer.put_string ("%T{(int16) 0, (int16) 0},%N")
+			buffer.put_string ("%T{0, (uint16) 0},%N")
 
 			from
 				i := 2
@@ -190,13 +190,13 @@ feature -- Generation
 			loop
 				ri := rout_infos.item (i)
 				if ri /= Void then
-					buffer.put_string ("%N%T{(int16) ")
+					buffer.put_string ("%N%T{")
 					buffer.put_integer (ri.origin)
-					buffer.put_string (", (int16) ")
+					buffer.put_string (", (uint16) ")
 					buffer.put_integer (ri.offset)
 					buffer.put_string ("},")
 				else
-					buffer.put_string ("%N%T{(int16) -1, (int16) -1},")
+					buffer.put_string ("%N%T{INVALID_DTYPE, 0},")
 				end
 				i := i + 1
 			end

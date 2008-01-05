@@ -20,11 +20,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_GEN_CONF_LEVEL
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	position: INTEGER
@@ -200,7 +195,7 @@ feature -- Generic conformance
 			buffer.put_string ("RTCA(arg")
 			buffer.put_integer (position)
 			buffer.put_character (',')
-			buffer.put_integer (None_type)
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.none_type)
 			buffer.put_character (')')
 			buffer.put_character (',')
 		end
@@ -208,7 +203,7 @@ feature -- Generic conformance
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is
 
 		do
-			ba.append_short_integer (Like_arg_type)
+			ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.like_arg_type)
 			ba.append_short_integer (position)
 		end
 
@@ -231,7 +226,7 @@ feature -- Generic conformance
 			buffer.put_string ("] = RTID(RTCA(arg")
 			buffer.put_integer (position)
 			buffer.put_character (',')
-			buffer.put_integer (None_type)
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.none_type)
 			buffer.put_string ("));")
 			buffer.put_new_line
 			dummy := idx_cnt.next

@@ -65,8 +65,8 @@ extern "C" {
 /*
  * For aging -- edit with care.
  */
-#define AGE_ONE		0x02000000		/* First birthday time */
-#define AGE_OFFSET	25				/* Age starts at bit 25 and lasts 4 bits */
+#define AGE_ONE		0x0200		/* First birthday time */
+#define AGE_OFFSET	9			/* Age starts at bit 9 and lasts 4 bits */
 
 /*
  * Garbage collector's status.

@@ -203,11 +203,12 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 	char *o_ptr;
 	long nb_references;
 	union overhead *zone = HEADER(object);
-	uint32 fflags, flags;
+	uint32 flags;
 	int is_expanded;
 	EIF_BOOLEAN object_needs_index;
 	long saved_file_pos = 0;
 	long saved_object_count = a_object_count;
+	EIF_TYPE_INDEX dtype;
 
 	REQUIRE ("valid need_index and make_index", (need_index && make_index) || (!need_index && !make_index));
 
@@ -227,8 +228,8 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 	}
 
 
-	fflags = zone->ov_flags;
-	flags = Mapped_flags(fflags);
+	flags = zone->ov_flags;
+	dtype = zone->ov_dtype;
 	is_expanded = eif_is_nested_expanded(flags) != (uint32) 0;
 	if (!(is_expanded || (flags & EO_STORE)))
 		return a_object_count;		/* Unmarked means already stored */
@@ -238,7 +239,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 	zone->ov_flags &= ~EO_STORE;	/* Unmark it */
 
 #ifdef DEBUG
-		printf("object 0x%" EIF_POINTER_DISPLAY " [%s %" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) object, System(Deif_bid(flags)).cn_generator, (rt_uint_ptr) zone->ov_flags);
+		printf("object 0x%" EIF_POINTER_DISPLAY " [%s %" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) object, System(dtype).cn_generator, (rt_uint_ptr) zone->ov_flags);
 #endif
 	/* Evaluation of the number of references of the object */
 	if (flags & EO_SPEC) {					/* Special object */
@@ -282,7 +283,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 			}
 		}
 	} else {								/* Normal object */
-		nb_references = References(Deif_bid(flags));
+		nb_references = References(dtype);
 
 		/* Traversal of references of `object' */
 		for (
@@ -297,7 +298,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 	}
 
 	if (!is_expanded)
-		st_write(object, HEADER(object)->ov_flags);		/* Write the object on the disk */
+		st_write(object);		/* Write the object on the disk */
 
 	/* Call `make_index' on `server' with `object' */
     if (object_needs_index) {
@@ -324,8 +325,8 @@ rt_private void parsing_store_write(size_t size)
 	lzo_uint cmps_out_size = (lzo_uint) cmp_buffer_size;
 	int signed_cmps_out_size;
 	
-	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0xFFFFFFFF);
-	REQUIRE("size not too big", size <= 0xFFFFFFFF);
+	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0x7FFFFFFF);
+	REQUIRE("size not too big", size <= 0x7FFFFFFF);
 
 	lzo1x_1_compress (
 					(unsigned char *) general_buffer,		/* Current buffer location */
@@ -334,7 +335,7 @@ rt_private void parsing_store_write(size_t size)
 					&cmps_out_size,		/* Size of output buffer and then size of compressed data */
 					wrkmem);			/* Memory allocator */
 
-	signed_cmps_out_size = cmps_out_size;
+	signed_cmps_out_size = (int) cmps_out_size;
 
 		/* Write size of compressed data */
 	if (parsing_char_write ((char *) &signed_cmps_out_size, sizeof(int)) <= 0)
@@ -365,8 +366,8 @@ rt_private void parsing_compiler_write(size_t size)
 	int signed_cmps_out_size;
 	int number_written;
 
-	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0xFFFFFFFF);
-	REQUIRE("size not too big", size <= 0xFFFFFFFF);
+	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0x7FFFFFFF);
+	REQUIRE("size not too big", size <= 0x7FFFFFFF);
 	
 	lzo1x_1_compress (
 					(unsigned char *) general_buffer,		/* Current buffer location */
@@ -375,7 +376,7 @@ rt_private void parsing_compiler_write(size_t size)
 					&cmps_out_size,		/* Size of output buffer and then size of compressed data */
 					wrkmem);			/* Memory allocator */
 
-	signed_cmps_out_size = cmps_out_size;
+	signed_cmps_out_size = (int) cmps_out_size;
 
 		/* Write size of compressed data */
 	if (write (file_descriptor, (char *) &signed_cmps_out_size, sizeof(int)) <= 0)

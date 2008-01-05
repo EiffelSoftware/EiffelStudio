@@ -97,61 +97,61 @@ extern "C" {
 	RT_LNK void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
 
 	RT_LNK void (*egc_correct_mismatch)(EIF_REFERENCE);	/* ANY `correct_mismatch' */
-	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
-	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
-	RT_LNK int egc_tup_dtype;				/* Dynamic type for TUPLE */
+	RT_LNK EIF_TYPE_INDEX egc_str_dtype;				/* Dynamic type for string */
+	RT_LNK EIF_TYPE_INDEX egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
+	RT_LNK EIF_TYPE_INDEX egc_tup_dtype;				/* Dynamic type for TUPLE */
 	RT_LNK int32 egc_disp_rout_id;			/* Dispose routine id */ 
-	RT_LNK int egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
-	RT_LNK int16 egc_any_dtype;			/* Dynamic type of ANY */
+	RT_LNK EIF_TYPE_INDEX egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
+	RT_LNK EIF_TYPE_INDEX egc_any_dtype;			/* Dynamic type of ANY */
 
-	RT_LNK uint32 egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
-	RT_LNK uint32 egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
-	RT_LNK uint32 egc_sp_wchar;		/* Dynamic type of SPECIAL[WIDE_CHARACTER] */
-	RT_LNK uint32 egc_sp_uint8;			/* Dynamic type of SPECIAL[NATURAL_8] */
-	RT_LNK uint32 egc_sp_uint16;		/* Dynamic type of SPECIAL[NATURAL_16] */
-	RT_LNK uint32 egc_sp_uint32;		/* Dynamic type of SPECIAL[NATURAL_32] */
-	RT_LNK uint32 egc_sp_uint64;		/* Dynamic type of SPECIAL[NATURAL_64] */
-	RT_LNK uint32 egc_sp_int8;			/* Dynamic type of SPECIAL[INTEGER_8] */
-	RT_LNK uint32 egc_sp_int16;		/* Dynamic type of SPECIAL[INTEGER_16] */
-	RT_LNK uint32 egc_sp_int32;		/* Dynamic type of SPECIAL[INTEGER_32] */
-	RT_LNK uint32 egc_sp_int64;		/* Dynamic type of SPECIAL[INTEGER_64] */
-	RT_LNK uint32 egc_sp_real32;			/* Dynamic type of SPECIAL[REAL_32] */
-	RT_LNK uint32 egc_sp_real64;		/* Dynamic type of SPECIAL[REAL_64] */
-	RT_LNK uint32 egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
-	RT_LNK uint32 egc_sp_ref;			/* Dynamic type of SPECIAL[ANY] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_wchar;		/* Dynamic type of SPECIAL[WIDE_CHARACTER] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_uint8;			/* Dynamic type of SPECIAL[NATURAL_8] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_uint16;		/* Dynamic type of SPECIAL[NATURAL_16] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_uint32;		/* Dynamic type of SPECIAL[NATURAL_32] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_uint64;		/* Dynamic type of SPECIAL[NATURAL_64] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_int8;			/* Dynamic type of SPECIAL[INTEGER_8] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_int16;		/* Dynamic type of SPECIAL[INTEGER_16] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_int32;		/* Dynamic type of SPECIAL[INTEGER_32] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_int64;		/* Dynamic type of SPECIAL[INTEGER_64] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_real32;			/* Dynamic type of SPECIAL[REAL_32] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_real64;		/* Dynamic type of SPECIAL[REAL_64] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
+	RT_LNK EIF_TYPE_INDEX egc_sp_ref;			/* Dynamic type of SPECIAL[ANY] */
 
-	RT_LNK int egc_uint8_ref_dtype;	/* Dynamic type of NATURAL_8_REF */
-	RT_LNK int egc_uint16_ref_dtype;	/* Dynamic type of NATURAL_16_REF */
-	RT_LNK int egc_uint32_ref_dtype;	/* Dynamic type of NATURAL_32_REF */
-	RT_LNK int egc_uint64_ref_dtype;	/* Dynamic type of NATURAL_64_REF */
-	RT_LNK int egc_int8_ref_dtype;	/* Dynamic type of INTEGER_8_REF */
-	RT_LNK int egc_int16_ref_dtype;	/* Dynamic type of INTEGER_16_REF */
-	RT_LNK int egc_int32_ref_dtype;	/* Dynamic type of INTEGER_32_REF */
-	RT_LNK int egc_int64_ref_dtype;	/* Dynamic type of INTEGER_64_REF */
-	RT_LNK int egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
-	RT_LNK int egc_real32_ref_dtype;	/* Dynamic type of REAL_32_REF */
-	RT_LNK int egc_real64_ref_dtype;	/* Dynamic type of REAL_64_REF */
-	RT_LNK int egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
-	RT_LNK int egc_wchar_ref_dtype;	/* Dynamic type of WIDE_CHARACTER_REF */
-	RT_LNK int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
+	RT_LNK EIF_TYPE_INDEX egc_uint8_ref_dtype;	/* Dynamic type of NATURAL_8_REF */
+	RT_LNK EIF_TYPE_INDEX egc_uint16_ref_dtype;	/* Dynamic type of NATURAL_16_REF */
+	RT_LNK EIF_TYPE_INDEX egc_uint32_ref_dtype;	/* Dynamic type of NATURAL_32_REF */
+	RT_LNK EIF_TYPE_INDEX egc_uint64_ref_dtype;	/* Dynamic type of NATURAL_64_REF */
+	RT_LNK EIF_TYPE_INDEX egc_int8_ref_dtype;	/* Dynamic type of INTEGER_8_REF */
+	RT_LNK EIF_TYPE_INDEX egc_int16_ref_dtype;	/* Dynamic type of INTEGER_16_REF */
+	RT_LNK EIF_TYPE_INDEX egc_int32_ref_dtype;	/* Dynamic type of INTEGER_32_REF */
+	RT_LNK EIF_TYPE_INDEX egc_int64_ref_dtype;	/* Dynamic type of INTEGER_64_REF */
+	RT_LNK EIF_TYPE_INDEX egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
+	RT_LNK EIF_TYPE_INDEX egc_real32_ref_dtype;	/* Dynamic type of REAL_32_REF */
+	RT_LNK EIF_TYPE_INDEX egc_real64_ref_dtype;	/* Dynamic type of REAL_64_REF */
+	RT_LNK EIF_TYPE_INDEX egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
+	RT_LNK EIF_TYPE_INDEX egc_wchar_ref_dtype;	/* Dynamic type of WIDE_CHARACTER_REF */
+	RT_LNK EIF_TYPE_INDEX egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
 	
-	RT_LNK int egc_uint8_dtype;	/* Dynamic type of NATURAL_8 */
-	RT_LNK int egc_uint16_dtype;	/* Dynamic type of NATURAL_16 */
-	RT_LNK int egc_uint32_dtype;	/* Dynamic type of NATURAL_32 */
-	RT_LNK int egc_uint64_dtype;	/* Dynamic type of NATURAL_64 */
-	RT_LNK int egc_int8_dtype;	/* Dynamic type of INTEGER_8 */
-	RT_LNK int egc_int16_dtype;	/* Dynamic type of INTEGER_16 */
-	RT_LNK int egc_int32_dtype;	/* Dynamic type of INTEGER_32 */
-	RT_LNK int egc_int64_dtype;	/* Dynamic type of INTEGER_64 */
-	RT_LNK int egc_bool_dtype;	/* Dynamic type of BOOLEAN */
-	RT_LNK int egc_real32_dtype;	/* Dynamic type of REAL_32 */
-	RT_LNK int egc_real64_dtype;	/* Dynamic type of REAL_64 */
-	RT_LNK int egc_char_dtype;	/* Dynamic type of CHARACTER */
-	RT_LNK int egc_wchar_dtype;	/* Dynamic type of WIDE_CHARACTER */
-	RT_LNK int egc_point_dtype;	/* Dynamic type of POINTER */
+	RT_LNK EIF_TYPE_INDEX egc_uint8_dtype;	/* Dynamic type of NATURAL_8 */
+	RT_LNK EIF_TYPE_INDEX egc_uint16_dtype;	/* Dynamic type of NATURAL_16 */
+	RT_LNK EIF_TYPE_INDEX egc_uint32_dtype;	/* Dynamic type of NATURAL_32 */
+	RT_LNK EIF_TYPE_INDEX egc_uint64_dtype;	/* Dynamic type of NATURAL_64 */
+	RT_LNK EIF_TYPE_INDEX egc_int8_dtype;	/* Dynamic type of INTEGER_8 */
+	RT_LNK EIF_TYPE_INDEX egc_int16_dtype;	/* Dynamic type of INTEGER_16 */
+	RT_LNK EIF_TYPE_INDEX egc_int32_dtype;	/* Dynamic type of INTEGER_32 */
+	RT_LNK EIF_TYPE_INDEX egc_int64_dtype;	/* Dynamic type of INTEGER_64 */
+	RT_LNK EIF_TYPE_INDEX egc_bool_dtype;	/* Dynamic type of BOOLEAN */
+	RT_LNK EIF_TYPE_INDEX egc_real32_dtype;	/* Dynamic type of REAL_32 */
+	RT_LNK EIF_TYPE_INDEX egc_real64_dtype;	/* Dynamic type of REAL_64 */
+	RT_LNK EIF_TYPE_INDEX egc_char_dtype;	/* Dynamic type of CHARACTER */
+	RT_LNK EIF_TYPE_INDEX egc_wchar_dtype;	/* Dynamic type of WIDE_CHARACTER */
+	RT_LNK EIF_TYPE_INDEX egc_point_dtype;	/* Dynamic type of POINTER */
 
-	RT_LNK int egc_except_emnger_dtype;	/* Dynamic type of EXCEPTION_MANAGER */
-	RT_LNK int egc_exception_dtype; /* Dynamic type of EXCEPTION. Could not be initialized if not exist. */
+	RT_LNK EIF_TYPE_INDEX egc_except_emnger_dtype;	/* Dynamic type of EXCEPTION_MANAGER */
+	RT_LNK EIF_TYPE_INDEX egc_exception_dtype; /* Dynamic type of EXCEPTION. Could not be initialized if not exist. */
 
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
 	RT_LNK struct ctable egc_ce_exp_type;		/* Class name -> type ID for expanded types */
@@ -159,7 +159,7 @@ extern "C" {
 	RT_LNK struct conform **egc_fco_table; 
 	RT_LNK void (*egc_system_mod_init) (void);	/* Module Initialization (from einit.c) */
 	RT_LNK struct eif_par_types **egc_partab;	/* Parent table */
-	RT_LNK int egc_partab_size;				/* Size of parent table */
+	RT_LNK EIF_TYPE_INDEX egc_partab_size;				/* Size of parent table */
 	RT_LNK int egc_type_of_gc;
 
 	RT_LNK struct eif_opt *egc_foption;	/* Frozen option table */
@@ -174,7 +174,7 @@ extern "C" {
 
 	RT_LNK int32 **egc_fcall;	/* Routine id arrays indexed by feature id's */
 	RT_LNK struct rout_info *egc_forg_table;/* Routine origin/offset table */
-	RT_LNK int16 *egc_fdtypes;	/* Dynamic type  array indexed by old
+	RT_LNK EIF_TYPE_INDEX *egc_fdtypes;	/* Dynamic type  array indexed by old
 								* dynamic types (for re-freezing) */
 #else
 	RT_LNK void (**egc_edispose)(void);
@@ -207,7 +207,7 @@ extern "C" {
 
 #ifdef WORKBENCH
 	RT_LNK EIF_INTEGER exec_recording_enabled;	  /* Is the Eiffel exec recording on ? */
-	RT_LNK int32 egc_rt_extension_dt;				/* E1/einit.c */
+	RT_LNK EIF_TYPE_INDEX egc_rt_extension_dt;				/* E1/einit.c */
 	RT_LNK void (*egc_rt_extension_notify)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
 	RT_LNK EIF_TYPED_VALUE (*egc_rt_extension_notify_argument)(EIF_REFERENCE, EIF_TYPED_VALUE);
 #endif

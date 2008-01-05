@@ -68,7 +68,7 @@ struct rt_struct {
 	union {
 		EIF_OBJECT rtu_obj;			/* status=SOLVED:   Hector reference */
 		struct rt_cell  *rtu_cell;	/* status=UNSOLVED: Detail about location to change */
-		int16 old_type;				/* status=DROPPED:  Type not in current system */
+		EIF_TYPE_INDEX old_type;	/* status=DROPPED:  Type not in current system */
 	} rtu_data; 
 };
 
@@ -98,7 +98,7 @@ typedef struct {
 	char *name;
 
 		/* Types of attribute and any generic parameters */
-	int16 *types;
+	EIF_TYPE_INDEX *types;
 
 		/* Basic type in storing system */
 	uint32 basic_type;
@@ -106,7 +106,7 @@ typedef struct {
 		/* Index of attribute in retrieving system. A value of -1 means
 		 * that attribute does not have a match in retrieving system.
 		 */
-	int16 new_index;
+	int new_index;
 } attribute_detail;
 
 /* Special values for the `type_index' elements of `type_table' and the
@@ -114,13 +114,13 @@ typedef struct {
  */
 enum type_state {
 		 /* The corresponding type is not present in the new system */
-	TYPE_NOT_PRESENT = -1,
+	TYPE_NOT_PRESENT = 0xFFFE,
 
 		 /* No entry for this type was found in the header */
-	TYPE_UNDEFINED = -2,
+	TYPE_UNDEFINED = 0xFFFD,
 
 		 /* The generic type has not yet been resolved */
-	TYPE_UNRESOLVED_GENERIC = -3
+	TYPE_UNRESOLVED_GENERIC = 0xFFFC
 };
 
 /* Describes a type in the storing system, with sufficient information to
@@ -141,7 +141,7 @@ typedef struct {
 	int32 *generics;
 
 		/* Type in storing system. */
-	int16 old_type;
+	EIF_TYPE_INDEX old_type;
 
 		/* Skeleton flags in storing system. */
 	uint16 flags;
@@ -150,21 +150,21 @@ typedef struct {
 		 * system. See the type_state enumeration for special values for this
 		 * field.
 		 */
-	int16 new_type;
+	EIF_TYPE_INDEX new_type;
 
 		/* New full dynamic type to use in place of generics recorded for
 		 * object.
 		 */
-	int16 new_dftype;
+	EIF_TYPE_INDEX new_dftype;
 
 		/* Count of attributes in storing system */
-	int16 attribute_count;
+	uint32 attribute_count;
 
 		/* Count of generic arguments in storing system */
 	uint16 generic_count;
 
 		/* Were attributes added to type in retrieving system? */
-	int16 mismatched;
+	uint32 mismatched;
 
 } type_descriptor;
 
@@ -178,7 +178,7 @@ typedef struct {
 		 * the type_state enumeration for special values for these
 		 * elements.
 		 */
-	int16 *type_index;
+	EIF_TYPE_INDEX *type_index;
 
 		/* Table of type descriptions for the types found in the header of
 		 * an independent or recoverable stored object.
@@ -189,7 +189,7 @@ typedef struct {
 		 * number of dynamic types recorded in the header of the stored
 		 * object.
 		 */
-	uint16 count;
+	EIF_TYPE_INDEX count;
 } type_table;
 
 typedef struct {

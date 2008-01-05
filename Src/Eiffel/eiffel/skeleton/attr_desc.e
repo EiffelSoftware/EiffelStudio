@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ATTR_DESC 
+deferred class ATTR_DESC
 
 inherit
 	COMPARABLE
@@ -32,12 +32,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -158,7 +158,7 @@ feature -- Code generation
 		local
 			l_type: TYPE_I
 		do
-			buffer.put_string ("static int16 g_atype")
+			buffer.put_string ("static EIF_TYPE_INDEX g_atype")
 			buffer.put_integer (code)
 			buffer.put_character ('_')
 			buffer.put_integer (idx)
@@ -168,9 +168,10 @@ feature -- Code generation
 				-- it is possible that we would not find the associated class type of `l_type'
 				-- and therefore generate an incorrect type specification (Cf eweasel bug about
 				-- storable).
-			l_type := context.creation_type (type_i)			
+			l_type := context.creation_type (type_i)
 			l_type.generate_cid (buffer, is_final_mode, False)
-			buffer.put_string ("-1};%N")
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+			buffer.put_string ("};%N")
 		end
 
 	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC is

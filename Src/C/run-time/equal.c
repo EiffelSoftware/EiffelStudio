@@ -73,8 +73,8 @@ rt_private struct s_table *eif_equality_table;		/* Search table for deep equal *
  * Routines declarations
  */
 
-rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF_REFERENCE source, int16 dftype);		/* Field-by-field equality */
-rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, register EIF_REFERENCE source, int16 dftype);			/* Field-by-field isomorhphism */
+rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF_REFERENCE source);		/* Field-by-field equality */
+rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, register EIF_REFERENCE source);			/* Field-by-field isomorhphism */
 rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target, EIF_REFERENCE source);				/* Recursive isomorphism */
 rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REFERENCE source);			/* Iteration on normal objects */
 
@@ -121,9 +121,6 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 	 * Return a boolean.
 	 */
 
-	uint32 s_flags;							/* Source object flags */
-	uint32 t_flags;							/* Target object flags */
-
 	REQUIRE ("source_not_null", source);
 	REQUIRE ("target_not_null", target);
 
@@ -132,10 +129,7 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 		return EIF_TRUE;
 	}
 
-	s_flags = HEADER(source)->ov_flags;
-	t_flags = HEADER(target)->ov_flags;
-
-	if (Dftype_flags(s_flags) == Dftype_flags(t_flags)) {
+	if (Dftype(source) == Dftype(target)) {
 		/* Dynamic type are the same: because of the intra-expanded
 		 * references, we can perform only a block comparison if
 		 * the target (or the source) is a composite object (i.e: it has
@@ -143,7 +137,7 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 		 * not expanded all the time, we can test either the source or
 		 * the target.
 		 */
-		if (s_flags & EO_SPEC) {
+		if (HEADER(source)->ov_flags & EO_SPEC) {
 				/* Works for both SPECIAL and TUPLE object */
 				/* Eiffel standard equality on special objects: type check assumes
 				* the comparison is on areas of the same type (containing the same
@@ -168,14 +162,14 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 		
 			/* Second condition: block equality */
 			return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
-		} else if ((int16) (s_flags & EO_TYPE) == (int16) egc_bit_dtype) {
+		} else if (Dftype(source) == (int16) egc_bit_dtype) {
 				/* Eiffel standard equality on BIT objects */
 			return b_equal (source, target);
 		} else {
-			if (!(s_flags & EO_COMP))	/* Perform a block comparison */
-				return EIF_TEST(!memcmp (source, target, EIF_Size(Deif_bid(s_flags))));
+			if (!(HEADER(source)->ov_flags & EO_COMP))	/* Perform a block comparison */
+				return EIF_TEST(!memcmp (source, target, EIF_Size(Dtype(source))));
 			else
-				return e_field_equal(target, source, Dftype_flags(s_flags));
+				return e_field_equal(target, source);
 		}
 	}
 	
@@ -194,35 +188,27 @@ rt_public EIF_BOOLEAN eiso(EIF_REFERENCE target, EIF_REFERENCE source)
 	 * Return a boolean.
 	 */
 
-	uint32 s_flags;	/* Source flags */
-	uint32 t_flags;	/* Target flags */
-	int16 dftype;	/* Dynamic type */
-
 	if (target == source)
 		return EIF_TRUE;
 
-	s_flags = HEADER(source)->ov_flags;
-	t_flags = HEADER(target)->ov_flags;
-
 #ifdef DEBUG
 	dprintf(2)("eiso: source = 0x%lx [%s] target = 0x%lx [%s]\n",
-		source, System(Deif_bid(s_flags)).cn_generator,
-		target, System(Deif_bid(t_flags)).cn_generator);
+		source, System(Dtype(source)).cn_generator,
+		target, System(Dtype(target)).cn_generator);
 #endif
 
-	if (s_flags & EO_C)
+	if (HEADER(source)->ov_flags & EO_C)
 		return EIF_FALSE;
 
-	if (t_flags & EO_C)
+	if (HEADER(target)->ov_flags & EO_C)
 		return EIF_FALSE;
 
 	/* Check if the dynamic types are the same */
-	dftype = Dftype_flags(s_flags);
-	if (dftype != Dftype_flags(t_flags)) {
+	if (Dftype(source) != Dftype(target)) {
 		return EIF_FALSE;
 	} else {
 			/* Check iomorphism */
-		return e_field_iso(target, source, dftype);
+		return e_field_iso(target, source);
 	}
 }
 	
@@ -495,8 +481,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			}
 			return EIF_TRUE;
 		}
-	}
-	else {
+	} else {
 		/* Normal object */
 		if (!eiso(target, source))
 			return EIF_FALSE;
@@ -545,10 +530,10 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 	return EIF_TRUE;
 }
 
-rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF_REFERENCE source, int16 dftype)
+rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF_REFERENCE source)
 {
 	/* Eiffel standard field-by-field equality:
-	 * Since target and source have the same dynamic type `dftype' we iterate
+	 * Since target and source have the same dynamic type we iterate
 	 * on the attributes of target.
 	 * Return a boolean.
 	 */
@@ -565,7 +550,12 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 	long index;		/* Target attribute index */
 	EIF_REFERENCE t_ref, s_ref;
 	int attribute_type;	/* Attribute type in skeleton */
-	int16 dtype = Deif_bid(dftype);
+	EIF_TYPE_INDEX dtype = Dtype(target);	/* Doesn't matter to take target or source
+											   since they are supposed to be the same type.*/
+
+	REQUIRE("target not null", target);
+	REQUIRE("source not null", source);
+	REQUIRE("Same full dynamic type", Dftype(target) == Dftype(source));
 
 	skeleton = &System(dtype);
 	types = skeleton->cn_types;
@@ -674,8 +664,7 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 }
 
 rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, 
-								register EIF_REFERENCE source, 
-								int16 dftype)
+								register EIF_REFERENCE source) 
 {
 	/* Eiffel standard field-by-field equality: since source type
 	 * conforms to source type, we iterate on target attributes which are
@@ -695,7 +684,12 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 	long index;		/* Target attribute index */
 	EIF_REFERENCE t_ref, s_ref, ref1, ref2;
 	int attribute_type;
-	int16 dtype = Deif_bid(dftype);
+	EIF_TYPE_INDEX dtype = Dtype(target);	/* Doesn't matter to take target or source
+											   since they are supposed to be the same type.*/
+
+	REQUIRE("target not null", target);
+	REQUIRE("source not null", source);
+	REQUIRE("Same full dynamic type", Dftype(target) == Dftype(source));
 
 	skeleton = &System(dtype);
 	types = skeleton->cn_types;
@@ -802,7 +796,7 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 					continue;
 				if (	(0 != ref1) &&
 						(0 != ref2) &&
-						(Dtype(ref1) == Dtype(ref2)))
+						(Dftype(ref1) == Dftype(ref2)))
 					continue;
 				return EIF_FALSE;
 			}

@@ -45,7 +45,7 @@ extern "C" {
 #endif
 
 /* Initialize module */
-extern void eif_gen_conf_init (int);
+extern void eif_gen_conf_init (EIF_TYPE_INDEX);
 
 /* Clean up module. */
 extern void eif_gen_conf_cleanup (void);
@@ -54,24 +54,24 @@ extern void eif_gen_conf_cleanup (void);
 extern int eif_tuple_is_atomic (EIF_REFERENCE tuple);
 
 /* Register a bit type of size `size' */
-extern int16 eif_register_bit_type (long size);
+extern EIF_TYPE_INDEX eif_register_bit_type (uint16 size);
 
 /* Type of ARRAY [type] */
-extern int16 eif_typeof_array_of (int16 type);
+extern EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX type);
 
 /* CID which creates a given type */
-extern int16 *eif_gen_cid (int16 dftype);
+extern EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype);
 
 /* Generic id list from external sources (retrieve) */
-extern int16 eif_gen_id_from_cid (int16 *, int *);
+extern  EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *);
 
 /* Parent tables */
 extern struct eif_par_types **eif_par_table;
-extern int eif_par_table_size;
+extern EIF_TYPE_INDEX eif_par_table_size;
 
 /* Auxiliary parent tables (dynamic extension) */
 extern struct eif_par_types **eif_par_table2;
-extern int eif_par_table2_size;
+extern EIF_TYPE_INDEX eif_par_table2_size;
 
 #ifdef EIF_THREADS
 extern EIF_LW_MUTEX_TYPE *eif_gen_mutex;

@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Parent table to generate
 
-class PARENT_TABLE 
+class PARENT_TABLE
 
 inherit
 	ARRAY [CL_TYPE_I]
@@ -20,7 +20,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	type_id: INTEGER;
 			-- Static type to which the table belongs
@@ -34,7 +34,7 @@ feature
 	is_expanded : BOOLEAN;
 			-- Is type expanded?
 
-	make is 
+	make is
 
 		do
 			array_make (1, Init_size)
@@ -83,7 +83,7 @@ feature
 			i, j, n : INTEGER;
 			l_type_id: INTEGER
 		do
-			buffer.put_string ("static int16 ptf");
+			buffer.put_string ("static EIF_TYPE_INDEX ptf");
 
 			l_type_id := type_id
 			if l_type_id <= -256 then
@@ -112,7 +112,7 @@ feature
 				end
 			end;
 
-			buffer.put_integer (-1);
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type);
 			buffer.put_string ("};%N%Nstatic struct eif_par_types par");
 
 			buffer.put_integer (l_type_id);
@@ -123,7 +123,7 @@ feature
 
 			buffer.put_integer (l_type_id);
 
-			buffer.put_string (", (int16) ")
+			buffer.put_string (", (EIF_TYPE_INDEX) ")
 			buffer.put_integer (generic_count)
 			buffer.put_string (", (char) ")
 

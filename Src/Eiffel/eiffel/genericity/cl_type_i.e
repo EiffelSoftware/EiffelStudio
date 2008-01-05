@@ -597,14 +597,16 @@ feature {NONE} -- Generic conformance
 
 feature -- Generic conformance
 
-	generated_id (final_mode : BOOLEAN) : INTEGER is
-
+	generated_id (final_mode : BOOLEAN) : NATURAL_16 is
+		local
+			l_id: INTEGER
 		do
 			if final_mode then
-				Result := type_id - 1
+				l_id := type_id - 1
 			else
-				Result := associated_class_type.static_type_id - 1
+				l_id := associated_class_type.static_type_id - 1
 			end
+			Result := l_id.to_natural_16
 		end
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is

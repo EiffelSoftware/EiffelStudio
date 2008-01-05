@@ -56,16 +56,16 @@ feature -- Generation
 			ae: ATTR_ENTRY
 			l_area: like area
 			entry_item: ENTRY
-			body_index_type, int16, gen_type, separator, null_init: STRING
+			body_index_type, type_index, gen_type, separator, null_init: STRING
 			invalid_entry: STRING
 		do
 			from
 				body_index_type := "%N%T{(BODY_INDEX) "
-				int16 := ", (int16) "
+				type_index := ", (EIF_TYPE_INDEX) "
 				gen_type := ", gen_type"
 				separator := "}, "
-				null_init := ", (int16 *) 0"
-				Invalid_entry := ", (int16) -1, (int16 *) 0},"
+				null_init := ", NULL"
+				Invalid_entry := ", INVALID_DTYPE, NULL},"
 				l_count := count - 1
 				l_area := area
 			until
@@ -101,7 +101,7 @@ feature -- Generation
 						buffer.put_integer (ae.workbench_offset)
 					end
 						-- Write the type of the feature.
-					buffer.put_string (int16)
+					buffer.put_string (type_index)
 					buffer.put_static_type_id (entry_item.static_feature_type_id)
 
 					if entry_item.is_generic then
@@ -155,9 +155,9 @@ feature -- Generation
 				body_index := "].body_index = (BODY_INDEX) ("
 				offset := "].offset = (BODY_INDEX) ("
 				desc2 := ");%N%Tdesc" + id_string + "["
-				type := "].type = (int16) ("
+				type := "].type = (EIF_TYPE_INDEX) ("
 				gen_type := "].gen_type = "
-				non_generic := "(int16 *) 0;%N"
+				non_generic := "NULL;%N"
 				gen_type_string := " gen_type"
 				end_of_line := ";%N"
 				l_count := count - 1
@@ -255,9 +255,9 @@ feature -- Generation
 			l_area: like area
 		do
 			from
-				static_decl := "static int16 gen_type"
+				static_decl := "static EIF_TYPE_INDEX gen_type"
 				start_decl := " [] = {0,"
-				end_decl := "-1};%N"
+				end_decl := "};%N"
 				l_count := count - 1
 				l_area := area
 			until
@@ -271,6 +271,7 @@ feature -- Generation
 					j := cnt.next
 					buffer.put_string (start_decl)
 					entry_item.generate_cid (buffer, False)
+					buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 					buffer.put_string (end_decl)
 				end
 				i := i + 1

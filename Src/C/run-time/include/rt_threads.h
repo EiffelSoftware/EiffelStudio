@@ -684,7 +684,7 @@ WINBASEAPI BOOL WINAPI InitializeCriticalSectionAndSpinCount(
 		if (sc < 0) { \
 			InitializeCriticalSection(m); \
 		} else { \
-			InitializeCriticalSectionAndSpinCount(m, sc); \
+			InitializeCriticalSectionAndSpinCount(m, (DWORD) sc); \
 		}
 #define EIF_LW_MUTEX_LOCK(m,msg) \
 		EnterCriticalSection(m)

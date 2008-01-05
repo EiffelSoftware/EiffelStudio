@@ -277,7 +277,7 @@ int main(int argc, char **argv)
 				fprintf(output_file, "%ld", (ps->c_off)(NON_RECURSIVE));
 				continue;
 			}
-			buf[pos++] = c;
+			buf[pos++] = (char) c;
 		}
 	}
 	fclose (input_file);
@@ -367,7 +367,7 @@ rt_private long nextarg(void)
 			sscanf(buf, "%ld", &val);
 			return val;
 		}
-		buf[pos++] = c;
+		buf[pos++] = (char) c;
 		if (pos >= BUFSIZ)
 			return -1;
 	}

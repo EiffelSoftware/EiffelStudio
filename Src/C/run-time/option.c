@@ -64,6 +64,7 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #include "rt_dir.h"
 #include <stdio.h>
 #include <string.h>
+#include "rt_assert.h"
 
 #ifndef EIF_THREADS
 /*
@@ -177,23 +178,23 @@ struct prof_rusage
 #endif /* HAS_GETRUSAGE */
 
 struct prof_info {
-				char	*featurename;		/* Name of feature */
-				int		dtype;				/* DTYPE of feature */
-				int		origin;				/* ORIGIN of feature */
-	unsigned	long	feature_hcode;		/* Hash code */
-				long	number_of_calls;	/* # calls to feature */
+	char	*featurename;		/* Name of feature */
+	int		dtype;				/* DTYPE of feature */
+	int		origin;				/* ORIGIN of feature */
+	rt_uint_ptr	feature_hcode;	/* Hash code */
+	long	number_of_calls;	/* # calls to feature */
 #ifdef HAS_GETRUSAGE
 	struct	prof_rusage	*this_total_time;
 	struct	prof_rusage	*all_total_time;
 	struct	prof_rusage	*descendent_time;
 
 #elif defined(HAS_TIMES)
-				double	this_total_time;	/* Time spent in the feature */
-											/* (during this execution) */
-				double	all_total_time;		/* Time spent in the feature */
-											/* (summarized) */
-				double	descendent_time;	/* Time spent in the */
-											/* descendents */
+	double	this_total_time;	/* Time spent in the feature */
+								/* (during this execution) */
+	double	all_total_time;		/* Time spent in the feature */
+								/* (summarized) */
+	double	descendent_time;	/* Time spent in the */
+								/* descendents */
 #elif defined(EIF_WINDOWS)
 	SYSTEMTIME	*this_total_time;
 	SYSTEMTIME	*all_total_time;
@@ -203,7 +204,7 @@ struct prof_info {
 	time_t *all_total_time;
 	time_t *descendent_time;
 #endif /* HAS_GERUSAGE */
-				int		is_running;			/* Is the feature running? */
+	int		is_running;			/* Is the feature running? */
 											/* Needed for recursives */
 };
 
@@ -307,10 +308,10 @@ struct prof_info {
 						}
 #define subtract_gc_time(x,y)	{\
 									if((x)->wMilliseconds >= y)\
-										(x)->wMilliseconds -= (unsigned short) y;\
+										(x)->wMilliseconds = (x)->wMilliseconds - (WORD) y;\
 									else\
 									{\
-										(x)->wMilliseconds = 1000 - ((unsigned short) y - (x)->wMilliseconds);\
+										(x)->wMilliseconds = 1000 - ((WORD) y - (x)->wMilliseconds);\
 										(x)->wSecond -= 1;\
 									}\
 								}
@@ -334,7 +335,7 @@ struct prof_info {
 		else\
 		{\
 			(x)->wMilliseconds = 1000 - ((z)->wMilliseconds - (y)->wMilliseconds);\
-			ExtraSecond = -1;\
+			ExtraSecond = 1;\
 		}\
 		if((y)->wSecond >= (z)->wSecond)\
 		{\
@@ -343,9 +344,11 @@ struct prof_info {
 		else\
 		{\
 			(x)->wSecond = 60 - ((z)->wSecond - (y)->wSecond);\
-			ExtraMinute = -1;\
+			ExtraMinute = 1;\
 		}\
-		(x)->wSecond += ExtraSecond;\
+		if (ExtraSecond) {\
+			(x)->wSecond -= 1; \
+		} \
 		if((y)->wMinute >= (z)->wMinute)\
 		{\
 			(x)->wMinute = (y)->wMinute - (z)->wMinute;\
@@ -353,9 +356,11 @@ struct prof_info {
 		else\
 		{\
 			(x)->wMinute = 60 - ((z)->wMinute - (y)->wMinute);\
-			ExtraHour = -1;\
+			ExtraHour = 1;\
 		}\
-		(x)->wMinute += ExtraMinute;\
+		if (ExtraMinute) {\
+			(x)->wMinute -= 1; \
+		} \
 		if((y)->wHour >= (z)->wHour)\
 		{\
 			(x)->wHour = (y)->wHour - (z)->wHour;\
@@ -364,7 +369,9 @@ struct prof_info {
 		{\
 			(x)->wHour = 24 - ((z)->wHour - (y)->wHour);\
 		}\
-		(x)->wHour += ExtraHour;\
+		if (ExtraHour) { \
+			(x)->wHour -= 1;\
+		} \
 	}\
 								}
 #define add_time(x,y,z)	{\
@@ -798,7 +805,8 @@ void start_profile(char *name, int origin, int dtype)
 		new_item->featurename = name;
 		new_item->dtype = dtype;
 		new_item->origin = origin;
-		new_item->feature_hcode = hashcode(name, strlen(name));
+		CHECK("valid_length", strlen(name) <= 0x7FFFFFFF);
+		new_item->feature_hcode = (rt_uint_ptr) hashcode(name, (EIF_INTEGER) strlen(name));
 			/* Record time value */
 		record_time(new_item->this_total_time);
 			/* Zero values */
@@ -820,7 +828,8 @@ void stop_profile(void)
 	if(prof_recording) {
 		struct prof_info *item;	/* The information to change */
 
-		if((item = prof_stack_pop())) {	/* Testing against NULL */
+		item = prof_stack_pop();
+		if (item) {	/* Testing against NULL */
 				/* `prof_stack' doesn't contain the finishing
 				 * feature anymore. This makes live easier.
 				 */
@@ -838,11 +847,9 @@ void stop_profile(void)
 			}
 #endif /* ISE_GC */
 
-			if ((stk_item = prof_stack_top())) {
-					/* There is still a callee, so
-					 * update it.
-					 */
-
+			stk_item = prof_stack_top();
+			if (stk_item) {
+					/* There is still a callee, so update it. */
 				subtract_time(stk_item->all_total_time, stk_item->all_total_time, item->all_total_time);
 				add_time(stk_item->descendent_time, stk_item->descendent_time, item->all_total_time);
 			}
@@ -940,7 +947,8 @@ struct prof_info* prof_stack_pop(void)
 		EIF_GET_CONTEXT
 		struct prof_info *stk_item;	/* Top item of stack */
 
-		if((stk_item = prof_stack_top())) {
+		stk_item = prof_stack_top();
+		if (stk_item) {
 				/* Okay, data structure still intact */
 			prof_stack->st_top -= 1;	/* Reset top */
 			if(prof_stack->st_top < prof_stack->st_cur->sk_arena) {
@@ -1071,7 +1079,7 @@ void update_class_table(struct prof_info *item)
 		EIF_GET_CONTEXT
 		struct feat_table *f_t;		/* Feature table */
 		struct prof_info *p_i;		/* New item */
-		unsigned long f_hcode;		/* Feature H code */
+		rt_uint_ptr f_hcode;		/* Feature H code */
 
 			/* Find the H table of features of class dtype */
 		f_t = (struct feat_table *) ht_value(class_table, item->dtype);

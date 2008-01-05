@@ -60,9 +60,9 @@ struct cnode {
 	long cn_nbattr;				/* Number of attributes */
 	char *cn_generator;			/* Class name */
 	char **cn_names;			/* Attribute names */
-	int *cn_parents;			/* Dynamic types of parents (-1 marks end) */
+	EIF_TYPE_INDEX *cn_parents;	/* Dynamic types of parents (TERMINATOR marks end) */
 	uint32 *cn_types;			/* Attribute types */
-	int16 **cn_gtypes;			/* Attribute generic types (expanded attributes only) */
+	EIF_TYPE_INDEX **cn_gtypes;	/* Attribute generic types (expanded attributes only) */
 	uint16 cn_flags;			/* Flags of Current type */
 #ifdef WORKBENCH
 	int32 *cn_attr;				/* Array of attribute routine ids */
@@ -140,8 +140,8 @@ struct cnode {
  */
 
 struct conform {
-	int16 co_min;		/* Minimum dynamic type able to conform */
-	int16 co_max;		/* Maximum dynamic type reached by `co_tab' */
+	EIF_TYPE_INDEX co_min;		/* Minimum dynamic type able to conform */
+	EIF_TYPE_INDEX co_max;		/* Maximum dynamic type reached by `co_tab' */
 	char *co_tab;		/* Conformance table (mapped on eight bits packs) */
 };
 
@@ -150,24 +150,24 @@ struct conform {
 
 struct eif_par_types {
 	char    *class_name;    /* Name of this class */
-	int16   *parents;       /* Parent types */
-	int16   nb_generics;    /* Number of formal generics */
+	EIF_TYPE_INDEX   *parents;       /* Parent types */
+	uint16   nb_generics;    /* Number of formal generics */
 	char    is_expanded;    /* Is it expanded? */
 };
 
-RT_LNK int scount;				/* Numner of dynamic types */
+RT_LNK EIF_TYPE_INDEX scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
 struct desc_info {						/* Descriptor information */
-	BODY_INDEX body_index;					/* Body index */
+	BODY_INDEX body_index;				/* Body index */
 	BODY_INDEX offset;					/* Attribute offset */
-	int16 type;							/* Feature type */
-	int16 *gen_type;					/* Generics, if any */
+	EIF_TYPE_INDEX type;				/* Feature type */
+	EIF_TYPE_INDEX *gen_type;			/* Generics, if any */
 };
 
 struct rout_info {						/* Routine information */
-	int16 origin;						/* Routine origin */
-	int16 offset;						/* Routine offset in origin */
+	EIF_TYPE_INDEX origin;				/* Routine origin */
+	uint16 offset;						/* Routine offset in origin */
 };
 #endif
 

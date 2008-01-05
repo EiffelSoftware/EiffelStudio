@@ -280,7 +280,7 @@ typedef struct tag_EIF_DEBUG_VALUE {
 
 extern void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volatile stop); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 
-extern void call_disp(uint32 dtype, char *object);				/* Function to call dispose routines */ 
+extern void call_disp(EIF_TYPE_INDEX dtype, char *object);	/* Function to call dispose routines */ 
 extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
 extern void xinitint(void);										/* Initialize the interpreter */
 extern EIF_TYPED_VALUE *otop(void);									/* Top of the stack */
@@ -293,7 +293,7 @@ extern void opstack_reset(struct opstack *stk);
 extern void dynamic_eval(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, int is_inline_agent);	/* Dynamic evaluation of a feature */
 extern EIF_TYPED_VALUE * dynamic_eval_dbg(int fid, int stype, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, int* exception_occured); /* Dynamic evaluation of a feature. Exceptions are caught*/
 
-extern short get_compound_id (EIF_REFERENCE, short);
+extern EIF_TYPE_INDEX get_compound_id (EIF_REFERENCE, EIF_TYPE_INDEX);
 
 #ifdef __cplusplus
 }

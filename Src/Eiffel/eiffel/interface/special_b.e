@@ -133,21 +133,21 @@ feature -- Code generation
 			pointer_dtype, boolean_dtype, ref_dtype: INTEGER
 		do
 			from
-				char_dtype := -1
-				wchar_dtype := -1
-				uint8_dtype := -1
-				uint16_dtype := -1
-				uint32_dtype := -1
-				uint64_dtype := -1
-				int8_dtype := -1
-				int16_dtype := -1
-				int32_dtype := -1
-				int64_dtype := -1
-				real32_dtype := -1
-				real64_dtype := -1
-				boolean_dtype := -1
-				pointer_dtype := -1
-				ref_dtype := -1
+				char_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				wchar_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				uint8_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				uint16_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				uint32_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				uint64_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				int8_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				int16_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				int32_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				int64_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				real32_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				real64_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				boolean_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				pointer_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
+				ref_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
 				types.start
 			until
 				types.after
@@ -192,35 +192,35 @@ feature -- Code generation
 				end
 				types.forth
 			end
-			buffer.put_string ("%N%Tegc_sp_char = (uint32)")
+			buffer.put_string ("%N%Tegc_sp_char = (EIF_TYPE_INDEX)")
 			buffer.put_integer (char_dtype)
-			buffer.put_string (";%N%Tegc_sp_wchar = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_wchar = (EIF_TYPE_INDEX)")
 			buffer.put_integer (wchar_dtype)
-			buffer.put_string (";%N%Tegc_sp_bool = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_bool = (EIF_TYPE_INDEX)")
 			buffer.put_integer (boolean_dtype)
-			buffer.put_string (";%N%Tegc_sp_uint8 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_uint8 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (uint8_dtype)
-			buffer.put_string (";%N%Tegc_sp_uint16 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_uint16 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (uint16_dtype)
-			buffer.put_string (";%N%Tegc_sp_uint32 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_uint32 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (uint32_dtype)
-			buffer.put_string (";%N%Tegc_sp_uint64 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_uint64 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (uint64_dtype)
-			buffer.put_string (";%N%Tegc_sp_int8 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_int8 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (int8_dtype)
-			buffer.put_string (";%N%Tegc_sp_int16 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_int16 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (int16_dtype)
-			buffer.put_string (";%N%Tegc_sp_int32 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_int32 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (int32_dtype)
-			buffer.put_string (";%N%Tegc_sp_int64 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_int64 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (int64_dtype)
-			buffer.put_string (";%N%Tegc_sp_real32 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_real32 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (real32_dtype)
-			buffer.put_string (";%N%Tegc_sp_real64 = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_real64 = (EIF_TYPE_INDEX)")
 			buffer.put_integer (real64_dtype)
-			buffer.put_string (";%N%Tegc_sp_pointer = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_pointer = (EIF_TYPE_INDEX)")
 			buffer.put_integer (pointer_dtype)
-			buffer.put_string (";%N%Tegc_sp_ref = (uint32)")
+			buffer.put_string (";%N%Tegc_sp_ref = (EIF_TYPE_INDEX)")
 			buffer.put_integer (ref_dtype)
 			buffer.put_string (";%N")
 		end

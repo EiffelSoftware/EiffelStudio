@@ -29,18 +29,23 @@ feature -- Processing
 			-- Freeze system: generate C files.
 		local
 			i, nb: INTEGER
-			classes: ARRAY [CLASS_C]
+			l_area: SPECIAL [CLASS_C]
 			a_class: CLASS_C
 			eif_class: EIFFEL_CLASS_C
+			l_degree_output: like degree_output
+			l_system: like system
+			l_m_desc_server: like m_desc_server
 		do
-			classes := System.classes.sorted_classes
+			l_system := system
+			l_degree_output := degree_output
+			l_area := l_system.classes.sorted_classes.area
 				-- Generation of the descriptor tables.
 			if Compilation_modes.is_precompiling then
 				nb := count
-				Degree_output.put_start_degree (Degree_number, nb)
-				System.open_log_files
-				from i := 1 until nb = 0 loop
-					a_class := classes.item (i).eiffel_class_c
+				l_degree_output.put_start_degree (Degree_number, nb)
+				l_system.open_log_files
+				from i := 0 until nb = 0 loop
+					a_class := l_area [i].eiffel_class_c
 					if a_class /= Void and then a_class.degree_minus_1_needed then
 							-- only eiffel classes have degree -1
 						check
@@ -48,7 +53,7 @@ feature -- Processing
 						end
 						eif_class := a_class.eiffel_class_c
 
-						Degree_output.put_degree_minus_1 (eif_class, nb)
+						l_degree_output.put_degree_minus_1 (eif_class, nb)
 						eif_class.generate_descriptor_tables
 						eif_class.pass4
 						eif_class.remove_from_degree_minus_1
@@ -57,24 +62,25 @@ feature -- Processing
 					i := i + 1
 				end
 			else
-				if System.first_compilation then
+				if l_system.first_compilation then
 					from
-						m_desc_server.start
+						l_m_desc_server := m_desc_server
+						l_m_desc_server.start
 					until
-						m_desc_server.after
+						l_m_desc_server.after
 					loop
-						a_class := System.class_of_id (m_desc_server.key_for_iteration)
+						a_class := l_system.class_of_id (l_m_desc_server.key_for_iteration)
 						if a_class /= Void then
 							insert_class (a_class)
 						end
-						m_desc_server.forth
+						l_m_desc_server.forth
 					end
 				end
 				nb := count
-				Degree_output.put_start_degree (Degree_number, nb)
-				System.open_log_files
-				from i := 1 until nb = 0 loop
-					a_class := classes.item (i)
+				l_degree_output.put_start_degree (Degree_number, nb)
+				l_system.open_log_files
+				from i := 0 until nb = 0 loop
+					a_class := l_area [i]
 					if a_class /= Void and then a_class.degree_minus_1_needed then
 							-- only eiffel classes have degree -1
 						check
@@ -82,7 +88,7 @@ feature -- Processing
 						end
 						eif_class := a_class.eiffel_class_c
 
-						Degree_output.put_degree_minus_1 (eif_class, nb)
+						l_degree_output.put_degree_minus_1 (eif_class, nb)
 						eif_class.generate_workbench_files
 						eif_class.remove_from_degree_minus_1
 						nb := nb - 1
@@ -91,8 +97,8 @@ feature -- Processing
 				end
 			end
 			count := 0
-			System.close_log_files
-			Degree_output.put_end_degree
+			l_system.close_log_files
+			l_degree_output.put_end_degree
 		end
 
 	make_update_feature_tables (file: RAW_FILE) is
@@ -103,20 +109,22 @@ feature -- Processing
 			file_open_write: file.is_open_write
 		local
 			i, nb: INTEGER
-			classes: ARRAY [CLASS_C]
+			l_area: SPECIAL [CLASS_C]
 			a_class: CLASS_C
 			types: TYPE_LIST
 			nb_tables: INTEGER
 			feat_tbl: MELTED_FEATURE_TABLE
+			l_m_feat_tbl_server: like m_feat_tbl_server
 		do
-			classes := System.classes.sorted_classes
+			l_area := System.classes.sorted_classes.area
+			l_m_feat_tbl_server := m_feat_tbl_server
 						debug ("ACTIVITY")
 							io.error.put_string ("%Tfeature tables%N")
 						end
 				-- Count of feature tables to update.
 			nb := count
-			from i := 1 until nb = 0 loop
-				a_class := classes.item (i)
+			from i := 0 until nb = 0 loop
+				a_class := l_area [i]
 				if a_class /= Void and then a_class.degree_minus_1_needed then
 						debug ("ACTIVITY")
 							io.error.put_string ("%T%T")
@@ -137,8 +145,8 @@ feature -- Processing
 						end
 				-- Write then the byte code for feature tables to update.
 			nb := count
-			from i := 1 until nb = 0 loop
-				a_class := classes.item (i)
+			from i := 0 until nb = 0 loop
+				a_class := l_area [i]
 				if a_class /= Void and then a_class.degree_minus_1_needed then
 								debug ("ACTIVITY")
 									io.error.put_string ("%T%T")
@@ -148,7 +156,7 @@ feature -- Processing
 					types := a_class.types
 					from types.start until types.after loop
 						if types.item.is_modifiable then
-							feat_tbl := m_feat_tbl_server.item (types.item.static_type_id)
+							feat_tbl := l_m_feat_tbl_server.item (types.item.static_type_id)
 
 								debug ("ACTIVITY")
 									io.error.put_string ("melting class desc of ")

@@ -52,7 +52,6 @@ feature -- Processing
 			l_system: like system
 			l_error_handler: like error_handler
 			l_class_counter: CLASS_COUNTER
-			l_error_found: BOOLEAN
 		do
 			l_degree_output := Degree_output
 			l_degree_output.put_start_degree (Degree_number, count)
@@ -82,15 +81,14 @@ feature -- Processing
 					l_class := l_classes.item (i)
 					if
 						l_class /= Void and then l_class.degree_5_needed and then
-						l_error_found implies (not l_classes_with_error.valid_index (i) or else not l_classes_with_error [i])
+						(not l_classes_with_error.valid_index (i) or else not l_classes_with_error [i])
 					then
 						l_degree_output.put_degree_5 (l_class, count)
 						l_system.set_current_class (l_class)
 						l_error_level := l_error_handler.error_level
 						process_class (l_class)
 						if l_error_handler.error_level /= l_error_level then
-							l_error_found := True
-							l_classes_with_error.force (l_error_found, i)
+							l_classes_with_error.force (True, i)
 							nb_errors := nb_errors + 1
 						elseif l_class.degree_5_needed then
 								-- Remove class if not already done.

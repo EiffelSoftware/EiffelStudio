@@ -399,9 +399,18 @@ feature -- Status
 
 	is_expanded: BOOLEAN is
 			-- Is the type expanded?
+		local
+			l_declaration_mark: like declaration_mark
 		do
+			l_declaration_mark := declaration_mark
 				-- Do not check for `has_separate_mark' because a separate class cannot be expanded.
-			Result := has_expanded_mark or else (has_no_mark and then base_class.is_expanded)
+			Result := l_declaration_mark = {CL_TYPE_A}.expanded_mark
+			if not Result and then l_declaration_mark = {CL_TYPE_A}.no_mark then
+				check class_id_not_zero: class_id /= 0 end
+				Result := system.classes.item (class_id).is_expanded
+			end
+
+--			Result := has_expanded_mark or else (has_no_mark and then base_class.is_expanded)
 		end
 
 	is_reference: BOOLEAN is
@@ -490,15 +499,24 @@ feature -- Status
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		local
-			other_cl_type: CL_TYPE_I
+--			other_cl_type: CL_TYPE_I
 		do
-			other_cl_type ?= other
-			Result := other_cl_type /= Void -- FIXME
-					and then other_cl_type.class_id = class_id
-					and then other_cl_type.is_expanded = is_expanded
-					and then other_cl_type.is_separate = is_separate
-					and then other_cl_type.meta_generic = Void
-					and then other_cl_type.true_generics = Void
+--			other_cl_type ?= other
+--			Result := other_cl_type /= Void -- FIXME
+--					and then other_cl_type.class_id = class_id
+--					and then other_cl_type.is_expanded = is_expanded
+--					and then other_cl_type.is_separate = is_separate
+--					and then other_cl_type.meta_generic = Void
+--					and then other_cl_type.true_generics = Void
+			if {l_other_cl_type: !CL_TYPE_I} other then
+				Result := l_other_cl_type.class_id = class_id
+					and then l_other_cl_type.class_id = class_id
+						-- 'class_id' is the same therefore we can check
+						-- 'declaration_mark' instead of comparing 'is_expanded' and 'is_separate'
+					and then l_other_cl_type.declaration_mark = declaration_mark
+					and then l_other_cl_type.meta_generic = Void
+					and then l_other_cl_type.true_generics = Void
+			end
 		end
 
 	has_actual (type: CL_TYPE_I): BOOLEAN is
@@ -748,7 +766,7 @@ feature {NONE} -- Implementation
 			internal_il_base_type_name_not_empty: not Result.is_empty
 		end
 
-feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} -- Implementation: class type declaration marks
+feature {CL_TYPE_I, CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} -- Implementation: class type declaration marks
 
 	declaration_mark: NATURAL_8
 			-- Declaration mark associated with a class type (if any)

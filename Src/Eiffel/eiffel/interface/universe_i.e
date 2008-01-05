@@ -399,95 +399,98 @@ feature {COMPILER_EXPORTER} -- Implementation
 		local
 			l_actions: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]
 			l_exceptions: SEARCH_TABLE [STRING]
+			l_system: like system
 		do
 			create l_actions.make (50)
 			create l_exceptions.make (1)
 
-			if system.il_generation then
-				l_actions.put (agent system.set_system_object_class, "SYSTEM_OBJECT")
-				l_actions.put (agent system.set_system_value_type_class, "VALUE_TYPE")
-				l_actions.put (agent system.set_system_exception_type_class, "NATIVE_EXCEPTION")
+			l_system := system
+
+			if l_system.il_generation then
+				l_actions.put (agent l_system.set_system_object_class, "SYSTEM_OBJECT")
+				l_actions.put (agent l_system.set_system_value_type_class, "VALUE_TYPE")
+				l_actions.put (agent l_system.set_system_exception_type_class, "NATIVE_EXCEPTION")
 			end
 
-			l_actions.put (agent system.set_any_class, "ANY")
-			l_actions.put (agent system.set_boolean_class, "BOOLEAN")
-			l_actions.put (agent system.set_character_class (?, 8), "CHARACTER_8")
-			l_actions.put (agent system.set_character_class (?, 32), "CHARACTER_32")
-			l_actions.put (agent system.set_natural_class (?, 8), "NATURAL_8")
-			l_actions.put (agent system.set_natural_class (?, 16), "NATURAL_16")
-			l_actions.put (agent system.set_natural_class (?, 32), "NATURAL_32")
-			l_actions.put (agent system.set_natural_class (?, 64), "NATURAL_64")
-			l_actions.put (agent system.set_integer_class (?, 8), "INTEGER_8")
-			l_actions.put (agent system.set_integer_class (?, 16), "INTEGER_16")
-			l_actions.put (agent system.set_integer_class (?, 32), "INTEGER_32")
-			l_actions.put (agent system.set_integer_class (?, 64), "INTEGER_64")
-			l_actions.put (agent system.set_real_class (?, 32), "REAL_32")
-			l_actions.put (agent system.set_real_class (?, 64), "REAL_64")
-			l_actions.put (agent system.set_pointer_class, "POINTER")
-			l_actions.put (agent system.set_typed_pointer_class, "TYPED_POINTER")
-			l_actions.put (agent system.set_string_class (?, 8), "STRING_8")
-			l_actions.put (agent system.set_string_class (?, 32), "STRING_32")
-			l_actions.put (agent system.set_array_class, "ARRAY")
-			l_actions.put (agent system.set_special_class, "SPECIAL")
-			l_actions.put (agent system.set_tuple_class, "TUPLE")
-			l_actions.put (agent system.set_disposable_class, "DISPOSABLE")
-			l_actions.put (agent system.set_routine_class, "ROUTINE")
-			l_actions.put (agent system.set_procedure_class, "PROCEDURE")
-			l_actions.put (agent system.set_function_class, "FUNCTION")
-			l_actions.put (agent system.set_predicate_class, "PREDICATE")
-			l_actions.put (agent system.set_type_class, "TYPE")
+			l_actions.put (agent l_system.set_any_class, "ANY")
+			l_actions.put (agent l_system.set_boolean_class, "BOOLEAN")
+			l_actions.put (agent l_system.set_character_class (?, 8), "CHARACTER_8")
+			l_actions.put (agent l_system.set_character_class (?, 32), "CHARACTER_32")
+			l_actions.put (agent l_system.set_natural_class (?, 8), "NATURAL_8")
+			l_actions.put (agent l_system.set_natural_class (?, 16), "NATURAL_16")
+			l_actions.put (agent l_system.set_natural_class (?, 32), "NATURAL_32")
+			l_actions.put (agent l_system.set_natural_class (?, 64), "NATURAL_64")
+			l_actions.put (agent l_system.set_integer_class (?, 8), "INTEGER_8")
+			l_actions.put (agent l_system.set_integer_class (?, 16), "INTEGER_16")
+			l_actions.put (agent l_system.set_integer_class (?, 32), "INTEGER_32")
+			l_actions.put (agent l_system.set_integer_class (?, 64), "INTEGER_64")
+			l_actions.put (agent l_system.set_real_class (?, 32), "REAL_32")
+			l_actions.put (agent l_system.set_real_class (?, 64), "REAL_64")
+			l_actions.put (agent l_system.set_pointer_class, "POINTER")
+			l_actions.put (agent l_system.set_typed_pointer_class, "TYPED_POINTER")
+			l_actions.put (agent l_system.set_string_class (?, 8), "STRING_8")
+			l_actions.put (agent l_system.set_string_class (?, 32), "STRING_32")
+			l_actions.put (agent l_system.set_array_class, "ARRAY")
+			l_actions.put (agent l_system.set_special_class, "SPECIAL")
+			l_actions.put (agent l_system.set_tuple_class, "TUPLE")
+			l_actions.put (agent l_system.set_disposable_class, "DISPOSABLE")
+			l_actions.put (agent l_system.set_routine_class, "ROUTINE")
+			l_actions.put (agent l_system.set_procedure_class, "PROCEDURE")
+			l_actions.put (agent l_system.set_function_class, "FUNCTION")
+			l_actions.put (agent l_system.set_predicate_class, "PREDICATE")
+			l_actions.put (agent l_system.set_type_class, "TYPE")
 
 				-- RT_EXTENSION is not really needed, so when we do not find it, we simply
 				-- continue as if it was not present.
 			l_exceptions.put ("RT_EXTENSION")
-			l_actions.put (agent system.set_rt_extension_class, "RT_EXTENSION")
+			l_actions.put (agent l_system.set_rt_extension_class, "RT_EXTENSION")
 
 				-- XX_REF classes
-			l_actions.put (agent system.set_bit_class, "BIT_REF")
-			l_actions.put (agent system.set_boolean_ref_class, "BOOLEAN_REF")
-			l_actions.put (agent system.set_character_ref_class (?, 8), "CHARACTER_8_REF")
-			l_actions.put (agent system.set_character_ref_class (?, 32), "CHARACTER_32_REF")
-			l_actions.put (agent system.set_natural_ref_class (?, 8), "NATURAL_8_REF")
-			l_actions.put (agent system.set_natural_ref_class (?, 16), "NATURAL_16_REF")
-			l_actions.put (agent system.set_natural_ref_class (?, 32), "NATURAL_32_REF")
-			l_actions.put (agent system.set_natural_ref_class (?, 64), "NATURAL_64_REF")
-			l_actions.put (agent system.set_integer_ref_class (?, 8), "INTEGER_8_REF")
-			l_actions.put (agent system.set_integer_ref_class (?, 16), "INTEGER_16_REF")
-			l_actions.put (agent system.set_integer_ref_class (?, 32), "INTEGER_32_REF")
-			l_actions.put (agent system.set_integer_ref_class (?, 64), "INTEGER_64_REF")
-			l_actions.put (agent system.set_real_ref_class (?, 32), "REAL_32_REF")
-			l_actions.put (agent system.set_real_ref_class (?, 64), "REAL_64_REF")
-			l_actions.put (agent system.set_pointer_ref_class, "POINTER_REF")
+			l_actions.put (agent l_system.set_bit_class, "BIT_REF")
+			l_actions.put (agent l_system.set_boolean_ref_class, "BOOLEAN_REF")
+			l_actions.put (agent l_system.set_character_ref_class (?, 8), "CHARACTER_8_REF")
+			l_actions.put (agent l_system.set_character_ref_class (?, 32), "CHARACTER_32_REF")
+			l_actions.put (agent l_system.set_natural_ref_class (?, 8), "NATURAL_8_REF")
+			l_actions.put (agent l_system.set_natural_ref_class (?, 16), "NATURAL_16_REF")
+			l_actions.put (agent l_system.set_natural_ref_class (?, 32), "NATURAL_32_REF")
+			l_actions.put (agent l_system.set_natural_ref_class (?, 64), "NATURAL_64_REF")
+			l_actions.put (agent l_system.set_integer_ref_class (?, 8), "INTEGER_8_REF")
+			l_actions.put (agent l_system.set_integer_ref_class (?, 16), "INTEGER_16_REF")
+			l_actions.put (agent l_system.set_integer_ref_class (?, 32), "INTEGER_32_REF")
+			l_actions.put (agent l_system.set_integer_ref_class (?, 64), "INTEGER_64_REF")
+			l_actions.put (agent l_system.set_real_ref_class (?, 32), "REAL_32_REF")
+			l_actions.put (agent l_system.set_real_ref_class (?, 64), "REAL_64_REF")
+			l_actions.put (agent l_system.set_pointer_ref_class, "POINTER_REF")
 
 				-- Exception manager
-			l_actions.put (agent system.set_exception_manager_class, "EXCEPTION_MANAGER")
+			l_actions.put (agent l_system.set_exception_manager_class, "EXCEPTION_MANAGER")
 			l_exceptions.put ("EXCEPTION")
 			l_actions.put (agent system.set_exception_class, "EXCEPTION")
 
-			if system.il_generation then
-				l_actions.put (agent system.set_system_string_class, "SYSTEM_STRING")
-				l_actions.put (agent system.set_native_array_class, "NATIVE_ARRAY")
-				l_actions.put (agent system.set_arguments_class, "ARGUMENTS")
-				l_actions.put (agent system.set_system_type_class, "SYSTEM_TYPE")
+			if l_system.il_generation then
+				l_actions.put (agent l_system.set_system_string_class, "SYSTEM_STRING")
+				l_actions.put (agent l_system.set_native_array_class, "NATIVE_ARRAY")
+				l_actions.put (agent l_system.set_arguments_class, "ARGUMENTS")
+				l_actions.put (agent l_system.set_system_type_class, "SYSTEM_TYPE")
 			end
 
 			check_class_unicity (l_actions, l_exceptions)
 
-			if system.il_generation then
+			if l_system.il_generation then
 					-- One more check, let's find out that `system_object' and `system_string'
 					-- are set with EXTERNAL_CLASS_I instances
 
 					-- We test against Void as `system_object_class' is declared as
 					-- EXTERNAL_CLASS_I.
-				if system.system_object_class = Void then
+				if l_system.system_object_class = Void then
 						-- Report error here
 						-- FIXME: Manu: 06/03/2003
 				end
 
 					-- Check it is an EXTERNAL_CLASS_I instance.
 				if
-					system.system_string_class = Void or else
-					not system.system_string_class.is_external_class
+					l_system.system_string_class = Void or else
+					not l_system.system_string_class.is_external_class
 				then
 						-- Report error here
 						-- FIXME: Manu: 06/03/2003

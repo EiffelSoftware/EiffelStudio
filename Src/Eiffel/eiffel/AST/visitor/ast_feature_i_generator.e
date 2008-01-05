@@ -26,6 +26,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATEFUL_VISITOR
+		export
+			{NONE} all
+		end
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -168,8 +173,11 @@ feature {NONE} -- Implementation
 					end
 
 					if l_routine.is_built_in then
-						create l_built_in_processor.make (current_class, Names_heap.item (feature_name_id), system.il_generation)
+						l_built_in_processor := built_in_processor
+						l_built_in_processor.set_current_class_and_feature_name (current_class, Names_heap.item (feature_name_id), System.il_generation)
 						l_feature_as := l_built_in_processor.ast_node
+
+						l_built_in_processor.reset
 					end
 					if l_feature_as /= Void then
 						process_body_as (l_feature_as.body)
@@ -222,8 +230,10 @@ feature {NONE} -- Implementation
 					type_exists: l_as.type /= Void
 				end
 				if l_routine.is_built_in then
-					create l_built_in_processor.make (current_class, Names_heap.item (feature_name_id), system.il_generation)
+					l_built_in_processor := built_in_processor
+					l_built_in_processor.set_current_class_and_feature_name (current_class, Names_heap.item (feature_name_id), System.il_generation)
 					l_feature_as := l_built_in_processor.ast_node
+					l_built_in_processor.reset
 					if l_feature_as /= Void then
 						process_body_as (l_feature_as.body)
 						if last_feature.is_constant or last_feature.is_attribute then

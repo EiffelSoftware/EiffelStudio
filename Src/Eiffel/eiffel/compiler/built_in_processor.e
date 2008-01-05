@@ -1,5 +1,5 @@
 indexing
-	description: "Process BUIL_IN_AS nodes."
+	description: "Process BUILT_IN_AS nodes."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,7 +7,6 @@ class
 	BUILT_IN_PROCESSOR
 
 inherit
-	ANY
 
 	EIFFEL_LAYOUT
 		export
@@ -32,9 +31,33 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Creation
 
-	make (a_class: like current_class; a_feature_name: like current_feature_name; a_is_dotnet: BOOLEAN) is
+	make
+			-- Create and initialize processor.
+		do
+			reset_all
+		end
+
+feature -- Status setting
+
+	reset
+			-- Reset state settings from last call to 'set_current_class_and_feature_name'
+		do
+			current_class := Void
+			current_feature_name := Void
+			is_dotnet := False
+		end
+
+	reset_all
+			-- Completely reset all settings so that no state information is kept.
+		do
+			reset
+			previous_built_in_code_path := ""
+			previous_class_as := Void
+		end
+
+	set_current_class_and_feature_name (a_class: like current_class; a_feature_name: like current_feature_name; a_is_dotnet: BOOLEAN)
 			-- Initialize current with `a_class' and `a_feature_name'
 		require
 			a_class_not_void: a_class /= Void
@@ -68,29 +91,53 @@ feature -- Status report
 			l_file: KL_BINARY_INPUT_FILE
 			retried: BOOLEAN
 			l_class_as: CLASS_AS
+			l_code_path_neutral, l_code_path_dependent: STRING
+			l_reuse_previous_as: BOOLEAN
+			l_empty_str: STRING
 		do
 			if not retried then
+				l_empty_str := once ""
 				l_parser := eiffel_parser
 					-- First search for platform specific implementation.
-				create l_file.make (built_in_code_path (False))
-				l_file.open_read
-				if not l_file.is_open_read then
-						-- Then look for platform independent implementation.
-					create l_file.make (built_in_code_path (True))
+				l_code_path_neutral := built_in_code_path (False)
+				l_reuse_previous_as :=  l_code_path_neutral.is_equal (previous_built_in_code_path)
+				if not l_reuse_previous_as then
+					l_code_path_dependent := built_in_code_path (True)
+					l_reuse_previous_as := l_code_path_dependent.is_equal (previous_built_in_code_path)
+				end
+
+				if not l_reuse_previous_as then
+					create l_file.make (l_code_path_neutral)
 					l_file.open_read
 					if not l_file.is_open_read then
-						l_file := Void
+						create l_file.make (l_code_path_dependent)
+						l_file.open_read
+						if not l_file.is_open_read then
+							l_file := Void
+							previous_built_in_code_path := l_empty_str
+						else
+							previous_built_in_code_path := l_code_path_dependent
+						end
+					else
+						previous_built_in_code_path := l_code_path_neutral
 					end
 				end
-				if l_file /= Void then
+
+				if l_reuse_previous_as then
+					l_class_as := previous_class_as
+				elseif l_file /= Void then
 					check l_file_is_open_read: l_file.is_open_read end
 					l_parser.parse_class (l_file, current_class)
-					l_class_as := l_parser.root_node
 					l_file.close
-					if l_class_as /= Void then
-						Result := l_class_as.feature_with_name (Names_heap.id_of (current_feature_name))
-					end
+					l_class_as := l_parser.root_node
 				end
+
+				if l_class_as /= Void then
+					Result := l_class_as.feature_with_name (Names_heap.id_of (current_feature_name))
+				else
+					previous_built_in_code_path := l_empty_str
+				end
+				previous_class_as := l_class_as
 			else
 				if l_file /= Void and not l_file.is_closed then
 					l_file.close
@@ -116,8 +163,13 @@ feature {NONE} -- Implementation
 			built_in_code_path_not_void: Result /= Void
 		end
 
+	previous_class_as: CLASS_AS
+		-- Class Abstract Syntax retrieved from previous parse.
+
+	previous_built_in_code_path: STRING
+		-- Location where code of previous parse was located.
+
 invariant
-	current_class_not_void: current_class /= Void
-	current_feature_name_not_void: current_feature_name /= Void
+	current_feature_name_not_void: current_feature_name /= Void implies current_class /= Void
 
 end

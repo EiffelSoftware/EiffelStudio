@@ -14,6 +14,8 @@ inherit
 			make
 		end
 
+	
+
 	COMPILER_EXPORTER
 	SHARED_ERROR_HANDLER
 

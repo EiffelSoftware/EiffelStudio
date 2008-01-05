@@ -16,8 +16,8 @@ inherit
 	ARRAY [TYPE_I]
 		rename
 			make as array_make
-		redefine
-			put
+--		redefine
+--			put
 		end
 
 	SHARED_WORKBENCH
@@ -41,16 +41,17 @@ feature -- Initialization
 
 feature -- Setters
 
-	put (v: like item; i: INTEGER_32) is
-			--
-		do
-			if not v.is_formal then
-				Precursor (v,i)
-			else
-				Precursor (v,i)
-			end
+--| FIXME IEK This redefinition is pointless as is
+--	put (v: like item; i: INTEGER_32) is
+--			--
+--		do
+--			if not v.is_formal then
+--				Precursor (v,i)
+--			else
+--				Precursor (v,i)
+--			end
 
-		end
+--		end
 
 feature -- Comparison
 
@@ -60,15 +61,20 @@ feature -- Comparison
 			other_not_void: other /= Void
 		local
 			i, nb: INTEGER
+			l_area, l_other_area: like area
 		do
-			nb := count
-			Result := nb = other.count
+				-- Array 'lower' of `Current' is always one so 'upper' is always `count'
+			nb := upper
+			Result := nb = other.upper
+			l_area := area
+			l_other_area := other.area
+				-- `l_area' access is zero based
 			from
-				i := 1
+--				i := 0
 			until
-				i > nb or else not Result
+				i = nb or else not Result
 			loop
-				Result := item (i).same_as (other.item (i))
+				Result := l_area [i].same_as (l_other_area [i])
 				i := i + 1
 			end
 		end

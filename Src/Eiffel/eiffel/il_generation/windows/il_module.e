@@ -1320,7 +1320,7 @@ feature -- Metadata description
 			interface_class_type: CLASS_TYPE
 			gen_type: GEN_TYPE_I
 		do
-			parents := class_c.parents
+			parents := class_c.conforming_parents
 			from
 				create l_list.make (parents.count)
 				parents.start

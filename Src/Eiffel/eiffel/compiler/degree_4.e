@@ -209,7 +209,6 @@ feature -- Processing
 			end
 
 			wipe_out
-
 			changed_status.wipe_out
 			l_system.set_current_class (Void)
 			l_degree_output.put_end_degree

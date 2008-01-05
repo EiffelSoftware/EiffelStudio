@@ -814,15 +814,22 @@ feature -- Comparison
 			-- Is `other' equal to Current ?
 			-- NOTE: we do not compare `true_generics'!
 		local
-			gen_type_i: GEN_TYPE_I
+--			gen_type_i: GEN_TYPE_I
 		do
-			gen_type_i ?= other
-			if gen_type_i /= Void then
-				Result := class_id = gen_type_i.class_id
-						and then is_expanded = gen_type_i.is_expanded
-						and then is_separate = gen_type_i.is_separate
-						and then meta_generic.same_as (gen_type_i.meta_generic)
+			if {l_gen_type_i: !GEN_TYPE_I} other then
+				Result := class_id = l_gen_type_i.class_id
+						-- 'class_id' is the same therefore we can just compare
+						-- 'declaration_mark' instead of comparing 'is_expanded' and 'is_separate' separately
+					and then declaration_mark = l_gen_type_i.declaration_mark
+					and then meta_generic.same_as (l_gen_type_i.meta_generic)
 			end
+--			gen_type_i ?= other
+--			if gen_type_i /= Void then
+--				Result := class_id = gen_type_i.class_id
+--						and then is_expanded = gen_type_i.is_expanded
+--						and then is_separate = gen_type_i.is_separate
+--						and then meta_generic.same_as (gen_type_i.meta_generic)
+--			end
 		end
 
 	has_actual (type: CL_TYPE_I): BOOLEAN is

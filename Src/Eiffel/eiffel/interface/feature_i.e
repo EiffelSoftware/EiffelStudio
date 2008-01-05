@@ -1625,6 +1625,7 @@ feature -- Signature instantiation
 		local
 			i, nb: INTEGER
 			old_type: TYPE_A
+			l_arguments: like arguments
 		do
 				-- Instantiation of the type
 			old_type ?= type
@@ -1632,12 +1633,15 @@ feature -- Signature instantiation
 				-- Instantiation of the arguments
 			from
 				i := 1
-				nb := argument_count
+				l_arguments := arguments
+				if l_arguments /= Void then
+					nb := l_arguments.count
+				end
 			until
 				i > nb
 			loop
-				old_type ?= arguments.i_th (i)
-				arguments.put_i_th (old_type.instantiated_in (parent_type), i)
+				old_type := l_arguments.i_th (i)
+				l_arguments.put_i_th (old_type.instantiated_in (parent_type), i)
 				i := i + 1
 			end
 		end
@@ -1650,19 +1654,25 @@ feature -- Signature instantiation
 		local
 			i, nb: INTEGER
 			old_type: TYPE_A
+			l_arguments: like arguments
+			l_written_in: like written_in
 		do
+			l_written_in := written_in
 				-- Instantiation of the type
 			old_type ?= type
-			set_type (old_type.instantiation_in (descendant_type, written_in), assigner_name_id)
+			set_type (old_type.instantiation_in (descendant_type, l_written_in), assigner_name_id)
 				-- Instantiation of the arguments
 			from
 				i := 1
-				nb := argument_count
+				l_arguments := arguments
+				if l_arguments /= Void then
+					nb := l_arguments.count
+				end
 			until
 				i > nb
 			loop
-				old_type ?= arguments.i_th (i)
-				arguments.put_i_th (old_type.instantiation_in (descendant_type, written_in), i)
+				old_type := l_arguments.i_th (i)
+				l_arguments.put_i_th (old_type.instantiation_in (descendant_type, l_written_in), i)
 				i := i + 1
 			end
 		end

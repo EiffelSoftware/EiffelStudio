@@ -7818,15 +7818,17 @@ feature -- Inline agents
 		local
 			inl_tbl: HASH_TABLE [FEATURE_I, INTEGER]
 		do
+			if eif_cl.has_inline_agents then
 				-- Generate
-			from
-				inl_tbl := eif_cl.inline_agent_table
-				inl_tbl.start
-			until
-				inl_tbl.after
-			loop
-				inline_agent_processor.call ([inl_tbl.item_for_iteration])
-				inl_tbl.forth
+				from
+					inl_tbl := eif_cl.inline_agent_table
+					inl_tbl.start
+				until
+					inl_tbl.after
+				loop
+					inline_agent_processor.call ([inl_tbl.item_for_iteration])
+					inl_tbl.forth
+				end
 			end
 		end
 

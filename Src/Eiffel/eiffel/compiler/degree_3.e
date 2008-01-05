@@ -44,16 +44,27 @@ feature -- Processing
 			l_class: EIFFEL_CLASS_C
 			l_conv_checker: CONVERTIBILITY_CHECKER
 			l_error_level: NATURAL_32
+			l_degree_output: like degree_output
+			l_system: like system
+			l_error_handler: like error_handler
+			l_full_class_checking_agent: PROCEDURE [ANY, TUPLE [CLASS_C]]
 		do
+			l_degree_output := degree_output
+			l_system := system
+			l_error_handler := error_handler
+
+				-- Create full class checking agent outside of loop to prevent unnecessary agent creation.
+			l_full_class_checking_agent := agent insert_class (?)
+
 			ignored_classes.wipe_out
-			Degree_output.put_start_degree (Degree_number, count)
-			classes := System.classes.sorted_classes
+			l_degree_output.put_start_degree (Degree_number, count)
+			classes := l_system.classes.sorted_classes
 
 				-- Check convertibility validity, there should be only one way
 				-- to convert one type to the other.
 			create l_conv_checker
 			l_conv_checker.system_validity_checking (classes)
-			Error_handler.checksum
+			l_error_handler.checksum
 
 			from
 				i := classes.lower
@@ -70,24 +81,21 @@ feature -- Processing
 					end
 					l_class := l_class_c.eiffel_class_c
 
-					Degree_output.put_degree_3 (l_class, count)
-					System.set_current_class (l_class)
-					l_error_level := error_handler.error_level
+					l_degree_output.put_degree_3 (l_class, count)
+					l_system.set_current_class (l_class)
+					l_error_level := l_error_handler.error_level
 					process_class (l_class)
 					if l_class.is_full_class_checking then
 							-- We need to add the descendant classes for checking
 							-- to ensure code is still valid.
-						l_class.direct_descendants.do_all (agent (a_class: CLASS_C)
-							do
-								insert_class (a_class)
-							end)
+						l_class.direct_descendants.do_all (l_full_class_checking_agent)
 					end
 						-- If class was in `ignored_classes', then we still need
 						-- to recheck it at the next compilation as otherwise we
 						-- would not typecheck inherited features after the ancestor
 						-- class fixed the error.
 					if not ignored_classes.has (l_class) then
-						if error_handler.error_level = l_error_level then
+						if l_error_handler.error_level = l_error_level then
 								-- No errors we can safely remove it from degree 3
 							l_class.remove_from_degree_3
 							count := count - 1
@@ -101,12 +109,12 @@ feature -- Processing
 			end
 
 				-- If there was an error, we cannot continue
-			error_handler.checksum
+			l_error_handler.checksum
 
 			update_assertions
 
-			System.set_current_class (Void)
-			Degree_output.put_end_degree
+			l_system.set_current_class (Void)
+			l_degree_output.put_end_degree
 		end
 
 feature {NONE} -- Processing

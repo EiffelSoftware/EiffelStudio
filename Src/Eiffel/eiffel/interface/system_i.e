@@ -72,6 +72,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATEFUL_VISITOR
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -1842,6 +1847,10 @@ end
 
 					-- Byte code production and type checking
 				process_degree_3
+
+					-- Reset built in processor so that any referenced CLASS_AS object is garbage collected.
+				built_in_processor.reset_all
+
 				debug ("timing")
 					create d2.make_now
 					print ("Degree 3 duration: ")

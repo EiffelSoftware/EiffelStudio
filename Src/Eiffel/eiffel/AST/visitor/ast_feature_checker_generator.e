@@ -88,6 +88,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATEFUL_VISITOR
+		export
+			{NONE} all
+		end
+
 	PREDEFINED_NAMES
 		export
 			{NONE} all
@@ -891,7 +896,9 @@ feature -- Roundtrip
 				process_routine_creation_as_ext (l_as, l_feature)
 			else
 				if not is_inherited and then is_byte_node_enabled then
-					l_cur_class.inline_agent_table.remove (l_feature.feature_name_id)
+					if l_cur_class.has_inline_agents then
+						l_cur_class.inline_agent_table.remove (l_feature.feature_name_id)
+					end
 				end
 				reset_types
 			end
@@ -1056,6 +1063,7 @@ feature -- Implementation
 			l_is_in_creation_expression, l_is_target_of_creation_instruction: BOOLEAN
 			l_feature_name: ID_AS
 			l_parameters: EIFFEL_LIST [EXPR_AS]
+			l_parameters_area: SPECIAL [EXPR_AS]
 			l_needs_byte_node: BOOLEAN
 			l_conv_info: CONVERSION_INFO
 			l_expr: EXPR_B
@@ -1305,12 +1313,13 @@ feature -- Implementation
 									-- Create l_parameters.
 								from
 									create l_parameters.make_filled (l_formal_count)
-									l_parameters.start
+									l_parameters_area := l_parameters.area
+									i := 0
 								until
-									l_parameters.after
+									i = l_formal_count
 								loop
-									l_parameters.put (create {OPERAND_AS}.initialize (Void, Void, Void))
-									l_parameters.forth
+									l_parameters_area.put (create {OPERAND_AS}.initialize (Void, Void, Void), i)
+									i := i + 1
 								end
 								l_actual_count := l_formal_count
 								current_target_type := Void
@@ -1801,7 +1810,13 @@ feature -- Implementation
 			l_last_types: like last_expressions_type
 			l_has_error: BOOLEAN
 			l_has_array_target: BOOLEAN
+			l_current_class: CLASS_C
+			l_current_class_void_safe: BOOLEAN
+			l_context: like context
 		do
+			l_context := context
+			l_current_class := l_context.current_class
+			l_current_class_void_safe := l_current_class.lace_class.is_void_safe
 			reset_for_unqualified_call_checking
 				-- Get target for manifest array creation (either through assignment or
 				-- argument passing).
@@ -1845,9 +1860,9 @@ feature -- Implementation
 						loop
 							l_element_type := l_last_types.item (i)
 							if not l_element_type.conform_to (l_type_a) then
-								if l_element_type.convert_to (context.current_class, l_type_a) then
+								if l_element_type.convert_to (l_current_class, l_type_a) then
 									if is_byte_node_enabled and not is_checking_cas then
-										l_list.put_i_th (context.last_conversion_info.byte_node (
+										l_list.put_i_th (l_context.last_conversion_info.byte_node (
 											l_list.i_th (i)), i)
 									end
 								else
@@ -1875,11 +1890,11 @@ feature -- Implementation
 						else
 							create l_array_type.make (system.array_id, l_generics)
 						end
-						if context.current_class.lace_class.is_void_safe then
+						if l_current_class_void_safe then
 								-- Type of a manifest array is always attached
 							l_array_type := l_array_type.as_attached
 						end
-						instantiator.dispatch (l_array_type, context.current_class)
+						instantiator.dispatch (l_array_type, l_current_class)
 					end
 				end
 				if l_array_type = Void then
@@ -1902,12 +1917,12 @@ feature -- Implementation
 									-- If not found it will be ANY.
 								if
 									l_element_type.conform_to (l_type_a) or
-									l_element_type.convert_to (context.current_class, l_type_a)
+									l_element_type.convert_to (l_current_class, l_type_a)
 								then
 										-- Nothing to be done
 								elseif
 									l_type_a.conform_to (l_element_type) or
-									l_type_a.convert_to (context.current_class, l_element_type)
+									l_type_a.convert_to (l_current_class, l_element_type)
 								then
 										-- Found a lowest type.
 									l_type_a := l_element_type
@@ -1959,9 +1974,9 @@ feature -- Implementation
 							loop
 								l_element_type := l_last_types.item (i)
 								if not l_element_type.conform_to (l_type_a) then
-									if l_element_type.convert_to (context.current_class, l_type_a) then
+									if l_element_type.convert_to (l_current_class, l_type_a) then
 										if is_byte_node_enabled and not is_checking_cas then
-											l_list.put_i_th (context.last_conversion_info.byte_node (
+											l_list.put_i_th (l_context.last_conversion_info.byte_node (
 												l_list.i_th (i)), i)
 										end
 									else
@@ -1976,22 +1991,22 @@ feature -- Implementation
 							create l_generics.make (1, 1)
 							l_generics.put (l_type_a, 1)
 							create l_array_type.make (system.array_id, l_generics)
-							if context.current_class.lace_class.is_void_safe then
+							if l_current_class_void_safe then
 									-- Type of a manifest array is always attached
 								l_array_type := l_array_type.as_attached
 							end
-							instantiator.dispatch (l_array_type, context.current_class)
+							instantiator.dispatch (l_array_type, l_current_class)
 						end
 					else
 							-- Empty manifest array
 						create l_generics.make (1, 1)
 						l_generics.put (create {CL_TYPE_A}.make (system.any_id), 1)
 						create l_array_type.make (system.array_id, l_generics)
-						if context.current_class.lace_class.is_void_safe then
+						if l_current_class_void_safe then
 								-- Type of a manifest array is always attached
 							l_array_type := l_array_type.as_attached
 						end
-						instantiator.dispatch (l_array_type, context.current_class)
+						instantiator.dispatch (l_array_type, l_current_class)
 					end
 				end
 
@@ -2071,8 +2086,10 @@ feature -- Implementation
 					-- If associated feature is not an external anymore, it means that it was interpreted
 					-- by our compiler as a real `built_in'.
 				if l_external = Void then
-					create l_built_in_processor.make (context.current_class, current_feature.feature_name, system.il_generation)
+					l_built_in_processor := built_in_processor
+					l_built_in_processor.set_current_class_and_feature_name (context.current_class, current_feature.feature_name, System.il_generation)
 					l_feature_as := l_built_in_processor.ast_node
+					l_built_in_processor.reset
 					if l_feature_as /= Void and then l_feature_as.body.content /= Void then
 							-- Only interprets the `built_in' implementation if this is not an attribute.
 						create l_feature_checker
@@ -5360,6 +5377,7 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
 			l_initialized_variable: like last_initialized_variable
+			l_current_class_void_safe: BOOLEAN
 		do
 			l_error_level := error_level
 			break_point_slot_count := break_point_slot_count + 1
@@ -5378,6 +5396,8 @@ feature -- Implementation
 				-- a feature of the current class, it is not reset when it is a local,
 				-- that's why we reset it.
 			is_target_of_creation_instruction := False
+
+			l_current_class_void_safe := context.current_class.lace_class.is_void_safe
 			l_target_type := last_type
 			if l_target_type /= Void then
 				if l_needs_byte_node then
@@ -5396,7 +5416,7 @@ feature -- Implementation
 						l_as.type.process (Current)
 						l_explicit_type := last_type
 							-- If `l_explicit_type' is Void then we stop the process here.
-						if l_explicit_type /= Void and then not l_explicit_type.is_attached and then context.current_class.lace_class.is_void_safe then
+						if l_explicit_type /= Void and then not l_explicit_type.is_attached and then l_current_class_void_safe then
 								-- Creation type is always attached
 							l_explicit_type := l_explicit_type.as_attached
 							last_type := l_explicit_type
@@ -5440,7 +5460,7 @@ feature -- Implementation
 								l_creation_type := l_explicit_type
 							else
 								l_creation_type := l_target_type
-								if not l_creation_type.is_attached and then context.current_class.lace_class.is_void_safe then
+								if not l_creation_type.is_attached and then l_current_class_void_safe then
 										-- Creation type is always attached.
 									l_creation_type := l_creation_type.as_attached
 									last_type := l_creation_type
@@ -7437,6 +7457,7 @@ feature {NONE} -- Agents
 			l_array_of_opens: ARRAY_CONST_B
 			l_operand_node: OPERAND_B
 			l_actual_target_type: TYPE_A
+			l_current_class_void_safe: BOOLEAN
 		do
 			if a_is_query then
 				if a_feat_type.is_boolean then
@@ -7592,14 +7613,15 @@ feature {NONE} -- Agents
 
 				-- Create open argument type tuple
 			create l_tuple.make (System.tuple_id, l_oargtypes)
-			if context.current_class.lace_class.is_void_safe and then l_oargtypes.count > 0 then
+			l_current_class_void_safe := context.current_class.lace_class.is_void_safe
+			if l_current_class_void_safe and then l_oargtypes.count > 0 then
 					-- Type of an argument tuple is always attached.
 				l_tuple := l_tuple.as_attached
 			end
 				-- Insert it as second generic parameter of ROUTINE.
 			l_generics.put (l_tuple, 2)
 
-			if context.current_class.lace_class.is_void_safe then
+			if l_current_class_void_safe then
 					-- Type of an agent is always attached.
 				l_result_type := l_result_type.as_attached
 			end

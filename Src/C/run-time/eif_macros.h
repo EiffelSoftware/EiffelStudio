@@ -1248,7 +1248,7 @@ RT_LNK EIF_TYPE_INDEX fcount;
 		 eif_compound_id ((tp), 0, (y), (z)))
 #define RTCID2(tp,x,y,z)	\
 		eif_compound_id((tp), (x),(y),(z))
-#define RTFCID(ct,x,y,z,u)	eif_final_id(x),(y), Dftype(z),(u))
+#define RTFCID(ct,x,y,z,u)	eif_final_id((x),(y), Dftype(z),(u))
 #define RTFCID2(ct,x,y,z,u)	eif_final_id((x),(y),(z),(u))
 #define RTGPTID(st,x,y)		eif_gen_param_id ((st), Dftype(x),(y))
 #ifdef WORKBENCH

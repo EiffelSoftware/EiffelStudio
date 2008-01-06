@@ -142,6 +142,10 @@
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
+		<setting name="check_for_void_target" value="false"/>
+		<setting name="exception_trace" value="false"/>
+		<setting name="executable_name" value="ecb"/>
+		<setting name="multithreaded" value="false"/>
 		<variable name="batch_preferences" value="true"/>
 		<variable name="batch_framework" value="true"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf" readonly="false">

@@ -18,7 +18,6 @@ feature {NONE} -- Creation
 	make (l: like lcurly_symbol; n: like name; t: like type; e: like expression) is
 			-- Create new node with given attributes.
 		require
-			l_attached: l /= Void
 			n_attached: n /= Void
 			t_attached: t /= Void
 			e_attached: e /= Void
@@ -62,13 +61,10 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := name.first_token (a_list)
-			else
-				check
-					lcurly_symbol /= Void
-				end
+			if lcurly_symbol /= Void then
 				Result := lcurly_symbol.first_token (a_list)
+			else
+				Result := name.first_token (a_list)
 			end
 		end
 

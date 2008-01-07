@@ -51,7 +51,7 @@ feature -- Roundtrip
 	set_index (i: INTEGER) is
 			-- Set `index' with `i'.
 		require
-			i_not_negative: i > 0
+			i_non_negative: i >= 0
 		do
 			index := i
 		ensure

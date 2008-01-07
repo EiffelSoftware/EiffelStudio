@@ -78,10 +78,10 @@ exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/studio studio
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 cdd %STUDIO_DIR\studio\spec
+move windows\compile_library.bat %ISE_PLATFORM\bin\
 iff "windows"=="%ISE_PLATFORM" then
 	fullrd win64
 else
-	move windows\compile_library.bat %ISE_PLATFORM\bin\
 	fullrd windows
 endiff
 cdd %STUDIO_DIR\studio\config

@@ -75,11 +75,11 @@ nmake /nologo
 remtrace Preparing GPL edition
 nmake /nologo gpl_%WINNAME
 copy %INIT_DIR\install\bin\studio_gpl_%WINNAME\package.msi %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.msi
+scp %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.msi manus@eiffel.com:builds/
 
 remtrace Preparing Commercial edition
 nmake /nologo enterprise_%WINNAME
 copy %INIT_DIR\install\bin\studio_ent_%WINNAME\package.msi %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_enterprise_%SVN_VERSION-%ISE_PLATFORM%.msi
-
 
 remtrace ----------------------------------------------
 remtrace Building the Zips
@@ -92,6 +92,7 @@ if .%IS_WIN64%. == .no. (
 )
 copy %INSTALL_DIR\releases\gpl_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 7z a -t7z %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+scp %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.7z manus@eiffel.com:builds/
 
 copy %INSTALL_DIR\releases\enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 7z a -t7z %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_enterprise_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG

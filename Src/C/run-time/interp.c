@@ -1899,7 +1899,7 @@ rt_private void interpret(int flag, int where)
 			}
 			stagval = tagval;
 				/* Create new object */
-			new_obj = RTLNRW((int16)type, 0, 0, 0, class_id, feature_id, open_map, is_precompiled, 
+			new_obj = RTLNRW(type, 0, 0, 0, class_id, feature_id, open_map, is_precompiled, 
 							 is_basic, is_target_closed, is_inline_agent, closed_operands, open_count);
 			
 			last = iget();				/* Push a new value onto the stack */
@@ -1986,7 +1986,7 @@ rt_private void interpret(int flag, int where)
 			uint32 elem_size = 0, bit_size = 0, i = 0;
 			uint16 flags = 0;
 			EIF_TYPED_VALUE *nb_item;
-			int16 exp_type;
+			EIF_TYPE_INDEX exp_type;
 			uint32 nb = 0;
 
 			type = get_creation_type ();

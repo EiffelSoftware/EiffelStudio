@@ -171,7 +171,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	long offset_bis = 0;					/* offset already taken :-) */
 	EIF_TYPE_INDEX   typres;
 #ifdef WORKBENCH
-	int16 curr_dtype;
+	EIF_TYPE_INDEX curr_dtype;
 
 	curr_dtype = Dtype(curr);	/* Dynamic type of current object instance */
 #endif

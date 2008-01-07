@@ -356,7 +356,7 @@ rt_public EIF_TYPE_INDEX wtype_gen(EIF_TYPE_INDEX static_type, int32 feature_id,
 	CGENFeatType(type,gen_type,rout_id,dyn_type);
 
 	if (gen_type) {
-		*gen_type = eif_id_for_typarr ((int16)dyn_type);
+		*gen_type = eif_id_for_typarr (dyn_type);
 	}
 
 	return eif_compound_id (NULL, Dftype (object), type, gen_type);
@@ -415,8 +415,8 @@ rt_shared struct desc_info ***desc_tab;
 
 
 struct bounds { 			/* Structure used to record min/max dtypes */
-	int16 min;
-	int16 max;
+	EIF_TYPE_INDEX min;
+	EIF_TYPE_INDEX max;
 };
 
 /*
@@ -441,8 +441,8 @@ rt_public char desc_fill;				/* Flag for descriptor table initialization */
 
 struct mdesc {				/* Structure used to record melted descriptor */
 	struct desc_info *desc_ptr;
-	int16 origin;
-	int16 type;
+	EIF_TYPE_INDEX origin;
+	EIF_TYPE_INDEX type;
 };
 
 /*
@@ -491,7 +491,7 @@ rt_public void init_desc(void)
 	struct bounds def;
 
 	def.max = -1;
-	def.min = (int16) ccount;
+	def.min = (EIF_TYPE_INDEX) ccount;
 	bounds_tab = (struct bounds *) cmalloc (sizeof(struct bounds) * (ccount + 1));	
 	if (bounds_tab == NULL)
 		enomem(MTC_NOARG);
@@ -523,8 +523,8 @@ rt_public void put_desc(struct desc_info *desc_ptr, int org, int dtype)
 		(desc_tab[org])[dtype] = desc_ptr;
 	} else {
 		b = bounds_tab+org;
-		b->min = (int16) (b->min + ((dtype<b->min)?(dtype-b->min):0));
-		b->max = (int16) (b->max + ((dtype>b->max)?(dtype-b->max):0));
+		b->min = (EIF_TYPE_INDEX) (b->min + ((dtype<b->min)?(dtype-b->min):0));
+		b->max = (EIF_TYPE_INDEX) (b->max + ((dtype>b->max)?(dtype-b->max):0));
 	}
 }
 
@@ -543,8 +543,8 @@ rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 
 	if (0 == desc_fill) {
 		b = bounds_tab+org;
-		b->min = (int16) (b->min + ((dtype<b->min)?(dtype-b->min):0));
-		b->max = (int16) (b->max + ((dtype>b->max)?(dtype-b->max):0));
+		b->min = (EIF_TYPE_INDEX) (b->min + ((dtype<b->min)?(dtype-b->min):0));
+		b->max = (EIF_TYPE_INDEX) (b->max + ((dtype>b->max)?(dtype-b->max):0));
 	}	
 
 	/* Insert information in temporary table */
@@ -558,8 +558,8 @@ rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 	}
 
 	md.desc_ptr = desc_ptr;
-	md.origin = (int16) org;
-	md.type = (int16) dtype;
+	md.origin = (EIF_TYPE_INDEX) org;
+	md.type = (EIF_TYPE_INDEX) dtype;
 
 	mdesc_tab[mdesc_count++] = md;
 }

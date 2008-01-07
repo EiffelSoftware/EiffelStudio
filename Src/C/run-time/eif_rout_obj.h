@@ -50,7 +50,7 @@ extern "C" {
    argument tuple `args', open map `omap' and closed map `cmap'
 */
 RT_LNK EIF_REFERENCE rout_obj_create2 (
-								int16 dftype, 
+								EIF_TYPE_INDEX dftype, 
 								EIF_POINTER rout_disp, 
 								EIF_POINTER encaps_rout_disp, 
 								EIF_POINTER calc_rout_addr, 
@@ -65,7 +65,7 @@ RT_LNK EIF_REFERENCE rout_obj_create2 (
 								EIF_INTEGER open_count);
 #ifdef WORKBENCH
 RT_LNK EIF_REFERENCE rout_obj_create_wb (
-								int16 dftype, 
+								EIF_TYPE_INDEX dftype, 
 								EIF_POINTER rout_disp, 
 								EIF_POINTER encaps_rout_disp, 
 								EIF_POINTER calc_rout_addr, 
@@ -80,7 +80,7 @@ RT_LNK EIF_REFERENCE rout_obj_create_wb (
 								EIF_INTEGER open_count);
 #else
 RT_LNK EIF_REFERENCE rout_obj_create_fl (
-								int16 dftype, 
+								EIF_TYPE_INDEX dftype, 
 								EIF_POINTER rout_disp, 
 								EIF_POINTER encaps_rout_disp, 
 								EIF_POINTER calc_rout_addr, 

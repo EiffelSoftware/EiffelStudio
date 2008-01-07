@@ -445,7 +445,7 @@ rt_private void root_class_updt (void)
 	egc_rcorigin = wint32();
 
 		/* Create an instance of ANY, to give us a context. */
-	l_obj = RTLNSMART((int16)wint32());
+	l_obj = RTLNSMART((EIF_TYPE_INDEX) wint32());
 		/* compute the full dynamic type for `root_obj'. */
 	IC = (unsigned char *) wtype_array(NULL);
 	egc_rcdt = get_compound_id (l_obj, get_int16(&IC));
@@ -693,7 +693,7 @@ rt_private void parents_updt(void)
 
 		/* Number of generics */
 
-		pt->nb_generics = (int16) wshort ();
+		pt->nb_generics = (uint16) wshort ();
 
 		/* Read class name */
 

@@ -1404,7 +1404,7 @@ rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
 
 	if ((dftype == NONE_TYPE) || (dftype < first_gen_id)) {
 		cid_array [1] = dftype;
-		return (EIF_TYPE_INDEX *) cid_array;
+		return cid_array;
 	}
 
 	/* It's a run-time generated id */

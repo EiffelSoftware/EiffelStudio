@@ -1627,7 +1627,7 @@ rt_private void string_inspect(EIF_OBJ object)
 	long nb_attr;					/* Attribute number */
 	int32 *cn_attr;				/* Attribute keys */
 	long offset;
-	int16 dtype;				/* Object dynamic type */
+	EIF_TYPE_INDEX dtype;				/* Object dynamic type */
 	char *o_ref;
 	char **names;					/* Attribute names */
 	char *reference;
@@ -1664,7 +1664,6 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 	EIF_INTEGER elem_size;				/* Element size */
 	char *o_ref;
 	EIF_INTEGER count;					/* Element count */
-	int dtype;
 	char *new_object_attr;		/* new value for the attribute (if new value is a reference) */
 	unsigned char error_code = 0;
 
@@ -1673,7 +1672,6 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, EIF_TYPED_
 	count = RT_SPECIAL_COUNT_WITH_INFO (o_ref);
 	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ref);
 	flags = zone->ov_flags;
-	dtype = Dtype(object);
 
 	/* Send the items within the bounds */
 	if (!(flags & EO_REF)) {

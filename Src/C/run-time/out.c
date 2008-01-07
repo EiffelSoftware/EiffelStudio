@@ -166,7 +166,7 @@ rt_shared char *build_out(EIF_REFERENCE object)
 
 	if (flags & EO_SPEC) {
 			/* Special object */
-		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename((int16) Dftype(object)),
+		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename(Dftype(object)),
 			(rt_uint_ptr) object);
 		write_out();
 		if (flags & EO_TUPLE) {
@@ -343,7 +343,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			break;
 		case SK_EXP:
 			/* Expanded attribute */
-			sprintf(buffero, "expanded %s\n", eif_typename((int16) Dftype(o_ref)));
+			sprintf(buffero, "expanded %s\n", eif_typename(Dftype(o_ref)));
 			write_out();
 			write_tab (tab + 2);
 			sprintf(buffero, "-- begin sub-object --\n");
@@ -366,7 +366,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 					write_out();
 				} else if (ref_flags & EO_SPEC) {
 					if (ref_flags & EO_TUPLE) {
-						sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename ((int16) Dftype(reference)),
+						sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename (Dftype(reference)),
 							(rt_uint_ptr) reference);
 						write_out();
 						write_tab(tab + 2);
@@ -380,7 +380,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 						write_out();
 
 					} else {
-						sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename ((int16) Dftype(reference)),
+						sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename (Dftype(reference)),
 							(rt_uint_ptr) reference);
 						write_out();
 						write_tab(tab + 2);
@@ -395,7 +395,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 					}
 				} else {
 					sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
-						eif_typename((int16) Dftype(reference)), (rt_uint_ptr) reference);
+						eif_typename(Dftype(reference)), (rt_uint_ptr) reference);
 					write_out();
 				}
 			} else {
@@ -433,7 +433,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				write_tab(tab + 1);
 				sprintf(buffero, "%ld: expanded ", (long) (old_count - count));
 				write_out();
-				sprintf(buffero, "%s\n", eif_typename((int16)Dftype(o_ref)));
+				sprintf(buffero, "%s\n", eif_typename(Dftype(o_ref)));
 				write_out();
 				write_tab(tab + 2);
 				sprintf(buffero, "-- begin sub-object --\n");
@@ -521,7 +521,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) reference);
 			else
 				sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
-					eif_typename((int16) Dftype(reference)), (rt_uint_ptr) reference);
+					eif_typename(Dftype(reference)), (rt_uint_ptr) reference);
 			write_out();
 		}
 }
@@ -532,7 +532,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 	RT_GET_CONTEXT
 	unsigned int count = RT_SPECIAL_COUNT (object);
 	unsigned int i = 1;
-	int16 dftype = (int16) Dftype (object);
+	EIF_TYPE_INDEX dftype = Dftype (object);
 
 	REQUIRE("Is tuple", HEADER(object)->ov_flags & EO_TUPLE);
 
@@ -569,7 +569,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 					write_out();
 				} else {
 					sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
-						eif_typename((int16) Dftype(eif_reference_item(object,i))),
+						eif_typename(Dftype(eif_reference_item(object,i))),
 						(rt_uint_ptr) eif_reference_item(object,i));
 					write_out();
 				}

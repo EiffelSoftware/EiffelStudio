@@ -1085,7 +1085,7 @@ rt_public EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 coun
 		eif_tuple_item_sk_type(l_item) = SK_BOOL;
 		l_item++;
 		for (i = 1; i < count; i++,l_item++) {
-			switch (eif_gen_typecode_with_dftype((int16)ftype, i)) {
+			switch (eif_gen_typecode_with_dftype(ftype, i)) {
 				case EIF_BOOLEAN_CODE:    t = SK_BOOL; break;
 				case EIF_CHARACTER_CODE:  t = SK_CHAR; break;
 				case EIF_WIDE_CHAR_CODE:  t = SK_WCHAR; break;
@@ -1382,7 +1382,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	if (need_expanded_initialization) {
 	   		/* Case of a special object of expanded structures. */
 			/* Initialize remaining items. */
-		object = sp_init(object, eif_gen_param_id (INVALID_DTYPE, (int16) Dftype(object), 1), count, nbitems - 1);
+		object = sp_init(object, eif_gen_param_id (INVALID_DTYPE, Dftype(object), 1), count, nbitems - 1);
 	}
 
 #ifdef ISE_GC

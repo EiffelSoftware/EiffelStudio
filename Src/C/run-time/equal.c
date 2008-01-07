@@ -162,7 +162,7 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 		
 			/* Second condition: block equality */
 			return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
-		} else if (Dftype(source) == (int16) egc_bit_dtype) {
+		} else if (Dftype(source) == egc_bit_dtype) {
 				/* Eiffel standard equality on BIT objects */
 			return b_equal (source, target);
 		} else {

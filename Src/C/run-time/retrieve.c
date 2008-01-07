@@ -3315,7 +3315,7 @@ rt_private int attribute_types_matched (EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *
 	if (type_defined (atype) && type_description (atype)->new_dftype != TYPE_UNDEFINED) {
 		EIF_TYPE_INDEX dftype;
 		int i, l_count = CIDARR_SIZE;
-		EIF_TYPE_INDEX *l_cid = (EIF_TYPE_INDEX *) cidarr;
+		EIF_TYPE_INDEX *l_cid = cidarr;
 		for (i = 0; gtypes[i] != TERMINATOR; i++) {
 				/* Make sure we don't go outside the bounds of `l_cid'. */
 			if ((i + 1) >= l_count) {
@@ -3343,7 +3343,7 @@ rt_private int attribute_types_matched (EIF_TYPE_INDEX *gtypes, EIF_TYPE_INDEX *
 		l_cid [0] = (EIF_TYPE_INDEX) i;
 		l_cid [i + 1] = TERMINATOR;
 		dftype = eif_compound_id (NULL, 0, l_cid[1], l_cid);
-		if (l_cid != (EIF_TYPE_INDEX *) cidarr) {
+		if (l_cid != cidarr) {
 			free(l_cid);
 		}
 		result = (dftype == type_description (atype)->new_dftype);
@@ -5236,7 +5236,7 @@ rt_private EIF_TYPE_INDEX rt_read_cid (EIF_TYPE_INDEX odtype)
 				xraise(EN_MEM);
 			}
 		} else {
-			l_cid = (EIF_TYPE_INDEX *) cidarr;
+			l_cid = cidarr;
 		}
 		l_cid [0] = count;
 		buffer_read ((char *) (l_cid + 1), count * sizeof (EIF_TYPE_INDEX));
@@ -5294,7 +5294,7 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 				xraise(EN_MEM);
 			}
 		} else {
-			l_cid = (EIF_TYPE_INDEX *) cidarr;
+			l_cid = cidarr;
 		}
 
 		if (rt_kind_version >= INDEPENDENT_STORE_5_5) {

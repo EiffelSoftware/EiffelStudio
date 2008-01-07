@@ -28,11 +28,6 @@ inherit
 	SHARED_NAMES_HEAP
 	COMPILER_EXPORTER
 
-	SYNTAX_STRINGS
-		export
-			{NONE} all
-		end
-
 feature
 
 	parent_type: CL_TYPE_A

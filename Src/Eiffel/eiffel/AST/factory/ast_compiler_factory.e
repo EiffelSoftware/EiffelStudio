@@ -273,6 +273,7 @@ feature -- Access
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
+				Result.set_position (l, c, p, n)
 			end
 		end
 
@@ -281,6 +282,7 @@ feature -- Access
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
+				Result.set_position (l, c, p, n)
 			end
 		end
 
@@ -289,6 +291,7 @@ feature -- Access
 		do
 			if v /= Void then
 				create Result.make_from_octal_string (t, s, v)
+				Result.set_position (l, c, p, n)
 			end
 		end
 
@@ -297,6 +300,7 @@ feature -- Access
 		do
 			if v /= Void then
 				create Result.make_from_binary_string (t, s, v)
+				Result.set_position (l, c, p, n)
 			end
 		end
 

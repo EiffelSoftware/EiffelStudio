@@ -136,7 +136,7 @@ typedef struct tag_rt_globals
 #endif
 
 		/* gen_conf.c */
-	int16 cid_array_cx[3];
+	EIF_TYPE_INDEX cid_array_cx[3];
 	char **non_generic_type_names_cx;
 
 		/* out.c */
@@ -177,7 +177,7 @@ typedef struct tag_rt_globals
 	char *stream_buffer_cx;
 	int stream_buffer_position_cx;
 	size_t stream_buffer_size_cx;
-	int16 cidarr_cx[CIDARR_SIZE];
+	EIF_TYPE_INDEX cidarr_cx[CIDARR_SIZE];
 	EIF_PROCEDURE mismatch_information_initialize_cx;
 	EIF_PROCEDURE mismatch_information_add_cx;
 	EIF_OBJECT mismatch_information_object_cx;

@@ -613,7 +613,7 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER *p)
 	/* To be implementated 
 	EIF_REFERENCE array;
  
-	array = emalloc((uint32)eif_typeof_array_of((int16)egc_str_dtype));
+	array = emalloc(eif_typeof_array_of(egc_str_dtype));
 	*/
  
 #if defined EIF_WINDOWS || defined EIF_OS2

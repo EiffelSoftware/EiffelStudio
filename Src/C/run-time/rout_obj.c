@@ -56,7 +56,7 @@ doc:<file name="rout_obj.c" header="eif_rout_obj.h" version="$Id$" summary="Rout
 /* Create a ROUTINE object of type `dftype'. Use the arguements for */
 /* the call to `set_rout_disp'.									    */
 /*------------------------------------------------------------------*/
-rt_public EIF_REFERENCE rout_obj_create2 ( int16 dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, 
+rt_public EIF_REFERENCE rout_obj_create2 ( EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, 
 										   EIF_POINTER calc_rout_addr, EIF_INTEGER class_id, EIF_INTEGER feature_id, 
 										   EIF_REFERENCE open_map,
 										   EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_BOOLEAN is_target_closed,
@@ -101,7 +101,7 @@ rt_public EIF_REFERENCE rout_obj_create2 ( int16 dftype, EIF_POINTER rout_disp, 
 /* Create a ROUTINE object of type `dftype'. Use the arguements for */
 /* the call to `set_rout_disp'.									    */
 /*------------------------------------------------------------------*/
-rt_public EIF_REFERENCE rout_obj_create_wb ( int16 dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, 
+rt_public EIF_REFERENCE rout_obj_create_wb ( EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, 
 										     EIF_POINTER calc_rout_addr, EIF_INTEGER class_id, EIF_INTEGER feature_id, 
 										     EIF_REFERENCE open_map,
 										     EIF_BOOLEAN is_precompiled, EIF_BOOLEAN is_basic, EIF_BOOLEAN is_target_closed,
@@ -183,7 +183,7 @@ rt_public EIF_REFERENCE rout_obj_create_wb ( int16 dftype, EIF_POINTER rout_disp
 /* Create a ROUTINE object of type `dftype' in finalized mode.		*/
 /* Use the arguements for the call to `set_rout_disp'.				*/
 /*------------------------------------------------------------------*/
-rt_public EIF_REFERENCE rout_obj_create_fl (int16 dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, EIF_POINTER calc_rout_addr, 
+rt_public EIF_REFERENCE rout_obj_create_fl (EIF_TYPE_INDEX dftype, EIF_POINTER rout_disp, EIF_POINTER encaps_rout_disp, EIF_POINTER calc_rout_addr, 
 											EIF_REFERENCE closed_operands, EIF_BOOLEAN is_target_closed, EIF_INTEGER open_count)
 {
 	EIF_GET_CONTEXT

@@ -201,7 +201,7 @@ rt_private void account_type (EIF_TYPE_INDEX dftype, int p_accounting)
 
 # ifdef RECOVERABLE_DEBUG
 	if ((account[dtype] & ACCOUNT_TYPE) == 0) {
-		printf ("Processing traversal of %s\n", eif_typename ((int16) dftype));
+		printf ("Processing traversal of %s\n", eif_typename (dftype));
 	}
 # endif
 

@@ -6,6 +6,10 @@ CG = Code Generation
 6.2
 ===
 
+6.2.7.1786 dynamic calls cost:
+201.54u 11.97s 4:11.15 85.0%: normal optimization of dynamic to static calls (exe size: 15826368)
+400.24u 13.74s 7:31.35 91.7%: all calls are dynamic (exe size: 21097208)
+
 6.2.7.1695 non-everything with optimized dtype (exe size: 15825048 bytes):
 210.51u 12.49s 4:22.34 85.0%
 210.75u 11.95s 4:26.49 83.5%

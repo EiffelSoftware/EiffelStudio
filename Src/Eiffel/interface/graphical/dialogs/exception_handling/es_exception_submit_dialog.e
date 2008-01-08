@@ -14,6 +14,8 @@ inherit
 	ES_DIALOG
 		rename
 			make as make_dialog
+		redefine
+			on_before_show
 		end
 
 	SYSTEM_CONSTANTS
@@ -484,6 +486,18 @@ feature {NONE} -- Action handlers
 			if l_text = Void or else l_text.is_empty then
 				a_text_widget.set_foreground_color (colors.grid_disabled_item_text_color)
 				a_text_widget.set_text (a_default_text)
+			end
+		end
+
+	on_before_show is
+			-- Redefine
+		local
+			l_dialog: EV_DIALOG
+		do
+			Precursor {ES_DIALOG}
+			l_dialog := dialog
+			if l_dialog /= Void and then l_dialog.default_push_button /= Void then
+				l_dialog.remove_default_push_button
 			end
 		end
 

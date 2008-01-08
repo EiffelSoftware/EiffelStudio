@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"PO-Revision-Date: 2007-06-14 19:19+0800\n"
+"PO-Revision-Date: 2008-01-08 15:46+0800\n"
 
 #. Source code: default_quick_melt_the_system: STRING_GENERAL is			do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
@@ -20299,7 +20299,7 @@ msgstr "请指定一个类(或者用*号表示所有类)"
 #. 	<PREF NAME="general.pnd_mode" DESCRIPTION="Use Pick and Drop mode? Contextual mode if false." HIDDEN="False"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:618
 msgid "Pnd mode"
-msgstr "右键模式"
+msgstr "拾放模式"
 
 #. Source code: Result.force (locale.translation ("Polish"), "pl")
 #: locale_names.e:98

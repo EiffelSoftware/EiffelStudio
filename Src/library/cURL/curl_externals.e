@@ -25,6 +25,17 @@ feature -- Command
 			end
 		end
 
+	global_cleanup is
+			-- Declared as curl_global_cleanup().
+		local
+			l_ptr: POINTER
+		do
+			l_ptr := api_loader.safe_load_api (module_name, "curl_global_cleanup")
+			if l_ptr /= default_pointer then
+				c_curl_global_cleanup (l_ptr);
+			end
+		end
+
 	formadd_string_string (a_form: CURL_FORM; a_last_pointer: CURL_FORM; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER) is
 			-- Declared as curl_formadd ().
 		require
@@ -165,7 +176,7 @@ feature {NONE} -- C externals
 		end
 
 	c_curl_global_init (a_api: POINTER; a_opt: NATURAL_64) is
-			-- `a_api' point to AIP curl_global_init ()
+			-- `a_api' point to API curl_global_init ()
 			-- `a_opt' is intialization option.
 		require
 			exists: a_api /= default_pointer
@@ -174,6 +185,18 @@ feature {NONE} -- C externals
 		alias
 			"[
 				(FUNCTION_CAST(void, (long)) $a_api)((long) $a_opt);
+			]"
+		end
+
+	c_curl_global_cleanup (a_api: POINTER) is
+			-- `a_api' point to API curl_global_cleanup()
+		require
+			exists: a_api /= default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				(FUNCTION_CAST(void, ()) $a_api)();
 			]"
 		end
 

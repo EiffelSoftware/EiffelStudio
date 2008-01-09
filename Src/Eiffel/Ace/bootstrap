@@ -11,6 +11,7 @@
 #           improved the performance of the compiler.
 
 set target = "batch"
+set ec_name = "ecb"
 #set target = "bench"
 
 set compile_type=F_code
@@ -27,16 +28,16 @@ mkdir $compile_type
 
 #First stage of bootstrap
 echo "Stage 1:"
-(time ec -local -finalize -config ec.ecf -target $target -batch -clean >& e_comp1 )>> e_comp1
+(time $ec_name -local -finalize -config ec.ecf -target $target -batch -clean >& e_comp1 )>> e_comp1
 echo "  Size is: `du -sh EIFGENs/$target/COMP`"
 echo "  Epr size is: `du -sh EIFGENs/$target/project.epr`"
 echo "  Time is: `tail -1 e_comp1`"
 chdir EIFGENs/$target/$compile_type
 echo "  Launching C compilation"
 (time finish_freezing >& ../../../c_comp1 )>> ../../../c_comp1
-strip ec
-echo "  ec size is: `du -sh ec`"
-mv ec ../../../ec_stage1
+strip $ec_name
+echo "  ec size is: `du -sh $ec_name`"
+mv $ec_name ../../../ec_stage1
 chdir ..
 mv $compile_type ../../$compile_type/stage1
 chdir ../..
@@ -52,9 +53,9 @@ if ( -e ec_stage1 ) then
 	chdir EIFGENs/$target/$compile_type
 	echo "  Launching C compilation"
 	(time finish_freezing >& ../../../c_comp2)>> ../../../c_comp2
-	strip ec
-	echo "  ec size is: `du -sh ec`"
-	mv ec ../../../ec_stage2
+	strip $ec_name
+	echo "  ec size is: `du -sh $ec_name`"
+	mv $ec_name ../../../ec_stage2
 	chdir ..
 	mv $compile_type ../../$compile_type/stage2
 	chdir ../..
@@ -70,9 +71,9 @@ if ( -e ec_stage1 ) then
 		chdir EIFGENs/$target/$compile_type
 		echo "  Launching C compilation"
 		(time finish_freezing >& ../../../c_comp3)>> ../../../c_comp3
-		strip ec
-		echo "  ec size is: `du -sh ec`"
-		mv ec ../../../ec_stage3
+		strip $ec_name
+		echo "  ec size is: `du -sh $ec_name`"
+		mv $ec_name ../../../ec_stage3
 		chdir ..
 		mv $compile_type ../../$compile_type/stage3
 		chdir ../..

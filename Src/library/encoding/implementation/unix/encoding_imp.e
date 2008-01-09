@@ -249,10 +249,10 @@ feature {NONE} -- Implementation
 					*$a_b = 1;
 					return NULL;
 				}
-
+				
 				wrptr = res;   /* duplicate pointers because they */
 				inptr = $a_str; /* get modified by iconv */
-
+				
 				cd = iconv_open ($a_to_codeset, $a_from_codeset);
 				if (cd == (iconv_t)(-1)) {
 					*$a_b = 3;
@@ -292,11 +292,11 @@ feature {NONE} -- Implementation
 						}
 					}
 				} while (insize);
-
+				
 				if (iconv_close(cd)) {
 					*$a_b = 8;
 				}
-
+				
 				*$a_out_count = alloc - avail;
 				
 				return res;

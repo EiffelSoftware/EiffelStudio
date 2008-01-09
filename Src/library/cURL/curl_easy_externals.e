@@ -95,6 +95,7 @@ feature -- Command
 
 	perform (a_curl_handle: POINTER): INTEGER is
 			-- Declared as curl_easy_perform().
+			-- Result is one value from {CURL_CODES}
 		require
 			exists: a_curl_handle /= default_pointer
 		local
@@ -145,6 +146,8 @@ feature -- Special setting
 
 	set_write_function (a_curl_handle: POINTER) is
 				-- Set cURL write function
+				-- Set cURL write function with Eiffel default write function.
+				-- So we can use CURL_STRING as parameter in {CURL_EASY_EXTERNALS}.setopt_curl_string when the option is {CURL_OPT_CONSTANTS}.curlopt_writedata
 		require
 			exists: a_curl_handle /= default_pointer
 		local

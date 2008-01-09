@@ -1123,7 +1123,7 @@ feature{NONE} -- Implementation
 		do
 			l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item ("focus_on_class_address")
 			create l_acc.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
-			l_acc.actions.extend (agent ((develop_window.address_manager).class_address).set_focus)
+			l_acc.actions.extend (agent (develop_window.address_manager).set_focus)
 
 			create l_cmd.make (l_acc)
 			l_cmd.set_referred_shortcut (l_shortcut)

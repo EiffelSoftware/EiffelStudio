@@ -473,11 +473,15 @@ feature -- Element change
 
 	set_focus is
 			-- Give the focus to the class combo box.
-		require
-			displayed: widget.is_displayed
 		do
 			if class_address.is_sensitive then
-				class_address.set_focus
+				if not class_address.has_focus then
+					class_address.set_focus
+				elseif class_address.text_length > 0 then
+					-- Class address already has focus. We select all texts in it instead of doing nothing.
+					-- This behavior is same as Firefox's `Ctrl + L' shortcut.
+					class_address.select_all
+				end
 			end
 		end
 

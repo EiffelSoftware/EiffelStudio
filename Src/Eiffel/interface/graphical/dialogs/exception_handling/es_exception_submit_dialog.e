@@ -14,8 +14,6 @@ inherit
 	ES_DIALOG
 		rename
 			make as make_dialog
-		redefine
-			on_before_show
 		end
 
 	SYSTEM_CONSTANTS
@@ -217,6 +215,9 @@ feature {NONE} -- Initialization
 			if is_user_remembered.item then
 				register_kamikaze_action (show_actions, agent on_login)
 			end
+
+			description_text.focus_in_actions.extend (agent on_focus_in)
+			description_text.focus_out_actions.extend (agent on_focus_out)
 		end
 
 feature {NONE} -- Access
@@ -489,15 +490,31 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_before_show is
-			-- Redefine
+	on_focus_in is
+			-- When the `description_text' has the focus, we disable the default push button.
 		local
 			l_dialog: EV_DIALOG
 		do
-			Precursor {ES_DIALOG}
 			l_dialog := dialog
-			if l_dialog /= Void and then l_dialog.default_push_button /= Void then
+			if l_dialog /= Void and then
+				(not l_dialog.is_destroyed and l_dialog.default_push_button /= Void) then
 				l_dialog.remove_default_push_button
+			end
+		end
+
+	on_focus_out is
+			-- When the `description_text' lost focus, we enable the default push button.
+		local
+			l_dialog: EV_DIALOG
+			l_button: EV_BUTTON
+		do
+			l_dialog := dialog
+			if l_dialog /= Void then
+			l_button := dialog_window_buttons.item (default_button)
+				if l_button /= Void and then
+				 (not l_dialog.is_destroyed and l_dialog.has_recursive (l_button)) then
+					l_dialog.set_default_push_button (l_button)
+				end
 			end
 		end
 

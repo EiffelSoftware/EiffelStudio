@@ -1,9 +1,6 @@
 indexing
 	description: "[
-		A base dialog implementation for all dialogs resident in EiffelStudio.
-		
-		Note: Dialogs a becoming quite complex. As of 6.2 the dialogs now use the session manager service ({SESSION_MANAGER_S})
-		      to store size/position information. This can be vetoed by redefining `is_size_and_position_remembered' to return False.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,13 +11,15 @@ deferred class
 	ES_POPUP_WINDOW
 
 inherit
-	ES_TOOL_FOUNDATIONS
+	ES_WINDOW_FOUNDATIONS
 		rename
-			make as make_foundation_tool,
-			foundation_widget as popup_window
+			make as make_window_foundations,
+			foundation_window as popup_window
 		redefine
 			internal_recycle,
-			on_after_initialized
+			on_after_initialized,
+			on_shown,
+			on_hidden
 		end
 
 convert
@@ -37,9 +36,10 @@ feature {NONE} -- Initialization
 
 				-- Create action lists
 			create show_actions
+			create hide_actions
 
 				-- Do actual initialization
-			make_foundation_tool
+			make_window_foundations
 		ensure
 			is_initialized: is_initialized
 		end
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
     on_after_initialized
             -- Use to perform additional creation initializations, after the UI has been created.
         do
-        	Precursor {ES_TOOL_FOUNDATIONS}
+        	Precursor {ES_WINDOW_FOUNDATIONS}
 
         	if has_border then
         			-- Set border color
@@ -68,6 +68,7 @@ feature {NONE} -- User interface initialization
 			if has_border then
 					-- Create border
 				l_main_container.set_border_width (border_width)
+				l_main_container.set_background_color (border_color)
 				border_widget := l_main_container
 
 				create l_container
@@ -84,9 +85,14 @@ feature {NONE} -- User interface initialization
 
 			build_window_interface (l_container)
 
-				-- Hook up enter and leave actions
-			propagate_register_action (popup_window, agent {EV_WIDGET}.pointer_enter_actions, agent internal_on_pointer_enter, Void)
-			register_action (l_container.pointer_leave_actions, agent on_pointer_leave)
+				-- Register focus actions to handle focus sensitivity. See `is_focus_sensitive' for more information
+			register_action (popup_window.focus_out_actions, agent do
+					if is_interface_usable then
+							-- Protect the call because is the window is pointer sensitive then the
+							-- window may be closed before the actions are called.
+						on_focused_out
+					end
+				end)
 		ensure then
 			popup_window_attached: popup_window /= Void
 			border_widget_attached: has_border implies border_widget /= Void
@@ -114,10 +120,11 @@ feature {NONE} -- Clean up
 		do
 			if is_initialized then
 				if internal_popup_window /= Void then
+					internal_popup_window.hide
 					internal_popup_window.destroy
 				end
 			end
-			Precursor {ES_TOOL_FOUNDATIONS}
+			Precursor {ES_WINDOW_FOUNDATIONS}
 		ensure then
 			not_is_initialized: not is_initialized
 		end
@@ -125,11 +132,12 @@ feature {NONE} -- Clean up
 feature {NONE} -- Access
 
 	popup_window: EV_POPUP_WINDOW
-			-- Actual dialog
+			-- Actual window
 		do
 			Result := internal_popup_window
 			if Result = Void then
 				Result := create_popup_window
+				auto_recycle (Result)
 				internal_popup_window := Result
 			end
 		end
@@ -142,19 +150,13 @@ feature {NONE} -- Access
 			result_positive: Result > 0
 		end
 
-	border_width: NATURAL_8
-			-- Pop up window border width.
-			-- Note: Return 0 to hide the border
-		do
-			Result := 1
-		end
-
 	border_color: EV_COLOR
 			-- Pop up window border color
 		require
 			has_border: has_border
 		once
-			Result := colors.grid_unfocus_selection_color
+			Result := active_border_color.twin
+			Result.set_rgb ((Result.red * 0.7).max (.0), (Result.green * 0.7).max (.0), (Result.blue * 0.7).max (.0))
 		ensure
 			result_attached: Result /= Void
 		end
@@ -164,9 +166,32 @@ feature {NONE} -- Access
 		require
 			has_border: has_border
 		once
-			Result := colors.grid_focus_selection_color
+			Result := colors.grid_focus_selection_color.twin
 		ensure
 			result_attached: Result /= Void
+		end
+
+	border_width: NATURAL_8
+			-- Pop up window border width.
+			-- Note: Return 0 to hide the border
+		do
+			Result := 1
+		end
+
+feature -- Status report
+
+	is_focus_sensitive: BOOLEAN
+			-- Indicates if the window is sensitive to focus. By default, if the window loses focus then
+			-- is it closed.
+		do
+			Result := True
+		end
+
+	is_pointer_sensitive: BOOLEAN
+			-- Indicates if the window is sensitive to having a mouse pointer. By default, if the mouse pointer leaves the
+			-- window, is it remains open.
+		do
+			Result := False
 		end
 
 feature {NONE} -- Status report
@@ -219,7 +244,11 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 		do
-			popup_window.hide
+			if is_recycled_on_closing then
+				recycle
+			else
+				popup_window.hide
+			end
 		ensure
 			not_popup_window_is_displayed: not popup_window.is_displayed
 		end
@@ -252,13 +281,36 @@ feature -- Actions
 	show_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the window is shown
 
+	hide_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+			-- Actions performed when the window is shown
+
 feature {NONE} -- Action handlers
 
 	on_before_show
-			-- Called prior to the window being shown.
+			-- Called prior to the window being shown, programmatically.
 		require
 			is_interface_usable: is_interface_usable
 		do
+			--| Do nothing	
+		end
+
+	on_shown
+			-- Called once the foundation widget has been shown.
+
+		do
+			Precursor {ES_WINDOW_FOUNDATIONS}
+
+				-- Hook up to application pointer mtion actions
+			register_action (ev_application.pointer_motion_actions, agent on_application_pointer_motion)
+		end
+
+	on_hidden
+			-- Called once the foundation widget has been hidden.
+		do
+			Precursor {ES_WINDOW_FOUNDATIONS}
+
+				-- Remove application pointer motion actions
+			unregister_action (ev_application.pointer_motion_actions, agent on_application_pointer_motion)
 		end
 
 	on_pointer_enter
@@ -280,9 +332,70 @@ feature {NONE} -- Action handlers
 			has_mouse_pointer: has_mouse_pointer
 		do
 			has_mouse_pointer := False
+
+				-- We still update the border even if the dialog is going to be hidden because of window reuse.
 			update_border_color
+
+			if is_pointer_sensitive then
+				hide
+			end
 		ensure
 			not_has_mouse_pointer: not has_mouse_pointer
+		end
+
+	on_focused_out
+			-- Called when the window loses focus
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			if is_focus_sensitive and then is_shown then
+				hide
+			end
+		end
+
+	on_application_pointer_motion (a_widget: EV_WIDGET; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
+			-- Called when the pointer moves during execution of the application.
+			--
+			-- `a_widget': The widget the move was performed on.
+			-- `a_screen_x': Position of mouse cusor on the x-axis.
+			-- `a_screen_y': Position of mouse cusor on the y-axis.
+		require
+			a_screen_x_non_negative: a_screen_x >= 0
+			a_screen_y_non_negative: a_screen_y >= 0
+		local
+			l_window: like popup_window
+			l_sx, l_sy: INTEGER
+			l_in_window: BOOLEAN
+		do
+			if is_initialized then
+				if a_widget /= Void then
+						-- If no widget is passed then the motion was not on the window.
+					l_window := popup_window
+					l_sx := l_window.screen_x
+					if a_screen_x >= l_sx and then a_screen_x <= l_sx + l_window.width then
+						l_sy := l_window.screen_y
+						l_in_window := a_screen_y >= l_sy and then a_screen_y <= l_sy + l_window.height
+					end
+				end
+
+				if l_in_window /= has_mouse_pointer then
+					if l_in_window then
+							-- Ensure we are processing this window!
+						l_in_window := helpers.widget_top_level_window (a_widget, False) = popup_window
+					end
+
+					if l_in_window then
+						if not has_mouse_pointer then
+							on_pointer_enter
+						end
+					else
+						if has_mouse_pointer then
+							on_pointer_leave
+						end
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Internal action handlers

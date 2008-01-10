@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Base core for all EiffelStudio foundations
+		Base core for all EiffelStudio foundations widgets and tools.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -112,6 +112,29 @@ feature {NONE} -- Status report
 	is_initializing: BOOLEAN
 			-- Indicates if the user interface is currently being initialized
 
+feature {NONE} -- Query
+
+	is_widget_applicable_for_color_propagation (a_widget: !EV_COLORIZABLE; a_fg: BOOLEAN; a_bg: BOOLEAN): BOOLEAN
+			-- Determines if a widget is applicable for propagation of either a foreground or background color.
+			--
+			-- `a_widget': The widget to determine if the applicable colors can be propagated.
+			-- `a_fg': True if a request is being made to change the foreground color; False otherwise.
+			-- `a_bg': True if a request is being made to change the background color; False otherwise.
+		require
+			a_fg_a_gb_exclusive: (a_fg and not a_bg) or (a_bg and not a_fg)
+		do
+			if a_fg then
+				Result := True
+			elseif a_bg then
+				Result := {l_cell: !EV_CELL} a_widget or
+					{l_check: !EV_CHECK_BUTTON} a_widget or
+					{l_rbutton: !EV_RADIO_BUTTON} a_widget or
+					{l_label: !EV_LABEL} a_widget or
+					{l_drawable: !EV_DRAWABLE} a_widget or
+					{l_separator: !EV_SEPARATOR} a_widget
+			end
+		end
+
 feature {NONE} -- Helpers
 
 	frozen interface_names: !INTERFACE_NAMES
@@ -176,6 +199,47 @@ feature {NONE} -- Basic operations
 				-- cursor
 			if l_style /= Void then
 				l_widget.set_pointer_style (l_style)
+			end
+		end
+
+	propagate_colors (a_start_widget: EV_WIDGET; a_fg_color: EV_COLOR; a_bg_color: EV_COLOR; a_excluded: ARRAY [EV_WIDGET])
+			-- Propagates setting of foreground and background colors to applicable widgets. The propagation respects the type of
+			-- widget and will only perform setting of background colors on "transparent" style widgets.
+			--
+			-- `a_start_widget': The starting widget to apply an action, as well as to all it's children widgets.
+			-- `a_fg_color': A foreground color. Can be Void to skip setting of a foreground color.
+			-- `a_bg_color': A background color. Can be Void to skip setting of a background color.
+			-- `a_excluded': An array of widgets to exluding the the propagation of colors, or Void to include all applicable widgets (see is applicable color widget)
+		require
+			a_start_widget_attached: a_start_widget /= Void
+			not_a_start_widget_is_destroyed: not a_start_widget.is_destroyed
+			color_change: a_fg_color /= Void or a_bg_color /= Void
+		local
+			l_cursor: CURSOR
+			l_propagate: BOOLEAN
+		do
+			if a_excluded = Void or else not a_excluded.has (a_start_widget) then
+				if {l_colorizable: !EV_COLORIZABLE} a_start_widget then
+					if a_fg_color /= Void and then is_widget_applicable_for_color_propagation (l_colorizable, True, False) then
+						l_colorizable.set_foreground_color (a_fg_color)
+						l_propagate := True
+					end
+					if a_bg_color /= Void and then is_widget_applicable_for_color_propagation (l_colorizable, False, True) then
+						l_colorizable.set_background_color (a_bg_color)
+						l_propagate := True
+					end
+				end
+			end
+
+			if l_propagate and then {l_list: !EV_WIDGET_LIST} a_start_widget then
+				l_cursor := l_list.cursor
+				from l_list.start until l_list.after loop
+					if {l_widget: !EV_WIDGET} l_list.item and then not l_widget.is_destroyed then
+						propagate_colors (l_widget, a_fg_color, a_bg_color, a_excluded)
+					end
+					l_list.forth
+				end
+				l_list.go_to (l_cursor)
 			end
 		end
 

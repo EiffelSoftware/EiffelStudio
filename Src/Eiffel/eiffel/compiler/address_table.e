@@ -305,7 +305,7 @@ feature -- Generation
 
 			buffer.put_string ("#include %"eaddress")
 			buffer.put_string (Dot_h)
-			buffer.put_string ("%"%N%N")
+			buffer.put_character ('"')
 
 			buffer.start_c_specific_code
 
@@ -410,7 +410,7 @@ feature -- Generation
 
 			buffer.clear_all
 			buffer.put_string ("#include %"eif_eiffel.h%"%N%
-								%#include %"eif_rout_obj.h%"%N")
+								%#include %"eif_rout_obj.h%"")
 
 			buffer.start_c_specific_code
 			Extern_declarations.generate (buffer)
@@ -742,9 +742,9 @@ feature {NONE} -- Generation
 			from
 				types := a_class.types
 				types.start
-				l_tabbed_open_c_comment_str := "%T/* "
+				l_tabbed_open_c_comment_str := "%N%T/* "
 				l_space_str := " "
-				l_close_c_comment_str := " */%N"
+				l_close_c_comment_str := " */"
 			until
 				types.after
 			loop
@@ -813,26 +813,24 @@ feature {NONE} -- Generation
 					generate_signature_for_agent (buffer, agent_types, a_types,
 						agent_type_string, return_type_string, function_name, omap, a_oargs_encapsulated)
 				else
-					buffer.generate_pure_function_signature
+					buffer.generate_function_signature
 						(return_type_string, function_name, True, buffer,
 						arg_names (args_count), a_types)
 				end
-				buffer.put_string ("{")
-				buffer.put_new_line
-				buffer.indent
+				buffer.generate_block_open
 				if not final_mode and then args_count > 0 and then (is_for_agent implies not a_oargs_encapsulated) then
 						-- Declare structure to be used for passing arguments.
+					buffer.put_new_line
 					buffer.put_string ("EIF_TYPED_VALUE u [")
 					buffer.put_integer (args_count)
 					buffer.put_string ("];")
-					buffer.put_new_line
 				end
 				if is_for_agent then
 					if final_mode and then has_creation then
 						if is_function then
+							buffer.put_new_line
 							buffer.put_string (agent_type_string)
 							buffer.put_string (" Result;")
-							buffer.put_new_line
 						end
 						from
 							i := args_count
@@ -841,14 +839,14 @@ feature {NONE} -- Generation
 						loop
 							if formal_arg [i] and then not reference_arg [i] then
 									-- A variable to keep a boxed value is required.
+								buffer.put_new_line
 								buffer.put_string ("EIF_REFERENCE arg")
 								buffer.put_integer (i)
 								buffer.put_string (" = (EIF_REFERENCE) 0;")
-								buffer.put_new_line
 							end
 							i := i - 1
 						end
-						buffer.put_string ("GTCX")
+						buffer.put_gtcx
 						buffer.put_new_line
 						buffer.put_string ("RTLD;")
 						buffer.put_new_line
@@ -859,13 +857,13 @@ feature {NONE} -- Generation
 						buffer.put_string ("RTLR(0,")
 						buffer.put_string (l_current_name)
 						buffer.put_string (");")
-						buffer.put_new_line
 						from
 							names := agent_arg_names (l_type, args, omap, a_oargs_encapsulated)
 							i := args_count
 						until
 							i <= 0
 						loop
+							buffer.put_new_line
 							if reference_arg [i] then
 									-- Mark for GC.
 								buffer.put_string ("RTLR(")
@@ -873,7 +871,6 @@ feature {NONE} -- Generation
 								buffer.put_character (',')
 								buffer.put_string (names [i + 1])
 								buffer.put_string (");")
-								buffer.put_new_line
 								reference_arg_count := reference_arg_count - 1
 							elseif formal_arg [i] then
 									-- Mark for GC.
@@ -882,7 +879,6 @@ feature {NONE} -- Generation
 								buffer.put_string (",arg")
 								buffer.put_integer (i)
 								buffer.put_string (");")
-								buffer.put_new_line
 								reference_arg_count := reference_arg_count - 1
 							end
 							i := i - 1
@@ -897,23 +893,24 @@ feature {NONE} -- Generation
 								basic_i ?= args.i_th (i).instantiated_in (l_type.type.type_a).type_i
 								basic_i.metamorphose (create {NAMED_REGISTER}.make ("arg" + i.out, reference_c_type), create {NAMED_REGISTER}.make (names [i + 1], basic_i), buffer)
 								buffer.put_character (';')
-								buffer.put_new_line
 							end
 							i := i - 1
 						end
 						if system.keep_assertions then
 								-- We need to check the invariant in an agent call, thus `nstcall' needs to be set.
-							buffer.put_string ("nstcall = 1;")
 							buffer.put_new_line
+							buffer.put_string ("nstcall = 1;")
 						end
 					elseif not final_mode or else system.keep_assertions then
 							-- We need to check the invariant in an agent call, thus `nstcall' needs to be set.
-						buffer.put_string ("GTCX%Nnstcall = 1;")
+						buffer.put_gtcx
 						buffer.put_new_line
+						buffer.put_string ("nstcall = 1;")
 					end
 				end
 
 				if is_function then
+					buffer.put_new_line
 					if final_mode and then has_creation then
 						buffer.put_string ("Result = ")
 					else
@@ -1009,18 +1006,19 @@ feature {NONE} -- Generation
 					end
 				end
 				buffer.put_string (";")
-				buffer.put_new_line
 
 				if final_mode and then has_creation then
-					buffer.put_string ("RTLE;")
 					buffer.put_new_line
+					buffer.put_string ("RTLE;")
 					if is_function then
-						buffer.put_string ("return Result;")
 						buffer.put_new_line
+						buffer.put_string ("return Result;")
 					end
 				end
-				buffer.exdent
-				buffer.put_string ("}%N%N")
+				buffer.generate_block_close
+
+					-- Separation for formatting
+				buffer.put_new_line
 
 				types.go_to (cursor)
 				types.forth
@@ -1044,6 +1042,7 @@ feature {NONE} -- Generation
 			l_rout_id := a_feature.rout_id_set.first
 			l_entry :=  Eiffel_table.poly_table (l_rout_id)
 
+			buffer.put_new_line
 			buffer.put_character ('(')
 			if l_entry = Void then
 					-- Function pointer associated to a deferred feature
@@ -1102,6 +1101,7 @@ feature {NONE} -- Generation
 			i: INTEGER
 			l_eif_typed_value_str: STRING
 		do
+			buffer.put_new_line
 			buffer.put_character ('(')
 			l_rout_id := a_feature.rout_id_set.first
 			create l_types.make (1, a_types.count)
@@ -1185,7 +1185,7 @@ feature {NONE} -- Generation
 						k := k + 1
 					elseif i <=1 or else final_mode then
 						a_buf.put_string ("op_")
-						a_buf.put_String (o.out)
+						a_buf.put_string (o.out)
 					else
 						a_buf.put_string ("((u [")
 						a_buf.put_integer (i - 2)
@@ -1197,7 +1197,7 @@ feature {NONE} -- Generation
 						arg_type.generate_typed_field (a_buf)
 						a_buf.put_string (" = ")
 						a_buf.put_string ("op_")
-						a_buf.put_String (o.out)
+						a_buf.put_string (o.out)
 						a_buf.put_string ("), u [")
 						a_buf.put_integer (i - 2)
 						a_buf.put_string ("])")
@@ -1331,7 +1331,7 @@ feature {NONE} -- Generation
 					a_omap.forth
 				end
 			end
-			a_buf.generate_pure_function_signature (a_agent_type, a_name, True, a_buf, l_arg_names, l_arg_types)
+			a_buf.generate_function_signature (a_agent_type, a_name, True, a_buf, l_arg_names, l_arg_types)
 		end
 
 	tmp_buffer: GENERATION_BUFFER is

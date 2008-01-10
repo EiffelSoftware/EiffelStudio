@@ -101,27 +101,27 @@ feature
 			buf.generate_function_signature ("void", internal_name,
 					True, Context.header_buffer,
 					<<"Current", "where">>, <<"EIF_REFERENCE", "int">>);
-
-			buf.indent;
+			buf.generate_block_open
+			buf.put_gtcx
 
 				-- Generation of temporary variables under the control
 				-- of the GC
 			context.generate_temporary_ref_variables;
 				-- Dynamic type of Current
 			if context.dftype_current > 1 then
-				buf.put_string ("RTCFDT;");
 				buf.put_new_line;
+				buf.put_string ("RTCFDT;");
 			end;
 			if context.dt_current > 1 then
-				buf.put_string ("RTCDT;");
 				buf.put_new_line;
+				buf.put_string ("RTCDT;");
 			end;
 
 				-- Generation of the local variable array
 			i := context.ref_var_used;
 			if i > 0 then
-				buf.put_string ("RTLD;");
 				buf.put_new_line;
+				buf.put_string ("RTLD;");
 			end;
 
 				-- Separate declarations and body with a blank line
@@ -138,11 +138,11 @@ feature
 				-- Remove gc hooks
 			i := context.ref_var_used;
 			if i > 0 then
-				buf.put_string ("RTLE;%N");
+				buf.put_new_line
+				buf.put_string ("RTLE;");
 			end;
 				-- End of C routine
-			buf.exdent;
-			buf.put_string ("}%N%N");
+			buf.generate_block_close
 		end;
 
 invariant

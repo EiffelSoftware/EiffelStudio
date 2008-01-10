@@ -5,14 +5,14 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class INV_ASSERT_B 
+class INV_ASSERT_B
 
 inherit
 	ASSERT_B
 		redefine
 			generate, process
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -20,8 +20,8 @@ feature -- Visitor
 		do
 			v.process_inv_assert_b (Current)
 		end
-	
-feature 
+
+feature
 
 	fill_from (a: ASSERT_B) is
 			-- Initialization
@@ -41,6 +41,7 @@ feature
 		do
 			buf := buffer
 				-- Generate the recording of the assertion
+			buf.put_new_line
 			if tag /= Void then
 				buf.put_string ("RTIT(")
 				buf.put_character ('"')
@@ -52,9 +53,9 @@ feature
 			end
 			context.Current_register.print_register
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 				-- Now evaluate the expression
 			expr.generate
+			buf.put_new_line
 			buf.put_string (gc_if_l_paran)
 			expr.print_register
 			buf.put_string (") {")
@@ -62,7 +63,6 @@ feature
 			buf.put_string (gc_lacc_else_r_acc)
 			generate_failure (buf)
 			buf.put_character ('}')
-			buf.put_new_line
 		end
 
 indexing

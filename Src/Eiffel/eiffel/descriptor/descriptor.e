@@ -81,7 +81,7 @@ feature -- Generation
 			buffer.put_string ("%N */%N%N")
 			buffer.put_string ("#include %"eif_macros.h%"%N");
 			if is_precompiling then
-				buffer.put_string ("#include %"eif_wbench.h%"%N%N")
+				buffer.put_string ("#include %"eif_wbench.h%"")
 			end
 			buffer.start_c_specific_code
 			if is_precompiling then
@@ -126,7 +126,7 @@ feature -- Generation
 			end
 			buffer.put_string (", (BODY_INDEX) ")
 			buffer.put_integer (Invalid_index)
-			buffer.put_string (", INVALID_DTYPE, NULL},%N")
+			buffer.put_string (", INVALID_DTYPE, NULL},")
 
 			from
 				create cnt
@@ -227,7 +227,7 @@ feature -- Generation
 			rtud.append ("));%N")
 
 			buffer.generate_extern_declaration ("void", init_name, <<>>);
-
+			biffer.put_new_line
 			buffer.put_string ("void ");
 			buffer.put_string (init_name);
 			buffer.put_string ("(void)%N{%N");

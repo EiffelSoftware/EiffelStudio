@@ -207,7 +207,7 @@ feature
 			l_byte_context: like byte_context
 		do
 			if used then
-				generate_header (buffer);
+				generate_header (class_type, buffer);
 				byte_code := Byte_server.disk_item (body_index)
 				check
 					byte_code_not_void: byte_code /= Void

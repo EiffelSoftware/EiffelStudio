@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ROUT_GENERATOR 
+class ROUT_GENERATOR
 
 inherit
 	TABLE_GENERATOR
@@ -17,7 +17,7 @@ inherit
 
 	SHARED_DECLARATIONS
 
-feature 
+feature
 
 	init_file (file: INDENT_FILE) is
 			-- Initialization of new file
@@ -40,7 +40,7 @@ feature
 			packet_number, n: INTEGER
 		do
 			current_buffer.clear_all
-			current_buffer.put_string ("#include %"eif_eiffel.h%"%N");
+			current_buffer.put_string ("#include %"eif_eiffel.h%"");
 			current_buffer.start_c_specific_code
 			Extern_declarations.generate (current_buffer);
 			current_buffer.end_c_specific_code
@@ -56,7 +56,7 @@ feature
 			header_file.close
 
 			current_buffer.clear_all
-			
+
 				-- Start C code generation for next block
 			current_buffer.start_c_specific_code
 		end;

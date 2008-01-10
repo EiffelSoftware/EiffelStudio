@@ -95,6 +95,7 @@ feature -- Line number setting
 			generate_frozen_debugger_hook
 
 				-- Generate the recording of the assertion
+			buf.put_new_line
 			if tag /= Void then
 				buf.put_string ("RTCT(")
 				buf.put_character ('"')
@@ -106,37 +107,36 @@ feature -- Line number setting
 			end
 			generate_assertion_code (context.assertion_type)
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 				-- Now evaluate the expression
 			l_expr := expr
 			l_expr.generate
+			buf.put_new_line
 			buf.put_string (gc_if_l_paran)
 			l_expr.print_register
 			buf.put_string (") {")
 			generate_success (buf)
+			buf.put_new_line
 			buf.put_string (gc_lacc_else_r_acc)
 			generate_failure (buf)
+			buffer.put_new_line
 			buf.put_character ('}')
-			buf.put_new_line
 		end
 
 	generate_success (buf: like buffer) is
 			-- Generate a success in assertion
 		do
-			buf.put_new_line
 			buf.indent
-			buf.put_string ("RTCK;")
 			buf.put_new_line
+			buf.put_string ("RTCK;")
 			buf.exdent
 		end
 
 	generate_failure (buf: like buffer) is
 			-- Generate a failure in assertion
 		do
-			buf.put_new_line
 			buf.indent
-			buf.put_string ("RTCF;")
 			buf.put_new_line
+			buf.put_string ("RTCF;")
 			buf.exdent
 		end
 

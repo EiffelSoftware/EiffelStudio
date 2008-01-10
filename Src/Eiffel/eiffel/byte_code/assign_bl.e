@@ -338,7 +338,6 @@ feature
 		do
 			generate_line_info
 			generate_frozen_debugger_hook
-
 			if last_in_result then
 					-- Assignement in Result is the last expression and
 					-- the source does not use GCable variable, or only in
@@ -390,8 +389,8 @@ feature
 			source_type := l_context.real_type (source.type)
 			if target_type.is_expanded and source_type.is_none then
 					-- Assigning Void to expanded.
-				buf.put_string ("RTEC(EN_VEXP);")
 				buf.put_new_line
+				buf.put_string ("RTEC(EN_VEXP);")
 			elseif target_type.is_true_expanded and then source_type.is_expanded then
 					-- Reattachment of expanded types.
 				check
@@ -440,8 +439,8 @@ feature
 				basic_source_type ?= context.real_type (source.type)
 				basic_source_type.metamorphose (register, source, buf)
 				buf.put_character (';')
-				buf.put_new_line
 			elseif how = Clone_assignment then
+				buf.put_new_line
 				print_register
 				buf.put_string (" = ")
 				if is_creation_instruction then
@@ -454,7 +453,6 @@ feature
 					source.print_register
 					buf.put_string (gc_rparan_semi_c)
 				end
-				buf.put_new_line
 			end
 		end
 
@@ -484,6 +482,7 @@ feature
 					-- address in a temporary register before RTAR can
 					-- handle it (it evaluates its arguments more than once).
 				if register /= Void and not register_for_metamorphosis then
+					buf.put_new_line
 					print_register
 					buf.put_string (" = ")
 					source.print_register
@@ -495,20 +494,20 @@ feature
 					print_register
 					buf.put_character (')')
 					buf.put_character (';')
-					buf.put_new_line
 				else
+					buf.put_new_line
 					buf.put_string ("RTAR(")
 					context.Current_register.print_register
 					buf.put_string (gc_comma)
 					source_print_register
 					buf.put_character (')')
 					buf.put_character (';')
-					buf.put_new_line
 				end
 			end
 			if how = Copy_assignment then
 				if register /= Void then
 						-- Initialize temporary.
+					buf.put_new_line
 					print_register
 					buf.put_string (" = ")
 					if not is_creation_instruction then
@@ -517,36 +516,37 @@ feature
 					buf.put_character ('(')
 					source.print_register
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 				end
 				generate_expanded_assignment
 			elseif how = Unmetamorphose_assignment then
 				if context.real_type (target.type).is_basic then
 						-- Reattachment of reference type to basic.
+					buf.put_new_line
 					target.print_register
 					buf.put_string (" = *")
 					target.c_type.generate_access_cast (buf)
 					buf.put_character ('(')
 					source.print_register
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 				else
 						-- Reattachment of reference type to expanded.
+					buf.put_new_line
 					buf.put_string ("RTXA(")
 					source.print_register
 					buf.put_string (gc_comma)
 					target.print_register
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 				end
 			else
 				if how = Simple_assignment or need_aging_tests then
 					if is_bit_assignment then
 						-- Otherwize, copy bit since I know that
 						-- bits have a default value.
+						buf.put_new_line
 						buf.put_string ("RTXB(")
 						source_print_register
 					else
+						buf.put_new_line
 						target.print_register
 						buf.put_string (" = ")
 							-- Always ensure that we perform a cast to type of target.
@@ -554,9 +554,7 @@ feature
 							-- as it has been validated by the Eiffel compiler.
 						target_c_type.generate_cast (buf)
 					end
-					if need_aging_tests and then
-						register /= Void and not register_for_metamorphosis
-					then
+					if need_aging_tests and then register /= Void and not register_for_metamorphosis then
 						print_register
 					else
 						if is_bit_assignment then
@@ -578,7 +576,6 @@ feature
 						end
 					end
 					buf.put_character (';')
-					buf.put_new_line
 				end
 			end
 		end
@@ -595,19 +592,20 @@ feature
 					-- FIXME: Optimization for attributes which are known to not have
 					-- references in final mode, we should just do a `memmove' which
 					-- is much faster.
+				buf.put_new_line
 				buf.put_string ("RTXA(")
 				source_print_register
 				buf.put_string (gc_comma)
 				target.print_register
 				buf.put_character (')')
 				buf.put_character (';')
-				buf.put_new_line
 			else
 				target_type ?= context.real_type (target.type)
 				check
 						-- An expanded is a valid class type.
 					target_type_not_void: target_type /= Void
 				end
+				buf.put_new_line
 				buf.put_string ("memmove(")
 				target.print_register
 				buf.put_string (gc_comma)
@@ -620,7 +618,6 @@ feature
 				end
 				buf.put_character (')')
 				buf.put_character (';')
-				buf.put_new_line
 			end
 		end
 
@@ -639,8 +636,8 @@ feature
 				-- Target (Result) cannot be expanded
 			if target_type.is_expanded and source_type.is_none then
 				buf := buffer
-				buf.put_string ("RTEC(EN_VEXP);")
 				buf.put_new_line
+				buf.put_string ("RTEC(EN_VEXP);")
 			elseif target_type.is_basic or else source_type.is_reference then
 					-- Reattachment of basic type to basic type or
 					-- of reference type to reference type.
@@ -700,6 +697,7 @@ feature
 			end
 				-- Generate the other side of the expression
 			other.generate
+			buf.put_new_line
 			if not target.is_predefined then
 				buf.put_character ('(')
 				target.print_register
@@ -719,7 +717,6 @@ feature
 				other.print_register
 			end
 			buf.put_character (';')
-			buf.put_new_line
 		end
 
 indexing

@@ -4,7 +4,7 @@ indexing
 -- Enlarged byte code for "or else"
 
 class
-	B_OR_ELSE_BL 
+	B_OR_ELSE_BL
 
 inherit
 	B_OR_ELSE_B
@@ -13,7 +13,7 @@ inherit
 			register, set_register, c_type
 		end;
 
-feature 
+feature
 
 	register: REGISTRABLE;
 			-- Where result of expression should be stored
@@ -93,19 +93,18 @@ feature
 		do
 			if has_call then
 					-- Initialize value to true
-				register.print_register;
 				buf := buffer
-				buf.put_string (" = '\01';");
 				buf.put_new_line;
+				register.print_register;
+				buf.put_string (" = '\01';");
 					-- Test first value. If it is true, then the whole
 					-- expression is true and the right handside is not evaled.
 				left.generate;
+				buf.put_new_line;
 				buf.put_string ("if (!");
 					-- If the register for left is void. then we need to
 					-- enclose in parenthesis.
-				if (left.register = Void or left.register = No_register) and
-					not left.is_simple_expr
-				then
+				if (left.register = Void or left.register = No_register) and not left.is_simple_expr then
 					buf.put_character ('(');
 					left.print_register;
 					buf.put_character (')');
@@ -113,19 +112,18 @@ feature
 					left.print_register;
 				end;
 				buf.put_string (") {");
-				buf.put_new_line;
 					-- Left handside was false. Value of the expression is the
 					-- value of the right handside.
 				buf.indent;
 				right.generate;
+				buf.put_new_line;
 				register.print_register;
 				buf.put_string (" = ");
 				right.print_register;
 				buf.put_character (';');
-				buf.put_new_line;
 				buf.exdent;
-				buf.put_character ('}');
 				buf.put_new_line;
+				buf.put_character ('}');
 			else
 				Precursor {B_OR_ELSE_B};
 			end;

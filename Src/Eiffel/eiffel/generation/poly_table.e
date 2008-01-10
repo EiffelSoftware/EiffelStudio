@@ -289,6 +289,7 @@ feature
 				entry := array_item (index)
 				if i = entry.type_id then
 					if entry.is_generic then
+						buffer.put_new_line
 						buffer.put_string ("static EIF_TYPE_INDEX ")
 						buffer.put_string (l_table_name)
 						buffer.put_string ("_pgtype")
@@ -297,7 +298,6 @@ feature
 						entry.generate_cid (buffer, True);
 						buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 						buffer.put_string ("};");
-						buffer.put_new_line
 						j := j + 1
 					end
 					index := index + 1
@@ -307,24 +307,24 @@ feature
 
 				-- Generate pointer table
 			nb := max_type_id - min_type_id + 1
+			buffer.put_new_line
 			buffer.put_string ("EIF_TYPE_INDEX *")
 			buffer.put_string (l_table_name)
 			buffer.put_string ("_gen_type [")
 			buffer.put_integer (nb)
 			buffer.put_string ("];");
-			buffer.put_new_line
 
+			buffer.put_new_line
 			buffer.put_string ("EIF_TYPE_INDEX ")
 			buffer.put_string (l_table_name)
 			buffer.put_string (" [")
 			buffer.put_integer (nb)
 			buffer.put_string ("];")
-			buffer.put_new_line
 
+			buffer.put_new_line
 			buffer.put_string ("void ")
 			buffer.put_string (l_table_name)
 			buffer.put_string ("_init (void) {")
-			buffer.put_new_line
 			buffer.indent
 
 				-- Compact generation for `XXX_gen_type' table. No need to try to be
@@ -341,6 +341,7 @@ feature
 				entry := array_item (index)
 				if i = entry.type_id then
 					if entry.is_generic then
+						buffer.put_new_line
 						buffer.put_string (l_table_name)
 						buffer.put_string ("_gen_type [")
 						buffer.put_integer (k)
@@ -349,7 +350,6 @@ feature
 						buffer.put_string ("_pgtype")
 						buffer.put_integer (j)
 						buffer.put_string (";");
-						buffer.put_new_line
 						j := j + 1
 					end
 					index := index + 1
@@ -408,8 +408,7 @@ feature
 			end
 
 			buffer.exdent
-			buffer.put_new_line
-			buffer.put_string ("}%N%N")
+			buffer.put_three_character ('%N', '}', '%N')
 		end
 
 	is_routine_table: BOOLEAN is
@@ -693,6 +692,7 @@ feature {NONE} -- Implementation
 			a_upper_non_negative: a_upper >= 0
 			a_upper_greater_or_equal_than_a_lower: a_upper >= a_lower
 		do
+			buffer.put_new_line
 			if a_lower = a_upper then
 				buffer.put_string (a_table_name)
 				buffer.put_character ('[')
@@ -700,7 +700,6 @@ feature {NONE} -- Implementation
 				buffer.put_string ("] = ")
 				buffer.put_integer (a_type_id)
 				buffer.put_character (';')
-				buffer.put_new_line
 			else
 				buffer.put_string ("{long i; for (i = ")
 				buffer.put_integer (a_lower)
@@ -710,10 +709,7 @@ feature {NONE} -- Implementation
 				buffer.put_string (a_table_name)
 				buffer.put_string ("[i] = ")
 				buffer.put_integer (a_type_id)
-				buffer.put_character (';')
-				buffer.put_character ('}')
-				buffer.put_character (';')
-				buffer.put_new_line
+				buffer.put_three_character (';', '}', ';')
 			end
 		end
 

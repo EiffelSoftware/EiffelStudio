@@ -639,7 +639,7 @@ feature -- Generation
 			buffer.clear_all
 			ext_inline_buffer := generation_ext_inline_buffer
 			ext_inline_buffer.clear_all
-			ext_inline_buffer.open_write_c
+			ext_inline_buffer.start_c_specific_code
 			header_buffer := header_generation_buffer
 			header_buffer.clear_all
 			l_byte_context.generated_inlines.wipe_out
@@ -696,23 +696,22 @@ feature -- Generation
 				tmp.put_string (packet_name (system_object_prefix, 1))
 				tmp.put_character ('/')
 				tmp.put_string (estructure)
-				tmp.put_string (".h%"%N%N")
+				tmp.put_string (".h%"")
 
 				if final_mode then
 					headers.put_string ("%N#include %"")
 					headers.put_string (base_file_name)
-					headers.put_string (".h%"%N%N")
+					headers.put_string (".h%"")
 
 						-- Generation of extern declarations
-					header_buffer.put_string ("#ifndef ")
+					header_buffer.put_string ("%N#ifndef ")
 					header_buffer.put_string (already_included_header)
 					header_buffer.put_string ("%N#define ")
 					header_buffer.put_string (already_included_header)
-					header_buffer.put_new_line
 				end
 				header_buffer.start_c_specific_code
 
-				buffer.open_write_c
+				buffer.start_c_specific_code
 
 				l_byte_context.set_buffer (buffer)
 				l_byte_context.set_header_buffer (header_buffer)
@@ -765,16 +764,15 @@ feature -- Generation
 					-- Create module initialization procedure
 				buffer.generate_function_signature ("void", Encoder.module_init_name
 					(static_type_id), True, header_buffer, <<>>, <<>>)
-				buffer.indent
+				buffer.generate_block_open
+				buffer.put_gtcx
 
 					-- Initialize once data
 				l_byte_context.generate_module_once_data_initialization (static_type_id)
 					-- Initialize once manifest strings
 				l_byte_context.generate_once_manifest_string_initialization
 
-				buffer.exdent
-				buffer.put_character ('}')
-				buffer.put_new_line
+				buffer.generate_block_close
 				buffer.put_new_line
 
 				if final_mode then
@@ -795,7 +793,7 @@ feature -- Generation
 					Extern_declarations.generate_header_files (header_buffer)
 					Extern_declarations.wipe_out
 				end
-				buffer.close_c
+				buffer.end_c_specific_code
 
 				if not final_mode then
 						-- Give the information status in Workbench mode only on the
@@ -813,7 +811,7 @@ feature -- Generation
 				else
 					headers.put_in_file (file)
 				end
-				ext_inline_buffer.close_c
+				ext_inline_buffer.end_c_specific_code
 				ext_inline_buffer.put_in_file (file)
 				buffer.put_in_file (file)
 				file.close
@@ -1005,17 +1003,17 @@ feature -- Generation
 			buffer.generate_function_signature ("void", c_name, True, header_buffer,
 				<<"Current", "parent">>, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
 
-			buffer.indent
+			buffer.generate_block_open
+			buffer.put_gtcx
+			buffer.put_new_line
 			buffer.put_string ("uint32 offset_position = 0;")
 			buffer.put_new_line
 			buffer.put_string ("RTLD;")
 			buffer.put_new_line
-			buffer.put_new_line
 			buffer.put_string ("RTLI(2);")
-			buffer.put_new_line
 			buffer.put_current_registration (0)
-			buffer.put_new_line
 			buffer.put_local_registration (1, "parent")
+				-- Separation for formatting
 			buffer.put_new_line
 			from
 			until
@@ -1025,11 +1023,12 @@ feature -- Generation
 					--| arguments. This means we won't generate anything if there is nothing
 					--| to generate. Remember that `True' is used in the generation of attributes
 					--| table in Final mode.
+				buffer.put_new_line
 				buffer.put_string ("offset_position = ");
 				skeleton.generate(buffer, False)
 				buffer.put_character (';')
-				buffer.put_new_line
 					-- Initialize dynamic type of the bit attribute
+				buffer.put_new_line
 				buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
 				buffer.put_new_line
 				buffer.put_string ("RT_DFS(HEADER(Current + offset_position), egc_bit_dtype);")
@@ -1039,25 +1038,25 @@ feature -- Generation
 				buffer.put_string(") = ")
 				buffer.put_integer (bits_desc.value)
 				buffer.put_character (';')
-				buffer.put_new_line
 				skeleton.forth
 			end
 				-- Current class type is composite
-			buffer.put_string ("HEADER(Current)->ov_flags |= EO_COMP;")
 			buffer.put_new_line
+			buffer.put_string ("HEADER(Current)->ov_flags |= EO_COMP;")
 			from
 				i := 0
 			until
 				skeleton.after
 			loop
+			buffer.put_new_line
 				buffer.put_string ("offset_position = ");
 				position := skeleton.position
 				skeleton.generate(buffer, False)
 					-- There is a side effect with generation
 				skeleton.go_to (position)
 				buffer.put_character (';')
-				buffer.put_new_line
 
+				buffer.put_new_line
 				buffer.put_string ("*(EIF_REFERENCE *) (Current ")
 				value := nb_ref + i
 				if value /= 0 then
@@ -1066,19 +1065,19 @@ feature -- Generation
 					buffer.put_string (")")
 				end
 				buffer.put_string(") = Current + offset_position;")
-				buffer.put_new_line
 
 				exp_desc ?= skeleton.item;		-- Cannot fail
 					-- Initialize dynaminc type of the expanded object
 				gen_type ?= exp_desc.type_i
 
 					-- The dynamic type has to be set after setting the flags.
-				buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
 				buffer.put_new_line
+				buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
 
 				if gen_type /= Void then
 					generate_typres_computation_start (buffer, gen_type)
 				end
+				buffer.put_new_line
 				buffer.put_string ("RT_DFS(HEADER(Current + offset_position), ")
 				if gen_type = Void then
 					l_formal ?= exp_desc.type_i
@@ -1094,15 +1093,14 @@ feature -- Generation
 				end
 				buffer.put_character (')')
 				buffer.put_character (';')
-				buffer.put_new_line
 				if gen_type /= Void then
 					generate_typres_computation_end (buffer)
 				end
 
 					-- Mark expanded object
+				buffer.put_new_line
 				buffer.put_string ("HEADER(Current + offset_position)->ov_size = ")
 				buffer.put_string ("offset_position + (Current - parent);")
-				buffer.put_new_line
 
 					-- Initializes expanded attribute if needed and then call creation procedure
 					-- if needed.
@@ -1112,8 +1110,11 @@ feature -- Generation
 				skeleton.forth
 				i := i + 1
 			end
-			buffer.put_string ("RTLE;%N}%N%N")
-			buffer.exdent
+			buffer.put_new_line
+			buffer.put_string ("RTLE;")
+			buffer.generate_block_close
+				-- Separation for formatting
+			buffer.put_new_line
 		end
 
 	generate_typres_computation_start (buffer: GENERATION_BUFFER; gen_type: GEN_TYPE_I) is
@@ -1127,8 +1128,8 @@ feature -- Generation
 		do
 			final_mode := byte_context.final_mode
 
-			buffer.put_character ('{')
 			buffer.put_new_line
+			buffer.put_character ('{')
 			buffer.indent
 
 			use_init := not gen_type.is_explicit
@@ -1137,6 +1138,7 @@ feature -- Generation
 				-- not modified by generated code in multithreaded mode only.
 				-- It is safe in monothreaded code as we are guaranteed that
 				-- only one thread of execution will use the modified `typarr'.
+			buffer.put_new_line
 			if not System.has_multithreaded or else not use_init then
 				buffer.put_string ("static ")
 			end
@@ -1157,17 +1159,16 @@ feature -- Generation
 			buffer.put_string ("};")
 			buffer.put_new_line
 			buffer.put_string ("EIF_TYPE_INDEX typres;")
-			buffer.put_new_line
 			if not use_init then
-				buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
+				buffer.put_new_line
 				buffer.put_new_line
 			end
-			buffer.put_new_line
 			if use_init then
 				idx_cnt.set_value (1)
 				gen_type.generate_cid_init (buffer, final_mode, False, idx_cnt)
 			end
 
+			buffer.put_new_line
 			if not use_init then
 				buffer.put_string ("typres = RTCID2(&typcache, Dftype(Current),")
 			else
@@ -1175,7 +1176,6 @@ feature -- Generation
 			end
 			buffer.put_integer (gen_type.generated_id (final_mode))
 			buffer.put_string (", typarr);")
-			buffer.put_new_line
 		end
 
 	generate_typres_computation_end (buffer: GENERATION_BUFFER) is
@@ -1184,8 +1184,8 @@ feature -- Generation
 			buffer_exists: buffer /= Void
 		do
 			buffer.exdent
-			buffer.put_character ('}')
 			buffer.put_new_line
+			buffer.put_character ('}')
 		end
 
 	mark_creation_routine (r: REMOVER) is
@@ -1438,37 +1438,48 @@ feature -- Skeleton generation
 		do
 			a_class := associated_class
 			skeleton_empty := skeleton.empty
-			buffer.put_string ("{%N(long) ")
+			buffer.generate_block_open
+			buffer.put_new_line
+			buffer.put_string ("(long) ")
 			buffer.put_integer (skeleton.count)
-			buffer.put_string (",%N")
+			buffer.put_character (',')
+			buffer.put_new_line
 			buffer.put_string_literal (a_class.name)
-			buffer.put_string (",%N")
+			buffer.put_character (',')
+			buffer.put_new_line
 			if not skeleton_empty then
 				buffer.put_string ("names")
 				buffer.put_integer (type_id)
-				buffer.put_string (",%N")
 			else
-				buffer.put_string ("(char **) 0,%N")
+				buffer.put_string ("NULL")
 			end
+			buffer.put_character (',')
+			buffer.put_new_line
 			buffer.put_string ("cn_parents")
 			buffer.put_integer (type_id)
-			buffer.put_string (",%N")
+			buffer.put_character (',')
+			buffer.put_new_line
 			if not skeleton_empty then
 				buffer.put_string ("types")
 				buffer.put_integer (type_id)
-				buffer.put_string (",%N")
+				buffer.put_character (',')
+				buffer.put_new_line
 				buffer.put_string ("gtypes")
 				buffer.put_integer (type_id)
-				buffer.put_string (",%N")
 			else
-				buffer.put_string ("NULL,%N")
-				buffer.put_string ("NULL,%N")
+				buffer.put_string ("NULL")
+				buffer.put_character (',')
+				buffer.put_new_line
+				buffer.put_string ("NULL")
 			end
 
 				-- Store Skeleton flag associated to Current type
+			buffer.put_character (',')
+			buffer.put_new_line
 			buffer.put_string ("(uint16) ")
 			buffer.put_integer (skeleton_flags)
-			buffer.put_string (",%N")
+			buffer.put_character (',')
+			buffer.put_new_line
 
 			if byte_context.final_mode then
 				if
@@ -1478,7 +1489,8 @@ feature -- Skeleton generation
 				else
 					buffer.put_string ("(void (*)()) 0")
 				end
-				buffer.put_string (",%N")
+				buffer.put_character (',')
+				buffer.put_new_line
 
 				if not skeleton_empty then
 					buffer.put_string ("offsets")
@@ -1496,16 +1508,19 @@ feature -- Skeleton generation
 				else
 					buffer.put_string ("(int32 *) 0")
 				end
-				buffer.put_string (",%N")
+				buffer.put_character (',')
+				buffer.put_new_line
 
 					-- Skeleton size
 				skeleton.generate_workbench_size (buffer)
-				buffer.put_string (",%N")
+				buffer.put_character (',')
+				buffer.put_new_line
 
 					-- Skeleton number of references
 				buffer.put_integer
 						(skeleton.nb_reference + skeleton.nb_expanded)
-				buffer.put_string ("L,%N")
+				buffer.put_two_character ('L', ',')
+				buffer.put_new_line
 
 				if
 					not Compilation_modes.is_precompiling and
@@ -1536,7 +1551,8 @@ feature -- Skeleton generation
 						buffer.put_string ("0,(int32) 0")
 					end
 				end
-				buffer.put_string (",%N")
+				buffer.put_character (',')
+				buffer.put_new_line
 
 				if
 					not Compilation_modes.is_precompiling and
@@ -1548,15 +1564,14 @@ feature -- Skeleton generation
 				else
 					buffer.put_string ("(int32 *) 0")
 				end
-				buffer.put_string (",%N")
+				buffer.put_character (',')
 
 				if a_class.has_visible then
 						-- Generate cecil structure if any
 					generate_cecil (buffer)
 				end
 			end
-
-			buffer.put_character ('}')
+			buffer.generate_block_close
 		end
 
 feature -- Structure generation
@@ -1569,6 +1584,7 @@ feature -- Structure generation
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
+			buffer.put_new_line
 			buffer.put_string (expanded_structure_name)
 			buffer.put_character (' ')
 			buffer.put_string (a_name)
@@ -1581,10 +1597,9 @@ feature -- Structure generation
 			buffer_not_void: buffer /= Void
 		do
 			if is_expanded then
+				buffer.put_new_line
 				buffer.put_string (expanded_structure_name)
 				buffer.put_string (" {")
-				buffer.put_new_line
-				buffer.indent
 				buffer.put_string ("char data [")
 				if byte_context.final_mode then
 					skeleton.generate_size (buffer)
@@ -1592,11 +1607,7 @@ feature -- Structure generation
 					buffer.put_integer (skeleton.workbench_size)
 				end
 				generate_expanded_overhead_size (buffer)
-				buffer.put_string ("];")
-				buffer.put_new_line
-				buffer.exdent
-				buffer.put_string ("};")
-				buffer.put_new_line
+				buffer.put_string ("]; };")
 			end
 		end
 
@@ -1629,14 +1640,15 @@ feature -- Structure generation
 --			if l_workbench_mode or else (skeleton.has_references or l_gen_type /= Void) then
 					-- The dynamic type has to be set after setting the flags.
 					-- Also note that we use EO_C as those expanded cannot move.
+				buffer.put_new_line
 				buffer.put_string ("((union overhead *) ")
 				buffer.put_string (a_name)
 				buffer.put_string (".data)->ov_flags = EO_EXP | EO_C;")
-				buffer.put_new_line
 
 				if l_gen_type /= Void then
 					generate_typres_computation_start (buffer, l_gen_type)
 				end
+				buffer.put_new_line
 				buffer.put_string ("RT_DFS((union overhead *) ")
 				buffer.put_string (a_name)
 				buffer.put_string (".data, ")
@@ -1654,12 +1666,10 @@ feature -- Structure generation
 				end
 				buffer.put_character (')')
 				buffer.put_character (';')
-				buffer.put_new_line
 				if l_gen_type /= Void then
 					generate_typres_computation_end (buffer)
 				end
 --			end
-			buffer.put_new_line
 		end
 
 	generate_expanded_creation (buffer: GENERATION_BUFFER; a_target_name: STRING; a_type: CL_TYPE_I) is
@@ -1679,6 +1689,7 @@ feature -- Structure generation
 			l_workbench_mode := byte_context.workbench_mode
 			if l_gen_type = Void then
 					-- Not a generic type.
+				buffer.put_new_line
 				buffer.put_string (a_target_name)
 				buffer.put_string ("= RTLN(")
 				if l_workbench_mode then
@@ -1691,13 +1702,12 @@ feature -- Structure generation
 				buffer.put_string (");")
 			else
 				generate_typres_computation_start (buffer, l_gen_type)
+				buffer.put_new_line
 				buffer.put_string (a_target_name)
 				buffer.put_string ("= RTLN(typres)")
 				buffer.put_character (';')
-				buffer.put_new_line
 				generate_typres_computation_end (buffer)
 			end
-			buffer.put_new_line
 		end
 
 	generate_expanded_initialization (buffer: GENERATION_BUFFER; a_target_name, a_parent_name: STRING; needs_initialization: BOOLEAN) is
@@ -1719,33 +1729,33 @@ feature -- Structure generation
 		do
 			if needs_initialization then
 				if byte_context.workbench_mode then
+					buffer.put_new_line
 					buffer.put_string ("wstdinit(")
 					buffer.put_string (a_target_name)
 					buffer.put_character (',')
 					buffer.put_string (a_parent_name)
 					buffer.put_string (");")
-					buffer.put_new_line
 				else
 					if has_creation_routine then
 						c_name := encoder.feature_name (static_type_id, initialization_body_index)
 						Extern_declarations.add_routine_with_signature (Void_c_type.c_string,
 							c_name, <<"EIF_REFERENCE, EIF_REFERENCE">>)
+						buffer.put_new_line
 						buffer.put_string (c_name)
 						buffer.put_character ('(')
 						buffer.put_string (a_target_name)
 						buffer.put_character (',')
 						buffer.put_string (a_parent_name)
 						buffer.put_string (");")
-						buffer.put_new_line
 					end
 				end
 			end
 			if byte_context.workbench_mode then
 					-- RTLEI is a macro used to initialize expanded types
+				buffer.put_new_line
 				buffer.put_string ("RTLXI(")
 				buffer.put_string (a_target_name)
 				buffer.put_string (");")
-				buffer.put_new_line
 			else
 					-- Manually call creation procedure on `a_target_name' only if
 					-- it is not the version of ANY or if it is not empty.
@@ -1758,13 +1768,13 @@ feature -- Structure generation
 					l_written_type := l_written_class.meta_type (Current)
 					c_name := Encoder.feature_name (l_written_type.static_type_id,
 						creation_feature.body_index)
+					buffer.put_new_line
 					buffer.put_string (c_name)
 					buffer.put_character ('(')
 					buffer.put_string (a_target_name)
 					Extern_declarations.add_routine_with_signature (Void_c_type.c_string,
 						c_name, <<"EIF_REFERENCE">>)
 					buffer.put_string (");")
-					buffer.put_new_line
 				end
 			end
 		end
@@ -1790,6 +1800,7 @@ feature -- Cecil generation
 			final_mode: BOOLEAN
 		do
 			final_mode := byte_context.final_mode
+			buffer.put_new_line
 			buffer.put_character ('{')
 			buffer.put_string ("(int32) ")
 			buffer.put_integer (associated_class.visible_table_size)

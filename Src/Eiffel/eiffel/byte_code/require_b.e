@@ -51,14 +51,14 @@ feature
 			if l_context.is_new_precondition_block then
 				first_generated := l_context.is_first_precondition_block_generated
 				if first_generated then
-					buf.put_string ("RTJB;")
 					buf.put_new_line
+					buf.put_string ("RTJB;")
 				end
 				l_context.generate_current_label_definition
 				l_context.inc_label
 				if first_generated then
-					buf.put_string ("RTCK;")
 					buf.put_new_line
+					buf.put_string ("RTCK;")
 				else
 					l_context.set_first_precondition_block_generated (True)
 				end
@@ -69,6 +69,7 @@ feature
 			generate_frozen_debugger_hook
 
 				-- Generate the recording of the assertion
+			buf.put_new_line
 			if tag /= Void then
 				buf.put_string ("RTCT(")
 				buf.put_character ('"')
@@ -80,11 +81,11 @@ feature
 			end
 			generate_assertion_code (l_context.assertion_type)
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 
 				-- Now evaluate the expression
 			l_expr := expr
 			l_expr.generate
+			buf.put_new_line
 			buf.put_string ("RTTE(")
 			l_expr.print_register
 			buf.put_string (gc_comma)
@@ -92,7 +93,6 @@ feature
 			buf.put_string (gc_rparan_semi_c)
 			buf.put_new_line
 			buf.put_string ("RTCK;")
-			buf.put_new_line
 		end
 
 indexing

@@ -110,12 +110,12 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
+			buffer.put_new_line
 			buffer.put_string ("typarr[")
 			buffer.put_integer (idx_cnt.value)
 			buffer.put_string ("] = RTID(")
 			context.generate_current_dftype
 			buffer.put_string (");")
-			buffer.put_new_line
 			dummy := idx_cnt.next
 		end
 

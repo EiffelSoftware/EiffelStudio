@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ONCE_STRING_BL 
+	ONCE_STRING_BL
 
 inherit
 	ONCE_STRING_B
@@ -24,7 +24,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	register: REGISTRABLE
 			-- Where string is kept to ensure it is GC safe
@@ -64,6 +64,7 @@ feature
 				buf := buffer
 					-- RTCOMS is the macro used to retrieve previously created once manifest strings
 					-- or to create a new one if this is the first acceess to the string
+				buf.put_new_line
 				buf.put_string ("RTCOMS(")
 				register.print_register
 				buf.put_character (',')
@@ -78,7 +79,6 @@ feature
 				buf.put_integer (value.hash_code)
 				buf.put_character (')')
 				buf.put_character (';')
-				buf.put_new_line
 			end
 		end
 

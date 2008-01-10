@@ -83,6 +83,7 @@ feature -- Code generation
 			if not l_ret_type.is_void then
 				put_eif_test := l_ret_type.is_boolean
 				l_is_func := True
+				l_buffer.put_new_line
 				a_result.print_register
 				l_buffer.put_string (" = ")
 				if put_eif_test then
@@ -150,10 +151,9 @@ feature -- Code generation
 			context.set_buffer (buf)
 			uc_name := name.as_upper
 
+			buf.put_new_line_only
 			buf.put_string ("#ifndef INLINE_")
 			buf.put_string (uc_name)
-			buf.put_new_line
-			buf.put_new_line
 
 			if a_ret_type.is_boolean then
 				type := "int"
@@ -161,7 +161,7 @@ feature -- Code generation
 				type := a_ret_type.c_type.c_string
 			end
 
-			buf.generate_pure_function_signature (
+			buf.generate_function_signature (
 				type,
 				inline_name (name),
 				False,
@@ -169,23 +169,19 @@ feature -- Code generation
 				inline_arg_names (arg_types.count),
 				arg_types)
 
-			buf.put_character ('{')
-			buf.put_new_line
+			buf.generate_block_open
 
 			internal_generate_inline (a_ret_type)
-			buf.put_character ('%N')
+			buf.put_new_line
 			buf.put_character (';')
 
-			buf.put_new_line
-			buf.put_character ('}')
-			buf.put_new_line
+			buf.generate_block_close
 
+			buf.put_new_line_only
 			buf.put_string ("#define INLINE_")
 			buf.put_string (uc_name)
-			buf.put_new_line
-			buf.put_string ( "#endif" )
-			buf.put_new_line
-			buf.put_new_line
+			buf.put_new_line_only
+			buf.put_string ("#endif" )
 			context.set_buffer (old_buf)
 		end
 
@@ -293,6 +289,7 @@ feature {NONE} -- Implementation
 				l_code.replace_substring_all ("%R", "")
 
 				l_buffer := Context.buffer
+				l_buffer.put_new_line
 				if a_ret_type.is_void then
 					l_buffer.put_string (l_code)
 				else

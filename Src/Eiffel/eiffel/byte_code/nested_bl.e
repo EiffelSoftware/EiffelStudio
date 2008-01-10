@@ -375,6 +375,7 @@ end
 				-- assignment.
 			agent_call ?= message_target
 			complex_message_target := agent_call /= Void
+			buf.put_new_line
 			if register /= Void and then register /= No_register and then not complex_message_target then
 				register.print_register
 				buf.put_string (" = ")
@@ -385,14 +386,13 @@ end
 			if register /= No_register then
 				message_target.generate_on (reg)
 				buf.put_character (';')
-				buf.put_new_line
 
 				if register /= Void and then complex_message_target then
+					buf.put_new_line
 					register.print_register
 					buf.put_string (" = ")
 					message_target.register.print_register
 					buf.put_character (';')
-					buf.put_new_line
 				end
 			end
 		end

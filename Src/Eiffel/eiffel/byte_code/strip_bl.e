@@ -9,12 +9,12 @@ inherit
 
 	STRIP_B
 		redefine
-			analyze, generate, 
+			analyze, generate,
 			register, set_register,
 			unanalyze, allocates_memory
 		end;
 
-feature 
+feature
 
 	register: REGISTRABLE;
 			-- Register for array containing the strip
@@ -30,7 +30,7 @@ feature
 		do
 			register := Void
 		end;
-	
+
 	analyze is
 			-- Analyze expression
 		do
@@ -47,9 +47,10 @@ feature
 		do
 			buf := buffer
 			cl_type := Context.class_type;
-			buf.put_character ('{');
 			buf.put_new_line;
+			buf.put_character ('{');
 			buf.indent;
+			buf.put_new_line
 			generate_attribute_names_list;
 			print_register;
 			buf.put_string (" = ");
@@ -66,10 +67,9 @@ feature
 			buf.put_string (", items, ");
 			buf.put_integer (feature_ids.count);
 			buf.put_string ("L);");
-			buf.put_new_line;
 			buf.exdent;
-			buf.put_string (" }");
 			buf.put_new_line;
+			buf.put_string (" }");
 		end;
 
 	generate_attribute_names_list is
@@ -77,7 +77,7 @@ feature
 		require
 			attribute_names_not_void: attribute_names /= Void
 		local
-			attr_names: LINKED_LIST [STRING];	
+			attr_names: LINKED_LIST [STRING];
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -96,7 +96,7 @@ feature
 					attr_names.forth;
 					if not attr_names.after then
 						buf.put_string (gc_comma);
-					end;	
+					end;
 				end;
 				buf.put_string (" };");
 			else

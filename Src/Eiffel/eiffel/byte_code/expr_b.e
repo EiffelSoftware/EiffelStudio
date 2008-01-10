@@ -261,6 +261,7 @@ feature -- C generation
 					end
 					basic_i.metamorphose (target_register, Current, buf)
 				else
+					buf.put_new_line
 					target_register.print_register
 					buf.put_string (" = ")
 					buf.put_string ("RTRCL(")
@@ -268,26 +269,25 @@ feature -- C generation
 					buf.put_character (')')
 				end
 				buf.put_character (';')
-				buf.put_new_line
 			elseif target_type.is_true_expanded then
+				buf.put_new_line
 				target_register.print_register
 				buf.put_string (" = ")
 				buf.put_string ("RTRCL(")
 				print_register
 				buf.put_string (gc_rparan_semi_c)
-				buf.put_new_line
 			elseif expression_type.is_reference then
+				buf.put_new_line
 				target_register.print_register
 				buf.put_string (" = ")
 				generate_dynamic_clone (Current, expression_type)
 				buf.put_character (';')
-				buf.put_new_line
 			elseif target_register /= Void and then target_register /= register then
+				buf.put_new_line
 				target_register.print_register
 				buf.put_string (" = ")
 				print_register
 				buf.put_character (';')
-				buf.put_new_line
 			end
 		end
 

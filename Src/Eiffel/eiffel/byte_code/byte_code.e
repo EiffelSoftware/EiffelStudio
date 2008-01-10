@@ -478,11 +478,11 @@ feature -- Settings
 				or else inh_assert.has_old_expression)
 			then
 				buf := buffer
+				buf.put_new_line
 				buf.put_string ("if (RTAL & CK_ENSURE) {")
-				buf.put_new_line
 				buf.indent
-				buf.put_string ("in_assertion = ~0;")
 				buf.put_new_line
+				buf.put_string ("in_assertion = ~0;")
 				if old_expressions /= Void then
 					from
 						old_expressions.start
@@ -499,12 +499,12 @@ feature -- Settings
 					inh_assert.generate_old_variables
 				end
 
-				buf.put_string ("in_assertion = 0;")
 				buf.put_new_line
+				buf.put_string ("in_assertion = 0;")
 
 				buf.exdent
-				buf.put_character ('}')
 				buf.put_new_line
+				buf.put_character ('}')
 			end
 		end
 

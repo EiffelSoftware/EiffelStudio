@@ -403,7 +403,7 @@ feature -- Genericity
 				else
 						-- Attribute is polymorphic
 					table_name := Encoder.type_table_name (routine_id)
-
+					buffer.put_new_line
 					buffer.put_string ("typarr[")
 					buffer.put_integer (idx_cnt.value)
 					buffer.put_string ("] = RTFCID2(")
@@ -418,7 +418,6 @@ feature -- Genericity
 					buffer.put_character (',')
 					buffer.put_type_id (table.min_type_id)
 					buffer.put_string (");")
-					buffer.put_new_line
 					dummy := idx_cnt.next
 
 						-- Side effect. This is not nice but
@@ -429,6 +428,7 @@ feature -- Genericity
 					Extern_declarations.add_type_table (table_name)
 				end
 			else
+				buffer.put_new_line
 				if
 					Compilation_modes.is_precompiling or
 					context.current_type.base_class.is_precompiled
@@ -454,7 +454,6 @@ feature -- Genericity
 				buffer.put_string (gc_comma)
 				context.Current_register.print_register
 				buffer.put_string ("));")
-				buffer.put_new_line
 				dummy := idx_cnt.next
 			end
 		end

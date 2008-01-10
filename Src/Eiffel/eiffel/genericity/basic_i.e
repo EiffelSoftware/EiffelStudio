@@ -124,23 +124,23 @@ feature -- Byte code generation
 			buf := buffer
 			create c.make (Current)
 			if true_generics /= Void then
-				buf.put_character ('{')
-				buf.put_new_line
-				buf.indent
 				g ?= Current
+				buf.put_new_line
+				buf.put_character ('{')
+				buf.indent
 				system.byte_context.generate_gen_type_conversion (g)
 			end
+			buf.put_new_line
 			reg.print_register
 			buf.put_string (" = ")
 			c.generate
 			buf.put_character (';')
-			buf.put_new_line
 			if true_generics /= Void then
-				buf.put_new_line
 				buf.exdent
-				buf.put_character ('}')
 				buf.put_new_line
+				buf.put_character ('}')
 			end
+			buf.put_new_line
 			buf.put_character ('*')
 			generate_access_cast (buffer)
 			reg.print_register

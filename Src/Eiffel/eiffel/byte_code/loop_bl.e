@@ -83,8 +83,6 @@ feature -- Access
 				generate_variant := variant_part /= Void
 				generate_invariant := invariant_part /= Void
 			end
-				-- Outstand loop structure
-			buffer.put_new_line
 
 				-- Generate the "from" part
 			if from_part /= Void then
@@ -153,10 +151,10 @@ feature -- Access
 				-- the end of the while body.
 				-- FIXME: maybe if the expression is too complex, we should
 				-- use the old mechanism (pre 3.2.5) with label and goto
+			buffer.put_new_line
 			buf.put_string ("while (!(")
 			stop.print_register
 			buf.put_string (")) {")
-			buf.put_new_line
 			buf.indent
 			if compound /= Void then
 				compound.generate
@@ -211,13 +209,9 @@ feature -- Access
 				set_current_frozen_debugger_hook (body_breakpoint_slot)
 			end
 
-			buf.put_character (';')
-			buf.put_new_line
 			buf.exdent
+			buf.put_new_line
 			buf.put_character ('}')
-			buf.put_new_line
-				-- Outstand loop structure
-			buf.put_new_line
 		end
 
 	generate_workbench_test is
@@ -228,8 +222,8 @@ feature -- Access
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.put_string ("if (RTAL & CK_LOOP) {")
 			buf.put_new_line
+			buf.put_string ("if (RTAL & CK_LOOP) {")
 			buf.indent
 		end
 
@@ -242,8 +236,8 @@ feature -- Access
 		do
 			buf := buffer
 			buf.exdent
-			buf.put_character ('}')
 			buf.put_new_line
+			buf.put_character ('}')
 		end
 
 	generate_final_mode_test is
@@ -251,8 +245,8 @@ feature -- Access
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.put_string ("if (~in_assertion) {")
 			buf.put_new_line
+			buf.put_string ("if (~in_assertion) {")
 			buf.indent
 		end
 
@@ -262,8 +256,8 @@ feature -- Access
 		do
 			buf := buffer
 			buf.exdent
-			buf.put_character ('}')
 			buf.put_new_line
+			buf.put_character ('}')
 		end
 
 	fill_from (l: LOOP_B) is

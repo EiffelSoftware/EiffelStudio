@@ -125,6 +125,7 @@ feature -- C code generation
 
 				-- Check validity of call
 			if not final_mode or else associated_class.assertion_level.is_precondition then
+				buffer.put_new_line
 				buffer.put_string ("if (")
 				nb_register.print_immediate_register
 				buffer.put_string ("< 0) {")
@@ -147,6 +148,7 @@ feature -- C code generation
 			end
 
 				-- Generate recipient of newly created SPECIAL instance.
+			buffer.put_new_line
 			target_register.print_register
 
 				-- 1. Dynamic type with flags
@@ -226,7 +228,6 @@ feature -- C code generation
 				buffer.exdent
 				buffer.put_character ('}')
 			end
-			buffer.put_new_line
 		end
 
 	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
@@ -290,7 +291,7 @@ feature {NONE} -- C code generation
 			l_param_is_expanded := gen_param.is_true_expanded
 			type_c := gen_param.c_type
 
-			buffer.put_string ("/* put */%N")
+			feat.generate_header (Current, buffer)
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index)
 
 			System.used_features_log_file.add (Current, "put", encoded_name)
@@ -313,31 +314,30 @@ feature {NONE} -- C code generation
 				l_byte_context.header_buffer, <<"Current", value_arg_name, index_arg_name>>,
 				<<"EIF_REFERENCE", value_type_name, index_type_name>>)
 
-			buffer.indent
+			buffer.generate_block_open
+			buffer.put_gtcx
 
 			if not final_mode then
 				if not type_c.is_pointer then
+					buffer.put_new_line
 					buffer.put_string ("if (arg1x.type == SK_REF) arg1x.")
 					type_c.generate_typed_field (buffer)
 					buffer.put_string (" = * ")
 					type_c.generate_access_cast (buffer)
 					buffer.put_string ("arg1x.it_r;")
 				end
-				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
 				buffer.put_new_line
-				buffer.left_margin
+				buffer.put_string ("if (arg2x.type == SK_REF) arg2x.it_i4 = * (EIF_INTEGER_32 *) arg2x.it_r;")
+				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.")
 				type_c.generate_typed_field (buffer)
-				buffer.put_new_line
+				buffer.put_new_line_only
 				buffer.put_string ("#define arg2 arg2x.it_i4")
-				buffer.put_new_line
-				buffer.restore_margin
 			end
 
 			if not final_mode and then l_param_is_expanded then
-				buffer.put_string ("%
-					%%Tif (arg1 == (EIF_REFERENCE) 0)%N%
-					%%T%TRTEC(EN_VEXP);%N")
+				buffer.put_new_line
+				buffer.put_string ("if (arg1 == NULL) RTEC(EN_VEXP);")
 			end
 
 			generate_precondition (buffer, final_mode, "arg2")
@@ -346,52 +346,56 @@ feature {NONE} -- C code generation
 				if final_mode then
 					expanded_type ?= gen_param
 					l_exp_class_type := expanded_type.associated_class_type
+					buffer.put_new_line
 					if l_exp_class_type.skeleton.has_references then
 							-- Optimization: size is know at compile time
-						buffer.put_string ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (");
+						buffer.put_string ("ecopy(arg1, Current + OVERHEAD + arg2 * (");
 						l_exp_class_type.skeleton.generate_size (buffer)
-						buffer.put_string (" + OVERHEAD));%N")
+						buffer.put_string (" + OVERHEAD));")
 					else
 							-- No references, do a simple `memcpy'.
-						buffer.put_string ("%Tmemcpy(Current + arg2 * ")
+						buffer.put_new_line
+						buffer.put_string ("memcpy(Current + arg2 * ")
 						l_exp_class_type.skeleton.generate_size (buffer)
 						buffer.put_string (", arg1, ")
 						l_exp_class_type.skeleton.generate_size (buffer)
-						buffer.put_string (");%N")
+						buffer.put_string (");")
 					end
 				else
+					buffer.put_new_line
 					buffer.put_string ("ecopy(arg1, Current + OVERHEAD + arg2 * (%
 						%*(EIF_INTEGER *) (Current + %
 						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
-						%sizeof(EIF_INTEGER))));%N")
+						%sizeof(EIF_INTEGER))));")
 				end
 			else
+				buffer.put_new_line
 				buffer.put_string ("*(")
 				type_c.generate_access_cast (buffer)
 				buffer.put_string (" Current + arg2) = arg1;")
-				buffer.put_new_line
 				if type_c.level = c_ref then
+					buffer.put_new_line
 					buffer.put_string ("RTAR(Current, arg1);%N")
 				end
 			end
 
-			buffer.exdent
+			buffer.generate_block_close
 			if not final_mode then
+				buffer.put_new_line_only
 				buffer.put_string ("#undef arg1")
-				buffer.put_new_line
+				buffer.put_new_line_only
 				buffer.put_string ("#undef arg2")
-				buffer.put_new_line
 			end
-			buffer.put_string ("%N}%N")
+				-- Separation for formatting
+			buffer.put_new_line
 
 			if final_mode then
 					-- Generate generic wrapper.
-				buffer.generate_pure_function_signature ("void", encoded_name + "2", True,
+				buffer.generate_function_signature ("void", encoded_name + "2", True,
 					l_byte_context.header_buffer, <<"Current", "arg1", "arg2">>,
 					<<"EIF_REFERENCE", "EIF_REFERENCE", "EIF_INTEGER">>)
-				buffer.put_character ('{')
+				buffer.generate_block_open
 				buffer.put_new_line
-				buffer.indent
 				if l_param_is_expanded or else type_c.level = c_ref or else associated_class.assertion_level.is_precondition then
 					buffer.put_string (encoded_name)
 					buffer.put_string (" (Current, ")
@@ -410,13 +414,10 @@ feature {NONE} -- C code generation
 					end
 					buffer.put_string ("arg1;")
 				end
-				buffer.exdent
-				buffer.put_new_line
-				buffer.put_character ('}')
+				buffer.generate_block_close
+					-- Separation for formatting
 				buffer.put_new_line
 			end
-
-			buffer.put_new_line
 
 			l_byte_context.clear_feature_data
 		end
@@ -446,7 +447,7 @@ feature {NONE} -- C code generation
 			l_param_is_expanded := gen_param.is_true_expanded
 			type_c := gen_param.c_type
 
-			buffer.put_string ("/* item */%N")
+			feat.generate_header (Current, buffer)
 
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index)
 
@@ -468,19 +469,21 @@ feature {NONE} -- C code generation
 				byte_context.header_buffer,
 				<<"Current", arg_name>>, <<"EIF_REFERENCE", arg_type_name>>)
 
-			buffer.indent
+			buffer.generate_block_open
+			buffer.put_gtcx
 
 			if l_param_is_expanded and final_mode then
 				expanded_type ?= gen_param;
 				l_exp_class_type := expanded_type.associated_class_type
 				l_exp_has_references := l_exp_class_type.skeleton.has_references
 				if not l_exp_has_references then
-					buffer.put_string ("EIF_REFERENCE Result;")
 					buffer.put_new_line
+					buffer.put_string ("EIF_REFERENCE Result;")
 				end
 			end
 
 			if not final_mode then
+				buffer.put_new_line
 				buffer.put_string ("EIF_TYPED_VALUE r;")
 				buffer.put_new_line
 				buffer.put_string ("r.")
@@ -488,22 +491,20 @@ feature {NONE} -- C code generation
 				buffer.put_character (';')
 				buffer.put_new_line
 				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
-				buffer.put_new_line
-				buffer.left_margin
+				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.it_i4")
-				buffer.put_new_line
-				buffer.restore_margin
 			end
 
 			generate_precondition (buffer, final_mode, "arg1")
 
+			buffer.put_new_line
 			if l_param_is_expanded then
 				if final_mode then
 						-- Optimization: size of expanded is known at compile time
 					if l_exp_has_references then
 						buffer.put_string ("return RTCL(Current + OVERHEAD + arg1 * (")
 						l_exp_class_type.skeleton.generate_size (buffer)
-						buffer.put_string (" + OVERHEAD));%N")
+						buffer.put_string (" + OVERHEAD));")
 					else
 						buffer.put_string ("RTLD;")
 						buffer.put_new_line
@@ -549,22 +550,21 @@ feature {NONE} -- C code generation
 				buffer.put_character (';')
 			end
 
-			buffer.exdent
+			buffer.generate_block_close
 			if not final_mode then
-				buffer.put_new_line
+				buffer.put_new_line_only
 				buffer.put_string ("#undef arg1")
 			end
-			buffer.put_string ("%N}%N")
+			buffer.put_new_line
 
 			if final_mode then
 					-- Generate generic wrapper.
-				buffer.generate_pure_function_signature ("EIF_REFERENCE", encoded_name + "1", True,
+				buffer.generate_function_signature ("EIF_REFERENCE", encoded_name + "1", True,
 					Byte_context.header_buffer, <<"Current", "arg1">>,
 					<<"EIF_REFERENCE", "EIF_INTEGER">>)
-				buffer.put_character ('{')
-				buffer.put_new_line
-				buffer.indent
+				buffer.generate_block_open
 				basic_i ?= gen_param
+				buffer.put_new_line
 				if basic_i = Void then
 					buffer.put_string ("return ")
 				else
@@ -582,21 +582,16 @@ feature {NONE} -- C code generation
 					type_c.generate_access_cast (buffer)
 					buffer.put_string (" Current + arg1);")
 				end
-				buffer.put_new_line
 				if basic_i /= Void then
 					basic_i.metamorphose (create {NAMED_REGISTER}.make ("Result", reference_c_type), create {NAMED_REGISTER}.make ("r", basic_i.c_type), buffer)
 					buffer.put_character (';')
 					buffer.put_new_line
 					buffer.put_string ("return Result;")
-					buffer.put_new_line
 				end
-				buffer.exdent
-				buffer.put_new_line
-				buffer.put_character ('}')
+				buffer.generate_block_close
+					-- Separation for formatting
 				buffer.put_new_line
 			end
-
-			buffer.put_new_line
 
 			byte_context.clear_feature_data
 		end
@@ -624,7 +619,7 @@ feature {NONE} -- C code generation
 			l_param_is_expanded := gen_param.is_true_expanded
 			type_c := gen_param.c_type
 
-			buffer.put_string ("/* item_address */%N")
+			feat.generate_header (Current, buffer)
 
 			result_type := feat.type.type_i.instantiation_in (Current)
 
@@ -646,9 +641,11 @@ feature {NONE} -- C code generation
 				l_byte_context.header_buffer,
 				<<"Current", index_arg_name>>, <<"EIF_REFERENCE", index_type_name>>)
 
-			buffer.indent
+			buffer.generate_block_open
+			buffer.put_gtcx
 
 			if l_byte_context.workbench_mode then
+				buffer.put_new_line
 				buffer.put_string ("EIF_TYPED_VALUE r;")
 				buffer.put_new_line
 				buffer.put_string ("r.")
@@ -656,15 +653,13 @@ feature {NONE} -- C code generation
 				buffer.put_character (';')
 				buffer.put_new_line
 				buffer.put_string ("if (arg1x.type == SK_REF) arg1x.it_i4 = * (EIF_INTEGER_32 *) arg1x.it_r;")
-				buffer.put_new_line
-				buffer.left_margin
+				buffer.put_new_line_only
 				buffer.put_string ("#define arg1 arg1x.it_i4")
-				buffer.put_new_line
-				buffer.restore_margin
 			end
 
 			generate_precondition (buffer, l_byte_context.final_mode, "arg1")
 
+			buffer.put_new_line
 			if l_byte_context.workbench_mode then
 				buffer.put_string ("r.")
 				result_type.c_type.generate_typed_field (buffer)
@@ -704,13 +699,13 @@ feature {NONE} -- C code generation
 				buffer.put_new_line
 				buffer.put_string ("return r;")
 			end
-			buffer.exdent
+			buffer.generate_block_close
 			if l_byte_context.workbench_mode then
-				buffer.put_new_line
+				buffer.put_new_line_only
 				buffer.put_string ("#undef arg1")
 			end
-			buffer.put_string ("%N}%N%N")
-
+				-- Separation for formatting
+			buffer.put_new_line
 			l_byte_context.clear_feature_data
 		end
 
@@ -730,7 +725,7 @@ feature {NONE} -- C code generation
 			l_param_is_expanded := gen_param.is_true_expanded
 			type_c := gen_param.c_type
 
-			buffer.put_string ("/* base_address */%N")
+			feat.generate_header (Current, buffer)
 
 			result_type := feat.type.type_i.instantiation_in (Current)
 
@@ -748,8 +743,9 @@ feature {NONE} -- C code generation
 				byte_context.header_buffer,
 				<<"Current">>, <<"EIF_REFERENCE">>)
 
-			buffer.indent
+			buffer.generate_block_open
 
+			buffer.put_new_line
 			if byte_context.workbench_mode then
 				buffer.put_string ("EIF_TYPED_VALUE r;")
 				buffer.put_new_line
@@ -764,14 +760,15 @@ feature {NONE} -- C code generation
 				buffer.put_string ("return ")
 			end
 			result_type.c_type.generate_cast (buffer)
-			buffer.put_string (" Current;")
+			buffer.put_string ("Current;")
 
 			if byte_context.workbench_mode then
 				buffer.put_new_line
 				buffer.put_string ("return r;")
 			end
-			buffer.put_string ("%N}%N%N")
-
+			buffer.generate_block_close
+				-- Separation for formatting
+			buffer.put_new_line
 			byte_context.clear_feature_data
 		end
 
@@ -783,6 +780,7 @@ feature {NONE} -- C code generation
 			arg_name_not_void: arg_name /= Void
 		do
 			if not final_mode then
+				buffer.put_new_line
 				buffer.put_string ("%
 					%if (")
 				buffer.put_string (arg_name)
@@ -797,6 +795,7 @@ feature {NONE} -- C code generation
 						% - LNGPAD(2))) {%N%
 					%%Teraise (%"index_small_enough%", EN_RT_CHECK);%N}%N");
 			elseif associated_class.assertion_level.is_precondition then
+				buffer.put_new_line
 				buffer.put_string ("if (~in_assertion) {%N");
 				buffer.put_string ("%
 					%RTCT(%"index_large_enough%", EX_PRE);%N%

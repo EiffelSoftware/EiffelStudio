@@ -262,6 +262,7 @@ feature -- C code generation
 		do
 				-- See `generate_once_prologue' for details
 			buf := context.buffer
+			buf.put_new_line
 			if context.workbench_mode then
 				if is_global_once then
 					buf.put_string ("RTOQE;")
@@ -279,7 +280,6 @@ feature -- C code generation
 				buf.put_integer (body_index)
 				buf.put_string (");")
 			end
-			buf.put_new_line
 		end
 
 feature -- Inlining

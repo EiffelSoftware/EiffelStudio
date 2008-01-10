@@ -179,13 +179,11 @@ feature
 				basic_i ?= context.real_type (left.type)
 				basic_i.metamorphose (left_register, left, buf)
 				buf.put_character (';')
-				buf.put_new_line
 			end
 			if right_register /= Void then
 				basic_i ?= context.real_type (right.type)
 				basic_i.metamorphose (right_register, right, buf)
 				buf.put_character (';')
-				buf.put_new_line
 			end
 		end
 
@@ -229,7 +227,7 @@ feature
 				else
 					left_register.print_register;
 				end;
-				generate_operator;
+				generate_operator (buf)
 				if right_register = Void then
 					right.print_register;
 				else

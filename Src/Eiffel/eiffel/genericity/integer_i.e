@@ -208,26 +208,30 @@ feature -- Code generation
 	minimum_interval_value: INTERVAL_VAL_B is
 			-- Minimum value in inspect interval for current type
 		do
-			if size = 64 then
-				create {INT64_VAL_B} Result.make (({INTEGER_64} -1) |<< (size - 1))
-			else
-				check
-					valid_size: size = 8 or size = 16 or size = 32
-				end
-				create {INT_VAL_B} Result.make ((-1) |<< (size - 1))
+			inspect size
+			when 8 then
+				create {INT_VAL_B} Result.make ({INTEGER_8}.min_value)
+			when 16 then
+				create {INT_VAL_B} Result.make ({INTEGER_16}.min_value)
+			when 32 then
+				create {INT_VAL_B} Result.make ({INTEGER_32}.min_value)
+			when 64 then
+				create {INT64_VAL_B} Result.make ({INTEGER_64}.min_value)
 			end
 		end
 
 	maximum_interval_value: INTERVAL_VAL_B is
 			-- Maximum value in inspect interval for current type
 		do
-			if size = 64 then
-				create {INT64_VAL_B} Result.make ((({INTEGER_64} 1) |<< (size - 1)) - 1)
-			else
-				check
-					valid_size: size = 8 or size = 16 or size = 32
-				end
-				create {INT_VAL_B} Result.make ((1 |<< (size - 1)) - 1)
+			inspect size
+			when 8 then
+				create {INT_VAL_B} Result.make ({INTEGER_8}.max_value)
+			when 16 then
+				create {INT_VAL_B} Result.make ({INTEGER_16}.max_value)
+			when 32 then
+				create {INT_VAL_B} Result.make ({INTEGER_32}.max_value)
+			when 64 then
+				create {INT64_VAL_B} Result.make ({INTEGER_64}.max_value)
 			end
 		end
 

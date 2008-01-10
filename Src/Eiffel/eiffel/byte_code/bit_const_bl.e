@@ -4,7 +4,7 @@ indexing
 -- Enlarged byte code for Eiffel bit constant (allocated each time).
 
 class
-	BIT_CONST_BL 
+	BIT_CONST_BL
 
 inherit
 	BIT_CONST_B
@@ -18,7 +18,7 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	register: REGISTRABLE
 			-- Where string is kept to ensure it is GC safe
@@ -58,8 +58,9 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			if register /= No_register then
-				register.print_register
 				buf := buffer
+				buf.put_new_line
+				register.print_register
 				buf.put_string (" = ")
 				generate_bit
 				buf.put_character (';')

@@ -346,12 +346,14 @@ feature -- C generation
 				buf := buffer
 						-- Procedures have a void return type
 				if register /= Void then
+					buf.put_new_line
 					register.print_register
 					buf.put_string (" = ")
+				else
+					buf.put_new_line
 				end
 				generate_access
 				buf.put_character (';')
-				buf.put_new_line
 			end
 		end
 

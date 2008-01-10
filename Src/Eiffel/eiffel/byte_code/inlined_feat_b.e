@@ -230,13 +230,12 @@ feature -- Generation
 			local_inliner.set_inlined_feature (Current);
 
 			buf := buffer
+			buf.put_new_line;
 			buf.put_character ('{');
 			buf.put_new_line;
-
 			buf.put_string ("/* INLINED CODE (");
 			buf.put_string (feature_name);
 			buf.put_string (") */");
-			buf.put_new_line;
 
 			if parameters /= Void then
 					-- Assign the parameter values to the registers
@@ -251,11 +250,11 @@ feature -- Generation
 				loop
 					if (not b_area.item (i)) then
 						expr := l_area.item (i)
+						buf.put_new_line;
 						argument_regs.item (i + 1).print_register;
 						buf.put_string (" = ");
 						expr.print_register;
 						buf.put_character (';');
-						buf.put_new_line
 					end;
 					i := i + 1
 				end
@@ -286,7 +285,7 @@ feature -- Generation
 			end
 
 			if not is_current_temporary then
-
+				buf.put_new_line
 				current_register.print_register;
 				buf.put_string (" = ");
 
@@ -307,6 +306,7 @@ feature -- Generation
 			end
 
 			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
+				buf.put_new_line
 				buf.put_character ('{')
 				if inlined_dftype_current > 1 then
 					context.set_inlined_dftype_current (inlined_dftype_current)
@@ -324,7 +324,6 @@ feature -- Generation
 					current_reg.print_register
 					buf.put_string (");")
 				end
-				buf.put_new_line
 			end
 
 			if compound /= Void then
@@ -332,8 +331,8 @@ feature -- Generation
 			end
 
 			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
-				buf.put_character ('}');
 				buf.put_new_line
+				buf.put_character ('}');
 				if inlined_dt_current > 1 then
 					context.set_inlined_dt_current (0);
 				end
@@ -342,11 +341,11 @@ feature -- Generation
 				end
 			end
 
+			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */");
-			buf.put_new_line;
 
-			buf.put_character ('}');
 			buf.put_new_line;
+			buf.put_character ('}');
 
 			Context.restore_class_type_context
 			Context.set_inlined_current_register (Void)
@@ -551,12 +550,12 @@ feature {NONE} -- Registers
 		local
 			buf: GENERATION_BUFFER
 		do
-			reg.print_register;
 			buf := buffer
+			buf.put_new_line
+			reg.print_register;
 			buf.put_string (" = ");
 			reg.c_type.generate_cast (buf);
 			buf.put_string (" 0;");
-			buf.put_new_line
 			if a_type.is_true_expanded then
 				a_type.generate_expanded_creation (buf, reg.register_name)
 			end

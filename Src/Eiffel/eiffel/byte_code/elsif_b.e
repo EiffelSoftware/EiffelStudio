@@ -5,7 +5,7 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class ELSIF_B 
+class ELSIF_B
 
 inherit
 	BYTE_NODE
@@ -112,23 +112,22 @@ feature -- Basic Operations
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			generate_line_info
 			buf.put_string (" else {")
-			buf.put_new_line
+			generate_line_info
 			buf.indent
 				-- Generate a hook for the evaluation/test of the condition.
 			generate_frozen_debugger_hook
 			expr.generate
-			buf.exdent
+			buf.put_new_line
 			buf.put_string (gc_if_l_paran)
 			expr.print_register
 			buf.put_string (") {")
-			buf.put_new_line
 			if compound /= Void then
 				buf.indent
 				compound.generate
 				buf.exdent
 			end
+			buf.put_new_line
 			buf.put_character ('}')
 		end
 

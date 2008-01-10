@@ -143,6 +143,7 @@ feature {NONE} -- C code generation
 			l_keys := keys
 
 				-- Generate the keys
+			buffer.put_new_line
 			if for_expanded then
 				buffer.put_string ("static char * exp_type_key [] = {%N")
 			else
@@ -301,9 +302,9 @@ feature {NONE} -- C code generation
 			buffer.put_integer (capacity)
 			buffer.put_string (", sizeof(struct cecil_info),")
 			if for_expanded then
-				buffer.put_string ("exp_type_key, (char *) exp_type_val};%N%N")
+				buffer.put_string ("exp_type_key, (char *) exp_type_val};%N")
 			else
-				buffer.put_string ("type_key, (char *) type_val};%N%N")
+				buffer.put_string ("type_key, (char *) type_val};%N")
 			end
 		end
 

@@ -174,13 +174,14 @@ feature -- Generation
 			buffer.put_string ("%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%
-				%#include %"eif_interp.h%"%N%N")
+				%#include %"eif_interp.h%"")
 
 			buffer.start_c_specific_code
 
 			generate_pattern (buffer)
 
 				-- Generate pattern table
+			buffer.put_new_line_only
 			buffer.put_string ("struct p_interface egc_fpattern_init[] = {%N")
 			from
 				i := 1
@@ -195,7 +196,7 @@ feature -- Generation
 				buffer.put_string ("},%N")
 				i := i + 1
 			end
-			buffer.put_string ("};%N%N")
+			buffer.put_string ("};")
 
 			buffer.end_c_specific_code
 

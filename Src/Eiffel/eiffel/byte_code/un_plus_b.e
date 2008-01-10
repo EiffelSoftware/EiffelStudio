@@ -19,10 +19,10 @@ feature -- Visitor
 
 feature
 
-	generate_operator is
+	generate_operator (a_buffer: GENERATION_BUFFER) is
 			-- Generate the unary operator
 		do
-		end;
+		end
 
 	is_built_in: BOOLEAN is
 			-- Is the current binary operator a built-in one ?

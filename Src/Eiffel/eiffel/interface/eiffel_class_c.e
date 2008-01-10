@@ -1266,7 +1266,7 @@ feature -- Workbench feature and descriptor table generation
 				buffer.put_string ("/*%N * Class ")
 				buffer.put_string (external_class_name)
 				buffer.put_string ("%N */%N%N")
-				buffer.put_string ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
+				buffer.put_string ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"")
 				buffer.start_c_specific_code
 				feature_table.generate (buffer)
 				buffer.end_c_specific_code

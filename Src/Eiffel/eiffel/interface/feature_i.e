@@ -2601,7 +2601,7 @@ feature -- C code generation
 			if used then
 					-- `generate' from BYTE_CODE will log the feature name
 					-- and encoded name in `used_features_log_file' from SYSTEM_I
-				generate_header (buffer)
+				generate_header (class_type, buffer)
 
 				tmp_body_index := body_index
 				l_byte_code := tmp_opt_byte_server.disk_item (tmp_body_index)
@@ -2624,20 +2624,22 @@ feature -- C code generation
 				l_byte_code.set_real_body_id (real_body_id (class_type))
 				l_byte_code.generate
 				l_byte_context.clear_feature_data
-
 			else
 				System.removed_log_file.add (class_type, feature_name)
 			end
 		end
 
-	generate_header (buffer: GENERATION_BUFFER) is
+	generate_header (a_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
 			-- Generate a header before body of feature
 		require
+			a_type_not_void: a_type /= Void
 			valid_buffer: buffer /= Void
 		do
-			buffer.put_string ("/* ")
+			buffer.put_string ("%N/* {")
+			buffer.put_string (a_type.associated_class.name)
+			buffer.put_two_character ('}', '.')
 			buffer.put_string (feature_name)
-			buffer.put_string (" */%N%N")
+			buffer.put_string (" */")
 		end
 
 feature -- Debug purpose

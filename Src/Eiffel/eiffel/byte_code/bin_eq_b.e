@@ -19,10 +19,10 @@ feature -- Visitor
 
 feature
 
-	generate_operator is
+	generate_operator (a_buffer: GENERATION_BUFFER) is
 			-- Generate the operator
 		do
-			buffer.put_string (" == ");
+			a_buffer.put_four_character (' ', '=', '=', ' ')
 		end;
 
 	generate_boolean_constant is

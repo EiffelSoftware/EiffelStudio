@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged byte code for semi-strict "implies"
 
-class B_IMPLIES_BL 
+class B_IMPLIES_BL
 
 inherit
 	B_IMPLIES_B
@@ -11,8 +11,8 @@ inherit
 			propagate, free_register, print_register, generate, analyze,
 			register, set_register, c_type
 		end;
-	
-feature 
+
+feature
 
 	register: REGISTRABLE;
 			-- Where result of expression should be stored
@@ -92,29 +92,29 @@ feature
 		do
 			if has_call then
 					-- Initialize value to true
-				register.print_register;
 				buf := buffer
-				buf.put_string (" = '\01';");
 				buf.put_new_line;
+				register.print_register;
+				buf.put_string (" = '\01';");
 					-- Test first value. If it is false, then the whole
 					-- expression is true and the right handside is not evaled.
 				left.generate;
+				buf.put_new_line;
 				buf.put_string (gc_if_l_paran);
 				left.print_register;
 				buf.put_string (") {");
-				buf.put_new_line;
 					-- Left handside was true. Value of the expression is the
 					-- value of the right handside.
 				buf.indent;
 				right.generate;
+				buf.put_new_line;
 				register.print_register;
 				buf.put_string (" = ");
 				right.print_register;
 				buf.put_character (';');
-				buf.put_new_line;
 				buf.exdent;
-				buf.put_character ('}');
 				buf.put_new_line;
+				buf.put_character ('}');
 			else
 				Precursor {B_IMPLIES_B};
 			end;

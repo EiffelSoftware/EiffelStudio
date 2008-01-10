@@ -43,17 +43,16 @@ feature -- C code generation
 			class_c := Context.associated_class
 			if workbench_mode or else class_c.trace_level.is_yes then
 					-- Trace clean-up
-				buf.put_string ("RTTS;")
 				buf.put_new_line
+				buf.put_string ("RTTS;")
 			end
 			if workbench_mode or else class_c.profile_level.is_yes then
 					-- Profiling clean-up
-				buf.put_string ("RTPS;")
 				buf.put_new_line
+				buf.put_string ("RTPS;")
 			end
-
-			buf.put_string ("RTER;")
 			buf.put_new_line
+			buf.put_string ("RTER;")
 		end
 
 indexing

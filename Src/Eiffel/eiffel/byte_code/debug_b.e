@@ -117,9 +117,10 @@ feature -- C Code generation
 						-- Generation of the debug compound in workbench
 						-- mode
 					static_type := Encoder.generate_type_id_name (context.class_type.static_type_id)
-					buf.put_string (gc_if_l_paran)
 					buf.put_new_line
+					buf.put_string (gc_if_l_paran)
 					buf.indent
+					buf.put_new_line
 					if keys = Void then
 							-- No keys
 						buf.put_string ("WDBG(RTUD(")
@@ -143,17 +144,14 @@ feature -- C Code generation
 							end
 						end
 					end
-					buf.put_new_line
 					buf.exdent
+					buf.put_new_line
 					buf.put_string (") {")
-					buf.put_new_line
 					buf.indent
-
 					compound.generate
-
 					buf.exdent
-					buf.put_character ('}')
 					buf.put_new_line
+					buf.put_character ('}')
 				end
 			end
 		end

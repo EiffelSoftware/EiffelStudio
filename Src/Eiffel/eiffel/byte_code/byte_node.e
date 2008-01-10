@@ -63,11 +63,11 @@ feature -- Eiffel source line information
 		do
 			if System.line_generation and then line_number > 0 then
 				l_buffer := buffer
-				l_buffer.put_string ("%N#line ")
+				l_buffer.put_new_line_only
+				l_buffer.put_string ("#line ")
 				l_buffer.put_integer (line_number)
 				l_buffer.put_character (' ')
 				l_buffer.put_indivisible_string_literal (Context.associated_class.lace_class.file_name)
-				l_buffer.put_new_line
 			end
 		end
 
@@ -102,10 +102,10 @@ feature -- Eiffel source line information
 						lnr > 0
 					end
 					l_buffer := buffer
+					l_buffer.put_new_line
 					l_buffer.put_string("RTHOOK(")
 					l_buffer.put_integer(lnr)
 					l_buffer.put_string(");")
-					l_buffer.put_new_line
 				end
 			end
 		end
@@ -124,10 +124,10 @@ feature -- Eiffel source line information
 						lnr > 0
 					end
 					l_buffer := buffer
+					l_buffer.put_new_line
 					l_buffer.put_string ("RTHOOK(")
 					l_buffer.put_integer (lnr)
 					l_buffer.put_string (");")
-					l_buffer.put_new_line
 				end
 			end
 		end
@@ -168,10 +168,10 @@ feature -- Eiffel source line information
 						-- if lnr = 0 or -1 then we do nothing.
 					if lnr > 0 then
 						l_buffer := buffer
+						l_buffer.put_new_line
 						l_buffer.put_string("RTNHOOK(")
 						l_buffer.put_integer(lnr)
 						l_buffer.put_string(");")
-						l_buffer.put_new_line
 					end
 				end
 			end
@@ -314,31 +314,6 @@ feature -- Inlining
 			Result := Current
 		ensure
 			Result_not_void: Result /= Void
-		end
-
-feature -- Generic conformance
-
-	generate_block_open is
-			-- Open a new C block.
-		local
-			l_buffer: like buffer
-		do
-			l_buffer := buffer
-			l_buffer.put_character ('{')
-			l_buffer.put_new_line
-			l_buffer.indent
-		end
-
-	generate_block_close is
-			-- Close C block.
-		local
-			l_buffer: like buffer
-		do
-			l_buffer := buffer
-			l_buffer.put_new_line
-			l_buffer.exdent
-			l_buffer.put_character ('}')
-			l_buffer.put_new_line
 		end
 
 indexing

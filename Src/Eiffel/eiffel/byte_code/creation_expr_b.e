@@ -265,6 +265,7 @@ feature -- Generation
 			l_special_creation := l_basic_type = Void and then
 				l_call /= Void and then l_call.routine_id = system.special_make_rout_id
 			if l_basic_type /= Void then
+				buf.put_new_line
 				register.print_register
 				buf.put_string (" = ")
 				l_basic_type.generate_default_value (buf)
@@ -292,11 +293,11 @@ feature -- Generation
 			else
 				info.generate_start (buf)
 				info.generate_gen_type_conversion
+				buf.put_new_line
 				register.print_register
 				buf.put_string (" = ")
 				info.generate
 				buf.put_character (';')
-				buf.put_new_line
 				info.generate_end (buf)
 
 				if call /= Void then
@@ -305,7 +306,6 @@ feature -- Generation
 					call.generate_on (register)
 					call.set_parent (Void)
 					buf.put_character (';')
-					buf.put_new_line
 					generate_frozen_debugger_hook_nested
 				end
 				if
@@ -315,7 +315,6 @@ feature -- Generation
 					buf.put_string ("RTCI2(")
 					register.print_register
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 				end
 			end
 		end

@@ -279,6 +279,7 @@ feature -- Code generation
 				-- not modified by generated code in multithreaded mode only.
 				-- It is safe in monothreaded code as we are guaranteed that
 				-- only one thread of execution will use the modified `typarr'.
+			l_buffer.put_new_line
 			if not System.has_multithreaded or else not use_init then
 				l_buffer.put_string ("static ")
 			end
@@ -298,10 +299,9 @@ feature -- Code generation
 			l_buffer.put_string ("};")
 			l_buffer.put_new_line
 			l_buffer.put_string ("EIF_TYPE_INDEX typres;")
-			l_buffer.put_new_line
 			if not use_init then
-				l_buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
 				l_buffer.put_new_line
+				l_buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
 			end
 			l_buffer.put_new_line
 
@@ -311,6 +311,7 @@ feature -- Code generation
 				gtype.generate_cid_init (l_buffer, final_mode, True, idx_cnt)
 			end
 
+			l_buffer.put_new_line
 			if not use_init then
 				l_buffer.put_string ("typres = RTCID2(&typcache, ")
 			else
@@ -320,8 +321,6 @@ feature -- Code generation
 			l_buffer.put_string (", ")
 			l_buffer.put_integer (gtype.generated_id (final_mode))
 			l_buffer.put_string (", typarr);")
-			l_buffer.put_new_line
-			l_buffer.put_new_line
 		end
 
 feature {NONE} -- Once features: implementation
@@ -452,6 +451,7 @@ feature -- C code generation: once features
 				until
 					once_indexes.after
 				loop
+					buf.put_new_line
 					buf.put_string (definition_macro_prefix)
 					result_type := once_indexes.item_for_iteration.first
 					if result_type.is_void then
@@ -463,7 +463,6 @@ feature -- C code generation: once features
 					end
 					buf.put_integer (once_indexes.key_for_iteration)
 					buf.put_character (')')
-					buf.put_new_line
 					once_indexes.forth
 				end
 			end
@@ -486,12 +485,12 @@ feature -- C code generation: once features
 				until
 					once_indexes.after
 				loop
+					buf.put_new_line
 					buf.put_string ("RTOTS (")
 					buf.put_integer (once_indexes.key_for_iteration)
 					buf.put_character (',')
 					buf.put_string (encoder.feature_name (static_type_id, once_indexes.key_for_iteration))
 					buf.put_character (')')
-					buf.put_new_line
 					once_indexes.forth
 				end
 					-- Initialize indexes for process-relative once routines
@@ -501,12 +500,12 @@ feature -- C code generation: once features
 				until
 					once_indexes.after
 				loop
+					buf.put_new_line
 					buf.put_string ("RTOQS (")
 					buf.put_integer (once_indexes.key_for_iteration)
 					buf.put_character (',')
 					buf.put_string (encoder.feature_name (static_type_id, once_indexes.key_for_iteration))
 					buf.put_character (')')
-					buf.put_new_line
 					once_indexes.forth
 				end
 			end
@@ -522,6 +521,7 @@ feature -- C code generation: once features
 		do
 			if final_mode and then system.has_multithreaded then
 					-- Set number of thread-relative once routines
+				buf.put_new_line
 				buf.put_string ("EIF_once_count = ")
 				buf.put_integer (onces.count)
 				buf.put_character (';')
@@ -537,10 +537,10 @@ feature -- C code generation: once features
 				until
 					once_indexes.after
 				loop
+					buf.put_new_line
 					buf.put_string (initialization_macro)
 					buf.put_integer (once_indexes.key_for_iteration)
 					buf.put_character (')')
-					buf.put_new_line
 					once_indexes.forth
 				end
 			end
@@ -603,6 +603,7 @@ feature -- Access: once manifest strings
 				string_counts.off
 			loop
 					-- Declare one field for one routine body.
+				buf.put_new_line
 				buf.put_string ("RTDOMS(")
 				buf.put_integer (string_counts.key_for_iteration - 1)
 				buf.put_character (',')
@@ -625,7 +626,6 @@ feature -- Access: once manifest strings
 				end
 				buf.put_character ('}')
 				buf.put_character (';')
-				buf.put_new_line
 				string_counts.forth
 			end
 		end
@@ -645,14 +645,13 @@ feature -- Access: once manifest strings
 				set_once_manifest_string_count (number)
 					-- Generate reference to once manifest string field
 				buf := buffer
+				buf.put_new_line
 				buf.put_string ("RTEOMS(")
 				buf.put_integer (original_body_index - 1)
 				buf.put_character (',')
 				buf.put_integer (number)
 				buf.put_character (')')
 				buf.put_character (';')
-				buf.put_new_line
-				buf.put_new_line
 			end
 		ensure
 			once_manifest_string_count_set:
@@ -669,13 +668,13 @@ feature -- Access: once manifest strings
 		do
 			if number > 0 and then not is_static_system_data_safe then
 				buf := buffer
+				buf.put_new_line
 				buf.put_string ("RTAOMS(")
 				buf.put_integer (original_body_index - 1)
 				buf.put_character (',')
 				buf.put_integer (number)
 				buf.put_character (')')
 				buf.put_character (';')
-				buf.put_new_line
 			end
 		end
 
@@ -721,6 +720,7 @@ feature -- Access: once manifest strings
 					if value /= Void then
 							-- RTPOMS is the macro used to create and store once manifest string
 							-- provided that it is not created and stored before
+						buf.put_new_line
 						buf.put_string ("RTPOMS(")
 						buf.put_integer (body_index - 1)
 						buf.put_character (',')
@@ -733,7 +733,6 @@ feature -- Access: once manifest strings
 						buf.put_integer (value.hash_code)
 						buf.put_character (')')
 						buf.put_character (';')
-						buf.put_new_line
 					end
 					i := i - 1
 				end
@@ -1453,10 +1452,8 @@ feature -- Access
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			buf.exdent
+			buf.put_new_line_only
 			buf.put_string ("body:;")
-			buf.put_new_line
-			buf.indent
 		end
 
 	print_body_label is
@@ -1480,12 +1477,9 @@ feature -- Access
 		do
 			if label > 0 then
 				buf := buffer
-				buf.exdent
-				buf.put_new_line
+				buf.put_new_line_only
 				print_label (l)
 				buf.put_character (':')
-				buf.put_new_line
-				buf.indent
 			end
 		end
 
@@ -1733,6 +1727,7 @@ feature -- Access
 			else
 				variable_type := value_type.c_string
 			end
+			buf.put_new_line
 			buf.put_string (variable_type)
 			buf.put_character (' ')
 			if has_rescue and then not is_generic then
@@ -1744,18 +1739,16 @@ feature -- Access
 				buf.put_string (once "x = {0, ")
 				buf.put_string (register_sk_value (ctype))
 				buf.put_string ("};")
-				buf.left_margin
-				buf.put_new_line
+				buf.put_new_line_only
 				buf.put_string ("#undef ")
 				put_register_name (ctype, num, buf)
-				buf.put_new_line
+				buf.put_new_line_only
 				buf.put_string ("#define ")
 				put_register_name (ctype, num, buf)
 				buf.put_character (' ')
 				put_register_name (ctype, num, buf)
 				buf.put_string ("x.")
 				value_type.generate_typed_field (buf)
-				buf.restore_margin
 			else
 				if ctype = c_ref then
 						-- Because it is a reference we absolutely need to initialize it
@@ -1764,7 +1757,6 @@ feature -- Access
 				end
 				buf.put_character (';')
 			end
-			buf.put_new_line
 		end
 
 	generate_gc_hooks (compound_or_post: BOOLEAN) is
@@ -1793,6 +1785,7 @@ feature -- Access
 
 				-- The hooks are only needed if there is at least one reference
 			if nb_refs > 0 then
+				buf.put_new_line
 				if compound_or_post or else byte_code.rescue_clause = Void then
 					buf.put_string ("RTLI(")
 				else
@@ -1800,7 +1793,6 @@ feature -- Access
 				end
 				buf.put_integer (nb_refs)
 				buf.put_string (gc_rparan_semi_c)
-				buf.put_new_line
 				from
 					hash_table := local_index_table
 					associated := associated_register_table
@@ -1836,10 +1828,8 @@ feature -- Access
 							buf.put_local_registration (position, rname)
 						end
 					end
-					buf.put_new_line
 					hash_table.forth
 				end
-				buf.put_new_line
 			end
 		end
 
@@ -1876,17 +1866,16 @@ feature -- Access
 		do
 			buf := buffer
 			if byte_code.rescue_clause /= Void then
-				buf.put_string ("RTEOK;")
 				buf.put_new_line
+				buf.put_string ("RTEOK;")
 			end
 			vars := ref_var_used
 			if vars > 0 then
+				buf.put_new_line
 				if byte_code.rescue_clause /= Void then
 					buf.put_string ("RTXE;")
-					buf.put_new_line
 				else
 					buf.put_string ("RTLE;")
-					buf.put_new_line
 				end
 			end
 		end

@@ -329,6 +329,7 @@ feature -- Generation
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		local
 			l_int: like integer_32_value
+			l_int64: like integer_64_value
 		do
 			buf.put_character ('(')
 			inspect default_type
@@ -349,33 +350,42 @@ feature -- Generation
 				buf.put_string (integer_32_cast)
 				l_int := integer_32_value
 				if l_int = {INTEGER}.min_value then
-					buf.put_string ("0x")
-					buf.put_string (l_int.to_hex_string)
+					buf.put_string ("0x80000000")
 				else
 					buf.put_integer (integer_32_value)
 				end
 				buf.put_character ('L')
 			when integer_64_mask then
+					-- Special treatment of `min_value' so that the C compiler
+					-- does not complain as -9223372036854775808 is treated as -(9223372036854775808)
+					-- as it is therefore an unsigned value we are trying to negate
+					-- and the C compiler warns it is still unsigned, although at
+					-- the end it is ok with the cast.
 				buf.put_string (integer_64_cast)
 				buf.put_string ("RTI64C(")
-				buf.put_string (integer_64_value.out)
+				l_int64 := integer_64_value
+				if l_int64 = {INTEGER_64}.min_value then
+					buf.put_string ("0x8000000000000000")
+				else
+					buf.put_integer_64 (integer_64_value)
+				end
 				buf.put_character (')')
 			when natural_8_mask then
 				buf.put_string (natural_8_cast)
-				buf.put_string (natural_8_value.out)
+				buf.put_natural_8 (natural_8_value)
 				buf.put_character ('U')
 			when natural_16_mask then
 				buf.put_string (natural_16_cast)
-				buf.put_string (natural_16_value.out)
+				buf.put_natural_16 (natural_16_value)
 				buf.put_character ('U')
 			when natural_32_mask then
 				buf.put_string (natural_32_cast)
-				buf.put_string (natural_32_value.out)
+				buf.put_natural_32 (natural_32_value)
 				buf.put_character ('U')
 			when natural_64_mask then
 				buf.put_string (natural_64_cast)
 				buf.put_string ("RTU64C(")
-				buf.put_string (natural_64_value.out)
+				buf.put_natural_64 (natural_64_value)
 				buf.put_character (')')
 			end
 			buf.put_character (')')

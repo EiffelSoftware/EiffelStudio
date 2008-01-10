@@ -227,7 +227,7 @@ feature -- Generation
 			rtud.append ("));%N")
 
 			buffer.generate_extern_declaration ("void", init_name, <<>>);
-			biffer.put_new_line
+			buffer.put_new_line
 			buffer.put_string ("void ");
 			buffer.put_string (init_name);
 			buffer.put_string ("(void)%N{%N");

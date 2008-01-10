@@ -490,7 +490,7 @@ rt_public void init_desc(void)
 	int i;
 	struct bounds def;
 
-	def.max = -1;
+	def.max = INVALID_DTYPE;
 	def.min = (EIF_TYPE_INDEX) ccount;
 	bounds_tab = (struct bounds *) cmalloc (sizeof(struct bounds) * (ccount + 1));	
 	if (bounds_tab == NULL)
@@ -574,7 +574,7 @@ rt_public void create_desc(void)
 
 	for (i=upper=0;i<=ccount;i++) {
 		b = bounds_tab+i;
-		upper += (-1==b->max)?0:(i-upper);
+		upper += (INVALID_DTYPE==b->max)?0:(i-upper);
 	}
 
 	/* Allocation of the global descriptor table.
@@ -590,14 +590,16 @@ rt_public void create_desc(void)
 
 	for (i=0;i<=upper;i++) {
 		b = bounds_tab+i;
-		size = b->max - b->min + 1;
-		if (size > 0) {
-			tab = (struct desc_info **) 
-				cmalloc (sizeof(struct desc_info *) * size);
-			if ((struct desc_info **) 0 == tab)
-				enomem(MTC_NOARG);
-			/* The hack of the century */
-			desc_tab[i] = tab - b->min; 
+		if (b->max != INVALID_DTYPE) {
+			size = b->max - b->min + 1;
+			if (size > 0) {
+				tab = (struct desc_info **) cmalloc (size * sizeof(struct desc_info *));
+				if (!tab) {
+					enomem(MTC_NOARG);
+				}
+					/* The hack of the century */
+				desc_tab[i] = tab - b->min; 
+			}
 		}
 	}
 

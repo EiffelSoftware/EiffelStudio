@@ -93,7 +93,7 @@ feature -- Generic conformance
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is
 
 		do
-			ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.like_current_type)
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_current_type)
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER;

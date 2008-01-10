@@ -464,13 +464,13 @@ feature -- Genericity
 			rout_info: ROUT_INFO
 		do
 			if context.current_type.base_class.is_precompiled then
-				ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.like_pfeature_type)
+				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_pfeature_type)
 				ba.append_short_integer (context.class_type.static_type_id-1)
 				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
-				ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.like_feature_type)
+				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_feature_type)
 				ba.append_short_integer (context.class_type.static_type_id - 1)
 				ba.append_integer (feature_id)
 			end

@@ -154,7 +154,7 @@ feature -- Generic conformance
 				-- It's an ancored type
 				cr_info.make_gen_type_byte_code (ba)
 			else
-				ba.append_short_integer ({SHARED_GEN_CONF_LEVEL}.tuple_type)
+				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
 				ba.append_short_integer (true_generics.count)
 				ba.append_short_integer (generated_id (False))
 

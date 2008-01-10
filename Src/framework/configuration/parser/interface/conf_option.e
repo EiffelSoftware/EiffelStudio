@@ -452,7 +452,7 @@ feature -- Merging
 					is_cat_call_detection := other.is_cat_call_detection
 				end
 				if not is_attached_by_default_configured then
-					is_attached_by_default := other.is_attached_by_default_configured
+					is_attached_by_default_configured := other.is_attached_by_default_configured
 					is_attached_by_default := other.is_attached_by_default
 				end
 				if not is_void_safe_configured then

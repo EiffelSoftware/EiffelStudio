@@ -149,16 +149,11 @@ feature -- Basic operations
 			-- Display the good tooltip on buttons.
 		do
 			if internal_managed_toolbar_items /= Void then
-				internal_managed_toolbar_items.do_all (agent (a_item: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON)
-														do
-															a_item.set_tooltip (tooltip)
-														end)
+				internal_managed_toolbar_items.do_all (agent {EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON}.set_tooltip (tooltip))
 			end
+
 			if internal_managed_sd_toolbar_items /= Void then
-				internal_managed_sd_toolbar_items.do_all (agent (a_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON)
-														do
-															a_item.set_tooltip (tooltip)
-														end)
+				internal_managed_sd_toolbar_items.do_all (agent {EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON}.set_tooltip (tooltip))
 			end
 		end
 

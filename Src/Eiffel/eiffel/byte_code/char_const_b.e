@@ -88,13 +88,12 @@ feature -- C code generation
 		do
 			buf := buffer
 			if is_character_32 then
-				buf.put_string ("(EIF_WIDE_CHAR) ")
-				buf.put_string (value.natural_32_code.out)
+				wide_char_c_type.generate_cast (buf)
+				buf.put_natural_32 (value.natural_32_code)
 				buf.put_character ('U')
 			else
-				buf.put_string ("(EIF_CHARACTER) %'")
-				buf.escape_char (value.to_character_8)
-				buf.put_character ('%'')
+				char_c_type.generate_cast (buf)
+				buf.put_character_literal (value.to_character_8)
 			end
 		end
 

@@ -90,8 +90,8 @@ feature -- C generation
 			if compound /= Void then
 				compound.generate
 			end
-			buf.put_string ("break;")
 			buf.put_new_line
+			buf.put_string ("break;")
 			buf.exdent
 		end
 

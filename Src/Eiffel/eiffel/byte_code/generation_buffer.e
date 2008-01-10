@@ -31,9 +31,6 @@ feature -- Status report
 	tabs: INTEGER
 			-- Number of inserted tabs.
 
-	emitted: BOOLEAN
-			-- Have leading tabs already been emitted?
-
 	as_string: STRING is
 			-- Representation of Current as a STRING.
 		local
@@ -60,8 +57,6 @@ feature -- Open, close buffer operations
 			-- Reset the cache for a new generation
 		do
 			tabs := 0
-			old_tabs := 0
-			emitted := True
 				-- We reuse the first buffer allocated with the creation procedure.
 				-- If `buffers' is not empty, then the first buffer is at the first
 				-- entry of `buffers', otherwise we simply reset `count' of
@@ -73,18 +68,18 @@ feature -- Open, close buffer operations
 			buffers.wipe_out
 		end
 
-	open_write_c, start_c_specific_code is
+	start_c_specific_code is
 			-- Write at beginning of buffer that it will be a C file with the
 			-- extern C declaration in case a C++ compiler is used.
 		do
-			append (starting_c_code_string)
+			put_string (starting_c_code_string)
 		end
 
-	close_c, end_c_specific_code is
+	end_c_specific_code is
 			-- Write at end of buffer that it will be a C file with the
 			-- extern C declaration in case a C++ compiler is used.
 		do
-			append (ending_c_code_string)
+			put_string (ending_c_code_string)
 		end
 
 	flush_buffer (file: INDENT_FILE) is
@@ -139,8 +134,6 @@ feature -- Ids generation
 	put_class_id (class_id: INTEGER) is
 			-- Generate textual representation of class id
 			-- in generated C code
-		require
-			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (class_id)
 		end
@@ -148,8 +141,6 @@ feature -- Ids generation
 	put_real_body_id (real_body_id: INTEGER) is
 			-- Generate textual representation of real body id
 			-- in generated C code
-		require
-			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (real_body_id - 1)
 		end
@@ -157,8 +148,6 @@ feature -- Ids generation
 	put_real_body_index (real_body_index: INTEGER) is
 			-- Generate textual representation of real body index
 			-- in generated C code
-		require
-			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (real_body_index - 1)
 		end
@@ -166,8 +155,6 @@ feature -- Ids generation
 	put_type_id (type_id: INTEGER) is
 			-- Generate textual representation of static type id
 			-- in generated C code
-		require
-			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (type_id - 1)
 		end
@@ -175,26 +162,20 @@ feature -- Ids generation
 	put_static_type_id (static_type_id: INTEGER) is
 			-- Generate textual representation of type id
 			-- in generated C code
-		require
-			emitted: emitted or tabs = 0
 		do
 			current_buffer.append_integer (static_type_id - 1)
 		end
 
-feature -- Fast output
+feature -- Automatically indented output
 
-	put_fast_character (c: CHARACTER) is
-			-- Write char `c' assuming no calls to `put_new_line' were done prior to this call.
-		require
-			emitted: emitted or tabs = 0
+	put_character (c: CHARACTER) is
+			-- Write char `c'.
 		do
 			current_buffer.append_character (c)
 		end
 
 	put_two_character (a, b: CHARACTER) is
 			-- Write char `a' and `b' assuming no calls to `put_new_line' were done prior to this call.
-		require
-			emitted: emitted or tabs = 0
 		local
 			l_buffer: like current_buffer
 		do
@@ -205,8 +186,6 @@ feature -- Fast output
 
 	put_three_character (a, b, c: CHARACTER) is
 			-- Write char `a', `b' and `c' assuming no calls to `put_new_line' were done prior to this call.
-		require
-			emitted: emitted or tabs = 0
 		local
 			l_buffer: like current_buffer
 		do
@@ -216,41 +195,52 @@ feature -- Fast output
 			l_buffer.append_character (c)
 		end
 
-	put_fast_integer (i: INTEGER) is
-			-- Write integer `i' assuming no calls to `put_new_line' were done prior to this call.
-		require
-			emitted: emitted or tabs = 0
+	put_four_character (a, b, c, d: CHARACTER) is
+			-- Write char `a', `b', `c' and `d' assuming no calls to `put_new_line' were done prior to this call.
+		local
+			l_buffer: like current_buffer
 		do
-			current_buffer.append_integer (i)
-		end
-
-	put_fast_string (s: STRING) is
-			-- Write string `s' assuming no calls to `put_new_line' were done prior to this call.
-		require
-			emitted: emitted or tabs = 0
-			s_not_void: s /= Void
-		do
-			append (s)
-		end
-
-feature -- Automatically indented output
-
-	put_character (c: CHARACTER) is
-			-- Write char `c'.
-		do
-			if not emitted and tabs > 0 then
-				emit_tabs
-			end
-			current_buffer.append_character (c)
+			l_buffer := current_buffer
+			l_buffer.append_character (a)
+			l_buffer.append_character (b)
+			l_buffer.append_character (c)
+			l_buffer.append_character (d)
 		end
 
 	put_integer (i: INTEGER) is
 			-- Write int `i'.
 		do
-			if not emitted and tabs > 0 then
-				emit_tabs
-			end
 			current_buffer.append_integer (i)
+		end
+
+	put_integer_64 (i: INTEGER_64) is
+			-- Write `i'.
+		do
+			current_buffer.append_integer_64 (i)
+		end
+
+	put_natural_8 (i: NATURAL_8) is
+			-- Write natural `i'.
+		do
+			current_buffer.append_natural_8 (i)
+		end
+
+	put_natural_16 (i: NATURAL_16) is
+			-- Write natural `i'.
+		do
+			current_buffer.append_natural_16 (i)
+		end
+
+	put_natural_32 (i: NATURAL_32) is
+			-- Write natural `i'.
+		do
+			current_buffer.append_natural_32 (i)
+		end
+
+	put_natural_64 (i: NATURAL_64) is
+			-- Write natural `i'.
+		do
+			current_buffer.append_natural_64 (i)
 		end
 
 	put_hex_natural_16 (v: NATURAL_16) is
@@ -260,9 +250,6 @@ feature -- Automatically indented output
 			a_digit: INTEGER
 			l_buffer: like current_buffer
 		do
-			if not emitted and tabs > 0 then
-				emit_tabs
-			end
 			l_buffer := current_buffer
 			l_buffer.append_character ('0')
 			l_buffer.append_character ('x')
@@ -300,11 +287,19 @@ feature -- Automatically indented output
 			-- Write string `s'.
 		require
 			s_not_void: s /= Void
+			s_not_void: s /= Void
+		local
+			l_buffer: like current_buffer
 		do
-			if not emitted and tabs > 0 then
-				emit_tabs
+			l_buffer := current_buffer
+			if (l_buffer.count + s.count) > current_buffer_size then
+				buffers.extend (l_buffer)
+				create l_buffer.make (max_chunk_size.max (s.count))
+				current_buffer := l_buffer
 			end
-			append (s)
+			l_buffer.append (s)
+		ensure
+			new_count: count = old count + s.count
 		end
 
 	put_string_array (a: ARRAY [STRING]) is
@@ -353,41 +348,6 @@ feature -- Automatically indented output
 			end
 		end
 
-	indent is
-			-- Indent next output line by one tab.
-		do
-			tabs := tabs + 1
-		end
-
-	exdent is
-			-- Remove one leading tab for next line.
-		require
-			valid_tabs: tabs > 0
-		do
-			tabs := tabs - 1
-		end
-
-	left_margin is
-			-- Temporary reset to left margin
-		do
-			old_tabs := tabs
-			tabs := 0
-		end
-
-	restore_margin is
-			-- Restore margin value as of the one which was in
-			-- use when a `left_margin' call was issued.
-		do
-			tabs := old_tabs
-		end
-
-	put_new_line is
-			-- Write a '\n'.
-		do
-			current_buffer.append_character ('%N')
-			emitted := False
-		end
-
 	put_local_registration (i: INTEGER; loc_name: STRING) is
 			-- Write "RTLR(`i',`loc_name');".
 		require
@@ -395,13 +355,11 @@ feature -- Automatically indented output
 			loc_name_not_void: loc_name /= Void
 			loc_name_not_empty: not loc_name.is_empty
 		do
-			if not emitted and tabs > 0 then
-				emit_tabs
-			end
-			append (rtlr_string)
+			put_new_line
+			put_string (rtlr_string)
 			current_buffer.append_integer (i)
 			current_buffer.append_character (',')
-			append (loc_name)
+			put_string (loc_name)
 			current_buffer.append_character (')')
 			current_buffer.append_character (';')
 		end
@@ -422,6 +380,29 @@ feature -- Automatically indented output
 			put_local_registration (i, result_string)
 		end
 
+	put_character_literal (c: CHARACTER) is
+			-- Append `c'.
+		local
+			l_buffer: like current_buffer
+		do
+			l_buffer := current_buffer
+			l_buffer.append_character ('%'')
+			inspect c
+			when '"', '\', '%'', '?' then
+				l_buffer.append_character ('\')
+				l_buffer.append_character (c)
+			else
+				if c < ' ' or c > '%/127/' then
+						-- Assume ASCII set, sorry--RAM.
+					l_buffer.append_character ('\')
+					put_octal (l_buffer, c.code)
+				else
+					l_buffer.append_character (c)
+				end
+			end
+			l_buffer.append_character ('%'')
+		end
+
 	put_string_literal (s: STRING) is
 			-- Append string literal `s' breaking it into several chunks if required.
 		require
@@ -431,7 +412,6 @@ feature -- Automatically indented output
 			j: INTEGER
 			n: INTEGER
 			l_current_buffer: like current_buffer
-			l_string_converter: like string_converter
 		do
 			i := s.count
 			if i > maximum_string_literal_count then
@@ -439,7 +419,6 @@ feature -- Automatically indented output
 				indent
 				from
 					l_current_buffer := current_buffer
-					l_string_converter := string_converter
 					j := 1
 				invariant
 					i >= 0
@@ -455,11 +434,8 @@ feature -- Automatically indented output
 						n := i
 					end
 					put_new_line
-					if not emitted and tabs > 0 then
-						emit_tabs
-					end
 					l_current_buffer.append_character ('"')
-					l_string_converter.escape_substring (l_current_buffer, s, j, j + n - 1)
+					escape_substring (l_current_buffer, s, j, j + n - 1)
 					l_current_buffer.append_character ('"')
 					i := i - n
 					j := j + n
@@ -478,36 +454,83 @@ feature -- Automatically indented output
 		local
 			l_buffer: like current_buffer
 		do
-			if not emitted and tabs > 0 then
-				emit_tabs
-			end
 			l_buffer := current_buffer
 			l_buffer.append_character ('"')
-			string_converter.escape_string (l_buffer, s)
+			escape_string (l_buffer, s)
 			l_buffer.append_character ('"')
 		end
 
-	escape_char (c: CHARACTER) is
-			-- Append `c' with C escape sequences.
+	put_gtcx is
+			-- Add GTCX macro.
 		do
-			string_converter.escape_char (current_buffer, c)
+			put_new_line
+			put_string (gtcx_string)
 		end
 
 	generate_block_open is
-			-- Open a new C block.
+			-- Open a new C block and indent code
 		do
-			put_character ('{')
 			put_new_line
+			put_character ('{')
 			indent
+		ensure
+			tabs_set: tabs = old tabs + 1
 		end
 
 	generate_block_close is
 			-- Close C block.
 		do
-			put_new_line
 			exdent
-			put_character ('}')
 			put_new_line
+			put_character ('}')
+		ensure
+			tabs_set: tabs = old tabs - 1
+		end
+
+feature -- Formatting
+
+	indent is
+			-- Indent next output line by one tab.
+		do
+			tabs := tabs + 1
+		end
+
+	exdent is
+			-- Remove one leading tab for next line.
+		require
+			valid_tabs: tabs > 0
+		do
+			tabs := tabs - 1
+		end
+
+	put_new_line_only is
+			-- Write a '\n'.
+		do
+			current_buffer.append_character ('%N')
+		end
+
+	put_new_line is
+			-- Write a '\n' and add the necessary `\t' after.
+		do
+			current_buffer.append_character ('%N')
+			put_indentation
+		end
+
+	put_indentation is
+			-- Write as many `\t' as `tabs'.
+		local
+			i: INTEGER
+			l_buffer: like current_buffer
+		do
+			from
+				i := tabs
+				l_buffer := current_buffer
+			until
+				i = 0
+			loop
+				l_buffer.append_character ('%T')
+				i := i - 1
+			end
 		end
 
 feature -- prototype code generation
@@ -532,7 +555,7 @@ feature -- prototype code generation
 			generate_function_declaration (type, f_name, False, arg_types)
 		end
 
-	generate_pure_function_signature (type: STRING; f_name: STRING;
+	generate_function_signature (type: STRING; f_name: STRING;
 					extern: BOOLEAN; extern_header: like Current
 					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING]) is
 			-- Generate the function signature for ANSI C
@@ -546,30 +569,28 @@ feature -- prototype code generation
 			i, nb: INTEGER
 			l_sep: STRING
 		do
-			if not emitted and tabs > 0 then
-				emit_tabs
-			end
 			if extern_header /= Void then
 				extern_header.generate_function_declaration (type, f_name, extern, arg_types)
 			end
+			put_new_line
 			if not extern then
-				append (static_string)
+				put_string (static_string)
 			end
 			if is_il_generation then
-				append (rtil_string)
+				put_string (rtil_string)
 			end
-			append (type)
+			put_string (type)
 			if is_il_generation then
-				append (stdcall_string)
+				put_string (stdcall_string)
 			else
 				current_buffer.append_character (' ')
 			end
-			append (f_name)
+			put_string (f_name)
 			put_two_character (' ', '(')
 
 			nb := arg_names.count
 			if nb = 0 then
-				append (void_string)
+				put_string (void_string)
 			else
 				from
 					i := 1
@@ -577,40 +598,17 @@ feature -- prototype code generation
 				until
 					i > nb
 				loop
-					append (arg_types @ i)
+					put_string (arg_types @ i)
 					current_buffer.append_character (' ')
-					append (arg_names @ i)
+					put_string (arg_names @ i)
 					if i /= nb then
-						append (l_sep)
+						put_string (l_sep)
 					end
 					i := i + 1
 				end
 			end
 
 			current_buffer.append_character (')')
-			put_new_line
-		end
-
-	generate_function_signature (type: STRING; f_name: STRING;
-					extern: BOOLEAN; extern_header: like Current
-					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING]) is
-			-- Generate the function signature for ANSI C
-			-- including the starting '{'
-		require
-			non_void_args: type /= Void and f_name /= Void and
-				arg_names /= Void and arg_types /= Void
-			same_count: arg_names.count = arg_types.count
-			valid_lower: arg_names.lower = 1 and arg_types.lower = 1
-		do
-			generate_pure_function_signature (type, f_name, extern, extern_header, arg_names, arg_types)
-			current_buffer.append_character ('{')
-			put_new_line
-			if not is_il_generation then
-				indent
-				put_string (gtcx_string)
-				exdent
-				put_new_line
-			end
 		end
 
 feature {GENERATION_BUFFER} -- prototype code generation
@@ -626,31 +624,29 @@ feature {GENERATION_BUFFER} -- prototype code generation
 			i, nb: INTEGER
 			l_sep: STRING
 		do
-			if not emitted and tabs > 0 then
-				emit_tabs
-			end
+			put_new_line
 			if extern then
 				if is_il_generation then
-					append (rtil_string)
+					put_string (rtil_string)
 				else
-					append (extern_string)
+					put_string (extern_string)
 				end
 			else
-				append (static_string)
+				put_string (static_string)
 			end
 
-			append (type)
+			put_string (type)
 			if is_il_generation then
-				append (stdcall_string)
+				put_string (stdcall_string)
 			else
 				current_buffer.append_character (' ')
 			end
-			append (f_name)
+			put_string (f_name)
 			current_buffer.append_character ('(')
 			nb := arg_types.count
 
 			if nb = 0 then
-				append (void_string)
+				put_string (void_string)
 			else
 				from
 					i := 1
@@ -659,22 +655,19 @@ feature {GENERATION_BUFFER} -- prototype code generation
 					i > nb
 				loop
 					if i /= 1 then
-						append (l_sep)
+						put_string (l_sep)
 					end
-					append (arg_types @ i)
+					put_string (arg_types @ i)
 					i := i + 1
 				end
 			end
-			put_three_character (')', ';', '%N')
+			put_two_character (')', ';')
 		end
 
 feature {NONE} -- Implementation: Status report
 
 	is_il_generation: BOOLEAN
 			-- Are we in IL code generation?
-
-	old_tabs: INTEGER
-			-- Saved indentation value
 
 	current_buffer_size: INTEGER
 			-- Size of buffers we will create.
@@ -714,59 +707,89 @@ feature {NONE} -- Implementation: Access
 	buffers: ARRAYED_LIST [like current_buffer]
 			-- Store buffers when they become too large.
 
-	string_converter: STRING_CONVERTER is
-			-- Instance of STRING_CONVERTER for `escape_string' and `escape_char'.
-		once
-			create Result
-		end
 
-feature {NONE} -- Implementation: Element change
+feature {NONE} -- Implementation
 
-	append (s: STRING) is
-			-- Append a copy of `s' at end of `buffer'.
+	escape_string (buffer: like current_buffer; s: STRING) is
+			-- Append `buffer' with the escaped version of `s'
 		require
-			s_not_void: s /= Void
-		local
-			l_buffer: like current_buffer
+			valid_arguments: s /= Void and then buffer /= Void
 		do
-			l_buffer := current_buffer
-			if (l_buffer.count + s.count) > current_buffer_size then
-				buffers.extend (l_buffer)
-				create l_buffer.make (max_chunk_size.max (s.count))
-				current_buffer := l_buffer
-			end
-			l_buffer.append (s)
-		ensure
-			new_count: count = old count + s.count
+			escape_substring (buffer, s, 1, s.count)
 		end
 
-	emit_tabs is
-			-- Emit the `tabs' leading tabs
+	escape_substring (buffer: like current_buffer; s: STRING; start_index, end_index: INTEGER) is
+			-- Append escaped version of `s.substring (start_index, end_index)' to `buffer'.
 		require
-			not_emitted: not emitted
-			has_tabs: tabs > 0
+			buffer_not_void: buffer /= Void
+			s_not_void: s /= Void
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= s.count
+			valid_indexes: start_index <= end_index + 1
 		local
 			i: INTEGER
-			l_buffer: like current_buffer
+			c: CHARACTER
+			l_area: SPECIAL [CHARACTER]
 		do
-			emitted := True
-			l_buffer := current_buffer
 			from
-				i := tabs
+				i := start_index - 1
+				l_area := s.area
+			variant
+				end_index - i + 2
 			until
-				i = 0
+				i = end_index
 			loop
-				l_buffer.append_character ('%T')
-				i := i - 1
+				c := l_area.item (i)
+				inspect c
+				when '"', '\', '%'', '?' then
+					buffer.append_character ('\')
+					buffer.append_character (c)
+				else
+					if c < ' ' or c > '%/127/' then
+							-- Assume ASCII set, sorry--RAM.
+						buffer.append_character ('\')
+						put_octal (buffer, c.code)
+					else
+						buffer.append_character (c)
+					end
+				end
+				i := i + 1
 			end
-		ensure
-			emitted: emitted
 		end
 
-feature {NONE} -- Constants
+	put_octal (buffer: like current_buffer; i: INTEGER) is
+			-- Print octal representation of `i' into `buffer'
+			--| always generate 3 digits
+		local
+			val: INTEGER
+			l_min_char: INTEGER
+		do
+			l_min_char := ('0').code
+			if i < 64 then
+				buffer.append_character ('0')
+				if i < 8 then
+					buffer.append_character ('0')
+					buffer.append_character ((l_min_char + i).to_character_8)
+				else
+					buffer.append_character ((l_min_char + i // 8).to_character_8)
+					buffer.append_character ((l_min_char + i \\ 8).to_character_8)
+				end
+			else
+					-- First we compute the 3rd digit.
+				buffer.append_character ((l_min_char + i // 64).to_character_8)
+				val := i \\ 64
+					-- Then the last digit as if it was a number less than 64.
+				buffer.append_character ((l_min_char + val // 8).to_character_8)
+				buffer.append_character ((l_min_char + val \\ 8).to_character_8)
+			end
+		ensure
+			count_updated: buffer.count = old buffer.count + 3
+		end
 
-	starting_c_code_string: STRING is "%N#ifdef __cplusplus%Nextern %"C%" {%N#endif%N%N"
-	ending_c_code_string: STRING is "%N#ifdef __cplusplus%N}%N#endif%N%N"
+feature -- Constants
+
+	starting_c_code_string: STRING is "%N%N#ifdef __cplusplus%Nextern %"C%" {%N#endif%N"
+	ending_c_code_string: STRING is "%N%N#ifdef __cplusplus%N}%N#endif%N"
 	coma_sep_string: STRING is ", "
 	rtlr_string: STRING is "RTLR("
 	current_string: STRING is "Current"
@@ -815,4 +838,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class GENERATION_BUFFER
+end

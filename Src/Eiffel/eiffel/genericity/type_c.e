@@ -80,6 +80,7 @@ feature
 			buffer.put_character ('(')
 			buffer.put_string (C_string)
 			buffer.put_character (')')
+			buffer.put_character (' ')
 		end
 
 	generate_access_cast (buffer: GENERATION_BUFFER) is

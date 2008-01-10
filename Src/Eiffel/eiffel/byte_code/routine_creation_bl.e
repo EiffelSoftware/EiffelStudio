@@ -95,8 +95,10 @@ feature
 			buf := buffer
 			agent_type ?= l_context.real_type (type)
 			gen_type  ?= agent_type
-			generate_block_open
+			buf.put_new_line
+			buf.generate_block_open
 			l_context.generate_gen_type_conversion (gen_type)
+			buf.put_new_line
 			print_register
 			buf.put_string (once " = ")
 			if wb_mode then
@@ -199,8 +201,7 @@ feature
 				buf.put_character ('0')
 			end
 			buf.put_string (");")
-			buf.put_new_line
-			generate_block_close
+			buf.generate_block_close
 		end
 
 	generate_routine_address (optimized, oargs_encapsulated: BOOLEAN) is

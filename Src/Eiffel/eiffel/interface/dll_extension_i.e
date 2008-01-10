@@ -166,7 +166,7 @@ feature {NONE} -- Internal generation
 				buf.put_string (" = ")
 				l_ret_type.c_type.generate_cast (buf)
 				if l_ret_type.is_boolean then
-					buf.put_string (" EIF_TEST")
+					buf.put_string ("EIF_TEST")
 				end
 			end
 			buf.put_character ('(')

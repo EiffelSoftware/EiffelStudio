@@ -198,7 +198,7 @@ feature -- Code generation
 				extern_declarations.wipe_out
 
 				buffer.start_c_specific_code
-				header_buffer.put_string ("#include %"eif_eiffel.h%"%N")
+				header_buffer.put_string ("#include %"eif_eiffel.h%"")
 				header_buffer.start_c_specific_code
 
 				create headers.make (100)
@@ -207,7 +207,7 @@ feature -- Code generation
 
 				ext_inline_buffer := generation_ext_inline_buffer
 				ext_inline_buffer.clear_all
-				ext_inline_buffer.open_write_c
+				ext_inline_buffer.start_c_specific_code
 				context.clear_class_type_data
 
 				start
@@ -231,7 +231,7 @@ feature -- Code generation
 			end
 			buffer.end_c_specific_code
 			header_buffer.end_c_specific_code
-			ext_inline_buffer.close_c
+			ext_inline_buffer.end_c_specific_code
 
 			create header_file.make_open_write (
 				full_file_name (final_mode, Void, "lib" + System.name, Dot_h))

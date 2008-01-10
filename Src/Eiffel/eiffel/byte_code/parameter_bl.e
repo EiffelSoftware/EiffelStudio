@@ -76,8 +76,8 @@ feature
 			target_type := real_type (attachment_type)
 			source_type := real_type (expression.type)
 			if source_type.is_none and target_type.is_expanded then
-				buffer.put_string ("RTEC(EN_VEXP);")
 				buffer.put_new_line
+				buffer.put_string ("RTEC(EN_VEXP);")
 			else
 				expression.generate_for_type (register, target_type)
 			end

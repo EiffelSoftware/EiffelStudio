@@ -30,10 +30,10 @@ feature
 			expr.print_register
 		end
 
-	generate_operator is
+	generate_operator (a_buffer: GENERATION_BUFFER) is
 			-- Generate the unary operator
 		do
-			buffer.put_character ('!');
+			a_buffer.put_character ('!')
 		end;
 
 	is_built_in: BOOLEAN is

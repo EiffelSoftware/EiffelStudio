@@ -40,10 +40,10 @@ feature -- Status report
 
 feature -- C code generaiton
 
-	generate_operator is
+	generate_operator (a_buffer: GENERATION_BUFFER) is
 			-- Generate the operator
 		do
-			buffer.put_string (gc_plus)
+			a_buffer.put_string (gc_plus)
 		end
 
 	generate_simple is

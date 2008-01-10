@@ -31,10 +31,10 @@ feature -- C code generation
 			Result := is_built_in
 		end
 
-	generate_operator is
+	generate_operator (a_buffer: GENERATION_BUFFER) is
 			-- Generate the operator
 		do
-			buffer.put_string (gc_star)
+			a_buffer.put_string (gc_star)
 		end
 
 	generate_simple is

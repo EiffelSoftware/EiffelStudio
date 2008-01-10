@@ -151,11 +151,11 @@ feature {NONE} -- C code generation
 			buf := buffer
 			info.generate_start (buf)
 			info.generate_gen_type_conversion
+			buf.put_new_line
 			print_register
 			buf.put_string (" = ")
 			info.generate
 			buf.put_character (';')
-			buf.put_new_line
 			info.generate_end (buf)
 		end
 
@@ -172,16 +172,17 @@ feature {NONE} -- C code generation
 			l_exp_class_type: CLASS_TYPE
 		do
 			is_expanded := target_type.is_true_expanded;
-			array_area_reg.print_register;
 			buf := buffer
+			buf.put_new_line
+			array_area_reg.print_register;
 			buf.put_string (" = * (EIF_REFERENCE *) ");
 			print_register;
 			buf.put_character (';');
-			buf.put_new_line;
 			if (is_expanded and then expressions.count > 0) then
-				buf.put_character ('{');
 				buf.put_new_line;
+				buf.put_character ('{');
 				buf.indent;
+				buf.put_new_line;
 				buf.put_string ("EIF_INTEGER elem_size;");
 				buf.put_new_line;
 				buf.put_string ("elem_size = *(EIF_INTEGER *) (");
@@ -189,7 +190,6 @@ feature {NONE} -- C code generation
 				buf.put_string (" + (HEADER(");
 				array_area_reg.print_register;
 				buf.put_string (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(EIF_INTEGER));");
-				buf.put_new_line;
 			end;
 			from
 				expressions.start;
@@ -200,6 +200,7 @@ feature {NONE} -- C code generation
 				expr ?= expressions.item;
 				actual_type := context.real_type (expr.type);
 				expr.generate_for_type (item_register, target_type)
+				buf.put_new_line
 				if is_expanded then
 					if context.workbench_mode then
 						buf.put_string ("ecopy(");
@@ -261,14 +262,13 @@ feature {NONE} -- C code generation
 					end
 				end
 				buf.put_character (';')
-				buf.put_new_line
 				expressions.forth
 				position := position + 1
 			end
 			if (is_expanded and expressions.count > 0) then
 				buf.exdent
-				buf.put_character ('}')
 				buf.put_new_line
+				buf.put_character ('}')
 			end
 		end
 
@@ -289,6 +289,7 @@ feature {NONE} -- C code generation
 				is_implemented: rout_table.is_implemented
 			end
 			internal_name := rout_table.feature_name.twin
+			buffer.put_new_line
 			buffer.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))")
 			buffer.put_string (internal_name);
 			buffer.put_string (")")
@@ -319,6 +320,7 @@ feature {NONE} -- C code generation
 			f_table := base_class.feature_table
 			feat_i := f_table.item_id (make_name_id)
 			buf := buffer
+			buf.put_new_line
 			arg1_register.print_register
 			buf.put_string (" = 1L;")
 			buf.put_new_line
@@ -332,7 +334,7 @@ feature {NONE} -- C code generation
 				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
 			then
-				buf.put_string ("RTWPF(");
+				buf.put_string (" RTWPF(");
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
 				buf.put_class_id (rout_info.origin);
@@ -355,7 +357,6 @@ feature {NONE} -- C code generation
 			buf.put_string (gc_comma)
 			context.print_argument_register (arg2_register, buf)
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 		end;
 
 	generate_array_make_arguments is
@@ -370,7 +371,6 @@ feature {NONE} -- C code generation
 			buf.put_string ("1L, ");
 			buf.put_integer (expressions.count);
 			buf.put_string ("L);");
-			buf.put_new_line;
 		end;
 
 	item_print_register (expr: EXPR_B; target_type: TYPE_I) is

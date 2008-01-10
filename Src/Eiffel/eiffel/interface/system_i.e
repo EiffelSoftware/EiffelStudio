@@ -4080,17 +4080,12 @@ feature -- Generation
 			l_header_buf.clear_all
 
 			l_header_buf.put_string ("#include %"eif_eiffel.h%"")
-			l_header_buf.put_new_line
-			l_header_buf.put_new_line
 			l_header_buf.start_c_specific_code
 
-			l_buf.put_new_line
-			l_buf.put_new_line
-
 				-- Initialize tables for routines.
-			l_buf.put_string ("void egc_routine_tables_init (void) {")
 			l_buf.put_new_line
-			l_buf.indent
+			l_buf.put_string ("void egc_routine_tables_init (void)")
+			l_buf.generate_block_open
 			from
 				used.start
 			until
@@ -4101,26 +4096,26 @@ feature -- Generation
 				if table.is_routine_table then
 					l_table_name := l_encoder.routine_table_name (l_rout_id)
 						-- Declare initialization routine for table
+					l_header_buf.put_new_line
 					l_header_buf.put_string ("extern void ")
 					l_header_buf.put_string (l_table_name)
 					l_header_buf.put_string ("_init(void);")
-					l_header_buf.put_new_line
 						-- Call the routine
+					l_buf.put_new_line
 					l_buf.put_string (l_table_name)
 					l_buf.put_string ("_init();")
-					l_buf.put_new_line
 				end
 				if table.is_attribute_table then
 					l_table_name := l_encoder.attribute_table_name (l_rout_id)
 						-- Declare initialization routine for table
+					l_header_buf.put_new_line
 					l_header_buf.put_string ("extern void ")
 					l_header_buf.put_string (l_table_name)
 					l_header_buf.put_string ("_init(void);")
-					l_header_buf.put_new_line
 						-- Call the routine
+					l_buf.put_new_line
 					l_buf.put_string (l_table_name)
 					l_buf.put_string ("_init();")
-					l_buf.put_new_line
 				end
 				used.forth
 			end
@@ -4134,15 +4129,15 @@ feature -- Generation
 				l_rout_id := l_rout_ids.item
 				l_table_name := l_encoder.type_table_name (l_rout_id)
 					-- Declare initialization routine for table
+				l_header_buf.put_new_line
 				l_header_buf.put_string ("extern void ")
 				l_header_buf.put_string (l_table_name)
 				l_header_buf.put_string ("_init(void);")
-				l_header_buf.put_new_line
 
 					-- Call the routine
+				l_buf.put_new_line
 				l_buf.put_string (l_table_name)
 				l_buf.put_string ("_init();")
-				l_buf.put_new_line
 				l_rout_ids.forth
 			end
 
@@ -4159,22 +4154,19 @@ feature -- Generation
 				l_rout_id := l_rout_ids.item
 				l_table_name := l_encoder.routine_table_name (l_rout_id)
 					-- Declare initialization routine for table
+				l_header_buf.put_new_line
 				l_header_buf.put_string ("extern void ")
 				l_header_buf.put_string (l_table_name)
 				l_header_buf.put_string ("_init(void);")
-				l_header_buf.put_new_line
 
 					-- Call the routine
+				l_buf.put_new_line
 				l_buf.put_string (l_table_name)
 				l_buf.put_string ("_init();")
-				l_buf.put_new_line
 				l_rout_ids.forth
 			end
 
-			l_buf.exdent
-			l_buf.put_string ("}")
-			l_buf.put_new_line
-
+			l_buf.generate_block_close
 			l_buf.end_c_specific_code
 			create l_poly_file.make_c_code_file (final_file_name (epoly, dot_c, 1))
 			l_header_buf.put_in_file (l_poly_file)
@@ -4280,7 +4272,7 @@ feature -- Generation
 
 			final_mode := byte_context.final_mode;
 
-			buffer.put_string ("#include %"eif_eiffel.h%"%N%N");
+			buffer.put_string ("#include %"eif_eiffel.h%"");
 
 			buffer.start_c_specific_code
 
@@ -4304,6 +4296,7 @@ feature -- Generation
 				i := i + 1;
 			end;
 
+			buffer.put_new_line
 			buffer.put_string ("int egc_partab_size_init = ")
 			buffer.put_integer (max_id);
 			buffer.put_string (";%N");
@@ -4323,7 +4316,7 @@ feature -- Generation
 				buffer.put_string (",%N");
 				i := i + 1;
 			end;
-			buffer.put_string ("NULL};%N");
+			buffer.put_string ("NULL};");
 			buffer.end_c_specific_code
 
 			create parents_file.make_c_code_file (gen_file_name (final_mode, Eparents));
@@ -4356,11 +4349,10 @@ feature -- Generation
 			buffer := generation_buffer
 			buffer.clear_all
 
-			buffer.put_string ("#include %"eif_eiffel.h%"%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"")
 
 			if not final_mode then
 					-- Hash table extern declaration in workbench mode
-				buffer.put_new_line
 				buffer.start_c_specific_code
 
 				class_array := classes
@@ -4454,7 +4446,7 @@ end
 				i := i + 1
 			end
 
-			buffer.put_string ("struct cnode egc_fsystem_init[] = {%N")
+			buffer.put_string ("struct cnode egc_fsystem_init[] = {")
 			from
 				i := 1
 			until
@@ -4462,41 +4454,41 @@ end
 			loop
 				buffer.flush_buffer (skeleton_file)
 				cl_type := class_types.item (i)
-if cl_type /= Void then
-				if final_mode then
-					if
-						not cl_type.associated_class.is_precompiled or else
-						cl_type.associated_class.is_in_system
-					then
-						cl_type.generate_skeleton2 (buffer)
+				if cl_type /= Void then
+					if final_mode then
+						if
+							not cl_type.associated_class.is_precompiled or else
+							cl_type.associated_class.is_in_system
+						then
+							cl_type.generate_skeleton2 (buffer)
+						else
+								-- Type not inserted in system because it was coming
+								-- from a precompiled library.
+							buffer.put_string ("%N{0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
+						end
 					else
-							-- Type not inserted in system because it was coming
-							-- from a precompiled library.
-						buffer.put_string ("{0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
+						cl_type.generate_skeleton2 (buffer)
 					end
 				else
-					cl_type.generate_skeleton2 (buffer)
+						-- FIXME
+					if final_mode then
+						buffer.put_string ("%N{0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
+					else
+						buffer.put_string
+							("%N{%N0L,%N%"INVALID_TYPE%",%NNULL,%NNULL,%N%
+							%NULL,%NNULL,%N(uint16) 0L,%NNULL,%N0L,%N0L,%N%
+							%(int32) 0L,(int32) 0L,%NNULL,%N%
+							%{(int32) 0, (int) 0, NULL, NULL}}")
+					end
 				end
-else
-		-- FIXME
-	if final_mode then
-		buffer.put_string ("{0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
-	else
-		buffer.put_string
-			("{%N0L,%N%"INVALID_TYPE%",%NNULL,%NNULL,%N%
-			%NULL,%NNULL,%N(uint16) 0L,%NNULL,%N0L,%N0L,%N%
-			%(int32) 0L,(int32) 0L,%NNULL,%N%
-			%{(int32) 0, (int) 0, NULL, NULL}}")
-	end
-end
-				buffer.put_string (",%N")
+				buffer.put_character (',')
 				i := i + 1
 			end
-			buffer.put_string ("};%N%N")
+			buffer.put_string ("};%N")
 
 			if not final_mode then
 					-- Generate the array of routine id arrays
-				buffer.put_string ("int32 *egc_fcall_init[] = {%N")
+				buffer.put_string ("%Nint32 *egc_fcall_init[] = {%N")
 				from
 					i := 1
 					nb := cltype_array.upper
@@ -4537,7 +4529,7 @@ end
 					buffer.put_string (",%N")
 					i := i + 1
 				end
-				buffer.put_string ("};%N")
+				buffer.put_string ("};")
 			end
 
 			buffer.end_c_specific_code
@@ -4569,7 +4561,7 @@ end
 			buffer.clear_all
 
 			buffer.put_string ("#ifndef _estructure_h_%N#define _estructure_h_%N%N")
-			buffer.put_string ("#include %"eif_eiffel.h%"%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"")
 
 			buffer.start_c_specific_code
 
@@ -4631,10 +4623,10 @@ end
 
 			final_mode := byte_context.final_mode
 
-			buffer.put_string ("#include %"eif_eiffel.h%"%N")
-			buffer.put_string ("#include %"eif_cecil.h%"%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"")
+			buffer.put_string ("%N#include %"eif_cecil.h%"")
 			if final_mode then
-				buffer.put_string ("#include %"ececil.h%"%N")
+				buffer.put_string ("%N#include %"ececil.h%"")
 			end
 
 			buffer.start_c_specific_code
@@ -4656,7 +4648,7 @@ end
 
 			if final_mode then
 					-- Extern declarations for previous file
-				header_buffer.put_string ("#include %"eif_eiffel.h%"%N%N")
+				header_buffer.put_string ("#include %"eif_eiffel.h%"")
 				header_buffer.start_c_specific_code
 				Extern_declarations.generate (header_buffer)
 				header_buffer.end_c_specific_code
@@ -4954,7 +4946,7 @@ feature -- Pattern table generation
 				rout_id := root_feat.rout_id_set.first
 			end
 
-			buffer.put_string ("#include %"eif_eiffel.h%"%N%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"")
 
 			buffer.start_c_specific_code
 
@@ -4979,60 +4971,68 @@ feature -- Pattern table generation
 			buffer.generate_function_signature ("void", "emain", True, buffer,
 						<<"argc", "argv">>, <<"int", "char **">>)
 
+			buffer.generate_block_open
 --			buffer.put_string ("#ifndef EIF_THREADS%N%
 --											%%Textern char *root_obj;%N%
 --											%#endif%N")
 
-			buffer.put_string ("%Troot_obj = RTLNSMART(")
+			buffer.put_new_line
+			buffer.put_string ("root_obj = RTLNSMART(")
 			buffer.put_string ("egc_rcdt")
-			buffer.put_string (");%N")
+			buffer.put_string (");")
 			if not final_mode then
-				buffer.put_string ("%Tif (egc_rt_extension_dt != INVALID_DTYPE) {")
 				buffer.put_new_line
-				buffer.put_string ("%T%Trt_extension_obj = RTLNSMART(")
+				buffer.put_string ("if (egc_rt_extension_dt != INVALID_DTYPE) {")
+				buffer.indent
+				buffer.put_new_line
+				buffer.put_string ("rt_extension_obj = RTLNSMART(")
 				buffer.put_string ("egc_rt_extension_dt")
 				buffer.put_string (");")
+				buffer.exdent
 				buffer.put_new_line
-				buffer.put_string ("%T};")
-				buffer.put_new_line
+				buffer.put_string ("};")
 			end
 
 				-- Initialize exception manager.
-			buffer.put_string ("%Tinit_emnger();%N")
+			buffer.put_new_line
+			buffer.put_string ("init_emnger();")
 
 			if final_mode then
 				if root_creation_name /= Void then
-					buffer.put_string ("%T")
+					buffer.put_new_line
 					buffer.put_string (c_name)
 					buffer.put_string ("(root_obj")
 					if root_feat.has_arguments then
 						buffer.put_string (", argarr(argc, argv)")
 					end
-					buffer.put_string (");%N")
+					buffer.put_string (");")
 				end
 			else
+				buffer.put_new_line_only
 				buffer.put_string (
-					"[
-							if (egc_rcorigin != -1) {
-								if (egc_rcarg) {
-									EIF_TYPED_VALUE u_args;
-									u_args.type = SK_REF;
-									u_args.it_r = argarr(argc, argv);
-									(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, u_args);
-								} else {
-									(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj);
-								}
-							}
-					]"
+					"{
+	if (egc_rcorigin != -1) {
+		if (egc_rcarg) {
+			EIF_TYPED_VALUE u_args;
+			u_args.type = SK_REF;
+			u_args.it_r = argarr(argc, argv);
+			(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, u_args);
+		} else {
+			(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj);
+		}
+	}
+					}"
 				)
 			end
 
-			buffer.put_string ("%N}%N")
+			buffer.generate_block_close
 
 			-- Generation of egc_einit_init() and egc_tabinit_init(). Only for workbench
 			-- mode.
 
 			if not final_mode then
+					-- Separation for formatting
+				buffer.put_new_line
 					-- Prototypes
 				buffer.generate_extern_declaration ("void", "egc_tabinit_init", <<>>)
 				from
@@ -5048,7 +5048,11 @@ feature -- Pattern table generation
 					i := i + 1
 				end
 
-				buffer.put_string ("%Nvoid egc_tabinit_init(void)%N{%N")
+					-- Separation for formatting
+				buffer.put_new_line
+				buffer.put_new_line
+				buffer.put_string ("void egc_tabinit_init(void)")
+				buffer.generate_block_open
 				from
 					i := 1
 					nb := type_id_counter.value
@@ -5057,34 +5061,45 @@ feature -- Pattern table generation
 				loop
 					cl_type := class_types.item (i)
 					if cl_type /= Void then
-						buffer.put_character ('%T')
+						buffer.put_new_line
 						buffer.put_string (Encoder.init_name (cl_type.static_type_id))
-						buffer.put_string ("();%N")
+						buffer.put_string ("();")
 					end
 					i := i + 1
 				end
-				buffer.put_string ("}%N%N")
+				buffer.generate_block_close
 
+					-- Separation for formatting
+				buffer.put_new_line
 				buffer.generate_function_signature ("void", "egc_einit_init", True, buffer, <<>>, <<>>)
+				buffer.generate_block_open
 
 					-- Set C variable `ccount'.
-				buffer.put_string ("%Tccount = ")
+				buffer.put_new_line
+				buffer.put_string ("ccount = ")
 				buffer.put_integer (class_counter.count)
+				buffer.put_character (';')
 
 					-- Set maximum routine body index
-				buffer.put_string (";%N%Teif_nb_org_routines = ")
+				buffer.put_new_line
+				buffer.put_string ("eif_nb_org_routines = ")
 				buffer.put_integer (body_index_counter.count)
+				buffer.put_character (';')
 
 					-- Set the frozen level
-				buffer.put_string (";%N%Teif_nb_features = ")
+				buffer.put_new_line
+				buffer.put_string ("eif_nb_features = ")
 				buffer.put_integer (nb_frozen_features)
-				buffer.put_string (";%N}%N%N")
+				buffer.put_character (';')
+
+				buffer.generate_block_close
 			end
 
-			-- Module initialization routine 'egc_system_mod_init_init'
+				-- Separation for formatting
+			buffer.put_new_line
 
-			-- Declarations
-
+				-- Module initialization routine 'egc_system_mod_init_init'
+				-- Declarations
 			from
 				i  := 1
 				nb := type_id_counter.value
@@ -5108,23 +5123,25 @@ feature -- Pattern table generation
 				-- Declare once data fields
 			byte_context.generate_once_data_definition (buffer)
 
-			-- Module initialization
+				-- Separation for formatting
+			buffer.put_new_line
+
+				-- Module initialization
 			buffer.generate_function_signature (
 				"void", "egc_system_mod_init_init", True, buffer, <<>>, <<>>)
 
-			buffer.put_new_line
-			buffer.indent
+			buffer.generate_block_open
 
 				-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-			buffer.put_string ("egc_type_of_gc = 123174;")
 			buffer.put_new_line
+			buffer.put_string ("egc_type_of_gc = 123174;")
 
 			if final_mode and then not byte_context.is_static_system_data_safe then
 					-- Set maximum routine body index
+				buffer.put_new_line
 				buffer.put_string ("eif_nb_org_routines = ")
 				buffer.put_integer (body_index_counter.count)
 				buffer.put_character (';')
-				buffer.put_new_line
 			end
 
 			from
@@ -5140,9 +5157,9 @@ feature -- Pattern table generation
 						not final_mode or else
 						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
 					then
+						buffer.put_new_line
 						buffer.put_string (Encoder.module_init_name (cl_type.static_type_id))
 						buffer.put_string ("();")
-						buffer.put_new_line
 					end
 				end
 				i := i + 1
@@ -5150,9 +5167,7 @@ feature -- Pattern table generation
 
 			byte_context.generate_system_once_data_initialization (buffer)
 
-			buffer.exdent
-			buffer.put_new_line
-			buffer.put_string ("}%N%N")
+			buffer.generate_block_close
 
 			byte_context.generate_once_manifest_string_declaration (buffer)
 
@@ -5199,7 +5214,7 @@ feature --option file generation
 			buffer.clear_all
 
 			buffer.put_string ("#include %"eif_eiffel.h%"%N%
-								%#include %"eif_option.h%"%N%N")
+								%#include %"eif_option.h%"")
 
 			buffer.start_c_specific_code
 
@@ -5215,6 +5230,7 @@ feature --option file generation
 			end
 
 				-- Then option C array
+			buffer.put_new_line
 			buffer.put_string ("struct eif_opt egc_foption_init[] = {%N")
 			from
 				i := 1
@@ -5241,7 +5257,7 @@ feature --option file generation
 				buffer.put_string ("},%N")
 				i := i + 1
 			end
-			buffer.put_string ("};%N")
+			buffer.put_string ("};")
 			buffer.end_c_specific_code
 
 			if is_workbench_mode then

@@ -325,38 +325,34 @@ feature -- Settings
 		do
 			buf := buffer
 			generate_line_info
-				-- Outstanding of if..then..else..end
-			buf.put_new_line
-
 				-- Generate the hook for "if cond then"
 			generate_frozen_debugger_hook
 
 			condition.generate
+
+			buf.put_new_line
 			buf.put_string (gc_if_l_paran)
 			condition.print_register
 			buf.put_string (") {")
-			buf.put_new_line
 			if compound /= Void then
 				buf.indent
 				compound.generate
 				buf.exdent
 			end
+			buf.put_new_line
 			buf.put_character ('}')
 			if elsif_list /= Void then
 				elsif_list.generate
 			end
 			if else_part /= Void then
 				buf.put_string (" else {")
-				buf.put_new_line
 				buf.indent
 				else_part.generate
 				buf.exdent
+				buf.put_new_line
 				buf.put_character ('}')
 			end
 			generate_closing_brakets
-			buf.put_new_line
-				-- Leave one blank line after the construct
-			buf.put_new_line
 		end
 
 	generate_closing_brakets is
@@ -372,6 +368,8 @@ feature -- Settings
 				until
 					i = 0
 				loop
+					buf.exdent
+					buf.put_new_line
 					buf.put_character ('}')
 					i := i - 1
 				end

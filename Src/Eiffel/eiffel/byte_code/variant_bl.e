@@ -5,7 +5,7 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class VARIANT_BL 
+class VARIANT_BL
 
 inherit
 	VARIANT_B
@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 
-feature 
+feature
 
 	register: REGISTRABLE
 			-- Register in which old variant value is kept
@@ -46,7 +46,7 @@ feature
 			expr.analyze
 			expr.free_register
 		end
-	
+
 	generate is
 			-- Generate variant initializations
 		local
@@ -58,6 +58,7 @@ feature
 			generate_frozen_debugger_hook
 
 				-- Assertion recording on stack
+			buf.put_new_line
 			if tag /= Void then
 				buf.put_string ("RTCT(")
 				buf.put_character ('"')
@@ -69,8 +70,8 @@ feature
 			end
 			generate_assertion_code (In_loop_variant)
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 			expr.generate
+			buf.put_new_line
 			register.print_register
 			buf.put_string (" = ")
 			expr.print_register
@@ -79,19 +80,18 @@ feature
 			buf.put_string ("if (")
 			register.print_register
 			buf.put_string (" >= 0) {")
-			buf.put_new_line
 			buf.indent
+			buf.put_new_line
 			buf.put_string ("RTCK;");
-			buf.put_new_line
 			buf.exdent
+			buf.put_new_line
 			buf.put_string("} else {")
-			buf.put_new_line
 			buf.indent
+			buf.put_new_line
 			buf.put_string ("RTCF;")
-			buf.put_new_line
 			buf.exdent
-			buf.put_character ('}')
 			buf.put_new_line
+			buf.put_character ('}')
 		end
 
 	print_register is
@@ -105,6 +105,7 @@ feature
 			generate_frozen_debugger_hook
 
 				-- Assertion recording on stack
+			buffer.put_new_line
 			if tag /= Void then
 				buf.put_string ("RTCT(")
 				buf.put_character ('"')
@@ -116,8 +117,8 @@ feature
 			end
 			generate_assertion_code (In_loop_variant)
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 			expr.generate
+			buf.put_new_line
 			new_register.print_register
 			buf.put_string (" = ")
 			expr.print_register
@@ -131,26 +132,23 @@ feature
 			buf.put_string (") && ")
 			new_register.print_register
 			buf.put_string (" >= 0) {")
-			buf.put_new_line
 			buf.indent
+			buf.put_new_line
 			buf.put_string ("RTCK;")
 			buf.put_new_line
 			register.print_register
 			buf.put_string (" = ")
 			new_register.print_register
 			buf.put_character (';')
-			buf.put_new_line
 			buf.exdent
-			buf.put_character ('}')
 			buf.put_new_line
-			buf.put_string ("else {")
-			buf.put_new_line
+			buf.put_string ("} else {")
 			buf.indent
+			buf.put_new_line
 			buf.put_string ("RTCF;")
-			buf.put_new_line
 			buf.exdent
-			buf.put_character ('}')
 			buf.put_new_line
+			buf.put_character ('}')
 		end
 
 	free_register is

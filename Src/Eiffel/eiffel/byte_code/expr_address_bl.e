@@ -28,7 +28,7 @@ feature
 				end;
 			end;
 		end;
- 
+
 	free_register is
 			-- Free register used by expression
 		do
@@ -37,7 +37,7 @@ feature
 				register.free_register
 			end
 		end;
- 
+
 	analyze is
 			-- Analyze expression
 		do
@@ -54,13 +54,13 @@ feature
 				context.mark_result_used;
 			end
 		end;
- 
+
 	unanalyze is
 			-- Undo the analysis of the expression
 		do
 			expr.unanalyze;
 		end;
- 
+
 	generate is
 			-- Generate expression
 		local
@@ -68,15 +68,15 @@ feature
 		do
 			expr.generate;
 			if register /= Void then
-				register.print_register;
 				buf := buffer
+				buf.put_new_line
+				register.print_register;
 				buf.put_string (" = ");
 				expr.print_register;
 				buf.put_character (';');
-				buf.put_new_line
 			end
 		end;
- 
+
 	print_register is
 			-- Print expression value
 		local
@@ -97,7 +97,7 @@ feature
 				r.print_register;
 			end
 		end;
- 
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

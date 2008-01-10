@@ -172,16 +172,16 @@ feature -- Generation
 			nb_elements := rout_infos.count
 
 			buffer.put_string ("#include %"eif_project.h%"%N%
-						 %#include %"eif_macros.h%"%N%N")
+						 %#include %"eif_macros.h%"")
 
 			buffer.start_c_specific_code
 
-			buffer.put_string ("struct rout_info egc_forg_table_init[] = {%N")
+			buffer.put_string ("%Nstruct rout_info egc_forg_table_init[] = {")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
-			buffer.put_string ("%T{INVALID_DTYPE, 0},%N")
+			buffer.put_string ("%N%T{INVALID_DTYPE, (uint16) 0},")
 				-- Entry for the invariant "routine"
-			buffer.put_string ("%T{0, (uint16) 0},%N")
+			buffer.put_string ("%N%T{0, (uint16) 0},")
 
 			from
 				i := 2
@@ -190,18 +190,18 @@ feature -- Generation
 			loop
 				ri := rout_infos.item (i)
 				if ri /= Void then
-					buffer.put_string ("%N%T{")
+					buffer.put_three_character ('%N', '%T', '{')
 					buffer.put_integer (ri.origin)
 					buffer.put_string (", (uint16) ")
 					buffer.put_integer (ri.offset)
-					buffer.put_string ("},")
+					buffer.put_two_character ('}', ',')
 				else
-					buffer.put_string ("%N%T{INVALID_DTYPE, 0},")
+					buffer.put_string ("%N%T{INVALID_DTYPE, (uint16) 0},")
 				end
 				i := i + 1
 			end
 
-			buffer.put_string ("%N};%N")
+			buffer.put_string ("%N};")
 
 			buffer.end_c_specific_code
 		end

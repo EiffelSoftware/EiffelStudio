@@ -53,11 +53,12 @@ feature
 			buf := buffer
 
 				-- Start try block of old expression evaluation
-			buf.put_string ("RTE_OT")
 			buf.put_new_line
+			buf.put_string ("RTE_OT")
 
 			expr.generate;
 			target_type := Context.real_type (type);
+			buf.put_new_line
 			register.print_register;
 			buf.put_string (" = ");
 			if target_type.is_true_expanded then
@@ -68,29 +69,26 @@ feature
 				expr.print_register;
 			end
 			buf.put_character (';')
-			buf.put_new_line
 
 				-- Clean the exception recording local.
+			buf.put_new_line
 			exception_register.print_register
 			buf.put_string (" = ")
 			buf.put_string ("NULL;")
-			buf.put_new_line
 
 				-- End try block of old expression evaluation
-			buf.put_string ("RTE_O")
 			buf.put_new_line
+			buf.put_string ("RTE_O")
 
 				-- Save possible exception object.
+			buf.put_new_line
 			exception_register.print_register
 			buf.put_string (" = ")
 			buf.put_string ("RTLA;")
-			buf.put_new_line
 
 				-- End of local rescue
-			buf.put_string ("RTE_OE")
 			buf.put_new_line
-
-			buf.put_new_line;
+			buf.put_string ("RTE_OE")
 		end;
 
 	unanalyze is
@@ -114,10 +112,10 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
+			buf.put_new_line;
 			buf.put_string ("RTCO(")
 			exception_register.print_register
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 		end;
 
 	print_register is

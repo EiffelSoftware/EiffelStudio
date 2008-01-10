@@ -103,6 +103,7 @@ feature
 				-- consecutives rows are identical we will generate a loop to fill the rows
 			from
 					-- Private table
+				buffer.put_new_line
 				buffer.put_string ("long ")
 				l_table_name := Encoder.attribute_table_name (rout_id)
 				buffer.put_string (l_table_name)
@@ -113,7 +114,6 @@ feature
 				buffer.put_string ("void ")
 				buffer.put_string (l_table_name)
 				buffer.put_string ("_init () {")
-				buffer.put_new_line
 				buffer.indent
 
 				create l_buf.make (24)
@@ -173,7 +173,7 @@ feature
 			end
 
 			buffer.exdent
-			buffer.put_string ("}%N%N")
+			buffer.put_three_character ('%N', '}', '%N')
 		end
 
 feature {POLY_TABLE} -- Special data
@@ -197,6 +197,7 @@ feature {NONE} -- Implementation
 			a_upper_non_negative: a_upper >= 0
 			a_upper_greater_or_equal_than_a_lower: a_upper >= a_lower
 		do
+			buffer.put_new_line
 			if a_lower = a_upper then
 				buffer.put_string (a_table_name)
 				buffer.put_character ('[')
@@ -204,7 +205,6 @@ feature {NONE} -- Implementation
 				buffer.put_string ("] = ")
 				buffer.put_string (a_offset)
 				buffer.put_character (';')
-				buffer.put_new_line
 			else
 				buffer.put_string ("{long i; for (i = ")
 				buffer.put_integer (a_lower)
@@ -214,9 +214,7 @@ feature {NONE} -- Implementation
 				buffer.put_string (a_table_name)
 				buffer.put_string ("[i] = ")
 				buffer.put_string (a_offset)
-				buffer.put_character (';')
-				buffer.put_character ('}')
-				buffer.put_new_line
+				buffer.put_two_character (';', '}')
 			end
 		end
 

@@ -179,21 +179,20 @@ end;
 								j := j - 1
 							end
 							buffer.generate_extern_declaration ("EIF_TYPED_VALUE", routine_name, <<>>)
-							buffer.generate_pure_function_signature (return_type.c_string, routine_name + cecil_suffix, False, Void, arg_names, arg_types)
-							buffer.put_character ('{')
-							buffer.indent
-							buffer.put_new_line
+							buffer.generate_function_signature (return_type.c_string, routine_name + cecil_suffix, False, Void, arg_names, arg_types)
+							buffer.generate_block_open
 							if arg_count > 0 then
+								buffer.put_new_line
 								buffer.put_string ("EIF_TYPED_VALUE u [")
 								buffer.put_integer (arg_count)
 								buffer.put_string ("];")
-								buffer.put_new_line
 								from
 									j := arg_count
 								until
 									j = 0
 								loop
 									arg_type := feat_args.i_th (j).type_i.instantiation_in (a_class_type).c_type
+									buffer.put_new_line
 									buffer.put_string ("u [")
 									buffer.put_integer (j - 1)
 									buffer.put_string ("].")
@@ -207,11 +206,11 @@ end;
 									buffer.put_string (" = ")
 									buffer.put_string (arg_names [j + 1])
 									buffer.put_character (';')
-									buffer.put_new_line
 									arg_types [j + 1] := "EIF_TYPED_VALUE"
 									j := j - 1
 								end
 							end
+							buffer.put_new_line
 							if return_type.is_void then
 								buffer.put_character ('(')
 							else
@@ -237,9 +236,7 @@ end;
 							end
 							buffer.put_character (';')
 							buffer.put_new_line
-							buffer.exdent
-							buffer.put_character ('}')
-							buffer.put_new_line
+							buffer.generate_block_close
 							buffer.put_new_line
 						end
 					end

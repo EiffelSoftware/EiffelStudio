@@ -111,34 +111,34 @@ feature -- C code generation
 		do
 			buf := buffer
 			generate_line_info
-			buf.put_new_line
 			generate_frozen_debugger_hook
 			switch.generate
+			buf.put_new_line
 			buf.put_string ("switch (")
 			switch.print_register
 			buf.put_string (") {")
-			buf.put_new_line
 			buf.indent
 			if case_list /= Void then
 				case_list.generate
 			end
 			if else_part = Void or else not else_part.is_empty then
-				buf.put_string ("default:")
 				buf.put_new_line
+				buf.put_string ("default:")
 				buf.indent
 				if else_part = Void then
 						-- Raise an exception
+					buf.put_new_line
 					buf.put_string ("RTEC(EN_WHEN);")
 				else
 					else_part.generate
+					buf.put_new_line
 					buf.put_string ("break;")
 				end
-				buf.put_new_line
 				buf.exdent
 			end
 			buf.exdent
-			buf.put_character ('}')
 			buf.put_new_line
+			buf.put_character ('}')
 		end
 
 feature -- Array optimization

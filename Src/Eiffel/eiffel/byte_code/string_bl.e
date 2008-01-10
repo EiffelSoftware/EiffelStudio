@@ -62,11 +62,11 @@ feature
 		do
 			if register /= No_register then
 				buf := buffer
+				buf.put_new_line
 				register.print_register
 				buf.put_string (" = ")
 				generate_string
 				buf.put_character (';')
-				buf.put_new_line
 			end
 		end
 

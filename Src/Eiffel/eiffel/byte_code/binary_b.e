@@ -257,13 +257,15 @@ feature -- C code generation
 			type.c_type.generate_cast (buf)
 			buf.put_character ('(')
 			left.print_register
-			generate_operator
+			generate_operator (buf)
 			right.print_register
 			buf.put_character (')')
 		end
 
-	generate_operator is
+	generate_operator (a_buffer: GENERATION_BUFFER) is
 			-- Generate operator in C
+		require
+			a_buffer_not_void: a_buffer /= Void
 		do
 		end
 

@@ -114,12 +114,11 @@ feature {NONE} -- Implementation: C generation
 		do
 			buf := buffer
 			if v.natural_32_code <= {CHARACTER_8}.max_value.as_natural_32 then
-				buf.put_string ("(EIF_CHARACTER) '")
-				buf.escape_char (v.to_character_8)
-				buf.put_character ('%'')
+				char_c_type.generate_cast (buf)
+				buffer.put_character_literal (v.to_character_8)
 			else
-				buf.put_string ("(EIF_WIDE_CHAR) ")
-				buf.put_string (v.natural_32_code.out)
+				wide_char_c_type.generate_cast (buf)
+				buf.put_natural_32 (v.natural_32_code)
 				buf.put_character ('U')
 			end
 		end

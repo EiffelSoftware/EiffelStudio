@@ -300,6 +300,7 @@ feature {NONE} -- Implementation
 				-- We generate a compact table initialization, that is to say if two or more
 				-- consecutives rows are identical we will generate a loop to fill the rows
 			from
+				buffer.put_new_line
 				buffer.put_string ("char *(*");
 				l_table_name := Encoder.routine_table_name (rout_id)
 				buffer.put_string (l_table_name);
@@ -310,7 +311,6 @@ feature {NONE} -- Implementation
 				buffer.put_string ("void ")
 				buffer.put_string (l_table_name)
 				buffer.put_string ("_init () {")
-				buffer.put_new_line
 				buffer.indent
 				i := a_min;
 				j := an_offset
@@ -375,8 +375,8 @@ feature {NONE} -- Implementation
 			end
 
 			buffer.exdent
-			buffer.put_string ("}")
 			buffer.put_new_line
+			buffer.put_string ("}")
 			buffer.put_new_line
 		end
 
@@ -391,6 +391,7 @@ feature {NONE} -- Implementation
 			a_upper_non_negative: a_upper >= 0
 			a_upper_greater_or_equal_than_a_lower: a_upper >= a_lower
 		do
+			buffer.put_new_line
 			if a_lower = a_upper then
 				buffer.put_string (a_table_name)
 				buffer.put_character ('[')
@@ -399,7 +400,6 @@ feature {NONE} -- Implementation
 				buffer.put_string (function_ptr_cast_string);
 				buffer.put_string (a_routine_name);
 				buffer.put_character (';')
-				buffer.put_new_line
 			else
 					-- FIXME: Manu: 03/23/2004: The following line should be used.
 					-- Unfortunately, there is a bug in VC6++ which prevents the C
@@ -417,8 +417,7 @@ feature {NONE} -- Implementation
 				buffer.put_string ("[i] = ")
 				buffer.put_string (function_ptr_cast_string);
 				buffer.put_string (a_routine_name);
-				buffer.put_string (";}")
-				buffer.put_new_line
+				buffer.put_two_character (';', '}')
 			end
 		end
 

@@ -221,6 +221,7 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
+			buffer.put_new_line
 			buffer.put_string ("typarr[")
 			buffer.put_integer (idx_cnt.value)
 			buffer.put_string ("] = RTID(RTCA(arg")
@@ -228,7 +229,6 @@ feature -- Generic conformance
 			buffer.put_character (',')
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.none_type)
 			buffer.put_string ("));")
-			buffer.put_new_line
 			dummy := idx_cnt.next
 		end
 

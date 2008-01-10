@@ -310,7 +310,7 @@ feature -- C code generation
 				i := 1
 				buffer.put_string ("#include %"eif_project.h%"%N%
 								%#include %"eif_macros.h%"%N%
-								%#include %"eif_struct.h%"%N%N")
+								%#include %"eif_struct.h%"")
 				buffer.start_c_specific_code
 			until
 				i > nb
@@ -334,21 +334,18 @@ feature -- C code generation
 			until
 				include_set.after
 			loop
-				buffer.put_string ("#include ")
+				buffer.put_string ("%N#include ")
 				buffer.put_string (l_names_heap.item (include_set.item))
-
-				buffer.put_string ("%N%N")
 				include_set.forth
 			end
 			include_set := Void
 
 			from
-				buffer.put_new_line
 				buffer.start_c_specific_code
 				i := 1
 				create temp.make (100000)
-				temp.put_string ("%Nint egc_fpatidtab_init[] = {%N")
-				buffer.put_string ("fnptr egc_frozen_init[] = {%N")
+				temp.put_string ("%Nint egc_fpatidtab_init[] = {")
+				buffer.put_string ("%Nfnptr egc_frozen_init[] = {")
 			until
 				i > nb
 			loop
@@ -356,16 +353,17 @@ feature -- C code generation
 				unit := values.item (i)
 				if unit /= Void then
 					unit.generate (buffer)
+					temp.put_new_line_only
 					temp.put_integer (unit.real_pattern_id)
-					temp.put_string (",%N")
+					temp.put_character (',')
 				else
-					buffer.put_string ("NULL,%N")
-					temp.put_string ("-1,%N")
+					buffer.put_string ("%NNULL,")
+					temp.put_four_character ('%N', '-', '1', ',')
 				end
 				i := i + 1
 			end
-			buffer.put_string ("};%N")
-			temp.put_string ("};%N")
+			buffer.put_string ("%N};%N")
+			temp.put_string ("%N};")
 			temp.end_c_specific_code
 
 			buffer.put_in_file (frozen_file)

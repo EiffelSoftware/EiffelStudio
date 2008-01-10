@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	fill_from (l: OPT_LOOP_B) is    
+	fill_from (l: OPT_LOOP_B) is
 		do
 			Precursor {LOOP_BL} (l)
 			array_desc := l.array_desc
@@ -94,13 +94,15 @@ feature -- Access
 		do
 			buf := buffer
 			if array_desc /= Void then
-				buf.put_character ('{')
 				buf.put_new_line
+				buf.put_character ('{')
+				buf.indent
 				from
 					array_desc.start
 				until
 					array_desc.after
 				loop
+					buf.put_new_line
 					buf.put_string ("RTAD(")
 					id := array_desc.item
 					r_name := external_reg_name (id)
@@ -108,23 +110,22 @@ feature -- Access
 					buf.put_string (gc_rparan_semi_c)
 							-- The Dtype has not been declared before
 					if
-						already_generated_offsets = Void
-					or else 
+						already_generated_offsets = Void or else
 						not already_generated_offsets.has (id)
 					then
-						buf.put_string (" RTADTYPE(")
+						buf.put_new_line
+						buf.put_string ("RTADTYPE(")
 						buf.put_string (r_name)
 						buf.put_string (gc_rparan_semi_c)
 					end
-					buf.put_new_line
 					array_desc.forth
 				end
-				buf.put_new_line
 			end
 			if generated_offsets /= Void then
 				if array_desc = Void then
-					buf.put_character ('{')
 					buf.put_new_line
+					buf.put_character ('{')
+					buf.indent
 				end
 				from
 					generated_offsets.start
@@ -132,15 +133,16 @@ feature -- Access
 					generated_offsets.after
 				loop
 					r_name := external_reg_name (generated_offsets.item)
+					buf.put_new_line
 					buf.put_string ("RTADTYPE(")
 					buf.put_string (r_name)
-					buf.put_string ("); RTADOFFSETS(")
+					buf.put_string (");")
+					buf.put_new_line
+					buf.put_string ("RTADOFFSETS(")
 					buf.put_string (r_name)
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 					generated_offsets.forth
 				end
-				buf.put_new_line
 			end
 		end
 
@@ -158,9 +160,9 @@ feature -- Access
 					array_desc.after
 				loop
 					id := array_desc.item
+					buf.put_new_line
 					if
-						already_generated_offsets = Void
-					or else
+						already_generated_offsets = Void or else
 						not already_generated_offsets.has (id)
 					then
 						buf.put_string ("RTAI(")
@@ -168,18 +170,14 @@ feature -- Access
 							-- We can use the offset definitions
 						buf.put_string ("RTAIOFF(")
 					end
-					System.remover.array_optimizer.array_item_type (id).
-						generate (buf)
+					System.remover.array_optimizer.array_item_type (id).generate (buf)
 					buf.put_string (gc_comma)
 					buf.put_string (external_reg_name (id))
 					buf.put_string (gc_comma)
 					register_acces (buf, id)
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
-
 					array_desc.forth
 				end
-				buf.put_new_line
 			end
 			if generated_offsets /= Void then
 				from
@@ -189,12 +187,12 @@ feature -- Access
 				loop
 					id := generated_offsets.item
 					r_name := external_reg_name (id)
+					buf.put_new_line
 					buf.put_string ("RTAIOFFSETS(")
 					buf.put_string (r_name)
 					buf.put_string (gc_comma)
 					register_acces (buf, id)
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 					generated_offsets.forth
 				end
 				buf.put_new_line
@@ -213,21 +211,22 @@ feature -- Access
 				until
 					array_desc.after
 				loop
+					buf.put_new_line
 					buf.put_string ("RTAF(")
 					id := array_desc.item
 					buf.put_string (external_reg_name (id))
 					buf.put_string (gc_comma)
 					register_acces (buf, id)
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 					array_desc.forth
 				end
+				buf.exdent
 				buf.put_new_line
 				buf.put_character ('}')
-				buf.put_new_line
 			elseif generated_offsets /= Void then
-				buf.put_character ('}')
+				buf.exdent
 				buf.put_new_line
+				buf.put_character ('}')
 			end
 		end
 

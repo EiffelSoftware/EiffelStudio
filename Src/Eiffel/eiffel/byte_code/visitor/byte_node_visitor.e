@@ -37,6 +37,17 @@ feature {BYTE_NODE} -- Helpers
 			end
 		end
 
+feature {BYTE_NODE} -- Routine visitors
+
+	process_std_byte_code (a_node: STD_BYTE_CODE) is
+			-- Process `a_node'.
+		require
+			is_valid: is_valid
+			a_node_not_void: a_node /= Void
+			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
 feature {BYTE_NODE} -- Visitors
 
 	process_access_expr_b (a_node: ACCESS_EXPR_B) is

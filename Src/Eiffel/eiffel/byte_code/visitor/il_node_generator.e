@@ -747,6 +747,13 @@ feature {NONE} -- Access
 	saved_last_exception: INTEGER
 			-- Number of local to store `last_exception'
 
+feature {NONE} -- Routine visitor
+
+	process_std_byte_code (a_node: STD_BYTE_CODE) is
+			-- Process current element.
+		do
+		end
+
 feature {NONE} -- Visitors
 
 	process_access_expr_b (a_node: ACCESS_EXPR_B) is
@@ -1945,8 +1952,8 @@ feature {NONE} -- Visitors
 					inspect_type := a_node.switch.type
 					l_cl_type_i ?= inspect_type
 					if l_cl_type_i /= Void and then l_cl_type_i.is_enum then
-						create {INT_VAL_B}min_value.make ((-1) |<< (32 - 1))
-						create {INT_VAL_B}max_value.make ((1 |<< (32 - 1)) - 1)
+						create {INT_VAL_B} min_value.make ({INTEGER_32}.min_value)
+						create {INT_VAL_B} max_value.make ({INTEGER_32}.max_value)
 					else
 						min_value := inspect_type.minimum_interval_value
 						max_value := inspect_type.maximum_interval_value

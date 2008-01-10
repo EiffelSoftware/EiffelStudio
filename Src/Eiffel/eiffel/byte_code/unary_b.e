@@ -175,12 +175,14 @@ feature -- C code generation
 			-- Print expression value
 		do
 			type.c_type.generate_cast (buffer)
-			generate_operator
+			generate_operator (buffer)
 			expr.print_register
 		end
 
-	generate_operator is
+	generate_operator (a_buffer: GENERATION_BUFFER) is
 			-- Generate operator in C
+		require
+			a_buffer_not_void: a_buffer /= Void
 		do
 				-- Should never be called directly. Descendant of UNARY_B
 				-- not redefining `generate_operator' usually redefine

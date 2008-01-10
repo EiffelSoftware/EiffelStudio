@@ -29,6 +29,7 @@ feature -- Generation
 				generate_item (gen_reg)
 			when {PREDEFINED_NAMES}.base_address_name_id then
 				buf := buffer
+				buf.put_new_line
 				buf.put_string ("/* INLINED CODE (SPECIAL.base_address) */")
 				buf.put_new_line
 				result_reg.print_register
@@ -37,7 +38,6 @@ feature -- Generation
 				buf.put_character (';')
 				buf.put_new_line
 				buf.put_string ("/* END INLINED CODE */")
-				buf.put_new_line
 			when {PREDEFINED_NAMES}.item_address_name_id then
 				generate_item_address (gen_reg)
 			when {PREDEFINED_NAMES}.copy_data_name_id then
@@ -63,9 +63,10 @@ feature -- Generation
 				end
 			when {PREDEFINED_NAMES}.count_name_id then
 				buf := buffer
-				buf.put_string ("/* INLINED CODE (SPECIAL.count) */")
 				buf.put_new_line
+				buf.put_string ("/* INLINED CODE (SPECIAL.count) */")
 
+				buf.put_new_line
 				result_reg.print_register
 				buf.put_string (" = ")
 				buf.put_string ("(*(EIF_INTEGER *) (char *) ((")
@@ -75,7 +76,6 @@ feature -- Generation
 				buf.put_string (")->ov_size & B_SIZE) - LNGPAD_2));")
 				buf.put_new_line
 				buf.put_string ("/* END INLINED CODE */")
-				buf.put_new_line
 			else
 				Precursor {INLINED_FEAT_B} (gen_reg)
 			end
@@ -136,13 +136,14 @@ feature {NONE} -- Implementation
 		do
 			parameters.generate
 			buf := buffer
-			buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
 			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
 
 				-- Get the type of the generic parameter of SPECIAL
 			l_gen_param := generic_type
 			l_param_is_expanded := l_gen_param.is_true_expanded
 
+			buf.put_new_line
 			if l_param_is_expanded then
 				l_exp_type ?= l_gen_param;
 				l_exp_class_type := l_exp_type.associated_class_type
@@ -185,7 +186,6 @@ feature {NONE} -- Implementation
 				buf.put_new_line
 			end
 			buf.put_string ("/* END INLINED CODE */")
-			buf.put_new_line
 		end
 
 	generate_item_address (gen_reg: REGISTRABLE) is
@@ -203,14 +203,15 @@ feature {NONE} -- Implementation
 			parameters.generate
 			buf := buffer
 
+			buf.put_new_line
 			buf.put_string ("/* INLINED CODE (SPECIAL.item_address) */")
+
 			buf.put_new_line
 			result_reg.print_register
 			buf.put_string (" = ")
 			gen_reg.print_register
 
 			l_gen_param := generic_type
-
 			l_param_is_expanded := l_gen_param.is_true_expanded
 
 			if l_param_is_expanded then
@@ -239,7 +240,6 @@ feature {NONE} -- Implementation
 			buf.put_character (';')
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
-			buf.put_new_line
 		end
 
 	generate_put (gen_reg: REGISTRABLE) is
@@ -256,13 +256,14 @@ feature {NONE} -- Implementation
 		do
 			parameters.generate
 			buf := buffer
-			buf.put_string ("/* INLINED CODE (SPECIAL.put) */")
 			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.put) */")
 
 				-- Get the type of the generic parameter of SPECIAL
 			l_gen_param := generic_type
 			l_param_is_expanded := l_gen_param.is_true_expanded
 
+			buf.put_new_line
 			if l_param_is_expanded then
 				l_exp_type ?= l_gen_param
 				l_exp_class_type := l_exp_type.associated_class_type
@@ -313,7 +314,6 @@ feature {NONE} -- Implementation
 				end
 			end
 			buf.put_string ("/* END INLINED CODE */")
-			buf.put_new_line
 		end
 
 	generate_move (gen_reg: REGISTRABLE; is_overlapping: BOOLEAN) is
@@ -331,13 +331,14 @@ feature {NONE} -- Implementation
 		do
 			parameters.generate
 			buf := buffer
-			buf.put_string ("/* INLINED CODE (SPECIAL.move_data/overlapping_move) */")
 			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.move_data/overlapping_move) */")
 
 				-- Get the type of the generic parameter of SPECIAL
 			l_gen_param := generic_type
 			l_param_is_expanded := l_gen_param.is_true_expanded
 
+			buf.put_new_line
 			if is_overlapping then
 				buf.put_string ("memmove")
 			else
@@ -385,7 +386,6 @@ feature {NONE} -- Implementation
 			buf.put_character (';')
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
-			buf.put_new_line
 		end
 
 	generate_copy_data (gen_reg: REGISTRABLE) is
@@ -403,13 +403,14 @@ feature {NONE} -- Implementation
 		do
 			parameters.generate
 			buf := buffer
-			buf.put_string ("/* INLINED CODE (SPECIAL.copy_data) */")
 			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.copy_data) */")
 
 				-- Get the type of the generic parameter of SPECIAL
 			l_gen_param := generic_type
 			l_param_is_expanded := l_gen_param.is_true_expanded
 
+			buf.put_new_line
 			if l_param_is_expanded then
 				l_exp_type ?= l_gen_param
 				l_exp_class_type := l_exp_type.associated_class_type
@@ -469,7 +470,6 @@ feature {NONE} -- Implementation
 
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
-			buf.put_new_line
 		end
 
 indexing

@@ -84,6 +84,14 @@ feature -- Access
 	is_in_creation_call: BOOLEAN
 			-- Is current call a creation instruction?
 
+
+feature -- Routine visitor
+
+	process_std_byte_code (a_node: STD_BYTE_CODE) is
+			-- Process current element.
+		do
+		end
+
 feature {NONE} -- Visitors
 
 	process_access_expr_b (a_node: ACCESS_EXPR_B) is

@@ -211,7 +211,7 @@ feature -- C code generation
 		do
 			if used then
 				local_byte_context := byte_context
-				generate_header (buffer)
+				generate_header (class_type, buffer)
 				type_c := type.type_i.c_type
 				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 				add_in_log (class_type, internal_name)
@@ -247,10 +247,12 @@ feature -- C code generation
 						<<"Current">>, <<"EIF_REFERENCE">>)
 
 					-- Function's body
-				buffer.indent
+				buffer.generate_block_open
+				buffer.put_gtcx
 
 					-- If constant is a string, it is the semantic of a once
 				if local_is_once then
+					buffer.put_new_line
 					if local_byte_context.workbench_mode then
 						buffer.put_string ("RTOTC (")
 						buffer.put_string (internal_name)
@@ -267,6 +269,7 @@ feature -- C code generation
 					value.generate (buffer)
 					buffer.put_character (')')
 				else
+					buffer.put_new_line
 					if local_byte_context.workbench_mode then
 						buffer.put_string ("EIF_TYPED_VALUE r;")
 						buffer.put_new_line
@@ -288,8 +291,9 @@ feature -- C code generation
 						buffer.put_string ("return r")
 					end
 				end
-				buffer.exdent
-				buffer.put_string (";%N}%N")
+				buffer.put_character (';')
+				buffer.generate_block_close
+				buffer.put_new_line
 				if local_byte_context.final_mode then
 							-- Generate generic wrappers if required.
 					from
@@ -305,7 +309,9 @@ feature -- C code generation
 								buffer.generate_function_signature
 									("EIF_REFERENCE", internal_name + "1", True,
 									 local_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
-								buffer.indent
+								buffer.generate_block_open
+								buffer.put_gtcx
+								buffer.put_new_line
 								if System.has_multithreaded then
 									buffer.put_string ("RTOUC (")
 									buffer.put_integer (local_byte_context.thread_relative_once_index (body_index))
@@ -317,12 +323,11 @@ feature -- C code generation
 								value.generate (buffer)
 								buffer.put_character (')')
 							else
-								buffer.generate_pure_function_signature
+								buffer.generate_function_signature
 									("EIF_REFERENCE", internal_name + "1", True,
 									 local_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
-								buffer.put_character ('{')
+								buffer.generate_block_open
 								buffer.put_new_line
-								buffer.indent
 								if type_c.is_pointer then
 									buffer.put_string ("return ")
 								else
@@ -344,10 +349,7 @@ feature -- C code generation
 								end
 							end
 							buffer.put_character (';')
-							buffer.put_new_line
-							buffer.exdent
-							buffer.put_character ('}')
-							buffer.put_new_line
+							buffer.generate_block_close
 							buffer.put_new_line
 							local_byte_context.clear_feature_data
 								-- Only 1 wrapper is generated.

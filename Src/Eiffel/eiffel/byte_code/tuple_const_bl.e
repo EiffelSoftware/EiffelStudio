@@ -119,8 +119,9 @@ feature {NONE} -- C code generation
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			generate_block_open
+			buf.generate_block_open
 			context.generate_gen_type_conversion (real_ty)
+			buf.put_new_line
 			print_register
 			buf.put_string (" = ")
 			buf.put_string ("RTLNTS(typres, ");
@@ -132,8 +133,7 @@ feature {NONE} -- C code generation
 				buf.put_integer (0)
 			end
 			buf.put_string (");");
-			buf.put_new_line;
-			generate_block_close
+			buf.generate_block_close
 		end
 
 	fill_tuple (target_types: META_GENERIC) is
@@ -161,6 +161,7 @@ feature {NONE} -- C code generation
 				if not actual_type.is_none then
 					if actual_type.is_true_expanded then
 						expr.generate
+						buf.put_new_line
 						metamorphose_reg.print_register
 						buf.put_string (" = RTCL(")
 						expr.print_register
@@ -171,6 +172,7 @@ feature {NONE} -- C code generation
 						expr.generate
 					end
 					-- Generate initializations of values.
+					buf.put_new_line
 					buf.put_string ("((EIF_TYPED_VALUE *)")
 					print_register
 					buf.put_character('+');
@@ -184,10 +186,10 @@ feature {NONE} -- C code generation
 						expr.print_register
 					end
 					buf.put_character (';')
-					buf.put_new_line
 						-- Generation of the RTAR protection
 						-- since the array contains references
 					if not actual_type.is_basic then
+						buf.put_new_line
 						buf.put_string ("RTAR(")
 						print_register
 						buf.put_character (',')
@@ -198,7 +200,6 @@ feature {NONE} -- C code generation
 						end
 						buf.put_character (')')
 						buf.put_character (';')
-						buf.put_new_line
 					end
 				end
 				expressions.forth

@@ -278,10 +278,11 @@ feature -- Generation
 		require
 			good_argument: buffer /= Void
 		do
+			buffer.put_new_line
 			buffer.put_string ("extern ")
 			type.generate (buffer)
 			buffer.put_string (compound_name)
-			buffer.put_string ("();%N")
+			buffer.put_three_character ('(', ')', ';')
 		end
 
 	generate (buffer: GENERATION_BUFFER) is
@@ -289,9 +290,10 @@ feature -- Generation
 		require
 			good_argument: buffer /= Void
 		do
+			buffer.put_new_line
 			buffer.put_string ("(fnptr) ")
 			buffer.put_string (compound_name)
-			buffer.put_string (",%N")
+			buffer.put_character (',')
 		end
 
 feature -- Debug

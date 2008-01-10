@@ -121,6 +121,7 @@ feature -- C code generation
 				buf := buffer
 				if l_expr_type.is_true_expanded then
 						-- Expanded objects are cloned
+					buf.put_new_line
 					register.print_register
 					buf.put_string (" = ")
 					buf.put_string ("RTCL(")
@@ -132,7 +133,6 @@ feature -- C code generation
 					basic_i.metamorphose (register, expr, buf)
 				end
 				buf.put_character(';')
-				buf.put_new_line
 			end
 		end
 

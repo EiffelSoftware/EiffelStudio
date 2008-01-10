@@ -83,6 +83,7 @@ feature
 			i, j, n : INTEGER;
 			l_type_id: INTEGER
 		do
+			buffer.put_new_line
 			buffer.put_string ("static EIF_TYPE_INDEX ptf");
 
 			l_type_id := type_id
@@ -93,7 +94,7 @@ feature
 
 			buffer.put_integer (l_type_id);
 
-			buffer.put_string ("[] = {%N");
+			buffer.put_string ("[] = {");
 
 			from
 				i := 1;
@@ -113,7 +114,7 @@ feature
 			end;
 
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type);
-			buffer.put_string ("};%N%Nstatic struct eif_par_types par");
+			buffer.put_string ("};%Nstatic struct eif_par_types par");
 
 			buffer.put_integer (l_type_id);
 
@@ -123,7 +124,7 @@ feature
 
 			buffer.put_integer (l_type_id);
 
-			buffer.put_string (", (EIF_TYPE_INDEX) ")
+			buffer.put_string (", (uint16) ")
 			buffer.put_integer (generic_count)
 			buffer.put_string (", (char) ")
 
@@ -133,7 +134,7 @@ feature
 				buffer.put_string ("0")
 			end
 
-			buffer.put_string ("};%N%N");
+			buffer.put_string ("};%N");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

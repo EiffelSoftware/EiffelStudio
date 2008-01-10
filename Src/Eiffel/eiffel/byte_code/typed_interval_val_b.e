@@ -64,18 +64,18 @@ feature {TYPED_INTERVAL_B} -- C code generation
 				buf := buffer
 				lo := value
 				up := other.value
+				buf.put_new_line
 				buf.put_string ("case ")
 				generate_value (lo)
 				buf.put_character (':')
-				buf.put_new_line
 			until
 				lo = up
 			loop
 				lo := next_value (lo)
+				buf.put_new_line
 				buf.put_string ("case ")
 				generate_value (lo)
 				buf.put_character (':')
-				buf.put_new_line
 			end
 		end
 

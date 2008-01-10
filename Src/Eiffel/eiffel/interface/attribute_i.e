@@ -167,7 +167,7 @@ feature -- Element Change
 		do
 			if used then
 					-- Generation of a routine to access the attribute
-				generate_header (buffer)
+				generate_header (class_type, buffer)
 				result_type := type.type_i.instantiation_in (class_type)
 				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 				add_in_log (class_type, internal_name)
@@ -181,7 +181,8 @@ feature -- Element Change
 				buffer.generate_function_signature (return_type_name,
 					internal_name, True, l_byte_context.header_buffer,
 					<<"Current">>, <<"EIF_REFERENCE">>)
-				buffer.indent
+				buffer.generate_block_open
+				buffer.put_new_line
 				if byte_context.workbench_mode then
 					buffer.put_string ("EIF_TYPED_VALUE r;")
 					buffer.put_new_line
@@ -205,8 +206,7 @@ feature -- Element Change
 					buffer.put_new_line
 				end
 
-				buffer.exdent
-				buffer.put_character ('}')
+				buffer.generate_block_close
 				buffer.put_new_line
 
 				if byte_context.final_mode then
@@ -220,13 +220,12 @@ feature -- Element Change
 						rout_id := rout_ids.item (i)
 						if system.seed_of_routine_id (rout_id).has_formal then
 								-- Generate generic wrapper.
-							buffer.generate_pure_function_signature
+							buffer.generate_function_signature
 								("EIF_REFERENCE", internal_name + "1", True,
 								 l_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
-							buffer.put_character ('{')
-							buffer.put_new_line
-							buffer.indent
+							buffer.generate_block_open
 							basic_i ?= result_type
+							buffer.put_new_line
 							if basic_i /= Void then
 								buffer.put_string ("EIF_REFERENCE Result;")
 								buffer.put_new_line
@@ -245,8 +244,7 @@ feature -- Element Change
 								buffer.put_string ("return Result;")
 								buffer.put_new_line
 							end
-							buffer.exdent
-							buffer.put_character ('}')
+							buffer.generate_block_close
 							buffer.put_new_line
 							l_byte_context.clear_feature_data
 								-- Only 1 wrapper is generated.

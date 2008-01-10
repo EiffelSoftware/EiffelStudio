@@ -29,10 +29,10 @@ feature -- Access
 
 feature -- C code generation
 
-	generate_operator is
+	generate_operator (a_buffer: GENERATION_BUFFER) is
 			-- Generate the operator
 		do
-			buffer.put_string (" / ");
+			a_buffer.put_three_character (' ', '/', ' ')
 		end;
 
 	generate_simple is
@@ -56,7 +56,7 @@ feature -- C code generation
 			left.print_register
 			l_buf.put_character (')')
 
-			generate_operator
+			generate_operator (l_buf)
 
 			l_buf.put_character (' ')
 			l_type := context.real_type (right.type)

@@ -13,12 +13,22 @@ inherit
 			compound, analyze, generate, finish_compound,
 			assigns_to, optimized_byte_node,
 			calls_special_features, size,
-			inlined_byte_code, pre_inlined_code
+			inlined_byte_code, pre_inlined_code,
+			process
 		end
 
 	SHARED_ERROR_HANDLER
 
 	SHARED_DECLARATIONS
+
+
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_std_byte_code (Current)
+		end
 
 feature -- Access
 
@@ -267,16 +277,14 @@ feature -- Analyzis
 				generate_once_declaration (internal_name, type_c)
 			end
 
-
-
 				-- Generate reference to once manifest string field
 			l_context.generate_once_manifest_string_import (once_manifest_string_count)
 
 			if rescue_clause /= Void then
+				buf.put_new_line_only
 				buf.put_string ("#undef EIF_VOLATILE")
-				buf.put_new_line
+				buf.put_new_line_only
 				buf.put_string ("#define EIF_VOLATILE volatile")
-				buf.put_new_line
 			end
 
 				-- Generate function signature
@@ -306,7 +314,8 @@ feature -- Analyzis
 				 l_context.header_buffer, args, argument_types)
 
 				-- Starting body of C routine
-			buf.indent
+			buf.generate_block_open
+			buf.put_gtcx
 
 				-- Declaration of all the local entities, such as
 				-- Eiffel local variables, Result, temporary registers...
@@ -329,6 +338,9 @@ feature -- Analyzis
 				-- Record the locals, arguments and Current address for debugging.
 			generate_push_db
 
+				-- Separate declaration from the rest.
+			buf.put_new_line
+
 				-- Generate execution trace information (RTEAA)
 			generate_execution_trace
 
@@ -346,8 +358,8 @@ feature -- Analyzis
 					-- Eiffel object that this routine might have.
 					-- For blocking externals, if it is needed, then it is
 					-- using the `blocking' keyword in its specification.
-				buf.put_string ("RTGC;")
 				buf.put_new_line
+				buf.put_string ("RTGC;")
 			end
 
 				-- Allocate memory for once manifest strings if required
@@ -376,15 +388,15 @@ feature -- Analyzis
 					-- Generate a `setjmp' C instruction in case of a
 					-- rescue clause
 				if trace_enabled then
-					buf.put_string ("RTTI;")
 					buf.put_new_line
+					buf.put_string ("RTTI;")
 				end
 				if profile_enabled then
-					buf.put_string ("RTPI;")
 					buf.put_new_line
+					buf.put_string ("RTPI;")
 				end
-				buf.put_string ("RTE_T")
 				buf.put_new_line
+				buf.put_string ("RTE_T")
 			end
 
 				-- Generate local expanded variable creations
@@ -401,8 +413,8 @@ feature -- Analyzis
 
 				-- Restore the caller_assertion_level
 			if keep then
-				buf.put_string ("RTRS;")
 				buf.put_new_line
+				buf.put_string ("RTRS;")
 			end
 
 			if not type_c.is_void then
@@ -425,13 +437,12 @@ feature -- Analyzis
 				generate_return_exp
 			end
 
-			buf.exdent
+			buf.generate_block_close
 
 				-- End of C function
 			if l_is_once then
-				buf.put_new_line
+				buf.put_new_line_only
 				buf.put_string ("#undef Result")
-				buf.put_new_line
 			end
 			if l_context.workbench_mode then
 				from
@@ -439,32 +450,34 @@ feature -- Analyzis
 				until
 					i <= 0
 				loop
+					buf.put_new_line_only
 					buf.put_string ("#undef arg")
 					buf.put_integer (i)
-					buf.put_new_line
 					i := i - 1
 				end
 			end
+			if rescue_clause /= Void then
+				buf.put_new_line_only
+				buf.put_string ("#undef EIF_VOLATILE")
+				buf.put_new_line_only
+				buf.put_string ("#define EIF_VOLATILE")
+			end
 
 				-- Leave a blank line after function definition
-			buf.put_string ("}%N%N")
-
-			if rescue_clause /= Void then
-				buf.put_string ("#undef EIF_VOLATILE")
-				buf.put_new_line
-				buf.put_string ("#define EIF_VOLATILE")
-				buf.put_new_line
-			end
+			buf.put_new_line
 
 			if l_is_once and then l_context.is_once_call_optimized then
 					-- Generate optimized stub for once routine.
 				buf.generate_function_signature
 					(return_type_name, internal_name, True,
 					 l_context.header_buffer, args, argument_types)
-				buf.indent
+				buf.generate_block_open
+				buf.put_gtcx
 				if not type_c.is_void then
+					buf.put_new_line
 					buf.put_string ("return ")
 				end
+				buf.put_new_line
 				l_context.generate_once_optimized_call_start (type_c, body_index, is_global_once, buf)
 				buf.put_string (name)
 				buf.put_string (",(")
@@ -479,8 +492,9 @@ feature -- Analyzis
 					buf.put_string (args.item (i))
 					i := i + 1
 				end
-				buf.exdent
-				buf.put_string ("));%N}%N%N")
+				buf.put_string ("));")
+				buf.generate_block_close
+				buf.put_new_line
 			end
 
 				-- Generate generic wrappers if required.
@@ -552,18 +566,17 @@ feature -- Analyzis
 							else
 								type_c := seed_type.c_type
 							end
-							buf.generate_pure_function_signature
+							buf.generate_function_signature
 								(type_c.c_string, internal_name + suffix, True,
 								 l_context.header_buffer, args, seed_types)
-							buf.put_character ('{')
-							buf.put_new_line
-							buf.indent
+							buf.generate_block_open
 							if not seed_type.is_void then
 								if type_c.is_pointer then
 									basic_i ?= real_type (result_type)
 								else
 									basic_i := Void
 								end
+								buf.put_new_line
 								if basic_i = Void then
 									buf.put_string ("return ")
 									if not type_c.is_pointer and then real_type (result_type).c_type.is_pointer then
@@ -618,7 +631,6 @@ feature -- Analyzis
 								i := i + 1
 							end
 							buf.put_string (gc_rparan_semi_c)
-							buf.put_new_line
 							if not seed_type.is_void and then basic_i /= Void then
 								basic_i.metamorphose (l_context.result_register, create {NAMED_REGISTER}.make ("r", basic_i.c_type), buf)
 								buf.put_character (';')
@@ -626,10 +638,8 @@ feature -- Analyzis
 								buf.put_string ("return ")
 								l_context.result_register.print_register
 								buf.put_character (';')
-								buf.put_new_line
 							end
-							buf.exdent
-							buf.put_string ("}%N%N")
+							buf.generate_block_close
 						end
 					end
 					j := j - 1
@@ -698,6 +708,7 @@ end
 			if not result_type.is_void then
 				type_c := real_type (result_type).c_type
 				buf := buffer
+				buf.put_new_line
 				if context.workbench_mode then
 						-- Note: in workbench, we always return the result. It may
 						--       have been changed by the user (see class EDIT_ITEM)
@@ -714,10 +725,9 @@ end
 						buf.put_string ("Result;")
 					else
 						type_c.generate_cast (buf)
-						buf.put_string ("0;")
+						buf.put_two_character ('0', ';')
 					end
 				end
-				buf.put_new_line
 			end
 		end -- generate_return_exp
 
@@ -951,26 +961,17 @@ end
 		do
 			if context.workbench_mode then
 				buf := buffer
-				DEBUG ("C_DEBUGGER")
-					buf.put_string ("GENERATE SAVE ARGS%N")
-				end
 				if arguments /= Void then
 					from
 						count := arguments.count
 						i := arguments.lower
-						DEBUG ("C_DEBUGGER")
-							buf.put_string ("The number of arguments is ")
-							buf.put_integer (count)
-							buf.put_string ("%NThe lower bound is ")
-							buf.put_integer (i)
-							buf.put_string ("%N%N")
-						end
 					until
 						i > count
 					loop
 						type_i := real_type (arguments.item (i))
 							-- Local reference variable are declared via
 							-- the local variable array "l[]"
+						buf.put_new_line
 						buf.put_string ("RTLU(")
 						type_i.c_type.generate_sk_value (buf)
 						if type_i.is_true_expanded then
@@ -980,16 +981,8 @@ end
 						end
 						buf.put_integer (i)
 						buf.put_string (");")
-						buf.put_new_line
 						i := i + 1
 					end
-				else
-					DEBUG ("C_DEBUGGER")
-						buf.put_string ("arguments is void%N")
-					end
-				end
-				DEBUG ("C_DEBUGGER")
-					buf.put_string ("END OF GENERATION%N%N%N")
 				end
 			end
 		end
@@ -1004,41 +997,24 @@ end
 		do
 			if context.workbench_mode then
 				buf := buffer
-				DEBUG ("C_DEBUGGER")
-					buf.put_string ("GENERATE SAVE LOCALS%N")
-				end
 				if locals /= Void then
 					from
 						count := locals.count
 						i := locals.lower
-						DEBUG ("C_DEBUGGER")
-							buf.put_string ("/* The number of locals is ")
-							buf.put_integer (count)
-							buf.put_string ("*/%N/* The lower bound is ")
-							buf.put_integer (i)
-							buf.put_string ("*/%N%N")
-						end
 					until
 						i > count
 					loop
 						type_i := real_type (locals.item (i))
 							-- Local reference variable are declared via
 							-- the local variable array "l[]"
+						buf.put_new_line
 						buf.put_string ("RTLU(")
 						type_i.c_type.generate_sk_value (buf)
 						buf.put_string (", &loc")
 						buf.put_integer (i)
 						buf.put_string (");")
-						buf.put_new_line
 						i := i + 1
 					end
-				else
-					DEBUG ("C_DEBUGGER")
-						buf.put_string ("locals is void%N")
-					end
-				end
-				DEBUG ("C_DEBUGGER")
-					buf.put_string ("END OF GENERATION%N%N%N")
 				end
 			end
 		end
@@ -1050,8 +1026,8 @@ end
 		do
 			if context.workbench_mode then
 				buf := buffer
-				buf.put_string ("RTLU (SK_REF, &Current);")
 				buf.put_new_line
+				buf.put_string ("RTLU (SK_REF, &Current);")
 			end
 		end
 
@@ -1065,13 +1041,13 @@ end
 				buf := buffer
 				if (not result_type.is_void) then
 					type_i := real_type (context.byte_code.result_type)
+					buf.put_new_line
 					buf.put_string ("RTLU (")
 					type_i.c_type.generate_sk_value (buf)
 					buf.put_string (", &Result);")
-					buf.put_new_line
 				else
-					buf.put_string ("RTLU (SK_VOID, NULL);")
 					buf.put_new_line
+					buf.put_string ("RTLU (SK_VOID, NULL);")
 				end
 			end
 		end
@@ -1096,8 +1072,8 @@ end
 					-- to restore it in case of a rescue.
 				if rescue_clause /= Void then
 					buf := buffer
-					buf.put_string ("RTLXL;")
 					buf.put_new_line
+					buf.put_string ("RTLXL;")
 				end
 			end
 		end
@@ -1155,8 +1131,8 @@ end
 							end
 							l_class_type := l_type.associated_class_type
 							l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
-							buf.put_new_line
 						end
+						buf.put_new_line
 						type_i.c_type.generate (buf)
 						if has_rescue then
 							buf.put_string ("EIF_VOLATILE ")
@@ -1166,16 +1142,14 @@ end
 						buf.put_string (" = ")
 						if type_i.is_true_expanded then
 							type_i.c_type.generate_cast (buf)
-							buf.put_string (" (")
+							buf.put_character ('(')
 							buf.put_string (l_loc_name)
 							buf.put_string (".data")
 							l_class_type.generate_expanded_overhead_size (buf)
 							buf.put_string (");")
-							buf.put_new_line
 						else
 							type_i.c_type.generate_cast (buf)
-							buf.put_string (" 0;")
-							buf.put_new_line
+							buf.put_two_character ('0', ';')
 						end
 					end
 					i := i + 1
@@ -1184,6 +1158,7 @@ end
 
 				-- Generate local declaration for storing exception object.
 			if has_rescue then
+				buf.put_new_line
 				buf.put_string ("EIF_REFERENCE EIF_VOLATILE saved_except = (EIF_REFERENCE) 0;")
 				context.set_local_index ("saved_except", create {NAMED_REGISTER}.make ("saved_except", reference_c_type))
 			end
@@ -1206,56 +1181,54 @@ end
 			if context.dftype_current > 1 then
 					-- There has to be more than one usage of the dynamic type
 					-- of current in order to have this variable generated.
+				buf.put_new_line
 				if l_is_once then
 					buf.put_string ("RTCFDD;")
 				else
 					buf.put_string ("RTCFDT;")
 				end
-				buf.put_new_line
 			end
 			if context.dt_current > 1 then
 					-- There has to be more than one usage of the full dynamic type
 					-- of current in order to have this variable generated.
+				buf.put_new_line
 				if l_is_once then
 					buf.put_string ("RTCDD;")
 				else
 					buf.put_string ("RTCDT;")
 				end
-				buf.put_new_line
 			end
 			if wkb_mode or else context.system.keep_assertions then
 					-- Generate the int local variable saving the global `nstcall'.
-				buf.put_string ("RTSN;")
 				buf.put_new_line
+				buf.put_string ("RTSN;")
 					-- Generate local variable for assertion level of the current object.
+				buf.put_new_line
 				buf.put_string ("RTDA;")
 			end
 
-			buf.put_new_line
 			if wkb_mode and then has_rescue then
-				buf.put_string ("RTDT;")
 				buf.put_new_line
+				buf.put_string ("RTDT;")
 			end
 				-- The local variable array is then declared, based on the
 				-- number of reference variable which need to be placed under
 				-- GC control (given by `ref_var_used').
 			i := context.ref_var_used
 			if i > 0 then
+				buf.put_new_line
 				if has_rescue then
 					buf.put_string ("RTXD;")
-					buf.put_new_line
 				else
 					buf.put_string ("RTLD;")
-					buf.put_new_line
 				end
 			end
 
 				-- Declare the variable local "backup" stack.
 			if wkb_mode and then has_rescue then
-				buf.put_string ("RTLXD;")
 				buf.put_new_line
+				buf.put_string ("RTLXD;")
 			end
-
 				-- Separate declarations and body with a blank line
 			buf.put_new_line
 		end
@@ -1278,8 +1251,10 @@ end
 						i <= 0
 					loop
 						c_type := context.real_type (types [i]).c_type
+						buf.put_new_line_only
 						if not c_type.is_pointer then
 								-- The argument type is not reference, so it might be boxed.
+							buf.put_indentation
 							buf.put_string ("if (arg")
 							buf.put_integer (i)
 							buf.put_string ("x.type == SK_REF) arg")
@@ -1293,19 +1268,17 @@ end
 							buf.put_string ("x.")
 							reference_c_type.generate_typed_field (buf)
 							buf.put_character (';')
-							buf.put_new_line
+							buf.put_new_line_only
 						end
-						buf.left_margin
 						buf.put_string ("#define arg")
 						buf.put_integer (i)
 						buf.put_string (" arg")
 						buf.put_integer (i)
 						buf.put_string ("x.")
 						c_type.generate_typed_field (buf)
-						buf.put_new_line
-						buf.restore_margin
 						i := i - 1
 					end
+					buf.put_new_line
 				end
 			end
 		end
@@ -1321,13 +1294,14 @@ end
 				buf := buffer
 				type_i := real_type (result_type)
 				ctype := type_i.c_type
+				buf.put_new_line
 				if may_need_volatile and then type_i.is_basic then
 					buf.put_string ("EIF_VOLATILE ")
 				end
 				ctype.generate (buf)
 				buf.put_string ("Result = ")
 				ctype.generate_cast (buf)
-				buf.put_string (" 0;")
+				buf.put_two_character ('0', ';')
 				buf.put_new_line
 			end
 		end
@@ -1340,8 +1314,8 @@ end
 		do
 			if context.dftype_current > 1 then
 				buf := buffer
-				buf.put_string ("dftype = Dftype(Current);")
 				buf.put_new_line
+				buf.put_string ("dftype = Dftype(Current);")
 			end
 		end
 
@@ -1353,8 +1327,8 @@ end
 		do
 			if context.dt_current > 1 then
 				buf := buffer
-				buf.put_string ("dtype = Dtype(Current);")
 				buf.put_new_line
+				buf.put_string ("dtype = Dtype(Current);")
 			end
 		end
 
@@ -1377,8 +1351,8 @@ end
 			generate_invariant_before
 			if have_assert then
 				buf := buffer
-				buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
 				buf.put_new_line
+				buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
 				buf.indent
 
 				if inh_assert.has_precondition then
@@ -1390,14 +1364,15 @@ end
 					precondition.generate
 				end
 
+				buf.put_new_line
 				buf.put_string ("RTJB;")
 				Context.generate_current_label_definition
 
+				buf.put_new_line
 				buf.put_string ("RTCF;")
-				buf.put_new_line
 				buf.exdent
-				buf.put_character ('}')
 				buf.put_new_line
+				buf.put_character ('}')
 			end
 		end
 
@@ -1416,8 +1391,8 @@ end
 			if have_assert then
 				buf := buffer
 				context.set_assertion_type (In_postcondition)
+				buffer.put_new_line
 				buf.put_string ("if (RTAL & CK_ENSURE) {")
-				buf.put_new_line
 				buf.indent
 
 				if inh_assert.has_postcondition then
@@ -1427,8 +1402,8 @@ end
 					postcondition.generate
 				end
 				buf.exdent
-				buf.put_character ('}')
 				buf.put_new_line
+				buf.put_character ('}')
 			end
 			generate_invariant_after
 		end
@@ -1440,12 +1415,12 @@ end
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
+			buf.put_new_line
 			buf.put_string ("RTSA(")
 			context.generate_current_dtype
 			buf.put_string (gc_rparan_semi_c)
 			buf.put_new_line
 			buf.put_string ("RTSC;")
-			buf.put_new_line
 		end
 
 	generate_invariant_before is
@@ -1467,11 +1442,11 @@ end
 		do
 			buf := buffer
 			if context.workbench_mode or else context.system.keep_assertions then
+				buf.put_new_line;
 				buf.put_string (tag)
 				buf.put_character ('(')
 				context.current_register.print_register
 				buf.put_string (", RTAL);")
-				buf.put_new_line
 			end
 		end
 
@@ -1485,26 +1460,25 @@ end
 				buf := buffer
 				buf.put_new_line
 				buf.put_string ("RTE_E")
-				buf.put_new_line
 					-- Restore the C operational stack
 				if context.workbench_mode then
-					buf.put_string ("RTLXE;")
 					buf.put_new_line
+					buf.put_string ("RTLXE;")
 				end
 					-- Resynchronize local variables stack
 				nb_refs := context.ref_var_used
 				if nb_refs > 0 then
+					buf.put_new_line
 					buf.put_string ("RTXS(")
 					buf.put_integer (nb_refs)
 					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 				end
 				rescue_clause.generate
 				generate_profile_stop
+				buf.put_new_line
 				buf.put_string ("/* NOTREACHED */")
 				buf.put_new_line
 				buf.put_string ("RTE_EE")
-				buf.put_new_line
 			end
 		end
 
@@ -1522,19 +1496,19 @@ end
 		do
 			if exception_stack_managed or else rescue_clause /= Void or else is_once then
 				buf := buffer
-				buf.put_string ("RTEX;")
 				buf.put_new_line
+				buf.put_string ("RTEX;")
 				if rescue_clause /= Void then
-					buf.put_string ("RTED;")
 					buf.put_new_line
+					buf.put_string ("RTED;")
 						-- We only need this for finalized mode...
 					if trace_enabled then
-						buf.put_string ("RTLT;")
 						buf.put_new_line
+						buf.put_string ("RTLT;")
 					end
 					if profile_enabled then
-						buf.put_string ("RTLP;")
 						buf.put_new_line
+						buf.put_string ("RTLP;")
 					end
 				end
 			end
@@ -1549,8 +1523,8 @@ end
 					-- Prepare execution stack to catch exceptions
 					--   explicitly by a rescue clause
 					--   implicitly by a code of once routine
-				buffer.put_string ("RTEV;")
 				buffer.put_new_line
+				buffer.put_string ("RTEV;")
 			end
 		end
 
@@ -1562,8 +1536,8 @@ end
 		do
 			if rescue_clause = Void and then (exception_stack_managed or else is_once) then
 				buf := buffer
-				buf.put_string ("RTEE;")
 				buf.put_new_line
+				buf.put_string ("RTEE;")
 			end
 		end
 
@@ -1584,10 +1558,10 @@ end
 					i := i + arguments.count
 				end
 				buf := buffer
+				buf.put_new_line
 				buf.put_string ("RTLO(")
 				buf.put_integer (i)
 				buf.put_string (");")
-				buf.put_new_line
 			end
 		end
 
@@ -1622,8 +1596,8 @@ end
 		do
 			if profile_enabled then
 				buf := buffer
-				buf.put_string ("RTXP;")
 				buf.put_new_line
+				buf.put_string ("RTXP;")
 			end
 		end
 
@@ -1652,6 +1626,7 @@ end
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
+			buf.put_new_line
 			buf.put_string (macro_name)
 			buf.put_character ('(')
 			buf.put_string_literal (feature_name)
@@ -1660,7 +1635,6 @@ end
 			buf.put_string (gc_comma)
 			buf.put_string (" dtype")
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 		end
 
 	generate_stack_macro (macro_name: STRING) is
@@ -1671,6 +1645,7 @@ end
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
+			buf.put_new_line
 			buf.put_string (macro_name)
 			buf.put_character ('(')
 			buf.put_string_literal (feature_name)
@@ -1693,7 +1668,6 @@ end
 			buf.put_string (gc_comma)
 			buf.put_real_body_id (real_body_id)
 			buf.put_string (gc_rparan_semi_c)
-			buf.put_new_line
 		end
 
 	finish_compound is

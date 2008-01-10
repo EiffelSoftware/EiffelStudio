@@ -284,7 +284,6 @@ feature -- Dynamic Library file
 											argument_names.after
 										loop
 											if not args.i_th(argument_names.index).is_basic then
-												buffer.put_string ("%N%T")
 												buffer.put_local_registration (i, argument_names.item)
 												i := i + 1
 											end
@@ -293,7 +292,6 @@ feature -- Dynamic Library file
 									end
 
 										-- CALCULATE THE MAIN OBJECT.
-									buffer.put_string ("%N%T")
 									buffer.put_local_registration (0, "main_obj")
 									buffer.put_string ("%N%Tmain_obj = RTLN(")
 
@@ -435,7 +433,7 @@ feature -- Plug and Makefile file
 			buffer.put_string ("%N */%N%N")
 			buffer.put_string ("#include %"eif_eiffel.h%"%N")
 			buffer.put_string ("#include %"eif_project.h%"%N")
-			buffer.put_string ("#include %"egc_include.h%"%N%N")
+			buffer.put_string ("#include %"egc_include.h%"")
 
 			buffer.start_c_specific_code
 
@@ -974,16 +972,15 @@ feature -- Plug and Makefile file
 			buffer.put_string ("}%N%N")
 
 				-- Declaration and definition of the egc_rcdt_init function.
-			buffer.put_string ("void egc_rcdt_init (void)%N{")
-			buffer.indent
+			buffer.put_string ("void egc_rcdt_init (void)")
+			buffer.generate_block_open
 			buffer.put_new_line
 			buffer.put_string ("if (egc_rcdt == 0) {")
-			buffer.put_new_line
+			buffer.indent
 			l_creation_type := system.root_type.type_i
 			l_gen_type ?= l_creation_type
 			if l_gen_type /= Void then
 				context.set_buffer (buffer)
-				buffer.indent
 				buffer.put_new_line
 					-- Because generic object creation requires a context object,
 					-- we simply create a temporary one of type ANY, used to
@@ -998,22 +995,21 @@ feature -- Plug and Makefile file
 				l_create_type.generate_gen_type_conversion
 				buffer.put_string ("l_root_obj = ")
 				l_create_type.generate
-				buffer.put_string (";")
+				buffer.put_character (';')
 				buffer.put_new_line
 				l_create_type.generate_end (buffer)
 					-- Set `egc_rcdt' to the right dynamic type
 				buffer.put_string ("egc_rcdt = Dftype(l_root_obj);")
-				buffer.exdent
 			else
-				buffer.put_string ("%T%Tegc_rcdt = ")
+				buffer.put_new_line
+				buffer.put_string ("egc_rcdt = ")
 				buffer.put_type_id (l_creation_type.type_id)
 				buffer.put_character (';')
 			end
-			buffer.put_new_line
-			buffer.put_character ('}')
 			buffer.exdent
 			buffer.put_new_line
-			buffer.put_string ("}%N%N")
+			buffer.put_character ('}')
+			buffer.generate_block_close
 
 			buffer.end_c_specific_code
 

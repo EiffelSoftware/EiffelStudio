@@ -11,6 +11,13 @@ class
 inherit
 	BYTE_NODE_VISITOR
 
+feature {BYTE_NODE} -- Routine visitors
+
+	process_std_byte_code (a_node: STD_BYTE_CODE) is
+			-- Process `a_node'.
+		do
+		end
+
 feature {BYTE_NODE} -- Visitors
 
 	process_access_expr_b (a_node: ACCESS_EXPR_B) is

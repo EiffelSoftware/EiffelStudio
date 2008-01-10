@@ -205,10 +205,10 @@ feature -- Pattern generation
 			until
 				i > nb
 			loop
+				buffer.put_new_line
 				buffer.put_string ("EIF_TYPED_VALUE *arg")
 				buffer.put_integer (i)
 				buffer.put_character (';')
-				buffer.put_new_line
 				i := i + 1
 			end
 		end
@@ -233,19 +233,20 @@ feature -- Pattern generation
 
 			buffer.generate_function_signature ("void", f_name, False, buffer,
 					<<"ptr">>, <<"fnptr">>)
-			buffer.indent
-			buffer.put_string ("EIF_REFERENCE Current;")
+			buffer.generate_block_open
 			buffer.put_new_line
+			buffer.put_string ("EIF_REFERENCE Current;")
 			if not result_type.is_void then
-				buffer.put_string ("	EIF_TYPED_VALUE result;")
+				buffer.put_new_line
+				buffer.put_string ("EIF_TYPED_VALUE result;")
 				buffer.put_new_line
 				buffer.put_string ("EIF_TYPED_VALUE *it;")
-				buffer.put_new_line
 			end
 			generate_argument_declaration (buffer)
 			generate_toc_pop (buffer)
 			generate_routine_call (buffer)
 			if not result_type.is_void then
+				buffer.put_new_line
 				buffer.put_string ("it = iget();")
 				buffer.put_new_line
 				if result_type.is_pointer then
@@ -264,10 +265,10 @@ feature -- Pattern generation
 						-- Result of a basic type can be used as it is.
 					buffer.put_string ("*it = result;")
 				end
-				buffer.put_new_line
 			end
-			buffer.exdent
-			buffer.put_string ("}%N%N") -- ss MT
+			buffer.generate_block_close
+				-- Separation for formatting
+			buffer.put_new_line
 		end
 
 	generate_toi_compound (id: INTEGER; buffer: GENERATION_BUFFER) is
@@ -291,21 +292,32 @@ feature -- Pattern generation
 			buffer.generate_function_signature
 				(result_string, f_name, False, buffer,
 				 argument_name_array, arg_types)
-
-			buffer.put_string ("%TEIF_TYPED_VALUE *it;%N")
+			buffer.generate_block_open
+			buffer.put_gtcx
+			buffer.put_new_line
+			buffer.put_string ("EIF_TYPED_VALUE *it;")
 			generate_toi_push (buffer)
-			buffer.put_string ("%Txinterp(IC);%N")
+			buffer.put_new_line
+			buffer.put_string ("xinterp(IC);")
 			if result_type.is_pointer then
 					-- Mask type-specific bits of the type tag
 					-- because they are not expected on the C side.
-				buffer.put_string ("%Tit = opop();%N%Tit->")
+				buffer.put_new_line
+				buffer.put_string ("it = opop();")
+				buffer.put_new_line
+				buffer.put_string ("it->")
 				result_type.generate_typed_tag (buffer)
-				buffer.put_string (";%N%Treturn *it;%N")
+				buffer.put_character (';')
+				buffer.put_new_line
+				buffer.put_string ("return *it;")
 			elseif not result_type.is_void then
 					-- Use basic type tag as is.
-				buffer.put_string ("%Treturn * opop();%N")
+				buffer.put_new_line
+				buffer.put_string ("return * opop();")
 			end
-			buffer.put_string ("}%N%N") -- ss MT
+			buffer.generate_block_close
+				-- Separation for formatting
+			buffer.put_new_line
 		end
 
 	generate_toi_push (buffer: GENERATION_BUFFER) is
@@ -322,16 +334,19 @@ feature -- Pattern generation
 				i > nb
 			loop
 				arg := argument_types.item (i);
+				buffer.put_new_line
 				if arg.is_pointer then
 						-- Reference value can be used as it is.
-					buffer.put_string ("%T*iget() = arg")
+					buffer.put_string ("*iget() = arg")
 					buffer.put_integer (i)
 				else
 						-- Basic value might need to be unboxed.
-					buffer.put_string ("%Tit = iget();%N");
-					buffer.put_string ("%Tit->type = ");
+					buffer.put_string ("it = iget();");
+					buffer.put_new_line
+					buffer.put_string ("it->type = ");
 					arg.generate_sk_value (buffer);
-					buffer.put_string (";%N%Tit->");
+					buffer.put_character (';')
+					buffer.put_string ("it->");
 					arg.generate_typed_field (buffer);
 					buffer.put_string (" = (arg");
 					buffer.put_integer (i);
@@ -346,7 +361,7 @@ feature -- Pattern generation
 					buffer.put_character ('.')
 					arg.generate_typed_field (buffer)
 				end
-				buffer.put_string (";%N");
+				buffer.put_character (';')
 				i := i + 1;
 			end;
 			buffer.put_string ("%
@@ -361,6 +376,7 @@ feature -- Pattern generation
 		local
 			i: INTEGER
 		do
+			buffer.put_new_line
 			buffer.put_string ("Current = opop()->it_ref;")
 			buffer.put_new_line
 			from
@@ -368,10 +384,10 @@ feature -- Pattern generation
 			until
 				i < 1
 			loop
+				buffer.put_new_line
 				buffer.put_string ("arg")
 				buffer.put_integer (i)
 				buffer.put_string (" = opop();")
-				buffer.put_new_line
 				i := i - 1
 			end
 		end
@@ -381,6 +397,7 @@ feature -- Pattern generation
 		local
 			i, nb: INTEGER
 		do
+			buffer.put_new_line
 			if not result_type.is_void then
 				buffer.put_string ("result = ")
 			end
@@ -405,7 +422,6 @@ feature -- Pattern generation
 				i := i + 1
 			end
 			buffer.put_string (");")
-			buffer.put_new_line
 		end
 
 	trace is

@@ -142,9 +142,9 @@ feature -- Settings
 				until
 					queue.after
 				loop
+					buffer.put_new_line
 					buffer.put_string ("#include ")
 					buffer.put_string (l_names_heap.item (queue.item_for_iteration))
-					buffer.put_new_line
 					queue.forth
 				end
 				queue.wipe_out

@@ -61,29 +61,34 @@ feature {NONE} -- Implementation
 
 	build_tool_bar is
 		local
-			but: EV_TOOL_BAR_BUTTON
+			but: SD_TOOL_BAR_BUTTON
 		do
 			if tool_bar = Void then
-				create tool_bar
-				create but
+				create tool_bar.make
+				create but.make
 				but.set_pixmap (pixmaps.icon_pixmaps.general_copy_icon)
+				but.set_pixel_buffer (pixmaps.icon_pixmaps.general_copy_icon_buffer)
 				but.select_actions.extend (agent copy_button_selected)
 				but.set_tooltip (Interface_names.l_copy_text_to_clipboard)
 				tool_bar.extend (but)
+				tool_bar.compute_minimum_size
 			end
 		end
 
 	build_mini_tool_bar is
 		local
-			but: EV_TOOL_BAR_BUTTON
+			but: SD_TOOL_BAR_BUTTON
 		do
 			if mini_tool_bar = Void then
-				create mini_tool_bar
-				create but
+				create mini_tool_bar.make
+				create but.make
 				but.set_pixmap (pixmaps.mini_pixmaps.general_copy_icon)
+				but.set_pixel_buffer (pixmaps.mini_pixmaps.general_copy_icon_buffer)
 				but.select_actions.extend (agent copy_button_selected)
 				but.set_tooltip (Interface_names.l_copy_text_to_clipboard)
 				mini_tool_bar.extend (but)
+
+				mini_tool_bar.compute_minimum_size
 			end
 		end
 

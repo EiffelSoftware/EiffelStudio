@@ -60,14 +60,14 @@ feature -- Contextual widget
 		do
 		end
 
-	mini_tool_bar: EV_TOOL_BAR
+	mini_tool_bar: SD_TOOL_BAR
 
 	build_tool_bar is
 			-- If `tool_bar' is Void, build it otherwise do nothing
 		do
 		end
 
-	tool_bar: EV_TOOL_BAR
+	tool_bar: SD_TOOL_BAR
 
 feature -- Change
 

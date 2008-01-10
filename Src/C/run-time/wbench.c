@@ -490,7 +490,7 @@ rt_public void init_desc(void)
 	int i;
 	struct bounds def;
 
-	def.max = INVALID_DTYPE;
+	def.max = 0;
 	def.min = (EIF_TYPE_INDEX) ccount;
 	bounds_tab = (struct bounds *) cmalloc (sizeof(struct bounds) * (ccount + 1));	
 	if (bounds_tab == NULL)
@@ -523,8 +523,8 @@ rt_public void put_desc(struct desc_info *desc_ptr, int org, int dtype)
 		(desc_tab[org])[dtype] = desc_ptr;
 	} else {
 		b = bounds_tab+org;
-		b->min = (EIF_TYPE_INDEX) (b->min + ((dtype<b->min)?(dtype-b->min):0));
-		b->max = (EIF_TYPE_INDEX) (b->max + ((dtype>b->max)?(dtype-b->max):0));
+		b->min = (EIF_TYPE_INDEX) (dtype < b->min ? dtype : b->min);
+		b->max = (EIF_TYPE_INDEX) (dtype > b->max ? dtype : b->max);
 	}
 }
 
@@ -543,8 +543,8 @@ rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 
 	if (0 == desc_fill) {
 		b = bounds_tab+org;
-		b->min = (EIF_TYPE_INDEX) (b->min + ((dtype<b->min)?(dtype-b->min):0));
-		b->max = (EIF_TYPE_INDEX) (b->max + ((dtype>b->max)?(dtype-b->max):0));
+		b->min = (EIF_TYPE_INDEX) (dtype < b->min ? dtype : b->min);
+		b->max = (EIF_TYPE_INDEX) (dtype > b->max ? dtype : b->max);
 	}	
 
 	/* Insert information in temporary table */
@@ -567,39 +567,31 @@ rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 rt_public void create_desc(void)
 {
 	struct bounds *b;
-	int i, upper;
+	int i;
 	struct desc_info **tab;
 	struct mdesc *mdesc_ptr;
 	int size;
 
-	for (i=upper=0;i<=ccount;i++) {
-		b = bounds_tab+i;
-		upper += (INVALID_DTYPE==b->max)?0:(i-upper);
-	}
-
-	/* Allocation of the global descriptor table.
-	 */
-
-	desc_tab = (struct desc_info ***) cmalloc (sizeof(struct desc_info **) * (upper + 1));
-	if ((struct desc_info ***) 0 == desc_tab)
+		/* Allocation of the global descriptor table. */
+	desc_tab = (struct desc_info ***) cmalloc (sizeof(struct desc_info **) * (ccount + 1));
+	if (!desc_tab) {
 		enomem(MTC_NOARG);
+	}
 
 	/* Allocation of the subtables
 	 * and insertion
 	 */
 
-	for (i=0;i<=upper;i++) {
+	for (i=0;i<=ccount;i++) {
 		b = bounds_tab+i;
-		if (b->max != INVALID_DTYPE) {
-			size = b->max - b->min + 1;
-			if (size > 0) {
-				tab = (struct desc_info **) cmalloc (size * sizeof(struct desc_info *));
-				if (!tab) {
-					enomem(MTC_NOARG);
-				}
-					/* The hack of the century */
-				desc_tab[i] = tab - b->min; 
+		size = b->max - b->min + 1;
+		if (size > 0) {
+			tab = (struct desc_info **) cmalloc (size * sizeof(struct desc_info *));
+			if (!tab) {
+				enomem(MTC_NOARG);
 			}
+				/* The hack of the century */
+			desc_tab[i] = tab - b->min; 
 		}
 	}
 

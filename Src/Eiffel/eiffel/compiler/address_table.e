@@ -909,8 +909,8 @@ feature {NONE} -- Generation
 					end
 				end
 
+				buffer.put_new_line
 				if is_function then
-					buffer.put_new_line
 					if final_mode and then has_creation then
 						buffer.put_string ("Result = ")
 					else

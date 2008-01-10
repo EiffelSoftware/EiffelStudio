@@ -662,9 +662,7 @@ feature
 			context.byte_code.finish_compound
 				-- Add a blank line before the return only if it
 				-- is the last instruction.
-			if last_instruction and context.byte_code.compound.count > 1 then
-				buf.put_new_line
-			end
+			buf.put_new_line
 			buf.put_string ("return ")
 				-- Always ensure that we perform a cast to type of target.
 				-- Cast in case of basic type will never loose information
@@ -672,7 +670,6 @@ feature
 			target.c_type.generate_cast (buf)
 			source_print_register
 			buf.put_character (';')
-			buf.put_new_line
 		end
 
 	generate_simple_assignment is

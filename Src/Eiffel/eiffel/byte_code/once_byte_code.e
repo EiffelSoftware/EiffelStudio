@@ -101,7 +101,8 @@ feature {NONE} -- C code generation: implementation
 				end
 				if context.workbench_mode or else context.result_used then
 						-- Generate Result definition
-					buf.put_string ("%N#define Result ")
+					buf.put_new_line_only
+					buf.put_string ("#define Result ")
 					buf.put_string (result_macro_prefix)
 					buf.put_character (data_macro_suffix)
 					if is_basic_type then
@@ -110,9 +111,9 @@ feature {NONE} -- C code generation: implementation
 						buf.put_string (c_type_name)
 						buf.put_character (')')
 					end
-					buf.put_new_line
 				end
 			end
+			buf.put_new_line
 			buf.put_string (data_macro_prefix)
 			buf.put_character (data_macro_suffix)
 			buf.put_character ('(')
@@ -139,11 +140,10 @@ feature -- C code generation
 			if context.workbench_mode then
 					-- Once result is accessed by index
 				buf := buffer
+				buf.put_new_line
 				buf.put_string ("RTOID (")
 				buf.put_string (a_name)
 				buf.put_character (')')
-				buf.put_new_line
-				buf.put_new_line
 			else
 					-- Once result is kept in global static fields
 				buf := context.header_buffer
@@ -185,13 +185,11 @@ feature -- C code generation
 				end
 				buf.put_string (generated_c_feature_name)
 				buf.put_string (gc_rparan_semi_c)
-				buf.put_new_line
 			elseif not is_global_once and then System.has_multithreaded then
 					-- Generate locals for thread-relative once routine
 				generate_once_result_definition ("RTOTR", "RTOUD")
 				buf.put_integer (context.thread_relative_once_index (body_index))
 				buf.put_character (')')
-				buf.put_new_line
 			end
 			init_dftype
 			init_dtype
@@ -206,8 +204,8 @@ feature -- C code generation
 			if context.workbench_mode then
 				if is_global_once then
 						-- Once is accessed using code index
-					buf.put_string ("RTOQP;")
 					buf.put_new_line
+					buf.put_string ("RTOQP;")
 					if context.result_used then
 						if real_type(result_type).c_type.is_pointer then
 							buf.put_new_line
@@ -216,16 +214,18 @@ feature -- C code generation
 					end
 				else
 						-- Once is accessed using local variable
+					buf.put_new_line
 					buf.put_string ("RTOTP;")
 				end
 			elseif is_global_once then
 					-- Once is accessed using code index
+				buf.put_new_line
 				buf.put_string ("RTOPP (")
 				buf.put_integer (body_index)
 				buf.put_string (");")
 				if context.result_used then
-					buf.put_new_line
-					buf.put_string ("%N#define Result RTOPR(")
+					buf.put_new_line_only
+					buf.put_string ("#define Result RTOPR(")
 					buf.put_integer (body_index)
 					buf.put_character (')')
 					if real_type(result_type).c_type.is_pointer then
@@ -235,15 +235,17 @@ feature -- C code generation
 				end
 			elseif System.has_multithreaded then
 					-- Once is accessed using pre-calculated once index
+				buf.put_new_line
 				buf.put_string ("RTOTP;")
 			else
 					-- Once is accessed using code index
+				buf.put_new_line
 				buf.put_string ("RTOSP (")
 				buf.put_integer (body_index)
 				buf.put_string (");")
 				if context.result_used then
-					buf.put_new_line
-					buf.put_string ("%N#define Result RTOSR(")
+					buf.put_new_line_only
+					buf.put_string ("#define Result RTOSR(")
 					buf.put_integer (body_index)
 					buf.put_character (')')
 					if real_type(result_type).c_type.is_pointer then
@@ -252,7 +254,6 @@ feature -- C code generation
 					end
 				end
 			end
-			buf.put_new_line
 		end
 
 	generate_once_epilogue (a_name: STRING) is

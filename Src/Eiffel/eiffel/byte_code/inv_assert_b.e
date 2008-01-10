@@ -60,8 +60,10 @@ feature
 			expr.print_register
 			buf.put_string (") {")
 			generate_success (buf)
+			buf.put_new_line
 			buf.put_string (gc_lacc_else_r_acc)
 			generate_failure (buf)
+			buf.put_new_line
 			buf.put_character ('}')
 		end
 

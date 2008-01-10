@@ -437,13 +437,12 @@ feature -- Analyzis
 				generate_return_exp
 			end
 
-			buf.generate_block_close
-
 				-- End of C function
 			if l_is_once then
 				buf.put_new_line_only
 				buf.put_string ("#undef Result")
 			end
+
 			if l_context.workbench_mode then
 				from
 					i := argument_count
@@ -456,6 +455,8 @@ feature -- Analyzis
 					i := i - 1
 				end
 			end
+			buf.generate_block_close
+
 			if rescue_clause /= Void then
 				buf.put_new_line_only
 				buf.put_string ("#undef EIF_VOLATILE")
@@ -473,11 +474,10 @@ feature -- Analyzis
 					 l_context.header_buffer, args, argument_types)
 				buf.generate_block_open
 				buf.put_gtcx
+				buf.put_new_line
 				if not type_c.is_void then
-					buf.put_new_line
 					buf.put_string ("return ")
 				end
-				buf.put_new_line
 				l_context.generate_once_optimized_call_start (type_c, body_index, is_global_once, buf)
 				buf.put_string (name)
 				buf.put_string (",(")

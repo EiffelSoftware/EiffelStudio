@@ -143,6 +143,9 @@ feature
 			end;
 				-- End of C routine
 			buf.generate_block_close
+
+				-- Separation for formatting
+			buf.put_new_line
 		end;
 
 invariant

@@ -270,7 +270,6 @@ feature -- Generation
 				buf.put_string (" = ")
 				l_basic_type.generate_default_value (buf)
 				buf.put_character (';')
-				buf.put_new_line
 			elseif l_special_creation then
 				check
 					is_special_call_valid: is_special_call_valid
@@ -303,6 +302,8 @@ feature -- Generation
 				if call /= Void then
 					call.set_parent (nested_b)
 					call.generate_parameters (register)
+						-- We need a new line since `generate_on' doesn't do it.
+					buf.put_new_line
 					call.generate_on (register)
 					call.set_parent (Void)
 					buf.put_character (';')
@@ -312,6 +313,7 @@ feature -- Generation
 					context.workbench_mode
 					or else context.system.keep_assertions
 				then
+					buf.put_new_line
 					buf.put_string ("RTCI2(")
 					register.print_register
 					buf.put_string (gc_rparan_semi_c)

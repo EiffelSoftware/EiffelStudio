@@ -14,6 +14,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
+			new_sd_toolbar_item,
 			tooltext
 		end
 
@@ -87,6 +88,8 @@ feature -- Basic operations
 
 	execute is
 			-- Toggle between a unified mode and a separate mode.
+		local
+			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
 		do
 			if not flag then
 				flag := True
@@ -115,6 +118,9 @@ feature -- Basic operations
 						internal_managed_toolbar_items.forth
 					end
 				end
+
+				-- We don't need toggle sd tool bar button in `internal_managed_sd_toolbar_items' since it handled automatically.
+
 				update_tooltip
 				flag := False
 			end
@@ -124,14 +130,16 @@ feature -- Basic operations
 			-- Display the good tooltip on buttons.
 		do
 			if internal_managed_toolbar_items /= Void then
-				from
-					internal_managed_toolbar_items.start
-				until
-					internal_managed_toolbar_items.after
-				loop
-					internal_managed_toolbar_items.item.set_tooltip (tooltip)
-					internal_managed_toolbar_items.forth
-				end
+				internal_managed_toolbar_items.do_all (agent (a_item: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON)
+														do
+															a_item.set_tooltip (tooltip)
+														end)
+			end
+			if internal_managed_sd_toolbar_items /= Void then
+				internal_managed_sd_toolbar_items.do_all (agent (a_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON)
+														do
+															a_item.set_tooltip (tooltip)
+														end)
 			end
 		end
 
@@ -165,6 +173,21 @@ feature -- Basic operations
 			Result.select_actions.extend (agent toggle_buttons)
 			Result.enable_sensitive
 			auto_recycle (Result)
+		end
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+			-- Create a new sd toolbar button for this command.
+		do
+				-- Create the button
+			create Result.make (Current)
+			check added: recycle_pool.has (Result) end
+			initialize_sd_toolbar_item (Result, display_text)
+			if window.unified_stone then
+				Result.enable_select
+			end
+			Result.select_actions.extend (agent execute)
+			Result.select_actions.extend (agent toggle_buttons)
+			Result.enable_sensitive
 		end
 
 feature {NONE} -- Recyclable

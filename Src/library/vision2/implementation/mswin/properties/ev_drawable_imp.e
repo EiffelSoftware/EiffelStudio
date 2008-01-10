@@ -600,6 +600,7 @@ feature -- Drawing operations
 			l_blend_function	: WEL_BLEND_FUNCTION
 			l_src_drawing_mode	: INTEGER
 			l_result			: BOOLEAN
+			l_is_src_bitmap_32bits : BOOLEAN
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			pixmap_height := pixmap_imp.height
@@ -660,10 +661,14 @@ feature -- Drawing operations
 					if source_drawable = Void then
 							-- Source bitmap dc
 						source_bitmap := pixmap_imp.get_bitmap
+						-- MSDN BLENDFUNCTION page say:
+						-- When the AlphaFormat parameter is AC_SRC_ALPHA, the source bitmap must be 32 bpp. If it is not, the AlphaBlend function will fail.
+						-- See bug#13828
+						l_is_src_bitmap_32bits := (source_bitmap.log_bitmap.bits_pixel = 32)
 						create source_bitmap_dc.make_by_dc (s_dc)
 						source_bitmap_dc.select_bitmap (source_bitmap)
 						l_src_drawing_mode := src_drawing_mode
-						if not (l_src_drawing_mode = srccopy) then
+						if l_src_drawing_mode /= srccopy or not l_is_src_bitmap_32bits then
 							dest_dc.bit_blt (
 								x, y,
 								source_width, source_height,

@@ -39,8 +39,8 @@ feature {NONE} -- Implementation
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			lab: EV_LABEL
-			l_tb: EV_TOOL_BAR
-			but: EV_TOOL_BAR_BUTTON
+			l_tb: SD_TOOL_BAR
+			but: SD_TOOL_BAR_BUTTON
 		do
 			create vb
 			widget := vb
@@ -74,12 +74,14 @@ feature {NONE} -- Implementation
 			hb.extend (upper_slice_field)
 			hb.disable_item_expand (upper_slice_field)
 
-			create l_tb
-			create but
+			create l_tb.make
+			create but.make
 			but.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
+			but.set_pixel_buffer (pixmaps.icon_pixmaps.general_tick_icon_buffer)
 			but.select_actions.extend (agent set_slice_selected)
 			but.set_tooltip (Interface_names.l_set_slice_values)
 			l_tb.extend (but)
+			l_tb.compute_minimum_size
 			hb.extend (l_tb)
 			hb.disable_item_expand (l_tb)
 
@@ -112,66 +114,76 @@ feature {NONE} -- Implementation
 	build_tool_bar is
 		local
 			l_tb: like tool_bar
-			tbb: EV_TOOL_BAR_BUTTON
-			tbtgb: EV_TOOL_BAR_TOGGLE_BUTTON
+			tbb: SD_TOOL_BAR_BUTTON
+			tbtgb: SD_TOOL_BAR_TOGGLE_BUTTON
 		do
 			if tool_bar = Void then
-				create l_tb
+				create l_tb.make
 				tool_bar := l_tb
 
-				create tbb
+				create tbb.make
 				tbb.set_pixmap (pixmaps.icon_pixmaps.debugger_object_expand_icon)
+				tbb.set_pixel_buffer (pixmaps.icon_pixmaps.debugger_object_expand_icon_buffer)
 				tbb.select_actions.extend (agent auto_slice_selected)
 				tbb.set_tooltip (interface_names.l_viewer_display_auto_upper_limit)
 				l_tb.extend (tbb)
 
-				l_tb.extend (create {EV_TOOL_BAR_SEPARATOR})
+				l_tb.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
-				create tbtgb
+				create tbtgb.make
 				tbtgb.set_pixmap (pixmaps.icon_pixmaps.general_word_wrap_icon)
+				tbtgb.set_pixel_buffer (pixmaps.icon_pixmaps.general_word_wrap_icon_buffer)
 				tbtgb.enable_select
 				tbtgb.select_actions.extend (agent word_wrap_toggled (tbtgb))
 				tbtgb.set_tooltip (interface_names.l_viewer_enable_word_wrapping)
 				l_tb.extend (tbtgb)
 
-				create tbb
+				create tbb.make
 				tbb.set_pixmap (pixmaps.icon_pixmaps.general_copy_icon)
+				tbb.set_pixel_buffer (pixmaps.icon_pixmaps.general_copy_icon_buffer)
 				tbb.select_actions.extend (agent copy_button_selected)
 				tbb.set_tooltip (interface_names.l_copy_text_to_clipboard)
 				l_tb.extend (tbb)
+
+				l_tb.compute_minimum_size
 			end
 		end
 
 	build_mini_tool_bar is
 		local
 			l_tb: like mini_tool_bar
-			tbb: EV_TOOL_BAR_BUTTON
-			tbtgb: EV_TOOL_BAR_TOGGLE_BUTTON
+			tbb: SD_TOOL_BAR_BUTTON
+			tbtgb: SD_TOOL_BAR_TOGGLE_BUTTON
 		do
 			if mini_tool_bar = Void then
-				create l_tb
+				create l_tb.make
 				mini_tool_bar := l_tb
 
-				create tbb
+				create tbb.make
 				tbb.set_pixmap (pixmaps.mini_pixmaps.viewer_expand_icon)
+				tbb.set_pixel_buffer (pixmaps.mini_pixmaps.viewer_expand_icon_buffer)
 				tbb.select_actions.extend (agent auto_slice_selected)
 				tbb.set_tooltip (Interface_names.l_viewer_display_complete_object)
 				l_tb.extend (tbb)
 
-				l_tb.extend (create {EV_TOOL_BAR_SEPARATOR})
+				l_tb.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
-				create tbtgb
+				create tbtgb.make
 				tbtgb.set_pixmap (pixmaps.mini_pixmaps.viewer_wrap_icon)
+				tbtgb.set_pixel_buffer (pixmaps.mini_pixmaps.viewer_wrap_icon_buffer)
 				tbtgb.enable_select
 				tbtgb.select_actions.extend (agent word_wrap_toggled (tbtgb))
 				tbtgb.set_tooltip (Interface_names.l_viewer_enable_word_wrapping)
 				l_tb.extend (tbtgb)
 
-				create tbb
+				create tbb.make
 				tbb.set_pixmap (pixmaps.mini_pixmaps.general_copy_icon)
+				tbb.set_pixel_buffer (pixmaps.mini_pixmaps.general_copy_icon_buffer)
 				tbb.select_actions.extend (agent copy_button_selected)
 				tbb.set_tooltip (interface_names.l_copy_text_to_clipboard)
 				l_tb.extend (tbb)
+
+				l_tb.compute_minimum_size
 			end
 		end
 
@@ -422,7 +434,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	word_wrap_toggled (but: EV_TOOL_BAR_TOGGLE_BUTTON) is
+	word_wrap_toggled (but: SD_TOOL_BAR_TOGGLE_BUTTON) is
 			-- Called by `select_actions' of `but'.
 		do
 			if but.is_selected then
@@ -485,3 +497,4 @@ indexing
 		]"
 
 end
+

@@ -106,6 +106,7 @@ feature -- Basic operations
 						internal_managed_menu_items.forth
 					end
 				end
+
 				if internal_managed_toolbar_items /= Void then
 					from
 						internal_managed_toolbar_items.start
@@ -119,7 +120,25 @@ feature -- Basic operations
 					end
 				end
 
-				-- We don't need toggle sd tool bar button in `internal_managed_sd_toolbar_items' since it handled automatically.
+				if internal_managed_sd_toolbar_items /= Void then
+					from
+						internal_managed_sd_toolbar_items.start
+					until
+						internal_managed_sd_toolbar_items.after
+					loop
+						l_button := internal_managed_sd_toolbar_items.item
+						l_button.select_actions.block
+						if window.unified_stone then
+							l_button.enable_select
+						else
+							l_button.disable_select
+						end
+
+						l_button.select_actions.resume
+
+						internal_managed_sd_toolbar_items.forth
+					end
+				end
 
 				update_tooltip
 				flag := False

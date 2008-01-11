@@ -1367,6 +1367,8 @@ test	built-in-unary-plus	ccomp065 tcf fail c_compilation
 test	expanded-generic-conformance-c-bad-finalization	ccomp066 tcf fail c_compilation
 if WINDOWS test	dll-generation-failure	ccomp067 tcf fail c_compilation
 test	once-global-procedure-c-failure	ccomp068 tcf fail c_compilation
+test	line-generation-finalize-bug	ccomp069 tcf pass c_compilation
+test	code-formatting					ccomp070 tcf pass c_compilation
 
 -- Storable tests
 

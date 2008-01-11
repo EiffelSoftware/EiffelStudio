@@ -349,7 +349,7 @@ feature -- Status report
 		do
 			Result := not is_recycled or is_recycling
 		ensure then
-			not_is_recycled: Result implies not is_recycled
+			not_is_recycled: Result implies (not is_recycled or is_recycling)
 		end
 
 feature {EB_RECYCLABLE} -- Status report

@@ -27,27 +27,12 @@ IEnumVARIANT1_impl_proxy::IEnumVARIANT1_impl_proxy( IUnknown * a_pointer )
 {
 	HRESULT hr, hr2;
 	hr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 	hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 
 	hr = a_pointer->QueryInterface(IID_IEnumVARIANT1_, (void **)&p_IEnumVARIANT1);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -71,12 +56,7 @@ void IEnumVARIANT1_impl_proxy::ccom_next(  /* [in] */ EIF_INTEGER celt,  /* [in]
 	if (p_IEnumVARIANT1 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IEnumVARIANT1_, (void **)&p_IEnumVARIANT1);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	ULONG tmp_celt = 0;
 	tmp_celt = (ULONG)celt;
@@ -84,12 +64,7 @@ void IEnumVARIANT1_impl_proxy::ccom_next(  /* [in] */ EIF_INTEGER celt,  /* [in]
 	tmp_pcelt_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pcelt_fetched), NULL);
 
 	hr = p_IEnumVARIANT1->Next(tmp_celt,rgvar,tmp_pcelt_fetched);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pcelt_fetched, pcelt_fetched);
 
 	if (tmp_pcelt_fetched != NULL)
@@ -107,23 +82,13 @@ void IEnumVARIANT1_impl_proxy::ccom_skip(  /* [in] */ EIF_INTEGER celt )
 	if (p_IEnumVARIANT1 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IEnumVARIANT1_, (void **)&p_IEnumVARIANT1);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	ULONG tmp_celt = 0;
 	tmp_celt = (ULONG)celt;
 
 	hr = p_IEnumVARIANT1->Skip(tmp_celt);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 
 
 };
@@ -139,20 +104,10 @@ void IEnumVARIANT1_impl_proxy::ccom_reset()
 	if (p_IEnumVARIANT1 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IEnumVARIANT1_, (void **)&p_IEnumVARIANT1);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	hr = p_IEnumVARIANT1->Reset ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -166,23 +121,13 @@ void IEnumVARIANT1_impl_proxy::ccom_clone1(  /* [out] */ EIF_OBJECT ppenum )
 	if (p_IEnumVARIANT1 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IEnumVARIANT1_, (void **)&p_IEnumVARIANT1);
-		if (FAILED (hr))
-		{
-			if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-				com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-			com_eraise (f.c_format_message (hr), EN_PROG);
-		};
+		rt.ccom_check_hresult (hr);
 	};
 	IEnumVARIANT * * tmp_ppenum = 0;
 	tmp_ppenum = (IEnumVARIANT * *)rt_ec.ccom_ec_pointed_pointed_enum_variant (eif_access (ppenum), NULL);
 
 	hr = p_IEnumVARIANT1->Clone(tmp_ppenum);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 	rt_ce.ccom_ce_pointed_pointed_enum_variant ((IEnumVARIANT * *)tmp_ppenum, ppenum);
 
 	if (tmp_ppenum != NULL)

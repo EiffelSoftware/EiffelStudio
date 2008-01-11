@@ -28,21 +28,10 @@ IFont20_impl_proxy::IFont20_impl_proxy( IUnknown * a_pointer )
 	HRESULT hr, hr2;
 
 	hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 
 	hr = a_pointer->QueryInterface(IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-
+	rt.ccom_check_hresult (hr);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -65,24 +54,12 @@ EIF_REFERENCE IFont20_impl_proxy::ccom_name(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	BSTR ret_value = 0;
 	
 	hr = p_IFont20->IFont20_Name( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);
 
 	return (EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value);
 	
@@ -99,23 +76,13 @@ void IFont20_impl_proxy::ccom_set_name(  /* [in] */ EIF_OBJECT pname )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	BSTR tmp_pname = 0;
 	tmp_pname = (BSTR)rt_ec.ccom_ec_bstr (eif_access (pname));
 	
 	hr = p_IFont20->IFont20_set_Name(tmp_pname);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 	if (tmp_pname != NULL)
 		SysFreeString (tmp_pname);
 
@@ -132,12 +99,7 @@ EIF_REFERENCE IFont20_impl_proxy::ccom_size(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	
 	EIF_TYPE_ID tid = -1;
@@ -152,14 +114,7 @@ EIF_REFERENCE IFont20_impl_proxy::ccom_size(  )
 	ret_value = (CURRENCY *)eif_field (eif_access (result), "item", EIF_POINTER);
 	
 	hr = p_IFont20->IFont20_Size( ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);
 
 	return eif_wean (result);
 	
@@ -176,21 +131,11 @@ void IFont20_impl_proxy::ccom_set_size(  /* [in] */ CURRENCY * psize )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	
 	hr = p_IFont20->IFont20_set_Size(*(CURRENCY*)psize);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 	
 	
 };
@@ -206,24 +151,12 @@ EIF_BOOLEAN IFont20_impl_proxy::ccom_bold(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	VARIANT_BOOL ret_value = 0;
 	
 	hr = p_IFont20->IFont20_Bold( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);
 
 	return (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
 	
@@ -240,24 +173,13 @@ void IFont20_impl_proxy::ccom_set_bold(  /* [in] */ EIF_BOOLEAN pbold )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	VARIANT_BOOL tmp_pbold = 0;
 	tmp_pbold = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (pbold);
 	
 	hr = p_IFont20->IFont20_set_Bold(tmp_pbold);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
+	rt.ccom_check_hresult (hr);
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -272,24 +194,12 @@ EIF_BOOLEAN IFont20_impl_proxy::ccom_italic(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	VARIANT_BOOL ret_value = 0;
 	
 	hr = p_IFont20->IFont20_Italic( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);	
 
 	return (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
 	
@@ -306,25 +216,13 @@ void IFont20_impl_proxy::ccom_set_italic(  /* [in] */ EIF_BOOLEAN pitalic )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	VARIANT_BOOL tmp_pitalic = 0;
 	tmp_pitalic = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (pitalic);
 	
 	hr = p_IFont20->IFont20_set_Italic(tmp_pitalic);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -338,27 +236,14 @@ EIF_BOOLEAN IFont20_impl_proxy::ccom_underline(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	VARIANT_BOOL ret_value = 0;
 	
 	hr = p_IFont20->IFont20_Underline( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 	
-	
-
 	return (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
-	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -372,24 +257,13 @@ void IFont20_impl_proxy::ccom_set_underline(  /* [in] */ EIF_BOOLEAN punderline 
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	VARIANT_BOOL tmp_punderline = 0;
 	tmp_punderline = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (punderline);
 	
 	hr = p_IFont20->IFont20_set_Underline(tmp_punderline);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
+	rt.ccom_check_hresult (hr);
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -404,27 +278,14 @@ EIF_BOOLEAN IFont20_impl_proxy::ccom_strikethrough(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	VARIANT_BOOL ret_value = 0;
 	
 	hr = p_IFont20->IFont20_Strikethrough( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);	
 
 	return (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
-	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -438,25 +299,14 @@ void IFont20_impl_proxy::ccom_set_strikethrough(  /* [in] */ EIF_BOOLEAN pstrike
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	VARIANT_BOOL tmp_pstrikethrough = 0;
 	tmp_pstrikethrough = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (pstrikethrough);
 	
 	hr = p_IFont20->IFont20_set_Strikethrough(tmp_pstrikethrough);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);
+
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -470,24 +320,12 @@ EIF_INTEGER IFont20_impl_proxy::ccom_weight(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	SHORT ret_value = 0;
 	
 	hr = p_IFont20->IFont20_Weight( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);	
 
 	return (EIF_INTEGER)ret_value;
 	
@@ -504,24 +342,13 @@ void IFont20_impl_proxy::ccom_set_weight(  /* [in] */ EIF_INTEGER pweight )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	SHORT tmp_pweight = 0;
 	tmp_pweight = (SHORT)pweight;
 	
 	hr = p_IFont20->IFont20_set_Weight(tmp_pweight);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
+	rt.ccom_check_hresult (hr);	
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -536,27 +363,14 @@ EIF_INTEGER IFont20_impl_proxy::ccom_charset(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	SHORT ret_value = 0;
 	
 	hr = p_IFont20->IFont20_Charset( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);	
 
 	return (EIF_INTEGER)ret_value;
-	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -570,24 +384,13 @@ void IFont20_impl_proxy::ccom_set_charset(  /* [in] */ EIF_INTEGER pcharset )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	SHORT tmp_pcharset = 0;
 	tmp_pcharset = (SHORT)pcharset;
 	
 	hr = p_IFont20->IFont20_set_Charset(tmp_pcharset);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
+	rt.ccom_check_hresult (hr);	
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -602,24 +405,12 @@ EIF_INTEGER IFont20_impl_proxy::ccom_h_font(  )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	OLE_HANDLE ret_value = 0;
 	
 	hr = p_IFont20->hFont( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+	rt.ccom_check_hresult (hr);	
 
 	return (EIF_INTEGER)ret_value;
 	
@@ -636,23 +427,13 @@ void IFont20_impl_proxy::ccom_clone1(  /* [out] */ EIF_OBJECT ppfont )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	IFont20 * * tmp_ppfont = 0;
 	tmp_ppfont = (IFont20 * *)rt_ec.ccom_ec_pointed_pointed_ifont (eif_access (ppfont), NULL);
 	
 	hr = p_IFont20->Clone(tmp_ppfont);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+	rt.ccom_check_hresult (hr);
 	rt_ce.ccom_ce_pointed_pointed_ifont ((IFont * *)tmp_ppfont, ppfont);
 	
 	
@@ -669,22 +450,11 @@ void IFont20_impl_proxy::ccom_is_equal1(  /* [in] */ IFont * pfont_other )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	
 	hr = p_IFont20->IsEqual((IFont20 *) pfont_other);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
+	rt.ccom_check_hresult (hr);	
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -699,12 +469,7 @@ void IFont20_impl_proxy::ccom_set_ratio(  /* [in] */ EIF_INTEGER cy_logical,  /*
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	LONG tmp_cy_logical = 0;
 	tmp_cy_logical = (LONG)cy_logical;
@@ -712,13 +477,7 @@ void IFont20_impl_proxy::ccom_set_ratio(  /* [in] */ EIF_INTEGER cy_logical,  /*
 	tmp_cy_himetric = (LONG)cy_himetric;
 	
 	hr = p_IFont20->SetRatio(tmp_cy_logical,tmp_cy_himetric);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
+	rt.ccom_check_hresult (hr);	
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -733,24 +492,13 @@ void IFont20_impl_proxy::ccom_add_ref_hfont(  /* [in] */ EIF_INTEGER a_h_font )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	OLE_HANDLE tmp_a_h_font = 0;
 	tmp_a_h_font = (OLE_HANDLE)a_h_font;
 	
 	hr = p_IFont20->AddRefHfont(tmp_a_h_font);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
+	rt.ccom_check_hresult (hr);	
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -765,24 +513,13 @@ void IFont20_impl_proxy::ccom_release_hfont(  /* [in] */ EIF_INTEGER a_h_font )
 	if (p_IFont20 == NULL)
 	{
 		hr = p_unknown->QueryInterface (IID_IFont20_, (void **)&p_IFont20);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+		rt.ccom_check_hresult (hr);
 	};
 	OLE_HANDLE tmp_a_h_font = 0;
 	tmp_a_h_font = (OLE_HANDLE)a_h_font;
 	
 	hr = p_IFont20->ReleaseHfont(tmp_a_h_font);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
+	rt.ccom_check_hresult (hr);	
 	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

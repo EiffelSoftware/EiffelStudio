@@ -22,10 +22,7 @@ inherit
 
 	ECOM_STAT_FLAGS
 
-	ECOM_EXCEPTION
-		redefine
-			dispose
-		end
+	EXCEPTION_MANAGER
 
 create
 	make_from_other,
@@ -127,16 +124,20 @@ feature -- Basic Operations
 			valid_bytes: bytes >= 0
 		local
 			tried: BOOLEAN
+			com_failure: COM_FAILURE
 		do
 			if not tried then
 				ccom_read (initializer, buffer, bytes)
 				end_of_stream := False
 			end
 		rescue
-			if exception = E_end_of_stream then
-				end_of_stream := True
-				tried := True
-				retry
+			com_failure ?= last_exception
+			if com_failure /= Void then
+				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
+					end_of_stream := True
+					tried := True
+					retry
+				end
 			end
 		end
 
@@ -144,16 +145,20 @@ feature -- Basic Operations
 			-- Read character from stream.
 		local
 			tried: BOOLEAN
+			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_character := ccom_read_character (initializer)
 				end_of_stream := False
 			end
 		rescue
-			if exception = E_end_of_stream then
-				end_of_stream := True
-				tried := True
-				retry
+			com_failure ?= last_exception
+			if com_failure /= Void then
+				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
+					end_of_stream := True
+					tried := True
+					retry
+				end
 			end
 		end
 
@@ -161,16 +166,20 @@ feature -- Basic Operations
 			-- Read integer from stream.
 		local
 			tried: BOOLEAN
+			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_integer := ccom_read_integer (initializer)
 				end_of_stream := False
 			end
 		rescue
-			if exception = E_end_of_stream then
-				end_of_stream := True
-				tried := True
-				retry
+			com_failure ?= last_exception
+			if com_failure /= Void then
+				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
+					end_of_stream := True
+					tried := True
+					retry
+				end
 			end
 		end
 
@@ -178,16 +187,20 @@ feature -- Basic Operations
 			-- Read real from stream.
 		local
 			tried: BOOLEAN
+			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_real := ccom_read_real (initializer)
 				end_of_stream := False
 			end
 		rescue
-			if exception = E_end_of_stream then
-				end_of_stream := True
-				tried := True
-				retry
+			com_failure ?= last_exception
+			if com_failure /= Void then
+				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
+					end_of_stream := True
+					tried := True
+					retry
+				end
 			end
 		end
 
@@ -195,16 +208,20 @@ feature -- Basic Operations
 			-- Read boolean from stream.
 		local
 			tried: BOOLEAN
+			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_boolean := ccom_read_boolean (initializer)
 				end_of_stream := False
 			end
 		rescue
-			if exception = E_end_of_stream then
-				end_of_stream := True
-				tried := True
-				retry
+			com_failure ?= last_exception
+			if com_failure /= Void then
+				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
+					end_of_stream := True
+					tried := True
+					retry
+				end
 			end
 		end
 
@@ -212,16 +229,20 @@ feature -- Basic Operations
 			-- Read string from stream.
 		local
 			tried: BOOLEAN
+			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_string := ccom_read_string (initializer)
 				end_of_stream := False
 			end
 		rescue
-			if exception = E_end_of_stream then
-				end_of_stream := True
-				tried := True
-				retry
+			com_failure ?= last_exception
+			if com_failure /= Void then
+				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
+					end_of_stream := True
+					tried := True
+					retry
+				end
 			end
 		end
 
@@ -375,7 +396,6 @@ feature {NONE} -- Implementation
 	dispose is
 		do
 			Precursor {ECOM_QUERIABLE}
-			Precursor {ECOM_EXCEPTION}
 		end
 
 feature {NONE} -- Externals

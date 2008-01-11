@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			create Result.make (100)
 			Result.append ("com_eraise (f.c_format_message (")
 			Result.append (variable_name)
-			Result.append ("), EN_PROG);%N%T")
+			Result.append ("), EN_COM);%N%T")
 		ensure
 			non_void_raise: Result /= Void
 			valid_raise: not Result.is_empty

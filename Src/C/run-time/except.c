@@ -266,7 +266,7 @@ rt_private SMART_STRING ex_string = {	/* Container of the exception trace */
 
 /*
 doc:	<attribute name="ex_tag" return_type="char * []" export="private">
-doc:		<summary>Pre-defined exception tags. No restriction on size. This is a duplication from Eiffel classes, but still used for trace printing.</summary>
+doc:		<summary>Pre-defined exception tags. No restriction on size. This is a duplication from Eiffel classes, but still used for trace printing and in EiffelCom.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since statically initialized.</synchronization>
 doc:	</attribute>
@@ -1235,6 +1235,7 @@ rt_public void com_eraise(char *tag, long num)
 	int				eclass = 0;
 	char			*reci_name = NULL;
 	struct ex_vect	*vector_call;	/* The stack trace entry */
+	long			com_error = 0, ex_obj = num;
 
 	if (echmem & MEM_PANIC)		/* In panic mode, do nothing */
 		return;
@@ -1277,23 +1278,30 @@ rt_public void com_eraise(char *tag, long num)
 		}
 	}
 
-	/* Set up 'echtg' to be the tag of the current exception, if one can be
-	 * computed, otherwise it is a null pointer. This will be used by the
-	 * debugger in its stop notification request.
-	 */
-
-	switch (num) {
-	case EN_SIG:			/* Signal received */
-		signo = trace->ex_sig;
-		echtg = signame(trace->ex_sig);
-		break;
-	case EN_SYS:			/* Operating system error */
-	case EN_IO:				/* I/O error */
-		eno = trace->ex_errno;
-		echtg = error_tag(trace->ex_errno);
-		break;
-	default:
+		/* Receive a Com error number, create a COM_FAILURE object with error number `com_error' */
+	if (!eedefined (num)){
+		signo = num;		/* Here `signo' is used as Com error number for convenience, not signal number at all */
+		ex_obj = EN_COM;
 		echtg = tag;
+	}else{
+
+		/* Set up 'echtg' to be the tag of the current exception, if one can be
+		 * computed, otherwise it is a null pointer. This will be used by the
+		 * debugger in its stop notification request.
+		 */
+		switch (num) {
+		case EN_SIG:			/* Signal received */
+			signo = trace->ex_sig;
+			echtg = signame(trace->ex_sig);
+			break;
+		case EN_SYS:			/* Operating system error */
+		case EN_IO:				/* I/O error */
+			eno = trace->ex_errno;
+			echtg = error_tag(trace->ex_errno);
+			break;
+		default:
+			echtg = tag;
+		}
 	}
 
 	vector_call = top_n_call(&eif_stack, 1);
@@ -1351,7 +1359,7 @@ rt_public void com_eraise(char *tag, long num)
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
-	make_exception (num, signo, eno, echtg, reci_name, Origin(eclass), "", "", 0, 0, 1);
+	make_exception (ex_obj, signo, eno, echtg, reci_name, Origin(eclass), "", "", 0, 0, 1);
 
 #ifndef NOHOOK
 	exception(PG_RAISE);	/* Debugger hook -- explicitly raised exception */
@@ -3198,6 +3206,25 @@ rt_public void eetrace(char b)	/* %%zmt never called in C dir. */
 		print_history_table = ~0;
 	else
 		print_history_table = 0;
+}
+
+rt_public EIF_REFERENCE eename(long ex)
+{
+	/* Return the english description for exeception `ex' */
+
+	char *e_string;
+
+	if (eedefined(ex) == (char) 1){
+		e_string = exception_string(ex);
+		return makestr(e_string, strlen(e_string));
+	}
+	return (0); /* to avoid a warning */
+}
+
+rt_private char eedefined(long ex)
+{
+	/* Is exception `ex' defined? */
+	return (char) ((ex > 0 && ex <= EN_NEX)? 1 : 0);
 }
 
 rt_shared struct ex_vect *top_n_call(struct xstack *stk, int n)

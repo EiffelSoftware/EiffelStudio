@@ -1,0 +1,17 @@
+test_name 	 line-generation-finalize-bug
+test_description Finalizing a system with `line_generation' set to true would cause a C compilation error when and elsif clause if used.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+	
+c_compile_final
+c_compile_result ok
+
+execute_final	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

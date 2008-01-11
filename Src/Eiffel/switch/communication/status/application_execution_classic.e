@@ -12,6 +12,7 @@ inherit
 	APPLICATION_EXECUTION
 		redefine
 			status,
+			send_no_breakpoints,
 			is_valid_object_address,
 			update_critical_stack_depth,
 			can_not_launch_system_message,
@@ -144,10 +145,14 @@ feature -- Execution
 
 	continue_ignoring_kept_objects is
 		do
-			cont_request.send_breakpoints
-			debugger_manager.breakpoints_manager.reset_breakpoints_changed
+			process_before_running
 			status.set_is_stopped (False)
 			cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
+		end
+
+	process_before_running is
+		do
+			send_breakpoints
 		end
 
 	interrupt is
@@ -285,6 +290,59 @@ feature -- Execution
 			-- Request ipc engine end of debugging
 		do
 			Ipc_engine.end_of_debugging
+		end
+
+feature {NONE} -- Breakpoints implementation
+
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER) is
+			-- Send breakpoints for step operation
+			-- called by `send_breakpoints'
+			-- DO NOT CALL DIRECTLY
+		do
+			update_breakpoints
+			ewb_request.send_breakpoints_for_stepping (Current, a_execution_mode)
+		end
+
+	send_no_breakpoints is
+			-- Application execution without any breakpoint
+		local
+			bps: BREAK_LIST
+			loc: BREAKPOINT_LOCATION
+		do
+				--| Redefined to optimize using the IPC protocol
+				--|
+				--| clear_application_breakpoints_table
+			ewb_request.send_rqst_0 (Rqst_clear_breakpoints)
+
+			bps := Debugger_manager.breakpoints_manager.breakpoints
+			from
+				bps.start
+			until
+				bps.after
+			loop
+				loc := bps.item_for_iteration.location
+				if loc.is_set_for_application then
+					debug ("debugger_trace_breakpoint")
+						print ("REMOVE APPLICATION BP :: " + loc.debug_output + "%N")
+					end
+					loc.set_application_not_set
+					-- then next time we go with StopPoint enable ... we'll add them again
+				end
+				bps.forth
+			end
+		end
+
+	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+			-- enable breakpoint at `loc'
+			-- if no breakpoint already exists at `loc' a breakpoint is created
+		do
+			ewb_request.set_classic_breakpoint (loc, True)
+		end
+
+	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+			-- remove breakpoint at `loc'
+		do
+			ewb_request.set_classic_breakpoint (loc, False)
 		end
 
 feature {NONE} -- Assertion change Implementation

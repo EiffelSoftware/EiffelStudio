@@ -111,9 +111,9 @@ feature {NONE} -- Implementation functions
 			if conv_brkstone /= Void then
 				bpm := develop_window.Debugger_manager.breakpoints_manager
 				if bpm.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
-					bpm.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+					bpm.remove_user_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				else
-					bpm.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+					bpm.set_user_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
 				bpm.notify_breakpoints_changes
 			elseif ef_stone /= Void then

@@ -1640,7 +1640,7 @@ feature -- Label texts
 	l_error_occurred_click: STRING_GENERAL is do Result := locale.translation ("Error occurred (double click to see details)") end
 	l_error_with_line (a_name: STRING_GENERAL; a_line: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.formatted_string (locale.translation ("Error with $1 line $2"), [a_name, a_line])
+			Result := locale.formatted_string (locale.translation ("Error with `$1' line $2"), [a_name, a_line])
 		end
 
 	l_exception_object: STRING_GENERAL is do Result := locale.translation ("Exception object") end

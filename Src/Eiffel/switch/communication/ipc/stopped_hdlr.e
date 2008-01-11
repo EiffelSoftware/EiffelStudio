@@ -59,9 +59,7 @@ feature -- Execution
 			l_status: APPLICATION_STATUS_CLASSIC
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
-			bp: BREAKPOINT
-			need_to_stop: BOOLEAN
-			need_to_resend_bp: BOOLEAN
+			need_to: TUPLE [stop: BOOLEAN; resend_bp: BOOLEAN]
 		do
 			check
 				application_is_executing: debugger_manager.application_is_executing
@@ -171,17 +169,26 @@ feature -- Execution
 					--| stopped state operations   |--
 					--|----------------------------|--
 
-				if stopping_reason /= Pg_new_breakpoint then
-						--| The debuggee is on a real stopped state
+				if stopping_reason = Pg_new_breakpoint then
+						--| If the reason is Pg_new_breakpoint, the application sends the
+						--| new breakpoints and then automatically resume its execution.
+					debug ("DEBUGGER_TRACE")
+						io.error.put_string ("STOPPED_HDLR: New breakpoint added, do nothing%N")
+					end
 
-					need_to_resend_bp := True
-					need_to_stop := True
+					-- application has stopped to take into account the
+					-- new breakpoints. So let's send the new breakpoints
+					-- to the application and resume it.
+					need_to := [False, True] -- Continue, but resend bp
+				else
+						--| The debuggee is on a real stopped state
+					need_to := [True, True]
 
 					inspect
 						stopping_reason
 					when Pg_raise, Pg_viol then
-						need_to_stop := execution_stopped_on_exception
-						need_to_resend_bp := False
+						need_to.stop := execution_stopped_on_exception
+						need_to.resend_bp := False
 					when Pg_break then
 							--| debuggee stopped on a Breakpoint
 
@@ -192,58 +199,46 @@ feature -- Execution
 
 							--| Check if this is a Conditional Breakpoint
 						cse := l_status.current_call_stack.i_th (1)
-						if {bm: !BREAKPOINTS_MANAGER} debugger_manager.breakpoints_manager then
-							if
-								cse = Void
-								or else cse.is_not_valid
-								or else cse.routine = Void
-							then
-								need_to_stop := True
-								need_to_resend_bp := True
-							elseif bm.is_breakpoint_set (cse.routine, cse.break_index) then
-								bp := bm.breakpoint (cse.routine, cse.break_index)
-								need_to_stop := Debugger_manager.process_breakpoint (bp)
-								need_to_resend_bp := need_to_stop or bm.breakpoints_changed
-							else
-								need_to_stop := False
-								need_to_resend_bp := True
-							end
+						if
+							cse = Void
+							or else cse.is_not_valid
+							or else cse.routine = Void
+						then
+							need_to.stop := True
+						else
+							need_to := execution_stopped_on_breakpoint (cse)
 						end
+						need_to.resend_bp := need_to.stop or else breakpoints_manager.breakpoints_changed
 					else
 						--| Nothing
 					end
-					if need_to_stop then
-							--| Now that we know the debuggee will be really stopped
-							--| Let get the effective call stack (not the dummy)
-						l_status.reload_current_call_stack
-						l_app.set_current_execution_stack_number (l_app.number_of_stack_elements)
+				end
 
-							-- Inspect the application's current state.
-						l_app.on_application_just_stopped
+				if need_to /= Void and then need_to.stop then
+						--| Now that we know the debuggee will be really stopped
+						--| Let get the effective call stack (not the dummy)
+					l_status.reload_current_call_stack
+					l_app.set_current_execution_stack_number (l_app.number_of_stack_elements)
 
-						debug ("DEBUGGER_TRACE")
-							io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
-						end
+						-- Inspect the application's current state.
+					l_app.on_application_just_stopped
+
+					debug ("DEBUGGER_TRACE")
+						io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
+					end
+				else
+						--| We don't stop on this breakpoint,
+						--| Relaunch the application.
+					if need_to /= Void and then need_to.resend_bp then
+							--| if we stopped on cond bp
+							--| in case we don't really stop
+							--| we won't send again the breakpoints
+							--| since they didn't changed, and a "go to this point" may be enabled
+						l_app.continue
 					else
-							--| We don't stop on this breakpoint,
-							--| Relaunch the application.
 						l_app.release_all_but_kept_object
-						if need_to_resend_bp then
-								--| if we stopped on cond bp
-								--| in case we don't really stop
-								--| we won't send again the breakpoints
-								--| since they didn't changed, and a "go to this point" may be enabled
-							Cont_request.send_breakpoints
-							debugger_manager.breakpoints_manager.reset_breakpoints_changed
-						end
 						l_status.set_is_stopped (False)
 						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
-					end
-				else --| stopping_reason = Pg_new_breakpoint |--
-						--| If the reason is Pg_new_breakpoint, the application sends the
-						--| new breakpoints and then automatically resume its execution.
-					debug ("DEBUGGER_TRACE")
-						io.error.put_string ("STOPPED_HDLR: New breakpoint added, do nothing%N")
 					end
 				end
 			else -- retry_clause
@@ -265,7 +260,42 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
+	execution_stopped_on_breakpoint (cse: CALL_STACK_ELEMENT_CLASSIC): TUPLE [stop: BOOLEAN; resend_bp: BOOLEAN] is
+			-- Do we stop execution and resend breakpoints on this breakpoint event ?
+		local
+			bps: LIST [BREAKPOINT]
+			loc: BREAKPOINT_LOCATION
+			bpm: BREAKPOINTS_MANAGER
+			dbm: DEBUGGER_MANAGER
+			b: BOOLEAN
+		do
+			Result := [False, True]
+
+			dbm := debugger_manager
+			bpm := dbm.breakpoints_manager
+			loc := bpm.breakpoint_location (cse.routine, cse.break_index, False)
+			bps := bpm.breakpoints_at (loc)
+			if bps /= Void then
+				from
+					b := False
+					bps.start
+				until
+					bps.after
+				loop
+					b := b or dbm.process_breakpoint (bps.item)
+					bps.forth
+				end
+				Result.stop := b
+			else
+					-- We are stopped, but there is no "set" breakpoints ...
+					-- might be a trouble, then resend bps
+				Result.stop := False
+				Result.resend_bp := True
+			end
+		end
+
 	execution_stopped_on_exception: BOOLEAN is
+			-- Do we stop execution on this exception event ?
 		do
 			Result := Debugger_manager.process_exception
 			debug ("debugger_trace")

@@ -305,6 +305,8 @@ feature -- Breakpoints management
 	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
 			-- Process `bp'
 			-- and return True in `a_stopped_execution' if application has to stop.
+		require
+			bp_not_void: bp /= Void
 		local
 			expr: DBG_EXPRESSION
 			evaluator: DBG_EXPRESSION_EVALUATOR
@@ -481,7 +483,7 @@ feature -- Breakpoints management
 					-- Need to individually remove the breakpoints
 					-- since the sent_bp must be updated to
 					-- not stop.
-				breakpoints_manager.clear_breakpoints
+				breakpoints_manager.clear_breakpoints (True)
 			else
 				breakpoints_manager.clear_breakpoints_at_once
 			end
@@ -1024,7 +1026,10 @@ feature -- Compilation events
 	on_project_recompiled (is_successful: BOOLEAN) is
 		do
 			if is_successful then
-				if breakpoints_manager /= Void and then breakpoints_manager.has_breakpoints then
+				if
+					breakpoints_manager /= Void and then
+					breakpoints_manager.has_breakpoint
+				then
 					Degree_output.put_resynchronizing_breakpoints_message
 					breakpoints_manager.resynchronize_breakpoints
 				end

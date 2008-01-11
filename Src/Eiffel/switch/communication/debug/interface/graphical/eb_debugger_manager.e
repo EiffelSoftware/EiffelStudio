@@ -21,7 +21,6 @@ inherit
 			dotnet_keep_stepping_info_non_eiffel_feature_pref,
 			change_current_thread_id,
 			activate_execution_replay_recording,
-			on_project_recompiled,
 			on_application_before_launching,
 			on_application_launched,
 			on_application_before_resuming,
@@ -1484,17 +1483,6 @@ feature {NONE} -- Raise/unraise notification
 
 	switching_mode_popup: EV_POPUP_WINDOW
 			-- Popup used when switching to or from debug mode.
-
-feature -- Compilations events
-
-	on_project_recompiled (is_successful: BOOLEAN) is
-		do
-			if is_successful and breakpoints_manager.has_breakpoints then
-				Degree_output.put_resynchronizing_breakpoints_message
-			end
-
-			Precursor {DEBUGGER_MANAGER} (is_successful)
-		end
 
 feature -- Debugging events
 

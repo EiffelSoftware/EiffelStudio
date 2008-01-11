@@ -231,16 +231,8 @@ feature {NONE} -- Implementation
 
 	drop_breakable (st: BREAKABLE_STONE) is
 			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
-		local
-			bpm: BREAKPOINTS_MANAGER
 		do
-			bpm := Debugger_manager.breakpoints_manager
-			if bpm.is_breakpoint_enabled (st.routine, st.index) then
-				bpm.remove_breakpoint (st.routine, st.index)
-			else
-				bpm.set_breakpoint (st.routine, st.index)
-			end
-			bpm.notify_breakpoints_changes
+			
 		end
 
 	drop_class (st: CLASSI_STONE) is

@@ -52,9 +52,9 @@ feature {NONE} -- Initialization
 	make_from_breakpoint (a_bp: BREAKPOINT) is
 		require
 			bp_not_void: a_bp /= Void
-			bp_valid: a_bp.is_valid
+			bp_valid: a_bp.location.is_valid
 		do
-			make (a_bp.routine, a_bp.breakable_line_number)
+			make (a_bp.location.routine, a_bp.location.breakable_line_number)
 		end
 
 feature -- Properties
@@ -81,8 +81,8 @@ feature -- Access
 			bp: BREAKPOINT
 		do
 			bpm := breakpoints_manager
-			if bpm.is_breakpoint_set (routine, index) then
-				bp := bpm.breakpoint (routine, index)
+			if bpm.is_breakpoint_set (routine, index, False) then
+				bp := bpm.user_breakpoint (routine, index)
 				Result := bp.to_tag_path
 			end
 		end
@@ -136,8 +136,10 @@ feature -- Basic operations
 			bp: BREAKPOINT
 		do
 			bpm := breakpoints_manager
-			if bpm.is_breakpoint_set (routine, index) then
-				bp := bpm.breakpoint (routine, index)
+			if {loc: !BREAKPOINT_LOCATION} bpm.breakpoint_location (routine, index, False) then
+				if bpm.is_user_breakpoint_set_at (loc) then
+					bp := bpm.user_breakpoint_at (loc)
+				end
 			end
 
 			create menu
@@ -150,13 +152,12 @@ feature -- Basic operations
 						end
 					end(bp)
 				)
---			item.disable_sensitive
 			menu.extend (item)
 			menu.extend (create {EV_MENU_SEPARATOR})
 
 				-- "Enable"
 			create item.make_with_text (Interface_names.m_Enable_this_bkpt)
-			item.select_actions.extend (agent bpm.enable_breakpoint (routine, index))
+			item.select_actions.extend (agent bpm.enable_user_breakpoint (routine, index))
 			item.select_actions.extend (agent bpm.notify_breakpoints_changes)
 
 			if bp /= Void and then bp.is_enabled then
@@ -166,7 +167,7 @@ feature -- Basic operations
 
 				-- "Disable"
 			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
-			item.select_actions.extend (agent bpm.disable_breakpoint (routine, index))
+			item.select_actions.extend (agent bpm.disable_user_breakpoint (routine, index))
 			item.select_actions.extend (agent bpm.notify_breakpoints_changes)
 			if bp /= Void and then bp.is_disabled then
 				item.disable_sensitive
@@ -176,7 +177,7 @@ feature -- Basic operations
 			if bp /= Void then
 					-- "Remove"
 				create item.make_with_text (Interface_names.m_Remove_this_bkpt)
-				item.select_actions.extend (agent bpm.remove_breakpoint (routine, index))
+				item.select_actions.extend (agent bpm.remove_user_breakpoint (routine, index))
 				item.select_actions.extend (agent bpm.notify_breakpoints_changes)
 				menu.extend (item)
 			end
@@ -200,7 +201,8 @@ feature -- Basic operations
 
 			if bp /= Void and then bp.has_condition then
 				create item.make_with_text (Interface_names.m_Remove_condition)
-				item.select_actions.extend (agent remove_condition_from_breakpoint (routine, index))
+				item.select_actions.extend (agent bp.remove_condition)
+				item.select_actions.extend (agent bpm.notify_breakpoints_changes)
 				menu.extend (item)
 			end
 
@@ -265,15 +267,6 @@ feature -- operation on breakpoint
  			new_breakpoint_dialog.show_on_active_window
  		end
 
-	remove_condition_from_breakpoint (f: E_FEATURE; pos: INTEGER) is
-		local
-			bpm: BREAKPOINTS_MANAGER
-		do
-			bpm := breakpoints_manager
-			bpm.remove_condition (f, pos)
-			bpm.notify_breakpoints_changes
-		end
-
 	edit_conditional_breakpoint (f: E_FEATURE; pos: INTEGER) is
 			-- Prompt the user for a condition and create a new breakpoint with that condition at coordinates (`f',`pos').
 		local
@@ -309,12 +302,21 @@ feature -- state of breakpoint
 			-- If the corresponding breakpoint was already enabled, remove it.
 		local
 			bpm: BREAKPOINTS_MANAGER
+			loc: BREAKPOINT_LOCATION
+			bp: BREAKPOINT
 		do
 			bpm := breakpoints_manager
-			if bpm.is_breakpoint_enabled (routine, index) then
-				bpm.remove_breakpoint (routine, index)
+			loc := bpm.breakpoint_location (routine, index, True)
+			if bpm.is_user_breakpoint_set_at (loc) then
+				bp := bpm.user_breakpoint_at (loc)
+				if bp.is_enabled then
+					bpm.delete_breakpoint (bp)
+				else
+					bp.enable
+				end
 			else
-				bpm.enable_breakpoint (routine, index)
+				bp := bpm.new_user_breakpoint (loc)
+				bpm.add_breakpoint (bp)
 			end
 			bpm.notify_breakpoints_changes
 		end

@@ -34,7 +34,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 		do
 			object_address := obj
 			reason := reas
-			if (reason /= Pg_new_breakpoint) then
+			if reason /= Pg_new_breakpoint then
 					-- Compute class type.
 				dynamic_class := Eiffel_system.class_of_dynamic_id (dt, False)
 
@@ -66,11 +66,6 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 --					stack_num := ccs.count
 --				end
 --				Application.set_current_execution_stack (stack_num)
-			else
-				-- application has stopped to take into account the
-				-- new breakpoints. So let's send the new breakpoints
-				-- to the application and resume it.
-				Application.continue_ignoring_kept_objects
 			end
 		ensure
 			valid_break_index: (break_index > 0) or (break_index = 0 implies (

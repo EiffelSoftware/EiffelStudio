@@ -531,6 +531,7 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 		end
 
 	set_rout (melted, exhausted: BOOLEAN; object: STRING; origin: INTEGER; type: INTEGER; r_name: STRING; line_number: INTEGER) is
+			-- See: C/ipc/ewb/ewb_dumper.c: c_recv_rout_info (..)
 		do
 			if exhausted then
 				is_exhausted := True
@@ -550,15 +551,6 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 				object_address.append (object)
 				is_melted := melted
 				routine_name := r_name
-
---				break_index := line_number
---				display_object_address := "Unavailable"
---				create object_address.make (10)
---				object_address.append (object)
---				object_address.to_upper
---				object_address.prepend ("0x")
---				is_melted := melted
---				routine_name := clone (r_name)
 			end
 		end
 

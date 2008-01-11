@@ -13,32 +13,31 @@ class
 	BREAKPOINT_KEY
 
 inherit
-	HASHABLE
+	BREAKPOINT_KEY_I
 		redefine
-			is_equal
+			hash_code
 		end
 
 create
-	make
+	make,
+	make_hidden
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_feature: E_FEATURE; a_breakable_index: INTEGER) is
-			-- Create a breakpoint in the feature `a_feature'
-			-- at the line `a_breakable_index'.
+	make (a_location: BREAKPOINT_LOCATION) is
+			-- Create a breakpoint at location `a_location'
 		require
-			valid_breakpoint: 	a_feature /= Void and then
-								a_breakable_index > 0 and then
-								a_feature.body_index /= 0
+			valid_location: 	a_location /= Void and then
+								not a_location.is_corrupted
 		do
-			if not is_corrupted then
-				breakable_line_number := a_breakable_index
-				routine := a_feature
-				body_index := routine.body_index
-			end
-		rescue
-			is_corrupted := True
-			retry
+			location := a_location
+		end
+
+	make_hidden (a_location: BREAKPOINT_LOCATION) is
+			-- Create a hidden breakpoint at location `a_location'
+		do
+			is_hidden := True
+			make (a_location)
 		end
 
 feature -- Comparison
@@ -51,59 +50,54 @@ feature -- Comparison
 			-- We use 'body_index' because it does not change after
 			-- a recompilation
 		do
-			Result := (other.breakable_line_number = breakable_line_number) and (other.body_index = body_index)
-		end
-
-feature -- Access
-
-	is_corrupted: BOOLEAN
-			-- False unless there was a problem at initialization (no feature).
-
-	hash_code: INTEGER is
-			-- Hash code for breakpoint.
-		do
-			Result := body_index * 1000 + breakable_line_number
-				-- here we take the absolute value of the
-				-- result if an overflow occurred
-			if Result < 0 then
-				Result := - Result
-			end
-		end
-
-feature {BREAKPOINTS_MANAGER} -- Change
-
-	set_is_corrupted (b: like is_corrupted) is
-			-- Set `is_corrupted' to `b'
-		do
-			is_corrupted := b
-		end
-
-	set_breakable_line_number (i: like breakable_line_number) is
-			-- Set `breakable_line_number' to `i'
-		require
-			i_positive: i > 0
-		do
-			breakable_line_number := i
-		end
-
-	update_routine_version is
-			-- Set `routine' to the updated_version of `routine'
-		require
-			routine_not_void: routine /= Void
-		do
-			routine := routine.updated_version
+			Result := location.is_equal (other.location) and (is_hidden = other.is_hidden)
 		end
 
 feature -- Properties
 
+	is_hidden: BOOLEAN
+			-- Is hidden breakpoint ?
+
+	location: BREAKPOINT_LOCATION
+			-- Location of the breakpoint.
+
+feature -- Access
+
+	hash_code: INTEGER is
+			-- Hash code for breakpoint.
+		do
+			Result := Precursor
+			if is_hidden then
+				Result := Result | 1
+			end
+		end
+
+	is_corrupted: BOOLEAN
+			-- False unless there was a problem at initialization (no feature).
+		do
+			Result := location.is_corrupted
+		end
+
 	routine: E_FEATURE
 			-- Feature where this breakpoint is situated.
+		do
+			Result := location.routine
+		end
 
 	breakable_line_number: INTEGER
 			-- Line number of the breakpoint in the stoppoint view under $EiffelGraphicalCompiler$.
+		do
+			Result := location.breakable_line_number
+		end
 
-	body_index: INTEGER;
+	body_index: INTEGER
 			-- `body_index' of the feature where this breakpoint is situated
+		do
+			Result := location.body_index
+		end
+
+invariant
+	location_not_void: location /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

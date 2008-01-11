@@ -220,6 +220,7 @@ feature -- C code generation
 				if is_once then
 					local_is_once := True
 					local_byte_context.add_thread_relative_once (type_c, body_index)
+					buffer.put_new_line
 					if local_byte_context.workbench_mode then
 						buffer.put_string ("RTOID (")
 						buffer.put_string (internal_name)

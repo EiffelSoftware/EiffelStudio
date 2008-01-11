@@ -13,23 +13,11 @@ class
 inherit
 	ES_EDITOR_TOKEN_HANDLER
 		redefine
-			is_applicable_token,
 			perform_on_token_with_mouse_coords
 		end
 
 create
 	make
-
-feature -- Query
-
-	is_applicable_token (a_token: !EDITOR_TOKEN): BOOLEAN
-			-- Determines if a token is applicable for processing
-			--
-			-- `a_token': Token to test for applicablity.
-			-- `Result': True if the token can be user; False otherwise.
-		do
-			Result := Precursor {ES_EDITOR_TOKEN_HANDLER} (a_token) and then {l_token: !EDITOR_TOKEN_KEYWORD} a_token
-		end
 
 feature -- Basic operations
 
@@ -43,10 +31,6 @@ feature -- Basic operations
 			-- `a_screen_x': The absolute screen x position of the mouse pointer when processing was requested.
 			-- `a_screen_y': The absolute screen y position of the mouse pointer when processing was requested.
 		do
-
-			if {l_token: !EDITOR_TOKEN_KEYWORD} a_token then
-				print (a_token.image + "%N")
-			end
 		end
 
 ;indexing

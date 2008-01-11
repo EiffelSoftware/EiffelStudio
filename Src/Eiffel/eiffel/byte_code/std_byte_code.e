@@ -570,13 +570,13 @@ feature -- Analyzis
 								(type_c.c_string, internal_name + suffix, True,
 								 l_context.header_buffer, args, seed_types)
 							buf.generate_block_open
+							buf.put_new_line
 							if not seed_type.is_void then
 								if type_c.is_pointer then
 									basic_i ?= real_type (result_type)
 								else
 									basic_i := Void
 								end
-								buf.put_new_line
 								if basic_i = Void then
 									buf.put_string ("return ")
 									if not type_c.is_pointer and then real_type (result_type).c_type.is_pointer then

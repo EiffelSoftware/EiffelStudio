@@ -137,6 +137,7 @@ feature -- Implementation
 			err_v: DUMMY_MESSAGE_DEBUG_VALUE
 			proc_v: PROCEDURE_RETURN_DEBUG_VALUE
 			l_once_nature: INTEGER
+			last_exception: ABSTRACT_DEBUG_VALUE
 		do
 			clear_last_values
 			l_index := once_index (once_routine)
@@ -145,7 +146,7 @@ feature -- Implementation
 					print ("### feature is of type : " + once_routine.generating_type + "%N")
 				end
 				if
-					(once_routine.is_function or once_routine.is_constant) and 
+					(once_routine.is_function or once_routine.is_constant) and
 					once_routine.type /= Void
 				then
 					l_once_func ?= once_routine
@@ -210,9 +211,16 @@ feature -- Implementation
 						end
 					end
 				else
-					last_exception_code := c_tread.to_integer
+					recv_value (Current)
+					last_exception := item
+					reset_recv_value
+
+					last_exception_code := 0 --| FIXME jfiat [2008/01/11] : c_tread.to_integer
 					create exc_v.make_with_name (once_routine.feature_name)
 					exc_v.set_tag (exception_tag_from_code (last_exception_code))
+					if last_exception /= Void then
+						exc_v.set_exception_value (last_exception)
+					end
 					Result := exc_v
 
 					debug ("debugger_ipc")

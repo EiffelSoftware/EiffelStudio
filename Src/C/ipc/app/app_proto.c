@@ -95,6 +95,7 @@ rt_private int dexecreplay(int dir, int steps);	/* ... */
 rt_private int dexecreplay_levels(int dir);		/* ... */
 rt_private void dobjectstorage_save(EIF_PSTREAM sp);				/* Save object to file */
 rt_private void dobjectstorage_load(EIF_PSTREAM sp);				/* Load stored object from file */
+rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref);
 
 rt_private long sp_lower, sp_upper;					/* Special objects' bounds to be inspected */
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
@@ -460,6 +461,37 @@ rt_public int app_recv_packet(EIF_PSTREAM s, Request *rqst
 }
 
 /*
+ * Send routines
+ */
+
+rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref)
+{
+	/* Send reference `ref' */
+
+	EIF_TYPED_VALUE *ip = NULL;
+	Request rqst;				/* What we receive and send back */
+	struct dump dumped;			/* Item returned */
+
+	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
+	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
+	if (ref != NULL) {
+		ip->it_ref = (EIF_REFERENCE) ref;
+		ip->type = SK_REF | Dtype(ip->it_ref);
+	} else {
+		ip->it_ref = (EIF_REFERENCE) 0;
+		ip->type = SK_VOID;
+	}
+
+	Request_Clean (rqst);
+	rqst.rq_type = DUMPED;			/* A dumped stack item */
+	dumped.dmp_type = DMP_ITEM;		/* We are dumping a variable */
+	dumped.dmp_item = ip;
+	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
+	app_send_packet(sp, &rqst);		/* Send to network */
+}
+
+
+/*
  * Protocol specific routines
  */
 
@@ -708,7 +740,6 @@ rt_private void dobjectstorage_load (EIF_PSTREAM sp)
 	Request rqst;			/* Loading request */
 	char *s = NULL;
 	EIF_TYPED_VALUE *pv = NULL;
-	struct dump dumped;			/* Item returned */
 	EIF_REFERENCE tmp = NULL;
 
 	EIF_GET_CONTEXT
@@ -754,22 +785,7 @@ rt_private void dobjectstorage_load (EIF_PSTREAM sp)
 		tmp = (EIF_REFERENCE) rtd_arg_value(rtd_arg, 1, r);
 	}
 
-	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
-	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
-	if (tmp != NULL) {
-		ip->it_ref = (EIF_REFERENCE) tmp;
-		ip->type = SK_REF | Dtype(ip->it_ref);
-	} else {
-		ip->it_ref = (EIF_REFERENCE) 0;
-		ip->type = SK_VOID;
-	}
-
-	Request_Clean (rqst);
-	rqst.rq_type = DUMPED;			/* A dumped stack item */
-	dumped.dmp_type = DMP_ITEM;		/* We are dumping a variable */
-	dumped.dmp_item = ip;
-	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
-	app_send_packet(sp, &rqst);		/* Send to network */
+	app_send_reference (sp, tmp);
 }
 
 #undef rtd_arg_value
@@ -961,10 +977,9 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 				/* Done ? */
 			app_twrite("true", 4);
 				/* Failed ? */
-			if (MTOF(OResult)) {
+			if (*MTOF(OResult)) {
 				app_twrite("true", 4);
-				sprintf(buf, "%u", MTOF(OResult));
-				app_twrite(buf, strlen(buf));
+				app_send_reference (sp, *MTOF(OResult));
 			} else {
 				app_twrite("false", 5);
 					/* Result */
@@ -1878,28 +1893,7 @@ rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp)
 {
 	/* Dump the rt_extension_obj */
 
-	EIF_TYPED_VALUE *ip = NULL;
-	Request rqst;				/* What we receive and send back */
-	struct dump dumped;			/* Item returned */
-	EIF_REFERENCE tmp = NULL;
-
-	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
-	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
-	tmp = rt_extension_obj;
-	if (tmp != NULL) {
-		ip->it_ref = (EIF_REFERENCE) tmp;
-		ip->type = SK_REF | Dtype(ip->it_ref);
-	} else {
-		ip->it_ref = (EIF_REFERENCE) 0;
-		ip->type = SK_VOID;
-	}
-
-	Request_Clean (rqst);
-	rqst.rq_type = DUMPED;			/* A dumped stack item */
-	dumped.dmp_type = DMP_ITEM;		/* We are dumping a variable */
-	dumped.dmp_item = ip;
-	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
-	app_send_packet(sp, &rqst);		/* Send to network */
+	app_send_reference (sp, rt_extension_obj);
 }
 
 rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
@@ -1908,9 +1902,8 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 
 	EIF_TYPED_VALUE *ip = NULL;
 	Request rqst;				/* What we receive and send back */
-	struct dump dumped;			/* Item returned */
 	EIF_REFERENCE tmp = NULL;
-	EIF_REFERENCE loc1 = (EIF_REFERENCE) 0;
+	EIF_REFERENCE loc1 = NULL;
 	EIF_TYPE_ID tid;
 	char* s = NULL;
 
@@ -1940,32 +1933,19 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 		send_ack(sp, AK_OK);
 	}
 	
-	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
-	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
 	if (s != NULL) {
 		tid = eif_type_id(s);
 		if (tid != -1) {
 			CHECK("valid tid", rt_valid_type_index(tid));
-			tmp = RTLNSMART((EIF_TYPE_INDEX) tid);
+			loc1 = RTLNSMART((EIF_TYPE_INDEX) tid);
 		}
 	} else {
-		tmp = RTLN(RTUD(typeid));
+		loc1 = RTLN(RTUD(typeid));
 	}
-	if (tmp != NULL) {
-		loc1 = (EIF_REFERENCE)RTCCL(tmp);
-		ip->it_ref = (EIF_REFERENCE) loc1;
-		ip->type = SK_REF | Dtype(ip->it_ref);
-	} else {
-		ip->it_ref = (EIF_REFERENCE) 0;
-		ip->type = SK_VOID;
+	if (loc1 != NULL) {
+		tmp = (EIF_REFERENCE)RTCCL(loc1); /* clone */
 	}
-
-	Request_Clean (rqst);
-	rqst.rq_type = DUMPED;			/* A dumped stack item */
-	dumped.dmp_type = DMP_ITEM;		/* We are dumping a variable */
-	dumped.dmp_item = ip;
-	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
-	app_send_packet(sp, &rqst);		/* Send to network */
+	app_send_reference (sp, tmp);
 }
 
 rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
@@ -1986,7 +1966,7 @@ rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid_or_offset, int stype_
 		dumped.dmp_item = NULL;			/* arguments to be sent. */
 	} else {
 		if (exception_occured == 1) {
-			dumped.dmp_type = DMP_EXCEPTION_TRACE;			/* We are dumping a variable */
+			dumped.dmp_type = DMP_EXCEPTION_TRACE; /* We are dumping an exception trace */
 		} else {
 			dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 		}

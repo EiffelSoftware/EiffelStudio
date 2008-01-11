@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	debugger_manager: DEBUGGER_MANAGER
+			-- Associated debugger manager.
 
 feature -- Recylcing
 
@@ -299,6 +300,38 @@ feature -- Execution
 		deferred
 		end
 
+	send_breakpoints is
+			-- Send breakpoints according to the context
+		local
+			bpm: BREAKPOINTS_MANAGER
+		do
+			debug("debugger_trace_breakpoint")
+				io.put_string ("sending updated breakpoints to the application%N")
+			end
+
+			bpm := Debugger_manager.breakpoints_manager
+			bpm.update -- remove breakpoint that are now useless.			
+			inspect execution_mode
+			when {EXEC_MODES}.no_stop_points then
+					-- remove all breakpoints set by the application.
+					-- without changing their status under bench				
+				debug("debugger_trace_breakpoint")
+					print ("No stop point.%N")
+				end
+				send_no_breakpoints
+			when {EXEC_MODES}.User_stop_points then
+					-- Execution with no stop points set.
+				update_breakpoints
+			when {EXEC_MODES}.step_into,
+			 	 {EXEC_MODES}.step_by_step,
+			 	 {EXEC_MODES}.out_of_routine then
+				send_breakpoints_for_stepping (execution_mode)
+			else
+					-- Unknown execution mode. Do nothing.				
+			end
+			bpm.reset_breakpoints_changed
+		end
+
 	interrupt is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
@@ -406,6 +439,97 @@ feature -- Execution
 		end
 
 	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is
+		deferred
+		end
+
+feature {NONE} -- Breakpoints implementation
+
+	update_breakpoints is
+			-- Synchronize breakpoints status between application and $EiffelGraphicalCompiler$.
+		local
+			lst: HASH_TABLE [INTEGER_32, BREAKPOINT_LOCATION] -- {BP_LOC => status}
+		do
+			debug ("debugger_trace_breakpoint")
+				print (generator + ".update_breakpoints %N")
+			end
+			lst := Debugger_manager.breakpoints_manager.updated_breakpoints_locations_status
+			from
+				lst.start
+			until
+				lst.off
+			loop
+				update_breakpoint (lst.key_for_iteration, lst.item_for_iteration)
+				lst.forth
+			end
+		end
+
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER) is
+			-- Send breakpoints for step operation
+			-- called by `send_breakpoints'
+			-- DO NOT CALL DIRECTLY
+		deferred
+		end
+
+	send_no_breakpoints is
+			-- Application execution without any breakpoint	
+			-- Remove BreakPoints from the application ones in execution
+			-- to perform a NoStopPoint operation
+		local
+			bps: BREAK_LIST
+			loc: BREAKPOINT_LOCATION
+		do
+			bps := Debugger_manager.breakpoints_manager.breakpoints
+			from
+				bps.start
+			until
+				bps.off
+			loop
+				loc := bps.item_for_iteration.location
+				if loc.is_set_for_application then
+					debug ("debugger_trace_breakpoint")
+						print ("REMOVE APPLICATION BP :: " + loc.debug_output + "%N")
+					end
+					unset_application_breakpoint (loc)
+					-- then next time we go with StopPoint enable ... we'll add them again
+				end
+				bps.forth
+			end
+		end
+
+	update_breakpoint (loc: BREAKPOINT_LOCATION; bp_mode: INTEGER) is
+			-- send a breakpoint to the application, and update the
+			-- status of the sent breakpoint
+		do
+			inspect
+				bp_mode
+			when {BREAKPOINT}.breakpoint_to_add then
+				debug("debugger_trace_breakpoint")
+					print ("ADD BP :: " + loc.debug_output + "%N")
+				end
+				if loc.is_valid then
+					set_application_breakpoint (loc)
+				end
+			when {BREAKPOINT}.Breakpoint_to_remove then
+				debug ("debugger_trace_breakpoint")
+					print ("DEL BP :: " + loc.debug_output + "%N")
+				end
+				unset_application_breakpoint (loc)
+			else
+				check bp_mode = {BREAKPOINT}.Breakpoint_do_nothing end
+				debug ("debugger_trace_breakpoint")
+					print ("KEEP BP %N")
+				end
+			end
+		end
+
+	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+			-- enable breakpoint at `loc'
+			-- if no breakpoint already exists at `loc' a breakpoint is created
+		deferred
+		end
+
+	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+			-- remove breakpoint at `loc'
 		deferred
 		end
 

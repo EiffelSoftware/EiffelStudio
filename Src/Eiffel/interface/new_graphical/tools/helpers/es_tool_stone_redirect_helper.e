@@ -56,7 +56,6 @@ feature -- Basic operations
 			a_widget_attached: a_widget /= Void
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		do
-			register_action (a_widget.drop_actions, agent drop_breakable)
 			register_action (a_widget.drop_actions, agent drop_class)
 			register_action (a_widget.drop_actions, agent drop_feature)
 			register_action (a_widget.drop_actions, agent drop_cluster)
@@ -70,32 +69,12 @@ feature -- Basic operations
 			a_widget_attached: a_widget /= Void
 		do
 			a_widget.drop_actions.compare_objects
-			a_widget.drop_actions.prune (agent drop_breakable)
 			a_widget.drop_actions.prune (agent drop_class)
 			a_widget.drop_actions.prune (agent drop_feature)
 			a_widget.drop_actions.prune (agent drop_cluster)
 		end
 
 feature {NONE} -- Redirects
-
-	drop_breakable (a_stone: BREAKABLE_STONE) is
-			-- Redirects a breakpoint stone.
-			--
-			-- `a_stone': Stone to redirect the drop actions to.
-		require
-			not_is_recycled: not is_recycled
-			a_stone_attached: a_stone /= Void
-		local
-			bpm: BREAKPOINTS_MANAGER
-		do
-			bpm := development_window.debugger_manager.breakpoints_manager
-			if bpm.is_breakpoint_enabled (a_stone.routine, a_stone.index) then
-				bpm.remove_breakpoint (a_stone.routine, a_stone.index)
-			else
-				bpm.set_breakpoint (a_stone.routine, a_stone.index)
-			end
-			bpm.notify_breakpoints_changes
-		end
 
 	drop_class (a_stone: CLASSI_STONE) is
 			-- Redirects a class stone.

@@ -25,7 +25,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			end
 		end
 
-	request_breakpoint_add (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	request_breakpoint_add (a_bp_loc: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
 			-- request a new breakpoint addition
 		local
 			l_bp: EIFNET_BREAKPOINT
@@ -33,12 +33,12 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 		do
 			debug ("debugger_trace_breakpoint")
 				io.error.put_string ("Request Add BP - line=" + a_line.to_hex_string+ "%N")
-				io.error.put_string ("%T Module = "+a_module_name+" %N")
+				io.error.put_string ("%T Module = " + a_module_name + " %N")
 				io.error.put_string ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
 				io.error.put_string ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
 				io.error.put_string ("%N")
 			end
-			create l_bp.make (a_bp, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
+			create l_bp.make (a_bp_loc, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
 			l_bp.activate
 
 			register_bp_for_addition (l_bp)
@@ -48,7 +48,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			end
 		end
 
-	request_breakpoint_remove (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	request_breakpoint_remove (a_bp_loc: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
 			-- request a breakpoint removal
 		local
 			l_bp: EIFNET_BREAKPOINT
@@ -61,7 +61,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 				io.error.put_string ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
 				io.error.put_string ("%N")
 			end
-			create l_bp.make (a_bp, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
+			create l_bp.make (a_bp_loc, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
 
 			if is_bp_waiting_for_addition (l_bp) then
 				--| The breakpoint has not yet been enabled on the dotnet side

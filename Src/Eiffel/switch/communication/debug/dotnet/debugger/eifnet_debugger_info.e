@@ -234,7 +234,7 @@ feature -- Current CallStack
 
 feature {EIFNET_EXPORTER} -- Current Breakpoint access
 
-	current_breakpoint: BREAKPOINT is
+	current_breakpoint_location: BREAKPOINT_LOCATION is
 			-- Current eStudio Breakpoint object corresponding to the
 			-- current breakpoint in dotnet world.
 		local
@@ -247,7 +247,7 @@ feature {EIFNET_EXPORTER} -- Current Breakpoint access
 										current_stack_info.current_il_offset
 									)
 			if l_eifnet_breakpoint /= Void then
-				Result := l_eifnet_breakpoint.breakpoint
+				Result := l_eifnet_breakpoint.breakpoint_location
 			end
 		end
 

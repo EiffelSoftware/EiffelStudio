@@ -138,7 +138,7 @@ feature -- Update
 				index := bs.index
 				body_index := bs.body_index
 				bpm := Debugger_manager.breakpoints_manager
-				bpm.enable_breakpoint (f, index)
+				bpm.enable_user_breakpoint (f, index)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
@@ -164,10 +164,10 @@ feature -- Update
 			f := fs.e_feature
 			if f.is_debuggable then
 				bpm := Debugger_manager.breakpoints_manager
-				if bpm.has_disabled_breakpoints then
-					bpm.enable_breakpoints_in_feature (f)
+				if bpm.has_disabled_breakpoint (False) then
+					bpm.enable_user_breakpoints_in_feature (f)
 				end
-				bpm.enable_first_breakpoint_of_feature (f)
+				bpm.enable_first_user_breakpoint_of_feature (f)
 
 				if bpm.error_in_bkpts then
 					prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
@@ -186,7 +186,7 @@ feature -- Update
 				-- If a feature stone was dropped, it is handled by the drop_feature feature.
 			if conv_fst = Void then
 				bpm := Debugger_manager.breakpoints_manager
-				bpm.enable_first_breakpoints_in_class (cs.e_class)
+				bpm.enable_first_user_breakpoints_in_class (cs.e_class)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
@@ -204,7 +204,7 @@ feature -- Execution
 			bpm: BREAKPOINTS_MANAGER
 		do
 			bpm := debugger_manager.breakpoints_manager
-			bpm.enable_all_breakpoints
+			bpm.enable_all_user_breakpoints
 			bpm.notify_breakpoints_changes
 		end
 
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 --		local
 --			body_index: INTEGER
 		do
-			Debugger_manager.breakpoints_manager.enable_breakpoints_in_feature (f)
+			Debugger_manager.breakpoints_manager.enable_user_breakpoints_in_feature (f)
 --| FIXME ARNAUD
 --			body_index := f.body_index
 --			tool_supervisor.feature_tool_mgr.show_stoppoint (body_index, 1)

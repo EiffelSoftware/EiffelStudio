@@ -99,7 +99,7 @@ feature -- Update
 					app := Debugger_manager.application
 					app.build_status
 					app.status.set_process_id (last_process_id)
-					send_breakpoints
+					app.send_breakpoints
 					send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
 					app.status.set_is_stopped (False)
 				end

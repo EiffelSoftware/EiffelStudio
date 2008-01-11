@@ -213,10 +213,6 @@ feature -- Basic Operations / Information message
 		do
 		end
 
-	display_breakpoints is
-		do
-		end
-
 feature -- Basic Operations / Compiler messages
 
 	trace_warnings (handler: ERROR_HANDLER) is

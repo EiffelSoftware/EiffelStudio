@@ -403,7 +403,7 @@ feature -- Breakpoints management
 					end
 				else
 					if s.item (1) = '*' then
-						breakpoints_manager.enable_first_breakpoints_in_class (cc)
+						breakpoints_manager.enable_first_user_breakpoints_in_class (cc)
 						l_added := True
 						localized_print (debugger_names.m_added_breakpoints_in_class (cc.name_in_upper))
 					else
@@ -442,7 +442,7 @@ feature -- Breakpoints management
 						elseif i > fe.number_of_breakpoint_slots then
 							i := fe.number_of_breakpoint_slots
 						end
-						breakpoints_manager.enable_breakpoint (fe, i)
+						breakpoints_manager.enable_user_breakpoint (fe, i)
 						l_added := True
 						localized_print (debugger_names.m_added_breakpoint_detailed (cc.name_in_upper, fe.name, i.out))
 					end

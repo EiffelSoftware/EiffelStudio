@@ -32,6 +32,8 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	EV_SHARED_APPLICATION
+
 feature -- Access
 
 	description: STRING_GENERAL is
@@ -140,7 +142,7 @@ feature -- Events
 				body_index := bs.body_index
 				index := bs.index
 				bpm := Debugger_manager.breakpoints_manager
-				bpm.remove_breakpoint (f, index)
+				bpm.remove_user_breakpoint (f, index)
 				show_message_on_error (bpm)
 
 					-- Update output tools
@@ -156,8 +158,8 @@ feature -- Events
 		do
 			f := fs.e_feature
 			bpm := Debugger_manager.breakpoints_manager
-			if f /= Void and then f.is_debuggable and then bpm.has_breakpoint_set (f) then
-				bpm.remove_breakpoints_in_feature (f)
+			if f /= Void and then f.is_debuggable and then bpm.has_user_breakpoint_set (f) then
+				bpm.remove_user_breakpoints_in_feature (f)
 				show_message_on_error (bpm)
 
 					-- Update output tools
@@ -174,7 +176,7 @@ feature -- Events
 			conv_fst ?= cs
 			if conv_fst = Void then
 				bpm := Debugger_manager.breakpoints_manager
-				bpm.remove_breakpoints_in_class (cs.e_class)
+				bpm.remove_user_breakpoints_in_class (cs.e_class)
 				show_message_on_error (bpm)
 
 					-- Update output tools
@@ -191,10 +193,10 @@ feature -- Execution
 			bpm: BREAKPOINTS_MANAGER
 		do
 			bpm := Debugger_manager.breakpoints_manager
-			if bpm.has_breakpoints then
+			if bpm.has_breakpoint then
 				create l_question.make_standard (warning_messages.w_clear_breakpoints, "", preferences.dialog_data.confirm_clear_breakpoints_string)
 				l_question.set_title (interface_names.t_debugger_question)
-				l_question.set_button_action (l_question.dialog_buttons.yes_button, agent clear_breakpoints)
+				l_question.set_button_action (l_question.dialog_buttons.yes_button, agent clear_breakpoints (ev_application.ctrl_pressed))
 				l_question.show_on_active_window
 
 					-- Update output tools
@@ -216,10 +218,14 @@ feature {NONE} -- Implementation
 			Window_manager.synchronize_all_about_breakpoints
 		end
 
-	clear_breakpoints is
+	clear_breakpoints (include_hidden: BOOLEAN) is
 			-- Execute with confirmation dialog.
 		do
-			debugger_manager.clear_breakpoints
+			if include_hidden then
+				debugger_manager.clear_breakpoints
+			else
+				debugger_manager.breakpoints_manager.clear_breakpoints (False)
+			end
 			show_message_on_error (debugger_manager.breakpoints_manager)
 		end
 

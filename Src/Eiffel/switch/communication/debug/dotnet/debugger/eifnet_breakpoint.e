@@ -8,35 +8,35 @@ indexing
 
 class
 	EIFNET_BREAKPOINT
-	
+
 inherit
-	
+
 	DEBUG_OUTPUT
 		redefine
 			is_equal
 		end
-	
+
 	HASHABLE
 		redefine
 			is_equal
 		end
-	
+
 	ICOR_EXPORTER
 		redefine
 			is_equal
 		end
-	
+
 create
 	make
-	
+
 feature
-	
-	make (a_bp: BREAKPOINT; a_module_key: STRING; a_class, a_feature: INTEGER; a_line: INTEGER_64) is
+
+	make (a_bp_loc: BREAKPOINT_LOCATION; a_module_key: STRING; a_class, a_feature: INTEGER; a_line: INTEGER_64) is
 			-- Initialize BP item data
 		require
 			module_key_lower_case: is_lower_case (a_module_key)
 		do
-			breakpoint := a_bp
+			breakpoint_location := a_bp_loc
 			module_key := a_module_key
 			class_token := a_class
 			feature_token := a_feature
@@ -61,16 +61,16 @@ feature -- comparison
 			-- Is `other' equal to `Current'?
 			-- `other' equals to `Current' if they represent
 			-- the same physical breakpoint, in other words they
-			-- have the same `body_index' and `offset'. 
+			-- have the same `body_index' and `offset'.
 			-- We use 'body_index' because it does not change after
 			-- a recompilation
 		do
-			Result := (other.break_index = break_index) 
+			Result := (other.break_index = break_index)
 					and then other.module_key.is_equal (module_key)
 					and then other.class_token = class_token
-					and then other.feature_token = feature_token					
+					and then other.feature_token = feature_token
 		end
-		
+
 feature -- Access assertion
 
 	is_lower_case (a_string: STRING): BOOLEAN is
@@ -81,44 +81,44 @@ feature -- Access assertion
 		do
 			Result := a_string.as_lower.is_equal (a_string)
 		end
-		
+
 feature -- access
 
-	breakpoint: BREAKPOINT
+	breakpoint_location: BREAKPOINT_LOCATION
 			-- Corresponding eStudio BREAKPOINT
-	
+
 	module_key: STRING
 			-- modulename view as key
 			-- this means in our case, lowered
 
 	class_token: INTEGER
 			-- class token
-	
+
 	feature_token: INTEGER
 			-- feature token
-	
+
 	break_index: INTEGER_64
 			-- il line index (il offset)
-	
+
 feature -- dotnet properties
 
 	icor_breakpoint: ICOR_DEBUG_BREAKPOINT
 			-- Corresponding ICorDebugBreakpoint
-	
+
 	set_icor_breakpoint (a_val: like icor_breakpoint) is
 			-- Set `icor_breakpoint' to `a_val'.
 		do
 			icor_breakpoint := a_val
-		end	
-	
+		end
+
 feature -- status
-	
+
 	is_active: BOOLEAN
 			-- Is Current an active Breakpoint ?
-	
+
 	enabled: BOOLEAN
 			-- Is Current enabled ?
-	
+
 feature -- change
 
 	enable is
@@ -126,7 +126,7 @@ feature -- change
 		do
 			enabled := True
 		end
-		
+
 	disable is
 			-- Disable the Current breakpoint.
 		do
@@ -136,15 +136,15 @@ feature -- change
 	activate is
 			-- Activate the Current breakpoint.
 		do
-			is_active := True				
+			is_active := True
 		end
-		
+
 	unactivate is
 			-- UnActivate the Current breakpoint.
 		do
-			is_active := False				
-		end		
-		
+			is_active := False
+		end
+
 feature -- debug output
 
 	debug_output: STRING is
@@ -152,10 +152,10 @@ feature -- debug output
 			-- debug purpose only
 		do
 			Result := "BP: "
-						+ "Class  [" + class_token.out + "] " 
+						+ "Class  [" + class_token.out + "] "
 						+ "Feature[" + feature_token.out +"] "
 						+ "Index  [" + break_index.out +"] "
-						+ "Module [" + module_key + "] " 
+						+ "Module [" + module_key + "] "
 		end
 
 indexing

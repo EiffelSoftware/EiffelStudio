@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			until
 				lst.after
 			loop
-				create bp.make_copy_for_saving (lst.item_for_iteration)
+				bp := lst.item_for_iteration.copy_for_saving
 				put (bp, bp)
 				lst.forth
 			end
@@ -73,7 +73,7 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 			until
 				after
 			loop
-				item_for_iteration.set_application_not_set
+				item_for_iteration.location.set_application_not_set
 				forth
 			end
 			update
@@ -81,13 +81,13 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 
 	update is
 			-- remove breakpoint that no more useful from the hash_table
-			-- see BREAKPOINT/is_not_useful for further comments
+			-- see `{BREAKPOINT}.is_useless' for further comments
 		local
 			bp: BREAKPOINT
 			newlst: ARRAYED_LIST [BREAKPOINT]
 		do
 			if not is_empty then
-					--| remove useless breakpoints
+					--| Remove useless breakpoints
 				from
 					create newlst.make (count)
 					start
@@ -95,13 +95,19 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 					after
 				loop
 					bp := item_for_iteration
-					if not bp.is_not_useful and then bp.is_valid then
+					if
+						not bp.is_useless --| i.e: bench not set, and application not set
+						and then bp.location.is_valid --| in this case (app not set) this is safe to get rid of invalid bp
+					then
 						newlst.force (bp)
 					end
 					forth
 				end
+
+					--| Wipe out all breakpoints
 				wipe_out
-					--| Readding the breakpoints ensures us to have fresh hash_code ...
+
+					--| Add again the remaining breakpoints to ensure up to date keys ...
 				from
 					newlst.start
 				until
@@ -111,17 +117,6 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 					force (bp, bp)
 					newlst.forth
 				end
-			end
-		end
-
-feature -- Element factory
-
-	new_breakpoint (bpk: BREAKPOINT_KEY): BREAKPOINT is
-			-- Real breakpoint from `bpk'.
-		do
-			Result ?= bpk
-			if Result = Void then
-				create Result.make (bpk.routine, bpk.breakable_line_number)
 			end
 		end
 
@@ -153,6 +148,18 @@ feature -- Element change
 			loop
 				add_breakpoint (other.item_for_iteration)
 				other.forth
+			end
+		end
+
+feature -- Access
+
+	has_location (loc: BREAKPOINT_LOCATION): BOOLEAN is
+			-- Has_key associated with `loc' ?
+			-- Set found_item to the found item.
+		do
+			Result := has_key (create {BREAKPOINT_KEY}.make (loc))
+			if not Result then
+				Result := has_key (create {BREAKPOINT_KEY}.make_hidden (loc))
 			end
 		end
 

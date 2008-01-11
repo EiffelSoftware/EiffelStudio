@@ -132,8 +132,8 @@ feature -- Execution
 			bpm: BREAKPOINTS_MANAGER
 		do
 			bpm := Debugger_manager.breakpoints_manager
-			if bpm.has_breakpoints then
-				bpm.disable_all_breakpoints
+			if bpm.has_enabled_breakpoint (False) then
+				bpm.disable_all_breakpoints (False)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
@@ -157,7 +157,7 @@ feature -- Update
 				index := bs.index
 				body_index := bs.body_index
 				bpm := Debugger_manager.breakpoints_manager
-				bpm.disable_breakpoint (f, index)
+				bpm.disable_user_breakpoint (f, index)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
@@ -174,8 +174,8 @@ feature -- Update
 		do
 			f := fs.e_feature
 			bpm := Debugger_manager.breakpoints_manager
-			if f /= Void and then f.is_debuggable and then bpm.has_breakpoint_set(f) then
-				bpm.disable_breakpoints_in_feature (f)
+			if f /= Void and then f.is_debuggable and then bpm.has_user_breakpoint_set (f) then
+				bpm.disable_user_breakpoints_in_feature (f)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)
@@ -205,7 +205,7 @@ feature -- Update
 			conv_fst ?= cs
 			if conv_fst = Void then
 				bpm := Debugger_manager.breakpoints_manager
-				bpm.disable_breakpoints_in_class (cs.e_class)
+				bpm.disable_user_breakpoints_in_class (cs.e_class)
 
 				if bpm.error_in_bkpts then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Feature_is_not_compiled, Void, Void)

@@ -154,9 +154,16 @@ feature -- Properties
 	breakpoint_index: INTEGER
 
 	associated_breakpoint: BREAKPOINT is
+		local
+			bm: BREAKPOINTS_MANAGER
+			loc: BREAKPOINT_LOCATION
 		do
-			if {bm: !BREAKPOINTS_MANAGER} debugger_manager.breakpoints_manager and then bm.is_breakpoint_set (breakpoint_routine, breakpoint_index) then
-				Result := bm.breakpoint (breakpoint_routine, breakpoint_index)
+			bm := debugger_manager.breakpoints_manager
+			if bm /= Void then
+				loc := bm.breakpoint_location (breakpoint_routine, breakpoint_index, False)
+				if bm.is_user_breakpoint_set_at (loc) then -- user bp
+					Result := bm.user_breakpoint_at (loc)
+				end
 			end
 		end
 
@@ -1305,6 +1312,7 @@ feature -- Action
 	on_ok is
 		local
 			bp: BREAKPOINT
+			loc: BREAKPOINT_LOCATION
 			bpm: BREAKPOINTS_MANAGER
 			err,
 			new: BOOLEAN
@@ -1320,8 +1328,9 @@ feature -- Action
 			bpm := debugger_manager.breakpoints_manager
 			if bp = Void then
 				new := True
-				bpm.enable_breakpoint (breakpoint_routine, breakpoint_index)
-				bp := bpm.breakpoint (breakpoint_routine, breakpoint_index)
+				loc := bpm.breakpoint_location (breakpoint_routine, breakpoint_index, True)
+				bp := bpm.new_user_breakpoint (loc)
+				bpm.add_breakpoint (bp)
 			end
 			check bp /= Void end
 
@@ -1365,7 +1374,7 @@ feature -- Action
 			if err then
 				expr := Void
 				if new then
-					bpm.remove_breakpoint (breakpoint_routine, breakpoint_index)
+					bpm.remove_user_breakpoint (breakpoint_routine, breakpoint_index)
 					bp := Void
 				end
 			else

@@ -201,20 +201,20 @@ feature -- Callstack related
 
 feature -- Breakpoint related
 
-	current_breakpoint: BREAKPOINT is
+	current_breakpoint_location: BREAKPOINT_LOCATION is
 		do
 			check
 				managed_callback_is_breakpoint (last_managed_callback)
 			end
-			Result := eifnet_debugger_info.current_breakpoint
+			Result := eifnet_debugger_info.current_breakpoint_location
 		end
 
-	request_breakpoint_add (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	request_breakpoint_add (a_bp: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
 		do
 			eifnet_debugger_info.request_breakpoint_add (a_bp, a_module_name, a_class_token, a_feature_token, a_line)
 		end
 
-	request_breakpoint_remove (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+	request_breakpoint_remove (a_bp: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
 		do
 			eifnet_debugger_info.request_breakpoint_remove (a_bp, a_module_name, a_class_token, a_feature_token, a_line)
 		end

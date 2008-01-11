@@ -204,48 +204,53 @@ feature -- Execution
 			index: INTEGER
 			f: E_FEATURE
 			body_index: INTEGER
-			bp_exists: BOOLEAN
+			hbp_exists: BOOLEAN
 			dbg: DEBUGGER_MANAGER
 			bm: BREAKPOINTS_MANAGER
-			bp: BREAKPOINT
+			hbp, nhbp: HIDDEN_BREAKPOINT
+			loc: BREAKPOINT_LOCATION
 		do
 			if Eiffel_project.successful then
 				f := bs.routine
 				if f.is_debuggable then
 					index := bs.index
 					body_index := bs.body_index
-						-- Remember the status of the breakpoint
+
 					dbg := Debugger_manager
 					bm := debugger_manager.breakpoints_manager
-					if bm.is_breakpoint_set (f, index) then
-						bp := bm.breakpoint (f, index)
-						bp_exists := bp /= Void
+
+						--| Remember the status of the breakpoint
+					loc := bm.breakpoint_location (f, index, True)
+					if bm.is_hidden_breakpoint_set_at (loc) then
+						hbp := bm.hidden_breakpoint_at (loc)
+						hbp_exists := hbp /= Void
 					end
 
-					if bp_exists then
-						bp.enable_run_to_cursor_mode
+					if hbp_exists then
+						hbp.enable_run_to_cursor_mode
 					else
-						bm.enable_breakpoint (f, index)
+						nhbp := bm.new_hidden_breakpoint (loc)
+						bm.add_breakpoint (nhbp)
 					end
 						-- Run the program
 					execute
 						-- Put back the status of the modified breakpoint This will prevent
 						-- the display of the temporary breakpoint (if not already present
 						-- at `index' in `f'.)
-					if bp_exists then
+					if hbp_exists then
 						dbg.add_on_stopped_action (
-								agent (a_dbg: DEBUGGER_MANAGER; a_bp: BREAKPOINT)
+								agent (a_dbg: DEBUGGER_MANAGER; a_bp: HIDDEN_BREAKPOINT)
 									do
 										a_bp.disable_run_to_cursor_mode
-									end (?, bp)
+									end (?, hbp)
 								, True
 							)
 					else
 						dbg.add_on_stopped_action (
-								agent (a_dbg: DEBUGGER_MANAGER; a_f: E_FEATURE; a_index: INTEGER)
+								agent (a_dbg: DEBUGGER_MANAGER; a_bp: HIDDEN_BREAKPOINT)
 									do
-										a_dbg.breakpoints_manager.remove_breakpoint (a_f, a_index)
-									end (?, f, index)
+										a_dbg.breakpoints_manager.delete_breakpoint (a_bp)
+									end (?, nhbp)
 								, True
 							)
 					end

@@ -1017,7 +1017,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (new_menu_item (names.m_add_first_breakpoints_in_class))
 			l_menu.last.select_actions.extend (
 				agent (a_class: CLASS_C) do
-					dev_window.debugger_manager.breakpoints_manager.enable_first_breakpoints_in_class (a_class)
+					dev_window.debugger_manager.breakpoints_manager.enable_first_user_breakpoints_in_class (a_class)
 					window_manager.synchronize_all_about_breakpoints
 				end (a_class_c)
 			)
@@ -1025,7 +1025,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (new_menu_item (names.m_enable_stop_points))
 			l_menu.last.select_actions.extend (
 				agent (a_class: CLASS_C) do
-					dev_window.debugger_manager.breakpoints_manager.enable_breakpoints_in_class (a_class)
+					dev_window.debugger_manager.breakpoints_manager.enable_user_breakpoints_in_class (a_class)
 					window_manager.synchronize_all_about_breakpoints
 				end (a_class_c)
 			)
@@ -1033,7 +1033,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (new_menu_item (names.m_disable_stop_points))
 			l_menu.last.select_actions.extend (
 				agent (a_class: CLASS_C) do
-					dev_window.debugger_manager.breakpoints_manager.disable_breakpoints_in_class (a_class)
+					dev_window.debugger_manager.breakpoints_manager.disable_user_breakpoints_in_class (a_class)
 					window_manager.synchronize_all_about_breakpoints
 				end (a_class_c)
 			)
@@ -1041,7 +1041,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (new_menu_item (names.m_clear_breakpoints))
 			l_menu.last.select_actions.extend (
 				agent (a_class: CLASS_C) do
-					dev_window.debugger_manager.breakpoints_manager.remove_breakpoints_in_class (a_class)
+					dev_window.debugger_manager.breakpoints_manager.remove_user_breakpoints_in_class (a_class)
 					window_manager.synchronize_all_about_breakpoints
 				end (a_class_c)
 			)
@@ -1060,7 +1060,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (new_menu_item (names.m_add_first_breakpoints_in_feature))
 			l_menu.last.select_actions.extend (
 				agent (a_feature: E_FEATURE) do
-					dev_window.debugger_manager.breakpoints_manager.enable_first_breakpoint_of_feature (a_feature)
+					dev_window.debugger_manager.breakpoints_manager.enable_first_user_breakpoint_of_feature (a_feature)
 					window_manager.synchronize_all_about_breakpoints
 				end (a_efeature)
 			)
@@ -1068,7 +1068,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (new_menu_item (names.m_enable_stop_points))
 			l_menu.last.select_actions.extend (
 				agent (a_feature: E_FEATURE) do
-					dev_window.debugger_manager.breakpoints_manager.enable_breakpoints_in_feature (a_feature)
+					dev_window.debugger_manager.breakpoints_manager.enable_user_breakpoints_in_feature (a_feature)
 					window_manager.synchronize_all_about_breakpoints
 				end (a_efeature)
 			)
@@ -1076,7 +1076,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (new_menu_item (names.m_disable_stop_points))
 			l_menu.last.select_actions.extend (
 				agent (a_feature: E_FEATURE) do
-					dev_window.debugger_manager.breakpoints_manager.disable_breakpoints_in_feature (a_feature)
+					dev_window.debugger_manager.breakpoints_manager.disable_user_breakpoints_in_feature (a_feature)
 					window_manager.synchronize_all_about_breakpoints
 				end (a_efeature)
 			)
@@ -1084,7 +1084,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (new_menu_item (names.m_clear_breakpoints))
 			l_menu.last.select_actions.extend (
 				agent (a_feature: E_FEATURE) do
-					dev_window.debugger_manager.breakpoints_manager.remove_breakpoints_in_feature (a_feature)
+					dev_window.debugger_manager.breakpoints_manager.remove_user_breakpoints_in_feature (a_feature)
 					window_manager.synchronize_all_about_breakpoints
 				end (a_efeature)
 			)

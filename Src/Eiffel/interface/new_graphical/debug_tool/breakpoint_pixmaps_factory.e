@@ -11,12 +11,6 @@ class
 
 feature
 
-	pixmap_for_breakpoint (a_dm: DEBUGGER_MANAGER; a_bp: BREAKPOINT; in_execution: BOOLEAN): EV_PIXMAP is
-			--
-		do
-			Result := pixmap_for_routine_index (a_dm, a_bp.routine, a_bp.breakable_line_number, in_execution)
-		end
-
 	pixmap_for_routine_index (a_dm: DEBUGGER_MANAGER; a_routine: E_FEATURE; a_index: INTEGER; in_execution: BOOLEAN): EV_PIXMAP is
 			-- Graphical representation of the breakable mark.
 			-- 10 different representations whether the breakpoint
@@ -26,6 +20,9 @@ feature
 		local
 			pixmaps: ARRAY [EV_PIXMAP]
 			status: APPLICATION_STATUS
+			bp: BREAKPOINT
+			bm: BREAKPOINTS_MANAGER
+			s: INTEGER  -- bp status
 			i: INTEGER 	-- index in the pixmap array.
 						--  1 = not stopped version
 						--  2 = stopped version.
@@ -43,19 +40,30 @@ feature
 				i := 1
 			end
 
-			inspect a_dm.breakpoints_manager.breakpoint_status (a_routine, a_index)
-			when {BREAKPOINTS_MANAGER}.breakpoint_not_set then
+			bm := a_dm.breakpoints_manager
+			s := bm.user_breakpoint_status (a_routine, a_index)
+			if s = {BREAKPOINTS_MANAGER}.breakpoint_not_set then
 				pixmaps := icon_group_bp_slot
-			when {BREAKPOINTS_MANAGER}.breakpoint_set then
-				pixmaps := icon_group_bp_enabled
-			when {BREAKPOINTS_MANAGER}.breakpoint_disabled then
-				pixmaps := icon_group_bp_disabled
-			when {BREAKPOINTS_MANAGER}.breakpoint_condition_set then
-				pixmaps := icon_group_bp_enabled_condition
-			when {BREAKPOINTS_MANAGER}.breakpoint_condition_disabled then
-				pixmaps := icon_group_bp_disabled_condition
+			else
+				bp := bm.user_breakpoint (a_routine, a_index)
+				check bp_not_void: bp /= Void end
+				inspect s
+				when {BREAKPOINTS_MANAGER}.breakpoint_set then
+					if bp.has_condition then
+						pixmaps := icon_group_bp_enabled_condition
+					else
+						pixmaps := icon_group_bp_enabled
+					end
+				when {BREAKPOINTS_MANAGER}.breakpoint_disabled then
+					if bp.has_condition then
+						pixmaps := icon_group_bp_disabled_condition
+					else
+						pixmaps := icon_group_bp_disabled
+					end
+				else
+					pixmaps := icon_group_bp_slot
+				end
 			end
-
 			Result := pixmaps[i]
 		end
 

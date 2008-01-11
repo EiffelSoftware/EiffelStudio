@@ -288,6 +288,8 @@ feature -- Execution
 
 	continue_ignoring_kept_objects is
 		do
+			process_before_running
+
 			inspect execution_mode
 			when {EXEC_MODES}.step_into then
 				step_into
@@ -296,9 +298,7 @@ feature -- Execution
 			when {EXEC_MODES}.out_of_routine then
 				step_out
 			else
-				process_before_running
 				Eifnet_debugger.set_last_control_mode_is_continue
-
 				status.set_is_stopped (False)
 				Eifnet_debugger.do_continue
 			end
@@ -337,12 +337,9 @@ feature -- Execution
 		end
 
 	notify_newbreakpoint is
-			-- Send an interrupt to the application
-			-- which will stop at the next breakable line number
-			-- in order to record the new breakpoint(s) before
-			-- automatically resuming its execution.
+			-- Send bp update operation request to the application
 		do
-			send_breakpoints
+			update_breakpoints
 		end
 
 	kill is
@@ -600,10 +597,6 @@ feature -- Query
 feature -- Control execution
 
 	process_before_running is
-		local
-			l_entry_point_feature: E_FEATURE
-			l_entry_fi: FEATURE_I
-			bpm: BREAKPOINTS_MANAGER
 		do
 			check il_debug_info_recorder.last_loading_is_workbench end
 
@@ -613,29 +606,7 @@ feature -- Control execution
 				print ("%N%N")
 			end
 
-			bpm := Debugger_manager.breakpoints_manager
-			bpm.update
-			inspect execution_mode
-			when {EXEC_MODES}.no_stop_points then
-				send_no_breakpoints
-			when {EXEC_MODES}.step_by_step, {EXEC_MODES}.step_into then
-				if not is_running then
-					debug ("debugger_trace_stepping")
-						print ("Let's add a breakpoint at the entry point of the system%N")
-					end
-					l_entry_fi := Il_debug_info_recorder.entry_point_feature_i
-					if l_entry_fi /= Void then
-						l_entry_point_feature := l_entry_fi.e_feature
-						bpm.enable_breakpoint (l_entry_point_feature, 1)
-						send_breakpoints
-						bpm.remove_breakpoint (l_entry_point_feature , 1)
-					end
-				else
-					send_breakpoints
-				end
-			else
-				send_breakpoints
-			end
+			send_breakpoints
 
 			debug ("debugger_eifnet_data_extra")
 				debug_display_threads
@@ -685,13 +656,11 @@ feature -- Control execution
 			end
 		end
 
-feature -- Stepping
+feature {NONE} -- Stepping
 
 	step_out is
 			-- Stepping out of the routine
 		do
-			process_before_running
-
 			debug ("debugger_trace_stepping")
 				print ("++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 				print ("++ OPERATION :: APPLICATION_EXECUTION_DOTNET::step_out%N")
@@ -703,8 +672,6 @@ feature -- Stepping
 	step_into is
 			-- Stepping into next routine
 		do
-			process_before_running
-
 			debug ("debugger_trace_stepping")
 				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 				print ("++ OPERATION :: APPLICATION_EXECUTION_DOTNET::step_into%N")
@@ -719,8 +686,6 @@ feature -- Stepping
 		local
 			l_status: APPLICATION_STATUS_DOTNET
 		do
-			process_before_running
-
 			debug ("debugger_trace_stepping")
 				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 				print ("++ OPERATION :: APPLICATION_EXECUTION_DOTNET::step_next%N")
@@ -813,83 +778,54 @@ feature {NONE} -- Stepping
 
 feature -- Breakpoints controller
 
-	send_breakpoints is
-			-- Synchronise the EiffelStudio BreakPoints with the application ones in execution
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER) is
+			-- Send breakpoints for step operation
+			-- called by `send_breakpoints'
+			-- DO NOT CALL DIRECTLY
 		local
-			l_bp_list: BREAK_LIST
-			l_bp_item: BREAKPOINT
+			l_entry_fi: FEATURE_I
+			bpm: BREAKPOINTS_MANAGER
+			bp: BREAKPOINT
 		do
-			debug ("debugger_trace_breakpoint")
-				print (generator + ".send_breakpoints %N")
-			end
-			l_bp_list := Debugger_manager.breakpoints_manager.breakpoints
-
-			from
-				l_bp_list.start
-			until
-				l_bp_list.off
-			loop
-				l_bp_item := l_bp_list.item_for_iteration
-				inspect l_bp_item.update_status
-				when {BREAKPOINT}.Breakpoint_to_add then
-					debug ("debugger_trace_breakpoint")
-						print ("ADD BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
-					end
-					if l_bp_item.is_valid then
-						add_dotnet_breakpoint (l_bp_item)
-						l_bp_item.set_application_set
-					end
-				when {BREAKPOINT}.Breakpoint_to_remove then
-					debug ("debugger_trace_breakpoint")
-						print ("DEL BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
-					end
-					remove_dotnet_breakpoint (l_bp_item)
-					l_bp_item.set_application_not_set
-				when {BREAKPOINT}.Breakpoint_do_nothing then
-					debug ("debugger_trace_breakpoint")
-						print ("NADA BP %N")
-					end
+			if is_running then
+				update_breakpoints
+			else
+				debug ("debugger_trace_stepping")
+					print ("Let's add a breakpoint at the entry point of the system%N")
 				end
-				l_bp_list.forth
-			end
-			debugger_manager.breakpoints_manager.reset_breakpoints_changed
-		end
-
-	send_no_breakpoints is
-			-- Remove BreakPoints from the application ones in execution
-			-- to perform a NoStopPoint operation
-		local
-			l_bp_list: BREAK_LIST
-			l_bp_item: BREAKPOINT
-		do
-			l_bp_list := Debugger_manager.breakpoints_manager.breakpoints
-
-			from
-				l_bp_list.start
-			until
-				l_bp_list.off
-			loop
-				l_bp_item := l_bp_list.item_for_iteration
-				if l_bp_item.is_set_for_application then
-					debug ("debugger_trace_breakpoint")
-						print ("REMOVE APPLICATION BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
-					end
-					remove_dotnet_breakpoint (l_bp_item)
-					l_bp_item.set_application_not_set
-					-- then next time we go with StopPoint enable ... we'll add them again
+				l_entry_fi := Il_debug_info_recorder.entry_point_feature_i
+				if l_entry_fi /= Void then
+					bpm := debugger_manager.breakpoints_manager
+					bp := bpm.new_hidden_breakpoint (bpm.breakpoint_location (l_entry_fi.e_feature, 1, True))
+					bpm.add_breakpoint (bp)
+					update_breakpoints
+					bpm.delete_breakpoint (bp)
 				end
-				l_bp_list.forth
 			end
 		end
 
-feature -- BreakPoints
+feature {NONE} -- BreakPoints
 
-	set_dotnet_breakpoint (bp: BREAKPOINT; a_state: BOOLEAN) is
-			-- enable the `i'-th breakpoint of `f' if `a_state' is `True'
-			-- otherwise disable it
-			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
+	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+			-- enable breakpoint at `loc'
+			-- if no breakpoint already exists at `loc' a breakpoint is created
+		do
+			set_dotnet_breakpoint (loc, True)
+			loc.set_application_set
+		end
+
+	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+			-- remove breakpoint at `loc'
+		do
+			set_dotnet_breakpoint (loc, False)
+			loc.set_application_not_set
+		end
+
+	set_dotnet_breakpoint (loc: BREAKPOINT_LOCATION; a_state: BOOLEAN) is
+			-- set breakpoint at `loc' if `a_state' is `True'
+			-- otherwise unset it
 		require
-			bp_valid: bp.is_valid
+			loc_valid: loc.is_valid
 		local
 			f: E_FEATURE
 			ln: INTEGER
@@ -904,8 +840,8 @@ feature -- BreakPoints
 			l_class_type: CLASS_TYPE
 			i, upper: INTEGER
 		do
-			f := bp.routine
-			ln := bp.breakable_line_number
+			f := loc.routine
+			ln := loc.breakable_line_number
 			debug ("debugger_trace_breakpoint")
 				print ("setBreakpoint (" + a_state.out + ") " + f.name + " index=" + ln.out + "%N")
 				display_feature_info (f)
@@ -940,9 +876,9 @@ feature -- BreakPoints
 					loop
 						l_il_offset := l_il_offset_set.item (i)
 						if a_state then
-							Eifnet_debugger.request_breakpoint_add (bp, l_module_name, l_class_token, l_feature_token, l_il_offset)
+							Eifnet_debugger.request_breakpoint_add (loc, l_module_name, l_class_token, l_feature_token, l_il_offset)
 						else
-							Eifnet_debugger.request_breakpoint_remove (bp, l_module_name, l_class_token, l_feature_token, l_il_offset)
+							Eifnet_debugger.request_breakpoint_remove (loc, l_module_name, l_class_token, l_feature_token, l_il_offset)
 						end
 						i := i + 1
 					end
@@ -951,20 +887,6 @@ feature -- BreakPoints
 				end
 				l_class_type_list.forth
 			end
-		end
-
-	add_dotnet_breakpoint (bp: BREAKPOINT) is
-			-- enable the `i'-th breakpoint of `f'
-			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
-		do
-			set_dotnet_breakpoint (bp, True)
-		end
-
-	remove_dotnet_breakpoint (bp: BREAKPOINT) is
-			-- remove the `i'-th breakpoint of `f'
-			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
-		do
-			set_dotnet_breakpoint (bp, False)
 		end
 
 feature {NONE} -- Implementation
@@ -1156,7 +1078,9 @@ feature {NONE} -- Events on notification
 	do_stop_on_breakpoint: BOOLEAN is
 			-- In case of conditional breakpoint, do we really stop on it ?
 		local
+			bps: LIST [BREAKPOINT]
 			l_bp: BREAKPOINT
+			loc: BREAKPOINT_LOCATION
 		do
 			if Eifnet_debugger.last_control_mode_is_stepping then
 				debug ("debugger_trace")
@@ -1164,8 +1088,21 @@ feature {NONE} -- Events on notification
 				end
 				Result := True
 			else
-				l_bp := Eifnet_debugger.current_breakpoint
-				Result := debugger_manager.process_breakpoint (l_bp)
+				loc := Eifnet_debugger.current_breakpoint_location
+				bps := debugger_manager.breakpoints_manager.breakpoints_at (loc)
+				if bps /= Void then
+					from
+						bps.start
+					until
+						bps.after
+					loop
+						l_bp := bps.item
+						if l_bp /= Void then
+							Result := Result or debugger_manager.process_breakpoint (l_bp)
+						end
+						bps.forth
+					end
+				end
 			end
 		end
 

@@ -17,6 +17,7 @@ inherit
 			foundation_window as popup_window
 		redefine
 			internal_recycle,
+			is_shown,
 			on_after_initialized,
 			on_shown,
 			on_hidden
@@ -119,7 +120,7 @@ feature {NONE} -- Clean up
 			-- To be called when the window has became useless.
 		do
 			if is_initialized then
-				if internal_popup_window /= Void then
+				if internal_popup_window /= Void and not internal_popup_window.is_destroyed then
 					internal_popup_window.hide
 					internal_popup_window.destroy
 				end
@@ -137,7 +138,6 @@ feature {NONE} -- Access
 			Result := internal_popup_window
 			if Result = Void then
 				Result := create_popup_window
-				auto_recycle (Result)
 				internal_popup_window := Result
 			end
 		end
@@ -179,6 +179,14 @@ feature {NONE} -- Access
 		end
 
 feature -- Status report
+
+	is_shown: BOOLEAN
+			-- Indicates if foundataion tool is current visible
+		do
+			if is_interface_usable and then is_initialized and internal_popup_window /= Void then
+				Result := internal_popup_window.is_displayed
+			end
+		end
 
 	is_focus_sensitive: BOOLEAN
 			-- Indicates if the window is sensitive to focus. By default, if the window loses focus then
@@ -244,10 +252,9 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 		do
+			popup_window.hide
 			if is_recycled_on_closing then
 				recycle
-			else
-				popup_window.hide
 			end
 		ensure
 			not_popup_window_is_displayed: not popup_window.is_displayed

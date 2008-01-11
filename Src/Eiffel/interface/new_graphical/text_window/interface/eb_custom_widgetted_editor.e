@@ -462,9 +462,6 @@ feature {NONE} -- Basic operation
 			-- in situtation such as editing where idle actions should not be performed.
 		do
 			if mouse_move_idle_timer /= Void then
-				if internal_token_handler /= Void then
-					internal_token_handler.perform_exit
-				end
 				mouse_move_idle_timer.destroy
 				mouse_move_idle_timer := Void
 			end

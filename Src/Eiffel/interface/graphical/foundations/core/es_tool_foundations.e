@@ -99,7 +99,7 @@ feature -- Status report
 	is_shown: BOOLEAN
 			-- Indicates if foundataion tool is current visible
 		do
-			if is_initialized and then not is_recycled then
+			if is_interface_usable and then is_initialized then
 				Result := foundation_widget.is_displayed
 			end
 		end

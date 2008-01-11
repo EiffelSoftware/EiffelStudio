@@ -42,6 +42,10 @@ feature -- Dialog
 	prompt_vertical_padding: INTEGER = 8
 	prompt_horizontal_icon_spacing: INTEGER = 10
 
+feature -- Pop up windows
+
+	popup_window_border_width: INTEGER = 1
+
 feature -- Grid
 
 	grid_row_height: INTEGER = 14

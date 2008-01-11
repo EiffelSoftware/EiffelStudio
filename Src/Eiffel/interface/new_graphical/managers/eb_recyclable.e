@@ -31,7 +31,6 @@ feature -- Basic operations
 		local
 			l_pool: like internal_recycle_pool
 			l_recycled: ARRAYED_LIST [EB_RECYCLABLE]
-
 		do
 			if not is_recycled and not is_recycling then
 					-- Prevents multiple calls.
@@ -177,7 +176,7 @@ feature {ANY} -- Extension
 			--
 			-- `a_object': Object to dispose of when Current is disposed.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_object_attached: a_object /= Void
 		local
 			l_recyclable: EB_RECYCLABLE
@@ -201,7 +200,7 @@ feature {ANY} -- Extension
 			-- `a_action': The action to retrieve a object for when Current is recycled.
 			--             Warning: THe action should not create any objects for Current
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_action_attached: a_action /= Void
 		do
 			check
@@ -245,6 +244,27 @@ feature -- Agent assistance
 			a_sequence_has_action: a_sequence.has_kamikaze_action (a_action)
 		end
 
+	unregister_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]) is
+			-- Unregisters an action sequence and automatically pools it for later removal.
+			--
+			-- `a_sequence': Action sequence to remove an action on.
+			-- `a_action': The action to remove to the sequence.
+		require
+			a_sequence_attached: a_sequence /= Void
+			a_action_attached: a_action /= Void
+		do
+			if a_sequence.has (a_action) then
+				a_sequence.prune (a_action)
+			elseif not a_sequence.object_comparison then
+				a_sequence.compare_objects
+				a_sequence.prune (a_action)
+				a_sequence.compare_references
+			end
+			recycle_actions.prune ([a_sequence, a_action])
+		ensure
+			not_a_sequence_has_action: not a_sequence.has (a_action)
+		end
+
 feature {EB_RECYCLABLE} -- Removal
 
 	frozen remove_auto_recycle (a_object: ANY)
@@ -252,7 +272,7 @@ feature {EB_RECYCLABLE} -- Removal
 			--
 			-- `a_object': The object to remove from the auto-recycle pool.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_object_attached: a_object /= Void
 		local
 			l_recyclable: EB_RECYCLABLE
@@ -275,7 +295,7 @@ feature {NONE} -- Access
 	frozen recycle_pool: ARRAYED_LIST [ANY]
 			-- List of items to be automatically recycled when Current is recycled
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := internal_recycle_pool
 			if Result = Void then
@@ -290,7 +310,7 @@ feature {NONE} -- Access
 	frozen recycle_actions: ARRAYED_LIST [TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]]]
 			-- List of items to be automatically recycled when Current is recycled
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := internal_recycle_actions
 			if Result = Void then
@@ -327,7 +347,7 @@ feature -- Status report
 	is_interface_usable: BOOLEAN
 			-- Dtermines if the interface was usable
 		do
-			Result := not is_recycled
+			Result := not is_recycled or is_recycling
 		ensure then
 			not_is_recycled: Result implies not is_recycled
 		end

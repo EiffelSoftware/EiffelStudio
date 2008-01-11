@@ -50,7 +50,7 @@ E_IRootStorage::E_IRootStorage (IUnknown * pstgName)
   if (hr != S_OK)
   {
     pIRootStorage = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   } 
 };
 //---------------------------------------------------------------------

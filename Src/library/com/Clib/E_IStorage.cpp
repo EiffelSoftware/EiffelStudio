@@ -25,7 +25,7 @@ E_IStorage::E_IStorage(IStorage * p_i)
   if (hr != S_OK)
   {
     pStorage = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //---------------------------------------------------------------------
@@ -63,7 +63,7 @@ void E_IStorage::ccom_create_doc_file (WCHAR * pwcsName, DWORD grfMode)
   if (hr != S_OK)
   {
     pStorage = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //------------------------------------------------------------------
@@ -83,7 +83,7 @@ void E_IStorage::ccom_open_root_storage (WCHAR * pwcsName, DWORD grfMode)
   if (hr != S_OK)
   {
     pStorage = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //------------------------------------------------------------------
@@ -114,7 +114,7 @@ IStream * E_IStorage::ccom_create_stream (WCHAR * pwcsName, DWORD grfMode)
   if (hr != S_OK)
   {
     pStream = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   } 
   return pStream;
 };
@@ -136,7 +136,7 @@ IStream * E_IStorage::ccom_open_stream (WCHAR * pwcsName, DWORD grfMode)
   if (hr != S_OK)
   {
     pStream = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
   return pStream;
 };
@@ -157,7 +157,7 @@ IStorage * E_IStorage::ccom_create_storage (WCHAR * pwcsName, DWORD grfMode)
   if (hr != S_OK)
   {
     pSubStorage = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
   return pSubStorage;
 };
@@ -180,7 +180,7 @@ IStorage * E_IStorage::ccom_open_storage (WCHAR * pwcsName, DWORD grfMode)
   if (hr != S_OK)
   {
     pSubStorage = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
   return pSubStorage;
 };
@@ -204,7 +204,7 @@ void E_IStorage::ccom_copy_to (DWORD ciidExclude, IID * rgiidExclude,
       NULL, pstgDest);
   if (hr != S_OK)
   {
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //----------------------------------------------------------------------
@@ -228,7 +228,7 @@ void E_IStorage::ccom_move_element_to (WCHAR * pwcsName, IStorage * pstgDest,
       pwcsNewName, grfFlags);
   if (hr != S_OK)
   {
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //----------------------------------------------------------------------
@@ -249,7 +249,7 @@ void E_IStorage::ccom_commit(DWORD grfCommitFlags)
   hr = pStorage->Commit (grfCommitFlags);
   if (hr != S_OK)
   {
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //--------------------------------------------------------------------
@@ -263,7 +263,7 @@ void E_IStorage::ccom_revert ()
   hr = pStorage->Revert(); 
   if (hr != S_OK)
   {
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //---------------------------------------------------------------------
@@ -280,7 +280,7 @@ IEnumSTATSTG * E_IStorage::ccom_enum_elements ()
   if (hr != S_OK)
   {
     pEnumSTATSTG = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
   return pEnumSTATSTG;
 };
@@ -297,7 +297,7 @@ void E_IStorage::ccom_destroy_element (WCHAR * pwcsName)
   hr = pStorage->DestroyElement(pwcsName); 
   if (hr != S_OK)
   {
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //-----------------------------------------------------------------------
@@ -315,7 +315,7 @@ void E_IStorage::ccom_rename_element (WCHAR * pwcsOldName, WCHAR * pwcsNewName)
   hr = pStorage->RenameElement(pwcsOldName, pwcsNewName);
   if (hr != S_OK)
   {
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //-----------------------------------------------------------------------
@@ -341,7 +341,7 @@ void E_IStorage::ccom_set_element_times (WCHAR * pwcsName, FILETIME * pctime,
       patime, pmtime);
   if (hr != S_OK)
   {
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //-----------------------------------------------------------------------
@@ -357,7 +357,7 @@ void E_IStorage::ccom_set_class (REFCLSID clsid)
   hr = pStorage->SetClass(clsid);
   if (hr != S_OK)
   {
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
 };
 //-----------------------------------------------------------------------
@@ -382,7 +382,7 @@ STATSTG * E_IStorage::ccom_stat (DWORD grfStatFlag)
       CoTaskMemFree (pSTATSTG->pwcsName);
     free (pSTATSTG);
     pSTATSTG = NULL;
-    com_eraise (f.c_format_message (hr), EN_PROG);
+    com_eraise (f.c_format_message (hr), EN_COM);
   }
   return pSTATSTG;
 };

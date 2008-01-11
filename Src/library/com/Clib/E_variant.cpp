@@ -565,7 +565,7 @@ EIF_POINTER ccom_variant (VARIANT * variant)
 	HRESULT hr = VariantCopy (a_result, V_VARIANTREF(variant));
 	if (FAILED (hr))
 	{
-		com_eraise (f.c_format_message (hr), EN_PROG);
+		com_eraise (f.c_format_message (hr), EN_COM);
 	};
 	return (EIF_POINTER)a_result;
 };
@@ -580,7 +580,7 @@ void ccom_set_variant (VARIANT * variant, VARIANT *a_value)
 	HRESULT hr = VariantCopy (a_result, a_value);
 	if (FAILED (hr))
 	{
-		com_eraise (f.c_format_message (hr), EN_PROG);
+		com_eraise (f.c_format_message (hr), EN_COM);
 	};
 
 	VariantClear (variant);

@@ -28,20 +28,10 @@ Picture23_impl_proxy::Picture23_impl_proxy( IUnknown * a_pointer )
   HRESULT hr, hr2;
 
   hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+  rt.ccom_check_hresult (hr);
 
   hr = a_pointer->QueryInterface(IID_Picture23_, (void **)&p_Picture23);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+  rt.ccom_check_hresult (hr);
 
   excepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));
 };
@@ -108,12 +98,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_handle()
   if (p_Picture23 == NULL)
   {
     hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+	rt.ccom_check_hresult (hr);
   };
   DISPID disp = (DISPID) 0;
   LCID lcid = (LCID) 0;
@@ -169,12 +154,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_h_pal()
   if (p_Picture23 == NULL)
   {
     hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+	rt.ccom_check_hresult (hr);
   };
   DISPID disp = (DISPID) 2;
   LCID lcid = (LCID) 0;
@@ -230,12 +210,7 @@ void Picture23_impl_proxy::ccom_set_h_pal( EIF_INTEGER a_value )
   if (p_Picture23 == NULL)
   {
     hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+	rt.ccom_check_hresult (hr);
   };
   DISPID disp = (DISPID) 2;
   LCID lcid = (LCID) 0;
@@ -297,12 +272,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_type()
   if (p_Picture23 == NULL)
   {
     hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+	rt.ccom_check_hresult (hr);
   };
   DISPID disp = (DISPID) 3;
   LCID lcid = (LCID) 0;
@@ -358,12 +328,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_width()
   if (p_Picture23 == NULL)
   {
     hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+	rt.ccom_check_hresult (hr);
   };
   DISPID disp = (DISPID) 4;
   LCID lcid = (LCID) 0;
@@ -419,12 +384,7 @@ EIF_INTEGER Picture23_impl_proxy::ccom_height()
   if (p_Picture23 == NULL)
   {
     hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+	rt.ccom_check_hresult (hr);
   };
   DISPID disp = (DISPID) 5;
   LCID lcid = (LCID) 0;
@@ -480,12 +440,7 @@ void Picture23_impl_proxy::ccom_render(  /* [in] */ EIF_INTEGER hdc,  /* [in] */
   if (p_Picture23 == NULL)
   {
     hr = p_unknown->QueryInterface (IID_Picture23_, (void **)&p_Picture23);
-  if (FAILED (hr))
-  {
-    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-    com_eraise (f.c_format_message (hr), EN_PROG);
-  };
+	rt.ccom_check_hresult (hr);
   };
   DISPID disp = (DISPID) 6;
   LCID lcid = (LCID) 0;

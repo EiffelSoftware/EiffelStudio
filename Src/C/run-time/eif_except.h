@@ -185,6 +185,10 @@ RT_LNK struct ex_vect *new_exset(EIF_CONTEXT char *name, EIF_TYPE_INDEX origin, 
 /* Routines for run-time usage only */
 RT_LNK void esdie(int code);
 
+/* Used by EiffelCom */
+RT_LNK char *eename(long ex);			/* Exception description */
+RT_LNK char eedefined(long ex);			/* Is `ex' defined? */
+
 /* Eiffel interface with class EXCEPTIONS */
 RT_LNK void eetrace(EIF_CONTEXT char b);			/* Print/No Print of exception history table */
 

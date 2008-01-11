@@ -33,7 +33,8 @@ inherit
 			on_text_edited,
 			on_text_reset,
 			on_key_down,
-			make
+			make,
+			create_token_handler
 		end
 
 	EB_TAB_CODE_COMPLETABLE
@@ -953,6 +954,17 @@ feature {NONE} -- Memory management
 				completion_timeout.destroy
 			end
 			completion_timeout := Void
+		end
+
+feature {NONE} -- Factory
+
+	create_token_handler: ?ES_EDITOR_TOKEN_HANDLER
+			-- Create a token handler, used to perform actions or respond to mouse/keyboard events
+			-- Note: Return Void to prevent any handling from takening place.
+		do
+			if {l_editor: !EB_CUSTOM_WIDGETTED_EDITOR} Current then
+				create {!ES_SMART_EDITOR_TOKEN_HANDLER} Result.make (l_editor)
+			end
 		end
 
 feature {NONE} -- Code completable implementation

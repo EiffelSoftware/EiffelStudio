@@ -12,6 +12,7 @@ inherit
 		redefine
 			trace_primary_context,
 			build_explain,
+			print_single_line_error_message,
 			help_file_name
 		end
 
@@ -72,6 +73,18 @@ feature -- Output
 			a_text_formatter.add ("Feature: ")
 			associated_feature.append_name (a_text_formatter)
 			a_text_formatter.add_new_line
+		end
+
+feature {NONE} -- Output
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		do
+			Precursor (a_text_formatter)
+			a_text_formatter.add_space
+			a_text_formatter.add ("See once function `")
+			associated_feature.append_name (a_text_formatter)
+			a_text_formatter.add ("'.")
 		end
 
 invariant

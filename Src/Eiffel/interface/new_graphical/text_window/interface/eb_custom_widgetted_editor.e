@@ -17,7 +17,10 @@ inherit
 			user_initialization,
 			gain_focus,
 			lose_focus,
-			internal_recycle
+			internal_recycle,
+			on_mouse_move,
+			on_mouse_button_down,
+			on_key_down
 		end
 
 create
@@ -80,6 +83,27 @@ feature -- Access
 				Result ?= dev_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
 			end
 		end
+
+feature {NONE} -- Access
+
+	token_handler: ?ES_EDITOR_TOKEN_HANDLER
+			-- Access to a token handler, for processing actions on tokens
+		do
+			Result := internal_token_handler
+			if Result = Void then
+				Result := create_token_handler
+				internal_token_handler := Result
+			end
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_consistent: Result = token_handler
+		end
+
+	mouse_move_idle_timer: EV_TIMEOUT
+			-- Timer used to process mouse idle actions.
+
+	mouse_mode_idle_internal: INTEGER = 500
+			-- Timeout interval signifying the mouse has remained idle
 
 feature -- Quick search bar basic operation
 
@@ -430,6 +454,105 @@ feature -- Search commands
 			end
 		end
 
+feature {NONE} -- Basic operation
+
+	reset_mouse_idle_timer
+			-- Resets the mouse idle timer, if it's active. Resetting actually kills the
+			-- timer and it will not resume again until the user moves the mouse. This is useful
+			-- in situtation such as editing where idle actions should not be performed.
+		do
+			if mouse_move_idle_timer /= Void then
+				if internal_token_handler /= Void then
+					internal_token_handler.perform_exit
+				end
+				mouse_move_idle_timer.destroy
+				mouse_move_idle_timer := Void
+			end
+		ensure
+			mouse_move_idle_timer_destroyed: old mouse_move_idle_timer /= Void implies (old mouse_move_idle_timer).is_destroyed
+			mouse_move_idle_timer_detached: mouse_move_idle_timer = Void
+		end
+
+feature {NONE} -- Action hanlders
+
+	on_mouse_move (a_x_pos: INTEGER; a_y_pos: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
+			-- Process events related to mouse pointer moves over the editor widget.
+		local
+			l_timer: like mouse_move_idle_timer
+		do
+			Precursor {EB_EDITOR} (a_x_pos, a_y_pos, unused1, unused2, unused3, a_screen_x, a_screen_y)
+
+			if text_is_fully_loaded and then not is_empty then
+				l_timer := mouse_move_idle_timer
+				if l_timer = Void then
+					create l_timer.make_with_interval (mouse_mode_idle_internal)
+					l_timer.actions.extend (agent on_mouse_idle (a_x_pos, a_y_pos, a_screen_x, a_screen_y))
+					mouse_move_idle_timer := l_timer
+					editor_drawing_area.pointer_leave_actions.extend_kamikaze (agent reset_mouse_idle_timer)
+				else
+					l_timer.actions.wipe_out
+					l_timer.actions.extend (agent on_mouse_idle (a_x_pos, a_y_pos, a_screen_x, a_screen_y))
+					l_timer.set_interval (mouse_mode_idle_internal)
+				end
+			end
+		end
+
+	on_mouse_idle (a_abs_x, a_abs_y: INTEGER; a_screen_x, a_screen_y: INTEGER)
+			-- Called when the pointer has remained idle over the same place for a interval.
+			-- The interval is dictated by `mouse_mode_idle_internal'.
+		require
+			is_interface_usable: is_interface_usable
+			text_displayed_attached: text_displayed /= Void
+			text_is_fully_loaded: text_is_fully_loaded
+			not_is_empty: not is_empty
+		local
+			l_handler: like token_handler
+			l_cursor: EIFFEL_EDITOR_CURSOR
+		do
+			l_handler := token_handler
+			if l_handler /= Void and then {l_clickable_text: !CLICKABLE_TEXT} text_displayed then
+					-- Fetch token at current mouse position
+				create l_cursor.make_from_character_pos (1, 1, l_clickable_text)
+				position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
+				if {l_token: !EDITOR_TOKEN} l_cursor.token and then l_handler.is_applicable_token (l_token) then
+					l_handler.perform_on_token_with_mouse_coords (l_token, l_cursor.line.index, a_abs_x, a_abs_y, a_screen_x, a_screen_y)
+				else
+						-- Nothing to perform so ensure exit.
+					l_handler.perform_exit
+				end
+			end
+		end
+
+	on_key_down (a_key: EV_KEY)
+			-- Called when the user hits a key
+		do
+			if is_editable then
+					-- Reset timer as edits override mouse idle events
+				reset_mouse_idle_timer
+			end
+
+			Precursor (a_key)
+		end
+
+	on_mouse_button_down (a_x_pos, a_y_pos, a_button: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+			-- Process single click on mouse buttons.
+		do
+				-- Reset idle timer because of a mouse action
+			reset_mouse_idle_timer
+			Precursor (a_x_pos, a_y_pos, a_button, unused1, unused2, unused3, a_screen_x, a_screen_y)
+		end
+
+feature {NONE} -- Factory
+
+	create_token_handler: ?ES_EDITOR_TOKEN_HANDLER
+			-- Create a token handler, used to perform actions or respond to mouse/keyboard events
+			-- Note: Return Void to prevent any handling from takening place.
+		do
+			-- Does nothing by default.
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
 feature {NONE} -- Implementation
 
 	set_focus_to_drawing_area is
@@ -555,7 +678,13 @@ feature {NONE} -- Implementation
 	bottom_reached_action: PROCEDURE [ANY, TUPLE];
 			-- Actions to recycle
 
-indexing
+feature {NONE} -- Internal implentation cache
+
+	internal_token_handler: like token_handler
+			-- Cached version of `token_handler'
+			-- Note: Do not use directly!
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

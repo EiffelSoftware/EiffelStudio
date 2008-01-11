@@ -33,6 +33,11 @@ feature {NONE} -- Clean up
 		do
 		end
 
+feature -- Access
+
+	last_token_handled: ?EDITOR_TOKEN
+			-- The last token performed upon
+
 feature {NONE} -- Access
 
 	editor: !EB_CUSTOM_WIDGETTED_EDITOR
@@ -60,7 +65,11 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			a_line_positive: a_line > 0
 		do
+			last_token_handled := a_token
+
 			--| Note. This is currently not used by the editor as will not be called.
+		ensure
+			last_token_handled_set: last_token_handled = a_token
 		end
 
 	perform_on_token_with_mouse_coords (a_token: !EDITOR_TOKEN; a_line: INTEGER; a_x: INTEGER; a_y: INTEGER; a_screen_x: INTEGER; a_screen_y: INTEGER)
@@ -76,6 +85,9 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			a_line_positive: a_line > 0
 		do
+			last_token_handled := a_token
+		ensure
+			last_token_handled_set: last_token_handled = a_token
 		end
 
 	perform_exit
@@ -84,6 +96,9 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 		do
+			last_token_handled := Void
+		ensure
+			last_token_handled_detached: last_token_handled = Void
 		end
 
 invariant

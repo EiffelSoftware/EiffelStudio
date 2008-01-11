@@ -102,7 +102,7 @@ feature {NONE} -- Access
 	mouse_move_idle_timer: EV_TIMEOUT
 			-- Timer used to process mouse idle actions.
 
-	mouse_mode_idle_internal: INTEGER = 500
+	mouse_move_idle_internal: INTEGER = 400
 			-- Timeout interval signifying the mouse has remained idle
 
 feature -- Quick search bar basic operation
@@ -482,14 +482,14 @@ feature {NONE} -- Action hanlders
 			if text_is_fully_loaded and then not is_empty then
 				l_timer := mouse_move_idle_timer
 				if l_timer = Void then
-					create l_timer.make_with_interval (mouse_mode_idle_internal)
+					create l_timer.make_with_interval (mouse_move_idle_internal)
 					l_timer.actions.extend (agent on_mouse_idle (a_x_pos, a_y_pos, a_screen_x, a_screen_y))
 					mouse_move_idle_timer := l_timer
 					editor_drawing_area.pointer_leave_actions.extend_kamikaze (agent reset_mouse_idle_timer)
 				else
 					l_timer.actions.wipe_out
 					l_timer.actions.extend (agent on_mouse_idle (a_x_pos, a_y_pos, a_screen_x, a_screen_y))
-					l_timer.set_interval (mouse_mode_idle_internal)
+					l_timer.set_interval (mouse_move_idle_internal)
 				end
 			end
 		end

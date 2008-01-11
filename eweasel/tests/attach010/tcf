@@ -1,4 +1,4 @@
-test_name 	 attached-generic-conformance
+test_name 	 attached-generic-type-conformance
 test_description Explicitly attached types should conform to non-attached variants
 
 copy_raw	test.e $CLUSTER test.e

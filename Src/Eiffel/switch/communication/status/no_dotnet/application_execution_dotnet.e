@@ -32,7 +32,10 @@ feature {NONE} -- Ancestor facade
 	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is do end
 	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is do end
 	remote_rt_object: ABSTRACT_DEBUG_VALUE is do end
-
+	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end
+	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER) is do end
+	
 
 feature -- Client facade
 

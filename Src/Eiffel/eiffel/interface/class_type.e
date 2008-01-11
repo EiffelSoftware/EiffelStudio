@@ -1160,9 +1160,10 @@ feature -- Generation
 			buffer.put_new_line
 			buffer.put_string ("EIF_TYPE_INDEX typres;")
 			if not use_init then
-				buffer.put_new_line
-				buffer.put_new_line
+				l_buffer.put_new_line
+				l_buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
 			end
+			buffer.put_new_line
 			if use_init then
 				idx_cnt.set_value (1)
 				gen_type.generate_cid_init (buffer, final_mode, False, idx_cnt)

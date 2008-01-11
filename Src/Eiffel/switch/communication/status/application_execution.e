@@ -453,13 +453,15 @@ feature {NONE} -- Breakpoints implementation
 				print (generator + ".update_breakpoints %N")
 			end
 			lst := Debugger_manager.breakpoints_manager.updated_breakpoints_locations_status
-			from
-				lst.start
-			until
-				lst.off
-			loop
-				update_breakpoint (lst.key_for_iteration, lst.item_for_iteration)
-				lst.forth
+			if lst /= Void then
+				from
+					lst.start
+				until
+					lst.off
+				loop
+					update_breakpoint (lst.key_for_iteration, lst.item_for_iteration)
+					lst.forth
+				end
 			end
 		end
 

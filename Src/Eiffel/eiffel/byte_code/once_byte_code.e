@@ -156,6 +156,7 @@ feature -- C code generation
 						-- Generate static declaration and definition of `once_done'
 						-- and `once_result' variables used to find out if once has
 						-- already been computed or not.
+					buf.put_new_line
 					buf.put_string (declaration_macro_prefix)
 					if a_type.is_void then
 						buf.put_string ("P (")
@@ -166,7 +167,6 @@ feature -- C code generation
 					end
 					buf.put_integer (body_index)
 					buf.put_character (')')
-					buf.put_new_line
 				end
 			end
 		end

@@ -1160,8 +1160,8 @@ feature -- Generation
 			buffer.put_new_line
 			buffer.put_string ("EIF_TYPE_INDEX typres;")
 			if not use_init then
-				l_buffer.put_new_line
-				l_buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
+				buffer.put_new_line
+				buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
 			end
 			buffer.put_new_line
 			if use_init then

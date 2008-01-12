@@ -280,8 +280,8 @@ feature -- Action
 					-- Call Eiffel parser
 				parser := Eiffel_parser
 				l_lace_class := lace_class
-				l_options := l_lace_class.options
 				if is_warning_generated then
+					l_options := l_lace_class.options
 					parser.set_has_syntax_warning (l_options.is_warning_enabled (w_syntax))
 					parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
 					parser.set_has_old_verbatim_strings_warning (l_options.is_warning_enabled (w_old_verbatim_strings))
@@ -502,6 +502,7 @@ feature -- Third pass: byte code production and type check
 			type_checked: BOOLEAN
 
 			l_class_error_level, l_error_level: NATURAL
+			l_ast_context: AST_CONTEXT
 		do
 				-- Initialization for actual types evaluation
 			Inst_context.set_group (cluster)
@@ -520,15 +521,16 @@ feature -- Third pass: byte code production and type check
 			feat_table := feature_table.features
 			def_resc := default_rescue_feature
 
-			ast_context.initialize (Current, actual_type, feature_table)
+			l_ast_context := ast_context
+			l_ast_context.initialize (Current, actual_type, feature_table)
 
 			if melted_set /= Void then
 				melted_set.clear_all
 			end
 
-			feature_checker.init (ast_context)
+			feature_checker.init (l_ast_context)
 
-			if has_inline_agents then
+			if internal_inline_agent_table /= Void and then internal_inline_agent_table.count > 0 then
 				old_inline_agent_table := internal_inline_agent_table.twin
 			end
 
@@ -541,8 +543,8 @@ feature -- Third pass: byte code production and type check
 				feat_table.after
 			loop
 				feature_i := feat_table.item_for_iteration
-				ast_context.set_written_class (feature_i.written_class)
-				ast_context.set_current_feature (feature_i)
+				l_ast_context.set_written_class (feature_i.written_class)
+				l_ast_context.set_current_feature (feature_i)
 				feature_i.check_type_validity (Current)
 				feat_table.forth
 			end
@@ -555,8 +557,8 @@ feature -- Third pass: byte code production and type check
 					feat_table.after
 				loop
 					feature_i := feat_table.item_for_iteration
-					ast_context.set_written_class (feature_i.written_class)
-					ast_context.set_current_feature (feature_i)
+					l_ast_context.set_written_class (feature_i.written_class)
+					l_ast_context.set_current_feature (feature_i)
 					type_checked := False
 
 					if feature_i.to_melt_in (Current) then
@@ -624,8 +626,8 @@ feature -- Third pass: byte code production and type check
 							then
 									-- Type check
 								l_error_level := Error_handler.error_level
-								ast_context.old_inline_agents.wipe_out
-								remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
+								l_ast_context.old_inline_agents.wipe_out
+								remove_inline_agents_of_feature (feature_i.body_index, l_ast_context.old_inline_agents)
 
 								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor)
 								type_checked := True
@@ -644,7 +646,7 @@ feature -- Third pass: byte code production and type check
 
 										-- Dependances update: add new
 										-- dependances for `feature_name'.
-									f_suppliers := ast_context.supplier_ids
+									f_suppliers := l_ast_context.supplier_ids
 
 									if
 										def_resc /= Void and then
@@ -733,8 +735,8 @@ feature -- Third pass: byte code production and type check
 									and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 							then
 								l_error_level := error_handler.error_level
-								ast_context.old_inline_agents.wipe_out
-								remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
+								l_ast_context.old_inline_agents.wipe_out
+								remove_inline_agents_of_feature (feature_i.body_index, l_ast_context.old_inline_agents)
 								feature_checker.type_check_and_code (feature_i, is_safe_to_check_ancestor)
 								type_checked := True
 								type_check_error := error_handler.error_level /= l_error_level
@@ -770,7 +772,7 @@ feature -- Third pass: byte code production and type check
 							is_safe_to_check_ancestor, class_id /= feature_i.written_in)
 						record_suppliers (feature_i, dependances)
 					end
-					ast_context.clear_feature_context
+					l_ast_context.clear_feature_context
 					feat_table.forth
 				end -- Main loop
 
@@ -790,7 +792,7 @@ feature -- Third pass: byte code production and type check
 						new_suppliers := suppliers.same_suppliers
 					end
 					if invariant_feature /= Void then
-						ast_context.old_inline_agents.wipe_out
+						l_ast_context.old_inline_agents.wipe_out
 						remove_inline_agents_of_feature (invariant_feature.body_index, Void)
 					end
 					if f_suppliers /= Void then
@@ -829,8 +831,8 @@ feature -- Third pass: byte code production and type check
 						invar_clause := Inv_ast_server.item (class_id)
 						l_error_level := Error_handler.error_level
 
-						ast_context.old_inline_agents.wipe_out
-						remove_inline_agents_of_feature (invariant_feature.body_index, ast_context.old_inline_agents)
+						l_ast_context.old_inline_agents.wipe_out
+						remove_inline_agents_of_feature (invariant_feature.body_index, l_ast_context.old_inline_agents)
 						feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
 						if Error_handler.error_level = l_error_level then
@@ -845,7 +847,7 @@ feature -- Third pass: byte code production and type check
 							end
 								-- We need to duplicate `f_suppliers' now, otherwise
 								-- we will be wiped out in `ast_context.clear_feature_context'.
-							f_suppliers := ast_context.supplier_ids.twin
+							f_suppliers := l_ast_context.supplier_ids.twin
 							if invariant_feature /= Void then
 								f_suppliers.set_feature_name_id (invariant_feature.feature_name_id)
 								dependances.put (f_suppliers, invariant_feature.body_index)
@@ -872,7 +874,7 @@ feature -- Third pass: byte code production and type check
 							add_feature_to_melted_set (invariant_feature)
 						end
 							-- Clean context
-						ast_context.clear_feature_context
+						l_ast_context.clear_feature_context
 					elseif invariant_feature /= Void and degree_3_needed then
 							-- we have to type check again to get the types into the ast
 						invar_clause := Inv_ast_server.item (class_id)
@@ -897,7 +899,7 @@ feature -- Third pass: byte code production and type check
 							body_index := removed_features.item_for_iteration
 
 							remove_inline_agents_of_feature (body_index, Void)
-							ast_context.old_inline_agents.wipe_out
+							l_ast_context.old_inline_agents.wipe_out
 
 							f_suppliers := dependances.item (body_index)
 							if f_suppliers /= Void then
@@ -939,7 +941,7 @@ feature -- Third pass: byte code production and type check
 			if error_handler.error_level /= l_class_error_level then
 					-- Clean data to avoid improper handling at
 					-- next compilation.
-				ast_context.clear_feature_context
+				l_ast_context.clear_feature_context
 				tmp_ast_server.cache.wipe_out
 				internal_inline_agent_table := old_inline_agent_table
 			end

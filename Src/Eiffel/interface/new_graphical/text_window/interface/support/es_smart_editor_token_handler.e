@@ -31,6 +31,7 @@ feature -- Basic operations
 			-- `a_screen_x': The absolute screen x position of the mouse pointer when processing was requested.
 			-- `a_screen_y': The absolute screen y position of the mouse pointer when processing was requested.
 		do
+			Precursor (a_token, a_line, a_x, a_y, a_screen_x, a_screen_y)
 		end
 
 ;indexing

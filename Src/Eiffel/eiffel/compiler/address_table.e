@@ -814,7 +814,7 @@ feature {NONE} -- Generation
 						agent_type_string, return_type_string, function_name, omap, a_oargs_encapsulated)
 				else
 					buffer.generate_function_signature
-						(return_type_string, function_name, True, buffer,
+						(return_type_string, function_name, True, Void,
 						arg_names (args_count), a_types)
 				end
 				buffer.generate_block_open
@@ -1042,7 +1042,6 @@ feature {NONE} -- Generation
 			l_rout_id := a_feature.rout_id_set.first
 			l_entry :=  Eiffel_table.poly_table (l_rout_id)
 
-			buffer.put_new_line
 			buffer.put_character ('(')
 			if l_entry = Void then
 					-- Function pointer associated to a deferred feature
@@ -1101,7 +1100,6 @@ feature {NONE} -- Generation
 			i: INTEGER
 			l_eif_typed_value_str: STRING
 		do
-			buffer.put_new_line
 			buffer.put_character ('(')
 			l_rout_id := a_feature.rout_id_set.first
 			create l_types.make (1, a_types.count)
@@ -1331,7 +1329,7 @@ feature {NONE} -- Generation
 					a_omap.forth
 				end
 			end
-			a_buf.generate_function_signature (a_agent_type, a_name, True, a_buf, l_arg_names, l_arg_types)
+			a_buf.generate_function_signature (a_agent_type, a_name, True, Void, l_arg_names, l_arg_types)
 		end
 
 	tmp_buffer: GENERATION_BUFFER is

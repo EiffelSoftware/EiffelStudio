@@ -90,8 +90,8 @@ feature {NONE} -- External
 			#ifdef EIF_WINDOWS
 				return _tcslen ((wchar_t *) $ptr);
 			#else
-			return 0;
-				#endif
+				return 0;
+			#endif
 			]"
 		end
 

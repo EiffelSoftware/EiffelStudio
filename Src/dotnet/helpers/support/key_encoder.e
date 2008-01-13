@@ -14,14 +14,16 @@ feature -- Access
 			a_key_not_void: a_key /= Void
 		local
 			i: INTEGER
+			l_special: SPECIAL [NATURAL_8]
 		do
-			create Result.make (a_key.count * 2)
+			create l_special.make_from_native_array (a_key)
+			create Result.make (l_special.count * 2)
 			from
-				i := 0	
+				i := 0
 			until
-				i >= a_key.count
+				i >= l_special.count
 			loop
-				Result.append (a_key.item (i).to_hex_string)
+				Result.append (l_special.item (i).to_hex_string)
 				i := i + 1
 			end
 			Result.to_lower

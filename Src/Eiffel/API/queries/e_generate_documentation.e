@@ -16,10 +16,7 @@ inherit
 
 	SHARED_TEXT_ITEMS
 
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
+	EC_SHARED_PREFERENCES
 
 	EIFFEL_LAYOUT
 		export

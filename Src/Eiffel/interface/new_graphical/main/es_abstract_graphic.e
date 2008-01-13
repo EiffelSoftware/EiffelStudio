@@ -45,6 +45,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_FORMAT_INFO
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	initialize_services
@@ -54,6 +59,91 @@ feature {NONE} -- Initialization
 		do
 			l_container ?= service_provider.query_service ({SERVICE_CONTAINER})
 			add_core_services (l_container)
+		end
+
+	compiler_initialization is
+			-- Various initialization of the compiler
+		local
+			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
+			l_layout: EC_EIFFEL_LAYOUT
+			l_ui_executor: EB_COMMAND_EXECUTOR
+			pref_strs: PREFERENCE_CONSTANTS
+			fn: FILE_NAME
+			new_resources: TTY_RESOURCES
+			eifgen_init: INIT_SERVERS
+			l_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER
+			l_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
+			l_c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER
+			l_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
+			l_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
+			preference_access: PREFERENCES
+			l_studio_preferences: EB_PREFERENCES
+		do
+				-- Check that environment variables
+				-- are properly set.
+			if not is_eiffel_layout_defined then
+				create l_layout
+				l_layout.check_environment_variable
+				set_eiffel_layout (l_layout)
+			end
+
+			create l_compiler_setting
+			create l_ui_executor
+			l_compiler_setting.set_command_executor (l_ui_executor)
+
+				--| Initialization of the run-time, so that at the end of a store/retrieve
+				--| operation (like retrieving or storing the project, creating the CASEGEN
+				--| directory, generating the profile information, ...) the run-time is initialized
+				--| back to the values which permits the compiler to access correctly the EIFGEN
+				--| directory
+			create eifgen_init.make
+
+				-- Initialization of compiler resources
+			create new_resources.initialize
+
+				--| Initialization of global resources.		
+			create pref_strs
+				-- Initialize pixmaps
+			pref_strs.Pixmaps_extension_cell.put ("png")
+			create fn.make_from_string (eiffel_layout.Bitmaps_path)
+			fn.extend ("png")
+			pref_strs.Pixmaps_path_cell.put (fn)
+
+			if not new_resources.error_occurred then
+				-- One has to quit there.
+			end
+
+				-- Initialization of compiler resources.
+			create preference_access.make_with_defaults_and_location (
+				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
+			create l_studio_preferences.make (preference_access, True, True)
+			l_compiler_setting.set_preferences (l_studio_preferences)
+
+				-- Create and setup the output manager / Error displayer
+			create l_output_manager
+			set_output_manager (l_output_manager)
+			create l_external_output_manager
+			set_external_output_manager (l_external_output_manager)
+			create l_c_compilation_output_manager
+			set_c_compilation_output_manager (l_c_compilation_output_manager)
+
+				-- Set the error display for graphical output
+			eiffel_project.set_error_displayer (create_error_displayer)
+
+				-- Create and setup the degree output window.
+			if not preferences.development_window_data.graphical_output_disabled then
+				create l_graphical_degree_output.make_with_output_manager (output_manager)
+				Eiffel_project.set_degree_output (l_graphical_degree_output)
+			end
+
+				-- Create and setup the recent projects manager
+			create l_recent_projects_manager.make
+			set_recent_projects_manager (l_recent_projects_manager)
+
+					-- Formatting includes breakpoints
+			set_is_with_breakable
+		ensure
+			eiffel_layout_not_void: eiffel_layout /= Void
 		end
 
 feature {NONE} -- Implementation (preparation of all widgets)
@@ -67,57 +157,17 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			path_index: INTEGER
 			target_index: INTEGER
 			l_config, l_project_path, l_target: STRING
-			an_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER
-
-			an_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
-			a_c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER
-
-			a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			first_window: EB_DEVELOPMENT_WINDOW
-			a_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
-			preference_access: PREFERENCES
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
-				--| If we don't put bench mode here,
-				--| `error_window' will assume batch
-				--| mode and thus it will initialize
-				--| `error_window' as a TERM_WINDOW.
-				--| Also note that `error_window' is a
-				--| once-function!!
-
 			initialize_services
 
-				-- Initialization of compiler resources.
-			create preference_access.make_with_defaults_and_location (
-				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
-			initialize_preferences (preference_access, True, True)
-
-				-- Create and setup the output manager / Error displayer
-			create an_output_manager
-			set_output_manager (an_output_manager)
-			create an_external_output_manager
-			set_external_output_manager (an_external_output_manager)
-			create a_c_compilation_output_manager
-			set_c_compilation_output_manager (a_c_compilation_output_manager)
-
-				-- Set the error display for graphical output
-			eiffel_project.set_error_displayer (create_error_displayer)
-
-				-- Create and setup the degree output window.
-			if not preferences.development_window_data.graphical_output_disabled then
-				create a_graphical_degree_output.make_with_output_manager (output_manager)
-				Eiffel_project.set_degree_output (a_graphical_degree_output)
-			end
-
-				-- Create and setup the recent projects manager
-			create a_recent_projects_manager.make
-			set_recent_projects_manager (a_recent_projects_manager)
+			compiler_initialization
 
 				-- Create a development window
 			window_manager.create_window
 			first_window := window_manager.last_created_window
 
-			mode.set_item (False)
 				-- If some more arguments were specified, it means that we either asked to retrieve
 				-- an existing project, or to create one.
 			project_index := index_of_word_option ("config")

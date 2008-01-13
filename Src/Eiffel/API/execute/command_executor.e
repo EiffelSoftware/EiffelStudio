@@ -10,6 +10,8 @@ class COMMAND_EXECUTOR
 inherit
 	SHARED_EXEC_ENVIRONMENT
 
+	SHARED_FLAGS
+
 feature -- Command Execution
 
 	execute (command: STRING) is
@@ -17,7 +19,7 @@ feature -- Command Execution
 		require
 			valid_command: command /= Void
 		do
-			Execution_environment.system (command)
+			Execution_environment.launch (command)
 		end
 
 	execute_with_args (appl_name, args: STRING) is
@@ -25,26 +27,53 @@ feature -- Command Execution
 		require
 			appl_name_not_void: appl_name /= Void
 			args_not_void: args /= Void
+		do
+			execute_with_args_and_working_directory (appl_name, args, Execution_environment.current_working_directory)
+		end
+
+	execute_with_args_and_working_directory (appl_name, args, working_directory: STRING) is
+			-- Execute external command `appl_name' with following arguments and working_directory.
+		require
+			appl_name_not_void: appl_name /= Void
+			args_not_void: args /= Void
+			working_directory_not_void: working_directory /= Void
+		do
+			execute_with_args_and_working_directory_and_environment (appl_name, args, working_directory, Void)
+		end
+
+	execute_with_args_and_working_directory_and_environment (appl_name, args, working_directory: STRING;
+				envir: HASH_TABLE [STRING, STRING]) is
+			-- Execute external command `appl_name' with following arguments and working_directory.
+		require
+			appl_name_not_void: appl_name /= Void
+			args_not_void: args /= Void
+			working_directory_not_void: working_directory /= Void
 		local
 			command: STRING
+			l_prc_factory: PROCESS_FACTORY
+			l_prc_launcher: PROCESS
 		do
 			create command.make (appl_name.count + args.count + 1)
 			command.append (appl_name)
 			command.append_character (' ')
 			command.append (args)
-			Execution_environment.launch (command)
+			create l_prc_factory
+			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (command, working_directory)
+			if envir /= Void then
+				l_prc_launcher.set_environment_variable_table (envir)
+			end
+			l_prc_launcher.set_separate_console (True)
+			l_prc_launcher.launch
 		end
-		
-feature -- $EiffelGraphicalCompiler$ specific calls
 
-	link_eiffel_driver (c_code_dir,
-				system_name,
-				prelink_cmd_name,
-				driver_name: STRING) is
+feature -- Compiler specific calls
+
+	link_eiffel_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: STRING) is
 			-- Link the driver of the precompilation to
 			-- the eiffel project.
 		do
-			eif_link_driver (c_code_dir.to_c, system_name.to_c,
+			eif_link_driver (
+				c_code_dir.to_c, system_name.to_c,
 				prelink_cmd_name.to_c, driver_name.to_c)
 		end
 
@@ -52,16 +81,20 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 			-- Invoke the `finish_freezing' script.
 		local
 			cwd: STRING
+			f_cmd: STRING
 		do
 				-- Store current working directory
 			cwd := Execution_environment.current_working_directory
-			
+			create f_cmd.make_from_string (freeze_command)
+
 			Execution_environment.change_working_directory (c_code_dir)
+
 			if asynchronous then
 				Execution_environment.launch (freeze_command)
 			else
 				Execution_environment.system (freeze_command)
 			end
+
 			Execution_environment.change_working_directory (cwd)
 		end
 
@@ -72,10 +105,7 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 
 feature {NONE} -- Externals
 
-	eif_link_driver (c_code_dir,
-			system_name,
-			prelink_cmd_name,
-			driver_name: ANY) is
+	eif_link_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: ANY) is
 		external
 			"C"
 		end

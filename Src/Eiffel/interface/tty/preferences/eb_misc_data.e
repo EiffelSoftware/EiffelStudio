@@ -22,7 +22,7 @@ inherit
 create
 	make
 
-feature {EB_PREFERENCES} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_preferences: PREFERENCES) is
 			-- Create
@@ -35,7 +35,7 @@ feature {EB_PREFERENCES} -- Initialization
 			preferences_not_void: preferences /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Value
+feature -- Value
 
 	dotnet_debugger: STRING is ""
 
@@ -161,7 +161,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := pnd_preference.value
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Preference
+feature -- Preference
 
 	acrobat_reader_preference: STRING_PREFERENCE
 	text_mode_is_windows_preference: BOOLEAN_PREFERENCE

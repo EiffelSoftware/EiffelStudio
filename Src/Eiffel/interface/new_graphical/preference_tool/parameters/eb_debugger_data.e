@@ -18,10 +18,7 @@ feature {EB_PREFERENCES} -- Initialization
 		require
 			preferences_not_void: a_preferences /= Void
 		do
-			preferences := a_preferences
-			initialize_preferences
-		ensure
-			preferences_not_void: preferences /= Void
+			initialize_preferences (a_preferences)
 		end
 
 feature {EB_SHARED_PREFERENCES} -- Value
@@ -149,12 +146,14 @@ feature {NONE} -- Preference Strings
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences (a_preferences: PREFERENCES) is
+		require
+			preferences_not_void: a_preferences /= Void
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
 		do
-			create l_manager.make (preferences, "debugger")
+			create l_manager.make (a_preferences, "debugger")
 
 			default_maximum_stack_depth_preference := l_manager.new_integer_preference_value (l_manager, default_maximum_stack_depth_string, 500)
 			critical_stack_depth_preference := l_manager.new_integer_preference_value (l_manager, critical_stack_depth_string, 500)
@@ -173,11 +172,7 @@ feature {NONE} -- Implementation
 			classic_debugger_location_preference := l_manager.new_string_preference_value (l_manager, classic_debugger_location_string, "")
 		end
 
-	preferences: PREFERENCES
-			-- Preferences
-
 invariant
-	preferences_not_void: preferences /= Void
 	default_maximum_stack_depth_preference_not_void: default_maximum_stack_depth_preference /= Void
 	critical_stack_depth_preference_not_void: critical_stack_depth_preference /= Void
 	close_classic_dbg_daemon_on_end_of_debugging_preference_not_void:  close_classic_dbg_daemon_on_end_of_debugging_preference /= Void

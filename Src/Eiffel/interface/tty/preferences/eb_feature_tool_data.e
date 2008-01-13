@@ -11,7 +11,7 @@ class
 create
 	make
 
-feature {EB_PREFERENCES} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_preferences: PREFERENCES) is
 			-- Create
@@ -24,7 +24,7 @@ feature {EB_PREFERENCES} -- Initialization
 			preferences_not_void: preferences /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Value
+feature -- Value
 
 	show_all_callers: BOOLEAN is
 			-- Show all callers (as opposed to local callers) in `callers' form

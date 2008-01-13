@@ -9,9 +9,6 @@ indexing
 class
 	EB_PROJECT_MANAGER
 
-inherit
-	EB_SHARED_INTERFACE_TOOLS
-
 create
 	make
 
@@ -26,7 +23,6 @@ feature -- Initialization
 			create load_agents.make (10)
 			create close_agents.make (10)
 			create create_agents.make (10)
-			create edition_agents.make (10)
 			create compile_start_agents.make (10)
 			create compile_stop_agents.make (10)
 		ensure
@@ -55,9 +51,6 @@ feature -- Event handlers
 	create_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Agents called when the associated project is created.
 
-	edition_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
-			-- Agents called when the associated project is edited for the first time after a compilation.
-
 	compile_start_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Agents called when the associated project starts compiling.
 
@@ -71,28 +64,6 @@ feature -- Status report
 
 	is_project_loaded: BOOLEAN
 			-- Is a project loaded?
-
-	has_edited_classes: BOOLEAN
-			-- Have some classes been edited since last compilation was launched?
-			-- In that case we might need to recompile to take the changes into account.
-
-feature -- Status setting
-
-	class_is_edited (ci: CLASS_I) is
-			-- Add `ci' to the list of classes that were edited since last compilation.
-		do
-			if not has_edited_classes then
-				has_edited_classes := True
-				from
-					edition_agents.start
-				until
-					edition_agents.after
-				loop
-					edition_agents.item.call (Void)
-					edition_agents.forth
-				end
-			end
-		end
 
 feature -- Basic operations
 
@@ -167,7 +138,6 @@ feature -- Basic operations
 		require
 			project_created: is_created
 		do
-			has_edited_classes := has_modified_classes
 			from
 				compile_start_agents.start
 			until

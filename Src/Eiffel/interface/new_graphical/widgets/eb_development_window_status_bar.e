@@ -43,6 +43,8 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+	EB_SHARED_INTERFACE_TOOLS
+
 create
 	make
 
@@ -63,7 +65,7 @@ feature {NONE} -- Initialization
 			mg := eiffel_project.manager
 			if mg.is_created then
 				on_project_created (dbg)
-				if mg.has_edited_classes then
+				if has_modified_classes then
 					on_project_edited
 				end
 			end
@@ -76,10 +78,8 @@ feature {NONE} -- Initialization
 			load_agent := agent on_project_loaded (dbg)
 			create_agent := agent on_project_created (dbg)
 			close_agent := agent on_project_closed (dbg)
-			edition_agent := agent on_project_edited
 			compile_start_agent := agent on_project_compiles
 			compile_stop_agent := agent on_project_compiled
-			mg.edition_agents.extend (edition_agent)
 			mg.create_agents.extend (create_agent)
 			mg.close_agents.extend (close_agent)
 			mg.load_agents.extend (load_agent)
@@ -249,6 +249,18 @@ feature -- Status setting
 			coordinate_label.enable_sensitive
 		end
 
+	on_project_edited is
+			-- The project has just been edited.
+		local
+			p: EV_PIXMAP
+		do
+			p := pixmaps.icon_pixmaps.view_editor_icon
+			edition_icon.set_background_color (debugger_cell.background_color)
+			edition_icon.clear
+			edition_icon.draw_pixmap (0, 0, p)
+			edition_icon.set_tooltip (Interface_names.E_edited)
+		end
+
 feature {NONE} -- Status setting
 
 	internal_recycle is
@@ -264,7 +276,6 @@ feature {NONE} -- Status setting
 			mg.load_agents.prune_all (load_agent)
 
 			mg.close_agents.prune_all (close_agent)
-			mg.edition_agents.prune_all (edition_agent)
 			mg.compile_start_agents.prune_all (compile_start_agent)
 			mg.compile_stop_agents.prune_all (compile_stop_agent)
 		end
@@ -403,7 +414,7 @@ feature {NONE} -- Implementation: event handling
 			-- The project has been loaded.
 		do
 			set_project_name (current_project_name)
-			if eiffel_project.manager.has_edited_classes then
+			if has_modified_classes then
 				on_project_edited
 			else
 				on_project_updated
@@ -448,7 +459,7 @@ feature {NONE} -- Implementation: event handling
 				compilation_icon.clear
 				compilation_icon.draw_pixmap (0, 0, pixmaps.icon_pixmaps.compile_animation_1_icon)
 			end
-			if Eiffel_project.Manager.has_edited_classes then
+			if has_modified_classes then
 				on_project_edited
 			end
 		end
@@ -473,18 +484,6 @@ feature {NONE} -- Implementation: event handling
 			compilation_icon.draw_pixmap (0, 0, p)
 		end
 
-	on_project_edited is
-			-- The project has just been edited.
-		local
-			p: EV_PIXMAP
-		do
-			p := pixmaps.icon_pixmaps.view_editor_icon
-			edition_icon.set_background_color (debugger_cell.background_color)
-			edition_icon.clear
-			edition_icon.draw_pixmap (0, 0, p)
-			edition_icon.set_tooltip (Interface_names.E_edited)
-		end
-
 	on_project_updated is
 			-- The project has just been updated (the exe corresponds to the class texts).
 		local
@@ -496,9 +495,6 @@ feature {NONE} -- Implementation: event handling
 			edition_icon.draw_pixmap (0, 0, p)
 			edition_icon.set_tooltip (Interface_names.E_up_to_date)
 		end
-
-	edition_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
-			-- Agent called when the project is edited.
 
 	close_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
 			-- Agent called when the project is closed.

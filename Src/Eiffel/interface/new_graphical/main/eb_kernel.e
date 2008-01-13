@@ -9,36 +9,7 @@ class
 	EB_KERNEL
 
 inherit
-	ANY
-
-	SHARED_EIFFEL_PROJECT
-		export
-			{NONE} all
-		end
-
-	EIFFEL_LAYOUT
-		export
-			{NONE} all
-		end
-
 	ARGUMENTS
-		rename
-			command_line as arguments_line
-		export
-			{NONE} all
-		end
-
-	SHARED_CONFIGURE_RESOURCES
-		export
-			{NONE} all
-		end
-
-	SHARED_FORMAT_INFO
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_PREFERENCES
 
 	SHARED_FLAGS
 
@@ -51,13 +22,7 @@ feature {NONE} -- Initialization
 			-- Create and map the first window: the system window.
 		local
 			compiler: ES
-			eifgen_init: INIT_SERVERS
-			new_resources: TTY_RESOURCES
-			pref_strs: PREFERENCE_CONSTANTS
-			l_app: EV_APPLICATION
-			fn: FILE_NAME
-			l_is_gui: BOOLEAN
-			l_layout: EC_EIFFEL_LAYOUT
+			graphic_compiler: ES_GRAPHIC
 			--| uncomment the following line when profiling
 			--prof_setting: PROFILING_SETTING
 		do
@@ -65,73 +30,21 @@ feature {NONE} -- Initialization
 			--create prof_setting.make
 			--prof_setting.stop_profiling
 
-				-- Check that environment variables
-				-- are properly set.
-			if not is_eiffel_layout_defined then
-				create l_layout
-				l_layout.check_environment_variable
-				set_eiffel_layout (l_layout)
-			end
-
-				--| Initialization of the run-time, so that at the end of a store/retrieve
-				--| operation (like retrieving or storing the project, creating the CASEGEN
-				--| directory, generating the profile information, ...) the run-time is initialized
-				--| back to the values which permits the compiler to access correctly the EIFGEN
-				--| directory
-			create eifgen_init.make
-
-				--| Initialization of global resources.		
-			create pref_strs
-				-- Initialize pixmaps
-			pref_strs.Pixmaps_extension_cell.put ("png")
-			create fn.make_from_string (eiffel_layout.Bitmaps_path)
-			fn.extend ("png")
-			pref_strs.Pixmaps_path_cell.put (fn)
-
-			l_is_gui := argument_count > 0 and then
-				(
-					index_of_word_option ("gui") > 0
-					or else argument (1).is_equal ("-from_bench")
-					or else argument (1).is_equal ("-bench")
-				)
-
-			set_gui (l_is_gui)
-			if l_is_gui then
-					-- Create EV_APPLICATION object even if running in batch mode as it is required
-					-- for preference initialization
-				create l_app
-			end
-
-			create new_resources.initialize
-			if not new_resources.error_occurred then
-				Eiffel_project.set_batch_mode (not l_is_gui)
-				if l_is_gui then
-
-						-- Formatting includes breakpoints
-					set_is_with_breakable
-
-					create graphic_compiler.make (l_app)
-
-						-- Launch graphical compiler
-					l_app.launch
-				else
-						-- Start the compilation in batch mode from the bench executable.
-					create compiler.make
-				end
-				eifgen_init.dispose
+			if
+				argument_count > 0 and then
+				(index_of_word_option ("gui") > 0 or else
+				argument (1).is_equal ("-from_bench") or else argument (1).is_equal ("-bench"))
+			then
+				set_gui (True)
+				create graphic_compiler.make
+			else
+					-- Start the compilation in batch mode from the bench executable.
+				create compiler.make
 			end
 
 			--| uncomment the following line when profiling
 			--prof_setting.start_profiling
 		end
-
-feature {NONE} -- Implementation
-
-	graphic_compiler: ES_GRAPHIC
-			-- Object needed to interact with Vision2 initialization
-
-	create_handler is do end
-			-- Still needed to ensure compatibility with old compiler.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -165,4 +78,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_KERNEL
+end

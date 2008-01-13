@@ -27,13 +27,19 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
+		local
+			l_class: CLASS_C
 		do
+			l_class ?= associated_class
+			check
+				l_class_not_void: l_class /= Void
+			end
 			from
 				error_list.start
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (a_text_formatter);
+				error_list.item.build_explain (a_text_formatter, l_class);
 				error_list.forth;
 			end;
 		end;

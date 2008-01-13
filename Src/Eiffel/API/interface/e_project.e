@@ -8,8 +8,6 @@ indexing
 class E_PROJECT
 
 inherit
-	COMMAND_EXECUTOR
-
 	PROJECT_CONTEXT
 
 	SHARED_WORKBENCH
@@ -30,7 +28,7 @@ inherit
 
 	COMPILER_EXPORTER
 
-	EB_SHARED_PREFERENCES
+	SHARED_EXEC_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -262,13 +260,6 @@ feature -- Access
 			Result := True
 		end
 
-	batch_mode: BOOLEAN is
-			-- Is the compiler in batch mode?
-			-- (By default it is true)
-		do
-			Result := mode.item
-		end
-
 	is_compiling: BOOLEAN is
 			-- Is it compiling?
 		do
@@ -408,14 +399,6 @@ feature -- Status setting
 			Error_handler.set_error_displayer (ed)
 		ensure
 			set: error_displayer = Error_handler.error_displayer
-		end
-
-	set_batch_mode (compiler_mode: BOOLEAN) is
-			-- Set `batch_mode' to `compiler_mode'
-		do
-			mode.set_item (compiler_mode)
-		ensure
-			set: compiler_mode = batch_mode
 		end
 
 feature -- Update
@@ -586,12 +569,12 @@ feature -- Update
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
-			l_processors := preferences.maximum_processor_usage
+			l_processors := compiler_objects.preferences.maximum_processor_usage
 			if l_processors > 0 then
 				l_cmd.append (" -nproc ")
 				l_cmd.append_integer (l_processors)
 			end
-			invoke_finish_freezing (path, l_cmd, True, workbench_mode)
+			compiler_objects.command_executor.invoke_finish_freezing (path, l_cmd, True, workbench_mode)
 		end
 
 	call_finish_freezing_and_wait (workbench_mode: BOOLEAN) is
@@ -614,14 +597,20 @@ feature -- Update
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
-			l_processors := preferences.maximum_processor_usage
+			l_processors := compiler_objects.preferences.maximum_processor_usage
 			if l_processors > 0 then
 				l_cmd.append (" -nproc ")
 				l_cmd.append_integer (l_processors)
 			end
 				-- Set below normal priority.
 			l_cmd.append (" -low")
-			invoke_finish_freezing (path, l_cmd, False, workbench_mode)
+			compiler_objects.command_executor.invoke_finish_freezing (path, l_cmd, False, workbench_mode)
+		end
+
+	terminate_c_compilation is
+			-- Terminate running c compilation, if any.
+		do
+			compiler_objects.command_executor.terminate_c_compilation
 		end
 
 	precompile (is_for_finalization: BOOLEAN) is
@@ -1001,16 +990,17 @@ feature {NONE} -- Implementation
 			create Result.put (deg_output)
 		end
 
+	compiler_objects: SETTABLE_COMPILER_OBJECTS is
+			-- Compiler specific objects.
+		once
+			create Result
+		ensure
+			compiler_objects_not_void: Result /= Void
+		end
+
 	exit_agent: PROCEDURE [ANY, TUPLE]
 			-- Optional procedure that should be called when an error occurs and
 			-- `exit_on_error' is set.
-
-	mode: BOOLEAN_REF is
-			-- Is the compile in batch mode?
-		once
-			create Result
-			Result.set_item (True)
-		end
 
 	is_compiling_ref: BOOLEAN_REF is
 			-- Is it compiling?
@@ -1040,7 +1030,7 @@ feature {NONE} -- Implementation
 				if not uf.exists then
 					create uf.make (Precompilation_driver)
 					if uf.exists and then uf.is_readable then
-						link_eiffel_driver (project_directory.workbench_path,
+						compiler_objects.command_executor.link_eiffel_driver (project_directory.workbench_path,
 							system.name,
 							eiffel_layout.Prelink_command_name,
 							Precompilation_driver)

@@ -40,8 +40,6 @@ inherit
 
 	COMPILER_EXPORTER
 
-	EB_SHARED_PREFERENCES
-
 	EXCEPTIONS
 		export
 			{NONE} all
@@ -64,6 +62,9 @@ feature -- Initialization
 			l_layout: EC_EIFFEL_LAYOUT
 			l_eifgen_init: INIT_SERVERS
 			l_preference_access: PREFERENCES
+			new_resources: TTY_RESOURCES
+			l_ec_preferences: EC_PREFERENCES
+			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
 		do
 				-- Check that environment variables
 				-- are properly set.
@@ -80,12 +81,19 @@ feature -- Initialization
 				--| directory
 			create l_eifgen_init.make
 
+				-- Initialization of compiler resources
+			create new_resources.initialize
+
 				-- Initialization of compiler resources.
 			create l_preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
-			initialize_preferences (l_preference_access, False, True)
+			create l_ec_preferences.make (l_preference_access)
+			create l_compiler_setting
+			l_compiler_setting.set_preferences (l_ec_preferences)
 
 			execute
+
+			l_eifgen_init.dispose
 		end
 
 	execute is

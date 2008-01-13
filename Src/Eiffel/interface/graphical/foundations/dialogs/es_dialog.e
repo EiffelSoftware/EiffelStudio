@@ -395,8 +395,6 @@ feature {NONE} -- Helpers
 		end
 
 	frozen preferences: EB_PREFERENCES
-		require
-			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences_initialized
 		once
 			Result := (create {EB_SHARED_PREFERENCES}).preferences
 		ensure

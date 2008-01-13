@@ -1,37 +1,58 @@
 indexing
-	description: "Shared output signs"
+	description: "All shared preferences for the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_SHARED_OUTPUT_TOOLS
-		-- This class was created to improve the separation between text and graphic classes
-		-- actually, it still needs some improvements, because its operation is not understandable enough. 
-		-- maybe an error_window_cell should be created.
+	EB_COMPILER_DATA
 
-feature
+create
+	make
 
-	error_window: OUTPUT_WINDOW is
-			-- Error window that displays error message
-		once
-			Result := init_error_window
+feature {NONE} -- Initialization
+
+	make (a_preferences: PREFERENCES) is
+			-- Create
+		require
+			preferences_not_void: a_preferences /= Void
+		do
+			initialize_preferences (a_preferences)
 		end
+
+feature -- Value
+
+	maximum_processor_usage: INTEGER is
+			-- Maximum number of processors to utilize for compilation
+		do
+			Result := maximum_processor_usage_preference.value
+		end
+
+feature {NONE} -- Preference
+
+	maximum_processor_usage_preference: INTEGER_PREFERENCE
+
+	maximum_processor_usage_string: STRING is "compiler.maximum_processors_usage"
 
 feature {NONE} -- Implementation
 
-	init_error_window: OUTPUT_WINDOW is
-			-- error window. this function is redefined for graphic mode
+	initialize_preferences (a_preferences: PREFERENCES) is
+			-- Initialize preference values.
+		require
+			a_preferences_not_void: a_preferences /= Void
+		local
+			l_manager: PREFERENCE_MANAGER
+			l_factory: BASIC_PREFERENCE_FACTORY
 		do
-			Result := term_window
+			create l_factory
+			l_manager := a_preferences.new_manager ("compiler")
+
+			maximum_processor_usage_preference := l_factory.new_integer_preference_value (l_manager, maximum_processor_usage_string, 0)
 		end
 
-	term_window: TERM_WINDOW is
-			-- terminal output. Used in text mode
-		once
-			create Result
-		end
+invariant
+	maximum_processor_usage_preference_attached: maximum_processor_usage_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -65,4 +86,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SHARED_OUTPUT_TOOLS
+end

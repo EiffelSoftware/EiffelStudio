@@ -42,7 +42,7 @@ inherit
 			default_create, copy
 		end
 
-	COMMAND_EXECUTOR
+	EB_COMMAND_EXECUTOR
 		rename
 			execute as launch_ebench,
 			project_location as compiler_project_location

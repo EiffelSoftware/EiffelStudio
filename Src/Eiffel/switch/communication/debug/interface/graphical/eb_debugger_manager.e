@@ -70,24 +70,22 @@ feature {NONE} -- Initialization
 			Precursor
 			create_events_handler
 
-			if not eiffel_project.batch_mode then
-					--| When compiling in batch mode with the graphical "ec"
-				create debug_run_cmd.make
+				--| When compiling in batch mode with the graphical "ec"
+			create debug_run_cmd.make
 
-					--| Graphical Preferences settings
-				objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
+				--| Graphical Preferences settings
+			objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
 
-				display_agent_details := preferences.debug_tool_data.display_agent_details
-				preferences.debug_tool_data.display_agent_details_preference.typed_change_actions.extend (
-						agent (b: BOOLEAN)
-							do
-								display_agent_details := b
-							end
-					)
+			display_agent_details := preferences.debug_tool_data.display_agent_details
+			preferences.debug_tool_data.display_agent_details_preference.typed_change_actions.extend (
+					agent (b: BOOLEAN)
+						do
+							display_agent_details := b
+						end
+				)
 
-					--| End of settings
-				init_commands
-			end
+				--| End of settings
+			init_commands
 
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
 

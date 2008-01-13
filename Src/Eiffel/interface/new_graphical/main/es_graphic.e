@@ -16,14 +16,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_app: EV_APPLICATION) is
+	make is
 			-- Make and initialize graphical compiler
-		require
-			an_app_not_void: an_app /= Void
+		local
+			l_app: EV_APPLICATION
 		do
-			an_app.post_launch_actions.extend (agent prepare (an_app))
+			create l_app
+			
+			l_app.post_launch_actions.extend (agent prepare (l_app))
 				-- Make sure any uncaught exceptions are handled
-			an_app.uncaught_exception_actions.extend (agent handle_exception)
+			l_app.uncaught_exception_actions.extend (agent handle_exception)
+
+			l_app.launch
 		end
 
 indexing

@@ -9,50 +9,18 @@ indexing
 class
 	EB_SHARED_PREFERENCES
 
-feature {ES} -- Initialization
-
-	initialize_preferences (a_preferences: PREFERENCES; gui_mode, dbg_mode: BOOLEAN) is
-		require
-			preferences_not_void: a_preferences /= Void
-			not_initialized: not preferences_initialized
-		local
-			l_prefs: like preferences
-		once
-			create l_prefs.make (a_preferences, gui_mode, dbg_mode)
-			preferences_cell.put (l_prefs)
-		ensure
-			preferences_not_void: preferences /= Void
-			initialized: preferences_initialized
+inherit
+	SHARED_COMPILER_PREFERENCES
+		redefine
+			preferences
 		end
 
 feature -- Access
 
 	preferences: EB_PREFERENCES is
 			-- All preferences for `ec'.
-		require
-			initialized: preferences_initialized
-		once
-			Result := preferences_cell.item
-		ensure
-			preferences_not_void: Result /= Void
-		end
-
-feature -- Query
-
-	preferences_initialized: BOOLEAN is
-			-- Have preferences been initialized?
 		do
-			Result := preferences_cell.item /= Void
-		end
-
-feature {NONE} -- Implementation
-
-	preferences_cell: CELL [EB_PREFERENCES] is
-			-- Once cell.
-		once
-			create Result
-		ensure
-			preferences_cell_not_void: Result /= Void
+			Result ?= preferences_cell.item
 		end
 
 indexing

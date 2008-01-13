@@ -11,8 +11,6 @@ class
 inherit
 	SHARED_TEXT_ITEMS
 
-	EB_SHARED_WINDOW_MANAGER
-
 create
 	make
 
@@ -60,7 +58,6 @@ feature {NONE} -- Initialization
 			-- Initialize the features by category for formatting.
 		local
 			l_entity: CONSUMED_ENTITY
-			l_dev_win: EB_DEVELOPMENT_WINDOW
 			access_features, hidden_access_features,
 			query_features, hidden_query_features,
 			command_features, hidden_command_features,
@@ -135,12 +132,6 @@ feature {NONE} -- Initialization
 
 			if misc_features /= Void then
 				add_to_features_list (misc_features)
-			end
-
-					-- Set feature category list to current development window.
-			l_dev_win := Window_manager.last_focused_development_window
-			if l_dev_win /= Void and class_c /= Void then
-				l_dev_win.set_feature_clauses (features, class_c.name)
 			end
 		end
 

@@ -108,88 +108,67 @@ feature -- DYNAMIC_LIB Exports processing.
 	add_export_feature (d_class:CLASS_C; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER; d_alias, d_call_type: STRING) is
 		require
 			class_exists: d_class /= Void
-			--creation_exists: d_creation /= Void
+			creation_exists: d_creation /= Void
 			routine_exists: d_routine /= Void
 		local
 			dl_exp, dl_item: DYNAMIC_LIB_EXPORT_FEATURE
 			dl_exp_list: LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE]
-			dl_creation:like d_creation
 			has_feature: BOOLEAN
 			i:INTEGER
-			list_dl: LIST_CREATION_DYNAMIC_LIB
 		do
-			if d_creation = Void then
-					--| FIXME XR: Huh, seems ugly.
-					--| In the old interface, this pops up a dialog to choose the creation
-					--| procedure, in the batch compiler, this does nothing,
-					--| I wonder if this clause is needed...
-					--| At least, it shouldn't be in the API\interface I believe.
-					--| (thinking aloud) When will we get rid of the old interface so that code
-					--| can be cleaned up?!
-					--| END FIXME
-
-					-- Addition of an export feature from the environment.
-				create list_dl.make(d_class, d_routine,d_index, d_alias, d_call_type)
-				list_dl.choose_creation
+				-- Addition of an export feature already defined in a ".def" file.
+			if d_creation.arguments /= Void and then d_creation /= d_routine then
+				-- Error: a creation procedure cannot have an argument
+			elseif d_routine.is_attribute then
+				-- Error: an attribute cannot be exported.
+			elseif d_routine.is_deferred then
+				-- Error: a deferred feature cannot be exported.
 			else
-					-- Addition of an export feature already defined in a ".def" file.
-				dl_creation := d_creation
-				if dl_creation.arguments /= Void and then d_creation /= d_routine then
-					-- Error: a creation procedure cannot have an argument
-				elseif d_routine.is_attribute then
-					-- Error: an attribute cannot be exported.
-				elseif d_routine.is_deferred then
-					-- Error: a deferred feature cannot be exported.
+				if dynamic_lib_exports.has_key (d_class.class_id) then
+					dl_exp_list := dynamic_lib_exports.found_item
 				else
-					if dynamic_lib_exports.has_key (d_class.class_id) then
-						dl_exp_list := dynamic_lib_exports.found_item
-					else
-						create dl_exp_list.make
-						dynamic_lib_exports.put (dl_exp_list, d_class.class_id)
+					create dl_exp_list.make
+					dynamic_lib_exports.put (dl_exp_list, d_class.class_id)
+				end
+
+					-- Check if the feature is or is not in the list.
+				from
+					dl_exp_list.start
+				until
+					has_feature = True or else dl_exp_list.after
+				loop
+					dl_item := dl_exp_list.item
+					has_feature := (d_routine.feature_id = dl_item.feature_id)
+									and then (d_creation.feature_id = dl_item.creation_routine.feature_id)
+									and then (equal (d_alias, dl_item.alias_name))
+					i := dl_exp_list.index
+					dl_exp_list.forth
+				end
+
+				if not has_feature then
+					create dl_exp.make (d_class, d_creation, d_routine)
+
+					dl_exp.set_creation_routine (d_creation)
+
+					if d_index /= 0 then
+						dl_exp.set_index (d_index)
 					end
 
-						-- Check if the feature is or is not in the list.
-					from
-						dl_exp_list.start
-					until
-						has_feature = True or else dl_exp_list.after
-					loop
-						dl_item := dl_exp_list.item
-						has_feature := (d_routine.feature_id = dl_item.feature_id)
-										and then (d_creation.feature_id = dl_item.creation_routine.feature_id)
-										and then (equal (d_alias, dl_item.alias_name))
-						i := dl_exp_list.index
-						dl_exp_list.forth
+					if d_alias /= Void then
+						dl_exp.set_alias_name (d_alias)
 					end
 
-					if not has_feature then
-						create dl_exp.make (d_class, dl_creation, d_routine)
-
-						if dl_creation /= Void then
-							dl_exp.set_creation_routine (dl_creation)
-						end
-
-						if d_index /= 0 then
-							dl_exp.set_index (d_index)
-						end
-
-						if d_alias /= Void then
-							dl_exp.set_alias_name (d_alias)
-						end
-
-						if d_call_type /= Void then
-							dl_exp.set_call_type (d_call_type)
-						end
-
-						dl_exp_list.extend (dl_exp)
-					else
-						dl_exp_list.go_i_th(i)
-						dl_exp_list.remove
-						if dl_exp_list.is_empty then
-							dynamic_lib_exports.remove (d_class.class_id)
-						end
+					if d_call_type /= Void then
+						dl_exp.set_call_type (d_call_type)
 					end
 
+					dl_exp_list.extend (dl_exp)
+				else
+					dl_exp_list.go_i_th(i)
+					dl_exp_list.remove
+					if dl_exp_list.is_empty then
+						dynamic_lib_exports.remove (d_class.class_id)
+					end
 				end
 			end
 		end
@@ -237,9 +216,11 @@ feature -- DYNAMIC_LIB Exports processing.
 							dl_index := 0
 						end
 
-						if dl_class /= Void and then
+						if
+							dl_class /= Void and then
 							dl_creation /= Void and then
-							dl_routine /= Void then
+							dl_routine /= Void
+						then
 							add_export_feature (dl_class,dl_creation,dl_routine,dl_index, t_alias, t_call_type)
 						end
 					end

@@ -17,7 +17,7 @@ inherit
 			name, help_message, abbreviation
 		end;
 
-	EB_SHARED_PREFERENCES
+	EC_SHARED_PREFERENCES
 
 create
 	make, default_create

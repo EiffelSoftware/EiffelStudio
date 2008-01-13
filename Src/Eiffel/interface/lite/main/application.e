@@ -53,6 +53,9 @@ feature {NONE} -- Initialization
 			l_eifgen_init: INIT_SERVERS
 			l_preference_access: PREFERENCES
 			l_parser: ARGUMENT_PARSER
+			new_resources: TTY_RESOURCES
+			l_ec_preferences: EC_PREFERENCES
+			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
 		do
 				-- Check that environment variables
 				-- are properly set.
@@ -60,9 +63,6 @@ feature {NONE} -- Initialization
 				create l_env
 				l_env.check_environment_variable
 				set_eiffel_layout (l_env)
-			else
-					-- Need to initialize with our own environment.
-				check False end
 			end
 
 				--| Initialization of the run-time, so that at the end of a store/retrieve
@@ -72,16 +72,24 @@ feature {NONE} -- Initialization
 				--| directory
 			create l_eifgen_init.make
 
+				-- Initialization of compiler resources
+			create new_resources.initialize
+
 				-- Initialization of compiler resources.
 			create l_preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
-			initialize_preferences (l_preference_access, False, False)
+			create l_ec_preferences.make (l_preference_access)
+			create l_compiler_setting
+			l_compiler_setting.set_preferences (l_ec_preferences)
 
 				-- We are always in batch mode
 			set_stop_on_error (True)
 
 			create l_parser.make
 			l_parser.execute (agent start (l_parser))
+
+				-- Dispose
+			l_eifgen_init.dispose
 		end
 
 	start (a_parser: ARGUMENT_PARSER) is
@@ -117,7 +125,6 @@ feature {NONE} -- Initialization
 				create l_err_window.make (io.error)
 				create l_displayer.make (l_name, l_err_window)
 				eiffel_project.set_error_displayer (l_displayer)
-				eiffel_project.set_batch_mode (True)
 
 				create l_degree_out.make (l_window)
 				l_degree_out.set_is_output_quiet (not a_parser.verbose_output)

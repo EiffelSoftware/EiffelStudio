@@ -1,62 +1,58 @@
 indexing
-	description: "All shared preferences for the compiler."
+	description: "[
+		Place where all the onces of the compiler that needs to be set differently depending
+		on the version of the compiler being compiled. 
+		If not used, then the compiler will use the default settings (usually for batch compilation).
+		
+		Note: some inheritance clauses are not used, they are here to show which settings
+		the compiler may modify by using the mentioned classes.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_COMPILER_DATA
+	SETTABLE_COMPILER_OBJECTS
 
-create
-	make
+inherit
+	SHARED_NAMES_HEAP
 
-feature {EB_PREFERENCES} -- Initialization
+	SHARED_COMPILER_PREFERENCES
 
-	make (a_preferences: PREFERENCES) is
-			-- Create
-		require
-			preferences_not_void: a_preferences /= Void
+feature -- Access
+
+	command_executor: COMMAND_EXECUTOR is
+			-- Objects that launches commands.
 		do
-			preferences := a_preferences
-			initialize_preferences
+			Result := command_executor_cell.item
 		ensure
-			preferences_not_void: preferences /= Void
+			command_executor_not_void: Result /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES, COMPILER_PREFERENCES} -- Value
+feature -- Settings
 
-	maximum_processor_usage: INTEGER is
-			-- Maximum number of processors to utilize for compilation
+	set_command_executor (c: like command_executor) is
+			-- Set `command_executor' with `c'.
+		require
+			c_not_void: c /= Void
 		do
-			Result := maximum_processor_usage_preference.value
+			command_executor_cell.put (c)
+		ensure
+			command_executor_set: command_executor = c
 		end
-
-feature {EB_SHARED_PREFERENCES} -- Preference
-
-	maximum_processor_usage_preference: INTEGER_PREFERENCE
-
-feature {NONE} -- Preference Strings
-
-	maximum_processor_usage_string: STRING is "compiler.maximum_processors_usage"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
-			-- Initialize preference values.
-		local
-			l_manager: EB_PREFERENCE_MANAGER
-		do
-			create l_manager.make (preferences, "compiler")
-			maximum_processor_usage_preference := l_manager.new_integer_preference_value (l_manager, maximum_processor_usage_string, 0)
+	command_executor_cell: CELL [COMMAND_EXECUTOR] is
+			-- Storage for `command_executor'.
+		once
+			create Result
+			Result.put (create {COMMAND_EXECUTOR})
+		ensure
+			command_executor_cell_not_void: Result /= Void
+			command_executor_not_void: Result.item /= Void
 		end
-
-	preferences: PREFERENCES
-			-- Preferences
-
-invariant
-	preferences_not_void: preferences /= Void
-	maximum_processor_usage_preference_attached: maximum_processor_usage_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

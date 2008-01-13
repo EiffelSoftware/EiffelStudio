@@ -15,7 +15,7 @@ inherit
 			loop_action
 		end
 
-	EB_SHARED_PREFERENCES
+	EC_SHARED_PREFERENCES
 
 create
 	make, default_create

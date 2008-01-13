@@ -1,47 +1,45 @@
 indexing
-
-	description:
-		"Popup a list of all valid creation procedures for a dynamic lib. %
-		%This functionality has been integrated into the EB_DYNAMIC_LIB_WINDOW %
-		%in the new interface and is not needed here any more.%
-		%This class is here only for backward compatibility."
+	description: "User preferences used in the interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	LIST_CREATION_DYNAMIC_LIB
+	SHARED_COMPILER_PREFERENCES
 
-create
-	make
+feature -- Access
 
-feature -- Initialization
-
-	make (d_cl: CLASS_C; d_r: E_FEATURE; d_i: INTEGER; d_a, d_c: STRING) is
+	preferences: COMPILER_PREFERENCES is
+			-- All preferences for `ec'.
 		do
---			init (Project_tool)
-			d_class := d_cl
-			d_routine := d_r
-			d_index := d_i
-			d_alias := d_a
-			d_call_type := d_c
+			Result := preferences_cell.item
+		ensure
+			preferences_not_void: Result /= Void
 		end
 
-feature -- Properties
+feature -- Settings
 
-	d_class: CLASS_C
-	d_routine: E_FEATURE
-	d_index: INTEGER
-	d_alias, d_call_type: STRING
-
-feature -- Interface
-
-	choose_creation is
+	set_preferences (p: like preferences) is
+			-- Set `command_executor' with `c'.
+		require
+			c_not_void: p /= Void
 		do
+			preferences_cell.put (p)
+		ensure
+			preferences_set: preferences = p
 		end
 
-feature {NONE} -- Execution
+feature {NONE} -- Implementation
+
+	preferences_cell: CELL [COMPILER_PREFERENCES] is
+			-- Once cell.
+		once
+			create Result
+			Result.put (create {COMPILER_PREFERENCES}.make (create {PREFERENCES}.make))
+		ensure
+			preferences_cell_not_void: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -75,5 +73,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class LIST_CREATION_DLL
-
+end

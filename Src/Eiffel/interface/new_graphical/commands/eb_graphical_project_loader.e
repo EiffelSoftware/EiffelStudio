@@ -55,7 +55,7 @@ inherit
 			{NONE} all
 		end
 
-	COMMAND_EXECUTOR
+	EB_COMMAND_EXECUTOR
 		rename
 			project_location as compiler_project_location
 		export

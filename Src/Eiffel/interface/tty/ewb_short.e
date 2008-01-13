@@ -17,7 +17,7 @@ inherit
 			help_message, name, abbreviation
 		end;
 
-	EB_SHARED_PREFERENCES
+	EC_SHARED_PREFERENCES
 
 create
 

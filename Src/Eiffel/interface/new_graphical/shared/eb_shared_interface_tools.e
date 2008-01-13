@@ -20,12 +20,17 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_FLAGS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	has_modified_classes: BOOLEAN is
 			-- Are there unsaved class texts in the interface?
 		do
-			if not mode.item then
+			if is_gui then
 				Result := Window_manager.has_modified_windows
 			end
 		end
@@ -97,13 +102,6 @@ feature {NONE} -- Shared tools change
 		end
 
 feature {NONE} -- Implementation
-
-	mode: BOOLEAN_REF is
-			-- In text mode?
-		once
-			create Result
-			Result.set_item (True)
-		end
 
 	Progress_dialog_cell: CELL [EB_PROGRESS_DIALOG] is
 			-- Progress dialog associated with the project.

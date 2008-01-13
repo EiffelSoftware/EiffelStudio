@@ -11,7 +11,7 @@ class
 create
 	make
 
-feature {EB_PREFERENCES} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_preferences: PREFERENCES) is
 			-- Create
@@ -24,7 +24,7 @@ feature {EB_PREFERENCES} -- Initialization
 			preferences_not_void: preferences /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Value
+feature -- Value
 
 	feature_clause_order: ARRAY [STRING] is
 		do

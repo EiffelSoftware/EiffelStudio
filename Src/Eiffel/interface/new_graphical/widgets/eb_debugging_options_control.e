@@ -18,9 +18,6 @@ inherit
 	EB_CONSTANTS
 
 	EB_SHARED_INTERFACE_TOOLS
-		rename
-			mode as text_mode
-		end
 
 	SHARED_WORKBENCH
 		export

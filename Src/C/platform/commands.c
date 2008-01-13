@@ -162,27 +162,6 @@ void eif_link_driver (EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT 
 #endif
 }
 
-void eif_gr_link_driver (EIF_OBJECT request, EIF_OBJECT c_code_dir, EIF_OBJECT system_name, EIF_OBJECT prelink_command_name, EIF_OBJECT driver_name)
-{
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
-	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
-#else
-	char *cmd;
-
-	cmd = malloc(15 + strlen(eif_access(c_code_dir)) + strlen (eif_access(system_name)) +
-					strlen(eif_access(prelink_command_name)) + strlen(eif_access(driver_name)));
-	if (cmd == (char *)0)
-		enomem();
-
-	sprintf(cmd, "%s %s %s/%s", eif_access(prelink_command_name), eif_access(driver_name), eif_access(c_code_dir), eif_access(system_name));
-
-	(*set_proc)(eif_access(request), RTMS (cmd));
-	(*send_proc)(eif_access(request));
-
-	free(cmd);
-#endif
-}
-
 EIF_REFERENCE eif_date_string (EIF_INTEGER a_date)
 {
 	EIF_REFERENCE result;

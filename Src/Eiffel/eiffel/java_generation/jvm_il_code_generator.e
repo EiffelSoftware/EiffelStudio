@@ -11,7 +11,7 @@ class
 
 inherit
 	IL_CODE_GENERATOR
-	
+
 	SHARED_IL_CODE_GENERATOR
 		export
 			{NONE} all
@@ -26,7 +26,7 @@ inherit
 		export
 			{NONE} all
 		end
-			
+
 	JVM_NAME_CONVERTER
 		export
 			{NONE} all
@@ -36,12 +36,12 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
 		end
-			
+
 create
 	make
 
@@ -70,6 +70,11 @@ feature -- Generation type
 
 	set_dll is
 			-- Current generated application is a DLL.
+		do
+		end
+
+	set_32bits is
+			-- Current generated application is a 32bit application
 		do
 		end
 
@@ -106,7 +111,7 @@ feature -- Generation Structure
 			debug ("JVM_GEN2")
 				print ("Generation of MODULE ")
 				print (name)
-										
+
 				if debug_mode then
 					print (" in debug mode")
 				end
@@ -131,13 +136,13 @@ feature -- Generation Structure
 			debug ("JVM_GEN2")
 				print ("def entry point: " + c.qualified_name + ", " + f.external_name + "%N")
 			end
-							
+
 			-- Add entry class_
 			calc_free_type_id
 			repository.put (c.qualified_name_wo_l + "_" + f.external_name, last_free_type_id)
 			ep_class := repository.item (last_free_type_id)
 			ep_class.parents.force (repository.item_by_qualified_name ("Ljava/lang/Object;").type_id)
-							
+
 						-- Add entry method
 			create ep_method.make (ep_class.constant_pool)
 			ep_method.set_external_name ("main")
@@ -147,14 +152,14 @@ feature -- Generation Structure
 			ep_method.set_feature_id (1)
 			ep_method.close_signature
 			ep_class.put_feature (ep_method)
-							
+
 						-- Add code for entry method
 			ep_method.code.append_new_class (type_id)
 			ep_method.code.append_dup
 			ep_method.code.append_invoke_default_constructor (type_id)
 			ep_method.code.append_invoke_from_feature_id (type_id, feature_id)
 			ep_method.code.append_return (void_type)
-							
+
 						-- Since the new free type id is the highest one, the class
 						-- will be generated automatically even if we are already
 						-- in the `repository.generate_byte_code' loop.
@@ -184,7 +189,7 @@ feature -- Class info
 			repository.set_capacity (class_count)
 			highest_used_type_id := 0
 		end
-			
+
 	generate_class_mappings (class_name: STRING; id: INTEGER; filename: STRING) is
 			-- Create a correspondance table between `id' and `class_name'.
 		do
@@ -202,7 +207,7 @@ feature -- Class info
 				highest_used_type_id := id
 			end
 		end
-	
+
 	generate_array_class_mappings (class_name, element_type_name: STRING; id: INTEGER) is
 			-- Create a correspondance table between `id' and `class_name'.
 		do
@@ -220,7 +225,7 @@ feature -- Class info
 				highest_used_type_id := id
 			end
 		end
-	
+
 	start_classes_descriptions is
 			-- Following calls to current will only describe parents and features of current class.
 		do
@@ -228,20 +233,20 @@ feature -- Class info
 				print ("start classes descr.......................%N")
 			end
 		end
-	
+
 	end_classes_descriptions is
 			-- Generate runtime
 		do
 			debug ("JVM_GEN2")
 				print ("end classes descr.......................%N")
 			end
-			
+
 			-- create Runtime class_
 			calc_free_type_id
 			repository.put ("ISERuntime", last_free_type_id)
 			ISERuntime := repository.item (last_free_type_id)
-			ISERuntime.parents.force (repository.item_by_qualified_name ("Ljava/lang/Object;").type_id)			
-						
+			ISERuntime.parents.force (repository.item_by_qualified_name ("Ljava/lang/Object;").type_id)
+
 						-- add StringObject
 			create static_string_object.make (ISERuntime.constant_pool)
 			static_string_object.set_external_name ("StringObject")
@@ -252,7 +257,7 @@ feature -- Class info
 			static_string_object.set_feature_id (1)
 			static_string_object.close_signature
 			ISERuntime.put_feature (static_string_object)
-			
+
 						-- add InAssertion
 			create static_in_assertion.make (ISERuntime.constant_pool)
 			static_in_assertion.set_external_name ("InAssertion")
@@ -269,7 +274,7 @@ feature -- Class info
 			-- Generate class name and its specifier.
 		do
 			current_type_id := type_id
-						
+
 			debug ("JVM_GEN2")
 				print ("[gen class header] ")
 				if
@@ -285,7 +290,7 @@ feature -- Class info
 				print (current_class.qualified_name)
 				print ("%N")
 			end
-							
+
 			if
 				is_interface and not current_class.qualified_name.is_equal ("Ljava/lang/Object;")
 			then
@@ -306,7 +311,7 @@ feature -- Class info
 			then
 				current_class.set_external
 			end
-							
+
 		end
 
 	end_class is
@@ -329,7 +334,7 @@ feature -- Class info
 			-- Finishing inheritance part description
 		do
 		end
-				
+
 feature -- Features info
 
 	start_features_list (type_id: INTEGER) is
@@ -397,16 +402,16 @@ feature -- Features info
 	current_is_attribute: BOOLEAN
 			-- Value stored bewteen calls of `generate_feature_nature' and `generate_feature_identification'.
 			-- Should be redesigned so this attribute can be removed
-			
+
 	generate_feature_nature (is_redefined, is_deferred, is_frozen, is_attribute: BOOLEAN) is
 			-- Generate nature of current feature.
 		do
-							
+
 			current_is_redefined := is_redefined
 			current_is_deferred := is_deferred
 			current_is_frozen := is_frozen
 			current_is_attribute := is_attribute
-							
+
 			debug ("JVM_GEN2")
 				print ("%T%T [gen feat nature]")
 				if is_frozen then
@@ -455,7 +460,7 @@ feature -- Features info
 			then
 				il_name := name
 			end
-												
+
 			if
 				in_current_class
 			then
@@ -496,7 +501,7 @@ feature -- Features info
 			current_feature.set_type_id (current_type_id)
 			current_class.put_feature (current_feature)
 		end
-			
+
 	generate_external_identification (name, il_name: STRING; ext_kind, feature_id, rout_id: INTEGER; in_current_class: BOOLEAN; written_type_id: INTEGER; signature: ARRAY [STRING]; return_type: STRING) is
 			-- Generate feature identification.
 		local
@@ -509,44 +514,44 @@ feature -- Features info
 				create wf.make (current_class.constant_pool)
 				current_written_feature := wf
 				wf.set_external_name (il_name)
-							
+
 				inspect
 					ext_kind
-										
+
 				when normal_type then
 					-- Do nothing
-										
+
 				when creator_type then
 					wf.set_is_constructor (True)
 					wf.set_external_name ("<init>")
-										
+
 				when field_type then
 					wf.set_is_field (True)
-													
+
 				when set_field_type then
 					wf.set_is_field_setter (True)
-										
+
 				when set_static_field_type then
 					wf.set_is_field_setter (True)
 					wf.set_is_static (True)
-										
+
 				when static_type then
 					wf.set_is_static (True)
-										
+
 				when static_field_type then
 					wf.set_is_field (True)
 					wf.set_is_static (True)
-										
+
 				when get_property_type then
 					check False end -- Not possible
-										
+
 				when set_property_type then
 					check False end -- Not possible
-										
+
 				else
 					check False end -- unkown constant
 				end
-										
+
 				if
 					signature /= Void
 				then
@@ -562,11 +567,11 @@ feature -- Features info
 				create rf.make
 				rf.set_written_type_id (written_type_id)
 				current_feature := rf
-			end	
-							
+			end
+
 			current_feature.set_feature_id (feature_id)
 			current_feature.set_routine_id (rout_id)
-							
+
 			debug ("JVM_GEN2")
 				print (current_class.qualified_name_wo_l + "::")
 				print ("ext.feature[2] " + il_name + "%T%T%TFID:" + feature_id.out + "%T%TRID:" + rout_id.out + "%T%T")
@@ -644,7 +649,7 @@ feature -- Features info
 				external_name := name
 				debug_state := 2
 			end
-							
+
 			debug ("JVM_GEN2")
 				print (current_class.qualified_name_wo_l + "::")
 				print ("ext.def.feature[3] " + external_name + "%T%T%TFID:"+ feature_id.out + "%T%TRID:" + rout_id.out + "%T%T")
@@ -659,7 +664,7 @@ feature -- Features info
 	current_parameters: LINKED_LIST [PAIR [INTEGER, STRING]]
 			-- temporary storage for parameter list
 			-- each pair holds a type_id and the parameter name
-			
+
 	generate_feature_return_type (type_id: INTEGER) is
 			-- Generate return type `type_id' of current feature.
 		do
@@ -724,7 +729,7 @@ feature -- IL Generation
 	start_il_generation (type_id: INTEGER) is
 		do
 			current_type_id := type_id
-							
+
 			debug ("JVM_GEN")
 				print ("[start il gen]%N")
 			end
@@ -744,7 +749,7 @@ feature -- IL Generation
 			current_written_feature ?= current_feature
 			current_method ?= current_feature
 			counter.reset
-							
+
 			check
 				current_method /= Void
 			end
@@ -838,7 +843,14 @@ feature -- IL Generation
 				end
 			end
 		end
-			
+
+	generate_external_creation_call (a_actual_type: CL_TYPE_I; name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; return_type: INTEGER)
+		is
+			-- Generate call to `name' with signature `parameters_type' + `return_type'.
+		do
+		end
+
 	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
 		is
@@ -862,12 +874,12 @@ feature -- Local variable info generation
 			debug ("JVM_GEN")
 				print ("put_result_info: " + type_id.out + "%N")
 			end
-			-- this info is already set by current_method, so just 
+			-- this info is already set by current_method, so just
 			-- initialize the value
 			current_method.code.append_push_default_value (eiffel_type_id_to_jvm_type_id (type_id))
 			current_method.code.append_pop_into_local (current_method.return_index, eiffel_type_id_to_jvm_type_id (type_id))
 		end
-			
+
 	put_local_info (type_i: TYPE_I; name_id: INTEGER) is
 			-- Specifies `type_id' of type local.
 		local
@@ -924,10 +936,15 @@ feature -- Object creation
 			-- Load on stack type of object on top of stack.
 		do
 		end
-		
+
 	create_type is
 			-- Given info on stack, it will create a new instance of a generic formal
 			-- parameter.
+		do
+		end
+
+	create_expanded_object (t: CL_TYPE_I) is
+			-- Create an object of expanded type `t'.
 		do
 		end
 
@@ -997,6 +1014,17 @@ feature -- Variables access
 			current_method.code.append_push_from_local (0, current_class.jvm_type_id)
 		end
 
+	generate_current_as_reference is
+			-- Generate access to `Current' in its reference form.
+			-- (I.e. box value type object if required.)
+		do
+		end
+
+	generate_current_as_basic is
+			-- Load `Current' as a basic value.
+		do
+		end
+
 	generate_result is
 			-- Generate access to `Result'.
 		do
@@ -1018,7 +1046,7 @@ feature -- Variables access
 				print ("::")
 				print (repository.item (type_id).features.item (feature_id).written_feature.external_name + "%N")
 			end
-							
+
 			current_method.code.append_push_field_by_feature_id (type_id, feature_id)
 		end
 
@@ -1031,7 +1059,7 @@ feature -- Variables access
 				print ("::")
 				print (repository.item (type_i.static_type_id).features.item (feature_id).written_feature.external_name + "%N")
 			end
-							
+
 			current_method.code.append_invoke_from_feature_id (type_i.static_type_id, feature_id)
 		end
 
@@ -1042,6 +1070,11 @@ feature -- Variables access
 		do
 		end
 
+	generate_type_feature_call (f: TYPE_FEATURE_I) is
+			-- Generate a call to a type feature `f' on current.
+		do
+		end
+
 	put_type_instance (a_type: TYPE_I) is
 			-- Put instance of the native TYPE object corresponding to `a_type' on stack.
 		do
@@ -1049,6 +1082,11 @@ feature -- Variables access
 
 	put_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in `type_i'.
+		do
+		end
+
+	put_impl_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+			-- Generate access to feature of `a_feature_id' in implementation of `type_i'.
 		do
 		end
 
@@ -1085,7 +1123,41 @@ feature -- Variables access
 			end
 		end
 
+	generate_external_metamorphose (type_i: TYPE_I) is
+			-- Generate `metamorphose', ie boxing an expanded type `type_i'
+			-- using an associated external type (if any).
+		do
+		end
+
+	generate_eiffel_metamorphose (a_type: TYPE_I) is
+			-- Generate a metamorphose of `a_type' into a _REF type.
+		do
+		end
+
+	generate_unmetamorphose (type_i: TYPE_I) is
+			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
+			-- Load content of address resulting from unbox operation.
+		do
+		end
+
+	generate_external_unmetamorphose (type_i: CL_TYPE_I) is
+			-- Generate `unmetamorphose', ie unboxing an external reference to a basic type of `type_i'.
+			-- Load content of address resulting from unbox operation.
+		do
+		end
+
+	generate_creation (cl_type_i: CL_TYPE_I) is
+			-- Generate IL code for a hardcoded creation type `cl_type_i'.
+		do
+		end
+
 feature -- IL Generation
+
+	generate_call_to_standard_copy is
+			-- Generate a call to run-time feature `standard_copy'
+			-- assuming that Current and argument are on the evaluation stack.
+		do
+		end
 
 	generate_object_equality_test is
 			-- Generate comparison of two objects.
@@ -1149,7 +1221,7 @@ feature -- Addresses
 			end
 		end
 
-	generate_routine_address (type_i: TYPE_I; feature_id: INTEGER) is
+	generate_routine_address (type_i: TYPE_I; feature_id: INTEGER; is_last_argument_current: BOOLEAN) is
 			-- Generate address of routine of `feature_id' in class `type_id'.
 		do
 			debug ("JVMGEN")
@@ -1160,8 +1232,23 @@ feature -- Addresses
 			end
 		end
 
+	generate_load_address (type_i: TYPE_I) is
+			-- Generate code that takes address of a boxed value object of type `type_i'.
+		do
+		end
+
 	generate_load_from_address (type_i: TYPE_I) is
 			-- Load value of `type_i' type from address pushed on stack.
+		do
+		end
+
+	generate_load_from_address_as_object (a_type: TYPE_I) is
+			-- Load value of non-built-in `a_type' type from address pushed on stack.
+		do
+		end
+
+	generate_load_from_address_as_basic (a_type: TYPE_I) is
+			-- Load value of a basic type `a_type' from address of an Eiffel object pushed on stack.
 		do
 		end
 
@@ -1179,6 +1266,11 @@ feature -- Assignments
 				print ("%Tis instance of [*]:" + type_i.static_type_id.out + "%N")
 			end
 			current_method.code.append_is_instance_of_by_type_id (type_i.static_type_id)
+		end
+
+	generate_is_instance_of_external (type_i: CL_TYPE_I) is
+			-- Generate `Isinst' byte code instruction for external variant of the type `type_i'.
+		do
 		end
 
 	generate_check_cast (source_type, target_type: TYPE_I) is
@@ -1209,6 +1301,11 @@ feature -- Assignments
 		do
 		end
 
+	generate_argument_assignment (n: INTEGER) is
+			-- Generate assignment to `n'-th argument of current feature.
+		do
+		end
+
 	generate_local_assignment (n: INTEGER) is
 			-- Generate assignment to `n'-th local variable of current feature.
 		do
@@ -1229,7 +1326,7 @@ feature -- Assignments
 			debug ("JVM_GEN")
 				print ("%T generate result assignment [*]%N")
 			end
-							
+
 			-- put top element of stack into local variable slot for
 			-- result (current_feature.result_index)
 			current_method.code.append_pop_into_local (current_method.return_index, current_method.return_jvm_type_id)
@@ -1281,9 +1378,9 @@ feature -- Once management
 			once_result.set_return_type_name (repository.item (type_id).qualified_name_wo_l)
 			once_result.set_feature_id (current_method.class_.features.count + 1)
 			once_result.close_signature
-			current_method.class_.put_feature (once_result)		
+			current_method.class_.put_feature (once_result)
 		end
-	
+
 	generate_once_test is
 			-- Generate test on `done' of once feature `name'.
 		do
@@ -1339,7 +1436,7 @@ feature -- Once manifest string manipulation
 
 	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN) is
 			-- Generate code for once string in a current routine with the given
-			-- `number' and `value' using CIL string type if `is_cil_string' is `true' 
+			-- `number' and `value' using CIL string type if `is_cil_string' is `true'
 			-- or Eiffel string type otherwise.
 		do
 		end
@@ -1403,6 +1500,12 @@ feature -- Array manipulation
 			current_method.code.append_pop_into_array (kind)
 		end
 
+	generate_array_initialization (array_type: CL_TYPE_I; actual_generic: CLASS_TYPE) is
+			-- Initialize native array with actual parameter type
+			-- `actual_generic' on the top of the stack.
+		do
+		end
+
 	generate_array_creation (type_id: INTEGER) is
 		do
 			debug ("JVM_GEN")
@@ -1410,6 +1513,11 @@ feature -- Array manipulation
 				print (repository.item (type_id).qualified_name + ", " + type_id.out)
 			end
 			current_method.code.append_new_array_by_type_id (type_id)
+		end
+
+	generate_generic_array_creation (a_formal: FORMAL_I) is
+			-- Create a new NATIVE_ARRAY [X] where X is a formal type `a_formal'.
+		do
 		end
 
 	generate_array_count is
@@ -1465,10 +1573,51 @@ feature -- Exception handling
 		do
 		end
 
+	generate_last_exception is
+			-- Generate value of `last_exception' on stack.
+		do
+		end
+
+	generate_restore_last_exception is
+			-- Restores `get_last_exception' using the local.
+		do
+		end
+
+	generate_start_old_try_block (a_ex_local: INTEGER) is
+			-- Generate start of try block at entry to evaluate old expression.
+			-- `a_ex_local' is the local declaration position for the exception.
+		do
+		end
+
+	generate_catch_old_exception_block (a_ex_local: INTEGER) is
+			-- Generate catch block for old expression evaluatation
+		do
+		end
+
+	prepare_old_expresssion_blocks (a_count: INTEGER) is
+			-- Prepare to generate `a_count' blocks for old expression evaluation
+		do
+		end
+
+	generate_raising_old_exception (a_ex_local: INTEGER) is
+			-- Generate raising old violation exception when there was exception saved
+		do
+		end
+
 feature -- Assertions
 
 	generate_in_assertion_status is
 			-- Generate value of `in_assertion' on stack.
+		do
+		end
+
+	generate_save_supplier_precondition is
+			-- Generate code to save the current supplier precondition in a local.
+		do
+		end
+
+	generate_restore_supplier_precondition is
+			-- Restores the supplier precondition flag using the local.
 		do
 		end
 
@@ -1519,6 +1668,16 @@ feature -- Assertions
 			current_method.code.append_pop_field (static_in_assertion)
 		end
 
+	generate_in_precondition_status is
+			-- Generate value of `in_precondition' on stack.
+		do
+		end
+
+	generate_set_precondition_status is
+			-- Set `in_precondition' flag with top of stack.
+		do
+		end
+
 	generate_assertion_check (assert_type: INTEGER; tag: STRING) is
 		local
 			l: IL_LABEL
@@ -1566,7 +1725,13 @@ feature -- Assertions
 			current_method.code.append_branch_on_false_by_label_id (label.id)
 		end
 
-	generate_invariant_checking (type_i: TYPE_I) is
+	generate_invariant_body (byte_list: BYTE_LIST [BYTE_NODE]) is
+			-- Generate body of the routine that checks class invariant of the current class
+			-- represented by `byte_list' (if any) as well as class invariant of ancestors.
+		do
+		end
+
+	generate_invariant_checking (type_i: TYPE_I; entry: BOOLEAN) is
 		local
 			f: JVM_WRITTEN_FEATURE
 			type_id: INTEGER
@@ -1603,6 +1768,11 @@ feature -- Generic conformance
 		do
 		end
 
+	generate_tuple_type_instance (n: INTEGER) is
+			-- Generate a RT_TUPLE_TYPE instance corresponding that will hold `n' items.
+		do
+		end
+
 	generate_generic_type_settings (gen_type: GEN_TYPE_I) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		do
@@ -1630,17 +1800,17 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_integer_8, convert_to_boolean is
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
-	convert_to_integer_16, convert_to_character is
+
+	convert_to_integer_16, convert_to_character_8 is
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_integer_32 is
 			-- Convert top of stack into appropriate type.
 		do
@@ -1655,13 +1825,13 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_natural_16 is
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
-	convert_to_natural_32 is
+
+	convert_to_natural_32, convert_to_character_32 is
 			-- Convert top of stack into appropriate type.
 		do
 		end
@@ -1670,12 +1840,12 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_real_64 is
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_real_32 is
 			-- Convert top of stack into appropriate type.
 		do
@@ -1698,7 +1868,7 @@ feature -- Constants generation
 		end
 
 	put_manifest_string_from_system_string_local (n: INTEGER) is
-			-- Create a manifest string by using local at position `n' which 
+			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
 		do
 		end
@@ -1735,7 +1905,7 @@ feature -- Constants generation
 			end
 			current_method.code.append_push_manifest_int (i)
 		end
-		
+
 	put_integer_64_constant (i: INTEGER_64) is
 			-- Put `i' as INTEGER_64 on IL stack
 		do
@@ -1885,13 +2055,13 @@ feature -- Basic feature
 			-- Generate call on `ToString'.
 		do
 		end
-	
+
 	generate_hash_code is
 			-- Given an INTEGER on top of stack, put on stack
 			-- a positive INTEGER.
 		do
 		end
-		
+
 	generate_out (type: TYPE_I) is
 			-- Generate `out' on basic types.
 		do
@@ -1911,7 +2081,7 @@ feature -- Switch instruction
 
 feature -- Binary operator generation
 
-	generate_binary_operator (code: INTEGER) is
+	generate_binary_operator (code: INTEGER; is_unsigned: BOOLEAN) is
 			-- Generate a binary operator represented by `code'.
 			-- Look in IL_CONST for `code' definition.
 		do
@@ -1944,9 +2114,9 @@ feature -- Binary operator generation
 			end
 			-- TODO: Make more efficient
 			current_method.code.append_gt
-			current_method.code.append_not		
+			current_method.code.append_not
 		end
-								
+
 	generate_gt is
 			-- Generate `>' operator.
 		do
@@ -1955,7 +2125,7 @@ feature -- Binary operator generation
 			end
 			current_method.code.append_gt
 		end
-								
+
 	generate_ge is
 			-- Generate `>=' operator.
 		do
@@ -2120,7 +2290,7 @@ feature -- Unary operator generation
 			-- Generate '-' operator.
 		do
 			debug ("JVM_GEN")
-				print ("%Tneg [*]%N")	
+				print ("%Tneg [*]%N")
 			end
 			current_method.code.append_neg
 		end
@@ -2180,6 +2350,26 @@ feature -- Line Info for debugging
 		do
 		end
 
+	set_pragma_offset (a_offset: INTEGER) is
+			-- Set line pragma offset for debug info.
+		do
+		end
+
+	set_default_document is
+			-- Restore debug document to default.
+		do
+		end
+
+	set_stop_breakpoints_generation (a_bool: BOOLEAN) is
+			-- Should breakpoints not be generated?
+		do
+		end
+
+	set_document (a_doc: STRING) is
+			-- Set debug document to `a_doc'.
+		do
+		end
+
 feature -- Compilation error handling
 
 	last_error: STRING is
@@ -2189,20 +2379,20 @@ feature -- Compilation error handling
 		end
 
 feature {NONE} -- Internal data
-			
+
 	current_type_id: INTEGER
 			-- Type id of class being generated.
-			
+
 	current_class: JVM_CLASS is
 		do
 			Result := repository.item (current_type_id)
 		end
-			
+
 	current_feature: JVM_FEATURE
-			
+
 	current_method: JVM_METHOD
 			-- method that is currently added code to
-	
+
 	current_written_feature: JVM_WRITTEN_FEATURE
 
 	counter: COUNTER is
@@ -2210,7 +2400,7 @@ feature {NONE} -- Internal data
 		once
 			create Result
 		end
-			
+
 	calc_free_type_id is
 			-- get a type id that is unused
 			-- you can only use this feature once all classes that come
@@ -2220,39 +2410,31 @@ feature {NONE} -- Internal data
 			highest_used_type_id := highest_used_type_id + 1
 			last_free_type_id := highest_used_type_id
 		end
-			
+
 	last_free_type_id: INTEGER
 			-- the last free type id, see `calc_free_type_id'
-			
+
 	highest_used_type_id: INTEGER
 			-- the highest type id used in the system
-				
+
 	ISERuntime: JVM_CLASS
 			-- Runtime class that holds global assertion helpers
-	
+
 	static_string_object: JVM_WRITTEN_FEATURE
 			-- holds the tag of the last failed assertion
-	
+
 	static_in_assertion: JVM_WRITTEN_FEATURE
 			-- `True' only when we are currently in an assertion check
-			-- Avoids recursive assertion evaluation, this is good 
+			-- Avoids recursive assertion evaluation, this is good
 			-- because it is common (not even bad design) to have
-			-- recursive assertion dependencies. In such cases we would 
+			-- recursive assertion dependencies. In such cases we would
 			-- loop independently, which is of course not what we want.
-	
+
 	once_done: JVM_WRITTEN_FEATURE
 			-- caches the once_done feature for the current once function
-	
+
 	once_result: JVM_WRITTEN_FEATURE
 			-- caches the once_result feature for the current once function
-
-feature {NONE} -- HACK FIXME NOT IMPLEMENTED
-
-	generate_unmetamorphose (type_i: TYPE_I) is
-			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
-			-- Load content of address resulting from unbox operation.
-		do
-		end
 
 feature -- Convenience
 
@@ -2265,7 +2447,7 @@ feature -- Convenience
 			-- Generate call on void target exception.
 		do
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

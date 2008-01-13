@@ -24,6 +24,8 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
+	SHARED_EIFFEL_PROJECT
+
 	EB_TEXT_OUTPUT_FACTORY
 
 create
@@ -217,7 +219,7 @@ feature -- Basic operation
 	update_pixmap is
 			-- Update pixmap after compilation
 		do
-			if develop_window.project_manager.eiffel_project.successful then
+			if eiffel_project.successful then
 				content.set_pixmap (pixmap_success)
 			else
 				content.set_pixmap (pixmap_failure)
@@ -232,7 +234,7 @@ feature {NONE} -- Implementation
 	drop_breakable (st: BREAKABLE_STONE) is
 			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
 		do
-			
+
 		end
 
 	drop_class (st: CLASSI_STONE) is

@@ -300,8 +300,6 @@ feature {NONE} -- Helpers
 
 	frozen preferences: EB_PREFERENCES
 			-- Shared access to EiffelStudio preferences.
-		require
-			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences_initialized
 		once
 			Result := (create {EB_SHARED_PREFERENCES}).preferences
 		ensure

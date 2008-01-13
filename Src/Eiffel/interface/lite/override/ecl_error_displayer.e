@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ERROR_TRACER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -176,7 +181,7 @@ feature {NONE} -- Implementation
 			end
 
 			a_window.put_new_line
-			a_error.trace (a_window)
+			tracer.trace (a_window, a_error, {ERROR_TRACER}.context)
 		end
 
 	short_help_file_name (a_error: ERROR): STRING is

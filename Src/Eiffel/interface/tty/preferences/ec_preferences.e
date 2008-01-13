@@ -9,9 +9,15 @@ indexing
 class
 	EC_PREFERENCES
 
+inherit
+	COMPILER_PREFERENCES
+		rename
+			make as make_compiler
+		end
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_preferences: PREFERENCES) is
@@ -22,9 +28,10 @@ feature {NONE} -- Initialization
 			create misc_data.make (a_preferences)
 			create feature_tool_data.make (a_preferences)
 			create flat_short_data.make (a_preferences)
-		end		
+			make_compiler (a_preferences)
+		end
 
-feature {EB_SHARED_PREFERENCES} -- Access
+feature -- Access
 
 	flat_short_data: EB_FLAT_SHORT_DATA
 		-- Preference data for class flat short.

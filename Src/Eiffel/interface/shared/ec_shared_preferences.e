@@ -1,23 +1,27 @@
 indexing
-	description: "Preferences for debugger components of the Eiffel Compiler.  Facade."
+	description: "Shared access to tty command line compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision$"
+	revision: "$Revision: "
 
 class
-	DBG_PREFERENCES
+	EC_SHARED_PREFERENCES
 
-create
-	make
-	
-feature {NONE} -- Initialization
+inherit
+	SHARED_COMPILER_PREFERENCES
+		redefine
+			preferences
+		end
 
-	make (a_preferences: PREFERENCES) is
-			-- Create
-		do			
-		end		
-	
+feature -- Access
+
+	preferences: EC_PREFERENCES is
+			-- All preferences for `ec'.
+		do
+			Result ?= preferences_cell.item
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -50,4 +54,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class DBG_PREFERENCES
+end

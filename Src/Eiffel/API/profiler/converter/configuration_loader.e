@@ -283,19 +283,21 @@ feature {NONE} -- Constants
 	GLU_string: STRING is "generates_leading_underscore";
 		-- generates_leading_underscore
 
-feature {EWB_GENERATE, EB_PROFILER_WIZARD_GENERATOR} -- Error handling
+feature -- Error handling
 
 	error_occurred: BOOLEAN
 		-- Was there an error during the load of the config file?
-
-	error_code: INTEGER
-		-- Configure load error code
 
 	shared_prof_config: SHARED_PROF_CONFIG
 		-- Shared configuration values
 
 	profiler_type: STRING
 		-- The profile tool used for profiling.
+
+feature {NONE} -- Implementation: Access
+
+	error_code: INTEGER
+		-- Configure load error code
 
 	Invalid_profiler_type: INTEGER is 1;
 		-- No profiler information file found in

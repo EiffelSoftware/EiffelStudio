@@ -72,7 +72,6 @@ feature -- Text observer Agents
 			-- Gray out the formatters.
 		local
 			l_str: STRING_32
-			l_cst: CLASSI_STONE
 		do
 			if not is_recycled then
 				if not develop_window.text_edited then
@@ -82,10 +81,7 @@ feature -- Text observer Agents
 						develop_window.set_title (l_str)
 					end
 					develop_window.address_manager.disable_formatters
-					l_cst ?= develop_window.stone
-					if l_cst /= Void then
-						develop_window.Eiffel_project.Manager.class_is_edited (l_cst.class_i)
-					end
+					develop_window.status_bar.on_project_edited
 					develop_window.set_text_edited (True)
 				end
 				if not develop_window.status_bar.message.is_equal (develop_window.interface_names.e_c_compilation_running) then

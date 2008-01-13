@@ -604,7 +604,7 @@ feature -- Automatic backup
 				file.put_string (compilation_modes.string_representation)
 				file.put_new_line
 				file.put_string ("batch mode: ")
-				file.put_boolean (Eiffel_project.batch_mode)
+				file.put_boolean (not is_gui)
 				file.put_new_line
 				file.put_string ("new session: ")
 				file.put_boolean (new_session)

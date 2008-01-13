@@ -44,7 +44,7 @@ feature -- Settings
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
-			path_field.set_browse_for_file (filter)
+			path_field.set_browse_for_open_file (filter)
 		end
 
 	set_browse_for_directory is

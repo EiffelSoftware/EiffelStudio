@@ -41,10 +41,17 @@
 		<set name="L_comp_dir" value="$cwd" 		unless="$compile_dir" />
 	</target>
 
-	<target name="compile" depend="init_compilation" >
-		<echo message="Compile `ec' in [$L_comp_dir]" />
+	<target name="finalize" depend="init_compilation" >
+		<echo message="finalize `ec' in [$L_comp_dir]" />
 
-		<geant target="compile" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+		<geant target="finalize" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
+			dir="$L_comp_dir"
+			reuse_variables="true" fork="false" />
+	</target>
+	<target name="workbench" depend="init_compilation" >
+		<echo message="workbench `ec' in [$L_comp_dir]" />
+
+		<geant target="freeze" file="${EIFFEL_SRC}${path_separator}scripts${path_separator}tools${path_separator}ec_bench.eant"
 			dir="$L_comp_dir"
 			reuse_variables="true" fork="false" />
 	</target>

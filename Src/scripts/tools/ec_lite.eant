@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_ec_lite" default="help">
+	<description>
+		description: "ec lite compilation"
+	</description>
+	<inherit>
+		<parent location="${PROJECT_ec_lite.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+			<redefine target="prepare"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" arguments="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace${path_separator}ec.ecf" />
+		<geant target="set_TARGET" arguments="eclite" />
+		<geant target="set_NAME" arguments="ecl" />
+	</target>
+
+	<target name="prepare" if="$is_windows">
+		<copy dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" file="ec.rc" to_directory="$_COMP_DIR" />
+		<copy dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" file="ec.ico" to_directory="$_COMP_DIR" />
+		<copy dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" file="ec.exe.manifest" to_directory="$_COMP_DIR" />
+	</target>
+
+</project>

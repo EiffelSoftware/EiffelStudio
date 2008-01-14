@@ -100,4 +100,32 @@
 		<unset name="return_code" />
 	</target>
 
+	<target name="copy_full_tree">
+		<!-- Tool to copy a full tree without .svn dirs -->
+		<!-- Added, as geant copy does not copy empty directories *sigh* -->
+		<!-- TODO: update, once it is possile to copy empty directories with geant copy -->
+		<argument name="A_source_dir"/>
+		<argument name="A_target_dir"/>
+		
+		<available resource="${A_source_dir}" variable="source_avail" />
+		<echo message="${A_source_dir} missing, copy aborted" unless="${source_avail}=true" />
+		<exit code="1" unless="${source_avail}=true" />
+
+		<!-- recreate the directory structure -->
+		<mkdir directory="${A_target_dir}"/>
+		<exec executable="cd ${A_source_dir} ; find . -type d ! -path '*/.svn*' -exec 'mkdir' '-p' '${A_target_dir}/{}' ';'" unless="${is_windows}"/>
+		<exec executable="xcopy /Y /t ${A_source_dir} ${A_target_dir}" if="${is_windows}"/>
+
+		<!-- copy files -->
+		<copy to_directory="${A_target_dir}" dir="${A_source_dir}">
+			<fileset include="@(**/*)" exclude="@(**/.svn/**/*)" />
+		</copy>		
+	</target>
+
+	<target name="copy_library_to">
+		<argument name="A_lib_name"/>
+		<argument name="A_target_dir"/>
+		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}library${path_separator}${A_lib_name},${A_target_dir}${path_separator}library${path_separator}${lib_name}"/>
+	</target>
+
 </project>

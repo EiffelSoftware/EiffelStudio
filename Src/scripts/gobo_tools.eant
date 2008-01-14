@@ -27,7 +27,7 @@
 	<target name="compile" depend="init" >
 		<set name="_COMP_DIR" value="" unless="${_COMP_DIR}" />
 		<set name="_COMP_DIR" value="$cwd" if="-${_COMP_DIR}-=--" />
-		<geant target="compile_from" arguments="$_COMP_DIR" reuse_variables="true" />
+		<geant target="compile_from" arguments="$_COMP_DIR" />
 	</target>
 
 	<target name="compile_from" depend="init" >
@@ -42,23 +42,23 @@
 		<mkdir directory="${L_comp_dir}" />
 
 		<!-- geant -->
-		<geant target="get_bin__gobo_exec" arguments="geant,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="geant,$L_comp_dir,$L_out_dir"     />
 		<!-- gec -->
-		<geant target="get_bin__gobo_exec" arguments="gec,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="gec,$L_comp_dir,$L_out_dir" 	    />
 		<!-- gelex -->
-		<geant target="get_bin__gobo_exec" arguments="gelex,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="gelex,$L_comp_dir,$L_out_dir"     />
 		<!-- geyacc -->
-		<geant target="get_bin__gobo_exec" arguments="geyacc,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="geyacc,$L_comp_dir,$L_out_dir"    />
 		<!-- gelint -->
-		<geant target="get_bin__gobo_exec" arguments="gelint,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="gelint,$L_comp_dir,$L_out_dir"    />
 		<!-- gepp -->
-		<geant target="get_bin__gobo_exec" arguments="gepp,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="gepp,$L_comp_dir,$L_out_dir" 	    />
 		<!-- getest -->
-		<geant target="get_bin__gobo_exec" arguments="getest,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="getest,$L_comp_dir,$L_out_dir"    />
 		<!-- gexace -->
-		<geant target="get_bin__gobo_exec" arguments="gexace,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="gexace,$L_comp_dir,$L_out_dir"    />
 		<!-- gexslt -->
-		<geant target="get_bin__gobo_exec" arguments="gexslt,$L_comp_dir,$L_out_dir" reuse_variables="true" />
+		<geant target="get_bin__gobo_exec" arguments="gexslt,$L_comp_dir,$L_out_dir"    />
 
 		<delete directory="${L_comp_dir}" />
 		<unset name="L_comp_dir" />
@@ -74,14 +74,14 @@
 		<set name="return_code" value="0" 							if="${tmp_available}=true" />
 		<geant dir="${GOBO_TOOLS.absdir}" 	if="${tmp_available}=false"
 			file="ise_eiffel_compiler.eant" target="finalize" 
-			reuse_variables="true" fork="false">
+			reuse_variables="true" fork="false" >
 			<argument name="a_ecf" value="${_GOBO_LIB}${path_separator}src${path_separator}${A_name}.ecf" />
 			<argument name="a_target" value="${A_name}" />
 			<argument name="a_name" value="${A_name}" />
 			<argument name="a_comp_dir" value="${A_comp_dir}" />
 			<argument name="a_output_dir" value="${A_out_dir}" />
 		</geant>
-		<echo message="Error occurred during building of wizard ${A_name}' (${return_code})" unless="${return_code}=0" />
+		<echo message="Error occurred during building of gobo tool `${A_name}' (${return_code})" unless="${return_code}=0" />
 	</target>
 	
 </project>

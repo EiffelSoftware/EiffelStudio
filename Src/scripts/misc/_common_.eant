@@ -43,7 +43,7 @@
 		<echo message="- Check environment" />
 		<set name="environment_valid" value="true" />
 		<geant target="check_environment" />
-		<exit code="-1" if="${environment_valid}=false" />
+		<exit code="1" if="${environment_valid}=false" />
 		<unset name="environment_valid" />
 	</target>
 
@@ -51,5 +51,25 @@
 		<argument name="a_msg" />
 		<echo message="$a_msg" />
 	</target>
+
+	<target name="_log_to_file">
+		<description>
+			writes the logmessage ${msg} to the file ${to_file}
+			call this target like this: 
+				geant target="logger" arguments="${logfile},${message_string}"
+		</description>
+		
+		<argument name="a_msg" />
+		<argument name="a_file" />
+
+		<!-- unix -->
+		<exec executable="echo &quot;`date +%H:%M` ${a_msg}&quot; >> ${a_file}" accept_errors="true" unless="${is_windows}" />
+		
+		<!-- windows -->
+		<exec executable="time /T HH:SS >> ${a_file}" accept_errors="true" if="${is_windows}" />
+		<echo message="${a_msg}" to_file="${a_file}" append="true" if="${is_windows}" />
+	</target>
+	
+
 
 </project>

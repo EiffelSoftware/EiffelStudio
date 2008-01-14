@@ -46,12 +46,12 @@
 		<echo message="==================================" if="$tmp_available=false" />
 		<echo message="! ERROR: invalid ecf path [_ECF] !" if="$tmp_available=false" />
 		<echo message="==================================" if="$tmp_available=false" />
-		<set name="_error" value="-1" if="$tmp_available=false" />
+		<set name="_error" value="1" if="$tmp_available=false" />
 		<unset name="tmp_available" />
 
 		<set name="_final_error" value="0" if="${A_exit_on_failure}=false" />
 		<set name="_final_error" value="$_error" unless="${A_exit_on_failure}=false" />
-		<exit code="-1" unless="$_final_error=0" />
+		<exit code="1" unless="$_final_error=0" />
 		<unset name="_final_error" />
 	</target>
 
@@ -144,7 +144,7 @@
 		<echo message="_NAME=$_NAME" />
 		<echo message="_COMP_DIR=$_COMP_DIR" />
 		<echo message="_OUT_DIR=$_OUT_DIR" />
-		<exit code="-1" />
+		<exit code="1" />
 		-->
 
 		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}${path_separator}..${path_separator}.." 

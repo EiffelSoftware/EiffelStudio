@@ -41,7 +41,7 @@ feature -- Initialization
 				-- Perform the request, `l_result' will get the return code
 				l_result := curl_easy.perform (curl_handle)
 
-				-- always cleanup
+				-- Always cleanup
 				curl_easy.cleanup (curl_handle)
 			end
 

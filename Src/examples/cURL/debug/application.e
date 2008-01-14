@@ -36,7 +36,7 @@ feature -- Initialization
 				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "www.google.com")
 				l_result := curl_easy.perform (curl_handle)
 
-				-- always cleanup
+				-- Always cleanup
 				curl_easy.cleanup (curl_handle)
 			end
 

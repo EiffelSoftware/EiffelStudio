@@ -3218,7 +3218,7 @@ rt_private char *exception_string(int code)
 
 	if (code < 0) {							/* Raised by Eiffel call to raise */
 		return "User-defined exception.";	/* Don't want to give code--RAM */
-	} else if (code < 1 || code > EN_NEX)		/* Ensure index is valid */
+	} else if (code < 1 || code > EN_NEX) {	/* Ensure index is valid */
 		return "Unknown exception.";		/* Should never happen */
 	}
 

@@ -8,27 +8,28 @@
 
 	<target name="menu">
 		<set name="debug_mode" value="false" unless="${debug_mode}=true" />
-		<set name="runtimeversion" value="" unless="-${runtimeversion}-=--" />
+		<unset name="runtimeversion" if="-${runtimeversion}-=--" />
+		<set name="runtimeversion" value="" unless="${runtimeversion}" />
 		<echo message=" -> debug_mode=${debug_mode}" />
 		<echo message=" -> runtimeversion=${runtimeversion}" />
-		<geant target="update_wkbench" reuse_variables="true" />
+		<geant target="update_wkbench" />
 	</target>
 
 	<target name="debug">
 		<set name="debug_mode" value="true" />
 		<set name="runtimeversion" value="d" />
-		<geant target="menu" reuse_variables="true" />
+		<geant target="menu" />
 	</target>
 	<target name="w">
 		<set name="runtimeversion" value="w" />
-		<geant target="menu" reuse_variables="true" />
+		<geant target="menu" />
 	</target>
 
 	<target name="init">
 		<set name="config_local_path" value="${EIFFEL_SRC}${path_separator}scripts${path_separator}config-local.eant" />
 		<available resource="${config_local_path}" variable="config_local_available"/>
-		<geant target="create_config_local_script" reuse_variables="true" fork="false" unless="${config_local_available}=true"/>
-		<geant file="${config_local_path}" target="init" reuse_variables="true" fork="false"/>
+		<geant target="create_config_local_script"  unless="${config_local_available}=true"/>
+		<geant file="${config_local_path}" target="init" reuse_variables="true" fork="false" />
 		<available resource="${ISE_EIFFEL}_wkbench" variable="ise_wkbench_available"/>
 		<geant target="create_wkbench" unless="${ise_wkbench_available}=true" />
 	</target>
@@ -45,6 +46,8 @@
 		</echo>
 	</target>
 
+	<!-- Targets -->
+
 	<target name="create_wkbench" >
 		<echo message="Creating [${ISE_EIFFEL}_wkbench]" />
 		<mkdir directory="${ISE_EIFFEL}_wkbench" />
@@ -59,30 +62,30 @@
 		<set name="ise_platform_dir" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 
 		<available resource="${delivery_dir}" variable="tmp0_available" />
-		<geant target="copy_from_delivery" reuse_variables="true" if="${tmp0_available}=true" />
+		<geant target="copy_from_delivery" if="${tmp0_available}=true" />
 		<echo message="! Unavailable: Delivery folder= ${delivery_dir}" unless="${tmp0_available}=true" />
 
 		<mkdir directory="${ISE_EIFFEL}_wkbench${path_separator}library" />
 		<available resource="${EIFFEL_SRC}${path_separator}library" variable="tmp0_available" />
-		<geant target="copy_from_library" reuse_variables="true" if="${tmp0_available}=true" />
+		<geant target="copy_from_library" if="${tmp0_available}=true" />
 		<echo message="! Unavailable: EIFFEL_SRC/library folder= ${EIFFEL_SRC}${path_separator}library" unless="${tmp0_available}=true" />
 
 		<mkdir directory="${wb_platform_dir}" />
 
 		<available resource="${ise_platform_dir}" variable="tmp0_available" />
-		<geant target="copy_from_ise_eiffel" reuse_variables="true" if="${tmp0_available}=true" />
+		<geant target="copy_from_ise_eiffel" if="${tmp0_available}=true" />
 		<echo message="! Unavailable: ISE_EIFFEL folder= ${ise_platform_dir}" unless="${tmp0_available}=true" />
 
 		<available resource="${EIFFEL_SRC}" variable="tmp0_available" />
-		<geant target="copy_from_eiffel_src" reuse_variables="true" if="${tmp0_available}=true" />
+		<geant target="copy_from_eiffel_src" if="${tmp0_available}=true" />
 		<echo message="! Unavailable: EIFFEL_SRC folder= ${EIFFEL_SRC}" unless="${tmp0_available}=true" />
 
 		<set name="wcode_dir" value="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}W_code" />
 		<available resource="${wcode_dir}" variable="tmp0_available" />
-		<geant target="copy_from_to_w_code" reuse_variables="true" if="${tmp0_available}=true" />
+		<geant target="copy_from_to_w_code" if="${tmp0_available}=true" />
 		<echo message="! Unavailable: W_code folder= ${wcode_dir}" unless="${tmp0_available}=true" />
 
-		<geant target="update_executable_properties" reuse_variables="true" />
+		<geant target="update_executable_properties" />
 	</target>
 
 	<target name="update_executable_properties" depend="init" unless="${is_windows}" >

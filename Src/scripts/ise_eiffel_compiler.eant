@@ -20,7 +20,7 @@
 		<echo message="var [ISE_PLATFORM] is missing !" unless="$ISE_PLATFORM" />
 		<set name="l_env_ok" value="false" unless="${ISE_PLATFORM}" />
 		<geant target="check_system_windows" reuse_variables="true" />
-		<exit code="-1" if="${l_env_ok}=true" />
+		<exit code="1" if="${l_env_ok}=true" />
 		<unset name="l_env_ok" />
 	</target>
 	<target name="check_system_windows" if="$is_windows" once="true">
@@ -56,7 +56,6 @@
 		<argument name="a_output_dir" />
 		<argument name="a_from_f_code" />
 
-		<echo message=" -> Copy `${a_exec_name}' from [$a_dir${path_separator}...] to [$a_output_dir]" />
 
 		<geant target="check_available" >
 			<argument name="a_res" value="$a_output_dir" />
@@ -65,26 +64,25 @@
 		</geant>
 		<mkdir directory="$a_output_dir" if="${tmp_ok}=false"/>
 
-		<set name="tmp_dir" value="$a_dir${path_separator}F_code" if="${a_from_f_code}=true" />
-		<set name="tmp_dir" value="$a_dir${path_separator}W_code" unless="${a_from_f_code}=true" />
 
-		<available resource="${tmp_dir}${path_separator}${a_exec_name}${exe}" variable="tmp_available" />
-		<copy file="$a_exec_name${exe}" to_directory="$a_output_dir" dir="$tmp_dir" if="${tmp_available}=true"/>
+		<echo message=" -> Copy `${a_exec_name}' from [$a_dir] to [$a_output_dir]" />
+
+		<available dir="$a_dir" resource="${a_exec_name}${exe}" variable="tmp_available" />
+		<copy dir="$a_dir" file="$a_exec_name${exe}" to_directory="$a_output_dir" if="${tmp_available}=true"/>
 		<unset name="tmp_available" />
 
-		<available resource="$tmp_dir${path_separator}${a_exec_name}.melted" variable="tmp_available" unless="${a_from_f_code}=true" />
-		<copy file="${a_exec_name}.melted" to_directory="$a_output_dir" dir="$tmp_dir" if="${tmp_available}=true"/>
+		<available dir="$a_dir" resource="${a_exec_name}.melted" variable="tmp_available" unless="${a_from_f_code}=true" />
+		<copy dir="$a_dir" file="${a_exec_name}.melted" to_directory="$a_output_dir" if="${tmp_available}=true"/>
 		<unset name="tmp_available" />
 
-		<available resource="$tmp_dir${path_separator}${a_exec_name}.dll" variable="tmp_available" if="${is_windows}" />
-		<copy file="${a_exec_name}.dll" to_directory="$a_output_dir" dir="$tmp_dir" if="${tmp_available}=true"/>
+		<available dir="$a_dir" resource="${a_exec_name}.dll" variable="tmp_available" if="${is_windows}" />
+		<copy dir="$a_dir" file="${a_exec_name}.dll" to_directory="$a_output_dir" if="${tmp_available}=true"/>
 		<unset name="tmp_available" />
 
-		<available resource="$tmp_dir${path_separator}lib${a_exec_name}.dll" variable="tmp_available" if="${is_windows}" />
-		<copy file="lib${a_exec_name}.dll" to_directory="$a_output_dir" dir="$tmp_dir" if="${tmp_available}=true"/>
+		<available dir="$a_dir" resource="lib${a_exec_name}.dll" variable="tmp_available" if="${is_windows}" />
+		<copy dir="$a_dir" file="lib${a_exec_name}.dll" to_directory="$a_output_dir" if="${tmp_available}=true"/>
 		<unset name="tmp_available" />
 
-		<unset name="tmp_dir" />
 		<unset name="tmp_ok" />
 	</target>
 
@@ -107,9 +105,11 @@
 			<argument name="a_msg" value=" .. Config file [$a_ecf] is not available!" />
 			<argument name="a_var" value="tmp_ok" />
 		</geant>
-		<exit code="-1" if="${tmp_ok}=false" />
+		<exit code="1" if="${tmp_ok}=false" />
 
-		<set name="eccmd" value="ec${exe} " />
+		<set name="ecname" value="${EC_NAME}" if="$EC_NAME" />
+		<set name="ecname" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin${path_separator}ec" unless="$EC_NAME" />
+		<set name="eccmd" value="${ecname}${exe} " />
 		<set name="eccmd" value="${eccmd} -config $a_ecf" />
 		<set name="eccmd" value="${eccmd} -target $a_target" />
 		<set name="eccmd" value="${eccmd} -project_path $a_comp_dir" />
@@ -139,15 +139,36 @@
 			exit_code_variable="return_code" 
 		/>
 		<unset name="eccmd" />
-		<echo message=" -> compilation failed!" 			unless="${return_code}=0" />
+
+		<set name="L_is_from_f_code" 	value="true" 	if="${a_compilation_mode}=finalize" />
+		<set name="L_is_from_f_code" 	value="false" 	unless="${a_compilation_mode}=finalize" />
+
+		<!-- we can not rely on return_code, so let's check for existance of executable file -->
+		<set name="L_comp_dir"	value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target${path_separator}W_code"
+			if="${L_is_from_f_code}=false" />
+		<set name="L_comp_dir"	value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target${path_separator}F_code" 
+			if="${L_is_from_f_code}=true" />
+
+		<available dir="$L_comp_dir" resource="${a_name}${exe}" variable="tmp_available" />
+		<available dir="$L_comp_dir" resource="${a_name}.dll" variable="tmp_available" if="$tmp_available=false" />
+		<available dir="$L_comp_dir" resource="${a_name}.so" variable="tmp_available" if="$tmp_available=false" />
+		<set name="return_code" value="0" if="$tmp_available=true" />
+		<set name="return_code" value="1" if="$tmp_available=false" />
+		<unset name="tmp_available" />
+
 		<echo message=" -> compilation succeed!" 			if="${return_code}=0" />
 		<set name="tmp_output_dir" value="$a_output_dir" 	if="${return_code}=0" />
+		<echo message=" -> compilation failed!" 			unless="${return_code}=0" />
+		<unset name="tmp_output_dir"						unless="${return_code}=0" />
+
 		<geant target="copy_to_output_dir" 					unless="-${tmp_output_dir}-=--" >
 			<argument name="a_exec_name" 	value="$a_name" />
-			<argument name="a_dir" 			value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target" />
+			<argument name="a_dir" 			value="${L_comp_dir}" />
 			<argument name="a_output_dir" 	value="$a_output_dir" />
-			<argument name="a_from_f_code" 	value="true" 	if="${a_compilation_mode}=finalize" />
+			<argument name="a_from_f_code" 	value="$L_is_from_f_code" />
 		</geant>
+		<unset name="L_comp_dir" />
+		<unset name="L_is_from_f_code" />
 		<unset name="tmp_output_dir" />
 	</target>
 
@@ -201,7 +222,7 @@
 			<argument name="a_comp_dir" value="$a_comp_dir" />
 			<argument name="a_output_dir" value="$a_output_dir" />
 
-			<argument name="a_c_compile" value="$c_compile" if="$c_compile=true"/>
+			<argument name="a_c_compile" value="$c_compile" />
 			<argument name="a_clean" value="$l_clean" />
 			<argument name="a_batch" value="$l_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
@@ -271,7 +292,7 @@
 			<argument name="a_comp_dir" value="$a_comp_dir" />
 			<argument name="a_output_dir" value="$a_output_dir" />
 
-			<argument name="a_c_compile" value="$c_compile" if="$c_compile"/>
+			<argument name="a_c_compile" value="$c_compile" />
 			<argument name="a_clean" value="$force_clean" />
 			<argument name="a_batch" value="$force_batch" />
 			<argument name="a_use_settings" value="$use_settings" />

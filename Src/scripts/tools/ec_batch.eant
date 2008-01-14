@@ -15,7 +15,7 @@
 		<precursor/>
 		<geant target="set_ECF" arguments="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace${path_separator}ec.ecf" />
 		<geant target="set_TARGET" arguments="batch" />
-		<geant target="set_NAME" arguments="ec" />
+		<geant target="set_NAME" arguments="ecb" />
 	</target>
 
 	<target name="prepare" if="$is_windows">

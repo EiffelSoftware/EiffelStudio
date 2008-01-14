@@ -977,7 +977,7 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 				/* Done ? */
 			app_twrite("true", 4);
 				/* Failed ? */
-			if (*MTOF(OResult)) {
+			if (MTOF(OResult) && *MTOF(OResult)) {
 				app_twrite("true", 4);
 				app_send_reference (sp, *MTOF(OResult));
 			} else {

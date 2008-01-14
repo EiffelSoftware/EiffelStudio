@@ -41,7 +41,7 @@ feature -- Initialization
 			-- Send all data to default Eiffel curl write function
 			curl_easy.set_write_function (curl_handle)
 
-			-- We pass our `l_curl_string' struct to the callback function */
+			-- We pass our `l_curl_string''s object id to the callback function */
 			curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_curl_string.object_id)
 
 			-- Get it!

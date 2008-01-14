@@ -71,7 +71,7 @@ inherit
 			on_draw_item, on_set_focus, background_brush, on_set_cursor,
 			default_process_message, on_right_button_double_click, hide,
 			on_wm_menu_command, on_mouse_move, on_wm_window_pos_changing,
-			on_show, on_char, on_left_button_down,
+			on_show, on_hide, on_char, on_left_button_down,
 			on_get_min_max_info, on_left_button_double_click, destroy,
 			on_sys_key_up, on_wm_command, on_activate, on_wm_setting_change,
 			is_displayed, on_wm_dropfiles

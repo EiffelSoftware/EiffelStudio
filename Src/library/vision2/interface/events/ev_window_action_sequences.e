@@ -42,7 +42,15 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
+	hide_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when window is hidden.
+		do
+			Result := implementation.hide_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed whan a request to close window
 			-- has been received.

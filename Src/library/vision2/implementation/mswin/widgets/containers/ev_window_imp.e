@@ -108,6 +108,7 @@ inherit
 			on_get_min_max_info,
 			on_destroy,
 			on_show,
+			on_hide,
 			on_move,
 			on_menu_command,
 			window_process_message,
@@ -785,6 +786,16 @@ feature {EV_ANY_I} -- Implementation
 				width.min (maximum_width),
 				height.min (maximum_height)
 				)
+		end
+
+	on_hide
+			-- Wm_showwindow message.
+			-- The window is being hidden.
+		do
+			Precursor
+			if hide_actions_internal /= Void then
+				hide_actions_internal.call (Void)
+			end
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is

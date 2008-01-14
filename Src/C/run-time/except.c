@@ -444,8 +444,9 @@ rt_public struct ex_vect *new_exset(char *name, EIF_TYPE_INDEX origin, char *obj
 	 * trace. Logically, it is as if we had never entered in this routine.
 	 */
 	vector = exget(&eif_stack);	 /* Get brand new vector on the Eiffel stack */
-	if (vector == (struct ex_vect *) 0)		/* No more memory */
+	if (vector == (struct ex_vect *) 0) {		/* No more memory */
 		enomem();					/* Critical exception */
+	}
 
 	vector->ex_type = EX_CALL;		/* Signals entry in a new routine */
 	vector->ex_retry = 0;			/* Function not retried (yet!) */
@@ -482,8 +483,9 @@ rt_public struct ex_vect *exft(void)
 	 * trace. Logically, it is as if we had never entered in this routine.
 	 */
 	vector = exget(&eif_stack);	 /* Get brand new vector on the Eiffel stack */
-	if (vector == (struct ex_vect *) 0)		/* No more memory */
+	if (vector == (struct ex_vect *) 0) {	/* No more memory */
 		enomem();							/* Critical exception */
+	}
 
 	memset (vector, 0, sizeof(struct ex_vect));	/* Make sure there is no garbage in the vector */
 
@@ -524,8 +526,9 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 	last_item = extop(&eif_stack);		/* Make sure top is EX_RESC */
 
 #ifdef MAY_PANIC
-	if (last_item->ex_type != EX_RESC)
+	if (last_item->ex_type != EX_RESC) {
 		eif_panic(RT_BOTCHED_MSG);
+	}
 #endif
 
 	SIGBLOCK;				/* Critical section, protected against signals */
@@ -548,8 +551,9 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 	rout_vect = extop(&eif_trace);		/* Top of exception trace stack */
 
 #ifdef MAY_PANIC
-	if (rout_vect->ex_type != EN_ILVL)
+	if (rout_vect->ex_type != EN_ILVL) {
 		eif_panic(RT_BOTCHED_MSG);
+	}
 #endif
 
 	expop(&eif_trace);					/* Remove EN_ILVL */
@@ -696,10 +700,12 @@ rt_public struct ex_vect * extre(void)
 	vector = extop(&eif_stack);
 
 #ifdef MAY_PANIC
-	if (vector == 0)
+	if (vector == 0) {
 		eif_panic("Missing outer execution vector.");
-	if (vector->ex_type != EX_CALL)
+	}
+	if (vector->ex_type != EX_CALL) {
 		eif_panic("Wrong type of outer execution vector.");
+	}
 #endif
 
 		/* Save routine execution vector. */
@@ -718,8 +724,7 @@ rt_public struct ex_vect * extre(void)
 	if (vector == (struct ex_vect *) 0) {	/* No more memory */
 		echmem |= MEM_FULL;		/* Exception stack incomplete */
 		xraise(EN_MEM);			/* Non-critical exception */
-	}
-	else {
+	} else {
 			/* Put original routine execution vector to the top. */
 		*vector = v;
 	}
@@ -750,10 +755,12 @@ rt_public struct ex_vect * extrl(void)
 	vector = extop(&eif_stack);
 
 #ifdef MAY_PANIC
-	if (vector == 0)
+	if (vector == 0) {
 		eif_panic("Missing execution vector.");
-	if (vector->ex_type != EX_CALL && vector->ex_type != EX_RESC && vector->ex_type != EX_RETY)
+	}
+	if (vector->ex_type != EX_CALL && vector->ex_type != EX_RESC && vector->ex_type != EX_RETY) {
 		eif_panic("Wrong type of execution vector.");
+	}
 #endif
 
 		/* Save routine execution vector. */
@@ -768,10 +775,12 @@ rt_public struct ex_vect * extrl(void)
 	vector = extop(&eif_stack);
 
 #ifdef MAY_PANIC
-	if (vector == 0)
+	if (vector == 0) {
 		eif_panic("Missing 'try' execution vector.");
-	if (vector->ex_type != EX_OSTK)
+	}
+	if (vector->ex_type != EX_OSTK) {
 		eif_panic("Wrong type of 'try' execution vector.");
+	}
 #endif
 
 		/* Restore routine execution vector. */
@@ -851,8 +860,9 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 	 * them for us...
 	 */
 
-	if (echmem & MEM_FSTK)			/* Eiffel stack is full */
+	if (echmem & MEM_FSTK) {		/* Eiffel stack is full */
 		enomem();					/* Critical exception */
+	}
 
 #ifdef ISE_GC
 	/* Before getting an execution vector, we must disable the GC. Indeed, we
@@ -1023,8 +1033,9 @@ rt_public void exresc(struct ex_vect *rout_vect)
 		}
 		trace->ex_type = EN_ILVL;			/* New exception level */
 		trace->ex_lvl = ++echlvl;			/* Record new level */
-	} else
+	} else {
 		echlvl++;
+	}
 
 	trace = exget(&eif_stack);				/* Get an execution vector */
 	if (trace == (struct ex_vect *) 0) {	/* No more memory */
@@ -1080,17 +1091,20 @@ rt_public void eraise(char *tag, long num)
 	char			*reci_name = NULL;
 	struct ex_vect	*vector_call;	/* The stack trace entry */
 
-	if (echmem & MEM_PANIC)		/* In panic mode, do nothing */
+	if (echmem & MEM_PANIC) {	/* In panic mode, do nothing */
 		return;
+	}
 
-	if (echmem & MEM_FATAL)		/* In fatal error mode, panic! */
+	if (echmem & MEM_FATAL) {	/* In fatal error mode, panic! */
 		eif_panic("exception in fatal mode");
+	}
 
 	/* Excepted for EN_OMEM, check whether the user wants to ignore the
 	 * exception or not. If so, return immediately.
 	 */
-	if (num != EN_OMEM && num < EN_NEX && is_ex_ignored(num))
+	if (num != EN_OMEM && num < EN_NEX && is_ex_ignored(num)) {
 		return;			/* Exception is ignored */
+	}
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 	echval = (int) num;		/* Set exception number */
@@ -1103,8 +1117,9 @@ rt_public void eraise(char *tag, long num)
 		trace = exget(&eif_trace);
 		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
 			echmem |= MEM_FULL;					/* Signal it */
-			if (num != EN_OMEM)					/* If not already there */
+			if (num != EN_OMEM) {				/* If not already there */
 				enomem();						/* Raise an out of memory */
+			}
 		} else {
 				/* Make sure there is no garbage in `trace'. */
 			memset (trace, 0, sizeof(struct ex_vect));
@@ -1158,10 +1173,10 @@ rt_public void eraise(char *tag, long num)
 		if (in_assertion) {
 			tg = vector->ex_name;
 			type = vector->ex_type;
-			if (type == EX_CINV)
+			if (type == EX_CINV) {
 				obj = vector->ex_oid;
-			if (type == EX_CINV && echentry || type == EX_PRE)
-			{
+			}
+			if (type == EX_CINV && echentry || type == EX_PRE) {
 				vector_call = top_n_call(&eif_stack, 2);
 				if (vector_call != (struct ex_vect *) 0) {
 					eclass = vector_call->ex_orig;
@@ -1179,15 +1194,17 @@ rt_public void eraise(char *tag, long num)
 				echclass = vector->ex_orig; /* Record class name */
 				line_number = vector->ex_linenum; /* Record line number */
 				vector = exget(&eif_stack);
-				if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
-					echmem |= MEM_FULL;				 /* Signal it */
-					if (num != EN_OMEM)				 /* If not already there */
-						enomem();					   /* Raise an out of memory */
+				if (vector == (struct ex_vect *) 0) {	/* Stack is full now */
+					echmem |= MEM_FULL;					/* Signal it */
+					if (num != EN_OMEM) {				/* If not already there */
+						enomem();						/* Raise an out of memory */
+					}
 				} else {
 					vector->ex_type = type;	 /* Restore type */
 					vector->ex_name = tg;	   /* Restore tag */
-					if (type == EX_CINV)
+					if (type == EX_CINV) {
 						vector->ex_oid = obj;   /* Restore object id if in invariant */
+					}
 				}
 			}
 		} else {
@@ -1237,17 +1254,20 @@ rt_public void com_eraise(char *tag, long num)
 	struct ex_vect	*vector_call;	/* The stack trace entry */
 	long			com_error = 0, ex_obj = num;
 
-	if (echmem & MEM_PANIC)		/* In panic mode, do nothing */
+	if (echmem & MEM_PANIC) {		/* In panic mode, do nothing */
 		return;
+	}
 
-	if (echmem & MEM_FATAL)		/* In fatal error mode, panic! */
+	if (echmem & MEM_FATAL) {		/* In fatal error mode, panic! */
 		eif_panic("exception in fatal mode");
+	}
 
 	/* Excepted for EN_OMEM, check whether the user wants to ignore the
 	 * exception or not. If so, return immediately.
 	 */
-	if (num != EN_OMEM && num < EN_NEX && is_ex_ignored(num))
+	if (num != EN_OMEM && num < EN_NEX && is_ex_ignored(num)) {
 		return;			/* Exception is ignored */
+	}
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 	echval = (int) num;		/* Set exception number */
@@ -1259,8 +1279,9 @@ rt_public void com_eraise(char *tag, long num)
 		trace = exget(&eif_trace);
 		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
 			echmem |= MEM_FULL;					/* Signal it */
-			if (num != EN_OMEM)					/* If not already there */
+			if (num != EN_OMEM) {				/* If not already there */
 				enomem();						/* Raise an out of memory */
+			}
 		} else {
 			trace->ex_type = (unsigned char) num;		/* Exception code */
 			switch (num) {
@@ -1283,7 +1304,7 @@ rt_public void com_eraise(char *tag, long num)
 		signo = num;		/* Here `signo' is used as Com error number for convenience, not signal number at all */
 		ex_obj = EN_COM;
 		echtg = tag;
-	}else{
+	} else {
 
 		/* Set up 'echtg' to be the tag of the current exception, if one can be
 		 * computed, otherwise it is a null pointer. This will be used by the
@@ -1318,8 +1339,9 @@ rt_public void com_eraise(char *tag, long num)
 		if (in_assertion) {
 			tg = vector->ex_name;
 			type = vector->ex_type;
-			if (type == EX_CINV)
+			if (type == EX_CINV) {
 				obj = vector->ex_oid;
+			}
 			if (type == EX_CINV && echentry || type == EX_PRE)
 			{
 				vector_call = top_n_call(&eif_stack, 2);
@@ -1339,13 +1361,15 @@ rt_public void com_eraise(char *tag, long num)
 				vector = exget(&eif_stack);
 				if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
 					echmem |= MEM_FULL;				 /* Signal it */
-					if (num != EN_OMEM)				 /* If not already there */
+					if (num != EN_OMEM) {				 /* If not already there */
 						enomem();					   /* Raise an out of memory */
+					}
 				} else {
-					vector->ex_type = type;	 /* Restore type */
-					vector->ex_name = tg;	   /* Restore tag */
-					if (type == EX_CINV)
-						vector->ex_oid = obj;   /* Restore object id if in invariant */
+					vector->ex_type = type;		/* Restore type */
+					vector->ex_name = tg;		/* Restore tag */
+					if (type == EX_CINV) {
+						vector->ex_oid = obj;	/* Restore object id if in invariant */
+					}
 				}
 			}
 		} else {
@@ -1413,14 +1437,16 @@ rt_public void eviol(void)
 
 	echval = code;				/* Keep track of the last exception code */
 	echtg = vector->ex_name;	/* Record exception tag, if any */
-	type = vector->ex_type;	 /* Record exception type */
-	if (type == EX_CINV)		/* if in invariant */
+	type = vector->ex_type;		/* Record exception type */
+	if (type == EX_CINV) {		/* if in invariant */
 		obj = vector->ex_oid;   /*	  record object */
+	}
 
-	if (type == EX_CINV && echentry || type == EX_PRE)
+	if (type == EX_CINV && echentry || type == EX_PRE) {
 		vector_call = top_n_call(&eif_stack, 2); /* Get the caller */
-	else
+	} else {
 		vector_call = top_n_call(&eif_stack, 1);
+	}
 	if (vector_call != (struct ex_vect *) 0) {
 		eclass = vector_call->ex_orig;
 		reci_name = vector_call->ex_rout;
@@ -1446,8 +1472,9 @@ rt_public void eviol(void)
 
 	vector->ex_type = type;	 /* Restore type */
 	vector->ex_name = echtg;	/* Restore tag */
-	if (type == EX_CINV)
+	if (type == EX_CINV) {
 		vector->ex_oid = obj;   /* Restore object id if in invariant */
+	}
 
 	SIGRESUME;
 
@@ -1481,8 +1508,9 @@ rt_shared void ereturn(void)
 	rescue = (jmp_buf *) backtrack();			/* Attempt rescue */
 	SIGRESUME;						/* Dispatch queued signals */
 
-	if (rescue != (jmp_buf *) 0)		/* %%zs was (char *) */
+	if (rescue != (jmp_buf *) 0) {		/* %%zs was (char *) */
 		longjmp(*rescue, echval);	/* Setjmp will return the exception code */
+	}
 
 	eif_panic(RT_VANISHED_MSG);				/* main() should have created a vector */
 	/* NOTREACHED */
@@ -1519,14 +1547,16 @@ rt_private jmp_buf *backtrack(void)
 			 * level. We'll jump in a rescue clause and the generated C code
 			 * will call exresc(), which will push a "New level" on stack.
 			 */
-			if (top->ex_jbuf && !(echmem & MEM_SPEC)) 	/* Not in panic */
+			if (top->ex_jbuf && !(echmem & MEM_SPEC)) { /* Not in panic */
 				return top->ex_jbuf;		/* We found a valid setjmp buffer */
+			}
 			break;
 		case EX_OLD:
 			/* We return the local rescue setjmp buffer */
 			echval = EN_OLD;			/* Exception in rescue clause */
-			if (top->ex_jbuf && !(echmem & MEM_SPEC)) 	/* Not in panic */
+			if (top->ex_jbuf && !(echmem & MEM_SPEC)) { 	/* Not in panic */
 				return top->ex_jbuf;		/* We found a valid setjmp buffer */
+			}
 			break;
 		case EX_OSTK:					/* Exception catcher */
 			/* Here we are: we caught the exception from the interpreter. There
@@ -1536,19 +1566,22 @@ rt_private jmp_buf *backtrack(void)
 			 * This has been enhanced to make a general exception catcher, hence
 			 * it is also defined in final mode.
 			 */
-			if (!(echmem & MEM_SPEC))	/* Not in panic */
+			if (!(echmem & MEM_SPEC)) {	/* Not in panic */
 				return top->ex_jbuf;	/* Setjmp buffer exists */
+			}
 			break;
 		case EX_HDLR:					/* Signal handler routine failed */
 #ifdef MAY_PANIC
 			if (top->ex_jbuf) {				/* There is a setjmp buffer */
 				if (!(echmem & MEM_SPEC))	/* Not in panic mode */
 					return top->ex_jbuf;	/* Address of env buffer */
-			} else
+			} else {
 				eif_panic(RT_BOTCHED_MSG);				/* There has to be a buffer */
+			}
 #else
-			if (!(echmem & MEM_SPEC))		/* Not in panic mode */
+			if (!(echmem & MEM_SPEC)){		/* Not in panic mode */
 				return top->ex_jbuf;		/* Address of env buffer */
+			}
 #endif
 			break;
 
@@ -1589,8 +1622,9 @@ rt_private jmp_buf *backtrack(void)
 			/* In workbench mode, if we detected an EX_OSTK catching record,
 			 * then the ex_jbuf entry in the trace vector is a non-null pointer.
 			 */
-			if (jbuf != NULL && !(echmem & MEM_SPEC))
+			if (jbuf != NULL && !(echmem & MEM_SPEC)) {
 				return jbuf;			/* Setjmp buffer from EX_OSTK */
+			}
 		}
 #endif
 			break;
@@ -1658,8 +1692,9 @@ rt_private void build_trace(void)
 			 * level. We'll jump in a rescue clause and the generated C code
 			 * will call exresc(), which will push a "New level" on stack.
 			 */
-			if (top->ex_jbuf && !(echmem & MEM_SPEC)) 	/* Not in panic */
+			if (top->ex_jbuf && !(echmem & MEM_SPEC)) {	/* Not in panic */
 				return;		/* We found a valid setjmp buffer */
+			}
 			break;
 		case EX_OSTK:					/* Exception catcher */
 			/* Here we are: we caught the exception from the interpreter. There
@@ -1687,8 +1722,9 @@ rt_private void build_trace(void)
 				memcpy (top, trace, sizeof(struct ex_vect));	/* Shift record */
 				trace->ex_type = EN_OLVL;	/* Exit one exception level */
 				trace->ex_lvl = echlvl--;	/* Level we're comming from */
-			} else
+			} else {
 				echlvl--;
+			}
 			break;
 		case EX_HDLR:					/* Signal handler routine failed */
 			/* Push an "end of level" pseudo-record on the exception trace stack
@@ -1701,13 +1737,16 @@ rt_private void build_trace(void)
 			trace->ex_lvl = echlvl--;		/* Level we're comming from */
 #ifdef MAY_PANIC
 			if (top->ex_jbuf) {				/* There is a setjmp buffer */
-				if (!(echmem & MEM_SPEC))	/* Not in panic mode */
+				if (!(echmem & MEM_SPEC)) {	/* Not in panic mode */
 					return;	/* Address of env buffer */
-			} else
+				}
+			} else {
 				eif_panic(RT_BOTCHED_MSG);				/* There has to be a buffer */
+			}
 #else
-			if (!(echmem & MEM_SPEC))		/* Not in panic mode */
+			if (!(echmem & MEM_SPEC)) {	/* Not in panic mode */
 				return;		/* Address of env buffer */
+			}
 #endif
 			break;
 
@@ -1847,8 +1886,9 @@ rt_public void exok(void)
 		echmem = 0;				/* We seem to have recovered from out of mem */
 	} else {					/* Normal case (should rarely occur) */
 		while ((top = extop(&eif_trace))) {
-			if (top->ex_type == EN_ILVL && top->ex_lvl == echlvl)
+			if (top->ex_type == EN_ILVL && top->ex_lvl == echlvl) {
 				break;			/* Found matching level record */
+			}
 			expop(&eif_trace);	/* Will panic if we underflow */
 		}
 		echmem &= ~MEM_FSTK;	/* Eiffel trace stack no longer full */
@@ -1879,7 +1919,9 @@ rt_public void exclear(void)
 	 * here--RAM).
 	 */
 
-	if (echval == 0) return; /* No exception occurred */
+	if (echval == 0) {
+		return; /* No exception occurred */
+	}
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
@@ -1915,8 +1957,9 @@ rt_private void excur(void)
 	struct ex_vect *top;		/* Walk through stack */
 
 #ifdef MAY_PANIC
-	if (echlvl < 1)				/* There has to be at least one nesting level */
+	if (echlvl < 1) {			/* There has to be at least one nesting level */
 		eif_panic(RT_BOTCHED_MSG);
+	}
 #endif
 
 	memcpy (&context, &eif_trace, sizeof(struct xstack));
@@ -1980,8 +2023,9 @@ rt_public void esfail(void)
 	fflush(stdout);
 
 	/* Display exception stack only if print_history_table is true */
-	if (!print_history_table)
+	if (!print_history_table) {
 		return;
+	}
 
 	/* Signals failure. If the out of memory flags are set, mention it */
 	EIF_EXCEPT_LOCK
@@ -2028,14 +2072,17 @@ rt_private void exception(int how)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
-	if (db_ign[echval])		/* Current exception to be ignored */
+	if (db_ign[echval]) {	/* Current exception to be ignored */
 		return;				/* Do not stop execution */
+	}
 
-	if (!debug_mode)
+	if (!debug_mode) {
 		return;
+	}
 
-	if ((echval == EN_FAIL || echval == EN_OSTK) || (echval == EN_RES))
+	if ((echval == EN_FAIL || echval == EN_OSTK) || (echval == EN_RES)) {
 		return;
+	}
 	dbreak(how);			/* Stop execution */
 }
 #endif
@@ -2087,14 +2134,16 @@ rt_public void eif_panic(char *msg)
 	 * on stderr, and something really weird must be happening, but there is
 	 * not much we can do.
 	 */
-	if (echmem & MEM_PANIC)			/* Already recorded a panic? */
+	if (echmem & MEM_PANIC) {		/* Already recorded a panic? */
 		return;
+	}
 
 	echmem |= MEM_PANIC;			/* Signals we enter in panic mode */
 	if (!(echmem & MEM_FSTK)) {
 		trace = exget(&eif_trace);	/* Try saving on top of the stack */
-		if (trace)
+		if (trace) {
 			trace->ex_type = EN_BYE;
+		}
 	}
 	echtg = msg;					/* Associated tag */
 	esfail();						/* Raise system failure and stack dump */
@@ -2143,14 +2192,16 @@ rt_public void fatal_error(char *msg)
 	 * on stderr, and something really weird must be happening, but there is
 	 * not much we can do.
 	 */
-	if (echmem & MEM_FATAL)			/* Already recorded a fatal? */
+	if (echmem & MEM_FATAL) {		/* Already recorded a fatal? */
 		return;
+	}
 
 	echmem |= MEM_FATAL;			/* Signals we enter in panic mode */
 	if (!(echmem & MEM_FSTK)) {
 		trace = exget(&eif_trace);	/* Try saving on top of the stack */
-		if (trace)
+		if (trace) {
 			trace->ex_type = EN_FATAL;
+		}
 	}
 	echtg = msg;					/* Associated tag */
 	echrt = (char *) 0;			 /* No routine name */
@@ -2237,16 +2288,18 @@ rt_private void find_call(void)
 			eif_except.rname = item->ex_rout;	/* Routine name */
 			eif_except.from = item->ex_orig;	/* Where it comes from */
 			eif_except.obj_id = item->ex_id;	/* Object's ID */
-			if (item->ex_retry)				/* Function has been retried */
+			if (item->ex_retry) {				/* Function has been retried */
 				eif_except.retried = 1;			/* Resumption has been attempted */
+			}
 
 			/* We want to signal an entry in a rescue clause even if it has not
 			 * led to an exception. If the end of the rescue clause is reached,
 			 * the ending of the rescue clause set the ex_rescue flag to 1.
 			 */
 
-			if (item->ex_rescue)
+			if (item->ex_rescue) {
 				eif_except.rescued = 1;			/* Led to a (failed) rescue */
+			}
 			break;
 
 		} else if (item->ex_type == EN_PRE) {
@@ -2324,8 +2377,9 @@ rt_private void extend_trace_string(char *line)
 		if(ex_string.area) {
 			strcpy (ex_string.area + ex_string.used, line);
 			ex_string.used += strlen(line);
-		} else
+		} else {
 			enomem();
+		}
 	}
 }
 rt_public char* stack_trace_str (void)
@@ -2337,8 +2391,9 @@ rt_public char* stack_trace_str (void)
 
     /* Clean the area from a previous call. Keep TRACE_SZ of the trace */
     if (ex_string.area || ex_string.size > TRACE_SZ) {
-		if (ex_string.area)
+		if (ex_string.area) {
 			eif_free(ex_string.area);
+		}
 			/* Prepare the structure for a new trace */
 		ex_string.used = 0;
 		ex_string.size = TRACE_SZ;
@@ -2392,12 +2447,13 @@ rt_private void dump_stack(void (*append_trace)(char *))
 	sprintf(buffer, "%s\n", RT_THREAD_ENTER_MSG);
 	append_trace(buffer);
 	
-	if (!(eif_thr_is_root()))
+	if (!(eif_thr_is_root())) {
 		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", 
 				"Child thread", (rt_uint_ptr) eif_thr_context->tid, "(thread id)");
-	else
+	} else {
 		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", 
 				"Root thread", (rt_uint_ptr) 0, "(thread id)");
+	}
 		
 	append_trace(buffer);
 	sprintf(buffer, "%s\n", RT_THREAD_FAILED_MSG);
@@ -2447,8 +2503,9 @@ rt_private void recursive_dump(void (*append_trace)(char *), int level)
 			 * if we reached the last item in the stack.
 			 */
 			(void) exnext();			/* Skip pseudo-vector "New level" */
-			if (exend())
+			if (exend()) {
 				return;					/* Exit if at the end of the stack */
+			}
 			sprintf(buffer, RT_BRANCH_ENTER_MSG, trace->ex_lvl);
 			append_trace(buffer);
 			sprintf(buffer, "\n%s\n", RT_FAILED_MSG);
@@ -2683,17 +2740,19 @@ rt_private void print_top(void (*append_trace)(char *))
 
 	/* create the 'routine_name@line_number' string. We limit ourself to the first 240
 	 * characters of `routine_name' otherwise we will do a buffer overflow. */
-	if (line_number>0)
+	if (line_number>0) {
 		/* the line number seems valid, so we are going to print it */
 		sprintf(rout_name_buffer, "%.240s @%d", eif_except.rname, line_number);
-	else
+	} else {
 		/* the line number is not valid, so we are forgetting it */
 		sprintf(rout_name_buffer, "%.240s", eif_except.rname);
+	}
 
-	if (eif_except.tag)
+	if (eif_except.tag) {
 		sprintf(buf, "%.255s:", eif_except.tag);
-	else
+	} else {
 		buf[0] = '\0';
+	}
 
 	if (eif_except.from >= 0) {
 		if (eif_except.obj_id) {
@@ -2725,19 +2784,23 @@ rt_private void print_top(void (*append_trace)(char *))
 			/* We limit ourself to the first 1000 characters of class name
 			 * to avoir buffer overflow. */
 		if (eif_except.obj_id) {
-			if (eif_except.from != Dtype(eif_except.obj_id))
+			if (eif_except.from != Dtype(eif_except.obj_id)) {
 				sprintf(buf, "(From %.1000s)", Origin(eif_except.from));
-		} else
+			}
+		} else {
 			sprintf(buf, "(From %.1000s)", Origin(eif_except.from));
+		}
 	}
 
 	/* Start panic effect when we reach the EN_BYE record */
-	if (code == EN_BYE)
+	if (code == EN_BYE) {
 		echval = EN_BYE;
+	}
 
 	/* Start fatal effect when we reach the EN_FATAL record */
-	if (code == EN_FATAL)
+	if (code == EN_FATAL) {
 		echval = EN_FATAL;
+	}
 
 	(void) exnext();			/* Can safely be removed */
 
@@ -2772,12 +2835,11 @@ rt_private void print_top(void (*append_trace)(char *))
 	} else if (code == EN_FAIL || code == EN_RES) {
 		if (eif_except.retried) {
 			sprintf(buffer, "Retry\n%s\n", RT_RETRIED_MSG);
-		} else
-			if (eif_except.rescued) {
-				sprintf(buffer, "Rescue\n%s\n", RT_FAILED_MSG);
-			} else {
-				sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
-			}
+		} else if (eif_except.rescued) {
+			sprintf(buffer, "Rescue\n%s\n", RT_FAILED_MSG);
+		} else {
+			sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
+		}
 
 		finished = 1;
 	}
@@ -2827,8 +2889,9 @@ rt_shared struct ex_vect *exget(struct xstack *stk)
 
 	if (top == (struct ex_vect *) 0)	{		/* No stack yet? */
 		top = stack_allocate(stk, eif_stack_chunk);	/* Create one */
-		if (top == (struct ex_vect *) 0) 		/* Could not create stack */
+		if (top == (struct ex_vect *) 0) { 		/* Could not create stack */
 			return top;
+		}
 	}
 
 	if (stk->st_end == top) {
@@ -2837,8 +2900,9 @@ rt_shared struct ex_vect *exget(struct xstack *stk)
 		 * a new one and insert it in the list.
 		 */
 		if (stk->st_cur == stk->st_tl) {	/* Reached last chunk */
-			if (-1 == stack_extend(stk, eif_stack_chunk))
+			if (-1 == stack_extend(stk, eif_stack_chunk)) {
 				return (struct ex_vect *) 0;
+			}
 			top = stk->st_top;				/* New top */
 		} else {
 			struct stxchunk *current;		/* New current chunk */
@@ -2867,8 +2931,9 @@ rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size)
 	size *= sizeof(struct ex_vect);
 	size += sizeof(*chunk);				/* Ensure arena is a correct multiple */
 	chunk = (struct stxchunk *) cmalloc(size);
-	if (chunk == (struct stxchunk *) 0)
-		return (struct ex_vect *) 0;	/* Malloc failed for some reason */
+	if (chunk == (struct stxchunk *) 0) {
+		return (struct ex_vect *) 0;		/* Malloc failed for some reason */
+	}
 
 	stk->st_hd = chunk;						/* New stack (head of list) */
 	stk->st_tl = chunk;						/* One chunk for now */
@@ -2901,11 +2966,13 @@ rt_private int stack_extend(struct xstack *stk, rt_uint_ptr size)
 	chunk = (struct stxchunk *) cmalloc(size);
 	if (chunk == (struct stxchunk *) 0) {
 		chunk = (struct stxchunk *) uchunk();	/* Attempt with urgent mem */
-		if (chunk != (struct stxchunk *) 0)
+		if (chunk != (struct stxchunk *) 0) {
 			size = HEADER(chunk)->ov_size & B_SIZE;	/* Size of urgent chunks */
+		}
 	}
-	if (chunk == (struct stxchunk *) 0)
+	if (chunk == (struct stxchunk *) 0) {
 		return -1;		/* Malloc failed for some reason */
+	}
 
 	arena = (struct ex_vect *) (chunk + 1);	/* Header of chunk */
 	chunk->sk_next = (struct stxchunk *) 0;	/* Last chunk in list */
@@ -2953,8 +3020,9 @@ rt_private void stack_wipe_out(register struct stxchunk *chunk)
 
 	struct stxchunk *next;	/* Address of next chunk */
 
-	if (chunk == (struct stxchunk *) 0)	/* No chunk */
-		return;							/* Nothing to be done */
+	if (chunk == (struct stxchunk *) 0) {	/* No chunk */
+		return;								/* Nothing to be done */
+	}
 
 	chunk->sk_prev->sk_next = (struct stxchunk *) 0;	/* Previous is last */
 
@@ -2962,8 +3030,9 @@ rt_private void stack_wipe_out(register struct stxchunk *chunk)
 		next = chunk->sk_next;
 		chunk != (struct stxchunk *) 0;
 		chunk = next, next = chunk ? chunk->sk_next : chunk
-	)
+	) {
 		eif_rt_xfree((char *) chunk);
+	}
 }
 
 rt_shared void xstack_reset(struct xstack *stk)
@@ -3043,8 +3112,9 @@ rt_private void expop_helper(struct xstack *stk, int is_truncated)
 			 */
 
 #ifdef WORKBENCH
-			if (d_cxt.pg_status == PG_RUN)	/* Program is running */
+			if (d_cxt.pg_status == PG_RUN) {/* Program is running */
 				stack_truncate(stk);		/* Remove unused chunks */
+			}
 #else
 			stack_truncate(stk);			/* Try removal of unused chunks */
 #endif
@@ -3096,15 +3166,17 @@ rt_shared struct ex_vect *exnext(void)
 	struct ex_vect *first_item;	/* First item pushed */
 
 	/* If we already reached the end of the stack, return immediately */
-	if (eif_trace.st_bot == eif_trace.st_top)
+	if (eif_trace.st_bot == eif_trace.st_top) {
 		return (struct ex_vect *) 0;		/* Reached the end of the stack */
+	}
 
 	first_item = eif_trace.st_bot++;
 
-	if  (eif_trace.st_bot == eif_trace.st_top)
+	if  (eif_trace.st_bot == eif_trace.st_top) {
 			/* We don't need to check if we reached the end of the chunk */
 			/* because the end of the stack is forseen */
 		return first_item;
+	}
 
 	if (eif_trace.st_bot >= eif_trace.st_cur->sk_end) {
 			/* We reached the end of the current chunk. Set the bottom */
@@ -3125,8 +3197,9 @@ rt_private int exend(void)
 	RT_GET_CONTEXT
 
 	/* If we already reached the end of the stack, return immediately */
-	if (eif_trace.st_bot == eif_trace.st_top)
+	if (eif_trace.st_bot == eif_trace.st_top) {
 		return 1;		/* Reached the end of the stack */
+	}
 
 	return 0;
 }
@@ -3143,10 +3216,11 @@ rt_private char *exception_string(int code)
 	 * are for the user-defined exceptions.
 	 */
 
-	if (code < 0)							/* Raised by Eiffel call to raise */
+	if (code < 0) {							/* Raised by Eiffel call to raise */
 		return "User-defined exception.";	/* Don't want to give code--RAM */
-	else if (code < 1 || code > EN_NEX)		/* Ensure index is valid */
+	} else if (code < 1 || code > EN_NEX)		/* Ensure index is valid */
 		return "Unknown exception.";		/* Should never happen */
+	}
 
 	return ex_tag[code];		/* Name of exception whose code is 'code' */
 }
@@ -3157,12 +3231,14 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector)
 {
 	/* This routine is meant to be used for debugging purposes only */
 
-	if (!(DEBUG & 1))
+	if (!(DEBUG & 1)) {
 		return;
+	}
 		
 	printf("%s (at 0x%lx):\n", msg, vector);
-	if (vector == (struct ex_vect *) 0)
+	if (vector == (struct ex_vect *) 0) {
 		return;
+	}
 	printf("\tex_type = %d\n", vector->ex_type);
 	printf("\tex_retry = %d\n", vector->ex_retry);
 	printf("\tex_rescue = %d\n", vector->ex_rescue);
@@ -3202,10 +3278,11 @@ rt_public void eetrace(char b)	/* %%zmt never called in C dir. */
 	/* Enable/diable printing of the history table */
 	RT_GET_CONTEXT
 
-	if (b == (char) 1)
+	if (b == (char) 1) {
 		print_history_table = ~0;
-	else
+	} else {
 		print_history_table = 0;
+	}
 }
 
 rt_public EIF_REFERENCE eename(long ex)
@@ -3243,21 +3320,22 @@ rt_shared struct ex_vect *top_n_call(struct xstack *stk, int n)
 	while (top--){
 		if (top >= cur->sk_arena){ /* We are still in current chunk */
 			if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
-				if (++found >= n)
+				if (++found >= n) {
 					return top;
+				}
 			}
-		}
-		else{ /* We are out of current chunk */
+		} else { /* We are out of current chunk */
 			cur = cur->sk_prev;
 			if (cur){ /* There is a previous chunk. */
 				top = cur->sk_arena;
 				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
-					if (++found >= n)
+					if (++found >= n) {
 						return top;
+					}
 				}
-			}
-			else	/* It is already bottom of the stack. */
+			} else {	/* It is already bottom of the stack. */
 				return (struct ex_vect *)0;
+			}
 		}
 	}
 	return (struct ex_vect *)0; /* Should never reach, just to make the c compiler happy. */
@@ -3282,21 +3360,22 @@ rt_shared struct ex_vect *draise_recipient_call (struct xstack *stk)
 	while (top--){
 		if (top >= cur->sk_arena){ /* We are still in current chunk */
 			if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
-				if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise")))
+				if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise"))) {
 					return top;
-			}
-		}
-		else{ /* We are out of current chunk */
-			cur = cur->sk_prev;
-			if (cur){ /* There is a previous chunk. */
-				top = cur->sk_arena;
-				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC){
-					if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise")))
-						return top;
 				}
 			}
-			else	/* It is already bottom of the stack. */
+		} else { /* We are out of current chunk */
+			cur = cur->sk_prev;
+			if (cur) { /* There is a previous chunk. */
+				top = cur->sk_arena;
+				if (top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC) {
+					if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise"))) {
+						return top;
+					}
+				}
+			} else {	/* It is already bottom of the stack. */
 				return (struct ex_vect *)0;
+			}
 		}
 	}
 	return (struct ex_vect *)0; /* Should never reach, just to make the c compiler happy. */
@@ -3342,17 +3421,20 @@ rt_public void draise(long code, char *meaning, char *message)
 	num = code;
 	tag = message;
 
-	if (echmem & MEM_PANIC)		/* In panic mode, do nothing */
+	if (echmem & MEM_PANIC) {	/* In panic mode, do nothing */
 		return;
+	}
 
-	if (echmem & MEM_FATAL)		/* In fatal error mode, panic! */
+	if (echmem & MEM_FATAL) {	/* In fatal error mode, panic! */
 		eif_panic("exception in fatal mode");
+	}
 
 	/* Excepted for EN_OMEM, check whether the user wants to ignore the
 	 * exception or not. If so, return immediately.
 	 */
-	if (num != EN_OMEM && num < EN_NEX && is_ex_ignored(num))
+	if (num != EN_OMEM && num < EN_NEX && is_ex_ignored(num)) {
 		return;			/* Exception is ignored */
+	}
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 	echval = (unsigned char) num;		/* Set exception number */
@@ -3364,8 +3446,9 @@ rt_public void draise(long code, char *meaning, char *message)
 		trace = exget(&eif_trace);
 		if (trace == (struct ex_vect *) 0) {	/* Stack is full now */
 			echmem |= MEM_FULL;					/* Signal it */
-			if (num != EN_OMEM)					/* If not already there */
+			if (num != EN_OMEM) {				/* If not already there */
 				enomem();						/* Raise an out of memory */
+			}
 		} else {
 				/* Make sure there is no garbage in `trace'. */
 			memset (trace, 0, sizeof(struct ex_vect));
@@ -3396,10 +3479,10 @@ rt_public void draise(long code, char *meaning, char *message)
 		if (in_assertion) {
 			tg = vector->ex_name;
 			type = vector->ex_type;
-			if (type == EX_CINV)
+			if (type == EX_CINV) {
 				obj = vector->ex_oid;
-			if (type == EX_CINV && echentry || type == EX_PRE)
-			{
+			}
+			if (type == EX_CINV && echentry || type == EX_PRE) {
 				vector_call = top_n_call(&eif_stack, 2);
 				if (vector_call != (struct ex_vect *) 0) {
 					eclass = vector_call->ex_orig;
@@ -3417,15 +3500,17 @@ rt_public void draise(long code, char *meaning, char *message)
 				echclass = vector->ex_orig; /* Record class name */
 				line_number = vector->ex_linenum; /* Record line number */
 				vector = exget(&eif_stack);
-				if (vector == (struct ex_vect *) 0) {   /* Stack is full now */
-					echmem |= MEM_FULL;				 /* Signal it */
-					if (num != EN_OMEM)				 /* If not already there */
-						enomem();					   /* Raise an out of memory */
+				if (vector == (struct ex_vect *) 0) {	/* Stack is full now */
+					echmem |= MEM_FULL;					/* Signal it */
+					if (num != EN_OMEM) {				/* If not already there */
+						enomem();						/* Raise an out of memory */
+					}
 				} else {
 					vector->ex_type = type;	 /* Restore type */
 					vector->ex_name = tg;	   /* Restore tag */
-					if (type == EX_CINV)
+					if (type == EX_CINV) {
 						vector->ex_oid = obj;   /* Restore object id if in invariant */
+					}
 				}
 			}
 		} else {
@@ -3439,7 +3524,7 @@ rt_public void draise(long code, char *meaning, char *message)
 		if (in_assertion) {
 			trace->ex_where = echrt;			/* Save routine in trace for exorig */
 			trace->ex_from = echclass;			/* Save class in trace for exorig */
-		}else{
+		} else {
 			trace->ex_rout = echrt;				/* Save routine in trace */
 			trace->ex_orig = echclass;			/* Save class in trace */
 		}
@@ -3487,8 +3572,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 			return;
 		}
 
-		if (except_code == EN_OMEM || except_code == EN_MEM)
-		{
+		if (except_code == EN_OMEM || except_code == EN_MEM) {
 			echmem |= MEM_RECU;			/* Mark that we are possibly running into no memory situation. */
 			/* Free the preallocated string in the exception manager through GC.
 			 * But this is not a good solution, since the GC could be off. And the preallocated string
@@ -3498,41 +3582,45 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 			RTGC;
 		}
 
-		if (reci_name)
+		if (reci_name) {
 			_reci = RTMS (reci_name);
-		else
+		} else {
 			_reci = RTMS ("");
+		}
 		RT_GC_PROTECT(_reci);
-		if (t_name)
+		if (t_name) {
 			_tag = RTMS (t_name);
-		else
+		} else {
 			_tag = RTMS ("");
+		}
 		RT_GC_PROTECT(_tag);
-		if (eclass)
+		if (eclass) {
 			_eclass = RTMS(eclass);
-		else
+		} else {
 			_eclass = RTMS("");
+		}
 		RT_GC_PROTECT(_eclass);
-		if (rf_routine)
+		if (rf_routine) {
 			_rf_routine = RTMS(rf_routine);
-		else
+		} else {
 			_rf_routine = RTMS("");
+		}
 		RT_GC_PROTECT(_rf_routine);
-		if (rf_class)
+		if (rf_class) {
 			_rf_class = RTMS(rf_class);
-		else
+		} else {
 			_rf_class = RTMS("");
+		}
 		RT_GC_PROTECT(_rf_class);
 
 		/* This implementation is slow and expensive, but without full chain of exception objects,
 		 * the trace can only be saved here */
-		if (print_history_table)
-		{
+		if (print_history_table) {
 			build_trace();
 			_trace = stack_trace_string();
-		}
-		else
+		} else {
 			_trace = RTMS("");
+		}
 		RT_GC_PROTECT(_trace);
 
 		_eco = (EIF_INTEGER)except_code;
@@ -3540,15 +3628,17 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 		_line_num = (EIF_INTEGER)line_num;
 		_signal_code = (EIF_INTEGER)signal_code;
 
-		if (new_obj)
+		if (new_obj) {
 			_new_obj = EIF_TRUE;
-		else
+		} else {
 			_new_obj = EIF_FALSE;
+		}
 
-		if (is_inva_entry)
+		if (is_inva_entry) {
 			_is_inva_entry = EIF_TRUE;
-		else
+		} else {
 			_is_inva_entry = EIF_FALSE;
+		}
 
 #ifdef WORKBENCH
 		__reci.type = SK_REF;
@@ -3592,8 +3682,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 	undiscard_breakpoints(); /* the debugger can now stop again */
 #endif
 
-	if (except_code == EN_OMEM || except_code == EN_MEM)
-	{
+	if (except_code == EN_OMEM || except_code == EN_MEM) {
 		echmem &= ~MEM_RECU;
 	}
 }
@@ -3601,23 +3690,22 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 rt_public void set_last_exception (EIF_REFERENCE ex)
 /* Call `set_last_exception' in EXCEPTION_MANAGER */
 {
-	if (except_mnger) /* In case get called in `dispose' */
-	{
+	if (except_mnger) {	/* In case get called in `dispose' */
 #ifdef WORKBENCH
-	EIF_TYPED_VALUE _ex;
-	_ex.type = SK_REF;
-	_ex.it_r = ex;
+		EIF_TYPED_VALUE _ex;
+		_ex.type = SK_REF;
+		_ex.it_r = ex;
 #else
-	EIF_REFERENCE _ex;
-	_ex = ex;
+		EIF_REFERENCE _ex;
+		_ex = ex;
 #endif
 
 #ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+		discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
 #endif
 		(egc_set_last_exception)(except_mnger, _ex);
 #ifdef WORKBENCH
-	undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+		undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
 #endif
 	}
 }
@@ -3631,31 +3719,29 @@ rt_public EIF_REFERENCE last_exception (void)
 	EIF_REFERENCE _re;
 #endif
 
-	if (except_mnger) /* In case get called in `dispose' */
-	{
-
+	if (except_mnger) { /* In case get called in `dispose' */
 #ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+		discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
 #endif
 		_re = (egc_last_exception)(except_mnger);
 
 #ifdef WORKBENCH
-	undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+		undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
 #endif
 
 #ifdef WORKBENCH
-	return _re.it_r;
+		return _re.it_r;
 #else
-	return _re;
+		return _re;
 #endif
-	}else
+	} else {
 		return (EIF_REFERENCE)0;
+	}
 }
 
 rt_public void chk_old(EIF_REFERENCE ex)
 {
-	if (ex != NULL)
-	{
+	if (ex != NULL) {
 		set_last_exception (ex);
 		eraise ("", EN_OLD);
 	}
@@ -3728,8 +3814,9 @@ rt_public void init_emnger (void)
 	ex_string.used = 0;
 	ex_string.size = TRACE_SZ;
 	ex_string.area = (char *) eif_malloc(TRACE_SZ);
-	if (!ex_string.area)
+	if (!ex_string.area) {
 		failure(); /* No enough memory to init the application */
+	}
 #ifdef WORKBENCH
 	discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
 #endif

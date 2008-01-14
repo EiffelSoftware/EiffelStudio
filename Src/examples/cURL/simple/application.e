@@ -30,10 +30,14 @@ feature -- Initialization
 			curl_handle := curl_easy.init
 
 			if curl_handle /= default_pointer then
+
+				-- First we specify which URL we would like to download.
 				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, "www.google.com")
+
+				-- After `perform' has been called, the remote HTML source is printed in the console.
 				l_result := curl_easy.perform (curl_handle)
 
-				-- always cleanup
+				-- Always cleanup
 				curl_easy.cleanup (curl_handle)
 			end
 

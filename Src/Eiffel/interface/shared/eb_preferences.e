@@ -19,10 +19,10 @@ inherit
 			make as make_gui
 		end
 
---	DBG_PREFERENCES
---		rename
---			make as make_dbg
---		end
+	DBG_PREFERENCES
+		rename
+			make as make_dbg
+		end
 
 create
 	make
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 				make_gui (a_preferences)
 			end
 			if dbg_mode then
---				make_dbg (a_preferences)
+				make_dbg (a_preferences)
 			end
 			preferences := a_preferences
 		end

@@ -401,6 +401,11 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 			end
 		end
 
+	on_widget_unmapped is
+			-- `Current' has been unmapped from the screen
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is

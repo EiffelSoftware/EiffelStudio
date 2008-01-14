@@ -78,6 +78,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 					restore_actions_internal.call (Void)
 				end
 			end
+			Precursor {EV_WINDOW_IMP} (a_changed_mask, a_new_state)
 		end
 
 feature -- Access

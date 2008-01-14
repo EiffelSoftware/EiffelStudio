@@ -35,6 +35,7 @@ inherit
 			on_size_allocate,
 			hide,
 			on_widget_mapped,
+			on_widget_unmapped,
 			destroy,
 			has_focus,
 			on_focus_changed,
@@ -248,16 +249,22 @@ feature -- Status setting
 	call_show_actions: BOOLEAN
 		-- Should the show actions be called?
 
+	call_hide_actions: BOOLEAN
+		-- Should the hide actions be called?
+
 	hide is
 			-- Unmap the Window from the screen.
 		local
 			a_x_pos, a_y_pos: INTEGER
 		do
 			if is_show_requested then
+				call_hide_actions := True
 				a_x_pos := x_position
 				a_y_pos := y_position
 				disable_capture
 				Precursor {EV_GTK_WINDOW_IMP}
+					-- Unmap here rather than the event loop because the window is hidden immediately.
+				on_widget_unmapped
 					-- Setting positions so that if `Current' is reshown then it reappears in the same place, as on Windows.
 				if disable_user_resize_called then
 					allow_resize
@@ -379,6 +386,18 @@ feature {EV_APPLICATION_IMP} -- Implementation
 				show_actions_internal.call (Void)
 			end
 			call_show_actions := False
+		end
+
+	on_widget_unmapped is
+			-- `Current' has been unmapped from the screen.
+		do
+			Precursor
+			if hide_actions_internal /= Void then
+				check
+					not_is_displayed: not is_displayed
+				end
+				hide_actions_internal.call (Void)
+			end
 		end
 
 feature {NONE} -- Implementation

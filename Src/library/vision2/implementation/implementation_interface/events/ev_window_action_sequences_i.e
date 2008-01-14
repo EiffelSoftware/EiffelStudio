@@ -85,6 +85,31 @@ feature {EV_ANY_I} -- Implementation
 	show_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `show_actions'.
 
+feature -- Event handling
+
+	hide_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when window is hiden.
+		do
+			if hide_actions_internal = Void then
+				hide_actions_internal :=
+					 create_hide_actions
+			end
+			Result := hide_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_hide_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a hide action sequence.
+		deferred
+		end
+
+	hide_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+			-- Implementation of once per object `hide_actions'.
+
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

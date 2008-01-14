@@ -462,6 +462,12 @@ feature {EV_ANY_I} -- Implementation
 							if currently_shown_control = l_gtk_widget_imp.interface then
 								set_currently_shown_control (Void)
 							end
+							l_widget_imp ?= l_gtk_widget_imp
+							if l_widget_imp /= Void then
+								l_widget_imp.on_widget_unmapped
+								l_widget_imp := Void
+							end
+							l_gtk_widget_imp := Void
 						end
 					when GDK_SELECTION_CLEAR then
 						debug ("GDK_EVENT")

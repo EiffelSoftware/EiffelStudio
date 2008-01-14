@@ -191,9 +191,16 @@
 		<geant target="get__library" arguments="${_OUTPUT_DIR},library_compiled"/>
 		<geant target="get_bin__gobo" arguments="${_OUTPUT_DIR},gobo_compiled"/>
 		
-		<geant target="get_bin__" arguments="ec_bench,${_OUTPUT_DIR},ec${exe}" />
-		<mkdir directory="${_OUTPUT_DIR}${path_separator}batch" />
+
 		<geant target="get_bin__" arguments="ec_batch,${_OUTPUT_DIR},ecb${exe}"/>
+
+		<!-- switch to use `ec batch' compiler if available -->
+		<available dir="$_OUTPUT_DIR" resource="ecb${exe}" variable="ecb_available" />
+		<set name="old_EC_NAME" value="${EC_NAME}" if="${EC_NAME}" />
+		<setenv name="EC_NAME" value="${_OUTPUT_DIR}${path_separator}ecb${exe}" if="${ecb_available}=true" />
+
+		<geant target="get_bin__" arguments="ec_lite,${_OUTPUT_DIR},ecl${exe}" />
+		<geant target="get_bin__" arguments="ec_bench,${_OUTPUT_DIR},ec${exe}" />
 		<geant target="get_bin__" arguments="estudio,${_OUTPUT_DIR},estudio${exe}" />
 		<geant target="get_bin__" arguments="quick_finalize,${_OUTPUT_DIR},quick_finalize${exe}" />
 		<geant target="get_bin__" arguments="finish_freezing,${_OUTPUT_DIR},finish_freezing${exe}"/>
@@ -207,6 +214,11 @@
 		<geant target="get_bin__" arguments="escln,${_OUTPUT_DIR},escln${exe}" 				if="${_INCLUDE_DEVPACK}=true"/>
 		<geant target="get_bin__" arguments="espawn,${_OUTPUT_DIR},espawn${exe}" 			if="${_INCLUDE_DEVPACK}=true"/>
 		<geant target="get_bin__" arguments="eimgemb,${_OUTPUT_DIR},eimgemb${exe}" 			if="${_INCLUDE_DEVPACK}=true"/>
+
+		<!-- switch back to previous default ec compiler -->
+		<setenv name="EC_NAME" value="$old_EC_NAME" if="${old_EC_NAME}"/>
+		<setenv name="EC_NAME" value="" unless="${old_EC_NAME}"/>
+		<unset name="old_EC_NAME" />
 
 		<geant target="_log" arguments="Compiling ES is completed ..." />
 	</target>
@@ -545,6 +557,7 @@
 		<geant target="copy_library_to" arguments="base,${cwd}"/>
 		<geant target="copy_library_to" arguments="diff,${cwd}"/>
 		<geant target="copy_library_to" arguments="event,${cwd}"/>
+		<geant target="copy_library_to" arguments="gobo,${cwd}"   />
 		<geant target="copy_library_to" arguments="gobo_extension,${cwd}"   />
 		<geant target="copy_library_to" arguments="graph,${cwd}" />
 		<geant target="copy_library_to" arguments="lex,${cwd}" />

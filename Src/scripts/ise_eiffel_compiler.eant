@@ -108,8 +108,8 @@
 		<exit code="1" if="${tmp_ok}=false" />
 
 		<set name="ecname" value="${EC_NAME}" if="$EC_NAME" />
-		<set name="ecname" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin${path_separator}ec" unless="$EC_NAME" />
-		<set name="eccmd" value="${ecname}${exe} " />
+		<set name="ecname" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin${path_separator}ec${exe}" unless="$EC_NAME" />
+		<set name="eccmd" value="${ecname} " />
 		<set name="eccmd" value="${eccmd} -config $a_ecf" />
 		<set name="eccmd" value="${eccmd} -target $a_target" />
 		<set name="eccmd" value="${eccmd} -project_path $a_comp_dir" />

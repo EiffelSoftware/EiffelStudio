@@ -54,6 +54,16 @@ feature -- Enumerations.
 			]"
 		end
 
+	curlopt_followlocation: INTEGER is
+			-- Declared as CURLOPT_FOLLOWLOCATION
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_FOLLOWLOCATION;
+			]"
+		end
+
 	curlopt_verbose: INTEGER is
 			-- Declared as CURLOPT_VERBOSE.
 		external
@@ -165,7 +175,7 @@ feature -- Enumerations.
 		end
 
 	curlopt_noprogress: INTEGER is
-			-- Decalred as CURLOPT_NOPROGRESS
+			-- Declared as CURLOPT_NOPROGRESS
 		external
 			"C inline use <curl/curl.h>"
 		alias
@@ -175,7 +185,7 @@ feature -- Enumerations.
 		end
 
 	curlopt_progressdata: INTEGER is
-			-- Decalred as CURLOPT_PROGRESSDATA
+			-- Declared as CURLOPT_PROGRESSDATA
 		external
 			"C inline use <curl/curl.h>"
 		alias
@@ -212,6 +222,7 @@ feature -- Enumerations.
 			Result := 	a_integer = curlopt_cookie or
 						a_integer = curlopt_cookiefile or
 						a_integer = curlopt_debugfunction or
+						a_integer = curlopt_followlocation or
 						a_integer = curlopt_httpheader or
 						a_integer = curlopt_httppost or
 						a_integer = curlopt_post or

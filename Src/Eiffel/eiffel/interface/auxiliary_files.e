@@ -532,9 +532,8 @@ feature -- Plug and Makefile file
 			end
 
 				-- Make exception manager declaration
-			exception_manager_cl := system.class_of_id (system.exception_manager_class_id)
+			exception_manager_cl := system.exception_manager_class.compiled_class
 			if exception_manager_cl.types /= Void and then not exception_manager_cl.types.is_empty then
-				exception_manager_cl := system.exception_manager_class.compiled_class
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_exception_data_name_id)
 				id := exception_manager_cl.types.first.static_type_id
 				set_exception_data_name := Encoder.feature_name (id, feat.body_index).twin

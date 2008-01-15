@@ -216,8 +216,6 @@ feature {NONE}-- Initialization
 					l_section.show_context_menu
 				end)
 			accelerators.extend (l_accel)
-
-			create hide_actions
 		end
 
 feature -- Status
@@ -258,10 +256,6 @@ feature -- Update
 		ensure
 			split_position_updated: split_position = a_position
 		end
-
-feature -- Events
-
-	hide_actions: EV_NOTIFY_ACTION_SEQUENCE
 
 feature -- Command
 

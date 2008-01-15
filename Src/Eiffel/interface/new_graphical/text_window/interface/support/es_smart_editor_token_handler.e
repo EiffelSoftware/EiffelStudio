@@ -12,29 +12,11 @@ class
 
 inherit
 	ES_EDITOR_TOKEN_HANDLER
-		redefine
-			perform_on_token_with_mouse_coords
-		end
 
 create
 	make
 
-feature -- Basic operations
-
-	perform_on_token_with_mouse_coords (a_token: !EDITOR_TOKEN; a_line: INTEGER; a_x: INTEGER; a_y: INTEGER; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Performs an action on a token, respecting the current mouse x and y coordinates.
-			--
-			-- `a_token': The editor token to process.
-			-- `a_line': The line number where the token is located in the editor.
-			-- `a_x': The relative x position of the mouse pointer, to the editor,  when processing was requested.
-			-- `a_y': The relative y position of the mouse pointer, to the editor, when processing was requested.
-			-- `a_screen_x': The absolute screen x position of the mouse pointer when processing was requested.
-			-- `a_screen_y': The absolute screen y position of the mouse pointer when processing was requested.
-		do
-			Precursor (a_token, a_line, a_x, a_y, a_screen_x, a_screen_y)
-		end
-
-;indexing
+indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

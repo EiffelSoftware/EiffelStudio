@@ -480,10 +480,7 @@ feature -- preference
 				end
 			end
 			if error_occurred or (vals = Void or else vals.is_empty) then
-				reset_objects_grids_contents_to_default
-				if not error_occurred then
-					p.set_value (objects_grids_contents_to_array) --| should trigger the `p.change_actions' and then recall this feature
-				end
+				reset_objects_grids_positions
 			end
 		rescue
 			error_occurred := True

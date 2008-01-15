@@ -556,7 +556,7 @@ feature -- Access
 		do
 			Result := bench_status = Bench_breakpoint_not_set and then not location.is_set_for_application
 		ensure
-			is_not_usefull: Result implies bench_status = Bench_breakpoint_not_set and location.is_set_for_application
+			is_not_usefull: Result implies bench_status = bench_breakpoint_not_set and not location.is_set_for_application
 		end
 
 	is_set: BOOLEAN is

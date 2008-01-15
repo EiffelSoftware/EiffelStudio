@@ -1065,13 +1065,11 @@ feature -- Warning messages
 	w_No_system_defined: STRING_GENERAL is do Result := locale.translation ("No project has been loaded.") end
 
 	w_Finalizing_running: STRING_GENERAL is do Result := locale.translation (
-		"A finalizing C/C++ compilation is current in progress. Starting the Eiffel compilation?%N%
-		%may terminate current finalizing.%NDo you want to continue?")
+		"A finalizing C/C++ compilation is currently in progress. Starting the Eiffel compilation may terminate current finalizing.%NDo you want to continue?")
 		end
 
 	w_Freezing_running: STRING_GENERAL is do Result := locale.translation (
-		"A freezing C/C++ compilation is current in progress. Starting the Eiffel compilation?%N%
-		%may terminate current freezing. Do you want to continue?")
+		"A freezing C/C++ compilation is currently in progress. Starting the Eiffel compilation may terminate current freezing.%NDo you want to continue?")
 		end
 
 	w_cannot_clear_when_c_compilation_running: STRING_GENERAL is do Result := locale.translation ("Please clear this window after c compilation has exited.") end

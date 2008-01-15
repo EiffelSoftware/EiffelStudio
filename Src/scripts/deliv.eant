@@ -194,7 +194,7 @@
 
 		<geant target="get_bin__" arguments="ec_batch,${_OUTPUT_DIR},ecb${exe}"/>
 
-		<!-- switch to use `ec batch' compiler if available -->
+		<!-- switch to use 'ec batch' compiler if available -->
 		<available dir="$_OUTPUT_DIR" resource="ecb${exe}" variable="ecb_available" />
 		<set name="old_EC_NAME" value="${EC_NAME}" if="${EC_NAME}" />
 		<setenv name="EC_NAME" value="${_OUTPUT_DIR}${path_separator}ecb${exe}" if="${ecb_available}=true" />
@@ -227,7 +227,7 @@
 		<argument name="a_output_dir" />
 		<argument name="a_resource" />
 
-		<geant target="_log" arguments="Product: `runtime' " />
+		<geant target="_log" arguments="Product: 'runtime' " />
 
 		<available dir="$a_output_dir" resource="runtime_compiled" variable="tmp_available" />
 
@@ -239,7 +239,7 @@
 		<geant target="_log" arguments=" -> building runtime ..."	if="$tmp_available=false" />
 		<geant target="compile_runtime"					 			if="$tmp_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
-		<geant target="_log" arguments=" -> `runtime' is ready." if="${return_code}=0"  />
+		<geant target="_log" arguments=" -> 'runtime' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_runtime' (${return_code})" unless="${return_code}=0"  />
 		<unset name="tmp_available" />
 
@@ -253,7 +253,7 @@
 		<argument name="a_output_dir" />
 		<argument name="a_resource" />
 
-		<geant target="_log" arguments="Product: `library' " />
+		<geant target="_log" arguments="Product: 'library' " />
 
 		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available"/>
 		<!-- Resource is already built -->
@@ -264,7 +264,7 @@
 		<geant target="_log" arguments=" -> building library ..." 	if="$tmp_available=false" />
 		<geant target="compile_library" 							if="$tmp_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
-		<geant target="_log" arguments=" -> `library' is ready." if="${return_code}=0"  />
+		<geant target="_log" arguments=" -> 'library' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0"  />
 
 		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll\wel_hook.dll" variable="tmp_available"/>
@@ -279,7 +279,7 @@
 		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available"/>
 
 		<geant target="_log" arguments="--------------------------------------------------" />
-		<geant target="_log" arguments="Product: `gobo tools' " />
+		<geant target="_log" arguments="Product: 'gobo tools' " />
 
 		<!-- Resource is already built -->
 		<set name="return_code" value="0" 						if="$tmp_available=true" />
@@ -290,8 +290,8 @@
 		<geant target="compile_gobo" arguments="$a_output_dir" if="$tmp_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 
-		<geant target="_log" arguments=" -> `gobo tools' is ready." if="${return_code}=0"  />
-		<geant target="_fail" arguments=" -> Error occurred during `compile_gobo'." unless="${return_code}=0"  />
+		<geant target="_log" arguments=" -> 'gobo tools' is ready." if="${return_code}=0"  />
+		<geant target="_fail" arguments=" -> Error occurred during 'compile_gobo'." unless="${return_code}=0"  />
 
 		<unset name="tmp_available" />
 	</target>
@@ -301,7 +301,7 @@
 		<argument name="a_resource" />
 
 		<geant target="_log" arguments="--------------------------------------------------" />
-		<geant target="_log" arguments="Product: `wizards' " />
+		<geant target="_log" arguments="Product: 'wizards' " />
 
 		<available resource="$a_resource" dir="$a_output_dir" variable="tmp_available"/>
 		<!-- Resource is already built -->
@@ -313,7 +313,7 @@
 		<geant target="compile_wizards" arguments="$a_output_dir" if="$tmp_available=false" />
 		<unset name="tmp_available" />
 		<geant target="_log" arguments=" -> Wizards are ready." if="${return_code}=0"  />
-		<geant target="_fail" arguments=" -> Error occurred during `compile_wizards'." unless="${return_code}=0"  />
+		<geant target="_fail" arguments=" -> Error occurred during 'compile_wizards'." unless="${return_code}=0"  />
 
 		<move dir="${_COMPILE_DIR}${path_separator}wizards" to_directory="${a_output_dir}${path_separator}wizards" if="${tmp_available}=false" >
 			<fileset include="@(**/*)"  exclude="@(**/.svn/**/*)" />
@@ -325,9 +325,9 @@
 
 	<target name="get_bin__" >
 		<!-- Template: 
-			if `a_resource' is not available then
-			   finalize executable `a_product_name'
-			   copy executable file(s) to `a_output_dir' folder
+			if 'a_resource' is not available then
+			   finalize executable 'a_product_name'
+			   copy executable file(s) to 'a_output_dir' folder
 			end
 		-->
 		
@@ -336,7 +336,7 @@
 		<argument name="a_resource" />
 
 		<geant target="_log" arguments="--------------------------------------------------" />
-		<geant target="_log" arguments="Product: `$a_product_name' " />
+		<geant target="_log" arguments="Product: '$a_product_name' " />
 
 		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available" unless="-${a_resource}-=--" />
 		<set name="tmp_available" value="false" if="-${a_resource}-=--" />
@@ -345,25 +345,25 @@
 		<set name="return_code" value="0" 								if="$tmp_available=true" />
 		<geant target="_log" arguments=" -> already available" 	if="$tmp_available=true" />
 
-		<!-- Let's build `a_product_name' -->
+		<!-- Let's build 'a_product_name' -->
 		<geant target="_log" arguments=" -> building ..." 	if="$tmp_available=false" />
 		<geant target="process_with_args" 								if="$tmp_available=false"
 			arguments="finalize,$_COMPILE_DIR,$a_output_dir"
 			dir="${DELIV_SCRIPT.absdir}/tools"
 			file="${a_product_name}.eant" 
-			fork="false" reuse_variables="true" /><!-- return variable `$return_code' -->
+			fork="false" reuse_variables="true" /><!-- return variable '$return_code' -->
 		<geant target="_log" arguments=" -> $a_product_name' is ready." if="${return_code}=0"  />
-		<geant target="_fail" arguments=" -> Error occurred for `$a_product_name'." unless="${return_code}=0"  />
+		<geant target="_fail" arguments=" -> Error occurred for '$a_product_name'." unless="${return_code}=0"  />
 
 		<unset name="tmp_available" />
 	</target>
 
 	<target name="get_bin__z" >
-		<!-- Template: same as `get_bin__' but create the `a_resource' file if completed -->
+		<!-- Template: same as 'get_bin__' but create the 'a_resource' file if completed -->
 		<argument name="a_product_name" />
 		<argument name="a_output_dir" />
 		<argument name="a_resource" />
-		<geant target="get_bin__" arguments="$a_product_name,$a_output_dir,$a_resource" /><!-- return variable `$return_code' -->
+		<geant target="get_bin__" arguments="$a_product_name,$a_output_dir,$a_resource" /><!-- return variable '$return_code' -->
 		<echo message="compiled" to_file="${a_output_dir}${path_separator}$a_resource" if="${return_code}=0" />
 		<unset name="return_code" />
 	</target>

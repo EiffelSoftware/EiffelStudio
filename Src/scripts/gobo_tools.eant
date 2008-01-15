@@ -81,7 +81,7 @@
 			<argument name="a_comp_dir" value="${A_comp_dir}" />
 			<argument name="a_output_dir" value="${A_out_dir}" />
 		</geant>
-		<echo message="Error occurred during building of gobo tool `${A_name}' (${return_code})" unless="${return_code}=0" />
+		<echo message="Error occurred during building of gobo tool '${A_name}' (${return_code})" unless="${return_code}=0" />
 	</target>
 	
 </project>

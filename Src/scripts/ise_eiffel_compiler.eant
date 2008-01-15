@@ -65,7 +65,7 @@
 		<mkdir directory="$a_output_dir" if="${tmp_ok}=false"/>
 
 
-		<echo message=" -> Copy `${a_exec_name}' from [$a_dir] to [$a_output_dir]" />
+		<echo message=" -> Copy '${a_exec_name}' from [$a_dir] to [$a_output_dir]" />
 
 		<available dir="$a_dir" resource="${a_exec_name}${exe}" variable="tmp_available" />
 		<copy dir="$a_dir" file="$a_exec_name${exe}" to_directory="$a_output_dir" if="${tmp_available}=true"/>
@@ -156,7 +156,7 @@
 		<set name="return_code" value="1" if="$tmp_available=false" />
 		<unset name="tmp_available" />
 
-		<echo message=" -> compilation succeed!" 			if="${return_code}=0" />
+		<echo message=" -> compilation succeeded!" 			if="${return_code}=0" />
 		<set name="tmp_output_dir" value="$a_output_dir" 	if="${return_code}=0" />
 		<echo message=" -> compilation failed!" 			unless="${return_code}=0" />
 		<unset name="tmp_output_dir"						unless="${return_code}=0" />
@@ -231,7 +231,7 @@
 		<unset name="l_batch" />
 	</target>
 
-	<!-- copy content from `finalize' for the following target -->
+	<!-- copy content from 'finalize' for the following target -->
 	<target name="melt" depend="init">
 		<argument name="a_ecf" />
 		<argument name="a_target" />

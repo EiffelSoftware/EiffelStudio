@@ -247,13 +247,15 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #define RTAG(x)		((HEADER(x)->ov_flags & (EO_OLD | EO_REM)) == EO_OLD)
 #define RTAN(x)		(!(HEADER(x)->ov_flags & EO_OLD))
 #define RTAM(x)		eremb(x)
-#define RTAR(parent,source) \
-	if (((source) != (EIF_REFERENCE) 0) && (RTAN(source))) { \
-		if (eif_is_nested_expanded(HEADER(parent)->ov_flags)) { \
-			EIF_REFERENCE z = (EIF_REFERENCE) parent - (HEADER (parent)->ov_size & B_SIZE); \
-			if (RTAG(z)) RTAM(z); \
-		} else if (RTAG(parent)) RTAM(parent); \
+rt_private void check_gc_tracking (EIF_REFERENCE parent, EIF_REFERENCE source) {
+	if (((source) != (EIF_REFERENCE) 0) && (RTAN(source))) {
+		if (eif_is_nested_expanded(HEADER(parent)->ov_flags)) {
+			EIF_REFERENCE z = (EIF_REFERENCE) parent - (HEADER (parent)->ov_size & B_SIZE);
+			if (RTAG(z)) RTAM(z);
+		} else if (RTAG(parent)) RTAM(parent);
 	}
+}
+#define RTAR(parent,source) check_gc_tracking(parent,source)
 #else
 #define RTAG(x) EIF_FALSE
 #define RTAN(x) EIF_FALSE

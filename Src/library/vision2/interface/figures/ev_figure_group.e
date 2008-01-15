@@ -249,7 +249,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: ARRAYED_LIST [EV_FIGURE]) is
 			-- Merge `other' into group before cursor.
 			-- `other' will be empty afterwards.
 		do
@@ -258,7 +258,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: ARRAYED_LIST [EV_FIGURE]) is
 			-- Merge `other' into group after cursor.
 			-- `other' will be empty afterwards.
 		do
@@ -319,7 +319,7 @@ feature -- List operations
 
 feature {NONE} -- Implementation
 
-	change_group (other: like Current) is
+	change_group (other: ARRAYED_LIST [EV_FIGURE]) is
 			-- Change group of all figures in `other' to Current.
 			-- Used by `merge_left' and `merge_right'.
 		local

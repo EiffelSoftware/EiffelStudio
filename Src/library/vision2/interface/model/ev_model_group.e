@@ -577,7 +577,7 @@ feature -- List change
 			item_not_in_lookup_table: fig /= Void implies not lookup_table.has (fig.id)
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: ARRAYED_LIST [EV_MODEL]) is
 			-- Merge `other' into group before cursor.
 			-- `other' will be empty afterwards.
 		do
@@ -589,7 +589,7 @@ feature -- List change
 			full_redraw
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: ARRAYED_LIST [EV_MODEL]) is
 			-- Merge `other' into group after cursor.
 			-- `other' will be empty afterwards.
 		do
@@ -854,7 +854,7 @@ feature {NONE} -- Implementation
 	initiale_size: INTEGER is 10
 			-- Initialize size of `Current'.
 
-	change_group (other: like Current) is
+	change_group (other: ARRAYED_LIST [EV_MODEL]) is
 			-- Change group of all figures in `other' to Current.
 			-- Used by `merge_left' and `merge_right'.
 		local
@@ -884,7 +884,7 @@ feature {NONE} -- Implementation
 	lookup_table: HASH_TABLE [EV_MODEL, INTEGER]
 			-- Lookup table to search faster.
 
-	insert_list_to_table (list: like Current) is
+	insert_list_to_table (list: ARRAYED_LIST [EV_MODEL]) is
 			-- Insert list element to lookup_table.
 		do
 			from

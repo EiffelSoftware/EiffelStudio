@@ -297,7 +297,10 @@ feature {NONE} -- Access
 			Result := internal_development_window
 			if Result = Void then
 				if is_modal then
-					l_window := helpers.widget_top_level_window (dialog.blocking_window, True)
+					l_window := dialog.blocking_window
+					if l_window /= Void then
+						l_window := helpers.widget_top_level_window (l_window, True)
+					end
 				end
 				if l_window /= Void then
 						-- Attempt to find matching top level window.

@@ -617,15 +617,19 @@ rt_public void exasrt(char *tag, int type)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *vector;		/* The execution vector */
+	struct ex_vect *top;		/* Current top vector */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
+	top = extop(&eif_stack);
 	vector = exget(&eif_stack);				/* Get an execution vector */
 	if (vector == (struct ex_vect *) 0) {	/* No more memory */
 		echmem |= MEM_FULL;					/* Exception stack incomplete */
 		xraise(EN_MEM);						/* Non-critical exception */
 		return;								/* Exception may be ignored */
 	}
+	/* Copy from enclosing vector. Reset if `top' is empty */
+	memcpy (vector, top, sizeof(struct ex_vect)); 
 
 	in_assertion = ~0;
 
@@ -1814,7 +1818,6 @@ rt_private void build_trace(void)
 			trace->ex_where = top->ex_rout;	/* Save routine name */
 			trace->ex_from = top->ex_orig;	/* Where it comes from */
 			trace->ex_oid = top->ex_id;		/* And object ID */
-			expop_helper (&eif_stack_cp, 0);/* Exception raised in caller */
 #ifdef WORKBENCH
 		}
 #endif
@@ -2313,9 +2316,6 @@ rt_private void find_call(void)
 			eif_except.from = item->ex_from;	/* Where it was written */
 			eif_except.obj_id = item->ex_oid;	/* Object's ID */
 			break;
-		} else {
-			eif_except.rname = NULL;	/* Routine name */
-			eif_except.tag = NULL;	/* Routine name */
 		}
 	}
 
@@ -2496,7 +2496,7 @@ rt_private void recursive_dump(void (*append_trace)(char *), int level)
 		trace = eif_trace.st_bot
 	) {
 		eif_except.code = trace->ex_type;	/* Record exception code */
-//		eif_except.obj_id = 0;				/* No original by default */
+		eif_except.tag = (char *) 0;		/* No tag by default */
 		switch (trace->ex_type) {
 		case EN_ILVL:					/* Entering new level */
 			/* The stack may end with such a beast, so detect this and return

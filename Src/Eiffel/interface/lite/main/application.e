@@ -9,7 +9,7 @@ class
 	APPLICATION
 
 inherit
-	EB_SHARED_PREFERENCES
+	EC_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end

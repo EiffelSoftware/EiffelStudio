@@ -40,11 +40,11 @@ feature {NONE} -- Initialization
 			Precursor {ES_TOOL_DIALOG}
 
 			set_button_text (dialog_buttons.yes_button, interface_names.b_apply)
-			set_button_action (dialog_buttons.yes_button, agent on_apply)
+			set_button_action_before_close (dialog_buttons.yes_button, agent on_apply)
 			set_button_text (dialog_buttons.no_button, interface_names.b_reset)
-			set_button_action (dialog_buttons.no_button, agent on_reset)
+			set_button_action_before_close (dialog_buttons.no_button, agent on_reset)
 			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
-			set_button_action (dialog_buttons.cancel_button, agent on_cancel)
+			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 		end
 
 feature {NONE} -- User interface initialization
@@ -450,6 +450,9 @@ feature {NONE} -- Action handlers
 		do
 			objects_tool.panel.reset_objects_grids_contents_to_default
 			update
+
+				-- And then apply the reset
+			on_apply
 
 				-- Prevents dialog from being closed
 			veto_close

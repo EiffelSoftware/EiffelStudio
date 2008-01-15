@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
-	<target name="test_library">
-		<root class="MY_COMPILER" feature="make"/>
-		<setting name="check_for_void_target" value="false"/>
-		<setting name="exception_trace" value="false"/>
-		<setting name="executable_name" value="ecb"/>
-		<setting name="multithreaded" value="false"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false"/>
-		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" readonly="false"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false"/>
-		<cluster name="my_compiler" location="$EIFFEL_SRC\Eiffel\Ace\"/>
-	</target>
 	<target name="common">
 		<file_rule>
 			<exclude>/\.svn$</exclude>

@@ -3391,14 +3391,7 @@ rt_public void oraise(EIF_REFERENCE ex)
 #else
 	EIF_REFERENCE _ex = ex;
 #endif
-#ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
-#endif
 	(egc_once_raise)(except_mnger, _ex);
-#ifdef WORKBENCH
-	undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
-#endif
-
 }
 
 rt_public void draise(long code, char *meaning, char *message)

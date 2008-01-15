@@ -276,7 +276,6 @@ feature {NONE} -- Agents
 			-- Quit without saving.
 		do
 			is_canceled := True
-			hide_actions.call (Void)
 			hide
 		end
 
@@ -286,7 +285,6 @@ feature {NONE} -- Agents
 			if conf_system /= Void then
 				commit_changes
 			end
-			hide_actions.call (Void)
 			hide
 		end
 

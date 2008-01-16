@@ -115,44 +115,30 @@ feature -- Basic operations
 		require
 			a_height_non_negative: a_height >= 0
 		local
-			internal_client_y: INTEGER
-			vertical_buffer_offset: INTEGER
-			current_row: EV_GRID_ROW_I
 			first_row_index: INTEGER
 			last_row_index: INTEGER
-			first_row_index_set, last_row_index_set: BOOLEAN
-			row_counter: INTEGER
-			row_offsets: ARRAYED_LIST [INTEGER]
+			l_row_offsets: ARRAYED_LIST [INTEGER]
 			invalid_y_start, invalid_y_end: INTEGER
 			i: INTEGER
-			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
-			internal_client_height: INTEGER
-			skipped_rows: INTEGER
-			current_height: INTEGER
 			l_row_count: INTEGER
-			start_pos: INTEGER
-			found: BOOLEAN
-			grid_row_count: INTEGER
+			l_grid_row_count: INTEGER
+			probe, high, low: INTEGER
+			l_first_visible: INTEGER
+			l_visible_cumulative_height: INTEGER
+			l_found_index: INTEGER
+			l_found_row_offset: INTEGER
+			l_visible_indexes_to_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
 		do
-			dynamic_content_function := grid.dynamic_content_function
 			create Result.make (20)
-			grid_row_count := grid.row_count
-
-			row_offsets := grid.row_offsets
-
-			internal_client_y := grid.internal_client_y
-			internal_client_height := grid.viewable_height
-
-			vertical_buffer_offset := grid.viewport_y_offset
-
-			if grid.row_count > 0 then
+			if not grid.header.is_empty then
 
 					-- Calculate the rows that must be displayed.
 					-- Compute the virtual positions of the invalidated area.
 				invalid_y_start := a_y
 				invalid_y_end := a_y + a_height
+				l_grid_row_count := grid.row_count
 
-				if invalid_y_end >= 0 and invalid_y_start <= grid.virtual_height then
+				if invalid_y_end >= 0 and invalid_y_start < grid.total_row_height then
 						-- There is nothing to perform if the positions to be checked
 						-- fall completely outside of the virtual height.
 
@@ -165,10 +151,10 @@ feature -- Basic operations
 							-- Note that we cannot calculate if there is tree functionality enabled in
 							-- the grid as nodes may be expanded or collapsed.
 						first_row_index := (((invalid_y_start) // grid.row_height) + 1)
-						last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid_row_count)
+						last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (l_grid_row_count)
 
-						if first_row_index <= grid_row_count then
-							l_row_count := grid_row_count
+						if first_row_index <= l_grid_row_count then
+							l_row_count := l_grid_row_count
 							from
 								i := first_row_index
 							until
@@ -182,80 +168,80 @@ feature -- Basic operations
 							end
 						end
 					else
-						row_offsets := grid.row_offsets
-						if grid_row_count >= 1 then
-								-- Only compute the rows that span the area if there are rows
-								-- are contained in `grid'. If not, there is nothing to perform here
-								-- and `Result' is simply an empty list.
+						l_visible_indexes_to_row_indexes := grid.visible_indexes_to_row_indexes
+						l_row_offsets := grid.row_offsets
+							-- We now perform a binary search on `row_offsets' to find the highest row index with a vertical offset
+							-- that is less than `invalid_y_start'.
+						from
+							high := l_grid_row_count
+							low := 0
+						until
+							not (high - low > 1)
+						loop
+							probe := (low + high) // 2
+							if l_row_offsets.i_th (probe) <= invalid_y_start then
+								low := probe
+							else
+								high := probe
+							end
+						end
+						l_found_row_offset := l_row_offsets.i_th (high)
+						if l_found_row_offset <= invalid_y_start then
+							l_found_index := high
+						else
+							l_found_index := low.max (1)
+							l_found_row_offset := l_row_offsets.i_th (l_found_index)
+						end
+
+							-- There may be multiple rows that are represented in `row_offsets' with the same row offset if rows are hidden or trees are used in the grid.
+							-- If the row offset of row `l_found_index' has multiple entries in `row_offsets', then `l_found_index' will be set to the higest of these rows,
+							-- even though the row may not actually be the visible row with this offset (The one we are looking for).
+							-- We first determine if this is the case below and then if so, have to perform another binary search to resolve which row is the actually displayed
+							-- row with that offset. We perform this with a binary search on `visible_indexes_to_row_indexes' to find the entry that is equal or
+							-- lower to `l_found_index' This is the one that is actually displayed.
+
+						if (l_found_index > 1 and then l_row_offsets.i_th (l_found_index - 1) = l_found_row_offset) then
+							check
+								duplicates_found_implies_next_offset_greater: l_found_index < grid.row_count + 1 implies l_row_offsets.i_th (l_found_index + 1) > l_found_row_offset
+							end
 							from
-								i := 1
+								high := grid.visible_row_count
+								low := 0
 							until
-								i > grid_row_count or found
+								not (high - low > 1)
 							loop
-								if row_offsets @ i > invalid_y_start then
-									found := True
+								probe := (low + high) // 2
+								if l_visible_indexes_to_row_indexes.i_th (probe) < l_found_index then
+									low := probe
 								else
-									i := i + pre_search_iteration_size
+									high := probe
 								end
 							end
-							start_pos := i - pre_search_iteration_size
-
-								-- If the starting index has fallen within a tree structure,
-								-- we must start from the beginning of the root parent.
-							if start_pos <= grid_row_count and then grid.row_internal (start_pos).parent_row /= Void then
-								start_pos := grid.row_internal (start_pos).parent_row_root.index
+							if l_visible_indexes_to_row_indexes.i_th (high) <= l_found_index then
+								l_found_index := l_visible_indexes_to_row_indexes.i_th (high)
+							else
+								l_found_index := l_visible_indexes_to_row_indexes.i_th (low.max (1))
 							end
-
-							from
-								row_counter := start_pos
-								i := 0
-							until
-								last_row_index_set or row_counter > grid_row_count
-							loop
-								i := row_offsets @ (row_counter)
-								current_row := grid.rows.i_th (row_counter)
-								if grid.is_row_height_fixed then
-									current_height := grid.row_height
-								else
-									current_height := current_row.height
-								end
-
-								if not first_row_index_set and then (i + current_height) > (invalid_y_start) then
-									first_row_index := row_counter
-									first_row_index_set := True
-								end
-								if first_row_index_set and (current_row = Void or else current_row.is_show_requested) then
-									Result.extend (row_counter)
-								end
-
-								if (current_row = Void or else current_row.is_show_requested) and then (not last_row_index_set and then (invalid_y_end) < i + current_height) then
-									last_row_index := row_counter
-									last_row_index_set := True
-								end
-								if current_row /= Void then
-										-- If the mode is partially dynamic and a tree is enabled, it
-										-- is possible that the current row may not exist.
-									if current_row.subrow_count > 0 and not current_row.is_expanded or not current_row.is_show_requested then
-										if not first_row_index_set then
-											skipped_rows := skipped_rows + current_row.subrow_count_recursive
-										end
-										row_counter := row_counter + current_row.subrow_count_recursive
-									end
-								end
-								row_counter := row_counter + 1
-							end
+						end
+							-- We have now found the first item that intersects the span, so we can iterate the visible indexes, constructing `result'
+							-- until we have passed the span length.
+						l_first_visible := grid.row_indexes_to_visible_indexes.i_th (l_found_index) + 1
+						l_found_index := l_visible_indexes_to_row_indexes.i_th (l_first_visible)
+						Result.extend (l_found_index)
+						l_visible_cumulative_height := l_row_offsets.i_th (l_found_index) + grid.row (l_found_index).height
+						from
+							i := l_first_visible + 1
+						until
+							(l_visible_cumulative_height > invalid_y_end) or i > grid.computed_visible_row_count
+						loop
+							l_found_index := l_visible_indexes_to_row_indexes.i_th (i)
+							Result.extend (l_found_index)
+							l_visible_cumulative_height := l_visible_cumulative_height + grid.row (l_found_index).height
+							i := i + 1
 						end
 					end
 				end
-				if last_row_index = 0 then
-					last_row_index := grid_row_count
-				end
-				if first_row_index = 0 then
-					first_row_index := grid_row_count
-				end
 			end
-
-
 		ensure
 			Result_not_void: Result /= Void
 		end

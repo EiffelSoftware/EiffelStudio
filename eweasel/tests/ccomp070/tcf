@@ -7,7 +7,7 @@ copy_raw	 test1.e $CLUSTER test1.e
 copy_raw	 test2.e $CLUSTER test2.e
 copy_raw	 test3.e $CLUSTER test3.e
 
-compile_work
+compile_frozen
 compile_result 	ok
 	
 c_compile_work

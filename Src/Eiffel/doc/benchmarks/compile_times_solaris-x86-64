@@ -1,5 +1,19 @@
 Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 
+6.2
+===
+
+6.2.7.1786 RTEA FILTER_LIST optimization (5036 classes, EIFGEN size: 400MB, exe size: 49919528):
+1013.16u 36.45s 23:21.58 74.8%
+1024.39u 35.29s 26:21.93 66.9%
+
+6.2.7.1786 RTEA normal (5036 classes, EIFGEN size: 400MB, exe size: 49890904):
+1153.64u 36.60s 29:33.54 67.1%
+1133.75u 36.60s 27:44.58 70.3%
+
+6.2.7.1786 compiled with optimized ecb compiler (5036 classes):
+722.27u 34.97s 21:42.54 58.1%
+
 6.0
 ===
 

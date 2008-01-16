@@ -132,7 +132,7 @@
 
 		<!-- recreate the directory structure -->
 		<mkdir directory="${A_target_dir}"/>
-		<exec executable="cd ${A_source_dir} ; find . -type d ! -path '*/.svn*' -exec 'mkdir' '-p' '${A_target_dir}/{}' ';'" unless="${is_windows}"/>
+		<exec executable="cd ${A_source_dir} ; find . \( -type d \! -name .svn -o \( -name .svn -prune \! -name .svn \) \) -exec 'mkdir' '-p' '${A_target_dir}/{}' ';'" unless="${is_windows}"/>
 		<exec executable="xcopy /Y /t ${A_source_dir} ${A_target_dir}" if="${is_windows}"/>
 
 		<!-- copy files -->

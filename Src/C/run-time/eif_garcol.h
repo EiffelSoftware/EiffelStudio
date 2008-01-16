@@ -98,6 +98,7 @@ RT_LNK void plsc(void);					/* Partial scavenging */
 RT_LNK void reclaim(void);				/* Reclaim all the objects */
 RT_LNK int collect(void);				/* Generation-based collector */
 #ifdef ISE_GC
+RT_LNK void check_gc_tracking(EIF_REFERENCE, EIF_REFERENCE);
 RT_LNK void eremb(EIF_REFERENCE obj);				/* Remembers old object */
 RT_LNK void erembq(EIF_REFERENCE obj);				/* Quick veersion (no GC call) of eremb */
 #endif

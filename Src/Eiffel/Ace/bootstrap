@@ -13,6 +13,7 @@
 set target = "batch"
 set ec_name = "ecb"
 #set target = "bench"
+#set ec_name = "ec"
 
 set compile_type=F_code
 #set compile_type=W_code

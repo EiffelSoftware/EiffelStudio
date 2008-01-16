@@ -2364,12 +2364,14 @@ end
 			class_filters: like filters
 			filter: CL_TYPE_I
 			class_filters_cursor: CURSOR
+			l_system: like system
 		do
 			class_filters := filters
 				-- Propagation along the filters since we have a new type
 				-- Clean the filters. Some of the filters can be obsolete
 				-- if the base class has been removed from the system
 			class_filters.clean
+			l_system := system
 			from
 				class_filters.start
 			until
@@ -2390,8 +2392,8 @@ debug ("GENERICITY")
 	io.error.put_new_line
 end
 				if filter.has_formal implies
-					(filter.base_class.original_class = system.native_array_class or else
-					filter.base_class.original_class = system.typed_pointer_class)
+					(filter.base_class.original_class = l_system.native_array_class or else
+					filter.base_class.original_class = l_system.typed_pointer_class)
 				then
 					filter.base_class.update_types (filter)
 				end
@@ -2412,6 +2414,7 @@ feature {CLASS_C} -- Incrementality
 			class_filters: like filters
 			filter: CL_TYPE_I
 			class_filters_cursor: CURSOR
+			l_system: SYSTEM_I
 		do
 			class_filters := filters
 				-- Propagation along the filters since we have a new type
@@ -2420,6 +2423,7 @@ feature {CLASS_C} -- Incrementality
 			class_filters.clean
 			from
 				class_filters.start
+				l_system := system
 			until
 				class_filters.after
 			loop
@@ -2431,8 +2435,8 @@ feature {CLASS_C} -- Incrementality
 					-- Instantiation of the filter with `data'
 				filter := class_filters.item.anchor_instantiation_in (new_class_type)
 				if
-					(filter.base_class.original_class /= system.native_array_class and then
-					filter.base_class.original_class /= system.typed_pointer_class) implies
+					(filter.base_class.original_class /= l_system.native_array_class and then
+					filter.base_class.original_class /= l_system.typed_pointer_class) implies
 					not filter.has_formal
 				then
 debug ("GENERICITY")

@@ -1,0 +1,32 @@
+test_name partial-generic-addition-crash
+test_description When adding a formal generic parameter to a class but not adding it on all the syntactical client cause the compiler to crash because the check for a valid number of generic parameter is done too late.
+
+define	GENERIC	""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	a.e $CLUSTER a.e
+copy_sub 	b.e $CLUSTER b.e
+copy_sub 	c.e $CLUSTER c.e
+copy_sub 	d.e $CLUSTER d.e
+copy_sub 	e.e $CLUSTER e.e
+
+compile_melted
+compile_result 	ok
+
+define GENERIC "[G]"
+copy_sub 	a.e $CLUSTER a.e
+copy_sub 	b.e $CLUSTER b.e
+copy_sub 	c.e $CLUSTER c.e
+copy_sub 	d.e $CLUSTER d.e
+copy_sub 	e.e $CLUSTER e.e
+
+compile_melted
+compile_result 	validity_error VTUG(2) E
+
+copy_raw	e_correct.e $CLUSTER e.e
+
+compile_melted
+compile_result	ok
+
+test_end
+

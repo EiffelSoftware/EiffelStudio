@@ -4577,6 +4577,15 @@ rt_private void swap_gen_zones(void)
 	sc_to.sc_top = sc_to.sc_arena;	/* Make sure 'to' is empty */
 }
 
+rt_public void check_gc_tracking (EIF_REFERENCE parent, EIF_REFERENCE source) {
+	if (((source) != (EIF_REFERENCE) 0) && (RTAN(source))) {
+		if (eif_is_nested_expanded(HEADER(parent)->ov_flags)) {
+			EIF_REFERENCE z = (EIF_REFERENCE) parent - (HEADER (parent)->ov_size & B_SIZE);
+			if (RTAG(z)) RTAM(z);
+		} else if (RTAG(parent)) RTAM(parent);
+	}
+}
+
 rt_public void eremb(EIF_REFERENCE obj)
 {
 	/* Remembers the object 'obj' by pushing it in the remembered set.

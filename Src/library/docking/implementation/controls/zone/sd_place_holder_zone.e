@@ -33,6 +33,7 @@ feature {NONE} -- Initlization
 			-- Creation method
 		require
 			not_void: a_content /= Void
+			only_for_place_holder_zone: a_content.unique_title.is_equal ((create {SD_SHARED}).editor_place_holder_content_name)
 		do
 			default_create
 			-- Not breaking the invariant

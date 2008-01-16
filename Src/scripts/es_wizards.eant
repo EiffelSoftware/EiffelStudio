@@ -27,12 +27,21 @@
 	<target name="compile_all_from" depend="init">
 		<argument name="A_comp_dir"/>
 		<set name="L_wizards_comp_dir" value="${A_comp_dir}${path_separator}wizards" />
+		<set name="L_error_occurred" value="false" />
 		<mkdir directory="${L_wizards_comp_dir}" />
 		<!-- <geant target="compile_a_wizard" arguments="new_projects,wizard,wizard_wizard"/> -->
 		<geant target="get_a_wizard" arguments="new_projects,vision2,vision2_wizard,${L_wizards_comp_dir}"/>
+		<set name="L_error_occurred" value="true" unless="${return_code}=0" />
 		<geant target="get_a_wizard" arguments="others,precompile,precompile_wizard,${L_wizards_comp_dir}"/>
+		<set name="L_error_occurred" value="true" unless="${return_code}=0" />
 		<geant target="get_a_wizard" arguments="new_projects,wel,wel_wizard,${L_wizards_comp_dir}" if="${is_windows}" />
+		<set name="L_error_occurred" value="true" unless="${return_code}=0" />
 		<geant target="get_a_wizard" arguments="new_projects,dotnet,dotnet_wizard,${L_wizards_comp_dir}" if="${is_windows}" />
+		<set name="L_error_occurred" value="true" unless="${return_code}=0" />
+
+		<set name="return_code" value="1" if="$L_error_occurred=true" />
+		<set name="return_code" value="0" if="$L_error_occurred=false" />
+		<unset name="L_error_occurred" />
 	</target>
 
 	<target name="get_a_wizard" depend="init">
@@ -40,6 +49,8 @@
 		<argument name="a_name"/>
 		<argument name="a_wizard_name"/>
 		<argument name="a_output_dir"/>
+
+		<set name="return_code" value="0" />
 
 		<set name="tmp_output" value="${a_output_dir}${path_separator}${a_type}${path_separator}${a_name}${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 		<mkdir directory="${tmp_output}" />
@@ -70,6 +81,7 @@
 			dir="${EIFFEL_SRC}${path_separator}help${path_separator}wizards"
 			to_directory="$a_comp_dir" force="true" 
 			/>
+		<set name="return_code" value="0" />
 		<geant dir="${COMPILE_WIZARDS.absdir}" file="ise_eiffel_compiler.eant" target="finalize" reuse_variables="true" fork="false">
 			<argument name="a_ecf" value="${EIFFEL_SRC}${path_separator}help${path_separator}wizards${path_separator}${a_wizard_name}.ecf"/>
 			<argument name="a_target" value="wizard"/>

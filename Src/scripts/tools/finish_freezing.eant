@@ -18,7 +18,7 @@
 		<geant target="set_NAME" arguments="finish_freezing" />
 
 		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
-		<geant target="set_SKIP_MESSAGE" arguments="Impossible to process: this is a Windows only application" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="Skipped: [finish_freezing] is a Windows only application" unless="${is_windows}"/>
 	</target>
 
 	<target name="prepare" if="$is_windows">

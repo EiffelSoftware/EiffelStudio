@@ -183,7 +183,7 @@
 	</target>
 
 	<target name="compile_binaries" depend="init_deliv" >
-		<geant target="_log" arguments="Compiling ES into ${_OUTPUT_DIR}" />
+		<geant target="_log" arguments="Compiling ES binaries into ${_OUTPUT_DIR}" />
 
 		<mkdir directory="${_OUTPUT_DIR}" />
 		
@@ -220,7 +220,7 @@
 		<setenv name="EC_NAME" value="" unless="${old_EC_NAME}"/>
 		<unset name="old_EC_NAME" />
 
-		<geant target="_log" arguments="Compiling ES is completed ..." />
+		<geant target="_log" arguments="ES Binaries compilation is completed ..." />
 	</target>
 
 	<target name="get__runtime" >
@@ -419,17 +419,19 @@
 		<set name="tmp_install_dir_bin" value="${tmp_install_dir}${path_separator}bin" />
 
 		<!-- ec -->
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},ec${exe}" />
-		<!-- ecbatch --> 
-		<geant target="install__file_as" arguments="${_OUTPUT_DIR}${path_separator}batch,${tmp_install_dir_bin},ec${exe},ecbatch${exe}" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},ec${exe}" />
+		<!-- ecb --> 
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},ecb${exe}" />
+		<!-- ecl --> 
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},ecl${exe}" />
 		<!-- estudio --> 
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},estudio${exe}" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},estudio${exe}" />
 		<!-- quick_finalize --> 
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},quick_finalize${exe}" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},quick_finalize${exe}" />
 
 		<!-- esbuilder --> 
 		<mkdir directory="${_INSTALL_DIR}${path_separator}esbuilder${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${_INSTALL_DIR}${path_separator}esbuilder${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin,esbuilder${exe}" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${_INSTALL_DIR}${path_separator}esbuilder${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin,esbuilder${exe}" />
 		<!-- wizards -->
 		<available dir="${_OUTPUT_DIR}" resource="wizards" variable="tmp_available" />
 		<geant target="copy_full_tree" arguments="${_OUTPUT_DIR}${path_separator}wizards,${_INSTALL_DIR}${path_separator}studio${path_separator}wizards" 
@@ -437,11 +439,11 @@
 		<unset name="tmp_available" />
 
 		<!-- escln --> 
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},escln${exe}"		if="${_INCLUDE_DEVPACK}=true" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},escln${exe}"		if="${_INCLUDE_DEVPACK}=true" />
 		<!-- eimgemb --> 
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},eimgemb${exe}"	if="${_INCLUDE_DEVPACK}=true" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},eimgemb${exe}"	if="${_INCLUDE_DEVPACK}=true" />
 		<!-- compile_all --> 
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},compile_all${exe}"	if="${_INCLUDE_DEVPACK}=true" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},compile_all${exe}"	if="${_INCLUDE_DEVPACK}=true" />
 
 		<!-- platform specific -->
 		<geant target="install_executables_windows"    if="${is_windows}" />
@@ -481,13 +483,13 @@
 		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},EiffelSoftware.Runtime.dll" />
 		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir}${path_separator}lib,EiffelSoftware.Runtime.dll" />
 		<!-- finish_freezing -->
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},finish_freezing${exe}" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},finish_freezing${exe}" />
 		<!-- h2e -->
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},h2e${exe}" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},h2e${exe}" />
 		<!-- emake -->
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},emake${exe}" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},emake${exe}" />
 		<!-- espawn --> 
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},espawn${exe}" 	if="${_INCLUDE_DEVPACK}=true" />
+		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},espawn${exe}" 	if="${_INCLUDE_DEVPACK}=true" />
 
 		<!-- continue with binaries -->
 		<copy dir="${_OUTPUT_DIR}" to_directory="${tmp_install_dir_bin}" >

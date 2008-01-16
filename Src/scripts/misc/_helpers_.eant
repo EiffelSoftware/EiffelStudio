@@ -129,11 +129,12 @@
 		<available resource="${A_source_dir}" variable="source_avail" />
 		<echo message="${A_source_dir} missing, copy aborted" unless="${source_avail}=true" />
 		<exit code="1" unless="${source_avail}=true" />
+		<unset name="source_avail" />
 
-		<!-- recreate the directory structure -->
+		<!-- recreate the directory structure including empty folders -->
 		<mkdir directory="${A_target_dir}"/>
 		<exec executable="cd ${A_source_dir} ; find . \( -type d \! -name .svn -o \( -name .svn -prune \! -name .svn \) \) -exec 'mkdir' '-p' '${A_target_dir}/{}' ';'" unless="${is_windows}"/>
-		<exec executable="xcopy /Y /t ${A_source_dir} ${A_target_dir}" if="${is_windows}"/>
+		<exec executable="xcopy /Y /T /E ${A_source_dir} ${A_target_dir}" if="${is_windows}"/>
 
 		<!-- copy files -->
 		<copy to_directory="${A_target_dir}" dir="${A_source_dir}">

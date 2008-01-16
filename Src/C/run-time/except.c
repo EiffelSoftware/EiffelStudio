@@ -3298,7 +3298,7 @@ rt_public EIF_REFERENCE eename(long ex)
 	return (0); /* to avoid a warning */
 }
 
-rt_private char eedefined(long ex)
+rt_public char eedefined(long ex)
 {
 	/* Is exception `ex' defined? */
 	return (char) ((ex > 0 && ex <= EN_NEX)? 1 : 0);

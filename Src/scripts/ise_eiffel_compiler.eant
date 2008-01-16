@@ -32,9 +32,11 @@
 		<geant target="check_system" />
 		<set name="force_clean" value="false" unless="$force_clean"/>
 		<set name="force_batch" value="true"  unless="$force_batch"/>
+		<set name="force_gui" value="false"  unless="$force_gui"/>
 		<set name="c_compile" value="true"  unless="$c_compile"/>
 		<set name="use_settings" value="false"  unless="$use_settings"/>
 	</target>
+
 	<target name="check_available">
 		<argument name="a_res"  />
 		<argument name="a_msg"  />
@@ -50,6 +52,13 @@
 		<set name="$a_var" value="${tmp_available}" unless="-${a_var}-=--"/>
 		<unset name="tmp_available" />
 	</target>
+
+	<target name="made_file_executable" unless="${is_windows}" ><!-- if="$is_unix" -->
+		<argument name="a_filename" />
+		<exec executable="chmod 755 ${a_filename}" accept_errors="true" exit_code_variable="no_return_code" />
+		<unset name="no_return_code" />
+	</target>
+
 	<target name="copy_to_output_dir" >
 		<argument name="a_exec_name" />
 		<argument name="a_dir" />
@@ -68,7 +77,8 @@
 		<echo message=" -> Copy '${a_exec_name}' from [$a_dir] to [$a_output_dir]" />
 
 		<available dir="$a_dir" resource="${a_exec_name}${exe}" variable="tmp_available" />
-		<copy dir="$a_dir" file="$a_exec_name${exe}" to_directory="$a_output_dir" if="${tmp_available}=true"/>
+		<copy dir="$a_dir" file="$a_exec_name${exe}" to_directory="$a_output_dir" if="${tmp_available}=true" />
+		<geant target="made_file_executable" arguments="${a_exec_name}${exe}" dir="$a_output_dir" if="${tmp_available}=true" />
 		<unset name="tmp_available" />
 
 		<available dir="$a_dir" resource="${a_exec_name}.melted" variable="tmp_available" unless="${a_from_f_code}=true" />
@@ -97,6 +107,7 @@
 		<argument name="a_clean" />
 		<argument name="a_batch" />
 		<argument name="a_use_settings" />
+		<argument name="a_gui" />
 
 		<echo message="Compilation [$a_compilation_mode] of [$a_ecf]:" />
 
@@ -117,10 +128,11 @@
 		<set name="eccmd" value="${eccmd} -finalize " if="${a_compilation_mode}=finalize" />
 		<set name="eccmd" value="${eccmd} -melt " if="${a_compilation_mode}=melt" />
 		<set name="eccmd" value="${eccmd} -precompile " if="${a_compilation_mode}=precompile" />
-		<set name="eccmd" value="${eccmd} -c_compile" if="$c_compile=true" />
-		<set name="eccmd" value="${eccmd} -clean" if="$force_clean=true" />
-		<set name="eccmd" value="${eccmd} -batch" if="$force_batch=true" />
-		<set name="eccmd" value="${eccmd} -use_settings" if="$use_settings=true" />
+		<set name="eccmd" value="${eccmd} -c_compile" if="$a_c_compile=true" />
+		<set name="eccmd" value="${eccmd} -clean" if="$a_clean=true" />
+		<set name="eccmd" value="${eccmd} -batch" if="$a_batch=true" />
+		<set name="eccmd" value="${eccmd} -use_settings" if="$a_use_settings=true" />
+		<set name="eccmd" value="${eccmd} -gui" if="$a_gui=true" />
 
 		<echo message=" DIR=${a_comp_dir}" />
 		<echo message=" CMD=${eccmd}" />
@@ -226,6 +238,7 @@
 			<argument name="a_clean" value="$l_clean" />
 			<argument name="a_batch" value="$l_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
+			<argument name="a_gui" value="$force_gui" />
 		</geant>
 		<unset name="l_clean" />
 		<unset name="l_batch" />
@@ -252,6 +265,7 @@
 			<argument name="a_clean" value="$force_clean" />
 			<argument name="a_batch" value="$force_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
+			<argument name="a_gui" value="$force_gui" />
 		</geant>
 	</target>
 	<target name="freeze" depend="init">
@@ -274,6 +288,7 @@
 			<argument name="a_clean" value="$force_clean" />
 			<argument name="a_batch" value="$force_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
+			<argument name="a_gui" value="$force_gui" />
 		</geant>
 	</target>
 	<target name="precompile" depend="init">
@@ -296,6 +311,7 @@
 			<argument name="a_clean" value="$force_clean" />
 			<argument name="a_batch" value="$force_batch" />
 			<argument name="a_use_settings" value="$use_settings" />
+			<argument name="a_gui" value="$force_gui" />
 		</geant>
 	</target>
 

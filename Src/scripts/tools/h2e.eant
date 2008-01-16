@@ -19,7 +19,7 @@
 		<geant target="set_NAME" 	arguments="h2e" />
 
 		<geant target="set_SKIP" 	arguments="true" unless="${is_windows}" />
-		<geant target="set_SKIP_MESSAGE" arguments="Impossible to process: this is a Windows only application" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="Skipped: [h2e] is a Windows only application" unless="${is_windows}"/>
 		
 	</target>
 

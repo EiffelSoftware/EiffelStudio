@@ -674,6 +674,7 @@ test	vtcg-add-remove-missing-error	incr281 tcf pass incrementality
 test	funky-removal-of-type			incr282 tcf pass incrementality
 test	multi-constraint-incremental-crash		incr283 tcf pass incrementality
 test	removing-formal-crashes			incr284 tcf pass incrementality
+test	partial-generic-addition-crash	incr285 tcf pass incrementality
 
 
 -- Melting

@@ -421,40 +421,44 @@ feature {NONE} -- Agents
 				fixed.set_minimum_width (a_width)
 				viewport.set_item_width (a_width)
 
-				if internal_custom_widget /= Void then
-					if a_width >= tool_bar_width + internal_custom_widget.minimum_width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
-						-- There is enough space for mini tool bar.
-						if internal_tool_bar.has (mini_tool_bar_indicator) then
-							internal_tool_bar.prune (mini_tool_bar_indicator)
-							internal_tool_bar.compute_minimum_size
-						end
-
-						if not fixed.has (internal_custom_widget) then
-							if internal_custom_widget.parent /= Void then
-								internal_custom_widget.parent.prune (internal_custom_widget)
+				if internal_custom_widget /= Void  then
+					-- We have to check if `internal_custome_widget' is_destroyed, it makes sense while an application is exiting.
+					-- See bug#13731.
+					if not internal_custom_widget.is_destroyed then
+						if a_width >= tool_bar_width + internal_custom_widget.minimum_width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
+							-- There is enough space for mini tool bar.
+							if internal_tool_bar.has (mini_tool_bar_indicator) then
+								internal_tool_bar.prune (mini_tool_bar_indicator)
+								internal_tool_bar.compute_minimum_size
 							end
-							fixed.extend (internal_custom_widget)
-						end
-						if internal_title.minimum_height < a_height then
-							internal_title.set_minimum_height (a_height)
-						end
-						fixed.set_item_x_position (internal_custom_widget, a_width - tool_bar_width - internal_custom_widget.minimum_width)
-						fixed.set_item_size (internal_title, a_width - tool_bar_width - internal_custom_widget.minimum_width, a_height)
-					else
-						-- There is not enough space for mini tool bar.
-						if not internal_tool_bar.has (mini_tool_bar_indicator) then
-							internal_tool_bar.force (mini_tool_bar_indicator, 1)
-							internal_tool_bar.compute_minimum_size
-						end
 
-						if fixed.has (internal_custom_widget) then
-							fixed.prune (internal_custom_widget)
-						end
-						if a_width - tool_bar_width >= 0 then
+							if not fixed.has (internal_custom_widget) then
+								if internal_custom_widget.parent /= Void then
+									internal_custom_widget.parent.prune (internal_custom_widget)
+								end
+								fixed.extend (internal_custom_widget)
+							end
 							if internal_title.minimum_height < a_height then
 								internal_title.set_minimum_height (a_height)
 							end
-							fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
+							fixed.set_item_x_position (internal_custom_widget, a_width - tool_bar_width - internal_custom_widget.minimum_width)
+							fixed.set_item_size (internal_title, a_width - tool_bar_width - internal_custom_widget.minimum_width, a_height)
+						else
+							-- There is not enough space for mini tool bar.
+							if not internal_tool_bar.has (mini_tool_bar_indicator) then
+								internal_tool_bar.force (mini_tool_bar_indicator, 1)
+								internal_tool_bar.compute_minimum_size
+							end
+
+							if fixed.has (internal_custom_widget) then
+								fixed.prune (internal_custom_widget)
+							end
+							if a_width - tool_bar_width >= 0 then
+								if internal_title.minimum_height < a_height then
+									internal_title.set_minimum_height (a_height)
+								end
+								fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
+							end
 						end
 					end
 				else

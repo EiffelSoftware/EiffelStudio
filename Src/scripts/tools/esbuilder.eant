@@ -7,7 +7,7 @@
 	<inherit>
 		<parent location="${PROJECT_esbuilder.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
-			<redefine target="prepare"/>
+			<redefine target="before"/>
 		</parent>
 	</inherit>
 
@@ -18,7 +18,7 @@
 		<geant target="set_NAME" arguments="esbuilder" />
 	</target>
 
-	<target name="prepare" if="$is_windows">
+	<target name="before" if="$is_windows">
 		<precursor/>
 		<set name="_ecf_dir" value="${EIFFEL_SRC}${path_separator}build" />
 		<copy dir="$_ecf_dir" file="esbuilder.rc" to_directory="$_COMP_DIR" />

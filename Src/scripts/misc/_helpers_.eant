@@ -143,6 +143,7 @@
 	</target>
 
 	<target name="copy_library_to">
+		<!-- Copy library '$EIFFEL_SRC/library/$A_lib_name' to '$A_target_dir/library/$A_lib_name' -->
 		<argument name="A_lib_name"/>
 		<argument name="A_target_dir"/>
 		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}library${path_separator}${A_lib_name},${A_target_dir}${path_separator}library${path_separator}${A_lib_name}"/>

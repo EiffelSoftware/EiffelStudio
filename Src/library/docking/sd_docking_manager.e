@@ -411,6 +411,27 @@ feature -- Command
 			command.show_displayed_floating_windows_in_idle
 		end
 
+	close_all is
+			-- Close all contents.
+			-- All actions in {SD_CONTENT} will NOT be called.
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				is_closing_all := True
+				l_contents := contents.twin
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				l_contents.item.close
+				l_contents.forth
+			end
+			is_closing_all := False
+		ensure
+			cleared: not is_closing_all
+		end
+
 	destroy is
 			-- Destroy all underline objects.
 		local
@@ -565,6 +586,9 @@ feature {SD_TOOL_BAR_HOT_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
 
 	main_container: SD_MAIN_CONTAINER
 			-- Container has four tab stub areas in four side and main area in center.
+
+	is_closing_all: BOOLEAN
+			-- If Current closing all contents now.
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER_COMMAND} -- Implementation
 

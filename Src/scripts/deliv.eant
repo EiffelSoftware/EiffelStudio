@@ -147,6 +147,7 @@
 		<geant target="set_ec_version" 				/>
 		<geant target="set_esbuilder_version" 		/>
 		<geant target="compile_binaries" 			/>
+		<geant target="compile_documentation"		/>
 		<geant target="build_delivery_structure"	/>
 		<geant target="install_binaries"			/>
 	</target>
@@ -206,7 +207,8 @@
 		<geant target="get_bin__" arguments="finish_freezing,${_OUTPUT_DIR},finish_freezing${exe}"/>
 		<geant target="get_bin__" arguments="h2e,${_OUTPUT_DIR},h2e${exe}"/>
 		<geant target="get_bin__" arguments="emake,${_OUTPUT_DIR},emake${exe}"/>
-		<geant target="get_bin__z" arguments="dotnet_consumer,${_OUTPUT_DIR},mdconsumer_compiled"/>
+		<mkdir directory="${_OUTPUT_DIR}${path_separator}consumer" />
+		<geant target="get_bin__z" arguments="dotnet_consumer,${_OUTPUT_DIR}${path_separator}consumer,mdconsumer_compiled"/>
 		<geant target="get_bin__" arguments="esbuilder,${_OUTPUT_DIR},esbuilder${exe}" />
 		<geant target="get_bin__wizards" arguments="${_OUTPUT_DIR},wizards_compiled"/>
 
@@ -221,6 +223,40 @@
 		<unset name="old_EC_NAME" />
 
 		<geant target="_log" arguments="ES Binaries compilation is completed ..." />
+	</target>
+
+	<target name="compile_documentation" depend="init_deliv">
+		<geant target="_log" arguments="Compiling Documentation into ${_OUTPUT_DIR} -> To Be Implemented" />
+	</target>
+
+	<target name="bootstrap_gobo" depend="init_deliv">
+		<available resource="${_DELIVERY_DIR}${path_separator}library${path_separator}gobo${path_separator}library" variable="gobo_dir_available" />
+		<echo message="Gobo missing in ${_DELIVERY_DIR}/library ..." if="${gobo_dir_available}=false" />
+		
+		<!-- Environment setup -->
+		<setenv name="GOBO" value="${_DELIVERY_DIR}${path_separator}library${path_separator}gobo"/>
+		<setenv name="GOBO_OS" value="windows" if="${is_windows}" />
+		<setenv name="GOBO_OS" value="unix" unless="${is_windows}" />
+		<setenv name="GOBO_DOTNET" value="true" if="${is_windows}" />
+
+		<!-- Call bootstrap -->
+		<set name="l_verb_flag" value="" unless="${verbose}=true" />
+		<set name="l_verb_flag" value="-v" if="${verbose}=true" />
+		<set name="l_gobo_compiler" value="ge" if="${gobo_using_gec}" />
+		<set name="l_gobo_compiler" value="ise" unless="${gobo_using_gec}" />
+		<set name="l_gobo_c_compiler" value="msc" if="${is_windows}" />
+		<set name="l_gobo_c_compiler" value="gcc" unless="${is_windows}" />
+		<!-- FIXME .. what about other C compiler ? -->
+
+		<set name="l_gobo_bootstrap_cmd" value="bootstrap.bat ${l_verb_flag} ${l_gobo_c_compiler} ${l_gobo_compiler}" if="${is_windows}" />
+		<set name="l_gobo_bootstrap_cmd" value="bash ./bootstrap.sh ${l_verb_flag} ${l_gobo_c_compiler} ${l_gobo_compiler}" unless="${is_windows}" />
+
+		<exec executable="${l_gobo_bootstrap_cmd}" dir="${GOBO}/work/bootstrap" if="${gobo_dir_available}" />
+
+		<unset name="l_gobo_bootstrap_cmd"/>
+		<unset name="l_gobo_c_compiler"/>
+		<unset name="l_gobo_compiler"/>
+		<unset name="l_verb_flag"/>
 	</target>
 
 	<target name="get__runtime" >
@@ -245,7 +281,8 @@
 
 		<!-- IL runtime -->
 		<available resource="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" variable="tmp_available"/>
-		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${a_output_dir}${path_separator}EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
+		<mkdir directory="${a_output_dir}${path_separator}lib" />
+		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${a_output_dir}${path_separator}lib${path_separator}EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
 		<unset name="tmp_available" />
 	</target>
 
@@ -479,9 +516,13 @@
 		<!-- wel_hook.dll -->
 		<geant target="install__file" arguments="${_OUTPUT_DIR},${_INSTALL_DIR}${path_separator}esbuilder${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin,wel_hook.dll" />
 		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},wel_hook.dll" />
+
+		<!-- EiffelSoftware. Consumer -->
+		<copy dir="${_OUTPUT_DIR}${path_separator}consumer" to_directory="${tmp_install_dir_bin}" >
+			<fileset include="@(*.dll)" />
+		</copy>
 		<!-- EiffelSoftware.Runtime -->
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},EiffelSoftware.Runtime.dll" />
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir}${path_separator}lib,EiffelSoftware.Runtime.dll" />
+		<geant target="install__file" arguments="${_OUTPUT_DIR}${path_separator}lib,${tmp_install_dir}${path_separator}lib,EiffelSoftware.Runtime.dll" />
 		<!-- finish_freezing -->
 		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},finish_freezing${exe}" />
 		<!-- h2e -->
@@ -553,17 +594,18 @@
 		<!-- platform independant -->
 		<echo message=" - Copy Delivery to ${cwd}"/>
 		<geant target="copy_full_tree" arguments="${_DELIVERY_DIR},${cwd}" />
+
+		<!-- libraries -->
 		<mkdir directory="library"/>
 		<echo message=" - Copy library.. to ${cwd}${path_separator}library"/>
-		<geant target="copy_library_to" arguments="Eiffel2Java,${cwd}"    />
 		<geant target="copy_library_to" arguments="base,${cwd}"/>
-		<geant target="copy_library_to" arguments="diff,${cwd}"/>
-		<geant target="copy_library_to" arguments="event,${cwd}"/>
+		<geant target="copy_library_to" arguments="base_original,${cwd}"/>
+		<geant target="copy_library_to" arguments="com,${cwd}"/>
+		<geant target="copy_library_to" arguments="Eiffel2Java,${cwd}"    />
 		<geant target="copy_library_to" arguments="gobo,${cwd}"   />
 		<geant target="copy_library_to" arguments="gobo_extension,${cwd}"   />
 		<geant target="copy_library_to" arguments="graph,${cwd}" />
 		<geant target="copy_library_to" arguments="lex,${cwd}" />
-		<geant target="copy_library_to" arguments="mel,${cwd}" />
 		<geant target="copy_library_to" arguments="memory_analyzer,${cwd}" />
 		<geant target="copy_library_to" arguments="net,${cwd}" />
 		<geant target="copy_library_to" arguments="obsolete,${cwd}" />
@@ -579,6 +621,10 @@
 		<geant target="copy_library_to" arguments="vision2_extension,${cwd}" />
 		<geant target="copy_library_to" arguments="web,${cwd}" />
 		<geant target="copy_library_to" arguments="wel,${cwd}"/>
+
+		<!-- extra -->
+		<geant target="copy_library_to" arguments="diff,${cwd}"/>
+		<geant target="copy_library_to" arguments="event,${cwd}"/>
 
 		<!-- <geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}library,${cwd}${path_separator}library" /> -->
 
@@ -630,5 +676,6 @@
 		<exec executable="ln -f -s ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
 		<exec executable="ln -f -s ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
 	</target>
+
 
 </project>

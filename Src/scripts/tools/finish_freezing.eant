@@ -7,7 +7,7 @@
 	<inherit>
 		<parent location="${PROJECT_finish_freezing.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
-			<redefine target="prepare"/>
+			<redefine target="before"/>
 		</parent>
 	</inherit>
 
@@ -21,7 +21,7 @@
 		<geant target="set_SKIP_MESSAGE" arguments="Skipped: [finish_freezing] is a Windows only application" unless="${is_windows}"/>
 	</target>
 
-	<target name="prepare" if="$is_windows">
+	<target name="before" if="$is_windows">
 		<set name="_ecf_dir" value="${EIFFEL_SRC}${path_separator}tools${path_separator}finish_freezing" />
 		<copy dir="$_ecf_dir" file="appl.ico" to_directory="$_COMP_DIR" />
 		<copy dir="$_ecf_dir" file="finish_freezing.rc" to_directory="$_COMP_DIR" />

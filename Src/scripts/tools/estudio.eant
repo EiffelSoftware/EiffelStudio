@@ -8,7 +8,7 @@
 	<inherit>
 		<parent location="${PROJECT_estudio.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
-			<redefine target="prepare"/>
+			<redefine target="before"/>
 		</parent>
 	</inherit>
 
@@ -20,7 +20,7 @@
 		<geant target="set_NAME" 	arguments="estudio" />
 	</target>
 
-	<target name="prepare" if="$is_windows">
+	<target name="before" if="$is_windows">
 		<precursor/>
 		<set name="_ecf_dir" value="${EIFFEL_SRC}${path_separator}tools${path_separator}estudio${path_separator}config" />
 		<copy dir="$_ecf_dir" file="estudio.rc" to_directory="$_COMP_DIR" />

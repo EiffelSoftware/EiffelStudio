@@ -35,7 +35,9 @@
 		<echo message="Skipped: no message" unless="$_SKIP_MESSAGE" />
 	</target>
 
-	<target name="prepare" depend="init">
+	<target name="before" depend="init">
+	</target>
+	<target name="after" depend="init">
 	</target>
 
 	<target name="require">
@@ -136,7 +138,7 @@
 	<target name="_tpl_compile_" depend="init_skip" unless="$_SKIP=true">
 		<argument name="a_mode" />
 		<geant target="require" arguments="true" />
-		<geant target="prepare" />
+		<geant target="before" />
 
 		<!-- Debug purpose
 		<echo message="_ECF=$_ECF" />
@@ -159,6 +161,7 @@
 			<argument name="a_comp_dir" value="$_COMP_DIR"/>
 			<argument name="a_output_dir" value="$_OUT_DIR"/>
 		</geant>
+		<geant target="after" />
 	</target>
 
 </project>

@@ -8,6 +8,7 @@
 	<inherit>
 		<parent location="${PROJECT_dotnet_consumer.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
+			<redefine target="after"/>
 		</parent>
 	</inherit>
 
@@ -23,7 +24,13 @@
 
 		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
 		<geant target="set_SKIP_MESSAGE" arguments="This is a Windows-only application" unless="${is_windows}"/>
-		
+	</target>
+
+	<target name="after" if="$is_windows">
+		<precursor/>
+		<available resource="EiffelSoftware.Runtime.dll" dir="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/lib" variable="tmp_dll_available" />
+		<copy dir="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/lib" file="EiffelSoftware.Runtime.dll" to_directory="$_OUT_DIR" if="$tmp_dll_available"/>
+		<unset name="tmp_dll_available" />
 	</target>
 
 </project>

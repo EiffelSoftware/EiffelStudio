@@ -29,7 +29,6 @@ inherit
 			il_type_name,
 			instantiation_in,
 			is_anchored,
-			is_equal,
 			is_explicit,
 			is_identical,
 			is_standalone,
@@ -773,13 +772,6 @@ feature -- Generic conformance for IL
 		end
 
 feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-		do
-			Result := same_as (other)
-		end
 
 	is_identical (other: TYPE_I): BOOLEAN is
 			-- Is `other' identical to Current ?

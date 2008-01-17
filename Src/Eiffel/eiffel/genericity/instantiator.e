@@ -36,9 +36,6 @@ inherit
 create
 	make
 
-create {INSTANTIATOR}
-	make_filled
-
 feature -- Attributes
 
 	dispatch (a_type: TYPE_A; a_class: CLASS_C) is
@@ -83,12 +80,8 @@ feature -- Attributes
 					io.error.put_new_line;
 				end;
 
-					-- Look for the item in the insertion list
-				insertion_list.start;
-				if not insertion_list.has_item (type_i) then
-						-- New data or item
-					insertion_list.extend (type_i)
-				end
+					-- Insert item in the insertion list if not present
+				insertion_list.put (type_i)
 
 					-- Recursion on the generic types
 				generics := a_type.generics
@@ -110,7 +103,6 @@ feature -- Attributes
 			-- Process the list in order to find new class types
 		local
 			data: like item
-			l_area: like area
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			class_type: CLASS_TYPE;
@@ -136,20 +128,13 @@ feature -- Attributes
 			clean;
 
 			from
-				i := 0
-				nb := count - 1
-				l_area := area
+				start
 			until
-				i > nb
+				after
 			loop
-				data := l_area.item (i);
-debug
-	io.error.put_string ("Adding data%N");
-	data.trace
-	io.error.put_new_line;
-end;
+				data := item_for_iteration
 				data.base_class.update_types (data);
-				i := i + 1
+				forth
 			end;
 			derivations.clear_all;
 

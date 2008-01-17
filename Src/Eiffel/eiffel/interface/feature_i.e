@@ -1831,10 +1831,10 @@ feature -- Signature checking
 					type_a_checker.check_type_validity (l_type, Void)
 					l_type.check_for_obsolete_class (a_context_class)
 				end
-			end
-			if arguments /= Void then
-					-- Check types of arguments
-				arguments.check_type_validity (a_context_class, Current, type_a_checker)
+				if arguments /= Void then
+						-- Check types of arguments
+					arguments.check_type_validity (a_context_class, Current, type_a_checker)
+				end
 			end
 		end
 

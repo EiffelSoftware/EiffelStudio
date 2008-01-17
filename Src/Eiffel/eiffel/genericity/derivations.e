@@ -52,7 +52,7 @@ end;
 			-- Do not add any TUPLE derivations
 
 			if tuple_i = Void then
-				derivations.extend (a_type);
+				derivations.put (a_type);
 			end
 		end;
 

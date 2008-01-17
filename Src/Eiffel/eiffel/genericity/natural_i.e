@@ -23,19 +23,11 @@ inherit
 			generate_conversion_to_real_32
 		end
 
-	BYTE_CONST
-		export
-			{NONE} all
-		end
-
-	SHARED_IL_CODE_GENERATOR
-		export
-			{NONE} all
-		end
-
 	SHARED_INCLUDE
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 create

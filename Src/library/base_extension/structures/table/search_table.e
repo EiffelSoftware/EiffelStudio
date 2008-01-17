@@ -97,6 +97,14 @@ feature -- Access and queries
 			item_if_found: found implies (found_item = content.item (position))
 		end
 
+	go_to (c: like cursor) is
+			-- Move to position `c'.
+		require
+			valid_cursor: valid_cursor (c)
+		do
+			iteration_position := c
+		end
+
 	found_item: H
 			-- Item found during a search with `has' to reduce the number of
 			-- search for clients
@@ -409,6 +417,14 @@ feature -- Assertion check
 			Result := k /= dead_key and then k.is_hashable
 		end
 
+	valid_cursor (c: like cursor): BOOLEAN is
+			-- Can cursor be moved to position `c'?
+		local
+			l_default: H
+		do
+			Result := (c >= capacity) or else (((c >= 0) and (c <= capacity)) and then content.item (c) /= l_default)
+		end
+
 feature {NONE} -- Status
 
 	control: INTEGER
@@ -486,6 +502,11 @@ feature -- Iteration
 			not_off: not after
 		do
 			Result := content.item (iteration_position)
+		end
+
+	cursor: INTEGER is
+		do
+			Result := iteration_position
 		end
 
 feature {NONE} -- Iteration cursor

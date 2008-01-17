@@ -261,8 +261,6 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_OBJECTS_TOOL})
 			l_tools.put_last ({ES_OBJECT_VIEWER_TOOL})
 
-			l_tools.put_last ({ES_TESTING_TOOL})
-
 			l_tools.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [TYPE [ES_TOOL [EB_TOOL]]]}.make (agent {TYPE [ES_TOOL [EB_TOOL]]}.is_equal))
 			Result := l_tools
 		ensure

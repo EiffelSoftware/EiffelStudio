@@ -129,10 +129,10 @@ feature -- from ROUT_ENTRY
 		do
 			system_i := System
 			remover := system_i.remover
-			Result := 	remover = Void						-- Workbench mode
-						or else system_i.remover_off		-- Dead code removal disconnected
-						--or else is_marked
-						or else remover.is_alive (body_index)	-- Final mode
+			Result := remover = Void or else		-- Workbench mode
+				system_i.remover_off or else		-- Dead code removal disconnected
+				-- is_marked or else
+				remover.is_alive (body_index)		-- Final mode
 		end
 
 	routine_name: STRING is

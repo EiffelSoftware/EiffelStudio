@@ -102,7 +102,7 @@ feature {NONE} -- Access
 	mouse_move_idle_timer: EV_TIMEOUT
 			-- Timer used to process mouse idle actions.
 
-	mouse_move_idle_internal: INTEGER = 400
+	mouse_move_idle_internal: INTEGER = 300
 			-- Timeout interval signifying the mouse has remained idle
 
 feature -- Quick search bar basic operation
@@ -454,7 +454,7 @@ feature -- Search commands
 			end
 		end
 
-feature {NONE} -- Basic operation
+feature {ES_EDITOR_TOKEN_HANDLER} -- Basic operation
 
 	reset_mouse_idle_timer
 			-- Resets the mouse idle timer, if it's active. Resetting actually kills the
@@ -485,7 +485,16 @@ feature {NONE} -- Action hanlders
 					create l_timer.make_with_interval (mouse_move_idle_internal)
 					l_timer.actions.extend (agent on_mouse_idle (a_x_pos, a_y_pos, a_screen_x, a_screen_y))
 					mouse_move_idle_timer := l_timer
-					editor_drawing_area.pointer_leave_actions.extend_kamikaze (agent reset_mouse_idle_timer)
+					editor_drawing_area.pointer_leave_actions.extend_kamikaze (agent
+						local
+							l_handler: like token_handler
+						do
+							reset_mouse_idle_timer
+							l_handler := token_handler
+							if l_handler /= Void and then l_handler.is_active and then l_handler.can_perform_exit (True) then
+								l_handler.perform_exit (True)
+							end
+						end)
 				else
 					l_timer.actions.wipe_out
 					l_timer.actions.extend (agent on_mouse_idle (a_x_pos, a_y_pos, a_screen_x, a_screen_y))
@@ -500,22 +509,29 @@ feature {NONE} -- Action hanlders
 		require
 			is_interface_usable: is_interface_usable
 			text_displayed_attached: text_displayed /= Void
-			text_is_fully_loaded: text_is_fully_loaded
 			not_is_empty: not is_empty
 		local
 			l_handler: like token_handler
 			l_cursor: EIFFEL_EDITOR_CURSOR
 		do
-			l_handler := token_handler
-			if l_handler /= Void and then {l_clickable_text: !CLICKABLE_TEXT} text_displayed then
-					-- Fetch token at current mouse position
-				create l_cursor.make_from_character_pos (1, 1, l_clickable_text)
-				position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
-				if {l_token: !EDITOR_TOKEN} l_cursor.token and then l_handler.is_applicable_token (l_token) then
-					l_handler.perform_on_token_with_mouse_coords (l_token, l_cursor.line.index, a_abs_x, a_abs_y, a_screen_x, a_screen_y)
-				else
-						-- Nothing to perform so ensure exit.
-					l_handler.perform_exit
+			if text_is_fully_loaded then
+				l_handler := token_handler
+				if l_handler /= Void then
+					if {l_clickable_text: !CLICKABLE_TEXT} text_displayed then
+						if not l_handler.is_active then
+								-- Fetch token at current mouse position
+							create l_cursor.make_from_character_pos (1, 1, l_clickable_text)
+							position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
+							if {l_token: !EDITOR_TOKEN} l_cursor.token and then l_handler.is_applicable_token (l_token) then
+								l_handler.perform_on_token_with_mouse_coords (l_token, l_cursor.line.index, a_abs_x, a_abs_y, a_screen_x, a_screen_y)
+							else
+								l_handler.perform_reset
+							end
+						elseif l_handler.can_perform_exit (False) then
+								-- Nothing to perform so ensure exit.
+							l_handler.perform_exit (False)
+						end
+					end
 				end
 			end
 		end
@@ -527,7 +543,6 @@ feature {NONE} -- Action hanlders
 					-- Reset timer as edits override mouse idle events
 				reset_mouse_idle_timer
 			end
-
 			Precursor (a_key)
 		end
 

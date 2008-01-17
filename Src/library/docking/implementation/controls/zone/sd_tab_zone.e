@@ -341,8 +341,8 @@ feature {NONE} -- Agents for docker
 			l_content := contents.i_th (internal_notebook.selected_item_index)
 			internal_title_bar.set_title (l_content.long_title)
 			update_mini_tool_bar (l_content)
-			if l_content.internal_focus_in_actions /= Void and then internal_docking_manager.property.last_focus_content /= l_content then
-				l_content.internal_focus_in_actions.call (Void)
+			if not l_content.focus_in_actions.is_empty and then internal_docking_manager.property.last_focus_content /= l_content then
+				l_content.focus_in_actions.call (Void)
 			end
 			internal_docking_manager.property.set_last_focus_content (l_content)
 		ensure

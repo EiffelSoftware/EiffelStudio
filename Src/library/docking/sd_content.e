@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			l_state: SD_STATE_VOID
 		do
 			create internal_shared
-			create drop_actions
-			create show_actions
+			create internal_drop_actions
+			create internal_show_actions
 
 			internal_user_widget := a_widget
 			internal_user_widget.set_minimum_size (0, 0)
@@ -497,10 +497,14 @@ feature -- Actions
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is gained.
 		do
-			if internal_focus_in_actions = Void then
-				create internal_focus_in_actions
+			if not is_ignore_actions then
+				if internal_focus_in_actions = Void then
+					create internal_focus_in_actions
+				end
+				Result := internal_focus_in_actions
+			else
+				create Result
 			end
-			Result := internal_focus_in_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -508,10 +512,14 @@ feature -- Actions
 	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is lost.
 		do
-			if internal_focus_out_actions = Void then
-				create internal_focus_out_actions
+			if not is_ignore_actions then
+				if internal_focus_out_actions = Void then
+					create internal_focus_out_actions
+				end
+				Result := internal_focus_out_actions
+			else
+				create Result
 			end
-			Result := internal_focus_out_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -519,17 +527,47 @@ feature -- Actions
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to perfrom when close requested.
 		do
-			if internal_close_request_actions = Void then
-				create internal_close_request_actions
+			if not is_ignore_actions then
+				if internal_close_request_actions = Void then
+					create internal_close_request_actions
+				end
+				Result := internal_close_request_actions
+			else
+				create Result
 			end
-			Result := internal_close_request_actions
+		ensure
+			not_void: Result /= Void
 		end
 
-	drop_actions: EV_PND_ACTION_SEQUENCE
+	drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Drop actions to performed when user drop a pebble on notebook tab.
+		do
+			if not is_ignore_actions then
+				if internal_drop_actions = Void then
+					create internal_drop_actions
+				end
+				Result := internal_drop_actions
+			else
+				create Result
+			end
+		ensure
+			not_void: Result /= Void
+		end
 
-	show_actions: EV_NOTIFY_ACTION_SEQUENCE
+	show_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to perform when `user_widget' is shown.
+		do
+			if not is_ignore_actions then
+				if internal_show_actions = Void then
+					create internal_show_actions
+				end
+				Result := internal_show_actions
+			else
+				create Result
+			end
+		ensure
+			not_void: Result /= Void
+		end
 
 feature -- Command
 
@@ -545,6 +583,8 @@ feature -- Command
 				docking_manager.contents.start
 				docking_manager.contents.prune (Current)
 			end
+		ensure
+			cleard: not is_docking_manager_attached
 		end
 
 	hide is
@@ -615,13 +655,13 @@ feature -- Command
 					internal_focus_out_actions.wipe_out
 					internal_focus_out_actions := Void
 				end
-				if drop_actions /= Void then
-					drop_actions.wipe_out
-					drop_actions := Void
+				if internal_drop_actions /= Void then
+					internal_drop_actions.wipe_out
+					internal_drop_actions := Void
 				end
-				if show_actions /= Void then
-					show_actions.wipe_out
-					show_actions := Void
+				if internal_show_actions /= Void then
+					internal_show_actions.wipe_out
+					internal_show_actions := Void
 				end
 
 				internal_user_widget := Void
@@ -768,6 +808,12 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 
 feature {NONE}  -- Implemention.
 
+	is_ignore_actions: BOOLEAN
+			-- Ignore actions?
+		do
+			Result := docking_manager /= Void and then docking_manager.is_closing_all
+		end
+
 	internal_user_widget: EV_WIDGET
 			-- Client programmer's widget.
 
@@ -792,6 +838,18 @@ feature {NONE}  -- Implemention.
 	internal_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Mouse focus out actions.
 
+	internal_drop_actions: EV_PND_ACTION_SEQUENCE
+			-- Drop actions to performed when user drop a pebble on notebook tab.
+
+	internal_show_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to perform when `user_widget' is shown.
+
+	internal_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Mouse focus in actions.
+
+	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to perfrom when close requested.	
+
 	internal_clear_docking_manager_property is
 			-- Clear stuffs related with Current in {SD_DOCKING_MANAGER_PROPERTY}.
 		require
@@ -803,22 +861,9 @@ feature {NONE}  -- Implemention.
 			end
 		end
 
-feature {SD_TAB_ZONE}  -- Actions for SD_TAB_ZONE
-
-	internal_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Mouse focus in actions.
-
-feature {SD_STATE} -- Actions for SD_STATE
-
-	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to perfrom when close requested.
-
 invariant
-
 	the_user_widget_not_void: internal_user_widget /= Void
 	internal_shared_not_void: internal_shared /= Void
-	drop_actions_not_void: drop_actions /= Void
-	show_actions_not_void: show_actions /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

@@ -11,7 +11,10 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 1153.64u 36.60s 29:33.54 67.1%
 1133.75u 36.60s 27:44.58 70.3%
 
-6.2.7.1786 compiled with optimized ecb compiler (5036 classes):
+6.2.7.1786 compiled with FILTER_LIST optimized ecb compiler (5036 classes):
+670.13u 33.18s 18:57.99 61.8%
+
+6.2.7.1786 compiled with ecb compiler (5036 classes):
 722.27u 34.97s 21:42.54 58.1%
 
 6.0

@@ -2363,7 +2363,7 @@ end
 		local
 			class_filters: like filters
 			filter: CL_TYPE_I
-			class_filters_cursor: CURSOR
+			class_filters_cursor: INTEGER
 			l_system: like system
 		do
 			class_filters := filters
@@ -2383,7 +2383,7 @@ end
 					-- we are going to traverse recursively the `filters' list.
 				class_filters_cursor := class_filters.cursor
 					-- Instantiation of the filter with `data'
-				filter := class_filters.item.instantiation_in (new_class_type)
+				filter := class_filters.item_for_iteration.instantiation_in (new_class_type)
 debug ("GENERICITY")
 	io.error.put_string ("Propagation of ")
 	filter.trace
@@ -2413,7 +2413,7 @@ feature {CLASS_C} -- Incrementality
 		local
 			class_filters: like filters
 			filter: CL_TYPE_I
-			class_filters_cursor: CURSOR
+			class_filters_cursor: INTEGER
 			l_system: SYSTEM_I
 		do
 			class_filters := filters
@@ -2433,7 +2433,7 @@ feature {CLASS_C} -- Incrementality
 					-- we are going to traverse recursively the `filters' list.
 				class_filters_cursor := class_filters.cursor
 					-- Instantiation of the filter with `data'
-				filter := class_filters.item.anchor_instantiation_in (new_class_type)
+				filter := class_filters.item_for_iteration.anchor_instantiation_in (new_class_type)
 				if
 					(filter.base_class.original_class /= l_system.native_array_class and then
 					filter.base_class.original_class /= l_system.typed_pointer_class) implies

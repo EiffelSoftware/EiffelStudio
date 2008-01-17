@@ -21,16 +21,6 @@ inherit
 			minimum_interval_value
 		end
 
-	BYTE_CONST
-		export
-			{NONE} all
-		end
-
-	SHARED_IL_CODE_GENERATOR
-		export
-			{NONE} all
-		end
-
 create
 	make
 

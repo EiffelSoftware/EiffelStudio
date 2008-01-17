@@ -186,6 +186,7 @@ feature -- Checking
 			a_context_class_not_void: a_context_class /= Void
 			a_feature_not_void: a_feature /= Void
 			a_checker_not_void: a_checker /= Void
+			written_in: a_context_class.class_id = a_feature.written_in
 		local
 			i, nb: INTEGER
 			l_area: SPECIAL [TYPE_A]
@@ -201,10 +202,8 @@ feature -- Checking
 			loop
 				l_type := l_area.item (i)
 					-- Process anchored type for argument types
-				if l_check then
-						-- Check validity of a generic type
-					a_checker.check_type_validity (l_type, Void)
-				end
+					-- Check validity of a generic type
+				a_checker.check_type_validity (l_type, Void)
 				l_type.check_for_obsolete_class (a_context_class)
 				i := i + 1
 			end

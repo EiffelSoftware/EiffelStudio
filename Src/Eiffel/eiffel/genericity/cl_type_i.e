@@ -26,6 +26,7 @@ inherit
 			internal_generic_derivation,
 			instantiated_description,
 			instantiation_in,
+			is_equal,
 			is_expanded,
 			is_explicit,
 			is_external,
@@ -43,16 +44,22 @@ inherit
 	SHARED_IL_CASING
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 	SHARED_GENERATION
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 	SHARED_DECLARATIONS
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 create
@@ -544,6 +551,15 @@ feature -- Setting
 			cr_info := cinfo
 		ensure
 			cr_info_set : cr_info = cinfo
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := same_as (other)
 		end
 
 feature -- C generation

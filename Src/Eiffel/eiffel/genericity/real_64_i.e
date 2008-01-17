@@ -14,20 +14,6 @@ inherit
 			default_create, tuple_code
 		end
 
-	BYTE_CONST
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-
-	SHARED_IL_CODE_GENERATOR
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-
 create
 	default_create
 

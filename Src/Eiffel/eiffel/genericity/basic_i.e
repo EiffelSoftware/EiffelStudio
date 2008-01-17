@@ -22,21 +22,29 @@ inherit
 
 	TYPE_C
 		undefine
-			is_bit, is_void
+			is_bit, is_void, is_equal
 		redefine
 			generate_conversion_to_real_64,
 			generate_conversion_to_real_32
 		end
 
 	SHARED_C_LEVEL
+		undefine
+			is_equal
+		end
 
 	BYTE_CONST
+		undefine
+			is_equal
+		end
 
 	SHARED_TYPES
 		rename
 			none_type as none_type_a
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 feature -- Access

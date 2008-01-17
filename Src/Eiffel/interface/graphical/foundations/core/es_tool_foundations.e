@@ -96,6 +96,9 @@ feature {NONE} -- Access
 
 feature -- Status report
 
+	is_initialized: BOOLEAN
+			-- Indicates if the user interface has been initialized
+
 	is_shown: BOOLEAN
 			-- Indicates if foundataion tool is current visible
 		do
@@ -105,9 +108,6 @@ feature -- Status report
 		end
 
 feature {NONE} -- Status report
-
-	is_initialized: BOOLEAN
-			-- Indicates if the user interface has been initialized
 
 	is_initializing: BOOLEAN
 			-- Indicates if the user interface is currently being initialized
@@ -130,6 +130,8 @@ feature {NONE} -- Query
 					{l_check: !EV_CHECK_BUTTON} a_widget or
 					{l_rbutton: !EV_RADIO_BUTTON} a_widget or
 					{l_label: !EV_LABEL} a_widget or
+					{l_hbox: !EV_HORIZONTAL_BOX} a_widget or
+					{l_vbox: !EV_VERTICAL_BOX} a_widget or
 					{l_drawable: !EV_DRAWABLE} a_widget or
 					{l_separator: !EV_SEPARATOR} a_widget
 			end
@@ -164,7 +166,7 @@ feature {NONE} -- Helpers
 	frozen preferences: !EB_PREFERENCES
 			-- Access to environment preferences
 		require
-			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences_initialized
+			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences /= Void
 		once
 			Result ?= (create {EB_SHARED_PREFERENCES}).preferences
 		end

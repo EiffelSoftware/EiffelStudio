@@ -1,6 +1,14 @@
 indexing
 	description: "[
-
+		A foundation popup window, with customizable behavior.
+		
+		The foundation provides built-in behavior for closing the window on focus-out or pointer leave actions based on the respective
+		`is_focus_sensitive' and `is_pointer_sensitive'. Support actions such as `execute_unfocusing_action' can be used to prevent
+		lose of focus senstivity for focus sensitive windows.
+		
+		Also supported is the notion of window-commit and window-cancel operations. A commited window is one that is commited using `hide_commit'
+		or via a widget calling `hide_commit'. `is_committed_on_close' is set based on `hide_cancel' and `hide_commit'. By default pressing CTRL+ENTER
+		will perform a commit hide. Pressing ESC or hiding due to sensitivity behavior will perform a cancel hide.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -24,7 +32,7 @@ inherit
 		end
 
 convert
-	to_popup_window: {EV_POPUP_WINDOW}
+	popup_window: {EV_POPUP_WINDOW}
 
 feature {NONE} -- Initialization
 
@@ -41,6 +49,10 @@ feature {NONE} -- Initialization
 
 				-- Do actual initialization
 			make_window_foundations
+
+				-- Register key actions
+			register_action (popup_window.key_press_actions, agent on_key_pressed)
+			register_action (popup_window.key_release_actions, agent on_key_release)
 		ensure
 			is_initialized: is_initialized
 		end
@@ -102,7 +114,7 @@ feature {NONE} -- User interface initialization
 	build_window_interface (a_container: EV_VERTICAL_BOX)
 			-- Builds the windows's user interface.
 			--
-			-- `a_container': The dialog's container where the user interface elements should be extended
+			-- `a_container': The dialog's container where the user interface elements should be extended.
 		require
 			a_container_attached: a_container /= Void
 			not_a_container_is_destoryed: not a_container.is_destroyed
@@ -130,10 +142,10 @@ feature {NONE} -- Clean up
 			not_is_initialized: not is_initialized
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
 	popup_window: EV_POPUP_WINDOW
-			-- Actual window
+			-- Actual popup window
 		do
 			Result := internal_popup_window
 			if Result = Void then
@@ -141,6 +153,8 @@ feature {NONE} -- Access
 				internal_popup_window := Result
 			end
 		end
+
+feature {NONE} -- Access
 
 	popup_window_border_width: INTEGER
 			-- Pop up window border width between the edge of the window and the containing widgets.
@@ -151,18 +165,18 @@ feature {NONE} -- Access
 		end
 
 	border_color: EV_COLOR
-			-- Pop up window border color
+			-- Pop up window border color.
 		require
 			has_border: has_border
 		once
 			Result := active_border_color.twin
-			Result.set_rgb ((Result.red * 0.7).max (.0), (Result.green * 0.7).max (.0), (Result.blue * 0.7).max (.0))
+			Result.set_rgb (.6, .6, .7)
 		ensure
 			result_attached: Result /= Void
 		end
 
 	active_border_color: EV_COLOR
-			-- Pop up window border color, when considered "active"
+			-- Pop up window border color, when considered "active".
 		require
 			has_border: has_border
 		once
@@ -180,8 +194,11 @@ feature {NONE} -- Access
 
 feature -- Status report
 
+	has_mouse_pointer: BOOLEAN
+			-- Indicates if the mouse cursor is within the bounds of the popup window.
+
 	is_shown: BOOLEAN
-			-- Indicates if foundataion tool is current visible
+			-- Indicates if foundataion tool is current visible.
 		do
 			if is_interface_usable and then is_initialized and internal_popup_window /= Void then
 				Result := internal_popup_window.is_displayed
@@ -202,10 +219,13 @@ feature -- Status report
 			Result := False
 		end
 
+	is_committed_on_closed: BOOLEAN
+			-- Indicates if the window was committed when closed, based on a call to `on_commit' or `on_cancel'.
+
 feature {NONE} -- Status report
 
 	has_border: BOOLEAN
-			-- Indicates if the window should display a border
+			-- Indicates if the window should display a border.
 		do
 			Result := border_width > 0
 		ensure
@@ -218,41 +238,56 @@ feature {NONE} -- Status report
 			--       initialization only. Once `create_popup_window' is called altering
 			--       the state will not have any affect.
 
-	has_mouse_pointer: BOOLEAN
-			-- Indicates if the mouse cursor is within the bounds of the popup window
+	is_executing_unfocused_action: BOOLEAN
+			-- Indicates if an action is being performed that will cause the popup window to loose focus.
 
 feature -- Basic operations
 
-	show (a_x: INTEGER a_y: INTEGER) is
+	show (a_x: INTEGER; a_y: INTEGER)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
+			--
+			-- `a_x': Window screen X position.
+			-- `a_y': Window screen Y position.
 		require
 			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
+			is_committed_on_closed := False
 			popup_window.set_position (a_x, a_y)
 			on_before_show
 			popup_window.show
 		ensure
 			popup_window_is_displayed: popup_window.is_displayed
+			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
 	show_relative_to_widget (a_widget: !EV_WIDGET; a_x: INTEGER a_y: INTEGER) is
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
+			--
+			-- `a_widget': A widget to show the window relative to.
+			-- `a_x': Relative X position to the specified widget.
+			-- `a_y': Relative Y position to the specified widget.
 		require
 			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
 			show (a_widget.screen_x + a_x, a_widget.screen_y + a_y)
 		ensure
 			popup_window_is_displayed: popup_window.is_displayed
+			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
 	hide
-			-- Hides popup window.
+			-- Hides the popup window.
 		require
 			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
-			popup_window.hide
+			if internal_popup_window /= Void and then not internal_popup_window.is_destroyed then
+				popup_window.hide
+			end
 			if is_recycled_on_closing then
 				recycle
 			end
@@ -260,10 +295,72 @@ feature -- Basic operations
 			not_popup_window_is_displayed: not popup_window.is_displayed
 		end
 
+	hide_commit
+			-- Hides popup window by performing a commit operation.
+			-- Note: Descendant may call this from a button or other UI to perform any commit-to-change actions.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			is_committed_on_closed := True
+			on_commit
+		ensure
+			is_committed_on_closed: is_committed_on_closed
+		end
+
+	hide_cancel
+			-- Hides popup window by performing a cancel operation.
+			-- Note: Descendant may call this from a button or other UI to perform any cancel changes actions.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			is_committed_on_closed := False
+			on_cancel
+		ensure
+			not_is_committed_on_closed: not is_committed_on_closed
+		end
+
+	frozen execute_unfocusing_action (a_action: PROCEDURE [ANY, TUPLE])
+			-- Performs an action that will cause the popup window to loose focus, but protects the popup window
+			-- from closing if `is_focus_sensitive' is true.
+			--
+			-- `a_action': The action to perform possibly causing the window to lose focus.
+		require
+			is_interface_usable: is_interface_usable
+			is_shown: is_shown
+			a_action_attached: a_action /= Void
+		local
+			l_performing: like is_executing_unfocused_action
+		do
+			if is_initialized then
+				l_performing := is_executing_unfocused_action
+				is_executing_unfocused_action := True
+				a_action.call (Void)
+				is_executing_unfocused_action := l_performing
+
+				if not l_performing then
+					if is_pointer_sensitive and then not has_mouse_pointer then
+							-- Forward call because the actions will not be called when `is_executing_unfocused_action' is True
+						has_mouse_pointer := True
+						on_pointer_leave
+					end
+					if is_focus_sensitive and then is_interface_usable and then not popup_window.has_focus then
+							-- Forward call because the actions will not be called when `is_executing_unfocused_action' is True
+						on_focused_out
+					end
+				end
+			else
+				a_action.call (Void)
+			end
+		rescue
+			is_executing_unfocused_action := l_performing
+		end
+
 feature {NONE} -- Basic operation
 
 	update_border_color
-			-- Changes the pop up window border color based on an active state.
+			-- Changes the pop up window border color based on an active (`has_mouse_pointer') state.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized or is_initializing
@@ -298,12 +395,11 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 		do
-			--| Do nothing	
+
 		end
 
 	on_shown
 			-- Called once the foundation widget has been shown.
-
 		do
 			Precursor {ES_WINDOW_FOUNDATIONS}
 
@@ -318,6 +414,30 @@ feature {NONE} -- Action handlers
 
 				-- Remove application pointer motion actions
 			unregister_action (ev_application.pointer_motion_actions, agent on_application_pointer_motion)
+		end
+
+	on_commit
+			-- Called when an action is perform that classifies as a commit action. Typically when the user presses CTRL+ENTER
+			-- this action will be called.
+			-- Note: Descendant may call `hide_commit' from a button or other UI to perform any commit-to-change actions.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			is_committed_on_closed: is_committed_on_closed
+		do
+			hide
+		end
+
+	on_cancel
+			-- Called when an action is perform that classifies as a cancel action. Typically when the user presses ESC
+			-- this action will be called.
+			-- Note: Descendant may call `hide_cancel' from a button or other UI to perform any cancel changes actions.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			not_is_committed_on_closed: not is_committed_on_closed
+		do
+			hide
 		end
 
 	on_pointer_enter
@@ -343,8 +463,8 @@ feature {NONE} -- Action handlers
 				-- We still update the border even if the dialog is going to be hidden because of window reuse.
 			update_border_color
 
-			if is_pointer_sensitive then
-				hide
+			if is_pointer_sensitive and then not is_executing_unfocused_action then
+				on_cancel
 			end
 		ensure
 			not_has_mouse_pointer: not has_mouse_pointer
@@ -356,8 +476,71 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if is_focus_sensitive and then is_shown then
-				hide
+			if is_focus_sensitive and then not is_executing_unfocused_action and then is_shown then
+				hide_cancel
+			end
+		end
+
+	frozen on_key_pressed (a_key: EV_KEY)
+			-- Called when the dialog recieves a key press
+			--
+			-- `a_key': The key pressed
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_application: like ev_application
+			l_handled: BOOLEAN
+		do
+			l_application := ev_application
+			l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, False)
+		end
+
+	frozen on_key_release (a_key: EV_KEY)
+			-- Called when the dialog recieves a key release
+			--
+			-- `a_key': The key pressed
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_application: like ev_application
+			l_handled: BOOLEAN
+		do
+			l_application := ev_application
+			l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, True)
+		end
+
+	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
+			-- Called when the popup window recieve a key event
+			--
+			-- `a_key': The key pressed.
+			-- `a_alt': True if the ALT key was pressed; False otherwise
+			-- `a_ctrl': True if the CTRL key was pressed; False otherwise
+			-- `a_shift': True if the SHIFT key was pressed; False otherwise
+			-- `a_released': True if the key event pertains to the release of a key, False to indicate a press.
+			-- `Result': True to indicate the key was handled
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_key_attached: a_key /= Void
+		do
+			if a_released then
+				if not a_alt and not a_ctrl and not a_shift then
+					inspect a_key.code
+					when {EV_KEY_CONSTANTS}.key_escape then
+						hide_cancel
+						Result := True
+					else
+					end
+				end
+
+				if not Result and then a_ctrl and not a_alt and not a_shift then
+					inspect a_key.code
+					when {EV_KEY_CONSTANTS}.key_enter then
+						hide_commit
+						Result := True
+					else
+					end
+				end
 			end
 		end
 

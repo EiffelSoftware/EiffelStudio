@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Base handler for performing idle actions of editor tokens.
+		Base handler for performing idle actions on editor tokens in a EiffelStudio custom widget based editor {EB_CUSTOM_WIDGETTED_EDITOR}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,9 @@ inherit
 feature {NONE} -- Initialization
 
 	make (a_editor: like editor)
-			-- Initializes a token handler
+			-- Initializes a token handler.
+			--
+			-- `a_editor': An associated editor to use with the handler.
 		require
 			a_editor_is_interface_usable: a_editor.is_interface_usable
 		do
@@ -43,6 +45,24 @@ feature {NONE} -- Access
 	editor: !EB_CUSTOM_WIDGETTED_EDITOR
 			-- Editor to perform operations on.
 
+feature -- Status report
+
+	is_active: BOOLEAN assign set_is_active
+			-- Determines if the handler is active. This is to be used by clients
+			-- to determine when and when not to use the handler.
+
+feature {NONE} -- Status setting
+
+	set_is_active (a_active: BOOLEAN)
+			-- Set's handler's active state.
+			--
+			-- `a_active': True to indicate the handler is active; False otherwise
+		do
+			is_active := a_active
+		ensure
+			is_active_set: is_active = a_active
+		end
+
 feature -- Query
 
 	is_applicable_token (a_token: !EDITOR_TOKEN): BOOLEAN
@@ -50,6 +70,15 @@ feature -- Query
 			--
 			-- `a_token': Token to test for applicablity.
 			-- `Result': True if the token can be user; False otherwise.
+		do
+			Result := False
+		end
+
+	can_perform_exit (a_force: BOOLEAN): BOOLEAN
+			-- Deterines if clients can perform a exit operation on an actively handled token.
+			--
+			-- `a_force': True to indicate a forced close operation, False to indicate a regular request to close.
+			-- `Result': True if the handler can perform an exit at this time; False otherwise.
 		do
 			Result := True
 		end
@@ -63,6 +92,7 @@ feature -- Basic operations
 			-- `a_line': The line number where the token is located in the editor.
 		require
 			is_interface_usable: is_interface_usable
+			not_is_active: not is_active
 			a_line_positive: a_line > 0
 		do
 			last_token_handled := a_token
@@ -83,6 +113,7 @@ feature -- Basic operations
 			-- `a_screen_y': The absolute screen y position of the mouse pointer when processing was requested.
 		require
 			is_interface_usable: is_interface_usable
+			not_is_active: not is_active
 			a_line_positive: a_line > 0
 		do
 			last_token_handled := a_token
@@ -90,11 +121,32 @@ feature -- Basic operations
 			last_token_handled_set: last_token_handled = a_token
 		end
 
-	perform_exit
+	perform_exit (a_force: BOOLEAN)
 			-- Exits a function being performed. This is called when a non applicable token or no token needs processing.
 			-- It allows the handler to perform exit or shutdown functionality.
+			--
+			-- Note: Implementers be careful of the force option. It is used when the pointer leave the editor, because closure
+			--       must be performed.
+			--
+			-- `a_force': True to ignore check and perform an exit; False otherwise
 		require
 			is_interface_usable: is_interface_usable
+			is_active: is_active
+			can_perform_exit: can_perform_exit (a_force)
+		do
+			last_token_handled := Void
+			is_active := False
+		ensure
+			last_token_handled_detached: can_perform_exit (a_force) implies last_token_handled = Void
+			not_is_active: can_perform_exit (a_force) implies not is_active
+		end
+
+	perform_reset
+			-- Peforms a reset of the token handler. This happens when the handler is not active
+			-- and cannot handle a token. This is useful to reset any cached data or preventative flags based on same token matching.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_active: not is_active
 		do
 			last_token_handled := Void
 		ensure
@@ -103,6 +155,7 @@ feature -- Basic operations
 
 invariant
 	editor_is_interface_usable: is_interface_usable implies editor.is_interface_usable
+	last_token_handled_attached: is_active implies last_token_handled /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -79,7 +79,7 @@
 		<argument name="a_from_dir" />
 		<argument name="a_to_dir" />
 		<argument name="a_name" />
-		<geant target="install__exec_file_as" arguments="$a_from_dir,$a_to_dir,$a_name,$a_name,true" />
+		<geant target="install__file_as" arguments="$a_from_dir,$a_to_dir,$a_name,$a_name,true" />
 	</target>
 
 	<target name="install__file_as" >

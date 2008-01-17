@@ -1256,7 +1256,7 @@ rt_public void com_eraise(char *tag, long num)
 	int				eclass = 0;
 	char			*reci_name = NULL;
 	struct ex_vect	*vector_call;	/* The stack trace entry */
-	long			com_error = 0, ex_obj = num;
+	long			ex_obj = num;
 
 	if (echmem & MEM_PANIC) {		/* In panic mode, do nothing */
 		return;
@@ -1303,7 +1303,7 @@ rt_public void com_eraise(char *tag, long num)
 		}
 	}
 
-		/* Receive a Com error number, create a COM_FAILURE object with error number `com_error' */
+		/* Receive a Com error number, create a COM_FAILURE object with error number `num' */
 	if (!eedefined (num)){
 		signo = num;		/* Here `signo' is used as Com error number for convenience, not signal number at all */
 		ex_obj = EN_COM;

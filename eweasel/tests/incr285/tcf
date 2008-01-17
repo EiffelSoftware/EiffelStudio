@@ -21,11 +21,11 @@ copy_sub 	d.e $CLUSTER d.e
 copy_sub 	e.e $CLUSTER e.e
 
 compile_melted
-compile_result 	validity_error VTUG(2) E
+compile_result 	validity_error E VTUG(2)
 
 copy_raw	e_correct.e $CLUSTER e.e
 
-compile_melted
+resume_compile
 compile_result	ok
 
 test_end

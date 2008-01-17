@@ -11,7 +11,9 @@ feature {NONE}
 			t2: TEST1 [DOUBLE]
 			ha: HASH_TABLE [ANY, INTEGER]
 			hi: HASH_TABLE [INTEGER, INTEGER]
+			haa: HASH_TABLE [ANY, HASHABLE]
 		do
+			create {HASH_TABLE [STRING, INTEGER]} ha.make (10)
 			create hi.make (1)
 			hi.compare_objects
 			hi.extend (1, 1)
@@ -21,8 +23,8 @@ feature {NONE}
 			hi.start
 			hi.forth
 			ha := hi
-			print (hi.count) print ("%N")
-			print (ha.count) print ("%N")
+			print (hi.count) print (" should be 1%N")
+			print (ha.count) print (" should be 1%N")
 
 			create hi.make (1)
 			ha := hi
@@ -33,8 +35,15 @@ feature {NONE}
 			ha.search (2)
 			ha.start
 			ha.forth
-			print (hi.count) print ("%N")
-			print (ha.count) print ("%N")
+			print (hi.count) print (" should be 1%N")
+			print (ha.count) print (" should be 1%N")
+
+			create hi.make (1)
+			haa := hi
+			haa.put (2, 2)
+			print (hi.item (2)) print (" should be 2%N")
+			haa.accommodate (100)
+			print (hi.item (2)) print (" should be 2%N")
 
 			create t2.make (4.0, "foo", "bar")
 			t1 := t2

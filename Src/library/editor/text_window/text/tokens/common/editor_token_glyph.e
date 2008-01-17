@@ -84,10 +84,10 @@ feature -- Display
 
 feature -- Visitor
 
-	process (a_visitor: EIFFEL_TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR) is
 			-- Visitor
 		do
-
+			a_visitor.process_editor_token_glyph (Current)
 		end
 
 invariant

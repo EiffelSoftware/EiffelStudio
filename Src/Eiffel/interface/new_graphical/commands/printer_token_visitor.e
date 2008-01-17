@@ -177,6 +177,11 @@ feature {NONE} -- Visit
 			build_token_text (a_tok)
 		end
 
+	process_editor_token_glyph (a_tok: EDITOR_TOKEN_GLYPH) is
+		do
+			
+		end
+
 feature {NONE} -- Implementation
 
 	print_color_table: ARRAYED_LIST [EV_COLOR]

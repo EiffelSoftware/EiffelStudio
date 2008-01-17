@@ -89,6 +89,12 @@ feature -- Visit
 		deferred
 		end
 
+	process_editor_token_glyph (a_tok: EDITOR_TOKEN_GLYPH) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

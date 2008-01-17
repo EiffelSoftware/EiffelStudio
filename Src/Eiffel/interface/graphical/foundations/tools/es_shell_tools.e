@@ -39,7 +39,13 @@ feature {NONE} -- Clean up
 
 	internal_recycle is
 			-- Called to clean up resources of Current.
+		local
+			l_win: like window
 		do
+			l_win := window
+			if l_win /= Void and then l_win.docking_manager /= Void then
+				l_win.docking_manager.close_all
+			end
 				-- Recycle all activated tools.
 			internal_requested_tools.do_all (agent (a_items: ARRAY [ES_TOOL [EB_TOOL]])
 				local
@@ -254,6 +260,8 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_WATCH_TOOL})
 			l_tools.put_last ({ES_OBJECTS_TOOL})
 			l_tools.put_last ({ES_OBJECT_VIEWER_TOOL})
+
+			l_tools.put_last ({ES_TESTING_TOOL})
 
 			l_tools.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [TYPE [ES_TOOL [EB_TOOL]]]}.make (agent {TYPE [ES_TOOL [EB_TOOL]]}.is_equal))
 			Result := l_tools

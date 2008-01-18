@@ -3946,6 +3946,7 @@ feature -- Generation
 					a_class := class_list.item (i)
 					types := a_class.types
 					l_class_is_finalized := not a_class.is_precompiled or else a_class.is_in_system
+					types.sort
 					from
 						types.start
 					until

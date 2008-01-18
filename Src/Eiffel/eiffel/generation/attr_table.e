@@ -53,7 +53,8 @@ feature
 			first_type: CLASS_TYPE
 			i, nb, old_position: INTEGER
 			system_i: SYSTEM_I
-			offset: INTEGER
+			l_offset: STRING
+			l_buffer: GENERATION_BUFFER
 		do
 			nb := max_position
 
@@ -65,15 +66,21 @@ feature
 				if i <= nb then
 					from
 						first_type := system_i.class_type_of_id (type_id);
-						offset := first_type.skeleton.offset (array_item (i).feature_id)
+						create l_buffer.make (50)
+						first_type.skeleton.generate_offset (l_buffer, array_item (i).feature_id, False)
+						l_offset := l_buffer.as_string
+							-- We have computed the first element, we go directly to the next one.
 						i := i + 1
 					until
 						Result or else i > nb
 					loop
 						entry := array_item (i)
 						cl_type := system_i.class_type_of_id (entry.type_id);
-						Result := cl_type.conform_to (first_type)
-								and then not (cl_type.skeleton.offset (entry.feature_id) = offset)
+						if cl_type.conform_to (first_type) then
+							l_buffer.clear_all
+							cl_type.skeleton.generate_offset (l_buffer, entry.feature_id, False)
+							Result := not l_buffer.as_string.is_equal (l_offset)
+						end
 						i := i + 1
 					end;
 				end

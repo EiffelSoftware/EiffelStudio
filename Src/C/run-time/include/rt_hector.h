@@ -43,9 +43,12 @@
 extern "C" {
 #endif
 
-#ifndef EIF_THREADS
 extern struct stack hec_saved;	/* Saved indirection pointers */
+
+#ifdef EIF_THREADS
+extern EIF_LW_MUTEX_TYPE *eif_hec_saved_mutex;
 #endif
+
 
 #ifdef __cplusplus
 }

@@ -223,12 +223,6 @@ typedef struct tag_rt_globals
 	size_t store_stream_buffer_size_cx;
 	EIF_BOOLEAN eif_is_new_recoverable_format_cx;
 
-		/* hector.c */
-#ifdef ISE_GC
-	struct stack hec_saved_cx;			/* Indirection table "hector saved" */
-	struct stack free_stack_cx;			/* Entries free in hector */
-#endif
-
 		/* option.c */
 	int last_dtype_cx;
 	int last_origin_cx;
@@ -450,12 +444,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define store_stream_buffer_position	(rt_globals->store_stream_buffer_position_cx)
 #define store_stream_buffer_size		(rt_globals->store_stream_buffer_size_cx)
 #define eif_is_new_recoverable_format	(rt_globals->eif_is_new_recoverable_format_cx)
-
-#ifdef ISE_GC
-	/* hector.c */
-#define hec_saved			(rt_globals->hec_saved_cx)		/* rt_public */
-#define free_stack			(rt_globals->free_stack_cx)	/* rt_private */
-#endif
 
 	/* option.c */
 #define last_dtype			(rt_globals->last_dtype_cx)

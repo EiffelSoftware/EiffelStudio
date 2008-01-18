@@ -47,11 +47,6 @@ doc:<file name="hector.c" header="eif_hector.h" version="$Id$" summary="Handling
 #include "eif_hector.h"
 
 #ifdef ISE_GC
-#ifdef DEBUG2
-int stck_nb_items (const struct stack stk);
-int stck_nb_items_free_stack ();
-#endif
-
 #ifndef EIF_THREADS
 /*
 doc:	<attribute name="hec_stack" return_type="struct stack" export="public">
@@ -68,21 +63,22 @@ rt_public struct stack hec_stack = {
 	(EIF_REFERENCE *) 0,	/* st_top */
 	(EIF_REFERENCE *) 0,	/* st_end */
 };
+#endif /* !EIF_THREADS */
 
 /*
 doc:	<attribute name="hec_saved" return_type="struct stack" export="shared">
 doc:		<summary>This stack records the saved references. Entries in this stack are obtained either via eif_freeze() or eif_adopt(). Hence the stack structure is not completely appropriate and holes may appear. The `free_stack' stack records those holes.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data and `eif_gc_mutex'.</synchronization>
+doc:		<synchronization>Under `eif_hec_saved_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct stack hec_saved = {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
+	NULL,	/* st_hd */
+	NULL,	/* st_tl */
+	NULL,	/* st_cur */
+	NULL,			/* st_top */
+	NULL,			/* st_end */
 };
 
 /*
@@ -90,30 +86,48 @@ doc:	<attribute name="free_stack" return_type="struct stack" export="private">
 doc:		<summary>Due to the way the hector stack is managed, there can be "holes" in it, when an object in the middle of the stack is released by the C. To avoid having an eternal growing bunch (EGB -- an Eternal Golden Braid :-) of chunks, we record free locations in the following stack.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data.</synchronization>
+doc:		<synchronization>Under `eif_hec_saved_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_private struct stack free_stack = {			/* Entries free in hector */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
+	NULL,	/* st_hd */
+	NULL,	/* st_tl */
+	NULL,	/* st_cur */
+	NULL,	/* st_top */
+	NULL,	/* st_end */
 };
-#endif /* !EIF_THREADS */
 
-/* Private function declarations */
-rt_private EIF_REFERENCE hpop(void);				/* Pop a free entry off the free stack */
-rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root);	/* Maps an adress to an hector position */
+#ifdef EIF_THREADS
+/*
+doc:	<attribute name="eif_hec_saved_mutex" return_type="" export="shared">
+doc:		<summary>Protect all access to `hec_saved' and `free_stack'.</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+rt_shared EIF_LW_MUTEX_TYPE *eif_hec_saved_mutex = NULL;
 
+#define EIFMTX_LOCK \
+	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_hec_saved_mutex, "Cannot lock mutex for hec_saved\n");
 
-/* In the following routines, I've put EIF_OBJECT to emphazise the fact that the
- * variable is an indirection pointer in the hector table. Otherwise, a EIF_REFERENCE 
- * refers to a true object's address (for instance the result of eif_freeze).
- * It is completely forbidden to access an EIF_OBJECT directly (it has not real
- * meaning anyway).
- */
+#define EIFMTX_UNLOCK \
+   	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_hec_saved_mutex, "Cannot unlock mutex for hec_saved\n"); \
 
+#else
+/* Noop for locks in non-multithreaded mode. */
+#define EIFMTX_LOCK
+#define EIFMTX_UNLOCK
+#endif
+
+/*
+doc:	<routine name="eif_freeze" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Freeze objects in memory by setting the B_C bit.</summary>
+doc:		<param name="object" type="EIF_OBJECT">Object to freeze</param>
+doc:		<return>Return new address for `object' in case a GC cycle was required to freeze the object. NULL on failure.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
+doc:	</routine>
+*/
 rt_public EIF_REFERENCE eif_freeze(EIF_OBJECT object)
 {
 	/* This is the most costly routine of Hector. Given an object, we want to
@@ -133,20 +147,13 @@ rt_public EIF_REFERENCE eif_freeze(EIF_OBJECT object)
 	 * reallocation and that could force moving its location...
 	 */
 
-	EIF_REFERENCE root;						/* Object's physical address */
+	EIF_REFERENCE root;				/* Object's physical address */
 	union overhead *zone;			/* Malloc information zone */
-	/* uint32 flags;*/ /* Eiffel flags */ /* %%ss removed */
-
-
-#ifdef DEBUG2
-		printf ("DEBUG2:-> eif_freeze called on %x\n", object);
-#endif
 
 	/* Insert object in Hector table (saved stack), so that the GC always sees
 	 * that object, and keep it alive.
 	 */
 
-	object = eif_adopt(object);		/* Transfer object into saved stack */
 	root = eif_access(object);		/* Object's address through hector */
 	zone = HEADER(root);			/* Point to object's header */
 	if (zone->ov_size & B_C)		/* Already frozen if C block */
@@ -171,117 +178,89 @@ rt_public EIF_REFERENCE eif_freeze(EIF_OBJECT object)
 	 */
 
 	zone->ov_flags |= EO_AGE;			/* Maximum reachable age */
-	if (tenure == eif_tenure_max)			/* Tenure fixed to maximum age ? */
-		tenure = eif_tenure_max - 1;		/* Ensure object will be tenured */
+	if (tenure == eif_tenure_max) {		/* Tenure fixed to maximum age ? */ 
+		tenure = eif_tenure_max - 1;	/* Ensure object will be tenured */
+	}
 	collect();							/* Run a generation scavenging cycle */
 	root = eif_access(object);			/* Update that reference too */
 	zone = HEADER(root);				/* Get new zone (object has moved) */
-	if (!(zone->ov_size & B_BUSY))		/* Object still in generation zone */
-		return (EIF_REFERENCE) 0;				/* Could not tenure, freeze failed */
-	zone->ov_size |= B_C;				/* Make it a C block now */
-
-	return root;						/* Freezing succeeded, new location */
+	if (!(zone->ov_size & B_BUSY)) {	/* Object still in generation zone */
+		return NULL;					/* Could not tenure, freeze failed */
+	} else {
+		zone->ov_size |= B_C;			/* Make it a C block now */
+		return root;					/* Freezing succeeded, new location */
+	}
 }
 
+/*
+doc:	<routine name="eif_unfreeze" export="public">
+doc:		<summary>The B_C bit on the object is cleared and should the object be dead, it will be collected during the next GC cycle.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object to unfreeze</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_unfreeze(EIF_REFERENCE object)
+{
+	HEADER(object)->ov_size &= ~B_C;		/* Back to the Eiffel world */
+}
+
+/*
+doc:	<routine name="eif_adopt" return_type="EIF_OBJECT" export="public">
+doc:		<summary>The C wants to keep an Eiffel reference. Very well, simply add an entry in the remembered hector objects stack 'hec_saved' and return the new indirection address.</summary>
+doc:		<param name="object" type="EIF_OBJECT">Object to protect</param>
+doc:		<return>Protected object.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
+doc:	</routine>
+*/
 rt_public EIF_OBJECT eif_adopt(EIF_OBJECT object)
 {
-	/* The C wants to keep an Eiffel reference. Very well, simply add an entry
-	 * in the remembered hector objects stack 'hec_saved' and return the new
-	 * indirection address.
-	 */
-	
 	return eif_protect(eif_access(object));	/* Enter object in saved stack */
 }
 
+/*
+doc:	<routine name="eif_wean" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>The C wants to get rid of a reference which was previously kept. It may be only be an adopted one. Anyway, we remove the object from hector table. If the object is dead, the next GC cycle will collect it. The C cannot reference the object through its EIF_OBJECT handle any more.</summary>
+doc:		<param name="object" type="EIF_OBJECT">Object to protect</param>
+doc:		<return>Unprotected object.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
+doc:	</routine>
+*/
 rt_public EIF_REFERENCE eif_wean(EIF_OBJECT object)
 {
-	/* The C wants to get rid of a reference which was previously kept. It may
-	 * be only be an adopted one. Anyway, we remove the object from hector
-	 * table. If the object is dead, the next GC cycle will collect it. The C
-	 * cannot reference the object through its EIF_OBJECT handle any more.
-	 */
 	RT_GET_CONTEXT
 	EIF_REFERENCE ret;
 
+	EIFMTX_LOCK
 	if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
+		EIFMTX_UNLOCK
 		plsc();									/* Run GC cycle */
-		if (-1 == epush(&free_stack, object))	/* Again, we can't */
+		EIFMTX_LOCK
+		if (-1 == epush(&free_stack, object)) {	/* Again, we can't */
+			EIFMTX_UNLOCK
 			eraise("hector weaning", EN_MEM);	/* No more memory */
+		}
 	}
 	ret = eif_access(object);
 	eif_access(object) = (EIF_REFERENCE) 0;		/* Reset hector's entry */
+	EIFMTX_UNLOCK
 
 	return ret;				/* return unprotected address */
 }
 
-rt_public void eif_unfreeze(EIF_REFERENCE object)
-{
-	/* The C wants to get rid of a frozen reference which was previously
-	 * obtained through eif_freeze(). However, the argument is the address of the
-	 * object, not an hector indirection pointer. The B_C bit on the object is
-	 * cleared and should the object be dead, it will be collected during the
-	 * next GC cycle.
-	 */
-	RT_GET_CONTEXT
-	EIF_OBJECT address;					/* Address in hector's stack */
-	EIF_REFERENCE unprotected_ref;
-
-#ifdef DEBUG2
-	printf ("DEBUG2:<- eif_unfreeze called on %x\n", object);
-#endif
-	address = hector_addr(object);		/* Fetch associated address */
-	if (-1 == epush(&free_stack, address)) {		/* Record free entry */
-		plsc();										/* Run GC cycle */
-		if (-1 == epush(&free_stack, address))		/* Again, we can't */
-			eraise("hector unfreezing", EN_MEM);	/* No more memory */
-	}
-	unprotected_ref = eif_access(address);
-
-	HEADER(unprotected_ref)->ov_size &= ~B_C;		/* Back to the Eiffel world */
-	eif_access(address) = (EIF_REFERENCE) 0;				/* Reset hector's entry */
-}
-
 /*
- * Run-time entries
- */
-
-#ifdef DEBUG2
-
-rt_shared int stck_nb_items_free_stack ()
-{
-	return stck_nb_items (free_stack);
-}
-rt_shared int stck_nb_items (const struct stack stk) 
-{
-
-	EIF_GET_CONTEXT
-	struct stchunk *s;
-	EIF_REFERENCE *arena;
-	int done = 0;
-	rt_uint_ptr nb_items = 0;
-
-for (s = stk.st_hd; s && !done; s = s->sk_next) {
-        arena = s->sk_arena;                /* Start of stack */
-        if (s != stk.st_cur)          /* Before current position? */
-            nb_items += s->sk_end - arena;   /* Take the whole chunk */
-        else {
-            nb_items += stk.st_top - arena;    /* Stop at the top */
-            done = 1;                               /* Reached end of stack */
-        }
-    }
-	return nb_items;
-}
-
-#endif
-		
-		
+doc:	<routine name="hrecord" return_type="EIF_OBJECT" export="public">
+doc:		<summary>This routine is called by the generated C code before passing references to C. It records the object in the hector table and returns the address in the table (indirection pointer). If the object cannot be recorded, raise a "No more memory" exception.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object to protect</param>
+doc:		<return>Protected object.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
 rt_public EIF_OBJECT hrecord(EIF_REFERENCE object)
 {
-	/* This routine is called by the generated C code before passing references
-	 * to C. It records the object in the hector table and returns the address
-	 * in the table (indirection pointer).
-	 * If the object cannot be recorded, raise a "No more memory" exception.
-	 */
 	EIF_GET_CONTEXT
 	EIF_OBJECT address;					/* Address in hector */
 
@@ -297,100 +276,70 @@ rt_public EIF_OBJECT hrecord(EIF_REFERENCE object)
 }
 
 /*
- * Low-level routines left visible to enable high wizardry--RAM.
- */
-
-rt_public EIF_OBJECT eif_protect(EIF_REFERENCE object)
+doc:	<routine name="hpop" return_type="EIF_OBJECT" export="private">
+doc:		<summary>Pop an address of the free_stack. If the stack is empty, return a null pointer. Otherwise the address points directly to a free entry in hector's table.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Only if caller holds the `eif_hec_saved_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_private EIF_OBJECT hpop(void)
 {
-	/* Enter 'object' into the hector indirection table and return its
-	 * indirection pointer. I think this run-time call might be useful if
-	 * someone wants to create Eiffel objects via emalloc() and let the GC
-	 * see them by calling 'eif_protect'--RAM.
-	 */
 	RT_GET_CONTEXT
-	EIF_REFERENCE address;						/* Address in hector */
+	EIF_REFERENCE *top;
+	EIF_REFERENCE result = NULL;
+	struct stchunk *s;
 
-	address = hpop();					/* Check for an already free location */
-	if (address == (EIF_REFERENCE) 0) {		/* No such luck */
-		if (-1 == epush(&hec_saved, object)) {		/* Cannot record object */
-			eraise("hector remembering", EN_MEM);	/* No more memory */
-			return (EIF_OBJECT) 0;						/* They ignored it */
+	top = free_stack.st_top;
+	if (top) {
+			/* Optimization: try to update the top first, hoping that it will remain
+			 * in the same chunk (this should be true more than 99% of the time). */
+		if (--top >= free_stack.st_cur->sk_arena) {
+			free_stack.st_top = top;			/* We remained in the same chunk */
+			result = *top;
+		} else {
+				/* Unusual case: top is just in the first place of next chunk */
+			s = free_stack.st_cur->sk_prev;			/* Backup one chunk */
+			if (s) {								/* Was already at first chunk */
+				free_stack.st_cur = s;				/* Update current chunk */
+				top = free_stack.st_end = s->sk_end;/* The end of the chunk */
+				free_stack.st_top = --top;			/* Backup one location */
+				result = *top;
+			}
 		}
-		address = (EIF_REFERENCE) (hec_saved.st_top - 1);	/* Was allocated here */
 	}
-	eif_access(address) = object;		/* Record object's physical address */
-
-	return (EIF_OBJECT) address;			/* Location in Hector table */
+	return (EIF_OBJECT) result;
 }
 
 /*
- * Stack handling
- */
-
-rt_private EIF_REFERENCE hpop(void)
+doc:	<routine name="eif_protect" return_type="EIF_OBJECT" export="public">
+doc:		<summary>Enter 'object' into the hector indirection table and return its indirection pointer. I think this run-time call might be useful if someone wants to create Eiffel objects via emalloc() and let the GC see them by calling 'eif_protect'.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object to protect</param>
+doc:		<return>Protected object.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_OBJECT eif_protect(EIF_REFERENCE object)
 {
-	/* Pop an address of the free_stack. If the stack is empty, return a
-	 * null pointer. Otherwise the address points directly to a free entry
-	 * in hector's table.
-	 */
 	RT_GET_CONTEXT
-	EIF_REFERENCE *top = free_stack.st_top;
-	struct stchunk *s;
+	EIF_OBJECT address;						/* Address in hector */
 
-	if (top == (EIF_REFERENCE *) 0)					/* Free stack is empty */
-		return (EIF_REFERENCE) 0;
-
-	/* Optimization: try to update the top first, hoping that it will remain
-	 * in the same chunk (this should be true more than 99% of the time).
-	 */
-
-	if (--top >= free_stack.st_cur->sk_arena) {
-		free_stack.st_top = top;			/* We remained in the same chunk */
-		return *top;
-	}
-
-	/* Unusual case: top is just in the first place of next chunk */
-
-	s = free_stack.st_cur->sk_prev;			/* Backup one chunk */
-	if (s == (struct stchunk *) 0)			/* Was already at first chunk */
-		return (EIF_REFERENCE) 0;					/* Stack is empty */
-	free_stack.st_cur = s;					/* Update current chunk */
-	top = free_stack.st_end = s->sk_end;	/* The end of the chunk */
-	free_stack.st_top = --top;				/* Backup one location */
-
-	return *top;
-}
-
-
-rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root)
-{
-	/* Given an object's address, look in the stack and find the hector address
-	 * associated with the physical address and return it. This is a linear
-	 * search, but the size of this stack should remain small.
-	 */
-	RT_GET_CONTEXT
-	rt_uint_ptr nb_items;			/* Number of items in arena */
-	struct stchunk *s;	/* To walk through each stack's chunk */
-	EIF_REFERENCE *arena;			/* Current arena in chunk */
-	int done = 0;					/* Top of stack not reached yet */
-
-	for (s = hec_saved.st_hd; s && !done; s = s->sk_next) {
-		arena = s->sk_arena;				/* Start of stack */
-		if (s != hec_saved.st_cur)			/* Before current position? */
-			nb_items = s->sk_end - arena;	/* Take the whole chunk */
-		else {
-			nb_items = hec_saved.st_top - arena;	/* Stop at the top */
-			done = 1;								/* Reached end of stack */
+	EIFMTX_LOCK
+	address = hpop();					/* Check for an already free location */
+	if (!address) {									/* No such luck */
+		if (-1 == epush(&hec_saved, object)) {		/* Cannot record object */
+			EIFMTX_UNLOCK
+			eraise("hector remembering", EN_MEM);	/* No more memory */
+			return NULL;							/* They ignored it */
 		}
-		for (; nb_items > 0; nb_items--, arena++)
-			if (*arena == root)						/* Found indirection */
-				return (EIF_OBJECT) arena;				/* Return indirection ptr */
+		address = (EIF_OBJECT) (hec_saved.st_top - 1);	/* Was allocated here */
 	}
+	eif_access(address) = object;		/* Record object's physical address */
 
-	eif_panic(MTC "hector stack inconsistency");		/* We must have found it */
-	/* NOTREACHED */
-	return 0; /* to avoid a warning */
+	EIFMTX_UNLOCK
+	return address;			/* Location in Hector table */
 }
+
 
 #endif
 /*

@@ -53,6 +53,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_assert.h"
 #include "rt_retrieve.h"
 #include "rt_gen_conf.h"
+#include "rt_hector.h"
 #include "rt_run_idr.h"
 #include "rt_store.h"
 #include "rt_except.h"
@@ -300,6 +301,7 @@ rt_public void eif_thr_init_global_mutexes (void)
 	EIF_LW_MUTEX_CREATE(eif_global_once_set_mutex, 4000, "Couldn't create global once set mutex");
 	EIF_LW_MUTEX_CREATE(eif_object_id_stack_mutex, 4000, "Couldn't create object_id set mutex");
 	EIF_LW_MUTEX_CREATE(eif_gen_mutex, 100, "Cannot create mutex for eif_gen_conf\n");
+	EIF_LW_MUTEX_CREATE(eif_hec_saved_mutex, 100, "Cannot create mutex for hec_saved\n");
 	EIF_LW_MUTEX_CREATE(eif_cecil_mutex, -1, "Couldn't create cecil lock");
 }
 
@@ -378,6 +380,7 @@ rt_shared void eif_thread_cleanup (void)
 	EIF_LW_MUTEX_DESTROY(eif_global_once_set_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_object_id_stack_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_gen_mutex, "Cannot destroy mutex for eif_gen_conf\n");
+	EIF_LW_MUTEX_DESTROY(eif_hec_saved_mutex, "Cannot destroy mutex for hec_saved\n");
 	EIF_LW_MUTEX_DESTROY(eif_cecil_mutex, "Couldn't destroy cecil mutex");
 
 	EIF_TSD_DESTROY(eif_global_key, "Could not free key");
@@ -598,10 +601,6 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 
 		/* Free allocated stacks in rt_globals. */
 	xstack_reset (&eif_trace);
-#ifdef ISE_GC
-	st_reset (&hec_saved);
-	st_reset (&free_stack);
-#endif
 #ifdef WORKBENCH
 	opstack_reset (&op_stack);
 	dbstack_reset (&db_stack);
@@ -937,7 +936,6 @@ rt_private void eif_init_gc_stacks(rt_global_context_t *rt_globals)
 	load_stack_in_gc (&once_set_list, &once_set);	
 	load_stack_in_gc (&oms_set_list, &oms_set);	
 	load_stack_in_gc (&hec_stack_list, &hec_stack);	
-	load_stack_in_gc (&hec_saved_list, &hec_saved);	
 	load_stack_in_gc (&eif_stack_list, &eif_stack);	
 	load_stack_in_gc (&eif_trace_list, &eif_trace);
 #ifdef WORKBENCH
@@ -962,7 +960,6 @@ rt_private void eif_free_gc_stacks(void)
 	eif_free (once_set_list.threads.data);
 	eif_free (oms_set_list.threads.data);
 	eif_free (hec_stack_list.threads.data);
-	eif_free (hec_saved_list.threads.data);
 	eif_free (eif_stack_list.threads.data);
 	eif_free (eif_trace_list.threads.data);
 #ifdef WORKBENCH
@@ -988,7 +985,6 @@ rt_private void eif_remove_gc_stacks(rt_global_context_t *rt_globals)
 	remove_data_from_gc (&once_set_list, &once_set);
 	remove_data_from_gc (&oms_set_list, &oms_set);
 	remove_data_from_gc (&hec_stack_list, &hec_stack);
-	remove_data_from_gc (&hec_saved_list, &hec_saved);
 	remove_data_from_gc (&eif_stack_list, &eif_stack);
 	remove_data_from_gc (&eif_trace_list, &eif_trace);
 #ifdef WORKBENCH
@@ -999,7 +995,6 @@ rt_private void eif_remove_gc_stacks(rt_global_context_t *rt_globals)
 	eif_stack_free (&once_set);
 	eif_stack_free (&oms_set);
 	eif_stack_free (&hec_stack);
-	eif_stack_free (&hec_saved);
 		/* The two stacks below are not properly cleaned up with `eif_stack_free'
 		 * as they have one more attribute than the `struct stack' structure, thus
 		 * the extra attribute is not reset. */
@@ -1011,7 +1006,6 @@ rt_private void eif_remove_gc_stacks(rt_global_context_t *rt_globals)
 		 * should do the job properly. */
 	eif_stack_free (&op_stack);
 #endif
-	eif_stack_free (&free_stack);
 #endif
 }
 
@@ -1429,7 +1423,6 @@ rt_shared pid_t eif_thread_fork(void) {
 		memset (&loc_set_list, 0, sizeof (struct stack_list));
 		memset (&once_set_list, 0, sizeof (struct stack_list));
 		memset (&hec_stack_list, 0, sizeof (struct stack_list));
-		memset (&hec_saved_list, 0, sizeof (struct stack_list));
 		memset (&eif_stack_list, 0, sizeof (struct stack_list));
 		memset (&eif_trace_list, 0, sizeof (struct stack_list));
 #ifdef WORKBENCH
@@ -1441,7 +1434,6 @@ rt_shared pid_t eif_thread_fork(void) {
 		load_stack_in_gc (&loc_set_list, &loc_set);	
 		load_stack_in_gc (&once_set_list, &once_set);	
 		load_stack_in_gc (&hec_stack_list, &hec_stack);	
-		load_stack_in_gc (&hec_saved_list, &hec_saved);	
 		load_stack_in_gc (&eif_stack_list, &eif_stack);	
 		load_stack_in_gc (&eif_trace_list, &eif_trace);
 #ifdef WORKBENCH

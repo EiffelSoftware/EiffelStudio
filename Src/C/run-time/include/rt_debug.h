@@ -55,6 +55,7 @@ extern void dbstack_reset(struct dbstack *stk);
 extern void  dbg_clear_exception_traces (void);
 extern int   dbg_store_exception_trace (char* trace);
 extern char* dbg_fetch_exception_trace (int eid);
+extern void c_opstack_reset(struct c_opstack *stk);
 #endif
 
 extern void debug_initialize(void);

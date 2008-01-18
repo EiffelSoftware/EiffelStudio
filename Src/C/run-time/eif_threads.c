@@ -589,7 +589,7 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 	}
 	xstack_reset (&eif_stack);
 #ifdef WORKBENCH
-	opstack_reset (&cop_stack);
+	c_opstack_reset (&cop_stack);
 #endif
 
 		/* Free public per thread data */

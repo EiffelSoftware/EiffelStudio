@@ -62,7 +62,7 @@ feature {NONE} -- Externals
 			-- Initialize and start thread, after setting its priority
 			-- and scheduling policy.
 		external
-			"C signature (EIF_OBJECT, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN) use %"eif_threads.h%""
+			"C signature (EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN) use %"eif_threads.h%""
 		alias
 			"eif_thr_create_with_args"
 		end

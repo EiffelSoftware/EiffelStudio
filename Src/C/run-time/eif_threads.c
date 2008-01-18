@@ -756,7 +756,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 			/* Protect root object so that it can be freed in `eif_thr_exit'. */
 		RT_GC_PROTECT(root_object);
 		root_object = eif_access(routine_ctxt->current);
-		routine_ctxt->current = henter(root_object);
+		routine_ctxt->current = eif_protect(root_object);
 		*routine_ctxt->is_initialized = 1;
 		RT_GC_WEAN(root_object);
 			/* Call the `execute' routine of the thread */

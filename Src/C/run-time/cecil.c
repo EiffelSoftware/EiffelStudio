@@ -209,7 +209,7 @@ rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID cid)
 
 	object = emalloc(dtype);		/* Create object */
 
-	return henter(object);			/* Return the indirection pointer */
+	return eif_protect(object);			/* Return the indirection pointer */
 }
 
 /*

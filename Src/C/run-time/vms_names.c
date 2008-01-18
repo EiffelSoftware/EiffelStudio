@@ -117,10 +117,10 @@ rt_public EIFUVISEX (void)
 
 /* hector.c */
 rt_public EIF_REFERENCE EWEAN (EIF_OBJECT object)
-    { return ewean (object); }
+    { return eif_wean (object); }
 
 rt_public EIF_OBJECT HENTER (EIF_REFERENCE object)
-    { return henter (object); }
+    { return eif_protect (object); }
 
 
 /* plug.c */

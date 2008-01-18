@@ -109,12 +109,12 @@ rt_private EIF_OBJECT hector_addr(EIF_REFERENCE root);	/* Maps an adress to an h
 
 /* In the following routines, I've put EIF_OBJECT to emphazise the fact that the
  * variable is an indirection pointer in the hector table. Otherwise, a EIF_REFERENCE 
- * refers to a true object's address (for instance the result of efreeze).
+ * refers to a true object's address (for instance the result of eif_freeze).
  * It is completely forbidden to access an EIF_OBJECT directly (it has not real
  * meaning anyway).
  */
 
-rt_public EIF_REFERENCE efreeze(EIF_OBJECT object)
+rt_public EIF_REFERENCE eif_freeze(EIF_OBJECT object)
 {
 	/* This is the most costly routine of Hector. Given an object, we want to
 	 * release it from GC control and prevent it from moving in memory. This is
@@ -146,7 +146,7 @@ rt_public EIF_REFERENCE efreeze(EIF_OBJECT object)
 	 * that object, and keep it alive.
 	 */
 
-	object = eadopt(object);		/* Transfer object into saved stack */
+	object = eif_adopt(object);		/* Transfer object into saved stack */
 	root = eif_access(object);		/* Object's address through hector */
 	zone = HEADER(root);			/* Point to object's header */
 	if (zone->ov_size & B_C)		/* Already frozen if C block */
@@ -183,17 +183,17 @@ rt_public EIF_REFERENCE efreeze(EIF_OBJECT object)
 	return root;						/* Freezing succeeded, new location */
 }
 
-rt_public EIF_OBJECT eadopt(EIF_OBJECT object)
+rt_public EIF_OBJECT eif_adopt(EIF_OBJECT object)
 {
 	/* The C wants to keep an Eiffel reference. Very well, simply add an entry
 	 * in the remembered hector objects stack 'hec_saved' and return the new
 	 * indirection address.
 	 */
 	
-	return henter(eif_access(object));	/* Enter object in saved stack */
+	return eif_protect(eif_access(object));	/* Enter object in saved stack */
 }
 
-rt_public EIF_REFERENCE ewean(EIF_OBJECT object)
+rt_public EIF_REFERENCE eif_wean(EIF_OBJECT object)
 {
 	/* The C wants to get rid of a reference which was previously kept. It may
 	 * be only be an adopted one. Anyway, we remove the object from hector
@@ -214,10 +214,10 @@ rt_public EIF_REFERENCE ewean(EIF_OBJECT object)
 	return ret;				/* return unprotected address */
 }
 
-rt_public void eufreeze(EIF_REFERENCE object)
+rt_public void eif_unfreeze(EIF_REFERENCE object)
 {
 	/* The C wants to get rid of a frozen reference which was previously
-	 * obtained through efreeze(). However, the argument is the address of the
+	 * obtained through eif_freeze(). However, the argument is the address of the
 	 * object, not an hector indirection pointer. The B_C bit on the object is
 	 * cleared and should the object be dead, it will be collected during the
 	 * next GC cycle.
@@ -300,12 +300,12 @@ rt_public EIF_OBJECT hrecord(EIF_REFERENCE object)
  * Low-level routines left visible to enable high wizardry--RAM.
  */
 
-rt_public EIF_OBJECT henter(EIF_REFERENCE object)
+rt_public EIF_OBJECT eif_protect(EIF_REFERENCE object)
 {
 	/* Enter 'object' into the hector indirection table and return its
 	 * indirection pointer. I think this run-time call might be useful if
 	 * someone wants to create Eiffel objects via emalloc() and let the GC
-	 * see them by calling 'henter'--RAM.
+	 * see them by calling 'eif_protect'--RAM.
 	 */
 	RT_GET_CONTEXT
 	EIF_REFERENCE address;						/* Address in hector */
@@ -321,56 +321,6 @@ rt_public EIF_OBJECT henter(EIF_REFERENCE object)
 	eif_access(address) = object;		/* Record object's physical address */
 
 	return (EIF_OBJECT) address;			/* Location in Hector table */
-}
-
-rt_public void hfree(EIF_OBJECT address)
-{
-	/* This routine frees an hector indirection pointer obtained through henter.
-	 * The indirection pointer is reset to a null pointer and its location
-	 * within the hector stack hec_saved is remembered in free_stack for later
-	 * reuse. Again, only guys wearing white hats should use this routine--RAM.
-	 */
-	RT_GET_CONTEXT
-	eif_access(address) = (EIF_REFERENCE) 0;				/* Reset hector's entry */
-	if (-1 == epush(&free_stack, address)) {		/* Record free entry */
-		plsc();										/* Run GC cycle */
-		(void) epush(&free_stack, address);			/* Retry, discard errors */
-	}
-}
-
-rt_public EIF_REFERENCE spfreeze(EIF_REFERENCE object)
-             		/* Physical address */
-{
-	/* Given an special object, we want to release it from GC control and 
-	 * prevent it from moving in memory. This is dangerous as we will have
-	 * to be sure that the object will not be reallocated (through array
-	 * resizing). Otherwise sprealloc() might move that object anyway
-	 * and will clear the B_C bit used to mark frozen objects.
-	 * The object should also be kept alive during the time it is frozen.
-	 * Beside that, the frozen object will not spoil the scavenge zones
-	 * because special objects are allocated outside of them.
-	 */
-
-	union overhead *zone;			/* Malloc information zone */
-
-#ifdef DEBUG2
-	printf ("->DEBUG2: EIF_SPFREEZE called on %x\n", object);
-#endif
-	zone = HEADER(object);			/* Point to object's header */
-	zone->ov_size |= B_C;			/* Make it be a C block */
-	return object;					/* Object's location did not change */
-}
-
-rt_public void spufreeze(EIF_REFERENCE object)
-             		/* Physical address */
-{
-	/* We want to put back under GC control a frozen object previously
-	 * obtain through spfreeze(). The B_C bit on the object is cleared.
-	 */
-#ifdef DEBUG2
-	printf ("<-DEBUG2: EIF_UNSPFREEZE called on %x\n", object);
-#endif
-	HEADER(object)->ov_size &= ~B_C;	/* Back to the Eiffel world */
 }
 
 /*

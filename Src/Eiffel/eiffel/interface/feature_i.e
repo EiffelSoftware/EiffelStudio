@@ -1902,6 +1902,7 @@ end
 			vdrd6: VDRD6
 			vdrd7: VDRD7
 			ve02: VE02
+			l_vtug: VTUG
 		do
 debug ("ACTIVITY")
 	io.error.put_string ("Check signature of ")
@@ -1957,7 +1958,12 @@ debug ("ACTIVITY")
 	io.error.put_new_line
 end
 
-			if not new_type.conform_to (old_type) then
+			if not new_type.good_generics then
+				l_vtug := new_type.error_generics
+				l_vtug.set_class (current_class)
+				l_vtug.set_feature (Current)
+				error_handler.insert_error (l_vtug)
+			elseif not new_type.conform_to (old_type) then
 				create vdrd51
 				vdrd51.init (old_feature, Current)
 				Error_handler.insert_error (vdrd51)
@@ -1998,7 +2004,12 @@ debug ("ACTIVITY")
 	end
 	io.error.put_new_line
 end
-					if not new_type.conform_to (old_type) then
+					if not new_type.good_generics then
+						l_vtug := new_type.error_generics
+						l_vtug.set_class (current_class)
+						l_vtug.set_feature (Current)
+						error_handler.insert_error (l_vtug)
+					elseif not new_type.conform_to (old_type) then
 						create vdrd53
 						vdrd53.init (old_feature, Current)
 						Error_handler.insert_error (vdrd53)

@@ -5,8 +5,8 @@ indexing
 -- hash coding in the pattern table.
 
 class SHARED_HASH_CODE
-	
-feature {NONE}
+
+feature -- Access
 
 	Character_code: INTEGER is 1
 	Wide_char_code: INTEGER is 2
@@ -17,7 +17,7 @@ feature {NONE}
 	Integer_16_code: INTEGER is 5
 	Integer_32_code: INTEGER is 6
 	Integer_64_code: INTEGER is 7
-	
+
 	natural_8_code: INTEGER is 8
 	natural_16_code: INTEGER is 9
 	natural_32_code: INTEGER is 10
@@ -27,7 +27,7 @@ feature {NONE}
 	Real_64_code: INTEGER is 13
 
 	Pointer_code: INTEGER is 14
-	
+
 	Typed_pointer_code: INTEGER is 15
 
 	Void_code: INTEGER is 16

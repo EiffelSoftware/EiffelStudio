@@ -9,7 +9,6 @@ deferred class TYPE_I
 
 inherit
 	HASHABLE
-	SHARED_HASH_CODE
 	SHARED_WORKBENCH
 	SHARED_TYPE_I
 		export

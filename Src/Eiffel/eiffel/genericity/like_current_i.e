@@ -54,7 +54,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code for current type
 		do
-			Result := Other_code
+			Result := {SHARED_HASH_CODE}.other_code
 		end
 
 	description: GENERIC_DESC is

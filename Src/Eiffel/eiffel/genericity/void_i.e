@@ -96,7 +96,7 @@ feature
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
-			Result := Void_code
+			Result := {SHARED_HASH_CODE}.void_code
 		end
 
 	sk_value: INTEGER is

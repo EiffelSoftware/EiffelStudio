@@ -68,7 +68,7 @@ feature
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
-			Result := Pointer_code
+			Result := {SHARED_HASH_CODE}.pointer_code
 		end
 
 	sk_value: INTEGER is

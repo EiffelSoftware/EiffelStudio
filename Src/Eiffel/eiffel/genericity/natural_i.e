@@ -159,10 +159,10 @@ feature -- Access
 			-- Hash code for current type
 		do
 			inspect size
-			when 8 then Result := natural_8_code
-			when 16 then Result := natural_16_code
-			when 32 then Result := natural_32_code
-			when 64 then Result := natural_64_code
+			when 8 then Result := {SHARED_HASH_CODE}.natural_8_code
+			when 16 then Result := {SHARED_HASH_CODE}.natural_16_code
+			when 32 then Result := {SHARED_HASH_CODE}.natural_32_code
+			when 64 then Result := {SHARED_HASH_CODE}.natural_64_code
 			end
 		end
 

@@ -39,7 +39,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
-			Result := Real_32_code
+			Result := {SHARED_HASH_CODE}.real_32_code
 		end
 
 	sk_value: INTEGER is

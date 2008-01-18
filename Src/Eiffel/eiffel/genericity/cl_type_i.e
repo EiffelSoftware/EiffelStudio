@@ -315,7 +315,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code for current type
 		do
-			Result := Other_code + class_id
+			Result := {SHARED_HASH_CODE}.other_code + class_id
 		end
 
 feature -- Type evaluation

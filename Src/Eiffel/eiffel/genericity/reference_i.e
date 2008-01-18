@@ -89,7 +89,7 @@ feature
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
-			Result := Reference_code
+			Result := {SHARED_HASH_CODE}.reference_code
 		end
 
 	sk_value: INTEGER is

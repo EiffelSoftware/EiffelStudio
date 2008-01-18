@@ -115,7 +115,7 @@ feature
 	hash_code: INTEGER is
 			-- Hash code for current type
 		do
-			Result := Other_code + size
+			Result := {SHARED_HASH_CODE}.other_code + size
 		end
 
 	sk_value: INTEGER is

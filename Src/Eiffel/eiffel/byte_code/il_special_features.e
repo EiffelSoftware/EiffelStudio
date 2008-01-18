@@ -23,11 +23,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_HASH_CODE
-		export
-			{NONE} all
-		end
-
 	SHARED_IL_CODE_GENERATOR
 		export
 			{NONE} all
@@ -748,25 +743,26 @@ feature {NONE} -- Type information
 		do
 			inspect
 				t.hash_code
-			when Character_code, Wide_char_code then Result := character_type
-			when Boolean_code then Result := boolean_type
+			when {SHARED_HASH_CODE}.Character_code, {SHARED_HASH_CODE}.Wide_char_code then
+				Result := character_type
+			when {SHARED_HASH_CODE}.Boolean_code then Result := boolean_type
 			when
-				Integer_8_code, Integer_16_code,
-				Integer_32_code, Integer_64_code
+				{SHARED_HASH_CODE}.Integer_8_code, {SHARED_HASH_CODE}.Integer_16_code,
+				{SHARED_HASH_CODE}.Integer_32_code, {SHARED_HASH_CODE}.Integer_64_code
 			then
 				Result := integer_type
 				is_signed_integer := True
 
 			when
-				natural_8_code, natural_16_code,
-				natural_32_code, natural_64_code
+				{SHARED_HASH_CODE}.natural_8_code, {SHARED_HASH_CODE}.natural_16_code,
+				{SHARED_HASH_CODE}.natural_32_code, {SHARED_HASH_CODE}.natural_64_code
 			then
 				Result := integer_type
 				is_signed_integer := False
 
-			when Real_32_code then	Result := real_32_type
-			when Real_64_code then Result := real_64_type
-			when Pointer_code then Result := pointer_type
+			when {SHARED_HASH_CODE}.Real_32_code then Result := real_32_type
+			when {SHARED_HASH_CODE}.Real_64_code then Result := real_64_type
+			when {SHARED_HASH_CODE}.Pointer_code then Result := pointer_type
 			else
 				if t.base_class.is_class_any then
 					Result := any_type

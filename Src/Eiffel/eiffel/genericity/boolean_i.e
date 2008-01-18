@@ -68,7 +68,7 @@ feature
 
 	hash_code: INTEGER is
 			-- Hash code for current type
-		once
+		do
 			Result := {SHARED_HASH_CODE}.boolean_code
 		end
 

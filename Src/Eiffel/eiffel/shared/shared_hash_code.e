@@ -1,6 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	fixme: "We should either use the SK_XX constants or the tuple one, instead of yet adding some more"
 -- Hash code for instance of TYPE_I: search of patterns is done through
 -- hash coding in the pattern table.
 
@@ -8,35 +9,36 @@ class SHARED_HASH_CODE
 
 feature -- Access
 
-	Character_code: INTEGER is 1
-	Wide_char_code: INTEGER is 2
+	Character_code: INTEGER = 0x01000000
+	Wide_char_code: INTEGER = 0x02000000
 
-	Boolean_code: INTEGER is 3
+	Boolean_code: INTEGER = 0x03000000
 
-	Integer_8_code: INTEGER is 4
-	Integer_16_code: INTEGER is 5
-	Integer_32_code: INTEGER is 6
-	Integer_64_code: INTEGER is 7
+	Integer_8_code: INTEGER = 0x04000000
+	Integer_16_code: INTEGER = 0x05000000
+	Integer_32_code: INTEGER = 0x06000000
+	Integer_64_code: INTEGER = 0x07000000
 
-	natural_8_code: INTEGER is 8
-	natural_16_code: INTEGER is 9
-	natural_32_code: INTEGER is 10
-	natural_64_code: INTEGER is 11
+	natural_8_code: INTEGER = 0x08000000
+	natural_16_code: INTEGER = 0x09000000
+	natural_32_code: INTEGER = 0x0A000000
+	natural_64_code: INTEGER = 0x0B000000
 
-	Real_32_code: INTEGER is 12
-	Real_64_code: INTEGER is 13
+	Real_32_code: INTEGER = 0x0C000000
+	Real_64_code: INTEGER = 0x0D000000
 
-	Pointer_code: INTEGER is 14
+	Pointer_code: INTEGER = 0x0E000000
 
-	Typed_pointer_code: INTEGER is 15
+	Typed_pointer_code: INTEGER = 0x0F000000
 
-	Void_code: INTEGER is 16
 
-	Reference_code: INTEGER is 17
+	Reference_code: INTEGER = 0x10000000
+	Expanded_code: INTEGER = 0x11000000
+	bit_code: INTEGER = 0x12000000
+	None_code: INTEGER = 0x13000000
+	Void_code: INTEGER = 0x14000000
 
-	None_code: INTEGER is 18
-
-	Other_code: INTEGER is 19;
+	Other_code: INTEGER = 0x15000000;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

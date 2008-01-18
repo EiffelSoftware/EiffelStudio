@@ -53,6 +53,14 @@ feature {NONE} -- Initialization
 				-- Register key actions
 			register_action (popup_window.key_press_actions, agent on_key_pressed)
 			register_action (popup_window.key_release_actions, agent on_key_release)
+
+				-- Register visiblity actions
+			register_action (popup_window.resize_actions, agent
+				do
+					if is_interface_usable and then not is_allowed_off_screen and then is_shown then
+						ensure_popup_window_visible_on_screen
+					end
+				end)
 		ensure
 			is_initialized: is_initialized
 		end
@@ -200,9 +208,11 @@ feature -- Status report
 	is_shown: BOOLEAN
 			-- Indicates if foundataion tool is current visible.
 		do
-			if is_interface_usable and then is_initialized and internal_popup_window /= Void then
-				Result := internal_popup_window.is_displayed
-			end
+			Result :=  is_interface_usable and then
+				is_initialized and then
+				internal_popup_window /= Void and then
+				not internal_popup_window.is_destroyed and then
+				internal_popup_window.is_displayed
 		end
 
 	is_focus_sensitive: BOOLEAN
@@ -215,6 +225,14 @@ feature -- Status report
 	is_pointer_sensitive: BOOLEAN
 			-- Indicates if the window is sensitive to having a mouse pointer. By default, if the mouse pointer leaves the
 			-- window, is it remains open.
+		do
+			Result := False
+		end
+
+	is_allowed_off_screen: BOOLEAN
+			-- Indicates if the window is allow to be displayed off-screen.
+			-- Note: This is used during initialization to determine whether or not to add the actions to ensure the window is always presented
+			--       on screen.
 		do
 			Result := False
 		end
@@ -241,6 +259,51 @@ feature {NONE} -- Status report
 	is_executing_unfocused_action: BOOLEAN
 			-- Indicates if an action is being performed that will cause the popup window to loose focus.
 
+feature {NONE} -- Positioning
+
+	requested_x_position: INTEGER
+			-- Requested show X position
+
+	requested_y_position: INTEGER
+			-- Requested show Y position
+
+	relative_widget: ?EV_WIDGET
+			-- The widget the popup window is shown relative to
+
+feature {NONE} -- Query
+
+	window_on_screen_position (a_widget: EV_WIDGET; a_constrain_to_widget: BOOLEAN): TUPLE [x, y: INTEGER]
+			-- Fetches the on-screen position based on the requested X and Y positions.
+			--
+			-- `a_widget': The parent widget/window to fetch the top-level window for.
+			-- `a_constrain_to_widget': True if the popup window should remain within the bounds of the specified widget/window.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			not_is_allowed_off_screen: not is_allowed_off_screen
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
+		local
+			l_widget: EV_WIDGET
+			l_window: like popup_window
+			l_pos: TUPLE [x, y: INTEGER]
+		do
+			l_window := popup_window
+			if a_constrain_to_widget then
+				l_widget := a_widget
+			else
+				l_widget := l_window
+			end
+			Result := helpers.suggest_pop_up_widget_location_with_size (l_widget,
+				requested_x_position,
+				requested_y_position,
+				l_window.width,
+				l_window.height)
+		ensure
+			result_attached: Result /= Void
+			result_x_non_negative: Result.x >= 0
+			result_y_non_negative: Result.y >= 0
+		end
+
 feature -- Basic operations
 
 	show (a_x: INTEGER; a_y: INTEGER)
@@ -252,9 +315,25 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+		local
+			l_screen: SD_SCREEN
 		do
+			if not is_allowed_off_screen then
+				requested_x_position := a_x
+				requested_y_position := a_y
+			end
+
 			is_committed_on_closed := False
-			popup_window.set_position (a_x, a_y)
+
+			if is_allowed_off_screen then
+				popup_window.set_position (a_x, a_y)
+			else
+					-- Show initially off-screen to retrieve width and height.
+				create l_screen
+				popup_window.set_position (l_screen.width + 1, l_screen.height + 1)
+				register_kamikaze_action (show_actions, agent ensure_popup_window_visible_on_screen)
+			end
+
 			on_before_show
 			popup_window.show
 		ensure
@@ -273,8 +352,10 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
+			relative_widget := a_widget
 			show (a_widget.screen_x + a_x, a_widget.screen_y + a_y)
 		ensure
+			relative_widget_set: relative_widget = a_widget
 			popup_window_is_displayed: popup_window.is_displayed
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
@@ -292,7 +373,9 @@ feature -- Basic operations
 				recycle
 			end
 		ensure
+			relative_widget_detached: relative_widget = Void
 			not_popup_window_is_displayed: not popup_window.is_displayed
+			not_is_interface_usable: is_recycled_on_closing implies not is_interface_usable
 		end
 
 	hide_commit
@@ -306,6 +389,8 @@ feature -- Basic operations
 			on_commit
 		ensure
 			is_committed_on_closed: is_committed_on_closed
+			relative_widget_detached: not is_shown implies relative_widget = Void
+			not_popup_window_is_displayed: not is_shown implies not popup_window.is_displayed
 		end
 
 	hide_cancel
@@ -319,6 +404,8 @@ feature -- Basic operations
 			on_cancel
 		ensure
 			not_is_committed_on_closed: not is_committed_on_closed
+			relative_widget_detached: not is_shown implies relative_widget = Void
+			not_popup_window_is_displayed: not is_shown implies not popup_window.is_displayed
 		end
 
 	frozen execute_unfocusing_action (a_action: PROCEDURE [ANY, TUPLE])
@@ -375,6 +462,34 @@ feature {NONE} -- Basic operation
 			end
 		end
 
+	ensure_popup_window_visible_on_screen
+			-- Ensures the popup window is visible on screen, given the bounding edges
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			not_is_allowed_off_screen: not is_allowed_off_screen
+		local
+			l_manager: EB_SHARED_WINDOW_MANAGER
+			l_window: EB_WINDOW
+			l_position: like window_on_screen_position
+		do
+			if {l_widget: !EV_WIDGET} relative_widget then
+				l_position := window_on_screen_position (l_widget, False)
+			else
+				create l_manager
+				l_window := l_manager.window_manager.last_focused_development_window
+				if l_window /= Void then
+					l_position := window_on_screen_position (l_window.window, False)
+				else
+					l_position := window_on_screen_position (popup_window, False)
+				end
+			end
+
+			check l_position_attached: l_position /= Void end
+
+			popup_window.set_position (l_position.x, l_position.y)
+		end
+
 feature {NONE} -- User interface elements
 
 	border_widget: EV_WIDGET
@@ -414,6 +529,11 @@ feature {NONE} -- Action handlers
 
 				-- Remove application pointer motion actions
 			unregister_action (ev_application.pointer_motion_actions, agent on_application_pointer_motion)
+
+				-- Unset the relative widget, if any
+			relative_widget := Void
+		ensure then
+			relative_widget_detached: relative_widget = Void
 		end
 
 	on_commit

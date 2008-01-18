@@ -79,6 +79,8 @@ feature {NONE} -- Initialize
 			dev_window_not_void: a_dev_window /= Void
 		do
 			Precursor {EB_CLICKABLE_EDITOR} (a_dev_window)
+				-- Set parent window, for completion
+			set_parent_window (a_dev_window.window)
 
 				-- Initialize code completion.
 			initialize_code_complete

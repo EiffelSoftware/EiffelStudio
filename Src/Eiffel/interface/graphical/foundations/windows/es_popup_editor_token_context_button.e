@@ -17,7 +17,7 @@ inherit
 		redefine
 			set_popup_widget,
 			set_popup_widget_fetch_action,
-			show,
+			window_on_screen_position,
 			on_popup_widget_show_requested,
 			on_popup_widget_hidden
 		end
@@ -87,14 +87,6 @@ feature {NONE} -- Initialization
 
 				-- Propagate background color to set widget structure.
 			propagate_colors (a_container, Void, editor_token.background_color, Void)
-
-			register_action (show_actions, agent
-					-- Called when the popup window is shown.
-				do
-					popup_window.set_position (
-						requested_x_position + (popup_window.screen_x - token_image.screen_x) + token_x_offset,
-						requested_y_position + (popup_window.screen_y - token_image.screen_y) + token_y_offset + 1)
-				end)
 		ensure then
 			widget_container_set: widget_container = a_container
 		end
@@ -126,12 +118,6 @@ feature {ES_EDITOR_TOKEN_HANDLER} -- Access
 
 	token_y_offset: INTEGER
 			-- Y offset position from drawn token to window top edge
-
-	requested_x_position: INTEGER
-			-- Requested show X position
-
-	requested_y_position: INTEGER
-			-- Requested show Y position
 
 feature -- Element change
 
@@ -185,32 +171,37 @@ feature -- Query
 			Result := not a_token.is_fake and not a_token.is_blank
 		end
 
+feature {NONE} -- Query
+
+	window_on_screen_position (a_widget: EV_WIDGET; a_constrain_to_widget: BOOLEAN): TUPLE [x, y: INTEGER]
+			-- Fetches the on-screen position based on the requested X and Y positions.
+			--
+			-- `a_widget': The parent widget/window to fetch the top-level window for.
+			-- `a_constrain_to_widget': True if the popup window should remain within the bounds of the specified widget/window.
+		local
+			l_widget: EV_WIDGET
+			l_window: like popup_window
+			l_pos: TUPLE [x, y: INTEGER]
+		do
+			l_window := popup_window
+			if a_constrain_to_widget then
+				l_widget := a_widget
+			else
+				l_widget := l_window
+			end
+			Result := helpers.suggest_pop_up_widget_location_with_size (editor.widget,
+				requested_x_position + (l_window.screen_x - token_image.screen_x) + token_x_offset,
+				requested_y_position + (l_window.screen_y - token_image.screen_y) + token_y_offset + 1,
+				l_window.width,
+				l_window.height)
+		end
+
 feature -- Status report
 
 	is_recycled_on_closing: BOOLEAN
 			-- Indicates if the foundation should be recycled on closing.
 		do
 			Result := False
-		end
-
-feature -- Basic operations
-
-	show (a_x: INTEGER a_y: INTEGER)
-			-- Show and wait until `Current' is closed.
-			-- `Current' is shown modal with respect to `a_window'.
-			--
-			-- `a_x': Window screen X position.
-			-- `a_y': Window screen Y position.
-		local
-			l_screen: SD_SCREEN
-		do
-			requested_x_position := a_x
-			requested_y_position := a_y
-
-			create l_screen
-
-				-- Display off-screen to evaluate coords
-			Precursor {ES_POPUP_BUTTON_WINDOW} (l_screen.width + 1, l_screen.height + 1)
 		end
 
 feature {NONE} -- Action handlers

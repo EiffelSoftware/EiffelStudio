@@ -2103,6 +2103,24 @@ rt_public void c_stack_truncate(EIF_CONTEXT_NOARG)
 	}
 }
 
+rt_shared void c_opstack_reset(struct c_opstack *stk)
+{
+	/* Reset the stack 'stk' to its minimal state and disgard all its
+	 * contents. Walking through the list of chunks, we free them and
+	 * clear the 'stk' structure.
+	 */
+
+	struct c_stochunk *k;	/* To walk through the list */
+	struct c_stochunk *n;	/* Save next before freeing chunk */
+
+	for (k = stk->st_hd; k; k = n) {
+		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
+		eif_rt_xfree((EIF_REFERENCE) k);
+	}
+
+	memset (stk, 0, sizeof(struct c_opstack));
+}
+
 rt_public void c_wipe_out(register struct c_stochunk *chunk)
 									/* First chunk to be freed */
 {

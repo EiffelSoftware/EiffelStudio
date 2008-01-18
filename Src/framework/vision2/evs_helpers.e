@@ -103,18 +103,22 @@ feature -- Screen
 		local
 			l_top_window: EV_TITLED_WINDOW
 			l_screen: SD_SCREEN
+			l_width: INTEGER
+			l_height: INTEGER
 		do
 			l_top_window ?= widget_top_level_window (a_window, True)
 			if l_top_window /= Void and l_top_window.is_maximized then
+				l_width := l_top_window.client_width + ((l_top_window.width - l_top_window.client_width) / 2).floor
+				l_height := l_top_window.client_height + ((l_top_window.height - l_top_window.client_height) / 2).floor
 				if l_top_window = a_window then
-					Result := [l_top_window.x_position, l_top_window.y_position, l_top_window.width, l_top_window.height]
+					Result := [l_top_window.x_position, l_top_window.y_position, l_width, l_height]
 				else
 					if
-						a_window.width + a_window.x_position <= l_top_window.width and
-						a_window.height + a_window.y_position <= l_top_window.height
+						a_window.width + a_window.x_position <= l_width and
+						a_window.height + a_window.y_position <= l_height
 					then
 							-- Window is within main window, so use main window coords
-						Result := [l_top_window.x_position, l_top_window.y_position, l_top_window.width, l_top_window.height]
+						Result := [l_top_window.x_position, l_top_window.y_position, l_width, l_height]
 					end
 				end
 			end
@@ -153,12 +157,14 @@ feature -- Placement
 			l_new_x: INTEGER
 			l_new_y: INTEGER
 		do
-			l_current_window := widget_top_level_window (a_widget, False)
 			l_top_window := widget_top_level_window (a_widget, True)
-
+			l_current_window := widget_top_level_window (a_widget, False)
 			if l_current_window /= Void and l_top_window /= Void then
 				l_current_area := window_working_area (l_current_window)
 				l_top_area := window_working_area (l_top_window)
+			end
+
+			if l_current_area /= Void and l_top_area /= Void then
 				l_area := l_top_area
 				if l_current_area.x > l_top_area.x then
 						-- Current window area is on the right of the top window
@@ -195,11 +201,14 @@ feature -- Placement
 				else
 					l_new_y := a_screen_y
 				end
-
-				Result := [l_new_x, l_new_y]
 			else
-				Result := [0, 0]
+				l_new_x := a_screen_x
+				l_new_y := a_screen_y
 			end
+
+			l_new_x := l_new_x.max (0)
+			l_new_y := l_new_y.max (0)
+			Result := [l_new_x, l_new_y]
 		ensure
 			result_attached: Result /= Void
 			result_x_non_negative: Result.x >= 0

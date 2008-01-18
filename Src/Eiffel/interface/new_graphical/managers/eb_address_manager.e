@@ -762,24 +762,18 @@ feature -- Updating
 		require
 	   		for_context_tool: mode
   		local
-		   window: EV_WINDOW
-		   l_x: INTEGER
-		   l_screen: EB_STUDIO_SCREEN
+			l_helper: EVS_HELPERS
+			window: EV_WINDOW
+			l_pos: TUPLE [x, y: INTEGER]
 		do
 			window := parent_window (header_info)
 			if address_dialog.is_show_requested then
 				address_dialog.hide
 			end
 			address_dialog.set_width (header_info.width)
-			create l_screen
-			if a_x + address_dialog.width > l_screen.virtual_width then
-				l_x := l_screen.virtual_width - address_dialog.width
-			elseif a_x < l_screen.virtual_x then
-				l_x := l_screen.virtual_x
-			else
-				l_x := a_x
-		   	end
-		   	address_dialog.set_position (l_x, a_y)
+			create l_helper
+			l_pos := l_helper.suggest_pop_up_widget_location_with_size (window, a_x, a_y, address_dialog.width, address_dialog.height)
+		   	address_dialog.set_position (l_pos.x, l_pos.y)
 			address_dialog.show
 			remove_error_message
 			inspect

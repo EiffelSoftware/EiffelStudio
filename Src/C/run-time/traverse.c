@@ -722,9 +722,10 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		/* Traverse all stacks and root object to find objects matching `action_fnptr'. */
 	match_object (root_obj, action_fnptr);
 
+	match_simple_stack (&hec_saved, action_fnptr);
+
 #ifndef EIF_THREADS
 #ifdef ISE_GC
-	match_simple_stack (&hec_saved, action_fnptr);
 	match_simple_stack (&hec_stack, action_fnptr);
 
 	match_stack (&loc_set, action_fnptr);
@@ -739,8 +740,6 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	match_stack (&oms_set, action_fnptr);
 #else
 #ifdef ISE_GC
-	for (i = 0; i < hec_saved_list.count; i++)
-		match_simple_stack(hec_saved_list.threads.sstack[i], action_fnptr);
 	for (i = 0; i < hec_stack_list.count; i++)
 		match_simple_stack(hec_stack_list.threads.sstack[i], action_fnptr);
 

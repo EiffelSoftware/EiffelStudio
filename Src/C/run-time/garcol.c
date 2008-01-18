@@ -297,19 +297,6 @@ rt_public struct stack_list hec_stack_list = {
 	(int) 0,	/* capacity */
 	{NULL}		/* threads_stack */
 };
-
-/*
-doc:	<attribute name="hec_saved_list" return_type="struct stack_list" export="public">
-doc:		<summary>List of all `hec_saved'. There is one per thread.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_mutex</synchronization>
-doc:	</attribute>
-*/
-rt_public struct stack_list hec_saved_list = {
-	(int) 0,	/* count */
-	(int) 0,	/* capacity */
-	{NULL}		/* threads_stack */
-};
 #endif
 /*
 doc:	<attribute name="eif_stack_list" return_type="struct stack_list" export="public">
@@ -1524,8 +1511,7 @@ rt_private void internal_marking(MARKER marking, int moving)
 
 	for (i = 0; i < hec_stack_list.count; i++)
 		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
-	for (i = 0; i < hec_saved_list.count; i++)
-		mark_simple_stack(hec_saved_list.threads.sstack[i], marking, moving);
+	mark_simple_stack(&hec_saved, marking, moving);
 
 #ifdef WORKBENCH
 	for (i = 0; i < opstack_list.count; i++)

@@ -1,0 +1,28 @@
+test_name adopt-wean-freeze-unfreeze-multithreaded
+test_description Performing calls to `eif_adopt' and `eif_wean' in different threads causes some memory corruption. Freeze and unfreeze needs to be done in the same thread otherwise it does not work. Those 2 limitations have been fixed/removed now.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	object_queue.e $CLUSTER object_queue.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1	100000
+execute_result 	ok
+compare		exec_output1 output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output2	100000
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

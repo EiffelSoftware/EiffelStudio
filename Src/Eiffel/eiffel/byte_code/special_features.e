@@ -17,8 +17,6 @@ inherit
 
 	SHARED_WORKBENCH
 
-	SHARED_HASH_CODE
-
 feature -- Access
 
 	has (feature_name_id: INTEGER; compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
@@ -1156,18 +1154,18 @@ feature {NONE} -- Type information
 			t: TYPED_POINTER_I
 		do
 			inspect b.hash_code
-			when Boolean_code then Result := boolean_type
-			when Character_code then
+			when {SHARED_HASH_CODE}.Boolean_code then Result := boolean_type
+			when {SHARED_HASH_CODE}.Character_code then
 				Result := character_type
 				is_wide := False
 
-			when Wide_char_code then
+			when {SHARED_HASH_CODE}.Wide_char_code then
 				Result := character_type
 				is_wide := True
 
 			when
-				natural_8_code, natural_16_code,
-				natural_32_code, natural_64_code
+				{SHARED_HASH_CODE}.natural_8_code, {SHARED_HASH_CODE}.natural_16_code,
+				{SHARED_HASH_CODE}.natural_32_code, {SHARED_HASH_CODE}.natural_64_code
 			then
 				Result := integer_type
 				is_signed_integer := False
@@ -1175,17 +1173,17 @@ feature {NONE} -- Type information
 				integer_size := l_nat.size
 
 			when
-				Integer_8_code, Integer_16_code,
-				Integer_32_code, Integer_64_code
+				{SHARED_HASH_CODE}.Integer_8_code, {SHARED_HASH_CODE}.Integer_16_code,
+				{SHARED_HASH_CODE}.Integer_32_code, {SHARED_HASH_CODE}.Integer_64_code
 			then
 				Result := integer_type
 				is_signed_integer := True
 				l_int ?= b
 				integer_size := l_int.size
 
-			when Pointer_code then Result := pointer_type
-			when Real_32_code then Result := real_32_type
-			when Real_64_code then Result := real_64_type
+			when {SHARED_HASH_CODE}.Pointer_code then Result := pointer_type
+			when {SHARED_HASH_CODE}.Real_32_code then Result := real_32_type
+			when {SHARED_HASH_CODE}.Real_64_code then Result := real_64_type
 
 			else
 				t ?= b

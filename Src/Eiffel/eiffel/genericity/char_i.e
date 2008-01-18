@@ -127,9 +127,9 @@ feature -- Access
 			-- Hash code for current type
 		do
 			if is_character_32 then
-				Result := Wide_char_code
+				Result := {SHARED_HASH_CODE}.wide_char_code
 			else
-				Result := Character_code
+				Result := {SHARED_HASH_CODE}.character_code
 			end
 		end
 

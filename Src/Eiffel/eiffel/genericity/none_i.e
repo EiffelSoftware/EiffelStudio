@@ -104,7 +104,7 @@ feature
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
-			Result := None_code
+			Result := {SHARED_HASH_CODE}.none_code
 		end
 
 	associated_reference: CLASS_TYPE is

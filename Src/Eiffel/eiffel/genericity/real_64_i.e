@@ -74,7 +74,7 @@ feature
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
-			Result := Real_64_code
+			Result := {SHARED_HASH_CODE}.real_64_code
 		end
 
 	sk_value: INTEGER is

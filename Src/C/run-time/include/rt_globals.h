@@ -69,7 +69,7 @@ extern "C" {
  
 typedef struct {
 	EIF_OBJECT current;				/* Root object of Thread creator. */
-	EIF_POINTER routine;			/* routine `execute' of thread. */
+	EIF_PROCEDURE routine;			/* routine `execute' of thread. */
 	volatile EIF_INTEGER * volatile is_initialized;	/* Has thread been launched? */
 	EIF_MUTEX_TYPE *children_mutex;	/* Mutex for `join_all' */
 	int *addr_n_children;			/* Number of thread children. */

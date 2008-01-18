@@ -80,7 +80,7 @@ rt_public void eif_thr_panic(char *);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public unsigned int eif_thr_is_initialized(void);
-rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_POINTER, EIF_INTEGER,
+rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER,
 										EIF_INTEGER, EIF_BOOLEAN);
 rt_public void eif_thr_exit(void);
 
@@ -621,7 +621,7 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 }
 
 rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj, 
-										 EIF_POINTER init_func,
+										 EIF_PROCEDURE init_func,
 										 EIF_INTEGER priority,
 										 EIF_INTEGER policy,
 										 EIF_BOOLEAN detach)
@@ -731,7 +731,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 
 		struct ex_vect *exvect;
 		jmp_buf exenv;
-		EIF_PROCEDURE execute = (EIF_PROCEDURE) routine_ctxt->routine;
+		EIF_PROCEDURE execute = routine_ctxt->routine;
 
 		eif_thr_context = routine_ctxt;
 		eif_thr_id = routine_ctxt->tid;	/* Initialize here the thread_id */

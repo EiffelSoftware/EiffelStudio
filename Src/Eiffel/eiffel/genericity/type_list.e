@@ -7,7 +7,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class TYPE_LIST
 
 inherit
@@ -20,9 +20,16 @@ inherit
 			{TYPE_LIST} all
 		end
 
+	COMPILER_EXPORTER
+		export
+			{NONE} all
+		undefine
+			is_equal, copy
+		end
+
 create
 	make
-	
+
 create {TYPE_LIST}
 	make_filled
 
@@ -188,6 +195,63 @@ feature -- Traversals
 			end
 		ensure
 			cursor_not_changed: index = old index
+		end
+
+feature -- Sorting
+
+	sort is
+			-- Sort current by topological conformance. This is a crucial step
+			-- for finalization where all the computed dynamic types ensure
+			-- that A conforms to B implies type_id_of_A > type_id_of_B. This
+			-- fixes eweasel test#exec272 and test#final039.
+		local
+			i, nb: INTEGER
+			l_list: TWO_WAY_LIST [TUPLE [type_a: TYPE_A; class_type: CLASS_TYPE]]
+			l_tuple: TUPLE [type_a: TYPE_A; class_type: CLASS_TYPE]
+			l_type_a: TYPE_A
+			l_done: BOOLEAN
+			l_area: like area
+			l_item: like item
+			l_gen_type: GEN_TYPE_I
+		do
+			nb := count - 1
+			if nb > 0 then
+					-- Perform sorting
+				from
+					l_area := area
+					create l_list.make
+				until
+					i > nb
+				loop
+					l_item := l_area.item (i)
+					l_type_a := l_item.type.type_a
+					from
+						l_list.start
+						l_done := l_list.after
+					until
+						l_done or else l_list.after
+					loop
+						if l_list.item.type_a.conform_to (l_type_a) then
+							l_done := True
+						else
+							l_list.forth
+						end
+					end
+					l_list.put_left ([l_type_a, l_item])
+					i := i + 1
+				end
+					-- Update `area' with sorted elements.
+				from
+					l_list.start
+					i := 0
+				until
+					l_list.after
+				loop
+					l_area.put (l_list.item.class_type, i)
+					i := i + 1
+					l_list.forth
+				end
+			end
 		end
 
 indexing

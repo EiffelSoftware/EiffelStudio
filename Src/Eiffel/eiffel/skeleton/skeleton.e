@@ -548,22 +548,6 @@ feature -- Status
 			generate (buffer, is_in_attr_table);
 		end;
 
-	offset (feature_id: INTEGER): INTEGER is
-			-- Compute offset of `feature_id' in final code.
-		require
-			final_mode: context.final_mode
-		do
-			search_feature_id (feature_id)
-			if has_expanded then
-				Result := position
-				if item.level > Reference_level then
-					Result := Result + nb_attributes.item (expanded_level)
-				end
-			else
-				Result := position
-			end
-		end
-
 	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER) is
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in `buffer' in workbench mode only.

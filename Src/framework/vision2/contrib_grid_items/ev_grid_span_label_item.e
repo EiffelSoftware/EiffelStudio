@@ -21,12 +21,14 @@ create
 feature {NONE} -- Initialization
 
 	make_master (a_master_col: INTEGER) is
+			-- Make as `master' cell which hold the text data
 		do
 			is_master := True
 			make_span (a_master_col)
 		end
 
 	make_span (a_master_col: INTEGER) is
+			-- Make as `slave' cell which "span" the master's cell's text data	
 		do
 			default_create
 			expose_actions.extend (agent redraw_span (?))
@@ -67,6 +69,8 @@ feature -- Properties
 feature -- change
 
 	set_text (v: STRING_GENERAL) is
+			-- Set text
+			--  available only for the master cell
 		require
 			is_master: is_master
 		do
@@ -76,6 +80,8 @@ feature -- change
 		end
 
 	set_font (v: like font) is
+			-- Set font
+			--  available only for the master cell	
 		require
 			is_master: is_master
 		do
@@ -85,6 +91,8 @@ feature -- change
 		end
 
 	set_pixmap (v: like pixmap) is
+			-- Set pixmap
+			--  available only for the master cell	
 		require
 			is_master: is_master
 		do
@@ -97,6 +105,8 @@ feature -- change
 		end
 
 	remove_pixmap is
+			-- Remove pixmap
+			--  available only for the master cell	
 		require
 			is_master: is_master
 		do
@@ -111,6 +121,7 @@ feature -- change
 feature {NONE} -- Implementation
 
 	master_item: like Current is
+			-- Master cell's item
 		require
 			row /= Void
 		do
@@ -120,6 +131,7 @@ feature {NONE} -- Implementation
 		end
 
 	redraw_span (a_drawable: EV_DRAWABLE) is
+			-- Redraw span cell
 		local
 			l_text: like text
 			g: EV_GRID

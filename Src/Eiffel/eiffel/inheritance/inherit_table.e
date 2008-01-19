@@ -1158,19 +1158,15 @@ end;
 		require
 			good_argument: resulting_table /= Void;
 		local
-			a_feature: FEATURE_I;
-			sys: SYSTEM_I
 			l_origins: like origins
 		do
 			from
-				sys := System
 				l_origins := origins
 				l_origins.start
 			until
 				l_origins.after
 			loop
-				a_feature := resulting_table.item_id (l_origins.item);
-				a_feature.process_pattern;
+				resulting_table.item_id (l_origins.item).process_pattern
 				l_origins.forth;
 			end;
 		end;

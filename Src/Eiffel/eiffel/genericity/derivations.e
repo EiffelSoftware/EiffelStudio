@@ -47,10 +47,8 @@ end;
 				put (derivations, an_id);
 			end;
 
+				-- Do not add any TUPLE derivations
 			tuple_i ?= a_type
-
-			-- Do not add any TUPLE derivations
-
 			if tuple_i = Void then
 				derivations.put (a_type);
 			end

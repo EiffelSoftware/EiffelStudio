@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- User interface initialization
 
-	frozen build_dialog_interface (a_container: EV_VERTICAL_BOX) is
+	frozen build_dialog_interface (a_container: EV_VERTICAL_BOX)
 			-- Builds the dialog's user interface.
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
@@ -293,7 +293,9 @@ feature {NONE} -- Access
 feature -- Element change
 
 	set_title (a_text: like title)
-			-- Sets prompt's title text
+			-- Sets prompt's title text.
+			--
+			-- `a_text': Window title to set on the prompt.
 		require
 			a_text_attached: a_text /= Void
 		do
@@ -303,41 +305,36 @@ feature -- Element change
 		end
 
 	set_text (a_text: like text)
-			-- Sets prompt's main text
+			-- Sets prompt's main text.
+			--
+			-- `a_text': Text to set on the prompt.
 		require
 			a_text_attached: a_text /= Void
 		do
-			if a_text.is_empty then
-				prompt_text.set_text ("")
-				prompt_text.hide
-			else
-				prompt_text.set_text (format_text (a_text))
-				prompt_text.show
-			end
+			set_label_text (prompt_text, a_text)
 		ensure
 			text_set: format_text (a_text).is_equal (text)
 			prompt_text_label_visible_respected: prompt_text.is_show_requested = not a_text.is_empty
 		end
 
 	set_sub_title (a_text: like sub_title)
-			-- Sets prompt's sub text
+			-- Sets prompt's sub text.
+			--
+			-- `a_text': Sub title text to set on the prompt
 		require
 			a_text_attached: a_text /= Void
 		do
-			if a_text.is_empty then
-				prompt_sub_title_label.set_text ("")
-				prompt_sub_title_label.hide
-			else
-				prompt_sub_title_label.set_text (a_text)
-				prompt_sub_title_label.show
-			end
+			set_label_text (prompt_sub_title_label, a_text)
 		ensure
 			sub_title_set: a_text.is_equal (sub_title)
 			prompt_sub_title_label_visible_respected: prompt_sub_title_label.is_show_requested = not a_text.is_empty
 		end
 
 	set_default_button (a_id: INTEGER)
-			-- Sets prompt's default button
+			-- Sets prompt's default button.
+			--
+			-- `a_id': A button id corresponding to an actual dialog button.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
@@ -356,7 +353,10 @@ feature -- Element change
 		end
 
 	set_default_confirm_button (a_id: INTEGER)
-			-- Sets prompt's default confirmation button (when CTRL+ENTER is pressed)
+			-- Sets prompt's default confirmation button (when CTRL+ENTER is pressed).
+			--
+			-- `a_id': A button id corresponding to an actual dialog button.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
@@ -367,7 +367,10 @@ feature -- Element change
 		end
 
 	set_default_cancel_button (a_id: INTEGER)
-			-- Sets prompt's default cancel button (when ESC is pressed)
+			-- Sets prompt's default cancel button (when ESC is pressed).
+			--
+			-- `a_id': A button id corresponding to an actual dialog button.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
@@ -376,6 +379,77 @@ feature -- Element change
 			dialog.set_default_cancel_button (dialog_window_buttons.item (a_id))
 		ensure
 			default_cancel_button_set: default_cancel_button = a_id
+		end
+
+feature {NONE} -- Element change
+
+	set_label_text (a_label: EVS_LABEL; a_text: like text)
+			-- Sets a wrappable/expandable label's text and adjusts the dialog's position to account for the change
+			-- in position.
+			--
+			-- `a_label': Label widget to set text on.
+			-- `a_text': The text to set.
+		require
+			is_interface_usable: is_interface_usable
+			a_label_attached: a_label /= Void
+			not_a_label_is_destroyed: not a_label.is_destroyed
+			a_text_attached: a_text /= Void
+		local
+			l_old_width: INTEGER
+			l_width: INTEGER
+			l_old_height: INTEGER
+			l_height: INTEGER
+			l_x_offset: INTEGER
+			l_y_offset: INTEGER
+			l_dialog: like dialog
+		do
+			if a_text.is_empty then
+				a_label.set_text ("")
+				a_label.hide
+			else
+				if is_shown then
+					l_old_width := dialog.width
+					l_old_height := dialog.height
+					a_label.set_maximum_width (maximum_prompt_text_width)
+				end
+
+					-- Set actul text
+				a_label.set_text (format_text (a_text))
+
+				if not a_label.is_displayed then
+						-- Ensure the label is display
+					a_label.show
+				else
+					a_label.hide
+
+						-- Adjust prompt text widths to ensure they are not too big for the screen.
+						-- This will cause long text to be wrapped.
+					l_width := prompt_text.font.string_width (prompt_text.text)
+					a_label.set_maximum_width (l_width.min (maximum_prompt_text_width))
+					a_label.calculate_size
+					a_label.refresh_now
+
+					a_label.show
+
+					l_dialog := dialog
+					l_width := l_dialog.width
+					l_height := l_dialog.height
+					if l_old_width /= l_width then
+							-- Calculate new X offset
+						l_x_offset := ((l_old_width - l_width) / 2).floor
+					end
+					if l_old_height /= l_height then
+							-- Calculate new Y offset
+						l_y_offset := ((l_old_height - l_height) / 2).floor
+					end
+					if l_x_offset /= 0 then
+						l_dialog.set_x_position (l_x_offset + l_dialog.x_position)
+					end
+				end
+			end
+		ensure
+			text_set: format_text (a_text).is_equal (a_label.text)
+			a_label_visible_respected: a_label.is_show_requested = not a_text.is_empty
 		end
 
 feature {NONE} -- Status report
@@ -443,6 +517,8 @@ feature {NONE} -- Basic operations
 
 	activate_button_using_key (a_key: EV_KEY)
 			-- Attempts to perform the activation (selection) of a button using the key `a_key'
+			--
+			-- `a_key': An EiffelVision 2 key to act upon.
 		local
 			l_keys: EV_KEY_CONSTANTS
 			l_buttons: DS_SET_CURSOR [INTEGER]
@@ -571,7 +647,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	propagate_prompt_background_color (a_source_widget: EV_WIDGET; a_color: EV_COLOR) is
+	propagate_prompt_background_color (a_source_widget: EV_WIDGET; a_color: EV_COLOR)
 			-- Propagates a background color to a widget and any widgets contained within.
 			-- Note: Propagation can be vetoed in `can_propagate_background_color_to_widget'.
 			--

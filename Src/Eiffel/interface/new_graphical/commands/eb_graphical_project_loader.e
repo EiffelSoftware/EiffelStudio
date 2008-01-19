@@ -224,9 +224,9 @@ feature {NONE} -- Actions
 			-- Actions performed after creating a new project.
 		do
 				-- Destroy and forget `deleting_dialog' if it was used.
-			if deleting_dialog /= Void and then not deleting_dialog.is_destroyed then
-				deleting_dialog.destroy
-				deleting_dialog := Void
+			if delete_status_prompt /= Void and then delete_status_prompt.is_interface_usable then
+				delete_status_prompt.recycle
+				delete_status_prompt := Void
 			end
 		end
 
@@ -590,92 +590,24 @@ feature {NONE} -- User interaction
 
 feature {NONE} -- Actions
 
-	deleting_dialog: EV_DIALOG
-			-- Dialog displaying that the program is currently deleting
-			-- some files.
-
-	deleting_dialog_label: EV_LABEL
-			-- Label displaying the file currently being deleted
-
 	choose_again: BOOLEAN
 			-- We need to choose again the file
-
-	build_deleting_dialog is
-			-- Build the dialog displayed to have the user wait during the
-			-- deletion of a directory.
-		local
-			label_font: EV_FONT
-			pixmap: EV_PIXMAP
-			hb: EV_HORIZONTAL_BOX
-			vb: EV_VERTICAL_BOX
-			pixmap_box: EV_CELL
-			button_box: EV_HORIZONTAL_BOX
-			cancel_button: EV_BUTTON
-		do
-				-- Create and display a dialog to have the user wait.
-			pixmap := (create {EV_STOCK_PIXMAPS}).Information_pixmap.twin
-			create pixmap_box
-			pixmap_box.extend (pixmap)
-			pixmap_box.set_minimum_size (pixmap.width, pixmap.height)
-
-			create deleting_dialog_label
-			deleting_dialog_label.align_text_left
-			deleting_dialog_label.set_text (Interface_names.l_deleting_dialog_default)
-			label_font := deleting_dialog_label.font
-			deleting_dialog_label.set_minimum_size (
-				label_font.width * minimum_width_of_deleting_dialog,
-				label_font.height * minimum_height_of_deleting_dialog
-				)
-
-			create cancel_button.make_with_text (Interface_names.b_cancel)
-			Layout_constants.set_default_width_for_button (cancel_button)
-			cancel_button.select_actions.extend (agent on_cancel_button_pushed)
-
-			create hb
-			hb.set_border_width (Layout_constants.Default_border_size)
-			hb.set_padding (Layout_constants.Default_padding_size)
-			hb.extend (pixmap_box)
-			hb.disable_item_expand (pixmap_box)
-			hb.extend (deleting_dialog_label)
-
-			create button_box
-			button_box.set_padding (Layout_constants.Default_padding_size)
-			button_box.set_border_width (Layout_constants.Default_border_size)
-			button_box.extend (create {EV_CELL})
-			button_box.extend (cancel_button)
-			button_box.disable_item_expand (cancel_button)
-			button_box.extend (create {EV_CELL})
-
-			create vb
-			vb.extend (hb)
-			vb.extend (button_box)
-			vb.disable_item_expand (button_box)
-
-			create deleting_dialog
-			deleting_dialog.extend (vb)
-			deleting_dialog.set_default_cancel_button (cancel_button)
-			deleting_dialog.set_title (Interface_names.t_deleting_files)
-			deleting_dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			deleting_dialog.show_relative_to_window (parent_window)
-		end
 
 	on_delete_directory (deleted_files: ARRAYED_LIST [STRING]) is
 			-- The files in `deleted_files' have just been deleted.
 			-- Display
 		local
-			ise_directory_utils: ISE_DIRECTORY_UTILITIES
-			deleted_file_pathname: STRING
+			l_show: BOOLEAN
 		do
-			if deleting_dialog = Void then
-				build_deleting_dialog
+			l_show := delete_status_prompt = Void
+			if l_show then
+				delete_status_prompt := create_delete_status_prompt
+				delete_status_prompt.to_dialog.set_minimum_width (600)
 			end
-			create ise_directory_utils
-			deleted_file_pathname := ise_directory_utils.path_ellipsis (deleted_files.first, Path_ellipsis_width)
-			check
-				deleting_dialog_label_exists: deleting_dialog_label /= Void
+			delete_status_prompt.set_text ((create {ISE_DIRECTORY_UTILITIES}).path_ellipsis (deleted_files.first, path_ellipsis_width))
+			if l_show then
+				delete_status_prompt.show (parent_window)
 			end
-			deleting_dialog_label.set_text (deleted_file_pathname)
-			deleting_dialog_label.refresh_now
 			ev_application.process_events
 		end
 
@@ -730,19 +662,35 @@ feature {NONE} -- Actions
 			end
 		end
 
+feature {NONE} -- Factory
+
+	delete_status_prompt: ES_PROMPT
+			-- Delete directory status prompt
+
+	create_delete_status_prompt: ES_PROMPT
+			-- Create a delete status prompt
+		local
+			l_prompt: ES_INFORMATION_PROMPT
+			l_dialog: ES_DIALOG
+		do
+			create l_prompt.make_standard ("")
+			l_prompt.set_sub_title (interface_names.st_cleaning_project)
+			l_prompt.set_button_text (l_prompt.dialog_buttons.ok_button, interface_names.b_cancel)
+			l_prompt.set_button_action (l_prompt.dialog_buttons.ok_button, agent
+				do
+					on_cancel_button_pushed
+				end)
+				-- Remove default modal state of prompt
+			l_dialog := l_prompt
+			l_dialog.set_is_modal (False)
+
+			Result := l_prompt
+		end
+
 feature {NONE} -- Implementation / Private constants.
 
-	minimum_width_of_deleting_dialog: INTEGER is 70
-			-- Minimum width of the deleting dialog in characters.
-
-	minimum_height_of_deleting_dialog: INTEGER is 2
-			-- Minimum height of the deleting dialog in characters.
-
-	Path_ellipsis_width: INTEGER is
+	path_ellipsis_width: INTEGER = 70
 			-- Maximum number of characters per item.
-		once
-			Result := minimum_width_of_deleting_dialog - 10
-		end
 
 invariant
 	parent_window_not_void: parent_window /= Void

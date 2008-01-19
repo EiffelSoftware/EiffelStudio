@@ -2100,6 +2100,7 @@ feature -- Sub titles
 	st_compile_changes: STRING_GENERAL is		do Result := locale.translation ("Uncompile changes") end
 	st_exit_eiffelstudio: STRING_GENERAL is		do Result := locale.translation ("Exit EiffelStudio") end
 	st_unsaved_changed: STRING_GENERAL is		do Result := locale.translation ("You have unsaved changes") end
+	st_cleaning_project: STRING_GENERAL is		do Result := locale.translation ("Cleaning project...") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

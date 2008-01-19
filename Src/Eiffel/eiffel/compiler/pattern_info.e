@@ -71,7 +71,7 @@ feature
 	hash_code: INTEGER is
 			-- Hash code
 		do
-			Result := written_in + pattern.hash_code;
+			Result := written_in.bit_xor (pattern.hash_code)
 		end;
 
 	associated_class: CLASS_C is

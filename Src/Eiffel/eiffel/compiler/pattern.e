@@ -226,6 +226,8 @@ feature -- Hash code
 			-- Hash code for pattern
 		local
 			i, n: INTEGER
+			l_rotate: INTEGER
+			l_bytes: INTEGER
 		do
 			Result := result_type.hash_code
 			n := argument_count
@@ -235,10 +237,15 @@ feature -- Hash code
 				until
 					i > n
 				loop
-					Result := Result + (argument_types.item (i).hash_code |<< (i \\ 16))
+						-- Perform a rotation of the hash_code value every 4 bytes.
+					l_rotate := argument_types.item (i).hash_code
+					l_bytes := 4 * (i \\ 8)
+					l_rotate := (l_rotate |<< l_bytes) | (l_rotate |>> (32 - l_bytes))
+					Result := Result.bit_xor(l_rotate)
 					i := i + 1
 				end
-				Result := Result.abs
+					-- To prevent negative values.				
+				Result := Result.hash_code
 			end
 		end
 

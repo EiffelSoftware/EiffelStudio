@@ -498,18 +498,23 @@ feature -- Status
 			Result := base_class.types.has_type (Current)
 		end
 
+
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
-		local
-			other_cl_type: CL_TYPE_I
 		do
-			other_cl_type ?= other
-			Result := other_cl_type /= Void -- FIXME
-					and then other_cl_type.class_id = class_id
-					and then other_cl_type.is_expanded = is_expanded
-					and then other_cl_type.is_separate = is_separate
-					and then other_cl_type.meta_generic = Void
-					and then other_cl_type.true_generics = Void
+			Result := other = Current
+			if not Result and then {l_other_cl_type: !CL_TYPE_I} other then
+					-- If the references are the same then return True.
+				Result := l_other_cl_type.class_id = class_id and then
+						-- 'class_id' is the same therefore we can compare 'declaration_mark'.
+						-- If 'declaration_mark' is not the same for both then we have to make sure
+						-- that both expanded and separate states are identical.
+					(l_other_cl_type.declaration_mark /= declaration_mark implies
+						(l_other_cl_type.is_expanded = is_expanded and then
+						l_other_cl_type.is_separate = is_separate)) and then
+					l_other_cl_type.meta_generic = Void and then
+					l_other_cl_type.true_generics = Void
+			end
 		end
 
 	has_actual (type: CL_TYPE_I): BOOLEAN is
@@ -770,7 +775,7 @@ feature {NONE} -- Implementation
 			internal_il_base_type_name_not_empty: not Result.is_empty
 		end
 
-feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} -- Implementation: class type declaration marks
+feature {CL_TYPE_I, CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} -- Implementation: class type declaration marks
 
 	declaration_mark: NATURAL_8
 			-- Declaration mark associated with a class type (if any)

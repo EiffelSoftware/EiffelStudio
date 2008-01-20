@@ -40,7 +40,8 @@ inherit
 			name,
 			same_as,
 			true_generics,
-			type_a
+			type_a,
+			hash_code
 		end
 
 create
@@ -515,6 +516,30 @@ feature -- Status Report
 			Result.set_mark (declaration_mark)
 		end
 
+	hash_code: INTEGER is
+		local
+			l_rotate, l_bytes, i: INTEGER
+			l_meta: like meta_generic
+		do
+			Result := Precursor {CL_TYPE_I}
+			l_meta := meta_generic
+			i := l_meta.count
+			if i >= 0 then
+				from
+				until
+					i = 0
+				loop
+					l_rotate := l_meta.item (i).hash_code
+					l_bytes := 4 * (1 + i \\ 8)
+					l_rotate := (l_rotate |<< l_bytes) | (l_rotate |>> (32 - l_bytes))
+					Result := Result.bit_xor (l_meta.item (i).hash_code)
+					i := i - 1
+				end
+					-- To prevent negative values.
+				Result := Result.hash_code
+			end
+		end
+
 feature {NONE} -- Generic conformance
 
 	make_full_type_byte_code_parameters (ba: BYTE_ARRAY) is
@@ -806,14 +831,19 @@ feature -- Comparison
 			-- Is `other' equal to Current ?
 			-- NOTE: we do not compare `true_generics'!
 		local
-			gen_type_i: GEN_TYPE_I
+			l_gen_type_i: like Current
 		do
-			gen_type_i ?= other
-			if gen_type_i /= Void then
-				Result := class_id = gen_type_i.class_id
-						and then is_expanded = gen_type_i.is_expanded
-						and then is_separate = gen_type_i.is_separate
-						and then meta_generic.same_as (gen_type_i.meta_generic)
+			Result := other = Current
+			if not Result and then same_type (other) then
+				l_gen_type_i ?= other
+				Result := l_gen_type_i.class_id = class_id and then (
+						-- 'class_id' is the same therefore we can compare 'declaration_mark'.
+						-- If 'declaration_mark' is not the same for both then we have to make sure
+						-- that both expanded and separate states are identical.
+					(l_gen_type_i.declaration_mark /= declaration_mark implies
+						(l_gen_type_i.is_expanded = is_expanded and then
+						l_gen_type_i.is_separate = is_separate)) and then
+					meta_generic.same_as (l_gen_type_i.meta_generic))
 			end
 		end
 

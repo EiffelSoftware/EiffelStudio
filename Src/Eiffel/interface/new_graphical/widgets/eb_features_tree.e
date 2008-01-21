@@ -94,10 +94,13 @@ feature -- Status report
 			-- Is the class corresponding to the item loaded in the tool when
 			-- the user left-click on it.
 
-feature {NONE} -- Acess
+feature {NONE} -- Access
 
 	features_tool: ES_FEATURES_TOOL_PANEL
 			-- Associated features tool.
+
+	last_class: CLASS_I
+			-- Last set class, the tree was built with
 
 feature {NONE} -- Status report
 
@@ -177,24 +180,22 @@ feature -- Basic operations
 			end
 			l_window := features_tool.develop_window
 			if {l_editor: !EB_SMART_EDITOR} l_window.editors_manager.current_editor then
-				l_text := "class"
+				if {l_class: !CLASS_I} last_class then
+					l_text := l_class.text
+				end
 				if l_text = Void then
 					l_text := l_editor.text
 				end
-				check
-					l_text_attached: l_text /= Void
-				end
 
-				if {l_formatter: !EB_BASIC_TEXT_FORMATTER} l_window.pos_container then
+				if l_text /= Void and then {l_formatter: !EB_BASIC_TEXT_FORMATTER} l_window.pos_container then
 						-- Ensure we are in edit mode in the editor.
 
 						-- Fetch line number
 					l_pos := a_clause.start_position
 					if l_pos <= l_text.count then
-						l_line := l_text.substring (1, l_pos).occurrences ('%N')
-					else
-						l_line := l_text.occurrences ('%N')
+						l_text := l_text.substring (1, l_pos)
 					end
+					l_line := l_text.occurrences ('%N')
 
 					if not a_focus then
 						l_editor.display_line_at_top_when_ready  (l_line, 0)
@@ -204,6 +205,8 @@ feature -- Basic operations
 						l_editor.scroll_to_start_of_line_when_ready_if_top (l_line, 0, False, True)
 					end
 				end
+			else
+				check False end
 			end
 		end
 
@@ -237,6 +240,8 @@ feature -- Tree construction
 			l_comments: EIFFEL_COMMENTS
 		do
 			if not retried then
+				last_class := a_class.lace_class
+
 				update_states
 
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
@@ -295,6 +300,8 @@ feature -- Tree construction
 				extend (create {EV_TREE_ITEM}.make_with_text (
 					Warning_messages.w_short_internal_error ("Crash in build_tree")))
 			end
+		ensure
+			last_class_set: last_class = a_class.lace_class
 		rescue
 			retried := True
 			retry
@@ -313,6 +320,8 @@ feature -- Tree construction
 			l_clauses: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
 		do
 			if not retried then
+				last_class := a_class.lace_class
+
 				update_states
 
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
@@ -361,6 +370,8 @@ feature -- Tree construction
 				wipe_out
 				extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_compile_first))
 			end
+		ensure
+			last_class_set: last_class = a_class.lace_class
 		rescue
 			retried := True
 			retry

@@ -31,9 +31,9 @@ feature -- Access
 			reordering: FEATURE_REORDERING
 		do
 			create reordering.make (a_is_target_closed, a_open_map, a_frozen_age)
-
-			if has (reordering) then
-				item (reordering).set_frozen_age (a_frozen_age)
+			search (reordering)
+			if found then
+				found_item.set_frozen_age (a_frozen_age)
 			else
 				put (reordering)
 			end

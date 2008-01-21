@@ -31,12 +31,12 @@ EIF_OBJ bstr_to_eif_obj (BSTR BstrName)
     wcstombs (str_name, BstrName, bstr_size);
     str_name [bstr_size] = '\0';
 
-    name = henter (eif_string (str_name));
+    name = eif_protect (eif_string (str_name));
     free (str_name);
   }
   else
   {
-	name = henter (eif_string (""));
+	name = eif_protect (eif_string (""));
   }
   return name;
 };

@@ -88,7 +88,7 @@ feature --Compare
 			then
 				Result := True
 			else
-				Result := equal (is_target_closed, other.is_target_closed)
+				Result := is_target_closed = other.is_target_closed
 				if Result then
 					if not (open_map = other.open_map) then
 						Result := open_map.count = other.open_map.count
@@ -98,7 +98,7 @@ feature --Compare
 						until
 							not Result or else open_map.after
 						loop
-							Result := equal (open_map.item, other.open_map.item)
+							Result := open_map.item = other.open_map.item
 							open_map.forth
 							other.open_map.forth
 						end

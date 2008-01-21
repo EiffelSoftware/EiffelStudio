@@ -377,7 +377,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string, EIF_OBJECT an_obje
     {
       if (a_string != NULL)
       {
-        result = henter (eif_string (a_string));
+        result = eif_protect (eif_string (a_string));
       }
       else
       {
@@ -428,7 +428,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpwstr (LPWSTR a_string, EIF_OBJECT an_ob
         string = (char *)malloc(size + 1);
 
         wcstombs (string, a_string, size_wide + 1);
-        local_obj = henter(eif_string(string));
+        local_obj = eif_protect(eif_string(string));
         free (string);
       }
       else

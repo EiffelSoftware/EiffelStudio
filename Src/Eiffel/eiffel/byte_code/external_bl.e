@@ -92,6 +92,9 @@ feature
 			else
 				check_dt_current (reg);
 			end;
+			if reg.is_current and then (encapsulated or not extension.is_static) then
+				context.mark_current_used
+			end
 		end;
 
 	check_dt_current (reg: REGISTRABLE) is

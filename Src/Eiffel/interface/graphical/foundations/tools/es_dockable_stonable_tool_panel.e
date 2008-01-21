@@ -138,7 +138,7 @@ feature {NONE} -- Action handlers
 		end
 
 invariant
---	tool_descriptor_is_stonable: {l_stonable: !ES_STONABLE_I} tool_descriptor
+	tool_descriptor_is_stonable: (({ES_STONABLE_I}) #? tool_descriptor) /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

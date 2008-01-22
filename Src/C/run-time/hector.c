@@ -284,7 +284,6 @@ doc:	</routine>
 */
 rt_private EIF_OBJECT hpop(void)
 {
-	RT_GET_CONTEXT
 	EIF_REFERENCE *top;
 	EIF_REFERENCE result = NULL;
 	struct stchunk *s;

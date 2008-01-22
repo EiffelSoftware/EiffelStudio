@@ -142,7 +142,7 @@
 <!-- Callable Targets -->
 
 	<target name="build_eiffelstudio_delivery" depend="init_deliv" >
-		<geant target="_log" arguments="Build EiffelStudio ..." />
+		<geant target="_log" arguments="Building EiffelStudio ..." />
 
 		<geant target="set_ec_version" 				/>
 		<geant target="set_esbuilder_version" 		/>
@@ -269,10 +269,10 @@
 
 		<!-- Resource is already built -->
 		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> already available" 	if="$tmp_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
 
 		<!-- Let's build it -->
-		<geant target="_log" arguments=" -> building runtime ..."	if="$tmp_available=false" />
+		<geant target="_log" arguments=" -> Building runtime ..."	if="$tmp_available=false" />
 		<geant target="compile_runtime"					 			if="$tmp_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 		<geant target="_log" arguments=" -> 'runtime' is ready." if="${return_code}=0"  />
@@ -295,10 +295,10 @@
 		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available"/>
 		<!-- Resource is already built -->
 		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> already available" 	if="$tmp_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
 
 		<!-- Let's build it -->
-		<geant target="_log" arguments=" -> building library ..." 	if="$tmp_available=false" />
+		<geant target="_log" arguments=" -> Building library ..." 	if="$tmp_available=false" />
 		<geant target="compile_library" 							if="$tmp_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 		<geant target="_log" arguments=" -> 'library' is ready." if="${return_code}=0"  />
@@ -320,10 +320,10 @@
 
 		<!-- Resource is already built -->
 		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> already available" 	if="$tmp_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
 
 		<!-- Let's build wizards -->
-		<geant target="_log" arguments=" -> building gobo tools ..." 	if="$tmp_available=false" />
+		<geant target="_log" arguments=" -> Building gobo tools ..." 	if="$tmp_available=false" />
 		<geant target="compile_gobo" arguments="$a_output_dir" if="$tmp_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 
@@ -343,10 +343,10 @@
 		<available resource="$a_resource" dir="$a_output_dir" variable="tmp_available"/>
 		<!-- Resource is already built -->
 		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> already available" 	if="$tmp_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
 
 		<!-- Let's build wizards -->
-		<geant target="_log" arguments=" -> building wizards ..." 	if="$tmp_available=false" />
+		<geant target="_log" arguments=" -> Building wizards ..." 	if="$tmp_available=false" />
 		<geant target="compile_wizards" arguments="$a_output_dir" if="$tmp_available=false" />
 		<unset name="tmp_available" />
 		<geant target="_log" arguments=" -> Wizards are ready." if="${return_code}=0"  />
@@ -379,18 +379,22 @@
 		<set name="tmp_available" value="false" if="-${a_resource}-=--" />
 
 		<!-- Resource is already built -->
-		<set name="return_code" value="0" 								if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> already available" 	if="$tmp_available=true" />
+		<set name="return_code" value="0" 						if="$tmp_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
 
 		<!-- Let's build 'a_product_name' -->
-		<geant target="_log" arguments=" -> building ..." 	if="$tmp_available=false" />
-		<geant target="process_with_args" 								if="$tmp_available=false"
+		<geant target="_log" arguments=" -> Building ..." 	if="$tmp_available=false" />
+		<set name="force_batch" value="$_FORCE_BATCH" />
+		<set name="force_clean" value="$_FORCE_CLEAN" />
+		<geant target="process_with_args" 					if="$tmp_available=false"
 			arguments="finalize,$_COMPILE_DIR,$a_output_dir"
 			dir="${DELIV_SCRIPT.absdir}/tools"
 			file="${a_product_name}.eant" 
 			fork="false" reuse_variables="true" /><!-- return variable '$return_code' -->
 		<geant target="_log" arguments=" -> $a_product_name' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred for '$a_product_name'." unless="${return_code}=0"  />
+		<unset name="force_clean" />
+		<unset name="force_batch" />
 
 		<unset name="tmp_available" />
 	</target>

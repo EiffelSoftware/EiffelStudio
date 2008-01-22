@@ -82,6 +82,8 @@
 			to_directory="$a_comp_dir" force="true" 
 			/>
 		<set name="return_code" value="0" />
+		<set name="force_clean" value="true" if="${_FORCE_CLEAN}=true" />
+		<set name="force_batch" value="true" if="${_FORCE_BATCH}=true" />
 		<geant dir="${COMPILE_WIZARDS.absdir}" file="ise_eiffel_compiler.eant" target="finalize" reuse_variables="true" fork="false">
 			<argument name="a_ecf" value="${EIFFEL_SRC}${path_separator}help${path_separator}wizards${path_separator}${a_wizard_name}.ecf"/>
 			<argument name="a_target" value="wizard"/>
@@ -89,6 +91,8 @@
 			<argument name="a_comp_dir" value="$a_comp_dir"/>
 			<argument name="a_output_dir" value="$a_output_dir"/>
 		</geant>
+		<unset name="force_clean" />
+		<unset name="force_batch" />
 		<echo message="Error occurred during building of wizard ${a_wizard_name}' (${return_code})" unless="${return_code}=0" />
 		<delete directory="${a_comp_dir}" />
 	</target>

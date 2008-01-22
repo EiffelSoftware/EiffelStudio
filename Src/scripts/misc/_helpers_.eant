@@ -10,59 +10,6 @@
 		<parent location="${_HELPERS_.absdir}${path_separator}_common_.eant" />
 	</inherit>
 
-	<target name="get_bin__xyz" >
-		<argument name="a_ecf" />
-		<argument name="a_target" />
-		<argument name="a_name" />
-		<argument name="a_compile_dir" />
-		<argument name="a_output_dir" />
-		<argument name="a_resource" />
-
-		<geant target="_log" arguments="Get binary [$a_name] from [$a_target] ..." />
-
-		<available resource="${a_resource}" variable="tmp_available"/>
-		<set name="return_code" value="0" if="${tmp_available}=true"/>
-		<geant target="finalize__xyz" reuse_variables="true" fork="false" if="${tmp_available}=false">
-			<argument name="a_ecf" value="$a_ecf"/>
-			<argument name="a_target" value="$a_target"/>
-			<argument name="a_name" value="$a_name"/>
-			<argument name="a_compile_dir" value="$a_compile_dir"/>
-			<argument name="a_output_dir" value="$a_output_dir"/>
-		</geant>
-		<unset name="tmp_available" />
-		<geant target="_log" arguments="-> ERROR for binary [$a_name]" unless="${return_code}=0" />
-		<set name="return_code" value="0" />
-	</target>
-
-	<target name="finalize__xyz" >
-		<argument name="a_ecf" />
-		<argument name="a_target" />
-		<argument name="a_name" />
-		<argument name="a_compile_dir" />
-		<argument name="a_output_dir" />
-
-		<set name="l_force_clean" value="$_FORCE_CLEAN" if="$_FORCE_CLEAN" />
-		<set name="l_force_clean" value="" unless="$_FORCE_CLEAN" />
-		<set name="l_force_batch" value="$_FORCE_BATCH" if="$_FORCE_BATCH" />
-		<set name="l_force_batch" value="" unless="$_FORCE_BATCH" />
-
-		<geant dir="${EIFFEL_SRC}${path_separator}scripts" 
-			file="ise_eiffel_compiler.eant"
-			target="finalize_with_options" 
-			fork="false"
-			>
-			<argument name="a_ecf" value="$a_ecf"/>
-			<argument name="a_target" value="$a_target"/>
-			<argument name="a_name" value="$a_name"/>
-			<argument name="a_comp_dir" value="$a_compile_dir"/>
-			<argument name="a_output_dir" value="$a_output_dir"/>
-			<argument name="a_clean" value="$l_force_clean"/>
-			<argument name="a_batch" value="$l_force_batch"/>
-		</geant>
-		<unset name="l_force_clean" />
-		<unset name="l_force_batch" />
-	</target>
-
 	<target name="made_file_executable" unless="${is_windows}" >
 		<argument name="a_filename" />
 		<exec executable="chmod 755 ${a_filename}" accept_errors="true" exit_code_variable="no_return_code" />

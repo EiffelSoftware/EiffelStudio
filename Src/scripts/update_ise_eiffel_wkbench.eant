@@ -258,13 +258,17 @@
 		<echo message=" - Update ecdbgd " />
 		<copy to_file="${wb_platform_dir}${path_separator}bin${path_separator}ecdbgd${exe}" file="${runtimedir}${path_separator}ipc${path_separator}daemon${path_separator}ecdbgd${exe}" force="true" if="${tmp_available}=true" />
 
-		<echo message=" - Update dotnet .dll" if="${is_windows}" />
+		<!-- Keep dotnet consumer from ISE_EIFFEL -->
+		<!--
+		<echo message=" - Update dotnet consumer .dll" if="${is_windows}" />
 		<copy to_directory="${wb_platform_dir}${path_separator}bin" 
-			  dir="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time" 
+			  dir="${ise_platform_dir}\bin" 
 			  force="true"
 			  if="${is_windows}" >
-			<fileset include="@(**/*.dll)" />
+			<fileset include="@(**/*eiffel*.dll)" />
 		</copy>
+		-->
+		<echo message=" - Update dotnet runtime .dll" if="${is_windows}" />
 		<copy to_directory="${wb_platform_dir}${path_separator}lib" 
 			  dir="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time" 
 			  force="true"
@@ -283,7 +287,7 @@
 		<echo message="Copy to W_code the consumer dll" if="${is_windows}" />
 		<copy to_directory="${wcode_dir}"  force="true"
 			  dir="${wb_platform_dir}\bin" if="${is_windows}" >
-			<fileset include="@(**/*.dll)" />
+			<fileset include="@(**/*eiffel*.dll)" />
 		</copy>
 	</target>
 

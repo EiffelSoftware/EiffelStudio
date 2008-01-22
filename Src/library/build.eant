@@ -31,6 +31,7 @@
 		<argument name="_target_name" />
 		<geant target="${_target_name}" dir="net" file="build.eant" reuse_variables="true" />
 		<geant target="${_target_name}" dir="wel" file="build.eant" reuse_variables="true" if="${is_windows}" />
+		<geant target="${_target_name}" dir="com" file="build.eant" reuse_variables="true" if="${is_windows}" />
 		<geant target="${_target_name}" dir="vision2" file="build.eant" reuse_variables="true" />
 
 		<!-- cURL is not an official library, so it might not exists in Delivery -->

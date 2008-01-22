@@ -7,20 +7,23 @@
 	
 	<target name="help">
 		<echo message="usage:"/>
-		<echo message=" geant check_setup		Check if your setup is ok for compilation " />
-		<echo message=" geant prepare			Prepare everything for development on `ec'"/>
-		<echo message=" geant compile			Compile `ec'" />
-		<echo message=" geant clean				Clean up the folders" />
-		<echo message=" geant clobber			Clean, and delete generated files"/>
+		<echo message=" geant check_setup     Check if your setup is ok for compilation " />
+		<echo message=" geant clean           Clean up the folders" />
+		<echo message=" geant clobber         Clean, and delete generated files in folders"/>
+		<echo message=" geant prepare         Prepare folders for development on `ec'"/>
+		<echo message="                       Note: folders=runtime, il runtime, C_library," /> 
+		<echo message="                                     library, framework." /> 
+		<echo message=" geant finalize        Compile 'ec' finalized" />
+		<echo message=" geant workbench       Compile 'ec' workbench" />
 		<echo message=" ---- "/>
-		<echo message=" geant build_delivery	Build a complete delivery " />
+		<echo message=" geant build_delivery  Build a complete delivery " />
 		<echo message="" />
 		<echo message="defines:" />
 		<!--
 		<echo message="  -Dclean_after_compile    Clean after compilation (to save disk space)"/>
 		<echo message="  -Dgobo_using_gec         Build GOBO tools using GEC"/>
 		-->
-		<echo message="  -Dcompile_dir=PATH       Build intermediate binaries in PATH"/>
+		<echo message="  -Dcompile_dir=PATH     Build intermediate binaries in PATH"/>
 	</target>
 
 <!-- Targets -->

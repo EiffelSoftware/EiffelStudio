@@ -72,6 +72,9 @@
 		<argument name="A_out_dir" />
 		<available resource="${A_out_dir}${path_separator}${A_name}${exe}" variable="tmp_available" />
 		<set name="return_code" value="0" 							if="${tmp_available}=true" />
+
+		<set name="force_clean" value="true" if="${_FORCE_CLEAN}=true" />
+		<set name="force_batch" value="true" if="${_FORCE_BATCH}=true" />
 		<geant dir="${GOBO_TOOLS.absdir}" 	if="${tmp_available}=false"
 			file="ise_eiffel_compiler.eant" target="finalize" 
 			reuse_variables="true" fork="false" >
@@ -81,6 +84,9 @@
 			<argument name="a_comp_dir" value="${A_comp_dir}" />
 			<argument name="a_output_dir" value="${A_out_dir}" />
 		</geant>
+		<unset name="force_clean" />
+		<unset name="force_batch" />
+
 		<echo message="Error occurred during building of gobo tool '${A_name}' (${return_code})" unless="${return_code}=0" />
 	</target>
 	

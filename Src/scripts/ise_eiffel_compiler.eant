@@ -15,16 +15,16 @@
 	</target>
 
 	<target name="check_system" once="true">
-		<echo message="var [ISE_EIFFEL] is missing !" unless="$ISE_EIFFEL" />
+		<echo message="Var [ISE_EIFFEL] is missing !" unless="$ISE_EIFFEL" />
 		<set name="l_env_ok" value="false" unless="${ISE_EIFFEL}" />
-		<echo message="var [ISE_PLATFORM] is missing !" unless="$ISE_PLATFORM" />
+		<echo message="Var [ISE_PLATFORM] is missing !" unless="$ISE_PLATFORM" />
 		<set name="l_env_ok" value="false" unless="${ISE_PLATFORM}" />
 		<geant target="check_system_windows" reuse_variables="true" />
 		<exit code="1" if="${l_env_ok}=true" />
 		<unset name="l_env_ok" />
 	</target>
 	<target name="check_system_windows" if="$is_windows" once="true">
-		<echo message="var [ISE_C_COMPILER] is missing !" unless="$ISE_C_COMPILER" /> 
+		<echo message="Var [ISE_C_COMPILER] is missing !" unless="$ISE_C_COMPILER" /> 
 		<set name="l_env_ok" value="false" unless="${ISE_C_COMPILER}" />
 	</target>
 	
@@ -168,9 +168,9 @@
 		<set name="return_code" value="1" if="$tmp_available=false" />
 		<unset name="tmp_available" />
 
-		<echo message=" -> compilation succeeded!" 			if="${return_code}=0" />
+		<echo message=" -> Compilation succeeded!" 			if="${return_code}=0" />
 		<set name="tmp_output_dir" value="$a_output_dir" 	if="${return_code}=0" />
-		<echo message=" -> compilation failed!" 			unless="${return_code}=0" />
+		<echo message=" -> Compilation failed!" 			unless="${return_code}=0" />
 		<unset name="tmp_output_dir"						unless="${return_code}=0" />
 
 		<geant target="copy_to_output_dir" 					unless="-${tmp_output_dir}-=--" >

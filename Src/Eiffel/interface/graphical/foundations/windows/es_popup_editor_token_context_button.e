@@ -253,7 +253,7 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		do
 			if not is_popup_widget_shown then
-				on_cancel
+				on_cancel_popup
 			end
 		end
 

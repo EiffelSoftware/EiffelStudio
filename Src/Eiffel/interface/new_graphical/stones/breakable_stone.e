@@ -257,7 +257,7 @@ feature -- operation on breakpoint
  			Result.set_is_modal (False)
  			last_dialogs.extend (Result)
  			breakpoints_manager.update_breakpoints_tags_provider
- 			Result.close_actions.extend_kamikaze (agent last_dialogs.prune_all (Result))
+ 			Result.register_kamikaze_action (Result.hide_actions, agent last_dialogs.prune_all (Result))
  		ensure
  			Result_not_void: Result /= Void
 		end

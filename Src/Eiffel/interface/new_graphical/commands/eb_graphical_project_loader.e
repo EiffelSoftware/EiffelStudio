@@ -602,7 +602,7 @@ feature {NONE} -- Actions
 			l_show := delete_status_prompt = Void
 			if l_show then
 				delete_status_prompt := create_delete_status_prompt
-				delete_status_prompt.to_dialog.set_minimum_width (600)
+				delete_status_prompt.dialog.set_minimum_width (600)
 			end
 			delete_status_prompt.set_text ((create {ISE_DIRECTORY_UTILITIES}).path_ellipsis (deleted_files.first, path_ellipsis_width))
 			if l_show then

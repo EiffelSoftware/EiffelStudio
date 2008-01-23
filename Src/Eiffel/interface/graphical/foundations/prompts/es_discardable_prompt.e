@@ -17,7 +17,7 @@ inherit
 			make_standard as make_standard_prompt,
 			build_prompt_interface as build_discardable_check_interface
 		export
-			{NONE} show_actions, close_actions
+			{NONE} show_actions, hide_actions
 		redefine
 			build_discardable_check_interface,
 			on_close_requested,

@@ -3,6 +3,8 @@ indexing
 		Exception for feature applied to void reference.
 		This type replace .NET NullReferenceException, and works as an adapter.
 		]"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +22,7 @@ inherit
 			internal_meaning
 		end
 
-	DOTNET_EXCEPTION_WAPPER
+	DOTNET_EXCEPTION_WRAPPER
 		undefine
 			default_create
 		end
@@ -41,6 +43,18 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Feature call on void target."
+	frozen internal_meaning: STRING is "Feature call on void target.";
+
+indexing
+	library:   "EiffelBase: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

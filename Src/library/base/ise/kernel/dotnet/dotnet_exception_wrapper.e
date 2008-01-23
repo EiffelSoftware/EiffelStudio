@@ -1,11 +1,12 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Ancestor of all exception classes to adapt .NET exceptions to Eiffel ones."
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	DOTNET_EXCEPTION_WAPPER
+	DOTNET_EXCEPTION_WRAPPER
 
 feature {NONE} -- Initialization
 
@@ -91,5 +92,17 @@ feature -- Access
 
 invariant
 	dotnet_exception_not_void: dotnet_exception /= Void
+
+indexing
+	library:   "EiffelBase: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

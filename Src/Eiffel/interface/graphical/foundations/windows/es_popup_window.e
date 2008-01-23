@@ -285,7 +285,6 @@ feature {NONE} -- Query
 		local
 			l_widget: EV_WIDGET
 			l_window: like popup_window
-			l_pos: TUPLE [x, y: INTEGER]
 		do
 			l_window := popup_window
 			if a_constrain_to_widget then
@@ -306,33 +305,32 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	show (a_x: INTEGER; a_y: INTEGER)
+	show (a_x: INTEGER; a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 			--
 			-- `a_x': Window screen X position.
 			-- `a_y': Window screen Y position.
+			-- `a_mouse_x': Mouse screen X position. Use -1 to ignore position
+			-- `a_mouse_y': Mouse screen Y position, Use -1 to ingore position
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			a_mouse_x_big_enough: a_mouse_x >= -1
+			a_mouse_y_big_enough: a_mouse_y >= -1
 		local
 			l_screen: SD_SCREEN
 		do
-			if not is_allowed_off_screen then
-				requested_x_position := a_x
-				requested_y_position := a_y
-			end
+			requested_x_position := a_x
+			requested_y_position := a_y
 
 			is_committed_on_closed := False
 
-			if is_allowed_off_screen then
-				popup_window.set_position (a_x, a_y)
-			else
 					-- Show initially off-screen to retrieve width and height.
-				create l_screen
-				popup_window.set_position (l_screen.width + 1, l_screen.height + 1)
-				register_kamikaze_action (show_actions, agent ensure_popup_window_visible_on_screen)
-			end
+			create l_screen
+			popup_window.set_position (l_screen.width + 1, l_screen.height + 1)
+			register_kamikaze_action (show_actions, agent ensure_popup_window_visible_on_screen)
+			register_kamikaze_action (show_actions, agent on_application_pointer_motion (popup_window, a_mouse_x, a_mouse_y))
 
 			on_before_show
 			popup_window.show
@@ -341,19 +339,21 @@ feature -- Basic operations
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
 
-	show_relative_to_widget (a_widget: !EV_WIDGET; a_x: INTEGER a_y: INTEGER) is
+	show_relative_to_widget (a_widget: !EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 			--
 			-- `a_widget': A widget to show the window relative to.
 			-- `a_x': Relative X position to the specified widget.
 			-- `a_y': Relative Y position to the specified widget.
+			-- `a_mouse_x': Relative mouse X position to the specified widget.
+			-- `a_mouse_y': Relative mouse Y position to the specified widget.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
 			relative_widget := a_widget
-			show (a_widget.screen_x + a_x, a_widget.screen_y + a_y)
+			show (a_widget.screen_x + a_x, a_widget.screen_y + a_y, a_widget.screen_x + a_mouse_x, a_widget.screen_y + a_mouse_y)
 		ensure
 			relative_widget_set: relative_widget = a_widget
 			popup_window_is_displayed: popup_window.is_displayed
@@ -366,16 +366,18 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if internal_popup_window /= Void and then not internal_popup_window.is_destroyed then
-				popup_window.hide
-			end
-			if is_recycled_on_closing then
-				recycle
+			if not is_executing_unfocused_action then
+				if internal_popup_window /= Void and then not internal_popup_window.is_destroyed then
+					popup_window.hide
+				end
+				if is_recycled_on_closing then
+					recycle
+				end
 			end
 		ensure
-			relative_widget_detached: relative_widget = Void
-			not_popup_window_is_displayed: not popup_window.is_displayed
-			not_is_interface_usable: is_recycled_on_closing implies not is_interface_usable
+			relative_widget_detached: not is_shown implies relative_widget = Void
+			not_popup_window_is_displayed: not is_shown implies not popup_window.is_displayed
+			not_is_interface_usable: not is_shown implies (is_recycled_on_closing implies not is_interface_usable)
 		end
 
 	hide_commit

@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 			create button_actions.make_default
 
 			is_modal := True
+			is_confirmation_key_active := True
 			dialog_result := default_button
 
 			Precursor {ES_WINDOW_FOUNDATIONS}
@@ -418,15 +419,15 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
+	is_close_vetoed: BOOLEAN
+			-- Indicates if the dialog's shutdown has been vetoed
+			-- Note: See `veto_close' for more information
+
 	is_recycled_on_closing: BOOLEAN
 			-- Indicates if the dialog should be recycled on closing.
 		once
 			Result := True
 		end
-
-	is_close_vetoed: BOOLEAN
-			-- Indicates if the dialog's shutdown has been vetoed
-			-- Note: See `veto_close' for more information
 
 	is_size_and_position_remembered: BOOLEAN
 			-- Indicates if the size and position information is remembered for the dialog
@@ -434,14 +435,59 @@ feature {NONE} -- Status report
 			Result := session_manager.is_service_available
 		end
 
+	is_confirmation_key_active: BOOLEAN
+			-- Indicates if the dialog can be closed using the ENTER key.
+			-- Note: Register non-enter closing widget using `suppress_confirmation_key_close'
+
 feature -- Status setting
 
 	set_is_modal (a_modal: BOOLEAN)
 			-- Sets dialog's modal state to `a_modal'
+		require
+			is_interface_usable: is_interface_usable
+			not_is_shown: not is_shown
 		do
 			is_modal := a_modal
 		ensure
 			is_modal_set: is_modal = a_modal
+		end
+
+feature {NONE} -- Status setting
+
+	suppress_confirmation_key_close (a_widget: EV_WIDGET)
+			-- Suppresses a widget's ability to close a dialog using the default confirmation key.
+			--
+			-- `a_widget': A widget that when has focus, should supress the dialog from closing
+			--             when the confirmation key is used.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+		local
+			l_recycler: EB_RECYCLABLE
+		do
+			l_recycler ?= a_widget
+			if l_recycler = Void then
+				l_recycler := Current
+			end
+			check l_recycler_attached: l_recycler /= Void end
+
+			l_recycler.register_action (a_widget.focus_in_actions, agent
+					-- Called when the widget is focused to prevent the dialog from closing when the confirmation key is pressed.
+				do
+					if is_interface_usable and is_shown then
+						is_confirmation_key_active := False
+						dialog.remove_default_push_button
+					end
+				end)
+
+			l_recycler.register_action (a_widget.focus_out_actions, agent
+					-- Called when the widget unfocused to resume the dialog closing when the confirmation key is pressed.
+				do
+					if is_interface_usable and is_shown then
+						is_confirmation_key_active := True
+						dialog.set_default_push_button (dialog_window_buttons.item (default_button))
+					end
+				end)
 		end
 
 feature -- Query
@@ -546,6 +592,7 @@ feature -- Basic operations
 			a_window_not_void: a_window /= Void
 			a_window_not_current: a_window /= dialog
 		do
+			is_confirmation_key_active := True
 			on_before_show
 			if is_modal then
 				dialog.show_modal_to_window (a_window)
@@ -628,6 +675,15 @@ feature {NONE} -- Basic operation
 		do
 		end
 
+	veto_close
+			-- Ensures dialog is not closed as a result of a button action.
+			-- Note: This routine should be called in a registered button action.
+		do
+			is_close_vetoed := True
+		ensure
+			is_close_vetoed: is_close_vetoed
+		end
+
 	adjust_dialog_button_widths
 			-- Automatically adjusts dialog window button widths to fit the largest button text
 		require
@@ -675,15 +731,6 @@ feature {NONE} -- Basic operation
 			if not l_allow_resize then
 				dialog.disable_user_resize
 			end
-		end
-
-	veto_close
-			-- Ensures dialog is not closed as a result of a button action.
-			-- Note: This routine should be called in a registered button action.
-		do
-			is_close_vetoed := True
-		ensure
-			is_close_vetoed: is_close_vetoed
 		end
 
 feature -- Actions
@@ -812,13 +859,9 @@ feature {NONE} -- Action handlers
 					end
 				end
 
-				if not Result and then a_ctrl and not a_alt and not a_shift then
-					inspect a_key.code
-					when {EV_KEY_CONSTANTS}.key_enter then
-						on_confirm_dialog
-						Result := True
-					else
-					end
+				if not Result and not a_alt and not a_shift and then (is_confirmation_key_active or a_ctrl) and a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+					on_confirm_dialog
+					Result := True
 				end
 			end
 

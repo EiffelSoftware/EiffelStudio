@@ -64,6 +64,10 @@ feature {NONE} -- Initialization
 
 			dialog_result := default_button
 			dialog.set_icon_pixmap (icon)
+
+				-- Remove key actions to prevent the ENTER and ESC from being processed by EV_DIALOG.
+			dialog.key_press_actions.wipe_out
+
 			register_action (dialog.key_press_actions, agent on_key_pressed)
 			register_action (dialog.key_release_actions, agent on_key_release)
 			register_action (dialog.show_actions, agent show_actions.call ([]))
@@ -894,29 +898,36 @@ feature {NONE} -- Action handlers
 	frozen on_key_pressed (a_key: EV_KEY)
 			-- Called when the dialog recieves a key press
 			--
-			-- `a_key': The key pressed
-		require
-			a_key_attached: a_key /= Void
+			-- `a_key': The key pressed.
 		local
 			l_application: like ev_application
 			l_handled: BOOLEAN
+			l_widget: EV_WIDGET
 		do
-			l_application := ev_application
-			l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, False)
+			if a_key /= Void then
+				l_application := ev_application
+				l_widget := l_application.focused_widget
+				if l_widget /= Void and then l_widget.default_key_processing_handler /= Void then
+					l_handled := l_widget.default_key_processing_handler.item ([a_key])
+				end
+				if not l_handled then
+					l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, False)
+				end
+			end
 		end
 
 	frozen on_key_release (a_key: EV_KEY)
 			-- Called when the dialog recieves a key release
 			--
-			-- `a_key': The key pressed
-		require
-			a_key_attached: a_key /= Void
+			-- `a_key': The key released.
 		local
 			l_application: like ev_application
 			l_handled: BOOLEAN
 		do
-			l_application := ev_application
-			l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, True)
+			if a_key /= Void then
+				l_application := ev_application
+				l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, True)
+			end
 		end
 
 	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN

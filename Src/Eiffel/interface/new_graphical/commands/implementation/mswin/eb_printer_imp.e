@@ -69,6 +69,7 @@ feature {EB_PRINTER} -- Basic operations
 			create pdc.make_by_pointer (interface.context.printer_context)
 			txt := interface.text
 			create l_loader.make (txt)
+			rich.set_text_limit (txt.count)
 			rich.rtf_stream_in (l_loader)
 			if interface.job_name /= Void then
 				rich.print_all (pdc, interface.job_name)

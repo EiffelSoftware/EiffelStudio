@@ -24,7 +24,7 @@ create
 	make
 
 convert
-	to_dialog: {EV_DIALOG}
+	dialog: {EV_DIALOG}
 
 feature {NONE} -- Initialization
 

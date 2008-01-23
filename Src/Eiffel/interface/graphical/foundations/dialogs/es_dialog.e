@@ -14,71 +14,35 @@ deferred class
 	ES_DIALOG
 
 inherit
-	EB_RECYCLABLE
+	ES_WINDOW_FOUNDATIONS
+		rename
+			foundation_window as dialog
+		redefine
+			internal_recycle,
+			on_before_initialize,
+			on_after_initialized,
+			on_handle_key
+		end
+
 
 inherit {NONE}
+	ES_SHARED_DIALOG_BUTTONS
+
+
 	ES_HELP_REQUEST_BINDER
 		export
 			{NONE} all
 		end
-
-	ES_SHARED_DIALOG_BUTTONS
 
 	EV_BUILDER
 		export
 			{NONE} all
 		end
 
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
-
-	ES_SHARED_FONTS_AND_COLORS
-		export
-			{NONE} all
-		end
-
 convert
-	to_dialog: {EV_DIALOG}
+	dialog: {EV_DIALOG}
 
 feature {NONE} -- Initialization
-
-	frozen make
-			-- Initialize dialog
-		local
-			l_init: BOOLEAN
-		do
-			l_init := is_initializing
-			is_initializing := True
-
-			is_modal := True
-
-				-- Create action lists
-			create show_actions
-			create close_actions
-			create button_actions.make_default
-
-			on_before_initialize
-			build_interface
-
-			dialog_result := default_button
-			dialog.set_icon_pixmap (icon)
-
-				-- Remove key actions to prevent the ENTER and ESC from being processed by EV_DIALOG.
-			dialog.key_press_actions.wipe_out
-
-			register_action (dialog.key_press_actions, agent on_key_pressed)
-			register_action (dialog.key_release_actions, agent on_key_release)
-			register_action (dialog.show_actions, agent show_actions.call ([]))
-
-			is_initialized := True
-			is_initializing := l_init
-
-			on_after_initialized
-		ensure
-			is_initialized: is_initialized
-		end
 
 	make_with_window (a_window: like development_window)
 			-- Initialize dialog using a specific development window
@@ -96,16 +60,31 @@ feature {NONE} -- Initialization
             -- Use to perform additional creation initializations, before the UI has been created.
 			-- Note: No user interface initialization should be done here! Use `build_dialog_interface' instead
 		do
+				-- Create action lists
+			create show_actions
+			create hide_actions
+			create button_actions.make_default
+
+			is_modal := True
+			dialog_result := default_button
+
+			Precursor {ES_WINDOW_FOUNDATIONS}
         end
 
     on_after_initialized
             -- Use to perform additional creation initializations, after the UI has been created.
-        require
-        	is_initialized: is_initialized
         local
         	l_sp_info: TUPLE [x, y, width, height: INTEGER]
         	l_screen: SD_SCREEN
         do
+			dialog.set_icon_pixmap (icon)
+
+   				-- Remove key actions to prevent the ENTER and ESC from being processed by EV_DIALOG.
+			dialog.key_press_actions.wipe_out
+			register_action (dialog.show_actions, agent show_actions.call ([]))
+
+			Precursor {ES_WINDOW_FOUNDATIONS}
+
        		bind_help_shortcut (dialog)
 
 			if is_size_and_position_remembered then
@@ -124,7 +103,7 @@ feature {NONE} -- Initialization
 	       			end
 
 	       				-- Hook up close action to store session size/position data
-	       			register_action (close_actions, (agent (a_ia_session: SESSION_I)
+	       			register_action (hide_actions, (agent (a_ia_session: SESSION_I)
 	       				do
 	       					if is_size_and_position_remembered then
 	       							-- Only persist data if a cancel button wasn't selected
@@ -142,9 +121,6 @@ feature {NONE} -- User interface initialization
 
 	frozen build_interface
 			-- Builds the dialog's user interface.
-		require
-			not_is_initialized: not is_initialized
-			is_initializing: is_initializing
 		local
 			l_main_container: EV_VERTICAL_BOX
 			l_container: EV_VERTICAL_BOX
@@ -168,10 +144,6 @@ feature {NONE} -- User interface initialization
 
 			dialog.set_icon_pixmap (icon.to_pixmap)
 			dialog.set_title (title)
-		ensure
-			not_is_initialized: not is_initialized
-			is_initializing: is_initializing
-			dialog_attached: dialog /= Void
 		end
 
 	build_dialog_interface (a_container: EV_VERTICAL_BOX)
@@ -210,10 +182,14 @@ feature {NONE} -- Clean up
 
 				button_actions.wipe_out
 
-				dialog.destroy
-				is_initialized := False
+				if internal_dialog /= Void then
+					internal_dialog.hide
+					internal_dialog.destroy
+				end
 				is_recycled := l_recycled
 			end
+
+			Precursor {ES_WINDOW_FOUNDATIONS}
 		end
 
 feature -- Access
@@ -232,6 +208,16 @@ feature -- Access
 		deferred
 		ensure
 			result_attached: Result /= Void
+		end
+
+	dialog: EV_DIALOG
+			-- Actual dialog
+		do
+			Result := internal_dialog
+			if Result = Void then
+				Result := create_dialog
+				internal_dialog := Result
+			end
 		end
 
 	buttons: DS_SET [INTEGER]
@@ -273,22 +259,6 @@ feature -- Access
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 
 feature {NONE} -- Access
-
-	dialog: EV_DIALOG
-			-- Actual dialog
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result := internal_dialog
-			if Result = Void then
-				Result := create_dialog
-				internal_dialog := Result
-			end
-		ensure
-			result_attached: Result /= Void
-			not_result_is_destroyed: not Result.is_destroyed
-			result_consistent: Result = dialog
-		end
 
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Access to top-level parent window
@@ -383,55 +353,6 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-feature {NONE} -- Helpers
-
-	frozen interface_names: INTERFACE_NAMES
-			-- Access to EiffelStudio's interface names
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen stock_pixmaps: ES_PIXMAPS_16X16
-			-- Shared access to stock 16x16 EiffelStudio pixmaps
-		once
-			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen preferences: EB_PREFERENCES
-		once
-			Result := (create {EB_SHARED_PREFERENCES}).preferences
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
-			-- Factory for generating pixmaps for class data
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen helpers: EVS_HELPERS
-			-- Helpers to extend the operations of EiffelVision2
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
-			-- Access to the session manager service {SESSION_MANAGER_S} consumer
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature -- Element change
 
 	set_button_text (a_id: INTEGER; a_text: STRING_32)
@@ -492,29 +413,13 @@ feature -- Element change
 
 feature -- Status report
 
-	is_shown: BOOLEAN
-			-- Indicates if dialog is current visible
-		do
-			if is_initialized and then not is_recycled then
-				Result := dialog.is_show_requested
-			end
-		end
-
 	is_modal: BOOLEAN assign set_is_modal
 			-- Indicates if dialog is a modal dialog
 
 feature {NONE} -- Status report
 
-	is_initialized: BOOLEAN
-			-- Indicates if the user interface has been initialized
-
-	is_initializing: BOOLEAN
-			-- Indicates if the user interface is currently being initialized
-
 	is_recycled_on_closing: BOOLEAN
 			-- Indicates if the dialog should be recycled on closing.
-		require
-			not_is_recycled: not is_recycled
 		once
 			Result := True
 		end
@@ -621,6 +526,16 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
+feature {NONE} -- Helpers
+
+	frozen pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+			-- Factory for generating pixmaps for class data
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Basic operations
 
 	show (a_window: EV_WINDOW) is
@@ -629,7 +544,7 @@ feature -- Basic operations
 		require
 			not_is_recycled: not is_recycled
 			a_window_not_void: a_window /= Void
-			a_window_not_current: a_window /= to_dialog
+			a_window_not_current: a_window /= dialog
 		do
 			on_before_show
 			if is_modal then
@@ -762,33 +677,6 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-    execute_with_busy_cursor (a_action: PROCEDURE [ANY, TUPLE])
-            -- Executes a action with a wait cursor
-            --
-            -- `a_action': An action to execute with a wait cursor displayed until the action has been completed
-        require
-            not_is_recycled: not is_recycled
-            is_initialized: is_initialized
-            a_action_attached: a_action /= Void
-        local
-            l_style: EV_POINTER_STYLE
-        do
-            if is_initialized then
-                l_style := dialog.pointer_style
-                dialog.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
-            end
-            a_action.call ([])
-            if l_style /= Void then
-                check is_initialized: is_initialized end
-                dialog.set_pointer_style (l_style)
-            end
-        rescue
-            if l_style /= Void then
-                check is_initialized: is_initialized end
-                dialog.set_pointer_style (l_style)
-            end
-        end
-
 	veto_close
 			-- Ensures dialog is not closed as a result of a button action.
 			-- Note: This routine should be called in a registered button action.
@@ -800,11 +688,11 @@ feature {NONE} -- Basic operation
 
 feature -- Actions
 
-	show_actions: EV_LITE_ACTION_SEQUENCE [TUPLE]
-			-- Actions performed when the dialog is shown
+	frozen show_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+			-- Actions performed when the window is shown
 
-	close_actions: EV_LITE_ACTION_SEQUENCE [TUPLE]
-			-- Actions performed when the dialog is closed
+	frozen hide_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+			-- Actions performed when the window is shown
 
 feature {NONE} -- Action handlers
 
@@ -828,7 +716,7 @@ feature {NONE} -- Action handlers
 			not_is_close_vetoed: not is_close_vetoed
 		do
 			dialog.hide
-			close_actions.call ([])
+			hide_actions.call ([])
 		ensure
 			not_is_close_vetoed: not is_close_vetoed
 		end
@@ -850,8 +738,8 @@ feature {NONE} -- Action handlers
 				l_action.call ([])
 			end
 			if not is_close_vetoed then
-				on_close_requested (a_id)
 				l_action := button_action (a_id)
+				on_close_requested (a_id)
 				if l_action /= Void then
 					l_action.call ([])
 				end
@@ -895,41 +783,6 @@ feature {NONE} -- Action handlers
 			dialog.set_size (l_width, l_height)
 		end
 
-	frozen on_key_pressed (a_key: EV_KEY)
-			-- Called when the dialog recieves a key press
-			--
-			-- `a_key': The key pressed.
-		local
-			l_application: like ev_application
-			l_handled: BOOLEAN
-			l_widget: EV_WIDGET
-		do
-			if a_key /= Void then
-				l_application := ev_application
-				l_widget := l_application.focused_widget
-				if l_widget /= Void and then l_widget.default_key_processing_handler /= Void then
-					l_handled := l_widget.default_key_processing_handler.item ([a_key])
-				end
-				if not l_handled then
-					l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, False)
-				end
-			end
-		end
-
-	frozen on_key_release (a_key: EV_KEY)
-			-- Called when the dialog recieves a key release
-			--
-			-- `a_key': The key released.
-		local
-			l_application: like ev_application
-			l_handled: BOOLEAN
-		do
-			if a_key /= Void then
-				l_application := ev_application
-				l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, True)
-			end
-		end
-
 	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
 			-- Called when the dialog recieve a key event
 			--
@@ -939,8 +792,6 @@ feature {NONE} -- Action handlers
 			-- `a_shift': True if the SHIFT key was pressed; False otherwise
 			-- `a_released': True if the key event pertains to the release of a key, False to indicate a press.
 			-- `Result': True to indicate the key was handled
-		require
-			a_key_attached: a_key /= Void
 		do
 			if a_released then
 				if not a_alt and not a_ctrl and not a_shift then
@@ -970,19 +821,10 @@ feature {NONE} -- Action handlers
 					end
 				end
 			end
-		end
 
-feature -- Conversion
-
-	to_dialog: EV_DIALOG
-			-- Converts Current to an actual EiffelVision2 dialog
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result := dialog
-		ensure
-			result_attached: Result /= Void
-			not_result_is_destroyed: not Result.is_destroyed
+			if not Result and then is_interface_usable then
+				Result := Precursor {ES_WINDOW_FOUNDATIONS} (a_key, a_alt, a_ctrl, a_shift, a_released)
+			end
 		end
 
 feature {NONE} -- Factory
@@ -1149,8 +991,6 @@ invariant
 	default_button_is_valid_button_id: buttons.has (default_button)
 	default_confirm_button_is_valid_button_id: buttons.has (default_confirm_button)
 	default_cancel_button_is_valid_button_id: buttons.has (default_cancel_button)
-	show_actions_attached: show_actions /= Void
-	close_actions_attached: close_actions /= Void
 	button_actions_attached: button_actions /= Void
 
 ;indexing

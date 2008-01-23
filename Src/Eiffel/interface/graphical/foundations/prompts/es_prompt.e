@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			set_text (a_text)
 
 				-- Prompts cannot be resized (can't do it here, there's a bug in EiffelVision2)
-			--dialog.disable_user_resize
+			dialog.disable_user_resize
 
 			is_initializing := l_init
 		ensure
@@ -710,11 +710,10 @@ feature {NONE} -- Action handlers
 				else
 					activate_button_using_key (a_key)
 					Result := not is_shown
-					Result := False
 				end
 			end
 
-			if not Result then
+			if not Result and then is_interface_usable then
 				Result := Precursor {ES_DIALOG} (a_key, a_alt, a_ctrl, a_shift, a_released)
 			end
 		end

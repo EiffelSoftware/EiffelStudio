@@ -28,7 +28,8 @@ inherit
 			is_shown,
 			on_after_initialized,
 			on_shown,
-			on_hidden
+			on_hidden,
+			on_handle_key
 		end
 
 convert
@@ -49,10 +50,6 @@ feature {NONE} -- Initialization
 
 				-- Do actual initialization
 			make_window_foundations
-
-				-- Register key actions
-			register_action (popup_window.key_press_actions, agent on_key_pressed)
-			register_action (popup_window.key_release_actions, agent on_key_release)
 
 				-- Register visiblity actions
 			register_action (popup_window.resize_actions, agent
@@ -136,7 +133,7 @@ feature {NONE} -- User interface initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the window has became useless.
 		do
 			if is_initialized then
@@ -146,8 +143,6 @@ feature {NONE} -- Clean up
 				end
 			end
 			Precursor {ES_WINDOW_FOUNDATIONS}
-		ensure then
-			not_is_initialized: not is_initialized
 		end
 
 feature -- Access
@@ -380,15 +375,15 @@ feature -- Basic operations
 			not_is_interface_usable: not is_shown implies (is_recycled_on_closing implies not is_interface_usable)
 		end
 
-	hide_commit
-			-- Hides popup window by performing a commit operation.
+	hide_confirm
+			-- Hides popup window by performing a confirm operation.
 			-- Note: Descendant may call this from a button or other UI to perform any commit-to-change actions.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
 			is_committed_on_closed := True
-			on_commit
+			on_confirm_popup
 		ensure
 			is_committed_on_closed: is_committed_on_closed
 			relative_widget_detached: not is_shown implies relative_widget = Void
@@ -403,7 +398,7 @@ feature -- Basic operations
 			is_initialized: is_initialized
 		do
 			is_committed_on_closed := False
-			on_cancel
+			on_cancel_popup
 		ensure
 			not_is_committed_on_closed: not is_committed_on_closed
 			relative_widget_detached: not is_shown implies relative_widget = Void
@@ -499,10 +494,10 @@ feature {NONE} -- User interface elements
 
 feature -- Actions
 
-	show_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	frozen show_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the window is shown
 
-	hide_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
+	frozen hide_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- Actions performed when the window is shown
 
 feature {NONE} -- Action handlers
@@ -538,8 +533,8 @@ feature {NONE} -- Action handlers
 			relative_widget_detached: relative_widget = Void
 		end
 
-	on_commit
-			-- Called when an action is perform that classifies as a commit action. Typically when the user presses CTRL+ENTER
+	on_confirm_popup
+			-- Called when an action is perform that classifies as a confirm action. Typically when the user presses CTRL+ENTER
 			-- this action will be called.
 			-- Note: Descendant may call `hide_commit' from a button or other UI to perform any commit-to-change actions.
 		require
@@ -550,7 +545,7 @@ feature {NONE} -- Action handlers
 			hide
 		end
 
-	on_cancel
+	on_cancel_popup
 			-- Called when an action is perform that classifies as a cancel action. Typically when the user presses ESC
 			-- this action will be called.
 			-- Note: Descendant may call `hide_cancel' from a button or other UI to perform any cancel changes actions.
@@ -586,7 +581,7 @@ feature {NONE} -- Action handlers
 			update_border_color
 
 			if is_pointer_sensitive and then not is_executing_unfocused_action then
-				on_cancel
+				on_cancel_popup
 			end
 		ensure
 			not_has_mouse_pointer: not has_mouse_pointer
@@ -603,34 +598,6 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	frozen on_key_pressed (a_key: EV_KEY)
-			-- Called when the dialog recieves a key press
-			--
-			-- `a_key': The key pressed
-		require
-			a_key_attached: a_key /= Void
-		local
-			l_application: like ev_application
-			l_handled: BOOLEAN
-		do
-			l_application := ev_application
-			l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, False)
-		end
-
-	frozen on_key_release (a_key: EV_KEY)
-			-- Called when the dialog recieves a key release
-			--
-			-- `a_key': The key pressed
-		require
-			a_key_attached: a_key /= Void
-		local
-			l_application: like ev_application
-			l_handled: BOOLEAN
-		do
-			l_application := ev_application
-			l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, True)
-		end
-
 	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
 			-- Called when the popup window recieve a key event
 			--
@@ -640,10 +607,6 @@ feature {NONE} -- Action handlers
 			-- `a_shift': True if the SHIFT key was pressed; False otherwise
 			-- `a_released': True if the key event pertains to the release of a key, False to indicate a press.
 			-- `Result': True to indicate the key was handled
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_key_attached: a_key /= Void
 		do
 			if a_released then
 				if not a_alt and not a_ctrl and not a_shift then
@@ -658,11 +621,15 @@ feature {NONE} -- Action handlers
 				if not Result and then a_ctrl and not a_alt and not a_shift then
 					inspect a_key.code
 					when {EV_KEY_CONSTANTS}.key_enter then
-						hide_commit
+						hide_confirm
 						Result := True
 					else
 					end
 				end
+			end
+
+			if not Result then
+				Result := Precursor {ES_WINDOW_FOUNDATIONS} (a_key, a_alt, a_ctrl, a_shift, a_released)
 			end
 		end
 

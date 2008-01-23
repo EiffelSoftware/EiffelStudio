@@ -86,7 +86,7 @@ feature {NONE} -- Query
 		do
 			if {l_kw_token: !EDITOR_TOKEN_KEYWORD} a_token and then {l_image: !STRING_8} l_kw_token.image then
 				if contract_keyword_token_images.has (l_image) then
-					--Result := create_contract_widget (l_kw_token)
+					Result := create_contract_widget (l_kw_token)
 				end
 			end
 		ensure
@@ -200,7 +200,7 @@ feature -- Basic operations
 
 					-- Show window
 				if {l_editor_widget: !EV_WIDGET} editor.editor_drawing_area then
-					popup_window.show_relative_to_widget (l_editor_widget, l_x_offset, l_y_offset)
+					popup_window.show_relative_to_widget (l_editor_widget, l_x_offset, l_y_offset, a_x, a_y)
 						-- The precusor will not be called because the handler is to be considered "active".
 					last_token_handled := a_token
 					is_active := True
@@ -299,15 +299,37 @@ feature {NONE} -- Action handlers
 			last_token_handled_unchanged: last_token_handled = old last_token_handled
 		end
 
---feature {NONE} -- Factory
+feature {NONE} -- Factory
 
---	create_contract_widget (a_token: !EDITOR_TOKEN_KEYWORD) : !EV_WIDGET
---			-- Create a new contract editor widget from a token.
---			--
---			-- `a_token': A token to base the contract widget on.
---			-- `Result': The widget structure created from the specified token.
---		do
---		end
+	create_contract_widget (a_token: !EDITOR_TOKEN_KEYWORD) : !EV_WIDGET
+			-- Create a new contract editor widget from a token.
+			--
+			-- `a_token': A token to base the contract widget on.
+			-- `Result': The widget structure created from the specified token.
+		local
+			l_box: !EV_HORIZONTAL_BOX
+			l_button: !EV_BUTTON
+		do
+			create l_box
+			create l_button.make_with_text ("This is a test")
+			l_button.select_actions.extend (agent do
+				popup_window.execute_unfocusing_action (agent on_button_clicked)
+			end)
+			l_box.extend (l_button)
+			Result := ({!EV_WIDGET}) #? l_box
+		end
+
+	on_button_clicked
+			-- Called when a button is clicked on the contract widget.
+		local
+			l_info: ES_INFORMATION_PROMPT
+		do
+			check
+				popup_window_attached: popup_window /= Void
+			end
+			create l_info.make_standard ("This is a simple test. The popup window should still be available when this message is displayed. The popup window should also hide as soon as this prompt is discarded.")
+			l_info.show (popup_window.to_popup_window)
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

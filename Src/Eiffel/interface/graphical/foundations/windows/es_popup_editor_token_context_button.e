@@ -181,7 +181,6 @@ feature {NONE} -- Query
 		local
 			l_widget: EV_WIDGET
 			l_window: like popup_window
-			l_pos: TUPLE [x, y: INTEGER]
 		do
 			l_window := popup_window
 			if a_constrain_to_widget then
@@ -189,9 +188,14 @@ feature {NONE} -- Query
 			else
 				l_widget := l_window
 			end
+
+			if {PLATFORM}.is_windows then
+					-- Currently a hack
+				token_y_offset := token_y_offset + 1
+			end
 			Result := helpers.suggest_pop_up_widget_location_with_size (editor.widget,
 				requested_x_position + (l_window.screen_x - token_image.screen_x) + token_x_offset,
-				requested_y_position + (l_window.screen_y - token_image.screen_y) + token_y_offset + 1,
+				requested_y_position + (l_window.screen_y - token_image.screen_y) + token_y_offset,
 				l_window.width,
 				l_window.height)
 		end

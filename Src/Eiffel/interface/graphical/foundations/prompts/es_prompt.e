@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			set_text (a_text)
 
 				-- Prompts cannot be resized (can't do it here, there's a bug in EiffelVision2)
-			dialog.disable_user_resize
+			--dialog.disable_user_resize
 
 			is_initializing := l_init
 		ensure

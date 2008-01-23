@@ -53,7 +53,7 @@
       <Property Id="ISEPLATFORM">windows</Property>
     <?endif?>
     <Property Id="INSTALLDIR" Secure="yes" />
-    <Property Id="INSTALLCURL">http://eiffelsoftware.origo.ethz.ch/index.php/Installing_Microsoft_C_compiler</Property>   <!-- URL for How-To-Install a C/C++ compiler -->
+    <Property Id="INSTALLCURL">http://dev.eiffel.com/Installing_Microsoft_C_compiler</Property>   <!-- URL for How-To-Install a C/C++ compiler -->
     <Property Id="CHECKCCOMPILER"><?ifdef x64?>1<?else?><?ifdef EiffelEnvision?>1<?else?>0<?endif?><?endif?></Property>   <!-- Determines if a C/C++ compiler should be checked -->
     <Property Id="HASMSCCOMPILER">0</Property>                                                                            <!-- Indicates if a MS C/C++ has been found -->
     <Property Id="CANCCOMPILE">0</Property>                                                                               <!-- Indicates if a MSC C/C++ can actually be used -->

@@ -24,13 +24,6 @@ inherit
 			kind
 		end
 
-	COMPILER_EXPORTER
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end
-
 	SHARED_EIFNET_DEBUGGER
 		export
 			{NONE} all
@@ -226,6 +219,38 @@ feature -- Output
 
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 
+feature {APPLICATION_EXECUTION} -- Query
+
+	attribute_value_for (att_name: STRING): ABSTRACT_DEBUG_VALUE is
+			-- Attribute value named `att_name'.
+		local
+			l_icd_class: ICOR_DEBUG_CLASS
+			cl: CLASS_C
+			f: FEATURE_I
+			o: like object_value
+		do
+			o := object_value
+			object_value := Void
+			get_object_value
+			if object_value /= Void then
+				l_icd_class := object_value.get_class
+				if l_icd_class /= Void then
+					cl := dynamic_class
+					if cl /= Void then
+						f := cl.feature_named (att_name)
+						if f.is_attribute then
+							Result := attribute_value (object_value, l_icd_class, f)
+						end
+					end
+				end
+				object_value.clean_on_dispose
+				object_value := Void
+			end
+			if o /= Void then
+				object_value := o
+			end
+		end
+
 feature {NONE} -- Children implementation
 
 	children_from_eiffel_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
@@ -283,28 +308,40 @@ feature {NONE} -- Children implementation
 			l_att_token: INTEGER
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 			l_statcl: CLASS_C
+			icdm: ICOR_DEBUG_MODULE
 		do
+			fixme ("Debugger/dotnet: Find general working solution to get dotnet field without trying many attempts.")
+				--| Let's try using the record IL data
 			l_att_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f, dynamic_class_type)
-			if l_att_token /= 0 then
-				l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
-				if l_att_icd_debug_value /= Void then
-					if f.type.has_associated_class then
-						l_statcl := f.type.associated_class
+			l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
+
+			if not a_obj_value.last_call_succeed and then l_att_icd_debug_value = Void then
+					--| Let's try using meta data and field name/
+				icdm := a_icd_class.get_module
+				if icdm /= Void then
+					l_att_token := icdm.md_field_token (a_icd_class.get_token, f.feature_name)
+					if l_att_token /= 0 then
+						l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
 					end
-					Result := debug_value_from_icdv (l_att_icd_debug_value, l_statcl)
-					if Result /= Void then
-						Result.set_name (f.feature_name)
-					else
-						create {DEBUG_BASIC_VALUE[INTEGER]} Result.make (Sk_int32, 0)
-						Result.set_name ("ERROR on " + f.feature_name)
-							--| FIXME JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say
-							--| we had problem to get its value ...
-						debug ("DEBUGGER_TRACE_CHILDREN")
-							print ("Unable to build debug value for : "
-									+ dynamic_class.name_in_upper + "." + f.feature_name
-									+ "%N"
-								)
-						end
+				end
+			end
+			if l_att_icd_debug_value /= Void then
+				if f.type.has_associated_class then
+					l_statcl := f.type.associated_class
+				end
+				Result := debug_value_from_icdv (l_att_icd_debug_value, l_statcl)
+				if Result /= Void then
+					Result.set_name (f.feature_name)
+				else
+					create {DEBUG_BASIC_VALUE[INTEGER]} Result.make (Sk_int32, 0)
+					Result.set_name ("ERROR on " + f.feature_name)
+						--| FIXME JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say
+						--| we had problem to get its value ...
+					debug ("DEBUGGER_TRACE_CHILDREN")
+						print ("Unable to build debug value for : "
+								+ dynamic_class.name_in_upper + "." + f.feature_name
+								+ "%N"
+							)
 					end
 				end
 			end

@@ -95,7 +95,9 @@ rt_private int dexecreplay(int dir, int steps);	/* ... */
 rt_private int dexecreplay_levels(int dir);		/* ... */
 rt_private void dobjectstorage_save(EIF_PSTREAM sp);				/* Save object to file */
 rt_private void dobjectstorage_load(EIF_PSTREAM sp);				/* Load stored object from file */
-rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref);
+rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int dump_type);
+rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type);
+rt_private void app_send_rt_uint_ptr_as_string (EIF_PSTREAM sp, rt_uint_ptr ref);
 
 rt_private long sp_lower, sp_upper;					/* Special objects' bounds to be inspected */
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
@@ -133,7 +135,6 @@ rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(EIF_PSTREAM s, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call);
 rt_private void dbg_new_instance_of_type(EIF_PSTREAM s, EIF_TYPE_INDEX typeid);
 rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp);
-rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid);
 extern EIF_TYPED_VALUE *dynamic_eval_dbg(int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call, EIF_TYPED_VALUE* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
@@ -248,11 +249,22 @@ static int curr_modify = NO_CURRMODIF;
 			exec_recording_enabled = b;
 		}
 		break;
+	case LAST_EXCEPTION:
+		/* return last_exception() */
+		{
+			EIF_TYPED_VALUE *excpt = NULL;		/* Exception's object */
+			excpt = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
+			memset (excpt, 0, sizeof(EIF_TYPED_VALUE));
+			excpt->it_ref = last_exception();	/* Get last exception */
+			excpt->type = SK_REF;
+			if (excpt->it_ref != NULL) {
+				excpt->type = excpt->type | Dtype(excpt->it_ref);
+			}
+			app_send_typed_value (sp, excpt, DMP_EXCEPTION_ITEM);
+		}
+		break;
 	case NEW_INSTANCE:
 		dbg_new_instance_of_type (sp, (EIF_TYPE_INDEX) arg_1);
-		break;
-	case DBG_EXCEPTION_TRACE:
-		dbg_exception_trace(sp, (int) arg_1);
 		break;
 	case MODIFY_LOCAL:				/* modify the value of a local variable, an argument or the result */
 		modify_local_variable(arg_1,arg_2,arg_3,NULL);	             /* of a feature in the call stack */
@@ -323,7 +335,6 @@ static int curr_modify = NO_CURRMODIF;
 		dsetbreak(arg_1, arg_3, arg_2);
 		break;
 	case RESUME:					/* Resume execution */
-		dbg_clear_exception_traces(); /* clear recorded exception traces */
 		if (!gc_stopped) eif_gc_run();
 		set_breakpoint_count (arg_2);
 		critical_stack_depth = (uint32) arg_3;
@@ -464,13 +475,22 @@ rt_public int app_recv_packet(EIF_PSTREAM s, Request *rqst
  * Send routines
  */
 
-rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref)
+rt_private void app_send_rt_uint_ptr_as_string (EIF_PSTREAM sp, rt_uint_ptr ref)
 {
 	/* Send reference `ref' */
+	char addr[20]; /* FIXME jfiat [2008/01/14] : think portability ... 32, 64 ... */
+	sprintf(addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) ref);
+	app_twrite(addr, strlen(addr));
+}
+
+rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int a_dmp_type)
+{
+	/* 
+	 * Send reference `ref' using dmp_type `a_dmp_type'
+	 *	 `a_dmp_type' is either DMP_ITEM, or DMP_EXCEPTION_ITEM
+	 */
 
 	EIF_TYPED_VALUE *ip = NULL;
-	Request rqst;				/* What we receive and send back */
-	struct dump dumped;			/* Item returned */
 
 	ip = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
 	memset (ip, 0, sizeof(EIF_TYPED_VALUE));
@@ -481,11 +501,23 @@ rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref)
 		ip->it_ref = (EIF_REFERENCE) 0;
 		ip->type = SK_VOID;
 	}
+	app_send_typed_value (sp, ip, a_dmp_type);
+}
 
+rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type)
+{
+	/* 
+	 * Send EIF_TYPED_VALUE `ip' using dmp_type `a_dmp_type'
+	 *	 `a_dmp_type' is either DMP_ITEM, or DMP_EXCEPTION_ITEM or DMP_VOID
+	 */
+
+	Request rqst;					/* What we send */
+	struct dump dumped;				/* Item sent */
+
+	dumped.dmp_type = a_dmp_type;	/* We are dumping a `a_dmp_type' */
+	dumped.dmp_item = ip;
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
-	dumped.dmp_type = DMP_ITEM;		/* We are dumping a variable */
-	dumped.dmp_item = ip;
 	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
 	app_send_packet(sp, &rqst);		/* Send to network */
 }
@@ -507,8 +539,7 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 	struct where wh;		/* Where did the program stop? */
 
 #define st_status	rq_stop.st_why
-#define st_extag	rq_stop.st_tag
-#define st_excode	rq_stop.st_code
+#define st_excep	rq_stop.st_exception
 #define st_wh		rq_stop.st_where
 
 	gc_stopped = (char) !eif_gc_ison();
@@ -517,19 +548,15 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 	Request_Clean (rqst);
 	rqst.rq_type = STOPPED;				/* Stop request */
 	rqst.st_status = d_cxt.pg_status;	/* Why we stopped */
-	rqst.st_extag = "";			/* No exception tag by default */
+	rqst.st_excep = 2;					/* Exception occurred ? */
 
-	/* If we stopped because an exception has occurred, also give the
-	 * exception code.
+	/* If we stopped because an exception has occurred, 
+	 * also give the exception data.
 	 */
 	switch (d_cxt.pg_status) {
 		case PG_RAISE:						/* Explicitely raised exception */
 		case PG_VIOL:						/* Implicitely raised exception */
-			rqst.st_excode = echval;		/* Exception code */
-			if (echtg != (char *) 0)		/* XDR might not like a null pointer */
-				rqst.rq_stop.st_tag = echtg;	/* Exception tag computed */
-			else
-				rqst.rq_stop.st_tag = "";
+			rqst.st_excep = 1;				/* Exception occurred ? */
 	}
 
 	ewhere(&wh);			/* Find out where we are */
@@ -556,12 +583,12 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_thread_id = (rt_int_ptr) dthread_id; 	/* Current Thread id  -> rt_int_ptr for XDR */
 	}
 
+	app_send_packet(sp, &rqst);	/* Send stopped notification */
+
 #undef st_status
-#undef st_extag
-#undef st_excode
+#undef st_exception
 #undef st_where
 
-	app_send_packet(sp, &rqst);	/* Send stopped notification */
 }
 
 rt_public void notify_rqst(EIF_PSTREAM sp, int ev_type, int ev_data)
@@ -785,7 +812,7 @@ rt_private void dobjectstorage_load (EIF_PSTREAM sp)
 		tmp = (EIF_REFERENCE) rtd_arg_value(rtd_arg, 1, r);
 	}
 
-	app_send_reference (sp, tmp);
+	app_send_reference (sp, tmp, DMP_ITEM);
 }
 
 #undef rtd_arg_value
@@ -979,7 +1006,7 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 				/* Failed ? */
 			if (MTOF(OResult) && *MTOF(OResult)) {
 				app_twrite("true", 4);
-				app_send_reference (sp, *MTOF(OResult));
+				app_send_reference(sp, *MTOF(OResult), DMP_EXCEPTION_ITEM);
 			} else {
 				app_twrite("false", 5);
 					/* Result */
@@ -1019,11 +1046,8 @@ rt_private void adopt(EIF_PSTREAM sp, Opaque *what)
 	 */
 
 	char *physical_addr;	/* Address of unprotected object */
-	char hector_addr[20];	/* Buffer where indirection address is stored */
-
 	physical_addr = (char *) what->op_3;
-	sprintf(hector_addr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_adopt((EIF_OBJ) &physical_addr));
-	app_twrite(hector_addr, strlen(hector_addr));
+	app_send_rt_uint_ptr_as_string (sp, (rt_uint_ptr) eif_adopt((EIF_OBJ) &physical_addr));
 }
 
 rt_private void ipc_access(EIF_PSTREAM sp, Opaque *what)
@@ -1893,7 +1917,7 @@ rt_private void dbg_dump_rt_extension_object (EIF_PSTREAM sp)
 {
 	/* Dump the rt_extension_obj */
 
-	app_send_reference (sp, rt_extension_obj);
+	app_send_reference (sp, rt_extension_obj, DMP_ITEM);
 }
 
 rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
@@ -1945,77 +1969,30 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 	if (loc1 != NULL) {
 		tmp = (EIF_REFERENCE)RTCCL(loc1); /* clone */
 	}
-	app_send_reference (sp, tmp);
+	app_send_reference (sp, tmp, DMP_ITEM);
 }
 
-rt_private void dynamic_evaluation(EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
+rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
 {
 	EIF_TYPED_VALUE *ip;
-	Request rqst;					/* What we send back */
-	struct dump dumped;			/* Item returned */
 	int exception_occured = 0;	/* Exception occurred ? */
  
-	Request_Clean (rqst);
-	rqst.rq_type = DUMPED;			/* A dumped stack item */
-
 	c_opush(0);	/*Is needed since the stack management seems to have problems with uninitialized c stack*/
 	ip = dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, &exception_occured);
 	c_opop();
 	if (ip == (EIF_TYPED_VALUE *) 0) {
-		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
-		dumped.dmp_item = NULL;			/* arguments to be sent. */
+		app_send_typed_value (sp, NULL, DMP_VOID);
 	} else {
 		if (exception_occured == 1) {
-			dumped.dmp_type = DMP_EXCEPTION_TRACE; /* We are dumping an exception trace */
+			app_send_typed_value (sp, ip, DMP_EXCEPTION_ITEM);
 		} else {
-			dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
+			app_send_typed_value (sp, ip, DMP_ITEM);
 		}
-		dumped.dmp_item = ip;
 	}
-	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
-	app_send_packet(sp, &rqst);			/* Send to network */
 
 	/* reset info concerning otop */
 	previous_otop = NULL;
 	otop_recorded = 0;
 }
-
-rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid)
-{
-	/* Sending the debug exception trace related to `eid' 
-	 * when accessed once, it is removed from dbg exception traces storage */
-	char buf[IDRF_SIZE];
-	char* etrace;
-	int i, l, n;
-
-	CHECK("EXCEPTION TRACE ID must be positive", eid > 0);	
-	if (eid > 0) {
-		etrace = dbg_fetch_exception_trace (eid);
-		/* etrace had been removed from exception traces storage, 
-		 * so we'll have to free it at the end */
-		if (etrace != NULL) {
-			l = (int) strlen(etrace);
-			n = l / IDRF_SIZE;
-			sprintf(buf, "%u", n + 1);
-			app_twrite(buf, strlen(buf));
-			for (i = 0; i <= n; i++) {
-				strncpy (buf, etrace + i * IDRF_SIZE, IDRF_SIZE);
-				if (i == n) {
-					app_twrite(buf, l - i * IDRF_SIZE);
-				} else {
-					app_twrite(buf, IDRF_SIZE);
-				}
-			}
-			free(etrace);
-		} else {
-			sprintf(buf, "%u", 0);
-			app_twrite(buf, strlen(buf));
-		}
-	} else {
-		sprintf(buf, "%u", 0);
-		app_twrite(buf, strlen(buf));
-	}
-}
-
 
 

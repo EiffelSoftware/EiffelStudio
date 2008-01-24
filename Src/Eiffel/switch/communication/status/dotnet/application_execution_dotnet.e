@@ -209,6 +209,8 @@ feature {APPLICATION_EXECUTION} -- load and save
 feature {NONE} -- Status
 
 	build_status is
+			-- Build associated `status'
+			-- (ie: the application is running)
 		do
 			create status.make (Current)
 		end
@@ -219,6 +221,8 @@ feature -- Properties
 			-- Status of the running dotnet application
 
 	is_inside_callback_notification_processing: BOOLEAN is
+			-- Is inside callback notification processing?
+			-- (to distinguish before normal execution, and evaluation)
 		do
 			Result := Eifnet_debugger.callback_notification_processing
 		end
@@ -242,12 +246,6 @@ feature -- Bridge to Debugger
 			Result := Eifnet_debugger.exit_process_occurred
 		end
 
-	exception_occurred: BOOLEAN is
-			-- Last callback is about exception ?
-		do
-			Result := status.exception_occurred
-		end
-
 feature -- Execution
 
 	run_with_env_string (app: STRING; args, cwd: STRING; env: STRING_GENERAL) is
@@ -265,7 +263,7 @@ feature -- Execution
 			else
 				Eifnet_debugger.initialize_debugger_session (debugger_manager.windows_handle)
 				if Eifnet_debugger.is_debugging then
-					process_before_running
+					process_before_resuming
 
 					Eifnet_debugger.do_run (safe_path (app), cwd, args, env)
 
@@ -287,8 +285,11 @@ feature -- Execution
 		end
 
 	continue_ignoring_kept_objects is
+			-- Continue the running of the application
+			-- before any debugger's operation occurred
+			-- so basically, we are sure we have the same `kept_objects'
 		do
-			process_before_running
+			process_before_resuming
 
 			inspect execution_mode
 			when {EXEC_MODES}.step_into then
@@ -313,7 +314,7 @@ feature -- Execution
 					print ("IsRunning :: " + Eifnet_debugger.icor_debug_controller.is_running.out + "%N")
 				end
 
-				process_before_running
+				process_before_resuming
 				Eifnet_debugger.set_last_control_mode_is_stop
 				Eifnet_debugger.stop_dbg_timer
 				Eifnet_debugger.do_stop
@@ -352,6 +353,29 @@ feature -- Execution
 			process_termination
 		end
 
+	clean_on_process_termination is
+			-- Process the termination of the executed
+			-- application. Also execute the `termination_command'.
+		do
+			Precursor {APPLICATION_EXECUTION}
+			Eifnet_debugger.reset_debugging_data
+			Eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
+
+--			Eifnet_debugger.terminate_debugger_session
+-- this is now called directly from EIFNET_DEBUGGER.on_exit_process
+		end
+
+--	load_system_dependent_debug_info is
+--		do
+--			if
+--				Eiffel_system.workbench.system_defined
+--			then
+--				load_dotnet_debug_info
+--			end
+--		end
+
+feature -- Remote access to RT_
+
 	query_replay_status (direction: INTEGER): INTEGER is
 			-- Query number of available steps in `direction'.
 		do
@@ -377,7 +401,6 @@ feature -- Execution
 						f := eifnet_debugger.new_active_frame
 						Result := icl.get_static_field_value (ftok, f)
 						f.clean_on_dispose
-						icl.clean_on_dispose
 					end
 				end
 			end
@@ -389,12 +412,15 @@ feature -- Execution
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_rt_object_icd_value
-			if icdv /= Void and then system.rt_extension_class /= Void then
-				Result := debug_value_from_icdv (icdv, system.rt_extension_class.compiled_class)
+			if icdv /= Void and then {cl: !CLASS_I} system.rt_extension_class then
+				Result := debug_value_from_icdv (icdv, cl.compiled_class)
 			end
+
 		end
 
 	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is
+			-- Store in file `fn' on the application the object addressed by `oa'
+			-- Return True is succeed.
 		local
 			icdv, r: ICOR_DEBUG_VALUE
 			rto: like remote_rt_object
@@ -414,7 +440,6 @@ feature -- Execution
 						i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
 						args := <<icdv, i_ref, i_fn>>
 						r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
-						i_fn.clean_on_dispose
 						if r /= Void then
 							Result := not eifnet_debugger.icor_debug_value_is_null_value (r)
 							r.clean_on_dispose
@@ -425,6 +450,8 @@ feature -- Execution
 		end
 
 	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is
+			-- Debug value related to remote loaded object from file `fn'.
+			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		local
 			icdv, r: ICOR_DEBUG_VALUE
 			rto: like remote_rt_object
@@ -447,32 +474,105 @@ feature -- Execution
 					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
 					args := <<icdv, i_ref, i_fn>>
 					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
-					i_fn.clean_on_dispose
 					Result := debug_value_from_icdv (r, Void)
 				end
 			end
 		end
 
-	clean_on_process_termination is
-			-- Process the termination of the executed
-			-- application. Also execute the `termination_command'.
-		do
-			Precursor {APPLICATION_EXECUTION}
-			Eifnet_debugger.reset_debugging_data
-			Eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
+feature -- Remote access to Exceptions
 
---			Eifnet_debugger.terminate_debugger_session
--- this is now called directly from EIFNET_DEBUGGER.on_exit_process
+	remote_exception_manager_icd_value: ICOR_DEBUG_VALUE is
+			-- Return the remote `{ISE_RUNTIME}.exception_manager' object.
+		local
+			m: ICOR_DEBUG_MODULE
+			f: ICOR_DEBUG_FRAME
+			icl: ICOR_DEBUG_CLASS
+			ctok, ftok: INTEGER
+		do
+			m := eifnet_debugger.ise_runtime_module
+			if m /= Void then
+				ctok := eifnet_debugger.edv_external_formatter.token_IseRuntime
+				if ctok > 0 then
+					ftok := eifnet_debugger.edv_external_formatter.token_IseRuntime__exception_manager
+					if ftok > 0 then
+						icl := m.get_class_from_token (ctok)
+						f := eifnet_debugger.new_active_frame
+						Result := icl.get_static_field_value (ftok, f)
+						f.clean_on_dispose
+					end
+				end
+			end
 		end
 
---	load_system_dependent_debug_info is
---		do
---			if
---				Eiffel_system.workbench.system_defined
---			then
---				load_dotnet_debug_info
---			end
---		end
+	remote_exception_manager: EIFNET_ABSTRACT_DEBUG_VALUE is
+			-- Return the remote rt_object
+		local
+			icdv: ICOR_DEBUG_VALUE
+		do
+			icdv := remote_exception_manager_icd_value
+			if icdv /= Void and then {cl: !CLASS_I} system.exception_manager_class then
+				Result := debug_value_from_icdv (icdv, cl.compiled_class)
+			end
+		end
+
+	remote_current_exception_value: EXCEPTION_DEBUG_VALUE is
+			-- `{EXCEPTION_MANAGER}.last_exception' aka `{ISE_RUNTIME}.last_exception' value
+		local
+			icdv: ICOR_DEBUG_VALUE
+		do
+			if Result = Void and Eifnet_debugger.exception_occurred then
+				icdv := Eifnet_debugger.new_active_exception_value_from_thread
+				if icdv /= Void then
+					if {wrap: !ABSTRACT_REFERENCE_VALUE} eiffel_wrapper_exception (icdv) then
+						create Result.make_with_value (wrap)
+
+						if {val: !ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) then
+							if {s8: !STRING_8} eifnet_debugger.exception_class_name (val) then
+								Result.set_exception_others (s8, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
+							end
+						end
+					else
+						check should_not_occur: False end
+					end
+				end
+			end
+			if Result = Void then
+				create Result.make_without_any_value
+			end
+		end
+
+	eiffel_wrapper_exception (e: ICOR_DEBUG_VALUE): ABSTRACT_DEBUG_VALUE is
+			-- Wrapped .NET exception
+		require
+			e_not_void: e /= Void
+		local
+			rem: like remote_exception_manager
+			icdf: ICOR_DEBUG_FUNCTION
+			icdv, r: ICOR_DEBUG_VALUE
+		do
+			rem := remote_exception_manager
+			if rem /= Void then
+				icdv := rem.icd_referenced_value
+				icdf := rem.icd_value_info.value_icd_function (Exception_manager_wrapped_exception_function_name)
+				if icdf /= Void then
+					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, <<icdv, e>>)
+					if not eifnet_debugger.eifnet_dbg_evaluator.last_eval_is_exception and r /= Void then
+						Result := debug_value_from_icdv (r, Void)
+					end
+				end
+			end
+		end
+
+	associated_dotnet_exception (e: EXCEPTION_DEBUG_VALUE): ABSTRACT_REFERENCE_VALUE is
+			-- Wrapped .NET exception icor debug value.
+		require
+			e_not_void: e /= Void
+		do
+			if {v: !EIFNET_DEBUG_REFERENCE_VALUE} e.debug_value then
+				Result ?= v.attribute_value_for (Exception_dotnet_exception_attribute_name)
+			end
+		end
+
 
 feature {NONE} -- Assertion change Implementation
 
@@ -535,9 +635,14 @@ feature -- Query
 						end
 						odv := err_dv
 					elseif l_eifnet_debugger.last_once_failed then
-						create exc_dv.make_with_name (l_feat.feature_name)
-						exc_dv.set_tag ("An exception occurred during the once execution")
-						exc_dv.set_exception_value (debug_value_from_icdv (icdv, Void))
+						if {arv: !ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) then
+							create exc_dv.make_with_value (arv)
+						else
+							check should_not_occur: False end
+							create exc_dv.make_without_any_value
+						end
+						exc_dv.set_name (l_feat.feature_name)
+						exc_dv.set_user_meaning ("An exception occurred during the once execution")
 						odv := exc_dv
 					elseif icdv /= Void then
 						odv := debug_value_from_icdv (icdv, l_feat.type.associated_class)
@@ -594,9 +699,99 @@ feature -- Query
 			end
 		end
 
+	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; full_details: BOOLEAN) is
+			-- Get Exception details
+		local
+			tn: STRING
+			s32: STRING_32
+			k: STRING
+			edv: DUMP_VALUE
+			cl: CLASS_C
+			val: ABSTRACT_REFERENCE_VALUE
+		do
+			val := e.debug_value
+			if val /= Void then
+				cl := val.dynamic_class
+				if cl = Void then
+					cl := debugger_manager.compiler_data.exception_class_c
+				end
+				if cl = Void then
+					if e.exception_type_name = Void then
+						e.set_exception_type_name ("NONE")
+					end
+				else
+						--| IL Type name
+					k := {APPLICATION_STATUS_DOTNET}.Exception_il_type_name_key
+					if e.exception_others /= Void and then e.exception_others.has (k) then
+						s32 := e.exception_others.item (k)
+						if s32 /= Void then
+							tn := s32.as_string_8
+						end
+					else
+						if e.has_value then
+							tn := eifnet_debugger.exception_class_name (associated_dotnet_exception (e))
+							e.set_exception_others (tn, k)
+						end
+					end
+						--| Eiffel Type name			
+					if e.exception_type_name = Void then
+						e.set_exception_type_name (cl.name_in_upper)
+						if tn /= Void and e.exception_type_name = Void then
+							e.set_exception_type_name (tn)
+						end
+					end
+
+					if full_details then
+						edv := val.dump_value
+
+							--| Module name
+						k := {APPLICATION_STATUS_DOTNET}.Exception_module_name_key
+						if e.exception_others = Void or else not e.exception_others.has (k) then
+							s32 := eifnet_debugger.exception_module_name (e.debug_value)
+							e.set_exception_others (s32, k)
+						end
+						check module_name_set: e.exception_others /= Void and then e.exception_others.has (k) end
+
+							--| Meaning
+						if e.exception_meaning = Void then
+							s32 := string_field_evaluation_on (val, edv, cl, "meaning")
+							if (s32 = Void or else s32.is_empty) and tn /= Void then
+								e.set_exception_meaning (tn)  --| IL Type name							
+							else
+								e.set_exception_meaning (s32) --| s32 can be Void
+							end
+						end
+
+							--| Exception message
+						if e.exception_message = Void then
+							e.set_exception_message (string_field_evaluation_on (val, edv, cl, "message"))
+						end
+
+							--| Text
+						if e.exception_text = Void then
+							s32 := string_field_evaluation_on (val, edv, cl, "exception_trace")
+							e.set_exception_text (s32)
+
+								--| using `to_string'
+							s32 := Eifnet_debugger.exception_text (associated_dotnet_exception (e))
+							if s32 /= Void then
+								if e.exception_text /= Void and then not e.exception_text.is_empty then
+									s32.prepend ("%NIL Information:%N")
+									e.exception_text.append (s32)
+								else
+									e.set_exception_text (s32)
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+
 feature -- Control execution
 
-	process_before_running is
+	process_before_resuming is
+			-- Operation to process before resuming execution
 		do
 			check il_debug_info_recorder.last_loading_is_workbench end
 
@@ -618,7 +813,7 @@ feature -- Control execution
 		end
 
 	debug_display_threads is
-			--
+			-- Display threads information for debugging purpose
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER
 			l_enum_thread: ICOR_DEBUG_THREAD_ENUM
@@ -1006,6 +1201,7 @@ feature {NONE} -- Events on notification
 			need_to_continue: BOOLEAN
 			l_status: APPLICATION_STATUS_DOTNET
 			dbg_info: EIFNET_DEBUGGER_INFO
+			e: EXCEPTION_DEBUG_VALUE
 		do
 			debug ("debugger_trace")
 				print ("%N*** REASON TO STOP *** %N")
@@ -1049,12 +1245,15 @@ feature {NONE} -- Events on notification
 					need_to_continue := not do_stop_on_breakpoint
 				elseif Eifnet_debugger.managed_callback_is_exception (cb_id) then
 					l_status.set_reason_as_raise
+					l_status.set_exception_occurred (True)
 
+					create e.make_without_any_value
 					if eifnet_debugger.last_exception_is_handled then
-						l_status.set_exception (0, "First chance exception occurred .. waiting for information")
+						e.set_user_meaning ("First chance exception occurred .. waiting for information")
 					else
-						l_status.set_exception (0, "UnHandled exception occurred .. waiting for information")
+						e.set_user_meaning ("UnHandled exception occurred .. waiting for information")
 					end
+					l_status.set_exception (e)
 				end
 			end
 
@@ -1347,7 +1546,15 @@ feature -- Object Keeper
 			Result := Eifnet_debugger.know_about_kept_object (a_address)
 		end
 
-indexing
+feature {NONE} -- Constants for dotnet interactions
+
+	Exception_dotnet_exception_attribute_name: STRING = "dotnet_exception"
+			-- {EXCEPTION}.dotnet_exception feature name (for dotnet)
+
+	Exception_manager_wrapped_exception_function_name: STRING = "wrapped_exception"
+			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

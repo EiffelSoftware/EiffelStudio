@@ -208,7 +208,7 @@ feature -- Graphical changes
 					set_value (Void)
 					set_type (Void)
 					set_address (Void)
-					set_pixmap (Icons @ (Void_value))
+					set_pixmap (Icons @ ({VALUE_TYPES}.Void_value))
 				else --| dv /= Void |--
 					if title /= Void then
 						set_name (title)
@@ -218,27 +218,26 @@ feature -- Graphical changes
 					set_address (dv.address)
 
 					last_dump_value := Void
-					if dv.kind = Error_message_value then
+					inspect
+						dv.kind
+					when {VALUE_TYPES}.Error_message_value then
 						dmdv ?= dv
 						set_value (dmdv.display_message)
 						set_type (debugger_names.l_no_information)
 						set_pixmap (Icons @ (dmdv.display_kind))
-					elseif dv.kind = Exception_message_value then
+					when {VALUE_TYPES}.Exception_message_value then
 						excdv ?= dv
-						if excdv.is_wrapper_mode then
-							set_title (debugger_names.l_exceptions_details)
-						end
-						set_value (excdv.display_tag)
+						set_value (excdv.short_description)
 						gi := value_cell
 						if gi /= Void then
-							gi.set_tooltip (excdv.display_message)
+							gi.set_tooltip (excdv.description)
 						end
 						set_type (debugger_names.l_exception_data)
 						set_pixmap (Icons @ (dv.kind))
-						if excdv.debug_value /= Void then
+						if excdv.has_value then
 							attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, Void)
 						end
-					elseif dv.kind = Procedure_return_message_value then
+					when {VALUE_TYPES}.Procedure_return_message_value then
 						set_value (interface_names.l_called)
 						set_type (once "")
 						set_pixmap (Icons @ (dv.kind))

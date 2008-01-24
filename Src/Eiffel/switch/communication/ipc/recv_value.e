@@ -32,14 +32,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 				$set_int8, $set_int16, $set_int32, $set_int64, $set_bool,
 				$set_char, $set_wchar, $set_real,
 				$set_double, $set_ref, $set_point,
-				$set_bits, $set_error, $set_exception_trace, $set_void)
-		end
-
-	set_exception_trace (a_id: INTEGER) is
-			-- Receive a exception trace id
-		do
-			exception_trace_id := a_id
-			item := Void
+				$set_bits, $set_error, $set_exception_ref, $set_void)
 		end
 
 	set_error is
@@ -150,6 +143,19 @@ feature	{} -- Initialization of the C/Eiffel interface
 			end
 		end
 
+	set_exception_ref (ref: POINTER; type: INTEGER) is
+			-- Receive a exception reference value.
+		local
+			rf: REFERENCE_VALUE
+		do
+			is_exception := True
+
+			check Eiffel_system.valid_dynamic_id (type + 1) end
+			create {REFERENCE_VALUE} rf.make (ref, type + 1)
+
+			create {EXCEPTION_DEBUG_VALUE} item.make_with_value (rf)
+		end
+
 	set_point (v: POINTER) is
 			-- Receive a pointer value.
 		do
@@ -168,20 +174,13 @@ feature	{} -- Initialization of the C/Eiffel interface
 			item := Void
 		end
 
-	clear_item is
-		do
-			item := Void
-		end
-
 feature -- Reset
 
 	reset_recv_value is
 		do
-			clear_item
+			item := Void
 			error := False
-
-			exception_trace := Void
-			exception_trace_id := 0
+			is_exception := False
 		end
 
 feature -- Status report
@@ -189,55 +188,23 @@ feature -- Status report
 	error: BOOLEAN
 			-- Did an error occurred ?
 
-	is_exception_trace: BOOLEAN is
-			-- Is current `item' an Exception trace ?
-		do
-			Result := exception_trace_id > 0
-		end
-
-	exception_trace: STRING_8
-
-	exception_trace_id: INTEGER
-
-	get_exception_trace is
-		require
-			is_exception_trace: is_exception_trace --| exception_trace_id > 0
-		local
-			s: STRING_8
-			n: INTEGER
-		do
-			if exception_trace = Void then
-				create exception_trace.make_empty
-				exception_trace_request.send_integer (exception_trace_id)
-				s := exception_trace_request.c_tread
-				if s.is_integer then
-					from
-						n := s.to_integer
-					until
-						n = 0
-					loop
-						s := exception_trace_request.c_tread
-						exception_trace.append (s)
-						n := n - 1
-					end
-				end
-		end
-		ensure
-			exception_trace_not_void: exception_trace /= Void
-		rescue
-			create exception_trace.make_empty
-			retry
-		end
-
-	exception_trace_request: EWB_REQUEST is
-		once
-			create Result.make (Rqst_dbg_Exception_trace)
-		end
+	is_exception: BOOLEAN
+			-- Is current `item' an Exception ?
 
 feature -- internal
 
 	item: ABSTRACT_DEBUG_VALUE
-			-- Last received value
+			-- Last received value.
+
+	exception_item: EXCEPTION_DEBUG_VALUE is
+			-- Last received exception value.
+		require
+			is_exception: is_exception
+		do
+			Result ?= item
+		ensure
+			item_is_exception_value: (item /= Void) implies (Result /= Void)
+		end
 
 	recv_value (c: like Current) is
 		require
@@ -250,6 +217,7 @@ feature -- internal
 feature {NONE} -- External routines
 
 	c_recv_value (c: like Current) is
+				-- Check: C/ipc/ewb/ewb_dumped.c	
 		external
 			"C"
 		end
@@ -257,8 +225,9 @@ feature {NONE} -- External routines
 	c_pass_recv_routines (
 			d_nat8, d_nat16, d_nat32, d_nat64,
 			d_int8, d_int16, d_int32, d_int64, d_bool, d_char, d_wchar, d_real, d_double,
-			d_ref, d_point, d_bits, d_error, d_exception_trace, d_void: POINTER)
+			d_ref, d_point, d_bits, d_error, d_exception_ref, d_void: POINTER)
 		is
+				-- Check: C/ipc/ewb/ewb_dumped.c
 		external
 			"C"
 		end

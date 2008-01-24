@@ -14,7 +14,6 @@ inherit
 		redefine
 			current_call_stack,
 			switch_to_current_thread_id,
-			exception_description,
 			thread_name, thread_priority
 		end
 
@@ -100,44 +99,11 @@ feature {NONE} -- CallStack Impl
 
 feature -- Values
 
-	exception_occurred: BOOLEAN is
-		do
-			Result := exception_code /= 0 or exception_tag /= Void
-		end
-
-	exception_message: STRING_32 is
-			-- For now, the exception message for classic system is the exception tag.
-		do
-			Result := exception_tag
-		end
-
-	exception_description: STRING_32 is
-		local
-			e: EXCEPTIONS
-			s8: STRING_8
-		do
-			create Result.make (10)
-			Result.append_string ("Code: ")
-			Result.append_integer (exception_code)
-			Result.append (" (")
-			create e
-			s8 := e.meaning (exception_code)
-			if s8 = Void then
-				s8 := "Undefined"
-			end
-			Result.append (s8.as_string_32)
-			Result.append (") ")
-			Result.append (Precursor {APPLICATION_STATUS})
-		end
-
-	exception_class_name: STRING is
-		do
-			--| For now, exception are not object on classic Eiffel system
-		end
-
 	current_call_stack: EIFFEL_CALL_STACK_CLASSIC
+			-- Current Eiffel call stack
 
 	refresh_current_thread_id is
+			-- Refresh current thread id
 		do
 			-- FIXME jfiat: for now Classic system do not support thread selection
 			-- TODO
@@ -146,12 +112,15 @@ feature -- Values
 feature -- Threads related access
 
 	thread_name (id: like current_thread_id): STRING is
+			-- Thread name.
 		do
-
+			--| Classic does not provide feature for that purpose
 		end
 
 	thread_priority (id: like current_thread_id): INTEGER is
+			-- Thread priority.
 		do
+			--| Classic does not provide feature for that purpose			
 		end
 
 indexing

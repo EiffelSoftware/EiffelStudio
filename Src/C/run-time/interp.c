@@ -4460,7 +4460,7 @@ rt_public EIF_TYPED_VALUE * dynamic_eval_dbg(int fid_or_offset, int stype_or_ori
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
-						/* return in `exception_occured' if an exception occurred */
+						/* return the exception object if exception occurred (and set `exception_occured' to 1) */
 	{
 	/* This is the debugger dispatcher for routine calls. It is called when
 	 * the user want to dynamically evaluate a feature. Depending on the
@@ -4499,8 +4499,11 @@ rt_public EIF_TYPED_VALUE * dynamic_eval_dbg(int fid_or_offset, int stype_or_ori
 		*exception_occured = 1;
 		result = (EIF_TYPED_VALUE*) malloc (sizeof (EIF_TYPED_VALUE));
 		memset (result, 0, sizeof(EIF_TYPED_VALUE));
-		result->type = SK_INT32;
-		result->it_int32 = dbg_store_exception_trace (stack_trace_str());
+		result->it_ref = last_exception();
+		result->type = SK_REF;
+		if (result->it_ref != NULL) {
+			result->type = result->type | Dtype(result->it_ref);
+		}
 		
 		RESTORE(op_stack,scur,stop);
 		RESTORE(db_stack,dcur,dtop);

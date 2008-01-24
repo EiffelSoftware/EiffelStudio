@@ -115,11 +115,14 @@ feature {NONE} -- Implementation
 				end
 					-- Receive the Result.
 				recv_value (Current)
-				if is_exception_trace then
-						--FIXME: this can slow down the debugger (cf: bug#13548) y retrieving this huge string
-					fixme ("Optimize this part when EAO is integrated")
-					get_exception_trace
-					notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exception_trace))
+				if is_exception then
+					if {exv: !EXCEPTION_DEBUG_VALUE} exception_item then
+						exv.set_hector_addr
+						notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exv.description))
+					else
+						notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, Void))
+					end
+
 					reset_recv_value
 				else
 					if fi.is_function then
@@ -267,7 +270,7 @@ feature -- Query
 			dv: DUMP_VALUE
 		do
 			if a_target.is_type_manifest_string then
-				dv := a_target.to_dump_value_object
+				dv := a_target.manifest_string_to_dump_value_object
 				if dv /= Void then
 					Result := dv.address
 				end

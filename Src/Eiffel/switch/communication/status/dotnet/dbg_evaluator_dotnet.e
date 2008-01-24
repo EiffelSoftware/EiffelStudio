@@ -114,12 +114,12 @@ feature {NONE} -- Implementation
 								exc_dv := last_result_value.value_exception
 								if exc_dv /= Void then
 									exc_dv.set_name (f.feature_name)
-									exc_dv.set_tag (Debugger_names.msg_error_exception_occurred_during_evaluation (f.written_class.name_in_upper, f.feature_name, Void))
+									exc_dv.set_user_meaning (Debugger_names.msg_error_exception_occurred_during_evaluation (f.written_class.name_in_upper, f.feature_name, Void))
 									notify_error_exception (
 											Debugger_names.msg_error_exception_occurred_during_evaluation (
 												f.written_class.name_in_upper,
 												f.feature_name,
-												exc_dv.display_message
+												exc_dv.description
 											)
 										)
 								else
@@ -373,12 +373,13 @@ feature {NONE} -- Implementation
 
 					notify_error_evaluation ("Once feature [" + f.feature_name + "]: not yet called")
 				elseif last_once_failed then
-					create exc_dv.make_with_name (f.feature_name)
-					exc_dv.set_wrapper_mode (True)
-					exc_dv.set_tag ("Once feature [" + f.feature_name + "]: an exception occurred")
-					if l_adv /= Void then
-						exc_dv.set_exception_value (l_adv)
+					if {arv: !ABSTRACT_REFERENCE_VALUE} l_adv then
+						create exc_dv.make_with_value (arv)
+					else
+						create exc_dv.make_without_any_value
 					end
+					exc_dv.set_name (f.feature_name)
+					exc_dv.set_user_meaning ("Once feature [" + f.feature_name + "]: an exception occurred")
 					last_result_value := exc_dv.dump_value
 
 					notify_error (cst_error_exception_during_evaluation, "Once feature [" + f.feature_name + "]: an exception occurred")
@@ -763,14 +764,13 @@ feature {NONE} -- Implementation
 				if eifnet_evaluator.last_eval_aborted then
 					notify_error (Cst_error_evaluation_aborted, Void)
 				elseif eifnet_evaluator.last_eval_is_exception then
-					l_adv := debug_value_from_icdv (l_result, Void)
-					create l_exc_dv.make_with_name (once "Unknown")
-					l_exc_dv.set_wrapper_mode (True)
-					l_exc_dv.set_tag ("An exception occurred")
-					l_exc_dv.set_message (eifnet_debugger.exception_text_from (l_result))
-					if l_adv /= Void then
-						l_exc_dv.set_exception_value (l_adv)
+					if {arv: !ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (l_result, Void) then
+						create l_exc_dv.make_with_value (arv)
+					else
+						create l_exc_dv.make_without_any_value
 					end
+					l_exc_dv.update_data
+					l_exc_dv.set_user_meaning ("An exception occurred")
 					Result := l_exc_dv.dump_value
 					notify_error (Cst_error_exception_during_evaluation, Void)
 				elseif not eifnet_evaluator.last_call_succeed then

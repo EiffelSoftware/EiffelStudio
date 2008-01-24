@@ -11,7 +11,6 @@ class
 	DBG_EVALUATOR
 
 inherit
-
 	REFACTORING_HELPER
 
 	SHARED_BENCH_NAMES
@@ -35,6 +34,9 @@ inherit
 			{NONE} all
 		end
 
+inherit {NONE}
+	DEBUGGER_COMPILER_UTILITIES		
+
 --create
 --	make
 
@@ -49,7 +51,7 @@ feature {NONE} -- Initialization
 			create error_messages.make
 		end
 
-feature {DEBUGGER_MANAGER, DBG_EXPRESSION_EVALUATOR} -- Init
+feature {DEBUGGER_MANAGER, DBG_EXPRESSION_EVALUATOR, APPLICATION_EXECUTION} -- Init
 
 	reset is
 		do
@@ -68,7 +70,7 @@ feature {NONE} -- Internal properties
 
 	debugger_manager: DEBUGGER_MANAGER
 
-feature {DBG_EXPRESSION_EVALUATOR} -- Variables
+feature {DBG_EXPRESSION_EVALUATOR, DEBUGGER_MANAGER, APPLICATION_EXECUTION} -- Variables
 
 	last_result_value: DUMP_VALUE
 
@@ -593,41 +595,6 @@ feature -- Implementation
 
 feature -- Query
 
-	adapted_class_type (ctype: CLASS_TYPE; f: FEATURE_I): CLASS_TYPE is
-			-- Adapted class_type receiving the call of `f'
-		local
-			l_f_class_c: CLASS_C
-			l_cl_type_a: CL_TYPE_A
-		do
-			if ctype.associated_class.is_basic then
-				Result := associated_reference_basic_class_type (ctype.associated_class)
-			else
-					--| Get the real class_type
-				l_f_class_c := f.written_class
-				if ctype.associated_class.is_equal (l_f_class_c) then
-						--| The feature is not inherited
-					Result := ctype
-				else
-					if l_f_class_c.types.count = 1 then
-						Result := l_f_class_c.types.first
-					elseif l_f_class_c.is_basic then
-						Result := l_f_class_c.types.first
-					else
-							--| The feature is inherited
-
-							--| let's search and find the correct CLASS_TYPE among the parents
-							--| this will solve the problem of inherited once and generic class
-							--| the level on inheritance is represented by the CLASS_C
-							--| then the derivation of the GENERIC by the CLASS_TYPE
-							--| among the parent we know the right CLASS_TYPE
-							--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
-						l_cl_type_a := ctype.type.type_a
-						Result := l_cl_type_a.find_class_type (l_f_class_c).type_i.associated_class_type
-					end
-				end
-			end
-		end
-
 	attributes_list_from_object (a_addr: STRING): DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
 			Result := debugger_manager.object_manager.attributes_at_address (a_addr, 0, 0)
@@ -709,111 +676,6 @@ feature {NONE} -- List helpers
 			end
 		ensure
 			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
-		end
-
-feature {DBG_EXPRESSION_EVALUATOR} -- compiler helpers
-
-	ancestor_version_of (fi: FEATURE_I; an_ancestor: CLASS_C): FEATURE_I is
-			-- Feature in `an_ancestor' of which `Current' is derived.
-			-- `Void' if not present in that class.
-		require
-			fi_not_void: fi /= Void
-			an_ancestor_not_void: an_ancestor /= Void
-		local
-			n, nb: INTEGER
-			ris: ROUT_ID_SET
-			rout_id: INTEGER
-		do
-			if
-				an_ancestor.is_valid
-				and then an_ancestor.has_feature_table
-			then
-				ris := fi.rout_id_set
-				from
-					n := ris.lower
-					nb := ris.count
-				until
-					n > nb or else Result /= Void
-				loop
-					rout_id := ris.item (n)
-					if rout_id > 0 then
-						Result := an_ancestor.feature_table.feature_of_rout_id (rout_id)
-					end
-					n := n + 1
-				end
-			end
-		end
-
-	associated_basic_class_type (cl: CLASS_C): CLASS_TYPE is
-			-- Associated classtype for type `cl'
-		require
-			cl_not_void: cl /= Void
-			cl_is_basic: cl.is_basic
-		local
-			t: CL_TYPE_I
-		do
-			t := cl.actual_type.type_i
-			if t.has_associated_class_type then
-				Result := t.associated_class_type
-			end
-		ensure
-			associated_basic_class_type_not_void: Result /= Void
-		end
-
-	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
-			-- Associated _REF classtype for type `cl'
-			--| for instance return INTEGER_REF for INTEGER
-		require
-			cl_not_void: cl /= Void
-			cl_is_basic: cl.is_basic
-		local
-			l_basic: BASIC_I
-		do
-			l_basic ?= cl.actual_type.type_i
-			check
-				l_basic_not_void: l_basic /= Void
-			end
-			Result := l_basic.associated_reference_class_type
-		ensure
-			associated_reference_basic_class_type_not_void: Result /= Void
-		end
-
-feature {NONE} -- Implementation
-
-	class_c_from_type_a (t: TYPE_A; a_ctx_class: CLASS_C): CLASS_C is
-		require
-			t_not_void: t /= Void
-			a_ctx_class_not_void: a_ctx_class /= Void
-		local
-			l_type: TYPE_A
-			l_formal: FORMAL_A
---			l_last_type_set: TYPE_SET_A
-		do
-			if t.has_associated_class then
-				Result := t.associated_class
-			else
-				l_type := t.actual_type
-				if l_type.is_formal then
-					l_formal ?= l_type
-					if l_formal.is_multi_constrained (a_ctx_class) then
-						fixme("Handle multi constrained type...")
---						l_last_type_set := l_type.to_type_set.constraining_types (a_ctx_class)
---						l_type := l_last_type_set.instantiated_in (a_ctx_class.actual_type)
---						if l_type.is_formal then
---							l_formal ?= l_type
---							l_type := l_formal.constrained_type (a_ctx_class)
---						end
-						l_type := Void
-					else
-						l_type := l_formal.constrained_type (a_ctx_class)
-					end
-				end
-				if l_type /= Void and then not l_type.is_none then
-					Result := l_type.associated_class
-				else
-					Result := Void
-				end
-			end
 		end
 
 indexing

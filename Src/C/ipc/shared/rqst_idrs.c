@@ -118,7 +118,6 @@ rt_private struct idr_discrim u_Request[] = {
 	{ CLOSE_DBG, idr_void },
 	{ SET_IPC_PARAM, idr_Opaque },
 	{ CLEAR_BREAKPOINTS, idr_void },
-	{ DBG_EXCEPTION_TRACE, idr_Opaque },
 	{ APPLICATION_ENV, idr_void },
 	{ NEW_INSTANCE, idr_Opaque },
 	{ RT_OPERATION, idr_Opaque },
@@ -182,17 +181,10 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext)
 rt_private bool_t idr_Stop(IDR *idrs, void *ext)
 {
 	Stop *sto = (Stop *) ext;
-	static char buf[MAX_STRLEN + 1];
 	bool_t result;
-	if (idrs->i_op == IDR_DECODE) {
-		buf[0]='\0';
-		sto->st_tag = buf;
-	}
 	result = idr_Where(idrs, &sto->st_where);
 	result = result && idr_int(idrs, &sto->st_why);
-	result = result && idr_int(idrs, &sto->st_code);
-	result = result && idr_string(idrs, &sto->st_tag, -MAX_STRLEN);
-
+	result = result && idr_int(idrs, &sto->st_exception);
 	return result;
 }
 
@@ -250,18 +242,18 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 				&& idr_type_index (idrs, &exv->exu.exua.exua_from)
 				&& idr_eif_reference (idrs, &exv->exu.exua.exua_oid);
 		}
-	case DMP_EXCEPTION_TRACE:
+	case DMP_EXCEPTION_ITEM:
 	case DMP_ITEM:
-		exi = dum -> dmpu.dmpu_item;
+		exi = dum->dmpu.dmpu_item;
 		if ((exi != last_exi) && (last_exi)) {
 			free(last_exi);
 			last_exi = NULL;
 		}
-		if (!exi){
+		if (!exi) {
 			exi = (EIF_TYPED_VALUE *) malloc (sizeof (EIF_TYPED_VALUE));
 			last_exi = exi;
 			memset (exi, 0, sizeof (EIF_TYPED_VALUE));
-			dum -> dmpu.dmpu_item = exi;
+			dum->dmpu.dmpu_item = exi;
 		}
 		if (!exi) {
 			return FALSE; /* lack of memory. Abort */

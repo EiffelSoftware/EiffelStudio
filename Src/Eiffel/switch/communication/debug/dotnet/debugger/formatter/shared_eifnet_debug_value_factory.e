@@ -43,11 +43,14 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 
 	exception_value (a_name: STRING; a_tag: STRING_GENERAL; a_value: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE is
 		do
-			create Result.make_with_name (a_name)
-			Result.set_tag (a_tag)
-			if a_value /= Void then
-				Result.set_exception_value (a_value)
+			if {arv: !ABSTRACT_REFERENCE_VALUE} a_value then
+				create Result.make_with_value (arv)
+			else
+				check should_not_occurred: False end
+				create Result.make_without_any_value
 			end
+			Result.set_name (a_name)
+			Result.set_user_meaning (a_tag)
 		ensure
 			Result /= Void
 		end

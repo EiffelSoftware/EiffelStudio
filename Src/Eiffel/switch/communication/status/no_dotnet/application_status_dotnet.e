@@ -34,6 +34,7 @@ feature -- Values
 		end
 
 	exception_module_name: STRING_32 is do end
+	exception_il_type_name: STRING_32 is do end
 
 	exception_handled: BOOLEAN is False
 

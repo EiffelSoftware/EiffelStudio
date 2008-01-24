@@ -395,13 +395,12 @@ feature {NONE} -- Store to disk
 			-- of FEATURE_AS and INVARIANT_AS
 		local
 			read_info: READ_INFO
-			feat: FEATURE_AS
 		do
 				-- Put `obj' in the index.
 			create read_info.make (file_position, current_file_id)
 			read_info.set_object_count (object_count)
-			if is_feature_as (obj) then
-				feat ?= obj
+
+			if {feat: !FEATURE_AS} obj then
 				tmp_body_info.force (read_info, feat.id)
 			else
 				invariant_info.put (read_info, current_class_id)
@@ -410,8 +409,11 @@ feature {NONE} -- Store to disk
 
 	need_index (obj: ANY): BOOLEAN is
 			-- Is an index needed for `obj'?
+		local
+			l_dynamic_type: INTEGER
 		do
-			Result := is_feature_as (obj) or else is_invariant_as (obj)
+			l_dynamic_type := {ISE_RUNTIME}.dynamic_type ($obj)
+			Result := l_dynamic_type = feature_as_type or else l_dynamic_type = invariant_as_type
 		end
 
 feature {NONE} -- Implementation
@@ -425,18 +427,6 @@ feature {NONE} -- Implementation
 			-- recompilation
 
 feature {NONE} -- Implementation of dynamic type checking
-
-	is_invariant_as (obj: ANY): BOOLEAN is
-			-- Is `obj' of type INVARIANT_AS?
-		do
-			Result := invariant_as_type = dynamic_type (obj)
-		end
-
-	is_feature_as (obj: ANY): BOOLEAN is
-			-- Is `obj' of type FEATURE_AS?
-		do
-			Result := feature_as_type = dynamic_type (obj)
-		end
 
 	invariant_as_type: INTEGER is
 			-- Dynamic type of objects of type INVARIANT_AS.

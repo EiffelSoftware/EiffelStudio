@@ -71,11 +71,10 @@ typedef struct {			/* Position in program execution flow */
 	rt_uint_ptr wh_thread_id;	/* Thread id */
 } Where;
 
-typedef struct {			/* Stopping notification */
-	Where st_where;			/* Where we are now */
-	int st_why;				/* Why did we stop? */
-	int st_code;			/* Exception code */
-	char *st_tag;			/* Exception tag, if appropriate */
+typedef struct {			/* Stopping notification 	*/
+	Where st_where;			/* Where we are now 		*/
+	int st_why;				/* Why did we stop? 		*/
+	int st_exception;		/* Exception occurred? 		*/
 } Stop;
 typedef struct {			/* Event notification */
 	int st_type;			/* Event type */

@@ -11,11 +11,6 @@ class
 
 inherit
 	ES_DIALOG
-		redefine
-			on_before_initialize,
-			on_handle_key,
-			on_dialog_button_pressed
-		end
 
 	ES_SHARED_PROMPT_PROVIDER
 		export
@@ -31,26 +26,6 @@ convert
 	dialog: {EV_DIALOG}
 
 feature {NONE} -- Initialization
-
-	on_before_initialize is
-		do
-			Precursor {ES_DIALOG}
-
-			buttons := dialog_buttons.reset_ok_cancel
-			default_button := dialog_buttons.ok_button
-			default_cancel_button := dialog_buttons.cancel_button
-			default_confirm_button := dialog_buttons.ok_button
-
-			set_button_text (dialog_buttons.ok_button, interface_names.b_ok)
-			set_button_text (dialog_buttons.reset_button, interface_names.b_reset)
-			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
-
-			set_button_action_before_close (dialog_buttons.ok_button, agent on_ok)
-			set_button_action_before_close (dialog_buttons.reset_button, agent on_reset)
-			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
-
-			dialog.resize_actions.force_extend (agent request_refresh_now)
-		end
 
 	refresh_now_delayer: ES_DELAYED_ACTION
 
@@ -146,14 +121,28 @@ feature {NONE} -- User interface initialization
 			create f
 			f.extend (b)
 			extend_expandable_to (vb_ctx, f)
+
+			set_button_text (dialog_buttons.ok_button, interface_names.b_ok)
+			set_button_text (dialog_buttons.reset_button, interface_names.b_reset)
+			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
+
+			set_button_action_before_close (dialog_buttons.ok_button, agent on_ok)
+			set_button_action_before_close (dialog_buttons.reset_button, agent on_reset)
+			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
+
+			dialog.resize_actions.force_extend (agent request_refresh_now)
 		end
 
 feature -- Properties
 
 	breakpoint_routine: E_FEATURE
+			-- Associated Breakpoint's routine.
+
 	breakpoint_index: INTEGER
+			-- Associated Breakpoint's breakable index.
 
 	associated_breakpoint: BREAKPOINT is
+			-- Associated Breakpoint.
 		local
 			bm: BREAKPOINTS_MANAGER
 			loc: BREAKPOINT_LOCATION
@@ -170,15 +159,16 @@ feature -- Properties
 feature -- behavior
 
 	switch_to_context_tab is
+			-- Switch to "Context" tab
 		do
 			noteb.select_item (noteb.i_th (1))
 		end
 
 	switch_to_when_hits_tab is
+			-- Switch to "When hits" tab	
 		do
 			noteb.select_item (noteb.i_th (2))
 		end
-
 
 	focus_widget (w: EV_WIDGET) is
 			-- Focus `w' is possible
@@ -193,6 +183,7 @@ feature -- behavior
 		end
 
 	focus_condition_panel is
+			-- Focus "condition" panel
 		do
 			switch_to_context_tab
 			focus_widget (condition_panel)
@@ -200,76 +191,30 @@ feature -- behavior
 		end
 
 	focus_hit_count_panel is
+			-- Focus "hit count" panel	
 		do
 			switch_to_context_tab
 			focus_widget (hit_count_panel)
 		end
 
 	focus_when_hits_panel is
+			-- Focus "when hits" panel
 		do
 			switch_to_when_hits_tab
 			focus_widget (when_hits_panel)
 		end
 
-	on_dialog_button_pressed (a_id: INTEGER) is
-		do
-			if not on_handle_key_ignored then
-				Precursor {ES_DIALOG} (a_id)
-			end
-		end
-
-	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN is
-			--
-		do
-			if not on_handle_key_ignored then
-				Result := Precursor {ES_DIALOG} (a_key, a_alt, a_ctrl, a_shift, a_released)
-			end
-		end
-
-	on_handle_key_ignored: BOOLEAN
-
-	on_handle_key_ignored_level: INTEGER
-
-	set_on_handle_key_ignored (b: BOOLEAN) is
-		do
-			if b then
-				on_handle_key_ignored := True
-				on_handle_key_ignored_level := on_handle_key_ignored_level + 1
-			else
-				on_handle_key_ignored_level := on_handle_key_ignored_level - 1
-				if on_handle_key_ignored_level = 0 then
-					on_handle_key_ignored := False
-				end
-			end
-		end
-
 feature {NONE} -- Helpers
 
 	register_input_widget (aw: EV_WIDGET) is
-			--
-		local
-			d: BOOLEAN
+			-- Register `aw' as an input widget
 		do
-			if aw /= Void then
-				if {comb: !EV_COMBO_BOX} aw then
-					comb.focus_in_actions.extend (agent set_on_handle_key_ignored (True))
-					comb.focus_out_actions.extend (agent set_on_handle_key_ignored (False))
-					d := True
-				else --| FIXME: temporary issue with Object Test local and elseif
-					if {tf: !EV_TEXT_COMPONENT} aw then
-						tf.focus_in_actions.extend (agent set_on_handle_key_ignored (True))
-						tf.focus_out_actions.extend (agent set_on_handle_key_ignored (False))
-						d := True
-					end
-				end
-				if not d then
-					aw.pointer_enter_actions.extend (agent set_on_handle_key_ignored (True))
-					aw.pointer_leave_actions.extend (agent set_on_handle_key_ignored (False))
-				end
-			end
+			suppress_confirmation_key_close  (aw)
 		end
 
 	new_panel_container (a_text: STRING_GENERAL; a_collapsable: BOOLEAN): EV_FRAME is
+			-- Create a new panel container for `a_text',
+			-- and make it collapsable if `a_collapsable' is True
 		do
 			create Result
 			if a_text /= Void and then not a_text.is_empty then
@@ -1497,18 +1442,30 @@ feature -- Access
 			Result := interface_names.m_breakpoints_tool
 		end
 
-	buttons: DS_SET [INTEGER]
+	buttons: DS_SET [INTEGER] is
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+		once
+			Result := dialog_buttons.reset_ok_cancel_buttons
+		end
 
-	default_button: INTEGER
+	default_button: INTEGER is
 			-- The dialog's default action button
+		once
+			Result := dialog_buttons.ok_button
+		end
 
-	default_cancel_button: INTEGER;
+	default_cancel_button: INTEGER is
 			-- The dialog's default cancel button
+		once
+			Result := dialog_buttons.cancel_button
+		end
 
-	default_confirm_button: INTEGER;
+	default_confirm_button: INTEGER is
 			-- The dialog's default confirm button
+		once
+			Result := dialog_buttons.ok_button
+		end
 
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

@@ -156,9 +156,9 @@ feature -- Graphical changes
 				set_type (object_type_representation)
 				set_address (object_address)
 				if object_dynamic_class /= Void and then object_dynamic_class.is_expanded then
-					set_pixmap (icons [expanded_value])
+					set_pixmap (icons [{VALUE_TYPES}.expanded_value])
 				else
-					set_pixmap (icons [reference_value])
+					set_pixmap (icons [{VALUE_TYPES}.reference_value])
 				end
 				row.ensure_expandable
 				set_expand_action (agent on_row_expand)

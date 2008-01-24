@@ -207,9 +207,6 @@ rt_public void discard_breakpoints(void);	/* discard all breakpoints. used when 
 rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 
 /* exception trace occurred during debugging evaluation */
-#define DBG_EXCEPTION_TRACE_MAX 10
-rt_private char** dbg_exception_traces;
-rt_private void dbg_create_exception_traces(void);
 
 rt_shared void debug_initialize(void);	/* Initialize debug information */
 rt_public void dnotify(int, int);		/* Notify the daemon event and data, no answer waited */
@@ -303,7 +300,6 @@ rt_public int already_warned;
 rt_shared void debug_initialize() /* Initialize debug information (breakpoints ...) */
 {
 	dbreak_create_table();			/* create the structure used to store breakpoints information */
-	dbg_create_exception_traces(); 	/* create dbg exception traces information */
 }
 
 /*
@@ -485,51 +481,6 @@ rt_public void dstatus(int dx)
 /*************************************************************************************************************************
 * Debugging hooks.
 *************************************************************************************************************************/
-
-rt_private void dbg_create_exception_traces(void)
-{
-	/* allocate memory for BP_TABLE_SIZE pointers */
-	dbg_exception_traces = (char* *)cmalloc(DBG_EXCEPTION_TRACE_MAX*sizeof(char*));
-	if (dbg_exception_traces == NULL) {
-		enomem();
-	}
-	
-	/* wipe out the allocated structure */
-	memset((char*)dbg_exception_traces, 0, DBG_EXCEPTION_TRACE_MAX*sizeof(char*));
-}
-
-rt_shared void dbg_clear_exception_traces(void)
-{
-	char* s;
-	int i;
-
-	for (i = 0; i < DBG_EXCEPTION_TRACE_MAX; i = i + 1) {
-		if (dbg_exception_traces[i] != NULL) {
-			s = dbg_exception_traces[i];
-			free(s);
-			dbg_exception_traces[i] = NULL;
-		}
-	}
-}
-
-rt_shared int dbg_store_exception_trace (char* trace) 
-{
-	int i;
-	for (i = 0; i < DBG_EXCEPTION_TRACE_MAX; i = i + 1) {
-		if (dbg_exception_traces[i] == NULL) {
-			dbg_exception_traces[i] = strdup (trace);
-			return i + 1;
-		}
-	}
-	return -1;
-}
-rt_public char* dbg_fetch_exception_trace (int eid)
-{
-	char* res;
-	res = dbg_exception_traces[eid - 1];
-	dbg_exception_traces[eid - 1] = NULL;
-	return res;
-}
 
 rt_public void set_breakpoint_count (int num)
 	{

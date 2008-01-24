@@ -49,7 +49,7 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_close_debugger: INTEGER 		= 44 -- Close the debugger daemon.
 	Rqst_set_ipc_param: INTEGER 		= 45 -- Set IPC parameters.
 	Rqst_clear_breakpoints: INTEGER 	= 46 -- Clear breakpoints table from debuggee.
-	Rqst_dbg_exception_trace: INTEGER 	= 47 -- Get dbg exception trace
+	Rqst_last_exception: INTEGER 		= 47 -- get Last exception value.	
 	Rqst_new_instance: INTEGER 			= 49 -- Create new instance of class
 	Rqst_rt_operation: INTEGER 			= 50 -- Invoke an `RT_EXTENSION' operation	
 

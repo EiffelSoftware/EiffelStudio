@@ -86,7 +86,7 @@
 #define CLOSE_DBG 44			/* Close ecdbgd */
 #define SET_IPC_PARAM 45		/* set IPC parameters value (pid, timeout in seconds, ...) */
 #define CLEAR_BREAKPOINTS 46	/* Clear breakpoints table */
-#define DBG_EXCEPTION_TRACE 47	/* Get exception trace by id */
+#define LAST_EXCEPTION	 47		/* Get last_exception object */
 #define APPLICATION_ENV	48		/* Send current env to launch application */
 #define NEW_INSTANCE	49		/* Create new instance of class */
 #define RT_OPERATION	50		/* Invoke an `RT_EXTENSION' operation */

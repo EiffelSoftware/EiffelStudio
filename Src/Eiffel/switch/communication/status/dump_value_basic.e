@@ -191,7 +191,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type_of_bits_set: type_of_bits = a_type
 		end
 
-feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR} -- Internal data
+feature {DUMP_VALUE, ES_OBJECTS_GRID_LINE, DBG_EXPRESSION_EVALUATOR, DBG_EVALUATOR, APPLICATION_EXECUTION} -- Internal data
 
 	value_boolean	: BOOLEAN
 	value_character_8 : CHARACTER

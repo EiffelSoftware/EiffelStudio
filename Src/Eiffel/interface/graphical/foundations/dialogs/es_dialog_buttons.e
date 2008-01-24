@@ -114,7 +114,7 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
-	frozen reset_ok_cancel: DS_HASH_SET [INTEGER]
+	frozen reset_ok_cancel_buttons: DS_HASH_SET [INTEGER]
 		once
 			create Result.make (3)
 --			if {PLATFORM}.is_windows then

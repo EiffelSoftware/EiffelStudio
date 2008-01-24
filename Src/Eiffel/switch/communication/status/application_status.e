@@ -140,8 +140,8 @@ feature -- Call Stack List management
 			reason := 0
 			body_index := 0
 			break_index := 0
-			exception_code := 0
-			exception_tag := Void
+			exception_occurred := False
+			exception := Void
 		end
 
 feature -- Callstack
@@ -214,42 +214,61 @@ feature -- Values
 			-- Address of object in which we are stopped
 			-- (hector address with an indirection)
 
-	exception_occurred: BOOLEAN is
-		deferred
+	exception_occurred: BOOLEAN
+			-- Exception occurred ?
+
+	exception: EXCEPTION_DEBUG_VALUE
+			-- Associated Exception value.
+
+	set_exception_occurred (b: BOOLEAN) is
+			-- Set `exception_occurred' to `b'
+		do
+			exception_occurred := b
 		end
 
-	exception_description: STRING_32 is
-		local
-			s32: STRING_32
+	exception_short_description: STRING_32 is
 		do
-			create Result.make (100)
-			Result.append ("Tag: ")
-			s32 := exception_tag
-			if s32 /= Void then
-				Result.append_string (s32)
-			end
+			Result := exception.short_description
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	exception_code: INTEGER
-			-- Exception code (if any).
+	exception_type_name: STRING is
+			-- Exception class name (if any).
+		require
+			exception_occurred: exception_occurred
+		do
+			if exception /= Void then
+				Result := exception.type_name
+			end
+		end
 
-	exception_tag: STRING_32
+	exception_meaning: STRING_32 is
 			-- Exception tag (if any).
+		do
+			if exception /= Void then
+				Result := exception.meaning
+			end
+		end
 
 	exception_message: STRING_32 is
 			-- Exception message (if any).
 		require
 			exception_occurred: exception_occurred
-		deferred
+		do
+			if exception /= Void then
+				Result := exception.message
+			end
 		end
 
-	exception_class_name: STRING is
-			-- Exception class name (if any).
+	exception_text: STRING_32 is
+			-- Exception text (if any).
 		require
 			exception_occurred: exception_occurred
-		deferred
+		do
+			if exception /= Void then
+				Result := exception.text
+			end
 		end
 
 feature -- Query
@@ -567,6 +586,11 @@ feature -- Execution replay
 
 feature -- Update
 
+	update_on_before_stopped_state is
+			-- Update data which need update before application is really stopped
+		do
+		end
+
 	update_on_stopped_state is
 			-- Update data which need update after application is really stopped
 		do
@@ -585,14 +609,12 @@ feature -- Setting
 			is_stopped := b
 		end
 
-	set_exception (i: INTEGER; s: STRING_32) is
+	set_exception (e: EXCEPTION_DEBUG_VALUE) is
+			-- Set exception
+		require
+			exception_occurred: e /= Void implies exception_occurred
 		do
-			exception_code := i
-			if s /= Void and then s.is_empty then
-				exception_tag := Void
-			else
-				exception_tag := s
-			end
+			exception := e
 		end
 
 	set_max_depth (n: INTEGER) is

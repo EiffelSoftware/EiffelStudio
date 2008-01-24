@@ -21,13 +21,6 @@ inherit
 			make
 		end
 
-	VALUE_TYPES
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		undefine
 			default_create, copy, is_equal
@@ -588,18 +581,18 @@ feature {NONE} -- Implementation
 	icons: ARRAY [EV_PIXMAP] is
 			-- List of available icons for objects.
 		once
-			create Result.make (Immediate_value, Error_message_value)
+			create Result.make ({VALUE_TYPES}.Immediate_value, {VALUE_TYPES}.Error_message_value)
 
-			Result.put (pixmaps.icon_pixmaps.debugger_object_immediate_icon, Immediate_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_void_icon, Void_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_eiffel_icon, Reference_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_expanded_icon, Expanded_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_eiffel_icon, Special_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_icon, External_reference_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_static_icon, Static_external_reference_value)
-			Result.put (pixmaps.icon_pixmaps.debugger_object_static_icon, Static_reference_value)
-			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, Exception_message_value)
-			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, Error_message_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_immediate_icon, {VALUE_TYPES}.Immediate_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_void_icon, {VALUE_TYPES}.Void_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_eiffel_icon, {VALUE_TYPES}.Reference_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_expanded_icon, {VALUE_TYPES}.Expanded_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_eiffel_icon, {VALUE_TYPES}.Special_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_icon, {VALUE_TYPES}.External_reference_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_dotnet_static_icon, {VALUE_TYPES}.Static_external_reference_value)
+			Result.put (pixmaps.icon_pixmaps.debugger_object_static_icon, {VALUE_TYPES}.Static_reference_value)
+			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, {VALUE_TYPES}.Exception_message_value)
+			Result.put (pixmaps.icon_pixmaps.general_mini_error_icon, {VALUE_TYPES}.Error_message_value)
 		end
 
 	hexa_mode_enabled: BOOLEAN is

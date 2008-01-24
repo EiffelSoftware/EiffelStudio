@@ -403,6 +403,13 @@ feature -- Status report
 			end
 		end
 
+	string_representation: STRING_32 is
+			-- Complete string value representation.
+			-- it can be Void!
+		do
+			Result := raw_string_representation (0, -1)
+		end
+
 	truncated_string_representation (min, max: INTEGER): STRING_32 is
 			-- truncated string value representation.
 			--| if max < 0 then do not truncate the upper part of the string
@@ -647,15 +654,15 @@ feature {NONE} -- Classic specific
 						end
 							-- Receive the Result.
 						recv_value (Current)
-						if is_exception_trace then
-							reset_recv_value
+						if is_exception then
+							Result := Void --| exception_item
 						else
 							if item /= Void then
 								item.set_hector_addr
 								Result := item.dump_value
-								reset_recv_value
 							end
 						end
+						reset_recv_value
 					end
 				end
 			end
@@ -777,6 +784,9 @@ feature -- Access
 				end
 			when Type_procedure_return then
 				Result := "Procedure returned"
+			when Type_exception then
+				Result := "Exception occurred"
+
 --			when
 --				Type_boolean,
 --				Type_character_8,
@@ -796,7 +806,7 @@ feature -- Access
 --			then
 --				--| Is handled by DUMP_VALUE_BASIC class
 			else
-				check not is_basic end
+				check is_not_basic: not is_basic end
 				Result := ""
 			end
 		ensure
@@ -854,6 +864,8 @@ feature -- Access
 		do
 			if type = Type_object or type = Type_string_dotnet or type = Type_manifest_string then
 				Result := value_address
+			elseif is_type_exception and value_exception /= Void then
+				Result := value_exception.address
 			end
 		end
 
@@ -873,7 +885,10 @@ feature -- Access
 	is_basic: BOOLEAN is
 			-- Is `Current' of a basic type?
 		do
-			Result := not is_type_object and type /= Type_manifest_string and type /= Type_string_dotnet
+			Result := not is_type_object
+				and not is_exception
+				and type /= Type_manifest_string
+				and type /= Type_string_dotnet
 		end
 
 feature -- Conversion
@@ -900,7 +915,7 @@ feature -- Conversion
 
 feature {DBG_EVALUATOR} -- Convertor
 
-	to_dump_value_object: DUMP_VALUE is
+	manifest_string_to_dump_value_object: DUMP_VALUE is
 			-- Current manifest string converted to an instance of STRING.
 		require
 			is_type_manifest_string

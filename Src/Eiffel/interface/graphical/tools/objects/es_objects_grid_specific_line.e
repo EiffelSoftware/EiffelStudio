@@ -344,11 +344,11 @@ feature {NONE} -- Implementation
 			glab: EV_GRID_LABEL_ITEM
 			es_glab: EV_GRID_LABEL_ITEM
 			l_exception_class_detail: STRING
-			l_exception_module_detail: STRING
-			l_exception_tag, l_exception_message: STRING_32
+			l_exception_module_detail: STRING_32
+			l_exception_meaning, l_exception_message, l_exception_text: STRING_32
 			appstat: APPLICATION_STATUS
 			dotnet_status: APPLICATION_STATUS_DOTNET
-			exc_dv: ABSTRACT_DEBUG_VALUE
+			exc_dv: EXCEPTION_DEBUG_VALUE
 		do
 			appstat := debugger_manager.application_status
 			if appstat.exception_occurred then
@@ -366,29 +366,42 @@ feature {NONE} -- Implementation
 						parent_grid.grid_cell_set_text (glab, Cst_exception_unhandled_text)
 					end
 				else
-					parent_grid.grid_cell_set_text (glab, appstat.exception_description)
+					parent_grid.grid_cell_set_text (glab, appstat.exception_short_description)
 				end
 				row.set_item (2, glab)
 
-					--| Tag
-				l_exception_tag := appstat.exception_tag
-				if l_exception_tag /= Void then
-					r := parent_grid.extended_new_subrow (row)
-					glab := parent_grid.name_label_item ("Tag")
-					parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-					r.set_item (1, glab)
-					create es_glab
-					es_glab.set_data (l_exception_tag)
-					parent_grid.grid_cell_set_text (es_glab, l_exception_tag)
-					r.set_item (2, es_glab)
-				end
+				exc_dv := appstat.exception
+				if exc_dv /= Void then
+						--| Meaning
+					l_exception_meaning := exc_dv.meaning
+					if l_exception_meaning /= Void then
+						r := parent_grid.extended_new_subrow (row)
+						glab := parent_grid.name_label_item ("Meaning")
+						parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
+						r.set_item (1, glab)
+						create es_glab
+						es_glab.set_data (l_exception_meaning)
+						parent_grid.grid_cell_set_text (es_glab, l_exception_meaning)
+						r.set_item (2, es_glab)
+					end
+						--| Message
+					l_exception_message := exc_dv.message
+					if l_exception_message /= Void then
+						r := parent_grid.extended_new_subrow (row)
+						glab := parent_grid.name_label_item ("Message")
+						parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
+						r.set_item (1, glab)
+						create es_glab
+						es_glab.set_data (l_exception_message)
+						parent_grid.grid_cell_set_text (es_glab, l_exception_message)
+						r.set_item (2, es_glab)
+					end
 
-				if dotnet_status /= Void then
 						--| Class
-					l_exception_class_detail := dotnet_status.exception_class_name
+					l_exception_class_detail := exc_dv.type_name
 					if l_exception_class_detail /= Void then
 						r := parent_grid.extended_new_subrow (row)
-						glab := parent_grid.name_label_item ("Class")
+						glab := parent_grid.name_label_item ("Type")
 						parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
 						r.set_item (1, glab)
 						create es_glab
@@ -396,41 +409,51 @@ feature {NONE} -- Implementation
 						parent_grid.grid_cell_set_text (es_glab, l_exception_class_detail)
 						r.set_item (2, es_glab)
 					end
-						--| Module
-					l_exception_module_detail := dotnet_status.exception_module_name
-					if l_exception_module_detail /= Void then
+
+					if dotnet_status /= Void then
+							--| IL type name
+						l_exception_class_detail := dotnet_status.exception_il_type_name
+						if l_exception_class_detail /= Void then
+							r := parent_grid.extended_new_subrow (row)
+							glab := parent_grid.name_label_item ("IL Type")
+							parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
+							r.set_item (1, glab)
+							create es_glab
+							es_glab.set_data (l_exception_class_detail)
+							parent_grid.grid_cell_set_text (es_glab, l_exception_class_detail)
+							r.set_item (2, es_glab)
+						end
+							--| Module
+						l_exception_module_detail := dotnet_status.exception_module_name
+						if l_exception_module_detail /= Void then
+							r := parent_grid.extended_new_subrow (row)
+							glab := parent_grid.name_label_item (interface_names.l_module)
+							parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
+							r.set_item (1, glab)
+							create es_glab
+							es_glab.set_data (l_exception_module_detail)
+							parent_grid.grid_cell_set_text (es_glab, l_exception_module_detail)
+							r.set_item (2, es_glab)
+						end
+					end
+
+						--| Nota/Message
+					l_exception_text := exc_dv.text
+					if l_exception_text /= Void and then not l_exception_text.is_empty then
 						r := parent_grid.extended_new_subrow (row)
-						glab := parent_grid.name_label_item (interface_names.l_module)
+						glab := parent_grid.name_label_item (interface_names.l_note)
 						parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
 						r.set_item (1, glab)
 						create es_glab
-						es_glab.set_data (l_exception_module_detail)
-						parent_grid.grid_cell_set_text (es_glab, l_exception_module_detail)
+						es_glab.set_data (l_exception_text)
+						parent_grid.grid_cell_set_text (es_glab, cst_exception_double_click_text)
+						parent_grid.grid_cell_set_tooltip (es_glab, l_exception_text)
+						es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_meaning, l_exception_message, l_exception_text))
 						r.set_item (2, es_glab)
 					end
-				end
 
-					--| Nota/Message
-				l_exception_message := appstat.exception_message
---				l_exception_message := dotnet_status.exception_to_string
-				if l_exception_message /= Void and then not l_exception_message.is_empty then
 					r := parent_grid.extended_new_subrow (row)
-					glab := parent_grid.name_label_item (interface_names.l_note)
-					parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
-					r.set_item (1, glab)
-					create es_glab
-					es_glab.set_data (l_exception_message)
-					parent_grid.grid_cell_set_text (es_glab, cst_exception_double_click_text)
-					parent_grid.grid_cell_set_tooltip (es_glab, l_exception_message)
-					es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
-					r.set_item (2, es_glab)
-				end
-				if dotnet_status /= Void then
-					exc_dv := dotnet_status.exception_debug_value
-					if exc_dv /= Void then
-						r := parent_grid.extended_new_subrow (row)
-						parent_grid.attach_debug_value_to_grid_row (r, exc_dv, interface_names.l_exception_object)
-					end
+					parent_grid.attach_debug_value_to_grid_row (r, exc_dv, interface_names.l_exception_object)
 				end
 				row.show
 				row.ensure_expandable
@@ -439,12 +462,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_exception_dialog (a_tag, a_msg: STRING) is
+	show_exception_dialog (a_meaning, a_msg, a_txt: STRING_32) is
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
 		do
-			create dlg.make (a_tag, a_msg)
-			dlg.show_modal_to_window (eb_debugger_manager.debugging_window.window)
+			create dlg.make
+			dlg.set_exception_meaning (a_meaning)
+			dlg.set_exception_message (a_msg)
+			dlg.set_exception_text (a_txt)
+			dlg.set_is_modal (True)
+			dlg.show_on_active_window
 		end
 
 	Cst_exception_double_click_text: STRING_GENERAL is

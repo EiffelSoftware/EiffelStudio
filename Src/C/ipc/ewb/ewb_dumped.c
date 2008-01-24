@@ -71,7 +71,7 @@ EIF_PROC set_ref;
 EIF_PROC set_pointer;
 EIF_PROC set_bits;
 EIF_PROC set_error;
-EIF_PROC set_exception_trace;
+EIF_PROC set_exception_ref;
 EIF_PROC set_void;
 
 
@@ -181,9 +181,10 @@ rt_public void c_recv_value (EIF_OBJ target)
 #endif
 		if (pack.rq_type == DUMPED) {
 			switch (pack.rq_dump.dmp_type) {
-				case DMP_EXCEPTION_TRACE:
+				case DMP_EXCEPTION_ITEM:
 					item = *pack.rq_dump.dmp_item;
-					(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) set_exception_trace) (eif_access (target), item.it_int32);
+					(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_exception_ref)
+							(eif_access (target), item.it_ref, item.type & SK_DTYPE);
 					return;
 				case DMP_ITEM:
 					item = *pack.rq_dump.dmp_item;
@@ -251,7 +252,7 @@ rt_public void c_pass_recv_routines (
 	EIF_PROC d_point,
 	EIF_PROC d_bits,
 	EIF_PROC d_error,
-	EIF_PROC d_exception_trace,
+	EIF_PROC d_exception_ref,
 	EIF_PROC d_void)
 /*
  *	Register the routines to communicate with a RECV_VALUE
@@ -274,7 +275,7 @@ rt_public void c_pass_recv_routines (
 	set_pointer = d_point;
 	set_bits = d_bits;
 	set_error = d_error;
-	set_exception_trace = d_exception_trace;
+	set_exception_ref = d_exception_ref;
 	set_void = d_void;
 }
 

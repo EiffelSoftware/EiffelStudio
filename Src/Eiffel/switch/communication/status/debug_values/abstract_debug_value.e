@@ -56,6 +56,12 @@ inherit
 			is_equal
 		end
 
+inherit {NONE}
+	DEBUGGER_COMPILER_UTILITIES
+		undefine
+			is_equal
+		end
+
 feature -- Properties
 
 	is_attribute: BOOLEAN;
@@ -174,7 +180,7 @@ feature -- Output
 			valid_kind: Result >= Immediate_value and then Result <= Error_message_value
 		end
 
-feature {DUMP_VALUE, CALL_STACK_ELEMENT, DBG_EVALUATOR, ABSTRACT_DEBUG_VALUE, IPC_REQUEST, OBJECT_ADDR}
+feature {DUMP_VALUE, CALL_STACK_ELEMENT, DBG_EVALUATOR, ABSTRACT_DEBUG_VALUE, IPC_REQUEST, OBJECT_ADDR} -- Hector address
 
 	set_hector_addr is
 			-- Convert the physical addresses received from the application

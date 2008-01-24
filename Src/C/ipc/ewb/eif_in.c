@@ -118,7 +118,6 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 	}
 }
 
-
 EIF_REFERENCE request_handler (void)
 {
 	/* Dispatch request from ised to
@@ -185,9 +184,7 @@ EIF_REFERENCE request_dispatch (Request rqst)
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_why);
 				ptr += strlen (ptr) + 1;
-				sprintf (ptr, "%i", stop_info.st_code);
-				ptr += strlen (ptr) + 1;
-				strcpy (ptr, stop_info.st_tag);
+				sprintf (ptr, "%i", stop_info.st_exception);
 				ptr += strlen (ptr); /* terminating null so that (ptr - string) is the length */
 				eif_string = makestr (string, ptr - string);
 				(stopped_hdlr_set) (eif_access (stopped_handler), eif_string);

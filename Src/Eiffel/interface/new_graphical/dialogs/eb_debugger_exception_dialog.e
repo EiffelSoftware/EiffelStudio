@@ -9,92 +9,87 @@ class
 	EB_DEBUGGER_EXCEPTION_DIALOG
 
 inherit
-	EB_DEBUGGER_EXCEPTION_DIALOG_IMP
-		redefine
-			default_create
-		end
-
-	EB_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
-	EB_FILE_DIALOG_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
-	EIFFEL_LAYOUT
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
+	ES_DIALOG
 
 create
-	make, default_create --, make_with_window
+	make
+
+convert
+	dialog: {EV_DIALOG}
 
 feature {NONE} -- Initialization
 
-	make (a_exception_tag, a_exception_message: STRING_GENERAL) is
-			-- Create Current with Exception message
+	build_dialog_interface (a_container: EV_VERTICAL_BOX) is
+			-- Builds the dialog's user interface.
+			--
+			-- `a_container': The dialog's container where the user interface elements should be extended
+		local
+			hb: EV_HORIZONTAL_BOX
 		do
-			default_create
-			set_exception_tag (a_exception_tag)
-			set_exception_message (a_exception_message)
+			create label
+			create wrapping_button
+			create message_text
+			create details_box
+			create details_text
+			details_box.extend (details_text)
+
+			create hb
+			hb.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			hb.extend (label); hb.disable_item_expand (label)
+			hb.extend (create {EV_CELL})
+			hb.extend (wrapping_button); hb.disable_item_expand (wrapping_button)
+
+			a_container.extend (hb); a_container.disable_item_expand (hb)
+			a_container.extend (message_text)
+			a_container.extend (details_box); a_container.disable_item_expand (details_box)
+
+			label.set_minimum_height (20)
+			wrapping_button.enable_select
+			wrapping_button.set_text (interface_names.l_wrap)
+			message_text.enable_word_wrapping
+			message_text.disable_edit
+			message_text.set_minimum_width (300)
+			message_text.set_minimum_height (80)
+			message_text.set_background_color (colors.stock_colors.white)
+
+			details_box.set_text (interface_names.l_additional_details)
+			details_box.hide
+
+			wrapping_button.select_actions.extend (agent set_wrapping_mode)
+
+			set_title_and_label (
+					interface_names.l_debugger_exception_message,
+					interface_names.l_exception_message_from_debugger
+					)
+
+			set_button_text (dialog_buttons.ok_button, interface_names.b_save)
+			set_button_text (dialog_buttons.cancel_button, interface_names.b_close)
+
+			set_button_action_before_close (dialog_buttons.ok_button, agent on_save)
+			set_button_action_before_close (dialog_buttons.cancel_button, agent on_close)
+
+			save_button := dialog_window_buttons.item (dialog_buttons.ok_button)
+			close_button := dialog_window_buttons.item (dialog_buttons.cancel_button)
+
+			dialog.set_size (400, 400)
 		end
 
-	make_with_window (a_window: EV_DIALOG) is
-			-- Create `Current' in `a_window'.
-		require
-			window_not_void: a_window /= Void
-			window_empty: a_window.is_empty
-			no_menu_bar: a_window.menu_bar = Void
-		do
-			window := a_window
-			initialize
-		ensure
-			window_set: window = a_window
-			window_not_void: window /= Void
-		end
+feature -- Widgets
 
-	default_create is
-			 -- Create `Current'.
-		do
-			create window
-			initialize
-		ensure then
-			window_not_void: window /= Void
-		end
+	message_text: EV_TEXT
+			-- Message text field.
 
-feature -- Show
+	wrapping_button: EV_CHECK_BUTTON
+			-- Wrapping button
 
-	show_modal_to_window (w: EV_WINDOW) is
-			-- Show modal to window
-		require
-			w_not_void: w /= Void
-		do
-			window.show_modal_to_window (w)
-		end
+	label, details_text: EV_LABEL
+			-- Details labels
 
-	show_relative_to_window (w: EV_WINDOW) is
-			-- Show relative to window
-		require
-			w_not_void: w /= Void
-		do
-			window.show_relative_to_window (w)
-		end
+	details_box: EV_FRAME
+			-- Details's box
+
+	save_button, close_button: EV_BUTTON
+			-- Dialog's buttons
 
 feature -- Details
 
@@ -104,47 +99,74 @@ feature -- Details
 			title_not_void: t /= Void
 			label_not_void: l /= Void
 		do
-			window.set_title (t)
+			dialog.set_title (t)
 			label.set_text (l)
 		end
 
-	set_exception_tag (t: STRING_GENERAL) is
-			-- Set tag and refresh display
+	set_exception (e: EXCEPTION_DEBUG_VALUE) is
+			-- Set Exception value
 		do
-			if t /= Void then
-				tag := t.as_string_32
+			set_exception_meaning (e.meaning)
+			set_exception_message (e.message)
+			set_exception_text (e.text)
+		end
+
+	set_exception_meaning (t: STRING_GENERAL) is
+			-- Set meaning and refresh display
+		do
+			if t /= Void and then not t.is_empty then
+				exception_meaning := t.as_string_32
 			else
-				tag := Void
+				exception_meaning := Void
 			end
-			display_exception_tag_and_message
+			display_exception_info
 		end
 
 	set_exception_message (t: STRING_GENERAL) is
 			-- Set message and refresh display
 		do
-			if t /= Void then
-				message := t.as_string_32
+			if t /= Void and then not t.is_empty then
+				exception_message := t.as_string_32
 			else
-				message := Void
+				exception_message := Void
 			end
 
-			display_exception_tag_and_message
+			display_exception_info
 		end
 
-	display_exception_tag_and_message is
+	set_exception_text (t: STRING_GENERAL) is
+			-- Set text and refresh display
+		do
+			if t /= Void and then not t.is_empty then
+				exception_text := t.as_string_32
+			else
+				exception_text := Void
+			end
+
+			display_exception_info
+		end
+
+	display_exception_info is
 			-- Display Exception's tag and message
 		local
 			s: STRING_32
 		do
 			create s.make_empty
-			if tag /= Void then
-				s.append_string (tag)
-				s.append_string ("%N%N")
+			if exception_meaning /= Void then
+				s.append_string (exception_meaning)
+				s.append_string ("%N")
 			end
-			if message /= Void then
-				if tag = Void or else not message.is_equal (tag) then
-					s.append_string (message)
+			if exception_message /= Void then
+				if exception_meaning = Void or else not exception_message.is_equal (exception_meaning) then
+					s.append_string (exception_message)
+					s.append_string ("%N")
 				end
+			end
+			if exception_text /= Void then
+				if not s.is_empty then
+					s.append_string ("%N")
+				end
+				s.append_string (exception_text)
 			end
 			if s.occurrences ('%R') > 0 then
 				s.prune_all ('%R')
@@ -174,49 +196,34 @@ feature -- Details
 			details_box.show
 		end
 
-feature {NONE} -- Initialization
-
-	user_initialization is
-			-- called by `initialize'.
-			-- Any custom user initialization that
-			-- could not be performed in `initialize',
-			-- (due to regeneration of implementation class)
-			-- can be added here.
-		do
-			window.set_size (400, 400)
-			set_title_and_label (
-					interface_names.l_debugger_exception_message,
-					interface_names.l_exception_message_from_debugger
-					)
-
-			details_box.hide
-			message_text.enable_word_wrapping
-			message_text.disable_edit
-			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)
-			window.set_default_cancel_button (close_button)
-			window.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-		end
-
 feature {NONE} -- Implementation
 
-	tag, message: STRING_32
-			-- Exception tag and message
+	exception_meaning,
+	exception_message,
+	exception_text: STRING_32
+			-- Exception meaning, message, and text
 
 	save_exception_message is
 			-- Save exception trace into a file
 		local
 			l_save_tool: EB_SAVE_STRING_TOOL
 		do
-			create l_save_tool.make (window)
+			create l_save_tool.make (dialog)
 			l_save_tool.set_text (message_text.text)
 			l_save_tool.set_title (Interface_names.e_Save_exception_into)
 			l_save_tool.save
 		end
 
-	close_dialog is
-			-- Close dialog
+	on_save is
+			-- Action to do when "Save" button is activated
 		do
-			window.destroy
+			save_exception_message
+			veto_close
+		end
+
+	on_close is
+			-- Action to do when "Close" button is activated
+		do
 		end
 
 	set_wrapping_mode is
@@ -228,6 +235,45 @@ feature {NONE} -- Implementation
 				message_text.disable_word_wrapping
 			end
 			message_text.disable_edit
+		end
+
+feature -- Access
+
+	icon: EV_PIXEL_BUFFER
+			-- The dialog's icon
+		do
+			Result := stock_pixmaps.general_dialog_icon
+		end
+
+	title: STRING_32
+			-- The dialog's title
+		do
+			Result := interface_names.l_debugger_exception_message
+		end
+
+	buttons: DS_SET [INTEGER] is
+			-- Set of button id's for dialog
+			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+		once
+			Result := dialog_buttons.ok_cancel_buttons
+		end
+
+	default_button: INTEGER is
+			-- The dialog's default action button
+		do
+			Result := dialog_buttons.cancel_button
+		end
+
+	default_cancel_button: INTEGER is
+			-- The dialog's default cancel button
+		do
+			Result := dialog_buttons.cancel_button
+		end
+
+	default_confirm_button: INTEGER is
+			-- The dialog's default confirm button		
+		do
+			Result := dialog_buttons.cancel_button
 		end
 
 indexing

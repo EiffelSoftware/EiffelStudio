@@ -227,8 +227,13 @@ fixme ("find a smarter way to get a valid value")
 		end
 
 	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+		local
+			dmp: DUMP_VALUE
 		do
-			if object_address /= Void then
+			dmp := last_dump_value
+			if dmp /= Void and then dmp.is_type_exception and then dmp.value_exception /= Void then
+				Result := dmp.value_exception.sorted_children
+			elseif object_address /= Void then
 				Result := debugger_manager.object_manager.sorted_attributes_at_address (object_address, object_spec_lower, object_spec_upper)
 			end
 		end
@@ -390,17 +395,20 @@ feature -- Graphical changes
 	show_error_dialog (txt: STRING_GENERAL) is
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
-			l_tag: STRING_32
+			l_meaning: STRING_32
 		do
 			if expression /= Void then
-				l_tag := expression.expression.twin
-				if l_tag /= Void then
-					l_tag := interface_names.l_error_on_expression (l_tag)
+				l_meaning := expression.expression.twin
+				if l_meaning /= Void then
+					l_meaning := interface_names.l_error_on_expression (l_meaning)
 				end
 			end
-			create dlg.make (l_tag, txt)
+			create dlg.make
+			dlg.set_exception_meaning (l_meaning)
+			dlg.set_exception_text (txt)
 			dlg.set_title_and_label (interface_names.t_watch_tool_error_message, interface_names.l_error_message)
-			dlg.show_modal_to_window (parent_window_from (row.parent.parent))
+			dlg.set_is_modal (True)
+			dlg.show_on_active_window
 		end
 
 	grid_activate_item_if_row_selected (a_item: EV_GRID_ITEM;
@@ -440,7 +448,6 @@ feature -- Graphical changes
 			glab: EV_GRID_LABEL_ITEM
 			add,typ: STRING
 			res: STRING_32
-			l_exception_dump_value: DUMP_VALUE
 			l_title: STRING_32
 		do
 			if not compute_grid_display_done and not refresh_requested then
@@ -517,12 +524,13 @@ feature -- Graphical changes
 							elseif expression_evaluator.has_error_not_implemented then
 								set_error_pixmap (pixmaps.icon_pixmaps.compile_error_icon)
 							end
-							l_exception_dump_value := expression_evaluator.final_result_value
-							if l_exception_dump_value /= Void and then l_exception_dump_value.is_type_exception then
-								if expression_evaluator.has_error_exception then
-									l_title := interface_names.l_Exception_object
+							if {l_exception_dump_value: !DUMP_VALUE} expression_evaluator.final_result_value then
+								if l_exception_dump_value.is_type_exception then
+									if expression_evaluator.has_error_exception then
+										l_title := interface_names.l_Exception_object
+									end
+									attach_debug_value_to_grid_row (grid_extended_new_subrow (row), l_exception_dump_value.value_exception, l_title)
 								end
-								attach_debug_value_to_grid_row (grid_extended_new_subrow (row), l_exception_dump_value.value_exception, l_title)
 							end
 						else
 							if last_dump_value /= Void then

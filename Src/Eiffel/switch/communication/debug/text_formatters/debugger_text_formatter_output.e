@@ -267,33 +267,10 @@ feature -- Application status
 
 	append_exception (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
 			-- Display exception in `st'.		
-		local
-			except_code: INTEGER
-			except_tag: STRING_32
-			e: EXCEPTIONS
-			m: STRING
 		do
 			st.add_indent
 			st.add_indent
-			st.add_string ("Code: ")
-			except_code := appstatus.exception_code
-			st.add_int (except_code)
-			st.add_string (" (")
-			create e
-			m := e.meaning (except_code)
-			if m = Void then
-				m := "Undefined"
-			end
-			st.add_string (m)
-			st.add_string (")")
-			st.add_new_line
-			st.add_indent
-			st.add_indent
-			st.add_string ("Tag: ")
-			except_tag := appstatus.exception_tag
-			if except_tag /= Void then
-				st.add_string (except_tag.as_string_8)
-			end
+			st.add_string (appstatus.exception_short_description)
 			st.add_new_line
 		end
 
@@ -766,7 +743,7 @@ feature {NONE} -- append_type_and_value implementation
 
 	exception_debug_value_append_type_and_value (v: EXCEPTION_DEBUG_VALUE; st: TEXT_FORMATTER) is
 		do
-			st.add_string (v.display_tag)
+			st.add_string (v.short_description)
 		end
 
 	eifnet_debug_unknown_type_value_append_type_and_value (v: EIFNET_DEBUG_UNKNOWN_TYPE_VALUE; st: TEXT_FORMATTER) is

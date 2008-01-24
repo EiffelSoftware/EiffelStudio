@@ -48,6 +48,7 @@ create {DEBUGGER_MANAGER}
 feature {NONE} -- Initialization
 
 	make_with_debugger (dbg: like debugger_manager) is
+			-- Instanciate Current with `dbg'
 		local
 			l_ipc: like ipc_engine
 		do
@@ -60,6 +61,7 @@ feature {NONE} -- Initialization
 			else
 				l_ipc.change_debugger_manager (debugger_manager)
 			end
+			init_recv_c
 		end
 
 feature {NONE} -- IPC implementation
@@ -79,6 +81,7 @@ feature {NONE} -- IPC implementation
 feature -- recycling data
 
 	recycle is
+			-- Recycle
 		do
 			once_request.recycle
 			Precursor
@@ -87,6 +90,8 @@ feature -- recycling data
 feature {DEAD_HDLR, RUN_REQUEST} -- Status
 
 	build_status is
+			-- Build associated `status'
+			-- (ie: the application is running)
 		do
 			create status.make (Current)
 		end
@@ -144,13 +149,17 @@ feature -- Execution
 		end
 
 	continue_ignoring_kept_objects is
+			-- Continue the running of the application
+			-- before any debugger's operation occurred
+			-- so basically, we are sure we have the same `kept_objects'
 		do
-			process_before_running
+			process_before_resuming
 			status.set_is_stopped (False)
 			cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
 		end
 
-	process_before_running is
+	process_before_resuming is
+			-- Operation to process before resuming
 		do
 			send_breakpoints
 		end
@@ -233,6 +242,21 @@ feature -- Execution
 			Result := ewb_request.item
 			Result.set_hector_addr
 			ewb_request.reset_recv_value
+		end
+
+	remote_current_exception_value: EXCEPTION_DEBUG_VALUE is
+			-- `{EXCEPTION_MANAGER}.last_exception' value.
+		do
+			send_rqst_0 (rqst_last_exception)
+			recv_value (Current)
+			if is_exception then
+				Result := exception_item
+				Result.set_hector_addr
+			else
+				check item_void: item = Void end
+				create Result.make_with_value (Void)
+			end
+			reset_recv_value
 		end
 
 	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is
@@ -431,6 +455,62 @@ feature -- Query
 --			Result := dump_value_at_address_with_class (a_addr, a_cl).
 			to_implement ("Need to be implemented, but for now this is not used.")
 			check False end
+		end
+
+	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; full_details: BOOLEAN) is
+			-- Code, Tag, Message from `val'.
+		local
+			cl: CLASS_C
+			dv: DUMP_VALUE
+			edv: DUMP_VALUE
+			f: FEATURE_I
+			val: ABSTRACT_REFERENCE_VALUE
+		do
+			val := e.debug_value
+			if val /= Void then
+				cl := val.dynamic_class
+				if cl = Void then
+					cl := debugger_manager.compiler_data.exception_class_c
+				end
+				if cl = Void then
+					if e.exception_type_name = Void then
+						e.set_exception_type_name ("NONE")
+					end
+				else
+						--| Type name
+					if e.exception_type_name = Void then
+						e.set_exception_type_name (cl.name_in_upper)
+					end
+						--| Exception code
+					if e.exception_code <= 0 then
+						f := cl.feature_named ("code")
+						if f /= Void and then f.is_function then
+							edv := val.dump_value
+							dv := function_evaluation_on (val, edv, f, cl, Void)
+							if dv /= Void and then dv.is_basic then
+								e.set_exception_code (dv.as_dump_value_basic.value_integer_32)
+							end
+						end
+					end
+
+					if full_details then
+						if edv = Void then
+							edv := val.dump_value
+						end
+							--| Exception meaning					
+						if e.exception_meaning = Void then
+							e.set_exception_meaning (string_field_evaluation_on (val, edv, cl, "meaning"))
+						end
+							--| Exception message					
+						if e.exception_message = Void then
+							e.set_exception_message (string_field_evaluation_on (val, edv, cl, "message"))
+						end
+						if e.exception_text = Void then
+							e.set_exception_text (string_field_evaluation_on (val, edv, cl, "exception_trace"))
+						end
+					end
+				end
+			end
 		end
 
 --feature {RUN_REQUEST} -- Implementation

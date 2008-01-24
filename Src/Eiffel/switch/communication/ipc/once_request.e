@@ -137,7 +137,6 @@ feature -- Implementation
 			err_v: DUMMY_MESSAGE_DEBUG_VALUE
 			proc_v: PROCEDURE_RETURN_DEBUG_VALUE
 			l_once_nature: INTEGER
-			last_exception: ABSTRACT_DEBUG_VALUE
 		do
 			clear_last_values
 			l_index := once_index (once_routine)
@@ -189,13 +188,16 @@ feature -- Implementation
 						Result := proc_v
 					else
 						recv_value (Current)
-						if is_exception_trace then
-							get_exception_trace
-							create exc_v.make_with_name (once_routine.feature_name)
-							exc_v.set_tag ("Exception occurred")
-							exc_v.set_message (exception_trace)
-							Result := exc_v
+						if is_exception then
+							exc_v := exception_item
 							reset_recv_value
+							if exc_v /= Void then
+								exc_v.set_hector_addr
+								Result := exc_v
+							else
+								create {EXCEPTION_DEBUG_VALUE} Result.make_without_any_value
+							end
+							Result.set_name (once_routine.feature_name)
 						else
 							Result := item
 							reset_recv_value
@@ -212,16 +214,27 @@ feature -- Implementation
 					end
 				else
 					recv_value (Current)
-					last_exception := item
-					reset_recv_value
-
-					last_exception_code := 0 --| FIXME jfiat [2008/01/11] : c_tread.to_integer
-					create exc_v.make_with_name (once_routine.feature_name)
-					exc_v.set_tag (exception_tag_from_code (last_exception_code))
-					if last_exception /= Void then
-						exc_v.set_exception_value (last_exception)
+					check is_exception: is_exception end
+					if is_exception then
+						exc_v := exception_item
+						reset_recv_value
+						check exc_v /= Void end
+						if exc_v /= Void then
+							Result := exc_v
+						else
+							create {EXCEPTION_DEBUG_VALUE} Result.make_without_any_value
+						end
+					else
+						if {arv: !ABSTRACT_REFERENCE_VALUE} item then
+							create {EXCEPTION_DEBUG_VALUE} Result.make_with_value (arv)
+						else
+							check should_not_occurred: False end
+							create {EXCEPTION_DEBUG_VALUE} Result.make_without_any_value
+						end
+						reset_recv_value
 					end
-					Result := exc_v
+					Result.set_hector_addr
+					Result.set_name (once_routine.feature_name)
 
 					debug ("debugger_ipc")
 						print (once_routine.feature_name + " : failed%N")

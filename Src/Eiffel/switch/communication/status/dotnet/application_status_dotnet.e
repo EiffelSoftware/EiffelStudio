@@ -14,10 +14,10 @@ inherit
 		redefine
 			current_call_stack_element,
 			current_call_stack,
+			update_on_before_stopped_state,
 			update_on_stopped_state,
 			set_current_thread_id,
-			thread_name, thread_priority,
-			exception_description
+			thread_name, thread_priority
 		end
 
 	SHARED_EIFNET_DEBUGGER
@@ -72,27 +72,6 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
 feature -- Update
 
-	exception_debug_value: ABSTRACT_DEBUG_VALUE is
-		require else
-			exception_occurred: exception_occurred
-			eifnet_debugger_exists: eifnet_debugger_initialized
-		local
-			icdv: ICOR_DEBUG_VALUE
-		do
-			icdv := eifnet_debugger.new_active_exception_value_from_thread
-			if icdv /= Void then
-				Result := debug_value_from_icdv (icdv, Void)
-				Result.set_name ("Exception object")
-			end
-		end
-
-	exception_occurred: BOOLEAN is
-		require else
-			eifnet_debugger_exists: eifnet_debugger_initialized
-		do
-			Result := Eifnet_debugger.exception_occurred
-		end
-
 	exception_handled: BOOLEAN is
 			-- Last Exception is handled ?
 			-- if True => first chance
@@ -103,36 +82,38 @@ feature -- Update
 			Result := Eifnet_debugger.last_exception_is_handled
 		end
 
-	exception_class_name: STRING is
-			-- Exception class name
-		do
-			Result := Eifnet_debugger.exception_class_name
-		end
-
-	exception_module_name: STRING is
+	exception_module_name: STRING_32 is
 			-- Exception module name
 		require
 			exception_occurred: exception_occurred
 		do
-			Result := Eifnet_debugger.exception_module_name
+			if exception /= Void then
+				Result := exception.other_info (Exception_module_name_key)
+			end
 		end
 
-	exception_to_string: STRING_32 is
-			-- Exception "ToString" output
+	exception_il_type_name: STRING_8 is
+			-- Exception IL type name
 		require
 			exception_occurred: exception_occurred
+		local
+			s32: STRING_32
 		do
-			Result := Eifnet_debugger.exception_to_string
+			if exception /= Void then
+				s32 := exception.other_info (Exception_il_type_name_key)
+				if s32 /= Void then
+					Result := s32.as_string_8
+				end
+			end
 		end
 
-	exception_message: STRING_32 is
-			-- Exception "GetMessage" output
-		require else
-			exception_occurred: exception_occurred
+	update_on_before_stopped_state is
+			-- Update data before the application is really stopped
 		do
-			Result := exception_to_string
-			if Result = Void then
-				Result := Eifnet_debugger.exception_message
+			if exception_occurred then
+				if exception = Void or else not exception.has_value then
+					set_exception (application.remote_current_exception_value)
+				end
 			end
 		end
 
@@ -140,15 +121,10 @@ feature -- Update
 			-- Update data once the application is really stopped
 		do
 			if exception_occurred and is_stopped then
-				exception_tag := Eifnet_debugger.exception_message
-			else
-				exception_tag := Void
+				if exception = Void or else not exception.has_value then
+					set_exception (application.remote_current_exception_value)
+				end
 			end
-		end
-
-	exception_description: STRING_32 is
-		do
-			Result := Precursor {APPLICATION_STATUS}
 		end
 
 feature -- Values
@@ -299,7 +275,15 @@ feature -- Reason for stopping
 			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_step)
 		end
 
-indexing
+feature {APPLICATION_EXECUTION_DOTNET} -- Constants
+
+	Exception_module_name_key: STRING = "module_name"
+			-- Key used to fetch exception other info for module name
+
+	Exception_il_type_name_key: STRING = "il_type_name"
+			-- Key used to fetch exception other info for IL type name
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

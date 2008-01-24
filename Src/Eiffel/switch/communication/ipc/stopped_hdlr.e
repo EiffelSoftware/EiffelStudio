@@ -11,6 +11,8 @@ inherit
 
 	OBJECT_ADDR
 
+	RECV_VALUE
+
 	APPLICATION_STATUS_EXPORTER
 
 	REFACTORING_HELPER
@@ -42,8 +44,13 @@ feature -- Execution
 			--    type of object
 			--    offset in byte code
 			--    reason for stopping
-			--    exception code (undefined if irrelevant)
+			--    did exception occurred ?
 			--    assertion tag (undefined if irrelevant)
+			--
+			-- Check:
+			--		* C\ipc\app\app_proto.c:stop_rqst (..)
+			--		* C\ipc\ewb\eif_in.c:request_dispatch (..) --> case STOPPED: ..
+			--		* C\ipc\shared\rqst_idrs.c:idr_Stop (..)
 		local
 			feature_name: STRING
 			origine_type: INTEGER
@@ -51,8 +58,7 @@ feature -- Execution
 			offset: INTEGER
 			address: STRING
 			stopping_reason: INTEGER
-			exception_code: INTEGER
-			exception_tag: STRING
+			exception_occurred: BOOLEAN
 			thr_id: INTEGER
 
 			l_app: APPLICATION_EXECUTION
@@ -89,6 +95,9 @@ feature -- Execution
 
 					--| Reset pipe reader parsing
 				reset_parsing
+				debug ("DEBUGGER_TRACE","DEBUGGER_IPC")
+					print (generator + ".details=" + detail + "%N")
+				end
 
 					--| Read feature name.
 				read_string
@@ -120,13 +129,9 @@ feature -- Execution
 				read_integer
 				stopping_reason := last_integer
 
-					--| Read exception code.
+					--| Read exception.
 				read_integer
-				exception_code := last_integer
-
-					--| Read assertion tag.
-				read_string;
-				exception_tag := last_string
+				exception_occurred := last_integer = 1
 
 					--|----------------------------|--
 					--| Data retrieved             |--
@@ -158,7 +163,17 @@ feature -- Execution
 				l_status.set_current_thread_id (thr_id)
 
 				l_status.set (feature_name, address, origine_type, dynamic_type, offset, stopping_reason)
-				l_status.set_exception (exception_code, exception_tag)
+				l_status.set_exception_occurred (exception_occurred)
+				if exception_occurred then
+					if {e: !EXCEPTION_DEBUG_VALUE} l_app.remote_current_exception_value then
+						e.update_data
+						l_status.set_exception (e)
+					else
+						check should_not_occur: False end
+						l_status.set_exception (create {EXCEPTION_DEBUG_VALUE}.make_without_any_value)
+						l_status.exception.set_user_meaning ("Exception occurred (no data available!)")
+					end
+				end
 
 				debug ("DEBUGGER_TRACE","DEBUGGER_IPC")
 					io.error.put_string ("STOPPED_HDLR: Finished setting status (Now calling after cmd)%N")
@@ -296,14 +311,20 @@ feature {NONE} -- Implementation
 
 	execution_stopped_on_exception: BOOLEAN is
 			-- Do we stop execution on this exception event ?
+		require
+			exception_occurred: debugger_manager.application_status.exception_occurred
 		do
 			Result := Debugger_manager.process_exception
 			debug ("debugger_trace")
 				if Result then
-					print ("Catch exception: " + debugger_manager.application_status.exception_code.out + "%N")
+					io.put_string ("Catch exception")
 				else
-					print ("Ignore exception: " + debugger_manager.application_status.exception_code.out + "%N")
+					io.put_string ("Ignore exception")
 				end
+				if {s: !STRING} debugger_manager.application_status.exception_type_name then
+					print (": " + s)
+				end
+				io.new_line
 			end
 		end
 

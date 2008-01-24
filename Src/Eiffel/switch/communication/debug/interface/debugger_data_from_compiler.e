@@ -148,6 +148,16 @@ feature {NONE} -- Initialization
 			if cl_i /= Void then
 				native_array_class_c := cl_i.compiled_class
 			end
+
+			cl_i := sys.exception_class
+			if cl_i /= Void then
+				exception_class_c := cl_i.compiled_class
+			end
+
+			cl_i := sys.exception_manager_class
+			if cl_i /= Void then
+				exception_manager_class_c := cl_i.compiled_class
+			end
 		end
 
 feature -- Access
@@ -174,6 +184,8 @@ feature -- Access
 	real_64_class_c: CLASS_C
 	pointer_class_c: CLASS_C
 	bit_class_c: CLASS_C
+	exception_class_c: CLASS_C
+	exception_manager_class_c: CLASS_C
 
 feature -- Specific access
 

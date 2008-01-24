@@ -96,7 +96,6 @@ feature -- Output
 			-- Generated on demand.
 			-- (sorted by name)
 		do
-			Result := Void
 		end
 
 	display_kind: like kind

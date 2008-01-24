@@ -613,19 +613,13 @@ feature -- Exception handling
 		require
 			application_is_executing and then application_status.exception_occurred
 		local
-			l_code: INTEGER
 			l_name: STRING
 		do
 			Result := True
 			if exceptions_handler.enabled then
-				if exceptions_handler.handling_mode_is_by_code then
-					l_code := application_status.exception_code
-					Result := exceptions_handler.exception_catched_by_code (l_code)
-					if not Result then
-						debugger_message ("Ignoring exception code: " + l_code.out)
-					end
-				elseif exceptions_handler.handling_mode_is_by_name then
-					l_name := application_status.exception_class_name
+				application_status.update_on_before_stopped_state
+				l_name := application_status.exception_type_name
+				if l_name /= Void then
 					Result := exceptions_handler.exception_catched_by_name (l_name)
 					if not Result then
 						debugger_message ("Ignoring exception class name: " + l_name.out)
@@ -634,18 +628,12 @@ feature -- Exception handling
 			end
 		end
 
-	exceptions_handler: DBG_EXCEPTION_HANDLER assign set_internal_exceptions_handler is
+	exceptions_handler: DBG_EXCEPTION_HANDLER is
 			-- Exception handler used during debugging.
 		do
 			Result := internal_exceptions_handler
 			if Result = Void then
-				if is_classic_project then
-					create Result.make_handling_by_code
-				elseif is_dotnet_project then
-					create Result.make_handling_by_name
-				else
-					check False end
-				end
+				create Result.make_handling_by_name
 				internal_exceptions_handler := Result
 			end
 		ensure
@@ -653,11 +641,6 @@ feature -- Exception handling
 		end
 
 feature {NONE} -- Internal data
-
-	set_internal_exceptions_handler (v: like internal_exceptions_handler) is
-		do
-			internal_exceptions_handler := v
-		end
 
 	internal_exceptions_handler: like exceptions_handler
 			-- Once perobject: exceptions_handler

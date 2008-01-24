@@ -359,6 +359,8 @@ feature -- Execution
 		deferred
 		end
 
+feature -- Remote access to RT_
+
 	activate_execution_replay_recording (b: BOOLEAN) is
 			-- Activate or Deactivate execution recording mode
 		do
@@ -406,6 +408,8 @@ feature -- Execution
 		end
 
 	replay (direction: INTEGER): BOOLEAN is
+			-- Replay execution in `direction'
+			-- and return True if operation succeed.
 		require
 			app_is_stopped: is_stopped
 			replay_activated: status.replay_activated
@@ -435,11 +439,92 @@ feature -- Execution
 		end
 
 	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is
+			-- Store in file `fn' on the application the object addressed by `oa'
+			-- Return True is succeed.
 		deferred
 		end
 
 	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is
+			-- Debug value related to remote loaded object from file `fn'.
+			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		deferred
+		end
+
+feature -- Remote access to Exceptions
+
+	remote_current_exception_value: EXCEPTION_DEBUG_VALUE is
+			-- `{EXCEPTION_MANAGER}.last_exception' value.
+		require
+			exception_occurred: status.exception_occurred
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Expression evaluation
+
+	string_field_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING): STRING_32 is
+			-- String representation of `{cl}.fname' evaluated on `edv'.
+		require
+			edv_not_void: edv /= Void
+			cl_not_void: cl /= Void
+		local
+			f: FEATURE_I
+			dv: DUMP_VALUE
+		do
+			f := cl.feature_named (fname)
+			if f /= Void then
+				if f.is_function then
+					dv := function_evaluation_on (e, edv, f, cl, Void)
+				elseif f.is_attribute then
+					dv := attribute_evaluation_on (e, edv, f, cl)
+				end
+				if dv /= Void and then dv.has_formatted_output then
+					Result := dv.string_representation
+				end
+			end
+		end
+
+	function_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]): DUMP_VALUE is
+			-- Evaluation's result for `a_expr' in current context
+			-- (note: Result = Void implies an error occurred)
+		require
+			is_stopped: is_stopped
+		local
+			dbg_eval: DBG_EVALUATOR
+		do
+			if is_stopped then
+				dbg_eval := debugger_manager.dbg_evaluator
+				dbg_eval.reset
+				if obj = Void then
+					dbg_eval.evaluate_static_function (f, cl, params)
+				else
+					dbg_eval.evaluate_routine (Void, obj, cl, f, params, obj = Void)
+				end
+				if not dbg_eval.error_occurred then
+					Result := dbg_eval.last_result_value
+				end
+				dbg_eval.reset
+			end
+		end
+
+	attribute_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C): DUMP_VALUE is
+			-- Evaluation's result for `a_expr' in current context
+			-- (note: Result = Void implies an error occurred)
+		require
+			is_stopped: is_stopped
+		local
+			dbg_eval: DBG_EVALUATOR
+		do
+			if is_stopped then
+				dbg_eval := debugger_manager.dbg_evaluator
+				dbg_eval.reset
+				dbg_eval.evaluate_attribute (Void, obj, cl, f)
+				if not dbg_eval.error_occurred then
+					Result := dbg_eval.last_result_value
+				end
+				dbg_eval.reset
+			end
 		end
 
 feature {NONE} -- Breakpoints implementation
@@ -596,6 +681,14 @@ feature -- Query
 		deferred
 		end
 
+	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; full_details: BOOLEAN) is
+			-- Code, Tag, Message from `val'.
+		require
+			e_not_void: e /= Void
+			e_has_value: e.has_value
+		deferred
+		end
+
 feature -- Parameters
 
 	parameters: DEBUGGER_EXECUTION_PARAMETERS
@@ -674,6 +767,8 @@ feature -- Environment related
 feature {DEAD_HDLR, RUN_REQUEST} -- Setting
 
 	build_status is
+			-- Build associated `status'
+			-- (ie: the application is running)
 		require
 			is_not_running: not is_running
 		deferred
@@ -720,6 +815,7 @@ feature {NONE} -- fake
 		end
 
 	keep_only_objects (kept_objects: LIST [STRING]) is
+			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		deferred
 		end
 

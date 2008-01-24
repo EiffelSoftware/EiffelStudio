@@ -166,7 +166,7 @@ debug ("SERVER")
 	print ("ID was not found in cache.")
 end
 
-					-- Id not avaible in memory
+					-- Id not available in memory
 				info := tbl_item (an_id)
 				if info /= Void then
 					server_file := Server_controler.file_of_id (info.file_id)

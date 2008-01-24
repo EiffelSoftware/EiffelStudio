@@ -476,7 +476,9 @@ feature {NONE} -- Status setting
 				do
 					if is_interface_usable and is_shown then
 						is_confirmation_key_active := False
-						dialog.remove_default_push_button
+						if dialog.default_push_button /= Void then
+							dialog.remove_default_push_button
+						end
 					end
 				end)
 

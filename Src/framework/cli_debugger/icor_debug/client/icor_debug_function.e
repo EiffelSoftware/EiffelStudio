@@ -10,24 +10,25 @@ class
 	ICOR_DEBUG_FUNCTION
 
 inherit
-
 	ICOR_OBJECT
+		export
+			{ICOR_OBJECTS_MANAGER} clean_on_dispose
 		redefine
 			init_icor
 		end
 
-create 
+create {ICOR_OBJECTS_MANAGER}
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	init_icor is
-			-- 
+			--
 		do
 			Precursor
 			token := get_token
-		end	
-	
+		end
+
 feature -- Addons
 
 	to_function_name: STRING is
@@ -42,9 +43,9 @@ feature -- Addons
 			l_cl: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
 		do
-			Result := "Function [Ox" + item.out + "] " 
+			Result := "Function [Ox" + item.out + "] "
 					+ " Token="+ get_token.out + "~0x" + get_token.to_hex_string
-			l_cl := get_class	
+			l_cl := get_class
 			if l_cl /= Void then
 				Result.append (" ClassToken=" + l_cl.get_token.out + "~0x" + l_cl.get_token.to_hex_string)
 --				l_cl.clean_on_dispose
@@ -54,11 +55,11 @@ feature -- Addons
 			l_module := get_module
 			Result.append (" Module[" + l_module.get_token.out + "]=" + l_module.get_name + " .")
 		end
-		
+
 feature {ICOR_EXPORTER} -- Access
 
-	token: INTEGER		
-		
+	token: INTEGER
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_module: ICOR_DEBUG_MODULE is
@@ -128,7 +129,7 @@ feature {ICOR_EXPORTER} -- Access
 			debug ("DBG")
 				if not last_call_succeed then
 					io.put_string ("ERROR ["+ last_error_code_id +"]: while create_breakpoint on ICorDebugFunction ")
-					
+
 				end
 			end
 --		ensure

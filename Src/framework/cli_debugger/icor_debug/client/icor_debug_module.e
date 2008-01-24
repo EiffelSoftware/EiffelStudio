@@ -12,6 +12,8 @@ class
 inherit
 
 	ICOR_OBJECT
+		export
+			{ICOR_OBJECTS_MANAGER} clean_on_dispose
 		redefine
 			init_icor, clean_on_dispose
 		end
@@ -21,7 +23,7 @@ inherit
 			out
 		end
 
-create
+create {ICOR_OBJECTS_MANAGER}
 	make_by_pointer
 
 feature {ICOR_EXPORTER} -- Access
@@ -44,7 +46,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-feature -- Dispose
+feature {ICOR_OBJECTS_MANAGER} -- Dispose
 
 	clean_on_dispose is
 			-- Clean data on dispose
@@ -76,6 +78,12 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 			-- member token for type identified by `a_class_token' and `a_feat_name'
 		do
 			Result := interface_md_import.find_member (a_class_token, a_feat_name)
+		end
+
+	md_field_token (a_class_token: INTEGER; a_field_name: STRING): INTEGER is
+			-- field token for type identified by `a_class_token' and `a_field_name'
+		do
+			Result := interface_md_import.find_field (a_class_token, a_field_name)
 		end
 
 	md_feature_token (a_class_token: INTEGER; a_name: STRING): INTEGER is

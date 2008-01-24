@@ -11,26 +11,28 @@ class
 
 inherit
 	ICOR_OBJECT
+		export
+			{ICOR_OBJECTS_MANAGER} clean_on_dispose
 		redefine
 			init_icor
 		end
 
-create 
+create {ICOR_OBJECTS_MANAGER}
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	init_icor is
-			-- 
+			--
 		do
 			Precursor
 			token := get_token
-		end		
-	
+		end
+
 feature {ICOR_EXPORTER} -- Properties
 
 	token: INTEGER
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_module: ICOR_DEBUG_MODULE is
@@ -53,7 +55,7 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	get_static_field_value (mdfielddef: INTEGER; a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE is
-			-- GetStaticFieldValue returns a value object (ICorDebugValue) 
+			-- GetStaticFieldValue returns a value object (ICorDebugValue)
 			-- for the given static field
 			-- variable. If the static field could possibly be relative to either
 			-- a thread, context, or appdomain, then pFrame will help the debugger

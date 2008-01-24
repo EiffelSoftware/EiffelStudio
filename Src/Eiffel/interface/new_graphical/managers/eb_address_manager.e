@@ -772,7 +772,11 @@ feature -- Updating
 			end
 			address_dialog.set_width (header_info.width)
 			create l_helper
-			l_pos := l_helper.suggest_pop_up_widget_location_with_size (window, a_x, a_y, address_dialog.width, address_dialog.height)
+			if window /= Void then
+				l_pos := l_helper.suggest_pop_up_widget_location_with_size (window, a_x, a_y, address_dialog.width, address_dialog.height)
+			else
+				l_pos := [a_x, a_y]
+			end
 		   	address_dialog.set_position (l_pos.x, l_pos.y)
 			address_dialog.show
 			remove_error_message

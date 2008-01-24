@@ -39,6 +39,10 @@ feature {NONE} -- Ancestor facade
 
 feature -- Client facade
 
+	get_exception_value_details (e: EXCEPTION_DEBUG_VALUE; full_details: BOOLEAN) is do end
+
+	remote_current_exception_value: EXCEPTION_DEBUG_VALUE is do end
+
 	callback_notification_processing: BOOLEAN is do end
 
 indexing

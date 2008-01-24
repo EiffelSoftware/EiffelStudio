@@ -23,7 +23,7 @@ inherit
 			out
 		end
 
-create {ICOR_OBJECTS_MANAGER}
+create {ICOR_OBJECTS_MANAGER, ICOR_DEBUG_ENUM_WITH_NEXT}
 	make_by_pointer
 
 feature {ICOR_EXPORTER} -- Access

@@ -21,7 +21,7 @@ create
 
 feature -- Status report
 
-feature {ARGUMENT_LITE_PARSER} -- Factory functions
+feature {ARGUMENT_PARSER} -- Factory functions
 
 	create_option: OPTIMIZED_ARGUMENT_OPTION
 			-- Creates a new argument option for switch

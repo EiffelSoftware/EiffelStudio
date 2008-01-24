@@ -11,43 +11,33 @@ deferred class
 	ES_WIDGET [G -> EV_WIDGET]
 
 inherit
-	EB_RECYCLABLE
-
--- inherit {NONE}
-
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
-
-	ES_SHARED_FONTS_AND_COLORS
-		export
-			{NONE} all
-		end
-
-	ES_SHARED_PROMPT_PROVIDER
-		export
-			{NONE} all
-		end
-
-	SHARED_SERVICE_PROVIDER
-		export
-			{NONE} all
+	ES_TOOL_FOUNDATIONS
+		rename
+			foundation_widget as widget
+		redefine
+			internal_recycle
 		end
 
 convert
 	widget: {G}
 
-feature {NONE} -- Initialization
+feature {NONE} -- User interface initialization
 
-	build_widget_interface (a_widget: G)
+	frozen build_interface
+			-- Builds the foundataion tool's user interface.
+		do
+			widget := create_widget
+			build_widget_interface (widget)
+		end
+
+	build_widget_interface (a_widget: !G)
 			-- Builds widget's interface.
+			-- `a_widget': The widget to initialize of build upon.
 		require
-			not_is_recycled: not is_recycled
-			a_widget_attached: a_widget /= Void
+			not_is_initialized: not is_initialized
+			is_initializing: is_initializing
 			not_a_widget_has_parent: not a_widget.has_parent
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
-			is_initializing: is_initializing
 		deferred
 		ensure
 			is_initializing: is_initializing
@@ -59,72 +49,30 @@ feature {NONE} -- Clean up
 			-- To be called when the button has became useless.
 		do
 			if is_initialized then
-				internal_widget.destroy
-				internal_widget := Void
+				widget.destroy
 			end
+			Precursor {ES_TOOL_FOUNDATIONS}
 		ensure then
-			internal_widget_detached: internal_widget = Void
-			not_is_initialized: not is_initialized
+			widget_is_destroyed: (old widget) /= Void implies (old widget).is_destroyed
 		end
 
 feature -- Access
 
 	widget: G
 			-- Actual widget
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result := internal_widget
-			if Result = Void then
-				is_initializing := True
-
-				Result := create_widget
-				internal_widget := Result
-				build_widget_interface (Result)
-
-				is_initializing := False
-				is_initialized := True
-			end
-		ensure
-			result_attached: Result /= Void
-			result_consistent: Result = Result
-			is_initializing_or_is_initialized: is_initializing or is_initialized
-		end
 
 feature {NONE} -- Access
 
 	window: EV_WINDOW
 			-- Acces to window containing widget
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 			widget_has_parent: widget.has_parent
 		do
 			Result := helpers.widget_top_level_window (widget, False)
 		ensure
 			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
-		end
-
-	development_window: EB_DEVELOPMENT_WINDOW
-			-- Access to top-level parent window
-		require
-			not_is_recycled: not is_recycled
-			widget_has_parent: widget.has_parent
-		local
-			l_window: EV_WINDOW
-			l_windows: BILINEAR [EB_WINDOW]
-		do
-			l_window := helpers.widget_top_level_window (widget, True)
-			if l_window /= Void then
-				l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
-				from l_windows.start until l_windows.after or Result /= Void loop
-					if l_window = l_windows.item.window then
-						Result ?= l_windows.item
-					end
-					l_windows.forth
-				end
-			end
-		ensure
-			not_result_is_recycled: Result /= Void implies not Result.is_recycled
 		end
 
 feature -- Measurement
@@ -133,7 +81,7 @@ feature -- Measurement
 			-- Horizontal size in pixels.
 			-- Same as `minimum_width' when not displayed.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.width
 		ensure
@@ -145,7 +93,7 @@ feature -- Measurement
 			-- Vertical size in pixels.
 			-- Same as `minimum_height' when not displayed.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.height
 		ensure
@@ -156,7 +104,7 @@ feature -- Measurement
 	minimum_width: INTEGER assign set_minimum_width
 			-- Lower bound on `width' in pixels.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.minimum_width
 		ensure
@@ -167,7 +115,7 @@ feature -- Measurement
 	minimum_height: INTEGER assign set_minimum_height
 			-- Lower bound on `height' in pixels.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.minimum_height
 		ensure
@@ -178,7 +126,7 @@ feature -- Measurement
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.x_position
 		ensure
@@ -188,7 +136,7 @@ feature -- Measurement
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.y_position
 		ensure
@@ -198,7 +146,7 @@ feature -- Measurement
 	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.screen_x
 		ensure
@@ -208,7 +156,7 @@ feature -- Measurement
 	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.screen_y
 		ensure
@@ -223,7 +171,8 @@ feature -- Element change
 			-- From now, `minimum_width' is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 			a_minimum_width_positive: a_minimum_width >= 0
 		do
 			widget.set_minimum_width (a_minimum_width)
@@ -237,7 +186,7 @@ feature -- Element change
 			-- From now, `minimum_height' is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_minimum_height_positive: a_minimum_height >= 0
 		do
 			widget.set_minimum_height (a_minimum_height)
@@ -252,7 +201,7 @@ feature -- Element change
 			-- From now, minimum size is fixed and will not be changed
 			-- dynamically by the application anymore.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_minimum_width_positive: a_minimum_width >= 0
 			a_minimum_height_positive: a_minimum_height >= 0
 		do
@@ -262,153 +211,52 @@ feature -- Element change
 			minimum_height_assigned: (a_minimum_height > 0 implies minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (minimum_height <= 1))
 		end
 
-feature {NONE} -- Helpers
-
-	frozen interface_names: INTERFACE_NAMES
-			-- Access to EiffelStudio's interface names
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen stock_pixmaps: ES_PIXMAPS_16X16
-			-- Shared access to stock 16x16 EiffelStudio pixmaps
-		once
-			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen stock_mini_pixmaps: ES_PIXMAPS_10X10
-			-- Shared access to stock 10x10 EiffelStudio pixmaps
-		once
-			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen cursor_factory: EVS_CURSOR_FACTORY
-			-- Shared access to cursor factory for generating stone cursors from an icon
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen preferences: EB_PREFERENCES
-		require
-			preferences_initialized: (create {EB_SHARED_PREFERENCES}).preferences_initialized
-		once
-			Result := (create {EB_SHARED_PREFERENCES}).preferences
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
-			-- Factory for generating pixmaps for class data
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-	frozen helpers: EVS_HELPERS
-			-- Helpers to extend the operations of EiffelVision2
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature -- Status report
 
-	is_sensitive: BOOLEAN
+	is_sensitive: BOOLEAN assign set_is_senstive
 			-- Is widget sensitive to user input.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := widget.is_sensitive
 		ensure
 			widget_is_sensitive_reported: Result = widget.is_sensitive
 		end
 
-	is_show_requested: BOOLEAN
-			-- Will `Current' be displayed when its parent is?
-			-- See also `is_displayed'.
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result := widget.is_show_requested
-		ensure
-			widget_is_show_requested_reported: Result = widget.is_show_requested
-		end
-
-	is_displayed: BOOLEAN is
-			-- Is `Current' visible on the screen?
-			-- `True' when show requested and parent displayed.
-		require
-			not_is_recycled: not is_recycled
-		do
-			Result := widget.is_displayed
-		ensure
-			widget_is_displayed_reported: Result = widget.is_displayed
-		end
-
-feature {NONE} -- Status report
-
-	is_initialized: BOOLEAN
-			-- Indicates if the user interface has been initialized
-
-	is_initializing: BOOLEAN
-			-- Indicates if the user interface is currently being initialized
-
 feature -- Status setting
 
-	enable_sensitive
-			-- Make object sensitive to user input.
+	set_is_senstive (a_sensitive: like is_sensitive)
+			-- Make object sensitive to user input base of state argument.
+			--
+			-- `a_sensitive': True to ensure the widget is sensitive; False otherwise.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
-			widget.enable_sensitive
+			if a_sensitive then
+				widget.enable_sensitive
+			else
+				widget.disable_sensitive
+			end
 		ensure
-			widget_sensitivity_enabled: widget.is_sensitive
-		end
-
-	disable_sensitive
-			-- Make object non-sensitive to user input.
-		require
-			not_is_recycled: not is_recycled
-		do
-			widget.disable_sensitive
-		ensure
-			widget_sensitivity_disabled: not widget.is_sensitive
+			widget_sensitivity_set: a_sensitive = widget.is_sensitive
 		end
 
 feature {NONE} -- Factory
 
-	create_widget: G
-			-- Creates a new wrapped widget
+	create_widget: !G
+			-- Creates a new widget, which will be initialized when `build_interface' is called.
 		require
-			not_is_recycled: not is_recycled
-			internal_widget_unattached: internal_widget = Void
+			is_interface_usable: is_interface_usable
 			not_is_initialized: not is_initialized
 			is_initializing: is_initializing
 		deferred
 		ensure
-			result_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed
 			not_result_has_parent: not Result.has_parent
 		end
 
-feature {NONE} -- Internal implementation cache
-
-	internal_widget: like widget
-			-- Cached version of `widget'
-			-- Note: Do not use directly!
-
 invariant
-	internal_widget_attached: is_initialized implies internal_widget /= Void
+	widget_attached: is_initialized implies widget /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

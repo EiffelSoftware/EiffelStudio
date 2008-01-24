@@ -33,18 +33,13 @@ feature -- Values
 		do
 		end
 
-	exception_debug_value: ABSTRACT_DEBUG_VALUE	 is do end
-
-	exception_module_name,
-	exception_class_name: STRING is do end
+	exception_module_name: STRING_32 is do end
 
 	exception_handled: BOOLEAN is False
 
-	exception_occurred: BOOLEAN is False
 
-	exception_message: STRING_32 is do end
 
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

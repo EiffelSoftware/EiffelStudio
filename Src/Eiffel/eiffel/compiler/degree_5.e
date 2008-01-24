@@ -156,22 +156,21 @@ feature {NONE} -- Processing
 			eif_class: EIFFEL_CLASS_C
 			class_id: INTEGER
 		do
-			class_id := a_class.class_id
 			if a_class.is_external_class_c then
 				a_class.external_class_c.process_degree_5
 				a_class.lace_class.config_class.set_up_to_date
 			else
 				eif_class := a_class.eiffel_class_c
 				if eif_class.parsing_needed then
-						-- Parse class and save a backup if requested and generates warning.
+						-- Parse class and save a backup if requested and generate warnings.
 					ast := eif_class.build_ast (True, True)
 				else
+					class_id := a_class.class_id
 					ast := Tmp_ast_server.item (class_id)
 					if ast = Void then
 						ast := Ast_server.item (class_id)
 					end
 				end
-
 				if ast /= Void then
 					eif_class.end_of_pass1 (ast)
 					a_class.lace_class.config_class.set_up_to_date

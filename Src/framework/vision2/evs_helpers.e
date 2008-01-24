@@ -100,6 +100,9 @@ feature -- Screen
 			-- Retrieves a working area for window `a_window'
 			--
 			-- `a_window': Window to retrieve a working area for.
+		require
+			a_window_attached: a_window /= Void
+			not_a_window_is_destroyed: not a_window.is_destroyed
 		local
 			l_top_window: EV_TITLED_WINDOW
 			l_screen: SD_SCREEN

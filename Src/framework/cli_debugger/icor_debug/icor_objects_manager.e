@@ -82,7 +82,7 @@ feature -- Cleaning
 			functions.clear_all
 		end
 
-feature {ICOR_EXPORTER} -- Access
+feature {SHARED_ICOR_OBJECTS_MANAGER, ICOR_EXPORTER} -- Access
 
 	icd_module (p: POINTER): ICOR_DEBUG_MODULE is
 		require

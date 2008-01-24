@@ -12,6 +12,14 @@ class
 inherit
 
 	ICOR_DEBUG_ENUM_WITH_NEXT [ICOR_DEBUG_MODULE]
+		redefine
+			icor_object_made_by_pointer
+		end
+
+	SHARED_ICOR_OBJECTS_MANAGER
+		undefine
+			out
+		end
 
 create 
 	make_by_pointer
@@ -49,6 +57,13 @@ feature {ICOR_EXPORTER} -- Access
 --		end
 
 feature {NONE} -- Implementation
+
+	icor_object_made_by_pointer (a_p: POINTER): ICOR_DEBUG_MODULE is
+			-- ICOR_DEBUG_MODULE from `a_p'
+			-- be sure to use Icor_objects_manager since those objects are cached.
+		do
+			Result := Icor_objects_manager.icd_module (a_p)
+		end
 
 	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: POINTER): INTEGER is
 		do

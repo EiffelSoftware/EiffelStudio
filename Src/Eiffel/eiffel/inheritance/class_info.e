@@ -7,7 +7,7 @@ indexing
 -- for quick interrogations for inheritance analysis and infix/prefix
 -- notation are interpreted. Those structures are forgotten after second
 -- pass.
--- Attribute `features' is useful for iteratiing on it during second
+-- Attribute `features' is useful for iterating on it during second
 -- pass in order to analyze local features written in a class.
 
 class CLASS_INFO
@@ -31,6 +31,27 @@ inherit
 		end
 
 	COMPILER_EXPORTER
+
+create
+	initialize
+
+feature {NONE} -- Initialization
+
+	initialize (a_class_id: INTEGER; a_conforming_parents, a_non_conforming_parents: EIFFEL_LIST [PARENT_AS]; a_creators: like creators; a_convertors: like convertors) is
+				-- Initialize `Current'.
+			do
+				class_id := a_class_id
+				conforming_parents := a_conforming_parents
+				non_conforming_parents := a_non_conforming_parents
+				creators := a_creators
+				convertors := a_convertors
+			ensure
+				class_id_set: class_id = a_class_id
+				conforming_parents_set: conforming_parents = a_conforming_parents
+				non_conforming_parents_set: non_conforming_parents = a_non_conforming_parents
+				creators_set: creators = a_creators
+				convertors_set: convertors = a_convertors
+			end
 
 feature -- Access
 
@@ -166,36 +187,6 @@ feature -- Access
 				Error_handler.checksum
 			end
 		end;
-
-feature -- Settings
-
-	set_conforming_parents (cp: like conforming_parents) is
-			-- Assign `cp' to `conforming_parents'.
-		do
-			conforming_parents := cp;
-		end
-
-	set_non_conforming_parents (ncp: like non_conforming_parents) is
-			-- Assign `ncp' to `non_conforming_parents'.
-		do
-			non_conforming_parents := ncp;
-		end
-
-	set_creators (c: like creators) is
-			-- Assign `c' to `creators'.
-		do
-			creators := c;
-		end;
-
-	set_convertors (c: like convertors) is
-			-- Assign `c' to `convertors'.
-		require
-			c_valid: c /= Void implies not c.is_empty
-		do
-			convertors := c
-		ensure
-			convertors_set: convertors = c
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

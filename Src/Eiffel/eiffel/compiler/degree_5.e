@@ -110,15 +110,21 @@ feature -- Processing
 			i, nb: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
-			l_old_info: CLASS_INFO
 			l_removed_classes: SEARCH_TABLE [CLASS_C]
 			l_error_level: NATURAL
+			l_system: like system
+			l_error_handler: like error_handler
+			l_class_info_server: like class_info_server
+			l_class_id: INTEGER
 		do
+			l_system := system
 			from
-				classes := system.classes
-				l_removed_classes := system.removed_classes
+				classes := l_system.classes
+				l_removed_classes := l_system.removed_classes
 				i := classes.lower
 				nb := classes.upper
+				l_error_handler := error_handler
+				l_class_info_server := class_info_server
 			until
 				i > nb
 			loop
@@ -126,23 +132,20 @@ feature -- Processing
 					-- Perform processing only on classes still in system.
 				if a_class /= Void and then (l_removed_classes = Void or else not l_removed_classes.has (a_class)) then
 					if a_class.need_new_parents then
-						System.set_current_class (a_class)
-						l_error_level := error_handler.error_level
-						if class_info_server.server_has (a_class.class_id) then
-							l_old_info := class_info_server.server_item (a_class.class_id)
-						else
-							l_old_info := Void
-						end
-						a_class.fill_parents (l_old_info, class_info_server.item (a_class.class_id))
-						if Error_handler.error_level /= l_error_level then
+						l_system.set_current_class (a_class)
+						l_error_level := l_error_handler.error_level
+						l_class_id := a_class.class_id
+							-- If the the class_info_server doesn't have 'class_id' as a server item then the 'old_info' returned is Void.
+						a_class.fill_parents (l_class_info_server.server_item (l_class_id), l_class_info_server.item (l_class_id))
+						if l_error_handler.error_level /= l_error_level then
 							insert_class (a_class)
 						end
 					end
 				end
 				i := i + 1
 			end
-			System.set_current_class (Void)
-			error_handler.checksum
+			l_system.set_current_class (Void)
+			l_error_handler.checksum
 		end
 
 feature {NONE} -- Processing

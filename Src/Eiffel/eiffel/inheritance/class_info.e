@@ -33,24 +33,26 @@ inherit
 	COMPILER_EXPORTER
 
 create
-	initialize
+	initialize_from_class_as
 
 feature {NONE} -- Initialization
 
-	initialize (a_class_id: INTEGER; a_conforming_parents, a_non_conforming_parents: EIFFEL_LIST [PARENT_AS]; a_creators: like creators; a_convertors: like convertors) is
+	initialize_from_class_as (a_class_as: CLASS_AS) is
 				-- Initialize `Current'.
+			require
+				a_class_as_not_void: a_class_as /= Void
 			do
-				class_id := a_class_id
-				conforming_parents := a_conforming_parents
-				non_conforming_parents := a_non_conforming_parents
-				creators := a_creators
-				convertors := a_convertors
+				class_id := a_class_as.class_id
+				conforming_parents := a_class_as.conforming_parents
+				non_conforming_parents := a_class_as.non_conforming_parents
+				creators := a_class_as.creators
+				convertors := a_class_as.convertors
 			ensure
-				class_id_set: class_id = a_class_id
-				conforming_parents_set: conforming_parents = a_conforming_parents
-				non_conforming_parents_set: non_conforming_parents = a_non_conforming_parents
-				creators_set: creators = a_creators
-				convertors_set: convertors = a_convertors
+				class_id_set: class_id = a_class_as.class_id
+				conforming_parents_set: conforming_parents = a_class_as.conforming_parents
+				non_conforming_parents_set: non_conforming_parents = a_class_as.non_conforming_parents
+				creators_set: creators = a_class_as.creators
+				convertors_set: convertors = a_class_as.convertors
 			end
 
 feature -- Access

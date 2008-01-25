@@ -47,12 +47,13 @@ feature
 				tmp_class := Ast_server.item (an_id)
 			end
 			if tmp_class /= Void then
-				create Result
-				Result.set_conforming_parents (tmp_class.conforming_parents)
-				Result.set_non_conforming_parents (tmp_class.non_conforming_parents)
-				Result.set_creators (tmp_class.creators)
-				Result.set_convertors (tmp_class.convertors)
-				Result.set_class_id (tmp_class.class_id)
+				create Result.initialize (
+					tmp_class.class_id,
+					tmp_class.conforming_parents,
+					tmp_class.non_conforming_parents,
+					tmp_class.creators,
+					tmp_class.convertors
+				)
 			end
 		end;
 
@@ -64,14 +65,15 @@ feature
 		do
 			if Ast_server.has (an_id) then
 				tmp_class := Ast_server.item (an_id)
-			end
-			if tmp_class /= Void then
-				create Result
-				Result.set_conforming_parents (tmp_class.conforming_parents)
-				Result.set_non_conforming_parents (tmp_class.non_conforming_parents)
-				Result.set_creators (tmp_class.creators)
-				Result.set_convertors (tmp_class.convertors)
-				Result.set_class_id (tmp_class.class_id)
+				if tmp_class /= Void then
+					create Result.initialize (
+						tmp_class.class_id,
+						tmp_class.conforming_parents,
+						tmp_class.non_conforming_parents,
+						tmp_class.creators,
+						tmp_class.convertors
+					)
+				end
 			end
 		end
 

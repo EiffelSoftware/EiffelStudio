@@ -47,32 +47,20 @@ feature
 				tmp_class := Ast_server.item (an_id)
 			end
 			if tmp_class /= Void then
-				create Result.initialize (
-					tmp_class.class_id,
-					tmp_class.conforming_parents,
-					tmp_class.non_conforming_parents,
-					tmp_class.creators,
-					tmp_class.convertors
-				)
+				create Result.initialize_from_class_as (tmp_class)
 			end
 		end;
 
 	server_item (an_id: INTEGER): CLASS_INFO is
-			-- Feature table of id `an_id'. Look first in the temporary
-			-- feature table server. It not present, look in itself.
+			-- Feature table of id `an_id'.
+			-- Temporary feature server is not used.
 		local
 			tmp_class: CLASS_AS
 		do
 			if Ast_server.has (an_id) then
 				tmp_class := Ast_server.item (an_id)
 				if tmp_class /= Void then
-					create Result.initialize (
-						tmp_class.class_id,
-						tmp_class.conforming_parents,
-						tmp_class.non_conforming_parents,
-						tmp_class.creators,
-						tmp_class.convertors
-					)
+					create Result.initialize_from_class_as (tmp_class)
 				end
 			end
 		end

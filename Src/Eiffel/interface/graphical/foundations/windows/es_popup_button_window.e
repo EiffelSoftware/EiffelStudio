@@ -15,6 +15,8 @@ deferred class
 inherit
 	ES_POPUP_WINDOW
 		redefine
+			on_pointer_enter,
+			on_pointer_leave,
 			on_focused_out,
 			on_handle_key
 		end
@@ -81,6 +83,9 @@ feature {NONE} -- Access
 
 	popup_widget_fetch_action: FUNCTION [ANY, TUPLE [window: ES_POPUP_BUTTON_WINDOW], EV_WIDGET]
 			-- Agent used to fetch a popup widget strucutre, shown when `popup_widget' is called.
+
+	popup_widget_activate_timer: EV_TIMEOUT
+			-- Timer used to automatically show the popup widget after an set interval.
 
 feature -- Element change
 
@@ -284,6 +289,45 @@ feature {NONE} -- Action handlers
 		do
 				-- Set a small size to ensure the window size information is retracted
 			popup_window.set_size (1, 1)
+		end
+
+	on_pointer_enter
+			-- Called when the mouse cursor enters the pop up window.
+		do
+			Precursor {ES_POPUP_WINDOW}
+
+				-- We register the timer anyway to ensure a popup widget set after the pointer has been
+				-- entered, will always popup. We could optimize this in the future and refactor the implementation
+				-- out to another routine.
+			create popup_widget_activate_timer
+			popup_widget_activate_timer.set_interval ({ES_UI_CONSTANTS}.popup_widget_show_interval)
+			register_kamikaze_action (popup_widget_activate_timer.actions, agent
+					-- Inline routine to display the popup widget, if applicable to do so.
+				do
+					check has_mouse_pointer: has_mouse_pointer end
+					if is_interface_usable and then is_shown and then is_popup_widget_available and then not is_popup_widget_shown then
+							-- Popup with widget on the timeout
+						show_popup_widget
+					end
+						-- Clean up timer
+					popup_widget_activate_timer.destroy
+					popup_widget_activate_timer := Void
+				end)
+		ensure then
+		end
+
+	on_pointer_leave
+			-- Called when the mouse cursor leaves the pop up window.
+		do
+			Precursor {ES_POPUP_WINDOW}
+
+			if popup_widget_activate_timer /= Void and then not popup_widget_activate_timer.is_destroyed then
+				popup_widget_activate_timer.destroy
+				popup_widget_activate_timer := Void
+			end
+		ensure then
+			popup_widget_activate_timer_detached: popup_widget_activate_timer = Void
+			popup_widget_activate_timer_is_destroyed: (old popup_widget_activate_timer) /= Void implies (old popup_widget_activate_timer).is_destroyed
 		end
 
 	on_focused_out

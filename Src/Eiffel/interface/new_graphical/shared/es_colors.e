@@ -146,6 +146,16 @@ feature -- Prompts
 			result_attached: Result /= Void
 		end
 
+feature -- Tool tip
+
+	tooltip_color: EV_COLOR
+			-- Background color for tool tip windows
+		once
+			Result := (create {EVS_TOOLTIP_STYLE}.make).tooltip_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

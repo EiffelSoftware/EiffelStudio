@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			editor := a_editor
 			editor_token := a_token
-			make_popup_button_window (False)
+			make_popup_button_window (True)
 		ensure
 			editor_set: editor = a_editor
 			editor_token_set: editor_token = a_token
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			a_container.extend (l_box)
 
 				-- Propagate background color to set widget structure.
-			propagate_colors (a_container, Void, editor_token.background_color, Void)
+			propagate_colors (a_container, Void, background_color, Void)
 		ensure then
 			widget_container_set: widget_container = a_container
 		end
@@ -118,6 +118,16 @@ feature {ES_EDITOR_TOKEN_HANDLER} -- Access
 
 	token_y_offset: INTEGER
 			-- Y offset position from drawn token to window top edge
+
+feature {NONE} -- Access
+
+	background_color: EV_COLOR
+			-- Pop up window background color, as well as the token background color
+		once
+			Result := colors.tooltip_color
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Element change
 
@@ -189,15 +199,16 @@ feature {NONE} -- Query
 				l_widget := l_window
 			end
 
-			if {PLATFORM}.is_windows then
-					-- Currently a hack
-				token_y_offset := token_y_offset + 1
-			end
 			Result := helpers.suggest_pop_up_widget_location_with_size (editor.widget,
 				requested_x_position + (l_window.screen_x - token_image.screen_x) + token_x_offset,
 				requested_y_position + (l_window.screen_y - token_image.screen_y) + token_y_offset,
 				l_window.width,
 				l_window.height)
+
+			if {PLATFORM}.is_windows then
+					-- Currently a hack
+				Result := [Result.x, Result.y + 1]
+			end
 		end
 
 feature -- Status report
@@ -267,6 +278,10 @@ feature {NONE} -- Action handlers
 				l_widget.show
 			else
 				widget_container.extend (l_widget)
+
+					-- Set the background color to match the token color
+				propagate_colors (l_widget, Void, background_color, Void)
+
 				if not widget_container.is_displayed then
 					widget_container.show
 				end
@@ -372,7 +387,7 @@ feature {NONE} -- Basic operations
 					-- Set token and font information for render
 				a_dc.set_font (a_token.font)
 				a_dc.set_foreground_color (a_token.text_color)
-				a_dc.set_background_color (a_token.background_color)
+				a_dc.set_background_color (background_color)
 			end
 
 			l_glyph ?= a_token

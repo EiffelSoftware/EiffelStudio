@@ -27,20 +27,47 @@ feature {NONE} -- Access
 	popup_window: ?ES_POPUP_EDITOR_TOKEN_CONTEXT_BUTTON
 			-- Pop up window used to display the token options
 
-	frozen contract_keyword_token_images: !DS_ARRAYED_LIST [STRING_8]
+	contract_keyword_token_images: !DS_HASH_TABLE [FUNCTION [ANY, TUPLE [!ES_CONTRACT_EDITOR_WIDGET_FACTORY], !EV_WIDGET], STRING_8]
 			-- Design by contract editor keyword images.
 		once
 			create Result.make_default
-			Result.set_equality_tester (create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER})
+			Result.set_key_equality_tester (create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER})
 
-			Result.force_last ("require")
-			Result.force_last ("ensure")
-			Result.force_last ("check")
-			Result.force_last ("invariant")
-			Result.force_last ("variant")
+				-- Contract keywords match to widget factory functions
+			Result.force_last (agent {!ES_CONTRACT_EDITOR_WIDGET_FACTORY}.create_precondition_widget, "require")
+			Result.force_last (agent {!ES_CONTRACT_EDITOR_WIDGET_FACTORY}.create_postcondition_widget, "ensure")
 		ensure
-			result_equality_tester_set: Result.equality_tester /= Void
+			result_equality_tester_set: Result.key_equality_tester /= Void
 			result_contains_attached_items: not Result.has (Void)
+		end
+
+feature
+
+	editor_class: EIFFEL_CLASS_I
+		require
+			is_interface_usable: is_interface_usable
+			is_editing_eiffel_class: is_editing_eiffel_class
+		do
+			if {l_class_stone: !CLASSI_STONE} editor.stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i then
+				Result := l_class
+			end
+		end
+
+	is_editing_eiffel_class: BOOLEAN
+			-- Indicates if the editor is currently editing an Eiffel class
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := {l_class_stone: !CLASSI_STONE} editor.stone and then {l_class: !EIFFEL_CLASS_I} l_class_stone.class_i
+		ensure
+			editor_has_class_i_stone: Result implies (({CLASSI_STONE}) #? editor.stone /= Void and then ({EIFFEL_CLASS_I}) #? (({CLASSI_STONE}) #? editor.stone).class_i /= Void)
+		end
+
+	is_editor_editable: BOOLEAN
+		require
+			is_interface_usable: is_interface_usable
+		do
+			Result := editor.is_editable
 		end
 
 feature -- Query
@@ -51,8 +78,12 @@ feature -- Query
 			-- `a_token': Token to test for applicablity.
 			-- `Result': True if the token can be user; False otherwise.
 		do
-			Result := Precursor {ES_EDITOR_TOKEN_HANDLER} (a_token)
-			if not Result and then {l_ky_token: !EDITOR_TOKEN_KEYWORD} a_token and then {l_image: !STRING_8} a_token.image then
+			if
+				{l_class_stone: !CLASSI_STONE} editor.stone and then
+				{l_class_i: !EIFFEL_CLASS_I} l_class_stone.class_i and then
+				{l_ky_token: !EDITOR_TOKEN_KEYWORD} a_token and then
+				{l_image: !STRING_8} a_token.image
+			then
 				Result := contract_keyword_token_images.has (l_image)
 			end
 		end
@@ -75,7 +106,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	token_widget (a_token: !EDITOR_TOKEN): ?EV_WIDGET
+	token_widget (a_token: !EDITOR_TOKEN; a_line: INTEGER): ?EV_WIDGET
 			-- Retrieve's a token's widget structure for the token's popped up window
 			--
 			-- `a_token': The token to retrieve a widget structure for.
@@ -83,10 +114,11 @@ feature {NONE} -- Query
 		require
 			is_interface_usable: is_interface_usable
 			a_token_is_applicable_token: is_applicable_token (a_token)
+			a_line_positive: a_line > 0
 		do
 			if {l_kw_token: !EDITOR_TOKEN_KEYWORD} a_token and then {l_image: !STRING_8} l_kw_token.image then
 				if contract_keyword_token_images.has (l_image) then
-					Result := create_contract_widget (l_kw_token)
+					Result := create_contract_widget (l_kw_token, a_line)
 				end
 			end
 		ensure
@@ -94,7 +126,7 @@ feature {NONE} -- Query
 			not_result_unparented: Result /= Void implies not Result.has_parent
 		end
 
-	token_action (a_token: !EDITOR_TOKEN): ?PROCEDURE [ANY, TUPLE]
+	token_action (a_token: !EDITOR_TOKEN; a_line: INTEGER): ?PROCEDURE [ANY, TUPLE]
 			-- Retrieve's an action for a token, called when the token in selected in the pop up window.
 			--
 			-- `a_token': The token to retrieve a action for.
@@ -102,8 +134,17 @@ feature {NONE} -- Query
 		require
 			is_interface_usable: is_interface_usable
 			a_token_is_applicable_token: is_applicable_token (a_token)
+			a_line_positive: a_line > 0
 		do
 
+		end
+
+feature {NONE} -- Helpers
+
+	contract_widget_factory: !ES_CONTRACT_EDITOR_WIDGET_FACTORY
+			-- Factory used to create contract editor widgets to display in the popup window.
+		once
+			create Result
 		end
 
 feature -- Basic operations
@@ -142,8 +183,8 @@ feature -- Basic operations
 					l_can_show := l_cursor_token /= a_token or else last_token_handled /= a_token
 
 					if l_can_show then
-						l_token_widget := token_widget (a_token)
-						l_token_action := token_action (a_token)
+						l_token_widget := token_widget (a_token, a_line)
+						l_token_action := token_action (a_token, a_line)
 						l_can_show := l_token_widget /= Void or l_token_action /= Void
 					end
 				end
@@ -173,7 +214,7 @@ feature -- Basic operations
 				popup_window := Void
 			end
 
-			if popup_window = Void or else not popup_window.is_interface_usable then
+			if l_can_show and then (popup_window = Void or else not popup_window.is_interface_usable) then
 					-- Create new window
 				if {l_widget: !EV_WIDGET} l_token_widget then
 					create popup_window.make_with_widget (editor, a_token, l_widget)
@@ -301,34 +342,40 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	create_contract_widget (a_token: !EDITOR_TOKEN_KEYWORD) : !EV_WIDGET
+	create_contract_widget (a_token: !EDITOR_TOKEN_KEYWORD; a_line: INTEGER): !EV_WIDGET is
 			-- Create a new contract editor widget from a token.
 			--
 			-- `a_token': A token to base the contract widget on.
 			-- `Result': The widget structure created from the specified token.
+		require
+			is_editing_eiffel_class: is_editing_eiffel_class
+			a_token_is_contract_token: contract_keyword_token_images.has (a_token.image)
+			a_line_positive: a_line > 0
 		local
-			l_box: !EV_HORIZONTAL_BOX
-			l_button: !EV_BUTTON
+			l_factory: like contract_widget_factory
+			l_factory_function: FUNCTION [ANY, TUPLE [!ES_CONTRACT_EDITOR_WIDGET_FACTORY], !EV_WIDGET]
+			l_widget: EV_WIDGET
 		do
-			create l_box
-			create l_button.make_with_text ("This is a test")
-			l_button.select_actions.extend (agent do
-				popup_window.execute_unfocusing_action (agent on_button_clicked)
-			end)
-			l_box.extend (l_button)
-			Result := ({!EV_WIDGET}) #? l_box
-		end
+			l_factory := contract_widget_factory
+			l_factory.reset_context
 
-	on_button_clicked
-			-- Called when a button is clicked on the contract widget.
-		local
-			l_info: ES_INFORMATION_PROMPT
-		do
-			check
-				popup_window_attached: popup_window /= Void
+			if {l_class: !EIFFEL_CLASS_I} editor_class and then {l_text: !STRING_GENERAL} editor.text then
+				l_factory_function := contract_keyword_token_images.item (a_token.image)
+				if l_factory_function /= Void then
+						-- Set factory context.
+					l_factory.set_context (l_class, l_text, a_line)
+					if l_factory.has_full_context then
+						l_widget := l_factory_function.item ([l_factory])
+					end
+				end
 			end
-			create l_info.make_standard ("This is a simple test. The popup window should still be available when this message is displayed. The popup window should also hide as soon as this prompt is discarded.")
-			l_info.show (popup_window.to_popup_window)
+
+			if l_widget = Void then
+					-- Could not create the widget because of some error or another.
+					-- So create a widget that explains that error.
+				l_widget := l_factory.create_invalid_context_widget
+			end
+			Result ?= l_widget
 		end
 
 ;indexing

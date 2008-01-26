@@ -659,7 +659,7 @@ feature {NONE} -- Action handlers
 				end
 
 				if l_in_window /= has_mouse_pointer then
-					if l_in_window then
+					if l_in_window and a_widget /= Void then
 							-- Ensure we are processing this window!
 						l_in_window := helpers.widget_top_level_window (a_widget, False) = popup_window
 					end

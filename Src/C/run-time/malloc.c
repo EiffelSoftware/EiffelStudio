@@ -465,7 +465,7 @@ doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_private void boehm_dispose (union overhead *header, GC_PTR cd)
+rt_private void boehm_dispose (union overhead *header, void *cd)
 	/* Record `dispose' routine fro Boehm GC. */
 {
 	DISP(header->ov_dtype, (EIF_REFERENCE) (header + 1));

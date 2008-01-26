@@ -52,6 +52,14 @@ feature -- Grid
 	grid_item_spacing: INTEGER = 3
 	grid_editor_item_spacing: INTEGER = 8
 
+feature -- Timing intervals
+
+	popup_idle_interval: INTEGER = 300
+			-- Standard popup window show interval for idle action.
+
+	popup_widget_show_interval: INTEGER = 800
+			-- Popup window widget show interval for idle action.
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

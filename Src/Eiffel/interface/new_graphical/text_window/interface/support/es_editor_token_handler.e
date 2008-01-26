@@ -12,6 +12,9 @@ deferred class
 
 inherit
 	EB_RECYCLABLE
+		redefine
+			is_interface_usable
+		end
 
 feature {NONE} -- Initialization
 
@@ -51,6 +54,14 @@ feature -- Status report
 			-- Determines if the handler is active. This is to be used by clients
 			-- to determine when and when not to use the handler.
 
+	is_interface_usable: BOOLEAN
+			-- Dtermines if the interface was usable
+		do
+			Result := Precursor {EB_RECYCLABLE} and then editor.is_interface_usable
+		ensure then
+			editor_is_interface_usable: Result implies editor.is_interface_usable
+		end
+
 feature {NONE} -- Status setting
 
 	set_is_active (a_active: BOOLEAN)
@@ -70,8 +81,7 @@ feature -- Query
 			--
 			-- `a_token': Token to test for applicablity.
 			-- `Result': True if the token can be user; False otherwise.
-		do
-			Result := False
+		deferred
 		end
 
 	can_perform_exit (a_force: BOOLEAN): BOOLEAN

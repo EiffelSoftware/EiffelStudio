@@ -192,7 +192,7 @@ d_tls='undef'
 #Check value for next 2
 mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
 mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
-optimize='-xO2'
+optimize='-xO2 -xstrconst'
 voidflags='15'
 #Check value for next 1
 warning_level=''

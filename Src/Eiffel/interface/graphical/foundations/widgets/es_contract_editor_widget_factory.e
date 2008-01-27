@@ -58,7 +58,7 @@ feature -- Element change
 			if l_class /= Void then
 				context_root := l_class
 
-				l_feature := l_class.feature_of_position (a_line)
+--				l_feature := l_class.feature_of_position (a_line)
 				if l_feature /= Void then
 					context_feature := l_feature
 				end

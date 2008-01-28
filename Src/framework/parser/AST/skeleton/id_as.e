@@ -30,6 +30,8 @@ inherit
 		end
 
 	HASHABLE
+		rename
+			hash_code as name_id
 		redefine
 			is_equal
 		end
@@ -90,7 +92,7 @@ feature -- Update
 
 feature -- Access
 
-	name_id, hash_code: INTEGER
+	name_id: INTEGER
 			-- ID representing the string in the names heap.
 
 	name: STRING is

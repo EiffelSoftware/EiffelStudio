@@ -107,7 +107,7 @@ feature
 			real_ty ?= context.real_type (type)
 			workbench_mode := context.workbench_mode
 			generate_tuple_creation (real_ty, workbench_mode)
-			fill_tuple (real_ty.meta_generic)
+			fill_tuple
 		end
 
 feature {NONE} -- C code generation
@@ -136,7 +136,7 @@ feature {NONE} -- C code generation
 			buf.generate_block_close
 		end
 
-	fill_tuple (target_types: META_GENERIC) is
+	fill_tuple is
 			-- Generate the registers for the expressions
 			-- to fill the manifest tuple.
 		local

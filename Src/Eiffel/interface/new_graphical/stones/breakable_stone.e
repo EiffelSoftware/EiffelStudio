@@ -102,6 +102,7 @@ feature -- Access
 		end
 
 	history_name: STRING is
+			-- History name.
 		do
 			Result := "Breakpoint in " + routine.name
 		end
@@ -113,11 +114,13 @@ feature -- Access
 		end
 
 	stone_signature: STRING is
+			-- Stone signature
 		do
 			Result := routine.feature_signature
 		end
 
 	header: STRING_GENERAL is
+			-- Header's string.
 		do
 			Result := "Stop point in " + routine.name + " at line " + index.out
 		end
@@ -187,7 +190,7 @@ feature -- Basic operations
 			if bp /= Void then
 					-- "Edit"
 				create item.make_with_text (Interface_names.m_Edit_this_bkpt)
-				item.select_actions.extend (agent open_breakpoint_dialog (routine, index))
+				item.select_actions.extend (agent open_breakpoint_dialog)
 				menu.extend (item)
 			end
 
@@ -196,7 +199,7 @@ feature -- Basic operations
 			else
 				create item.make_with_text (Interface_names.m_Edit_condition)
 			end
-			item.select_actions.extend (agent edit_conditional_breakpoint (routine, index))
+			item.select_actions.extend (agent edit_conditional_breakpoint)
 			menu.extend (item)
 
 			if bp /= Void and then bp.has_condition then
@@ -211,7 +214,7 @@ feature -- Basic operations
 
 					--| Hit count
 				create cmi.make_with_text (Interface_names.m_Hit_count)
-				cmi.select_actions.extend (agent edit_hit_count_breakpoint (bp))
+				cmi.select_actions.extend (agent edit_hit_count_breakpoint)
 				if bp.has_hit_count_condition then
 					cmi.enable_select
 				end
@@ -219,7 +222,7 @@ feature -- Basic operations
 
 					--| When hits breakpoint
 				create cmi.make_with_text (Interface_names.m_When_hits)
-				cmi.select_actions.extend (agent edit_when_hits_breakpoint (bp))
+				cmi.select_actions.extend (agent edit_when_hits_breakpoint)
 				if bp.has_when_hits_action then
 					cmi.enable_select
 				end
@@ -245,6 +248,8 @@ feature -- Basic operations
 feature -- operation on breakpoint
 
 	last_dialogs: LINKED_LIST [ES_BREAKPOINT_DIALOG] is
+			-- Opened dialogs
+			-- to avoid the dialog to be destroy on GC cycle.
 		once
 			create Result.make
 		end
@@ -262,12 +267,13 @@ feature -- operation on breakpoint
  			Result_not_void: Result /= Void
 		end
 
- 	open_breakpoint_dialog (a_feat: E_FEATURE; a_index: INTEGER) is
+ 	open_breakpoint_dialog is
+ 			-- Open a new breakpoint dialog for Current
  		do
  			new_breakpoint_dialog.show_on_active_window
  		end
 
-	edit_conditional_breakpoint (f: E_FEATURE; pos: INTEGER) is
+	edit_conditional_breakpoint is
 			-- Prompt the user for a condition and create a new breakpoint with that condition at coordinates (`f',`pos').
 		local
 			dlg: like new_breakpoint_dialog
@@ -277,7 +283,8 @@ feature -- operation on breakpoint
 			dlg.show_on_active_window
 		end
 
-	edit_hit_count_breakpoint (bp: BREAKPOINT) is
+	edit_hit_count_breakpoint is
+			-- Open new breakpoint dialog and focus the hit_count panel
 		local
 			dlg: like new_breakpoint_dialog
  		do
@@ -286,7 +293,8 @@ feature -- operation on breakpoint
 			dlg.show_on_active_window
  		end
 
-	edit_when_hits_breakpoint (bp: BREAKPOINT) is
+	edit_when_hits_breakpoint is
+			-- Open new breakpoint dialog and focus the when_hits panel	
 		local
 			dlg: like new_breakpoint_dialog
  		do

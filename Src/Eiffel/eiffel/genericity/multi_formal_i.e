@@ -33,23 +33,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (is_ref: like is_reference; is_exp: like is_expanded; i: like position; a_constraint_position: like constraint_position) is
+	make (is_ref: like is_reference; is_exp: like is_expanded; i: like position) is
 			-- Assign `i' to `position'.
 		require
 			valid_position: i > 0
 		do
 			is_expanded := is_exp
 			position := i
-			constraint_position := a_constraint_position
 		ensure
-			constraint_position_set: a_constraint_position = constraint_position
 			is_expanded_set: is_expanded = is_exp
 			position_set: position = i
 		end
 
 feature -- Status report
-
-	constraint_position: INTEGER
 
 	element_type: INTEGER_8 is
 			-- Formal element type.

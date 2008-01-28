@@ -127,9 +127,6 @@ feature -- Access
 	current_used: BOOLEAN
 			-- Is Current used (apart from dtype computation) ?
 
-	current_used_count: INTEGER
-			-- How many times current is used?
-
 	result_used: BOOLEAN
 			-- Is Result used (apart from very last assignment) ?
 
@@ -1068,7 +1065,7 @@ feature -- Access
 				reference_i ?= Result
 				if reference_i /= Void then
 					if formal.type_a.is_multi_constrained (context_type.type.base_class) then
-						create {MULTI_FORMAL_I} Result.make (formal.is_reference, formal.is_expanded, formal.position, -1)
+						create {MULTI_FORMAL_I} Result.make (formal.is_reference, formal.is_expanded, formal.position)
 					else
 						Result := context_type_i.base_class.constrained_type (formal_position).type_i
 					end
@@ -1116,7 +1113,7 @@ feature -- Access
 					if l_type_set.has_expanded then
 						Result := l_type_set.expanded_representative.type_i
 					else
-						create {MULTI_FORMAL_I} Result.make (type.is_reference, l_type_set.has_expanded, l_formal.position, -1)
+						create {MULTI_FORMAL_I} Result.make (type.is_reference, l_type_set.has_expanded, l_formal.position)
 					end
 			else
 				Result := constrained_type_in (type, context_type).instantiation_in (context_type)
@@ -1408,8 +1405,7 @@ feature -- Access
 		do
 				-- Not marking if inside inlined code:
 				-- Current is NOT in Current_b
-			current_used_count := current_used_count + 1
-			if not (current_used or else in_inlined_code) then
+			if not current_used and then not in_inlined_code then
 				set_local_index ("Current", Current_b)
 				current_used := True
 			end
@@ -1642,7 +1638,6 @@ feature -- Access
 		do
 			register_server := saved_context.register_server
 			current_used := saved_context.current_used
-			current_used_count := saved_context.current_used_count
 			need_gc_hook := saved_context.need_gc_hook
 			current_feature := saved_context.current_feature
 			result_used := saved_context.result_used
@@ -1931,7 +1926,6 @@ feature -- Clearing
 			current_feature := Void
 			original_body_index := 0
 			current_used := False
-			current_used_count := 0
 			need_gc_hook := False
 			label := 0
 			local_list.wipe_out

@@ -226,6 +226,9 @@ if [ ! "$NO_INSTALL" ]; then
 		move c.tar.bz2 $EXPORT_DIR
 
 		remtrace C_library
+			# Removing parts that we do not need to put in the porterpackage
+		fullrd	C_library/curl
+		fullrd	C_library/openssl
 		tar -cf c_libs.tar C_library
 		bzip2 c_libs.tar
 		move c_libs.tar.bz2 $EXPORT_DIR

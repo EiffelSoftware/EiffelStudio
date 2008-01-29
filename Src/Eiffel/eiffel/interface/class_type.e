@@ -658,7 +658,7 @@ feature -- Generation
 						 system.keep_assertions)
 				from
 					i := 0
-					l_count := l_feature_table_area.count
+					l_count := l_feature_table.count
 				until
 					generate_c_code or else i = l_count
 				loop
@@ -724,7 +724,7 @@ feature -- Generation
 
 				from
 					i := 0
-					l_count := l_feature_table_area.count
+					l_count := l_feature_table.count
 				until
 					i = l_count
 				loop

@@ -294,13 +294,15 @@ feature -- Generation
 		require
 			c_not_void: c /= Void
 		local
+			l_desc_list: DESC_LIST
 			l_desc_list_area: SPECIAL [DESCRIPTOR]
 			i, l_count: INTEGER
 			desc: DESCRIPTOR
 		do
 			from
-				l_desc_list_area := descriptors (c).area
-				l_count := l_desc_list_area.count
+				l_desc_list := descriptors (c)
+				l_desc_list_area := l_desc_list.area
+				l_count := l_desc_list.count
 			until
 				i = l_count
 			loop

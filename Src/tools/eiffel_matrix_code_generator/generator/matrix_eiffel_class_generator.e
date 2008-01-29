@@ -280,7 +280,7 @@ feature {NONE} -- Buffers
 
 feature {NONE} -- Formatting
 
-	
+
 
 feature {NONE} -- Implementation
 
@@ -330,17 +330,17 @@ feature {NONE} -- Tokens
 
 feature {NONE} -- Constant Templates
 
-	access_template: STRING is "%Tfrozen {1}: EV_PIXMAP is%N%
+	access_template: STRING is "%Tfrozen {1}: !EV_PIXMAP is%N%
 		%%T%T%T-- Access to '{2}' pixmap.%N%
 		%%T%Tonce%N%
-		%%T%T%TResult := raw_buffer.sub_pixmap (pixel_rectangle ({3}, {4}))%N%
+		%%T%T%TResult := ({{!EV_PIXMAP}}) #? raw_buffer.sub_pixmap (pixel_rectangle ({3}, {4}))%N%
 		%%T%Tend%N"
 			-- Template used for access features
 
-	access_buffer_template: STRING is "%Tfrozen {1}: EV_PIXEL_BUFFER is%N%
+	access_buffer_template: STRING is "%Tfrozen {1}: !EV_PIXEL_BUFFER is%N%
 		%%T%T%T-- Access to '{2}' pixmap pixel buffer.%N%
 		%%T%Tonce%N%
-		%%T%T%TResult := raw_buffer.sub_pixel_buffer (pixel_rectangle ({3}, {4}))%N%
+		%%T%T%TResult := ({{!EV_PIXEL_BUFFER}}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle ({3}, {4}))%N%
 		%%T%Tend%N"
 			-- Template used for access pixel buffer features
 

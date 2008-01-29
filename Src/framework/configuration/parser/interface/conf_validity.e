@@ -152,7 +152,7 @@ feature {NONE} -- Onces
 	platform_names: HASH_TABLE [STRING, INTEGER] is
 			-- The platform names mapped to their integer.
 		once
-			create Result.make (5)
+			create Result.make (4)
 			Result.force (pf_windows_name, Pf_windows)
 			Result.force (pf_unix_name, Pf_unix)
 			Result.force (pf_macintosh_name, Pf_mac)
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 	valid_warnings: SEARCH_TABLE [STRING] is
 			-- The codes of valid warnings.
 		once
-			create Result.make (10)
+			create Result.make (13)
 			Result.force (w_unused_local)
 			Result.force (w_obsolete_class)
 			Result.force (w_obsolete_feature)
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 	valid_settings: SEARCH_TABLE [STRING] is
 			-- The codes of valid settings.
 		once
-			create Result.make (40)
+			create Result.make (37)
 			Result.force (s_address_expression)
 			Result.force (s_array_optimization)
 			Result.force (s_automatic_backup)
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 	boolean_settings: SEARCH_TABLE [STRING] is
 			-- Settings that have a boolean value.
 		once
-			create Result.make (25)
+			create Result.make (23)
 			Result.force (s_dead_code_removal)
 			Result.force (s_array_optimization)
 			Result.force (s_inlining)

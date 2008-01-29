@@ -270,8 +270,8 @@ feature -- Access
 					l_built_in_class_as := l_built_in_processor.class_as
 					if l_built_in_class_as /= Void then
 							-- We have an associating built in class.
-							-- If we find a feature with the name matching the built in then we replace the body of 'Result'
-							-- with that of the built-in.
+							-- If we find a feature with the name matching the built in then we set this
+							-- replacement feature as an attribute of the dummy built in.
 						l_built_in_feature_node := l_built_in_class_as.feature_with_name (l_built_in_processor.names_heap.id_of (f.first.visual_name))
 						if l_built_in_feature_node /= Void then
 							l_routine_as ?= b.content

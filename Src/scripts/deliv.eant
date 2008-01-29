@@ -208,7 +208,7 @@
 		<geant target="get_bin__" arguments="h2e,${_OUTPUT_DIR},h2e${exe}"/>
 		<geant target="get_bin__" arguments="emake,${_OUTPUT_DIR},emake${exe}"/>
 		<mkdir directory="${_OUTPUT_DIR}${path_separator}consumer" />
-		<geant target="get_bin__z" arguments="dotnet_consumer,${_OUTPUT_DIR}${path_separator}consumer,mdconsumer_compiled"/>
+		<geant target="get_bin__z" arguments="dotnet_consumer,${_OUTPUT_DIR}${path_separator}consumer,dotnet_consumer_compiled"/>
 		<geant target="get_bin__" arguments="esbuilder,${_OUTPUT_DIR},esbuilder${exe}" />
 		<geant target="get_bin__wizards" arguments="${_OUTPUT_DIR},wizards_compiled"/>
 

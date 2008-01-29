@@ -8,7 +8,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO_TOOLS.absdir}${path_separator}misc${path_separator}_common_.eant">
+		<parent location="${GOBO_TOOLS.absdir}/misc/_common_.eant">
 			<redefine target="init"/>
 		</parent>
 	</inherit>
@@ -70,7 +70,7 @@
 		<argument name="A_name" />
 		<argument name="A_comp_dir" />
 		<argument name="A_out_dir" />
-		<available resource="${A_out_dir}${path_separator}${A_name}${exe}" variable="tmp_available" />
+		<available resource="${A_out_dir}/${A_name}${exe}" variable="tmp_available" />
 		<set name="return_code" value="0" 							if="${tmp_available}=true" />
 
 		<set name="force_clean" value="true" if="${_FORCE_CLEAN}=true" />

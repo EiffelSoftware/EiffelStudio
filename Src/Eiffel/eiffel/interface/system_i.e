@@ -87,11 +87,12 @@ feature {NONE} -- Initialization
 		do
 			set_compilation_id (1)
 
-				-- Names heap creation
-			create names.make
+				-- Use names heap created from parser library.
+			names := Workbench.names_heap
 
 				-- Set up working environment to use current as SYSTEM_I instance.
 			Workbench.set_system (Current)
+
 
 				-- Creation of all the servers.
 			server_make

@@ -57,6 +57,9 @@ feature -- Roundtrip/Token
 
 feature -- Properties
 
+	is_built_in: BOOLEAN is False
+			-- Is the current content a built in?
+
 	is_constant: BOOLEAN is True
 			-- Is the current content a constant one ?
 

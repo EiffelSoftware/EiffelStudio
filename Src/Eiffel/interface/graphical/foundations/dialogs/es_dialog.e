@@ -164,7 +164,7 @@ feature {NONE} -- User interface initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
 		local
 			l_buttons: DS_SET_CURSOR [INTEGER]
@@ -586,7 +586,7 @@ feature {NONE} -- Helpers
 
 feature -- Basic operations
 
-	show (a_window: EV_WINDOW) is
+	show (a_window: EV_WINDOW)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 		require
@@ -609,27 +609,18 @@ feature -- Basic operations
 			--dialog_closed_so_no_blocking_window: not dialog.is_destroyed implies dialog.blocking_window = Void
 		end
 
-	show_on_active_window is
+	show_on_active_window
 			-- Attempts to show the dialog parented to the last active window.
 		require
 			not_is_recycled: not is_recycled
 		local
-			l_shared_wm: EB_SHARED_WINDOW_MANAGER
-			l_manager: EB_WINDOW_MANAGER
+			l_dev_window: like development_window
 			l_window: EV_WINDOW
-			l_dialog: EV_DIALOG
 		do
-			create l_shared_wm
-			l_manager := l_shared_wm.window_manager
-			if l_manager.has_active_development_windows then
-					-- Attempt to grab best top-most window.
-				l_window := l_manager.last_focused_window.window
-				l_dialog ?= l_window
-				if l_dialog = Void or else not l_dialog.has_focus then
-					l_window := l_manager.last_focused_development_window.window
-				end
+			l_dev_window := development_window
+			if l_dev_window /= Void then
+				l_window := l_dev_window.window
 			end
-
 			if l_window /= Void then
 				show (l_window)
 			else

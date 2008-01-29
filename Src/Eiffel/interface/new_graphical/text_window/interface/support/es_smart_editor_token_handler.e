@@ -86,6 +86,11 @@ feature -- Query
 			then
 				Result := contract_keyword_token_images.has (l_image)
 			end
+
+			if Result then
+					-- Check the editor is in edit mode and has focus
+				Result := editor.has_focus and editor.is_editable
+			end
 		end
 
 	can_perform_exit (a_force: BOOLEAN): BOOLEAN

@@ -74,16 +74,13 @@ feature -- Checking
 		require
 			good_argument: feats /= Void
 			not_empty: not feats.is_empty
-		local
-			feature_i: FEATURE_I
 		do
 			from
 				feats.start
 			until
 				feats.after
 			loop
-				feature_i := feats.item.a_feature
-				new_feature.check_signature (feature_i, tbl)
+				new_feature.check_signature (feats.item.a_feature, tbl)
 				feats.forth
 			end
 		end

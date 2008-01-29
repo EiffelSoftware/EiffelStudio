@@ -88,11 +88,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_STATEFUL_VISITOR
-		export
-			{NONE} all
-		end
-
 	PREDEFINED_NAMES
 		export
 			{NONE} all
@@ -2077,7 +2072,6 @@ feature -- Implementation
 			-- Process `l_as'.
 		local
 			l_external: EXTERNAL_I
-			l_built_in_processor: BUILT_IN_PROCESSOR
 			l_feature_as: FEATURE_AS
 			l_feature_checker: AST_FEATURE_CHECKER_GENERATOR
 		do
@@ -2086,10 +2080,7 @@ feature -- Implementation
 					-- If associated feature is not an external anymore, it means that it was interpreted
 					-- by our compiler as a real `built_in'.
 				if l_external = Void then
-					l_built_in_processor := built_in_processor
-					l_built_in_processor.set_current_class_and_feature_name (context.current_class, current_feature.feature_name, System.il_generation)
-					l_feature_as := l_built_in_processor.ast_node
-					l_built_in_processor.reset
+					l_feature_as := l_as.body
 					if l_feature_as /= Void and then l_feature_as.body.content /= Void then
 							-- Only interprets the `built_in' implementation if this is not an attribute.
 						create l_feature_checker

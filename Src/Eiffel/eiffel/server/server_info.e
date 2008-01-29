@@ -17,7 +17,7 @@ feature
 			-- Position id file of id `id'.
 
 	file_id: INTEGER;
-			-- Id of the file where associated item is strored
+			-- Id of the file where associated item is stored
 
 	make (p: INTEGER; i: INTEGER) is
 			-- Initialization

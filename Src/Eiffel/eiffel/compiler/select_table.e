@@ -252,7 +252,7 @@ feature -- Generation
 			from
 				l_table := feature_table.features
 				l_area := l_table.area
-				l_count := l_area.count
+				l_count := l_table.count
 			until
 				i = l_count
 			loop

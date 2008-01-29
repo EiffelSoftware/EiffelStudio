@@ -65,7 +65,7 @@ feature -- Access
 ${ACCESS}		
 feature {NONE} -- Query
 
-	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is
+	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): !EV_RECTANGLE is
 			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
 		require
 			a_x_positive: a_x > 0
@@ -84,23 +84,18 @@ feature {NONE} -- Query
 			Result.set_y (l_y_offset)
 			Result.set_width (${PIXEL_WIDTH})
 			Result.set_height (${PIXEL_HEIGHT})
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	raw_buffer: EV_PIXEL_BUFFER
+	raw_buffer: !EV_PIXEL_BUFFER
 			-- raw matrix pixel buffer
 
-	frozen rectangle: EV_RECTANGLE is
+	frozen rectangle: !EV_RECTANGLE is
 			-- Reusable rectangle for `pixmap_from_constant'.
 		once
 			create Result
 		end
-
-invariant
-	raw_buffer_attached: raw_buffer /= Void
 
 indexing
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

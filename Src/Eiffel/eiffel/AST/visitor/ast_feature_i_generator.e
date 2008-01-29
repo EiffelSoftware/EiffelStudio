@@ -26,11 +26,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_STATEFUL_VISITOR
-		export
-			{NONE} all
-		end
-
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -115,7 +110,6 @@ feature {NONE} -- Implementation
 			l_is_deferred_external, l_is_attribute_external: BOOLEAN
 			l_result: FEATURE_I
 			l_assigner_name_id: INTEGER
-			l_built_in_processor: BUILT_IN_PROCESSOR
 			l_feature_as: FEATURE_AS
 			l_type: TYPE_A
 		do
@@ -173,11 +167,9 @@ feature {NONE} -- Implementation
 					end
 
 					if l_routine.is_built_in then
-						l_built_in_processor := built_in_processor
-						l_built_in_processor.set_current_class_and_feature_name (current_class, Names_heap.item (feature_name_id), System.il_generation)
-						l_feature_as := l_built_in_processor.ast_node
-
-						l_built_in_processor.reset
+						if {l_built_in_as: !BUILT_IN_AS} l_routine.routine_body then
+							l_feature_as := l_built_in_as.body
+						end
 					end
 					if l_feature_as /= Void then
 						process_body_as (l_feature_as.body)
@@ -230,10 +222,9 @@ feature {NONE} -- Implementation
 					type_exists: l_as.type /= Void
 				end
 				if l_routine.is_built_in then
-					l_built_in_processor := built_in_processor
-					l_built_in_processor.set_current_class_and_feature_name (current_class, Names_heap.item (feature_name_id), System.il_generation)
-					l_feature_as := l_built_in_processor.ast_node
-					l_built_in_processor.reset
+					if {l_built_in: !BUILT_IN_AS} l_routine.routine_body then
+						l_feature_as := l_built_in.body
+					end
 					if l_feature_as /= Void then
 						process_body_as (l_feature_as.body)
 						if last_feature.is_constant or last_feature.is_attribute then

@@ -3,9 +3,29 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2
 ===
 
+6.2.7.2080 RTEA without Kpic and no buffer for {POLY_TABLE}.is_polymorphic:
+1124.19u 37.48s 28:28.27 68.0%
+
+6.2.7.2080 RTEA without Kpic (exe size: 47750912):
+968.00u 35.42s 27:25.09 60.9%
+
+6.2.7.2080 RTEA with Kpic (exe size: 48919352):
+985.46u 36.07s 27:54.65 60.9%
+
+6.2.7.1994 RTEA same_as optimization + hash_code on GEN_TYPE_I with ecb compiler:
+679.07u 33.02s 23:12.17 51.1%
+
+6.2.7.1994 RTEA same_as optimization + hash_code on GEN_TYPE_I:
+972.95u 36.67s 26:23.81 63.7%
+977.00u 34.86s 27:02.65 62.3%
+977.50u 36.60s 26:30.06 63.7%
+979.62u 33.89s 23:31.29 71.8%
+
 6.2.7.1786 RTEA FILTER_LIST optimization (5036 classes, EIFGEN size: 400MB, exe size: 49919528):
 1013.16u 36.45s 23:21.58 74.8%
 1024.39u 35.29s 26:21.93 66.9%
+1012.34u 37.70s 28:09.09 62.1%
+1018.80u 34.88s 26:09.49 67.1%
 
 6.2.7.1786 RTEA normal (5036 classes, EIFGEN size: 400MB, exe size: 49890904):
 1153.64u 36.60s 29:33.54 67.1%

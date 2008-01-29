@@ -14,6 +14,11 @@ inherit
 
 feature -- Properties
 
+	is_built_in: BOOLEAN
+			-- Is the current content a built in?
+		deferred
+		end
+
 	is_constant: BOOLEAN is
 			-- is the current content a constant content ?
 		do

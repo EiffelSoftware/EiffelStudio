@@ -83,7 +83,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- No big pixmap is necessary.
 		do
-			Result := pixmaps.icon_pixmaps.execution_object_storage_icon_buffer
+			Result := pixmaps.icon_pixmaps.execution_object_storage_icon
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER is

@@ -62,153 +62,154 @@ feature -- Access
 	height: INTEGER is 1
 			-- Matrix height
 
-	frozen bp_current_line_icon: EV_PIXMAP is
+	frozen bp_current_line_icon: !EV_PIXMAP is
 			-- Access to 'current line' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (1, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (1, 1))
 		end
 
-	frozen bp_current_line_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_current_line_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'current line' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 1))
 		end
 
-	frozen bp_slot_icon: EV_PIXMAP is
+	frozen bp_slot_icon: !EV_PIXMAP is
 			-- Access to 'slot' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (2, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (2, 1))
 		end
 
-	frozen bp_slot_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_slot_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'slot' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 1))
 		end
 
-	frozen bp_enabled_icon: EV_PIXMAP is
+	frozen bp_enabled_icon: !EV_PIXMAP is
 			-- Access to 'enabled' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (3, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (3, 1))
 		end
 
-	frozen bp_enabled_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_enabled_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'enabled' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 1))
 		end
 
-	frozen bp_disabled_icon: EV_PIXMAP is
+	frozen bp_disabled_icon: !EV_PIXMAP is
 			-- Access to 'disabled' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (4, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (4, 1))
 		end
 
-	frozen bp_disabled_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_disabled_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'disabled' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 1))
 		end
 
-	frozen bp_slot_current_line_icon: EV_PIXMAP is
+	frozen bp_slot_current_line_icon: !EV_PIXMAP is
 			-- Access to 'slot current line' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (5, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (5, 1))
 		end
 
-	frozen bp_slot_current_line_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_slot_current_line_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'slot current line' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 1))
 		end
 
-	frozen bp_enabled_current_line_icon: EV_PIXMAP is
+	frozen bp_enabled_current_line_icon: !EV_PIXMAP is
 			-- Access to 'enabled current line' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (6, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (6, 1))
 		end
 
-	frozen bp_enabled_current_line_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_enabled_current_line_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'enabled current line' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 1))
 		end
 
-	frozen bp_disabled_current_line_icon: EV_PIXMAP is
+	frozen bp_disabled_current_line_icon: !EV_PIXMAP is
 			-- Access to 'disabled current line' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (7, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (7, 1))
 		end
 
-	frozen bp_disabled_current_line_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_disabled_current_line_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'disabled current line' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 1))
 		end
 
-	frozen bp_slot_other_frame_icon: EV_PIXMAP is
+	frozen bp_slot_other_frame_icon: !EV_PIXMAP is
 			-- Access to 'slot other frame' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (8, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (8, 1))
 		end
 
-	frozen bp_slot_other_frame_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_slot_other_frame_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'slot other frame' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 1))
 		end
 
-	frozen bp_enabled_other_frame_icon: EV_PIXMAP is
+	frozen bp_enabled_other_frame_icon: !EV_PIXMAP is
 			-- Access to 'enabled other frame' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (9, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (9, 1))
 		end
 
-	frozen bp_enabled_other_frame_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_enabled_other_frame_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'enabled other frame' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 1))
 		end
 
-	frozen bp_disabled_other_frame_icon: EV_PIXMAP is
+	frozen bp_disabled_other_frame_icon: !EV_PIXMAP is
 			-- Access to 'disabled other frame' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (10, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (10, 1))
 		end
 
-	frozen bp_disabled_other_frame_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_disabled_other_frame_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'disabled other frame' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 1))
 		end
 
-	frozen bp_enabled_conditional_icon: EV_PIXMAP is
+	frozen bp_enabled_conditional_icon: !EV_PIXMAP is
 			-- Access to 'enabled conditional' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (11, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (11, 1))
 		end
 
-	frozen bp_enabled_conditional_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_enabled_conditional_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'enabled conditional' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 1))
 		end
 
-	frozen bp_disabled_conditional_icon: EV_PIXMAP is
+	frozen bp_disabled_conditional_icon: !EV_PIXMAP is
 			-- Access to 'disabled conditional' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (12, 1))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (12, 1))
 		end
 
-	frozen bp_disabled_conditional_icon_buffer: EV_PIXEL_BUFFER is
+	frozen bp_disabled_conditional_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'disabled conditional' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 1))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 1))
 		end
+
 
 feature {NONE} -- Query
 
-	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is
+	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): !EV_RECTANGLE is
 			-- Retrieves a pixmap from matrix coordinates `a_x', `a_y'	
 		require
 			a_x_positive: a_x > 0
@@ -227,23 +228,18 @@ feature {NONE} -- Query
 			Result.set_y (l_y_offset)
 			Result.set_width (12)
 			Result.set_height (12)
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	raw_buffer: EV_PIXEL_BUFFER
+	raw_buffer: !EV_PIXEL_BUFFER
 			-- raw matrix pixel buffer
 
-	frozen rectangle: EV_RECTANGLE is
+	frozen rectangle: !EV_RECTANGLE is
 			-- Reusable rectangle for `pixmap_from_constant'.
 		once
 			create Result
 		end
-
-invariant
-	raw_buffer_attached: raw_buffer /= Void
 
 indexing
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

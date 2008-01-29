@@ -242,7 +242,7 @@ feature -- Access
 	icon: EV_PIXEL_BUFFER
 			-- The dialog's icon
 		do
-			Result := stock_pixmaps.general_dialog_icon
+			Result := stock_pixmaps.general_dialog_icon_buffer
 		end
 
 	title: STRING_32

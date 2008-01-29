@@ -356,7 +356,7 @@ feature -- Action
 				-- Check suppliers of parsed class represented by `ast_b'.
 				-- Supplier classes not present already in the system
 				-- are introduced in it, after having verified that they
-				-- are avaible in the universe.
+				-- are available in the universe.
 				-- Empty syntactical supplier list from compilation
 				-- to another one after duplicating it.
 			old_syntactical_suppliers := syntactical_suppliers

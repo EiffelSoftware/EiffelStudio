@@ -142,7 +142,27 @@ feature -- Access
 	warning_count: NATURAL
 			-- Number of warnings
 
+feature -- Status report
+
+	show_errors: BOOLEAN
+			-- Indicates if errors should be shown
+		do
+			Result := not is_initialized or else errors_button.is_selected
+		end
+
+	show_warnings: BOOLEAN
+			-- Indicates if errors should be shown
+		do
+			Result := not is_initialized or else warnings_button.is_selected
+		end
+
+	expand_errors: BOOLEAN
+			-- Indicates if errors should be shown automatically
+
 feature {NONE} -- Status report
+
+	is_expanding_all_errors: BOOLEAN
+			-- Indicates if the errors are being expanded, as a result of the expand errors button being pressed.
 
 	frozen surpress_synchronization: BOOLEAN
 			-- State to indicate if synchonization with the event list service should be suppressed
@@ -278,23 +298,6 @@ feature {NONE} -- Query
 		ensure
 			not_is_error_event: Result implies not is_error_event (a_event_item)
 		end
-
-feature -- Status report
-
-	show_errors: BOOLEAN
-			-- Indicates if errors should be shown
-		do
-			Result := not is_initialized or else errors_button.is_selected
-		end
-
-	show_warnings: BOOLEAN
-			-- Indicates if errors should be shown
-		do
-			Result := not is_initialized or else warnings_button.is_selected
-		end
-
-	expand_errors: BOOLEAN
-			-- Indicates if errors should be shown automatically
 
 feature {ES_ERROR_LIST_TOOL} -- Navigation
 
@@ -541,6 +544,10 @@ feature {NONE} -- Events
 
 	on_toggle_expand_errors_button
 			-- Called when the expand error button is selected
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			not_is_expanding_all_errors: not is_expanding_all_errors
 		local
 			l_expand: BOOLEAN
 			l_grid: like grid_events
@@ -550,6 +557,7 @@ feature {NONE} -- Events
 		do
 			l_expand := expand_errors_button.is_selected
 			if expand_errors /= l_expand then
+				is_expanding_all_errors := l_expand
 				expand_errors := l_expand
 				if session_manager.is_service_available then
 					session_manager.service.retrieve (False).set_value (l_expand, expand_errors_session_id)
@@ -576,9 +584,33 @@ feature {NONE} -- Events
 					end
 					i := i + 1
 				end
+				is_expanding_all_errors := False
 			end
 		ensure
 			expand_errors_set: expand_errors = expand_errors_button.is_selected
+			not_is_expanding_all_errors: not is_expanding_all_errors
+		end
+
+	on_expand_event_row (a_row: EV_GRID_ROW) is
+			-- Called when the expand error button is selected.
+			--
+			-- `a_row': The row that was expanded.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_row_attached: a_row /= Void
+			not_a_row_is_destroyed: not a_row.is_destroyed
+			a_row_has_grid_events_as_parent: a_row.parent = grid_events
+			a_row_is_expanded: a_row.is_expanded
+		do
+			if not is_expanding_all_errors then
+				grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
+				a_row.enable_select
+				if a_row.subrow_count > 0 then
+						-- Ensure the row is visible.
+					a_row.subrow (1).ensure_visible
+				end
+			end
 		end
 
 	on_error_info
@@ -902,9 +934,13 @@ feature {NONE} -- User interface manipulation
 			l_row: EV_GRID_ROW
 			l_pos_token: EDITOR_TOKEN_NUMBER
 			l_line: EIFFEL_EDITOR_LINE
+			l_expanded: BOOLEAN
 		do
 			create l_item
 			a_row.set_item (1, l_item)
+
+				-- Set expand actions
+			a_row.expand_actions.extend (agent on_expand_event_row (a_row))
 
 				-- Set category pixmap item
 			create l_item
@@ -1020,11 +1056,16 @@ feature {NONE} -- User interface manipulation
 				-- Set expanded status
 			if a_row.is_expandable and then is_error_event (a_event_item) then
 				if expand_errors then
+					l_expanded := is_expanding_all_errors
+					is_expanding_all_errors := True
 					a_row.expand
+					is_expanding_all_errors := l_expanded
 				elseif a_row.is_expanded then
 					a_row.collapse
 				end
 			end
+		ensure then
+			is_expanding_all_errors_unchanged: is_expanding_all_errors = old is_expanding_all_errors
 		end
 
 feature {NONE} -- Constants

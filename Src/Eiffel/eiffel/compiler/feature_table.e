@@ -844,9 +844,11 @@ end
 		local
 			l_feat: FEATURE_I
 			nb, l_id: INTEGER
+			l_system: like system
 		do
 			from
 				nb := count
+				l_system := system
 				create feature_table.make (nb)
 				feature_table.set_id (feat_tbl_id)
 				create select_table.make (nb, Current)
@@ -858,7 +860,7 @@ end
 			loop
 				l_id := internal_table_item_for_iteration
 				check l_id_positive: l_id > 0 end
-				l_feat := system.feature_server.item (l_id)
+				l_feat := l_system.feature_server.item (l_id)
 				feature_id_table.force (l_feat.feature_name_id, l_feat.feature_id)
 				body_index_table.put (l_feat.feature_name_id, l_feat.body_index)
 				select_table.add_feature (l_feat)
@@ -1066,6 +1068,7 @@ end
 			feat: FEATURE_I
 			i, nb: INTEGER
 			rout_id: INTEGER
+			l_int32_str, l_comma_newline_str: STRING
 		do
 			tab := routine_id_array
 			buffer.put_string ("int32 ra")
@@ -1075,11 +1078,13 @@ end
 			from
 				i := 0
 				nb := tab.upper
+				l_int32_str := "(int32) "
+				l_comma_newline_str := ",%N"
 			until
 				i > nb
 			loop
 				feat := tab.item (i)
-				buffer.put_string ("(int32) ")
+				buffer.put_string (l_int32_str)
 				if feat = Void then
 					buffer.put_integer (0)
 				else
@@ -1091,7 +1096,7 @@ buffer.put_string (feat.feature_name)
 buffer.put_string ("' */")
 end
 				end
-				buffer.put_string (",%N")
+				buffer.put_string (l_comma_newline_str)
 				i := i + 1
 			end
 			buffer.put_string ("};%N%N")

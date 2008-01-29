@@ -8,7 +8,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${COMPILE_WIZARDS.absdir}${path_separator}misc${path_separator}_common_.eant">
+		<parent location="${COMPILE_WIZARDS.absdir}/misc/_common_.eant">
 		</parent>
 	</inherit>
 
@@ -57,7 +57,7 @@
 
 		<set name="tmp_comp_dir" value="${a_output_dir}${path_separator}${a_wizard_name}" />
 
-		<available resource="${tmp_output}${path_separator}wizard${exe}" variable="tmp_available" />
+		<available resource="${tmp_output}/wizard${exe}" variable="tmp_available" />
 		<mkdir directory="$tmp_comp_dir" if="${tmp_available}=false"/>
 		<geant target="compile_a_wizard" arguments="$a_name,$a_wizard_name,$tmp_comp_dir,$tmp_output" if="${tmp_available}=false"/>
 		<echo message=" -> Wizard [$a_type:$a_wizard_name] already available" if="${tmp_available}=true"/>
@@ -74,11 +74,11 @@
 		<argument name="a_output_dir"/>
 
 		<copy file="wizard.ico"
-			dir="${EIFFEL_SRC}${path_separator}help${path_separator}wizards"
+			dir="${EIFFEL_SRC}/help/wizards"
 			to_directory="$a_comp_dir" force="true" 
 			/>
 		<copy file="wizard.rc"
-			dir="${EIFFEL_SRC}${path_separator}help${path_separator}wizards"
+			dir="${EIFFEL_SRC}/help/wizards"
 			to_directory="$a_comp_dir" force="true" 
 			/>
 		<set name="return_code" value="0" />

@@ -7,7 +7,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${_HELPERS_.absdir}${path_separator}_common_.eant" />
+		<parent location="${_HELPERS_.absdir}/_common_.eant" />
 	</inherit>
 
 	<target name="made_file_executable" unless="${is_windows}" >
@@ -39,7 +39,7 @@
 		<available dir="${a_from_dir}" resource="${a_name}" variable="tmp_available"/>
 		<geant target="_log" arguments="- Install file [${a_from_dir}${path_separator}${a_name}] to [${a_to_dir}${path_separator}${a_new_name}]" if="${tmp_available}=true"/>
 		<geant target="_log" arguments="- File not found [${a_from_dir}${path_separator}${a_name}]" if="${tmp_available}=false"/>
-		<copy dir="${a_from_dir}" file="${a_name}" to_file="${a_to_dir}${path_separator}${a_new_name}" if="${tmp_available}=true"/>
+		<copy dir="${a_from_dir}" file="${a_name}" to_file="${a_to_dir}/${a_new_name}" if="${tmp_available}=true"/>
 
 			<!-- executable property -->
 		<set name="tmp_exec_available" value="$tmp_available" if="$a_is_executable" />

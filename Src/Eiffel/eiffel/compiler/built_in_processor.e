@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			-- Parser input file buffer
 			-- Redefined as nested parsing causes assertion violations.
 		once
-			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 10000)
+			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 4096)
 		end
 
 end

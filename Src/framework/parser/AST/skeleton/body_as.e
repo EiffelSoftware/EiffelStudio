@@ -219,22 +219,23 @@ feature -- Type check, byte code and dead code removal
 			Result := content /= Void and then content.is_unique
 		end
 
+	is_built_in: BOOLEAN is
+			-- Is current body a built in?
+		do
+			Result := content /= Void and then content.is_built_in
+		end
+
 	is_routine: BOOLEAN is
 			-- Is current body a routine?
-		local
-			l_routine: ROUTINE_AS
 		do
-			l_routine ?= content
-			Result := l_routine /= Void
+				-- If not a constant then current body is a routine.
+			Result := content /= Void and then not content.is_constant
 		end
 
 	is_constant: BOOLEAN is
 			-- Is current body a constant?
-		local
-			l_constant: CONSTANT_AS
 		do
-			l_constant ?= content
-			Result := l_constant /= Void
+			Result := content /= Void and then content.is_constant
 		end
 
 feature -- New feature description

@@ -222,6 +222,8 @@
 		<argument name="a_clean" />
 		<argument name="a_batch" />
 
+		<set name="l_clean" value="$a_clean" />
+		<set name="l_batch" value="$a_batch" />
 		<set name="l_clean" value="$force_clean" if="-$a_clean-=--" />
 		<set name="l_batch" value="$force_batch" if="-$a_batch-=--" />
 

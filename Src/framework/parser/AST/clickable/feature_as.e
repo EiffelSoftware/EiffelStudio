@@ -261,7 +261,7 @@ feature -- Access
 		do
 			from
 				l_area := feature_names.area
-				l_count := l_area.count
+				l_count := feature_names.count
 			until
 				Result /= Void or else i = l_count
 			loop

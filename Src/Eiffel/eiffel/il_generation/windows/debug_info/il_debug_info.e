@@ -39,11 +39,11 @@ feature -- Class info
 	class_of_id (a_cls_id: INTEGER): CLASS_C is
 			-- -- Class of id `a_cls_id'
 		require
-			a_cls_id_void: a_cls_id /= 0			
+			a_cls_id_void: a_cls_id /= 0
 		do
 			Result := System.class_of_id (a_cls_id)
 		end
-		
+
 feature -- Class Types info
 
 	class_types: ARRAY [CLASS_TYPE] is
@@ -61,7 +61,7 @@ feature -- Class Types info
 					l_class_types := System.class_types
 					i := l_class_types.lower
 					nb := l_class_types.upper
-					create Result.make (0, System.Static_type_id_counter.count)
+					create Result.make (0, System.static_type_id_counter.count)
 				until
 					i > nb
 				loop

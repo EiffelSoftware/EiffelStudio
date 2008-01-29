@@ -7466,7 +7466,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				from
 					i := System.class_types.lower
 					nb := System.class_types.upper
-					create Result.make (0, System.Static_type_id_counter.count)
+					create Result.make (0, System.static_type_id_counter.count)
 				until
 					i > nb
 				loop

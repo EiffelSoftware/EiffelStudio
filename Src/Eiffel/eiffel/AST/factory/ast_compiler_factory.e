@@ -1,5 +1,5 @@
 indexing
-	description: "Factory for compiler which generates descendans of certain AST classes."
+	description: "Factory for compiler which generates descendants of certain AST classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -51,6 +51,11 @@ inherit
 		end
 
 	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
+	SHARED_STATEFUL_VISITOR
 		export
 			{NONE} all
 		end
@@ -185,6 +190,11 @@ feature -- Access
 			operator: STRING
 			arguments: EIFFEL_LIST [TYPE_DEC_AS]
 			vfav: VFAV_SYNTAX
+			l_built_in_processor: like built_in_processor
+			l_built_in_class_as: CLASS_AS
+			l_built_in_feature_node: FEATURE_AS
+			l_routine_as: ROUTINE_AS
+			l_built_in_as: BUILT_IN_AS
 		do
 			if
 				(f /= Void and then not f.is_empty) and b /= Void
@@ -252,6 +262,33 @@ feature -- Access
 					f.forth
 				end
 				create Result.initialize (f, b, i, system.feature_as_counter.next_id, next_pos)
+
+				if b.is_built_in then
+					-- We have a built in so we set the replacement feature inside if available.
+					l_built_in_processor := built_in_processor
+					l_built_in_processor.parse_current_class (system.current_class, system.il_generation)
+					l_built_in_class_as := l_built_in_processor.class_as
+					if l_built_in_class_as /= Void then
+							-- We have an associating built in class.
+							-- If we find a feature with the name matching the built in then we replace the body of 'Result'
+							-- with that of the built-in.
+						l_built_in_feature_node := l_built_in_class_as.feature_with_name (l_built_in_processor.names_heap.id_of (f.first.visual_name))
+						if l_built_in_feature_node /= Void then
+							l_routine_as ?= b.content
+							l_built_in_as ?= l_routine_as.routine_body
+							l_built_in_as.set_body (l_built_in_feature_node)
+								-- Add any newly introduced suppliers if any.
+							if l_built_in_class_as.suppliers /= Void then
+									-- Make sure any uncompiled classes referenced by the built in get compiled.
+									--| FIXME IEK Optimize if possible as this only needs to be performed once per built in class.
+								eiffel_parser.suppliers.light_supplier_ids.merge (l_built_in_class_as.suppliers.light_supplier_ids)
+								eiffel_parser.suppliers.supplier_ids.merge (l_built_in_class_as.suppliers.supplier_ids)
+							end
+						end
+					end
+					l_built_in_processor.reset
+				end
+
 				if b.is_unique then
 					if system.current_class /= Void then
 						system.current_class.set_has_unique

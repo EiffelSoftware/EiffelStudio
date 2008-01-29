@@ -36,6 +36,7 @@ inherit
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
+			{SYSTEM_I} names_heap
 		end
 
 feature -- Status

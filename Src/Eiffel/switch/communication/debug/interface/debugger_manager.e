@@ -496,6 +496,9 @@ feature {NONE} -- Breakpoints events
 
 	on_breakpoints_change_event is
 		do
+				--| For now, let's notify as new breakpoint event
+				--| Later we might try to optimize.
+			on_new_breakpoint_event
 		end
 
 	on_new_breakpoint_event is

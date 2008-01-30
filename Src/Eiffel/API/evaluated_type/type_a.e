@@ -92,7 +92,7 @@ feature -- Properties
 		end
 
 	is_type_set: BOOLEAN is
-			-- Is curren type a type_set?
+			-- Is current type a type_set?
 			-- | example: {A, B}
 		do
 			-- False
@@ -105,7 +105,7 @@ feature -- Properties
 		end
 
 	is_integer: BOOLEAN is
-			--  Is the current actual type an integer type ?
+			--  Is the current actual type an integer type?
 		do
 			-- Do nothing
 		end

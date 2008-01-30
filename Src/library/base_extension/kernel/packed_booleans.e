@@ -31,7 +31,7 @@ feature -- Access
 		require
 			valid_index: valid_index (i)
 		do
-			Result := area.item(i // Integer_size).bit_test (i \\ Integer_size)
+			Result := area.item (i // Integer_size).bit_test (i \\ Integer_size)
 		end
 
 feature -- Status Report
@@ -124,12 +124,11 @@ feature -- Resizing
 			-- Rearrange array so that it can accommodate `n' items.
 			-- Do not lose any previously entered item.
 		local
-			old_count, new_count: INTEGER
+			new_count: INTEGER
 		do
-			old_count := area.count
 			new_count := 1 + (n // Integer_size)
-			if new_count > old_count then
-				area := area.resized_area (new_count)
+			if new_count > area.count then
+				area := area.aliased_resized_area (new_count)
 			end
 		ensure
 			consistent_count: count >= n

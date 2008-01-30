@@ -700,7 +700,6 @@
 	<PREF NAME="shortcuts.view.tools.show_search_report_tool" DESCRIPTION="Shortcut to display Search Report tool."><SHORTCUT Ctrl="True" Alt="True">R</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_output_tool" DESCRIPTION="Shortcut to display Output tool."><SHORTCUT Ctrl="True" Alt="True">O</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_c_output_tool" DESCRIPTION="Shortcut to display C Output tool."><SHORTCUT Ctrl="True" Alt="True">0</SHORTCUT></PREF>
-	<PREF NAME="shortcuts.view.tools.show_logger_tool" DESCRIPTION="Shortcut to display Logger tool."><SHORTCUT Ctrl="True" Alt="True">L</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_external_output_tool" DESCRIPTION="Shortcut to display External output tool."><SHORTCUT Ctrl="True" Alt="True">X</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_errors_and_warnings_tool" DESCRIPTION="Shortcut to display Error and Warnings tool."><SHORTCUT Ctrl="True" Alt="True">E</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_properties_tool" DESCRIPTION="Shortcut to display Properties tool."><SHORTCUT>F4</SHORTCUT></PREF>

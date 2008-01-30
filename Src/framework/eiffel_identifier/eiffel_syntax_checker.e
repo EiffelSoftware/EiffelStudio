@@ -309,7 +309,7 @@ feature -- Status report
 	free_operators_characters: SEARCH_TABLE [CHARACTER] is
 			-- List of characters that can start a free operator name.
 		once
-			create Result.make (20)
+			create Result.make (30)
 			Result.force ('@')
 			Result.force ('#')
 			Result.force ('|')

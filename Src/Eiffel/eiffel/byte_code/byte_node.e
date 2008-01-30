@@ -61,13 +61,13 @@ feature -- Eiffel source line information
 		local
 			l_buffer: like buffer
 		do
-			if System.line_generation and then line_number > 0 then
-				l_buffer := buffer
+			if line_number > 0 and then System.line_generation then
+				l_buffer := context.buffer
 				l_buffer.put_new_line_only
-				l_buffer.put_string ("#line ")
+				l_buffer.put_string (LINE_INFO)
 				l_buffer.put_integer (line_number)
 				l_buffer.put_character (' ')
-				l_buffer.put_indivisible_string_literal (Context.associated_class.lace_class.file_name)
+				l_buffer.put_indivisible_string_literal (context.associated_class.lace_class.file_name)
 			end
 		end
 
@@ -96,16 +96,16 @@ feature -- Eiffel source line information
 			l_buffer: like buffer
 		do
 			if not context.final_mode or else System.exception_stack_managed then
-				if context.current_feature /= Void and context.current_feature.supports_step_in then
+				if context.current_feature /= Void and then context.current_feature.supports_step_in then
 					lnr := context.get_next_breakpoint_slot
 					check
 						lnr > 0
 					end
-					l_buffer := buffer
+					l_buffer := context.buffer
 					l_buffer.put_new_line
-					l_buffer.put_string("RTHOOK(")
+					l_buffer.put_string(RTNHOOK_OPEN)
 					l_buffer.put_integer(lnr)
-					l_buffer.put_string(");")
+					l_buffer.put_string(RTNHOOK_CLOSE)
 				end
 			end
 		end
@@ -118,16 +118,16 @@ feature -- Eiffel source line information
 			lnr: INTEGER
 		do
 			if not context.final_mode or else System.exception_stack_managed then
-				if context.current_feature /= Void and context.current_feature.supports_step_in then
+				if context.current_feature /= Void and then context.current_feature.supports_step_in then
 					lnr := context.get_next_breakpoint_slot
 					check
 						lnr > 0
 					end
-					l_buffer := buffer
+					l_buffer := context.buffer
 					l_buffer.put_new_line
-					l_buffer.put_string ("RTHOOK(")
+					l_buffer.put_string (RTNHOOK_OPEN)
 					l_buffer.put_integer (lnr)
-					l_buffer.put_string (");")
+					l_buffer.put_string (RTNHOOK_CLOSE)
 				end
 			end
 		end
@@ -163,15 +163,15 @@ feature -- Eiffel source line information
 				-- Note: the line number is not increased !!
 
 			if not context.final_mode then
-				if context.current_feature /= Void and context.current_feature.supports_step_in then
+				if context.current_feature /= Void and then context.current_feature.supports_step_in then
 					lnr := context.get_breakpoint_slot
 						-- if lnr = 0 or -1 then we do nothing.
 					if lnr > 0 then
-						l_buffer := buffer
+						l_buffer := context.buffer
 						l_buffer.put_new_line
-						l_buffer.put_string("RTNHOOK(")
+						l_buffer.put_string(RTNHOOK_OPEN)
 						l_buffer.put_integer(lnr)
-						l_buffer.put_string(");")
+						l_buffer.put_string(RTNHOOK_CLOSE)
 					end
 				end
 			end
@@ -190,6 +190,13 @@ feature -- Eiffel source line information
 				ba.generate_melted_debugger_hook (lnr)
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	RTNHOOK_OPEN: STRING = "RTNHOOK("
+	RTNHOOK_CLOSE: STRING = ");"
+	LINE_INFO: STRING = "#line"
+		-- String constants for generating debugging information.
 
 feature
 

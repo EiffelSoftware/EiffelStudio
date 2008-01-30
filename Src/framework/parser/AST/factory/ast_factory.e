@@ -207,13 +207,13 @@ feature -- Access
 		end
 
 	new_alias_triple (k_as: KEYWORD_AS; n_as: STRING_AS; c_as: KEYWORD_AS): ALIAS_TRIPLE is
-			-- New ALIST_TRIPLE.
+			-- New ALIAS_TRIPLE.
 		do
 			create Result.make (k_as, n_as, c_as)
 		end
 
 	new_agent_target_triple (l_as, r_as: SYMBOL_AS; o_as: OPERAND_AS): AGENT_TARGET_TRIPLE is
-			-- New ALIST_TRIPLE.
+			-- New AGENT_TARGET_TRIPLE.
 		do
 			create Result.make (l_as, r_as, o_as)
 		end

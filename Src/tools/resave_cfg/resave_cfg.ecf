@@ -6,7 +6,6 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="resave"/>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>

@@ -7,7 +7,6 @@
 		</option>
 		<setting name="multithreaded" value="true"/>
 		<setting name="console_application" value="true"/>
-		<precompile name="base_pre" location="${ISE_PRECOMP}\base-mt.ecf"/>
 		<library name="arg_parser" location="${EIFFEL_SRC}\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
 		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf"/>
 		<library name="environment" location="${EIFFEL_SRC}\framework\environment\environment.ecf"/>

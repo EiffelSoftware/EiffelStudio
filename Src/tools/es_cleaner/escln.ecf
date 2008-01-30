@@ -18,7 +18,6 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="executable_name" value="escln"/>
-		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="call_site" location="$EIFFEL_SRC\framework\patterns\call_site\call_site.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>

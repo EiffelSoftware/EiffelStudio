@@ -9,7 +9,6 @@
 		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="project" location=".\" recursive="true"/>
 	</target>

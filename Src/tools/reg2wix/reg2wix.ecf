@@ -20,7 +20,6 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf"/>
 		<cluster name="reg2wix" location=".\main\" recursive="true">
 			<file_rule>

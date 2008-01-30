@@ -119,7 +119,7 @@ feature -- Access
 			-- Last line pragma to be associated with next instruction
 
 	token_buffer: STRING
-			-- Buffer for lexial tokens
+			-- Buffer for lexical tokens
 
 	string_position: INTEGER
 			-- Start position of a string token

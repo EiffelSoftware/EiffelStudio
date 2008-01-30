@@ -56,11 +56,12 @@ feature -- Generation
 			ae: ATTR_ENTRY
 			l_area: like area
 			entry_item: ENTRY
-			body_index_type, type_index, gen_type, separator, null_init: STRING
+			body_index_type, body_index_type_separator, type_index, gen_type, separator, null_init: STRING
 			invalid_entry: STRING
 		do
 			from
 				body_index_type := "%N%T{(BODY_INDEX) "
+				body_index_type_separator := ", (BODY_INDEX) "
 				type_index := ", (EIF_TYPE_INDEX) "
 				gen_type := ", gen_type"
 				separator := "}, "
@@ -80,7 +81,7 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table).
 						buffer.put_real_body_index (re.real_body_index)
-						buffer.put_string (", (BODY_INDEX) ")
+						buffer.put_string (body_index_type_separator)
 							-- Write the offset of the attribute in the
 							-- run-time structure (object) (if any).
 						if re.is_attribute then
@@ -97,7 +98,7 @@ feature -- Generation
 						buffer.put_integer (Invalid_index)
 							-- Write the offset of the attribute in the
 							-- run-time structure (object).
-						buffer.put_string (", (BODY_INDEX) ")
+						buffer.put_string (body_index_type_separator)
 						buffer.put_integer (ae.workbench_offset)
 					end
 						-- Write the type of the feature.
@@ -119,7 +120,7 @@ feature -- Generation
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
 					buffer.put_integer (Invalid_index)
-					buffer.put_string (", (BODY_INDEX)")
+					buffer.put_string (body_index_type_separator)
 					buffer.put_integer (Invalid_index)
 					buffer.put_string (invalid_entry)
 				end

@@ -11,7 +11,7 @@ and other product from EiffelStudio open source project.
 
 1) First you need to checkout the source.
 for instance
-svn checkout https://svn.eiffel.com/eiffelstudio/branches/eth/cdd/Eiffel_61 cdd61dev
+svn checkout https://svn.eiffel.com/eiffelstudio/trunk ESdev
 
 Note: the whole trunk or branches is checkouted into a single folder
 

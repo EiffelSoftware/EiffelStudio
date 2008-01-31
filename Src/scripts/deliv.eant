@@ -18,7 +18,7 @@
 	
 	<target name="help">
 		<echo message=" geant menu"/>
-		<echo message=" geant build_eiffelstudio_delivery"/>
+		<echo message=" geant build_delivery"/>
 		<echo message=" ---- "/>
 		<echo message=" geant make_binaries"/>
 		<echo message=" geant make_delivery_structure"/>
@@ -28,7 +28,7 @@
 	<target name="menu">
 		<echo message="Menu"/>
 		<echo message="1) clean ..." />
-		<echo message="2) build_eiffelstudio_delivery (includes 3,4)" />
+		<echo message="2) build_delivery (includes 3,4)" />
 		<echo message="---(sub tasks)---" />
 		<echo message="3) make_binaries" />
 		<echo message="4) make_delivery_structure" />
@@ -37,7 +37,7 @@
 		<echo message="Q) quit" />
 		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,Q,q" />
 		<geant if="$answer=1" target="_menu_clean" 					/>
-		<geant if="$answer=2" target="build_eiffelstudio_delivery" 	/>
+		<geant if="$answer=2" target="build_delivery" 	/>
 		<geant if="$answer=3" target="make_binaries" 			/>
 		<geant if="$answer=4" target="make_delivery_structure" 	/>
 		<geant if="$answer=5" target="install_binaries" 			/>
@@ -62,8 +62,8 @@
 
 <!-- Obsolete Targets -->
 	<target name="build_es">
-		<echo message="Obsolete target [build_es], please use [build_eiffelstudio_delivery]" />
-		<geant target="build_eiffelstudio_delivery" />
+		<echo message="Obsolete target [build_es], please use [build_delivery]" />
+		<geant target="build_delivery" />
 	</target>
 
 <!-- ====================== -->
@@ -146,9 +146,9 @@
 <!-- Make effective delivery -->
 <!-- ======================= -->
 
-	<target name="build_eiffelstudio_delivery" depend="init_deliv" >
+	<target name="build_delivery" depend="init_deliv" >
 		<!-- Main target to build the whole delivery -->
-		<geant target="_log" arguments="Building EiffelStudio ..." />
+		<geant target="_log" arguments="Building EiffelStudio Delivery ..." />
 
 		<!-- Set internal version numbers -->
 		<geant target="set_ec_version" 				/>

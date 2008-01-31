@@ -14,12 +14,11 @@ feature -- Query
 
 	module_name: STRING is
 			-- Module name.
-		local
-			l_platform: PLATFORM
 		once
-			create l_platform
-			if l_platform.is_windows then
+			if {PLATFORM}.is_windows then
 				Result := "libcurl.dll"
+			elseif {PLATFORM}.is_mac then
+				Result := "libcurl.dylib"
 			else
 				Result := "libcurl.so"
 			end

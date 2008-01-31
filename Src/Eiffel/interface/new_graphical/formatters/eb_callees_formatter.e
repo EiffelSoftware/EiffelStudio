@@ -135,6 +135,12 @@ feature -- Access
 			Result := preferences.class_browser_data.callee_sorting_order_preference
 		end
 
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callees
+		end
+
 feature -- Status report
 
 	is_dotnet_formatter: BOOLEAN is

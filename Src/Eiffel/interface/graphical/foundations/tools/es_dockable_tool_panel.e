@@ -29,7 +29,7 @@ inherit
             title,
             show,
             build_docking_content
-        end
+		end
 
 inherit {NONE}
 	ES_HELP_REQUEST_BINDER
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-    internal_recycle is
+    internal_recycle
             -- Recycle tool.
         local
             l_site: SITE [EB_DEVELOPMENT_WINDOW]
@@ -555,34 +555,109 @@ feature -- Basic operations
             is_initialized: (develop_window/= Void and then not develop_window.is_recycling and not develop_window.is_recycled) implies is_initialized
         end
 
-feature {NONE} -- Basic operations
+feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDATIONS)
 
     execute_with_busy_cursor (a_action: PROCEDURE [ANY, TUPLE])
             -- Executes a action with a wait cursor
             --
             -- `a_action': An action to execute with a wait cursor displayed until the action has been completed
         require
-            not_is_recycled: not is_recycled
-            not_is_recycling: not is_recycling
+            is_interface_usable: is_interface_usable
+            is_initialized: is_initialized
             a_action_attached: a_action /= Void
         local
             l_style: EV_POINTER_STYLE
+            l_widget: like user_widget
         do
-            if is_initialized then
-                l_style := widget.pointer_style
-                widget.set_pointer_style (develop_window.busy_cursor)
-            end
-            a_action.call ([])
-            if l_style /= Void then
-                check is_initialized: is_initialized end
-                widget.set_pointer_style (l_style)
-            end
-        rescue
-            if l_style /= Void then
-                check is_initialized: is_initialized end
-                widget.set_pointer_style (l_style)
-            end
-        end
+        	l_widget := user_widget
+			l_style := l_widget.pointer_style
+			l_widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
+			a_action.call ([])
+			l_widget.set_pointer_style (l_style)
+		rescue
+				-- Action may raise an exception, so we need to restore the
+				-- cursor
+			if l_style /= Void then
+				l_widget.set_pointer_style (l_style)
+			end
+		end
+		
+	propagate_action (a_start_widget: EV_WIDGET; a_action: PROCEDURE [ANY, TUPLE [EV_WIDGET]]; a_excluded: ARRAY [EV_WIDGET])
+			-- Propagates a performed action to all child widgets of an initial widget.
+			--
+			-- `a_start_widget': The starting widget to apply an action, as well as to all it's children widgets.
+			-- `a_action': The action to be performed.
+			-- `a_excluded': An array of widgets to exluding the the propagation of actions, or Void to include all widgets
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+			a_start_widget_attached: a_start_widget /= Void
+			not_a_start_widget_is_destroyed: not a_start_widget.is_destroyed
+			a_action_attached: a_action /= Void
+		local
+			l_cursor: CURSOR
+		do
+			if a_excluded = Void or else not a_excluded.has (a_start_widget) then
+					-- Perform action
+				a_action.call ([a_start_widget])
+			end
+
+			if {l_list: !EV_WIDGET_LIST} a_start_widget then
+				l_cursor := l_list.cursor
+				from l_list.start until l_list.after loop
+					if {l_widget: !EV_WIDGET} l_list.item and then not l_widget.is_destroyed then
+							-- Perform action on all child widgets
+						propagate_action (l_widget, a_action, a_excluded)
+					end
+					l_list.forth
+				end
+				l_list.go_to (l_cursor)
+			end
+		end
+
+	propagate_register_action (a_start_widget: EV_WIDGET; a_sequence: FUNCTION [ANY, TUPLE [EV_WIDGET], ACTION_SEQUENCE [TUPLE]]; a_action: PROCEDURE [ANY, TUPLE]; a_excluded: ARRAY [EV_WIDGET])
+			-- Propagates an actions to all child widgets
+			--
+			-- `a_exclude': An array of widgets to exluding the the propagation of actions, or Void to include all widgets
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+			a_start_widget_attached: a_start_widget /= Void
+			not_a_start_widget_is_destroyed: not a_start_widget.is_destroyed
+			a_action_attached: a_action /= Void
+		local
+			l_sequence: ACTION_SEQUENCE [TUPLE]
+			l_cursor: CURSOR
+			l_start_widget: EV_WIDGET
+		do
+			if a_excluded = Void or else not a_excluded.has (a_start_widget) then
+				l_sequence := a_sequence.item ([a_start_widget])
+				if l_sequence /= Void then
+						-- Add action
+					register_action (l_sequence, a_action)
+				end
+			end
+
+			if {l_window: !EV_WINDOW} a_start_widget then
+				if not l_window.is_empty then
+					l_start_widget := l_window.item
+				end
+			else
+				l_start_widget := a_start_widget
+			end
+
+			if {l_list: !EV_WIDGET_LIST} l_start_widget then
+				l_cursor := l_list.cursor
+				from l_list.start until l_list.after loop
+					if {l_widget: !EV_WIDGET} l_list.item and then not l_widget.is_destroyed then
+							-- Apply addition to all child widgets
+						propagate_register_action (l_widget, a_sequence, a_action, a_excluded)
+					end
+					l_list.forth
+				end
+				l_list.go_to (l_cursor)
+			end
+		end
 
 feature -- Status report
 

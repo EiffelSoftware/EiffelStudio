@@ -22,13 +22,21 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_manager: like manager) is
 			-- Create a formatter associated with `a_manager'.
 		do
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (a_manager)
 			create_feature_cmd
+		end
+
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.basic
 		end
 
 feature -- Properties

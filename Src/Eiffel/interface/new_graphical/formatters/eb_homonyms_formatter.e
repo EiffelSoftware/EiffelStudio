@@ -22,6 +22,14 @@ inherit
 create
 	make
 
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.homonyms
+		end
+
 feature -- Properties
 
 	symbol: ARRAY [EV_PIXMAP] is

@@ -1527,7 +1527,7 @@ feature -- Debugging events
 			record_objects_grids_layout
 			if debugging_window /= Void then
 				feat_tool ?= debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
-				feat_tool.pop_feature_flat
+				feat_tool.set_mode ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat)
 				feat_tool.show (False)
 				debugging_window.tools.launch_stone (st)
 			end
@@ -1556,7 +1556,8 @@ feature -- Debugging events
 			end
 
 			feat_tool ?= debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
-			feat_tool.pop_feature_flat
+			feat_tool.set_mode ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat)
+			feat_tool.show (False)
 
 				-- Modify the debugging window display.
 			stop_cmd.enable_sensitive

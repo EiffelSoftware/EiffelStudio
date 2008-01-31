@@ -169,17 +169,6 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-feature -- Query
-
-	is_stone_usable (a_stone: STONE): BOOLEAN
-			-- Determines if a stone can be used by Current.
-			--
-			-- `a_stone': Stone to determine usablity.
-			-- `Result': True if the stone can be used, False otherwise.
-		do
-			Result := True and True
-		end
-
 feature {NONE} -- Event handlers
 
 	on_session_value_changed (a_session: SESSION; a_id: STRING_8) is
@@ -258,7 +247,9 @@ feature {NONE} -- Action handlers
 
 	on_stone_changed
 			-- Called when the set stone changes.
-			-- Note: This routine can be called when `stone' if Void.
+			-- Note: This routine can be called when `stone' is Void, to indicate a stone has been cleared.
+			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit
+			--       setting or through compile synchronization.
 		local
 			l_class: CLASS_C
 			l_tree: like features_tree

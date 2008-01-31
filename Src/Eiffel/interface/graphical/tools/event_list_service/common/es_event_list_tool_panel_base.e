@@ -42,6 +42,30 @@ feature {NONE} -- Initialization
 	on_after_initialized
 			-- Use to perform additional creation initializations, after the UI has been created.
 		do
+				-- Set dynamic function for view optimzations in the grid.
+			grid_events.set_dynamic_content_function (agent (a_row, a_col: INTEGER; a_grid: like grid_events): EV_GRID_ITEM
+					-- Set partially dynamic content function for populating event list items.
+				require
+					--a_row_small_enough: a_grid.row_count <= a_row
+				local
+					l_row: EV_GRID_ROW
+					l_event_item: EVENT_LIST_ITEM_I
+				do
+					l_row := a_grid.row (a_row)
+					l_event_item ?= l_row.data
+					if l_event_item /= Void then
+							-- Only for the first request
+						populate_event_grid_row_items (l_event_item, l_row)
+						a_grid.grid_row_fill_empty_cells (l_row)
+					end
+
+					if Result = Void then
+							-- Create empty item
+						create {EV_GRID_ITEM} Result
+					end
+			end (?, ?, grid_events))
+			grid_events.disable_vertical_scrolling_per_item
+
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 			if not surpress_synchronization then
 				synchronize_event_list_items
@@ -855,8 +879,10 @@ feature {NONE} -- Events
 				l_row := l_grid.row (l_count)
 					-- Set row information and items
 				l_row.set_data (a_event_item)
-				populate_event_grid_row_items (a_event_item, l_row)
-				l_grid.grid_row_fill_empty_cells (l_row)
+				if not l_grid.is_content_partially_dynamic then
+					populate_event_grid_row_items (a_event_item, l_row)
+					l_grid.grid_row_fill_empty_cells (l_row)
+				end
 
 				item_count := item_count + 1
 
@@ -991,10 +1017,10 @@ feature {NONE} -- Factory
 			Result.enable_row_separators
 			Result.set_separator_color (colors.grid_line_color)
 			Result.enable_default_tree_navigation_behavior (True, True, True, True)
+			Result.enable_row_height_fixed
 			Result.disable_vertical_scrolling_per_item
 			Result.set_focused_selection_color (colors.grid_focus_selection_color)
 			Result.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
-
 			Result.pointer_double_press_item_actions.extend (agent on_grid_events_item_pointer_double_press)
 		end
 

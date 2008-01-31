@@ -32,6 +32,7 @@ feature {NONE} -- User interface initialization
 
 	build_widget_interface (a_widget: !G)
 			-- Builds widget's interface.
+			--
 			-- `a_widget': The widget to initialize of build upon.
 		require
 			not_is_initialized: not is_initialized

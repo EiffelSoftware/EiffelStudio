@@ -15,6 +15,15 @@ inherit
 			veto_pebble_function
 		end
 
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+		deferred
+		ensure
+			result_is_valid_mode: (create {ES_FEATURE_RELATION_TOOL_VIEW_MODES}).is_valid_mode (Result)
+		end
+
 feature -- Properties
 
 	associated_feature: E_FEATURE

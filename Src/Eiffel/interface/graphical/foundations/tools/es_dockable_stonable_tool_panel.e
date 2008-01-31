@@ -13,6 +13,8 @@ deferred class
 inherit
 	ES_DOCKABLE_TOOL_PANEL [G]
 		redefine
+			tool_descriptor,
+			on_after_initialized,
 			on_show
 		end
 
@@ -23,6 +25,28 @@ inherit
 			set_stone
 		end
 
+feature {NONE} -- Initialize
+
+    on_after_initialized
+            -- Use to perform additional creation initializations, after the UI has been created.
+        do
+        	Precursor {ES_DOCKABLE_TOOL_PANEL}
+
+				-- Set drop actions on all widgets
+        	propagate_register_action (user_widget, agent {EV_WIDGET}.drop_actions, agent (a_pebble: ANY)
+        			-- Propagate the stone drop actions	
+        		do
+        			if is_interface_usable and is_initialized and then {l_stone: !STONE} a_pebble then
+        				if tool_descriptor.is_interface_usable and then tool_descriptor.is_stone_usable (l_stone) then
+      						-- Force stone on descriptor, which will optimize the display of the stone on Current.
+	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
+	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
+	        				tool_descriptor.set_stone (l_stone)
+        				end
+					end
+        		end, Void)
+        end
+
 feature {ES_STONABLE_I, ES_TOOL} -- Access
 
 	frozen stone: STONE
@@ -32,6 +56,11 @@ feature {ES_STONABLE_I, ES_TOOL} -- Access
 				Result := l_stonable.stone
 			end
 		end
+
+feature {NONE} -- Access
+
+	tool_descriptor: ES_STONABLE_TOOL [like Current]
+			-- Descriptor used to created tool.
 
 feature {ES_STONABLE_I, ES_TOOL} -- Element change
 
@@ -67,6 +96,17 @@ feature {NONE} -- Status report
 			--       Idealistically all stones should be set through the tool panel's `tool_descriptor'.
 			--       as ESF dictates that no interaction should be perform with the panel (Current) but
 			--       the tool descritor (`tool_descriptor').
+
+feature -- Query
+
+	is_stone_usable (a_stone: STONE): BOOLEAN
+			-- Determines if a stone can be used by Current.
+			--
+			-- `a_stone': Stone to determine usablity.
+			-- `Result': True if the stone can be used, False otherwise.
+		do
+			Result := tool_descriptor.is_stone_usable (a_stone)
+		end
 
 feature -- Synchronization
 
@@ -105,7 +145,7 @@ feature {NONE} -- Action handlers
 
 	on_stone_changed
 			-- Called when the set stone changes.
-			-- Note: This routine can be called when `stone' if Void.
+			-- Note: This routine can be called when `stone' is Void, to indicate a stone has been cleared.
 			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit
 			--       setting or through compile synchronization.
 		require

@@ -20,6 +20,11 @@ inherit
 			force_last_stone
 		end
 
+	ES_FEATURE_RELATION_TOOL_COMMANDER_I
+		export
+			{ES_FEATURE_RELATION_TOOL} all
+		end
+
 create
 	make
 
@@ -48,13 +53,79 @@ feature -- Access
 			Result := develop_window.managed_feature_formatters
 		end
 
-	flat_format_index: INTEGER is 2
-			-- Index of the flat format in the managed formatters.
-
 	no_target_message: STRING_GENERAL is
 			-- Message to be displayed in `output_line' when no stone is set
 		do
 			Result := Interface_names.l_No_feature
+		end
+
+feature {ES_FEATURE_RELATION_TOOL} -- Access
+
+	mode: NATURAL_8 assign set_mode
+			-- The feature relation tool's view mode.
+			-- See {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+		local
+			l_formatters: like predefined_formatters
+			l_cursor: CURSOR
+			l_stop: BOOLEAN
+		do
+			l_formatters := predefined_formatters
+			l_cursor := l_formatters.cursor
+			from l_formatters.start until l_formatters.after or l_stop loop
+				if {l_formatter: !EB_FEATURE_INFO_FORMATTER} l_formatters.item and then l_formatter.selected then
+					Result := l_formatter.mode
+					l_stop := True
+				else
+					l_formatters.forth
+				end
+			end
+			l_formatters.go_to (l_cursor)
+		ensure then
+			formatters_unmoved: formatters.cursor.is_equal (old formatters.cursor)
+		end
+
+feature {ES_FEATURE_RELATION_TOOL} -- Element change
+
+	set_mode (a_mode: like mode)
+			-- Sets the current view mode.
+			--
+			-- `a_mode': The view mode to set. See {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+		local
+			l_formatters: like predefined_formatters
+			l_cursor: CURSOR
+			l_stop: BOOLEAN
+		do
+			l_formatters := predefined_formatters
+			l_cursor := l_formatters.cursor
+			from l_formatters.start until l_formatters.after or l_stop loop
+				if {l_formatter: !EB_FEATURE_INFO_FORMATTER} l_formatters.item and then l_formatter.mode = a_mode then
+						-- Execute formatter
+					l_formatter.execute
+					l_stop := True
+				else
+					l_formatters.forth
+				end
+			end
+			l_formatters.go_to (l_cursor)
+		ensure then
+			formatters_unmoved: formatters.cursor.is_equal (old formatters.cursor)
+		end
+
+	set_mode_with_stone (a_mode: like mode; a_stone: STONE)
+			-- Sets the current view mode and the stone to view using the mode.
+			--
+			-- `a_mode': The view mode to set.
+			-- `a_stone': The stone to set on the feature releation tool.
+		do
+				-- First clear the stone, for performance reasons
+			set_stone (Void)
+
+				-- Now set the mode and stone.
+			set_mode (a_mode)
+			set_stone (a_stone)
+		ensure then
+			formatters_unmoved: formatters.cursor.is_equal (old formatters.cursor)
+			stone_set: stone = a_stone
 		end
 
 feature -- Status setting
@@ -178,35 +249,22 @@ feature -- Status setting
 			end
 		end
 
-	pop_feature_flat is
-			-- Force the display of `Current' and select the flat form.
-		local
-			f: EB_FORMATTER
-		do
-			f := formatters @ flat_format_index
-			if
-				f /= Void and then
-				f.widget /= Void and then
-				not f.widget.is_displayed
-			then
-				f.execute
-			end
-		end
-
 	pop_default_formatter is
 			-- Force the display of `Current' and select the default formatter.
 		local
-			real_index: INTEGER
+			l_index: INTEGER
+			l_mode: NATURAL_8
 		do
-			real_index := preferences.context_tool_data.default_feature_formatter_index
+			l_mode := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat
+			l_index := preferences.context_tool_data.default_feature_formatter_index
 			if
-				real_index < 1 or
-				real_index > formatters.count
+				l_index >= 1 and
+				l_index <= formatters.count and then
+				{l_formatter: !EB_FEATURE_INFO_FORMATTER} formatters.i_th (l_index)
 			then
-					-- The "default default formatter" is the flat format (which is rather fast).
-				real_index := flat_format_index
+				l_mode := l_formatter.mode
 			end
-			(formatters @ real_index).execute
+			set_mode (l_mode)
 		end
 
 feature {NONE} -- Implementation

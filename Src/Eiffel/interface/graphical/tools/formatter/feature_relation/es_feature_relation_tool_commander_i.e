@@ -1,77 +1,47 @@
 indexing
 	description: "[
-		Tool descriptor for EiffelStudio's feature relation code browsing tool.
+		A commander interface for interacting with the feature relation tool {ES_FEATURE_RELATION_TOOL}.
+
+		Note: Commment code can be uncommented when {ES_FEATURES_RELEATION_TOOL_PANEL} uses ESF.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
-frozen class
-	ES_FEATURE_RELATION_TOOL
+deferred class
+	ES_FEATURE_RELATION_TOOL_COMMANDER_I
 
 inherit
-	ES_FORMATTER_TOOL [ES_FEATURES_RELATION_TOOL_PANEL]
+	USABLE_I
 
-	ES_FEATURE_RELATION_TOOL_COMMANDER_I
-		undefine
-			out
-		end
-
-create {NONE}
-	default_create
+--	ES_STONABLE_I
 
 feature -- Access
-
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
-		do
-			Result := stock_pixmaps.tool_feature_icon_buffer
-		end
-
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
-		do
-			Result := stock_pixmaps.tool_feature_icon
-		end
-
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
-		do
-			Result := interface_names.l_tab_feature_info
-		end
-
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
-			Result := "show_feature_relation_tool"
-		end
 
 	mode: NATURAL_8 assign set_mode
 			-- The feature relation tool's view mode.
 			-- See {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
-		do
-			if is_tool_instantiated then
-				Result := panel.mode
-			else
-				Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.basic
-			end
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_is_valid_mode: (create {ES_FEATURE_RELATION_TOOL_VIEW_MODES}).is_valid_mode (Result)
 		end
-		
+
 feature -- Element change
 
 	set_mode (a_mode: like mode)
 			-- Sets the current view mode.
 			--
 			-- `a_mode': The view mode to set. See {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
-		do
-				-- Setting a mode will force the creation of the tool, by design.
-			panel.set_mode (a_mode)
+		require
+			is_interface_usable: is_interface_usable
+			a_mode_is_valid_mode: (create {ES_FEATURE_RELATION_TOOL_VIEW_MODES}).is_valid_mode (a_mode)
+			a_mode_not_custom: a_mode /= {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.custom
+		deferred
+		ensure
+			mode_set: mode = a_mode
 		end
 
 	set_mode_with_stone (a_mode: like mode; a_stone: STONE)
@@ -79,27 +49,37 @@ feature -- Element change
 			--
 			-- `a_mode': The view mode to set.
 			-- `a_stone': The stone to set on the feature releation tool.
-		do
-				-- First clear the stone, for performance reasons
-			panel.set_stone (Void)
-
-				-- Now set the mode and stone.
-			set_mode (a_mode)
-			panel.set_stone (a_stone)
+		require
+			is_interface_usable: is_interface_usable
+			a_mode_is_valid_mode: (create {ES_FEATURE_RELATION_TOOL_VIEW_MODES}).is_valid_mode (a_mode)
+			a_mode_not_custom: a_mode /= {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.custom
+		deferred
+		ensure
+			mode_set: mode = a_mode
 		end
 
-feature -- Status report
+--	frozen set_mode_with_stone (a_mode: like mode; a_stone: like stone)
+--			-- Sets the current view mode and the stone to view using the mode.
+--			--
+--			-- `a_mode': The view mode to set.
+--			-- `a_stone': The stone to set on the feature releation tool.
+--		require
+--			is_interface_usable: is_interface_usable
+--			a_mode_is_valid_mode: (create {ES_FEATURE_RELATION_TOOL_VIEW_MODES}).is_valid_mode (a_mode)
+--			a_mode_not_custom: a_mode /= {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.custom
+--		do
+--				-- First clear the stone, for performance reasons
+--			set_stone (Void)
 
-	is_customizable: BOOLEAN = True
-			-- Indicates if the tool can be customize to support custom views.
-
-feature {NONE} -- Factory
-
-	create_tool: ES_FEATURES_RELATION_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
-		do
-			create Result.make (window, Current)
-		end
+--				-- Now set the mode and stone.
+--			set_mode (a_mode)
+--			if a_stone /= Void then
+--				set_stone (a_stone)	
+--			end
+--		ensure
+--			mode_set: mode = a_mode
+--			stone_set: stone = a_stone
+--		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -28,6 +28,14 @@ inherit
 create
 	make
 
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat
+		end
+
 feature -- Status setting
 
 	set_editor_displayer (a_displayer: like displayer) is

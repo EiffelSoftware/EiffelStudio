@@ -76,6 +76,7 @@ extern "C" {
 #endif
 #define eif_builtin_PLATFORM_is_windows 				EIF_IS_WINDOWS
 #define eif_builtin_PLATFORM_is_unix 					EIF_TEST(!(EIF_IS_VMS || EIF_IS_WINDOWS))
+#define eif_builtin_PLATFORM_is_mac					EIF_OS==EIF_OS_DARWIN
 #ifdef EIF_IL_DLL
 #define eif_builtin_PLATFORM_is_dotnet					EIF_TRUE
 #else

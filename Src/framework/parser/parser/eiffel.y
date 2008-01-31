@@ -938,7 +938,7 @@ Inheritance: -- Empty
 				if not non_conforming_inheritance_flag then
 						-- Check to make sure Class_identifier is 'NONE'
 						-- An error will be thrown if TYPE_AS is not of type NONE_TYPE_AS
-					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type ($3, Void, Void))
+					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type ($3, Void, Void, False, False))
 				else
 						-- Raise error as non conforming inheritance has already been specified
 					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one non-conforming inheritance clause allowed per class"))
@@ -978,7 +978,7 @@ Parent: Parent_clause ASemi
 	;
 
 Parent_class_type: Class_identifier Generics_opt
-			{ $$ := ast_factory.new_class_type_as ($1, $2, Void) }
+			{ $$ := ast_factory.new_class_type_as ($1, $2, Void, False, False) }
 	;
 
 Parent_clause: Parent_class_type
@@ -1519,7 +1519,7 @@ Attached_type: Attached_class_type
 	
 Type_no_id: 
 		Class_identifier Generics
-			{ $$ := new_class_type ($1, $2, Void) }
+			{ $$ := new_class_type ($1, $2, Void, False, False) }
 	|	Tuple_type
 			{ $$ := $1 }
 	|	Non_class_type
@@ -1550,17 +1550,17 @@ Non_class_type: TE_EXPANDED Attached_class_type
 	|	TE_BIT Identifier_as_lower
 			{ $$ := ast_factory.new_bits_symbol_as ($2, $1) }
 	|	TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($2, $1, Void) }
+			{ $$ := ast_factory.new_like_id_as ($2, $1, Void, False, False) }
 	|	TE_BANG TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($3, $2, $1) }
+			{ $$ := ast_factory.new_like_id_as ($3, $2, $1, True, False) }
 	|	TE_QUESTION TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($3, $2, $1) }
+			{ $$ := ast_factory.new_like_id_as ($3, $2, $1, False, True) }
 	|	TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($2, $1, Void) }
+			{ $$ := ast_factory.new_like_current_as ($2, $1, Void, False, False) }
 	|	TE_BANG TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($3, $2, $1) }
+			{ $$ := ast_factory.new_like_current_as ($3, $2, $1, True, False) }
 	|	TE_QUESTION TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($3, $2, $1) }
+			{ $$ := ast_factory.new_like_current_as ($3, $2, $1, False, True) }
 	;
 
 Class_or_tuple_type: Class_type
@@ -1570,15 +1570,15 @@ Class_or_tuple_type: Class_type
 	;
 
 Attached_class_type: Class_identifier Generics_opt
-			{ $$ := new_class_type ($1, $2, Void) }
+			{ $$ := new_class_type ($1, $2, Void, False, False) }
 	;
 
 Class_type: Attached_class_type
 			{ $$ := $1 }
 	| TE_BANG Class_identifier Generics_opt
-			{ $$ := new_class_type ($2, $3, $1) }
+			{ $$ := new_class_type ($2, $3, $1, True, False) }
 	| TE_QUESTION Class_identifier Generics_opt
-			{ $$ := new_class_type ($2, $3, $1) }
+			{ $$ := new_class_type ($2, $3, $1, False, True) }
 	;
 
 Generics_opt: -- Empty
@@ -1627,14 +1627,14 @@ Type_list_impl: Type
 	;
 
 Tuple_type: TE_TUPLE
-			{ $$ := ast_factory.new_class_type_as ($1, Void, Void) }
+			{ $$ := ast_factory.new_class_type_as ($1, Void, Void, False, False) }
 	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
 			  	last_type_list := ast_factory.new_eiffel_list_type (0)
 				if last_type_list /= Void then
 					last_type_list.set_positions ($4, $5)
 				end
-				$$ := ast_factory.new_class_type_as ($1, last_type_list, Void)
+				$$ := ast_factory.new_class_type_as ($1, last_type_list, Void, False, False)
 				last_type_list := Void
 				remove_counter
 				remove_counter2
@@ -1644,7 +1644,7 @@ Tuple_type: TE_TUPLE
 				if $5 /= Void then
 					$5.set_positions ($4, last_rsqure.item)
 				end
-				$$ := ast_factory.new_class_type_as ($1, $5, Void)
+				$$ := ast_factory.new_class_type_as ($1, $5, Void, False, False)
 				last_rsqure.remove
 				remove_counter
 				remove_counter2
@@ -1672,7 +1672,7 @@ Actual_parameter_list:	Type TE_RSQURE
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$1.to_upper		
-					$$.reverse_extend (new_class_type ($1, Void, Void))
+					$$.reverse_extend (new_class_type ($1, Void, Void, False, False))
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
@@ -2661,7 +2661,7 @@ A_precursor: TE_PRECURSOR Parameters
 			{ $$ := ast_factory.new_precursor_as ($1, Void, $2) }
 	|	TE_PRECURSOR TE_LCURLY Class_identifier TE_RCURLY Parameters
 			{
-				temp_class_type_as := ast_factory.new_class_type_as ($3, Void, Void)
+				temp_class_type_as := ast_factory.new_class_type_as ($3, Void, Void, False, False)
 				if temp_class_type_as /= Void then
 					temp_class_type_as.set_lcurly_symbol ($2)
 					temp_class_type_as.set_rcurly_symbol ($4)

@@ -2953,13 +2953,10 @@ feature {NONE} -- Implementation
 				if last_type /= Void then
 					type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
 				else
-					if l_as.attachment_mark /= Void then
-						if l_as.attachment_mark.is_bang then
-							text_formatter_decorator.process_symbol_text (ti_exclamation)
-						else
-							text_formatter_decorator.process_symbol_text (ti_question)
-						end
-						text_formatter_decorator.add_space
+					if l_as.has_attached_mark then
+						text_formatter_decorator.process_symbol_text (ti_exclamation)
+					elseif l_as.has_detachable_mark then
+						text_formatter_decorator.process_symbol_text (ti_question)
 					end
 					text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
 					text_formatter_decorator.add_space
@@ -4332,7 +4329,7 @@ invariant
 	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

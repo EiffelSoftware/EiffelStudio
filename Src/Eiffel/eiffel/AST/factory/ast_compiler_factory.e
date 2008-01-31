@@ -122,10 +122,10 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; attachment_mark: SYMBOL_AS): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; attachment_mark: SYMBOL_AS; a_m, d_m: BOOLEAN): CLASS_TYPE_AS is
 		do
 			if n /= Void then
-				create Result.initialize (n, g, attachment_mark)
+				create Result.initialize (n, g, attachment_mark, a_m, d_m)
 			end
 		end
 

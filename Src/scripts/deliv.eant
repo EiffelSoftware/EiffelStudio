@@ -20,8 +20,8 @@
 		<echo message=" geant menu"/>
 		<echo message=" geant build_eiffelstudio_delivery"/>
 		<echo message=" ---- "/>
-		<echo message=" geant compile_binaries"/>
-		<echo message=" geant build_delivery_structure"/>
+		<echo message=" geant make_binaries"/>
+		<echo message=" geant make_delivery_structure"/>
 		<echo message=" geant install_binaries"/>
 	</target>
 
@@ -30,16 +30,16 @@
 		<echo message="1) clean ..." />
 		<echo message="2) build_eiffelstudio_delivery (includes 3,4)" />
 		<echo message="---(sub tasks)---" />
-		<echo message="3) compile_binaries" />
-		<echo message="4) build_delivery_structure" />
+		<echo message="3) make_binaries" />
+		<echo message="4) make_delivery_structure" />
 		<echo message="5) install_binaries" />
 		<echo message="----" />
 		<echo message="Q) quit" />
 		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,Q,q" />
 		<geant if="$answer=1" target="_menu_clean" 					/>
 		<geant if="$answer=2" target="build_eiffelstudio_delivery" 	/>
-		<geant if="$answer=3" target="compile_binaries" 			/>
-		<geant if="$answer=4" target="build_delivery_structure" 	/>
+		<geant if="$answer=3" target="make_binaries" 			/>
+		<geant if="$answer=4" target="make_delivery_structure" 	/>
 		<geant if="$answer=5" target="install_binaries" 			/>
 		<echo message="Bye..."/>
 	</target>
@@ -47,19 +47,17 @@
 	<target name="_menu_clean">
 		<echo message="Menu"/>
 		<echo message="1) clean all (3,4,5)" />
-		<echo message="2) clean es (4,5 : all but output)" />
 		<echo message="----" />
-		<echo message="3) clean output folder (bin)" />
-		<echo message="4) clean compile folder (EIFGENs)" />
-		<echo message="5) clean delivery folder (EiffelXX)" />
+		<echo message="2) clean binaries folder (bin)" />
+		<echo message="3) clean compilation folder (EIFGENs)" />
+		<echo message="4) clean target delivery folder (EiffelXX)" />
 		<echo message="----" />
 		<echo message="Q) quit" />
-		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,5,Q,q" />
+		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,Q,q" />
 		<geant if="$answer=1" target="clean_all" 		/>
-		<geant if="$answer=2" target="clean_es" 		/>
-		<geant if="$answer=3" target="clean_bin" 		/>
-		<geant if="$answer=4" target="clean_compile" 	/>
-		<geant if="$answer=5" target="clean_delivery" 	/>
+		<geant if="$answer=2" target="clean_binaries_folder" 		/>
+		<geant if="$answer=3" target="clean_compilation_folder" 	/>
+		<geant if="$answer=4" target="clean_delivery_structure" 	/>
 	</target>
 
 <!-- Obsolete Targets -->
@@ -68,7 +66,9 @@
 		<geant target="build_eiffelstudio_delivery" />
 	</target>
 
-<!-- Redefined Targets -->
+<!-- ====================== -->
+<!-- Initialization Targets -->
+<!-- ====================== -->
 
 	<target name="check_environment" once="true">
 		<precursor/>
@@ -78,40 +78,7 @@
 		<unset name="tmp_available" />
 	</target>
 
-	<!--
-	<target name="_log_to_file" >
-		<argument name="a_msg" />
-		<argument name="a_file" />
-		<echo message="$a_msg" to_file="$a_file" append="true" />
-	</target>
-	-->
-	<target name="_log" >
-		<argument name="a_msg" />
-		<echo message="$a_msg" />
-		<geant target="_log_to_file" append="true" >
-			<argument name="a_msg" value="$a_msg" />
-			<argument name="a_file" value="$_LOGFILE" />
-		</geant>
-	</target>
-	<target name="_fail" >
-		<argument name="a_msg" />
-		<echo message="$a_msg" />
-		<geant target="_log" arguments="$a_msg" />
-		<geant target="_log_to_file" append="true" >
-			<argument name="a_msg" value="$a_msg" />
-			<argument name="a_file" value="${_LOGFILE}.err" />
-		</geant>
-		<exit code="1" if="$_EXIT_ON_FAILURE=true"/>
-	</target>
-	<target name="copy_library_to">
-		<argument name="A_lib_name"/>
-		<argument name="A_target_dir"/>
-		<geant target="_log" arguments="   - Copy library [${A_lib_name}] to ${A_target_dir}" />
-		<precursor arguments="${A_lib_name},${A_target_dir}" />
-	</target>
-
 	<target name="init"  once="true">
-		<echo message="System init" />
 		<precursor/>
 
 		<!-- compilation related -->
@@ -126,115 +93,264 @@
 		<set name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" if="${tmp_available}=false"/>
 		<unset name="tmp_available" />
 
+		<set name="_XMLDOC_DIR" value="${EIFFEL_SRC}${path_separator}..${path_separator}Documentation" unless="${_XMLDOC_DIR}"/>
 		<!-- environment related -->
 		<setenv name="ISE_LIBRARY" value="${EIFFEL_SRC}" />
 	</target>
 
-	<target name="init_deliv" depend="init" >
-		<set name="_INSTALL_DIR" value="${cwd}${path_separator}EiffelXX" unless="$_INSTALL_DIR" />
-		<set name="_OUTPUT_DIR" value="${cwd}${path_separator}bin" unless="$_OUTPUT_DIR"/>
-		<set name="_LOGFILE" value="${cwd}${path_separator}deliv.log" unless="$_LOGFILE" />
+	<target name="init_deliv" depend="init" once="true" >
+		<!-- Target folder containing new delivery -->
+		<set name="_TARGET_DELIV_DIR" value="${cwd}${path_separator}EiffelXX" unless="$_TARGET_DELIV_DIR" />
+
+		<!-- Log file -->
+		<set name="_LOGFILE" value="${_TARGET_DELIV_DIR}.log" unless="$_LOGFILE" />
+
+		<!-- Binary folder containing compiled materials -->
+		<set name="_BINARY_DIR" value="${cwd}${path_separator}bin" unless="$_BINARY_DIR"/>
+
+		<!-- Various options -->
 		<set name="_WIPEOUT" value="true" unless="$_WIPEOUT" />
 		<set name="_EXIT_ON_FAILURE" value="false" unless="$_EXIT_ON_FAILURE" />
 		<set name="_INCLUDE_DEVPACK" value="false" unless="$_INCLUDE_DEVPACK"/>
+		<set name="_INCLUDE_DOTNET" value="true" unless="$_INCLUDE_DOTNET"/>
 	</target>
 
-<!-- Callable Targets -->
+<!-- ================ -->
+<!-- Cleaning Targets -->
+<!-- ================ -->
+
+	<target name="clean_binaries_folder" depend="init_deliv" >
+		<geant target="_log" arguments="Clean binaries folder [$_BINARY_DIR]" />
+		<geant target="clean_folder" arguments="${_BINARY_DIR}" />
+	</target>
+
+	<target name="clean_compilation_folder" depend="init_deliv" >
+		<geant target="_log" arguments="Clean compilation folder [$_COMPILE_DIR]/EIFGENs" />
+		<geant target="clean_folder" arguments="${_COMPILE_DIR}${path_separator}EIFGENs" />
+	</target>
+
+	<target name="clean_delivery_structure" depend="init_deliv" >
+		<geant target="_log" arguments="Clean target delivery folder [$_TARGET_DELIV_DIR]" />
+		<geant target="clean_folder" arguments="${_TARGET_DELIV_DIR}" />
+	</target>
+
+	<target name="clean_all" depend="init_deliv" >
+		<!-- Clean binaries, compilation folder, and delivery -->
+		<echo message="Cleaning All folders ..." />
+		<geant target="clean_compilation_folder" />
+		<geant target="clean_delivery_structure" />
+		<geant target="clean_binaries_folder" />
+	</target>
+
+<!-- ======================= -->
+<!-- Make effective delivery -->
+<!-- ======================= -->
 
 	<target name="build_eiffelstudio_delivery" depend="init_deliv" >
+		<!-- Main target to build the whole delivery -->
 		<geant target="_log" arguments="Building EiffelStudio ..." />
 
+		<!-- Set internal version numbers -->
 		<geant target="set_ec_version" 				/>
 		<geant target="set_esbuilder_version" 		/>
-		<geant target="compile_binaries" 			/>
-		<geant target="compile_documentation"		/>
-		<geant target="build_delivery_structure"	/>
+
+		<!-- Compile binaries, and others -->
+		<geant target="make_binaries" 			/>
+		<geant target="make_documentation"		/>
+
+		<!-- Build target delivery, 
+			and install compiled binaries -->
+		<geant target="clean_delivery_structure"	/>
+		<geant target="make_delivery_structure"	/>
 		<geant target="install_binaries"			/>
 	</target>
 
-	<target name="build_delivery_structure" depend="init_deliv" >
-		<geant target="_log" arguments="Building delivery for ES into ${_INSTALL_DIR}" />
-		<!-- Delivery -->
-		<available resource="${_INSTALL_DIR}" variable="installdir_available"/>
-		<!--
-		<geant target="_log" arguments="Clean delivery ..." if="${installdir_available}=true"  />
-		<geant target="clean_delivery" if="${installdir_available}=true" />
-		<echo message="Error occurred during 'clean_delivery' (${return_code})" unless="${return_code}=0" />
-		<geant target="_log" arguments="Error occurred during 'clean_delivery' (${return_code})" unless="${return_code}=0" />
-		<exit code="${return_code}" unless="${return_code}=0" />
-
-		<available resource="${_INSTALL_DIR}" variable="installdir_available"/>
-		-->
-		<mkdir directory="${_INSTALL_DIR}"  if="${installdir_available}=false" />
-
-		<set name="return_code" value="0" />
-
-		<geant target="_log" arguments="Make delivery in ${_INSTALL_DIR} ..." if="${installdir_available}=false" />
-		<geant target="make_delivery" dir="${_INSTALL_DIR}" if="${installdir_available}=false" />
-		<geant target="_fail" arguments=" -> Error occurred during 'make_delivery'." unless="${return_code}=0" />
-		<exit code="${return_code}" unless="${return_code}=0" />
-
-		<geant target="_log" arguments="Update delivery in ${_INSTALL_DIR} ..." if="${installdir_available}=true" />
-		<geant target="update_delivery" dir="${_INSTALL_DIR}" if="${installdir_available}=true" />
-		<geant target="_fail" arguments=" -> Error occurred during 'update_delivery'." unless="${return_code}=0"  />
-		<exit code="${return_code}" unless="${return_code}=0" />
-
+	<target name="make_delivery_structure" depend="init_deliv" >
+		<geant target="_log" arguments="Building delivery for ES in ${_TARGET_DELIV_DIR}" />
+		<!-- Create _TARGET_DELIV_DIR -->
+		<available resource="${_TARGET_DELIV_DIR}" variable="installdir_available"/>
+		<geant target="_log" arguments="Delivery folder already exists! [${_TARGET_DELIV_DIR}]" 
+													if="${installdir_available}=true" />
+		<mkdir directory="${_TARGET_DELIV_DIR}"  	if="${installdir_available}=false" />
 		<unset name="installdir_available" />
+
+		<!-- Skeleton from _DELIVERY_DIR -->
+		<geant target="_make_delivery" arguments="${_TARGET_DELIV_DIR}" />
+
 		<unset name="return_code" />
 	</target>
 
-	<target name="compile_binaries" depend="init_deliv" >
-		<geant target="_log" arguments="Compiling ES binaries into ${_OUTPUT_DIR}" />
+	<target name="_make_delivery" depend="init_deliv" >
+		<argument name="a_dir" />
+		<geant target="_log" arguments="Make delivery in ${a_dir} ..." />
 
-		<mkdir directory="${_OUTPUT_DIR}" />
-		
-		<geant target="get__runtime" arguments="${_OUTPUT_DIR},runtime_compiled" />
-		<geant target="get__library" arguments="${_OUTPUT_DIR},library_compiled"/>
-		<geant target="get_bin__gobo" arguments="${_OUTPUT_DIR},gobo_compiled"/>
-		
+		<!-- platform independant -->
+		<geant target="_log" arguments=" - Copy Delivery structure to ${a_dir}" />
+		<geant target="copy_full_tree" arguments="${_DELIVERY_DIR},${a_dir}" />
 
-		<geant target="get_bin__" arguments="ec_batch,${_OUTPUT_DIR},ecb${exe}"/>
+		<geant target="clean_folder" arguments="codedom_provider" dir="${a_dir}" />
+
+		<!-- libraries -->
+		<mkdir directory="library" dir="${a_dir}" />
+		<geant target="_log" arguments=" - Copy library.. to ${a_dir}${path_separator}library" />
+		<geant target="copy_library_to" arguments="base,${a_dir}" />
+		<geant target="copy_library_to" arguments="base_original,${a_dir}" />
+		<geant target="copy_library_to" arguments="com,${a_dir}" if="${is_windows}" />
+		<geant target="copy_library_to" arguments="Eiffel2Java,${a_dir}" />
+		<geant target="copy_library_to" arguments="gobo,${a_dir}" />
+		<geant target="copy_library_to" arguments="gobo_extension,${a_dir}" />
+		<geant target="copy_library_to" arguments="graph,${a_dir}" />
+		<geant target="copy_library_to" arguments="lex,${a_dir}" />
+		<geant target="copy_library_to" arguments="memory_analyzer,${a_dir}" />
+		<geant target="copy_library_to" arguments="net,${a_dir}" />
+		<geant target="copy_library_to" arguments="obsolete,${a_dir}" />
+		<geant target="copy_library_to" arguments="parse,${a_dir}" />
+		<geant target="copy_library_to" arguments="preferences,${a_dir}" />
+		<geant target="copy_library_to" arguments="process,${a_dir}" />
+		<geant target="copy_library_to" arguments="store,${a_dir}" />
+		<geant target="copy_library_to" arguments="thread,${a_dir}" />
+		<geant target="copy_library_to" arguments="time,${a_dir}" />
+		<geant target="copy_library_to" arguments="uuid,${a_dir}" />
+		<geant target="copy_library_to" arguments="vision,${a_dir}" />
+		<geant target="copy_library_to" arguments="vision2,${a_dir}" />
+		<geant target="clean_folder" arguments="vision2${path_separator}implementation${path_separator}gtk" dir="$a_dir" unless="${is_unix}" />
+		<geant target="clean_folder" arguments="vision2${path_separator}implementation${path_separator}mswin" dir="$a_dir" unless="${is_windows}" />
+		<geant target="clean_folder" arguments="vision2${path_separator}implementation${path_separator}carbon" dir="$a_dir" />
+		<geant target="copy_library_to" arguments="vision2_extension,${a_dir}" />
+		<geant target="copy_library_to" arguments="web,${a_dir}" />
+		<geant target="copy_library_to" arguments="wel,${a_dir}" if="${is_windows}" />
+			<!-- extra libraries -->
+		<geant target="copy_library_to" arguments="diff,${a_dir}"/>
+		<geant target="copy_library_to" arguments="event,${a_dir}"/>
+
+		<!-- C_library -->
+		<mkdir directory="C_library"/>
+		<geant target="_log" arguments=" - Copy C_library to ${a_dir}${path_separator}C_library" />
+		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}C_library,${a_dir}${path_separator}C_library" />
+
+		<!-- examples -->
+		<mkdir directory="examples"/>
+		<echo message=" - Copy examples.. to ${a_dir}${path_separator}examples"/>
+		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}examples,${a_dir}${path_separator}examples" />
+
+		<!-- studio -->
+		<echo message="Creating ISE_EIFFEL/studio/... folders" />
+		<mkdir directory="studio/spec/$ISE_PLATFORM" dir="${a_dir}" />
+		<mkdir directory="studio/spec/$ISE_PLATFORM/bin" dir="${a_dir}" />
+		<mkdir directory="studio/spec/$ISE_PLATFORM/include" dir="${a_dir}" />
+		<mkdir directory="studio/spec/$ISE_PLATFORM/lib" dir="${a_dir}" />
+		<copy dir="${EIFFEL_SRC}/C/run-time" to_directory="${a_dir}/studio/spec/${ISE_PLATFORM}/include"  >
+			<fileset include="@(*.h)" />
+		</copy>
+
+		<!-- at this point, the runtime should already be compiled -->
+		<geant target="copy_file" 		arguments="${EIFFEL_SRC}/C,${a_dir}/studio/spec/${ISE_PLATFORM}/include,eif_confmagic.h" />
+		<geant target="copy_exec_file" 	arguments="${EIFFEL_SRC}/C/run-time,${a_dir}/studio/spec/${ISE_PLATFORM}/bin,x2c${exe}" />
+		<geant target="copy_exec_file" 	arguments="${EIFFEL_SRC}/C/ipc/daemon,${a_dir}/studio/spec/${ISE_PLATFORM}/bin,ecdbgd${exe}" />
+		
+		<!-- precomp folder -->
+		<geant target="copy_full_tree" arguments="${_DELIVERY_DIR}${path_separator}precomp${path_separator}spec${path_separator}platform,${a_dir}${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+
+		<!-- platform specific -->
+		<geant target="_make_delivery_windows" dir="${a_dir}"     if="${is_windows}" />
+		<geant target="_make_delivery_unix"    dir="${a_dir}" unless="${is_windows}" />
+
+		<!-- platform specific: clean folders -->
+		<geant target="clean_folder" arguments="studio/spec/windows" dir="${a_dir}" unless="${ISE_PLATFORM}=windows" />
+		<geant target="clean_folder" arguments="studio/spec/win64" dir="${a_dir}" unless="${ISE_PLATFORM}=win64" />
+		<geant target="clean_folder" arguments="studio/spec/unix" dir="${a_dir}" if="${is_windows}" />
+		<!-- Now let's recompile the new library, even if it should be compiled -->
+		<!-- compile library from $a_dir -->
+		<set name="ISE_LIBRARY_backup" value="${ISE_LIBRARY}" />
+		<setenv name="ISE_LIBRARY" value="${a_dir}" />
+		<geant target="compile_library" />
+		<geant target="_fail" arguments=" -> Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0"  />
+		<set name="return_code" value="0" />
+
+		<!-- compile gobo from $a_dir -->
+		<geant target="compile_gobo" arguments="$_COMPILE_DIR" />
+		<geant target="_fail" arguments=" -> Error occurred during 'compile_gobo' (${return_code})" unless="${return_code}=0"  />
+		<set name="return_code" value="0" />
+
+		<setenv name="ISE_LIBRARY" value="${ISE_LIBRARY_backup}" />
+		<unset name="ISE_LIBRARY_backup" />
+	</target>
+
+	<target name="make_binaries" depend="init_deliv" >
+		<geant target="_log" arguments="Compiling ES binaries into ${_BINARY_DIR}" />
+
+		<mkdir directory="${_BINARY_DIR}" />
+		
+		<geant target="get__runtime_compiled" arguments="${_BINARY_DIR},runtime_compiled" />
+		<geant target="get__libraries_compiled" arguments="${_BINARY_DIR},library_compiled"/>
+		<geant target="get__gobo_compiled" arguments="${_BINARY_DIR},gobo_compiled"/>
+		
+		<!-- compile executables -->
+		<geant target="get_bin__" arguments="ec_batch,${_BINARY_DIR},ecb${exe}"/>
 
 		<!-- switch to use 'ec batch' compiler if available -->
-		<available dir="$_OUTPUT_DIR" resource="ecb${exe}" variable="ecb_available" />
+		<available dir="$_BINARY_DIR" resource="ecb${exe}" variable="ecb_available" />
+		<geant target="_log" arguments="Let's use [ecb${exe}] as active compiler." if="${ecb_available}=true" />
 		<set name="old_EC_NAME" value="${EC_NAME}" if="${EC_NAME}" />
-		<setenv name="EC_NAME" value="${_OUTPUT_DIR}${path_separator}ecb${exe}" if="${ecb_available}=true" />
+		<setenv name="EC_NAME" value="${_BINARY_DIR}${path_separator}ecb${exe}" if="${ecb_available}=true" />
 
-		<geant target="get_bin__" arguments="ec_lite,${_OUTPUT_DIR},ecl${exe}" />
-		<geant target="get_bin__" arguments="ec_bench,${_OUTPUT_DIR},ec${exe}" />
-		<geant target="get_bin__" arguments="estudio,${_OUTPUT_DIR},estudio${exe}" />
-		<geant target="get_bin__" arguments="quick_finalize,${_OUTPUT_DIR},quick_finalize${exe}" />
-		<geant target="get_bin__" arguments="finish_freezing,${_OUTPUT_DIR},finish_freezing${exe}"/>
-		<geant target="get_bin__" arguments="h2e,${_OUTPUT_DIR},h2e${exe}"/>
-		<geant target="get_bin__" arguments="emake,${_OUTPUT_DIR},emake${exe}"/>
-		<mkdir directory="${_OUTPUT_DIR}/consumer" />
-		<geant target="get_bin__z" arguments="dotnet_consumer,${_OUTPUT_DIR}${path_separator}dotnet_consumer,dotnet_consumer_compiled"/>
-		<geant target="get_bin__" arguments="esbuilder,${_OUTPUT_DIR},esbuilder${exe}" />
-		<geant target="get_bin__wizards" arguments="${_OUTPUT_DIR},wizards_compiled"/>
+		<geant target="get_bin__" arguments="ec_bench,${_BINARY_DIR},ec${exe}" />
+		<geant target="get_bin__" arguments="estudio,${_BINARY_DIR},estudio${exe}" />
+		<geant target="get_bin__" arguments="quick_finalize,${_BINARY_DIR},quick_finalize${exe}" />
+		<geant target="get_bin__" arguments="finish_freezing,${_BINARY_DIR},finish_freezing${exe}" />
+		<geant target="get_bin__" arguments="h2e,${_BINARY_DIR},h2e${exe}" />
+		<geant target="get_bin__" arguments="emake,${_BINARY_DIR},emake${exe}" />
+		<geant target="get__wizards_compiled" arguments="${_BINARY_DIR},wizards_compiled" />
+		<geant target="get_bin__" arguments="esbuilder,${_BINARY_DIR},esbuilder${exe}" />
 
-		<geant target="get_bin__" arguments="compile_all,${_OUTPUT_DIR},compile_all${exe}" 	if="${_INCLUDE_DEVPACK}=true"/>
-		<geant target="get_bin__" arguments="escln,${_OUTPUT_DIR},escln${exe}" 				if="${_INCLUDE_DEVPACK}=true"/>
-		<geant target="get_bin__" arguments="espawn,${_OUTPUT_DIR},espawn${exe}" 			if="${_INCLUDE_DEVPACK}=true"/>
-		<geant target="get_bin__" arguments="eimgemb,${_OUTPUT_DIR},eimgemb${exe}" 			if="${_INCLUDE_DEVPACK}=true"/>
+		<geant target="_make_dotnet" arguments="${_BINARY_DIR}" />
+
+		<!-- Dev Pack -->
+		<geant target="_make_devpack" arguments="${_BINARY_DIR}" />
 
 		<!-- switch back to previous default ec compiler -->
 		<setenv name="EC_NAME" value="$old_EC_NAME" if="${old_EC_NAME}"/>
 		<setenv name="EC_NAME" value="" unless="${old_EC_NAME}"/>
 		<unset name="old_EC_NAME" />
 
+		<geant target="_log" arguments="--------------------------------------------------" />
 		<geant target="_log" arguments="ES Binaries compilation is completed ..." />
+		<geant target="_log" arguments="--------------------------------------------------" />
 	</target>
 
-	<target name="compile_documentation" depend="init_deliv">
-		<geant target="_log" arguments="Compiling Documentation into ${_OUTPUT_DIR} -> To Be Implemented" />
+	<target name="_make_dotnet" depend="init" if="${_INCLUDE_DOTNET}=true" >
+		<!-- Dotnet Compilation -->
+		<argument name="a_binary_dir" />
+
+		<mkdir directory="${a_binary_dir}/dotnet_consumer" if="${is_windows}" />
+		<geant target="get_bin__z" arguments="dotnet_consumer,${a_binary_dir}\dotnet_consumer,dotnet_consumer_compiled" if="${is_windows}" />
+	</target>
+
+	<target name="_make_devpack" depend="init" if="${_INCLUDE_DEVPACK}=true" >
+		<!-- Dev Pack Compilation -->
+		<argument name="a_binary_dir" />
+
+		<geant target="get_bin__" arguments="ec_lite,${_BINARY_DIR},ecl${exe}" />
+		<geant target="get_bin__" arguments="compile_all,${a_binary_dir},compile_all${exe}" />
+		<geant target="get_bin__" arguments="eimgemb,${a_binary_dir},eimgemb${exe}" />
+		<geant target="get_bin__" arguments="escln,${a_binary_dir},escln${exe}" />
+		<geant target="get_bin__" arguments="espawn,${a_binary_dir},espawn${exe}" if="${is_windows}" />
+		<geant target="get_bin__" arguments="doc_builder,${a_binary_dir},doc_builder${exe}" />
+	</target>
+
+	<target name="make_documentation" depend="init_deliv">
+		<geant target="_log" arguments="Compiling Documentation into ${_BINARY_DIR} -> To Be Completed" />
+		<geant target="get__documentation_generated" arguments="${_BINARY_DIR},documentation_generated" />
 	</target>
 
 	<target name="bootstrap_gobo" depend="init_deliv">
-		<available resource="${_DELIVERY_DIR}/library/gobo/library" variable="gobo_dir_available" />
-		<echo message="Gobo missing in ${_DELIVERY_DIR}/library ..." if="${gobo_dir_available}=false" />
+		<!-- Bootstrap Gobo in ISE_LIBRARY -->
+		<available resource="${ISE_LIBRARY}/library/gobo/svn" variable="gobo_dir_available" />
+		<geant target="_log" arguments="Gobo missing in ${ISE_LIBRARY}/library/gobo/svn ..." if="${gobo_dir_available}=false" />
+		<geant target="_log" arguments="Bootstrapping Gobo in ${ISE_LIBRARY}/library/gobo/svn ..." if="${gobo_dir_available}=true" />
 		
 		<!-- Environment setup -->
-		<setenv name="GOBO" value="${_DELIVERY_DIR}${path_separator}library${path_separator}gobo"/>
+		<setenv name="GOBO" value="${ISE_LIBRARY}${path_separator}library${path_separator}gobo${path_separator}svn"/>
 		<setenv name="GOBO_OS" value="windows" if="${is_windows}" />
 		<setenv name="GOBO_OS" value="unix" unless="${is_windows}" />
 		<setenv name="GOBO_DOTNET" value="true" if="${is_windows}" />
@@ -259,7 +375,8 @@
 		<unset name="l_verb_flag"/>
 	</target>
 
-	<target name="get__runtime" >
+	<target name="get__runtime_compiled" >
+		<!-- Get runtime compiled -->
 		<argument name="a_output_dir" />
 		<argument name="a_resource" />
 
@@ -280,13 +397,11 @@
 		<unset name="tmp_available" />
 
 		<!-- IL runtime -->
-		<available resource="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" variable="tmp_available"/>
-		<mkdir directory="${a_output_dir}/lib" />
-		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${a_output_dir}/lib/EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
-		<unset name="tmp_available" />
+		<geant target="copy_file" arguments="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time,${a_output_dir}\lib,EiffelSoftware.Runtime.dll" if="${is_windows}" />
 	</target>
 
-	<target name="get__library" >
+	<target name="get__libraries_compiled" >
+		<!-- get library, C_library, framework compiled -->
 		<argument name="a_output_dir" />
 		<argument name="a_resource" />
 
@@ -304,13 +419,11 @@
 		<geant target="_log" arguments=" -> 'library' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0"  />
 
-		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll\wel_hook.dll" variable="tmp_available"/>
-		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll\wel_hook.dll" to_file="${a_output_dir}/wel_hook.dll" if="${tmp_available}=true" />
-
 		<unset name="tmp_available" />
 	</target>
 
-	<target name="get_bin__gobo" >
+	<target name="get__gobo_compiled" >
+		<!-- get Gobo tools compiled -->
 		<argument name="a_output_dir" />
 		<argument name="a_resource" />
 		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available"/>
@@ -333,7 +446,7 @@
 		<unset name="tmp_available" />
 	</target>
 
-	<target name="get_bin__wizards" >
+	<target name="get__wizards_compiled" >
 		<argument name="a_output_dir" />
 		<argument name="a_resource" />
 
@@ -358,7 +471,373 @@
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 	</target>
 
-	<!-- helpers -->
+	<target name="get__documentation_generated" >
+		<!-- Get documentation generated -->
+		<argument name="a_output_dir" />
+		<argument name="a_resource" />
+
+		<geant target="_log" arguments="Product: 'documentation' " />
+
+		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available" />
+
+		<!-- Resource is already built -->
+		<set name="return_code" value="0" 						if="$tmp_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
+
+		<!-- Let's build it -->
+		<geant target="_log" arguments=" -> Building documentation ..."	if="$tmp_available=false" />
+		<geant target="_make_documentation" arguments="$a_output_dir"	if="$tmp_available=false" /><!-- return return_code -->
+		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
+		<geant target="_log" arguments=" -> 'documentation' is ready." if="${return_code}=0"  />
+		<geant target="_fail" arguments=" -> Error occurred during 'make_documentation' (${return_code})" unless="${return_code}=0"  />
+		<unset name="tmp_available" />
+	</target>
+
+
+<!-- ============================ -->
+<!-- Documentation implementation -->
+<!-- ============================ -->
+
+	<target name="_make_documentation" depend="init_deliv" >
+		<argument  name="a_output_dir" />
+		<set name="l_doc_error" value="0" />
+
+		<!-- get doc_builder executable -->
+		<geant target="get_bin__" arguments="doc_builder,${a_output_dir},doc_builder${exe}" />
+		<available resource="${a_output_dir}/doc_builder${exe}" variable="tmp_docbuilder_avail" />
+		<echo message="doc_builder missing" unless="${tmp_docbuilder_avail}=true" />
+		<set name="l_doc_error" value="1" unless="${tmp_docbuilder_avail}=true" />
+
+		<available resource="${_XMLDOC_DIR}" variable="tmp_documentation_avail" />
+		<echo message="Documentation folder missing in parent of EIFFEL_SRC" if="${tmp_documentation_avail}=false" />
+		<set name="l_doc_error" value="2" unless="${tmp_documentation_avail}=true" />
+
+		<set name="return_code" value="$l_doc_error" />
+
+		<setenv name="DOCUMENT_DIR" value="${_XMLDOC_DIR}" />
+
+		<!-- generate eiffel information for all_libs -->
+		<!-- Not Yet Ready ...
+		<set name="tmp_dir" value="${EIFFEL_SRC}${path_separator}tools${path_separator}doc_builder${path_separator}resources${path_separator}xml" />
+		<geant target="melt" file="${DELIV_SCRIPT.absdir}/ise_eiffel_compiler.eant"
+			dir="$tmp_dir" >
+			<argument name="a_ecf" value="all_libs.ecf" />
+			<argument name="a_target" value="all_libs" />
+			<argument name="a_name" value="all_libs" />
+			<argument name="a_comp_dir" value="$tmp_dir" />
+			<argument name="a_output_dir" value="" />
+		</geant>
+		<exec executable="ec -local -flatshort -filter xml -all -config all_libs.ecf" dir="$tmp_dir" 
+			accept_errors="true" exit_code_variable="no_return_code" />
+		<unset name="no_return_code" />
+		<geant target="recursive_remove_file" arguments="*.html" dir="$tmp_dir/Documentation" />
+		<geant target="recursive_remove_file" arguments="*_links.xml" dir="$tmp_dir/Documentation" />
+		<geant target="recursive_remove_file" arguments="*_short.xml" dir="$tmp_dir/Documentation" />
+		<unset name="tmp_dir" />
+
+		TO COMPLETE ...
+		-->
+
+		<!-- delegate to _windows and _unix  -->
+		<geant target="_make_documentation_windows" arguments="$a_output_dir" if="${is_windows}" />
+		<geant target="_make_documentation_unix" arguments="$a_output_dir" unless="${is_windows}" />
+
+		<echo message="_make_documentation: return_code=$return_code" />
+	</target>
+
+	<target name="_make_documentation_windows" depend="init_deliv" if="${is_windows}" >
+		<argument  name="a_output_dir" />
+
+
+		<set name="l_doc_error_win" value="0" />
+		<!-- check for hhc -->
+		<exec executable="cd %TMP%" />
+		<exec executable="hhc.exe %TMP% > NUL:" accept_errors="true" exit_code_variable="conf_hhc" />
+		<echo message="ERROR: hhc.exe not in path, exit code: $conf_hhc, ! please check you have Microsofts hhc Compiler installed and that it appears in your path." unless="${conf_hhc}=0" />	
+		<set name="l_doc_error_win" value="1" unless="${conf_hhc}=0" />
+
+		<geant target="_log" arguments="Generate documentation using doc_builder" />
+		<mkdir directory="${a_output_dir}/tmp_doc" />
+
+		<geant target="_make_documentation_web_simple" arguments="$a_output_dir" unless="${conf_hhc}=0" />
+		<geant target="_make_documentation_chm" arguments="$a_output_dir" if="${conf_hhc}=0" />
+
+		<unset name="conf_hhc" />
+	</target>
+
+	<target name="_make_documentation_unix" depend="init_deliv" unless="${is_windows}" >
+		<argument  name="a_output_dir" />
+		<geant target="_make_documentation_web_simple" arguments="$a_output_dir" />
+	</target>
+
+	<target name="_make_documentation_chm" depend="init_deliv" if="${is_windows}" >
+		<argument  name="a_output_dir" />
+
+		<mkdir directory="${a_output_dir}/tmp_doc" />
+		<exec executable="${a_output_dir}\doc_builder${exe} -gen /xml2help -o /studio -t /mshtml -nohtml ${_XMLDOC_DIR}\xmldoc\projects\documentation.dpr" 
+			dir="${a_output_dir}/tmp_doc"  
+			exit_code_variable="tmp_return_code"
+			accept_errors="true" 
+			/>
+		<geant target="_log" arguments="Generate .chm file using hhc.exe" if="$tmp_return_code=0"/>
+		<exec executable="del /s/q docs.chm" dir="${a_output_dir}\tmp_doc\Html" if="$tmp_return_code=0" 
+			exit_code_variable="no_return_code"
+			accept_errors="true" 
+			/>
+		<unset name="no_return_code" />
+
+		<exec executable="hhc.exe docs.hhp" dir="${a_output_dir}\tmp_doc\Html" if="$tmp_return_code=0" 
+			exit_code_variable="tmp_return_code"
+			accept_errors="true" 
+			/>
+
+		<available resource="docs.chm" variable="tmp_chm_available" dir="${a_output_dir}/tmp_doc/Html" />
+		<mkdir directory="docs" dir="${a_output_dir}" if="$tmp_chm_available=true"/>
+		<geant target="copy_file_as" arguments="${a_output_dir}\tmp_doc\Html,$a_output_dir\docs,docs.chm,eiffel.chm,false" if="$tmp_chm_available=0" />
+		<set name="return_code" value="0" 			if="$tmp_chm_available=true" />
+		<set name="return_code" value="1" 			unless="$tmp_chm_available=true" />
+
+		<unset name="tmp_chm_available" />
+		<geant target="clean_folder" arguments="tmp_doc" dir="${a_output_dir}" />
+	</target>
+
+	<target name="_make_documentation_web_simple" depend="init_deliv" >
+		<argument  name="a_output_dir" />
+
+		<mkdir directory="${a_output_dir}/tmp_doc" />
+		<exec executable="${a_output_dir}${path_separator}doc_builder${exe} -gen /xml2help -o /studio -t /web_simple -nohtml ${_XMLDOC_DIR}${path_separator}xmldoc${path_separator}projects${path_separator}documentation.dpr" dir="${a_output_dir}/tmp_doc"
+			accept_errors="true" exit_code_variable="tmp_return_code" 
+			/>
+
+		<mkdir directory="docs" dir="${a_output_dir}" if="$tmp_return_code=0"/>
+		<geant target="copy_full_tree" arguments="${a_output_dir}${path_separator}tmp_doc${path_separator}Help,${a_output_dir}${path_separator}docs" if="$tmp_return_code=0" />
+		<set name="return_code" value="$tmp_return_code" />
+
+		<geant target="clean_folder" arguments="tmp_doc" dir="${a_output_dir}" />
+	</target>
+
+<!-- =========================== -->
+<!-- bridge to predefined target -->
+<!-- =========================== -->
+
+	<target name="compile_runtime" depend="init">
+		<!-- Compile Eiffel runtimes  (classic and dotnet) -->
+		<!-- Classic runtime -->
+		<geant dir="${EIFFEL_SRC}/C" file="build.eant" target="compile_runtime" 
+			reuse_variables="true"  fork="false" />
+
+		<!-- IL runtime (dotnet) -->
+		<geant dir="${EIFFEL_SRC}/Eiffel/eiffel/com_il_generation/Core/run-time" 
+			file="build.eant" target="compile" 
+			reuse_variables="true"  fork="false" if="${is_windows}" />
+	</target>
+
+	<target name="compile_library" depend="init">
+		<!-- Compile C_library, library and framework materials -->
+
+		<!-- We keep a copy of vendors specific header files at EiffelSoftware as they cannot be redistributed freely. -->
+		<available dir="${EIFFEL_SRC}" resource="headers.tar.gz" variable="tmp_headers_available" />
+		<exec executable="svn cat svn://${USERNAME}@svn.ise:3691/ise_svn/trunk/Src/library/headers.tar.gz > headers.tar.gz" 
+			dir="${EIFFEL_SRC}"
+			if="${tmp_headers_available}=false" 
+			exit_code_variable="tmp_return_code"
+			accept_errors="true" 
+			/>
+		<available dir="${EIFFEL_SRC}" resource="headers.tar.gz" variable="tmp_headers_available" />
+		<geant target="uncompress_tar_gz" arguments="headers.tar.gz,tmp_return_code" 
+			dir="${EIFFEL_SRC}" 
+			if="${tmp_headers_available}=true" 
+			/>
+		<unset name="tmp_headers_available" />
+		<unset name="tmp_return_code" />
+
+		<set name="return_code" value="0" />
+
+		<!-- Compile C_library -->
+		<geant target="compile" dir="${EIFFEL_SRC}/C_library"	file="build.eant" fork="true" />
+
+		<!-- Compile library -->
+		<geant target="compile" dir="${EIFFEL_SRC}/library"		file="build.eant" fork="true" />
+
+		<!-- Compile framework -->
+		<geant target="compile" dir="${EIFFEL_SRC}/framework"	file="build.eant" fork="true" />
+	</target>
+
+	<target name="compile_wizards" depend="init">
+		<argument name="A_comp_dir" />
+		<geant dir="${DELIV_SCRIPT.absdir}" file="es_wizards.eant" target="compile_all_from" arguments="$A_comp_dir" 
+			reuse_variables="true"  fork="false" />
+	</target>
+
+	<target name="compile_gobo" depend="init">
+		<argument name="A_comp_dir" />
+		<geant dir="${DELIV_SCRIPT.absdir}" file="gobo_tools.eant" target="compile_from" arguments="$A_comp_dir"
+			reuse_variables="true"  fork="false" />
+	</target>
+
+	<target name="set_ec_version" depend="init">
+		<geant file="${DELIV_SCRIPT.absdir}/set_version.eant" target="set_version" 
+			arguments="system_constants.e"
+			dir="${EIFFEL_SRC}/Eiffel/API/constants"
+			reuse_variables="true"  fork="false" />
+	</target>
+
+	<target name="set_esbuilder_version" depend="init">
+		<geant file="${DELIV_SCRIPT.absdir}/set_version.eant" target="set_version" 
+			arguments="gb_about_dialog_constants.e"
+			dir="${EIFFEL_SRC}/build/Constants"
+			reuse_variables="true"  fork="false" />
+	</target>
+
+<!-- ========================= -->
+<!-- Install compiled products -->
+<!-- ========================= -->
+
+	<target name="install_binaries" depend="init_deliv" >
+		<geant target="_log" arguments="Installing ES into ${_TARGET_DELIV_DIR}" />
+
+		<!-- install binaries -->
+		<set name="tmp_install_dir" value="${_TARGET_DELIV_DIR}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+		<set name="tmp_install_dir_bin" value="${tmp_install_dir}${path_separator}bin" />
+
+		<!-- ec -->
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${tmp_install_dir_bin},ec${exe}" />
+		<!-- ecb --> 
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${tmp_install_dir_bin},ecb${exe}" />
+		<!-- estudio --> 
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${tmp_install_dir_bin},estudio${exe}" />
+		<!-- quick_finalize --> 
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${tmp_install_dir_bin},quick_finalize${exe}" />
+
+		<!-- esbuilder --> 
+		<mkdir directory="${_TARGET_DELIV_DIR}/esbuilder/spec/${ISE_PLATFORM}/bin" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${_TARGET_DELIV_DIR}/esbuilder/spec/${ISE_PLATFORM}/bin,esbuilder${exe}" />
+		<!-- wizards -->
+		<available dir="${_BINARY_DIR}" resource="wizards" variable="tmp_available" />
+		<geant target="copy_full_tree" arguments="${_BINARY_DIR}${path_separator}wizards,${_TARGET_DELIV_DIR}${path_separator}studio${path_separator}wizards" 
+			if="${tmp_available}=true" />
+		<unset name="tmp_available" />
+
+		<!-- platform specific -->
+		<geant target="_install_executables_windows"    if="${is_windows}" />
+		<geant target="_install_executables_unix"   unless="${is_windows}" />
+
+		<!-- Dev Pack -->
+		<geant target="_install_devpack" arguments="${tmp_install_dir_bin}" />
+
+		<unset name="tmp_install_dir_bin" />
+		<unset name="tmp_install_dir" />
+		
+		<geant target="_log" arguments="Installing ES is completed ..." />
+	</target>
+
+	<target name="_install_devpack" depend="init_deliv" if="${_INCLUDE_DEVPACK}=true" >
+		<!-- Dev Pack Installation -->
+		<argument name="a_target_dir" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},ecl${exe}" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},compile_all${exe}" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},eimgemb${exe}" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},escln${exe}" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},espawn${exe}" if="${is_windows}" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},doc_builder${exe}" />
+	</target>
+
+	<target name="_install_dotnet" depend="init_deliv" if="${_INCLUDE_DOTNET}=true" >
+		<!-- Dotnet Installation -->
+		<argument name="a_target_dir" />
+
+		<!-- EiffelSoftware. Consumer -->
+		<copy dir="${_BINARY_DIR}\dotnet_consumer" to_directory="${a_target_dir}\bin" >
+			<fileset include="@(*.dll)" />
+		</copy>
+		<!-- EiffelSoftware.Runtime -->
+		<geant target="copy_file" arguments="${_BINARY_DIR}\lib,${tmp_install_dir}\lib,EiffelSoftware.Runtime.dll" />
+	</target>
+
+	<target name="_install_executables_windows" depend="init_deliv" if="${is_windows}" >
+		<!-- install tool to compile libraries -->
+		<copy dir="${EIFFEL_SRC}\C\shell\bin" to_directory="${tmp_install_dir}/bin" >
+			<fileset include="@(*.dll)" />
+			<fileset include="@(*.exe)" />
+		</copy>
+
+		<!-- 'etc' must exists to allow shell binaries -->
+		<mkdir directory="${tmp_install_dir}\..\etc"/>
+		<!-- 'compile_library.bat' must exists to allow 'finish_freezing -library' -->
+		<geant target="copy_exec_file" arguments="${_DELIVERY_DIR}\studio\spec\windows,${tmp_install_dir}\bin,compile_library.bat" />
+		<!-- copy related config file on Windows -->
+		<set name="tmp_config_fn" value="windows-x86-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=windows" />
+		<set name="tmp_config_fn" value="windows-x86-64-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=win64" />
+		<geant target="copy_file" arguments="${EIFFEL_SRC}\C\CONFIGS,${_TARGET_DELIV_DIR}\studio\config\${ISE_PLATFORM}\${ISE_C_COMPILER},${tmp_config_fn}" />
+		<unset name="tmp_config_fn" />
+
+		<!-- wel_hook.dll -->
+		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll,${_TARGET_DELIV_DIR}\esbuilder\spec\${ISE_PLATFORM}\bin,wel_hook.dll" />
+		<geant target="copy_file" arguments="${EIFFEL_SRC}\library\wel\spec\msc\windows\dll,${tmp_install_dir_bin},wel_hook.dll" />
+
+		<!-- finish_freezing -->
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${tmp_install_dir_bin},finish_freezing${exe}" />
+		<!-- h2e -->
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${tmp_install_dir_bin},h2e${exe}" />
+		<!-- emake -->
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${tmp_install_dir_bin},emake${exe}" />
+
+		<!-- dotnet -->
+		<geant target="_install_dotnet" arguments="${tmp_install_dir}" />
+	</target>
+
+	<target name="_install_executables_unix" depend="init_deliv" unless="${is_windows}" >
+		<!-- Mainly to ensure executables are really executable -->
+
+		<!-- EiffelStudio binaries -->
+		<geant target="made_file_executable" arguments="*" dir="${tmp_install_dir_bin}" />
+		<!-- EsBuilder binaries -->
+		<geant target="made_file_executable" arguments="*" dir="${_TARGET_DELIV_DIR}/esbuilder/spec/${ISE_PLATFORM}/bin" />
+		<!-- Gobo binaries -->
+		<geant target="made_file_executable" arguments="*" dir="${_TARGET_DELIV_DIR}/library/gobo/spec/${ISE_PLATFORM}/bin" />
+		<!-- Delivery Scripts -->
+		<geant target="made_file_executable" arguments="make_install" dir="${_TARGET_DELIV_DIR}" />
+		<!-- Vision2 Scripts -->
+		<geant target="made_file_executable" arguments="vision2-gtk-config" dir="${_TARGET_DELIV_DIR}/library/vision2/implementation/gtk/Clib" />
+	</target>
+
+
+<!-- ============================ -->
+<!-- Make Delivery Implementation -->
+<!-- ============================ -->
+
+
+	<target name="_make_delivery_windows" depend="init_deliv" >
+		<!-- Windows -->
+		<mkdir directory="studio\spec\$ISE_PLATFORM\lib\$ISE_C_COMPILER"/>
+		<copy to_directory="${_TARGET_DELIV_DIR}\studio\spec\${ISE_PLATFORM}\lib\$ISE_C_COMPILER" dir="${EIFFEL_SRC}\C\run-time\LIB" >
+			<fileset include="@(*.lib|*.dll)" />
+		</copy>
+
+		<geant target="copy_full_tree" arguments="studio\config\windows,${_TARGET_DELIV_DIR}\studio\config\${ISE_PLATFORM}" unless="${ISE_PLATFORM}=windows" />
+		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${_TARGET_DELIV_DIR}/studio/config/${ISE_PLATFORM}/${ISE_C_COMPILER}/config.sh" />
+
+		<!-- Unix tools -->
+		<copy file="${EIFFEL_SRC}/C/shell/bin/rt_converter${exe}" 	to_file="${_TARGET_DELIV_DIR}/studio/spec/${ISE_PLATFORM}/bin/rt_converter${exe}" />
+		<copy file="${EIFFEL_SRC}/C/shell/bin/sed${exe}" 			to_file="${_TARGET_DELIV_DIR}/studio/spec/${ISE_PLATFORM}/bin/sed${exe}" />
+		<copy file="${EIFFEL_SRC}/C/shell/bin/msys-1.0.dll" 		to_file="${_TARGET_DELIV_DIR}/studio/spec/${ISE_PLATFORM}/bin/msys-1.0.dll" />
+		<mkdir directory="${_TARGET_DELIV_DIR}/studio/spec/${ISE_PLATFORM}/etc"  />
+	</target>
+
+	<target name="_make_delivery_unix" depend="init_deliv" >
+		<copy to_directory="${_TARGET_DELIV_DIR}/studio/spec/${ISE_PLATFORM}/lib" dir="${EIFFEL_SRC}/C/run-time" >
+			<fileset include="@(lib*.*)" />
+		</copy>
+		<geant target="copy_file" arguments="${EIFFEL_SRC}/C,studio/spec/${ISE_PLATFORM}/include,config.sh" />
+		<geant target="copy_full_tree" arguments="studio/config/unix,${_TARGET_DELIV_DIR}/studio/config/${ISE_PLATFORM}" />
+		<geant target="copy_file" arguments="${EIFFEL_SRC}/C,${_TARGET_DELIV_DIR}/studio/config/${ISE_PLATFORM},config.sh" />
+		<geant target="link_file" arguments="../../unix/finish_freezing,finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
+		<geant target="link_file" arguments="../../unix/prelink,prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
+	</target>
+
+<!-- ======= -->
+<!-- helpers -->
+<!-- ======= -->
 
 	<target name="get_bin__" >
 		<!-- Template: 
@@ -409,282 +888,41 @@
 		<unset name="return_code" />
 	</target>
 
-	<!-- bridge -->
-	<target name="compile_runtime" depend="init">
-		<geant dir="${EIFFEL_SRC}/C" file="build.eant" target="compile_runtime" 
-			reuse_variables="true"  fork="false" />
-		<geant dir="${EIFFEL_SRC}/Eiffel/eiffel/com_il_generation/Core/run-time" 
-			file="build.eant" target="compile" 
-			reuse_variables="true"  fork="false" if="${is_windows}" />
+
+<!-- ============== -->
+<!-- Implementation -->
+<!-- ============== -->
+
+	<!--
+	<target name="_log_to_file" >
+		<argument name="a_msg" />
+		<argument name="a_file" />
+		<echo message="$a_msg" to_file="$a_file" append="true" />
 	</target>
-	<target name="compile_library" depend="init">
-		<geant dir="${EIFFEL_SRC}/C_library" 	file="build.eant" target="compile" 
-			reuse_variables="true"  fork="false" />
-		<geant dir="${EIFFEL_SRC}/library" 		file="build.eant" target="compile" 
-			reuse_variables="true"  fork="false" />
-		<geant dir="${EIFFEL_SRC}/framework"	file="build.eant" target="compile"
-			reuse_variables="true"  fork="false" />
+	-->
+	<target name="_log" >
+		<argument name="a_msg" />
+		<echo message="$a_msg" />
+		<geant target="_log_to_file" append="true" >
+			<argument name="a_msg" value="$a_msg" />
+			<argument name="a_file" value="$_LOGFILE" />
+		</geant>
 	</target>
-
-	<target name="set_ec_version" depend="init">
-		<geant file="${DELIV_SCRIPT.absdir}/set_version.eant" target="set_version" 
-			arguments="system_constants.e"
-			dir="${EIFFEL_SRC}/Eiffel/API/constants"
-			reuse_variables="true"  fork="false" />
+	<target name="_fail" >
+		<argument name="a_msg" />
+		<echo message="$a_msg" />
+		<geant target="_log" arguments="$a_msg" />
+		<geant target="_log_to_file" append="true" >
+			<argument name="a_msg" value="$a_msg" />
+			<argument name="a_file" value="${_LOGFILE}.err" />
+		</geant>
+		<exit code="1" if="$_EXIT_ON_FAILURE=true"/>
 	</target>
-	<target name="set_esbuilder_version" depend="init">
-		<geant file="${DELIV_SCRIPT.absdir}/set_version.eant" target="set_version" 
-			arguments="gb_about_dialog_constants.e"
-			dir="${EIFFEL_SRC}/build/Constants"
-			reuse_variables="true"  fork="false" />
+	<target name="copy_library_to">
+		<argument name="A_lib_name"/>
+		<argument name="A_target_dir"/>
+		<geant target="_log" arguments="   - Copy library [${A_lib_name}] to ${A_target_dir}" />
+		<precursor arguments="${A_lib_name},${A_target_dir}" />
 	</target>
-	<target name="compile_wizards" depend="init">
-		<argument name="A_comp_dir" />
-		<geant dir="${DELIV_SCRIPT.absdir}" file="es_wizards.eant" target="compile_all_from" arguments="$A_comp_dir" 
-			reuse_variables="true"  fork="false" />
-	</target>
-	<target name="compile_gobo" depend="init">
-		<argument name="A_comp_dir" />
-		<geant dir="${DELIV_SCRIPT.absdir}" file="gobo_tools.eant" target="compile_from" arguments="$A_comp_dir"
-			reuse_variables="true"  fork="false" />
-	</target>
-
-
-	<!-- Install compiled products -->
-	<target name="install_binaries" depend="init_deliv" >
-		<geant target="_log" arguments="Installing ES into ${_INSTALL_DIR}" />
-
-		<!-- install binaries -->
-		<set name="tmp_install_dir" value="${_INSTALL_DIR}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
-		<set name="tmp_install_dir_bin" value="${tmp_install_dir}${path_separator}bin" />
-
-		<!-- ec -->
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},ec${exe}" />
-		<!-- ecb --> 
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},ecb${exe}" />
-		<!-- ecl --> 
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},ecl${exe}" />
-		<!-- estudio --> 
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},estudio${exe}" />
-		<!-- quick_finalize --> 
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},quick_finalize${exe}" />
-
-		<!-- esbuilder --> 
-		<mkdir directory="${_INSTALL_DIR}/esbuilder/spec/${ISE_PLATFORM}/bin" />
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${_INSTALL_DIR}${path_separator}esbuilder${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin,esbuilder${exe}" />
-		<!-- wizards -->
-		<available dir="${_OUTPUT_DIR}" resource="wizards" variable="tmp_available" />
-		<geant target="copy_full_tree" arguments="${_OUTPUT_DIR}${path_separator}wizards,${_INSTALL_DIR}${path_separator}studio${path_separator}wizards" 
-			if="${tmp_available}=true" />
-		<unset name="tmp_available" />
-
-		<!-- escln --> 
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},escln${exe}"		if="${_INCLUDE_DEVPACK}=true" />
-		<!-- eimgemb --> 
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},eimgemb${exe}"	if="${_INCLUDE_DEVPACK}=true" />
-		<!-- compile_all --> 
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},compile_all${exe}"	if="${_INCLUDE_DEVPACK}=true" />
-
-		<!-- platform specific -->
-		<geant target="install_executables_windows"    if="${is_windows}" />
-		<geant target="install_executables_unix"   unless="${is_windows}" />
-
-		<unset name="tmp_install_dir_bin" />
-		<unset name="tmp_install_dir" />
-		
-		<geant target="_log" arguments="Installing ES is completed ..." />
-	</target>
-
-	<target name="install_executables_unix" depend="init_deliv" unless="${is_windows}" >
-		<exec executable="chmod 755 ${tmp_install_dir_bin}/* " accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="chmod 755 ${_INSTALL_DIR}/esbuilder/spec/${ISE_PLATFORM}/bin/*" accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="chmod 755 ${_INSTALL_DIR}/make_install" accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="chmod 755 ${_INSTALL_DIR}/library/vision2/implementation/gtk/Clib/vision2-gtk-config" accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="chmod 755 ${_INSTALL_DIR}/library/gobo/spec/${ISE_PLATFORM}/bin/*" accept_errors="true" exit_code_variable="return_code" />
-	</target>
-
-	<target name="install_executables_windows" depend="init_deliv" if="${is_windows}" >
-		<!-- install tool to compile libraries -->
-		<copy dir="${EIFFEL_SRC}\C\shell\bin" to_directory="${tmp_install_dir}/bin" >
-			<fileset include="@(*.dll)" />
-			<fileset include="@(*.exe)" />
-		</copy>
-		<mkdir directory="${tmp_install_dir}\..\etc"/>
-		<copy file="${_DELIVERY_DIR}\studio\spec\windows\compile_library.bat" to_file="${tmp_install_dir}/bin/compile_library.bat" />
-		<set name="tmp_config_fn" value="windows-x86-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=windows" />
-		<set name="tmp_config_fn" value="windows-x86-64-${ISE_C_COMPILER}" if="${ISE_PLATFORM}=win64" />
-		<copy file="${EIFFEL_SRC}\C\CONFIGS\${tmp_config_fn}" to_file="${_INSTALL_DIR}\studio\config\${ISE_PLATFORM}\${ISE_C_COMPILER}\${tmp_config_fn}" />
-		<unset name="tmp_config_fn" />
-
-		<!-- wel_hook.dll -->
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${_INSTALL_DIR}${path_separator}esbuilder${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin,wel_hook.dll" />
-		<geant target="install__file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},wel_hook.dll" />
-
-		<!-- EiffelSoftware. Consumer -->
-		<copy dir="${_OUTPUT_DIR}/consumer" to_directory="${tmp_install_dir_bin}" >
-			<fileset include="@(*.dll)" />
-		</copy>
-		<!-- EiffelSoftware.Runtime -->
-		<geant target="install__file" arguments="${_OUTPUT_DIR}${path_separator}lib,${tmp_install_dir}${path_separator}lib,EiffelSoftware.Runtime.dll" />
-		<!-- finish_freezing -->
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},finish_freezing${exe}" />
-		<!-- h2e -->
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},h2e${exe}" />
-		<!-- emake -->
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},emake${exe}" />
-		<!-- espawn --> 
-		<geant target="install__exec_file" arguments="${_OUTPUT_DIR},${tmp_install_dir_bin},espawn${exe}" 	if="${_INCLUDE_DEVPACK}=true" />
-
-		<!-- continue with binaries -->
-		<copy dir="${_OUTPUT_DIR}" to_directory="${tmp_install_dir_bin}" >
-			<fileset include="@(*.exe)" />
-			<fileset include="@(*.dll)" />
-		</copy>
-	</target>
-
-	<target name="clean_all" depend="init_deliv" >
-		<echo message="Cleaning All ..." />
-		<geant target="clean_bin" />
-		<geant target="clean_es" />
-		<geant target="clean_compile" />
-	</target>
-	<target name="clean_bin" depend="init_deliv" >
-		<geant target="clean__folder" arguments="${_OUTPUT_DIR}" />
-	</target>
-	<target name="clean_es" depend="init_deliv" >
-		<echo message="Cleaning EIFGENs ..." />
-		<geant target="clean_compile" />
-		<geant target="clean_delivery" />
-	</target>
-	<target name="clean_compile" depend="init_deliv" >
-		<geant target="clean__folder" arguments="${_COMPILE_DIR}${path_separator}EIFGENs" />
-	</target>
-	<target name="clean_delivery" depend="init_deliv" >
-		<geant target="clean__folder" arguments="${_INSTALL_DIR}" />
-	</target>
-
-	<target name="make_delivery" depend="init_deliv" >
-		<echo message="Task: make_delivery"/>
-		<geant target="_log" arguments="Task: make_delivery" />
-
-		<set name="NEW_ISE_EIFFEL" value="${cwd}" unless="${NEW_ISE_EIFFEL}" />
-		<geant target="make_delivery_common"  dir="${NEW_ISE_EIFFEL}" />
-		<geant target="make_delivery_windows" dir="${NEW_ISE_EIFFEL}"     if="${is_windows}" />
-		<geant target="make_delivery_unix"    dir="${NEW_ISE_EIFFEL}" unless="${is_windows}" />
-
-		<!-- compile NEW_ISE_EIFFEL library -->
-		<set name="old_ISE_LIBRARY" value="${ISE_LIBRARY}" />
-		<setenv name="ISE_LIBRARY" value="${NEW_ISE_EIFFEL}" />
-		<geant target="compile_library" />
-		<geant target="_fail" arguments=" -> Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0"  />
-
-		<geant target="compile_gobo" arguments="$_COMPILE_DIR" />
-		<geant target="_fail" arguments=" -> Error occurred during 'compile_gobo' (${return_code})" unless="${return_code}=0"  />
-
-		<setenv name="ISE_LIBRARY" value="${old_ISE_LIBRARY}" />
-		<unset name="old_ISE_LIBRARY" />
-		<set name="return_code" value="0" />
-	</target>
-
-	<target name="update_delivery" depend="init_deliv" >
-		<echo message="Task: update_delivery"/>
-		<geant target="_log" arguments="Task: update_delivery" />
-		<set name="NEW_ISE_EIFFEL" value="${cwd}" />
-		<geant target="make_delivery" />
-	</target>
-
-	<target name="make_delivery_common" depend="init_deliv" >
-		<!-- platform independant -->
-		<echo message=" - Copy Delivery to ${cwd}"/>
-		<geant target="copy_full_tree" arguments="${_DELIVERY_DIR},${cwd}" />
-
-		<!-- libraries -->
-		<mkdir directory="library"/>
-		<echo message=" - Copy library.. to ${cwd}${path_separator}library"/>
-		<geant target="copy_library_to" arguments="base,${cwd}"/>
-		<geant target="copy_library_to" arguments="base_original,${cwd}"/>
-		<geant target="copy_library_to" arguments="com,${cwd}"/>
-		<geant target="copy_library_to" arguments="Eiffel2Java,${cwd}"    />
-		<geant target="copy_library_to" arguments="gobo,${cwd}"   />
-		<geant target="copy_library_to" arguments="gobo_extension,${cwd}"   />
-		<geant target="copy_library_to" arguments="graph,${cwd}" />
-		<geant target="copy_library_to" arguments="lex,${cwd}" />
-		<geant target="copy_library_to" arguments="memory_analyzer,${cwd}" />
-		<geant target="copy_library_to" arguments="net,${cwd}" />
-		<geant target="copy_library_to" arguments="obsolete,${cwd}" />
-		<geant target="copy_library_to" arguments="parse,${cwd}" />
-		<geant target="copy_library_to" arguments="preferences,${cwd}" />
-		<geant target="copy_library_to" arguments="process,${cwd}" />
-		<geant target="copy_library_to" arguments="store,${cwd}" />
-		<geant target="copy_library_to" arguments="thread,${cwd}" />
-		<geant target="copy_library_to" arguments="time,${cwd}" />
-		<geant target="copy_library_to" arguments="uuid,${cwd}" />
-		<geant target="copy_library_to" arguments="vision,${cwd}" />
-		<geant target="copy_library_to" arguments="vision2,${cwd}" />
-		<geant target="copy_library_to" arguments="vision2_extension,${cwd}" />
-		<geant target="copy_library_to" arguments="web,${cwd}" />
-		<geant target="copy_library_to" arguments="wel,${cwd}"/>
-
-		<!-- extra libraries -->
-		<geant target="copy_library_to" arguments="diff,${cwd}"/>
-		<geant target="copy_library_to" arguments="event,${cwd}"/>
-
-		<!-- examples -->
-		<mkdir directory="examples"/>
-		<echo message=" - Copy examples.. to ${cwd}${path_separator}examples"/>
-		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}examples,${cwd}${path_separator}examples" />
-
-		<!-- <geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}library,${cwd}${path_separator}library" /> -->
-
-		<!-- C_library -->
-		<mkdir directory="C_library"/>
-		<echo message=" - Copy C_library to ${cwd}${path_separator}C_library"/>
-		<geant target="copy_full_tree" arguments="${EIFFEL_SRC}${path_separator}C_library,${cwd}${path_separator}C_library" />
-
-		<!-- studio -->
-		<echo message="Creating ISE_EIFFEL/studio/... folders" />
-		<mkdir directory="studio/spec/$ISE_PLATFORM"/>
-		<mkdir directory="studio/spec/$ISE_PLATFORM/bin"/>
-		<mkdir directory="studio/spec/$ISE_PLATFORM/include"/>
-		<mkdir directory="studio/spec/$ISE_PLATFORM/lib"/>
-		<copy to_directory="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include" dir="${EIFFEL_SRC}/C/run-time" >
-			<fileset include="@(*.h)" />
-		</copy>
-		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" 			to_file="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include/eif_confmagic.h" />
-		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" 		to_file="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />
-		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" 	to_file="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" />
-
-		<geant target="copy_full_tree" arguments="precomp${path_separator}spec${path_separator}platform,${cwd}${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" />
-	</target>
-
-	<target name="make_delivery_windows" depend="init_deliv" >
-		<!-- Windows -->
-		<mkdir directory="studio\spec\$ISE_PLATFORM\lib\$ISE_C_COMPILER"/>
-		<copy to_directory="${_INSTALL_DIR}\studio\spec\${ISE_PLATFORM}\lib\$ISE_C_COMPILER" dir="${EIFFEL_SRC}\C\run-time\LIB" >
-			<fileset include="@(*.lib|*.dll)" />
-		</copy>
-
-		<geant target="copy_full_tree" arguments="studio\config\windows,${_INSTALL_DIR}\studio\config\${ISE_PLATFORM}" unless="${ISE_PLATFORM}=windows" />
-		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${_INSTALL_DIR}/studio/config/${ISE_PLATFORM}/${ISE_C_COMPILER}/config.sh" />
-
-		<!-- Unix tools -->
-		<copy file="${EIFFEL_SRC}/C/shell/bin/rt_converter${exe}" 	to_file="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/rt_converter${exe}" />
-		<copy file="${EIFFEL_SRC}/C/shell/bin/sed${exe}" 			to_file="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/sed${exe}" />
-		<copy file="${EIFFEL_SRC}/C/shell/bin/msys-1.0.dll" 		to_file="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/msys-1.0.dll" />
-		<mkdir directory="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/etc"  />
-	</target>
-
-	<target name="make_delivery_unix" depend="init_deliv" >
-		<copy file="${EIFFEL_SRC}/C/config.sh" to_directory="studio/spec/${ISE_PLATFORM}/include" />
-		<copy to_directory="${_INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/lib" dir="${EIFFEL_SRC}/C/run-time" >
-			<fileset include="@(lib*.*)" />
-		</copy>
-		<geant target="copy_full_tree" arguments="studio/config/unix,${_INSTALL_DIR}/studio/config/${ISE_PLATFORM}" />
-		
-		<copy file="${EIFFEL_SRC}/C/config.sh" to_file="${_INSTALL_DIR}/studio/config/${ISE_PLATFORM}/config.sh"  />
-		<exec executable="ln -f -s ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
-		<exec executable="ln -f -s ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
-	</target>
-
 
 </project>

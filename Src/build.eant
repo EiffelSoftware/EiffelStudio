@@ -68,16 +68,16 @@
 
 	<target name="prepare" >
 		<echo message="Prepare everything for development on `ec'" />
-		<geant target="_target_template_" arguments="compile" reuse_variables="true" />
+		<geant target="_target_template_" arguments="compile" dir="${EIFFEL_SRC}" />
 	</target>
 
 	<target name="clean" >
-		<geant target="_target_template_" arguments="clean" reuse_variables="true" />
-		<geant target="clean_compilation" reuse_variables="true" />
+		<geant target="_target_template_" arguments="clean" dir="${EIFFEL_SRC}" />
+		<geant target="clean_compilation" />
 	</target>
 
 	<target name="clobber" depend="clean" >
-		<geant target="_target_template_" arguments="clobber" reuse_variables="true" />
+		<geant target="_target_template_" arguments="clobber" dir="${EIFFEL_SRC}" />
 	</target>
 
 	<target name="build_delivery" >

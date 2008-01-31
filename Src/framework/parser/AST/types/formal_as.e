@@ -49,6 +49,9 @@ feature -- Roundtrip
 	reference_expanded_keyword: KEYWORD_AS
 			-- Keyword "reference" or "expanded" associated with this structure
 
+	attachment_mark: SYMBOL_AS
+			-- Attachment symbol (if any)
+
 feature -- Properties
 
 	name: ID_AS
@@ -64,14 +67,23 @@ feature -- Properties
 	is_expanded: BOOLEAN
 			-- Is Current formal to be always instantiated as an expanded type?
 
-	attachment_mark: SYMBOL_AS
-			-- Attachment symbol (if any)
+	has_attached_mark: BOOLEAN
+			-- Is attached mark specified?
+
+	has_detachable_mark: BOOLEAN
+			-- Is detachable mark specified?
 
 feature -- Modification
 
-	set_attachment_mark (m: like attachment_mark)
+	set_attachment_mark (m: like attachment_mark; a: like has_attached_mark; d: like has_detachable_mark)
 		do
 			attachment_mark := m
+			has_attached_mark := a
+			has_detachable_mark := d
+		ensure
+			attachment_mark_set: attachment_mark = m
+			has_attached_mark_set: has_attached_mark = a
+			has_detachable_mark_set: has_detachable_mark = d
 		end
 
 feature -- Roundtrip/Token
@@ -104,28 +116,23 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			if attachment_mark = Void then
-				Result := other.attachment_mark = Void
-			elseif other.attachment_mark /= Void then
-				Result := attachment_mark.is_equivalent (other.attachment_mark)
-			end
-			if Result then
-				Result := position = other.position and then is_reference = other.is_reference
-					and then is_expanded = other.is_expanded
-			end
+			Result := position = other.position
+				and then is_reference = other.is_reference
+				and then is_expanded = other.is_expanded
+				and then has_attached_mark = other.has_attached_mark
+				and then has_detachable_mark = other.has_detachable_mark
 		end
 
 feature -- Output
 
 	dump: STRING is
 		do
-			if attachment_mark /= Void then
+			if has_attached_mark then
 				create Result.make (4)
-				if attachment_mark.is_bang then
-					Result.append_character ('!')
-				else
-					Result.append_character ('?')
-				end
+				Result.append_character ('!')
+			elseif has_detachable_mark then
+				create Result.make (4)
+				Result.append_character ('?')
 			else
 				create Result.make (3)
 			end
@@ -142,7 +149,7 @@ feature {COMPILER_EXPORTER} -- Settings
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 				l_clients.after
 			loop
 				create l_click_ast.initialize (l_clients.item,
-					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void, Void))
+					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void, Void, False, False))
 				internal_click_list.extend (l_click_ast)
 				l_clients.forth
 			end

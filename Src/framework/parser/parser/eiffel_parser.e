@@ -6247,7 +6247,7 @@ end
 				if not non_conforming_inheritance_flag then
 						-- Check to make sure Class_identifier is 'NONE'
 						-- An error will be thrown if TYPE_AS is not of type NONE_TYPE_AS
-					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type (yyvs2.item (yyvsp2), Void, Void))
+					ast_factory.validate_non_conforming_inheritance_type (Current, new_class_type (yyvs2.item (yyvsp2), Void, Void, False, False))
 				else
 						-- Raise error as non conforming inheritance has already been specified
 					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs12.item (yyvsp12)), token_column (yyvs12.item (yyvsp12)), filename, "Only one non-conforming inheritance clause allowed per class"))
@@ -6366,7 +6366,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval81 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), Void) 
+yyval81 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), Void, False, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp81 := yyvsp81 + 1
@@ -9852,7 +9852,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), Void) 
+yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), Void, False, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp79 := yyvsp79 + 1
@@ -10043,7 +10043,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := ast_factory.new_like_id_as (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), Void) 
+yyval79 := ast_factory.new_like_id_as (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), Void, False, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp79 := yyvsp79 + 1
@@ -10079,7 +10079,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := ast_factory.new_like_id_as (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4)) 
+yyval79 := ast_factory.new_like_id_as (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4), True, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp79 := yyvsp79 + 1
@@ -10116,7 +10116,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := ast_factory.new_like_id_as (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4)) 
+yyval79 := ast_factory.new_like_id_as (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4), False, True) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp79 := yyvsp79 + 1
@@ -10153,7 +10153,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := ast_factory.new_like_current_as (yyvs9.item (yyvsp9), yyvs12.item (yyvsp12), Void) 
+yyval79 := ast_factory.new_like_current_as (yyvs9.item (yyvsp9), yyvs12.item (yyvsp12), Void, False, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp79 := yyvsp79 + 1
@@ -10189,7 +10189,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := ast_factory.new_like_current_as (yyvs9.item (yyvsp9), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4)) 
+yyval79 := ast_factory.new_like_current_as (yyvs9.item (yyvsp9), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4), True, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp79 := yyvsp79 + 1
@@ -10226,7 +10226,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := ast_factory.new_like_current_as (yyvs9.item (yyvsp9), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4)) 
+yyval79 := ast_factory.new_like_current_as (yyvs9.item (yyvsp9), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4), False, True) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp79 := yyvsp79 + 1
@@ -10297,7 +10297,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), Void) 
+yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), Void, False, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp79 := yyvsp79 + 1
@@ -10350,7 +10350,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), yyvs4.item (yyvsp4)) 
+yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), yyvs4.item (yyvsp4), True, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp79 := yyvsp79 + 1
@@ -10387,7 +10387,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), yyvs4.item (yyvsp4)) 
+yyval79 := new_class_type (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), yyvs4.item (yyvsp4), False, True) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp79 := yyvsp79 + 1
@@ -10619,7 +10619,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval79 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), Void, Void) 
+yyval79 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), Void, Void, False, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp79 := yyvsp79 + 1
@@ -10658,7 +10658,7 @@ end
 				if last_type_list /= Void then
 					last_type_list.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end
-				yyval79 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), last_type_list, Void)
+				yyval79 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), last_type_list, Void, False, False)
 				last_type_list := Void
 				remove_counter
 				remove_counter2
@@ -10702,7 +10702,7 @@ end
 				if yyvs112.item (yyvsp112) /= Void then
 					yyvs112.item (yyvsp112).set_positions (yyvs4.item (yyvsp4), last_rsqure.item)
 				end
-				yyval79 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), Void)
+				yyval79 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), yyvs112.item (yyvsp112), Void, False, False)
 				last_rsqure.remove
 				remove_counter
 				remove_counter2
@@ -10831,7 +10831,7 @@ end
 				yyval112 := yyvs112.item (yyvsp112)
 				if yyval112 /= Void and yyvs2.item (yyvsp2) /= Void then
 					yyvs2.item (yyvsp2).to_upper		
-					yyval112.reverse_extend (new_class_type (yyvs2.item (yyvsp2), Void, Void))
+					yyval112.reverse_extend (new_class_type (yyvs2.item (yyvsp2), Void, Void, False, False))
 					ast_factory.reverse_extend_separator (yyval112, yyvs4.item (yyvsp4))
 				end
 			
@@ -17713,7 +17713,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				temp_class_type_as := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), Void, Void)
+				temp_class_type_as := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), Void, Void, False, False)
 				if temp_class_type_as /= Void then
 					temp_class_type_as.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
 					temp_class_type_as.set_rcurly_symbol (yyvs4.item (yyvsp4))
@@ -22189,7 +22189,6 @@ end
 feature {NONE} -- Table templates
 
 	yytranslate_template: SPECIAL [INTEGER] is
-			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -22237,7 +22236,6 @@ feature {NONE} -- Table templates
 		end
 
 	yyr1_template: SPECIAL [INTEGER] is
-			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
 			    0,  324,  324,  324,  324,  324,  324,  324,  324,  325,
@@ -22307,20 +22305,8 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes1_template: SPECIAL [INTEGER] is
-			-- Template for `yytypes1'
-		local
-			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1016)
-			yytypes1_template_1 (an_array)
-			yytypes1_template_2 (an_array)
-			Result := yyfixed_array (an_array)
-		end
-
-	yytypes1_template_1 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #1 of template for `yytypes1'.
-		do
-			yy_array_subcopy (an_array, <<
+			Result := yyfixed_array (<<
 			    1,   12,   12,   12,   12,   12,   12,    2,    2,    2,
 			  103,    1,    1,   12,   62,    1,   51,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -22429,21 +22415,13 @@ feature {NONE} -- Table templates
 			    1,    4,    1,    4,   87,  112,  112,   12,    1,    1,
 			    4,    4,    4,    4,    4,    1,   12,   48,    1,    1,
 			   48,   12,  110,  102,    4,    4,   94,    1,    3,    2,
-			   68,   79,    3,    2,   59,   68,    2,   59,   68,   79, yyDummy>>,
-			1, 1000, 0)
-		end
+			   68,   79,    3,    2,   59,   68,    2,   59,   68,   79,
 
-	yytypes1_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yytypes1'.
-		do
-			yy_array_subcopy (an_array, <<
 			    1,    3,    2,   59,   68,   12,   12,   89,   15,    4,
-			  104,   15,   15,   12,    1,    1,    1, yyDummy>>,
-			1, 17, 1000)
+			  104,   15,   15,   12,    1,    1,    1, yyDummy>>)
 		end
 
 	yytypes2_template: SPECIAL [INTEGER] is
-			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    4,    4,   12,   12,   12,   12,    4,
@@ -22464,20 +22442,8 @@ feature {NONE} -- Table templates
 		end
 
 	yydefact_template: SPECIAL [INTEGER] is
-			-- Template for `yydefact'
-		local
-			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1016)
-			yydefact_template_1 (an_array)
-			yydefact_template_2 (an_array)
-			Result := yyfixed_array (an_array)
-		end
-
-	yydefact_template_1 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #1 of template for `yydefact'.
-		do
-			yy_array_subcopy (an_array, <<
+			Result := yyfixed_array (<<
 			   14,  580,  315,  579,  580,    0,  482,  481,  480,    0,
 			   40,    1,  580,  317,    6,  580,    3,    0,  544,  552,
 			  551,  550,  549,  548,  547,  546,  545,  543,  542,  541,
@@ -22586,21 +22552,13 @@ feature {NONE} -- Table templates
 			    0,  324,    0,   59,  131,    0,    0,    9,  580,   13,
 			    0,    0,    0,  582,    0,    0,  279,    0,    0,  280,
 			  319,  178,  326,   61,  133,    0,   63,   53,  297,  303,
-			  311,    0,  302,  299,  300,  306,  301,  295,  309,    0, yyDummy>>,
-			1, 1000, 0)
-		end
+			  311,    0,  302,  299,  300,  306,  301,  295,  309,    0,
 
-	yydefact_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yydefact'.
-		do
-			yy_array_subcopy (an_array, <<
 			    0,  310,  305,  308,  307,  178,  178,  282,    0,  132,
-			  293,  291,  283,  312,    0,    0,    0, yyDummy>>,
-			1, 17, 1000)
+			  293,  291,  283,  312,    0,    0,    0, yyDummy>>)
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER] is
-			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			  417,  481,  427,  319,  919,  689,  542,  531,  501,  290,
@@ -22631,20 +22589,8 @@ feature {NONE} -- Table templates
 		end
 
 	yypact_template: SPECIAL [INTEGER] is
-			-- Template for `yypact'
-		local
-			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1016)
-			yypact_template_1 (an_array)
-			yypact_template_2 (an_array)
-			Result := yyfixed_array (an_array)
-		end
-
-	yypact_template_1 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #1 of template for `yypact'.
-		do
-			yy_array_subcopy (an_array, <<
+			Result := yyfixed_array (<<
 			  400, 1102,  478,  993, -32768, 1895, -32768, -32768, -32768, 1322,
 			   47, -32768, -32768, -32768, -32768, -32768, -32768,  791, -32768, -32768,
 			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
@@ -22753,21 +22699,13 @@ feature {NONE} -- Table templates
 			 2709, -32768,  281, -32768, -32768,  258,  221, -32768, -32768, -32768,
 			  578,  798,  603, -32768,  798,  154, -32768, 2451,  142, -32768,
 			 2878, -32768, -32768, -32768, -32768,  166, -32768, -32768, -32768, -32768,
-			 -32768,   61, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  395, yyDummy>>,
-			1, 1000, 0)
-		end
+			 -32768,   61, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  395,
 
-	yypact_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yypact'.
-		do
-			yy_array_subcopy (an_array, <<
 			  798, -32768, -32768, -32768, -32768, -32768, -32768, -32768,   97, -32768,
-			 -32768, -32768, -32768, -32768,   96,   90, -32768, yyDummy>>,
-			1, 17, 1000)
+			 -32768, -32768, -32768, -32768,   96,   90, -32768, yyDummy>>)
 		end
 
 	yypgoto_template: SPECIAL [INTEGER] is
-			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			 -359, -32768, -392, -32768,  326, -32768,  704,  549,  712, -317,
@@ -22798,21 +22736,8 @@ feature {NONE} -- Table templates
 		end
 
 	yytable_template: SPECIAL [INTEGER] is
-			-- Template for `yytable'
-		local
-			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 2945)
-			yytable_template_1 (an_array)
-			yytable_template_2 (an_array)
-			yytable_template_3 (an_array)
-			Result := yyfixed_array (an_array)
-		end
-
-	yytable_template_1 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #1 of template for `yytable'.
-		do
-			yy_array_subcopy (an_array, <<
+			Result := yyfixed_array (<<
 			    9,  143,  134,  446,  199,  317,  270,  150,  151,  159,
 			  142,  392,   12,  395,  258,   17,  312,  141,  269,  343,
 			  412,  247,  311,  135,  741,  486,  139,  525,  354,  270,
@@ -22921,14 +22846,8 @@ feature {NONE} -- Table templates
 			  168,  469,  -20,  565,  948,  326,  480,  244,  244,  881,
 			  989,  993,  996,  467, 1002,  267,  267,  -13,  267,   17,
 			  -13,  266,  266,  -13,  266,  464,  581,  463,  387,  385,
-			  456,  255,  254,  -16,  439,  389,  388,  587,  121,  120, yyDummy>>,
-			1, 1000, 0)
-		end
+			  456,  255,  254,  -16,  439,  389,  388,  587,  121,  120,
 
-	yytable_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yytable'.
-		do
-			yy_array_subcopy (an_array, <<
 			  944,  589,  253,  349,  267,  435,  253,  252,  251,  250,
 			  266,  252,  667,  250,  257,  474,  913,  414,  397,  256,
 			  -20,  413,  -20,  -20,  -20,  550,  407,  244,  244,  280,
@@ -23037,14 +22956,8 @@ feature {NONE} -- Table templates
 			   47,   46,    0,   45,    0,    0,    0,    6,    0,    0,
 			    0,    0,   44,    0,    0,    0,    0,    0,    0,    0,
 			    0,   43,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,   42,    0,    0,    0,    0,    0,    0, yyDummy>>,
-			1, 1000, 1000)
-		end
+			    0,    0,    0,   42,    0,    0,    0,    0,    0,    0,
 
-	yytable_template_3 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #3 of template for `yytable'.
-		do
-			yy_array_subcopy (an_array, <<
 			    0,    0,    0,    0,    0,    0,   41,   40,   39,   38,
 			   37,   36,   35,   34,   33,   32,   31,   30,   29,   28,
 			   27,   26,   25,   24,   23,   22,   21,   20,   19,   18,
@@ -23148,26 +23061,12 @@ feature {NONE} -- Table templates
 			  232,  231,  230,  229,  228,  227,   70,  240,  239,  238,
 			  237,  236,  235,  234,  233,  232,  231,  230,  229,  228,
 			  227,   70,  239,  238,  237,  236,  235,  234,  233,  232,
-			  231,  230,  229,  228,  227,   70, yyDummy>>,
-			1, 946, 2000)
+			  231,  230,  229,  228,  227,   70, yyDummy>>)
 		end
 
 	yycheck_template: SPECIAL [INTEGER] is
-			-- Template for `yycheck'
-		local
-			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 2945)
-			yycheck_template_1 (an_array)
-			yycheck_template_2 (an_array)
-			yycheck_template_3 (an_array)
-			Result := yyfixed_array (an_array)
-		end
-
-	yycheck_template_1 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #1 of template for `yycheck'.
-		do
-			yy_array_subcopy (an_array, <<
+			Result := yyfixed_array (<<
 			    0,   17,   12,  346,   56,  140,  116,   43,   44,   45,
 			   17,  273,    1,  275,  113,    4,  139,   17,  116,  192,
 			  294,   90,  139,   12,  683,  428,   15,  463,  212,  139,
@@ -23276,14 +23175,8 @@ feature {NONE} -- Table templates
 			   27,   46,    0,  526, 1000,   41,   76,  778,  779,  829,
 			  970,  971,  972,   34,  974,  971,  972,   86,  974,  968,
 			   89,  971,  972,   92,  974,   35,  549,   34,   31,   31,
-			   41,   15,   16,    0,   43,   15,   16,  560,   28,   29, yyDummy>>,
-			1, 1000, 0)
-		end
+			   41,   15,   16,    0,   43,   15,   16,  560,   28,   29,
 
-	yycheck_template_2 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #2 of template for `yycheck'.
-		do
-			yy_array_subcopy (an_array, <<
 			 1000,  564,   26,   43, 1000,   41,   26,   31,   32,   33,
 			 1000,   31,   42,   33,   44,  411,  876,   46,   35,   49,
 			   58,   47,   60,   61,   62,   49,   47,  838,  839,   85,
@@ -23392,14 +23285,8 @@ feature {NONE} -- Table templates
 			   65,   66,   -1,   68,   -1,   -1,   -1,   72,   -1,   -1,
 			   -1,   -1,   77,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   86,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   98,   -1,   -1,   -1,   -1,   -1,   -1, yyDummy>>,
-			1, 1000, 1000)
-		end
+			   -1,   -1,   -1,   98,   -1,   -1,   -1,   -1,   -1,   -1,
 
-	yycheck_template_3 (an_array: ARRAY [INTEGER]) is
-			-- Fill chunk #3 of template for `yycheck'.
-		do
-			yy_array_subcopy (an_array, <<
 			   -1,   -1,   -1,   -1,   -1,   -1,  111,  112,  113,  114,
 			  115,  116,  117,  118,  119,  120,  121,  122,  123,  124,
 			  125,  126,  127,  128,  129,  130,  131,  132,  133,  134,
@@ -23503,8 +23390,7 @@ feature {NONE} -- Table templates
 			   16,   17,   18,   19,   20,   21,   22,    8,    9,   10,
 			   11,   12,   13,   14,   15,   16,   17,   18,   19,   20,
 			   21,   22,    9,   10,   11,   12,   13,   14,   15,   16,
-			   17,   18,   19,   20,   21,   22, yyDummy>>,
-			1, 946, 2000)
+			   17,   18,   19,   20,   21,   22, yyDummy>>)
 		end
 
 feature {NONE} -- Semantic value stacks

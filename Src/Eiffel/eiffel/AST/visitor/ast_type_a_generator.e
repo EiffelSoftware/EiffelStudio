@@ -105,12 +105,10 @@ feature {NONE} -- Visitor implementation
 			t: UNEVALUATED_LIKE_TYPE
 		do
 			create t.make (l_as.anchor.name)
-			if l_as.attachment_mark /= Void then
-				if l_as.attachment_mark.is_bang then
-					t.set_attached_mark
-				else
-					t.set_detachable_mark
-				end
+			if l_as.has_attached_mark then
+				t.set_attached_mark
+			elseif l_as.has_detachable_mark then
+				t.set_detachable_mark
 			end
 			last_type := t
 		end
@@ -121,12 +119,10 @@ feature {NONE} -- Visitor implementation
 		do
 			create l_cur
 			l_cur.set_actual_type (current_class.actual_type)
-			if l_as.attachment_mark /= Void then
-				if l_as.attachment_mark.is_bang then
-					l_cur.set_attached_mark
-				else
-					l_cur.set_detachable_mark
-				end
+			if l_as.has_attached_mark then
+				l_cur.set_attached_mark
+			elseif l_as.has_detachable_mark then
+				l_cur.set_detachable_mark
 			end
 			last_type := l_cur
 		end
@@ -134,13 +130,11 @@ feature {NONE} -- Visitor implementation
 	process_formal_as (l_as: FORMAL_AS) is
 		do
 			create {FORMAL_A} last_type.make (l_as.is_reference, l_as.is_expanded, l_as.position)
-			if l_as.attachment_mark /= Void then
-				if l_as.attachment_mark.is_bang then
-					last_type.set_attached_mark
-					check last_type.is_attached end
-				else
-					last_type.set_detachable_mark
-				end
+			if l_as.has_attached_mark then
+				last_type.set_attached_mark
+				check last_type.is_attached end
+			elseif l_as.has_detachable_mark then
+				last_type.set_detachable_mark
 			elseif current_class.lace_class.is_attached_by_default then
 					-- It's not clear yet whether ECMA-367 will mark such types as attached or not.
 				-- last_type.set_is_attached
@@ -186,18 +180,21 @@ feature {NONE} -- Visitor implementation
 					last_type := l_type
 				end
 				if l_type /= Void then
-					if l_as.attachment_mark /= Void then
+					if l_as.has_attached_mark then
 						if l_type.is_basic then
 								-- Avoid modifying once values
 							l_type := l_type.duplicate
 							last_type := l_type
 						end
-						if l_as.attachment_mark.is_bang then
-							l_type.set_attached_mark
-							check l_type.is_attached end
-						else
-							l_type.set_detachable_mark
+						l_type.set_attached_mark
+						check l_type.is_attached end
+					elseif l_as.has_detachable_mark then
+						if l_type.is_basic then
+								-- Avoid modifying once values
+							l_type := l_type.duplicate
+							last_type := l_type
 						end
+						l_type.set_detachable_mark
 					elseif current_class.lace_class.is_attached_by_default then
 						if l_type.is_basic then
 								-- Avoid modifying once values
@@ -288,7 +285,7 @@ feature {NONE} -- Visitor implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

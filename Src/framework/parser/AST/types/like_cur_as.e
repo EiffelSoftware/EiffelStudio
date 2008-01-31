@@ -24,12 +24,15 @@ create
 
 feature{NONE} -- Initialization
 
-	make (c_as: KEYWORD_AS; l_as: KEYWORD_AS; m_as: SYMBOL_AS) is
+	make (c_as: KEYWORD_AS; l_as: KEYWORD_AS; m_as: SYMBOL_AS; a: like has_attached_mark; d: like has_detachable_mark) is
 			-- Create new LIKE_CURRENT AST node.
 		require
 			c_as_not_void: c_as /= Void
+			correct_attachment_status: not (a and d)
 		do
 			attachment_mark := m_as
+			has_attached_mark := a
+			has_detachable_mark := d
 			like_keyword := l_as
 			current_keyword := c_as
 			make_from_other (c_as)
@@ -37,6 +40,8 @@ feature{NONE} -- Initialization
 			like_keyword_set: like_keyword = l_as
 			current_keyword_set: current_keyword = c_as
 			attachment_mark_set: attachment_mark = m_as
+			has_attached_mark_set: has_attached_mark = a
+			has_detachable_mark_set: has_detachable_mark = d
 		end
 
 feature -- Visitor
@@ -46,6 +51,14 @@ feature -- Visitor
 		do
 			v.process_like_cur_as (Current)
 		end
+
+feature -- Status
+
+	has_attached_mark: BOOLEAN
+			-- Is attached mark specified?
+
+	has_detachable_mark: BOOLEAN
+			-- Is detachable mark specified?
 
 feature -- Roundtrip
 
@@ -63,11 +76,8 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			if attachment_mark = Void then
-				Result := other.attachment_mark = Void
-			elseif other.attachment_mark /= Void then
-				Result := attachment_mark.is_equivalent (other.attachment_mark)
-			end
+			Result := has_attached_mark = other.has_attached_mark and then
+				has_detachable_mark = other.has_detachable_mark
 		end
 
 feature -- Roundtrip/Token
@@ -99,19 +109,17 @@ feature -- Output
 	dump: STRING
 			-- Dump trace
 		do
-			Result := "like Current"
-			if attachment_mark /= Void then
-				Result.precede (' ')
-				if attachment_mark.is_bang then
-					Result.precede ('!')
-				else
-					Result.precede ('?')
-				end
+			if has_attached_mark then
+				Result := "!like Current"
+			elseif has_detachable_mark then
+				Result := "?like Current"
+			else
+				Result := "like Current"
 			end
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

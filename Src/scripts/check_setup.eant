@@ -382,7 +382,7 @@ Setup check complete and your configuration seems ok.
 		<exec executable="${find_bin} /C &quot;usage: LINK&quot; es_setup_check > NUL:" exit_code_variable="conf_msc_link_available" if="${conf_msc_link_available}=1100"/>
 		<delete file="es_setup_check"/>
 		<echo message="  -> link.exe found, exit code: $conf_msc_link_available, ok" if="${conf_msc_link_available}=0" />
-		<echo message="ERROR: link.exe not in path, exit code: $conf_msc_link_available, ! please check you have Microsofts Linker installed and that it apperars before cygwin's in your path." unless="${conf_msc_link_available}=0" />
+		<echo message="ERROR: link.exe not in path, exit code: $conf_msc_link_available, ! please check you have Microsofts Linker installed and that it appears before cygwin's in your path." unless="${conf_msc_link_available}=0" />
 		<set name="setup_error" value="" unless="$conf_msc_link_available=0" />
 		
 		<!-- check for midl -->
@@ -391,7 +391,7 @@ Setup check complete and your configuration seems ok.
 		<exec executable="${find_bin} /C &quot;MIDL1000&quot; es_setup_check > NUL:" exit_code_variable="conf_midl_available" if="${conf_midl_available}=1000"/>
 		<delete file="es_setup_check"/>
 		<echo message="  -> midl.exe found, exit code: $conf_midl_available, ok" if="${conf_midl_available}=0" />
-		<echo message="ERROR: midl.exe not in path, exit code: $conf_midl_available, ! please check you have Microsofts Midl Compiler installed and that it apperars in your path." unless="${conf_midl_available}=0" />
+		<echo message="ERROR: midl.exe not in path, exit code: $conf_midl_available, ! please check you have Microsofts Midl Compiler installed and that it appears in your path." unless="${conf_midl_available}=0" />
 		<set name="setup_error" value="" unless="$conf_midl_available=0" />
 		
 		<!-- check for csc -->
@@ -400,7 +400,7 @@ Setup check complete and your configuration seems ok.
 		<exec executable="${find_bin} /C &quot;fatal error CS2008: No inputs specified&quot; es_setup_check > NUL:" exit_code_variable="conf_csc_available" if="${conf_csc_available}=1"/>
 		<delete file="es_setup_check"/>
 		<echo message="  -> csc.exe found, exit code: $conf_csc_available, ok" if="${conf_csc_available}=0" />
-		<echo message="ERROR: csc.exe not in path, exit code: $conf_csc_available, ! please check you have Microsofts C# Compiler installed and that it apperars in your path." unless="${conf_csc_available}=0" />	
+		<echo message="ERROR: csc.exe not in path, exit code: $conf_csc_available, ! please check you have Microsofts C# Compiler installed and that it appears in your path." unless="${conf_csc_available}=0" />	
 		<set name="setup_error" value="" unless="$conf_csc_available=0" />
 	</target>
 

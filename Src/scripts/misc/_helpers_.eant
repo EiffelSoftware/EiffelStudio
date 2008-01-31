@@ -16,20 +16,36 @@
 		<unset name="no_return_code" />
 	</target>
 
-	<target name="install__file" >
-		<argument name="a_from_dir" />
-		<argument name="a_to_dir" />
-		<argument name="a_name" />
-		<geant target="install__file_as" arguments="$a_from_dir,$a_to_dir,$a_name,$a_name,false" />
-	</target>
-	<target name="install__exec_file" >
-		<argument name="a_from_dir" />
-		<argument name="a_to_dir" />
-		<argument name="a_name" />
-		<geant target="install__file_as" arguments="$a_from_dir,$a_to_dir,$a_name,$a_name,true" />
+	<target name="link_file" unless="${is_windows}" >
+		<argument name="a_from_filename" />
+		<argument name="a_to_filename" />
+		<exec executable="ln -f -s ${a_from_filename} ${a_to_filename}" accept_errors="true" exit_code_variable="no_return_code" />
+		<unset name="no_return_code" />
 	</target>
 
-	<target name="install__file_as" >
+	<target name="copy_file" >
+		<!-- Note: arguments can safely use '/' as path_separator -->
+		<argument name="a_from_dir" />
+		<argument name="a_to_dir" />
+		<argument name="a_name" />
+		<geant target="copy_file_as" arguments="$a_from_dir,$a_to_dir,$a_name,$a_name,false" />
+	</target>
+	<target name="copy_exec_file" >
+		<!-- Note: arguments can safely use '/' as path_separator -->
+		<argument name="a_from_dir" />
+		<argument name="a_to_dir" />
+		<argument name="a_name" />
+		<geant target="copy_file_as" arguments="$a_from_dir,$a_to_dir,$a_name,$a_name,true" />
+	</target>
+
+	<target name="copy_file_as" >
+		<!-- 
+			Copy file 'a_name' from 'a_from_dir' to 'a_to_dir' as 'a_new_name'
+			create 'a_to_dir' if needed		
+			
+			Note: 	arguments can safely use '/' as path_separator, 
+					since we use only geant's feature 					
+		-->
 		<argument name="a_from_dir" />
 		<argument name="a_to_dir" />
 		<argument name="a_name" />
@@ -37,39 +53,80 @@
 		<argument name="a_is_executable" />
 
 		<available dir="${a_from_dir}" resource="${a_name}" variable="tmp_available"/>
-		<geant target="_log" arguments="- Install file [${a_from_dir}${path_separator}${a_name}] to [${a_to_dir}${path_separator}${a_new_name}]" if="${tmp_available}=true"/>
-		<geant target="_log" arguments="- File not found [${a_from_dir}${path_separator}${a_name}]" if="${tmp_available}=false"/>
+		<geant target="_log" arguments="- Install file [${a_from_dir}/${a_name}] to [${a_to_dir}/${a_new_name}]" if="${tmp_available}=true"/>
+		<geant target="_log" arguments="- File not found [${a_from_dir}/${a_name}]" if="${tmp_available}=false"/>
+
+		<!-- create 'a_to_dir' if it does not exist, and if source file is available -->
+		<available resource="${a_to_dir}" variable="tmp_to_dir_available" if="${tmp_available}=true" />
+		<mkdir directory="${a_to_dir}" if="${tmp_to_dir_available}=false" />
+		<unset name="tmp_to_dir_available" />
+
+		<!-- copy source file to target directory -->
 		<copy dir="${a_from_dir}" file="${a_name}" to_file="${a_to_dir}/${a_new_name}" if="${tmp_available}=true"/>
 
-			<!-- executable property -->
+		<!-- ensure executable property -->
 		<set name="tmp_exec_available" value="$tmp_available" if="$a_is_executable" />
-		<geant target="made_file_executable" arguments="${a_new_name}" dir="$a_to_dir" if="${tmp_exec_available}=true" />
+		<geant target="made_file_executable" arguments="${a_new_name}" dir="${a_to_dir}" if="${tmp_exec_available}=true" />
 		<unset name="tmp_exec_available" />
 
 		<unset name="tmp_available" />
 	</target>
 
-	<target name="clean__folder" >
-		<argument name="a_folder" />
-		<geant target="_log" arguments="Cleaning folder: ${a_folder} ..." />
-		<exec executable="rmdir /q/s ${a_folder}" 	accept_errors="true" exit_code_variable="return_code" if="${is_windows}" />
-		<exec executable="\rm -rf ${a_folder}" 		accept_errors="true" exit_code_variable="return_code" unless="${is_windows}" />
-		<unset name="return_code" />
+	<target name="recursive_remove_file" >
+		<argument name="a_file" />
+		<geant target="_log" arguments="Recursive remove file: ${a_file} ..." />
+		<exec executable="del /s/q ${a_file}"							if="${is_windows}" 
+				accept_errors="true" exit_code_variable="no_return_code" />
+		<exec executable="find . -name $a_file -print | xargs \rm -f"	unless="${is_windows}"	
+				accept_errors="true" exit_code_variable="no_return_code" />
+		<unset name="no_return_code" />
 	</target>
 
-	<target name="clean__compile" >
+	<target name="clean_folder" >
+		<argument name="a_folder" />
+		<geant target="_log" arguments="Cleaning folder: ${a_folder} ..." />
+
+		<available resource="$a_folder" variable="a_folder_available" />
+		<geant target="_log" arguments=" -> no folder: ${a_folder}" if="$a_folder_available=false"/>
+
+		<set name="clean_folder_cmd" value="rmdir /q/s ${a_folder}" if="${is_windows}" />
+		<set name="clean_folder_cmd" value="\rm -rf ${a_folder}" unless="${is_windows}" />
+
+		<exec executable="$clean_folder_cmd" if="$a_folder_available=true"
+			accept_errors="true" exit_code_variable="no_return_code" />
+
+		<unset name="a_folder_available" />
+		<unset name="clean_folder_cmd" />
+		<unset name="no_return_code" />
+	</target>
+
+	<target name="clean_compile_target" >
 		<argument name="a_folder" />
 		<argument name="a_target" />
-		<geant target="_log" arguments="Cleaning compilation ${a_folder}/EIFGENs/$a_target ..." />
-		<exec executable="rmdir /q/s ${a_folder}\EIFGENs\${a_target}" 	accept_errors="true" exit_code_variable="return_code" if="${is_windows}" />
-		<exec executable="\rm -rf ${a_folder}/EIFGENs/${a_target}" 		accept_errors="true" exit_code_variable="return_code" unless="${is_windows}" />
-		<unset name="return_code" />
+		<geant target="_log" arguments="Cleaning compilation: ${a_folder}/EIFGENs/$a_target ..." />
+		<exec executable="rmdir /q/s ${a_folder}\EIFGENs\${a_target}"
+			accept_errors="true" exit_code_variable="no_return_code" if="${is_windows}" />
+		<exec executable="\rm -rf ${a_folder}/EIFGENs/${a_target}"
+			accept_errors="true" exit_code_variable="no_return_code" unless="${is_windows}" />
+		<unset name="no_return_code" />
+	</target>
+
+	<target name="uncompress_tar_gz" >
+		<argument name="a_file" />
+		<argument name="a_return_var" />
+		<geant target="_log" arguments="Uncompressing ${a_file} in ${cwd} ..." />
+		<exec executable="tar xvfz ${a_file}" accept_errors="true" exit_code_variable="${a_return_var}" 
+		/>
 	</target>
 
 	<target name="copy_full_tree">
 		<!-- Tool to copy a full tree without .svn dirs -->
 		<!-- Added, as geant copy does not copy empty directories *sigh* -->
 		<!-- TODO: update, once it is possile to copy empty directories with geant copy -->
+
+		<!--
+		Note: 	arguments should use ${path_separator} since we use <exec /> target
+		-->
 		<argument name="A_source_dir"/>
 		<argument name="A_target_dir"/>
 		

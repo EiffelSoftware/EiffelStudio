@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_doc_builder" default="help">
+	<description>
+		description: "doc_builder compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_doc_builder.dir}/_inc/_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}doc_builder${path_separator}doc_builder.ecf" />
+		<geant target="set_TARGET" 	arguments="doc_builder" />
+		<geant target="set_NAME" 	arguments="doc_builder" />
+	</target>
+
+</project>

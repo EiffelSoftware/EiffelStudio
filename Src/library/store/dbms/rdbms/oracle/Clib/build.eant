@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project name="build_store_oracle_clib" default="help">
+
+	<description>
+		description: "EiffelStore ORACLE Clib library compilation"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<available resource="${EIFFEL_SRC}/headers/apps" variable="tmp_available"/>
+		<setenv name="JDK_HOME" 
+			 value="${EIFFEL_SRC}${path_separator}headers${path_separator}apps${path_separator}jdk1.1.8" 
+			 if="${tmp_available}=true" />
+		<setenv name="ORACLE_HOME" 
+			 value="${EIFFEL_SRC}${path_separator}headers${path_separator}apps${path_separator}oracle" 
+			 if="${tmp_available}=true" />
+		<exec executable="finish_freezing -library" if="${tmp_available}=true" />
+		<setenv name="JDK_HOME" value="" />
+		<setenv name="ORACLE_HOME" value="" />
+	</target>
+	
+	<target name="clean" >
+	</target>
+
+	<target name="clobber" depend="clean" />
+	
+</project>

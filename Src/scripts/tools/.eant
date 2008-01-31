@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="LIST__all_" default="list">
+	<description>
+		description: "list all target tools"
+	</description>
+
+	<target name="list" >
+		<echo message="List all tools:" />
+		<geant target="_list_entry_" reuse_variables="true" >
+			<fileset
+				dir="${LIST__all_.absdir}"
+				include="@(*.eant)"
+				exclude="@(_*.eant|.eant)"
+				filename_variable="FS_GEANT_FILE"
+			/>
+		</geant>
+		<echo message="Usage: geant -b ${LIST__all_.absdir}${path_separator}$${SCRIPT.EANT: cf list}" />
+	</target>
+
+	<target name="_list_entry_" >
+		<!--
+		<echo message="geant -b ${LIST__all_.absdir}${path_separator}$FS_GEANT_FILE" />
+		-->
+		<echo message=" -> $FS_GEANT_FILE" />
+	</target>
+
+</project>

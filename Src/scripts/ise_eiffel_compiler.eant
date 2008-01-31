@@ -41,16 +41,16 @@
 		<argument name="a_res"  />
 		<argument name="a_msg"  />
 		<argument name="a_var"  />
-		<available resource="$a_res" variable="tmp_available"/>
+		<available resource="$a_res" variable="tmp_check_available"/>
 
 		<unset name="check_available__message" />
 		<set name="check_available__message" value="$a_msg" unless="-${a_msg}-=--" />
-		<unset name="check_available__message" if="${tmp_available}=true" />
+		<unset name="check_available__message" if="${tmp_check_available}=true" />
 		<echo message="$check_available__message" if="${check_available__message}" />
 		<unset name="check_available__message" />
 
-		<set name="$a_var" value="${tmp_available}" unless="-${a_var}-=--"/>
-		<unset name="tmp_available" />
+		<set name="$a_var" value="${tmp_check_available}" unless="-${a_var}-=--"/>
+		<unset name="tmp_check_available" />
 	</target>
 
 	<target name="made_file_executable" unless="${is_windows}" ><!-- if="$is_unix" -->
@@ -76,22 +76,22 @@
 
 		<echo message=" -> Copy '${a_exec_name}' from [$a_dir] to [$a_output_dir]" />
 
-		<available dir="$a_dir" resource="${a_exec_name}${exe}" variable="tmp_available" />
-		<copy dir="$a_dir" file="$a_exec_name${exe}" to_directory="$a_output_dir" if="${tmp_available}=true" />
-		<geant target="made_file_executable" arguments="${a_exec_name}${exe}" dir="$a_output_dir" if="${tmp_available}=true" />
-		<unset name="tmp_available" />
+		<available dir="$a_dir" resource="${a_exec_name}${exe}" variable="tmp_out_available" />
+		<copy dir="$a_dir" file="$a_exec_name${exe}" to_directory="$a_output_dir" if="${tmp_out_available}=true" />
+		<geant target="made_file_executable" arguments="${a_exec_name}${exe}" dir="$a_output_dir" if="${tmp_out_available}=true" />
+		<unset name="tmp_out_available" />
 
-		<available dir="$a_dir" resource="${a_exec_name}.melted" variable="tmp_available" unless="${a_from_f_code}=true" />
-		<copy dir="$a_dir" file="${a_exec_name}.melted" to_directory="$a_output_dir" if="${tmp_available}=true"/>
-		<unset name="tmp_available" />
+		<available dir="$a_dir" resource="${a_exec_name}.melted" variable="tmp_out_available" unless="${a_from_f_code}=true" />
+		<copy dir="$a_dir" file="${a_exec_name}.melted" to_directory="$a_output_dir" if="${tmp_out_available}=true"/>
+		<unset name="tmp_out_available" />
 
-		<available dir="$a_dir" resource="${a_exec_name}.dll" variable="tmp_available" if="${is_windows}" />
-		<copy dir="$a_dir" file="${a_exec_name}.dll" to_directory="$a_output_dir" if="${tmp_available}=true"/>
-		<unset name="tmp_available" />
+		<available dir="$a_dir" resource="${a_exec_name}.dll" variable="tmp_out_available" if="${is_windows}" />
+		<copy dir="$a_dir" file="${a_exec_name}.dll" to_directory="$a_output_dir" if="${tmp_out_available}=true"/>
+		<unset name="tmp_out_available" />
 
-		<available dir="$a_dir" resource="lib${a_exec_name}.dll" variable="tmp_available" if="${is_windows}" />
-		<copy dir="$a_dir" file="lib${a_exec_name}.dll" to_directory="$a_output_dir" if="${tmp_available}=true"/>
-		<unset name="tmp_available" />
+		<available dir="$a_dir" resource="lib${a_exec_name}.dll" variable="tmp_out_available" if="${is_windows}" />
+		<copy dir="$a_dir" file="lib${a_exec_name}.dll" to_directory="$a_output_dir" if="${tmp_out_available}=true"/>
+		<unset name="tmp_out_available" />
 
 		<unset name="tmp_ok" />
 	</target>
@@ -156,17 +156,17 @@
 		<set name="L_is_from_f_code" 	value="false" 	unless="${a_compilation_mode}=finalize" />
 
 		<!-- we can not rely on return_code, so let's check for existance of executable file -->
-		<set name="L_comp_dir"	value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target${path_separator}W_code"
+		<set name="L_ec_comp_dir"	value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target${path_separator}W_code"
 			if="${L_is_from_f_code}=false" />
-		<set name="L_comp_dir"	value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target${path_separator}F_code" 
+		<set name="L_ec_comp_dir"	value="${a_comp_dir}${path_separator}EIFGENs${path_separator}$a_target${path_separator}F_code" 
 			if="${L_is_from_f_code}=true" />
 
-		<available dir="$L_comp_dir" resource="${a_name}${exe}" variable="tmp_available" />
-		<available dir="$L_comp_dir" resource="${a_name}.dll" variable="tmp_available" if="$tmp_available=false" />
-		<available dir="$L_comp_dir" resource="${a_name}.so" variable="tmp_available" if="$tmp_available=false" />
-		<set name="return_code" value="0" if="$tmp_available=true" />
-		<set name="return_code" value="1" if="$tmp_available=false" />
-		<unset name="tmp_available" />
+		<available dir="$L_ec_comp_dir" resource="${a_name}${exe}" variable="tmp_output_available" />
+		<available dir="$L_ec_comp_dir" resource="${a_name}.dll" variable="tmp_output_available" if="$tmp_output_available=false" />
+		<available dir="$L_ec_comp_dir" resource="${a_name}.so" variable="tmp_output_available" if="$tmp_output_available=false" />
+		<set name="return_code" value="0" if="$tmp_output_available=true" />
+		<set name="return_code" value="1" if="$tmp_output_available=false" />
+		<unset name="tmp_output_available" />
 
 		<echo message=" -> Compilation succeeded!" 			if="${return_code}=0" />
 		<set name="tmp_output_dir" value="$a_output_dir" 	if="${return_code}=0" />
@@ -175,11 +175,11 @@
 
 		<geant target="copy_to_output_dir" 					unless="-${tmp_output_dir}-=--" >
 			<argument name="a_exec_name" 	value="$a_name" />
-			<argument name="a_dir" 			value="${L_comp_dir}" />
+			<argument name="a_dir" 			value="${L_ec_comp_dir}" />
 			<argument name="a_output_dir" 	value="$a_output_dir" />
 			<argument name="a_from_f_code" 	value="$L_is_from_f_code" />
 		</geant>
-		<unset name="L_comp_dir" />
+		<unset name="L_ec_comp_dir" />
 		<unset name="L_is_from_f_code" />
 		<unset name="tmp_output_dir" />
 	</target>
@@ -188,11 +188,11 @@
 		<argument name="a_target" />
 		<argument name="a_comp_dir" />
 		<echo message="Clean [$a_target] from [$a_comp_dir]." />
-		<set name="a_dir" value="${a_comp_dir}${path_separator}EIFGENs${path_separator}${a_target}" />
-		<available resource="$a_dir" variable="tmp_available"/>
-		<delete directory="$a_dir" if="${tmp_available}=true" />
-		<unset name="a_dir" />
-		<unset name="tmp_available" />
+		<set name="l_dir" value="${a_comp_dir}${path_separator}EIFGENs${path_separator}${a_target}" />
+		<available resource="$l_dir" variable="tmp_clean_available"/>
+		<delete directory="$l_dir" if="${tmp_clean_available}=true" />
+		<unset name="l_dir" />
+		<unset name="tmp_clean_available" />
 	</target>
 
 	<target name="finalize" depend="init">

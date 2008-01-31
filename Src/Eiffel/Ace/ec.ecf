@@ -62,7 +62,7 @@
 		<setting name="multithreaded" value="false"/>
 		<variable name="batch_preferences" value="true"/>
 		<variable name="batch_framework" value="true"/>
-		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false"/>
+		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true" />
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf" readonly="false">
 			<condition>
 				<platform value="windows"/>
@@ -82,7 +82,7 @@
 			<cluster name="interface_shared" location="$|shared\" recursive="true"/>
 			<cluster name="tty" location="$|tty\" recursive="true"/>
 		</cluster>
-		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\no_communication" recursive="true"/>
+		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\no_communication\" recursive="true"/>
 	</target>
 	<target name="batch_unix" extends="batch">
 		<description>Compiling UNIX batch compiler on other platforms than Windows</description>
@@ -145,6 +145,7 @@
 			</condition>
 		</external_object>
 		<variable name="batch_framework" value="false"/>
+		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_gui" location="$EIFFEL_SRC\framework\configuration\configuration_gui.ecf" readonly="false"/>
 		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf" readonly="false"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf" readonly="false"/>
@@ -170,14 +171,13 @@
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="false"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="false" use_application_options="true"/>
-		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false"/>
 		<cluster name="compiler_api_profiler" location="$EIFFEL_SRC\Eiffel\API\profiler\" recursive="true"/>
 		<cluster name="compiler_api_ql" location="$EIFFEL_SRC\Eiffel\API\query_language\" recursive="true"/>
 		<cluster name="compiler_api_queries" location="$EIFFEL_SRC\Eiffel\API\queries\" recursive="true"/>
 		<cluster name="compiler_framework" location="$EIFFEL_SRC\Eiffel\API\framework\" recursive="true"/>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
-		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="flat_short_ast" location="$EIFFEL_SRC\Eiffel\flat_short\AST\"/>
+		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<file_rule>
 				<exclude>/lite$</exclude>

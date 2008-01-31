@@ -17,6 +17,9 @@
 			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}hallow${path_separator}hallow.ecf" />
 		<geant target="set_TARGET" 	arguments="hallow" />
 		<geant target="set_NAME" 	arguments="hallow" />
+
+		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="Skipped: [hallow] is a Windows-only application" unless="${is_windows}"/>
 	</target>
 
 </project>

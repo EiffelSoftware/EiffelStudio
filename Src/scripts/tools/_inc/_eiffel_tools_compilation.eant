@@ -23,6 +23,13 @@
 	<target name="init">
 		<set name="_COMP_DIR" value="$cwd" unless="${_COMP_DIR}" />
 		<set name="_OUT_DIR" value="$_COMP_DIR" unless="${_OUT_DIR}" />
+
+		<!-- reset variables -->
+		<unset name="_ECF" />
+		<unset name="_TARGET" />
+		<unset name="_NAME" />
+		<unset name="_SKIP" />
+		<unset name="_SKIP_MESSAGE" />
 		<!-- You have to set the following values
 		<geant target="set_ECF"		arguments="path_to_ecf" />
 		<geant target="set_TARGET"	arguments="target_name" />
@@ -175,25 +182,30 @@
 	<target name="set_ECF" > <!-- Set $_ECF -->
 		<argument name="a_value" />
 		<set name="_ECF" value="$a_value" />
+		<unset name="_ECF" if="-$a_value-=--" />
 	</target>
 
 	<target name="set_TARGET" > <!-- Set $_TARGET -->
 		<argument name="a_value" />
 		<set name="_TARGET" value="$a_value" />
+		<unset name="_TARGET" if="-$a_value-=--" />
 	</target>
 
 	<target name="set_NAME" > <!-- Set $_NAME -->
 		<argument name="a_value" />
 		<set name="_NAME" value="$a_value" />
+		<unset name="_NAME" if="-$a_value-=--" />
 	</target>
 
 	<target name="set_SKIP" > <!-- Set $_SKIP -->
 		<argument name="a_value" />
 		<set name="_SKIP" value="$a_value" />
+		<unset name="_SKIP" if="-$a_value-=--" />
 	</target>
 	<target name="set_SKIP_MESSAGE" > <!-- Set $_SKIP_MESSAGE -->
 		<argument name="a_mesg" />
 		<set name="_SKIP_MESSAGE" value="$a_mesg" />
+		<unset name="_SKIP_MESSAGE" if="-$a_value-=--" />
 	</target>
 
 	<target name="_tpl_compile_" depend="init_skip" unless="$_SKIP=true">

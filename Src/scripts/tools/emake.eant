@@ -6,7 +6,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${PROJECT_emake.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+		<parent location="${PROJECT_emake.dir}/_inc/_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
 		</parent>
 	</inherit>
@@ -17,6 +17,9 @@
 			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}eiffel_make${path_separator}emake.ecf" />
 		<geant target="set_TARGET" 	arguments="emake" />
 		<geant target="set_NAME" 	arguments="emake" />
+
+		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="Skipped: [emake] is a Windows only application" unless="${is_windows}"/>
 	</target>
 
 </project>

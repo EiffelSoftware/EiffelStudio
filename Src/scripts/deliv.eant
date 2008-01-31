@@ -297,9 +297,9 @@
 		<geant target="get_bin__" arguments="ec_bench,${_BINARY_DIR},ec${exe}" />
 		<geant target="get_bin__" arguments="estudio,${_BINARY_DIR},estudio${exe}" />
 		<geant target="get_bin__" arguments="quick_finalize,${_BINARY_DIR},quick_finalize${exe}" />
-		<geant target="get_bin__" arguments="finish_freezing,${_BINARY_DIR},finish_freezing${exe}"  if="$is_windows"/>
-		<geant target="get_bin__" arguments="h2e,${_BINARY_DIR},h2e${exe}" if="$is_windows" />
-		<geant target="get_bin__" arguments="emake,${_BINARY_DIR},emake${exe}"  if="$is_windows"/>
+		<geant target="get_bin__" arguments="finish_freezing,${_BINARY_DIR},finish_freezing${exe}"  />
+		<geant target="get_bin__" arguments="h2e,${_BINARY_DIR},h2e${exe}" />
+		<geant target="get_bin__" arguments="emake,${_BINARY_DIR},emake${exe}"  />
 		<geant target="get__wizards_compiled" arguments="${_BINARY_DIR},wizards_compiled" />
 		<geant target="get_bin__" arguments="esbuilder,${_BINARY_DIR},esbuilder${exe}" />
 

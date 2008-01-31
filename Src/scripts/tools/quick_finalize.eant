@@ -6,7 +6,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${PROJECT_quick_finalize.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+		<parent location="${PROJECT_quick_finalize.absdir}/_inc/_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
 		</parent>
 	</inherit>

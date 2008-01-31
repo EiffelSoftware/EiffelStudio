@@ -6,7 +6,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${PROJECT_dotnet_consumer.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+		<parent location="${PROJECT_dotnet_consumer.absdir}/_inc/_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
 			<redefine target="after"/>
 		</parent>

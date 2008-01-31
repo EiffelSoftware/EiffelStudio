@@ -17,6 +17,9 @@
 			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}reg2wix${path_separator}reg2wix.ecf" />
 		<geant target="set_TARGET" 	arguments="reg2wix" />
 		<geant target="set_NAME" 	arguments="reg2wix" />
+
+		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="Skipped: [reg2wix] is a Windows-only application" unless="${is_windows}"/>
 	</target>
 
 </project>

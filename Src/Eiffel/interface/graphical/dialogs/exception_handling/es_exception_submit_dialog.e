@@ -14,8 +14,11 @@ inherit
 	ES_DIALOG
 		rename
 			make as make_dialog
+		redefine
+			on_after_initialized
 		end
 
+inherit {NONE}
 	SYSTEM_CONSTANTS
 		export
 			{NONE} all
@@ -74,9 +77,6 @@ feature {NONE} -- Initialization
 			l_hbox.extend (l_user_label)
 			l_hbox.disable_item_expand (l_user_label)
 			create username_text
-			if is_user_remembered.item then
-				username_text.set_text (remembered_username.item)
-			end
 			username_text.set_minimum_width (190)
 			register_action (username_text.change_actions, agent enable_login)
 			l_hbox.extend (username_text)
@@ -89,9 +89,6 @@ feature {NONE} -- Initialization
 			l_hbox.extend (l_pass_label)
 			l_hbox.disable_item_expand (l_pass_label)
 			create password_text
-			if is_user_remembered.item then
-				password_text.set_text (remembered_password.item)
-			end
 			register_action (password_text.change_actions, agent enable_login)
 			password_text.set_minimum_width (190)
 			l_hbox.extend (password_text)
@@ -103,11 +100,16 @@ feature {NONE} -- Initialization
 			create l_hbox
 			l_hbox.extend (create {EV_CELL})
 			create remember_me_check.make_with_text ("Remember me")
-			if is_user_remembered.item then
-				remember_me_check.enable_select
-			end
+			register_action (remember_me_check.select_actions, agent on_remember_me_toggled)
 			l_hbox.extend (remember_me_check)
 			l_hbox.disable_item_expand (remember_me_check)
+
+			if not session_manager.is_service_available then
+					-- Remembering the user's details uses the session manager service, so if it's unavailble then
+					-- we there is no point showing the check mark
+				remember_me_check.hide
+			end
+
 			create login_button.make_with_text ("Login...")
 			login_button.set_minimum_width ({ES_UI_CONSTANTS}.dialog_button_width)
 			register_action (login_button.select_actions, agent on_login)
@@ -212,12 +214,20 @@ feature {NONE} -- Initialization
 			set_button_text ({ES_DIALOG_BUTTONS}.ok_button, "Submit")
 			set_button_action_before_close ({ES_DIALOG_BUTTONS}.ok_button, agent on_submit)
 
-			if is_user_remembered.item then
-				register_kamikaze_action (show_actions, agent on_login)
-			end
-
 			description_text.focus_in_actions.extend (agent on_focus_in)
 			description_text.focus_out_actions.extend (agent on_focus_out)
+		end
+
+	on_after_initialized
+			-- Use to perform additional creation initializations, after the UI has been created.	
+		do
+			Precursor {ES_DIALOG}
+			if is_user_remembered then
+				username_text.set_text (remembered_username)
+				password_text.set_text (remembered_password)
+				remember_me_check.enable_select
+				register_kamikaze_action (show_actions, agent on_login)
+			end
 		end
 
 feature {NONE} -- Access
@@ -225,31 +235,38 @@ feature {NONE} -- Access
 	support_login: COMM_SUPPORT_BUG_REPORTER
 			-- Reporter used to report bugs to the support system
 
-	is_user_remembered: BOOLEAN_REF
-			-- Indicates if user login information was remembered
-		once
-			create Result
-			Result.set_item (False)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	remembered_username: CELL [STRING_GENERAL]
+	remembered_username: STRING_GENERAL
 			-- Last remembered user name
-		once
-			create Result.put ("")
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+			is_user_remembered: is_user_remembered
+		do
+			if session_manager.is_service_available then
+				Result ?= session_data.value (username_session_id)
+			end
+			if Result = Void then
+				create {STRING_32} Result.make_empty
+			end
 		ensure
 			result_attached: Result /= Void
-			result_item_attached: Result.item /= Void
 		end
 
-	remembered_password: CELL [STRING_GENERAL]
+	remembered_password: STRING_GENERAL
 			-- Last remembered password
-		once
-			create Result.put ("")
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+			is_user_remembered: is_user_remembered
+		do
+			if session_manager.is_service_available then
+				Result ?= session_data.value (password_session_id)
+			end
+			if Result = Void then
+				create {STRING_32} Result.make_empty
+			end
 		ensure
 			result_attached: Result /= Void
-			result_item_attached: Result.item /= Void
 		end
 
 	icon: EV_PIXEL_BUFFER
@@ -300,6 +317,19 @@ feature {NONE} -- Access
 
 feature {NONE} -- Status report
 
+	is_user_remembered: BOOLEAN
+			-- Indicates if user login information was remembered
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+		do
+			if session_manager.is_service_available then
+				if {l_ref: !BOOLEAN_REF} session_data.value_or_default (remembered_session_id, False) then
+					Result := l_ref.item
+				end
+			end
+		end
+
 	is_synopsis_available: BOOLEAN
 			-- Determines if a synopsis has been entered by the user
 		require
@@ -344,14 +374,6 @@ feature {NONE} -- Action handlers
 					support_login.force_logout
 					support_login.attempt_logon (username_text.text, password_text.text, remember_me_check.is_selected)
 					if support_login.is_logged_in then
-						is_user_remembered.set_item (remember_me_check.is_selected)
-						if remember_me_check.is_selected then
-							remembered_username.put (username_text.text)
-							remembered_password.put (password_text.text)
-						else
-							remembered_username.put ("")
-							remembered_password.put ("")
-						end
 						logged_in_label.set_text ("You are currently logged in as " + username_text.text + " ")
 						logged_in_label.show
 						log_out_link.show
@@ -412,6 +434,30 @@ feature {NONE} -- Action handlers
 			else
 				create l_error.make_standard ("There was a problem submitting the problem report. Please submit is manually at http://support.eiffel.com.")
 				l_error.show (dialog)
+			end
+		end
+
+	on_remember_me_toggled
+			-- Called when the user toggles the "remember me" check box.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_remember: BOOLEAN
+		do
+			if session_manager.is_service_available then
+				l_remember := remember_me_check.is_selected
+				session_data.set_value (l_remember, remembered_session_id)
+				if l_remember then
+					session_data.set_value (username_text.text, username_session_id)
+					session_data.set_value (password_text.text, password_session_id)
+				else
+						-- Clear remembered data
+					session_data.set_value (Void, username_session_id)
+					session_data.set_value (Void, password_session_id)
+				end
+					-- Store session information incase user selects to quit ES.
+				session_manager.service.store (session_data)
 			end
 		end
 
@@ -697,6 +743,12 @@ feature {NONE} -- Reporting
 			l_thanks.set_sub_title ("Thank you for the bug report")
 			l_thanks.show (dialog)
 		end
+
+feature {NONE} -- Constants
+
+	username_session_id: STRING_8 = "com.eiffel.exception_submit_dialog.username"
+	password_session_id: STRING_8 = "com.eiffel.exception_submit_dialog.password"
+	remembered_session_id: STRING_8 = "com.eiffel.exception_submit_dialog.remembered"
 
 invariant
 	support_reporter: support_login /= Void

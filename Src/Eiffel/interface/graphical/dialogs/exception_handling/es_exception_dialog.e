@@ -219,18 +219,12 @@ feature {NONE} -- Action handlers
 
 	on_ignore
 			-- Called when the user selects the Ignore button
-		require
-			is_initialized: is_initialized
-			not_is_recycled: not is_recycled
 		do
 			--| Do nothing
 		end
 
 	on_restart_now
 			-- Called when the user selects the Restart button
-		require
-			is_initialized: is_initialized
-			not_is_recycled: not is_recycled
 		do
 				-- Launch new EiffelStudio process
 			(create {COMMAND_EXECUTOR}).execute ("%"" + (create {EIFFEL_LAYOUT}).eiffel_layout.estudio_command_name + "%"")
@@ -241,9 +235,6 @@ feature {NONE} -- Action handlers
 
 	on_quit
 			-- Called when the user selects the Quit button
-		require
-			is_initialized: is_initialized
-			not_is_recycled: not is_recycled
 		do
 			(create {EXCEPTIONS}).die (-1)
 		end
@@ -300,6 +291,9 @@ feature {NONE} -- Action handlers
 		do
 			create l_dialog.make (support_login)
 			l_dialog.show (dialog)
+			if l_dialog.dialog_result = l_dialog.dialog_buttons.ok_button then
+				submit_bug_button.disable_sensitive
+			end
 		end
 
 feature -- Button constants

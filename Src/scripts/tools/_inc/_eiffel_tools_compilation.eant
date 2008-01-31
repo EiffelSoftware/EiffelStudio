@@ -77,7 +77,7 @@
 	</target>
 
 	<target name="clean" depend="init_skip" unless="$_SKIP=true">
-		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}${path_separator}..${path_separator}.." 
+		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}/../.." 
 			file="ise_eiffel_compiler.eant"
 			target="clean" 
 			fork="false"
@@ -106,6 +106,67 @@
 		<set name="_COMP_DIR" value="$a_comp_dir" unless="-$a_comp_dir-=--" />
 		<set name="_OUT_DIR" value="$a_out_dir" unless="-$a_out_dir-=--" />
 		<geant target="_tpl_compile_" arguments="$a_comp_mode" />
+	</target>
+	
+<!-- F_code output usage -->
+	<target name="generate_f_code" depend="init" >
+		<argument name="a_comp_dir" />
+		<argument name="a_out_dir" />
+		<set name="_COMP_DIR" value="$a_comp_dir" unless="-$a_comp_dir-=--" />
+
+		<geant target="require" arguments="true" />
+		<geant target="before" />
+
+		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}/../.." 
+			file="ise_eiffel_compiler.eant"
+			target="finalize_with_options" 
+			fork="false"
+			reuse_variables="true"
+			>
+			<argument name="a_ecf" value="$_ECF" />
+			<argument name="a_target" value="$_TARGET" />
+			<argument name="a_name" value="$_NAME" />
+			<argument name="a_comp_dir" value="$_COMP_DIR" />
+			<argument name="a_output_dir" value="" />
+			<argument name="a_clean" value="" />
+			<argument name="a_batch" value="" />
+			<argument name="a_c_compile" value="false" />
+		</geant>
+		<echo message="f code generated" if="$return_code=0" />
+		<mkdir directory="$a_out_dir" />
+		<geant target="get_abs_cwd" arguments="l_abs_out_dir" dir="$a_out_dir" />
+		<echo message="go" if="$return_code=0" />
+		<copy dir="$_COMP_DIR/EIFGENs/$_TARGET/F_code" to_directory="$l_abs_out_dir/${_TARGET}_${_NAME}__F_code" >
+			<fileset include="@(**/*)" />
+		</copy>		
+		<unset name="l_abs_out_dir" />
+		<geant target="after" />
+	</target>
+
+	<target name="c_compile_f_code" depend="init" >
+		<argument name="a_comp_dir" />
+		<argument name="a_out_dir" />
+		<set name="_COMP_DIR" value="$a_comp_dir" unless="-$a_comp_dir-=--" />
+
+		<geant target="require" arguments="true" />
+		<geant target="before" />
+
+		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}/../.." 
+			file="ise_eiffel_compiler.eant"
+			target="finalize_with_options" 
+			fork="false"
+			reuse_variables="true"
+			>
+			<argument name="a_ecf" value="$_ECF" />
+			<argument name="a_target" value="$_TARGET" />
+			<argument name="a_name" value="$_NAME" />
+			<argument name="a_comp_dir" value="$_COMP_DIR" />
+			<argument name="a_output_dir" value="" />
+			<argument name="a_clean" value="" />
+			<argument name="a_batch" value="" />
+			<argument name="a_c_compile" value="false" />
+		</geant>
+		<geant target="after" />
 	</target>
 
 <!-- Implementation -->
@@ -149,7 +210,7 @@
 		<exit code="1" />
 		-->
 
-		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}${path_separator}..${path_separator}.." 
+		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}/../.." 
 			file="ise_eiffel_compiler.eant"
 			target="$a_mode" 
 			fork="false"
@@ -162,6 +223,13 @@
 			<argument name="a_output_dir" value="$_OUT_DIR"/>
 		</geant>
 		<geant target="after" />
+	</target>
+
+	<target name="get_abs_cwd" >
+		<!-- get absolute path into $$varname            -->
+		<!-- the result is using the good path_separator -->
+		<argument name="varname" />
+		<set name="$varname" value="$cwd" />
 	</target>
 
 </project>

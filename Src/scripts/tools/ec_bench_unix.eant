@@ -5,7 +5,7 @@
 		description: "ec bench unix compilation"
 	</description>
 	<inherit>
-		<parent location="${PROJECT_ec_bench_unix.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+		<parent location="${PROJECT_ec_bench_unix.absdir}/_inc/_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
 		</parent>
 	</inherit>

@@ -5,7 +5,7 @@
 		description: "esbuilder compilation"
 	</description>
 	<inherit>
-		<parent location="${PROJECT_esbuilder.dir}${path_separator}_inc${path_separator}_eiffel_tools_compilation.eant">
+		<parent location="${PROJECT_esbuilder.absdir}/_inc/_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
 			<redefine target="before"/>
 		</parent>

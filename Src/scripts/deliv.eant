@@ -334,7 +334,9 @@
 		<geant target="get_bin__" arguments="compile_all,${a_binary_dir},compile_all${exe}" />
 		<geant target="get_bin__" arguments="eimgemb,${a_binary_dir},eimgemb${exe}" />
 		<geant target="get_bin__" arguments="escln,${a_binary_dir},escln${exe}" />
-		<geant target="get_bin__" arguments="espawn,${a_binary_dir},espawn${exe}" if="${is_windows}" />
+		<geant target="get_bin__" arguments="espawn,${a_binary_dir},espawn${exe}" if="$is_windows" />
+		<geant target="get_bin__" arguments="hallow,${a_binary_dir},hallow${exe}" if="$is_windows"  />
+		<geant target="get_bin__" arguments="reg2wix,${a_binary_dir},reg2wix${exe}" if="$is_windows" />
 		<geant target="get_bin__" arguments="doc_builder,${a_binary_dir},doc_builder${exe}" />
 	</target>
 
@@ -740,6 +742,8 @@
 		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},eimgemb${exe}" />
 		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},escln${exe}" />
 		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},espawn${exe}" if="${is_windows}" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},hallow${exe}" if="${is_windows}" />
+		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},reg2wix${exe}" if="${is_windows}" />
 		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},doc_builder${exe}" />
 	</target>
 

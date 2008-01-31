@@ -6,7 +6,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${PROJECT_hallow.dir}/_inc/_eiffel_tools_compilation.eant">
+		<parent location="${PROJECT_hallow.absdir}/_inc/_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
 		</parent>
 	</inherit>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_reg2wix" default="help">
+	<description>
+		description: "reg2wix compilation"
+	</description>
+
+	<inherit>
+		<parent location="${PROJECT_reg2wix.absdir}/_inc/_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" 
+			arguments="${EIFFEL_SRC}${path_separator}tools${path_separator}reg2wix${path_separator}reg2wix.ecf" />
+		<geant target="set_TARGET" 	arguments="reg2wix" />
+		<geant target="set_NAME" 	arguments="reg2wix" />
+	</target>
+
+</project>

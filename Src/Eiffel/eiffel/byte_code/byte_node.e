@@ -103,9 +103,9 @@ feature -- Eiffel source line information
 					end
 					l_buffer := context.buffer
 					l_buffer.put_new_line
-					l_buffer.put_string(RTNHOOK_OPEN)
+					l_buffer.put_string(RTHOOK_OPEN)
 					l_buffer.put_integer(lnr)
-					l_buffer.put_string(RTNHOOK_CLOSE)
+					l_buffer.put_two_character (')', ';')
 				end
 			end
 		end
@@ -125,9 +125,9 @@ feature -- Eiffel source line information
 					end
 					l_buffer := context.buffer
 					l_buffer.put_new_line
-					l_buffer.put_string (RTNHOOK_OPEN)
+					l_buffer.put_string (RTHOOK_OPEN)
 					l_buffer.put_integer (lnr)
-					l_buffer.put_string (RTNHOOK_CLOSE)
+					l_buffer.put_two_character (')', ';')
 				end
 			end
 		end
@@ -171,7 +171,7 @@ feature -- Eiffel source line information
 						l_buffer.put_new_line
 						l_buffer.put_string(RTNHOOK_OPEN)
 						l_buffer.put_integer(lnr)
-						l_buffer.put_string(RTNHOOK_CLOSE)
+						l_buffer.put_two_character (')', ';')
 					end
 				end
 			end
@@ -193,9 +193,9 @@ feature -- Eiffel source line information
 
 feature {NONE} -- Implementation
 
+	RTHOOK_OPEN: STRING = "RTHOOK("
 	RTNHOOK_OPEN: STRING = "RTNHOOK("
-	RTNHOOK_CLOSE: STRING = ");"
-	LINE_INFO: STRING = "#line"
+	LINE_INFO: STRING = "#line "
 		-- String constants for generating debugging information.
 
 feature

@@ -10,8 +10,9 @@ class
 	DBG_EXCEPTION_HANDLER
 
 inherit
-
 	EXCEP_CONST
+
+	SESSION_DATA_I
 
 create
 	make_handling_by_name

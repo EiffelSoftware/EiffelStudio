@@ -19,6 +19,11 @@ inherit
 			make as ht_make
 		end
 
+	SESSION_DATA_I
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 

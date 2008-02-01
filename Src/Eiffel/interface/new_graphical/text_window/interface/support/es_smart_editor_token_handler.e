@@ -78,13 +78,15 @@ feature -- Query
 			-- `a_token': Token to test for applicablity.
 			-- `Result': True if the token can be user; False otherwise.
 		do
-			if
-				{l_class_stone: !CLASSI_STONE} editor.stone and then
-				{l_class_i: !EIFFEL_CLASS_I} l_class_stone.class_i and then
-				{l_ky_token: !EDITOR_TOKEN_KEYWORD} a_token and then
-				{l_image: !STRING_8} a_token.image
-			then
-				Result := contract_keyword_token_images.has (l_image)
+			if {l_class_stone: !CLASSI_STONE} editor.stone then
+					-- Nested if because of a code generation bug.
+				if
+					{l_class_i: !EIFFEL_CLASS_I} l_class_stone.class_i and then
+					{l_ky_token: !EDITOR_TOKEN_KEYWORD} a_token and then
+					{l_image: !STRING_8} a_token.image
+				then
+					Result := contract_keyword_token_images.has (l_image)
+				end
 			end
 
 			if Result then
@@ -208,7 +210,7 @@ feature -- Basic operations
 
 					if l_token = a_token then
 							-- Token located, adjust the offset
-						l_y_offset := (a_line - 1) * editor.line_height
+						l_y_offset := a_y - (a_y \\ editor.line_height)
 					end
 				end
 			end

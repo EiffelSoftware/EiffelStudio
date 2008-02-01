@@ -137,12 +137,23 @@ feature -- Element change
 			-- `a_value': Data to set in sessions, or Void to remove it.
 			-- `a_id': An id to index and store the session data with.
 		local
-			l_value: ANY
+			l_old_value: ANY
 		do
-			l_value := value (a_id)
-			if not equal (l_value, a_value) then
+			l_old_value := value (a_id)
+			if not equal (l_old_value, a_value) then
+				if {l_old_data: !SESSION_DATA_I} l_old_value then
+						-- Remove current session as the owner of the data
+					l_old_data.set_session (Void)
+				end
+				
 				is_dirty := True
 				data.force (box_value (a_value), a_id)
+				if a_value /= Void then
+					if {l_data: !SESSION_DATA_I} a_value and then l_data.session /= Current then
+							-- Set current session as owner of the data
+						l_data.set_session (Current)
+					end
+				end
 				value_changed_event.publish ([Current, a_id])
 			end
 		end
@@ -174,6 +185,14 @@ feature {SESSION_MANAGER_S} -- Element change
 				l_change_events := value_changed_event
 				data := l_data.twin
 
+				l_data.do_all (agent (a_ia_value: ANY)
+						-- Set session as owner on new, loaded data.
+					do
+						if {l_session_data: !SESSION_DATA_I} a_ia_value then
+							l_session_data.set_session (Current)
+						end
+					end)
+
 				if l_old_data.is_empty then
 						-- Notify subscribers of all new changes
 					l_cursor := l_data.new_cursor
@@ -203,6 +222,10 @@ feature {SESSION_MANAGER_S} -- Element change
 						-- Publish events for removed data
 					l_cursor := l_old_data.new_cursor
 					from l_cursor.start until l_cursor.after loop
+						if {l_session_data: !SESSION_DATA_I} l_cursor.item then
+								-- Remove session as owner of the data
+							l_session_data.set_session (Void)
+						end
 						l_change_events.publish ([Current, l_cursor.key])
 						l_cursor.forth
 					end
@@ -290,6 +313,26 @@ feature {NONE} -- Helpers
 			result_attached: Result /= Void
 		end
 
+feature {SESSION_DATA_I, SESSION_I} -- Basic operations
+
+	notify_value_changed (a_value: !SESSION_DATA_I)
+			-- Used by complex session data objects to notify the session that an inner value has changed.
+			--
+			-- `a_value': The changed session data value.
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ANY, STRING_8]
+		do
+				-- Locate value
+			l_cursor := data.new_cursor
+			l_cursor.start
+			l_cursor.search_forth (a_value)
+			if not l_cursor.after then
+					-- Post notification
+				is_dirty := True
+				value_changed_event.publish ([Current, l_cursor.key])
+			end
+		end
+
 feature -- Events
 
 	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
@@ -297,6 +340,38 @@ feature -- Events
 			--
 			-- `session': The session where the change occured.
 			-- `id': The session data identifier index that the value changed for
+
+feature {SESSION_MANAGER_S} -- Action Handlers
+
+	on_begin_store
+			-- Called to notify the session that a store is about to take place.
+		do
+			data.do_all (agent (a_value: ANY)
+					-- Iterate the values and notify any session data of commencing storage.
+				require
+					a_value_attached: a_value /= Void
+				do
+					if {l_data: !SESSION_DATA_I} a_value and {l_session: !SESSION_I} Current then
+						l_data.set_session (Void)
+						l_data.on_begin_store (l_session)
+					end
+				end)
+		end
+
+	on_end_store
+			-- Called to notify the session that a store is complete.
+		do
+			data.do_all (agent (a_value: ANY)
+					-- Iterate the values and notify any session data of commencing storage.
+				require
+					a_value_attached: a_value /= Void
+				do
+					if {l_data: !SESSION_DATA_I} a_value then
+						l_data.set_session (Current)
+						l_data.on_end_store
+					end
+				end)
+		end
 
 feature {NONE} -- Conversion
 

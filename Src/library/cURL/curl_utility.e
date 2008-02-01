@@ -17,7 +17,7 @@ feature -- Query
 		once
 			if {PLATFORM}.is_windows then
 				Result := "libcurl.dll"
-			elseif {PLATFORM}.is_mac_os then
+			elseif {PLATFORM}.is_mac then
 				Result := "libcurl.dylib"
 			else
 				Result := "libcurl.so"

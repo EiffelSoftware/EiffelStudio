@@ -1444,42 +1444,33 @@ feature {NONE} -- Raise/unraise notification
 
 	popup_switching_mode is
 		local
-			popup: EV_POPUP_WINDOW
-			lab: EV_LABEL
-			w,h, pw,ph: INTEGER
+			l_popup: ES_POPUP_TRANSITION_WINDOW
+			l_message: !STRING_32
+			l_icon: !EV_PIXEL_BUFFER
 		do
-			if debugging_window /= Void and then debugging_window.window /= Void then
-				create popup
-				popup.enable_border
-				create lab
+			if debugging_window /= Void and then {l_window: !EV_WINDOW} debugging_window.window then
 				if raised then
-					lab.set_text (interface_names.l_Switching_to_normal_mode)
+					create l_message.make_from_string (interface_names.l_Switching_to_normal_mode.as_string_32)
+					l_icon := pixmaps.icon_pixmaps.view_editor_icon_buffer
 				else
-					lab.set_text (interface_names.l_Switching_to_debug_mode)
+					create l_message.make_from_string (interface_names.l_Switching_to_debug_mode.as_string_32)
+					l_icon := pixmaps.icon_pixmaps.debugger_environment_force_debug_mode_icon_buffer
 				end
-				popup.extend (lab)
-				lab.refresh_now
-				w := debugging_window.window.width
-				h := debugging_window.window.height
-				pw := lab.font.string_width (lab.text) + 30
-				ph := lab.font.height + 30
-				popup.set_size (pw, ph)
-				popup.set_position (debugging_window.window.x_position + (w - pw) // 2, debugging_window.window.y_position + (h - ph) // 2)
-				popup.show_relative_to_window (debugging_window.window)
-				popup.refresh_now
-				switching_mode_popup := popup
+				create l_popup.make_with_icon (l_message, l_icon)
+				l_popup.show_relative_to_window (l_window)
+				switching_mode_popup := l_popup
 			end
 		end
 
 	unpopup_switching_mode is
 		do
 			if switching_mode_popup /= Void then
-				switching_mode_popup.destroy
+				switching_mode_popup.hide
 				switching_mode_popup := Void
 			end
 		end
 
-	switching_mode_popup: EV_POPUP_WINDOW
+	switching_mode_popup: ES_POPUP_TRANSITION_WINDOW
 			-- Popup used when switching to or from debug mode.
 
 feature -- Debugging events

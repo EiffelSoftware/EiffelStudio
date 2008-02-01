@@ -269,11 +269,10 @@ feature -- Debug info access
 					bplst.restore
 
 						-- Effective saving
-					if internal_exceptions_handler /= Void then
-						raw_file.open_write
-						raw_file.independent_store ([bplst, internal_exceptions_handler])
-						raw_file.close
-					end
+					raw_file.open_write
+					raw_file.independent_store ([bplst, internal_exceptions_handler])
+					raw_file.close
+					
 					bplst := Void
 				else
 					set_error_message ("Unable to save debugger's properties%N%

@@ -301,8 +301,7 @@ feature {NONE} -- Query
 feature -- Basic operations
 
 	show (a_x: INTEGER; a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
-			-- Show and wait until `Current' is closed.
-			-- `Current' is shown modal with respect to `a_window'.
+			-- Displays the pop up window at a designated position on screen.
 			--
 			-- `a_x': Window screen X position.
 			-- `a_y': Window screen Y position.
@@ -335,8 +334,7 @@ feature -- Basic operations
 		end
 
 	show_relative_to_widget (a_widget: !EV_WIDGET; a_x: INTEGER a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
-			-- Show and wait until `Current' is closed.
-			-- `Current' is shown modal with respect to `a_window'.
+			-- Displays the pop up window at a position relative to a widget.
 			--
 			-- `a_widget': A widget to show the window relative to.
 			-- `a_x': Relative X position to the specified widget.
@@ -346,11 +344,47 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		do
 			relative_widget := a_widget
 			show (a_widget.screen_x + a_x, a_widget.screen_y + a_y, a_widget.screen_x + a_mouse_x, a_widget.screen_y + a_mouse_y)
 		ensure
 			relative_widget_set: relative_widget = a_widget
+			popup_window_is_displayed: popup_window.is_displayed
+			not_is_committed_on_closed: not is_committed_on_closed
+		end
+
+	show_relative_to_window (a_window: !EV_WINDOW)
+			-- Shows popup window centered to a parent window.
+			--
+			-- `a_window': The window to show the popup window centered to.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_window_is_displayed: a_window.is_displayed
+			a_window_is_detroyed: not a_window.is_destroyed
+		local
+			l_screen: SD_SCREEN
+		do
+			is_committed_on_closed := False
+
+					-- Show initially off-screen to retrieve width and height.
+			create l_screen
+			popup_window.set_position (l_screen.width + 1, l_screen.height + 1)
+			register_kamikaze_action (show_actions, agent (a_ia_window: !EV_WINDOW)
+				do
+					if is_interface_usable and is_initialized and then not a_ia_window.is_destroyed and then a_ia_window.is_displayed then
+							-- Set requested x and y positions so `ensure_popup_window_visible_on_screen' will make the necessary correct
+							-- popup window placement
+						requested_x_position := a_ia_window.screen_x + ((a_ia_window.width - popup_window.width) / 2).truncated_to_integer
+						requested_y_position := a_ia_window.screen_y + ((a_ia_window.height - popup_window.height) / 2).truncated_to_integer
+					end
+				end (a_window))
+			register_kamikaze_action (show_actions, agent ensure_popup_window_visible_on_screen)
+
+			on_before_show
+			popup_window.show
+		ensure
 			popup_window_is_displayed: popup_window.is_displayed
 			not_is_committed_on_closed: not is_committed_on_closed
 		end
@@ -514,6 +548,8 @@ feature {NONE} -- Action handlers
 			-- Called once the foundation widget has been shown.
 		do
 			Precursor {ES_WINDOW_FOUNDATIONS}
+
+			popup_window.refresh_now
 
 				-- Hook up to application pointer mtion actions
 			register_action (ev_application.pointer_motion_actions, agent on_application_pointer_motion)

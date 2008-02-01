@@ -111,8 +111,8 @@ feature -- Screen
 		do
 			l_top_window ?= widget_top_level_window (a_window, True)
 			if l_top_window /= Void and l_top_window.is_maximized then
-				l_width := l_top_window.client_width + ((l_top_window.width - l_top_window.client_width) / 2).floor
-				l_height := l_top_window.client_height + ((l_top_window.height - l_top_window.client_height) / 2).floor
+				l_width := l_top_window.client_width + ((l_top_window.width - l_top_window.client_width) / 2).truncated_to_integer
+				l_height := l_top_window.client_height + ((l_top_window.height - l_top_window.client_height) / 2).truncated_to_integer
 				if l_top_window = a_window then
 					Result := [l_top_window.x_position, l_top_window.y_position, l_width, l_height]
 				else

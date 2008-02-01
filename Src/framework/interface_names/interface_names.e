@@ -1296,8 +1296,8 @@ feature -- Label texts
 	l_Public_key_token: STRING_GENERAL is		do Result := locale.translation ("PublicKeyToken") end
 	l_Put_text_right_text: STRING_GENERAL is 	do Result := locale.translation("Show selective text on the right of buttons")	end
 	l_Show_all_text: STRING_GENERAL is			do Result := locale.translation("Show text labels")	end
-	l_Switching_to_debug_mode: STRING_GENERAL is do Result := locale.translation("Switching to debug mode")	end
-	l_Switching_to_normal_mode: STRING_GENERAL is do Result := locale.translation("Switching to normal mode")	end
+	l_Switching_to_debug_mode: STRING_GENERAL is do Result := locale.translation("Switching to debug mode...")	end
+	l_Switching_to_normal_mode: STRING_GENERAL is do Result := locale.translation("Switching to edit mode...")	end
 
 	l_Query: STRING_GENERAL is					do Result := locale.translation("Query")	end
 	l_refresh_tools: STRING_GENERAL is			do Result := locale.translation("Refresh tools")	end
@@ -2065,6 +2065,7 @@ feature -- Title part
 	t_Features_tool: STRING_GENERAL is					do Result := locale.translation ("Features")	end
 	t_Editor: STRING_GENERAL is							do Result := locale.translation("Editor")	end
 	t_execution_parameters: STRING_GENERAL is			do Result := locale.translation("Execution Parameters")	end
+	t_contract_tool: STRING_GENERAL is					do Result := locale.translation ("Contract Editor") end
 
 	t_Standard_toolbar: STRING_GENERAL is				do Result := locale.translation ("Standard Buttons") end
 	t_Address_toolbar: STRING_GENERAL is				do Result := locale.translation ("Address Bar") end

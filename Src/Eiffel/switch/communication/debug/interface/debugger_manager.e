@@ -194,31 +194,44 @@ feature -- Debug info access
 			Result.add_extension (Debug_info_extension)
 		end
 
+	session_manager: SESSION_MANAGER_S is
+			-- Session manager service
+		local
+			dbg_sc: SERVICE_CONSUMER [SESSION_MANAGER_S]
+		once
+			create dbg_sc
+			if dbg_sc.is_service_available then
+				Result := dbg_sc.service
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	session_data: SESSION_I is
+			-- Session data
+		once
+			Result := session_manager.retrieve (True)
+		end
+
+	force_save_session_data is
+			-- Force storing of `session_data'
+		do
+			session_manager.store (session_data)
+		end
+
 	load_debugger_data is
 			-- Load debug information from the file `raw_filename'
 		local
-			raw_file: RAW_FILE
 			bplst: BREAK_LIST
 			loading_rescued: BOOLEAN
 			full_load_rescued: BOOLEAN
-			obj: TUPLE [breakpoints: BREAK_LIST; exceptions_handler: like exceptions_handler]
+			dbg_session: like session_data
 		do
 			if not full_load_rescued then
 				if not loading_rescued then
-					check
-						valid_filename: debug_info_filename /= Void and then
-										not debug_info_filename.is_empty
-					end
-					create raw_file.make (debug_info_filename)
-					if raw_file.exists and then raw_file.is_readable then
-						raw_file.open_read
-						obj ?= raw_file.retrieved
-						raw_file.close
-						if obj /= Void then
-							bplst := obj.breakpoints
-							internal_exceptions_handler := obj.exceptions_handler
-						end
-					end
+					dbg_session := session_data
+   					bplst ?= dbg_session.value ("com.eiffel.debugger.breakpoints")
+					internal_exceptions_handler ?= dbg_session.value ("com.eiffel.debugger.exceptions_handler")
 
 					breakpoints_manager.set_breakpoints (bplst)
 							-- Reset information about the application
@@ -247,37 +260,28 @@ feature -- Debug info access
 	save_debugger_data is
 			-- Save debug informations into the file `raw_filename'.
 		local
-			raw_file: RAW_FILE
 			retried: BOOLEAN
 			bplst: BREAK_LIST
 			old_bplist: BREAK_LIST
+			dbg_session: like session_data
 		do
 			if not retried then
-				check
-					valid_filename: debug_info_filename /= Void and then
-									not debug_info_filename.is_empty
-				end
-				create raw_file.make (debug_info_filename)
-				if not raw_file.exists or else raw_file.is_writable then
-						-- backup current list
-					old_bplist := breakpoints_manager.breakpoints
-					create bplst.make_copy_for_saving (old_bplist)
-					breakpoints_manager.set_breakpoints (bplst)
+					-- backup current list
+				old_bplist := breakpoints_manager.breakpoints
+				create bplst.make_copy_for_saving (old_bplist)
+				breakpoints_manager.set_breakpoints (bplst)
 
-						-- Reset information about the application
-						-- contained in the breakpoints.
-					bplst.restore
+					-- Reset information about the application
+					-- contained in the breakpoints.
+				bplst.restore
 
-						-- Effective saving
-					raw_file.open_write
-					raw_file.independent_store ([bplst, internal_exceptions_handler])
-					raw_file.close
-					
-					bplst := Void
-				else
-					set_error_message ("Unable to save debugger's properties%N%
-							%Cause: Unable to open " + debug_info_filename + " for writing")
-				end
+					-- Effective saving
+				dbg_session := session_data
+   				dbg_session.set_value (bplst, "com.eiffel.debugger.breakpoints")
+   				dbg_session.set_value (internal_exceptions_handler, "com.eiffel.debugger.exceptions_handler")
+				force_save_session_data
+
+				bplst := Void
 
 				breakpoints_manager.set_breakpoints (old_bplist)
 			else

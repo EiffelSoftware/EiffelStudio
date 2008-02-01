@@ -186,24 +186,29 @@ feature -- Change
 
 feature -- Debugger session data access
 
-	session_manager: SESSION_MANAGER_S is
-			-- Session manager service
-		local
-			dbg_sc: SERVICE_CONSUMER [SESSION_MANAGER_S]
-		once
-			create dbg_sc
-			if dbg_sc.is_service_available then
-				Result := dbg_sc.service
-			end
-		ensure
-			Result_not_void: Result /= Void
+	session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S] is
+			-- Session manager consumer
+		do
+			create Result
 		end
 
 	session_data: SESSION_I is
 			-- Session data
-		once
-			Result := session_manager.retrieve (True)
+		local
+			cons: like session_manager
+		do
+			Result := internal_session_data
+			if Result = Void then
+				cons := session_manager
+				if cons.is_service_available then
+					Result := cons.service.retrieve (True)
+					internal_session_data := Result
+				end
+			end
 		end
+
+	internal_session_data: like session_data
+			-- cached version of `session_data'
 
 	Breakpoints_session_data_id: STRING is "com.eiffel.debugger.breakpoints"
 			-- Id for session data related to breakpoints
@@ -215,8 +220,13 @@ feature -- Debugger data change
 
 	force_save_session_data is
 			-- Force storing of `session_data'
+		local
+			cons: like session_manager
 		do
-			session_manager.store (session_data)
+			cons := session_manager
+			if cons.is_service_available then
+				cons.service.store (session_data)
+			end
 		end
 
 	load_debugger_data is

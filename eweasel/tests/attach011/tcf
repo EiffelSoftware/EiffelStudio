@@ -1,0 +1,15 @@
+test_name 	 correct-attached-predicate-precedence-semantics
+test_description Ensures using and then with object tests does not evaluate anything after the prior test, if it fails
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE test_output
+execute_result	ok
+compare		test_output output
+
+test_end

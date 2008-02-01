@@ -1778,16 +1778,17 @@ test	agent-optimization-failure		agent001 tcf pass agents
 test	print-large-pointer				platform001 tcf pass platform
 
 -- Tests for attached types and void-safe constructs
-test	object-test-semantics						attach001 tcf pass execution object_test expanded
-test	object-test-local-scope						attach002 tcf pass validity object_test scope local
-test	like-current-object-test-no-defaults		attach003 tcf fail object_test attached_types
-test	object-test-with-local-use-failure			attach004 tcf pass object_test
-test	current-is_attached-no-defaults				attach005 tcf fail attached_types
-test	anchored-attached-type-failure-no-defaults	attach006 tcf fail attached_types anchored_types
-test	attached-formal-generic						attach007 tcf pass conformance attached_types
-test	object-test-in-invariant					attach008 tcf fail object_test
-test	attached-basic-type							attach009 tcf pass conformance basic_types attached_types
-test	attached-generic-type-conformance			attach010 tcf fail conformance attached_types
+test	object-test-semantics							attach001 tcf pass execution object_test expanded
+test	object-test-local-scope							attach002 tcf pass validity object_test scope local
+test	like-current-object-test-no-defaults			attach003 tcf fail object_test attached_types
+test	object-test-with-local-use-failure				attach004 tcf pass object_test
+test	current-is_attached-no-defaults					attach005 tcf fail attached_types
+test	anchored-attached-type-failure-no-defaults		attach006 tcf fail attached_types anchored_types
+test	attached-formal-generic							attach007 tcf pass conformance attached_types
+test	object-test-in-invariant						attach008 tcf fail object_test
+test	attached-basic-type								attach009 tcf pass conformance basic_types attached_types
+test	attached-generic-type-conformance				attach010 tcf fail conformance attached_types
+test	correct-attached-predicate-precedence-semantics	attach011 tcf fail object_test execution
 
 
 -- .NET specific test

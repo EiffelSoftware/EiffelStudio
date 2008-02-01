@@ -125,6 +125,13 @@ feature -- Comparison
 				equal (deleted_marks, other.deleted_marks)
 		end
 
+	same_keys (a_search_key, a_key: H): BOOLEAN is
+			-- Does `a_search_key' equal to `a_key'?
+			--| Default implementation is using `is_equal'.
+		do
+			Result := a_search_key.is_equal (a_key)
+		end
+
 feature -- Insertion, deletion
 
 	put (key: H) is
@@ -356,7 +363,7 @@ feature {NONE} -- Internal features
 					elseif first_deleted_position < 0 then
 						first_deleted_position := pos
 					end
-				elseif search_key.is_equal (old_key) then
+				elseif same_keys (search_key, old_key) then
 					control := Found_constant
 					stop := True
 				end

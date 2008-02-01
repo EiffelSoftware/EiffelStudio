@@ -184,15 +184,7 @@ feature -- Change
 		do
 		end
 
-feature -- Debug info access
-
-	debug_info_filename: FILE_NAME is
-		do
-			create Result.make
-			Result.set_directory (project_location.workbench_path)
-			Result.set_file_name (Debug_info_name)
-			Result.add_extension (Debug_info_extension)
-		end
+feature -- Debugger session data access
 
 	session_manager: SESSION_MANAGER_S is
 			-- Session manager service
@@ -213,6 +205,14 @@ feature -- Debug info access
 			Result := session_manager.retrieve (True)
 		end
 
+	Breakpoints_session_data_id: STRING is "com.eiffel.debugger.breakpoints"
+			-- Id for session data related to breakpoints
+
+	Exception_handler_session_data_id: STRING is "com.eiffel.debugger.exceptions_handler"
+			-- Id for session data related to exception_handler
+
+feature -- Debugger data change
+
 	force_save_session_data is
 			-- Force storing of `session_data'
 		do
@@ -230,8 +230,8 @@ feature -- Debug info access
 			if not full_load_rescued then
 				if not loading_rescued then
 					dbg_session := session_data
-   					bplst ?= dbg_session.value ("com.eiffel.debugger.breakpoints")
-					internal_exceptions_handler ?= dbg_session.value ("com.eiffel.debugger.exceptions_handler")
+   					bplst ?= dbg_session.value (Breakpoints_session_data_id)
+					internal_exceptions_handler ?= dbg_session.value (Exception_handler_session_data_id)
 
 					breakpoints_manager.set_breakpoints (bplst)
 							-- Reset information about the application
@@ -277,8 +277,8 @@ feature -- Debug info access
 
 					-- Effective saving
 				dbg_session := session_data
-   				dbg_session.set_value (bplst, "com.eiffel.debugger.breakpoints")
-   				dbg_session.set_value (internal_exceptions_handler, "com.eiffel.debugger.exceptions_handler")
+   				dbg_session.set_value (bplst, Breakpoints_session_data_id)
+   				dbg_session.set_value (internal_exceptions_handler, Exception_handler_session_data_id)
 				force_save_session_data
 
 				bplst := Void

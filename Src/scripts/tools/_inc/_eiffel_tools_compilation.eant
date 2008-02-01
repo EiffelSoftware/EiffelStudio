@@ -16,8 +16,8 @@
 		<echo message=" geant clean" />
 		<echo message="" />
 		<echo message="defines:" />
-		<echo message=" -Dforce_batch={true|false}		(default=true)"  />
 		<echo message=" -Dforce_clean={true|false}		(default=false)" />
+		<echo message=" -Dforce_batch={true|false}		(default=true)"  />
 	</target>
 
 	<target name="init">
@@ -84,6 +84,7 @@
 	</target>
 
 	<target name="clean" depend="init_skip" unless="$_SKIP=true">
+		<!-- note: does not affect $return_code -->
 		<geant dir="${_EIFFEL_TOOLS_COMPILATION.absdir}/../.." 
 			file="ise_eiffel_compiler.eant"
 			target="clean" 
@@ -110,11 +111,21 @@
 		<argument name="a_comp_mode" />
 		<argument name="a_comp_dir" />
 		<argument name="a_out_dir" />
+		<argument name="a_force_clean" />
+		<argument name="a_force_batch" />
+
 		<set name="_COMP_DIR" value="$a_comp_dir" unless="-$a_comp_dir-=--" />
 		<set name="_OUT_DIR" value="$a_out_dir" unless="-$a_out_dir-=--" />
+
+		<set name="force_clean" value="$a_force_clean" unless="-$a_force_clean-=--" />
+		<set name="force_batch" value="$a_force_batch" unless="-$a_force_batch-=--" />
+
 		<geant target="_tpl_compile_" arguments="$a_comp_mode" />
+
+		<unset name="force_clean" unless="-$a_force_clean-=--" />
+		<unset name="force_batch" unless="-$a_force_batch-=--" />
 	</target>
-	
+
 <!-- F_code output usage -->
 	<target name="generate_f_code" depend="init" >
 		<argument name="a_comp_dir" />

@@ -80,7 +80,7 @@ feature {NONE} -- Query
 			is_interface_usable: is_interface_usable
 			a_session_attached: a_session /= Void
 			a_session_is_interface_usable: a_session.is_interface_usable
-			project_loaded: not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.eiffel_project.manager.is_project_loaded
+			project_loaded: not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined
 		local
 			l_formatter: STRING_FORMATTER
 			l_kinds: SESSION_KINDS
@@ -141,7 +141,7 @@ feature -- Storage
 			retried: BOOLEAN
 		do
 			if not retried then
-				if a_session.is_dirty and then (not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.eiffel_project.manager.is_project_loaded) then
+				if a_session.is_dirty and then (not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined) then
 						-- Ensure the project is loaded for project sessions.
 					create l_sed_util
 					create l_file.make_open_write (session_file_path (a_session))
@@ -149,8 +149,10 @@ feature -- Storage
 					l_writer.set_for_writing
 
 						-- Encode and emit object
+					a_session.on_begin_store
 					l_sed_util.independent_store (a_session.session_object, l_writer, False)
 					l_file.flush
+					a_session.on_end_store
 
 						-- Reset direty state
 					a_session.reset_is_dirty
@@ -281,7 +283,7 @@ feature {NONE} -- Basic operation
 			is_interface_usable: is_interface_usable
 			a_session_attached: a_session /= Void
 			a_session_is_interface_usable: a_session.is_interface_usable
-			project_loaded: not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.eiffel_project.manager.is_project_loaded
+			project_loaded: not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined
 		local
 			l_sed_util: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
@@ -366,11 +368,11 @@ feature {NONE} -- Factory
 
 				if a_per_project then
 					create l_shared
-					l_loader := l_shared.eiffel_project.manager
-					l_set_object := l_loader.is_project_loaded
-					if not l_set_object then
+					if l_shared.eiffel_project.workbench.system_defined then
+						set_session_object (Result)
+					else
 							-- No project is loaded so we have to initialize the project session once it is loaded.
-						l_loader.load_agents.extend (agent set_session_object (Result))
+						l_shared.eiffel_project.manager.load_agents.extend (agent set_session_object (Result))
 					end
 				end
 			else

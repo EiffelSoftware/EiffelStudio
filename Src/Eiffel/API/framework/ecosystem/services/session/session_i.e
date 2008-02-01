@@ -122,6 +122,7 @@ feature -- Element change
 		ensure
 			value_set: equal (a_value, value (a_id))
 			is_dirty: not equal (a_value, old value (a_id)) implies is_dirty
+			session_set_on_session_data: {l_session_data: !SESSION_DATA_I} a_value and then (({SESSION_DATA_I}) #? a_value).session = Current
 		end
 
 feature -- Status report
@@ -159,6 +160,20 @@ feature {SESSION_MANAGER_S} -- Status setting
 			not_is_dirty: not is_dirty
 		end
 
+feature {SESSION_DATA_I, SESSION_I} -- Basic operations
+
+	notify_value_changed (a_value: !SESSION_DATA_I)
+			-- Used by complex session data objects to notify the session that an inner value has changed.
+			--
+			-- `a_value': The changed session data value.
+		require
+			is_interface_usable: is_interface_usable
+			a_value_belongs_to_session: a_value.session = Current
+		deferred
+		ensure
+			is_dirty: is_dirty
+		end
+
 feature -- Events
 
 	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
@@ -171,6 +186,22 @@ feature -- Events
 		deferred
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature {SESSION_MANAGER_S} -- Action Handlers
+
+	on_begin_store
+			-- Called to notify the session that a store is about to take place.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+	on_end_store
+			-- Called to notify the session that a store is complete.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
 		end
 
 invariant

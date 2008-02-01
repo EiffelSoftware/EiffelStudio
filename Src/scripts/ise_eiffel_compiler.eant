@@ -54,13 +54,16 @@
 	</target>
 
 	<target name="clean" >
+		<!-- Clean project compilation -->
+		<!-- note: does not affect $return_code -->
 		<argument name="a_target" />
 		<argument name="a_comp_dir" />
+
 		<echo message="Clean [$a_target] from [$a_comp_dir]." />
-		<set name="l_dir" value="${a_comp_dir}${path_separator}EIFGENs${path_separator}${a_target}" />
-		<available resource="$l_dir" variable="tmp_clean_available"/>
-		<delete directory="$l_dir" if="${tmp_clean_available}=true" />
-		<unset name="l_dir" />
+		<set name="l_dir_to_clean" value="${a_comp_dir}/EIFGENs/${a_target}" />
+		<available resource="$l_dir_to_clean" variable="tmp_clean_available"/>
+		<delete directory="$l_dir_to_clean" if="${tmp_clean_available}=true" />
+		<unset name="l_dir_to_clean" />
 		<unset name="tmp_clean_available" />
 	</target>
 
@@ -238,6 +241,7 @@
 		<set name="eccmd" value="${eccmd} -gui" if="$a_gui=true" />
 
 		<echo message=" DIR=${a_comp_dir}" if="$verbose=true" />
+		<echo message=" OUT=${a_output_dir}" if="$verbose=true" />
 		<echo message=" CMD=${eccmd}" />
 
 		<geant target="check_available" >
@@ -279,7 +283,7 @@
 			<argument name="a_c_comp_dir" value="$L_ec_c_comp_dir" />
 			<argument name="a_output_dir" value="$a_output_dir" />
 			<argument name="a_is_from_f_code" value="$L_is_from_f_code=true" />
-			<argument name="a_c_compile" value="$a_c_comp_dir" />
+			<argument name="a_c_compile" value="$a_c_compile" />
 		</geant>
 
 		<unset name="L_ec_c_comp_dir" />

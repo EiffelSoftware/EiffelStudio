@@ -109,7 +109,7 @@
 		<argument name="a_mode" />
 		<argument name="a_comp_dir" />
 		<geant target="process_with_args" 
-			arguments="${a_mode},$_COMPILE_DIR,$a_output_dir"
+			arguments="${a_mode},$_COMPILE_DIR,$a_output_dir,$force_clean,$force_batch"
 			file="${a_product}.eant" dir="${EIFFELSOFTWARE_BUILD.absdir}${path_separator}tools"
 		/>
 	</target>

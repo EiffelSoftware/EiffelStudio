@@ -72,10 +72,10 @@
 
 	<target name="check_environment" once="true">
 		<precursor/>
-		<available resource="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin/ec${exe}" variable="tmp_available"/>
-		<echo message="Error: executable ec${exe} does not exists" if="${tmp_available}=false" />
-		<set name="environment_valid" value="false" if="${tmp_available}=false" />
-		<unset name="tmp_available" />
+		<available resource="${ISE_EIFFEL}/studio/spec/${ISE_PLATFORM}/bin/ec${exe}" variable="tmp_ecbin_available"/>
+		<echo message="Error: executable ec${exe} does not exists" if="${tmp_ecbin_available}=false" />
+		<set name="environment_valid" value="false" if="${tmp_ecbin_available}=false" />
+		<unset name="tmp_ecbin_available" />
 	</target>
 
 	<target name="init"  once="true">
@@ -89,9 +89,9 @@
 		<!-- source related -->
 		<!-- we support both location for Delivery, under Src, or under Trunk -->
 		<set name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}..${path_separator}Delivery" unless="${_DELIVERY_DIR}"/>
-		<available resource="${_DELIVERY_DIR}" variable="tmp_available"/>
-		<set name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" if="${tmp_available}=false"/>
-		<unset name="tmp_available" />
+		<available resource="${_DELIVERY_DIR}" variable="tmp_delivdir_available"/>
+		<set name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" if="${tmp_delivdir_available}=false"/>
+		<unset name="tmp_delivdir_available" />
 
 		<set name="_XMLDOC_DIR" value="${EIFFEL_SRC}${path_separator}..${path_separator}Documentation" unless="${_XMLDOC_DIR}"/>
 		<!-- environment related -->
@@ -109,7 +109,7 @@
 		<set name="_BINARY_DIR" value="${cwd}${path_separator}bin" unless="$_BINARY_DIR"/>
 
 		<!-- Various options -->
-		<set name="_WIPEOUT" value="true" unless="$_WIPEOUT" />
+		<set name="_CLEAN_AFTER_COMPILE" value="true" unless="$_CLEAN_AFTER_COMPILE" />
 		<set name="_EXIT_ON_FAILURE" value="false" unless="$_EXIT_ON_FAILURE" />
 		<set name="_INCLUDE_DEVPACK" value="false" unless="$_INCLUDE_DEVPACK"/>
 		<set name="_INCLUDE_DOTNET" value="true" unless="$_INCLUDE_DOTNET"/>
@@ -330,14 +330,19 @@
 		<!-- Dev Pack Compilation -->
 		<argument name="a_binary_dir" />
 
-		<geant target="get_bin__" arguments="ec_lite,${_BINARY_DIR},ecl${exe}" />
-		<geant target="get_bin__" arguments="compile_all,${a_binary_dir},compile_all${exe}" />
-		<geant target="get_bin__" arguments="eimgemb,${a_binary_dir},eimgemb${exe}" />
-		<geant target="get_bin__" arguments="escln,${a_binary_dir},escln${exe}" />
-		<geant target="get_bin__" arguments="espawn,${a_binary_dir},espawn${exe}" if="$is_windows" />
-		<geant target="get_bin__" arguments="hallow,${a_binary_dir},hallow${exe}" if="$is_windows"  />
-		<geant target="get_bin__" arguments="reg2wix,${a_binary_dir},reg2wix${exe}" if="$is_windows" />
-		<geant target="get_bin__" arguments="doc_builder,${a_binary_dir},doc_builder${exe}" />
+		<set name="devpack_binary_dir" value="${a_binary_dir}${path_separator}devpack" />
+		<mkdir directory="$devpack_binary_dir" />
+
+		<geant target="get_bin__" arguments="ec_lite,${devpack_binary_dir},ecl${exe}" />
+		<geant target="get_bin__" arguments="compile_all,${devpack_binary_dir},compile_all${exe}" />
+		<geant target="get_bin__" arguments="eimgemb,${devpack_binary_dir},eimgemb${exe}" />
+		<geant target="get_bin__" arguments="escln,${devpack_binary_dir},escln${exe}" />
+		<geant target="get_bin__" arguments="espawn,${devpack_binary_dir},espawn${exe}" if="$is_windows" />
+		<geant target="get_bin__" arguments="hallow,${devpack_binary_dir},hallow${exe}" if="$is_windows"  />
+		<geant target="get_bin__" arguments="reg2wix,${devpack_binary_dir},reg2wix${exe}" if="$is_windows" />
+		<geant target="get_bin__" arguments="doc_builder,${devpack_binary_dir},doc_builder${exe}" />
+
+		<unset name="devpack_binary_dir" />
 	</target>
 
 	<target name="make_documentation" depend="init_deliv">
@@ -384,19 +389,19 @@
 
 		<geant target="_log" arguments="Product: 'runtime' " />
 
-		<available dir="$a_output_dir" resource="runtime_compiled" variable="tmp_available" />
+		<available dir="$a_output_dir" resource="runtime_compiled" variable="tmp_rt_available" />
 
 		<!-- Resource is already built -->
-		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
+		<set name="return_code" value="0" 						if="$tmp_rt_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_rt_available=true" />
 
 		<!-- Let's build it -->
-		<geant target="_log" arguments=" -> Building runtime ..."	if="$tmp_available=false" />
-		<geant target="compile_runtime"					 			if="$tmp_available=false" />
+		<geant target="_log" arguments=" -> Building runtime ..."	if="$tmp_rt_available=false" />
+		<geant target="compile_runtime"					 			if="$tmp_rt_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 		<geant target="_log" arguments=" -> 'runtime' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_runtime' (${return_code})" unless="${return_code}=0"  />
-		<unset name="tmp_available" />
+		<unset name="tmp_rt_available" />
 
 		<!-- IL runtime -->
 		<geant target="copy_file" arguments="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time,${a_output_dir}\lib,EiffelSoftware.Runtime.dll" if="${is_windows}" />
@@ -409,43 +414,43 @@
 
 		<geant target="_log" arguments="Product: 'library' " />
 
-		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available"/>
+		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_lib_available"/>
 		<!-- Resource is already built -->
-		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
+		<set name="return_code" value="0" 						if="$tmp_lib_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_lib_available=true" />
 
 		<!-- Let's build it -->
-		<geant target="_log" arguments=" -> Building library ..." 	if="$tmp_available=false" />
-		<geant target="compile_library" 							if="$tmp_available=false" />
+		<geant target="_log" arguments=" -> Building library ..." 	if="$tmp_lib_available=false" />
+		<geant target="compile_library" 							if="$tmp_lib_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 		<geant target="_log" arguments=" -> 'library' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0"  />
 
-		<unset name="tmp_available" />
+		<unset name="tmp_lib_available" />
 	</target>
 
 	<target name="get__gobo_compiled" >
 		<!-- get Gobo tools compiled -->
 		<argument name="a_output_dir" />
 		<argument name="a_resource" />
-		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available"/>
+		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_gobo_available"/>
 
 		<geant target="_log" arguments="--------------------------------------------------" />
 		<geant target="_log" arguments="Product: 'gobo tools' " />
 
 		<!-- Resource is already built -->
-		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
+		<set name="return_code" value="0" 						if="$tmp_gobo_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_gobo_available=true" />
 
 		<!-- Let's build gobo -->
-		<geant target="_log" arguments=" -> Building gobo tools ..." 	if="$tmp_available=false" />
-		<geant target="compile_gobo" arguments="$a_output_dir" if="$tmp_available=false" />
+		<geant target="_log" arguments=" -> Building gobo tools ..." 	if="$tmp_gobo_available=false" />
+		<geant target="compile_gobo" arguments="$a_output_dir" if="$tmp_gobo_available=false" />
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 
 		<geant target="_log" arguments=" -> 'gobo tools' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_gobo'." unless="${return_code}=0"  />
 
-		<unset name="tmp_available" />
+		<unset name="tmp_gobo_available" />
 	</target>
 
 	<target name="get__wizards_compiled" >
@@ -455,19 +460,19 @@
 		<geant target="_log" arguments="--------------------------------------------------" />
 		<geant target="_log" arguments="Product: 'wizards' " />
 
-		<available resource="$a_resource" dir="$a_output_dir" variable="tmp_available"/>
+		<available resource="$a_resource" dir="$a_output_dir" variable="tmp_w_available"/>
 		<!-- Resource is already built -->
-		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
+		<set name="return_code" value="0" 						if="$tmp_w_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_w_available=true" />
 
 		<!-- Let's build wizards -->
-		<geant target="_log" arguments=" -> Building wizards ..." 	if="$tmp_available=false" />
-		<geant target="compile_wizards" arguments="$a_output_dir" if="$tmp_available=false" />
-		<unset name="tmp_available" />
+		<geant target="_log" arguments=" -> Building wizards ..." 	if="$tmp_w_available=false" />
+		<geant target="compile_wizards" arguments="$a_output_dir" if="$tmp_w_available=false" />
+		<unset name="tmp_w_available" />
 		<geant target="_log" arguments=" -> Wizards are ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred during 'compile_wizards'." unless="${return_code}=0"  />
 
-		<move dir="${_COMPILE_DIR}/wizards" to_directory="${a_output_dir}/wizards" if="${tmp_available}=false" >
+		<move dir="${_COMPILE_DIR}/wizards" to_directory="${a_output_dir}/wizards" if="${tmp_w_available}=false" >
 			<fileset include="@(**/*)"  exclude="@(**/.svn/**/*)" />
 		</move>
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
@@ -480,19 +485,19 @@
 
 		<geant target="_log" arguments="Product: 'documentation' " />
 
-		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available" />
+		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_doc_available" />
 
 		<!-- Resource is already built -->
-		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
+		<set name="return_code" value="0" 						if="$tmp_doc_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_doc_available=true" />
 
 		<!-- Let's build it -->
-		<geant target="_log" arguments=" -> Building documentation ..."	if="$tmp_available=false" />
-		<geant target="_make_documentation" arguments="$a_output_dir"	if="$tmp_available=false" /><!-- return return_code -->
+		<geant target="_log" arguments=" -> Building documentation ..."	if="$tmp_doc_available=false" />
+		<geant target="_make_documentation" arguments="$a_output_dir"	if="$tmp_doc_available=false" /><!-- return return_code -->
 		<echo message="compiled" dir="$a_output_dir" to_file="$a_resource" if="${return_code}=0" />
 		<geant target="_log" arguments=" -> 'documentation' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred during 'make_documentation' (${return_code})" unless="${return_code}=0"  />
-		<unset name="tmp_available" />
+		<unset name="tmp_doc_available" />
 	</target>
 
 
@@ -726,7 +731,7 @@
 		<geant target="_install_executables_unix"   unless="${is_windows}" />
 
 		<!-- Dev Pack -->
-		<geant target="_install_devpack" arguments="${tmp_install_dir_bin}" />
+		<geant target="_install_devpack" arguments="${_BINARY_DIR},${tmp_install_dir_bin}" />
 
 		<unset name="tmp_install_dir_bin" />
 		<unset name="tmp_install_dir" />
@@ -736,15 +741,21 @@
 
 	<target name="_install_devpack" depend="init_deliv" if="${_INCLUDE_DEVPACK}=true" >
 		<!-- Dev Pack Installation -->
+		<argument name="a_binary_dir" />
 		<argument name="a_target_dir" />
-		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},ecl${exe}" />
-		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},compile_all${exe}" />
-		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},eimgemb${exe}" />
-		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},escln${exe}" />
-		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},espawn${exe}" if="${is_windows}" />
-		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},hallow${exe}" if="${is_windows}" />
-		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},reg2wix${exe}" if="${is_windows}" />
-		<geant target="copy_exec_file" arguments="${_BINARY_DIR},${a_target_dir},doc_builder${exe}" />
+
+		<set name="devpack_binary_dir" value="${a_binary_dir}${path_separator}devpack" />
+
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},ecl${exe}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},compile_all${exe}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},eimgemb${exe}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},escln${exe}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},espawn${exe}" if="${is_windows}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},hallow${exe}" if="${is_windows}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},reg2wix${exe}" if="${is_windows}" />
+		<geant target="copy_exec_file" arguments="${devpack_binary_dir},${a_target_dir},doc_builder${exe}" />
+
+		<unset name="devpack_binary_dir" />
 	</target>
 
 	<target name="_install_dotnet" depend="init_deliv" if="${_INCLUDE_DOTNET}=true" >
@@ -860,28 +871,33 @@
 		<geant target="_log" arguments="--------------------------------------------------" />
 		<geant target="_log" arguments="Product: '$a_product_name' " />
 
-		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_available" unless="-${a_resource}-=--" />
-		<set name="tmp_available" value="false" if="-${a_resource}-=--" />
+		<available dir="$a_output_dir" resource="$a_resource" variable="tmp_res_available" unless="-${a_resource}-=--" />
+		<set name="tmp_res_available" value="false" if="-${a_resource}-=--" />
 
 		<!-- Resource is already built -->
-		<set name="return_code" value="0" 						if="$tmp_available=true" />
-		<geant target="_log" arguments=" -> Already available" 	if="$tmp_available=true" />
+		<set name="return_code" value="0" 						if="$tmp_res_available=true" />
+		<geant target="_log" arguments=" -> Already available" 	if="$tmp_res_available=true" />
 
 		<!-- Let's build 'a_product_name' -->
-		<geant target="_log" arguments=" -> Building ..." 	if="$tmp_available=false" />
-		<set name="force_batch" value="$_FORCE_BATCH" />
-		<set name="force_clean" value="$_FORCE_CLEAN" />
-		<geant target="process_with_args" 					if="$tmp_available=false"
-			arguments="finalize,$_COMPILE_DIR,$a_output_dir"
+		<geant target="_log" arguments=" -> Building ..." 	if="$tmp_res_available=false" />
+		<geant target="process_with_args" 					if="$tmp_res_available=false"
+			arguments="finalize,$_COMPILE_DIR,$a_output_dir,$_FORCE_CLEAN,$_FORCE_BATCH"
 			dir="${DELIV_SCRIPT.absdir}/tools"
 			file="${a_product_name}.eant" 
 			fork="false" reuse_variables="true" /><!-- return variable '$return_code' -->
 		<geant target="_log" arguments=" -> $a_product_name' is ready." if="${return_code}=0"  />
 		<geant target="_fail" arguments=" -> Error occurred for '$a_product_name'." unless="${return_code}=0"  />
-		<unset name="force_clean" />
-		<unset name="force_batch" />
 
-		<unset name="tmp_available" />
+		<!-- _CLEAN_AFTER_COMPILE ? -->
+		<set name="l_clean_get_bin__compilation" value="$_CLEAN_AFTER_COMPILE" if="$return_code=0" />
+		<unset name="l_clean_get_bin__compilation" if="$tmp_res_available=true" />
+		<geant target="clean" 		if="$l_clean_get_bin__compilation=true"
+			dir="${_COMPILE_DIR}"
+			file="${DELIV_SCRIPT.absdir}/tools/${a_product_name}.eant" 
+			fork="false" reuse_variables="false" /><!-- does not affect variable '$return_code' -->
+		<unset name="l_clean_get_bin__compilation" />
+
+		<unset name="tmp_res_available" />
 	</target>
 
 	<target name="get_bin__z" >

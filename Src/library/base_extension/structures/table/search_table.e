@@ -128,6 +128,9 @@ feature -- Comparison
 	same_keys (a_search_key, a_key: H): BOOLEAN is
 			-- Does `a_search_key' equal to `a_key'?
 			--| Default implementation is using `is_equal'.
+		require
+			valid_search_key: valid_key (a_search_key)
+			valid_key: valid_key (a_key)
 		do
 			Result := a_search_key.is_equal (a_key)
 		end

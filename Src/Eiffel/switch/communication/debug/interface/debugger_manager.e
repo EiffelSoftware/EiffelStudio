@@ -184,7 +184,7 @@ feature -- Change
 		do
 		end
 
-feature -- Debugger session data access
+feature {NONE} -- Debugger session data access
 
 	session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S] is
 			-- Session manager consumer
@@ -216,7 +216,7 @@ feature -- Debugger session data access
 	Exception_handler_session_data_id: STRING is "com.eiffel.debugger.exceptions_handler"
 			-- Id for session data related to exception_handler
 
-feature -- Debugger data change
+feature {NONE} -- Debugger session data change
 
 	force_save_session_data is
 			-- Force storing of `session_data'
@@ -228,6 +228,8 @@ feature -- Debugger data change
 				cons.service.store (session_data)
 			end
 		end
+
+feature -- Debugger data change		
 
 	load_debugger_data is
 			-- Load debug information from the file `raw_filename'

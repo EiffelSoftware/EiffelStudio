@@ -338,7 +338,6 @@ feature {NONE} -- Factory
 		local
 			l_inner_session: SESSION_I
 			l_shared: SHARED_EIFFEL_PROJECT
-			l_loader: EB_PROJECT_MANAGER
 			l_set_object: BOOLEAN
 		do
 			l_set_object := True

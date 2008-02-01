@@ -122,7 +122,7 @@ feature -- Element change
 		ensure
 			value_set: equal (a_value, value (a_id))
 			is_dirty: not equal (a_value, old value (a_id)) implies is_dirty
-			session_set_on_session_data: {l_session_data: !SESSION_DATA_I} a_value and then (({SESSION_DATA_I}) #? a_value).session = Current
+			session_set_on_session_data: {l_session_data: !SESSION_DATA_I} a_value implies (({SESSION_DATA_I}) #? a_value).session = Current
 		end
 
 feature -- Status report

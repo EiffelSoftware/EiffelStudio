@@ -188,7 +188,7 @@ feature -- Debugger session data access
 
 	session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S] is
 			-- Session manager consumer
-		do
+		once
 			create Result
 		end
 
@@ -287,6 +287,7 @@ feature -- Debugger data change
 
 					-- Effective saving
 				dbg_session := session_data
+
    				dbg_session.set_value (bplst, Breakpoints_session_data_id)
    				dbg_session.set_value (internal_exceptions_handler, Exception_handler_session_data_id)
 				force_save_session_data

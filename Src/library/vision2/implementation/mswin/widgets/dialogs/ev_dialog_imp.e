@@ -346,6 +346,7 @@ feature {NONE} -- Implementation
 			set_icon_pixmap (other_imp.icon_pixmap)
 			deny_cursor := other_imp.deny_cursor
 			drop_actions_internal := other_imp.drop_actions_internal
+			default_key_processing_handler := other_imp.default_key_processing_handler
 			focus_in_actions_internal := other_imp.focus_in_actions_internal
 			focus_out_actions_internal := other_imp.focus_out_actions_internal
 			foreground_color_imp := other_imp.foreground_color_imp

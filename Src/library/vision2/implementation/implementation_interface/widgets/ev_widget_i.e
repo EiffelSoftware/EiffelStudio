@@ -247,6 +247,12 @@ feature -- Measurement
 
 feature {EV_ANY_I} -- Implementation
 
+	disable_default_processing_on_key (a_key: EV_KEY): BOOLEAN
+			-- Should default processing of `Current' be disabled when `a_key' is press/released?
+		do
+			Result := default_key_processing_handler /= Void and then not default_key_processing_handler.item ([a_key])
+		end
+
 	interface: EV_WIDGET
 		-- Provides a common user interface to platform dependent functionality
 		-- implemented by `Current'.

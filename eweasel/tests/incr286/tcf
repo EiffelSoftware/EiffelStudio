@@ -1,0 +1,21 @@
+test_name change-export-create-generic-contraint-error-ignored
+test_description When specifying the export clause of the create of a type involved in constrainted generic. The VTCG is not catched, unless recompiling from scratch.
+
+define	FOO_BAR_EXPORT_CLAUSE	"FOO_FACTORY"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	foo.e $CLUSTER foo.e
+copy_sub 	foo_bar.e $CLUSTER foo_bar.e
+copy_sub 	foo_factory.e $CLUSTER foo_factory.e
+copy_sub 	foo_bar_factory.e $CLUSTER foo_bar_factory.e
+
+compile_melted
+compile_result 	ok
+
+define	FOO_BAR_EXPORT_CLAUSE	"FOO_BAR_FACTORY"
+copy_sub 	foo_bar.e $CLUSTER foo_bar.e
+
+compile_melted
+compile_result 	validity_error FOO_BAR_FACTORY VTCG
+
+test_end

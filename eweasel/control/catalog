@@ -675,6 +675,7 @@ test	funky-removal-of-type			incr282 tcf pass incrementality
 test	multi-constraint-incremental-crash		incr283 tcf pass incrementality
 test	removing-formal-crashes			incr284 tcf pass incrementality
 test	partial-generic-addition-crash	incr285 tcf pass incrementality
+test	change-export-create-generic-contraint-error-ignored	incr286  tcf fail incrementality
 
 
 -- Melting

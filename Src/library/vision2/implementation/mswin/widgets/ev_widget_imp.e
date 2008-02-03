@@ -882,9 +882,11 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 					if propagate_key_event_to_toplevel_window (True) then
 							-- Propagate key event to top level window if default key processing is enabled for 'key'.
 						l_top_level_window_imp ?= top_level_window_imp
+							-- The following line is to avoid VWEQ warning when comparing with Current.
+						l_current := Current
 						if
 							l_top_level_window_imp /= Void
-							and then l_top_level_window_imp /= Current
+							and then l_top_level_window_imp /= l_current
 							and then not l_top_level_window_imp.disable_default_processing_on_key (key)
 						then
 							l_top_level_window_imp.key_press_actions.call ([key])
@@ -913,6 +915,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 		local
 			key: EV_KEY
 			l_top_level_window_imp: EV_WINDOW_I
+			l_current: EV_WIDGET_I
 		do
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
@@ -924,9 +927,11 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 						-- Propagate key event to top level window if default key processing is enabled.
 					if propagate_key_event_to_toplevel_window (False) then
 						l_top_level_window_imp ?= top_level_window_imp
+							-- The following line is to avoid VWEQ warning when comparing with Current.
+						l_current := Current
 						if
 							l_top_level_window_imp /= Void
-							and then l_top_level_window_imp /= Current
+							and then l_top_level_window_imp /= l_current
 							and then not l_top_level_window_imp.disable_default_processing_on_key (key)
 						then
 							l_top_level_window_imp.key_release_actions.call ([key])

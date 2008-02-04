@@ -140,13 +140,12 @@ feature -- Element change
 			l_old_value: ANY
 		do
 			l_old_value := value (a_id)
-			if not equal (l_old_value, a_value) then
+			if l_old_value /= a_value then
 				if {l_old_data: !SESSION_DATA_I} l_old_value then
 						-- Remove current session as the owner of the data
 					l_old_data.set_session (Void)
 				end
-				
-				is_dirty := True
+
 				data.force (box_value (a_value), a_id)
 				if a_value /= Void then
 					if {l_data: !SESSION_DATA_I} a_value and then l_data.session /= Current then
@@ -154,7 +153,11 @@ feature -- Element change
 						l_data.set_session (Current)
 					end
 				end
-				value_changed_event.publish ([Current, a_id])
+				if not equal (l_old_value, a_value) then
+						-- The two values are considered the same so do not publish the changed event
+					value_changed_event.publish ([Current, a_id])
+					is_dirty := True
+				end
 			end
 		end
 

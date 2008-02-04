@@ -38,8 +38,13 @@
 	<target name="internal_set_version">
 		<argument name="A_dir" />
 		<argument name="A_filename" />
+		<set name="old_LC_MESSAGES" value="$LC_MESSAGES" if="$LC_MESSAGES" />
+		<setenv name="LC_MESSAGES" value="C" />
 		<geant target="set_version_windows" arguments="$A_dir,$A_filename" if="$is_windows" />
 		<geant target="set_version_unix" arguments="$A_dir,$A_filename" unless="$is_windows" />
+		<setenv name="LC_MESSAGES" value="$old_LC_MESSAGES" if="$old_LC_MESSAGES" />
+		<setenv name="LC_MESSAGES" value="" unless="$old_LC_MESSAGES" />
+		<unset name="old_LC_MESSAGES" />
 	</target>
 
 	<target name="set_version_windows" depend="init" if="${is_windows}" >

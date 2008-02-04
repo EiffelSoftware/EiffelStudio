@@ -38,13 +38,8 @@
 	<target name="internal_set_version">
 		<argument name="A_dir" />
 		<argument name="A_filename" />
-		<set name="old_LC_MESSAGES" value="$LC_MESSAGES" if="$LC_MESSAGES" />
-		<setenv name="LC_MESSAGES" value="C" />
 		<geant target="set_version_windows" arguments="$A_dir,$A_filename" if="$is_windows" />
 		<geant target="set_version_unix" arguments="$A_dir,$A_filename" unless="$is_windows" />
-		<setenv name="LC_MESSAGES" value="$old_LC_MESSAGES" if="$old_LC_MESSAGES" />
-		<setenv name="LC_MESSAGES" value="" unless="$old_LC_MESSAGES" />
-		<unset name="old_LC_MESSAGES" />
 	</target>
 
 	<target name="set_version_windows" depend="init" if="${is_windows}" >
@@ -60,6 +55,7 @@ setlocal
 set SVNWCT=%1
 set EFILE=%2
 set EFILE_TMP=%EFILE%.tmp
+set LC_MESSAGES=C
 
 svn info %SVNWCT% &gt; %EFILE_TMP%
 For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('findstr /L /B /C:&quot;Last Changed Rev&quot; %EFILE_TMP%') do (set LASTREV=%%d)
@@ -93,6 +89,8 @@ endlocal
 # set version number in $2 to the latest SVN repository version number.
 # $1 = SVN repository
 # $2 = file to process if any, otherwise display version on output
+
+LC_MESSAGES=C
 
 computed_svn_revision=`until svn info $1; do echo &quot;&quot;; done | grep &quot;Last Changed Rev&quot; | sed -e &quot;s/Last Changed Rev: //&quot;`
 if [ '$2' = '' ]; then

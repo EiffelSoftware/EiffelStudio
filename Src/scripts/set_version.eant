@@ -60,10 +60,12 @@ set LC_MESSAGES=C
 svn info %SVNWCT% &gt; %EFILE_TMP%
 For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('findstr /L /B /C:&quot;Last Changed Rev&quot; %EFILE_TMP%') do (set LASTREV=%%d)
 del %EFILE_TMP%
-svn revert %EFILE%
+if .%LASTREV%. == .. set LASTREV=0000 -- Script was unable to set this value
 
 For /f &quot;tokens=2-4 delims=/ &quot; %%a in ('date /t') do (set TODAYDATE=%%c-%%a-%%b)
 
+echo Set version: LASTREV=%LASTREV%
+svn revert %EFILE%
 sed -e &quot;s/:= 0000/:= %LASTREV%/&quot; %EFILE% &gt; %EFILE_TMP%
 move %EFILE_TMP% %EFILE%
 
@@ -74,8 +76,11 @@ move %EFILE_TMP% %EFILE%
 endlocal
 @echo on
 		</echo>
+		<echo message="cwd = $cwd " />
+		<exec executable="type ${set_version_fn} > test.bat" dir="${A_dir}" />
 		<exec executable="${set_version_fn} ${EIFFEL_SRC} ${A_filename}" dir="${A_dir}"
-			accept_errors="true" />
+			accept_errors="true" exit_code_variable="no_return_code" />
+		<unset name="no_return_code" />
 		<delete file="${set_version_fn}" />
 	</target>
 
@@ -93,6 +98,9 @@ endlocal
 LC_MESSAGES=C
 
 computed_svn_revision=`until svn info $1; do echo &quot;&quot;; done | grep &quot;Last Changed Rev&quot; | sed -e &quot;s/Last Changed Rev: //&quot;`
+if [ '$computed_svn_revision' = '' ]; then
+	computed_svn_revision='0000 -- Script was unable to set this value'
+fi
 if [ '$2' = '' ]; then
 	echo $computed_svn_revision
 else

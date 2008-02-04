@@ -98,12 +98,14 @@ endlocal
 LC_MESSAGES=C
 
 computed_svn_revision=`until svn info $1; do echo &quot;&quot;; done | grep &quot;Last Changed Rev&quot; | sed -e &quot;s/Last Changed Rev: //&quot;`
-if [ '$computed_svn_revision' = '' ]; then
+if test "$computed_svn_revision" = "" ; then
+	echo bad
 	computed_svn_revision='0000 -- Script was unable to set this value'
 fi
-if [ '$2' = '' ]; then
+if test "$2" = "" ; then
 	echo $computed_svn_revision
 else
+	echo Set version: LASTREV=$computed_svn_revision
 	svn revert $2 #revert in case it was modification
 	sed -e "s/:= 0000/:= $computed_svn_revision/" $2 &gt; tmp
 	mv tmp $2

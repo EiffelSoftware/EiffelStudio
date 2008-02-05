@@ -864,48 +864,44 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			l_top_level_window_imp: EV_WINDOW_I
 			l_current: EV_WIDGET_I
 			l_pnd_finished: BOOLEAN
+			l_disable_default_processing: BOOLEAN
 		do
 				-- If escape or tab has been pressed then end pick and drop.
 				--| This is to stop the user from ever using Alt + tab
+
 				--| to switch between applications while in PND.
 			if virtual_key = vk_menu or virtual_key = vk_escape then
 				l_pnd_finished := transport_executing
 				escape_pnd
 			end
-			if not l_pnd_finished and then valid_wel_code (virtual_key) then
+			if not l_pnd_finished and valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 
-					-- Should default processing be disabled?
-				if disable_default_processing_on_key (key) then
+				l_disable_default_processing := disable_default_processing_on_key (key)
+
+				if not l_disable_default_processing and then propagate_key_event_to_toplevel_window (True) then
+						-- Propagate key event to top level window
+					l_top_level_window_imp ?= top_level_window_imp
+					l_current := Current
+					if l_top_level_window_imp /= Void and then l_top_level_window_imp /= l_current then
+						l_top_level_window_imp.key_press_actions.call ([key])
+					end
+				end
+				if application_imp.key_press_actions_internal /= Void then
+					application_imp.key_press_actions_internal.call ([interface, key])
+				end
+				if key_press_actions_internal /= Void then
+					key_press_actions_internal.call ([key])
+				end
+				if virtual_key = vk_return and then not l_disable_default_processing then
+						-- Fire `select_actions' on Current widget if it is the expected
+						-- behavior. For now, only EV_BUTTON_IMP instances do that.
+					fire_select_actions_on_enter
+				end
+				if l_disable_default_processing then
 					disable_default_processing
-				else
-					if propagate_key_event_to_toplevel_window (True) then
-							-- Propagate key event to top level window if default key processing is enabled for 'key'.
-						l_top_level_window_imp ?= top_level_window_imp
-							-- The following line is to avoid VWEQ warning when comparing with Current.
-						l_current := Current
-						if
-							l_top_level_window_imp /= Void
-							and then l_top_level_window_imp /= l_current
-							and then not l_top_level_window_imp.disable_default_processing_on_key (key)
-						then
-							l_top_level_window_imp.key_press_actions.call ([key])
-						end
-					end
-					if application_imp.key_press_actions_internal /= Void then
-						application_imp.key_press_actions_internal.call ([interface, key])
-					end
-					if key_press_actions_internal /= Void then
-						key_press_actions_internal.call ([key])
-					end
-					if virtual_key = vk_return then
-							-- Fire `select_actions' on Current widget if it is the expected
-							-- behavior. For now, only EV_BUTTON_IMP instances do that.
-						fire_select_actions_on_enter
-					end
-					if is_tabable_from then
-						process_navigation_key (virtual_key)
-					end
+				elseif is_tabable_from and then not l_disable_default_processing then
+					process_navigation_key (virtual_key)
 				end
 			end
 		end
@@ -916,33 +912,28 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			key: EV_KEY
 			l_top_level_window_imp: EV_WINDOW_I
 			l_current: EV_WIDGET_I
+			l_disable_default_processing: BOOLEAN
 		do
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 
-					-- Should default key processing be disabled?
-				if disable_default_processing_on_key (key) then
+				l_disable_default_processing := disable_default_processing_on_key (key)
+
+				if not l_disable_default_processing and then propagate_key_event_to_toplevel_window (False) then
+					l_top_level_window_imp ?= top_level_window_imp
+					l_current := Current
+					if l_top_level_window_imp /= Void and l_top_level_window_imp /= l_current then
+						l_top_level_window_imp.key_release_actions.call ([key])
+					end
+				end
+				if application_imp.key_release_actions_internal /= Void then
+					application_imp.key_release_actions_internal.call ([interface, key])
+				end
+				if key_release_actions_internal /= Void then
+					key_release_actions_internal.call ([key])
+				end
+				if l_disable_default_processing then
 					disable_default_processing
-				else
-						-- Propagate key event to top level window if default key processing is enabled.
-					if propagate_key_event_to_toplevel_window (False) then
-						l_top_level_window_imp ?= top_level_window_imp
-							-- The following line is to avoid VWEQ warning when comparing with Current.
-						l_current := Current
-						if
-							l_top_level_window_imp /= Void
-							and then l_top_level_window_imp /= l_current
-							and then not l_top_level_window_imp.disable_default_processing_on_key (key)
-						then
-							l_top_level_window_imp.key_release_actions.call ([key])
-						end
-					end
-					if application_imp.key_release_actions_internal /= Void then
-						application_imp.key_release_actions_internal.call ([interface, key])
-					end
-					if key_release_actions_internal /= Void then
-						key_release_actions_internal.call ([key])
-					end
 				end
 			end
 		end
@@ -1044,42 +1035,37 @@ feature {NONE} -- Implementation
 			l_char: CHARACTER_32
 			l_key: EV_KEY
 			l_code: INTEGER
-			l_default_processing_disabled: BOOLEAN
 		do
-			l_code := {WEL_API}.vk_key_scan (l_char)
-			if l_code /= -1 and then valid_wel_code (l_code) then
-				create l_key.make_with_code (key_code_from_wel (l_code))
+			if character_code = 13 then
+					-- On Windows, the Enter key gives us "%R" but we need to
+					-- substitute this with "%N" which is the Eiffel newline character.
+				l_char := '%N'
+			else
+				l_char := character_code.as_natural_32.to_character_32
 			end
-
-			if l_key = Void or else not disable_default_processing_on_key (l_key) then
-				if character_code = 13 then
-						-- On Windows, the Enter key gives us "%R" but we need to
-						-- substitute this with "%N" which is the Eiffel newline character.
-					l_char := '%N'
-				else
-					l_char := character_code.as_natural_32.to_character_32
+			create character_string.make(1)
+			character_string.append_character (l_char)
+			inspect character_code
+			when 8, 27, 127 then
+				-- Do not fire `key_press_string_actions' if Backspace, Esc or del
+				-- are pressed as they are not displayable characters.
+			else
+				if application_imp.key_press_string_actions_internal /= Void then
+					application_imp.key_press_string_actions_internal.call ([interface, character_string])
 				end
-				create character_string.make(1)
-				character_string.append_character (l_char)
-				inspect character_code
-				when 8, 27, 127 then
-					-- Do not fire `key_press_string_actions' if Backspace, Esc or del
-					-- are pressed as they are not displayable characters.
-				else
-					if application_imp.key_press_string_actions_internal /= Void then
-						application_imp.key_press_string_actions_internal.call ([interface, character_string])
-					end
-					if key_press_string_actions_internal /= Void then
-						key_press_string_actions_internal.call ([character_string])
-					end
+				if key_press_string_actions_internal /= Void then
+					key_press_string_actions_internal.call ([character_string])
 				end
-			elseif l_key /= Void then
-					-- Default processing should be disabled.
-				disable_default_processing
-				l_default_processing_disabled := True
 			end
-
-			if not l_default_processing_disabled and then (not has_focus or ignore_character_code (character_code)) then
+			if default_key_processing_handler /= Void then
+				l_code := {WEL_API}.vk_key_scan (l_char)
+				if l_code /= -1 and then valid_wel_code (l_code) then
+					create l_key.make_with_code (key_code_from_wel (l_code))
+					if not default_key_processing_handler.item ([l_key]) then
+						disable_default_processing
+					end
+				end
+			elseif not has_focus or ignore_character_code (character_code) then
 					-- When we loose the focus or press return, we do not perform the
 					-- default processing since it causes a system beep.
 				disable_default_processing
@@ -1589,3 +1575,4 @@ indexing
 		]"
 
 end -- class EV_WIDGET_IMP
+

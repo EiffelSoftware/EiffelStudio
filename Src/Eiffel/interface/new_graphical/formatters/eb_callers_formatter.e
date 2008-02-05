@@ -45,7 +45,14 @@ feature -- Access
 	mode: NATURAL_8
 			-- Formatter mode, see {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
 		do
-			Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callers
+			inspect flag
+			when {DEPEND_UNIT}.is_in_assignment_flag then
+				Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.assigners
+			when {DEPEND_UNIT}.is_in_creation_flag then
+				Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.creators
+			else
+				Result := {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callers
+			end
 		end
 
 feature -- Properties

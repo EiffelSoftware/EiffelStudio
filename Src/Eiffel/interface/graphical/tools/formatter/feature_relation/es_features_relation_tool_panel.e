@@ -95,18 +95,20 @@ feature {ES_FEATURE_RELATION_TOOL} -- Element change
 			l_cursor: CURSOR
 			l_stop: BOOLEAN
 		do
-			l_formatters := predefined_formatters
-			l_cursor := l_formatters.cursor
-			from l_formatters.start until l_formatters.after or l_stop loop
-				if {l_formatter: !EB_FEATURE_INFO_FORMATTER} l_formatters.item and then l_formatter.mode = a_mode then
-						-- Execute formatter
-					l_formatter.execute
-					l_stop := True
-				else
-					l_formatters.forth
+			if a_mode /= mode then
+				l_formatters := predefined_formatters
+				l_cursor := l_formatters.cursor
+				from l_formatters.start until l_formatters.after or l_stop loop
+					if {l_formatter: !EB_FEATURE_INFO_FORMATTER} l_formatters.item and then l_formatter.mode = a_mode then
+							-- Execute formatter
+						l_formatter.execute
+						l_stop := True
+					else
+						l_formatters.forth
+					end
 				end
+				l_formatters.go_to (l_cursor)
 			end
-			l_formatters.go_to (l_cursor)
 		ensure then
 			formatters_unmoved: formatters.cursor.is_equal (old formatters.cursor)
 		end

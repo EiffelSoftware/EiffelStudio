@@ -70,6 +70,7 @@ feature -- Query
 				a_mode = implementers or
 				a_mode = ancestors or
 				a_mode = descendants or
+				a_mode = homonyms or
 				a_mode = custom)
 		end
 

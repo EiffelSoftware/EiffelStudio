@@ -1,49 +1,49 @@
 indexing
-	description: "Core of the application"
+	description: "Main class for Batch mode in EiffelStudio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_KERNEL
+	ES_BATCH
 
 inherit
-	ARGUMENTS
+	ES
+		redefine
+			initialize
+		end
 
-	SHARED_FLAGS
+	SHARED_SERVICE_PROVIDER
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create and map the first window: the system window.
-		local
-			compiler: ES_BATCH
-			graphic_compiler: ES_GRAPHIC
-			--| uncomment the following line when profiling
-			--prof_setting: PROFILING_SETTING
+	initialize is
+			-- Initializes batch compiler
 		do
-			--| uncomment the following lines when profiling
-			--create prof_setting.make
-			--prof_setting.stop_profiling
+			initialize_services
+		end
 
-			if
-				argument_count > 0 and then
-				(index_of_word_option ("gui") > 0 or else
-				argument (1).is_equal ("-from_bench") or else argument (1).is_equal ("-bench"))
-			then
-				set_gui (True)
-				create graphic_compiler.make
-			else
-					-- Start the compilation in batch mode from the bench executable.
-				create compiler.make
-			end
+feature {NONE} -- Service initialization
 
-			--| uncomment the following line when profiling
-			--prof_setting.start_profiling
+	initialize_services is
+			-- Initializes tty services
+		local
+			l_container: SERVICE_CONTAINER
+		do
+			l_container ?= service_provider.query_service ({SERVICE_CONTAINER})
+			l_container.add_service_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
+		end
+
+	create_session_manager_service: SESSION_MANAGER_S
+			-- Creates the session manager service
+		do
+			create {SESSION_MANAGER} Result
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
 indexing

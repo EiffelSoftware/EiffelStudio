@@ -91,9 +91,18 @@ feature -- Initialization
 			create l_compiler_setting
 			l_compiler_setting.set_preferences (l_ec_preferences)
 
+				-- Remaining initialization			
+			initialize
+
+				-- Execution
 			execute
 
 			l_eifgen_init.dispose
+		end
+
+	initialize is
+			-- Initialize batch compiler
+		do
 		end
 
 	execute is

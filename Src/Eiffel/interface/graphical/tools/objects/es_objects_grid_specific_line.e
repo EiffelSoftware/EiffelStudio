@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 						es_glab.set_data (l_exception_text)
 						parent_grid.grid_cell_set_text (es_glab, cst_exception_double_click_text)
 						parent_grid.grid_cell_set_tooltip (es_glab, l_exception_text)
-						es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_meaning, l_exception_message, l_exception_text))
+						es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (exc_dv))
 						r.set_item (2, es_glab)
 					end
 
@@ -462,14 +462,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_exception_dialog (a_meaning, a_msg, a_txt: STRING_32) is
+	show_exception_dialog (a_exc_dv: EXCEPTION_DEBUG_VALUE) is
+			-- Show `a_exc_dv' in exception dialog
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
 		do
 			create dlg.make
-			dlg.set_exception_meaning (a_meaning)
-			dlg.set_exception_message (a_msg)
-			dlg.set_exception_text (a_txt)
+			dlg.set_exception (a_exc_dv)
 			dlg.set_is_modal (True)
 			dlg.show_on_active_window
 		end

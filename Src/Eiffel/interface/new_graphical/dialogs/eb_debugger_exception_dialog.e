@@ -106,43 +106,7 @@ feature -- Details
 	set_exception (e: EXCEPTION_DEBUG_VALUE) is
 			-- Set Exception value
 		do
-			set_exception_meaning (e.meaning)
-			set_exception_message (e.message)
-			set_exception_text (e.text)
-		end
-
-	set_exception_meaning (t: STRING_GENERAL) is
-			-- Set meaning and refresh display
-		do
-			if t /= Void and then not t.is_empty then
-				exception_meaning := t.as_string_32
-			else
-				exception_meaning := Void
-			end
-			display_exception_info
-		end
-
-	set_exception_message (t: STRING_GENERAL) is
-			-- Set message and refresh display
-		do
-			if t /= Void and then not t.is_empty then
-				exception_message := t.as_string_32
-			else
-				exception_message := Void
-			end
-
-			display_exception_info
-		end
-
-	set_exception_text (t: STRING_GENERAL) is
-			-- Set text and refresh display
-		do
-			if t /= Void and then not t.is_empty then
-				exception_text := t.as_string_32
-			else
-				exception_text := Void
-			end
-
+			exception_text := e.long_description
 			display_exception_info
 		end
 
@@ -152,20 +116,7 @@ feature -- Details
 			s: STRING_32
 		do
 			create s.make_empty
-			if exception_meaning /= Void then
-				s.append_string (exception_meaning)
-				s.append_string ("%N")
-			end
-			if exception_message /= Void then
-				if exception_meaning = Void or else not exception_message.is_equal (exception_meaning) then
-					s.append_string (exception_message)
-					s.append_string ("%N")
-				end
-			end
 			if exception_text /= Void then
-				if not s.is_empty then
-					s.append_string ("%N")
-				end
 				s.append_string (exception_text)
 			end
 			if s.occurrences ('%R') > 0 then
@@ -198,8 +149,6 @@ feature -- Details
 
 feature {NONE} -- Implementation
 
-	exception_meaning,
-	exception_message,
 	exception_text: STRING_32
 			-- Exception meaning, message, and text
 

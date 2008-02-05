@@ -395,6 +395,7 @@ feature -- Graphical changes
 	show_error_dialog (txt: STRING_GENERAL) is
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
+			edv: EXCEPTION_DEBUG_VALUE
 			l_meaning: STRING_32
 		do
 			if expression /= Void then
@@ -404,8 +405,11 @@ feature -- Graphical changes
 				end
 			end
 			create dlg.make
-			dlg.set_exception_meaning (l_meaning)
-			dlg.set_exception_text (txt)
+			create edv.make_without_any_value
+			edv.set_user_meaning (l_meaning)
+			edv.set_user_text (txt)
+
+			dlg.set_exception (edv)
 			dlg.set_title_and_label (interface_names.t_watch_tool_error_message, interface_names.l_error_message)
 			dlg.set_is_modal (True)
 			dlg.show_on_active_window

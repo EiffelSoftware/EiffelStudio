@@ -1456,9 +1456,13 @@ feature {NONE} -- Raise/unraise notification
 					create l_message.make_from_string (interface_names.l_Switching_to_debug_mode.as_string_32)
 					l_icon := pixmaps.icon_pixmaps.debugger_environment_force_debug_mode_icon_buffer
 				end
-				create l_popup.make_with_icon (l_message, l_icon)
-				l_popup.show_relative_to_window (l_window)
-				switching_mode_popup := l_popup
+				if l_window.is_displayed and then l_window.screen_x + l_window.width > 0 and l_window.screen_y + l_window.height > 0 then
+						-- When window is off-screen, prevent the transition window from being shown.
+					create l_popup.make_with_icon (l_message, l_icon)
+					l_popup.show_relative_to_window (l_window)
+					switching_mode_popup := l_popup
+				end
+
 			end
 		end
 

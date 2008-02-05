@@ -291,7 +291,7 @@ feature {NONE} -- Access
 
                 l_items := create_mini_tool_bar_items
                 if l_items /= Void or else l_multi then
-                    create Result.make
+                    create {SD_WIDGET_TOOL_BAR} Result.make (create {SD_TOOL_BAR}.make)
                 end
                 if l_multi then
                         -- Add new edition button
@@ -581,7 +581,7 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 				l_widget.set_pointer_style (l_style)
 			end
 		end
-		
+
 	propagate_action (a_start_widget: EV_WIDGET; a_action: PROCEDURE [ANY, TUPLE [EV_WIDGET]]; a_excluded: ARRAY [EV_WIDGET])
 			-- Propagates a performed action to all child widgets of an initial widget.
 			--

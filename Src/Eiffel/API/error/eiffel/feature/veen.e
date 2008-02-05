@@ -82,7 +82,9 @@ feature {NONE} -- Output
 			Precursor (a_text_formatter)
 			create l_text.make (50)
 			l_text.append (" `")
-			l_text.append (identifier)
+			if {l_id: !like identifier} identifier then
+				l_text.append (l_id)
+			end
 			l_text.append ("' taking ")
 			if parameter_count > 0 then
 				l_text.append_integer (parameter_count)

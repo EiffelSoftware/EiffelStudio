@@ -230,7 +230,7 @@ feature -- Graphical changes
 						set_value (excdv.short_description)
 						gi := value_cell
 						if gi /= Void then
-							gi.set_tooltip (excdv.description)
+							gi.set_tooltip (excdv.long_description)
 						end
 						set_type (debugger_names.l_exception_data)
 						set_pixmap (Icons @ (dv.kind))

@@ -19,6 +19,8 @@ inherit
 
 create {RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make_with_value, make_without_any_value
+create
+	make_fake
 
 feature {NONE} -- Initialization
 
@@ -34,6 +36,12 @@ feature {NONE} -- Initialization
 		do
 			make_with_value (Void)
 			set_user_meaning ("Exception occurred (no information)")
+		end
+
+	make_fake (t: like user_meaning) is
+		do
+			make_with_value (Void)
+			set_user_meaning (t)
 		end
 
 feature -- Report
@@ -65,28 +73,59 @@ feature -- Report
 				end
 			elseif l_mesg = Void or else not l_meaning.is_equal (l_mesg) then
 				Result.append_string (l_meaning)
-				if l_type_name /= Void then
-					Result.append (" (")
-					Result.append (l_type_name.to_string_32)
-					Result.append (")")
-				end
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	description: STRING_32 is
-			-- Computed information message to display in object tool
+			-- Computed information message to display
 		local
 			s: STRING_32
+			l_type_name: STRING_8
 		do
 			create Result.make_from_string (short_description)
+			l_type_name := type_name
+			if l_type_name /= Void then
+				Result.append (" (")
+				Result.append (l_type_name.to_string_32)
+				Result.append (")")
+			end
+
 			s := text
 			if s /= Void and then not s.is_empty then
 				if not Result.is_empty then
 					Result.append_string ("%N")
 				end
 				Result.append_string (s)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	long_description: STRING_32 is
+			-- Computed full information message to display
+		local
+			k: STRING_8
+			s: STRING_32
+		do
+			create Result.make_from_string (description)
+			if exception_others /= Void then
+				from
+					exception_others.start
+				until
+					exception_others.after
+				loop
+					k := exception_others.key_for_iteration
+					s := exception_others.item_for_iteration
+					if k /= Void and s /= Void then
+						Result.append_string ("%N")
+						Result.append_string (k)
+						Result.append_string (": ")
+						Result.append_string (s)
+					end
+					exception_others.forth
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void

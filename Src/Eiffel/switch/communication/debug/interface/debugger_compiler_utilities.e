@@ -138,7 +138,7 @@ feature -- Type adaptation
 		end
 
 	frozen class_c_from_type_a (t: TYPE_A; a_ctx_class: CLASS_C): CLASS_C is
-			-- instance of CLASS_C associated witþ type `t', in context of class `a_ctx_class'.
+			-- instance of CLASS_C associated with type `t', in context of class `a_ctx_class'.
 		require
 			t_not_void: t /= Void
 			a_ctx_class_not_void: a_ctx_class /= Void

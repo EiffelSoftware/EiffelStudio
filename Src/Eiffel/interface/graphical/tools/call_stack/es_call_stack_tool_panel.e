@@ -741,14 +741,14 @@ feature {NONE} -- Implementation
 					stop_cause.set_text (Interface_names.l_Explicit_exception_pending)
 					m.append (Interface_names.l_Explicit_exception_pending)
 					m.append (": ")
-					m.append (exception_meaning_text)
+					m.append (exception_short_description)
 					display_exception
 					set_focus_is_visible
 				when Pg_viol then
 					stop_cause.set_text (Interface_names.l_Implicit_exception_pending)
 					m.append (Interface_names.l_Implicit_exception_pending)
 					m.append (": ")
-					m.append (exception_meaning_text)
+					m.append (exception_short_description)
 					display_exception
 					set_focus_is_visible
 				when Pg_new_breakpoint then
@@ -775,7 +775,7 @@ feature {NONE} -- Implementation
 		local
 			m: STRING_32
 		do
-			m := exception_meaning_text
+			m := exception_short_description
 --| FIXME jfiat [2004/03/19] : NewFeature keep only first line of exception text for callstack_tool
 --| We'll enable this, once we have an exception window to display the full message
 			exception.set_text (first_line_of (m))
@@ -791,9 +791,7 @@ feature {NONE} -- Implementation
 			w := Eb_debugger_manager.debugging_window.window
 			if debugger_manager.safe_application_is_stopped then
 				create dlg.make
-				dlg.set_exception_meaning (exception_meaning_text)
-				dlg.set_exception_message (exception_message_text)
-				dlg.set_exception_text (exception_text_text)
+				dlg.set_exception (exception_value)
 				dlg.set_is_modal (True)
 				dlg.show_on_active_window
 			else
@@ -839,60 +837,40 @@ feature {NONE} -- Implementation
 			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
 		end
 
-	exception_meaning_text: STRING_32 is
-			-- Text corresponding to the current exception.
+	exception_value: EXCEPTION_DEBUG_VALUE is
+			-- Current exception value
 		local
 			l_status: APPLICATION_STATUS
 		do
 			l_status := Debugger_manager.application_status
 			if l_status /= Void then
 				if l_status.exception_occurred then
-					Result := l_status.exception_short_description
-				else
-					Result := "No exception occurred"
+					Result := l_status.exception
 				end
-			end
-			if Result = Void then
-				Result := ""
-			end
-
--- FIXME JFIAT: 2003/03/12 : what for this postcondition limitation ?
--- need to check if there is any reason for that ...
--- except we are using a TEXT_FIELD instead of multiple line widget
---		ensure
---			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
-		end
-
-	exception_message_text: STRING_32 is
-			-- Text corresponding to the current exception.
-		local
-			l_status: APPLICATION_STATUS
-		do
-			l_status := Debugger_manager.application_status
-			if l_status /= Void then
-				if l_status.exception_occurred then
-					Result := l_status.exception_message
-				end
-			end
-			if Result = Void then
-				Result := ""
 			end
 		end
 
-	exception_text_text: STRING_32 is
+	fake_exception_value: EXCEPTION_DEBUG_VALUE is
+			-- Current exception value
+		do
+			Result := exception_value
+			if Result = Void then
+				create Result.make_fake ("No exception occurred")
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	exception_short_description: STRING_32 is
 			-- Text corresponding to the current exception.
 		local
-			l_status: APPLICATION_STATUS
+			e: like exception_value
 		do
-			l_status := Debugger_manager.application_status
-			if l_status /= Void then
-				if l_status.exception_occurred then
-					Result := l_status.exception_text
-				end
+			e := exception_value
+			if e = Void then
+				e := fake_exception_value
 			end
-			if Result = Void then
-				Result := ""
-			end
+			Result := e.short_description
 		end
 
 	on_element_drop (st: CALL_STACK_STONE) is
@@ -1228,6 +1206,7 @@ feature {NONE} -- Implementation
 		local
 			l_output: YANK_STRING_WINDOW
 			retried: BOOLEAN
+			e: like exception_value
 			s: STRING
 			t: STRING
 		do
@@ -1236,19 +1215,11 @@ feature {NONE} -- Implementation
 						--| We generate the call stack.
 					create s.make_empty
 					if debugger_manager.application_status.exception_occurred then
-						t := exception_meaning_text
-						if t /= Void and then not t.is_empty then
-							s.append_string ("Exception meaning:%N" + t + "%N")
+						e := exception_value
+						if e = Void then
+							e := fake_exception_value
 						end
-						t := exception_message_text
-						if t /= Void and then not t.is_empty then
-							s.append_string ("Exception message:%N" + t + "%N")
-						end
-						t := exception_text_text
-						if t /= Void and then not t.is_empty then
-							s.append_string ("Exception text:%N" + t + "%N")
-						end
-
+						s.append (e.long_description)
 					end
 					create l_output.make;
 					Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, l_output)

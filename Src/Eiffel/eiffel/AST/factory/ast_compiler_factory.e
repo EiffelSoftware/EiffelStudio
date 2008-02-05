@@ -272,7 +272,7 @@ feature -- Access
 							-- We have an associating built in class.
 							-- If we find a feature with the name matching the built in then we set this
 							-- replacement feature as an attribute of the dummy built in.
-						l_built_in_feature_node := l_built_in_class_as.feature_with_name (l_built_in_processor.names_heap.id_of (f.first.visual_name))
+						l_built_in_feature_node := l_built_in_class_as.feature_with_name (f.first.internal_name.name_id)
 						if l_built_in_feature_node /= Void then
 							l_routine_as ?= b.content
 							l_built_in_as ?= l_routine_as.routine_body

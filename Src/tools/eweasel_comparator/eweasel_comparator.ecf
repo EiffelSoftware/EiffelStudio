@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="eweasel_comparator" uuid="98B6F4E7-C920-495B-809F-45DFCE987844">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="eweasel_comparator" uuid="98B6F4E7-C920-495B-809F-45DFCE987844">
 	<target name="eweasel_comparator">
 		<root class="ROOT_CLASS" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="true" invariant="false" loop="false"/>
+			<assertions precondition="true" check="true"/>
 			<warning name="vjrv" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<cluster name="root_cluster" location=".\" />
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

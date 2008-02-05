@@ -6,10 +6,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	LIST_TEST 
+	LIST_TEST
 
 inherit
-	HASH_TABLE [STRING, STRING]
+	DS_HASH_TABLE [STRING, STRING]
 		rename
 			make as table_make
 		end
@@ -22,43 +22,38 @@ feature -- Initialization
 	make is
 			-- Initialize
 		do
-			table_make(2) 				
+			table_make(2)
 		end
 
-feature 
+feature
 
 	add_tests_from_compiler_results (cr : COMPILER_RESULTS) is
 			-- add additional tests if not yet in list_test
 		local
-
-			key_compiler: ARRAY [STRING]
-			key,name: STRING
+			l_key,name: STRING
 			test_info: TEST_INFO
-			index: INTEGER
 		do
-
-			key_compiler := cr.current_keys
 			from
-				index := 1
+				cr.start
 			until
-				index > key_compiler.count
+				cr.after
 			loop
-				key := key_compiler @ index
-				if not has (key) then
-					test_info := cr.item(key)
+				l_key := cr.key_for_iteration
+				if not has (l_key) then
+					test_info := cr.item (l_key)
 					name := test_info.test_real_name
-					add_single_test (key, name)
+					add_single_test (l_key, name)
 				end
-			index := index + 1
+				cr.forth
 			end
 		end
 
-feature 
-	add_single_test (key, name : STRING) is
+feature
+	add_single_test (a_key, a_name : STRING) is
 			-- add test if not present
 		do
-			if not has (key) then
-				put (name, key)
+			if not has (a_key) then
+				force_last (a_name, a_key)
 			end
 		end
 

@@ -9,11 +9,11 @@ class
 	COMPILER_RESULTS
 
 inherit
-	HASH_TABLE [TEST_INFO, STRING]
+	DS_HASH_TABLE [TEST_INFO, STRING]
 		rename
 			make as table_make
 		end
-	
+
 create
 	make
 
@@ -25,8 +25,8 @@ feature -- Initialization
 		local
 			file_path_name: STRING
 		do
-			file_path_name := name			
-			create file.make (file_path_name)	
+			file_path_name := name
+			create file.make (file_path_name)
 			table_make (10)
 			if file.exists then
 				file.open_read
@@ -46,22 +46,22 @@ feature -- Measurement
 	build_test_hash_table (f : PLAIN_TEXT_FILE) is
 			-- Select useful information of file `f'
 			-- Store test's name and result with key `code'
-		local	
-			line_test_info, test, name, key, test_result : STRING
+		local
+			line_test_info, test, name, l_key, test_result : STRING
 			index1, index2 : INTEGER
 			test_info : TEST_INFO
 		do
-			
+
 			from
 				f.start
 			until
 				f.exhausted
 			loop
 				f.read_line
-				line_test_info := f.last_string	
+				line_test_info := f.last_string
 				test := line_test_info.substring (1,4)
-			
-				if equal (test, "Test") then			
+
+				if equal (test, "Test") then
 					line_test_info := line_test_info.substring (5,line_test_info.count)
 
 					if line_test_info.count /= 0 then
@@ -71,29 +71,29 @@ feature -- Measurement
 
 						index1 := line_test_info.index_of ('(',1)
 						index2 := line_test_info.index_of (')',2)
-						key := line_test_info.substring (index1 + 1, index2 - 1)
+						l_key := line_test_info.substring (index1 + 1, index2 - 1)
 
 						index1 := line_test_info.index_of (':',1)
 						index2 := line_test_info.count
-						test_result := line_test_info.substring (index1 + 2, index2)					
+						test_result := line_test_info.substring (index1 + 2, index2)
 					end
 
-					create test_info.make(test_result, name, key)
-					put (test_info, key)
+					create test_info.make(test_result, name, l_key)
+					force_last (test_info, l_key)
 				end
-	
+
 			end
-			
+
 		end
 
 
 feature
 
-	result_of (key: STRING) : STRING is
-			-- Return item stored with key `key'
+	result_of (a_key: STRING) : STRING is
+			-- Return item stored with key `akey'
 		do
-			if has (key) then
-				Result := item (key).test_result
+			if has (a_key) then
+				Result := item (a_key).test_result
 			else
 				Result := "-"
 			end

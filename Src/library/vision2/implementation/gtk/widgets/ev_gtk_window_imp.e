@@ -284,8 +284,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_accel_called: BOOLEAN
 			l_window_imp: EV_WINDOW_IMP
 			a_focus_widget: EV_WIDGET_IMP
-			l_block_events, l_block_window_events: BOOLEAN
 			l_tab_controlable: EV_TAB_CONTROLABLE_I
+			l_disable_default_processing: BOOLEAN
 			l_char: CHARACTER_32
 			l_any: ANY
 			l_accel: EV_ACCELERATOR
@@ -298,9 +298,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			if keyval > 0 and then valid_gtk_code (keyval) then
 				create a_key.make_with_code (key_code_from_gtk (keyval))
 			end
-			l_window_imp ?= Current
 			if {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (a_key_event) = {EV_GTK_EXTERNALS}.gdk_key_press_enum then
 				a_key_press := True
+				l_window_imp ?= Current
+
 					-- Call accelerators if present.
 				if a_key /= Void and then l_window_imp /= Void then
 					l_accel_list := l_window_imp.accelerators_internal
@@ -359,32 +360,14 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			end
 			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
 				if a_key /= Void then
-						-- Check if default key processing is allowed on `Current'.
-
-					if l_window_imp /= Void and then l_window_imp.default_key_processing_handler /= Void then
-						l_block_window_events := not l_window_imp.default_key_processing_handler.item ([a_key])
-						if a_focus_widget = l_any then
-								-- If the focus widget is `Current' then we also have to block normal events
-							l_block_events := True
+					l_disable_default_processing := a_focus_widget.disable_default_processing_on_key (a_key)
+					if not l_disable_default_processing then
+						l_tab_controlable ?= a_focus_widget
+						if l_tab_controlable /= Void and then not l_tab_controlable.is_tabable_from then
+							l_disable_default_processing := a_key.is_arrow or else a_key.code = {EV_KEY_CONSTANTS}.key_tab
 						end
 					end
-
-					if not l_block_events then
-						if a_focus_widget.default_key_processing_handler /= Void then
-							l_block_events := not a_focus_widget.default_key_processing_handler.item ([a_key])
-						end
-						if not l_block_events then
-							l_tab_controlable ?= a_focus_widget
-							if l_tab_controlable /= Void and then not l_tab_controlable.is_tabable_from then
-								l_block_events := a_key.is_arrow or else a_key.code = {EV_KEY_CONSTANTS}.key_tab
-							end
-						else
-								-- The widget is blocking events, therefore we don't propagate the event to the window either
-								-- as this is considered default processing.
-							l_block_window_events := True
-						end
-					end
-					if not l_block_events then
+					if not l_disable_default_processing then
 						{EV_GTK_EXTERNALS}.gtk_main_do_event (a_key_event)
 					end
 				end
@@ -403,12 +386,13 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 							l_app_imp.key_release_actions_internal.call ([a_focus_widget.interface, a_key])
 						end
 					end
-						-- Only propagate the events if they have not been blocked.
-					if a_focus_widget /= l_any and then not l_block_window_events then
-							-- An internal window has the focus so we propagate the event to it
+					if not l_disable_default_processing then
+							-- If `a_focus_widget' is disabling default processing then
+							-- we don't call top level window events. 
 						on_key_event (a_key, a_key_string, a_key_press)
 					end
-					if not l_block_events then
+					if a_focus_widget /= l_any then
+							-- If the focus widget is `Current' then do not call 'on_key_event' twice.
 						a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end

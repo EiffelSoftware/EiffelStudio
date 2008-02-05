@@ -215,13 +215,34 @@ feature {NONE} -- WEL Implementation
 				draw_flags := Wel_drawing_constants.Dss_normal
 			end
 			wel_icon := extract_icon (pixmap_imp)
-			draw_dc.draw_state_icon (Void, wel_icon, icon_left_position, icon_top_position, draw_flags)
+			if disabled and disabled_image /= Void then
+				if selected then
+					create hlc.make_by_color (contrast_color (system_color_highlight).item)
+				else
+					create hlc.make_by_color (contrast_color (system_color_menu).item)
+				end
+				disabled_image.draw_grayscale_icon_with_memory_buffer (wel_icon, draw_dc, pixmap_imp.width, pixmap_imp.height, icon_left_position, icon_top_position, hlc)
+			else
+				draw_dc.draw_state_icon (Void, wel_icon, icon_left_position, icon_top_position, draw_flags)
+			end
 			wel_icon.decrement_reference
 		ensure
 			rect_ok: rect.left = old rect.left and
 					rect.top = old rect.top and
 					rect.right = old rect.right and
 					rect.bottom = old rect.bottom
+		end
+
+	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER is
+			-- Grayscale image drawer.
+			-- Void if Gdi+ not installed.
+		local
+			l_gdip_starter: WEL_GDIP_STARTER
+		once
+			create l_gdip_starter
+			if l_gdip_starter.is_gdi_plus_installed then
+				create Result
+			end
 		end
 
 	contrast_color (a_color: WEL_COLOR_REF): WEL_COLOR_REF is

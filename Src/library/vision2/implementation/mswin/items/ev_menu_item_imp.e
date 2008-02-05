@@ -661,12 +661,13 @@ feature {NONE} -- WEL Implementation
 
 					-- First erase the background
 			create rect.make (0, 0, 0, 0)
+			if disabled_state and pixmap_imp /= Void and not selected_state then
+				background_color := system_color_menu
+			else
+				background_color := system_color_highlight
+			end
 			if selected_state then
-				if disabled_state and pixmap_imp /= Void then
-					background_color := system_color_menu
-				else
-					background_color := system_color_highlight
-				end
+
 				rect.set_rect (left_pos, top_pos, left_pos + plain_text_position - 2, bottom_pos)
 				erase_background (draw_dc, rect, background_color)
 				rect.set_rect (left_pos + plain_text_position - 2, top_pos, left_pos + plain_text_position, bottom_pos)
@@ -684,9 +685,16 @@ feature {NONE} -- WEL Implementation
 					draw_flags := Wel_drawing_constants.Dss_normal
 				end
 				icon_top_position := top_pos + (draw_item_struct_rect.height - pixmap_imp.height - 2) // 2
+				left_pos := left_pos + 1
+
 				wel_icon := extract_icon (pixmap_imp)
-				draw_dc.draw_state_icon (Void, wel_icon, 1 + left_pos, icon_top_position, draw_flags)
+				if disabled_state and disabled_image /= Void then
+					disabled_image.draw_grayscale_icon_with_memory_buffer (wel_icon, draw_dc, pixmap_imp.width, pixmap_imp.height, left_pos, icon_top_position, background_color)
+				else
+					draw_dc.draw_state_icon (Void, wel_icon, left_pos, icon_top_position, draw_flags)
+				end
 				wel_icon.decrement_reference
+
 			end
 		end
 
@@ -755,7 +763,11 @@ feature {NONE} -- WEL Implementation
 				end
 				icon_top_position := top_pos + (draw_item_struct_rect.height - pixmap_imp.height) // 2
 				wel_icon := extract_icon (pixmap_imp)
-				draw_dc.draw_state_icon (Void, wel_icon, left_pos + left_pos_start, icon_top_position, draw_flags)
+				if disabled_state and disabled_image /= Void then
+					disabled_image.draw_grayscale_icon_with_memory_buffer (wel_icon, draw_dc, pixmap_imp.width, pixmap_imp.height, left_pos, icon_top_position, background_color)
+				else
+					draw_dc.draw_state_icon (Void, wel_icon, left_pos + left_pos_start, icon_top_position, draw_flags)
+				end
 				wel_icon.decrement_reference
 				left_pos_start := left_pos_start + pixmap_imp.width + Menu_bar_item_pixmap_text_space
 			end
@@ -787,6 +799,18 @@ feature {NONE} -- WEL Implementation
 					draw_dc.draw_text (drawn_text, rect, draw_flags)
 				end
 				draw_dc.unselect_font
+			end
+		end
+		
+	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER is
+			-- Grayscale image drawer.
+			-- Void if Gdi+ not installed.
+		local
+			l_gdip_starter: WEL_GDIP_STARTER
+		once
+			create l_gdip_starter
+			if l_gdip_starter.is_gdi_plus_installed then
+				create Result
 			end
 		end
 

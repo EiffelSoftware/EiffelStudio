@@ -20,25 +20,23 @@ feature -- Initialization
 	make is
 		local
 			index_output, index_tests: INTEGER
+			l_args: ANY
 		do
+			l_args := argument_array
 			set_option_sign ('-')
 			only_different_results := False
 			index_output := index_of_beginning_with_word_option ("output")
 			index_tests := index_of_beginning_with_word_option ("tests")
 
-			if index_output * index_tests /=0 then
-				if equal (argument_array.item (1), "-output") and equal (argument_array.item (3), "-tests") then
-					if index_of_beginning_with_word_option ("full") = 0 then
-						only_different_results := True
-					end
-					if index_of_beginning_with_word_option ("tab") /= 0 then
-						has_tab := True
-					end
-					non_interactive_execution
-					sort
-				else
-					throw_usage
+			if index_tests /= 0 then
+				if index_of_beginning_with_word_option ("full") = 0 then
+					only_different_results := True
 				end
+				if index_of_beginning_with_word_option ("tab") /= 0 then
+					has_tab := True
+				end
+				non_interactive_execution
+				sort
 			elseif index_of_word_option ("loop") /= 0 then
 				if equal (separate_word_option_value("loop"), "") then
 					interactive_execution
@@ -131,8 +129,15 @@ feature
 			index: INTEGER
 			first_test: STRING
 			nb_to_remove: INTEGER
+			l_test_index: INTEGER
 		do
-			output_file := separate_word_option_value ("output")
+			if index_of_beginning_with_word_option ("output") /= 0 then
+				output_file := separate_word_option_value ("output")
+			else
+					-- By default we redirect to the STDOUT.
+				output_file := "stdout"
+			end
+			l_test_index := index_of_beginning_with_word_option ("tests")
 			first_test := separate_word_option_value ("tests")
 
 			if first_test.count * output_file.count /= 0 then
@@ -145,7 +150,7 @@ feature
 				if index_of_beginning_with_word_option ("tab") /= 0 then
 					nb_to_remove := nb_to_remove + 1
 				end
-				create array.make(1, argument_array.count - 4 - nb_to_remove)
+				create array.make(1, argument_array.count - l_test_index - nb_to_remove - 1)
 				array.put (first_test, 1)
 				if array.count > 1 then
 					from
@@ -153,7 +158,7 @@ feature
 					until
 						index > array.count
 					loop
-						array.put (argument_array.item (index + 3), index)
+						array.put (argument_array.item (index + l_test_index), index)
 						index := index + 1
 					end
 				end
@@ -199,7 +204,7 @@ feature
 
 	throw_usage is
 		do
-			io.putstring ("Usage:%N[-output file_name -tests file1 file2 ...][-full][-tab]")
+			io.putstring ("Usage:%N[[-output file_name] -tests file1 file2 ...][-full][-tab]")
 			io.putstring ("%N[-loop]%N")
 		end
 

@@ -521,116 +521,23 @@ feature {NONE} -- Implementation
 
 	desaturation_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
 			-- Disaturation `a_pixel_buffer' when Gdi+ is available.
-		require
-			not_void: a_pixel_buffer /= Void
 		local
-			l_imp: EV_PIXEL_BUFFER_IMP
 			l_image: WEL_GDIP_BITMAP
-
-			l_graphics: WEL_GDIP_GRAPHICS
-			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
-			l_src_rect, l_dest_rect: WEL_RECT
+			l_imp: EV_PIXEL_BUFFER_IMP
 		do
-
 			l_imp ?= a_pixel_buffer.implementation
 			check not_void: l_imp /= Void end
 			l_image := l_imp.gdip_bitmap
 
-			create l_image_attributes.make
-			l_image_attributes.clear_color_key
-			l_image_attributes.set_color_matrix (disabled_color_matrix)
-			create l_src_rect.make (0, 0, l_image.width, l_image.height)
-			create l_dest_rect.make (pixmap_coordinate.x, pixmap_coordinate.y, pixmap_coordinate.x + l_image.width, pixmap_coordinate.y + l_image.height)
-			create l_graphics.make_from_dc (dc_to_draw)
-			l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (l_image, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
-
-			l_graphics.destroy_item
-			l_dest_rect.dispose
-			l_src_rect.dispose
-			l_image_attributes.destroy_item
+			grayscale_icon_drawer.draw_grayscale_bitmap (l_image, dc_to_draw, pixmap_coordinate.x, pixmap_coordinate.y)
 		end
 
-	disabled_color_matrix: WEL_COLOR_MATRIX is
-			-- Disable color matrix.
-		do
-			Result := mulitply_color_matix (disabled_color_matrix_2, disabled_color_matrix_1)
+	grayscale_icon_drawer: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
+			-- Grayscale icon drawer.
+		once
+			create Result
 		ensure
 			not_void: Result /= Void
-		end
-
-	disabled_color_matrix_1: WEL_COLOR_MATRIX is
-			-- Disabled color matrix used by GDI+ DrawImage.
-			-- See MSDN "A Twist in Color Space"
-		do
-			create Result.make
-			Result.set_m_row (<<0.2125, 0.2125, 0.2125, 0, 0>>, 0) -- Grey scale R channel
-			Result.set_m_row (<<0.2577, 0.2577, 0.2577, 0, 0>>, 1) -- Grey scale G channel
-			Result.set_m_row (<<0.0361, 0.0361, 0.0361, 0, 0>>, 2) -- Grey scale B channel			
-			Result.set_m_row (<<0, 0, 0, 1, 0>>, 3) -- Opacity
-			Result.set_m_row (<<0.38, 0.38, 0.38, 0, 1>>, 4) -- Brightness
-		ensure
-			not_void: Result /= Void
-		end
-
-	disabled_color_matrix_2: WEL_COLOR_MATRIX is
-			-- Disabled color matrix used by GDI+ DrawImage.
-			-- See MSDN "A Twist in Color Space"
-		do
-			create Result.make
-			Result.set_m_row (<<1, 0, 0, 0, 0>>, 0) -- Grey scale R channel
-			Result.set_m_row (<<0, 1, 0, 0, 0>>, 1) -- Grey scale G channel
-			Result.set_m_row (<<0, 0, 1, 0, 0>>, 2) -- Grey scale B channel			
-			Result.set_m_row (<<0, 0, 0, 0.7, 0>>, 3) -- Opacity
-			Result.set_m_row (<<0, 0, 0, 0, 0>>, 4) -- Brightness
-		ensure
-			not_void: Result /= Void
-		end
-
-	mulitply_color_matix (a_matrix_1, a_matrix_2: WEL_COLOR_MATRIX): WEL_COLOR_MATRIX is
-			-- Mulitply `a_matrix_1' and `a_matrix_2'
-		require
-			not_void: a_matrix_1 /= Void
-			not_void: a_matrix_2 /= Void
-		local
-			l_i, l_j, l_k: INTEGER
-			l_temp_array: ARRAY [REAL]
-			l_sum: REAL
-		do
-			create Result.make
-			create l_temp_array.make (0, 4)
-			from
-				l_j := 0
-			until
-				l_j > 4
-			loop
-				from
-					l_k := 0
-				until
-					l_k > 4
-				loop
-					l_temp_array [l_k] := a_matrix_1.m (l_k, l_j)
-					l_k := l_k + 1
-				end
-				from
-					l_i := 0
-				until
-					l_i > 4
-				loop
-					l_sum := 0
-					from
-						l_k := 0
-					until
-						l_k > 4
-					loop
-						l_sum := l_sum + a_matrix_2.m (l_i, l_k) * l_temp_array [l_k]
-						l_k := l_k + 1
-					end
-					Result.m (l_i, l_j) := l_sum
-					l_i := l_i + 1
-				end
-
-				l_j := l_j + 1
-			end
 		end
 
 	draw_flat_button_edge_hot (a_dc: WEL_DC; a_rect: WEL_RECT) is

@@ -511,6 +511,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Theme drawer currently in use.
 			l_internal_brush: WEL_BRUSH
 			l_is_remote: BOOLEAN
+			l_icon: WEL_ICON
 		do
 			theme_drawer := application_imp.theme_drawer
 			l_is_remote := metrics.is_remote_session
@@ -666,7 +667,15 @@ feature {EV_ANY_I} -- Drawing implementation
 				create coordinate.make (left_position, pixmap_border + height_offset)
 				theme_drawer.update_button_pixmap_coordinates_for_state (open_theme, state, coordinate)
 
-				theme_drawer.draw_bitmap_on_dc (memory_dc, wel_bitmap, mask_bitmap, coordinate.x, coordinate.y, is_sensitive)
+				if not is_sensitive and disabled_image /= Void then
+					l_icon := internal_pixmap_state.build_icon
+					if {l_color_imp: !EV_COLOR_IMP} background_color.implementation then
+						disabled_image.draw_grayscale_icon_with_memory_buffer (l_icon, dc, internal_pixmap_state.width, internal_pixmap_state.height, coordinate.x, coordinate.y, l_color_imp)
+					end
+					l_icon.dispose
+				else
+					theme_drawer.draw_bitmap_on_dc (memory_dc, wel_bitmap, mask_bitmap, coordinate.x, coordinate.y, is_sensitive)
+				end
 			end
 
 				-- If `Current' has the focus, then we must draw the focus rectangle.
@@ -693,6 +702,18 @@ feature {EV_ANY_I} -- Drawing implementation
 			end
 			if mask_bitmap /= Void then
 				mask_bitmap.decrement_reference
+			end
+		end
+		
+	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER is
+			-- Grayscale image drawer.
+			-- Void if Gdi+ not installed.
+		local
+			l_gdip_starter: WEL_GDIP_STARTER
+		once
+			create l_gdip_starter
+			if l_gdip_starter.is_gdi_plus_installed then
+				create Result
 			end
 		end
 

@@ -1,12 +1,12 @@
-indexing	
-	description: 
+indexing
+	description:
 		"EiffelVision check menu item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_CHECK_MENU_ITEM_IMP
 
 inherit
@@ -19,15 +19,16 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		undefine
-			on_draw_menu_item_left_part
+			on_draw_menu_item_left_part,
+			disabled_image
 		redefine
 			on_activate,
 			interface,
 			initialize
 		end
-		
+
 	EV_CHECKABLE_MENU_ITEM_IMP
-	
+
 create
 	make
 
@@ -67,7 +68,7 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECK_MENU_ITEM
-	
+
 feature {NONE} -- Implementation
 
 	on_activate is

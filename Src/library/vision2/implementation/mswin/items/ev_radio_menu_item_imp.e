@@ -1,4 +1,4 @@
-indexing	
+indexing
 	description: "Eiffel Vision radio menu item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,8 @@ inherit
 
 	EV_MENU_ITEM_IMP
 		undefine
-			on_draw_menu_item_left_part
+			on_draw_menu_item_left_part,
+			disabled_image
 		redefine
 			interface,
 			on_activate,
@@ -55,7 +56,7 @@ feature {EV_ANY_I} -- Status setting
 		do
 			is_selected := False
 		end
-	
+
 	enable_select is
 		local
 			cur: CURSOR

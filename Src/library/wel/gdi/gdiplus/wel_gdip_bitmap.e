@@ -18,7 +18,8 @@ inherit
 create
 	make_with_size,
 	make_with_graphics,
-	make_from_icon
+	make_from_icon,
+	make_from_bitmap
 
 feature {NONE} -- Initlization
 
@@ -58,6 +59,22 @@ feature {NONE} -- Initlization
 		do
 			default_create
 			item := c_gdip_create_bitmap_from_hicon  (gdi_plus_handle, a_icon.item, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: WEL_PALETTE) is
+			-- Creation method.
+		require
+			a_bitmap_not_void: a_bitmap /= Void
+		local
+			l_result: INTEGER
+			l_palette: POINTER
+		do
+			default_create
+			if a_palette /= Void then
+				l_palette := a_palette.item
+			end
+			item := c_gdip_create_bitmap_from_bitmap  (gdi_plus_handle, a_bitmap.item, l_palette, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -256,6 +273,33 @@ feature -- C externals
 			}
 			]"
 		end
+
+	c_gdip_create_bitmap_from_bitmap (a_gdiplus_handle: POINTER; a_image, a_palette: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+				-- Create a bitmap object.	
+			require
+				a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			external
+				"C inline use %"wel_gdi_plus.h%""
+			alias
+				"[
+				{
+					static FARPROC GdipCreateBitmapFromHBITMAP = NULL;
+					GpBitmap *l_result = NULL;
+					*(EIF_INTEGER *) $a_result_status = 1;
+
+					if (!GdipCreateBitmapFromHBITMAP)	{
+						GdipCreateBitmapFromHBITMAP = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipCreateBitmapFromHBITMAP");
+					}
+					if (GdipCreateBitmapFromHBITMAP) {
+						*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (HBITMAP, HPALETTE, GpBitmap **)) GdipCreateBitmapFromHBITMAP)
+									((HBITMAP) $a_image,
+									(HPALETTE) $a_palette,
+									(GpBitmap **) &l_result);
+					}
+					return (EIF_POINTER) l_result;
+				}
+				]"
+			end
 
 	c_gdip_create_bitmap_from_hicon (a_gdiplus_handle: POINTER; a_hicon: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
 			-- Create a bitmap object.

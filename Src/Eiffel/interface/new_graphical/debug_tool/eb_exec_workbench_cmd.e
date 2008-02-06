@@ -34,11 +34,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_ARGUMENTS
-		export
-			{NONE} all
-		end
-
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -63,14 +58,14 @@ feature -- Execution
 
 	execute is
 			-- Execute Current.
-		local
-			param: DEBUGGER_EXECUTION_PARAMETERS
 		do
-			create param
-			param.set_arguments (current_cmd_line_argument)
-			param.set_working_directory (application_working_directory)
-			param.set_environment_variables (application_environment_variables)
-			debugger_manager.controller.start_workbench_application (param)
+			debugger_manager.controller.start_workbench_application (debugger_manager.current_execution_parameters)
+		end
+
+	execute_with_parameters (params: DEBUGGER_EXECUTION_PARAMETERS) is
+			-- Execute Current with parameters.
+		do
+			debugger_manager.controller.start_workbench_application (debugger_manager.resolved_execution_parameters (params))
 		end
 
 feature -- Properties

@@ -266,6 +266,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 			-- Should we display a dialog when clicking on "Run application without
 			-- stopping at breakpoints"?
 
+	confirm_always_apply_debugger_profiles_before_closing_preference: BOOLEAN_PREFERENCE
+			-- Should we always apply execution profile changes when closing the related dialog ?
+
 	confirm_always_compile_before_executing_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog when asked for execution ?
 
@@ -338,6 +341,7 @@ feature -- Preference strings
 	confirm_finalize_assertions_string: STRING is "interface.dialogs.confirm_finalize_assertions"
 	confirm_clear_breakpoints_string: STRING is "interface.dialogs.confirm_clear_breakpoints"
 	confirm_ignore_all_breakpoints_string: STRING is "interface.dialogs.confirm_ignore_all_breakpoints"
+	confirm_always_apply_debugger_profiles_before_closing_string: STRING is "interface.dialogs.confirm_always_apply_debugger_profiles_before_closing"
 	confirm_always_compile_before_executing_string: STRING is "interface.dialogs.confirm_always_compile_before_executing"
 	confirm_convert_project_string: STRING is "interface.dialogs.confirm_convert_project"
 	confirm_build_precompile_string: STRING is "interface.dialogs.confirm_build_precompile"
@@ -401,6 +405,7 @@ feature {NONE} -- Implementation
 			confirm_finalize_assertions_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_assertions_string, True)
 			confirm_clear_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_clear_breakpoints_string, True)
 			confirm_ignore_all_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_ignore_all_breakpoints_string, True)
+			confirm_always_apply_debugger_profiles_before_closing_preference := l_manager.new_boolean_preference_value (l_manager, confirm_always_apply_debugger_profiles_before_closing_string, True)
 			confirm_always_compile_before_executing_preference := l_manager.new_boolean_preference_value (l_manager, confirm_always_compile_before_executing_string, True)
 			confirm_convert_project_preference := l_manager.new_boolean_preference_value (l_manager, confirm_convert_project_string, True)
 			confirm_build_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_build_precompile_string, True)
@@ -456,6 +461,9 @@ invariant
 	confirm_finalize_assertions_preference_not_void: confirm_finalize_assertions_preference /= Void
 	confirm_clear_breakpoints_preference_not_void: confirm_clear_breakpoints_preference /= Void
 	confirm_ignore_all_breakpoints_preference_not_void: confirm_ignore_all_breakpoints_preference /= Void
+	confirm_always_apply_debugger_profiles_before_closing_preference_not_void: confirm_always_apply_debugger_profiles_before_closing_preference /= Void
+
+
 	confirm_always_compile_before_executing_preference_not_void: confirm_always_compile_before_executing_preference /= Void
 	confirm_convert_project_preference_not_void: confirm_convert_project_preference /= Void
 	confirm_build_precompile_preference_not_void: confirm_build_precompile_preference /= Void

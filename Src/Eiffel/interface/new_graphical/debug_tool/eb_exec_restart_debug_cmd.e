@@ -31,13 +31,17 @@ feature -- Initialization
 			-- Execute.
 		local
 			pre_ag, ag: PROCEDURE [ANY, TUPLE]
+			params: like last_parameters
 		do
 			if eb_debugger_manager.application_is_executing then
+
 				if not eb_debugger_manager.debug_mode_forced then
 					eb_debugger_manager.force_debug_mode (True)
 					pre_ag := agent eb_debugger_manager.unforce_debug_mode
 					eb_debugger_manager.application_prelaunching_actions.extend_kamikaze (pre_ag)
 				end
+
+				last_parameters := eb_debugger_manager.application.parameters
 
 				if delayed_run_action = Void then
 					create delayed_run_action.make (agent internal_execute (a_execution_mode), 5)
@@ -58,13 +62,23 @@ feature -- Initialization
 			else
 				delayed_run_action.cancel_request
 				delayed_run_action := Void
-				Precursor (a_execution_mode)
+				params := last_parameters
+				last_parameters := Void
+				if params = Void then
+					Precursor (a_execution_mode)
+				else
+					internal_launch (a_execution_mode, params)
+				end
 			end
 		end
 
-	delayed_run_action: ES_DELAYED_ACTION
+	last_parameters: DEBUGGER_EXECUTION_PARAMETERS
+			-- Parameters used before Restarting
 
 feature {NONE} -- Implementation
+
+	delayed_run_action: ES_DELAYED_ACTION
+			-- Delayed run action when "restarting"
 
 	ask_and_kill is
 			-- Pop up a discardable confirmation dialog before killing the application.

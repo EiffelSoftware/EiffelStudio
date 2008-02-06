@@ -267,7 +267,7 @@ feature -- Project settings warnings
 
 feature -- Debug warnings
 
-	w_apply_debugger_profiles_before_continuing: STRING_GENERAL is do Result := locale.translation ("The debug profiles have been modified.%NDo you want to apply the changes before continuing?") end
+	w_apply_debugger_profiles_before_closing: STRING_GENERAL is do Result := locale.translation ("The execution profiles have been modified.%NDo you want to apply the changes before closing?") end
 
 	w_Compile_before_debug: STRING_GENERAL is do Result := locale.translation ("Do you want to compile before debugging?") end
 

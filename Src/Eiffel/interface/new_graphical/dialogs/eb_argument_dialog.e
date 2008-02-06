@@ -1,7 +1,9 @@
 indexing
 	description:
-		"Popup dialog to enter new arguments, modify existing ones and launch system with%
-		%chosen argument."
+		"[
+			Popup dialog to enter new arguments, modify existing ones and launch system with
+			chosen argument.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -58,7 +60,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: EB_DEVELOPMENT_WINDOW; cmd: PROCEDURE [ANY, TUPLE]) is
+	make (a_window: EB_DEVELOPMENT_WINDOW; cmd: like run) is
 			-- Initialize Current with `par' as parent and
 			-- `cmd' as command window.
 		require
@@ -104,12 +106,6 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
 
-			create cb.make_with_text (interface_names.b_keep_dialog_open)
-			cb.disable_select
-			vbox.extend (cb)
-			vbox.disable_item_expand (cb)
-			keep_opened_check_button := cb
-
 			create b.make_with_text (interface_names.b_close)
 			vbox.extend (b)
 			Layout_constants.set_default_width_for_button (b)
@@ -117,11 +113,25 @@ feature {NONE} -- Initialization
 			b.select_actions.extend (agent on_close)
 
 			if run /= Void then
+					--| Run workbench
+
 				create run_button.make_with_text (interface_names.b_run)
 				vbox.extend (run_button)
 				Layout_constants.set_default_width_for_button (run_button)
 				vbox.disable_item_expand (run_button)
 				run_button.select_actions.extend (agent execute)
+
+				create cb.make_with_text (interface_names.b_keep_dialog_open)
+				if keep_opened_status then
+					cb.enable_select
+				else
+					cb.disable_select
+				end
+				vbox.extend (cb)
+				vbox.disable_item_expand (cb)
+				keep_opened_check_button := cb
+
+					--| Outside ES
 
 				vbox.extend (create {EV_CELL})
 				create lab.make_with_text (interface_names.l_outside_ide)
@@ -134,7 +144,9 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_wb_button)
 				start_wb_button.set_pixmap (cmd.pixmap)
 				start_wb_button.set_tooltip (cmd.tooltip)
-				start_wb_button.select_actions.extend (agent execute_operation (agent cmd.execute))
+				if {wbcmd: !EB_EXEC_WORKBENCH_CMD} eb_debugger_manager.run_workbench_cmd then
+					start_wb_button.select_actions.extend (agent execute_operation (agent wbcmd.execute_with_parameters))
+				end
 				Layout_constants.set_default_width_for_button (start_wb_button)
 
 				cmd := eb_debugger_manager.run_finalized_cmd
@@ -143,7 +155,9 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (start_final_button)
 				start_final_button.set_pixmap (cmd.pixmap)
 				start_final_button.set_tooltip (cmd.tooltip)
-				start_final_button.select_actions.extend (agent execute_operation (agent cmd.execute))
+				if {fncmd: !EB_EXEC_FINALIZED_CMD} eb_debugger_manager.run_finalized_cmd then
+					start_final_button.select_actions.extend (agent execute_operation (agent fncmd.execute_with_parameters))
+				end
 				Layout_constants.set_default_width_for_button (start_final_button)
 			end
 
@@ -153,6 +167,40 @@ feature {NONE} -- Initialization
 			execution_frame.extend (hbox)
 			extend (execution_frame)
 		end
+
+feature {NONe} -- session data
+
+	keep_opened_status_session_data_id: STRING = "com.eiffel.execution_options_dialog.keep_opened_status"
+
+	keep_opened_status: BOOLEAN is
+			-- Access to keep_opened_status' data
+		local
+    		consumer: !SERVICE_CONSUMER [!SESSION_MANAGER_S]
+		do
+			create consumer
+    		if consumer.is_service_available then
+				if {session: !SESSION_I} consumer.service.retrieve (False) then
+					if {ref: !BOOLEAN_REF} session.value (keep_opened_status_session_data_id) then
+						Result := ref.item
+					else
+						Result := False
+			      	end
+        		end
+      		end
+	  	end
+
+	save_keep_opened_status is
+			-- Change keep_opened_status' data.
+		local
+    		consumer: !SERVICE_CONSUMER [!SESSION_MANAGER_S]
+		do
+			create consumer
+    		if consumer.is_service_available then
+				if {session: !SESSION_I} consumer.service.retrieve (False) then
+        			session.set_value (keep_opened_check_button.is_selected, keep_opened_status_session_data_id)
+        		end
+      		end
+	  	end
 
 feature -- GUI
 
@@ -179,14 +227,23 @@ feature {NONE} -- Actions
 
 	on_close is
 	 		-- Action to take when user presses 'Cancel' button.
+	 	local
+	 		l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			if debugging_options_control.has_changed then
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
-					warning_messages.w_apply_debugger_profiles_before_continuing, Current, agent debugging_options_control.store_dbg_options, agent debugging_options_control.validate_and_store)
+				create l_question.make_standard_with_cancel (
+						warning_messages.w_apply_debugger_profiles_before_closing,
+						"",
+						preferences.dialog_data.confirm_always_apply_debugger_profiles_before_closing_string
+					)
+				l_question.set_button_action (l_question.dialog_buttons.yes_button, agent do debugging_options_control.store_dbg_options; hide end)
+				l_question.set_button_action (l_question.dialog_buttons.no_button, agent do debugging_options_control.validate; hide end)
+				l_question.show_on_active_window
 			else
-				debugging_options_control.validate_and_store
+				debugging_options_control.validate
+				hide
 			end
-			hide
+			save_keep_opened_status
 		end
 
 feature {NONE} -- Properties
@@ -194,7 +251,7 @@ feature {NONE} -- Properties
 	debugging_options_control: EB_DEBUGGING_OPTIONS_CONTROL
 			-- Widget holding all arguments information.
 
-	run: PROCEDURE [ANY, TUPLE]
+	run: PROCEDURE [ANY, TUPLE [DEBUGGER_EXECUTION_PARAMETERS]]
 
 feature {NONE} -- Implementation
 
@@ -222,40 +279,18 @@ feature {NONE} -- Implementation
             end
       	end
 
-	execute_operation (op: PROCEDURE [ANY, TUPLE]) is
+	execute_operation (op: like run) is
 			-- Execute operation `op'
 		local
-			l_op: PROCEDURE [ANY, TUPLE]
+			params: DEBUGGER_EXECUTION_PARAMETERS
 		do
-			if keep_opened_check_button.is_selected then
-				l_op := op
-			else
-				l_op := agent (aop: PROCEDURE [ANY, TUPLE]; adlg: EV_WINDOW)
-						do
-							adlg.hide;
-							aop.call (Void)
-						end(op, Current)
-			end
+			params := debugging_options_control.selected_profile_parameters
 
-			if debugging_options_control.has_changed then
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt_with_cancel (
-					warning_messages.w_apply_debugger_profiles_before_continuing, Current,
-							agent (a_op: PROCEDURE [ANY, TUPLE])
-								do
-									debugging_options_control.apply_changes
-									a_op.call (Void)
-								end (l_op),
-							agent (a_op: PROCEDURE [ANY, TUPLE])
-								do
-									debugging_options_control.validate_and_store
-									debugging_options_control.reset_changes
-									a_op.call (Void)
-								end (l_op),
-							Void
-						)
+			if keep_opened_check_button.is_selected then
+				op.call ([params])
 			else
-				debugging_options_control.validate_and_store
-				l_op.call (Void)
+				op.call ([params])
+				on_close
 			end
 		end
 
@@ -281,19 +316,20 @@ feature {NONE} -- Observing event handling.
 	on_application_launched (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is launched.
 		do
-			on_application_resumed (dbg)
+			run_button.disable_sensitive
+--			on_application_resumed (dbg)
 		end
 
 	on_application_resumed (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is resumed.
 		do
-			run_button.disable_sensitive
+--			run_button.disable_sensitive
 		end
 
 	on_application_stopped (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is stopped.
 		do
-			run_button.enable_sensitive
+--			run_button.enable_sensitive
 		end
 
 invariant

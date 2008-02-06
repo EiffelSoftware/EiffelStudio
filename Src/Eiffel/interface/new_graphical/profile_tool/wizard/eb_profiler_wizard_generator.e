@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_ARGUMENTS
+	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -86,7 +86,7 @@ feature -- Basic operations
 				add_error_message (Warning_messages.w_Load_configuration)
 				last_operation_successful := False
 			else
-				create prof_invoker.make (l_profiler, current_cmd_line_argument, profinfo, compile)
+				create prof_invoker.make (l_profiler, debugger_manager.current_execution_parameters.arguments, profinfo, compile)
 				if prof_invoker.must_invoke_profiler then
 					prof_invoker.invoke_profiler
 				end

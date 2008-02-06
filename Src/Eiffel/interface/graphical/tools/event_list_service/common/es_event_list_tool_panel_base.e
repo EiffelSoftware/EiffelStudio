@@ -914,6 +914,8 @@ feature {NONE} -- Events
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
 			l_row_count: INTEGER
+			l_row_item_count: INTEGER
+			l_item: EV_GRID_ITEM
 			l_index: INTEGER
 			l_selected: BOOLEAN
 		do
@@ -930,6 +932,15 @@ feature {NONE} -- Events
 
 					l_grid := grid_events
 					l_index := l_row.index
+
+					from l_row_item_count := l_row.count until l_row_item_count = 0 loop
+						l_item := l_row.item (l_row_item_count)
+						if not l_item.is_destroyed then
+								-- Force call of pointer leave actions
+							l_item.pointer_leave_actions.call (Void)
+						end
+						l_row_item_count := l_row_item_count - 1
+					end
 					l_grid.remove_row (l_index)
 
 					if item_count > 0 and then l_selected then

@@ -88,7 +88,7 @@ feature {NONE} -- External
 		alias
 			"[
 			#ifdef EIF_WINDOWS
-				return _tcslen ((wchar_t *) $ptr);
+				return (EIF_INTEGER_32) _tcslen ((wchar_t *) $ptr);
 			#else
 				return 0;
 			#endif

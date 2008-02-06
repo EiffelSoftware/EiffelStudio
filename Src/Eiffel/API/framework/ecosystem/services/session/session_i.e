@@ -2,6 +2,10 @@ indexing
 	description: "[
 		An abstract interface for a collection of managed session data, bound to a IDE/project context.
 	]"
+	doc: "wiki://Session Manager Service:Sessions and Aggregated Sessions"
+	doc: "wiki://Session Manager Service:Retrieving Sessions"
+	doc: "wiki://Session Manager Service:Using Sessions"
+	doc: "wiki://Session Manager Service:Storing Sessions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";

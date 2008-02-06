@@ -20,6 +20,8 @@ indexing
 #ifndef _GDIPLUS_H
 #define _GDIPLUS_H
 
+#include "wel.h"
+
 typedef void GpBitmap;
 typedef void GpImage;
 typedef void GpGraphics;
@@ -38,10 +40,6 @@ typedef INT PixelFormat;
 typedef unsigned short UINT16;
 
 #define  WINGDIPAPI __stdcall
-
-#ifndef ULONG_PTR
-#define ULONG_PTR unsigned long*
-#endif
 
 typedef struct {
 	int X, Y, Width, Height;

@@ -170,7 +170,6 @@ feature {NONE} -- Initialization
 			a_container.extend (l_hbox)
 			a_container.disable_item_expand (l_hbox)
 
-
 				--
 				-- More bug information
 				--
@@ -216,6 +215,9 @@ feature {NONE} -- Initialization
 
 			description_text.focus_in_actions.extend (agent on_focus_in)
 			description_text.focus_out_actions.extend (agent on_focus_out)
+
+				-- Suppress close on ENTER in the description text
+			suppress_confirmation_key_close (description_text)
 		end
 
 	on_after_initialized
@@ -369,6 +371,7 @@ feature {NONE} -- Action handlers
 			execute_with_busy_cursor (agent
 				local
 					l_error: ES_ERROR_PROMPT
+					l_last_focus: EV_WIDGET
 				do
 					login_button.disable_sensitive
 					support_login.force_logout
@@ -389,6 +392,9 @@ feature {NONE} -- Action handlers
 						log_out_link.hide
 						login_button.enable_sensitive
 						enable_login_content_widget (False)
+
+							-- Set focus back to button, as it will have been the last focused widget
+						login_button.set_focus
 					end
 				end)
 		end
@@ -405,6 +411,8 @@ feature {NONE} -- Action handlers
 
 			login_button.enable_sensitive
 			enable_login_content_widget (False)
+				-- The user wants to change the login, select the user name field
+			username_text.set_focus
 
 			create shrink_timer.make_with_interval (shrink_interval)
 			shrink_timer.actions.extend (agent on_shrink_interval_expired_for_expand)
@@ -475,6 +483,9 @@ feature {NONE} -- Action handlers
 				shrink_timer.destroy
 				shrink_timer := Void
 				enable_login_content_widget (True)
+
+					-- Set focus to description, now the fields are activated
+				description_text.set_focus
 			else
 				shrink_widget.set_minimum_height ((shrink_widget.height - 4).max (0))
 			end

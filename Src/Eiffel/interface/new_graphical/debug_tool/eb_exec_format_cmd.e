@@ -44,11 +44,11 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
-	execute_from_argument_dialog (a_execution_mode: INTEGER) is
-			-- Execute from argument dialog and therefore ALWAYS stop at breakpoints.
+	launch_with_parameters (a_execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS) is
+			-- Execute with `params' and using mode `a_execution_mode'
 		do
 			if is_sensitive then
-				internal_execute (a_execution_mode)
+				internal_launch (a_execution_mode, eb_debugger_manager.resolved_execution_parameters (params))
 			end
 		end
 
@@ -121,6 +121,22 @@ feature {NONE} -- Implementation
 
 	internal_execute (a_execution_mode: INTEGER) is
 			-- Execute.
+		do
+			before_internal_execute
+			eb_debugger_manager.debug_run_cmd.execute_with_mode (a_execution_mode)
+			after_internal_execute
+		end
+
+	internal_launch (a_execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS) is
+			-- Launch.
+		do
+			before_internal_execute
+			eb_debugger_manager.debug_run_cmd.launch_with_mode (a_execution_mode, params)
+			after_internal_execute
+		end
+
+	before_internal_execute is
+			-- before calling internal_execute
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
@@ -136,7 +152,11 @@ feature {NONE} -- Implementation
 					eb_debugger_manager.set_debugging_window (Window_manager.a_development_window)
 				end
 			end
-			eb_debugger_manager.debug_run_cmd.execute_with_mode (a_execution_mode)
+		end
+
+	after_internal_execute is
+			-- before calling internal_execute
+		do
 			if not eb_debugger_manager.application_is_executing then
 					-- The application was not launched for some reason
 					-- (a compilation was running, the user didn't want to launch it after all,...)
@@ -222,7 +242,7 @@ feature {NONE} -- Implementation
 				if window /= Void then
 					dev := window.window
 					if not argument_dialog_is_valid then
-						create args_dialog.make (window, agent execute_from_argument_dialog (User_stop_points))
+						create args_dialog.make (window, agent launch_with_parameters (User_stop_points, ?))
 						set_argument_dialog (args_dialog)
 					else
 						argument_dialog.update

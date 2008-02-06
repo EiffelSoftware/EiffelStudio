@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			can_debug := True
 			set_default_parameters
 			create observers.make (3)
+			create profiles.make_equal (10)
 			create controller.make (Current)
 			create application_quit_actions
 			create application_prelaunching_actions
@@ -210,6 +211,9 @@ feature {NONE} -- Debugger session data access
 	internal_session_data: like session_data
 			-- cached version of `session_data'
 
+	Profiles_session_data_id: STRING is "com.eiffel.debugger.profiles"
+			-- Id for session data related to profiles
+
 	Breakpoints_session_data_id: STRING is "com.eiffel.debugger.breakpoints"
 			-- Id for session data related to breakpoints
 
@@ -235,6 +239,7 @@ feature -- Debugger data change
 			-- Load debug information from the file `raw_filename'
 		local
 			bplst: BREAK_LIST
+			prof: like profiles
 			loading_rescued: BOOLEAN
 			full_load_rescued: BOOLEAN
 			dbg_session: like session_data
@@ -242,8 +247,15 @@ feature -- Debugger data change
 			if not full_load_rescued then
 				if not loading_rescued then
 					dbg_session := session_data
+					prof ?= dbg_session.value (Profiles_session_data_id)
    					bplst ?= dbg_session.value (Breakpoints_session_data_id)
 					internal_exceptions_handler ?= dbg_session.value (Exception_handler_session_data_id)
+
+					if prof /= Void then
+						profiles := prof
+					else
+						check profiles /= Void end
+					end
 
 					breakpoints_manager.set_breakpoints (bplst)
 							-- Reset information about the application
@@ -290,6 +302,7 @@ feature -- Debugger data change
 					-- Effective saving
 				dbg_session := session_data
 
+				dbg_session.set_value (profiles, Profiles_session_data_id)
    				dbg_session.set_value (bplst, Breakpoints_session_data_id)
    				dbg_session.set_value (internal_exceptions_handler, Exception_handler_session_data_id)
 				force_save_session_data
@@ -528,6 +541,9 @@ feature {NONE} -- Breakpoints events
 
 feature -- Properties
 
+	profiles: DEBUGGER_PROFILES
+			-- Execution profiles
+
 	object_manager: DEBUGGED_OBJECT_MANAGER
 			-- Debugged object manager
 
@@ -536,6 +552,77 @@ feature -- Properties
 
 	dump_value_factory: DUMP_VALUE_FACTORY
 			-- Dump value factory
+
+feature -- Access
+
+	current_execution_parameters: DEBUGGER_EXECUTION_PARAMETERS is
+			-- Current resolved execution parameters
+		local
+			t: TUPLE [title: STRING_32; params: DEBUGGER_EXECUTION_PARAMETERS]
+			params: like current_execution_parameters
+		do
+			t := profiles.last_profile
+			if t /= Void then
+				params := t.params
+			end
+			Result := resolved_execution_parameters (params)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	resolved_execution_parameters (params: DEBUGGER_EXECUTION_PARAMETERS): DEBUGGER_EXECUTION_PARAMETERS is
+			-- Resolved execution parameters from `params'
+			-- i.e: check the validity of parameters, and either correct them, of fill with default values.
+		local
+			envi: ENV_INTERP
+			shared_eiffel: SHARED_EIFFEL_PROJECT
+			wd: STRING
+			l_dir: DIRECTORY
+		do
+			create Result
+
+			create envi
+			create shared_eiffel
+
+				--| arguments			
+			if params /= Void and then params.arguments /= Void and then not params.arguments.is_empty then
+				Result.set_arguments (envi.interpreted_string (params.arguments))
+			else
+				Result.set_arguments ("")
+			end
+
+				--| Working_directory
+			if params /= Void and then params.working_directory /= Void and then not params.working_directory.is_empty then
+				wd := envi.interpreted_string (params.working_directory)
+			else
+				wd := shared_eiffel.Eiffel_project.lace.directory_name
+			end
+			wd := wd.twin; wd.left_adjust; wd.right_adjust
+			if wd.count > 1 then
+					-- Check if directory exists? If it does not, it might be because of
+					-- an extra directory separator at the end of the name which could cause
+					-- some problem. Therefore we remove it.
+					-- We only do it if there is at least one character in the directory name,
+					-- otherwise it does not make sense.
+				create l_dir.make (wd)
+				if not l_dir.exists and then wd.item (wd.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
+					wd.remove_tail (1)
+					create l_dir.make (wd)
+					if not l_dir.exists then
+							-- Revert back to the original string.
+						wd.extend ((create {OPERATING_ENVIRONMENT}).directory_separator)
+					end
+				end
+			end
+			Result.set_working_directory (wd)
+
+				--| environment_variables
+			if params /= Void and then params.environment_variables /= Void and then not params.environment_variables.is_empty then
+				Result.set_environment_variables (params.environment_variables.twin)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 
 feature -- Status
 

@@ -24,11 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_ARGUMENTS
-		export
-			{NONE} all
-		end
-
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -49,9 +44,14 @@ feature {NONE} -- Initialization
 			parent_not_void: a_parent /= Void
 		do
 			parent_window := a_parent
+			control_in_tool := False
 			build_interface
 			update
 		end
+
+	control_in_tool: BOOLEAN
+			-- Current control embedded in ES tool ?
+			-- (unused for now)
 
 feature -- Interface access
 
@@ -71,11 +71,12 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 	load_dbg_options is
 			-- Retrieve and initialize the arguments from user options.
 		local
-			l_profs: ARRAYED_LIST [like profile_from_row]
-			l_user_opts: TARGET_USER_OPTIONS
 			l_row: EV_GRID_ROW
 			l_prof: like profile_from_row
-			i: INTEGER
+			dm: DEBUGGER_MANAGER
+			profs: DEBUGGER_PROFILES
+			l_param: DEBUGGER_EXECUTION_PARAMETERS
+			l_title: STRING_32
 		do
 				--| Reset cached data
 			internal_sorted_environment_variables := Void
@@ -86,24 +87,26 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 				--| Default
 			l_row := added_profile_text_row (Void, False)
 
-			l_user_opts := lace.user_options.target
-			l_profs := l_user_opts.profiles
-			if l_profs /= Void and then l_profs.count > 0 then
+			dm := debugger_manager
+			profs := dm.profiles
+			if profs /= Void then
 					--| It is safer to work on a copy to be able to cancel
 					--| changes easily
-				l_profs := l_profs.deep_twin
+				profs := profs.deep_twin
 				from
-					l_profs.start
+					profs.start
 				until
-					l_profs.after
+					profs.after
 				loop
-					l_prof := l_profs.item
+					l_title := profs.key_for_iteration
+					l_param := profs.item_for_iteration
+					l_prof := [l_title, l_param]
 					l_row := added_profile_text_row (l_prof, False)
-					l_profs.forth
+					profs.forth
 				end
-				i := l_user_opts.last_profile_index
-				if l_profs.valid_index (i) then
-					l_prof := l_profs[i]
+
+				l_prof := profs.last_profile
+				if l_prof /= Void then
 					l_row := grid_row_with_profile (l_prof)
 					if l_row = Void then
 						l_row := added_profile_text_row (l_prof, True)
@@ -114,14 +117,14 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 					if l_row.is_expandable and then not l_row.is_expanded then
 						l_row.expand
 					end
-					if profiles_grid.column_count > 0 then
-						profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
-						if profiles_grid.column_count > 1 then
-							profiles_grid.safe_resize_column_to_content (profiles_grid.column (2), False, False)
-						end
-					end
 				else
 					default_profile_row.enable_select
+				end
+				if profiles_grid.column_count > 0 then
+					profiles_grid.safe_resize_column_to_content (profiles_grid.column (1), False, False)
+					if profiles_grid.column_count > 1 then
+						profiles_grid.safe_resize_column_to_content (profiles_grid.column (2), False, False)
+					end
 				end
 			else
 				default_profile_row.enable_select
@@ -130,24 +133,11 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			set_changed (Void, False)
 		end
 
-	validate_and_store is
-		local
-			l_user_factory: USER_OPTIONS_FACTORY
-		do
-				--| Validate (i.e: update selected profile)
-			validate
-				--| And store
-			create l_user_factory
-			l_user_factory.store (lace.user_options)
-		end
-
 	store_dbg_options is
 			-- Store the current arguments and set current
 			-- arguments for system execution.
 		local
-			l_profs: ARRAYED_LIST [like profile_from_row]
-			l_user_opts: TARGET_USER_OPTIONS
-			l_user_factory: USER_OPTIONS_FACTORY
+			profs: DEBUGGER_PROFILES
 			r: INTEGER
 			t: like profile_from_row
 			toprows: LINKED_LIST [EV_GRID_ROW]
@@ -166,23 +156,20 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 				r := r + lrow.subrow_count_recursive + 1
 			end
 
-				--| Fill the profiles data
+				--| Set profiles
+			profs := debugger_manager.profiles
 			from
+				profs.wipe_out
 				toprows.start
-				create l_profs.make (toprows.count)
 			until
 				toprows.after
 			loop
 				t := profile_from_row (toprows.item)
 				if t /= Void then
-					l_profs.extend (t)
+					profs.force_last (t.params, t.title)
 				end
 				toprows.forth
 			end
-
-				--| Set profiles
-			l_user_opts := lace.user_options.target
-			l_user_opts.set_profiles (l_profs)
 
 			t := selected_profile
 			if t = Void then
@@ -191,10 +178,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 					lrow.enable_select
 				end
 			end
-			l_user_opts.set_last_profile (t)
-
-			create l_user_factory
-			l_user_factory.store (lace.user_options)
+			profs.set_last_profile (t)
 
 			set_changed (Void, False)
 		end
@@ -208,6 +192,17 @@ feature -- Query
 			if profiles_grid.row_count > 0 and then not profiles_grid.selected_rows.is_empty then
 				lrow := profiles_grid.selected_rows.first
 				Result := profile_from_row (lrow)
+			end
+		end
+
+	selected_profile_parameters: DEBUGGER_EXECUTION_PARAMETERS is
+			-- Selected profile's execution parameters
+		local
+			p: like selected_profile
+		do
+			p := selected_profile
+			if p /= Void then
+				Result := p.params
 			end
 		end
 
@@ -289,9 +284,11 @@ feature {NONE} -- Display profiles impl
 			layout_constants.set_default_width_for_button (dup_button)
 			dup_button.disable_sensitive
 
-			create apply_button.make_with_text_and_action (interface_names.b_apply, agent apply_changes)
-			layout_constants.set_default_width_for_button (apply_button)
-			apply_button.disable_sensitive
+			if control_in_tool then --| provide a way to "Apply" changes
+				create apply_button.make_with_text_and_action (interface_names.b_apply, agent apply_changes)
+				layout_constants.set_default_width_for_button (apply_button)
+				apply_button.disable_sensitive
+			end
 
 			create reset_button.make_with_text_and_action (interface_names.b_reset, agent reset_changes)
 			layout_constants.set_default_width_for_button (reset_button)
@@ -304,8 +301,10 @@ feature {NONE} -- Display profiles impl
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
 			hb.extend (create {EV_HORIZONTAL_SEPARATOR})
-			hb.extend (apply_button)
-			hb.disable_item_expand (apply_button)
+			if apply_button /= Void then
+				hb.extend (apply_button)
+				hb.disable_item_expand (apply_button)
+			end
 			hb.extend (reset_button)
 			hb.disable_item_expand (reset_button)
 
@@ -487,10 +486,14 @@ feature -- Status Setting
 			if has_changed /= b then
 				has_changed := b
 				if has_changed then
-					apply_button.enable_sensitive
+					if apply_button /= Void then
+						apply_button.enable_sensitive
+					end
 					reset_button.enable_sensitive
 				else
-					apply_button.disable_sensitive
+					if apply_button /= Void then
+						apply_button.disable_sensitive
+					end
 					reset_button.disable_sensitive
 				end
 			end
@@ -552,14 +555,17 @@ feature -- Data change
 			v /= Void
 		local
 			s: STRING
+			params: DEBUGGER_EXECUTION_PARAMETERS
 		do
 			if v.is_empty then
 				s := Void
 			else
 				s := v
 			end
-			if not same_string_value (p.cwd, s) then
-				p.cwd := s
+			params := p.params
+			check p.params /= Void end
+			if not same_string_value (params.working_directory, s) then
+				params.set_working_directory (s)
 				update_title_row_of (p)
 				set_changed (p, True)
 			end
@@ -570,25 +576,32 @@ feature -- Data change
 			v /= Void
 		local
 			s: STRING
+			params: DEBUGGER_EXECUTION_PARAMETERS
 		do
 			if v.is_empty then
 				s := Void
 			else
 				s := v
 			end
-			if not same_string_value (p.args, s) then
-				p.args := s
+			params := p.params
+			check p.params /= Void end
+			if not same_string_value (params.arguments, s) then
+				params.set_arguments (s)
 				update_title_row_of (p)
 				set_changed (p, True)
 			end
 		end
 
 	change_env_on (v: HASH_TABLE [STRING_32, STRING_32]; p: like profile_from_row) is
+		local
+			params: DEBUGGER_EXECUTION_PARAMETERS
 		do
+			params := p.params
+			check params /= Void end
 			if v = Void or else v.is_empty then
-				p.env := Void
+				params.set_environment_variables (Void)
 			else
-				p.env := v
+				params.set_environment_variables (v)
 			end
 			update_title_row_of (p)
 			set_changed (p, True)
@@ -629,36 +642,35 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 	validate is
 			-- Update the selected profile in user options
 		local
-			l_user_opts: TARGET_USER_OPTIONS
-			l_profs: ARRAYED_LIST [like profile_from_row]
-			old_sp, sp, p: like profile_from_row
+			profs: DEBUGGER_PROFILES
+			sp, p: like profile_from_row
+			t: STRING_32
 		do
-			l_user_opts := lace.user_options.target
-			old_sp := l_user_opts.last_profile
-			l_profs := l_user_opts.profiles
-			if l_profs /= Void then
+			profs := debugger_manager.profiles
+			if profs /= Void then
 				sp := selected_profile
 				if sp = Void then
-					l_user_opts.set_last_profile (Void) -- Default profile
+					profs.set_last_profile (Void) -- Default profile
 				elseif sp.title /= Void then
 					from
-						l_profs.start
+						profs.start
 					until
-						l_profs.after or p /= Void
+						profs.after or p /= Void
 					loop
-						p := l_profs.item
+						t := profs.key_for_iteration
+						p := [t, profs.item_for_iteration]
 						if
-							p.title /= Void
-							and then p.title.is_case_insensitive_equal (sp.title)
+							t /= Void
+							and then t.is_case_insensitive_equal (sp.title)
 						then
 							--| Let's consider it as same profile.
 						else
 							p := Void
 						end
-						l_profs.forth
+						profs.forth
 					end
 					if p /= Void then
-						l_user_opts.set_last_profile (p)
+						profs.set_last_profile (p)
 					end
 				end
 			end
@@ -673,7 +685,7 @@ feature {NONE} -- Button Actions
 			p: like profile_from_row
 		do
 			profiles_grid.remove_selection
-			p := [interface_names.l_profile_no.as_string_32 + (1 + profiles_count).out, Void, Void, Void]
+			p := [interface_names.l_profile_no.as_string_32 + (1 + profiles_count).out, create {DEBUGGER_EXECUTION_PARAMETERS}]
 			r := added_profile_text_row (p, True)
 			if r.is_expandable and then not r.is_expanded then
 				r.expand
@@ -691,7 +703,7 @@ feature {NONE} -- Button Actions
 			if r /= Void then
 				p := profile_from_row (r)
 				if p /= Void then
-					p := p.deep_twin
+					p := [p.title, p.params.deep_twin]
 					if p.title = Void then
 						p.title := description_from_profile (p)
 					end
@@ -736,20 +748,23 @@ feature {NONE} -- Button Actions
 
 feature {NONE} -- Queries
 
-	description_from_profile (a_profile: like profile_from_row): STRING is
+	description_from_profile (a_profile: like profile_from_row): STRING_32 is
 			-- String describing `a_profile'.
+		local
+			params: DEBUGGER_EXECUTION_PARAMETERS
 		do
 			create Result.make (5)
-			if a_profile.args /= Void then
-				Result.append ("%"" + a_profile.args + "%"")
+			params := a_profile.params
+			if params.arguments /= Void then
+				Result.append ("%"" + params.arguments + "%"")
 			end
-			if a_profile.cwd /= Void and then not a_profile.cwd.is_empty then
+			if params.working_directory /= Void and then not params.working_directory.is_empty then
 				Result.append (" ")
-				Result.append (interface_names.l_cwd (a_profile.cwd).as_string_8)
+				Result.append (interface_names.l_cwd (params.working_directory))
 			end
-			if a_profile.env /= Void and then not a_profile.env.is_empty then
+			if params.environment_variables /= Void and then not params.environment_variables.is_empty then
 				Result.append (" (")
-				Result.append (interface_names.l_variable_count (a_profile.env.count).as_string_8)
+				Result.append (interface_names.l_variable_count (params.environment_variables.count))
 				Result.append (")")
 			end
 		ensure
@@ -809,9 +824,9 @@ feature {NONE} -- Profile actions
 			was_changed := has_changed
 			p := profile_from_row (a_row)
 			l_title := p.title
-			l_cwd := p.cwd
-			l_args := p.args
-			l_env := p.env
+			l_cwd := p.params.working_directory
+			l_args := p.params.arguments
+			l_env := p.params.environment_variables
 
 				-- Clean a_row
 			if a_row.subrow_count > 0 then
@@ -969,7 +984,7 @@ feature {NONE} -- Profile actions
 			l_item.set_text (s)
 		end
 
-	profile_from_row (a_row: EV_GRID_ROW): TUPLE [title:STRING_32; cwd:STRING; args:STRING; env:HASH_TABLE [STRING_32, STRING_32]] is
+	profile_from_row (a_row: EV_GRID_ROW): TUPLE [title:STRING_32; params: DEBUGGER_EXECUTION_PARAMETERS] is
 			-- Profile related to `a_row'.
 		require
 			a_row_not_void: a_row /= Void
@@ -1011,8 +1026,8 @@ feature {NONE} -- Environment queries
 			p: like profile_from_row
 		do
 			p := profile_from_row (a_row)
-			if p /= Void then
-				Result := p.env
+			if p /= Void and then p.params /= Void then
+				Result := p.params.environment_variables
 			end
 		end
 
@@ -1323,7 +1338,7 @@ feature {NONE} -- Environment actions
 				old_k := environment_variable_name_from_row (a_row)
 				p := profile_from_row (a_row)
 				check p /= Void end
-				env := p.env
+				env := p.params.environment_variables
 				if env = Void then
 					create env.make (3)
 				end
@@ -1394,8 +1409,8 @@ feature {NONE} -- Environment actions
 			end
 			k := environment_variable_name_from_row (a_row)
 			p := profile_from_row (a_row)
-			if k /= Void and (p /= Void and then p.env /= Void) then
-				p.env.remove (k)
+			if k /= Void and (p /= Void and then p.params.environment_variables /= Void) then
+				p.params.environment_variables.remove (k)
 			end
 			r := a_row.index
 			g := a_row.parent
@@ -1412,7 +1427,7 @@ feature {NONE} -- Environment actions
 			end
 			a_row.clear
 			g.remove_row (r)
-			change_env_on (p.env, p)
+			change_env_on (p.params.environment_variables, p)
 			inside_row_operation := False
 			if r > 1 then
 				g.select_row (r - 1)
@@ -1431,9 +1446,12 @@ feature {NONE} -- Environment actions
 			k := environment_variable_name_from_row (a_row)
 			p := profile_from_row (a_row)
 			if k = Void or else k.is_empty then
-				if k /= Void and (p /= Void and then p.env /= Void) then
-					p.env.remove (k)
-					change_env_on (p.env, p)
+				if
+					k /= Void and
+					(p /= Void and then p.params /= Void and then p.params.environment_variables /= Void)
+				then
+					p.params.environment_variables.remove (k)
+					change_env_on (p.params.environment_variables, p)
 				end
 			end
 		end

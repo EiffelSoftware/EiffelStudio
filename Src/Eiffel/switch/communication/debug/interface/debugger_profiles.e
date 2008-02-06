@@ -1,88 +1,59 @@
 indexing
-	description: "User specific options for a given target."
+	description: "Object keeping the execution profiles' data..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TARGET_USER_OPTIONS
+	DEBUGGER_PROFILES
+
+inherit
+	DS_HASH_TABLE [DEBUGGER_EXECUTION_PARAMETERS, STRING_32]
+
+	SESSION_DATA_I
+		undefine
+			is_equal, copy
+		end
 
 create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_name: STRING) is
-			-- Initialize user specific option for target `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		do
-			name := a_name
-		ensure
-			name_set: name = a_name
-		end
+	make_equal
 
 feature -- Access
 
-	name: STRING
-			-- Name for current target.
+	last_profile_name: STRING_32
+			-- Last profile's name
 
-	last_location: STRING is
-			-- EIFGENs location for `a_target'.
-		local
-			l_list: like locations
+	last_profile: TUPLE [name: like last_profile_name; params: DEBUGGER_EXECUTION_PARAMETERS] is
+			-- Last profile details
 		do
-			l_list := locations
-			if l_list /= Void then
-				Result := l_list.first
+			if
+				last_profile_name /= Void and then
+				has (last_profile_name)
+			then
+				Result := [last_profile_name, item (last_profile_name)]
 			end
 		end
 
-	locations: ARRAYED_LIST [STRING]
-			-- Set of EIFGENs location for `a_target'.
+feature -- Change
 
-	favorites: STRING
-			-- String representation of the favorites.
-
-feature -- Update
-
-	set_last_location (a_location: like last_location) is
-			-- Set `last_location' to `a_location'.
-		require
-			a_location_not_void: a_location /= Void
-		local
-			l_list: like locations
+	set_last_profile (v: like last_profile) is
+			-- Set `last_profile_name' to `v'
 		do
-			l_list := locations
-			if l_list = Void then
-				create l_list.make (5)
-				l_list.compare_objects
-				locations := l_list
+			if v = Void then
+				last_profile_name := Void
+			else
+				last_profile_name := v.name
+				if has (last_profile_name) then
+					replace (v.params, last_profile_name)
+				else
+					force_last (v.params, last_profile_name)
+				end
 			end
-				-- Always put `a_location' first in the list.
-			l_list.start
-			l_list.search (a_location)
-			if not l_list.exhausted then
-				l_list.remove
-			end
-			l_list.put_front (a_location)
-		ensure
-			last_location_set: last_location /= Void and then last_location.is_equal (a_location)
 		end
 
-	set_favorites (a_favorites: like favorites) is
-			-- Set `favorites' to `a_favorites'.
-		do
-			favorites := a_favorites
-		ensure
-			favorites_set: favorites = a_favorites
-		end
-
-invariant
-	name_not_void: name /= Void
-
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -113,4 +84,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end

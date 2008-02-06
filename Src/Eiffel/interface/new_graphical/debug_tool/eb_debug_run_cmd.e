@@ -39,16 +39,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_ARGUMENTS
-		export
-			{NONE} all
-		end
-
-	EXEC_MODES
-		export
-			{NONE} all
-		end
-
 	SHARED_STATUS
 		export
 			{NONE} all
@@ -100,71 +90,89 @@ feature -- Execution
 	execute is
 			-- Launch program in debugger with mode `User_stop_points' (i.e "Run").
 		do
-			execute_with_mode (User_stop_points)
+			execute_with_mode ({EXEC_MODES}.User_stop_points)
 		end
 
 	execute_with_mode (execution_mode: INTEGER) is
-			-- Launch program in debugger with mode `execution_mode'.
+			-- execute program in debugger with mode `User_stop_points' (i.e "Run").
+		do
+			if
+				Eiffel_project.initialized and then
+				not Eiffel_project.Workbench.is_compiling
+			then
+				if debugger_manager.application_is_executing then
+					resume_with_mode (execution_mode)
+				else -- not yet launched
+					launch_with_mode (execution_mode, debugger_manager.current_execution_parameters)
+				end
+			end
+		end
+
+	launch_with_mode (execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS) is
+		require
+			project_initialized: Eiffel_project.initialized
+			not_compiling: not Eiffel_project.Workbench.is_compiling
+			app_not_launched: not debugger_manager.application_is_executing
 		local
 			l_warning: ES_WARNING_PROMPT
 			l_compile_request: ES_DISCARDABLE_QUESTION_PROMPT
 			l_wb: WORKBENCH_I
 			l_cancel_debug: BOOLEAN
 		do
+				-- ask to compile if we changed some classes inside eiffel studio
+			l_wb := eiffel_project.workbench
+			if l_wb.is_changed or window_manager.has_modified_windows then
+				create l_compile_request.make_standard_with_cancel (warning_messages.w_compile_before_debug,
+					interface_names.l_always_compile_before_debug,
+					preferences.dialog_data.confirm_always_compile_before_executing_string)
+				l_compile_request.set_title (interface_names.t_debugger_question)
+				l_compile_request.set_button_action (dialog_buttons.yes_button, agent melt_project_cmd.execute_and_wait)
+				l_compile_request.show_on_active_window
+				if l_compile_request.dialog_result = dialog_buttons.cancel_button then
+					l_cancel_debug := True
+				end
+			end
+
+			if not l_cancel_debug then
+				if not Eiffel_project.Workbench.successful then
+						-- The last compilation was not successful.
+						-- It is VERY dangerous to launch the debugger in these conditions.
+						-- However, forbidding it completely may be too frustating.
+					create l_warning.make_standard_with_cancel (warning_messages.w_debug_not_compiled)
+					l_warning.set_title (interface_names.t_debugger_warning)
+					l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode, params))
+					l_warning.show_on_active_window
+				elseif not Debugger_manager.can_debug then
+						-- A class was removed since the last compilation.
+						-- It is VERY dangerous to launch the debugger in these conditions.
+						-- However, forbidding it completely may be too frustating.
+					create l_warning.make_standard_with_cancel (warning_messages.w_removed_class_debug)
+					l_warning.set_title (interface_names.t_debugger_warning)
+					l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode, params))
+					l_warning.show_on_active_window
+				else
+					launch_application (execution_mode, params)
+				end
+			end
+		end
+
+	resume_with_mode (execution_mode: INTEGER) is
+			-- resume program in debugger with mode `execution_mode'.
+		require
+			project_initialized: Eiffel_project.initialized
+			not_compiling: not Eiffel_project.Workbench.is_compiling
+			app_initialized: debugger_manager.application_initialized
+		do
 				--| At this point we define the 'type' on debug operation
 				--| either step next, step into, step out, continue ...
 				--| this will be used in APPLICATION_EXECUTION.continue_ignoring_kept_objects
 
-			if debugger_manager.application_initialized then
-				Debugger_manager.application.set_execution_mode (execution_mode)
-			end
+			Debugger_manager.application.set_execution_mode (execution_mode)
 
-				--| Now let's check the application status
-			if
-				Eiffel_project.initialized and then
-				not Eiffel_project.Workbench.is_compiling
-			then
-					--| Application is not yet launched |--
-				if not debugger_manager.application_is_executing then
-						-- ask to compile if we changed some classes inside eiffel studio
-					l_wb := eiffel_project.workbench
-					if l_wb.is_changed or window_manager.has_modified_windows then
-						create l_compile_request.make_standard_with_cancel (warning_messages.w_compile_before_debug,
-							interface_names.l_always_compile_before_debug,
-							preferences.dialog_data.confirm_always_compile_before_executing_string)
-						l_compile_request.set_title (interface_names.t_debugger_question)
-						l_compile_request.set_button_action (dialog_buttons.yes_button, agent melt_project_cmd.execute_and_wait)
-						l_compile_request.show_on_active_window
-						if l_compile_request.dialog_result = dialog_buttons.cancel_button then
-							l_cancel_debug := True
-						end
-					end
-
-					if not l_cancel_debug then
-						if not Eiffel_project.Workbench.successful then
-								-- The last compilation was not successful.
-								-- It is VERY dangerous to launch the debugger in these conditions.
-								-- However, forbidding it completely may be too frustating.
-							create l_warning.make_standard_with_cancel (warning_messages.w_debug_not_compiled)
-							l_warning.set_title (interface_names.t_debugger_warning)
-							l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode))
-							l_warning.show_on_active_window
-						elseif not Debugger_manager.can_debug then
-								-- A class was removed since the last compilation.
-								-- It is VERY dangerous to launch the debugger in these conditions.
-								-- However, forbidding it completely may be too frustating.
-							create l_warning.make_standard_with_cancel (warning_messages.w_removed_class_debug)
-							l_warning.set_title (interface_names.t_debugger_warning)
-							l_warning.set_button_action (dialog_buttons.ok_button, agent launch_application (execution_mode))
-							l_warning.show_on_active_window
-						else
-							launch_application (execution_mode)
-						end
-					end
-				elseif debugger_manager.safe_application_is_stopped then
-						--| Application is already launched and is stopped |--
-					resume_application
-				end
+					--| Application is already launched (precondition) |--
+			if debugger_manager.safe_application_is_stopped then
+					--| Application is already launched and is stopped |--
+				resume_application
 			end
 		end
 
@@ -267,18 +275,13 @@ feature -- Execution
 			end
 		end
 
-	launch_application (a_execution_mode: INTEGER) is
+	launch_application (a_execution_mode: INTEGER; a_params: DEBUGGER_EXECUTION_PARAMETERS) is
 			-- Launch the program from the project target.
 		local
 			ctlr: DEBUGGER_CONTROLLER
-			param: DEBUGGER_EXECUTION_PARAMETERS
 		do
 			ctlr := debugger_manager.controller
-			create param
-			param.set_arguments (current_cmd_line_argument)
-			param.set_working_directory (application_working_directory)
-			param.set_environment_variables (application_environment_variables)
-			ctlr.debug_application (param, a_execution_mode)
+			ctlr.debug_application (a_params, a_execution_mode)
 		end
 
 	resume_application is

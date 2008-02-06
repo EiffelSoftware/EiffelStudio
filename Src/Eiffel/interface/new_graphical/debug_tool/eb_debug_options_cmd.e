@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
-	execute_run_project is
+	launch_project (params: DEBUGGER_EXECUTION_PARAMETERS) is
 		do
 			if is_sensitive then
-				debugger_manager.run_project_cmd.execute
+				debugger_manager.run_project_cmd.launch_with_parameters ({EXEC_MODES}.User_stop_points, params)
 			end
 		end
 
@@ -54,7 +54,7 @@ feature -- Formatting
 				if window /= Void then
 					dev := window.window
 					if not argument_dialog_is_valid then
-						create args_dialog.make (window, agent execute_run_project)
+						create args_dialog.make (window, agent launch_project)
 						set_argument_dialog (args_dialog)
 					else
 						argument_dialog.update

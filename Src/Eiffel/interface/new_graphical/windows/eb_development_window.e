@@ -580,7 +580,7 @@ feature -- Stone process
 				end
 			end
 
-			if cv_cst /= Void or ef_stone /= Void then
+			if l_filename /= Void and (cv_cst /= Void or ef_stone /= Void) then
 				l := Window_manager.development_windows_with_class (l_filename)
 				if l.is_empty or else l.has (Current) then
 						-- We're not editing the class in another window.

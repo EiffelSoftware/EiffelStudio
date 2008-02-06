@@ -77,11 +77,17 @@ feature {NONE} -- Initialization
         local
         	l_sp_info: TUPLE [x, y, width, height: INTEGER]
         	l_screen: SD_SCREEN
+        	l_titled_window: EV_WINDOW_ACTION_SEQUENCES
         do
 			dialog.set_icon_pixmap (icon)
 
    				-- Remove key actions to prevent the ENTER and ESC from being processed by EV_DIALOG.
 			dialog.key_press_actions.wipe_out
+				-- Because the key actions are removed (or even if a default key handler is set) the close button
+				-- will be inactive because of the way EV_DIALOG was implemented.
+				-- As a result we must access the close request actions of the window to perform the proper close.
+			l_titled_window := dialog
+			register_action (l_titled_window.close_request_actions, agent on_cancel_dialog)
 			register_action (dialog.show_actions, agent show_actions.call ([]))
 
 			Precursor {ES_WINDOW_FOUNDATIONS}

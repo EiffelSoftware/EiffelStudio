@@ -853,7 +853,11 @@ feature {NONE} -- Action handlers
 				end
 
 				if not Result and not a_alt and not a_shift and then (is_confirmation_key_active or a_ctrl) and a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-					on_confirm_dialog
+					if a_ctrl or else ({l_widget: !EV_WIDGET} ev_application.focused_widget and then not {l_button: !EV_BUTTON} l_widget) then
+							-- We check if the focus widget is Void, because if it is then, technically the dialog does not have focus.
+							-- The key processing will stil be effective if there is no focused widget, which could be a bug.
+						on_confirm_dialog
+					end
 					Result := True
 				end
 			end

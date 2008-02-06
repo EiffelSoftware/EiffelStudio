@@ -55,10 +55,13 @@ feature {NONE} -- Initialization
 	initialize_services
 			-- Initializes graphical services
 		local
-			l_container: SERVICE_CONTAINER
+			l_fn: SERVICE_CONSUMER [FILE_NOTIFIER_S]
+			l_service: FILE_NOTIFIER_S
+			l_agent: PROCEDURE [ANY, TUPLE [type: NATURAL_8]]
 		do
-			l_container ?= service_provider.query_service ({SERVICE_CONTAINER})
-			add_core_services (l_container)
+			if {l_container: !SERVICE_CONTAINER} service_provider.query_service ({SERVICE_HEAP}) then
+				service_initializer.add_core_services (l_container)
+			end
 		end
 
 	compiler_initialization is
@@ -144,6 +147,14 @@ feature {NONE} -- Initialization
 			set_is_with_breakable
 		ensure
 			eiffel_layout_not_void: eiffel_layout /= Void
+		end
+
+feature {NONE} -- Access
+
+	service_initializer: !SERVICE_INITIALIZER
+			-- Initializer used to register all services
+		once
+			create {!ES_SERVICE_INITIALIZER} Result
 		end
 
 feature {NONE} -- Implementation (preparation of all widgets)
@@ -232,74 +243,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 			create project_dialog.make_default
 			project_dialog.show_modal_to_window (first_window.window)
-		end
-
-feature {NONE} -- Services
-
-	add_core_services (a_container: SERVICE_CONTAINER)
-			-- Initialize core services for the graphical IDE.
-			--
-			-- `a_container': The service container to add services to.
-		require
-			a_container_attached: a_container /= Void
-		do
-			a_container.add_service_with_activator ({EVENT_LIST_S}, agent create_event_list_service, False)
-			a_container.add_service_with_activator ({HELP_PROVIDERS_S}, agent setup_help_providers_service, False)
-			a_container.add_service_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
-		end
-
-feature {NONE} -- Service factories
-
-	create_event_list_service: EVENT_LIST_S
-			-- Creates the event list service
-		do
-			create {EVENT_LIST} Result.make
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	create_session_manager_service: SESSION_MANAGER_S
-			-- Creates the session manager service
-		do
-			create {SESSION_MANAGER} Result
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	create_help_providers_service: HELP_PROVIDERS_S
-			-- Creates the editor documents table service
-		do
-			create {HELP_PROVIDERS} Result.make
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-feature {NONE} -- Help registration
-
-	frozen setup_help_providers_service: HELP_PROVIDERS_S
-			-- Creates the editor documents table service
-		do
-			Result := create_help_providers_service
-			if {l_service: !HELP_PROVIDERS_S} Result then
-					-- Register all services.
-					-- Note: There is no need to perform any unregistering as the service should clean up all
-					--       help providers when the service is disposed of.
-				register_help_providers (l_service)
-			end
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	register_help_providers (a_service: !HELP_PROVIDERS_S) is
-			-- Registers all help providers with the help providers service
-		require
-			a_service_is_interface_usable: a_service.is_interface_usable
-		local
-			l_kinds: HELP_PROVIDER_KINDS
-		do
-			create l_kinds
-
-			a_service.register_provider (l_kinds.wiki, {WIKI_HELP_PROVIDER})
 		end
 
 feature {NONE} -- Exception handling

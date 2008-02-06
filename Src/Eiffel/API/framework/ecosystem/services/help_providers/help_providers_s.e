@@ -2,7 +2,7 @@ indexing
 	description: "[
 		Abstract interface for the help provider service used in querying help service providers based on available providers described in {HELP_PROVIDER_KINDS}.
 	]"
-	help: "http://dev.eiffel.com/Help_Providers_Service"
+	doc: "wiki://Help Providers Service"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";

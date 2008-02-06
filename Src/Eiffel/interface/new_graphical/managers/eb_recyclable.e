@@ -13,6 +13,7 @@ indexing
 		              true for all automatically recycled referring objects. Saying that, it's better to be explict about
 		              destorying EiffelVision2 objects.
 	]"
+	doc: "wiki://User Interface Memory Managment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"

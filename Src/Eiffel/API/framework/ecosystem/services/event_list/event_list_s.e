@@ -7,6 +7,7 @@ indexing
 		added the item. To ensure protection every client of the event service should have their own context cookie id, in the form
 		of a UUID.
 	]"
+	doc: "wiki://Event List Service"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";

@@ -23,7 +23,7 @@ inherit
 			internal_meaning
 		end
 
-	DOTNET_EXCEPTION_WAPPER
+	DOTNET_EXCEPTION_WRAPPER
 		undefine
 			default_create
 		end

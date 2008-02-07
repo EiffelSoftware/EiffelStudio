@@ -324,7 +324,9 @@ feature {NONE} -- Externals
 				GtkStyle *l_style;
 				
 				l_widget = GTK_WIDGET ($a_gtk_widget);
-				l_style = GTK_STYLE ($a_style);
+					// We need to attach the style to the window
+					// otherwise the color depths may be different.
+				l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
 				
 				if ($a_inset_shadow)
 				{
@@ -337,10 +339,12 @@ feature {NONE} -- Externals
 					l_style->ythickness = 1;				
 				}
 				
-				gtk_paint_box ($a_style, l_widget->window,
+				gtk_paint_box (l_style, l_widget->window,
 					$a_gtk_state_type, $a_gtk_shadow_type,
 					NULL, l_widget, "button",				
 					$a_x, $a_y, $a_width, $a_height);
+
+				gtk_style_detach (l_style);
 			}
 			]"
 		end

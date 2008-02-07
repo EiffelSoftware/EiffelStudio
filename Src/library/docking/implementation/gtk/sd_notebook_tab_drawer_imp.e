@@ -238,6 +238,10 @@ feature {NONE}  -- Implementation
 			l_imp ?= internal_tab.parent.implementation
 			check not_void: l_imp /= Void end
 
+			if l_imp.is_destroyed then
+				print ("Widget destroyed%N")
+			end
+
 			if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer then
 				c_gtk_paint_extension (l_imp.c_object, notebook_style, a_is_selected,
 										 a_x, 0 ,a_width, internal_tab.height, is_top_side_tab)
@@ -260,7 +264,9 @@ feature {NONE}  -- Implementation
 			"[
 			{
 				GtkWidget *l_widget;
+				GtkStyle *l_style;
 				l_widget = GTK_WIDGET ($a_gtk_widget);
+				l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
 				
 				GtkStateType l_state_type;
 				GtkPositionType l_gap_side;
@@ -277,11 +283,13 @@ feature {NONE}  -- Implementation
 				else
 					l_gap_side = GTK_POS_TOP;
 				
-				gtk_paint_extension($a_style, l_widget->window,
+				gtk_paint_extension(l_style, l_widget->window,
 					l_state_type, GTK_SHADOW_OUT,
 					&l_area, l_widget, "tab",
 					$a_x, $a_y, $a_width, $a_height,
-					l_gap_side);				
+					l_gap_side);
+
+				gtk_style_detach (l_style);		
 			}
 			]"
 		end
@@ -294,11 +302,13 @@ feature {NONE}  -- Implementation
 			"[
 			{
 				GtkWidget *l_widget;
+				GtkStyle *l_style;
 				l_widget = GTK_WIDGET ($a_gtk_widget);
+				l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
 				
 				GdkRectangle l_area = {$a_x, $a_y, $a_width, $a_height};
 				
-				gtk_paint_focus  (	$a_style,
+				gtk_paint_focus  (	l_style,
 									l_widget->window,
 								 	GTK_STATE_ACTIVE,
 								 	&l_area,
@@ -308,6 +318,8 @@ feature {NONE}  -- Implementation
 								 	$a_y,
 								 	$a_width,
 								 	$a_height);
+
+				gtk_style_detach (l_style);
 
 			}
 			]"

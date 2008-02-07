@@ -87,12 +87,14 @@ feature {NONE} -- Query
 			l_kind: UUID
 			l_fn: STRING_8
 			l_path: FILE_NAME
+			l_conf_target: CONF_TARGET
 			l_ver: STRING_8
+			l_target: STRING_8
 		do
 			create l_formatter
 			create l_kinds
 
-				-- Determine session type
+				-- Determine session type		
 			l_kind := a_session.kind
 			if l_kind.is_equal (l_kinds.environment) then
 				l_fn := environment_file_name
@@ -100,10 +102,14 @@ feature {NONE} -- Query
 				l_fn := window_file_name
 			elseif l_kind.is_equal (l_kinds.project) then
 				l_fn := project_file_name
-				l_ver := (create {SHARED_WORKBENCH}).workbench.lace.target.system.uuid.out
+				l_conf_target := (create {SHARED_WORKBENCH}).workbench.lace.target
+				l_ver := l_conf_target.system.uuid.out
+				l_target := l_conf_target.name
 			elseif l_kind.is_equal (l_kinds.project_window) then
 				l_fn := project_window_file_name
-				l_ver := (create {SHARED_WORKBENCH}).workbench.lace.target.system.uuid.out
+				l_conf_target := (create {SHARED_WORKBENCH}).workbench.lace.target
+				l_ver := l_conf_target.system.uuid.out
+				l_target := l_conf_target.name
 			else
 					-- Unknown session kind
 				check False end
@@ -116,7 +122,7 @@ feature {NONE} -- Query
 
 				-- Format path using collected parts
 			if l_ver /= Void then
-				l_fn := l_formatter.format (l_fn, [l_ver])
+				l_fn := l_formatter.format (l_fn, [l_ver, l_target])
 			end
 
 				-- Create full path
@@ -359,7 +365,6 @@ feature {NONE} -- Factory
 				if a_window = Void then
 						-- Must be a per-project session because there is no parent window
 					check a_per_project: a_per_project end
-
 					create {AGGREGATED_SESSION} Result.make (True, Current, l_inner_session)
 				else
 					create {AGGREGATED_SESSION} Result.make_per_window (a_per_project, a_window, Current, l_inner_session)
@@ -367,11 +372,10 @@ feature {NONE} -- Factory
 
 				if a_per_project then
 					create l_shared
-					if l_shared.eiffel_project.workbench.system_defined then
-						set_session_object (Result)
-					else
+					if not l_shared.eiffel_project.workbench.system_defined then
 							-- No project is loaded so we have to initialize the project session once it is loaded.
 						l_shared.eiffel_project.manager.load_agents.extend (agent set_session_object (Result))
+						l_set_object := False
 					end
 				end
 			else
@@ -401,8 +405,8 @@ feature {NONE} -- Constants
 
 	environment_file_name: STRING_8 = ".environment.session"
 	window_file_name: STRING_8 = ".window.session"
-	project_file_name: STRING_8 = ".{1}.session"
-	project_window_file_name: STRING_8 = ".{1}.window.session"
+	project_file_name: STRING_8 = ".{1}.{2}.session"
+	project_window_file_name: STRING_8 = ".{1}.{2}.window.session"
 
 feature {NONE} -- Internal implementation cache
 

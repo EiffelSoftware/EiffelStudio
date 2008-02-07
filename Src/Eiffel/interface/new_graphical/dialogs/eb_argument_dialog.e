@@ -179,7 +179,7 @@ feature {NONe} -- session data
 		do
 			create consumer
     		if consumer.is_service_available then
-				if {session: !SESSION_I} consumer.service.retrieve (False) then
+				if {session: !SESSION_I} consumer.service.retrieve (True) then
 					if {ref: !BOOLEAN_REF} session.value (keep_opened_status_session_data_id) then
 						Result := ref.item
 					else
@@ -196,7 +196,7 @@ feature {NONe} -- session data
 		do
 			create consumer
     		if consumer.is_service_available then
-				if {session: !SESSION_I} consumer.service.retrieve (False) then
+				if {session: !SESSION_I} consumer.service.retrieve (True) then
         			session.set_value (keep_opened_check_button.is_selected, keep_opened_status_session_data_id)
         		end
       		end

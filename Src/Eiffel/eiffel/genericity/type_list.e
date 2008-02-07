@@ -207,12 +207,10 @@ feature -- Sorting
 		local
 			i, nb: INTEGER
 			l_list: TWO_WAY_LIST [TUPLE [type_a: TYPE_A; class_type: CLASS_TYPE]]
-			l_tuple: TUPLE [type_a: TYPE_A; class_type: CLASS_TYPE]
 			l_type_a: TYPE_A
 			l_done: BOOLEAN
 			l_area: like area
 			l_item: like item
-			l_gen_type: GEN_TYPE_I
 		do
 			nb := count - 1
 			if nb > 0 then

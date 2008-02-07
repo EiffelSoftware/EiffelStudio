@@ -371,7 +371,6 @@ feature {NONE} -- Action handlers
 			execute_with_busy_cursor (agent
 				local
 					l_error: ES_ERROR_PROMPT
-					l_last_focus: EV_WIDGET
 				do
 					login_button.disable_sensitive
 					support_login.force_logout

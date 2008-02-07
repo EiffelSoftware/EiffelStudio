@@ -238,10 +238,6 @@ feature {NONE}  -- Implementation
 			l_imp ?= internal_tab.parent.implementation
 			check not_void: l_imp /= Void end
 
-			if l_imp.is_destroyed then
-				print ("Widget destroyed%N")
-			end
-
 			if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer then
 				c_gtk_paint_extension (l_imp.c_object, notebook_style, a_is_selected,
 										 a_x, 0 ,a_width, internal_tab.height, is_top_side_tab)

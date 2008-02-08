@@ -1774,6 +1774,7 @@ test	filename-classname-mismatch-warning	warn001	tcf pass warning
 
 -- test for agents
 test	agent-optimization-failure		agent001 tcf pass agents
+test	agent-with-like					agent002 tcf pass agents
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

@@ -1,0 +1,31 @@
+test_name agent-with-like
+test_description When an agent is defined on a routine where one of the argument is an anchor, the compiler would crash while generating the address table.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+c_compile_work
+c_compile_result ok
+execute_work NONE exec_output_m
+execute_result ok
+compare exec_output_m output
+
+compile_frozen
+compile_result ok
+execute_work NONE exec_output_w
+c_compile_work
+c_compile_result ok
+execute_result ok
+compare exec_output_w output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+execute_final NONE exec_output_f
+execute_result ok
+compare exec_output_f output
+
+test_end

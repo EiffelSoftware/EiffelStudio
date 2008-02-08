@@ -663,7 +663,7 @@ feature {NONE} -- Sort handling
 				l_last_sort_order := {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order
 			end
 
-			a_map.sort (create {DS_QUICK_SORTER [like row_data]}.make (create {AGENT_BASED_EQUALITY_TESTER [like row_data]}.make (agent (a_data, a_other_data: like row_data a_column, a_order: INTEGER): BOOLEAN
+			a_map.sort (create {DS_QUICK_SORTER [like row_data]}.make (create {AGENT_BASED_EQUALITY_TESTER [like row_data]}.make (agent (a_data, a_other_data: like row_data; a_column, a_order: INTEGER): BOOLEAN
 				do
 					inspect a_column
 					when object_column_index then

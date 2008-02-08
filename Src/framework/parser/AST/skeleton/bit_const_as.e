@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- with bit sequence contained in `b'.
 		require
 			b_not_void: b /= Void
+			b_minimum_length: b.name.count > 1
 		do
 			value := b
 		ensure
@@ -72,6 +73,7 @@ feature -- Output
 
 invariant
 	value_not_void: value /= Void
+	value_minimum_length: value.name.count > 1
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

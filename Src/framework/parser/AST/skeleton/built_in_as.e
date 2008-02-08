@@ -12,7 +12,8 @@ inherit
 	EXTERNAL_AS
 		redefine
 			is_built_in,
-			process
+			process,
+			is_equivalent
 		end
 
 create
@@ -44,6 +45,16 @@ feature -- Settings
 			body := b
 		ensure
 			body_set: body = b
+		end
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := alias_name_id = other.alias_name_id and then
+				equivalent (language_name, other.language_name) and then
+				equivalent (body, other.body)
 		end
 
 indexing

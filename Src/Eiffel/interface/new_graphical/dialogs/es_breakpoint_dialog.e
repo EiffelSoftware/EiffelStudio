@@ -679,7 +679,7 @@ feature {NONE} -- When hits
 			l_fixed.set_item_position (vb, 0, 0)
 			l_scroll.resize_actions.extend (agent (asc: EV_SCROLLABLE_AREA; ax,ay,aw,ah: INTEGER)
 					do
-						asc.set_item_size (asc.width - vertical_scrollbar_width, asc.height - horizontal_scrollbar_height)
+						asc.set_item_size (asc.item.minimum_width.max (asc.width - vertical_scrollbar_width), asc.item.minimum_height.max (asc.height - horizontal_scrollbar_height))
 					end(l_scroll, ?,?,?,?)
 				)
 			l_fixed.resize_actions.force_extend (agent (af: EV_FIXED; avb: EV_BOX; ax,ay,aw,ah: INTEGER)

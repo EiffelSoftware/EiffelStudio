@@ -52,7 +52,7 @@ feature -- Execute
 			lst: LIST [BREAKPOINT]
 			bp: BREAKPOINT
 		do
-			lst := a_dm.breakpoints_manager.breakpoints_tagged (tags)
+			lst := a_dm.breakpoints_manager.breakpoints_tagged (tags, False)
 			if lst /= Void and then not lst.is_empty then
 				from
 					lst.start

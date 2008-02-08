@@ -53,7 +53,7 @@ feature {EB_PREFERENCES} -- Initialization
 			Precursor {EDITOR_DATA} (a_preferences)
 		end
 
-feature {EB_EDITORS_MANAGER, EB_SHARED_PREFERENCES, EDITOR_TOKEN, ES_DIALOG} -- Value
+feature {EB_EDITORS_MANAGER, EB_SHARED_PREFERENCES, EDITOR_TOKEN, ES_DIALOG, ES_DOCKABLE_TOOL_PANEL} -- Value
 
 	breakpoint_background_color: EV_COLOR is
 			-- Background color used to display breakpoints		

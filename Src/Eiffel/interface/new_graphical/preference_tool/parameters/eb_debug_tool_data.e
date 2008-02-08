@@ -27,7 +27,7 @@ feature {EB_PREFERENCES} -- Initialization
 			preferences_not_void: preferences /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Value
+feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 
 	last_saved_stack_path: STRING is
 			-- Last saved stack path.
@@ -137,7 +137,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := display_agent_details_preference.value
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Preference
+feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 
 	last_saved_stack_path_preference: STRING_PREFERENCE
 	default_expanded_view_size_preference: INTEGER_PREFERENCE

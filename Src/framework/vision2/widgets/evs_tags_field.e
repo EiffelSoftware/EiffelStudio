@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create Current
 		do
+			create change_actions
 			build_interface
 		end
 
@@ -62,6 +63,9 @@ feature -- Properties
 
 	original_text: like text
 			-- Original text kept to be able to compute `is_modified'.
+
+	change_actions: ACTION_SEQUENCE [TUPLE]
+			-- Action triggered when user press Return with modified values.
 
 feature -- Measurement
 
@@ -100,59 +104,8 @@ feature -- Access
 
 	used_tags: ARRAY [STRING_32] is
 			-- Used tags as Array.
-		local
-			s,t: STRING_32
-			n,p,pp: INTEGER
-			sres: SORTABLE_ARRAY [STRING_32]
-			lst: ARRAYED_LIST [STRING_32]
 		do
-			s := text
-			s.left_adjust
-			s.right_adjust
-			if not s.is_empty then
-				n := s.occurrences (',') + 1
-				if n = 1 then
-					Result := << s >>
-				else
-					create lst.make (n)
-					lst.compare_objects
-					from
-						pp := 1
-					until
-						pp > s.count or n = 0
-					loop
-						p := s.index_of (',', pp)
-						if p > 0 then
-
-						else
-							p := s.count + 1
-						end
-						t := s.substring (pp, p - 1)
-						pp := p + 1
-						t.left_adjust
-						t.right_adjust
-						if not t.is_empty and then not lst.has (t) then
-							lst.extend (t)
-							n := n - 1
-						end
-					end
-					lst.prune_all (Void)
-					from
-						n := lst.count
-						create sres.make (1, n)
-						lst.finish
-					until
-						lst.before or n = 0
-					loop
-						sres.put (lst.item_for_iteration, n)
-						check lst.item_for_iteration /= Void end
-						n := n - 1
-						lst.back
-					end
-					sres.sort
-					Result := sres
-				end
-			end
+			Result := string_to_array_tags (text)
 		end
 
 feature -- Change
@@ -216,12 +169,22 @@ feature -- Change
 			text_field.set_foreground_color (c)
 		end
 
+	validate_changes is
+			-- Validate current change,
+			-- and update original_value
+		do
+			original_text := text
+		end
+
 feature -- event
 
 	update_text is
 			-- Update text with well formatted string from `used_tags'
 		do
 			internal_set_tags (used_tags)
+			if is_modified then
+				change_actions.call (Void)
+			end
 		end
 
 	add_tag	(t: STRING_32) is
@@ -258,6 +221,8 @@ feature -- event
 			create pw.make_with_shadow
 			pw.enable_border
 			pw.enable_user_resize
+
+			pw.hide_actions.extend (agent update_text)
 
 			create b
 			create g
@@ -600,6 +565,66 @@ feature {NONE} -- Implementation
 				internal_set_text (t)
 			else
 				remove_text
+			end
+		end
+
+	string_to_array_tags (a_text: STRING_32): ARRAY [STRING_32] is
+			-- Used tags as Array from `s'.
+		require
+			a_text_not_void: a_text /= Void
+		local
+			s,t: STRING_32
+			n,p,pp: INTEGER
+			sres: SORTABLE_ARRAY [STRING_32]
+			lst: ARRAYED_LIST [STRING_32]
+		do
+			s := a_text
+			s.left_adjust
+			s.right_adjust
+			if not s.is_empty then
+				n := s.occurrences (',') + 1
+				if n = 1 then
+					Result := << s >>
+				else
+					create lst.make (n)
+					lst.compare_objects
+					from
+						pp := 1
+					until
+						pp > s.count or n = 0
+					loop
+						p := s.index_of (',', pp)
+						if p > 0 then
+
+						else
+							p := s.count + 1
+						end
+						t := s.substring (pp, p - 1)
+						pp := p + 1
+						t.left_adjust
+						t.right_adjust
+						if not t.is_empty and then not lst.has (t) then
+							lst.extend (t)
+							n := n - 1
+						end
+					end
+					lst.prune_all (Void)
+					from
+						n := lst.count
+						create sres.make (1, n)
+						lst.finish
+					until
+						lst.before or n = 0
+					loop
+						sres.put (lst.item_for_iteration, n)
+						check lst.item_for_iteration /= Void end
+						n := n - 1
+						lst.back
+					end
+					sres.sort
+					Result := sres
+				end
+				Result.compare_objects
 			end
 		end
 

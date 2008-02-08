@@ -18,7 +18,7 @@ feature -- Sorting order
 			-- Ascending order
 
 	descending_order: INTEGER is 2
-			-- Decending order
+			-- Descending order
 
 	topology_order: INTEGER is 3
 			-- Topology order
@@ -36,7 +36,7 @@ feature -- Sorting order
 		end
 
 	descending_indicator_pixmap: EV_PIXMAP is
-			-- Indicator for `decending_order'
+			-- Indicator for `descending_order'
 		do
 			Result := pixmaps.icon_pixmaps.sort_descending_icon
 		end

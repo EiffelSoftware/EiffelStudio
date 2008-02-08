@@ -263,12 +263,15 @@ feature -- Access
 				l_area := feature_names.area
 				l_count := feature_names.count
 			until
-				Result /= Void or else i = l_count
+				i = l_count
 			loop
 				if n = l_area [i].internal_name.name_id then
 					Result := Current
+						-- Jump out of loop
+					i := l_count
+				else
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 

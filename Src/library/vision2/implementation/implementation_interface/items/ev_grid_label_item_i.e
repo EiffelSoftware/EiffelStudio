@@ -98,7 +98,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	recompute_text_dimensions is
 			-- Recompute `internal_text_width' and `internal_text_height'.
 		local
-			l_text_dimensions: TUPLE [INTEGER, INTEGER]
+			l_text_dimensions: TUPLE [w: INTEGER; h: INTEGER]
 		do
 			if must_recompute_text_dimensions then
 				if parent_i /= Void then
@@ -116,8 +116,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 						l_text_dimensions := internal_default_font.string_size (interface.text)
 					end
 				end
-				internal_text_width := l_text_dimensions.integer_item (1)
-				internal_text_height := l_text_dimensions.integer_item (2)
+				internal_text_width := l_text_dimensions.w
+				internal_text_height := l_text_dimensions.h
 			end
 			must_recompute_text_dimensions := False
 		ensure

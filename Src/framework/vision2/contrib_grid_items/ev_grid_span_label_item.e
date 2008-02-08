@@ -159,6 +159,9 @@ feature {NONE} -- Implementation
 
 			a_drawable.set_foreground_color (bg)
 			a_drawable.fill_rectangle (0, 0, a_drawable.width, a_drawable.height)
+			if not g.pre_draw_overlay_actions.is_empty then
+				g.pre_draw_overlay_actions.call ([a_drawable, Current, column.index, row.index])
+			end
 
 			w := 0
 			if is_master then

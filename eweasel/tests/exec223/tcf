@@ -19,9 +19,9 @@ compile_result	validity_warning TEST Unused_local_warning Unused_local_warning U
 c_compile_work
 c_compile_result ok
 
-execute_work	NONE exec_output
+execute_work	NONE exec_output_1
 execute_result	ok
-compare		exec_output output1
+compare		exec_output_1 output1
 
 
 copy_raw	i_sortable_array.e $CLUSTER i_sortable_array.e
@@ -29,9 +29,9 @@ copy_raw	test3.e $CLUSTER test.e
 compile_melted
 compile_result ok
 
-execute_work	NONE exec_output
+execute_work	NONE exec_output_2
 execute_result	ok
-compare		exec_output output2
+compare		exec_output_2 output2
 
 compile_final
 compile_result ok
@@ -39,9 +39,9 @@ compile_result ok
 c_compile_final
 c_compile_result ok
 
-execute_final NONE exec_output
+execute_final NONE exec_output_3
 execute_result ok
-compare exec_output output2
+compare exec_output_3 output2
 
 compile_final_keep
 compile_result ok
@@ -49,8 +49,8 @@ compile_result ok
 c_compile_final
 c_compile_result ok
 
-execute_final NONE exec_output
+execute_final NONE exec_output_4
 execute_result ok
-compare exec_output output2
+compare exec_output_4 output2
 
 test_end

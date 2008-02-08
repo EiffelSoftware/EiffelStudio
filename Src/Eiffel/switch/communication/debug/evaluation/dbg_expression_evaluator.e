@@ -12,6 +12,10 @@ deferred class
 inherit
 	ANY
 
+inherit {NONE}
+
+	DEBUGGER_COMPILER_UTILITIES
+
 	SHARED_BENCH_NAMES
 		export
 			{NONE} all

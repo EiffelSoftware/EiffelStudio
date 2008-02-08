@@ -2052,16 +2052,13 @@ feature {NONE} -- Implementation
 		end
 
 	reset_byte_node is
+			-- Reset `byte_node'
 		do
 			internal_byte_node := Void
 		end
 
 	internal_byte_node: like  byte_node
-
-	dbg_expression_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR is
-		once
-			create Result
-		end
+			-- Cached `byte_node'
 
 feature {NONE} -- Compiler helpers
 
@@ -2077,49 +2074,6 @@ feature {NONE} -- Compiler helpers
 			end
 		ensure
 			Result_not_void: Result /= Void
-		end
-
-	feature_i_from_call_access_b_in_context (cl: CLASS_C; a_call_access_b: CALL_ACCESS_B): FEATURE_I is
-			-- Return FEATURE_I corresponding to `a_call_access_b' in class `cl'
-			-- (this handles the feature renaming cases)
-		require
-			cl_not_void: cl /= Void
-			a_call_access_b_not_void: a_call_access_b /= Void
-		local
-			wcl: CLASS_C
-			l_cl: CLASS_C
-		do
-			if cl.is_basic then
-				l_cl := dbg_evaluator.associated_reference_basic_class_type (cl).associated_class
-				Result := l_cl.feature_of_rout_id (a_call_access_b.routine_id)
-			else
-				if cl.class_id = a_call_access_b.written_in then
-						--| if same class, this is straight forward
-					Result := cl.feature_of_feature_id (a_call_access_b.feature_id)
-				else
-						--| let's search from written_class
-					wcl := system.class_of_id (a_call_access_b.written_in)
-					check wcl_not_void: wcl /= Void end
-					Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
-					if Result /= Void and then wcl /= cl then
-						Result := fi_version_of_class (Result, cl)
-					end
-					if Result = Void then
-							--| from _B target static type ...
-						if a_call_access_b.parent /= Void and then a_call_access_b.parent.target /= Void then
-							l_cl := class_c_from_expr_b (a_call_access_b.parent.target)
-							if l_cl /= Void then
-								Result := l_cl.feature_of_rout_id (a_call_access_b.routine_id)
-								if Result /= Void and then l_cl /= cl then
-									Result := fi_version_of_class (Result, cl)
-								end
-							end
-						end
-
-						--| else giveup, no need to find an erroneous feature whic lead to debuggee crash
-					end
-				end
-			end
 		end
 
 	class_c_from_external_b (a_external_b: EXTERNAL_B): CLASS_C is
@@ -2138,72 +2092,11 @@ feature {NONE} -- Compiler helpers
 			end
 		end
 
-	class_c_from_expr_b (a_expr_b: EXPR_B): CLASS_C is
-			-- Class C related to `a_expr_b' if exists.
-		require
-			a_expr_b_not_void: a_expr_b /= Void
-		local
-			l_type_i: TYPE_I
-		do
-			l_type_i := a_expr_b.type
-			if l_type_i /= Void then
-				Result := class_c_from_type_i (l_type_i)
-			end
-		end
+feature {NONE} -- Implementation
 
-	class_c_from_type_i (a_type_i: TYPE_I): CLASS_C is
-			-- Class C related to `a_type_i' if exists.
-		require
-			a_type_i_not_void: a_type_i /= Void
-		local
-			l_type_a: TYPE_A
-		do
-			if a_type_i /= Void then
-				l_type_a := a_type_i.type_a
-				if l_type_a.has_associated_class then
-					Result := l_type_a.associated_class
-				end
-			end
-		end
-
-	class_type_from_expr_b (a_expr_b: EXPR_B): CLASS_TYPE is
-			-- Class type related to `a_expr_b' if exists.
-			--| NOT USED FOR NOW.
-		require
-			a_expr_b_not_void: a_expr_b /= Void
-		local
-			l_cl_type_i: CL_TYPE_I
-		do
-			l_cl_type_i ?= a_expr_b.type
-			if l_cl_type_i /= Void then
-				l_cl_type_i := resolved_real_type_in_context (l_cl_type_i)
-				if l_cl_type_i.has_associated_class_type then
-					Result := l_cl_type_i.associated_class_type
-				end
-			else
-				--| might be :
-				--| FORMAL_I
-				--| LIKE_CURRENT_I
-				--| MULTI_FORMAL_I
-				--| NONE_I
-				--| REFERENCE_I																
-				--| VOID_I
-			end
-		end
-
-	fi_version_of_class (fi: FEATURE_I; a_class: CLASS_C): FEATURE_I is
-			-- Feature in `a_class' of which `Current' is derived.
-			-- `Void' if not present in that class.
-		require
-			fi_not_void: fi /= Void
-			a_class_not_void: a_class /= Void
-		local
-			rids: ROUT_ID_SET
-		do
-			if a_class.is_valid and then a_class.has_feature_table then
-				rids := fi.rout_id_set
-				Result := a_class.feature_table.feature_of_rout_id_set (fi.rout_id_set)
-			end
+	dbg_expression_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR is
+		once
+			create Result
 		end
 
 indexing

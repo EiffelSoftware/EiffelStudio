@@ -268,10 +268,9 @@ feature -- Access
 				if n = l_area [i].internal_name.name_id then
 					Result := Current
 						-- Jump out of loop
-					i := l_count
-				else
-					i := i + 1
+					i := l_count - 1
 				end
+				i := i + 1
 			end
 		end
 

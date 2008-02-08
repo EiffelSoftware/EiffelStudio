@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			bits_value_set: bits_value = v
 			bit_keyword_set: bit_keyword = b_as
 		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is

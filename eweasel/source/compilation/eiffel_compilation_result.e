@@ -12,33 +12,36 @@ inherit
 
 feature -- Properties
 
-	syntax_errors: LINKED_LIST [EIFFEL_SYNTAX_ERROR];
+	syntax_errors: SORTED_TWO_WAY_LIST [EIFFEL_SYNTAX_ERROR];
 			-- Syntax errors reported by compiler
-	
-	validity_errors: LINKED_LIST [EIFFEL_VALIDITY_ERROR];
+
+	validity_errors: SORTED_TWO_WAY_LIST [EIFFEL_VALIDITY_ERROR];
 			-- Validity errors reported by compiler
-	
+
+	last_validity_error: EIFFEL_VALIDITY_ERROR
+			-- Last validity error being inserted
+
 	had_panic: BOOLEAN;
 			-- Did a panic occur during compilation?
-	
+
 	had_exception: BOOLEAN;
 			-- Did an exception occur during compilation?
-	
+
 	execution_failure: BOOLEAN;
 			-- Did a system execution failure occur during
 			-- compilation?
-	
+
 	illegal_instruction: BOOLEAN;
 			-- Was an illegal instruction executed
 			-- during compilation?
-	
+
 	updt_failure: BOOLEAN;
 			-- Was the compiler unable to write the .UPDT file,
 			-- which contains the melted code?
-	
+
 	c_generation_failure: BOOLEAN;
 			-- Was the compiler unable to generate C code?
-	
+
 	compilation_paused: BOOLEAN;
 			-- Did compilation pause and await user input
 			-- before resuming?
@@ -46,7 +49,7 @@ feature -- Properties
 	compilation_aborted: BOOLEAN;
 			-- Was compilation aborted prematurely, usually
 			-- due to an exception?
-	
+
 	compilation_finished: BOOLEAN;
 			-- Did compilation finish normally?
 
@@ -84,7 +87,7 @@ feature -- Properties
 					validity_errors.forth;
 				end;
 			end;
-				
+
 			create status.make (0);
 			if updt_failure then
 				status.append (".UPDT_file_error ");
@@ -196,7 +199,7 @@ feature {NONE} -- State
 	in_error: BOOLEAN;
 			-- Are we analyzing lines which are part of
 			-- a syntax or validity error?
-			
+
 
 feature -- Modification
 
@@ -204,12 +207,12 @@ feature -- Modification
 		do
 			compilation_paused := True;
 		end;
-	
+
 	set_compilation_finished is
 		do
 			compilation_finished := True;
 		end;
-	
+
 	add_syntax_error (err: EIFFEL_SYNTAX_ERROR) is
 		require
 			error_not_void: err /= Void;
@@ -219,7 +222,7 @@ feature -- Modification
 			end;
 			syntax_errors.extend (err);
 		end;
-	
+
 	add_validity_error (err: EIFFEL_VALIDITY_ERROR) is
 		require
 			error_not_void: err /= Void;
@@ -228,9 +231,10 @@ feature -- Modification
 				create validity_errors.make;
 			end;
 			validity_errors.extend (err);
+			last_validity_error := err
 		end;
-	
-	
+
+
 feature -- Comparison
 
 	matches (other: EIFFEL_COMPILATION_RESULT): BOOLEAN is
@@ -262,14 +266,14 @@ feature {NONE} -- Implementation
 		do
 			add_syntax_error (new_syntax_error (line));
 		end;
-	
+
 	analyze_syntax_warning (line: STRING) is
 		require
 			line_not_void: line /= Void;
 		do
 			add_syntax_error (new_syntax_warning (line));
 		end;
-	
+
 	new_syntax_error (line: STRING): EIFFEL_SYNTAX_ERROR is
 		require
 			line_not_void: line /= Void;
@@ -305,13 +309,12 @@ feature {NONE} -- Implementation
 			else
 				create class_name.make (0);
 			end;
-			create Result;
-			Result.set_class_name (class_name);
+			create Result.make (class_name)
 			if is_integer (line_no) then
 				Result.set_line_number (line_no.to_integer);
 			end;
 		end;
-	
+
 	new_syntax_warning (line: STRING): EIFFEL_SYNTAX_ERROR is
 		require
 			line_not_void: line /= Void;
@@ -347,20 +350,19 @@ feature {NONE} -- Implementation
 			else
 				create class_name.make (0);
 			end;
-			create Result;
-			Result.set_class_name (class_name);
+			create Result.make (class_name)
 			if is_integer (line_no) then
 				Result.set_line_number (line_no.to_integer);
 			end;
 		end;
-	
+
 	analyze_validity_error (line: STRING) is
 		require
 			line_not_void: line /= Void;
 		do
 			add_validity_error (new_validity_error (line));
 		end;
-	
+
 	new_validity_error (line: STRING): EIFFEL_VALIDITY_ERROR is
 		require
 			line_not_void: line /= Void;
@@ -372,11 +374,9 @@ feature {NONE} -- Implementation
 			words := broken_into_words (line);
 			code := words.i_th (3);
 			create class_name.make (0);
-			create Result;
-			Result.set_class_name (class_name);
-			Result.set_validity_code (code);
+			create Result.make (class_name, code)
 		end;
-	
+
 	analyze_error_line (line: STRING) is
 		require
 			line_not_void: line /= Void;
@@ -388,13 +388,16 @@ feature {NONE} -- Implementation
 				words := broken_into_words (line);
 				if words.count >= 2 then
 					class_name := words.i_th (2);
-					validity_errors.last.set_class_name (class_name);
+					check
+						last_validity_error_not_void: last_validity_error /= Void
+					end
+					last_validity_error.set_class_name (class_name);
 				end;
 				in_error := False;
 			end
 		end;
-	
-	linked_list_matches (list1, list2: LINKED_LIST [ANY]): BOOLEAN is
+
+	linked_list_matches (list1, list2: SORTED_TWO_WAY_LIST [EIFFEL_ERROR]): BOOLEAN is
 		local
 			count1, count2: INTEGER;
 			different: BOOLEAN;
@@ -414,6 +417,12 @@ feature {NONE} -- Implementation
 			elseif count1 /= count2 then
 				Result := False;
 			else
+					-- List have to be sorted because when we insert the errors
+					-- in the list the objects might be partially initialized.
+					-- Now we know for sure that they are properly initialized, so
+					-- sorting will yield the proper order.
+				list1.sort
+				list2.sort
 				from
 					list1.start; list2.start;
 				until

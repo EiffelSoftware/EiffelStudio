@@ -7,37 +7,36 @@ indexing
 class EIFFEL_SYNTAX_ERROR
 
 inherit
-	ANY
+	EIFFEL_ERROR
 		redefine
 			is_equal
 		end
 
-feature -- Properties
+create
+	make
 
-	class_name: STRING;
-			-- Class in which error occurred
+feature {NONE} -- Initialization
+
+	make (a_name: like class_name) is
+			-- Create current with `a_name' as `class_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			class_name := a_name
+		ensure
+			class_name_set: class_name = a_name
+		end
+
+feature -- Properties
 
 	line_number: INTEGER;
 			-- Line number on which syntax error occurred
 
-	position: INTEGER;
-			-- Character position at which syntax error occurred
-
 feature -- Modification
-
-	set_class_name (name: STRING) is
-		do
-			class_name := name;
-		end;
 
 	set_line_number (n: INTEGER) is
 		do
 			line_number := n;
-		end
-
-	set_position (pos: INTEGER) is
-		do
-			position := pos;
 		end
 
 feature -- Summary
@@ -58,15 +57,20 @@ feature -- Summary
 			Result.append_integer (line_number);
 		end;
 
-
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 		do
 			Result := equal (class_name, other.class_name) and
-				line_number = other.line_number and
-				position = other.position;
+				line_number = other.line_number
 		end
+
+	infix "<" (other: like Current): BOOLEAN is
+		do
+			Result := class_name < other.class_name or else
+				(equal (class_name, other.class_name) and line_number < other.line_number)
+		end
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

@@ -226,12 +226,15 @@ feature -- Access on Byte node
 						--| if same class, this is straight forward
 					Result := cl.feature_of_feature_id (a_call_access_b.feature_id)
 				else
-						--| let's search from written_class
-					wcl := eiffel_system.class_of_id (a_call_access_b.written_in)
-					check wcl_not_void: wcl /= Void end
-					Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
-					if Result /= Void and then wcl /= cl then
-						Result := fi_version_of_class (Result, cl)
+					Result := cl.feature_of_rout_id (a_call_access_b.routine_id)
+					if Result = Void then
+							--| let's search from written_class
+						wcl := eiffel_system.class_of_id (a_call_access_b.written_in)
+						check wcl_not_void: wcl /= Void end
+						Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
+						if Result /= Void and then wcl /= cl then
+							Result := fi_version_of_class (Result, cl)
+						end
 					end
 					if Result = Void then
 							--| from _B target static type ...

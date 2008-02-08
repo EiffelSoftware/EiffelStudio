@@ -7,29 +7,43 @@ indexing
 class EIFFEL_VALIDITY_ERROR
 
 inherit
-	ANY
+	EIFFEL_ERROR
 		redefine
 			is_equal
 		end
 
-feature -- Properties
+create
+	make
 
-	class_name: STRING;
-			-- Class in which error occurred
+feature -- Initialization
+
+	make (a_name: like class_name; a_code: like validity_code) is
+			-- Create current validity error with `a_name' and `a_code'.
+		require
+			a_name_not_void: a_name /= Void
+			a_code_not_void: a_code /= Void
+		do
+			class_name := a_name
+			validity_code := a_code
+		ensure
+			class_name_set: class_name = a_name
+			validity_code_set: validity_code = a_code
+		end
+
+feature -- Properties
 
 	validity_code: STRING;
 			-- Validity code which was violated
 
 feature -- Modification
 
-	set_class_name (name: STRING) is
+	set_validity_code (a_code: STRING) is
+		require
+			a_code_not_void: a_code /= Void
 		do
-			class_name := name;
-		end;
-
-	set_validity_code (code: STRING) is
-		do
-			validity_code := code;
+			validity_code := a_code
+		ensure
+			validity_code_set: validity_code = a_code
 		end
 
 feature -- Summary
@@ -52,9 +66,18 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 		do
-			Result := equal (class_name, other.class_name) and
-				equal (validity_code, other.validity_code);
+			Result := class_name.is_equal (other.class_name) and validity_code.is_equal (other.validity_code)
 		end
+
+	infix "<" (other: like Current): BOOLEAN is
+		do
+			Result := class_name < other.class_name or else
+				(equal (class_name, other.class_name) and validity_code < other.validity_code)
+		end
+
+invariant
+	validity_code_not_void: validity_code /= Void
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

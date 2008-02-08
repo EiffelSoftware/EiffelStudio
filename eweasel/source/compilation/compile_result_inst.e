@@ -115,7 +115,7 @@ feature
 				execute_ok := False;
 				create failure_explanation.make (0);
 				failure_explanation.append ("no pending Eiffel compilation result to check");
-				
+
 			else
 				execute_ok := cr.matches (expected_compile_result);
 				if not execute_ok then
@@ -132,7 +132,7 @@ feature
 
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
-	
+
 	execute_ok: BOOLEAN;
 			-- Was last call to `execute' successful?
 
@@ -170,13 +170,12 @@ feature {NONE} -- Implementation
 				failure_explanation.append ("syntax error has non-integer line number: ");
 				failure_explanation.append (line_no);
 			else
-				create syn;
 				cname := real_class_name (cname);
-				syn.set_class_name (cname);
+				create syn.make (cname)
 				syn.set_line_number (line_no.to_integer);
 				cr.add_syntax_error (syn);
 			end
-		
+
 		end;
 
 	process_validity_phrase (phrase: STRING; cr: EIFFEL_COMPILATION_RESULT) is
@@ -206,9 +205,7 @@ feature {NONE} -- Implementation
 				until
 					words.after
 				loop
-					create val;
-					val.set_class_name (cname);
-					val.set_validity_code (words.item);
+					create val.make (cname, words.item)
 					cr.add_validity_error (val);
 					words.forth;
 				end;
@@ -228,19 +225,19 @@ feature {NONE} -- Implementation
 		end;
 
 	No_class_name: STRING is "NONE";
-	
+
 	Phrase_separator: CHARACTER is ';';
-	
+
 	Ok_result: STRING is "ok"
-	
+
 	Syntax_error_result: STRING is "syntax_error"
-	
+
 	Syntax_warning_result: STRING is "syntax_warning"
-	
+
 	Validity_error_result: STRING is "validity_error"
-	
+
 	Validity_warning_result: STRING is "validity_warning";
-	
+
 indexing
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.

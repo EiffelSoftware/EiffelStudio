@@ -25,6 +25,11 @@ inherit
 			is_equal
 		end
 
+	COMPARABLE
+		undefine
+			is_equal
+		end
+
 create {BREAKPOINTS_MANAGER}
 	make
 
@@ -60,6 +65,35 @@ feature -- Comparison
 			-- a recompilation
 		do
 			Result := (other.breakable_line_number = breakable_line_number) and (other.body_index = body_index)
+		end
+
+	infix "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		local
+			acl,ocl: CLASS_C
+		do
+			if routine /= Void then
+				acl := routine.associated_class
+			end
+			if other.routine /= Void then
+				ocl := other.routine.associated_class
+			end
+			if acl = Void and ocl = Void then
+				Result := True
+			elseif acl = Void then
+				Result := True
+			else --| none are Void
+				if acl.name_in_upper.is_equal (ocl.name_in_upper) then
+					--| routine not Void neither
+					if routine.is_equal (other.routine) then
+						Result := breakable_line_number < other.breakable_line_number
+					else
+						Result := routine.name < other.routine.name
+					end
+				else
+					Result := acl.name_in_upper < ocl.name_in_upper
+				end
+			end
 		end
 
 feature -- Properties
@@ -186,14 +220,15 @@ feature -- Change status
 			location_is_not_set_for_application: application_status = Application_breakpoint_not_set
 		end
 
-feature -- debug output
+feature -- String representation
 
-	debug_output: STRING is
-			-- Debug output.
+	to_string: STRING is
+			-- String representation of Current location.
 		local
 			lcl: CLASS_C
 		do
-			Result := "{"
+			create Result.make_empty
+			Result.append_character ('{')
 			if routine /= Void then
 				lcl := routine.associated_class
 			end
@@ -209,11 +244,20 @@ feature -- debug output
 				Result.append_string ("???")
 			end
 			Result.append_string (" [" + breakable_line_number.out + "] ")
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- debug output
+
+	debug_output: STRING is
+			-- Debug output.
+		do
+			Result := to_string
 			if is_set_for_application then
 				Result.append_string (" <set for application> ")
 			end
 		end
-
 
 feature {NONE} -- Private constants		
 

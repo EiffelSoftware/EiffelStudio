@@ -698,12 +698,12 @@ feature -- Breakpoints access with feature,index
 			retry
 		end
 
-	features_with_breakpoint_set (include_hidden: BOOLEAN): LIST [E_FEATURE] is
+	features_associated_to (bps: LIST [BREAKPOINT]): LIST [E_FEATURE] is
 			-- list of all feature with a breakpoint set (enabled or disabled)
 		local
 			bp: BREAKPOINT
 			loc: BREAKPOINT_LOCATION
-			bplst: like breakpoints
+			bplst: LIST [BREAKPOINT]
 			known_features: ARRAYED_LIST [INTEGER]
 			body_index: INTEGER
 		do
@@ -712,26 +712,21 @@ feature -- Breakpoints access with feature,index
 			create known_features.make(5)
 
 			from
-				bplst := breakpoints
+				bplst := bps
 				bplst.start
 			until
 				bplst.after
 			loop
 				bp := bplst.item_for_iteration
-				if
-					bp.is_set and
-					(include_hidden or not bp.is_hidden)
-				then
-					loc := bp.location
-					if not loc.is_corrupted and then loc.is_valid then
-						body_index := loc.body_index
-							-- have we already added the feature corresponding to this breakpoint ?
-						if not known_features.has (body_index) then
-								-- feature not already added... so add it
-							known_features.extend (body_index)
-								-- add the feature to the result list
-							Result.extend (loc.routine)
-						end
+				loc := bp.location
+				if not loc.is_corrupted and then loc.is_valid then
+					body_index := loc.body_index
+						-- have we already added the feature corresponding to this breakpoint ?
+					if not known_features.has (body_index) then
+							-- feature not already added... so add it
+						known_features.extend (body_index)
+							-- add the feature to the result list
+						Result.extend (loc.routine)
 					end
 				end
 				bplst.forth
@@ -740,24 +735,72 @@ feature -- Breakpoints access with feature,index
 			non_void_result: Result /= Void
 		end
 
+	features_with_breakpoint_set (include_hidden: BOOLEAN): LIST [E_FEATURE] is
+			-- list of all feature with a breakpoint set (enabled or disabled)
+		do
+			Result := features_associated_to (breakpoints_set (include_hidden))
+		ensure
+			non_void_result: Result /= Void
+		end
+
 feature -- Query
 
-	breakpoints_tagged (a_tags: ARRAY [STRING_32]): LIST [BREAKPOINT] is
+	user_breakpoints_set: LIST [BREAKPOINT] is
+			-- User breakpoints which are set
+		do
+			Result := breakpoints_set (False)
+		end
+
+	user_breakpoints_tagged (a_tags: ARRAY [STRING_32]): LIST [BREAKPOINT] is
+			-- User breakpoints which are set and match `a_tags'
+		do
+			Result := breakpoints_tagged (a_tags, False)
+		end
+
+	breakpoints_set (include_hidden: BOOLEAN): LIST [BREAKPOINT] is
+			-- breakpoints which are set
 		local
 			bp: BREAKPOINT
+			bplst: like breakpoints
+		do
+			create {ARRAYED_LIST [BREAKPOINT]} Result.make (breakpoints.count)
+			from
+				bplst := breakpoints
+				bplst.start
+			until
+				bplst.after
+			loop
+				bp := bplst.item_for_iteration
+				if bp.is_set and (include_hidden or not bp.is_hidden) then
+					Result.extend (bp)
+				end
+				bplst.forth
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	breakpoints_tagged (a_tags: ARRAY [STRING_32]; include_hidden: BOOLEAN): LIST [BREAKPOINT] is
+			-- breakpoints which are set and match `a_tags'	
+		local
+			bp: BREAKPOINT
+			bplst: like breakpoints
 		do
 			if a_tags /= Void and then not a_tags.is_empty then
 				create {LINKED_LIST [BREAKPOINT]} Result.make
 				from
-					breakpoints.start
+					bplst := breakpoints
+					bplst.start
 				until
-					breakpoints.after
+					bplst.after
 				loop
-					bp := breakpoints.item_for_iteration
-					if bp.match_tags (a_tags) then
-						Result.extend (bp)
+					bp := bplst.item_for_iteration
+					if bp.is_set and then (include_hidden or not bp.is_hidden) then
+						if bp.match_tags (a_tags) then
+							Result.extend (bp)
+						end
 					end
-					breakpoints.forth
+					bplst.forth
 				end
 			end
 		end

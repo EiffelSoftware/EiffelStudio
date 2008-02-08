@@ -172,6 +172,8 @@ feature -- Tags access
 					ltags.forth
 				end
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	tags_as_array: ARRAY [STRING_32] is

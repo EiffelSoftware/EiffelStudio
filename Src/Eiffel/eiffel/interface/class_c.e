@@ -498,8 +498,8 @@ feature -- Building conformance table
 			topological_id_processed: topological_id > 0
 		do
 				-- Resize the table after the topological sort
-			conformance_table.resize (topological_id)
 			conformance_table.clear_all
+			conformance_table.resize (topological_id)
 			conf_dep_table := Void
 			build_conformance_table_of (Current)
 		end

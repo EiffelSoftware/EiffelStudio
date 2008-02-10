@@ -17,8 +17,17 @@ feature
 			create x2
 			x2.try
 			x2.try2
+			create x3
+			x3.try
+			x3.try2
+			create x4
+			x4.try
+			x4.try2
 		end;
 
 	x1: TEST1 [STRING]
 	x2: TEST2 [STRING]
+	x3: TEST3
+	x4: TEST4
+
 end

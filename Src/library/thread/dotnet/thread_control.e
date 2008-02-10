@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+class 
 	THREAD_CONTROL
 
 feature -- Basic operations

@@ -9,11 +9,16 @@ creation
 	make
 feature
 	
-	make (args: ARRAY [STRING]) is
+	make is
 		do
-			create x
-			x.try
+			create x1
+			x1.try
+			x1.try2
+			create x2
+			x2.try
+			x2.try2
 		end;
 
-	x: TEST2
+	x1: TEST1 [STRING]
+	x2: TEST2 [STRING]
 end

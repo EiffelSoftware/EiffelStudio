@@ -1764,11 +1764,7 @@ test	expanded-reverse-assignment						expanded002 tcf pass expanded
 test	array-of-user-defined-expanded					expanded003 tcf pass expanded
 test	expanded-formal-multiconstraint					expanded004 tcf pass expanded
 test	expanded-formal-multiconstraint2				expanded005 tcf pass expanded
-
---test						expanded006 tcf pass expanded
---test						expanded007 tcf pass expanded
---test						expanded008 tcf pass expanded
---test						expanded009 tcf pass expanded
+test	wrong-type-in-expanded-generic-in-generic		expanded006 tcf pass expanded
 
 
 test	filename-classname-mismatch-warning	warn001	tcf pass warning

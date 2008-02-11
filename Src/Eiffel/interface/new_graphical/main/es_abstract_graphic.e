@@ -54,10 +54,6 @@ feature {NONE} -- Initialization
 
 	initialize_services
 			-- Initializes graphical services
-		local
-			l_fn: SERVICE_CONSUMER [FILE_NOTIFIER_S]
-			l_service: FILE_NOTIFIER_S
-			l_agent: PROCEDURE [ANY, TUPLE [type: NATURAL_8]]
 		do
 			if {l_container: !SERVICE_CONTAINER} service_provider.query_service ({SERVICE_HEAP}) then
 				service_initializer.add_core_services (l_container)

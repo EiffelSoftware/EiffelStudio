@@ -36,11 +36,13 @@ feature {NONE} -- Clean up
 			--
 			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
 		do
-				-- Remove all subscribers to prevent potential memory leaks.
-			subscribers.wipe_out
-			subscribers := Void
-			suicide_actions.wipe_out
-			suicide_actions := Void
+			if a_disposing then
+					-- Remove all subscribers to prevent potential memory leaks.
+				subscribers.wipe_out
+				subscribers := Void
+				suicide_actions.wipe_out
+				suicide_actions := Void
+			end
 		ensure then
 			subscribers_emptied: (old subscribers).is_empty
 			subscribers_detached: subscribers = Void

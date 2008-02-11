@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Clean up
 
-	safe_dispose (a_disposing: BOOLEAN) is
+	safe_dispose (a_disposing: BOOLEAN)
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 			--
@@ -34,21 +34,24 @@ feature {NONE} -- Clean up
 		local
 			l_sessions: like internal_sessions
 		do
-				-- Store all unsaved session data
-			store_all
-			l_sessions := internal_sessions
-			if l_sessions /= Void then
-					-- Clean up sessions
-				l_sessions.do_all (agent (a_ia_session: SESSION_I)
-					local
-						l_disposable: DISPOSABLE
-					do
-						l_disposable ?= a_ia_session
-						if l_disposable /= Void then
-							l_disposable.dispose
-						end
-					end)
+			if a_disposing then
+					-- Store all unsaved session data
+				store_all
+				l_sessions := internal_sessions
+				if l_sessions /= Void then
+						-- Clean up sessions
+					l_sessions.do_all (agent (a_ia_session: SESSION_I)
+						local
+							l_disposable: DISPOSABLE
+						do
+							l_disposable ?= a_ia_session
+							if l_disposable /= Void then
+								l_disposable.dispose
+							end
+						end)
+				end
 			end
+
 			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
 		end
 

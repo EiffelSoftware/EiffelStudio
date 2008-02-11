@@ -146,12 +146,16 @@ feature -- Element change
 					l_old_data.set_session (Void)
 				end
 
-				data.force (box_value (a_value), a_id)
 				if a_value /= Void then
+					data.force (box_value (a_value), a_id)
+
 					if {l_data: !SESSION_DATA_I} a_value and then l_data.session /= Current then
 							-- Set current session as owner of the data
 						l_data.set_session (Current)
 					end
+				else
+						-- The value is Void so it should be removed.
+					data.remove (a_id)
 				end
 				if not equal (l_old_value, a_value) then
 						-- The two values are considered the same so do not publish the changed event

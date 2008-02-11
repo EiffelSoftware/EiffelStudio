@@ -23,11 +23,12 @@ feature {NONE} -- Clean up
 			--
 			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
 		do
-			check
-					-- If the following is violated then some object did not disconnect the events
-				internal_connected_event_observers_is_empty: internal_connected_event_observers /= Void implies internal_connected_event_observers.is_empty
-			end
 			if a_disposing then
+				check
+						-- If the following is violated then some object did not disconnect the events
+					internal_connected_event_observers_is_empty: internal_connected_event_observers /= Void implies internal_connected_event_observers.is_empty
+				end
+				
 				if internal_connected_event_observers /= Void then
 					internal_connected_event_observers.do_all (agent (a_ia_observer: G)
 						do

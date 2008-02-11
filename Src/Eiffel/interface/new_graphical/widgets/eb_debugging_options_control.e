@@ -92,7 +92,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			if profs /= Void then
 					--| It is safer to work on a copy to be able to cancel
 					--| changes easily
-				profs := profs.deep_twin
+				profs := profs.duplicate
 				from
 					profs.start
 				until
@@ -166,7 +166,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			loop
 				t := profile_from_row (toprows.item)
 				if t /= Void then
-					profs.force_last (t.params, t.title)
+					profs.force (t.params, t.title)
 				end
 				toprows.forth
 			end

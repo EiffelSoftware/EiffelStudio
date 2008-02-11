@@ -10,15 +10,19 @@ class
 	DEBUGGER_PROFILES
 
 inherit
-	DS_HASH_TABLE [DEBUGGER_EXECUTION_PARAMETERS, STRING_32]
-
 	SESSION_DATA_I
-		undefine
-			is_equal, copy
-		end
 
 create
-	make_equal
+	make
+
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+		require
+			n_non_negative: n >= 0
+		do
+			create internal_storage.make (n)
+		end
 
 feature -- Access
 
@@ -30,13 +34,35 @@ feature -- Access
 		do
 			if
 				last_profile_name /= Void and then
-				has (last_profile_name)
+				internal_storage.has (last_profile_name)
 			then
-				Result := [last_profile_name, item (last_profile_name)]
+				Result := [last_profile_name, internal_storage.item (last_profile_name)]
 			end
 		end
 
-feature -- Change
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate `Current' without `session'.
+		local
+			l_session: like session
+		do
+			l_session := session
+			session := Void
+			Result := deep_twin
+			session := l_session
+		ensure
+			duplicate_not_void: Result /= Void
+		end
+
+feature -- Element change
+
+	force (new: DEBUGGER_EXECUTION_PARAMETERS; key: STRING_32) is
+			-- Update Current so that `new' will be the item associated
+			-- with `key'.
+		do
+			internal_storage.force (new, key)
+		end
 
 	set_last_profile (v: like last_profile) is
 			-- Set `last_profile_name' to `v'
@@ -45,15 +71,66 @@ feature -- Change
 				last_profile_name := Void
 			else
 				last_profile_name := v.name
-				if has (last_profile_name) then
-					replace (v.params, last_profile_name)
-				else
-					force_last (v.params, last_profile_name)
-				end
+				internal_storage.force (v.params, last_profile_name)
 			end
 		end
 
-;indexing
+feature -- Removal
+
+	wipe_out is
+			-- Reset all items to default values; reset status.
+		do
+			internal_storage.wipe_out
+		end
+
+feature -- Cursor movement
+
+	start is
+			-- Bring cursor to first position.
+		do
+			internal_storage.start
+		end
+
+	forth is
+			-- Advance cursor to next occupied position,
+			-- or `off' if no such position remains.
+		require
+			not_off: not after
+		do
+			internal_storage.forth
+		end
+
+	after: BOOLEAN is
+			-- Is cursor past last item?
+		do
+			Result := internal_storage.after
+		end
+
+	item_for_iteration: DEBUGGER_EXECUTION_PARAMETERS is
+			-- Element at current iteration position
+		require
+			not_off: not after
+		do
+			Result := internal_storage.item_for_iteration
+		end
+
+	key_for_iteration: STRING_32 is
+			-- Key at current iteration position
+		require
+			not_off: not after
+		do
+			Result := internal_storage.key_for_iteration
+		end
+
+feature {NONE} -- Implementation
+
+	internal_storage: HASH_TABLE [DEBUGGER_EXECUTION_PARAMETERS, STRING_32]
+			-- Storage for the profiles.
+
+invariant
+	internal_storage_not_void: internal_storage /= Void
+
+indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

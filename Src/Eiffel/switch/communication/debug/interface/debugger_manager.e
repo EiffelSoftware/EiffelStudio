@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			can_debug := True
 			set_default_parameters
 			create observers.make (3)
-			create profiles.make_equal (10)
+			create profiles.make (10)
 			create controller.make (Current)
 			create application_quit_actions
 			create application_prelaunching_actions

@@ -40,14 +40,16 @@ feature {NONE} -- Clean up
 			--
 			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
 		do
-			file_modified_callbacks.do_all (agent (a_events: !EVENT_TYPE [TUPLE [modification_type: NATURAL_8]])
-					-- Clean up all events created
-				do
-					a_events.dispose
-				end)
-			file_modified_callbacks.wipe_out
-			file_records.wipe_out
-			file_modified_events.dispose
+			if a_disposing then
+				file_modified_callbacks.do_all (agent (a_events: !EVENT_TYPE [TUPLE [modification_type: NATURAL_8]])
+						-- Clean up all events created
+					do
+						a_events.dispose
+					end)
+				file_modified_callbacks.wipe_out
+				file_records.wipe_out
+				file_modified_events.dispose
+			end
 		end
 
 feature {NONE} -- Access

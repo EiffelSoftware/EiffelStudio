@@ -33,7 +33,7 @@ feature {NONE} -- Clean up
 			if not a_disposing and then internal_disposable_pool /= Void then
 				internal_disposable_pool.do_all (agent (a_item: ANY)
 					local
-						l_disposable: DISPOSABLE
+						l_disposable: SAFE_DISPOSABLE
 						retried: BOOLEAN
 					do
 						if not retried then

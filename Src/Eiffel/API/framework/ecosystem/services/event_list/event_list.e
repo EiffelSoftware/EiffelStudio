@@ -46,11 +46,13 @@ feature {NONE} -- Clean up
 			--
 			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
 		do
-			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
+			if a_disposing then
+				item_added_event.dispose
+				item_removed_event.dispose
+				item_changed_event.dispose
+			end
 
-			item_added_event.dispose
-			item_removed_event.dispose
-			item_changed_event.dispose
+			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
 		end
 
 feature -- Access

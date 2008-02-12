@@ -405,11 +405,24 @@ feature -- Access
 
 feature -- tools
 
-	call_stack_tool: ES_CALL_STACK_TOOL_PANEL
+	call_stack_tool_descriptor: ES_CALL_STACK_TOOL
 			-- A tool that represents the call stack in a graphical display.
 		do
 			if debugging_window /= Void then
-				Result ?= debugging_window.shell_tools.tool ({ES_CALL_STACK_TOOL}).panel
+				Result ?= debugging_window.shell_tools.tool ({ES_CALL_STACK_TOOL})
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	call_stack_tool: ES_CALL_STACK_TOOL_PANEL
+			-- A tool that represents the call stack in a graphical display.
+		local
+			td: like call_stack_tool_descriptor
+		do
+			td := call_stack_tool_descriptor
+			if td /= Void then
+				Result ?= td.panel
 			end
 		ensure
 			result_attached: Result /= Void
@@ -1417,7 +1430,7 @@ feature -- Status setting
 					end
 				end
 				if propagate_stone then
-					call_stack_tool.set_stone (st)
+					call_stack_tool_descriptor.set_stone (st)
 					objects_tool.set_stone (st)
 					watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.set_stone (st))
 				end

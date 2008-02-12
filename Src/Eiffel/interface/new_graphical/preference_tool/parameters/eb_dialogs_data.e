@@ -222,7 +222,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := open_project_dialog_height_preference.value
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Preference
+feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 
 	confirm_on_terminate_freezing_preference: BOOLEAN_PREFERENCE
 			-- Should a running freezing be terminated before any new Eiffel compilation?

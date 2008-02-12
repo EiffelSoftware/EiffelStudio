@@ -10,15 +10,13 @@ class
 	ES_CALL_STACK_TOOL_PANEL
 
 inherit
-	EB_STONABLE_TOOL
+	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
-			mini_toolbar,
-			build_mini_toolbar,
+			create_mini_tool_bar_items,
+			on_after_initialized,
 			internal_recycle,
 			show
 		end
-
-	EB_RECYCLABLE
 
 	APPLICATION_STATUS_CONSTANTS
 		export
@@ -36,11 +34,6 @@ inherit
 		end
 
 	EB_SHARED_DEBUGGER_MANAGER
-
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
 
 	EB_FILE_DIALOG_CONSTANTS
 		export
@@ -63,11 +56,10 @@ create
 
 feature {NONE} -- Initialization
 
-	build_interface is
+	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
 			-- Build all the tool's widgets.
 		local
 			development_window: EB_DEVELOPMENT_WINDOW
-			box: EV_VERTICAL_BOX
 			box2: EV_VERTICAL_BOX
 			tb_but: like exception_dialog_button
 			box_exception: EV_HORIZONTAL_BOX
@@ -75,7 +67,6 @@ feature {NONE} -- Initialization
 			t_label: EV_LABEL
 			special_label_col: EV_COLOR
 		do
-			development_window ?= develop_window
 
 				--| UI look
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
@@ -91,7 +82,6 @@ feature {NONE} -- Initialization
 			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.extend (set_row_replayable_bg_color_agent)
 
 				--| UI structure			
-			create box
 			create box2
 
 			box2.set_padding (3)
@@ -175,8 +165,8 @@ feature {NONE} -- Initialization
 			box2.disable_item_expand (box_replay_controls)
 			activate_execution_replay_mode (False, 0)
 
-			box.extend (box2)
-			box.disable_item_expand (box2)
+			a_widget.extend (box2)
+			a_widget.disable_item_expand (box2)
 			if Debugger_manager.application_is_executing then
 				display_stop_cause (False)
 			end
@@ -210,16 +200,16 @@ feature {NONE} -- Initialization
 			else
 				stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
 			end
+			development_window ?= develop_window
 			stack_grid.set_configurable_target_menu_mode
 			stack_grid.set_configurable_target_menu_handler (agent (development_window.menus.context_menu_factory).call_stack_menu)
 
 			preferences.debug_tool_data.select_call_stack_level_on_double_click_preference.change_actions.extend (agent update_call_stack_level_selection_mode)
 
-			box.extend (stack_grid)
+			a_widget.extend (stack_grid)
 
 			stack_grid.build_delayed_cleaning
 			create_update_on_idle_agent
-			widget := box
 		end
 
 	update_call_stack_level_selection_mode (dbl_click_bpref: BOOLEAN_PREFERENCE) is
@@ -237,25 +227,26 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_mini_toolbar is
-			-- Build the associated tool bar
+    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            -- Retrieves a list of tool bar items to display on the window title
 		local
 			cmd: EB_STANDARD_CMD
-		do
-			create mini_toolbar.make
+        do
+			create Result.make (5)
+
 			create save_call_stack_cmd.make
 			save_call_stack_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_save_icon)
 			save_call_stack_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_save_icon_buffer)
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (agent save_call_stack)
-			mini_toolbar.extend (save_call_stack_cmd.new_mini_sd_toolbar_item)
+			Result.force_last (save_call_stack_cmd.new_mini_sd_toolbar_item)
 
 			create cmd.make
 			cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_copy_icon)
 			cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_copy_icon_buffer)
 			cmd.set_tooltip (Interface_names.e_Copy_call_stack_to_clipboard)
 			cmd.add_agent (agent copy_call_stack_to_clipboard)
-			mini_toolbar.extend (cmd.new_mini_sd_toolbar_item)
+			Result.force_last (cmd.new_mini_sd_toolbar_item)
 			copy_call_stack_cmd := cmd
 
 			create set_stack_depth_cmd.make
@@ -264,18 +255,36 @@ feature {NONE} -- Initialization
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
 			set_stack_depth_cmd.add_agent (agent set_stack_depth)
 			set_stack_depth_cmd.enable_sensitive
-			mini_toolbar.extend (set_stack_depth_cmd.new_mini_sd_toolbar_item)
+			Result.force_last (set_stack_depth_cmd.new_mini_sd_toolbar_item)
 
 			if eb_debugger_manager.toggle_exec_replay_recording_mode_cmd /= Void then
-				mini_toolbar.extend (eb_debugger_manager.toggle_exec_replay_recording_mode_cmd.new_mini_sd_toolbar_item)
+				Result.force_last (eb_debugger_manager.toggle_exec_replay_recording_mode_cmd.new_mini_sd_toolbar_item)
 			end
 			if eb_debugger_manager.toggle_exec_replay_mode_cmd /= Void then
-				mini_toolbar.extend (eb_debugger_manager.toggle_exec_replay_mode_cmd.new_mini_sd_toolbar_item)
+				Result.force_last (eb_debugger_manager.toggle_exec_replay_mode_cmd.new_mini_sd_toolbar_item)
 			end
+		end
 
-			mini_toolbar.compute_minimum_size
-		ensure then
-			mini_toolbar_exists: mini_toolbar /= Void
+	on_after_initialized
+			-- Use to perform additional creation initializations, after the UI has been created.
+		do
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
+
+			update
+		end
+
+feature {NONE} -- Factory
+
+    create_widget: EV_VERTICAL_BOX
+            -- Create a new container widget upon request.
+            -- Note: You may build the tool elements here or in `build_tool_interface'
+        do
+        	Create Result
+        end
+
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display at the top of the tool.
+		do
 		end
 
 feature -- Box management
@@ -390,12 +399,6 @@ feature -- Execution replay
 
 feature -- Access
 
-	mini_toolbar: SD_TOOL_BAR
-			-- Associated mini toolbar.
-
-	widget: EV_WIDGET
-			-- Widget representing Current.
-
 	thread_id: EV_LABEL
 			-- Thread Identifier
 
@@ -411,9 +414,6 @@ feature -- Access
 	stack_grid: ES_GRID
 			-- Graphical representation of the execution stack.
 
-	stone: STONE
-			-- Not used.
-
 feature -- Status setting
 
 	set_callstack_thread (tid: INTEGER) is
@@ -423,34 +423,6 @@ feature -- Status setting
 			if debugger_manager.application_current_thread_id /= tid then
 				debugger_manager.change_current_thread_id (tid)
 				update
-			end
-		end
-
-	set_stone (a_stone: STONE) is
-			-- Assign `a_stone' as new stone.
-		local
-			st: CALL_STACK_STONE
-			new_level: INTEGER
-			count: INTEGER
-			l_row: EV_GRID_ROW
-			old_current_level: INTEGER
-		do
-			st ?= a_stone
-			if st /= Void then
-				old_current_level := arrowed_level
-				new_level := st.level_number
-
-					-- Stack grid
-				count := stack_grid.row_count
-				if old_current_level >= 1 and then count >= old_current_level then
-					l_row := stack_grid.row (old_current_level)
-					refresh_stack_grid_row (l_row, new_level)
-				end
-				if new_level >= 1 and then count >= new_level then
-					l_row := stack_grid.row (new_level)
-					arrowed_level := new_level
-					refresh_stack_grid_row (l_row, new_level)
-				end
 			end
 		end
 
@@ -477,9 +449,39 @@ feature -- Status setting
 	show is
 			-- Show tool
 		do
-			Precursor {EB_STONABLE_TOOL}
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 			if stack_grid.is_displayed and then stack_grid.is_sensitive then
 				stack_grid.set_focus
+			end
+		end
+
+feature {NONE} -- Stone handlers
+
+	on_stone_changed is
+			-- Assign `a_stone' as new stone.
+		local
+			st: CALL_STACK_STONE
+			new_level: INTEGER
+			count: INTEGER
+			l_row: EV_GRID_ROW
+			old_current_level: INTEGER
+		do
+			st ?= stone
+			if st /= Void then
+				old_current_level := arrowed_level
+				new_level := st.level_number
+
+					-- Stack grid
+				count := stack_grid.row_count
+				if old_current_level >= 1 and then count >= old_current_level then
+					l_row := stack_grid.row (old_current_level)
+					refresh_stack_grid_row (l_row, new_level)
+				end
+				if new_level >= 1 and then count >= new_level then
+					l_row := stack_grid.row (new_level)
+					arrowed_level := new_level
+					refresh_stack_grid_row (l_row, new_level)
+				end
 			end
 		end
 
@@ -512,7 +514,7 @@ feature {NONE} -- Memory management
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			Preferences.debug_tool_data.row_unsensitive_foreground_color_preference.change_actions.prune_all (set_row_unsensitive_fg_color_agent)
 			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.prune_all (set_row_replayable_bg_color_agent)
-			Precursor {EB_STONABLE_TOOL}
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
 feature {NONE} -- Grid Implementation

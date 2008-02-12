@@ -179,6 +179,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 				end
 			end
 			profs.set_last_profile (t)
+			debugger_manager.save_profiles
 
 			set_changed (Void, False)
 		end
@@ -284,11 +285,11 @@ feature {NONE} -- Display profiles impl
 			layout_constants.set_default_width_for_button (dup_button)
 			dup_button.disable_sensitive
 
-			if control_in_tool then --| provide a way to "Apply" changes
+--			if control_in_tool then --| provide a way to "Apply" changes
 				create apply_button.make_with_text_and_action (interface_names.b_apply, agent apply_changes)
 				layout_constants.set_default_width_for_button (apply_button)
 				apply_button.disable_sensitive
-			end
+--			end
 
 			create reset_button.make_with_text_and_action (interface_names.b_reset, agent reset_changes)
 			layout_constants.set_default_width_for_button (reset_button)

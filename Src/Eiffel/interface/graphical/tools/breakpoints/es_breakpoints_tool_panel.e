@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 						if tf.is_modified then
 							tf.validate_changes
 							filter := tf.used_tags
-							refresh_breakpoints_info_now
+							refresh_breakpoints_info
 						end
 					end(tags_tf))
 
@@ -330,7 +330,7 @@ feature {NONE} -- Sort handling
 				-- Repopulate grid
 			execute_with_busy_cursor (agent
 				do
-					refresh_breakpoints_info_now
+					refresh_breakpoints_info
 				end)
 		end
 
@@ -342,6 +342,7 @@ feature -- Events
 				filter_enabled := False
 				filter := Void
 				filter_bar.hide
+				refresh_breakpoints_info
 			else
 				filter_enabled := True
 				filter_bar.show

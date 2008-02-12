@@ -141,7 +141,7 @@ feature -- Change
 	remove_text is
 			-- Remove text
 		do
-			text_field.remove_text
+			internal_remove_text
 			original_text := Void
 		end
 
@@ -498,6 +498,12 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
+	internal_remove_text is
+			-- Remove text
+		do
+			text_field.remove_text
+		end
+
 	internal_set_text (s: STRING_GENERAL) is
 			-- Set text
 		require
@@ -564,7 +570,7 @@ feature {NONE} -- Implementation
 				end
 				internal_set_text (t)
 			else
-				remove_text
+				internal_remove_text
 			end
 		end
 

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Initialize dialog using a specific development window
 		require
 			a_window_attached: a_window /= Void
-			not_a_window_is_recycled: not a_window.is_recycled
+			a_window_is_interface_usable: a_window.is_interface_usable
 		do
 			internal_development_window := a_window
 			make
@@ -204,7 +204,7 @@ feature -- Access
 	icon: EV_PIXEL_BUFFER
 			-- The dialog's icon
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -270,7 +270,8 @@ feature {NONE} -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Access to top-level parent window
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		local
 			l_window: EV_WINDOW
 			l_windows: BILINEAR [EB_WINDOW]
@@ -320,7 +321,7 @@ feature {NONE} -- Access
 			-- Dialog window buttons indexed by a button id.
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
 			Result := internal_dialog_window_buttons
 			if Result = Void then
@@ -340,7 +341,7 @@ feature {NONE} -- Access
 	frozen session_data: SESSION_I
 			-- Provides access to the environment session data
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			is_session_manager_available: session_manager.is_service_available
 		do
 			Result := session_manager.service.retrieve (False)
@@ -369,7 +370,7 @@ feature -- Element change
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `a_text': Text to change button text to.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			a_text_attached: a_text /= Void
 			not_a_text_is_empty: not a_text.is_empty
@@ -390,7 +391,7 @@ feature -- Element change
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `a_action': An action to be performed when the button is pressed.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
 			a_action_attached: a_action /= Void
@@ -408,7 +409,7 @@ feature -- Element change
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `a_action': An action to be performed when the button is pressed.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
 			a_action_attached: a_action /= Void
@@ -501,12 +502,13 @@ feature {NONE} -- Status setting
 feature -- Query
 
 	button_action (a_id: INTEGER): PROCEDURE [ANY, TUPLE]
-			-- Button action, called before the dialog is closed, for a specific button.
+			-- Button action, called after the dialog is closed, for a specific button.
 			--
 			-- `a_id': A button id corresponding to an actual dialog button.
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `Result': An action to be performed when the button is pressed.
 		require
+			is_interface_usable: is_interface_usable
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
 		local
@@ -527,6 +529,7 @@ feature -- Query
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `Result': An action to be performed when the button is pressed.
 		require
+			is_interface_usable: is_interface_usable
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
 		local
@@ -549,7 +552,7 @@ feature {NONE} -- Query
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `Result': A non-empty string
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			is_initializing: is_initializing
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 		do
@@ -596,7 +599,7 @@ feature -- Basic operations
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_window_not_void: a_window /= Void
 			a_window_not_current: a_window /= dialog
 		do
@@ -618,7 +621,7 @@ feature -- Basic operations
 	show_on_active_window
 			-- Attempts to show the dialog parented to the last active window.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		local
 			l_dev_window: like development_window
 			l_window: EV_WINDOW
@@ -650,8 +653,8 @@ feature {NONE} -- Basic operation
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `a_button': The button to bind any actions to.
 		require
-			not_is_recycled: not is_recycled
-			is_initializing: is_initializing
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_has_a_id: buttons.has (a_id)
 			a_button_attached: a_button /= Void
@@ -666,7 +669,7 @@ feature {NONE} -- Basic operation
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `a_button': The button to unbind an bindings from.
 		require
-			is_initialized: is_initialized
+			is_initialized: is_initialized or is_initializing
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_has_a_id: buttons.has (a_id)
 			a_button_attached: a_button /= Void
@@ -677,6 +680,9 @@ feature {NONE} -- Basic operation
 	veto_close
 			-- Ensures dialog is not closed as a result of a button action.
 			-- Note: This routine should be called in a registered button action.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
 			is_close_vetoed := True
 		ensure
@@ -686,6 +692,8 @@ feature {NONE} -- Basic operation
 	adjust_dialog_button_widths
 			-- Automatically adjusts dialog window button widths to fit the largest button text
 		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
 			dialog_window_buttons_attached: dialog_window_buttons /= Void
 			not_dialog_window_buttons_is_empty: not dialog_window_buttons.is_empty
 		local
@@ -744,6 +752,9 @@ feature {NONE} -- Action handlers
 
 	on_before_show
 			-- Called prior to the dialog being shown
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
 		do
 			adjust_dialog_button_widths
 			dialog.set_default_cancel_button (dialog_window_buttons.item (default_cancel_button))
@@ -757,6 +768,8 @@ feature {NONE} -- Action handlers
 			-- `a_id': A button id corrsponding to the button pressed to close the dialog.
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_has_a_id: buttons.has (a_id)
 			not_is_close_vetoed: not is_close_vetoed
@@ -773,6 +786,8 @@ feature {NONE} -- Action handlers
 			-- `a_id': A button id corrsponding to the button pressed.
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_has_a_id: buttons.has (a_id)
 		local
@@ -797,12 +812,18 @@ feature {NONE} -- Action handlers
 
 	on_confirm_dialog
 			-- Called when the user presses CTRL+ENTER to discard the dialog
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
 			on_dialog_button_pressed (default_confirm_button)
 		end
 
 	on_cancel_dialog
 			-- Called when the user presses ESC
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
 			on_dialog_button_pressed (default_cancel_button)
 		end
@@ -878,7 +899,7 @@ feature {NONE} -- Factory
 	create_dialog: EV_DIALOG
 			-- Creates an implementation dialog
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			is_initializing: is_initializing
 		do
 			create Result
@@ -890,7 +911,7 @@ feature {NONE} -- Factory
 	create_dialog_button_ribbon: EV_CONTAINER
 			-- Creates a container with all of the dialog buttons.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			is_initializing: is_initializing
 		local
 			l_container: EV_HORIZONTAL_BOX
@@ -934,7 +955,7 @@ feature {NONE} -- Factory
 			-- Creates the table of dialog buttons indexed by their id.
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			is_initializing: is_initializing
 		local
 			l_buttons: DS_SET_CURSOR [INTEGER]
@@ -972,7 +993,7 @@ feature {NONE} -- Factory
 			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 			-- `Result': A non-empty string
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			is_initializing: is_initializing
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 		local
@@ -987,7 +1008,7 @@ feature {NONE} -- Factory
 	create_help_button: SD_TOOL_BAR_BUTTON
 			-- Creates a help widget for use in the dialog button ribbon for recieving help
 		require
-			not_is_recyled: not is_recycled
+			is_interface_usable: is_interface_usable
 			is_initializing: is_initializing
 			help_providers_is_service_available: help_providers.is_service_available
 		local

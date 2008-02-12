@@ -60,7 +60,7 @@ feature -- Query
 			-- `a_stone': Stone to determine usablity.
 			-- `Result': True if the stone can be used, False otherwise.
 		do
-			Result := {l_stone: !CLASSI_STONE} a_stone
+			Result := {l_stone: !CLASSI_STONE} a_stone or {l_cluster: !CLUSTER_STONE} a_stone
 		end
 
 feature -- Basic operations

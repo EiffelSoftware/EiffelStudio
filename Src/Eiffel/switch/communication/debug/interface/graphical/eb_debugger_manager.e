@@ -405,24 +405,11 @@ feature -- Access
 
 feature -- tools
 
-	call_stack_tool_descriptor: ES_CALL_STACK_TOOL
+	call_stack_tool: ES_CALL_STACK_TOOL
 			-- A tool that represents the call stack in a graphical display.
 		do
 			if debugging_window /= Void then
 				Result ?= debugging_window.shell_tools.tool ({ES_CALL_STACK_TOOL})
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	call_stack_tool: ES_CALL_STACK_TOOL_PANEL
-			-- A tool that represents the call stack in a graphical display.
-		local
-			td: like call_stack_tool_descriptor
-		do
-			td := call_stack_tool_descriptor
-			if td /= Void then
-				Result ?= td.panel
 			end
 		ensure
 			result_attached: Result /= Void
@@ -749,7 +736,7 @@ feature -- tools management
 			-- Show call stack tool if any.
 		do
 			if call_stack_tool /= Void and raised then
-				call_stack_tool.show
+				call_stack_tool.show (True)
 			end
 		end
 
@@ -1077,15 +1064,11 @@ feature -- Status setting
 						exec_replay_back_cmd.disable_sensitive
 						exec_replay_forth_cmd.disable_sensitive
 					end
-					if call_stack_tool /= Void then
-						call_stack_tool.set_execution_replay_level (d, m)
-					end
+					call_stack_tool.set_execution_replay_level (d, m)
 				else
 					exec_replay_back_cmd.disable_sensitive
 					exec_replay_forth_cmd.disable_sensitive
-					if call_stack_tool /= Void then
-						call_stack_tool.set_execution_replay_level (0, 0)
-					end
+					call_stack_tool.set_execution_replay_level (0, 0)
 				end
 			end
 		end
@@ -1110,12 +1093,7 @@ feature -- Status setting
 				toggle_exec_replay_recording_mode_cmd.enable_sensitive
 				toggle_exec_replay_mode_cmd.enable_sensitive
 			end
-			if call_stack_tool /= Void then
-				call_stack_tool.activate_execution_replay_mode (b, dlim)
-				if b then
-					call_stack_tool.show
-				end
-			end
+			call_stack_tool.activate_execution_replay_mode (b, dlim)
 			update_execution_replay
 		end
 
@@ -1150,7 +1128,7 @@ feature -- Status setting
 								-- We reloaded less elements than there were.
 							pos := 1
 						end
-						call_stack_tool.update
+						call_stack_tool.request_update
 						create cst.make (pos)
 						if cst.is_valid then
 							launch_stone (cst)
@@ -1274,6 +1252,7 @@ feature -- Status setting
 			threads_tool.request_update
 
 				--| Call Stack Tool
+			call_stack_tool.show (False)
 			call_stack_tool.request_update
 
 				-- Show Tools and final visual settings
@@ -1402,7 +1381,7 @@ feature -- Status setting
 			-- Reset tools to free unused data
 		do
 			threads_tool.reset_tool
-			call_stack_tool.reset_tool
+			call_stack_tool.reset
 			objects_tool.reset_tool
 			object_viewer_cmd.end_debug
 			object_storage_management_cmd.end_debug
@@ -1430,7 +1409,7 @@ feature -- Status setting
 					end
 				end
 				if propagate_stone then
-					call_stack_tool_descriptor.set_stone (st)
+					call_stack_tool.set_stone (st)
 					objects_tool.set_stone (st)
 					watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.set_stone (st))
 				end
@@ -1442,7 +1421,7 @@ feature -- Status setting
 		do
 			Precursor (tid)
 			if raised then
-				call_stack_tool.update
+				call_stack_tool.force_update
 				threads_tool.update
 			end
 		end
@@ -1640,8 +1619,8 @@ feature -- Debugging events
 				st := first_valid_call_stack_stone
 				if st /= Void then
 					launch_stone (st)
-					-- After launch_stone, the call stack tool will show something, so we want the feature relation tool show up too.
-					if call_stack_tool.widget.is_displayed then
+						--| After launch_stone, the call stack tool will show something,
+					if call_stack_tool.shown then
 						debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).show (False)
 					end
 				end
@@ -2176,7 +2155,7 @@ feature {NONE} -- Implementation
 			l_tool.content.set_tab_with (l_refer_tool_content, True)
 
 				--| Call stack tool (on right)
-			call_stack_tool.content.set_top ({SD_ENUMERATION}.right)
+			call_stack_tool.panel.content.set_top ({SD_ENUMERATION}.right)
 
 				--| Objects tool			
 			objects_tool.content.set_top ({SD_ENUMERATION}.bottom)
@@ -2249,7 +2228,7 @@ feature {NONE} -- Implementation
 
 			-- We do this to make sure the minimized editor minized horizontally, otherwise the editor will be minimized vertically.
 
-			l_refer_tool_content := call_stack_tool.content
+			l_refer_tool_content := call_stack_tool.panel.content
 			l_tool := l_dyna_tools.tool ({ES_FAVORITES_TOOL}).panel
 			l_tool.content.set_tab_with (l_refer_tool_content, False)
 			l_tool.content.hide

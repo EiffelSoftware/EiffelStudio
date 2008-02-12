@@ -548,6 +548,11 @@ feature -- Basic operations
 	                initialize
 	            end
 	            Precursor {EB_TOOL}
+
+	            if not is_auto_hide then
+	            		-- This has to be called because, for some reason, the docking library does not call the show actions
+					on_shown
+	            end
 	        else
 	        	check False end
         	end

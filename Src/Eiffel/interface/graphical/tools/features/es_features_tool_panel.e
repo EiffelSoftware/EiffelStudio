@@ -15,6 +15,7 @@ inherit
 		rename
 			user_widget as features_tree
 		redefine
+			on_after_initialized,
 			internal_recycle,
 			create_mini_tool_bar_items
 		end
@@ -34,9 +35,17 @@ feature {NONE} -- User interface initialization
             -- Note: This function is called prior to showing the tool for the first time.
             --
             -- `a_widget': A widget to build the tool interface using.
+		do
+
+		end
+
+    on_after_initialized
+            -- Use to perform additional creation initializations, after the UI has been created.
         local
         	l_session: like session_data
 		do
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
+
 			if session_manager.is_service_available then
 					-- Hook up events
 				l_session := session_data

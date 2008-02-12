@@ -14,7 +14,6 @@ inherit
 	ES_DOCKABLE_TOOL_PANEL [G]
 		redefine
 			tool_descriptor,
-			on_after_initialized,
 			on_show
 		end
 
@@ -24,28 +23,6 @@ inherit
 		redefine
 			set_stone
 		end
-
-feature {NONE} -- Initialize
-
-    on_after_initialized
-            -- Use to perform additional creation initializations, after the UI has been created.
-        do
-        	Precursor {ES_DOCKABLE_TOOL_PANEL}
-
-				-- Set drop actions on all widgets
-        	propagate_register_action (user_widget, agent {EV_WIDGET}.drop_actions, agent (a_pebble: ANY)
-        			-- Propagate the stone drop actions	
-        		do
-        			if is_interface_usable and is_initialized and then {l_stone: !STONE} a_pebble then
-        				if tool_descriptor.is_interface_usable and then tool_descriptor.is_stone_usable (l_stone) then
-      						-- Force stone on descriptor, which will optimize the display of the stone on Current.
-	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
-	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
-	        				tool_descriptor.set_stone (l_stone)
-        				end
-					end
-        		end, Void)
-        end
 
 feature {ES_STONABLE_I, ES_TOOL} -- Access
 
@@ -107,6 +84,31 @@ feature -- Query
 		do
 			Result := tool_descriptor.is_stone_usable (a_stone)
 		end
+
+feature {NONE} -- Basic opertations
+
+	propagate_drop_actions (a_excluded: ARRAY [EV_WIDGET])
+			-- Propagates the stone drop actions to all widgets, to force the stone to be set on the panel.
+			--
+			-- `a_exclude': An array of widgets to exluding the the propagation of actions, or Void to include all widgets.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+        do
+        		-- Set drop actions on all widgets
+        	propagate_register_action (user_widget, agent {EV_WIDGET}.drop_actions, agent (a_pebble: ANY)
+        			-- Propagate the stone drop actions	
+        		do
+        			if is_interface_usable and is_initialized and then {l_stone: !STONE} a_pebble then
+        				if tool_descriptor.is_interface_usable and then tool_descriptor.is_stone_usable (l_stone) then
+      							-- Force stone on descriptor, which will optimize the display of the stone on Current.
+	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
+	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
+	        				tool_descriptor.set_stone (l_stone)
+        				end
+					end
+        		end, a_excluded)
+        end
 
 feature -- Synchronization
 

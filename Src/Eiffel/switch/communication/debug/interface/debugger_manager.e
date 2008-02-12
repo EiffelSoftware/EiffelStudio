@@ -288,8 +288,9 @@ feature -- Debugger data change
 		do
 			if not retried then
 					-- Effective saving
-				profiles.prepare_for_storage
 				session_data.set_value (profiles, Profiles_session_data_id)
+				profiles.prepare_for_storage
+
 				force_save_session_data
 			else
 				set_error_message ("Unable to save debugger's profiles%N")
@@ -324,14 +325,14 @@ feature -- Debugger data change
    				dbg_session.set_value (bplst, Breakpoints_session_data_id)
 
 					--| Set profiles
-				profiles.prepare_for_storage
 				dbg_session.set_value (profiles, Profiles_session_data_id)
+				profiles.prepare_for_storage
 
 					--| Set exceptions handler
+   				dbg_session.set_value (internal_exceptions_handler, Exception_handler_session_data_id)
    				if internal_exceptions_handler /= Void then
    					internal_exceptions_handler.prepare_for_storage
    				end
-   				dbg_session.set_value (internal_exceptions_handler, Exception_handler_session_data_id)
 
    					--| Force storage
 				force_save_session_data

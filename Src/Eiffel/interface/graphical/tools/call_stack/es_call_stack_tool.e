@@ -11,10 +11,31 @@ frozen class
 	ES_CALL_STACK_TOOL
 
 inherit
-	ES_DEBUGGER_TOOL [ES_CALL_STACK_TOOL_PANEL]
+	ES_STONABLE_TOOL [ES_CALL_STACK_TOOL_PANEL]
 
 create {NONE}
 	default_create
+
+feature {NONE} -- Debugger related
+
+	frozen debugger_manager: EB_DEBUGGER_MANAGER
+			-- Debugger manager to use for tool creation
+		do
+			Result ?= window.debugger_manager
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Query
+
+	is_stone_usable (a_stone: STONE): BOOLEAN
+			-- Determines if a stone can be used by Current.
+			--
+			-- `a_stone': Stone to determine usablity.
+			-- `Result': True if the stone can be used, False otherwise.
+		do
+			Result := {l_stone: !CALL_STACK_STONE} a_stone
+		end
 
 feature -- Access
 

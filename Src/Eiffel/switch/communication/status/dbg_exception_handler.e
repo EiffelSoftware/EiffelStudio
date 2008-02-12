@@ -13,6 +13,11 @@ inherit
 	EXCEP_CONST
 
 	SESSION_DATA_I
+		rename
+			notify_session_of_value_change as prepare_for_storage
+		export
+			{DEBUGGER_MANAGER} prepare_for_storage
+		end
 
 create
 	make_handling_by_name

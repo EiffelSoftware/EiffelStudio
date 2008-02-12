@@ -281,6 +281,24 @@ feature -- Debugger data change
 			retry
 		end
 
+	save_profiles is
+			-- Save profile
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+					-- Effective saving
+				profiles.prepare_for_storage
+				session_data.set_value (profiles, Profiles_session_data_id)
+				force_save_session_data
+			else
+				set_error_message ("Unable to save debugger's profiles%N")
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	save_debugger_data is
 			-- Save debug informations into the file `raw_filename'.
 		local
@@ -302,9 +320,20 @@ feature -- Debugger data change
 					-- Effective saving
 				dbg_session := session_data
 
-				dbg_session.set_value (profiles, Profiles_session_data_id)
+					--| Set breakpoints (this is a copy, thus new object, and then it will be stored)
    				dbg_session.set_value (bplst, Breakpoints_session_data_id)
+
+					--| Set profiles
+				profiles.prepare_for_storage
+				dbg_session.set_value (profiles, Profiles_session_data_id)
+
+					--| Set exceptions handler
+   				if internal_exceptions_handler /= Void then
+   					internal_exceptions_handler.prepare_for_storage
+   				end
    				dbg_session.set_value (internal_exceptions_handler, Exception_handler_session_data_id)
+
+   					--| Force storage
 				force_save_session_data
 
 				bplst := Void

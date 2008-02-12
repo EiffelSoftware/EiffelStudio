@@ -168,7 +168,7 @@ feature {NONE} -- Initialization
 			extend (execution_frame)
 		end
 
-feature {NONe} -- session data
+feature {NONE} -- session data
 
 	keep_opened_status_session_data_id: STRING = "com.eiffel.execution_options_dialog.keep_opened_status"
 

@@ -355,8 +355,6 @@ feature {SESSION_MANAGER_S} -- Action Handlers
 		do
 			data.do_all (agent (a_value: ANY)
 					-- Iterate the values and notify any session data of commencing storage.
-				require
-					a_value_attached: a_value /= Void
 				do
 					if {l_data: !SESSION_DATA_I} a_value and {l_session: !SESSION_I} Current then
 						l_data.set_session (Void)

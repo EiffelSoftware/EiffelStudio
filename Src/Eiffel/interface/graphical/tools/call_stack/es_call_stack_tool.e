@@ -16,7 +16,7 @@ inherit
 create {NONE}
 	default_create
 
-feature {NONE} -- Debugger related
+feature {DEBUGGER_MANAGER} -- Debugger related
 
 	frozen debugger_manager: EB_DEBUGGER_MANAGER
 			-- Debugger manager to use for tool creation
@@ -24,6 +24,68 @@ feature {NONE} -- Debugger related
 			Result ?= window.debugger_manager
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature {DEBUGGER_MANAGER} -- Access
+
+	force_update is
+			-- Update now, no delay
+		do
+			if is_tool_instantiated then
+				panel.update
+			end
+		end
+
+	request_update is
+			-- Request an update, this should call update only
+			-- once per debugging "operation"
+			-- This is to avoid computing twice the data
+			-- on specific cases
+		do
+			if is_tool_instantiated then
+				panel.request_update
+			end
+		end
+
+	reset is
+			-- Reset current's panel
+		do
+			if is_tool_instantiated then
+				panel.reset_tool
+			end
+		end
+
+	activate_execution_replay_mode (b: BOOLEAN; deplim: INTEGER_32)
+			-- Activate or not the execution replay mode according to `b'
+			-- and using `deplim' as depth limit
+		do
+			if is_tool_instantiated then
+				panel.activate_execution_replay_mode (b, deplim)
+				if b then
+					show (False)
+				end
+			end
+		end
+
+	set_execution_replay_level (dep: INTEGER_32; deplim: INTEGER_32) is
+			-- Set execution replay active level on the panel
+		require
+			app_is_stopped: debugger_manager.safe_application_is_stopped
+			in_range: deplim > 0 implies dep <= deplim
+		do
+			if is_tool_instantiated then
+				panel.set_execution_replay_level (dep, deplim)
+			end
+		end
+
+feature -- Status
+
+	shown: BOOLEAN is
+			-- Is Current's panel shown on the screen?
+		do
+			if is_tool_instantiated then
+				Result := panel.shown
+			end
 		end
 
 feature -- Query

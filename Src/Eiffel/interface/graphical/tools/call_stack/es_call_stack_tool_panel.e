@@ -321,13 +321,15 @@ feature -- Box management
 			tb.compute_minimum_size
 		end
 
-feature -- Execution replay
+feature -- Execution replay properties
 
 	execution_replay_activated: BOOLEAN
 			-- Is Execution replay activated ?
 
 	execution_replay_depth_limit_level: INTEGER
 			-- Maximal depth level
+
+feature {ES_CALL_STACK_TOOL} -- Execution replay change
 
 	activate_execution_replay_mode (b: BOOLEAN; deplim: INTEGER) is
 			-- Enable or disable execution replay
@@ -485,7 +487,7 @@ feature {NONE} -- Stone handlers
 			end
 		end
 
-feature -- Memory management
+feature {ES_CALL_STACK_TOOL} -- Memory management
 
 	reset_tool is
 		do

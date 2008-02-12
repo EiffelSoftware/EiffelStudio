@@ -818,8 +818,6 @@ end
 			-- The objective is to deal with anchored types and genericity.
 			-- All the anchored types are interpreted here and the generic
 			-- parameter instantiated if possible.
-		local
-			arguments: FEAT_ARG
 		do
 debug
 io.error.put_string ("Check feature: ")
@@ -829,8 +827,7 @@ end
 			if f.written_in = feat_tbl_id then
 					-- Take a feature written in the class associated
 					-- to the feature table
-				arguments := f.arguments
-				if arguments /= Void then
+				if f.arguments /= Void then
 						-- Check if there is not twice the same argument name,
 						-- or if one argument has a feature name.
 					f.check_argument_names (Current)

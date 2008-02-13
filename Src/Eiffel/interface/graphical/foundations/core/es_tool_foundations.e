@@ -96,6 +96,18 @@ feature {NONE} -- Access
 			result_consistent: Result = foundation_widget
 		end
 
+	frozen session_data: SESSION_I
+			-- Provides access to the environment session data
+		require
+			is_interface_usable: is_interface_usable
+			is_session_manager_available: session_manager.is_service_available
+		do
+			Result := session_manager.service.retrieve (False)
+		ensure
+			result_attached: Result /= Void
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
 feature -- Status report
 
 	is_initialized: BOOLEAN

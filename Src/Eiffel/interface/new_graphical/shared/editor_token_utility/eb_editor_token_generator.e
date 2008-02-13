@@ -43,6 +43,8 @@ feature -- Access
 
 	lines: LIST [like last_line] is
 			-- All process lines since last `wipe_out_lines'.
+		require
+			is_multiline_mode: is_multiline_mode
 		do
 			if lines_internal = Void then
 				create {ARRAYED_LIST [like last_line]}lines_internal.make (10)
@@ -50,6 +52,64 @@ feature -- Access
 			Result := lines_internal
 		ensure
 			result_attached: Result /= Void
+		end
+
+	tokens: ARRAYED_LIST [EDITOR_TOKEN]
+			-- Create a list of editor tokens from lines `a_lines'
+			--
+			-- `a_lines': Lines to create a token list from
+		local
+			l_cursor: CURSOR
+			l_eol: EDITOR_TOKEN_EOL
+			l_start: BOOLEAN
+			l_lines: like lines
+		do
+			if is_multiline_mode then
+				l_lines := lines
+			end
+
+			if l_lines = Void or else l_lines.is_empty then
+					-- Fall back and take the last line processed.
+				create {ARRAYED_LIST [like last_line]} l_lines.make (1)
+				if last_line /= Void then
+					l_lines.extend (last_line)
+				end
+			end
+
+			create Result.make (20)
+			l_cursor := l_lines.cursor
+			from l_lines.start until l_lines.after loop
+				if not l_start then
+					l_start := l_lines.item.count > 0
+				end
+				if l_start then
+						-- Ensures no blank lines at the beginning of the text
+					Result.append (l_lines.item.content)
+					if not l_lines.islast then
+						Result.extend (create {EDITOR_TOKEN_EOL}.make)
+					end
+				end
+				l_lines.forth
+			end
+			l_lines.go_to (l_cursor)
+
+			if not Result.is_empty then
+					-- Ensures no blank lines at the end of the text
+				l_eol ?= Result.last
+				from Result.finish until Result.before or l_eol = Void loop
+					l_eol ?= Result.item
+					if l_eol /= Void then
+						Result.remove
+					end
+					if not Result.before then
+						Result.back
+					end
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_items: not Result.has (Void)
+			lines_unmoved: lines.cursor.is_equal (old lines.cursor)
 		end
 
 feature -- New line
@@ -95,8 +155,10 @@ feature -- Setting
 			-- Wipe out `lines'.
 		do
 			lines.wipe_out
+			create last_line.make_empty_line
 		ensure
 			lines_is_empty: lines.is_empty
+			last_line_empty: last_line.empty
 		end
 
 feature -- Process

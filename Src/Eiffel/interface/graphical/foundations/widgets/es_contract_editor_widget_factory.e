@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		A factory for creating a contract editor widgets.
+		A factory for creating a contract editor widgets structures.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -58,7 +58,7 @@ feature -- Element change
 			if l_class /= Void then
 				context_root := l_class
 
---				l_feature := l_class.feature_of_position (a_line)
+				l_feature := l_class.feature_of_position (a_line)
 				if l_feature /= Void then
 					context_feature := l_feature
 				end
@@ -98,11 +98,7 @@ feature -- Factory
 			-- Creates a contract editor widget for editing a feature's precondition.
 		require
 			has_full_context: has_full_context
---		local
---			l_widget: !ES_CONTRACT_EDITOR_WIDGET
 		do
---			create l_widget.make
---			Result := ({!EV_WIDGET}) #? l_widget.widget
 			Result := create_coming_soon_widget
 		end
 
@@ -110,11 +106,15 @@ feature -- Factory
 			-- Creates a contract editor widget for editing a feature's postconditions.
 		require
 			has_full_context: has_full_context
---		local
---			l_widget: !ES_CONTRACT_EDITOR_WIDGET
 		do
---			create l_widget.make
---			Result := ({!EV_WIDGET}) #? l_widget.widget
+			Result := create_coming_soon_widget
+		end
+
+	create_invariant_widget: !EV_WIDGET
+			-- Creates a contract editor widget for editing a class invariant.
+		require
+			has_full_context: has_full_context
+		do
 			Result := create_coming_soon_widget
 		end
 

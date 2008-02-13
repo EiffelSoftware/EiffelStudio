@@ -84,6 +84,7 @@ feature {NONE} -- Initialization
 			l_box.extend (create {EV_CELL})
 
 			a_container.extend (l_box)
+			a_container.disable_item_expand (l_box)
 
 				-- Propagate background color to set widget structure.
 			propagate_colors (a_container, Void, background_color, Void)
@@ -153,6 +154,33 @@ feature -- Element change
 			if is_initialized then
 				redraw_token_image
 			end
+		end
+
+feature -- Status report
+
+	is_token_hidden_on_popup_widget_shown: BOOLEAN
+			-- Indicates if the token image should be hidden when the popup widget is shown.
+
+feature -- Status setting
+
+	set_is_token_hidden_on_popup_widget_shown (a_hide: like is_token_hidden_on_popup_widget_shown)
+			-- Shows/hides the token when the pop up widget is displayed.
+			--
+			-- `a_hide': True to hide the token when the popup widget is displayed; False to ensure it's always visible it.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initialized
+		do
+			is_token_hidden_on_popup_widget_shown := a_hide
+			if is_popup_widget_shown then
+				if a_hide then
+					token_image.hide
+				else
+					token_image.show
+				end
+			end
+		ensure
+			is_token_hidden_on_popup_widget_shown_set: is_token_hidden_on_popup_widget_shown = a_hide
 		end
 
 feature -- Actions
@@ -286,7 +314,11 @@ feature {NONE} -- Action handlers
 					widget_container.show
 				end
 			end
-			redraw_token_image
+
+			if is_token_hidden_on_popup_widget_shown then
+				redraw_token_image
+				token_image.hide
+			end
 		end
 
 	on_popup_widget_hidden
@@ -294,6 +326,7 @@ feature {NONE} -- Action handlers
 		do
 			Precursor {ES_POPUP_BUTTON_WINDOW}
 			redraw_token_image
+			token_image.show
 		end
 
 feature {NONE} -- User interface elements

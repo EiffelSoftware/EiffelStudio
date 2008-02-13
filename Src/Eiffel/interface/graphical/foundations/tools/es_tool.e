@@ -325,15 +325,16 @@ feature -- Basic operations
 		do
 			if not panel.shown or panel.is_auto_hide then
 				panel.show
-				if a_activate then
-					check
-							-- FIXME: Paul, when {ES_TOOL} uses {ES_DOCKABLE_TOOL_PANEL} instead of {EB_TOOL} this check
-							-- can be greatly simplified.
-						tool_is_initialized: (({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel) /= Void implies
-							(({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel).is_initialized
-					end
-					panel.content.set_focus
+			end
+
+			if a_activate then
+				check
+						-- FIXME: Paul, when {ES_TOOL} uses {ES_DOCKABLE_TOOL_PANEL} instead of {EB_TOOL} this check
+						-- can be greatly simplified.
+					tool_is_initialized: (({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel) /= Void implies
+						(({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel).is_initialized
 				end
+				panel.content.set_focus
 			end
 		ensure
 			tool_shown: not panel.is_auto_hide implies panel.shown

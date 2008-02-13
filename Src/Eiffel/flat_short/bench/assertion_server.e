@@ -55,12 +55,13 @@ feature -- Initialization
 				-- pre/postcondition several times if there was a repeated
 				-- inheritance.
 		do
+			create processed_features.make (5)
+			create chained_assert.make
+
 			assert_id_set := f.assert_id_set
 			if assert_id_set /= Void then
 				written_in := f.written_in
-				create processed_features.make (5)
 				from
-					create chained_assert.make
 					i := 1
 				until
 					i > assert_id_set.count
@@ -87,12 +88,13 @@ feature -- Initialization
 							-- Prepare next iteration
 					i := i + 1
 				end
-				if f.has_assertion and then (not processed_features.has (f.body_index)) then
-					create assertion.make_for_feature (f, ast)
-					chained_assert.extend (assertion)
-				end
-				current_assertion := chained_assert
 			end
+
+			if f.has_assertion and then (not processed_features.has (f.body_index)) then
+				create assertion.make_for_feature (f, ast)
+				chained_assert.extend (assertion)
+			end
+			current_assertion := chained_assert
 		end
 
 feature -- Properties

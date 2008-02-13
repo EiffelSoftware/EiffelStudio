@@ -236,6 +236,43 @@ feature {COMPILER_EXPORTER} -- Setting
 			feature_names_set: feature_names = f
 		end
 
+feature -- Query
+
+	is_named (a_name: STRING_GENERAL): BOOLEAN
+			-- Determines if the feature is named `a_name'
+			--
+			-- `a_name': Feature name to check current feature against
+			-- `Result': True if one of the feature names matches `a_name'; False otherwise.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_fn: like feature_name
+			l_names: like feature_names
+			l_name: FEATURE_NAME
+			l_string_name: STRING_8
+			l_cursor: CURSOR
+		do
+			l_string_name := a_name.as_string_8
+			l_fn := feature_name
+			Result := l_fn /= Void and then l_fn.name.is_case_insensitive_equal (l_string_name)
+			if not Result then
+					-- Check feature name list
+				l_names := feature_names
+				if l_names /= Void and then l_names.count > 1 or Result then
+					l_cursor := l_names.cursor
+					from l_names.start until l_names.after loop
+						l_name := l_names.item
+						if l_name /= Void then
+							Result := l_name.visual_name.is_case_insensitive_equal (l_string_name)
+						end
+						l_names.forth
+					end
+					l_names.go_to (l_cursor)
+				end
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

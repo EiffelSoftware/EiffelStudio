@@ -578,6 +578,151 @@ feature -- Access
 			end
 		end
 
+feature -- Query
+
+	all_features: !BILINEAR [!FEATURE_AS]
+			-- Retrieves a list of all features of the Current class.
+		local
+			l_fccursor: CURSOR
+			l_fcursor: CURSOR
+			l_result: !ARRAYED_LIST [!FEATURE_AS]
+		do
+			create l_result.make (0)
+			if {l_fclauses: !like features} features then
+					-- Iterate the features clauses and feature all features
+				l_fccursor := l_fclauses.cursor
+				from l_fclauses.start until l_fclauses.after loop
+					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item and then {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
+							-- Iterate all features and extend the result list
+						l_fcursor := l_features.cursor
+						from l_features.start until l_features.after loop
+							if {l_feature: !FEATURE_AS} l_features.item then
+									-- Add feature
+								l_result.extend (l_feature)
+							end
+							l_features.forth
+						end
+						l_features.go_to (l_fcursor)
+					end
+					l_fclauses.forth
+				end
+				l_fclauses.go_to (l_fccursor)
+			end
+
+			Result := ({!BILINEAR [!FEATURE_AS]}) #? l_result
+		end
+
+	feature_of_name (a_name: !STRING_GENERAL; a_reverse_lookup: BOOLEAN): FEATURE_AS
+			-- Retrieves the first located feature using the supplied feature name.
+			--
+			-- `a_name': The feature name to retrieve a feature AS node for.
+			-- `a_reverse_lookup': True to lookup a feature from the end to the beginning.
+		local
+			l_fccursor: CURSOR
+			l_fcursor: CURSOR
+		do
+			if {l_fclauses: !like features} features then
+				l_fccursor := l_fclauses.cursor
+				if a_reverse_lookup then
+					l_fclauses.finish
+				else
+					l_fclauses.start
+				end
+
+					-- Iterate the features clauses and feature all features
+				from until l_fclauses.after or Result /= Void loop
+					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item and then {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
+						l_fcursor := l_features.cursor
+						if a_reverse_lookup then
+							l_features.finish
+						else
+							l_features.start
+						end
+
+							-- Iterate all features and extend the result list
+						from until l_features.after or Result /= Void loop
+							if {l_feature2: !FEATURE_AS} l_features.item then --and then l_feature2.is_named (a_name) then
+								if l_feature2.is_named (a_name) then
+										-- Feature located
+									Result := l_feature2
+								end
+
+							end
+							if a_reverse_lookup then
+								l_features.back
+							else
+								l_features.forth
+							end
+						end
+						l_features.go_to (l_fcursor)
+					end
+					if a_reverse_lookup then
+						l_fclauses.back
+					else
+						l_fclauses.forth
+					end
+				end
+				l_fclauses.go_to (l_fccursor)
+			end
+		end
+
+	feature_of_position (a_line: INTEGER;): FEATURE_AS
+			-- Retrieves the feature located
+			--
+			-- `a_line': One-base line number index to start looking for a feature at.
+			-- `a_reverse_lookup': True to lookup a feature from the end to the beginning.
+			-- `Result': The feature node located at the corresponding line number or Void if the line
+			--           number resides outside of a feature.
+		local
+			l_fccursor: CURSOR
+			l_fcursor: CURSOR
+			l_helper: AST_HELPER
+			l_stop: BOOLEAN
+		do
+			if {l_fclauses: !like features} features and then not l_fclauses.is_empty then
+					-- Iterate the features clauses and feature all features
+				create l_helper
+				l_fccursor := l_fclauses.cursor
+				from l_fclauses.start until l_stop or else l_fclauses.after loop
+					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item then
+						if
+							l_helper.is_valid_positional_node (l_fclause) and then
+							l_helper.is_line_in (l_fclause, a_line)
+						then
+							if {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
+									-- Found a feature clauses
+									-- Iterate all features and extend the result list
+								l_fcursor := l_features.cursor
+								from l_features.start until l_stop or l_features.after loop
+									if
+										{l_feature: !FEATURE_AS} l_features.item and then
+										l_helper.is_valid_positional_node (l_feature) and then
+										l_helper.is_line_in (l_feature, a_line)
+									then
+										Result := l_feature
+										l_stop := True
+									end
+									l_features.forth
+								end
+								l_features.go_to (l_fcursor)
+							end
+
+								-- Ensure we go no further because if no feature is found then
+								-- we are not going to find it.
+							l_stop := True
+						end
+					end
+
+					check
+						stop_for_attached_result: Result /= Void implies l_stop
+					end
+
+					l_fclauses.forth
+				end
+				l_fclauses.go_to (l_fccursor)
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

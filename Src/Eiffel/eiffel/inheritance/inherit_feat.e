@@ -53,6 +53,8 @@ feature
 			create rout_id_set.make
 		end
 
+
+--| FIXME IEK: The following two features are currently unused.
 	has_assertion: BOOLEAN is
 			-- Do deferred_features or features have assertions?
 			-- (for Merging)
@@ -111,22 +113,14 @@ feature
 	insert (info: INHERIT_INFO) is
 			-- Insert `info' in one of the two lists.
 		require
-			good_argument: info /= Void
-		local
-			old_cursor: CURSOR;
+			info_not_void: info /= Void
 		do
-				-- The position of the list of features must be saved
-				-- because feature `treat_renamings' could call it.
-			if info.a_feature.is_deferred then
-				old_cursor := deferred_features.cursor
-				deferred_features.start
-				deferred_features.put_left (info)
-				deferred_features.go_to (old_cursor)
+				-- The position of the list of features must not change
+				-- as `treat_renamings' may call it.
+			if not info.a_feature.is_deferred then
+				features.put_front (info)
 			else
-				old_cursor := features.cursor
-				features.start
-				features.put_left (info)
-				features.go_to (old_cursor)
+				deferred_features.put_front (info)
 			end
 		end
 
@@ -461,7 +455,7 @@ feature
 	all_attributes: BOOLEAN is
 			-- Are all the inherited features non-deferred attributes ?
 		do
-			if deferred_features.is_empty then
+			if deferred_features.count = 0 then
 				from
 					Result := True;
 					features.start

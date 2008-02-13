@@ -117,6 +117,7 @@ feature {NONE} -- User interface initialization
 			l_box.disable_item_expand (memory_stats_separator)
 
 			a_widget.extend (l_box)
+			a_widget.enable_item_expand (l_box)
 
 				-- Memory stats
 			create memory_stats_text

@@ -141,7 +141,7 @@ feature -- Removal
 		do
 			area.clear_all
 		ensure
-			default_items: area.all_default (area.count - 1)
+			default_items: area.all_default (0, area.upper)
 		end
 
 feature -- Constants

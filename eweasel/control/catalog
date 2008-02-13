@@ -500,7 +500,7 @@ test	veen-cant-find-feature		incr105  tcf pass incrementality
 test	no-precomp-chg-class-name	incr106  tcf pass incrementality
 test	root-none-remove-cluster	incr107  tcf pass incrementality
 test	veen2-called-veen22		incr108  tcf pass incrementality
-test	bool-string-to-bit-ref		incr109  tcf pass incrementality
+test	bool-string-to-bit-ref		incr109  tcf pass incrementality consistency_precondition
 test	chg-expanded-source-freeze	incr110  tcf pass incrementality
 test	melt-chg-attr-type-freeze	incr111  tcf pass incrementality
 test	actual-generic-vtbt-sneak	incr112  tcf pass incrementality
@@ -1634,7 +1634,7 @@ test	non-boolean-exit		fixed066 tcf pass fixed
 test	entity-rule-violation		fixed067 tcf pass fixed
 test	misleading-vmfn-error		fixed068 tcf pass fixed
 test	time-checker-error		fixed069 tcf pass fixed
-test	intro-assign-rule-viol		fixed070 tcf pass fixed
+test	intro-assign-rule-viol		fixed070 tcf pass fixed consistency_precondition
 test	once-function-void		fixed071 tcf pass fixed
 test	vuex-violation			fixed072 tcf pass fixed
 test	invalid-local-entity-assign	fixed073 tcf pass fixed

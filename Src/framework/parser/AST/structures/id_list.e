@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 		ensure
 			new_area_not_void: Result /= Void
 			new_area_correct_count: Result.count = a_count
-			new_area_correct_values: a_old_area = Void implies Result.all_default (a_count - 1)
+			new_area_correct_values: a_old_area = Void implies Result.all_default (0, Result.upper)
 		end
 
 indexing

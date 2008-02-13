@@ -22,12 +22,9 @@ class
 feature -- Initialization
 
 	default_create is
-			-- Create culture info with "en-US" as locale
-		local
-			t_culture_info : CULTURE_INFO
+			-- Default `culture_info' to `System.Globalization.CultureInfo.CurrentCulture'
 		do
-			create t_culture_info.make_from_name ("en-US")
-			create culture_info.make_from_name (t_culture_info.current_culture.name)
+			culture_info := {CULTURE_INFO}.current_culture
 		end
 
 	create_locale_info_from_user_locale: I18N_LOCALE_INFO is
@@ -48,7 +45,9 @@ feature -- Initialization
 	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO is
 			-- Create locale with a_locale_id
 		do
-			create culture_info.make_from_name (a_locale_id.name)
+			if {l_name: !STRING}a_locale_id.name.string then
+				create culture_info.make_from_name (format_id_to_dotnet (l_name))
+			end
 			create Result.make
 			fill (Result)
 			Result.set_id (a_locale_id)
@@ -120,7 +119,9 @@ feature -- Element change
 	set_locale (a_locale_name : STRING_32) is
 			-- set current locale to `a_locale_name'
 		do
-			create culture_info.make_from_name (a_locale_name)
+			if a_locale_name /= Void and then ({l_name: !STRING}a_locale_name.string) then
+				create culture_info.make_from_name (format_id_to_dotnet (l_name))
+			end
 		end
 
 feature -- Informations
@@ -493,10 +494,19 @@ feature -- General Information
 	default_locale_id: I18N_LOCALE_ID is
 			-- default locale id
 		local
-			t_culture_info : CULTURE_INFO
+			l_culture_info: CULTURE_INFO
 		do
-			create t_culture_info.make_from_name ("en-US")
-			create Result.make_from_string (t_culture_info.current_culture.name)
+			l_culture_info := {CULTURE_INFO}.current_culture
+			create Result.make_from_string (l_culture_info.name)
+		end
+
+	system_locale_id: I18N_LOCALE_ID is
+			-- Default system locale id.
+		local
+			l_culture_info: CULTURE_INFO
+		do
+			l_culture_info := {CULTURE_INFO}.installed_ui_culture
+			create Result.make_from_string (l_culture_info.name)
 		end
 
 feature {NONE} -- Implementation
@@ -529,6 +539,29 @@ feature {NONE} -- Help fuction
 				i > a_native_array.upper
 			loop
 				Result.put (a_native_array.item (i), i+dif)
+				i := i + 1
+			end
+		end
+
+	format_id_to_dotnet (a_id: !STRING): !STRING is
+			-- Format id to dotnet style.
+			-- Replace "_", "@" and "." with "-"
+		local
+			i: INTEGER
+			l_c: CHARACTER
+		do
+			create Result.make (a_id.count)
+			from
+				i := 1
+			until
+				i > a_id.count
+			loop
+				l_c := a_id.item (i)
+				if l_c = '_' or else l_c = '@' or else l_c = '.' or else l_c = '-' then
+					Result.append_character ('-')
+				else
+					Result.append_character (l_c)
+				end
 				i := i + 1
 			end
 		end

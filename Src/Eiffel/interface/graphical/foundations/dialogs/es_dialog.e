@@ -338,18 +338,6 @@ feature {NONE} -- Access
 	frozen button_actions: DS_HASH_TABLE [TUPLE [action: like button_action; before_close: BOOLEAN], INTEGER]
 			-- Dialog button actions
 
-	frozen session_data: SESSION_I
-			-- Provides access to the environment session data
-		require
-			is_interface_usable: is_interface_usable
-			is_session_manager_available: session_manager.is_service_available
-		do
-			Result := session_manager.service.retrieve (False)
-		ensure
-			result_attached: Result /= Void
-			result_is_interface_usable: Result.is_interface_usable
-		end
-
 	dialog_session_id: !STRING_8
 			-- Dialog session ID for storing size/position information
 		require

@@ -390,7 +390,16 @@ feature -- Access
 			c := written_class;
 			class_text := c.text;
 			if class_text /= Void then
-				body_as := ast;
+				if {l_name: !STRING_GENERAL} name then
+						-- Attempt to locate a feature using the same name as Current
+					body_as := c.ast.feature_of_name (l_name, False)
+				end
+				if body_as = Void then
+						-- Fall back and use the old implementation
+					body_as := ast
+				end
+
+					-- Extract positional information
 				start_position := body_as.start_position
 				rout_as ?= body_as.body.content
 				if rout_as = Void then
@@ -400,10 +409,15 @@ feature -- Access
 				else
 					end_position := body_as.end_position
 				end
-				a_text_formatter.add ("-- Version from class: ");
-				a_text_formatter.add_classi (c.lace_class, c.name_in_upper);
+
+				if c /= associated_class then
+						-- From a different class
+					a_text_formatter.add ("-- Version inherited from class: ");
+					a_text_formatter.add_classi (c.lace_class, c.name_in_upper);
+					a_text_formatter.add_new_line;
+				end
 				a_text_formatter.add_new_line;
-				a_text_formatter.add_new_line;
+
 				a_text_formatter.add_indent;
 				if
 					class_text.count >= end_position and

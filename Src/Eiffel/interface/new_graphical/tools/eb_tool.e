@@ -105,7 +105,6 @@ feature {NONE} -- Initialization
 				content.set_pixel_buffer (pixel_buffer)
 			end
 			register_action (content.close_request_actions, agent close)
-			register_action (content.focus_in_actions, agent show)
 		end
 
 	build_mini_toolbar is

@@ -19,6 +19,8 @@ inherit
 			dotnet_message
 		end
 
+	EXCEPTION_MANAGER_FACTORY
+
 feature -- Raise
 
 	raise is
@@ -26,7 +28,7 @@ feature -- Raise
 		require
 			is_raisable: is_raisable
 		do
-			(create {EXCEPTION_MANAGER}).raise (Current)
+			exception_manager.raise (Current)
 		end
 
 feature -- Access
@@ -97,7 +99,7 @@ feature -- Status report
 		do
 			create l_internal
 			l_type ?= l_internal.type_of (Current)
-			Result := (create {EXCEPTION_MANAGER}).is_ignorable (l_type)
+			Result := exception_manager.is_ignorable (l_type)
 		end
 
 	frozen is_raisable: BOOLEAN is
@@ -108,7 +110,7 @@ feature -- Status report
 		do
 			create l_internal
 			l_type ?= l_internal.type_of (Current)
-			Result := (create {EXCEPTION_MANAGER}).is_raisable (l_type)
+			Result := exception_manager.is_raisable (l_type)
 		end
 
 	frozen is_ignored: BOOLEAN is
@@ -119,7 +121,7 @@ feature -- Status report
 		do
 			create l_internal
 			l_type ?= l_internal.type_of (Current)
-			Result := (create {EXCEPTION_MANAGER}).is_ignored (l_type)
+			Result := exception_manager.is_ignored (l_type)
 		ensure
 			is_ignored_implies_is_ignorable: Result implies is_ignorable
 			not_is_caught: Result = not is_caught

@@ -89,7 +89,7 @@ extern "C" {
 #define eif_builtin_PLATFORM_pointer_bytes 				sizeof(EIF_POINTER)
 
 /* EXCEPTION_MANAGER */
-#define eif_builtin_EXCEPTION_MANAGER_developer_raise(object, code, meaning, message)			draise(code, meaning, message)
+#define eif_builtin_ISE_EXCEPTION_MANAGER_developer_raise(object, code, meaning, message)			draise(code, meaning, message)
 
 #ifdef __cplusplus
 }

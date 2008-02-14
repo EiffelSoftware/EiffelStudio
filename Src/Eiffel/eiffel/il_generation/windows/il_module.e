@@ -966,7 +966,7 @@ feature -- Code generation
 			end
 
 				-- Create EXCEPTION_MANAGER object and assign it to ISE_RUNTIME.
-			il_code_generator.create_object (exception_manager_type_id)
+			il_code_generator.create_object (ise_exception_manager_type_id)
 			l_field_sig := field_sig
 			l_field_sig.reset
 			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
@@ -3390,10 +3390,10 @@ feature {NONE} -- Convenience
 			typed_pointer_class_id_positive: Result > 0
 		end
 
-	exception_manager_type_id: INTEGER is
-			-- Type id of EXCEPTION_MANAGER
+	ise_exception_manager_type_id: INTEGER is
+			-- Type id of ISE_EXCEPTION_MANAGER
 		once
-			Result := system.exception_manager_class.compiled_class.types.first.type.implementation_id
+			Result := system.ise_exception_manager_class.compiled_class.types.first.type.implementation_id
 		end
 
 	rt_extension_type_implementation_id: INTEGER is

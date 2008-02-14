@@ -445,7 +445,7 @@ feature -- Properties
 			local_workbench.change_class (boolean_class)
 
 				-- Exception manager
-			local_workbench.change_class (exception_manager_class)
+			local_workbench.change_class (ise_exception_manager_class)
 			if exception_class /= Void then
 				local_workbench.change_class (exception_class)
 			end
@@ -499,7 +499,7 @@ feature -- Properties
 			end
 
 				-- Exception manager
-			exception_manager_class.compiled_class.record_precompiled_class_in_system
+			ise_exception_manager_class.compiled_class.record_precompiled_class_in_system
 			if exception_class /= Void and then exception_class.is_compiled then
 				exception_class.compiled_class.record_precompiled_class_in_system
 			end
@@ -2159,7 +2159,7 @@ end
 			predicate_class.compiled_class.mark_class (marked_classes)
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
 			type_class.compiled_class.mark_class (marked_classes)
-			exception_manager_class.compiled_class.mark_class (marked_classes)
+			ise_exception_manager_class.compiled_class.mark_class (marked_classes)
 			if exception_class /= Void and then exception_class.is_compiled then
 				exception_class.compiled_class.mark_class (marked_classes)
 			end
@@ -3620,8 +3620,8 @@ feature -- Dead code removal
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.open_count_name_id), l_class)
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.closed_count_name_id), l_class)
 
-				-- Protection of EXCEPTION_MANAGER class features
-			l_class := exception_manager_class.compiled_class
+				-- Protection of ISE_EXCEPTION_MANAGER class features
+			l_class := ise_exception_manager_class.compiled_class
 			l_feature_table := l_class.feature_table
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.last_exception_name_id), l_class)
 			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_last_exception_name_id), l_class)

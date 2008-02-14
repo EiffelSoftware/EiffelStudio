@@ -2,17 +2,31 @@ indexing
 	description: "[
 		Exception manager
 		]"
-	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EXCEPTION_MANAGER
+	ISE_EXCEPTION_MANAGER
 
 inherit
 	RT_EXCEPTION_MANAGER
+
+	EXCEPTION_MANAGER
+		redefine
+			last_exception,
+			raise,
+			ignore,
+			catch,
+			set_is_ignored,
+			is_ignorable,
+			is_raisable,
+			is_ignored,
+			is_caught,
+			type_of_code,
+			exception_from_code
+		end
 
 feature -- Access
 
@@ -21,6 +35,73 @@ feature -- Access
 		do
 			Result ?= {ISE_RUNTIME}.last_exception
 		end
+
+feature -- Raise
+
+	raise (a_exception: EXCEPTION) is
+			-- Raise `a_exception'.
+			-- Raising `a_exception' by this routine makes `a_exception' accessable by `last_exception'
+			-- in rescue clause. Hence causes removal of original `last_exception'.
+			-- If the original `last_exception' needs to be reserved, `set_throwing_exception'
+			-- on `a_exception' can be called.
+		do
+			if not a_exception.is_ignored then
+				{ISE_RUNTIME}.raise (a_exception)
+			end
+		end
+
+feature -- Status setting
+
+	ignore (a_exception: TYPE [EXCEPTION]) is
+			-- Make sure that any exception of code `code' will be
+			-- ignored. This is not the default.
+		do
+			ignored_exceptions.extend (a_exception)
+		end
+
+	catch (a_exception: TYPE [EXCEPTION]) is
+			-- Set type of `a_exception' `is_ignored'.
+		do
+			ignored_exceptions.prune_all (a_exception)
+		end
+
+	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN) is
+			-- Set type of `a_exception' to be `a_ignored'.
+		do
+			if a_ignored then
+				ignore (a_exception)
+			else
+				catch (a_exception)
+			end
+		end
+
+feature -- Status report
+
+	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+			-- If set, type of `a_exception' is ignorable.
+		do
+			Result := not unignorable_exceptions.has (a_exception)
+		end
+
+	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+			-- If set, type of `a_exception' is raisable.
+		do
+			Result := not unraisable_exceptions.has (a_exception)
+		end
+
+	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+			-- If set, type of `a_exception' is not raised.
+		do
+			Result := ignored_exceptions.has (a_exception)
+		end
+
+	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+			-- If set, type of `a_exception' is raised.
+		do
+			Result := not ignored_exceptions.has (a_exception)
+		end
+
+feature {EXCEPTIONS} -- Backward compatibility support
 
 	type_of_code (a_code: INTEGER): TYPE [EXCEPTION]
 			-- Exception type of `a_code'
@@ -170,92 +251,6 @@ feature -- Access
 				create {SERIALIZATION_FAILURE}Result
 			else
 			end
-		end
-
-feature -- Raise
-
-	raise (a_exception: EXCEPTION) is
-			-- Raise `a_exception'.
-			-- Raising `a_exception' by this routine makes `a_exception' accessable by `last_exception'
-			-- in rescue clause. Hence causes removal of original `last_exception'.
-			-- If the original `last_exception' needs to be reserved, `set_throwing_exception'
-			-- on `a_exception' can be called.
-		require
-			a_exception_not_void: a_exception /= Void
-			a_exception_is_raisable: a_exception.is_raisable
-		do
-			if not a_exception.is_ignored then
-				{ISE_RUNTIME}.raise (a_exception)
-			end
-		end
-
-feature -- Status setting
-
-	ignore (a_exception: TYPE [EXCEPTION]) is
-			-- Make sure that any exception of code `code' will be
-			-- ignored. This is not the default.
-		require
-			a_exception_not_void: a_exception /= Void
-			is_ignorable: is_ignorable (a_exception)
-		do
-			ignored_exceptions.extend (a_exception)
-		ensure
-			is_caught: is_ignored (a_exception)
-		end
-
-	catch (a_exception: TYPE [EXCEPTION]) is
-			-- Set type of `a_exception' `is_ignored'.
-		require
-			a_exception_not_void: a_exception /= Void
-		do
-			ignored_exceptions.prune_all (a_exception)
-		ensure
-			is_ignored: not is_ignored (a_exception)
-		end
-
-	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN) is
-			-- Set type of `a_exception' to be `a_ignored'.
-		require
-			a_exception_not_void: a_exception /= Void
-			a_ignored_implies_is_ignorable: a_ignored implies is_ignorable (a_exception)
-		do
-			if a_ignored then
-				ignore (a_exception)
-			else
-				catch (a_exception)
-			end
-		ensure
-			is_ignored_set: is_ignored (a_exception) = a_ignored
-		end
-
-feature -- Status report
-
-	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
-			-- If set, type of `a_exception' is ignorable.
-		do
-			Result := not unignorable_exceptions.has (a_exception)
-		end
-
-	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
-			-- If set, type of `a_exception' is raisable.
-		do
-			Result := not unraisable_exceptions.has (a_exception)
-		end
-
-	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN is
-			-- If set, type of `a_exception' is not raised.
-		do
-			Result := ignored_exceptions.has (a_exception)
-		ensure
-			not_is_caught: Result = not is_caught (a_exception)
-		end
-
-	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN is
-			-- If set, type of `a_exception' is raised.
-		do
-			Result := not ignored_exceptions.has (a_exception)
-		ensure
-			not_is_ignored: Result = not is_ignored (a_exception)
 		end
 
 feature {NONE} -- Element change
@@ -587,5 +582,17 @@ feature {NONE} -- Exception codes, Implementation of RT_EXCEPTION_MANAGER
 	Runtime_check_exception:INTEGER do Result := {EXCEP_CONST}.Runtime_check_exception end
 	old_exception:INTEGER do Result := {EXCEP_CONST}.old_exception end
 	serialization_exception:INTEGER do Result := {EXCEP_CONST}.serialization_exception end
+	
+indexing
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end

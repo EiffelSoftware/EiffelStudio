@@ -89,8 +89,8 @@ feature -- Access
 
 	rt_extension_class: CLASS_I
 
-	exception_manager_class: CLASS_I
-			-- Class EXCEPTION_MANAGER
+	ise_exception_manager_class: CLASS_I
+			-- Class ISE_EXCEPTION_MANAGER
 
 	exception_class: CLASS_I
 			-- Class EXCEPTION
@@ -298,13 +298,13 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	exception_manager_class_id: INTEGER is
-			-- Id of class EXCEPTION_MANAGER
+	ise_exception_manager_class_id: INTEGER is
+			-- Id of class ISE_EXCEPTION_MANAGER
 		require
-			type_class_exists: exception_manager_class /= Void
-			compiled: exception_manager_class.is_compiled
+			type_class_exists: ise_exception_manager_class /= Void
+			compiled: ise_exception_manager_class.is_compiled
 		do
-			Result := exception_manager_class.compiled_class.class_id
+			Result := ise_exception_manager_class.compiled_class.class_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -446,12 +446,12 @@ feature -- Status report
 feature -- Status report
 
 	exception_manager_type_id: INTEGER is
-			-- Dynamic type_id of class EXCEPTION_MANAGER
+			-- Dynamic type_id of class ISE_EXCEPTION_MANAGER
 		require
-			exception_manager_class_exist: exception_manager_class /= Void
-			compiled: exception_manager_class.is_compiled
+			exception_manager_class_exist: ise_exception_manager_class /= Void
+			compiled: ise_exception_manager_class.is_compiled
 		do
-			Result := exception_manager_class.compiled_class.types.first.type_id
+			Result := ise_exception_manager_class.compiled_class.types.first.type_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -926,14 +926,14 @@ feature -- Settings: XX_REF classes
 feature -- Settings: Exception
 
 	set_exception_manager_class (c: CLASS_I) is
-			-- Assign `c' to `exception_manager_class'.
+			-- Assign `c' to `ise_exception_manager_class'.
 		require
 			c_not_void: c /= Void
 		do
 			c.set_as_basic_class
-			exception_manager_class := c
+			ise_exception_manager_class := c
 		ensure
-			exception_manager_class_set: exception_manager_class = c
+			ise_exception_manager_class_set: ise_exception_manager_class = c
 		end
 
 indexing

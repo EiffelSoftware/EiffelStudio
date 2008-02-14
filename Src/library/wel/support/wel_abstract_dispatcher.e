@@ -32,6 +32,12 @@ inherit
 	WEL_EN_CONSTANTS
 		-- debug
 
+inherit {NONE}
+	EXCEPTION_MANAGER_FACTORY
+		export
+			{NONE} all
+		end
+
 feature -- Settings
 
 	set_exception_callback (an_action: like exception_callback) is
@@ -190,11 +196,8 @@ feature {NONE} -- Implementation
 
 	new_exception: EXCEPTION is
 			-- New exception object representating the last exception caught in Current
-		local
-			l_mnger: EXCEPTION_MANAGER
 		do
-			create l_mnger
-			Result := l_mnger.last_exception
+			Result := exception_manager.last_exception
 		ensure
 			new_exception_not_void: Result /= Void
 		end

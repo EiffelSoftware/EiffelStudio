@@ -532,7 +532,7 @@ feature -- Plug and Makefile file
 			end
 
 				-- Make exception manager declaration
-			exception_manager_cl := system.exception_manager_class.compiled_class
+			exception_manager_cl := system.ise_exception_manager_class.compiled_class
 			if exception_manager_cl.types /= Void and then not exception_manager_cl.types.is_empty then
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_exception_data_name_id)
 				id := exception_manager_cl.types.first.static_type_id
@@ -722,7 +722,7 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				-- Pointer on `set_exception_data' of class EXCEPTION_MANAGER.
+				-- Pointer on `set_exception_data' of class ISE_EXCEPTION_MANAGER.
 			if set_exception_data_name /= Void then
 				if final_mode then
 					buffer.put_string ("%Tegc_set_exception_data = (void (*)(EIF_REFERENCE, EIF_INTEGER, EIF_BOOLEAN, EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_BOOLEAN)) ")
@@ -733,7 +733,7 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				-- Pointer on `set_last_exception' of class EXCEPTION_MANAGER.
+				-- Pointer on `set_last_exception' of class ISE_EXCEPTION_MANAGER.
 			if set_last_exception_name /= Void then
 				if final_mode then
 					buffer.put_string ("%Tegc_set_last_exception = (void (*)(EIF_REFERENCE, EIF_REFERENCE)) ")
@@ -744,7 +744,7 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				-- Pointer on `last_exception' of class EXCEPTION_MANAGER.
+				-- Pointer on `last_exception' of class ISE_EXCEPTION_MANAGER.
 			if last_exception_name /= Void then
 				if final_mode then
 					buffer.put_string ("%Tegc_last_exception = (EIF_REFERENCE (*)(EIF_REFERENCE)) ")
@@ -755,7 +755,7 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				-- Pointer on `is_code_ignored' of class EXCEPTION_MANAGER.
+				-- Pointer on `is_code_ignored' of class ISE_EXCEPTION_MANAGER.
 			if is_code_ignored_name /= Void then
 				if final_mode then
 					buffer.put_string ("%Tegc_is_code_ignored = (EIF_BOOLEAN (*)(EIF_REFERENCE, EIF_INTEGER)) ")
@@ -766,7 +766,7 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				-- Pointer on `raise' of class EXCEPTION_MANAGER.
+				-- Pointer on `raise' of class ISE_EXCEPTION_MANAGER.
 			if once_raise_name /= Void then
 				if final_mode then
 					buffer.put_string ("%Tegc_once_raise = (void (*)(EIF_REFERENCE, EIF_REFERENCE)) ")
@@ -777,14 +777,14 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				-- Pointer on `init_exception_manager' of class EXCEPTION_MANAGER.
+				-- Pointer on `init_exception_manager' of class ISE_EXCEPTION_MANAGER.
 			if init_exception_manager_name /= Void then
 				buffer.put_string ("%Tegc_init_exception_manager = (void (*)(EIF_REFERENCE)) ")
 				buffer.put_string (init_exception_manager_name)
 				buffer.put_string (";%N")
 			end
 
-				-- Pointer on `free_preallocated_trace_name' of class EXCEPTION_MANAGER.
+				-- Pointer on `free_preallocated_trace_name' of class ISE_EXCEPTION_MANAGER.
 			if free_preallocated_trace_name /= Void then
 				buffer.put_string ("%Tegc_free_preallocated_trace = (void (*)(EIF_REFERENCE)) ")
 				buffer.put_string (free_preallocated_trace_name)

@@ -802,7 +802,7 @@ feature -- Implementation
 	new_exception: EXCEPTION is
 			-- New exception object representating the last exception caught in Current
 		do
-			Result := (create {EXCEPTION_MANAGER}).last_exception
+			Result := exception_manager.last_exception
 		ensure
 			new_exception_not_void: Result /= Void
 		end

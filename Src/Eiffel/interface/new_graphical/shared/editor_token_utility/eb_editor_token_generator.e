@@ -54,15 +54,19 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	tokens: ARRAYED_LIST [EDITOR_TOKEN]
+	tokens (a_indents: INTEGER): !ARRAYED_LIST [EDITOR_TOKEN]
 			-- Create a list of editor tokens from lines `a_lines'
 			--
-			-- `a_lines': Lines to create a token list from
+			-- `a_indents': The number of surplus indentations to push the result tokens to.
+			-- `Result': A list of tokens, based on the last processed text.
+		require
+			a_indents_non_negative: a_indents >= 0
 		local
 			l_cursor: CURSOR
 			l_eol: EDITOR_TOKEN_EOL
 			l_start: BOOLEAN
 			l_lines: like lines
+			l_tokens: LIST [EDITOR_TOKEN]
 		do
 			if is_multiline_mode then
 				l_lines := lines
@@ -79,14 +83,26 @@ feature -- Access
 			create Result.make (20)
 			l_cursor := l_lines.cursor
 			from l_lines.start until l_lines.after loop
-				if not l_start then
-					l_start := l_lines.item.count > 0
+				l_tokens := l_lines.item.content
+				if not l_start and l_tokens /= Void then
+					l_start := l_tokens.count > 0
 				end
 				if l_start then
 						-- Ensures no blank lines at the beginning of the text
-					Result.append (l_lines.item.content)
+					if a_indents > 0 and then l_lines.isfirst then
+							-- Add initial tabulation
+						Result.extend (create {EDITOR_TOKEN_TABULATION}.make (a_indents))
+					end
+					if l_tokens /= Void then
+						Result.append (l_tokens)
+					end
+
 					if not l_lines.islast then
 						Result.extend (create {EDITOR_TOKEN_EOL}.make)
+						if a_indents > 0 then
+								-- Adds new line tabulation
+							Result.extend (create {EDITOR_TOKEN_TABULATION}.make (a_indents))
+						end
 					end
 				end
 				l_lines.forth
@@ -107,7 +123,6 @@ feature -- Access
 				end
 			end
 		ensure
-			result_attached: Result /= Void
 			result_contains_attached_items: not Result.has (Void)
 			lines_unmoved: lines.cursor.is_equal (old lines.cursor)
 		end

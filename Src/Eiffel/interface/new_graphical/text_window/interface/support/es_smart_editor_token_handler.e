@@ -72,25 +72,30 @@ feature -- Query
 			--
 			-- `a_token': Token to test for applicablity.
 			-- `Result': True if the token can be user; False otherwise.
+		local
+			l_editor: like editor
 		do
 			if is_editing_eiffel_class then
-				if {l_class_stone: !CLASSI_STONE} editor.stone then -- Nested if because of a code generation bug.
-					Result := {l_ky_token: !EDITOR_TOKEN_FEATURE_START} a_token
---					if
---						{l_class_i: !EIFFEL_CLASS_I} l_class_stone.class_i and then
---						{l_ky_token: !EDITOR_TOKEN_KEYWORD} a_token and then
---						{l_image: !STRING_8} a_token.image
---					then
---						Result := contract_keyword_token_images.has (l_image)
---					end
-				end
+				l_editor := editor
 
-				if Result then
-						-- Check the editor is in edit mode and has focus
-					Result := editor.has_focus and editor.is_editable
+					-- Check the editor is in edit mode and has focus
+				if
+					l_editor.has_focus and then
+					l_editor.dev_window /= Void and then
+					{l_formatter: !EB_BASIC_TEXT_FORMATTER} l_editor.dev_window.selected_formatter
+				then
+					if {l_class_stone: !CLASSI_STONE} l_editor.stone then -- Nested if because of a code generation bug.
+						Result := {l_ky_token: !EDITOR_TOKEN_FEATURE_START} a_token
+--						if
+--							{l_class_i: !EIFFEL_CLASS_I} l_class_stone.class_i and then
+--							{l_ky_token: !EDITOR_TOKEN_KEYWORD} a_token and then
+--							{l_image: !STRING_8} a_token.image
+--						then
+--							Result := contract_keyword_token_images.has (l_image)
+--						end
+					end
 				end
 			end
-
 		end
 
 	can_perform_exit (a_force: BOOLEAN): BOOLEAN
@@ -123,24 +128,22 @@ feature {NONE} -- Query
 			a_line_positive: a_line > 0
 		local
 			l_viewer: !ES_CONTRACT_VIEWER_WIDGET
---			l_fstart: !EDITOR_TOKEN_FEATURE_START
-
-
+			l_feautre: E_FEATURE
 		do
-			if {l_fstart: !EDITOR_TOKEN_FEATURE_START} a_token then
-					-- Create contract viewer widget
-				if editor_class /= Void and then editor_class.is_compiled and then {l_class: !CLASS_C} editor_class.compiled_class then
-					if {l_feature: !E_FEATURE} editor_class.compiled_class.feature_with_name (l_fstart.image) then
+			if editor_class /= Void and then editor_class.is_compiled and then {l_class: !CLASS_C} editor_class.compiled_class then
+				if {l_fstart: !EDITOR_TOKEN_FEATURE_START} a_token then
+						-- Create contract viewer widget
+					l_feautre := l_class.feature_with_name (l_fstart.image)
+					if {l_feat: !E_FEATURE} l_feautre then
 						create l_viewer.make
 						l_viewer.set_is_showing_full_contracts (True)
-						l_viewer.set_context (l_class, l_feature)
+						l_viewer.set_context (l_class, l_feat)
 						Result := l_viewer.widget
 					end
+--				elseif {l_kw_token: !EDITOR_TOKEN} a_token and then {l_image: !STRING_8} l_kw_token.image and then contract_keyword_token_images.has (l_image) then
+--						  -- Create a contract widget
+--					Result := create_contract_editor_widget (l_kw_token, a_line)
 				end
-
---			elseif {l_kw_token: !EDITOR_TOKEN} a_token and then {l_image: !STRING_8} l_kw_token.image and then contract_keyword_token_images.has (l_image) then
---					-- Create a contract widget
---				Result := create_contract_editor_widget (l_kw_token, a_line)
 			end
 		ensure
 			result_is_destroyed: Result /= Void implies not Result.is_destroyed
@@ -171,13 +174,13 @@ feature {NONE} -- Query
 			--| No actions here
 		end
 
---feature {NONE} -- Helpers
+feature {NONE} -- Helpers
 
---	contract_widget_factory: !ES_CONTRACT_EDITOR_WIDGET_FACTORY
---			-- Factory used to create contract editor widgets to display in the popup window.
---		once
---			create Result
---		end
+	contract_widget_factory: !ES_CONTRACT_EDITOR_WIDGET_FACTORY
+			-- Factory used to create contract editor widgets to display in the popup window.
+		once
+			create Result
+		end
 
 feature -- Basic operations
 
@@ -240,7 +243,7 @@ feature -- Basic operations
 				end
 			end
 
-			if popup_window /= Void and last_token_handled /= a_token then
+			if popup_window /= Void then
 					-- Remove and clean up last window
 				popup_window.recycle
 				popup_window := Void

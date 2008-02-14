@@ -13,17 +13,6 @@ class
 inherit
 	ES_WIDGET [EV_VERTICAL_BOX]
 
---inherit {NONE}
---	SHARED_INST_CONTEXT
---		export
---			{NONE} all
---		end
-
---	SHARED_WORKBENCH
---		export
---			{NONE} all
---		end
-
 create
 	make
 
@@ -38,6 +27,7 @@ feature {NONE} -- Initialization
 		local
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
+			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
 			a_widget.set_border_width (2)
 
@@ -47,6 +37,11 @@ feature {NONE} -- Initialization
 			contract_grid.enable_auto_size_best_fit_column (1)
 			contract_grid.disable_row_height_fixed
 			contract_grid.disable_selection_on_click
+
+			create l_grid_support.make_with_grid (contract_grid)
+			l_grid_support.enable_ctrl_right_click_to_open_new_window
+			l_grid_support.enable_grid_item_pnd_support
+			auto_recycle (l_grid_support)
 
 			a_widget.extend (contract_grid)
 
@@ -169,12 +164,6 @@ feature {NONE} -- Basic operation
 			l_grid.clear
 
 			if {l_feature: !like context_feature} context_feature and {l_class: !like context_class} context_class then
-					-- Set context data
-	--			l_old_class := system.current_class
-	--			l_old_group := inst_context.group
-	--			system.set_current_class (l_class)
-	--			inst_context.set_group (l_class.group)
-
 				contract_grid.set_row_count_to (1)
 
 				create l_token_text
@@ -183,7 +172,7 @@ feature {NONE} -- Basic operation
 				create l_generator.make
 				l_generator.enable_multiline
 				l_feature.append_signature (l_generator)
-				l_tokens := l_generator.tokens
+				l_tokens := l_generator.tokens (0)
 
 				l_row := contract_grid.row (1)
 				create l_editor_item
@@ -238,7 +227,7 @@ feature {NONE} -- Basic operation
 					l_decorator.init_feature_context (l_feature_i, l_feature_i, l_feature_as)
 					l_assertions.format_precondition (l_decorator)
 
-					l_tokens := l_generator.tokens
+					l_tokens := l_generator.tokens (1)
 					if not l_tokens.is_empty then
 							-- Format preconditions
 						create l_editor_item
@@ -264,7 +253,7 @@ feature {NONE} -- Basic operation
 						l_decorator.init_feature_context (l_feature_i, l_feature_i, l_feature_as)
 						l_assertions.format_postcondition (l_decorator)
 
-						l_tokens := l_generator.tokens
+						l_tokens := l_generator.tokens (1)
 						if not l_tokens.is_empty then
 								-- Format postconditions
 							create l_editor_item
@@ -286,15 +275,36 @@ feature {NONE} -- Basic operation
 					end
 				end
 
-	--			system.set_current_class (l_old_class)
-	--			inst_context.set_group (l_old_group)
-
 				l_grid.set_minimum_size (l_width + 5, l_height + 5)
 				l_grid.column (1).set_width (l_width + 5)
 			end
 
 			l_grid.unlock_update
 		end
+
+--	indent_tokens (a_list: !ARRAYED_LIST [EDITOR_TOKEN]; a_indent: INTEGER) is
+--			-- Indents a list of tokens by an index amount.
+--			--
+--			-- `a_list': List of tokens to add indentation to.
+--			-- `a_indent': The number of indentation to add.
+--		require
+--			not_a_list_is_empty: not a_list.is_empty
+--			a_list_has_attached_items: not a_list.has (Void)
+--			a_indent_positive: a_indent > 0
+--		local
+--			l_count, i: INTEGER
+--		do
+--			from
+--				i := 1
+--				l_count := a_list.count
+--			until i = a_list.count loop -- This is correct, forget the last item.
+--				if {l_nl: EDITOR_TOKEN_EOL} a_list.i_th (i) then
+--						-- Add a tabs
+--					a_list.put_right (create {EDITOR_TOKEN_TABULATION}.make (a_indent))
+--					l_count := l_count + a_index
+--				end
+--			end
+--		end
 
 feature {NONE} -- Comment extraction
 
@@ -329,6 +339,7 @@ feature {NONE} -- Comment extraction
 							l_comments.after
 						loop
 							a_token_writer.new_line
+							a_token_writer.add_indent
 							a_token_writer.add_indent
 
 							l_comment := l_comments.item.content

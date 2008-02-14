@@ -2,6 +2,7 @@ indexing
 	description: "[
 		A utility for clients accessing a service (globally or locally via a service provider) and determining a service's existance.
 	]"
+	doc: "wiki://Service Consumers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";
@@ -28,6 +29,8 @@ feature {NONE} -- Initialization
 			-- Initialize a service consumer using an alternative (local) service provider
 			--
 			-- `a_provider': A service provider to use when querying for a service
+		indexing
+			doc: "wiki://Service Consumers:Using Local Service Providers"
 		require
 			a_provider_attached: a_provider /= Void
 		do
@@ -70,6 +73,8 @@ feature -- Status report
 
 	is_service_available: BOOLEAN
 			-- Indicates if the service is available
+		indexing
+			doc: "wiki://Service Consumers:Services Are Tentative"
 		do
 			Result := internal_service /= Void or else (service_provider.query_service ({G}) /= Void)
 		end

@@ -1,4 +1,4 @@
-class TEST1 [G -> STRING create make end]
+class TEST1 [G -> A create make end]
 
 feature
 
@@ -6,20 +6,30 @@ feature
 		local
 			b: like a
 		do
-			create b.make (1)
-			print (b.generating_type)
-			io.new_line
-		end
-		
-	g (a: like s) is
-		local
-			b: like a
-		do
-			create b.make (1)
+			create b.make
 			print (b.generating_type)
 			io.new_line
 		end
 
-	s: STRING
+	g (a: like s) is
+		local
+			b: like a
+		do
+			create b.make
+			print (b.generating_type)
+			io.new_line
+		end
+
+	h (a: like Current) is
+		local
+			b: like a
+		do
+			create b
+			print (b.generating_type)
+			io.new_line
+		end
+
+
+	s: A
 
 end

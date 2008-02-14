@@ -902,10 +902,10 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #define To_dtype(t) 	(eif_cid_map[t])
 
 #define RT_DFS(x,y)		((x)->ov_dftype = y, (x)->ov_dtype = To_dtype(y))
-#define RTCDT			int EIF_VOLATILE dtype = Dtype(Current)
-#define RTCDD			int EIF_VOLATILE dtype
-#define RTCFDT			int EIF_VOLATILE dftype = Dftype(Current)
-#define RTCFDD			int EIF_VOLATILE dftype
+#define RTCDT			EIF_TYPE_INDEX EIF_VOLATILE dtype = Dtype(Current)
+#define RTCDD			EIF_TYPE_INDEX EIF_VOLATILE dtype
+#define RTCFDT			EIF_TYPE_INDEX EIF_VOLATILE dftype = Dftype(Current)
+#define RTCFDD			EIF_TYPE_INDEX EIF_VOLATILE dftype
 
 /* If call on void target are detected, we use RTCV to perform the check. Unlike the workbench
  * mode, we won't know the message of the call as it would require too much data to be generated. */

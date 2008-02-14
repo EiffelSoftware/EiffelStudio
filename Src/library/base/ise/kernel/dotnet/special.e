@@ -10,7 +10,7 @@ indexing
 
 frozen class
 	SPECIAL [T]
-	
+
 inherit
 	ABSTRACT_SPECIAL
 		redefine
@@ -102,7 +102,7 @@ feature -- Access
 		ensure
 			base_address_not_null: Result /= default_pointer
 		end
-		
+
 	frozen native_array: NATIVE_ARRAY [T] is
 			-- Only for compatibility with .NET
 		require
@@ -115,8 +115,8 @@ feature -- Measurement
 
 	lower: INTEGER is 0
 			-- Minimum index of Current
-			
-	frozen upper: INTEGER is 
+
+	frozen upper: INTEGER is
 			-- Maximum index of Current
 		do
 			Result := internal_native_array.count - 1
@@ -130,62 +130,54 @@ feature -- Measurement
 
 feature -- Status report
 
-	frozen all_default (upper_bound: INTEGER): BOOLEAN is
-			-- Are all items between index `0' and `upper_bound'
+	all_default (start_index, end_index: INTEGER): BOOLEAN
+			-- Are all items between index `start_index' and `end_index'
 			-- set to default values?
 		require
-			min_upper_bound: upper_bound >= -1
-			max_upper_bound: upper_bound < count
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < count
 		local
-			i, nb: INTEGER
-			l_array: like internal_native_array
+			i: INTEGER
 			t: T
 		do
 			from
 				Result := True
-				l_array := internal_native_array
-				nb := upper_bound + 1
+				i := start_index
 			until
-				i = nb
+				i > end_index or else not Result
 			loop
-				if l_array.item (i) /= t then
-					Result := False
-					i := nb - 1
-				end
+				Result := item (i) = t
 				i := i + 1
 			end
 		ensure
-			valid_on_empty_area: upper_bound = -1 implies Result
+			valid_on_empty_area: (end_index < start_index) implies Result
 		end
 
-	frozen same_items (other: like Current; upper_bound: INTEGER): BOOLEAN is
-			-- Do all items between index `0' and `upper_bound' have
+	same_items (other: like Current; start_index, end_index: INTEGER): BOOLEAN
+			-- Do all items between index `start_index' and `end_index' have
 			-- same value?
+			-- (Use reference equality for comparison.)
 		require
-			min_upper_bound: upper_bound >= -1
-			max_upper_bound: upper_bound < count
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < count
 			other_not_void: other /= Void
-			other_has_enough_items: upper_bound < other.count
+			other_has_enough_items: end_index < other.count
 		local
-			i, nb: INTEGER
-			l_array, l_other_array: like internal_native_array
+			i: INTEGER
 		do
 			from
 				Result := True
-				l_array := internal_native_array
-				l_other_array := other.internal_native_array
-				nb := upper_bound + 1
+				i := start_index
 			until
-				i = nb
+				i > end_index or else not Result
 			loop
-				if l_array.item (i) /= l_other_array.item (i) then
-					Result := False
-					i := nb - 1 -- Jump out of loop
-				end
+				Result := item (i) = other.item (i)
 				i := i + 1
 			end
 		ensure
-			valid_on_empty_area: upper_bound = -1 implies Result
+			valid_on_empty_area: (end_index < start_index) implies Result
 		end
 
 	frozen valid_index (i: INTEGER): BOOLEAN is
@@ -205,7 +197,7 @@ feature -- Comparison
 			if other /= Current then
 				l_other_count := other.count
 				if count = l_other_count then
-					Result := same_items (other, l_other_count - 1)
+					Result := same_items (other, 0, l_other_count - 1)
 				end
 			else
 				Result := True
@@ -228,7 +220,7 @@ feature -- Element change
 			-- Set items between `start_index' and `end_index' with `v'.
 		require
 			start_index_non_negative: start_index >= 0
-			start_index_not_too_big: start_index <= end_index
+			start_index_not_too_big: start_index <= end_index + 1
 			end_index_valid: end_index < count
 		local
 			i, nb: INTEGER
@@ -301,7 +293,7 @@ feature -- Element change
 			destination_index_non_negative: destination_index >= 0
 			n_non_negative: n >= 0
 			different_source_and_target: source_index /= destination_index
-			non_overlapping: 
+			non_overlapping:
 				(source_index < destination_index implies source_index + n < destination_index) or
 				(source_index > destination_index implies destination_index + n < source_index)
 			n_is_small_enough_for_source: source_index + n <= count
@@ -328,7 +320,7 @@ feature -- Duplication
 			else
 				internal_native_array := l_old_native
 			end
-			
+
 			{SYSTEM_ARRAY}.copy (other.internal_native_array, internal_native_array, other.count)
 		end
 
@@ -349,7 +341,7 @@ feature -- Resizing
 			Result_different_from_current: Result /= Current
 			new_count: Result.count = n
 		end
-	
+
 	frozen aliased_resized_area (n: INTEGER): like Current is
 			-- Try to resize `Current' with a count of `n', if not
 			-- possible a new copy.
@@ -377,7 +369,7 @@ feature -- Resizing
 			Result_not_void: Result /= Void
 			new_count: Result.count = n
 		end
-	
+
 feature -- Removal
 
 	frozen clear_all is

@@ -13,12 +13,14 @@ define		EXCLUDE "<exclude>integer_32.e</exclude>"
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 compile_melted
-compile_result	validity_error NONE VD23 VD23
+if not DOTNET compile_result	validity_error NONE VD23 VD23
+if DOTNET compile_result	validity_error NONE VD23
 
 define		EXCLUDE "<exclude>any.e</exclude>"
 copy_sub 	Ace $TEST Ace
 resume_compile
-compile_result	validity_error NONE VD23 VD23
+if not DOTNET compile_result	validity_error NONE VD23 VD23
+if DOTNET compile_result	validity_error NONE VD23
 
 copy_sub	Ace_rev1 $TEST Ace
 resume_compile

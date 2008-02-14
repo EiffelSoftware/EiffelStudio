@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="test" uuid="2769B2FC-9769-410C-B2D9-0383556691F8" library_target="test">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="test">
 	<target name="test">
 		<description>FreeELKS: Library of reusable components for Eiffel.
 Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
@@ -32,6 +32,7 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 				<exclude>/support/class_name_translations.e$</exclude>
 				<exclude>/support/double_math.e$</exclude>
 				<exclude>/support/execution_environment.e$</exclude>
+				<exclude>/support/identified_routines.e$</exclude>
 				<exclude>/support/internal.e$</exclude>
 				<exclude>/support/managed_pointer.e$</exclude>
 				<exclude>/support/mismatch_information.e$</exclude>
@@ -69,6 +70,11 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 				<exclude>/kernel/type.e$</exclude>
 				<exclude>/kernel/unix_file_info.e$</exclude>
 				<exclude>/kernel/unix_signals.e$</exclude>
+				<exclude>/kernel/exceptions/exception_manager.e$</exclude>
+				<exclude>/kernel/exceptions/exception.e$</exclude>
+				<exclude>/kernel/exceptions/void_target.e$</exclude>
+				<exclude>/kernel/exceptions/operating_system_signal_failure.e$</exclude>
+				<exclude>/kernel/exceptions/operating_system_failure.e$</exclude>
 				<condition>
 					<dotnet value="true"/>
 				</condition>
@@ -84,13 +90,31 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 			<file_rule>
 				<exclude>/classic$</exclude>
 				<exclude>/kernel/exceptions/io_failure.e$</exclude>
-				<exclude>/kernel/exceptions/elks_exceptions/exception.e$</exclude>
-				<exclude>/kernel/exceptions/elks_exceptions/exception_manager.e$</exclude>
-				<exclude>/kernel/exceptions/elks_exceptions/operating_system_failure.e$</exclude>
-				<exclude>/kernel/exceptions/elks_exceptions/operating_system_signal_failure.e$</exclude>
-				<exclude>/kernel/exceptions/elks_exceptions/void_target.e$</exclude>
 				<condition>
 					<dotnet value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/runtime$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="ise_runtime" location="$BASE_ISE\runtime\" recursive="true">
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/classic$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/debug$</exclude>
+				<condition>
+					<build value="finalize"/>
 				</condition>
 			</file_rule>
 		</cluster>

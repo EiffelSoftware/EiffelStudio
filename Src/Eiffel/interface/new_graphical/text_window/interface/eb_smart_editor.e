@@ -524,6 +524,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			cursor: like cursor_type
 			right_space,
 			list_width: INTEGER
+			l_helpers: EVS_HELPERS
 		do
 			create screen
 
@@ -548,7 +549,13 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 				Result := Result + margin.width
 			end
 
+				-- Remove space for pixmap
 			Result := Result - 20
+
+			create l_helpers
+			if {l_window: !EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) and then l_window.is_maximized then
+				Result := l_helpers.suggest_pop_up_widget_location_with_size (l_window, Result, 0, list_width, 10).x
+			end
 			Result := Result.max (0)
 		end
 
@@ -561,14 +568,25 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			upper_space,
 			lower_space: INTEGER
 			show_below: BOOLEAN
+			l_height: INTEGER
+			l_helpers: EVS_HELPERS
 		do
 				-- Get y pos of cursor
-			create screen
+			create l_helpers
+
+			if {l_window: !EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) and then l_window.is_maximized then
+				l_height := l_helpers.window_working_area (l_window).height
+			end
+			if l_height = 0 then
+				create screen
+				l_height := screen.virtual_height
+			end
+
 			cursor := text_displayed.cursor
 			show_below := True
 			Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)
 
-			if Result < ((screen.virtual_height / 3) * 2) then
+			if Result < ((l_height / 3) * 2) then
 					-- Cursor in upper two thirds of screen
 				show_below := True
 			else
@@ -577,7 +595,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			end
 
 			upper_space := Result - completion_border_size
-			lower_space := screen.virtual_bottom - Result - completion_border_size
+			lower_space := l_height - Result - completion_border_size
 
 			if preferences.development_window_data.remember_completion_list_size then
 				preferred_height := preferences.development_window_data.completion_list_height

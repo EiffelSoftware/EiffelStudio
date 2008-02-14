@@ -6,6 +6,7 @@ feature
 		local
 			b: like a
 			b2: LINKED_LIST [like a]
+			b3: LINKED_LIST [LINKED_LIST [like a]]
 		do
 			create b.make
 			print (b.generating_type)
@@ -14,6 +15,11 @@ feature
 			create b2.make
 			print (b2.generating_type)
 			io.new_line
+
+			create b3.make
+			print (b3.generating_type)
+			io.new_line
+
 			io.new_line
 		end
 
@@ -21,6 +27,7 @@ feature
 		local
 			b: like a
 			b2: LINKED_LIST [like a]
+			b3: LINKED_LIST [LINKED_LIST [like a]]
 		do
 			create b.make
 			print (b.generating_type)
@@ -29,6 +36,11 @@ feature
 			create b2.make
 			print (b2.generating_type)
 			io.new_line
+
+			create b3.make
+			print (b3.generating_type)
+			io.new_line
+
 			io.new_line
 		end
 
@@ -36,6 +48,7 @@ feature
 		local
 			b: like a
 			b2: LINKED_LIST [like a]
+			b3: LINKED_LIST [LINKED_LIST [like a]]
 		do
 			create b
 			print (b.generating_type)
@@ -44,6 +57,11 @@ feature
 			create b2.make
 			print (b2.generating_type)
 			io.new_line
+
+			create b3.make
+			print (b3.generating_type)
+			io.new_line
+
 			io.new_line
 		end
 

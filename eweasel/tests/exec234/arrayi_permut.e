@@ -65,7 +65,7 @@ feature -- Initialization
 			items_set: (agent: BOOLEAN 
 				do
 					melt($MELT6)
-					Result := area.all_default ((agent upper).item ([]) - (agent lower).item ([]))
+					Result := area.all_default (0, (agent upper).item ([]) - (agent lower).item ([]))
 				ensure
 					definition: Result = ((agent count).item ([]) = 0) or else
 						((
@@ -274,7 +274,7 @@ feature -- Comparison
 						i := i + 1
 					end
 				else
-					Result := area.same_items (other.area, upper - lower)
+					Result := area.same_items (other.area, 0, upper - lower)
 				end
 			end
 		end
@@ -284,7 +284,7 @@ feature -- Status report
 	all_default: BOOLEAN is
 			-- Are all items set to default values?
 		do
-			Result := area.all_default (upper - lower)
+			Result := area.all_default (0, upper - lower)
 		ensure
 			definition: Result = (count = 0 or else
 				((item (upper) = Void or else
@@ -304,7 +304,7 @@ feature -- Status report
 			other_not_void: other /= Void
 		do
 			if count = other.count then
-				Result := area.same_items (other.area, upper - lower)
+				Result := area.same_items (other.area, 0, upper - lower)
 			end
 		ensure
 			definition: Result = ((count = other.count) and then

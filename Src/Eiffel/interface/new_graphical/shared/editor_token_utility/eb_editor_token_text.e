@@ -718,9 +718,12 @@ feature{NONE} -- Display
 			a_token_attached: a_token /= Void
 			a_drawable_attached: a_drawable /= Void
 		do
-			a_drawable.set_font (actual_token_font (a_token))
-			a_drawable.set_foreground_color (a_token.text_color)
-			a_drawable.draw_text_top_left (x, y, a_token.image)
+			if not a_token.is_tabulation and then not a_token.is_blank then
+					-- Do not draw the token image because it will be rendered too large
+				a_drawable.set_font (actual_token_font (a_token))
+				a_drawable.set_foreground_color (a_token.text_color)
+				a_drawable.draw_text_top_left (x, y, a_token.image)
+			end
 		end
 
 	display_selected_token (x, y: INTEGER; a_token: EDITOR_TOKEN; a_focus: BOOLEAN; a_drawable: EV_DRAWABLE) is
@@ -753,7 +756,9 @@ feature{NONE} -- Display
 			l_font := actual_token_font (a_token)
 			a_drawable.set_font (l_font)
 			a_drawable.clear_rectangle (x, y, l_font.string_width (a_token.image), actual_line_height)--l_font.height)
-			a_drawable.draw_text_top_left (x, y, a_token.image)
+			if not a_token.is_tabulation and then not a_token.is_blank then
+				a_drawable.draw_text_top_left (x, y, a_token.image)
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -1050,8 +1055,10 @@ feature{NONE} -- Implementation
 					overriden_fonts.item (a_token.font_id) /= Void
 				end
 				Result := overriden_fonts.item (a_token.font_id).string_width (a_image)
-			else
+			elseif not a_token.is_tabulation then
 				Result := a_token.font.string_width (a_image)
+			else
+				Result := a_token.width
 			end
 		end
 

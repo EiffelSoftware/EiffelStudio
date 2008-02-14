@@ -309,6 +309,31 @@ feature -- Access
 			Result := window_id.as_integer_32
 		end
 
+	selected_formatter: EB_CLASS_TEXT_FORMATTER is
+			-- Current selected formatter
+		local
+			l_end : BOOLEAN
+			l_index: INTEGER
+			l_formatter: like managed_main_formatters
+		do
+			l_formatter := managed_main_formatters
+			l_index := l_formatter.index
+			from
+				l_formatter.start
+			until
+				l_formatter.after or l_end
+			loop
+				if l_formatter.item.selected then
+					l_end := True
+					Result := l_formatter.item
+				end
+				l_formatter.forth
+			end
+			l_formatter.go_i_th (l_index)
+		ensure
+			selected_formatter_not_void: Result /= Void
+		end
+
 feature {NONE} -- Access
 
 	frozen window_id_counter: CELL [NATURAL_32]
@@ -1900,31 +1925,6 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WIND
 
 	context_refreshing_timer: EV_TIMEOUT
 			-- Timer to refresh feature tree address bar.
-
-	selected_formatter: EB_CLASS_TEXT_FORMATTER is
-			-- Current selected formatter
-		local
-			l_end : BOOLEAN
-			l_index: INTEGER
-			l_formatter: like managed_main_formatters
-		do
-			l_formatter := managed_main_formatters
-			l_index := l_formatter.index
-			from
-				l_formatter.start
-			until
-				l_formatter.after or l_end
-			loop
-				if l_formatter.item.selected then
-					l_end := True
-					Result := l_formatter.item
-				end
-				l_formatter.forth
-			end
-			l_formatter.go_i_th (l_index)
-		ensure
-			selected_formatter_not_void: Result /= Void
-		end
 
 feature {NONE} -- Recycle
 

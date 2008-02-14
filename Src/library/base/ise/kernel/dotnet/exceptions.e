@@ -16,6 +16,8 @@ inherit
 
 	EXCEP_CONST
 
+	EXCEPTION_MANAGER_FACTORY
+
 feature -- Status report
 
 	meaning (except: INTEGER): STRING is
@@ -85,16 +87,18 @@ feature -- Status report
 			-- Is last exception originally due to an
 			-- external event (operating system error)?
 		local
-			l_external: EXTERNAL_FAILURE
+
 			l_system_failure: SYS_EXCEPTION
-			l_exception: EXCEPTION
+			l_exception, l_external: EXCEPTION
 		do
 			l_exception := exception_manager.last_exception
-			l_external ?= l_exception
-			Result := (l_external /= Void)
-			if not Result then
-				l_system_failure ?= l_exception
-				Result := (l_system_failure /= Void)
+			l_external := exception_manager.exception_from_code (external_exception)
+			if l_exception /= Void and then l_external /= Void then
+				Result := l_exception.conforms_to (l_external)
+				if not Result then
+					l_system_failure ?= l_exception
+					Result := (l_system_failure /= Void)
+				end
 			end
 		end
 
@@ -242,9 +246,9 @@ feature -- Status setting
 	raise_retrieval_exception (name: STRING) is
 			-- Raise a retrieval exception of name `name'.
 		local
-			l_exception: SERIALIZATION_FAILURE
+			l_exception: EXCEPTION
 		do
-			create l_exception
+			l_exception := exception_manager.exception_from_code (serialization_exception)
 			l_exception.set_message (name)
 			l_exception.raise
 		end
@@ -282,14 +286,6 @@ feature -- Status setting
 				False
 				--| Not supported.
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	exception_manager: EXCEPTION_MANAGER is
-			-- Exception manager
-		once
-			create Result
 		end
 
 indexing

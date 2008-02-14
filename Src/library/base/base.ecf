@@ -71,7 +71,6 @@
 				<exclude>/kernel/type.e$</exclude>
 				<exclude>/kernel/unix_file_info.e$</exclude>
 				<exclude>/kernel/unix_signals.e$</exclude>
-				<exclude>/kernel/exceptions/exception_manager.e$</exclude>
 				<exclude>/kernel/exceptions/exception.e$</exclude>
 				<exclude>/kernel/exceptions/void_target.e$</exclude>
 				<exclude>/kernel/exceptions/operating_system_signal_failure.e$</exclude>
@@ -92,6 +91,7 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/classic$</exclude>
+				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
 				<exclude>/kernel/exceptions/io_failure.e$</exclude>
 				<condition>
 					<dotnet value="true"/>

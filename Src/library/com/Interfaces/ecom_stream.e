@@ -22,7 +22,7 @@ inherit
 
 	ECOM_STAT_FLAGS
 
-	EXCEPTION_MANAGER
+	EXCEPTION_MANAGER_FACTORY
 
 create
 	make_from_other,
@@ -131,7 +131,7 @@ feature -- Basic Operations
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= last_exception
+			com_failure ?= exception_manager.last_exception
 			if com_failure /= Void then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
@@ -152,7 +152,7 @@ feature -- Basic Operations
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= last_exception
+			com_failure ?= exception_manager.last_exception
 			if com_failure /= Void then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
@@ -173,7 +173,7 @@ feature -- Basic Operations
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= last_exception
+			com_failure ?= exception_manager.last_exception
 			if com_failure /= Void then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
@@ -194,7 +194,7 @@ feature -- Basic Operations
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= last_exception
+			com_failure ?= exception_manager.last_exception
 			if com_failure /= Void then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
@@ -215,7 +215,7 @@ feature -- Basic Operations
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= last_exception
+			com_failure ?= exception_manager.last_exception
 			if com_failure /= Void then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
@@ -236,7 +236,7 @@ feature -- Basic Operations
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= last_exception
+			com_failure ?= exception_manager.last_exception
 			if com_failure /= Void then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True

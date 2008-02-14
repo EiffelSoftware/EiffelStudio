@@ -510,7 +510,7 @@ feature -- Remote access to Exceptions
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_exception_manager_icd_value
-			if icdv /= Void and then {cl: !CLASS_I} system.exception_manager_class then
+			if icdv /= Void and then {cl: !CLASS_I} system.ise_exception_manager_class then
 				Result := debug_value_from_icdv (icdv, cl.compiled_class)
 			end
 		end

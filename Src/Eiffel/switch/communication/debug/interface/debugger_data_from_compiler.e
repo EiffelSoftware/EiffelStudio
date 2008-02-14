@@ -154,7 +154,7 @@ feature {NONE} -- Initialization
 				exception_class_c := cl_i.compiled_class
 			end
 
-			cl_i := sys.exception_manager_class
+			cl_i := sys.ise_exception_manager_class
 			if cl_i /= Void then
 				exception_manager_class_c := cl_i.compiled_class
 			end

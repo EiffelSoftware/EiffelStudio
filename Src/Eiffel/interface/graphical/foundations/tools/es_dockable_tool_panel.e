@@ -715,6 +715,8 @@ feature {NONE} -- Action handlers
 					register_action (show_polling_timer.actions, agent
 						do
 							if is_interface_usable and is_initialized and then shown then
+								show_polling_timer.destroy
+								show_polling_timer := Void
 								on_show
 							end
 						end)

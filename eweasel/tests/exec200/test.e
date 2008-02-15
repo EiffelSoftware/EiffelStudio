@@ -14,16 +14,19 @@ feature
 			a.f (c)
 			a.g (c)
 			a.h (Void)
+			a.k (Void)
 
 			create c.make
 			a.f (c)
 			a.g (c)
 			a.h (a)
+			a.k (a)
 
 			create b
 			b.f (c)
 			b.g (c)
 			b.h (b)
+			b.k (b)
 		end;
 
 end

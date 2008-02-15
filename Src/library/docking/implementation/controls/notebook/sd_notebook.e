@@ -157,7 +157,7 @@ feature -- Command
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
 
 			if not internal_docking_manager.property.is_opening_config then
-				a_content.show_actions.call ([])
+				a_content.show_actions.call (Void)
 			end
 		ensure
 			selected: selected_item = a_content

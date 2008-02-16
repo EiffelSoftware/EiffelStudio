@@ -1099,7 +1099,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu, l_menu2: EV_MENU
 			l_class_stone: CLASSC_STONE
 			l_debugger: EB_DEBUGGER_MANAGER
-			l_list: LINKED_SET [ES_WATCH_TOOL_PANEL]
+			l_list: LINKED_SET [ES_WATCH_TOOL]
 		do
 			create l_menu.make_with_text (names.m_add_to)
 			a_menu.extend (l_menu)
@@ -1144,8 +1144,10 @@ feature {NONE} -- Menu section, Granularity 1.
 					until
 						l_list.after
 					loop
-						l_menu2.extend (new_menu_item (l_list.item.title))
-						l_menu2.last.select_actions.extend (agent (l_list.item).on_element_drop (l_class_stone))
+						if l_list.item.is_tool_instantiated then
+							l_menu2.extend (new_menu_item (l_list.item.tool_title))
+							l_menu2.last.select_actions.extend (agent (l_list.item).set_stone (l_class_stone))
+						end
 						l_list.forth
 					end
 				end

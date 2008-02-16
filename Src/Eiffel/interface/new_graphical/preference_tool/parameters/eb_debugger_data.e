@@ -110,7 +110,7 @@ feature {EB_SHARED_PREFERENCES} -- Dotnet specific
 			Result := dotnet_debugger_preference.value
 		end
 
-feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
+feature {EB_SHARED_PREFERENCES, EB_TOOL, ES_DIALOG} -- Preference
 
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE
 	critical_stack_depth_preference: INTEGER_PREFERENCE

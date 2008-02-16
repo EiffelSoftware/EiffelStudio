@@ -1443,9 +1443,12 @@ feature -- Status setting
 
 	change_current_thread_id (tid: INTEGER) is
 			-- Set Current thread id to `tid'
+		local
+			tid_changed: BOOLEAN
 		do
+			tid_changed := application_current_thread_id /= tid
 			Precursor (tid)
-			if raised then
+			if tid_changed and raised then
 				call_stack_tool.force_update
 				threads_tool.update
 			end

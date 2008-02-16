@@ -500,7 +500,7 @@ test	veen-cant-find-feature		incr105  tcf pass incrementality
 test	no-precomp-chg-class-name	incr106  tcf pass incrementality
 test	root-none-remove-cluster	incr107  tcf pass incrementality
 test	veen2-called-veen22		incr108  tcf pass incrementality
-test	bool-string-to-bit-ref		incr109  tcf pass incrementality consistency_precondition
+test	bool-string-to-bit-ref		incr109  tcf pass incrementality ec_precondition
 test	chg-expanded-source-freeze	incr110  tcf pass incrementality
 test	melt-chg-attr-type-freeze	incr111  tcf pass incrementality
 test	actual-generic-vtbt-sneak	incr112  tcf pass incrementality
@@ -834,6 +834,7 @@ test	inline-deferred-routine-with-constants-implementations	final037  tcf pass f
 test	agent_to_feature_of_generic_class final038 tcf pass finalizing
 test	wrong-attribute-dynamic-binding	final039 tcf pass finalizing
 test	dead-code-catcall			final040 tcf pass finalizing
+test	oms-ec-precondition-violation	final041 tcf pass finalizing ec_precondition
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime
@@ -1634,7 +1635,7 @@ test	non-boolean-exit		fixed066 tcf pass fixed
 test	entity-rule-violation		fixed067 tcf pass fixed
 test	misleading-vmfn-error		fixed068 tcf pass fixed
 test	time-checker-error		fixed069 tcf pass fixed
-test	intro-assign-rule-viol		fixed070 tcf pass fixed consistency_precondition
+test	intro-assign-rule-viol		fixed070 tcf pass fixed ec_precondition
 test	once-function-void		fixed071 tcf pass fixed
 test	vuex-violation			fixed072 tcf pass fixed
 test	invalid-local-entity-assign	fixed073 tcf pass fixed

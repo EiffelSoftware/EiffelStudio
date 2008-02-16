@@ -452,12 +452,10 @@ feature -- tools
 				l_tools := debugging_window.shell_tools.tools ({ES_WATCH_TOOL})
 				create Result.make
 				l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL])
-						local
-							l_tool: ES_WATCH_TOOL
 						do
-							if 
-								{l_tool: !ES_WATCH_TOOL} a_tool and then 
-								l_tool.is_tool_instantiated 
+							if
+								{l_tool: !ES_WATCH_TOOL} a_tool and then
+								l_tool.is_tool_instantiated
 							then
 								a_result.extend (l_tool)
 							end

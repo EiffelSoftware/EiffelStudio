@@ -11,7 +11,7 @@ frozen class
 	ES_WATCH_TOOL
 
 inherit
-	ES_DEBUGGER_TOOL [ES_WATCH_TOOL_PANEL]
+	ES_STONABLE_TOOL [ES_WATCH_TOOL_PANEL]
 		redefine
 			is_supporting_multiple_instances,
 			is_recycled_on_closing
@@ -20,25 +20,133 @@ inherit
 create {NONE}
 	default_create
 
+feature {DEBUGGER_MANAGER} -- Debugger related
+
+	frozen debugger_manager: EB_DEBUGGER_MANAGER
+			-- Debugger manager to use for tool creation
+		do
+			Result ?= window.debugger_manager
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Access
+
+	tool_title: STRING_GENERAL is
+			-- Panel's title
+		do
+			if is_tool_instantiated then
+				Result := panel.title
+			end
+		end
+
+	has_focus: BOOLEAN is
+			-- Has focus
+		do
+			if is_tool_instantiated then
+				Result := panel.has_focus
+			end
+		end
+
+	shown: BOOLEAN is
+			-- Is Current's panel shown on the screen?
+		do
+			if is_tool_instantiated then
+				Result := panel.shown
+			end
+		end
+
+feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
+
+	refresh is
+			-- Call refresh on panel
+		do
+			if is_tool_instantiated then
+				panel.refresh
+			end
+		end
+
+	request_update is
+			-- Request an update, this should call update only
+			-- once per debugging "operation"
+			-- This is to avoid computing twice the data
+			-- on specific cases
+		do
+			if is_tool_instantiated then
+				panel.request_update
+			end
+		end
+
+	disable_refresh is
+			-- Disable refresh
+		do
+			if is_tool_instantiated then
+				panel.disable_refresh
+			end
+		end
+
+	enable_refresh is
+			-- Disable refresh
+		do
+			if is_tool_instantiated then
+				panel.enable_refresh
+			end
+		end
+
+	record_grid_layout is
+			-- Record grid's layout
+		do
+			if is_tool_instantiated then
+				panel.record_grid_layout
+			end
+		end
+
+	prepare_for_debug is
+			-- Remove obsolete expressions from `Current'.		
+		do
+			if is_tool_instantiated then
+				panel.prepare_for_debug
+			end
+		end
+
+	reset is
+			-- Reset current's panel
+		do
+			if is_tool_instantiated then
+				panel.reset_tool
+			end
+		end
+
+feature -- Query
+
+	is_stone_usable (a_stone: STONE): BOOLEAN
+			-- Determines if a stone can be used by Current.
+			--
+			-- `a_stone': Stone to determine usablity.
+			-- `Result': True if the stone can be used, False otherwise.
+		do
+			Result := {l_stone: !CALL_STACK_STONE} a_stone
+		end
+
+feature -- Properties
 
 	icon: EV_PIXEL_BUFFER
 			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+			-- Note: Do not call `panel.icon' as it will create the tool unnecessarly!
 		do
 			Result := stock_pixmaps.tool_watch_icon_buffer
 		end
 
 	icon_pixmap: EV_PIXMAP
 			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+			-- Note: Do not call `panel.icon' as it will create the tool unnecessarly!
 		do
 			Result := stock_pixmaps.tool_watch_icon
 		end
 
 	title: STRING_32
 			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+			-- Note: Do not call `panel.title' as it will create the tool unnecessarly!
 		do
 			Result := interface_names.t_watch_tool
 		end
@@ -69,6 +177,7 @@ feature {NONE} -- Factory
 		do
 			create Result.make (window, Current)
 			Result.set_debugger_manager (debugger_manager)
+			debugger_manager.update_all_debugging_tools_menu
 		end
 
 ;indexing

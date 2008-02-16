@@ -14,23 +14,17 @@ inherit
 
 	ES_OBJECTS_GRID_MANAGER
 
-	EB_STONABLE_TOOL
+	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
 			make,
-			show,
 			close,
+			create_mini_tool_bar_items,
+			build_docking_content,
 			internal_recycle,
-			mini_toolbar,
-			build_mini_toolbar,
-			build_docking_content
+			show
 		end
 
 	EB_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	EB_RECYCLABLE
 		export
 			{NONE} all
 		end
@@ -45,11 +39,6 @@ inherit
 			real_update, update
 		end
 
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -62,7 +51,7 @@ feature {NONE} -- Initialization
 			Precursor (a_manager, a_tool)
 		end
 
-	build_interface is
+	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
 			-- Build all the tool's widgets.
 		local
 			esgrid: ES_OBJECTS_GRID
@@ -108,24 +97,29 @@ feature {NONE} -- Initialization
 			watches_grid := esgrid
 			initialize_watches_grid_layout (preferences.debug_tool_data.is_watches_grids_layout_managed_preference)
 
+				--| Attach the slices_cmd to the objects grid
+			watches_grid.set_slices_cmd (slices_cmd)
+
 			create_update_on_idle_agent
+
+			a_widget.extend (watches_grid)
 		end
 
-	build_mini_toolbar is
-			-- Build associated tool bar
+    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            -- Retrieves a list of tool bar items to display on the window title
 		local
 			tbb: SD_TOOL_BAR_BUTTON
 			scmd: EB_STANDARD_CMD
 		do
-			create mini_toolbar.make
+			create Result.make (12)
 
 			create scmd.make
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
 			scmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.toolbar_dropdown_icon_buffer)
 			scmd.set_tooltip (interface_names.f_Open_watch_tool_menu)
-			scmd.add_agent (agent open_watch_menu (mini_toolbar, 0, 0))
+			scmd.add_agent (agent open_watch_menu)
 			scmd.enable_sensitive
-			mini_toolbar.extend (scmd.new_mini_sd_toolbar_item)
+			Result.force_last (scmd.new_mini_sd_toolbar_item)
 
 			create toggle_auto_behavior_cmd.make
 			toggle_auto_behavior_cmd.set_pixmap (pixmaps.mini_pixmaps.watch_auto_icon)
@@ -137,7 +131,7 @@ feature {NONE} -- Initialization
 			toggle_auto_behavior_cmd.add_action (agent toggle_auto_expressions)
 			toggle_auto_behavior_cmd.set_is_selected_function (agent auto_expression_enabled)
 			toggle_auto_behavior_cmd.enable_sensitive
-			mini_toolbar.extend (toggle_auto_behavior_cmd.new_mini_sd_toolbar_item)
+			Result.force_last (toggle_auto_behavior_cmd.new_mini_sd_toolbar_item)
 
 			create create_expression_cmd.make
 			create_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.new_expression_icon)
@@ -145,7 +139,7 @@ feature {NONE} -- Initialization
 			create_expression_cmd.set_tooltip (interface_names.e_new_expression)
 			create_expression_cmd.add_agent (agent define_new_expression)
 			create_expression_cmd.enable_sensitive
-			mini_toolbar.extend (create_expression_cmd.new_mini_sd_toolbar_item)
+			Result.force_last (create_expression_cmd.new_mini_sd_toolbar_item)
 
 			create edit_expression_cmd.make
 			edit_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_edit_icon)
@@ -153,7 +147,7 @@ feature {NONE} -- Initialization
 			edit_expression_cmd.set_tooltip (interface_names.e_edit_expression)
 			edit_expression_cmd.add_agent (agent edit_expression)
 			tbb := edit_expression_cmd.new_mini_sd_toolbar_item
-			mini_toolbar.extend (tbb)
+			Result.force_last (tbb)
 
 			create toggle_state_of_expression_cmd.make
 			toggle_state_of_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_toogle_icon)
@@ -161,18 +155,18 @@ feature {NONE} -- Initialization
 			toggle_state_of_expression_cmd.set_tooltip (interface_names.e_toggle_state_of_expressions)
 			toggle_state_of_expression_cmd.add_agent (agent toggle_state_of_selected)
 			tbb := toggle_state_of_expression_cmd.new_mini_sd_toolbar_item
-			mini_toolbar.extend (tbb)
+			Result.force_last (tbb)
 
 			create slices_cmd.make (Current)
 			slices_cmd.enable_sensitive
-			mini_toolbar.extend (slices_cmd.new_mini_sd_toolbar_item)
+			Result.force_last (slices_cmd.new_mini_sd_toolbar_item)
 
 			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
 			hex_format_cmd.enable_sensitive
-			mini_toolbar.extend (hex_format_cmd.new_mini_sd_toolbar_item)
+			Result.force_last (hex_format_cmd.new_mini_sd_toolbar_item)
 
-			mini_toolbar.extend (object_viewer_cmd.new_mini_sd_toolbar_item)
-			mini_toolbar.extend (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item_for_watch_tool (Current))
+			Result.force_last (object_viewer_cmd.new_mini_sd_toolbar_item)
+			Result.force_last (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item_for_watch_tool (Current))
 
 			create delete_expression_cmd.make
 			delete_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
@@ -182,7 +176,7 @@ feature {NONE} -- Initialization
 			tbb := delete_expression_cmd.new_mini_sd_toolbar_item
 			tbb.drop_actions.extend (agent remove_object_line)
 			tbb.drop_actions.set_veto_pebble_function (agent is_removable )
-			mini_toolbar.extend (tbb)
+			Result.force_last (tbb)
 
 			create move_up_cmd.make
 			move_up_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_up_icon)
@@ -190,7 +184,7 @@ feature {NONE} -- Initialization
 			move_up_cmd.set_tooltip (interface_names.f_move_item_up)
 			move_up_cmd.add_agent (agent move_selected (watches_grid, -1))
 			tbb := move_up_cmd.new_mini_sd_toolbar_item
-			mini_toolbar.extend (tbb)
+			Result.force_last (tbb)
 
 			create move_down_cmd.make
 			move_down_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_down_icon)
@@ -198,21 +192,14 @@ feature {NONE} -- Initialization
 			move_down_cmd.set_tooltip (interface_names.f_move_item_down)
 			move_down_cmd.add_agent (agent move_selected (watches_grid, +1))
 			tbb := move_down_cmd.new_mini_sd_toolbar_item
-			mini_toolbar.extend (tbb)
-
-				--| Attach the slices_cmd to the objects grid
-			watches_grid.set_slices_cmd (slices_cmd)
-
-			mini_toolbar.compute_minimum_size
-		ensure then
-			mini_toolbar_exists: mini_toolbar /= Void
+			Result.force_last (tbb)
 		end
 
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Build content for docking.
 
 		do
-			Precursor {EB_STONABLE_TOOL} (a_docking_manager)
+			Precursor (a_docking_manager)
 			content.drop_actions.extend (agent on_element_drop)
 		end
 
@@ -220,6 +207,20 @@ feature {NONE} -- Initialization
 			-- Context menu handler
 		do
 			develop_window.menus.context_menu_factory.watch_tool_menu (a_menu, a_target_list, a_source, a_pebble, Current, watches_grid)
+		end
+
+feature {NONE} -- Factory
+
+    create_widget: EV_VERTICAL_BOX
+            -- Create a new container widget upon request.
+            -- Note: You may build the tool elements here or in `build_tool_interface'
+        do
+        	Create Result
+        end
+
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display at the top of the tool.
+		do
 		end
 
 feature -- Properties
@@ -230,22 +231,16 @@ feature -- Properties
 feature {EB_DEBUGGER_MANAGER} -- Closing
 
 	close is
+		local
+			wt: ES_WATCH_TOOL
 		do
 			Precursor
-			debugger_manager.watch_tool_list.prune_all (Current)
+			wt ?= tool_descriptor
+			debugger_manager.watch_tool_list.prune_all (wt)
 			debugger_manager.update_all_debugging_tools_menu
 		end
 
 feature -- Access
-
-	mini_toolbar: SD_TOOL_BAR
-			-- Associated mini toolbar.
-
-	widget: EV_WIDGET is
-			-- Widget representing Current.
-		do
-			Result := watches_grid
-		end
 
 	can_refresh: BOOLEAN
 			-- Should we display data when a stone is set?
@@ -255,9 +250,6 @@ feature -- Access
 
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
-
-	stone: STONE
-			-- Not used.
 
 feature -- Change
 
@@ -270,7 +262,7 @@ feature -- Change
 	show is
 			-- Show tool
 		do
-			Precursor {EB_STONABLE_TOOL}
+			Precursor
 			if watches_grid.is_displayed then
 				watches_grid.set_focus
 			end
@@ -310,16 +302,16 @@ feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 			end
 		end
 
-feature -- Status setting
+feature {NONE} -- Stone handlers
 
-	set_stone (a_stone: STONE) is
+	on_stone_changed is
 			-- Assign `a_stone' as new stone.
 		local
 			cst: CALL_STACK_STONE
 			app_impl: APPLICATION_EXECUTION_DOTNET
 		do
 			if can_refresh then
-				cst ?= a_stone
+				cst ?= stone
 				if cst /= Void and then debugger_manager.safe_application_is_stopped then
 					fixme ("Check if we should not call `update' to benefit real_update optimisation")
 					if debugger_manager.is_dotnet_project then
@@ -334,6 +326,8 @@ feature -- Status setting
 				end
 			end
 		end
+
+feature -- Change status
 
 	enable_refresh is
 			-- Set `can_refresh' to `True'.
@@ -408,7 +402,7 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			reset_tool
-			Precursor {EB_STONABLE_TOOL}
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
 	recycle_expressions is
@@ -594,12 +588,15 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 
 feature {NONE} -- Event handling
 
-	open_watch_menu (w: EV_WIDGET; ax, ay: INTEGER) is
+	open_watch_menu is
 		local
+			w: EV_WIDGET
 			m: EV_MENU
 			mi: EV_MENU_ITEM
 			mci: EV_CHECK_MENU_ITEM
 		do
+			w := mini_toolbar
+
 			create m
 				--| Auto expressions
 			if toggle_auto_behavior_cmd /= Void then
@@ -622,19 +619,19 @@ feature {NONE} -- Event handling
 				m.extend (mi)
 			end
 
-			m.show_at (w, ax, ay)
+			m.show_at (w, 0, 0)
 		end
 
 	open_new_created_watch_tool is
 			-- Open new created watch tool.
 		local
-			wt: like Current
+			wt: ES_WATCH_TOOL
 		do
 			debugger_manager.create_new_watch_tool_tabbed_with (develop_window, Current)
 			wt := debugger_manager.watch_tool_list.last
 			if wt /= Void then
-				wt.show
-				wt.update
+				wt.show (True)
+				wt.request_update
 			end
 		end
 

@@ -443,7 +443,7 @@ feature -- tools
 			result_attached: Result /= Void
 		end
 
-	watch_tool_list: LINKED_SET [ES_WATCH_TOOL_PANEL]
+	watch_tool_list: LINKED_SET [ES_WATCH_TOOL]
 			-- List of watched tools
 		local
 			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
@@ -451,15 +451,18 @@ feature -- tools
 			if debugging_window /= Void then
 				l_tools := debugging_window.shell_tools.tools ({ES_WATCH_TOOL})
 				create Result.make
-				l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL_PANEL])
-					local
-						l_tool: ES_WATCH_TOOL_PANEL
-					do
-						if a_tool.is_tool_instantiated then
-							l_tool ?= a_tool.panel
-							a_result.extend (l_tool)
-						end
-					end (?, Result))
+				l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL])
+						local
+							l_tool: ES_WATCH_TOOL
+						do
+							if 
+								{l_tool: !ES_WATCH_TOOL} a_tool and then 
+								l_tool.is_tool_instantiated 
+							then
+								a_result.extend (l_tool)
+							end
+						end (?, Result)
+					)
 			end
 		ensure
 			result_attached: debugging_window /= Void implies Result /= Void
@@ -468,6 +471,7 @@ feature -- tools
 feature -- Output visitor
 
 	text_formatter_visitor: DEBUGGER_TEXT_FORMATTER_VISITOR
+			-- Text formatter visitor attached to Current
 
 feature -- tools management
 
@@ -476,14 +480,14 @@ feature -- tools management
 			-- most likely due to display parameters changes
 		do
 			objects_tool.refresh
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.refresh)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.refresh)
 		end
 
 	record_objects_grids_layout is
 			-- Record objects grids layout
 		do
 			objects_tool.record_grids_layout
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.record_grid_layout)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.record_grid_layout)
 		end
 
 	new_toolbar (a_recycler: EB_RECYCLABLE): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
@@ -642,7 +646,7 @@ feature -- tools management
 			m: EV_MENU
 			mi: EB_COMMAND_MENU_ITEM
 			mn: STRING_GENERAL
-			wt: ES_WATCH_TOOL_PANEL
+			wt: ES_WATCH_TOOL
 			l_recyclable: EB_RECYCLABLE
 			l_show_cmd: ES_SHOW_TOOL_COMMAND
 			l_wt_lst: like watch_tool_list
@@ -705,17 +709,19 @@ feature -- tools management
 						l_wt_lst.after
 					loop
 						wt := l_wt_lst.item
-						mn := wt.menu_name.twin
-						if show_watch_tool_command.shortcut_available then
-							mn.append ("%T")
-							mn.append (show_watch_tool_command.shortcut_string)
+						if wt.is_tool_instantiated then
+							mn := wt.panel.menu_name.twin
+							if show_watch_tool_command.shortcut_available then
+								mn.append ("%T")
+								mn.append (show_watch_tool_command.shortcut_string)
+							end
+							mi := show_watch_tool_command.new_menu_item
+							mi.set_text (mn)
+							mi.select_actions.wipe_out
+							mi.select_actions.extend (agent wt.show (True))
+							m.extend (mi)
+							w.auto_recycle (mi)
 						end
-						mi := show_watch_tool_command.new_menu_item
-						mi.set_text (mn)
-						mi.select_actions.wipe_out
-						mi.select_actions.extend (agent wt.show)
-						m.extend (mi)
-						w.auto_recycle (mi)
 
 						l_wt_lst.forth
 					end
@@ -729,8 +735,24 @@ feature -- tools management
 	update_all_debugging_tools_menu is
 			-- Update all debugging_tools_menu in all development windows
 		do
-			window_manager.for_all_development_windows (agent update_debugging_tools_menu_from)
+			if update_all_debugging_tools_menu_delayed_action = Void then
+				create update_all_debugging_tools_menu_delayed_action.make (agent
+						do
+							if update_all_debugging_tools_menu_delayed_action /= Void then
+								update_all_debugging_tools_menu_delayed_action.destroy
+								update_all_debugging_tools_menu_delayed_action := Void
+							end
+							window_manager.for_all_development_windows (agent update_debugging_tools_menu_from)
+						end
+					, 100)
+				update_all_debugging_tools_menu_delayed_action.request_call
+			else
+				update_all_debugging_tools_menu_delayed_action.request_call
+			end
 		end
+
+	update_all_debugging_tools_menu_delayed_action: ES_DELAYED_ACTION
+			-- Delayed action for effective `update_all_debugging_tools_menu'
 
 	show_call_stack_tool is
 			-- Show call stack tool if any.
@@ -770,7 +792,7 @@ feature -- tools management
 		local
 			l_wt_lst: like watch_tool_list
 			l_shown: BOOLEAN
-			l_watch_tool: ES_WATCH_TOOL_PANEL
+			l_watch_tool: ES_WATCH_TOOL
 			l_focused_watch_index: INTEGER
 		do
 			if raised then
@@ -783,7 +805,7 @@ feature -- tools management
 					until
 						l_wt_lst.after
 					loop
-						if l_wt_lst.item.content.has_focus then
+						if l_wt_lst.item.has_focus then
 							l_shown := True
 							l_focused_watch_index := l_wt_lst.index
 						end
@@ -793,14 +815,14 @@ feature -- tools management
 						l_wt_lst.forth
 					end
 					if l_watch_tool /= Void then
-						l_watch_tool.show
+						l_watch_tool.show (True)
 					else
 						if l_focused_watch_index = l_wt_lst.count then
 							l_focused_watch_index := 1
 						else
 							l_focused_watch_index := l_focused_watch_index + 1
 						end
-						l_wt_lst.i_th (l_focused_watch_index).show
+						l_wt_lst.i_th (l_focused_watch_index).show (True)
 					end
 				end
 			end
@@ -811,7 +833,7 @@ feature -- tools management
 		do
 			if debugging_window /= Void then
 				create_new_watch_tool_tabbed_with (debugging_window, Void)
-				watch_tool_list.last.show
+				watch_tool_list.last.show (False)
 			end
 		end
 
@@ -835,7 +857,6 @@ feature -- tools management
 				then
 					l_watch_tool.content.set_tab_with (a_tool.content, False)
 				end
-				update_all_debugging_tools_menu
 			end
 		end
 
@@ -945,13 +966,13 @@ feature -- Change
 		end
 
 	toggle_display_breakpoints is
-			-- Show or hide the breakpoint tool
+			-- Show breakpoints tool
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			conv_dev := last_focused_development_window (False)
 			if conv_dev /= Void then
-				conv_dev.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).show (False)
+				conv_dev.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).show (True)
 			end
 		end
 
@@ -1182,7 +1203,7 @@ feature -- Status setting
 			not_already_raised: not raised
 		local
 			split: EV_SPLIT_AREA
-			l_watch_tool: ES_WATCH_TOOL_PANEL
+			l_watch_tool: ES_WATCH_TOOL
 			l_wt_lst: like watch_tool_list
 			l_tool: EB_TOOL
 			l_docking_manager: SD_DOCKING_MANAGER
@@ -1232,8 +1253,8 @@ feature -- Status setting
 					l_tool := Void
 					if not l_wt_lst.is_empty then
 						l_watch_tool := l_wt_lst.last
-						if l_watch_tool.shown then
-							l_tool := l_watch_tool
+						if l_watch_tool.panel.shown then
+							l_tool := l_watch_tool.panel
 						end
 					end
 				until
@@ -1245,8 +1266,14 @@ feature -- Status setting
 				l_wt_lst := watch_tool_list
 			end
 
-			l_wt_lst.do_all (agent {ES_WATCH_TOOL_PANEL}.prepare_for_debug)
-			l_wt_lst.do_all (agent {ES_WATCH_TOOL_PANEL}.request_update)
+			l_wt_lst.do_all (agent (ewt: ES_WATCH_TOOL)
+						do
+							if ewt.is_tool_instantiated and then ewt.panel.is_initialized then
+								ewt.prepare_for_debug
+								ewt.request_update
+							end
+						end
+					)
 
 				--| Threads Tool
 			threads_tool.request_update
@@ -1388,7 +1415,7 @@ feature -- Status setting
 			if object_viewer_tool /= Void then
 				object_viewer_tool.reset_tool
 			end
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.reset_tool)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.reset)
 			if application /= Void then
 				destroy_application
 			end
@@ -1411,7 +1438,7 @@ feature -- Status setting
 				if propagate_stone then
 					call_stack_tool.set_stone (st)
 					objects_tool.set_stone (st)
-					watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.set_stone (st))
+					watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
 				end
 			end
 		end
@@ -1567,7 +1594,7 @@ feature -- Debugging events
 			end
 
 				-- Update Watch tool
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.request_update)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_launched : done%N")
 			end
@@ -1614,7 +1641,7 @@ feature -- Debugging events
 			end
 
 			objects_tool.disable_refresh
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.disable_refresh)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
 			if not application.current_call_stack_is_empty then
 				st := first_valid_call_stack_stone
 				if st /= Void then
@@ -1634,11 +1661,11 @@ feature -- Debugging events
 			call_stack_tool.request_update
 				-- Fill in the objects tool.
 			objects_tool.enable_refresh
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.enable_refresh)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)
 
 			objects_tool.request_update
 			object_viewer_tool.request_update
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.request_update)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
 			debugging_window.window.raise
 
@@ -1676,7 +1703,7 @@ feature -- Debugging events
 			Precursor
 			toggle_exec_replay_mode_cmd.reset
 			objects_tool.record_grids_layout
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.record_grid_layout)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.record_grid_layout)
 		end
 
 	on_application_resumed is
@@ -1702,7 +1729,7 @@ feature -- Debugging events
 			object_storage_management_cmd.disable_sensitive
 
 			objects_tool.disable_refresh
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.disable_refresh)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
 
 				-- Fill in the threads tool.
 			threads_tool.request_update
@@ -1710,13 +1737,13 @@ feature -- Debugging events
 			call_stack_tool.request_update
 
 			objects_tool.enable_refresh
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.enable_refresh)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)
 
 				-- Fill in the objects tool.
 			objects_tool.request_update
 
 				-- Update Watch tool
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL_PANEL}.request_update)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
 			window_manager.quick_refresh_all_margins
 			if dialog /= Void and then not dialog.is_destroyed then
@@ -2108,7 +2135,8 @@ feature {NONE} -- Implementation
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_dyna_tools: ES_SHELL_TOOLS
-			l_tool, l_last_watch_tool: EB_TOOL
+			l_tool: EB_TOOL
+			l_last_watch_tool: ES_WATCH_TOOL
 			l_refer_tool_content: SD_CONTENT
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_sd_button: SD_TOOL_BAR_ITEM
@@ -2181,9 +2209,9 @@ feature {NONE} -- Implementation
 				l_wt_lst.before
 			loop
 				if l_last_watch_tool = Void then
-					l_wt_lst.item.content.set_tab_with (l_refer_tool_content, True)
+					l_wt_lst.item.panel.content.set_tab_with (l_refer_tool_content, True)
 				else
-					l_wt_lst.item.content.set_tab_with (l_last_watch_tool.content, True)
+					l_wt_lst.item.panel.content.set_tab_with (l_last_watch_tool.panel.content, True)
 				end
 				l_last_watch_tool := l_wt_lst.item
 				l_wt_lst.back

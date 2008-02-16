@@ -185,25 +185,11 @@ feature {NONE} -- Initialization
 			enable_sorting
 
 				-- Set button states based on session data
---			if session_manager.is_service_available then
---				l_bool ?= window_session_data.value_or_default (show_memory_usage_session_id, False)
---				if l_bool.item then
---					show_memory_usage_button.enable_select
---					on_toggle_memory_stats
---				end
-
---				l_bool ?= window_session_data.value_or_default (show_deltas_only_session_id, True)
---				if l_bool.item then
---					show_deltas_button.enable_select
---					on_toogle_show_deltas
---				end
-
---				l_filter ?= window_session_data.value (filter_session_id)
---				if l_filter /= Void then
---					filter_combo.set_text (l_filter)
---					on_filter_changed
---				end
---			end
+			if session_manager.is_service_available then
+				if {s: !STRING} window_session_data.value (columns_sorting_data_session_id) then
+					grid_wrapper.set_sorting_status (grid_wrapper.sorted_columns_from_string (s))
+				end
+			end
 
 			update
 		end
@@ -327,6 +313,11 @@ feature {NONE} -- Sort handling
 			not_a_column_list_is_empty: not a_column_list.is_empty
 			a_comparator_attached: a_comparator /= Void
 		do
+			if session_manager.is_service_available then
+					-- Set session data
+				window_session_data.set_value (grid_wrapper.string_representation_of_sorted_columns, columns_sorting_data_session_id)
+			end
+
 				-- Repopulate grid
 			execute_with_busy_cursor (agent
 				do
@@ -454,10 +445,12 @@ feature -- Updating
 			end
 		end
 
+feature {NONE} -- Action handlers
+
 	show is
-			-- Show tool.
+			-- Called when the tool is brought into view
 		do
-			Precursor {ES_DOCKABLE_TOOL_PANEL}
+			Precursor
 			if grid.is_displayed and grid.is_sensitive then
 				grid.set_focus
 			end
@@ -511,21 +504,11 @@ feature {NONE} -- Implementation
 
 	refresh_breakpoints_info is
 			-- Refresh and recomputed breakpoints's grid when shown
-		local
-			w: EV_WIDGET
 		do
-			if shown then -- Tool exists in layout
-				check content /= Void end
-				w := content.user_widget
-				if
-					w /= Void
-				then
-					if w.is_displayed then
-						refresh_breakpoints_info_now
-					else
-						request_refresh_breakpoints_info_now
-					end
-				end
+			if shown then -- Tool exists in layout and is displayed
+				refresh_breakpoints_info_now
+			else
+				request_refresh_breakpoints_info_now
 			end
 		end
 
@@ -537,7 +520,7 @@ feature {NONE} -- Refresh breakpoints info Now implementation
 	request_refresh_breakpoints_info_now is
 			-- Request `refresh_breakpoints_info_now'
 		require
-			tool_shown: shown
+			tool_visible: content /= Void
 		do
 			if agent_refresh_breakpoints_info_now = Void then
 				agent_refresh_breakpoints_info_now := agent refresh_breakpoints_info_now
@@ -550,8 +533,10 @@ feature {NONE} -- Refresh breakpoints info Now implementation
 	cancel_refresh_breakpoints_info_now is
 			-- Request `refresh_breakpoints_info_now'
 		do
-			if content /= Void and then agent_refresh_breakpoints_info_now /= Void then
-				content.show_actions.prune_all (agent_refresh_breakpoints_info_now)
+			if agent_refresh_breakpoints_info_now /= Void then
+				if content /= Void then
+					content.show_actions.prune_all (agent_refresh_breakpoints_info_now)
+				end
 				agent_refresh_breakpoints_info_now := Void
 			end
 		end
@@ -559,7 +544,6 @@ feature {NONE} -- Refresh breakpoints info Now implementation
 	refresh_breakpoints_info_now is
 			-- Refresh and recomputed breakpoints's grid
 		require
-			tool_shown: shown
 			content_widget_visible: content /= Void and then content.user_widget /= Void and then content.user_widget.is_show_requested
 		do
 			cancel_refresh_breakpoints_info_now
@@ -1100,6 +1084,7 @@ feature {NONE} -- Dynamic item filling
 					lab.set_tooltip (t)
 				end
 
+				lab.pointer_double_press_actions.force_extend (agent on_breakpoint_cell_double_left_clicked (f, i, lab, ?,?,?))
 				lab.pointer_button_release_actions.force_extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?))
 				a_row.set_item (Status_column_index, lab)
 
@@ -1121,6 +1106,23 @@ feature {NONE} -- Dynamic item filling
 		end
 
 feature {NONE} -- Events on grid
+
+	on_breakpoint_cell_double_left_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER) is
+			-- Handle a cell right click actions.
+		require
+			f /= Void
+			i > 0
+			gi /= Void
+		local
+			bp_stone: BREAKABLE_STONE
+		do
+			grid.remove_selection
+			gi.row.enable_select
+			if button = 1 then
+				create bp_stone.make (f, i)
+				bp_stone.open_breakpoint_dialog
+			end
+		end
 
 	on_line_cell_right_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER) is
 			-- Handle a cell right click actions.
@@ -1241,6 +1243,11 @@ feature {NONE} -- Grid columns' Constants
 	Status_column_index: INTEGER = 2
 	Details_column_index: INTEGER = 3
 	Tags_column_index: INTEGER = 4
+
+feature {NONE} -- Constants
+
+	columns_sorting_data_session_id: STRING_8 = "com.eiffel.breakpoints_tool.columns_sorting_data"
+			-- Session id to store columns sorting data
 
 feature {NONE} -- Implementation, cosmetic
 

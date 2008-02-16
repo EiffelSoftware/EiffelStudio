@@ -754,7 +754,7 @@ feature {NONE} -- Implementation: threads
 					if arr /= Void and then not arr.is_empty then
 						create m
 
-						create mi.make_with_text_and_action ("Show threads panel", agent 
+						create mi.make_with_text_and_action ("Show threads panel", agent
 								do
 									if {th: !ES_THREADS_TOOL_PANEL} eb_debugger_manager.threads_tool then
 										th.show
@@ -965,7 +965,9 @@ feature {NONE} -- Stack grid implementation
 			-- Clean the stack_grid
 		do
 			stack_grid.call_delayed_clean
-			stack_data.discard_items
+			if stack_data /= Void then
+				stack_data.discard_items
+			end
 		ensure
 			stack_grid_cleaned: stack_grid.row_count = 0
 		end
@@ -1074,7 +1076,7 @@ feature {NONE} -- Stack grid implementation
 			app_exec: APPLICATION_EXECUTION
 		do
 			level := level_from_row (a_row)
-			if stack_data.valid_index (level) then
+			if stack_data /= Void and then stack_data.valid_index (level) then
 				cse := stack_data [level]
 			end
 			check cse_not_void: cse /= Void end

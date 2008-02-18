@@ -459,14 +459,14 @@ feature -- Query
 
 feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 
-	draw_mask_bitmap: EV_BITMAP is
-			-- Draw bitmap's mask bitmap base on it alpha datas.
-		local
-			l_matrix: WEL_COLOR_MATRIX
-		do
-			create Result.make_with_size (width, height)
-			l_matrix := mask_color_matrix
-		end
+--	draw_mask_bitmap: EV_BITMAP is
+--			-- Draw bitmap's mask bitmap base on it alpha datas.
+--		local
+--			l_matrix: WEL_COLOR_MATRIX
+--		do
+--			create Result.make_with_size (width, height)
+--			l_matrix := mask_color_matrix
+--		end
 
 	draw_to_drawable_with_matrix (a_drawable: EV_DRAWABLE; a_color_matrix: WEL_COLOR_MATRIX) is
 			-- Draw Current to `a_drawable' with `a_color_matrix'.

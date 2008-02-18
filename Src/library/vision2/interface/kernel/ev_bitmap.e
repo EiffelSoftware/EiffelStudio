@@ -1,6 +1,5 @@
 indexing
 	description: "Bitmap object used for EV_PIXMAP masking"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

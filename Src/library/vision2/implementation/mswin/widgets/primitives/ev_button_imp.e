@@ -670,7 +670,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				if not is_sensitive and disabled_image /= Void then
 					l_icon := internal_pixmap_state.build_icon
 					if {l_color_imp: !EV_COLOR_IMP} background_color.implementation then
-						disabled_image.draw_grayscale_icon_with_memory_buffer (l_icon, dc, internal_pixmap_state.width, internal_pixmap_state.height, coordinate.x, coordinate.y, l_color_imp)
+						disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (internal_bitmap, l_icon, dc, coordinate.x, coordinate.y, l_color_imp, internal_pixmap_state.has_mask)
 					end
 					l_icon.dispose
 				else
@@ -704,7 +704,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				mask_bitmap.decrement_reference
 			end
 		end
-		
+
 	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER is
 			-- Grayscale image drawer.
 			-- Void if Gdi+ not installed.

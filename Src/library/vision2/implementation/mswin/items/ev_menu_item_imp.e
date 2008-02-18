@@ -649,6 +649,7 @@ feature {NONE} -- WEL Implementation
 			selected_state, disabled_state: BOOLEAN
 			draw_flags: INTEGER
 			rect: WEL_RECT
+			l_bitmap: WEL_BITMAP
 		do
 			draw_dc := draw_item_struct.dc
 			draw_item_struct_rect := draw_item_struct.rect_item
@@ -689,7 +690,9 @@ feature {NONE} -- WEL Implementation
 
 				wel_icon := extract_icon (pixmap_imp)
 				if disabled_state and disabled_image /= Void then
-					disabled_image.draw_grayscale_icon_with_memory_buffer (wel_icon, draw_dc, pixmap_imp.width, pixmap_imp.height, left_pos, icon_top_position, background_color)
+					l_bitmap := pixmap_imp.get_bitmap
+					disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, left_pos, icon_top_position, background_color, pixmap_imp.has_mask)
+					l_bitmap.decrement_reference
 				else
 					draw_dc.draw_state_icon (Void, wel_icon, left_pos, icon_top_position, draw_flags)
 				end
@@ -716,6 +719,7 @@ feature {NONE} -- WEL Implementation
 			left_pos_start: INTEGER
 			drawn_text: STRING_32
 			flat_menu_enabled: BOOLEAN
+			l_bitmap: WEL_BITMAP
 		do
 			draw_dc := draw_item_struct.dc
 			draw_item_struct_rect := draw_item_struct.rect_item
@@ -762,9 +766,12 @@ feature {NONE} -- WEL Implementation
 					draw_flags := Wel_drawing_constants.Dss_normal
 				end
 				icon_top_position := top_pos + (draw_item_struct_rect.height - pixmap_imp.height) // 2
+
 				wel_icon := extract_icon (pixmap_imp)
 				if disabled_state and disabled_image /= Void then
-					disabled_image.draw_grayscale_icon_with_memory_buffer (wel_icon, draw_dc, pixmap_imp.width, pixmap_imp.height, left_pos, icon_top_position, background_color)
+					l_bitmap := pixmap_imp.get_bitmap
+					disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, left_pos, icon_top_position, background_color, pixmap_imp.has_mask)
+					l_bitmap.decrement_reference
 				else
 					draw_dc.draw_state_icon (Void, wel_icon, left_pos + left_pos_start, icon_top_position, draw_flags)
 				end
@@ -801,7 +808,7 @@ feature {NONE} -- WEL Implementation
 				draw_dc.unselect_font
 			end
 		end
-		
+
 	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER is
 			-- Grayscale image drawer.
 			-- Void if Gdi+ not installed.

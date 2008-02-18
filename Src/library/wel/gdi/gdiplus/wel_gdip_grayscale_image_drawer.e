@@ -39,35 +39,67 @@ feature -- Command
 			l_image_attributes.destroy_item
 		end
 
-	draw_grayscale_icon_with_memory_buffer (a_orignal_icon: WEL_ICON; a_control_dc: WEL_DC; a_icon_width, a_icon_height, a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF) is
+	draw_grayscale_bitmap_or_icon_with_memory_buffer (a_bitmap: WEL_BITMAP; a_icon: WEL_ICON; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF; a_pixmap_has_mask: BOOLEAN) is
+			-- This feature will use one of `draw_grayscale_icon_with_memory_buffer' or `draw_grayscale_bitmap_with_memory_buffer' automatically.
+		require
+			not_void: a_bitmap /= Void and a_icon /= Void and a_control_dc /= Void and a_background_color /= Void
+		local
+			l_log_bitmap: WEL_LOG_BITMAP
+			l_gdip_bitmap: WEL_GDIP_BITMAP
+		do
+			l_log_bitmap := a_bitmap.log_bitmap
+			if not a_pixmap_has_mask and then l_log_bitmap.bits_pixel = 32 and then a_bitmap.ppv_bits /= default_pointer then
+				create l_gdip_bitmap.make_from_bitmap_with_alpha (a_bitmap)
+				draw_grayscale_bitmap_with_memory_buffer (l_gdip_bitmap, a_control_dc, a_dest_x, a_dest_y, a_background_color)
+				l_gdip_bitmap.dispose
+			else
+				draw_grayscale_icon_with_memory_buffer (a_icon, a_control_dc, a_dest_x, a_dest_y, a_background_color)
+			end
+			l_log_bitmap.dispose
+		end
+
+	draw_grayscale_icon_with_memory_buffer (a_orignal_icon: WEL_ICON; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF) is
 			-- Draw grayscale version of `a_orignal_icon' on `a_control_dc'
 		require
 			not_void: a_orignal_icon /= Void and a_control_dc /= Void and a_background_color /= Void
 		local
 			l_gdip_bitmap: WEL_GDIP_BITMAP
+		do
+			create l_gdip_bitmap.make_from_icon (a_orignal_icon)
+			draw_grayscale_bitmap_with_memory_buffer (l_gdip_bitmap, a_control_dc, a_dest_x, a_dest_y, a_background_color)
+			l_gdip_bitmap.dispose
+		end
+
+	draw_grayscale_bitmap_with_memory_buffer (a_gdip_bitmap: WEL_GDIP_BITMAP; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF) is
+			-- Draw grayscale version of `a_orignal_icon' on `a_control_dc'
+			-- We must draw on a buffer dc first, otherwise in Windows Remote Desktop (at least Windows Vista), the generated grayscale icon will distorted.
+		require
+			not_void: a_gdip_bitmap /= Void and a_control_dc /= Void and a_background_color /= Void
+		local
 			l_buffered_dc: WEL_DC
 			l_wel_bitmap: WEL_BITMAP
 			l_brush: WEL_BRUSH
+			l_width, l_height: INTEGER
 		do
-			-- We must create a buffer dc first, otherwise in Windows Remote Desktop (at least Windows Vista), the generated grayscale icon will distorted.
+			l_width := a_gdip_bitmap.width
+			l_height := a_gdip_bitmap.height
+
 			create {WEL_MEMORY_DC} l_buffered_dc.make_by_dc (a_control_dc)
-			create l_wel_bitmap.make_compatible (a_control_dc, a_icon_width, a_icon_height)
+			create l_wel_bitmap.make_compatible (a_control_dc, l_width, l_height)
 			l_buffered_dc.select_bitmap (l_wel_bitmap)
 			l_buffered_dc.set_background_color (a_background_color)
 
 			-- Fill background
 			create l_brush.make_solid (a_background_color)
-			l_buffered_dc.fill_rect (create {WEL_RECT}.make (0, 0, a_icon_width, a_icon_height), l_brush)
+			l_buffered_dc.fill_rect (create {WEL_RECT}.make (0, 0, l_width, l_height), l_brush)
 			l_brush.delete
 
 			-- Draw grayscale icon on memory buffer dc
-			create l_gdip_bitmap.make_from_icon (a_orignal_icon)
-			draw_grayscale_bitmap (l_gdip_bitmap, l_buffered_dc, 0, 0)
-			l_gdip_bitmap.dispose
+			draw_grayscale_bitmap (a_gdip_bitmap, l_buffered_dc, 0, 0)
 			l_wel_bitmap.dispose
 
 			-- Finally, we copy buffer icon to target control dc.
-			a_control_dc.bit_blt (a_dest_x, a_dest_y, a_icon_width, a_icon_height, l_buffered_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+			a_control_dc.bit_blt (a_dest_x, a_dest_y, l_width, l_height, l_buffered_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
 		end
 
 feature {NONE} -- Implementation

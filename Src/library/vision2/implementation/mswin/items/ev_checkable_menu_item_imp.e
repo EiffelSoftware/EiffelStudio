@@ -188,6 +188,7 @@ feature {NONE} -- WEL Implementation
 			draw_flags: INTEGER
 			edge_rect: WEL_RECT
 			hlc: WEL_COLOR_REF
+			l_bitmap: WEL_BITMAP
 		do
 				-- Draw an edge around the pixmap when it is selected
 			create edge_rect.make (rect.left, rect.top, rect.left + plain_text_position - 2, rect.bottom)
@@ -221,7 +222,9 @@ feature {NONE} -- WEL Implementation
 				else
 					create hlc.make_by_color (contrast_color (system_color_menu).item)
 				end
-				disabled_image.draw_grayscale_icon_with_memory_buffer (wel_icon, draw_dc, pixmap_imp.width, pixmap_imp.height, icon_left_position, icon_top_position, hlc)
+				l_bitmap := pixmap_imp.get_bitmap
+				disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (l_bitmap, wel_icon, draw_dc, icon_left_position, icon_top_position, hlc, pixmap_imp.has_mask)
+				l_bitmap.decrement_reference
 			else
 				draw_dc.draw_state_icon (Void, wel_icon, icon_left_position, icon_top_position, draw_flags)
 			end

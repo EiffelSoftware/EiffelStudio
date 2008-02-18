@@ -19,7 +19,8 @@ create
 	make_with_size,
 	make_with_graphics,
 	make_from_icon,
-	make_from_bitmap
+	make_from_bitmap,
+	make_from_dib_bitmap
 
 feature {NONE} -- Initlization
 
@@ -64,6 +65,7 @@ feature {NONE} -- Initlization
 
 	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: WEL_PALETTE) is
 			-- Creation method.
+			-- When convert from `a_bitmap' to Current, alpha channel data will lost.
 		require
 			a_bitmap_not_void: a_bitmap /= Void
 		local
@@ -75,6 +77,20 @@ feature {NONE} -- Initlization
 				l_palette := a_palette.item
 			end
 			item := c_gdip_create_bitmap_from_bitmap  (gdi_plus_handle, a_bitmap.item, l_palette, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	make_from_dib_bitmap (a_bitmap_info: WEL_BITMAP_INFO; a_bitmap_data: POINTER) is
+			-- Creation method.
+			-- When convert from `a_bitmap_info' and `a_bitmap_data' to Current, alpha channel data will lost.
+		require
+			exists: a_bitmap_info /= Void and then a_bitmap_info.exists
+			exists: a_bitmap_data /= default_pointer
+		local
+			l_result: INTEGER
+		do
+			default_create
+			item := c_gdip_create_bitmap_from_dib_bitmap (gdi_plus_handle, a_bitmap_info.item, a_bitmap_data, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -173,8 +189,6 @@ feature -- Command
 			l_helper: WEL_BITMAP_HELPER
 		do
 			create l_header_info.make
-			l_header_info.set_width (width)
-			l_header_info.set_height (height)
 			l_header_info.set_planes (1)
 			l_header_info.set_bit_count (32)
 			l_header_info.set_compression ({WEL_BI_COMPRESSION_CONSTANTS}.Bi_rgb)
@@ -183,7 +197,8 @@ feature -- Command
 			l_header_info.set_y_pels_per_meter (0)
 			l_header_info.set_clr_used (0)
 			l_header_info.set_clr_important (0)
-
+			l_header_info.set_width (width)
+			l_header_info.set_height (height)
 			create Result.make_dib (l_header_info)
 			l_header_info.dispose
 
@@ -294,6 +309,33 @@ feature -- C externals
 						*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (HBITMAP, HPALETTE, GpBitmap **)) GdipCreateBitmapFromHBITMAP)
 									((HBITMAP) $a_image,
 									(HPALETTE) $a_palette,
+									(GpBitmap **) &l_result);
+					}
+					return (EIF_POINTER) l_result;
+				}
+				]"
+			end
+
+	c_gdip_create_bitmap_from_dib_bitmap (a_gdiplus_handle: POINTER; a_bitmap_info, a_bitmap_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+				-- Create a bitmap object.	
+			require
+				a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			external
+				"C inline use %"wel_gdi_plus.h%""
+			alias
+				"[
+				{
+					static FARPROC GdipCreateBitmapFromGdiDib = NULL;
+					GpBitmap *l_result = NULL;
+					*(EIF_INTEGER *) $a_result_status = 1;
+
+					if (!GdipCreateBitmapFromGdiDib)	{
+						GdipCreateBitmapFromGdiDib = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipCreateBitmapFromGdiDib");
+					}
+					if (GdipCreateBitmapFromGdiDib) {
+						*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GDIPCONST BITMAPINFO*, VOID*, GpBitmap **)) GdipCreateBitmapFromGdiDib)
+									((GDIPCONST BITMAPINFO*) $a_bitmap_info,
+									(VOID*) $a_bitmap_data,
 									(GpBitmap **) &l_result);
 					}
 					return (EIF_POINTER) l_result;

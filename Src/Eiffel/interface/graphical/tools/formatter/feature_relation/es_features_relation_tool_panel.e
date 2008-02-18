@@ -17,7 +17,8 @@ inherit
 			attach_to_docking_manager,
 			stone,
 			retrieve_formatters,
-			force_last_stone
+			force_last_stone,
+			on_file_changed
 		end
 
 	ES_FEATURE_RELATION_TOOL_COMMANDER_I
@@ -172,6 +173,7 @@ feature -- Status setting
 					do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.reset_display end)
 				end
 			end
+
 			if widget.is_displayed or else is_auto_hide then
 				force_last_stone
 					--| Note: this will also call `flat_formatter.show_debugged_line' if any
@@ -267,6 +269,20 @@ feature -- Status setting
 				l_mode := l_formatter.mode
 			end
 			set_mode (l_mode)
+		end
+
+feature {NONE} -- Event handlers
+
+	on_file_changed (a_type: NATURAL_8)
+			-- Called when the file associated with the last stone is changed
+			--
+			-- `a_type': The type of modification performed on the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for modification types.
+		do
+			if (a_type & {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed) = {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed then
+				set_is_last_stone_processed (False)
+				force_last_stone
+			end
+			Precursor
 		end
 
 feature {NONE} -- Implementation

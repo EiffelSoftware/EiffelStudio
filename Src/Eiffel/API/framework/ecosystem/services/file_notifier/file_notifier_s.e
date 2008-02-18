@@ -111,8 +111,6 @@ feature -- Basic operations
 			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name)
 			a_callback_attached: a_callback /= Void
 		deferred
-		ensure
-			is_monitoring_a_file_name: is_monitoring (a_file_name)
 		end
 
 feature -- Events

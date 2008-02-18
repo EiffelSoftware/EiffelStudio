@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 			create file_records.make_default
 			create file_modified_callbacks.make_default
 			create file_modified_events
+
+			file_modified_events.subscribe (agent on_file_modified)
 		end
 
 feature {NONE} -- Clean up
@@ -121,9 +123,6 @@ feature -- Basic operation
 				if l_modification_type /= 0 and then not l_events.is_suspended then
 						-- Only call the actions if they are not suspended.
 					l_events.publish ([a_file_name, l_modification_type])
-					if l_callbacks.has (l_key) then
-						l_callbacks.item (l_key).publish ([l_modification_type])
-					end
 				end
 			else
 					-- Create a new record and add it to the record table
@@ -258,6 +257,24 @@ feature -- Events
 			--
 			-- `file_name': The name of the file modified.
 			-- `modification_type': The type of modification applied to the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for the respective flags
+
+feature -- Event handlers
+
+	on_file_modified (a_file_name: !STRING_32; a_type: NATURAL_8)
+			-- Called when a file has been modified.
+			--
+			-- `a_file_name': The name of the file modified.
+			-- `a_type': The type of modification applied to the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for the respective flags
+		local
+			l_key: like file_name_key
+			l_callbacks: like file_modified_callbacks
+		do
+			l_callbacks := file_modified_callbacks
+			l_key := file_name_key (a_file_name)
+			if l_callbacks.has (l_key) then
+				l_callbacks.item (l_key).publish ([a_type])
+			end
+		end
 
 feature {NONE} -- Constants
 

@@ -30,7 +30,20 @@ feature {NONE} -- Clean up
 
 	internal_recycle is
 			-- Recycle tool.
+		local
+			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 		do
+			if last_stone /= Void then
+					-- Unregister file modification event callbacks.
+				create l_notifier
+				if l_notifier.is_service_available then
+						-- Unregister existing file check modification
+					if {l_stone2: !FILED_STONE} last_stone and then {l_fn2: !STRING_32} l_stone2.file_name.out.as_string_32 then
+						l_notifier.service.check_modifications_with_callback (l_fn2, agent on_file_changed)
+					end
+				end
+			end
+
 			last_stone := Void
 			Precursor {EB_TOOL}
 		ensure then
@@ -91,13 +104,41 @@ feature -- Element change
 		deferred
 		end
 
+feature {NONE} -- Event handlers
+
+	on_file_changed (a_type: NATURAL_8)
+			-- Called when the file associated with the last stone is changed
+			--
+			-- `a_type': The type of modification performed on the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for modification types.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	set_last_stone (a_stone: like last_stone) is
 			-- Set `last_stone' with `a_stone'.
+		local
+			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 		do
+			create l_notifier
+			if l_notifier.is_service_available then
+					-- Unregister existing file check modification
+				if {l_stone: !FILED_STONE} last_stone and then {l_fn: !STRING_32} l_stone.file_name.out.as_string_32 then
+					if l_notifier.service.is_monitoring (l_fn) then
+						l_notifier.service.uncheck_modifications_with_callback (l_fn, agent on_file_changed)
+					end
+				end
+			end
+
 			last_stone := a_stone
 			set_is_last_stone_processed (False)
+
+			if l_notifier.is_service_available then
+					-- Unregister existing file check modification
+				if {l_stone2: !FILED_STONE} a_stone and then {l_fn2: !STRING_32} l_stone2.file_name.out.as_string_32 then
+					l_notifier.service.check_modifications_with_callback (l_fn2, agent on_file_changed)
+				end
+			end
 		ensure
 			last_stone_set: last_stone = a_stone
 			last_stone_not_processed: not is_last_stone_processed

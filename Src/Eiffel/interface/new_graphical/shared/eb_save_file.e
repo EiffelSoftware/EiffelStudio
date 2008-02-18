@@ -69,6 +69,7 @@ feature -- Basic operations
 			aok, create_backup, new_created: BOOLEAN
 			tmp_name: STRING
 			l_retry: BOOLEAN
+			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 		do
 			if not l_retry then
 					-- Always assume a saving is successful.
@@ -130,6 +131,13 @@ feature -- Basic operations
 						last_saving_date := tmp_file.date
 					end
 					workbench.set_changed
+
+						-- Notify service of file change
+					create l_notifier
+					if l_notifier.is_service_available and then {l_fn: !STRING_32} a_file_name.as_string_32 then
+							-- Publish event regarding the file change
+						l_notifier.service.file_modified_events.publish ([l_fn, {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed])
+					end
 				end
 			else
 				if tmp_file /= Void and then not tmp_file.is_closed then

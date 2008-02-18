@@ -77,6 +77,7 @@ feature -- Execution
 					end;
 
 					l_match_list := match_list_server.item (written_in_class.class_id)
+
 						-- We only display one name in a feature_as.
 					if f_ast.feature_names.count > 1 then
 						f_ast := replace_name_from_feature (f_ast.deep_twin, f_ast.feature_names.first, source_feat)
@@ -90,9 +91,10 @@ feature -- Execution
 						f_ast := normal_to_deferred_feature_as (f_ast, l_match_list)
 					end
 
-					if l_match_list /= Void then
-						feature_comments := f_ast.comment (l_match_list)
+					if {l_feat: !E_FEATURE} a_target_feat then
+						feature_comments := (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
 					end
+
 					create assert_server.make_for_feature (target_feat, f_ast);
 					init_feature_context (source_feat, target_feat, f_ast);
 

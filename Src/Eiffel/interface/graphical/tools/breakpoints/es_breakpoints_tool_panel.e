@@ -16,7 +16,7 @@ inherit
 			build_docking_content,
 			on_after_initialized,
 			internal_recycle,
-			show
+			on_show
 		end
 
 	EB_VETO_FACTORY
@@ -130,7 +130,6 @@ feature {NONE} -- Initialization
 			filter_bar.hide
 		end
 
-
     create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
 		local
@@ -176,9 +175,6 @@ feature {NONE} -- Initialization
 
 	on_after_initialized
 			-- Use to perform additional creation initializations, after the UI has been created.
-		local
---			l_bool: BOOLEAN_REF
---			l_filter: STRING_GENERAL
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
@@ -410,18 +406,23 @@ feature -- Updating
 			-- Class has changed in `development_window'.
 		local
 			r: INTEGER
+			g: like grid
+			l_row: EV_GRID_ROW
 		do
-			if is_initialized then
-				if grid.row_count = 0 then
+			if is_initialized and shown then
+				g := grid
+				if g.row_count = 0 then
 					update
 				else
 					from
-						r := grid.row_count
+						r := g.row_count
 					until
 						r = 0
 					loop
-						if {bp: !BREAKPOINT} grid.row (r).data then
-							grid.row (r).clear
+						l_row := g.row (r)
+						if {bp: !BREAKPOINT} l_row.data then 
+								--| FIXME jfiat [2008/02/18]: {bp: !BREAKPOINT} grid.row (r).data is not working as expected
+							l_row.clear
 						end
 						r := r - 1
 					end
@@ -447,14 +448,15 @@ feature -- Updating
 
 feature {NONE} -- Action handlers
 
-	show is
-			-- Called when the tool is brought into view
+	on_show
+			-- Performs actions when the user widget is displayed.
 		do
-			Precursor
-			if grid.is_displayed and grid.is_sensitive then
-				grid.set_focus
+			if is_initialized then
+				if grid.is_displayed and grid.is_sensitive then
+					grid.set_focus
+				end
+				refresh
 			end
-			refresh
 		end
 
 feature -- Memory management

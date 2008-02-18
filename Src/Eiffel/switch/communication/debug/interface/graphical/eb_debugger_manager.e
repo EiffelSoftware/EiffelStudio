@@ -1501,15 +1501,10 @@ feature {NONE} -- Raise/unraise notification
 feature -- Debugging events
 
 	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
-		local
-			l_tool: ES_BREAKPOINTS_TOOL_PANEL
 		do
 			Result := Precursor {DEBUGGER_MANAGER} (bp)
 			if debugging_window /= Void then
-				 l_tool ?= debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
-				 if l_tool /= Void then
-				 	l_tool.refresh
-				 end
+				refresh_breakpoints_tool
 			end
 		end
 
@@ -2296,13 +2291,12 @@ feature {NONE} -- Implementation
 
 	refresh_breakpoints_tool is
 			-- Refresh breakpoint tool if needed.
-		local
-			l_tool: ES_BREAKPOINTS_TOOL_PANEL
 		do
 			if debugging_window /= Void then
-				l_tool ?= debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
-				if l_tool.content.is_visible then
-					l_tool.refresh
+				if {l_tool: !ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) then
+					if l_tool.shown then
+						l_tool.refresh
+					end
 				end
 			end
 		end

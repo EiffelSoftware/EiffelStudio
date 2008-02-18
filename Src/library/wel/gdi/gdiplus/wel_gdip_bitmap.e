@@ -20,7 +20,8 @@ create
 	make_with_graphics,
 	make_from_icon,
 	make_from_bitmap,
-	make_from_dib_bitmap
+	make_from_dib_bitmap,
+	make_from_bitmap_with_alpha
 
 feature {NONE} -- Initlization
 
@@ -92,6 +93,37 @@ feature {NONE} -- Initlization
 			default_create
 			item := c_gdip_create_bitmap_from_dib_bitmap (gdi_plus_handle, a_bitmap_info.item, a_bitmap_data, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	make_from_bitmap_with_alpha (a_bitmap: WEL_BITMAP) is
+			-- Copy raw image data from `a_bitmap' directly.
+			-- `a_bitmap' must have alpha channel and bits order is argb.
+		require
+			exists: a_bitmap /= Void and then a_bitmap.exists
+			is_32bits: a_bitmap.log_bitmap.bits_pixel = 32
+		local
+			l_current_data: WEL_GDIP_BITMAP_DATA
+			l_rect: WEL_GDIP_RECT
+			l_pointer: POINTER
+			l_width, l_height: INTEGER
+			l_helper: WEL_BITMAP_HELPER
+			l_data: ARRAY [CHARACTER_8]
+		do
+			l_width := a_bitmap.width
+			l_height := a_bitmap.height
+			make_with_size (l_width, l_height)
+
+			create l_rect.make_with_size (0, 0, l_width, l_height)
+			l_current_data := lock_bits (l_rect, {WEL_GDIP_IMAGE_LOCK_MODE}.write_only, {WEL_GDIP_PIXEL_FORMAT}.format32bppargb)
+
+			l_pointer := l_current_data.scan_0
+
+			-- Gdi and Gdi+ have different pixel data order (`up to bottom' vs `bottom to up')
+			create l_helper
+			l_data := l_helper.bits_of_image_bottom_up (a_bitmap)
+
+			l_pointer.memory_copy (l_data.area.base_address, l_width * l_height * 4)
+			unlock_bits (l_current_data)
 		end
 
 feature -- Command

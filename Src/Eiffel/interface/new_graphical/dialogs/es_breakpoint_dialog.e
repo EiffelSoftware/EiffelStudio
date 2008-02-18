@@ -11,6 +11,9 @@ class
 
 inherit
 	ES_DIALOG
+		redefine
+			is_size_and_position_remembered
+		end
 
 	ES_SHARED_PROMPT_PROVIDER
 		export
@@ -641,6 +644,7 @@ feature {NONE} -- When hits
 			register_action (l_combo.select_actions, agent mi.enable_select)
 			(<<
 				[interface_names.b_bp_print_message, {BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}],
+				[interface_names.b_bp_change_assertion_checking, {BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING}],
 				[interface_names.b_bp_activate_execution_recording, {BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING}],
 				[interface_names.b_bp_enable_disable_breakpoints, {BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS}],
 				[interface_names.b_bp_reset_hits_count, {BREAKPOINT_WHEN_HITS_ACTION_RESET_HIT_COUNT}]
@@ -927,13 +931,23 @@ feature -- change
 						end
 					end
 				end
+			elseif wh_atype.is_equal ({BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING}) then
+				if not when_hits_actions_entries_has (wh_atype) then
+					if wh_a = Void then
+						insert_when_hits_action_change_assertion_checking_entry (Void, box, a_has_focus)
+					else
+						if {x3: !BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING} wh_a then
+							insert_when_hits_action_change_assertion_checking_entry (x3, box, a_has_focus)
+						end
+					end
+				end
 			elseif wh_atype.is_equal ({BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING}) then
 				if not when_hits_actions_entries_has (wh_atype) then
 					if wh_a = Void then
 						insert_when_hits_action_execution_recording_entry (Void, box, a_has_focus)
 					else
-						if {x3: !BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING} wh_a then
-							insert_when_hits_action_execution_recording_entry (x3, box, a_has_focus)
+						if {x4: !BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING} wh_a then
+							insert_when_hits_action_execution_recording_entry (x4, box, a_has_focus)
 						end
 					end
 				end
@@ -942,8 +956,8 @@ feature -- change
 					if wh_a = Void then
 						insert_when_hits_action_reset_hits_count_entry (Void, box, a_has_focus)
 					else
-						if {x4: !BREAKPOINT_WHEN_HITS_ACTION_RESET_HIT_COUNT} wh_a then
-							insert_when_hits_action_reset_hits_count_entry (x4, box, a_has_focus)
+						if {x5: !BREAKPOINT_WHEN_HITS_ACTION_RESET_HIT_COUNT} wh_a then
+							insert_when_hits_action_reset_hits_count_entry (x5, box, a_has_focus)
 						end
 					end
 				end
@@ -1190,6 +1204,11 @@ feature -- change
 
 			if a /= Void then
 				cb.enable_select
+				if a.status then
+					start_rb.enable_select
+				else
+					stop_rb.enable_select
+				end
 			else
 				cb.disable_select
 				start_rb.enable_select
@@ -1211,6 +1230,67 @@ feature -- change
 									end
 								end
 							end(?, a, cb, start_rb, stop_rb)
+					]
+				)
+			if a_has_focus then
+				set_focus_within_crollable_area (cb, when_hits_action_scrollable_area)
+			end
+			extend_non_expandable_to (when_hits_action_container, create {EV_HORIZONTAL_SEPARATOR})
+		end
+
+	insert_when_hits_action_change_assertion_checking_entry (a: BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN) is
+		local
+			cb: EV_CHECK_BUTTON
+			disable_rb, restore_rb: EV_RADIO_BUTTON
+			hb: EV_HORIZONTAL_BOX
+		do
+			create cb.make_with_text (interface_names.b_bp_change_assertion_checking)
+
+				--| Disable/Restore/Toggle widgets
+			create disable_rb.make_with_text (interface_names.b_disable)
+			create restore_rb.make_with_text (interface_names.b_restore)
+
+				--| Assertion checking: layout
+			create hb
+			hb.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			extend_expandable_to (hb, cb)
+			extend_non_expandable_to (hb, create {EV_CELL})
+			extend_non_expandable_to (hb, disable_rb)
+			extend_non_expandable_to (hb, restore_rb)
+			extend_non_expandable_to (box, hb)
+
+				--| Assertion checking: actions
+			add_toggle_status_on_check_button (cb, <<disable_rb, restore_rb>>, Void, Void)
+				--| Assertion checking: default
+
+			if a /= Void then
+				cb.enable_select
+				if a.status then
+					restore_rb.enable_select
+				else
+					disable_rb.enable_select
+				end
+			else
+				cb.disable_select
+				disable_rb.enable_select
+			end
+
+			when_hits_actions_entries.extend (
+					[
+						a, {BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING},
+						Void,
+						agent (a_bp: BREAKPOINT; aa: BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING;
+								acb: EV_CHECK_BUTTON; adisable_rb,arestore_rb: EV_RADIO_BUTTON): BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING
+							do
+								if acb.is_selected then
+									Result := aa
+									if Result = Void then
+										create Result.make (arestore_rb.is_selected)
+									else
+										Result.set_status (arestore_rb.is_selected)
+									end
+								end
+							end(?, a, cb, disable_rb, restore_rb)
 					]
 				)
 			if a_has_focus then
@@ -1467,7 +1547,10 @@ feature -- Access
 			Result := dialog_buttons.ok_button
 		end
 
-indexing
+	is_size_and_position_remembered: BOOLEAN = False
+			-- Indicates if the size and position information is remembered for the dialog	
+
+;indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

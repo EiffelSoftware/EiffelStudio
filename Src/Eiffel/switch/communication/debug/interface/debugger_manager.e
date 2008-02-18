@@ -1135,11 +1135,55 @@ feature -- Change
 			not can_debug
 		end
 
+feature -- Application change
+
 	activate_execution_replay_recording (a_mode: BOOLEAN) is
+			-- Activate or Deactivate execution replay recording
 		require
 			safe_application_is_stopped: safe_application_is_stopped
 		do
 			application.activate_execution_replay_recording (a_mode)
+		end
+
+	disable_assertion_checking is
+			-- Disable assertion checking
+		require
+			safe_application_is_stopped: safe_application_is_stopped
+		local
+			s: STRING_32
+		do
+			s := "Disable assertion checking"
+
+			if application.last_assertion_check_stack.is_empty then
+				--| was unchanged
+			elseif application.last_assertion_check_stack.item then
+				s.append_string (" (was enabled)")
+			else
+				s.append_string (" (was disabled)")
+			end
+			application.disable_assertion_check
+			debugger_status_message (s)
+		end
+
+	restore_assertion_checking is
+			-- Enable assertion checking	
+		require
+			safe_application_is_stopped: safe_application_is_stopped
+		local
+			s: STRING_32
+		do
+			s := "Restore assertion checking"
+			if application.last_assertion_check_stack.is_empty then
+				s.append_string (" (ignored since it was not changed).")
+			else
+				if application.last_assertion_check_stack.item then
+					s.append_string (" (was enabled)")
+				else
+					s.append_string (" (was disabled)")
+				end
+				application.restore_assertion_check
+			end
+			debugger_status_message (s)
 		end
 
 feature -- Compilation events

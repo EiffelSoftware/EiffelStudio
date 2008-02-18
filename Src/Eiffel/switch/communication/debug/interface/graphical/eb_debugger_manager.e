@@ -21,6 +21,7 @@ inherit
 			dotnet_keep_stepping_info_non_eiffel_feature_pref,
 			change_current_thread_id,
 			activate_execution_replay_recording,
+			disable_assertion_checking, restore_assertion_checking,
 			on_application_before_launching,
 			on_application_launched,
 			on_application_before_resuming,
@@ -1527,13 +1528,6 @@ feature -- Debugging events
 			end
 		end
 
-	activate_execution_replay_recording (a_mode: BOOLEAN) is
-			--
-		do
-			Precursor {DEBUGGER_MANAGER} (a_mode)
-			toggle_exec_replay_recording_mode_cmd.set_select (a_mode)
-		end
-
 	launch_stone (st: STONE) is
 			-- Set `st' in the debugging window as the new stone.
 		local
@@ -1844,6 +1838,30 @@ feature {NONE} -- Breakpoints events
 			Precursor {DEBUGGER_MANAGER}
 			display_breakpoints (False)
 			window_manager.synchronize_all_about_breakpoints
+		end
+
+feature -- Application change
+
+
+	activate_execution_replay_recording (a_mode: BOOLEAN) is
+			-- Activate or Deactivate execution recording
+		do
+			Precursor {DEBUGGER_MANAGER} (a_mode)
+			toggle_exec_replay_recording_mode_cmd.set_select (a_mode)
+		end
+
+	disable_assertion_checking is
+			-- Disable assertion checking
+		do
+			Precursor {DEBUGGER_MANAGER}
+			assertion_checking_handler_cmd.set_select (True)
+		end
+
+	restore_assertion_checking is
+			-- Enable assertion checking	
+		do
+			Precursor {DEBUGGER_MANAGER}
+			assertion_checking_handler_cmd.set_select (False)
 		end
 
 feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation

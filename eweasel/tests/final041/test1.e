@@ -4,9 +4,17 @@ feature
 
 	new_tuple: TUPLE [INTEGER] is
 		require
-			has: default = Void
+			test (once "Test 1: OK")
 		do
-			print (once "")
+			print (once "Test: Failed")
+		end
+
+	test (s: STRING): BOOLEAN is
+		require
+			s_attached: s /= Void
+		do
+			io.put_string (s)
+			io.put_new_line
 		end
 
 end

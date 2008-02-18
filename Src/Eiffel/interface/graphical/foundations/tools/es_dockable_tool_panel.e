@@ -495,7 +495,7 @@ feature {NONE} -- Helpers
 feature {NONE} -- Concealed access
 
     frozen icon_pixmap: EV_PIXMAP
-            -- Pixmap as it appears in toolbars and menu, there is no pixmap by default.
+            -- Pixmap as it appears in tool bars and menu, there is no pixmap by default.
         do
             Result := internal_icon_pixmap
             if Result = Void then
@@ -592,7 +592,7 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 			--
 			-- `a_start_widget': The starting widget to apply an action, as well as to all it's children widgets.
 			-- `a_action': The action to be performed.
-			-- `a_excluded': An array of widgets to exluding the the propagation of actions, or Void to include all widgets
+			-- `a_excluded': An array of widgets to excluding the propagation of actions, or Void to include all widgets
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized or is_initializing
@@ -623,7 +623,7 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 	propagate_register_action (a_start_widget: EV_WIDGET; a_sequence: FUNCTION [ANY, TUPLE [EV_WIDGET], ACTION_SEQUENCE [TUPLE]]; a_action: PROCEDURE [ANY, TUPLE]; a_excluded: ARRAY [EV_WIDGET])
 			-- Propagates an actions to all child widgets
 			--
-			-- `a_exclude': An array of widgets to exluding the the propagation of actions, or Void to include all widgets
+			-- `a_exclude': An array of widgets to excluding the propagation of actions, or Void to include all widgets
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized or is_initializing
@@ -697,7 +697,7 @@ feature {NONE} -- Action handlers
 
 	frozen on_shown
 			-- Perform update actions when the tool is displayed.
-			-- Note: This implementation takes into account that auto-hide tools may recieve a show action
+			-- Note: This implementation takes into account that auto-hide tools may receive a show action
 			--       yet the user widget is not shown. In this case a timer is used to poll the user widget's
 			--       shown state.
 		do

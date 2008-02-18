@@ -282,7 +282,7 @@ feature {NONE} -- Event handlers
 				set_is_last_stone_processed (False)
 				force_last_stone
 			end
-			Precursor
+			Precursor (a_type)
 		end
 
 feature {NONE} -- Implementation

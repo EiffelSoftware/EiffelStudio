@@ -119,6 +119,25 @@ rt_shared EIF_LW_MUTEX_TYPE *eif_hec_saved_mutex = NULL;
 #define EIFMTX_UNLOCK
 #endif
 
+/* The following routines are just for backward compatibility.
+ * Remove them in 5 years from now (i.e. in 2013/02/15)
+ */
+rt_public EIF_REFERENCE ewean (EIF_OBJECT object) {
+	return eif_wean (object);
+}
+rt_public EIF_OBJECT eadopt (EIF_OBJECT object) {
+	return eif_adopt (object);
+}
+rt_public EIF_OBJECT henter (EIF_REFERENCE object) {
+	return eif_protect (object);
+}
+rt_public EIF_REFERENCE efreeze (EIF_OBJECT object) {
+	return eif_freeze (object);
+}
+rt_public void eufreeze (EIF_REFERENCE object) {
+	eif_unfreeze (object);
+}
+
 /*
 doc:	<routine name="eif_freeze" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Freeze objects in memory by setting the B_C bit.</summary>

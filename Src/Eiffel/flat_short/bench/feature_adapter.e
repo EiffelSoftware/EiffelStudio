@@ -316,7 +316,11 @@ feature {NONE} -- Implementation
 			valid_feat: feat /= Void
 			valid_format_reg: format_reg /= Void
 		do
-			comments := format_reg.feature_comments (ast)
+			if {l_feat: !E_FEATURE} feat.e_feature then
+				comments := (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
+			else
+				comments := Void
+			end
 			if format_reg.client = void or else
 				feat.is_exported_for (format_reg.client)
 			then

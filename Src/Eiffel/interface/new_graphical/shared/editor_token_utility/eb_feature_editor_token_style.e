@@ -490,12 +490,12 @@ feature{NONE} -- Implementation
 				token_writer.disable_multiline
 			else
 					-- For normal features
-				l_leaf := match_list_server.item (a_feature.written_class.class_id)
-				if l_leaf /= Void then
-					token_writer.new_line
-					l_comments := a_feature.ast.comment (l_leaf)
-					create l_tokens.make
+				token_writer.new_line
+				if {l_feat: !E_FEATURE} a_feature then
+					l_comments :=  (create {COMMENT_EXTRACTOR}).feature_comments (l_feat)
+
 					if l_comments /= Void and then l_comments.count > 0 then
+						create l_tokens.make
 						token_writer.set_comment_context_class (a_feature.associated_class)
 						from
 							l_comments.start

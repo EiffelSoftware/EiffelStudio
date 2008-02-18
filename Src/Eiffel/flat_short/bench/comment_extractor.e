@@ -19,10 +19,20 @@ class
 
 feature -- Query
 
-	feature_comments (a_feature: !E_FEATURE): ?EIFFEL_COMMENTS is
-			-- Editor token representation of comment of `a_feature'.
+	feature_comments (a_feature: !E_FEATURE): ?EIFFEL_COMMENTS
+			-- Retrieve's the feature comments from a given compiled feature.
 			--
 			-- `a_feature': The feature to show comments for.
+			-- `Result': A list of tokens or Void if no comments were found.
+		do
+			Result := feature_comments_ex (a_feature, False)
+		end
+
+	feature_comments_ex (a_feature: !E_FEATURE; a_show_impl: BOOLEAN): ?EIFFEL_COMMENTS is
+			-- Retrieve's the feature comments from a given compiled feature, with the option to include implementation comments
+			--
+			-- `a_feature': The feature to show comments for.
+			-- `a_show_impl': True if the feature's implmentation comments should be displayed; False otherwise.
 			-- `Result': A list of tokens or Void if no comments were found.
 		local
 			l_parent_comments: like feature_inherited_comments
@@ -46,9 +56,8 @@ feature -- Query
 							l_comments.after
 						loop
 							l_comment := l_comments.item
-							if not l_comment.is_implementation then
-									-- Add only actual comments, because implementation comments should not be shown.
-
+							if a_show_impl or else not l_comment.is_implementation then
+									-- Add only actual comments, because implementation comments should not be shown (unless requested)
 								l_string := l_comment.content
 								if not l_string.is_empty and then l_string.occurrences (' ') + l_string.occurrences ('%T') /= l_string.count then
 										-- Non blank comments
@@ -125,7 +134,7 @@ feature -- Query
 feature {NONE} -- Query
 
 	feature_inherited_comments (a_feature: !E_FEATURE; a_parent_name: ?STRING_8): ?EIFFEL_COMMENTS
-			-- Attempts to extract the inherited comments from a feature
+			-- Attempts to extract the inherited comments from a given feature
 			--
 			-- `a_feature': The feature to extract the comments from.
 			-- `a_parent_name': An optional parent class name to use when extracting inherited comments.
@@ -162,7 +171,7 @@ feature {NONE} -- Query
 									-- Attempt to locate a parent feature and extract the comments for them.
 								l_parent_feature := l_parent_class.feature_with_rout_id (l_rout_id_set.item (i))
 								if {l_feature: !E_FEATURE} l_parent_feature then
-									Result := feature_comments (l_feature)
+									Result := feature_comments_ex (l_feature, False)
 								end
 								i := i + 1
 							end
@@ -174,7 +183,7 @@ feature {NONE} -- Query
 				if a_parent_name /= Void and then l_parent_feature = Void then
 						-- The comment specification used a incorrect class name, so the redefined feature could not be located.
 					create Result.make
-					Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string ("Unable to retrieve the comments from redefinition of {" + a_parent_name.as_upper + "}."))
+					Result.extend (create {EIFFEL_COMMENT_LINE}.make_from_string (" Unable to retrieve the comments from redefinition of {" + a_parent_name.as_upper + "}."))
 				end
 			end
 		ensure

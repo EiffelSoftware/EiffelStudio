@@ -198,7 +198,7 @@ feature {NONE} -- Basic operation
 				l_row.hide
 
 				if is_showing_comments then
-					l_tokens := feature_comment (l_feature, l_generator)
+					l_tokens := feature_comment_tokens (l_feature, l_generator)
 					if l_tokens /= Void then
 						l_editor_item.set_text_with_tokens (l_tokens)
 						l_generator.wipe_out_lines
@@ -282,33 +282,9 @@ feature {NONE} -- Basic operation
 			l_grid.unlock_update
 		end
 
---	indent_tokens (a_list: !ARRAYED_LIST [EDITOR_TOKEN]; a_indent: INTEGER) is
---			-- Indents a list of tokens by an index amount.
---			--
---			-- `a_list': List of tokens to add indentation to.
---			-- `a_indent': The number of indentation to add.
---		require
---			not_a_list_is_empty: not a_list.is_empty
---			a_list_has_attached_items: not a_list.has (Void)
---			a_indent_positive: a_indent > 0
---		local
---			l_count, i: INTEGER
---		do
---			from
---				i := 1
---				l_count := a_list.count
---			until i = a_list.count loop -- This is correct, forget the last item.
---				if {l_nl: EDITOR_TOKEN_EOL} a_list.i_th (i) then
---						-- Add a tabs
---					a_list.put_right (create {EDITOR_TOKEN_TABULATION}.make (a_indent))
---					l_count := l_count + a_index
---				end
---			end
---		end
-
 feature {NONE} -- Comment extraction
 
-	feature_comment (a_feature: !E_FEATURE; a_token_writer: !EB_EDITOR_TOKEN_GENERATOR): ARRAYED_LIST [EDITOR_TOKEN] is
+	feature_comment_tokens (a_feature: !E_FEATURE; a_token_writer: !EB_EDITOR_TOKEN_GENERATOR): ARRAYED_LIST [EDITOR_TOKEN] is
 			-- Editor token representation of comment of `a_feature'.
 			--
 			-- `a_feature': The feature to show comments for.
@@ -317,170 +293,34 @@ feature {NONE} -- Comment extraction
 		local
 			l_comments: EIFFEL_COMMENTS
 			l_comment: STRING_8
-			l_string: STRING_8
-			l_leaf: LEAF_AS_LIST
-			l_token: EDITOR_TOKEN
-			l_stop: BOOLEAN
-
-			l_parent_comments: like feature_inherited_comments
-			l_comments_emitted: BOOLEAN
 		do
-			create Result.make (128)
+			l_comments := (create {COMMENT_EXTRACTOR}).feature_comments_ex (a_feature, True)
+			if l_comments /= Void and then not l_comments.is_empty then
+				create Result.make (128)
 
-			if {l_mls: !MATCH_LIST_SERVER} a_feature.system.match_list_server then
-				l_leaf := l_mls.item (a_feature.written_class.class_id)
-				if l_leaf /= Void then
-					l_comments := a_feature.ast.comment (l_leaf)
-					if l_comments /= Void and then l_comments.count > 0 then
-						a_token_writer.set_comment_context_class (a_feature.associated_class)
-						from
-							l_comments.start
-						until
-							l_comments.after
-						loop
-							a_token_writer.new_line
-							a_token_writer.add_indent
-							a_token_writer.add_indent
-
-							l_comment := l_comments.item.content
-							if l_comment.count > 1 and then l_comment.item (1).is_space then
-									-- Remove first leading space
-								l_comment.remove (1)
-							end
-
-								-- Retrieve comment string
-							l_string := l_comment.out
-							if not l_string.is_empty then
-
-									-- Determine if inherited comments should be used
-								original_comment_reg_ex.match (l_string)
-								if original_comment_reg_ex.has_matched then
-										-- The comment is actually a inherited comment reference
-									if original_comment_reg_ex.match_count = 3 then
-											-- The comment contains a inherited type specifier, take the comment from a particular type.
-										l_parent_comments := feature_inherited_comments (a_feature, a_token_writer, original_comment_reg_ex.captured_substring (2))
-									else
-										l_parent_comments := feature_inherited_comments (a_feature, a_token_writer, Void)
-									end
-
-									if l_parent_comments /= Void and then not l_parent_comments.is_empty then
-										Result.append (l_parent_comments)
-
-											-- Adds a new line to clear the last line
-										a_token_writer.add_new_line
-
-											-- Set state to let other parts of the routine know that comments have actually been emitted.
-										l_comments_emitted := True
-									end
-								else
-										-- Add original comment
-									a_token_writer.add_comment_text ("-- ")
-									a_token_writer.add_comment_text (l_string)
-
-										-- Set state to let other parts of the routine know that comments have actually been emitted.
-									l_comments_emitted := True
-								end
-							elseif l_comments_emitted then
-								a_token_writer.add_comment_text ("-- ")
-							end
-
-								-- Emit the comment line into the mutable result list
-							Result.append (a_token_writer.last_line.content)
-							if not l_comments.islast then
-								Result.extend (create{EDITOR_TOKEN_EOL}.make)
-							end
-							l_comments.forth
-						end
-
-							-- Trim whitespace from the end of token list
-						from
-							l_stop := False
-							Result.finish
-						until
-							Result.before or l_stop
-						loop
-							l_token := Result.item
-							if l_token.is_blank or l_token.is_new_line or l_token.is_tabulation then
-								if Result.isfirst then
-									Result.remove
-								else
-									Result.back
-									Result.remove_right
-								end
-							else
-								l_stop := True
-							end
-						end
-
-							-- Update the comment token widths
-						Result.do_all (agent {EDITOR_TOKEN}.update_width)
-					end
-
-					if not l_comments_emitted then
-							-- No comments were found, try using the inherited comments
-						check result_is_empty: Result.is_empty end
-
-						l_parent_comments := feature_inherited_comments (a_feature, a_token_writer, Void)
-						if l_parent_comments /= Void and then not l_parent_comments.is_empty then
-							Result.append (l_parent_comments)
-						end
-					end
-				end
-			end
-
-			if Result.is_empty then
-				Result := Void
-			end
-		ensure
-			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_contains_attached_items: Result /= Void implies not Result.has (Void)
-		end
-
-	feature_inherited_comments (a_feature: !E_FEATURE; a_token_writer: !EB_EDITOR_TOKEN_GENERATOR; a_parent_name: ?STRING_8): ARRAYED_LIST [EDITOR_TOKEN]
-			-- Attempts to extract the inherited comments from a feature
-			--
-			-- `a_feature': The feature to extract the comments from.
-			-- `a_writer': The text formatter to use to generate editor tokens for the comments.
-			-- `a_parent_name': An optional parent class name to use when extracting inherited comments.
-			-- `Result': A list of tokens or Void if not comments were located.
-		local
-			l_parents: LIST [CLASS_C]
-			l_parent_class: CLASS_C
-			l_rout_id_set: ROUT_ID_SET
-			l_count, i: INTEGER
-			l_parent_feature: E_FEATURE
-		do
-			l_parents := a_feature.precursors
-			if l_parents /= Void and then not l_parents.is_empty then
-					-- Iterate throught parents to locate a matching routine id
-				l_rout_id_set := a_feature.rout_id_set
+				a_token_writer.set_comment_context_class (a_feature.associated_class)
 				from
-					l_parents.start
+					l_comments.start
 				until
-					l_parents.after or
-					(Result /= Void and then not Result.is_empty)
+					l_comments.after
 				loop
-					l_parent_class := l_parents.item
-					if l_parent_class /= Void then
-						if (a_parent_name = Void or else l_parent_class.name_in_upper.is_equal (a_parent_name)) then
-							from
-								l_parent_feature := Void
-								l_count := l_rout_id_set.count
-								i := 1
-							until
-								i > l_count or l_parent_feature /= Void
-							loop
-									-- Attempt to locate a parent feature and extract the comments for them.
-								l_parent_feature := l_parent_class.feature_with_rout_id (l_rout_id_set.item (i))
-								if {l_feature: !E_FEATURE} l_parent_feature then
-									Result := feature_comment (l_feature, a_token_writer)
-								end
-								i := i + 1
-							end
-						end
+					a_token_writer.new_line
+					a_token_writer.add_indent
+					a_token_writer.add_indent
+
+					l_comment := l_comments.item.content
+					a_token_writer.add_comment_text ("--")
+					a_token_writer.add_comment_text (l_comment)
+					
+					Result.append (a_token_writer.last_line.content)
+					if not l_comments.islast then
+						Result.extend (create {EDITOR_TOKEN_EOL}.make)
 					end
-					l_parents.forth
+					l_comments.forth
 				end
+
+					-- Update the comment token widths
+				Result.do_all (agent {EDITOR_TOKEN}.update_width)
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty

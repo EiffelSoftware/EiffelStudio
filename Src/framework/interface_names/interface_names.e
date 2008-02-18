@@ -178,6 +178,8 @@ feature -- Button texts
 	b_No: STRING_GENERAL is								do Result := locale.translation("No")	end
 	b_Ok: STRING_GENERAL is								do Result := locale.translation("OK")	end
 	b_Cancel: STRING_GENERAL is							do Result := locale.translation("Cancel")	end
+	b_Disable: STRING_GENERAL is							do Result := locale.translation("Disable") end
+	b_Restore: STRING_GENERAL is							do Result := locale.translation("Restore") end
 	b_Reset: STRING_GENERAL is							do Result := locale.translation("Reset") end
 	b_start: STRING_GENERAL is							do Result := locale.translation("Start") end
 	b_stop: STRING_GENERAL is							do Result := locale.translation("Stop") end
@@ -208,6 +210,7 @@ feature -- Button texts
 	b_bp_enable_disable_breakpoints: STRING_GENERAL is do Result := locale.translation("Enable/Disable Breakpoints")	end
 	b_bp_reset_hits_count: STRING_GENERAL is do Result := locale.translation("Reset Hits Count")	end
 	b_bp_activate_execution_recording: STRING_GENERAL is do Result := locale.translation("Record Execution")	end
+	b_bp_change_assertion_checking: STRING_GENERAL is do Result := locale.translation("Disable/Restore Assertion Checking")	end
 	b_bp_print_message: STRING_GENERAL is			do Result := locale.translation("Print Message")	end
 
 	b_bp_add_when_hits_action: STRING_GENERAL is do Result := locale.translation("Add When Hits Action ...")	end

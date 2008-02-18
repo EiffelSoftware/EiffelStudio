@@ -1,22 +1,53 @@
 indexing
-	description: "When breakpoint hits do ..."
+description: "When breakpoint hits discard or restore assertion checking..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred
 class
+	BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING
+
+inherit
 	BREAKPOINT_WHEN_HITS_ACTION_I
 
-feature
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_status: BOOLEAN) is
+		do
+			set_status (a_status)
+		end
+
+feature -- Access
+
+	status: BOOLEAN
+		-- True  -> Restore assertion checking
+		-- False -> Disable assertion checking
+
+feature -- Change
+
+	set_status (a_status: BOOLEAN) is
+			-- Set `status' with `a_status'
+		do
+			status := a_status
+		end
+
+feature -- Execute
 
 	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER) is
-		require
-			a_bp_not_void: a_bp /= Void
-			a_dm_not_void: a_dm /= Void
-		deferred
+			-- Execute action
+		do
+			if a_dm.safe_application_is_stopped then
+				if status then
+					a_dm.restore_assertion_checking
+				else
+					a_dm.disable_assertion_checking
+				end
+			end
 		end
 
 indexing

@@ -197,7 +197,7 @@ feature {NONE} -- Regular expressions
 			-- Pattern to match a original comment specification with an optional precursor class name
 		once
 			create Result.make
-			Result.compile ("[\ \t]*<[\ \t]*[Oo][Rr][Ii][Gg][Ii][Nn][Aa][Ll][\ \t]*({([A-Z][A-Z_0-9]*)\}[\ \t]*>|>)")
+			Result.compile ("^[\ \t]*<[\ \t]*[Oo][Rr][Ii][Gg][Ii][Nn][Aa][Ll][\ \t]*({([A-Z][A-Z_0-9]*)\}[\ \t]*>|>)[ \t]*$")
 		ensure
 			result_is_compiled: Result.is_compiled
 		end

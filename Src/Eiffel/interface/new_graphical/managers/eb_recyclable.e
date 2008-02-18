@@ -7,11 +7,11 @@ indexing
 		      Registration to action sequences can be performed though `register_action' and will be automatically removed
 		      upon recycling.
 		      
-		      After recycling and all referring recycable objects have been recycled all attributes are automatically detached.
+		      After recycling and all referring recyclable objects have been recycled all attributes are automatically detached.
 		      
-		Special Note: EiffelVision2 objects that are recyclable (inheriting {EB_RECYCLABLE} are automatically destoryed if you do not destory them! This is
-		              true for all automatically recycled referring objects. Saying that, it's better to be explict about
-		              destorying EiffelVision2 objects.
+		Special Note: EiffelVision2 objects that are recyclable (inheriting {EB_RECYCLABLE} are automatically destroyed if you do not destroy them! This is
+		              true for all automatically recycled referring objects. Saying that, it's better to be explicit about
+		              destroying EiffelVision2 objects.
 	]"
 	doc: "wiki://User Interface Memory Managment"
 	legal: "See notice at end of class."
@@ -199,7 +199,7 @@ feature {ANY} -- Extension
 			-- Automatically recycles of an object when Current is recycled of.
 			--
 			-- `a_action': The action to retrieve a object for when Current is recycled.
-			--             Warning: THe action should not create any objects for Current
+			--             Warning: the action should not create any objects for Current
 		require
 			is_interface_usable: is_interface_usable
 			a_action_attached: a_action /= Void
@@ -346,7 +346,7 @@ feature -- Status report
 			-- Has current been recycled?
 
 	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
+			-- Determines if the interface was usable
 		do
 			Result := not is_recycled or is_recycling
 		ensure then

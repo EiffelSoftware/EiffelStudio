@@ -18,6 +18,24 @@ create {NONE}
 
 feature -- Access
 
+	shown: BOOLEAN is
+			-- Is Current instantiated and shown on the screen?
+		do
+			if is_tool_instantiated then
+				Result := panel.shown
+			end
+		end
+
+	refresh is
+			-- Refresh breakpoints display if shown.
+		do
+			if shown then
+				panel.refresh
+			end
+		end
+
+feature -- Access
+
 	icon: EV_PIXEL_BUFFER
 			-- Tool icon
 			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!

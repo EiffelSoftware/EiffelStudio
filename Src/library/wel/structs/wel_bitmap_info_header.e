@@ -131,6 +131,7 @@ feature -- Element change
 		end
 
 	set_compression (a_compression: INTEGER) is
+			-- `a_compression' is one value from {WEL_BI_COMPRESSION_CONSTANTS}.
 		do
 			cwel_bitmapinfoheader_set_compression (item,
 				a_compression)

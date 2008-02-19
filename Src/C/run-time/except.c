@@ -301,7 +301,7 @@ rt_private char *ex_tag[] = {
 	"CECIL cannot call melted code",	/* EN_DOL */
 	"Runtime I/O error.",				/* EN_ISE_IO */
 	"COM error.",						/* EN_COM */
-	"Runtime check violated."			/* EN_RT_CHECK */
+	"Runtime check violated.",			/* EN_RT_CHECK */
 	"Old expression evaluation failed.",/* EN_OLD */
 	"Serialization failed."				/* EN_SEL */
 };

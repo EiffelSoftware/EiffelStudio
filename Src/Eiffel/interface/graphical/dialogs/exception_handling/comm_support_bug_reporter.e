@@ -102,14 +102,18 @@ feature {NONE} -- Basic operations
 			l_view_state := find_view_state (a_last_html)
 			l_validation := find_event_validation (a_last_html)
 
-			l_form := form_for_bug_report (l_view_state, l_validation, "ctl00$ctl00$default_main_content$main_content$category_list", a_report)
-			create l_memory.make_empty
-			setopt_with_form (l_memory, l_form)
-			perform
+			if l_view_state /= Void and l_validation /= Void then
+				l_form := form_for_bug_report (l_view_state, l_validation, "ctl00$ctl00$default_main_content$main_content$category_list", a_report)
+				create l_memory.make_empty
+				setopt_with_form (l_memory, l_form)
+				perform
 
-			Result := l_memory.string
-			if Result = Void then
-				create {STRING_32} Result.make_empty
+				Result := l_memory.string
+				if Result = Void then
+					create {STRING_32} Result.make_empty
+				end
+			else
+				(create {EXCEPTIONS}).raise ("Connection error: " + a_last_html.as_string_8.out)
 			end
 		ensure
 			result_attached: Result /= Void

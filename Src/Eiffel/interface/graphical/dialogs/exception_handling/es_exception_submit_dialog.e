@@ -418,29 +418,30 @@ feature {NONE} -- Action handlers
 		end
 
 	on_submit
-			-- Call when user chooses to submit a bug report
+			-- Call when user chooses to submit a bug report when `can_submit'
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 			is_support_accessible: support_login.is_support_accessible
-			can_submit: can_submit
 		local
 			l_warning: ES_WARNING_PROMPT
 			l_error: ES_ERROR_PROMPT
 			retried: BOOLEAN
 		do
-			if not retried then
-				if not is_description_available then
-					create l_warning.make_standard_with_cancel ("No bug description has been supplied. Submitting a report without additional details can make it hard to repoduce.%N%NDo you want to continue submitting a bug report?")
-					l_warning.set_button_action ({ES_DIALOG_BUTTONS}.cancel_button, agent veto_close)
-					l_warning.set_button_action ({ES_DIALOG_BUTTONS}.ok_button, agent do execute_with_busy_cursor (agent submit_bug_report) end)
-					l_warning.show (dialog)
+			if can_submit then
+				if not retried then
+					if not is_description_available then
+						create l_warning.make_standard_with_cancel ("No bug description has been supplied. Submitting a report without additional details can make it hard to repoduce.%N%NDo you want to continue submitting a bug report?")
+						l_warning.set_button_action ({ES_DIALOG_BUTTONS}.cancel_button, agent veto_close)
+						l_warning.set_button_action ({ES_DIALOG_BUTTONS}.ok_button, agent do execute_with_busy_cursor (agent submit_bug_report) end)
+						l_warning.show (dialog)
+					else
+						execute_with_busy_cursor (agent submit_bug_report)
+					end
 				else
-					execute_with_busy_cursor (agent submit_bug_report)
+					create l_error.make_standard ("There was a problem submitting the problem report. Please submit is manually at http://support.eiffel.com.")
+					l_error.show (dialog)
 				end
-			else
-				create l_error.make_standard ("There was a problem submitting the problem report. Please submit is manually at http://support.eiffel.com.")
-				l_error.show (dialog)
 			end
 		end
 
@@ -670,18 +671,30 @@ feature {NONE} -- Reporting
 			l_class_name: STRING
 			l_recipient: STRING
 			l_exceptions: EXCEPTIONS
+			l_exception_meaning: STRING_32
+			l_exception_code: INTEGER_32
+			l_tag_name: STRING
 		do
 			create Result.make (100)
 
 			if not is_initialized or else not is_synopsis_available then
 				create l_exceptions
-				Result.append (l_exceptions.meaning (l_exceptions.exception))
+				l_exception_code := l_exceptions.exception
+				l_exception_meaning := l_exceptions.meaning (l_exception_code)
+				if l_exception_meaning = Void then
+					l_exception_meaning := (" " + l_exception_code.out + " Unknown exception code")
+				end
+				Result.append (l_exception_meaning)
 				Result.prune_all_trailing ('.')
 				Result.append_character (' ')
 
 				if l_exceptions.assertion_violation then
 					Result.append ("Tag: ")
-					Result.append (l_exceptions.tag_name)
+					l_tag_name := l_exceptions.tag_name
+					if l_tag_name = Void then
+						l_tag_name := "unknown tag name"
+					end
+					Result.append (l_tag_name)
 					Result.append_character (' ')
 				end
 

@@ -76,7 +76,7 @@ feature {NONE} -- Clean up
 	clean_requested_tools
 			-- Performs a clean up for `requested_tools' to remove any recycled tools from it.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		local
 			l_requested_tools: like internal_requested_tools
 			l_cursor: DS_HASH_TABLE_CURSOR [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
@@ -167,7 +167,7 @@ feature -- Access
 			-- List of available first-edition tools, that can be used by Current.
 			-- Note: If you need access to later editions please use `tool_edition'.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		local
 			l_types: like tool_types
 			l_cursor: DS_BILINEAR_CURSOR [TYPE [ES_TOOL [EB_TOOL]]]
@@ -193,7 +193,7 @@ feature -- Access
 	frozen all_requested_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
 			-- List of all tools requested and initialized. The resulting list may contain multiple editions of the same tool.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
 			l_tools: like requested_tools
@@ -224,7 +224,7 @@ feature {NONE} -- Access
 	tool_types: DS_BILINEAR [TYPE [ES_TOOL [EB_TOOL]]]
 			-- List of predefined available tools in the EiffelStudio shell.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		local
 			l_tools: DS_ARRAYED_LIST [TYPE [ES_TOOL [EB_TOOL]]]
 		once
@@ -285,7 +285,7 @@ feature -- Status reporting
 			-- `a_type': The type of tool requested.
 			-- `Result': True if multiple editions are supported, False otherwise.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
 			l_tool: ES_TOOL [EB_TOOL]
@@ -335,7 +335,7 @@ feature -- Query
 			-- `a_type': The type of tool requested.
 			-- `Result': An activated tool corresponding to the supplied type.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		do
 			Result := tool_edition (a_type, 1)
@@ -354,7 +354,7 @@ feature -- Query
 			-- `a_type': The type of tool requested.
 			-- `Result': A list of activated tools corresponding to the supplied type.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
 			l_count, i: like editions_of_tool
@@ -392,7 +392,7 @@ feature -- Query
 			-- `a_edition': The edition number of the tool to retrieve, for multiple instance supported tool.
 			-- `Result': An activated tool corresponding to the supplied type.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 			a_type_is_multi_edition_tool: a_edition > 1 implies is_multi_edition_tool (a_type)
 			a_edition_positive: a_edition > 0
@@ -439,7 +439,7 @@ feature -- Query
 			-- `a_reuse': Attempts to reuse a uninitialized or closed tool instead of incrementing the number of tool.
 			-- `Result': An activated tool corresponding to the supplied type.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
 			l_editions: like editions_of_tool
@@ -494,7 +494,7 @@ feature -- Query
 			-- `a_active': True to retrieve the number of "activated" (instantiated) tool instances; False for the available instances.
 			-- `Result': A positive number of active tools or 0 to indicate the tool has not yet been requested.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
 			l_tool_types: like requested_tools
@@ -571,7 +571,7 @@ feature -- Basic operation
 			-- `a_type': Tool type to show an active tool for.
 			-- `a_activate': True to set focus to the shown tool; False otherwise.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		do
 			show_tool_edition (a_type, 1, a_activate)
@@ -587,7 +587,7 @@ feature -- Basic operation
 			-- `a_edition': The edition number of the tool to show, for multiple instance supported tool.
 			-- `a_activate': True to set focus to the shown tool; False otherwise.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 			a_type_is_multi_edition_tool: a_edition > 1 implies is_multi_edition_tool (a_type)
 			a_edition_positive: a_edition > 0
@@ -609,7 +609,7 @@ feature -- Basic operation
 			-- `a_reuse': Attempts to reuse a uninitialized or closed tool instead of incrementing the number of tools.
 			-- `a_activate': True to set focus to the shown tool; False otherwise.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
 			l_tool: like tool
@@ -632,7 +632,7 @@ feature {ES_TOOL} -- Removal
 		require
 			a_tool_attached: a_tool /= Void
 		do
-			if not a_tool.is_recycled and then a_tool.is_recycled_on_closing then
+			if not a_tool.is_recycled and then not a_tool.is_hide_requested and then a_tool.is_recycled_on_closing then
 				a_tool.recycle
 				a_tool.set_window (Void)
 				if not is_recycled then
@@ -654,7 +654,7 @@ feature {NONE} -- Factory
 			-- `a_edition': The edition number of the tool to create, for multiple instance supported tool.
 			-- `Result': An new initialized tool corresponding to the supplied tool type.
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 			a_edition_positive: a_edition > 0
 			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1

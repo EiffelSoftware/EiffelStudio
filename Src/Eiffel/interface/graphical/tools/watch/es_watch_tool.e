@@ -13,8 +13,7 @@ frozen class
 inherit
 	ES_STONABLE_TOOL [ES_WATCH_TOOL_PANEL]
 		redefine
-			is_supporting_multiple_instances,
-			is_recycled_on_closing
+			is_supporting_multiple_instances
 		end
 
 create {NONE}
@@ -164,11 +163,6 @@ feature -- Status report
 	is_supporting_multiple_instances: BOOLEAN = True
 			-- Indicates if the tool can spawn multiple instances in the
 			-- same development window
-
-feature {NONE} -- Status report
-
-	is_recycled_on_closing: BOOLEAN = True
-			-- Indicates if the tool should be recycled on closing
 
 feature {NONE} -- Factory
 

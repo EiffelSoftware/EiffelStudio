@@ -441,8 +441,8 @@ feature {NONE} -- Implementation, exception chain
 			-- Filterred routines
 		once
 			create Result.make (2)
-			Result.put (0, "ExceptionManager")
-			Result.put (0, "EXCEPTION_MANAGER")
+			Result.put (0, "IseExceptionManager")
+			Result.put (0, "ISE_EXCEPTION_MANAGER")
 		end
 
 	filtered_routines: HASH_TABLE [INTEGER, STRING] is

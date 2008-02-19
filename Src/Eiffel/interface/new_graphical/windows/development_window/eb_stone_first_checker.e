@@ -46,7 +46,7 @@ feature -- Command
 
 			if editor /= Void then
 				l_editors_manager.editor_switched_actions.block
-				if not has_error_when_error_tool_auto_hide then
+				if not has_error_when_error_tool_auto_hide and then editor.docking_content.is_docking_manager_attached then
 					editor.docking_content.set_focus_no_maximized (editor.docking_content.user_widget)
 				end
 				l_editors_manager.editor_switched_actions.resume

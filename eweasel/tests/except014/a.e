@@ -20,11 +20,11 @@ feature
 			retried := retried + 1
 			print ("Retried " + retried.out + "%N")
 			if retried = 1 then
-				saved_exception := (create {EXCEPTION_MANAGER}).last_exception.original
+				saved_exception := (create {EXCEPTION_MANAGER_FACTORY}).exception_manager.last_exception.original
 				print ("Saving exception%N")
 				print_exception (saved_exception)
 			else
-				l_exception := (create {EXCEPTION_MANAGER}).last_exception.original
+				l_exception := (create {EXCEPTION_MANAGER_FACTORY}).exception_manager.last_exception.original
 				if l_exception = saved_exception then
 					print ("True%N")
 					print_exception (saved_exception)
@@ -44,7 +44,7 @@ feature
 				my_check: False
 			end
 		rescue
-			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
+			l_exception ?= (create {EXCEPTION_MANAGER_FACTORY}).exception_manager.last_exception
 			print ("In once rescue%N")
 			if l_exception /= Void then
 				print ("True%N")

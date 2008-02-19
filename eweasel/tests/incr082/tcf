@@ -15,7 +15,7 @@ if not DOTNET define DOTNET_EXCLUDE ""
 define		 EXCLUDE ""
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
-copy_raw 	 exception_manager.e  $CLUSTER exception_manager.e
+copy_raw 	 ise_exception_manager.e  $CLUSTER ise_exception_manager.e
 copy_raw 	 exception.e  $CLUSTER exception.e
 compile_frozen
 compile_result 	 ok

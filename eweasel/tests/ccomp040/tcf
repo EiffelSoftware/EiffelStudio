@@ -61,7 +61,7 @@ copy_raw	tuple.e $CLUSTER tuple.e
 copy_raw	type.e $CLUSTER type.e
 copy_raw	typed_pointer.e $CLUSTER typed_pointer.e
 copy_raw	exception.e $CLUSTER exception.e
-copy_raw	exception_manager.e $CLUSTER exception_manager.e
+copy_raw	ise_exception_manager.e $CLUSTER ise_exception_manager.e
 
 compile_final
 compile_result 	ok

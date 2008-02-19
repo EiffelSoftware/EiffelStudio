@@ -55,7 +55,7 @@ copy_raw	test.e $CLUSTER test.e
 copy_raw	traversable.e $CLUSTER traversable.e 
 copy_raw	unbounded.e $CLUSTER unbounded.e 
 copy_raw	operating_environment.e $CLUSTER operating_environment.e 
-copy_raw	exception_manager.e $CLUSTER exception_manager.e 
+copy_raw	ise_exception_manager.e $CLUSTER ise_exception_manager.e 
 copy_raw	exception.e $CLUSTER exception.e
 compile_melted
 compile_result 	 ok

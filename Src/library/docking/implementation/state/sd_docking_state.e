@@ -388,7 +388,9 @@ feature -- Redefine.
 				l_multi_dock_area.update_middle_container
 			end
 
-			if not zone.is_displayed then
+			if zone.is_displayed then
+				call_show_actions
+			else
 				-- `parent_floating_zone' doesn't exist on screen anymore, it was destroyed when open_config (from SD_CONFIG_MEDIATOR),
 				-- and current content doesn't have layout information restored when open_config, so let it use SD_STATE_VOID's default behavior.
 				create l_state_void.make (content)

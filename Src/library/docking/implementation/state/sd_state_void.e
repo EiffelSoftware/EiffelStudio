@@ -169,7 +169,7 @@ feature -- Redefine.
 			l_auto_hide_state, l_new_state: SD_AUTO_HIDE_STATE
 			l_restired: BOOLEAN
 			l_dock_area: SD_MULTI_DOCK_AREA
-			l_zone: SD_ZONE
+			l_zone, l_new_zone: SD_ZONE
 		do
 			if relative /= Void and not l_restired and relative.is_visible then
 				l_zone := relative.state.zone
@@ -201,6 +201,13 @@ feature -- Redefine.
 				end
 			else
 				float (internal_shared.default_screen_x, internal_shared.default_screen_y)
+			end
+
+			if content /= Void then
+				l_new_zone := content.state.zone
+				if l_new_zone /= Void and then l_new_zone.is_displayed then
+					call_show_actions
+				end
 			end
 		rescue
 			if not l_restired then

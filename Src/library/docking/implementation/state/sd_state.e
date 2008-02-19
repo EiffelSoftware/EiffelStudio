@@ -483,6 +483,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	call_show_actions is
+			-- Call content's show actions if possible.
+		require
+			exists: content.state.zone /= Void
+			displayed: content.state.zone.is_displayed
+		do
+			if not docking_manager.property.is_opening_config then
+				content.show_actions.call (Void)
+			end
+		end
+
 	internal_content: SD_CONTENT
 			-- Content managed by `Current'.
 

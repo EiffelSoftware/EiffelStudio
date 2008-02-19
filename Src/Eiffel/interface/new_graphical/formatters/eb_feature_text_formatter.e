@@ -108,7 +108,6 @@ feature -- Formatting
 				display_temp_header
 				setup_viewpoint
 				generate_text
-				editor.set_focus
 				if not last_was_error then
 					if has_breakpoints then
 						editor.enable_has_breakable_slots

@@ -1020,6 +1020,7 @@ feature {NONE} -- Stack grid implementation
 				l_tooltipable_grid_row.set_item (1, glab)
 			end
 			stack_grid.request_columns_auto_resizing
+			stack_grid.refresh_now
 		end
 
 	compute_stack_grid_item (c, r: INTEGER): EV_GRID_ITEM is

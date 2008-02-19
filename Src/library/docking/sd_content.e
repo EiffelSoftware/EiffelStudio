@@ -327,6 +327,7 @@ feature -- Set
 		require
 			visible: is_visible
 			not_destroyed: not is_destroyed
+			attached: is_docking_manager_attached
 		do
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				state.set_focus (Current)
@@ -340,6 +341,7 @@ feature -- Set
 			-- Same as `set_focus', but only do things when no maximized zone in dock area which has `a_zone'
 		require
 			not_destroyed: not is_destroyed
+			attached: is_docking_manager_attached
 		do
 			if docking_manager.property.last_focus_content /= Current and not docking_manager.property.is_opening_config then
 				if docking_manager.query.maximized_inner_container (a_zone) = Void then

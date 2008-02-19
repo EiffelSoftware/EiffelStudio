@@ -1766,6 +1766,7 @@ test	array-of-user-defined-expanded					expanded003 tcf pass expanded
 test	expanded-formal-multiconstraint					expanded004 tcf pass expanded
 test	expanded-formal-multiconstraint2				expanded005 tcf pass expanded
 test	wrong-type-in-expanded-generic-in-generic		expanded006 tcf pass expanded
+test	complex-expanded-generic-inheritance-crash		expanded007 tcf pass expanded
 
 
 test	filename-classname-mismatch-warning	warn001	tcf pass warning

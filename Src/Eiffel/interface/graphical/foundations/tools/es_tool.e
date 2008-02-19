@@ -248,7 +248,9 @@ feature {ES_SHELL_TOOLS} -- Status report
 			not_is_recycled: not is_recycled
 		do
 				-- Keeps a single tool available always.
-			Result := is_supporting_multiple_instances and window.shell_tools.editions_of_tool ({like Current}, False) > 1
+			Result := is_supporting_multiple_instances and not is_hide_requested and then window.shell_tools.editions_of_tool ({like Current}, False) > 1
+		ensure
+			not_is_hide_requested: is_hide_requested implies not Result
 		end
 
 feature -- Status report
@@ -260,6 +262,11 @@ feature -- Status report
 		do
 			Result := internal_panel /= Void
 		end
+
+feature {ES_SHELL_TOOLS} -- Status report
+
+	is_hide_requested: BOOLEAN
+			-- Indicates if a hide is requested, rather than a proper close which could cause a recycle.
 
 feature -- Hashing
 
@@ -321,35 +328,46 @@ feature -- Basic operations
 			--
 			-- `a_activate': True to set focus to the displayed window
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
 		do
-			if not panel.shown or panel.is_auto_hide then
-				panel.show
-			end
-
-			if a_activate then
-				check
-						-- FIXME: Paul, when {ES_TOOL} uses {ES_DOCKABLE_TOOL_PANEL} instead of {EB_TOOL} this check
-						-- can be greatly simplified.
-					tool_is_initialized: (({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel) /= Void implies
-						(({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel).is_initialized
+			if panel.is_interface_usable then
+				if not panel.shown or panel.is_auto_hide then
+					panel.show
 				end
-				panel.content.set_focus
+
+				if a_activate then
+					check
+							-- FIXME: Paul, when {ES_TOOL} uses {ES_DOCKABLE_TOOL_PANEL} instead of {EB_TOOL} this check
+							-- can be greatly simplified.
+						tool_is_initialized: (({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel) /= Void implies
+							(({ES_DOCKABLE_TOOL_PANEL [EV_WIDGET]}) #? panel).is_initialized
+					end
+					panel.content.set_focus
+				end
 			end
 		ensure
-			tool_shown: not panel.is_auto_hide implies panel.shown
+			tool_shown: panel.is_interface_usable implies not panel.is_auto_hide implies panel.shown
 		end
 
 	close
 			-- Closes or hides the tool based on the tool's options
 		do
-			if is_tool_instantiated and then panel.shown then
+			if is_tool_instantiated and then internal_panel /= Void and then internal_panel.shown then
 					-- Close was called directly, so reroute through the actual tool instance to ensure
 					-- the tool is cleaned up too.
-				panel.close
+				internal_panel.close
 			else
 				window.shell_tools.close_tool (Current)
 			end
+		end
+
+	hide
+			-- Hides the tool, without closing and possibly recycling it.
+		do
+			check not_is_hide_requested: not is_hide_requested end
+			is_hide_requested := True
+			close
+			is_hide_requested := False
 		end
 
 feature -- Events

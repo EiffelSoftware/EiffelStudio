@@ -9,22 +9,28 @@ indexing
 	revision: "$Revision$"
 
 class
+	ISE_EXCEPTION_MANAGER
+	
+inherit
 	EXCEPTION_MANAGER
+		redefine
+			last_exception,
+			raise,
+			ignore,
+			catch,
+			set_is_ignored,
+			is_ignorable,
+			is_raisable,
+			is_ignored,
+			is_caught,
+			type_of_code,
+			exception_from_code
+		end
 
 feature -- Access
 
 	last_exception: EXCEPTION
 			-- Last exception
-		do
-		end
-
-	type_of_code (a_code: INTEGER): TYPE [EXCEPTION]
-			-- Exception type of `a_code'
-		do
-		end
-
-	exception_from_code (a_code: INTEGER): EXCEPTION is
-			-- Create exception object from `a_code'
 		do
 		end
 
@@ -79,6 +85,18 @@ feature -- Status report
 		do
 		end
 
+feature {EXCEPTIONS} -- Compatibility support
+
+	type_of_code (a_code: INTEGER): TYPE [EXCEPTION]
+			-- Exception type of `a_code'
+		do
+		end
+
+	exception_from_code (a_code: INTEGER): EXCEPTION is
+			-- Create exception object from `a_code'
+		do
+		end
+
 feature {NONE} -- Access
 
 	exception_data: TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN] is
@@ -130,8 +148,7 @@ feature {NONE} -- Implementation
 
 	developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER) is
 			-- Raise an exception
-		external
-			"built_in"
+		do
 		end
 
 end

@@ -16,7 +16,7 @@ feature
 		ensure
 			old_g: h = old g - s.count		-- 2. Raise an OLD_VIOLATION.
 		rescue
-			old_exception ?= (create {EXCEPTION_MANAGER}).last_exception
+			old_exception ?= (create {EXCEPTION_MANAGER_FACTORY}).exception_manager.last_exception
 			if old_exception /= Void then
 				print ("True%N")
 				print_exception (old_exception)

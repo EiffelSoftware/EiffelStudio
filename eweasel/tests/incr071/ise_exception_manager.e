@@ -9,22 +9,28 @@ indexing
 	revision: "$Revision$"
 
 class
+	ISE_EXCEPTION_MANAGER
+	
+inherit
 	EXCEPTION_MANAGER
+		redefine
+			last_exception,
+			raise,
+			ignore,
+			catch,
+			set_is_ignored,
+			is_ignorable,
+			is_raisable,
+			is_ignored,
+			is_caught,
+			type_of_code,
+			exception_from_code
+		end
 
 feature -- Access
 
 	last_exception: EXCEPTION
 			-- Last exception
-		do
-		end
-
-	type_of_code (a_code: INTEGER): TYPE [EXCEPTION]
-			-- Exception type of `a_code'
-		do
-		end
-
-	exception_from_code (a_code: INTEGER): EXCEPTION is
-			-- Create exception object from `a_code'
 		do
 		end
 
@@ -76,6 +82,18 @@ feature -- Status report
 
 	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN is
 			-- If set, type of `a_exception' is raised.
+		do
+		end
+
+feature {EXCEPTIONS} -- Compatibility support
+
+	type_of_code (a_code: INTEGER): TYPE [EXCEPTION]
+			-- Exception type of `a_code'
+		do
+		end
+
+	exception_from_code (a_code: INTEGER): EXCEPTION is
+			-- Create exception object from `a_code'
 		do
 		end
 

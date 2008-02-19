@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EXCEPTION_MANAGER
+	ISE_EXCEPTION_MANAGER
 
 feature -- Access
 

@@ -14,7 +14,7 @@ feature
 			if not retried then
 				create l_exception_1
 				create l_exception_2
-				create l_mnger
+				l_mnger := (create {EXCEPTION_MANAGER_FACTORY}).exception_manager
 				l_mnger.ignore ({MY_EXCEPTION})
 				if l_exception_1.is_ignored then
 					print ("True%N")

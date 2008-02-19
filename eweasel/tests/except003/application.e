@@ -18,7 +18,7 @@ feature -- Initialization
 				a.f
 			end
 		rescue
-			l_exception ?= (create {EXCEPTION_MANAGER}).last_exception
+			l_exception ?= (create {EXCEPTION_MANAGER_FACTORY}).exception_manager.last_exception
 			if l_exception /= Void then
 				print ("True%N")
 				print_exception (l_exception)

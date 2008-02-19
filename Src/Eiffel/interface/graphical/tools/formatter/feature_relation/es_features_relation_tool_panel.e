@@ -277,10 +277,14 @@ feature {NONE} -- Event handlers
 			-- Called when the file associated with the last stone is changed
 			--
 			-- `a_type': The type of modification performed on the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for modification types.
+		local
+			l_mode: like mode
 		do
 			if (a_type & {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed) = {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed then
-				set_is_last_stone_processed (False)
-				force_last_stone
+				l_mode := mode
+				if l_mode = {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.basic or l_mode = {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat then
+					refresh
+				end
 			end
 			Precursor (a_type)
 		end

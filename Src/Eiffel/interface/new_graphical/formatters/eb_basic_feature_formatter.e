@@ -74,7 +74,6 @@ feature -- Formatting
 				editor.enable_feature_click
 				display_temp_header
 				generate_text
-				editor.set_focus
 				if last_was_error then
 					editor.clear_window
 					editor.put_string (Warning_messages.W_formatter_failed)

@@ -176,7 +176,7 @@ feature -- C generation
 		end
 
 	allocates_memory: BOOLEAN is
-			-- Does the expression allocates memory ?
+			-- Does the expression allocate memory?
 		do
 		end
 
@@ -334,7 +334,7 @@ feature -- Inlining
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

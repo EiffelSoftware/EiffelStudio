@@ -1391,6 +1391,7 @@ test	tuple-57-unretrievable		store011 tcf pass storable
 test	retrieve-corrupted-file-thread-freezes	store012 tcf pass storable thread
 test	storable-formats			store013 tcf pass storable thread
 test	storable-formats-2			store014 tcf pass storable thread
+test	retrieve-mismatch-serialization-failure	store015 tcf pass storable exception
 
 
 -- Flat, short, flatshort tests

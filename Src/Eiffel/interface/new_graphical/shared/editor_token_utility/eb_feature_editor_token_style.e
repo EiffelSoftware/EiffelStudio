@@ -434,7 +434,6 @@ feature{NONE} -- Implementation
 			l_ext_class: EXTERNAL_CLASS_I
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
 			l_line: LIST [EDITOR_TOKEN]
-			l_leaf: LEAF_AS_LIST
 		do
 			create Result.make (128)
 			if a_feature.is_il_external then

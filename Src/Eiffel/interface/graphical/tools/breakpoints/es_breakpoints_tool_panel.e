@@ -420,8 +420,7 @@ feature -- Updating
 						r = 0
 					loop
 						l_row := g.row (r)
-						if {bp: !BREAKPOINT} l_row.data then 
-								--| FIXME jfiat [2008/02/18]: {bp: !BREAKPOINT} grid.row (r).data is not working as expected
+						if {bp: !BREAKPOINT} l_row.data then
 							l_row.clear
 						end
 						r := r - 1
@@ -451,6 +450,7 @@ feature {NONE} -- Action handlers
 	on_show
 			-- Performs actions when the user widget is displayed.
 		do
+			Precursor
 			if is_initialized then
 				if grid.is_displayed and grid.is_sensitive then
 					grid.set_focus

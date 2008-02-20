@@ -14,29 +14,18 @@ inherit
 
 	ES_OBJECTS_GRID_MANAGER
 
-	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
+	ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
 			make,
 			close,
+			on_before_initialize,
+			on_after_initialized,
 			create_mini_tool_bar_items,
 			build_docking_content,
 			internal_recycle,
-			show
-		end
-
-	EB_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_PIXMAPS
-		export
-			{NONE} all
-		end
-
-	DEBUGGING_UPDATE_ON_IDLE
-		redefine
-			real_update, update
+			show,
+			update,
+			real_update
 		end
 
 create
@@ -51,14 +40,19 @@ feature {NONE} -- Initialization
 			Precursor (a_manager, a_tool)
 		end
 
+	on_before_initialize is
+			-- <Precursor>
+		do
+			Precursor
+			auto_expressions_deltas := [-2, +1]
+			create watched_items.make (10)
+		end
+
 	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
 			-- Build all the tool's widgets.
 		local
 			esgrid: ES_OBJECTS_GRID
 		do
-			auto_expressions_deltas := [-2, +1]
-			create watched_items.make (10)
-
 			create esgrid.make_with_name (title, "watches" + watch_id.out)
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (5)
@@ -100,9 +94,14 @@ feature {NONE} -- Initialization
 				--| Attach the slices_cmd to the objects grid
 			watches_grid.set_slices_cmd (slices_cmd)
 
-			create_update_on_idle_agent
-
 			a_widget.extend (watches_grid)
+		end
+
+	on_after_initialized is
+			-- <Precursor>
+		do
+			Precursor
+			create_update_on_idle_agent
 		end
 
     create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -402,7 +401,7 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			reset_tool
-			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
+			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
 	recycle_expressions is
@@ -1345,7 +1344,7 @@ feature {NONE} -- Implementation
 			l_item: like watched_item_from
 			witems: like watched_items
 		do
-			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
+			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (dbg_was_stopped)
 			if debugger_manager.safe_application_is_stopped and dbg_was_stopped then
 				eval := True
 			end

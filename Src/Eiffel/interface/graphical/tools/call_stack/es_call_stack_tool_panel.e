@@ -10,12 +10,15 @@ class
 	ES_CALL_STACK_TOOL_PANEL
 
 inherit
-	ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
+	ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
 			create_mini_tool_bar_items,
 			on_after_initialized,
 			internal_recycle,
-			show
+			show,
+			on_show,
+			update,
+			real_update
 		end
 
 	APPLICATION_STATUS_CONSTANTS
@@ -38,12 +41,6 @@ inherit
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
-		end
-
-	DEBUGGING_UPDATE_ON_IDLE
-		redefine
-			update,
-			real_update
 		end
 
 	ES_SHARED_PROMPT_PROVIDER
@@ -242,8 +239,7 @@ feature {NONE} -- Initialization
 	on_after_initialized
 			-- Use to perform additional creation initializations, after the UI has been created.
 		do
-			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
-
+			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 			request_update
 		end
 
@@ -471,6 +467,12 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 
 feature -- Change
 
+	refresh is
+			-- Refresh call stack
+		do
+			stack_grid.clear
+		end
+
 	update is
 			-- Refresh `Current's display.
 		local
@@ -494,10 +496,18 @@ feature -- Change
 	show is
 			-- Show tool
 		do
-			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
+			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 			if stack_grid.is_displayed and then stack_grid.is_sensitive then
 				stack_grid.set_focus
 			end
+		end
+
+feature {NONE} -- Even handlers
+
+	on_show	is
+			-- <Precursor>
+		do
+			Precursor
 		end
 
 feature {NONE} -- Implementation: Update
@@ -509,7 +519,7 @@ feature {NONE} -- Implementation: Update
 			l_status: APPLICATION_STATUS
 			stack: EIFFEL_CALL_STACK
 		do
-			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
+			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (dbg_was_stopped)
 			request_clean_stack_grid
 			save_call_stack_cmd.disable_sensitive
 			copy_call_stack_cmd.disable_sensitive
@@ -565,7 +575,7 @@ feature {NONE} -- Internal memory management
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.prune_all (set_row_replayable_bg_color_agent)
 			Preferences.debug_tool_data.unsensitive_foreground_color_preference.change_actions.prune_all (set_unsensitive_fg_color_agent)
-			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
+			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
 feature {NONE} -- Implementation: Stop
@@ -756,8 +766,8 @@ feature {NONE} -- Implementation: threads
 
 						create mi.make_with_text_and_action ("Show threads panel", agent
 								do
-									if {th: !ES_THREADS_TOOL_PANEL} eb_debugger_manager.threads_tool then
-										th.show
+									if {th: !ES_THREADS_TOOL} eb_debugger_manager.threads_tool then
+										th.show (True)
 									end
 								end)
 						m.extend (mi)

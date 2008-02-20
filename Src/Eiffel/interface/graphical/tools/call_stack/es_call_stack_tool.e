@@ -11,49 +11,12 @@ frozen class
 	ES_CALL_STACK_TOOL
 
 inherit
-	ES_STONABLE_TOOL [ES_CALL_STACK_TOOL_PANEL]
+	ES_DEBUGGER_STONABLE_TOOL [ES_CALL_STACK_TOOL_PANEL]
 
 create {NONE}
 	default_create
 
-feature {DEBUGGER_MANAGER} -- Debugger related
-
-	frozen debugger_manager: EB_DEBUGGER_MANAGER
-			-- Debugger manager to use for tool creation
-		do
-			Result ?= window.debugger_manager
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature {DEBUGGER_MANAGER} -- Access
-
-	force_update is
-			-- Update now, no delay
-		do
-			if is_tool_instantiated then
-				panel.update
-			end
-		end
-
-	request_update is
-			-- Request an update, this should call update only
-			-- once per debugging "operation"
-			-- This is to avoid computing twice the data
-			-- on specific cases
-		do
-			if is_tool_instantiated then
-				panel.request_update
-			end
-		end
-
-	reset is
-			-- Reset current's panel
-		do
-			if is_tool_instantiated then
-				panel.reset_tool
-			end
-		end
 
 	activate_execution_replay_mode (b: BOOLEAN; deplim: INTEGER_32)
 			-- Activate or not the execution replay mode according to `b'
@@ -75,16 +38,6 @@ feature {DEBUGGER_MANAGER} -- Access
 		do
 			if is_tool_instantiated then
 				panel.set_execution_replay_level (dep, deplim)
-			end
-		end
-
-feature -- Status
-
-	shown: BOOLEAN is
-			-- Is Current's panel shown on the screen?
-		do
-			if is_tool_instantiated then
-				Result := panel.shown
 			end
 		end
 

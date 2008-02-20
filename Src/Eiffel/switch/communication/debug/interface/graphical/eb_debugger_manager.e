@@ -416,26 +416,35 @@ feature -- tools
 			result_attached: Result /= Void
 		end
 
-	threads_tool: ES_THREADS_TOOL_PANEL
+	threads_tool: ES_THREADS_TOOL
 			-- A tool that represents the threads list in a graphical display.
 		do
 			if debugging_window /= Void then
-				Result ?= debugging_window.shell_tools.tool ({ES_THREADS_TOOL}).panel
+				Result ?= debugging_window.shell_tools.tool ({ES_THREADS_TOOL})
 			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	objects_tool: ES_OBJECTS_TOOL_PANEL
+	objects_tool: ES_OBJECTS_TOOL
 		do
 			if debugging_window /= Void then
-				Result ?= debugging_window.shell_tools.tool ({ES_OBJECTS_TOOL}).panel
+				Result ?= debugging_window.shell_tools.tool ({ES_OBJECTS_TOOL})
 			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	object_viewer_tool: ES_OBJECT_VIEWER_TOOL_PANEL
+	object_viewer_tool: ES_OBJECT_VIEWER_TOOL
+		do
+			if debugging_window /= Void then
+				Result ?= debugging_window.shell_tools.tool ({ES_OBJECT_VIEWER_TOOL})
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	object_viewer_tool_panel: ES_OBJECT_VIEWER_TOOL_PANEL
 		do
 			if debugging_window /= Void then
 				Result ?= debugging_window.shell_tools.tool ({ES_OBJECT_VIEWER_TOOL}).panel
@@ -765,7 +774,7 @@ feature -- tools management
 			-- Show thread tool if any.
 		do
 			if threads_tool /= Void and raised then
-				threads_tool.show
+				threads_tool.show (True)
 			end
 		end
 
@@ -773,7 +782,7 @@ feature -- tools management
 			-- Show object tool if any.
 		do
 			if objects_tool /= Void and raised then
-				objects_tool.show
+				objects_tool.show (True)
 			end
 		end
 
@@ -781,7 +790,7 @@ feature -- tools management
 			-- Show object viewer tool if any.
 		do
 			if object_viewer_tool /= Void and raised then
-				object_viewer_tool.show
+				object_viewer_tool.show (True)
 			end
 		end
 
@@ -1236,12 +1245,12 @@ feature -- Status setting
 			object_storage_management_cmd.disable_sensitive
 
 				--| Grid Objects Tool
-			objects_tool.set_manager (debugging_window)
-			objects_tool.set_cleaning_delay (preferences.debug_tool_data.delay_before_cleaning_objects_grid)
+			objects_tool.panel.set_manager (debugging_window)
+			objects_tool.update_cleaning_delay (preferences.debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.request_update
 
 				--| object viewer Objects Tool
-			object_viewer_tool.set_manager (debugging_window)
+			object_viewer_tool.panel.set_manager (debugging_window)
 
 				--| Watches tool
 			l_wt_lst := watch_tool_list
@@ -1252,7 +1261,7 @@ feature -- Status setting
 					l_tool := Void
 					if not l_wt_lst.is_empty then
 						l_watch_tool := l_wt_lst.last
-						if l_watch_tool.panel.shown then
+						if l_watch_tool.is_tool_instantiated and then l_watch_tool.shown then
 							l_tool := l_watch_tool.panel
 						end
 					end
@@ -1278,21 +1287,23 @@ feature -- Status setting
 			threads_tool.request_update
 
 				--| Call Stack Tool
-			call_stack_tool.show (False)
 			call_stack_tool.request_update
 
 				-- Show Tools and final visual settings
 			debugging_window.show_tools
+
 			attach_tools
 			restore_debug_docking_layout
 
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
-			split ?= objects_tool.widget
-			if split /= Void then
-				if 0 <= objects_split_proportion and objects_split_proportion <= 1 then
-					split.set_proportion (objects_split_proportion)
+			if objects_tool.is_interface_usable and then objects_tool.is_tool_instantiated then
+				split ?= objects_tool.panel.widget
+				if split /= Void then
+					if 0 <= objects_split_proportion and objects_split_proportion <= 1 then
+						split.set_proportion (objects_split_proportion)
+					end
+					split := Void
 				end
-				split := Void
 			end
 
 			raised := True
@@ -1377,10 +1388,12 @@ feature -- Status setting
 				debugging_window.window.lock_update
 			end
 
-			objects_tool.save_grids_preferences
-			split ?= objects_tool.widget
-			if split /= Void then
-				objects_split_proportion := split.split_position / split.width
+			if objects_tool.is_interface_usable and then objects_tool.is_tool_instantiated then
+				objects_tool.panel.save_grids_preferences
+				split ?= objects_tool.panel.widget
+				if split /= Void then
+					objects_split_proportion := split.split_position / split.width
+				end
 			end
 
 			save_debug_docking_layout
@@ -1406,13 +1419,14 @@ feature -- Status setting
 	reset_tools is
 			-- Reset tools to free unused data
 		do
-			threads_tool.reset_tool
+			threads_tool.reset
 			call_stack_tool.reset
-			objects_tool.reset_tool
+			objects_tool.reset
+
 			object_viewer_cmd.end_debug
 			object_storage_management_cmd.end_debug
 			if object_viewer_tool /= Void then
-				object_viewer_tool.reset_tool
+				object_viewer_tool.reset
 			end
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.reset)
 			if application /= Void then
@@ -1451,7 +1465,7 @@ feature -- Status setting
 			Precursor (tid)
 			if tid_changed and raised then
 				call_stack_tool.force_update
-				threads_tool.update
+				threads_tool.force_update
 			end
 		end
 
@@ -2200,11 +2214,11 @@ feature {NONE} -- Implementation
 			call_stack_tool.panel.content.set_top ({SD_ENUMERATION}.right)
 
 				--| Objects tool			
-			objects_tool.content.set_top ({SD_ENUMERATION}.bottom)
-			if objects_tool.content.is_visible then
-				objects_tool.content.set_focus
+			objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
+			if objects_tool.panel.content.is_visible then
+				objects_tool.panel.content.set_focus
 			end
-			l_refer_tool_content := objects_tool.content
+			l_refer_tool_content := objects_tool.panel.content
 
 				--| Breakpoints tool
 			l_tool := l_dyna_tools.tool ({ES_BREAKPOINTS_TOOL}).panel
@@ -2212,8 +2226,8 @@ feature {NONE} -- Implementation
 			l_refer_tool_content := l_tool.content
 
 				--| Threads tool
-			threads_tool.content.set_tab_with (l_refer_tool_content, True)
-			l_refer_tool_content := threads_tool.content
+			threads_tool.panel.content.set_tab_with (l_refer_tool_content, True)
+			l_refer_tool_content := threads_tool.panel.content
 
 				--| Watch tools
 			l_wt_lst := watch_tool_list
@@ -2335,7 +2349,8 @@ feature {NONE} -- Implementation
 			not_void: a_type /= Void
 		local
 			l_manager: SD_DOCKING_MANAGER
-			l_tool: EB_DOCKING_MANAGER_ATTACHABLE
+			l_tool: ES_TOOL [EB_TOOL]
+			l_content: SD_CONTENT
 			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
 			l_active_count: INTEGER
 			l_shell_tools: ES_SHELL_TOOLS
@@ -2343,18 +2358,20 @@ feature {NONE} -- Implementation
 			l_manager := debugging_window.docking_manager
 			if l_manager /= Void then
 				l_shell_tools := debugging_window.shell_tools
-				l_active_count := l_shell_tools.editions_of_tool (a_type, True)
+				l_active_count := l_shell_tools.editions_of_tool (a_type, False)
 				if l_active_count > 0 then
 					check only_one_tool_except_watch_tool: not a_type.is_equal ({ES_WATCH_TOOL}) implies l_active_count = 1 end
-						from
+					from
 						l_tools := l_shell_tools.tools (a_type)
 						l_tools.start
 					until
 						l_tools.after
 					loop
-						l_tool := l_tools.item_for_iteration.panel
-						if not l_manager.contents.has (l_tool.content) then
-							l_manager.contents.extend (l_tool.content)
+						l_tool := l_tools.item_for_iteration
+						l_content := l_tool.panel.content
+						if not l_manager.contents.has (l_content) then
+							l_tool.panel.attach_to_docking_manager (l_manager)
+--							l_manager.contents.extend (l_content)
 						end
 						l_tools.forth
 					end
@@ -2368,7 +2385,8 @@ feature {NONE} -- Implementation
 			not_void: a_type /= Void
 		local
 			l_manager: SD_DOCKING_MANAGER
-			l_tool: EB_DOCKING_MANAGER_ATTACHABLE
+			l_tool: ES_TOOL [EB_TOOL]
+			l_content: SD_CONTENT
 			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
 			l_active_count: INTEGER
 			l_shell_tools: ES_SHELL_TOOLS
@@ -2385,10 +2403,14 @@ feature {NONE} -- Implementation
 					until
 						l_tools.after
 					loop
-						l_tool := l_tools.item_for_iteration.panel
-						if l_manager.contents.has (l_tool.content) then
-							l_manager.contents.prune_all (l_tool.content)
-						end
+						l_tool := l_tools.item_for_iteration
+						if l_tool.is_interface_usable and then l_tool.is_tool_instantiated then
+							l_tool.hide
+							l_content := l_tool.panel.content
+							if l_content /= Void and then l_manager.contents.has (l_content) then
+								l_manager.contents.prune_all (l_content)
+							end
+ 						end
 						l_tools.forth
 					end
 				end

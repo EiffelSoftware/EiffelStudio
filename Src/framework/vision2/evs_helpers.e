@@ -18,7 +18,7 @@ inherit -- {NONE}
 
 feature -- Basic operations
 
-	peform_window_locking_action (a_action: PROCEDURE [ANY, TUPLE]; a_container: EV_CONTAINER)
+	perform_window_locking_action (a_action: PROCEDURE [ANY, TUPLE]; a_container: EV_CONTAINER)
 			-- Performs an operation locking the user interface.
 			-- Note: If the UI is already locked by another window then locking will be skipped.
 			--

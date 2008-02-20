@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			run := cmd
 
 				-- Build Dialog GUI
-			create debugging_options_control.make (Current)
+			create debugging_options_control.make
 
 			build_interface
 

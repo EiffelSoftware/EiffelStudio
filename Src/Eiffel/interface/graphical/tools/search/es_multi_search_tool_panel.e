@@ -426,8 +426,10 @@ feature -- Action
 			end
 			if not hindered then
 				if not is_current_editor_searched then
-					create l_warning.make_standard (warning_messages.w_replace_all, interface_names.l_discard_replace_all_warning_dialog, preferences.dialog_data.confirm_replace_all_string)
+					create l_warning.make_standard_with_cancel (warning_messages.w_replace_all, interface_names.l_discard_replace_all_warning_dialog, preferences.dialog_data.confirm_replace_all_string)
 					l_warning.set_button_action (l_warning.dialog_buttons.ok_button, agent extend_and_run_loaded_action (agent replace_all))
+					l_warning.set_button_text (l_warning.dialog_buttons.ok_button, interface_names.b_yes)
+					l_warning.set_button_text (l_warning.dialog_buttons.cancel_button, interface_names.b_no)
 					l_warning.show_on_active_window
 				else
 					extend_and_run_loaded_action (agent replace_all)

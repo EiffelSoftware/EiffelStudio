@@ -235,7 +235,11 @@ feature -- C code generation
 						buf.put_string ("RTRV(")
 						info.generate_type_id (buf, context.final_mode)
 						buf.put_string (gc_comma)
-						register.print_register
+						if source_type.is_expanded then
+							register.print_register
+						else
+							expression_print_register
+						end
 						buf.put_string (gc_rparan_semi_c)
 						result_value := target_variable
 					end
@@ -305,7 +309,7 @@ feature {NONE} -- Object test value
 			-- Expression value is stored in a target register
 
 indexing
-	copyright:	"Copyright (c) 2007, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

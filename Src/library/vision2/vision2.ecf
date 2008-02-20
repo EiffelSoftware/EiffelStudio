@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="vision2" uuid="FF177272-9E24-4282-941E-60889FC503EB" library_target="vision2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="vision2" uuid="FF177272-9E24-4282-941E-60889FC503EB" library_target="vision2">
 	<target name="vision2">
 		<description>EiffelVision2: Multiplatform graphical library of reusable components for Eiffel.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -91,9 +91,6 @@
 		</library>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<assembly name="system.configuration.install" location="$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll" prefix="CONFIG_INSTALL_"/>
-		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
-		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
 		<cluster name="contrib" location="contrib\" recursive="true">
 			<option namespace="Vision2.Contrib">
 			</option>

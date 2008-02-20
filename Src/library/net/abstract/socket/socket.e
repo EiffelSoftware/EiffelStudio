@@ -580,7 +580,7 @@ feature -- Input
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		do
-			read_to_managed_pointer (socket_buffer, 0, character_bytes)
+			read_to_managed_pointer (socket_buffer, 0, character_8_bytes)
 			last_character := socket_buffer.read_character (0)
 		end;
 

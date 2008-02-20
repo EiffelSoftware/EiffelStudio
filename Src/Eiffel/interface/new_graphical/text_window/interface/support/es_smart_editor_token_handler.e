@@ -128,21 +128,23 @@ feature {NONE} -- Query
 			a_line_positive: a_line > 0
 		local
 			l_viewer: !ES_CONTRACT_VIEWER_WIDGET
-			l_feautre: E_FEATURE
+			l_feature: E_FEATURE
 		do
 			if editor_class /= Void and then editor_class.is_compiled and then {l_class: !CLASS_C} editor_class.compiled_class then
-				if {l_fstart: !EDITOR_TOKEN_FEATURE_START} a_token then
-						-- Create contract viewer widget
-					l_feautre := l_class.feature_with_name (l_fstart.image)
-					if {l_feat: !E_FEATURE} l_feautre then
-						create l_viewer.make
-						l_viewer.set_is_showing_full_contracts (True)
-						l_viewer.set_context (l_class, l_feat)
-						Result := l_viewer.widget
+				if l_class.has_feature_table then
+					if {l_fstart: !EDITOR_TOKEN_FEATURE_START} a_token then
+							-- Create contract viewer widget
+						l_feature := l_class.feature_with_name (l_fstart.image)
+						if {l_feat: !E_FEATURE} l_feature then
+							create l_viewer.make
+							l_viewer.set_is_showing_full_contracts (True)
+							l_viewer.set_context (l_class, l_feat)
+							Result := l_viewer.widget
+						end
+--					elseif {l_kw_token: !EDITOR_TOKEN} a_token and then {l_image: !STRING_8} l_kw_token.image and then contract_keyword_token_images.has (l_image) then
+--							  -- Create a contract widget
+--						Result := create_contract_editor_widget (l_kw_token, a_line)
 					end
---				elseif {l_kw_token: !EDITOR_TOKEN} a_token and then {l_image: !STRING_8} l_kw_token.image and then contract_keyword_token_images.has (l_image) then
---						  -- Create a contract widget
---					Result := create_contract_editor_widget (l_kw_token, a_line)
 				end
 			end
 		ensure

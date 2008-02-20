@@ -337,7 +337,8 @@ feature -- Setting
 	init_byte_code (byte_code: BYTE_CODE) is
 			-- Initialiaze `byte_code'.
 		require
-			current_feature /= Void;
+			byte_code_attached: byte_code /= Void
+			current_feature_attached: current_feature /= Void
 		local
 			local_dec: ARRAY [TYPE_I]
 			local_info: LOCAL_INFO
@@ -464,7 +465,7 @@ invariant
 
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -31,7 +31,7 @@ X		([a-z]|[A-Z]|[0-9]|_)
 -- Comments
 
 "--".*		{
-				if is_windows then
+				if {PLATFORM}.is_windows then
 					comments.append (text_substring (1, text_count - 1) + "%N")
 				else
 					comments.append (text_substring (1, text_count) + "%N")

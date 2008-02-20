@@ -23,13 +23,6 @@ inherit
 	BASIC_ROUTINES
 		export {NONE} all end
 
-	PLATFORM
-		export
-			{NONE} all
-		undefine
-			maximum_character_code
-		end
-
 feature {NONE} -- Initialization
 
 	make is

@@ -39,7 +39,7 @@ feature {NONE} -- Clean up
 				if l_notifier.is_service_available then
 						-- Unregister existing file check modification
 					if {l_stone2: !FILED_STONE} last_stone and then {l_fn2: !STRING_32} l_stone2.file_name.out.as_string_32 then
-						l_notifier.service.check_modifications_with_callback (l_fn2, agent on_file_changed)
+						l_notifier.service.uncheck_modifications_with_callback (l_fn2, agent on_file_changed)
 					end
 				end
 			end

@@ -11,14 +11,17 @@ class
 inherit
 	EXPR_B
 		redefine
-			enlarged,
+			allocates_memory,
 			assigns_to,
+			calls_special_features,
+			enlarged,
+			has_call,
+			has_gcable_variable,
+			inlined_byte_code,
 			is_unsafe,
 			optimized_byte_node,
-			calls_special_features,
-			size,
-			inlined_byte_code,
-			pre_inlined_code
+			pre_inlined_code,
+			size
 		end
 
 create
@@ -64,6 +67,26 @@ feature -- Access
 
 	info: CREATE_INFO
 			-- Additional information about target type
+
+feature -- Status report
+
+	has_gcable_variable: BOOLEAN is
+			-- Is the expression using a GCable variable?
+		do
+			Result := expression.has_gcable_variable
+		end
+
+	has_call: BOOLEAN is
+			-- Is the expression using a call?
+		do
+			Result := expression.has_call
+		end
+
+	allocates_memory: BOOLEAN is
+			-- Does the expression allocate memory?
+		do
+			Result := expression.allocates_memory or else expression.allocates_memory_for_type (target.type)
+		end
 
 feature -- C code generation
 
@@ -123,7 +146,7 @@ feature -- Inlining
 		end
 
 indexing
-	copyright:	"Copyright (c) 2007, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

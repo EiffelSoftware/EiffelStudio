@@ -1791,6 +1791,7 @@ test	object-test-in-invariant						attach008 tcf fail object_test
 test	attached-basic-type								attach009 tcf pass conformance basic_types attached_types
 test	attached-generic-type-conformance				attach010 tcf fail conformance attached_types
 test	correct-attached-predicate-precedence-semantics	attach011 tcf fail object_test execution
+test	object-test-chain								attach012 tcf pass object_test execution
 
 
 -- .NET specific test

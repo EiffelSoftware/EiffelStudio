@@ -68,7 +68,6 @@ extern "C" {
 
 /* PLATFORM class */
 #define eif_builtin_PLATFORM_is_vms						EIF_IS_VMS
-#define eif_builtin_PLATFORM_real_bytes 				sizeof(EIF_REAL_32)
 #ifdef EIF_IL_DLL
 #define eif_builtin_PLATFORM_is_thread_capable 			EIF_TRUE
 #else
@@ -86,6 +85,8 @@ extern "C" {
 #define eif_builtin_PLATFORM_character_bytes 			sizeof(EIF_CHARACTER)
 #define eif_builtin_PLATFORM_wide_character_bytes 		sizeof(EIF_WIDE_CHAR)
 #define eif_builtin_PLATFORM_integer_bytes 				sizeof(EIF_INTEGER_32)
+#define eif_builtin_PLATFORM_real_bytes 				sizeof(EIF_REAL_32)
+#define eif_builtin_PLATFORM_double_bytes 				sizeof(EIF_REAL_64)
 #define eif_builtin_PLATFORM_pointer_bytes 				sizeof(EIF_POINTER)
 
 /* EXCEPTION_MANAGER */

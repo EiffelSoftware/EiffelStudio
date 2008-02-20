@@ -115,6 +115,7 @@ feature {NONE} -- Initialization
         	is_initialized: is_initialized
         do
         	if {l_window: !EV_WINDOW} content then
+        			-- Set up help shortcut binding
         		bind_help_shortcut (l_window)
         	end
         end
@@ -548,11 +549,6 @@ feature -- Basic operations
 	                initialize
 	            end
 	            Precursor {EB_TOOL}
-
-	            if not is_auto_hide then
-	            		-- This has to be called because, for some reason, the docking library does not call the show actions
-					on_shown
-	            end
 	        else
 	        	check False end
         	end

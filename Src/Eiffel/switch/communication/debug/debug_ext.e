@@ -213,24 +213,24 @@ feature {NONE} -- Implementation
 			-- Convert binary character enclosed in `s' into an CHARACTER.
 		require
 			s_not_void: s /= Void
-			valid_string: s.count = Character_bytes
+			valid_string: s.count = Character_8_bytes
 		local
 			a: ANY
 		do
 			a := s.area;
-			($Result).memory_copy ($a, Character_bytes);
+			($Result).memory_copy ($a, Character_8_bytes);
 		end
 
 	to_character_32 (s: STRING): CHARACTER_32 is
 			-- Convert binary wide_char enclosed in `s' into an WIDE_CHARACTER.
 		require
 			s_not_void: s /= Void
-			valid_string: s.count = Wide_character_bytes
+			valid_string: s.count = character_32_bytes
 		local
 			a: ANY
 		do
 			a := s.area;
-			($Result).memory_copy ($a, Wide_character_bytes)
+			($Result).memory_copy ($a, character_32_bytes)
 		end
 
 	to_natural_8 (s: STRING): NATURAL_8 is
@@ -309,12 +309,12 @@ feature {NONE} -- Implementation
 			-- Convert binary integer enclosed in `s' into an INTEGER.
 		require
 			s_not_void: s /= Void
-			valid_string: s.count = Integer_bytes
+			valid_string: s.count = Integer_8_bytes
 		local
 			a: ANY
 		do
 			a := s.area;
-			($Result).memory_copy ($a, Integer_bytes)
+			($Result).memory_copy ($a, Integer_8_bytes)
 		end
 
 	to_integer_64 (s: STRING): INTEGER_64 is
@@ -345,24 +345,24 @@ feature {NONE} -- Implementation
 			-- Convert binary double enclosed in `s' into a DOUBLE.
 		require
 			s_not_void: s /= Void
-			valid_string: s.count = Real_bytes
+			valid_string: s.count = Real_32_bytes
 		local
 			a: ANY
 		do
 			a := s.area;
-			($Result).memory_copy ($a, Real_bytes)
+			($Result).memory_copy ($a, Real_32_bytes)
 		end
 
 	to_real_64 (s: STRING): REAL_64 is
 			-- Convert binary double enclosed in `s' into a DOUBLE.
 		require
 			s_not_void: s /= Void
-			valid_string: s.count = Double_bytes
+			valid_string: s.count = Real_64_bytes
 		local
 			a: ANY
 		do
 			a := s.area;
-			($Result).memory_copy ($a, Double_bytes)
+			($Result).memory_copy ($a, Real_64_bytes)
 		end
 
 indexing

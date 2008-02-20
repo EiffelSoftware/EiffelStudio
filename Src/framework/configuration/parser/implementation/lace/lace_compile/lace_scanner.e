@@ -16,6 +16,7 @@ create
 
 	make
 
+
 feature -- Status report
 
 	valid_start_condition (sc: INTEGER): BOOLEAN is
@@ -50,12 +51,12 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'lace.l' at line 33")
 end
 
-				if is_windows then
+				if {PLATFORM}.is_windows then
 					comments.append (text_substring (1, text_count - 1) + "%N")
 				else
 					comments.append (text_substring (1, text_count) + "%N")
 				end
-
+			
 when 2 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -81,7 +82,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_SEMICOLON
-
+			
 when 5 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -91,7 +92,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_COLON
-
+			
 when 6 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -101,7 +102,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_COMMA
-
+			
 when 7 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -111,7 +112,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_LEFT_PARAM
-
+			
 when 8 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -121,7 +122,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_RIGHT_PARAM
-
+			
 when 9 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -131,7 +132,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_ADAPT
-
+			
 when 10 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
@@ -141,7 +142,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_ALL
-
+			
 when 11 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -151,7 +152,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_AS
-
+			
 when 12 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -161,7 +162,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_ASSEMBLY
-
+			
 when 13 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
@@ -171,7 +172,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_ASSERTION
-
+			
 when 14 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -181,7 +182,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_CHECK
-
+			
 when 15 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -191,7 +192,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_CLUSTER
-
+			
 when 16 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -201,7 +202,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_CREATION
-
+			
 when 17 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -211,7 +212,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_CREATION
-
+			
 when 18 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -221,7 +222,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_DEBUG
-
+			
 when 19 then
 	yy_column := yy_column + 14
 	yy_position := yy_position + 14
@@ -231,7 +232,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_DISABLED_DEBUG
-
+			
 when 20 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -241,7 +242,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_DEFAULT
-
+			
 when 21 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
@@ -251,7 +252,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_END
-
+			
 when 22 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -261,7 +262,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_ENSURE
-
+			
 when 23 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -271,7 +272,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_EXCLUDE
-
+			
 when 24 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -281,7 +282,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_DEPEND
-
+			
 when 25 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -291,7 +292,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_EXPORT
-
+			
 when 26 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -301,7 +302,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_EXTERNAL
-
+			
 when 27 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -311,7 +312,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_GENERATE
-
+			
 when 28 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -321,7 +322,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_IGNORE
-
+			
 when 29 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -331,7 +332,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_INCLUDE
-
+			
 when 30 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
@@ -341,7 +342,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_INVARIANT
-
+			
 when 31 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -351,7 +352,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_LIBRARY
-
+			
 when 32 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
@@ -361,7 +362,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_LOOP
-
+			
 when 33 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -371,7 +372,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_NO
-
+			
 when 34 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -381,7 +382,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_OPTIMIZE
-
+			
 when 35 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -391,7 +392,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_OPTION
-
+			
 when 36 then
 	yy_column := yy_column + 11
 	yy_position := yy_position + 11
@@ -401,7 +402,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_PRECOMPILED
-
+			
 when 37 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -411,7 +412,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_PREFIX
-
+			
 when 38 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -421,7 +422,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_RENAME
-
+			
 when 39 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -431,7 +432,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_REQUIRE
-
+			
 when 40 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
@@ -441,7 +442,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_ROOT
-
+			
 when 41 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -451,7 +452,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_SYSTEM
-
+			
 when 42 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -461,7 +462,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_TRACE
-
+			
 when 43 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
@@ -471,7 +472,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_USE
-
+			
 when 44 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -481,7 +482,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_VISIBLE
-
+			
 when 45 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
@@ -491,7 +492,7 @@ debug ("GELEX")
 end
 
 				last_token := LAC_YES
-
+			
 when 46 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -505,7 +506,7 @@ end
 				append_text_to_string (token_buffer)
 				token_buffer.to_lower
 				last_token := LAC_IDENTIFIER
-
+			
 when 47 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -517,7 +518,7 @@ end
 					-- Empty string.
 				report_string_empty_error
 				last_token := LAC_STRING
-
+			
 when 48 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -529,7 +530,7 @@ end
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				last_token := LAC_STRING
-
+			
 when 49 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -543,7 +544,7 @@ end
 					append_text_substring_to_string (2, text_count, token_buffer)
 				end
 				set_start_condition (IN_STR)
-
+			
 when 50 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -553,7 +554,7 @@ debug ("GELEX")
 end
 
 				append_text_to_string (token_buffer)
-
+			
 when 51 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -563,7 +564,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%A')
-
+			
 when 52 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -573,7 +574,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%B')
-
+			
 when 53 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -583,7 +584,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%C')
-
+			
 when 54 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -593,7 +594,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%D')
-
+			
 when 55 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -603,7 +604,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%F')
-
+			
 when 56 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -613,7 +614,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%H')
-
+			
 when 57 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -623,7 +624,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%L')
-
+			
 when 58 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -633,7 +634,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%N')
-
+			
 when 59 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -643,7 +644,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%Q')
-
+			
 when 60 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -653,7 +654,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%R')
-
+			
 when 61 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -663,7 +664,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%S')
-
+			
 when 62 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -673,7 +674,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%T')
-
+			
 when 63 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -683,7 +684,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%U')
-
+			
 when 64 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -693,7 +694,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%V')
-
+			
 when 65 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -703,7 +704,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%%')
-
+			
 when 66 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -713,7 +714,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%'')
-
+			
 when 67 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -723,7 +724,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%"')
-
+			
 when 68 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -733,7 +734,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%(')
-
+			
 when 69 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -743,7 +744,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%)')
-
+			
 when 70 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -753,7 +754,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%<')
-
+			
 when 71 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -763,7 +764,7 @@ debug ("GELEX")
 end
 
 				token_buffer.append_character ('%>')
-
+			
 when 72 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -773,7 +774,7 @@ debug ("GELEX")
 end
 
 				process_string_character_code (text_substring (3, text_count - 1).to_integer)
-
+			
 when 73 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -784,7 +785,7 @@ end
 
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
-
+			
 when 74 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -801,7 +802,7 @@ end
 					report_string_empty_error
 				end
 				last_token := LAC_STRING
-
+			
 when 75 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -813,7 +814,7 @@ end
 					-- Bad special character.
 				set_start_condition (INITIAL)
 				report_string_bad_special_character_error
-
+			
 when 76 then
 	yy_line := yy_line + 1
 	yy_column := 1
@@ -826,7 +827,7 @@ end
 					-- No final double-quote.
 				set_start_condition (INITIAL)
 				report_string_missing_quote_error (token_buffer)
-
+			
 when 77 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -836,7 +837,7 @@ debug ("GELEX")
 end
 
 				report_unknown_token_error (text_item (1))
-
+			
 when 78 then
 yy_set_line_column
 	yy_position := yy_position + 1
@@ -863,7 +864,7 @@ debug ("GELEX")
 end
 
 				terminate
-
+			
 when 1 then
 --|#line 0 "lace.l"
 debug ("GELEX")
@@ -873,7 +874,7 @@ end
 					-- No final double-quote.
 				set_start_condition (INITIAL)
 				report_string_missing_quote_error (token_buffer)
-
+			
 			else
 				terminate
 			end
@@ -1199,6 +1200,8 @@ feature {NONE} -- Constants
 			-- Start condition codes
 
 feature -- User-defined features
+
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

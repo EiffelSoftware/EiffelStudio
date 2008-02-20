@@ -34,15 +34,36 @@ feature -- Access
 	last_profile_name: STRING_32
 			-- Last profile's name
 
-	last_profile: TUPLE [name: like last_profile_name; params: DEBUGGER_EXECUTION_PARAMETERS] is
+	last_profile: like profile is
 			-- Last profile details
 		do
-			if
-				last_profile_name /= Void and then
-				internal_storage.has (last_profile_name)
-			then
-				Result := [last_profile_name, internal_storage.item (last_profile_name)]
+			if last_profile_name /= Void then
+				Result := profile (last_profile_name)
 			end
+		end
+
+	profile (a_name: like last_profile_name): TUPLE [name: like last_profile_name; params: DEBUGGER_EXECUTION_PARAMETERS] is
+			-- Profile indexed by `a_name'
+		require
+			a_name_not_void: a_name /= Void
+		local
+			cursor: CURSOR
+			lst: like internal_storage
+		do
+			lst := internal_storage
+			cursor := lst.cursor
+			from
+				lst.start
+			until
+				lst.after or Result /= Void
+			loop
+				Result := lst.item
+				if Result /= Void and then not Result.name.is_equal (a_name) then
+					Result := Void
+				end
+				lst.forth
+			end
+			internal_storage.go_to (cursor)
 		end
 
 feature -- Duplication
@@ -66,17 +87,22 @@ feature -- Element change
 			-- Update Current so that `new' will be the item associated
 			-- with `key'.
 		do
-			internal_storage.force (new, key)
+			if has (key) then
+				check profile (key).name.is_equal (key) end
+				internal_storage.replace ([key, new])
+			else
+				internal_storage.force ([key, new])
+			end
 		end
 
-	set_last_profile (v: like last_profile) is
+	set_last_profile (v: like profile) is
 			-- Set `last_profile_name' to `v'
 		do
 			if v = Void then
 				last_profile_name := Void
 			else
 				last_profile_name := v.name
-				internal_storage.force (v.params, last_profile_name)
+				force (v.params, v.name)
 			end
 		end
 
@@ -89,6 +115,35 @@ feature -- Removal
 		end
 
 feature -- Cursor movement
+
+	has (key: like last_profile_name): BOOLEAN is
+			-- Has profile named `key' ?
+			-- move cursor to found profile if any
+		local
+			cursor: CURSOR
+			lst: like internal_storage
+			p: like profile
+		do
+			lst := internal_storage
+			cursor := lst.cursor
+			from
+				lst.start
+			until
+				lst.after or Result
+			loop
+				p := lst.item
+				if p /= Void and then p.name.is_equal (key) then
+					Result := True
+				else
+					lst.forth
+				end
+			end
+			if not Result then
+				lst.go_to (cursor)
+			end
+		ensure
+			found_at_position: Result implies (internal_storage.item /= Void and then internal_storage.item.name.is_equal (key))
+		end
 
 	start is
 			-- Bring cursor to first position.
@@ -116,7 +171,7 @@ feature -- Cursor movement
 		require
 			not_off: not after
 		do
-			Result := internal_storage.item_for_iteration
+			Result := internal_storage.item.params
 		end
 
 	key_for_iteration: STRING_32 is
@@ -124,12 +179,12 @@ feature -- Cursor movement
 		require
 			not_off: not after
 		do
-			Result := internal_storage.key_for_iteration
+			Result := internal_storage.item.name
 		end
 
 feature {NONE} -- Implementation
 
-	internal_storage: HASH_TABLE [DEBUGGER_EXECUTION_PARAMETERS, STRING_32]
+	internal_storage: ARRAYED_LIST [like profile]
 			-- Storage for the profiles.
 
 invariant

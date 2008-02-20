@@ -10,6 +10,19 @@ class
 	ES_OBJECTS_TOOL_PANEL
 
 inherit
+	ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
+		redefine
+			tool_descriptor,
+			on_before_initialize,
+			on_after_initialized,
+			create_mini_tool_bar_items,
+			build_docking_content,
+			internal_recycle,
+			show,
+			update,
+			real_update
+		end
+
 	REFACTORING_HELPER
 
 	ES_OBJECTS_GRID_SPECIFIC_LINE_CONSTANTS
@@ -24,34 +37,9 @@ inherit
 
 	ES_OBJECTS_GRID_MANAGER
 
-	EB_STONABLE_TOOL
-		rename
-			mini_toolbar as mini_toolbar_box,
-			build_mini_toolbar as build_mini_toolbar_box
-		redefine
-			make,
-			mini_toolbar_box,
-			build_mini_toolbar_box,
-			build_docking_content,
-			internal_recycle,
-			tool_descriptor,
-			show
-		end
-
 	VALUE_TYPES
 		export
 			{NONE} all
-		end
-
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
-	DEBUGGING_UPDATE_ON_IDLE
-		redefine
-			update,
-			real_update
 		end
 
 create
@@ -59,17 +47,165 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: ES_OBJECTS_TOOL) is
+	tool_descriptor: ES_OBJECTS_TOOL
+			-- <Precursor>
+
+	on_before_initialize is
+			-- <Precursor>
 		do
 			cleaning_delay := preferences.debug_tool_data.delay_before_cleaning_objects_grid
-			debugger_manager := a_tool.debugger_manager
-			Precursor (a_manager, a_tool)
+			set_debugger_manager (tool_descriptor.debugger_manager)
+			Precursor
 		end
 
-feature {NONE} -- Access
+	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
+			-- <Precursor>
+		local
+			l_box: EV_HORIZONTAL_BOX
+			stack_objects_grid, debugged_objects_grid: like objects_grid
+		do
+				--| Build interface
 
-	tool_descriptor: ES_OBJECTS_TOOL
-			-- Descriptor used to created tool.		
+			create displayed_objects.make
+
+			create objects_grids.make (2)
+			objects_grids.compare_objects
+			create_objects_grid (interface_names.l_object_tool_left, first_grid_id)
+			create_objects_grid (interface_names.l_object_tool_right, second_grid_id)
+
+			stack_objects_grid := objects_grid (first_grid_id)
+			debugged_objects_grid := objects_grid (second_grid_id)
+
+			create split
+			split.pointer_double_press_actions.force_extend (agent (a_split: EV_SPLIT_AREA)
+					do
+						a_split.set_proportion (0.5)
+					end(split)
+				)
+
+				-- The `stack_objects_grid' and `debugged_objects_grid' are
+				-- inserted into a temporary box to provide a padding of one pixel
+				-- so that it appears that they have a border. This makes the distinction
+				-- between the edges of the control and the split area more pronounced.
+
+			create l_box
+			l_box.set_border_width (1)
+			l_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
+			split.set_first (l_box)
+			l_box.extend (stack_objects_grid)
+
+			create l_box
+			l_box.set_border_width (1)
+			l_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
+			split.set_second (l_box)
+			l_box.extend (debugged_objects_grid)
+
+			a_widget.extend (split)
+
+				--| objects grid layout
+			initialize_objects_grid_layout (preferences.debug_tool_data.is_stack_grid_layout_managed_preference, stack_objects_grid)
+			initialize_objects_grid_layout (preferences.debug_tool_data.is_debugged_grid_layout_managed_preference, debugged_objects_grid)
+
+		end
+
+	on_after_initialized is
+			-- <Precursor>
+		do
+			Precursor
+
+				--| Initialize various agent and special mecanisms
+			init_delayed_cleaning_mecanism
+			create_update_on_idle_agent
+			preferences.debug_tool_data.objects_tool_layout_preference.change_actions.extend (agent refresh_objects_layout_from_preference)
+
+			refresh_objects_layout_from_preference (preferences.debug_tool_data.objects_tool_layout_preference)
+
+				--| Attach the slices_cmd to the objects grid
+			from
+				objects_grids.start
+			until
+				objects_grids.after
+			loop
+				objects_grids.item_for_iteration.grid.set_slices_cmd (slices_cmd)
+				objects_grids.forth
+			end
+		end
+
+    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            -- Retrieves a list of tool bar items to display on the window title
+		local
+			tbb: SD_TOOL_BAR_BUTTON
+			scmd: EB_STANDARD_CMD
+			wi: SD_TOOL_BAR_WIDGET_ITEM
+        do
+			create Result.make (7)
+
+			create_header_box
+			create wi.make (header_box)
+			wi.set_name ("Location")
+			Result.force_last (wi)
+
+			create scmd.make
+			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
+			scmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.toolbar_dropdown_icon_buffer)
+			scmd.set_tooltip (interface_names.f_Open_object_tool_menu)
+			scmd.add_agent (agent open_objects_menu (mini_toolbar, 0, 0))
+			scmd.enable_sensitive
+			Result.force_last (scmd.new_mini_sd_toolbar_item)
+
+				--| Delete command
+			create remove_debugged_object_cmd.make
+			remove_debugged_object_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
+			remove_debugged_object_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_delete_icon_buffer)
+			remove_debugged_object_cmd.set_tooltip (Interface_names.e_Remove_object)
+			remove_debugged_object_cmd.add_agent (agent remove_selected_debugged_objects)
+			tbb := remove_debugged_object_cmd.new_mini_sd_toolbar_item
+			tbb.drop_actions.extend (agent remove_dropped_debugged_object)
+			tbb.drop_actions.set_veto_pebble_function (agent is_removable_debugged_object)
+			remove_debugged_object_cmd.enable_sensitive
+			Result.force_last (tbb)
+
+			create slices_cmd.make (Current)
+			slices_cmd.enable_sensitive
+			Result.force_last (slices_cmd.new_mini_sd_toolbar_item)
+
+			Result.force_last (object_viewer_cmd.new_mini_sd_toolbar_item)
+
+			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
+			hex_format_cmd.enable_sensitive
+			Result.force_last (hex_format_cmd.new_mini_sd_toolbar_item)
+
+			Result.force_last (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item)
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build docking content
+		do
+			Precursor (a_docking_manager)
+			content.drop_actions.extend (agent add_debugged_object)
+			content.drop_actions.extend (agent drop_stack_element)
+		end
+
+feature {NONE} -- Factory
+
+    create_widget: EV_VERTICAL_BOX
+            -- Create a new container widget upon request.
+            -- Note: You may build the tool elements here or in `build_tool_interface'
+        do
+        	Create Result
+        end
+
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display at the top of the tool.
+		do
+		end
+
+	create_header_box is
+		do
+			create header_box
+		ensure
+			header_box /= Void
+		end
 
 feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 
@@ -211,62 +347,6 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 
 feature {NONE} -- Interface
 
-	build_interface is
-			-- Build all the tool's widgets.
-		local
-			l_box: EV_HORIZONTAL_BOX
-			stack_objects_grid, debugged_objects_grid: like objects_grid
-		do
-				--| Build interface
-
-			create displayed_objects.make
-
-			create objects_grids.make (2)
-			objects_grids.compare_objects
-			create_objects_grid (interface_names.l_object_tool_left, first_grid_id)
-			create_objects_grid (interface_names.l_object_tool_right, second_grid_id)
-
-			stack_objects_grid := objects_grid (first_grid_id)
-			debugged_objects_grid := objects_grid (second_grid_id)
-
-			create split
-			split.pointer_double_press_actions.force_extend (agent (a_split: EV_SPLIT_AREA)
-					do
-						a_split.set_proportion (0.5)
-					end(split)
-				)
-
-				-- The `stack_objects_grid' and `debugged_objects_grid' are
-				-- inserted into a temporary box to provide a padding of one pixel
-				-- so that it appears that they have a border. This makes the distinction
-				-- between the edges of the control and the split area more pronounced.
-
-			create l_box
-			l_box.set_border_width (1)
-			l_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
-			split.set_first (l_box)
-			l_box.extend (stack_objects_grid)
-
-			create l_box
-			l_box.set_border_width (1)
-			l_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
-			split.set_second (l_box)
-			l_box.extend (debugged_objects_grid)
-
-			widget := split
-
-
-				--| objects grid layout
-			initialize_objects_grid_layout (preferences.debug_tool_data.is_stack_grid_layout_managed_preference, stack_objects_grid)
-			initialize_objects_grid_layout (preferences.debug_tool_data.is_debugged_grid_layout_managed_preference, debugged_objects_grid)
-
-				--| Initialize various agent and special mecanisms
-			init_delayed_cleaning_mecanism
-			create_update_on_idle_agent
-			preferences.debug_tool_data.objects_tool_layout_preference.change_actions.extend (agent refresh_objects_layout_from_preference)
-
-			refresh_objects_layout_from_preference (preferences.debug_tool_data.objects_tool_layout_preference)
-		end
 
 	create_objects_grid (a_name: STRING_GENERAL; a_id: STRING) is
 			-- Create an objects grid named `a_name' and identified by `a_id'
@@ -316,78 +396,6 @@ feature {NONE} -- Interface
 
 			g.set_configurable_target_menu_mode
 			g.set_configurable_target_menu_handler (agent context_menu_handler (?, ?, ?, ?, g))
-		end
-
-	build_mini_toolbar_box is
-		do
-			create mini_toolbar_box
-			build_header_box
-			build_mini_toolbar
-			mini_toolbar_box.extend (header_box)
-			mini_toolbar_box.extend (mini_toolbar)
-		end
-
-	build_mini_toolbar is
-			-- Build associated tool bar
-		local
-			tbb: SD_TOOL_BAR_BUTTON
-			scmd: EB_STANDARD_CMD
-		do
-			create mini_toolbar.make
-			create scmd.make
-			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
-			scmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.toolbar_dropdown_icon_buffer)
-			scmd.set_tooltip (interface_names.f_Open_object_tool_menu)
-			scmd.add_agent (agent open_objects_menu (mini_toolbar, 0, 0))
-			scmd.enable_sensitive
-			mini_toolbar.extend (scmd.new_mini_sd_toolbar_item)
-
-				--| Delete command
-			create remove_debugged_object_cmd.make
-			remove_debugged_object_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
-			remove_debugged_object_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_delete_icon_buffer)
-			remove_debugged_object_cmd.set_tooltip (Interface_names.e_Remove_object)
-			remove_debugged_object_cmd.add_agent (agent remove_selected_debugged_objects)
-			tbb := remove_debugged_object_cmd.new_mini_sd_toolbar_item
-			tbb.drop_actions.extend (agent remove_dropped_debugged_object)
-			tbb.drop_actions.set_veto_pebble_function (agent is_removable_debugged_object)
-			remove_debugged_object_cmd.enable_sensitive
-
-			mini_toolbar.extend (tbb)
-
-			create slices_cmd.make (Current)
-			slices_cmd.enable_sensitive
-			mini_toolbar.extend (slices_cmd.new_mini_sd_toolbar_item)
-
-			mini_toolbar.extend (object_viewer_cmd.new_mini_sd_toolbar_item)
-
-			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
-			hex_format_cmd.enable_sensitive
-			mini_toolbar.extend (hex_format_cmd.new_mini_sd_toolbar_item)
-
-			mini_toolbar.extend (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item)
-
-				--| Attach the slices_cmd to the objects grid
-			from
-				objects_grids.start
-			until
-				objects_grids.after
-			loop
-				objects_grids.item_for_iteration.grid.set_slices_cmd (slices_cmd)
-				objects_grids.forth
-			end
-
-			mini_toolbar.compute_minimum_size
-		ensure then
-			mini_toolbar_exists: mini_toolbar /= Void
-		end
-
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
-			-- Build docking content
-		do
-			Precursor {EB_STONABLE_TOOL} (a_docking_manager)
-			content.drop_actions.extend (agent add_debugged_object)
-			content.drop_actions.extend (agent drop_stack_element)
 		end
 
 	open_objects_menu (w: EV_WIDGET; ax, ay: INTEGER) is
@@ -506,22 +514,11 @@ feature -- preference
 
 feature -- Access
 
-	mini_toolbar_box: EV_HORIZONTAL_BOX
-
-	mini_toolbar: SD_TOOL_BAR
-			-- Associated mini tool bar.
-
 	header_box: EV_HORIZONTAL_BOX
 			-- Associated header box
 
-	widget: EV_WIDGET
-			-- Widget representing Current.
-
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
-
-	stone: STONE
-			-- Not used.
 
 feature -- Menu
 
@@ -582,13 +579,6 @@ feature {NONE} -- Notebook item's behavior
 			end
 		ensure
 			header_box /= Void implies header_box.is_empty
-		end
-
-	build_header_box is
-		do
-			create header_box
-		ensure
-			header_box /= Void
 		end
 
 	update_header_box (dbg_stopped: BOOLEAN) is
@@ -734,23 +724,22 @@ feature {NONE} -- Row actions
 			remove_debugged_object_cmd.disable_sensitive
 		end
 
-feature -- Change
+feature {NONE} -- event handlers
 
-	set_stone (a_stone: STONE) is
+	on_stone_changed is
 			-- Assign `a_stone' as new stone.
-		local
-			conv_stack: CALL_STACK_STONE
 		do
 			debug ("debug_recv")
 				print ("ES_OBJECTS_TOOL.set_stone%N")
 			end
 			if can_refresh then
-				conv_stack ?= a_stone
-				if conv_stack /= Void then
+				if {conv_stack: !CALL_STACK_STONE} stone then
 					update
 				end
 			end
 		end
+
+feature -- Change
 
 	enable_refresh is
 			-- Set `can_refresh' to `True'.
@@ -803,7 +792,7 @@ feature -- Change
 		local
 			l_grid: like objects_grid
 		do
-			Precursor {EB_STONABLE_TOOL}
+			Precursor
 			l_grid := objects_grid (first_grid_id)
 			if not l_grid.is_destroyed and then l_grid.is_displayed and then l_grid.is_sensitive then
 				l_grid.set_focus
@@ -860,13 +849,15 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			reset_tool
-			Precursor {EB_STONABLE_TOOL}
+			Precursor
 		end
 
-feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
+feature {ES_OBJECTS_TOOL} -- Cleaning timer change
 
-	set_cleaning_delay (ms: INTEGER) is
+	update_cleaning_delay (ms: INTEGER) is
+			-- Set cleaning delay to object grids
 		require
+			is_initialized: is_initialized
 			delay_positive_or_null: ms >= 0
 		local
 			g: like objects_grid
@@ -1026,7 +1017,7 @@ feature {NONE} -- Implementation
 			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
 			t: like objects_grid_data
 		do
-			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
+			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (dbg_was_stopped)
 			from
 				objects_grids.start
 			until

@@ -13,9 +13,15 @@ class
 inherit
 	REFACTORING_HELPER
 
+feature -- Properties
+
+	pixmap_enabled: BOOLEAN is True
+			-- Is pixmap enabled ?
+
 feature -- Access
 
 	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: STRING_GENERAL) is
+			-- Set text and tooltip to `a_cell'
 		require
 			cell_not_void: a_cell /= Void
 		local
@@ -32,15 +38,16 @@ feature -- Access
 		end
 
 	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: STRING_GENERAL) is
+			-- Set tool tip to `a_cell'
 		require
 			cell_not_void: a_cell /= Void
 		do
 			a_cell.set_tooltip (v)
 		end
 
-	pixmap_enabled: BOOLEAN is True
-
 	grid_cell_set_pixmap (a_cell: EV_GRID_ITEM; v: EV_PIXMAP) is
+			-- Set pixmap to `a_cell'
+			-- if possible, i.e on EV_GRID_LABEL_ITEM
 		require
 			cell_not_void: a_cell /= Void
 		local
@@ -63,7 +70,6 @@ feature -- Access
 		require
 			a_row_attached: a_row /= Void
 		local
-			l_item: EV_GRID_LABEL_ITEM
 			i, l_count: INTEGER
 		do
 			from
@@ -73,14 +79,14 @@ feature -- Access
 				i > l_count
 			loop
 				if a_row.item (i) = Void then
-					create l_item
-					a_row.set_item (i, l_item)
+					a_row.set_item (i, create {EV_GRID_ITEM})
 				end
 				i := i + 1
 			end
 		end
 
 	grid_move_to_end_of_grid (a_row: EV_GRID_ROW) is
+			-- Move `a_row' to the end of the grid
 		require
 			a_row /= Void
 			a_row.parent /= Void
@@ -89,10 +95,11 @@ feature -- Access
 		end
 
 	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
+			-- move top row from `grid' at `row_index' by `offset' top row
 		require
-			grid /= Void
-			row_index > 0 and then row_index <= grid.row_count
-			offset /= 0
+			grid_not_void: grid /= Void
+			row_index_valid: row_index > 0 and then row_index <= grid.row_count
+			offset_non_zero: offset /= 0
 		local
 			to_index: INTEGER
 		do
@@ -222,6 +229,7 @@ feature -- Access
 		end
 
 	grid_front_new_row (a_grid: EV_GRID): EV_GRID_ROW is
+			-- New row inserted in the front of `a_grid'
 		require
 			a_grid /= Void
 		do
@@ -230,6 +238,7 @@ feature -- Access
 		end
 
 	grid_extended_new_row (a_grid: EV_GRID): EV_GRID_ROW is
+			-- New row inserted in the end of `a_grid'	
 		require
 			a_grid /= Void
 		local
@@ -241,6 +250,7 @@ feature -- Access
 		end
 
 	grid_extended_new_subrow (a_row: EV_GRID_ROW): EV_GRID_ROW is
+			-- New subrow inserted in `a_row'
 		require
 			a_row /= Void
 		local
@@ -294,6 +304,7 @@ feature -- Access
 		end
 
 	grid_remove_and_clear_all_rows (g: EV_GRID) is
+			-- Remove and clear all rows from `g'
 		require
 			g /= Void
 		do
@@ -306,7 +317,7 @@ feature -- Access
 		end
 
 	grid_clear_row (row: EV_GRID_ROW) is
-			-- Clear the row
+			-- Clear `row'
 		do
 			row.set_data (Void)
 			row.clear

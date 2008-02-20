@@ -10,19 +10,15 @@ class
 	ES_THREADS_TOOL_PANEL
 
 inherit
-	EB_TOOL
+	ES_DOCKABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
-			mini_toolbar,
 			internal_recycle,
+			on_before_initialize,
+			on_after_initialized,
 			show
 		end
 
 	EB_SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
@@ -33,29 +29,28 @@ inherit
 			real_update
 		end
 
-	SHARED_BENCH_NAMES
-		export
-			{NONE} all
-		end
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	build_interface is
-			-- Build all the tool's widgets.
-		local
-			box: EV_VERTICAL_BOX
+	on_before_initialize is
+			-- <Precursor>
 		do
 			create notes_on_threads.make (3)
 
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
 			set_row_highlight_bg_color_agent := agent set_row_highlight_bg_color
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (set_row_highlight_bg_color_agent)
+		end
 
-			create box
-			box.set_padding (3)
+	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
+			-- <Precursor>
+		local
+			box: EV_VERTICAL_BOX
+		do
+			box := a_widget
+			box.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
 			create grid
 			grid.enable_single_row_selection
@@ -72,23 +67,35 @@ feature {NONE} -- Initialization
 
 			box.extend (grid)
 
-			create_update_on_idle_agent
-
 			grid.build_delayed_cleaning
-			widget := box
 		end
+
+	on_after_initialized is
+			-- <Precursor>
+		do
+			Precursor
+			create_update_on_idle_agent
+		end
+
 
 feature -- Properties
 
 	grid: ES_GRID
+			-- Grid to display the threads
 
-feature -- Access
+feature {NONE} -- Factory
 
-	mini_toolbar: EV_TOOL_BAR
-			-- Associated mini toolbar.
+    create_widget: EV_VERTICAL_BOX
+            -- Create a new container widget upon request.
+            -- Note: You may build the tool elements here or in `build_tool_interface'
+        do
+        	Create Result
+        end
 
-	widget: EV_WIDGET
-			-- Widget representing Current.
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display at the top of the tool.
+		do
+		end
 
 feature -- Status setting
 
@@ -157,20 +164,20 @@ feature -- Status setting
 			end
 		end
 
-	show is
-			-- Show tool.
-		do
-			Precursor {EB_TOOL}
-			if grid.is_displayed and grid.is_sensitive then
-				grid.set_focus
-			end
-		end
-
 	reset_tool is
 		do
 			reset_update_on_idle
 			notes_on_threads.wipe_out
 			clean_threads_info
+		end
+
+	show is
+			-- <Precursor>
+		do
+			Precursor
+			if grid.is_displayed and grid.is_sensitive then
+				grid.set_focus
+			end
 		end
 
 feature {NONE} -- Memory management
@@ -181,7 +188,7 @@ feature {NONE} -- Memory management
 		do
 			reset_tool
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
-			Precursor {EB_TOOL}
+			Precursor
 		end
 
 feature {NONE} -- Implementation
@@ -317,6 +324,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation note
 
 	update_notes_from_item (gi: EV_GRID_EDITABLE_ITEM) is
+			-- Update note attached to thread
 		local
 			tid: INTEGER_REF
 		do
@@ -329,6 +337,7 @@ feature {NONE} -- Implementation note
 		end
 
 	notes_on_threads: HASH_TABLE [STRING, INTEGER]
+			-- Notes attached to thread
 
 feature {NONE} -- Implementation, cosmetic
 

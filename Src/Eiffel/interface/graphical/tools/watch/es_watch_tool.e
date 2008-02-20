@@ -4,30 +4,20 @@ indexing
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 frozen class
 	ES_WATCH_TOOL
 
 inherit
-	ES_STONABLE_TOOL [ES_WATCH_TOOL_PANEL]
+	ES_DEBUGGER_STONABLE_TOOL [ES_WATCH_TOOL_PANEL]
 		redefine
 			is_supporting_multiple_instances
 		end
 
 create {NONE}
 	default_create
-
-feature {DEBUGGER_MANAGER} -- Debugger related
-
-	frozen debugger_manager: EB_DEBUGGER_MANAGER
-			-- Debugger manager to use for tool creation
-		do
-			Result ?= window.debugger_manager
-		ensure
-			result_attached: Result /= Void
-		end
 
 feature -- Access
 
@@ -47,34 +37,7 @@ feature -- Access
 			end
 		end
 
-	shown: BOOLEAN is
-			-- Is Current's panel shown on the screen?
-		do
-			if is_tool_instantiated then
-				Result := panel.shown
-			end
-		end
-
 feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
-
-	refresh is
-			-- Call refresh on panel
-		do
-			if is_tool_instantiated then
-				panel.refresh
-			end
-		end
-
-	request_update is
-			-- Request an update, this should call update only
-			-- once per debugging "operation"
-			-- This is to avoid computing twice the data
-			-- on specific cases
-		do
-			if is_tool_instantiated then
-				panel.request_update
-			end
-		end
 
 	disable_refresh is
 			-- Disable refresh
@@ -95,7 +58,10 @@ feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
 	record_grid_layout is
 			-- Record grid's layout
 		do
-			if is_tool_instantiated then
+			if
+				is_tool_instantiated and then
+				panel.is_initialized
+			then
 				panel.record_grid_layout
 			end
 		end
@@ -103,16 +69,11 @@ feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
 	prepare_for_debug is
 			-- Remove obsolete expressions from `Current'.		
 		do
-			if is_tool_instantiated then
+			if
+				is_tool_instantiated and then
+				panel.is_initialized
+			then
 				panel.prepare_for_debug
-			end
-		end
-
-	reset is
-			-- Reset current's panel
-		do
-			if is_tool_instantiated then
-				panel.reset_tool
 			end
 		end
 

@@ -1,22 +1,29 @@
 indexing
 	description: "[
-		Tool descriptor for the debugger's thread switching tool.
+		A descriptor shim for all debugger tools, requiring access to the active debugger manager {ES_DEBUGGER_MANAGER}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";
 	revision: "$revision$"
 
-frozen class
-	ES_THREADS_TOOL
+deferred class
+	ES_DEBUGGER_STONABLE_TOOL [G -> {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET], ES_STONABLE_I}]
 
 inherit
-	ES_DEBUGGER_TOOL [ES_THREADS_TOOL_PANEL]
+	ES_STONABLE_TOOL [G]
 
-create {NONE}
-	default_create
+feature -- Access
 
-feature {DEBUGGER_MANAGER} -- Access
+	frozen debugger_manager: EB_DEBUGGER_MANAGER
+			-- Debugger manager to use for tool creation
+		do
+			Result ?= window.debugger_manager
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {DEBUGGER_MANAGER, ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} -- Access		
 
 	force_update is
 			-- Update now, no delay
@@ -54,43 +61,25 @@ feature {DEBUGGER_MANAGER} -- Access
 			end
 		end
 
-feature -- Access
-
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	refresh is
+			-- Call refresh on panel
 		do
-			Result := stock_pixmaps.tool_threads_icon_buffer
+			if
+				is_tool_instantiated and then
+				panel.is_initialized
+			then
+				panel.refresh
+			end
 		end
 
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
-		do
-			Result := stock_pixmaps.tool_threads_icon
-		end
+feature -- Status
 
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
+	shown: BOOLEAN is
+			-- Is Current's panel shown on the screen?
 		do
-			Result := interface_names.t_threads_tool
-		end
-
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
-			Result := "show_threads_tool"
-		end
-
-feature {NONE} -- Factory
-
-	create_tool: ES_THREADS_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
-		do
-			create Result.make (window, Current)
+			if is_tool_instantiated then
+				Result := panel.shown
+			end
 		end
 
 ;indexing

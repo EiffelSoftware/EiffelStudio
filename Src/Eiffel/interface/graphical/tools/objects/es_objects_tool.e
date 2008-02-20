@@ -11,10 +11,61 @@ frozen class
 	ES_OBJECTS_TOOL
 
 inherit
-	ES_DEBUGGER_TOOL [ES_OBJECTS_TOOL_PANEL]
+	ES_DEBUGGER_STONABLE_TOOL [ES_OBJECTS_TOOL_PANEL]
 
 create {NONE}
 	default_create
+
+feature {DEBUGGER_MANAGER} -- Access
+
+	disable_refresh is
+			-- Disable refresh
+		do
+			if is_tool_instantiated	then
+				panel.disable_refresh
+			end
+		end
+
+	enable_refresh is
+			-- Disable refresh
+		do
+			if is_tool_instantiated then
+				panel.enable_refresh
+			end
+		end
+
+	record_grids_layout is
+			-- Record grid's layout
+		do
+			if
+				is_tool_instantiated and then
+				panel.is_initialized
+			then
+				panel.record_grids_layout
+			end
+		end
+
+	update_cleaning_delay (ms: INTEGER_32) is
+			-- Set cleaning delay to object grids
+		do
+			if
+				is_tool_instantiated and then
+				panel.is_initialized
+			then
+				panel.update_cleaning_delay (ms)
+			end
+		end
+
+feature -- Query
+
+	is_stone_usable (a_stone: STONE): BOOLEAN
+			-- Determines if a stone can be used by Current.
+			--
+			-- `a_stone': Stone to determine usablity.
+			-- `Result': True if the stone can be used, False otherwise.
+		do
+			Result := {l_stone: !CALL_STACK_STONE} a_stone
+		end
 
 feature -- Access
 

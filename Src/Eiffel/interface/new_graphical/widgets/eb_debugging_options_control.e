@@ -14,17 +14,15 @@ class
 	EB_DEBUGGING_OPTIONS_CONTROL
 
 inherit
-
-	EB_CONSTANTS
+	ES_WIDGET [EV_VERTICAL_BOX]
+		redefine
+			on_before_initialize,
+			on_after_initialized
+		end
 
 	EB_SHARED_INTERFACE_TOOLS
 
 	SHARED_WORKBENCH
-		export
-			{NONE} all
-		end
-
-	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
@@ -36,17 +34,50 @@ inherit
 create
 	make
 
+convert
+	widget: {EV_WIDGET}
+
 feature {NONE} -- Initialization
 
-	make (a_parent: EV_WINDOW) is
-			-- Initialization
-		require
-			parent_not_void: a_parent /= Void
+	build_widget_interface (a_widget: !EV_VERTICAL_BOX) is
+			-- Builds widget's interface.
+			-- `a_widget': The widget to initialize of build upon.
+		local
+			vbox: EV_VERTICAL_BOX
 		do
-			parent_window := a_parent
+			create execution_panel
+			a_widget.extend (execution_panel)
+
+				-- Create all widgets.
+			build_display_profiles_box
+
+			create vbox
+			vbox.extend (display_profiles_box)
+			execution_panel.extend (vbox)
+
+				-- Global actions.
+			a_widget.focus_in_actions.extend (agent on_focused)
+		end
+
+    on_before_initialize
+            -- Use to perform additional creation initializations, before the UI has been created.
+			-- Note: No user interface initialization should be done here! Use `build_dialog_interface' instead
+		do
 			control_in_tool := False
-			build_interface
+	    end
+
+    on_after_initialized
+            -- Use to perform additional creation initializations, after the UI has been created.
+        do
+        	Precursor
 			update
+        end
+
+	Layout_constants: EV_LAYOUT_CONSTANTS is
+			-- Constants for vision2 layout
+		once
+				--| FIXME: get rid of this feature
+			create Result
 		end
 
 	control_in_tool: BOOLEAN
@@ -55,13 +86,10 @@ feature {NONE} -- Initialization
 
 feature -- Interface access
 
-	widget: EV_VERTICAL_BOX
-			-- Widget representing Current.	
-
 	set_focus_on_widget is
 			-- Set focus on widget
 		do
-			if widget.is_displayed then
+			if is_shown then
 				widget.set_focus
 			end
 		end
@@ -217,27 +245,6 @@ feature -- Query
 
 feature {NONE} -- GUI
 
-	build_interface is
-		local
-			vbox: EV_VERTICAL_BOX
-		do
-			create widget
-			widget.set_padding (Layout_constants.Default_padding_size)
-
-			create execution_panel
-			widget.extend (execution_panel)
-
-				-- Create all widgets.
-			build_display_profiles_box
-
-			create vbox
-			vbox.extend (display_profiles_box)
-			execution_panel.extend (vbox)
-
-				-- Global actions.
-			widget.focus_in_actions.extend (agent on_focused)
-		end
-
 	on_focused is
 			-- Widget focused in
 		do
@@ -258,21 +265,21 @@ feature {NONE} -- Display profiles impl
 			hb: EV_HORIZONTAL_BOX
 		do
 			create display_profiles_box
-			display_profiles_box.set_padding_width (Layout_constants.Small_padding_size)
-			display_profiles_box.set_border_width (Layout_constants.Small_border_size)
+			display_profiles_box.set_padding_width ({ES_UI_CONSTANTS}.vertical_padding)
+			display_profiles_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 
 			create f.make_with_text (interface_names.t_execution_parameters)
 			create vb
 			f.extend (vb)
 
-			vb.set_padding_width (layout_constants.small_padding_size)
-			vb.set_border_width (layout_constants.Small_border_size)
+			vb.set_padding_width ({ES_UI_CONSTANTS}.vertical_padding)
+--			vb.set_border_width (layout_constants.Small_border_size)
 
 				--| Buttons
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			hb.set_padding_width (layout_constants.small_padding_size)
+			hb.set_padding_width ({ES_UI_CONSTANTS}.horizontal_padding)
 			create add_button.make_with_text_and_action (interface_names.b_add, agent add_new_profile)
 			layout_constants.set_default_width_for_button (add_button)
 			add_button.enable_sensitive
@@ -324,7 +331,7 @@ feature {NONE} -- Display profiles impl
 			g.set_auto_resizing_column (1, True)
 			g.set_auto_resizing_column (2, True)
 			g.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
-			g.key_press_actions.extend (agent on_key_pressed)
+			g.key_press_actions.extend (agent on_profiles_grid_key_pressed)
 
 			g.row_expand_actions.force_extend (agent profiles_grid.request_columns_auto_resizing)
 			g.row_collapse_actions.force_extend (agent profiles_grid.request_columns_auto_resizing)
@@ -337,6 +344,14 @@ feature {NONE} -- Display profiles impl
 			vb.extend (l_border_box)
 			create display_profiles_box
 			display_profiles_box.extend (f)
+		end
+
+feature {NONE} -- Factory
+
+	create_widget: !EV_VERTICAL_BOX
+			-- Creates a new widget, which will be initialized when `build_interface' is called.
+		do
+			create Result
 		end
 
 feature {NONE} -- GUI Properties
@@ -355,7 +370,7 @@ feature {NONE} -- GUI Properties
 
 feature {NONE} -- Grid events
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_profiles_grid_key_pressed (a_key: EV_KEY) is
 			-- `a_key' has been pressed on `profiles_grid'
 		local
 			l_ctler: ES_GRID_ROW_CONTROLLER
@@ -369,20 +384,47 @@ feature {NONE} -- Grid events
 				if l_ctler /= Void then
 					l_ctler.call_key_pressed_action (a_key)
 				elseif l_row.count > 0 then
-					from
-						c := 1
-					until
-						l_gi /= Void or c > l_row.count
-					loop
-						l_gi ?= l_row.item (c)
-						c := c + 1
-					end
-					if l_gi /= Void then
-						inspect a_key.code
-						when {EV_KEY_CONSTANTS}.key_enter then
-							l_gi.activate
-						else
+					inspect a_key.code
+					when {EV_KEY_CONSTANTS}.key_enter then
+						from
+							c := 1
+						until
+							l_gi /= Void or c > l_row.count
+						loop
+							l_gi ?= l_row.item (c)
+							c := c + 1
 						end
+						if l_gi /= Void then
+							l_gi.activate
+						end
+					when {EV_KEY_CONSTANTS}.key_numpad_add then
+						if ev_application.ctrl_pressed then
+							move_first_selected_row_by (+1)
+						end
+					when {EV_KEY_CONSTANTS}.key_numpad_subtract then
+						if ev_application.ctrl_pressed then
+							move_first_selected_row_by (-1)
+						end
+					else
+					end
+				end
+			end
+		end
+
+	move_first_selected_row_by (offset: INTEGER) is
+			-- Move first selected row by `offset'
+		local
+			c: INTEGER
+		do
+			if {lst: !LIST [EV_GRID_ROW]} profiles_grid.grid_selected_top_rows (profiles_grid) then
+				if lst.count > 0 then
+					if {row: !EV_GRID_ROW} lst.first then
+						c := profiles_grid.grid_move_top_row_node_by (profiles_grid, row.index, offset)
+						if c > 0 then
+							set_changed (Void, True)
+						end
+						profiles_grid.remove_selection
+						row.enable_select
 					end
 				end
 			end
@@ -425,7 +467,7 @@ feature {NONE} -- Grid events
 				gi ?= a_row.item (1)
 				if gi /= Void then
 					if a_is_selected then
-						gi.set_pixmap (pixmaps.mini_pixmaps.general_next_icon)
+						gi.set_pixmap (mini_stock_pixmaps.general_next_icon)
 					else
 						gi.remove_pixmap
 					end
@@ -1192,14 +1234,14 @@ feature {NONE} -- Environment actions
 					a_row.set_foreground_color (Void)
 				elseif k /= Void and then k.is_empty then
 					a_row.set_background_color (stock_colors.red)
-					gei.set_pixmap (pixmaps.mini_pixmaps.debugger_error_icon)
+					gei.set_pixmap (mini_stock_pixmaps.debugger_error_icon)
 					gei.set_tooltip (Void)
 					a_row.set_foreground_color (Void)
 				else
 					s := Execution_env.get (k)
 					if s = Void then
 						a_row.set_background_color (Void)
-						gei.set_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_disabled_icon)
+						gei.set_pixmap (stock_pixmaps.debugger_object_watched_disabled_icon)
 						gei.set_tooltip (Void)
 						a_row.set_foreground_color (Void)
 					else
@@ -1211,7 +1253,7 @@ feature {NONE} -- Environment actions
 							a_row.set_background_color (override_color)
 						end
 
-						gei.set_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_icon)
+						gei.set_pixmap (stock_pixmaps.debugger_object_watched_icon)
 						gei.set_tooltip (interface_names.f_original_value_is (k, s))
 					end
 				end

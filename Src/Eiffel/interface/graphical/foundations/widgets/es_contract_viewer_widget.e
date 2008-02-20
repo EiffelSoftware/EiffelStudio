@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			-- Builds widget's interface.
 			-- `a_widget': The widget to initialize of build upon.
 		local
-			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
 			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do

@@ -206,6 +206,64 @@ feature -- Feature access
 			end
 		end
 
+	frozen agent_feature_for_class_and_type_id (ct_id, fe_id: INTEGER): E_FEATURE is
+			-- Agent feature related to `ct_id' and `fe_id'
+		require
+			id_valid: ct_id > 0 and fe_id > 0
+		local
+			l_ct: CLASS_TYPE
+			l_ecc: EIFFEL_CLASS_C
+			l_fe: E_FEATURE
+			l_fi: FEATURE_I
+		do
+			l_ct := eiffel_system.system.class_type_of_static_type_id (ct_id)
+			if l_ct /= Void and then fe_id /= 0 then
+				l_ecc ?= l_ct.associated_class
+				if l_ecc /= Void then
+					Result := l_ecc.feature_with_feature_id (fe_id)
+					if Result = Void then
+						l_fi := l_ecc.inline_agent_of_id (fe_id)
+						if l_fi /= Void then
+								--| Test l_fi.is_fake_inline_agent to deal with agent on attribute
+							Result := l_fi.api_feature (l_ecc.class_id)
+						end
+					end
+				end
+			end
+		end
+
+	frozen real_feature (a_feat: E_FEATURE): E_FEATURE is
+			-- real feature of `a_feat'
+			-- i.e: either `a_feat' or the feature inlining `a_feat' in case of inline agent
+		require
+			a_feat /= Void
+		local
+			l_tokens: LIST [STRING]
+			l_class_id, l_feature_id: INTEGER
+			l_class: CLASS_C
+		do
+			l_tokens := a_feat.name.split ('#')
+			if l_tokens.count /= 5 or else not equal ("fake inline-agent", l_tokens.i_th (1)) then
+				Result := a_feat
+			elseif not l_tokens.i_th (3).is_integer_32 or not l_tokens.i_th (4).is_integer_32 then
+				Result := a_feat
+			else
+				l_class_id := l_tokens.i_th (3).to_integer
+				l_feature_id := l_tokens.i_th (4).to_integer
+				l_class := eiffel_system.class_of_id (l_class_id)
+				if l_class /= Void then
+					Result := l_class.feature_with_feature_id (l_feature_id)
+					if Result = Void then
+						Result := a_feat
+					end
+				else
+					Result := a_feat
+				end
+			end
+		ensure
+			Result /= Void
+		end
+
 feature -- Access on Byte node
 
 	frozen feature_i_from_call_access_b_in_context (cl: CLASS_C; a_call_access_b: CALL_ACCESS_B): FEATURE_I is

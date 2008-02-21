@@ -8,79 +8,12 @@ indexing
 	revision: "$revision$"
 
 deferred class
-	ES_DEBUGGER_STONABLE_TOOL [G -> {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET], ES_STONABLE_I}]
+	ES_DEBUGGER_STONABLE_TOOL [G -> {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET], ES_STONABLE_I, ES_DEBUGGING_UPDATE_ON_IDLE_TOOL_PANEL_I}]
 
 inherit
 	ES_STONABLE_TOOL [G]
 
-feature -- Access
-
-	frozen debugger_manager: EB_DEBUGGER_MANAGER
-			-- Debugger manager to use for tool creation
-		do
-			Result ?= window.debugger_manager
-		ensure
-			result_attached: Result /= Void
-		end
-
-feature {DEBUGGER_MANAGER, ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} -- Access		
-
-	force_update is
-			-- Update now, no delay
-		do
-			if
-				is_tool_instantiated and then
-				panel.is_initialized
-			then
-				panel.update
-			end
-		end
-
-	request_update is
-			-- Request an update, this should call update only
-			-- once per debugging "operation"
-			-- This is to avoid computing twice the data
-			-- on specific cases
-		do
-			if
-				is_tool_instantiated and then
-				panel.is_initialized
-			then
-				panel.request_update
-			end
-		end
-
-	reset is
-			-- Reset current's panel
-		do
-			if
-				is_tool_instantiated and then
-				panel.is_initialized
-			then
-				panel.reset_tool
-			end
-		end
-
-	refresh is
-			-- Call refresh on panel
-		do
-			if
-				is_tool_instantiated and then
-				panel.is_initialized
-			then
-				panel.refresh
-			end
-		end
-
-feature -- Status
-
-	shown: BOOLEAN is
-			-- Is Current's panel shown on the screen?
-		do
-			if is_tool_instantiated then
-				Result := panel.shown
-			end
-		end
+	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL [G]
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

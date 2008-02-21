@@ -263,6 +263,7 @@ feature -- Change
 			if watches_grid.is_displayed then
 				watches_grid.set_focus
 			end
+			request_update
 		end
 
 feature -- Properties setting

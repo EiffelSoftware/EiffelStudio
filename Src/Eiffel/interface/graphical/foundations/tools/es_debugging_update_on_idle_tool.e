@@ -1,20 +1,17 @@
 indexing
 	description: "[
-		Tool descriptor for the debugger's breakpoint management tool.
+		A descriptor shim for all debugger tools, requiring access to the active debugger manager {ES_DEBUGGER_MANAGER}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";
 	revision: "$revision$"
 
-frozen class
-	ES_BREAKPOINTS_TOOL
+deferred class
+	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL [G -> {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET], ES_DEBUGGING_UPDATE_ON_IDLE_TOOL_PANEL_I}]
 
 inherit
-	ES_TOOL [ES_BREAKPOINTS_TOOL_PANEL]
-
-create {NONE}
-	default_create
+	ES_TOOL [G]
 
 feature -- Access
 
@@ -26,61 +23,60 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-feature -- Status
+feature {DEBUGGER_MANAGER, EB_TOOL} -- Access		
 
-	shown: BOOLEAN is
-			-- Is Current instantiated and shown on the screen?
+	force_update is
+			-- Update now, no delay
 		do
-			if is_tool_instantiated then
-				Result := panel.shown
+			if is_visible then
+				panel.update
+			end
+		end
+
+	request_update is
+			-- Request an update, this should call update only
+			-- once per debugging "operation"
+			-- This is to avoid computing twice the data
+			-- on specific cases
+		do
+			if is_visible then
+				panel.request_update
+			end
+		end
+
+	reset is
+			-- Reset current's panel
+		do
+			if is_tool_instantiated and then panel.is_initialized then
+				panel.reset_tool
 			end
 		end
 
 	refresh is
-			-- Refresh breakpoints display if shown.
+			-- Call refresh on panel
 		do
-			if shown then
+			if is_visible then
 				panel.refresh
 			end
 		end
 
-feature -- Access
+feature -- Status
 
-	icon: EV_PIXEL_BUFFER
-			-- Tool icon
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	is_visible: BOOLEAN is
+			--  Is Current's panel visible ?
+			--| i.e: sd content exists
 		do
-			Result := stock_pixmaps.tool_breakpoints_icon_buffer
+			if is_tool_instantiated and then panel.is_initialized then
+				Result := panel.is_visible
+			end
 		end
 
-	icon_pixmap: EV_PIXMAP
-			-- Tool icon pixmap
-			-- Note: Do not call `tool.icon' as it will create the tool unnecessarly!
+	shown: BOOLEAN is
+			-- Is Current's panel shown on the screen?
 		do
-			Result := stock_pixmaps.tool_breakpoints_icon
-		end
-
-	title: STRING_32
-			-- Tool title.
-			-- Note: Do not call `tool.title' as it will create the tool unnecessarly!
-		do
-			Result := interface_names.t_breakpoints_tool
-		end
-
-	shortcut_preference_name: STRING_32
-			-- An optional shortcut preference name, for automatic preference binding.
-			-- Note: The preference should be registered in the default.xml file
-			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
-		do
-			Result := "show_breakpoints_tool"
-		end
-
-feature {NONE} -- Factory
-
-	create_tool: ES_BREAKPOINTS_TOOL_PANEL
-			-- Creates the tool for first use on the development `window'
-		do
-			create Result.make (window, Current)
+			if is_tool_instantiated and then panel.is_initialized then
+				Result := panel.shown
+			end
 		end
 
 ;indexing

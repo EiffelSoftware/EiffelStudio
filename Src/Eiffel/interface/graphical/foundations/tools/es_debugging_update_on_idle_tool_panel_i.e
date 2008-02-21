@@ -1,26 +1,43 @@
 indexing
 	description: "[
-		A descriptor shim for all debugger tools, requiring access to the active debugger manager {ES_DEBUGGER_MANAGER}.
+		An EiffelStudio debugging tool panel.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class
-	ES_DEBUGGER_TOOL [G -> EB_TOOL]
+	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL_PANEL_I
 
 inherit
-	ES_TOOL [G]
+	DEBUGGING_UPDATE_ON_IDLE
+
+feature {ES_DEBUGGER_STONABLE_TOOL, ES_DEBUGGING_UPDATE_ON_IDLE_TOOL} -- Status
+
+	is_visible: BOOLEAN is
+			-- Is panel visible ?
+		do
+			Result := content /= Void and then content.is_visible
+		end
+
+feature {ES_DEBUGGER_STONABLE_TOOL, ES_DEBUGGING_UPDATE_ON_IDLE_TOOL, DEBUGGER_MANAGER} -- Access
+
+	reset_tool is
+			-- Reset tool
+		deferred
+		end
+
+	refresh is
+			-- Refresh tool
+		deferred
+		end
 
 feature -- Access
 
-	frozen debugger_manager: EB_DEBUGGER_MANAGER
-			-- Debugger manager to use for tool creation
-		do
-			Result ?= window.debugger_manager
-		ensure
-			result_attached: Result /= Void
+	content: SD_CONTENT is
+			-- Docking content
+		deferred
 		end
 
 ;indexing

@@ -16,19 +16,7 @@ inherit
 			tool_descriptor
 		end
 
-	DEBUGGING_UPDATE_ON_IDLE
-
-feature {ES_DEBUGGER_STONABLE_TOOL, DEBUGGER_MANAGER} -- Access
-
-	reset_tool is
-			-- Reset tool
-		deferred
-		end
-
-	refresh is
-			-- Refresh tool
-		deferred
-		end
+	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL_PANEL_I
 
 feature {NONE} -- Access
 

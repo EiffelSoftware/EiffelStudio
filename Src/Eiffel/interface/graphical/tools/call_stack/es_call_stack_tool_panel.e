@@ -478,6 +478,7 @@ feature -- Change
 			if stack_grid.is_displayed and then stack_grid.is_sensitive then
 				stack_grid.set_focus
 			end
+			request_update
 		end
 
 feature {NONE} -- Even handlers

@@ -451,7 +451,7 @@ feature -- Status report
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.device) = 
+			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.device) =
 				{FILE_ATTRIBUTES}.device
 		end
 
@@ -461,7 +461,7 @@ feature -- Status report
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.directory) = 
+			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.directory) =
 				{FILE_ATTRIBUTES}.directory
 		end
 
@@ -1036,7 +1036,7 @@ feature -- Element change
 			file_exists: exists
 			-- `fn' does not exist already
 		do
-			
+
 		end
 
 	append (f: like Current) is
@@ -1107,7 +1107,7 @@ feature -- Element change
 				from
 					i := 1
 				until
-					i > l_count					
+					i > l_count
 				loop
 					str_area.put (i-1, s.item (i).code.to_natural_8)
 					i := i + 1
@@ -1137,7 +1137,7 @@ feature -- Element change
 
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
-			
+
 		do
 			internal_stream.write_byte (c.code.to_natural_8)
 		end
@@ -1148,7 +1148,7 @@ feature -- Element change
 			check
 				eiffel_newline_valid_count: eiffel_newline.count = 1
 			end
-			internal_stream.write_byte (eiffel_newline.item (1).code.to_natural_8)				
+			internal_stream.write_byte (eiffel_newline.item (1).code.to_natural_8)
 		end
 
 	stamp (time: INTEGER) is
@@ -1216,7 +1216,7 @@ feature -- Element change
 			what_is_not_void: what /= Void
 			file_descriptor_exists: exists
 		do
-			
+
 		end
 
 	remove_permission (who, what: STRING) is
@@ -1229,7 +1229,7 @@ feature -- Element change
 			what_is_not_void: what /= Void
 			file_descriptor_exists: exists
 		do
-			
+
 		end
 
 	change_mode (mask: INTEGER) is
@@ -1290,7 +1290,7 @@ feature -- Element change
 			create l_formatter.make
 			l_formatter.serialize (internal_stream, object)
 		end
- 
+
 	general_store (object: ANY) is
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
@@ -1414,7 +1414,7 @@ feature -- Input
 			from
 				if last_string = Void then
 					create_last_string (1024)
-				else	
+				else
 					last_string.clear_all
 				end
 				done := False
@@ -1440,12 +1440,12 @@ feature -- Input
 						if str_cap < 2048 then
 							last_string.grow (str_cap + 1024)
 							str_cap := str_cap + 1024
-						else	
+						else
 							last_string.automatic_grow
 							str_cap := last_string.capacity
 						end
-					end						
-					last_string.append_character (c.to_character_8)				
+					end
+					last_string.append_character (c.to_character_8)
 				end
 			end
 		end
@@ -1535,7 +1535,7 @@ feature -- Input
 				-- Initialize list of blanks character
 			blanks := internal_separators
 
-				-- Read until we find a character which is not a 
+				-- Read until we find a character which is not a
 				-- separator.
 			from
 				read_character
@@ -1732,29 +1732,29 @@ feature {NONE} -- Inapplicable
 feature {FILE} -- Implementation
 
 	dot_net_base_file_time: INTEGER_64 is
-			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1601:00:00:00:00 
+			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1601:00:00:00:00
 		local
 			t: SYSTEM_DATE_TIME
 		once
 			t.make_with_year_and_month_and_day (1601 ,1 ,1 ,0 ,0 ,0 ,0)
 			Result := t.ticks
 		end
-		
+
 	eiffel_base_file_time: INTEGER_64 is
-			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1970:00:00:00:00 
+			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1970:00:00:00:00
 		local
 			t: SYSTEM_DATE_TIME
 		once
 			t.make_with_year_and_month (1970 ,1 ,1 ,0 ,0 ,0)
 			Result := t.ticks
 		end
-		
+
 	dot_net_time_offset: INTEGER_64 is
 			-- the offset in nano-seconds between 01/01/1601:00:00:00:00 and 01/01/1970:00:00:00:00
 		do
 			Result := eiffel_base_file_time - dot_net_base_file_time
 		end
-		
+
 	dot_net_file_date_time (time: INTEGER): SYSTEM_DATE_TIME is
 			-- convert an eiffel date to a .NET file date time
 			-- 'eiffel_date' must be the seconds from 01/01/1970:00:00:00:00 (file system time)
@@ -1800,19 +1800,19 @@ feature {FILE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-		
+
 	peek: INTEGER is
 			-- Peek next character in file, but don't use it, e.g. don't move `position'.
 			-- Return -1 if end of file has been reached, otherwise next character.
 		require
-			is_readable: file_readable			
+			is_readable: file_readable
 		do
 			Result := internal_stream.read_byte
 			if Result /= -1 then
 				back
 			end
-		end	
-		
+		end
+
 	set_string (buf: NATIVE_ARRAY [NATURAL_8]; offset, nb: INTEGER; str: STRING) is
 			-- Set `nb' bytes of data stored in `buf' starting from `offset'
 			-- to `str'.
@@ -1843,7 +1843,7 @@ feature {NONE} -- Implementation
 					str.append_character (buf.item (j).to_character_8)
 				else
 					str.put (buf.item (j).to_character_8, i)
-				end				
+				end
 				i := i + 1
 				j := j + 1
 			end
@@ -1856,10 +1856,10 @@ feature {NONE} -- Implementation
 		alias
 			"_open_osfhandle"
 		end
-		
+
 	eiffel_newline: STRING is "%N"
 			-- Representation of Eiffel `%N' character as a SYSTEM_STRING.
-			
+
 	dotnet_newline: STRING is "%R%N"
 			-- Representation of a .NET newline as a SYSTEM_STRING.
 
@@ -1872,13 +1872,7 @@ feature {NONE} -- Implementation
 
 	internal_separators: STRING is " %N%R%T%U"
 			-- Characters that are considered as separators.
-			
-	platform_indicator: PLATFORM is
-			-- Platform indicator
-		once
-			create Result
-		end
-	
+
 invariant
 
 	valid_mode: Closed_file <= mode and mode <= Append_read_file

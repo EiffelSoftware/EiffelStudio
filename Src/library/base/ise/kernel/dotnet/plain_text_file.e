@@ -44,13 +44,13 @@ feature -- Output
 			i: INTEGER
 			l_cnt: INTEGER
 		do
-			from 
+			from
 				i := 1
 				l_cnt := dotnet_newline.count
 			until
 				i > l_cnt
 			loop
-				internal_stream.write_byte (dotnet_newline.item (i).code.to_natural_8)				
+				internal_stream.write_byte (dotnet_newline.item (i).code.to_natural_8)
 				i := i + 1
 			end
 		end
@@ -66,57 +66,57 @@ feature -- Output
 				Precursor (l_str)
 			end
 		end
-		
+
 	putstring (s: STRING) is
 			-- Write `s' at current position.
 		do
 			put_string (s)
-		end		
+		end
 
 	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_integer_8 (i: INTEGER_8) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_integer_16 (i: INTEGER_16) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_integeR_64 (i: INTEGER_64) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_natural_8 (i: NATURAL_8) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_natural_16 (i: NATURAL_16) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_natural, put_natural_32 (i: NATURAL_32) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_natural_64 (i: NATURAL_64) is
-			-- Write ASCII value of `i' at current position. 
+			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
@@ -163,7 +163,7 @@ feature -- Input
 			Precursor {FILE} (nb_char)
 			last_string.replace_substring_all (dotnet_newline, eiffel_newline)
 		end
-		
+
 	readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
@@ -173,20 +173,20 @@ feature -- Input
 		end
 
 	read_integer_64 is
-			-- 
+			--
 		do
 			read_integer_with_no_type
 			last_integer_64 := ctoi_convertor.parsed_integer_64
 		end
-		
+
 	read_integer, readint, read_integer_32 is
 			-- Read the ASCII representation of a new 32-bit integer
 			-- from file. Make result available in `last_integer'.
 		do
 			read_integer_with_no_type
-			last_integer := ctoi_convertor.parsed_integer_32		
+			last_integer := ctoi_convertor.parsed_integer_32
 		end
-		
+
 	read_integer_16 is
 			-- Read the ASCII representation of a new 16-bit integer
 			-- from file. Make result available in `last_integer_16'.
@@ -194,15 +194,15 @@ feature -- Input
 			read_integer_with_no_type
 			last_integer_16 := ctoi_convertor.parsed_integer_16
 		end
-		
+
 	read_integer_8 is
 			-- Read the ASCII representation of a new 8-bit integer
-			-- from file. Make result available in `last_integer_8'. 
+			-- from file. Make result available in `last_integer_8'.
 		do
 			read_integer_with_no_type
 			last_integer_8 := ctoi_convertor.parsed_integer_8
 		end
-		
+
 	read_natural_64 is
 			-- Read the ASCII representation of a new 64-bit natural
 			-- from file. Make result available in `last_natural_64'.
@@ -211,7 +211,7 @@ feature -- Input
 			last_natural_64 := ctoi_convertor.parsed_natural_64
 
 		end
-		
+
 	read_natural, read_natural_32 is
 			-- Read the ASCII representation of a new 32-bit natural
 			-- from file. Make result available in `last_natural'.
@@ -219,7 +219,7 @@ feature -- Input
 			read_integer_with_no_type
 			last_natural := ctoi_convertor.parsed_natural_32
 		end
-		
+
 	read_natural_16 is
 			-- Read the ASCII representation of a new 16-bit natural
 			-- from file. Make result available in `last_natural_16'.
@@ -227,14 +227,14 @@ feature -- Input
 			read_integer_with_no_type
 			last_natural_16 := ctoi_convertor.parsed_natural_16
 		end
-		
+
 	read_natural_8 is
 			-- Read the ASCII representation of a new 8-bit natural
 			-- from file. Make result available in `last_natural_8'.
 		do
 			read_integer_with_no_type
 			last_natural_8 := ctoi_convertor.parsed_natural_8
-		end					
+		end
 
 	read_real, readreal is
 			-- Read the ASCII representation of a new real
@@ -250,9 +250,9 @@ feature -- Input
 		do
 			read_number_sequence (ctor_convertor, {NUMERIC_INFORMATION}.type_double)
 			last_double := ctor_convertor.parsed_double
-			if not is_sequence_an_expected_numeric then		
-				return_characters								
-			end	
+			if not is_sequence_an_expected_numeric then
+				return_characters
+			end
 		end
 
 	read_character, readchar is
@@ -285,19 +285,19 @@ feature {NONE} -- Implementation
 			Result.set_leading_separators_acceptable (True)
 			Result.set_trailing_separators_acceptable (False)
 		end
-		
+
 	ctor_convertor: STRING_TO_REAL_CONVERTOR is
 			-- Convertor used to parse string to double or real
 		once
 			create Result.make
 			Result.set_leading_separators (internal_leading_separators)
-			Result.set_leading_separators_acceptable (True)	
-			Result.set_trailing_separators_acceptable (False)					
-		end		
-					
+			Result.set_leading_separators_acceptable (True)
+			Result.set_trailing_separators_acceptable (False)
+		end
+
 	internal_leading_separators: STRING is " %N%R%T"
 			-- Characters that are considered as leading separators
-			
+
 	is_sequence_an_expected_numeric: BOOLEAN
 			-- Is last number sequence read by `read_number_sequence' an expected numeric?
 
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			-- Set `is_sequence_an_expected_numeric' with True if it is valid.
 		do
 			convertor.reset (conversion_type)
-			from			
+			from
 				is_sequence_an_expected_numeric := True
 			until
 				end_of_file or else not is_sequence_an_expected_numeric
@@ -317,28 +317,28 @@ feature {NONE} -- Implementation
 					convertor.parse_character (last_character)
 					is_sequence_an_expected_numeric := convertor.parse_successful
 				end
-			end			
+			end
 		end
-			
+
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
 			-- at current position.
 		do
-			read_number_sequence (ctoi_convertor, {NUMERIC_INFORMATION}.type_no_limitation)	
+			read_number_sequence (ctoi_convertor, {NUMERIC_INFORMATION}.type_no_limitation)
 			if not is_sequence_an_expected_numeric then
-				return_characters	
+				return_characters
 			end
 		end
-		
+
 	return_characters is
 			-- Return character(s)
-		do				
-			if last_character = '%N' and platform_indicator.is_windows then
+		do
+			if last_character = '%N' and {PLATFORM}.is_windows then
 				back
 			end
-			back																
-			internal_end_of_file := peek = -1			
-		end		
+			back
+			internal_end_of_file := peek = -1
+		end
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at

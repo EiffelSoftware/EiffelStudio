@@ -33,7 +33,7 @@ MAKEFILE_DEPENDENCIES = $(subst :,\:,$(MAKEFILE_LIST))
 #EXTRA_DEPENDENCIES = [C]eif_config.h [C]eif_portable.h [C.run-time]eif_size.h [C.run-time]eif_vmsdef.h $(MAKEFILE_DEPENDENCIES) 
 EXTRA_DEPENDENCIES = [C]eif_config.h [C]eif_portable.h $(MAKEFILE_DEPENDENCIES) 
 
-# Individual Makefiles should define (if necessary) CDEFINES, CINCLUDES as comma separated lists;
+# Individual Makefiles should define (as necessary) CDEFINES, CINCLUDES as comma separated lists;
 # this file constructs DECC_INCLUDES and DECC_DEFINES
 # see .c.obj rule below.
 
@@ -50,7 +50,8 @@ ifneq ($(MY_CINCLUDES),)
 DECC_INCLUDES += ,$(MY_CINCLUDES)
 endif
 
-#TOP_CDEFINES = EIF_THREADSxxx
+#TOP_CDEFINES = EIF_TOP_CDEFINE_TEST
+TOP_CDEFINES = _SOCKADDR_LEN
 
 ifneq ($(TOP_CDEFINES),)
 DECC_DEFINES = $(TOP_CDEFINES)
@@ -67,16 +68,14 @@ endif
 ifneq ($(DECC_DEFINES),)
 DECC_DEFINES_MT := $(DECC_DEFINES),EIF_THREADS
 DECC_DEFINES_WORKBENCH := $(DECC_DEFINES),WORKBENCH
-DECC_DEFINES_MT_WORKBENCH := $(DECC_DEFINES),EIF_THREADS,WORKBENCH
 DECC_DEFINES_NOHOOK := $(DECC_DEFINES),NOHOOK
-DECC_DEFINES_MT_NOHOOK := $(DECC_DEFINES),EIF_THREADS,NOHOOK
 else
-DECC_DEFINES_MT = EIF_THREADS
+DECC_DEFINES_MT =EIF_THREADS
 DECC_DEFINES_WORKBENCH := WORKBENCH
-DECC_DEFINES_MT_WORKBENCH := EIF_THREADS,WORKBENCH
 DECC_DEFINES_NOHOOK := NOHOOK
-DECC_DEFINES_MT_NOHOOK := EIF_THREADS,NOHOOK
 endif
+DECC_DEFINES_MT_WORKBENCH := $(DECC_DEFINES_MT),WORKBENCH
+DECC_DEFINES_MT_NOHOOK := $(DECC_DEFINES_MT),NOHOOK
 
 ifneq ($(MY_CDEFINES),)
 ifneq ($(DECC_DEFINES),)
@@ -99,7 +98,7 @@ endif
 
 # symbols for utilities
 AR = libr/create
-COPY = copy
+COPY = copy/log
 LINKFLAGS = $(DEBUG_LINKFLAGS)$(EIF_LINKFLAGS)$(MY_LINKFLAGS)
 MKDIR = create/directory/version_limit=3
 
@@ -166,6 +165,7 @@ GTK_LINKFLAGS = $(GTK_PATH)VMS_LINK.OPT/OPT
 
 #.SUFFIXES : .lis .i .obji .dia
 .PRECIOUS : %.lis %.i
+.PHONY : all listings show show_compile show_macro dump
 
 
 #.c.obj :
@@ -188,6 +188,7 @@ b%.obj : %.c
 %.obj_b : %.c
 	$(CC) $</obj=$@ $(CFLAGS_NOHOOK) $(MY_CFLAGS)
 
+# rules for generating .LIST files
 %.lis : %.c
 	$(CC)/noobj $< $(CFLAGS) /list=$@$(LISTFLAGS) $(MY_CFLAGS)$(MY_LISTFLAGS)
 mt%.lis : %.c
@@ -195,10 +196,6 @@ mt%.lis : %.c
 w%.lis : %.c
 	$(CC)/noobj $< $(CFLAGS_WORKBENCH) /list=$@$(LISTFLAGS) $(MY_CFLAGS)$(MY_LISTFLAGS)
 
-
-# suffix rules are obsolete; replace with pattern rules (as above)
-#.c.obj_wk :
-#	$(CC) $</obj=$@ $(CFLAGS_WK) $(MY_CFLAGS)/NONONO
 
 .c.lis :
 	-$(CC)/noobj $< $(CFLAGS)/list=$@ $(LISTFLAGS) $(MY_CFLAGS)$(MY_LISTFLAGS)
@@ -215,20 +212,33 @@ w%.lis : %.c
 .i.obji :
 	$(CC) $</obj=$@ $(CFLAGS) $(MY_CFLAGS)
 
+# generate vms-specific .h files from *_h.vms
+%.h : %_h.vms
+	$(COPY) $? $@
 
-# force "all" to be the default target 
-# it needs a :: here to ensure that it runs all the rules in individual Makefile.VMS.
+
+# force "all" to be the default target (by making it the first one defined)
+# it needs a :: here to ensure that it runs all the rules in individual Makefile.VMS files.
 # if it has a :: here, must not have a : in individual Makefile.VMS files
-all ::
-#	write sys$$output "[C]Makeinc.VMS  $@: $$(CURRENT) = $(CURRENT), $$(LOCAL_MAKEFILE) = $(LOCAL_MAKEFILE)"
+
+all :: vms_includes_from_shell
+
+vms_includes_from_shell : [C]eif_config.h [C.run-time]eif_size.h
+
+all :: show_compile
+
+show_compile :
+	-show default
+	-show logical eiffel_src,ise_eiffel,ise_platform,ise_library,vms_jackets,vms_jackets_include
+	-if f$$type(cc) .nes. "" then show symbol cc
 
 dump : show
 
 show_macro :
 	@write sys$$output "[C]Makeinc.VMS $@: $$($(SHOW)) = $($(SHOW))"
 
-
 show ::
+	@write sys$$output "*** now in $(lastword $(MAKEFILE_LIST)) target = $@ ***"
 	@write sys$$output "[C]Makeinc.VMS $@: $$(ISE_PLATFORM) = ""$(ISE_PLATFORM)"""
 	@write sys$$output "[C]Makeinc.VMS $@: $$(TOP) = ""$(TOP)""  $$(TOPDIR) = ""$(TOPDIR)"""
 	@write sys$$output "[C]Makeinc.VMS $@: $$(CURDIR) = ""$(CURDIR)""  $$(CURRENT) = ""$(CURRENT)"""
@@ -269,6 +279,7 @@ endif
 #endif
 	@write sys$$output "[C]Makeinc.VMS $@: $$(DECC_FLAGS) = ""$(DECC_FLAGS)"""
 	@write sys$$output "[C]Makeinc.VMS $@: $$(CFLAGS) = ""$(CFLAGS)"""
-	@write sys$$output "[C]Makeinc.VMS $@: $$(LOCAL_MAKEFILE): $(LOCAL_MAKEFILE)"
+	@write sys$$output "*** end $(lastword $(MAKEFILE_LIST)) target = $@ ***"
+
 
 # end EIFFEL_SRC:[C]Makeinc.VMS (aka $(EIFFEL_SRC)/C/Makeinc.VMS)

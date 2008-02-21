@@ -34,7 +34,7 @@
 		]"
 
 
-	--- size.vms  (eif_size.h for VMS) ---
+	--- eif_size_h.vms  (eif_size.h for VMS) ---
 	Size of basic types and access macros.
 
 */

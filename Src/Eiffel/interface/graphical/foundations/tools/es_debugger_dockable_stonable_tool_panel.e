@@ -12,6 +12,9 @@ deferred class
 
 inherit
 	ES_DOCKABLE_STONABLE_TOOL_PANEL [G]
+		redefine
+			tool_descriptor
+		end
 
 	DEBUGGING_UPDATE_ON_IDLE
 
@@ -27,7 +30,12 @@ feature {ES_DEBUGGER_STONABLE_TOOL, DEBUGGER_MANAGER} -- Access
 		deferred
 		end
 
-indexing
+feature {NONE} -- Access
+
+	tool_descriptor: ES_DEBUGGER_STONABLE_TOOL [like Current]
+			-- Descriptor used to created tool.
+
+;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

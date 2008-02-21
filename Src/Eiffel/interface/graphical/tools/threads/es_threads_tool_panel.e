@@ -24,10 +24,6 @@ inherit
 		end
 
 	DEBUGGING_UPDATE_ON_IDLE
-		redefine
-			update,
-			real_update
-		end
 
 create
 	make
@@ -150,20 +146,6 @@ feature -- Status setting
 		do
 		end
 
-	update is
-			-- Refresh `Current's display.
-		local
-			l_status: APPLICATION_STATUS
-		do
-			cancel_process_real_update_on_idle
-			request_clean_threads_info
-			if debugger_manager.application_is_executing then
-				l_status := debugger_manager.application_status
-				check l_status /= Void end
-				process_real_update_on_idle (l_status.is_stopped)
-			end
-		end
-
 	reset_tool is
 		do
 			reset_update_on_idle
@@ -180,6 +162,35 @@ feature -- Status setting
 			end
 		end
 
+feature {NONE} -- Update
+
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+			-- Update when debugging
+		do
+			request_clean_threads_info
+		end
+
+	on_update_when_application_is_not_executing is
+			-- Update when not debugging
+		do
+			request_clean_threads_info
+		end
+
+	real_update (dbg_was_stopped: BOOLEAN) is
+			-- Display current execution status.
+			-- dbg_was_stopped is ignore if Application/Debugger is not running			
+		local
+			l_status: APPLICATION_STATUS
+		do
+			if debugger_manager.application_is_executing then
+				l_status := debugger_manager.application_status
+				if dbg_was_stopped then
+					l_status.update_on_stopped_state
+				end
+				refresh_threads_info
+			end
+		end
+
 feature {NONE} -- Memory management
 
 	internal_recycle is
@@ -191,23 +202,7 @@ feature {NONE} -- Memory management
 			Precursor
 		end
 
-feature {NONE} -- Implementation
-
-	real_update (dbg_was_stopped: BOOLEAN) is
-			-- Display current execution status.
-			-- dbg_was_stopped is ignore if Application/Debugger is not running			
-		local
-			l_status: APPLICATION_STATUS
-		do
-			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
-			if debugger_manager.application_is_executing then
-				l_status := debugger_manager.application_status
-				if dbg_was_stopped then
-					l_status.update_on_stopped_state
-				end
-				refresh_threads_info
-			end
-		end
+feature {NONE} -- Implementation		
 
 	clean_threads_info is
 		do

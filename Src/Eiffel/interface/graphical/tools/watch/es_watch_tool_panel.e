@@ -23,9 +23,7 @@ inherit
 			create_mini_tool_bar_items,
 			build_docking_content,
 			internal_recycle,
-			show,
-			update,
-			real_update
+			show
 		end
 
 create
@@ -1298,8 +1296,6 @@ feature -- Access
 			add_expression (expr, False)
 		end
 
-feature -- Update
-
 	refresh is
 			-- Refresh current grid
 			--| Could be optimized to refresh only grid's content display ..
@@ -1308,32 +1304,18 @@ feature -- Update
 			update
 		end
 
-	update is
-			-- Display current execution status.
+feature {NONE} -- Update
+
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+			-- Update when debugging
 		do
-			cancel_process_real_update_on_idle
-			if debugger_manager.application_is_executing then
-				process_real_update_on_idle (debugger_manager.application_is_stopped)
-			else
-				watches_grid.reset_layout_recorded_values
-			end
 		end
 
-feature {NONE} -- Auto-completion
-
-	set_up_complete_possibilities_provider (a_item: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL) is
-			-- Set up code completion possibilities.
-		local
-			l_provider: EB_DEBUGGER_EXPRESSION_COMPLETION_POSSIBILITIES_PROVIDER
+	on_update_when_application_is_not_executing is
+			-- Update when not debugging
 		do
-			create l_provider.make (Void, Void)
-			l_provider.set_dynamic_context_functions (
-										agent debugger_manager.current_debugging_class_c,
-										agent debugger_manager.current_debugging_feature_as)
-			a_item.set_completion_possibilities_provider (l_provider)
+			watches_grid.reset_layout_recorded_values
 		end
-
-feature {NONE} -- Implementation
 
 	real_update (dbg_was_stopped: BOOLEAN) is
 			-- Display current execution status.
@@ -1344,7 +1326,6 @@ feature {NONE} -- Implementation
 			l_item: like watched_item_from
 			witems: like watched_items
 		do
-			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (dbg_was_stopped)
 			if debugger_manager.safe_application_is_stopped and dbg_was_stopped then
 				eval := True
 			end
@@ -1393,6 +1374,22 @@ feature {NONE} -- Implementation
 			end
 			process_record_layout_on_next_recording_request := eval
 		end
+
+feature {NONE} -- Auto-completion
+
+	set_up_complete_possibilities_provider (a_item: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL) is
+			-- Set up code completion possibilities.
+		local
+			l_provider: EB_DEBUGGER_EXPRESSION_COMPLETION_POSSIBILITIES_PROVIDER
+		do
+			create l_provider.make (Void, Void)
+			l_provider.set_dynamic_context_functions (
+										agent debugger_manager.current_debugging_class_c,
+										agent debugger_manager.current_debugging_feature_as)
+			a_item.set_completion_possibilities_provider (l_provider)
+		end
+
+feature {NONE} -- Implementation
 
 	standard_grid_label (s: STRING): EV_GRID_LABEL_ITEM is
 		do

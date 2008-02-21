@@ -258,9 +258,9 @@ feature -- Access: Platform specific
 			-- Read CHARACTER at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Character_bytes) <= count
+			valid_position: (pos + Character_8_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Character_bytes)
+			($Result).memory_copy (item + pos, Character_8_bytes)
 		end		
 
 	read_real (pos: INTEGER): REAL is
@@ -268,18 +268,18 @@ feature -- Access: Platform specific
 		obsolete "Use read_real_32 instead."
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Real_bytes) <= count
+			valid_position: (pos + Real_32_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Real_bytes)
+			($Result).memory_copy (item + pos, Real_32_bytes)
 		end
 
 	read_real_32 (pos: INTEGER): REAL is
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Real_bytes) <= count
+			valid_position: (pos + Real_32_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Real_bytes)
+			($Result).memory_copy (item + pos, Real_32_bytes)
 		end
 
 	read_double (pos: INTEGER): DOUBLE is
@@ -287,18 +287,18 @@ feature -- Access: Platform specific
 		obsolete "Use read_real_64 instead."
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Double_bytes) <= count
+			valid_position: (pos + Real_64_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Double_bytes)
+			($Result).memory_copy (item + pos, Real_64_bytes)
 		end
 
 	read_real_64 (pos: INTEGER): DOUBLE is
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Double_bytes) <= count
+			valid_position: (pos + Real_64_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, Double_bytes)
+			($Result).memory_copy (item + pos, Real_64_bytes)
 		end
 
 	read_array (pos, a_count: INTEGER): ARRAY [NATURAL_8] is
@@ -439,9 +439,9 @@ feature -- Element change: Platform specific
 			-- Insert `' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Character_bytes) <= count
+			valid_position: (pos + Character_8_bytes) <= count
 		do
-			(item + pos).memory_copy ($c, Character_bytes)
+			(item + pos).memory_copy ($c, Character_8_bytes)
 		ensure
 			inserted: c = read_character (pos)
 		end			
@@ -451,9 +451,9 @@ feature -- Element change: Platform specific
 		obsolete "Use put_real_32 instead."
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Real_bytes) <= count
+			valid_position: (pos + Real_32_bytes) <= count
 		do
-			(item + pos).memory_copy ($r, Real_bytes)
+			(item + pos).memory_copy ($r, Real_32_bytes)
 		ensure
 			inserted: r = read_real_32 (pos)
 		end
@@ -462,9 +462,9 @@ feature -- Element change: Platform specific
 			-- Insert `r' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Real_bytes) <= count
+			valid_position: (pos + Real_32_bytes) <= count
 		do
-			(item + pos).memory_copy ($r, Real_bytes)
+			(item + pos).memory_copy ($r, Real_32_bytes)
 		ensure
 			inserted: r = read_real_32 (pos)
 		end
@@ -474,9 +474,9 @@ feature -- Element change: Platform specific
 		obsolete "Use put_real_64 instead."
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Double_bytes) <= count
+			valid_position: (pos + Real_64_bytes) <= count
 		do
-			(item + pos).memory_copy ($d, Double_bytes)
+			(item + pos).memory_copy ($d, Real_64_bytes)
 		ensure
 			inserted: d = read_real_64 (pos)
 		end
@@ -485,9 +485,9 @@ feature -- Element change: Platform specific
 			-- Insert `d' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
-			valid_position: (pos + Double_bytes) <= count
+			valid_position: (pos + Real_64_bytes) <= count
 		do
-			(item + pos).memory_copy ($d, Double_bytes)
+			(item + pos).memory_copy ($d, Real_64_bytes)
 		ensure
 			inserted: d = read_real_64 (pos)
 		end

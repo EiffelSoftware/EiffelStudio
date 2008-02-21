@@ -15,7 +15,7 @@ inherit
 		rename
 			index as position
 		redefine
-			read_stream, 
+			read_stream,
 			readstream,
 			read_character,
 			readchar,
@@ -60,47 +60,47 @@ feature -- Output
 			internal_managed_pointer.put_integer_32 (i, 0)
 			put_managed_pointer (internal_managed_pointer, 0, 4)
 		end
-				
+
 	put_integer_16 (i: INTEGER_16) is
 			-- Write binary value of `i' at current position.
 		do
 			internal_managed_pointer.put_integer_16 (i, 0)
 			put_managed_pointer (internal_managed_pointer, 0, 2)
 		end
-		
+
 	put_integeR_64 (i: INTEGER_64) is
 			-- Write binary value of `i' at current position.
 		do
 			internal_managed_pointer.put_integer_64 (i, 0)
 			put_managed_pointer (internal_managed_pointer, 0, 8)
 		end
-		
+
 	put_natural_8 (i: NATURAL_8) is
 			-- Write binary value of `i' at current position.
 		do
 			internal_managed_pointer.put_natural_8 (i, 0)
 			put_managed_pointer (internal_managed_pointer, 0, 1)
 		end
-		
+
 	put_natural_16 (i: NATURAL_16) is
 			-- Write binary value of `i' at current position.
 		do
 			internal_managed_pointer.put_natural_16 (i, 0)
-			put_managed_pointer (internal_managed_pointer, 0, 2)		
+			put_managed_pointer (internal_managed_pointer, 0, 2)
 		end
-		
+
 	put_natural, put_natural_32 (i: NATURAL_32) is
 			-- Write binary value of `i' at current position.
 		do
 			internal_managed_pointer.put_natural_32 (i, 0)
-			put_managed_pointer (internal_managed_pointer, 0, 4)		
+			put_managed_pointer (internal_managed_pointer, 0, 4)
 		end
-		
+
 	put_natural_64 (i: NATURAL_64) is
 			-- Write binary value of `i' at current position.
 		do
 			internal_managed_pointer.put_natural_64 (i, 0)
-			put_managed_pointer (internal_managed_pointer, 0, 8)	
+			put_managed_pointer (internal_managed_pointer, 0, 8)
 		end
 
 	put_boolean, putbool (b: BOOLEAN) is
@@ -117,14 +117,14 @@ feature -- Output
 			-- Write binary value of `r' at current position.
 		do
 			internal_managed_pointer.put_real_32 (r, 0)
-			put_managed_pointer (internal_managed_pointer, 0, platform_indicator.real_bytes)
+			put_managed_pointer (internal_managed_pointer, 0, {PLATFORM}.real_32_bytes)
 		end
 
 	put_double, putdouble (d: DOUBLE) is
 			-- Write binary value `d' at current position.
 		do
 			internal_managed_pointer.put_real_64 (d, 0)
-			put_managed_pointer (internal_managed_pointer, 0, platform_indicator.double_bytes)
+			put_managed_pointer (internal_managed_pointer, 0, {PLATFORM}.real_64_bytes)
 
 		end
 
@@ -147,7 +147,7 @@ feature -- Output
 		end
 
 	put_string, putstring (s: STRING) is
-			-- 
+			--
 		local
 			byte_array: NATIVE_ARRAY [NATURAL_8]
 			str_index: INTEGER
@@ -163,7 +163,7 @@ feature -- Output
 			end
 			internal_stream.write (byte_array, 0, byte_array.count)
 		end
-		
+
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		do
@@ -191,11 +191,11 @@ feature -- Input
 			end
 			create str_area.make (nb_char)
 			new_count := internal_stream.read (str_area, 0, nb_char)
-			
+
 			check
 				valid_new_count: new_count <= nb_char
 			end
-			
+
 			from
 				str_area_index := 0
 			until
@@ -209,20 +209,20 @@ feature -- Input
 	read_integer, readint, read_integer_32 is
 			-- Read the binary representation of a new integer
 			-- from file. Make result available in `last_integer'.
-		do			
+		do
 			read_to_managed_pointer (internal_managed_pointer, 0, 4)
 			last_integer := internal_managed_pointer.read_integer_32 (0)
 		end
-		
+
 	read_integer_8 is
 			-- Read the binary representation of a new 8-bit integer
 			-- from file. Make result available in `last_integer_8'.
 		do
 			read_to_managed_pointer (internal_managed_pointer, 0, 1)
 			last_integer_8 := internal_managed_pointer.read_integer_8 (0)
-			
+
 		end
-		
+
 	read_integer_16 is
 			-- Read the binary representation of a new 16-bit integer
 			-- from file. Make result available in `last_integer_16'.
@@ -230,7 +230,7 @@ feature -- Input
 			read_to_managed_pointer (internal_managed_pointer, 0, 2)
 			last_integer_16 := internal_managed_pointer.read_integer_16 (0)
 		end
-		
+
 	read_integer_64 is
 			-- Read the binary representation of a new 64-bit integer
 			-- from file. Make result available in `last_integer_64'.
@@ -238,7 +238,7 @@ feature -- Input
 			read_to_managed_pointer (internal_managed_pointer, 0, 8)
 			last_integer_64 := internal_managed_pointer.read_integer_64 (0)
 		end
-		
+
 	read_natural_8 is
 			-- Read the binary representation of a new 8-bit natural
 			-- from file. Make result available in `last_natural_8'.
@@ -246,13 +246,13 @@ feature -- Input
 			read_to_managed_pointer (internal_managed_pointer, 0, 1)
 			last_natural_8 := internal_managed_pointer.read_natural_8 (0)
 		end
-	
+
 	read_natural_16 is
 			-- Read the binary representation of a new 16-bit natural
 			-- from file. Make result available in `last_natural_16'.
 		do
 			read_to_managed_pointer (internal_managed_pointer, 0, 2)
-			last_natural_16 := internal_managed_pointer.read_natural_16 (0)	
+			last_natural_16 := internal_managed_pointer.read_natural_16 (0)
 		end
 
 	read_natural, read_natural_32 is
@@ -262,29 +262,29 @@ feature -- Input
 			read_to_managed_pointer (internal_managed_pointer, 0, 4)
 			last_natural := internal_managed_pointer.read_natural_32 (0)
 		end
-	
+
 	read_natural_64 is
 			-- Read the binary representation of a new 64-bit natural
 			-- from file. Make result available in `last_natural_64'.
 		do
 			read_to_managed_pointer (internal_managed_pointer, 0, 8)
-			last_natural_64 := internal_managed_pointer.read_natural_64 (0)			
+			last_natural_64 := internal_managed_pointer.read_natural_64 (0)
 		end
 
 	read_real, readreal is
 			-- Read the binary representation of a new real
 			-- from file. Make result available in `last_real'.
 		do
-			read_to_managed_pointer (internal_managed_pointer, 0, platform_indicator.real_bytes)
-			last_real := internal_managed_pointer.read_real_32 (0)			
+			read_to_managed_pointer (internal_managed_pointer, 0, {PLATFORM}.real_32_bytes)
+			last_real := internal_managed_pointer.read_real_32 (0)
 		end
 
 	read_double, readdouble is
 			-- Read the binary representation of a new double
 			-- from file. Make result available in `last_double'.
 		do
-			read_to_managed_pointer (internal_managed_pointer, 0, platform_indicator.double_bytes)
-			last_double := internal_managed_pointer.read_real_64 (0)		
+			read_to_managed_pointer (internal_managed_pointer, 0, {PLATFORM}.real_64_bytes)
+			last_double := internal_managed_pointer.read_real_64 (0)
 		end
 
 	read_character, readchar is
@@ -300,7 +300,7 @@ feature -- Input
 				last_character := a_code.to_character_8
 		  	end
 		end
-	
+
 	read_data (p: POINTER; nb_bytes: INTEGER) is
 			-- Read a string of at most `nb_bytes' bound bytes
 			-- or until end of file.
@@ -319,8 +319,8 @@ feature -- Input
 				l_i := internal_stream.read_byte
 				if l_i /= -1 then
 					l_read := l_read + 1
-					{MARSHAL}.write_byte (p + i, l_i.to_natural_8)	
-					i := i + 1									
+					{MARSHAL}.write_byte (p + i, l_i.to_natural_8)
+					i := i + 1
 				end
 			end
 			bytes_read := l_read
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 
 	c_open_modifier: INTEGER is 32768
 			-- Open the file in binary mode.
-			
+
 	internal_managed_pointer: MANAGED_POINTER is
 			-- Managed pointer for internal use
 		do
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			end
 			Result := mgn_ptr
 		end
-	
+
 	mgn_ptr: MANAGED_POINTER
 			-- Managed pointer for internal use	
 

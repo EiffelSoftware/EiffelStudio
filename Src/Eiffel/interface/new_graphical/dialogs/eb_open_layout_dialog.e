@@ -83,7 +83,7 @@ feature {NONE} -- Initlization
 			-- Initlialize layout list items.
 		local
 			l_item: EV_LIST_ITEM
-			l_names: ARRAYED_LIST [STRING_GENERAL]
+			l_names: DS_HASH_TABLE [TUPLE [FILE_NAME, BOOLEAN], STRING_GENERAL]
 		do
 			from
 				l_names := manager.layouts
@@ -91,7 +91,7 @@ feature {NONE} -- Initlization
 			until
 				l_names.after
 			loop
-				create l_item.make_with_text (l_names.item)
+				create l_item.make_with_text (l_names.key_for_iteration)
 				list_for_existing_layouts.extend (l_item)
 				l_names.forth
 			end

@@ -16,9 +16,7 @@ inherit
 			on_after_initialized,
 			internal_recycle,
 			show,
-			on_show,
-			update,
-			real_update
+			on_show
 		end
 
 	APPLICATION_STATUS_CONSTANTS
@@ -473,26 +471,6 @@ feature -- Change
 			stack_grid.clear
 		end
 
-	update is
-			-- Refresh `Current's display.
-		local
-			l_is_stopped: BOOLEAN
-		do
-			cancel_process_real_update_on_idle
-			request_clean_stack_grid
-			if Debugger_manager.application_is_executing then
-				l_is_stopped := Debugger_manager.application_is_stopped
-				display_stop_cause (l_is_stopped)
-				refresh_threads_info
-				process_real_update_on_idle (l_is_stopped)
-			else
-				save_call_stack_cmd.disable_sensitive
-				copy_call_stack_cmd.disable_sensitive
-				display_stop_cause (False)
-				display_box_thread (False)
-			end
-		end
-
 	show is
 			-- Show tool
 		do
@@ -510,7 +488,25 @@ feature {NONE} -- Even handlers
 			Precursor
 		end
 
-feature {NONE} -- Implementation: Update
+feature {NONE} -- Update
+
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+			-- Update when debugging
+		do
+			request_clean_stack_grid
+			display_stop_cause (dbg_stopped)
+			refresh_threads_info
+		end
+
+	on_update_when_application_is_not_executing is
+			-- Update when not debugging
+		do
+			request_clean_stack_grid
+			save_call_stack_cmd.disable_sensitive
+			copy_call_stack_cmd.disable_sensitive
+			display_stop_cause (False)
+			display_box_thread (False)
+		end
 
 	real_update (dbg_was_stopped: BOOLEAN) is
 			-- Display current execution status.
@@ -519,7 +515,6 @@ feature {NONE} -- Implementation: Update
 			l_status: APPLICATION_STATUS
 			stack: EIFFEL_CALL_STACK
 		do
-			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (dbg_was_stopped)
 			request_clean_stack_grid
 			save_call_stack_cmd.disable_sensitive
 			copy_call_stack_cmd.disable_sensitive

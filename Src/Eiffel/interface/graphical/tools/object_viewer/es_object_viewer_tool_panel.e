@@ -10,12 +10,6 @@ class
 	ES_OBJECT_VIEWER_TOOL_PANEL
 
 inherit
-
-	EB_OBJECT_VIEWERS_I
-		rename
-			close as close_tool
-		end
-
 	EB_TOOL
 		redefine
 --			on_shown,
@@ -25,6 +19,11 @@ inherit
 			build_mini_toolbar,
 			build_docking_content,
 			show, close
+		end
+
+	EB_OBJECT_VIEWERS_I
+		rename
+			close as close_tool
 		end
 
 	EB_SHARED_DEBUGGER_MANAGER
@@ -45,10 +44,6 @@ inherit
 		end
 
 	DEBUGGING_UPDATE_ON_IDLE
-		redefine
-			update,
-			real_update
-		end
 
 create
 	make,
@@ -227,25 +222,6 @@ feature -- Events
 			end
 		end
 
-	update is
-			-- Refresh `Current's display.
-		do
-			cancel_process_real_update_on_idle
-			if Debugger_manager.application_is_executing then
-				process_real_update_on_idle (Debugger_manager.application_is_stopped)
-			else
-				viewers_manager.clear
-			end
-		end
-
-	real_update (dbg_was_stopped: BOOLEAN) is
-			-- Display current execution status.
-			-- dbg_was_stopped is ignore if Application/Debugger is not running
-		do
-			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
-			viewers_manager.refresh
-		end
-
 	show is
 			-- Show tool.
 		local
@@ -279,6 +255,26 @@ feature -- Events
 			if command /= Void then
 				command.remove_entry (Current)
 			end
+		end
+
+feature {NONE} -- Update
+
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+			-- Update when debugging
+		do
+		end
+
+	on_update_when_application_is_not_executing is
+			-- Update when not debugging
+		do
+			viewers_manager.clear
+		end
+
+	real_update (dbg_was_stopped: BOOLEAN) is
+			-- Display current execution status.
+			-- dbg_was_stopped is ignore if Application/Debugger is not running
+		do
+			viewers_manager.refresh
 		end
 
 feature -- Label management

@@ -12,15 +12,13 @@ class
 inherit
 	ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
-			tool_descriptor,
+--			tool_descriptor,
 			on_before_initialize,
 			on_after_initialized,
 			create_mini_tool_bar_items,
 			build_docking_content,
 			internal_recycle,
-			show,
-			update,
-			real_update
+			show
 		end
 
 	REFACTORING_HELPER
@@ -47,8 +45,8 @@ create
 
 feature {NONE} -- Initialization
 
-	tool_descriptor: ES_OBJECTS_TOOL
-			-- <Precursor>
+--	tool_descriptor: ES_OBJECTS_TOOL
+--			-- <Precursor>
 
 	on_before_initialize is
 			-- <Precursor>
@@ -763,24 +761,6 @@ feature -- Change
 			update
 		end
 
-	update is
-			-- Display current execution status.
-		do
-			cancel_process_real_update_on_idle
-			if Debugger_manager.application_is_executing then
-				process_real_update_on_idle (Debugger_manager.application_is_stopped)
-			else
-				from
-					objects_grids.start
-				until
-					objects_grids.after
-				loop
-					objects_grids.item_for_iteration.grid.reset_layout_recorded_values
-					objects_grids.forth
-				end
-			end
-		end
-
 	set_debugger_manager (a_manager: like debugger_manager) is
 			-- Affect `a_manager' to `debugger_manager'.
 		do
@@ -797,6 +777,102 @@ feature -- Change
 			if not l_grid.is_destroyed and then l_grid.is_displayed and then l_grid.is_sensitive then
 				l_grid.set_focus
 			end
+		end
+
+feature {NONE} -- Update
+
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+			-- Update when debugging
+		do
+		end
+
+	on_update_when_application_is_not_executing is
+			-- Update when not debugging
+		do
+			from
+				objects_grids.start
+			until
+				objects_grids.after
+			loop
+				objects_grids.item_for_iteration.grid.reset_layout_recorded_values
+				objects_grids.forth
+			end
+		end
+
+	real_update (dbg_was_stopped: BOOLEAN) is
+			-- Display current execution status.
+			-- dbg_was_stopped is ignore if Application/Debugger is not running
+		local
+			l_app: APPLICATION_EXECUTION
+			l_status: APPLICATION_STATUS
+			g: like objects_grid
+			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
+			t: like objects_grid_data
+		do
+			from
+				objects_grids.start
+			until
+				objects_grids.after
+			loop
+				objects_grids.item_for_iteration.grid.request_delayed_clean
+				objects_grids.forth
+			end
+
+			if debugger_manager.application_is_executing then
+				l_app := debugger_manager.application
+				l_status := l_app.status
+			end
+			if l_status /= Void then
+				if l_status.is_stopped and dbg_was_stopped then
+					if l_status.has_valid_call_stack and then l_status.has_valid_current_eiffel_call_stack_element then
+						init_specific_lines
+						from
+							objects_grids.start
+						until
+							objects_grids.after
+						loop
+							objects_grids.item_for_iteration.grid.cancel_delayed_clean
+							objects_grids.forth
+						end
+						from
+							objects_grids.start
+						until
+							objects_grids.after
+						loop
+							t := objects_grids.item_for_iteration
+							g := t.grid
+							g.call_delayed_clean
+							t.grid_is_empty := False
+
+							lines := t.lines
+							from
+								lines.start
+							until
+								lines.after
+							loop
+								if lines.item /= Void then
+									lines.item.attach_to_row (g.extended_new_row)
+								else --| Void is the place for displayed objects
+									if dropped_objects_grid = g then
+										add_displayed_objects_to_grid (g)
+									end
+								end
+								lines.forth
+							end
+							if g.row_count > 0 then
+									--| be sure the grid is redrawn, and the first row is visible
+								g.row (1).redraw
+							end
+							g.restore_layout
+							objects_grids.forth
+						end
+					end
+				end
+			end
+			if header_box /= Void then
+				update_header_box (dbg_was_stopped)
+			end
+			on_objects_row_deselected (Void) -- reset toolbar buttons
 		end
 
 feature -- Status report
@@ -1006,83 +1082,6 @@ feature {NONE} -- Implementation
 
 	split: EV_HORIZONTAL_SPLIT_AREA
 			-- Split area that contains both `stack_objects_grid' and `debugged_objects_grid'.
-
-	real_update (dbg_was_stopped: BOOLEAN) is
-			-- Display current execution status.
-			-- dbg_was_stopped is ignore if Application/Debugger is not running
-		local
-			l_app: APPLICATION_EXECUTION
-			l_status: APPLICATION_STATUS
-			g: like objects_grid
-			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
-			t: like objects_grid_data
-		do
-			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (dbg_was_stopped)
-			from
-				objects_grids.start
-			until
-				objects_grids.after
-			loop
-				objects_grids.item_for_iteration.grid.request_delayed_clean
-				objects_grids.forth
-			end
-
-			if debugger_manager.application_is_executing then
-				l_app := debugger_manager.application
-				l_status := l_app.status
-			end
-			if l_status /= Void then
-				if l_status.is_stopped and dbg_was_stopped then
-					if l_status.has_valid_call_stack and then l_status.has_valid_current_eiffel_call_stack_element then
-						init_specific_lines
-						from
-							objects_grids.start
-						until
-							objects_grids.after
-						loop
-							objects_grids.item_for_iteration.grid.cancel_delayed_clean
-							objects_grids.forth
-						end
-						from
-							objects_grids.start
-						until
-							objects_grids.after
-						loop
-							t := objects_grids.item_for_iteration
-							g := t.grid
-							g.call_delayed_clean
-							t.grid_is_empty := False
-
-							lines := t.lines
-							from
-								lines.start
-							until
-								lines.after
-							loop
-								if lines.item /= Void then
-									lines.item.attach_to_row (g.extended_new_row)
-								else --| Void is the place for displayed objects
-									if dropped_objects_grid = g then
-										add_displayed_objects_to_grid (g)
-									end
-								end
-								lines.forth
-							end
-							if g.row_count > 0 then
-									--| be sure the grid is redrawn, and the first row is visible
-								g.row (1).redraw
-							end
-							g.restore_layout
-							objects_grids.forth
-						end
-					end
-				end
-			end
-			if header_box /= Void then
-				update_header_box (dbg_was_stopped)
-			end
-			on_objects_row_deselected (Void) -- reset toolbar buttons
-		end
 
 feature {NONE} -- Current objects grid Implementation
 

@@ -18,16 +18,16 @@ inherit
 			{NONE} all
 		end
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	create_update_on_idle_agent is
-		do
-			update_on_idle_agent := agent real_update_on_idle
+	debugger_manager: DEBUGGER_MANAGER is
+			-- Associated debugger manager
+		deferred
 		end
 
-feature -- update
+feature -- Update access
 
-	request_update is
+	frozen request_update is
 			-- Request an update, this should call update only
 			-- once per debugging "operation"
 			-- This is to avoid computing twice the data
@@ -38,39 +38,121 @@ feature -- update
 			end
 		end
 
-	update is
+	frozen update is
+			-- Update now or on idle
 		local
-			l_status: APPLICATION_STATUS
+			dbg_stopped: BOOLEAN
 		do
 			cancel_process_real_update_on_idle
-			l_status := debugger_manager.application.status
-			if l_status /= Void then
-				process_real_update_on_idle (l_status.is_stopped)
+			if debugger_manager.application_is_executing then
+				dbg_stopped := debugger_manager.application_is_stopped
+				on_update_when_application_is_executing (dbg_stopped)
+				process_real_update_on_idle (dbg_stopped)
+			else
+				on_update_when_application_is_not_executing
 			end
-				-- To redefine
 		end
 
-	cancel_idled_update is
-		do
-			cancel_process_real_update_on_idle
+feature {NONE} -- update
+
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+			-- Update when debugging
+			-- To redefine for adaptation			
+		require
+			application_is_executing: debugger_manager.application_is_executing
+		deferred
 		end
 
-feature {NONE} -- real_update
-
-	reset_update_on_idle is
-		do
-			cancel_process_real_update_on_idle
-			last_real_update_id := 0
+	on_update_when_application_is_not_executing is
+			-- Update when not debugging
+			-- To redefine for adaptation			
+		require
+			application_is_not_executing: not debugger_manager.application_is_executing
+		deferred
 		end
+
+	real_update (arg_is_stopped: BOOLEAN) is
+			-- Display current execution status.
+		require
+			last_real_update_id_updated: last_real_update_id = Debugger_manager.debugging_operation_id
+		deferred
+		end
+
+feature {NONE} -- Implementation Properties
+
+	update_on_idle_agent: PROCEDURE [ANY, TUPLE]; --TUPLE [BOOLEAN]]
+			-- Procedure used in the update on idle mecanism
+
+	real_update_on_idle_called_on_stopped: BOOLEAN
+			-- is real update was requested when application was stopped ?
 
 	last_real_update_id: NATURAL_32
+			-- Last real update id
+			-- this keeps the debugging operation id
+			-- to be sure we don't perform the update if the debugging operation is past		
 
-	update_already_done: BOOLEAN is
+feature {NONE} -- Implementation status
+
+	frozen update_already_done: BOOLEAN is
+			-- Update already done,
+			-- this means the last update was done for current debugging operation id
 		do
 			Result := debugger_manager.debugging_operation_id = last_real_update_id
 		end
 
-	real_update_on_idle is
+	frozen real_update_allowed (dbg_was_stopped: BOOLEAN): BOOLEAN is
+			-- Is real_update allowed ?
+			--| This is to prevent graphical operation to be done during
+			--| dotnet debugger callback notification
+		do
+			Result := not is_real_update_on_idle_processing
+			if Result and debugger_manager.is_dotnet_project then
+				if {app_impl: !APPLICATION_EXECUTION_DOTNET} debugger_manager.application then
+					Result := not app_impl.callback_notification_processing
+				end
+			end
+		end
+
+	frozen is_real_update_on_idle_processing: BOOLEAN is
+			-- Is a real update on idle currently processing on the system?
+			--| this is to prevent conflict between dotnet debugger thread graphical thread.
+		do
+			Result := real_update_on_idle_processing_cell.item
+		end
+
+	frozen real_update_on_idle_processing_cell: CELL [BOOLEAN] is
+			-- Keep info that a real update on idle is processing (or not) in the system.
+			-- we keep this per thread for now.
+		once
+			create Result
+		end
+
+feature {NONE} -- Implementation change
+
+	frozen create_update_on_idle_agent is
+			-- Create update_on_idle_agent
+		do
+			update_on_idle_agent := agent real_update_on_idle
+		ensure
+			update_on_idle_agent_set: update_on_idle_agent /= Void
+		end
+
+	frozen process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
+			-- Call `real_update' on idle action
+		do
+			real_update_on_idle_called_on_stopped := a_dbg_stopped
+			ev_application.add_idle_action (update_on_idle_agent)
+		end
+
+	frozen cancel_process_real_update_on_idle is
+			-- cancel any calls to `real_update' on idle action	
+		do
+			real_update_on_idle_called_on_stopped := False
+			ev_application.remove_idle_action (update_on_idle_agent)
+		end
+
+	frozen real_update_on_idle is
+			-- Call the real_update if allowed, otherwise postpone it on next idle
 		local
 			l_dbg_is_stopped: BOOLEAN
 		do
@@ -81,6 +163,7 @@ feature {NONE} -- real_update
 			cancel_process_real_update_on_idle
 			if real_update_allowed (l_dbg_is_stopped) then
 				real_update_on_idle_processing_cell.replace (True)
+				last_real_update_id := Debugger_manager.debugging_operation_id
 				real_update (l_dbg_is_stopped)
 				real_update_on_idle_processing_cell.replace (False)
 			else
@@ -88,25 +171,15 @@ feature {NONE} -- real_update
 			end
 		end
 
-	real_update_allowed (dbg_was_stopped: BOOLEAN): BOOLEAN is
-		local
-			app_impl: APPLICATION_EXECUTION_DOTNET
+	frozen reset_update_on_idle is
+			-- Reset update on idle
 		do
-			Result := not is_real_update_on_idle_processing
-			if Result and Debugger_manager.is_dotnet_project then
-				app_impl ?= Debugger_manager.application
-				check app_impl /= Void end
-				Result := not app_impl.callback_notification_processing
-			end
+			cancel_process_real_update_on_idle
+			last_real_update_id := 0
 		end
 
-	real_update (arg_is_stopped: BOOLEAN) is
-			-- Display current execution status.
-		do
-			last_real_update_id := Debugger_manager.debugging_operation_id
-		end
-
-	postpone_real_update_on_next_idle (a_dbg_stopped: BOOLEAN) is
+	frozen postpone_real_update_on_next_idle (a_dbg_stopped: BOOLEAN) is
+			-- Postpone on next idle
 		do
 			debug ("update_on_idle")
 				print (generator +".postpone_real_update_on_next_idle (dbg_is_stopped="
@@ -114,45 +187,6 @@ feature {NONE} -- real_update
 			end
 			process_real_update_on_idle (a_dbg_stopped)
 		end
-
-feature {NONE} -- Implementation
-
-	debugger_manager: DEBUGGER_MANAGER is
-		deferred
-		end
-
-	is_real_update_on_idle_processing: BOOLEAN is
-		do
-			Result := real_update_on_idle_processing_cell.item
-		end
-
-	real_update_on_idle_processing_cell: CELL [BOOLEAN] is
-		once
-			create Result
-		end
-
-	real_update_on_idle_called_on_stopped: BOOLEAN
-
-	process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
-			-- Call `real_update' on idle action
-		do
-			real_update_on_idle_called_on_stopped := a_dbg_stopped
-			ev_application.add_idle_action (update_on_idle_agent)
-		end
-
-	cancel_process_real_update_on_idle is
-			-- cancel any calls to `real_update' on idle action	
-		do
-			real_update_on_idle_called_on_stopped := False
-			ev_application.remove_idle_action (update_on_idle_agent)
-		end
-
-	update_on_idle_agent: PROCEDURE [ANY, TUPLE]; --TUPLE [BOOLEAN]]
-			-- Procedure used in the update on idle mecanism
-
-invariant
-
-	update_on_idle_agent_not_void: update_on_idle_agent /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

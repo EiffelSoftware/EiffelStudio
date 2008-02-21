@@ -33,7 +33,7 @@
 */
 
 /*
- * config.vms (aka eif_config.h for VMS)
+ * eif_config_h.vms (aka eif_config.h for VMS)
  * $Id$
  * This file was produced by running the config_h.SH script, which
  * gets its values from config.sh, which is generally produced by
@@ -688,6 +688,44 @@
 /* INTEGER_64 constant definition: */
 #define RTI64C(x)	x##LL
 #define RTU64C(x)	x##ULL
+
+/* 6.x */
+
+/* Define EIF_OS Constants */
+
+#define EIF_OS_WINNT 	1
+#define EIF_OS_LINUX 	2
+#define EIF_OS_SUNOS	3
+#define EIF_OS_DARWIN 	4
+#define EIF_OS_ALPHA 	5
+#define EIF_OS_FREEBSD 	6
+#define EIF_OS_HPUX 	7
+#define EIF_OS_IRIX 	8
+#define EIF_OS_OPENBSD 	9
+#define EIF_OS_UNICOS 	10
+#define EIF_OS_VXWORKS	11
+#define EIF_OS_VMS		12
+
+/* Define EIF_OS value */
+#define EIF_OS EIF_OS_VMS
+
+/* Define EIF_ARCH Constants */
+
+#define EIF_ARCH_X86 	1
+#define EIF_ARCH_X86_64 	2
+#define EIF_ARCH_SPARC 	3
+#define EIF_ARCH_SPARC_64 	4
+#define EIF_ARCH_PPC		5
+#define EIF_ARCH_PPC_64	6
+#define EIF_ARCH_C90		7
+#define EIF_ARCH_T3D		8
+#define EIF_ARCH_HPPA	9
+#define EIF_ARCH_MIPS	10
+#define EIF_ARCH_MIPS_64	11
+
+
+
+/* VMS specific */
 
 /* is VMS platform? */
 #if defined __VMS || defined __vms || defined VMS || defined vms

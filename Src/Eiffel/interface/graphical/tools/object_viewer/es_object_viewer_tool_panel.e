@@ -1,5 +1,5 @@
 indexing
-	description: "Tool that displays breakpoints"
+	description: "Tool that displays objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "$Author$"
@@ -14,6 +14,7 @@ inherit
 		redefine
 			create_mini_tool_bar_items,
 			internal_recycle,
+			on_before_initialize,
 			on_after_initialized,
 			build_docking_content,
 			show, close
@@ -52,11 +53,17 @@ feature {NONE} -- Initialization
 			make (a_manager, a_tool)
 		end
 
+	on_before_initialize is
+			-- <Precursor>
+		do
+			Precursor
+			create viewers_manager.make_for_tool (Current)
+			viewers_manager.viewer_changed_actions.extend (agent update_viewers_selector)
+		end
+
 	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
 			-- <Precursor>
 		do
-			create viewers_manager.make_for_tool (Current)
-			viewers_manager.viewer_changed_actions.extend (agent update_viewers_selector)
 			a_widget.extend (viewers_manager.widget)
 		end
 

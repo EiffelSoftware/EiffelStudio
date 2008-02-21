@@ -1291,8 +1291,6 @@ feature -- Status setting
 
 				-- Show Tools and final visual settings
 			debugging_window.show_tools
-
-			attach_tools
 			restore_debug_docking_layout
 
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
@@ -1397,7 +1395,6 @@ feature -- Status setting
 			end
 
 			save_debug_docking_layout
-			detach_tools
 			Preferences.debug_tool_data.number_of_watch_tools_preference.set_value (watch_tool_list.count)
 
 				-- Free and recycle tools
@@ -2319,102 +2316,6 @@ feature {NONE} -- Implementation
 			-- Show watch tool preference
 		do
 			Result := preferences.misc_shortcut_data.shortcuts.item ("show_watch_tool")
-		end
-
-	attach_tools is
-			-- Attach debug tools to docking manager.
-		do
-			attach_a_tool ({ES_CALL_STACK_TOOL})
-			attach_a_tool ({ES_OBJECTS_TOOL})
-			attach_a_tool ({ES_OBJECT_VIEWER_TOOL})
-			attach_a_tool ({ES_WATCH_TOOL})
-			attach_a_tool ({ES_THREADS_TOOL})
-			attach_a_tool ({ES_BREAKPOINTS_TOOL})
-		end
-
-	detach_tools is
-			-- Detach debug tools from docking manager
-		do
-			detach_a_tool ({ES_CALL_STACK_TOOL})
-			detach_a_tool ({ES_OBJECTS_TOOL})
-			detach_a_tool ({ES_OBJECT_VIEWER_TOOL})
-			detach_a_tool ({ES_WATCH_TOOL})
-			detach_a_tool ({ES_THREADS_TOOL})
-			detach_a_tool ({ES_BREAKPOINTS_TOOL})
-		end
-
-	attach_a_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]) is
-			-- Attach tool which type is `a_type' to docking manager.
-		require
-			not_void: a_type /= Void
-		local
-			l_manager: SD_DOCKING_MANAGER
-			l_tool: ES_TOOL [EB_TOOL]
-			l_content: SD_CONTENT
-			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
-			l_active_count: INTEGER
-			l_shell_tools: ES_SHELL_TOOLS
-		do
-			l_manager := debugging_window.docking_manager
-			if l_manager /= Void then
-				l_shell_tools := debugging_window.shell_tools
-				l_active_count := l_shell_tools.editions_of_tool (a_type, False)
-				if l_active_count > 0 then
-					check only_one_tool_except_watch_tool: not a_type.is_equal ({ES_WATCH_TOOL}) implies l_active_count = 1 end
-					from
-						l_tools := l_shell_tools.tools (a_type)
-						l_tools.start
-					until
-						l_tools.after
-					loop
-						l_tool := l_tools.item_for_iteration
-						l_content := l_tool.panel.content
-						if not l_manager.contents.has (l_content) then
-							l_tool.panel.attach_to_docking_manager (l_manager)
---							l_manager.contents.extend (l_content)
-						end
-						l_tools.forth
-					end
-				end
-			end
-		end
-
-	detach_a_tool (a_type: TYPE [ES_TOOL [EB_TOOL]]) is
-			-- Detach tool which type is `a_type' from docking manager.
-		require
-			not_void: a_type /= Void
-		local
-			l_manager: SD_DOCKING_MANAGER
-			l_tool: ES_TOOL [EB_TOOL]
-			l_content: SD_CONTENT
-			l_tools: DS_ARRAYED_LIST [ES_TOOL [EB_TOOL]]
-			l_active_count: INTEGER
-			l_shell_tools: ES_SHELL_TOOLS
-		do
-			l_manager := debugging_window.docking_manager
-			if l_manager /= Void then
-				l_shell_tools := debugging_window.shell_tools
-				l_active_count := l_shell_tools.editions_of_tool (a_type, True)
-				if l_active_count > 0 then
-					check only_one_tool_except_watch_tool: not a_type.is_equal ({ES_WATCH_TOOL}) implies l_active_count = 1 end
-					from
-						l_tools := l_shell_tools.tools (a_type)
-						l_tools.start
-					until
-						l_tools.after
-					loop
-						l_tool := l_tools.item_for_iteration
-						if l_tool.is_interface_usable and then l_tool.is_tool_instantiated then
-							l_tool.hide
-							l_content := l_tool.panel.content
-							if l_content /= Void and then l_manager.contents.has (l_content) then
-								l_manager.contents.prune_all (l_content)
-							end
- 						end
-						l_tools.forth
-					end
-				end
-			end
 		end
 
 feature {NONE} -- Memory management

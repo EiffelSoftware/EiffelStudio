@@ -22,6 +22,7 @@ feature {NONE} -- Initlization
 			not_void: a_dev_window /= Void
 		do
 			create interface_names
+			create layouts.make (10)
 			init_existing_layouts
 			development_window := a_dev_window
 		ensure
@@ -30,6 +31,15 @@ feature {NONE} -- Initlization
 
 	init_existing_layouts is
 			-- Initialize `layouts'.
+		do
+			init_existing_layouts_imp (user_layout_normal_mode_path, True)
+			init_existing_layouts_imp (user_layout_debug_mode_path, False)
+		end
+
+	init_existing_layouts_imp (a_dir: FILE_NAME; a_from_normal_mode: BOOLEAN) is
+			-- Used by `init_eixisting_layouts'.
+		require
+			not_void: a_dir /= Void and then not a_dir.is_empty
 		local
 			l_dir: DIRECTORY
 			l_files: ARRAYED_LIST [STRING]
@@ -39,13 +49,9 @@ feature {NONE} -- Initlization
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_fn: FILE_NAME
 		do
-			create l_dir.make (docking_standard_layout_path)
+			create l_dir.make (a_dir)
 			if l_dir.exists then
 				from
-					create layouts.make (10)
-					layouts.compare_objects
-					create file_names.make (10)
-					file_names.compare_objects
 					l_files := l_dir.linear_representation
 					l_files.start
 				until
@@ -64,8 +70,8 @@ feature {NONE} -- Initlization
 
 						-- Maybe it's corrupted data, we ignore it.
 						if l_config_data /= Void then
-							layouts.extend (l_config_data.name)
-							file_names.extend (l_fn)
+							check not_already_has: not layouts.has (l_config_data.name) end
+							layouts.force ([l_fn, a_from_normal_mode], l_config_data.name)
 						end
 						l_file.close
 					end
@@ -86,9 +92,9 @@ feature -- Command
 			l_fn: FILE_NAME
 		do
 			if layouts.has (a_name) then
-				l_fn := file_name_of (a_name)
+				l_fn := layouts.item (a_name).file_path
 			else
-				l_fn := docking_standard_layout_path
+				l_fn := user_layout_path
 				l_fn.set_file_name (user_layout_prefix + (layouts.count + 1).out)
 			end
 
@@ -105,45 +111,116 @@ feature -- Command
 			l_r: BOOLEAN
 			l_pointer_style: EV_POINTER_STYLE
 			l_stock_pixmaps: EV_STOCK_PIXMAPS
+			l_dialog: ES_ERROR_PROMPT
+			l_debugger: EB_SHARED_DEBUGGER_MANAGER
+			l_info: TUPLE [file_name: FILE_NAME; is_normal_mode: BOOLEAN]
+			l_ok_to_open: BOOLEAN
+			l_cmd: EB_COMMAND
 		do
-			l_pointer_style := development_window.window.pointer_style
-			create l_stock_pixmaps
-			development_window.window.set_pointer_style (l_stock_pixmaps.busy_cursor)
+			l_info := layouts.item (a_name)
 
-			l_fn := file_name_of (a_name)
-			l_r := development_window.docking_manager.open_tools_config (l_fn)
-			if not l_r then
-				-- If opening failed, we open orignal layout before opening.
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (interface_names.l_open_layout_error, development_window.window, Void)
-				development_window.restore_standard_tools_docking_layout
+			if l_info.is_normal_mode /= is_normal_mode then
+				-- Layout saved in different mode. We need swtich mode now.
+				create l_debugger
+				if is_normal_mode then
+					l_ok_to_open := True
+				else
+					-- Is debug mode, can we swtich to normal mode now?
+					if l_debugger.eb_debugger_manager.is_debugging then
+						create l_dialog.make_standard (interface_names.l_open_layout_not_possible)
+						l_dialog.show_on_active_window
+						l_ok_to_open := False
+					else
+						l_ok_to_open := True
+					end
+				end
+				if l_ok_to_open then
+					l_cmd := l_debugger.eb_debugger_manager.force_debug_mode_cmd
+					if l_cmd /= Void and l_cmd.executable then
+						l_cmd.execute
+					end
+				end
+			else
+				l_ok_to_open := True
 			end
 
-			development_window.menus.update_menu_lock_items
-			development_window.menus.update_show_tool_bar_items
+			if l_ok_to_open then
+				l_pointer_style := development_window.window.pointer_style
+				create l_stock_pixmaps
+				development_window.window.set_pointer_style (l_stock_pixmaps.busy_cursor)
 
-			development_window.window.set_pointer_style (l_pointer_style)
+				l_fn := l_info.file_name
+				l_r := development_window.docking_manager.open_tools_config (l_fn)
+				if not l_r then
+					-- If opening failed, we open orignal layout before opening.
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (interface_names.l_open_layout_error, development_window.window, Void)
+					development_window.restore_standard_tools_docking_layout
+				end
+
+				development_window.menus.update_menu_lock_items
+				development_window.menus.update_show_tool_bar_items
+
+				development_window.window.set_pointer_style (l_pointer_style)
+			end
+
 		end
 
 feature -- Query
 
-	layouts: ARRAYED_LIST [STRING_GENERAL]
+	layouts: DS_HASH_TABLE [TUPLE [file_path: FILE_NAME; is_normal_mode: BOOLEAN], STRING_GENERAL]
 			-- All names of layouts.
-
-	file_names: ARRAYED_LIST [FILE_NAME]
-			-- File names associate with `layouts'
-
-	file_name_of (a_name: STRING_GENERAL): FILE_NAME is
-			-- File name associate with the layout which name is `a_name'
-		require
-			has: layouts.has (a_name)
-		do
-			Result := file_names.i_th (layouts.index_of (a_name, 1))
-		ensure
-			not_void: Result /= Void
-			file_exist:
-		end
+			-- Key is name of a layout.
 
 feature {NONE} -- Implementation
+
+	is_normal_mode: BOOLEAN is
+			-- True means Eiffel Studio is normal mode now.
+			-- False means Eiffel Studio is debug mode now.
+		local
+			l_debugger: EB_SHARED_DEBUGGER_MANAGER
+		do
+			create l_debugger
+			Result := not l_debugger.eb_debugger_manager.raised
+		end
+
+	user_layout_path: FILE_NAME is
+			-- User layout files saving path base on Current mode (normal/debug).
+		local
+
+			l_dir: DIRECTORY
+		do
+			if is_normal_mode then
+				Result := user_layout_normal_mode_path
+			else
+				Result := user_layout_debug_mode_path
+			end
+
+			create l_dir.make (Result)
+			if not l_dir.exists then
+				l_dir.create_dir
+			end
+			l_dir.dispose
+		ensure
+			not_void: Result /= Void
+		end
+
+	user_layout_normal_mode_path: FILE_NAME is
+			-- Normal mode user layout files saving path
+		do
+			Result := docking_standard_layout_path
+			Result.extend ("normal")
+		ensure
+			not_void: Result /= Void
+		end
+
+	user_layout_debug_mode_path: FILE_NAME is
+			-- Debug mode user layout files saving path
+		do
+			Result := docking_standard_layout_path
+			Result.extend ("debug")
+		ensure
+			not_void: Result /= Void
+		end
 
 	interface_names: INTERFACE_NAMES
 			-- Interface names.
@@ -156,7 +233,6 @@ feature {NONE} -- Implementation
 
 invariant
 	not_void: layouts /= Void
-	not_void: file_names /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -13,13 +13,13 @@ class
 inherit
 	ICOR_DEBUG_HEAP_VALUE
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_element_type: INTEGER is
-			-- GetElementType returns the simple type of the elements 
+			-- GetElementType returns the simple type of the elements
 			-- in the array
 		do
 			last_call_success := cpp_get_element_type (item, $Result)
@@ -54,7 +54,7 @@ feature {ICOR_EXPORTER} -- Access
 			i: INTEGER
 			l_element: INTEGER
 		do
-			l_integer_size := (create {PLATFORM}).Integer_bytes
+			l_integer_size := {PLATFORM}.Integer_8_bytes
 			create mp_tab.make (a_indicies_count * l_integer_size)
 
 			last_call_success := cpp_get_dimensions (item, a_indicies_count, mp_tab.item)
@@ -83,7 +83,7 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	get_base_indicies (a_indicies_count: INTEGER): ARRAY [INTEGER] is
-			-- GetBaseIndicies returns the base index of each dimension in 
+			-- GetBaseIndicies returns the base index of each dimension in
 	 		-- the array
 		require
 			a_indicies_count > 0
@@ -93,7 +93,7 @@ feature {ICOR_EXPORTER} -- Access
 			i: INTEGER
 			l_element: INTEGER
 		do
-			l_integer_size := (create {PLATFORM}).Integer_bytes
+			l_integer_size := {PLATFORM}.Integer_8_bytes
 			create mp_tab.make (a_indicies_count * l_integer_size)
 
 			last_call_success := cpp_get_base_indicies (item, a_indicies_count, mp_tab.item)
@@ -118,8 +118,8 @@ feature {ICOR_EXPORTER} -- Access
 			i: INTEGER
 		do
 			--| create table of 'a_ranges.count' struct COR_DEBUG_STEP_RANGE |--
-			
-			l_integer_size := (create {PLATFORM}).Integer_bytes
+
+			l_integer_size := {PLATFORM}.Integer_8_bytes
 			create l_mp_indexes.make (a_indexes.count * l_integer_size)
 			from
 				i := a_indexes.lower
@@ -128,7 +128,7 @@ feature {ICOR_EXPORTER} -- Access
 			loop
 				l_mp_indexes.put_integer_32 (a_indexes @ i, i * l_integer_size)
 				i := i + 1
-			end		
+			end
 			last_call_success := cpp_get_element (item, a_indexes.count, l_mp_indexes.item, $l_p)
 			if l_p /= default_pointer then
 				create Result.make_value_by_pointer (l_p)

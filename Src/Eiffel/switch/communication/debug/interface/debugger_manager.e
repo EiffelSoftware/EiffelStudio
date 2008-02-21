@@ -128,6 +128,12 @@ feature -- Application execution
 	dbg_evaluator: DBG_EVALUATOR
 			-- Debugger expression evaluator.
 
+	is_debugging: BOOLEAN is
+			-- Is debugger currently debugging ?
+		do
+			Result := application_launching_in_progress or application_initialized
+		end
+
 feature -- Output helpers
 
 	debugger_message (m: STRING_GENERAL) is

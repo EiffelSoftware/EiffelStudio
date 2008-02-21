@@ -952,7 +952,12 @@ feature {NONE} -- Agent filling
 				list_cursor.forth
 			end
 			if ag_ct_id > 0 and ag_fe_id > 0 then
-				ag_ct := debugger_manager.eiffel_system.system.class_type_of_static_type_id (ag_ct_id)
+					--| in workbench: static_type_id and type_id are the same
+				ag_ct := debugger_manager.eiffel_system.system.class_type_of_id (ag_ct_id)
+				if ag_ct = Void then
+						--| Previous optimization failed, let's try to find using static_type_id container
+					ag_ct := debugger_manager.eiffel_system.system.class_type_of_static_type_id (ag_ct_id)
+				end
 				if ag_ct /= Void and then ag_fe_id /= 0 then
 					ag_ecc ?= ag_ct.associated_class
 					if ag_ecc /= Void then

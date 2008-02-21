@@ -141,6 +141,9 @@ feature {NONE} -- Implementation change
 			-- Call `real_update' on idle action
 		do
 			real_update_on_idle_called_on_stopped := a_dbg_stopped
+			if update_on_idle_agent = Void then
+				create_update_on_idle_agent
+			end
 			ev_application.add_idle_action (update_on_idle_agent)
 		end
 
@@ -148,7 +151,9 @@ feature {NONE} -- Implementation change
 			-- cancel any calls to `real_update' on idle action	
 		do
 			real_update_on_idle_called_on_stopped := False
-			ev_application.remove_idle_action (update_on_idle_agent)
+			if update_on_idle_agent /= Void then
+				ev_application.remove_idle_action (update_on_idle_agent)
+			end
 		end
 
 	frozen real_update_on_idle is

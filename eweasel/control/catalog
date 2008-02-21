@@ -1375,6 +1375,7 @@ test	once-global-procedure-c-failure	ccomp068 tcf fail c_compilation
 test	line-generation-finalize-bug	ccomp069 tcf pass c_compilation
 test	code-formatting					ccomp070 tcf pass c_compilation
 test	assign-attempt-on-basic-type	ccomp071 tcf pass c_compilation
+test	polymorphic-feature-address-bad-code	ccomp072 tcf pass c_compilation
 
 -- Storable tests
 

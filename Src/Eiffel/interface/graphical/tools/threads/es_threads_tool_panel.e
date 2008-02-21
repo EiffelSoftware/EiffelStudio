@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-	DEBUGGING_UPDATE_ON_IDLE
+	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL_PANEL_I
 
 create
 	make
@@ -72,7 +72,6 @@ feature {NONE} -- Initialization
 			Precursor
 			create_update_on_idle_agent
 		end
-
 
 feature -- Properties
 
@@ -160,6 +159,7 @@ feature -- Status setting
 			if grid.is_displayed and grid.is_sensitive then
 				grid.set_focus
 			end
+			request_update
 		end
 
 feature {NONE} -- Update

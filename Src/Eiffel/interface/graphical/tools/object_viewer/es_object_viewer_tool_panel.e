@@ -10,13 +10,11 @@ class
 	ES_OBJECT_VIEWER_TOOL_PANEL
 
 inherit
-	EB_TOOL
+	ES_DOCKABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
---			on_shown,
+			create_mini_tool_bar_items,
 			internal_recycle,
-			attach_to_docking_manager,
-			mini_toolbar,
-			build_mini_toolbar,
+			on_after_initialized,
 			build_docking_content,
 			show, close
 		end
@@ -31,19 +29,10 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_WINDOW_MANAGER
 
-	EB_CONSTANTS
-		export
-			{NONE} all
-		end
 
-	DEBUGGING_UPDATE_ON_IDLE
+	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL_PANEL_I
 
 create
 	make,
@@ -63,55 +52,68 @@ feature {NONE} -- Initialization
 			make (a_manager, a_tool)
 		end
 
-	build_interface is
-			-- Build all the tool's widgets.
+	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
+			-- <Precursor>
 		do
 			create viewers_manager.make_for_tool (Current)
-
 			viewers_manager.viewer_changed_actions.extend (agent update_viewers_selector)
-			widget := viewers_manager.widget
+			a_widget.extend (viewers_manager.widget)
+		end
+
+	on_after_initialized is
+			-- <Precursor>
+		do
+			Precursor
 			create_update_on_idle_agent
 		end
 
-	build_mini_toolbar is
-			-- Build the associated tool bar
+    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            -- Retrieves a list of tool bar items to display on the window title
 		local
 			cl: EV_CELL
+			wi: SD_TOOL_BAR_WIDGET_ITEM
 		do
-			create mini_toolbar
+			create Result.make (3)
+
 			viewer_selector := new_clickable_label (interface_names.l_select_viewer)
 			viewer_selector.set_tooltip (interface_names.l_select_viewer)
 			viewer_selector.pointer_button_press_actions.extend (agent open_viewer_selector_menu)
 			viewer_selector.drop_actions.extend (agent viewers_manager.set_stone)
 			viewer_selector.drop_actions.set_veto_pebble_function (agent is_stone_valid)
-			mini_toolbar.extend (viewer_selector)
+			create wi.make (viewer_selector)
+			Result.force_last (wi)
+
 			create cl
 			cl.set_minimum_width (3)
-			mini_toolbar.extend (cl)
+			create wi.make (cl)
+			Result.force_last (wi)
+
 			create viewer_selector_toolbar_cell
-			mini_toolbar.extend (viewer_selector_toolbar_cell)
+			create wi.make (viewer_selector_toolbar_cell)
+			Result.force_last (wi)
 			update_viewers_selector (Void)
-		ensure then
-			mini_toolbar_exists: mini_toolbar /= Void
 		end
 
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
 		do
-			Precursor {EB_TOOL} (a_docking_manager)
+			Precursor (a_docking_manager)
 			check content_not_void : content /= Void end
 			content.drop_actions.extend (agent set_stone)
 			content.drop_actions.set_veto_pebble_function (agent is_stone_valid)
 		end
 
-feature -- Docking
+feature {NONE} -- Factory
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
-			-- Attach to docking manager
+    create_widget: EV_VERTICAL_BOX
+            -- Create a new container widget upon request.
+            -- Note: You may build the tool elements here or in `build_tool_interface'
+        do
+        	Create Result
+        end
+
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
-			build_docking_content (a_docking_manager)
-
-			check not_already_has: not a_docking_manager.has_content (content) end
-			a_docking_manager.contents.extend (content)
 		end
 
 feature -- Properties
@@ -123,14 +125,6 @@ feature -- Properties
 	viewer_selector: EV_LABEL
 
 	viewer_selector_toolbar_cell: EV_CELL
-
-feature -- Access
-
-	mini_toolbar: EV_HORIZONTAL_BOX
-			-- Associated mini toolbar.
-
-	widget: EV_WIDGET
-			-- Widget representing Current.
 
 feature -- change
 
@@ -227,7 +221,7 @@ feature -- Events
 		local
 			w: EV_WIDGET
 		do
-			Precursor {EB_TOOL}
+			Precursor
 			w := viewers_manager.widget
 			if w /= Void and then w.is_displayed and w.is_sensitive then
 				w.set_focus
@@ -237,7 +231,7 @@ feature -- Events
 
 	close is
 		do
-			Precursor {EB_TOOL}
+			Precursor
 			viewers_manager.reset
 		end
 
@@ -332,7 +326,7 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			Precursor {EB_TOOL}
+			Precursor
 		end
 
 indexing

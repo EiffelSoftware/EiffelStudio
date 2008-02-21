@@ -11,39 +11,10 @@ frozen class
 	ES_OBJECT_VIEWER_TOOL
 
 inherit
-	ES_DEBUGGER_TOOL [ES_OBJECT_VIEWER_TOOL_PANEL]
+	ES_DEBUGGING_UPDATE_ON_IDLE_TOOL [ES_OBJECT_VIEWER_TOOL_PANEL]
 
 create {NONE}
 	default_create
-
-feature {DEBUGGER_MANAGER} -- Access
-
-	force_update is
-			-- Update now, no delay
-		do
-			if is_tool_instantiated then
-				panel.update
-			end
-		end
-
-	request_update is
-			-- Request an update, this should call update only
-			-- once per debugging "operation"
-			-- This is to avoid computing twice the data
-			-- on specific cases
-		do
-			if is_tool_instantiated then
-				panel.request_update
-			end
-		end
-
-	reset is
-			-- Reset current's panel
-		do
-			if is_tool_instantiated then
-				panel.reset_tool
-			end
-		end
 
 feature -- Access
 

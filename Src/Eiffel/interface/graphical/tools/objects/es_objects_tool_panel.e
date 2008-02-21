@@ -777,6 +777,7 @@ feature -- Change
 			if not l_grid.is_destroyed and then l_grid.is_displayed and then l_grid.is_sensitive then
 				l_grid.set_focus
 			end
+			request_update
 		end
 
 feature {NONE} -- Update

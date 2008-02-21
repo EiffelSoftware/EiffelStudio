@@ -309,12 +309,12 @@ feature {NONE} -- Implementation
 			-- Convert binary integer enclosed in `s' into an INTEGER.
 		require
 			s_not_void: s /= Void
-			valid_string: s.count = Integer_8_bytes
+			valid_string: s.count = Integer_32_bytes
 		local
 			a: ANY
 		do
 			a := s.area;
-			($Result).memory_copy ($a, Integer_8_bytes)
+			($Result).memory_copy ($a, Integer_32_bytes)
 		end
 
 	to_integer_64 (s: STRING): INTEGER_64 is

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="ec" uuid="8C34810E-D67D-46DF-A13C-F3821FA4FA8E" library_target="compiler_kernel">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="ec_kernel" uuid="8C34810E-D67D-46DF-A13C-F3821FA4FA8E" library_target="compiler_kernel">
 	<target name="compiler_kernel">
+		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<root all_classes="true"/>
 		<option warning="true">
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>

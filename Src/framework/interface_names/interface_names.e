@@ -2277,6 +2277,9 @@ feature -- Description texts
 	e_external_command_not_launched: STRING_GENERAL is do Result := locale.translation("External command not launched.")	end
 	e_refactoring_undo_sure: STRING_GENERAL is do Result := locale.translation("Are you sure you want to undo the refactoring?%N If classes have been modified since the refactoring this can lead to corrupt classes and lost information!")	end
 	e_refactoring_redo_sure: STRING_GENERAL is do Result := locale.translation("Are you sure you want to redo the refactoring?%N If classes have been modified since the undo of the refactoring this can lead to corrupt classes and lost information!")	end
+	e_show_help: STRING_GENERAL is do Result := locale.translation("Click to show the help documentation.")	end
+	e_show_help_unavailable: STRING_GENERAL is do Result := locale.translation("No help provider is available to show help for this dialog!")	end
+
 
 feature -- Description text, no translation (for the editor).
 

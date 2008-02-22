@@ -137,41 +137,48 @@ feature -- Application execution
 feature -- Output helpers
 
 	debugger_message (m: STRING_GENERAL) is
+			-- Display debugger message `m'
 		require
-			m /= Void
+			m_not_void: m /= Void
 		do
 			debugger_output_message (m)
 			debugger_status_message (m)
 		end
 
-	debugger_output_message (msg: STRING_GENERAL) is
+	debugger_output_message (m: STRING_GENERAL) is
+			-- Display debugger message `m' on the output
 		require
-			msg /= Void
+			m_not_void: m /= Void
 		do
 		end
 
-	debugger_warning_message (msg: STRING_GENERAL) is
+	debugger_warning_message (m: STRING_GENERAL) is
+			-- Display debugger warning message `m'
 		require
-			msg /= Void
+			m_not_void: m /= Void
 		do
-			debugger_output_message (msg)
+			debugger_output_message (m)
 		end
 
-	debugger_status_message (msg: STRING_GENERAL) is
+	debugger_status_message (m: STRING_GENERAL) is
+			-- Display debugger message `m' on the status output
 		require
-			msg /= Void
+			m_not_void: m /= Void
 		do
 		end
 
 	display_application_status is
+			-- Display application status info
 		do
 		end
 
 	display_system_info	is
+			-- Display system info
 		do
 		end
 
 	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS) is
+			-- Display execution parameters information	
 		do
 		end
 

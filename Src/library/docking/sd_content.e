@@ -586,7 +586,7 @@ feature -- Command
 				docking_manager.contents.prune (Current)
 			end
 		ensure
-			cleard: not is_docking_manager_attached
+			detached: not is_docking_manager_attached
 		end
 
 	hide is

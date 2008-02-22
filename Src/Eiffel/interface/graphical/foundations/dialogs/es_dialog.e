@@ -336,7 +336,7 @@ feature {NONE} -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result.make_from_string (generating_type)
+			create Result.make_from_string (generating_type)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

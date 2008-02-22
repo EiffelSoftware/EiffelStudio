@@ -346,6 +346,8 @@ feature -- Call stack menu
 				extend_separator (a_menu)
 				l_call_stack_stone ?= a_pebble
 				if l_call_stack_stone /= Void then
+					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
+					extend_separator (a_menu)
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					extend_separator (a_menu)
 					extend_sync_in_context_tool (a_menu, a_pebble)
@@ -367,12 +369,16 @@ feature -- Object tool, Object Viewer and Watch tool menus
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
 				extend_separator (a_menu)
-				extend_standard_compiler_item_menu (a_menu, a_pebble)
-				l_object_stone ?= a_pebble
-				if l_object_stone /= Void then
+				if a_pebble /= Void then
+					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
 					extend_separator (a_menu)
-					extend_expanded_object_view (a_menu, a_pebble)
-					extend_property_menu (a_menu, a_pebble)
+					extend_standard_compiler_item_menu (a_menu, a_pebble)
+					l_object_stone ?= a_pebble
+					if l_object_stone /= Void then
+						extend_separator (a_menu)
+						extend_expanded_object_view (a_menu, a_pebble)
+						extend_property_menu (a_menu, a_pebble)
+					end
 				end
 				if a_objects_tool /= Void then
 					m := a_objects_tool.tool_menu (False)
@@ -399,22 +405,26 @@ feature -- Object tool, Object Viewer and Watch tool menus
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
-				extend_separator (a_menu)
-				extend_standard_compiler_item_menu (a_menu, a_pebble)
-				l_object_stone ?= a_pebble
-				if l_object_stone /= Void then
+				if a_pebble /= Void then
 					extend_separator (a_menu)
-					l_sep_added := True
-					extend_expanded_object_view (a_menu, a_pebble)
+					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
+					extend_separator (a_menu)
+					extend_standard_compiler_item_menu (a_menu, a_pebble)
+					l_object_stone ?= a_pebble
+					if l_object_stone /= Void then
+						extend_separator (a_menu)
+						l_sep_added := True
+						extend_expanded_object_view (a_menu, a_pebble)
 
-					l_row ?= l_object_stone.ev_item
-					if l_row /= Void then
-						if not l_sep_added then
-							extend_separator (a_menu)
-							l_sep_added := True
+						l_row ?= l_object_stone.ev_item
+						if l_row /= Void then
+							if not l_sep_added then
+								extend_separator (a_menu)
+								l_sep_added := True
+							end
+							a_menu.extend (new_menu_item (names.m_remove))
+							a_menu.last.select_actions.extend (agent a_watch_tool.remove_expression_row (l_row))
 						end
-						a_menu.extend (new_menu_item (names.m_remove))
-						a_menu.last.select_actions.extend (agent a_watch_tool.remove_expression_row (l_row))
 					end
 				end
 				extend_property_menu (a_menu, a_pebble)
@@ -430,6 +440,10 @@ feature -- Object tool, Object Viewer and Watch tool menus
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
 				setup_pick_item (a_menu, a_pebble)
+				if a_pebble /= Void then
+					extend_separator (a_menu)
+					extend_retarget_tool_menu (a_source, a_menu, a_pebble)
+				end
 				extend_separator (a_menu)
 				extend_standard_compiler_item_menu (a_menu, a_pebble)
 				if a_grid /= Void then
@@ -490,7 +504,6 @@ feature -- Object tool, Object Viewer and Watch tool menus
 				ev_application.clipboard.set_text (t)
 			end
 		end
-
 
 feature -- Search scope menu
 

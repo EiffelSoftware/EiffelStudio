@@ -62,7 +62,7 @@
 		<setting name="multithreaded" value="false"/>
 		<variable name="batch_preferences" value="true"/>
 		<variable name="batch_framework" value="true"/>
-		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true" />
+		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf" readonly="false">
 			<condition>
 				<platform value="windows"/>

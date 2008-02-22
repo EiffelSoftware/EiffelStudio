@@ -15,7 +15,6 @@ inherit
 			create_mini_tool_bar_items,
 			internal_recycle,
 			on_before_initialize,
-			on_after_initialized,
 			build_docking_content,
 			show, close
 		end
@@ -67,13 +66,6 @@ feature {NONE} -- Initialization
 			a_widget.extend (viewers_manager.widget)
 		end
 
-	on_after_initialized is
-			-- <Precursor>
-		do
-			Precursor
-			create_update_on_idle_agent
-		end
-
     create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
 		local
@@ -88,6 +80,7 @@ feature {NONE} -- Initialization
 			viewer_selector.drop_actions.extend (agent viewers_manager.set_stone)
 			viewer_selector.drop_actions.set_veto_pebble_function (agent is_stone_valid)
 			create wi.make (viewer_selector)
+			viewer_selector_widget := wi
 			Result.force_last (wi)
 
 			create cl
@@ -128,6 +121,8 @@ feature -- Properties
 	command: EB_OBJECT_VIEWER_COMMAND
 
 	viewers_manager: EB_OBJECT_VIEWERS_MANAGER
+
+	viewer_selector_widget: SD_TOOL_BAR_WIDGET_ITEM
 
 	viewer_selector: EV_LABEL
 
@@ -177,6 +172,7 @@ feature -- Events
 					viewer_selector_toolbar_cell.wipe_out
 				end
 				if content /= Void then
+					viewer_selector_widget.update_parent_tool_bar_size
 					content.update_mini_tool_bar_size
 				end
 			end

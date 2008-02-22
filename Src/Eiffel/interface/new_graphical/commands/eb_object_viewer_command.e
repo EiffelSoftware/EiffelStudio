@@ -191,14 +191,16 @@ feature {NONE} -- Implementation
 			dlg: EB_OBJECT_VIEWERS_DIALOG
 			w: EV_WINDOW
 		do
-			create dlg.make (Current)
+			create dlg.make_with_command (Current)
+			dlg.is_modal := False
 			opened_viewers.extend (dlg)
 			last_opened_viewer := dlg
+
 			w := associated_window
 			if w /= Void then
-				dlg.show_relative_to_window (w)
+				dlg.show (w)
 			else
-				dlg.show
+				dlg.show_on_active_window
 			end
 		ensure
 			added_a_dialog: opened_viewers.count = (old opened_viewers.count) + 1

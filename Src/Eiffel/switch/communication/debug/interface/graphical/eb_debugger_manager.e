@@ -1287,6 +1287,7 @@ feature -- Status setting
 			threads_tool.request_update
 
 				--| Call Stack Tool
+			call_stack_tool.panel.set_manager (debugging_window)
 			call_stack_tool.request_update
 
 				-- Show Tools and final visual settings
@@ -1386,7 +1387,11 @@ feature -- Status setting
 				debugging_window.window.lock_update
 			end
 
-			if objects_tool.is_interface_usable and then objects_tool.is_tool_instantiated then
+			if
+				objects_tool.is_interface_usable and then
+				objects_tool.is_tool_instantiated and then
+				objects_tool.panel.is_initialized
+			then
 				objects_tool.panel.save_grids_preferences
 				split ?= objects_tool.panel.widget
 				if split /= Void then

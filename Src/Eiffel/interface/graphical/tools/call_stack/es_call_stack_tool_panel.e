@@ -175,7 +175,6 @@ feature {NONE} -- Initialization
 
 				--| Specific Grid's behavior
 			stack_grid.build_delayed_cleaning
-			create_update_on_idle_agent
 
 				--| Attach to Current dialog
 			a_widget.extend (stack_grid)

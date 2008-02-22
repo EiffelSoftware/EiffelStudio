@@ -1,8 +1,7 @@
 indexing
-	description : "Objects that ..."
+	description : "Objects that edit a breakpoint..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
 
@@ -64,8 +63,6 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- User interface initialization
-
-	noteb: EV_NOTEBOOK
 
 	build_dialog_interface (a_container: EV_VERTICAL_BOX) is
 			-- Builds the dialog's user interface.
@@ -135,6 +132,11 @@ feature {NONE} -- User interface initialization
 
 			dialog.resize_actions.force_extend (agent request_refresh_now)
 		end
+
+feature -- Widgets
+
+	noteb: EV_NOTEBOOK
+			-- Notebook holding the interface
 
 feature -- Properties
 

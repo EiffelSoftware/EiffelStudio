@@ -19,7 +19,6 @@ inherit
 			make,
 			close,
 			on_before_initialize,
-			on_after_initialized,
 			create_mini_tool_bar_items,
 			build_docking_content,
 			internal_recycle,
@@ -93,13 +92,6 @@ feature {NONE} -- Initialization
 			watches_grid.set_slices_cmd (slices_cmd)
 
 			a_widget.extend (watches_grid)
-		end
-
-	on_after_initialized is
-			-- <Precursor>
-		do
-			Precursor
-			create_update_on_idle_agent
 		end
 
     create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]

@@ -12,7 +12,6 @@ class
 inherit
 	ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
---			tool_descriptor,
 			on_before_initialize,
 			on_after_initialized,
 			create_mini_tool_bar_items,
@@ -45,14 +44,13 @@ create
 
 feature {NONE} -- Initialization
 
---	tool_descriptor: ES_OBJECTS_TOOL
---			-- <Precursor>
-
 	on_before_initialize is
 			-- <Precursor>
 		do
 			cleaning_delay := preferences.debug_tool_data.delay_before_cleaning_objects_grid
 			set_debugger_manager (tool_descriptor.debugger_manager)
+
+			create displayed_objects.make
 			Precursor
 		end
 
@@ -63,8 +61,6 @@ feature {NONE} -- Initialization
 			stack_objects_grid, debugged_objects_grid: like objects_grid
 		do
 				--| Build interface
-
-			create displayed_objects.make
 
 			create objects_grids.make (2)
 			objects_grids.compare_objects
@@ -113,7 +109,6 @@ feature {NONE} -- Initialization
 
 				--| Initialize various agent and special mecanisms
 			init_delayed_cleaning_mecanism
-			create_update_on_idle_agent
 			preferences.debug_tool_data.objects_tool_layout_preference.change_actions.extend (agent refresh_objects_layout_from_preference)
 
 			refresh_objects_layout_from_preference (preferences.debug_tool_data.objects_tool_layout_preference)
@@ -129,8 +124,8 @@ feature {NONE} -- Initialization
 			end
 		end
 
-    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-            -- Retrieves a list of tool bar items to display on the window title
+	create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display on the window title
 		local
 			tbb: SD_TOOL_BAR_BUTTON
 			scmd: EB_STANDARD_CMD
@@ -141,6 +136,7 @@ feature {NONE} -- Initialization
 			create_header_box
 			create wi.make (header_box)
 			wi.set_name ("Location")
+			header_box_widget := wi
 			Result.force_last (wi)
 
 			create scmd.make
@@ -345,7 +341,6 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 
 feature {NONE} -- Interface
 
-
 	create_objects_grid (a_name: STRING_GENERAL; a_id: STRING) is
 			-- Create an objects grid named `a_name' and identified by `a_id'
 		local
@@ -359,11 +354,11 @@ feature {NONE} -- Interface
 			spref := preferences.debug_tool_data.grid_column_layout_preference_for (g.id)
 			g.set_default_columns_layout (
 						<<
-							[1, True, False, 150, interface_names.l_name, interface_names.to_name],
-							[2, True, False, 150, interface_names.l_value, interface_names.to_value],
-							[3, True, False, 200, interface_names.l_type, interface_names.to_type],
-							[4, True, False, 80, interface_names.l_address, interface_names.to_address],
-							[5, False, False, 0, interface_names.l_context_dot, interface_names.to_context_dot]
+							[g.col_name_id, 	True,  False, 150, interface_names.l_name, interface_names.to_name],
+							[g.col_value_id, 	True,  False, 150, interface_names.l_value, interface_names.to_value],
+							[g.col_type_id, 	True,  False, 200, interface_names.l_type, interface_names.to_type],
+							[g.col_address_id, 	True,  False,  80, interface_names.l_address, interface_names.to_address],
+							[g.col_context_id, 	False, False,   0, interface_names.l_context_dot, interface_names.to_context_dot]
 						>>
 					)
 			g.set_columns_layout_from_string_preference (preferences.debug_tool_data.grid_column_layout_preference_for (g.id))
@@ -397,6 +392,9 @@ feature {NONE} -- Interface
 		end
 
 	open_objects_menu (w: EV_WIDGET; ax, ay: INTEGER) is
+			-- Open objects tool menu
+		require
+			is_initialized: is_initialized
 		local
 			m: EV_MENU
 		do
@@ -494,6 +492,9 @@ feature -- preference
 		end
 
 	save_grids_preferences is
+			-- Save grids preferences
+		require
+			is_initialized: is_initialized
 		local
 			g: like objects_grid
 		do
@@ -511,6 +512,9 @@ feature -- preference
 		end
 
 feature -- Access
+
+	header_box_widget: SD_TOOL_BAR_WIDGET_ITEM
+			-- header box item
 
 	header_box: EV_HORIZONTAL_BOX
 			-- Associated header box
@@ -593,6 +597,7 @@ feature {NONE} -- Notebook item's behavior
 			hbox := header_box
 			if header_text_label = Void or else header_text_label.parent /= hbox then
 				clean_header_box
+
 				create header_class_label
 				header_class_label.set_foreground_color (preferences.editor_data.class_text_color)
 				hbox.extend (header_class_label)
@@ -655,12 +660,14 @@ feature {NONE} -- Notebook item's behavior
 				header_text_label.set_text (Interface_names.l_System_not_running)
 				header_feature_label.remove_text
 			end
+
+			header_box_widget.update_parent_tool_bar_size
+			content.update_mini_tool_bar_size
+
 			header_class_label.refresh_now
 			header_text_label.refresh_now
 			header_feature_label.refresh_now
 			header_box.refresh_now
-
-			develop_window.docking_manager.update_mini_tool_bar_size (content)
 		end
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
@@ -884,6 +891,7 @@ feature -- Status report
 feature -- Status Setting
 
 	reset_tool is
+			-- Reset tool
 		local
 			g: like objects_grid
 			t: like objects_grid_data
@@ -891,30 +899,32 @@ feature -- Status Setting
 			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
 		do
 			reset_update_on_idle
-			displayed_objects.wipe_out
-			from
-				objects_grids.start
-			until
-				objects_grids.after
-			loop
-				t := objects_grids.item_for_iteration
-				lines := t.lines
+			if is_initialized then
+				displayed_objects.wipe_out
 				from
-					lines.start
+					objects_grids.start
 				until
-					lines.after
+					objects_grids.after
 				loop
-					l := lines.item
-					if l /= Void then
-						l.reset
+					t := objects_grids.item_for_iteration
+					lines := t.lines
+					from
+						lines.start
+					until
+						lines.after
+					loop
+						l := lines.item
+						if l /= Void then
+							l.reset
+						end
+						lines.forth
 					end
-					lines.forth
-				end
 
-				g := t.grid
-				g.call_delayed_clean
-				g.reset_layout_manager
-				objects_grids.forth
+					g := t.grid
+					g.call_delayed_clean
+					g.reset_layout_manager
+					objects_grids.forth
+				end
 			end
 			clean_header_box
 		end

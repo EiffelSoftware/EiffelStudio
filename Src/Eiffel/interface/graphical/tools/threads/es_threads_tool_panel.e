@@ -2,7 +2,6 @@ indexing
 	description: "Tool that displays the threads during a debugging session."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,6 @@ inherit
 		redefine
 			internal_recycle,
 			on_before_initialize,
-			on_after_initialized,
 			show
 		end
 
@@ -52,25 +50,18 @@ feature {NONE} -- Initialization
 			grid.enable_single_row_selection
 			grid.enable_border
 			grid.set_column_count_to (4)
-			grid.column (1).set_title (debugger_names.t_id)
-			grid.column (2).set_title (debugger_names.t_name)
-			grid.column (3).set_title (debugger_names.t_priority)
-			grid.column (4).set_title (debugger_names.t_note)
+			grid.column (col_id_index).set_title (debugger_names.t_id)
+			grid.column (col_name_index).set_title (debugger_names.t_name)
+			grid.column (col_priority_index).set_title (debugger_names.t_priority)
+			grid.column (col_note_index).set_title (debugger_names.t_note)
 
 			grid.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
-			grid.set_auto_resizing_column (1, True)
-			grid.set_auto_resizing_column (2, True)
+			grid.set_auto_resizing_column (col_id_index, True)
+			grid.set_auto_resizing_column (col_name_index, True)
 
 			box.extend (grid)
 
 			grid.build_delayed_cleaning
-		end
-
-	on_after_initialized is
-			-- <Precursor>
-		do
-			Precursor
-			create_update_on_idle_agent
 		end
 
 feature -- Properties
@@ -266,7 +257,7 @@ feature {NONE} -- Implementation
 							lab.set_tooltip (debugger_names.t_debuggees_active_thread)
 						end
 
-						row.set_item (1, lab)
+						row.set_item (col_id_index, lab)
 
 						if tid = l_status.current_thread_id then
 							row.set_background_color (row_highlight_bg_color)
@@ -281,7 +272,7 @@ feature {NONE} -- Implementation
 						else
 							create lab
 						end
-						row.set_item (2, lab)
+						row.set_item (col_name_index, lab)
 
 						prio := l_status.thread_priority (tid)
 						if prio > 0 then
@@ -289,7 +280,7 @@ feature {NONE} -- Implementation
 						else
 							create lab
 						end
-						row.set_item (3, lab)
+						row.set_item (col_priority_index, lab)
 
 						if notes_on_threads.has (tid) then
 							create gedit.make_with_text (notes_on_threads.item (tid))
@@ -297,7 +288,7 @@ feature {NONE} -- Implementation
 							create gedit
 						end
 						gedit.deactivate_actions.extend (agent update_notes_from_item (gedit))
-						row.set_item (4, gedit)
+						row.set_item (col_note_index, gedit)
 
 						row.set_data (tid)
 						r := r + 1
@@ -355,7 +346,14 @@ feature {NONE} -- Implementation, cosmetic
 			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 		end
 
-indexing
+feature {NONE} -- Constants
+
+	col_id_index: 		INTEGER = 1
+	col_name_index: 	INTEGER = 2
+	col_priority_index: INTEGER = 3
+	col_note_index: 	INTEGER = 4
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

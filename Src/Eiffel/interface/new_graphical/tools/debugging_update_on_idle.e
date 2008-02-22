@@ -129,20 +129,13 @@ feature {NONE} -- Implementation status
 
 feature {NONE} -- Implementation change
 
-	frozen create_update_on_idle_agent is
-			-- Create update_on_idle_agent
-		do
-			update_on_idle_agent := agent real_update_on_idle
-		ensure
-			update_on_idle_agent_set: update_on_idle_agent /= Void
-		end
-
 	frozen process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
 			-- Call `real_update' on idle action
 		do
 			real_update_on_idle_called_on_stopped := a_dbg_stopped
 			if update_on_idle_agent = Void then
-				create_update_on_idle_agent
+					--| Create update on idle agent  "on demand"
+				update_on_idle_agent := agent real_update_on_idle
 			end
 			ev_application.add_idle_action (update_on_idle_agent)
 		end

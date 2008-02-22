@@ -16,82 +16,53 @@ inherit
 			default_create, copy, is_equal
 		end
 
-	EV_DIALOG
-		redefine
-			destroy,
-			raise
-		end
-
-	EV_SHARED_APPLICATION
-		undefine
-			default_create, copy, is_equal
-		end
-
-	EB_CONSTANTS
-		undefine
-			default_create, copy, is_equal
-		end
+	ES_DIALOG
 
 create
-	make
+	make_with_command
+
+convert
+	dialog: {EV_DIALOG}
 
 feature {NONE} -- Initialization
 
-	make (cmd: EB_OBJECT_VIEWER_COMMAND) is
+	make_with_command (cmd: EB_OBJECT_VIEWER_COMMAND) is
 			-- Initialize `Current'.
 		require
 			cmd_not_void: cmd /= Void
+		do
+			command := cmd
+			make
+		end
+
+	build_dialog_interface (vb: EV_VERTICAL_BOX) is
 		local
-			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			but: EV_BUTTON
 		do
-			command := cmd
-			default_create
-
-			create vb
-			extend (vb)
-			vb.set_border_width (layout_constants.small_border_size)
+			create viewers_manager.make
 
 			create viewer_header_cell
-			vb.extend (viewer_header_cell)
-			vb.disable_item_expand (viewer_header_cell)
-
-			create viewers_manager.make
-			vb.extend (viewers_manager.widget)
-			viewers_manager.viewer_changed_actions.extend (agent update_current_viewer)
-
-				--| Bottom close button box			
-			vb.extend (create {EV_CELL})
-			vb.last.set_minimum_height (layout_constants.small_padding_size)
-			vb.disable_item_expand (vb.last)
-
-			create hb
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
-			hb.extend (create {EV_CELL})
 
 			create but.make_with_text (interface_names.l_select_viewer)
 			but.select_actions.extend (agent open_viewer_selector_menu (but))
 			but.drop_actions.extend (agent viewers_manager.set_stone )
 			but.drop_actions.set_veto_pebble_function (agent viewers_manager.is_stone_valid)
 
-			hb.extend (but)
-			hb.disable_item_expand (but)
+			create hb
+			hb.extend (viewer_header_cell)
+			hb.disable_item_expand (viewer_header_cell)
+			hb.extend (create {EV_CELL})
+			hb.extend (but); hb.disable_item_expand (but)
 			layout_constants.set_default_width_for_button (but)
-			hb.extend (create {EV_CELL})
-			create close_button.make_with_text_and_action (interface_names.b_close, agent destroy)
-			layout_constants.set_default_width_for_button (close_button)
 
-			hb.extend (close_button)
-			hb.disable_item_expand (close_button)
-			hb.extend (create {EV_CELL})
+			vb.extend (hb);	vb.disable_item_expand (hb)
 
-			if viewers_manager.title /= Void then
-				set_title (viewers_manager.title)
-			end
-			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			set_default_cancel_button (close_button)
+			vb.extend (viewers_manager.widget)
+			viewers_manager.viewer_changed_actions.extend (agent update_current_viewer)
+
+			set_button_text (dialog_buttons.close_button, interface_names.b_close)
+			set_button_action_before_close (dialog_buttons.close_button, agent on_close)
 
 			set_size (400, 300)
 		end
@@ -128,8 +99,6 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization
 
-	close_button: EV_BUTTON
-
 	open_viewer_selector_menu (w: EV_WIDGET) is
 			--
 		local
@@ -153,7 +122,9 @@ feature -- Access
 
 	refresh is
 		do
-			viewers_manager.refresh
+			if is_initialized then
+				viewers_manager.refresh
+			end
 		end
 
 	set_stone (st: OBJECT_STONE) is
@@ -162,30 +133,101 @@ feature -- Access
 			viewers_manager.set_stone (st)
 		end
 
+	is_destroyed: BOOLEAN
+			-- Is viewer manager destroyed ?
+
 feature -- Status setting
+
+	set_size (a_width, a_height: INTEGER_32) is
+			-- Assign `a_width' to width and `a_height' to height in pixels.
+		do
+			if is_initialized then
+				internal_dialog.set_size (a_width, a_height)
+			end
+		end
+
+	set_title (s: STRING_GENERAL) is
+			-- Set title
+		do
+			if is_initialized then
+				internal_dialog.set_title (s)
+			end
+		end
+
+	remove_title is
+			-- Remove title
+		do
+			if is_initialized then
+				internal_dialog.remove_title
+			end
+		end
 
 	close is
 		do
-			hide
-			destroy
+			if is_interface_usable and is_initialized then
+				on_dialog_button_pressed (default_cancel_button)
+			end
 		end
 
-	raise is
-			-- Display `dialog' and put it in front.
-		do
-			Precursor
-			show_relative_to_window (command.associated_window)
-		end
-
-	destroy is
+	on_close is
 			-- Destroy Current
 		do
 			viewers_manager.destroy
-			Precursor
+			viewers_manager := Void
+			is_destroyed := True
 			command.remove_entry (Current)
 		end
 
+feature -- Access
+
+	icon: EV_PIXEL_BUFFER
+			-- The dialog's icon
+		do
+			Result := stock_pixmaps.new_object_icon_buffer
+		end
+
+	title: STRING_32
+			-- The dialog's title
+		do
+			if viewers_manager /= Void and then viewers_manager.title /= Void then
+				Result := viewers_manager.title
+			else
+				Result := interface_names.m_object_viewer_tool
+			end
+		end
+
+	buttons: DS_SET [INTEGER] is
+			-- Set of button id's for dialog
+			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+		once
+			Result := dialog_buttons.close_buttons
+		end
+
+	default_button: INTEGER is
+			-- The dialog's default action button
+		once
+			Result := dialog_buttons.close_button
+		end
+
+	default_cancel_button: INTEGER is
+			-- The dialog's default cancel button
+		once
+			Result := dialog_buttons.close_button
+		end
+
+	default_confirm_button: INTEGER is
+			-- The dialog's default confirm button
+		once
+			Result := dialog_buttons.close_button
+		end
+
 feature {NONE} -- Implementation
+
+	Layout_constants: EV_LAYOUT_CONSTANTS is
+			-- Constants for vision2 layout
+		once
+			create Result
+		end
 
 	command: EB_OBJECT_VIEWER_COMMAND;
 			-- Command that created `Current' and knows about it.

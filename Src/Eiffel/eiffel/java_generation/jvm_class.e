@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			fn_not_empty: not fn.is_empty
 			valid_id: a_type_id > 0
 		do
-			qualified_name := clone (fn)
+			qualified_name := fn.twin
 			type_id := a_type_id
 			element_type_id := -1
 			create parents.make
@@ -54,12 +54,12 @@ feature {ANY} -- Access
 			-- same as `qualified_name' but without the leading L and
 			-- trailing ;
 		do
-			Result := clone (qualified_name)
+			Result := qualified_name.twin
 			if
 				Result.item (1) = 'L'
 			then
-				Result.tail (Result.count - 1)
-				Result.head (Result.count - 1)
+				Result.keep_tail (Result.count - 1)
+				Result.keep_head (Result.count - 1)
 			end
 		end
 			
@@ -147,7 +147,7 @@ feature {ANY} -- Java debug information
 				is_source_code_hack_enabled
 			then
 				-- chop of ".e"
-				source_code_file_name.head (source_code_file_name.count - 2)
+				source_code_file_name.keep_head (source_code_file_name.count - 2)
 							-- add ".java"
 				source_code_file_name.append (".java")
 			end
@@ -532,7 +532,7 @@ feature {ANY} -- Code Generation
 	jvm_file_name: STRING is
 			-- file name of file this class will be stored in
 		do
-			Result := clone (qualified_name_wo_l) + ".class"
+			Result := qualified_name_wo_l + ".class"
 		end
 			
 	generate_byte_code is

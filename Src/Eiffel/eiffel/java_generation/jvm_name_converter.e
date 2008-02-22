@@ -20,7 +20,7 @@ feature {NONE}
 			-- Note: does not embed object types into L;, shorten
 			-- basic types to one letter abbrevs or shorten array names
 		do
-			Result := clone (a)
+			Result := a.twin
 			hack_rename (Result)
 						--	 Result.replace_substring_all (".", "/")
 			Result := java_to_jvm_name (Result)
@@ -90,13 +90,13 @@ feature {NONE}
 			-- found in the eiffel class text in the external signature 
 			-- clause to a type description as demanded by the JVM
 		do
-			Result := clone ("(")
+			Result := "("
 			if
 				params /= Void
 			then
 				Result.append (eiffel_external_parameter_names_to_jvm_parameters (params))
 			end
-			result.append (")")
+			Result.append (")")
 			if
 				return_type /= Void
 			then
@@ -122,7 +122,7 @@ feature {NONE}
 			if
 				n > 0
 			then
-				in.head (in.index_of ('[', 1) - 1)
+				in.keep_head (in.index_of ('[', 1) - 1)
 			end
 							
 			Result := convert_non_array (in)

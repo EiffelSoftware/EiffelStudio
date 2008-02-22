@@ -37,6 +37,7 @@ feature {NONE}-- Initlization
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
+			a_content_attached: a_content.is_docking_manager_attached
 		do
 			create internal_shared
 			internal_docking_manager := a_content.docking_manager
@@ -58,6 +59,7 @@ feature {NONE}-- Initlization
 			-- Creation method for SD_TAB_STATE.
 		require
 			a_content_not_void: a_content /= Void
+			a_content_attached: a_content.is_docking_manager_attached
 			a_container_not_void: a_container /= Void
 			a_container_not_full: not a_container.full
 		do

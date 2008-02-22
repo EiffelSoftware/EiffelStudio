@@ -333,7 +333,11 @@ feature -- Redefine
 			internal_docking_manager.command.lock_update (zone, False)
 			l_parent := tab_zone.parent
 			tab_zone.prune (internal_content, True)
-			assistant.update_last_content_state (l_parent)
+			-- When Eiffel Studio exiting and recycling, `l_parent' maybe void.
+			-- This is ok since Current whole tab zone will be destroyed.
+			if l_parent /= Void then
+				assistant.update_last_content_state (l_parent)
+			end
 			create l_state_void.make (content)
 			change_state (l_state_void)
 			internal_docking_manager.command.remove_empty_split_area

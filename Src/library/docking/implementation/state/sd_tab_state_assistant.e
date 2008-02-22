@@ -299,43 +299,49 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_split_area: EV_SPLIT_AREA
 			l_widget: EV_WIDGET
 			l_second_parent: EV_CONTAINER
+			l_last_content: SD_CONTENT
 		do
 			-- `a_parent' may be void if calling by `close' from SD_TAB_STATE on Linux.
 			if a_parent /= Void and then state.tab_zone.count = 1 then
-				l_split_area ?= state.tab_zone.parent
-				if l_split_area /= Void then
-					l_split_position := l_split_area.split_position
-				end
-				l_second_parent := state.tab_zone.parent
-				internal_docking_manager.zones.prune_zone (state.tab_zone)
-				if a_parent.full then
-					-- If a tab want to dock at it's own tab area, then a_parent is full, we use l_second_parent (old tab_zone parent) instead.
-					create l_docking_state.make_for_tab_zone (state.tab_zone.last_content, l_second_parent, state.direction)
-				else
-					create l_docking_state.make_for_tab_zone (state.tab_zone.last_content, a_parent, state.direction)
-				end
+				l_last_content := state.tab_zone.last_content
 
-				if state.zone.is_maximized then
-					l_docking_state.set_widget_main_area (state.zone.main_area_widget , state.zone.main_area, state.zone.internal_parent, state.zone.internal_parent_split_position)
-				end
-
-				state.tab_zone.last_content.change_state (l_docking_state)
-
-				if l_split_area /= Void then
-					l_widget ?= l_docking_state.zone
-					check l_widget /= Void end
-					l_split_area ?= l_widget.parent
-					check l_split_area /= Void end
-					if
-						l_split_area.full and then
-						(l_split_area.minimum_split_position <= l_split_position and l_split_area.maximum_split_position >= l_split_position)
-					then
-						l_split_area.set_split_position (l_split_position)
+				-- When Eiffel Studio is exiting (everything is recycling), we are not sure if `l_last_content''s docking manager attached, we have to check.
+				if l_last_content.is_docking_manager_attached then
+					l_split_area ?= state.tab_zone.parent
+					if l_split_area /= Void then
+						l_split_position := l_split_area.split_position
 					end
+					l_second_parent := state.tab_zone.parent
+					internal_docking_manager.zones.prune_zone (state.tab_zone)
+					if a_parent.full then
+						-- If a tab want to dock at it's own tab area, then a_parent is full, we use l_second_parent (old tab_zone parent) instead.
+						create l_docking_state.make_for_tab_zone (l_last_content, l_second_parent, state.direction)
+					else
+						create l_docking_state.make_for_tab_zone (l_last_content, a_parent, state.direction)
+					end
+
+					if state.zone.is_maximized then
+						l_docking_state.set_widget_main_area (state.zone.main_area_widget , state.zone.main_area, state.zone.internal_parent, state.zone.internal_parent_split_position)
+					end
+
+					state.tab_zone.last_content.change_state (l_docking_state)
+
+					if l_split_area /= Void then
+						l_widget ?= l_docking_state.zone
+						check l_widget /= Void end
+						l_split_area ?= l_widget.parent
+						check l_split_area /= Void end
+						if
+							l_split_area.full and then
+							(l_split_area.minimum_split_position <= l_split_position and l_split_area.maximum_split_position >= l_split_position)
+						then
+							l_split_area.set_split_position (l_split_position)
+						end
+					end
+					state.zone.destroy
+					internal_docking_manager.command.resize (False)
+					internal_docking_manager.command.update_title_bar
 				end
-				state.zone.destroy
-				internal_docking_manager.command.resize (False)
-				internal_docking_manager.command.update_title_bar
 			end
 		ensure
 			updated: state.tab_zone.count = 1 implies state.tab_zone.last_content.state /= state

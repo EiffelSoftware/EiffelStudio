@@ -54,6 +54,20 @@ feature -- Query
 	widget: EV_WIDGET
 			-- Widget which Current represent.
 
+feature -- Command
+
+	update_parent_tool_bar_size is
+			-- If `widget' size changed, client programmers should call this feature
+			-- to update parent tool bar's size.
+		local
+			l_tool_bar: like tool_bar
+		do
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
+				l_tool_bar.compute_minimum_size
+			end
+		end
+
 feature -- Agents
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
@@ -96,7 +110,7 @@ feature {NONE} -- Implementation
 invariant
 
 	widget_not_void: widget /= Void
-	
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

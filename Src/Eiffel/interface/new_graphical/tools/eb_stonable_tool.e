@@ -38,8 +38,9 @@ feature {NONE} -- Clean up
 				create l_notifier
 				if l_notifier.is_service_available then
 						-- Unregister existing file check modification
-					if {l_stone2: !FILED_STONE} last_stone and then {l_fn2: !STRING_32} l_stone2.file_name.out.as_string_32 then
+					if {l_stone2: !FILED_STONE} last_monitored_stone and then {l_fn2: !STRING_32} l_stone2.file_name.out.as_string_32 then
 						l_notifier.service.uncheck_modifications_with_callback (l_fn2, agent on_file_changed)
+						last_monitored_stone := Void
 					end
 				end
 			end
@@ -63,6 +64,11 @@ feature -- Access
 			-- When a stone is set into current view through `set_stone', we store it here,
 			-- until Current view is displayed on the screen, the stone is used to update related formatters
 			-- by invoking `force_last_stone'.
+
+feature {NONE} -- Access
+
+	last_monitored_stone: FILED_STONE
+			-- Last stone monitored for file change notifications
 
 feature -- Status setting
 
@@ -123,10 +129,11 @@ feature {NONE} -- Implementation
 			create l_notifier
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
-				if {l_stone: !FILED_STONE} last_stone then
+				if {l_stone: !FILED_STONE} last_monitored_stone then
 					if {l_fn: !STRING_32} l_stone.file_name.out.as_string_32 then
 						if l_notifier.service.is_monitoring (l_fn) then
 							l_notifier.service.uncheck_modifications_with_callback (l_fn, agent on_file_changed)
+							last_monitored_stone := Void
 						end
 					end
 				end
@@ -140,12 +147,14 @@ feature {NONE} -- Implementation
 				if {l_stone2: !FILED_STONE} a_stone then
 					if {l_fn2: !STRING_32} l_stone2.file_name.out.as_string_32 then
 						l_notifier.service.check_modifications_with_callback (l_fn2, agent on_file_changed)
+						last_monitored_stone := l_stone2
 					end
 				end
 			end
 		ensure
 			last_stone_set: last_stone = a_stone
 			last_stone_not_processed: not is_last_stone_processed
+			last_monitored_stone_set: (create {SERVICE_CONSUMER [FILE_NOTIFIER_S]}).is_service_available implies (last_monitored_stone = ({FILED_STONE}) #? a_stone)
 		end
 
 	set_is_last_stone_processed (b: BOOLEAN) is

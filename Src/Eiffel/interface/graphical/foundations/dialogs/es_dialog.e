@@ -6,9 +6,9 @@ indexing
 		      to store size/position information. This can be vetoed by redefining `is_size_and_position_remembered' to return False.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision: \$"
 
 deferred class
 	ES_DIALOG
@@ -24,17 +24,10 @@ inherit
 			on_handle_key
 		end
 
-
 inherit {NONE}
 	ES_SHARED_DIALOG_BUTTONS
 
-
 	ES_HELP_REQUEST_BINDER
-		export
-			{NONE} all
-		end
-
-	EV_BUILDER
 		export
 			{NONE} all
 		end
@@ -73,7 +66,7 @@ feature {NONE} -- Initialization
         end
 
     on_after_initialized
-            -- Use to perform additional creation initializations, after the UI has been created.
+            -- <Precursor>
         local
         	l_sp_info: TUPLE [x, y, width, height: INTEGER]
         	l_screen: SD_SCREEN
@@ -88,7 +81,7 @@ feature {NONE} -- Initialization
 				-- As a result we must access the close request actions of the window to perform the proper close.
 			l_titled_window := dialog
 			register_action (l_titled_window.close_request_actions, agent on_cancel_dialog)
-			register_action (dialog.show_actions, agent show_actions.call ([]))
+			register_action (dialog.show_actions, agent show_actions.call (Void))
 
 			Precursor {ES_WINDOW_FOUNDATIONS}
 
@@ -343,8 +336,7 @@ feature {NONE} -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			create Result.make (30)
-			Result.append (generating_type)
+			Result.make_from_string (generating_type)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -420,7 +412,7 @@ feature {NONE} -- Status report
 
 	is_recycled_on_closing: BOOLEAN
 			-- Indicates if the dialog should be recycled on closing.
-		once
+		do
 			Result := True
 		end
 
@@ -457,6 +449,8 @@ feature {NONE} -- Status setting
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized or is_initializing
+			a_widget_attached: a_widget /= Void
+			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		local
 			l_recycler: EB_RECYCLABLE
 		do
@@ -497,7 +491,6 @@ feature -- Query
 			-- `Result': An action to be performed when the button is pressed.
 		require
 			is_interface_usable: is_interface_usable
-			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
 		local
 			l_action: TUPLE [action: PROCEDURE [ANY, TUPLE]; on_close: BOOLEAN]
@@ -589,6 +582,7 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			a_window_not_void: a_window /= Void
+			not_a_window_is_destoryed: not a_window.is_destroyed
 			a_window_not_current: a_window /= dialog
 		do
 			is_confirmation_key_active := True
@@ -692,6 +686,8 @@ feature {NONE} -- Basic operation
 			l_padding: INTEGER
 			l_allow_resize: BOOLEAN
 		do
+				-- HACK: We have to allow user resizing in order for the buttons to be resized correctly
+				-- as well as the padding cell. If this code is removed the buttons are resized but incorrectly placed.
 			l_allow_resize := dialog.user_can_resize
 			if not l_allow_resize then
 				dialog.enable_user_resize
@@ -763,7 +759,7 @@ feature {NONE} -- Action handlers
 			not_is_close_vetoed: not is_close_vetoed
 		do
 			dialog.hide
-			hide_actions.call ([])
+			hide_actions.call (Void)
 		ensure
 			not_is_close_vetoed: not is_close_vetoed
 		end
@@ -784,13 +780,13 @@ feature {NONE} -- Action handlers
 			dialog_result := a_id
 			l_action := button_action_before_close (a_id)
 			if l_action /= Void then
-				l_action.call ([])
+				l_action.call (Void)
 			end
 			if not is_close_vetoed then
 				l_action := button_action (a_id)
 				on_close_requested (a_id)
 				if l_action /= Void then
-					l_action.call ([])
+					l_action.call (Void)
 				end
 			end
 			is_close_vetoed := False
@@ -984,11 +980,8 @@ feature {NONE} -- Factory
 			is_interface_usable: is_interface_usable
 			is_initializing: is_initializing
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
-		local
-			l_label: STRING_32
 		do
-			l_label := dialog_button_label (a_id)
-			create Result.make_with_text (l_label)
+			create Result.make_with_text (dialog_button_label (a_id))
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1012,13 +1005,13 @@ feature {NONE} -- Factory
 			end
 
 			if l_enable_help then
-				Result.set_tooltip ("Click to show the help documentation.")
+				Result.set_tooltip (interface_names.e_show_help)
 
 					-- Set click action
 				register_action (Result.select_actions, agent show_help)
 			else
 				Result.disable_sensitive
-				Result.set_tooltip ("No help provider is available to show help for this dialog!")
+				Result.set_tooltip (interface_names.e_show_help_unavailable)
 			end
 		ensure
 			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed

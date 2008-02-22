@@ -43,16 +43,21 @@ feature {NONE} -- Initialization
 			on_after_initialized
 		ensure
 			is_initialized: is_initialized
+			is_initializing_unchanged: old is_initializing = is_initializing
 		end
 
     on_before_initialize
             -- Use to perform additional creation initializations, before the UI has been created.
 			-- Note: No user interface initialization should be done here! Use `build_dialog_interface' instead
+		require
+			not_is_initialized: not is_initialized
 		do
         end
 
     on_after_initialized
-            -- Use to perform additional creation initializations, after the UI has been created.
+            -- Performs additional initialization of the UI, after the widget structure has been created.
+            --
+            --| Here is it safe to perform operations on widgets created in `build_interface'
         require
         	is_initialized: is_initialized
         do
@@ -208,7 +213,7 @@ feature {NONE} -- Basic operations
         	l_widget := foundation_widget
 			l_style := l_widget.pointer_style
 			l_widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
-			a_action.call ([])
+			a_action.call (Void)
 			l_widget.set_pointer_style (l_style)
 		rescue
 				-- Action may raise an exception, so we need to restore the

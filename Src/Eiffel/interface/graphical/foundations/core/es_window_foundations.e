@@ -22,7 +22,7 @@ inherit
 feature {NONE} -- Initialization
 
     on_after_initialized
-            -- Use to perform additional creation initializations, after the UI has been created.
+            -- <Precursor>
         do
         	Precursor {ES_TOOL_FOUNDATIONS}
         		-- Register the internal event handlers, so we can guarentee state after execution because
@@ -91,7 +91,7 @@ feature {NONE} -- Internal action handlers
 			is_shown: is_shown
 		do
 			on_shown
-			show_actions.call ([])
+			show_actions.call (Void)
 		end
 
 	frozen internal_on_hidden
@@ -100,7 +100,7 @@ feature {NONE} -- Internal action handlers
 			is_interface_usable: is_interface_usable
 		do
 			on_hidden
-			hide_actions.call ([])
+			hide_actions.call (Void)
 			if is_recycled_on_closing then
 				recycle
 			end

@@ -1,0 +1,37 @@
+test_name 	 large-formal-changes
+test_description When the number of generic parameter of a class changes, then the code yields a crash when processing the generic parameters.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	a_rev0.e $CLUSTER a.e
+copy_raw	b_rev0.e $CLUSTER b.e
+copy_raw	c_rev0.e $CLUSTER c.e
+copy_raw	d_rev0.e $CLUSTER d.e
+copy_raw	exp1_rev0.e $CLUSTER exp1.e
+copy_raw	e_rev0.e $CLUSTER e.e
+copy_raw	test1_rev0.e $CLUSTER test1.e
+copy_raw	test_rev0.e $CLUSTER test.e
+copy_raw	x_rev0.e $CLUSTER x.e
+copy_raw	y_rev0.e $CLUSTER y.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE	exec_output_1
+execute_result	ok
+compare	exec_output_1 output1
+
+copy_raw	a_rev1.e $CLUSTER a.e
+copy_raw	c_rev1.e $CLUSTER c.e
+copy_raw	d_rev1.e $CLUSTER d.e
+copy_raw	test_rev1.e $CLUSTER test.e
+copy_raw	x_rev1.e $CLUSTER x.e
+copy_raw	y_rev1.e $CLUSTER y.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE	exec_output_2
+execute_result	ok
+compare	exec_output_2 output2
+
+test_end

@@ -34,7 +34,7 @@ feature {ANY} -- Initialsiation
 		do
 			create parameter_type_names.make (1, 0)
 			create parameter_jvm_type_ids.make (1, 0)
-			return_type_name := clone ("V")
+			return_type_name := "V"
 			return_jvm_type_id := void_type
 			set_constant_pool (cp)
 		end
@@ -65,7 +65,7 @@ feature {ANY} -- Access
 				else
 					from
 						i := parameter_type_names.lower
-						signature_cache := clone ("(")
+						signature_cache := "("
 					until
 						i > parameter_type_names.upper
 					loop
@@ -337,7 +337,7 @@ feature {ANY} -- Basic Access
 		local
 			s: STRING
 		do
-			s := clone (signature)
+			s := signature.twin
 			if
 				not is_field
 			then
@@ -346,7 +346,7 @@ feature {ANY} -- Basic Access
 					index_of_not_0: s.index_of ('(', 1) /= 0
 				end
 				-- remove parameters
-				s.tail (s.count - s.index_of (')', 1))
+				s.keep_tail (s.count - s.index_of (')', 1))
 			end
 			-- now s contains only the return type
 			check

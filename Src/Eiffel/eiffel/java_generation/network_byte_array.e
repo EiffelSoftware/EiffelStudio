@@ -1,12 +1,14 @@
 indexing
-	description: "objects that writes data into a character array. conversion to network byte order (%
-					 %big endian) will be done automatically if %
-	%neccessary depending on used platform."
+	description: "[
+		Objects that writes data into a character array. conversion to network byte order (
+		big endian) will be done automatically if
+		neccessary depending on used platform.
+
+		Note: Currently a platform with little endian is assumed, 
+		impelementation must be changed to not convert on platforms with big endian
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "Currently a platform with little endian is assumed, %
-	%impelementation must be changed to not convert on %
-	%platforms with big endian"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +21,7 @@ inherit
 	JVM_CONSTANTS
 
 feature {ANY} -- Element Change
-			
+
 	put_uint_8_from_int (i: INTEGER; pos: INTEGER) is
 			-- puts the 8 least significant bits of `i' at `pos'
 			-- using network byte order
@@ -29,9 +31,9 @@ feature {ANY} -- Element Change
 			i_positive: i >= 0
 			i_small_enough: i < 256 -- 2^8
 		do
-			area.put (i.ascii_char, pos)
+			area.put (i.to_character_8, pos)
 		end
-			
+
 	put_sint_8_from_int (i: INTEGER; pos: INTEGER) is
 			-- puts the 8 least significant bits of `i' at `pos'
 			-- using network byte order
@@ -41,9 +43,9 @@ feature {ANY} -- Element Change
 			i_positive: i >= -128
 			i_small_enough: i <= 127
 		do
-			area.put (i.ascii_char, pos)
+			area.put (i.to_character_8, pos)
 		end
-			
+
 	put_uint_16_from_int (i: INTEGER; pos: INTEGER) is
 			-- put 16 bit unsigned integer
 			-- puts the 16 least significant bits of `i' at `pos'
@@ -57,7 +59,7 @@ feature {ANY} -- Element Change
 			put_uint_8_from_int (i.bit_shift_right (8), pos)
 			put_uint_8_from_int (i.bit_and (0x000000FF), pos + Int_8_size)
 		end
-			
+
 	put_sint_16_from_int (i: INTEGER; pos: INTEGER) is
 			-- put 16 bit singned integer
 			-- puts the 16 least significant bits of `i' at `pos'
@@ -71,7 +73,7 @@ feature {ANY} -- Element Change
 			put_sint_8_from_int (i.bit_shift_right (8), pos)
 			put_uint_8_from_int (i.bit_and (0x000000FF), pos + Int_8_size)
 		end
-			
+
 	put_uint_32_from_int (i: INTEGER; pos: INTEGER) is
 			-- puts the 32 least significant bits of `i' at `pos'
 			-- using network byte order
@@ -86,7 +88,7 @@ feature {ANY} -- Element Change
 			put_uint_16_from_int (i.bit_shift_right (16), pos)
 			put_uint_16_from_int (i.bit_and (0x0000FFFF), pos + Int_16_size)
 		end
-			
+
 	put_sint_32_from_int (i: INTEGER; pos: INTEGER) is
 			-- puts the 32 least significant bits of `i' at `pos'
 			-- using network byte order
@@ -101,7 +103,7 @@ feature {ANY} -- Element Change
 			put_sint_16_from_int (i.bit_shift_right (16), pos)
 			put_uint_16_from_int (i.bit_and (0x0000FFFF), pos + Int_16_size)
 		end
-			
+
 	put_uint_64_from_int_64 (i: INTEGER_64; pos: INTEGER) is
 			-- puts the 64 least significant bits of `i' at `pos'
 			-- using network byte order
@@ -118,7 +120,7 @@ feature {ANY} -- Element Change
 			end
 			-- still missing int 64 to int 32 conversion (in class INTEGER_64)
 		end
-			
+
 	put_sint_64_from_int_64 (i: INTEGER_64; pos: INTEGER) is
 			-- puts the 64 least significant bits of `i' at `pos'
 			-- using network byte order
@@ -135,13 +137,13 @@ feature {ANY} -- Element Change
 			end
 			-- still missing int 64 to int 32 conversion (in class INTEGER_64)
 		end
-			
+
 	put_utf8_from_string (s: STRING; pos: INTEGER) is
 			-- puts `s' at pos
 			-- byte for byte from `s' will be written to the array
 			-- there will be no additional info on size or a terminating
 			-- zero character. You have to provide this information yourself
-		require	
+		require
 			index_small_enough: (pos + Int_16_size + s.count) <= count;
 			index_large_enough: pos > 0;
 			s_not_void: s /= Void
@@ -151,7 +153,7 @@ feature {ANY} -- Element Change
 				False -- TODO
 			end
 		end
-			
+
 	put_double_from_double (d: DOUBLE; pos: INTEGER) is
 			-- Note: `ca_wdouble' does not seem to work. FIXME
 		require
@@ -173,14 +175,14 @@ feature {ANY} -- Element Change
 		end
 
 feature {NONE} --
-			
+
 	ca_wdouble (ptr: POINTER; val: DOUBLE; pos: INTEGER) is
 			-- Note: This does not seem to write the double into the
 			-- memory as Java would expect it. FIXME
 		external
 			"C"
 		end
-								
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

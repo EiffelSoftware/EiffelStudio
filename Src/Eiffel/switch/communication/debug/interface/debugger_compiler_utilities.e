@@ -213,7 +213,6 @@ feature -- Feature access
 		local
 			l_ct: CLASS_TYPE
 			l_ecc: EIFFEL_CLASS_C
-			l_fe: E_FEATURE
 			l_fi: FEATURE_I
 		do
 			l_ct := eiffel_system.system.class_type_of_static_type_id (ct_id)

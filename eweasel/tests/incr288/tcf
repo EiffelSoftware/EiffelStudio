@@ -21,6 +21,7 @@ execute_result	ok
 compare	exec_output_1 output1
 
 copy_raw	a_rev1.e $CLUSTER a.e
+copy_raw	b_rev1.e $CLUSTER b.e
 copy_raw	c_rev1.e $CLUSTER c.e
 copy_raw	d_rev1.e $CLUSTER d.e
 copy_raw	test_rev1.e $CLUSTER test.e

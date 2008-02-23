@@ -3016,7 +3016,7 @@ feature -- Final mode generation
 			l_type_id_mapping: ARRAY [INTEGER]
 		do
 			eiffel_project.terminate_c_compilation
-			if not retried and True then -- is_finalization_needed then
+			if not retried and is_finalization_needed then
 				if not il_generation then
 					internal_retrieved_finalized_type_mapping := Void
 					create l_type_id_mapping.make (0, static_type_id_counter.count)

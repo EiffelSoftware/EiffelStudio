@@ -16,9 +16,14 @@ feature
 
 	is_built_in: BOOLEAN is
 			-- Is the current binary operator a built-in one ?
+		local
+			l_char: CHARACTER_A
 		do
 			Result := Precursor {NUM_BINARY_B}
-					or else context.real_type (left.type).is_char
+			if not Result then
+				l_char ?= context.real_type (left.type)
+				Result := l_char /= Void
+			end
 		end
 
 	is_type_fixed: BOOLEAN is

@@ -110,7 +110,7 @@ feature -- Initialization
 					Void,	-- convertors
 					Void,	-- features
 					Void,	-- invariant_part
-					create {SUPPLIERS_AS}.make,	-- suppliers
+					create {SUPPLIERS_AS},	-- suppliers
 					Void,	-- obsolete_message
 					create {KEYWORD_AS}.make_null
 					)

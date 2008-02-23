@@ -17,6 +17,11 @@ inherit
 			line_number, set_line_number, has_call, allocates_memory
 		end
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -44,7 +49,7 @@ feature -- C code generation
 	enlarged: CREATION_EXPR_B is
 			-- Enlarge current_node
 		local
-			l_type: CL_TYPE_I
+			l_type: CL_TYPE_A
 		do
 			create Result
 			Result.set_info (info)
@@ -58,17 +63,17 @@ feature -- C code generation
 						-- 4 - if empty and it is {SPECIAL}.make we do the normal way.
 					l_type := info.type_to_create
 					if l_type = Void then
-						Result.set_call (call.enlarged_on (type))
-					elseif not l_type.base_class.feature_of_rout_id (call.routine_id).is_empty then
-						Result.set_call (call.enlarged_on (type))
+						Result.set_call (call.enlarged_on (context.real_type (type)))
+					elseif not l_type.associated_class.feature_of_rout_id (call.routine_id).is_empty then
+						Result.set_call (call.enlarged_on (context.real_type (type)))
 						Result.call.set_precursor_type (l_type)
 					elseif call.routine_id = system.special_make_rout_id then
 							-- We cannot optimized the empty routine `{SPECIAL}.make' as otherwise
 							-- it will simply generate a normal creation in `generate' below.
-						Result.set_call (call.enlarged_on (type))
+						Result.set_call (call.enlarged_on (context.real_type (type)))
 					end
 				else
-					Result.set_call (call.enlarged_on (type))
+					Result.set_call (call.enlarged_on (context.real_type (type)))
 				end
 			end
 			Result.set_creation_instruction (is_creation_instruction)
@@ -241,7 +246,7 @@ feature -- Comparisons
 
 feature -- Type info
 
-	type: TYPE_I
+	type: TYPE_A
 			-- Current static type of creation.
 
 feature -- Generation
@@ -250,10 +255,9 @@ feature -- Generation
 			-- Generate C code for creation expression
 		local
 			buf: GENERATION_BUFFER
-			l_basic_type: BASIC_I
+			l_basic_type: BASIC_A
 			l_call: like call
 			l_special_creation: BOOLEAN
-			l_special_type: GEN_TYPE_I
 			l_class_type: SPECIAL_CLASS_TYPE
 			parameter: PARAMETER_BL
 		do
@@ -268,30 +272,28 @@ feature -- Generation
 				buf.put_new_line
 				register.print_register
 				buf.put_string (" = ")
-				l_basic_type.generate_default_value (buf)
+				l_basic_type.c_type.generate_default_value (buf)
 				buf.put_character (';')
 			elseif l_special_creation then
 				check
 					is_special_call_valid: is_special_call_valid
 				end
-				l_special_type ?= context.creation_type (type)
 				check
-					is_special_type: l_special_type /= Void and then
-						l_special_type.base_class.original_class = system.special_class
+					is_special_type: type.has_associated_class_type (context.context_class_type.type)
 				end
-				l_class_type ?= l_special_type.associated_class_type
+				l_class_type ?= type.associated_class_type (context.context_class_type.type)
 				check
 					l_class_type_not_void: l_class_type /= Void
 				end
 				l_call.parameters.first.generate
 				info.generate_start (buf)
-				info.generate_gen_type_conversion
+				info.generate_gen_type_conversion (0)
 				parameter ?= l_call.parameters.first
 				l_class_type.generate_creation (buf, info, register, parameter)
 				info.generate_end (buf)
 			else
 				info.generate_start (buf)
-				info.generate_gen_type_conversion
+				info.generate_gen_type_conversion (0)
 				buf.put_new_line
 				register.print_register
 				buf.put_string (" = ")

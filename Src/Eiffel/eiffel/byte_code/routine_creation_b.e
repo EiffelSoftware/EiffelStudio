@@ -26,7 +26,7 @@ feature -- Visitor
 feature  -- Initialization
 
 	init (cl_type: like class_type; cl_id: INTEGER; f: FEATURE_I;
-		  r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
+		  r_type : GEN_TYPE_A; args : TUPLE_CONST_B;
 		  omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
 		  a_is_inline_agent, a_is_target_closed, a_is_precompiled, a_is_basic: BOOLEAN) is
 			-- Initialization
@@ -69,7 +69,7 @@ feature  -- Initialization
 		end
 
 	set_ids (cl_type : like class_type; cl_id, o_cl_id, r_id, f_id, r_origin, r_offset: INTEGER;
-			 r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
+			 r_type : GEN_TYPE_A; args : TUPLE_CONST_B;
 			 omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
 			 a_is_inline_agent, a_is_target_closed, a_is_precompile, a_is_basic: BOOLEAN) is
 			-- Set ids and type
@@ -97,9 +97,9 @@ feature  -- Initialization
 
 feature -- Attributes
 
-	class_type: TYPE_I
+	class_type: TYPE_A
 			-- Type of the class where feature comes from
-			-- (It conforms either to CL_TYPE_I or to LIKE_CURRENT_I.)
+			-- (It conforms either to CL_TYPE_A or to LIKE_CURRENT.)
 
 	class_id: INTEGER
 			-- Class Id of the addressed feature
@@ -119,7 +119,7 @@ feature -- Attributes
 	rout_id: INTEGER
 			-- Routine id of the feature
 
-	type: GEN_TYPE_I
+	type: GEN_TYPE_A
 			-- Type of routine object
 
 	arguments: TUPLE_CONST_B

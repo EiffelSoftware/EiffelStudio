@@ -63,7 +63,7 @@ feature -- Output
 				c_type := c_type.twin
 				c_type.substitude_formals (l_gen_type)
 			end
-			if not actual_type_set.conform_to_type (c_type) then
+			if not actual_type_set.is_valid or else not actual_type_set.conform_to_type (c_type) then
 				a_text_formatter.add ("Type to which it should conform: ")
 				c_type.ext_append_to (a_text_formatter, type.associated_class)
 				a_text_formatter.add_new_line

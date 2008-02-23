@@ -90,10 +90,10 @@ feature -- Validity
 
 feature -- Typing
 
-	new_type (data: CL_TYPE_I): SPECIAL_CLASS_TYPE is
+	new_type (data: CL_TYPE_A): SPECIAL_CLASS_TYPE is
 			-- New class type for class SPECIAL
 		local
-			l_data: GEN_TYPE_I
+			l_data: GEN_TYPE_A
 		do
 			l_data ?= data
 			check
@@ -121,11 +121,10 @@ feature -- Code generation
 			-- Generate dynamic types of type classes available in the system
 		local
 			class_type: CLASS_TYPE
-			gen_type: GEN_TYPE_I
-			gen_param: TYPE_I
-			int_i: INTEGER_I
-			nat_i: NATURAL_I
-			char_i: CHAR_I
+			gen_type: GEN_TYPE_A
+			gen_param: TYPE_A
+			int_i: INTEGER_A
+			nat_i: NATURAL_A
 			dtype, char_dtype, uint8_dtype, uint16_dtype,
 			uint32_dtype, uint64_dtype, int8_dtype, int16_dtype,
 			int32_dtype, int64_dtype, wchar_dtype,
@@ -155,10 +154,9 @@ feature -- Code generation
 				class_type := types.item
 				dtype := class_type.type_id - 1
 				gen_type ?= class_type.type
-				gen_param := gen_type.meta_generic.item (1)
-				if gen_param.is_char then
-					char_i ?= gen_param
-					if char_i.is_character_32 then
+				gen_param := gen_type.generics.item (1)
+				if gen_param.is_character then
+					if gen_param.is_character_32 then
 						wchar_dtype := dtype
 					else
 						char_dtype := dtype
@@ -185,7 +183,7 @@ feature -- Code generation
 					real64_dtype := dtype
 				elseif gen_param.is_boolean then
 					boolean_dtype := dtype
-				elseif gen_param.is_feature_pointer then
+				elseif gen_param.is_pointer or gen_param.is_typed_pointer then
 					pointer_dtype := dtype
 				elseif not gen_param.is_expanded then
 					ref_dtype := dtype

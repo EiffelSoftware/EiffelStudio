@@ -17,14 +17,10 @@ feature
 			class_type_not_void: class_type /= Void
 			feature_name_not_void: feature_name /= Void
 			encoded_name_not_void: encoded_name /= Void
-		local
-			s: GENERATION_BUFFER
 		do
 			put_string (class_type.associated_class.group.name)
 			put_character ('%T')
-			create s.make (128)
-			class_type.type.dump (s)
-			s.put_in_file (Current)
+			put_string (class_type.type.dump)
 			put_character ('%T')
 			put_string (feature_name)
 			put_character ('%T')

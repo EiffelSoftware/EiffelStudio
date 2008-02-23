@@ -409,7 +409,8 @@ feature -- Pattern generation
 				buffer.put_string ("result = ")
 			end
 			buffer.put_character ('(')
-			result_type.generate_function_cast (buffer, argument_type_array)
+				-- Patterns are only in workbench mode generation
+			result_type.generate_function_cast (buffer, argument_type_array, True)
 			buffer.put_string ("ptr)(")
 			nb := argument_count
 			buffer.put_string ("Current")
@@ -431,25 +432,6 @@ feature -- Pattern generation
 			buffer.put_string (");")
 		end
 
-	trace is
-			-- Debug purpose
-		local
-			i: INTEGER;
-		do
-			from
-				i := 1;
-			until
-				i > argument_count
-			loop
-				argument_types.item (i).trace;
-				io.error.put_character ('/');
-				i := i + 1;
-			end;
-			io.error.put_character ('|');
-			result_type.trace;
-			io.error.put_string ("|");
-		end;
-
 feature {NONE} -- Implemantation
 
 	equivalent_type (first_type, other_type: TYPE_C): BOOLEAN is
@@ -458,28 +440,8 @@ feature {NONE} -- Implemantation
 		require
 			first_type_not_void: first_type /= Void
 			other_type_not_void: other_type /= Void
-		local
-			basic_i, other_basic_i: BASIC_I
 		do
-				-- Check if they have the exact same object type.
-				-- If not they are different.
-			if (first_type.same_type (other_type)) then
-				Result := True
-
-					-- If type is basic, we can call `same_as' to ensure that they
-					-- are the same kind of basic types (eg LONG_I is used to
-					-- represent all INTEGER classes, or CHAR_I to represent an ASCII
-					-- character or a wide character).
-					--
-					-- If it is not, it means that we have either a NONE_I, a REFERENCE_I
-					-- or a VOID_I and are test on the type ensure that here we have to
-					-- we return True.
-				basic_i ?= first_type
-				if basic_i /= Void then
-					other_basic_i ?= other_type
-					Result := basic_i.same_as (other_basic_i)
-				end
-			end
+			Result := first_type.is_equal (other_type)
 		end
 
 invariant

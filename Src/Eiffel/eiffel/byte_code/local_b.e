@@ -37,7 +37,7 @@ feature
 	read_only: BOOLEAN is false
 			-- Is the access only a read-only one ?
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Local type
 		do
 			Result := context.byte_code.locals.item (position)

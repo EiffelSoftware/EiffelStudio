@@ -20,6 +20,11 @@ inherit
 
 	SHARED_DECLARATIONS
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -92,7 +97,7 @@ end
 		local
 			tmp_register: REGISTER
 			access_b: ACCESS_B
-			basic_i: BASIC_I
+			basic_i: BASIC_A
 		do
 debug
 io.error.put_string ("In feature_bl [analyze_on]: ")
@@ -145,7 +150,7 @@ io.error.put_new_line
 end
 		end
 
-	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_I) is
+	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_A) is
 			-- Generate code for special routines (is_equal, copy ...).
 		do
 			special_routines.generate (buffer, basic_type, reg, parameters)
@@ -168,8 +173,8 @@ end
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			type_i: TYPE_I
-			class_type: CL_TYPE_I
+			type_i: TYPE_A
+			class_type: CL_TYPE_A
 			access: ACCESS_B
 			void_register: REGISTER
 			is_polymorphic_access: BOOLEAN
@@ -178,7 +183,7 @@ end
 			class_type ?= type_i
 			is_polymorphic_access := not type_i.is_basic and then precursor_type = Void and then
 					class_type /= Void and then
-					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0
+					Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), True) >= 0
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 			end
@@ -198,17 +203,17 @@ end
 	is_polymorphic: BOOLEAN is
 			-- Is access polymorphic ?
 		local
-			class_type: CL_TYPE_I
-			type_i: TYPE_I
+			class_type: CL_TYPE_A
+			type_i: TYPE_A
 		do
 			type_i := context_type
 			if not type_i.is_basic and then precursor_type = Void then
 				class_type ?= type_i -- Cannot fail
-				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0
+				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), True) >= 0
 			end
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
 			-- Generate final portion of C code.
 		local
 			buf: GENERATION_BUFFER
@@ -246,13 +251,13 @@ end
 			buf.put_character (')')
 		end
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
 			-- Generate feature call in a `typ' context
 		local
 			internal_name		: STRING
 			table_name			: STRING
 			rout_table			: ROUT_TABLE
-			type_i: TYPE_I
+			type_i: TYPE_A
 			type_c				: TYPE_C
 			buf					: GENERATION_BUFFER
 			array_index			: INTEGER
@@ -267,7 +272,7 @@ end
 			keep := system.keep_assertions
 			is_nested := not is_first
 			l_par := parent
-			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
+			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), True)
 			buf := buffer
 			is_deferred := False
 			type_i := real_type (type)
@@ -276,14 +281,17 @@ end
 					-- Call to a deferred feature without implementation
 				is_deferred := True
 				buf.put_character ('(')
-				type_c.generate_function_cast (buf, <<"EIF_REFERENCE">>)
+				type_c.generate_function_cast (buf, <<"EIF_REFERENCE">>, False)
 				buf.put_string (" RTNR)")
 			elseif precursor_type = Void and then array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.routine_table_name (routine_id)
-				if system.seed_of_routine_id (routine_id).type.type_i.is_formal and then type_i.is_basic then
+					-- It is pretty important that we use `actual_type.is_formal' and not
+					-- just `is_formal' because otherwise if you have `like x' and `x: G'
+					-- then we would fail to detect that.
+				if system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then type_i.is_basic then
 						-- Feature returns a reference that need to be used as a basic one.
 					buf.put_character ('*')
 					type_c.generate_access_cast (buf)
@@ -297,7 +305,7 @@ end
 						buf.put_string ("nstcall = 0, ")
 					end
 				end
-				type_c.generate_function_cast (buf, argument_types)
+				type_c.generate_function_cast (buf, argument_types, False)
 
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
@@ -325,7 +333,7 @@ end
 					-- and get the routine name of the first entry in the
 					-- routine table.
 				rout_table ?= Eiffel_table.poly_table (routine_id)
-				rout_table.goto_implemented (typ.type_id)
+				rout_table.goto_implemented (typ.type_id (context.context_class_type.type))
 
 				if rout_table.is_implemented then
 					internal_name := rout_table.feature_name
@@ -368,7 +376,7 @@ end
 						buf.put_string ("nstcall = 0, ")
 					end
 				end
-				type_c.generate_function_cast (buf, local_argument_types)
+				type_c.generate_function_cast (buf, local_argument_types, False)
 				buf.put_string (internal_name)
 				buf.put_character (')')
 			end

@@ -87,18 +87,18 @@ feature {NONE} -- Status report
 			-- Is current type of generic parameter G in SPECIAL [G] is
 			-- expanded with references?
 		local
-			l_cl_item_type: CL_TYPE_I
+			l_cl_item_type: CL_TYPE_A
 		do
 			l_cl_item_type ?= generic_type
 			if l_cl_item_type /= Void and l_cl_item_type.is_true_expanded then
-				Result := l_cl_item_type.associated_class_type.skeleton.has_references
+				Result := l_cl_item_type.associated_class_type (context.context_class_type.type).skeleton.has_references
 			end
 		end
 
-	generic_type: TYPE_I is
+	generic_type: TYPE_A is
 				-- Extract type of generic parameter G in SPECIAL [G].
 			local
-				l_special_type: GEN_TYPE_I
+				l_special_type: GEN_TYPE_A
 			do
 				if parent = Void then
 						-- When there is no parent it means that the call is done
@@ -108,16 +108,16 @@ feature {NONE} -- Status report
 				else
 					if parent.target = Current then
 							-- This is the case of (area.item (i).feature_call).
-						l_special_type ?= Context.real_type (parent.parent.target.type)
+						l_special_type ?= parent.parent.target.type.associated_class_type (context.context_class_type.type).type
 					else
 							-- We go back to the target of current call to get its type.
-						l_special_type ?= Context.real_type (parent.target.type) 
+						l_special_type ?= parent.target.type.associated_class_type (context.context_class_type.type).type
 					end
 				end
 				check
 					l_special_type_not_void: l_special_type /= Void
 				end
-				Result := l_special_type.meta_generic.item (1)
+				Result := l_special_type.generics.item (1)
 			end
 
 feature {NONE} -- Implementation
@@ -128,10 +128,10 @@ feature {NONE} -- Implementation
 			gen_reg_not_void: gen_reg /= Void
 		local
 			buf: GENERATION_BUFFER
-			l_gen_param: TYPE_I
+			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_I
+			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -146,9 +146,9 @@ feature {NONE} -- Implementation
 			buf.put_new_line
 			if l_param_is_expanded then
 				l_exp_type ?= l_gen_param;
-				l_exp_class_type := l_exp_type.associated_class_type
+				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
 				if l_exp_class_type.skeleton.has_references then
-					result_reg.print_register 
+					result_reg.print_register
 					buf.put_string (" = RTCL(")
 					gen_reg.print_register
 					buf.put_string (" + OVERHEAD + ")
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 				else
 						-- No need to protect target register, because it is
 						-- protected by the routine calling `item'.
-					l_exp_type.generate_expanded_creation (buf, result_reg.register_name)
+					l_exp_type.generate_expanded_creation (buf, result_reg.register_name, context.class_type)
 					buf.put_string ("memcpy (")
 					result_reg.print_register
 					buf.put_string (", ")
@@ -194,10 +194,10 @@ feature {NONE} -- Implementation
 			gen_reg_not_void: gen_reg /= Void
 		local
 			buf: GENERATION_BUFFER
-			l_gen_param: TYPE_I
+			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_I
+			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 
 			if l_param_is_expanded then
 				l_exp_type ?= l_gen_param
-				l_exp_class_type := l_exp_type.associated_class_type
+				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
 				if l_exp_class_type.skeleton.has_references then
 					buf.put_string (" + OVERHEAD + ")
 					parameters.i_th (1).print_register
@@ -248,10 +248,10 @@ feature {NONE} -- Implementation
 			gen_reg_not_void: gen_reg /= Void
 		local
 			buf: GENERATION_BUFFER
-			l_gen_param: TYPE_I
+			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_I
+			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			buf.put_new_line
 			if l_param_is_expanded then
 				l_exp_type ?= l_gen_param
-				l_exp_class_type := l_exp_type.associated_class_type
+				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
 				if l_exp_class_type.skeleton.has_references then
 					buf.put_string ("ecopy(")
 					parameters.i_th (1).print_register
@@ -323,10 +323,10 @@ feature {NONE} -- Implementation
 			not_is_expanded_with_references: not is_expanded_with_references
 		local
 			buf: GENERATION_BUFFER
-			l_gen_param: TYPE_I
+			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_I
+			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 
 			if l_param_is_expanded then
 				l_exp_type ?= l_gen_param
-				l_exp_class_type := l_exp_type.associated_class_type
+				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
 
 				buf.put_string ("((char *)")
 				gen_reg.print_register
@@ -395,10 +395,10 @@ feature {NONE} -- Implementation
 			not_is_expanded_with_references: not is_expanded_with_references
 		local
 			buf: GENERATION_BUFFER
-			l_gen_param: TYPE_I
+			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_I
+			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			buf.put_new_line
 			if l_param_is_expanded then
 				l_exp_type ?= l_gen_param
-				l_exp_class_type := l_exp_type.associated_class_type
+				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
 
 				buf.put_string ("memmove((char *)")
 				gen_reg.print_register

@@ -66,13 +66,13 @@ feature -- Code generation
 			l_tuple_const: ARRAYED_LIST [TUPLE [STRING_B, EXPR_B]]
 			l_ctor_token: INTEGER
 			l_creation_class: CLASS_C
-			l_type: CL_TYPE_I
+			l_type: CL_TYPE_A
 		do
 			cil_generator := a_code_generator
 
 			cb := a_ca.creation_expr
 			l_type ?= cb.type
-			l_creation_class := l_type.base_class
+			l_creation_class := l_type.associated_class
 			l_tuple_const := a_ca.named_arguments
 
 			param := cb.call.parameters
@@ -93,9 +93,9 @@ feature -- Code generation
 				l_type ?= cb.type
 				if count = 0 then
 						-- Use default constructor
-					l_ctor_token := cil_generator.constructor_token (l_type.associated_class_type.implementation_id)
+					l_ctor_token := cil_generator.constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id)
 				else
-					l_ctor_token := cil_generator.inherited_constructor_token (l_type.associated_class_type.implementation_id, cb.call.feature_id)
+					l_ctor_token := cil_generator.inherited_constructor_token (l_type.associated_class_type (a_code_generator.current_class_type.type).implementation_id, cb.call.feature_id)
 				end
 			end
 
@@ -147,7 +147,7 @@ feature -- Code generation
 
 feature {NONE} -- Access
 
-	target_type: TYPE_I
+	target_type: TYPE_A
 			-- Actual expected type of custom attribute argument or optional argument.
 
 	cil_generator: CIL_CODE_GENERATOR
@@ -174,11 +174,11 @@ feature {BYTE_NODE} -- Visitors
 			l_expressions: BYTE_LIST [BYTE_NODE]
 			l_expr: EXPR_B
 			l_old_target_type: like target_type
-			l_type: TYPE_I
+			l_type: TYPE_A
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			l_expressions := a_node.expressions
-			l_type := a_node.type.true_generics [1]
+			l_type := a_node.type.generics [1]
 
 			if is_target_object then
 					-- Mark the fact it is an array when not a fixed argument
@@ -239,8 +239,8 @@ feature {BYTE_NODE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_value: VALUE_I
-			l_type: TYPE_I
-			l_char_type: CHAR_I
+			l_type: TYPE_A
+			l_char_type: CHARACTER_A
 			l_int: INTEGER_CONSTANT
 			l_bool: BOOL_VALUE_I
 			l_char: CHAR_VALUE_I
@@ -312,7 +312,7 @@ feature {BYTE_NODE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_il_enum: IL_ENUM_EXTENSION_I
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			l_il_enum ?= a_node.extension
@@ -383,8 +383,8 @@ feature {BYTE_NODE} -- Visitors
 	process_type_expr_b (a_node: TYPE_EXPR_B) is
 			-- Process `a_node'.
 		local
-			l_gen_type: GEN_TYPE_I
-			l_actual_type: CL_TYPE_I
+			l_gen_type: GEN_TYPE_A
+			l_actual_type: CL_TYPE_A
 			l_class_type: CLASS_TYPE
 			l_type_name: STRING
 			l_ext_class: EXTERNAL_CLASS_C
@@ -395,16 +395,16 @@ feature {BYTE_NODE} -- Visitors
 			end
 
 			if a_node.is_dotnet_type then
-				l_class_type := a_node.type.associated_class_type
+				l_class_type := a_node.type.associated_class_type (cil_generator.current_class_type.type)
 			else
 				l_gen_type ?= a_node.type
 				check
 					l_gen_type_not_void: l_gen_type /= Void
-					l_gen_type_has_one_generic: l_gen_type.true_generics.count > 0
+					l_gen_type_has_one_generic: l_gen_type.generics.count > 0
 				end
-				l_actual_type ?= l_gen_type.true_generics[1]
+				l_actual_type ?= l_gen_type.generics[1]
 				if l_actual_type /= Void then
-					l_class_type := l_actual_type.associated_class_type
+					l_class_type := l_actual_type.associated_class_type (cil_generator.current_class_type.type)
 				end
 			end
 			if l_class_type /= Void then
@@ -428,11 +428,11 @@ feature {BYTE_NODE} -- Visitors
 	process_void_b (a_node: VOID_B) is
 			-- Process `a_node'.
 		local
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			l_cl_type ?= target_type
-			if l_cl_type.base_class = system.native_array_class.compiled_class then
+			if l_cl_type.associated_class = system.native_array_class.compiled_class then
 					-- We insert the value 0xFFFFFFFF to show that it is a Void array.
 				ca_blob.put_integer_32 (0xFFFFFFFF)
 			else
@@ -447,7 +447,7 @@ feature {NONE} -- Implemention
 		require
 			target_type_not_void: target_type /= Void
 		local
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 		do
 			l_cl_type ?= target_type
 			if l_cl_type /= Void then
@@ -468,7 +468,7 @@ feature {NONE} -- Implemention
 			l_extension: IL_EXTENSION_I
 			l_string_b: STRING_B
 			l_feat_name: STRING
-			l_type: TYPE_I
+			l_type: TYPE_A
 		do
 			l_string_b ?= a_tuple.item (1)
 			l_expr_b ?= a_tuple.item (2)
@@ -489,7 +489,7 @@ feature {NONE} -- Implemention
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
 			end
 
-			l_type := l_feat.type.type_i
+			l_type := l_feat.type
 			insert_field_or_prop_type (l_type)
 
 				-- Put name of attribute or property.
@@ -518,11 +518,11 @@ feature {NONE} -- Implemention
 			-- compatible value, or a REAL_32/REAL_64 value.
 		local
 			l_element_type: INTEGER_8
-			l_cl_type_i: CL_TYPE_I
+			l_cl_type_i: CL_TYPE_A
 			l_feature_table: FEATURE_TABLE
 			l_feature_i: FEATURE_I
 			l_il_extension_i: IL_EXTENSION_I
-			l_underlying_type: TYPE_I
+			l_underlying_type: TYPE_A
 		do
 			if is_target_object then
 					-- We simply assume that we will put the INTEGER as is.
@@ -530,13 +530,13 @@ feature {NONE} -- Implemention
 			else
 				l_element_type := target_type.element_type
 				l_cl_type_i ?= target_type
-				if l_cl_type_i /= Void and then l_cl_type_i.base_class.is_enum then
+				if l_cl_type_i /= Void and then l_cl_type_i.associated_class.is_enum then
 						-- Use underlying integer type.
 					check
 						l_cl_type_i_not_void: l_cl_type_i /= Void
 					end
 					from
-						l_feature_table := l_cl_type_i.base_class.feature_table
+						l_feature_table := l_cl_type_i.associated_class.feature_table
 						l_feature_table.start
 					until
 						l_feature_table.after or else l_underlying_type /= Void
@@ -544,7 +544,7 @@ feature {NONE} -- Implemention
 						l_feature_i := l_feature_table.item_for_iteration
 						l_il_extension_i ?= l_feature_i.extension
 						if l_il_extension_i /= Void and then l_il_extension_i.type = {SHARED_IL_CONSTANTS}.field_type then
-							l_underlying_type := l_feature_i.type.type_i
+							l_underlying_type := l_feature_i.type
 						end
 						l_feature_table.forth
 					end
@@ -615,12 +615,12 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	insert_field_or_prop_type (a_type: TYPE_I) is
+	insert_field_or_prop_type (a_type: TYPE_A) is
 			-- Fill `FieldOrPropType' in `ca_blob'.
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 		do
 			l_cl_type ?= a_type
 			if l_cl_type = Void then
@@ -637,17 +637,17 @@ feature {NONE} -- Implemention
 					-- Mark the fact it is an array
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_szarray)
 				check
-					has_generics: l_cl_type.true_generics /= Void and then
-						l_cl_type.true_generics.count = 1
+					has_generics: l_cl_type.generics /= Void and then
+						l_cl_type.generics.count = 1
 				end
 					-- Mark the type of elements.
-				insert_field_or_prop_type (l_cl_type.true_generics.item (1))
+				insert_field_or_prop_type (l_cl_type.generics.item (1))
 			else
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boxed)
 			end
 		end
 
-	insert_enum_type (a_cl_type: CL_TYPE_I) is
+	insert_enum_type (a_cl_type: CL_TYPE_A) is
 			-- Insert enum specification in `ca_blob'.
 		require
 			a_cl_type_not_void: a_cl_type /= Void
@@ -656,10 +656,10 @@ feature {NONE} -- Implemention
 			l_ext_class: EXTERNAL_CLASS_C
 		do
 			ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_enum)
-			create l_type_name.make_from_string (a_cl_type.il_type_name (Void))
+			create l_type_name.make_from_string (a_cl_type.il_type_name (Void, cil_generator.current_class_type.type))
 			l_type_name.append_character (',')
 			l_type_name.append_character (' ')
-			l_ext_class ?= a_cl_type.base_class
+			l_ext_class ?= a_cl_type.associated_class
 			check l_ext_class_not_void: l_ext_class /= Void end
 			l_type_name.append (l_ext_class.assembly.full_name)
 			ca_blob.put_string (l_type_name)

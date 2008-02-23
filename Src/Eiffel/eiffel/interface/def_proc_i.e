@@ -27,7 +27,7 @@ feature -- Status Report
 
 feature -- Access
 
-	access_for_feature (access_type: TYPE_I; static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
+	access_for_feature (access_type, static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
 			-- New ACCESS_B structure for current deferred routine
 		local
 			external_b: EXTERNAL_B

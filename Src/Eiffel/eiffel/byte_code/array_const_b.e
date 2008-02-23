@@ -60,7 +60,7 @@ feature -- Access
 	expressions: BYTE_LIST [BYTE_NODE];
 			-- Expressions in the array
 
-	type: GEN_TYPE_I;
+	type: GEN_TYPE_A
 			-- Generic array type
 
 	info: CREATE_INFO

@@ -352,37 +352,35 @@ feature -- Contexts
 
 	array_item_type (id: INTEGER): TYPE_C is
 		local
-			array_type: CL_TYPE_I
 			type_a: TYPE_A
 			bc: BYTE_CODE
-			array_type_a: TYPE_A
+			array_type_a: CL_TYPE_A
 			f: FEATURE_I
 			formal_a: FORMAL_A
 		do
 			bc := context.byte_code
 			if id = 0 then
 					-- Result
-				array_type ?= bc.result_type
+				array_type_a ?= bc.result_type
 			elseif id < 0 then
 					-- local
-				array_type ?= bc.locals.item (-id)
+				array_type_a ?= bc.locals.item (-id)
 			else
 					-- Argument
-				array_type ?= bc.arguments.item (id)
+				array_type_a ?= bc.arguments.item (id)
 			end
-			array_type_a := array_type.type_a
-			f := array_type.base_class.feature_of_rout_id (item_rout_id)
+			f := array_type_a.associated_class.feature_of_rout_id (item_rout_id)
 
 			type_a ?= f.type
-			type_a := type_a.instantiation_in (array_type_a, array_type.base_class.class_id)
+			type_a := type_a.instantiation_in (array_type_a, array_type_a.associated_class.class_id)
 								--(array_type_a, System.current_class.class_id)
 
 			if type_a.is_formal then
 				formal_a ?= type_a
-				Result := Context.class_type.type.meta_generic.item
+				Result := Context.class_type.type.generics.item
 						(formal_a.position).c_type
 			else
-				Result := type_a.type_i.c_type
+				Result := type_a.c_type
 			end
 		end
 

@@ -10,7 +10,7 @@ class DEPEND_SERVER
 inherit
 	COMPILER_SERVER [CLASS_DEPENDANCE]
 		redefine
-			make, item, has
+			make, item, has, remove
 		end
 
 create
@@ -61,6 +61,13 @@ feature -- Access
 			-- Is an item of id `an_id' present in the current server?
 		do
 			Result := Precursor (an_id) or else Tmp_depend_server.has (an_id);
+		end
+
+	remove (an_id: INTEGER_32) is
+			-- <Original>
+		do
+			tmp_depend_server.remove (an_id)
+			Precursor (an_id)
 		end
 
 feature -- Server size configuration

@@ -43,19 +43,19 @@ feature -- Access
 	sk_value: INTEGER is
 		do
 			if is_wide then
-				Result := Sk_wchar
+				Result := {SK_CONST}.Sk_wchar
 			else
-				Result := Sk_char
+				Result := {SK_CONST}.Sk_char
 			end
 		end
 
-	type_i: TYPE_I is
+	type_i: TYPE_A is
 			-- Corresponding TYPE_I instance.
 		do
 			if is_wide then
-				Result := Wide_char_c_type
+				Result := wide_char_type
 			else
-				Result := Char_c_type
+				Result := character_type
 			end
 		end
 
@@ -66,22 +66,10 @@ feature -- Code generation
 			-- `buffer'.
 		do
 			if is_wide then
-				buffer.put_string ("SK_WCHAR")
+				buffer.put_string ({SK_CONST}.sk_wchar_string)
 			else
-				buffer.put_string ("SK_CHAR")
+				buffer.put_string ({SK_CONST}.sk_char_string)
 			end
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_string (attribute_name)
-			io.error.put_string ("[")
-			if is_wide then
-				io.error.put_string ("WIDE_")
-			end
-			io.error.put_string ("CHARACTER]")
 		end
 
 indexing

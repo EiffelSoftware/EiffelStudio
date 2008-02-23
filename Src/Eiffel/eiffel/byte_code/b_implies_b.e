@@ -56,7 +56,7 @@ feature
 			if l_is_normal then
 					-- Normal code transformation.
 				create l_b_implies_bl
-				l_b_implies_bl.init (access.enlarged_on (left.type))
+				l_b_implies_bl.init (access.enlarged_on (context.real_type (left.type)))
 				l_b_implies_bl.set_left (left)
 				l_b_implies_bl.set_right (right.enlarged)
 				Result := l_b_implies_bl

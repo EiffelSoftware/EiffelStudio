@@ -30,7 +30,7 @@ feature -- C code generation
 			context.add_dftype_current
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
 			-- Generate creation type id (dynamic type) of current	
 		do
 			context.generate_current_dftype
@@ -41,7 +41,7 @@ feature -- Il code generation
 	generate_il is
 			-- Generate byte code for like Current creation type.
 		local
-			cl_type_i: CL_TYPE_I
+			cl_type_i: CL_TYPE_A
 		do
 			cl_type_i := context.original_class_type.type
 			if cl_type_i.is_expanded then
@@ -61,7 +61,7 @@ feature -- Il code generation
 			il_generator.load_type
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_I is
+	created_in (other: CLASS_TYPE): TYPE_A is
 			-- Resulting type of Current as if it was used to create object in `other'
 		do
 			Result := other.type
@@ -77,7 +77,7 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
-	generate_gen_type_conversion is
+	generate_gen_type_conversion (a_level: NATURAL) is
 
 		do
 			-- Nothing.
@@ -106,12 +106,14 @@ feature -- Generic conformance
 		end
 
 	generate_cid_init (buffer : GENERATION_BUFFER;
-					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
+					   final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL) is
 		local
 			dummy : INTEGER
 		do
 			buffer.put_new_line
-			buffer.put_string ("typarr[")
+			buffer.put_string ("typarr")
+			buffer.put_natural_32 (a_level)
+			buffer.put_character ('[')
 			buffer.put_integer (idx_cnt.value)
 			buffer.put_string ("] = RTID(")
 			context.generate_current_dftype
@@ -119,7 +121,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	type_to_create : CL_TYPE_I is
+	type_to_create : CL_TYPE_A is
 
 		do
 			-- None.

@@ -17,6 +17,11 @@ inherit
 			generate, size
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 create
 	make, make_with_type
 
@@ -64,16 +69,15 @@ feature -- Access
 	expr: ACCESS_B
 			-- Access on which we do `$'.
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression's type
 		do
 			if is_pointer then
-				Result := Pointer_c_type
+				Result := Pointer_type
 			else
 				Result := internal_type
 				if Result = Void then
-					create {TYPED_POINTER_I} Result.make (
-						System.typed_pointer_class.compiled_class.class_id, expr.type.type_a)
+					create {TYPED_POINTER_A} Result.make_typed (expr.type)
 					internal_type := Result
 				end
 			end
@@ -122,7 +126,7 @@ feature -- C code generation
 			-- Print expression value
 		local
 			buf: GENERATION_BUFFER
-			l_type: TYPE_I
+			l_type: TYPE_A
 		do
 			l_type := real_type (expr.type)
 			if not is_pointer or else (l_type.is_basic and not l_type.is_bit) then
@@ -195,7 +199,7 @@ feature -- Inlining
 
 feature {NONE} -- Implementation
 
-	internal_type: TYPE_I
+	internal_type: TYPE_A
 			-- Type associated to Current.
 
 invariant

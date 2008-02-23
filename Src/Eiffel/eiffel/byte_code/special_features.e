@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	has (feature_name_id: INTEGER; compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
+	has (feature_name_id: INTEGER; compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN is
 			-- Does Current have `feature_name_id'?
 		require
 			valid_feature_name_id: feature_name_id > 0
@@ -60,7 +60,7 @@ feature -- Status
 
 feature -- Byte code special generation
 
-	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
+	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A) is
 			-- Generate byte code sequence that will be used with basic types.
 		require
 			basic_type_not_void: basic_type /= Void
@@ -148,7 +148,7 @@ feature -- Byte code special generation
 					-- it for now.
 				ba.append (bc_pop)
 				ba.append_uint32_integer (1)
-				basic_type.make_default_byte_code (ba)
+				basic_type.c_type.make_default_byte_code (ba)
 			when bit_and_type..bit_test_type, set_bit_with_mask_type, set_bit_type then
 				check integer_type: type_of (basic_type) = integer_type end
 				make_bit_operation_code (ba, function_type)
@@ -163,7 +163,7 @@ feature -- Byte code special generation
 
 feature -- C special code generation
 
-	generate (buffer: GENERATION_BUFFER; basic_type: BASIC_I; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
+	generate (buffer: GENERATION_BUFFER; basic_type: BASIC_A; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
 		require
 			valid_output_buffer: buffer /= Void
 			valid_target: target /= Void
@@ -239,14 +239,14 @@ feature -- C special code generation
 				target.print_register
 				buffer.put_character (')')
 			when ceiling_real_type then
-				basic_type.generate_cast (buffer)
+				basic_type.c_type.generate_cast (buffer)
 				buffer.put_string ("ceil ((double)")
 				target.print_register
 				buffer.put_character (')')
 					-- Add `<math.h>' for C declaration of `ceil'.
 				shared_include_queue.put ({PREDEFINED_NAMES}.math_header_name_id)
 			when floor_real_type then
-				basic_type.generate_cast (buffer)
+				basic_type.c_type.generate_cast (buffer)
 				buffer.put_string ("floor ((double)")
 				target.print_register
 				buffer.put_character (')')
@@ -269,7 +269,7 @@ feature -- C special code generation
 			when generator_type then
 				generate_generator (buffer, type_of (basic_type))
 			when default_type then
-				basic_type.generate_default_value (buffer)
+				basic_type.c_type.generate_default_value (buffer)
 			when bit_and_type..bit_test_type then
 				check
 					integer_type: type_of (basic_type) = integer_type
@@ -542,7 +542,7 @@ feature {NONE} -- Byte code generation
 feature {NONE} -- C code generation
 
 	generate_lower_upper (buffer: GENERATION_BUFFER;
-			basic_type: BASIC_I; f_type: INTEGER; target: REGISTRABLE)
+			basic_type: BASIC_A; f_type: INTEGER; target: REGISTRABLE)
 		is
 			-- Generate fast wrapper for call on `upper' and `lower' of CHARACTER.
 		require
@@ -564,7 +564,7 @@ feature {NONE} -- C code generation
 		end
 
 	generate_is_digit (buffer: GENERATION_BUFFER;
-			basic_type: BASIC_I; target: REGISTRABLE)
+			basic_type: BASIC_A; target: REGISTRABLE)
 		is
 			-- Generate fast wrapper for call on `is_digit'.
 		require
@@ -582,7 +582,7 @@ feature {NONE} -- C code generation
 		end
 
 	generate_is_space (buffer: GENERATION_BUFFER;
-			basic_type: BASIC_I; target: REGISTRABLE)
+			basic_type: BASIC_A; target: REGISTRABLE)
 		is
 			-- Generate fast wrapper for call on `is_space' of CHARACTER.
 		require
@@ -1143,15 +1143,15 @@ feature {NONE} -- Type information
 	is_wide: BOOLEAN
 			-- Is `character_type' returned by `type_of' a WIDE_CHARACTER?
 
-	type_of (b: BASIC_I): INTEGER is
+	type_of (b: BASIC_A): INTEGER is
 			-- Returns corresponding type constants to `b'.
 		require
 			b_not_void: b /= Void
 			b_not_bit: not b.is_bit
 		local
-			l_int: INTEGER_I
-			l_nat: NATURAL_I
-			t: TYPED_POINTER_I
+			l_int: INTEGER_A
+			l_nat: NATURAL_A
+			t: TYPED_POINTER_A
 		do
 			inspect b.hash_code
 			when {SHARED_HASH_CODE}.Boolean_code then Result := boolean_type

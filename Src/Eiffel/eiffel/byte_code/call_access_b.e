@@ -51,7 +51,7 @@ feature -- Access
 	written_in: INTEGER
 			-- Class ID where Current is written.
 
-	precursor_type : TYPE_I
+	precursor_type : TYPE_A
 			-- Type of parent in a precursor call if any.
 
 	enlarged: CALL_ACCESS_B is
@@ -60,7 +60,7 @@ feature -- Access
 			Result := Current
 		end
 
-	enlarged_on (type_i: TYPE_I): CALL_ACCESS_B is
+	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B is
 			-- Enlarged byte node evaluated in the context of `type_i'.
 			-- Redefined because we want to change the return type.
 		do
@@ -83,44 +83,28 @@ feature -- Setting
 
 feature -- Byte code generation
 
-	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
+	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A) is
 			-- Make byte code for special calls.
 		do
 		end
 
-	real_feature_id (context_class: CLASS_C): INTEGER is
+	real_feature_id (a_context_type: CL_TYPE_A): INTEGER is
 			-- The feature ID in INTEGER is not necessarily the same as
 			-- in the INTEGER_REF class. And likewise for other simple types.
 			-- But also for generic derivation which contains an expanded type
 			-- as a generic parameter.
+		require
+			a_context_type_not_void: a_context_type /= Void
+			a_context_type_has_class: a_context_type.has_associated_class
 		local
-			associated_class: CLASS_C
-			feat_tbl: FEATURE_TABLE
-			instant_context_type: TYPE_I
-			basic_type: BASIC_I
-			cl_type: CL_TYPE_I
-			gen: GEN_TYPE_I
+			gen: GEN_TYPE_A
 		do
-			if context.is_written_context then
-					-- Code is processed in the context where it is written
-				Result := feature_id
-			else
-					-- Code is processed in the context different from the one where it is written
-				Result := context_class.feature_of_rout_id (routine_id).feature_id
-			end
 			if precursor_type = Void then
-				instant_context_type := context_type
-				if
-					instant_context_type.is_basic
-					and then not instant_context_type.is_bit
-				then
-						-- We perform a non-optimized call on a basic type
-					basic_type ?= instant_context_type
+				if a_context_type.is_basic and then not a_context_type.is_bit then
+						-- We perform a non-optimized call on a basic type.
 						-- Process the feature id of `feature_name' in the
 						-- associated reference type
-					associated_class := basic_type.reference_type.base_class
-					feat_tbl := associated_class.feature_table
-					Result := feat_tbl.item_id (feature_name_id).feature_id
+					Result := a_context_type.reference_type.associated_class.feature_of_name_id (feature_name_id).feature_id
 				else
 						-- A generic parameter of current class has been derived
 						-- into an expanded type, so we need to find the `feature_id'
@@ -132,10 +116,19 @@ feature -- Byte code generation
 						-- We could maybe find a way for not performing the check in the
 						-- above case.
 					gen ?= context.current_type
-					if gen /= Void and then instant_context_type.is_true_expanded then
-						cl_type ?= instant_context_type
-						Result := cl_type.base_class.feature_of_rout_id (routine_id).feature_id
+					if gen /= Void and then a_context_type.is_true_expanded then
+						Result := a_context_type.associated_class.feature_of_rout_id (routine_id).feature_id
 					end
+				end
+			end
+				-- No feature ID was computed, so let's compute it.
+			if Result = 0 then
+				if context.current_type.class_id = a_context_type.class_id then
+						-- Code is processed in the context where it is written
+					Result := feature_id
+				else
+						-- Code is processed in the context different from the one where it is written
+					Result := a_context_type.associated_class.feature_of_rout_id (routine_id).feature_id
 				end
 			end
 		end
@@ -160,9 +153,9 @@ feature -- Byte code generation
 			-- `reg' ("Current") is not used except for
 			-- inlining
 		local
-			type_i: TYPE_I
-			class_type: CL_TYPE_I
-			basic_type: BASIC_I
+			type_i: TYPE_A
+			class_type: CL_TYPE_A
+			basic_type: BASIC_A
 			buf: GENERATION_BUFFER
 		do
 			Precursor (reg)
@@ -188,7 +181,7 @@ feature -- Byte code generation
 			end
 		end
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
 			-- Generate access on `reg' in a `typ' context\
 		require
 			reg_not_void: reg /= Void
@@ -196,7 +189,7 @@ feature -- Byte code generation
 		do
 		end
 
-	generate_workbench_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I; result_register: REGISTER) is
+	generate_workbench_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A; result_register: REGISTER) is
 			-- Generate feature call in a `typ' context
 			-- in workbench mode.
 		require
@@ -205,7 +198,7 @@ feature -- Byte code generation
 			is_nested: BOOLEAN
 			rout_info: ROUT_INFO
 			buf: GENERATION_BUFFER
-			cl_type_i: CL_TYPE_I
+			cl_type_i: CL_TYPE_A
 			return_type: TYPE_C
 		do
 			is_nested := not is_first
@@ -230,11 +223,11 @@ feature -- Byte code generation
 				end
 			end
 			buf.put_character ('(')
-			return_type.generate_function_cast (buf, argument_types)
+			return_type.generate_function_cast (buf, argument_types, True)
 
 			if
 				Compilation_modes.is_precompiling or else
-				cl_type_i.base_class.is_precompiled
+				cl_type_i.associated_class.is_precompiled
 			then
 				if is_nested and need_invariant then
 					buf.put_string ("RTVPF(")
@@ -251,9 +244,9 @@ feature -- Byte code generation
 				else
 					buf.put_string ("RTWF(")
 				end
-				buf.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+				buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
 				buf.put_string (gc_comma)
-				buf.put_integer (real_feature_id (cl_type_i.base_class))
+				buf.put_integer (real_feature_id (cl_type_i))
 			end
 			buf.put_string (gc_comma)
 			if not is_nested then
@@ -261,7 +254,7 @@ feature -- Byte code generation
 						-- Use dynamic type of parent instead
 						-- of dynamic type of Current.
 					buf.put_string ("RTUD(")
-					buf.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
 					buf.put_character (')')
 				else
 					context.generate_current_dtype
@@ -319,7 +312,7 @@ feature -- Byte code generation
 			end
 		end
 
-	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_I) is
+	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_A) is
 			-- Generate code for special routines (is_equal, copy ...).
 			-- (Only for feature calls)
 		require
@@ -328,7 +321,7 @@ feature -- Byte code generation
 		do
 		end
 
-	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN is
 			-- Is feature a special routine of class of `target_type'?
 			-- (Only for feature calls)
 		do
@@ -339,9 +332,9 @@ feature -- Byte code generation
 		require
 			valid_register: reg /= Void
 		local
-			type_i: TYPE_I
-			class_type: CL_TYPE_I
-			basic_type: BASIC_I
+			type_i: TYPE_A
+			class_type: CL_TYPE_A
+			basic_type: BASIC_A
 			buf: GENERATION_BUFFER
 		do
 			type_i := context_type
@@ -375,7 +368,7 @@ feature -- Byte code generation
 			end
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
 			-- Generate final portion of C code.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -400,24 +393,29 @@ feature -- Byte code generation
 			end
 		end
 
-	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
-		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
+	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_A;
+		basic_type: BASIC_A; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
 		require
 			gen_reg_not_void: gen_reg /= Void
 			meta_reg_not_void: meta_reg /= Void
 			basic_type_not_void: basic_type /= Void
 			buf_not_void: buf /= Void
+		local
+			l_target_type: TYPE_A
+			l_return_type: TYPE_A
 		do
+				-- Compute the actual return type and the type of the function being called.
+			l_target_type := real_type (type)
+			l_return_type := class_type.associated_class.feature_of_rout_id (routine_id).type
 			if
-				not type.is_void and then
-				real_type (type).is_expanded and then
-				not real_type (type).is_bit and then
-				class_type.base_class.feature_of_rout_id (routine_id).type.is_reference
+				not l_target_type.is_void and then l_target_type.is_expanded and then
+				not l_target_type.is_bit and then
+				(l_return_type.is_reference or l_return_type.is_like_current)
 			then
 					-- Result of a basic type is expected.
 				buffer.put_character ('*')
-				basic_type.generate_access_cast (buf)
+				basic_type.c_type.generate_access_cast (buf)
 			end
 			generate_end (basic_register, class_type)
 		end

@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			Result.set_pattern_id (pattern_id)
 			Result.set_written_in (written_in)
 
-			Result.set_type (result_type.instantiation_in (class_type).c_type)
+			Result.set_type (result_type.adapted_in (class_type).c_type)
 		end
 
 	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I is

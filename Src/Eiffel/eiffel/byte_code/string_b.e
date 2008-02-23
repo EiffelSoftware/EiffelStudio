@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Properties
 
-	type: CL_TYPE_I is
+	type: CL_TYPE_A is
 			-- String type
 		do
 			if is_dotnet_string then
@@ -88,7 +88,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation: types
 
-	string_type: CL_TYPE_I is
+	string_type: CL_TYPE_A is
 			-- Type of STRING.
 		once
 			create Result.make (System.string_8_id)
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation: types
 			string_type_not_void: Result /= Void
 		end
 
-	system_string_type: CL_TYPE_I is
+	system_string_type: CL_TYPE_A is
 			-- Type of SYSTEM_STRING.
 		require
 			il_generation: System.il_generation

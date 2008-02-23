@@ -33,7 +33,7 @@ feature -- Access
 			Result := Current
 		end
 
-	context_type: TYPE_I is
+	context_type: TYPE_A is
 			-- Context type of the access (properly instantiated)
 		local
 			a_parent: NESTED_B
@@ -71,7 +71,7 @@ feature -- Access
 			Result := Current
 		end
 
-	enlarged_on (type_i: TYPE_I): ACCESS_B is
+	enlarged_on (type_i: TYPE_A): ACCESS_B is
 			-- Enlarged byte node evaluated in the context of `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -516,18 +516,18 @@ feature -- Array optimization
 
 feature -- Multi constraint suport
 
-	set_multi_constraint_static (a_type: TYPE_I) is
-				-- `formal_multi_constraint_static' to `a_type'
-			do
-				multi_constraint_static := a_type
-			ensure
-				multi_constraint_static_set: multi_constraint_static = a_type
-			end
+	set_multi_constraint_static (a_type: TYPE_A) is
+			-- `formal_multi_constraint_static' to `a_type'
+		do
+			multi_constraint_static := a_type
+		ensure
+			multi_constraint_static_set: multi_constraint_static = a_type
+		end
 
-	multi_constraint_static: TYPE_I;
-				-- Static type of recipient of access message.
-				--| In the multi constraint there is more then one recipient for a message.
-				--| `multi_constraint_static' states to which type out of the type set exactly it should be sent.
+	multi_constraint_static: TYPE_A;
+			-- Static type of recipient of access message.
+			--| In the multi constraint there is more then one recipient for a message.
+			--| `multi_constraint_static' states to which type out of the type set exactly it should be sent.
 
 	has_multi_constraint_static: BOOLEAN is
 			-- Does current access send it's message to a multi constraint?

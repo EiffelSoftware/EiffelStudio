@@ -30,33 +30,37 @@ inherit
 		end
 
 create
-	make
+	default_create, make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (f_id, f_rout_id: INTEGER; a_class: CLASS_C) is
+	make (f_id, f_rout_id: INTEGER) is
 			-- Initialize Current with `f_id' and `f_name_id'
 			-- in context of class `a_class_id'.
 		require
 			valid_f_id: f_id > 0
 			valid_f_rout_id: f_rout_id > 0
-			valid_class: a_class /= Void
 		do
 			feature_id := f_id
 			routine_id := f_rout_id
-
-				-- It is faster to force the same value again
-				-- in `type_set' than testing if it is already
-				-- present or not and then insert it.
-			System.type_set.force (f_rout_id)
-
-				-- Add it to current class too for IL code generation.
-			if System.il_generation then
-				a_class.extend_type_set (f_rout_id)
-			end
 		ensure
 			feature_id_set: feature_id = f_id
 			routine_id_set: routine_id = f_rout_id
+		end
+
+feature -- Settings
+
+	set_info (f_id, r_id: INTEGER) is
+			-- Set `feature_id' and `routine_id' with `f_id' and `r_id'.
+		require
+			valid_f_id: f_id > 0
+			valid_r_id: r_id > 0
+		do
+			feature_id := f_id
+			routine_id := r_id
+		ensure
+			feature_id_set: feature_id = f_id
+			routine_id_set: routine_id = r_id
 		end
 
 feature -- Access
@@ -86,13 +90,13 @@ feature -- C code generation
 			end
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
 			-- Generate the creation type id of the feature.
 		local
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			rout_info: ROUT_INFO
-			gen_type: GEN_TYPE_I
+			gen_type: GEN_TYPE_A
 		do
 			if final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -110,6 +114,7 @@ feature -- C code generation
 
 					if gen_type /= Void then
 						buffer.put_string ("typres")
+						buffer.put_natural_32 (a_level)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 					end
@@ -118,7 +123,7 @@ feature -- C code generation
 					table_name := Encoder.type_table_name (routine_id)
 
 					buffer.put_string ("RTFCID2(")
-					buffer.put_integer (context.current_type.generated_id (context.final_mode))
+					buffer.put_integer (context.context_class_type.type.generated_id (context.final_mode, Void))
 					buffer.put_character (',')
 					buffer.put_string (table_name)
 					buffer.put_character (',')
@@ -133,14 +138,14 @@ feature -- C code generation
 						-- Side effect. This is not nice but
 						-- unavoidable.
 						-- Mark routine id used
-					Eiffel_table.mark_used (routine_id)
+					Eiffel_table.mark_used_for_type (routine_id)
 						-- Remember extern declaration
 					Extern_declarations.add_type_table (table_name)
 				end
 			else
 				if
 					Compilation_modes.is_precompiling or
-					context.current_type.base_class.is_precompiled
+					context.current_type.associated_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCT(")
 					buffer.put_static_type_id (context.class_type.static_type_id)
@@ -167,7 +172,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for an anchored creation type.
 		local
-			target_type: TYPE_I
+			target_type: TYPE_A
 		do
 				-- Generate call to feature that will give the type we want to create.
 			generate_il_type
@@ -177,7 +182,7 @@ feature -- IL code generation
 			il_generator.create_type
 
 			target_type := context.real_type (context.class_type.associated_class.anchored_features.item
-				(routine_id).type.type_i)
+				(routine_id).type)
 			if target_type.is_expanded then
 					-- Load value of a value type object.
 				il_generator.generate_unmetamorphose (target_type)
@@ -193,10 +198,10 @@ feature -- IL code generation
 			il_generator.generate_type_feature_call (context.class_type.associated_class.anchored_features.item (routine_id))
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_I is
+	created_in (other: CLASS_TYPE): TYPE_A is
 			-- Resulting type of Current as if it was used to create object in `other'
 		do
-			Result := context.real_type_in (other.associated_class.feature_of_rout_id (routine_id).type.type_i, other)
+			Result := context.real_type_in (other.associated_class.feature_of_rout_id (routine_id).type, other)
 		end
 
 feature -- Byte code generation
@@ -206,9 +211,9 @@ feature -- Byte code generation
 		local
 			rout_info: ROUT_INFO
 		do
-			if context.current_type.base_class.is_precompiled then
+			if context.current_type.associated_class.is_precompiled then
 				ba.append (Bc_pclike)
-				ba.append_short_integer (context.class_type.static_type_id-1)
+				ba.append_short_integer (context.class_type.static_type_id - 1)
 				rout_info := System.rout_info_table.item (routine_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
@@ -239,15 +244,15 @@ feature -- Genericity
 			end
 		end
 
-	generate_gen_type_conversion is
+	generate_gen_type_conversion (a_level: NATURAL) is
 
 		local
-			gen_type : GEN_TYPE_I
+			gen_type : GEN_TYPE_A
 		do
 			gen_type ?= type_to_create
 
 			if gen_type /= Void then
-				context.generate_gen_type_conversion (gen_type)
+				context.generate_gen_type_conversion (gen_type, a_level)
 			end
 		end
 
@@ -257,7 +262,7 @@ feature -- Genericity
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			rout_info: ROUT_INFO
-			gen_type: GEN_TYPE_I
+			gen_type: GEN_TYPE_A
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -275,7 +280,7 @@ feature -- Genericity
 					gen_type ?= table.first.type
 
 					if gen_type /= Void then
-						gen_type.generate_cid (buffer, final_mode, True)
+						gen_type.generate_cid (buffer, final_mode, True, context.context_class_type.type)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
@@ -285,7 +290,7 @@ feature -- Genericity
 					table_name := Encoder.type_table_name (routine_id)
 
 					buffer.put_string ("RTFCID2(")
-					buffer.put_integer (context.current_type.generated_id (context.final_mode))
+					buffer.put_integer (context.context_class_type.type.generated_id (context.final_mode, Void))
 					buffer.put_character (',')
 					buffer.put_string (table_name)
 					buffer.put_character (',')
@@ -301,14 +306,14 @@ feature -- Genericity
 						-- Side effect. This is not nice but
 						-- unavoidable.
 						-- Mark routine id used
-					Eiffel_table.mark_used (routine_id)
+					Eiffel_table.mark_used_for_type (routine_id)
 						-- Remember extern declaration
 					Extern_declarations.add_type_table (table_name)
 				end
 			else
 				if
 					Compilation_modes.is_precompiling or
-					context.current_type.base_class.is_precompiled
+					context.current_type.associated_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCT(")
 					buffer.put_static_type_id (context.class_type.static_type_id)
@@ -336,7 +341,7 @@ feature -- Genericity
 		local
 			dummy : INTEGER
 			table: POLY_TABLE [ENTRY]
-			gen_type: GEN_TYPE_I
+			gen_type: GEN_TYPE_A
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -357,7 +362,7 @@ feature -- Genericity
 
 					if gen_type /= Void then
 						gen_type.generate_cid_array (buffer,
-												final_mode, True, idx_cnt)
+												final_mode, True, idx_cnt, context.context_class_type.type)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
 						buffer.put_character (',')
@@ -374,13 +379,13 @@ feature -- Genericity
 		end
 
 	generate_cid_init (buffer : GENERATION_BUFFER;
-					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
+					   final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL) is
 		local
 			dummy: INTEGER
 			table: POLY_TABLE [ENTRY]
 			table_name: STRING
 			rout_info: ROUT_INFO
-			gen_type: GEN_TYPE_I
+			gen_type: GEN_TYPE_A
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -396,7 +401,7 @@ feature -- Genericity
 					gen_type ?= table.first.type
 
 					if gen_type /= Void then
-						gen_type.generate_cid_init (buffer, final_mode, True, idx_cnt)
+						gen_type.generate_cid_init (buffer, final_mode, True, idx_cnt, a_level)
 					else
 						dummy := idx_cnt.next
 					end
@@ -404,10 +409,12 @@ feature -- Genericity
 						-- Attribute is polymorphic
 					table_name := Encoder.type_table_name (routine_id)
 					buffer.put_new_line
-					buffer.put_string ("typarr[")
+					buffer.put_string ("typarr")
+					buffer.put_natural_32 (a_level)
+					buffer.put_character ('[')
 					buffer.put_integer (idx_cnt.value)
 					buffer.put_string ("] = RTFCID2(")
-					buffer.put_integer (context.current_type.generated_id (context.final_mode))
+					buffer.put_integer (context.context_class_type.type.generated_id (context.final_mode, Void))
 					buffer.put_character (',')
 					buffer.put_string (table_name)
 					buffer.put_character (',')
@@ -423,18 +430,20 @@ feature -- Genericity
 						-- Side effect. This is not nice but
 						-- unavoidable.
 						-- Mark routine id used
-					Eiffel_table.mark_used (routine_id)
+					Eiffel_table.mark_used_for_type (routine_id)
 						-- Remember extern declaration
 					Extern_declarations.add_type_table (table_name)
 				end
 			else
 				buffer.put_new_line
+				buffer.put_string ("typarr")
+				buffer.put_natural_32 (a_level)
+				buffer.put_character ('[')
+				buffer.put_integer (idx_cnt.value)
 				if
 					Compilation_modes.is_precompiling or
-					context.current_type.base_class.is_precompiled
+					context.current_type.associated_class.is_precompiled
 				then
-					buffer.put_string ("typarr[")
-					buffer.put_integer (idx_cnt.value)
 					buffer.put_string ("] = RTID(RTWPCT(")
 					buffer.put_static_type_id (context.class_type.static_type_id)
 					buffer.put_string (gc_comma)
@@ -443,8 +452,6 @@ feature -- Genericity
 					buffer.put_string (gc_comma)
 					buffer.put_integer (rout_info.offset)
 				else
-					buffer.put_string ("typarr[")
-					buffer.put_integer (idx_cnt.value)
 					buffer.put_string ("] = RTID(RTWCT(")
 					buffer.put_static_type_id (context.class_type.static_type_id)
 					buffer.put_string (gc_comma)
@@ -463,7 +470,7 @@ feature -- Genericity
 		local
 			rout_info: ROUT_INFO
 		do
-			if context.current_type.base_class.is_precompiled then
+			if context.current_type.associated_class.is_precompiled then
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_pfeature_type)
 				ba.append_short_integer (context.class_type.static_type_id-1)
 				rout_info := System.rout_info_table.item (routine_id)
@@ -476,7 +483,7 @@ feature -- Genericity
 			end
 		end
 
-	type_to_create : CL_TYPE_I is
+	type_to_create : CL_TYPE_A is
 
 		local
 			table : POLY_TABLE [ENTRY]
@@ -489,9 +496,6 @@ feature -- Genericity
 				end
 			end
 		end
-
-invariant
-	inserted_in_type_set: System.type_set.has (routine_id)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

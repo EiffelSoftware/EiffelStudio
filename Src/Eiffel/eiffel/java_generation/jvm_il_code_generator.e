@@ -11,6 +11,9 @@ class
 
 inherit
 	IL_CODE_GENERATOR
+		rename
+			current_class as il_current_class
+		end
 
 	SHARED_IL_CODE_GENERATOR
 		export
@@ -844,7 +847,7 @@ feature -- IL Generation
 			end
 		end
 
-	generate_external_creation_call (a_actual_type: CL_TYPE_I; name: STRING; ext_kind: INTEGER;
+	generate_external_creation_call (a_actual_type: CL_TYPE_A; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER)
 		is
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
@@ -865,12 +868,12 @@ feature -- Local variable info generation
 		do
 		end
 
-	put_result_info (type_i: TYPE_I) is
+	put_result_info (type_i: TYPE_A) is
 			-- Specifies `type_id' of type of result.
 		local
 			type_id: INTEGER
 		do
-			type_id := type_i.static_type_id
+			type_id := type_i.static_type_id (current_class_type.type)
 			debug ("JVM_GEN")
 				print ("put_result_info: " + type_id.out + "%N")
 			end
@@ -880,14 +883,14 @@ feature -- Local variable info generation
 			current_method.code.append_pop_into_local (current_method.return_index, eiffel_type_id_to_jvm_type_id (type_id))
 		end
 
-	put_local_info (type_i: TYPE_I; name_id: INTEGER) is
+	put_local_info (type_i: TYPE_A; name_id: INTEGER) is
 			-- Specifies `type_id' of type local.
 		local
 			type_id: INTEGER
 			name: STRING
 		do
 			name := Names_heap.item (name_id)
-			type_id := type_i.static_type_id
+			type_id := type_i.static_type_id (current_class_type.type)
 			debug ("JVM_GEN")
 				print ("put_local_info: " + type_id.out + "(" + name + ", " + eiffel_type_id_to_jvm_type_id (type_id).out + ")%Na")
 			end
@@ -896,12 +899,12 @@ feature -- Local variable info generation
 			current_method.code.append_pop_into_local (current_method.eiffel_locals_index.item (current_method.eiffel_locals_index.count), eiffel_type_id_to_jvm_type_id (type_id))
 		end
 
-	put_nameless_local_info (type_i: TYPE_I; name_id: INTEGER) is
+	put_nameless_local_info (type_i: TYPE_A; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
 		do
 		end
 
-	put_dummy_local_info (type_i: TYPE_I; name_id: INTEGER) is
+	put_dummy_local_info (type_i: TYPE_A; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
 		do
 		end
@@ -943,7 +946,7 @@ feature -- Object creation
 		do
 		end
 
-	create_expanded_object (t: CL_TYPE_I) is
+	create_expanded_object (t: CL_TYPE_A) is
 			-- Create an object of expanded type `t'.
 		do
 		end
@@ -1034,12 +1037,12 @@ feature -- Variables access
 			current_method.code.append_push_from_local (current_method.return_index, current_method.return_jvm_type_id)
 		end
 
-	generate_attribute (need_target: BOOLEAN; type_i: TYPE_I; feature_id: INTEGER) is
+	generate_attribute (need_target: BOOLEAN; type_i: TYPE_A; feature_id: INTEGER) is
 			-- Generate access to attribute of `feature_id' in `type_i'.
 		local
 			type_id: INTEGER
 		do
-			type_id := type_i.static_type_id
+			type_id := type_i.static_type_id (current_class_type.type)
 			debug ("JVM_GEN")
 				print ("%N%Tldfld [*2] ")
 				print (repository.item (type_id).qualified_name)
@@ -1050,20 +1053,20 @@ feature -- Variables access
 			current_method.code.append_push_field_by_feature_id (type_id, feature_id)
 		end
 
-	generate_feature_access (type_i: TYPE_I; feature_id, nb: INTEGER; is_function, is_virtual: BOOLEAN) is
+	generate_feature_access (type_i: TYPE_A; feature_id, nb: INTEGER; is_function, is_virtual: BOOLEAN) is
 			-- Generate access to feature of `feature_id' in `type_id'.
 		do
 			debug ("JVM_GEN")
 				print ("%Tcallvirt [*2] ")
-				print (repository.item (type_i.static_type_id).qualified_name_wo_l)
+				print (repository.item (type_i.static_type_id (current_class_type.type)).qualified_name_wo_l)
 				print ("::")
-				print (repository.item (type_i.static_type_id).features.item (feature_id).written_feature.external_name + "%N")
+				print (repository.item (type_i.static_type_id (current_class_type.type)).features.item (feature_id).written_feature.external_name + "%N")
 			end
 
-			current_method.code.append_invoke_from_feature_id (type_i.static_type_id, feature_id)
+			current_method.code.append_invoke_from_feature_id (type_i.static_type_id (current_class_type.type), feature_id)
 		end
 
-	generate_precursor_feature_access (type_i: TYPE_I; a_feature_id: INTEGER;
+	generate_precursor_feature_access (type_i: TYPE_A; a_feature_id: INTEGER;
 			nb: INTEGER; is_function: BOOLEAN)
 		is
 			-- Generate access to feature of `a_feature_id' in `type_i' with `nb' arguments.
@@ -1075,17 +1078,22 @@ feature -- Variables access
 		do
 		end
 
-	put_type_instance (a_type: TYPE_I) is
+	generate_type_feature_call_for_formal (a_position: INTEGER) is
+			-- Generate a call to a type feature for formal at position `a_position'.
+		do
+		end
+
+	put_type_instance (a_type: TYPE_A) is
 			-- Put instance of the native TYPE object corresponding to `a_type' on stack.
 		do
 		end
 
-	put_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+	put_method_token (type_i: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		do
 		end
 
-	put_impl_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+	put_impl_method_token (type_i: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in implementation of `type_i'.
 		do
 		end
@@ -1113,40 +1121,40 @@ feature -- Variables access
 			current_method.code.append_push_from_local (current_method.eiffel_locals_index.item (n), eiffel_type_id_to_jvm_type_id (current_method.eiffel_locals_type_id.item (n)))
 		end
 
-	generate_metamorphose (type_i: TYPE_I) is
+	generate_metamorphose (type_i: TYPE_A) is
 			-- Generate `metamorphose', ie boxing a basic type of `type_id' into its
 			-- corresponding reference type.
 		do
 			debug ("JVM_GEN")
 				print ("%Tbox [ ]")
-				print (repository.item (type_i.static_type_id).qualified_name + "%N")
+				print (repository.item (type_i.static_type_id (current_class_type.type)).qualified_name + "%N")
 			end
 		end
 
-	generate_external_metamorphose (type_i: TYPE_I) is
+	generate_external_metamorphose (type_i: TYPE_A) is
 			-- Generate `metamorphose', ie boxing an expanded type `type_i'
 			-- using an associated external type (if any).
 		do
 		end
 
-	generate_eiffel_metamorphose (a_type: TYPE_I) is
+	generate_eiffel_metamorphose (a_type: TYPE_A) is
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		do
 		end
 
-	generate_unmetamorphose (type_i: TYPE_I) is
+	generate_unmetamorphose (type_i: TYPE_A) is
 			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
 		do
 		end
 
-	generate_external_unmetamorphose (type_i: CL_TYPE_I) is
+	generate_external_unmetamorphose (type_i: CL_TYPE_A) is
 			-- Generate `unmetamorphose', ie unboxing an external reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
 		do
 		end
 
-	generate_creation (cl_type_i: CL_TYPE_I) is
+	generate_creation (cl_type_i: CL_TYPE_A) is
 			-- Generate IL code for a hardcoded creation type `cl_type_i'.
 		do
 		end
@@ -1210,7 +1218,7 @@ feature -- Addresses
 			end
 		end
 
-	generate_attribute_address (type_i, attr_type: TYPE_I; feature_id: INTEGER) is
+	generate_attribute_address (type_i, attr_type: TYPE_A; feature_id: INTEGER) is
 			-- Generate address of attribute of `feature_id' in class `type_id'.
 		do
 			debug ("JVMGEN")
@@ -1221,7 +1229,7 @@ feature -- Addresses
 			end
 		end
 
-	generate_routine_address (type_i: TYPE_I; feature_id: INTEGER; is_last_argument_current: BOOLEAN) is
+	generate_routine_address (type_i: TYPE_A; feature_id: INTEGER; is_last_argument_current: BOOLEAN) is
 			-- Generate address of routine of `feature_id' in class `type_id'.
 		do
 			debug ("JVMGEN")
@@ -1232,57 +1240,57 @@ feature -- Addresses
 			end
 		end
 
-	generate_load_address (type_i: TYPE_I) is
+	generate_load_address (type_i: TYPE_A) is
 			-- Generate code that takes address of a boxed value object of type `type_i'.
 		do
 		end
 
-	generate_load_from_address (type_i: TYPE_I) is
+	generate_load_from_address (type_i: TYPE_A) is
 			-- Load value of `type_i' type from address pushed on stack.
 		do
 		end
 
-	generate_load_from_address_as_object (a_type: TYPE_I) is
+	generate_load_from_address_as_object (a_type: TYPE_A) is
 			-- Load value of non-built-in `a_type' type from address pushed on stack.
 		do
 		end
 
-	generate_load_from_address_as_basic (a_type: TYPE_I) is
+	generate_load_from_address_as_basic (a_type: TYPE_A) is
 			-- Load value of a basic type `a_type' from address of an Eiffel object pushed on stack.
 		do
 		end
 
 feature -- Assignments
 
-	generate_is_true_instance_of (type_i: TYPE_I) is
+	generate_is_true_instance_of (type_i: TYPE_A) is
 			-- Generate `Isinst' byte code instruction.
 		do
 		end
 
-	generate_is_instance_of (type_i: TYPE_I) is
+	generate_is_instance_of (type_i: TYPE_A) is
 			-- Generate `Isinst' byte code instruction.
 		do
 			debug ("JVM_GEN")
-				print ("%Tis instance of [*]:" + type_i.static_type_id.out + "%N")
+				print ("%Tis instance of [*]:" + type_i.static_type_id (current_class_type.type).out + "%N")
 			end
-			current_method.code.append_is_instance_of_by_type_id (type_i.static_type_id)
+			current_method.code.append_is_instance_of_by_type_id (type_i.static_type_id (current_class_type.type))
 		end
 
-	generate_is_instance_of_external (type_i: CL_TYPE_I) is
+	generate_is_instance_of_external (type_i: CL_TYPE_A) is
 			-- Generate `Isinst' byte code instruction for external variant of the type `type_i'.
 		do
 		end
 
-	generate_check_cast (source_type, target_type: TYPE_I) is
+	generate_check_cast (source_type, target_type: TYPE_A) is
 			-- Generate `checkcast' byte code instruction.
 		do
 			debug ("JVM_GEN")
-				print ("%Tcheckcast [*]:" + target_type.static_type_id.out + "%N")
+				print ("%Tcheckcast [*]:" + target_type.static_type_id (current_class_type.type).out + "%N")
 			end
-			current_method.code.append_check_cast_by_type_id (target_type.static_type_id)
+			current_method.code.append_check_cast_by_type_id (target_type.static_type_id (current_class_type.type))
 		end
 
-	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_I; feature_id: INTEGER) is
+	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_A; feature_id: INTEGER) is
 			-- Generate assignment to attribute of `feature_id' in current class.
 		do
 			debug ("JVM_GEN")
@@ -1295,7 +1303,7 @@ feature -- Assignments
 			current_method.code.append_pop_field_by_feature_id (current_type_id, feature_id)
 		end
 
-	generate_expanded_attribute_assignment (type_i, attr_type: TYPE_I; a_feature_id: INTEGER) is
+	generate_expanded_attribute_assignment (type_i, attr_type: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class
 			-- when direct access to attribute is not possible.
 		do
@@ -1500,7 +1508,7 @@ feature -- Array manipulation
 			current_method.code.append_pop_into_array (kind)
 		end
 
-	generate_array_initialization (array_type: CL_TYPE_I; actual_generic: CLASS_TYPE) is
+	generate_array_initialization (array_type: CL_TYPE_A; actual_generic: CLASS_TYPE) is
 			-- Initialize native array with actual parameter type
 			-- `actual_generic' on the top of the stack.
 		do
@@ -1515,7 +1523,7 @@ feature -- Array manipulation
 			current_method.code.append_new_array_by_type_id (type_id)
 		end
 
-	generate_generic_array_creation (a_formal: FORMAL_I) is
+	generate_generic_array_creation (a_formal: FORMAL_A) is
 			-- Create a new NATIVE_ARRAY [X] where X is a formal type `a_formal'.
 		do
 		end
@@ -1731,12 +1739,12 @@ feature -- Assertions
 		do
 		end
 
-	generate_invariant_checking (type_i: TYPE_I; entry: BOOLEAN) is
+	generate_invariant_checking (type_i: TYPE_A; entry: BOOLEAN) is
 		local
 			f: JVM_WRITTEN_FEATURE
 			type_id: INTEGER
 		do
-			type_id := type_i.static_type_id
+			type_id := type_i.static_type_id (current_class_type.type)
 			debug ("JVM_DBC")
 				print ("%Tgen. invariant checking: " + type_id.out + "[ ]%N")
 			end
@@ -1758,7 +1766,7 @@ feature -- Assertions
 
 feature -- Generic conformance
 
-	generate_class_type_instance (cl_type: CL_TYPE_I) is
+	generate_class_type_instance (cl_type: CL_TYPE_A) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		do
 		end
@@ -1773,7 +1781,7 @@ feature -- Generic conformance
 		do
 		end
 
-	generate_generic_type_settings (gen_type: GEN_TYPE_I) is
+	generate_generic_type_settings (gen_type: GEN_TYPE_A) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		do
 		end
@@ -1791,7 +1799,7 @@ feature -- Generic conformance
 
 feature -- Conversion
 
-	convert_to (type: TYPE_I) is
+	convert_to (type: TYPE_A) is
 			-- Convert top of stack into `type'.
 		do
 		end
@@ -1853,7 +1861,7 @@ feature -- Conversion
 
 feature -- Constants generation
 
-	put_default_value (type: TYPE_I) is
+	put_default_value (type: TYPE_A) is
 			-- Put default value of `type' on IL stack.
 		do
 		end
@@ -1889,7 +1897,7 @@ feature -- Constants generation
 			current_method.code.append_push_manifest_string (s)
 		end
 
-	put_numeric_integer_constant (type: TYPE_I; i: INTEGER) is
+	put_numeric_integer_constant (type: TYPE_A; i: INTEGER) is
 			-- Put `i' as a constant of type `type'.
 		do
 		end
@@ -2027,7 +2035,7 @@ feature -- Labels and branching
 
 feature -- Basic feature
 
-	generate_min (type: TYPE_I) is
+	generate_min (type: TYPE_A) is
 			-- Generate `min' on basic types.
 		do
 		end
@@ -2041,12 +2049,12 @@ feature -- Basic feature
 		do
 		end
 
-	generate_max (type: TYPE_I) is
+	generate_max (type: TYPE_A) is
 			-- Generate `max' on basic types.
 		do
 		end
 
-	generate_abs (type: TYPE_I) is
+	generate_abs (type: TYPE_A) is
 			-- Generate `abs' on basic types.
 		do
 		end
@@ -2062,7 +2070,7 @@ feature -- Basic feature
 		do
 		end
 
-	generate_out (type: TYPE_I) is
+	generate_out (type: TYPE_A) is
 			-- Generate `out' on basic types.
 		do
 		end
@@ -2380,9 +2388,6 @@ feature -- Compilation error handling
 
 feature {NONE} -- Internal data
 
-	current_type_id: INTEGER
-			-- Type id of class being generated.
-
 	current_class: JVM_CLASS is
 		do
 			Result := repository.item (current_type_id)
@@ -2438,7 +2443,7 @@ feature {NONE} -- Internal data
 
 feature -- Convenience
 
-	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_I): CL_TYPE_I is
+	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_A): CL_TYPE_A is
 			-- Return static_type_id of class that defined `feat'.
 		do
 		end

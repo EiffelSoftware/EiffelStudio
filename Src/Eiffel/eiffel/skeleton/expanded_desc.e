@@ -5,42 +5,40 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EXPANDED_DESC 
+class EXPANDED_DESC
 
 inherit
 	ATTR_DESC
 		rename
 			Expanded_level as level
 		redefine
-			is_expanded, same_as
+			is_expanded, same_as, instantiation_in
 		end
-	
+
 feature -- Access
 
-	class_type: CLASS_TYPE is
-			-- Associated CLASS_TYPE of `cl_type_i'.
-		do
-			Result := cl_type_i.associated_class_type
-		end
-		
-	cl_type_i: CL_TYPE_I
-			-- Class type of the expanded attribute
+	class_type: CLASS_TYPE
+			-- Class type of the expanded attribute.
 
-	type_i: TYPE_I
+	cl_type_i: TYPE_A
+			-- Class type of the expanded attribute
+			-- The attribute is only set when instantiating the GENERIC_SKELETON into SKELETON.
+
+	type_i: TYPE_A
 			-- Type of attribute
 
 	type_id: INTEGER is
 			-- Type id of the expanded type of the attribute
 		require
-			cl_type_i_exists: cl_type_i /= Void
+			class_type_exists: class_type /= Void
 		do
-			Result := cl_type_i.type_id
+			Result := class_type.type_id
 		end
 
 	sk_value: INTEGER is
 			-- Sk value
 		do
-			Result := Sk_exp | (type_id - 1)
+			Result := {SK_CONST}.Sk_exp | (type_id - 1)
 		end
 
 feature -- Status report
@@ -57,25 +55,20 @@ feature -- Comparisons
 		do
 			if Precursor {ATTR_DESC} (other) then
 				other_exp ?= other
-					-- Before calling `other_exp.type_id' we have to make sure that
-					-- this call is permissible in current context. It could be that
-					-- `other_exp' stands for "A [X]" while now we have generic class
-					-- "A [G, G]" and therefore cannot find associated CLASS_TYPE for
-					-- `other.cl_type_i'.
-				Result := (other_exp /= Void) and then other_exp.cl_type_i.has_associated_class_type and then
-					(other_exp.type_id = type_id) and then identical_types (other_exp.type_i)
+					-- We have to make sure that they represent the same expanded
+					-- class type and that they have the same types.
+				Result := (other_exp /= Void) and then other_exp.type_id = type_id and then
+					identical_types (other_exp.type_i)
 			end
 		end
 
-	identical_types (otype : TYPE_I) : BOOLEAN is
+	identical_types (otype : TYPE_A) : BOOLEAN is
 			-- Are `type_i' and `otype' identical?
 		do
 			if type_i = Void then
 				Result := (otype = Void)
-			else
-				if otype /= Void then
-					Result := type_i.is_identical (otype) and then otype.is_identical (type_i)
-				end
+			elseif otype /= Void then
+				Result := type_i.same_as (otype)
 			end
 		end
 
@@ -89,7 +82,17 @@ feature -- Settings
 			cl_type_i_set: cl_type_i = i
 		end
 
-	set_type_i (t : TYPE_I) is
+	set_class_type (a_class_type: like class_type) is
+			-- Set `class_type' with `a_class_type'.
+		require
+			a_class_type_not_void: a_class_type /= Void
+		do
+			class_type := a_class_type
+		ensure
+			class_type_set: class_type = a_class_type
+		end
+
+	set_type_i (t : TYPE_A) is
 			-- Assign `t' to `type_i'.
 		require
 			exists: t /= Void
@@ -99,40 +102,25 @@ feature -- Settings
 			set: type_i = t
 		end
 
+	instantiation_in (a_class_type: CLASS_TYPE): EXPANDED_DESC is
+		local
+			l_type: TYPE_A
+		do
+			Result := twin
+			l_type := type_i.adapted_in (a_class_type)
+			Result.set_cl_type_i (l_type)
+			Result.set_class_type (l_type.associated_class_type (a_class_type.type))
+		end
+
 feature -- Code generation
 
 	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.put_string ("SK_EXP + ")
+			buffer.put_string ({SK_CONST}.sk_exp_string)
+			buffer.put_three_character (' ', '+', ' ')
 			buffer.put_type_id (type_id)
-		end
-
-	make_gen_type_byte_code (ba: BYTE_ARRAY) is
-			-- Generate full type array byte code
-		require
-			ba /= Void
-		local
-			gen_type : GEN_TYPE_I
-		do
-			ba.append_short_integer (0)
-			gen_type ?= type_i
-
-			if gen_type /= Void then
-				gen_type.make_gen_type_byte_code (ba, False)
-			end
-			ba.append_short_integer (-1)
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_string (attribute_name)
-			io.error.put_string ("[EXPANDED ")
-			io.error.put_string (class_type.associated_class.name)
-			io.error.put_string ("]")
 		end
 
 indexing

@@ -10,7 +10,7 @@ inherit
 	B_OR_ELSE_B
 		redefine
 			propagate, free_register, print_register, generate, analyze,
-			register, set_register, c_type
+			register, set_register
 		end;
 
 feature
@@ -22,12 +22,6 @@ feature
 			-- Set `register' to `r'
 		do
 			register := r;
-		end;
-
-	c_type: BOOLEAN_I is
-			-- Type is boolean
-		once
-			create Result;
 		end;
 
 	free_register is

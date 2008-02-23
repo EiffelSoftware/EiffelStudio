@@ -118,6 +118,11 @@ feature
 		deferred
 		end
 
+	write_for_type is
+			-- Generate table for type description.
+		deferred
+		end
+
 	item: T is
 		do
 			Result := array_item (position)
@@ -239,7 +244,7 @@ feature
 			not_empty: not is_empty
 		local
 			i, nb: INTEGER
-			first_type, this_type: TYPE_I
+			first_type, this_type: TYPE_A
 		do
 			from
 				i := lower
@@ -253,8 +258,8 @@ feature
 				this_type := array_item (i).type
 				Result := (first_type = Void and then this_type = Void)
 						or else ((first_type /= Void and then this_type /= Void)
-						and then first_type.is_identical (this_type)
-						and then this_type.is_identical (first_type))
+						and then first_type.same_as (this_type)
+						and then this_type.same_as (first_type))
 				i := i + 1
 			end
 			if Result then
@@ -288,7 +293,7 @@ feature
 			loop
 				entry := array_item (index)
 				if i = entry.type_id then
-					if entry.is_generic then
+					if entry.needs_extended_info then
 						buffer.put_new_line
 						buffer.put_string ("static EIF_TYPE_INDEX ")
 						buffer.put_string (l_table_name)
@@ -340,7 +345,7 @@ feature
 			loop
 				entry := array_item (index)
 				if i = entry.type_id then
-					if entry.is_generic then
+					if entry.needs_extended_info then
 						buffer.put_new_line
 						buffer.put_string (l_table_name)
 						buffer.put_string ("_gen_type [")

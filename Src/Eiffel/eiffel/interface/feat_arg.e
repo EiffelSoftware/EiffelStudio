@@ -106,11 +106,11 @@ feature -- Access
 			not_found_or_found: Result = 0 or else (Result >= 1 and then Result <= count)
 		end
 
-	pattern_types: ARRAY [TYPE_I] is
+	pattern_types: ARRAY [TYPE_A] is
 			-- Pattern types of arguments
 		local
 			l_area: SPECIAL [TYPE_A]
-			r_area: SPECIAL [TYPE_I]
+			r_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 		do
 			from

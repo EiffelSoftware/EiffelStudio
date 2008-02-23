@@ -19,7 +19,7 @@ feature
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			class_type: CL_TYPE_I
+			class_type: CL_TYPE_A
 		do
 				-- Do nothing if `reg' is not the current entity
 			if reg.is_current then
@@ -33,11 +33,11 @@ feature
 	is_polymorphic: BOOLEAN is True;
 			-- Is the attribute access polymorphic ?
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
 			-- Generate attribute access in a `typ' context
 		local
 			is_nested: BOOLEAN;
-			type_i: TYPE_i;
+			type_i: TYPE_A;
 			type_c: TYPE_C;
 			r_id: INTEGER;
 			rout_info: ROUT_INFO;
@@ -63,11 +63,8 @@ feature
 				buf.put_new_line;
 				buf.indent;
 			end;
-			base_class := typ.base_class;
-			if
-				Compilation_modes.is_precompiling or else
-				base_class.is_precompiled
-			then
+			base_class := typ.associated_class;
+			if Compilation_modes.is_precompiling or else base_class.is_precompiled then
 				if is_nested then
 					buf.put_string ("RTVPA(");
 				else
@@ -84,9 +81,9 @@ feature
 				else
 					buf.put_string ("RTWA(");
 				end;
-				buf.put_static_type_id (typ.associated_class_type.static_type_id)
+				buf.put_static_type_id (typ.static_type_id (context.context_class_type.type))
 				buf.put_string (gc_comma);
-				buf.put_integer (real_feature_id (typ.base_class));
+				buf.put_integer (real_feature_id (typ));
 			end;
 			buf.put_string (gc_comma);
 			if is_nested then

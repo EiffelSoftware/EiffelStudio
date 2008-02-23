@@ -1,12 +1,14 @@
 indexing
+	description: "[
+		Description of a pattern. Used for workbench code generation to ease
+		transfer of control between C generated code and melted code.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Information about pattern
 
 class PATTERN_INFO
 
 inherit
-
 	HASHABLE
 		redefine
 			is_equal
@@ -84,7 +86,6 @@ feature
 			-- Instantiation of `pattern' in the context of `type'.
 		require
 			good_argument: type /= Void
-			type_is_standalone: not type.type.is_anchored and not type.type.has_formal
 			consistency1: type.associated_class.conform_to (associated_class)
 			pattern_valid: pattern.is_valid (associated_class)
 		do
@@ -92,17 +93,7 @@ feature
 			Result := Result.instantiation_in (associated_class.meta_type (type))
 		ensure
 			result_not_void: Result /= Void
-			result_is_standalone: Result.is_standalone
 		end
-
-	trace is
-			-- Debug purpose
-		do
-			pattern.trace;
-			io.error.put_string (" --> written in ");
-			io.error.put_string (associated_class.name);
-			io.error.put_new_line;
-		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

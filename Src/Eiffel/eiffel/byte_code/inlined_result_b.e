@@ -59,7 +59,7 @@ feature -- Register and code generation
 
 feature
 
-	type: TYPE_I is
+	type: TYPE_A is
 		do
 			Result := System.remover.inliner.inlined_feature.result_type
 		end

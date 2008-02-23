@@ -70,7 +70,7 @@ feature -- IL Generation
 			p: PAIR [INTEGER, INTEGER]
 			ct: INTEGER
 			ca: BYTE_LIST [BYTE_NODE]
-			t: TYPE_I
+			t: TYPE_A
 		do
 				-- Reset data
 			rout_ids_tbl.wipe_out
@@ -127,11 +127,11 @@ feature -- IL Generation
 				property_sig.reset
 				property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
 				property_sig.set_parameter_count (0)
-				t := result_type_in (f, current_class_type)
+				t := result_type_in (f, class_type)
 				if t.is_void then
-					t := argument_actual_type_in (f.arguments.first.type_i, current_class_type)
+					t := argument_actual_type_in (f.arguments.first, class_type)
 				end
-				set_signature_type (property_sig, t)
+				set_signature_type (property_sig, t, class_type)
 				st := current_module.defined_property_setter_token (tid, fid)
 				if st & {MD_TOKEN_TYPES}.md_method_def /= {MD_TOKEN_TYPES}.md_method_def then
 					st := {MD_TOKEN_TYPES}.md_method_def
@@ -159,7 +159,6 @@ feature -- IL Generation
 			-- Generate IL code for feature in `class_c'.
 		do
 				-- Initialize context.
-			set_current_class (class_c)
 			set_current_class_type (class_type)
 			inst_context.set_group (class_c.group)
 			is_single_class := class_type.is_generated_as_single_type
@@ -383,7 +382,7 @@ feature -- IL Generation
 			l_is_method_impl_generated: BOOLEAN
 			is_expanded: BOOLEAN
 			impl_feat: FEATURE_I
-			impl_type: CL_TYPE_I
+			impl_type: CL_TYPE_A
 			impl_class_type: CLASS_TYPE
 			written_class_type: CLASS_TYPE
 		do
@@ -396,7 +395,7 @@ feature -- IL Generation
 				if is_replicated then
 						-- Calculate class type where the feature is written.
 					written_class_type := current_class_type.type.implemented_type
-						(feat.written_in).associated_class_type
+						(feat.written_in).associated_class_type (Void)
 				end
 				if not is_single_class then
 						-- Generate static definition of a routine `feat' if the class type is not expanded.
@@ -447,7 +446,7 @@ feature -- IL Generation
 								-- Generate implementation for reference counterpart of this class.
 							impl_feat := feat
 							impl_type := current_class_type.type.reference_type
-							impl_class_type := impl_type.associated_class_type
+							impl_class_type := impl_type.associated_class_type (Void)
 						else
 								-- Generate implementation for parent class type.
 							impl_feat := inh_feat
@@ -459,8 +458,8 @@ feature -- IL Generation
  					end
 					if impl_feat /= Void then
 						l_is_method_impl_generated := is_method_impl_needed (feat, impl_feat, impl_class_type) or else
-							not signatures (current_type_id, feat.feature_id).is_equal (
-								signatures (impl_class_type.static_type_id, impl_feat.feature_id))
+							not signature (current_type_id, feat.feature_id).is_equal (
+								signature (impl_class_type.static_type_id, impl_feat.feature_id))
 					end
 					if feat.is_c_external then
 						if is_replicated then
@@ -507,31 +506,35 @@ feature -- IL Generation
 			implementation_feature_id: INTEGER
 			old_class_type: CLASS_TYPE
 		do
-			if feat.access_in /= byte_context.current_type.class_id then
-				old_class_type := byte_context.class_type
-				byte_context.set_class_type (system.class_of_id (feat.access_in).meta_type (current_class_type))
-			end
 			if not is_single_class or inh_feat /= Void then
 				if inh_feat /= Void then
 					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type) or else is_local_signature_changed (feat)
 				end
-
 				if feat.body_index = standard_twin_body_index then
 					generate_feature_standard_twin (feat)
 				elseif current_class_type.is_expanded and then not feat.is_c_external then
+					if feat.written_in /= byte_context.current_type.class_id then
+						old_class_type := byte_context.class_type
+						byte_context.set_class_type (
+							system.class_of_id (feat.written_in).meta_type (current_class_type))
+					end
 					generate_feature_code (feat, False)
 				else
 					if feat.is_once then
 						implementation_class_id := feat.access_in
-						implementation_feature_id := system.class_of_id (implementation_class_id).feature_table.feature_of_rout_id_set (feat.rout_id_set).feature_id
+						implementation_feature_id := system.class_of_id (
+							implementation_class_id).feature_table.feature_of_rout_id_set (feat.rout_id_set).feature_id
 					else
 						implementation_class_id := feat.written_in
 						implementation_feature_id := feat.written_feature_id
 					end
 					generate_feature_il (feat,
 						current_class_type.type.implemented_type
-							(implementation_class_id).implementation_id,
+							(implementation_class_id).implementation_id (Void),
 						implementation_feature_id)
+				end
+				if old_class_type /= Void then
+					byte_context.set_class_type (old_class_type)
 				end
 
 					-- We need a MethodImpl here for mapping
@@ -544,18 +547,23 @@ feature -- IL Generation
 					valid: is_single_class and then inh_feat = Void
 				end
 				if current_class_type.is_expanded then
+					if feat.written_in /= byte_context.current_type.class_id then
+						old_class_type := byte_context.class_type
+						byte_context.set_class_type (
+							system.class_of_id (feat.written_in).meta_type (current_class_type))
+					end
 					generate_feature_code (feat, False)
 				else
 					generate_feature_il (feat,
 						current_class_type.type.implemented_type
-							(feat.written_in).associated_class_type.implementation_id,
+							(feat.written_in).associated_class_type (Void).implementation_id,
 							feat.written_feature_id)
+				end
+				if old_class_type /= Void then
+					byte_context.set_class_type (old_class_type)
 				end
 			end
 			generate_property (feat, inh_feat, class_type, not l_is_method_impl_generated)
-			if old_class_type /= Void then
-				byte_context.set_class_type (old_class_type)
-			end
 		end
 
 	mark_as_treated (feat: FEATURE_I) is

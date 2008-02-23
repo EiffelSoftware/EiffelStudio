@@ -67,7 +67,7 @@ feature -- Code generation
 		local
 			l_buffer: GENERATION_BUFFER
 			l_is_func: BOOLEAN
-			l_ret_type: TYPE_I
+			l_ret_type: TYPE_A
 			name: STRING
 			i: INTEGER
 			put_eif_test: BOOLEAN
@@ -113,7 +113,7 @@ feature -- Code generation
 			l_buffer.put_new_line
 		end
 
-	force_inline_def (a_ret_type: TYPE_I; name: STRING; arg_types: ARRAY [STRING]) is
+	force_inline_def (a_ret_type: TYPE_A; name: STRING; arg_types: ARRAY [STRING]) is
 			-- Add routine `name' in set of already generated inlines if not present already.
 		require
 			a_ret_type_not_void: a_ret_type /= Void
@@ -136,7 +136,7 @@ feature -- Code generation
 			inline_name_not_void: Result /= Void
 		end
 
-	generate_inline_def (a_ret_type: TYPE_I; name: STRING; arg_types: ARRAY [STRING]) is
+	generate_inline_def (a_ret_type: TYPE_A; name: STRING; arg_types: ARRAY [STRING]) is
 			-- Generate content of inline routine `name' in a separate routine called `inline_name'.
 		require
 			a_ret_type_not_void: a_ret_type /= Void
@@ -187,7 +187,7 @@ feature -- Code generation
 
 feature {NONE} -- Implementation
 
-	internal_generate_inline (a_ret_type: TYPE_I) is
+	internal_generate_inline (a_ret_type: TYPE_A) is
 			-- Generate code for inline C feature.
 		local
 			l_code, l_arg: STRING

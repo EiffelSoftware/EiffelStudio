@@ -51,18 +51,18 @@ feature
 			-- Analyze expression.
 		local
 			expr: EXPR_B
-			real_ty: GEN_TYPE_I
-			target_gen_type: TYPE_I
+			real_ty: GEN_TYPE_A
+			target_gen_type: TYPE_A
 		do
 			-- We need 'Current'
 			context.add_dftype_current
 			info.analyze
 
 			real_ty ?= context.real_type (type)
-			target_gen_type := real_ty.meta_generic.item (1)
+			target_gen_type := real_ty.generics.item (1)
 
 			get_register
-			create array_area_reg.make (Reference_c_type.c_type)
+			create array_area_reg.make (Reference_c_type)
 			from
 				expressions.start
 			until
@@ -124,12 +124,12 @@ feature
 	generate is
 			-- Generate expression
 		local
-			real_ty: GEN_TYPE_I
+			real_ty: GEN_TYPE_A
 			workbench_mode: BOOLEAN
-			target_gen_type: TYPE_I
+			target_gen_type: TYPE_A
 		do
 			real_ty ?= context.real_type (type)
-			target_gen_type := real_ty.meta_generic.item (1)
+			target_gen_type := real_ty.generics.item (1)
 			workbench_mode := context.workbench_mode
 			generate_array_creation (real_ty, workbench_mode)
 			if workbench_mode then
@@ -142,7 +142,7 @@ feature
 
 feature {NONE} -- C code generation
 
-	generate_array_creation (real_ty: GEN_TYPE_I; workbench_mode: BOOLEAN) is
+	generate_array_creation (real_ty: GEN_TYPE_A; workbench_mode: BOOLEAN) is
 			-- Generate the object creation of
 			-- manifest array.
 		local
@@ -150,7 +150,7 @@ feature {NONE} -- C code generation
 		do
 			buf := buffer
 			info.generate_start (buf)
-			info.generate_gen_type_conversion
+			info.generate_gen_type_conversion (0)
 			buf.put_new_line
 			print_register
 			buf.put_string (" = ")
@@ -159,16 +159,16 @@ feature {NONE} -- C code generation
 			info.generate_end (buf)
 		end
 
-	fill_array (target_type: TYPE_I) is
+	fill_array (target_type: TYPE_A) is
 			-- Generate the registers for the expressions
 			-- to fill the manifest array.
 		local
 			expr: EXPR_B;
-			actual_type: TYPE_I;
+			actual_type: TYPE_A;
 			is_expanded: BOOLEAN;
 			position: INTEGER;
 			buf: GENERATION_BUFFER
-			l_target_type: CL_TYPE_I
+			l_target_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			is_expanded := target_type.is_true_expanded;
@@ -215,7 +215,7 @@ feature {NONE} -- C code generation
 						check
 							l_target_type_not_void_since_expanded: l_target_type /= Void
 						end
-						l_exp_class_type := l_target_type.associated_class_type
+						l_exp_class_type := l_target_type.associated_class_type (context.context_class_type.type)
 						if l_exp_class_type.skeleton.has_references then
 							buf.put_string ("ecopy(");
 							item_print_register (expr, target_type)
@@ -272,7 +272,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_final_array_make (real_ty: GEN_TYPE_I)	is
+	generate_final_array_make (real_ty: GEN_TYPE_A)	is
 				-- Generate code to call the make routine
 				-- of the manifest array in final mode.
 		local
@@ -280,11 +280,11 @@ feature {NONE} -- C code generation
 			internal_name: STRING
 			rout_id: INTEGER
 		do
-			rout_id := real_ty.base_class.feature_table.item_id (make_name_id).rout_id_set.first;
+			rout_id := real_ty.associated_class.feature_table.item_id (make_name_id).rout_id_set.first;
 			rout_table ?= Eiffel_table.poly_table (rout_id);
 
 				-- Generate the signature of the function
-			rout_table.goto_implemented (real_ty.type_id)
+			rout_table.goto_implemented (real_ty.type_id (context.context_class_type.type))
 			check
 				is_implemented: rout_table.is_implemented
 			end
@@ -298,14 +298,14 @@ feature {NONE} -- C code generation
 			generate_array_make_arguments;
 
 				-- Remember extern routine declaration
-				-- Since `make' from ARRAY is a procedure, the return type is `Void_c_type'
+				-- Since `make' from ARRAY is a procedure, the return type is `Void_type'
 				--| Note: it used to be `real_ty.c_type' but it was the C type of
 				--| the array itself and not of the `make' routine and thus was incorrect.
 			Extern_declarations.add_routine_with_signature (Void_c_type.c_string, internal_name,
 							<<"EIF_REFERENCE", "EIF_INTEGER", "EIF_INTEGER">>)
 		end;
 
-	generate_wk_array_make (real_ty: GEN_TYPE_I)	is
+	generate_wk_array_make (real_ty: GEN_TYPE_A)	is
 				-- Generate code to call the make routine
 				-- of the manifest array in workbench mode.
 		local
@@ -316,7 +316,7 @@ feature {NONE} -- C code generation
 			base_class: CLASS_C
 			buf: GENERATION_BUFFER
 		do
-			base_class := real_ty.base_class
+			base_class := real_ty.associated_class
 			f_table := base_class.feature_table
 			feat_i := f_table.item_id (make_name_id)
 			buf := buffer
@@ -342,7 +342,7 @@ feature {NONE} -- C code generation
 				buf.put_integer (rout_info.offset);
 			else
 				buf.put_string (" RTWF(");
-				buf.put_static_type_id (real_ty.associated_class_type.static_type_id);
+				buf.put_static_type_id (real_ty.static_type_id (context.context_class_type.type));
 				buf.put_string (gc_comma);
 				buf.put_integer (feat_i.feature_id);
 			end;
@@ -373,7 +373,7 @@ feature {NONE} -- C code generation
 			buf.put_string ("L);");
 		end;
 
-	item_print_register (expr: EXPR_B; target_type: TYPE_I) is
+	item_print_register (expr: EXPR_B; target_type: TYPE_A) is
 			-- Print register for `expr' taking into account
 			-- that its value may be stored in `item_register'.
 		require

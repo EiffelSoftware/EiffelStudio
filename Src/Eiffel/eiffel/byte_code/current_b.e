@@ -24,10 +24,10 @@ feature -- Visitor
 
 feature
 
-	type: LIKE_CURRENT_I is
+	type: TYPE_A is
 			-- Current type
 		once
-			create Result
+			create {LIKE_CURRENT} Result
 		end
 
 	is_current: BOOLEAN is

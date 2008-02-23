@@ -13,13 +13,18 @@ inherit
 			make as cl_make
 		redefine
 			generics, valid_generic, parent_type, dump, ext_append_to,
-			has_like, has_like_argument, is_loose, duplicate, type_i, good_generics,
+			has_like, has_like_argument, has_like_current, is_loose, duplicate, good_generics,
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
-			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
-			same_as, is_equivalent,
-			deep_actual_type, instantiation_in,
+			has_expanded, internal_is_valid_for_class, expanded_deferred, valid_expanded_creation,
+			same_as, is_equivalent, description, instantiated_description, is_explicit,
+			deep_actual_type, instantiation_in, has_actual,
 			actual_argument_type, update_dependance, hash_code,
-			is_full_named_type, process, evaluated_type_in_descendant
+			is_full_named_type, process, evaluated_type_in_descendant,
+			generate_cid, generate_cid_array, generate_cid_init,
+			make_gen_type_byte_code, il_type_name, generic_il_type_name,
+			generate_gen_type_il, adapted_in, internal_generic_derivation,
+			internal_same_generic_derivation_as, is_class_valid,
+			is_valid_generic_derivation, skeleton_adapted_in, dispatch_anchors
 		end
 
 create
@@ -34,7 +39,7 @@ feature {NONE} -- Initialization
 			has_generics: g /= Void
 		do
 			generics := g
-			class_id := a_class_id
+			cl_make (a_class_id)
 		ensure
 			generics_set: generics = g
 			class_id_set: class_id = a_class_id
@@ -48,10 +53,31 @@ feature -- Visitor
 			v.process_gen_type_a (Current)
 		end
 
-feature -- Property
+feature -- Properties
 
-	generics: ARRAY [TYPE_A]
-			-- Actual generical parameter
+	has_actual (type: CL_TYPE_A): BOOLEAN is
+			-- Is `type' an (possibly nested) actual parameter of this type?
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+			l_cl_type: CL_TYPE_A
+		do
+			from
+				l_generics := generics
+				i := l_generics.lower
+				nb := l_generics.upper
+			until
+				i > nb
+			loop
+				l_cl_type ?= l_generics.item (i)
+				if l_cl_type /= Void and then (l_cl_type.same_as (type) or else l_cl_type.has_actual (type)) then
+					Result := True
+					i := nb + 1
+				else
+					i := i + 1
+				end
+			end
+		end
 
 feature -- Comparison
 
@@ -77,8 +103,6 @@ feature -- Comparison
 				end
 			end
 		end
-
-feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
@@ -109,27 +133,142 @@ feature -- Access
 			end
 		end
 
+feature -- Access
+
+	generics: ARRAY [TYPE_A]
+			-- Actual generical parameter
+
 	hash_code: INTEGER is
-			-- Hash code value
+		local
+			l_rotate, l_bytes, i: INTEGER
+			l_generics: like generics
+		do
+			Result := Precursor
+			l_generics := generics
+			i := l_generics.count
+			if i >= 0 then
+				from
+				until
+					i = 0
+				loop
+					l_rotate := l_generics.item (i).hash_code
+					l_bytes := 4 * (1 + i \\ 8)
+					l_rotate := (l_rotate |<< l_bytes) | (l_rotate |>> (32 - l_bytes))
+					Result := Result.bit_xor (l_generics.item (i).hash_code)
+					i := i - 1
+				end
+					-- To prevent negative values.
+				Result := Result.hash_code
+			end
+		end
+
+	description: ATTR_DESC is
+			-- Descritpion of type for skeletons.
+		local
+			gen_desc: GENERIC_DESC
+		do
+			if is_loose then
+				create gen_desc
+				gen_desc.set_type_i (Current)
+				Result := gen_desc
+			else
+				Result := Precursor {CL_TYPE_A}
+			end
+		end
+
+	instantiated_description: ATTR_DESC is
+		local
+			exp: EXPANDED_DESC
+			l_ref: REFERENCE_DESC
+		do
+			if is_expanded then
+				create exp
+				exp.set_type_i (Current)
+				Result := exp
+			else
+				create l_ref
+				l_ref.set_type_i (Current)
+				Result := l_ref
+			end
+		end
+
+feature -- Status Report
+
+	is_explicit: BOOLEAN is
+			-- Is type fixed at compile time without anchors or formals?
 		local
 			i, nb: INTEGER
-			l_cl_type_a: CL_TYPE_A
+			l_generics: like generics
 		do
-			Result := class_id
 			from
 				i := 1
-				nb := generics.count
+				l_generics := generics
+				nb := l_generics.count
+				Result := True
 			until
 				i > nb
 			loop
-				l_cl_type_a ?= generics.item (i)
-				if l_cl_type_a /= Void then
-					Result := Result + l_cl_type_a.hash_code
+				if not l_generics.item (i).is_explicit then
+					Result := False
+					i := nb + 1
+				else
+					i := i + 1
 				end
-				i := i + 1
 			end
-				-- Clear sign if it becomes negative
-			Result := 0x7FFFFFFF & Result
+		end
+
+	is_class_valid: BOOLEAN is
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+		do
+			if associated_class /= Void then
+				from
+					i := 1
+					l_generics := generics
+					nb := l_generics.count
+					Result := True
+				until
+					i > nb
+				loop
+					if not l_generics.item (i).is_class_valid then
+						Result := False
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	is_valid_generic_derivation: BOOLEAN is
+			-- A generic type is a valid derivation if and only if the class type
+			-- being referenced are still expanded.
+			--| This can happen when a generic class which was expanded and used in
+			--| another generic class is not expanded anymore.
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+			l_type: CL_TYPE_A
+		do
+			from
+				i := 1
+				l_generics := generics
+				nb := l_generics.count
+				Result := True
+			until
+				i > nb
+			loop
+				l_type ?= l_generics.item (i)
+					-- If type is still expanded, we do the recursion in case it has a generic parameter which is
+					-- itself generic and needs to be checked as well.
+				if l_type /= Void and then not l_type.is_expanded then
+					Result := False
+					i := nb + 1
+				else
+					i := i + 1
+				end
+			end
 		end
 
 feature -- Output
@@ -173,7 +312,7 @@ feature -- Output
 				-- TUPLE may have zero generic parameters
 			if count > 0 then
 				st.add_space
-				st.process_symbol_text (ti_L_bracket)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
 				from
 					i := 1
 				until
@@ -181,12 +320,501 @@ feature -- Output
 				loop
 					generics.item (i).ext_append_to (st, c)
 					if i /= count then
-						st.process_symbol_text (ti_Comma)
+						st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_Comma)
 						st.add_space
 					end
 					i := i + 1
 				end
-				st.process_symbol_text (ti_R_bracket)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_R_bracket)
+			end
+		end
+
+feature -- Generic conformance
+
+	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN; a_context_type: TYPE_A) is
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+		do
+			Precursor (buffer, final_mode, use_info, a_context_type)
+			from
+				l_generics := generics
+				i  := l_generics.lower
+				nb := l_generics.upper
+			until
+				i > nb
+			loop
+				l_generics.item (i).generate_cid (buffer, final_mode, use_info, a_context_type)
+				i := i + 1
+			end
+		end
+
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+		do
+			Precursor (buffer, final_mode, use_info, idx_cnt, a_context_type)
+
+			from
+				l_generics := generics
+				i  := l_generics.lower
+				nb := l_generics.upper
+			until
+				i > nb
+			loop
+				l_generics.item (i).generate_cid_array (buffer, final_mode, use_info, idx_cnt, a_context_type)
+				i := i + 1
+			end
+		end
+
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+		do
+			Precursor (buffer, final_mode, use_info, idx_cnt, a_level)
+
+			from
+				l_generics := generics
+				i  := l_generics.lower
+				nb := l_generics.upper
+			until
+				i > nb
+			loop
+				l_generics.item (i).generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_level)
+				i := i + 1
+			end
+		end
+
+	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+			-- Put type id's in byte array.
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+		do
+			Precursor (ba, use_info, a_context_type)
+
+			from
+				l_generics := generics
+				i  := l_generics.lower
+				nb := l_generics.upper
+			until
+				i > nb
+			loop
+				l_generics.item (i).make_gen_type_byte_code (ba, use_info, a_context_type)
+				i := i + 1
+			end
+		end
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN) is
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		local
+			i, nb : INTEGER
+			l_generics: like generics
+		do
+			l_generics := generics
+
+			generate_gen_type_instance (il_generator, l_generics.count)
+
+			from
+				i  := l_generics.lower
+				check
+					i_start_at_one: i = 1
+				end
+				nb := l_generics.upper
+			until
+				i > nb
+			loop
+				il_generator.duplicate_top
+				il_generator.put_integer_32_constant (i - 1)
+				l_generics.item (i).generate_gen_type_il (il_generator, use_info)
+				il_generator.generate_array_write ({IL_CONST}.il_ref, 0)
+				i := i + 1
+			end
+
+			il_generator.generate_generic_type_settings (Current)
+		end
+
+	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER) is
+			-- Generic runtime instance for Current
+		require
+			il_generator_not_void: il_generator /= Void
+			n_non_negative: n >= 0
+		do
+			il_generator.generate_generic_type_instance (n)
+		end
+
+	frozen enumerate_interfaces (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]) is
+			-- Enumerate all class types for which an object of this type can be attached to.
+			-- FIXME: To be put in GEN_TYPE_A when refactoring complete.
+		require
+			processor_attached: processor /= Void
+		do
+				-- TODO:
+				-- 1. Rule out generic types with too many generic parameters to
+				-- avoid explosure of artificially introduced types.
+				-- 2. Ensure generated code works as expected.
+				-- 3. Remove validity rule that prevents reattaching derivations
+				-- with expanded parameters to derivations with reference parameters.
+			enumerate_interfaces_recursively (processor, generics.count)
+		end
+
+feature -- CECIL code generation
+
+	generate_cecil_values (buffer: GENERATION_BUFFER; a_context_type: TYPE_A) is
+			-- Generate CECIL metatypes for current generic derivation
+		require
+			buffer_not_void: buffer /= Void
+			context_type_valid: a_context_type /= Void implies
+				a_context_type.generic_derivation.same_as (a_context_type)
+			context_type_class_valid: a_context_type /= Void implies
+				(a_context_type.has_associated_class and then
+					is_valid_for_class (a_context_type.associated_class))
+			has_associated_class_type: has_associated_class_type (a_context_type)
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+			l_cast: STRING
+		do
+			from
+				l_generics := generics
+				i := l_generics.lower
+				nb := l_generics.upper
+				l_cast := "(int32) "
+			until
+				i > nb
+			loop
+				buffer.put_string (l_cast)
+				l_generics.item (i).generate_cecil_value (buffer, a_context_type)
+				buffer.put_two_character (',', '%N')
+				i := i + 1
+			end
+		end
+
+	make_cecil_values (ba: BYTE_ARRAY; a_context_type: TYPE_A) is
+			-- Make byte code for cecil values
+		require
+			ba_not_void: ba /= Void
+			context_type_valid: a_context_type /= Void implies
+				a_context_type.generic_derivation.same_as (a_context_type)
+			context_type_class_valid: a_context_type /= Void implies
+				(a_context_type.has_associated_class and then
+					is_valid_for_class (a_context_type.associated_class))
+			has_associated_class_type: has_associated_class_type (a_context_type)
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+		do
+			from
+				l_generics := generics
+				i := l_generics.lower
+				nb := l_generics.upper
+			until
+				i > nb
+			loop
+				ba.append_integer_32 (l_generics.item (i).sk_value (a_context_type))
+				i := i + 1
+			end
+		end
+
+feature -- IL code generation
+
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+			-- Name of current class
+		local
+			i, count: INTEGER
+			sep, tmp: STRING
+			l_generics: like generics
+			l_class_c: like associated_class
+			l_is_precompiled: BOOLEAN
+			l_cl_type: like associated_class_type
+		do
+			l_class_c := associated_class
+			l_is_precompiled := l_class_c.is_precompiled
+			if l_is_precompiled then
+				l_cl_type := associated_class_type (a_context_type)
+				l_is_precompiled := l_cl_type.is_precompiled
+				if l_is_precompiled then
+					Result := l_cl_type.il_type_name (a_prefix)
+				end
+			end
+			if not l_is_precompiled then
+				Result := l_class_c.name.twin
+
+				l_generics := generics
+
+					-- Append generic information.
+				count := l_generics.count
+				if count > 0 then
+					from
+						i := 1
+						sep := "_"
+					until
+						i > count
+					loop
+						Result.append (sep)
+						tmp := l_generics.item (i).generic_il_type_name (a_context_type).twin
+						tmp.remove_head (tmp.last_index_of ('.', tmp.count))
+						Result.append (tmp)
+						i := i + 1
+					end
+				end
+
+				Result := internal_il_type_name (Result, a_prefix)
+			end
+		end
+
+	generic_il_type_name (a_context_type: TYPE_A): STRING is
+			-- Associated name to for naming in generic derivation.
+		do
+			Result := il_type_name (Void, a_context_type)
+		end
+
+	dispatch_anchors (a_context_class: CLASS_C) is
+			-- <Original>
+		local
+			i, count: INTEGER
+		do
+			from
+				i := 1
+				count := generics.count
+			until
+				i > count
+			loop
+				generics.item (i).dispatch_anchors (a_context_class)
+				i := i + 1
+			end
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+		local
+			l_class: like associated_class
+			l_generics: like generics
+			i, nb: INTEGER
+		do
+			l_class := associated_class
+			l_generics := generics
+			nb := l_generics.count
+			if
+				l_class /= Void and then
+				(l_class.is_expanded = (class_declaration_mark = expanded_mark)) and then
+				((l_class.generics /= Void and then l_class.generics.count = nb) or is_tuple)
+			then
+				from
+					Result := True
+					i := 1
+					nb := generics.count
+				until
+					i > nb
+				loop
+					if not generics.item (i).internal_is_valid_for_class (a_class) then
+						Result := False
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	enumerate_interfaces_recursively (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]; n: INTEGER) is
+			-- Enumerate all class types for which an object of this type can be attached to
+			-- using `n' as an upper bound for generic parameters that can be changed.
+		require
+			processor_attached: processor /= Void
+			valid_n: 1 <= n and n <= generics.count
+		local
+			gen_type: GEN_TYPE_A
+			parameter: TYPE_A
+			other_parameter: TYPE_A
+			cl_type: CL_TYPE_A
+			types: TYPE_LIST
+			cursor: ARRAYED_LIST_CURSOR
+			i: INTEGER
+		do
+				-- Enumerate types where expanded parameters are replaced with reference ones.
+				-- Take into account only registered generic derivations.
+			if n > 4  then
+					-- It's faster to scan registered class types rather than to generate conforming ones.
+				from
+					types := associated_class.types
+					cursor := types.cursor
+					types.start
+				until
+					types.after
+				loop
+					cl_type := types.item.type
+						-- Check only types that differ from current one.
+					if cl_type /= Current then
+						gen_type ?= cl_type
+						check
+							gen_type_attached: gen_type /= Void
+						end
+							-- Ensure the type is reference.
+						if gen_type.is_reference then
+							from
+								i := generics.count
+							until
+								i <= 0
+							loop
+								parameter := generics.item (i)
+								other_parameter := gen_type.generics.item (i)
+								if
+									parameter.same_as (other_parameter) or else
+									parameter.is_expanded and then other_parameter.is_formal
+								then
+										-- Continue processing.
+								else
+										-- Types differ. Stop processing.
+									i := 0
+								end
+								i := i - 1
+							end
+							if i = 0 then
+								processor.call ([types.item])
+							end
+						end
+					end
+					types.forth
+				end
+				types.go_to (cursor)
+			else
+				from
+					i := n
+				until
+					i <= 0
+				loop
+					parameter := generics [i]
+					if parameter.is_expanded then
+						gen_type := duplicate
+						gen_type.set_reference_mark
+							-- We replace the generics at position `i' by a FORMAL_A which simply
+							-- states that this is the generic derivation with reference in it.
+						gen_type.generics [i] := create {FORMAL_A}.make (False, False, i)
+						if associated_class.types.has_type (Void, gen_type) then
+							processor.call ([gen_type.associated_class_type (Void)])
+						end
+						if i > 1 then
+							gen_type.enumerate_interfaces_recursively (processor, i - 1)
+						end
+					end
+					i := i - 1
+				end
+			end
+		end
+
+	internal_generic_derivation (a_level: INTEGER): like Current is
+			-- Precise generic derivation of current type.
+		local
+			i, count: INTEGER
+			l_generics, l_new_generics: like generics
+			l_attachment_bits: like attachment_bits
+			l_type: TYPE_A
+		do
+			from
+					-- Duplicate current without the attachment information
+					-- since it does not matter for a generic derivation.
+				l_attachment_bits := attachment_bits
+				attachment_bits := 0
+				Result := duplicate
+				attachment_bits := l_attachment_bits
+
+				l_generics := generics
+				l_new_generics := Result.generics
+				i := 1
+				count := l_generics.count
+			until
+				i > count
+			loop
+				l_type := l_generics.item (i)
+				if l_type.actual_type.is_formal or l_type.is_reference then
+					if a_level = 0 then
+							-- We are now analyzing the B part in A [B]
+						l_new_generics.put (create {FORMAL_A}.make (False, False, i), i)
+					else
+							-- We are now analyzing the X part in A [B [X]]
+							-- which can only happen if B [X] is expanded. In that case, we
+							-- cannot store the formal if there is one, we will simply use
+							-- the constraint instead. If the constraint is a multi-constraint
+							-- we put ANY for now.
+						if associated_class.generics.i_th (i).is_multi_constrained (associated_class.generics) then
+							l_new_generics.put (system.any_type, i)
+						else
+							l_new_generics.put (associated_class.constrained_type (i), i)
+						end
+					end
+				else
+						-- We have a basic type, as an optimization, we
+						-- store the basic type data, rather than a formal
+						-- generic paramter to save some time at run-time
+						-- when computing the dynamic type.
+					l_new_generics.put (l_type.internal_generic_derivation (a_level + 1), i)
+				end
+				i := i + 1
+			end
+		end
+
+	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN is
+		local
+			i, nb: INTEGER
+			l_generics, l_other_generics: like generics
+			l_type: TYPE_A
+			l_formal: FORMAL_A
+		do
+			if
+				same_type (other) and then {l_gen_type_i: !like Current} other and then
+				l_gen_type_i.class_id = class_id and then
+						-- 'class_id' is the same therefore we can compare 'declaration_mark'.
+						-- If 'declaration_mark' is not the same for both then we have to make sure
+						-- that both expanded and separate states are identical.
+				(l_gen_type_i.declaration_mark /= declaration_mark implies
+					(l_gen_type_i.is_expanded = is_expanded and then
+					l_gen_type_i.is_separate = is_separate))
+			then
+				from
+					i := 1
+					l_generics := generics
+					nb := l_generics.count
+					l_other_generics := l_gen_type_i.generics
+					Result := nb = l_other_generics.count
+				until
+					i > nb or else not Result
+				loop
+					l_type := l_generics.item (i)
+						-- We use `actual_type' here because if this is an anchor, then we need to know
+						-- if the anchor is a formal since it is crucial for the comparison.
+					if l_type.actual_type.is_formal and current_type /= Void then
+							-- It is a formal, so we need to instantiate the formal in the
+							-- context of the current type. For example, we are looking for
+							-- the class type of A [G] in the context of B [INTEGER], thus
+							-- G is INTEGER. If we were not doing that, we would have to
+							-- create additional objects.
+						l_formal ?= l_type.actual_type
+						l_type := current_type.generics.item (l_formal.position)
+					end
+					if l_type.actual_type.is_formal or l_type.is_reference then
+						if a_level = 0 then
+								-- We are now comparing the B part in A [B]								
+							l_formal ?= l_other_generics.item (i)
+							Result := l_formal /= Void and then l_formal.position = i
+						else
+								-- We are now analyzing the X part in A [B [X]]
+								-- which can only happen if B [X] is expanded. In that case
+								-- we just check that for X the corresponding actual in `other' is
+								-- also a reference.
+							Result := l_other_generics.item (i).is_reference
+						end
+					else
+						Result := l_type.internal_same_generic_derivation_as (current_type, l_other_generics.item (i), a_level + 1)
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -259,22 +887,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	is_valid: BOOLEAN is
-		local
-			i, count: INTEGER
-		do
-			from
-				Result := Precursor {CL_TYPE_A}
-				i := 1
-				count := generics.count
-			until
-				i > count or else not Result
-			loop
-				Result := generics.item (i).is_valid
-				i := i + 1
-			end
-		end
-
 	is_full_named_type: BOOLEAN is
 			-- Is Current a fully named type?
 		local
@@ -322,32 +934,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 				Result := g.item (i).is_loose
 				i := i - 1
 			end
-		end
-
-	type_i: GEN_TYPE_I is
-			-- Meta generic interpretation of the generic type
-		local
-			i, count: INTEGER
-			meta_generic: META_GENERIC
-			true_generics: ARRAY [TYPE_I]
-			gt:TYPE_A
-		do
-			from
-				i := 1
-				count := generics.count
-				create meta_generic.make (count)
-				create true_generics.make (1, count)
-			until
-				i > count
-			loop
-				gt := generics.item (i)
-				meta_generic.put (gt.meta_type, i)
-				true_generics.put (gt.type_i, i)
-				i := i + 1
-			end
-
-			create Result.make (class_id, meta_generic, true_generics)
-			Result.set_mark (declaration_mark)
 		end
 
 	deep_actual_type: like Current is
@@ -428,49 +1014,125 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	instantiated_in (class_type: TYPE_A): TYPE_A is
+	adapted_in (a_class_type: CLASS_TYPE): GEN_TYPE_A is
+		local
+			i, nb: INTEGER
+			l_generics, l_new_generics: like generics
+			l_old_generic, l_new_generic: TYPE_A
+		do
+			from
+				l_generics := generics
+				i := 1
+				nb := l_generics.count
+			until
+				i > nb
+			loop
+				l_old_generic := l_generics.item (i)
+				l_new_generic := l_old_generic.adapted_in (a_class_type)
+				if l_old_generic /= l_new_generic then
+					if Result = Void then
+						Result := duplicate
+						l_new_generics := Result.generics
+					end
+					l_new_generics.put (l_new_generic, i)
+				end
+				i := i + 1
+			end
+			if Result = Void then
+				Result := Current
+			end
+		end
+
+	skeleton_adapted_in (a_class_type: CLASS_TYPE): GEN_TYPE_A is
+		local
+			i, nb: INTEGER
+			l_generics, l_new_generics: like generics
+			l_old_generic, l_new_generic: TYPE_A
+		do
+			from
+				l_generics := generics
+				i := 1
+				nb := l_generics.count
+			until
+				i > nb
+			loop
+				l_old_generic := l_generics.item (i)
+				l_new_generic := l_old_generic.skeleton_adapted_in (a_class_type)
+				if l_old_generic /= l_new_generic then
+					if Result = Void then
+						Result := duplicate
+						l_new_generics := Result.generics
+					end
+					l_new_generics.put (l_new_generic, i)
+				end
+				i := i + 1
+			end
+			if Result = Void then
+				Result := Current
+			end
+		end
+
+	instantiated_in (class_type: TYPE_A): GEN_TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		local
-			i, count: INTEGER
-			new_generics: like generics
+			i, nb: INTEGER
+			l_generics, l_new_generics: like generics
+			l_old_generic, l_new_generic: TYPE_A
 		do
 			from
-				Result := duplicate
+				l_generics := generics
 				i := 1
-				count := generics.count
-				new_generics := Result.generics
+				nb := l_generics.count
 			until
-				i > count
+				i > nb
 			loop
-				new_generics.put
-					(generics.item (i).instantiated_in (class_type), i)
+				l_old_generic := l_generics.item (i)
+				l_new_generic := l_old_generic.instantiated_in (class_type)
+				if l_old_generic /= l_new_generic then
+					if Result = Void then
+						Result := duplicate
+						l_new_generics := Result.generics
+					end
+					l_new_generics.put (l_new_generic, i)
+				end
 				i := i + 1
+			end
+			if Result = Void then
+				Result := Current
 			end
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
 		local
 			i, nb: INTEGER
-			new_generics: like generics
+			l_generics, l_new_generics: like generics
+			l_old_generic, l_new_generic: TYPE_A
 		do
 			if a_ancestor /= a_descendant then
 				if is_loose then
 					from
-						nb := generics.count
-						create new_generics.make (1, nb)
+						l_generics := generics
+						nb := l_generics.count
 						i := 1
 					until
 						i > nb
 					loop
-						new_generics.put (
-							generics.item (i).evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature),
-							i)
+						l_old_generic := l_generics.item (i)
+						l_new_generic := l_old_generic.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
+						if l_old_generic /= l_new_generic then
+							if Result = Void then
+								Result := duplicate
+								l_new_generics := Result.generics
+							end
+							l_new_generics.put (l_new_generic, i)
+						end
 						i := i + 1
 					end
-					Result := twin
-					Result.set_generics (new_generics)
+					if Result = Void then
+						Result := Current
+					end
 				else
 					Result := Current
 				end
@@ -595,6 +1257,22 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
+	has_like_Current: BOOLEAN is
+			-- <Precursor>
+		local
+			i, count: INTEGER
+		do
+			from
+				i := 1
+				count := generics.count
+			until
+				i > count or else Result
+			loop
+				Result := generics.item (i).has_like_current
+				i := i + 1
+			end
+		end
+
 	duplicate: like Current is
 			-- Duplication
 		local
@@ -645,30 +1323,34 @@ feature {COMPILER_EXPORTER} -- Primitives
 			base_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			i, generic_count: INTEGER
 		do
-			base_generics := associated_class.generics
-			if base_generics /= Void then
-				generic_count := base_generics.count
-				if (generic_count = generics.count) then
-					from
-						i := 1
-					until
-						i > generic_count or else (Result /= Void)
-					loop
-						if not generics.item (i).good_generics then
-							Result := generics.item (i).error_generics
+				-- We could avoid having this check but the precondition does not tell us
+				-- we can.
+			if associated_class /= Void then
+				base_generics := associated_class.generics
+				if base_generics /= Void then
+					generic_count := base_generics.count
+					if (generic_count = generics.count) then
+						from
+							i := 1
+						until
+							i > generic_count or else (Result /= Void)
+						loop
+							if not generics.item (i).good_generics then
+								Result := generics.item (i).error_generics
+							end
+							i := i + 1
 						end
-						i := i + 1
 					end
 				end
-			end
-			if Result = Void then
-				if base_generics = Void then
-					create {VTUG1} Result
-				else
-					create {VTUG2} Result
+				if Result = Void then
+					if base_generics = Void then
+						create {VTUG1} Result
+					else
+						create {VTUG2} Result
+					end
+					Result.set_type (Current)
+					Result.set_base_class (associated_class)
 				end
-				Result.set_type (Current)
-				Result.set_base_class (associated_class)
 			end
 		end
 

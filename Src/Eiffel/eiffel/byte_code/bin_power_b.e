@@ -36,7 +36,7 @@ feature -- C code generation
 			power_nb: REAL_CONST_B
 			power_value: DOUBLE
 			done: BOOLEAN
-			l_type: TYPE_I
+			l_type: TYPE_A
 		do
 			buf := buffer
 			power_nb ?= right

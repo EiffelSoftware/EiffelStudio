@@ -11,14 +11,21 @@ deferred class
 inherit
 	ATTACHABLE_TYPE_A
 		undefine
-			instantiation_in, same_as
+			same_as
 		redefine
 			actual_type,
 			conformance_type,
 			convert_to,
 			has_associated_class,
+			has_like_current,
+			associated_class_type,
+			has_associated_class_type,
 			has_like,
+			good_generics,
+			error_generics,
 			instantiated_in,
+			is_class_valid,
+			is_explicit,
 			is_attached,
 			is_basic,
 			is_expanded,
@@ -27,10 +34,19 @@ inherit
 			is_loose,
 			is_none,
 			is_reference,
-			is_valid,
+			internal_is_valid_for_class,
 			meta_type,
 			set_attached_mark,
-			set_detachable_mark
+			set_detachable_mark,
+			description,
+			c_type,
+			generated_id,
+			generate_cid, generate_cid_array, generate_cid_init,
+			make_gen_type_byte_code, generate_gen_type_il,
+			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
+			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
+			internal_generic_derivation, internal_same_generic_derivation_as,
+			skeleton_adapted_in
 		end
 
 feature -- Properties
@@ -58,14 +74,36 @@ feature -- Properties
 				actual_type.has_associated_class
 		end
 
+	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN is
+			-- Does Current have an associated class?
+		do
+			Result := actual_type /= Void and then actual_type.has_associated_class_type (a_context_type)
+		end
+
 	has_like: BOOLEAN is True
 			-- Does the type have anchored type in its definition ?
+
+	has_like_current: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := actual_type.has_like_current
+		end
+
+	is_class_valid: BOOLEAN is
+		do
+			Result := actual_type /= Void and then actual_type.is_class_valid
+		end
 
 	is_like: BOOLEAN is True
 			-- Is the type anchored one ?
 
 	is_loose: BOOLEAN is True
 			-- Does type depend on formal generic parameters and/or anchors?
+
+	is_explicit: BOOLEAN is
+		do
+				-- By definition an anchor is never explicit.
+		end
 
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic one ?
@@ -97,12 +135,6 @@ feature -- Properties
 			Result := actual_type.is_none
 		end
 
-	is_valid: BOOLEAN is
-			-- Is current type valid?
-		do
-			Result := actual_type /= Void
-		end
-
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		deferred
@@ -118,12 +150,48 @@ feature -- Properties
 			end
 		end
 
+	good_generics: BOOLEAN is
+			-- <Original>
+		do
+			Result := actual_type.good_generics
+		end
+
+	error_generics: VTUG is
+			-- <Original>
+			--| No need to redefine it in LIKE_CURRENT since `good_generics' is always True.
+		do
+			Result := actual_type.error_generics
+				-- We override the `type' set above since it is `actual_type'
+				-- and we want to see the anchor instead.
+			Result.set_type (Current)
+		end
+
 feature -- Access
+
+	hash_code: INTEGER is
+		do
+			Result := actual_type.hash_code
+		end
 
 	associated_class: CLASS_C is
 			-- Associated class
 		do
 			Result := actual_type.associated_class
+		end
+
+	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE is
+		do
+			Result := actual_type.associated_class_type (a_context_type)
+		end
+
+	description: ATTR_DESC is
+		do
+			Result := actual_type.description
+		end
+
+	c_type: TYPE_C is
+		do
+			Result := actual_type.c_type
 		end
 
 feature -- Primitives
@@ -151,7 +219,22 @@ feature -- Primitives
 	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
-		deferred
+		local
+			t: like Current
+		do
+			t := twin
+			t.set_actual_type (actual_type.instantiation_in (type, written_id))
+			Result := t
+		end
+
+	adapted_in (a_class_type: CLASS_TYPE): TYPE_A is
+		do
+			Result := actual_type.adapted_in (a_class_type)
+		end
+
+	skeleton_adapted_in (a_class_type: CLASS_TYPE): TYPE_A is
+		do
+			Result := actual_type.skeleton_adapted_in (a_class_type)
 		end
 
 	instantiated_in (class_type: TYPE_A): TYPE_A is
@@ -179,22 +262,7 @@ feature -- Primitives
 			Result := actual_type.convert_to (a_context_class, a_target_type)
 		end
 
-	type_i: TYPE_I is
-			-- Reduced type of `actual_type'
-		local
-			cl_type : CL_TYPE_I
-		do
-			Result := actual_type.type_i
-			cl_type ?= Result
-
-			if cl_type /= Void and then not cl_type.is_expanded then
-					-- Remember that it's an anchored type, not needed
-					-- when handling expanded types.
-				cl_type.set_cr_info (create_info)
-			end
-		end
-
-	meta_type: TYPE_I is
+	meta_type: TYPE_A is
 			-- C type for `actual_type'
 		do
 			Result := actual_type.meta_type
@@ -224,6 +292,129 @@ feature -- Modification
 			if not is_expanded and then a /= Void and then actual_type.is_attached then
 				actual_type := a.as_detachable
 			end
+		end
+
+feature -- IL code generation
+
+	minimum_interval_value: INTERVAL_VAL_B is
+		require else
+			valid_type: actual_type.is_integer or actual_type.is_natural or actual_type.is_character
+		do
+			Result := actual_type.minimum_interval_value
+		end
+
+	maximum_interval_value: INTERVAL_VAL_B is
+		require else
+			valid_type: actual_type.is_integer or actual_type.is_natural or actual_type.is_character
+		do
+			Result := actual_type.maximum_interval_value
+		end
+
+	heaviest (other: TYPE_A): TYPE_A
+		do
+			Result := actual_type.heaviest (other)
+		end
+
+	is_optimized_as_frozen: BOOLEAN is
+		do
+			Result := actual_type.is_optimized_as_frozen
+		end
+
+	is_generated_as_single_type: BOOLEAN is
+			-- Is associated type generated as a single type or as an interface type and
+			-- an implementation type.
+		do
+			Result := actual_type.is_generated_as_single_type
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
+			-- Id of a `like xxx'.
+		do
+			Result := actual_type.generated_id (final_mode, a_context_type)
+		end
+
+	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
+		do
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.generate_cid (buffer, final_mode)
+			else
+				actual_type.generate_cid (buffer, final_mode, use_info, a_context_type)
+			end
+		end
+
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+		do
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.generate_cid_array (buffer, final_mode, idx_cnt)
+			else
+				actual_type.generate_cid_array (buffer, final_mode, use_info, idx_cnt, a_context_type)
+			end
+		end
+
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+		do
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
+			else
+				actual_type.generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_level)
+			end
+		end
+
+	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
+		do
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.make_gen_type_byte_code (ba)
+			else
+				actual_type.make_gen_type_byte_code (ba, use_info, a_context_type)
+			end
+		end
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN)
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		do
+			if use_info then
+				initialize_info (shared_create_info)
+				shared_create_info.generate_il_type
+			else
+				actual_type.generate_gen_type_il (il_generator, use_info)
+			end
+		end
+
+	initialize_info (an_info: like shared_create_info) is
+			-- Initialize `shared_create_info'.
+		do
+		end
+
+	shared_create_info: CREATE_INFO is
+			-- Same as `create_info' except that it is a shared instance.
+		deferred
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+			-- Is current type valid?
+		do
+			Result := actual_type /= Void and then actual_type.internal_is_valid_for_class (a_class)
+		end
+
+	internal_generic_derivation (a_level: INTEGER_32): TYPE_A is
+		do
+				-- We keep the same level since we are merely forwarding the call.
+			Result := actual_type.internal_generic_derivation (a_level)
+		end
+
+	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER_32): BOOLEAN is
+		do
+				-- We keep the same level since we are merely forwarding the call.
+			Result := actual_type.internal_same_generic_derivation_as (current_type, other, a_level)
 		end
 
 indexing

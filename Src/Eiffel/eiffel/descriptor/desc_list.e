@@ -42,7 +42,7 @@ create {DESC_LIST}
 
 feature -- Creation
 
-	make (c: CLASS_C; s: INTEGER) is
+	make (c: CLASS_C) is
 			-- Initialize descriptor list of class
 			-- `c', and initialize the size of the
 			-- individual descriptors to `s'.
@@ -50,7 +50,7 @@ feature -- Creation
 			desc: DESCRIPTOR
 			local_class_types: TYPE_LIST
 			l_area: SPECIAL [DESCRIPTOR]
-			i, nb: INTEGER
+			i, nb, nb_entries: INTEGER
 		do
 			base_class := c
 			class_types := c.types
@@ -58,6 +58,8 @@ feature -- Creation
 
 			nb := local_class_types.count
 			make_filled (nb)
+				-- Compute the size of the DESCRIPTOR table.
+			nb_entries := c.number_of_ancestors + 1
 			from
 				l_area := area
 				nb := count
@@ -65,7 +67,7 @@ feature -- Creation
 			until
 				i = nb
 			loop
-				create desc.make (local_class_types.item, s)
+				create desc.make (local_class_types.item, nb_entries)
 				l_area.put (desc, i)
 				local_class_types.forth
 				i := i + 1

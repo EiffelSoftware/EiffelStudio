@@ -244,7 +244,7 @@ feature -- Generation
 			l_inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER_32]
 			l_area: SPECIAL [FEATURE_I]
 		do
-			create Result.make (c, count)
+			create Result.make (c)
 			if c.has_invariant then
 				Result.put_invariant (c.invariant_feature)
 			end

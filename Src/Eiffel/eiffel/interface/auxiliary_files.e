@@ -25,7 +25,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_TYPE_I
+	SHARED_TYPES
 		export
 			{NONE} all
 		end
@@ -147,7 +147,7 @@ feature -- Dynamic Library file
 										buffer.put_string (dl_exp.creation_routine.name)
 										buffer.put_string (")")
 										internal_creation_name := Encoder.feature_name (
-													System.class_of_id (dl_exp.creation_routine.written_in).types.first.static_type_id,
+													System.class_of_id (dl_exp.creation_routine.written_in).types.first.type_id,
 													dl_exp.creation_routine.body_index).twin
 								elseif (dl_exp.creation_routine = Void) then
 										buffer.put_string (" (!!)")
@@ -159,7 +159,7 @@ feature -- Dynamic Library file
 										feature_name := dl_exp.routine.name.twin
 									end
 									internal_feature_name := Encoder.feature_name (
-											System.class_of_id (dl_exp.routine.written_in).types.first.static_type_id,
+											System.class_of_id (dl_exp.routine.written_in).types.first.type_id,
 											dl_exp.routine.body_index).twin
 									args:= dl_exp.routine.arguments
 
@@ -193,7 +193,7 @@ feature -- Dynamic Library file
 									----- Routine function
 									buffer.put_string ("%Nextern ")
 									if dl_exp.routine.type /= Void then
-										return_type := dl_exp.routine.type.type_i.c_type.c_string
+										return_type := dl_exp.routine.type.c_type.c_string
 									else
 										return_type := "void"
 									end
@@ -211,7 +211,7 @@ feature -- Dynamic Library file
 											args.after
 										loop
 											buffer.put_string (", ")
-											args.item.type_i.c_type.generate (buffer)
+											args.item.c_type.generate (buffer)
 											if not args.item.is_basic then
 												nb_ref := nb_ref + 1
 											end
@@ -237,7 +237,7 @@ feature -- Dynamic Library file
 										until
 											argument_names.after
 										loop
-											args.i_th (argument_names.index).type_i.c_type.generate (buffer)
+											args.i_th (argument_names.index).c_type.generate (buffer)
 											buffer.put_string(argument_names.item)
 											if not argument_names.islast then
 												buffer.put_string(", ")
@@ -297,10 +297,10 @@ feature -- Dynamic Library file
 
 									if Context.workbench_mode then
 										buffer.put_string ("RTUD(");
-										buffer.put_static_type_id (dl_exp.compiled_class.actual_type.type_i.associated_class_type.static_type_id)
+										buffer.put_static_type_id (dl_exp.compiled_class.actual_type.associated_class_type (Void).static_type_id)
 										buffer.put_character (')');
 									else
-										buffer.put_type_id (dl_exp.compiled_class.actual_type.type_i.type_id);
+										buffer.put_type_id (dl_exp.compiled_class.actual_type.type_id (Void));
 									end
 									buffer.put_string (");")
 
@@ -415,8 +415,8 @@ feature -- Plug and Makefile file
 			rcoffset: INTEGER
 
 			l_create_type: CREATE_TYPE
-			l_creation_type: CL_TYPE_I
-			l_gen_type: GEN_TYPE_I
+			l_creation_type: CL_TYPE_A
+			l_gen_type: GEN_TYPE_A
 
 			l_rt_dbg_cl: CLASS_C
 			l_rt_extension_notify_name, l_rt_extension_notify_argument_name: STRING
@@ -440,7 +440,6 @@ feature -- Plug and Makefile file
 				-- Extern declarations
 			string_cl := system.class_of_id (system.string_8_id)
 			cl_type := string_cl.types.first
-			id := cl_type.static_type_id
 			str_type_id := cl_type.type_id
 			creators := string_cl.creators
 			creators.start
@@ -449,21 +448,21 @@ feature -- Plug and Makefile file
 			any_cl := system.any_class.compiled_class
 			correct_mismatch_feat :=
 				any_cl.feature_table.item_id (Names_heap.internal_correct_mismatch_name_id)
-			correct_mismatch_name := Encoder.feature_name (any_cl.types.first.static_type_id,
+			correct_mismatch_name := Encoder.feature_name (any_cl.types.first.type_id,
 				correct_mismatch_feat.body_index).twin
 			buffer.put_string ("extern void ")
 			buffer.put_string (correct_mismatch_name)
 			buffer.put_string ("();%N")
 
 			equal_name :=
-				Encoder.feature_name (any_cl.types.first.static_type_id,
+				Encoder.feature_name (any_cl.types.first.type_id,
 					any_cl.feature_table.item_id (Names_heap.equal_name_id).body_index).twin
 			buffer.put_string ("extern EIF_BOOLEAN ")
 			buffer.put_string (equal_name)
 			buffer.put_string ("();%N")
 
 			twin_name :=
-				Encoder.feature_name (any_cl.types.first.static_type_id,
+				Encoder.feature_name (any_cl.types.first.type_id,
 					any_cl.feature_table.item_id (Names_heap.twin_name_id).body_index).twin
 			buffer.put_string ("extern EIF_REFERENCE ")
 			buffer.put_string (twin_name)
@@ -471,7 +470,7 @@ feature -- Plug and Makefile file
 
 				-- Make STRING declaration
 			str_make_feat := string_cl.feature_table.item_id (Names_heap.make_name_id)
-			str_make_name := Encoder.feature_name (id, str_make_feat.body_index).twin
+			str_make_name := Encoder.feature_name (str_type_id, str_make_feat.body_index).twin
 			buffer.put_string ("extern void ")
 			buffer.put_string (str_make_name)
 			buffer.put_string ("();%N")
@@ -480,7 +479,7 @@ feature -- Plug and Makefile file
 				internal_hash_code_feat ?= string_cl.feature_table.item_id (Names_heap.internal_hash_code_name_id)
 			else
 				set_count_feat ?= string_cl.feature_table.item_id (Names_heap.set_count_name_id)
-				set_count_name := Encoder.feature_name (id, set_count_feat.body_index).twin
+				set_count_name := Encoder.feature_name (str_type_id, set_count_feat.body_index).twin
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_count_name)
 				buffer.put_string ("();%N")
@@ -495,16 +494,23 @@ feature -- Plug and Makefile file
 			if (system.array_make_name = Void) or not System.uses_precompiled or final_mode then
 				array_cl := System.class_of_id (System.array_id)
 					--! Array ref type (i.e. ARRAY[ANY])
-				cl_type := System.Instantiator.Array_type.associated_class_type;
-				id := cl_type.static_type_id
+				cl_type := System.Instantiator.Array_type.associated_class_type (Void);
+				id := cl_type.type_id
 				arr_type_id := cl_type.type_id
 				creators := array_cl.creators
 				creators.start
 				creation_feature := array_cl.feature_table.item_id (Names_heap.make_name_id)
 				arr_make_name := Encoder.feature_name (id, creation_feature.body_index).twin
-				system.set_array_make_name (arr_make_name)
+				if not final_mode then
+						-- Only store the name of the routine in workbench mode. Otherwise
+						-- eweasel test#multicon008 would fail when freezing after finalizing.
+						-- The issue is that because we use type IDs for generating the name
+						-- and that the type IDs are recomputed when finalizing, we would end up
+						-- storing a name that does not make sense in workbench mode.
+					system.set_array_make_name (arr_make_name)
+				end
 			else
-				cl_type := System.Instantiator.Array_type.associated_class_type;
+				cl_type := System.Instantiator.Array_type.associated_class_type (Void)
 				arr_type_id := cl_type.type_id
 				arr_make_name := system.array_make_name
 			end
@@ -518,7 +524,7 @@ feature -- Plug and Makefile file
 
 			if rout_cl.types /= Void and then not rout_cl.types.is_empty then
 				cl_type := rout_cl.types.first
-				id := cl_type.static_type_id
+				id := cl_type.type_id
 				if final_mode then
 					feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_final_name_id)
 					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).twin
@@ -535,7 +541,7 @@ feature -- Plug and Makefile file
 			exception_manager_cl := system.ise_exception_manager_class.compiled_class
 			if exception_manager_cl.types /= Void and then not exception_manager_cl.types.is_empty then
 				feat := exception_manager_cl.feature_table.item_id (Names_heap.set_exception_data_name_id)
-				id := exception_manager_cl.types.first.static_type_id
+				id := exception_manager_cl.types.first.type_id
 				set_exception_data_name := Encoder.feature_name (id, feat.body_index).twin
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_exception_data_name)
@@ -585,7 +591,7 @@ feature -- Plug and Makefile file
 			then
 				l_rt_dbg_cl := system.rt_extension_class.compiled_class
 				cl_type := l_rt_dbg_cl.types.first
-				id := cl_type.static_type_id
+				id := cl_type.type_id
 
 				feat := l_rt_dbg_cl.feature_table.item_id (Names_heap.notify_name_id)
 				if feat /= Void then
@@ -976,22 +982,23 @@ feature -- Plug and Makefile file
 			buffer.put_new_line
 			buffer.put_string ("if (egc_rcdt == 0) {")
 			buffer.indent
-			l_creation_type := system.root_type.type_i
+			l_creation_type := system.root_type
 			l_gen_type ?= l_creation_type
 			if l_gen_type /= Void then
 				context.set_buffer (buffer)
+				context.init (system.root_class_type)
 				buffer.put_new_line
 					-- Because generic object creation requires a context object,
 					-- we simply create a temporary one of type ANY, used to
 					-- create an instance of our generic type.
 				buffer.put_string ("EIF_REFERENCE l_root_obj, Current = RTLN(")
-				buffer.put_type_id (system.any_class.compiled_class.types.first.type_id)
+				buffer.put_type_id (context.context_class_type.type_id)
 				buffer.put_string (");")
 				buffer.put_new_line
 					-- Go ahead an create our generic type.
 				create l_create_type.make (l_creation_type)
 				l_create_type.generate_start (buffer)
-				l_create_type.generate_gen_type_conversion
+				l_create_type.generate_gen_type_conversion (0)
 				buffer.put_string ("l_root_obj = ")
 				l_create_type.generate
 				buffer.put_character (';')
@@ -1002,7 +1009,7 @@ feature -- Plug and Makefile file
 			else
 				buffer.put_new_line
 				buffer.put_string ("egc_rcdt = ")
-				buffer.put_type_id (l_creation_type.type_id)
+				buffer.put_type_id (l_creation_type.type_id (Void))
 				buffer.put_character (';')
 			end
 			buffer.exdent
@@ -1053,33 +1060,33 @@ feature -- Plug and Makefile file
 			buffer.put_string (";%N");
 
 			buffer.put_string ("%N%Tegc_uint8_dtype = ")
-			buffer.put_type_id (uint8_c_type.type_id)
+			buffer.put_type_id (natural_8_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_uint16_dtype = ")
-			buffer.put_type_id (uint16_c_type.type_id)
+			buffer.put_type_id (natural_16_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_uint32_dtype = ")
-			buffer.put_type_id (uint32_c_type.type_id)
+			buffer.put_type_id (natural_32_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_uint64_dtype = ")
-			buffer.put_type_id (uint64_c_type.type_id)
+			buffer.put_type_id (natural_64_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_int8_dtype = ")
-			buffer.put_type_id (int8_c_type.type_id)
+			buffer.put_type_id (integer_8_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_int16_dtype = ")
-			buffer.put_type_id (int16_c_type.type_id)
+			buffer.put_type_id (integer_16_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_int32_dtype = ")
-			buffer.put_type_id (int32_c_type.type_id)
+			buffer.put_type_id (integer_32_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_int64_dtype = ")
-			buffer.put_type_id (int64_c_type.type_id)
+			buffer.put_type_id (integer_64_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_bool_dtype = ")
-			buffer.put_type_id (boolean_c_type.type_id)
+			buffer.put_type_id (boolean_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_real32_dtype = ")
-			buffer.put_type_id (real32_c_type.type_id)
+			buffer.put_type_id (real_32_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_char_dtype = ")
-			buffer.put_type_id (char_c_type.type_id)
+			buffer.put_type_id (character_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_wchar_dtype = ")
-			buffer.put_type_id (wide_char_c_type.type_id)
+			buffer.put_type_id (wide_char_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_real64_dtype = ")
-			buffer.put_type_id (real64_c_type.type_id)
+			buffer.put_type_id (real_64_type.type_id (Void))
 			buffer.put_string (";%N%Tegc_point_dtype = ")
-			buffer.put_type_id (pointer_c_type.type_id)
+			buffer.put_type_id (pointer_type.type_id (Void))
 
 				-- Exceptions
 			if system.exception_class /= Void and then system.exception_class.is_compiled then

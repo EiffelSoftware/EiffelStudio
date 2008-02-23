@@ -32,7 +32,7 @@ feature
 	special_analyze is
 			-- Analyze expression and get a register
 		local
-			target_type: TYPE_I
+			target_type: TYPE_A
 		do
 			target_type := Context.real_type (type);
 			context.init_propagation;
@@ -47,7 +47,7 @@ feature
 	initialize is
 			-- Initialize the value of the old variable.
 		local
-			target_type: TYPE_I
+			target_type: TYPE_A
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer

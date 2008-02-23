@@ -71,7 +71,7 @@ feature -- Validity
 					skelet := types.first.skeleton
 					if
 						skelet.count /= 1 or else
-						not skelet.first.type_i.same_as (actual_type.type_i)
+						not skelet.first.type_i.same_as (actual_type)
 					then
 						create special_error.make (basic_case_2, Current)
 						Error_handler.insert_error (special_error)
@@ -94,6 +94,9 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 		end
+
+invariant
+	is_expanded: is_expanded
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

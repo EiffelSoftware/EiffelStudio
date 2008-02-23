@@ -16,7 +16,7 @@ inherit
 
 	SHARED_WORKBENCH
 
-	SHARED_TYPE_I
+	SHARED_TYPES
 		export
 			{NONE} all
 		end
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 	LINE_INFO: STRING = "#line "
 		-- String constants for generating debugging information.
 
-feature
+feature -- Operations
 
 	null_byte_node: BYTE_LIST [BYTE_NODE] is
 			-- Null instructions
@@ -214,7 +214,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	real_type (typ: TYPE_I): TYPE_I is
+	real_type (typ: TYPE_A): TYPE_A is
 			-- Real type
 		require
 			typ_not_void: typ /= Void

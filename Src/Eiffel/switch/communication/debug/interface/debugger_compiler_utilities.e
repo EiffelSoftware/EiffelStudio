@@ -65,8 +65,8 @@ feature -- Type adaptation
 							--| then the derivation of the GENERIC by the CLASS_TYPE
 							--| among the parent we know the right CLASS_TYPE
 							--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
-						l_cl_type_a := ctype.type.type_a
-						Result := l_cl_type_a.find_class_type (l_f_class_c).type_i.associated_class_type
+						l_cl_type_a := ctype.type
+						Result := l_cl_type_a.find_class_type (l_f_class_c).associated_class_type (ctype.type)
 					end
 				end
 			end
@@ -109,11 +109,11 @@ feature -- Type adaptation
 			cl_not_void: cl /= Void
 			cl_is_basic: cl.is_basic
 		local
-			t: CL_TYPE_I
+			t: CL_TYPE_A
 		do
-			t := cl.actual_type.type_i
-			if t.has_associated_class_type then
-				Result := t.associated_class_type
+			t := cl.actual_type
+			if t.has_associated_class_type (Void) then
+				Result := t.associated_class_type (Void)
 			end
 		ensure
 			associated_basic_class_type_not_void: Result /= Void
@@ -126,9 +126,9 @@ feature -- Type adaptation
 			cl_not_void: cl /= Void
 			cl_is_basic: cl.is_basic
 		local
-			l_basic: BASIC_I
+			l_basic: BASIC_A
 		do
-			l_basic ?= cl.actual_type.type_i
+			l_basic ?= cl.actual_type
 			check
 				l_basic_not_void: l_basic /= Void
 			end
@@ -174,7 +174,7 @@ feature -- Type adaptation
 			end
 		end
 
-	frozen class_c_from_type_i (a_type_i: TYPE_I): CLASS_C is
+	frozen class_c_from_type_i (a_type_i: TYPE_A): CLASS_C is
 			-- Class C related to `a_type_i' if exists.
 		require
 			a_type_i_not_void: a_type_i /= Void
@@ -182,7 +182,7 @@ feature -- Type adaptation
 			l_type_a: TYPE_A
 		do
 			if a_type_i /= Void then
-				l_type_a := a_type_i.type_a
+				l_type_a := a_type_i
 				if l_type_a.has_associated_class then
 					Result := l_type_a.associated_class
 				end
@@ -316,7 +316,7 @@ feature -- Access on Byte node
 		require
 			a_expr_b_not_void: a_expr_b /= Void
 		local
-			l_type_i: TYPE_I
+			l_type_i: TYPE_A
 		do
 			l_type_i := a_expr_b.type
 			if l_type_i /= Void then

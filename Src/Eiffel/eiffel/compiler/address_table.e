@@ -434,12 +434,10 @@ feature -- Generation
 				-- 12 covers most cases without the need for a resize.
 			if a_is_for_agent then
 				if a_oargs_encapsulated then
-					Result.append ("_f")
+					Result.append ("_")
 				else
-					Result.append ("__f")
+					Result.append ("__")
 				end
-			else
-				Result.extend ('f')
 			end
 
 			Result.append (Encoder.address_table_name (a_feature_id, a_static_type_id))
@@ -463,8 +461,8 @@ feature -- Generation helpers
 		local
 			s_type: TYPE_A
 		do
-			s_type := type_a.instantiated_in (context_type.type.type_a)
-			Result := s_type.type_i.c_type
+			s_type := type_a.instantiated_in (context_type.type)
+			Result := s_type.c_type
 		end
 
 	arg_types (context_type: CLASS_TYPE; args: FEAT_ARG; is_for_agent: BOOLEAN; seed: FEATURE_I): ARRAY [STRING] is
@@ -474,7 +472,7 @@ feature -- Generation helpers
 		local
 			i, nb: INTEGER
 			t: STRING
-			type_i: TYPE_I
+			type_i: TYPE_A
 			l_eif_reference_str, l_eif_typed_value_str: STRING
 			l_is_for_agent_and_workbench_mode: BOOLEAN
 		do
@@ -494,10 +492,13 @@ feature -- Generation helpers
 				if l_is_for_agent_and_workbench_mode then
 					t := l_eif_typed_value_str
 				elseif seed /= Void then
-					type_i := seed.arguments.i_th (i).type_i
-					if type_i.is_anchored then
+					type_i := seed.arguments.i_th (i)
+					if type_i.has_like then
 						t := l_eif_reference_str
-					elseif type_i.is_formal then
+						-- It is pretty important that we use `actual_type.is_formal' and not
+						-- just `is_formal' because otherwise if you have `like x' and `x: G'
+						-- then we would fail to detect that.
+					elseif type_i.actual_type.is_formal then
 						t := l_eif_reference_str
 					else
 						t := type_i.c_type.c_string
@@ -519,10 +520,9 @@ feature {NONE} -- Generation
 		local
 			l_table_of_class: like table_of_class
 			l_table_entry: ADDRESS_TABLE_ENTRY
-			l_type_list: TYPE_LIST
 			l_feature_id: INTEGER
 			l_dollar_ids: HASH_TABLE [INTEGER, INTEGER]
-			l_disp_tab: ARRAYED_LIST [TUPLE [static_type_id, feature_id: INTEGER]]
+			l_disp_tab: ARRAYED_LIST [TUPLE [type_id, feature_id: INTEGER]]
 		do
 			create l_disp_tab.make_filled (dollar_id_counter.value)
 			from
@@ -532,7 +532,6 @@ feature {NONE} -- Generation
 			loop
 				from
 					l_table_of_class := item_for_iteration
-					l_type_list := System.class_of_id (key_for_iteration).types
 					l_table_of_class.start
 				until
 					l_table_of_class.after
@@ -686,7 +685,7 @@ feature {NONE} -- Generation
 			formal_arg_count: NATURAL_32
 			has_creation: BOOLEAN
 			names: ARRAY [STRING]
-			basic_i: BASIC_I
+			basic_i: BASIC_A
 			i: INTEGER
 			l_tabbed_open_c_comment_str, l_space_str, l_close_c_comment_str: STRING
 			l_arg_str: STRING
@@ -711,7 +710,10 @@ feature {NONE} -- Generation
 					until
 						i <= 0
 					loop
-						if args.i_th (i).type_i.is_formal then
+							-- It is pretty important that we use `actual_type.is_formal' and not
+							-- just `is_formal' because otherwise if you have `like x' and `x: G'
+							-- then we would fail to detect that.
+						if args.i_th (i).actual_type.is_formal then
 							formal_arg.put (True, i)
 							formal_arg_count := formal_arg_count + 1
 						end
@@ -755,7 +757,7 @@ feature {NONE} -- Generation
 													 omap, a_oargs_encapsulated)
 
 				buffer.put_string (l_tabbed_open_c_comment_str)
-				l_type.type.dump (buffer)
+				buffer.put_string (l_type.type.dump)
 				buffer.put_string (l_space_str)
 				buffer.put_string (a_feature.feature_name)
 				buffer.put_string (l_close_c_comment_str)
@@ -768,7 +770,10 @@ feature {NONE} -- Generation
 					if is_for_agent and then not final_mode then
 						return_type_string := "EIF_TYPED_VALUE"
 						agent_type_string := return_type_string
-					elseif seed /= Void and then seed.type.is_formal then
+						-- It is pretty important that we use `actual_type.is_formal' and not
+						-- just `is_formal' because otherwise if you have `like x' and `x: G'
+						-- then we would fail to detect that.
+					elseif seed /= Void and then seed.type.actual_type.is_formal then
 						feature_return_type := reference_c_type
 						return_type_string := feature_return_type.c_string
 					end
@@ -890,8 +895,9 @@ feature {NONE} -- Generation
 						loop
 							if formal_arg [i] and then not reference_arg [i] then
 									-- Box expanded object.
-								basic_i ?= args.i_th (i).instantiated_in (l_type.type.type_a).type_i
-								basic_i.metamorphose (create {NAMED_REGISTER}.make ("arg" + i.out, reference_c_type), create {NAMED_REGISTER}.make (names [i + 1], basic_i), buffer)
+								basic_i ?= args.i_th (i).adapted_in (l_type)
+								check basic_i_not_void: basic_i /= Void end
+								basic_i.metamorphose (create {NAMED_REGISTER}.make ("arg" + i.out, reference_c_type), create {NAMED_REGISTER}.make (names [i + 1], basic_i.c_type), buffer)
 								buffer.put_character (';')
 							end
 							i := i - 1
@@ -916,7 +922,10 @@ feature {NONE} -- Generation
 					else
 						buffer.put_string ("return ")
 					end
-					if final_mode and then seed /= Void and then seed.type.type_i.is_formal and then not c_return_type.is_pointer then
+						-- It is pretty important that we use `actual_type.is_formal' and not
+						-- just `is_formal' because otherwise if you have `like x' and `x: G'
+						-- then we would fail to detect that.
+					if final_mode and then seed /= Void and then seed.type.actual_type.is_formal and then not c_return_type.is_pointer then
 						buffer.put_character ('*')
 						c_return_type.generate_access_cast (buffer)
 					end
@@ -951,8 +960,8 @@ feature {NONE} -- Generation
 					end
 				elseif a_feature.is_inline_agent then
 					buffer.put_character ('(')
-					c_return_type.generate_function_cast (buffer, a_types)
-					function_name := Encoder.feature_name (l_type.static_type_id, a_feature.body_index)
+					c_return_type.generate_function_cast (buffer, a_types, not final_mode)
+					function_name := Encoder.feature_name (l_type.type_id, a_feature.body_index)
 					buffer.put_string (function_name)
 					buffer.put_string (")(")
 					extern_declarations.add_routine_with_signature (return_type_string,
@@ -1046,7 +1055,7 @@ feature {NONE} -- Generation
 			if l_entry = Void then
 					-- Function pointer associated to a deferred feature
 					-- without any implementation
-				c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
+				c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>, False)
 				buffer.put_string ("RTNR) (")
 				buffer.put_string (a_current_name)
 				Result := False
@@ -1054,7 +1063,7 @@ feature {NONE} -- Generation
 				l_type_id := a_type.type_id
 				if l_entry.is_polymorphic (l_type_id) then
 					l_table_name := Encoder.routine_table_name (l_rout_id)
-					c_return_type.generate_function_cast (buffer, a_types)
+					c_return_type.generate_function_cast (buffer, a_types, False)
 					buffer.put_string (l_table_name)
 					buffer.put_string ("[Dtype(")
 					buffer.put_string (a_current_name)
@@ -1070,7 +1079,7 @@ feature {NONE} -- Generation
 
 					l_rout_table.goto_implemented (l_type_id)
 					if l_rout_table.is_implemented then
-						c_return_type.generate_function_cast (buffer, a_types)
+						c_return_type.generate_function_cast (buffer, a_types, False)
 						l_function_name := l_rout_table.feature_name + system.seed_of_routine_id (l_rout_id).generic_fingerprint
 						buffer.put_string (l_function_name)
 						buffer.put_string (")(")
@@ -1082,7 +1091,7 @@ feature {NONE} -- Generation
 							-- to False to not generate the argument list since
 							-- RTNR takes only one argument.
 						Result := False
-						c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
+						c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>, False)
 						buffer.put_string ("RTNR) (")
 						buffer.put_string (a_current_name)
 					end
@@ -1113,7 +1122,7 @@ feature {NONE} -- Generation
 				l_types [i] := l_eif_typed_value_str
 				i := i - 1
 			end
-			c_return_type.generate_function_cast (buffer, l_types)
+			c_return_type.generate_function_cast (buffer, l_types, True)
 
 			if
 				Compilation_modes.is_precompiling or else

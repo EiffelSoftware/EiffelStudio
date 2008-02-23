@@ -14,6 +14,11 @@ inherit
 			set_real_type
 		end
 
+	SHARED_BN_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -23,6 +28,7 @@ feature {NONE} -- Initialization
 			-- Create new instance from string representation `v'.
 		require
 			v_not_void: v /= Void
+			v_not_empty: not v.is_empty
 		do
 			bit_value := v
 			bit_count := v.count
@@ -90,9 +96,7 @@ feature -- Code generation
 	generate_il is
 			-- Generate IL code for BIT constant value.
 		do
-			check
-				not_implemented: False
-			end
+			cil_node_generator.generate_il_node (il_generator, create {BIT_CONST_B}.make (bit_value))
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -107,6 +111,9 @@ feature -- Code generation
 		do
 			Result := bit_value
 		end
+
+invariant
+	bit_count_non_negative: bit_count > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

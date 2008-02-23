@@ -10,7 +10,7 @@ class SHARED_TEXT_ITEMS
 inherit
 	SHARED_FILTER
 
-feature {NONE} -- Keywords
+feature -- Keywords
 
 	ti_and_keyword: STRING is "and"
 			-- "and" keyword
@@ -207,7 +207,7 @@ feature {NONE} -- Keywords
 	ti_xor_keyword: STRING is "xor"
 			-- "xor" keyword
 
-feature {NONE} -- Symbol names
+feature -- Symbol names
 
 	ti_Assign: STRING is ":="
 			-- ":=" characters
@@ -296,7 +296,7 @@ feature {NONE} -- Symbol names
 	ti_Tilda: STRING is "~"
 			-- "~" character
 
-feature {NONE} -- Basic text
+feature -- Basic text
 
 	ti_Padded_debug_mark: STRING is "    "
 			-- Breakpoint item
@@ -328,7 +328,7 @@ feature {NONE} -- Basic text
 	ti_Tab5: STRING is "%T%T%T%T%T"
 			-- 5 tab characters
 
-feature {NONE} -- Difference items
+feature -- Difference items
 
 	ti_Added: STRING is " + "
 			-- Added text item
@@ -342,7 +342,7 @@ feature {NONE} -- Difference items
 	ti_Removed: STRING is " - "
 			-- Removed text item
 
-feature {NONE} -- Feature signature items
+feature -- Feature signature items
 
 	ti_Argument_index: STRING is "arg #"
 			-- Index in argument list. Used for "like" <parameter>.
@@ -353,7 +353,7 @@ feature {NONE} -- Feature signature items
 	ti_Open_arg: STRING is "Open argument"
 			-- Index in open arguments parameter list.
 
-feature {NONE} -- Standard classes
+feature -- Standard classes
 
 	ti_None_class: STRING is "NONE"
 			-- `NONE' class.

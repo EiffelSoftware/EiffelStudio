@@ -89,7 +89,7 @@ feature -- Enlarging
 			if l_is_normal then
 					-- Normal code transformation.
 				create l_b_or_else_bl
-				l_b_or_else_bl.init (access.enlarged_on (left.type))
+				l_b_or_else_bl.init (access.enlarged_on (context.real_type (left.type)))
 				l_b_or_else_bl.set_left (left)
 				l_b_or_else_bl.set_right (right)
 				Result := l_b_or_else_bl

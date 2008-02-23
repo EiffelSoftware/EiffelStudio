@@ -25,9 +25,10 @@ inherit
 			has_formal_generic,
 			instantiation_in,
 			is_loose,
-			is_valid,
+			internal_is_valid_for_class,
 			is_type_set,
-			to_type_set
+			to_type_set,
+			is_class_valid
 		end
 
 	ARRAYED_LIST [RENAMED_TYPE_A [TYPE_A]]
@@ -1070,19 +1071,19 @@ feature -- Status
 						end)
 		end
 
-	is_type_set: BOOLEAN
-			-- Is `Current' an instance of `TYPE_SET_A'?
-		do
-			Result := True
-		end
-
-	is_valid: BOOLEAN is
+	is_class_valid: BOOLEAN is
 			-- Is the type set valid, meaning that all items are valid items?
 		do
 			Result := for_all (agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
 						do
-							Result := a_item.type.is_valid
+							Result := a_item.type.is_class_valid
 						end)
+		end
+
+	is_type_set: BOOLEAN
+			-- Is `Current' an instance of `TYPE_SET_A'?
+		do
+			Result := True
 		end
 
 	is_loose: BOOLEAN is
@@ -1116,6 +1117,11 @@ feature -- Status
 		end
 
 feature -- Access
+
+	hash_code: INTEGER is
+		do
+			Result := {SHARED_HASH_CODE}.other_code
+		end
 
 	expanded_representative: RENAMED_TYPE_A [TYPE_A] is
 			-- Expanded item is returned.
@@ -1324,13 +1330,6 @@ feature -- Not anymore applicable: a type set has most likley not one, but many 
 
 feature {COMPILER_EXPORTER} -- Access
 
-	type_i: TYPE_I is
-			-- C type
-		do
-				-- TYPE_SET_A does not support this feature.
-			check false end
-		end
-
 	create_info: CREATE_FORMAL_TYPE is
 			-- Create formal type info.
 		do
@@ -1345,6 +1344,17 @@ feature -- Visitor
 		do
 				-- Martins 12/19/06: Right now it would most likely be a bug if we arrive here.
 			check false end
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+			-- Is the type set valid, meaning that all items are valid items?
+		do
+			Result := for_all (agent (a_item: RENAMED_TYPE_A [TYPE_A]; a_context_class: CLASS_C): BOOLEAN
+						do
+							Result := a_item.type.internal_is_valid_for_class (a_context_class)
+						end (?, a_class))
 		end
 
 feature {NONE} -- Implementation

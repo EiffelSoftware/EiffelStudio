@@ -58,7 +58,7 @@ feature -- Code generation
 			-- Generate encapsulation to C++ external which has `nb' parameters.
 		local
 			l_buffer: GENERATION_BUFFER
-			l_ret_type: TYPE_I
+			l_ret_type: TYPE_A
 		do
 				-- Initialize generation buffer.
 			l_buffer := Context.buffer
@@ -100,7 +100,7 @@ feature -- Code generation
 			l_buffer.put_new_line
 		end
 
-	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
 			-- Generate inline call to C++ external.
 		require
 			external_name_not_void: external_name /= Void
@@ -118,7 +118,7 @@ feature -- Code generation
 
 feature {NONE} -- Code generation
 
-	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_I) is
+	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_A) is
 		require
 			external_name_not_void: external_name /= Void
 			nb_nonnegative: nb >= 0

@@ -11,7 +11,12 @@ inherit
 			allocates_memory, has_call, has_gcable_variable,
 			is_hector, inlined_byte_code, pre_inlined_code, size,
 			optimized_byte_node, is_unsafe, calls_special_features
-		end;
+		end
+
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -49,11 +54,11 @@ feature -- Status report
 
 feature
 
-	type: POINTER_I is
+	type: POINTER_A is
 			-- Address type
-		once
-			create Result;
-		end;
+		do
+			Result := pointer_type
+		end
 
 	enlarged: EXPR_ADDRESS_BL is
 			-- Enlarge the expression

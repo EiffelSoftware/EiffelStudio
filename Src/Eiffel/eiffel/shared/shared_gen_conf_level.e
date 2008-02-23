@@ -22,21 +22,21 @@ feature -- Generic conformance access
 
 feature -- TUPLE code
 
-	reference_tuple_code: INTEGER_8 is 0x00
-	boolean_tuple_code: INTEGER_8 is 0x01
-	character_tuple_code: INTEGER_8 is 0x02
-	real_64_tuple_code: INTEGER_8 is 0x03
-	real_32_tuple_code: INTEGER_8 is 0x04
-	pointer_tuple_code: INTEGER_8 is 0x05
-	integer_8_tuple_code: INTEGER_8 is 0x06
-	integer_16_tuple_code: INTEGER_8  is 0x07
-	integer_32_tuple_code: INTEGER_8 is 0x08
-	integer_64_tuple_code: INTEGER_8 is 0x09
-	natural_8_tuple_code: INTEGER_8 is 0x0A
-	natural_16_tuple_code: INTEGER_8 is 0x0B
-	natural_32_tuple_code: INTEGER_8  is 0x0C
-	natural_64_tuple_code: INTEGER_8 is 0x0D
-	wide_character_tuple_code: INTEGER_8 is 0x0E;
+	reference_tuple_code: NATURAL_8 is 0x00
+	boolean_tuple_code: NATURAL_8 is 0x01
+	character_tuple_code: NATURAL_8 is 0x02
+	real_64_tuple_code: NATURAL_8 is 0x03
+	real_32_tuple_code: NATURAL_8 is 0x04
+	pointer_tuple_code: NATURAL_8 is 0x05
+	integer_8_tuple_code: NATURAL_8 is 0x06
+	integer_16_tuple_code: NATURAL_8  is 0x07
+	integer_32_tuple_code: NATURAL_8 is 0x08
+	integer_64_tuple_code: NATURAL_8 is 0x09
+	natural_8_tuple_code: NATURAL_8 is 0x0A
+	natural_16_tuple_code: NATURAL_8 is 0x0B
+	natural_32_tuple_code: NATURAL_8  is 0x0C
+	natural_64_tuple_code: NATURAL_8 is 0x0D
+	wide_character_tuple_code: NATURAL_8 is 0x0E;
 			-- Code used to identify type in TUPLE.
 
 	expanded_tuple_code_extension: NATURAL_8 is 0x10

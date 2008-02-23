@@ -419,7 +419,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_put_feat_i: FEATURE_I
 			l_tmp_target_backup: like tmp_target
 			l_call_value: DUMP_VALUE
-			l_type_i: CL_TYPE_I
+			l_type_i: CL_TYPE_A
 		do
 			l_tmp_target_backup := tmp_target
 			l_type_i := resolved_real_type_in_context (a_tuple_const_b.type)
@@ -436,7 +436,7 @@ feature {NONE} -- EXPR_B evaluation
 					l_byte_list := a_tuple_const_b.expressions
 					if l_byte_list.count > 0 then
 						from
-							l_class := l_type_i.associated_class_type.associated_class
+							l_class := l_type_i.associated_class
 							l_put_feat_i := l_class.feature_named ("put")
 							check l_put_feat_i /= Void end
 							create l_arg_as_lst.make
@@ -494,7 +494,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_put_feat_i: FEATURE_I
 			l_tmp_target_backup: like tmp_target
 			l_call_value: DUMP_VALUE
-			l_type_i: CL_TYPE_I
+			l_type_i: CL_TYPE_A
 			dbg: like debugger_manager
 		do
 			l_tmp_target_backup := tmp_target
@@ -524,7 +524,7 @@ feature {NONE} -- EXPR_B evaluation
 					tmp_target := l_call_value
 					if l_byte_list.count > 0 then
 						from
-							l_class := l_type_i.associated_class_type.associated_class
+							l_class := l_type_i.associated_class
 							l_put_feat_i := l_class.feature_named ("put")
 							check l_put_feat_i /= Void end
 							create l_arg_as_lst.make
@@ -576,7 +576,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_char: CHAR_VALUE_I
 			l_real: REAL_VALUE_I
 			l_string: STRING_VALUE_I
-			l_type: TYPE_I
+			l_type: TYPE_A
 			l_cl: CLASS_C
 			l_cli: CLASS_I
 			-- ...
@@ -922,7 +922,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_def_create_feat_i: FEATURE_I
 			l_tmp_target_backup: like tmp_target
 			l_call_value: DUMP_VALUE
-			l_type_i: CL_TYPE_I
+			l_type_i: CL_TYPE_A
 		do
 			fixme ("Later when we have a way to ensure the unicity of TYPE instances, we'll need to update this part")
 			l_tmp_target_backup := tmp_target
@@ -949,7 +949,7 @@ feature {NONE} -- EXPR_B evaluation
 		local
 			retried: BOOLEAN
 
-			l_type_to_create: CL_TYPE_I
+			l_type_to_create: CL_TYPE_A
 			l_f_b: FEATURE_B
 			l_p_b: PARAMETER_B
 			l_e_b: EXPR_B
@@ -1011,7 +1011,7 @@ feature {NONE} -- EXPR_B evaluation
 			retry
 		end
 
-	evaluate_creation_expr_b_with_type (a_creation_expr_b: CREATION_EXPR_B; a_type_i: CL_TYPE_I) is
+	evaluate_creation_expr_b_with_type (a_creation_expr_b: CREATION_EXPR_B; a_type_i: CL_TYPE_A) is
 		require
 			a_type_i_not_void: a_type_i /= Void
 		local
@@ -1019,19 +1019,19 @@ feature {NONE} -- EXPR_B evaluation
 			l_call_value: DUMP_VALUE
 			l_call_access: CALL_ACCESS_B
 			l_call: CALL_B
-			l_type_i: CL_TYPE_I
-			l_gen_type_i: GEN_TYPE_I
-			l_elt_type_i: CL_TYPE_I
+			l_type_i: CL_TYPE_A
+			l_gen_type_i: GEN_TYPE_A
+			l_elt_type_i: CL_TYPE_A
 			l_params: BYTE_LIST [PARAMETER_B]
 			l_dv: DUMP_VALUE
 		do
 			l_tmp_target_backup := tmp_target
 			l_type_i := resolved_real_type_in_context (a_type_i)
-			if l_type_i.base_class.is_special then
+			if l_type_i.associated_class.is_special then
 				l_gen_type_i ?= l_type_i
 				if l_gen_type_i /= Void then
-					if l_gen_type_i.true_generics.valid_index (1) then
-						l_elt_type_i ?= l_gen_type_i.true_generics[1]
+					if l_gen_type_i.generics.valid_index (1) then
+						l_elt_type_i ?= l_gen_type_i.generics[1]
 						if l_elt_type_i /= Void then
 							l_call_access := a_creation_expr_b.call
 							if l_call_access /= Void then
@@ -1119,8 +1119,8 @@ feature {NONE} -- EXPR_B evaluation
 		local
 			fi: FEATURE_I
 			cl: CLASS_C
-			l_cl_type: CL_TYPE_I
---			l_basic_i: BASIC_I
+			l_cl_type: CL_TYPE_A
+--			l_basic_i: BASIC_A
 			params: ARRAYED_LIST [DUMP_VALUE]
 		do
 			if tmp_target /= Void then
@@ -1150,7 +1150,7 @@ feature {NONE} -- EXPR_B evaluation
 					if a_feature_b.precursor_type /= Void and then a_feature_b.precursor_type.is_standalone then
 						l_cl_type ?= a_feature_b.precursor_type
 						check l_cl_type_not_void_if_true_precursor: l_cl_type /= Void end
-						cl := l_cl_type.base_class
+						cl := l_cl_type.associated_class
 						fi := cl.feature_table.feature_of_rout_id (a_feature_b.routine_id)
 					else
 						fi := feature_i_from_call_access_b_in_context (cl, a_feature_b)
@@ -1594,21 +1594,21 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I) is
+	create_empty_instance_of (a_type_i: CL_TYPE_A) is
 			-- New empty instance of class represented by `a_type_id'.
 		require
 			a_type_i_not_void: a_type_i /= Void
 			already_resolved: a_type_i = resolved_real_type_in_context (a_type_i)
-			not_special: not a_type_i.base_class.is_special
+			not_special: not a_type_i.associated_class.is_special
 		local
-			l_cl_type_i: CL_TYPE_I
+			l_cl_type_i: CL_TYPE_A
 		do
 			l_cl_type_i := a_type_i
-			if l_cl_type_i.has_associated_class_type then
+			if l_cl_type_i.has_associated_class_type (Void) then
 				prepare_evaluation
 				Dbg_evaluator.create_empty_instance_of (l_cl_type_i)
 				retrieve_evaluation
-				if error_occurred and l_cl_type_i.has_true_formal then
+				if error_occurred and l_cl_type_i.has_formal_generic then
 					notify_error_not_implemented (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
 				end
 			else
@@ -1616,21 +1616,21 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER) is
 			-- Create new instance of SPECIAL represented by `a_type_id' and `a_count'
 		require
 			a_type_i_not_void: a_type_i /= Void
 			already_resolved: a_type_i = resolved_real_type_in_context (a_type_i)
-			is_special: a_type_i.base_class.is_special
+			is_special: a_type_i.associated_class.is_special
 		local
-			l_cl_type_i: CL_TYPE_I
+			l_cl_type_i: CL_TYPE_A
 		do
 			l_cl_type_i := a_type_i
-			if l_cl_type_i.has_associated_class_type then
+			if l_cl_type_i.has_associated_class_type (Void) then
 				prepare_evaluation
 				Dbg_evaluator.create_special_any_instance (l_cl_type_i, a_count)
 				retrieve_evaluation
-				if error_occurred and l_cl_type_i.has_true_formal then
+				if error_occurred and l_cl_type_i.has_formal_generic then
 					notify_error_not_implemented (Debugger_names.msg_error_can_not_instanciate_type (l_cl_type_i.name, Debugger_names.cst_error_formal_type_not_yet_supported))
 				end
 			else
@@ -1700,7 +1700,7 @@ feature -- Change Context
 		local
 			l_reset_byte_node: BOOLEAN
 			c_c_t: CLASS_TYPE
-			c_t_i: CL_TYPE_I
+			c_t_i: CL_TYPE_A
 		do
 			if c /= Void then
 				if
@@ -1716,9 +1716,9 @@ feature -- Change Context
 				if ct /= Void then
 					c_c_t := ct
 				elseif context_class /= Void then
-					c_t_i := context_class.actual_type.type_i
-					if c_t_i.has_associated_class_type then
-						c_c_t := c_t_i.associated_class_type
+					c_t_i := context_class.actual_type
+					if c_t_i.has_associated_class_type (Void) then
+						c_c_t := c_t_i.associated_class_type (Void)
 					end
 				end
 				if not equal (context_class_type, c_c_t) then
@@ -1866,7 +1866,7 @@ feature {NONE} -- Implementation
 			l_ta: CL_TYPE_A
 		do
 			if ct /= Void then
-				l_ta := ct.type.type_a
+				l_ta := ct.type
 			else
 				l_ta := cl.actual_type
 			end
@@ -2062,7 +2062,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Compiler helpers
 
-	resolved_real_type_in_context (a_type_i: CL_TYPE_I): CL_TYPE_I is
+	resolved_real_type_in_context (a_type_i: CL_TYPE_A): CL_TYPE_A is
 		require
 			a_type_i_not_void: a_type_i /= Void
 		do
@@ -2081,7 +2081,7 @@ feature {NONE} -- Compiler helpers
 		require
 			a_expr_b_not_void: a_external_b /= Void
 		local
-			ti: TYPE_I
+			ti: TYPE_A
 		do
 			ti := a_external_b.static_class_type
 			if ti /= Void then

@@ -34,7 +34,7 @@ feature -- from ENTRY
 	type_id: INTEGER
 			-- Type id of the entry
 
-	type: TYPE_I
+	type: TYPE_A
 			-- Result type fo the entry
 
 	set_type_id (i: INTEGER) is
@@ -43,7 +43,7 @@ feature -- from ENTRY
 			type_id := i;
 		end;
 
-	set_type (t: TYPE_I) is
+	set_type (t: TYPE_A) is
 			-- Assign `t' to `type'.
 		do
 			type := t;
@@ -93,14 +93,20 @@ feature -- previously in POLY_UNIT
 		deferred
 		end;
 
-	feature_type (class_type: CLASS_TYPE): TYPE_I is
+	feature_type (class_type: CLASS_TYPE): TYPE_A is
 			-- Type id of the result type in `class_type'.
 		require
 			good_argument: class_type /= Void
+		local
+			l_type: LIKE_CURRENT
 		do
-			Result := type_a.type_i
-			if not Result.is_formal then
-				Result := Result.instantiation_in (class_type)
+			Result := type_a
+			if Result.is_like_current then
+					-- We need to instantiate `like Current' in the context of `class_type'
+					-- to fix eweasel test#exec035.
+				create l_type
+				l_type.set_actual_type (class_type.type)
+				Result := l_type
 			end
 		end
 
@@ -125,81 +131,56 @@ feature -- from ENTRY
 	static_feature_type_id: INTEGER is
 			-- Type id of the Result type
 		local
-			class_type: CL_TYPE_I;
+			l_context_type: CL_TYPE_A
 		do
-			class_type ?= type;
-			if
-				not ( class_type = Void or else class_type.is_basic
-				--or else --class_type.is_expanded
-				)
-			then
-				Result := class_type.associated_class_type.static_type_id;
-			end;
-		end;
+			l_context_type := system.class_type_of_id (type_id).type
+			if type.has_associated_class_type (l_context_type) then
+				Result := type.static_type_id (l_context_type)
+			end
+		end
 
 	generated_static_feature_type_id (buffer: GENERATION_BUFFER) is
 			-- Textual representation of type id of the Result type
-		local
-			class_type: CL_TYPE_I
 		do
-			class_type ?= type;
-			if
-				not ( class_type = Void or else class_type.is_basic
-				--or else-class_type.is_expanded
-				)
-			then
-				buffer.put_static_type_id (class_type.associated_class_type.static_type_id)
-			else
-				buffer.put_integer (-1)
-			end
+			buffer.put_static_type_id (static_feature_type_id)
 		end;
 
 	feature_type_id: INTEGER is
 			-- Type id of the Result type
 		local
-			class_type: CL_TYPE_I;
+			l_context_type: CL_TYPE_A
 		do
-			class_type ?= type;
-			if
-				not ( class_type = Void or else class_type.is_basic
-				--or else --class_type.is_expanded
-				)
-			then
-				Result := class_type.type_id;
-			end;
-		end;
+			l_context_type := system.class_type_of_id (type_id).type
+			if type.has_associated_class_type (l_context_type) then
+				Result := type.type_id (l_context_type)
+			end
+		end
 
-	is_generic : BOOLEAN is
-			-- Is `type' a generic type?
+	needs_extended_info: BOOLEAN is
+			-- Is `type' a type which needs more data to be resolved at run-time?
+			--| Currently it is only generic types, formal generic type and like Current.
 		local
-			gtype : GEN_TYPE_I
+			gtype : GEN_TYPE_A
 		do
 			gtype ?= type;
-			Result := (gtype /= Void) or type.is_formal
+			Result := (gtype /= Void) or type.is_formal or type.is_like_current
 		end;
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
 			-- Generate list of type id's of generic type
 			-- separated by commas.
 		require
-			is_generic : is_generic
-		local
-			l_type: TYPE_I
+			is_generic : needs_extended_info
 		do
-				-- In order to generate proper type description for current entry we need to
-				-- evaluate `type' in the context of `type_id', otherwise it is possible that
-				-- we would not find the associated class type of `l_type' and therefore generate
-				-- an incorrect type specification (Cf eweasel bug about storable).
-			l_type := type.complete_instantiation_in (System.class_type_of_id (type_id))
-			l_type.generate_cid (buffer, final_mode, False)
+			type.generate_cid (buffer, final_mode, False, system.class_type_of_id (type_id).type)
 		end
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for type of current entry.
 		require
-			is_generic : is_generic
+			is_generic : needs_extended_info
 		do
-			type.make_gen_type_byte_code (ba, False)
+			type.make_gen_type_byte_code (ba, False, system.class_type_of_id (type_id).type)
 		end;
 
 indexing

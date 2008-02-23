@@ -279,9 +279,10 @@ feature {NONE} -- Implementation
 				a_s.after
 			loop
 				ext ?= feat_tbl.item_id (a_s.item_for_iteration)
-				check
-					external_feature_not_void: ext /= Void
-				end
+					-- Sometime an external disappeared but was not actually removed from Current.
+					-- This happens in eweasel test#fake005 where 2 externals with errors are added
+					-- and then removed in one compilation, they are not removed from EXTERNALS because
+					-- we are always comparing against the original feature table which did not have them.
 				if ext /= Void then
 						-- We found that it might be Void time to time, thus
 						-- the if statement in addition to the check so that in
@@ -292,6 +293,8 @@ feature {NONE} -- Implementation
 					buffer.put_string (class_c.name)
 					buffer.put_string (" */")
 					ext.generate (class_type, buffer)
+				else
+					a_s.remove (a_s.item_for_iteration)
 				end
 				a_s.forth
 			end

@@ -11,7 +11,7 @@ class
 inherit
 	GEN_TYPE_A
 		redefine
-			type_i, process
+			process, il_type_name, generic_il_type_name
 		end
 
 create
@@ -25,14 +25,59 @@ feature -- Visitor
 			v.process_native_array_type_a (Current)
 		end
 
-feature {COMPILER_EXPORTER} -- Access
+feature -- IL code generation
 
-	type_i: NATIVE_ARRAY_TYPE_I is
-			-- Meta generic interpretation of the generic type
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+			-- Name of current class
 		do
-			create Result.make (class_id, generics.item (1))
-			Result.set_mark (declaration_mark)
+			Result := generics.item (1).il_type_name (a_prefix, a_context_type).twin
+			Result.append ("[]")
 		end
+
+	generic_il_type_name (a_context_type: TYPE_A): STRING is
+			-- Name of current class
+		do
+			Result := generics.item (1).generic_il_type_name (a_context_type).twin
+			Result.append ("[]")
+		end
+
+	deep_il_element_type: CL_TYPE_A is
+			-- Find type of array element.
+			-- I.e. if you have NATIVE_ARRAY [NATIVE_ARRAY [INTEGER]], it
+			-- will return INTEGER.
+		require
+			true_generics_not_void: generics /= Void
+		local
+			l_native: NATIVE_ARRAY_TYPE_A
+		do
+			Result ?= generics.item (1)
+			if Result = Void then
+				Result := object_type
+			else
+				l_native ?= Result
+				if l_native /= Void then
+					Result := l_native.deep_il_element_type
+				end
+			end
+		ensure
+			deep_il_element_type_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	object_type: CL_TYPE_A is
+			-- Type of SYSTEM_OBJECT.
+		require
+			in_il_generation: system.il_generation
+			system_not_void: system /= Void
+			object_class_not_void: system.system_object_class /= Void
+			object_class_compiled: system.system_object_class.is_compiled
+		once
+			Result := system.system_object_class.compiled_class.actual_type
+		ensure
+			object_type_not_void: Result /= Void
+		end
+
 
 invariant
 	il_generation: System.il_generation

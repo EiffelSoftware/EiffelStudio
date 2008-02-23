@@ -82,7 +82,7 @@ feature -- C code generation
 						written_class := System.class_of_id (feat.written_in);
 					end
 					written_type := written_class.meta_type (a_class_type)
-					routine_name := Encoder.feature_name (written_type.static_type_id, feat.body_index);
+					routine_name := Encoder.feature_name (written_type.type_id, feat.body_index);
 					if not is_final then
 						routine_name := routine_name + cecil_suffix
 					end
@@ -101,7 +101,7 @@ end;
 
 						-- Remember extern declarations
 					Extern_declarations.add_routine (
-						feat.type.type_i.instantiation_in (a_class_type).c_type,
+						feat.type.adapted_in (a_class_type).c_type,
 						routine_name
 					)
 				end;
@@ -117,6 +117,7 @@ end;
 			buffer_attached: buffer /= Void
 			a_class_attached: a_class /= Void
 			generated_wrappers_attached: generated_wrappers /= Void
+			workbench_mode: system.byte_context.workbench_mode
 		local
 			types: TYPE_LIST
 			a_class_type: CLASS_TYPE
@@ -152,17 +153,17 @@ end;
 					if feat /= Void and then not feat.is_external and then not feat.is_deferred then
 						written_class := System.class_of_id (feat.written_in);
 						written_type := written_class.meta_type (a_class_type)
-						routine_name := Encoder.feature_name (written_type.static_type_id, feat.body_index)
+						routine_name := Encoder.feature_name (written_type.type_id, feat.body_index)
 						if not generated_wrappers.has (routine_name) then
 								-- The wrapper is not generated yet.
 							generated_wrappers.force (routine_name.twin)
 							buffer.put_string ("/* {")
-							buffer.put_string (written_type.type.name)
+							buffer.put_string (written_type.type.dump)
 							buffer.put_string ("}.")
 							buffer.put_string (feat.feature_name)
 							buffer.put_string (" */")
 							buffer.put_new_line
-							return_type := feat.type.type_i.instantiation_in (a_class_type).c_type
+							return_type := feat.type.adapted_in (a_class_type).c_type
 							arg_count := feat.argument_count
 							create arg_names.make (1, arg_count + 1)
 							arg_names.put ("Current", 1)
@@ -175,7 +176,7 @@ end;
 								j = 0
 							loop
 								arg_names.put ("arg" + j.out, j + 1)
-								arg_types.put (feat_args.i_th (j).type_i.instantiation_in (a_class_type).c_type.c_string, j + 1)
+								arg_types.put (feat_args.i_th (j).adapted_in (a_class_type).c_type.c_string, j + 1)
 								j := j - 1
 							end
 							buffer.generate_extern_declaration ("EIF_TYPED_VALUE", routine_name, <<>>)
@@ -191,7 +192,7 @@ end;
 								until
 									j = 0
 								loop
-									arg_type := feat_args.i_th (j).type_i.instantiation_in (a_class_type).c_type
+									arg_type := feat_args.i_th (j).adapted_in (a_class_type).c_type
 									buffer.put_new_line
 									buffer.put_string ("u [")
 									buffer.put_integer (j - 1)
@@ -216,7 +217,7 @@ end;
 							else
 								buffer.put_string ("return (")
 							end
-							return_type.generate_function_cast (buffer, arg_types)
+							return_type.generate_function_cast (buffer, arg_types, True)
 							buffer.put_string (routine_name)
 							buffer.put_string (") (Current")
 							from

@@ -10,7 +10,7 @@ class POINTER_A
 inherit
 	BASIC_A
 		redefine
-			is_pointer, type_i, associated_class, same_as,
+			is_pointer, associated_class, same_as,
 			default_create, process
 		end
 
@@ -46,7 +46,7 @@ feature -- Property
 
 feature {COMPILER_EXPORTER}
 
-	type_i: POINTER_I is
+	c_type: POINTER_I is
 			-- Pointer C type
 		do
 			Result := pointer_c_type

@@ -22,7 +22,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialization
 		do
-			create used.make (Default_size)
+			create used.make (system.routine_id_counter.count)
+			create used_for_types.make (system.routine_id_counter.count)
+			create used_for_routines.make (system.routine_id_counter.count)
 		end
 
 feature -- Access
@@ -35,8 +37,11 @@ feature -- Access
 			Result := Tmp_poly_server.item (rout_id)
 		end
 
-	used: SEARCH_TABLE [INTEGER]
-			-- Used routine table ids
+	used: PACKED_BOOLEANS
+	used_for_routines: PACKED_BOOLEANS
+	used_for_types: PACKED_BOOLEANS
+			-- Entries for finding out if a routine ID is used, and if it
+			-- is for which reason (routine dispatch, type information).
 
 feature -- Process
 
@@ -154,14 +159,6 @@ feature -- Status
 			end
 		end
 
-	is_used (rout_id: INTEGER): BOOLEAN is
-			-- Is the table of routine id `rout_id' used ?
-		require
-			rout_id_not_void: rout_id /= 0
-		do
-			Result := used.has (rout_id)
-		end
-
 feature -- Element change
 
 	mark_used (rout_id: INTEGER) is
@@ -169,7 +166,17 @@ feature -- Element change
 		require
 			rout_id_not_void: rout_id /= 0
 		do
-			used.force (rout_id)
+			used.put (True, rout_id)
+			used_for_routines.put (True, rout_id)
+		end
+
+	mark_used_for_type (rout_id: INTEGER) is
+			-- Mark routine table of routine id `rout_id' used for type description.
+		require
+			rout_id_not_void: rout_id /= 0
+		do
+			used.put (True, rout_id)
+			used_for_types.put (True, rout_id)
 		end
 
 	wipe_out is
@@ -177,7 +184,9 @@ feature -- Element change
 		do
 			min_id_table := Void
 			is_polymorphic_table := Void
-			used.wipe_out
+			used.clear_all
+			used_for_routines.clear_all
+			used_for_types.clear_all
 		end
 
 feature -- Implementation
@@ -259,6 +268,8 @@ feature {NONE} -- Constants
 
 invariant
 	used_not_void: used /= Void
+	used_for_routines_not_void: used_for_routines /= Void
+	used_for_types_not_void: used_for_types /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

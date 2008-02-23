@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I) is
+	create_empty_instance_of (a_type_i: CL_TYPE_A) is
 			-- create an empty instance of `a_type_i'
 		local
 			l_class_c: CLASS_C
@@ -402,11 +402,11 @@ feature {NONE} -- Implementation
 			l_class: ICOR_DEBUG_CLASS
 			l_adv: ABSTRACT_DEBUG_VALUE
 
-			l_gens: ARRAY [TYPE_I]
+			l_gens: ARRAY [TYPE_A]
 			l_gens_nb: INTEGER
 		do
-			if a_type_i.has_associated_class_type then
-				l_gens := a_type_i.true_generics
+			if a_type_i.has_associated_class_type (Void)then
+				l_gens := a_type_i.generics
 				if l_gens /= Void then
 					l_gens_nb := l_gens.count
 				end
@@ -426,13 +426,13 @@ feature {NONE} -- Implementation
 						notify_error (Cst_error_occurred, Void)
 					end
 				else
-					l_class := eifnet_debugger.icor_debug_class (a_type_i.associated_class_type)
+					l_class := eifnet_debugger.icor_debug_class (a_type_i.associated_class_type (Void))
 					l_icd_value := eifnet_evaluator.new_object_no_constructor_evaluation (new_active_icd_frame, l_class)
 					if not eifnet_evaluator.last_call_succeed then
 						l_icd_value := Void
 						notify_error (Cst_error_occurred, Void)
 					else
-						l_adv := debug_value_from_icdv (l_icd_value, a_type_i.associated_class_type.associated_class)
+						l_adv := debug_value_from_icdv (l_icd_value, a_type_i.associated_class)
 						last_result_value := l_adv.dump_value
 					end
 				end
@@ -441,13 +441,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER) is
 		local
 			l_class_c: CLASS_C
 			l_icd_value: ICOR_DEBUG_VALUE
 			l_class: ICOR_DEBUG_CLASS
 		do
-			if a_type_i.has_associated_class_type then
+			if a_type_i.has_associated_class_type (Void) then
 					--| Create INTERNAL's object
 				l_class_c := debugger_manager.compiler_data.internal_class_c
 				if l_class_c /= Void then
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_special_any_instance_using_internal (a_type_i: CL_TYPE_I; a_count: INTEGER; a_internal_value: ICOR_DEBUG_VALUE; a_internal_class_c: CLASS_C): DUMP_VALUE is
+	new_special_any_instance_using_internal (a_type_i: CL_TYPE_A; a_count: INTEGER; a_internal_value: ICOR_DEBUG_VALUE; a_internal_class_c: CLASS_C): DUMP_VALUE is
 		local
 			l_dyn_type_from_str_feat_i,
 			l_new_instance_of_feat_i: FEATURE_I
@@ -485,7 +485,7 @@ feature {NONE} -- Implementation
 			Result := dotnet_evaluate_icd_function (a_internal_value, l_icd_func, <<l_dv, l_dv_count>>, False, True)
 		end
 
-	new_empty_instance_of_using_internal (a_type_i: CL_TYPE_I; a_internal_value: ICOR_DEBUG_VALUE; a_internal_class_c: CLASS_C): DUMP_VALUE is
+	new_empty_instance_of_using_internal (a_type_i: CL_TYPE_A; a_internal_value: ICOR_DEBUG_VALUE; a_internal_class_c: CLASS_C): DUMP_VALUE is
 			--
 		local
 			l_dyn_type_from_str_feat_i,

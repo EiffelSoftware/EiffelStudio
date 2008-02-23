@@ -33,6 +33,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -51,7 +56,7 @@ feature {NONE} -- Initialization
 				feature_id := f.feature_id
 				internal_data := f.rout_id_set.first
 			end
-			feature_type := f.type.type_i.c_type
+			feature_type := f.type.c_type
 			feature_class_id := cl_id
 			record_feature (cl_id, feature_id)
 		end
@@ -98,10 +103,10 @@ feature -- Access
 
 feature -- Status report
 
-	type: POINTER_I is
+	type: POINTER_A is
 			-- Expression type of $ operator.
-		once
-			create Result
+		do
+			Result := pointer_type
 		end
 
 	used (r: REGISTRABLE): BOOLEAN is
@@ -140,10 +145,8 @@ feature -- C code generation
 					buf.put_string ("NULL")
 
 				elseif array_index >= 0 then
-					create table_name.make (12)
-					table_name.append ("f")
-					table_name.append (Encoder.address_table_name (feature_id,
-								class_type.static_type_id))
+					create table_name.make (16)
+					table_name.append (Encoder.address_table_name (feature_id, class_type.static_type_id))
 
 					buf.put_string ("(EIF_POINTER) ")
 					buf.put_string (table_name)

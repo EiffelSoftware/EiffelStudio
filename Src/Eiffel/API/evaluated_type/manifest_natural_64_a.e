@@ -26,9 +26,8 @@ feature {NONE} -- Initialization
 			-- and that can be converted to INTEGER_64 iff
 			-- `is_convertible_to_integer_64' is `True'.
 		do
-			size := 64
 			is_convertible_to_integer_64 := convertible_to_integer_64
-			cl_make (associated_class.class_id)
+			make (64)
 		ensure
 			size_set: size = 64
 			is_convertible_to_integer_64_set: is_convertible_to_integer_64 = convertible_to_integer_64

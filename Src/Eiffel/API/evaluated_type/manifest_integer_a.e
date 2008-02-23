@@ -34,9 +34,8 @@ feature {NONE} -- Initialization
 			consistent_integer_32: n = 32 implies (possible_types & integer_32_mask) /= 0
 			consistent_integer_64: n = 64 implies (possible_types & integer_64_mask) /= 0
 		do
-			size := n
+			make (n)
 			types := possible_types
-			cl_make (associated_class.class_id)
 		ensure
 			size_set: size = n
 			types_set: types = possible_types

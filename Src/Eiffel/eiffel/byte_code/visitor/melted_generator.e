@@ -31,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_TYPE_I
+	SHARED_TYPES
 		export
 			{NONE} all
 		end
@@ -118,17 +118,17 @@ feature {NONE} -- Visitors
 	process_array_const_b (a_node: ARRAY_CONST_B) is
 			-- Process `a_node'.
 		local
-			l_real_ty: GEN_TYPE_I
+			l_real_ty: GEN_TYPE_A
 			l_feat_i: FEATURE_I
 			l_expr: EXPR_B
-			l_target_type: TYPE_I
+			l_target_type: TYPE_A
 			l_base_class: CLASS_C
 			l_rout_info: ROUT_INFO
 		do
 			fixme ("We should use `info' to create byte code")
 			l_real_ty ?= context.real_type (a_node.type)
-			l_target_type := l_real_ty.meta_generic.item (1)
-			l_base_class := l_real_ty.base_class
+			l_target_type := l_real_ty.generics.item (1)
+			l_base_class := l_real_ty.associated_class
 			l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
 			from
 				a_node.expressions.start
@@ -147,16 +147,16 @@ feature {NONE} -- Visitors
 				l_rout_info := System.rout_info_table.item (l_feat_i.rout_id_set.first)
 				ba.append_integer (l_rout_info.origin)
 				ba.append_integer (l_rout_info.offset)
-				ba.append_short_integer (l_real_ty.associated_class_type.type_id - 1)
+				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_gen_type_byte_code (ba, True)
+				l_real_ty.make_gen_type_byte_code (ba, True, context.context_class_type.type)
 				ba.append_short_integer (-1)
 			else
 				ba.append (Bc_array)
-				ba.append_short_integer (l_real_ty.associated_class_type.static_type_id - 1)
-				ba.append_short_integer (l_real_ty.associated_class_type.type_id - 1)
+				ba.append_short_integer (l_real_ty.static_type_id (context.context_class_type.type) - 1)
+				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_gen_type_byte_code (ba, True)
+				l_real_ty.make_gen_type_byte_code (ba, True, context.context_class_type.type)
 				ba.append_short_integer (-1)
 				ba.append_short_integer (l_feat_i.feature_id)
 			end
@@ -172,7 +172,7 @@ feature {NONE} -- Visitors
 	process_assign_b (a_node: ASSIGN_B) is
 			-- Process `a_node'.
 		local
-			l_target_type: TYPE_I
+			l_target_type: TYPE_A
 			l_target_node: ACCESS_B
 			l_hector_b: HECTOR_B
 		do
@@ -209,8 +209,8 @@ feature {NONE} -- Visitors
 	process_attribute_b (a_node: ATTRIBUTE_B) is
 			-- Process `a_node'.
 		local
-			l_type: TYPE_I
-			l_cl_type: CL_TYPE_I
+			l_type: TYPE_A
+			l_cl_type: CL_TYPE_A
 			l_rout_info: ROUT_INFO
 		do
 			l_type := context.real_type (a_node.type)
@@ -222,7 +222,7 @@ feature {NONE} -- Visitors
 				if a_node.is_first then
 					ba.append (bc_current)
 				end
-				if l_cl_type.base_class.is_precompiled then
+				if l_cl_type.associated_class.is_precompiled then
 					l_rout_info := system.rout_info_table.item (a_node.routine_id)
 					if a_node.is_first then
 						ba.append (bc_pattribute)
@@ -239,10 +239,10 @@ feature {NONE} -- Visitors
 						ba.append (bc_attribute_inv)
 						ba.append_raw_string (a_node.attribute_name)
 					end
-					ba.append_integer (a_node.real_feature_id (l_cl_type.base_class))
-					ba.append_short_integer (l_cl_type.associated_class_type.static_type_id - 1)
+					ba.append_integer (a_node.real_feature_id (l_cl_type))
+					ba.append_short_integer (l_cl_type.static_type_id (context.context_class_type.type) - 1)
 				end
-				ba.append_uint32_integer (l_type.sk_value)
+				ba.append_uint32_integer (l_type.sk_value (context.context_class_type.type))
 			end
 		end
 
@@ -493,8 +493,8 @@ feature {NONE} -- Visitors
 	process_creation_expr_b (a_node: CREATION_EXPR_B) is
 			-- Process `a_node'.
 		local
-			l_basic_type: BASIC_I
-			l_special_type: GEN_TYPE_I
+			l_basic_type: BASIC_A
+			l_special_type: GEN_TYPE_A
 			l_class_type: SPECIAL_CLASS_TYPE
 			l_call: CALL_ACCESS_B
 			l_nested: NESTED_B
@@ -504,7 +504,7 @@ feature {NONE} -- Visitors
 					-- Special cases for basic types where nothing needs to be created, we
 					-- simply need to push a default value as their creation procedure
 					-- is `default_create' and it does nothing.
-				l_basic_type.make_default_byte_code (ba)
+				l_basic_type.c_type.make_default_byte_code (ba)
 			else
 				l_call := a_node.call
 				if l_call /= Void and then l_call.routine_id = system.special_make_rout_id then
@@ -512,9 +512,9 @@ feature {NONE} -- Visitors
 					check
 						is_special_call_valid: a_node.is_special_call_valid
 						is_special_type: l_special_type /= Void and then
-							l_special_type.base_class.lace_class = system.special_class
+							l_special_type.associated_class.lace_class = system.special_class
 					end
-					l_class_type ?= l_special_type.associated_class_type
+					l_class_type ?= l_special_type.associated_class_type (context.context_class_type.type)
 					check
 						l_class_type_not_void: l_class_type /= Void
 					end
@@ -633,7 +633,7 @@ feature {NONE} -- Visitors
 			l_expr_address_b: EXPR_ADDRESS_B
 			l_nb_expr_address: INTEGER
 			l_pos, r_id: INTEGER
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 			l_is_in_creation_call: like is_in_creation_call
 			l_rout_info: ROUT_INFO
 		do
@@ -698,7 +698,7 @@ feature {NONE} -- Visitors
 			if a_node.is_static_call then
 				ba.append (bc_current)
 				l_cl_type ?= context.real_type (a_node.static_class_type)
-				if l_cl_type.base_class.is_precompiled then
+				if l_cl_type.associated_class.is_precompiled then
 					r_id := a_node.routine_id
 					l_rout_info := System.rout_info_table.item (r_id)
 					ba.append (bc_pextern)
@@ -706,8 +706,8 @@ feature {NONE} -- Visitors
 					ba.append_integer (l_rout_info.offset)
 				else
 					ba.append (bc_extern)
-					ba.append_integer (a_node.real_feature_id (l_cl_type.base_class))
-					l_type_id := l_cl_type.associated_class_type.static_type_id - 1
+					ba.append_integer (a_node.real_feature_id (l_cl_type))
+					l_type_id := l_cl_type.static_type_id (context.context_class_type.type) - 1
 					ba.append_short_integer (l_type_id)
 				end
 				make_precursor_byte_code (a_node)
@@ -848,7 +848,7 @@ feature {NONE} -- Visitors
 	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
 			-- Process `a_node'.
 		local
-			l_type, l_expr_type: TYPE_I
+			l_type, l_expr_type: TYPE_A
 		do
 			a_node.expr.process (Current)
 
@@ -1029,7 +1029,7 @@ feature {NONE} -- Visitors
 	process_invariant_b (a_node: INVARIANT_B) is
 			-- Process `a_node'.
 		local
-			l_local_list: LINKED_LIST [TYPE_I]
+			l_local_list: LINKED_LIST [TYPE_A]
 			l_tmp_ba: BYTE_ARRAY
 			l_context: like context
 		do
@@ -1055,7 +1055,7 @@ feature {NONE} -- Visitors
 			l_tmp_ba.append_integer (-1)
 
 				-- Void result type
-			l_tmp_ba.append_integer (Void_c_type.sk_value)
+			l_tmp_ba.append_integer (Void_type.c_type.sk_value)
 				-- No arguments
 			l_tmp_ba.append_short_integer (0)
 
@@ -1077,7 +1077,7 @@ feature {NONE} -- Visitors
 			until
 				l_local_list.after
 			loop
-				l_tmp_ba.append_integer (l_local_list.item.sk_value)
+				l_tmp_ba.append_integer (l_local_list.item.sk_value (context.context_class_type.type))
 				l_local_list.forth
 			end
 
@@ -1094,7 +1094,7 @@ feature {NONE} -- Visitors
 	process_loop_b (a_node: LOOP_B) is
 			-- Process `a_node'.
 		local
-			local_list: LINKED_LIST [TYPE_I]
+			local_list: LINKED_LIST [TYPE_A]
 			variant_local_number: INTEGER
 			invariant_breakpoint_slot: INTEGER
 			body_breakpoint_slot: INTEGER
@@ -1109,7 +1109,7 @@ feature {NONE} -- Visitors
 			if a_node.variant_part /= Void then
 					-- Initialization of the variant control variable
 				local_list := l_context.local_list
-				l_context.add_local (int32_c_type)
+				l_context.add_local (integer_32_type)
 				variant_local_number := local_list.count
 				ba.append (Bc_init_variant)
 				ba.append_short_integer (variant_local_number)
@@ -1226,10 +1226,10 @@ feature {NONE} -- Visitors
 	process_object_test_b (a_node: OBJECT_TEST_B) is
 			-- Process `a_node'.
 		local
-			l_source_type: TYPE_I
-			l_target_type: TYPE_I
-			l_source_class_type: CL_TYPE_I
-			l_target_class_type: CL_TYPE_I
+			l_source_type: TYPE_A
+			l_target_type: TYPE_A
+			l_source_class_type: CL_TYPE_A
+			l_target_class_type: CL_TYPE_A
 		do
 				-- Generate expression byte code
 			l_source_type := context.real_type (a_node.expression.type)
@@ -1300,7 +1300,7 @@ feature {NONE} -- Visitors
 	process_parameter_b (a_node: PARAMETER_B) is
 			-- Process `a_node'.
 		local
-			l_target_type, l_source_type: TYPE_I
+			l_target_type, l_source_type: TYPE_A
 		do
 			l_target_type := context.real_type (a_node.attachment_type)
 			l_source_type := context.real_type (a_node.expression.type)
@@ -1349,16 +1349,16 @@ feature {NONE} -- Visitors
 	process_reverse_b (a_node: REVERSE_B) is
 			-- Process `a_node'.
 		local
-			l_source_type: TYPE_I
-			l_target_type: TYPE_I
-			l_source_class_type: CL_TYPE_I
-			l_target_class_type: CL_TYPE_I
+			l_source_type: TYPE_A
+			l_target_type: TYPE_A
+			l_source_class_type: CL_TYPE_A
+			l_target_class_type: CL_TYPE_A
 		do
 			generate_melted_debugger_hook
 
 				-- Generate expression byte code
 			l_source_type := context.real_type (a_node.source.type)
-			l_target_type := context.creation_type (a_node.target.type)
+			l_target_type := context.real_type (a_node.target.type)
 
 			make_expression_byte_code_for_type (a_node.source, l_target_type)
 
@@ -1398,8 +1398,7 @@ feature {NONE} -- Visitors
 	process_routine_creation_b (a_node: ROUTINE_CREATION_B) is
 			-- Process `a_node'.
 		local
-			l_cl_type_i: CL_TYPE_I
-			l_gen_type : GEN_TYPE_I
+			l_type: TYPE_A
 		do
 				-- Closed operands
 			if a_node.arguments /= Void then
@@ -1417,25 +1416,20 @@ feature {NONE} -- Visitors
 				-- Do we have arguments (a TUPLE) on the stack?
 			ba.append_boolean (a_node.arguments /= Void)
 
-			l_cl_type_i ?= context.real_type (a_node.type)
-			l_gen_type  ?= l_cl_type_i
-			ba.append_short_integer (l_cl_type_i.type_id - 1)
-
-			if l_gen_type /= Void then
-				ba.append_short_integer (context.current_type.generated_id (False))
-				l_gen_type.make_gen_type_byte_code (ba, True)
-			end
-
-			ba.append_short_integer (-1)
-
-			l_cl_type_i ?= context.real_type (a_node.class_type)
+				-- Generate byte code for `a_node.type'.
+			l_type := context.real_type (a_node.type)
+			l_type.make_full_type_byte_code (ba, context.context_class_type.type)
 
 			if a_node.is_precompiled then
 				ba.append_integer (a_node.rout_origin)
 				ba.append_integer (a_node.rout_offset)
 			else
-					-- class_id
-				ba.append_integer (l_cl_type_i.associated_class_type.static_type_id - 1)
+					-- Note that we use `context.current_type' because we do not adapt
+					-- `a_node.class_type' to `context.context_class_type' for the simple reasons
+					-- that `feature_id' is the one from where the agent creation is declared.
+					-- If we were to adapt it, then we would need something like `{CALL_ACCESS_B}.real_feature_id'
+					-- for a proper code generation.
+				ba.append_integer (a_node.class_type.static_type_id (context.current_type) - 1)
 					-- feature_id
 				ba.append_integer (a_node.feature_id)
 			end
@@ -1493,20 +1487,18 @@ feature {NONE} -- Visitors
 				generate_melted_debugger_hook
 				a_node.source.process (Current)
 				ba.append (bc_tuple_assign)
-				ba.append_integer_32 (a_node.position)
-				ba.append_uint32_integer (a_node.tuple_element_type.sk_value)
 			else
 					-- Access to tuple entry.
 				ba.append (bc_tuple_access)
-				ba.append_integer_32 (a_node.position)
-				ba.append_uint32_integer (a_node.tuple_element_type.sk_value)
 			end
+			ba.append_integer_32 (a_node.position)
+			ba.append_uint32_integer (a_node.tuple_element_type.sk_value (context.context_class_type.type))
 		end
 
 	process_tuple_const_b (a_node: TUPLE_CONST_B) is
 			-- Process `a_node'.
 		local
-			l_real_ty: TUPLE_TYPE_I
+			l_real_ty: TUPLE_TYPE_A
 			l_expr: EXPR_B
 		do
 			l_real_ty ?= context.real_type (a_node.type)
@@ -1523,17 +1515,17 @@ feature {NONE} -- Visitors
 				l_expr.process (Current)
 				a_node.expressions.back
 			end
-			if l_real_ty.base_class.is_precompiled then
+			if l_real_ty.associated_class.is_precompiled then
 				ba.append (Bc_ptuple)
-				ba.append_short_integer (l_real_ty.associated_class_type.type_id - 1)
+				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id-1)
-				l_real_ty.make_gen_type_byte_code (ba, True)
+				l_real_ty.make_gen_type_byte_code (ba, True, context.context_class_type.type)
 				ba.append_short_integer (-1)
 			else
 				ba.append (Bc_tuple)
-				ba.append_short_integer (l_real_ty.associated_class_type.type_id - 1)
+				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id - 1)
-				l_real_ty.make_gen_type_byte_code (ba, True)
+				l_real_ty.make_gen_type_byte_code (ba, True, context.context_class_type.type)
 				ba.append_short_integer (-1)
 			end
 			ba.append_integer (a_node.expressions.count + 1)
@@ -1614,14 +1606,14 @@ feature {NONE} -- Visitors
 
 feature {NONE} -- Implementation
 
-	make_expression_byte_code_for_type (an_expr: EXPR_B; a_target_type: TYPE_I) is
+	make_expression_byte_code_for_type (an_expr: EXPR_B; a_target_type: TYPE_A) is
 			-- Generate byte code for the expression which is about
 			-- to be assigned or compared to the type `a_target_type'.
 		require
 			expr_not_void: an_expr /= Void
 			target_type_not_void: a_target_type /= Void
 		local
-			l_expression_type: TYPE_I
+			l_expression_type: TYPE_A
 			l_hector_b: HECTOR_B
 		do
 			an_expr.process (Current)
@@ -1656,7 +1648,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_dynamic_clone (expression: EXPR_B; type: TYPE_I) is
+	generate_dynamic_clone (expression: EXPR_B; type: TYPE_A) is
 			-- Generate code that clones result of an `expression' depending on
 			-- dynamic type of object of static type `type'.
 		require
@@ -1796,7 +1788,7 @@ feature {NONE} -- Implementation
 			a_node_obvious_opcode_valid: a_node_obvious_opcode = bc_true_compar or
 				a_node_obvious_opcode = bc_false_compar
 		local
-			l_lt, l_rt: TYPE_I
+			l_lt, l_rt: TYPE_A
 			l_flag: BOOLEAN
 		do
 			l_lt := context.real_type (a_node.left.type)
@@ -1894,11 +1886,11 @@ feature {NONE} -- Implementation
 		require
 			a_node_not_void: a_node /= Void
 		local
-			l_basic_type: BASIC_I
-			l_cl_type: CL_TYPE_I
+			l_basic_type: BASIC_A
+			l_cl_type: CL_TYPE_A
 			l_associated_class: CLASS_C
 			l_feat_tbl: FEATURE_TABLE
-			l_inst_cont_type: TYPE_I
+			l_inst_cont_type: TYPE_A
 			l_metamorphosed: BOOLEAN
 			r_id: INTEGER
 			l_rout_info: ROUT_INFO
@@ -1916,7 +1908,7 @@ feature {NONE} -- Implementation
 				else
 						-- Process the feature id of `feature_name' in the
 						-- associated reference type
-					l_associated_class := l_basic_type.reference_type.base_class
+					l_associated_class := l_basic_type.reference_type.associated_class
 					l_feat_tbl := l_associated_class.feature_table
 					if a_node.parameters /= Void then
 						ba.append (Bc_rotate)
@@ -1959,7 +1951,7 @@ feature {NONE} -- Implementation
 						ba.append_short_integer (a_node.parameters.count + 1)
 					end
 				end
-				l_associated_class := l_cl_type.base_class
+				l_associated_class := l_cl_type.associated_class
 				if l_associated_class.is_precompiled then
 					r_id := a_node.routine_id
 					l_rout_info := System.rout_info_table.item (r_id)
@@ -1979,8 +1971,8 @@ feature {NONE} -- Implementation
 						ba.append (code_next)
 						ba.append_raw_string (a_node.feature_name)
 					end
-					ba.append_integer (a_node.real_feature_id (l_cl_type.base_class))
-					ba.append_short_integer (l_cl_type.associated_class_type.static_type_id - 1)
+					ba.append_integer (a_node.real_feature_id (l_cl_type))
+					ba.append_short_integer (l_cl_type.static_type_id (context.context_class_type.type) - 1)
 					make_precursor_byte_code (a_node)
 				end
 			end
@@ -1989,12 +1981,12 @@ feature {NONE} -- Implementation
 	make_precursor_byte_code (a_node: CALL_ACCESS_B) is
 			-- Generate precursor byte code if needed.
 		local
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 		do
 			if a_node.precursor_type /= Void then
 				l_cl_type ?= context.real_type (a_node.precursor_type)
 				check l_cl_type_not_void: l_cl_type /= Void end
-				ba.append_short_integer (l_cl_type.associated_class_type.static_type_id - 1)
+				ba.append_short_integer (l_cl_type.static_type_id (context.context_class_type.type) - 1)
 			else
 				ba.append_short_integer (-1)
 			end

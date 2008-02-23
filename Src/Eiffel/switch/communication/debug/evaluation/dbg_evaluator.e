@@ -35,7 +35,7 @@ inherit
 		end
 
 inherit {NONE}
-	DEBUGGER_COMPILER_UTILITIES		
+	DEBUGGER_COMPILER_UTILITIES
 
 --create
 --	make
@@ -285,6 +285,7 @@ feature {NONE} -- Parameters Implementation
 		local
 			dmp: DUMP_VALUE
 			bak_cc: CLASS_C
+			l_type: TYPE_A
 		do
 				--| Prepare parameters ...
 			bak_cc := System.current_class
@@ -298,27 +299,27 @@ feature {NONE} -- Parameters Implementation
 				params.after or error_occurred
 			loop
 				dmp := params.item
-					-- We need to evaluate feature argument using BYTE_CONTEXT because
+					-- We need to evaluate feature argument in the context of `dt'
 					-- it might have some formal and the metamorphose should only appear
 					-- when there is indeed a type difference and not because the expected
 					-- argument is a formal parameter and the actual argument value is
 					-- a basic type.
 					-- This happen when evaluation `my_hash_table.item (1)' where
-					-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]'.
+					-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]',
+					-- or when evaluating `test.has_item (1)' if `test' is a descendant
+					-- of `HASH_TABLE [INTEGER, XXXX]'.
 				if dmp.is_basic then
-					if
-						f /= Void
-						and dt /= Void
-						and then (not Byte_context.real_type_in (
-									f.arguments.i_th (params.index).type_i
-									, dt).is_basic
-								)
-					then
-						parameters_push_and_metamorphose (dmp)
+					if f /= Void and dt /= Void then
+						l_type := f.arguments.i_th (params.index).instantiation_in (dt.type, f.written_in)
+						if not l_type.is_basic then
+							parameters_push_and_metamorphose (dmp)
+						else
+							parameters_push (dmp)
+						end
 					else
-						parameters_push (dmp)
 						-- FIXME jfiat : in very specific case we have  'f =  Void'
 						-- i.e: when we have only the feature_name with no more info
+						parameters_push (dmp)
 					end
 				else
 					parameters_push (dmp)
@@ -558,18 +559,18 @@ feature -- Concrete evaluation
 		deferred
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I) is
+	create_empty_instance_of (a_type_i: CL_TYPE_A) is
 		require
 			a_type_i_not_void: a_type_i /= Void
-			a_type_i_compiled: a_type_i.has_associated_class_type
+			a_type_i_compiled: a_type_i.has_associated_class_type (Void)
 		deferred
 		end
 
-	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER) is
 		require
 			a_type_i_not_void: a_type_i /= Void
-			a_type_i_compiled: a_type_i.has_associated_class_type
-			is_special: a_type_i.base_class.is_special
+			a_type_i_compiled: a_type_i.has_associated_class_type (Void)
+			is_special: a_type_i.associated_class.is_special
 		deferred
 		end
 

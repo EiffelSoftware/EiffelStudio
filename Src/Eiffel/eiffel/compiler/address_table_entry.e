@@ -48,7 +48,7 @@ feature -- Access
 		end
 
 	dollar_ids: HASH_TABLE [INTEGER, INTEGER];
-		-- Id of dollar operator for a given static type-id
+		-- Id of dollar operator for a given type-id
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

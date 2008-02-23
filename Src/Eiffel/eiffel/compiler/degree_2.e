@@ -167,11 +167,11 @@ feature -- Processing
 			from i := 1 until nb = 0 loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_2_needed then
-									debug ("CHECK_EXPANDED")
-										io.error.put_string ("Check expanded on ")
-										io.error.put_string (a_class.name)
-										io.error.put_new_line
-									end
+					debug ("CHECK_EXPANDED")
+						io.error.put_string ("Check expanded on ")
+						io.error.put_string (a_class.name)
+						io.error.put_new_line
+					end
 					types := a_class.types
 					from types.start until types.after loop
 						class_type := types.item

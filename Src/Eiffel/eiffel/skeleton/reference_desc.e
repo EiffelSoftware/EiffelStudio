@@ -17,12 +17,12 @@ inherit
 
 feature -- Access
 
-	type_i: TYPE_I
+	type_i: TYPE_A
 			-- Class type of a reference attribute
 
 	sk_value: INTEGER is
 		do
-			Result := Sk_ref
+			Result := {SK_CONST}.Sk_ref
 		end
 
 feature -- Settings
@@ -47,7 +47,7 @@ feature -- Comparisons
 			if Precursor {ATTR_DESC} (other) then
 				l_ref ?= other
 				Result := (l_ref /= void) and then (type_i /= Void and l_ref.type_i /= Void) and then
-					type_i.is_identical (l_ref.type_i)
+					type_i.equivalent (type_i, l_ref.type_i)
 			end
 		end
 
@@ -57,15 +57,7 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.put_string ("SK_REF")
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_string (attribute_name)
-			io.error.put_string ("[REFERENCE]")
+			buffer.put_string ({SK_CONST}.sk_ref_string)
 		end
 
 indexing

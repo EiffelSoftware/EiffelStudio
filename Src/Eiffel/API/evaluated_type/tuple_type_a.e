@@ -11,7 +11,10 @@ inherit
 	GEN_TYPE_A
 		redefine
 			good_generics, error_generics, check_constraints,
-			is_tuple, conform_to, type_i, process, valid_generic
+			is_tuple, conform_to, process, valid_generic, generate_cid,
+			generate_cid_array, generate_cid_init, make_gen_type_byte_code,
+			il_type_name, generate_gen_type_instance, same_generic_derivation_as,
+			generic_derivation
 		end
 
 create
@@ -28,6 +31,125 @@ feature -- Visitor
 feature -- Properties
 
 	is_tuple: BOOLEAN is True
+
+	is_basic_uniform: BOOLEAN is
+			-- Are all types in Current basic?
+		local
+			i, nb: INTEGER
+			l_generics: like generics
+		do
+			from
+				l_generics := generics
+				i := l_generics.lower
+				nb := l_generics.upper
+				Result := True
+			until
+				i > nb
+			loop
+				if not l_generics.item (i).is_basic then
+					Result := False
+					i := nb + 1
+				else
+					i := i + 1
+				end
+			end
+		end
+
+feature -- Access
+
+	generic_derivation: TUPLE_TYPE_A is
+		do
+				-- Since the generic derivation for a TUPLE does not has actual generic parameter
+				-- we simply create a copy of current without actuals.
+			create Result.make (class_id, create {ARRAY [TYPE_A]}.make (1, 0))
+			Result.set_mark (declaration_mark)
+		end
+
+feature -- Comparison
+
+	same_generic_derivation_as (current_type, other: TYPE_A): BOOLEAN is
+		do
+				-- For TUPLE, it is just enough that they are
+				-- either both reference or both expanded.
+			if {t: !TUPLE_TYPE_A} other then
+				Result := is_expanded = t.is_expanded
+			end
+		end
+
+feature -- Generic conformance
+
+	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
+		do
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
+			buffer.put_character (',')
+			buffer.put_integer (generics.count)
+			buffer.put_character (',')
+
+			Precursor (buffer, final_mode, use_info, a_context_type)
+		end
+
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+		local
+			dummy: INTEGER
+		do
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
+			buffer.put_character (',')
+			buffer.put_integer (generics.count)
+			buffer.put_character (',')
+
+				-- Increment counter by an additional 2 (mark for tuple type and count)
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+
+			Precursor (buffer, final_mode, use_info, idx_cnt, a_context_type)
+		end
+
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+		local
+			dummy: INTEGER
+		do
+				-- Increment counter by an additional 2 (mark for tuple type and count)
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+
+			Precursor (buffer, final_mode, use_info, idx_cnt, a_level)
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+		do
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.tuple_type)
+			ba.append_short_integer (generics.count)
+			Precursor (ba, use_info, a_context_type)
+		end
+
+	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER) is
+			-- Generic runtime instance for Current
+		do
+			il_generator.generate_tuple_type_instance (n)
+		end
+
+feature -- IL code generation
+
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+			-- Class name of current type.
+		local
+			l_class_c: like associated_class
+			l_is_precompiled: BOOLEAN
+			l_cl_type: like associated_class_type
+		do
+			l_class_c := associated_class
+			l_is_precompiled := l_class_c.is_precompiled
+			if l_is_precompiled then
+				l_cl_type := associated_class_type (a_context_type)
+				l_is_precompiled := l_cl_type.is_precompiled
+				if l_is_precompiled then
+					Result := l_cl_type.il_type_name (a_prefix)
+				end
+			end
+			if not l_is_precompiled then
+				Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- Primitives
 
@@ -84,34 +206,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 					-- Conformance TUPLE -> other classtypes
 				Result := Precursor {GEN_TYPE_A} (other)
 			end
-		end
-
-	type_i: TUPLE_TYPE_I is
-			-- Meta generic interpretation of the generic type
-			-- Same definition as in GEN_TYPE_A except return type
-			-- which is TUPLE_TYPE_I.
-		local
-			i, count: INTEGER
-			meta_generic: META_GENERIC
-			true_generics: ARRAY [TYPE_I]
-			gt:TYPE_A
-		do
-			from
-				i := 1
-				count := generics.count
-				create meta_generic.make (count)
-				create true_generics.make (1, count)
-			until
-				i > count
-			loop
-				gt := generics.item (i)
-				meta_generic.put (gt.meta_type, i)
-				true_generics.put (gt.type_i, i)
-				i := i + 1
-			end
-
-			create Result.make (class_id, meta_generic, true_generics)
-			Result.set_mark (declaration_mark)
 		end
 
 	good_generics: BOOLEAN is

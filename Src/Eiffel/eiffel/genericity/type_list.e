@@ -35,7 +35,7 @@ create {TYPE_LIST}
 
 feature -- Search
 
-	has_type (t: TYPE_I): BOOLEAN is
+	has_type (context_type, t: TYPE_A): BOOLEAN is
 			-- Is the type `t' present in instances of CLASS_TYPE in the
 			-- list ?
 		require
@@ -52,7 +52,7 @@ feature -- Search
 				i > nb or Result
 			loop
 				l_item := l_area.item (i)
-				Result := l_item.type.same_as (t)
+				Result := t.same_generic_derivation_as (context_type, l_item.type)
 				i := i + 1
 			end
 
@@ -65,14 +65,14 @@ feature -- Search
 			cursor_not_changed: index = old index
 		end
 
-	search_item (t: TYPE_I): CLASS_TYPE is
-			-- Is the type `t' present in instances of CLASS_TYPE in the list?
-			-- If not, return the last item found in the list.
+	search_item (context_type, t: TYPE_A): CLASS_TYPE is
+			-- Is the type `t' resolved in `context_type' present in instances of CLASS_TYPE
+			-- in the list? If not, return the last item found in the list.
 		require
 			type_not_void: t /= Void
-			has_type: has_type (t)
+			has_type: has_type (context_type, t)
 		do
-			if has_type (t) then
+			if has_type (context_type, t) then
 				Result := found_item
 			end
 		ensure
@@ -222,7 +222,11 @@ feature -- Sorting
 					i > nb
 				loop
 					l_item := l_area.item (i)
-					l_type_a := l_item.type.type_a
+						-- We instantiate the type in the `constraint_actual_type' so that
+						-- all formals if any are replaced by the constraint below, that way
+						-- the conformance test will say that A [INTEGER] will conform to A [ANY]
+						-- for us putting A[G] first in the current type list.
+					l_type_a := l_item.type.instantiated_in (l_item.associated_class.constraint_actual_type)
 					from
 						l_list.start
 						l_done := l_list.after
@@ -248,6 +252,32 @@ feature -- Sorting
 					l_area.put (l_list.item.class_type, i)
 					i := i + 1
 					l_list.forth
+				end
+				do_nothing
+			end
+		end
+
+feature -- Cleanup
+
+	clean is
+			-- Remove types that are not valid anymore.
+		local
+			l_class_type: CLASS_TYPE
+		do
+			from
+				start
+			until
+				after
+			loop
+				l_class_type := item
+				if
+					not l_class_type.type.is_valid or else
+					not l_class_type.type.is_valid_generic_derivation
+				then
+					l_class_type.system.remove_class_type (l_class_type)
+					remove
+				else
+					forth
 				end
 			end
 		end

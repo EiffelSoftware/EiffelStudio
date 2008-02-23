@@ -1067,7 +1067,7 @@ feature -- Implementation
 			l_veen: VEEN
 			l_vsta2: VSTA2
 			l_vica2: VICA2
-			l_cl_type_i: CL_TYPE_I
+			l_cl_type_i: CL_TYPE_A
 			l_parameter: PARAMETER_B
 			l_parameter_list: BYTE_LIST [PARAMETER_B]
 			l_is_assigner_call, l_is_last_access_tuple_access: BOOLEAN
@@ -1286,7 +1286,7 @@ feature -- Implementation
 									last_feature_name_correct: last_feature_name = l_feature_name.name
 								end
 								if l_needs_byte_node then
-									create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple.type_i, l_label_pos)
+									create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple, l_label_pos)
 									last_byte_node := l_tuple_access_b
 									last_byte_node.set_line_number (l_feature_name.line)
 								end
@@ -1471,11 +1471,14 @@ feature -- Implementation
 												-- This fix is incomplete since it does not take care of types
 												-- that are redefined as expanded.
 											if a_precursor_type /= Void and l_last_class.is_expanded then
-												l_parameter.set_attachment_type (l_formal_arg_type.instantiation_in (a_precursor_type, a_precursor_type.associated_class.class_id).type_i)
+												l_parameter.set_attachment_type (l_formal_arg_type.instantiation_in (a_precursor_type, a_precursor_type.associated_class.class_id))
 											else
-												l_parameter.set_attachment_type (l_formal_arg_type.type_i)
+												l_parameter.set_attachment_type (l_formal_arg_type)
 												if not system.il_generation then
-													l_parameter.set_is_formal (l_seed.arguments.i_th (i).type_i.is_formal)
+														-- It is pretty important that we use `actual_type.is_formal' and not
+														-- just `is_formal' because otherwise if you have `like x' and `x: G'
+														-- then we would fail to detect that.
+													l_parameter.set_is_formal (l_seed.arguments.i_th (i).actual_type.is_formal)
 												end
 											end
 											l_parameter_list.extend (l_parameter)
@@ -1607,8 +1610,8 @@ feature -- Implementation
 								end
 								if not is_static then
 									if is_precursor then
-										l_cl_type_i ?= a_precursor_type.type_i
-										l_access := l_feature.access_for_feature (l_generated_result_type.type_i, l_cl_type_i, False)
+										l_cl_type_i ?= a_precursor_type
+										l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False)
 											-- Strange situation where Precursor is an external, then we do as if
 											-- it was a static call.
 										l_ext ?= l_access
@@ -1617,17 +1620,17 @@ feature -- Implementation
 										end
 									else
 										if l_is_multiple_constraint_case then
-											check not l_last_constrained.type_i.is_formal end
-											l_access := l_feature.access_for_multi_constraint (l_generated_result_type.type_i, l_last_constrained.type_i, is_qualified)
+											check not l_last_constrained.is_formal end
+											l_access := l_feature.access_for_multi_constraint (l_generated_result_type, l_last_constrained, is_qualified)
 										else
-											l_access := l_feature.access (l_generated_result_type.type_i, is_qualified)
+											l_access := l_feature.access (l_generated_result_type, is_qualified)
 										end
 									end
 								else
-									l_access := l_feature.access_for_feature (l_generated_result_type.type_i, a_type.type_i, is_qualified)
+									l_access := l_feature.access_for_feature (l_generated_result_type, a_type, is_qualified)
 									if l_is_multiple_constraint_case then
-										check not l_last_constrained.type_i.is_formal end
-										l_access.set_multi_constraint_static (l_last_constrained.type_i)
+										check not l_last_constrained.is_formal end
+										l_access.set_multi_constraint_static (l_last_constrained)
 									end
 									l_ext ?= l_access
 									if l_ext /= Void then
@@ -1754,7 +1757,7 @@ feature -- Implementation
 
 				if is_byte_node_enabled then
 					l_list ?= last_byte_node
-					create {TUPLE_CONST_B} last_byte_node.make (l_list, l_tuple_type.type_i)
+					create {TUPLE_CONST_B} last_byte_node.make (l_list, l_tuple_type)
 				end
 			else
 				reset_types
@@ -2011,7 +2014,7 @@ feature -- Implementation
 					l_as.set_array_type (last_type)
 					if is_byte_node_enabled then
 						create {ARRAY_CONST_B} last_byte_node.make (l_list,
-							l_array_type.type_i, l_array_type.create_info)
+							l_array_type, l_array_type.create_info)
 					end
 				else
 					fixme ("Insert new validity error saying that manifest array is not valid")
@@ -3262,7 +3265,7 @@ feature -- Implementation
 				if l_needs_byte_node then
 					create l_argument
 					l_argument.set_position (l_arg_pos)
-					create {HECTOR_B} last_byte_node.make_with_type (l_argument, last_type.type_i)
+					create {HECTOR_B} last_byte_node.make_with_type (l_argument, last_type)
 				end
 				if not is_inherited then
 					l_as.enable_argument
@@ -3282,7 +3285,7 @@ feature -- Implementation
 					if l_needs_byte_node then
 						create l_local
 						l_local.set_position (l_local_info.position)
-						create {HECTOR_B} last_byte_node.make_with_type (l_local, last_type.type_i)
+						create {HECTOR_B} last_byte_node.make_with_type (l_local, last_type)
 					end
 
 					if is_checking_postcondition or else is_checking_precondition then
@@ -3340,8 +3343,8 @@ feature -- Implementation
 
 							if l_needs_byte_node then
 								if l_feature.is_attribute then
-									l_access := l_feature.access (l_type.type_i, False)
-									create {HECTOR_B} last_byte_node.make_with_type (l_access, last_type.type_i)
+									l_access := l_feature.access (l_type, False)
+									create {HECTOR_B} last_byte_node.make_with_type (l_access, last_type)
 								else
 									create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
 								end
@@ -3376,7 +3379,7 @@ feature -- Implementation
 				instantiator.dispatch (l_type_type, context.current_class)
 				last_type := l_type_type
 				if is_byte_node_enabled then
-					create {TYPE_EXPR_B} last_byte_node.make (l_type_type.type_i)
+					create {TYPE_EXPR_B} last_byte_node.make (l_type_type)
 				end
 			end
 		end
@@ -3652,7 +3655,7 @@ feature -- Implementation
 									-- Update the type stack; instantiate the result of the
 									-- refixed feature
 								l_prefix_feature_type := l_prefix_feature.type
-								if l_last_constrained.is_bits and then l_prefix_feature_type.is_like_current then
+								if l_last_constrained.is_bit and then l_prefix_feature_type.is_like_current then
 										-- For feature prefix "not" of symbolic class BIT_REF.
 									l_prefix_feature_type := l_last_constrained
 								else
@@ -3687,7 +3690,7 @@ feature -- Implementation
 								end
 
 								if l_needs_byte_node then
-									l_access := l_prefix_feature.access (l_prefix_feature_type.type_i, True)
+									l_access := l_prefix_feature.access (l_prefix_feature_type, True)
 										-- If we have something like `a.f' where `a' is predefined
 										-- and `f' is a constant then we simply generate a byte
 										-- node that will be the constant only. Otherwise if `a' is
@@ -3695,7 +3698,7 @@ feature -- Implementation
 										-- complete evaluation `a.f'. However during generation,
 										-- we will do an optimization by hardwiring value of constant.
 									if l_is_multi_constrained then
-										l_access.set_multi_constraint_static (last_calls_target_type.type_i)
+										l_access.set_multi_constraint_static (last_calls_target_type)
 									end
 									if not (l_access.is_constant and l_expr.is_predefined) then
 										l_unary := byte_anchor.unary_node (l_as)
@@ -3959,7 +3962,7 @@ feature -- Implementation
 								-- infixed feature
 							l_infix_type := last_infix_feature.type
 							if
-								l_target_type.is_bits and then l_right_constrained.is_bits and then
+								l_target_type.is_bit and then l_right_constrained.is_bit and then
 								l_infix_type.is_like_current
 							then
 									-- For non-balanced features of symbolic class BIT_REF
@@ -3980,14 +3983,14 @@ feature -- Implementation
 								l_binary.set_left (l_left_expr)
 								l_binary.set_right (l_right_expr)
 
-								l_call_access ?= last_infix_feature.access (l_infix_type.type_i, True)
+								l_call_access ?= last_infix_feature.access (l_infix_type, True)
 									-- If we have a multi constrained formal we need to set the selected constrained type on which the call is done.
 								if l_is_left_multi_constrained then
-									l_call_access.set_multi_constraint_static (l_left_constrained.conformance_type.type_i)
+									l_call_access.set_multi_constraint_static (l_left_constrained.conformance_type)
 								end
 								l_binary.init (l_call_access)
 									-- Add type to `parameters' in case we will need it later.
-								l_binary.set_attachment (last_infix_arg_type.type_i)
+								l_binary.set_attachment (last_infix_arg_type)
 								last_byte_node := l_binary
 							end
 							last_type := l_infix_type
@@ -4367,7 +4370,7 @@ feature -- Implementation
 									l_access_b ?= last_byte_node
 										-- Last generated bytenode is from `process_call'.
 									check is_access_b: l_access_b /= Void end
-									l_access_b.set_multi_constraint_static (constrained_target_type.type_i)
+									l_access_b.set_multi_constraint_static (constrained_target_type)
 									call_b := l_access_b
 								else
 									call_b ?= last_byte_node
@@ -4636,7 +4639,7 @@ feature -- Implementation
 						-- Type checking
 					process_type_compatibility (l_target_type)
 					if not is_type_compatible then
-						if l_source_type.is_bits then
+						if l_source_type.is_bit then
 							create l_vncb
 							context.init_error (l_vncb)
 							l_vncb.set_target_name (l_as.target.access_name)
@@ -4691,7 +4694,7 @@ feature -- Implementation
 			l_instr: INSTR_CALL_B
 			l_tuple_access: TUPLE_ACCESS_B
 			l_is_tuple_access: BOOLEAN
-			l_multi_constraint_static: TYPE_I
+			l_multi_constraint_static: TYPE_A
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -4767,7 +4770,10 @@ feature -- Implementation
 							argument.set_expression (binary_b.right)
 							argument.set_attachment_type (binary_b.attachment)
 							if not system.il_generation then
-								argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).type_i.is_formal)
+								-- It is pretty important that we use `actual_type.is_formal' and not
+								-- just `is_formal' because otherwise if you have `like x' and `x: G'
+								-- then we would fail to detect that.
+								argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
 							end
 							arguments.extend (argument)
 						else
@@ -4799,16 +4805,19 @@ feature -- Implementation
 							end
 							create argument
 							argument.set_expression (source_byte_node)
-							argument.set_attachment_type (target_type.type_i)
+							argument.set_attachment_type (target_type)
 							if not system.il_generation then
-								argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).type_i.is_formal)
+								-- It is pretty important that we use `actual_type.is_formal' and not
+								-- just `is_formal' because otherwise if you have `like x' and `x: G'
+								-- then we would fail to detect that.
+								argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
 							end
 							assigner_arguments.extend (argument)
 							if arguments /= Void then
 								assigner_arguments.append (arguments)
 							end
 								-- Evaluate assigner command byte node
-							access_b := target_assigner.access (void_type.type_i, True)
+							access_b := target_assigner.access (void_type, True)
 							access_b.set_parameters (assigner_arguments)
 
 							if l_multi_constraint_static /= Void then
@@ -4898,8 +4907,8 @@ feature -- Implementation
 							l_vjrv1.set_location (l_as.target.end_location)
 							error_handler.insert_warning (l_vjrv1)
 						end
-					elseif l_target_type.is_formal then
-						l_formal ?= l_target_type
+					elseif l_target_type.actual_type.is_formal then
+						l_formal ?= l_target_type.actual_type
 						check
 							l_formal_not_void: l_formal /= Void
 						end
@@ -4937,7 +4946,11 @@ feature -- Implementation
 						if l_target_node.is_attribute then
 							l_attribute ?= l_target_node
 							create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id,
-								l_attribute.routine_id, context.current_class)
+								l_attribute.routine_id)
+							if system.il_generation then
+									-- we need to record into current class
+								context.current_class.extend_type_set (l_attribute.routine_id)
+							end
 						else
 							l_create_info := l_target_type.create_info
 						end
@@ -5265,7 +5278,7 @@ feature -- Implementation
 									check
 										no_static_set: not l_call_access.has_multi_constraint_static
 									end
-									l_call_access.set_multi_constraint_static (l_creation_type.type_i)
+									l_call_access.set_multi_constraint_static (l_creation_type)
 								end
 							end
 
@@ -5469,14 +5482,18 @@ feature -- Implementation
 								if l_creation_type.is_expanded then
 										-- Even if there is an anchor, once a type is expanded it
 										-- cannot change.
-									create {CREATE_TYPE} l_create_info.make (l_creation_type.type_i)
+									create {CREATE_TYPE} l_create_info.make (l_creation_type)
 								elseif l_access.is_attribute and l_explicit_type = Void then
 										-- When we create an attribute without a type specification,
 										-- then we need to create an instance matching the possible redeclared
 										-- type of the attribute in descendant classes.
 									l_attribute ?= l_access
 									create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id,
-										l_attribute.routine_id, context.current_class)
+										l_attribute.routine_id)
+									if system.il_generation then
+											-- we need to record into current class
+										context.current_class.extend_type_set (l_attribute.routine_id)
+									end
 								else
 									l_create_info := l_creation_type.create_info
 								end
@@ -5488,8 +5505,8 @@ feature -- Implementation
 									l_creation_expr.set_multi_constraint_static (l_call_access.multi_constraint_static)
 								end
 
-								check l_creation_type.type_i /= Void end
-								l_creation_expr.set_type (l_creation_type.type_i)
+								check l_creation_type /= Void end
+								l_creation_expr.set_type (l_creation_type)
 								l_creation_expr.set_creation_instruction (True)
 								l_creation_expr.set_line_number (l_as.target.start_location.line)
 
@@ -5558,7 +5575,7 @@ feature -- Implementation
 						create l_creation_expr
 						l_creation_expr.set_call (l_call_access)
 						l_creation_expr.set_info (l_create_info)
-						l_creation_expr.set_type (l_creation_type.type_i)
+						l_creation_expr.set_type (l_creation_type)
 						l_creation_expr.set_line_number (l_as.type.start_location.line)
 
 						last_byte_node := l_creation_expr
@@ -7450,6 +7467,8 @@ feature {NONE} -- Agents
 			l_actual_target_type: TYPE_A
 			l_current_class_void_safe: BOOLEAN
 		do
+			l_actual_target_type := a_target_type.actual_type
+
 			if a_is_query then
 				if a_feat_type.is_boolean then
 						-- generics are: base_type, open_types
@@ -7458,7 +7477,7 @@ feature {NONE} -- Agents
 				else
 						-- generics are: base_type, open_types, result_type
 					create l_generics.make (1, 3)
-					l_generics.put (a_feat_type, 3)
+					l_generics.put (a_feat_type.instantiation_in (l_actual_target_type, cid).deep_actual_type, 3)
 					create l_result_type.make (System.function_class_id, l_generics)
 				end
 			else
@@ -7467,7 +7486,6 @@ feature {NONE} -- Agents
 				create l_result_type.make (System.procedure_class_id, l_generics)
 			end
 
-			l_actual_target_type := a_target_type.actual_type
 			l_generics.put (a_target_type, 1)
 
 			if a_has_args then
@@ -7658,7 +7676,7 @@ feature {NONE} -- Agents
 					-- Create TUPLE_CONST_B instance which holds all closed arguments.
 				l_expressions.start
 				create l_tuple_node.make (l_expressions,
-					(create {TUPLE_TYPE_A}.make (System.tuple_id, l_cargtypes)).type_i)
+					(create {TUPLE_TYPE_A}.make (System.tuple_id, l_cargtypes)))
 
 					-- Setup l_last_open_positions
 
@@ -7679,15 +7697,15 @@ feature {NONE} -- Agents
 						-- Create ARRAY_CONST_B which holds all open positions in
 						-- above generated tuple.
 					l_expressions.start
-					create l_array_of_opens.make (l_expressions, integer_array_type.type_i,
+					create l_array_of_opens.make (l_expressions, integer_array_type,
 						integer_array_type.create_info)
 				end
 
 					-- Initialize ROUTINE_CREATION_B instance
 					-- We need to use the conformence_type since it could be a like_current type which would
 					-- be a problem with inherited assertions. See eweasel test execX10
-				l_routine_creation.init (a_target_type.conformance_type.type_i, a_target_type.associated_class.class_id,
-					a_feature, l_result_type.type_i, l_tuple_node, l_array_of_opens, l_last_open_positions,
+				l_routine_creation.init (a_target_type.conformance_type, a_target_type.associated_class.class_id,
+					a_feature, l_result_type, l_tuple_node, l_array_of_opens, l_last_open_positions,
 					a_feature.is_inline_agent, l_target_closed, a_target_type.associated_class.is_precompiled,
 					a_target_type.associated_class.is_basic)
 
@@ -7711,7 +7729,7 @@ feature {NONE} -- Agents
 	compute_feature_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: FEATURE_I; a_target: BYTE_NODE;
 								a_target_type: TYPE_A; a_agent_type: TYPE_A)
 		do
-			compute_fake_inline_agent (a_rc, a_feature.access (a_feature.type.type_i, True), a_feature.type, a_target,
+			compute_fake_inline_agent (a_rc, a_feature.access (a_feature.type, True), a_feature.type, a_target,
 									a_target_type, a_agent_type, a_feature)
 		end
 
@@ -7720,8 +7738,8 @@ feature {NONE} -- Agents
 		local
 			l_tuple_access: TUPLE_ACCESS_B
 		do
-			create l_tuple_access.make (a_named_tuple.type_i, a_label_pos)
-			compute_fake_inline_agent (a_rc, l_tuple_access, l_tuple_access.type.type_a, a_target, a_target_type, a_agent_type, Void)
+			create l_tuple_access.make (a_named_tuple, a_label_pos)
+			compute_fake_inline_agent (a_rc, l_tuple_access, l_tuple_access.type, a_target, a_target_type, a_agent_type, Void)
 		end
 
 	compute_fake_inline_agent (
@@ -7749,7 +7767,7 @@ feature {NONE} -- Agents
 			l_assign: ASSIGN_B
 			l_tuple_node: TUPLE_CONST_B
 			l_closed_args: BYTE_LIST [BYTE_NODE]
-			l_agent_type: GEN_TYPE_I
+			l_agent_type: GEN_TYPE_A
 			l_operand: OPERAND_B
 			l_target: BYTE_NODE
 			l_cur_class: EIFFEL_CLASS_C
@@ -7793,13 +7811,13 @@ feature {NONE} -- Agents
 			create l_code
 			l_code.set_compound (l_byte_list)
 
-			l_code.set_arguments (<<a_target_type.type_i>>)
+			l_code.set_arguments (<<a_target_type>>)
 
 			l_code.set_rout_id (l_func.rout_id_set.first)
 			l_code.set_body_index (l_func.body_index)
 			l_code.set_start_line_number (a_rc.start_location.line)
 			l_code.set_end_location (a_rc.end_location)
-			l_code.set_result_type (a_feature_type.type_i)
+			l_code.set_result_type (a_feature_type)
 			l_code.set_feature_name_id (l_func.feature_name_id)
 			if inline_agent_byte_codes = Void then
 				create inline_agent_byte_codes.make
@@ -7828,15 +7846,15 @@ feature {NONE} -- Agents
 				create l_tuple_type.make (system.tuple_id, <<context.current_class_type>> )
 			end
 
-			create l_tuple_node.make (l_closed_args, l_tuple_type.type_i)
+			create l_tuple_node.make (l_closed_args, l_tuple_type)
 
 				-- We need to use the conformence type since it could be a like_current type which would
 				-- be a problem with inherited assertions. See eweasel test execX10
-			l_agent_type ?= a_agent_type.conformance_type.type_i
+			l_agent_type ?= a_agent_type.conformance_type
 
 			create l_rout_creation
 			if l_target_closed  then
-				l_rout_creation.init (context.current_class_type.type_i,
+				l_rout_creation.init (context.current_class_type,
 					l_cur_class.class_id,
 					l_func,
 					l_agent_type,
@@ -7848,7 +7866,7 @@ feature {NONE} -- Agents
 					False,
 					False)
 			else
-				l_rout_creation.init (context.current_class_type.type_i,
+				l_rout_creation.init (context.current_class_type,
 					l_cur_class.class_id,
 					l_func,
 					l_agent_type,
@@ -7875,7 +7893,7 @@ feature {NONE} -- Agents
 		do
 			create l_byte_list.make (1)
 			l_byte_list.extend (create {INTEGER_CONSTANT}.make_with_value (2))
-			create Result.make (l_byte_list, integer_array_type.type_i, integer_array_type.create_info)
+			create Result.make (l_byte_list, integer_array_type, integer_array_type.create_info)
 		end
 
 	empty_omap_bc: ARRAY_CONST_B is
@@ -7883,7 +7901,7 @@ feature {NONE} -- Agents
 			l_byte_list: BYTE_LIST [BYTE_NODE]
 		do
 			create l_byte_list.make (0)
-			create Result.make (l_byte_list, integer_array_type.type_i, integer_array_type.create_info)
+			create Result.make (l_byte_list, integer_array_type, integer_array_type.create_info)
 		end
 
 	init_inline_agent_feature (a_feat, a_real_feat: FEATURE_I): FEATURE_I is

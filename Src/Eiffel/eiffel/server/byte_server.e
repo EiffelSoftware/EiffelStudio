@@ -11,7 +11,7 @@ class
 inherit
 	COMPILER_SERVER [BYTE_CODE]
 		redefine
-			disk_item, has, item
+			disk_item, has, item, remove
 		end
 
 create
@@ -55,6 +55,13 @@ feature -- Access
 		do
 			Result := Precursor (an_id) or else Tmp_byte_server.has (an_id);
 		end;
+
+	remove (an_id: INTEGER_32) is
+			-- <Original>
+		do
+			tmp_byte_server.remove (an_id)
+			Precursor (an_id)
+		end
 
 feature -- Server size configuration
 

@@ -33,11 +33,11 @@ feature -- Enlarging
 				if l_left_val.is_boolean and then l_left_val.same_type (l_right_val) then
 					create {BOOL_CONST_B} Result.make (not l_left_val.is_equivalent (l_right_val))
 				else
-					access := access.enlarged_on (left.type)
+					access := access.enlarged_on (context.real_type (left.type))
 					Result := Current
 				end
 			else
-				access := access.enlarged_on (left.type)
+				access := access.enlarged_on (context.real_type (left.type))
 				Result := Current
 			end
 		end

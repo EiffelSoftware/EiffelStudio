@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 				l_plain_style.set_symbol_text (ti_l_curly)
 				l_tokens.append (l_plain_style.text)
 			end
-			l_plain_style.set_source_text (a_class_type.type.name)
+			l_plain_style.set_source_text (a_class_type.type.dump)
 			l_tokens.append (l_plain_style.text)
 			if mapper.is_for_feature then
 				l_plain_style.set_symbol_text (ti_r_curly + ti_dot)

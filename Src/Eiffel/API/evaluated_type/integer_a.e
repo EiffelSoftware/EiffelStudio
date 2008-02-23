@@ -14,7 +14,10 @@ inherit
 			make as cl_make
 		redefine
 			is_integer, associated_class,
-			same_as, is_numeric, process
+			same_as, is_numeric, process,
+			minimum_interval_value,
+			maximum_interval_value,
+			heaviest
 		end
 
 create
@@ -75,12 +78,64 @@ feature -- Access
 			end
 		end
 
+feature -- IL code generation
+
+	minimum_interval_value: INTERVAL_VAL_B is
+			-- Minimum value in inspect interval for current type
+		do
+			inspect size
+			when 8 then
+				create {INT_VAL_B} Result.make ({INTEGER_8}.min_value)
+			when 16 then
+				create {INT_VAL_B} Result.make ({INTEGER_16}.min_value)
+			when 32 then
+				create {INT_VAL_B} Result.make ({INTEGER_32}.min_value)
+			when 64 then
+				create {INT64_VAL_B} Result.make ({INTEGER_64}.min_value)
+			end
+		end
+
+	maximum_interval_value: INTERVAL_VAL_B is
+			-- Maximum value in inspect interval for current type
+		do
+			inspect size
+			when 8 then
+				create {INT_VAL_B} Result.make ({INTEGER_8}.max_value)
+			when 16 then
+				create {INT_VAL_B} Result.make ({INTEGER_16}.max_value)
+			when 32 then
+				create {INT_VAL_B} Result.make ({INTEGER_32}.max_value)
+			when 64 then
+				create {INT64_VAL_B} Result.make ({INTEGER_64}.max_value)
+			end
+		end
+
+	heaviest (other: TYPE_A): TYPE_A is
+		local
+			l_long: like Current
+		do
+			if other.is_real_64 or other.is_real_32 then
+				Result := other
+			else
+				if other.is_integer then
+					l_long ?= other
+					if size >= l_long.size then
+						Result := Current
+					else
+						Result := other
+					end
+				else
+					Result := Current
+				end
+			end
+		end
+
 feature {COMPILER_EXPORTER}
 
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
 
-	type_i: INTEGER_I is
+	c_type: INTEGER_I is
 			-- C type
 		do
 			inspect size

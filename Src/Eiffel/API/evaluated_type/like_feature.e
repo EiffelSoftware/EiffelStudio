@@ -11,7 +11,13 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			update_dependance, evaluated_type_in_descendant
+			update_dependance, evaluated_type_in_descendant, is_explicit,
+			initialize_info, dispatch_anchors
+		end
+
+	SHARED_TABLE
+		export
+			{NONE} all
 		end
 
 	SHARED_NAMES_HEAP
@@ -68,6 +74,25 @@ feature -- Properties
 			Result_not_empty: not Result.is_empty
 		end
 
+feature -- Status Report
+
+	is_explicit: BOOLEAN is
+			-- Is type fixed at compile time without anchors or formals?
+		local
+			table: POLY_TABLE [ENTRY]
+		do
+			if system.in_final_mode then
+				table := Eiffel_table.poly_table (routine_id)
+				if table = Void then
+					Result := True
+				else
+					Result := table.has_one_type
+				end
+			else
+				Result := False
+			end
+		end
+
 feature {COMPILER_EXPORTER} -- Implementation: Access
 
 	feature_id: INTEGER
@@ -106,6 +131,32 @@ feature -- Access
 			feat_depend.extend (depend_unit)
 		end
 
+feature -- Generic conformance
+
+	initialize_info (an_info: like shared_create_info) is
+		do
+				-- FIXME: Should we use `make' or just `set_info'?
+			an_info.make (feature_id, routine_id)
+		end
+
+	create_info: CREATE_FEAT is
+		do
+			create Result.make (feature_id, routine_id)
+		end
+
+	shared_create_info: CREATE_FEAT is
+		once
+			create Result
+		end
+
+feature -- IL code generation
+
+	dispatch_anchors (a_context_class: CLASS_C) is
+			-- <Original>
+		do
+			a_context_class.extend_type_set (routine_id)
+		end
+
 feature -- Output
 
 	dump: STRING is
@@ -131,13 +182,13 @@ feature -- Output
 			l_feat: E_FEATURE
 		do
 			ec := Eiffel_system.class_of_id (class_id)
-			st.process_symbol_text (ti_l_bracket)
+			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_l_bracket)
 			if has_attached_mark then
-				st.process_symbol_text (ti_exclamation)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_exclamation)
 			elseif has_detachable_mark then
-				st.process_symbol_text (ti_question)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_question)
 			end
-			st.process_keyword_text (ti_like_keyword, Void)
+			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_like_keyword, Void)
 			st.add_space
 			if ec.has_feature_table then
 				l_feat := ec.feature_with_name (feature_name)
@@ -147,7 +198,7 @@ feature -- Output
 			else
 				st.add_feature_name (feature_name, ec)
 			end
-			st.process_symbol_text (ti_r_bracket)
+			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_r_bracket)
 			st.add_space
 			if is_valid then
 				actual_type.ext_append_to (st, c)
@@ -155,15 +206,6 @@ feature -- Output
 		end
 
 feature -- Primitives
-
-	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_FEATURE is
-			-- Instantiation of Current in the context of `type',
-			-- assuming that Current is written in class of id `written_id'.
-		do
-			Result := twin
-			Result.set_actual_type
-							(actual_type.instantiation_in (type, written_id))
-		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_FEATURE is
 		local
@@ -182,12 +224,6 @@ feature -- Primitives
 			else
 				Result := Current
 			end
-		end
-
-	create_info: CREATE_FEAT is
-			-- Byte code information for entity type creation
-		do
-			create Result.make (feature_id, routine_id, system.class_of_id (class_id))
 		end
 
 feature -- Comparison

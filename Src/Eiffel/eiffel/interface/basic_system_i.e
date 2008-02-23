@@ -144,6 +144,17 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
+	any_type: CL_TYPE_A is
+			-- Type representing ANY
+		require
+			any_class_exists: any_class /= Void
+			compiled: any_class.is_compiled
+		do
+			create Result.make (any_id)
+		ensure
+			any_type_not_void: Result /= Void
+		end
+
 	system_object_id: INTEGER is
 			-- Id of class SYSTEM_OBJECT
 		require

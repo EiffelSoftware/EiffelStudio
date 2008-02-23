@@ -12,7 +12,9 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_character, is_character_32, type_i, associated_class, same_as, process
+			is_character, is_character_32, associated_class, same_as, process,
+			minimum_interval_value,
+			maximum_interval_value
 		end
 
 create
@@ -71,9 +73,27 @@ feature -- Access
 			end
 		end
 
-feature {COMPILER_EXPORTER}
+feature -- IL code generation
 
-	type_i: CHAR_I is
+	minimum_interval_value: CHAR_VAL_B is
+			-- Minimum value in inspect interval for current type
+		do
+			create Result.make ('%/0/')
+		end
+
+	maximum_interval_value: CHAR_VAL_B is
+			-- Maximum value in inspect interval for current type
+		do
+			if is_character_32 then
+				create Result.make ({CHARACTER_32}.max_value.to_character_32)
+			else
+				create Result.make ({CHARACTER_8}.Max_value.to_character_8)
+			end
+		end
+
+feature -- Access
+
+	c_type: CHAR_I is
 			-- C type
 		do
 			if is_character_32 then

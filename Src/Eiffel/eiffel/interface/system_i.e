@@ -1312,9 +1312,9 @@ end
 		do
 			check
 					-- Should be ensured by semantic analysis.
-				class_type_exists: root_type.type_i.has_associated_class_type
+				class_type_exists: root_type.has_associated_class_type (system.any_class.compiled_class.types.first.type)
 			end
-			Result := root_type.type_i.associated_class_type
+			Result := root_type.associated_class_type (system.any_class.compiled_class.types.first.type)
 		end
 
 	init_recompilation is
@@ -2298,20 +2298,17 @@ end
 			l_class_type: CLASS_TYPE
 			l_types: ARRAY [CLASS_TYPE]
 			i, nb: INTEGER
-			l_tuple: TUPLE [CLASS_TYPE]
 		do
 			from
 				l_types := class_types
 				i := l_types.lower
 				nb := l_types.upper
-				create l_tuple
 			until
 				i > nb
 			loop
 				l_class_type := l_types.item (i)
 				if l_class_type /= Void then
-					l_tuple.put (l_class_type, 1)
-					set_or_reset_action.call (l_tuple)
+					set_or_reset_action.call ([l_class_type])
 				end
 				i := i + 1
 			end
@@ -2481,11 +2478,11 @@ end
 				write_int (file_pointer, rcorigin)
 
 					-- Generate type ID for ANY
-				write_int (file_pointer, any_class.compiled_class.types.first.type.type_id - 1)
+				write_int (file_pointer, any_class.compiled_class.types.first.type_id - 1)
 					-- Generate data to create the root full dynamic type ID.
 				create l_ba.make
 				byte_context.init (root_class_type)
-				root_type.type_i.make_full_type_byte_code (l_ba)
+				root_type.make_full_type_byte_code (l_ba, byte_context.context_class_type.type)
 					-- Write number of bytes in byte array.
 				l_ba.character_array.store (melted_file)
 
@@ -3019,7 +3016,7 @@ feature -- Final mode generation
 			l_type_id_mapping: ARRAY [INTEGER]
 		do
 			eiffel_project.terminate_c_compilation
-			if not retried and is_finalization_needed then
+			if not retried and True then -- is_finalization_needed then
 				if not il_generation then
 					internal_retrieved_finalized_type_mapping := Void
 					create l_type_id_mapping.make (0, static_type_id_counter.count)
@@ -3947,6 +3944,8 @@ feature -- Generation
 					a_class := class_list.item (i)
 					types := a_class.types
 					l_class_is_finalized := not a_class.is_precompiled or else a_class.is_in_system
+						-- The following line is a hack so that `types.sort' works.
+					current_class := a_class
 					types.sort
 					from
 						types.start
@@ -4034,7 +4033,8 @@ feature -- Generation
 			in_final_mode: byte_context.final_mode
 		local
 			table: POLY_TABLE [ENTRY]
-			used: SEARCH_TABLE [INTEGER]
+			i, nb: INTEGER
+			used, used_for_routines, used_for_types: PACKED_BOOLEANS
 			l_rout_id: INTEGER
 			l_buf: like generation_buffer
 			l_header_buf: like header_generation_buffer
@@ -4055,18 +4055,23 @@ feature -- Generation
 
 			from
 				used := Eiffel_table.used
-				used.start
-					-- Usually we do not have that many generic tables.
-				create l_rout_ids.make (100)
+				used_for_types := Eiffel_table.used_for_types
+				used_for_routines := Eiffel_table.used_for_routines
+				i := used.lower
+				nb := used.upper
 			until
-				used.after
+				i > nb
 			loop
-				table := l_tmp_poly_server.item (used.item_for_iteration)
-				if table.has_type_table and then not table.has_one_type then
-					l_rout_ids.extend (used.item_for_iteration)
+				if used.item (i) then
+					table := l_tmp_poly_server.item (i)
+					if used_for_routines.item (i) then
+						table.write
+					end
+					if used_for_types.item (i) then
+						table.write_for_type
+					end
 				end
-				table.write
-				used.forth
+				i := i + 1
 			end
 
 			generate_initialization_table
@@ -4089,58 +4094,54 @@ feature -- Generation
 			l_buf.put_string ("void egc_routine_tables_init (void)")
 			l_buf.generate_block_open
 			from
-				used.start
+				i := used.lower
+				nb := used.upper
 			until
-				used.after
+				i > nb
 			loop
-				l_rout_id := used.item_for_iteration
-				table := l_tmp_poly_server.item (l_rout_id)
-				if table.is_routine_table then
-					l_table_name := l_encoder.routine_table_name (l_rout_id)
-						-- Declare initialization routine for table
-					l_header_buf.put_new_line
-					l_header_buf.put_string ("extern void ")
-					l_header_buf.put_string (l_table_name)
-					l_header_buf.put_string ("_init(void);")
-						-- Call the routine
-					l_buf.put_new_line
-					l_buf.put_string (l_table_name)
-					l_buf.put_string ("_init();")
-				end
-				if table.is_attribute_table then
-					l_table_name := l_encoder.attribute_table_name (l_rout_id)
-						-- Declare initialization routine for table
-					l_header_buf.put_new_line
-					l_header_buf.put_string ("extern void ")
-					l_header_buf.put_string (l_table_name)
-					l_header_buf.put_string ("_init(void);")
-						-- Call the routine
-					l_buf.put_new_line
-					l_buf.put_string (l_table_name)
-					l_buf.put_string ("_init();")
-				end
-				used.forth
-			end
-				-- Initialize then table used for finding out
-				-- redefinition of a generic type.
-			from
-				l_rout_ids.start
-			until
-				l_rout_ids.after
-			loop
-				l_rout_id := l_rout_ids.item
-				l_table_name := l_encoder.type_table_name (l_rout_id)
-					-- Declare initialization routine for table
-				l_header_buf.put_new_line
-				l_header_buf.put_string ("extern void ")
-				l_header_buf.put_string (l_table_name)
-				l_header_buf.put_string ("_init(void);")
+				if used.item (i) then
+					table := l_tmp_poly_server.item (i)
+					if used_for_routines.item (i) then
+						if table.is_routine_table then
+							l_table_name := l_encoder.routine_table_name (i)
+								-- Declare initialization routine for table
+							l_header_buf.put_new_line
+							l_header_buf.put_string ("extern void ")
+							l_header_buf.put_string (l_table_name)
+							l_header_buf.put_string ("_init(void);")
+								-- Call the routine
+							l_buf.put_new_line
+							l_buf.put_string (l_table_name)
+							l_buf.put_string ("_init();")
+						end
+						if table.is_attribute_table then
+							l_table_name := l_encoder.attribute_table_name (i)
+								-- Declare initialization routine for table
+							l_header_buf.put_new_line
+							l_header_buf.put_string ("extern void ")
+							l_header_buf.put_string (l_table_name)
+							l_header_buf.put_string ("_init(void);")
+								-- Call the routine
+							l_buf.put_new_line
+							l_buf.put_string (l_table_name)
+							l_buf.put_string ("_init();")
+						end
+					end
+					if used_for_types.item (i) then
+						l_table_name := l_encoder.type_table_name (i)
+							-- Declare initialization routine for table
+						l_header_buf.put_new_line
+						l_header_buf.put_string ("extern void ")
+						l_header_buf.put_string (l_table_name)
+						l_header_buf.put_string ("_init(void);")
 
-					-- Call the routine
-				l_buf.put_new_line
-				l_buf.put_string (l_table_name)
-				l_buf.put_string ("_init();")
-				l_rout_ids.forth
+							-- Call the routine
+						l_buf.put_new_line
+						l_buf.put_string (l_table_name)
+						l_buf.put_string ("_init();")
+					end
+				end
+				i := i + 1
 			end
 
 				-- Generate initialization for special tables.
@@ -4289,7 +4290,7 @@ feature -- Generation
 				cl_type := class_types.item (i);
 				if cl_type /= Void then
 					cl_type.generate_parent_table (buffer, final_mode);
-					cid := cl_type.type.generated_id (final_mode);
+					cid := cl_type.type.generated_id (final_mode, Void);
 					used_ids.force (True, cid);
 					if cid > max_id then
 						max_id := cid;
@@ -4433,14 +4434,7 @@ if cl_type /= Void then
 					cl_type.generate_skeleton1 (buffer)
 				end
 				if not final_mode then
-						-- Doesn't use `cl_type' as first argument:
-						-- LINKED_LIST [INTEGER] introduced in two precompiled projects
-						-- must have only one derivation in the generated code, i.e. objects
-						-- created by one precompiled project can be used by the other as they are
-						-- of the same type.
-						-- Using cl_type.type.associated_class_type will make sure that both
-						-- derivations will share the same dynamic type.
-					cltype_array.put (cl_type.type.associated_class_type, cl_type.static_type_id)
+					cltype_array.put (cl_type, cl_type.static_type_id)
 				end
 else
 		-- FIXME
@@ -4737,7 +4731,7 @@ end
 			rout_entry: ROUT_ENTRY
 			i, nb: INTEGER
 			class_type: CLASS_TYPE
-			l_void: VOID_I
+			l_void: VOID_A
 		do
 			if remover /= Void then
 					-- Ensure that initialization routines are marked `used'.
@@ -4776,7 +4770,7 @@ end
 			i, nb: INTEGER
 			class_type: CLASS_TYPE
 			l_class: CLASS_C
-			l_void: VOID_I
+			l_void: VOID_A
 		do
 			from
 				create rout_table.make (routine_id_counter.creation_rout_id)
@@ -4798,7 +4792,7 @@ end
 						rout_entry.set_type_id (i)
 						rout_entry.set_type (l_void)
 						rout_entry.set_written_type_id (
-							class_type.type.implemented_type (l_class.creation_feature.written_in).type_id)
+							class_type.type.implemented_type (l_class.creation_feature.written_in).type_id (Void))
 						rout_entry.set_body_index (l_class.creation_feature.body_index)
 						rout_table.extend (rout_entry)
 					end

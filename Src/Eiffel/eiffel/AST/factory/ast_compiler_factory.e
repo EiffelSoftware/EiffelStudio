@@ -281,8 +281,7 @@ feature -- Access
 							if l_built_in_class_as.suppliers /= Void then
 									-- Make sure any uncompiled classes referenced by the built in get compiled.
 									--| FIXME IEK Optimize if possible as this only needs to be performed once per built in class.
-								eiffel_parser.suppliers.light_supplier_ids.merge (l_built_in_class_as.suppliers.light_supplier_ids)
-								eiffel_parser.suppliers.supplier_ids.merge (l_built_in_class_as.suppliers.supplier_ids)
+								eiffel_parser.suppliers.merge (l_built_in_class_as.suppliers)
 							end
 						end
 					end

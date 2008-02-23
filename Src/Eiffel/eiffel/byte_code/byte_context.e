@@ -71,7 +71,7 @@ feature -- Access
 	original_body_index: INTEGER
 			-- Original body index of the current feature or class invariant
 
-	current_type: CL_TYPE_I
+	current_type: CL_TYPE_A
 			-- Current class type in which byte code is processed
 
 	class_type: CLASS_TYPE
@@ -259,7 +259,7 @@ feature -- Setting
 
 feature -- Code generation
 
-	generate_gen_type_conversion (gtype : GEN_TYPE_I) is
+	generate_gen_type_conversion (gtype: GEN_TYPE_A; a_level: NATURAL) is
 			-- Generate code for converting type id arrays
 			-- into single id's.
 		require
@@ -280,44 +280,56 @@ feature -- Code generation
 			if not System.has_multithreaded or else not use_init then
 				l_buffer.put_string ("static ")
 			end
-			l_buffer.put_string ("EIF_TYPE_INDEX typarr [] = {")
+			l_buffer.put_string ("EIF_TYPE_INDEX typarr")
+			l_buffer.put_natural_32 (a_level)
+			l_buffer.put_string ("[] = {")
 
-			l_buffer.put_integer (current_type.generated_id (final_mode))
+			l_buffer.put_integer (context_class_type.type.generated_id (final_mode, Void))
 			l_buffer.put_character (',')
 
 			if use_init then
 				create idx_cnt
 				idx_cnt.set_value (1)
-				gtype.generate_cid_array (l_buffer, final_mode, True, idx_cnt)
+				gtype.generate_cid_array (l_buffer, final_mode, True, idx_cnt, context_class_type.type)
 			else
-				gtype.generate_cid (l_buffer, final_mode, True)
+				gtype.generate_cid (l_buffer, final_mode, True, context_class_type.type)
 			end
 			l_buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			l_buffer.put_string ("};")
 			l_buffer.put_new_line
-			l_buffer.put_string ("EIF_TYPE_INDEX typres;")
+			l_buffer.put_string ("EIF_TYPE_INDEX typres")
+			l_buffer.put_natural_32 (a_level)
+			l_buffer.put_character (';')
 			if not use_init then
 				l_buffer.put_new_line
-				l_buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
+				l_buffer.put_string ("static EIF_TYPE_INDEX typcache")
+				l_buffer.put_natural_32 (a_level)
+				l_buffer.put_string (" = INVALID_DTYPE;")
 			end
-			l_buffer.put_new_line
 
 			if use_init then
 				-- Reset counter
 				idx_cnt.set_value (1)
-				gtype.generate_cid_init (l_buffer, final_mode, True, idx_cnt)
+				gtype.generate_cid_init (l_buffer, final_mode, True, idx_cnt, a_level)
 			end
 
 			l_buffer.put_new_line
+			l_buffer.put_new_line
+			l_buffer.put_string ("typres")
+			l_buffer.put_natural_32 (a_level)
 			if not use_init then
-				l_buffer.put_string ("typres = RTCID2(&typcache, ")
+				l_buffer.put_string (" = RTCID2(&typcache")
+				l_buffer.put_natural_32 (a_level)
+				l_buffer.put_two_character (',', ' ')
 			else
-				l_buffer.put_string ("typres = RTCID2(NULL, ")
+				l_buffer.put_string (" = RTCID2(NULL, ")
 			end
 			generate_current_dftype
 			l_buffer.put_string (", ")
-			l_buffer.put_integer (gtype.generated_id (final_mode))
-			l_buffer.put_string (", typarr);")
+			l_buffer.put_integer (gtype.generated_id (final_mode, context_class_type.type))
+			l_buffer.put_string (", typarr")
+			l_buffer.put_natural_32 (a_level)
+			l_buffer.put_two_character (')', ';')
 		end
 
 feature {NONE} -- Once features: implementation
@@ -465,8 +477,8 @@ feature -- C code generation: once features
 			end
 		end
 
-	generate_module_once_data_initialization (static_type_id: INTEGER) is
-			-- Generate initialization of once data fields for type identified by `static_type_id'
+	generate_module_once_data_initialization (a_type_id: INTEGER) is
+			-- Generate initialization of once data fields for type identified by `a_type_id'
 		require
 			buffer_not_void: buffer /= Void
 		local
@@ -486,7 +498,7 @@ feature -- C code generation: once features
 					buf.put_string ("RTOTS (")
 					buf.put_integer (once_indexes.key_for_iteration)
 					buf.put_character (',')
-					buf.put_string (encoder.feature_name (static_type_id, once_indexes.key_for_iteration))
+					buf.put_string (encoder.feature_name (a_type_id, once_indexes.key_for_iteration))
 					buf.put_character (')')
 					once_indexes.forth
 				end
@@ -501,7 +513,7 @@ feature -- C code generation: once features
 					buf.put_string ("RTOQS (")
 					buf.put_integer (once_indexes.key_for_iteration)
 					buf.put_character (',')
-					buf.put_string (encoder.feature_name (static_type_id, once_indexes.key_for_iteration))
+					buf.put_string (encoder.feature_name (a_type_id, once_indexes.key_for_iteration))
 					buf.put_character (')')
 					once_indexes.forth
 				end
@@ -797,8 +809,6 @@ feature -- Registers
 
 	Result_register: RESULT_B is
 			-- An instace of Result register for local var index computation
-		local
-			dummy: NONE_I
 		once
 				-- This hack is needed because of the special treatment of
 				-- the Result register in once functions. The Result is always
@@ -807,8 +817,7 @@ feature -- Registers
 				-- the print_register function on Result_register,
 				-- and this has been carefully patched in RESULT_BL to handle
 				-- the once cases.
-			create dummy
-			create {RESULT_BL} Result.make (dummy)
+			create {RESULT_BL} Result.make (create {NONE_A})
 		end
 
 	get_argument_register (t: TYPE_C): REGISTER is
@@ -884,6 +893,8 @@ feature {REGISTER} -- Registers
 				Result := real32_c_type
 			when c_real64 then
 				Result := real64_c_type
+			when c_boolean then
+				Result := boolean_c_type
 			when c_char then
 				Result := char_c_type
 			when c_wide_char then
@@ -922,6 +933,7 @@ feature {NONE} -- Registers: implementation
 			Result.put ("tu8_", c_uint64)
 			Result.put ("tr4_", c_real32)
 			Result.put ("tr8_", c_real64)
+			Result.put ("tb", c_boolean)
 			Result.put ("tc", c_char)
 			Result.put ("tw", c_wide_char)
 			Result.put ("tp", c_pointer)
@@ -937,6 +949,7 @@ feature {NONE} -- Registers: implementation
 			Result.put ("uu8_", c_nb_types - 1 + c_uint64)
 			Result.put ("ur4_", c_nb_types - 1 + c_real32)
 			Result.put ("ur8_", c_nb_types - 1 + c_real64)
+			Result.put ("ub", c_nb_types - 1 + c_boolean)
 			Result.put ("uc", c_nb_types - 1 + c_char)
 			Result.put ("uw", c_nb_types - 1 + c_wide_char)
 			Result.put ("up", c_nb_types - 1 + c_pointer)
@@ -965,6 +978,7 @@ feature {NONE} -- Registers: implementation
 			Result.put ("SK_UINT64", c_uint64)
 			Result.put ("SK_REAL32", c_real32)
 			Result.put ("SK_REAL64", c_real64)
+			Result.put ("SK_BOOL", c_boolean)
 			Result.put ("SK_CHAR", c_char)
 			Result.put ("SK_WCHAR", c_wide_char)
 			Result.put ("SK_POINTER", c_pointer)
@@ -980,6 +994,7 @@ feature {NONE} -- Registers: implementation
 			Result.put ("SK_UINT64", c_nb_types - 1 + c_uint64)
 			Result.put ("SK_REAL32", c_nb_types - 1 + c_real32)
 			Result.put ("SK_REAL64", c_nb_types - 1 + c_real64)
+			Result.put ("SK_BOOL", c_nb_types - 1 + c_boolean)
 			Result.put ("SK_CHAR", c_nb_types - 1 + c_char)
 			Result.put ("SK_WCHAR", c_nb_types - 1 + c_wide_char)
 			Result.put ("SK_POINTER", c_nb_types - 1 + c_pointer)
@@ -1037,22 +1052,21 @@ feature -- Access
 	associated_class: CLASS_C is
 			-- Class associated with current type
 		do
-			Result := current_type.base_class
+			Result := current_type.associated_class
 		end
 
-	constrained_type_in (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
+	constrained_type_in (type: TYPE_A; context_type: CLASS_TYPE): TYPE_A is
 			-- Constrained type `type' in the context of `context_class_type'
 		require
 			type_not_void: type /= Void
 			context_type_not_void: context_type /= Void
 		local
-			context_type_i: CL_TYPE_I
-			formal: FORMAL_I
+			context_type_i: CL_TYPE_A
+			formal: FORMAL_A
 			formal_position: INTEGER
-			reference_i: REFERENCE_I
 		do
 			debug ("to_implement")
-				to_implement ("Move this feature to TYPE_I with a redefinition in FORMAL_I.")
+				to_implement ("Move this feature to TYPE_A with a redefinition in FORMAL_A.")
 			end
 			from
 				Result := type
@@ -1062,16 +1076,15 @@ feature -- Access
 				context_type_i := context_type.type
 				formal ?= Result
 				check
-					context_type_i.meta_generic /= Void
+					context_type_i.generics /= Void
 				end
 				formal_position := formal.position
-				Result := context_type_i.meta_generic.item (formal_position)
-				reference_i ?= Result
-				if reference_i /= Void then
-					if formal.type_a.is_multi_constrained (context_type.type.base_class) then
-						create {MULTI_FORMAL_I} Result.make (formal.is_reference, formal.is_expanded, formal.position)
+				Result := context_type_i.generics.item (formal_position)
+				if Result.is_formal then
+					if formal.is_multi_constrained (context_type.type.associated_class) then
+						create {MULTI_FORMAL_A} Result.make (True, formal.is_expanded, formal.position)
 					else
-						Result := context_type_i.base_class.constrained_type (formal_position).type_i
+						Result := context_type_i.associated_class.constrained_type (formal_position)
 					end
 				end
 			end
@@ -1080,107 +1093,86 @@ feature -- Access
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	real_type_in (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
+	real_type_in (type: TYPE_A; context_type: CLASS_TYPE): TYPE_A is
 			-- Type `type' as seen in `context_type'
 		require
 			type_not_void: type /= Void
 			context_type_not_void: context_type /= Void
 		do
-			debug ("to_implement")
-				to_implement ("Move this feature to TYPE_I and descendants.")
+			if type.is_like_current then
+				Result := context_type.type
+			elseif type.is_like then
+				Result := real_type_in (type.actual_type, context_type)
+			elseif type.is_formal then
+				Result := constrained_type_in (type, context_type)
+			else
+				Result := type
 			end
-			Result := constrained_type_in (type, context_type).instantiation_in (context_type)
 		ensure
 			result_not_void: Result /= Void
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	real_type_in_fixed (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
+	real_type_in_fixed (type: TYPE_A; context_type: CLASS_TYPE): TYPE_A is
 			-- Type `type' as seen in `context_type'
 		require
 			type_not_void: type /= Void
 			context_type_not_void: context_type /= Void
-		local
-			l_formal: FORMAL_A
-			l_type_set: TYPE_SET_A
 		do
-			Result := real_type_in (type, context_type)
-				-- Avoid instantiating types if possible
-			if false then
-
-			debug ("to_implement")
-				to_implement ("Move this feature to TYPE_I and descendants.")
-			end
-			l_formal ?= type.type_a
-			if l_formal /= Void and then l_formal.is_multi_constrained (context_type.associated_class) then
-					l_type_set := l_formal.constraints (class_type.associated_class)
-					if l_type_set.has_expanded then
-						Result := l_type_set.expanded_representative.type_i
-					else
-						create {MULTI_FORMAL_I} Result.make (type.is_reference, l_type_set.has_expanded, l_formal.position)
-					end
-			else
-				Result := constrained_type_in (type, context_type).instantiation_in (context_type)
-			end
-			end
+			Result := real_type_in (type, class_type)
 		ensure
 			result_not_void: Result /= Void
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	real_type (type: TYPE_I): TYPE_I is
+	real_type (type: TYPE_A): TYPE_A is
 			-- Type `type' written in `class_type' as seen in `context_class_type'
 		require
 			type_not_void: type /= Void
 			class_type_not_void: class_type /= Void
-			context_class_type_not_void: context_class_type /= Void
-		local
-			cl_type_i: CL_TYPE_I
+			context_class_type_not_void: current_type /= Void
 		do
-			fixme ("Check that all callers are aware that they can get back a MULTI_FORMAL_I.")
-				-- Avoid instantiating types if possible
-			cl_type_i ?= type
-			if cl_type_i /= Void and then cl_type_i.is_standalone then
-					-- Standalone class type
-				Result := cl_type_i
-			elseif cl_type_i = Void and then type.is_anchored then
-					-- "like Current"
-				Result := context_class_type.type
-			elseif context_class_type = class_type then
-				Result := real_type_in (type, class_type)
+				-- If code is inherited, we first find out the type.
+			if class_type /= context_class_type then
+				Result := type.evaluated_type_in_descendant (class_type.associated_class,
+					context_class_type.associated_class, current_feature)
 			else
-				debug ("to_implement")
-					to_implement ("Implement context-aware TYPE_I.instantiation_in so that there is no need to create TYPE_A.")
-				end
-				Result := constrained_type_in (type, class_type).type_a.instantiation_in
-						(context_class_type.type.type_a, class_type.type.class_id).type_i
+				Result := type
 			end
+				-- And then we instantiate it in the context of `context_class_type'.
+			Result := real_type_in (Result, context_class_type)
 		ensure
 			result_not_void: Result /= Void
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	real_type_fixed (type: TYPE_I): TYPE_I is
+	real_type_fixed (type: TYPE_A): TYPE_A is
 			-- Type `type' written in `class_type' as seen in `context_class_type'
-			-- Fixed means that the possible return of a MULTI_FORMAL_I is checked and valid.
+			-- Fixed means that the possible return of a MULTI_FORMAL_A is checked and valid.
 		require
 			type_not_void: type /= Void
 			class_type_not_void: class_type /= Void
-			context_class_type_not_void: context_class_type /= Void
+			context_class_type_not_void: current_type /= Void
 		do
-			Result := real_type (type)
+			Result := real_type_in (type, class_type)
 		ensure
 			result_not_void: Result /= Void
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	creation_type (type: TYPE_I): TYPE_I is
+	creation_type (type: TYPE_A): TYPE_A is
 			-- Convenience
 		require
 			type_not_void: type /= Void
 			class_type_not_void: class_type /= Void
 		do
-			Result := type.complete_instantiation_in (class_type)
+				-- If code is inherited, we first find out the type.
+			if class_type /= context_class_type then
+				Result := type.evaluated_type_in_descendant (class_type.associated_class,
+					context_class_type.associated_class, current_feature)
+			else
+				Result := type
+			end
 		end
 
 	set_byte_code (bc: BYTE_CODE) is
@@ -1227,8 +1219,17 @@ feature -- Access
 
 	is_ancestor (other: CLASS_TYPE): BOOLEAN is
 			-- Is `other' an ancestor of `context_class_type'?
+		local
+			l_class: CLASS_C
 		do
-			Result := context_class_type.type.type_a.is_conformant_to (other.type.type_a)
+				-- We need to set `system.current_class' since conformance require a context class
+				-- especially when you have a formal. Note that once `conform_to' takes a context
+				-- class as argument we won't need this.
+			l_class := system.current_class
+			system.set_current_class (context_class_type.associated_class)
+				-- We do `twin' because `is_conformant_to' as a side effect of modifying the object.
+			Result := context_class_type.type.is_conformant_to (other.type)
+			system.set_current_class (l_class)
 		end
 
 	is_written_context: BOOLEAN is
@@ -1836,7 +1837,7 @@ feature -- Access
 			-- Compute the argument's ordinal position within the expanded
 			-- subset of arguments.
 		local
-			arg_array: ARRAY [TYPE_I]
+			arg_array: ARRAY [TYPE_A]
 			i, count: INTEGER
 			nb_exp: INTEGER
 		do
@@ -1889,12 +1890,12 @@ feature -- Access
 			end
 		end
 
-	local_list: LINKED_LIST [TYPE_I]
+	local_list: LINKED_LIST [TYPE_A]
 			-- Local type list for byte code: it includes Eiffel local
 			-- variables types, variant local integer and hector
 			-- temporary varaibles
 
-	add_local (t: TYPE_I) is
+	add_local (t: TYPE_A) is
 			-- Add local type to `local_list'.
 		require
 			good_argument: t /= Void
@@ -2070,7 +2071,7 @@ feature -- Descendants information
 			i: INTEGER
 			class_types: ARRAY [CLASS_TYPE]
 			c: CLASS_TYPE
-			t: CL_TYPE_I
+			t: CL_TYPE_A
 		do
 			from
 				class_types := system.class_types
@@ -2083,8 +2084,8 @@ feature -- Descendants information
 				if c /= Void and then c.is_expanded then
 					expanded_descendants.include (c.conformance_table)
 					t := c.type.reference_type
-					if t.has_associated_class_type then
-						expanded_descendants.put (True, t.associated_class_type.type_id)
+					if t.has_associated_class_type (Void) then
+						expanded_descendants.put (True, t.associated_class_type (Void).type_id)
 					end
 				end
 				i := i - 1

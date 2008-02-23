@@ -157,12 +157,6 @@ feature -- Processing
 					from types.start until types.after loop
 						if types.item.is_modifiable then
 							feat_tbl := l_m_feat_tbl_server.item (types.item.static_type_id)
-
-								debug ("ACTIVITY")
-									io.error.put_string ("melting class desc of ")
-									types.item.type.trace
-									io.error.put_new_line
-								end
 							feat_tbl.store (file)
 						end
 						types.forth

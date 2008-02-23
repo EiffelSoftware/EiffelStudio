@@ -61,7 +61,7 @@ feature -- Code generation
 		do
 		end;
 
-	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN is
 		do
 		end;
 
@@ -115,7 +115,7 @@ feature -- Code generation
 			Result := System.remover.array_optimizer.array_item_type (id);
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
 		local
 			expr: EXPR_B
 			id: INTEGER;
@@ -157,8 +157,8 @@ feature -- Code generation
 			buf.put_character (')');
 		end
 
-	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
-		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
+	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_A;
+		basic_type: BASIC_A; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
 		do
 			generate_end (gen_reg, class_type)

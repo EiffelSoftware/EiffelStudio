@@ -258,14 +258,14 @@ feature -- Special checking
 		do
 			l_class_type ?= a_type
 			l_type_a := type_a_generator.evaluate_type (a_type, a_context_class)
-						-- Check if there is no anchor and no bit symbol in the constraint type.
-			if not l_type_a.is_valid or else l_type_a.has_like then
+				-- Check if there is no anchor (has_like) and no bit symbol (is_class_valid) in the constraint type.
+			if l_type_a.has_like or not l_type_a.is_class_valid then
 				create l_vcfg3
 				l_vcfg3.set_class (a_context_class)
 				l_vcfg3.set_formal_name ("Constraint genericity")
 				l_vcfg3.set_location (a_type.start_location)
 				a_error_handler.insert_error (l_vcfg3)
-				-- If `l_class_type' is Void, we stop because we habe a formal generic, which is always valid.
+				-- If `l_class_type' is Void, we stop because we have a formal generic, which is always valid.
 			elseif l_class_type /= Void then
 				l_cluster := a_context_class.group
 				l_class_i := universe.class_named (l_class_type.class_name.name, l_cluster)

@@ -13,7 +13,10 @@ inherit
 
 	CHARACTER_ROUTINES
 
-	SHARED_TYPE_I
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
 
 create
 	make_character_8,
@@ -85,11 +88,11 @@ feature
 			-- Generate value in `buffer'.
 		do
 			if is_character_32 then
-				wide_char_c_type.generate_cast (buffer)
+				wide_char_type.c_type.generate_cast (buffer)
 				buffer.put_natural_32 (character_value.natural_32_code)
 				buffer.put_character ('U')
 			else
-				char_c_type.generate_cast (buffer)
+				character_type.c_type.generate_cast (buffer)
 				buffer.put_character_literal (character_value.to_character_8)
 			end
 		end

@@ -15,6 +15,11 @@ inherit
 			is_fast_as_local, is_constant_expression
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -69,13 +74,13 @@ feature -- Status report
 	is_constant_expression: BOOLEAN is True
 			-- A character constant is constant.
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression type
 		do
 			if is_character_32 then
-				Result := wide_char_c_type
+				Result := wide_char_type
 			else
-				Result := Char_c_type
+				Result := character_type
 			end
 		end
 
@@ -88,11 +93,11 @@ feature -- C code generation
 		do
 			buf := buffer
 			if is_character_32 then
-				wide_char_c_type.generate_cast (buf)
+				wide_char_type.c_type.generate_cast (buf)
 				buf.put_natural_32 (value.natural_32_code)
 				buf.put_character ('U')
 			else
-				char_c_type.generate_cast (buf)
+				character_type.c_type.generate_cast (buf)
 				buf.put_character_literal (value.to_character_8)
 			end
 		end

@@ -11,6 +11,13 @@ class
 inherit
 	TYPED_INTERVAL_VAL_B [CHARACTER_32]
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 create
 	make
 
@@ -114,10 +121,10 @@ feature {NONE} -- Implementation: C generation
 		do
 			buf := buffer
 			if v.natural_32_code <= {CHARACTER_8}.max_value.as_natural_32 then
-				char_c_type.generate_cast (buf)
+				character_type.c_type.generate_cast (buf)
 				buffer.put_character_literal (v.to_character_8)
 			else
-				wide_char_c_type.generate_cast (buf)
+				wide_char_type.c_type.generate_cast (buf)
 				buf.put_natural_32 (v.natural_32_code)
 				buf.put_character ('U')
 			end

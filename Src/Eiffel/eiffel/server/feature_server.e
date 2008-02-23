@@ -11,7 +11,7 @@ class
 inherit
 	COMPILER_SERVER [FEATURE_I]
 		redefine
-			has, item
+			has, item, remove
 		end
 
 create
@@ -40,6 +40,13 @@ feature -- Access
 			if Result = Void then
 				Result := Precursor (an_id)
 			end
+		end
+
+	remove (an_id: INTEGER_32) is
+			-- <Original>
+		do
+			tmp_feature_server.remove (an_id)
+			Precursor (an_id)
 		end
 
 feature -- Server size configuration

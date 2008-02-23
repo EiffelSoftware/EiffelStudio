@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER; a_class_type: CLASS_TYPE) is
 			-- Create a specific skeleton corresponding to a certain CLASS_TYPE
 		require
 			n_non_negative: n >= 0
@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			create area.make (n)
 			count := n
 			position := 0
+			class_type := a_class_type
 		ensure
 			count_set: count = n
 		end
@@ -62,6 +63,9 @@ feature -- Update
 		end
 
 feature -- Access
+
+	class_type: CLASS_TYPE
+			-- Associated class_type
 
 	count: INTEGER
 			-- Number of items in skeleton.
@@ -114,6 +118,7 @@ feature -- Comparison
 			current_area, other_area: SPECIAL [ATTR_DESC]
 			l_exp_desc: EXPANDED_DESC
 			l_old_skel: SKELETON
+			l_exp_class_type: CLASS_TYPE
 		do
 			nb := count
 			if nb = other.count then
@@ -155,17 +160,18 @@ feature -- Comparison
 						check
 							l_exp_desc_not_void: l_exp_desc /= Void
 						end
-						l_old_skel := old_skeletons.item (l_exp_desc.class_type.type_id)
+						l_exp_class_type := l_exp_desc.class_type
+						l_old_skel := old_skeletons.item (l_exp_class_type.type_id)
 						if l_old_skel /= Void then
 								-- We now checks the old skeleton associated to `l_exp_desc' with a
 								-- new one that we generate on the fly. It is definitely not the
 								-- most efficient way because of the creation of a skeleton we will
 								-- not use, but at least do the correct job at finding if a skeleton
 								-- of a class having expanded attributes has changed.
-							if l_exp_desc.class_type.associated_class.skeleton /= Void then
+							if l_exp_class_type.associated_class.skeleton /= Void then
 								Result := l_old_skel.equiv (old_skeletons,
-									l_exp_desc.class_type.associated_class.skeleton.
-										instantiation_in (l_exp_desc.class_type))
+									l_exp_class_type.associated_class.skeleton.
+										instantiation_in (l_exp_class_type))
 							else
 									-- Most likeley an external class, therefore its skeleton
 									-- did not change.
@@ -174,7 +180,7 @@ feature -- Comparison
 									-- checking voidness of `skeleton' from CLASS_C.
 							end
 						else
-							if l_exp_desc.class_type.associated_class.is_external then
+							if l_exp_class_type.associated_class.is_external then
 									-- A .NET external class so we cannot tell if the skeleton
 									-- changed
 									-- FIXME: Manu: 10/27/2003: What if we handle incremental
@@ -988,7 +994,7 @@ feature -- Skeleton byte code
 			loop
 				ba.append_short_integer (1)
 				ba.append_short_integer (0)
-				current_area.item (i).type_i.make_gen_type_byte_code (ba, False)
+				current_area.item (i).type_i.make_gen_type_byte_code (ba, False, class_type.type)
 				ba.append_short_integer (- 1)
 				i := i + 1
 			end;
@@ -1066,7 +1072,7 @@ feature -- Skeleton byte code
 			buffer.put_string ("};%N%N");
 		end;
 
-	generate_generic_type_arrays (code : INTEGER) is
+	generate_generic_type_arrays is
 			-- Generate static C arrays of attributes full type codes in the
 			-- skeleton file.
 		require
@@ -1086,12 +1092,12 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				current_area.item (i).generate_generic_code (buffer, Context.final_mode, code, i)
+				current_area.item (i).generate_generic_code (buffer, Context.final_mode, class_type, i)
 				i := i + 1;
 			end;
 			buffer.put_new_line;
 			buffer.put_string ("static EIF_TYPE_INDEX *gtypes")
-			buffer.put_integer (code)
+			buffer.put_integer (class_type.type_id)
 			buffer.put_string (" [] = {%N")
 
 			from
@@ -1102,7 +1108,7 @@ feature -- Skeleton byte code
 			loop
 				edesc ?= current_area.item (i)
 				buffer.put_string ("g_atype")
-				buffer.put_integer (code)
+				buffer.put_integer (class_type.type_id)
 				buffer.put_character ('_')
 				buffer.put_integer (i)
 				buffer.put_string (",%N")
@@ -1241,29 +1247,6 @@ feature {NONE} -- Implementation of quick sort algorithm
 			current_area.put (current_area.item (min), down)
 			current_area.put (temp, min)
 			Result := down
-		end
-
-feature -- Trace
-
-	trace is
-			-- Debug purpose
-		local
-			current_area: SPECIAL [ATTR_DESC]
-			i, nb: INTEGER
-		do
-			from
-				current_area := area
-				i := 0
-				nb := count - 1
-			until
-				i > nb
-			loop
-				io.error.put_string (current_area.item (i).attribute_name);
-				io.error.put_string (": ");
-				item.trace;
-				io.error.put_new_line;
-				i := i + 1;
-			end;
 		end
 
 feature {NONE} -- Externals
@@ -1408,6 +1391,9 @@ feature {NONE} -- Externals
 		alias
 			"OVERHEAD"
 		end;
+
+invariant
+	class_type_not_void: class_type /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -5009,69 +5009,75 @@ rt_private void address(int32 aid)
 	last->it_ptr = (EIF_POINTER) RTWPP(aid);
 }
 
+rt_private EIF_TYPE_INDEX get_next_compound_id (EIF_REFERENCE Current) 
+	/* Compute next element of currently traversed compound_id. */
+{
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+	EIF_TYPE_INDEX result = 0;
+	int pos;
+
+	result = (EIF_TYPE_INDEX) get_int16(&IC);
+	switch (result)
+	{
+		case LIKE_ARG_TYPE: /* like argument */
+			pos = (int) get_int16(&IC);
+			result = get_creation_type ();
+			result = RTID(RTCA(arg(pos)->it_ref, result));
+			break;
+		case LIKE_CURRENT_TYPE: /* like Current */
+			result = RTID(Dftype(Current));
+			break;
+		case LIKE_PFEATURE_TYPE: /* like feature - see BC_PCLIKE */
+			{
+				short stype;
+				int32 origin, ooffset;
+
+				stype = get_int16(&IC);			/* Get static type of caller */
+				origin = get_int32(&IC);			/* Get the origin class id */
+				ooffset = get_int32(&IC);			/* Get the offset in origin */
+				result = RTID(RTWPCT(stype, origin, ooffset, Current));
+			}
+			break;
+		case LIKE_FEATURE_TYPE: /* like feature - see BC_CLIKE */
+			{
+				short code;
+				long  offset;
+
+				code = get_int16(&IC);		/* Get the static type first */
+				offset = get_int32(&IC);	/* Get the feature id of the anchor */
+				result = RTID(RTWCT(code, offset, Current));
+			}
+			break;
+		default:
+			break;
+	}
+	return result;
+}
+
 rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current, EIF_TYPE_INDEX dtype)
 {
 	/* Get array of short ints and convert it to a compound id. */
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
-	EIF_TYPE_INDEX   gen_types [MAX_CID_SIZE+1], *gp, last;
-	int     cnt, pos;
+	EIF_TYPE_INDEX   gen_types [MAX_CID_SIZE+1], *gp;
+	int cnt;
 
 	gp  = gen_types;
 	cnt = 0;
 
 	do
 	{
-		*(gp++) = last = (EIF_TYPE_INDEX) get_int16(&IC);
 		++cnt;
-
-		/* Check for anchors */
-
-		switch (last)
-		{
-			case LIKE_ARG_TYPE: /* like argument */
-						pos = (int) get_int16(&IC);
-						*(gp - 1) = RTID(RTCA(arg(pos)->it_ref, -10));
-						break;
-			case LIKE_CURRENT_TYPE: /* like Current */
-						*(gp - 1) = RTID(Dftype(Current));
-						break;
-			case LIKE_PFEATURE_TYPE: /* like feature - see BC_PCLIKE */
-						{
-							short stype;
-							int32 origin, ooffset;
-
-							stype = get_int16(&IC);			/* Get static type of caller */
-							origin = get_int32(&IC);			/* Get the origin class id */
-							ooffset = get_int32(&IC);			/* Get the offset in origin */
-							*(gp - 1) = RTID(RTWPCT(stype, origin, ooffset, Current));
-						}
-						break;
-			case LIKE_FEATURE_TYPE: /* like feature - see BC_CLIKE */
-						{
-							short code;
-							long  offset;
-
-							code = get_int16(&IC);		/* Get the static type first */
-							offset = get_int32(&IC);	/* Get the feature id of the anchor */
-							*(gp - 1) = RTID(RTWCT(code, offset, Current));
-						}
-						break;
-			default:
-						break;
-		}
-
-		if (cnt >= MAX_CID_SIZE)
+		*(gp++) = get_next_compound_id (Current);
+		if (cnt >= MAX_CID_SIZE) {
 			eif_panic(MTC "Too many generic parameters in compound type");
+		}
+	} while (*(gp - 1) != TERMINATOR);
 
-	} while (last != TERMINATOR);
-
-	/* If not generic then return dtype */
-
+		/* If not generic then return dtype */
 	if (cnt <= 2)
 		return dtype;
 	
-	return eif_compound_id(NULL, Dftype (Current), dtype, gen_types);
+	return eif_compound_id (NULL, Dftype (Current), dtype, gen_types);
 }
 
 rt_private EIF_TYPE_INDEX get_creation_type (void)
@@ -5089,20 +5095,7 @@ rt_private EIF_TYPE_INDEX get_creation_type (void)
 		type = get_compound_id(MTC icurrent->it_ref,(short)type);
 		break;
 	case BC_CARG:				/* Like argument creation type */
-		if (*IC++ == BC_GEN_PARAM_CREATE) {
-				/* Anchor is based on a formal generic parameter. */
-			EIF_TYPE_INDEX current_type;
-			int32 formal_position;
-
-			current_type = get_int16(&IC);		/* Get static type of caller */
-			formal_position = get_int32(&IC);	/* Get position of formal generic
-											   we want to create */
-			type = RTGPTID(current_type, icurrent->it_ref, formal_position);
-		} else {
-				/* Anchor is based on a class type. */
-			type = get_int16(&IC);		/* Default creation type if void arg.  */
-			type = get_compound_id(MTC icurrent->it_ref,(short)type);
-		}	
+		type = get_creation_type ();
 		code = get_int16(&IC);		/* Argument position */
 		type = RTCA(arg(code)->it_ref, type);
 		break;

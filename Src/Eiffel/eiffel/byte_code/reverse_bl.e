@@ -41,9 +41,9 @@ feature
 	analyze is
 			-- Analyze reverse assignment
 		local
-			source_type: TYPE_I
-			target_type: TYPE_I
-			gen_type: GEN_TYPE_I
+			source_type: TYPE_A
+			target_type: TYPE_A
+			gen_type: GEN_TYPE_A
 			l_context: like context
 		do
 			l_context := context
@@ -61,7 +61,7 @@ feature
 			target.analyze
 			info.analyze
 			source_type := l_context.real_type (source.type)
-			target_type := l_context.creation_type (target.type)
+			target_type := l_context.real_type (target.type)
 			if target.is_predefined and then not target_type.is_expanded then
 				register := target
 			else
@@ -128,10 +128,10 @@ feature
 			-- Generate assignment
 		local
 			buf: GENERATION_BUFFER
-			source_type: TYPE_I
-			target_type: TYPE_I
-			source_class_type: CL_TYPE_I
-			target_class_type: CL_TYPE_I
+			source_type: TYPE_A
+			target_type: TYPE_A
+			source_class_type: CL_TYPE_A
+			target_class_type: CL_TYPE_A
 			is_code_empty: BOOLEAN
 			l_context: like context
 		do
@@ -145,7 +145,7 @@ feature
 			generate_special (how)
 
 			info.generate_start (buf)
-			info.generate_gen_type_conversion
+			info.generate_gen_type_conversion (0)
 
 			source_type := l_context.real_type (source.type)
 			target_type := l_context.real_type (target.type)
@@ -209,7 +209,7 @@ feature
 						-- Attachment to entity of basic type.
 					buf.put_new_line
 					buf.put_string ("RTRB(")
-					info.generate_type_id (buf, l_context.final_mode)
+					info.generate_type_id (buf, l_context.final_mode, 0)
 					buf.put_string (gc_comma)
 					source_print_register
 					buf.put_string (gc_comma)
@@ -222,7 +222,7 @@ feature
 						-- Attachment to entity of non-basic expanded type.
 					buf.put_new_line
 					buf.put_string ("RTRE(")
-					info.generate_type_id (buf, l_context.final_mode)
+					info.generate_type_id (buf, l_context.final_mode, 0)
 					buf.put_string (gc_comma)
 					source_print_register
 					buf.put_string (gc_comma)
@@ -238,7 +238,7 @@ feature
 					target.print_register
 					buf.put_string (" = ")
 					buf.put_string ("RTRV(")
-					info.generate_type_id (buf, l_context.final_mode)
+					info.generate_type_id (buf, l_context.final_mode, 0)
 					buf.put_string (gc_comma)
 					print_register
 					buf.put_character (')')
@@ -255,7 +255,7 @@ feature
 				end
 			else
 				buf.put_string ("RTRV(")
-				info.generate_type_id (buf, l_context.final_mode)
+				info.generate_type_id (buf, l_context.final_mode, 0)
 
 				buf.put_string (gc_comma)
 				source_print_register

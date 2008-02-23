@@ -38,6 +38,9 @@ feature -- Element change
 	remove_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
 			-- Remove one occurrence for each supplier of id
 			-- included in `l'.
+			--| FIXME: look at eweasel test#incr109 and test#fixed070 which shows that
+			--| the `consistency' precondition is being violated. At this stage we think that
+			--| the precondition might be too strong, but this hasn't been checked carefully.
 		require
 			l_not_void: l /= Void
 			consistency: is_ok (l)

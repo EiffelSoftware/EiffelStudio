@@ -63,7 +63,7 @@ feature -- Access
 			Result := access
 		end;
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Access type
 		do
 			Result := access.type;

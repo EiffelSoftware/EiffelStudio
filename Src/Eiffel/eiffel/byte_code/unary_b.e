@@ -40,7 +40,7 @@ feature -- Access
 	access: ACCESS_B
 			-- Access when expression is not a simple type
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Type of the prefixed feature
 		do
 			Result := context.real_type (access.type)
@@ -127,7 +127,7 @@ feature -- Code generation
 				expr := expr.enlarged
 					-- Access is void in UN_OLD_B
 				if access /= Void then
-					access := access.enlarged_on (expr.type)
+					access := access.enlarged_on (context.real_type (expr.type))
 				end
 				Result := Current
 			end

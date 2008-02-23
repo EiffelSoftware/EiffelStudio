@@ -36,6 +36,11 @@ inherit
 			evaluate
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 	SHARED_STATELESS_VISITOR
 		export
 			{NONE} all
@@ -139,7 +144,7 @@ feature {NONE} -- Types
 
 feature -- Access
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Integer type
 		do
 			check
@@ -147,21 +152,21 @@ feature -- Access
 			end
 			inspect default_type
 			when integer_8_mask then
-				create {INTEGER_I} Result.make (8)
+				Result := integer_8_type
 			when integer_16_mask then
-				create {INTEGER_I} Result.make (16)
+				Result := integer_16_type
 			when integer_32_mask then
-				create {INTEGER_I} Result.make (32)
+				Result := integer_32_type
 			when integer_64_mask then
-				create {INTEGER_I} Result.make (64)
+				Result := integer_64_type
 			when natural_8_mask then
-				create {NATURAL_I} Result.make (8)
+				Result := natural_8_type
 			when natural_16_mask then
-				create {NATURAL_I} Result.make (16)
+				Result := natural_16_type
 			when natural_32_mask then
-				create {NATURAL_I} Result.make (32)
+				Result := natural_32_type
 			when natural_64_mask then
-				create {NATURAL_I} Result.make (64)
+				Result := natural_64_type
 			end
 		end
 

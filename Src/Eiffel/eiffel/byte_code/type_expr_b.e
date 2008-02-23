@@ -45,10 +45,10 @@ feature -- Visitor
 
 feature -- Access
 
-	type_data: GEN_TYPE_I
+	type_data: GEN_TYPE_A
 			-- Character value
 
-	type: CL_TYPE_I is
+	type: CL_TYPE_A is
 			-- String type
 		do
 			if is_dotnet_type then
@@ -137,7 +137,7 @@ feature -- C code generation
 			buf := buffer
 			create l_type_creator.make (context.real_type (type_data))
 			l_type_creator.generate_start (buf)
-			l_type_creator.generate_gen_type_conversion
+			l_type_creator.generate_gen_type_conversion (0)
 			buf.put_new_line
 			register.print_register
 			buf.put_string (" = ")
@@ -154,7 +154,7 @@ feature -- C code generation
 
 feature {NONE} -- Implementation: types
 
-	system_type_type: CL_TYPE_I is
+	system_type_type: CL_TYPE_A is
 			-- Type of SYSTEM_TYPE.
 		require
 			il_generation: System.il_generation
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation: types
 
 invariant
 	type_data_not_void: type_data /= Void
-	type_data_generics_count: type_data.meta_generic.count = 1
+	type_data_generics_count: type_data.generics.count = 1
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

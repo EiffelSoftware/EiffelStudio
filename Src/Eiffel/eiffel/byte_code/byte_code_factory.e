@@ -40,14 +40,14 @@ feature -- Convertibility
 					Result := basic_conversion_byte_node (a_expr, l_source_type, l_target_type, True)
 				else
 					Result := creation_byte_code (a_conversion_info.conversion_feature,
-						l_source_type.type_i, l_target_type.type_i, a_expr)
+						l_source_type, l_target_type, a_expr)
 				end
 			else
 				if is_basic_conversion (a_expr, l_source_type, l_target_type, False) then
 					Result := basic_conversion_byte_node (a_expr, l_source_type, l_target_type, False)
 				else
 					Result := to_type_byte_code (a_conversion_info.conversion_feature,
-						l_target_type.type_i, a_expr)
+						l_target_type, a_expr)
 				end
 			end
 		ensure
@@ -82,9 +82,9 @@ feature {NONE} -- Implementation: status report
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				Result := True
 			elseif is_from_conversion then
-				Result := not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bits
+				Result := not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bit
 			elseif not is_from_conversion then
-				Result := a_source_type.is_basic and not a_source_type.is_bits and not a_target_type.is_expanded
+				Result := a_source_type.is_basic and not a_source_type.is_bit and not a_target_type.is_expanded
 			end
 		end
 
@@ -102,8 +102,8 @@ feature {NONE} -- Implementation: Byte node
 			l_type_expr_b: TYPE_EXPR_B
 			l_hector_b: HECTOR_B
 			l_feat: FEATURE_I
-			l_basic_i: BASIC_I
-			l_ref: CL_TYPE_I
+			l_basic_i: BASIC_A
+			l_ref: CL_TYPE_A
 		do
 			if
 				System.il_generation and then
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation: Byte node
 					Result := a_expr
 				end
 			elseif is_from_conversion then
-				if not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bits then
+				if not a_source_type.is_expanded and a_target_type.is_basic and not a_target_type.is_bit then
 						-- Simply call `item' from the reference type instead of
 						-- trying to create an instance of the basic type and then
 						-- calling its creation procedure.
@@ -143,17 +143,17 @@ feature {NONE} -- Implementation: Byte node
 					check
 						l_feat_not_void: l_feat /= Void
 					end
-					Result := to_type_byte_code (l_feat, a_target_type.type_i, a_expr)
+					Result := to_type_byte_code (l_feat, a_target_type, a_expr)
 				end
 			elseif not is_from_conversion then
-				if a_source_type.is_basic and not a_source_type.is_bits and not a_target_type.is_expanded then
+				if a_source_type.is_basic and not a_source_type.is_bit and not a_target_type.is_expanded then
 						-- Create a new instance of the associated reference of `a_source_type'
 						-- and then assign new value. We use a hack here to call `set_item' as
 						-- creation procedure to avoid having to generate two calls: one
 						-- for creating the object, the other to assign it.
-					l_basic_i ?= a_source_type.type_i
+					l_basic_i ?= a_source_type
 					l_ref := l_basic_i.reference_type
-					l_feat := l_ref.base_class.
+					l_feat := l_ref.associated_class.
 						feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 					check
 						l_feat_not_void: l_feat /= Void
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation: Byte node
 							-- incorrect signature of `set_item'. It fixed C compilation
 							-- warnings/errors (depending on the platform used to run the test)
 							-- in eweasel tests ccomp050.
-						Result := creation_byte_code (l_feat, pointer_type.type_i, l_ref, a_expr)
+						Result := creation_byte_code (l_feat, pointer_type, l_ref, a_expr)
 					else
 						Result := creation_byte_code (l_feat, l_basic_i, l_ref, a_expr)
 					end
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation: Byte node
 			end
 		end
 
-	to_type_byte_code (a_feat: FEATURE_I; a_target_type: TYPE_I; a_expr: EXPR_B): NESTED_B is
+	to_type_byte_code (a_feat: FEATURE_I; a_target_type: TYPE_A; a_expr: EXPR_B): NESTED_B is
 			-- New instance nested call `a_expr.a_feat'
 		require
 			a_feat_not_void: a_feat /= Void
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation: Byte node
 			Result.set_message (l_access)
 		end
 
-	creation_byte_code (a_feat: FEATURE_I; a_source_type, a_target_type: TYPE_I; a_expr: EXPR_B): CREATION_EXPR_B is
+	creation_byte_code (a_feat: FEATURE_I; a_source_type, a_target_type: TYPE_A; a_expr: EXPR_B): CREATION_EXPR_B is
 			-- New instance of `create {a_target_type}.a_feat (a_expr)'
 		require
 			a_feat_not_void: a_feat /= Void
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation: Byte node
 			Result.set_type (a_target_type)
 
 				-- Create call.
-			l_access ?= a_feat.access (Void_type.type_i, True)
+			l_access ?= a_feat.access (Void_type, True)
 			create l_param
 			l_param.set_expression (a_expr)
 			l_param.set_attachment_type (a_source_type)

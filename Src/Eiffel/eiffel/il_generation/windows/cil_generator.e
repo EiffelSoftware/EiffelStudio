@@ -32,11 +32,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_TYPE_I
-		export
-			{NONE} all
-		end
-
 	PROJECT_CONTEXT
 		export
 			{NONE} all
@@ -453,7 +448,7 @@ feature {NONE} -- Type description
 			i, nb: INTEGER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
-			gen_type: GEN_TYPE_I
+			gen_type: GEN_TYPE_A
 			l_class_counted: BOOLEAN
 		do
 			from
@@ -552,43 +547,41 @@ feature {NONE} -- Type description
 				i > nb
 			loop
 				class_c := classes.item (i)
-				if is_class_generated (class_c) then
+				if is_class_generated (class_c) and then class_c.has_types then
 					has_root_class := has_root_class or else (root_class_routine /= Void and then
 						class_c.lace_class = root_class_routine.lace_class)
 					types := class_c.types
-					if not types.is_empty then
-							-- Generate reference classes first, because their interface class
-							-- may be required to generate expanded classes.
-						from
-							types.start
-						until
-							types.after
-						loop
-							cl_type := types.item
-								-- Generate correspondance between Eiffel IDs and
-								-- CIL information.
-							if cl_type.is_generated and then not cl_type.is_expanded then
-								cil_generator.set_current_module_with (cl_type)
-								cil_generator.generate_class_mappings (cl_type, for_interface)
-							end
-
-							types.forth
+						-- Generate reference classes first, because their interface class
+						-- may be required to generate expanded classes.
+					from
+						types.start
+					until
+						types.after
+					loop
+						cl_type := types.item
+							-- Generate correspondance between Eiffel IDs and
+							-- CIL information.
+						if cl_type.is_generated and then not cl_type.is_expanded then
+							cil_generator.set_current_module_with (cl_type)
+							cil_generator.generate_class_mappings (cl_type, for_interface)
 						end
-						from
-							types.start
-						until
-							types.after
-						loop
-							cl_type := types.item
-								-- Generate correspondance between Eiffel IDs and
-								-- CIL information.
-							if cl_type.is_generated and then cl_type.is_expanded then
-								cil_generator.set_current_module_with (cl_type)
-								cil_generator.generate_class_mappings (cl_type, for_interface)
-							end
 
-							types.forth
+						types.forth
+					end
+					from
+						types.start
+					until
+						types.after
+					loop
+						cl_type := types.item
+							-- Generate correspondance between Eiffel IDs and
+							-- CIL information.
+						if cl_type.is_generated and then cl_type.is_expanded then
+							cil_generator.set_current_module_with (cl_type)
+							cil_generator.generate_class_mappings (cl_type, for_interface)
 						end
+
+						types.forth
 					end
 				end
 				i := i + 1
@@ -616,7 +609,7 @@ feature {NONE} -- Type description
 				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if is_class_generated (class_c) then
+				if is_class_generated (class_c) and then class_c.has_types then
 					System.set_current_class (class_c)
 					from
 						types := class_c.types
@@ -672,7 +665,7 @@ feature {NONE} -- Type description
 				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if is_class_generated (class_c) then
+				if is_class_generated (class_c) and then class_c.has_types then
 					from
 						types := class_c.types
 						types.start
@@ -742,7 +735,7 @@ feature {NONE} -- Type description
 				i > nb or j = 0
 			loop
 				class_c := classes.item (i)
-				if is_class_generated (class_c) then
+				if is_class_generated (class_c) and then class_c.has_types then
 					from
 						types := class_c.types
 						types.start
@@ -780,7 +773,15 @@ feature {NONE} -- Type description
 						types.forth
 					end
 					if not class_c.is_precompiled and then not class_c.is_external then
-						cil_generator.generate_once_data (class_c)
+							-- Because we need a context type to resolve the signatures
+							-- of the once routines, we simply use one of the generic
+							-- derivation for that. It is safe to do so, because we know
+							-- that a once cannot rely on anchor or formals.
+						check
+							cl_type_not_void: cl_type /= Void
+							same_class: class_c = cl_type.associated_class
+						end
+						cil_generator.generate_once_data (class_c, cl_type)
 						class_c.set_assembly_info (assembly_info)
 					end
 				end
@@ -812,7 +813,7 @@ feature {NONE} -- Type description
 				i > nb
 			loop
 				class_c := classes.item (i)
-				if is_class_generated (class_c) then
+				if is_class_generated (class_c) and then class_c.has_types then
 					System.set_current_class (class_c)
 					from
 						types := class_c.types
@@ -846,21 +847,21 @@ feature {NONE} -- Type description
 			a_class: CLASS_C
 			root_class_type: CLASS_TYPE
 			root_feat: FEATURE_I
-			l_decl_type: CL_TYPE_I
+			l_decl_type: CL_TYPE_A
 		do
 			if
 				System.msil_generation_type.is_equal ("exe") and then
 				System.root_creation_name /= Void
 			then
 					-- Update the root class info
-				a_class := system.root_type.associated_class
 				root_class_type := system.root_class_type
+				a_class := root_class_type.associated_class
 				root_feat := a_class.feature_table.item (System.root_creation_name)
 				l_decl_type := root_class_type.type.implemented_type (root_feat.written_in)
 				context.init (root_class_type)
 				cil_generator.define_entry_point (
 					root_class_type,
-					l_decl_type.associated_class_type,
+					l_decl_type.associated_class_type (root_class_type.type),
 					root_feat.written_feature_id, root_feat.has_arguments)
 			end
 		end
@@ -1001,9 +1002,9 @@ feature {NONE} -- Sort
 						i > nb
 					loop
 						l_class_c := l_classes.item (i)
-						if
-							l_class_c /= Void and not is_class_generated (l_class_c)
-						then
+							-- If `l_class_c' is not marked to be generated, we force its addition
+							-- so that it gets compiled.
+						if l_class_c /= Void and then not is_class_generated (l_class_c) then
 							System.degree_minus_1.insert_class (l_class_c)
 						end
 						i := i + 1
@@ -1152,6 +1153,8 @@ feature {NONE} -- Progression
 				-- will be generated.
 			Result := (a_class /= Void and then (a_class.is_basic and then not a_class.is_typed_pointer or not a_class.is_external))
 				and then (is_finalizing or else a_class.degree_minus_1_needed)
+		ensure
+			definition: Result implies a_class /= Void
 		end
 
 invariant

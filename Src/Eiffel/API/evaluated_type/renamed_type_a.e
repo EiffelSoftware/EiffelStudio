@@ -22,13 +22,11 @@ inherit
 		redefine
 			renaming, is_renamed_type, has_renaming, instantiated_in,
 			instantiation_in, has_associated_class,
-			to_type_set, conformance_type
+			to_type_set, conformance_type, actual_type
 		end
 
 create
 	make
-
-feature -- remove me
 
 feature -- Initialization
 
@@ -48,7 +46,12 @@ feature -- Initialization
 
 feature -- Access
 
-	conformance_type: G
+	hash_code: INTEGER is
+		do
+			Result := type.hash_code
+		end
+
+	actual_type, conformance_type: G
 			-- Type to which the renaming `renaming' is applied. Can be used for conformance checks.
 		do
 			Result := type
@@ -91,12 +94,6 @@ feature {COMPILER_EXPORTER} -- Access
 			-- assuming that Current is written in the class of id `written_id'.
 		do
 			Result := type.instantiation_in (a_type, a_written_id)
-		end
-
-	type_i: TYPE_I is
-			-- C type
-		do
-			Result := type.type_i
 		end
 
 	create_info: CREATE_INFO is
@@ -202,6 +199,7 @@ feature -- Output
 		end
 
 invariant
+	type_not_void: type /= Void
 	type_is_not_a_type_set: not type.is_type_set
 	no_nested_renamed_types: not type.is_renamed_type
 

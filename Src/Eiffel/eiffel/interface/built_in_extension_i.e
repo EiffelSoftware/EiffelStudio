@@ -42,7 +42,7 @@ feature -- Code generation
 
 	generate_body (inline_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
 		local
-			l_ret_type: TYPE_I
+			l_ret_type: TYPE_A
 			l_buffer: GENERATION_BUFFER
 		do
 			l_buffer := context.buffer
@@ -61,7 +61,7 @@ feature -- Code generation
 			l_buffer.put_character (';')
 		end
 
-	generate_access (external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+	generate_access (external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
 			-- Generate inline call to C++ external.
 		require
 			external_name_not_void: external_name /= Void
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 
 	internal_generate_access (
 			external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B];
-			nb: INTEGER; a_ret_type: TYPE_I)
+			nb: INTEGER; a_ret_type: TYPE_A)
 		is
 			-- Generate inline C external call.
 		require

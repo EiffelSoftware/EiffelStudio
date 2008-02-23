@@ -85,7 +85,7 @@ feature -- Call generation
 				type, argument_types, return_type, is_polymorphic)
 		end
 
-	generate_external_creation_call (a_actual_type: CL_TYPE_I) is
+	generate_external_creation_call (a_actual_type: CL_TYPE_A) is
 			-- Generate external creation call for `a_actual_type', where constructor comes
 			-- from `Current'.
 		require

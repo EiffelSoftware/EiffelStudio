@@ -21,7 +21,7 @@ create
 
 feature -- Access
 
-	type: FORMAL_I
+	type: FORMAL_A
 			-- Current type of creation.
 
 feature -- C code generation
@@ -39,15 +39,15 @@ feature -- C code generation
 		do
 			buffer := context.buffer
 			buffer.put_string ("RTLNSMART(")
-			generate_type_id (buffer, context.final_mode)
+			generate_type_id (buffer, context.final_mode, 0)
 			buffer.put_character (')')
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL) is
 			-- Generate formal creation type id
 		do
 			buffer.put_string ("RTGPTID(")
-			buffer.put_integer (context.current_type.generated_id (final_mode))
+			buffer.put_integer (context.context_class_type.type.generated_id (final_mode, Void))
 			buffer.put_character (',')
 			context.current_register.print_register
 			buffer.put_character (',')
@@ -60,8 +60,8 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for a formal creation type.
 		local
-			formal: FORMAL_I
-			target_type: TYPE_I
+			formal: FORMAL_A
+			target_type: TYPE_A
 		do
 				-- Compute actual type of Current formal.
 			formal ?= type
@@ -85,7 +85,7 @@ feature -- Byte code generation
 			-- Generate byte code for a formal creation type.
 		do
 			ba.append (Bc_gen_param_create)
-			ba.append_short_integer (context.current_type.generated_id (False))
+			ba.append_short_integer (context.context_class_type.type.generated_id (False, Void))
 			ba.append_integer (type.position)
 		end
 
@@ -97,17 +97,20 @@ feature -- Generic conformance
 			Result := False
 		end
 
-	generate_gen_type_conversion is
+	generate_gen_type_conversion (a_level: NATURAL) is
 		do
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 		do
-			generate_type_id (buffer, final_mode)
+				-- If we are here, it means that it is known that the type cannot have
+				-- sublevel, thus the value of `0'. This is usually the case when describing
+				-- an attribute type in eskelet.c
+			generate_type_id (buffer, final_mode, 0)
 			buffer.put_character (',')
 		end
 
-	type_to_create : CL_TYPE_I is
+	type_to_create : CL_TYPE_A is
 		do
 		end
 

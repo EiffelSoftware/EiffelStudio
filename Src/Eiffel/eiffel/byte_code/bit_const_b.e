@@ -51,7 +51,7 @@ feature -- Status report
 	is_constant_expression: BOOLEAN is True
 			-- A bit constant is constant
 
-	type: BIT_I is
+	type: BITS_A is
 			-- Bit type
 		do
 			create Result.make (value.count)

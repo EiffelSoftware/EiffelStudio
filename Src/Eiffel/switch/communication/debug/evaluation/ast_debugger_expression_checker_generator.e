@@ -85,12 +85,14 @@ feature -- Type checking
 			l_cl, l_wc: CLASS_C
 			l_ft: FEATURE_TABLE
 			l_ctx: AST_CONTEXT
+			l_error_level: like error_level
 		do
 			reset
 			is_byte_node_enabled := True
 			current_feature := a_feature
 
 			l_cl := context.current_class
+			l_error_level := error_level
 			if current_feature /= Void then
 				l_wc := current_feature.written_class
 				if l_wc /= l_cl then
@@ -111,7 +113,9 @@ feature -- Type checking
 				end
 				type_a_checker.init_for_checking (a_feature, l_cl, Void, error_handler)
 			end
-			an_ast.process (Current)
+			if l_error_level = error_level then
+				an_ast.process (Current)
+			end
 		end
 
 feature {NONE} -- Implementation

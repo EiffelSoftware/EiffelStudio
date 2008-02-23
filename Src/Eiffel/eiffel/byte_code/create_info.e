@@ -8,10 +8,9 @@ indexing
 deferred class CREATE_INFO
 
 inherit
+	ANY
+
 	SHARED_BYTE_CONTEXT
-		export
-			{NONE} all
-		end
 
 	BYTE_CONST
 		export
@@ -34,19 +33,22 @@ feature -- C code generation
 
 	generate is
 			-- Generate creation type
+		require
+			context_valid: context.context_class_type.type /= Void
 		local
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
 			buffer.put_string ("RTLNSMART(")
-			generate_type_id (buffer, context.final_mode)
+			generate_type_id (buffer, context.final_mode, 0)
 			buffer.put_character (')')
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
 			-- Generate creation type id.
 		require
 			buffer_not_void: buffer /= Void
+			context_valid: context.context_class_type.type /= Void
 		deferred
 		end
 
@@ -62,7 +64,7 @@ feature -- IL code generation
 		deferred
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_I is
+	created_in (other: CLASS_TYPE): TYPE_A is
 			-- Resulting type of Current as if it was used to create object in `other'
 		require
 			other_not_void: other /= Void
@@ -77,6 +79,7 @@ feature -- Byte code generation
 			-- Generate byte code for creation type evaluation
 		require
 			ba_not_void: ba /= Void
+			context_valid: context.context_class_type.type /= Void
 		deferred
 		end
 
@@ -108,7 +111,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_gen_type_conversion is
+	generate_gen_type_conversion (a_level: NATURAL) is
 			-- Generate the conversion of a type array into an id.
 		deferred
 		end
@@ -118,6 +121,7 @@ feature -- Generic conformance
 			-- types with anchored parameters.
 		require
 			valid: buffer /= Void
+			context_valid: context.context_class_type.type /= Void
 		do
 			-- Do nothing
 		end
@@ -125,6 +129,8 @@ feature -- Generic conformance
 	make_gen_type_byte_code (ba: BYTE_ARRAY) is
 			-- Additional info for creation of generic
 			-- types with anchored parameters.
+		require
+			context_valid: context.context_class_type.type /= Void
 		do
 		end
 
@@ -136,11 +142,11 @@ feature -- Generic conformance
 		require
 			valid_file: buffer /= Void
 			valid_counter: idx_cnt /= Void
+			context_valid: context.context_class_type.type /= Void
 		do
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER;
-					   final_mode: BOOLEAN; idx_cnt: COUNTER) is
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
 			-- Generate mode dependent initialization of
 			-- cid array. 'idx_cnt' holds the index in the
 			-- array for this entry.
@@ -150,7 +156,7 @@ feature -- Generic conformance
 		do
 		end
 
-	type_to_create: CL_TYPE_I is
+	type_to_create: CL_TYPE_A is
 			-- Type of this info.
 		deferred
 		end
@@ -158,7 +164,7 @@ feature -- Generic conformance
 	is_generic: BOOLEAN is
 			-- Is generated type generic?
 		local
-			gen_type: GEN_TYPE_I
+			gen_type: GEN_TYPE_A
 		do
 			gen_type ?= type_to_create
 			Result := (gen_type /= Void)

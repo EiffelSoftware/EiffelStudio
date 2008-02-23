@@ -41,11 +41,11 @@ feature -- Access
 	access: CALL_ACCESS_B
 			-- Access when left is not a simple type
 
-	attachment: TYPE_I
+	attachment: TYPE_A
 			-- Type of `right' expression as described in
 			-- class text, used for metamorphosis of basic type.
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Type of the infixed feature
 		do
 			Result := context.real_type (access.type)
@@ -65,7 +65,7 @@ feature -- Settings
 			right := r
 		end
 
-	set_attachment (a: TYPE_I) is
+	set_attachment (a: like attachment) is
 			-- Set `attachment' to `a'.
 		do
 			attachment := a
@@ -158,7 +158,10 @@ feature -- Code generation
 			p.set_expression (right)
 			p.set_attachment_type (attachment)
 			if not system.il_generation then
-				p.set_is_formal (system.seed_of_routine_id (access.routine_id).arguments.first.type_i.is_formal)
+					-- It is pretty important that we use `actual_type.is_formal' and not
+					-- just `is_formal' because otherwise if you have `like x' and `x: G'
+					-- then we would fail to detect that.
+				p.set_is_formal (system.seed_of_routine_id (access.routine_id).arguments.first.actual_type.is_formal)
 			end
 			param.extend (p)
 			access.set_parameters (param)
@@ -180,7 +183,7 @@ feature -- Code generation
 		do
 			left := left.enlarged
 			right := right.enlarged
-			access := access.enlarged_on (left.type)
+			access := access.enlarged_on (context.real_type (left.type))
 			Result := Current
 		end
 

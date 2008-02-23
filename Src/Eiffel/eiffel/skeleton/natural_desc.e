@@ -24,7 +24,7 @@ feature -- Initialization
 		ensure
 			size_set: size = n
 		end
-	
+
 feature -- Access
 
 	size: INTEGER
@@ -45,21 +45,21 @@ feature -- Access
 			-- Skeleton characteristic value
 		do
 			inspect size
-			when 8 then Result := Sk_uint8
-			when 16 then Result := Sk_uint16
-			when 32 then Result := Sk_uint32
-			when 64 then Result := Sk_uint64
+			when 8 then Result := {SK_CONST}.Sk_uint8
+			when 16 then Result := {SK_CONST}.Sk_uint16
+			when 32 then Result := {SK_CONST}.Sk_uint32
+			when 64 then Result := {SK_CONST}.Sk_uint64
 			end
 		end
-		
-	type_i: TYPE_I is
+
+	type_i: TYPE_A is
 			-- Corresponding TYPE_I instance
 		do
 			inspect size
-			when 8 then Result := uint8_c_type
-			when 16 then Result := uint16_c_type
-			when 32 then Result := uint32_c_type
-			when 64 then Result := uint64_c_type
+			when 8 then Result := natural_8_type
+			when 16 then Result := natural_16_type
+			when 32 then Result := natural_32_type
+			when 64 then Result := natural_64_type
 			end
 		end
 
@@ -69,18 +69,12 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.put_string ("SK_UINT")
-			buffer.put_integer (size)
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_string (attribute_name)
-			io.error.put_string ("[NATURAL_")
-			io.error.put_integer (size)
-			io.error.put_string ("]")
+			inspect size
+			when 8 then buffer.put_string ({SK_CONST}.sk_uint8_string)
+			when 16 then buffer.put_string ({SK_CONST}.sk_uint16_string)
+			when 32 then buffer.put_string ({SK_CONST}.sk_uint32_string)
+			when 64 then buffer.put_string ({SK_CONST}.sk_uint64_string)
+			end
 		end
 
 invariant

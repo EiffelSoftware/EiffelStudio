@@ -17,20 +17,20 @@ feature -- Name generation
 			type_id_not_void: type_id > 0
 		do
 			Result := Feature_buffer
-			eif000 ($Result, type_id, body_index);
-				-- In order to get a proper `hash_code' value for `Result'
-				-- we reset its count to the same value.
-			Result.set_count (name_count)
+			Result.clear_all
+			Result.append_character ('F')
+			Result.append_integer (type_id)
+			Result.append_character ('_')
+			Result.append_integer (body_index)
 		end
 
 	attribute_table_name (rout_id: INTEGER): STRING is
 			-- Name of a table of attribute offsets for the final Eiffel executable.
 		do
 			Result := Attribute_table_buffer
-			eif011 ($Result, rout_id)
-				-- In order to get a proper `hash_code' value for `Result'
-				-- we reset its count to the same value.
-			Result.set_count (name_count)
+			Result.clear_all
+			Result.append_character ('O')
+			Result.append_integer (rout_id)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -39,10 +39,9 @@ feature -- Name generation
 			-- Name of a routine table for the final Eiffel executable.
 		do
 			Result := Routine_table_buffer
-			eif011 ($Result, rout_id)
-				-- In order to get a proper `hash_code' value for `Result'
-				-- we reset its count to the same value.
-			Result.set_count (name_count)
+			Result.clear_all
+			Result.append_character ('R')
+			Result.append_integer (rout_id)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -52,21 +51,22 @@ feature -- Name generation
 			-- routine table. Useful for creation generation.
 		do
 			Result := Type_table_buffer
-			eif101 ($Result, rout_id)
-				-- In order to get a proper `hash_code' value for `Result'
-				-- we reset its count to the same value.
-			Result.set_count (name_count)
+			Result.clear_all
+			Result.append_character ('Y')
+			Result.append_integer (rout_id)
 		end
 
-	address_table_name (feature_id: INTEGER; type_id: INTEGER): STRING is
-			-- Name of a table of function pointers used by then
-			-- $ operator
+	address_table_name (feature_id: INTEGER; static_type_id: INTEGER): STRING is
+			-- Name of a table of function pointers used by the $ operator
+			-- Note that we use `static_type_id' because of incrementality between
+			-- workbench and finalized mode.
 		do
 			Result := Address_table_buffer;
-			eif000 ($Result, type_id, feature_id);
-				-- In order to get a proper `hash_code' value for `Result'
-				-- we reset its count to the same value.
-			Result.set_count (name_count)
+			Result.clear_all
+			Result.append_character ('A')
+			Result.append_integer (static_type_id)
+			Result.append_character ('_')
+			Result.append_integer (feature_id)
 		end
 
 	generate_type_id_name (type_id: INTEGER): STRING is
@@ -98,59 +98,44 @@ feature -- Name generation
 
 feature {NONE}
 
-	name_count: INTEGER is 7
-			-- Number of characters in names we generate.
-
-	Address_table_buffer: STRING is
+	address_table_buffer: STRING is
 			-- String buffer for address table generation
 		once
-			create Result.make (name_count)
-			Result.append ("A000000")
+			create Result.make (1 + 2 * {INTEGER_32}.max_value.out.count)
+		ensure
+			address_table_buffer_not_void: Result /= Void
 		end
 
-	Feature_buffer: STRING is
+	feature_buffer: STRING is
 			-- String buffer for feature generation.
 		once
-			create Result.make (name_count)
-			Result.append ("F000000")
+			create Result.make (1 + 2 * {INTEGER_32}.max_value.out.count)
+		ensure
+			feature_buffer_not_void: Result /= Void
 		end
 
 	Attribute_table_buffer: STRING is
 			-- String buffer for feature generation.
 		once
-			create Result.make (name_count)
-			Result.append ("O000000")
+			create Result.make (1 + {INTEGER_32}.max_value.out.count)
+		ensure
+			attribute_table_buffer_not_void: Result /= Void
 		end
 
 	Routine_table_buffer: STRING is
 			-- String buffer for feature generation.
 		once
-			create Result.make (name_count)
-			Result.append ("R000000")
+			create Result.make (1 + {INTEGER_32}.max_value.out.count)
+		ensure
+			routine_table_buffer_not_void: Result /= Void
 		end
 
 	Type_table_buffer: STRING is
 			-- String buffer for feature generation.
 		once
-			create Result.make (name_count)
-			Result.append ("Y000000")
-		end
-
-feature {NONE} -- External features
-
-	eif000 (s: POINTER; i,j: INTEGER) is
-		external
-			"C"
-		end
-
-	eif101 (s: POINTER; i: INTEGER) is
-		external
-			"C"
-		end
-
-	eif011 (s: POINTER; i: INTEGER) is
-		external
-			"C"
+			create Result.make (1 + {INTEGER_32}.max_value.out.count)
+		ensure
+			type_table_buffer_not_void: Result /= Void
 		end
 
 indexing

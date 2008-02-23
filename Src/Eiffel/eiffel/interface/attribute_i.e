@@ -127,7 +127,7 @@ feature -- Element Change
 			end
 		end
 
-	access_for_feature (access_type: TYPE_I; static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
 			-- Byte code access for current feature
 		local
 			attribute_b: ATTRIBUTE_B
@@ -156,20 +156,20 @@ feature -- Element Change
 		require else
 			valid_file: buffer /= Void
 		local
-			result_type: TYPE_I
+			result_type: TYPE_A
 			internal_name: STRING
 			return_type_name: STRING
 			rout_ids: like rout_id_set
 			rout_id: INTEGER
-			basic_i: BASIC_I
+			basic_i: BASIC_A
 			i: INTEGER
 			l_byte_context: like byte_context
 		do
 			if used then
 					-- Generation of a routine to access the attribute
 				generate_header (class_type, buffer)
-				result_type := type.type_i.instantiation_in (class_type)
-				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
+				result_type := type.adapted_in (class_type)
+				internal_name := Encoder.feature_name (class_type.type_id, body_index)
 				add_in_log (class_type, internal_name)
 
 				l_byte_context := byte_context
@@ -261,13 +261,13 @@ feature -- Element Change
 			-- Generates attribute access.
 			-- [Redecalaration of a function into an attribute]
 		local
-			result_type: TYPE_I
+			result_type: TYPE_A
 			table_name: STRING
 			rout_id: INTEGER
 			rout_info: ROUT_INFO
 			array_index: INTEGER
 		do
-			result_type := type.type_i.instantiation_in (class_type)
+			result_type := type.adapted_in (class_type)
 
 			if not result_type.is_true_expanded and then not result_type.is_bit then
 				buffer.put_string ("*")
@@ -366,7 +366,7 @@ feature -- Element Change
 		local
 			melted_feature: MELT_FEATURE
 			ba: BYTE_ARRAY
-			result_type: TYPE_I
+			result_type: TYPE_A
 			current_type: CLASS_TYPE
 			r_id: INTEGER
 			rout_info: ROUT_INFO
@@ -385,8 +385,8 @@ feature -- Element Change
 				-- Real body id ( -1 because it's an attribute. We can't set a breakpoint )
 			ba.append_integer (-1)
 				-- Meta-type of Result
-			result_type := l_byte_context.real_type (type.type_i)
-			ba.append_integer (result_type.sk_value)
+			result_type := l_byte_context.real_type (type)
+			ba.append_integer (result_type.sk_value (l_byte_context.context_class_type.type))
 				-- Argument count
 			ba.append_short_integer (0)
 				-- Local count
@@ -394,7 +394,7 @@ feature -- Element Change
 				-- Precise result type (if required)
 			if result_type.is_true_expanded and then not result_type.is_bit then
 					-- Generate full type info.
-				result_type.make_full_type_byte_code (ba)
+				type.make_full_type_byte_code (ba, l_byte_context.context_class_type.type)
 			end
 				-- Feature name
 			ba.append_raw_string (feature_name)
@@ -420,7 +420,7 @@ feature -- Element Change
 				ba.append_short_integer (current_type.static_type_id - 1)
 			end
 				-- Attribute meta-type
-			ba.append_uint32_integer (result_type.sk_value)
+			ba.append_uint32_integer (result_type.sk_value (l_byte_context.context_class_type.type))
 			ba.append (Bc_rassign)
 
 				-- End mark

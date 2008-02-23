@@ -11,7 +11,7 @@ class
 inherit
 	TYPE_A
 		redefine
-			associated_class, is_valid, same_as
+			associated_class, internal_is_valid_for_class, same_as, is_class_valid
 		end
 
 	SHARED_NAMES_HEAP
@@ -43,7 +43,7 @@ feature -- Visitor
 			v.process_unevaluated_bits_symbol_a (Current)
 		end
 
-feature -- Properties
+feature -- Access
 
 	symbol_name_id: INTEGER
 			-- Id of `symbol' in `names_heap'.
@@ -54,16 +54,20 @@ feature -- Properties
 			Result := names_heap.item (symbol_name_id)
 		end
 
-	is_valid: BOOLEAN is False
-			-- An unevaluated type is never valid.
-
-feature -- Access
+	hash_code: INTEGER is
+		do
+			Result := {SHARED_HASH_CODE}.bit_code
+		end
 
 	associated_class: CLASS_C is
 			-- Associated class
 		once
 			Result := System.bit_class.compiled_class
 		end
+
+feature -- Status Report
+
+	is_class_valid: BOOLEAN = False
 
 feature -- Comparison
 
@@ -78,7 +82,7 @@ feature -- Output
 	ext_append_to (a_text_formatter: TEXT_FORMATTER;  c: CLASS_C) is
 			-- Append Current type to `st'.
 		do
-			a_text_formatter.process_keyword_text (ti_Bit_class, Void)
+			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Bit_class, Void)
 			a_text_formatter.add_space
 			a_text_formatter.add_string (symbol)
 		end
@@ -88,6 +92,13 @@ feature -- Output
 			create Result.make (9)
 			Result.append ("BIT ")
 			Result.append (symbol)
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+			-- An unevaluated type is never valid.
+		do
 		end
 
 feature {NONE} -- Implementation
@@ -104,10 +115,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Not applicable
 
 	conform_to (other: TYPE_A): BOOLEAN is
-		do
-		end
-
-	type_i: TYPE_I is
 		do
 		end
 

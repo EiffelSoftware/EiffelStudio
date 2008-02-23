@@ -17,6 +17,11 @@ inherit
 	SHARED_TABLE
 	SHARED_DECLARATIONS
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -37,8 +42,8 @@ feature
 	analyze is
 			-- Analyze expression
 		local
-			real_ty: TUPLE_TYPE_I
-			expr_type: TYPE_I
+			real_ty: TUPLE_TYPE_A
+			expr_type: TYPE_A
 			expr: EXPR_B
 			i: INTEGER
 			require_meta: BOOLEAN
@@ -101,7 +106,7 @@ feature
 	generate is
 			-- Generate expression
 		local
-			real_ty: TUPLE_TYPE_I
+			real_ty: TUPLE_TYPE_A
 			workbench_mode: BOOLEAN
 		do
 			real_ty ?= context.real_type (type)
@@ -112,7 +117,7 @@ feature
 
 feature {NONE} -- C code generation
 
-	generate_tuple_creation (real_ty: TUPLE_TYPE_I; workbench_mode: BOOLEAN) is
+	generate_tuple_creation (real_ty: TUPLE_TYPE_A; workbench_mode: BOOLEAN) is
 			-- Generate the object creation of
 			-- manifest tuple.
 		local
@@ -120,12 +125,12 @@ feature {NONE} -- C code generation
 		do
 			buf := buffer
 			buf.generate_block_open
-			context.generate_gen_type_conversion (real_ty)
+			context.generate_gen_type_conversion (real_ty, 0)
 			buf.put_new_line
 			print_register
 			buf.put_string (" = ")
-			buf.put_string ("RTLNTS(typres, ");
-			buf.put_integer (real_ty.true_generics.count + 1)
+			buf.put_string ("RTLNTS(typres0, ");
+			buf.put_integer (real_ty.generics.count + 1)
 			buf.put_string (", ")
 			if real_ty.is_basic_uniform then
 				buf.put_integer (1)
@@ -141,7 +146,7 @@ feature {NONE} -- C code generation
 			-- to fill the manifest tuple.
 		local
 			expr: EXPR_B
-			actual_type: TYPE_I
+			actual_type: TYPE_A
 			metamorphosed: BOOLEAN
 			i: INTEGER
 			buf: GENERATION_BUFFER

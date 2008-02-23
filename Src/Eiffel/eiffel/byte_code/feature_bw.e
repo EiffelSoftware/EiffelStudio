@@ -40,7 +40,7 @@ feature
 			return_type := c_type
 			if return_type.is_pointer then
 					-- Do not use reference type because this register should not be tracked by GC.
-				result_register := context.get_argument_register (pointer_c_type)
+				result_register := context.get_argument_register (pointer_type.c_type)
 			end
 		end
 
@@ -65,8 +65,8 @@ feature
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			class_type: CL_TYPE_I;
-			type_i: TYPE_I;
+			class_type: CL_TYPE_A;
+			type_i: TYPE_A;
 			access: ACCESS_B;
 			void_register: REGISTER;
 		do
@@ -90,13 +90,13 @@ feature
 			end;
 		end;
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
 			-- Generate feature call in a `typ' context.
 		do
 			generate_workbench_access_on_type (reg, typ, result_register)
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
 			-- Generate final portion of C code.
 		do
 			Precursor (gen_reg, class_type)

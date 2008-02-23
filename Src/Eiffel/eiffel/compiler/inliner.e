@@ -77,7 +77,7 @@ feature -- Conversion
 
 feature -- Status
 
-	inline (a_return_type: TYPE_I; body_index: INTEGER): BOOLEAN is
+	inline (a_return_type: TYPE_A; body_index: INTEGER): BOOLEAN is
 			-- Can we inline `f' ?
 		require
 			is_inlining_enabled: inlining_on
@@ -95,16 +95,16 @@ feature -- Status
 
 feature {NONE} -- Implementation
 
-	can_be_inlined (a_return_type: TYPE_I; body_index: INTEGER): BOOLEAN is
+	can_be_inlined (a_return_type: TYPE_A; body_index: INTEGER): BOOLEAN is
 			-- Tell us if we can inline the code corresponding to `body_index'
 		local
 			byte_code: BYTE_CODE;
 			i: INTEGER
-			type_i: TYPE_I
-			types: ARRAY [TYPE_I]
+			type_i: TYPE_A
+			types: ARRAY [TYPE_A]
 			wc: CLASS_C
 			cid: INTEGER
-			result_type: TYPE_I
+			result_type: TYPE_A
 		do
 				-- Make sure we can find the BYTE_CODE
 			byte_code := Byte_server.disk_item (body_index)
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			then
 				result_type := byte_code.result_type
 				Result := (a_return_type = Void or else not (a_return_type.is_true_expanded
-					or else a_return_type.is_bit or else result_type.is_anchored)) and then
+					or else a_return_type.is_bit or else result_type.has_like)) and then
 					byte_code.rescue_clause = Void
 
 				if Result then
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 							i = 0 or else not Result
 						loop
 							type_i := types.item (i)
-							Result := not (type_i.is_true_expanded or else type_i.is_bit or else type_i.is_anchored)
+							Result := not (type_i.is_true_expanded or else type_i.is_bit or else type_i.has_like)
 							i := i - 1
 						end
 					end
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 							i = 0 or else not Result
 						loop
 							type_i := types.item (i)
-							Result := not (type_i.is_true_expanded or else type_i.is_bit or else type_i.is_anchored)
+							Result := not (type_i.is_true_expanded or else type_i.is_bit or else type_i.has_like)
 							i := i - 1
 						end
 					end

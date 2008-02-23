@@ -1,27 +1,64 @@
 indexing
+	description: "Mapping of real Eiffel types to underlying machine type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 deferred class TYPE_C
 
 inherit
 	HASHABLE
 
-	SHARED_BYTE_CONTEXT
-		export
-			{NONE} all
-		end
-
-	SHARED_NAMES_HEAP
-		export
-			{NONE} all
-		end
-
-feature
+feature -- Access
 
 	level: INTEGER is
 			-- Internal code for generation
 		deferred
 		end
+
+	tuple_code: NATURAL_8 is
+			-- Code for TUPLE type
+		do
+			Result := {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
+		end
+
+	element_type: INTEGER_8 is
+			-- Type of current element. See MD_SIGNATURE_CONSTANTS for
+			-- all possible values.
+		deferred
+		end
+
+	sk_value: INTEGER is
+			-- SK value associated to the current type.
+		deferred
+		end
+
+	c_string: STRING is
+			-- String generated for the type.
+		deferred
+		ensure
+			c_string_not_null: Result /= Void
+			c_string_not_empty: not Result.is_empty
+		end
+
+	typed_field: STRING is
+			-- Value field of a C structure corresponding to this type
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_not_empty: not Result.is_empty
+		end
+
+	new_attribute_description: ATTR_DESC is
+			-- New descritpion of type for skeletons
+		do
+			create {REFERENCE_DESC} Result
+		ensure
+			description_not_void: Result /= Void
+		end
+
+feature -- Comparison
 
 	same_class_type (other: TYPE_C): BOOLEAN is
 			-- Is `other' the same C type as Current ?
@@ -31,37 +68,39 @@ feature
 			Result := other.level = level
 		end
 
+	same_as (other: TYPE_C): BOOLEAN is
+			-- Is `other' the same C type as Current?
+		do
+			Result := other.level = level
+		end
+
+feature -- Status Report
+
 	is_pointer: BOOLEAN is
 			-- Is C type a reference type
 		do
-			-- Do nothing
 		end
 
 	is_bit: BOOLEAN is
 			-- Is C type a a bit type (Conveniencee)
 		do
-			-- Do nothing
-		end
-
-	is_boolean: BOOLEAN is
-			-- Is C type a boolean type ?
-		deferred
 		end
 
 	is_void: BOOLEAN is
 			-- Is C type a void type
 		do
-			-- Do nothing
 		end
 
-	trace is
-			-- Debug purpose
-		deferred
+feature -- Byte code generation
+
+	make_default_byte_code (ba: BYTE_ARRAY) is
+			-- Generate default value of basic type on stack.
+		require
+			valid_array: ba /= Void
+		do
 		end
 
-	description: ATTR_DESC is
-		deferred
-		end
+feature -- C code generation
 
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate C type in `buffer'.
@@ -106,7 +145,17 @@ feature
 			buffer.put_character (')')
 		end
 
-	generate_function_cast (buffer: GENERATION_BUFFER; arg_types: ARRAY [STRING]) is
+	generate_default_value (buffer: GENERATION_BUFFER) is
+			-- Generate default value associated to current basic type.
+		require
+			buffer_not_void: buffer /= Void
+		do
+			buffer.put_two_character ('(', '(')
+			buffer.put_string (c_string)
+			buffer.put_four_character (')', ' ', '0', ')')
+		end
+
+	generate_function_cast (buffer: GENERATION_BUFFER; arg_types: ARRAY [STRING]; workbench_mode: BOOLEAN) is
 			-- Generate C function cast in `buffer'.
 		require
 			good_arguments: buffer /= Void and arg_types /= Void
@@ -114,7 +163,7 @@ feature
 		do
 			buffer.put_string (function_cast_string)
 			buffer.put_character ('(')
-			if context.workbench_mode and then not is_void then
+			if workbench_mode and then not is_void then
 				buffer.put_string (union_string)
 			else
 				buffer.put_string (c_string)
@@ -182,7 +231,9 @@ feature
 			-- to the current C type in `buffer'.
 		require
 			buffer_attached: buffer /= Void
-		deferred
+		do
+			buffer.put_string ("type = ")
+			generate_sk_value (buffer)
 		end
 
 	generate_sk_value (buffer: GENERATION_BUFFER) is
@@ -190,19 +241,6 @@ feature
 		require
 			good_argument: buffer /= Void
 		deferred
-		end
-
-	c_string: STRING is
-			-- String generated for the type.
-		deferred
-		end
-
-	typed_field: STRING is
-			-- Value field of a C structure corresponding to this type
-		deferred
-		ensure
-			result_attached: Result /= Void
-			result_not_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Constants

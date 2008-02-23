@@ -29,7 +29,7 @@ feature
 	read_only: BOOLEAN is False;
 			-- Is Result a read-only entity ?
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Result type
 		do
 			Result := context.byte_code.result_type;

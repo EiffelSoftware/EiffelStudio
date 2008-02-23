@@ -28,24 +28,24 @@ create
 
 feature -- Access
 
-	type: NATIVE_ARRAY_TYPE_I
+	type: NATIVE_ARRAY_TYPE_A
 			-- Type of generic derivation.
 
-	first_generic: TYPE_I is
+	first_generic: TYPE_A is
 			-- First generic parameter type
 		require
-			has_generics: type.true_generics /= Void
-			good_generic_count: type.true_generics.count = 1
+			has_generics: type.generics /= Void
+			good_generic_count: type.generics.count = 1
 		do
-			Result := type.true_generics.item (1)
+			Result := type.generics.item (1)
 		end
 
 	il_type_name: STRING is
 			-- Associated name to current generic derivation.
 			-- E.g. NATIVE_ARRAY [INTEGER] gives `INTEGER []'.
 		require
-			has_generics: type.true_generics /= Void
-			good_generic_count: type.true_generics.count = 1
+			has_generics: type.generics /= Void
+			good_generic_count: type.generics.count = 1
 			in_il_generation: System.il_generation
 		do
 			Result := il_element_type_name
@@ -56,23 +56,23 @@ feature -- Access
 			-- Associated name of element types.
 			-- E.g. NATIVE_ARRAY [INTEGER] gives `INTEGER'.
 		require
-			has_generics: type.true_generics /= Void
-			good_generic_count: type.true_generics.count = 1
+			has_generics: type.generics /= Void
+			good_generic_count: type.generics.count = 1
 			in_il_generation: System.il_generation
 		local
-			cl_type: CL_TYPE_I
+			cl_type: CL_TYPE_A
 			l_name: STRING
 		do
-			cl_type ?=  type.true_generics.item (1)
+			cl_type ?=  type.generics.item (1)
 			if cl_type = Void then
 				cl_type := object_type
 			end
-			l_name := cl_type.il_type_name (Void)
+			l_name := cl_type.il_type_name (Void, Void)
 			create Result.make (l_name.count + 2)
 			Result.append (l_name)
 		end
 
-	deep_il_element_type: CL_TYPE_I is
+	deep_il_element_type: CL_TYPE_A is
 			-- Find actual type of element array.
 			-- I.e. if you have NATIVE_ARRAY [NATIVE_ARRAY [INTEGER]], it
 			-- will return INTEGER.
@@ -84,75 +84,85 @@ feature -- Access
 
 feature -- IL code generation
 
-	generate_il_put_preparation (array_type: CL_TYPE_I) is
+	generate_il_put_preparation (array_type, a_context_type: CL_TYPE_A) is
 			-- Generate preparation to `put' calls in case of expanded elements.
 		require
-			has_generics: type.true_generics /= Void
-			good_generic_count: type.true_generics.count = 1
+			has_generics: type.generics /= Void
+			good_generic_count: type.generics.count = 1
 			array_type_not_void: array_type /= Void
+			array_type_is_valid: array_type.generics /= Void
+			a_context_type_not_void: a_context_type /= Void
 		local
-			gen_param: TYPE_I
-			cl_type: CL_TYPE_I
+			l_actual_generic_parameter: TYPE_A
 			generic_type_id: INTEGER
 		do
 			if first_generic.is_true_expanded then
-				gen_param ?= array_type.true_generics.item (1)
-				cl_type ?= gen_param
-				if cl_type /= Void then
-					generic_type_id := cl_type.associated_class_type.static_type_id
+				l_actual_generic_parameter := array_type.generics.item (1)
+				if l_actual_generic_parameter.actual_type.is_formal then
+						-- Type that was provided to us didn't have much type information, we have
+						-- to rely on what we have from `Current'. 
+					l_actual_generic_parameter := first_generic
+				end
+				if l_actual_generic_parameter.has_associated_class_type (a_context_type) then
+					generic_type_id := l_actual_generic_parameter.associated_class_type (a_context_type).static_type_id
 				else
-						-- Most likely it is a formal. We do not handle this
-						-- case correctly yet.
-					generic_type_id := system.system_object_class.compiled_class.
-						types.first.static_type_id
+						-- It is most likely a formal.
+					generic_type_id := system.system_object_class.compiled_class.types.first.static_type_id
 				end
 				Il_generator.generate_array_write_preparation (generic_type_id)
 			end
 		end
-	generate_il (name_id: INTEGER; array_type: CL_TYPE_I) is
+
+	generate_il (name_id: INTEGER; array_type, a_context_type: CL_TYPE_A) is
 			-- Generate call to `name_id' from NATIVE_ARRAY.
 		require
 			valid_name_id: name_id > 0
-			has_generics: type.true_generics /= Void
-			good_generic_count: type.true_generics.count = 1
+			has_generics: type.generics /= Void
+			good_generic_count: type.generics.count = 1
 			array_type_not_void: array_type /= Void
+			array_type_is_valid: array_type.generics /= Void
+			a_context_type_not_void: a_context_type /= Void
 		local
-			gen_param: TYPE_I
-			l_formal: FORMAL_I
-			cl_type: CL_TYPE_I
+			l_actual_generic_parameter: TYPE_A
+			l_actual_array_type: CL_TYPE_A
+			l_formal: FORMAL_A
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			type_kind: INTEGER
 			generic_type: CLASS_TYPE
 			generic_type_id: INTEGER
 		do
-			gen_param := first_generic
-			l_param_is_expanded := gen_param.is_true_expanded
-			type_c := gen_param.c_type
+			l_actual_generic_parameter := first_generic
+			l_param_is_expanded := l_actual_generic_parameter.is_true_expanded
 
-				-- Find real type of ARRAY.
-			gen_param ?= array_type.true_generics.item (1)
-			cl_type ?= gen_param
-			if cl_type /= Void then
-				generic_type := cl_type.associated_class_type
-			else
-					-- Most likely it is a formal. We do not handle this
-					-- case correctly yet.
-				generic_type := system.system_object_class.compiled_class.
-					types.first
-				l_formal ?= gen_param
+			l_actual_array_type ?= array_type.instantiated_in (a_context_type)
+			check
+				l_actual_array_type_not_void: l_actual_array_type /= Void
 			end
+			l_actual_generic_parameter := l_actual_array_type.generics.item (1)
+			if l_actual_generic_parameter.actual_type.is_formal and not first_generic.is_formal then
+					-- Type that was provided to us didn't have much type information, we have
+					-- to rely on what we have from `Current'. 
+				l_actual_generic_parameter := first_generic
+			end
+			if l_actual_generic_parameter.has_associated_class_type (a_context_type) then
+				generic_type := l_actual_generic_parameter.associated_class_type (a_context_type)
+			else
+					-- It is a formal. We simply assume System.Object
+				generic_type := system.system_object_class.compiled_class.types.first
+				l_formal ?= l_actual_generic_parameter
+			end
+
 			generic_type_id := generic_type.static_type_id
 
 			if not l_param_is_expanded then
+				type_c := l_actual_generic_parameter.c_type
 				inspect
 					type_c.level
+				when c_boolean then
+					type_kind := il_i1
 				when C_char then
-					if type_c.is_boolean then
-						type_kind := il_i1
-					else
-						type_kind := il_i2
-					end
+					type_kind := il_i2
 				when C_wide_char then
 					type_kind := il_u4
 				when C_int32 then
@@ -198,13 +208,13 @@ feature -- IL code generation
 						-- Create the correct array type based on how the formal
 						-- will be instantiated.
 					il_generator.generate_generic_array_creation (l_formal)
-					il_generator.generate_check_cast (Void, array_type)
+					il_generator.generate_check_cast (Void, l_actual_array_type)
 				else
-					if cl_type.is_basic then
-						generic_type_id := cl_type.external_id
+					if l_actual_generic_parameter.is_basic then
+						generic_type_id := l_actual_generic_parameter.external_id (Void)
 					end
 					il_generator.generate_array_creation (generic_type_id)
-					il_generator.generate_array_initialization (array_type, generic_type)
+					il_generator.generate_array_initialization (l_actual_array_type, generic_type)
 				end
 
 			when count_name_id then
@@ -233,7 +243,7 @@ feature -- IL code generation
 			end
 		end
 
-	Object_type: CL_TYPE_I is
+	Object_type: CL_TYPE_A is
 			-- Type of SYSTEM_OBJECT.
 		require
 			in_il_generation: system.il_generation
@@ -241,7 +251,7 @@ feature -- IL code generation
 			object_class_not_void: system.system_object_class /= Void
 			object_class_compiled: system.system_object_class.is_compiled
 		once
-			Result := system.system_object_class.compiled_class.actual_type.type_i
+			Result := system.system_object_class.compiled_class.actual_type
 		ensure
 			object_type_not_void: Result /= Void
 		end

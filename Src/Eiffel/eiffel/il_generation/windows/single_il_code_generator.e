@@ -103,7 +103,6 @@ feature -- IL Generation
 			-- Generate IL code for feature in `class_c'.
 		do
 				-- Initialize context.
-			set_current_class (class_c)
 			set_current_class_type (class_type)
 			Inst_context.set_group (class_c.group)
 			is_single_class := class_type.is_generated_as_single_type
@@ -446,6 +445,7 @@ feature {NONE} -- Implementation
 								proc.set_arguments (inh_feat.arguments)
 							end
 							dup_feat.set_type (inh_feat.type, inh_feat.assigner_name_id)
+							dup_feat.set_rout_id_set (inh_feat.rout_id_set)
 							implementation_generate_feature (dup_feat, False, False, False, False, False, class_type)
 						else
 							generate_feature (feat, False, False, False)
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 							-- made below to find in which parent's type.
 						generate_feature_il (feat,
 							current_class_type.type.implemented_type
-								(feat.written_in).associated_class_type.implementation_id,
+								(feat.written_in).associated_class_type (Void).implementation_id,
 							feat.written_feature_id)
 					end
 				else
@@ -475,8 +475,8 @@ feature {NONE} -- Implementation
 							generate_method_impl (feat, class_type, inh_feat)
 						else
 							if
-								not signatures (current_type_id, feat.feature_id).is_equal (
-									signatures (class_type.static_type_id, inh_feat.feature_id))
+								not signature (current_type_id, feat.feature_id).is_equal (
+									signature (class_type.static_type_id, inh_feat.feature_id))
 							then
  								generate_method_impl (feat, class_type, inh_feat)
 							end
@@ -536,6 +536,7 @@ feature {NONE} -- Implementation
 							proc.set_arguments (inh_feat.arguments)
 						end
 						dup_feat.set_type (inh_feat.type, inh_feat.assigner_name_id)
+						dup_feat.set_rout_id_set (inh_feat.rout_id_set)
 						implementation_generate_feature (dup_feat, False, False, False, False, False, class_type)
 					else
 						generate_feature (feat, False, False, False)
@@ -549,7 +550,7 @@ feature {NONE} -- Implementation
 				else
 					generate_feature_il (feat,
 						current_class_type.type.implemented_type
-							(feat.written_in).implementation_id,
+							(feat.written_in).implementation_id (Void),
 						feat.written_feature_id)
 				end
 
@@ -564,7 +565,7 @@ feature {NONE} -- Implementation
 				end
 				generate_feature_il (feat,
 					current_class_type.type.implemented_type
-						(feat.written_in).associated_class_type.implementation_id,
+						(feat.written_in).associated_class_type (Void).implementation_id,
 						feat.written_feature_id)
 			end
 		end

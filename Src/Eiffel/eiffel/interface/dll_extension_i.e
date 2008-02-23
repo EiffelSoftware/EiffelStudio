@@ -103,7 +103,7 @@ feature {NONE} -- Internal generation
 		local
 			buf: GENERATION_BUFFER
 			l_names_heap: like Names_heap
-			l_ret_type: TYPE_I
+			l_ret_type: TYPE_A
 		do
 			buf := Context.buffer
 

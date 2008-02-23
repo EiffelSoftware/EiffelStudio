@@ -229,9 +229,12 @@ feature {NONE} -- Implementation
 			-- Generate table using writer.
 		do
 			generate (Attr_generator)
-			if has_type_table and then not has_one_type then
-				generate_type_table (Attr_generator)
-			end
+		end
+
+	write_for_type
+			-- <Original>
+		do
+			generate_type_table (Attr_generator)
 		end
 
 indexing

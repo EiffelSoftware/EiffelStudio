@@ -45,10 +45,10 @@ feature -- Assertion
 	saved_body_index: INTEGER
 			-- Saved original body index from `context'
 
-	saved_arguments: ARRAY [TYPE_I]
+	saved_arguments: ARRAY [TYPE_A]
 			-- Saved byte_code arguments
 
-	saved_result_type: TYPE_I
+	saved_result_type: TYPE_A
 			-- Saved byte_code arguments
 
 	saved_old_expressions: LINKED_LIST [UN_OLD_B]
@@ -210,7 +210,7 @@ feature -- Inherited precondition
 	precondition_list: LINKED_LIST [BYTE_LIST [BYTE_NODE]]
 			-- List of inherited precondition
 
-	prec_arg_list: LINKED_LIST [ARRAY[TYPE_I]]
+	prec_arg_list: LINKED_LIST [ARRAY[TYPE_A]]
 			-- List of inherited arguments corresponding to assertion
 
 	precondition_types: LINKED_LIST [CLASS_TYPE]
@@ -423,10 +423,10 @@ feature -- inherited postcondition
 	postcondition_list: LINKED_LIST [BYTE_LIST [BYTE_NODE]]
 			-- List of inherited postcondition
 
-	post_arg_list: LINKED_LIST [ARRAY [TYPE_I]]
+	post_arg_list: LINKED_LIST [ARRAY [TYPE_A]]
 			-- List of inherited arguments corresponding to assertion
 
-	post_result_list: LINKED_LIST [TYPE_I]
+	post_result_list: LINKED_LIST [TYPE_A]
 			-- List of inherited result type corresponding to assertion
 
 	old_expression_list: LINKED_LIST [LINKED_LIST [UN_OLD_B]]

@@ -11,7 +11,7 @@ inherit
 	BASIC_A
 		redefine
 			is_real_32, associated_class, same_as, is_numeric,
-			default_create, process
+			default_create, process, heaviest
 		end
 
 create
@@ -38,10 +38,25 @@ feature -- Property
 	is_real_32: BOOLEAN is True
 			-- Is the current type a real 32 bits type ?
 
+feature -- Access
+
 	associated_class: CLASS_C is
 			-- Class REAL
 		once
 			Result := System.real_32_class.compiled_class
+		end
+
+feature -- IL code generation
+
+	heaviest (other: TYPE_A): TYPE_A is
+			-- `other' if `other' is heavier than Current,
+			-- Current otherwise.
+		do
+			if other.is_real_64 then
+				Result := other
+			else
+				Result := Current
+			end
 		end
 
 feature {COMPILER_EXPORTER}
@@ -49,7 +64,7 @@ feature {COMPILER_EXPORTER}
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
 
-	type_i: REAL_32_I is
+	c_type: REAL_32_I is
 			-- C type
 		do
 			Result := real32_c_type

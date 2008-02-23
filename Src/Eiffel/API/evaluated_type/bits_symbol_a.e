@@ -95,7 +95,7 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
-			st.process_keyword_text (ti_Bit_class, Void)
+			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Bit_class, Void)
 			st.add_space
 			st.add (names_heap.item (feature_name_id))
 		end

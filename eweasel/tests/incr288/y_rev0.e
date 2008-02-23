@@ -7,5 +7,4 @@ inherit
 		select
 			h
 		end
---	SYSTEM_OBJECT
 end

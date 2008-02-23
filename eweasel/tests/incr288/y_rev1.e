@@ -7,5 +7,4 @@ inherit
 		select
 			g
 		end
-	$SYSTEM_OBJECT
 end

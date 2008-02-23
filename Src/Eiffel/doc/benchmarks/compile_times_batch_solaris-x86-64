@@ -6,10 +6,16 @@ CG = Code Generation
 6.2
 ===
 
-6.2.7.2080 RTEA without Kpic (exe size: 14509216):
-181.24u 12.44s 3:50.30 84.0%
+6.2.7.2421 non-RTEA without Kpic (exe size: 14645064, EIFGEN 170MB):
+173.88u 12.35s 3:47.15 81.9%
+173.61u 13.33s 3:46.30 82.6%
+173.85u 13.24s 3:14.26 96.3%
 
-6.2.7.2080 RTEA with Kpic (exe size: ):
+6.2.7.2080 non-RTEA without Kpic (exe size: 14509216, EIFGEN 173MB):
+181.24u 12.44s 3:50.30 84.0%
+180.77u 12.42s 3:23.37 94.9%
+
+6.2.7.2080 non-RTEA with Kpic (exe size: ):
 195.63u 13.24s 4:04.70 85.3%
 
 6.2.7.1893 with FILTER_LIST optimization (exe size: 15234936):

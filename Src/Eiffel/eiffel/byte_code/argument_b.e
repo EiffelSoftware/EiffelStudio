@@ -34,7 +34,7 @@ feature
 			position := i;
 		end;
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Argument type
 		do
 			Result := context.byte_code.arguments.item (position);
@@ -80,7 +80,7 @@ feature
 			-- The "arg<num>" string
 		do
 			create Result.make (10)
-			if type.is_true_expanded then
+			if context.real_type (type).is_true_expanded then
 					-- Expanded argument are copied into
 					-- a local variable `earg'.
 				Result.append_character ('e')

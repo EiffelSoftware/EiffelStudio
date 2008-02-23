@@ -46,7 +46,7 @@ inherit
 
 	COMPILER_EXPORTER
 
-	SHARED_TYPE_I
+	SHARED_TYPES
 		export
 			{NONE} all
 		end
@@ -80,11 +80,7 @@ feature {NONE} -- Initialization
 			-- `t', type of actual CLASS_C as used in Eiffel code.
 		require
 			good_argument: t /= Void
-			not_anchored: not t.is_anchored
-			not_formal:
-				(t.base_class.original_class /= system.native_array_class and then
-				t.base_class.original_class /= system.typed_pointer_class) implies
-				not t.has_formal
+			not_formal: not t.is_formal
 		local
 			l_system: like system
 			l_static_type_id_counter: like static_type_id_counter
@@ -101,7 +97,6 @@ feature {NONE} -- Initialization
 					-- Duplicate type object to avoid modification of `t'.
 				type := t.duplicate
 			end
-			type.set_cr_info (create_current)
 			is_changed := True
 			type_id := l_system.type_id_counter.next
 			static_type_id := l_static_type_id_counter.next_id
@@ -144,7 +139,7 @@ feature -- Access
 			-- variant of current CLASS_TYPE (if any), otherwise
 			-- it defaults to `static_type_id'.
 
-	type: CL_TYPE_I
+	type: CL_TYPE_A
 			-- Type of the class: it includes meta-instantiation of
 			-- possible generic parameters
 
@@ -160,6 +155,12 @@ feature -- Access
 	skeleton: SKELETON
 			-- Skeleton of the class type
 
+	is_valid: BOOLEAN is
+			-- Is current type still valid for current system?
+		do
+			Result := associated_class /= Void and then system.class_type_of_id (type_id) /= Void
+		end
+
 	is_modifiable: BOOLEAN is
 			-- Is current type not part of a precompiled library?
 		do
@@ -171,12 +172,18 @@ feature -- Access
 		require
 			il_generation: System.il_generation
 		do
-			Result := not is_precompiled and not type.is_external
+			Result := not is_precompiled and not is_external
 		end
 
 	is_changed: BOOLEAN
 			-- Is the attribute list changed ? [has the skeleton of
 			-- attributes to be re-generated ?]
+
+	is_reference: BOOLEAN
+			-- Is `type' a reference type?
+		do
+			Result := type.is_reference
+		end
 
 	is_basic: BOOLEAN is
 			-- Is current class type a basic type?
@@ -203,7 +210,7 @@ feature -- Access
 	is_generic: BOOLEAN is
 			-- Is current class a generic class?
 		local
-			l_gen_type: GEN_TYPE_I
+			l_gen_type: GEN_TYPE_A
 		do
 			l_gen_type ?= type
 			Result := l_gen_type /= Void
@@ -217,7 +224,7 @@ feature -- Access
 			l_class: like associated_class
 		do
 			l_class := associated_class
-			Result := l_class.is_external and then (not l_class.is_basic or else l_class.is_typed_pointer)
+			Result := l_class.is_external and (not l_class.is_basic or l_class.is_typed_pointer or l_class.is_native_array)
 		end
 
 	is_generated_as_single_type: BOOLEAN is
@@ -282,8 +289,8 @@ feature -- Access
 
 feature {NONE} -- Implementation: Access
 
-	basic_type: BASIC_I
-			-- If `type' is originally a basic type, we keep the BASIC_I instance
+	basic_type: BASIC_A
+			-- If `type' is originally a basic type, we keep the BASIC_A instance
 			-- as it is used for certain queries (e.g. tuple_code).
 
 feature -- Status report
@@ -411,9 +418,9 @@ feature -- Settings
 		do
 			internal_namespace := associated_class.original_class.actual_namespace.twin
 			if basic_type /= Void then
-				internal_type_name := basic_type.il_type_name (Void)
+				internal_type_name := basic_type.il_type_name (Void, Void)
 			else
-				internal_type_name := type.il_type_name (Void)
+				internal_type_name := type.il_type_name (Void, Void)
 			end
 			l_pos := internal_type_name.last_index_of ('.', internal_type_name.count)
 			internal_type_name := internal_type_name.substring (l_pos + 1, internal_type_name.count)
@@ -453,7 +460,8 @@ feature -- Update
 		end
 
 	build_conformance_table_of (cl: CLASS_TYPE) is
-			-- Build recursively the conformance table of class `cl'.
+			-- Build recursively the conformance table of class `cl' knowing that
+			-- `cl' conforms to Current.
 		require
 			cl_not_void: cl /= Void
 			conformance_table_not_void: cl.conformance_table /= Void
@@ -461,8 +469,8 @@ feature -- Update
 			a_parent: CLASS_TYPE
 			a_table: like conformance_table
 			l_area: SPECIAL [CL_TYPE_A]
-			l_parent_type: CL_TYPE_I
-			l_gen_type: GEN_TYPE_I
+			l_parent_type: CL_TYPE_A
+			l_gen_type: GEN_TYPE_A
 			i, nb: INTEGER
 		do
 			a_table := cl.conformance_table
@@ -470,24 +478,21 @@ feature -- Update
 					-- The parent has not been inserted yet. We use `force' as `type_id'
 					-- might be greater than what `a_table' can hold.
 				a_table.force (True, type_id)
+					-- Since `cl' conforms to Current, it also conforms to the parent
+					-- of Current.
 				from
 					l_area := associated_class.parents.area
 					nb := associated_class.parents.count
-					l_gen_type ?= type
 				until
 					i = nb
 				loop
-					l_parent_type := l_area.item (i).type_i
-					if l_gen_type /= Void then
-							-- Current class type is generic, we need to evaluate parent
-							-- type in context of current class type.
-						l_parent_type := l_parent_type.instantiation_in (Current)
-					end
-					a_parent := l_parent_type.associated_class_type
+					l_parent_type := l_area.item (i)
+					a_parent := l_parent_type.associated_class_type (type)
 					a_parent.build_conformance_table_of (cl)
 					i := i + 1
 				end
-				if l_gen_type /= Void and then not l_gen_type.base_class.is_tuple then
+				l_gen_type ?= type
+				if l_gen_type /= Void and then not l_gen_type.is_tuple then
 						-- Mark all generic derivations this one conforms to.
 					l_gen_type.enumerate_interfaces (agent {CLASS_TYPE}.build_conformance_table_of (cl))
 				end
@@ -503,9 +508,9 @@ feature -- Conveniences
 			il_generation: System.il_generation
 		do
 			if basic_type /= Void then
-				Result := basic_type.il_type_name (Void)
+				Result := basic_type.il_type_name (Void, Void)
 			else
-				Result := type.il_type_name (Void)
+				Result := type.il_type_name (Void, Void)
 			end
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
@@ -519,9 +524,9 @@ feature -- Conveniences
 			il_generation: System.il_generation
 		do
 			if basic_type /= Void then
-				Result := basic_type.il_type_name ("Impl")
+				Result := basic_type.il_type_name ("Impl", Void)
 			else
-				Result := type.il_type_name ("Impl")
+				Result := type.il_type_name ("Impl", Void)
 			end
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
@@ -535,9 +540,9 @@ feature -- Conveniences
 			il_generation: System.il_generation
 		do
 			if basic_type /= Void then
-				Result := basic_type.il_type_name ("Create")
+				Result := basic_type.il_type_name ("Create", Void)
 			else
-				Result := type.il_type_name ("Create")
+				Result := type.il_type_name ("Create", Void)
 			end
 		ensure
 			full_il_create_type_name_not_void: Result /= Void
@@ -578,7 +583,7 @@ feature -- Conveniences
 			-- List of parent types used for checking the invariant
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
-			parent_type: CL_TYPE_I
+			parent_type: CL_TYPE_A
 			already_in: BOOLEAN
 		do
 			from
@@ -588,7 +593,7 @@ feature -- Conveniences
 			until
 				parents.after
 			loop
-				parent_type := parents.item.type_i.instantiation_in (Current)
+				parent_type := parents.item
 				from
 						-- Check if the parent type is not already in
 						-- the list (repeated inheritance ...).
@@ -597,11 +602,11 @@ feature -- Conveniences
 				until
 					Result.after or else already_in
 				loop
-					already_in := Result.item.type.same_as (parent_type)
+					already_in := parent_type.same_generic_derivation_as (type, Result.item.type)
 					Result.forth
 				end
 				if not already_in then
-					Result.extend (parent_type.associated_class_type)
+					Result.extend (parent_type.associated_class_type (type))
 				end
 
 				parents.forth
@@ -688,7 +693,7 @@ feature -- Generation
 
 						-- Write header
 				tmp.put_string ("/*%N * Code for class ")
-				type.dump (tmp)
+				tmp.put_string (type.dump)
 				tmp.put_string ("%N */%N%N")
 					-- Includes wanted
 				tmp.put_string ("#include %"eif_eiffel.h%"%N")
@@ -768,7 +773,7 @@ feature -- Generation
 				buffer.put_gtcx
 
 					-- Initialize once data
-				l_byte_context.generate_module_once_data_initialization (static_type_id)
+				l_byte_context.generate_module_once_data_initialization (type_id)
 					-- Initialize once manifest strings
 				l_byte_context.generate_once_manifest_string_initialization
 
@@ -989,11 +994,9 @@ feature -- Generation
 			c_name: STRING
 			bits_desc: BITS_DESC
 			value: INTEGER
-			gen_type: GEN_TYPE_I
-			l_formal: FORMAL_I
-			l_formal_type: CREATE_FORMAL_TYPE
+			l_create_info: CREATE_INFO
 		do
-			c_name := Encoder.feature_name (static_type_id, Initialization_body_index)
+			c_name := Encoder.feature_name (type_id, Initialization_body_index)
 			nb_ref := skeleton.nb_reference
 			skeleton.go_bits
 				-- There are some expandeds here...
@@ -1048,7 +1051,7 @@ feature -- Generation
 			until
 				skeleton.after
 			loop
-			buffer.put_new_line
+				buffer.put_new_line
 				buffer.put_string ("offset_position = ");
 				position := skeleton.position
 				skeleton.generate(buffer, False)
@@ -1065,37 +1068,23 @@ feature -- Generation
 					buffer.put_string (")")
 				end
 				buffer.put_string(") = Current + offset_position;")
+				buffer.put_new_line
 
 				exp_desc ?= skeleton.item;		-- Cannot fail
 					-- Initialize dynaminc type of the expanded object
-				gen_type ?= exp_desc.type_i
+				l_create_info := exp_desc.type_i.create_info
 
 					-- The dynamic type has to be set after setting the flags.
-				buffer.put_new_line
 				buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
-
-				if gen_type /= Void then
-					generate_typres_computation_start (buffer, gen_type)
-				end
+				buffer.put_new_line
+				l_create_info.generate_start (buffer)
+				l_create_info.generate_gen_type_conversion (0)
 				buffer.put_new_line
 				buffer.put_string ("RT_DFS(HEADER(Current + offset_position), ")
-				if gen_type = Void then
-					l_formal ?= exp_desc.type_i
-					if l_formal /= Void then
-						create l_formal_type.make (l_formal)
-						l_formal_type.generate_type_id (buffer, byte_context.final_mode)
-					else
-							-- Not an expanded generic
-						buffer.put_type_id (exp_desc.type_id)
-					end
-				else
-					buffer.put_string ("typres")
-				end
+				l_create_info.generate_type_id (buffer, True, 0)
 				buffer.put_character (')')
 				buffer.put_character (';')
-				if gen_type /= Void then
-					generate_typres_computation_end (buffer)
-				end
+				l_create_info.generate_end (buffer)
 
 					-- Mark expanded object
 				buffer.put_new_line
@@ -1115,78 +1104,6 @@ feature -- Generation
 			buffer.generate_block_close
 				-- Separation for formatting
 			buffer.put_new_line
-		end
-
-	generate_typres_computation_start (buffer: GENERATION_BUFFER; gen_type: GEN_TYPE_I) is
-			-- Start computation of generic type.
-		require
-			buffer_exists: buffer /= Void
-			type_exists: gen_type /= Void
-		local
-			use_init, final_mode: BOOLEAN
-			idx_cnt : COUNTER
-		do
-			final_mode := byte_context.final_mode
-
-			buffer.put_new_line
-			buffer.put_character ('{')
-			buffer.indent
-
-			use_init := not gen_type.is_explicit
-
-				-- Optimize: Use static array only when `typarr' is
-				-- not modified by generated code in multithreaded mode only.
-				-- It is safe in monothreaded code as we are guaranteed that
-				-- only one thread of execution will use the modified `typarr'.
-			buffer.put_new_line
-			if not System.has_multithreaded or else not use_init then
-				buffer.put_string ("static ")
-			end
-			buffer.put_string ("EIF_TYPE_INDEX typarr [] = {")
-
-			buffer.put_integer (type.generated_id (final_mode))
-			buffer.put_string (", ")
-
-			if use_init then
-				create idx_cnt
-				idx_cnt.set_value (1)
-				gen_type.generate_cid_array (buffer, final_mode, False, idx_cnt)
-			else
-				gen_type.generate_cid (buffer, final_mode, False)
-			end
-
-			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
-			buffer.put_string ("};")
-			buffer.put_new_line
-			buffer.put_string ("EIF_TYPE_INDEX typres;")
-			if not use_init then
-				buffer.put_new_line
-				buffer.put_string ("static EIF_TYPE_INDEX typcache = INVALID_DTYPE;")
-			end
-			buffer.put_new_line
-			if use_init then
-				idx_cnt.set_value (1)
-				gen_type.generate_cid_init (buffer, final_mode, False, idx_cnt)
-			end
-
-			buffer.put_new_line
-			if not use_init then
-				buffer.put_string ("typres = RTCID2(&typcache, Dftype(Current),")
-			else
-				buffer.put_string ("typres = RTCID2(NULL, Dftype(Current),")
-			end
-			buffer.put_integer (gen_type.generated_id (final_mode))
-			buffer.put_string (", typarr);")
-		end
-
-	generate_typres_computation_end (buffer: GENERATION_BUFFER) is
-			-- Finish setting of dynamic type.
-		require
-			buffer_exists: buffer /= Void
-		do
-			buffer.exdent
-			buffer.put_new_line
-			buffer.put_character ('}')
 		end
 
 	mark_creation_routine (r: REMOVER) is
@@ -1290,14 +1207,14 @@ feature -- Parent table generation
 			valid_file   : buffer /= Void
 		do
 			compute_parent_table (final_mode)
-			Par_table.generate (buffer, final_mode)
+			Par_table.generate (buffer, final_mode, Current)
 		end
 
 	make_parent_table_byte_code (ba: BYTE_ARRAY) is
 			-- Generate parent table.
 		do
 			compute_parent_table (False)
-			Par_table.make_byte_code (ba)
+			Par_table.make_byte_code (ba, Current)
 		end
 
 feature {NONE} -- Implementation
@@ -1306,19 +1223,19 @@ feature {NONE} -- Implementation
 			-- Compute parent table and make it available in `Par_table'.
 		local
 			parents     : FIXED_LIST [CL_TYPE_A];
-			parent_type : CL_TYPE_I
-			gen_type    : GEN_TYPE_I;
+			parent_type : CL_TYPE_A
+			gen_type    : GEN_TYPE_A;
 			a_class     : CLASS_C
 		do
 			gen_type ?= type
 			a_class  := associated_class
 
-			if gen_type /= Void and then gen_type.meta_generic /= Void then
-				Par_table.init (type.generated_id (final_mode),
-								gen_type.meta_generic.count,
+			if gen_type /= Void and then gen_type.generics /= Void then
+				Par_table.init (type.generated_id (final_mode, Void),
+								gen_type.generics.count,
 								a_class.name, a_class.is_expanded);
 			else
-				Par_table.init (type.generated_id (final_mode), 0,
+				Par_table.init (type.generated_id (final_mode, Void), 0,
 								a_class.name, a_class.is_expanded);
 			end
 
@@ -1327,7 +1244,7 @@ feature {NONE} -- Implementation
 					-- that reattachment of expanded to reference works
 					-- as expected.
 				parent_type := type.reference_type
-				if parent_type.has_associated_class_type then
+				if parent_type.has_associated_class_type (type) then
 					par_table.append_type (parent_type)
 				else
 					parent_type := Void
@@ -1340,9 +1257,9 @@ feature {NONE} -- Implementation
 				until
 					parents.after
 				loop
-					parent_type := parents.item.type_i
+					parent_type := parents.item
 					if gen_type /= Void then
-						parent_type := parent_type.instantiation_in (Current)
+						parent_type := parent_type.adapted_in (Current)
 					end
 					Par_table.append_type (parent_type)
 					parents.forth
@@ -1380,7 +1297,7 @@ feature -- Skeleton generation
 
 					-- Generate expanded generic type arrays
 				Byte_context.init (Current)
-				skeleton.generate_generic_type_arrays (type_id)
+				skeleton.generate_generic_type_arrays
 
 				if byte_context.final_mode then
 
@@ -1423,7 +1340,7 @@ feature -- Skeleton generation
 					-- Generate extern declaration for invariant
 					-- routine of the current class type
 				buffer.put_string ("extern void ")
-				buffer.put_string (Encoder.feature_name (static_type_id, Invariant_body_index))
+				buffer.put_string (Encoder.feature_name (type_id, Invariant_body_index))
 				buffer.put_string ("();%N%N")
 			end
 		end
@@ -1478,7 +1395,7 @@ feature -- Skeleton generation
 			buffer.put_character (',')
 			buffer.put_new_line
 			buffer.put_string ("(uint16) ")
-			buffer.put_integer (skeleton_flags)
+			buffer.put_natural_16 (skeleton_flags)
 			buffer.put_character (',')
 			buffer.put_new_line
 
@@ -1486,7 +1403,7 @@ feature -- Skeleton generation
 				if
 					a_class.has_invariant and then system.keep_assertions
 				then
-					buffer.put_string (Encoder.feature_name (static_type_id, Invariant_body_index))
+					buffer.put_string (Encoder.feature_name (type_id, Invariant_body_index))
 				else
 					buffer.put_string ("(void (*)()) 0")
 				end
@@ -1623,21 +1540,24 @@ feature -- Structure generation
 --			end
 		end
 
-	generate_expanded_type_initialization (buffer: GENERATION_BUFFER; a_name: STRING; a_type: CL_TYPE_I) is
-			-- Generate initialization of expanded local variable `a_name'.
+	generate_expanded_type_initialization (buffer: GENERATION_BUFFER; a_name: STRING; a_type: TYPE_A; a_context_type: CLASS_TYPE) is
+			-- Generate initialization of expanded local variable `a_name' and `type `a_type'
+			-- declared in the context of `a_context_type' into `buffer'.
 		require
 			is_expanded: is_expanded
 			buffer_not_void: buffer /= Void
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 			a_type_not_void: a_type /= Void
-			compatible_type: a_type.same_as (type)
+			compatible_type: a_type.adapted_in (a_context_type).generic_derivation.same_as (type)
 		local
-			l_gen_type: GEN_TYPE_I
+--			l_gen_type: GEN_TYPE_A
+			l_create_info: CREATE_INFO
 			l_workbench_mode: BOOLEAN
 		do
-			l_gen_type ?= a_type
+			l_create_info := a_type.create_info
 			l_workbench_mode := byte_context.workbench_mode
+--			l_gen_type ?= a_type.adapted_in (type)
 --			if l_workbench_mode or else (skeleton.has_references or l_gen_type /= Void) then
 					-- The dynamic type has to be set after setting the flags.
 					-- Also note that we use EO_C as those expanded cannot move.
@@ -1646,69 +1566,42 @@ feature -- Structure generation
 				buffer.put_string (a_name)
 				buffer.put_string (".data)->ov_flags = EO_EXP | EO_C;")
 
-				if l_gen_type /= Void then
-					generate_typres_computation_start (buffer, l_gen_type)
-				end
+				l_create_info.generate_start (buffer)
+				l_create_info.generate_gen_type_conversion (0)
+
 				buffer.put_new_line
 				buffer.put_string ("RT_DFS((union overhead *) ")
 				buffer.put_string (a_name)
 				buffer.put_string (".data, ")
-				if l_gen_type = Void then
-						-- Not a generic type.
-					if l_workbench_mode then
-						buffer.put_string ("RTUD(")
-						buffer.put_integer (a_type.generated_id (False))
-						buffer.put_character (')')
-					else
-						buffer.put_integer (a_type.generated_id (True))
-					end
-				else
-					buffer.put_string ("typres")
-				end
+				l_create_info.generate_type_id (buffer, not l_workbench_mode, 0)
 				buffer.put_character (')')
 				buffer.put_character (';')
-				if l_gen_type /= Void then
-					generate_typres_computation_end (buffer)
-				end
+				l_create_info.generate_end (buffer)
 --			end
 		end
 
-	generate_expanded_creation (buffer: GENERATION_BUFFER; a_target_name: STRING; a_type: CL_TYPE_I) is
-			-- Allocate memory and call to `default_create' if needed on `a_target_name'.
+	generate_expanded_creation (buffer: GENERATION_BUFFER; a_target_name: STRING; a_type: TYPE_A; a_context_type: CLASS_TYPE) is
+			-- Allocate memory and call to `default_create' if needed on `a_target_name' of type `a_type'
+			-- declared in context `a_context_type'.
 		require
 			is_expanded: is_expanded
 			buffer_not_void: buffer /= Void
 			a_target_name_not_void: a_target_name /= Void
 			a_target_name_not_empty: not a_target_name.is_empty
 			a_type_not_void: a_type /= Void
-			compatible_type: a_type.same_as (type)
+			compatible_type: a_type.adapted_in (a_context_type).generic_derivation.same_as (type)
 		local
-			l_gen_type: GEN_TYPE_I
-			l_workbench_mode: BOOLEAN
+			l_create_info: CREATE_INFO
 		do
-			l_gen_type ?= a_type
-			l_workbench_mode := byte_context.workbench_mode
-			if l_gen_type = Void then
-					-- Not a generic type.
-				buffer.put_new_line
-				buffer.put_string (a_target_name)
-				buffer.put_string ("= RTLN(")
-				if l_workbench_mode then
-					buffer.put_string ("RTUD(")
-					buffer.put_integer (a_type.generated_id (False))
-					buffer.put_string (")")
-				else
-					buffer.put_integer (a_type.generated_id (True))
-				end
-				buffer.put_string (");")
-			else
-				generate_typres_computation_start (buffer, l_gen_type)
-				buffer.put_new_line
-				buffer.put_string (a_target_name)
-				buffer.put_string ("= RTLN(typres)")
-				buffer.put_character (';')
-				generate_typres_computation_end (buffer)
-			end
+			l_create_info := a_type.create_info
+			l_create_info.generate_start (buffer)
+			l_create_info.generate_gen_type_conversion (0)
+			buffer.put_new_line
+			buffer.put_string (a_target_name)
+			buffer.put_string ("= RTLN(")
+			l_create_info.generate_type_id (buffer, not byte_context.workbench_mode, 0)
+			buffer.put_two_character (')', ';')
+			l_create_info.generate_end (buffer)
 		end
 
 	generate_expanded_initialization (buffer: GENERATION_BUFFER; a_target_name, a_parent_name: STRING; needs_initialization: BOOLEAN) is
@@ -1738,8 +1631,8 @@ feature -- Structure generation
 					buffer.put_string (");")
 				else
 					if has_creation_routine then
-						c_name := encoder.feature_name (static_type_id, initialization_body_index)
-						Extern_declarations.add_routine_with_signature (Void_c_type.c_string,
+						c_name := encoder.feature_name (type_id, initialization_body_index)
+						Extern_declarations.add_routine_with_signature (Void_type.c_type.c_string,
 							c_name, <<"EIF_REFERENCE, EIF_REFERENCE">>)
 						buffer.put_new_line
 						buffer.put_string (c_name)
@@ -1767,13 +1660,13 @@ feature -- Structure generation
 				then
 					l_written_class := System.class_of_id (creation_feature.written_in)
 					l_written_type := l_written_class.meta_type (Current)
-					c_name := Encoder.feature_name (l_written_type.static_type_id,
+					c_name := Encoder.feature_name (l_written_type.type_id,
 						creation_feature.body_index)
 					buffer.put_new_line
 					buffer.put_string (c_name)
 					buffer.put_character ('(')
 					buffer.put_string (a_target_name)
-					Extern_declarations.add_routine_with_signature (Void_c_type.c_string,
+					Extern_declarations.add_routine_with_signature (Void_type.c_type.c_string,
 						c_name, <<"EIF_REFERENCE">>)
 					buffer.put_string (");")
 				end
@@ -1857,7 +1750,7 @@ feature -- Byte code generation
 			end
 
 				-- 6. Store skeleton flags
-			ba.append_short_integer (skeleton_flags)
+			ba.append_natural_16 (skeleton_flags)
 
 				-- 7. Routine ids of attributes
 			skeleton.make_rout_id_array (ba)
@@ -1971,17 +1864,9 @@ feature -- Cleaning
 			retry
 		end
 
-feature -- Debug
-
-	trace is
-		do
-			skeleton.trace
-			type.trace
-		end
-
 feature {NONE} -- Convenience
 
-	skeleton_flags: INTEGER_16 is
+	skeleton_flags: NATURAL_16 is
 			-- Corresponding flags to insert in skeleton structure
 		local
 			l_class: like associated_class
@@ -1991,10 +1876,10 @@ feature {NONE} -- Convenience
 				-- From bit 0 to bit 3: we store `tuple_code'.
 			if basic_type /= Void then
 					-- For basic types, we use `basic_type' as `type' only
-					-- contains the true expanded forms of basic types (i.e CL_TYPE_I).
-				Result := basic_type.tuple_code
+					-- contains the true expanded forms of basic types (i.e CL_TYPE_A).
+				Result := basic_type.c_type.tuple_code
 			else
-				Result := type.tuple_code
+				Result := type.c_type.tuple_code
 			end
 
 				-- Bit 8: Store `is_declared_as_expanded'
@@ -2031,7 +1916,7 @@ feature {NONE} -- Debug output
 			l_name: STRING
 		do
 			if type /= Void then
-				l_name := type.name
+				l_name := type.dump
 				create Result.make (l_name.count + 15 )
 			else
 				create Result.make (13)
@@ -2068,6 +1953,7 @@ feature {NONE} -- Implementation
 
 invariant
 	type_not_void: type /= Void
+	type_is_generic_derivation: type.generic_derivation.same_as (type)
 	valid_type_id: type_id > 0
 	valid_static_type_id: static_type_id > 0
 	valid_implementation_id: System.il_generation implies implementation_id > 0

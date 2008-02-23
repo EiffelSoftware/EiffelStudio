@@ -51,6 +51,8 @@ feature -- Removal
 	remove (an_id: INTEGER) is
 			-- Remove an element from the Server
 		deferred
+		ensure
+			not_present: not has (an_id)
 		end
 
 feature -- Update
@@ -269,7 +271,7 @@ feature {NONE} -- HASH_TABLE like features
 				l_table.remove (key)
 			end
 		ensure
-			not_present: not has (key)
+			not_present: not tbl_has (key)
 		end
 
 	tbl_put (new: G; key: INTEGER) is

@@ -14,8 +14,6 @@ inherit
 			is_named_type
 		end
 
-	HASHABLE
-
 feature -- Property
 
 	is_named_type: BOOLEAN is True;

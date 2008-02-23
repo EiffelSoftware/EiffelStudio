@@ -20,16 +20,16 @@ feature -- Access
 	value: INTEGER
 			-- Bits value
 
-	type_i: TYPE_I is
+	type_i: TYPE_A is
 			-- Correspdonding instance of BIT type.
 		do
-			create {BIT_I} Result.make (value)
+			create {BITS_A} Result.make (value)
 		end
 
 	sk_value: INTEGER is
 			-- Sk value
 		do
-			Result := Sk_bit + value
+			Result := {SK_CONST}.Sk_bit + value
 		end
 
 feature -- Status report
@@ -68,18 +68,9 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.put_string ("SK_BIT + ")
+			buffer.put_string ({SK_CONST}.sk_bit_string)
+			buffer.put_three_character (' ', '+', ' ')
 			buffer.put_integer (value)
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_string (attribute_name)
-			io.error.put_string ("[BITS ")
-			io.error.put_integer (value)
-			io.error.put_string ("]")
 		end
 
 indexing

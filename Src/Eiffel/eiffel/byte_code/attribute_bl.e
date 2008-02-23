@@ -20,6 +20,11 @@ inherit
 
 	SHARED_DECLARATIONS
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 feature
 
 	parent: NESTED_B
@@ -115,13 +120,13 @@ end
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			class_type: CL_TYPE_I
+			class_type: CL_TYPE_A
 		do
 				-- Do nothing if `reg' is not the current entity
 			if reg.is_current then
 				class_type ?= context_type
 				if class_type /= Void then
-					if Eiffel_table.is_polymorphic (routine_id, class_type.type_id, False) >= 0 then
+					if Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), False) >= 0 then
 						context.add_dt_current
 					end
 				end
@@ -131,23 +136,23 @@ end
 	is_polymorphic: BOOLEAN is
 			-- Is access polymorphic ?
 		local
-			class_type: CL_TYPE_I
-			type_i: TYPE_I
+			class_type: CL_TYPE_A
+			type_i: TYPE_A
 		do
 			type_i := context_type
 			if not type_i.is_basic then
 				class_type ?= type_i;	-- Cannot fail
-				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id, False) >= 0
+				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), False) >= 0
 			end
 		end
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
 			-- Generate attribute in a `typ' context
 		local
 			table_name: STRING
 			offset_class_type: CLASS_TYPE
 			type_c: TYPE_C
-			type_i: TYPE_I
+			type_i: TYPE_A
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 		do
@@ -170,7 +175,7 @@ end
 				reg.print_register
 				buf.put_character (')')
 			end
-			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, False)
+			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), False)
 			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
@@ -198,12 +203,12 @@ end
 				Extern_declarations.add_attribute_table (table_name)
 			else
 					-- Hardwire the offset
-				offset_class_type := typ.associated_class_type
+				offset_class_type := typ.associated_class_type (context.context_class_type.type)
 					--| In this instruction, we put `False' as second
 					--| arguments. This means we won't generate anything if there is nothing
 					--| to generate. Remember that `True' is used in the generation of attributes
 					--| table in Final mode.
-				offset_class_type.skeleton.generate_offset (buf, real_feature_id (typ.base_class), False)
+				offset_class_type.skeleton.generate_offset (buf, real_feature_id (typ), False)
 			end
 			buf.put_character (')')
 		end

@@ -41,7 +41,7 @@ feature {NONE}
 			create Result.make (16)
 		end
 
-	Integer_type: INTEGER_A is
+	Integer_32_type, Integer_type: INTEGER_A is
 			-- Actual integer type of 32 bits
 		once
 			create Result.make (32)

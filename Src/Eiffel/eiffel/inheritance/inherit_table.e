@@ -460,8 +460,7 @@ end;
 				a_class.class_interface.process_features (resulting_table)
 			end
 
-				-- Instantiate generic parameter in context of current
-				-- class.
+				-- Instantiate generic parameter in context of current class.
 			a_class.update_generic_features
 
 				-- Find main_parent of current class.

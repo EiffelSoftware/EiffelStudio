@@ -6,7 +6,7 @@ indexing
 class PARENT_TABLE
 
 inherit
-	ARRAY [CL_TYPE_I]
+	ARRAY [CL_TYPE_A]
 		rename
 			make as array_make
 		end;
@@ -62,7 +62,7 @@ feature
 			cursor_reset: crnt_pos = 1
 		end;
 
-	append_type (ptype : CL_TYPE_I) is
+	append_type (ptype : CL_TYPE_A) is
 			-- Append type `ptype' to list of parent types.
 		require
 			valid_type: ptype /= Void
@@ -75,7 +75,7 @@ feature
 			crnt_pos := crnt_pos + 1
 		end;
 
-	generate (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+	generate (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_class_type: CLASS_TYPE) is
 			-- Generates the current parent table
 		require
 			valid_file: buffer /= Void
@@ -103,7 +103,7 @@ feature
 			until
 				i >= n
 			loop
-				item (i).generate_cid (buffer, final_mode, False);
+				item (i).generate_cid (buffer, final_mode, False, a_class_type.type);
 
 				i := i + 1;
 				j := j + 1;
@@ -137,7 +137,7 @@ feature
 			buffer.put_string ("};%N");
 		end;
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY; a_class_type: CLASS_TYPE) is
 			-- Generate byte code
 		local
 			i, n: INTEGER;
@@ -169,7 +169,7 @@ feature
 			until
 				i >= n
 			loop
-				item (i).make_gen_type_byte_code (ba, False);
+				item (i).make_gen_type_byte_code (ba, False, a_class_type.type);
 				i := i + 1
 			end;
 

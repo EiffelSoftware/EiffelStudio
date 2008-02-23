@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	type: TYPE_I;
+	type: TYPE_A;
 
 feature -- Status report
 

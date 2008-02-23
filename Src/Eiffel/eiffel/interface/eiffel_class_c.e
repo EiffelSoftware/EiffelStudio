@@ -235,7 +235,7 @@ feature -- Action
 				if has_ast then
 					ast_b := Ast_server.item (class_id)
 					supplier_list := ast_b.suppliers.supplier_ids
-					if not supplier_list.is_empty then
+					if supplier_list /= Void and then not supplier_list.is_empty then
 						check_suppliers (supplier_list, False)
 					end
 					parent_list := ast_b.parents
@@ -362,19 +362,19 @@ feature -- Action
 			old_syntactical_suppliers := syntactical_suppliers
 			create syntactical_suppliers.make (old_syntactical_suppliers.count)
 			supplier_list := ast_b.suppliers.supplier_ids
-			if supplier_list.count > 0 then
+			if supplier_list /= Void and then not supplier_list.is_empty then
 				check_suppliers (supplier_list, False)
 			end
 			if lace_class.options.is_warning_enabled (w_export_class_missing) then
 				light_supplier_list := ast_b.suppliers.light_supplier_ids
-				if not light_supplier_list.is_empty then
+				if light_supplier_list /= Void and then not light_supplier_list.is_empty then
 					check_suppliers (light_supplier_list, True)
 				end
 			end
 			parent_list := ast_b.parents
 			if parent_list /= Void then
-
-					-- FIXME add incrementality check  Type check error d.add (Current) of type B not conform to A ...
+					-- FIXME add incrementality check  Type check error
+					-- d.add (Current) of type B not conform to A ...
 				check_parent_classes (parent_list)
 			end
 

@@ -85,8 +85,8 @@ feature
 			-- expanded or if there are some postconditions which might use
 			-- it or there is a rescue clause...
 		local
-			source_type: TYPE_I
-			target_type: TYPE_I
+			source_type: TYPE_A
+			target_type: TYPE_A
 		do
 			if target.is_result and
 				not context.has_postcondition and
@@ -171,8 +171,8 @@ feature
 			string_b: STRING_B
 			source_has_gcable: BOOLEAN
 			result_used: BOOLEAN
-			source_type: TYPE_I
-			target_type: TYPE_I
+			source_type: TYPE_A
+			target_type: TYPE_A
 			call_b: CALL_B
 			expr_b: EXPR_B
 			saved_context: like context
@@ -378,8 +378,8 @@ feature
 	generate_assignment is
 			-- Generate a non-optimized assignment
 		local
-			target_type: TYPE_I
-			source_type: TYPE_I
+			target_type: TYPE_A
+			source_type: TYPE_A
 			buf: GENERATION_BUFFER
 			l_context: like context
 		do
@@ -431,7 +431,7 @@ feature
 	generate_special (how: INTEGER) is
 			-- Generate special pre-treatment
 		local
-			basic_source_type: BASIC_I
+			basic_source_type: BASIC_A
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -462,7 +462,7 @@ feature
 			need_aging_tests: BOOLEAN
 			buf: GENERATION_BUFFER
 			target_c_type: TYPE_C
-			source_type: TYPE_I
+			source_type: TYPE_A
 		do
 			buf := buffer
 			generate_special (how)
@@ -584,7 +584,7 @@ feature
 			-- Generate reattachment between expanded `source' and `target'.
 		local
 			buf: GENERATION_BUFFER
-			target_type: CL_TYPE_I
+			target_type: CL_TYPE_A
 		do
 			buf := buffer
 			if not target.is_predefined and target.c_type.is_pointer then
@@ -612,9 +612,9 @@ feature
 				source_print_register
 				buf.put_string (gc_comma)
 				if context.workbench_mode then
-					target_type.associated_class_type.skeleton.generate_workbench_size (buf)
+					target_type.associated_class_type (context.context_class_type.type).skeleton.generate_workbench_size (buf)
 				else
-					target_type.associated_class_type.skeleton.generate_size (buf)
+					target_type.associated_class_type (context.context_class_type.type).skeleton.generate_size (buf)
 				end
 				buf.put_character (')')
 				buf.put_character (';')
@@ -627,8 +627,8 @@ feature
 			no_postcondition: not context.has_postcondition
 			no_invariant: not context.has_invariant
 		local
-			target_type: TYPE_I
-			source_type: TYPE_I
+			target_type: TYPE_A
+			source_type: TYPE_A
 			buf: GENERATION_BUFFER
 		do
 			target_type := context.real_type (target.type)

@@ -24,6 +24,11 @@ inherit
 			size
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -59,10 +64,10 @@ feature -- Access
 	expression: EXPR_B
 			-- Associated expression
 
-	type: TYPE_I
+	type: TYPE_A
 			-- Expression type
 		do
-			Result := boolean_c_type
+			Result := boolean_type
 		end
 
 	info: CREATE_INFO

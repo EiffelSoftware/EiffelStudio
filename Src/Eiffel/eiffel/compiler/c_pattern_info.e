@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	C_PATTERN_INFO 
+	C_PATTERN_INFO
 
 inherit
 	HASHABLE
@@ -78,15 +78,6 @@ feature -- Code generation
 			buffer_not_void: buffer /= Void
 		do
 			pattern.generate_pattern (c_pattern_id, buffer)
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_integer (c_pattern_id)
-			io.error.put_new_line
-			pattern.trace
 		end
 
 invariant

@@ -63,8 +63,7 @@ feature -- AST Element change
 			storage.remove (a_class_id)
 			invariant_info.remove (a_class_id)
 		ensure then
-			not_has: not has (a_class_id)
-			not_has_invariant: not has (a_class_id)
+			not_has_invariant: not invariant_info.has (a_class_id)
 		end
 
 feature -- Body element change

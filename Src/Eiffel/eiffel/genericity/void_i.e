@@ -1,94 +1,46 @@
 indexing
+	description: "Mapping of real Eiffel types to underlying machine type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class VOID_I
 
 inherit
-	TYPE_I
-		redefine
-			is_void, same_as
-		end
-
 	TYPE_C
-		export
-			{NONE} generate_access_cast
-		undefine
-			is_bit
 		redefine
 			is_void
 		end
 
-	SHARED_C_LEVEL
-
-	SHARED_TYPES
-		rename
-			none_type as none_type_a
-		export
-			{NONE} all
-		end
-
-feature -- Status report
-
-	element_type: INTEGER_8 is
-			-- Void element type
-		do
-			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_void
-		end
-
-	tuple_code: INTEGER_8 is
-			-- Code for Void.
-		do
-			-- Nothing
-		end
-
-feature
+feature -- Access
 
 	level: INTEGER is
 			-- Internal type value for generation
 		do
-			Result := C_void
+			Result := {SHARED_C_LEVEL}.c_void
 		end
 
-	c_type: TYPE_C is
-			-- C type
+	element_type: INTEGER_8 is
 		do
-			Result := Current
+			Result := {MD_SIGNATURE_CONSTANTS}.element_type_void
 		end
 
-	il_type_name (a_prefix: STRING): STRING is
-			-- Name of current class type.
-		once
-			Result := name
-		end
-
-	same_as (other: TYPE_I): BOOLEAN is
-			-- Is `other' the equal to Current ?
+	sk_value: INTEGER is
 		do
-			Result := other.is_void
+			Result := {SK_CONST}.sk_void
 		end
 
-	is_void: BOOLEAN is True
-			-- Type is a void one
-
-	description: ATTR_DESC is
-		do
-			Result := Reference_c_type.description
-		end
-
-	generate_cecil_value (buffer: GENERATION_BUFFER) is
-			-- Generate Cecil type value.
-		do
-			generate_sk_value (buffer)
-		ensure then
-			False
-		end
-
-	name, c_string: STRING is "void"
+	c_string: STRING is "void"
 			-- String generated for the type.
 
 	typed_field: STRING is
 			-- Value field of a C structure corresponding to this type
 		do
+				-- Dummy value to fullfil inherited contract to cause
+				-- a syntax error at C compilation time instead of a
+				-- crash during compilation.
+			Result := "it_v"
 		ensure then
 			False
 		end
@@ -99,29 +51,17 @@ feature
 			Result := {SHARED_HASH_CODE}.void_code
 		end
 
-	sk_value: INTEGER is
-			-- Generate SK value associated to the current type.
-		do
-			Result := Sk_void
-		end
+feature -- Status Report
 
-	generate_typed_tag (buffer: GENERATION_BUFFER) is
-			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
-			-- to the current C type in `buffer'.
-		do
-		ensure then
-			False
-		end
+	is_void: BOOLEAN is True
+			-- Type is a void one
+
+feature -- C code generation
 
 	generate_sk_value (buffer: GENERATION_BUFFER) is
 			-- Generate SK value associated to current C type in `buffer'.
 		do
-			buffer.put_string ("SK_VOID")
-		end
-
-	type_a: TYPE_A is
-		do
-			Result := void_type
+			buffer.put_string ({SK_CONST}.sk_void_string)
 		end
 
 indexing

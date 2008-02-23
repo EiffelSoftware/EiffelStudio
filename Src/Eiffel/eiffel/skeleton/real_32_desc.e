@@ -5,20 +5,20 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class REAL_32_DESC 
+class REAL_32_DESC
 
 inherit
 	ATTR_DESC
 		rename
 			real_32_level as level,
-			real32_c_type as type_i
+			real_32_type as type_i
 		end
 
 feature -- Access
 
 	sk_value: INTEGER is
 		do
-			Result := Sk_real32
+			Result := {SK_CONST}.Sk_real32
 		end
 
 feature -- Code generation
@@ -27,15 +27,7 @@ feature -- Code generation
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.put_string ("SK_REAL32")
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_string (attribute_name)
-			io.error.put_string ("[REAL]")
+			buffer.put_string ({SK_CONST}.sk_real32_string)
 		end
 
 indexing

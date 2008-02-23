@@ -18,17 +18,12 @@ inherit
 			{NONE} all
 		end
 
-	SK_CONST
-		export
-			{NONE} all
-		end
-
 	COMPILER_EXPORTER
 		export
 			{NONE} all
 		end
 
-	SHARED_TYPE_I
+	SHARED_TYPES
 		export
 			{NONE} all
 		end
@@ -100,7 +95,7 @@ feature -- Status report
 		deferred
 		end
 
-	type_i: TYPE_I is
+	type_i: TYPE_A is
 			-- Corresponding TYPE_I instance for current description.
 		deferred
 		end
@@ -149,17 +144,15 @@ feature -- Code generation
 		deferred
 		end
 
-	generate_generic_code (buffer: GENERATION_BUFFER; is_final_mode: BOOLEAN; code, idx : INTEGER) is
+	generate_generic_code (buffer: GENERATION_BUFFER; is_final_mode: BOOLEAN; a_class_type: CLASS_TYPE; idx : INTEGER) is
 			-- Generate full type code for current attribute description in
 			-- `buffer'.
 		require
 			buffer_not_void: buffer /= Void
 			has_type: type_i /= Void
-		local
-			l_type: TYPE_I
 		do
 			buffer.put_string ("static EIF_TYPE_INDEX g_atype")
-			buffer.put_integer (code)
+			buffer.put_integer (a_class_type.type_id)
 			buffer.put_character ('_')
 			buffer.put_integer (idx)
 			buffer.put_string (" [] = {0,")
@@ -168,8 +161,7 @@ feature -- Code generation
 				-- it is possible that we would not find the associated class type of `l_type'
 				-- and therefore generate an incorrect type specification (Cf eweasel bug about
 				-- storable).
-			l_type := context.creation_type (type_i)
-			l_type.generate_cid (buffer, is_final_mode, False)
+			type_i.generate_cid (buffer, is_final_mode, False, a_class_type.type)
 			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			buffer.put_string ("};%N")
 		end
@@ -181,15 +173,6 @@ feature -- Code generation
 			good_argument: class_type /= Void
 		do
 			Result := Current
-		ensure
-			no_formal: not Result.has_formal
-		end
-
-feature -- Debug
-
-	trace is
-			-- Debug purpose
-		deferred
 		end
 
 indexing

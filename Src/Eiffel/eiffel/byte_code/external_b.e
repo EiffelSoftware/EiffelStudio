@@ -30,13 +30,13 @@ feature -- Visitor
 	process (v: BYTE_NODE_VISITOR) is
 			-- Process current element.
 		local
-			c: CL_TYPE_I
+			c: CL_TYPE_A
 			f: FEATURE_I
 		do
 			if not is_static_call and then not context.is_written_context then
 					-- Ensure the feature is not redeclared into attribute or internal routine.
 				c ?= context_type
-				f := c.base_class.feature_of_rout_id (routine_id)
+				f := c.associated_class.feature_of_rout_id (routine_id)
 				if f.is_external or else f.extension = extension then
 					f := Void
 				end
@@ -52,7 +52,7 @@ feature -- Visitor
 
 feature
 
-	type: TYPE_I;
+	type: TYPE_A
 			-- Type of the call
 
 	parameters: BYTE_LIST [PARAMETER_B];
@@ -123,7 +123,7 @@ feature -- Routines for externals
 			end
 		end
 
-	set_type (t: TYPE_I) is
+	set_type (t: like type) is
 			-- Assign `t' to `type'.
 		do
 			type := t;
@@ -206,18 +206,18 @@ feature -- Status report
 			Result := enlarged_on (context_type)
 		end
 
-	enlarged_on (a_type_i: TYPE_I): CALL_ACCESS_B is
+	enlarged_on (a_type_i: TYPE_A): CALL_ACCESS_B is
 			-- Enlarged byte node evaluated in the context of `a_type_i'.
 		local
 			external_bl: EXTERNAL_BL
-			c: CL_TYPE_I
+			c: CL_TYPE_A
 			f: FEATURE_I
 		do
 			if not is_static_call and then not context.is_written_context then
 					-- Ensure the feature is not redeclared into attribute or internal routine.
-				c ?= real_type (a_type_i)
+				c ?= a_type_i
 				if c /= Void then
-					f := c.base_class.feature_of_rout_id (routine_id)
+					f := c.associated_class.feature_of_rout_id (routine_id)
 					if f.is_external then
 						f := Void
 					end

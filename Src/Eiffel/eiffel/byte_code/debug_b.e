@@ -86,7 +86,7 @@ feature -- C Code generation
 		do
 			Result := context.workbench_mode and not system.il_generation
 			if not Result then
-				debug_level := context.current_type.base_class.debug_level
+				debug_level := context.context_class_type.associated_class.debug_level
 				if keys = Void then
 					Result := debug_level.has_unnamed
 				else
@@ -105,7 +105,6 @@ feature -- C Code generation
 	generate is
 			-- Generation of the C code for debug compound
 		local
-			static_type: STRING
 			buf: GENERATION_BUFFER
 		do
 			generate_line_info
@@ -114,9 +113,7 @@ feature -- C Code generation
 					compound.generate
 				else
 					buf := buffer
-						-- Generation of the debug compound in workbench
-						-- mode
-					static_type := Encoder.generate_type_id_name (context.class_type.static_type_id)
+						-- Generation of the debug compound in workbench mode
 					buf.put_new_line
 					buf.put_string (gc_if_l_paran)
 					buf.indent
@@ -124,7 +121,7 @@ feature -- C Code generation
 					if keys = Void then
 							-- No keys
 						buf.put_string ("WDBG(RTUD(")
-						buf.put_string (static_type)
+						buf.put_static_type_id (context.class_type.static_type_id)
 						buf.put_string ("), (char *) 0)")
 					else
 						from
@@ -133,7 +130,7 @@ feature -- C Code generation
 							keys.after
 						loop
 							buf.put_string ("WDBG(RTUD(")
-							buf.put_string (static_type)
+							buf.put_static_type_id (context.class_type.static_type_id)
 							buf.put_string ("),%"")
 							buf.put_string (keys.item)
 							buf.put_string ("%")")

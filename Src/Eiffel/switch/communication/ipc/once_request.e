@@ -158,7 +158,8 @@ feature -- Implementation
 						end
 					end
 					if l_type /= Void then
-						l_type_value := l_type.type_i.sk_value
+							-- FIXME: Manu 2008/02/04: do we need a context type here?
+						l_type_value := l_type.sk_value (Void)
 					end
 				else
 					l_type_value := 0

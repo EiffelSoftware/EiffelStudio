@@ -18,7 +18,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Implementation
 
 	make (a_formal: like formal_type; a_target_type: like target_type) is
@@ -43,7 +43,7 @@ feature -- Byte code generation
 	byte_node (an_expr: EXPR_B): EXPR_B is
 			-- Generate byte node needed to convert `an_expr' to `target_type'
 		do
-			create {FORMAL_CONVERSION_B} Result.make (an_expr, target_type.type_i, False)
+			create {FORMAL_CONVERSION_B} Result.make (an_expr, target_type, False)
 		end
 
 invariant

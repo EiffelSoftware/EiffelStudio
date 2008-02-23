@@ -12,8 +12,8 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			is_like_current, has_associated_class,
-			type_i, associated_class, conform_to, is_valid,
-			evaluated_type_in_descendant, instantiated_in
+			associated_class, conform_to, internal_is_valid_for_class,
+			evaluated_type_in_descendant, instantiated_in, instantiation_in
 		end
 
 	SHARED_NAMES_HEAP
@@ -72,9 +72,6 @@ feature -- Properties
 	has_associated_class: BOOLEAN is False
 			-- Does Current have associated class?
 
-	is_valid: BOOLEAN is False
-			-- An unevaluated type is never valid.
-
 feature -- Access
 
 	associated_class: CLASS_C is
@@ -99,11 +96,11 @@ feature -- Output
 			-- Append Current type to `st'.
 		do
 			if has_attached_mark then
-				st.process_symbol_text (ti_exclamation)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_exclamation)
 			elseif has_detachable_mark then
-				st.process_symbol_text (ti_question)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_question)
 			end
-			st.process_keyword_text (ti_Like_keyword, Void)
+			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
 			st.add_space
 			st.add (anchor)
 		end
@@ -120,6 +117,13 @@ feature -- Output
 			Result.append (anchor)
 		end
 
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+			-- An unevaluated type is never valid.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	same_as (other: TYPE_A): BOOLEAN is
@@ -133,7 +137,7 @@ feature {NONE} -- Implementation
 				has_same_attachment_marks (o)
 		end
 
-	create_info: CREATE_INFO is
+	shared_create_info, create_info: CREATE_INFO is
 			-- Byte code information for entity type creation
 		do
 		end
@@ -152,11 +156,6 @@ feature {NONE} -- Implementation
 		end
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
-		do
-		end
-
-	type_i: TYPE_I is
-			-- C type
 		do
 		end
 

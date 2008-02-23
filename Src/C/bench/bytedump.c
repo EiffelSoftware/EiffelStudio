@@ -1382,10 +1382,7 @@ static void get_creation_type (void)
 			/* like argument */
 			/* static creation type */
 			fprintf (ofp, " (BC_CARG) ");
-
-			print_ctype (get_int16(&ip));
-/*GENERIC CONFORMANCE*/
-			print_cid ();
+			get_creation_type ();
 			/* argument index */
 			fprintf (ofp,"%d", (int) get_int16(&ip));
 			break;

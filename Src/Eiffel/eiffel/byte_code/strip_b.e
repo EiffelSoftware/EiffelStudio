@@ -35,10 +35,10 @@ feature
 			create feature_ids.make
 		end
 
-	type: GEN_TYPE_I is
+	type: GEN_TYPE_A is
 			-- Type of byte code strip expression
-		once
-			Result := Instantiator.Array_type
+		do
+			Result := Instantiator.array_type
 		end
 
 	used (r: REGISTRABLE): BOOLEAN is

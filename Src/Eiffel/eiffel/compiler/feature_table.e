@@ -987,7 +987,7 @@ end
 						(l_ext = Void or else l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type)
 					then
 							-- We do not take IL static fields, only attributes of a class.
-						desc := feature_i.type.type_i.description
+						desc := feature_i.type.description
 						desc.set_feature_id (feature_i.feature_id)
 						desc.set_attribute_name_id (feature_i.feature_name_id)
 						desc.set_rout_id (feature_i.rout_id_set.first)

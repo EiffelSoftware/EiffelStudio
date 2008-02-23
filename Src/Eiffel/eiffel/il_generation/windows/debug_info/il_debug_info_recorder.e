@@ -165,7 +165,7 @@ feature -- Queries : eStudio data
 	implemented_type (a_class_c: CLASS_C; a_class_type: CLASS_TYPE): CLASS_TYPE is
 			-- Return CLASS_TYPE from `a_class_c' related to the derivation of `a_class_type'
 		do
-			Result := a_class_type.type.implemented_type (a_class_c.class_id).associated_class_type
+			Result := a_class_type.type.implemented_type (a_class_c.class_id).associated_class_type (Void)
 		end
 
 feature -- Queries : eStudio data from debugger data

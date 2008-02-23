@@ -40,7 +40,7 @@ inherit
 
 feature -- Access
 
-	has (feat: FEATURE_B; target_type: CL_TYPE_I): BOOLEAN is
+	has (feat: FEATURE_B; target_type: CL_TYPE_A): BOOLEAN is
 			-- Does Current have `feat.feature_name_id'?
 		require
 			valid_feat: feat /= Void
@@ -107,7 +107,7 @@ feature -- Status
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_il (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence that will be used with basic types.
 		require
 			a_generator_not_void: a_generator /= Void
@@ -117,9 +117,9 @@ feature -- IL code generation
 			type_not_void: type /= Void
 		local
 			f_type: INTEGER
-			long: INTEGER_I
-			nat: NATURAL_I
-			typed_pointer_i: TYPED_POINTER_I
+			long: INTEGER_A
+			nat: NATURAL_A
+			typed_pointer_i: TYPED_POINTER_A
 		do
 			f_type := function_type
 			inspect f_type
@@ -281,7 +281,7 @@ feature -- IL code generation
 				if typed_pointer_i /= Void then
 					il_generator.put_manifest_string ("POINTER")
 				else
-					il_generator.put_manifest_string (type.name)
+					il_generator.put_manifest_string (type.dump)
 				end
 
 			when from_integer_to_enum_type then
@@ -482,7 +482,7 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_hash_code (type: CL_TYPE_I) is
+	generate_hash_code (type: CL_TYPE_A) is
 			-- Generate hash-code for current basic type at top of evaluation stack.
 		require
 			type_not_void: type /= Void
@@ -502,7 +502,7 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_three_way_comparison (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_I; a_expr: EXPR_B) is
+	generate_three_way_comparison (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; a_expr: EXPR_B) is
 			-- Generate three_way_comparison computation for basic type objects
 			-- at top of evaluation stack.
 		require
@@ -563,7 +563,7 @@ feature {NONE} -- IL code generation
 			il_generator.mark_label (l_end_label)
 		end
 
-	generate_set_item (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_item (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence that will be used with basic types.
 		require
 			a_generator_not_void: a_generator /= Void
@@ -606,7 +606,7 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_set_bit (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_bit (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence for `set_bit'
 		require
 			a_generator_not_void: a_generator /= Void
@@ -663,7 +663,7 @@ feature {NONE} -- IL code generation
 			il_generator.generate_local (l_result)
 		end
 
-	generate_set_bit_with_mask (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_bit_with_mask (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence for `set_bit'
 		require
 			a_generator_not_void: a_generator /= Void
@@ -729,17 +729,19 @@ feature {NONE} -- Type information
 			-- Constant defining type
 
 	is_signed_integer: BOOLEAN
-			-- Is integer_type corresponding to INTEGER_I?
-			-- False when corresponding to NATURAL_I.
+			-- Is integer_type corresponding to INTEGER_A?
+			-- False when corresponding to NATURAL_A.
 
 	is_wide: BOOLEAN
 			-- Is `character_type' returned by `type_of' a WIDE_CHARACTER?
 
-	type_of (t: CL_TYPE_I): INTEGER is
-			-- Returns corresponding type constants to `b'.
+	type_of (t: CL_TYPE_A): INTEGER is
+			-- Returns corresponding type constants to `t'.
 		require
 			t_not_void: t /= Void
 			t_not_bit: not t.is_bit
+		local
+			l_typed_pointer: TYPED_POINTER_A
 		do
 			inspect
 				t.hash_code
@@ -764,7 +766,10 @@ feature {NONE} -- Type information
 			when {SHARED_HASH_CODE}.Real_64_code then Result := real_64_type
 			when {SHARED_HASH_CODE}.Pointer_code then Result := pointer_type
 			else
-				if t.base_class.is_class_any then
+				l_typed_pointer ?= t
+				if l_typed_pointer /= Void then
+					Result := pointer_type
+				elseif t.associated_class.is_class_any then
 					Result := any_type
 				else
 					Result := unknown_type

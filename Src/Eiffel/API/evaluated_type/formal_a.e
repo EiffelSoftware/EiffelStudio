@@ -9,22 +9,34 @@ class FORMAL_A
 
 inherit
 	NAMED_TYPE_A
+		rename
+			is_multi_constrained as has_multi_constrained
 		redefine
-			is_formal,
+			is_formal, is_explicit,
 			instantiation_in,
 			has_formal_generic,
 			is_loose,
 			instantiated_in,
+			adapted_in,
+			skeleton_adapted_in,
 			evaluated_type_in_descendant,
 			same_as,
 			is_full_named_type,
 			convert_to,
 			check_const_gen_conformance,
 			is_reference,
-			is_expanded
+			is_expanded,
+			internal_is_valid_for_class,
+			description,
+			generated_id,
+			generate_cid, generate_cid_array, generate_cid_init,
+			make_gen_type_byte_code,
+			generate_gen_type_il,
+			generic_il_type_name
 		end
 
 	REFACTORING_HELPER
+
 create
 	make
 
@@ -56,6 +68,9 @@ feature -- Property
 	is_formal: BOOLEAN is True
 			-- Is the current actual type a formal generic type ?
 
+	is_explicit: BOOLEAN is False
+			-- Is type fixed at compile time without anchors or formals?
+
 	is_multi_constrained (a_context_class: CLASS_C): BOOLEAN is
 			-- Is Current a multi constraint formal relative to current context class?
 			--
@@ -79,12 +94,6 @@ feature -- Property
 	is_expanded: BOOLEAN
 			-- Is current constrained to be always an expanded?
 
-	hash_code: INTEGER is
-			--
-		do
-			Result := position
-		end
-
 	is_single_constraint_without_renaming (a_context_class: CLASS_C): BOOLEAN
 			-- Is current type a formal type which is single constrained and the constraint has not a feature renaming?			
 			--
@@ -96,9 +105,17 @@ feature -- Property
 		local
 			l_generics: EIFFEL_LIST[FORMAL_DEC_AS]
 		do
-				l_generics := a_context_class.generics
-				check l_generics_not_void: l_generics /= Void end
-				Result := l_generics.i_th (position).is_single_constraint_without_renaming (l_generics)
+			l_generics := a_context_class.generics
+			check l_generics_not_void: l_generics /= Void end
+			Result := l_generics.i_th (position).is_single_constraint_without_renaming (l_generics)
+		end
+
+feature -- IL code generation
+
+	generic_il_type_name (a_context_type: TYPE_A): STRING is
+			-- <Precursor>
+		once
+			Result := "REFERENCE"
 		end
 
 feature -- Comparison
@@ -112,6 +129,18 @@ feature -- Comparison
 		end
 
 feature -- Access
+
+	hash_code: INTEGER is
+		do
+			Result := {SHARED_HASH_CODE}.other_code + position
+		end
+
+	description: GENERIC_DESC is
+			-- Descritpion of type for skeletons.
+		do
+			create Result
+			Result.set_type_i (Current)
+		end
 
 	constrained_type (a_context_class: CLASS_C): TYPE_A
 			-- Constraint of Current.
@@ -225,6 +254,58 @@ feature -- Access
 			-- Position of the formal parameter in the
 			-- generic class declaration
 
+feature -- Generic conformance
+
+	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
+			-- Id of a `like xxx'.
+		do
+			Result := {SHARED_GEN_CONF_LEVEL}.formal_type
+		end
+
+	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
+		do
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
+			buffer.put_character (',')
+			buffer.put_integer (position)
+			buffer.put_character (',')
+		end
+
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+		local
+			dummy: INTEGER
+		do
+			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
+			buffer.put_character (',')
+			buffer.put_integer (position)
+			buffer.put_character (',')
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+		local
+			dummy: INTEGER
+		do
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
+
+	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+			-- Put type id's in byte array.
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		do
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.formal_type)
+			ba.append_short_integer (position)
+		end
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		do
+			il_generator.generate_type_feature_call_for_formal (position)
+		end
+
 feature -- Output
 
 	dump: STRING is
@@ -241,9 +322,9 @@ feature -- Output
 			l_class: CLASS_AS
 		do
 			if has_attached_mark then
-				st.process_symbol_text (ti_exclamation)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_exclamation)
 			elseif has_detachable_mark then
-				st.process_symbol_text (ti_question)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_question)
 			end
 			if c /= Void then
 				l_class := c.ast
@@ -256,13 +337,20 @@ feature -- Output
 						-- from B [G], therefore in B, `G' at position 2 does not make sense.
 						--| FIXME: Manu 05/29/2002: we cannot let this happen, the reason is
 						-- due to bad initialization of `f' in wrong class.
-					st.add (Ti_generic_index)
+					st.add ({SHARED_TEXT_ITEMS}.Ti_generic_index)
 					st.add_int (position)
 				end
 			else
-				st.add (Ti_generic_index)
+				st.add ({SHARED_TEXT_ITEMS}.Ti_generic_index)
 				st.add_int (position)
 			end
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
+		do
+			Result := a_class = Void or else (a_class.is_generic and then position <= a_class.generics.count)
 		end
 
 feature {COMPILER_EXPORTER} -- Type checking
@@ -297,11 +385,8 @@ feature {COMPILER_EXPORTER} -- Type checking
 
 feature {COMPILER_EXPORTER}
 
-	has_formal_generic: BOOLEAN is
+	has_formal_generic: BOOLEAN is True
 			-- Does the current actual type have formal generic type ?
-		do
-			Result := True
-		end
 
 	is_loose: BOOLEAN is True
 			-- Does type depend on formal generic parameters and/or anchors?
@@ -375,6 +460,29 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
+	adapted_in (class_type: CLASS_TYPE): TYPE_A is
+		do
+			Result := class_type.type.generics.item (position)
+		end
+
+	skeleton_adapted_in (class_type: CLASS_TYPE): TYPE_A is
+		local
+			l_type: TYPE_A
+		do
+				-- For backward compatibility, if the associated actual
+				-- generic parameter of `class_type' is a basic type, we keep
+				-- it, otherwise we preserve the formal aspect of Current.
+				--| See eweasel test#store013 for an example where changing
+				--| `skeleton_adapted_in' to be similar to `adapted_in' would make
+				--| it fail.
+			l_type := class_type.type.generics.item (position)
+			if not l_type.is_true_expanded then
+				Result := l_type
+			else
+				Result := Current
+			end
+		end
+
 	instantiated_in (class_type: TYPE_A): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
@@ -402,16 +510,10 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	type_i: FORMAL_I is
-			-- C type
-		do
-			create Result.make (is_reference, is_expanded, position)
-		end
-
 	create_info: CREATE_FORMAL_TYPE is
 			-- Create formal type info.
 		do
-			create Result.make (type_i)
+			create Result.make (Current)
 		end
 
 indexing

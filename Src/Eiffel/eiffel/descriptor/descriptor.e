@@ -77,7 +77,7 @@ feature -- Generation
 
 			is_precompiling := Compilation_modes.is_precompiling
 			buffer.put_string ("/*%N * Class ")
-			class_type.type.dump (buffer)
+			buffer.put_string (class_type.type.dump)
 			buffer.put_string ("%N */%N%N")
 			buffer.put_string ("#include %"eif_macros.h%"%N");
 			if is_precompiling then

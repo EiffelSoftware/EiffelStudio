@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	process_attribute_b (a_node: ATTRIBUTE_B) is
 			-- Process `a_node'.
 		local
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 		do
 			l_cl_type ?= a_node.context_type
 			il_generator.generate_current

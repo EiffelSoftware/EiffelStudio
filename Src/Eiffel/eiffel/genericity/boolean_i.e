@@ -1,63 +1,37 @@
 indexing
+	description: "C type for booleans."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class BOOLEAN_I
 
 inherit
 	BASIC_I
-		redefine
-			is_boolean,
-			element_type,
-			description, hash_code, sk_value,
-			default_create, tuple_code
-		end
 
-create
-	default_create
-
-feature {NONE} -- Initialization
-
-	default_create is
-			-- Initialize new instance of BOOLEAN_I
-		do
-			make (system.boolean_class.compiled_class.class_id)
-		end
-
-feature -- Status report
-
-	element_type: INTEGER_8 is
-			-- Pointer element type
-		do
-			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_boolean
-		end
-
-	tuple_code: INTEGER_8 is
-			-- Tuple code for class type
-		do
-			Result := {SHARED_GEN_CONF_LEVEL}.boolean_tuple_code
-		end
-
-	reference_type: CL_TYPE_I is
-			-- Assocated reference type of Current.
-		do
-			create Result.make (system.boolean_ref_class.compiled_class.class_id)
-		end
-
-feature
+feature -- Access
 
 	level: INTEGER is
 			-- Internal code for generation
 		do
-			Result := C_char
+			Result := {SHARED_C_LEVEL}.c_boolean
 		end
 
-	is_boolean: BOOLEAN is True
-			-- Type is a boolean one.
-
-	description: BOOLEAN_DESC is
-			-- Type description for skeleton
+	tuple_code: NATURAL_8 is
+			-- Code for TUPLE type
 		do
-			create Result
+			Result := {SHARED_GEN_CONF_LEVEL}.boolean_tuple_code
+		end
+
+	element_type: INTEGER_8 is
+		do
+			Result := {MD_SIGNATURE_CONSTANTS}.element_type_boolean
+		end
+
+	sk_value: INTEGER_32
+		do
+			Result := {SK_CONST}.sk_bool
 		end
 
 	c_string: STRING is "EIF_BOOLEAN"
@@ -72,37 +46,27 @@ feature
 			Result := {SHARED_HASH_CODE}.boolean_code
 		end
 
-	sk_value: INTEGER is
-			-- Generate SK value associated to the current type.
+	new_attribute_description: BOOLEAN_DESC is
+			-- Type description for skeleton
 		do
-			Result := Sk_bool
+			create Result
 		end
 
-	generate_sk_value (buffer: GENERATION_BUFFER) is
-			-- Generate SK value associated to current C type in `buffer'.
-		do
-			buffer.put_string ("SK_BOOL")
-		end
-
-	type_a: BOOLEAN_A is
-		do
-			Result := boolean_type
-		end
-
-	generate_typed_tag (buffer: GENERATION_BUFFER) is
-			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
-			-- to the current C type in `buffer'.
-		do
-			buffer.put_string ("type = SK_BOOL")
-		end
-
-feature
+feature -- Byte code generation
 
 	make_default_byte_code (ba: BYTE_ARRAY) is
 			-- Generate default value of basic type on stack.
 		do
-			ba.append (Bc_bool)
+			ba.append ({BYTE_CONST}.Bc_bool)
 			ba.append ('%U')
+		end
+
+feature -- C code generation
+
+	generate_sk_value (buffer: GENERATION_BUFFER) is
+			-- Generate SK value associated to current C type in `buffer'.
+		do
+			buffer.put_string ({SK_CONST}.sk_bool_string)
 		end
 
 indexing

@@ -91,12 +91,6 @@ feature {NONE} -- Implementation
 			stop_recursion := id_set.has (current_id)
 			from
 				current_skeleton := class_type.skeleton
-				debug
-					io.error.put_string ("Recursive check%N")
-					io.error.put_boolean (stop_recursion)
-					io.error.put_new_line
-					current_skeleton.trace
-				end
 				current_skeleton.go_expanded
 			until
 				current_skeleton.after or else finished
@@ -121,7 +115,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if
-						client_type.type.same_as (current_type.type) and then
+						client_type = current_type and then
 						(not System.il_generation or else (attr.extension = Void or else
 						attr.extension.type /= {SHARED_IL_CONSTANTS}.static_field_type))
 					then

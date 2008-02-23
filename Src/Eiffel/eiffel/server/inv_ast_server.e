@@ -11,7 +11,7 @@ class
 inherit
 	READ_SERVER [INVARIANT_AS]
 		redefine
-			has, item
+			has, item, remove
 		end
 
 create
@@ -40,6 +40,13 @@ feature
 			if Result = Void then
 				Result := Precursor (an_id)
 			end
+		end
+
+	remove (an_id: INTEGER_32) is
+			-- <Original>
+		do
+			tmp_ast_server.invariant_remove (an_id)
+			Precursor (an_id)
 		end
 
 indexing

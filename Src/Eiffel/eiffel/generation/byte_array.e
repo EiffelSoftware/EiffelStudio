@@ -320,6 +320,14 @@ feature -- Element change
 			position := new_position
 		end
 
+	append_type_id (type_id: INTEGER) is
+			-- Append type ID `type_id'.
+		require
+			type_id_non_negative: type_id >= 0
+		do
+			append_short_integer (type_id - 1)
+		end
+
 	append_string (s: STRING) is
 			-- Append string `s'.
 		require
@@ -382,49 +390,6 @@ feature -- Element change
 				i := i + 1
 			end
 			append ('%U')
-		end
-
-	allocate_space (t: TYPE_I) is
-			-- Allocate space for meta-type `t'.
-		require
-			good_argument: t /= Void
-		local
-			new_position: INTEGER
-		do
-			inspect
-				t.c_type.level
-			when C_char then
-				new_position := position + character_bytes
-			when c_uint8 then
-				new_position := position + natural_8_bytes
-			when c_uint16 then
-				new_position := position + natural_16_bytes
-			when c_uint32 then
-				new_position := position + natural_32_bytes
-			when c_uint64 then
-				new_position := position + natural_64_bytes
-			when C_int8 then
-				new_position := position + integer_8_bytes
-			when C_int16, C_wide_char then
-				new_position := position + integer_16_bytes
-			when C_int32 then
-				new_position := position + integer_32_bytes
-			when C_int64 then
-				new_position := position + integer_64_bytes
-			when C_real32 then
-				new_position := position + real_32_bytes
-			when C_real64 then
-				new_position := position + real_64_bytes
-			when C_pointer, C_ref then
-				new_position := position + pointer_bytes
-			else
-					-- Void type
-				new_position := position
-			end
-			if new_position >= count then
-				resize (count + Chunk)
-			end
-			position := new_position
 		end
 
 feature -- Forward and backward jump managment

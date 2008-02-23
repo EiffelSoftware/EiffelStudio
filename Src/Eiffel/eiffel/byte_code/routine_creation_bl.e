@@ -20,6 +20,11 @@ inherit
 	SHARED_DECLARATIONS
 	SHARED_INCLUDE
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 feature
 
 	register: REGISTRABLE
@@ -71,8 +76,8 @@ feature
 	generate is
 			-- Generate expression
 		local
-			agent_type, feat_cl_type: CL_TYPE_I
-			gen_type: GEN_TYPE_I
+			agent_type: CL_TYPE_A
+			gen_type: GEN_TYPE_A
 			buf: GENERATION_BUFFER
 			sep: STRING
 			wb_mode: BOOLEAN
@@ -97,14 +102,14 @@ feature
 			gen_type  ?= agent_type
 			buf.put_new_line
 			buf.generate_block_open
-			l_context.generate_gen_type_conversion (gen_type)
+			l_context.generate_gen_type_conversion (gen_type, 0)
 			buf.put_new_line
 			print_register
 			buf.put_string (once " = ")
 			if wb_mode then
-				buf.put_string (once "RTLNRW(typres, ")
+				buf.put_string (once "RTLNRW(typres0, ")
 			else
-				buf.put_string (once "RTLNRF(typres, ")
+				buf.put_string (once "RTLNRF(typres0, ")
 			end
 				-- now the parameters for set_rout_disp:
 				-- rout_disp
@@ -134,9 +139,12 @@ feature
 					buf.put_integer (rout_offset)
 					buf.put_string (sep)
 				else
-						-- class_id
-					feat_cl_type ?= l_context.real_type (class_type)
-					buf.put_integer (feat_cl_type.associated_class_type.static_type_id - 1)
+						-- Note that we use `context.current_type' because we do not adapt
+						-- `a_node.class_type' to `context.context_class_type' for the simple reasons
+						-- that `feature_id' is the one from where the agent creation is declared.
+						-- If we were to adapt it, then we would need something like
+						-- `{CALL_ACCESS_B}.real_feature_id' for a proper code generation.
+					buf.put_static_type_id (class_type.static_type_id (context.current_type))
 					buf.put_string (sep)
 						-- feature_id
 					buf.put_integer (feature_id)
@@ -207,7 +215,6 @@ feature
 	generate_routine_address (optimized, oargs_encapsulated: BOOLEAN) is
 			-- Generate routine address
 		local
-			cl_type		: CL_TYPE_I
 			table_name	: STRING
 			buf			: GENERATION_BUFFER
 			array_index: INTEGER
@@ -219,10 +226,15 @@ feature
 				l_omap := omap
 			end
 			l_context := context
-			cl_type ?= l_context.real_type (class_type)
+
+				-- Note that we use `context.current_type' because we do not adapt
+				-- `a_node.class_type' to `context.context_class_type' for the simple reasons
+				-- that `feature_id' is the one from where the agent creation is declared.
+				-- If we were to adapt it, then we would need something like
+				-- `{CALL_ACCESS_B}.real_feature_id' for a proper code generation.
 
 			if not l_context.workbench_mode and then not is_inline_agent then
-				array_index := Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True)
+				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id (context.current_type), True)
 			end
 
 			if array_index = -2 then
@@ -230,13 +242,12 @@ feature
 					-- any implementation
 				buf.put_string ("NULL")
 			else
-				cl_type ?= l_context.real_type (class_type)
 				check
 					system.address_table.has_agent (
-						cl_type.associated_class_type.associated_class.class_id, feature_id, is_target_closed, omap)
+						class_type.associated_class.class_id, feature_id, is_target_closed, omap)
 				end
 				table_name := system.address_table.calc_function_name (
-					True, feature_id, cl_type.associated_class_type.static_type_id, l_omap, oargs_encapsulated)
+					True, feature_id, class_type.static_type_id (context.current_type), l_omap, oargs_encapsulated)
 
 				buf.put_string ("(EIF_POINTER) ")
 				buf.put_string (table_name)
@@ -244,10 +255,7 @@ feature
 					-- Remember extern declarations
 				Extern_declarations.add_routine (type.c_type, table_name)
 
-				if not l_context.workbench_mode and then
-				   not is_inline_agent and then
-				   array_index >= 0
-				then
+				if not l_context.workbench_mode and then not is_inline_agent and then array_index >= 0 then
 						-- Mark table used
 					Eiffel_table.mark_used (rout_id)
 				end
@@ -264,7 +272,6 @@ feature
 
 	generate_precalc_routine_address is
 		local
-			l_cl_type: CL_TYPE_I
 			l_class_type: CLASS_TYPE
 			l_entry: POLY_TABLE [ENTRY]
 			l_table_name, l_function_name: STRING
@@ -285,8 +292,12 @@ feature
 			if is_inline_agent or else l_context.workbench_mode then
 				l_buffer.put_string ("0),")
 			else
-				l_cl_type ?= l_context.real_type (class_type)
-				l_class_type := l_cl_type.associated_class_type
+					-- Note that we use `context.current_type' because we do not adapt
+					-- `a_node.class_type' to `context.context_class_type' for the simple reasons
+					-- that `feature_id' is the one from where the agent creation is declared.
+					-- If we were to adapt it, then we would need something like
+					-- `{CALL_ACCESS_B}.real_feature_id' for a proper code generation.
+				l_class_type := class_type.associated_class_type (context.current_type)
 				l_entry :=  Eiffel_table.poly_table (rout_id)
 
 				if l_entry = Void then
@@ -313,16 +324,15 @@ feature
 
 						l_feat := l_class_type.associated_class.feature_of_feature_id (feature_id)
 						l_seed := system.seed_of_routine_id (rout_id)
-						if l_seed.type.type_i.is_formal then
+							-- It is pretty important that we use `actual_type.is_formal' and not
+							-- just `is_formal' because otherwise if you have `like x' and `x: G'
+							-- then we would fail to detect that.
+						if l_seed.type.actual_type.is_formal then
 							l_c_return_type := reference_c_type
 						else
 							l_c_return_type := system.address_table.solved_type (l_class_type, l_feat.type)
 						end
-						if l_context.workbench_mode then
-							l_return_type_string := "EIF_TYPED_VALUE"
-						else
-							l_return_type_string := l_c_return_type.c_string
-						end
+						l_return_type_string := l_c_return_type.c_string
 						if l_rout_table.is_implemented then
 							l_function_name := l_rout_table.feature_name + system.seed_of_routine_id (rout_id).generic_fingerprint
 							l_buffer.put_string (l_function_name)
@@ -339,7 +349,7 @@ feature
 								-- without any implementation. We mark `l_is_implemented'
 								-- to False to not generate the argument list since
 								-- RTNR takes only one argument.
-							l_c_return_type.generate_function_cast (l_buffer, <<"EIF_REFERENCE">>)
+							l_c_return_type.generate_function_cast (l_buffer, <<"EIF_REFERENCE">>, False)
 							l_buffer.put_string ("RTNR),")
 						end
 					end

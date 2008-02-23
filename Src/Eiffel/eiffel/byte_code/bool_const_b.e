@@ -15,6 +15,11 @@ inherit
 			is_fast_as_local, is_constant_expression
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -60,10 +65,10 @@ feature -- Status report
 	is_constant_expression: BOOLEAN is True
 			-- A boolean constant is constant.
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Boolean type
-		once
-			Result := Boolean_c_type
+		do
+			Result := boolean_type
 		end
 
 feature -- C code generation

@@ -167,13 +167,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I) is
+	create_empty_instance_of (a_type_i: CL_TYPE_A) is
 			-- create an empty instance of `a_type_i' in the context of object's type `a_curr_obj_typeid'
 		local
 			b: BOOLEAN
 			c_string: C_STRING
 		do
-			send_rqst_1 (Rqst_new_instance, a_type_i.associated_class_type.type_id - 1)
+			send_rqst_1 (Rqst_new_instance, a_type_i.associated_class_type (Void).type_id - 1)
 			create c_string.make (a_type_i.name)
 			send_string_value (c_string.item)
 			b := recv_ack
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
---	create_empty_instance_using_internal (a_type_i: CL_TYPE_I) is
+--	create_empty_instance_using_internal (a_type_i: CL_TYPE_A) is
 --			--
 --		require
 --			is_not_special: not a_type_i.associated_class_type.associated_class.is_special
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 --			end
 --		end
 
-	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER) is
 		local
 			l_class_c: CLASS_C
 			l_params: LINKED_LIST [DUMP_VALUE]

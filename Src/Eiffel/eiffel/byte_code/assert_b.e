@@ -60,7 +60,7 @@ feature -- Line number setting
 			expr := e
 		end
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression type
 		do
 			Result := expr.type

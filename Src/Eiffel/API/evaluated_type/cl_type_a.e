@@ -12,8 +12,20 @@ inherit
 		redefine
 			is_expanded, is_reference, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
-			has_expanded, is_valid, convert_to,
-			is_full_named_type, is_external, is_enum, is_conformant_to
+			has_expanded, internal_is_valid_for_class, convert_to, description,
+			is_full_named_type, is_external, is_enum, is_conformant_to,
+			hash_code, sk_value, is_optimized_as_frozen, generated_id,
+			generate_cecil_value, element_type, generate_expanded_creation,
+			generate_expanded_initialization, adapted_in,
+			il_type_name, generate_gen_type_il, is_generated_as_single_type,
+			generic_derivation, associated_class_type, has_associated_class_type,
+			internal_same_generic_derivation_as, internal_generic_derivation,
+			has_associated_class, is_class_valid
+		end
+
+	SHARED_IL_CASING
+		export
+			{NONE} all
 		end
 
 	DEBUG_OUTPUT
@@ -26,8 +38,14 @@ feature {NONE} -- Initialization
 	make (a_class_id: INTEGER) is
 		require
 			valid_class_id: a_class_id > 0
+		local
+			l_class: like associated_class
 		do
 			class_id := a_class_id
+			l_class := system.class_of_id (class_id)
+			if l_class /= Void and then l_class.is_expanded then
+				set_expanded_class_mark
+			end
 		ensure
 			class_id_set: class_id = a_class_id
 		end
@@ -74,29 +92,42 @@ feature -- Properties
 			definition: Result = (declaration_mark = separate_mark)
 		end
 
+	has_actual (a_type: TYPE_A): BOOLEAN is
+			-- Is `a_type' an actual parameter of Current?
+		require
+			a_type_not_void: a_type /= Void
+		do
+			-- Ideally should be in GEN_TYPE_I
+		end
+
+	has_associated_class, is_class_valid: BOOLEAN is
+		do
+			Result := associated_class /= Void
+		end
+
+	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN is
+		do
+			if associated_class /= Void then
+				Result := associated_class.types.has_type (a_context_type, Current)
+			end
+		end
+
 	is_expanded: BOOLEAN is
 			-- Is the type expanded?
 		do
-			Result := has_expanded_mark or else has_no_mark and then associated_class.is_expanded
+			Result := has_expanded_mark or else (has_no_mark and then associated_class.is_expanded)
 		end
 
 	is_reference: BOOLEAN is
 			-- Is the type a reference type?
 		do
-			Result := has_reference_mark or else has_no_mark and then not associated_class.is_expanded
+			Result := has_reference_mark or else (has_no_mark and then not associated_class.is_expanded)
 		end
 
 	is_separate: BOOLEAN is
 			-- Is the type separate?
 		do
 			Result := has_separate_mark
-		end
-
-	is_valid: BOOLEAN is
-			-- Is Current still valid?
-			-- I.e. its `associated_class' is still in system.
-		do
-			Result := associated_class /= Void
 		end
 
 	is_full_named_type: BOOLEAN is
@@ -148,17 +179,6 @@ feature -- Comparison
 				class_id = other.class_id
 		end
 
-feature -- Access
-
-	hash_code: INTEGER is
-			-- Hash code value.
-		do
-			Result := class_id
-		end
-
-	class_id: INTEGER
-			-- Class id of the associated class
-
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		local
@@ -171,10 +191,56 @@ feature -- Access
 						and then has_same_attachment_marks (other_class_type)
 		end
 
+feature -- Access
+
+	hash_code: INTEGER is
+			-- Hash code value.
+		do
+			Result := class_id
+		end
+
+	class_id: INTEGER
+			-- Class id of the associated class
+
 	associated_class: CLASS_C is
 			-- Associated class to the type
 		do
 			Result := System.class_of_id (class_id)
+		end
+
+	associated_class_type (context_type: TYPE_A): CLASS_TYPE is
+		do
+			Result := associated_class.types.search_item (context_type, Current)
+		end
+
+	sk_value (a_context_type: TYPE_A): INTEGER is
+		do
+			if is_expanded then
+				Result := {SK_CONST}.sk_exp | (type_id (a_context_type) - 1)
+			else
+				Result := {SK_CONST}.sk_ref | (type_id (a_context_type) - 1)
+			end
+		end
+
+	description: ATTR_DESC is
+		local
+			exp: EXPANDED_DESC
+		do
+			if is_expanded then
+				create exp
+				exp.set_type_i (Current)
+				Result := exp
+			else
+				Result := Precursor
+			end
+		end
+
+	generic_derivation: CL_TYPE_A is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_A
+			-- which can be used to search its associated CLASS_TYPE.
+		do
+			Result := internal_generic_derivation (0)
 		end
 
 feature -- Output
@@ -182,18 +248,18 @@ feature -- Output
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
 			if has_attached_mark then
-				st.process_symbol_text (ti_exclamation)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_exclamation)
 			elseif has_detachable_mark then
-				st.process_symbol_text (ti_question)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_question)
 			end
 			if has_expanded_mark then
-				st.process_keyword_text (ti_expanded_keyword, Void)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_expanded_keyword, Void)
 				st.add_space
 			elseif has_reference_mark then
-				st.process_keyword_text (ti_reference_keyword, Void)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_reference_keyword, Void)
 				st.add_space
 			elseif has_separate_mark then
-				st.process_keyword_text (ti_separate_keyword, Void)
+				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_separate_keyword, Void)
 				st.add_space
 			end
 			associated_class.append_name (st)
@@ -227,6 +293,262 @@ feature -- Output
 				Result.append ("separate ")
 			end
 			Result.append (class_name)
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
+		local
+			l_id: INTEGER
+		do
+			if final_mode then
+				l_id := type_id (a_context_type) - 1
+			else
+				l_id := static_type_id (a_context_type) - 1
+			end
+			Result := l_id.to_natural_16
+		end
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		do
+			il_generator.generate_class_type_instance (Current)
+		end
+
+feature -- IL code generation
+
+	implemented_type (implemented_in: INTEGER_32): CL_TYPE_A
+			-- Parent type that corresponds to the current one.
+		require
+			valid_implemented_in: implemented_in > 0
+		do
+			if class_id = implemented_in then
+				Result := Current
+			else
+				Result := find_class_type (system.class_of_id (implemented_in))
+			end
+		end
+
+	element_type: INTEGER_8 is
+			-- Void element type
+		do
+			if is_expanded then
+				Result := {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype
+			else
+				if class_id = System.system_string_class.compiled_class.class_id then
+					Result := {MD_SIGNATURE_CONSTANTS}.Element_type_string
+				elseif class_id = System.system_object_id or class_id = system.any_id then
+						-- For ANY or SYSTEM_OBJECT, we always generate a System.Object
+						-- signature since we can now assign SYSTEM_OBJECTs into ANYs.
+					Result := {MD_SIGNATURE_CONSTANTS}.Element_type_object
+				else
+					Result := {MD_SIGNATURE_CONSTANTS}.Element_type_class
+				end
+			end
+		end
+
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+			-- Class name of current type.
+		local
+			l_class_c: like associated_class
+			l_cl_type: like associated_class_type
+			l_alias_name: STRING
+			l_dot_pos: INTEGER
+		do
+			l_class_c := associated_class
+			if l_class_c.is_external and not l_class_c.is_basic then
+				Result := l_class_c.external_class_name.twin
+			else
+				if l_class_c.is_precompiled then
+						-- Reuse the name that was computed at precompilation time.
+					l_cl_type := associated_class_type (a_context_type)
+					if l_cl_type.is_precompiled then
+						Result := l_cl_type.il_type_name (a_prefix)
+					end
+				end
+				if Result = Void then
+					if not has_no_mark or else is_basic or else l_class_c.external_class_name.is_equal (l_class_c.name) then
+						Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
+					else
+							-- Special case when an external name has been specified.
+						Result := l_class_c.external_class_name.twin
+						Result.left_adjust
+						Result.right_adjust
+							-- Remove leading `.' since it is not a valid .NET name.
+						from
+						until
+							Result.is_empty or else Result.item (1) /= '.'
+						loop
+							Result.remove_head (1)
+						end
+							-- Remove trailing `.' since it is not a valid .NET name.
+						from
+						until
+							Result.is_empty or else Result.item (Result.count) /= '.'
+						loop
+							Result.remove_tail (1)
+						end
+						if Result.is_empty then
+								-- External name is invalid since empty, we use the normal
+								-- way of generating the .Net name
+							Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
+						else
+							if a_prefix /= Void then
+								l_dot_pos := Result.last_index_of ('.', Result.count)
+								if l_dot_pos = 0 then
+									Result.prepend_character ('.')
+									Result.prepend (a_prefix)
+								else
+									check
+											-- Because there are no more leading or trailing `.'.
+										valid_l_dot_pos: l_dot_pos > 1 and l_dot_pos < Result.count
+									end
+									l_alias_name := Result.substring (l_dot_pos + 1, Result.count)
+									check
+										l_alias_name_not_empty: not l_alias_name.is_empty
+									end
+									Result.keep_head (l_dot_pos)
+									l_alias_name := internal_il_base_type_name (l_alias_name)
+									Result.append (a_prefix)
+									Result.append_character ('.')
+									Result.append (l_alias_name)
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+
+	is_optimized_as_frozen: BOOLEAN
+		do
+			Result := associated_class.is_optimized_as_frozen
+		end
+
+	is_generated_as_single_type: BOOLEAN is
+			-- Is associated type generated as a single type or as an interface type and
+			-- an implementation type.
+		do
+				-- External classes have only one type.
+				-- Classes that inherits from external classes
+				-- have only one generated type as well as expanded types.
+			Result := is_true_external or associated_class.is_single or is_expanded
+		end
+
+feature {NONE} -- IL code generation
+
+	frozen internal_il_type_name (a_base_name, a_prefix: STRING): STRING is
+			-- Full type name of `a_base_name' using `a_prefix' in IL code generation
+			-- with namespace specification
+		require
+			a_base_name_not_void: a_base_name /= Void
+			a_base_name_not_empty: not a_base_name.is_empty
+		do
+			Result := internal_il_base_type_name (a_base_name)
+				-- Result needs to be in lower case because that's
+				-- what our casing conversion routines require to perform
+				-- a good job.
+			Result.to_lower
+			Result := il_casing.type_name (associated_class.original_class.actual_namespace, a_prefix, Result, System.dotnet_naming_convention)
+		ensure
+			internal_il_type_name_not_void: Result /= Void
+			internal_il_type_name_not_empty: not Result.is_empty
+		end
+
+	frozen internal_il_base_type_name (a_base_name: STRING): STRING is
+			-- Given `a_base_name' provides its updated name depending on its usage.
+		require
+			a_base_name_not_void: a_base_name /= Void
+			a_base_name_not_empty: not a_base_name.is_empty
+		local
+			l_base_class: like associated_class
+		do
+			l_base_class := associated_class
+			if is_expanded and then not l_base_class.is_expanded then
+				create Result.make (6 + a_base_name.count)
+				Result.append ("value_")
+			elseif not is_expanded and then l_base_class.is_expanded then
+				create Result.make (10 + a_base_name.count)
+				Result.append ("reference_")
+			else
+				create Result.make (a_base_name.count)
+			end
+			Result.append (a_base_name)
+		ensure
+			internal_il_base_type_name_not_void: Result /= Void
+			internal_il_base_type_name_not_empty: not Result.is_empty
+		end
+
+feature -- C code generation
+
+	generate_cecil_value (buffer: GENERATION_BUFFER; a_context_type: TYPE_A) is
+			-- Generate type value for cecil.
+		do
+			if not is_expanded then
+				buffer.put_string ({SK_CONST}.sk_ref_string)
+			else
+				buffer.put_string ({SK_CONST}.sk_exp_string)
+			end
+			buffer.put_three_character (' ', '+', ' ')
+			buffer.put_type_id (type_id (a_context_type))
+		end
+
+	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: CLASS_TYPE) is
+			-- Generate object associated to current and initializes it.
+		do
+			associated_class_type (a_context_type.type).generate_expanded_creation (buffer, target_name, Current, a_context_type)
+		end
+
+	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: TYPE_A) is
+			-- Generate creation of expanded object associated to Current.
+		do
+			associated_class_type (a_context_type).generate_expanded_initialization (buffer, target_name, target_name, True)
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+			-- Is Current still valid?
+			-- I.e. its `associated_class' is still in system.
+		local
+			l_class: like associated_class
+		do
+			l_class := associated_class
+				-- Check that current class still exists and that there are no
+				-- generics.
+				--| Ideally we could also check that if Current base class is expanded
+				--| then it has the class_declaration_mark properly set, but it does not
+				--| currently work when processing TYPED_POINTER which is currently interpreted
+			Result := l_class /= Void and then l_class.generics = Void and then
+				(l_class.is_expanded = (class_declaration_mark = expanded_mark))
+		end
+
+	internal_generic_derivation (a_level: INTEGER): CL_TYPE_A is
+		local
+			l_attachment: like attachment_bits
+		do
+			if attachment_bits = 0 then
+				Result := Current
+			else
+					-- Clear the attachment mark.
+				l_attachment := attachment_bits
+				attachment_bits := 0
+				Result := twin
+				attachment_bits := l_attachment
+			end
+		end
+
+	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN is
+		do
+			Result := same_type (other) and then {l_cl_type: !like Current} other and then
+				l_cl_type.class_id = class_id and then
+						-- 'class_id' is the same therefore we can compare 'declaration_mark'.
+						-- If 'declaration_mark' is not the same for both then we have to make sure
+						-- that both expanded and separate states are identical.
+				(l_cl_type.declaration_mark /= declaration_mark implies
+					(l_cl_type.is_expanded = is_expanded and then
+					l_cl_type.is_separate = is_separate))
 		end
 
 feature {COMPILER_EXPORTER} -- Settings
@@ -263,20 +585,13 @@ feature {COMPILER_EXPORTER} -- Settings
 			has_separate_mark: has_separate_mark
 		end
 
-	type_i: CL_TYPE_I is
-			-- C type
-		do
-			create Result.make (class_id)
-			Result.set_mark (declaration_mark)
-		end
-
-	meta_type: TYPE_I is
+	meta_type: TYPE_A is
 			-- Meta type of the type
 		do
 			if is_expanded then
-				Result := type_i
+				Result := Current
 			else
-				Result := Reference_c_type
+				Result := system.any_type
 			end
 		end
 
@@ -289,9 +604,13 @@ feature {COMPILER_EXPORTER} -- Settings
 
 	error_generics: VTUG is
 		do
-			create {VTUG2} Result
-			Result.set_type (Current)
-			Result.set_base_class (associated_class)
+				-- We could avoid having this check but the precondition does not tell us
+				-- we can.
+			if associated_class /= Void then
+				create {VTUG2} Result
+				Result.set_type (Current)
+				Result.set_base_class (associated_class)
+			end
 		end
 
 	has_expanded: BOOLEAN is
@@ -365,29 +684,32 @@ feature {COMPILER_EXPORTER} -- Conformance
 			current_mark: like declaration_mark
 			other_mark: like declaration_mark
 		do
-			l_other_class_type ?= other.actual_type
-			if l_other_class_type /= Void then
-					-- We perform conformance as if the two types were not
-					-- expanded. So, if they are expanded, we remove their
-					-- expanded flag to do the conformance check.
-				l_is_exp := is_expanded
-				l_other_is_exp := l_other_class_type.is_expanded
-				if l_is_exp then
-					current_mark := declaration_mark
-					set_reference_mark
-				end
-				if l_other_is_exp then
-					other_mark := l_other_class_type.declaration_mark
-					l_other_class_type.set_reference_mark
-				end
+			Result := Current = other
+			if not Result then
+				l_other_class_type ?= other.actual_type
+				if l_other_class_type /= Void then
+						-- We perform conformance as if the two types were not
+						-- expanded. So, if they are expanded, we remove their
+						-- expanded flag to do the conformance check.
+					l_is_exp := is_expanded
+					l_other_is_exp := l_other_class_type.is_expanded
+					if l_is_exp then
+						current_mark := declaration_mark
+						set_reference_mark
+					end
+					if l_other_is_exp then
+						other_mark := l_other_class_type.declaration_mark
+						l_other_class_type.set_reference_mark
+					end
 
-				Result := conform_to (other)
+					Result := conform_to (other)
 
-				if l_is_exp then
-					set_mark (current_mark)
-				end
-				if l_other_is_exp then
-					l_other_class_type.set_mark (other_mark)
+					if l_is_exp then
+						set_mark (current_mark)
+					end
+					if l_other_is_exp then
+						l_other_class_type.set_mark (other_mark)
+					end
 				end
 			end
 		end
@@ -460,6 +782,12 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 			else
 				Result := Current
 			end
+		end
+
+	adapted_in (class_type: CLASS_TYPE): CL_TYPE_A is
+			-- Redefined for covariant redefinition of result type.
+		do
+			Result := Current
 		end
 
 feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
@@ -539,7 +867,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
-			create Result.make (type_i)
+			create Result.make (Current)
 		end
 
 feature -- Debugging
@@ -547,20 +875,23 @@ feature -- Debugging
 	debug_output: STRING is
 			-- Display name of associated class.
 		do
-			if is_valid then
+			if is_class_valid then
 				Result := dump
 			else
 				Result := "Class not in system anymore"
 			end
 		end
 
-feature {CL_TYPE_A, CL_TYPE_I, TUPLE_CLASS_B} --Class type declaration marks
+feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} --Class type declaration marks
 
 	declaration_mark: NATURAL_8
 			-- Declaration mark associated with a class type (if any)
 
 	class_declaration_mark: NATURAL_8
-			-- Declaration mark associated with class
+			-- Declaration mark associated with class. Meaning that when this instance was
+			-- created the base class had the same mark (currently only works for expanded).
+			-- If Current has still the mark and not the base class, it simply means that
+			-- Current is not valid.
 
 	set_mark (mark: like declaration_mark) is
 			-- Set `declaration_mark' to the given value `mark'.
@@ -588,13 +919,11 @@ feature {CL_TYPE_A, CL_TYPE_I, TUPLE_CLASS_B} --Class type declaration marks
 
 invariant
 	class_id_positive: class_id > 0
-	valid_declaration_mark: declaration_mark = no_mark or declaration_mark = expanded_mark or
+	valid_declaration_mark:
+		declaration_mark = no_mark or declaration_mark = expanded_mark or
 		declaration_mark = reference_mark or declaration_mark = separate_mark
 	valid_class_declaration_mark:
-		class_declaration_mark = no_mark or
-		class_declaration_mark = expanded_mark or
-		class_declaration_mark = reference_mark or
-		class_declaration_mark = separate_mark
+		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

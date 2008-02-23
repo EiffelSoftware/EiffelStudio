@@ -71,7 +71,7 @@ feature
 	generate is
 			-- Generate expression
 		local
-			target_type, source_type: TYPE_I
+			target_type, source_type: TYPE_A
 		do
 			target_type := real_type (attachment_type)
 			source_type := real_type (expression.type)
@@ -86,8 +86,8 @@ feature
 	print_register is
 			-- Print expression value that can be used as an argument to a routine.
 		local
-			target_type, source_type: TYPE_I;
-			l_basic: BASIC_I
+			target_type, source_type: TYPE_A;
+			l_basic: BASIC_A
 			target_ctype, source_ctype: TYPE_C;
 			cast_generated: BOOLEAN;
 			buf: GENERATION_BUFFER
@@ -114,7 +114,7 @@ feature
 						-- the value by default.
 					l_basic ?= target_type
 					check l_basic_not_void: l_basic /= Void end
-					l_basic.generate_default_value (buf)
+					l_basic.c_type.generate_default_value (buf)
 				else
 						-- Ensure correct value in case the target is a double
 						-- and the source an int.

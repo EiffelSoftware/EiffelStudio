@@ -19,7 +19,7 @@ create
 
 feature
 
-	has_derivation (an_id: INTEGER; a_type: CL_TYPE_I): BOOLEAN is
+	has_derivation (an_id: INTEGER; a_type: CL_TYPE_A): BOOLEAN is
 		local
 			derivations: FILTER_LIST;
 		do
@@ -29,18 +29,11 @@ feature
 			end;
 		end;
 
-	insert_derivation (an_id: INTEGER; a_type: CL_TYPE_I) is
+	insert_derivation (an_id: INTEGER; a_type: CL_TYPE_A) is
 		local
 			derivations: FILTER_LIST;
-			tuple_i: TUPLE_TYPE_I
+			tuple_i: TUPLE_TYPE_A
 		do
-debug
-	io.error.put_string ("Inserting a new derivation ");
-	io.error.put_integer (an_id)
-	io.error.put_new_line;
-	a_type.trace
-	io.error.put_new_line;
-end;
 			derivations := item (an_id);
 			if derivations = Void then
 				create derivations.make;

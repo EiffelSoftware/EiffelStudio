@@ -105,7 +105,7 @@ feature -- Generation
 					buffer.put_string (type_index)
 					buffer.put_static_type_id (entry_item.static_feature_type_id)
 
-					if entry_item.is_generic then
+					if entry_item.needs_extended_info then
 						buffer.put_string (gen_type)
 						buffer.put_integer (cnt.value)
 						buffer.put_string (id_string)
@@ -212,7 +212,7 @@ feature -- Generation
 					buffer.put_integer (nb)
 					buffer.put_string (gen_type)
 
-					if entry_item.is_generic then
+					if entry_item.needs_extended_info then
 						buffer.put_string (gen_type_string)
 						buffer.put_integer (cnt.value)
 						buffer.put_string (id_string)
@@ -265,7 +265,7 @@ feature -- Generation
 				i > l_count
 			loop
 				entry_item := l_area.item (i)
-				if entry_item /= Void and then entry_item.is_generic then
+				if entry_item /= Void and then entry_item.needs_extended_info then
 					buffer.put_string (static_decl)
 					buffer.put_integer (cnt.value)
 					buffer.put_string (id_string)
@@ -341,7 +341,7 @@ feature -- Melting
 						-- Write the type of the feature.
 					ba.append_short_integer (entry_item.static_feature_type_id - 1)
 
-					if entry_item.is_generic then
+					if entry_item.needs_extended_info then
 						ba.append_short_integer (0)
 						entry_item.make_gen_type_byte_code (ba)
 					end

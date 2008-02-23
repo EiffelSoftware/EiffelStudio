@@ -27,7 +27,7 @@ feature -- Visitor
 
 feature {PARAMETER_B} -- Implementation
 
-	internal_attachment_type: TYPE_I
+	internal_attachment_type: TYPE_A
 			-- Type to which the expression is attached
 
 feature -- Access
@@ -35,11 +35,11 @@ feature -- Access
 	expression: EXPR_B;
 			-- Expression
 
-	attachment_type: TYPE_I is
+	attachment_type: TYPE_A is
 			-- Type to which the expression is attached
 		do
 			if not system.il_generation and then context.final_mode and then is_formal and then parent.is_polymorphic then
-				Result := reference_c_type
+				Result := system.any_type
 			else
 				Result := internal_attachment_type
 			end
@@ -62,7 +62,7 @@ feature -- Modification
 			expression := e
 		end
 
-	set_attachment_type (t: TYPE_I) is
+	set_attachment_type (t: TYPE_A) is
 			-- Assign `t' to `attachment_type'.
 		do
 			internal_attachment_type := t
@@ -83,7 +83,7 @@ feature -- Modification
 
 feature -- Status report
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression type
 		do
 			Result := expression.type

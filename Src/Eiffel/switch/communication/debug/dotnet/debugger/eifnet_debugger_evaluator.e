@@ -26,7 +26,7 @@ inherit
 
 	SHARED_EIFNET_DEBUG_VALUE_FORMATTER
 
-	SHARED_TYPE_I
+	SHARED_TYPES
 		export
 			{NONE} all
 		end
@@ -742,7 +742,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_integer_8_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (int8_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (integer_8_type.associated_reference_class_type)
 				once_reference_integer_8_icd_class := Result
 			end
 		ensure
@@ -753,7 +753,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_integer_16_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (int16_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (integer_16_type.associated_reference_class_type)
 				once_reference_integer_16_icd_class := Result
 			end
 		ensure
@@ -764,7 +764,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_integer_32_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (int32_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (integer_32_type.associated_reference_class_type)
 				once_reference_integer_32_icd_class := Result
 			end
 		ensure
@@ -775,7 +775,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_integer_64_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (int64_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (integer_64_type.associated_reference_class_type)
 				once_reference_integer_64_icd_class := Result
 			end
 		ensure
@@ -787,7 +787,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_natural_8_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (Uint8_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (natural_8_type.associated_reference_class_type)
 				once_reference_natural_8_icd_class := Result
 			end
 		ensure
@@ -798,7 +798,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_natural_16_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (Uint16_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (natural_16_type.associated_reference_class_type)
 				once_reference_natural_16_icd_class := Result
 			end
 		ensure
@@ -809,7 +809,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_natural_32_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (Uint32_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (natural_32_type.associated_reference_class_type)
 				once_reference_natural_32_icd_class := Result
 			end
 		ensure
@@ -820,7 +820,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_natural_64_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (Uint64_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (natural_64_type.associated_reference_class_type)
 				once_reference_natural_64_icd_class := Result
 			end
 		ensure
@@ -832,7 +832,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_real_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (real32_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (real_32_type.associated_reference_class_type)
 				once_reference_real_icd_class := Result
 			end
 		ensure
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_double_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (real64_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (real_64_type.associated_reference_class_type)
 				once_reference_double_icd_class := Result
 			end
 		ensure
@@ -856,7 +856,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_boolean_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (boolean_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (boolean_type.associated_reference_class_type)
 				once_reference_boolean_icd_class := Result
 			end
 		ensure
@@ -868,7 +868,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_character_8_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (char_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (character_type.associated_reference_class_type)
 				once_reference_character_8_icd_class := Result
 			end
 		ensure
@@ -880,7 +880,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_character_32_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (wide_char_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (wide_char_type.associated_reference_class_type)
 				once_reference_character_32_icd_class := Result
 			end
 		ensure
@@ -892,7 +892,7 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 		do
 			Result := once_reference_pointer_icd_class
 			if Result = Void then
-				Result := icor_debug_class_from (Pointer_c_type.associated_reference_class_type)
+				Result := icor_debug_class_from (pointer_type.associated_reference_class_type)
 				once_reference_pointer_icd_class := Result
 			end
 		ensure
@@ -923,7 +923,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_integer_8_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (int8_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (integer_8_type.associated_reference_class_type)
 				once_reference_integer_8_set_item_method := Result
 			end
 		ensure
@@ -934,7 +934,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_integer_16_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (int16_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (integer_16_type.associated_reference_class_type)
 				once_reference_integer_16_set_item_method := Result
 			end
 		ensure
@@ -945,7 +945,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_integer_32_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (int32_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (integer_32_type.associated_reference_class_type)
 				once_reference_integer_32_set_item_method := Result
 			end
 		ensure
@@ -956,7 +956,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_integer_64_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (int64_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (integer_64_type.associated_reference_class_type)
 				once_reference_integer_64_set_item_method := Result
 			end
 		ensure
@@ -968,7 +968,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_natural_8_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (Uint8_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (natural_8_type.associated_reference_class_type)
 				once_reference_natural_8_set_item_method := Result
 			end
 		ensure
@@ -979,7 +979,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_natural_16_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (Uint16_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (natural_16_type.associated_reference_class_type)
 				once_reference_natural_16_set_item_method := Result
 			end
 		ensure
@@ -990,7 +990,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_natural_32_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (Uint32_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (natural_32_type.associated_reference_class_type)
 				once_reference_natural_32_set_item_method := Result
 			end
 		ensure
@@ -1001,7 +1001,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_natural_64_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (Uint64_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (natural_64_type.associated_reference_class_type)
 				once_reference_natural_64_set_item_method := Result
 			end
 		ensure
@@ -1013,7 +1013,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_real_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (Real32_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (Real_32_type.associated_reference_class_type)
 				once_reference_real_set_item_method := Result
 			end
 		ensure
@@ -1025,7 +1025,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_double_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (Real64_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (Real_64_type.associated_reference_class_type)
 				once_reference_double_set_item_method := Result
 			end
 		ensure
@@ -1037,7 +1037,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_boolean_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (boolean_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (boolean_type.associated_reference_class_type)
 				once_reference_boolean_set_item_method := Result
 			end
 		ensure
@@ -1049,7 +1049,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_character_8_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (char_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (character_type.associated_reference_class_type)
 				once_reference_character_8_set_item_method := Result
 			end
 		ensure
@@ -1061,7 +1061,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_character_32_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (Wide_char_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (Wide_char_type.associated_reference_class_type)
 				once_reference_character_32_set_item_method := Result
 			end
 		ensure
@@ -1073,7 +1073,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 		do
 			Result := once_reference_pointer_set_item_method
 			if Result = Void then
-				Result := icor_set_item_method_from (Pointer_c_type.associated_reference_class_type)
+				Result := icor_set_item_method_from (pointer_type.associated_reference_class_type)
 				once_reference_pointer_set_item_method := Result
 			end
 		ensure

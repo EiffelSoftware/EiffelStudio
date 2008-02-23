@@ -19,7 +19,7 @@ feature
 	parent: NESTED_BL;
 			-- Parent of access
 
-	type: TYPE_I;
+	type: TYPE_A
 			-- Local variable type
 
 	set_parent (p: NESTED_BL) is

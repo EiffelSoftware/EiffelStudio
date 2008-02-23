@@ -58,24 +58,23 @@ feature -- Code generation
 	generate_on (reg: REGISTRABLE) is
 			-- Generate access call of feature in current on `current_register'
 		local
-			l_class_type: CLASS_TYPE
+			l_cl_type: GEN_TYPE_A
 		do
-			l_class_type := cl_type.associated_class_type
-			context.change_class_type_context (l_class_type, l_class_type)
+			l_cl_type := cl_type.instantiated_in (context.context_class_type.type)
 			if is_function then
 				register.print_register
 				buffer.put_string (" = ")
 			end
 			buffer.put_character ('(')
-			generate_function_cast
-			rout_disp_b.generate_access_on_type (reg, cl_type)
-			buffer.put_String (")(")
+			generate_function_cast (l_cl_type)
+			rout_disp_b.generate_access_on_type (reg, l_cl_type)
+			buffer.put_string (")(")
 			buffer.indent
 			buffer.put_new_line
-			calc_rout_addr_b.generate_access_on_type (reg, cl_type)
+			calc_rout_addr_b.generate_access_on_type (reg, l_cl_type)
 			buffer.put_character (',')
 			buffer.put_new_line
-			closed_operands_b.generate_access_on_type (reg, cl_type)
+			closed_operands_b.generate_access_on_type (reg, l_cl_type)
 			generate_parameters_list
 			buffer.put_string (gc_rparan_semi_c)
 			buffer.exdent
@@ -83,7 +82,7 @@ feature -- Code generation
 
 				-- if it is a call on a function object we need to set the last_result
 			if is_function and then not is_item then
-				last_result_b.generate_access_on_type (reg, cl_type)
+				last_result_b.generate_access_on_type (reg, l_cl_type)
 				buffer.put_string (" = ")
 				register.print_register
 				buffer.put_character (';')
@@ -99,21 +98,14 @@ feature -- Code generation
 					buffer.put_new_line
 				end
 			end
-
-			context.restore_class_type_context
 		end
 
 	analyze_on (reg: REGISTRABLE) is
 			-- Analyze agent call on `reg'
 		local
 			tmp_register: REGISTER
-			l_class_type: CLASS_TYPE
 		do
 			Precursor{FEATURE_BL}(reg)
-
-			l_class_type := cl_type.associated_class_type
-			context.change_class_type_context (l_class_type, l_class_type)
-
 			if is_manifest_optimizable then
 				rout_disp_b := init_attribute ({PREDEFINED_NAMES}.rout_disp_name_id, reg)
 			else
@@ -134,8 +126,6 @@ feature -- Code generation
 					set_register (tmp_register)
 				end
 			end
-
-			context.restore_class_type_context
 		end
 
 	check_dt_current (reg: REGISTRABLE) is
@@ -177,19 +167,19 @@ feature -- Code generation
 
 			cl_type ?= a.context_type
 
-			rout_class := cl_type.associated_class_type.associated_class.eiffel_class_c
+			rout_class := cl_type.associated_class.eiffel_class_c
 			is_function := rout_class.class_id = system.function_class_id or else
 						   rout_class.class_id = system.predicate_class_id
 			is_predicate := rout_class.class_id = system.predicate_class_id
 
 			if is_function then
 				if is_predicate then
-					type := create {BOOLEAN_I}
+					type := create {BOOLEAN_A}
 				else
-					type := cl_type.true_generics.item (3)
+					type := cl_type.generics.item (3)
 				end
 			else
-				type := create {VOID_I}
+				type := create {VOID_A}
 			end
 
 			a_bl ?= a
@@ -222,7 +212,7 @@ feature {NONE}--Access
 	is_predicate: BOOLEAN
 		-- Is this a call to an agent of type PREDICATE?
 
-	cl_type: GEN_TYPE_I
+	cl_type: GEN_TYPE_A
 		-- Exact type of the agent reference used for the call.
 
 feature {AGENT_CALL_BL}--Optimized parameters
@@ -239,31 +229,14 @@ feature {NONE} --Implementation
 			-- Initializes an attribute byte node to access attribute with id `id' of object in `reg'
 		local
 			l_feat: FEATURE_I
-			l_type_i: TYPE_I
+			l_type_i: TYPE_A
 		do
 			l_feat := rout_class.feature_table.item_id (id)
 			create Result
 			Result.init (l_feat)
-			l_type_i := context.real_type_in (l_feat.type.type_i, cl_type.associated_class_type)
+			l_type_i := context.real_type_in (l_feat.type, cl_type.associated_class_type (context.context_class_type.type))
 			Result.set_type (l_type_i)
 			Result := Result.enlarged
-			Result.set_parent (parent)
-			Result.analyze_on (reg)
-			Result.set_register (No_register)
-		end
-
-	init_feature (id: INTEGER; reg: REGISTRABLE): CALL_ACCESS_B is
-			-- Initializes an feature byte node to access feature with id `id' of object in `reg'
-		local
-			l_feat: FEATURE_I
-			l_feat_b: FEATURE_B
-			l_type_i: TYPE_I
-		do
-			l_feat := rout_class.feature_table.item_id (id)
-			l_type_i := context.real_type_in (l_feat.type.type_i, cl_type.associated_class_type)
-			create l_feat_b.make (l_feat, l_type_i, Void)
-			Result := l_feat_b.enlarged
-			Result.set_parent (parent)
 			Result.analyze_on (reg)
 			Result.set_register (No_register)
 		end
@@ -278,12 +251,11 @@ feature {NONE} --Implementation
 			l_first_parameter, l_parameter: PARAMETER_B
 			l_exprs: BYTE_LIST [EXPR_B]
 			l_expr: EXPR_B
-			l_tuple_type: TUPLE_TYPE_I
+			l_tuple_type: TUPLE_TYPE_A
 			l_class_type: CLASS_TYPE
 		do
 			l_first_parameter := parameters.first
-			l_tuple_type ?= context.real_type_in (l_first_parameter.attachment_type, cl_type.associated_class_type)
-			l_class_type := context.current_type.associated_class_type
+			l_tuple_type ?= context.real_type_in (l_first_parameter.attachment_type, cl_type.associated_class_type (context.context_class_type.type))
 
 			l_void ?= l_first_parameter.expression
 			if l_void /= Void then
@@ -297,6 +269,7 @@ feature {NONE} --Implementation
 						l_exprs ?= l_manifest_tuple.expressions
 						l_exprs.start
 						create optimized_parameters.make (l_exprs.count)
+						l_class_type := context.class_type
 					until
 						optimized_parameters.full or else l_exprs.after
 					loop
@@ -311,7 +284,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-	generate_function_cast is
+	generate_function_cast (a_type: GEN_TYPE_A) is
 			-- Generates a c function cast
 		local
 			l_arg_types: ARRAY [STRING]
@@ -320,12 +293,12 @@ feature {NONE} --Implementation
 		do
 			if is_function then
 				if is_predicate then
-					create {BOOLEAN_I}l_ret_type
+					l_ret_type := boolean_type.c_type
 				else
-					l_ret_type := cl_type.true_generics.item (3).c_type
+					l_ret_type := a_type.generics.item (3).c_type
 				end
 			else
-				create {VOID_I}l_ret_type
+				l_ret_type := void_type.c_type
 			end
 			if is_manifest_optimizable then
 				create l_arg_types.make (1, optimized_parameters.count + 2)
@@ -349,7 +322,7 @@ feature {NONE} --Implementation
 				l_arg_types.put ("EIF_REFERENCE", 3)
 			end
 
-			l_ret_type.generate_function_cast (buffer, l_arg_types)
+			l_ret_type.generate_function_cast (buffer, l_arg_types, context.workbench_mode)
 		end
 
 indexing

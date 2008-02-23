@@ -132,7 +132,7 @@ feature {NONE} -- C code generation
 		local
 			l_class: CLASS_C
 			i, nb: INTEGER
-			gen_type: GEN_TYPE_I
+			gen_type: GEN_TYPE_A
 			l_types: TYPE_LIST
 			l_values: like values
 			l_keys: like keys
@@ -198,10 +198,10 @@ feature {NONE} -- C code generation
 									check
 										gen_type_not_void: gen_type /= Void
 						 			end
-									gen_type.meta_generic.generate_cecil_values (buffer)
+									gen_type.generate_cecil_values (buffer, l_types.item.type)
 								else
 									buffer.put_string ("(int32) ")
-									l_types.item.type.generate_cecil_value (buffer)
+									l_types.item.type.generate_cecil_value (buffer, l_types.item.type)
 									buffer.put_string (",%N")
 								end
 							end
@@ -317,7 +317,7 @@ feature {NONE} -- Byte code generation
 			cl_name: STRING
 			l_class: CLASS_C
 			l_types: TYPE_LIST
-			gen_type: GEN_TYPE_I
+			gen_type: GEN_TYPE_A
 			l_keys: like keys
 			l_values: like values
 			l_is_generic: BOOLEAN
@@ -420,9 +420,9 @@ feature {NONE} -- Byte code generation
 									check
 										gen_type_not_void: gen_type /= Void
 									end
-									gen_type.meta_generic.make_byte_code (ba)
+									gen_type.make_cecil_values (ba, l_types.item.type)
 								else
-									ba.append_integer_32 (l_types.item.type.cecil_value)
+									ba.append_integer_32 (l_types.item.type.sk_value (l_types.item.type))
 								end
 							end
 							l_types.forth

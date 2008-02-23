@@ -45,7 +45,7 @@ feature -- C code generation
 			-- Print expression value
 		local
 			l_buf: like buffer
-			l_type: TYPE_I
+			l_type: TYPE_A
 		do
 			l_buf := buffer
 			type.c_type.generate_cast (l_buf)

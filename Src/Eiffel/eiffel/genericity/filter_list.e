@@ -1,16 +1,22 @@
 indexing
+	description: "Filter all available types in system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class FILTER_LIST
 
 inherit
-	SEARCH_TABLE [CL_TYPE_I]
+	SEARCH_TABLE [CL_TYPE_A]
 		rename
 			has as has_item,
 			make as table_make
 		export
-			{ANY} start, item_for_iteration, forth, after, put, has_item, cursor, go_to
+			{ANY} start, item_for_iteration, forth, after, put, has_item, cursor, go_to, valid_key
 			{NONE} all
+		redefine
+			same_keys
 		end
 
 create
@@ -23,14 +29,21 @@ feature -- Initialization
 			table_make (2)
 		end
 
-feature -- Search
+feature -- Comparison
+
+	same_keys (a_search_key, a_key: CL_TYPE_A): BOOLEAN is
+		do
+			Result := a_search_key.same_as (a_key)
+		end
+
+feature -- Cleaning
 
 	clean is
 			-- Clean the list of all the removed classes
 		local
 			i, nb: INTEGER
-			l_item: CL_TYPE_I
-			l_default: CL_TYPE_I
+			l_item: CL_TYPE_A
+			l_default: CL_TYPE_A
 			local_content: like content
 		do
 				-- Note: we cannot search items in the table because they might be
@@ -46,7 +59,7 @@ feature -- Search
 				i >= nb
 			loop
 				l_item := local_content.item (i)
-				if valid_key (l_item) and then not l_item.is_consistent then
+				if valid_key (l_item) and then not l_item.is_valid then
 					local_content.put (l_default, i)
 					deleted_marks.put (True, i)
 					count := count - 1

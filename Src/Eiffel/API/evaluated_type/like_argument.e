@@ -12,7 +12,8 @@ class LIKE_ARGUMENT
 inherit
 	LIKE_TYPE_A
 		redefine
-			actual_argument_type, is_like_argument, has_like_argument, evaluated_type_in_descendant
+			actual_argument_type, is_like_argument, has_like_argument, evaluated_type_in_descendant,
+			initialize_info
 		end
 
 feature -- Visitor
@@ -67,6 +68,24 @@ feature -- Setting
 			position := p
 		end
 
+feature -- Generic conformance
+
+	initialize_info (an_info: like shared_create_info) is
+		do
+			an_info.set_position (position)
+		end
+
+	create_info: CREATE_ARG is
+		do
+			create Result
+			Result.set_position (position)
+		end
+
+	shared_create_info: CREATE_ARG is
+		once
+			create Result
+		end
+
 feature -- Output
 
 	dump: STRING is
@@ -90,23 +109,23 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
-			st.process_symbol_text (ti_L_bracket)
+			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
 			if has_attached_mark then
-				st.process_symbol_text (ti_exclamation)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_exclamation)
 			elseif has_detachable_mark then
-				st.process_symbol_text (ti_question)
+				st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_question)
 			end
-			st.process_keyword_text (ti_Like_keyword, Void)
+			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Like_keyword, Void)
 			st.add_space
 			--Martins 2/6/2007: this code here does not work anymore because of switch from E_FAETURE to CLASS_C
 			-- As it has to be removed anyway we do not spent any effort to enable it again.
 			-- if c /= Void then
 				--st.process_local_text (c.arguments.argument_names.i_th (position))
 			--else
-			st.add (ti_Argument_index)
+			st.add ({SHARED_TEXT_ITEMS}.ti_Argument_index)
 			st.add_int (position)
 
-			st.process_symbol_text (ti_R_bracket)
+			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_R_bracket)
 			st.add_space
 			if is_valid then
 				actual_type.ext_append_to (st, c)
@@ -115,20 +134,18 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_ARGUMENT is
-			-- Instantiation of Current in the context of `class_type',
-			-- assuming that Current is written in class of id `written_id'.
-		do
-			Result := twin
-			Result.set_actual_type (actual_type.instantiation_in (type, written_id))
-		end
-
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
+		local
+			l_new_type: TYPE_A
 		do
 			if a_ancestor /= a_descendant then
-				Result := twin
-				Result.set_actual_type (
-					a_feature.arguments.i_th (position).evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature))
+				l_new_type := a_feature.arguments.i_th (position).evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
+				if l_new_type /= actual_type then
+					Result := twin
+					Result.set_actual_type (l_new_type)
+				else
+					Result := Current
+				end
 			else
 				Result := Current
 			end
@@ -143,13 +160,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 				valid_position: a_arg_types.valid_index (position)
 			end
 			Result := a_arg_types.item (position)
-		end
-
-	create_info: CREATE_ARG is
-			-- Byte code information for entity type creation
-		do
-			create Result
-			Result.set_position (position)
 		end
 
 indexing

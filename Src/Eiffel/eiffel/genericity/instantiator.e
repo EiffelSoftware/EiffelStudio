@@ -47,24 +47,30 @@ feature -- Attributes
 			a_type_not_void: a_type /= Void
 			a_class_not_void: a_class /= Void
 		local
-			type_i: CL_TYPE_I;
+			type_i: CL_TYPE_A;
 			i, nb: INTEGER;
 			generics: ARRAY [TYPE_A];
 			insertion_list: FILTER_LIST;
 		do
 				-- Evaluation of a type class
-			type_i ?= a_type.type_i
+			type_i ?= a_type
+
+			if system.il_generation then
+					-- If `a_type' has an anchor, we need to add them to `{CLASS_C}.type_set'.
+					-- Currently this is only needed in .NET code generation.
+				a_type.dispatch_anchors (a_class)
+			end
 
 				-- We do not record various type declaration of BIT x
 				-- as we only need the one from BIT_REF.
 			if type_i /= Void and then not type_i.is_bit then
 					-- Check if it is a data or a filter
-				if type_i.has_formal or else type_i.is_anchored then
+				if type_i.is_loose then
 						-- It is a filter: the insertion list is the filter
 						-- list of `a_class'
 					insertion_list := a_class.filters
 					check
-						class_has_generics: type_i.has_formal implies a_class.generics /= Void
+						class_has_generics: type_i.has_formal_generic implies a_class.generics /= Void
 					end;
 				else
 						-- it is a data: the insertion list is the Current one
@@ -104,11 +110,20 @@ feature -- Attributes
 		local
 			data: like item
 			a_class: CLASS_C;
-			types: TYPE_LIST;
-			class_type: CLASS_TYPE;
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER
 		do
+				-- Remove the obsolete class types
+			class_array := System.classes
+			nb := Class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					a_class.types.clean
+				end
+				i := i + 1
+			end
+
 				-- Check array class
 			check_array_class
 
@@ -133,39 +148,10 @@ feature -- Attributes
 				after
 			loop
 				data := item_for_iteration
-				data.base_class.update_types (data);
+				data.associated_class.update_types (data);
 				forth
 			end;
 			derivations.clear_all;
-
-				-- Remove the obsolete class types
-			class_array := System.classes
-			nb := Class_counter.count
-			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
-				if a_class /= Void then
-					from
-						types := a_class.types;
-						types.start
-					until
-						types.after
-					loop
-						class_type := types.item;
-						if not class_type.type.is_consistent then
-debug
-io.error.put_string ("Removing a type of ");
-io.error.put_string (a_class.name);
-io.error.put_new_line;
-end;
-							System.remove_class_type (class_type)
-							types.remove;
-						else
-							types.forth
-						end;
-					end;
-				end
-				i := i + 1
-			end
 		end;
 
 	derivations: DERIVATIONS is
@@ -184,11 +170,9 @@ feature {NONE}
 			array_compiled: System.array_class.is_compiled;
 		local
 			array_cl: CLASS_C;
-			array_t: GEN_TYPE_I;
 		do
 			array_cl := System.array_class.compiled_class;
 			dispatch (Array_type_a, array_cl);
-			array_t := Array_type;
 		end;
 
 	check_tuple_class is
@@ -197,11 +181,9 @@ feature {NONE}
 			tuple_compiled: System.tuple_class.is_compiled
 		local
 			tuple_cl: CLASS_C;
-			tuple_t: GEN_TYPE_I;
 		do
 			tuple_cl := System.tuple_class.compiled_class;
 			dispatch (Tuple_type_a, tuple_cl);
-			tuple_t := Tuple_type;
 		end;
 
 	check_function_class is
@@ -340,41 +322,17 @@ feature
 
 feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
 
-	Array_type: GEN_TYPE_I is
-			-- Default array type
+	array_type: GEN_TYPE_A is
+			-- Default array type.
+			-- Not a once since `array_id' might change.
 		local
-			ref: REFERENCE_I;
-			meta_gen: META_GENERIC;
-			true_gen: ARRAY [TYPE_I]
-			any_type_i : TYPE_I
+			true_gen: ARRAY [TYPE_A]
 			any_type_a : TYPE_A
 		do
-				--- Not once because array_id can change
-			create ref;
-			create meta_gen.make (1);
-			meta_gen.put (ref, 1);
-			create true_gen.make (1, 1);
-			any_type_a := ref.type_a;
-
-			if any_type_a /= Void then
-				any_type_i := any_type_a.type_i;
-			end;
-
-			if any_type_i /= Void then
-				true_gen.put (any_type_i, 1);
-			else
-				-- Should never happen!
-				true_gen.put (ref, 1);
-			end;
-			create Result.make (System.array_id, meta_gen, true_gen)
-		end;
-
-	Tuple_type: TUPLE_TYPE_I is
-			-- Default tuple type
-		do
-			Result := Tuple_type_a.type_i
-		ensure
-			Result_not_void: Result /= Void
+			create true_gen.make (1, 1)
+			any_type_a := system.any_class.compiled_class.actual_type
+			true_gen.put (any_type_a, 1);
+			create Result.make (System.array_id, true_gen)
 		end;
 
 indexing

@@ -18,6 +18,11 @@ inherit
 			line_number, set_line_number
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -49,23 +54,23 @@ feature -- Access
 	read_only: BOOLEAN is False
 			-- Is Result a read-only entity ?
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Type of current tuple access.
 		do
 			if source /= Void then
-				Result := void_c_type
+				Result := void_type
 			else
 				Result := tuple_element_type
 			end
 		end
 
-	tuple_type: TUPLE_TYPE_I
+	tuple_type: TUPLE_TYPE_A
 			-- Type of tuple on which access is done.
 
-	tuple_element_type: TYPE_I is
+	tuple_element_type: TYPE_A is
 			-- Type of element of tuple we are accessing.
 		do
-			Result := context.real_type (tuple_type.true_generics.item (position))
+			Result := context.real_type (tuple_type.generics.item (position))
 		end
 
 	position: INTEGER
@@ -243,7 +248,7 @@ feature -- C Code generation
 			-- String representation of TUPLE element type.
 		do
 			inspect
-				tuple_element_type.sk_value
+				tuple_element_type.c_type.sk_value
 			when {SK_CONST}.sk_bool then Result := once "boolean"
 			when {SK_CONST}.sk_char then Result := once "character"
 			when {SK_CONST}.sk_wchar then Result := once "wide_character"

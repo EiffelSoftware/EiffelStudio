@@ -52,7 +52,7 @@ feature -- Access
 	expr: EXPR_B
 			-- Associated expression whose result is boxed
 
-	type: TYPE_I
+	type: TYPE_A
 			-- Type to which expression should be converted if needed
 
 	is_boxing: BOOLEAN
@@ -108,8 +108,8 @@ feature -- C code generation
 	generate is
 			-- Generate expression
 		local
-			l_type, l_expr_type: TYPE_I
-			basic_i: BASIC_I
+			l_type, l_expr_type: TYPE_A
+			basic_i: BASIC_A
 			buf: GENERATION_BUFFER
 		do
 			expr.generate
@@ -159,7 +159,7 @@ feature -- Inlining
 
 feature {BYTE_NODE_VISITOR} -- Convenience
 
-	is_conversion_needed (a_source, a_target: TYPE_I): BOOLEAN is
+	is_conversion_needed (a_source, a_target: TYPE_A): BOOLEAN is
 			-- Is conversion needed from `a_source' to `a_target'?
 		require
 			a_source_not_void: a_source /= Void

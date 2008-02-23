@@ -15,6 +15,11 @@ inherit
 			is_fast_as_local, is_constant_expression
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -78,13 +83,13 @@ feature -- Status report
 	real_size: NATURAL_8
 			-- Size of REAL constant
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Float type
 		do
 			if real_size = 64 then
-				Result := real64_c_type
+				Result := real_64_type
 			else
-				Result := real32_c_type
+				Result := real_32_type
 			end
 		end
 

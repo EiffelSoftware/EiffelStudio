@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	type: TYPE_I is
+	type: TYPE_A is
 		do
 			Result := System.remover.inliner.inlined_feature.argument_type (position)
 		end

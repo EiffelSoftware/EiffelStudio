@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		ensure
 			creation_expr_set: creation_expr = a_creation
 		end
-		
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -34,12 +34,12 @@ feature -- Visitor
 		do
 			v.process_custom_attribute_b (Current)
 		end
-	
+
 feature -- Access
 
 	creation_expr: CREATION_EXPR_B
 			-- Associated creation expression.
-			
+
 	named_arguments:  ARRAYED_LIST [TUPLE [STRING_B, EXPR_B]]
 			-- Associated data for named arguments.
 
@@ -52,15 +52,15 @@ feature -- Settings
 		ensure
 			named_arguments_set: named_arguments = n
 		end
-		
+
 feature {NONE} -- Not applicable
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression type.
 		do
 			Result := creation_expr.type
 		end
-		
+
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is register `r' used in local or forthcomming dot calls ?
 		do
@@ -68,7 +68,7 @@ feature {NONE} -- Not applicable
 				not_callable: False
 			end
 		end
-		
+
 invariant
 	creation_expr_not_void: creation_expr /= Void
 

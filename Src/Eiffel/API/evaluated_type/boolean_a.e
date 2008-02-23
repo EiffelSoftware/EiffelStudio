@@ -10,7 +10,7 @@ class BOOLEAN_A
 inherit
 	BASIC_A
 		redefine
-			is_boolean, type_i, associated_class, same_as,
+			is_boolean, associated_class, same_as,
 			default_create, process
 		end
 
@@ -57,7 +57,7 @@ feature -- Access
 
 feature {COMPILER_EXPORTER}
 
-	type_i: BOOLEAN_I is
+	c_type: BOOLEAN_I is
 			-- C type
 		do
 			Result := boolean_c_type

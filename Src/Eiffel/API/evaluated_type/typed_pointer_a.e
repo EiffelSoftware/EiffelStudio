@@ -19,16 +19,24 @@ inherit
 			expanded_deferred, valid_expanded_creation, update_dependance,
 			has_expanded, dump, duplicate, reference_type,
 			is_equivalent, instantiation_of, same_as, instantiation_in,
-			is_full_named_type, evaluated_type_in_descendant
+			is_full_named_type, evaluated_type_in_descendant, is_explicit,
+			generate_cid, generate_cid_array, generate_cid_init, has_actual,
+			make_gen_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
+			adapted_in, skeleton_adapted_in, is_class_valid, is_valid_generic_derivation,
+			dispatch_anchors, has_like_current, internal_generic_derivation,
+			internal_same_generic_derivation_as
 		redefine
-			is_typed_pointer, type_i, associated_class, process
+			is_typed_pointer, c_type, associated_class, process,
+			il_type_name, generic_il_type_name
 		end
 
 	GEN_TYPE_A
 		undefine
-			meta_type, is_basic, feature_type, is_valid
+			meta_type, is_basic, feature_type, description, instantiated_description,
+			generate_cecil_value, sk_value, element_type, cl_make
 		redefine
-			is_typed_pointer, type_i, associated_class, process, reference_type
+			is_typed_pointer, c_type, associated_class, process, reference_type,
+			il_type_name, generic_il_type_name
 		end
 
 create
@@ -73,7 +81,30 @@ feature -- Property
 			Result := generics.item (1)
 		end
 
-feature {COMPILER_EXPORTER}
+feature -- IL code generation
+
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+			-- Name of current class
+		local
+			t: TYPE_A
+		do
+			t := generics.item (1)
+			Result := t.il_type_name (a_prefix, a_context_type).twin
+			Result.append ("&")
+			if a_prefix /= Void and then t.is_external then
+				Result.precede ('.')
+				Result.prepend (a_prefix)
+			end
+		end
+
+	generic_il_type_name (a_context_type: TYPE_A): STRING is
+			-- Name of current class
+		do
+			Result := generics.item (1).generic_il_type_name (a_context_type).twin
+			Result.append ("&")
+		end
+
+feature {COMPILER_EXPORTER} -- Access
 
 	reference_type: GEN_TYPE_A is
 			-- Reference counterpart of an expanded type
@@ -85,10 +116,10 @@ feature {COMPILER_EXPORTER}
 			Result.set_reference_mark
 		end
 
-	type_i: TYPED_POINTER_I is
+	c_type: TYPED_POINTER_I is
 			-- Pointer C type
 		do
-			create Result.make (class_id, pointed_type)
+			create Result.make (pointed_type.c_type)
 		end
 
 indexing

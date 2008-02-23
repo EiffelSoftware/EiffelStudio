@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			else
 				written_in := f.written_in
 			end
-			result_type := f.type.type_i
+			result_type := f.type
 		end
 
 feature -- Update
@@ -76,7 +76,7 @@ feature -- Access
 	written_in: INTEGER
 			-- Class where current feature is to mel.
 
-	result_type: TYPE_I
+	result_type: TYPE_A
 			-- Return type of current feature to melt.
 
 	is_equal (other: like Current): BOOLEAN is

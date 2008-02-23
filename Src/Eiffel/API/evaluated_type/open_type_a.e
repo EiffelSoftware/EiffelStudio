@@ -11,14 +11,12 @@ class
 inherit
 	TYPE_A
 		redefine
-			is_valid,
 			is_equivalent,
 			same_as,
 			has_associated_class,
 			associated_class,
 			ext_append_to,
 			dump,
-			type_i,
 			good_generics,
 			conform_to
 		end
@@ -31,11 +29,6 @@ feature -- Visitor
 		end
 
 feature -- Properties
-
-	is_valid: BOOLEAN is
-		do
-			Result := True
-		end
 
 	has_associated_class: BOOLEAN is False
 
@@ -51,6 +44,11 @@ feature -- Comparison
 		end
 
 feature -- Access
+
+	hash_code: INTEGER is
+		do
+			Result := {SHARED_HASH_CODE}.other_code
+		end
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
@@ -73,7 +71,7 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
-			st.add (ti_Open_arg)
+			st.add ({SHARED_TEXT_ITEMS}.ti_Open_arg)
 		end
 
 	dump: STRING is
@@ -84,13 +82,6 @@ feature -- Output
 		end
 
 feature {COMPILER_EXPORTER}
-
-	type_i : CL_TYPE_I is
-
-		do
-		ensure then
-			not_called : False
-		end
 
 	good_generics: BOOLEAN is
 

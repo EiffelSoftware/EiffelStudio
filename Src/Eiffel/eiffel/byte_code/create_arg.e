@@ -41,37 +41,19 @@ feature -- C code generation
 			if is_generic then
 				context.mark_current_used
 				context.add_dftype_current
-			elseif is_formal then
+			elseif type_to_create = Void then
 				context.mark_current_used
 			end
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
 			-- Generate creation type. Take the dynamic type of the argument
 			-- if possible, otherwise take its static type.
-		local
-			cl_type_i: CL_TYPE_I
-			gen_type_i: GEN_TYPE_I
 		do
-			cl_type_i := type_to_create
-			gen_type_i ?= cl_type_i
 			buffer.put_string ("RTCA(arg")
 			buffer.put_integer (position)
 			buffer.put_string (gc_comma)
-
-			if gen_type_i /= Void then
-				buffer.put_string ("typres")
-			elseif is_formal then
-				create_formal_type.generate_type_id (buffer, final_mode)
-			else
-				if context.workbench_mode then
-					buffer.put_string ("RTUD(")
-					buffer.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
-					buffer.put_character (')')
-				else
-					buffer.put_type_id (cl_type_i.type_id)
-				end
-			end
+			associated_create_info.generate_type_id (buffer, final_mode, a_level)
 			buffer.put_character (')')
 		end
 
@@ -92,28 +74,24 @@ feature -- IL code generation
 			internal_generate_il (True)
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_I is
+	created_in (other: CLASS_TYPE): TYPE_A is
 			-- Resulting type of Current as if it was used to create object in `other'
 		do
-			Result := type_to_create.created_in (other)
+				-- Used to be `type_to_create.created_in' but I felt it was not really necessary.
+			Result := type_to_create
 		end
 
 feature {NONE} -- IL code generation
 
 	internal_generate_il (a_is_for_type: BOOLEAN) is
 		local
-			l_type: TYPE_I
+			l_type: TYPE_A
 			creation_label, end_label: IL_LABEL
-			l_is_formal: BOOLEAN
-			l_formal_info: CREATE_FORMAL_TYPE
+			l_info: CREATE_INFO
 		do
-			l_is_formal := is_formal
-			if l_is_formal then
-				l_formal_info := create_formal_type
-				l_type := l_formal_info.type
-			else
-				l_type := type_to_create
-			end
+			l_type := argument_type
+			l_info := associated_create_info
+
 			creation_label := Il_label_factory.new_label
 			end_label := Il_label_factory.new_label
 
@@ -125,17 +103,9 @@ feature {NONE} -- IL code generation
 				-- Object is null, we are therefore creating an object of
 				-- the declared type.
 			if a_is_for_type then
-				if l_is_formal then
-					l_formal_info.generate_il_type
-				else
-					(create {CREATE_TYPE}.make (l_type)).generate_il_type
-				end
+				l_info.generate_il_type
 			else
-				if l_is_formal then
-					l_formal_info.generate_il
-				else
-					(create {CREATE_TYPE}.make (l_type)).generate_il
-				end
+				l_info.generate_il
 			end
 			il_generator.branch_to (end_label)
 
@@ -154,7 +124,7 @@ feature {NONE} -- IL code generation
 			il_generator.mark_label (end_label)
 
 			if not a_is_for_type then
-				il_generator.generate_check_cast (Void, l_type)
+				il_generator.generate_check_cast (Void, context.real_type (l_type))
 			end
 		end
 
@@ -164,39 +134,30 @@ feature -- Byte code generation
 			-- Generate byte code for an argument anchored type.
 		do
 			ba.append (Bc_carg)
-			if is_formal then
-				create_formal_type.make_byte_code (ba)
-			else
-				ba.append ('%U')
-					-- Default creation type
-				type_to_create.make_full_type_byte_code (ba)
-			end
-				-- Argument position
+			associated_create_info.make_byte_code (ba)
 			ba.append_short_integer (position)
 		end
 
 feature -- Generic conformance
 
-	generate_gen_type_conversion is
+	generate_gen_type_conversion (a_level: NATURAL) is
 
 		local
-			gen_type : GEN_TYPE_I
+			gen_type : GEN_TYPE_A
 		do
 			gen_type ?= type_to_create
 
 			if gen_type /= Void then
-				context.generate_gen_type_conversion (gen_type)
+				context.generate_gen_type_conversion (gen_type, a_level)
 			end
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-
 		do
-			buffer.put_string ("RTCA(arg")
-			buffer.put_integer (position)
-			buffer.put_character (',')
-			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.none_type)
-			buffer.put_character (')')
+				-- If we are here, it means that it is known that the type cannot have
+				-- sublevel, thus the value of `0'. This is usually the case when describing
+				-- an attribute type in eskelet.c
+			generate_type_id (buffer, final_mode, 0)
 			buffer.put_character (',')
 		end
 
@@ -205,6 +166,7 @@ feature -- Generic conformance
 		do
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_arg_type)
 			ba.append_short_integer (position)
+			associated_create_info.make_byte_code (ba)
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER;
@@ -216,46 +178,62 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER;
-					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
+	generate_cid_init (buffer : GENERATION_BUFFER; final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL) is
 		local
 			dummy : INTEGER
 		do
+			generate_start (buffer)
+			generate_gen_type_conversion (a_level + 1)
 			buffer.put_new_line
-			buffer.put_string ("typarr[")
+			buffer.put_string ("typarr")
+			buffer.put_natural_32 (a_level)
+			buffer.put_character ('[')
 			buffer.put_integer (idx_cnt.value)
-			buffer.put_string ("] = RTID(RTCA(arg")
-			buffer.put_integer (position)
-			buffer.put_character (',')
-			buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.none_type)
-			buffer.put_string ("));")
+			buffer.put_string ("] = RTID(")
+			generate_type_id (buffer, final_mode, a_level + 1)
+			buffer.put_two_character (')', ';')
+			generate_end (buffer)
 			dummy := idx_cnt.next
 		end
 
-	type_to_create : CL_TYPE_I is
-		local
-			type_i : TYPE_I
+feature -- Type information
+
+	type_to_create : CL_TYPE_A is
 		do
-			type_i := context.byte_code.arguments.item (position)
-			Result ?= context.creation_type (type_i)
+			Result ?= argument_type
 		end
 
-	is_formal: BOOLEAN is
-		local
-			l_formal: FORMAL_I
+	argument_type: TYPE_A is
+			-- Type of argument as declared.
 		do
-			l_formal ?= context.creation_type (context.byte_code.arguments.item (position))
-			Result := l_formal /= Void
+			Result := context.creation_type (context.byte_code.arguments.item (position))
+		ensure
+			argument_type_not_void: Result /= Void
 		end
 
-	create_formal_type: CREATE_FORMAL_TYPE is
-		require
-			is_formal: is_formal
+	associated_create_info: CREATE_INFO is
 		local
-			l_formal: FORMAL_I
+			l_type: TYPE_A
+			l_formal: FORMAL_A
 		do
-			l_formal ?= context.creation_type (context.byte_code.arguments.item (position))
-			create Result.make (l_formal)
+			l_type := context.creation_type (argument_type)
+			if l_type.is_like then
+				if l_type.is_like_current then
+					create {CREATE_CURRENT} Result
+				else
+					Result := l_type.create_info
+				end
+			elseif l_type.is_formal then
+				l_formal ?= l_type
+				check
+					l_formal_not_void: l_formal /= Void
+				end
+				create {CREATE_FORMAL_TYPE} Result.make (l_formal)
+			else
+				create {CREATE_TYPE} Result.make (l_type)
+			end
+		ensure
+			refined_create_info_not_void: Result /= Void
 		end
 
 indexing

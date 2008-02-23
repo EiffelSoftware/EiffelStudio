@@ -91,13 +91,13 @@ feature -- Access
 	-- the current type id in final mode only. for the workbench mode, we
 	-- used the feature id instead of the body index.
 
-	arguments: ARRAY [TYPE_I]
+	arguments: ARRAY [TYPE_A]
 			-- List of argument types of the feature: can be Void
 
-	result_type: TYPE_I
+	result_type: TYPE_A
 			-- Result type of the feature: can be Void.
 
-	locals: ARRAY [TYPE_I]
+	locals: ARRAY [TYPE_A]
 			-- List of local types of the feature: can be Void.
 
 	precondition: BYTE_LIST [BYTE_NODE]
@@ -248,7 +248,7 @@ feature -- Settings
 			pattern_id := i
 		end
 
-	set_result_type (t: TYPE_I) is
+	set_result_type (t: TYPE_A) is
 			-- Assign `t' to `result_type'.
 		do
 			result_type := t
@@ -579,9 +579,9 @@ feature -- Byte code generation
 			valid_class_type: Context.class_type /= Void
 		local
 			i, nb: INTEGER
-			r_type, formal_type: TYPE_I;
-			local_list: LINKED_LIST [TYPE_I]
-			bit_i: BIT_I
+			l_type, l_adapted_type: TYPE_A;
+			local_list: LINKED_LIST [TYPE_A]
+			bit_i: BITS_A
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
 		do
@@ -613,8 +613,8 @@ feature -- Byte code generation
 			Temp_byte_code_array.append_integer (real_body_id - 1)
 
 				-- Result SK value
-			r_type := context.real_type(result_type)
-			Temp_byte_code_array.append_integer (r_type.sk_value)
+			l_type := context.real_type (result_type)
+			Temp_byte_code_array.append_integer (l_type.sk_value (context.context_class_type.type))
 
 				-- Argument number
 			Temp_byte_code_array.append_short_integer (argument_count)
@@ -626,7 +626,7 @@ feature -- Byte code generation
 			ba.append_raw_string (feature_name)
 
 				-- Dynamic type where the feature is written in
-			ba.append_short_integer (context.current_type.type_id - 1)
+			ba.append_short_integer (context.class_type.type_id - 1)
 
 				-- Rescue offset if any.
 			if rescue_clause /= Void then
@@ -665,11 +665,12 @@ feature -- Byte code generation
 			until
 				local_list.after
 			loop
-				Temp_byte_code_array.append_integer (local_list.item.sk_value)
-				formal_type := context.real_type (local_list.item)
-				if formal_type.is_true_expanded and then not formal_type.is_bit then
+				l_type := local_list.item
+				Temp_byte_code_array.append_integer (l_type.sk_value (context.context_class_type.type))
+				l_adapted_type := context.real_type (l_type)
+				if l_adapted_type.is_true_expanded and then not l_adapted_type.is_bit then
 						-- Generate full type info.
-					formal_type.make_full_type_byte_code (Temp_byte_code_array)
+					l_type.make_full_type_byte_code (Temp_byte_code_array, context.context_class_type.type)
 				end
 				local_list.forth
 			end
@@ -682,24 +683,26 @@ feature -- Byte code generation
 				until
 					i > nb
 				loop
-					formal_type := context.real_type (arguments.item (i))
-					if formal_type.is_bit then
+					l_type := arguments.item (i)
+					l_adapted_type := context.real_type (l_type)
+					if l_adapted_type.is_bit then
 						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.bit_tuple_code_extension)
-						bit_i ?= formal_type
-						Temp_byte_code_array.append_integer(bit_i.size)
-					elseif formal_type.is_true_expanded then
+						bit_i ?= l_adapted_type
+						Temp_byte_code_array.append_integer(bit_i.bit_count)
+					elseif l_adapted_type.is_true_expanded then
 						Temp_byte_code_array.append_natural_8 ({SHARED_GEN_CONF_LEVEL}.expanded_tuple_code_extension)
-						formal_type.make_full_type_byte_code (Temp_byte_code_array)
+						l_type.make_full_type_byte_code (Temp_byte_code_array, context.context_class_type.type)
 					else
-						Temp_byte_code_array.append_natural_8 (formal_type.tuple_code.as_natural_8)
+						Temp_byte_code_array.append_natural_8 (l_adapted_type.c_type.tuple_code)
 					end
 					i := i + 1
 				end
 			end
 
-			if r_type.is_true_expanded and then not r_type.is_bit then
+			l_adapted_type := context.real_type(result_type)
+			if l_adapted_type.is_true_expanded and then not l_adapted_type.is_bit then
 					-- Generate full type info.
-				r_type.make_full_type_byte_code (Temp_byte_code_array)
+				result_type.make_full_type_byte_code (Temp_byte_code_array, context.context_class_type.type)
 			end
 
 			context.byte_prepend (ba, Temp_byte_code_array)
@@ -735,7 +738,7 @@ end
 			nb, i, position: INTEGER
 			item: UN_OLD_B
 			l_old_expressions: like old_expressions
-			l_type: TYPE_I
+			l_type: TYPE_A
 			l_il_generation: BOOLEAN
 			assert_chheck: BOOLEAN
 		do
@@ -846,7 +849,7 @@ feature -- Array optimization
 
 feature {NONE} -- Array optimization
 
-	has_array_as_item (a: ARRAY [TYPE_I]): BOOLEAN is
+	has_array_as_item (a: ARRAY [TYPE_A]): BOOLEAN is
 		local
 			i, n: INTEGER
 		do

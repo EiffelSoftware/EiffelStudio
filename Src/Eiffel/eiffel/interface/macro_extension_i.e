@@ -50,7 +50,7 @@ feature -- Code generation
 			-- Generate encapsulation to C/C++ macro external `macro_byte_code'.
 		local
 			l_buffer: GENERATION_BUFFER
-			l_ret_type: TYPE_I
+			l_ret_type: TYPE_A
 			nb: INTEGER
 		do
 			l_ret_type := macro_byte_code.result_type
@@ -67,7 +67,7 @@ feature -- Code generation
 			l_buffer.put_new_line
 		end
 
-	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
 			-- Generate inline C/C++ macro external.
 		require
 			external_name_not_void: external_name /= Void
@@ -82,7 +82,7 @@ feature -- Code generation
 
 feature {NONE} -- Implementation
 
-	internal_generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_I) is
+	internal_generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_A) is
 			-- Generate inline C/C++ macro external.
 		require
 			external_name_not_void: external_name /= Void

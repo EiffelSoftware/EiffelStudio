@@ -15,8 +15,6 @@ inherit
 			context as ast_context
 		end
 
-	SHARED_TYPES
-
 	SHARED_TYPEID_TABLE
 
 	SHARED_CODE_FILES
@@ -85,7 +83,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_TYPE_I
+	SHARED_TYPES
 		export
 			{NONE} all
 		end
@@ -265,7 +263,7 @@ feature -- Access
 			-- recursive descendants also.
 
 	filters: FILTER_LIST 	-- ## FIXME 2.3 Patch: redefinition of equal in
-							-- GEN_TYPE_I
+							-- GEN_TYPE_A
 			-- Filters associated to the class: useful for recalculating
 			-- the type system: it is empty if the class is a non-generic
 			-- one.
@@ -1184,13 +1182,24 @@ feature -- Parent checking
 						l_parent_as := l_parents_as.item
 						l_raw_type := l_parent_as.type
 						l_parent_c := l_compiled_parent_generator.compiled_parent (system, Current, l_parent_as)
-							-- Check if there is no anchor and no bit symbol in the parent type.
-						if not l_parent_c.parent_type.is_valid or else l_parent_c.parent_type.has_like then
+						l_parent_type := l_parent_c.parent_type
+
+							-- Check if there is no anchor (has_like) and no bit symbol (is_class_valid) in the constraint type.
+						if l_parent_type.has_like or not l_parent_type.is_class_valid then
 							create l_ve04
 							l_ve04.set_class (Current)
 							l_ve04.set_parent_type (l_raw_type)
 							l_ve04.set_location (l_parent_as.start_location)
 							Error_handler.insert_error (l_ve04)
+						elseif not l_parent_type.good_generics then
+								-- This addresses eweasel test#term146 where we assumed before at degree 4
+								-- they had the correct number of formal generics and thus performed conformance
+								-- checking blindly. Now we check the error at the end of degree 5 to prevent
+								-- this problem.
+							l_vtug := l_parent_type.error_generics
+							l_vtug.set_class (Current)
+							l_vtug.set_location (l_parent_as.start_location)
+							error_handler.insert_error (l_vtug)
 						else
 							computed_parents.extend (l_parent_c)
 
@@ -1206,7 +1215,6 @@ feature -- Parent checking
 							l_parent_class.add_descendant (Current)
 
 								-- Use reference class type as a parent.
-							l_parent_type := l_parent_c.parent_type
 							if l_parent_type.is_expanded then
 								l_parent_type := l_parent_type.reference_type
 							end
@@ -1228,17 +1236,6 @@ feature -- Parent checking
 									end
 									l_parents_classes.forth
 								end
-							end
-
-								-- This addresses eweasel test#term146 where we assumed before at degree 4
-								-- they had the correct number of formal generics and thus performed conformance
-								-- checking blindly. Now we check the error at the end of degree 5 to prevent
-								-- this problem.
-							if not l_parent_type.good_generics then
-								l_vtug := l_parent_type.error_generics
-								l_vtug.set_class (Current)
-								l_vtug.set_location (l_parent_as.start_location)
-								error_handler.insert_error (l_vtug)
 							end
 
 								-- Add parent class to either conforming or non-conforming inheritance list.
@@ -1923,7 +1920,7 @@ feature -- Actual class type
 			-- Actual type of the class
 		local
 			i, nb: INTEGER
-			actual_generic: ARRAY [FORMAL_A]
+			actual_generic: ARRAY [TYPE_A]
 			formal: FORMAL_A
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
@@ -2161,28 +2158,25 @@ end
 		require
 			no_generic: not is_generic
 		local
-			data: CL_TYPE_I
+			data: CL_TYPE_A
 		do
-			data := actual_type.type_i
+			data := actual_type
 			register_type (data).do_nothing
-			instantiator.dispatch (data.type_a, Current)
-			if data.is_expanded and then not data.is_external or else data.is_basic then -- and then not data.is_char then
+			instantiator.dispatch (data, Current)
+			if (data.is_expanded and not data.is_external) or data.is_basic then
 					-- Process reference counterpart.
 				data := data.reference_type
 				register_type (data).do_nothing
-				instantiator.dispatch (data.type_a, Current)
+				instantiator.dispatch (data, Current)
 			end
 		end
 
-	update_types (data: CL_TYPE_I) is
+	update_types (data: CL_TYPE_A) is
 			-- Update `types' with `data'.
 		require
 			good_argument: data /= Void
-			consistency: data.base_class = Current
-			good_context:
-				(data.base_class.original_class /= system.native_array_class and then
-				data.base_class.original_class /= system.typed_pointer_class) implies
-				not data.has_formal
+			consistency: data.associated_class = Current
+			good_context: not data.is_formal
 		local
 			new_class_type: CLASS_TYPE
 			l_parents_classes: like parents_classes
@@ -2191,14 +2185,8 @@ end
 					-- The recursive update is done only once
 				derivations.insert_derivation (class_id, data)
 
-debug ("GENERICITY")
-	io.error.put_string ("Update_types%N")
-	io.error.put_string (name)
-	data.trace
-end
 				new_class_type := register_type (data)
-
-				if data.is_expanded and then not data.is_external then
+				if (data.is_expanded and not data.is_external) or data.is_basic then
 						-- Process reference counterpart.
 					update_types (data.reference_type)
 				end
@@ -2231,20 +2219,20 @@ feature {NONE} -- Incrementality
 			derivations_not_void: Result /= Void
 		end
 
-	register_type (data: CL_TYPE_I): CLASS_TYPE is
+	register_type (data: CL_TYPE_A): CLASS_TYPE is
 			-- Ensure that `data' has an associated class type by creating
 			-- a new class type descriptor if it is not already created;
 			-- return the associated class type.
 		require
 			data_not_void: data /= Void
 		local
-			g: GEN_TYPE_I
+			g: GEN_TYPE_A
 		do
-			if data.meta_generic /= Void then
+			if data.generics /= Void then
 					-- Register this generic type and other required types.
 				g ?= data
-				Result := register_generic_type (g, g.meta_generic.count)
-			elseif types.has_type (data) then
+				Result := register_generic_type (g, g.generics.count)
+			elseif types.has_type (Void, data) then
 				Result := types.found_item
 			else
 					-- Found a new type for the class
@@ -2252,19 +2240,19 @@ feature {NONE} -- Incrementality
 			end
 		ensure
 			result_not_void: Result /= Void
-			data_is_registered: types.has_type (data)
+			data_is_registered: types.has_type (Void, data)
 		end
 
-	register_new_type (data: CL_TYPE_I): CLASS_TYPE is
+	register_new_type (data: CL_TYPE_A): CLASS_TYPE is
 			-- Register new type `data' and return the corresponding descriptor.
 		require
 			data_attached: data /= Void
-			data_is_new: not types.has_type (data)
+			data_is_new: not types.has_type (Void, data)
 		do
 debug ("GENERICITY")
 	io.error.put_string ("new type%N")
 end
-			Result := new_type (normalized_type_i (data))
+			Result := new_type (data)
 				-- If the $ operator is used in the class,
 				-- an encapsulation of the feature must be generated
 			if System.address_table.class_has_dollar_operator (class_id) then
@@ -2278,24 +2266,24 @@ end
 			System.insert_class_type (Result)
 		ensure
 			result_attached: Result /= Void
-			data_is_registered: types.has_type (data)
+			data_is_registered: types.has_type (Void, data)
 		end
 
-	register_generic_type (data: GEN_TYPE_I; n: INTEGER): CLASS_TYPE is
+	register_generic_type (data: GEN_TYPE_A; n: INTEGER): CLASS_TYPE is
 			-- Ensure that `data' has an associated class type by creating
 			-- a new class type descriptor if it is not already created;
 			-- return the associated class type. Register all the types
 			-- required by this type for code generation.
 		local
-			g: GEN_TYPE_I
-			t: ARRAY [TYPE_I]
-			p: TYPE_I
-			c: CL_TYPE_I
+			g: GEN_TYPE_A
+			t: ARRAY [TYPE_A]
+			p: TYPE_A
+			c: CL_TYPE_A
 			i: INTEGER
-			a: NATIVE_ARRAY_TYPE_I
-			r: GEN_TYPE_I
+			a: NATIVE_ARRAY_TYPE_A
+			r: GEN_TYPE_A
 		do
-			if types.has_type (data) then
+			if types.has_type (Void, data) then
 				Result := types.found_item
 			else
 					-- Found a new type for the class
@@ -2306,10 +2294,10 @@ end
 				end
 				a ?= r
 --				if False then
---					-- TODO: see GEN_TYPE_I.enumerate_interfaces
+--					-- TODO: see GEN_TYPE_A.enumerate_interfaces
 				if a = Void and then system.is_precompiled then
 						-- Register all types where expanded parameters are replaced with reference ones.
-					t := r.true_generics
+					t := r.generics
 					from
 						i := n
 					until
@@ -2322,8 +2310,7 @@ end
 							check
 								c_attached: c /= Void
 							end
-							g.true_generics [i] := c.reference_type
-							g.meta_generic [i] := reference_c_type
+							g.generics [i] := c.reference_type
 							register_generic_type (g, i - 1).do_nothing
 							update_types (g)
 						end
@@ -2333,17 +2320,7 @@ end
 			end
 		end
 
-	normalized_type_i (data: CL_TYPE_I): CL_TYPE_I is
-			-- Class type `data' normalized in terms of the current class.
-		require
-			data_not_void: data /= Void
-		do
-			Result := data
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	new_type (data: CL_TYPE_I): CLASS_TYPE is
+	new_type (data: CL_TYPE_A): CLASS_TYPE is
 			-- New class type for current class
 		do
 			create Result.make (data)
@@ -2362,7 +2339,7 @@ end
 			filters_not_void: filters /= Void
 		local
 			class_filters: like filters
-			filter: CL_TYPE_I
+			filter: CL_TYPE_A
 			class_filters_cursor: INTEGER
 			l_system: like system
 		do
@@ -2382,20 +2359,11 @@ end
 					-- and that this class has some `like Current' then
 					-- we are going to traverse recursively the `filters' list.
 				class_filters_cursor := class_filters.cursor
-					-- Instantiation of the filter with `data'
-				filter := class_filters.item_for_iteration.instantiation_in (new_class_type)
-debug ("GENERICITY")
-	io.error.put_string ("Propagation of ")
-	filter.trace
-	io.error.put_string ("propagation to ")
-	io.error.put_string (filter.base_class.name)
-	io.error.put_new_line
-end
-				if filter.has_formal implies
-					(filter.base_class.original_class = l_system.native_array_class or else
-					filter.base_class.original_class = l_system.typed_pointer_class)
-				then
-					filter.base_class.update_types (filter)
+					-- Instantiation of the filter with `data' but only if it is not a formal
+					-- since in that case there is nothing to propagate.
+				filter := class_filters.item_for_iteration.adapted_in (new_class_type)
+				if not filter.is_formal then
+					filter.associated_class.update_types (filter)
 				end
 				class_filters.go_to (class_filters_cursor)
 				class_filters.forth
@@ -2410,9 +2378,10 @@ feature {CLASS_C} -- Incrementality
 			new_class_type_not_void: new_class_type /= Void
 			new_class_type_is_expanded: new_class_type.is_expanded
 			filters_not_void: filters /= Void
+			conformance: new_class_type.associated_class.simple_conform_to (Current)
 		local
 			class_filters: like filters
-			filter: CL_TYPE_I
+			filter: CL_TYPE_A
 			class_filters_cursor: INTEGER
 			l_system: SYSTEM_I
 		do
@@ -2432,21 +2401,13 @@ feature {CLASS_C} -- Incrementality
 					-- and that this class has some `like Current' then
 					-- we are going to traverse recursively the `filters' list.
 				class_filters_cursor := class_filters.cursor
-					-- Instantiation of the filter with `data'
-				filter := class_filters.item_for_iteration.anchor_instantiation_in (new_class_type)
-				if
-					(filter.base_class.original_class /= l_system.native_array_class and then
-					filter.base_class.original_class /= l_system.typed_pointer_class) implies
-					not filter.has_formal
-				then
-debug ("GENERICITY")
-	io.error.put_string ("Propagation of ")
-	filter.trace
-	io.error.put_string ("propagation to ")
-	io.error.put_string (filter.base_class.name)
-	io.error.put_new_line
-end
-					filter.base_class.update_types (filter)
+					-- Instantiation of the filter with `new_class_type'
+				filter ?= class_filters.item_for_iteration.instantiation_in (new_class_type.type, class_id)
+				if filter /= Void and then not filter.has_formal_generic then
+					check
+						has_associated_class: filter.has_associated_class
+					end
+					filter.associated_class.update_types (filter)
 				end
 				class_filters.go_to (class_filters_cursor)
 				class_filters.forth
@@ -2472,7 +2433,7 @@ feature -- Meta-type
 				Result := types.first
 			else
 					-- FIXME: Manu 2007/09/13: This way of finding the class type in descendant
-					-- is clearly not the best way as it is slow since we are creating a new TYPE_I
+					-- is clearly not the best way as it is slow since we are creating a new TYPE_A
 					-- instance just to find its associated type id. The better way would be to
 					-- iterate through the generics of Current and find a CLASS_TYPE instances.
 					-- See eweasel test#valid045 to see the slowness.
@@ -2487,7 +2448,7 @@ feature -- Meta-type
 					written_actual_type := written_actual_type.reference_type
 				end
 					-- Ask for the meta-type
-				Result := written_actual_type.type_i.instantiation_in (class_type).associated_class_type
+				Result := written_actual_type.associated_class_type (class_type.type)
 			end
 		ensure
 			meta_type_not_void: Result /= Void
@@ -2739,6 +2700,34 @@ feature -- Properties
 
 	need_new_parents: BOOLEAN
 			-- Does Current need to recompute `parents' and `computed_parents'?
+
+	number_of_ancestors: INTEGER is
+			-- Number of direct and inderect ancestor of Current. If repeated inheritance
+			-- parents are counted twice.
+		do
+			if conforming_parents /= Void then
+				Result := conforming_parents.count
+				from
+					conforming_parents.start
+				until
+					conforming_parents.after
+				loop
+					Result := Result + conforming_parents.item.associated_class.number_of_ancestors
+					conforming_parents.forth
+				end
+			end
+			if non_conforming_parents /= Void then
+				Result := Result + non_conforming_parents.count
+				from
+					non_conforming_parents.start
+				until
+					non_conforming_parents.after
+				loop
+					Result := Result + non_conforming_parents.item.associated_class.number_of_ancestors
+					non_conforming_parents.forth
+				end
+			end
+		end
 
 	parents: FIXED_LIST [CL_TYPE_A]
 			-- Parent class types
@@ -3282,6 +3271,14 @@ feature -- Access
 					end
 					l_gen.go_to (l_cursor)
 				end
+					-- Check the invariant now.
+				if
+					Result = Void and
+					(invariant_feature /= Void and then
+					invariant_feature.rout_id_set.has (a_routine_id))
+				then
+					Result := invariant_feature
+				end
 			end
 		end
 
@@ -3707,9 +3704,38 @@ feature -- Genericity
 			l_rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
 			l_formal_dec: FORMAL_DEC_AS
+			l_formals: SPECIAL [TYPE_FEATURE_I]
 		do
 				-- Clean previously stored information.
 			l_old := generic_features
+			if l_old /= Void and is_generic then
+					-- We prepare a fast lookup table so that
+					-- no new routine IDs are assigned to formal generic
+					-- parameters of a class which introduce them if the class
+					-- is processed at degree 4 and nothing really changed.
+					-- Fixes eweasel test#incrXXX.
+				create l_formals.make (generics.count + 1)
+				from
+					l_old.start
+				until
+					l_old.after
+				loop
+					l_formal_type ?= l_old.item_for_iteration.type
+					if
+							-- We check that the previous formal was written in the Current class and that
+							-- it is still makes sense. A case where it does not make sense is when the Current
+							-- class has less generics than before.
+						(l_formal_type /= Void and l_old.item_for_iteration.written_in = class_id) and then
+						l_formals.valid_index (l_formal_type.position)
+					then
+						check
+							not_inserted: l_formals.item (l_formal_type.position) = Void
+						end
+						l_formals.put (l_old.item_for_iteration, l_formal_type.position)
+					end
+					l_old.forth
+				end
+			end
 			generic_features := Void
 
 				-- Collect all information about parent formal generic parameters.
@@ -3794,20 +3820,19 @@ feature -- Genericity
 						l_formal.set_written_in (class_id)
 						l_formal.set_origin_class_id (class_id)
 
-						create l_rout_id_set.make
-						l_rout_id_set.put (l_formal.new_rout_id)
+						if l_formals /= Void and then l_formals.item (i) /= Void then
+								-- Reuse existing TYPE_FEATURE_I information for routine IDs and feature ID.
+							l_rout_id_set := l_formals.item (i).rout_id_set
+							l_formal.set_feature_id (l_formals.item (i).feature_id)
+						else
+							create l_rout_id_set.make
+							l_rout_id_set.put (l_formal.new_rout_id)
+							l_formal.set_feature_id (feature_id_counter.next)
+						end
 						l_formal.set_rout_id_set (l_rout_id_set)
 						l_formal.set_is_origin (True)
 						l_formal.set_position (i)
-
-						if l_old /= Void and then l_old.has (l_rout_id_set.first) then
-							l_formal.set_feature_id (
-								l_old.item (l_formal.rout_id_set.first).feature_id)
-						else
-							l_formal.set_feature_id (feature_id_counter.next)
-						end
 						l_formal.set_origin_feature_id (l_formal.feature_id)
-
 						l_generic_features.put (l_formal, l_rout_id_set.first)
 					end
 					i := i + 1

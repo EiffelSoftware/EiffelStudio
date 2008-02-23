@@ -17,6 +17,11 @@ inherit
 			process
 		end
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 	SHARED_ERROR_HANDLER
 
 	SHARED_DECLARATIONS
@@ -49,7 +54,7 @@ feature -- Access
 			-- Name of generated routine in C generated code
 		do
 			Result := Encoder.feature_name (
-				context.current_type.static_type_id,
+				context.class_type.type_id,
 				body_index)
 		end
 
@@ -67,7 +72,7 @@ feature -- Analyzis
 			-- Builds a proper context (for C code).
 		local
 			workbench_mode, keep_assertions: BOOLEAN
-			type_i: TYPE_I
+			type_i: TYPE_A
 			feat: FEATURE_I
 			have_precond, have_postcond, has_invariant: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
@@ -201,7 +206,7 @@ feature -- Analyzis
 		local
 			args: like arguments
 			i, nb: INTEGER
-			arg: TYPE_I
+			arg: TYPE_A
 		do
 			args := arguments
 			if args /= Void then
@@ -247,12 +252,12 @@ feature -- Analyzis
 			keep: BOOLEAN
 			seed: FEATURE_I
 			rout_id_set: ROUT_ID_SET
-			seed_type: TYPE_I
+			seed_type: TYPE_A
 			seed_arguments: FEAT_ARG
 			seed_types: ARRAY [STRING]
 			routine_id: INTEGER
-			t: TYPE_I
-			basic_i: BASIC_I
+			t: TYPE_A
+			basic_i: BASIC_A
 			suffix: STRING
 			suffixes: LIST [STRING]
 			inline_agent_feature: FEATURE_I
@@ -530,7 +535,7 @@ feature -- Analyzis
 						if not suffixes.has (suffix) then
 							suffixes.force (suffix)
 							seed_arguments := seed.arguments
-							seed_type := seed.type.type_i
+							seed_type := seed.type
 							create seed_types.make (1, args.count)
 							i := 1
 							if generate_current then
@@ -543,12 +548,14 @@ feature -- Analyzis
 								until
 									seed_arguments.after
 								loop
-									t := seed_arguments.item.type_i
-									if t.is_formal then
+									t := seed_arguments.item
+										-- We have to use `actual_type.is_formal' in case `t' represents
+										-- an anchor. See {FEATURE_I}.has_formal for more details.
+									if t.actual_type.is_formal then
 											-- Formal is passed as a reference.
 										seed_types.put ("EIF_REFERENCE", i)
 									else
-										if t.is_anchored then
+										if t.has_like then
 												-- "like Current" is passed as a reference.
 											type_c := reference_c_type
 										else
@@ -560,7 +567,7 @@ feature -- Analyzis
 									seed_arguments.forth
 								end
 							end
-							if seed_type.is_anchored then
+							if seed_type.has_like then
 									-- "like Current" is passed as a reference.
 								type_c := reference_c_type
 							else
@@ -608,15 +615,17 @@ feature -- Analyzis
 							loop
 								if i > 1 then
 									buf.put_character (',')
-									t := seed_arguments.item.type_i
-									if t.is_formal then
+									t := seed_arguments.item
+										-- We have to use `actual_type.is_formal' in case `t' represents
+										-- an anchor. See {FEATURE_I}.has_formal for more details.
+									if t.actual_type.is_formal then
 										if not real_type (arguments.item (i - 1)).c_type.is_pointer then
 												-- "Unbox" argument value.
 											buf.put_character ('*')
 											real_type (arguments.item (i - 1)).c_type.generate_access_cast (buf)
 										end
 										buf.put_string (args.item (i))
-									elseif not t.is_anchored and then not t.c_type.is_pointer and then real_type (arguments.item (i - 1)).c_type.is_pointer then
+									elseif not t.has_like and then not t.c_type.is_pointer and then real_type (arguments.item (i - 1)).c_type.is_pointer then
 											-- "Box" argument value.
 										buf.put_string ("/* Should not get here */ ")
 										reference_c_type.generate_cast (buf)
@@ -770,7 +779,7 @@ end
 			i, nb: INTEGER
 			l_buf: like buffer
 			l_has_expanded: BOOLEAN
-			l_type: CL_TYPE_I
+			l_type: CL_TYPE_A
 			l_arg_name: STRING
 			l_class_type: CLASS_TYPE
 		do
@@ -788,7 +797,7 @@ end
 						create l_arg_name.make (6)
 						l_arg_name.append ("sarg")
 						l_arg_name.append_integer (i)
-						l_class_type := l_type.associated_class_type
+						l_class_type := l_type.associated_class_type (context.context_class_type.type)
 						l_class_type.generate_expanded_structure_declaration (l_buf, l_arg_name)
 						l_buf.put_new_line
 						l_buf.put_string ("EIF_REFERENCE earg")
@@ -809,10 +818,11 @@ end
 	generate_expanded_initialization is
 			-- Clone expanded parameters and initialize local expanded objects.
 		local
-			l_type: CL_TYPE_I
+			l_adapted_type: CL_TYPE_A
+			l_type: TYPE_A
 			i, count: INTEGER
 			buf: GENERATION_BUFFER
-			l_list: ARRAY [TYPE_I]
+			l_list: ARRAY [TYPE_A]
 			l_class_type: CLASS_TYPE
 			l_loc_name: STRING
 		do
@@ -825,8 +835,9 @@ end
 				until
 					i > count
 				loop
-					l_type ?= real_type (l_list.item (i))
-					if l_type /= Void and then l_type.is_true_expanded then
+					l_type := l_list.item (i)
+					l_adapted_type ?= real_type (l_type)
+					if l_adapted_type /= Void and then l_adapted_type.is_true_expanded then
 							-- FIXME: Manu: 05/10/2004: if argument is not
 							-- used and if associated type does not redefine `copy'
 							-- then we could skip this call for more efficiency.
@@ -837,12 +848,12 @@ end
 							-- is redefined, not the equivalent of `standard_copy'.
 							-- Note: Safe to use `memcpy' since target is allocated on the
 							-- stack and no one can have a reference to it.
-						l_class_type := l_type.associated_class_type
 						buf.put_string ("memcpy (sarg")
 						buf.put_integer (i)
 						buf.put_string (".data, HEADER(arg")
 						buf.put_integer (i)
 						buf.put_string ("), ")
+						l_class_type := l_adapted_type.associated_class_type (context.context_class_type.type)
 						if context.workbench_mode then
 							l_class_type.skeleton.generate_workbench_size (buf)
 						else
@@ -875,8 +886,9 @@ end
 				until
 					i > count
 				loop
-					l_type ?= real_type (l_list.item (i))
-					if l_type /= Void and then l_type.is_true_expanded then
+					l_type := l_list.item (i)
+					l_adapted_type ?= real_type (l_type)
+					if l_adapted_type /= Void and then l_adapted_type.is_true_expanded then
 							-- FIXME: Manu: 05/12/2004: if local is not
 							-- used and if associated type does not redefine `default_create'
 							-- then we could skip this call for more efficiency.
@@ -889,7 +901,7 @@ end
 						buf.put_string ("memset (")
 						buf.put_string (l_loc_name)
 						buf.put_string (".data, 0, ")
-						l_class_type := l_type.associated_class_type
+						l_class_type := l_adapted_type.associated_class_type (context.context_class_type.type)
 						if context.workbench_mode then
 							l_class_type.skeleton.generate_workbench_size (buf)
 						else
@@ -900,7 +912,7 @@ end
 						buf.put_new_line
 
 							-- Then we update the type information
-						l_class_type.generate_expanded_type_initialization (buf, l_loc_name, l_type)
+						l_class_type.generate_expanded_type_initialization (buf, l_loc_name, l_type, context.class_type)
 					end
 					i := i + 1
 				end
@@ -911,10 +923,11 @@ end
 			-- Create local expanded variables and Result
 		local
 			i, count: INTEGER
-			type_i: TYPE_I
+			type_i: TYPE_A
 			used_upper: INTEGER
 			l_buffer: like buffer
 			is_workbench: BOOLEAN
+			l_class_type: CLASS_TYPE
 		do
 			l_buffer := buffer
 			is_workbench := context.workbench_mode
@@ -931,10 +944,10 @@ end
 						type_i := real_type (locals.item (i))
 						if type_i.is_true_expanded then
 							local_var.set_position (i)
-							type_i.generate_expanded_initialization (l_buffer, local_var.register_name)
+							type_i.generate_expanded_initialization (l_buffer, local_var.register_name, context.context_class_type.type)
 						elseif type_i.is_bit then
 							local_var.set_position (i)
-							type_i.generate_expanded_creation (l_buffer, local_var.register_name)
+							type_i.generate_expanded_creation (l_buffer, local_var.register_name, context.class_type)
 						end
 					end
 					i := i + 1
@@ -942,11 +955,17 @@ end
 			end
 			if context.result_used then
 				type_i := real_type (result_type)
-				if type_i.is_true_expanded or type_i.is_bit then
+				if type_i.is_true_expanded then
+					l_class_type := type_i.associated_class_type (context.context_class_type.type)
+					l_class_type.generate_expanded_creation (l_buffer,
+						context.result_register.register_name, result_type, context.class_type)
+					l_class_type.generate_expanded_initialization (l_buffer,
+						context.result_register.register_name, context.result_register.register_name, True)
+				elseif type_i.is_bit then
 					type_i.generate_expanded_creation (l_buffer,
-						context.result_register.register_name)
+						context.result_register.register_name, context.class_type)
 					type_i.generate_expanded_initialization (l_buffer,
-						context.result_register.register_name)
+						context.result_register.register_name, context.context_class_type.type)
 				end
 			end
 		end
@@ -956,7 +975,7 @@ end
 		local
 			i		: INTEGER
 			count	: INTEGER
-			type_i	: TYPE_I
+			type_i	: TYPE_A
 			buf		: GENERATION_BUFFER
 		do
 			if context.workbench_mode then
@@ -992,7 +1011,7 @@ end
 		local
 			i		: INTEGER
 			count	: INTEGER
-			type_i	: TYPE_I
+			type_i	: TYPE_A
 			buf		: GENERATION_BUFFER
 		do
 			if context.workbench_mode then
@@ -1035,7 +1054,7 @@ end
 			-- Push the address of Result on the local variable stack.
 		local
 			buf		: GENERATION_BUFFER
-			type_i	: TYPE_I
+			type_i	: TYPE_A
 		do
 			if context.workbench_mode then
 				buf := buffer
@@ -1083,7 +1102,7 @@ end
 		local
 			i: INTEGER
 			count: INTEGER
-			type_i: TYPE_I
+			type_i: TYPE_A
 			buf: GENERATION_BUFFER
 			used_local: BOOLEAN
 			wkb_mode: BOOLEAN
@@ -1091,7 +1110,7 @@ end
 			has_rescue: BOOLEAN
 			l_is_once: BOOLEAN
 			l_loc_name: STRING
-			l_type: CL_TYPE_I
+			l_type: CL_TYPE_A
 			l_class_type: CLASS_TYPE
 		do
 				-- Cache accessed attributes
@@ -1126,10 +1145,10 @@ end
 							l_loc_name.append_integer (i)
 							l_type ?= type_i
 							check
-									-- Only a CL_TYPE_I could be an expanded
+									-- Only a CL_TYPE_A could be an expanded
 								l_type_not_void: l_type /= Void
 							end
-							l_class_type := l_type.associated_class_type
+							l_class_type := l_type.associated_class_type (context.context_class_type.type)
 							l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
 						end
 						buf.put_new_line
@@ -1287,7 +1306,7 @@ end
 			-- Generate the declaration of the Result entity
 		local
 			ctype: TYPE_C
-			type_i: TYPE_I
+			type_i: TYPE_A
 			buf: GENERATION_BUFFER
 		do
 			if not is_once then

@@ -52,7 +52,7 @@ feature -- Access
 	expressions: BYTE_LIST [BYTE_NODE];
 			-- Expressions in the tuple
 
-	type: TUPLE_TYPE_I;
+	type: TUPLE_TYPE_A;
 
 feature -- Settings
 

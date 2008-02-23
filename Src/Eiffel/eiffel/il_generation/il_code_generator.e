@@ -15,8 +15,41 @@ inherit
 
 feature -- Access
 
+	current_class_type: CLASS_TYPE
+			-- Currently class type being handled.
+
+	current_class: CLASS_C
+			-- Current class being treated.
+
+	current_type_id: INTEGER
+			-- Type_id of class being analyzed.
+
 	local_count: INTEGER
 			-- Number of locals for feature being generated
+
+feature -- Settings
+
+	set_current_class_type (cl_type: like current_class_type) is
+			-- Set `current_class_type' to `cl_type'.
+		require
+			cl_type_not_void: cl_type /= Void
+		do
+			current_class_type := cl_type
+			current_class := cl_type.associated_class
+		ensure
+			current_class_type_set: current_class_type = cl_type
+			current_class_set: current_class = cl_type.associated_class
+		end
+
+	set_current_type_id (an_id: like current_type_id) is
+			-- Set `current_type_id' to `an_id'.
+		require
+			valid_id: an_id > 0
+		do
+			current_type_id := an_id
+		ensure
+			current_type_id_set: current_type_id = an_id
+		end
 
 feature -- Generation type
 
@@ -82,7 +115,7 @@ feature -- IL Generation
 		deferred
 		end
 
-	generate_external_creation_call (a_actual_type: CL_TYPE_I; name: STRING; ext_kind: INTEGER;
+	generate_external_creation_call (a_actual_type: CL_TYPE_A; name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER)
 		is
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
@@ -116,28 +149,28 @@ feature -- Local variable info generation
 			local_count_set: local_count = a_count
 		end
 
-	put_result_info (type_i: TYPE_I) is
+	put_result_info (type_i: TYPE_A) is
 			-- Specifies `type_i' of type of result.
 		require
 			type_i_not_void: type_i /= Void
 		deferred
 		end
 
-	put_local_info (type_i: TYPE_I; name_id: INTEGER) is
+	put_local_info (type_i: TYPE_A; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
 		require
 			type_i_not_void: type_i /= Void
 		deferred
 		end
 
-	put_nameless_local_info (type_i: TYPE_I; name_id: INTEGER) is
+	put_nameless_local_info (type_i: TYPE_A; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
 		require
 			type_i_not_void: type_i /= Void
 		deferred
 		end
 
-	put_dummy_local_info (type_i: TYPE_I; name_id: INTEGER) is
+	put_dummy_local_info (type_i: TYPE_A; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
 		require
 			type_i_not_void: type_i /= Void
@@ -170,7 +203,7 @@ feature -- Object creation
 		deferred
 		end
 
-	create_expanded_object (t: CL_TYPE_I) is
+	create_expanded_object (t: CL_TYPE_A) is
 			-- Create an object of expanded type `t'.
 		require
 			t_attached: t /= Void
@@ -214,7 +247,7 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_attribute (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
+	generate_attribute (need_target: BOOLEAN; type_i: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate access to attribute of `a_feature_id' in `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -222,7 +255,7 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
+	generate_feature_access (type_i: TYPE_A; a_feature_id: INTEGER; nb: INTEGER;
 			is_function, is_virtual: BOOLEAN)
 		is
 			-- Generate access to feature of `a_feature_id' in `type_i'.
@@ -232,7 +265,7 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_precursor_feature_access (type_i: TYPE_I; a_feature_id: INTEGER;
+	generate_precursor_feature_access (type_i: TYPE_A; a_feature_id: INTEGER;
 			nb: INTEGER; is_function: BOOLEAN)
 		is
 			-- Generate access to feature of `a_feature_id' in `type_i' with `nb' arguments.
@@ -249,14 +282,22 @@ feature -- Variables access
 		deferred
 		end
 
-	put_type_instance (a_type: TYPE_I) is
-			-- Put instance of the native TYPE object corresponding to `a_type' on stack.
+	generate_type_feature_call_for_formal (a_position: INTEGER) is
+			-- Generate a call to a type feature for formal at position `a_position'.
+		require
+			a_position_positive: a_position > 0
+		deferred
+		end
+
+	put_type_instance (a_type: TYPE_A) is
+			-- Put instance of the native TYPE object corresponding to `a_type' on stack
+			-- in the context of `a_context_type'
 		require
 			a_type_not_void: a_type /= Void
 		deferred
 		end
 
-	put_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+	put_method_token (type_i: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -264,7 +305,7 @@ feature -- Variables access
 		deferred
 		end
 
-	put_impl_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
+	put_impl_method_token (type_i: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in implementation of `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -286,7 +327,7 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_metamorphose (type_i: TYPE_I) is
+	generate_metamorphose (type_i: TYPE_A) is
 			-- Generate `metamorphose', ie boxing an expanded type `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -294,7 +335,7 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_external_metamorphose (type_i: TYPE_I) is
+	generate_external_metamorphose (type_i: TYPE_A) is
 			-- Generate `metamorphose', ie boxing an expanded type `type_i'
 			-- using an associated external type (if any).
 		require
@@ -303,7 +344,7 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_eiffel_metamorphose (a_type: TYPE_I) is
+	generate_eiffel_metamorphose (a_type: TYPE_A) is
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
 			a_type_not_void: a_type /= Void
@@ -311,7 +352,7 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_unmetamorphose (type_i: TYPE_I) is
+	generate_unmetamorphose (type_i: TYPE_A) is
 			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
 		require
@@ -320,7 +361,7 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_external_unmetamorphose (type_i: CL_TYPE_I) is
+	generate_external_unmetamorphose (type_i: TYPE_A) is
 			-- Generate `unmetamorphose', ie unboxing an external reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
 		require
@@ -329,10 +370,10 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_creation (cl_type_i: CL_TYPE_I) is
-			-- Generate IL code for a hardcoded creation type `cl_type_i'.
+	generate_creation (a_type: TYPE_A) is
+			-- Generate IL code for a hardcoded creation type `a_type'.
 		require
-			cl_type_i_attached: cl_type_i /= Void
+			a_type_i_attached: a_type /= Void
 		deferred
 		end
 
@@ -362,7 +403,7 @@ feature -- Addresses
 		deferred
 		end
 
-	generate_attribute_address (type_i: TYPE_I; attr_type: TYPE_I; a_feature_id: INTEGER) is
+	generate_attribute_address (type_i: TYPE_A; attr_type: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate address to attribute of `a_feature_id' in `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -371,7 +412,7 @@ feature -- Addresses
 		deferred
 		end
 
-	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER; is_last_argument_current: BOOLEAN) is
+	generate_routine_address (type_i: TYPE_A; a_feature_id: INTEGER; is_last_argument_current: BOOLEAN) is
 			-- Generate address of routine of `a_feature_id' in class `type_i'
 			-- assuming that previous argument is Current if `is_last_argument_current' is true.
 		require
@@ -380,7 +421,7 @@ feature -- Addresses
 		deferred
 		end
 
-	generate_load_address (type_i: TYPE_I) is
+	generate_load_address (type_i: TYPE_A) is
 			-- Generate code that takes address of a boxed value object of type `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -388,15 +429,16 @@ feature -- Addresses
 		deferred
 		end
 
-	generate_load_from_address (a_type: TYPE_I) is
-			-- Load value of `a_type' type from address pushed on stack.
+	generate_load_from_address (a_type: TYPE_A) is
+			-- Load value of `a_type' type from address pushed on stack in the
+			-- context of `a_context_type'
 		require
 			type_not_void: a_type /= Void
 			type_is_expanded: a_type.is_expanded
 		deferred
 		end
 
-	generate_load_from_address_as_object (a_type: TYPE_I) is
+	generate_load_from_address_as_object (a_type: TYPE_A) is
 			-- Load value of non-built-in `a_type' type from address pushed on stack.
 		require
 			type_not_void: a_type /= Void
@@ -404,7 +446,7 @@ feature -- Addresses
 		deferred
 		end
 
-	generate_load_from_address_as_basic (a_type: TYPE_I) is
+	generate_load_from_address_as_basic (a_type: TYPE_A) is
 			-- Load value of a basic type `a_type' from address of an Eiffel object pushed on stack.
 		require
 			type_not_void: a_type /= Void
@@ -414,35 +456,35 @@ feature -- Addresses
 
 feature -- Assignments
 
-	generate_is_true_instance_of (type_i: TYPE_I) is
+	generate_is_true_instance_of (type_i: TYPE_A) is
 			-- Generate `Isinst' byte code instruction.
 		require
 			type_i_not_void: type_i /= Void
 		deferred
 		end
 
-	generate_is_instance_of (type_i: TYPE_I) is
+	generate_is_instance_of (type_i: TYPE_A) is
 			-- Generate `Isinst' byte code instruction.
 		require
 			type_i_not_void: type_i /= Void
 		deferred
 		end
 
-	generate_is_instance_of_external (type_i: CL_TYPE_I) is
+	generate_is_instance_of_external (type_i: CL_TYPE_A) is
 			-- Generate `Isinst' byte code instruction for external variant of the type `type_i'.
 		require
 			type_i_not_void: type_i /= Void
 		deferred
 		end
 
-	generate_check_cast (source_type, target_type: TYPE_I) is
+	generate_check_cast (source_type, target_type: TYPE_A) is
 			-- Generate `checkcast' byte code instruction.
 		require
 			target_type_not_void: target_type /= Void
 		deferred
 		end
 
-	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
+	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class.
 		require
 			type_i_not_void: type_i /= Void
@@ -450,7 +492,7 @@ feature -- Assignments
 		deferred
 		end
 
-	generate_expanded_attribute_assignment (type_i, attr_type: TYPE_I; a_feature_id: INTEGER) is
+	generate_expanded_attribute_assignment (type_i, attr_type: TYPE_A; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class
 			-- when direct access to attribute is not possible.
 		require
@@ -481,7 +523,7 @@ feature -- Assignments
 
 feature -- Conversion
 
-	convert_to (type: TYPE_I) is
+	convert_to (type: TYPE_A) is
 			-- Convert top of stack into `type'.
 		require
 			type_not_void: type /= Void
@@ -618,7 +660,7 @@ feature -- Array manipulation
 		deferred
 		end
 
-	generate_array_initialization (array_type: CL_TYPE_I; actual_generic: CLASS_TYPE) is
+	generate_array_initialization (array_type: CL_TYPE_A; actual_generic: CLASS_TYPE) is
 			-- Initialize native array with actual parameter type
 			-- `actual_generic' on the top of the stack.
 		require
@@ -634,7 +676,7 @@ feature -- Array manipulation
 		deferred
 		end
 
-	generate_generic_array_creation (a_formal: FORMAL_I) is
+	generate_generic_array_creation (a_formal: FORMAL_A) is
 			-- Create a new NATIVE_ARRAY [X] where X is a formal type `a_formal'.
 		require
 			a_formal_not_void: a_formal /= Void
@@ -792,7 +834,7 @@ feature -- Assertions
 		deferred
 		end
 
-	generate_invariant_checking (type_i: TYPE_I; entry: BOOLEAN) is
+	generate_invariant_checking (type_i: TYPE_A; entry: BOOLEAN) is
 			-- Generate an invariant check after routine call
 			-- Is the invariant checking `entry'?
 		require
@@ -802,7 +844,7 @@ feature -- Assertions
 
 feature -- Constants generation
 
-	put_default_value (type: TYPE_I) is
+	put_default_value (type: TYPE_A) is
 			-- Put default value of `type' on IL stack.
 		require
 			type_not_void: type /= Void
@@ -836,7 +878,7 @@ feature -- Constants generation
 		deferred
 		end
 
-	put_numeric_integer_constant (type: TYPE_I; i: INTEGER) is
+	put_numeric_integer_constant (type: TYPE_A; i: INTEGER) is
 			-- Put `i' as a constant of type `type'.
 		require
 			type_not_void: type /= Void
@@ -986,7 +1028,7 @@ feature -- Unary operator generation
 
 feature -- Basic feature
 
-	generate_min (type: TYPE_I) is
+	generate_min (type: TYPE_A) is
 			-- Generate `min' on basic types.
 		require
 			type_not_void: type /= Void
@@ -1005,7 +1047,7 @@ feature -- Basic feature
 		deferred
 		end
 
-	generate_max (type: TYPE_I) is
+	generate_max (type: TYPE_A) is
 			-- Generate `max' on basic types.
 		require
 			type_not_void: type /= Void
@@ -1013,7 +1055,7 @@ feature -- Basic feature
 		deferred
 		end
 
-	generate_abs (type: TYPE_I) is
+	generate_abs (type: TYPE_A) is
 			-- Generate `abs' on basic types.
 		require
 			type_not_void: type /= Void
@@ -1032,7 +1074,7 @@ feature -- Basic feature
 		deferred
 		end
 
-	generate_out (type: TYPE_I) is
+	generate_out (type: TYPE_A) is
 			-- Generate `out' on basic types.
 		require
 			type_not_void: type /= Void
@@ -1122,7 +1164,7 @@ feature -- Convenience
 
 feature -- Generic conformance
 
-	generate_class_type_instance (cl_type: CL_TYPE_I) is
+	generate_class_type_instance (cl_type: CL_TYPE_A) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		require
 			cl_type_not_void: cl_type /= Void
@@ -1143,7 +1185,7 @@ feature -- Generic conformance
 		deferred
 		end
 
-	generate_generic_type_settings (gen_type: GEN_TYPE_I) is
+	generate_generic_type_settings (gen_type: GEN_TYPE_A) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		require
 			gen_type_not_void: gen_type /= Void

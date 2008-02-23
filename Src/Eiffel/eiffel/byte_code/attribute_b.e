@@ -31,13 +31,13 @@ feature -- Visitor
 
 feature
 
-	type: TYPE_I
+	type: TYPE_A
 			-- Attribute type
 
 	read_only: BOOLEAN is False
 			-- Is the access only a read-only one ?
 
-	set_type (t: TYPE_I) is
+	set_type (t: like type) is
 			-- Assign `t' to `type'.
 		do
 			type := t
@@ -109,10 +109,10 @@ feature -- Byte code generation
 	assign_code: CHARACTER is
 			-- Assignment code to an attribute
 		local
-			cl_type: CL_TYPE_I
+			cl_type: CL_TYPE_A
 		do
 			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.base_class.is_precompiled then
+			if cl_type /= Void and then cl_type.associated_class.is_precompiled then
 				Result := {BYTE_CONST}.bc_passign
 			else
 				Result := {BYTE_CONST}.bc_assign
@@ -122,10 +122,10 @@ feature -- Byte code generation
 	expanded_assign_code: CHARACTER is
 			-- Expanded assignment code to an attribute
 		local
-			cl_type: CL_TYPE_I
+			cl_type: CL_TYPE_A
 		do
 			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.base_class.is_precompiled then
+			if cl_type /= Void and then cl_type.associated_class.is_precompiled then
 				Result := {BYTE_CONST}.bc_pexp_assign
 			else
 				Result := {BYTE_CONST}.bc_exp_assign
@@ -135,10 +135,10 @@ feature -- Byte code generation
 	reverse_code: CHARACTER is
 			-- Reverse assignment code
 		local
-			cl_type: CL_TYPE_I
+			cl_type: CL_TYPE_A
 		do
 			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.base_class.is_precompiled then
+			if cl_type /= Void and then cl_type.associated_class.is_precompiled then
 				Result := {BYTE_CONST}.bc_preverse
 			else
 				Result := {BYTE_CONST}.bc_reverse

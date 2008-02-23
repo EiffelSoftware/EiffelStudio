@@ -9,17 +9,6 @@ class INTEGER_I
 
 inherit
 	BASIC_I
-		rename
-			make as base_make
-		redefine
-			is_integer,
-			is_numeric,
-			element_type,
-			description, sk_value, hash_code,
-			heaviest, tuple_code,
-			maximum_interval_value,
-			minimum_interval_value
-		end
 
 create
 	make
@@ -32,52 +21,8 @@ feature -- Initialization
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
 			size := n.to_integer_8
-			inspect
-				n
-			when 8 then base_make (system.integer_8_class.compiled_class.class_id)
-			when 16 then base_make (system.integer_16_class.compiled_class.class_id)
-			when 32 then base_make (system.integer_32_class.compiled_class.class_id)
-			when 64 then base_make (system.integer_64_class.compiled_class.class_id)
-			end
 		ensure
 			size_set: size = n
-		end
-
-feature -- Status report
-
-	element_type: INTEGER_8 is
-			-- Pointer element type
-		do
-			inspect size
-			when 8 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i1
-			when 16 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i2
-			when 32 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i4
-			when 64 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i8
-			end
-		end
-
-	tuple_code: INTEGER_8 is
-			-- Tuple code for class type
-		do
-			inspect
-				size
-			when 8 then Result := {SHARED_GEN_CONF_LEVEL}.integer_8_tuple_code
-			when 16 then Result := {SHARED_GEN_CONF_LEVEL}.integer_16_tuple_code
-			when 32 then Result := {SHARED_GEN_CONF_LEVEL}.integer_32_tuple_code
-			when 64 then Result := {SHARED_GEN_CONF_LEVEL}.integer_64_tuple_code
-			end
-		end
-
-	reference_type: CL_TYPE_I is
-			-- Assocated reference type of Current.
-		do
-			inspect
-				size
-			when 8 then create Result.make (system.integer_8_ref_class.compiled_class.class_id)
-			when 16 then create Result.make (system.integer_16_ref_class.compiled_class.class_id)
-			when 32 then create Result.make (system.integer_32_ref_class.compiled_class.class_id)
-			when 64 then create Result.make (system.integer_64_ref_class.compiled_class.class_id)
-			end
 		end
 
 feature -- Access
@@ -89,43 +34,43 @@ feature -- Access
 			-- Internal code for generation
 		do
 			inspect size
-			when 8 then Result := C_int8
-			when 16 then Result := C_int16
-			when 32 then Result := C_int32
-			when 64 then Result := C_int64
+			when 8 then Result := {SHARED_C_LEVEL}.C_int8
+			when 16 then Result := {SHARED_C_LEVEL}.C_int16
+			when 32 then Result := {SHARED_C_LEVEL}.C_int32
+			when 64 then Result := {SHARED_C_LEVEL}.C_int64
 			end
 		end
 
-	is_integer: BOOLEAN is True
-			-- Is the type a integer type ?
-
-	is_numeric: BOOLEAN is True
-			-- Is the type a numeric one ?
-
-	heaviest (other : TYPE_I) : TYPE_I is
-		local
-			l_long: like Current
+	tuple_code: NATURAL_8 is
+			-- Tuple code for class type
 		do
-			if other.is_real_64 or other.is_real_32 then
-				Result := other
-			else
-				if other.is_integer then
-					l_long ?= other
-					if size >= l_long.size then
-						Result := Current
-					else
-						Result := other
-					end
-				else
-					Result := Current
-				end
+			inspect
+				size
+			when 8 then Result := {SHARED_GEN_CONF_LEVEL}.integer_8_tuple_code
+			when 16 then Result := {SHARED_GEN_CONF_LEVEL}.integer_16_tuple_code
+			when 32 then Result := {SHARED_GEN_CONF_LEVEL}.integer_32_tuple_code
+			when 64 then Result := {SHARED_GEN_CONF_LEVEL}.integer_64_tuple_code
 			end
 		end
 
-	description: INTEGER_DESC is
-			-- Type description for skeleton
+	element_type: INTEGER_8 is
 		do
-			create Result.make (size)
+			inspect size
+			when 8 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i1
+			when 16 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i2
+			when 32 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i4
+			when 64 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i8
+			end
+		end
+
+	sk_value: INTEGER is
+		do
+			inspect size
+			when 8 then Result := {SK_CONST}.Sk_int8
+			when 16 then Result := {SK_CONST}.Sk_int16
+			when 32 then Result := {SK_CONST}.Sk_int32
+			when 64 then Result := {SK_CONST}.Sk_int64
+			end
 		end
 
 	c_string: STRING is
@@ -157,72 +102,10 @@ feature -- Access
 			end
 		end
 
-	sk_value: INTEGER is
-			-- Generate SK value associated to the current type.
+	new_attribute_description: INTEGER_DESC is
+			-- Type description for skeleton
 		do
-			inspect size
-			when 8 then Result := Sk_int8
-			when 16 then Result := Sk_int16
-			when 32 then Result := Sk_int32
-			when 64 then Result := Sk_int64
-			end
-		end
-
-	generate_typed_tag (buffer: GENERATION_BUFFER) is
-			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
-			-- to the current C type in `buffer'.
-		do
-			buffer.put_string ("type = SK_INT")
-			buffer.put_integer (size)
-		end
-
-	generate_sk_value (buffer: GENERATION_BUFFER) is
-			-- Generate SK value associated to current C type in `buffer'.
-		do
-			buffer.put_string ("SK_INT")
-			buffer.put_integer (size)
-		end
-
-	type_a: INTEGER_A is
-		do
-			inspect size
-			when 8 then Result := integer_8_type
-			when 16 then Result := integer_16_type
-			when 32 then Result := integer_type
-			when 64 then Result := integer_64_type
-			end
-		end
-
-feature -- Code generation
-
-	minimum_interval_value: INTERVAL_VAL_B is
-			-- Minimum value in inspect interval for current type
-		do
-			inspect size
-			when 8 then
-				create {INT_VAL_B} Result.make ({INTEGER_8}.min_value)
-			when 16 then
-				create {INT_VAL_B} Result.make ({INTEGER_16}.min_value)
-			when 32 then
-				create {INT_VAL_B} Result.make ({INTEGER_32}.min_value)
-			when 64 then
-				create {INT64_VAL_B} Result.make ({INTEGER_64}.min_value)
-			end
-		end
-
-	maximum_interval_value: INTERVAL_VAL_B is
-			-- Maximum value in inspect interval for current type
-		do
-			inspect size
-			when 8 then
-				create {INT_VAL_B} Result.make ({INTEGER_8}.max_value)
-			when 16 then
-				create {INT_VAL_B} Result.make ({INTEGER_16}.max_value)
-			when 32 then
-				create {INT_VAL_B} Result.make ({INTEGER_32}.max_value)
-			when 64 then
-				create {INT64_VAL_B} Result.make ({INTEGER_64}.max_value)
-			end
+			create Result.make (size)
 		end
 
 feature -- Byte code generation
@@ -232,18 +115,34 @@ feature -- Byte code generation
 		do
 			inspect size
 			when 8 then
-				ba.append (Bc_int8)
+				ba.append ({BYTE_CONST}.Bc_int8)
 				ba.append_integer_8 (0)
 			when 16 then
-				ba.append (Bc_int16)
+				ba.append ({BYTE_CONST}.Bc_int16)
 				ba.append_integer_16 (0)
 			when 32 then
-				ba.append (Bc_int32)
+				ba.append ({BYTE_CONST}.Bc_int32)
 				ba.append_integer_32 (0)
 			when 64 then
-				ba.append (Bc_int64)
+				ba.append ({BYTE_CONST}.Bc_int64)
 				ba.append_integer_64 (0)
 			end
+		end
+
+feature -- C code generation
+
+	generate_sk_value (buffer: GENERATION_BUFFER) is
+			-- Generate SK value associated to current C type in `buffer'.
+		local
+			l_string: STRING
+		do
+			inspect size
+			when 8 then l_string := {SK_CONST}.sk_int8_string
+			when 16 then l_string := {SK_CONST}.sk_int16_string
+			when 32 then l_string := {SK_CONST}.sk_int32_string
+			when 64 then l_string := {SK_CONST}.sk_int64_string
+			end
+			buffer.put_string (l_string)
 		end
 
 feature {NONE} -- Constants for generation

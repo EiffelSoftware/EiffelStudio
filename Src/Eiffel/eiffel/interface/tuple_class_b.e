@@ -13,7 +13,6 @@ inherit
 		redefine
 			actual_type,
 			is_tuple,
-			normalized_type_i,
 			partial_actual_type
 		end
 
@@ -24,15 +23,6 @@ feature -- Status report
 
 	is_tuple: BOOLEAN is True
 			-- Current class is TUPLE.
-
-feature {NONE} -- Implementation
-
-	normalized_type_i (data: CL_TYPE_I): TUPLE_TYPE_I is
-			-- Class type `data' normalized in terms of the current class.
-		do
-			create Result.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
-			Result.set_mark (data.declaration_mark)
-		end
 
 feature -- Actual class type
 

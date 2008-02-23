@@ -270,7 +270,7 @@ feature -- Generation
 	compound_name: STRING is
 			-- Generate compound name
 		do
-			Result := Encoder.feature_name (class_type.static_type_id, body_index)
+			Result := Encoder.feature_name (class_type.type_id, body_index)
 		end
 
 	generate_declaration (buffer: GENERATION_BUFFER) is
@@ -294,24 +294,6 @@ feature -- Generation
 			buffer.put_string ("(fnptr) ")
 			buffer.put_string (compound_name)
 			buffer.put_character (',')
-		end
-
-feature -- Debug
-
-	trace is
-		do
-			io.error.put_string (generator)
-			io.error.put_string ("%NBody_index: ")
-			io.error.put_integer (body_index)
-			io.error.put_string ("%NIndex: ")
-			io.error.put_integer (real_body_index)
-			io.error.put_string ("%NPattern id: ")
-			io.error.put_integer (pattern_id)
-			io.error.put_string ("%Nwritten_in: ")
-			io.error.put_integer (written_in)
-			io.error.put_string ("%NType: ")
-			type.trace
-			io.error.put_new_line
 		end
 
 feature {NONE} -- Implementation

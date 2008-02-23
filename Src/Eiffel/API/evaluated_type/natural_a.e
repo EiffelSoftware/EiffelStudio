@@ -14,7 +14,10 @@ inherit
 			make as cl_make
 		redefine
 			is_natural, associated_class,
-			same_as, is_numeric, process
+			same_as, is_numeric, process,
+			minimum_interval_value,
+			maximum_interval_value,
+			heaviest
 		end
 
 create
@@ -75,12 +78,62 @@ feature -- Access
 			end
 		end
 
+feature -- IL code generation
+
+	minimum_interval_value: INTERVAL_VAL_B is
+			-- Minimum value in inspect interval for current type
+		do
+			if size = 64 then
+				create {NAT64_VAL_B} Result.make (0)
+			else
+				check
+					valid_size: size = 8 or size = 16 or size = 32
+				end
+				create {NAT_VAL_B} Result.make (0)
+			end
+		end
+
+	maximum_interval_value: INTERVAL_VAL_B is
+			-- Maximum value in inspect interval for current type
+		do
+			inspect size
+			when 8 then
+				create {NAT_VAL_B} Result.make ({NATURAL_8}.max_value)
+			when 16 then
+				create {NAT_VAL_B} Result.make ({NATURAL_16}.max_value)
+			when 32 then
+				create {NAT_VAL_B} Result.make ({NATURAL_32}.max_value)
+			when 64 then
+				create {NAT64_VAL_B} Result.make ({NATURAL_64}.max_value)
+			end
+		end
+
+	heaviest (other: TYPE_A): TYPE_A is
+		local
+			l_long: like Current
+		do
+			if other.is_real_64 or other.is_real_32 then
+				Result := other
+			else
+				if other.is_natural then
+					l_long ?= other
+					if size >= l_long.size then
+						Result := Current
+					else
+						Result := other
+					end
+				else
+					Result := Current
+				end
+			end
+		end
+
 feature {COMPILER_EXPORTER}
 
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
 
-	type_i: NATURAL_I is
+	c_type: NATURAL_I is
 			-- C type
 		do
 			inspect size

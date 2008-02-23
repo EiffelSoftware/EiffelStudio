@@ -44,7 +44,7 @@ feature -- Properties
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-		do	
+		do
 			Result := same_type (other) and then
 				return_type = other.return_type and then
 				array_is_equal (argument_types, other.argument_types) and then
@@ -58,7 +58,7 @@ feature -- Code generation
 			-- Generate encapsulation to C/C++ struct external `struct_byte_code'.
 		local
 			l_buffer: GENERATION_BUFFER
-			l_ret_type: TYPE_I
+			l_ret_type: TYPE_A
 		do
 			l_buffer := Context.buffer
 			l_ret_type := struct_byte_code.result_type
@@ -72,7 +72,7 @@ feature -- Code generation
 			l_buffer.put_new_line
 		end
 
-	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
 			-- Generate inline C/C++ struct external.
 		require
 			external_name_not_void: external_name /= Void
@@ -85,7 +85,7 @@ feature -- Code generation
 
 feature {NONE} -- Code generation helper
 
-	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
 			-- Generate access to C/C++ struct external.
 		require
 			external_name_not_void: external_name /= Void

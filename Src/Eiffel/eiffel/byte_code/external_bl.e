@@ -24,6 +24,11 @@ inherit
 
 	EXTERNAL_CONSTANTS;
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 feature
 
 	parent: NESTED_BL;
@@ -102,8 +107,8 @@ feature
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			type_i: TYPE_I;
-			class_type: CL_TYPE_I;
+			type_i: TYPE_A;
+			class_type: CL_TYPE_A;
 			access: ACCESS_B;
 			void_register: REGISTER;
 			is_polymorphic_access: BOOLEAN;
@@ -113,7 +118,7 @@ feature
 			is_polymorphic_access := not is_static_call and then
 					not type_i.is_basic and then
 					class_type /= Void and then
-					Eiffel_table.is_polymorphic (routine_id, class_type.type_id, True) >= 0;
+					Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), True) >= 0;
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current;
 				context.mark_current_used
@@ -143,13 +148,13 @@ feature
 			do_generate (reg);
 		end;
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
 			-- Generate external call in a `typ' context
 		local
 			table_name: STRING;
 			type_c: TYPE_C
-			l_type_i: TYPE_I
-			l_typ: CL_TYPE_I
+			l_type_i: TYPE_A
+			l_typ: CL_TYPE_A
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			local_argument_types, real_arg_types: like argument_types
@@ -171,7 +176,7 @@ feature
 					-- polymorphic call handling.
 				array_index := -1
 			else
-				array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
+				array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), True)
 			end
 			if array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
@@ -179,7 +184,10 @@ feature
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.routine_table_name (routine_id)
 
-				if system.seed_of_routine_id (routine_id).type.type_i.is_formal and then l_type_i.is_basic then
+					-- It is pretty important that we use `actual_type.is_formal' and not
+					-- just `is_formal' because otherwise if you have `like x' and `x: G'
+					-- then we would fail to detect that.
+				if system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then l_type_i.is_basic then
 						-- Feature returns a reference that need to be used as a basic one.
 					buf.put_character ('*')
 					type_c.generate_access_cast (buf)
@@ -187,7 +195,7 @@ feature
 				end
 
 				buf.put_character ('(');
-				type_c.generate_function_cast (buf, argument_types)
+				type_c.generate_function_cast (buf, argument_types, False)
 
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
@@ -224,9 +232,9 @@ feature
 						check
 							l_typ_not_void: l_typ /= Void
 						end
-						rout_table.goto_implemented (l_typ.type_id)
+						rout_table.goto_implemented (l_typ.type_id (context.context_class_type.type))
 					else
-						rout_table.goto_implemented (typ.type_id)
+						rout_table.goto_implemented (typ.type_id (context.context_class_type.type))
 					end
 					check
 						is_valid_routine: rout_table.is_implemented
@@ -269,7 +277,7 @@ feature
 						buf.put_string (inline_ext.inline_name (internal_name))
 					else
 						buf.put_character ('(')
-						type_c.generate_function_cast (buf, real_arg_types)
+						type_c.generate_function_cast (buf, real_arg_types, False)
 						buf.put_string (internal_name)
 						buf.put_character (')')
 					end
@@ -283,14 +291,14 @@ feature
 			end
 		end
 
-	inline_needed (typ: CL_TYPE_I): BOOLEAN is
+	inline_needed (typ: CL_TYPE_A): BOOLEAN is
 		do
 			Result := context.final_mode and
 				not (encapsulated or else system.keep_assertions) and (is_static_call or
-				Eiffel_table.is_polymorphic (routine_id, typ.type_id, True) < 0)
+				Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), True) < 0)
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
 			-- Generate final portion of C code.
 		local
 			cpp_ext: CPP_EXTENSION_I
@@ -299,7 +307,7 @@ feature
 			c_ext: C_EXTENSION_I
 			l_built_in: BUILT_IN_EXTENSION_I
 			buf: GENERATION_BUFFER
-			l_type: TYPE_I
+			l_type: TYPE_A
 			l_args: like argument_types
 			put_eif_test: BOOLEAN
 		do

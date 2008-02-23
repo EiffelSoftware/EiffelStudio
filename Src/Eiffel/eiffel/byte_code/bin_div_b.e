@@ -34,7 +34,7 @@ feature -- Status report
 	is_built_in: BOOLEAN is
 			-- Is the current binary operator a built-in one?
 		local
-			l_type: TYPE_I
+			l_type: TYPE_A
 		do
 			l_type := context.real_type (left.type)
 			Result := l_type.is_integer or l_type.is_natural

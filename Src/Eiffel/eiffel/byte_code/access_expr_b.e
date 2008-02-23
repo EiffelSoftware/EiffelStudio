@@ -62,10 +62,10 @@ feature -- Status
 			expr := e;
 		end;
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression type
 		do
-			Result := expr.type;
+			Result := expr.type
 		end;
 
 	enlarged: like Current is

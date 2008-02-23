@@ -105,12 +105,6 @@ feature -- Access
 			create Result
 		end
 
-	None_c_type: NONE_I is
-			-- None C type
-		once
-			create Result
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

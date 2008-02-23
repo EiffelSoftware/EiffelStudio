@@ -10,7 +10,7 @@ class VOID_A
 inherit
 	TYPE_A
 		redefine
-			is_void, same_as
+			is_reference, is_void, same_as, c_type
 		end
 
 feature -- Visitor
@@ -26,6 +26,9 @@ feature -- Property
 	is_void: BOOLEAN is True
 			-- Is the current actual type a void type ?
 
+	is_reference: BOOLEAN is False
+			-- Current type is certainly not a reference since it is nothing.
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -35,6 +38,11 @@ feature -- Comparison
 		end
 
 feature -- Access
+
+	hash_code: INTEGER is
+		do
+			Result := {SHARED_HASH_CODE}.void_code
+		end
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is `other' the same as Current ?
@@ -54,7 +62,7 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
-			st.process_keyword_text (ti_void, Void)
+			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_void, Void)
 		end
 
 feature {COMPILER_EXPORTER}
@@ -65,10 +73,10 @@ feature {COMPILER_EXPORTER}
 			Result := other.conformance_type.is_void
 		end
 
-	type_i: VOID_I is
+	c_type: VOID_I is
 			-- Void type
-		once
-			create Result
+		do
+			Result := void_c_type
 		end
 
 	create_info: CREATE_INFO is

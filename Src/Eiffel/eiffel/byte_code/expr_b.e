@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression type
 		deferred
 		end
@@ -79,20 +79,20 @@ feature -- Status report
 			Result := is_constant_expression
 		end
 
-	is_dynamic_clone_required (source_type: TYPE_I): BOOLEAN is
+	is_dynamic_clone_required (source_type: TYPE_A): BOOLEAN is
 			-- Does expression need to be cloned at run-time depending on
 			-- the dynamic type of its value of static type `source_type'.
 		require
 			source_type_not_void: source_type /= Void
 			source_type_is_reference: source_type.is_reference
 		local
-			cl_type_i: CL_TYPE_I
+			cl_type_i: CL_TYPE_A
 		do
 			Result := True
 			cl_type_i ?= source_type
 			if
 				context.original_body_index = context.twin_body_index or else
-				(cl_type_i /= Void and then cl_type_i.base_class.is_optimized_as_frozen) or else
+				(cl_type_i /= Void and then cl_type_i.associated_class.is_optimized_as_frozen) or else
 				source_type.is_none or else
 				is_type_fixed
 			then
@@ -104,7 +104,7 @@ feature -- Status report
 					-- Avoid dynamic check of object type if we know
 					-- in advance that the type cannot be expanded.
 				if cl_type_i /= Void then
-					Result := context.has_expanded_descendants (cl_type_i.associated_class_type.type_id)
+					Result := context.has_expanded_descendants (cl_type_i.type_id (context.context_class_type.type))
 				end
 			end
 		end
@@ -180,12 +180,12 @@ feature -- C generation
 		do
 		end
 
-	allocates_memory_for_type (target_type: TYPE_I): BOOLEAN is
+	allocates_memory_for_type (target_type: TYPE_A): BOOLEAN is
 			-- Is memory allocated when expression is attached to a target of `target_type'?
 		require
 			target_type_not_void: target_type /= Void
 		local
-			expression_type: TYPE_I
+			expression_type: TYPE_A
 		do
 			expression_type := context.real_type (type)
 			if expression_type.is_expanded and then target_type.is_reference or else
@@ -224,11 +224,11 @@ feature -- C generation
 		do
 		end
 
-	is_register_required (target_type: TYPE_I): BOOLEAN is
+	is_register_required (target_type: TYPE_A): BOOLEAN is
 			-- Is register required if expression is about
 			-- to be assigned or compared to the type `target_type'?
 		local
-			source_type: TYPE_I
+			source_type: TYPE_A
 		do
 			source_type := context.real_type (type)
 			Result :=
@@ -236,16 +236,16 @@ feature -- C generation
 				target_type.is_true_expanded or else source_type.is_reference
 		end
 
-	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_I) is
+	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_A) is
 			-- Generate expression which is about
 			-- to be assigned or compared to the type `target_type'.
 		require
 			target_type_not_void: target_type /= Void
 			target_register_not_void: is_register_required (target_type) implies target_register /= Void
 		local
-			expression_type: TYPE_I
-			basic_i: BASIC_I
-			typed_pointer_i: TYPED_POINTER_I
+			expression_type: TYPE_A
+			basic_i: BASIC_A
+			typed_pointer_i: TYPED_POINTER_A
 			buf: GENERATION_BUFFER
 		do
 			generate
@@ -257,7 +257,7 @@ feature -- C generation
 					typed_pointer_i ?= basic_i
 					if typed_pointer_i /= Void then
 							-- Use POINTER instead of TYPED_POINTER to follow .NET semantics.
-						basic_i := pointer_c_type
+						basic_i := pointer_type
 					end
 					basic_i.metamorphose (target_register, Current, buf)
 				else
@@ -291,7 +291,7 @@ feature -- C generation
 			end
 		end
 
-	generate_dynamic_clone (source_register: REGISTRABLE; source_type: TYPE_I) is
+	generate_dynamic_clone (source_register: REGISTRABLE; source_type: TYPE_A) is
 			-- Generate expression that clones `source_register' depending on
 			-- dynamic type of object of static type `source_type'.
 		require

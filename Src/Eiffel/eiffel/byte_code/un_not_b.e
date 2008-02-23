@@ -65,7 +65,7 @@ feature -- Enlarging
 					create {BOOL_CONST_B} Result.make (not l_val.boolean_value)
 				else
 					if access /= Void then
-						access := access.enlarged_on (expr.type)
+						access := access.enlarged_on (context.real_type (expr.type))
 					end
 					Result := Current
 				end

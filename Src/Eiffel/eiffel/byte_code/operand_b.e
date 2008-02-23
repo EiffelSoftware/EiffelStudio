@@ -3,14 +3,14 @@ indexing
 	status: "See notice at end of class."
 -- Open operand
 
-class OPERAND_B 
+class OPERAND_B
 
 inherit
 	ACCESS_B
 		redefine
 			enlarged
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -18,13 +18,13 @@ feature -- Visitor
 		do
 			v.process_operand_b (Current)
 		end
-	
-feature 
 
-	type: REFERENCE_I is
+feature
+
+	type: TYPE_A is
 			-- Type of operand.
-		once
-			create Result
+		do
+			Result := system.any_type
 		end
 
 	same (other: ACCESS_B): BOOLEAN is

@@ -1,9 +1,13 @@
 indexing
+	description: "Shared access to BYTE_CONTEXT which is a context used for code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class SHARED_BYTE_CONTEXT
 
-feature {NONE}
+feature -- Access
 
 	Context: BYTE_CONTEXT is
 			-- Context for byte code processing

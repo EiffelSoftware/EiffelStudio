@@ -74,7 +74,7 @@ feature {NONE} -- C code generation: implementation
 			result_macro_prefix_not_void: result_macro_prefix /= Void
 			data_macro_prefix_not_void: data_macro_prefix /= Void
 		local
-			type_i: TYPE_I
+			type_i: TYPE_A
 			c_type_name: STRING
 			buf: like buffer
 			data_macro_suffix: CHARACTER
@@ -86,7 +86,7 @@ feature {NONE} -- C code generation: implementation
 			if type_i.is_void then
 				data_macro_suffix := 'V'
 			else
-				if type_i.is_feature_pointer then
+				if type_i.is_typed_pointer then
 					c_type_name := "EIF_POINTER"
 				else
 					c_type_name := type_i.c_type.c_string

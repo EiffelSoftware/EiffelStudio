@@ -16,6 +16,11 @@ inherit
 			is_constant_expression
 		end
 
+	SHARED_TYPES
+		export
+			{NONE} all
+		end
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -26,10 +31,10 @@ feature -- Visitor
 
 feature -- Access
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression type.
-		once
-			create {NONE_I} Result
+		do
+			Result := none_type
 		ensure then
 			type_not_void: Result /= Void
 		end

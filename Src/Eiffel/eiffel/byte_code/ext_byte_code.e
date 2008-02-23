@@ -48,7 +48,7 @@ feature -- Access
 	argument_types: like std_argument_types is
 			-- Type of arguments, not including Current.
 		local
-			arg: TYPE_I
+			arg: TYPE_A
 			i, j, count: INTEGER
 		do
 			if arguments /= Void then
@@ -140,7 +140,7 @@ feature -- C code generation
 	generate_il_code is
 			-- Generate code for IL code generation.
 		local
-			l_ret_type: TYPE_I
+			l_ret_type: TYPE_A
 			internal_name: STRING
 			buf: GENERATION_BUFFER
 		do

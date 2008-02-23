@@ -24,21 +24,20 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 create
 	make
 
 feature -- Status
 
-	is_character_array: BOOLEAN is
-			-- Is Current an array of character?
-		do
-			Result := first_generic.c_type.level = C_char
-		end
-
 	is_any_array: BOOLEAN is
 			-- Is Current an array of ANY?
 		local
-			any_type: CL_TYPE_I
+			any_type: CL_TYPE_A
 		do
 			create any_type.make (System.any_id)
 			Result := first_generic.same_as (any_type)
@@ -46,16 +45,18 @@ feature -- Status
 
 feature -- Access
 
-	first_generic: TYPE_I is
+	first_generic: TYPE_A is
 			-- First generic parameter type
 		require
-			has_generics: type.meta_generic /= Void;
-			good_generic_count: type.meta_generic.count = 1;
+			has_generics: type.generics /= Void;
+			good_generic_count: type.generics.count = 1;
 		do
-			Result := type.meta_generic.item (1);
+				-- No need to call `meta_type' here since this must have been done already when
+				-- creating `type'.
+			Result := type.generics.item (1)
 		end
 
-	type: GEN_TYPE_I
+	type: GEN_TYPE_A
 			-- Type of the class. It includes meta-instantiation of possible
 			-- generic parameters.
 
@@ -66,9 +67,9 @@ feature -- Byte code generation
 		require
 			ba_not_void: ba /= Void
 		local
-			gen_param: TYPE_I
-			expanded_type: CL_TYPE_I
-			l_bit: BIT_I
+			gen_param: TYPE_A
+			expanded_type: CL_TYPE_A
+			l_bit: BITS_A
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			final_mode: BOOLEAN
@@ -78,7 +79,7 @@ feature -- Byte code generation
 			final_mode := byte_context.final_mode
 			type_c := gen_param.c_type
 
-			ba.append_boolean (gen_param.is_reference)
+			ba.append_boolean (not gen_param.is_expanded)
 			ba.append_boolean (gen_param.is_basic)
 			ba.append_boolean (gen_param.is_bit)
 			ba.append_boolean (l_param_is_expanded)
@@ -87,14 +88,14 @@ feature -- Byte code generation
 				check
 					expanded_type_not_void: expanded_type /= Void
 				end
-				ba.append_short_integer (expanded_type.associated_class_type.static_type_id - 1)
+				ba.append_short_integer (expanded_type.static_type_id (Void) - 1)
 			else
-				ba.append_uint32_integer (gen_param.sk_value)
+				ba.append_uint32_integer (gen_param.sk_value (Void))
 			end
 			if gen_param.is_bit then
 					-- Initialize array of bits with default values
 				l_bit ?= gen_param
-				ba.append_uint32_integer (l_bit.size)
+				ba.append_uint32_integer (l_bit.bit_count)
 			end
 		end
 
@@ -109,11 +110,11 @@ feature -- C code generation
 			target_register_not_void: target_register /= Void
 			nb_register_not_void: nb_register /= Void
 		local
-			gen_param: TYPE_I
-			expanded_type: CL_TYPE_I
+			gen_param: TYPE_A
+			expanded_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			l_exp_has_references: BOOLEAN
-			l_bit: BIT_I
+			l_bit: BITS_A
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			final_mode: BOOLEAN
@@ -143,7 +144,7 @@ feature -- C code generation
 				check
 					expanded_type_not_void: expanded_type /= Void
 				end
-				l_exp_class_type := expanded_type.associated_class_type
+				l_exp_class_type := expanded_type.associated_class_type (Void)
 				l_exp_has_references := l_exp_class_type.skeleton.has_references
 			end
 
@@ -153,9 +154,9 @@ feature -- C code generation
 
 				-- 1. Dynamic type with flags
 			buffer.put_string (" = RTLNSP2(")
-			info.generate_type_id (buffer, final_mode)
+			info.generate_type_id (buffer, final_mode, 0)
 			buffer.put_character (',')
-			if gen_param.is_reference or else l_exp_has_references or else gen_param.is_bit then
+			if not gen_param.is_expanded or else l_exp_has_references or else gen_param.is_bit then
 				buffer.put_string ("EO_REF")
 				if l_param_is_expanded then
 					buffer.put_string (" | EO_COMP")
@@ -213,7 +214,7 @@ feature -- C code generation
 				buffer.put_string ("*((EIF_REFERENCE *) ")
 				target_register.print_register
 				buffer.put_string (" + i) = RTLB(")
-				buffer.put_integer (l_bit.size)
+				buffer.put_integer (l_bit.bit_count)
 				buffer.put_string (");")
 				buffer.put_new_line
 				buffer.put_string ("RTAR(")
@@ -273,8 +274,8 @@ feature {NONE} -- C code generation
 			feat_exists: feat /= Void
 			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.put_name_id
 		local
-			gen_param: TYPE_I
-			expanded_type: CL_TYPE_I
+			gen_param: TYPE_A
+			expanded_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
@@ -292,7 +293,7 @@ feature {NONE} -- C code generation
 			type_c := gen_param.c_type
 
 			feat.generate_header (Current, buffer)
-			encoded_name := Encoder.feature_name (static_type_id, feat.body_index)
+			encoded_name := Encoder.feature_name (type_id, feat.body_index)
 
 			System.used_features_log_file.add (Current, "put", encoded_name)
 
@@ -345,7 +346,7 @@ feature {NONE} -- C code generation
 			if l_param_is_expanded then
 				if final_mode then
 					expanded_type ?= gen_param
-					l_exp_class_type := expanded_type.associated_class_type
+					l_exp_class_type := expanded_type.associated_class_type (Void)
 					buffer.put_new_line
 					if l_exp_class_type.skeleton.has_references then
 							-- Optimization: size is know at compile time
@@ -430,15 +431,15 @@ feature {NONE} -- C code generation
 			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.item_name_id or
 				feat.feature_name_id = {PREDEFINED_NAMES}.infix_at_name_id
 		local
-			gen_param: TYPE_I
-			expanded_type: CL_TYPE_I
+			gen_param: TYPE_A
+			expanded_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			final_mode: BOOLEAN
 			encoded_name: STRING
 			l_exp_has_references: BOOLEAN
-			basic_i: BASIC_I
+			basic_i: BASIC_A
 			result_type_name: STRING
 			arg_name: STRING
 			arg_type_name: STRING
@@ -449,7 +450,7 @@ feature {NONE} -- C code generation
 
 			feat.generate_header (Current, buffer)
 
-			encoded_name := Encoder.feature_name (static_type_id, feat.body_index)
+			encoded_name := Encoder.feature_name (type_id, feat.body_index)
 
 			System.used_features_log_file.add (Current, "item", encoded_name)
 
@@ -474,7 +475,7 @@ feature {NONE} -- C code generation
 
 			if l_param_is_expanded and final_mode then
 				expanded_type ?= gen_param;
-				l_exp_class_type := expanded_type.associated_class_type
+				l_exp_class_type := expanded_type.associated_class_type (Void)
 				l_exp_has_references := l_exp_class_type.skeleton.has_references
 				if not l_exp_has_references then
 					buffer.put_new_line
@@ -506,13 +507,18 @@ feature {NONE} -- C code generation
 						l_exp_class_type.skeleton.generate_size (buffer)
 						buffer.put_string (" + OVERHEAD));")
 					else
+						buffer.generate_block_open
+						buffer.put_new_line
 						buffer.put_string ("RTLD;")
 						buffer.put_new_line
 						buffer.put_string ("RTLI(1);")
 						buffer.put_new_line
 						buffer.put_string ("RTLR(0, Current);")
+							-- Create expanded type based on the actual generic parameter, and not
+							-- on the recorded derivation (as it would not work if `expanded_type' is
+							-- generic. (See eweasel test#exec282 for an example where it does not work).
+						l_exp_class_type.generate_expanded_creation (buffer, "Result", create {FORMAL_A}.make (False, False, 1), Current)
 						buffer.put_new_line
-						expanded_type.generate_expanded_creation (buffer, "Result")
 						buffer.put_string ("memcpy (Result, ")
 						buffer.put_string ("Current + arg1 * (")
 						l_exp_class_type.skeleton.generate_size (buffer)
@@ -523,6 +529,7 @@ feature {NONE} -- C code generation
 						buffer.put_string ("RTLE;")
 						buffer.put_new_line
 						buffer.put_string ("return Result;")
+						buffer.generate_block_close
 					end
 				else
 					buffer.put_string ("r.")
@@ -603,11 +610,11 @@ feature {NONE} -- C code generation
 			feat_exists: feat /= Void;
 			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.item_address_name_id
 		local
-			result_type, gen_param: TYPE_I
+			result_type, gen_param: TYPE_A
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			encoded_name: STRING
-			expanded_type: CL_TYPE_I
+			expanded_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			result_type_name: STRING
 			index_type_name: STRING
@@ -621,9 +628,9 @@ feature {NONE} -- C code generation
 
 			feat.generate_header (Current, buffer)
 
-			result_type := feat.type.type_i.instantiation_in (Current)
+			result_type := feat.type.adapted_in (Current)
 
-			encoded_name := Encoder.feature_name (static_type_id, feat.body_index)
+			encoded_name := Encoder.feature_name (type_id, feat.body_index)
 
 			System.used_features_log_file.add (Current, "item_address", encoded_name)
 
@@ -672,7 +679,7 @@ feature {NONE} -- C code generation
 			if l_param_is_expanded then
 				if l_byte_context.final_mode then
 					expanded_type ?= gen_param
-					l_exp_class_type := expanded_type.associated_class_type
+					l_exp_class_type := expanded_type.associated_class_type (Void)
 						-- It is set to True because at the moment we need a header in
 						-- order to call inherited features in an expanded class. This is
 						-- necessary until we are able to do a flat code generation for
@@ -716,7 +723,7 @@ feature {NONE} -- C code generation
 			feat_exists: feat /= Void;
 			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.base_address_name_id
 		local
-			gen_param, result_type: TYPE_I
+			gen_param, result_type: TYPE_A
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			encoded_name, result_type_name: STRING
@@ -727,9 +734,9 @@ feature {NONE} -- C code generation
 
 			feat.generate_header (Current, buffer)
 
-			result_type := feat.type.type_i.instantiation_in (Current)
+			result_type := feat.type.adapted_in (Current)
 
-			encoded_name := Encoder.feature_name (static_type_id, feat.body_index)
+			encoded_name := Encoder.feature_name (type_id, feat.body_index)
 
 			System.used_features_log_file.add (Current, "base_address", encoded_name)
 
@@ -793,7 +800,7 @@ feature {NONE} -- C code generation
 				buffer.put_string (">= *(EIF_INTEGER *) %
 						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
 						% - LNGPAD(2))) {%N%
-					%%Teraise (%"index_small_enough%", EN_RT_CHECK);%N}%N");
+					%%Teraise (%"index_small_enough%", EN_RT_CHECK);%N}");
 			elseif associated_class.assertion_level.is_precondition then
 				buffer.put_new_line
 				buffer.put_string ("if (~in_assertion) {%N");
@@ -817,13 +824,13 @@ feature {NONE} -- C code generation
 					%} else {%N%
 					%%TRTCF;%N}%N");
 
-				buffer.put_string ("}%N");
+				buffer.put_string ("}");
 			end
 		end
 
 feature -- IL code generation
 
-	prepare_generate_il (name_id: INTEGER; special_type: CL_TYPE_I) is
+	prepare_generate_il (name_id: INTEGER; special_type: CL_TYPE_A) is
 			-- Generate call to `name_id' from SPECIAL so that it is
 			-- very efficient.
 		require
@@ -832,8 +839,8 @@ feature -- IL code generation
 				name_id = {PREDEFINED_NAMES}.Infix_at_name_id or
 				name_id = {PREDEFINED_NAMES}.Put_name_id
 			special_type_not_void: special_type /= Void
-			has_generics: type.true_generics /= Void
-			good_generic_count: type.true_generics.count = 1
+			has_generics: type.generics /= Void
+			good_generic_count: type.generics.count = 1
 		local
 			l_native_array: ATTRIBUTE_I
 		do
@@ -848,7 +855,7 @@ feature -- IL code generation
 			Il_generator.generate_attribute (True, special_type, l_native_array.feature_id)
 		end
 
-	generate_il (name_id: INTEGER; special_type: CL_TYPE_I) is
+	generate_il (name_id: INTEGER; special_type, a_context_type: CL_TYPE_A) is
 			-- Generate call to `name_id' from SPECIAL so that it is
 			-- very efficient.
 		require
@@ -857,12 +864,14 @@ feature -- IL code generation
 				name_id = {PREDEFINED_NAMES}.Infix_at_name_id or
 				name_id = {PREDEFINED_NAMES}.Put_name_id
 			special_type_not_void: special_type /= Void
-			has_generics: type.true_generics /= Void
-			good_generic_count: type.true_generics.count = 1
+			special_is_indeed_special: special_type.associated_class.is_special
+			a_context_type_not_void: a_context_type /= Void
+			has_generics: type.generics /= Void
+			good_generic_count: type.generics.count = 1
 		local
 			l_native_array: ATTRIBUTE_I
-			l_native_array_type: CL_TYPE_I
-			l_element_type: TYPE_I
+			l_native_array_type: CL_TYPE_A
+			l_element_type: TYPE_A
 			l_index, l_element: INTEGER
 			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 		do
@@ -872,23 +881,34 @@ feature -- IL code generation
 				l_native_array_not_void: l_native_array /= Void
 			end
 
-				-- Let's evaluate type of NATIVE_ARRAY			
-			l_native_array_type ?= Byte_context.real_type_in (l_native_array.type.type_i, Current)
+				-- Let's evaluate type of NATIVE_ARRAY
+			l_native_array_type ?= l_native_array.type.instantiated_in (special_type).actual_type
 			check
 				l_native_array_type_not_void: l_native_array_type /= Void
+				l_native_array_has_type: l_native_array_type.has_associated_class_type (a_context_type)
 			end
 
 				-- Call feature from NATIVE_ARRAY
-			l_native_array_class_type ?= l_native_array_type.associated_class_type
+			l_native_array_class_type ?= l_native_array_type.associated_class_type (a_context_type)
 			check
-				l_native_array_class_not_void: l_native_array_type /= Void
+				l_native_array_class_type_not_void: l_native_array_class_type /= Void
 			end
 
 			if name_id = {PREDEFINED_NAMES}.Put_name_id then
 					-- Because `put' from SPECIAL and `put' from NATIVE_ARRAY
 					-- have their argument inverted, we need to swap the two
 					-- elements on top of the stack.
-				l_element_type := first_generic
+				check
+						-- Since `special_type' is a SPECIAL instances, it must have some generics.
+					has_generics: special_type.generics /= Void
+					valid_index: special_type.generics.valid_index (1)
+				end
+				l_element_type := special_type.generics.item (1)
+				if l_element_type.is_formal and not first_generic.is_formal then
+						-- Type that was provided to us didn't have much type information, we have
+						-- to rely on what we have from `Current' if it is not formal. 
+					l_element_type := first_generic
+				end
 
 					-- Variable to store element to be stored in SPECIAL
 				Byte_context.add_local (l_element_type)
@@ -896,17 +916,17 @@ feature -- IL code generation
 				il_generator.put_dummy_local_info (l_element_type, l_element)
 
 					-- Variable to store index where element will be stored in SPECIAL.
-				Byte_context.add_local (int32_c_type)
+				Byte_context.add_local (integer_32_type)
 				l_index := Byte_context.local_list.count
-				il_generator.put_dummy_local_info (int32_c_type, l_index)
+				il_generator.put_dummy_local_info (integer_32_type, l_index)
 
 				Il_generator.generate_local_assignment (l_index)
 				Il_generator.generate_local_assignment (l_element)
 				Il_generator.generate_local (l_index)
-				l_native_array_class_type.generate_il_put_preparation (l_native_array_type)
+				l_native_array_class_type.generate_il_put_preparation (l_native_array_type, a_context_type)
 				Il_generator.generate_local (l_element)
 			end
-			l_native_array_class_type.generate_il (name_id, l_native_array_type)
+			l_native_array_class_type.generate_il (name_id, l_native_array_type, a_context_type)
 		end
 
 indexing

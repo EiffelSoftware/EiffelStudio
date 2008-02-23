@@ -1,83 +1,36 @@
 indexing
+	description: "Descripion of a multi formal generic type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Enlarged access to Result
+	date: "$Date$"
+	revision: "$Revision$"
 
-class
-	RESULT_BL
+class MULTI_FORMAL_A
 
 inherit
-	RESULT_B
+	FORMAL_A
 		redefine
-			used, generate, parent, set_parent,
-			free_register, print_register, propagate,
-			type
-		end;
+			has_multi_constrained,
+			process
+		end
 
 create
 	make
 
-feature
+feature -- Visitor
 
-	parent: NESTED_BL;
-			-- Parent of access
-
-	type: TYPE_A
-			-- Result type
-
-	make (t: like type) is
-			-- Initialization
-		require
-			good_argument: t /= Void
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
 		do
-			type := t;
-		end;
+			v.process_multi_formal_a (Current)
+		end
 
-	set_parent (p: NESTED_BL) is
-			-- Set `parent' to `p'
-		do
-			parent := p;
-		end;
+feature -- Property
 
-	propagate (r: REGISTRABLE) is
-			-- Do nothing
-		do
-		end;
-
-	used (r: REGISTRABLE): BOOLEAN is
-			-- Is `r' the "Result" entity ?
-		do
-			Result := r.is_result;
-		end;
-
-	generate is
-			-- Do nothing
-		do
-		end;
-
-	free_register is
-			-- Do nothing
-		do
-		end;
-
-	print_register is
-			-- Print "Result"
-		local
-			type_i: TYPE_A;
-		do
-			if context.result_used then
-					-- Once function have their result recorded into the GC,
-					-- so it's useless to use an l[] variable.
-				buffer.put_string (register_name);
-			else
-				type_i := real_type (context.byte_code.result_type);
-				type_i.c_type.generate_cast (buffer);
-				buffer.put_character ('0');
-			end;
-		end;
+	has_multi_constrained: BOOLEAN is True;
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

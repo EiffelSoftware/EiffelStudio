@@ -12,10 +12,14 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_bits, is_valid, conform_to,
+			is_bit, is_class_valid, internal_is_valid_for_class, conform_to,
 			associated_class, dump,
 			same_as, ext_append_to,
-			is_equivalent, process
+			is_equivalent, process,
+			generate_cid, generate_cid_array, generate_cid_init,
+			generate_expanded_creation, generate_expanded_initialization,
+			make_gen_type_byte_code, associated_class_type, has_associated_class_type,
+			metamorphose, is_external, reference_type
 		end
 
 create
@@ -36,21 +40,29 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Visitor
+
 	process (v: TYPE_A_VISITOR) is
 			-- Process current element.
 		do
 			v.process_bits_a (Current)
 		end
 
-feature -- Property
+feature -- Status Report
 
-	is_bits: BOOLEAN is True
+	is_bit: BOOLEAN is True
 			-- Is the current actual type a bits type?
 
-	is_valid: BOOLEAN is
-			-- Is current type valid?
+	is_class_valid: BOOLEAN is
 		do
 			Result := bit_count > 0
+		end
+
+	is_external: BOOLEAN is False
+			-- <Original>
+
+	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN
+		do
+			Result := not associated_class.types.is_empty
 		end
 
 feature -- Comparison
@@ -78,6 +90,13 @@ feature -- Access
 			Result := System.bit_class.compiled_class
 		end
 
+	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE is
+			-- Associated class type
+		do
+				-- Return class type for BIT_REF.
+			Result := associated_class.types.first
+		end
+
 	bit_count: INTEGER
 			-- Bit count
 
@@ -93,6 +112,71 @@ feature -- Settings
 			bit_count_set: bit_count = a_count
 		end
 
+feature -- Generic conformance
+
+	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN; a_context_type: TYPE_A) is
+		do
+			buffer.put_integer (generated_id (final_mode, a_context_type))
+			buffer.put_character (',')
+			buffer.put_integer (bit_count)
+			buffer.put_character (',')
+		end
+
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+		local
+			dummy: INTEGER
+		do
+			generate_cid (buffer, final_mode, use_info, a_context_type)
+				-- Increment counter twice.
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+		local
+			dummy: INTEGER
+		do
+				-- Increment counter twice.
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
+
+	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+		do
+			Precursor (ba, use_info, a_context_type)
+				-- FIXME: Manu 08/06/2003: There is no limitation about the size
+				-- of a BIT to 2^15, therefore when `size' is greater than 2^15
+				-- we have a problem!!!!. It does not only apply to current routine
+				-- but to all the generic conformance stuff.
+			ba.append_short_integer (bit_count)
+		end
+
+feature -- C code generation
+
+	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: CLASS_TYPE) is
+			-- Generate object associated to current.
+		do
+			buffer.put_string (target_name)
+			buffer.put_three_character (' ', '=', ' ')
+			c_type.generate_default_value (buffer)
+			buffer.put_two_character (';', '%N')
+		end
+
+	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: TYPE_A) is
+			-- Generate creation of expanded object associated to Current.
+		do
+		end
+
+	metamorphose (reg, value: REGISTRABLE; buffer: GENERATION_BUFFER) is
+			-- Generate the metamorphism from simple type to reference and
+			-- put result in register `reg'. The value of the basic type is
+			-- held in `value'.
+		do
+			reg.print_register
+			buffer.put_string (" = ")
+			value.print_register
+		end
+
 feature -- Output
 
 	dump: STRING is
@@ -105,12 +189,26 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
-			st.process_keyword_text (ti_bit_class, Void)
+			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_bit_class, Void)
 			st.add_space
 			st.add_int (bit_count)
 		end
 
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+			-- Is current type valid?
+		do
+			Result := bit_count > 0
+		end
+
 feature {COMPILER_EXPORTER}
+
+	reference_type: BITS_A is
+			-- We can use Current as `reference type' since they share the same code.
+		do
+			Result := Current
+		end
 
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
@@ -125,7 +223,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	type_i: BIT_I is
+	c_type: BIT_I is
 			-- C type
 		do
 			create Result.make (bit_count)

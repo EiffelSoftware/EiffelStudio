@@ -340,7 +340,7 @@ feature -- Setting
 			byte_code_attached: byte_code /= Void
 			current_feature_attached: current_feature /= Void
 		local
-			local_dec: ARRAY [TYPE_I]
+			local_dec: ARRAY [TYPE_A]
 			local_info: LOCAL_INFO
 			local_count: INTEGER
 			argument_count: INTEGER
@@ -353,7 +353,7 @@ feature -- Setting
 				-- Feature id
 			byte_code.set_body_index (current_feature.body_index)
 				-- Result type if any
-			byte_code.set_result_type (current_feature.type.type_i)
+			byte_code.set_result_type (current_feature.type)
 				-- Routine id
 			rout_id := current_feature.rout_id_set.first
 			byte_code.set_rout_id (rout_id)
@@ -371,7 +371,7 @@ feature -- Setting
 					locals.after
 				loop
 					local_info := locals.item_for_iteration
-					local_dec.put (local_info.type.type_i, local_info.position)
+					local_dec.put (local_info.type, local_info.position)
 					locals.forth
 				end
 				from
@@ -380,7 +380,7 @@ feature -- Setting
 					object_test_locals.after
 				loop
 					local_info := object_test_locals.item_for_iteration
-					local_dec.put (local_info.type.type_i, local_info.position)
+					local_dec.put (local_info.type, local_info.position)
 					object_test_locals.forth
 				end
 				byte_code.set_locals (local_dec)
@@ -395,7 +395,7 @@ feature -- Setting
 				until
 					i > argument_count
 				loop
-					local_dec.put (arguments.i_th (i).type_i, i)
+					local_dec.put (arguments.i_th (i), i)
 					i := i + 1
 				end
 				byte_code.set_arguments (local_dec)

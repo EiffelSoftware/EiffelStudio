@@ -294,7 +294,7 @@ end;
 			a_feature.set_is_selected (False);
 			a_feature.set_is_origin (True);
 			attribute_i ?= a_feature
-			if attribute_i /= Void and then attribute_i.type.type_i.is_formal then
+			if attribute_i /= Void and then attribute_i.type.is_formal then
 					-- A wrapper has to be generated.
 				attribute_i.set_generate_in (system.current_class.class_id)
 			end

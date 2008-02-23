@@ -30,7 +30,7 @@ feature	{NONE} -- Initialization
 
 feature -- Access
 
-	type: TYPE_I
+	type: TYPE_A
 			-- Type to create
 
 feature -- C code generation
@@ -46,22 +46,23 @@ feature -- C code generation
 			end
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
 			-- Generate creation type id.
 		local
-			cl_type_i : CL_TYPE_I
-			gen_type_i: GEN_TYPE_I
+			cl_type_i : CL_TYPE_A
+			gen_type_i: GEN_TYPE_A
 		do
 			cl_type_i ?= context.creation_type (type)
 			gen_type_i ?= cl_type_i
 			if gen_type_i /= Void then
 				buffer.put_string ("typres")
+				buffer.put_natural_32 (a_level)
 			else
 				if final_mode then
-					buffer.put_type_id (cl_type_i.type_id)
+					buffer.put_type_id (cl_type_i.type_id (context.context_class_type.type))
 				else
 					buffer.put_string ("RTUD(")
-					buffer.put_static_type_id (cl_type_i.associated_class_type.static_type_id)
+					buffer.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
 					buffer.put_character (')')
 				end
 			end
@@ -72,8 +73,8 @@ feature -- C code generation
 		local
 			l_buffer: GENERATION_BUFFER
 			l_final_mode: BOOLEAN
-			l_cl_type: CL_TYPE_I
-			l_tuple_type: TUPLE_TYPE_I
+			l_cl_type: CL_TYPE_A
+			l_tuple_type: TUPLE_TYPE_A
 			l_is_tuple: BOOLEAN
 		do
 
@@ -85,18 +86,18 @@ feature -- C code generation
 
 			if l_final_mode and not l_is_tuple then
 				l_buffer.put_string ("RTLNS(")
-				generate_type_id (l_buffer, l_final_mode)
+				generate_type_id (l_buffer, l_final_mode, 0)
 				l_buffer.put_string (", ")
-				l_buffer.put_type_id (l_cl_type.type_id)
+				l_buffer.put_type_id (l_cl_type.type_id (context.context_class_type.type))
 				l_buffer.put_string (", ")
-				l_cl_type.associated_class_type.skeleton.generate_size (l_buffer)
+				l_cl_type.associated_class_type (context.context_class_type.type).skeleton.generate_size (l_buffer)
 			else
 				if l_is_tuple then
 					l_buffer.put_string ("RTLNTS(")
 				else
 					l_buffer.put_string ("RTLN(")
 				end
-				generate_type_id (l_buffer, l_final_mode)
+				generate_type_id (l_buffer, l_final_mode, 0)
 			end
 			if l_is_tuple then
 					-- Add `count' parameter and if it is full of basic types.
@@ -106,7 +107,7 @@ feature -- C code generation
 				l_buffer.put_string (", ")
 					-- We add `+1' so that we do not need to do `i - 1' each time
 					-- we want to access a tuple item in TUPLE class.
-				l_buffer.put_integer (l_tuple_type.true_generics.count + 1)
+				l_buffer.put_integer (l_tuple_type.generics.count + 1)
 				l_buffer.put_string (", ")
 				if l_tuple_type.is_basic_uniform then
 					l_buffer.put_integer (1)
@@ -122,29 +123,26 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for a hardcoded creation type.
 		local
-			cl_type_i: CL_TYPE_I
+			l_type: TYPE_A
 		do
-			cl_type_i ?= context.creation_type (type)
-			check
-				cl_type_i_not_void: cl_type_i /= Void
-			end
-			il_generator.generate_creation (cl_type_i)
-			if cl_type_i.is_expanded then
+			l_type := context.creation_type (type)
+			il_generator.generate_creation (l_type)
+			if l_type.is_expanded and not l_type.is_bit then
 					-- Load value of a boxed value type object.
-				il_generator.generate_unmetamorphose (cl_type_i)
+				il_generator.generate_unmetamorphose (l_type)
 			end
 		end
 
 	generate_il_type is
 			-- Generate IL code to load type.
 		local
-			cl_type_i: CL_TYPE_I
+			l_type: TYPE_A
 		do
-			cl_type_i ?= context.creation_type (type)
-			cl_type_i.generate_gen_type_il (il_generator, True)
+			l_type := context.creation_type (type)
+			l_type.generate_gen_type_il (il_generator, True)
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_I is
+	created_in (other: CLASS_TYPE): TYPE_A is
 			-- Resulting type of Current as if it was used to create object in `other'
 		do
 			Result := type
@@ -156,7 +154,7 @@ feature -- Byte code generation
 			-- Generate byte code for a hardcoded creation type
 		do
 			ba.append (Bc_ctype)
-			context.creation_type (type).make_full_type_byte_code (ba)
+			context.creation_type (type).make_full_type_byte_code (ba, context.context_class_type.type)
 		end
 
 feature -- Generic conformance
@@ -167,26 +165,29 @@ feature -- Generic conformance
 			Result := type.is_explicit
 		end
 
-	generate_gen_type_conversion is
+	generate_gen_type_conversion (a_level: NATURAL) is
 
 		local
-			gen_type : GEN_TYPE_I
+			gen_type : GEN_TYPE_A
 		do
 			gen_type ?= context.creation_type (type)
 
 			if gen_type /= Void then
-				context.generate_gen_type_conversion (gen_type)
+				context.generate_gen_type_conversion (gen_type, a_level)
 			end
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 			-- Generate creation type.
 		do
-			generate_type_id (buffer, final_mode)
+				-- If we are here, it means that it is known that the type cannot have
+				-- sublevel, thus the value of `0'. This is usually the case when describing
+				-- an attribute type in eskelet.c
+			generate_type_id (buffer, final_mode, 0)
 			buffer.put_character (',')
 		end
 
-	type_to_create : CL_TYPE_I is
+	type_to_create : CL_TYPE_A is
 		do
 			Result ?= context.creation_type (type)
 		end

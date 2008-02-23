@@ -11,7 +11,8 @@ class
 inherit
 	TYPE_A
 		redefine
-			is_none, dump, type_i, same_as, is_full_named_type
+			is_none, dump, c_type, same_as, is_full_named_type, generated_id,
+			generate_gen_type_il, make_gen_type_byte_code
 		end
 
 feature -- Visitor
@@ -40,6 +41,12 @@ feature -- Properties
 
 feature -- Access
 
+	hash_code: INTEGER is
+			-- Hash code for current type
+		do
+			Result := {SHARED_HASH_CODE}.none_code
+		end
+
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
@@ -58,7 +65,32 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
 		do
-			st.add (ti_none_class)
+			st.add ({SHARED_TEXT_ITEMS}.ti_none_class)
+		end
+
+feature -- Generic conformance
+
+	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
+			-- Id of a `like xxx'.
+		do
+			Result := {SHARED_GEN_CONF_LEVEL}.none_type
+		end
+
+	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+			-- Put type id's in byte array.
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		do
+			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.none_type)
+		end
+
+feature -- IL code generation
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		do
+			il_generator.generate_none_type_instance
 		end
 
 feature {COMPILER_EXPORTER}
@@ -66,13 +98,13 @@ feature {COMPILER_EXPORTER}
 	create_info: CREATE_TYPE is
 			-- Byte code information for entity type creation
 		do
-			create Result.make (type_i)
+			create Result.make (Current)
 		end
 
-	type_i: NONE_I is
+	c_type: REFERENCE_I is
 			-- Void C type
-		once
-			Result := None_c_type
+		do
+			Result := reference_c_type
 		end
 
 	conform_to (other: TYPE_A): BOOLEAN is

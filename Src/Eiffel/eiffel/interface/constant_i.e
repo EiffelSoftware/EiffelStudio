@@ -206,14 +206,14 @@ feature -- C code generation
 			header_buffer: GENERATION_BUFFER
 			rout_ids: like rout_id_set
 			rout_id: INTEGER
-			basic_i: BASIC_I
+			basic_i: BASIC_A
 			i: INTEGER
 		do
 			if used then
 				local_byte_context := byte_context
 				generate_header (class_type, buffer)
-				type_c := type.type_i.c_type
-				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
+				type_c := type.c_type
+				internal_name := Encoder.feature_name (class_type.type_id, body_index)
 				add_in_log (class_type, internal_name)
 
 					-- If constant is a string, it is the semantic of a once
@@ -342,7 +342,7 @@ feature -- C code generation
 								if not type_c.is_pointer then
 									buffer.put_character (';')
 									buffer.put_new_line
-									basic_i ?= type_c
+									basic_i ?= type
 									basic_i.metamorphose (create {NAMED_REGISTER}.make ("Result", reference_c_type), create {NAMED_REGISTER}.make ("r", type_c), buffer)
 									buffer.put_character (';')
 									buffer.put_new_line
@@ -364,7 +364,7 @@ feature -- C code generation
 			end
 		end
 
-	access_for_feature (access_type: TYPE_I; static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
 			-- Byte code access for constant. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		local
@@ -399,13 +399,13 @@ feature -- IL Code generation
 	generate_il is
 			-- Generate IL code for constant.
 		local
-			type_i: TYPE_I
+			type_i: TYPE_A
 			l_byte_context: like byte_context
 		do
 			l_byte_context := byte_context
 			l_byte_context.set_byte_code (create {STD_BYTE_CODE})
 			l_byte_context.set_current_feature (Current)
-			type_i := type.type_i
+			type_i := type
 			if is_once then
 				il_generator.generate_once_prologue
 				value.generate_il
@@ -427,7 +427,7 @@ feature -- Byte code generation
 		local
 			melted_feature: MELT_FEATURE
 			ba: BYTE_ARRAY
-			result_type: TYPE_I
+			result_type: TYPE_A
 			static_type: INTEGER
 		do
 			ba := Byte_array
@@ -451,8 +451,8 @@ feature -- Byte code generation
 				-- Real body id ( -1 because it's a constant. We can't set a breakpoint )
 			ba.append_integer (-1)
 				-- Meta-type of Result
-			result_type := byte_context.real_type (type.type_i)
-			ba.append_integer (result_type.sk_value)
+			result_type := byte_context.real_type (type)
+			ba.append_integer (result_type.sk_value (byte_context.context_class_type.type))
 				-- Argument count
 			ba.append_short_integer (0)
 
@@ -461,7 +461,7 @@ feature -- Byte code generation
 				-- Feature name
 			ba.append_raw_string (feature_name)
 				-- Type where the feature is written in
-			static_type := byte_context.current_type.type_id - 1
+			static_type := byte_context.class_type.type_id - 1
 			ba.append_short_integer (static_type)
 
 				-- No rescue

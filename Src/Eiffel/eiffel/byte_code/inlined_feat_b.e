@@ -33,7 +33,7 @@ feature
 	written_type_id: INTEGER
 			-- Class type ID of the class type where the feature is written
 
-	result_type: TYPE_I is
+	result_type: TYPE_A is
 			-- Type of an inlined feature
 		do
 			Result := real_type (byte_code.result_type)
@@ -110,13 +110,13 @@ feature
 
 	analyze_on (reg: REGISTRABLE) is
 		local
-			r_type: TYPE_I
+			r_type: TYPE_A
 			reg_type: TYPE_C
 			local_is_current_temporary: BOOLEAN
 			a: ATTRIBUTE_BL
 			access: ACCESS_EXPR_B
 			local_inliner: INLINER
-			cl_type_i: CL_TYPE_I
+			cl_type_i: CL_TYPE_A
 		do
 				-- First, standard analysis of the call
 			Precursor {FEATURE_BL} (reg)
@@ -204,7 +204,7 @@ feature
 			Context.set_inlined_current_register (Void)
 		end
 
-	argument_type (pos: INTEGER): TYPE_I is
+	argument_type (pos: INTEGER): TYPE_A is
 			-- Type of the argument at position `pos'
 		do
 			Result := real_type (byte_code.arguments.item (pos))
@@ -353,7 +353,7 @@ feature -- Generation
 			local_inliner.set_inlined_feature (Void)
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
 		do
 			Context.set_inlined_current_register (current_reg);
 			if result_reg /= Void then
@@ -363,8 +363,8 @@ feature -- Generation
 			Context.set_inlined_current_register (Void)
 		end
 
-	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
-		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
+	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_A;
+		basic_type: BASIC_A; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
 		do
 			generate_end (gen_reg, class_type)
@@ -389,7 +389,7 @@ feature {NONE}
 
 feature {NONE} -- Registers
 
-	get_inlined_registers (a: ARRAY [TYPE_I]): ARRAY [REGISTER] is
+	get_inlined_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTER] is
 		local
 			i, count: INTEGER
 		do
@@ -407,7 +407,7 @@ feature {NONE} -- Registers
 			end
 		end;
 
-	get_inlined_param_registers (a: ARRAY [TYPE_I]): ARRAY [REGISTRABLE] is
+	get_inlined_param_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTRABLE] is
 		local
 			i ,count: INTEGER
 			is_param_temporary_reg: BOOLEAN
@@ -505,7 +505,7 @@ feature {NONE} -- Registers
 			end
 		end;
 
-	get_inline_register (type_i: TYPE_I): REGISTER is
+	get_inline_register (type_i: TYPE_A): REGISTER is
 		do
 			create Result.make (type_i.c_type);
 		end
@@ -546,7 +546,7 @@ feature {NONE} -- Registers
 			end
 		end
 
-	reset_register_value (a_type: TYPE_I; reg: REGISTER) is
+	reset_register_value (a_type: TYPE_A; reg: REGISTER) is
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -557,7 +557,7 @@ feature {NONE} -- Registers
 			reg.c_type.generate_cast (buf);
 			buf.put_string (" 0;");
 			if a_type.is_true_expanded then
-				a_type.generate_expanded_creation (buf, reg.register_name)
+				a_type.generate_expanded_creation (buf, reg.register_name, context.class_type)
 			end
 		end
 

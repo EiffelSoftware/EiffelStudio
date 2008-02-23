@@ -99,7 +99,7 @@ feature -- previously in ROUT_UNIT
 			Result.set_body_index (body_index)
 debug
 io.error.put_string ("arg = ")
-io.error.put_string (class_type.type.base_class.name)
+io.error.put_string (class_type.type.associated_class.name)
 io.error.put_string ("   ")
 io.error.put_string ("cur = ")
 io.error.put_string (written_class.name)
@@ -138,7 +138,7 @@ feature -- from ROUT_ENTRY
 	routine_name: STRING is
 			-- Routine name to generate
 		do
-			Result := Encoder.feature_name (written_class_type.static_type_id, body_index)
+			Result := Encoder.feature_name (written_class_type.type_id, body_index)
 		end
 
 	written_class_type: CLASS_TYPE is

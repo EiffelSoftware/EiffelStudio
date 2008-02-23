@@ -31,7 +31,7 @@ inherit
 		rename
 			generate as generate_routine_table
 		undefine
-			is_attribute_table
+			is_attribute_table, write_for_type
 		redefine
 			is_polymorphic,
 			make,
@@ -84,9 +84,6 @@ feature -- Code generation
 		do
 			generate_attribute_table (Attr_generator)
 			generate_routine_table (Rout_generator)
-			if has_type_table and then not has_one_type then
-				generate_type_table (Attr_generator)
-			end
 		end
 
 indexing

@@ -17,16 +17,21 @@ inherit
 			is_equal
 		end;
 
+	COMPILER_EXPORTER
+		redefine
+			is_equal
+		end
+
 create
 
 	make
 
 feature
 
-	result_type: TYPE_I;
+	result_type: TYPE_A;
 			-- Meta type of the result
 
-	argument_types: ARRAY [TYPE_I];
+	argument_types: ARRAY [TYPE_A];
 			-- Meta types of the arguments
 
 	set_argument_types (a: like argument_types) is
@@ -35,7 +40,7 @@ feature
 			argument_types := a;
 		end;
 
-	make (t: TYPE_I) is
+	make (t: TYPE_A) is
 			-- Creation of a pattern with a result meta type
 		require
 			good_argument: t /= Void;
@@ -56,7 +61,7 @@ feature
 		local
 			n, i: INTEGER;
 		do
-			Result := result_type.is_valid (a_class)
+			Result := result_type.is_valid_for_class (a_class)
 			if Result then
 				from
 					i := 1
@@ -64,7 +69,7 @@ feature
 				until
 					i > n or else not Result
 				loop
-					Result := argument_types.item (i).is_valid (a_class)
+					Result := argument_types.item (i).is_valid_for_class (a_class)
 					i := i + 1
 				end
 			end
@@ -73,64 +78,20 @@ feature
 	is_equal (other: PATTERN): BOOLEAN is
 			-- Is `other' equal to Current ?
 		local
-			n, i: INTEGER;
+			n, i: INTEGER
 		do
-			n := argument_count;
-			Result := n = other.argument_count and then
-					type_deep_equal (result_type, other.result_type)
+			n := argument_count
+				-- Note: We used to perform a deep equality here, now we simply `same_as'.
+			Result := n = other.argument_count and then result_type.same_as (other.result_type)
 			from
-				i := 1;
+				i := 1
 			until
 				i > n or else not Result
 			loop
-				Result := type_deep_equal (argument_types.item (i),
-										other.argument_types.item (i));
-				i := i + 1;
-			end;
-		end;
-
-	is_standalone: BOOLEAN is
-			-- Is pattern described only in terms of standalone types,
-			-- i.e. types that involve only class types without either
-			-- anchored types or formal generics?
-		local
-			type: TYPE_I
-			i: INTEGER
-		do
-			type := result_type
-			Result := not type.has_formal and then not type.is_anchored
-			if Result then
-				from
-					i := argument_count
-				until
-					i <= 0 or else not Result
-				loop
-					type := argument_types.item (i)
-					Result := not type.has_formal and then not type.is_anchored
-					i := i - 1
-				end
+				Result := argument_types.item (i).same_as (other.argument_types.item (i))
+				i := i + 1
 			end
 		end
-
-	has_formal: BOOLEAN is
-			-- Are there some formal generic parameters in the current
-			-- pattern?
-		local
-			i, nb: INTEGER;
-		do
-			Result := result_type.has_formal;
-			if not Result then
-				from
-					i := 1;
-					nb := argument_count
-				until
-					i > nb or else Result
-				loop
-					Result := argument_types.item (i).has_formal;
-					i := i + 1;
-				end;
-			end;
-		end;
 
 	duplicate: like Current is
 			-- Duplication
@@ -146,16 +107,15 @@ feature
 			-- `gen_type'.
 		require
 			gen_type_not_void: gen_type /= Void
-			gen_type_is_standalone: not gen_type.type.is_anchored and not gen_type.type.has_formal
 		local
 			i, n: INTEGER;
 			new_arguments: like argument_types;
-			type: TYPE_I;
-			argument_type: TYPE_I
+			type: TYPE_A;
+			argument_type: TYPE_A
 		do
 				-- New pattern is created only when it is different
 				-- from the current one in `gen_type'.
-			type := result_type.instantiation_in (gen_type)
+			type := result_type.adapted_in (gen_type)
 			if type /= result_type then
 				create Result.make (type)
 			end
@@ -172,7 +132,7 @@ feature
 					i > n
 				loop
 					argument_type := argument_types.item (i)
-					type := argument_type.instantiation_in (gen_type)
+					type := argument_type.adapted_in (gen_type)
 					if type /= argument_type and then new_arguments = Void then
 						new_arguments := argument_types.twin
 					end
@@ -193,13 +153,10 @@ feature
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_is_standalone: Result.is_standalone
 		end
 
 	c_pattern: C_PATTERN is
 			-- C pattern
-		require
-			is_standalone: is_standalone
 		local
 			new_arguments: ARRAY [TYPE_C];
 			i, arg_count: INTEGER;
@@ -249,30 +206,9 @@ feature -- Hash code
 			end
 		end
 
-feature -- Debug
-
-	trace is
-			-- Debug purpose
-		local
-			i: INTEGER;
-		do
-			from
-				i := 1;
-			until
-				i > argument_count
-			loop
-				argument_types.item (i).trace;
-				io.error.put_character ('/');
-				i := i + 1;
-			end;
-			io.error.put_character ('|');
-			result_type.trace;
-			io.error.put_string ("|");
-		end;
-
 feature {NONE} -- Implementation
 
-	type_deep_equal (first_type, other_type: TYPE_I): BOOLEAN is
+	type_deep_equal (first_type, other_type: TYPE_A): BOOLEAN is
 			-- Deep equal comparison wich does not compare the `cr_info´ attribute
 			-- declared in CL_TYPE_I and the `true_generics' attributes declared
 			-- in GEN_TYPE_I.
@@ -280,9 +216,9 @@ feature {NONE} -- Implementation
 			first_type_not_void: first_type /= Void
 			other_type_not_void: other_type /= Void
 		local
-			bit_i, other_bit_i: BIT_I
-			cl_type_i, other_cl_type_i: CL_TYPE_I
-			gen_type_i, other_gen_type_i: GEN_TYPE_I
+			bit_i, other_bit_i: BITS_A
+			cl_type_i, other_cl_type_i: CL_TYPE_A
+			gen_type_i, other_gen_type_i: GEN_TYPE_A
 		do
 			if (first_type.same_type (other_type)) then
 				cl_type_i ?= first_type
@@ -290,7 +226,7 @@ feature {NONE} -- Implementation
 					bit_i ?= first_type
 					if bit_i /= Void then
 						other_bit_i ?= other_type
-						Result := bit_i.size = other_bit_i.size
+						Result := bit_i.bit_count = other_bit_i.bit_count
 					else
 						Result := True
 					end
@@ -303,7 +239,7 @@ feature {NONE} -- Implementation
 					gen_type_i ?= first_type
 					if gen_type_i /= Void then
 						other_gen_type_i ?= other_type
-						Result := Result and then deep_equal (gen_type_i.meta_generic, other_gen_type_i.meta_generic)
+--						Result := Result and then deep_equal (gen_type_i.meta_generic, other_gen_type_i.meta_generic)
 					end
 				else
 						-- There is no attributes to compare in the case of

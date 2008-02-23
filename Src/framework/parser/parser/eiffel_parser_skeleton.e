@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		do
 			make_eiffel_scanner_with_factory (a_factory)
 			make_parser_skeleton
-			create suppliers.make
+			create suppliers
 			create formal_parameters.make (Initial_formal_parameters_capacity)
 			formal_parameters.compare_objects
 			is_supplier_recorded := True
@@ -157,7 +157,7 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			Precursor
-			create suppliers.make
+			create suppliers
 			formal_parameters.wipe_out
 			feature_stack.wipe_out
 			add_feature_frame

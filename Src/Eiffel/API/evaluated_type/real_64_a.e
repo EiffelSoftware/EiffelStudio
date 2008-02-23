@@ -60,7 +60,7 @@ feature {COMPILER_EXPORTER}
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
 
-	type_i: REAL_64_I is
+	c_type: REAL_64_I is
 			-- C type
 		do
 			Result := real64_c_type

@@ -77,13 +77,13 @@ feature -- Visitor
 	process (v: BYTE_NODE_VISITOR) is
 			-- Process current element.
 		local
-			c: CL_TYPE_I
+			c: CL_TYPE_A
 			f: FEATURE_I
 		do
 			if not context.is_written_context then
 					-- Ensure the feature is not redeclared into attribute.
 				c ?= context_type
-				f := c.base_class.feature_of_rout_id (routine_id)
+				f := c.associated_class.feature_of_rout_id (routine_id)
 				if not f.is_attribute then
 					f := Void
 				end
@@ -99,7 +99,7 @@ feature -- Visitor
 
 feature -- Access
 
-	type: TYPE_I
+	type: TYPE_A
 			-- Type of the call
 
 	body_index: INTEGER
@@ -125,7 +125,7 @@ feature -- Access
 			end
 		end
 
-	set_type (t: TYPE_I) is
+	set_type (t: like type) is
 			-- Assign `t' to `type'.
 		do
 			type := t
@@ -142,7 +142,7 @@ feature -- Access
 		do
 		end
 
-	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN is
 			-- Search for feature_name in special_routines.
 			-- This is used for simple types only.
 			-- If found return True (and keep reference position).
@@ -172,18 +172,18 @@ feature -- Access
 			Result := enlarged_on (context_type)
 		end
 
-	enlarged_on (type_i: TYPE_I): CALL_ACCESS_B is
+	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B is
 			-- Enlarged byte node evaluated in the context of `type_i'.
 		local
 			feature_bl: FEATURE_BL
-			c: CL_TYPE_I
+			c: CL_TYPE_A
 			f: FEATURE_I
 		do
 			if not context.is_written_context then
 					-- Ensure the feature is not redeclared into attribute.
-				c ?= real_type (type_i)
+				c ?= type_i
 				if c /= Void then
-					f := c.base_class.feature_of_rout_id (routine_id)
+					f := c.associated_class.feature_of_rout_id (routine_id)
 					if not f.is_attribute then
 						f := Void
 					end
@@ -206,7 +206,7 @@ feature -- Access
 
 feature -- Context type
 
-	context_type: TYPE_I is
+	context_type: TYPE_A is
 			-- Context type of the access (properly instantiated)
 		do
 			if precursor_type = Void then
@@ -218,7 +218,7 @@ feature -- Context type
 
 feature -- Byte code generation
 
-	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
+	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A) is
 			-- Make byte code for special calls.
 		do
 			special_routines.make_byte_code (ba, basic_type)
@@ -228,13 +228,13 @@ feature -- Array optimization
 
 	is_special_feature: BOOLEAN is
 		local
-			cl_type: CL_TYPE_I
+			cl_type: CL_TYPE_A
 			base_class: CLASS_C
 			f: FEATURE_I
 			dep: DEPEND_UNIT
 		do
 			cl_type ?= context_type -- Cannot fail
-			base_class := cl_type.base_class
+			base_class := cl_type.associated_class
 			f := base_class.feature_table.item_id (feature_name_id)
 			create dep.make (base_class.class_id, f)
 			Result := optimizer.special_features.has (dep)
@@ -242,13 +242,13 @@ feature -- Array optimization
 
 	is_unsafe: BOOLEAN is
 		local
-			cl_type: CL_TYPE_I
+			cl_type: CL_TYPE_A
 			base_class: CLASS_C
 			f: FEATURE_I
 			dep: DEPEND_UNIT
 		do
 			cl_type ?= context_type -- Cannot fail
-			base_class := cl_type.base_class
+			base_class := cl_type.associated_class
 			f := base_class.feature_table.item_id (feature_name_id)
 debug ("OPTIMIZATION")
 	io.error.put_string ("%N%N%NTESTING is_unsafe for ")
@@ -334,8 +334,8 @@ feature -- Inlining
 			inlined_feat_b: INLINED_FEAT_B
 			inline: BOOLEAN
 			inliner: INLINER
-			type_i: TYPE_I
-			cl_type: CL_TYPE_I
+			type_i: TYPE_A
+			cl_type: CL_TYPE_A
 			bc: STD_BYTE_CODE
 			l_rout_table: ROUT_TABLE
 			l_body_index: INTEGER
@@ -349,9 +349,9 @@ feature -- Inlining
 				if not type_i.is_basic then
 					cl_type ?= type_i -- Cannot fail
 						-- Inline only if it is not polymorphic and if it can be inlined.
-					if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id, True) = -1 then
+					if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id (context.context_class_type.type), True) = -1 then
 						l_rout_table ?= eiffel_table.poly_table (routine_id)
-						l_rout_table.goto_implemented (cl_type.type_id)
+						l_rout_table.goto_implemented (cl_type.type_id (context.context_class_type.type))
 							-- Only if it is implemented that we can inline it.
 						if l_rout_table.is_implemented then
 							inliner := System.remover.inliner
@@ -374,10 +374,10 @@ feature -- Inlining
 						-- feature (descendant of STD_BYTE_CODE)
 					inliner.set_current_feature_inlined
 					context_class_type := system.class_type_of_id (entry.type_id)
-					written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type
+					written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
 					context_class_type := written_class_type
 						-- Create inlined byte node.
-					if cl_type.base_class.is_special then
+					if cl_type.associated_class.is_special then
 						create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
 					else
 						create inlined_feat_b
@@ -399,62 +399,6 @@ feature -- Inlining
 				Result := Current
 				if parameters /= Void then
 					parameters := parameters.inlined_byte_code
-				end
-			end
-		end
-
-	current_class_type: CLASS_TYPE is
-			-- Current type for the call (NOT the static type but the
-			-- type corresponding to the written in class)
-		local
-			written_class	: CLASS_C
-			tuple_class		: TUPLE_CLASS_B
-			original_feature: FEATURE_I
-			m				: META_GENERIC
-			true_gen		: ARRAY [TYPE_I]
-			real_target_type: TYPE_A
-			actual_type		: TYPE_A
-			formal_a		: FORMAL_A
-			nb_generics, i	: INTEGER
-			l_formal_dec: FORMAL_CONSTRAINT_AS
-		do
-			original_feature := context_type.type_a.associated_class.feature_of_rout_id (routine_id)
-			written_class := original_feature.written_class
-
-			if written_class.generics = Void then
-				Result := written_class.types.first
-			else
-				tuple_class ?= written_class
-				if tuple_class /= Void then
-					Result := tuple_class.types.first
-				else
-					real_target_type := context_type.type_a
-						-- LINKED_LIST [STRING] is recorded as LINKED_LIST [REFERENCE_I]
-						-- => LINKED_LIST [ANY] after previous call
-
-					from
-						i := 1
-						nb_generics := written_class.generics.count
-						create m.make (nb_generics)
-						create true_gen.make (1, nb_generics)
-					until
-						i > nb_generics
-					loop
-						l_formal_dec ?= written_class.generics.i_th (1)
-						check l_formal_dec_not_void: l_formal_dec /= Void end
-						create formal_a.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
-						actual_type := formal_a.instantiation_in (real_target_type, written_class.class_id)
-
-						if actual_type.is_expanded then
-							m.put (actual_type.type_i, i)
-						else
-							m.put (reference_c_type, i)
-						end
-						true_gen.put (actual_type.type_i, i)
-						i := i + 1
-					end
-
-					Result := (create {GEN_TYPE_I}.make (written_class.class_id, m, true_gen)).associated_class_type
 				end
 			end
 		end

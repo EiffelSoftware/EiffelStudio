@@ -34,7 +34,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_TYPE_I
+	SHARED_TYPES
 		export
 			{NONE} all
 		end
@@ -77,9 +77,9 @@ feature -- Generation
 	generate_il (a_code_generator: like il_generator; a_body: BYTE_CODE) is
 			-- Generate IL byte code `a_body'.
 		local
-			r_type: TYPE_I
-			cl_type_i: CL_TYPE_I
-			local_list: LINKED_LIST [TYPE_I]
+			r_type: TYPE_A
+			cl_type_i: CL_TYPE_A
+			local_list: LINKED_LIST [TYPE_A]
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
 			class_c: CLASS_C
@@ -134,26 +134,26 @@ feature -- Generation
 
 			if keep then
 					-- Generate local variable to save assertions level.
-				context.add_local (Boolean_c_type)
+				context.add_local (boolean_type)
 				l_saved_supplier_precondition := context.local_list.count
 				context.set_saved_supplier_precondition (l_saved_supplier_precondition)
-				il_generator.put_dummy_local_info (Boolean_c_type, l_saved_supplier_precondition)
+				il_generator.put_dummy_local_info (boolean_type, l_saved_supplier_precondition)
 				il_generator.generate_save_supplier_precondition
 				il_generator.generate_local_assignment (l_saved_supplier_precondition)
 			end
 
 			if a_body.rescue_clause /= Void then
 					-- Generate local variable to save assertions level.
-				context.add_local (Boolean_c_type)
+				context.add_local (boolean_type)
 				l_saved_in_assertion := context.local_list.count
-				il_generator.put_dummy_local_info (Boolean_c_type, l_saved_in_assertion)
+				il_generator.put_dummy_local_info (boolean_type, l_saved_in_assertion)
 				il_generator.generate_in_assertion_status
 				il_generator.generate_local_assignment (l_saved_in_assertion)
 
 					-- Generate local variable to save in precondition status.
-				context.add_local (Boolean_c_type)
+				context.add_local (boolean_type)
 				l_saved_in_precondition := context.local_list.count
-				il_generator.put_dummy_local_info (Boolean_c_type, l_saved_in_precondition)
+				il_generator.put_dummy_local_info (boolean_type, l_saved_in_precondition)
 				il_generator.generate_in_precondition_status
 				il_generator.generate_local_assignment (l_saved_in_precondition)
 
@@ -170,7 +170,10 @@ feature -- Generation
 			end
 
 				-- Make IL code for preconditions
-			if a_body.precondition /= Void or inh_assert.has_precondition then
+			if
+				context.origin_has_precondition and
+				(a_body.precondition /= Void or inh_assert.has_precondition)
+			then
 				if keep then
 					generate_il_precondition (a_body)
 				elseif System.is_precompile_finalized then
@@ -327,7 +330,7 @@ feature -- Generation
 			end
 		end
 
-	frozen generate_il_assignment (a_node: ACCESS_B; source_type: TYPE_I) is
+	frozen generate_il_assignment (a_node: ACCESS_B; source_type: TYPE_A) is
 			-- Generate source assignment IL code.
 		require
 			is_valid: is_valid
@@ -335,13 +338,13 @@ feature -- Generation
 			is_creatable: a_node.is_creatable
 			source_type_not_void: source_type /= Void
 		local
-			target_type: TYPE_I
+			target_type: TYPE_A
 		do
 			target_type := context.real_type (a_node.type)
 			generate_il_simple_assignment (a_node, target_type, source_type)
 		end
 
-	generate_reattachment (source: EXPR_B; source_type, target_type: TYPE_I) is
+	generate_reattachment (source: EXPR_B; source_type, target_type: TYPE_A) is
 			-- Generate code that ensures semantics of reattachment
 			-- of expression of `source_type' to entity of `target_type'
 			-- assuming the expression value is on the stack.
@@ -369,8 +372,8 @@ feature -- Generation
 				source.is_dynamic_clone_required (source_type) and then
 				(source_type.is_external and then
 				target_type.is_external and then
-				source_type.type_a.associated_class.is_interface and then
-				target_type.type_a.associated_class.is_interface or else
+				source_type.associated_class.is_interface and then
+				target_type.associated_class.is_interface or else
 				not source_type.is_external and then
 				not source_type.is_generated_as_single_type and then
 				not source_type.is_optimized_as_frozen)
@@ -549,7 +552,7 @@ feature {NONE} -- Implementation
 			il_generator.mark_label (end_of_assertion)
 		end
 
-	generate_il_local_info (local_list: LINKED_LIST [TYPE_I]) is
+	generate_il_local_info (local_list: LINKED_LIST [TYPE_A]) is
 			-- Generate IL info for local variables in `local_list'.
 		require
 			is_valid: is_valid
@@ -627,7 +630,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_locals (local_list: LINKED_LIST [TYPE_I]) is
+	initialize_locals (local_list: LINKED_LIST [TYPE_A]) is
 			-- Generate code to initialize local variables of the current routine
 			-- taking their types from `local_list'.
 		require
@@ -638,7 +641,7 @@ feature {NONE} -- Implementation
 			routine_as: ROUTINE_AS
 			id_list: ARRAYED_LIST [INTEGER]
 			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
-			local_type: CL_TYPE_I
+			local_type: CL_TYPE_A
 			i: INTEGER
 			l_body: BODY_AS
 		do
@@ -681,8 +684,8 @@ feature {NONE} -- Implementation
 	generate_copy is
 			-- Generate body of feature `copy' from ANY.
 		local
-			class_type: CLASS_TYPE
-			cl_type_i: CL_TYPE_I
+			class_type, l_old_class_type: CLASS_TYPE
+			cl_type_i: CL_TYPE_A
 			skeleton: SKELETON
 			feature_id: INTEGER
 		do
@@ -691,6 +694,8 @@ feature {NONE} -- Implementation
 				cl_type_i := class_type.type
 				skeleton := class_type.skeleton
 				if skeleton /= Void then
+					l_old_class_type := context.class_type
+					context.set_class_type (class_type)
 					from
 						skeleton.start
 					until
@@ -707,6 +712,7 @@ feature {NONE} -- Implementation
 						il_generator.generate_attribute_assignment (True, cl_type_i, feature_id)
 						skeleton.forth
 					end
+					context.set_class_type (l_old_class_type)
 				end
 			else
 				il_generator.generate_current
@@ -760,14 +766,14 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_is_nested_call: like is_nested_call
-			l_type_i: TYPE_I
+			l_type_i: TYPE_A
 		do
 			l_is_nested_call := is_nested_call
 			is_nested_call := False
 			a_node.expr.process (Current)
 			if l_is_nested_call then
 				l_type_i := context.real_type (a_node.type)
-				if l_type_i.is_true_expanded and then not l_type_i.type_a.associated_class.is_enum then
+				if l_type_i.is_true_expanded and then not l_type_i.associated_class.is_enum then
 					generate_il_metamorphose (l_type_i, l_type_i, True)
 				end
 			end
@@ -776,12 +782,12 @@ feature {NONE} -- Visitors
 	process_address_b (a_node: ADDRESS_B) is
 			-- Process `a_node'.
 		local
-			l_target_type: CL_TYPE_I
+			l_target_type: CL_TYPE_A
 			l_target_feature_id: INTEGER
 		do
-			l_target_type := context.current_type
+			l_target_type := context.context_class_type.type
 			if l_target_type.is_expanded then
-				l_target_feature_id := l_target_type.base_class.feature_of_rout_id (
+				l_target_feature_id := l_target_type.associated_class.feature_of_rout_id (
 					system.class_of_id (a_node.class_id).feature_of_feature_id (a_node.feature_id).rout_id_set.first
 				).feature_id
 			else
@@ -805,36 +811,31 @@ feature {NONE} -- Visitors
 	process_array_const_b (a_node: ARRAY_CONST_B) is
 			-- Process `a_node'.
 		local
-			l_real_ty: GEN_TYPE_I
-			l_decl_type: CL_TYPE_I
-			l_target_type: TYPE_I
+			l_real_ty: GEN_TYPE_A
+			l_decl_type: CL_TYPE_A
+			l_target_type: TYPE_A
 			l_expr: EXPR_B
 			l_base_class: CLASS_C
-			l_local_array: INTEGER
 			i: INTEGER
 			l_feat_tbl: FEATURE_TABLE
 			l_make_feat, l_put_feat: FEATURE_I
 		do
 			l_real_ty ?= context.real_type (a_node.type)
-			l_target_type := l_real_ty.true_generics.item (1)
-			l_base_class := l_real_ty.base_class
+			l_target_type := l_real_ty.generics.item (1)
+			l_base_class := l_real_ty.associated_class
 			l_feat_tbl := l_base_class.feature_table
 			l_make_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.make_name_id)
 			l_decl_type := l_real_ty.implemented_type (l_make_feat.origin_class_id)
 
 				-- Creation of Array
- 			context.add_local (l_real_ty)
- 			l_local_array := context.local_list.count
- 			il_generator.put_dummy_local_info (l_real_ty, l_local_array)
 			a_node.info.generate_il
- 			il_generator.generate_local_assignment (l_local_array)
 
 				-- Call creation procedure of ARRAY
-			il_generator.generate_local (l_local_array)
+			il_generator.duplicate_top
 			il_generator.put_integer_32_constant (1)
  			il_generator.put_integer_32_constant (a_node.expressions.count)
  			il_generator.generate_feature_access (l_decl_type, l_make_feat.origin_feature_id,
- 				l_make_feat.argument_count, l_make_feat.has_return_value, True)
+				l_make_feat.argument_count, l_make_feat.has_return_value, True)
 
 				-- Find `put' from ARRAY
 			l_put_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
@@ -849,7 +850,7 @@ feature {NONE} -- Visitors
  				l_expr ?= a_node.expressions.item
 
  					-- Prepare call to `put'.
- 				il_generator.generate_local (l_local_array)
+				il_generator.duplicate_top
 
  					-- Generate expression
  				generate_expression_il_for_type (l_expr, l_target_type)
@@ -857,12 +858,10 @@ feature {NONE} -- Visitors
  				il_generator.put_integer_32_constant (i)
 
  				il_generator.generate_feature_access (l_decl_type, l_put_feat.origin_feature_id,
- 					l_put_feat.argument_count, l_put_feat.has_return_value, True)
+					l_put_feat.argument_count, l_put_feat.has_return_value, True)
  				i := i + 1
  				a_node.expressions.forth
  			end
-
- 			il_generator.generate_local (l_local_array)
 		end
 
 	process_assert_b (a_node: ASSERT_B) is
@@ -880,8 +879,8 @@ feature {NONE} -- Visitors
 	process_assign_b (a_node: ASSIGN_B) is
 			-- Process `a_node'.
 		local
-			source_type: TYPE_I
-			target_type: TYPE_I
+			source_type: TYPE_A
+			target_type: TYPE_A
 		do
 			generate_il_line_info (a_node, True)
 			process_pragma (a_node)
@@ -910,10 +909,10 @@ feature {NONE} -- Visitors
 	process_attribute_b (a_node: ATTRIBUTE_B) is
 			-- Process `a_node'.
 		local
-			l_r_type: TYPE_I
-			l_cl_type: CL_TYPE_I
-			l_attribute_cl_type: CL_TYPE_I
-			l_target_type: TYPE_I
+			l_r_type: TYPE_A
+			l_cl_type: CL_TYPE_A
+			l_attribute_cl_type: CL_TYPE_A
+			l_target_type: TYPE_A
 			l_target_attribute_id: INTEGER
 			l_feature_call: FEATURE_B
 			l_cancel_attribute_generation: BOOLEAN
@@ -936,14 +935,14 @@ feature {NONE} -- Visitors
 			else
 					-- Type of class which defines current attribute.
 				l_cl_type ?= a_node.context_type
-				if l_cl_type.is_expanded and then not l_cl_type.is_external then
+				if l_cl_type.is_expanded and then not l_cl_type.is_true_external then
 						-- Access attribute directly.
-					if l_cl_type.base_class.is_typed_pointer then
+					if l_cl_type.associated_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
-						l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+						l_cl_type := system.pointer_class.compiled_class.actual_type
 					end
 					l_target_type := l_cl_type
-					l_target_attribute_id := l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id
+					l_target_attribute_id := l_cl_type.associated_class.feature_of_rout_id (a_node.routine_id).feature_id
 				else
 					l_target_type := l_cl_type.implemented_type (a_node.written_in)
 					l_target_attribute_id := a_node.attribute_id
@@ -975,7 +974,7 @@ feature {NONE} -- Visitors
 				if not l_cancel_attribute_generation then
 					if a_node.is_first and a_node.need_target then
 							-- Accessing attribute written in current analyzed class.
-						if l_need_address and not context.current_type.is_generated_as_single_type then
+						if l_need_address and not context.context_class_type.is_generated_as_single_type then
 								-- We need current target which will be used later on in
 								-- NESTED_B.generate_il to assign back the new value of the attribute.
 							il_generator.generate_current
@@ -1215,11 +1214,49 @@ feature {NONE} -- Visitors
 
 	process_bit_const_b (a_node: BIT_CONST_B) is
 			-- Process `a_node'.
+		local
+			l_bit_type: BITS_A
+			l_bit_class: CLASS_C
+			l_make_feat, l_put_feat: FEATURE_I
+			l_decl_type: CL_TYPE_A
+			l_values: STRING
+			i, nb: INTEGER
 		do
-			fixme ("Not implemented because not supported")
-			check
-				False
-			end
+			l_bit_type ?= context.real_type (a_node.type)
+			l_bit_class := l_bit_type.associated_class
+			l_make_feat := l_bit_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
+			l_decl_type := l_bit_type.implemented_type (l_make_feat.origin_class_id)
+
+				-- Creation of BIT object
+			l_bit_type.create_info.generate_il
+
+ 				-- Call creation procedure of BIT_REF
+			il_generator.duplicate_top
+			il_generator.put_integer_32_constant (l_bit_type.bit_count)
+ 			il_generator.generate_feature_access (l_decl_type, l_make_feat.origin_feature_id,
+				l_make_feat.argument_count, l_make_feat.has_return_value, True)
+
+				-- Find `put' and call `put' for the sequence.
+			l_put_feat := l_bit_class.feature_table.item_id ({PREDEFINED_NAMES}.put_name_id)
+			l_decl_type := l_bit_type.implemented_type (l_put_feat.origin_class_id)
+
+			from
+				l_values := a_node.value
+ 				i := 1
+ 				nb := l_values.count
+ 			until
+ 				i = nb
+ 			loop
+ 					-- Duplicate top
+				il_generator.duplicate_top
+
+ 					-- Generate expression
+ 				il_generator.put_boolean_constant (l_values.item (i) /= '0')
+ 				il_generator.put_integer_32_constant (i)
+ 				il_generator.generate_feature_access (l_decl_type, l_put_feat.origin_feature_id,
+					l_put_feat.argument_count, l_put_feat.has_return_value, True)
+ 				i := i + 1
+ 			end
 		end
 
 	process_bool_const_b (a_node: BOOL_CONST_B) is
@@ -1306,7 +1343,7 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_ext_call: EXTERNAL_B
-			l_creation_type: TYPE_I
+			l_creation_type: TYPE_A
 			l_nested: NESTED_B
 			l_is_il_external: BOOLEAN
 		do
@@ -1369,7 +1406,7 @@ feature {NONE} -- Visitors
 	process_current_b (a_node: CURRENT_B) is
 			-- Process `a_node'.
 		local
-			l_type_i: TYPE_I
+			l_type_i: TYPE_A
 			l_is_object_load_required: like is_object_load_required
 		do
 			if is_nested_call then
@@ -1434,9 +1471,9 @@ feature {NONE} -- Visitors
 	process_external_b (a_node: EXTERNAL_B) is
 			-- Process `a_node'.
 		local
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 			l_il_ext: IL_EXTENSION_I
-			l_return_type: TYPE_I
+			l_return_type: TYPE_A
 			l_count: INTEGER
 			l_real_metamorphose: BOOLEAN
 			l_real_target: ACCESS_B
@@ -1466,9 +1503,9 @@ feature {NONE} -- Visitors
 				end
 
 				if l_cl_type.is_expanded then
-					if l_cl_type.base_class.is_typed_pointer then
+					if l_cl_type.associated_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
-						l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+						l_cl_type := system.pointer_class.compiled_class.actual_type
 					end
 						-- Current type is expanded. We need to find out if
 						-- we need to generate a box operation, meaning that
@@ -1525,10 +1562,10 @@ feature {NONE} -- Visitors
 						l_il_ext.generate_call (False)
 					elseif l_is_in_external_creation_call then
 						l_il_ext.generate_external_creation_call (l_cl_type)
-					elseif l_cl_type.is_expanded and then not l_cl_type.is_external and then not l_is_in_creation then
+					elseif l_cl_type.is_expanded and then not l_cl_type.is_true_external and then not l_is_in_creation then
 							-- The feature is generated in the current class.
 						il_generator.generate_feature_access
-							(l_cl_type, l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id,
+							(l_cl_type, l_cl_type.associated_class.feature_of_rout_id (a_node.routine_id).feature_id,
 							l_count, not context.real_type (a_node.type).is_void, False)
 					else
 							-- Standard call to an external feature.
@@ -1548,7 +1585,7 @@ feature {NONE} -- Visitors
 			end
 			if l_is_nested_call then
 				l_return_type := context.real_type (a_node.type)
-				if l_return_type.is_true_expanded and then not l_return_type.type_a.associated_class.is_enum then
+				if l_return_type.is_true_expanded and then not l_return_type.associated_class.is_enum then
 					generate_il_metamorphose (l_return_type, l_return_type, True)
 				end
 			end
@@ -1557,8 +1594,8 @@ feature {NONE} -- Visitors
 	process_feature_b (a_node: FEATURE_B) is
 			-- Process `a_node'.
 		local
-			l_cl_type: CL_TYPE_I
-			l_orig_return_type, l_return_type: TYPE_I
+			l_cl_type: CL_TYPE_A
+			l_orig_return_type, l_return_type: TYPE_A
 			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 			l_special_array_class_type: SPECIAL_CLASS_TYPE
 			l_is_special_handled: BOOLEAN
@@ -1566,9 +1603,9 @@ feature {NONE} -- Visitors
 			l_class_c: CLASS_C
 			l_real_metamorphose: BOOLEAN
 			l_need_generation: BOOLEAN
-			l_target_type, l_precursor_type: CL_TYPE_I
+			l_target_type, l_precursor_type: CL_TYPE_A
 			l_count: INTEGER
-			l_arg_type: CL_TYPE_I
+			l_arg_type: CL_TYPE_A
 			l_is_call_on_any: BOOLEAN
 			l_is_nested_call: like is_nested_call
 			l_is_in_creation: like is_in_creation_call
@@ -1603,10 +1640,10 @@ feature {NONE} -- Visitors
 			else
 				l_is_call_on_any := a_node.is_any_feature and l_precursor_type = Void
 					-- Find location of feature.
-				if l_cl_type.is_expanded and then not l_cl_type.is_external and then not l_is_call_on_any then
-					if l_cl_type.base_class.is_typed_pointer then
+				if not l_is_call_on_any and l_cl_type.is_expanded and not l_cl_type.is_true_external then
+					if l_cl_type.associated_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
-						l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+						l_cl_type := system.pointer_class.compiled_class.actual_type
 					end
 					l_target_type := l_cl_type
 				else
@@ -1616,10 +1653,13 @@ feature {NONE} -- Visitors
 					target_type_not_void: l_target_type /= Void
 				end
 
-				l_class_c := l_cl_type.base_class
+				l_class_c := l_cl_type.associated_class
 
 				if l_class_c.is_native_array then
-					l_native_array_class_type ?= l_cl_type.associated_class_type
+					check
+						not_expanded: not l_cl_type.is_expanded
+					end
+					l_native_array_class_type ?= l_cl_type.associated_class_type (context.context_class_type.type)
 					check
 						native_array_class_type_not_void: l_native_array_class_type /= Void
 					end
@@ -1663,7 +1703,7 @@ feature {NONE} -- Visitors
 					end
 				elseif not a_node.is_first and then l_cl_type.is_basic then
 						-- Address of a value is required.
-					il_generator.generate_load_address (l_cl_type)
+						il_generator.generate_load_address (l_cl_type)
 				elseif a_node.is_first and then l_precursor_type /= Void and then context.context_class_type.is_expanded then
 					check
 						precursor_not_expanded: not l_precursor_type.is_expanded
@@ -1674,7 +1714,10 @@ feature {NONE} -- Visitors
 				end
 
 				if l_class_c.is_special then
-					l_special_array_class_type ?= l_cl_type.associated_class_type
+					check
+						not_expanded: not l_cl_type.is_expanded
+					end
+					l_special_array_class_type ?= l_cl_type.associated_class_type (context.context_class_type.type)
 					check
 						special_array_class_type_not_void: l_special_array_class_type /= Void
 					end
@@ -1702,7 +1745,7 @@ feature {NONE} -- Visitors
 						end
 						a_node.parameters.i_th (1).process (Current)
 						if context.real_type (a_node.parameters.i_th (2).type).is_true_expanded then
-							l_native_array_class_type.generate_il_put_preparation (l_cl_type)
+							l_native_array_class_type.generate_il_put_preparation (l_cl_type, context.context_class_type.type)
 						end
 						a_node.parameters.i_th (2).process (Current)
 					elseif l_is_call_on_any then
@@ -1731,8 +1774,8 @@ feature {NONE} -- Visitors
 					-- Special handling when precursor has a different expanded status
 					-- than current type. We need to find out the return type of the Precursor.
 				if l_precursor_type /= Void and then context.context_class_type.is_expanded then
-					context.change_class_type_context (l_precursor_type.associated_class_type,
-						l_precursor_type.associated_class_type)
+					context.change_class_type_context (l_precursor_type.associated_class_type (context.context_class_type.type),
+						l_precursor_type.associated_class_type (context.context_class_type.type))
 					l_orig_return_type := context.real_type (a_node.type)
 					context.restore_class_type_context
 				else
@@ -1743,7 +1786,7 @@ feature {NONE} -- Visitors
 
 				if l_native_array_class_type /= Void then
 					l_need_generation := False
-					l_native_array_class_type.generate_il (a_node.feature_name_id, l_cl_type)
+					l_native_array_class_type.generate_il (a_node.feature_name_id, l_cl_type, context.context_class_type.type)
 					if System.il_verifiable then
 						if
 							not l_return_type.is_expanded and then
@@ -1754,7 +1797,7 @@ feature {NONE} -- Visitors
 						end
 					end
 				elseif l_is_special_handled then
-					l_special_array_class_type.generate_il (a_node.feature_name_id, l_cl_type)
+					l_special_array_class_type.generate_il (a_node.feature_name_id, l_cl_type, context.context_class_type.type)
 					l_need_generation := False
 					if System.il_verifiable then
 						if
@@ -1784,23 +1827,23 @@ feature {NONE} -- Visitors
 				if l_invariant_checked then
 					generate_il_call_invariant_trailing (l_cl_type, l_return_type)
 				end
-			end
 
-			if
-				l_precursor_type /= Void and then l_orig_return_type /= l_return_type and then
-				not l_orig_return_type.is_expanded and then l_return_type.is_expanded
-			then
-					-- Return type of precursor is not expanded, we need to make
-					-- an expanded out of it. Because the way it works, the value
-					-- we get from the Precursor call must be a boxed value.
-				il_generator.generate_check_cast (l_orig_return_type, l_return_type)
-				il_generator.generate_load_address (l_return_type)
-				il_generator.generate_load_from_address (l_return_type)
-			elseif l_is_nested_call then
-				l_return_type := context.real_type (a_node.type)
-				if l_return_type.is_true_expanded and then not l_return_type.type_a.associated_class.is_enum then
-						-- Pointer to value type is required.
-					generate_il_metamorphose (l_return_type, l_return_type, True)
+				if
+					l_precursor_type /= Void and then l_orig_return_type /= l_return_type and then
+					not l_orig_return_type.is_expanded and then l_return_type.is_expanded
+				then
+						-- Return type of precursor is not expanded, we need to make
+						-- an expanded out of it. Because the way it works, the value
+						-- we get from the Precursor call must be a boxed value.
+					il_generator.generate_check_cast (l_orig_return_type, l_return_type)
+					il_generator.generate_load_address (l_return_type)
+					il_generator.generate_load_from_address (l_return_type)
+				elseif l_is_nested_call then
+					l_return_type := context.real_type (a_node.type)
+					if l_return_type.is_true_expanded and then not l_return_type.associated_class.is_enum then
+							-- Pointer to value type is required.
+							generate_il_metamorphose (l_return_type, l_return_type, True)
+					end
 				end
 			end
 		end
@@ -1813,8 +1856,8 @@ feature {NONE} -- Visitors
 	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
 			-- Process `a_node'.
 		local
-			l_type: TYPE_I
-			l_expr_type: TYPE_I
+			l_type: TYPE_A
+			l_expr_type: TYPE_A
 		do
 				-- Generate expression
 			a_node.expr.process (Current)
@@ -1927,8 +1970,8 @@ feature {NONE} -- Visitors
 			l_end_label: IL_LABEL
 			l_intervals: SORTED_TWO_WAY_LIST [INTERVAL_B]
 			l_spans: ARRAYED_LIST [INTERVAL_SPAN]
-			inspect_type: TYPE_I
-			l_cl_type_i: CL_TYPE_I
+			inspect_type: TYPE_A
+			l_cl_type_i: CL_TYPE_A
 			min_value: INTERVAL_VAL_B
 			max_value: INTERVAL_VAL_B
 			labels: ARRAY [IL_LABEL]
@@ -2069,7 +2112,7 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_test_label, l_end_label, l_label: IL_LABEL
-			l_local_list: LINKED_LIST [TYPE_I]
+			l_local_list: LINKED_LIST [TYPE_A]
 			l_variant_local_number: INTEGER
 			l_check_assertion: BOOLEAN
 		do
@@ -2084,7 +2127,7 @@ feature {NONE} -- Visitors
 			if l_check_assertion and then a_node.variant_part /= Void then
 					-- Initialization of the variant control variable
 				l_local_list := context.local_list
-				context.add_local (int32_c_type)
+				context.add_local (integer_32_type)
 				l_variant_local_number := l_local_list.count
 				il_generator.put_dummy_local_info (a_node.variant_part.type, l_variant_local_number)
 			end
@@ -2179,9 +2222,9 @@ feature {NONE} -- Visitors
 			l_is_target_generated: BOOLEAN
 			l_call_access: CALL_ACCESS_B
 			l_attr: ATTRIBUTE_B
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 			l_local_number: INTEGER
-			l_type: TYPE_I
+			l_type: TYPE_A
 			l_need_attribute_to_be_assigned_back: BOOLEAN
 			l_external: EXTERNAL_B
 		do
@@ -2219,7 +2262,7 @@ feature {NONE} -- Visitors
 				l_attr ?= a_node.target
 				if l_attr /= Void then
 					l_need_attribute_to_be_assigned_back := need_access_address (l_attr, True) and then
-						l_attr.is_first and then not context.current_type.is_generated_as_single_type
+						l_attr.is_first and then not context.context_class_type.is_generated_as_single_type
 					if l_need_attribute_to_be_assigned_back then
 						il_generator.duplicate_top
 					end
@@ -2270,9 +2313,9 @@ feature {NONE} -- Visitors
 	process_object_test_b (a_node: OBJECT_TEST_B) is
 			-- Process `a_node'.
 		local
-			l_target_type, l_source_type: TYPE_I
-			l_source_class_type: CL_TYPE_I
-			l_target_class_type: CL_TYPE_I
+			l_target_type, l_source_type: TYPE_A
+			l_source_class_type: CL_TYPE_A
+			l_target_class_type: CL_TYPE_A
 			success_label, failure_label: IL_LABEL
 			basic_failure_label: IL_LABEL
 		do
@@ -2300,7 +2343,7 @@ feature {NONE} -- Visitors
 			l_target_class_type ?= l_target_type
 			if
 				l_target_class_type /= Void and then
-				l_target_class_type.base_class.is_typed_pointer and then not
+				l_target_class_type.associated_class.is_typed_pointer and then not
 				l_source_type.same_as (l_target_type)
 			then
 					-- Objcet test for TYPED_POINTER fails
@@ -2332,9 +2375,9 @@ feature {NONE} -- Visitors
 			else
 				if l_source_type.is_expanded then
 					l_source_class_type ?= l_source_type
-					if l_source_class_type /= Void and then l_source_class_type.base_class.is_typed_pointer then
+					if l_source_class_type /= Void and then l_source_class_type.associated_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
-						l_source_type := system.pointer_class.compiled_class.actual_type.type_i
+						l_source_type := system.pointer_class.compiled_class.actual_type
 					end
 					generate_il_metamorphose (l_source_type, l_target_type, True)
 				end
@@ -2350,7 +2393,7 @@ feature {NONE} -- Visitors
 					-- Assignment attempt failed.
 
 				l_target_class_type ?= l_target_type
-				if l_target_class_type /= Void and then l_target_class_type.is_basic and then l_target_class_type.meta_generic = Void then
+				if l_target_class_type /= Void and then l_target_class_type.is_basic and then l_target_class_type.generics = Void then
 						-- Check native .NET type.
 						-- Generate Test on type
 					il_generator.generate_is_instance_of_external (l_target_class_type)
@@ -2404,7 +2447,7 @@ feature {NONE} -- Visitors
 	process_parameter_b (a_node: PARAMETER_B) is
 			-- Process `a_node'.
 		local
-			target_type: TYPE_I
+			target_type: TYPE_A
 		do
 			is_last_argument_current := is_this_argument_current
 			is_this_argument_current := False
@@ -2457,9 +2500,9 @@ feature {NONE} -- Visitors
 	process_reverse_b (a_node: REVERSE_B) is
 			-- Process `a_node'.
 		local
-			l_target_type, l_source_type: TYPE_I
-			l_source_class_type: CL_TYPE_I
-			l_target_class_type: CL_TYPE_I
+			l_target_type, l_source_type: TYPE_A
+			l_source_class_type: CL_TYPE_A
+			l_target_class_type: CL_TYPE_A
 			success_label, failure_label: IL_LABEL
 			basic_failure_label: IL_LABEL
 		do
@@ -2494,7 +2537,7 @@ feature {NONE} -- Visitors
 			l_target_class_type ?= l_target_type
 			if
 				l_target_class_type /= Void and then
-				l_target_class_type.base_class.is_typed_pointer and then not
+				l_target_class_type.associated_class.is_typed_pointer and then not
 				l_source_type.same_as (l_target_type)
 			then
 					-- Reverse reattachment to TYPED_POINTER is NOOP
@@ -2524,9 +2567,9 @@ feature {NONE} -- Visitors
 			else
 				if l_source_type.is_expanded then
 					l_source_class_type ?= l_source_type
-					if l_source_class_type /= Void and then l_source_class_type.base_class.is_typed_pointer then
+					if l_source_class_type /= Void and then l_source_class_type.associated_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
-						l_source_type := system.pointer_class.compiled_class.actual_type.type_i
+						l_source_type := system.pointer_class.compiled_class.actual_type
 					end
 					generate_il_metamorphose (l_source_type, l_target_type, True)
 				end
@@ -2549,7 +2592,7 @@ feature {NONE} -- Visitors
 						-- Assignment attempt failed.
 
 					l_target_class_type ?= l_target_type
-					if l_target_class_type /= Void and then l_target_class_type.is_basic and then l_target_class_type.meta_generic = Void then
+					if l_target_class_type /= Void and then l_target_class_type.is_basic and then l_target_class_type.generics = Void then
 							-- Check native .NET type.
 							-- Generate Test on type
 						il_generator.generate_is_instance_of_external (l_target_class_type)
@@ -2592,14 +2635,14 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_set_rout_disp_feat: FEATURE_I
-			l_real_ty: GEN_TYPE_I
-			l_decl_type, l_cl_type: CL_TYPE_I
+			l_real_ty: GEN_TYPE_A
+			l_decl_type, l_cl_type: CL_TYPE_A
 		do
 			l_real_ty ?= context.real_type (a_node.type)
 			(create {CREATE_TYPE}.make (l_real_ty)).generate_il
 			il_generator.duplicate_top
 
-			l_set_rout_disp_feat := l_real_ty.base_class.feature_table.
+			l_set_rout_disp_feat := l_real_ty.associated_class.feature_table.
 				item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id)
 			l_decl_type := l_real_ty.implemented_type (l_set_rout_disp_feat.origin_class_id)
 
@@ -2653,13 +2696,14 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_feat_tbl: FEATURE_TABLE
-			l_decl_type: CL_TYPE_I
-			l_actual_type: CL_TYPE_I
-			l_real_ty: TUPLE_TYPE_I
+			l_decl_type: CL_TYPE_A
+			l_actual_type: CL_TYPE_A
+			l_real_ty: TUPLE_TYPE_A
+			l_tuple_element_type: TYPE_A
 			l_item_feat, l_put_feat: FEATURE_I
 		do
 			l_real_ty ?= context.real_type (a_node.tuple_type)
-			l_feat_tbl := l_real_ty.base_class.feature_table
+			l_feat_tbl := l_real_ty.associated_class.feature_table
 			if a_node.source /= Void then
 				generate_il_line_info (a_node, True)
 				a_node.source.process (Current)
@@ -2685,13 +2729,16 @@ feature {NONE} -- Visitors
 					-- Call `fast_item' from TUPLE
 				il_generator.generate_feature_access (l_decl_type, l_item_feat.origin_feature_id, l_item_feat.argument_count, l_item_feat.has_return_value, True)
 
-				if a_node.tuple_element_type.is_expanded then
-					l_actual_type ?= a_node.tuple_element_type
+				l_tuple_element_type := a_node.tuple_element_type
+				if l_tuple_element_type.is_expanded then
+					l_actual_type ?= l_tuple_element_type
 					if l_actual_type /= Void then
 						il_generator.generate_external_unmetamorphose (l_actual_type)
 					else
-						il_generator.generate_unmetamorphose (a_node.tuple_element_type)
+						il_generator.generate_unmetamorphose (l_tuple_element_type)
 					end
+				elseif System.il_verifiable and then not l_tuple_element_type.is_none then
+					il_generator.generate_check_cast (Void, l_tuple_element_type)
 				end
 			end
 		end
@@ -2699,29 +2746,24 @@ feature {NONE} -- Visitors
 	process_tuple_const_b (a_node: TUPLE_CONST_B) is
 			-- Process `a_node'.
 		local
-			l_real_ty: GEN_TYPE_I
-			l_decl_type: CL_TYPE_I
-			l_actual_type: CL_TYPE_I
+			l_real_ty: GEN_TYPE_A
+			l_decl_type: CL_TYPE_A
+			l_actual_type: CL_TYPE_A
 			l_expr: EXPR_B
-			l_local_tuple: INTEGER
 			i: INTEGER
 			l_feat_tbl: FEATURE_TABLE
 			l_make_feat, l_put_feat: FEATURE_I
 		do
 			l_real_ty ?= context.real_type (a_node.type)
-			l_feat_tbl := l_real_ty.base_class.feature_table
+			l_feat_tbl := l_real_ty.associated_class.feature_table
 			l_make_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.default_create_name_id)
 			l_decl_type := l_real_ty.implemented_type (l_make_feat.origin_class_id)
 
 				-- Creation of Array
- 			context.add_local (l_real_ty)
- 			l_local_tuple := context.local_list.count
- 			il_generator.put_dummy_local_info (l_real_ty, l_local_tuple)
 			(create {CREATE_TYPE}.make (l_real_ty)).generate_il
- 			il_generator.generate_local_assignment (l_local_tuple)
 
 				-- Call creation procedure of TUPLE
-			il_generator.generate_local (l_local_tuple)
+			il_generator.duplicate_top
  			il_generator.generate_feature_access (l_decl_type, l_make_feat.origin_feature_id,
  				l_make_feat.argument_count, l_make_feat.has_return_value, True)
 
@@ -2739,7 +2781,7 @@ feature {NONE} -- Visitors
  				l_actual_type ?= context.real_type (l_expr.type)
 
  					-- Prepare call to `put'.
- 				il_generator.generate_local (l_local_tuple)
+				il_generator.duplicate_top
 
  					-- Generate expression
  				l_expr.process (Current)
@@ -2755,8 +2797,6 @@ feature {NONE} -- Visitors
  				i := i + 1
  				a_node.expressions.forth
  			end
-
- 			il_generator.generate_local (l_local_tuple)
 		end
 
 	process_type_expr_b (a_node: TYPE_EXPR_B) is
@@ -2766,7 +2806,7 @@ feature {NONE} -- Visitors
 		do
 			if a_node.is_dotnet_type then
 				il_generator.put_type_instance (
-					context.real_type (a_node.type_data.true_generics.item (1)))
+					context.real_type (a_node.type_data.generics.item (1)))
 			else
 				fixme ("Instance should be unique.")
 				create l_type_creator.make (context.real_type (a_node.type_data))
@@ -2831,7 +2871,7 @@ feature {NONE} -- Implementation
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 		local
-			l_cl_type: CL_TYPE_I
+			l_cl_type: CL_TYPE_A
 			l_call_access: CALL_ACCESS_B
 			l_nested: NESTED_B
 			l_constant: CONSTANT_B
@@ -2878,7 +2918,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_expression_il_for_type (a_node: EXPR_B; a_target_type: TYPE_I) is
+	generate_expression_il_for_type (a_node: EXPR_B; a_target_type: TYPE_A) is
 			-- Generate IL code for `expression' that is attached
 			-- or compared to the target of type `a_target_type'.
 		require
@@ -2886,8 +2926,8 @@ feature {NONE} -- Implementation
 			a_node_not_void: a_node /= Void
 			target_type_not_void: a_target_type /= Void
 		local
-			l_expression_type: TYPE_I
-			l_cl_type: CL_TYPE_I
+			l_expression_type: TYPE_A
+			l_cl_type: CL_TYPE_A
 		do
 			is_object_load_required := True
 			a_node.process (Current)
@@ -2899,12 +2939,12 @@ feature {NONE} -- Implementation
 						-- Simply box the object.
 					il_generator.generate_metamorphose (l_expression_type)
 				else
-					if l_cl_type.base_class.is_typed_pointer then
+					if l_cl_type.associated_class.is_typed_pointer then
 							-- Use POINTER instead of TYPED_POINTER.
-						l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+						l_cl_type := system.pointer_class.compiled_class.actual_type
 						l_expression_type := l_cl_type
 					end
-					if not a_target_type.is_external or else l_cl_type.meta_generic /= Void then
+					if not a_target_type.is_external or else l_cl_type.generics /= Void then
 							-- Basic type is attached to Eiffel reference type,
 							-- so basic type has to be represented by Eiffel type
 							-- rather than by built-in IL type.
@@ -2916,7 +2956,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_il_eiffel_metamorphose (a_type: TYPE_I) is
+	generate_il_eiffel_metamorphose (a_type: TYPE_A) is
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
 			is_valid: is_valid
@@ -2926,7 +2966,7 @@ feature {NONE} -- Implementation
 			il_generator.generate_eiffel_metamorphose (a_type)
 		end
 
-	generate_il_metamorphose (a_type, a_target_type: TYPE_I; a_real_metamorphose: BOOLEAN) is
+	generate_il_metamorphose (a_type, a_target_type: TYPE_A; a_real_metamorphose: BOOLEAN) is
 			-- Generate a metamorphose of target object.
 			-- If `a_real_metamorphose' is set to True, target is an
 			-- expanded type and feature is defined in a non-expanded class.
@@ -2937,7 +2977,7 @@ feature {NONE} -- Implementation
 		local
 			l_local_number: INTEGER
 		do
-			if a_target_type /= Void and then a_type.is_basic and then not a_target_type.is_external then
+			if a_target_type /= Void and then a_type.is_basic and then not a_target_type.is_true_external then
 					-- Box object.
 				generate_il_eiffel_metamorphose (a_type)
 				if not a_real_metamorphose then
@@ -3032,13 +3072,13 @@ feature {NONE} -- Implementation: binary operators
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 		local
-			l_left_type, l_right_type: TYPE_I
-			l_type: TYPE_I
+			l_left_type, l_right_type: TYPE_A
+			l_type: TYPE_A
 			l_same_type: BOOLEAN
 		do
 			if a_node.is_built_in then
-				l_left_type := a_node.left.type
-				l_right_type := a_node.right.type
+				l_left_type := context.real_type (a_node.left.type)
+				l_right_type := context.real_type (a_node.right.type)
 				l_same_type := l_left_type.same_as (l_right_type)
 				if not l_same_type then
 					l_type := l_left_type.heaviest (l_right_type)
@@ -3080,9 +3120,9 @@ feature {NONE} -- Implementation: binary operators
 			a_node_not_void: a_node /= Void
 			an_opcode_valie: an_opcode = il_ne or an_opcode = il_eq
 		local
-			l_left_type: TYPE_I
-			l_right_type: TYPE_I
-			l_comparison_type: TYPE_I
+			l_left_type: TYPE_A
+			l_right_type: TYPE_A
+			l_comparison_type: TYPE_A
 			l_continue_label: IL_LABEL
 			l_end_label: IL_LABEL
 			l_right_value: INTEGER
@@ -3121,9 +3161,9 @@ feature {NONE} -- Implementation: binary operators
 								l_left_type.is_external and then not l_left_type.is_basic or else
 								l_right_type.is_external and then not l_right_type.is_basic
 							then
-								create {CL_TYPE_I} l_comparison_type.make (system.system_object_id)
+								create {CL_TYPE_A} l_comparison_type.make (system.system_object_id)
 							else
-								create {CL_TYPE_I} l_comparison_type.make (system.any_id)
+								create {CL_TYPE_A} l_comparison_type.make (system.any_id)
 							end
 						end
 					else
@@ -3535,7 +3575,7 @@ feature {NONE} -- Implementation: assignments
 				-- Nothing to do in the current implementation.
 		end
 
-	frozen generate_il_simple_assignment (a_node: ACCESS_B; target_type, source_type: TYPE_I) is
+	frozen generate_il_simple_assignment (a_node: ACCESS_B; target_type, source_type: TYPE_A) is
 			-- Generate simple source assignment
 		require
 			is_valid: is_valid
@@ -3547,8 +3587,8 @@ feature {NONE} -- Implementation: assignments
 			attr: ATTRIBUTE_B
 			loc: LOCAL_B
 			res: RESULT_B
-			cl_type: CL_TYPE_I
-			local_index: INTEGER_32
+			cl_type: CL_TYPE_A
+			local_index: INTEGER
 		do
 					-- Generate cast if we have to generate verifiable code
 					-- since access might have been redefined and in this
@@ -3566,7 +3606,11 @@ feature {NONE} -- Implementation: assignments
 
 			if a_node.is_attribute then
 				attr ?= a_node
-				cl_type ?= attr.context_type
+					-- Check the type in which we are generating the current attribute
+					-- assignment. We could take `attr.context_type' but this would not
+					-- work when we regenerate the assignment in a descendant class (case
+					-- where routine is regenerated in an expanded type).
+				cl_type := context.original_class_type.type
 					-- Save expression value in a local, put Current on the stack,
 					-- load saved expression value and perform the assignment.
 				context.add_local (target_type)
@@ -3578,7 +3622,7 @@ feature {NONE} -- Implementation: assignments
 				if cl_type.is_expanded then
 						-- Generate direct assignment.
 					il_generator.generate_attribute_assignment (attr.need_target,
-						cl_type, cl_type.base_class.feature_of_rout_id (attr.routine_id).feature_id)
+						cl_type, cl_type.associated_class.feature_of_rout_id (attr.routine_id).feature_id)
 				else
 						-- Generate assignment to the potentially inherited attribute.
 					il_generator.generate_attribute_assignment (attr.need_target,
@@ -3595,16 +3639,16 @@ feature {NONE} -- Implementation: assignments
 
 feature {NONE} -- Implementation: Feature calls
 
-	need_real_metamorphose (a_node: CALL_ACCESS_B; a_type: CL_TYPE_I): BOOLEAN is
+	need_real_metamorphose (a_node: CALL_ACCESS_B; a_type: CL_TYPE_A): BOOLEAN is
 			-- Does call `a_node' originate from a reference type?
 		require
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 			a_type_not_void: a_type /= Void
-			a_type_has_associated_class: a_type.base_class /= Void
+			a_type_has_associated_class: a_type.associated_class /= Void
 		do
 			Result := system.class_of_id (a_node.written_in).is_external and then
-				a_node.written_in /= a_type.base_class.class_id
+				a_node.written_in /= a_type.associated_class.class_id
 		end
 
 	generate_il_c_call (a_node: EXTERNAL_B; inv_checked: BOOLEAN) is
@@ -3614,11 +3658,11 @@ feature {NONE} -- Implementation: Feature calls
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 		local
-			l_cl_type: CL_TYPE_I
-			l_return_type: TYPE_I
+			l_cl_type: CL_TYPE_A
+			l_return_type: TYPE_A
 			l_invariant_checked: BOOLEAN
 			l_real_metamorphose: BOOLEAN
-			l_basic_type: BASIC_I
+			l_basic_type: BASIC_A
 			l_count: INTEGER
 		do
 				-- Get type on which call will be performed.
@@ -3628,9 +3672,9 @@ feature {NONE} -- Implementation: Feature calls
 			end
 
 			if l_cl_type.is_expanded then
-				if l_cl_type.base_class.is_typed_pointer then
+				if l_cl_type.associated_class.is_typed_pointer then
 						-- Use POINTER instead of TYPED_POINTER.
-					l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+					l_cl_type := system.pointer_class.compiled_class.actual_type
 				end
 					-- Current type is expanded. We need to find out if
 					-- we need to generate a box operation, meaning that
@@ -3643,7 +3687,7 @@ feature {NONE} -- Implementation: Feature calls
 				-- magically added feature on basic types.
 			l_basic_type ?= l_cl_type
 			l_invariant_checked := (context.workbench_mode or
-				l_cl_type.base_class.assertion_level.is_invariant) and then
+				l_cl_type.associated_class.assertion_level.is_invariant) and then
 				not a_node.is_first
 
 			if a_node.is_first then
@@ -3654,8 +3698,7 @@ feature {NONE} -- Implementation: Feature calls
 					if a_node.is_static_call then
 							-- Bug fix until we generate direct static access
 							-- to C external.
-						(create {CREATE_TYPE}.make (l_cl_type.implemented_type
-							(a_node.written_in))).generate_il
+						(create {CREATE_TYPE}.make (a_node.static_class_type)).generate_il
 					else
 						il_generator.generate_current
 					end
@@ -3693,11 +3736,10 @@ feature {NONE} -- Implementation: Feature calls
 					-- not expanded and therefore we can safely generate a static
 					-- call to Precursor feature.
 				il_generator.generate_feature_access (
-					l_cl_type.implemented_type (a_node.written_in),
-					a_node.feature_id, l_count, not l_return_type.is_void, False)
+					a_node.static_class_type, a_node.feature_id, l_count, not l_return_type.is_void, False)
 			elseif l_cl_type.is_expanded then
 				il_generator.generate_feature_access (l_cl_type,
-					l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id,
+					l_cl_type.associated_class.feature_of_rout_id (a_node.routine_id).feature_id,
 					l_count, not l_return_type.is_void, False)
 			else
 				il_generator.generate_feature_access (
@@ -3719,7 +3761,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_il_call_invariant (cl_type: CL_TYPE_I; entry: BOOLEAN) is
+	generate_il_call_invariant (cl_type: CL_TYPE_A; entry: BOOLEAN) is
 			-- Generate IL code for calling invariant feature on class type `cl_type'.
 			-- Is the invariant checking `entry'?
 		require
@@ -3736,7 +3778,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_generator.generate_invariant_checking (cl_type, entry)
 		end
 
-	generate_il_call_invariant_leading (cl_type: CL_TYPE_I; is_checked_before_call: BOOLEAN) is
+	generate_il_call_invariant_leading (cl_type: CL_TYPE_A; is_checked_before_call: BOOLEAN) is
 			-- Generate IL code for calling invariant feature on class type `cl_type'
 			-- before associated feature call if `is_checked_before_call' is true.
 			-- Object on which a class invariant has
@@ -3756,7 +3798,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_il_call_invariant_trailing (cl_type: CL_TYPE_I; a_return_type: TYPE_I) is
+	generate_il_call_invariant_trailing (cl_type: CL_TYPE_A; a_return_type: TYPE_A) is
 			-- Generate IL code for calling invariant feature on class type `cl_type'
 			-- after associated feature call with result type `a_return_type'.
 			-- It is assumed that `generate_il_call_invariant_leading' is called
@@ -3790,7 +3832,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_special_routines_not_void: Result /= Void
 		end
 
-	generate_il_normal_call (a_node: FEATURE_B; target_type: CL_TYPE_I; is_virtual: BOOLEAN) is
+	generate_il_normal_call (a_node: FEATURE_B; target_type: CL_TYPE_A; is_virtual: BOOLEAN) is
 			-- Normal feature call.
 		require
 			is_valid: is_valid
@@ -3798,7 +3840,7 @@ feature {NONE} -- Implementation: Feature calls
 			target_type_not_void: target_type /= Void
 		local
 			l_count: INTEGER
-			l_return_type: TYPE_I
+			l_return_type: TYPE_A
 			target_feature_id: INTEGER
 		do
 			if a_node.parameters /= Void then
@@ -3809,7 +3851,7 @@ feature {NONE} -- Implementation: Feature calls
 
 			if target_type.is_expanded then
 					-- Generate direct call.
-				target_feature_id := target_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id
+				target_feature_id := target_type.associated_class.feature_of_rout_id (a_node.routine_id).feature_id
 			else
 				target_feature_id := a_node.feature_id
 			end
@@ -3836,7 +3878,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_il_any_call (a_node: FEATURE_B; written_type, target_type: CL_TYPE_I; is_virtual: BOOLEAN) is
+	generate_il_any_call (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A; is_virtual: BOOLEAN) is
 			-- Generate call to routine of ANY that works for both ANY and SYSTEM_OBJECT.
 			-- Arguments and target of the call are already pushed on the stack.
 		require
@@ -3849,7 +3891,7 @@ feature {NONE} -- Implementation: Feature calls
 			not_precursor_call: a_node.precursor_type = Void
 		local
 			l_count: INTEGER
-			l_return_type: TYPE_I
+			l_return_type: TYPE_A
 		do
 			if a_node.parameters /= Void then
 				l_count := a_node.parameters.count
@@ -4004,7 +4046,7 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.generate_call (False)
 		end
 
-	generate_clone_routine (a_feature_name_id: INTEGER; a_result_type: TYPE_I) is
+	generate_clone_routine (a_feature_name_id: INTEGER; a_result_type: TYPE_A) is
 			-- Generate inlined call to xx_clone' routines of ANY.
 		require
 			is_valid: is_valid
@@ -4070,13 +4112,13 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.generate_call (False)
 		end
 
-	generate_default (target_type, return_type: TYPE_I) is
+	generate_default (target_type, return_type: TYPE_A) is
 			-- Generate inlined call to `default'.
 		require
 			is_valid: is_valid
 			target_type_not_void: target_type /= Void
 		local
-			cl_type_i: CL_TYPE_I
+			cl_type_i: CL_TYPE_A
 		do
 				-- Check validity of target
 			generate_call_on_void_target (target_type, False)
@@ -4106,7 +4148,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_default_routine (a_node: FEATURE_B; written_type, target_type: CL_TYPE_I) is
+	generate_default_routine (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A) is
 			-- Generate inlined call to `default_create' and `default_rescue'.
 		require
 			is_valid: is_valid
@@ -4137,7 +4179,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_generator.mark_label (l_end_label)
 		end
 
-	generate_default_pointer (target_type: TYPE_I) is
+	generate_default_pointer (target_type: TYPE_A) is
 			-- Generate inlined call to `default_pointer'.
 		require
 			is_valid: is_valid
@@ -4151,7 +4193,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_generator.convert_to_native_int
 		end
 
-	generate_do_nothing (target_type: TYPE_I) is
+	generate_do_nothing (target_type: TYPE_A) is
 			-- Generate inlined call to `do_nothing'.
 		require
 			is_valid: is_valid
@@ -4193,7 +4235,7 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.generate_call (False)
 		end
 
-	generate_io (a_node: FEATURE_B; written_type, target_type: CL_TYPE_I) is
+	generate_io (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A) is
 			-- Generate inlined call to `io'.
 		require
 			is_valid: is_valid
@@ -4217,7 +4259,7 @@ feature {NONE} -- Implementation: Feature calls
 			generate_il_normal_call (a_node, written_type, True)
 		end
 
-	generate_operating_environment (a_node: FEATURE_B; written_type, target_type: CL_TYPE_I) is
+	generate_operating_environment (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A) is
 			-- Generate inlined call to `operating_environment'.
 		require
 			is_valid: is_valid
@@ -4240,7 +4282,7 @@ feature {NONE} -- Implementation: Feature calls
 			generate_il_normal_call (a_node, written_type, True)
 		end
 
-	generate_string_routine (a_node: FEATURE_B; written_type: CL_TYPE_I) is
+	generate_string_routine (a_node: FEATURE_B; written_type: CL_TYPE_A) is
 			-- Generate inlined call to routines of ANY returning a STRING object:
 			-- `generator', `generating_type', `out' and `tagged_out'.
 		require
@@ -4302,7 +4344,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_twin_routine (a_feature_name_id: INTEGER; a_result_type: TYPE_I) is
+	generate_twin_routine (a_feature_name_id: INTEGER; a_result_type: TYPE_A) is
 			-- Generate inlined call to xx_twin' routines of ANY.
 		require
 			is_valid: is_valid
@@ -4345,7 +4387,7 @@ feature {NONE} -- Implementation: Feature calls
 
 feature {NONE} -- Convenience
 
-	generate_call_on_void_target (target_type: TYPE_I; need_top_duplication: bOOLEAN) is
+	generate_call_on_void_target (target_type: TYPE_A; need_top_duplication: bOOLEAN) is
 			-- Generate check that current object is not Void.
 		require
 			is_valid: is_valid
@@ -4374,35 +4416,35 @@ feature {NONE} -- Convenience
 			end
 		end
 
-	any_type: CL_TYPE_I is
+	any_type: CL_TYPE_A is
 			-- Actual type of ANY
 		require
 			has_any: system.any_class /= Void
 			has_any_compiled: system.any_class.is_compiled
 		once
-			Result := system.any_class.compiled_class.actual_type.type_i
+			Result := system.any_class.compiled_class.actual_type
 		ensure
 			any_type_not_void: Result /= Void
 		end
 
-	system_string_type: CL_TYPE_I is
+	system_string_type: CL_TYPE_A is
 			-- Actual type of SYSTEM_STRING
 		require
 			has_system_string: system.system_string_class /= Void
 			has_system_string_compiled: system.system_string_class.is_compiled
 		once
-			Result := system.system_string_class.compiled_class.actual_type.type_i
+			Result := system.system_string_class.compiled_class.actual_type
 		ensure
 			system_string_type_not_void: Result /= Void
 		end
 
-	system_exception_type: CL_TYPE_I is
+	system_exception_type: CL_TYPE_A is
 			-- Actual type of SYSTEM_EXCEPTION
 		require
 			has_system_string: system.system_exception_type_class /= Void
 			has_system_string_compiled: system.system_exception_type_class.is_compiled
 		once
-			Result := system.system_exception_type_class.compiled_class.actual_type.type_i
+			Result := system.system_exception_type_class.compiled_class.actual_type
 		ensure
 			system_exception_type_not_void: Result /= Void
 		end

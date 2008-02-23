@@ -12,7 +12,7 @@ inherit
 		rename
 			make as basic_make
 		redefine
-			actual_type, partial_actual_type,
+			actual_type, partial_actual_type, constraint_actual_type,
 			is_typed_pointer, check_validity
 		end
 
@@ -43,6 +43,20 @@ feature -- Access
 				create {TYPED_POINTER_A} Result.make_typed (l_formal)
 			else
 				Result := Pointer_type
+			end
+		end
+
+	constraint_actual_type: BASIC_A is
+			-- Actual double type
+		do
+			if generics = Void then
+				Result := actual_type
+			else
+				if is_typed_pointer then
+					create {TYPED_POINTER_A} Result.make_typed (constraints (1))
+				else
+					Result := Pointer_type
+				end
 			end
 		end
 
@@ -101,7 +115,7 @@ feature -- Validity
 						skelet := types.first.skeleton
 						if
 							skelet.count /= 1 or else
-							not skelet.first.type_i.same_as (pointer_type.type_i)
+							not skelet.first.type_i.same_as (pointer_type)
 						then
 							create special_error.make (typed_pointer_case_2, Current)
 							Error_handler.insert_error (special_error)

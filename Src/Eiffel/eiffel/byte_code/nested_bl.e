@@ -40,7 +40,7 @@ feature
 			Result := local_type.c_type
 		end
 
-	local_type: TYPE_I is
+	local_type: TYPE_A is
 			-- Type of the current call
 		require
 			valid_message: message /= Void

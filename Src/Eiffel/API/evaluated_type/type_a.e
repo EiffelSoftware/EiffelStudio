@@ -8,11 +8,6 @@ indexing
 deferred class TYPE_A
 
 inherit
-	SHARED_TEXT_ITEMS
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -47,6 +42,8 @@ inherit
 			{NONE} all
 		end
 
+	HASHABLE
+
 feature -- Visitor
 
 	process (v: TYPE_A_VISITOR) is
@@ -57,13 +54,219 @@ feature -- Visitor
 		deferred
 		end
 
-feature -- Roundtrip/Token
+feature -- Generic conformance
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
+			-- Mode dependent type id - just for convenience
+		require
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			Result := {SHARED_GEN_CONF_LEVEL}.terminator_type       -- Invalid type id.
+			check
+				not_called: False
+			end
+		end
+
+	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
+			-- Generate mode dependent sequence of type id's 
+			-- separated by commas. `use_info' is true iff
+			-- we generate code for a creation instruction.
+		require
+			valid_file : buffer /= Void
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			buffer.put_integer (generated_id (final_mode, a_context_type))
+			buffer.put_character (',')
+		end
+
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+			-- Generate mode dependent sequence of type id's 
+			-- separated by commas. `use_info' is true iff
+			-- we generate code for a creation instruction.
+			-- 'idx_cnt' holds the index in the array for
+			-- this entry.
+		require
+			valid_file : buffer /= Void
+			valid_counter : idx_cnt /= Void
+			context_type_valid: is_valid_context_type (a_context_type)
+		local
+			dummy : INTEGER
+		do
+			buffer.put_integer (generated_id (final_mode, a_context_type))
+			buffer.put_character (',')
+
+				-- Increment counter
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+			-- Generate mode dependent initialization of
+			-- cid array. `use_info' is true iff
+			-- we generate code for a creation instruction.
+			-- 'idx_cnt' holds the index in the array for
+			-- this entry.
+		require
+			valid_file : buffer /= Void
+			valid_counter : idx_cnt /= Void
+		local
+			dummy : INTEGER
+		do
+				-- Increment counter
+			dummy := idx_cnt.next
+		end
+
+	make_full_type_byte_code (ba: BYTE_ARRAY; a_context_type: TYPE_A) is
+			-- Append full type info for the current type to `ba'
+			-- following the format for locals, creation expressions, etc.
+		require
+			ba_attached: ba /= Void
+			a_context_type_not_void: a_context_type /= Void
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			if has_associated_class_type (a_context_type) then
+				ba.append_short_integer (type_id (a_context_type) - 1)
+			else
+				ba.append_short_integer (0)
+			end
+				-- We can provide `Void' for `generated_id' since it is the one
+				-- from `a_context_type' that we are retrieving.
+			ba.append_short_integer (a_context_type.generated_id (False, Void))
+			make_gen_type_byte_code (ba, True, a_context_type)
+			ba.append_short_integer (-1)
+		end
+
+	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
+			-- Put type id's in byte array.
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		require
+			ba_attached: ba /= Void
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			ba.append_short_integer (generated_id (False, a_context_type))
+		end
+
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
+			-- `use_info' is true iff we generate code for a
+			-- creation instruction.
+		require
+			il_generator_not_void: il_generator /= Void
 		do
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+feature -- C code generation
+
+	generate_cecil_value (buffer: GENERATION_BUFFER; a_context_type: TYPE_A) is
+			-- Generate type value for cecil.
+		require
+			buffer_not_void: buffer /= Void
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			c_type.generate_sk_value (buffer)
+		end
+
+	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: CLASS_TYPE) is
+			-- Generate object associated to current and initializes it.
+		require
+			buffer_not_void: buffer /= Void
+			target_name_not_void: target_name /= Void
+			a_context_type_not_void: a_context_type /= Void
+		do
+		end
+
+	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: TYPE_A) is
+			-- Initializes object associated to current.
+		require
+			buffer_not_void: buffer /= Void
+			target_name_not_void: target_name /= Void
+			target_name_not_empty: not target_name.is_empty
+			a_context_type_not_void: a_context_type /= Void
+			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
+		do
+		end
+
+feature -- IL code generation
+
+	element_type: INTEGER_8 is
+			-- Type of current element. See MD_SIGNATURE_CONSTANTS for
+			-- all possible values.
+		do
+			Result := c_type.element_type
+		end
+
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+			-- Name of current class type in IL generation.
+		require
+			in_il_generation: System.il_generation
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			Result := name
+		ensure
+			il_type_name_not_void: Result /= Void
+			il_type_name_not_empty: not Result.is_empty
+		end
+
+	generic_il_type_name (a_context_type: TYPE_A): STRING_8
+			-- Associated name to for naming in generic derivation.
+		require
+			in_il_generation: system.il_generation
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			Result := name
+		ensure
+			il_type_name_not_void: Result /= Void
+			il_type_name_not_empty: not Result.is_empty
+		end
+
+	minimum_interval_value: INTERVAL_VAL_B is
+			-- Minimum value in inspect interval for current type
+		require
+			valid_type: is_integer or else is_natural or else is_character
+		do
+				-- Implementation is provided by descendants that meet precondition
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	maximum_interval_value: INTERVAL_VAL_B is
+			-- Maximum value in inspect interval for current type
+		require
+			valid_type: is_integer or else is_natural or else is_character
+		do
+				-- Implementation is provided by descendants that meet precondition
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	is_optimized_as_frozen: BOOLEAN is
+			-- Is current type optimizable as a frozen one in .NET code generation?
+		do
+		end
+
+	is_generated_as_single_type: BOOLEAN is
+			-- Is associated type generated as a single type or as an interface type and
+			-- an implementation type.
+		require
+			il_generation: System.il_generation
+			valid_type: is_valid
+		do
+		end
+
+	heaviest (other: TYPE_A): TYPE_A is
+			-- Heaviest of two numeric types.
+		do
+			Result := Current
+		end
+
+	dispatch_anchors (a_context_class: CLASS_C) is
+			-- If `Current' is an anchor to a feature, we need to record this anchoring
+			-- in `a_context_class'.
+			-- We do not check that `Current' is valid because this routine simply looks
+			-- for the `routine_id' of `{LIKE_FEATURE}' and nothing else.
+		require
+			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
 		do
 		end
 
@@ -85,6 +288,14 @@ feature -- Properties
 								is_formal or else is_none or else is_type_set)
 		end
 
+	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN is
+			-- Does Current have an associated class in `a_context_type'?
+		require
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			Result := has_associated_class
+		end
+
 	generics: ARRAY [TYPE_A] is
 			-- Actual generic types
 		do
@@ -98,10 +309,62 @@ feature -- Properties
 			-- False
 		end
 
-	is_valid: BOOLEAN is
-			-- The associated class is still in the system
+	is_valid_generic_derivation: BOOLEAN is
+			-- Is current still a valid type to be used as a generic derivation?
+			-- Note that Current has to be a generic derivation, unfortunately
+			-- we cannot use the usual precondition `same_as (generic_derivation)'
+			-- as we might be working on types that have changed their expanded
+			-- status and thus the query `generic_derivation' may yield a different value.
+		require
+			is_valid: is_valid
+			is_generic_derivation: -- same_as (generic_derivation)
 		do
 			Result := True
+		end
+
+	is_class_valid: BOOLEAN is
+			-- Are all types referenced by current type part of the system?
+		do
+			Result := True
+		end
+
+	frozen is_valid: BOOLEAN is
+			-- Is current a valid declaration by itself?
+		do
+			Result := internal_is_valid_for_class (Void)
+		ensure
+			true_implication: is_valid implies is_class_valid
+			false_implication: not is_class_valid implies not is_valid
+		end
+
+	frozen is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+			-- Is current valid for a declaration in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_valid: a_class.is_valid
+		do
+			Result := internal_is_valid_for_class (a_class)
+		end
+
+	frozen is_valid_context_type (a_type: TYPE_A): BOOLEAN is
+			-- Is `a_type' a valid context type for current type?
+			--| It is assumed that `a_type' is the type coming from
+			--| a CLASS_TYPE (see first check below).
+			--| If `a_context_type' is Void, it means that current can be resolved
+			--| without a context. However one has to be careful to not pass Void
+			--| all the time because if there are FORMAL_A in it, they
+			--| won't be properly resolved, or more precisely the reference
+			--| version will be taken which might not be the expected result.
+		do
+			if a_type /= Void then
+				Result :=
+						-- First type should be the one from a generic derivation.
+					a_type.generic_derivation.same_as (a_type) and then
+						-- Second it should be valid for Current type.
+					(a_type.has_associated_class and then is_valid_for_class (a_type.associated_class))
+			else
+				Result := True
+			end
 		end
 
 	is_integer: BOOLEAN is
@@ -146,7 +409,7 @@ feature -- Properties
 			-- Do nothing
 		end
 
-	is_bits: BOOLEAN is
+	is_bit: BOOLEAN is
 			-- Is the current actual type a bits type ?
 		do
 			-- Do nothing
@@ -199,6 +462,17 @@ feature -- Properties
 		do
 		end
 
+	is_true_external: BOOLEAN is
+			-- Is Current type based solely on an external one?
+		local
+			l_class: CLASS_C
+		do
+			l_class := associated_class
+			if l_class /= Void then
+				Result := l_class.is_external_class_c
+			end
+		end
+
 	is_separate: BOOLEAN is
 			-- Is the current actual type a separate one ?
 		do
@@ -222,6 +496,12 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
+
+	is_multi_constrained: BOOLEAN is
+			-- Is the current actual type a formal generic type representing a multiconstraint?
+		do
+		end
+
 	is_named_tuple: BOOLEAN is
 			-- Is the current type a tuple with labels?
 		do
@@ -269,6 +549,13 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	has_like_current: BOOLEAN is
+			-- Has the type `like Current' in its definition?
+		require
+			is_valid: is_valid
+		do
+		end
+
 	has_like_argument: BOOLEAN is
 			-- Has the type like argument in its definition?
 		do
@@ -289,6 +576,12 @@ feature -- Properties
 			definition: Result = (has_like or has_formal_generic)
 		end
 
+	is_explicit: BOOLEAN is
+			-- Is type fixed at compile time without anchors or formals?	
+		do
+			Result := True
+		end
+
 	is_void: BOOLEAN is
 			-- Is the type void (procedure type) ?
 		do
@@ -304,6 +597,12 @@ feature -- Properties
 			-- Is type attached?
 		do
 					-- False by default
+		end
+
+	is_standalone: BOOLEAN is
+			-- Is type standalone, i.e. does not depend on formal generic or acnhored type?
+		do
+			Result := not is_loose
 		end
 
 feature -- Comparison
@@ -354,18 +653,39 @@ feature -- Comparison
 			-- Do nothing
 		end
 
+	same_generic_derivation_as (current_type, other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' in the context of `current_type'?
+		require
+			other_not_void: other /= Void
+			other_derived: other.generic_derivation.same_as (other)
+		do
+			Result := internal_same_generic_derivation_as (current_type, other, 0)
+		ensure
+				-- Only if `current_type' is Void, can we ensure that a True results means that they have
+				-- the same generic derivation.
+			definition: (Result and then current_type = Void) implies generic_derivation.same_as (other.generic_derivation)
+		end
+
 feature -- Access
 
 	associated_class: CLASS_C is
 			-- Class associated to the current type.
-		require
-			has_associated_class: has_associated_class
 		deferred
+		ensure
+			definition: (Result /= Void) = has_associated_class
+		end
+
+	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE is
+			-- Class associated to the current type.
+			--| See comments on `has_associated_class_type' for details on `a_context_type'.
+		require
+			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
+		do
 		end
 
 	actual_type: TYPE_A is
 			-- Actual type of the interpreted type
-			--| *** FIXME this will become obsolete
 		do
 			Result := Current
 		ensure
@@ -458,6 +778,11 @@ feature -- Output
 			ext_append_to (a_text_formatter, Void)
 		end
 
+	frozen name: STRING is
+		do
+			Result := dump
+		end
+
 	dump: STRING is
 			-- Dumped trace
 		deferred
@@ -484,7 +809,15 @@ feature -- Conversion
 			to_type_set_not_void: Result /= Void
 		end
 
-feature {COMPILER_EXPORTER} -- Access
+feature -- Access
+
+	sk_value (a_context_type: TYPE_A): INTEGER is
+			-- SK value associated to the current type.
+		require
+			context_type_valid: is_valid_context_type (a_context_type)
+		do
+			Result := c_type.sk_value
+		end
 
 	has_expanded: BOOLEAN is
 			-- Has the current type some expanded types in itself ?
@@ -492,19 +825,93 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Do nothing
 		end
 
-	type_i: TYPE_I is
-			-- C type
+	type_id (a_context_type: TYPE_A): INTEGER is
+			-- Type ID of the corresponding class type
+			--| See comments on `has_associated_class_type' for details on `a_context_type'.
 		require
-			is_valid: is_valid
-		deferred
+			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
+		do
+			Result := associated_class_type (a_context_type).type_id
 		end
 
-	meta_type: TYPE_I is
-			-- Meta type
+	static_type_id (a_context_type: TYPE_A): INTEGER is
+			-- Static type ID of the corresponding class type.
+			--| See comments on `has_associated_class_type' for details on `a_context_type'.
 		require
-			is_valid: is_valid
+			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
 		do
-			Result := type_i
+			Result := associated_class_type (a_context_type).static_type_id
+		end
+
+	external_id (a_context_type: TYPE_A): INTEGER is
+			-- External type id of `Current' (or `static_type_id' for pure Eiffel type).
+		require
+			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
+		do
+			Result := associated_class_type (a_context_type).external_id
+		end
+
+	implementation_id (a_context_type: TYPE_A): INTEGER is
+			-- Return implementation id of `Current'.
+		require
+			il_generation: System.il_generation
+			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
+		do
+--			if has_associated_class_type (a_context_type) then
+				Result := associated_class_type (a_context_type).implementation_id
+--			else
+--				check
+--					is_reference_at_least: is_reference
+--				end
+--				Result := System.system_object_class.compiled_class.types.first.implementation_id
+--			end
+		ensure
+			valid_result: Result > 0
+		end
+
+	description: ATTR_DESC is
+			-- Descritpion of type for skeletons
+		local
+			l_ref: REFERENCE_DESC
+		do
+			create l_ref
+			l_ref.set_type_i (Current)
+			Result := l_ref
+		end
+
+	instantiated_description: ATTR_DESC is
+			-- Description of type when SKELETON is instantiated in the context of
+			-- a CLASS_TYPE.
+		do
+			Result := description
+		end
+
+	c_type: TYPE_C is
+			-- Corresponding C type
+		do
+			Result := reference_c_type
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	meta_type: TYPE_A is
+			-- Meta type
+		do
+			Result := Current
+		end
+
+	generic_derivation: TYPE_A is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_A
+			-- which can be used to search its associated CLASS_TYPE.
+		do
+			Result := internal_generic_derivation (0)
+		ensure
+			generic_derivation_not_void: Result /= Void
 		end
 
 	is_numeric: BOOLEAN is
@@ -565,6 +972,12 @@ feature {COMPILER_EXPORTER} -- Access
 			other_not_void: other /= Void
 			other_is_valid: other.is_valid
 		deferred
+		end
+
+	frozen conforms_to_array: BOOLEAN is
+			-- Does current conform to ARRAY regardless of the context.
+		do
+			Result := has_associated_class and then associated_class.conform_to (system.array_class.compiled_class)
 		end
 
 	is_conformant_to (other: TYPE_A): BOOLEAN is
@@ -631,13 +1044,35 @@ feature {COMPILER_EXPORTER} -- Access
 			Result := Current
 		end
 
+	adapted_in (class_type: CLASS_TYPE): TYPE_A is
+			-- See `TYPE_I.instantiation_in'.
+		require
+			class_type_not_void: class_type /= Void
+			class_type_valid: class_type.associated_class.is_valid
+			class_type_valid_for_current: is_valid_for_class (class_type.associated_class)
+		do
+			Result := Current
+		end
+
+	skeleton_adapted_in (class_type: CLASS_TYPE): TYPE_A is
+			-- Adapt current type in the context of `class_type' where all formals are adapted using
+			-- the actual from `class_type' but only if actuals are basic types, for expanded types
+			-- we leave the formal.
+			--  This is a special version only used in `{GENERIC_DESC}.instantiation_in' for backward
+			-- compatibility of storable files. If we did not care about backward compatibility, we would
+			-- not need to use it.
+		require
+			class_type_not_void: class_type /= Void
+			class_type_valid: class_type.associated_class.is_valid
+			class_typer_valid_for_current: is_valid_for_class (class_type.associated_class)
+		do
+			Result := Current
+		end
+
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): TYPE_A is
 			-- Evaluate `Current' written in `a_ancestor' in the context of `a_descendant' class.
 			-- If `a_feature' is not Void, then it is the feature seen from `a_descendant' from where
 			-- `Current' appears (i.e. not in an inheritance clause).
-			-- FIXME: it would be nice to have an assertion that checks the validity of a type
-			-- in  a class (for example that FORMAL_A #3 would not make sense in a class with only
-			-- one formal generic parameter).
 		require
 			type_is_valid: is_valid
 			a_ancestor_not_void: a_ancestor /= Void
@@ -646,11 +1081,12 @@ feature {COMPILER_EXPORTER} -- Access
 			a_descendant_not_void: a_descendant /= Void
 			a_descendant_valid: a_descendant.is_valid
 			a_descendant_compiled: a_descendant.has_feature_table
-			real_descendant: a_descendant.conform_to (a_ancestor)
+			real_descendant: a_descendant.simple_conform_to (a_ancestor)
 			a_feature_valid: a_feature /= Void implies
-				(a_feature.written_class.conform_to (a_ancestor) and
-				a_descendant.conform_to (a_feature.written_class))
-			is_feature_needed: has_like implies a_feature /= Void
+				(a_feature.access_class.simple_conform_to (a_ancestor) and
+				a_descendant.simple_conform_to (a_feature.access_class))
+			is_feature_needed: has_like_argument implies a_feature /= Void
+			is_valid_for_class: is_valid_for_class (a_ancestor)
 		do
 			Result := Current
 		ensure
@@ -666,12 +1102,16 @@ feature {COMPILER_EXPORTER} -- Access
 	good_generics: BOOLEAN is
 			-- Has the base class exactly the same number of generic
 			-- parameters in its formal generic declarations ?
+		require
+			is_class_valid: is_class_valid
 		do
 			Result := True
 		end
 
 	error_generics: VTUG is
 			-- Build the error if `good_generics' returns False
+		require
+			not_good_generics: not good_generics
 		do
 		end
 
@@ -779,6 +1219,38 @@ feature {COMPILER_EXPORTER} -- Access
 	update_dependance (feat_depend: FEATURE_DEPENDANCE) is
 			-- Update dependency for Dead Code Removal
 		do
+		end
+
+feature {TYPE_A} -- Helpers
+
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+			-- Is Current consistent and valid for `a_class'?
+		do
+			Result := True
+		end
+
+	internal_generic_derivation (a_level: INTEGER): TYPE_A is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_A
+			-- which can be used to search its associated CLASS_TYPE.
+		do
+			Result := Current
+		ensure
+			internal_generic_derivation_not_void: Result /= Void
+		end
+
+	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN is
+			-- Helpers for `same_generic_derivation_as'.
+		require
+			other_not_void: other /= Void
+			other_derived: other.internal_generic_derivation (a_level).same_as (other)
+		do
+			Result := is_equal (other)
+		ensure
+				-- Only if `current_type' is Void, can we ensure that a True results means that they have
+				-- the same generic derivation.
+			definition: (Result and current_type = Void) implies
+				internal_generic_derivation (a_level).same_as (other.internal_generic_derivation (a_level))
 		end
 
 feature {NONE} -- Implementation

@@ -16,6 +16,11 @@ inherit
 			calls_special_features, pre_inlined_code, inlined_byte_code
 		end
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	is_built_in: BOOLEAN is True
@@ -34,17 +39,17 @@ feature
 
 	register: ANY is do end;
 
-	type: TYPE_I is
+	type: TYPE_A is
 			-- Expression type is boolean
 		do
-			Result := Boolean_c_type;
+			Result := Boolean_type;
 		end;
 
 	allocates_memory: BOOLEAN is
 			-- Does the expression allocates memory ?
 		local
-			left_type: TYPE_I;
-			right_type: TYPE_I;
+			left_type: TYPE_A;
+			right_type: TYPE_A;
 		do
 			left_type := context.real_type (left.type);
 			right_type := context.real_type (right.type);
@@ -125,8 +130,8 @@ feature
 	analyze is
 			-- Analyze expression
 		local
-			left_type: TYPE_I;
-			right_type: TYPE_I;
+			left_type: TYPE_A;
+			right_type: TYPE_A;
 		do
 			left_type := context.real_type (left.type);
 			right_type := context.real_type (right.type);
@@ -169,7 +174,7 @@ feature
 	generate is
 			-- Generate expression
 		local
-			basic_i: BASIC_I
+			basic_i: BASIC_A
 			buf: GENERATION_BUFFER
 		do
 			left.generate
@@ -190,8 +195,8 @@ feature
 	print_register is
 			-- Print expression value
 		local
-			left_type: TYPE_I;
-			right_type: TYPE_I;
+			left_type: TYPE_A;
+			right_type: TYPE_A;
 			buf: GENERATION_BUFFER
 		do
 			left_type := context.real_type (left.type);

@@ -242,7 +242,10 @@ feature -- Access
 		local
 			a: like arguments
 		do
-			if type.type_i.is_formal then
+				-- It is pretty important that we use `actual_type.is_formal' and not
+				-- just `is_formal' because otherwise if you have `like x' and `x: G'
+				-- then we would fail to detect that.
+			if type.actual_type.is_formal then
 				Result := True
 			else
 				a := arguments
@@ -252,7 +255,7 @@ feature -- Access
 					until
 						a.after
 					loop
-						if a.item.type_i.is_formal then
+						if a.item.actual_type.is_formal then
 							Result := True
 							a.finish
 						end
@@ -272,7 +275,10 @@ feature -- Access
 			z: INTEGER
 		do
 			create Result.make_empty
-			if type.type_i.is_formal then
+				-- It is pretty important that we use `actual_type.is_formal' and not
+				-- just `is_formal' because otherwise if you have `like x' and `x: G'
+				-- then we would fail to detect that.
+			if type.actual_type.is_formal then
 				digit := 1
 			end
 			a := arguments
@@ -283,7 +289,7 @@ feature -- Access
 				until
 					a.after
 				loop
-					if a.item.type_i.is_formal then
+					if a.item.actual_type.is_formal then
 						digit := digit + i
 					end
 					i := i |<< 1
@@ -1289,6 +1295,18 @@ feature -- Conveniences
 			good_written_in: written_in /= 0
 		do
 			Result := System.class_of_id (written_in)
+		ensure
+			written_class_not_void: Result /= Void
+		end
+
+	access_class: CLASS_C is
+			-- Class where current feature can be accessed
+			-- through its routine id.
+			-- Useful for replication
+		require
+			access_in_positive: access_in > 0
+		do
+			Result := System.class_of_id (access_in)
 		ensure
 			written_class_not_void: Result /= Void
 		end
@@ -2533,7 +2551,7 @@ feature -- Dead code removal
 
 feature -- Byte code access
 
-	frozen access (access_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
+	frozen access (access_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
 			-- Byte code access for current feature
 		require
 			access_type_not_void: access_type /= Void
@@ -2543,7 +2561,7 @@ feature -- Byte code access
 			Result_exists: Result /= Void
 		end
 
-	frozen access_for_multi_constraint (access_type: TYPE_I; a_static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
+	frozen access_for_multi_constraint (access_type: TYPE_A; a_static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
 			-- Creates a byte code access for a multi constraint target.
 			-- `a_static_type' is the type where the feature is from.
 			-- It is NOT a static call that will be generated, but a dynamic one. It is only needed for W_bench.
@@ -2557,7 +2575,7 @@ feature -- Byte code access
 			Result_exists: Result /= Void
 		end
 
-	access_for_feature (access_type: TYPE_I; static_type: TYPE_I; is_qualified: BOOLEAN): ACCESS_B is
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
 			-- Byte code access for current feature. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		require

@@ -33,11 +33,11 @@ feature -- Access
 		do
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_I) is
+	create_empty_instance_of (a_type_i: CL_TYPE_A) is
 		do
 		end
 
-	create_special_any_instance (a_type_i: CL_TYPE_I; a_count: INTEGER) is
+	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER) is
 		do
 		end
 

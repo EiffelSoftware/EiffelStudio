@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			create item.make (Default_size)
 			current_position := 0
 		end
-		
+
 feature -- Access
 
 	count: INTEGER is
@@ -62,6 +62,28 @@ feature -- Settings
 			end
 		end
 
+feature -- Copy
+
+	as_special: SPECIAL [NATURAL_8] is
+			-- Copy of Current as SPECIAL.
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 0
+				nb := current_position
+				create Result.make (nb)
+			until
+				i = nb
+			loop
+				Result.put (item.read_natural_8 (i), i)
+				i := i + 1
+			end
+		ensure
+			as_special_not_void: Result /= Void
+			same_count: Result.count = current_position
+		end
+
 feature {NONE} -- Implementation
 
 	compress_data (i: INTEGER) is
@@ -74,7 +96,7 @@ feature {NONE} -- Implementation
 			l_val: INTEGER
 		do
 			l_pos := current_position
-			
+
 			if i <= 0x7F then
 					-- Simply copy first byte.
 				internal_put (i.to_integer_8, l_pos)
@@ -162,7 +184,7 @@ feature {NONE} -- Stack depth management
 
 invariant
 	item_not_void: item /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

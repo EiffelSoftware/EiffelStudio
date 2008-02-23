@@ -52,12 +52,6 @@ feature -- Access
 	parameter_count: INTEGER
 			-- Number of parameters
 
-	return_type_element_type: INTEGER_8
-			-- Return type element type
-
-	return_type_token: INTEGER
-			-- Return type token
-
 feature -- Settings
 
 	set_method_type (t: like method_type) is
@@ -89,7 +83,7 @@ feature -- Settings
 			parameter_count_set: parameter_count = n
 		end
 
-	set_return_type (element_type: like return_type_element_type; token: like return_type_token) is
+	set_return_type (element_type: INTEGER_8; token: INTEGER) is
 			-- Set return type of method.
 		require
 			valid_state: state = Return_type_state
@@ -99,12 +93,8 @@ feature -- Settings
 		do
 			set_type (element_type, token)
 			state := Parameters_state
-			return_type_element_type := element_type
-			return_type_token := token
 		ensure
 			state_set: state = Parameters_state
-			return_type_element_type_set: return_type_element_type = element_type
-			return_type_token_set: return_type_token = token
 		end
 
 feature -- State

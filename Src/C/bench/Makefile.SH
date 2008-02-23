@@ -81,14 +81,13 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the daemon
-LSRC = byte.c date.c encode.c offset.c minilzo.c
+LSRC = byte.c date.c offset.c minilzo.c
 PSTORE = pstore.c pretrieve.c
 
 # Derived object file names
 FOBJ = \
 	   byte.o \
 	   date.o \
-	   encode.o \
 	   offset.o \
 	   minilzo.o \
 	   pstore.o \
@@ -97,7 +96,6 @@ FOBJ = \
 MT_FOBJ = \
 	       MTbyte.o \
 	       MTdate.o \
-	       MTencode.o \
 	       MToffset.o \
 	       MTminilzo.o \
 	       MTpstore.o \
@@ -106,7 +104,6 @@ MT_FOBJ = \
 WOBJ = \
 	      byte.o \
 	      date.o \
-	      encode.o \
 	      offset.o \
 	      minilzo.o \
 	       wpstore.o \
@@ -115,7 +112,6 @@ WOBJ = \
 MT_WOBJ = \
 	       MTbyte.o \
 	       MTdate.o \
-	       MTencode.o \
 	       MToffset.o \
 	       MTminilzo.o \
 	       MTwpstore.o \
@@ -131,9 +127,6 @@ MTbyte.o: byte.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
 MTdate.o: date.c
-	       $(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTencode.o: encode.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
 MToffset.o: offset.c

@@ -7,7 +7,7 @@
 >JMTCFLAGS
 
 ;# Files used to build the daemon
-LSRC = byte.c date.c encode.c offset.c minilzo.c
+LSRC = byte.c date.c offset.c minilzo.c
 PSTORE = pstore.c pretrieve.c
 
 ;# Derived object file names

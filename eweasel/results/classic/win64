@@ -1526,6 +1526,8 @@ Test change-export-create-generic-contraint-error-ignored (incr286): failed
 		Validity error in class FOO_BAR_FACTORY code VTCG
 		Final status:  paused 
 
+Test inherit-crash-after-update (incr287): passed
+Test large-formal-changes (incr288): passed
 Test divide-melt-panic (melt001): passed
 Test bit-melt-metamorphose (melt002): passed
 Test manifest-array-with-old (melt003): passed
@@ -1761,6 +1763,18 @@ Test inline-deferred-routine-with-constants-implementations (final037): passed
 Test agent_to_feature_of_generic_class (final038): passed
 Test wrong-attribute-dynamic-binding (final039): passed
 Test dead-code-catcall (final040): passed
+Test oms-ec-precondition-violation (final041): failed
+	Description: During code generation of inherited contracts of a routine that has some once manifest string, a precondition is violated in the compiled.
+	Execution error in file C:\work\eweasel\eweasel\tests\final041\tcf at line 24
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  had_exception (valid_number
+	) 
+	Expected result:
+		Final status:  completed 
+
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -2697,6 +2711,7 @@ Test once-global-procedure-c-failure (ccomp068): passed
 Test line-generation-finalize-bug (ccomp069): passed
 Test code-formatting (ccomp070): passed
 Test assign-attempt-on-basic-type (ccomp071): passed
+Test polymorphic-feature-address-bad-code (ccomp072): passed
 Test freeze-retrieval-mismatch (store001): passed
 Test retrieve-corrupted-file (store002): passed
 Test melt-retrieval-mismatch (store003): passed
@@ -2721,6 +2736,7 @@ Test tuple-57-unretrievable (store011): passed
 Test retrieve-corrupted-file-thread-freezes (store012): passed
 Test storable-formats (store013): passed
 Test storable-formats-2 (store014): passed
+Test retrieve-mismatch-serialization-failure (store015): passed
 Test rename-inherited-wrong-flat (flat001): manual
 Test flat-after-change (flat002): manual
 Test flat-feature-two-defs (flat003): manual
@@ -3041,6 +3057,7 @@ Test array-of-user-defined-expanded (expanded003): passed
 Test expanded-formal-multiconstraint (expanded004): passed
 Test expanded-formal-multiconstraint2 (expanded005): passed
 Test wrong-type-in-expanded-generic-in-generic (expanded006): passed
+Test complex-expanded-generic-inheritance-crash (expanded007): passed
 Test filename-classname-mismatch-warning (warn001): passed
 Test agent-optimization-failure (agent001): failed
 	Description: When an agent is defined to return an ANY but is redefined in a descendant to return an expanded type the optimized code for the agent call is not properly done.
@@ -3099,17 +3116,9 @@ Test attached-generic-type-conformance (attach010): failed
 	Expected result:
 		Final status:  completed 
 
-Test correct-attached-predicate-precedence-semantics (attach011): failed
-	Description: Ensures using and then with object tests does not evaluate anything after the prior test, if it fails
-	Execution error in file C:\work\eweasel\eweasel\tests\attach011\tcf at line 12
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test correct-attached-predicate-precedence-semantics (attach011): passed
+Test object-test-chain (attach012): passed
+Test object-test-code-generation (attach013): passed
 Test tuple-insertions-assertions (dotnet002): passed
 Test copy-infinite-recursion (dotnet003): passed
 Test dotnet-nested-constant-access (dotnet004): passed
@@ -3127,8 +3136,8 @@ Test real-output-no-locale (dotnet036): passed
 Test replicated-from-generic-type (dotnet050): passed
 Test implicit-type-cause-crash-on-cast (dotnet051): passed
 
-Passed:  1487 / 1654  (90%)
-Failed:  150 / 1654  (10%)
-Manual:  14 / 1654  (1%)
-Skipped:  3 / 1654  (1%)
+Passed:  1496 / 1662  (90%)
+Failed:  149 / 1662  (10%)
+Manual:  14 / 1662  (1%)
+Skipped:  3 / 1662  (1%)
 

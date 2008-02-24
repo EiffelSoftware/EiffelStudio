@@ -458,11 +458,13 @@ feature -- Generation helpers
 
 	solved_type (context_type: CLASS_TYPE; type_a: TYPE_A): TYPE_C is
 			-- Solved type associated with `context_type'.
-		local
-			s_type: TYPE_A
+		require
+			context_type_not_void: context_type /= Void
+			type_a_not_void: type_a /= Void
 		do
-			s_type := type_a.instantiated_in (context_type.type)
-			Result := s_type.c_type
+			Result := type_a.instantiated_in (context_type.type).c_type
+		ensure
+			solved_type_not_void: Result /= Void
 		end
 
 	arg_types (context_type: CLASS_TYPE; args: FEAT_ARG; is_for_agent: BOOLEAN; seed: FEATURE_I): ARRAY [STRING] is
@@ -492,17 +494,7 @@ feature -- Generation helpers
 				if l_is_for_agent_and_workbench_mode then
 					t := l_eif_typed_value_str
 				elseif seed /= Void then
-					type_i := seed.arguments.i_th (i)
-					if type_i.has_like then
-						t := l_eif_reference_str
-						-- It is pretty important that we use `actual_type.is_formal' and not
-						-- just `is_formal' because otherwise if you have `like x' and `x: G'
-						-- then we would fail to detect that.
-					elseif type_i.actual_type.is_formal then
-						t := l_eif_reference_str
-					else
-						t := type_i.c_type.c_string
-					end
+					t := seed.arguments.i_th (i).c_type.c_string
 				else
 					t := solved_type (context_type, args.i_th (i)).c_string
 				end

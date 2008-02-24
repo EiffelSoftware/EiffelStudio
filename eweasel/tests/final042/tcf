@@ -1,0 +1,12 @@
+test_name inlining-finalization-crash
+test_description Trying to finalize some code would cause the compiler to crash at degree -3. The merge of TYPE_I/TYPE_A basically solved the problem without having to debug this particular problem since now types are always analyzed in a proper context.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_final_keep
+compile_result   ok
+c_compile_final
+c_compile_result ok
+
+test_end

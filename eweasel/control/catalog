@@ -837,6 +837,7 @@ test	agent_to_feature_of_generic_class final038 tcf pass finalizing
 test	wrong-attribute-dynamic-binding	final039 tcf pass finalizing
 test	dead-code-catcall			final040 tcf pass finalizing
 test	oms-ec-precondition-violation	final041 tcf pass finalizing ec_precondition
+test	inlining-finalization-crash	final042 tcf pass finalizing
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime

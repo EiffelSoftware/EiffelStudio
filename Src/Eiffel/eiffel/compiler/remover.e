@@ -110,7 +110,7 @@ feature {NONE}
 	features: INTEGER
 		-- Number of features for the current dot
 
-	features_per_message: INTEGER is 50
+	features_per_message: INTEGER is 100
 
 	mark_alive (body_index: INTEGER) is
 			-- Record feature `feat'

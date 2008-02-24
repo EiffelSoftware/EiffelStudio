@@ -276,10 +276,7 @@ feature
 							-- prior to the call.
 						buf.put_string (inline_ext.inline_name (internal_name))
 					else
-						buf.put_character ('(')
-						type_c.generate_function_cast (buf, real_arg_types, False)
 						buf.put_string (internal_name)
-						buf.put_character (')')
 					end
 				else
 					if not l_type_i.is_void then

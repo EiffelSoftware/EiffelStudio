@@ -217,38 +217,61 @@ end
 			-- Generate final portion of C code.
 		local
 			buf: GENERATION_BUFFER
+			l_type_c: TYPE_C
 		do
 			is_direct_once.set_item (False)
 			generate_access_on_type (gen_reg, class_type)
 			buf := buffer
-			if is_direct_once.item then
-				buf.put_character (',')
-				buf.put_character ('(')
-				if context.workbench_mode or gen_reg.is_current then
-					gen_reg.print_register
-				else
-					buf.put_string ("RTCV(")
-					gen_reg.print_register
+			if not is_deferred then
+				if is_direct_once.item then
+					if system.keep_assertions then
+						buf.put_character (')')
+					end
+					buf.put_character (',')
+					buf.put_character ('(')
+					if context.workbench_mode or gen_reg.is_current then
+						gen_reg.print_register
+					else
+						buf.put_string ("RTCV(")
+						gen_reg.print_register
+						buf.put_character (')')
+					end
+					if parameters /= Void then
+						generate_parameters_list
+					end
 					buf.put_character (')')
+					buf.put_character (')')
+				else
+					buf.put_character ('(')
+					if context.workbench_mode or gen_reg.is_current then
+						gen_reg.print_register
+					else
+						buf.put_string ("RTCV(")
+						gen_reg.print_register
+						buf.put_character (')')
+					end
+					if parameters /= Void then
+						generate_parameters_list
+					end
+					buf.put_character (')')
+					if system.keep_assertions then
+						buf.put_character (')')
+					end
 				end
-				if parameters /= Void then
-					generate_parameters_list
+			else
+					-- The line below can be removed when the RTNR macro
+					-- doesn't take an argument anymore.
+				buf.put_string ("(NULL)")
+				l_type_c := real_type (type).c_type
+				if not l_type_c.is_void then
+					buf.put_two_character (',', ' ')
+					l_type_c.generate_default_value (buf)
 				end
 				buf.put_character (')')
-			else
-				buf.put_character ('(')
-				if context.workbench_mode or gen_reg.is_current then
-					gen_reg.print_register
-				else
-					buf.put_string ("RTCV(")
-					gen_reg.print_register
+				if system.keep_assertions then
 					buf.put_character (')')
 				end
-				if parameters /= Void then
-					generate_parameters_list
-				end
 			end
-			buf.put_character (')')
 		end
 
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
@@ -265,11 +288,11 @@ end
 			entry: ROUT_ENTRY
 			f: FEATURE_I
 			index: INTEGER
-			keep, is_nested: BOOLEAN
+			l_keep, is_nested: BOOLEAN
 			l_par: NESTED_BL
 			return_type_string: STRING
 		do
-			keep := system.keep_assertions
+			l_keep := system.keep_assertions
 			is_nested := not is_first
 			l_par := parent
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), True)
@@ -280,9 +303,10 @@ end
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
 				is_deferred := True
-				buf.put_character ('(')
-				type_c.generate_function_cast (buf, <<"EIF_REFERENCE">>, False)
-				buf.put_string (" RTNR)")
+				if l_keep then
+					buf.put_character ('(')
+				end
+				buf.put_string ("(RTNR")
 			elseif precursor_type = Void and then array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
@@ -297,14 +321,15 @@ end
 					type_c.generate_access_cast (buf)
 					type_c := reference_c_type
 				end
-				buf.put_character ('(')
-				if keep then
+				if l_keep then
+					buf.put_character ('(')
 					if is_nested and then need_invariant then
 						buf.put_string ("nstcall = 1, ")
 					else
 						buf.put_string ("nstcall = 0, ")
 					end
 				end
+				buf.put_character ('(')
 				type_c.generate_function_cast (buf, argument_types, False)
 
 					-- Generate following dispatch:
@@ -365,20 +390,20 @@ end
 				else
 						-- Call to a deferred feature without implementation
 					is_deferred := True
-					internal_name := "RTNR"
-					local_argument_types := <<"EIF_REFERENCE">>
 				end
-				buf.put_character ('(')
-				if keep then
+				if l_keep then
+					buf.put_character ('(')
 					if is_nested and then need_invariant then
 						buf.put_string ("nstcall = 1, ")
 					else
 						buf.put_string ("nstcall = 0, ")
 					end
 				end
-				type_c.generate_function_cast (buf, local_argument_types, False)
-				buf.put_string (internal_name)
-				buf.put_character (')')
+				if is_deferred then
+					buf.put_string ("(RTNR")
+				else
+					buf.put_string (internal_name)
+				end
 			end
 		end
 

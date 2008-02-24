@@ -3,6 +3,7 @@ test_description An agent defined on a routine involving a like argument generat
 
 copy_sub 	 Ace $TEST Ace
 copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
 
 compile_final
 compile_result 	ok

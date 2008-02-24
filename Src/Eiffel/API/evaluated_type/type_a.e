@@ -1042,6 +1042,8 @@ feature -- Access
 			good_argument: class_type /= Void
 		do
 			Result := Current
+		ensure
+			instantiated_in_not_void: Result /= Void
 		end
 
 	adapted_in (class_type: CLASS_TYPE): TYPE_A is
@@ -1052,6 +1054,8 @@ feature -- Access
 			class_type_valid_for_current: is_valid_for_class (class_type.associated_class)
 		do
 			Result := Current
+		ensure
+			adapted_in_not_void: Result /= Void
 		end
 
 	skeleton_adapted_in (class_type: CLASS_TYPE): TYPE_A is

@@ -1888,7 +1888,7 @@ feature -- Implementation
 						else
 							create l_array_type.make (system.array_id, l_generics)
 						end
-						if l_current_class_void_safe then
+						if l_current_class_void_safe and then not l_array_type.is_attached then
 								-- Type of a manifest array is always attached
 							l_array_type := l_array_type.as_attached
 						end
@@ -2046,7 +2046,7 @@ feature -- Implementation
 			t: like last_type
 		do
 			t := string_type
-			if t /= Void and then context.current_class.lace_class.is_void_safe then
+			if t /= Void and then context.current_class.lace_class.is_void_safe and then not t.is_attached then
 					-- Constants are always of an attached type
 				t := t.as_attached
 			end
@@ -2801,7 +2801,7 @@ feature -- Implementation
 			if not l_has_invalid_locals then
 					-- Check body
 				l_as.routine_body.process (Current)
-				if l_needs_byte_node then
+				if l_needs_byte_node and then error_level = l_error_level then
 					l_byte_code ?= last_byte_node
 					context.init_byte_code (l_byte_code)
 					l_byte_code.set_precondition (l_list)
@@ -2841,7 +2841,7 @@ feature -- Implementation
 						-- are not taken into account
 					set_is_checking_postcondition (True)
 					l_as.postcondition.process (Current)
-					if l_needs_byte_node then
+					if l_needs_byte_node and then error_level = l_error_level then
 						l_list ?= last_byte_node
 						l_byte_code.set_postcondition (l_list)
 					end
@@ -2869,7 +2869,7 @@ feature -- Implementation
 						-- Set mark of context
 					is_in_rescue := True
 					process_compound (l_as.rescue_clause)
-					if l_needs_byte_node then
+					if l_needs_byte_node and then error_level = l_error_level then
 						l_list ?= last_byte_node
 						l_byte_code.set_rescue_clause (l_list)
 					end
@@ -3122,7 +3122,7 @@ feature -- Implementation
 				l_as.id_list.forth
 			end
 			last_type := strip_type
-			if context.current_class.lace_class.is_void_safe then
+			if context.current_class.lace_class.is_void_safe and then not last_type.is_attached then
 					-- Type of strip expression is always attached.
 				last_type := last_type.as_attached
 			end
@@ -3372,7 +3372,7 @@ feature -- Implementation
 			l_type := last_type
 			if l_type /= Void then
 				create l_type_type.make (system.type_class.compiled_class.class_id, << l_type >>)
-				if context.current_class.lace_class.is_void_safe then
+				if context.current_class.lace_class.is_void_safe and then not l_type_type.is_attached then
 						-- The type is always attached
 					l_type_type := l_type_type.as_attached
 				end
@@ -6081,6 +6081,7 @@ feature -- Implementation
 		do
 			break_point_slot_count := 0
 			context.inline_agent_counter.reset
+			context.variables.start_feature
 			if l_as.assertion_list /= Void then
 				reset_for_unqualified_call_checking
 				set_is_checking_invariant (True)
@@ -7623,7 +7624,7 @@ feature {NONE} -- Agents
 				-- Create open argument type tuple
 			create l_tuple.make (System.tuple_id, l_oargtypes)
 			l_current_class_void_safe := context.current_class.lace_class.is_void_safe
-			if l_current_class_void_safe and then l_oargtypes.count > 0 then
+			if l_current_class_void_safe and then l_oargtypes.count > 0 and then not l_tuple.is_attached then
 					-- Type of an argument tuple is always attached.
 				l_tuple := l_tuple.as_attached
 			end

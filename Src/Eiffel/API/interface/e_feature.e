@@ -547,9 +547,9 @@ feature -- Access
 					end
 					fdep.forth
 				end
-				if Result.is_empty then
-					Result := Void
-				end
+			end
+			if Result.is_empty then
+				Result := Void
 			end
 		ensure
 			valid_result: Result /= Void implies not Result.is_empty
@@ -996,7 +996,7 @@ feature {FEATURE_I} -- Setting
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

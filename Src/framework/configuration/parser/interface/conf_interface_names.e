@@ -316,6 +316,12 @@ feature -- Option names and descriptions
 	option_is_void_safe_name: STRING_GENERAL do Result := locale.translation ("Is source code void safe?") end
 	option_is_void_safe_description: STRING_GENERAL do Result := locale.translation ("Shall feature calls on targets of detachable types be reported as errors?") end
 
+	option_syntax_level_name: STRING_GENERAL do Result := locale.translation ("Syntax level") end
+	option_syntax_level_description: STRING_GENERAL do Result := locale.translation ("Variant of syntax used in source code") end
+	option_syntax_level_obsolete_name: STRING_GENERAL do Result := locale.translation ("Obsolete syntax") end
+	option_syntax_level_transitional_name: STRING_GENERAL do Result := locale.translation ("Transitional syntax") end
+	option_syntax_level_standard_name: STRING_GENERAL do Result := locale.translation ("Standard syntax") end
+
 	warning_names: HASH_TABLE [STRING_GENERAL, STRING] is
 			-- Warning names.
 		once
@@ -801,7 +807,7 @@ feature -- Boolean values
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

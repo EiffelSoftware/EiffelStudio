@@ -290,6 +290,8 @@ feature -- Action
 					parser.set_has_old_verbatim_strings (False)
 					parser.set_has_old_verbatim_strings_warning (False)
 				end
+				parser.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
+				parser.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
 				Inst_context.set_group (cluster)
 				parser.parse_class (file, Current)
 				Result := parser.root_node
@@ -2226,7 +2228,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -369,8 +369,13 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_IMPLIES
 			}
 [iI][nN][dD][eE][xX][iI][nN][gG]	{				
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
-				last_token := TE_INDEXING
+				if is_indexing_keyword then
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
+					last_token := TE_INDEXING
+				else
+					process_id_as
+					last_token := TE_ID
+				end
 			}
 [iI][nN][fF][iI][xX]	{				
 				last_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
@@ -409,12 +414,17 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_NOT
 			}
 [nN][oO][tT][eE]	{
-				last_token := TE_ID
-				process_id_as
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-							once "Use of `note', possibly a new keyword in future definition of `Eiffel'."))
+				if is_note_keyword then
+					last_keyword_as_value := ast_factory.new_keyword_as (TE_NOTE, Current)
+					last_token := TE_NOTE
+				else
+					process_id_as
+					last_token := TE_ID
+					if has_syntax_warning then
+						report_one_warning (
+							create {SYNTAX_WARNING}.make (line, column, filename,
+								once "Keyword `note' is used as identifier."))
+					end
 				end
 			}
 [oO][bB][sS][oO][lL][eE][tT][eE]	{				
@@ -1203,7 +1213,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 %%
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

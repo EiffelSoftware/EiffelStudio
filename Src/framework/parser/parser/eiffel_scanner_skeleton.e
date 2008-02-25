@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 			create token_buffer2.make (Initial_buffer_size)
 			create verbatim_marker.make (Initial_verbatim_marker_size)
 			filename := ""
+			is_indexing_keyword := True
+			is_note_keyword := False
 		ensure
 			ast_factory_set: ast_factory = a_factory
 		end
@@ -69,6 +71,8 @@ feature -- Initialization
 			token_buffer.clear_all
 			token_buffer2.clear_all
 			verbatim_marker.clear_all
+			is_indexing_keyword := True
+			is_note_keyword := False
 		end
 
 feature -- Roundtrip
@@ -151,6 +155,14 @@ feature -- Access
 			--   C compiler (e.g., CL does not support strings longer than 0xFFFF bytes)
 			--   CLI specification (e.g., identifiers cannot be longer 0x1FFFFFFF bytes)
 
+feature {NONE} -- Status
+
+	is_note_keyword: BOOLEAN
+			-- Is "note" keyword allowed in current context?
+
+	is_indexing_keyword: BOOLEAN
+			-- Is "indexing" keyword allowed in current context?
+
 feature -- Convenience
 
 	token_line (a_node: AST_EIFFEL): like line is
@@ -203,6 +215,22 @@ feature -- Settings
 			has_old_verbatim_strings_warning := b
 		ensure
 			has_old_verbatim_strings_warning_set: has_old_verbatim_strings_warning = b
+		end
+
+	set_is_indexing_keyword (value: BOOLEAN)
+			-- Set `is_indexing_keyword' to `value'
+		do
+			is_indexing_keyword := value
+		ensure
+			is_indexing_keyword_set: is_indexing_keyword = value
+		end
+
+	set_is_note_keyword (value: BOOLEAN)
+			-- Set `is_note_keyword' to `value'
+		do
+			is_note_keyword := value
+		ensure
+			is_note_keyword_set: is_note_keyword = value
 		end
 
 feature {NONE} -- Error handling
@@ -336,12 +364,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_id_as_with_existing_stub (a_index: INTEGER) is
+	process_id_as_with_existing_stub (keyword: KEYWORD_AS; a_index: INTEGER; is_lower: BOOLEAN) is
 			-- Process current token which is an identifier and whose leaf stub has been inserted into `match_list'.
 			-- For example, an "assign" keyword is later recognized as an identifier.
 			-- Used for roundtrip.
 		local
 			l_count: INTEGER
+			message: STRING
 		do
 			l_count := text_count
 				-- Note: Identifiers are converted to lower-case.
@@ -349,8 +378,23 @@ feature {NONE} -- Implementation
 				report_too_long_string (text)
 			else
 				last_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, a_index)
+				if has_syntax_warning then
+					if last_id_as_value = Void then
+						message := once "Keyword is used as identifier."
+					else
+						message := once "Keyword `" + last_id_as_value.name
+						message.append_string ("' is used as identifier.")
+					end
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line (keyword), token_column (keyword),
+							filename, message))
+				end
 				if last_id_as_value /= Void then
-					append_text_to_string (last_id_as_value.name)
+					if is_lower then
+						last_id_as_value.to_lower
+					else
+						last_id_as_value.to_upper
+					end
 				end
 			end
 		end
@@ -505,7 +549,7 @@ invariant
 	filename_not_void: filename /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

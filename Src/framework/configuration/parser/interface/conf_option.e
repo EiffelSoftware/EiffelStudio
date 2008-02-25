@@ -10,8 +10,26 @@ class
 
 inherit
 	CONF_VALIDITY
+		redefine
+			copy,
+			default_create,
+			is_equal
+		end
 
 	CONF_ACCESS
+		redefine
+			copy,
+			default_create,
+			is_equal
+		end
+
+feature {NONE} -- Creation
+
+	default_create
+		do
+			create syntax_level
+			syntax_level.limit (3)
+		end
 
 feature -- Status
 
@@ -169,6 +187,34 @@ feature -- Access, stored in configuration file
 
 	description: STRING
 			-- A description about the options.
+
+feature -- Access: syntax level
+
+	syntax_level: CONF_VALUE_CHOICE
+			-- Expected variant of source code syntax
+
+	syntax_level_obsolete: NATURAL_8 = 0
+			-- Option value for obsolete syntax
+
+	syntax_level_transitional: NATURAL_8 = 1
+			-- Option value for transitional syntax
+
+	syntax_level_standard: NATURAL_8 = 2
+			-- Option value for standard syntax
+
+	syntax_level_count: NATURAL_8 = 3
+			-- Total number of different values of `syntax_level'
+
+	is_valid_syntax_level (value: NATURAL_8): BOOLEAN
+			-- Is `value' a valid syntax level?
+		do
+			inspect value
+			when syntax_level_obsolete, syntax_level_transitional, syntax_level_standard then
+				Result := True
+			else
+				-- False by default
+			end
+		end
 
 feature -- Access, stored in configuration file.
 
@@ -361,7 +407,100 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			description_set: description = a_description
 		end
 
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		do
+			if {a: !like assertions} other.assertions then
+				assertions := a.twin
+			else
+				assertions := Void
+			end
+			if {d: !like debugs} other.debugs then
+				debugs := d.twin
+			else
+				debugs := Void
+			end
+			if {s: !like description} other.description then
+				description := s.twin
+			else
+				description := Void
+			end
+			is_attached_by_default := other.is_attached_by_default
+			is_attached_by_default_configured := other.is_attached_by_default_configured
+			is_cat_call_detection := other.is_cat_call_detection
+			is_cat_call_detection_configured := other.is_cat_call_detection_configured
+			is_debug := other.is_debug
+			is_debug_configured := other.is_debug_configured
+			is_full_class_checking := other.is_full_class_checking
+			is_full_class_checking_configured := other.is_full_class_checking_configured
+			is_msil_application_optimize := other.is_msil_application_optimize
+			is_msil_application_optimize_configured := other.is_msil_application_optimize_configured
+			is_optimize := other.is_optimize
+			is_optimize_configured := other.is_optimize_configured
+			is_profile := other.is_profile
+			is_profile_configured := other.is_profile_configured
+			is_trace := other.is_trace
+			is_trace_configured := other.is_trace_configured
+			is_void_safe := other.is_void_safe
+			is_void_safe_configured := other.is_void_safe_configured
+			is_warning := other.is_warning
+			is_warning_configured := other.is_warning_configured
+			if {l: !like local_namespace} other.local_namespace then
+				local_namespace := l.twin
+			else
+				local_namespace := Void
+			end
+			if {n: !like namespace} other.namespace then
+				namespace := n.twin
+			else
+				namespace := Void
+			end
+			syntax_level := other.syntax_level.twin
+			if {w: !like warnings} other.warnings then
+				warnings := w.twin
+			else
+				warnings := Void
+			end
+		end
+
 feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+		do
+			if equal (assertions, other.assertions)
+			and then equal (debugs, other.debugs)
+			and then equal (description, other.description)
+			and then is_attached_by_default = other.is_attached_by_default
+			and then is_attached_by_default_configured = other.is_attached_by_default_configured
+			and then is_cat_call_detection = other.is_cat_call_detection
+			and then is_cat_call_detection_configured = other.is_cat_call_detection_configured
+			and then is_debug = other.is_debug
+			and then is_debug_configured = other.is_debug_configured
+			and then is_full_class_checking = other.is_full_class_checking
+			and then is_full_class_checking_configured = other.is_full_class_checking_configured
+			and then is_msil_application_optimize = other.is_msil_application_optimize
+			and then is_msil_application_optimize_configured = other.is_msil_application_optimize_configured
+			and then is_optimize = other.is_optimize
+			and then is_optimize_configured = other.is_optimize_configured
+			and then is_profile = other.is_profile
+			and then is_profile_configured = other.is_profile_configured
+			and then is_trace = other.is_trace
+			and then is_trace_configured = other.is_trace_configured
+			and then is_void_safe = other.is_void_safe
+			and then is_void_safe_configured = other.is_void_safe_configured
+			and then is_warning = other.is_warning
+			and then is_warning_configured = other.is_warning_configured
+			and then equal (local_namespace, other.local_namespace)
+			and then equal (namespace, other.namespace)
+			and then syntax_level.is_equal (other.syntax_level)
+			and then equal (warnings, other.warnings)
+			then
+				Result := True
+			end
+		end
 
 	is_equal_options (other: like Current): BOOLEAN is
 			-- Are `current' and `other' equal considering the options that are in the compiled result?
@@ -372,7 +511,9 @@ feature -- Comparison
 				is_cat_call_detection = other.is_cat_call_detection and
 				is_attached_by_default = other.is_attached_by_default and
 				is_void_safe = other.is_void_safe and
-				is_trace = other.is_trace and equal(local_namespace, other.local_namespace) and
+				is_trace = other.is_trace and
+				syntax_level.is_equal (other.syntax_level) and
+				equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
 		end
 
@@ -459,14 +600,17 @@ feature -- Merging
 					is_void_safe_configured := other.is_void_safe_configured
 					is_void_safe := other.is_void_safe
 				end
+				syntax_level.set_safely (other.syntax_level)
 			end
 		end
 
 invariant
 	local_namespace_not_empty: local_namespace = Void or else not local_namespace.is_empty
+	syntax_level_attached: syntax_level /= Void
+	syntax_level_count_set: syntax_level.count = syntax_level_count
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

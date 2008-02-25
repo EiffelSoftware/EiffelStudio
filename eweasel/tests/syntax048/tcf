@@ -1,0 +1,99 @@
+test_name indexing-notes-syntax
+test_description Test for Notes syntax and obsolete Indexing syntax.
+
+-- Obsolete syntax
+
+define SL "0"
+copy_sub Ace $TEST Ace
+
+define ID "name"
+define KW "indexing"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+define ID "note"
+define KW "indexing"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result syntax_warning TEST 5; TEST 17; TEST 22
+
+define ID "name"
+define KW "note"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result syntax_error TEST 1; TEST 2
+
+-- Transitional syntax
+
+define SL "1"
+copy_sub Ace $TEST Ace
+
+define ID "name"
+define KW "indexing"
+
+copy_sub test.e $CLUSTER test.e
+
+resume_compile
+compile_result ok
+
+define ID "name"
+define KW "note"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+define ID "note"
+define KW "indexing"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result syntax_error TEST 5
+
+define ID "indexing"
+define KW "note"
+
+copy_sub test.e $CLUSTER test.e
+
+resume_compile
+compile_result syntax_error TEST 5
+
+-- Standard syntax
+
+define SL "2"
+copy_sub Ace $TEST Ace
+
+define ID "name"
+define KW "indexing"
+
+copy_sub test.e $CLUSTER test.e
+
+resume_compile
+compile_result syntax_error TEST 2
+
+define ID "name"
+define KW "note"
+
+copy_sub test.e $CLUSTER test.e
+
+resume_compile
+compile_result ok
+
+define ID "indexing"
+define KW "note"
+
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

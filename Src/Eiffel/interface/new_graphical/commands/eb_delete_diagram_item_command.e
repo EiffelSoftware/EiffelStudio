@@ -16,7 +16,6 @@ inherit
 		undefine
 			menu_name
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			description,
 			internal_recycle
@@ -33,8 +32,6 @@ inherit
 		undefine
 			enable_sensitive,
 			disable_sensitive,
-			new_toolbar_item,
-			new_mini_toolbar_item,
 			new_mini_sd_toolbar_item,
 			new_sd_toolbar_item,
 			mini_pixmap,
@@ -187,17 +184,6 @@ feature -- Access
 					delete_features (selected_features, a_stone.source)
 				end
 			end
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND} (display_text)
-			Result.drop_actions.extend (agent execute_with_inherit_stone)
-			Result.drop_actions.extend (agent execute_with_client_stone)
-			Result.drop_actions.extend (agent drop_class)
-			Result.drop_actions.extend (agent drop_cluster)
-			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is

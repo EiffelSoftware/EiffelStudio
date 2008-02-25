@@ -11,7 +11,6 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			tooltext
 		end
@@ -47,15 +46,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Redefine
-		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
-			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
-			Result.drop_actions.extend (agent on_drop)
-			Result.drop_actions.set_veto_pebble_function (agent dropable)
-		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Redefine

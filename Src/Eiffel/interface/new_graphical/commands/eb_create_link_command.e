@@ -12,7 +12,6 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			make,
 			description,
@@ -46,18 +45,6 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-			--
-			-- Call `recycle' on the result when you don't need it anymore otherwise
-			-- it will never be garbage collected.
-		do
-			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text)
-			current_button := Result
-			Result.select_actions.extend (agent show_text_menu)
-		end
-
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
@@ -87,7 +74,6 @@ feature -- Status setting
 		require
 			valid_type: a_type = Inheritance or else a_type = Supplier or else a_type = Aggregate
 		local
-			tbb: EB_COMMAND_TOOL_BAR_BUTTON
 			l_sd_button: like new_sd_toolbar_item
 			tt: STRING_GENERAL
 		do
@@ -100,23 +86,7 @@ feature -- Status setting
 				tt.append (shortcut_string)
 				tt.append (Closing_parenthesis)
 			end
-			if internal_managed_toolbar_items /= Void then
-				from
-					internal_managed_toolbar_items.start
-				until
-					internal_managed_toolbar_items.after
-				loop
-					tbb := internal_managed_toolbar_items.item
-					tbb.set_pixmap (pixmap)
-					tbb.set_tooltip (tt)
-					if is_sensitive then
-						tbb.enable_sensitive
-					else
-						tbb.disable_sensitive
-					end
-					internal_managed_toolbar_items.forth
-				end
-			end
+
 			if internal_managed_sd_toolbar_items /= Void then
 				from
 					internal_managed_sd_toolbar_items.start
@@ -224,9 +194,7 @@ feature {NONE} -- Implementation
 	current_widget: EV_WIDGET is
 			-- Current widget
 		do
-			if current_button /= Void then
-				Result := current_button.parent
-			elseif current_sd_button /= Void then
+			if current_sd_button /= Void then
 				Result := current_sd_button.tool_bar
 			end
 		end
@@ -234,9 +202,7 @@ feature {NONE} -- Implementation
 	button_height: INTEGER is
 			-- Height of button
 		do
-			if current_button /= Void then
-				Result := current_button.parent.height
-			elseif current_sd_button /= Void then
+			if current_sd_button /= Void then
 				Result := current_sd_button.tool_bar.height
 			end
 		end
@@ -244,9 +210,6 @@ feature {NONE} -- Implementation
 feature {ES_DIAGRAM_TOOL_PANEL} -- Implementation
 
 	current_sd_button: EB_SD_COMMAND_TOOL_BAR_BUTTON;
-			-- Current toggle button.
-
-	current_button: EB_COMMAND_TOOL_BAR_BUTTON;
 			-- Current toggle button.
 
 indexing

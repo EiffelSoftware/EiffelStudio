@@ -12,7 +12,7 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
+			new_sd_toolbar_item,
 			tooltext
 		end
 
@@ -79,14 +79,14 @@ feature -- Status report
 		do
 			-- Currently there is no pixel buffer for this command.
 		end
-		
+
 	menu_name: STRING_GENERAL is
 			-- Text used for menu items for `Current'.
 		do
 			Result := Interface_names.b_Terminate_c_compilation
 		end
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise

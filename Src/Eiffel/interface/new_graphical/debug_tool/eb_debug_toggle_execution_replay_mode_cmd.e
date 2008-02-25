@@ -74,7 +74,6 @@ feature -- Change text
 	update_graphical is
 		local
 			menu_items: like internal_managed_menu_items
-			toolbar_items: like internal_managed_toolbar_items
 			sd_toolbar_items: like internal_managed_sd_toolbar_items
 			t: STRING_GENERAL
 			p,mp: like pixmap
@@ -99,20 +98,6 @@ feature -- Change text
 			end
 
 			t := tooltext
-			toolbar_items := internal_managed_toolbar_items
-			if toolbar_items /= Void then
-				from
-					toolbar_items.start
-				until
-					toolbar_items.after
-				loop
-					if toolbar_items.item.text /= Void then
-						toolbar_items.item.set_text (t)
-					end
-					toolbar_items.item.set_pixmap (mp)
-					toolbar_items.forth
-				end
-			end
 
 			sd_toolbar_items := internal_managed_sd_toolbar_items
 			if sd_toolbar_items /= Void then

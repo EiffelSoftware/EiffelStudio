@@ -12,8 +12,6 @@ inherit
 	EB_TOOLBARABLE_COMMAND
 		redefine
 			initialize_sd_toolbar_item,
-			new_toolbar_item,
-			new_mini_toolbar_item,
 			new_sd_toolbar_item,
 			new_mini_sd_toolbar_item
 		end
@@ -22,31 +20,9 @@ feature -- Change
 
 	set_select (b: BOOLEAN) is
 		local
-			lst: like internal_managed_toolbar_items
-			but: like new_toolbar_item
 			sdlst: like internal_managed_sd_toolbar_items
 			sdbut: like new_sd_toolbar_item
 		do
-			lst := internal_managed_toolbar_items
-			if lst /= Void and then not lst.is_empty then
-				from
-					lst.start
-				until
-					lst.after
-				loop
-					but ?= lst.item
-					if but /= Void then
-						but.select_actions.block
-						if b then
-							but.enable_select
-						else
-							but.disable_select
-						end
-						but.select_actions.resume
-					end
-					lst.forth
-				end
-			end
 			sdlst := internal_managed_sd_toolbar_items
 			if sdlst /= Void and then not sdlst.is_empty then
 				from
@@ -73,32 +49,6 @@ feature -- Basic operations
 
 	is_selected: BOOLEAN is
 		deferred
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
-			-- Create a new mini toolbar button for this command.
-		do
-			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text)
-			Result.select_actions.extend (agent execute)
-		end
-
-	new_mini_toolbar_item: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
-			-- Create a new mini toolbar button for this command.
-		do
-			create Result.make (Current)
-			Result.set_pixmap (mini_pixmap)
-			if is_sensitive then
-				Result.enable_sensitive
-			else
-				Result.disable_sensitive
-			end
-			Result.set_tooltip (tooltip)
-			if is_selected then
-				Result.enable_select
-			end
-			Result.select_actions.extend (agent execute)
-			Result.select_actions.extend (agent update_tooltip (Result))
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
@@ -129,12 +79,6 @@ feature -- Basic operations
 		end
 
 feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
-
-	update_tooltip (toggle: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON) is
-			-- Update tooltip of `toggle'.
-		do
-			toggle.set_tooltip (tooltip)
-		end
 
 	update_sd_tooltip (toggle: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON) is
 			-- Update tooltip of `toggle'.

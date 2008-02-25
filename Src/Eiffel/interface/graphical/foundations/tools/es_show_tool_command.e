@@ -20,7 +20,6 @@ inherit
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			tooltext,
 			is_tooltext_important,
@@ -151,15 +150,6 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text)
-			Result.select_actions.extend (agent execute)
-			Result.select_actions.extend (agent update_tooltip (Result))
-		end
-
 	new_sd_toolbar_item (a_display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
@@ -198,20 +188,6 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-
-	update_tooltip (toggle: EB_COMMAND_TOOL_BAR_BUTTON) is
-			-- Update tooltip of `toggle'.
-		local
-			l_tt: like tooltip
-		do
-			l_tt := tooltip.twin
-			if shortcut_available then
-				l_tt.append (opening_parenthesis)
-				l_tt.append (shortcut_string)
-				l_tt.append (closing_parenthesis)
-			end
-			toggle.set_tooltip (l_tt)
-		end
 
 	update_sd_tooltip (a_toogle: EB_SD_COMMAND_TOOL_BAR_BUTTON) is
 			-- Update tooltip of `a_toggle'.

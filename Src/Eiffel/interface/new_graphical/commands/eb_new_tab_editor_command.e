@@ -12,9 +12,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			tooltext,
-			new_toolbar_item,
 			new_sd_toolbar_item,
-			new_mini_toolbar_item,
 			new_mini_sd_toolbar_item
 		end
 
@@ -97,26 +95,10 @@ feature -- Execution
 
 feature -- Items
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent execute_with_stone)
-			Result.drop_actions.set_veto_pebble_function (agent editors_manager.stone_acceptable)
-		end
-
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- New toolbar item for dockable toolbar.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}(display_text)
-			Result.drop_actions.extend (agent execute_with_stone)
-			Result.drop_actions.set_veto_pebble_function (agent editors_manager.stone_acceptable)
-		end
-
-	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
-			-- New mini toolbar item.
-		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			Result.drop_actions.extend (agent execute_with_stone)
 			Result.drop_actions.set_veto_pebble_function (agent editors_manager.stone_acceptable)
 		end

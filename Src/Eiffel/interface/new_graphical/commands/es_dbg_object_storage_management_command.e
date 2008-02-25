@@ -14,7 +14,6 @@ inherit
 			tooltext,
 			mini_pixmap,
 			mini_pixel_buffer,
-			new_mini_toolbar_item,
 			new_mini_sd_toolbar_item
 		end
 
@@ -96,14 +95,6 @@ feature -- Access
 			-- Menu name for `Current'.
 		do
 			Result := Interface_names.m_Save_debuggee_object
-		end
-
-	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new mini toolbar button for this command.
-		do
-			Result := Precursor
-			Result.drop_actions.extend (agent on_stone_dropped)
-			Result.drop_actions.set_veto_pebble_function (agent accepts_stone)
 		end
 
 	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is

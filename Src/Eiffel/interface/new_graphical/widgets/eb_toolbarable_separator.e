@@ -25,13 +25,6 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN): EV_TOOL_BAR_ITEM is
-			-- Create a new toolbar item for Current
-			-- display_text currently has only a compatibility role
-		do
-			create {EV_TOOL_BAR_SEPARATOR} Result
-		end
-
 	new_sd_toolbar_item (a_display_text: BOOLEAN): SD_TOOL_BAR_ITEM is
 			-- Create a new toolbar item for Current
 		do

@@ -12,7 +12,6 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			description,
 			menu_name
@@ -339,19 +338,6 @@ feature -- Basic operations
 			if not a_class_list.is_empty then
 				calculate_relations_for_classes (a_class_list)
 			end
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-			--
-			-- Call `recycle' on the result when you don't need it anymore otherwise
-			-- it will never be garbage collected.
-		do
-			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text)
-			Result.select_actions.extend (agent execute)
-			Result.drop_actions.extend (agent execute_with_class_stone)
-			Result.drop_actions.extend (agent execute_with_class_list)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is

@@ -59,7 +59,7 @@ feature {NONE} -- Removal
 				-- No need to wipe out the content, because it should
 				-- have been done by the users of menu and toolbar items.
 			internal_managed_menu_items := Void
-			internal_managed_toolbar_items := Void
+			internal_managed_sd_toolbar_items := Void
 		end
 
 indexing

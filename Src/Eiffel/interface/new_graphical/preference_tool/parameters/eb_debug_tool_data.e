@@ -196,16 +196,20 @@ feature -- Toolbar Convenience
 			end
 		end
 
-	save_project_toolbar (project_toolbar: EB_TOOLBAR) is
+	save_project_toolbar (project_toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM]) is
 			-- Save the project toolbar `project_toolbar' layout/status into the preferences.
 			-- Call `save_preferences' to have the changes actually saved.
 		do
-			project_toolbar_layout_preference.set_value (save_toolbar (project_toolbar))
-			show_text_in_project_toolbar_preference.set_value (project_toolbar.is_text_important)
-			show_all_text_in_project_toolbar_preference.set_value (project_toolbar.is_text_displayed)
-			preferences.save_preference (project_toolbar_layout_preference)
-			preferences.save_preference (show_text_in_project_toolbar_preference)
-			preferences.save_preference (show_all_text_in_project_toolbar_preference)
+			-- FIXIT: 	This feature is not used. However, docking library should support features
+			--			like `is_text_important' and `is_text_displayed'
+			-- 			Original codes:
+			--
+			--			project_toolbar_layout_preference.set_value (save_toolbar (project_toolbar))
+			--			show_text_in_project_toolbar_preference.set_value (project_toolbar.is_text_important)
+			--			show_all_text_in_project_toolbar_preference.set_value (project_toolbar.is_text_displayed)
+			--			preferences.save_preference (project_toolbar_layout_preference)
+			--			preferences.save_preference (show_text_in_project_toolbar_preference)
+			--			preferences.save_preference (show_all_text_in_project_toolbar_preference)
 		end
 
 feature -- Preference Strings

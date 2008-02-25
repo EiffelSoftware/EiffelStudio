@@ -280,8 +280,8 @@ feature -- Action
 					-- Call Eiffel parser
 				parser := Eiffel_parser
 				l_lace_class := lace_class
+				l_options := l_lace_class.options
 				if is_warning_generated then
-					l_options := l_lace_class.options
 					parser.set_has_syntax_warning (l_options.is_warning_enabled (w_syntax))
 					parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
 					parser.set_has_old_verbatim_strings_warning (l_options.is_warning_enabled (w_old_verbatim_strings))

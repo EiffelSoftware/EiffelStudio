@@ -25,11 +25,6 @@ inherit
 			is_equal
 		end
 
-	COMPARABLE
-		undefine
-			is_equal
-		end
-
 create {BREAKPOINTS_MANAGER}
 	make
 
@@ -67,7 +62,7 @@ feature -- Comparison
 			Result := (other.breakable_line_number = breakable_line_number) and (other.body_index = body_index)
 		end
 
-	infix "<" (other: like Current): BOOLEAN
+	is_lesser_than (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		local
 			acl,ocl: CLASS_C

@@ -1277,6 +1277,7 @@ test	agent-with-anchor-crash		term149 tcf fail termination generic
 test	expanded-generic-crash		term150 tcf fail termination generic
 test	integer-like-constant		term151 tcf fail termination
 test	qualified-call-on-procedure-failure	term152 tcf fail termination
+test	crash-for-redefined-feature-with-wrong-anchor	term153 tcf fail termination
 
 -- Config
 

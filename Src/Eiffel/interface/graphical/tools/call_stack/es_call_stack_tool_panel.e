@@ -1025,7 +1025,7 @@ feature {NONE} -- Stack grid implementation
 				l_tooltipable_grid_row.set_item (1, glab)
 			end
 			stack_grid.request_columns_auto_resizing
-			stack_grid.refresh_now
+			stack_grid.redraw
 		end
 
 	compute_stack_grid_item (c, r: INTEGER): EV_GRID_ITEM is
@@ -1096,16 +1096,21 @@ feature {NONE} -- Stack grid implementation
 				l_tooltip.append ("{" + l_class_info + "}.")
 			end
 
+				--| Break Index
+			l_breakindex_info := cse.break_index.out
+
 				--| Routine name
 			l_feature_name := cse.routine_name
 			if l_feature_name /= Void then
 				l_feature_name := l_feature_name.twin
+			else
+				create l_feature_name.make_empty
 			end
+--			if l_feature_name /= Void then
+--				l_feature_name.append (" @" + l_breakindex_info.out)
+--			end
 
 			l_tooltip.append (l_feature_name)
-
-				--| Break Index
-			l_breakindex_info := cse.break_index.out
 
 				--| Object address
 			l_obj_address_info := cse.object_address

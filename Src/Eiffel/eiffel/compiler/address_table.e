@@ -474,7 +474,6 @@ feature -- Generation helpers
 		local
 			i, nb: INTEGER
 			t: STRING
-			type_i: TYPE_A
 			l_eif_reference_str, l_eif_typed_value_str: STRING
 			l_is_for_agent_and_workbench_mode: BOOLEAN
 		do

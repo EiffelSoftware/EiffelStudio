@@ -58,7 +58,7 @@ feature -- Status Report
 		end
 
 	is_external: BOOLEAN is False
-			-- <Original>
+			-- <Precursor>
 
 	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN
 		do

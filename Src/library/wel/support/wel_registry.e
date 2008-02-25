@@ -91,6 +91,7 @@ feature -- Actions
 			index_value := key_from_path (key_path, False, Key_write)
 			if index_value /= default_pointer then
 				delete_value (index_value, value_name)
+				close_key (index_value)
 			end
 		end
 

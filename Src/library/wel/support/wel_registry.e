@@ -27,6 +27,7 @@ feature -- Actions
 			index_value: POINTER
 		do
 			index_value := key_from_path (key_path, True, Key_create_sub_key)
+			close_key (index_value)
 		end
 
 	open_key_with_access (key_path: STRING_GENERAL; acc: INTEGER): POINTER is
@@ -54,6 +55,7 @@ feature -- Actions
 			index_value := key_from_path (key_path, False, Key_read)
 			if index_value /= default_pointer then
 				Result := key_value (index_value, value_name)
+				close_key (index_value)
 			end
 		end
 
@@ -72,6 +74,7 @@ feature -- Actions
 			index_value := key_from_path (key_path, True, Key_write)
 			if index_value /= default_pointer then
 				set_key_value (index_value, value_name, value)
+				close_key (index_value)
 			end
 		end
 

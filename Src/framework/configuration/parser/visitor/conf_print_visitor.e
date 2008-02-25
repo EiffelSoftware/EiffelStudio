@@ -759,6 +759,9 @@ feature {NONE} -- Implementation
 				if an_options.is_void_safe_configured then
 					append_text (" is_void_safe=%""+an_options.is_void_safe.out.as_lower+"%"")
 				end
+				if an_options.syntax_level.is_set then
+					append_text (" syntax_level=%"" + an_options.syntax_level.out + "%"")
+				end
 				l_str := an_options.local_namespace
 				if l_str /= Void and then not l_str.is_empty then
 					append_text (" namespace=%""+escape_xml (l_str)+"%"")
@@ -1030,7 +1033,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

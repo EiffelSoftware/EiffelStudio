@@ -69,6 +69,7 @@ feature {NONE} -- Implementation
 			properties_not_void: properties /= Void
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
+			l_choice_prop: STRING_CHOICE_PROPERTY
 		do
 			properties.add_section (conf_interface_names.section_general)
 
@@ -191,6 +192,76 @@ feature {NONE} -- Implementation
 				end
 			end
 			properties.add_property (l_bool_prop)
+
+				-- Syntax support
+			create l_choice_prop.make_with_choices (conf_interface_names.option_syntax_level_name, <<conf_interface_names.option_syntax_level_obsolete_name, conf_interface_names.option_syntax_level_transitional_name, conf_interface_names.option_syntax_level_standard_name>>)
+			l_choice_prop.set_description (conf_interface_names.option_syntax_level_description)
+			l_choice_prop.disable_text_editing
+			if a_inherits then
+				l_choice_prop.set_refresh_action (
+					agent (i: CONF_OPTION): STRING_32
+						do
+							inspect i.syntax_level.item
+							when {CONF_OPTION}.syntax_level_obsolete then
+								Result := conf_interface_names.option_syntax_level_obsolete_name
+							when {CONF_OPTION}.syntax_level_transitional then
+								Result := conf_interface_names.option_syntax_level_transitional_name
+							when {CONF_OPTION}.syntax_level_standard then
+								Result := conf_interface_names.option_syntax_level_standard_name
+							end
+						end
+					(an_inherited_options)
+				)
+				if an_options.syntax_level.is_set then
+					l_choice_prop.enable_overriden
+				else
+					l_choice_prop.enable_inherited
+				end
+				l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?,
+					agent (o: CONF_OPTION; p: STRING_CHOICE_PROPERTY)
+						do
+							if o.syntax_level.is_set then
+								p.enable_overriden
+							else
+								p.enable_inherited
+							end
+						end
+					(an_options, l_choice_prop)
+				))
+				l_choice_prop.use_inherited_actions.extend (agent (o: CONF_OPTION) do o.syntax_level.unset end (an_options))
+				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.enable_inherited)
+				l_choice_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.enable_inherited)
+				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.redraw)
+			end
+			if an_options.syntax_level.is_set then
+				inspect an_options.syntax_level.item
+				when {CONF_OPTION}.syntax_level_obsolete then
+					l_choice_prop.set_value (l_choice_prop.item_strings [1])
+				when {CONF_OPTION}.syntax_level_transitional then
+					l_choice_prop.set_value (l_choice_prop.item_strings [2])
+				when {CONF_OPTION}.syntax_level_standard then
+					l_choice_prop.set_value (l_choice_prop.item_strings [3])
+				end
+			end
+			l_choice_prop.change_value_actions.put_front (
+				agent (o: CONF_OPTION; value: STRING_32)
+					do
+						if value /= Void then
+							if value.is_equal (conf_interface_names.option_syntax_level_obsolete_name) then
+								o.syntax_level.put ({CONF_OPTION}.syntax_level_obsolete)
+							elseif value.is_equal (conf_interface_names.option_syntax_level_transitional_name) then
+								o.syntax_level.put ({CONF_OPTION}.syntax_level_transitional)
+							else
+								o.syntax_level.put ({CONF_OPTION}.syntax_level_standard)
+							end
+						end
+					end
+				(an_options, ?)
+			)
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent l_choice_prop.redraw))
+			properties.add_property (l_choice_prop)
 
 			properties.current_section.expand
 		end
@@ -553,7 +624,7 @@ feature {NONE} -- Refresh displayed data.
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

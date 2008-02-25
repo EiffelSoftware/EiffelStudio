@@ -240,6 +240,34 @@ feature -- Access
 			Result := options.is_void_safe
 		end
 
+	is_syntax_obsolete: BOOLEAN
+			-- Is obsolete syntax used in the source code?
+		do
+			inspect
+				options.syntax_level.item
+			when
+				{CONF_OPTION}.syntax_level_obsolete,
+				{CONF_OPTION}.syntax_level_transitional
+			then
+				Result := True
+			else
+			end
+		end
+
+	is_syntax_standard: BOOLEAN
+			-- Is obsolete syntax used in the source code?
+		do
+			inspect
+				options.syntax_level.item
+			when
+				{CONF_OPTION}.syntax_level_standard,
+				{CONF_OPTION}.syntax_level_transitional
+			then
+				Result := True
+			else
+			end
+		end
+
 	is_compiled: BOOLEAN is
 			-- Is the class already compiled ?
 		do
@@ -490,7 +518,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -81,7 +81,7 @@ create
 %token <KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
 %token <KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INDEXING TE_INHERIT
 %token <KEYWORD_AS> TE_INSPECT TE_INVARIANT TE_LIKE TE_LOCAL
-%token <KEYWORD_AS> TE_LOOP TE_NOT TE_OBSOLETE TE_OLD TE_ONCE
+%token <KEYWORD_AS> TE_LOOP TE_NOT TE_NOTE TE_OBSOLETE TE_OLD TE_ONCE
 %token <KEYWORD_AS> TE_ONCE_STRING TE_OR TE_REDEFINE TE_REFERENCE TE_RENAME
 %token <KEYWORD_AS> TE_REQUIRE TE_RESCUE TE_SELECT TE_SEPARATE TE_STRIP
 %token <KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
@@ -141,7 +141,7 @@ create
 %type <FORMAL_DEC_AS>		Formal_generic
 %type <ID_AS>				Class_or_tuple_identifier Class_identifier Identifier_as_lower Free_operator Feature_name_for_call
 %type <IF_AS>				Conditional
-%type <INDEX_AS>			Index_clause Index_clause_impl
+%type <INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
 %type <INSPECT_AS>			Multi_branch
 %type <INSTRUCTION_AS>		Instruction Instruction_impl
 %type <INTEGER_AS>	Integer_constant Signed_integer Nosigned_integer Typed_integer Typed_nosigned_integer Typed_signed_integer
@@ -172,7 +172,7 @@ create
 %type <VARIANT_AS>			Variant
 %type <FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
 
-%type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms
+%type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms Note_values
 %type <EIFFEL_LIST [CASE_AS]>			When_part_list_opt When_part_list
 %type <CONVERT_FEAT_LIST_AS>			Convert_list Convert_clause
 %type <EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
@@ -191,7 +191,7 @@ create
 %type <FORMAL_GENERIC_LIST_AS>		Formal_generics Formal_generic_list
 %type <CLASS_LIST_AS>					Client_list Class_list
 
-%type <INDEXING_CLAUSE_AS>			Indexing Index_list Dotnet_indexing
+%type <INDEXING_CLAUSE_AS>			Indexing Index_list Note_list Dotnet_indexing
 %type <EIFFEL_LIST [INSTRUCTION_AS]>	Compound Instruction_list
 %type <EIFFEL_LIST [INTERVAL_AS]>		Choices
 %type <EIFFEL_LIST [OPERAND_AS]>		Delayed_actual_list
@@ -210,7 +210,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 126
+%expect 127
 
 %%
 
@@ -354,6 +354,21 @@ Indexing: -- Empty
 					$$.set_indexing_keyword ($1)
 				end
 			}
+	|	TE_NOTE Add_indexing_counter Note_list Remove_counter
+			{
+				$$ := $3
+				if $$ /= Void then
+					$$.set_indexing_keyword ($1)
+				end				
+				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
+			}
+	|	TE_NOTE
+			{
+				$$ := ast_factory.new_indexing_clause_as (0)
+				if $$ /= Void then
+					$$.set_indexing_keyword ($1)
+				end
+			}
 	;
 
 Dotnet_indexing: -- Empty
@@ -400,7 +415,29 @@ Index_list: Index_clause
 			}
 	;
 
+Note_list: Note_entry
+			{
+				$$ := ast_factory.new_indexing_clause_as (counter_value + 1)
+				if $$ /= Void and $1 /= Void then
+					$$.reverse_extend ($1)
+					$$.update_lookup ($1)
+				end
+			}
+	|	Note_entry Increment_counter Note_list
+			{
+				$$ := $3
+				if $$ /= Void and $1 /= Void then
+					$$.reverse_extend ($1)
+					$$.update_lookup ($1)
+				end
+			}
+	;
+
 Index_clause: Add_counter Index_clause_impl Remove_counter
+		{ $$ := $2 }
+	;
+			
+Note_entry: Add_counter Note_entry_impl Remove_counter
 		{ $$ := $2 }
 	;
 			
@@ -416,6 +453,12 @@ Index_clause_impl: Identifier_as_lower TE_COLON Index_terms ASemi
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Missing `Index' part of `Index_clause'."))
 				end
+			}
+	;
+
+Note_entry_impl: Identifier_as_lower TE_COLON Note_values ASemi
+			{
+				$$ := ast_factory.new_index_as ($1, $3, $2)
 			}
 	;
 
@@ -438,6 +481,23 @@ Index_terms: Index_value
 			{
 -- TO DO: remove this TE_SEMICOLON (see: INDEX_AS.index_list /= Void)
 				$$ := ast_factory.new_eiffel_list_atomic_as (0)
+			}
+	;
+
+Note_values: Index_value
+			{
+				$$ := ast_factory.new_eiffel_list_atomic_as (counter_value + 1)
+				if $$ /= Void and $1 /= Void then
+					$$.reverse_extend ($1)
+				end
+			}
+	|	Index_value TE_COMMA Increment_counter Note_values
+			{
+				$$ := $4
+				if $$ /= Void and $1 /= Void then
+					$$.reverse_extend ($1)
+					ast_factory.reverse_extend_separator ($$, $2)
+				end
 			}
 	;
 
@@ -2803,16 +2863,7 @@ Class_identifier: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub (last_keyword_as_id_index)
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
-				end
-
-				if last_id_as_value /= Void then
-					last_id_as_value.to_upper
-				end
+				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, False)
 				$$ := last_id_as_value
 			}
 	;
@@ -2834,15 +2885,7 @@ Identifier_as_lower: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub (last_keyword_as_id_index)
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
-				end
-				if last_id_as_value /= Void then
-					last_id_as_value.to_lower
-				end
+				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, True)
 				$$ := last_id_as_value
 			}
 	;
@@ -3276,7 +3319,7 @@ Remove_counter: { remove_counter }
 %%
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

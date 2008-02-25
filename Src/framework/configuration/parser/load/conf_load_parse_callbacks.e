@@ -1114,7 +1114,8 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class,
 			l_warning, l_msil_application_optimize, l_full_class_checking,
-			l_cat_call_detection, l_is_attached_by_default, l_is_void_safe: STRING
+			l_cat_call_detection, l_is_attached_by_default, l_is_void_safe,
+			l_syntax_level: STRING
 		do
 			l_trace := current_attributes.item (at_trace)
 			l_profile := current_attributes.item (at_profile)
@@ -1128,6 +1129,7 @@ feature {NONE} -- Implementation attribute processing
 			l_cat_call_detection := current_attributes.item (at_cat_call_detection)
 			l_is_attached_by_default := current_attributes.item (at_is_attached_by_default)
 			l_is_void_safe := current_attributes.item (at_is_void_safe)
+			l_syntax_level := current_attributes.item (at_syntax_level)
 
 			current_option := factory.new_option
 			if l_trace /= Void then
@@ -1197,6 +1199,13 @@ feature {NONE} -- Implementation attribute processing
 					current_option.set_is_void_safe (l_is_void_safe.to_boolean)
 				else
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_void_safe"))
+				end
+			end
+			if l_syntax_level /= Void then
+				if l_syntax_level.is_natural_8 and then current_option.is_valid_syntax_level (l_syntax_level.to_natural_8) then
+					current_option.syntax_level.put (l_syntax_level.to_natural_8)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax_level"))
 				end
 			end
 
@@ -1911,6 +1920,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_cat_call_detection, "cat_call_detection")
 			l_attr.force (at_is_attached_by_default, "is_attached_by_default")
 			l_attr.force (at_is_void_safe, "is_void_safe")
+			l_attr.force (at_syntax_level, "syntax_level")
 			Result.force (l_attr, t_option)
 
 				-- class_option
@@ -2210,6 +2220,7 @@ feature {NONE} -- Implementation constants
 	at_cat_call_detection: INTEGER is 1059
 	at_is_attached_by_default: INTEGER is 1060
 	at_is_void_safe: INTEGER is 1061
+	at_syntax_level: INTEGER is 1062
 
 feature -- Assertions
 
@@ -2225,7 +2236,7 @@ invariant
 	factory_not_void: factory /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -298,6 +298,10 @@ feature
 
 				-- Check types in the feature table
 			resulting_table.check_table;
+			if error_handler.error_level /= l_error_level then
+				error_handler.raise_error
+			end
+
 				-- Check the adaptations
 			check_validity3 (resulting_table);
 				-- Check useless selections

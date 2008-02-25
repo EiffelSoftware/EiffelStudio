@@ -129,7 +129,7 @@ feature -- Modification
 				end
 			end
 		ensure then
-			variable_count_incremented: (not old is_attribute_set (feature_id)) implies nested_variables.item = old nested_variables.item + 1
+			variable_count_incremented: (is_creation_procedure and then not old is_attribute_set (feature_id)) implies nested_variables.item = old nested_variables.item + 1
 		end
 
 	set_local (id: INTEGER)

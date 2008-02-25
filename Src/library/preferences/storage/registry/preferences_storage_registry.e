@@ -51,9 +51,7 @@ feature {PREFERENCES} -- Initialization
 			Precursor (a_preferences)
 
 			l_keyp := open_key_with_access (location, key_read)
-			if l_keyp = default_pointer then
-				create_new_key (location)
-			else
+			if l_keyp /= default_pointer then
 				l_key_values := enumerate_values_as_string_8 (l_keyp)
 				if not l_key_values.is_empty then
 					from
@@ -72,6 +70,7 @@ feature {PREFERENCES} -- Initialization
 						l_key_values.forth
 					end
 				end
+				close_key (l_keyp)
 			end
 		end
 
@@ -80,9 +79,9 @@ feature {PREFERENCES} -- Resource Management
 	exists: BOOLEAN is
 			-- Does storage exists ?
 		do
-			Result := True 
+			Result := True
 				--| Registry exists by default on Windows
-				--| If the related key did not exists, 
+				--| If the related key did not exists,
 				--|   `initialize_with_preferences' created it anyway
 		end
 
@@ -116,11 +115,14 @@ feature {PREFERENCES} -- Resource Management
 			l_new_value: WEL_REGISTRY_KEY_VALUE
 			l_registry_preference_name: STRING
 		do
-			l_registry_preference_name := a_preference.string_type + "_" + a_preference.name
 			l_parent_key := open_key_with_access (location, key_write)
-			create l_new_value.make ({WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, a_preference.string_value)
-
+			if not  valid_value_for_hkey (l_parent_key) then
+				create_new_key (location)
+				l_parent_key := open_key_with_access (location, key_write)
+			end
 			if valid_value_for_hkey (l_parent_key) then
+				l_registry_preference_name := a_preference.string_type + "_" + a_preference.name
+				create l_new_value.make ({WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, a_preference.string_value)
 				set_key_value (l_parent_key, l_registry_preference_name, l_new_value)
 				close_key (l_parent_key)
 			end
@@ -132,9 +134,13 @@ feature {PREFERENCES} -- Resource Management
 			l_parent_key: POINTER
 			l_registry_preference_name: STRING
 		do
-			l_registry_preference_name := a_preference.string_type + "_" + a_preference.name
 			l_parent_key := open_key_with_access (location, key_write)
+			if not  valid_value_for_hkey (l_parent_key) then
+				create_new_key (location)
+				l_parent_key := open_key_with_access (location, key_write)
+			end
 			if valid_value_for_hkey (l_parent_key) then
+				l_registry_preference_name := a_preference.string_type + "_" + a_preference.name
 				delete_value (l_parent_key, l_registry_preference_name)
 				close_key (l_parent_key)
 			end

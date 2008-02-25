@@ -16,7 +16,7 @@ inherit
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
+			new_sd_toolbar_item,
 			new_menu_item,
 			new_menu_item_unmanaged
 		end
@@ -40,7 +40,7 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			do
 				start_observer

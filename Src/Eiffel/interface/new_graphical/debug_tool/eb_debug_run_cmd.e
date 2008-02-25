@@ -11,7 +11,7 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
+			new_sd_toolbar_item,
 			new_menu_item,
 			tooltext,
 			is_tooltext_important
@@ -73,10 +73,15 @@ feature -- Initialization
 
 feature -- Access
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+		local
+			l_tool_bar: SD_TOOL_BAR
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
-			Result.select_actions.put_front (agent execute_from (Result))
+			l_tool_bar := Result.tool_bar
+			check not_void: l_tool_bar /= Void end
+
+			Result.select_actions.put_front (agent execute_from (l_tool_bar))
 		end
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is

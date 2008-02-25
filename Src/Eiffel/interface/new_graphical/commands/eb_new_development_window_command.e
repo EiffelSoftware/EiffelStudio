@@ -12,7 +12,6 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			tooltext,
 			pixel_buffer,
@@ -80,14 +79,6 @@ feature -- Basic operations
 			if a_stone /= Void then
 				new_window.force_stone (a_stone)
 			end
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent execute_with_stone (?))
-			Result.drop_actions.set_veto_pebble_function (agent is_storable)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is

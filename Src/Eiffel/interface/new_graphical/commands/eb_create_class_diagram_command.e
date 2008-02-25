@@ -11,7 +11,6 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			menu_name
 		end
@@ -29,17 +28,6 @@ feature -- Basic operations
 			create dialog.make_default (tool.develop_window)
 			dialog.set_stone_when_finished
 			dialog.call_default
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		local
-			a_stone: CREATE_CLASS_STONE
-		do
-			create a_stone
-			Result := Precursor (display_text)
-			Result.set_pebble (a_stone)
-			Result.set_accept_cursor (Cursors.cur_Class)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is

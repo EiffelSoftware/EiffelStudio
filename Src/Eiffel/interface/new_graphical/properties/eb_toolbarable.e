@@ -19,11 +19,6 @@ feature -- Access
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN): EV_TOOL_BAR_ITEM is
-			-- Create a new toolbar item for Current
-		deferred
-		end
-
 	new_sd_toolbar_item (a_display_text: BOOLEAN): SD_TOOL_BAR_ITEM is
 			-- Create a new docking tool bar item for Current
 		deferred

@@ -13,7 +13,6 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			tooltext
 		end
@@ -107,19 +106,6 @@ feature -- Basic operations
 					end
 				end
 
-				if internal_managed_toolbar_items /= Void then
-					from
-						internal_managed_toolbar_items.start
-					until
-						internal_managed_toolbar_items.after
-					loop
-						internal_managed_toolbar_items.item.select_actions.block
-						internal_managed_toolbar_items.item.toggle
-						internal_managed_toolbar_items.item.select_actions.resume
-						internal_managed_toolbar_items.forth
-					end
-				end
-
 				if internal_managed_sd_toolbar_items /= Void then
 					from
 						internal_managed_sd_toolbar_items.start
@@ -148,10 +134,6 @@ feature -- Basic operations
 	update_tooltip is
 			-- Display the good tooltip on buttons.
 		do
-			if internal_managed_toolbar_items /= Void then
-				internal_managed_toolbar_items.do_all (agent {EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON}.set_tooltip (tooltip))
-			end
-
 			if internal_managed_sd_toolbar_items /= Void then
 				internal_managed_sd_toolbar_items.do_all (agent {EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON}.set_tooltip (tooltip))
 			end
@@ -159,34 +141,26 @@ feature -- Basic operations
 
 	toggle_buttons is
 			-- Display the good tooltip on buttons.
+		local
+			l_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
 		do
-			if internal_managed_toolbar_items /= Void then
+			if internal_managed_sd_toolbar_items /= Void then
 				from
-					internal_managed_toolbar_items.start
+					internal_managed_sd_toolbar_items.start
 				until
-					internal_managed_toolbar_items.after
+					internal_managed_sd_toolbar_items.after
 				loop
-					internal_managed_toolbar_items.item.select_actions.block
-					internal_managed_toolbar_items.item.toggle
-					internal_managed_toolbar_items.item.select_actions.resume
-					internal_managed_toolbar_items.forth
+					l_button := internal_managed_sd_toolbar_items.item
+					l_button.select_actions.block
+					if l_button.is_selected then
+						l_button.disable_select
+					else
+						l_button.enable_select
+					end
+					l_button.select_actions.resume
+					internal_managed_sd_toolbar_items.forth
 				end
 			end
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-				-- Create the button
-			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text)
-			if window.unified_stone then
-				Result.toggle
-			end
-			Result.select_actions.extend (agent execute)
-			Result.select_actions.extend (agent toggle_buttons)
-			Result.enable_sensitive
-			auto_recycle (Result)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is

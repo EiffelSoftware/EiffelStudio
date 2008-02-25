@@ -30,7 +30,6 @@ feature -- Status setting
 			-- Set `is_sensitive' to True.
 		local
 			menu_items: like managed_menu_items
-			toolbar_items: like managed_toolbar_items
 			l_sd_toolbar_items: like managed_sd_toolbar_items
 		do
 			if not is_sensitive then
@@ -48,18 +47,6 @@ feature -- Status setting
 				end
 
 					-- Enable toolbar item
-				toolbar_items := managed_toolbar_items
-				if toolbar_items /= Void then
-					from
-						toolbar_items.start
-					until
-						toolbar_items.after
-					loop
-						toolbar_items.item.enable_sensitive
-						toolbar_items.forth
-					end
-				end
-
 				l_sd_toolbar_items := managed_sd_toolbar_items
 				if l_sd_toolbar_items /= Void then
 					from
@@ -80,7 +67,6 @@ feature -- Status setting
 			-- Set `is_sensitive' to True.
 		local
 			menu_items: like managed_menu_items
-			toolbar_items: like managed_toolbar_items
 			l_sd_tool_bar_items: like managed_sd_toolbar_items
 		do
 			if is_sensitive then
@@ -98,18 +84,6 @@ feature -- Status setting
 				end
 
 					-- Disable toolbar item
-				toolbar_items := managed_toolbar_items
-				if toolbar_items /= Void then
-					from
-						toolbar_items.start
-					until
-						toolbar_items.after
-					loop
-						toolbar_items.item.disable_sensitive
-						toolbar_items.forth
-					end
-				end
-
 				l_sd_tool_bar_items := managed_sd_toolbar_items
 				if l_sd_tool_bar_items /= Void then
 					from

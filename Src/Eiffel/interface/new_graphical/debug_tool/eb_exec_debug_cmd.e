@@ -60,25 +60,11 @@ feature -- Access
 
 	refresh_items is
 		local
-			l_toolbar_lst: like internal_managed_toolbar_items
-			l_toolbar_item: like new_toolbar_item
 			l_sd_lst: like internal_managed_sd_toolbar_items
 			l_sd_item: like new_sd_toolbar_item
 			l_menu_lst: like internal_managed_menu_items
 			l_menu_item: like new_menu_item
 		do
-			l_toolbar_lst := internal_managed_toolbar_items
-			if l_toolbar_lst /= Void then
-				from
-					l_toolbar_lst.start
-				until
-					l_toolbar_lst.after
-				loop
-					l_toolbar_item := l_toolbar_lst.item
-					initialize_toolbar_item (l_toolbar_item, not l_toolbar_item.text.is_empty)
-					l_toolbar_lst.forth
-				end
-			end
 			l_sd_lst := internal_managed_sd_toolbar_items
 			if l_sd_lst /= Void then
 				from

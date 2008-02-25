@@ -11,7 +11,6 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
 			tooltext,
 			is_tooltext_important
 		end
@@ -65,12 +64,6 @@ feature -- Access
 			-- Text for toolbar button
 		do
 			Result := interface_names.b_refactoring_undo
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for `Current'.
-		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 		end
 
 	menu_name: STRING_GENERAL is

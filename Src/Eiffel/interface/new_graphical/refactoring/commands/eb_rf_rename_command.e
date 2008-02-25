@@ -11,7 +11,6 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			tooltext,
 			is_tooltext_important
@@ -66,15 +65,6 @@ feature -- Access
 			-- Text for toolbar button
 		do
 			Result := interface_names.b_refactoring_rename
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for `Current'.
-		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
-			Result.drop_actions.extend (agent drop_class (?))
-			Result.drop_actions.extend (agent drop_feature (?))
-			Result.drop_actions.set_veto_pebble_function (agent can_drop)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is

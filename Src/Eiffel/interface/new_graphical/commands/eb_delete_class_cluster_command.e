@@ -16,8 +16,6 @@ inherit
 		redefine
 			mini_pixmap,
 			mini_pixel_buffer,
-			new_toolbar_item,
-			new_mini_toolbar_item,
 			new_sd_toolbar_item,
 			new_mini_sd_toolbar_item,
 			tooltext
@@ -45,30 +43,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-			--
-			-- Call `recycle' on the result when you don't need it anymore otherwise
-			-- it will never be garbage collected.
-		do
-			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent drop_class)
-			Result.drop_actions.extend (agent drop_cluster)
-			auto_recycle (Result)
-		end
-
-	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-			--
-			-- Call `recycle' on the result when you don't need it anymore otherwise
-			-- it will never be garbage collected.
-		do
-			Result := Precursor
-			Result.drop_actions.extend (agent drop_class)
-			Result.drop_actions.extend (agent drop_cluster)
-			auto_recycle (Result)
-		end
 
 	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.

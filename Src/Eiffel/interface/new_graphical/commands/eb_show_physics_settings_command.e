@@ -12,7 +12,6 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			description,
 			initialize,
@@ -44,17 +43,6 @@ feature -- Basic operations
 				create dialog.make (tool.force_directed_layout, tool)
 				dialog.show_modal_to_window (tool.develop_window.window)
 			end
-		end
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-			--
-			-- Call `recycle' on the result when you don't need it anymore otherwise
-			-- it will never be garbage collected.
-		do
-			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text)
-			Result.select_actions.extend (agent execute)
 		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is

@@ -178,12 +178,12 @@ feature {NONE} -- Implementation
 			-- make toolbar items sensitive
 		do
 			from
-				managed_toolbar_items.start
+				managed_sd_toolbar_items.start
 			until
-				managed_toolbar_items.exhausted
+				managed_sd_toolbar_items.exhausted
 			loop
-				managed_toolbar_items.item.enable_sensitive
-				managed_toolbar_items.forth
+				managed_sd_toolbar_items.item.enable_sensitive
+				managed_sd_toolbar_items.forth
 			end
 		end
 
@@ -191,12 +191,12 @@ feature {NONE} -- Implementation
 			-- make toolbar items insensitive
 		do
 			from
-				managed_toolbar_items.start
+				managed_sd_toolbar_items.start
 			until
-				managed_toolbar_items.exhausted
+				managed_sd_toolbar_items.exhausted
 			loop
-				managed_toolbar_items.item.disable_sensitive
-				managed_toolbar_items.forth
+				managed_sd_toolbar_items.item.disable_sensitive
+				managed_sd_toolbar_items.forth
 			end
 		end
 

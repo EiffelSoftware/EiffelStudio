@@ -14,7 +14,7 @@ inherit
 		redefine
 			name,
 			executable,
-			new_toolbar_item,
+			new_sd_toolbar_item,
 			pixel_buffer
 		end
 
@@ -147,11 +147,12 @@ feature -- Status report
 			Result := is_sensitive
 		end
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
 			Result.set_pixmap (pixmap)
+			Result.set_pixel_buffer (pixel_buffer)
 			Result.set_tooltip (tooltip)
 		end
 

@@ -12,7 +12,6 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			menu_name
 		end
@@ -74,16 +73,6 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent execute_with_class_stone)
-			Result.drop_actions.extend (agent execute_with_cluster_stone)
-			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_fucntion)
-			Result.set_pebble_function (agent pebble)
-		end
-
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
@@ -104,15 +93,15 @@ feature {NONE} -- Implementation
 		local
 			class_stone: CLASSI_STONE
 			cluster_stone: CLUSTER_STONE
-			tbi: EB_COMMAND_TOOL_BAR_BUTTON
+			tbi: EB_SD_COMMAND_TOOL_BAR_BUTTON
 		do
 			if not was_dropped then
 				Result := tool.last_stone
 				check
-					internal_managed_toolbar_items /= Void
-					not internal_managed_toolbar_items.is_empty
+					internal_managed_sd_toolbar_items /= Void
+					not internal_managed_sd_toolbar_items.is_empty
 				end
-				tbi := internal_managed_toolbar_items.first
+				tbi := internal_managed_sd_toolbar_items.first
 				class_stone ?= Result
 				cluster_stone ?= Result
 				if class_stone /= Void then

@@ -16,8 +16,7 @@ inherit
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
-			new_mini_toolbar_item,
+			new_sd_toolbar_item,
 			new_mini_sd_toolbar_item,
 			new_menu_item,
 			new_menu_item_unmanaged
@@ -42,7 +41,7 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			do
 				start_observer
@@ -51,17 +50,6 @@ feature -- Basic operations
 				end
 
 				Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
-			end
-
-	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-			do
-				start_observer
-				if not executable then
-					disable_sensitive
-				end
-
-				Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			end
 
 	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is

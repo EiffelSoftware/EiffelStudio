@@ -12,7 +12,6 @@ deferred class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			new_menu_item,
 			new_menu_item_unmanaged
@@ -72,14 +71,6 @@ feature -- Properties
 		end
 
 feature -- Access
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar item.
-		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
-			Result.select_actions.put_front (agent execute_from (Result))
-			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
-		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new docking toolbar item.

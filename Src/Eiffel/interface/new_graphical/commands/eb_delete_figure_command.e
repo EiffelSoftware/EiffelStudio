@@ -11,7 +11,6 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item,
 			new_sd_toolbar_item,
 			menu_name,
 			description
@@ -179,18 +178,6 @@ feature -- Basic operations
 		end
 
 feature -- Access
-
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
-			-- Create a new toolbar button for this command.
-		do
-			Result := Precursor (display_text)
-			Result.drop_actions.extend (agent execute_with_class_stone)
-			Result.drop_actions.extend (agent execute_with_cluster_stone)
-			Result.drop_actions.extend (agent execute_with_link_midpoint)
-			Result.drop_actions.extend (agent execute_with_inheritance_stone)
-			Result.drop_actions.extend (agent execute_with_client_stone)
-			Result.drop_actions.extend (agent execute_with_class_list)
-		end
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.

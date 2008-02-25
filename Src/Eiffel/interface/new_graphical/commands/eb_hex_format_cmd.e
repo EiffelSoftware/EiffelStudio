@@ -16,7 +16,6 @@ inherit
 		redefine
 			mini_pixmap,
 			mini_pixel_buffer,
-			new_mini_toolbar_item,
 			new_mini_sd_toolbar_item
 		end
 
@@ -98,22 +97,6 @@ feature -- Execution
 		end
 
 feature -- Basic operations
-
-	new_mini_toolbar_item: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
-			-- Create a new mini toolbar button for this command.
-		do
-			create Result.make (Current)
-			Result.set_pixmap (mini_pixmap)
-			if is_sensitive then
-				Result.enable_sensitive
-			else
-				Result.disable_sensitive
-			end
-			Result.set_tooltip (tooltip)
-			Result.select_actions.extend (agent execute)
-
-			toggle_button := Result
-		end
 
 	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
 			-- Create a new sd mini toolbar button for this command.

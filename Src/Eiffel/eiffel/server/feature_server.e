@@ -43,7 +43,7 @@ feature -- Access
 		end
 
 	remove (an_id: INTEGER_32) is
-			-- <Original>
+			-- <Precursor>
 		do
 			tmp_feature_server.remove (an_id)
 			Precursor (an_id)

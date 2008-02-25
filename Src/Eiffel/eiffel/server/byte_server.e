@@ -57,7 +57,7 @@ feature -- Access
 		end;
 
 	remove (an_id: INTEGER_32) is
-			-- <Original>
+			-- <Precursor>
 		do
 			tmp_byte_server.remove (an_id)
 			Precursor (an_id)

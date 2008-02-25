@@ -152,7 +152,7 @@ feature -- Generic conformance
 feature -- IL code generation
 
 	dispatch_anchors (a_context_class: CLASS_C) is
-			-- <Original>
+			-- <Precursor>
 		do
 			a_context_class.extend_type_set (routine_id)
 		end

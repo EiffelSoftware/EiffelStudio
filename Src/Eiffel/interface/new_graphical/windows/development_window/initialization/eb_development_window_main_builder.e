@@ -603,8 +603,7 @@ feature -- Command
 		end
 
 	build_tools is
-			-- Build all tools that can take place in this window and put them
-			-- in `left_tools' or `bottom_tools'.
+			-- Build all tools that can take place in this window and attach them with docking manager.
 		local
 			l_undo_redo_observer: UNDO_REDO_OBSERVER
 

@@ -316,4 +316,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_OUTPUT_TOOL
+end -- class ES_OUTPUT_TOOL_PANEL

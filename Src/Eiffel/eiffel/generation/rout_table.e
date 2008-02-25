@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_for_type
-			-- <Original>
+			-- <Precursor>
 		do
 			generate_type_table (rout_generator)
 		end

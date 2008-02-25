@@ -4462,7 +4462,7 @@ feature -- Variables access
 		end
 
 	put_type_instance (a_type: TYPE_A) is
-			-- <Original>
+			-- <Precursor>
 		do
 			put_type_token (a_type.external_id (current_class_type.type))
 			internal_generate_external_call (current_module.mscorlib_token, 0,
@@ -4699,7 +4699,7 @@ feature -- Addresses
 		end
 
 	generate_load_address (type_i: TYPE_A) is
-			-- <Original>
+			-- <Precursor>
 		do
 				-- See comment on `generate_metamorphose' on why we chose `implementation_id'.
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Unbox,
@@ -4707,14 +4707,14 @@ feature -- Addresses
 		end
 
 	generate_load_address_as_external (type_i: TYPE_A) is
-			-- <Original>
+			-- <Precursor>
 		do
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Unbox,
 				actual_class_type_token (type_i.external_id (current_class_type.type)))
 		end
 
 	generate_load_from_address (a_type: TYPE_A) is
-			-- <Original>
+			-- <Precursor>
 		do
 			inspect a_type.element_type
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_i then

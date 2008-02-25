@@ -494,7 +494,7 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_basic_type: BASIC_A
-			l_special_type: GEN_TYPE_A
+			l_special_type: TYPE_A
 			l_class_type: SPECIAL_CLASS_TYPE
 			l_call: CALL_ACCESS_B
 			l_nested: NESTED_B
@@ -508,7 +508,7 @@ feature {NONE} -- Visitors
 			else
 				l_call := a_node.call
 				if l_call /= Void and then l_call.routine_id = system.special_make_rout_id then
-					l_special_type ?= context.creation_type (a_node.type)
+					l_special_type := context.creation_type (a_node.type)
 					check
 						is_special_call_valid: a_node.is_special_call_valid
 						is_special_type: l_special_type /= Void and then

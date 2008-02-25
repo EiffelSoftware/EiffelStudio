@@ -686,7 +686,7 @@ feature -- Breakpoints access with feature,index
 			loop
 				bp := bplst.item_for_iteration
 				loc := bp.location
-				if loc.routine.is_equal (f) then
+				if loc.routine.same_as (f) then
 					bp.discard
 				end
 				bplst.forth

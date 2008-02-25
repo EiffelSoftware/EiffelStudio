@@ -640,10 +640,10 @@ feature {NONE} -- Impl filling
 												do
 													inspect a_column
 													when Data_column_index then
-														Result := a_data.location < a_other_data.location
+														Result := a_data.location.is_lesser_than (a_other_data.location)
 													when Status_column_index then
 														if a_data.is_enabled = a_other_data.is_enabled then
-															Result := a_data.location < a_other_data.location
+															Result := a_data.location.is_lesser_than (a_other_data.location)
 														elseif a_data.is_enabled then
 															Result := True
 														else
@@ -653,7 +653,7 @@ feature {NONE} -- Impl filling
 														s1 := a_data.tags_as_string
 														s2 := a_other_data.tags_as_string
 														if s1.is_equal (s2) then
-															Result := a_data.location < a_other_data.location
+															Result := a_data.location.is_lesser_than (a_other_data.location)
 														else
 															Result := s1 < s2
 														end

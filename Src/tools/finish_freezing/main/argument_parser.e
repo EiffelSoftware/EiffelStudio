@@ -133,8 +133,8 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (nproc_switch, "Maximum number of processors to use", True, False, "n", "Number of processors", False, 1, {NATURAL_16}.max_value))
 			Result.extend (create {ARGUMENT_SWITCH}.make (low_priority_switch, "Executes finish freezing in low-execution priority mode.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Generate 32bit lib DLLs for .NET projects.", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Supresses confirmation dialog", True, True))
-			Result.extend (create {ARGUMENT_SWITCH}.make (library_switch, "Compile the C code of an Eiffel library", True, True))
+			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Suppresses confirmation dialog", True, True))
+			Result.extend (create {ARGUMENT_SWITCH}.make (library_switch, "Compiles the C code of an Eiffel library", True, True))
 		end
 
 feature {NONE} -- Switches

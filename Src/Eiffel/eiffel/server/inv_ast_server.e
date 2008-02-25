@@ -43,7 +43,7 @@ feature
 		end
 
 	remove (an_id: INTEGER_32) is
-			-- <Original>
+			-- <Precursor>
 		do
 			tmp_ast_server.invariant_remove (an_id)
 			Precursor (an_id)

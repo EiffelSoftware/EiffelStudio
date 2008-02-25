@@ -4,9 +4,9 @@ indexing
 		
 		Current there is a comment specification for injecting inherited comments into an existing feature's comment:
 		
-		Using the comment <Original> will inject the first matched redefined feature's comment, from a parent declaration.
-		To be more specific, you can use <Original {CLASS_NAME}> where CLASS_NAME is the name of the class where the
-		feature is redefined from. Multiple <Original> comments can be used, with class name, to allow for comments from multiple
+		Using the comment <Precursor> will inject the first matched redefined feature's comment, from a parent declaration.
+		To be more specific, you can use <Precursor {CLASS_NAME}> where CLASS_NAME is the name of the class where the
+		feature is redefined from. Multiple <Precursor> comments can be used, with class name, to allow for comments from multiple
 		classes.
 	]"
 	legal: "See notice at end of class."

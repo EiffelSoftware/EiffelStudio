@@ -213,7 +213,8 @@ feature {NONE} -- Implementation: Byte node
 		do
 				-- Initialize creation expression `(create {a_target_type}.a_feat (a_expr))'.
 			create Result
-			create l_create_type.make (a_target_type)
+				-- We use `a_target_type.actual_type' as CREATE_TYPE cannot handle anchors.
+			create l_create_type.make (a_target_type.actual_type)
 			Result.set_info (l_create_type)
 			Result.set_type (a_target_type)
 

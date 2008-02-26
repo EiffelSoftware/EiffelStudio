@@ -523,7 +523,9 @@ feature {NONE} -- Display implementation for redefinition by descendants.
 	percentage_calculation (to_go: INTEGER): INTEGER is
 			-- Percentage calcuation based on `to_go' and `total_number'
 		do
-			Result := 100 - (100 * to_go) // total_number;
+				--| FIXME IEK We shouldn't need the max call but there is an odd situation
+				--| where the `total_number' is zero (see bug#14036)
+			Result := 100 - (100 * to_go) // (total_number).max (1);
 			if Result = 100 and then to_go /= 0 then
 				Result := 99
 			end

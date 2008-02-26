@@ -191,7 +191,6 @@
 
 	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_tab_editor];new_window;current_editor;context;external</LIST></PREF>
-	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left?" RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.estudio_dbg_menu_allowed" DESCRIPTION="Is EiffelStudio Debug menu allowed?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.estudio_dbg_menu_accelerator_allowed" DESCRIPTION="When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug menu shown by accelerator?" HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.estudio_dbg_menu_enabled" DESCRIPTION="Should EiffelStudio Debug menu be shown" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>

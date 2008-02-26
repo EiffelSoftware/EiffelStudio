@@ -91,10 +91,10 @@ feature -- Value
 			font_of_id_not_void: Result /= Void
 		end
 
-	smart_identation: BOOLEAN is
-			-- Is smart identation enabled?
+	smart_indentation: BOOLEAN is
+			-- Is smart indentation enabled?
 		do
-			Result := smart_identation_preference.value
+			Result := smart_indentation_preference.value
 		end
 
 	tabulation_spaces: INTEGER is
@@ -434,8 +434,8 @@ feature {ANY} -- Preferences
 
 	highlight_document_changes_preference: BOOLEAN_PREFERENCE
 
-	smart_identation_preference: BOOLEAN_PREFERENCE
-			-- Is smart identation enabled?	
+	smart_indentation_preference: BOOLEAN_PREFERENCE
+			-- Is smart indentation enabled?	
 
 	quadruple_click_enabled_preference: BOOLEAN_PREFERENCE
 			-- is quadruple click (select all) enabled ?
@@ -536,8 +536,8 @@ feature {NONE} -- Preference Strings
 
 	cursor_line_highlight_color_string: STRING is "editor.general.colors.cursor_line_highlight_color"
 
-	smart_identation_string: STRING is "editor.general.smart_identation"
-			-- Is smart identation enabled?
+	smart_indentation_string: STRING is "editor.general.smart_indentation"
+			-- Is smart indentation enabled?
 
 	quadruple_click_enabled_string: STRING is "editor.general.quadruple_click_enabled"
 			-- is quadruple click (select all) enabled ?
@@ -602,7 +602,7 @@ feature {NONE} -- Implementation
 
 				-- Preferences
 
-			smart_identation_preference := l_manager.new_boolean_preference_value (l_manager, smart_identation_string, True)
+			smart_indentation_preference := l_manager.new_boolean_preference_value (l_manager, smart_indentation_string, True)
 			tabulation_spaces_preference := l_manager.new_integer_preference_value (l_manager, tabulation_spaces_string, 4)
 			left_margin_width_preference := l_manager.new_integer_preference_value (l_manager, left_margin_width_string, 10)
 			margin_background_color_preference := l_manager.new_color_preference_value (l_manager, margin_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))

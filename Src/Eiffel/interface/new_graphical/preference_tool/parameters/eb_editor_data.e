@@ -673,7 +673,7 @@ feature {NONE} -- Initialization
 			error_background_color_preference.change_actions.extend (agent update)
 			object_text_color_preference.change_actions.extend (agent update)
 			object_background_color_preference.change_actions.extend (agent update)
-			smart_identation_preference.change_actions.extend (agent update)
+			smart_indentation_preference.change_actions.extend (agent update)
 			underscore_is_separator_preference.change_actions.extend (agent update)
 			once_and_constant_in_upper_preference.change_actions.extend (agent update)
 			autocomplete_brackets_and_parentheses_preference.change_actions.extend (agent update)
@@ -1105,7 +1105,7 @@ feature -- Keybord shortcuts Customization
 invariant
 	preferences_not_void: preferences /= Void
 	keyword_font_preference_not_void: keyword_font_preference /= Void
-	smart_identation_preference_not_void: smart_identation_preference /= Void
+	smart_indentation_preference_not_void: smart_indentation_preference /= Void
 	normal_text_color_preference_not_void: normal_text_color_preference /= Void
 	normal_background_color_preference_not_void: normal_background_color_preference /= Void
 	selection_text_color_preference_not_void: selection_text_color_preference /= Void

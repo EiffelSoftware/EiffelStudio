@@ -783,8 +783,6 @@ feature -- Command
 			create l_panel
 			develop_window.set_panel (l_panel)
 
-			develop_window.update_expanded_state_of_panel
-
 				-- Create the status bar.
 			create l_status_bar.make
 			develop_window.set_status_bar (l_status_bar)

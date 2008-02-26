@@ -1224,81 +1224,87 @@ feature {NONE} -- Events on grid
 			l_unprocessed: BOOLEAN
 		do
 			g := grid
-			l_selected_rows := g.selected_rows
-			if not l_selected_rows.is_empty then
-				inspect a_key.code
-				when {EV_KEY_CONSTANTS}.key_space then
-					from
-						l_selected_rows.start
-					until
-						l_selected_rows.after
-					loop
-						l_row := l_selected_rows.item
-						if {bp_s: !BREAKPOINT} (l_row.data) then
-							if bp_s.is_enabled then
-								bp_s.disable
-							else
-								bp_s.enable
-							end
-							bp_changed := True
-							l_selected_rows.item.clear  --| refresh the related grid items
-						end
-						l_selected_rows.forth
-					end
-				when {EV_KEY_CONSTANTS}.key_delete then
-					from
-						l_selected_rows.start
-					until
-						l_selected_rows.after
-					loop
-						l_row := l_selected_rows.item
-						if {bp_d: !BREAKPOINT} (l_row.data) then
-							l_selected_rows.remove
-							bp_d.discard
-							bp_changed := True
-							g.remove_row (l_row.index)
-						else
-							l_selected_rows.forth
-						end
-					end
-					l_selected_rows := Void
-				when {EV_KEY_CONSTANTS}.key_enter then
-					if {bp_e: !BREAKPOINT} (l_selected_rows.first.data) then
-						create bp_stone.make_from_breakpoint (bp_e)
-						bp_stone.display_bkpt_menu
-					end
-					l_row := l_selected_rows.first
-				else
-					l_unprocessed := True
-				end
-				if not l_unprocessed then
+			if ev_application.ctrl_pressed then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_a then
 					g.remove_selection
-					if l_selected_rows /= Void and then l_selected_rows.count > 0 then
-						create l_row_indexes.make (l_selected_rows.count)
+					g.select_all_rows
+				end
+			else
+				l_selected_rows := g.selected_rows
+				if not l_selected_rows.is_empty then
+					inspect a_key.code
+					when {EV_KEY_CONSTANTS}.key_space then
 						from
 							l_selected_rows.start
 						until
 							l_selected_rows.after
 						loop
-							l_row := l_selected_rows.item_for_iteration
-							if l_row /= Void and then l_row.parent /= Void then
-								l_row_indexes.extend (l_row.index)
+							l_row := l_selected_rows.item
+							if {bp_s: !BREAKPOINT} (l_row.data) then
+								if bp_s.is_enabled then
+									bp_s.disable
+								else
+									bp_s.enable
+								end
+								bp_changed := True
+								l_selected_rows.item.clear  --| refresh the related grid items
 							end
 							l_selected_rows.forth
 						end
+					when {EV_KEY_CONSTANTS}.key_delete then
+						from
+							l_selected_rows.start
+						until
+							l_selected_rows.after
+						loop
+							l_row := l_selected_rows.item
+							if {bp_d: !BREAKPOINT} (l_row.data) then
+								l_selected_rows.remove
+								bp_d.discard
+								bp_changed := True
+								g.remove_row (l_row.index)
+							else
+								l_selected_rows.forth
+							end
+						end
+						l_selected_rows := Void
+					when {EV_KEY_CONSTANTS}.key_enter then
+						if {bp_e: !BREAKPOINT} (l_selected_rows.first.data) then
+							create bp_stone.make_from_breakpoint (bp_e)
+							bp_stone.display_bkpt_menu
+						end
+						l_row := l_selected_rows.first
+					else
+						l_unprocessed := True
 					end
-					if bp_changed then
-						breakpoints_manager.notify_breakpoints_changes
-					end
-
-					if l_row_indexes /= Void and then l_row_indexes.count > 0 then
-						l_row_indexes.do_all (agent (r: INTEGER; ag: like grid)
-								do
-									if r > 0 and r <= ag.row_count then
-										ag.row (r).enable_select
-									end
-								end (?, g)
-							)
+					if not l_unprocessed then
+						g.remove_selection
+						if l_selected_rows /= Void and then l_selected_rows.count > 0 then
+							create l_row_indexes.make (l_selected_rows.count)
+							from
+								l_selected_rows.start
+							until
+								l_selected_rows.after
+							loop
+								l_row := l_selected_rows.item_for_iteration
+								if l_row /= Void and then l_row.parent /= Void then
+									l_row_indexes.extend (l_row.index)
+								end
+								l_selected_rows.forth
+							end
+						end
+						if bp_changed then
+							breakpoints_manager.notify_breakpoints_changes
+						end
+						if l_row_indexes /= Void and then l_row_indexes.count > 0 then
+							l_row_indexes.do_all (agent (r: INTEGER; ag: like grid)
+									do
+										if r > 0 and r <= ag.row_count then
+											ag.row (r).enable_select
+										end
+									end (?, g)
+								)
+						end
 					end
 				end
 			end

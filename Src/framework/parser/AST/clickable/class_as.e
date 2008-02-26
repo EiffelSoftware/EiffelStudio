@@ -243,22 +243,24 @@ feature -- Attributes
 			end
 		end
 
-	parents: PARENT_LIST_AS is
+	parents: PARENT_LIST_AS
 			-- Parents from both conforming and non-conforming inheritance clauses.
 		local
-			l_non_conforming_parents: like non_conforming_parents
+			l_conforming_parents, l_non_conforming_parents: like non_conforming_parents
 		do
-			Result := conforming_parents
-			l_non_conforming_parents := non_conforming_parents
-			if Result /= Void then
-					-- Add non-conforming parents to list
+			l_conforming_parents := conforming_parents
+			if l_conforming_parents /= Void then
+				l_non_conforming_parents := non_conforming_parents
 				if l_non_conforming_parents /= Void then
-					Result := Result.twin
-						-- We need to twin the result to append the non-conforming parents.
+					create Result.make (Result.count + l_non_conforming_parents.count)
+					Result.append (l_conforming_parents)
+						-- We need to twin the result if appending to avoid side effect.
 					Result.append (l_non_conforming_parents)
+				else
+					Result := l_conforming_parents
 				end
 			else
-				Result := l_non_conforming_parents
+				Result := non_conforming_parents
 			end
 		end
 
@@ -481,11 +483,11 @@ feature -- Access
 		require
 			n_not_void: n /= Void
 		local
-			cur: CURSOR
+			cur: INTEGER
 			pn: STRING
 		do
 			if parents /= Void then
-				cur := parents.cursor
+				cur := parents.index
 				from
 					parents.start
 				until
@@ -497,7 +499,7 @@ feature -- Access
 					end
 					parents.forth
 				end
-				parents.go_to (cur)
+				parents.go_i_th (cur)
 			end
 		end
 
@@ -583,18 +585,17 @@ feature -- Query
 	all_features: !BILINEAR [!FEATURE_AS]
 			-- Retrieves a list of all features of the Current class.
 		local
-			l_fccursor: CURSOR
-			l_fcursor: CURSOR
+			l_fccursor, l_fcursor: INTEGER
 			l_result: !ARRAYED_LIST [!FEATURE_AS]
 		do
 			create l_result.make (0)
 			if {l_fclauses: !like features} features then
 					-- Iterate the features clauses and feature all features
-				l_fccursor := l_fclauses.cursor
+				l_fccursor := l_fclauses.index
 				from l_fclauses.start until l_fclauses.after loop
 					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item and then {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
 							-- Iterate all features and extend the result list
-						l_fcursor := l_features.cursor
+						l_fcursor := l_features.index
 						from l_features.start until l_features.after loop
 							if {l_feature: !FEATURE_AS} l_features.item then
 									-- Add feature
@@ -602,11 +603,11 @@ feature -- Query
 							end
 							l_features.forth
 						end
-						l_features.go_to (l_fcursor)
+						l_features.go_i_th (l_fcursor)
 					end
 					l_fclauses.forth
 				end
-				l_fclauses.go_to (l_fccursor)
+				l_fclauses.go_i_th (l_fccursor)
 			end
 
 			Result := ({!BILINEAR [!FEATURE_AS]}) #? l_result
@@ -618,11 +619,10 @@ feature -- Query
 			-- `a_name': The feature name to retrieve a feature AS node for.
 			-- `a_reverse_lookup': True to lookup a feature from the end to the beginning.
 		local
-			l_fccursor: CURSOR
-			l_fcursor: CURSOR
+			l_fccursor, l_fcursor: INTEGER
 		do
 			if {l_fclauses: !like features} features then
-				l_fccursor := l_fclauses.cursor
+				l_fccursor := l_fclauses.index
 				if a_reverse_lookup then
 					l_fclauses.finish
 				else
@@ -632,7 +632,7 @@ feature -- Query
 					-- Iterate the features clauses and feature all features
 				from until l_fclauses.after or Result /= Void loop
 					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item and then {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
-						l_fcursor := l_features.cursor
+						l_fcursor := l_features.index
 						if a_reverse_lookup then
 							l_features.finish
 						else
@@ -654,7 +654,7 @@ feature -- Query
 								l_features.forth
 							end
 						end
-						l_features.go_to (l_fcursor)
+						l_features.go_i_th (l_fcursor)
 					end
 					if a_reverse_lookup then
 						l_fclauses.back
@@ -662,7 +662,7 @@ feature -- Query
 						l_fclauses.forth
 					end
 				end
-				l_fclauses.go_to (l_fccursor)
+				l_fclauses.go_i_th (l_fccursor)
 			end
 		end
 
@@ -674,15 +674,14 @@ feature -- Query
 			-- `Result': The feature node located at the corresponding line number or Void if the line
 			--           number resides outside of a feature.
 		local
-			l_fccursor: CURSOR
-			l_fcursor: CURSOR
+			l_fccursor, l_fcursor: INTEGER
 			l_helper: AST_HELPER
 			l_stop: BOOLEAN
 		do
 			if {l_fclauses: !like features} features and then not l_fclauses.is_empty then
 					-- Iterate the features clauses and feature all features
 				create l_helper
-				l_fccursor := l_fclauses.cursor
+				l_fccursor := l_fclauses.index
 				from l_fclauses.start until l_stop or else l_fclauses.after loop
 					if {l_fclause: !FEATURE_CLAUSE_AS} l_fclauses.item then
 						if
@@ -692,7 +691,7 @@ feature -- Query
 							if {l_features: !EIFFEL_LIST [FEATURE_AS]} l_fclause.features then
 									-- Found a feature clauses
 									-- Iterate all features and extend the result list
-								l_fcursor := l_features.cursor
+								l_fcursor := l_features.index
 								from l_features.start until l_stop or l_features.after loop
 									if
 										{l_feature: !FEATURE_AS} l_features.item and then
@@ -704,7 +703,7 @@ feature -- Query
 									end
 									l_features.forth
 								end
-								l_features.go_to (l_fcursor)
+								l_features.go_i_th (l_fcursor)
 							end
 
 								-- Ensure we go no further because if no feature is found then
@@ -719,7 +718,7 @@ feature -- Query
 
 					l_fclauses.forth
 				end
-				l_fclauses.go_to (l_fccursor)
+				l_fclauses.go_i_th (l_fccursor)
 			end
 		end
 

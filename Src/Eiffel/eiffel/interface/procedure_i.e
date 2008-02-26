@@ -135,7 +135,7 @@ feature -- Initialization
 			i, j, l_count, dec_count, nb_arg: INTEGER
 			arg_type: TYPE_A
 			arg_dec: TYPE_DEC_AS
-			id_list: ARRAYED_LIST [INTEGER]
+			id_list: IDENTIFIER_LIST
 		do
 				-- Calculate the number of arguments.
 			from

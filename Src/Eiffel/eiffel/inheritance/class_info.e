@@ -60,18 +60,21 @@ feature -- Access
 	parents: EIFFEL_LIST [PARENT_AS]
 			-- List containing both conforming and non-conforming parents of `Current'.
 		local
-			l_non_conforming_parents: like non_conforming_parents
+			l_conforming_parents, l_non_conforming_parents: like non_conforming_parents
 		do
-			Result := conforming_parents
-			l_non_conforming_parents := non_conforming_parents
-			if Result /= Void then
+			l_conforming_parents := conforming_parents
+			if l_conforming_parents /= Void then
+				l_non_conforming_parents := non_conforming_parents
 				if l_non_conforming_parents /= Void then
-					Result := Result.twin
+					create Result.make (Result.count + l_non_conforming_parents.count)
+					Result.append (l_conforming_parents)
 						-- We need to twin the result if appending to avoid side effect.
 					Result.append (l_non_conforming_parents)
+				else
+					Result := l_conforming_parents
 				end
 			else
-				Result := l_non_conforming_parents
+				Result := non_conforming_parents
 			end
 		end
 

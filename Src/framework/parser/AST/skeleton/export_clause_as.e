@@ -79,14 +79,14 @@ feature -- Status reporting
 	valid_meaningful_content (a_meaningful_content: like meaningful_content): BOOLEAN is
 			-- Is `a_meaningful_content' valid?
 		local
-			l_cursor: CURSOR
+			l_cursor: INTEGER
 		do
 			if content = Void or else content.is_empty then
 				Result := a_meaningful_content = Void
 			else
 				Result := True
 				if a_meaningful_content /= Void then
-					l_cursor := a_meaningful_content.cursor
+					l_cursor := a_meaningful_content.index
 					from
 						a_meaningful_content.start
 					until
@@ -97,9 +97,9 @@ feature -- Status reporting
 						end
 						a_meaningful_content.forth
 					end
-					a_meaningful_content.go_to (l_cursor)
+					a_meaningful_content.go_i_th (l_cursor)
 				else
-					l_cursor := content.cursor
+					l_cursor := content.index
 					from
 						content.start
 					until
@@ -110,7 +110,7 @@ feature -- Status reporting
 						end
 						content.forth
 					end
-					content.go_to (l_cursor)
+					content.go_i_th (l_cursor)
 				end
 			end
 		end

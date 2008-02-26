@@ -49,9 +49,9 @@ feature -- Access
 	has_assertion (a: TAGGED_AS): BOOLEAN is
 			-- Does current list have assertion `a'?
 		local
-			cur: CURSOR
+			cur: INTEGER
 		do
-			cur := assertions.cursor
+			cur := assertions.index
 
 			from
 				assertions.start
@@ -62,7 +62,7 @@ feature -- Access
 				assertions.forth
 			end
 
-			assertions.go_to (cur)
+			assertions.go_i_th (cur)
 		end
 
 feature {ASSERT_LIST_AS} -- Replication

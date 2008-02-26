@@ -235,7 +235,7 @@ feature -- Type checking
 			a_node_not_void: a_node /= Void
 		local
 			l_routine: ROUTINE_AS
-			l_id_list: ARRAYED_LIST [INTEGER]
+			l_id_list: IDENTIFIER_LIST
 			l_feat_tbl: FEATURE_TABLE
 			l_vrle1: VRLE1
 			l_vpir: VPIR1
@@ -8306,7 +8306,7 @@ feature {NONE} -- Implementation: checking locals
 			l_as_not_void: l_as /= Void
 			locals_not_void: l_as.locals /= Void
 		local
-			l_id_list: ARRAYED_LIST [INTEGER]
+			l_id_list: IDENTIFIER_LIST
 			l_local_type: TYPE_AS
 			l_local_name_id: INTEGER
 			l_local_name: STRING

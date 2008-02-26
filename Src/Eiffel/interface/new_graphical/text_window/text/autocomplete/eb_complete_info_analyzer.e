@@ -1004,9 +1004,9 @@ feature {NONE} -- Implementation
 			l_feat_name: FEATURE_NAME
 			l_arguments: EIFFEL_LIST [TYPE_DEC_AS]
 			l_type_dec: TYPE_DEC_AS
-			l_cursor: CURSOR
-			l_redefining_cursor: CURSOR
-			l_args_cursor: CURSOR
+			l_cursor: INTEGER
+			l_redefining_cursor: INTEGER
+			l_args_cursor: INTEGER
 			l_name: STRING
 			l_continue: BOOLEAN
 			l_completion_name: EB_PRECURSOR_FOR_COMPLETION
@@ -1023,7 +1023,7 @@ feature {NONE} -- Implementation
 		do
 			l_parents := a_class.parents
 			if l_parents /= Void and then not l_parents.is_empty then
-				l_cursor := l_parents.cursor
+				l_cursor := l_parents.index
 				l_name := a_feature.feature_name.name
 				from
 					l_parents.start
@@ -1035,7 +1035,7 @@ feature {NONE} -- Implementation
 						l_redefining := l_parent.redefining
 						if l_redefining /= Void and then not l_redefining.is_empty then
 							l_continue := False
-							l_redefining_cursor := l_redefining.cursor
+							l_redefining_cursor := l_redefining.index
 							from
 								l_redefining.start
 							until
@@ -1070,7 +1070,7 @@ feature {NONE} -- Implementation
 														-- Add current feature argument list
 													create l_args.make (50)
 													l_args.extend (create {EDITOR_TOKEN_OPERATOR}.make (ti_l_parenthesis))
-													l_args_cursor := l_arguments.cursor
+													l_args_cursor := l_arguments.index
 													from
 														l_arguments.start
 													until
@@ -1109,7 +1109,7 @@ feature {NONE} -- Implementation
 													if l_error then
 														l_args := Void
 													end
-													l_arguments.go_to (l_args_cursor)
+													l_arguments.go_i_th (l_args_cursor)
 												end
 											end
 										end
@@ -1120,12 +1120,12 @@ feature {NONE} -- Implementation
 								l_redefining.forth
 							end
 
-							l_redefining.go_to (l_redefining_cursor)
+							l_redefining.go_i_th (l_redefining_cursor)
 						end
 					end
 					l_parents.forth
 				end
-				l_parents.go_to (l_cursor)
+				l_parents.go_i_th (l_cursor)
 			end
 		end
 

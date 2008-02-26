@@ -93,9 +93,9 @@ feature -- Access
 	has_feature_name (f: FEATURE_NAME): BOOLEAN is
 			-- Is `f' present in current creation?
 		local
-			cur: CURSOR
+			cur: INTEGER
 		do
-			cur := feature_list.cursor
+			cur := feature_list.index
 
 			from
 				feature_list.start
@@ -106,7 +106,7 @@ feature -- Access
 				feature_list.forth
 			end
 
-			feature_list.go_to (cur)
+			feature_list.go_i_th (cur)
 		end
 
 feature {COMPILER_EXPORTER} -- Convenience

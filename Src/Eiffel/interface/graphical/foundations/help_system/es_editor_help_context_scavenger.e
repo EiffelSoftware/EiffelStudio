@@ -79,20 +79,20 @@ feature {NONE} -- Query
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_cursor, l_sub_cursor: CURSOR
+			l_cursor, l_sub_cursor: INTEGER
 			l_index: INDEX_AS
 			l_list: EIFFEL_LIST [ATOMIC_AS]
 		do
 			create Result.make_default
 
-			l_cursor := a_clause.cursor
+			l_cursor := a_clause.index
 			from a_clause.start until a_clause.after loop
 				l_index := a_clause.item
 				if l_index.tag.name.is_case_insensitive_equal (help_indexing_tag) then
 					l_list := l_index.index_list
 					if l_list /= Void then
 							-- Add all documents
-						l_sub_cursor := l_list.cursor
+						l_sub_cursor := l_list.index
 						from l_list.start until l_list.after loop
 							if {l_value: !STRING_8} l_list.item.string_value then
 									-- Strip quotation marks from URI
@@ -102,15 +102,15 @@ feature {NONE} -- Query
 							end
 							l_list.forth
 						end
-						l_list.go_to (l_cursor)
+						l_list.go_i_th (l_cursor)
 					end
 				end
 				a_clause.forth
 			end
-			a_clause.go_to (l_cursor)
+			a_clause.go_i_th (l_cursor)
 		ensure
 			result_contains_valid_items: Result.for_all (agent (a_ia_item: !STRING_8): BOOLEAN do Result := not a_ia_item.is_empty end)
-			a_clause_unmovde: equal (a_clause.cursor, old a_clause.cursor)
+			a_clause_unmovde: a_clause.index = old a_clause.index
 		end
 
 feature {NONE} -- Basic operations

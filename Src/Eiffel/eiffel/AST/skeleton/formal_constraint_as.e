@@ -711,7 +711,7 @@ feature {NONE} -- Implementation
 			--
 			-- `a_rename_clause': AST for which the RENAMING_A instance is built.
 		local
-			l_renaminings: LIST[RENAME_AS]
+			l_renaminings: EIFFEL_LIST [RENAME_AS]
 			l_rename: RENAME_AS
 			l_new_name: FEATURE_NAME
 			l_old_name_id, l_alias_name_id: INTEGER

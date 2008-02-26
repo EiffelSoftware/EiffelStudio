@@ -1554,7 +1554,7 @@ feature {NONE}-- Implementation
 		local
 			current_feature: FEATURE_I
 			entities_list: EIFFEL_LIST [TYPE_DEC_AS]
-			id_list: ARRAYED_LIST [INTEGER]
+			id_list: IDENTIFIER_LIST
 			stop: BOOLEAN
 			name_id: INTEGER
 			retried: BOOLEAN

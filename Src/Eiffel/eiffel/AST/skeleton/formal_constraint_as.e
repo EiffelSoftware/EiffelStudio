@@ -711,22 +711,22 @@ feature {NONE} -- Implementation
 			--
 			-- `a_rename_clause': AST for which the RENAMING_A instance is built.
 		local
-			l_renaminings: EIFFEL_LIST [RENAME_AS]
+			l_renamings: EIFFEL_LIST [RENAME_AS]
 			l_rename: RENAME_AS
 			l_new_name: FEATURE_NAME
 			l_old_name_id, l_alias_name_id: INTEGER
 			l_feature_name_id: FEAT_NAME_ID_AS
 		do
 			if a_rename_clause /= Void then
-				l_renaminings := a_rename_clause.content
-				if l_renaminings /= Void then
-					create Result.make (l_renaminings.count)
+				l_renamings := a_rename_clause.content
+				if l_renamings /= Void then
+					create Result.make (l_renamings.count)
 					from
-						l_renaminings.start
+						l_renamings.start
 					until
-						l_renaminings.after
+						l_renamings.after
 					loop
-						l_rename := l_renaminings.item
+						l_rename := l_renamings.item
 						l_old_name_id := l_rename.old_name.internal_name.name_id
 						l_new_name := l_rename.new_name
 						l_feature_name_id ?= l_new_name
@@ -741,7 +741,7 @@ feature {NONE} -- Implementation
 						if l_alias_name_id /= 0 then
 							Result.put_delayed_alias (l_old_name_id, l_new_name)
 						end
-						l_renaminings.forth
+						l_renamings.forth
 					end
 				end
 			end

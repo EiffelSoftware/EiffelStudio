@@ -97,7 +97,7 @@ feature -- Access
 		do
 			if syntactical_button_internal = Void then
 				create syntactical_button_internal.make (preferences.class_browser_data.syntactical_class_preference)
-				syntactical_button_internal.set_pixmap (pixmaps.icon_pixmaps.class_overriden_normal_icon)
+				syntactical_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.class_overriden_normal_icon_buffer)
 				syntactical_button_internal.set_tooltip (interface_names.h_show_syntactical_classes)
 				syntactical_button_internal.select_actions.extend (agent on_refresh_for_flat_view)
 			end
@@ -111,7 +111,7 @@ feature -- Access
 		do
 			if normal_referenced_button_internal = Void then
 				create normal_referenced_button_internal.make (preferences.class_browser_data.normal_referenced_class_preference)
-				normal_referenced_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_supplier_link_icon)
+				normal_referenced_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.diagram_supplier_link_icon_buffer)
 				normal_referenced_button_internal.set_tooltip (interface_names.h_show_normal_referenced_classes)
 				normal_referenced_button_internal.select_actions.extend (agent on_refresh_for_flat_view)
 			end
@@ -638,7 +638,7 @@ feature{NONE} -- Implementation
 		do
 			if display_path_button_internal = Void then
 				create display_path_button_internal.make (preferences.class_browser_data.show_item_path_preference)
-				display_path_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
+				display_path_button_internal.set_pixel_buffer (pixmaps.icon_pixmaps.metric_unit_group_icon_buffer)
 				display_path_button_internal.set_tooltip (interface_names.h_show_item_location)
 				display_path_button_internal.select_actions.extend (agent on_show_path_changed)
 			end

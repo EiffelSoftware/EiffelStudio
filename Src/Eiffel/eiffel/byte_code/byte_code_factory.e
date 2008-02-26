@@ -213,8 +213,14 @@ feature {NONE} -- Implementation: Byte node
 		do
 				-- Initialize creation expression `(create {a_target_type}.a_feat (a_expr))'.
 			create Result
-				-- We use `a_target_type.actual_type' as CREATE_TYPE cannot handle anchors.
-			create l_create_type.make (a_target_type.actual_type)
+				-- CREATE_TYPE cannot handle anchors.
+			if a_target_type.is_like_current then
+					-- Use conformance type instead.
+				create l_create_type.make (a_target_type.conformance_type)
+			else
+					-- Use actual type to remove the anchor.
+				create l_create_type.make (a_target_type.actual_type)
+			end
 			Result.set_info (l_create_type)
 			Result.set_type (a_target_type)
 

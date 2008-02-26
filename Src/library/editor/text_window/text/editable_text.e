@@ -62,7 +62,7 @@ feature -- Status Report
 	use_smart_indentation: BOOLEAN is
 			-- Is smart_indentation enabled?
 		do
-			Result := editor_preferences.smart_identation
+			Result := editor_preferences.smart_indentation
 		end
 
 	redo_is_possible: BOOLEAN is

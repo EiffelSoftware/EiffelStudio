@@ -612,7 +612,7 @@ feature -- Syntax completion
 				if has_selection and then not cursor.is_equal (selection_cursor) then
 					delete_selection
 				end
-				if editor_preferences.smart_identation then
+				if editor_preferences.smart_indentation then
 					indent := cursor.line.indentation
 				else
 					indent := ""

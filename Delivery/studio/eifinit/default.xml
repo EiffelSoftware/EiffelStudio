@@ -568,7 +568,7 @@
 	<PREF NAME="editor.general.mouse_wheel_scroll_size" DESCRIPTION="Number of lines scrolled using the mouse wheel."><INTEGER>3</INTEGER></PREF>
 	<PREF NAME="editor.general.quadruple_click_enabled" DESCRIPTION="Does a quadruple click select the entire document?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.remove_trailing_white_space" HIDDEN="true" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.smart_identation" DESCRIPTION="Should editor perform auto-indenting?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.general.smart_indentation" DESCRIPTION="Should editor perform auto-indenting?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.tab_step" DESCRIPTION="Number of spaces that a tabulation character represents."><INTEGER>4</INTEGER></PREF>
 	<PREF NAME="editor.general.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.colors.margin_background_color" DESCRIPTION="Background color of line number margin."><COLOR>212;208;200</COLOR></PREF>

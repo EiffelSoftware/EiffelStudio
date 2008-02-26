@@ -339,7 +339,7 @@ rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF
 
 	register char *address;
 
-	if (id==0)							/* No object associated with 0 */
+	if (id<=0)							/* No object associated with 0 or a negative value. */
 		return (EIF_REFERENCE) 0;
 
 	if (id>max_value)

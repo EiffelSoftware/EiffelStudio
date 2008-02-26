@@ -515,6 +515,9 @@ feature{NONE} -- Redraw
 				end
 			end
 			a_drawable.fill_rectangle (l_gap, 0, width, height)
+			if not l_parent.pre_draw_overlay_actions.is_empty then
+				l_parent.pre_draw_overlay_actions.call ([a_drawable, Current, column.index, row.index])
+			end
 		end
 
 feature{NONE} -- Implementation

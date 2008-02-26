@@ -3143,10 +3143,10 @@ rt_private void interpret(int flag, int where)
 		offset_o = get_int32(&IC);		/* Get position of the next BC_OLD */
 		if (saved_except_for_old)
 			loc(code)->it_r = saved_except_for_old;
-			//memcpy (loc(code), saved_except_for_old, sizeof (saved_except_for_old));
+			/*memcpy (loc(code), saved_except_for_old, sizeof (saved_except_for_old));*/
 		else
 			loc(code)->it_r = NULL;
-			//memset (loc(code), 0, sizeof(EIF_TYPED_VALUE));
+			/*memset (loc(code), 0, sizeof(EIF_TYPED_VALUE));*/
 
 		RTE_OP; /* Pop last old evaluation vector in the stack. */
 		/* Rescue next old expression evaluation */

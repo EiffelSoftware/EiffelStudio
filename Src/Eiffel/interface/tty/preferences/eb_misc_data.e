@@ -127,11 +127,6 @@ feature -- Value
 			external_editor_cli_not_empty: not Result.is_empty
 		end
 
-	editor_left_side: BOOLEAN is
-		do
-			Result := editor_left_side_preference.value
-		end
-
 	show_hidden_preferences: BOOLEAN is
 		do
 			Result := show_hidden_preferences_preference.value
@@ -171,7 +166,6 @@ feature -- Preference
 	dyn_lib_window_height_preference: INTEGER_PREFERENCE
 	preference_window_width_preference: INTEGER_PREFERENCE
 	preference_window_height_preference: INTEGER_PREFERENCE
-	editor_left_side_preference: BOOLEAN_PREFERENCE
 	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
 	console_shell_command_preference: STRING_PREFERENCE
 	file_browser_command_preference: STRING_PREFERENCE
@@ -184,7 +178,6 @@ feature {NONE} -- Preference Strings
 	text_mode_is_windows_string: STRING is "editor.eiffel.text_mode_is_windows"
 	internet_browser_string: STRING is "general.internet_browser"
 	external_editor_command_string: STRING is "general.external_editor_command"
-	editor_left_side_string: STRING is "interface.development_window.editor_left_side"
 	dyn_lib_window_width_string: STRING is "general.dynamic_library_window_width"
 	dyn_lib_window_height_string: STRING is "general.dynamic_library_window_height"
 	preference_window_width_string: STRING is "general.preference_window_width"
@@ -209,7 +202,6 @@ feature {NONE} -- Implementation
 			acrobat_reader_preference := l_manager.new_string_preference_value (l_manager, acrobat_reader_string, "acrobat")
 			text_mode_is_windows_preference := l_manager.new_boolean_preference_value (l_manager, text_mode_is_windows_string, l_platform.is_windows)
 			internet_browser_preference := l_manager.new_string_preference_value (l_manager, internet_browser_string, "netscape $url")
-			editor_left_side_preference := l_manager.new_boolean_preference_value (l_manager, editor_left_side_string, False)
 			dyn_lib_window_height_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_width_string, 400)
 			preference_window_height_preference := l_manager.new_integer_preference_value (l_manager, preference_window_height_string, 200)
@@ -330,7 +322,6 @@ invariant
 	dyn_lib_window_height_preference_not_void: dyn_lib_window_height_preference /= Void
 	preference_window_width_preference_not_void: preference_window_width_preference /= Void
 	preference_window_height_preference_not_void: preference_window_height_preference /= Void
-	editor_left_side_preference_not_void: editor_left_side_preference /= Void
 	console_shell_command_preference_not_void: console_shell_command_preference /= Void
 	locale_id_preference_not_void: locale_id_preference /= Void
 	pnd_preference_not_void: pnd_preference /= Void

@@ -153,14 +153,6 @@ feature -- Explorer bar handling.
 	splitter_position: INTEGER
 			-- Position of the main splitter.
 
-	update_expanded_state_of_panel is
-			-- If `panel' `is_full', update expanded status of widgets
-			-- based on `editor_left_side_cell'. This must be performed
-			-- after insertions or updates to `panel', ensuring that the
-			-- non editor side does not resize when `panel' is enlarged.
-		do
-		end
-
 	restore_bars is
 			-- A maximized item has been restored.
 		do
@@ -185,12 +177,6 @@ feature {NONE} -- Constants
 			-- Default Vision2 colors.
 		once
 			create Result
-		end
-
-	editor_left_side_cell: CELL [BOOLEAN] is
-			-- Is Editor and associated tools displayed on left side of window?
-		once
-			create Result.put (preferences.misc_data.editor_left_side)
 		end
 
 indexing

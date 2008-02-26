@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 			local_list_not_empty: not local_list.is_empty
 		local
 			routine_as: ROUTINE_AS
-			id_list: ARRAYED_LIST [INTEGER]
+			id_list: IDENTIFIER_LIST
 			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
 			debug_generation: BOOLEAN
 			i: INTEGER
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 			local_list_not_empty: not local_list.is_empty
 		local
 			routine_as: ROUTINE_AS
-			id_list: ARRAYED_LIST [INTEGER]
+			id_list: IDENTIFIER_LIST
 			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
 			local_type: CL_TYPE_A
 			i: INTEGER

@@ -63,7 +63,7 @@ feature -- Access
 	found_names: LINKED_LIST [STRING] is
 			-- List of found entity names.
 		local
-			id_list: ARRAYED_LIST [INTEGER]
+			id_list: IDENTIFIER_LIST
 		do
 			create Result.make
 			if found_entities /= Void and not found_entities.is_empty then

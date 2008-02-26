@@ -251,7 +251,7 @@ feature -- Query
 			l_names: like feature_names
 			l_name: FEATURE_NAME
 			l_string_name: STRING_8
-			l_cursor: CURSOR
+			l_cursor: INTEGER
 		do
 			l_string_name := a_name.as_string_8
 			l_fn := feature_name
@@ -260,7 +260,7 @@ feature -- Query
 					-- Check feature name list
 				l_names := feature_names
 				if l_names /= Void and then l_names.count > 1 or Result then
-					l_cursor := l_names.cursor
+					l_cursor := l_names.index
 					from l_names.start until l_names.after loop
 						l_name := l_names.item
 						if l_name /= Void then
@@ -268,7 +268,7 @@ feature -- Query
 						end
 						l_names.forth
 					end
-					l_names.go_to (l_cursor)
+					l_names.go_i_th (l_cursor)
 				end
 			end
 		end
@@ -314,9 +314,9 @@ feature -- Access
 	has_feature_name (n: FEATURE_NAME): BOOLEAN is
 			-- Does this feature have the name `n'?
 		local
-			cur: CURSOR
+			cur: INTEGER
 		do
-			cur := feature_names.cursor
+			cur := feature_names.index
 
 			from
 				feature_names.start
@@ -327,7 +327,7 @@ feature -- Access
 				feature_names.forth
 			end
 
-			feature_names.go_to (cur)
+			feature_names.go_i_th (cur)
 		end
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN is

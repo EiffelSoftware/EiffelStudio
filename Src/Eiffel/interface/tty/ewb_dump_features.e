@@ -73,7 +73,7 @@ feature {NONE} -- Properties
 	process_compiled_class (e_class: CLASS_C) is
 			-- Process compiled class `e_class'.
 		local
-			gs: LINEAR [FORMAL_DEC_AS]
+			gs: EIFFEL_LIST [FORMAL_DEC_AS]
 			gts: ARRAY [STRING]
 			l_tbl: FEATURE_TABLE
 			i: INTEGER

@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	process_routine_as (l_as: ROUTINE_AS) is
 		local
 			l_feat_tbl: FEATURE_TABLE
-			l_id_list: ARRAYED_LIST [INTEGER]
+			l_id_list: IDENTIFIER_LIST
 			l_solved_type: TYPE_A
 			l_local_info: LOCAL_INFO
 			i: INTEGER

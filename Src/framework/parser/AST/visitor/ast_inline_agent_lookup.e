@@ -76,10 +76,10 @@ feature
 
 	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
 		local
-			l_cursor: CURSOR
+			l_cursor: INTEGER
 		do
 			from
-				l_cursor := l_as.cursor
+				l_cursor := l_as.index
 				l_as.start
 			until
 				found_inline_agent /= Void or else l_as.after
@@ -87,7 +87,7 @@ feature
 				l_as.item.process (Current)
 				l_as.forth
 			end
-			l_as.go_to (l_cursor)
+			l_as.go_i_th (l_cursor)
 		end
 
 feature {NONE}

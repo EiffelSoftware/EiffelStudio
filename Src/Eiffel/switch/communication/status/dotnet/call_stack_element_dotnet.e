@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 		local
 			local_decl_grps: EIFFEL_LIST [TYPE_DEC_AS]
 			l_ot_locals: like object_test_locals_from
-			id_list: ARRAYED_LIST [INTEGER]
+			id_list: IDENTIFIER_LIST
 			l_index: INTEGER
 			l_count: INTEGER
 			value: ABSTRACT_DEBUG_VALUE

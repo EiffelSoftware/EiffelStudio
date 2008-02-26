@@ -21,7 +21,7 @@ inherit
 		redefine
 			process_feature
 		end
-		
+
 create
 
 	make, do_nothing
@@ -37,7 +37,7 @@ feature {NONE} -- Properties
 	process_feature (e_feature: E_FEATURE; e_class: CLASS_C) is
 			-- Process `e_feature' defined in `e_class'.
 		local
-			gs: LINEAR [FORMAL_DEC_AS]
+			gs: EIFFEL_LIST [FORMAL_DEC_AS]
 			gts: ARRAY [STRING]
 			types: LINEAR [TYPE_A]
 			l_names: LINEAR [STRING]

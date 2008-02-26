@@ -140,9 +140,8 @@ feature {NONE} -- Display
 			-- `a_dialog': Dialog prompt to show
 			-- `a_window': A window to show the prompt parented to, or Void if no parent is available.
 		require
-			a_prompt_attached: a_prompt /= Void
-			not_a_prompt_is_recycled: not a_prompt.is_recycled
-			not_a_prompt_is_shown: not a_prompt.is_shown
+			a_dialog_attached: a_dialog /= Void
+			not_a_dialog_is_shown: not a_dialog.is_displayed
 		do
 			if a_window = Void or else a_window.is_destroyed or else not a_window.is_show_requested then
 				a_dialog.show

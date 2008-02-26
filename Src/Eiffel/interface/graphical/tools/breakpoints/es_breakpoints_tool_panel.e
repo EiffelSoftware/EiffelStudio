@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 			create grid
 			grid.enable_tree
-			grid.enable_single_row_selection
+			grid.enable_multiple_row_selection
 			grid.enable_border
 			grid.enable_partial_dynamic_content
 			grid.set_dynamic_content_function (agent computed_grid_item)
@@ -1213,21 +1213,92 @@ feature {NONE} -- Events on grid
 		end
 
 	key_pressed_on_grid (a_key: EV_KEY) is
-			--
+			-- Key events on grid's handler
 		local
+			g: like grid
 			l_selected_rows: LIST [EV_GRID_ROW]
+			l_row_indexes: ARRAYED_LIST [INTEGER]
 			l_row: EV_GRID_ROW
-			l_bp: BREAKPOINT
 			bp_stone: BREAKABLE_STONE
+			bp_changed: BOOLEAN
+			l_unprocessed: BOOLEAN
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-				l_selected_rows := grid.selected_rows
-				if not l_selected_rows.is_empty then
-					l_row := l_selected_rows.first
-					l_bp ?= l_row.data
-					if l_bp /= Void then
-						create bp_stone.make_from_breakpoint (l_bp)
+			g := grid
+			l_selected_rows := g.selected_rows
+			if not l_selected_rows.is_empty then
+				inspect a_key.code
+				when {EV_KEY_CONSTANTS}.key_space then
+					from
+						l_selected_rows.start
+					until
+						l_selected_rows.after
+					loop
+						l_row := l_selected_rows.item
+						if {bp_s: !BREAKPOINT} (l_row.data) then
+							if bp_s.is_enabled then
+								bp_s.disable
+							else
+								bp_s.enable
+							end
+							bp_changed := True
+							l_selected_rows.item.clear  --| refresh the related grid items
+						end
+						l_selected_rows.forth
+					end
+				when {EV_KEY_CONSTANTS}.key_delete then
+					from
+						l_selected_rows.start
+					until
+						l_selected_rows.after
+					loop
+						l_row := l_selected_rows.item
+						if {bp_d: !BREAKPOINT} (l_row.data) then
+							l_selected_rows.remove
+							bp_d.discard
+							bp_changed := True
+							g.remove_row (l_row.index)
+						else
+							l_selected_rows.forth
+						end
+					end
+					l_selected_rows := Void
+				when {EV_KEY_CONSTANTS}.key_enter then
+					if {bp_e: !BREAKPOINT} (l_selected_rows.first.data) then
+						create bp_stone.make_from_breakpoint (bp_e)
 						bp_stone.display_bkpt_menu
+					end
+					l_row := l_selected_rows.first
+				else
+					l_unprocessed := True
+				end
+				if not l_unprocessed then
+					g.remove_selection
+					if l_selected_rows /= Void and then l_selected_rows.count > 0 then
+						create l_row_indexes.make (l_selected_rows.count)
+						from
+							l_selected_rows.start
+						until
+							l_selected_rows.after
+						loop
+							l_row := l_selected_rows.item_for_iteration
+							if l_row /= Void and then l_row.parent /= Void then
+								l_row_indexes.extend (l_row.index)
+							end
+							l_selected_rows.forth
+						end
+					end
+					if bp_changed then
+						breakpoints_manager.notify_breakpoints_changes
+					end
+
+					if l_row_indexes /= Void and then l_row_indexes.count > 0 then
+						l_row_indexes.do_all (agent (r: INTEGER; ag: like grid)
+								do
+									if r > 0 and r <= ag.row_count then
+										ag.row (r).enable_select
+									end
+								end (?, g)
+							)
 					end
 				end
 			end

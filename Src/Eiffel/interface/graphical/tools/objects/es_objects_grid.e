@@ -90,6 +90,7 @@ feature {NONE} -- Initialization
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)
 			set_item_deny_cursor_function (agent on_pnd_deny_cursor_function)
 			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
+			pointer_button_release_item_actions.extend (agent on_pointer_right_click_item)
 
 			enable_selection_on_single_button_click
 
@@ -630,6 +631,17 @@ feature {NONE} -- Actions implementation
 				ei ?= a_item
 				if ei /= Void then
 					activate_grid_item (ei)
+				end
+			end
+		end
+
+	on_pointer_right_click_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM) is
+			-- Action to be performed when pointer right click on grid
+			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.	
+		do
+			if ab =  {EV_POINTER_CONSTANTS}.right and ev_application.ctrl_pressed then
+				if {l_stone: !STONE} grid_pebble_from_cell (a_item) and then l_stone.is_valid then
+					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end
 		end

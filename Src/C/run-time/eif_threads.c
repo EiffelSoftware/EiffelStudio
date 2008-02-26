@@ -820,7 +820,9 @@ rt_public void eif_thr_exit(void)
 
 		if (l_has_parent_thread) {
 			RT_GC_PROTECT(thread_object);
+#ifndef EIF_NO_CONDVAR
 			l_chld_cond = eif_thr_context->children_cond; 
+#endif
 			l_chld_mutex = eif_thr_context->children_mutex;
 			l_addr_n_children = eif_thr_context->addr_n_children;
 			thread_object = eif_wean(eif_thr_context->current);

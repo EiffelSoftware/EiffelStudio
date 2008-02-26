@@ -4448,8 +4448,8 @@ feature -- Implementation
 			check_type (l_as.type)
 			local_type := last_type
 			if local_type /= Void then
-				if not local_type.is_attached then
-					error_handler.insert_error (create {VUOT2}.make (context, local_name_id, local_type, l_as.name))
+				if not local_type.is_attached and then context.current_class.lace_class.is_void_safe then
+					local_type := local_type.as_attached
 				end
 
 				local_type.check_for_obsolete_class (context.current_class)

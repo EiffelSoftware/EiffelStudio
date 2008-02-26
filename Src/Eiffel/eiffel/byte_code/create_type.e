@@ -22,6 +22,7 @@ feature	{NONE} -- Initialization
 			-- Assign `t' to `type'.
 		require
 			t_not_void: t /= Void
+			t_not_is_like: not t.is_like
 		do
 			type := t
 		ensure

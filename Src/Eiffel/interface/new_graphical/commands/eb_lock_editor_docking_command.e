@@ -44,6 +44,7 @@ feature -- Command
 			else
 				l_manager.lock_editor
 			end
+			set_select (is_selected)
 		end
 
 feature -- Query

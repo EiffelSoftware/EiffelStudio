@@ -75,8 +75,10 @@ feature -- Command
 			else
 				is_maximized := False
 			end
-			check only_one: managed_menu_items.count = 1 end
-			managed_menu_items.first.set_text (menu_name)
+			managed_menu_items.do_all (agent (a_item: EB_COMMAND_MENU_ITEM)
+										do
+											a_item.set_text (menu_name)
+										end)
 		end
 
 indexing

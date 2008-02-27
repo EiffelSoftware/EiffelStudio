@@ -43,6 +43,7 @@ feature -- Command
 			else
 				l_manager.lock
 			end
+			set_select (is_selected)
 		end
 
 feature -- Query

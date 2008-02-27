@@ -646,7 +646,8 @@ feature -- Access
 		end
 
 	first_breakpoint_slot_index: INTEGER is
-			-- Index of the first breakpoin-slot. Includes inherited and inner assertions
+			-- Index of the first breakpoin-slot of the body
+			-- Take into account inherited and inner assertions
 		local
 			f: FEATURE_I
 		do

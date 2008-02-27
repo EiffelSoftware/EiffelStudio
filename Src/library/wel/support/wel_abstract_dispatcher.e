@@ -32,7 +32,6 @@ inherit
 	WEL_EN_CONSTANTS
 		-- debug
 
-inherit {NONE}
 	EXCEPTION_MANAGER_FACTORY
 		export
 			{NONE} all
@@ -223,8 +222,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class WEL_ABSTRACT_DISPATCHER
-

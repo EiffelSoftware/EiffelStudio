@@ -8,7 +8,7 @@ indexing
 class
 	SD_WIDGET_FACTORY
 
-create
+create {SD_SHARED}
 	make
 
 feature {NONE} -- Initlization
@@ -17,6 +17,9 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		do
 			set_style (style_different)
+
+			create notebook_tab_area_menu_items.make (10)
+			create title_bar_area_menu_items.make (10)
 		ensure
 			default_style_set: internal_style = style_different
 		end
@@ -111,6 +114,54 @@ feature -- Factory method.
 			not_void: Result /= Void
 		end
 
+feature -- Menu
+
+	notebook_tab_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM]
+			-- Notebook tab area menu items which can be customized by client programmers in {SD_SHARED}.
+
+	title_bar_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM]
+			-- Title bar area menu items which can be customized by client programmers in {SD_SHARED}.
+
+	editor_tab_area_menu (a_notebook: SD_NOTEBOOK): EV_MENU
+			-- Right click menu for editor tab area.
+		require
+			not_void: a_notebook /= Void
+		local
+			l_items: SD_ZONE_MANAGEMENT_MENU
+		do
+			create Result
+
+			create l_items.make (a_notebook)
+			Result.append (l_items.items)
+
+			if not notebook_tab_area_menu_items.is_empty then
+				notebook_tab_area_menu_items.do_all (agent (a_item: EV_MENU_ITEM)
+														do
+															if a_item.parent /= Void then
+																a_item.parent.prune (a_item)
+															end
+														end)
+				Result.append (notebook_tab_area_menu_items)
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	title_area_menu: EV_MENU
+			-- Right click menu for {SD_CONTENT}'s title bar area.
+		do
+			if not title_bar_area_menu_items.is_empty then
+				create Result
+				title_bar_area_menu_items.do_all (agent (a_item: EV_MENU_ITEM)
+														do
+															if a_item.parent /= Void then
+																a_item.parent.prune (a_item)
+															end
+														end)
+				Result.append (title_bar_area_menu_items)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	internal_style: INTEGER
@@ -122,6 +173,11 @@ feature -- Enumeration
 			-- Look and feel which all the same.
 	style_different: INTEGER is 2;
 			-- Look and feel which different.
+
+invariant
+
+	not_void: title_bar_area_menu_items /= Void
+	not_void: notebook_tab_area_menu_items /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

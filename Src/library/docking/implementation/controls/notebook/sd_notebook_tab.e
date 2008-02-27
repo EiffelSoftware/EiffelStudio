@@ -541,12 +541,12 @@ feature {NONE}  -- Implementation functions.
 			-- Show right click menu
 			-- We will use pointer release action to show the menu only in the future. Larry 2007-6-7
 		local
-			l_menu: SD_ZONE_MANAGEMENT_MENU
+			l_menu: EV_MENU
 			l_platform: PLATFORM
 		do
 			create l_platform
 			if (l_platform.is_windows and not a_pointer_release_action) or (not l_platform.is_windows and a_pointer_release_action) then
-				create l_menu.make (internal_notebook)
+				l_menu := internal_shared.widget_factory.editor_tab_area_menu (internal_notebook)
 				l_menu.show_at (parent, a_relative_x, a_relative_y)
 			end
 		end

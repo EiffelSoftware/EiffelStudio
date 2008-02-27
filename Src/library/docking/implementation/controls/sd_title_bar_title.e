@@ -25,15 +25,15 @@ feature {NONE} -- Initlization
 			create internal_shared
 			expose_actions.force_extend (agent on_expose)
 
-			pointer_button_press_actions.force_extend (agent on_pointer_press)
-			pointer_button_release_actions.force_extend (agent on_pointer_release)
-			pointer_leave_actions.force_extend (agent on_pointer_leave)
+			pointer_button_press_actions.extend (agent on_pointer_press)
+			pointer_button_release_actions.extend (agent on_pointer_release)
+			pointer_leave_actions.extend (agent on_pointer_leave)
 			pointer_motion_actions.extend (agent on_pointer_motion)
 
 			-- Because on Linux, pointer leave actions will not be called after pointer double pressed, so we clear the flag manually.
 			pointer_double_press_actions.force_extend (agent do
-				pressed := False
-			end)
+																pressed := False
+															end)
 
 			create drag_actions
 		end
@@ -142,23 +142,31 @@ feature -- Query
 
 feature {NONE} -- Agents
 
-	on_pointer_press is
+	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- Handle pointer press.
 		do
-			pressed := True
+			if a_button = {EV_POINTER_CONSTANTS}.left then
+				pressed := True
+			elseif a_button = {EV_POINTER_CONSTANTS}.right then
+				show_menu (True, a_x, a_y)
+			end
 		ensure
-			set: pressed = True
+			set: a_button = {EV_POINTER_CONSTANTS}.left implies pressed = True
 		end
 
-	on_pointer_release is
+	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- Handle pointer release.
 		do
 			pressed := False
+
+			if a_button = {EV_POINTER_CONSTANTS}.right then
+				show_menu (False, a_x, a_y)
+			end
 		ensure
 			set: pressed = False
 		end
 
-	on_pointer_leave is
+	on_pointer_leave (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- Hanle pointer leave.
 		do
 			pressed := False
@@ -175,8 +183,24 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
+	show_menu (a_is_pointer_press: BOOLEAN; a_x, a_y: INTEGER)
+			-- Show right click menu if exists
+		local
+			l_platform: PLATFORM
+			l_menu: EV_MENU
+		do
+			create l_platform
+			if (l_platform.is_windows and a_is_pointer_press) or (not l_platform.is_windows and not a_is_pointer_press) then
+				l_menu := internal_shared.widget_factory.title_area_menu
+				if l_menu /= Void then
+					l_menu.show_at (Current, a_x, a_y)
+				end
+			end
+		end
+
 	pressed: BOOLEAN
 			-- Is pointer button pressed?
+			-- This flag used for judging whether to call `drag_actions'.
 
 	offset_x: INTEGER is 4
 			-- The x position start to draw title text.

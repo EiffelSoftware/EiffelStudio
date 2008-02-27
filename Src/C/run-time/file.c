@@ -1760,7 +1760,7 @@ rt_public EIF_REFERENCE file_owner(int uid)
 
 	char str[NAME_MAX];
 #ifdef HAS_GETPWUID
-#if defined(EIF_VMS) && defined(__USE_64BIT_FUNCS)
+#if defined(EIF_VMS) && __USE_64BIT_FUNCS
 	struct __passwd64 *pp;	/* %%ss moved frm above */
 #else
 	struct passwd *pp; /* %%ss moved frm above */

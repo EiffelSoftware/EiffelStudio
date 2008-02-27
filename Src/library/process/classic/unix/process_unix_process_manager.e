@@ -674,7 +674,11 @@ feature {NONE} -- Debugger access
         external
             "C inline use%"eif_main.h%""
         alias
-            "set_debug_mode ($a_debug_mode);"
+            "[
+			#ifdef WORKBENCH
+				set_debug_mode ($a_debug_mode);
+			#endif
+			]"
         end
 
     internal_debug_mode: INTEGER is
@@ -682,7 +686,13 @@ feature {NONE} -- Debugger access
         external
             "C inline use %"eif_main.h%""
         alias
-			"return is_debug_mode();"
+			"[
+			#ifdef WORKBENCH
+				return is_debug_mode();
+			#else
+				return 0;
+			#endif
+			]"
         end
 
 invariant

@@ -1,24 +1,33 @@
 indexing
-	description	: "Toolbar button for a toolbarable toolbar command."
+	description: "Dual pop-up toolbar button for a toolbarable toolbar command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
 class
-	EB_SD_COMMAND_TOOL_BAR_BUTTON
+	EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON
 
 inherit
-	SD_TOOL_BAR_BUTTON
+	SD_TOOL_BAR_DUAL_POPUP_BUTTON
 		rename
 			make as sd_make
+		end
+
+	EB_SD_COMMAND_TOOL_BAR_BUTTON
+		undefine
+			on_pointer_motion,
+			on_pointer_release,
+			sd_make,
+			width
+		redefine
+			make
 		end
 
 	EB_RECYCLABLE
 		undefine
 			default_create, copy
 		end
-
 create
 	make
 
@@ -26,37 +35,10 @@ feature {NONE} -- Initialization
 
 	make (a_command: EB_TOOLBARABLE_COMMAND) is
 			-- Creation method
-		local
-			l_recyclable: EB_RECYCLABLE
 		do
 			sd_make
-
-			command := a_command
-			command.managed_sd_toolbar_items.extend (Current)
-			name := command.name
-
-			l_recyclable ?= a_command
-			if l_recyclable /= Void then
-				l_recyclable.auto_recycle (Current)
-			end
+			Precursor {EB_SD_COMMAND_TOOL_BAR_BUTTON}(a_command)
 		end
-
-feature -- Cleaning
-
-	internal_recycle is
-			-- To be called when the button has became useless
-		do
-			command.managed_sd_toolbar_items.prune_all (Current)
-			drop_actions.wipe_out
-			select_actions.wipe_out
-			-- If pick_actions available in the furture, we should do:
-			-- pick_actions.wipe_out
-		end
-
-feature {NONE} -- Implementation
-
-	command: EB_TOOLBARABLE_COMMAND;
-			-- command associated with Current.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -90,4 +72,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SD_COMMAND_TOOL_BAR_BUTTON
+end -- class EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON

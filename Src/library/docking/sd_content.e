@@ -11,6 +11,8 @@ class
 inherit
 	HASHABLE
 
+	SD_ACCESS
+	
 create
 	make_with_widget_title_pixmap,
 	make_with_widget

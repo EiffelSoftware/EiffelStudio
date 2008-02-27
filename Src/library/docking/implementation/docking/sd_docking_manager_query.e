@@ -8,6 +8,9 @@ indexing
 class
 	SD_DOCKING_MANAGER_QUERY
 
+inherit
+	SD_ACCESS
+	
 create
 	make
 

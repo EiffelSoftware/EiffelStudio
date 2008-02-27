@@ -22,6 +22,14 @@ inherit
 			{SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR} minimum_width, minimum_height, resize_actions
 			{SD_TOOL_BAR_MANAGER, SD_TOOL_BAR_CONTENT} hide, is_displayed
 		end
+
+	SD_ACCESS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 create
 	make
 

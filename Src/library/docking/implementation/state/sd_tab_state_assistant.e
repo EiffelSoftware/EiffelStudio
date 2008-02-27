@@ -8,6 +8,9 @@ indexing
 class
 	SD_TAB_STATE_ASSISTANT
 
+inherit
+	SD_ACCESS
+	
 create
 	make
 

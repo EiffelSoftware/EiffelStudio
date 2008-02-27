@@ -28,6 +28,13 @@ inherit
 			fill
 		end
 
+	SD_ACCESS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 feature -- Command
 
 	on_normal_max_window is

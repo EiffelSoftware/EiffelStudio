@@ -7,6 +7,9 @@ indexing
 class
 	SD_SAVE_CONFIG_MEDIATOR
 
+inherit
+	SD_ACCESS
+	
 create
 	make
 

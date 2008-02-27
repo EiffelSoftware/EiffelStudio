@@ -9,12 +9,12 @@ class
 	SD_DOCKING_MANAGER_COMMAND
 
 inherit
-	ANY
-
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
+
+	SD_ACCESS
 
 create
 	make

@@ -22,6 +22,13 @@ inherit
 			default_create, copy
 		end
 
+	SD_ACCESS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 create
 	make,
 	make_for_menu

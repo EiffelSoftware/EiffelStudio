@@ -21,6 +21,8 @@ inherit
 			copy
 		end
 
+	SD_ACCESS
+	
 create
 	make
 

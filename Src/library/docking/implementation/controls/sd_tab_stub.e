@@ -15,6 +15,13 @@ inherit
 			{ANY} screen_x, screen_y, width, height, pointer_enter_actions
 		end
 
+	SD_ACCESS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 create
 	make
 

@@ -12,12 +12,11 @@ deferred class
 inherit
 	CALL_STACK_ELEMENT
 
-	SHARED_STATELESS_VISITOR
+inherit {NONE}
+	DEBUGGER_COMPILER_UTILITIES
 		export
 			{NONE} all
 		end
-
-feature {NONE} -- Initialization
 
 feature -- Properties
 
@@ -194,20 +193,6 @@ feature {NONE} -- Implementation Properties
 			-- Associated body index
 
 feature {NONE} -- Implementation helper
-
-	static_class_for_local (a_type: TYPE_AS; a_rout_i: FEATURE_I; a_class: CLASS_C): CLASS_C is
-			-- Static class for local represented by `a_type' and `a_rout_i'
-			-- `a_class' should be `a_rout_i.written_class'.
-		local
-			l_type_a: TYPE_A
-		do
-			l_type_a := type_a_generator.evaluate_type (a_type, a_class)
-			type_a_checker.init_for_checking (a_rout_i, a_class, Void, Void)
-			l_type_a := type_a_checker.solved (l_type_a, Void)
-			if l_type_a /= Void and then l_type_a.has_associated_class then
-				Result := l_type_a.associated_class
-			end
-		end
 
 	error_value (a_name, a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE is
 		do

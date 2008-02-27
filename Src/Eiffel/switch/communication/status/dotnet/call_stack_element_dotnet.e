@@ -106,9 +106,9 @@ feature -- Filling
 			end
 
 			object_address := a_address
-			display_object_address := object_address
-			if display_object_address = Void or else display_object_address.is_equal ("0x00000000") then
-				display_object_address := "Unavailable"
+			object_address_to_string := object_address
+			if object_address_to_string = Void or else object_address_to_string.is_equal ("0x00000000") then
+				object_address_to_string := "Unavailable"
 			end
 
 			is_melted := melted
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation Properties
 	private_current_object: EIFNET_ABSTRACT_DEBUG_VALUE
 			-- Current object value
 
-	display_object_address:like object_address
+	object_address_to_string:like object_address
 
 feature {NONE} -- Implementation
 
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 				if private_current_object /= Void then
 					private_current_object.set_name ("Current")
 					object_address := private_current_object.address
-					display_object_address := object_address
+					object_address_to_string := object_address
 				end
 				initialized_current_object := True
 

@@ -7,48 +7,6 @@ indexing
 
 deferred class EIFFEL_CALL_STACK
 
-feature -- Fake inherit from TWO_WAY_LIST
-
-	count: INTEGER is
-		deferred
-		end
-
-	is_empty: BOOLEAN is
-			-- Call Stack empty ?
-		deferred
-		end
-
-	start is
-		deferred
-		end
-
-	forth is
-		deferred
-		end
-
-	after: BOOLEAN is
-		deferred
-		end
-
-	item: CALL_STACK_ELEMENT is
-		deferred
-		end
-
-	extend (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-		deferred
-		end
-
-	i_th alias "[]" (i: INTEGER): like item is
-		deferred
-		end
-
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' within allowable bounds?
-		deferred
-		end
-
 feature -- Properties
 
 	thread_id: INTEGER is
@@ -68,15 +26,30 @@ feature -- Properties
 	is_loaded: BOOLEAN
 			-- Is Call stacks loaded ?
 
-feature {APPLICATION_STATUS} -- Change
+feature -- fake TWO_WAY_LIST Interface
 
-	reload (n: INTEGER) is
-			-- Reload call stack up to level `n'
-		require
-			all_level_or_positive: n = -1 or n > 0
+	count: INTEGER is
 		deferred
-		ensure
-			is_loaded: is_loaded
+		end
+
+	is_empty: BOOLEAN is
+			-- Call Stack empty ?
+		deferred
+		end
+
+feature -- Access
+
+	item: CALL_STACK_ELEMENT is
+		deferred
+		end
+
+	i_th alias "[]" (i: INTEGER): like item is
+		deferred
+		end
+
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' within allowable bounds?
+		deferred
 		end
 
 feature -- Queries
@@ -98,6 +71,39 @@ feature -- Queries
 				Result.append_character ('%N')
 				forth
 			end
+		end
+
+feature -- Change
+
+	extend (v: like item) is
+			-- Add `v' to end.
+			-- Do not move cursor.
+		deferred
+		end
+
+feature -- Cursor movement
+
+	start is
+		deferred
+		end
+
+	forth is
+		deferred
+		end
+
+	after: BOOLEAN is
+		deferred
+		end
+
+feature {APPLICATION_STATUS} -- Change
+
+	reload (n: INTEGER) is
+			-- Reload call stack up to level `n'
+		require
+			all_level_or_positive: n = -1 or n > 0
+		deferred
+		ensure
+			is_loaded: is_loaded
 		end
 
 invariant

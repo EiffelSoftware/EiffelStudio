@@ -42,7 +42,7 @@ feature -- Properties
 
 feature -- Output
 
-	display_object_address: like object_address is
+	object_address_to_string: like object_address is
 		do
 			Result := object_address
 		end

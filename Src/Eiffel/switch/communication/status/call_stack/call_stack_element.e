@@ -7,17 +7,6 @@ indexing
 
 deferred class CALL_STACK_ELEMENT
 
-inherit
-
-	COMPILER_EXPORTER
-
-	SHARED_EIFFEL_PROJECT
-
-	SHARED_CONFIGURE_RESOURCES
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Initialization
 
 	make (level: INTEGER; tid: INTEGER) is
@@ -30,15 +19,6 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	is_not_valid: BOOLEAN
-			-- Current call stack element is not valid ?
-			-- (i.e: issue retrieving the data...)
-
-	is_eiffel_call_stack_element: BOOLEAN is
-			-- Is, Current, an eiffel call stack element or not (external stack) ?
-		deferred
-		end
-
 	class_name: STRING
 			-- Associated class name
 
@@ -50,6 +30,7 @@ feature -- Properties
 			-- 1 means on the top.
 
 	thread_id: INTEGER
+			-- Thread id related to Current
 
 	break_index: INTEGER
 			-- the "Line number" where application is stopped within current feature
@@ -62,6 +43,17 @@ feature -- Properties
 			--| the "line" between the two processes is free.
 			--| Initialially it is the physical address but is then
 			--| protected in the `set_hector_addr_for_current_object' routine.
+		deferred
+		end
+
+feature -- Status
+
+	is_not_valid: BOOLEAN
+			-- Current call stack element is not valid ?
+			-- (i.e: issue retrieving the data...)
+
+	is_eiffel_call_stack_element: BOOLEAN is
+			-- Is, Current, an eiffel call stack element or not (external stack) ?
 		deferred
 		end
 
@@ -87,7 +79,8 @@ feature -- Output
 			Result.append (" @" + break_index.out)
 		end
 
-	display_object_address: like object_address is
+	object_address_to_string: like object_address is
+			-- Display object address
 		deferred
 		end
 

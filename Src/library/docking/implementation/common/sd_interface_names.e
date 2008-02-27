@@ -207,6 +207,23 @@ feature -- Hidden item dialog strings
 			Result_not_void: Result /= Void
 		end
 
+feature -- Menu
+
+	menu_close: STRING_GENERAL
+			-- For editor tab area right click menu
+		deferred
+		end
+
+	menu_close_all_but_this: STRING_GENERAL
+			-- For editor tab area right click menu
+		deferred
+		end
+
+	menu_close_all: STRING_GENERAL
+			-- For editor tab area right click menu
+		deferred
+		end
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -8,15 +8,8 @@ indexing
 class
 	SD_ZONE_MANAGEMENT_MENU
 
-inherit
-	EV_MENU
-		redefine
-			initialize
-		end
-
-create
+create {SD_WIDGET_FACTORY}
 	make
-
 
 feature {NONE}  -- Initlization
 
@@ -26,33 +19,32 @@ feature {NONE}  -- Initlization
 			not_void: a_notebook /= Void
 		do
 			default_create
+			create items.make (3)
 			internal_notebook := a_notebook
 			create internal_shared
 			create internal_close
 			internal_close.set_pixmap (internal_shared.icons.close_context_tool_bar)
-			internal_close.set_text ("Close")
+			internal_close.set_text (internal_shared.interface_names.menu_close)
 			internal_close.select_actions.extend (agent on_close (internal_notebook.selected_item))
-			extend (internal_close)
+			items.extend (internal_close)
 			create internal_close_others
 			internal_close_others.set_pixmap (internal_shared.icons.close_others)
-			internal_close_others.set_text ("Close All But This")
+			internal_close_others.set_text (internal_shared.interface_names.menu_close_all_but_this)
 			internal_close_others.select_actions.extend (agent on_close_others (internal_notebook.selected_item))
-			extend (internal_close_others)
+			items.extend (internal_close_others)
 			create internal_close_all
 			internal_close_all.set_pixmap (internal_shared.icons.close_all)
-			internal_close_all.set_text ("Close All")
+			internal_close_all.set_text (internal_shared.interface_names.menu_close_all)
 			internal_close_all.select_actions.extend (agent on_close_all (internal_notebook.selected_item))
-			extend (internal_close_all)
+			items.extend (internal_close_all)
 		ensure
 			set: internal_notebook = a_notebook
 		end
 
-	initialize is
-			-- Redefine
-		do
-			Precursor {EV_MENU}
+feature -- Query
 
-		end
+	items: ARRAYED_LIST [EV_MENU_ITEM]
+			-- Menu items for zone management.
 
 feature {NONE}  -- Agents
 
@@ -115,6 +107,7 @@ feature {NONE} -- Implementation
 invariant
 
 	not_void: internal_shared /= Void
+	not_void: items /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

@@ -178,6 +178,26 @@ feature -- Hidden item dialog strings
 			Result := locale.translation ("Customize")
 		end
 
+feature -- Menu
+
+	menu_close: STRING_GENERAL
+			-- For editor tab area right click menu
+		do
+			Result := locale.translation ("Close")
+		end
+
+	menu_close_all_but_this: STRING_GENERAL
+			-- For editor tab area right click menu
+		do
+			Result := locale.translation ("Close All But This")
+		end
+
+	menu_close_all: STRING_GENERAL
+			-- For editor tab area right click menu
+		do
+			Result := locale.translation ("Close All")
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -534,6 +534,9 @@ feature {EV_ANY_I} -- Drawing implementation
 
 				-- Now set both the font and background colors of `memory_dc'.
 			color_imp ?= background_color.implementation
+			check
+				color_imp_not_void: color_imp /= Void
+			end
 			memory_dc.set_background_color (color_imp)
 				-- We are unable to query the font directly from `dc', so we set it ourselves.
 			if private_font /= Void then
@@ -669,9 +672,11 @@ feature {EV_ANY_I} -- Drawing implementation
 
 				if not is_sensitive and disabled_image /= Void then
 					l_icon := internal_pixmap_state.build_icon
-					if {l_color_imp: !EV_COLOR_IMP} background_color.implementation then
-						disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (internal_bitmap, l_icon, dc, coordinate.x, coordinate.y, l_color_imp, internal_pixmap_state.has_mask)
+					color_imp ?= background_color.implementation
+					check
+						color_imp_not_void: color_imp /= Void
 					end
+					disabled_image.draw_grayscale_bitmap_or_icon_with_memory_buffer (internal_bitmap, l_icon, dc, coordinate.x, coordinate.y, color_imp, internal_pixmap_state.has_mask)
 					l_icon.dispose
 				else
 					theme_drawer.draw_bitmap_on_dc (memory_dc, wel_bitmap, mask_bitmap, coordinate.x, coordinate.y, is_sensitive)

@@ -393,9 +393,6 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 
 	activate_execution_replay_mode (b: BOOLEAN; deplim: INTEGER) is
 			-- Enable or disable execution replay
-		local
-			i,n: INTEGER
-			r: EV_GRID_ROW
 		do
 			execution_replay_activated := b
 			execution_replay_depth_limit_level := deplim
@@ -406,23 +403,16 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 				replay_controls_label.remove_text
 				box_replay_controls.hide
 			end
-			marked_level := 1
 			if stack_grid /= Void then
-				stack_grid.remove_selection
-				from
-					i := 1
-				until
-					i > stack_grid.row_count
-				loop
-					r := stack_grid.row (i)
-					if r.parent_row = Void then
-					else
-						r := r.parent_row_root
-						i := r.index
-					end
-					n := n - 1
-					refresh_stack_grid_row (r, arrowed_level)
-					i := i + 1
+				clean_stack_grid
+				if execution_replay_activated then
+					stack_grid.enable_tree
+				else
+					stack_grid.disable_tree
+				end
+				marked_level := 1
+				if debugger_manager.safe_application_is_stopped then
+					populate_stack_grid (debugger_manager.application_status.current_call_stack)
 				end
 			end
 		end
@@ -453,10 +443,10 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 				if li /= marked_level then
 					m := marked_level
 					marked_level := li
-					refresh_stack_grid_row (row_for_level (m), li)
+					row_for_level (m).clear --| refresh
 				end
 				select_element_by_level (li)
-				refresh_stack_grid_row (row_for_level (marked_level), li)
+				row_for_level (marked_level).clear --| refresh
 			else
 				marked_level := 0
 			end
@@ -985,6 +975,8 @@ feature {NONE} -- Stack grid implementation
 
 	populate_stack_grid (stack: EIFFEL_CALL_STACK) is
 			-- Fill the satck_grid with `stack' data
+		require
+			application_stopped: debugger_manager.safe_application_is_stopped
 		local
 			g: ES_GRID
 			row: EV_GRID_ROW
@@ -1106,6 +1098,7 @@ feature {NONE} -- Stack grid implementation
 			else
 				create l_feature_name.make_empty
 			end
+--| Decide later, if we want the  "@bp-index" visible
 --			if l_feature_name /= Void then
 --				l_feature_name.append (" @" + l_breakindex_info.out)
 --			end
@@ -1214,25 +1207,32 @@ feature {NONE} -- Stack grid implementation
 			a_row.set_background_color (Void)
 
 			glab ?= a_row.item (Feature_column_index)
-			if level = current_level then
-				glab.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
-				a_row.set_background_color (row_highlight_bg_color)
+			if glab = Void then
+				a_row.clear
 			else
-				ep := pixmaps.icon_pixmaps.callstack_empty_arrow_icon
-				if level >= 0 then
-					glab.set_pixmap (ep)
+				if level = current_level then
+					glab.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
+					a_row.set_background_color (row_highlight_bg_color)
 				else
-					glab.remove_pixmap
-					glab.set_left_border (glab.left_border + glab.spacing + ep.width)
-					a_row.set_foreground_color (unsensitive_fg_color)
+					ep := pixmaps.icon_pixmaps.callstack_empty_arrow_icon
+					if level >= 0 then
+						glab.set_pixmap (ep)
+					else
+						glab.remove_pixmap
+						glab.set_left_border (glab.left_border + glab.spacing + ep.width)
+						a_row.set_foreground_color (unsensitive_fg_color)
+					end
 				end
 			end
 			if execution_replay_activated then
 				if level - 1 <= execution_replay_depth_limit_level then
+					a_row.ensure_expandable
 					a_row.set_background_color (row_replayable_bg_color)
 				end
 				if level = marked_level then
-					glab.set_pixmap (pixmaps.icon_pixmaps.callstack_marked_arrow_icon)
+					if glab /= Void then
+						glab.set_pixmap (pixmaps.icon_pixmaps.callstack_marked_arrow_icon)
+					end
 				end
 			end
 		end
@@ -1257,12 +1257,12 @@ feature {NONE} -- Stone handlers
 				count := stack_grid.row_count
 				if old_current_level >= 1 and then count >= old_current_level then
 					l_row := stack_grid.row (old_current_level)
-					refresh_stack_grid_row (l_row, new_level)
+					l_row.clear -- refresh
 				end
 				if new_level >= 1 and then count >= new_level then
 					l_row := stack_grid.row (new_level)
 					arrowed_level := new_level
-					refresh_stack_grid_row (l_row, new_level)
+					l_row.clear -- refresh
 				end
 			end
 		end
@@ -1395,7 +1395,6 @@ feature {NONE} -- Grid Implementation
 			end
 		end
 
-
 feature {NONE} -- Constants
 
 	Feature_column_index: INTEGER = 1
@@ -1470,6 +1469,8 @@ feature {NONE} -- Implementation, cosmetic
 			-- (i.e: row related to non Eiffel call stack element)
 
 	special_label_color: EV_COLOR
+			-- label foreground color for special labels
+			-- such as display stop, threads ...
 
 
 ;indexing

@@ -95,7 +95,7 @@ feature -- Access
 			-- Enter feature `{cid}.fid' on object `ref', depth is `dep'
 			-- And if available, `fnp' is a C string representing the feature name.
 		require
-			cid_positive: cid > 0
+			cid_positive: cid >= 0 --| 0 might stands for ANY
 		local
 			r: RT_DBG_CALL_RECORD
 			fn: STRING

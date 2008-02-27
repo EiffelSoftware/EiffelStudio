@@ -55,6 +55,8 @@ feature -- Access
 
 	widget_factory: SD_WIDGET_FACTORY is
 			-- SD_WIDGET_FACTORY instance.
+		indexing
+			once_status: global
 		once
 			create Result.make
 		ensure
@@ -120,6 +122,24 @@ feature -- Access
 			-- On Windows by default is Ctlr + Tab.
 		do
 			Result := zone_navigation_accelerator_key_cell.item
+		end
+
+	notebook_tab_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM] is
+			-- Menu items shown at notebook tab area.
+			-- Client programmers can customize the menu items here.
+		do
+			Result := widget_factory.notebook_tab_area_menu_items
+		ensure
+			not_void: Result /= Void
+		end
+
+	title_bar_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM] is
+			-- Menu items shown at {SD_CONTENT}'s title bar.
+			-- Client programmers can customize the menu items here.
+		do
+			Result := widget_factory.title_bar_area_menu_items
+		ensure
+			not_void: Result /= Void
 		end
 
 feature -- Status report

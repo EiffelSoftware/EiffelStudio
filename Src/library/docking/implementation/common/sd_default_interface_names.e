@@ -179,6 +179,26 @@ feature -- Hidden item dialog strings
 			Result := "Customize"
 		end
 
+feature -- Menu
+
+	menu_close: STRING_GENERAL
+			-- For editor tab area right click menu
+		do
+			Result := "Close"
+		end
+
+	menu_close_all_but_this: STRING_GENERAL
+			-- For editor tab area right click menu
+		do
+			Result := "Close All But This"
+		end
+
+	menu_close_all: STRING_GENERAL
+			-- For editor tab area right click menu
+		do
+			Result := "Close All"
+		end
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -28,7 +28,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
 
@@ -421,7 +421,7 @@ feature {NONE} -- Agents
 				end
 			when {EV_KEY_CONSTANTS}.key_up then
 				l_selected_label := selected_label
-				l_next_label := find_previsou_label
+				l_next_label := find_previous_label
 			when {EV_KEY_CONSTANTS}.key_down then
 				l_selected_label := selected_label
 				l_next_label := find_next_label
@@ -715,8 +715,8 @@ feature {NONE} -- Implementation command
 			not_void: Result /= Void
 		end
 
-	find_previsou_label: SD_TOOL_BAR_RADIO_BUTTON is
-			-- Find previsou lable.
+	find_previous_label: SD_TOOL_BAR_RADIO_BUTTON is
+			-- Find previous label.
 		require
 			has_label: items_count > 0
 		local

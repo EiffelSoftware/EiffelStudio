@@ -8,6 +8,9 @@ indexing
 class
 	SD_TOOL_BAR_HOT_ZONE
 
+inherit
+	SD_ACCESS
+	
 create
 	make
 

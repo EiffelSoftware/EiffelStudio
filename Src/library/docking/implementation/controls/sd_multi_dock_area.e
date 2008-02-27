@@ -11,6 +11,13 @@ class
 inherit
 	EV_CELL
 
+	SD_ACCESS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 create
 	make
 

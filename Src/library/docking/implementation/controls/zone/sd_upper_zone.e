@@ -29,6 +29,13 @@ inherit
 			fill
 		end
 
+	SD_ACCESS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 feature -- Command
 
 	recover_normal_size_from_minimize is

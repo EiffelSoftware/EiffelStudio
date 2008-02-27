@@ -11,6 +11,8 @@ class
 inherit
 	HASHABLE
 
+	SD_ACCESS
+	
 create
 	make_with_items,
 	make_with_tool_bar
@@ -231,7 +233,7 @@ feature -- Command
 			destroy_container
 
 			manager.set_top_with (Current, a_target_content)
-			
+
 			is_visible := True
 		ensure
 			visible: is_visible = True

@@ -22,6 +22,13 @@ inherit
 			default_create, copy
 		end
 
+	SD_ACCESS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
 create
 	make
 
@@ -37,7 +44,7 @@ feature {NONE} -- Initialization
 			internal_docking_manager := a_docking_manager
 
 			make_with_shadow
-			
+
 			add_all_content_label
 			key_release_actions.extend (agent on_key_release)
 			key_press_actions.extend (agent on_key_press)

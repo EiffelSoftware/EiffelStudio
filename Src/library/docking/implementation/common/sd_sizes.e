@@ -8,6 +8,9 @@ indexing
 class
 	SD_SIZES
 
+inherit
+	SD_ACCESS
+	
 create
 	make
 

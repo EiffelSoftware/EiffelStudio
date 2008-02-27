@@ -8,6 +8,9 @@ indexing
 deferred class
 	SD_STATE
 
+inherit
+	SD_ACCESS
+	
 feature -- Properties
 
 	docking_manager: SD_DOCKING_MANAGER is

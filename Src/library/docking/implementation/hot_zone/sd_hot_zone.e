@@ -11,6 +11,9 @@ indexing
 deferred class
 	SD_HOT_ZONE
 
+inherit
+	SD_ACCESS
+	
 feature -- Commands
 
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is

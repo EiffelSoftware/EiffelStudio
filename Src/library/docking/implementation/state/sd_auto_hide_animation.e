@@ -9,12 +9,12 @@ class
 	SD_AUTO_HIDE_ANIMATION
 
 inherit
-	ANY
-
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
+
+	SD_ACCESS
 
 create
 	make

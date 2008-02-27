@@ -28,6 +28,12 @@ inherit
 			copy
 		end
 
+	SD_ACCESS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
 create
 	make
 

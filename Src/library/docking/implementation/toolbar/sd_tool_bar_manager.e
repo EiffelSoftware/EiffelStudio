@@ -9,12 +9,12 @@ class
 	SD_TOOL_BAR_MANAGER
 
 inherit
-	ANY
-
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
+
+	SD_ACCESS
 
 create
 	{SD_DOCKING_MANAGER} make

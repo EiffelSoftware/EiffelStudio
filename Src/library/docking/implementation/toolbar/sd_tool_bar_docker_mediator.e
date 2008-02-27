@@ -9,13 +9,13 @@ class
 	SD_TOOL_BAR_DOCKER_MEDIATOR
 
 inherit
-	ANY
-
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
 
+	SD_ACCESS
+	
 create
 	make
 

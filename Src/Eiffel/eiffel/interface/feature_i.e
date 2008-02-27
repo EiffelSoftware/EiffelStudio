@@ -472,7 +472,8 @@ feature -- Debugger access
 		end
 
 	first_breakpoint_slot_index: INTEGER is
-			-- Index of the first breakpoin-slot. Includes inherited and inner assertions
+			-- Index of the first breakpoin-slot of the body
+			-- Take into account inherited and inner assertions
 		local
 			l_body: like real_body
 			l_routine: ROUTINE_AS
@@ -485,6 +486,8 @@ feature -- Debugger access
 					l_internal ?= l_routine.routine_body
 					if l_internal /= Void then
 						if l_internal.is_empty then
+								--| in this case, the first bp of the body
+								--| is the last breakable point
 							Result := number_of_breakpoint_slots
 						else
 							Result := l_internal.first_breakpoint_slot_index

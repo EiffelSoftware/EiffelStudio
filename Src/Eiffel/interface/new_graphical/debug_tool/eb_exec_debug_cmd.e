@@ -18,7 +18,8 @@ inherit
 		redefine
 			make,
 			tooltext,
-			is_tooltext_important
+			is_tooltext_important,
+			new_sd_toolbar_item
 		end
 
 create
@@ -91,6 +92,19 @@ feature -- Access
 			end
 		end
 
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON
+			-- Redefine
+		do
+			create Result.make (Current)
+			initialize_sd_toolbar_item (Result, display_text)
+			Result.select_actions.extend (agent execute)
+
+			Result.select_actions.put_front (agent execute_from (eb_debugger_manager.debugging_window.window))
+			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
+
+			Result.set_menu (drop_down_menu)
+		end
+
 feature {NONE} -- Attributes
 
 	pixmap: EV_PIXMAP is
@@ -122,6 +136,25 @@ feature {NONE} -- Attributes
 
 	menu_name: STRING_GENERAL;
 			-- Name used in menu entry.
+
+	drop_down_menu: EV_MENU is
+			-- Drop down menu for `new_sd_toolbar_item'.
+		local
+			l_item: EV_MENU_ITEM
+		do
+			create Result
+
+			create l_item.make_with_text (tooltext)
+			l_item.set_pixmap (pixmap)
+			l_item.select_actions.extend (agent execute)
+			Result.extend (l_item)
+
+			create l_item.make_with_text (interface_names.m_Edit_execution_parameters)
+			l_item.select_actions.extend (agent button_right_click_action (0, 0, {EV_POINTER_CONSTANTS}.right, 0, 0, 0, 0, 0))
+			Result.extend (l_item)
+		ensure
+			not_void: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

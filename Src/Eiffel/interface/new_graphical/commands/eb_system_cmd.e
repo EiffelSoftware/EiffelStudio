@@ -47,10 +47,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON is
 			-- Redefine
 		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
+			create Result.make (Current)
+			initialize_sd_toolbar_item (Result, display_text)
+			Result.select_actions.extend (agent execute)
+			Result.set_menu (drop_down_menu)
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 			Result.drop_actions.extend (agent on_drop)
 			Result.drop_actions.set_veto_pebble_function (agent dropable)
@@ -243,7 +246,7 @@ feature {NONE} -- Implementation
 		local
 			cmd_exec: COMMAND_EXECUTOR
 		do
-			if a_button = 3 and is_sensitive then
+			if a_button = {EV_POINTER_CONSTANTS}.right and is_sensitive then
 				create cmd_exec
 				cmd_exec.execute (preferences.misc_data.external_editor_cli (eiffel_ace.lace.file_name, 1))
 			end
@@ -264,6 +267,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	drop_down_menu: EV_MENU is
+			-- Drop down menu for `new_sd_toolbar_item'.
+		local
+			l_item: EV_MENU_ITEM
+		do
+			create Result
+
+			create l_item.make_with_text (tooltext)
+			l_item.set_pixmap (pixmap)
+			l_item.select_actions.extend (agent execute)
+			Result.extend (l_item)
+
+			create l_item.make_with_text (interface_names.m_Eidt_in_external_editor)
+			l_item.select_actions.extend (agent button_right_click_action (0, 0, {EV_POINTER_CONSTANTS}.right, 0, 0, 0 ,0 ,0))
+			Result.extend (l_item)
+		ensure
+			not_void: Result /= Void
+		end
+		
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			window: EB_DEVELOPMENT_WINDOW
 			dev: EV_WINDOW
 		do
-			if a_button = 3 and is_sensitive then
+			if a_button = {EV_POINTER_CONSTANTS}.right and is_sensitive then
 				window ?= window_manager.last_focused_window
 				if window /= Void then
 					dev := window.window

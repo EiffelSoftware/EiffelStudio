@@ -790,6 +790,7 @@ feature -- Menu mnenomics
 	m_Display_system_info: STRING_GENERAL is	do Result := locale.translation("S&ystem Info")	end
 	m_Edit: STRING_GENERAL is					do Result := locale.translation("&Edit")	end
 	m_Edit_condition: STRING_GENERAL is			do Result := locale.translation("E&dit Condition")	end
+	m_Edit_execution_parameters: STRING_GENERAL do Result := locale.translation("Edit Execution Parameters")	end
 	m_Edit_exported_feature: STRING_GENERAL is	do Result := locale.translation("&Edit...")	end
 	m_Edit_external_commands: STRING_GENERAL is	do Result := locale.translation("&External Commands...")	end
 	m_Enable_this_bkpt: STRING_GENERAL is		do Result := locale.translation("&Enable This Breakpoint")	end
@@ -828,6 +829,7 @@ feature -- Menu mnenomics
 	m_Remove_condition: STRING_GENERAL is		do Result := locale.translation("Remove Condition")	end
 	m_Remove_this_bkpt: STRING_GENERAL is		do Result := locale.translation("&Remove This Breakpoint")	end
 	m_Edit_this_bkpt: STRING_GENERAL is		do Result := locale.translation("&Edit This Breakpoint")	end
+	m_Eidt_in_external_editor: STRING is	do Result := locale.translation("&Edit in External Editor") end
 	m_Run_to_this_point: STRING_GENERAL is		do Result := locale.translation("&Run to This Point")	end
 	m_Send_stone_to_context: STRING_GENERAL is	do Result := locale.translation("S&ynchronize Context Tool")	end
 	m_Set_conditional_breakpoint: STRING_GENERAL is do Result := locale.translation("Set &Conditional Breakpoint")	end

@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 			end
 			written_class := Eiffel_system.class_of_dynamic_id (origin + 1, False)
 			object_address := addr
-			display_object_address := object_address
+			object_address_to_string := object_address
 				-- set the private body index to a fake value
 			private_body_index := -1
 
@@ -218,7 +218,7 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 			object_address := keep_object_as_hector_address (object_address)
 
 				-- Now the address is correct and we can display it.
-			display_object_address := object_address
+			object_address_to_string := object_address
 		end
 
 feature {NONE} -- Implementation
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation Properties
 	private_routine: like routine
 			-- Associated routine
 
-	display_object_address: STRING
+	object_address_to_string: STRING
 			-- String representing the Address of the current
 			-- Object for display purpose (may contain "Unavailable")
 
@@ -545,7 +545,7 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 
 				break_index := line_number
 				object.to_upper
-				display_object_address := "Unavailable"
+				object_address_to_string := "Unavailable"
 				create object_address.make (10)
 				object_address.append ("0x")
 				object_address.append (object)

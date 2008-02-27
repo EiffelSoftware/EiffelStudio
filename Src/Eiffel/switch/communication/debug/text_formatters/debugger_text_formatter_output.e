@@ -415,7 +415,7 @@ feature -- Call stack
 			oaddr: STRING
 			s: STRING
 		do
-			oaddr := cse.display_object_address
+			oaddr := cse.object_address_to_string
 			ecse ?= cse
 			if ecse /= Void then
 				c := ecse.dynamic_class

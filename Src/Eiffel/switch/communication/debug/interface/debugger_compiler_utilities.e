@@ -10,8 +10,6 @@ class
 	DEBUGGER_COMPILER_UTILITIES
 
 inherit
-	SHARED_EIFFEL_PROJECT
-
 	COMPILER_EXPORTER
 			--| Just to be able to access E_FEATURE::associated_feature_i :(
 			--| and other expression evaluation purpose
@@ -20,7 +18,20 @@ inherit
 		end
 
 inherit {NONE}
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
 
 feature -- Class c
 
@@ -186,6 +197,20 @@ feature -- Type adaptation
 				if l_type_a.has_associated_class then
 					Result := l_type_a.associated_class
 				end
+			end
+		end
+
+	frozen static_class_for_local (a_type: TYPE_AS; a_rout_i: FEATURE_I; a_class: CLASS_C): CLASS_C is
+			-- Static class for local represented by `a_type' and `a_rout_i'
+			-- `a_class' should be `a_rout_i.written_class'.
+		local
+			l_type_a: TYPE_A
+		do
+			l_type_a := type_a_generator.evaluate_type (a_type, a_class)
+			type_a_checker.init_for_checking (a_rout_i, a_class, Void, Void)
+			l_type_a := type_a_checker.solved (l_type_a, Void)
+			if l_type_a /= Void and then l_type_a.has_associated_class then
+				Result := l_type_a.associated_class
 			end
 		end
 

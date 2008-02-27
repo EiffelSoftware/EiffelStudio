@@ -1334,7 +1334,11 @@ feature {NONE} -- External implementation
 		external
 			"C inline use %"eif_main.h%""
 		alias
-			"set_debug_mode ($a_debug_mode);"
+			"[
+			#ifdef WORKBENCH
+				set_debug_mode ($a_debug_mode);
+			#endif
+			]"
 		end
 
 	saved_debug_mode: INTEGER
@@ -1345,7 +1349,13 @@ feature {NONE} -- External implementation
 		external
 			"C inline use %"eif_main.h%""
 		alias
-			"return is_debug_mode();"
+			"[
+			#ifdef WORKBENCH
+				return is_debug_mode();
+			#else
+				return 0;
+			#endif
+			]"
 		end
 
 	enable_ev_gtk_log (a_mode: INTEGER) is

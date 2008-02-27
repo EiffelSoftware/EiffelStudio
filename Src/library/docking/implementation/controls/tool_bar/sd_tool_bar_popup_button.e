@@ -32,6 +32,14 @@ feature {NONE} -- Initlialization
 
 feature -- Command
 
+	set_menu (a_menu: EV_MENU) is
+			-- Set `menu' with `a_menu'
+		do
+			menu := a_menu
+		ensure
+			set: menu = a_menu
+		end
+
 	set_popup_widget (a_widget: like popup_widget) is
 			-- Set `popup_widget' with `a_widget'
 		do
@@ -57,6 +65,12 @@ feature -- Query
 		do
 			Result := Precursor + gap + dropdrown_width
 		end
+
+	menu: EV_MENU
+			-- Menu to popup after end user pressed.
+			-- Note: `menu' has priority than `popup_widget'.
+			-- It means, if `menu' and `popup_widget' both not void,
+			-- `menu' will be used.
 
 	popup_widget: EV_WIDGET
 			-- Widget to popup after end user pressed.
@@ -111,17 +125,25 @@ feature {NONE} -- Implementation
 	on_select is
 			-- Handle select actions.
 		require
-			set: popup_widget /= Void
+			set: menu /= Void or popup_widget /= Void
 		local
 			l_helper: SD_POSITION_HELPER
+			l_x, l_y, l_height: INTEGER
 		do
-			if popup_widget /= Void and tool_bar /= Void then
+			if (menu /= Void or popup_widget /= Void) and tool_bar /= Void then
 				create l_helper.make
-				l_helper.set_dialog_position (popup, tool_bar.screen_x + tool_bar.item_x (Current), tool_bar.screen_y + tool_bar.item_y (Current), tool_bar.height)
-				popup.show
+				l_x := tool_bar.item_x (Current)
+				l_y := tool_bar.item_y (Current)
+				l_height := tool_bar.height
+				if menu /= Void then
+					menu.show_at (tool_bar, l_x, l_y + tool_bar.standard_height)
+				else
+					l_helper.set_dialog_position (popup, tool_bar.screen_x + l_x, tool_bar.screen_y + l_y, l_height)
+					popup.show
+				end
 			end
 		ensure
-			popuped: popup.is_displayed
+			popuped: menu = Void implies popup.is_displayed
 		end
 
 	dropdown_pixel_buffer_imp: EV_PIXEL_BUFFER;

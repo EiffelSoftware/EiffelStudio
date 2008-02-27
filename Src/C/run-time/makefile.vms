@@ -327,27 +327,25 @@ $(LOBJ) $(MT_LOBJ) : $(EXTRA_DEPENDENCIES)
 $(LOBJ_EXTRA) $(MT_LOBJ_EXTRA) : $(EXTRA_DEPENDENCIES)
 
 all ::
-	show logical eiffel_src,ise_eiffel,ise_library,ise_platform
-	show default
 
 # ancillary targets; need to be created before any compilation is done
-all :: ancillary
+LOCAL_ANCILLARY_FILES: # eif_size.h ### in top level makefile
 
-ancillary : eif_size.h
+all :: $(LOCAL_ANCILLARY_FILES)
 
-eif_size.h : size.vms ### nono $(LOCAL_MAKEFILE)
+eif_size.h : eif_size_h.vms  ### no $(LOCAL_MAKEFILE)
 #	backup $?;0 $@/new/log	# backup preserves dates; we dont want that here
-	copy $? $@ 
+	$(COPY) $? $@ 
 
-.PHONY : size size.exe
-size : size.exe # size.obj size.vms
+size : eif_size.h
+	$(CC)/obj=$@.obj $? $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES)) $(MY_CFLAGS) /DEFINE=(TEST,WORKBENCH)
+	link/exe=$@.exe size.obj
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia/log
 
-size.exe : size.obj # eif_size.h
-
-size.obj : size.vms
-#	$(CC) size.vms $(CFLAGS_NOINC)$(CINCLUDES) $(MY_CFLAGS)/DEFINE=(TEST,WORKBENCH)
-	$(CC) $? $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES)) $(MY_CFLAGS) /DEFINE=(TEST,WORKBENCH)
-	delete size.obj;    # delete obj file to always force size.vms to be recompiled
+size.exe : size.obj # eif_size.h $(LOCAL_MAKEFILE)
+	link/exe=$@ size.obj
+size.obj : eif_size.h # eif_size_h.vms # size.vms
+	$(CC)/obj=$@ $? $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES)) $(MY_CFLAGS) /DEFINE=(TEST,WORKBENCH)
     
 eifrtvms_test:
 	CC/debug/noopt/diag $(CFLAGS) eifrtvms/obj=eifrtvms_test.obj /define=(TEST) $(MY_CFLAGS)
@@ -480,7 +478,9 @@ local_realclean ::
 #x2c.obj : x2c.c # $(MAKEFILE_DEPENDENCIES)
 #	$(CC) $</obj=$@ /NOOBJ $(DECC_FLAGS) /INCLUDE=
 
-x2c.exe : x2c.obj
+x2c.obj : x2c.c $(LOCAL_ANCILLARY_FILES) # eif_size.h 
+
+x2c.exe : x2c.obj 
 	link /exe=$@ x2c.obj,ISE_EIFFEL:[C_library.VMS.Porting.LIB]VMS_JACKETS.OLB/libr
 
 

@@ -64,7 +64,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 
 feature {NONE} -- Status report
 
-	is_in_stone_synchoronization: BOOLEAN
+	is_in_stone_synchronization: BOOLEAN
 			-- Indicates if a stone synchronization is taking place instead of a simple change of stone
 
 	stone_change_notified: BOOLEAN
@@ -122,13 +122,16 @@ feature -- Synchronization
 				if l_new_stone /= Void then
 						-- Force recomputation
 					stone_change_notified := False
-					is_in_stone_synchoronization := True
-					set_stone (l_new_stone.synchronized_stone)
-					is_in_stone_synchoronization := False
+					is_in_stone_synchronization := True
+					l_new_stone := l_new_stone.synchronized_stone
+					if is_stone_usable (l_new_stone) then
+						set_stone (l_new_stone)
+					end
+					is_in_stone_synchronization := False
 				end
 			end
 		rescue
-			is_in_stone_synchoronization := False
+			is_in_stone_synchronization := False
 		end
 
 feature {NONE} -- Action handlers

@@ -3,7 +3,11 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2
 ===
 
-6.2.7.2422 non-RTEA with ec compiler without Kpic (exe size: 48233160):
+6.2.7.2437 RTEA without Kpic (exe size: 48212320, EIFGEN size: 354MB):
+986.32u 38.37s 24:38.47 69.3%
+985.44u 38.17s 24:37.58 69.2%
+
+6.2.7.2422 RTEA with ec compiler without Kpic (exe size: 48233160):
 988.96u 40.03s 28:42.46 59.7%
 990.89u 36.57s 28:36.14 59.8%
 

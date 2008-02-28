@@ -3,7 +3,6 @@
 #   EIFFEL_SRC:[library.net.Clib]Makefile.vms
 
 
-
 TOP = /EIFFEL_SRC/library
 TOPDIR = EIFFEL_SRC:[LIBRARY
 CURRENT = net/Clib
@@ -76,22 +75,19 @@ OBJECTS = \
 	syncpoll.obj \
 	storable.obj \
 
-ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
-#LOBJ = $(patsubst %.c,%.obj,$(LSRC))
 #LOBJ = $(OBJECTS)
-#$(LOBJ) $(LOBJ$(CSSUF)) : $(LOCAL_MAKEFILE)	# make objects depend on this Makefile 
-#$(LOBJ) :: []netvmsdef.h #$(LOCAL_MAKEFILE) 
+#$(LOBJ) : []netvmsdef.h # $(EXTRA_DEPENDENCIES)
+ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 $(ALL_OBJECTS) : []netvmsdef.h $(EXTRA_DEPENDENCIES)
 
 LIBS = net.olb MTnet.olb
 
-#SPECDIR = ISE_EIFFEL:[library.net.spec.$(ISE_PLATFORM).lib]
-#SPECDIRU = /ISE_EIFFEL/library/net/spec/$(ISE_PLATFORM)/lib
-#SPECLIB	= $(SPECDIRU)/net.olb
-
 all :: $(LIBS) 
 
-#all ::  $(SPECDIRU) $(SPECLIB) 
+# build local objects
+obj : $(ALL_OBJECTS)
+# build local objects, libraries
+lib : $(LIBS)
 
 LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
 $(LISTINGS) : $(EXTRA_DEPENDENCIES)
@@ -102,22 +98,22 @@ net.olb :: $(OBJECTS)
 	libr/create/insert $@ $^
 	-purge/nolog *.*obj*
 	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
-#	copy $@ $(SPECDIR)
 
 MTnet.olb :: $(MT_OBJECTS) 
 	libr/create/insert $@ $^
 	purge/nolog *.*obj*
 	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
-#	copy $@ $(SPECDIR)
 
+
+# library targets
 
 EIFLIB = ISE_EIFFEL\:[library.net.spec.$(ISE_PLATFORM).lib]
 eiflib : $(EIFLIB) $(EIFLIB)net.olb $(EIFLIB)MTnet.olb
 
-#all :: $(EIFLIB)
+all :: eiflib
 
 $(EIFLIB) :
-	create/directory $(EIFLIB)
+	create/directory/version_limit=10 $(EIFLIB)
 
 $(EIFLIB)net.olb : []net.olb
 	copy $^ $(EIFLIB)

@@ -270,7 +270,7 @@ feature {NONE} -- Action handlers
 			if {l_class_stone: !CLASSC_STONE} stone then
 				l_class := l_class_stone.e_class
 
-				if l_class /= current_compiled_class or is_in_stone_synchoronization then
+				if l_class /= current_compiled_class or is_in_stone_synchronization then
 						-- Removes the tree from the parent to perform off-screen drawing.
 					l_container := l_tree.parent
 					l_container.prune (l_tree)

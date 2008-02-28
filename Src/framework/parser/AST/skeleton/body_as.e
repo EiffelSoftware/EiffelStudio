@@ -25,18 +25,24 @@ feature {NONE} -- Initialization
 			type := t
 			assigner := r
 			content := c
-			colon_symbol := c_as
-			is_keyword := k_as
-			assign_keyword := a_as
+			if c_as /= Void then
+				colon_symbol_index := c_as.index
+			end
+			if k_as /= Void then
+				is_keyword_index := k_as.index
+			end
+			if a_as /= Void then
+				assign_keyword_index := a_as.index
+			end
 			indexing_clause := i_as
 		ensure
 			internal_arguments_set: internal_arguments = a
 			type_set: type = t
 			assigner_set: assigner = r
 			content_set: content = c
-			colon_symbol_set: colon_symbol = c_as
-			is_keyword_set: is_keyword = k_as
-			assign_keyword_set: assign_keyword = a_as
+			colon_symbol_set: c_as /= Void implies colon_symbol_index = c_as.index
+			is_keyword_set: k_as /= Void implies is_keyword_index = k_as.index
+			assign_keyword_set: a_as /= Void implies assign_keyword_index = a_as.index
 			indexing_clause_set: indexing_clause = i_as
 		end
 
@@ -50,14 +56,53 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	colon_symbol: SYMBOL_AS
+	colon_symbol_index: INTEGER
+			-- Index of symbol colon associated with this structure
+
+	is_keyword_index: INTEGER
+			-- Index of keyword "is" or equal sign associated with this structure
+
+	assign_keyword_index: INTEGER
+			-- Index of keyword "assign" associated with this structure
+
+	colon_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol colon associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := colon_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	is_keyword: LEAF_AS
+	is_keyword (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Keyword "is" or equal sign associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := is_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	assign_keyword: KEYWORD_AS
+	assign_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "assign" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := assign_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -84,6 +129,18 @@ feature -- Attributes
 	content: CONTENT_AS
 			-- Content of the body: constant or regular body
 
+	as_routine: ROUTINE_AS is
+			-- See `content' as an instance of ROUTINE_AS.
+		do
+			Result ?= content
+		end
+
+	as_constant: CONSTANT_AS is
+			-- See `content' as an instance of CONSTANT_AS.
+		do
+			Result ?= content
+		end
+
 feature -- Roundtrip
 
 	internal_arguments: FORMAL_ARGU_DEC_LIST_AS
@@ -96,32 +153,22 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if arguments /= Void then
-					Result := arguments.first_token (a_list)
-				elseif type /= Void then
-					Result := type.first_token (a_list)
-				elseif assigner /= Void then
-					Result := assigner.first_token (a_list)
-				elseif content /= Void then
-					Result := content.first_token (a_list)
-				end
-			else
-				if internal_arguments /= Void then
-					Result := internal_arguments.first_token (a_list)
-				elseif colon_symbol /= Void then
-					Result := colon_symbol.first_token (a_list)
-				elseif assign_keyword /= Void then
-					Result := assign_keyword.first_token (a_list)
-				elseif is_keyword /= Void then
-					Result := is_keyword.first_token (a_list)
-				elseif indexing_clause /= Void then
-					Result := indexing_clause.first_token (a_list)
-				elseif content /= VOid then
-					Result := content.first_token (a_list)
-				else
-					check False end
-				end
+			if internal_arguments /= Void then
+				Result := internal_arguments.first_token (a_list)
+			elseif colon_symbol_index /= 0 and a_list /= Void then
+				Result := colon_symbol (a_list)
+			elseif type /= Void then
+				Result := type.first_token (a_list)
+			elseif assign_keyword_index /= 0 and a_list /= Void then
+				Result := assign_keyword (a_list)
+			elseif assigner /= Void then
+				Result := assigner.first_token (a_list)
+			elseif is_keyword_index /= 0 and a_list /= Void then
+				Result := is_keyword (a_list)
+			elseif indexing_clause /= Void then
+				Result := indexing_clause.first_token (a_list)
+			elseif content /= Void then
+				Result := content.first_token (a_list)
 			end
 		end
 

@@ -63,13 +63,8 @@ feature -- Stoning
 
 feature -- Status report
 
-	is_frozen: BOOLEAN is
+	is_frozen: BOOLEAN
 			-- Is the name of the feature frozen?
-		do
-			Result := frozen_keyword /= Void
-		ensure
-			definition: Result = (frozen_keyword /= Void)
-		end
 
 	is_infix: BOOLEAN is
 			-- Is the feature name an infixed notation?
@@ -162,14 +157,22 @@ feature -- Status setting
 			is_unary: is_unary
 		end
 
+	set_is_frozen (v: BOOLEAN) is
+			-- Set `is_frozen' with `v'.
+		do
+			is_frozen := v
+		ensure
+			is_frozen_set: is_frozen = v
+		end
+
 	set_frozen_keyword (l: KEYWORD_AS) is
 			-- Set location of the associated "frozen" keyword to `l'.
-		require
-			l_not_void: l /= Void
 		do
-			frozen_keyword := l
+			if l /= Void then
+				frozen_keyword_index := l.index
+			end
 		ensure
-			frozen_keyword_set: frozen_keyword = l
+			frozen_keyword_set: l /= Void implies frozen_keyword_index = l.index
 		end
 
 feature -- Comparison
@@ -180,8 +183,21 @@ feature -- Comparison
 
 feature -- Location
 
-	frozen_keyword: KEYWORD_AS
+	frozen_keyword_index: INTEGER
+			-- Index of keyword "frozen" (if any)
+
+	frozen_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "frozen" (if any)
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := frozen_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature {NONE} -- Implementation: helper functions
 

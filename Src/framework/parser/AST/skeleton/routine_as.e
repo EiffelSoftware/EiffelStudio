@@ -42,8 +42,12 @@ feature {NONE} -- Initialization
 			end_keyword := ek
 			once_manifest_string_count := oms_count
 			body_start_position := a_pos
-			obsolete_keyword := k_as
-			rescue_keyword := r_as
+			if k_as /= Void then
+				obsolete_keyword_index := k_as.index
+			end
+			if r_as /= Void then
+				rescue_keyword_index := r_as.index
+			end
 			object_test_locals := ot_locals
 		ensure
 			obsolete_message_set: obsolete_message = o
@@ -55,8 +59,8 @@ feature {NONE} -- Initialization
 			end_keyword_set: end_keyword = ek
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
 			body_start_position_set: body_start_position = a_pos
-			obsolete_keyword_set: obsolete_keyword = k_as
-			rescue_keyword_set: rescue_keyword = r_as
+			obsolete_keyword_set: k_as /= Void implies obsolete_keyword_index = k_as.index
+			rescue_keyword_set: r_as /= Void implies rescue_keyword_index = r_as.index
 			object_test_locals_set: object_test_locals = ot_locals
 		end
 
@@ -70,8 +74,34 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	obsolete_keyword, rescue_keyword: KEYWORD_AS
-			-- keyword "obsolete" and "rescue" associated with this class
+	obsolete_keyword_index, rescue_keyword_index: INTEGER
+			-- Index of keyword "obsolete" and "rescue" associated with this class
+
+	obsolete_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "obsolete" associated with this class
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := obsolete_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	rescue_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "rescue" associated with this class
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rescue_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Roundtrip
 
@@ -130,36 +160,26 @@ feature -- Roundtrip/Token
 		local
 			l_leaf: LEAF_AS
 		do
-			if a_list = Void then
-				if obsolete_message /= Void then
-					Result := obsolete_message.first_token (a_list)
-				elseif precondition /= Void then
-					Result := precondition.first_token (a_list)
-				elseif internal_locals /= Void then
-					Result := internal_locals.first_token (a_list)
-				else
-					l_leaf := routine_body.first_token (a_list)
-					if l_leaf /= Void and then not l_leaf.is_null then
-						Result := l_leaf
-					else
-						if postcondition /= Void then
-							Result := postcondition.first_token (a_list)
-						elseif rescue_clause /= Void then
-							Result := rescue_clause.first_token (a_list)
-						elseif end_keyword /= Void then
-							Result := end_keyword.first_token (a_list)
-						end
-					end
-				end
+			if a_list /= Void and obsolete_keyword_index /= 0 then
+				Result := obsolete_keyword (a_list)
+			elseif obsolete_message /= Void then
+				Result := obsolete_message.first_token (a_list)
+			elseif precondition /= Void then
+				Result := precondition.first_token (a_list)
+			elseif internal_locals /= Void then
+				Result := internal_locals.first_token (a_list)
 			else
-				if obsolete_keyword /= Void then
-					Result := obsolete_keyword.first_token (a_list)
-				elseif precondition /= Void then
-					Result := precondition.first_token (a_list)
-				elseif internal_locals /= Void then
-					Result := internal_locals.first_token (a_list)
-				else
-					Result := routine_body.first_token (a_list)
+				Result := routine_body.first_token (a_list)
+				if Result = Void or else Result.is_null then
+					if postcondition /= Void then
+						Result := postcondition.first_token (a_list)
+					elseif a_list /= Void and rescue_keyword_index /= 0 then
+						Result := rescue_keyword (a_list)
+					elseif rescue_clause /= Void then
+						Result := rescue_clause.first_token (a_list)
+					elseif end_keyword /= Void then
+						Result := end_keyword.first_token (a_list)
+					end
 				end
 			end
 		end

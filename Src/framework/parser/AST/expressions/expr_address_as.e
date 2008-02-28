@@ -18,20 +18,26 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (e: like expr; a_as, l_as, r_as: like address_symbol) is
+	initialize (e: like expr; a_as, lp_as, rp_as: like address_symbol) is
 			-- Create a new EXPR_ADDRESS AST node.
 		require
 			e_not_void: e /= Void
 		do
 			expr := e
-			address_symbol := a_as
-			lparan_symbol := l_as
-			rparan_symbol := r_as
+			if a_as /= Void then
+				address_symbol_index := a_as.index
+			end
+			if lp_as /= Void then
+				lparan_symbol_index := lp_as.index
+			end
+			if rp_as /= Void then
+				rparan_symbol_index := rp_as.index
+			end
 		ensure
 			expr_set: expr = e
-			address_symbol_set: address_symbol = a_as
-			lparan_symbol_set: lparan_symbol = l_as
-			rparan_symbol_set: rparan_symbol = r_as
+			address_symbol_set: a_as /= Void implies address_symbol_index = a_as.index
+			lparan_symbol_set: lp_as /= Void implies lparan_symbol_index = lp_as.index
+			rparan_symbol_set: rp_as /= Void implies rparan_symbol_index = rp_as.index
 		end
 
 feature -- Visitor
@@ -44,11 +50,50 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	address_symbol: SYMBOL_AS
-			-- Symbol "$" associated with this structure
+	address_symbol_index: INTEGER
+			-- Index of symbol "$" associated with this structure
 
-	lparan_symbol, rparan_symbol: SYMBOL_AS
-			-- Symbol "(" and ")" associated with this structure
+	lparan_symbol_index, rparan_symbol_index: INTEGER
+			-- Index of symbol "(" and ")" associated with this structure
+
+	address_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+			-- Symbol "$" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := address_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "(" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := lparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol ")" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Properties
 
@@ -59,19 +104,21 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := expr.first_token (a_list)
+			if a_list /= Void and address_symbol_index /= 0 then
+				Result := address_symbol (a_list)
+			elseif a_list /= Void and lparan_symbol_index /= 0 then
+				Result := lparan_symbol (a_list)
 			else
-				Result := address_symbol.first_token (a_list)
+				Result := expr.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := expr.last_token (a_list)
+			if a_list /= Void and rparan_symbol_index /= 0 then
+				Result := rparan_symbol (a_list)
 			else
-				Result := rparan_symbol.last_token (a_list)
+				Result := expr.last_token (a_list)
 			end
 		end
 

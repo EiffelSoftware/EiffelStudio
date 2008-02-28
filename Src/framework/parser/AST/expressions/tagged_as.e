@@ -22,11 +22,13 @@ feature {NONE} -- Initialization
 		do
 			tag := t
 			expr := e
-			colon_symbol := s_as
+			if s_as /= Void then
+				colon_symbol_index := s_as.index
+			end
 		ensure
 			tag_set: tag = t
 			expr_set: expr = e
-			colon_symbol_set: colon_symbol = s_as
+			colon_symbol_set: s_as /= Void implies colon_symbol_index = s_as.index
 		end
 
 feature -- Visitor
@@ -39,8 +41,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	colon_symbol: SYMBOL_AS
+	colon_symbol_index: INTEGER
+			-- Index of symbol colon associated with this structure
+
+	colon_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol colon associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := colon_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	is_complete: BOOLEAN is
 			-- Is this tagged structure complete?
@@ -72,8 +87,8 @@ feature -- Roundtrip/Token
 		do
 			if expr /= Void then
 				Result := expr.last_token (a_list)
-			elseif a_list /= Void and then colon_symbol /= Void then
-				Result := colon_symbol.last_token (a_list)
+			elseif a_list /= Void and colon_symbol_index /= 0 then
+				Result := colon_symbol (a_list)
 			else
 				Result := tag.last_token (a_list)
 			end

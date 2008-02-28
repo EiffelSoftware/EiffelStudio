@@ -163,6 +163,12 @@ feature -- Roundtrip: process leaf
 			last_index := l_as.index
 		end
 
+	process_keyword_stub_as (l_as: KEYWORD_STUB_AS) is
+			-- Process `l_as'.
+		do
+			process_keyword_as (l_as)
+		end
+
 	process_bool_as (l_as: BOOL_AS) is
 		do
 			process_leading_leaves (l_as.index)
@@ -208,7 +214,7 @@ feature -- Roundtrip: process leaf
 	process_string_as (l_as: STRING_AS) is
 		do
 			if l_as.is_once_string then
-				safe_process (l_as.once_string_keyword)
+				safe_process (l_as.once_string_keyword (match_list))
 			end
 			safe_process (l_as.type)
 			process_leading_leaves (l_as.index)
@@ -218,7 +224,7 @@ feature -- Roundtrip: process leaf
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
 		do
 			if l_as.is_once_string then
-				safe_process (l_as.once_string_keyword)
+				safe_process (l_as.once_string_keyword (match_list))
 			end
 			safe_process (l_as.type)
 			process_leading_leaves (l_as.index)
@@ -234,7 +240,7 @@ feature -- Roundtrip: process leaf
 	process_integer_as (l_as: INTEGER_AS) is
 		do
 			safe_process (l_as.constant_type)
-			safe_process (l_as.sign_symbol)
+			safe_process (l_as.sign_symbol (match_list))
 			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
@@ -242,7 +248,7 @@ feature -- Roundtrip: process leaf
 	process_real_as (l_as: REAL_AS) is
 		do
 			safe_process (l_as.constant_type)
-			safe_process (l_as.sign_symbol)
+			safe_process (l_as.sign_symbol (match_list))
 			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
@@ -276,12 +282,12 @@ feature
 	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.agent_keyword)
+			safe_process (l_as.agent_keyword (match_list))
 			if l_as.target /= Void then
-				safe_process (l_as.lparan_symbol)
+				safe_process (l_as.lparan_symbol (match_list))
 				l_as.target.process (Current)
-				safe_process (l_as.rparan_symbol)
-				safe_process (l_as.dot_symbol)
+				safe_process (l_as.rparan_symbol (match_list))
+				safe_process (l_as.dot_symbol (match_list))
 			end
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_operands)
@@ -291,11 +297,11 @@ feature
 			-- Process `l_as'.
 		do
 			if l_as.target /= Void then
-				safe_process (l_as.lparan_symbol)
+				safe_process (l_as.lparan_symbol (match_list))
 				l_as.target.process (Current)
-				safe_process (l_as.rparan_symbol)
+				safe_process (l_as.rparan_symbol (match_list))
 			end
-			safe_process (l_as.tilda_symbol)
+			safe_process (l_as.tilda_symbol (match_list))
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_operands)
 		end
@@ -303,7 +309,7 @@ feature
 	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.agent_keyword)
+			safe_process (l_as.agent_keyword (match_list))
 			safe_process (l_as.body)
 			safe_process (l_as.internal_operands)
 		end
@@ -311,7 +317,7 @@ feature
 	process_create_creation_as (l_as: CREATE_CREATION_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.create_keyword)
+			safe_process (l_as.create_keyword (match_list))
 			safe_process (l_as.type)
 			safe_process (l_as.target)
 			safe_process (l_as.call)
@@ -330,7 +336,7 @@ feature
 	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.create_keyword)
+			safe_process (l_as.create_keyword (match_list))
 			safe_process (l_as.type)
 			safe_process (l_as.call)
 		end
@@ -350,14 +356,14 @@ feature
 		do
 			safe_process (l_as.creation_expr)
 			safe_process (l_as.tuple)
-			safe_process (l_as.end_keyword)
+			safe_process (l_as.end_keyword (match_list))
 		end
 
 	process_static_access_as (l_as: STATIC_ACCESS_AS) is
 		do
-			safe_process (l_as.feature_keyword)
+			safe_process (l_as.feature_keyword (match_list))
 			safe_process (l_as.class_type)
-			safe_process (l_as.dot_symbol)
+			safe_process (l_as.dot_symbol (match_list))
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_parameters)
 		end
@@ -371,16 +377,16 @@ feature
 
 	process_tuple_as (l_as: TUPLE_AS) is
 		do
-			safe_process (l_as.lbracket)
+			safe_process (l_as.lbracket_symbol (match_list))
 			safe_process (l_as.expressions)
-			safe_process (l_as.rbracket)
+			safe_process (l_as.rbracket_symbol (match_list))
 		end
 
 	process_array_as (l_as: ARRAY_AS) is
 		do
-			safe_process (l_as.larray)
+			safe_process (l_as.larray_symbol (match_list))
 			safe_process (l_as.expressions)
-			safe_process (l_as.rarray)
+			safe_process (l_as.rarray_symbol (match_list))
 		end
 
 	process_body_as (l_as: BODY_AS) is
@@ -388,11 +394,11 @@ feature
 			c_as: CONSTANT_AS
 		do
 			safe_process (l_as.internal_arguments)
-			safe_process (l_as.colon_symbol)
+			safe_process (l_as.colon_symbol (match_list))
 			safe_process (l_as.type)
-			safe_process (l_as.assign_keyword)
+			safe_process (l_as.assign_keyword (match_list))
 			safe_process (l_as.assigner)
-			safe_process (l_as.is_keyword)
+			safe_process (l_as.is_keyword (match_list))
 
 			c_as ?= l_as.content
 			if c_as /= Void then
@@ -418,7 +424,7 @@ feature
 
 	process_access_inv_as (l_as: ACCESS_INV_AS) is
 		do
-			safe_process (l_as.dot_symbol)
+			safe_process (l_as.dot_symbol (match_list))
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_parameters)
 		end
@@ -443,17 +449,17 @@ feature
 
 	process_nested_expr_as (l_as: NESTED_EXPR_AS) is
 		do
-			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.lparan_symbol (match_list))
 			safe_process (l_as.target)
-			safe_process (l_as.rparan_symbol)
-			safe_process (l_as.dot_symbol)
+			safe_process (l_as.rparan_symbol (match_list))
+			safe_process (l_as.dot_symbol (match_list))
 			safe_process (l_as.message)
 		end
 
 	process_nested_as (l_as: NESTED_AS) is
 		do
 			safe_process (l_as.target)
-			safe_process (l_as.dot_symbol)
+			safe_process (l_as.dot_symbol (match_list))
 			safe_process (l_as.message)
 		end
 
@@ -472,13 +478,13 @@ feature
 	process_routine_as (l_as: ROUTINE_AS) is
 		do
 
-			safe_process (l_as.obsolete_keyword)
+			safe_process (l_as.obsolete_keyword (match_list))
 			safe_process (l_as.obsolete_message)
 			safe_process (l_as.precondition)
 			safe_process (l_as.internal_locals)
 			safe_process (l_as.routine_body)
 			safe_process (l_as.postcondition)
-			safe_process (l_as.rescue_keyword)
+			safe_process (l_as.rescue_keyword (match_list))
 			safe_process (l_as.rescue_clause)
 			safe_process (l_as.end_keyword)
 		end
@@ -504,7 +510,7 @@ feature
 				loop
 					safe_process (l_as.item)
 					if i <= l_count then
-						safe_process (l_as.separator_list.i_th (i))
+						safe_process (l_as.separator_list_i_th (i, match_list))
 						i := i + 1
 					end
 					l_as.forth
@@ -514,17 +520,15 @@ feature
 
 	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
 		do
-			safe_process (l_as.indexing_keyword)
+			safe_process (l_as.indexing_keyword (match_list))
 			process_eiffel_list (l_as)
-			safe_process (l_as.end_keyword)
+			safe_process (l_as.end_keyword (match_list))
 		end
 
 	process_operand_as (l_as: OPERAND_AS) is
 		do
 			safe_process (l_as.class_type)
-			if l_as.question_mark_symbol /= Void then
-				l_as.question_mark_symbol.process (Current)
-			end
+			safe_process (l_as.question_mark_symbol (match_list))
 			safe_process (l_as.target)
 			safe_process (l_as.expression)
 		end
@@ -532,34 +536,31 @@ feature
 	process_tagged_as (l_as: TAGGED_AS) is
 		do
 			safe_process (l_as.tag)
-			safe_process (l_as.colon_symbol)
+			safe_process (l_as.colon_symbol (match_list))
 			safe_process (l_as.expr)
 		end
 
 	process_variant_as (l_as: VARIANT_AS) is
 		do
-			safe_process (l_as.variant_keyword)
+			safe_process (l_as.variant_keyword (match_list))
 			safe_process (l_as.tag)
-			safe_process (l_as.colon_symbol)
+			safe_process (l_as.colon_symbol (match_list))
 			safe_process (l_as.expr)
 		end
 
 	process_un_strip_as (l_as: UN_STRIP_AS) is
-		local
-			i_as: IDENTIFIER_LIST
 		do
-			i_as ?= l_as.id_list
-			safe_process (l_as.strip_keyword)
-			safe_process (l_as.lparan_symbol)
-			safe_process (i_as.id_list)
-			safe_process (l_as.rparan_symbol)
+			safe_process (l_as.strip_keyword (match_list))
+			safe_process (l_as.lparan_symbol (match_list))
+			process_identifier_list (l_as.id_list)
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_paran_as (l_as: PARAN_AS) is
 		do
-			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.lparan_symbol (match_list))
 			safe_process (l_as.expr)
-			safe_process (l_as.rparan_symbol)
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_expr_call_as (l_as: EXPR_CALL_AS) is
@@ -569,21 +570,21 @@ feature
 
 	process_expr_address_as (l_as: EXPR_ADDRESS_AS) is
 		do
-			safe_process (l_as.address_symbol)
-			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.address_symbol (match_list))
+			safe_process (l_as.lparan_symbol (match_list))
 			safe_process (l_as.expr)
-			safe_process (l_as.rparan_symbol)
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_address_result_as (l_as: ADDRESS_RESULT_AS) is
 		do
-			safe_process (l_as.address_symbol)
+			safe_process (l_as.address_symbol (match_list))
 			safe_process (l_as.result_keyword)
 		end
 
 	process_address_current_as (l_as: ADDRESS_CURRENT_AS) is
 		do
-			safe_process (l_as.address_symbol)
+			safe_process (l_as.address_symbol (match_list))
 			safe_process (l_as.current_keyword)
 		end
 
@@ -602,7 +603,7 @@ feature
 
 	process_unary_as (l_as: UNARY_AS) is
 		do
-			safe_process (l_as.operator)
+			safe_process (l_as.operator (match_list))
 			safe_process (l_as.expr)
 		end
 
@@ -635,13 +636,16 @@ feature
 	process_binary_as (l_as: BINARY_AS) is
 		do
 			safe_process (l_as.left)
-			safe_process (l_as.operator)
+			safe_process (l_as.operator (match_list))
 			safe_process (l_as.right)
 		end
 
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
 		do
-			process_binary_as (l_as)
+			safe_process (l_as.left)
+			safe_process (l_as.and_keyword (match_list))
+			safe_process (l_as.then_keyword (match_list))
+			safe_process (l_as.right)
 		end
 
 	process_bin_free_as (l_as: BIN_FREE_AS) is
@@ -661,7 +665,10 @@ feature
 
 	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
 		do
-			process_binary_as (l_as)
+			safe_process (l_as.left)
+			safe_process (l_as.or_keyword (match_list))
+			safe_process (l_as.else_keyword (match_list))
+			safe_process (l_as.right)
 		end
 
 	process_bin_xor_as (l_as: BIN_XOR_AS) is
@@ -778,26 +785,26 @@ feature
 
 	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
 		do
-			safe_process (l_as.frozen_keyword)
-			safe_process (l_as.infix_prefix_keyword)
+			safe_process (l_as.frozen_keyword (match_list))
+			safe_process (l_as.infix_prefix_keyword (match_list))
 			safe_process (l_as.alias_name)
 		end
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
 		do
-			safe_process (l_as.frozen_keyword)
+			safe_process (l_as.frozen_keyword (match_list))
 			safe_process (l_as.feature_name)
 		end
 
 	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
 		do
-			safe_process (l_as.frozen_keyword)
+			safe_process (l_as.frozen_keyword (match_list))
 			safe_process (l_as.feature_name)
 			if l_as.alias_name /= Void then
-				safe_process (l_as.alias_keyword)
+				safe_process (l_as.alias_keyword (match_list))
 				safe_process (l_as.alias_name)
 				if l_as.has_convert_mark then
-					safe_process (l_as.convert_keyword)
+					safe_process (l_as.convert_keyword (match_list))
 				end
 			end
 		end
@@ -809,13 +816,13 @@ feature
 
 	process_all_as (l_as: ALL_AS) is
 		do
-			safe_process (l_as.all_keyword)
+			safe_process (l_as.all_keyword (match_list))
 		end
 
 	process_assign_as (l_as: ASSIGN_AS) is
 		do
 			safe_process (l_as.target)
-			safe_process (l_as.assignment_symbol)
+			safe_process (l_as.assignment_symbol (match_list))
 			safe_process (l_as.source)
 		end
 
@@ -829,13 +836,13 @@ feature
 	process_reverse_as (l_as: REVERSE_AS) is
 		do
 			safe_process (l_as.target)
-			safe_process (l_as.assignment_symbol)
+			safe_process (l_as.assignment_symbol (match_list))
 			safe_process (l_as.source)
 		end
 
 	process_check_as (l_as: CHECK_AS) is
 		do
-			safe_process (l_as.check_keyword)
+			safe_process (l_as.check_keyword (match_list))
 			safe_process (l_as.full_assertion_list)
 			safe_process (l_as.end_keyword)
 		end
@@ -849,7 +856,7 @@ feature
 
 	process_debug_as (l_as: DEBUG_AS) is
 		do
-			safe_process (l_as.debug_keyword)
+			safe_process (l_as.debug_keyword (match_list))
 			safe_process (l_as.internal_keys)
 			safe_process (l_as.compound)
 			safe_process (l_as.end_keyword)
@@ -857,22 +864,22 @@ feature
 
 	process_if_as (l_as: IF_AS) is
 		do
-			safe_process (l_as.if_keyword)
+			safe_process (l_as.if_keyword (match_list))
 			safe_process (l_as.condition)
-			safe_process (l_as.then_keyword)
+			safe_process (l_as.then_keyword (match_list))
 			safe_process (l_as.compound)
 			safe_process (l_as.elsif_list)
-			safe_process (l_as.else_keyword)
+			safe_process (l_as.else_keyword (match_list))
 			safe_process (l_as.else_part)
 			safe_process (l_as.end_keyword)
 		end
 
 	process_inspect_as (l_as: INSPECT_AS) is
 		do
-			safe_process (l_as.inspect_keyword)
+			safe_process (l_as.inspect_keyword (match_list))
 			safe_process (l_as.switch)
 			safe_process (l_as.case_list)
-			safe_process (l_as.else_keyword)
+			safe_process (l_as.else_keyword (match_list))
 			safe_process (l_as.else_part)
 			safe_process (l_as.end_keyword)
 		end
@@ -884,45 +891,42 @@ feature
 
 	process_loop_as (l_as: LOOP_AS) is
 		do
-			safe_process (l_as.from_keyword)
+			safe_process (l_as.from_keyword (match_list))
 			safe_process (l_as.from_part)
-			safe_process (l_as.invariant_keyword)
+			safe_process (l_as.invariant_keyword (match_list))
 			safe_process (l_as.full_invariant_list)
 			safe_process (l_as.variant_part)
-			safe_process (l_as.until_keyword)
+			safe_process (l_as.until_keyword (match_list))
 			safe_process (l_as.stop)
-			safe_process (l_as.loop_keyword)
+			safe_process (l_as.loop_keyword (match_list))
 			safe_process (l_as.compound)
 			safe_process (l_as.end_keyword)
 		end
 
 	process_external_as (l_as: EXTERNAL_AS) is
 		do
-			safe_process (l_as.external_keyword)
+			safe_process (l_as.external_keyword (match_list))
 			safe_process (l_as.language_name)
-			safe_process (l_as.alias_keyword)
+			safe_process (l_as.alias_keyword (match_list))
 			safe_process (l_as.alias_name_literal)
 		end
 
 	process_do_as (l_as: DO_AS) is
 		do
-			safe_process (l_as.do_keyword)
+			safe_process (l_as.do_keyword (match_list))
 			safe_process (l_as.compound)
 		end
 
 	process_once_as (l_as: ONCE_AS) is
 		do
-			safe_process (l_as.once_keyword)
+			safe_process (l_as.once_keyword (match_list))
 			safe_process (l_as.compound)
 		end
 
 	process_type_dec_as (l_as: TYPE_DEC_AS) is
-		local
-			id_list: IDENTIFIER_LIST
 		do
-			id_list ?= l_as.id_list
-			safe_process (id_list.id_list)
-			safe_process (l_as.colon_symbol)
+			process_identifier_list (l_as.id_list)
+			safe_process (l_as.colon_symbol (match_list))
 			safe_process (l_as.type)
 		end
 
@@ -931,18 +935,18 @@ feature
 			s: STRING_AS
 		do
 			safe_process (l_as.internal_top_indexes)
-			safe_process (l_as.frozen_keyword)
-			safe_process (l_as.deferred_keyword)
-			safe_process (l_as.expanded_keyword)
-			safe_process (l_as.separate_keyword)
-			safe_process (l_as.external_keyword)
-			safe_process (l_as.class_keyword)
+			safe_process (l_as.frozen_keyword (match_list))
+			safe_process (l_as.deferred_keyword (match_list))
+			safe_process (l_as.expanded_keyword (match_list))
+			safe_process (l_as.separate_keyword (match_list))
+			safe_process (l_as.external_keyword (match_list))
+			safe_process (l_as.class_keyword (match_list))
 			safe_process (l_as.class_name)
 			safe_process (l_as.internal_generics)
-			safe_process (l_as.alias_keyword)
+			safe_process (l_as.alias_keyword (match_list))
 			s ?= l_as.external_class_name
 			safe_process (s)
-			safe_process (l_as.obsolete_keyword)
+			safe_process (l_as.obsolete_keyword (match_list))
 			safe_process (l_as.obsolete_message)
 			safe_process (l_as.internal_conforming_parents)
 			safe_process (l_as.internal_non_conforming_parents)
@@ -962,106 +966,116 @@ feature
 			safe_process (l_as.internal_undefining)
 			safe_process (l_as.internal_redefining)
 			safe_process (l_as.internal_selecting)
-			safe_process (l_as.end_keyword)
+			safe_process (l_as.end_keyword (match_list))
 		end
 
 	process_like_id_as (l_as: LIKE_ID_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
-			safe_process (l_as.attachment_mark)
-			safe_process (l_as.like_keyword)
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.attachment_mark (match_list))
+			safe_process (l_as.like_keyword (match_list))
 			safe_process (l_as.anchor)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_like_cur_as (l_as: LIKE_CUR_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
-			safe_process (l_as.attachment_mark)
-			safe_process (l_as.like_keyword)
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.attachment_mark (match_list))
+			safe_process (l_as.like_keyword (match_list))
 			safe_process (l_as.current_keyword)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_formal_as (l_as: FORMAL_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.lcurly_symbol (match_list))
 			safe_process (l_as.attachment_mark)
-			safe_process (l_as.reference_expanded_keyword)
+			safe_process (l_as.reference_or_expanded_keyword (match_list))
 			safe_process (l_as.name)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
 		do
 			safe_process (l_as.formal)
-			safe_process (l_as.constrain_symbol)
+			safe_process (l_as.constrain_symbol (match_list))
 			safe_process (l_as.constraints)
-			safe_process (l_as.create_keyword)
+			safe_process (l_as.create_keyword (match_list))
 			safe_process (l_as.creation_feature_list)
-			safe_process (l_as.end_keyword)
+			safe_process (l_as.end_keyword (match_list))
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
-			safe_process (l_as.attachment_mark)
-			safe_process (l_as.expanded_keyword)
-			safe_process (l_as.separate_keyword)
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.attachment_mark (match_list))
+			safe_process (l_as.expanded_keyword (match_list))
+			safe_process (l_as.separate_keyword (match_list))
+			safe_process (l_as.class_name)
+			safe_process (l_as.rcurly_symbol (match_list))
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+		do
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.attachment_mark (match_list))
+			safe_process (l_as.expanded_keyword (match_list))
+			safe_process (l_as.separate_keyword (match_list))
 			safe_process (l_as.class_name)
 			safe_process (l_as.internal_generics)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
-			safe_process (l_as.separate_keyword)
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.separate_keyword (match_list))
 			safe_process (l_as.class_name)
 			safe_process (l_as.parameters)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
-			do
-				l_as.type.process (Current)
-				safe_process (l_as.renaming)
-				safe_process (l_as.end_of_renaming)
-			end
+		do
+			l_as.type.process (Current)
+			safe_process (l_as.renaming)
+			safe_process (l_as.end_keyword (match_list))
+		end
 
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.lcurly_symbol (match_list))
 			safe_process (l_as.class_name_literal)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_bits_as (l_as: BITS_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
-			safe_process (l_as.bit_keyword)
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.bit_keyword (match_list))
 			safe_process (l_as.bits_value)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
 		do
-			safe_process (l_as.lcurly_symbol)
-			safe_process (l_as.bit_keyword)
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.bit_keyword (match_list))
 			safe_process (l_as.bits_symbol)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_rename_as (l_as: RENAME_AS) is
 		do
 			safe_process (l_as.old_name)
-			safe_process (l_as.as_keyword)
+			safe_process (l_as.as_keyword (match_list))
 			safe_process (l_as.new_name)
 		end
 
 	process_invariant_as (l_as: INVARIANT_AS) is
 		do
-			safe_process (l_as.invariant_keyword)
+			safe_process (l_as.invariant_keyword (match_list))
 			safe_process (l_as.full_assertion_list)
 		end
 
@@ -1075,7 +1089,7 @@ feature
 	process_index_as (l_as: INDEX_AS) is
 		do
 			safe_process (l_as.tag)
-			safe_process (l_as.colon_symbol)
+			safe_process (l_as.colon_symbol (match_list))
 			safe_process (l_as.index_list)
 		end
 
@@ -1087,15 +1101,15 @@ feature
 
 	process_elseif_as (l_as: ELSIF_AS) is
 		do
-			safe_process (l_as.elseif_keyword)
+			safe_process (l_as.elseif_keyword (match_list))
 			safe_process (l_as.expr)
-			safe_process (l_as.then_keyword)
+			safe_process (l_as.then_keyword (match_list))
 			safe_process (l_as.compound)
 		end
 
 	process_create_as (l_as: CREATE_AS) is
 		do
-			safe_process (l_as.create_creation_keyword)
+			safe_process (l_as.create_creation_keyword (match_list))
 			safe_process (l_as.clients)
 			safe_process (l_as.feature_list)
 		end
@@ -1107,168 +1121,168 @@ feature
 
 	process_case_as (l_as: CASE_AS) is
 		do
-			safe_process (l_as.when_keyword)
+			safe_process (l_as.when_keyword (match_list))
 			safe_process (l_as.interval)
-			safe_process (l_as.then_keyword)
+			safe_process (l_as.then_keyword (match_list))
 			safe_process (l_as.compound)
 		end
 
 	process_ensure_as (l_as: ENSURE_AS) is
 		do
-			safe_process (l_as.ensure_keyword)
+			safe_process (l_as.ensure_keyword (match_list))
 			safe_process (l_as.full_assertion_list)
 		end
 
 	process_ensure_then_as (l_as: ENSURE_THEN_AS) is
 		do
-			safe_process (l_as.ensure_keyword)
-			safe_process (l_as.then_keyword)
+			safe_process (l_as.ensure_keyword (match_list))
+			safe_process (l_as.then_keyword (match_list))
 			safe_process (l_as.full_assertion_list)
 		end
 
 	process_require_as (l_as: REQUIRE_AS) is
 		do
-			safe_process (l_as.require_keyword)
+			safe_process (l_as.require_keyword (match_list))
 			safe_process (l_as.full_assertion_list)
 		end
 
 	process_require_else_as (l_as: REQUIRE_ELSE_AS) is
 		do
-			safe_process (l_as.require_keyword)
-			safe_process (l_as.else_keyword)
+			safe_process (l_as.require_keyword (match_list))
+			safe_process (l_as.else_keyword (match_list))
 			safe_process (l_as.full_assertion_list)
 		end
 
 	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
 		do
 			safe_process (l_as.feature_name)
-			safe_process (l_as.colon_symbol)
-			safe_process (l_as.lparan_symbol)
-			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.colon_symbol (match_list))
+			safe_process (l_as.lparan_symbol (match_list))
+			safe_process (l_as.lcurly_symbol (match_list))
 			safe_process (l_as.conversion_types)
-			safe_process (l_as.rcurly_symbol)
-			safe_process (l_as.rparan_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS) is
 		do
-			safe_process (l_as.opening_bracket_as)
+			safe_process (l_as.opening_bracket_as (match_list))
 			process_eiffel_list (l_as)
-			safe_process (l_as.closing_bracket_as)
+			safe_process (l_as.closing_bracket_as (match_list))
 		end
 
 	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS) is
 		do
-			safe_process (l_as.opening_bracket_as)
+			safe_process (l_as.opening_bracket_as (match_list))
 			process_eiffel_list (l_as)
-			safe_process (l_as.closing_bracket_as)
+			safe_process (l_as.closing_bracket_as (match_list))
 		end
 
 	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.convert_keyword)
+			safe_process (l_as.convert_keyword (match_list))
 			process_eiffel_list (l_as)
 		end
 
 	process_class_list_as (l_as: CLASS_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.lcurly_symbol (match_list))
 			process_eiffel_list (l_as)
-			safe_process (l_as.rcurly_symbol)
+			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
 	process_parent_list_as (l_as: PARENT_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.inherit_keyword)
-			safe_process (l_as.left_curly_symbol)
-			safe_process (l_as.none_id_as)
-			safe_process (l_as.right_curly_symbol)
+			safe_process (l_as.inherit_keyword (match_list))
+			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.none_id_as (match_list))
+			safe_process (l_as.rcurly_symbol (match_list))
 			process_eiffel_list (l_as)
 		end
 
 	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.local_keyword)
+			safe_process (l_as.local_keyword (match_list))
 			safe_process(l_as.locals)
 		end
 
 	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.lparan_symbol (match_list))
 			safe_process (l_as.arguments)
-			safe_process (l_as.rparan_symbol)
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.lparan_symbol (match_list))
 			safe_process (l_as.keys)
-			safe_process (l_as.rparan_symbol)
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.lparan_symbol (match_list))
 			safe_process (l_as.operands)
-			safe_process (l_as.rparan_symbol)
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_parameter_list_as (l_as: PARAMETER_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.lparan_symbol (match_list))
 			safe_process (l_as.parameters)
-			safe_process (l_as.rparan_symbol)
+			safe_process (l_as.rparan_symbol (match_list))
 		end
 
 	process_rename_clause_as (l_as: RENAME_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.rename_keyword)
+			safe_process (l_as.rename_keyword (match_list))
 			safe_process (l_as.content)
 		end
 
 	process_export_clause_as (l_as: EXPORT_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.export_keyword)
+			safe_process (l_as.export_keyword (match_list))
 			safe_process (l_as.content)
 		end
 
 	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.undefine_keyword)
+			safe_process (l_as.undefine_keyword (match_list))
 			safe_process (l_as.content)
 		end
 
 	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.redefine_keyword)
+			safe_process (l_as.redefine_keyword (match_list))
 			safe_process (l_as.content)
 		end
 
 	process_select_clause_as (l_as: SELECT_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.select_keyword)
+			safe_process (l_as.select_keyword (match_list))
 			safe_process (l_as.content)
 		end
 
 	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.lsqure_symbol)
+			safe_process (l_as.lsqure_symbol (match_list))
 			process_eiffel_list (l_as)
-			safe_process (l_as.rsqure_symbol)
+			safe_process (l_as.rsqure_symbol (match_list))
 		end
 
 feature
@@ -1343,6 +1357,49 @@ feature{NONE} -- Implementation
 					loop
 						match_list.i_th (last_index).process (Current)
 						last_index := last_index + 1
+					end
+				end
+			end
+		end
+
+	process_identifier_list (l_as: IDENTIFIER_LIST) is
+			-- Process `l_as'
+		local
+			i, l_count: INTEGER
+			l_index: INTEGER
+			l_ids: CONSTRUCT_LIST [INTEGER]
+			l_id_as: ID_AS
+			l_leaf: LEAF_AS
+		do
+			if l_as /= Void then
+				l_ids := l_as.id_list
+				if l_ids /= Void and l_ids.count > 0 then
+					from
+						l_ids.start
+						i := 1
+							-- Temporary/reused objects to print identifiers.
+						create l_id_as.initialize_from_id (1)
+						if l_as.separator_list /= Void then
+							l_count := l_as.separator_list.count
+						end
+					until
+						l_ids.after
+					loop
+						l_index := l_ids.item
+						if match_list.valid_index (l_index) then
+							l_leaf := match_list.i_th (l_index)
+								-- Note that we do not set the `name_id' for `l_id_as' since it will require
+								-- updating the NAMES_HEAP and we do not want to do that. It is assumed in roundtrip
+								-- mode that the text is never obtained from the node itself but from the `text' queries.
+							l_id_as.set_position (l_leaf.line, l_leaf.column, l_leaf.position, l_leaf.location_count)
+							l_id_as.set_index (l_index)
+							safe_process (l_id_as)
+						end
+						if i <= l_count then
+							safe_process (l_as.separator_list_i_th (i, match_list))
+							i := i + 1
+						end
+						l_ids.forth
 					end
 				end
 			end

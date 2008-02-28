@@ -26,13 +26,17 @@ feature {NONE} -- Initialization
 		do
 			interval := i
 			compound := c
-			when_keyword := w_as
-			then_keyword := t_as
+			if w_as /= Void then
+				when_keyword_index := w_as.index
+			end
+			if t_as /= Void then
+				then_keyword_index := t_as.index
+			end
 		ensure
 			interval_set: interval = i
 			compound_set: compound = c
-			when_keyword_set: when_keyword = w_as
-			then_keyword_set: then_keyword = t_as
+			when_keyword_set: w_as /= Void implies when_keyword_index = w_as.index
+			then_keyword_set: t_as /= Void implies then_keyword_index = t_as.index
 		end
 
 feature -- Visitor
@@ -45,8 +49,34 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	when_keyword, then_keyword: KEYWORD_AS
-			-- Keyword "when" and "then" associated with this structure
+	when_keyword_index, then_keyword_index: INTEGER
+			-- Index of keyword "when" and "then" associated with this structure
+
+	when_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "when" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := when_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "then" ssociated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := then_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -60,10 +90,10 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := interval.first_token (a_list)
+			if a_list /= Void and when_keyword_index /= 0 then
+				Result := when_keyword (a_list)
 			else
-				Result := when_keyword.first_token (a_list)
+				Result := interval.first_token (a_list)
 			end
 		end
 
@@ -71,12 +101,10 @@ feature -- Roundtrip/Token
 		do
 			if compound /= Void then
 				Result := compound.last_token (a_list)
-			elseif a_list = Void then
-					-- Roundtrip mode
-				Result := interval.last_token (a_list)
+			elseif a_list /= Void and then_keyword_index /= 0 then
+				Result := then_keyword (a_list)
 			else
-					-- Non-roundtrip mode
-				Result := then_keyword.last_token (a_list)
+				Result := interval.last_token (a_list)
 			end
 		end
 

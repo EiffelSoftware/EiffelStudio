@@ -26,15 +26,19 @@ feature {NONE} -- Initialization
 			case_list := c
 			else_part := e
 			end_keyword := el
-			inspect_keyword := i_as
-			else_keyword := e_as
+			if i_as /= Void then
+				inspect_keyword_index := i_as.index
+			end
+			if e_as /= Void then
+				else_keyword_index := e_as.index
+			end
 		ensure
 			switch_set: switch = s
 			case_list_set: case_list = c
 			else_part_set: else_part = e
 			end_keyword_set: end_keyword = el
-			inspect_keyword_set: inspect_keyword = i_as
-			else_keyword_set: else_keyword = e_as
+			inspect_keyword_set: i_as /= Void implies inspect_keyword_index = i_as.index
+			else_keyword_set: e_as /= Void implies else_keyword_index = e_as.index
 		end
 
 feature -- Visitor
@@ -47,8 +51,34 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	inspect_keyword, else_keyword: KEYWORD_AS
-			-- Keyword "inspect" and "else" associated with this structure
+	inspect_keyword_index, else_keyword_index: INTEGER
+			-- Index of keyword "inspect" and "else" associated with this structure
+
+	inspect_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "inspect" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := inspect_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "else" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := else_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -68,10 +98,10 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := switch.first_token (a_list)
+			if a_list /= Void and inspect_keyword_index /= 0 then
+				Result := inspect_keyword (a_list)
 			else
-				Result := inspect_keyword.first_token (a_list)
+				Result := switch.first_token (a_list)
 			end
 		end
 

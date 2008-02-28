@@ -42,7 +42,7 @@ feature{NONE} -- Implementation
 			dest_match_list_not_void: dest_match_list /= Void
 			sour_not_void: sour /= Void
 			sour_match_list_not_void: sour_match_list /= Void
-			parents_of_same_type: dest.type.is_equivalent (sour.type)
+			parents_of_same_type: dest.type.same_type (sour.type) and then dest.type.is_equivalent (sour.type)
 		do
 			source := sour
 			destination := dest

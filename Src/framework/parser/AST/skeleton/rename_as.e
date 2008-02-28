@@ -27,11 +27,13 @@ feature {NONE} -- Initialization
 		do
 			old_name := o
 			new_name := n
-			as_keyword := k_as
+			if k_as /= Void then
+				as_keyword_index := k_as.index
+			end
 		ensure
 			old_name_set: old_name = o
 			new_name_set: new_name = n
-			as_keyword_set: as_keyword = k_as
+			as_keyword_set: k_as /= Void implies as_keyword_index = k_as.index
 		end
 
 feature -- Visitor
@@ -44,8 +46,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	as_keyword: KEYWORD_AS
-		-- Keyword "as" associated with this structure.
+	as_keyword_index: INTEGER
+			-- Index of keyword "as" associated with this structure.
+
+	as_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "as" associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := as_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 

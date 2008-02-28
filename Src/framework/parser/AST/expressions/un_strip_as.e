@@ -27,17 +27,21 @@ feature {NONE} -- Initialization
 			i_not_void: i /= Void
 		do
 			id_list := i
-			strip_keyword := o
-			set_paran_symbols (lp_as, rp_as)
+			if o /= Void then
+				strip_keyword_index := o.index
+			end
+			if lp_as /= Void then
+				lparan_symbol_index := lp_as.index
+			end
+			if rp_as /= Void then
+				rparan_symbol_index := rp_as.index
+			end
 		ensure
 			id_list_set: id_list = i
-			strip_keyword_set: strip_keyword = o
+			strip_keyword_set: o /= Void implies strip_keyword_index = o.index
+			lparan_symbol_set: lp_as /= Void implies lparan_symbol_index = lp_as.index
+			rparan_symbol_set: rp_as /= Void implies rparan_symbol_index = rp_as.index
 		end
-
-feature -- Roundtrip
-
-	strip_keyword: AST_EIFFEL
-			-- Keyword "strip"
 
 feature -- Visitor
 
@@ -49,26 +53,24 @@ feature -- Visitor
 
 feature -- Attributes
 
-	id_list: CONSTRUCT_LIST [INTEGER]
+	id_list: IDENTIFIER_LIST
 			-- Attribute list
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := Void
-			else
-				Result := strip_keyword.first_token (a_list)
+			if a_list /= Void and strip_keyword_index /= 0 then
+				Result := strip_keyword (a_list)
+			elseif a_list /= Void and lparan_symbol_index /= 0 then
+				Result := lparan_symbol (a_list)
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := Void
-			else
-				Result := rparan_symbol.last_token (a_list)
+			if a_list /= Void and rparan_symbol_index /= 0 then
+				Result := rparan_symbol (a_list)
 			end
 		end
 
@@ -82,30 +84,49 @@ feature -- Comparison
 
 feature -- Roundtrip
 
-	lparan_symbol, rparan_symbol: SYMBOL_AS
-			-- Symbol "(" and ")" associated with current AST node
+	strip_keyword_index: INTEGER
+			-- Index of keyword "strip"
 
-	set_rparan_symbol (a_symbol: SYMBOL_AS) is
-			-- Set `rparan_symbol' with `a_symbol'.
+	lparan_symbol_index, rparan_symbol_index: INTEGER
+			-- Index of symbol "(" and ")" associated with this structure
+
+	strip_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "strip"
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
 		do
-			rparan_symbol := a_symbol
-		ensure
-			rparan_symbol_set: rparan_symbol = a_symbol
+			i := strip_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
 		end
 
-	set_lparan_symbol (a_symbol: SYMBOL_AS) is
-			-- Set `lparan_symbol' with `a_symbol'.
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "(" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
 		do
-			lparan_symbol := a_symbol
-		ensure
-			lparan_symbol_set: lparan_symbol = a_symbol
+			i := lparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
 		end
 
-	set_paran_symbols (l, r: SYMBOL_AS) is
-			-- Set `lparan_symbol' with `l' and `rparan_symbol' with 'r'.
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol ")" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
 		do
-			set_lparan_symbol (l)
-			set_rparan_symbol (r)
+			i := rparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
 		end
 
 invariant

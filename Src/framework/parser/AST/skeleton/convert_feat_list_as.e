@@ -32,22 +32,37 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 				Result := Precursor (a_list)
-			else
-				Result := convert_keyword.first_token (a_list)
+			elseif convert_keyword_index /= 0 then
+				Result := convert_keyword (a_list)
 			end
 		end
 
 feature -- Roundtrip
 
-	convert_keyword: KEYWORD_AS
+	convert_keyword_index: INTEGER
+			-- Index of keyword "convert" associated with current AST node
+
+	convert_keyword (a_list: LEAF_AS_LIST): SYMBOL_AS is
 			-- Keyword "convert" associated with current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := convert_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	set_convert_keyword (a_keyword: KEYWORD_AS) is
 			-- Set `convert_keyword' with `a_keyword'.
 		do
-			convert_keyword := a_keyword
+			if a_keyword /= Void then
+				convert_keyword_index := a_keyword.index
+			end
 		ensure
-			convert_keyword_set: convert_keyword = a_keyword
+			convert_keyword_set: a_keyword /= Void implies convert_keyword_index = a_keyword.index
 		end
 
 indexing

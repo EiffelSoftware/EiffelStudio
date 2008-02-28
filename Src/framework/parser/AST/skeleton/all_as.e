@@ -18,10 +18,11 @@ feature {NONE} -- Initialization
 	 initialize (a_as: KEYWORD_AS) is
 			-- Create a new ALL AST node.
 		do
-			-- Do nothing.
-			all_keyword := a_as
+			if a_as /= Void then
+				all_keyword_index := a_as.index
+			end
 		ensure
-			all_keyword_set: all_keyword = a_as
+			all_keyword_set: a_as /= Void implies all_keyword_index = a_as.index
 		end
 
 feature -- Visitor
@@ -34,8 +35,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	all_keyword: KEYWORD_AS
-		-- Keyword "all" assoicated with this structure
+	all_keyword_index: INTEGER
+			-- Index of keyword "all" assoicated with this structure
+
+	all_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "all" assoicated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := all_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Comparison
 
@@ -49,19 +63,15 @@ feature -- Roundtrip/Location
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := Void
-			else
-				Result := all_keyword.first_token (a_list)
+			if a_list /= void and all_keyword_index /= 0 then
+				Result := all_keyword (a_list)
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := Void
-			else
-				Result := all_keyword.last_token (a_list)
+			if a_list /= void and all_keyword_index /= 0 then
+				Result := all_keyword (a_list)
 			end
 		end
 

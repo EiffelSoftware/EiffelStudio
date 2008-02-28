@@ -23,11 +23,13 @@ feature {NONE} -- Initialization
 		do
 			target := t
 			source := s
-			assignment_symbol := a_as
+			if a_as /= Void then
+				assignment_symbol_index := a_as.index
+			end
 		ensure
 			target_set: target = t
 			source_set: source = s
-			assignment_symbol_set: assignment_symbol = a_as
+			assignment_symbol_set: a_as /= Void implies assignment_symbol_index = a_as.index
 		end
 
 feature -- Visitor
@@ -40,8 +42,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	assignment_symbol: SYMBOL_AS
+	assignment_symbol_index: INTEGER
+			-- Index of symbol ":=" or "?=" associated with this structure
+
+	assignment_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol ":=" or "?=" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := assignment_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 

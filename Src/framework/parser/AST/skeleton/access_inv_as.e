@@ -26,9 +26,11 @@ feature{NONE} -- Initialization
 			-- Create a new FEATURE_ACCESS AST node.
 		do
 			initialize (f, p)
-			dot_symbol := s_as
+			if s_as /= Void then
+				dot_symbol_index := s_as.index
+			end
 		ensure
-			dot_symbol_set: dot_symbol = s_as
+			dot_symbol_set: s_as /= Void implies dot_symbol_index = s_as.index
 		end
 
 feature -- Attributes
@@ -49,8 +51,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	dot_symbol: SYMBOL_AS;
+	dot_symbol_index: INTEGER
+			-- Index of symbol "." associated with this structure
+
+	dot_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "." associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := dot_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

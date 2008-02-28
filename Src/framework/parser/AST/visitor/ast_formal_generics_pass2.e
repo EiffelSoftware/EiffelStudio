@@ -15,7 +15,8 @@ inherit
 	AST_NULL_VISITOR
 		redefine
 			process_like_id_as, process_like_cur_as,
-			process_formal_as, process_class_type_as, process_none_type_as,
+			process_formal_as, process_class_type_as,
+			process_generic_class_type_as, process_none_type_as,
 			process_bits_as, process_bits_symbol_as,
 			process_named_tuple_type_as, process_type_dec_as
 		end
@@ -105,58 +106,62 @@ feature {NONE} -- Visitor implementation
 			l_formal_type, l_new_formal: FORMAL_AS
 			l_generics: TYPE_LIST_AS
 		do
-				check not_has_node_changed: not has_node_changed end
-				l_class_name := l_as.class_name
-				if l_as.generics = Void then
-						-- Check whether this class type should actually be a formal.
-						-- If so, create a new formal instance and signal that the object has changed.				
-					from
-						formal_parameters.start
-					until
-						formal_parameters.after
-					loop
-						l_formal_type := formal_parameters.item
-						if l_class_name.is_equal (l_formal_type.name) then
-							l_new_formal := ast_factory.new_formal_as (l_class_name, l_formal_type.is_reference,
-								l_formal_type.is_expanded, Void)
-							l_new_formal.set_position (l_formal_type.position)
-								-- Jump out of the loop.
-							formal_parameters.finish
-						end
-						formal_parameters.forth
+			check not_has_node_changed: not has_node_changed end
+			l_class_name := l_as.class_name
+			if l_as.generics = Void then
+					-- Check whether this class type should actually be a formal.
+					-- If so, create a new formal instance and signal that the object has changed.				
+				from
+					formal_parameters.start
+				until
+					formal_parameters.after
+				loop
+					l_formal_type := formal_parameters.item
+					if l_class_name.is_equal (l_formal_type.name) then
+						l_new_formal := ast_factory.new_formal_as (l_class_name, l_formal_type.is_reference,
+							l_formal_type.is_expanded, Void)
+						l_new_formal.set_position (l_formal_type.position)
+							-- Jump out of the loop.
+						formal_parameters.finish
 					end
-
-					if l_new_formal /= Void then
-							-- We changed, update `new_node'
-							-- After we set `new_node' the query `has_node_changed' will yield true.
-						new_node := l_new_formal
-					else
-							-- We have not found a formal. So it is indeed a class type.
-							-- Add the class type to the suppliers!
-						suppliers.insert_supplier_id (l_class_name)
-					end
-				else
-						-- A formal can never be a base class of a generic class.
-						-- Something like H -> G[INTEGER] is illegal.
-						-- The error will be caught later.
-					suppliers.insert_supplier_id (l_class_name)
-					from
-						l_generics := l_as.generics
-						l_generics.start
-					until
-						l_generics.after
-					loop
-						l_generics.item.process (Current)
-							-- If we changed the object, we need to replace the references.
-						if has_node_changed then
-							consume_node
-							l_generics.replace (last_consumed_node)
-							check is_replaced: l_generics.item = last_consumed_node end
-						end
-						l_generics.forth
-					end
+					formal_parameters.forth
 				end
 
+				if l_new_formal /= Void then
+						-- We changed, update `new_node'
+						-- After we set `new_node' the query `has_node_changed' will yield true.
+					new_node := l_new_formal
+				else
+						-- We have not found a formal. So it is indeed a class type.
+						-- Add the class type to the suppliers!
+					suppliers.insert_supplier_id (l_class_name)
+				end
+			else
+					-- A formal can never be a base class of a generic class.
+					-- Something like H -> G[INTEGER] is illegal.
+					-- The error will be caught later.
+				suppliers.insert_supplier_id (l_class_name)
+				from
+					l_generics := l_as.generics
+					l_generics.start
+				until
+					l_generics.after
+				loop
+					l_generics.item.process (Current)
+						-- If we changed the object, we need to replace the references.
+					if has_node_changed then
+						consume_node
+						l_generics.replace (last_consumed_node)
+						check is_replaced: l_generics.item = last_consumed_node end
+					end
+					l_generics.forth
+				end
+			end
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+		do
+			process_class_type_as (l_as)
 		end
 
 	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS)

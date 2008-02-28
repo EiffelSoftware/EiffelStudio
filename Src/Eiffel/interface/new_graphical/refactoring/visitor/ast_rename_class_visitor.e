@@ -12,6 +12,7 @@ inherit
 	AST_REFACTORING_VISITOR
 		redefine
 			process_class_type_as,
+			process_generic_class_type_as,
 			process_class_as,
 			process_client_as,
 			process_break_as,
@@ -49,6 +50,11 @@ feature
 				has_modified := True
 			end
 			Precursor (l_as)
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+		do
+			process_class_type_as (l_as)
 		end
 
 	process_class_as (l_as: CLASS_AS) is

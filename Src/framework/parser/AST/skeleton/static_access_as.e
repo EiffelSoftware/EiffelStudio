@@ -35,14 +35,18 @@ feature {AST_FACTORY} -- Initialization
 			class_type := c
 			feature_name := f
 			set_parameters (p)
-			feature_keyword := f_as
-			dot_symbol := d_as
+			if f_as /= Void then
+				feature_keyword_index := f_as.index
+			end
+			if d_as /= Void then
+				dot_symbol_index := d_as.index
+			end
 		ensure
 			class_type_set: class_type = c
 			feature_name_set: feature_name = f
 			internal_parameters_set: internal_parameters = p
-			feature_keyword_set: feature_keyword = f_as
-			dot_symbol_set: dot_symbol = d_as
+			feature_keyword_set: f_as /= Void implies feature_keyword_index = f_as.index
+			dot_symbol_set: d_as /= Void implies dot_symbol_index = d_as.index
 		end
 
 feature -- Visitor
@@ -57,24 +61,46 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void  then
-				Result := Precursor (a_list)
+			if a_list /= Void and feature_keyword_index /= 0 then
+				Result := feature_keyword (a_list)
 			else
-				if feature_keyword /= Void then
-					Result := feature_keyword.first_token (a_list)
-				else
-					Result := class_type.first_token (a_list)
-				end
+				Result := class_type.first_token (a_list)
 			end
 		end
 
 feature -- Roundtrip
 
-	feature_keyword: KEYWORD_AS
-			-- Keyword "feature" associated with this structure
+	feature_keyword_index: INTEGER
+			-- Index of keyword "feature" associated with this structure
 
-	dot_symbol: SYMBOL_AS
+	dot_symbol_index: INTEGER
+			-- Index of symbol "." associated with this structure
+
+	feature_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "feature" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := feature_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	dot_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "." associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := dot_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 

@@ -80,6 +80,16 @@ feature -- Update
 			name_set: name.is_equal (a_name)
 		end
 
+	set_name_id (a_name_id: like name_id) is
+			-- Set `name' to `a_name'.
+		require
+			a_name_id_positive: a_name_id > 0
+		do
+			name_id := a_name_id
+		ensure
+			name_id_set: name_id = a_name_id
+		end
+
 	to_upper
 		do
 			initialize (name.as_upper)

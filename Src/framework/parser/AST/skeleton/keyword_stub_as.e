@@ -1,16 +1,24 @@
 indexing
-	description: "Object that represents a creation structure (using keyword create)"
+	description: "A stub for keywords in `match_list'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CREATE_CREATION_AS
+	KEYWORD_STUB_AS
 
 inherit
-	CREATION_AS
+	KEYWORD_AS
+		undefine
+			literal_text, is_equivalent
+		redefine
+			make, process
+		end
+
+	LEAF_STUB_AS
+		rename
+			make as leaf_stub_make
 		redefine
 			process
 		end
@@ -18,67 +26,21 @@ inherit
 create
 	make
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
-	make (tp: like type; tg: like target; c: like call; k_as: like create_keyword) is
-			-- Create new CREATE_CREATION AST node.
-		require
-			tg_not_void: tg /= Void
+	make (a_code: INTEGER_32; a_text: STRING_8; l, c, p, n: INTEGER_32) is
+			-- <Precursor>
 		do
-			initialize (tp, tg, c)
-			if k_as /= Void then
-				create_keyword_index := k_as.index
-			end
-		ensure
-			create_keyword_set: k_as /= Void implies create_keyword_index = k_as.index
-		end
-
-feature -- Roundtrip
-
-	create_keyword_index: INTEGER
-			-- Index of keyword "create" associated with this structure
-
-	create_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
-			-- Keyword "create" associated with this structure
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := create_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
+			code := a_code
+			leaf_stub_make (a_text, l, c, p, n)
 		end
 
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
-			-- process current element.
+			-- Visitor feature.
 		do
-			v.process_create_creation_as (Current)
-		end
-
-feature -- Roundtrip/Token
-
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		do
-			if a_list /= Void and create_keyword_index /= 0 then
-				Result := create_keyword (a_list)
-			elseif type /= Void then
-				Result := type.first_token (a_list)
-			else
-				Result := target.first_token (a_list)
-			end
-		end
-
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		do
-			if call /= Void then
-				Result := call.last_token (a_list)
-			else
-				Result := target.last_token (a_list)
-			end
+			v.process_keyword_stub_as (Current)
 		end
 
 indexing
@@ -112,5 +74,4 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 end

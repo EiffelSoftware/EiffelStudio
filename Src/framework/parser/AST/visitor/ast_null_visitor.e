@@ -92,6 +92,11 @@ feature -- Roundtrip
 		do
 		end
 
+	process_keyword_stub_as (l_as: KEYWORD_STUB_AS) is
+			-- Process `l_as'.
+		do
+		end
+
 feature -- Implementation
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
@@ -500,6 +505,10 @@ feature -- Implementation
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
+		do
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
 		do
 		end
 

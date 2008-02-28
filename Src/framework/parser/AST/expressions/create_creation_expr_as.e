@@ -26,15 +26,30 @@ feature{NONE} -- Initialization
 			t_not_void: t /= Void
 		do
 			initialize (t, c)
-			create_keyword := k_as
+			if k_as /= Void then
+				create_keyword_index := k_as.index
+			end
 		ensure
-			create_keyword_set: create_keyword = k_as
+			create_keyword_set: k_as /= Void implies create_keyword_index = k_as.index
 		end
 
 feature -- Roundtrip
 
-	create_keyword: KEYWORD_AS
+	create_keyword_index: INTEGER
+			-- Index of keyword "create" associated with this structure
+
+	create_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "create" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := create_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Visitor
 
@@ -48,10 +63,10 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := type.first_token (a_list)
+			if a_list /= Void and create_keyword_index /= 0 then
+				Result := create_keyword (a_list)
 			else
-				Result := create_keyword.first_token (a_list)
+				Result := type.first_token (a_list)
 			end
 		end
 

@@ -35,6 +35,7 @@ inherit
 
 			reverse_extend_separator,
 			reverse_extend_identifier,
+			reverse_extend_identifier_separator,
 
 			new_character_as, new_typed_char_as,
 			new_once_string_keyword_as,
@@ -106,16 +107,28 @@ feature -- Match list maintain
 
 feature -- List operation
 
-	reverse_extend_separator (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
+	reverse_extend_separator (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: LEAF_AS) is
 			-- Add `l_as' into `a_list'.separator_list.
 		do
-			a_list.reverse_extend_separator (l_as)
+			if a_list /= Void and l_as /= Void then
+				a_list.reverse_extend_separator (l_as)
+			end
 		end
 
-	reverse_extend_identifier (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: ID_AS) is
+	reverse_extend_identifier (a_list: IDENTIFIER_LIST l_as: ID_AS) is
 			-- Add `l_as' into `a_list'.
 		do
-			a_list.reverse_extend (l_as)
+			if a_list /= Void and l_as /= Void then
+				a_list.reverse_extend_identifier (l_as)
+			end
+		end
+
+	reverse_extend_identifier_separator (a_list: IDENTIFIER_LIST; l_as: LEAF_AS) is
+			-- Add `l_as' into `a_list.separator_list'.
+		do
+			if a_list /= Void and l_as /= Void then
+				a_list.reverse_extend_separator (l_as)
+			end
 		end
 
 feature -- Leaf nodes

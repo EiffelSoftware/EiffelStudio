@@ -28,18 +28,24 @@ feature {NONE} -- Initialization
 			elsif_list := ei
 			else_part := e
 			end_keyword := el
-			if_keyword := i_as
-			then_keyword := t_as
-			else_keyword := e_as
+			if i_as /= Void then
+				if_keyword_index := i_as.index
+			end
+			if t_as /= Void then
+				then_keyword_index := t_as.index
+			end
+			if e_as /= Void then
+				else_keyword_index := e_as.index
+			end
 		ensure
 			condition_set: condition = cnd
 			compound_set: compound = cmp
 			elsif_list_set: elsif_list = ei
 			else_part_set: else_part = e
 			end_keyword_set: end_keyword = el
-			if_keyword_set: if_keyword = i_as
-			then_keyword_set: then_keyword = t_as
-			else_keyword_set: else_keyword = e_as
+			if_keyword_set: i_as /= Void implies if_keyword_index = i_as.index
+			then_keyword_set: t_as /= Void implies then_keyword_index = t_as.index
+			else_keyword_set: e_as /= Void implies else_keyword_index = e_as.index
 		end
 
 feature -- Visitor
@@ -52,8 +58,47 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	if_keyword, then_keyword, else_keyword: KEYWORD_AS
-			-- Keyword "if", "else" and "then" assoicated with this structure
+	if_keyword_index, then_keyword_index, else_keyword_index: INTEGER
+			-- Index of keyword "if", "else" and "then" assoicated with this structure
+
+	if_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "if" assoicated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := if_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "then" assoicated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := then_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "else" assoicated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := else_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -78,8 +123,8 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 				Result := condition.first_token (a_list)
-			else
-				Result := if_keyword.first_token (a_list)
+			elseif if_keyword_index /= 0 then
+				Result := if_keyword (a_list)
 			end
 		end
 

@@ -100,13 +100,18 @@ feature -- Roundtrip: Match list maintaining
 
 feature -- Roundtrip
 
-	reverse_extend_separator (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
+	reverse_extend_separator (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: LEAF_AS) is
 			-- Add `l_as' into `a_list'.separator_list in reverse order.
 		do
 		end
 
-	reverse_extend_identifier (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: ID_AS) is
-			-- Add `l_as' into `a_list'.
+	reverse_extend_identifier (a_list: IDENTIFIER_LIST; l_as: ID_AS) is
+			-- Add `l_as' into `a_list.id_list'.
+		do
+		end
+
+	reverse_extend_identifier_separator (a_list: IDENTIFIER_LIST; l_as: LEAF_AS) is
+			-- Add `l_as' into `a_list.separator_list'.
 		do
 		end
 
@@ -609,7 +614,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_and_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_AND_AS is
+	new_bin_and_as (l, r: EXPR_AS; o: LEAF_AS): BIN_AND_AS is
 			-- New binary and AST node
 		do
 			if l /= Void and r /= Void then
@@ -625,7 +630,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_div_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_DIV_AS is
+	new_bin_div_as (l, r: EXPR_AS; o: LEAF_AS): BIN_DIV_AS is
 			-- New binary // AST node
 		do
 			if l /= Void and r /= Void then
@@ -633,7 +638,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_eq_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_EQ_AS is
+	new_bin_eq_as (l, r: EXPR_AS; o: LEAF_AS): BIN_EQ_AS is
 			-- New binary = AST node
 		do
 			if l /= Void and r /= Void then
@@ -649,7 +654,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_ge_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_GE_AS is
+	new_bin_ge_as (l, r: EXPR_AS; o: LEAF_AS): BIN_GE_AS is
 			-- New binary >= AST node
 		do
 			if l /= Void and r /= Void then
@@ -657,7 +662,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_gt_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_GT_AS is
+	new_bin_gt_as (l, r: EXPR_AS; o: LEAF_AS): BIN_GT_AS is
 			-- New binary > AST node
 		do
 			if l /= Void and r /= Void then
@@ -665,7 +670,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_implies_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_IMPLIES_AS is
+	new_bin_implies_as (l, r: EXPR_AS; o: LEAF_AS): BIN_IMPLIES_AS is
 			-- New binary implies AST node
 		do
 			if l /= Void and r /= Void then
@@ -673,7 +678,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_le_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_LE_AS is
+	new_bin_le_as (l, r: EXPR_AS; o: LEAF_AS): BIN_LE_AS is
 			-- New binary <= AST node
 		do
 			if l /= Void and r /= Void then
@@ -681,7 +686,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_lt_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_LT_AS is
+	new_bin_lt_as (l, r: EXPR_AS; o: LEAF_AS): BIN_LT_AS is
 			-- New binary < AST node
 		do
 			if l /= Void and r /= Void then
@@ -689,7 +694,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_minus_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_MINUS_AS is
+	new_bin_minus_as (l, r: EXPR_AS; o: LEAF_AS): BIN_MINUS_AS is
 			-- New binary - AST node
 		do
 			if l /= Void and r /= Void then
@@ -697,7 +702,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_mod_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_MOD_AS is
+	new_bin_mod_as (l, r: EXPR_AS; o: LEAF_AS): BIN_MOD_AS is
 			-- New binary \\ AST node
 		do
 			if l /= Void and r /= Void then
@@ -705,7 +710,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_ne_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_NE_AS is
+	new_bin_ne_as (l, r: EXPR_AS; o: LEAF_AS): BIN_NE_AS is
 			-- New binary /= AST node
 		do
 			if l /= Void and r /= Void then
@@ -713,7 +718,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_not_tilde_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_NOT_TILDE_AS is
+	new_bin_not_tilde_as (l, r: EXPR_AS; o: LEAF_AS): BIN_NOT_TILDE_AS is
 			-- New binary /~ AST node
 		do
 			if l /= Void and r /= Void then
@@ -721,7 +726,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_or_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_OR_AS is
+	new_bin_or_as (l, r: EXPR_AS; o: LEAF_AS): BIN_OR_AS is
 			-- New binary or AST node
 		do
 			if l /= Void and r /= Void then
@@ -737,7 +742,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_plus_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_PLUS_AS is
+	new_bin_plus_as (l, r: EXPR_AS; o: LEAF_AS): BIN_PLUS_AS is
 			-- New binary + AST node
 		do
 			if l /= Void and r /= Void then
@@ -745,7 +750,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_power_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_POWER_AS is
+	new_bin_power_as (l, r: EXPR_AS; o: LEAF_AS): BIN_POWER_AS is
 			-- New binary ^ AST node
 		do
 			if l /= Void and r /= Void then
@@ -753,7 +758,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_slash_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_SLASH_AS is
+	new_bin_slash_as (l, r: EXPR_AS; o: LEAF_AS): BIN_SLASH_AS is
 			-- New binary / AST node
 		do
 			if l /= Void and r /= Void then
@@ -761,7 +766,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_star_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_STAR_AS is
+	new_bin_star_as (l, r: EXPR_AS; o: LEAF_AS): BIN_STAR_AS is
 			-- New binary * AST node
 		do
 			if l /= Void and r /= Void then
@@ -769,7 +774,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_tilde_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_TILDE_AS is
+	new_bin_tilde_as (l, r: EXPR_AS; o: LEAF_AS): BIN_TILDE_AS is
 			-- New binary ~ AST node
 		do
 			if l /= Void and r /= Void then
@@ -777,7 +782,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_xor_as (l, r: EXPR_AS; o: AST_EIFFEL): BIN_XOR_AS is
+	new_bin_xor_as (l, r: EXPR_AS; o: LEAF_AS): BIN_XOR_AS is
 			-- New binary xor AST node
 		do
 			if l /= Void and r /= Void then
@@ -893,7 +898,11 @@ feature -- Access
 			-- New CLASS_TYPE AST node
 		do
 			if n /= Void then
-				create Result.initialize (n, g, attachment_mark, a_m, d_m)
+				if g /= Void then
+					create {GENERIC_CLASS_TYPE_AS} Result.initialize (n, g, attachment_mark, a_m, d_m)
+				else
+					create Result.initialize (n, attachment_mark, a_m, d_m)
+				end
 			end
 		end
 
@@ -1752,7 +1761,7 @@ feature -- Access
 			end
 		end
 
-	new_un_minus_as (e: EXPR_AS; o: AST_EIFFEL): UN_MINUS_AS is
+	new_un_minus_as (e: EXPR_AS; o: LEAF_AS): UN_MINUS_AS is
 			-- New unary - AST node
 		do
 			if e /= Void then
@@ -1760,7 +1769,7 @@ feature -- Access
 			end
 		end
 
-	new_un_not_as (e: EXPR_AS; o: AST_EIFFEL): UN_NOT_AS is
+	new_un_not_as (e: EXPR_AS; o: LEAF_AS): UN_NOT_AS is
 			-- New unary not AST node
 		do
 			if e /= Void then
@@ -1768,7 +1777,7 @@ feature -- Access
 			end
 		end
 
-	new_un_old_as (e: EXPR_AS; o: AST_EIFFEL): UN_OLD_AS is
+	new_un_old_as (e: EXPR_AS; o: LEAF_AS): UN_OLD_AS is
 			-- New unary old AST node
 		do
 			if e /= Void then
@@ -1776,7 +1785,7 @@ feature -- Access
 			end
 		end
 
-	new_un_plus_as (e: EXPR_AS; o: AST_EIFFEL): UN_PLUS_AS is
+	new_un_plus_as (e: EXPR_AS; o: LEAF_AS): UN_PLUS_AS is
 			-- New unary + AST node
 		do
 			if e /= Void then
@@ -1784,7 +1793,7 @@ feature -- Access
 			end
 		end
 
-	new_un_strip_as (i: CONSTRUCT_LIST [INTEGER]; o: KEYWORD_AS; lp_as, rp_as: SYMBOL_AS): UN_STRIP_AS is
+	new_un_strip_as (i: IDENTIFIER_LIST; o: KEYWORD_AS; lp_as, rp_as: SYMBOL_AS): UN_STRIP_AS is
 			-- New UN_STRIP AST node
 		do
 			if i /= Void then

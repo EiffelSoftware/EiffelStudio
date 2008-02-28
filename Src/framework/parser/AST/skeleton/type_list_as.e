@@ -22,8 +22,8 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if opening_bracket_as /= Void then
-				Result := opening_bracket_as.first_token (a_list)
+			if a_list /= Void and opening_bracket_as_index /= 0 then
+				Result := opening_bracket_as (a_list)
 			else
 				Result := Precursor {EIFFEL_LIST} (a_list)
 			end
@@ -31,8 +31,8 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if closing_bracket_as /= Void then
-				Result := closing_bracket_as.last_token (a_list)
+			if a_list /= Void and closing_bracket_as_index /= 0 then
+				Result := closing_bracket_as (a_list)
 			else
 				Result := Precursor {EIFFEL_LIST} (a_list)
 			end
@@ -52,20 +52,50 @@ feature -- Setting
 			-- Set `start_location' and `end_location' with `a_opener' and `a_closer'
 			-- if not Void, nothing otherwise
 		do
-			opening_bracket_as := a_opener
-			closing_bracket_as := a_closer
+			if a_opener /= Void then
+				opening_bracket_as_index := a_opener.index
+			end
+			if a_closer /= Void then
+				closing_bracket_as_index := a_closer.index
+			end
 		ensure
-			opening_bracket_as_set: opening_bracket_as = a_opener
-			closing_bracket_as_set: closing_bracket_as = a_closer
+			opening_bracket_as_set: a_opener /= Void implies opening_bracket_as_index = a_opener.index
+			closing_bracket_as_set: a_closer /= Void closing_bracket_as_index = a_closer.index
 		end
 
 feature
 
-	opening_bracket_as: SYMBOL_AS
-			-- Location of `[' if present.
+	opening_bracket_as_index: INTEGER
+			-- Index of `[' token if present.
 
-	closing_bracket_as: SYMBOL_AS;
+	closing_bracket_as_index: INTEGER
 			-- Location of `]' if present.
+
+	opening_bracket_as (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Location of `[' if present.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := opening_bracket_as_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	closing_bracket_as (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Location of `]' if present.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := closing_bracket_as_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

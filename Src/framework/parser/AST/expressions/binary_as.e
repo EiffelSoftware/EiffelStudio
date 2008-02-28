@@ -29,11 +29,13 @@ feature {NONE} -- Initialization
 		do
 			left := l
 			right := r
-			operator := o
+			if o /= Void then
+				operator_index := o.index
+			end
 		ensure
 			left_set: left = l
 			right_set: right = r
-			operator_set: operator = o
+			operator_set: o /= Void implies operator_index = o.index
 		end
 
 feature -- Attributes
@@ -52,16 +54,54 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	operator: AST_EIFFEL
+	operator_index: INTEGER
+			-- Index of binary operation AST node.
+
+	operator (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- Binary operation AST node.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := operator_index
+			if a_list.valid_index (i) then
+				Result := a_list.i_th (i)
+			end
+		end
 
 feature -- Location
 
 	operator_location: LOCATION_AS is
 			-- Location of operator
+		local
+			l_left, l_right: LOCATION_AS
+			l_line, l_column, l_pos, l_count: INTEGER
 		do
-			fixme ("This is not precise enough, we ought to have the precise location.")
-			Result := left.end_location
+			l_left := left.end_location
+			l_right := right.start_location
+
+			l_line := l_left.line
+			l_count := (l_right.position) - (l_left.position + l_left.location_count)
+			check l_count >= 0 end
+			l_column := l_left.column + l_left.location_count
+			l_pos := l_left.position + l_left.location_count
+
+			create Result.make (l_line, l_column, l_pos, l_count)
+		ensure
+			operator_location_not_void: Result /= Void
+		end
+
+	operator_ast: ID_AS is
+			-- Approximation of current operator AST without a match_list.
+		local
+			l_location: LOCATION_AS
+		do
+			l_location := operator_location
+			Result := op_name.twin
+			Result.set_position (l_location.line, l_location.column, l_location.position, l_location.location_count)
+		ensure
+			operator_ast_not_void: Result /= Void
 		end
 
 feature -- Roundtrip/Token

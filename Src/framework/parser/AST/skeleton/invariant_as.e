@@ -32,12 +32,14 @@ feature {NONE} -- Initialization
 			full_assertion_list := a
 			assertion_list := filter_tagged_list (full_assertion_list)
 			once_manifest_string_count := oms_count
-			invariant_keyword := i_as
+			if i_as /= Void then
+				invariant_keyword_index := i_as.index
+			end
 			object_test_locals := ot_locals
 		ensure
 			full_assertion_list_set: full_assertion_list = a
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
-			invariant_keyword_set: invariant_keyword = i_as
+			invariant_keyword_set: i_as /= Void implies invariant_keyword_index = i_as.index
 			object_test_locals_set: object_test_locals = ot_locals
 		end
 
@@ -55,8 +57,21 @@ feature -- Roundtrip
 			-- Assertion list that contains both complete and incomplete assertions.
 			-- e.g. "tag:expr", "tag:", "expr"
 
-	invariant_keyword: KEYWORD_AS
+	invariant_keyword_index: INTEGER
+			-- Index of keyword "invariant" associated with this structure
+
+	invariant_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "invariant" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := invariant_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attribute
 
@@ -73,31 +88,19 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if assertion_list /= Void then
-					Result := assertion_list.first_token (a_list)
-				else
-					Result := Void
-				end
-			else
-				Result := invariant_keyword.first_token (a_list)
+			if a_list /= Void and invariant_keyword_index /= 0 then
+				Result := invariant_keyword (a_list)
+			elseif full_assertion_list /= Void then
+				Result := full_assertion_list.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if assertion_list /= Void then
-					Result := assertion_list.last_token (a_list)
-				else
-					Result := Void
-				end
-			else
-				if full_assertion_list /= Void then
-					Result := full_assertion_list.last_token (a_list)
-				else
-					Result := invariant_keyword.last_token (a_list)
-				end
+			if full_assertion_list /= Void then
+				Result := full_assertion_list.last_token (a_list)
+			elseif a_list /= Void and invariant_keyword_index /= 0 then
+				Result := invariant_keyword (a_list)
 			end
 		end
 
@@ -108,14 +111,6 @@ feature -- Comparison
 		do
 				-- FIXME: optimize (order doesn't matter)
 			Result := equivalent (assertion_list, other.assertion_list)
-		end
-
-feature {COMPILER_EXPORTER}
-
-	set_assertion_list (a: like assertion_list) is
-		do
-			full_assertion_list := a
-			assertion_list := filter_tagged_list (full_assertion_list)
 		end
 
 indexing

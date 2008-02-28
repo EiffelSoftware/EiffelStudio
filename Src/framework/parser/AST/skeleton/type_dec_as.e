@@ -30,11 +30,13 @@ feature {NONE} -- Initialization
 		do
 			id_list := i
 			type := t
-			colon_symbol := c_as
+			if c_as /= Void then
+				colon_symbol_index := c_as.index
+			end
 		ensure
 			id_list_set: id_list = i
 			type_set: type = t
-			colon_symbol_set: colon_symbol = c_as
+			colon_symbol_set: c_as /= Void implies colon_symbol_index = c_as.index
 		end
 
 feature -- Visitor
@@ -47,8 +49,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	colon_symbol: SYMBOL_AS
-		-- Symbol colon associated with this structure
+	colon_symbol_index: INTEGER
+			-- Index of symbol colon associated with this structure
+
+	colon_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+			-- Symbol colon associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := colon_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Access
 
@@ -74,11 +89,13 @@ feature -- Roundtrip/Token
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- First token in current AST nodE
 		local
-			l_list: EIFFEL_LIST [ID_AS]
+			l_list: CONSTRUCT_LIST [INTEGER]
 		do
 			l_list := id_list.id_list
-			if not l_list.is_empty then
-				Result := l_list.first.first_token (a_list)
+			if a_list /= Void and (l_list /= Void and then not l_list.is_empty) then
+				if a_list.valid_index (l_list.first) then
+					Result := a_list.i_th (l_list.first)
+				end
 			end
 			if Result = Void then
 				Result := type.first_token (a_list)

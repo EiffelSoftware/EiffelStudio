@@ -19,11 +19,13 @@ feature {NONE} -- Initialization
 		do
 			clients := c
 			feature_list := f
-			create_creation_keyword := c_as
+			if c_as /= Void then
+				create_creation_keyword_index := c_as.index
+			end
 		ensure
 			clients_set: clients = c
 			feature_list_set: feature_list = f
-			create_creation_keyword_set: create_creation_keyword = c_as
+			create_creation_keyword_set: c_as /= Void implies create_creation_keyword_index = c_as.index
 		end
 
 feature -- Visitor
@@ -36,8 +38,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	create_creation_keyword: KEYWORD_AS
+	create_creation_keyword_index: INTEGER
+			-- Index of keyword "create" or "creation" associated with this structure
+
+	create_creation_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "create" or "creation" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := create_creation_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -51,16 +66,14 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if clients /= Void then
-					Result := clients.first_token (a_list)
-				elseif feature_list /= Void then
-					Result := feature_list.first_token (a_list)
-				else
-					Result := Void
-				end
+			if a_list /= Void and create_creation_keyword_index /= 0 then
+				Result := create_creation_keyword (a_list)
+			elseif clients /= Void then
+				Result := clients.first_token (a_list)
+			elseif feature_list /= Void then
+				Result := feature_list.first_token (a_list)
 			else
-				Result := create_creation_keyword.first_token (a_list)
+				Result := Void
 			end
 		end
 
@@ -70,12 +83,10 @@ feature -- Roundtrip/Token
 				Result := feature_list.last_token (a_list)
 			elseif clients /= Void then
 				Result := clients.last_token (a_list)
-			elseif a_list = Void then
-					-- Non-roundtrip mode
-				Result := Void
+			elseif a_list /= Void and create_creation_keyword_index /= 0 then
+				Result := create_creation_keyword (a_list)
 			else
-					-- Roundtrip mode
-				Result := create_creation_keyword.last_token (a_list)
+				Result := Void
 			end
 		end
 

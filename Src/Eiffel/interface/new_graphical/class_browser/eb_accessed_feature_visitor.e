@@ -268,7 +268,7 @@ feature{NONE} -- Implementation/Process
 
 	process_binary_as (l_as: BINARY_AS) is
 		do
-			check_accessor_for_operators (e_feature, l_as.class_id, l_as.infix_function_name, l_as.operator)
+			check_accessor_for_operators (e_feature, l_as.class_id, l_as.infix_function_name, l_as.operator_ast)
 			Precursor (l_as)
 		end
 
@@ -278,7 +278,7 @@ feature{NONE} -- Implementation/Process
 		do
 			l_feature_name := l_as.prefix_feature_name
 			if l_feature_name /= Void then
-				check_accessor_for_operators (e_feature, l_as.class_id, l_feature_name, l_as.operator)
+				check_accessor_for_operators (e_feature, l_as.class_id, l_feature_name, l_as.operator_ast)
 			end
 			Precursor (l_as)
 		end

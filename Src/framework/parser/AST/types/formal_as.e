@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN; r_as: like reference_expanded_keyword) is
+	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN; r_as: like reference_or_expanded_keyword) is
 			-- Create a new FORMAL AST node.
 		require
 			n_not_void: n /= Void
@@ -28,12 +28,14 @@ feature {NONE} -- Initialization
 			name := n
 			is_reference := is_ref
 			is_expanded := is_exp
-			reference_expanded_keyword := r_as
+			if r_as /= Void then
+				reference_or_expanded_keyword_index := r_as.index
+			end
 		ensure
 			name_set: name = n
 			is_reference_set: is_reference = is_ref
 			is_expanded_set: is_expanded = is_exp
-			reference_expanded_keyword_set: reference_expanded_keyword = r_as
+			reference_or_expanded_keyword_set: r_as /= Void implies reference_or_expanded_keyword_index = r_as.index
 		end
 
 feature -- Visitor
@@ -46,8 +48,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	reference_expanded_keyword: KEYWORD_AS
+	reference_or_expanded_keyword_index: INTEGER
+			-- Index of keyword "reference" or "expanded" associated with this structure
+
+	reference_or_expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
 			-- Keyword "reference" or "expanded" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := reference_or_expanded_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	attachment_mark: SYMBOL_AS
 			-- Attachment symbol (if any)
@@ -92,9 +107,8 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list /= Void and then reference_expanded_keyword /= Void then
-						-- Roundtrip mode
-					Result := reference_expanded_keyword.first_token (a_list)
+				if a_list /= Void and then reference_or_expanded_keyword_index /= 0 then
+					Result := reference_or_expanded_keyword (a_list)
 				elseif a_list /= Void and then attachment_mark /= Void then
 					Result := attachment_mark.first_token (a_list)
 				else

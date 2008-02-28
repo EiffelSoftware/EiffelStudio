@@ -11,8 +11,6 @@ inherit
 	FEATURE_NAME
 		rename
 			internal_name as feature_name
-		export
-			{AST_VISITOR}frozen_keyword
 		end
 
 create
@@ -88,8 +86,8 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if frozen_keyword /= Void then
-				Result := frozen_keyword.first_token (a_list)
+			if a_list /= Void and frozen_keyword_index /= 0 then
+				Result := frozen_keyword (a_list)
 			end
 			if Result = Void or else Result.is_null then
 				Result := feature_name.first_token (a_list)

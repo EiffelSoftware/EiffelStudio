@@ -52,7 +52,7 @@ feature -- Applicability
 			elseif l_destination_parents = Void then
 				Result := destination.class_name.can_append_text (destination_match_list)
 			elseif l_destination_parents.is_empty then
-				Result := destination.parents.inherit_keyword.can_append_text (destination_match_list)
+				Result := destination.parents.inherit_keyword (destination_match_list).can_append_text (destination_match_list)
 			else
 				compute_modification
 				Result := last_computed_modifier.for_all (agent {ERT_AST_MODIFIER}.can_apply)
@@ -72,7 +72,7 @@ feature -- Applicability
 			elseif l_destination_parents = Void then
 				destination.class_name.append_text ("%N"+source.parents.text (source_match_list), destination_match_list)
 			elseif l_destination_parents.is_empty then
-				destination.parents.inherit_keyword.replace_text (source.parents.text (source_match_list), destination_match_list)
+				destination.parents.inherit_keyword (destination_match_list).replace_text (source.parents.text (source_match_list), destination_match_list)
 			else
 				compute_modification
 				last_computed_modifier.do_all (agent {ERT_AST_MODIFIER}.apply)
@@ -123,6 +123,9 @@ feature{NONE} -- Implementation
 					i > dest_count or done
 				loop
 					if not l_processed.item (i) then
+						check
+							same_type: l_source_parents.item.type.same_type (l_destination_parents.i_th (i).type)
+						end
 						if l_source_parents.item.type.is_equivalent (l_destination_parents.i_th (i).type) then
 							last_computed_modifier.extend (
 								create {ERT_PARENT_AS_MERGE_MODIFIER}.make

@@ -30,7 +30,9 @@ feature {NONE} -- Initialization
 			internal_undefining := u
 			internal_redefining := rd
 			internal_selecting := s
-			end_keyword := ek
+			if ek /= Void then
+				end_keyword_index := ek.index
+			end
 		ensure
 			type_set: type = t
 			internal_renaming_set: internal_renaming = rn
@@ -38,7 +40,7 @@ feature {NONE} -- Initialization
 			internal_undefining_set: internal_undefining = u
 			internal_redefining_set: internal_redefining = rd
 			internal_selecting_set: internal_selecting = s
-			end_keyword_set: end_keyword = ek
+			end_keyword_set: ek /= Void implies end_keyword_index = ek.index
 		end
 
 feature -- Visitor
@@ -135,9 +137,23 @@ feature -- Attributes
 						 (internal_selecting /= Void implies Result = internal_selecting.meaningful_content)
 		end
 
-	end_keyword: KEYWORD_AS
+	end_keyword_index: INTEGER
 			-- End of clause if any of the `rename', `export', `redefine', `undefine'
 			-- and `select' is present
+
+	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- End of clause if any of the `rename', `export', `redefine', `undefine'
+			-- and `select' is present
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := end_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Roundtrip
 
@@ -167,8 +183,8 @@ feature -- Roundtrip/Token
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- Last token in current AST node
 		do
-			if end_keyword /= Void then
-				Result := end_keyword.last_token (a_list)
+			if a_list /= Void and end_keyword_index /= 0 then
+				Result := end_keyword (a_list)
 			else
 				Result := type.last_token (a_list)
 			end

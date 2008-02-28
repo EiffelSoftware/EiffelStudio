@@ -27,13 +27,17 @@ feature {NONE} -- Initialization
 		do
 			expr := e
 			compound := c
-			elseif_keyword := l_as
-			then_keyword := t_as
+			if l_as /= Void then
+				elseif_keyword_index := l_as.index
+			end
+			if t_as /= Void then
+				then_keyword_index := t_as.index
+			end
 		ensure
 			expr_set: expr = e
 			compound_set: compound = c
-			elseif_keyword_set: elseif_keyword = l_as
-			then_keyword_set: then_keyword = t_as
+			elseif_keyword_set: l_as /= Void implies elseif_keyword_index = l_as.index
+			then_keyword_set: t_as /= Void implies then_keyword_index = t_as.index
 		end
 
 feature -- Visitor
@@ -46,11 +50,34 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	elseif_keyword: KEYWORD_AS
-			-- Keyword "elseif" associated with this structure
+	elseif_keyword_index, then_keyword_index: INTEGER
+			-- Index of keyword "elseif" and "then" assoicated with this structure
 
-	then_keyword: KEYWORD_AS
-			-- Keyword "then" associated with this structure			
+	elseif_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "elseif" assoicated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := elseif_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "then" assoicated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := then_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -64,10 +91,10 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := expr.first_token (a_list)
+			if a_list /= Void and elseif_keyword_index /= 0 then
+				Result := elseif_keyword (a_list)
 			else
-				Result := elseif_keyword.first_token (a_list)
+				Result := expr.first_token (a_list)
 			end
 		end
 
@@ -75,14 +102,10 @@ feature -- Roundtrip/Token
 		do
 			if compound /= Void then
 				Result := compound.last_token (a_list)
+			elseif a_list /= Void and then_keyword_index /= 0 then
+				Result := then_keyword (a_list)
 			else
-				if a_list = Void then
-						-- Non-roundtrip mode
-					Result := expr.last_token (a_list)
-				else
-						-- Roundtrip mode
-					Result := then_keyword.last_token (a_list)
-				end
+				Result := expr.last_token (a_list)
 			end
 		end
 

@@ -136,11 +136,22 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- First token in current AST node
+			--| Note for implementors of this routine as `last_token'.
+			--| Do not rely on `a_list' non-voidness to figure out the
+			--| presence or absence of information. Simply check what
+			--| you want to check in logical order and if one element
+			--| requires `a_list' to be not void, simply states it.
+			--|
+			--| FIXME: most of the redefinition of this routine do not
+			--| follow the above recommendation, but instead use a if then else
+			--| where one branch is taken when `a_list' is void and the other branch
+			--| when it is not void.
 		deferred
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- Last token in current AST node
+			--| Note: see comment on `last_token'.
 		deferred
 		end
 
@@ -154,6 +165,47 @@ feature -- Roundtrip/Token
 			create Result.make (first_token (a_list).index, last_token (a_list).index)
 		ensure
 			token_region_not_void: Result /= Void
+		end
+
+	index_of_matching_leaf (a_list: LEAF_AS_LIST; a_start_index: INTEGER; a_forward_search: BOOLEAN; a_matching: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): INTEGER is
+			-- Index of the first matching leaf for `a_matching' in `a_list' starting from
+			-- `a_start_index' in the direction indicated by `a_forward_search'.
+		require
+			a_list_not_void: a_list /= Void
+			a_start_index_valid: a_list.valid_index (a_start_index)
+			a_matching_not_void: a_matching /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_forward_search then
+				from
+					i := a_start_index
+					nb := a_list.count
+				until
+					i > nb
+				loop
+					if a_matching.item ([a_list.i_th (i)]) then
+						Result := i
+							-- Jump out of loop
+						i := nb
+					end
+					i := i + 1
+				end
+			else
+				from
+					i := a_start_index
+					nb := a_list.count
+				until
+					i = 0
+				loop
+					if a_matching.item ([a_list.i_th (i)]) then
+						Result := i
+							-- Jump out of loop
+						i := 1
+					end
+					i := i - 1
+				end
+			end
 		end
 
 feature -- Roundtrip/Text modification

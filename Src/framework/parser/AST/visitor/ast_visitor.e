@@ -110,6 +110,13 @@ feature -- Roundtrip
 		deferred
 		end
 
+	process_keyword_stub_as (l_as: KEYWORD_STUB_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 feature {AST_EIFFEL} -- Helpers
 
 	frozen safe_process (l_as: AST_EIFFEL) is
@@ -1048,6 +1055,13 @@ feature {AST_EIFFEL} -- Clickable visitor
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void

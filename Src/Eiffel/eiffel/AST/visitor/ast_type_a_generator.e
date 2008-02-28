@@ -12,7 +12,8 @@ inherit
 	AST_NULL_VISITOR
 		redefine
 			process_like_id_as, process_like_cur_as,
-			process_formal_as, process_class_type_as, process_none_type_as,
+			process_formal_as, process_class_type_as,
+			process_generic_class_type_as, process_none_type_as,
 			process_bits_as, process_bits_symbol_as,
 			process_named_tuple_type_as, process_type_dec_as
 		end
@@ -146,6 +147,7 @@ feature {NONE} -- Visitor implementation
 			l_class_i: CLASS_I
 			l_class_c: CLASS_C
 			l_actual_generic: ARRAY [TYPE_A]
+			l_generics: TYPE_LIST_AS
 			i, count: INTEGER
 			l_has_error: BOOLEAN
 			l_type: CL_TYPE_A
@@ -154,17 +156,18 @@ feature {NONE} -- Visitor implementation
 			l_class_i := universe.class_named (l_as.class_name.name, current_class.group)
 			if l_class_i /= Void and then l_class_i.is_compiled then
 				l_class_c := l_class_i.compiled_class
-				if l_as.generics /= Void then
+				l_generics := l_as.generics
+				if l_generics /= Void then
 					from
 						i := 1
-						count := l_as.generics.count
+						count := l_generics.count
 						create l_actual_generic.make (1, count)
 						l_type := l_class_c.partial_actual_type (l_actual_generic, l_as.is_expanded,
 							l_as.is_separate)
 					until
 						i > count or l_has_error
 					loop
-						l_as.generics.i_th (i).process (Current)
+						l_generics.i_th (i).process (Current)
 						l_has_error := last_type = Void
 						l_actual_generic.put (last_type, i)
 						i := i + 1
@@ -208,6 +211,11 @@ feature {NONE} -- Visitor implementation
 				check failure_enabled: is_failure_enabled end
 				last_type := Void
 			end
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+		do
+			process_class_type_as (l_as)
 		end
 
 	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is

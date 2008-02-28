@@ -53,15 +53,30 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	sign_symbol: SYMBOL_AS
+	sign_symbol_index: INTEGER
+			-- Index of symbol "+" or "-" associated with this structure
+
+	sign_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
 			-- Symbol "+" or "-" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := sign_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	set_sign_symbol (s_as: SYMBOL_AS) is
 			-- Set `sign_symbol' with `s_as'.
 		do
-			sign_symbol := s_as
+			if s_as /= Void then
+				sign_symbol_index := s_as.index
+			end
 		ensure
-			sign_symbol_set: sign_symbol = s_as
+			sign_symbol_set: s_as /= Void implies sign_symbol_index = s_as.index
 		end
 
 feature -- Roundtrip/Token
@@ -73,8 +88,8 @@ feature -- Roundtrip/Token
 			else
 				if constant_type /= Void then
 					Result := constant_type.first_token (a_list)
-				elseif sign_symbol /= Void then
-					Result := sign_symbol.first_token (a_list)
+				elseif sign_symbol_index /= 0 then
+					Result := sign_symbol (a_list)
 				else
 					Result := Current
 				end

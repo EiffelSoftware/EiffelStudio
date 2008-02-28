@@ -23,10 +23,12 @@ feature{NONE} -- Initialization
 			l_as_not_void: l_as /= Void
 		do
 			locals := l_as
-			local_keyword := k_as
+			if k_as /= Void then
+				local_keyword_index := k_as.index
+			end
 		ensure
 			locals_set: locals = l_as
-			local_keyword_set: local_keyword = k_as
+			local_keyword_set: k_as /= Void implies local_keyword_index = k_as.index
 		end
 
 feature -- Access
@@ -57,12 +59,10 @@ feature -- Roundtrip/Token
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- First token in current AST node
 		do
-			if a_list = Void then
-				if locals /= Void then
-					Result := locals.first_token (a_list)
-				end
-			else
-				Result := local_keyword.first_token (a_list)
+			if a_list /= Void and local_keyword_index /= 0 then
+				Result := local_keyword (a_list)
+			elseif locals /= Void then
+				Result := locals.last_token (a_list)
 			end
 		end
 
@@ -72,16 +72,28 @@ feature -- Roundtrip/Token
 			if locals /= Void then
 				Result := locals.last_token (a_list)
 			end
-			if (Result = Void or else Result.is_null) and a_list /= Void then
-					-- Roundtrip mode
-				Result := local_keyword.last_token (a_list)
+			if (Result = Void or else Result.is_null) and a_list /= Void and local_keyword_index /= 0 then
+				Result := local_keyword (a_list)
 			end
 		end
 
 feature -- Roundtrip
 
-	local_keyword: KEYWORD_AS;
+	local_keyword_index: INTEGER
+			-- Index of keyword "local" associated with current AST node
+
+	local_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
 			-- Keyword "local" associated with current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := local_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

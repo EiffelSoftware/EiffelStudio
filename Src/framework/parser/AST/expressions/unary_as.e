@@ -32,16 +32,31 @@ feature {NONE} -- Initialization
 			e_not_void: e /= Void
 		do
 			expr := e
-			operator := o
+			if o /= Void then
+				operator_index := o.index
+			end
 		ensure
 			expr_set: expr = e
-			operator_set: operator = o
+			operator_set: o /= Void implies operator_index = o.index
 		end
 
 feature -- Roundtrip
 
-	operator: AST_EIFFEL
+	operator_index: INTEGER
+			-- Index of unary operation AST node.
+
+	operator (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- Unary operation AST node.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := operator_index
+			if a_list.valid_index (i) then
+				Result := a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -55,19 +70,39 @@ feature -- Location
 
 	operator_location: LOCATION_AS is
 			-- Location of operator
+		local
+			l_location: LOCATION_AS
+			l_count: INTEGER
 		do
-			fixme ("Need to store operator location")
-			Result := start_location
+			l_location := start_location
+				-- We add `+1' because often there is a space between the operator and the expression.
+			l_count := operator_name.count + 1
+			create Result.make (l_location.line, (l_location.column - l_count).max (0),
+				(l_location.position - l_count).max (0), l_count)
+		ensure
+			operator_location_not_void: Result /= Void
+		end
+
+	operator_ast: ID_AS is
+			-- Approximation of current operator AST without a match_list.
+		local
+			l_location: LOCATION_AS
+		do
+			l_location := operator_location
+			create Result.initialize (operator_name)
+			Result.set_position (l_location.line, l_location.column, l_location.position, l_location.location_count)
+		ensure
+			operator_ast_not_void: Result /= Void
 		end
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := expr.first_token (a_list)
+			if a_list /= Void and operator_index /= 0 then
+				Result := operator (a_list)
 			else
-				Result :=operator.first_token (a_list)
+				Result := expr.first_token (a_list)
 			end
 		end
 

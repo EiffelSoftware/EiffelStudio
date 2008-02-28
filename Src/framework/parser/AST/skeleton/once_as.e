@@ -22,9 +22,11 @@ feature{NONE} -- Initialization
 			-- Create new DO AST node.
 		do
 			initialize (c)
-			once_keyword := l_as
+			if l_as /= Void then
+				once_keyword_index := l_as.index
+			end
 		ensure
-			once_keyword_set: once_keyword = l_as
+			once_keyword_set: l_as /= Void implies once_keyword_index = l_as.index
 		end
 
 feature -- Visitor
@@ -37,8 +39,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	once_keyword: KEYWORD_AS
+	once_keyword_index: INTEGER
+			-- Index of keyword "once" associated with this structure
+
+	once_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "once" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := once_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Properties
 
@@ -49,14 +64,10 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if compound /= Void then
-					Result := compound.first_token (a_list)
-				else
-					Result := Void
-				end
-			else
-				Result := once_keyword.first_token (a_list)
+			if a_list /= Void and once_keyword_index /= 0 then
+				Result := once_keyword (a_list)
+			elseif compound /= Void then
+				Result := compound.first_token (a_list)
 			end
 		end
 
@@ -64,11 +75,8 @@ feature -- Roundtrip/Token
 		do
 			if compound /= Void then
 				Result := compound.last_token (a_list)
-			elseif a_list = Void then
-					-- Non-roundtrip mode
-				Result := Void
-			else
-				Result := once_keyword.last_token (a_list)
+			elseif a_list /= Void and once_keyword_index /= 0 then
+				Result := once_keyword (a_list)
 			end
 		end
 

@@ -1,0 +1,12 @@
+test_name non-conforming-finalization-postcondition-violation
+test_description Finalizing a system that has non-conforming inheritance may cause a postcondition violation in CLASS_TYPE.conform_to.
+
+copy_sub Ace $TEST Ace
+copy_raw parent_class.e $CLUSTER parent_class.e
+copy_raw grand_parent_class.e $CLUSTER grand_parent_class.e
+copy_raw test.e $CLUSTER test.e
+
+compile_final
+compile_result OK
+
+test_end

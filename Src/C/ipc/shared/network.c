@@ -39,7 +39,7 @@
 		]"
 */
 
-#ifdef __VMS	/* module name clash with .../library/clib/network.c */
+#ifdef __VMS	/* resolve module name clash with .../library/net/clib/network.c */
 #pragma module IPC_NETWORK
 #endif /* __VMS */
 
@@ -63,8 +63,8 @@
 #endif
 
 #ifdef EIF_VMS
-#include "ipcvms.h"
-#endif  /* EIF_VMS */
+#include "ipcvms.h"		/* force use of select jacket on VMS */
+#endif
 
 
 #ifndef EIF_WINDOWS

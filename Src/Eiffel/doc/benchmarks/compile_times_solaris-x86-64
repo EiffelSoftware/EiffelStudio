@@ -3,6 +3,15 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2
 ===
 
+6.2.7.2422 non-RTEA with ec compiler without Kpic (exe size: 48233160):
+988.96u 40.03s 28:42.46 59.7%
+990.89u 36.57s 28:36.14 59.8%
+
+6.2.7.2422 non-RTEA with ecb compiler without Kpic (EIFGEN size: 393MB):
+586.29u 37.03s 20:45.30 50.0%
+598.31u 34.30s 21:40.99 48.6%
+610.72u 34.10s 21:42.11 49.5%
+
 6.2.7.2080 RTEA without Kpic and no buffer for {POLY_TABLE}.is_polymorphic:
 1124.19u 37.48s 28:28.27 68.0%
 

@@ -61,7 +61,9 @@ rt_private void check_lock(char *file);				/* Make sure lockfile is not too old 
 
 #ifndef EIF_WINDOWS
 #include <unistd.h>
+#ifndef EIF_VMS		/* breaks on VMS; should not <errno.h> be used for all platforms? */
 extern int errno;						/* System error status */
+#endif
 #else
 #include "io.h"
 extern int usleep(unsigned int);		/* Current time */

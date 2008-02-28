@@ -51,10 +51,10 @@
 #include "stream.h"
 #ifndef EIF_WINDOWS
 #include <unistd.h>
+#endif
 #ifdef EIF_VMS
-#include "ipcvms.h"		/* only affects VMS */
-#endif
-#endif
+#include "ipcvms.h"	/* force use of select jacket on VMS */
+#endif /* EIF_VMS */
 
 #define MAX_FILE_DESC	64		/* To be Configured--FIXME */
 

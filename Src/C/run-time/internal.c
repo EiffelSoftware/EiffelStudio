@@ -251,13 +251,9 @@ rt_public rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object)
 	
 rt_public rt_uint_ptr ei_size(EIF_REFERENCE object)
 {
-	/* Returns physical size occupied by `object'. */
-
-	if (HEADER(object)->ov_flags & EO_SPEC)
-			/* Works for both special and TUPLE */
-		return (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
-	else
-		return (long) EIF_Size(Dtype(object));
+	REQUIRE ("not expanded", HEADER(object)->ov_flags & EO_EXP == 0);
+		/* Returns physical size occupied by `object' including its header. */
+	return (OVERHEAD + HEADER(object)->ov_size & B_SIZE);
 }
 
 rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)

@@ -5829,7 +5829,9 @@ feature -- Implementation
 
 			if l_as.from_part /= Void then
 					-- Type check the from part
-				process_compound (l_as.from_part)
+					-- Processing is done on the same level as the outer instructions
+					-- because the effective scope of setters is at that level
+				l_as.from_part.process (Current)
 				if l_needs_byte_node then
 					l_list ?= last_byte_node
 					l_loop.set_from_part (l_list)

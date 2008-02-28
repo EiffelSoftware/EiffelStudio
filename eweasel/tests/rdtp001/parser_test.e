@@ -61,6 +61,8 @@ feature {NONE} -- Implementation
 		do
 			if equal (file_name.substring (file_name.count - 1, file_name.count), ".e") then
 				create parser.make_with_factory (factory)
+					-- Set for `IL' parsing since it accepts more classes.
+				parser.set_il_parser
 				create file.make (file_name)
 				count := file.count
 				file.open_read

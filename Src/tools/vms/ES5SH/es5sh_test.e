@@ -7,8 +7,9 @@ indexing
 
 class ES5SH_TEST
 
-inherit ES5SH
-	rename test as es5sh_test
+inherit
+	ES5SH
+		rename test as es5sh_test
 	end
 
 feature
@@ -93,7 +94,7 @@ feature
 		do
 		    count := count + 1
 		    l_test ?= a_test_case.item(1)
-		    l_test_copy := clone (l_test)
+		    l_test_copy := l_test.twin
 		    l_expected ?= a_test_case.item(2)
 		    print ("  test case: transform '" + l_test + "' ==> '" + l_expected + "'  -- ")
 		    l_actual := as_vms_filespec (l_test)
@@ -160,38 +161,42 @@ feature
 		    total_failed := total_failed + failed
 		    count := 0; passed := 0; failed := 0
     	end
-    	
+
 
     vms_filespec_test_cases: ARRAY [ TUPLE [ STRING,STRING ] ] is
 		once
 			-- notes: a:b == a:[]b: "/a/b" ==> "a:b (a:[]b)
-		    create Result.make_from_array ( <<  
-		    	["", ""], 
+		    create Result.make_from_array ( <<
+		    	["", ""],
 		    	-- FAILS: [".", "[]"], ["a\", "[.a]"], ["\a",       "a:"    ],
-				["a",       "a"      ], ["a/",       "[.a]"    ], ["/a",       "a:"    ], ["/a/",      "a:[]"    ], 
+				["a",       "a"      ], ["a/",       "[.a]"    ], ["/a",       "a:"    ], ["/a/",      "a:[]"    ],
 				["$(a)",    "a:"     ], ["$(a)/",    "a:[]"    ], ["/$(a)",    "a:"    ], ["/$(a)/",   "a:[]"    ],
-				["a/b",     "[.a]b"  ], ["a/b/",     "[.a.b]"  ], ["/a/b",     "a:b"   ], ["/a/b/",    "a:[b]"   ], 
-				["$(a)/b",  "a:b"    ], ["$(a)/b/",  "a:[b]"   ], ["/$(a)/b",  "a:b"   ], ["/$(a)/b/", "a:[b]"   ], 
-				["a/b/c",   "[.a.b]c"], ["a/b/c/",   "[.a.b.c]"], ["/a/b/c",   "a:[b]c"], ["/a/b/c/",  "a:[b.c]" ], 
-				["$(a)/b/c","a:[b]c" ], ["$(a)/b/c/","a:[b.c]" ], ["/$(a)/b/c","a:[b]c"], ["$(a)/b/c/","a:[b.c]" ]
+				["a/b",     "[.a]b"  ], ["a/b/",     "[.a.b]"  ], ["/a/b",     "a:b"   ], ["/a/b/",    "a:[b]"   ],
+				["$(a)/b",  "a:b"    ], ["$(a)/b/",  "a:[b]"   ], ["/$(a)/b",  "a:b"   ], ["/$(a)/b/", "a:[b]"   ],
+				["a/b/c",   "[.a.b]c"], ["a/b/c/",   "[.a.b.c]"], ["/a/b/c",   "a:[b]c"], ["/a/b/c/",  "a:[b.c]" ],
+				["$(a)/b/c","a:[b]c" ], ["$(a)/b/c/","a:[b.c]" ], ["/$(a)/b/c","a:[b]c"], ["$(a)/b/c/","a:[b.c]" ],
+				["c:\temp\", "c:[temp]"], ["c:\temp", "c:temp"], ["c:\temp\foo.bar", "c:[temp]foo.bar"]
 				-- ***FIXME*** add test cases for . ==> [], ./ ==> [], ./a ==> []a, ./a/ ==> [.a]
 			>> )
 		end
 
     is_relative_filespec_test_cases: ROSE_LINEAR_ARRAY [ TUPLE [ STRING,BOOLEAN ] ] is
 		once
-		    create Result.make_from_array ( << ["",True], [".",True], ["a",True], ["./a",True], ["./a/",True], 
-				["/",False], ["/a",False], ["/a/",False], 
-				["[]",True], ["[.a]",True], ["[.a]b",True], 
-				["a:",True], ["a:[]",True], ["a:[.b]",True], 
-				["[a]",False], ["a:[b]",False], ["[b]",False] >> )
+		    create Result.make_from_array ( <<
+			    	["",True], [".",True], ["a",True], ["./a",True], ["./a/",True],
+					["/",False], ["/a",False], ["/a/",False],
+					["[]",True], ["[.a]",True], ["[.a]b",True],
+					["a:",True], ["a:[]",True], ["a:[.b]",True],
+					["[a]",False], ["a:[b]",False], ["[b]",False],
+					["c:\temp\foo", False], ["\temp\foo.bar", True], ["c:temp", True], ["temp\", True]
+				>> )
 		end
 
     dirname_basename_test_cases: ROSE_LINEAR_ARRAY [ TUPLE [STRING, STRING, STRING] ] is
 		once
-		    create Result.make_from_array ( << ["","",""], ["/", "/", ""], 
-				["a", "", "a"], ["a/", "a/", ""], ["a/b", "a/", "b"], 
-				[":", ":", ""], ["[a]","[a]",""], ["[a]b", "[a]", "b"], 
+		    create Result.make_from_array ( << ["","",""], ["/", "/", ""],
+				["a", "", "a"], ["a/", "a/", ""], ["a/b", "a/", "b"],
+				[":", ":", ""], ["[a]","[a]",""], ["[a]b", "[a]", "b"],
 				["a:", "a:", ""], ["a:[b.c]d.e", "a:[b.c]", "d.e"] >> )
 		end
 

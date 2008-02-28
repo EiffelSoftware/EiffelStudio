@@ -7,8 +7,7 @@ class
 	PAIR[G,H]
 
 create
-	make,
-	default_create
+	make, default_create
 
 feature
 	first : G

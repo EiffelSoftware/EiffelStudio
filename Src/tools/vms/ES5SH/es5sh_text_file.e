@@ -8,15 +8,14 @@ indexing
 		3. for debugging, it tracks the last string written to the file in last_string_output
 	]"
 
-class 
-	ES5SH_TEXT_FILE
+class ES5SH_TEXT_FILE
 
 inherit
 	PLAIN_TEXT_FILE
 		export {NONE} readline, putstring, new_line
-		redefine 
-			read_line, readline, 
-			put_string, putstring, 
+		redefine
+			read_line, readline,
+			put_string, putstring,
 			put_new_line, new_line,
 			open_read, open_write, open_append, open_read_write, open_read_append
 		end
@@ -31,27 +30,27 @@ feature -- Initialization
 	open_read is
 		do
 			Precursor
-			initialize		
+			initialize
 		end
 	open_write is
 		do
 			Precursor
-			initialize		
+			initialize
 		end
 	open_append is
 		do
 			Precursor
-			initialize		
+			initialize
 		end
 	open_read_write is
 		do
 			Precursor
-			initialize		
+			initialize
 		end
 	open_read_append is
 		do
 			Precursor
-			initialize		
+			initialize
 		end
 
 feature -- Access
@@ -59,7 +58,7 @@ feature -- Access
 	line_count: INTEGER
 		-- count of lines read
 	last_string_output: STRING
-		-- last string output to file (this is an example of a classically useless 
+		-- last string output to file (this is an example of a classically useless
 
 feature -- Input
 
@@ -79,11 +78,11 @@ feature -- Input
 	readline is
 			-- synonym for read_line; must be separate to call Precursor
 		do  read_line  end
-		
+
 feature -- Output
 
 	put_string (s: STRING) is
-			-- save 's` as last_string_output and write to file
+			-- save `s' as last_string_output and write to file
 		do
 			last_string_output := s.twin
 			Precursor (s)
@@ -91,9 +90,9 @@ feature -- Output
 		end
 
 	putstring (s: STRING) is
-			-- synonym for put_string; must be separate to use Precursor
+			-- synonym for put_string; must be distinct from put_string to use Precursor
 		do  put_string (s)  end
-		
+
 	put_new_line is
 			-- save newline as last_string_output and write to file
 		do
@@ -120,5 +119,5 @@ feature {NONE} -- Implementation
 				print (generating_type + ": spurious <cr> eliminated from line #" + line_count.out + ": " + a_line + "%N")
 			end -- debug
 		end
-		
+
 end -- class ES5SH_TEXT_FILE

@@ -45,7 +45,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #ifdef EIF_VMS
-#include "ipcvms.h"		/* only affects VMS */
+#include "ipcvms.h"		/* VMS: force use of select jacket */
 #endif
 #include <string.h>
 #ifdef I_SYS_TIMES
@@ -237,6 +237,15 @@ rt_public int identify(char* id, int fd_in, int fd_out)
 	struct timeval tm;			/* Timeout for select */
 	struct stat buf;			/* Statistics buffer */
 
+#ifdef EIF_VMS_V6_ONLY  /* VMS FIXME: is this still necessary? */
+	/* close pipes that are open from parent; required because VMS uses */
+	/* vfork().  This normally happens after fork() when the process id */
+	/* is 0 (see spawn_child() in ipc/daemon/child.c)		    */
+	FD_ZERO (&mask);
+	FD_SET (EWBOUT, &mask); FD_SET (EWBIN, &mask);
+	ipcvms_cleanup_fd (&mask, -1);
+#endif
+
 	/* Cut off the whole process if file fd_in is not a valid file descriptor,
 	 * something the kernel will gladly tell us by making the fstat() system
 	 * call fail.
@@ -258,11 +267,11 @@ rt_public int identify(char* id, int fd_in, int fd_out)
 	 * then return if nothing is available within that time frame.
 	 */
 
-#ifdef __VMS	/* I admit it; it can take a long time to spawn on vms. */
+#ifdef EIF_VMS	/* VMS: spawn is slow; ensure enough time is allowed for parent to write to pipe. */
 	tm.tv_sec = 5;
 #else
 	tm.tv_sec = 2;
-#endif /* vms */
+#endif /* EIF_VMS */
 	tm.tv_usec = 0;
 	if (-1 == select(fd_in + 1, &mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm)) {
 #ifdef USE_ADD_LOG

@@ -31,7 +31,7 @@ SED = /bin/sed
 # Automatically generated parameters -- do not edit
 
 SOURCES =  $(LSRC)
-OBJECTS =  $(LOBJ)
+OBJECTS =  $(LOBJ) $(MT_LOBJ)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -87,11 +87,11 @@ LSRC =	ipcvms.c    \
 #	transfer.obj rqst_idrs.obj
 
 LOBJ = $(patsubst %.c,%.obj,$(LSRC))
+MT_LOBJ = $(patsubst %.c,MT%.obj,$(LSRC))
 
 $(OBJECTS) : ipcvms.h $(EXTRA_DEPENDENCIES)
 
-
-LIBS	= ipc.olb # ipc.olb_cs
+LIBS	= ipc.olb MTipc.olb
 
 all :: $(LIBS)
 
@@ -104,14 +104,17 @@ listings : $(LISTINGS)
 	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 
-#LOBJ = ipcvms.obj com.obj
-
 ipc.olb : $(LOBJ)
 #	$(RM) $@
 #	$(AR) $@ $(LOBJS)
 #	$(RANLIB) $@
 #	write sys$$output "$(LOCAL_MAKEFILE): $@: $$? = $?"
 #	write sys$$output "$(LOCAL_MAKEFILE): $@: $$^ = $^"
+	libr/create/insert $@ $^
+	-purge/nolog *.obj
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+MTipc.olb : $(MT_LOBJ)
 	libr/create/insert $@ $^
 	-purge/nolog *.obj
 	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia

@@ -166,7 +166,7 @@ feature {NONE} -- Agents
 			set: pressed = False
 		end
 
-	on_pointer_leave (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_pointer_leave is
 			-- Hanle pointer leave.
 		do
 			pressed := False

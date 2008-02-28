@@ -481,8 +481,8 @@ feature -- Update
 					-- Since `cl' conforms to Current, it also conforms to the parent
 					-- of Current.
 				from
-					l_area := associated_class.parents.area
-					nb := associated_class.parents.count
+					l_area := associated_class.conforming_parents.area
+					nb := associated_class.conforming_parents.count
 				until
 					i = nb
 				loop

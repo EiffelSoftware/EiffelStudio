@@ -31,7 +31,7 @@ feature -- Properties
 
 	object_address: STRING
 
-	display_object_address: like object_address
+	object_address_to_string: like object_address
 
 feature -- Dotnet Properties
 

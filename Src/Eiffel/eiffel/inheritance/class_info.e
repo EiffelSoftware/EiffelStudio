@@ -66,7 +66,7 @@ feature -- Access
 			if l_conforming_parents /= Void then
 				l_non_conforming_parents := non_conforming_parents
 				if l_non_conforming_parents /= Void then
-					create Result.make (Result.count + l_non_conforming_parents.count)
+					create Result.make (l_conforming_parents.count + l_non_conforming_parents.count)
 					Result.append (l_conforming_parents)
 						-- We need to twin the result if appending to avoid side effect.
 					Result.append (l_non_conforming_parents)

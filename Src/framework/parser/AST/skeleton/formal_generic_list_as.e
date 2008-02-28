@@ -68,8 +68,8 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 				Result := Precursor (a_list)
-			else
-				Result := lsqure_symbol.first_token (a_list)
+			elseif lsqure_symbol_index /= 0 then
+				Result := lsqure_symbol (a_list)
 			end
 		end
 
@@ -77,31 +77,62 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 				Result := Precursor (a_list)
-			else
-				Result := rsqure_symbol.last_token (a_list)
+			elseif rsqure_symbol_index /= 0 then
+				Result := rsqure_symbol (a_list)
 			end
-
 		end
 
 feature -- Roundtrip
 
-	lsqure_symbol, rsqure_symbol: SYMBOL_AS
+	lsqure_symbol_index, rsqure_symbol_index: INTEGER
 			-- Symbol "[" and "]" associated with Current AST node
 
-	set_lsqure_symbol (a_symbol: SYMBOL_AS) is
-			-- Set `lsqure_symbol' with `a_symbol'.
+	lsqure_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "[" associated with Current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
 		do
-			lsqure_symbol := a_symbol
-		ensure
-			lsqure_symbol_set: lsqure_symbol = a_symbol
+			i := lsqure_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
 		end
 
-	set_rsqure_symbol (a_symbol: SYMBOL_AS) is
-			-- Set `rsqure_symbol' with `a_symbol'.
+	rsqure_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "]" associated with Current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
 		do
-			rsqure_symbol := a_symbol
+			i := rsqure_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+feature -- Settings
+
+	set_lsqure_symbol (s_as: SYMBOL_AS) is
+			-- Set `lsqure_symbol' with `s_as'.
+		do
+			if s_as /= Void then
+				lsqure_symbol_index := s_as.index
+			end
 		ensure
-			rsqure_symbol_set: rsqure_symbol = a_symbol
+			lsqure_symbol_index_set: s_as /= Void implies lsqure_symbol_index = s_as.index
+		end
+
+	set_rsqure_symbol (s_as: SYMBOL_AS) is
+			-- Set `rsqure_symbol' with `s_as'.
+		do
+			if s_as /= Void then
+				rsqure_symbol_index := s_as.index
+			end
+		ensure
+			rsqure_symbol_index_set: s_as /= Void implies rsqure_symbol_index = s_as.index
 		end
 
 	set_squre_symbols (l_as, r_as: SYMBOL_AS) is

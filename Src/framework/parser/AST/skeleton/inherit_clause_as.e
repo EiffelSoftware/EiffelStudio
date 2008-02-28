@@ -22,22 +22,22 @@ feature{NONE} -- Initialization
 			l_valid: l /= Void implies not l.is_empty
 		do
 			content := l
-			clause_keyword := k_as
+			if k_as /= Void then
+				clause_keyword_index := k_as.index
+			end
 		ensure
 			content_set: content = l
-			clause_keyword_set: clause_keyword = k_as
+			clause_keyword_set: k_as /= Void implies clause_keyword_index = k_as.index
 		end
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if content /= Void then
-					Result := content.first_token (a_list)
-				end
-			else
-				Result := clause_keyword.first_token (a_list)
+			if a_list /= Void and clause_keyword_index /= 0 then
+				Result := clause_keyword (a_list)
+			elseif content /= Void then
+				Result := content.first_token (a_list)
 			end
 		end
 
@@ -46,11 +46,8 @@ feature -- Roundtrip/Token
 			if content /= Void then
 				Result := content.last_token (a_list)
 			end
-			if (Result = Void or Result.is_null) and a_list /= Void then
-				check
-					clause_keyword /= Void
-				end
-				Result := clause_keyword.last_token (a_list)
+			if (Result = Void or Result.is_null) and a_list /= Void and clause_keyword_index /= 0 then
+				Result := clause_keyword (a_list)
 			end
 		end
 
@@ -71,8 +68,21 @@ feature -- Comparison
 
 feature -- Roundtrip
 
-	clause_keyword: KEYWORD_AS;
+	clause_keyword_index: INTEGER
+			-- Index of keyword "rename", "export", "undefine", "redefine" or "select" associated with current AST node
+
+	clause_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "rename", "export", "undefine", "redefine" or "select" associated with current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := clause_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

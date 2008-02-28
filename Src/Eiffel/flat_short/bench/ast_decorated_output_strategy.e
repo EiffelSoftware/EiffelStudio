@@ -355,6 +355,11 @@ feature -- Roundtrip
 		do
 		end
 
+	process_keyword_stub_as (l_as: KEYWORD_STUB_AS) is
+			-- Process `l_as'.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
@@ -1136,13 +1141,13 @@ feature {NONE} -- Implementation
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
-				if l_as.lparan_symbol /= Void then
+				if l_as.has_lparan then
 					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 				end
 			end
 			l_as.target.process (Current)
 			if not expr_type_visiting then
-				if l_as.rparan_symbol /= Void then
+				if l_as.has_rparan then
 					text_formatter_decorator.set_without_tabs
 					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				end
@@ -3093,6 +3098,11 @@ feature {NONE} -- Implementation
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
+		do
+			process_type_as (l_as)
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
 		do
 			process_type_as (l_as)
 		end

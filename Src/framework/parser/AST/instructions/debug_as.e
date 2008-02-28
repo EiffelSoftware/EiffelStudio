@@ -23,12 +23,14 @@ feature {NONE} -- Initialization
 			internal_keys := k
 			compound := c
 			end_keyword := e
-			debug_keyword := d_as
+			if d_as /= Void then
+				debug_keyword_index := d_as.index
+			end
 		ensure
 			internal_keys_set: internal_keys = k
 			compound_set: compound = c
 			end_keyword_set: end_keyword = e
-			debug_keyword_set: debug_keyword = d_as
+			debug_keyword_set: d_as /= Void implies debug_keyword_index = d_as.index
 		end
 
 feature -- Visitor
@@ -41,8 +43,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	debug_keyword: KEYWORD_AS
+	debug_keyword_index: INTEGER
+			-- Index of keyword "debug" associated with this structure
+
+	debug_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "debug" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := debug_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -83,8 +98,8 @@ feature -- Roundtrip/Token
 				else
 					Result := end_keyword.first_token (a_list)
 				end
-			else
-				Result := debug_keyword.first_token (a_list)
+			elseif debug_keyword_index /= 0 then
+				Result := debug_keyword (a_list)
 			end
 		end
 

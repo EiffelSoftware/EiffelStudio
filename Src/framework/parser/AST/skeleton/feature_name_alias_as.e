@@ -54,14 +54,18 @@ feature {NONE} -- Creation
 					set_is_binary
 				end
 			end
-			alias_keyword := a_as
-			convert_keyword := c_as
+			if a_as /= Void then
+				alias_keyword_index := a_as.index
+			end
+			if c_as /= Void then
+				convert_keyword_index := c_as.index
+			end
 		ensure
 			feature_name_set: feature_name = feature_id
 			alias_name_set: alias_name = alias_id
 			has_convert_mark_set: has_convert_mark = convert_status
-			alias_keyword_set: alias_keyword = a_as
-			convert_keyword_set: convert_keyword = c_as
+			alias_keyword_set: a_as /= Void implies alias_keyword_index = a_as.index
+			convert_keyword_set: c_as /= Void implies convert_keyword_index = c_as.index
 		end
 
 feature -- Visitor
@@ -74,11 +78,37 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	alias_keyword: KEYWORD_AS
-		-- Keyword "alias" associated with this structure.
+	alias_keyword_index: INTEGER
+		-- Index of keyword "alias" associated with this structure.
 
-	convert_keyword: KEYWORD_AS
+	convert_keyword_index: INTEGER
+		-- Index of keyword "convert" associated with this structure.
+
+	alias_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+		-- Keyword "alias" associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := alias_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	convert_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 		-- Keyword "convert" associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := convert_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Access
 
@@ -137,8 +167,8 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if frozen_keyword /= Void then
-				Result := frozen_keyword.first_token (a_list)
+			if a_list /= Void and frozen_keyword_index /= 0 then
+				Result := frozen_keyword (a_list)
 			end
 			if Result = Void or else Result.is_null then
 				Result := feature_name.first_token (a_list)
@@ -150,8 +180,8 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := alias_name.last_token (a_list)
 			else
-				if convert_keyword /= Void then
-					Result := convert_keyword.last_token (a_list)
+				if a_list /= Void and convert_keyword_index /= 0 then
+					Result := convert_keyword (a_list)
 				else
 					Result := alias_name.last_token (a_list)
 				end

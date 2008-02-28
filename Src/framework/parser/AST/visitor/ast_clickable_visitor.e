@@ -18,6 +18,7 @@ inherit
 			process_feature_name_alias_as,
 			process_class_as,
 			process_class_type_as,
+			process_generic_class_type_as,
 			process_named_tuple_type_as,
 			process_rename_as,
 			process_client_as,
@@ -136,6 +137,11 @@ feature {NONE} -- Implementation
 			safe_process (l_as.generics)
 		end
 
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+		do
+			process_class_type_as (l_as)
+		end
+
 	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
 		local
 			l_click_ast: CLICK_AST
@@ -171,7 +177,7 @@ feature {NONE} -- Implementation
 				l_clients.after
 			loop
 				create l_click_ast.initialize (l_clients.item,
-					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void, Void, False, False))
+					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void, False, False))
 				internal_click_list.extend (l_click_ast)
 				l_clients.forth
 			end

@@ -120,7 +120,7 @@ feature -- Status Report
 			if successful then
 				l_match_list := roundtrip_eiffel_parser.match_list
 				if l_ast.is_partial then
-					l_ast.class_keyword.replace_text ("class", l_match_list)
+					l_ast.class_keyword (l_match_list).replace_text ("class", l_match_list)
 				end
 				l_is_deferred := l_ast.is_deferred
 				l_is_expanded := l_ast.is_expanded
@@ -145,10 +145,10 @@ feature -- Status Report
 				end
 				if successful then
 					if not l_ast.is_deferred and l_is_deferred then
-						l_ast.class_keyword.prepend_text ("deferred ", l_match_list)
+						l_ast.class_keyword (l_match_list).prepend_text ("deferred ", l_match_list)
 					end
 					if not l_ast.is_expanded and l_is_expanded then
-						l_ast.class_keyword.prepend_text ("expanded ", l_match_list)
+						l_ast.class_keyword (l_match_list).prepend_text ("expanded ", l_match_list)
 					end
 					class_text := l_ast.text (l_match_list)
 				end

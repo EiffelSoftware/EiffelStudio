@@ -10,7 +10,7 @@ class VARIANT_AS
 inherit
 	TAGGED_AS
 		redefine
-			process
+			process, first_token
 		end
 
 create
@@ -22,15 +22,43 @@ feature -- Initialization
 			-- Create new VARIANT AST node.
 		do
 			initialize (t, e, c_as)
-			variant_keyword := v_as
+			if v_as /= Void then
+				variant_keyword_index := v_as.index
+			end
 		ensure
-			variant_keyword_set: variant_keyword = v_as
+			variant_keyword_set: v_as /= Void implies variant_keyword_index = v_as.index
 		end
 
 feature -- Roundtrip
 
-	variant_keyword: KEYWORD_AS
+	variant_keyword_index: INTEGER
+		-- Index of keyword "variant" associated with this structure
+
+	variant_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 		-- Keyword "variant" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := variant_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if a_list /= Void and variant_keyword_index /= 0 then
+				Result := variant_keyword (a_list)
+			elseif tag /= Void then
+				Result := tag.first_token (a_list)
+			else
+				Result := expr.first_token (a_list)
+			end
+		end
 
 feature -- Visitor
 

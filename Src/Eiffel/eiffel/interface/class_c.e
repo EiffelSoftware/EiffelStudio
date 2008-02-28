@@ -802,7 +802,7 @@ feature {NONE} -- Class initialization
 		local
 			i, o_count, j, l_count: INTEGER
 			l_area, o_area: SPECIAL [PARENT_AS]
-			l_parent_type: CLASS_TYPE_AS
+			l_parent_type, l_other_type: CLASS_TYPE_AS
 			l_same_parent, l_removed_parent, l_found: BOOLEAN
 		do
 			if a_old_parents = Void then
@@ -832,7 +832,8 @@ feature {NONE} -- Class initialization
 					until
 						j > o_count or else l_same_parent
 					loop
-						l_same_parent := l_parent_type.is_equivalent (o_area.item (j).type)
+						l_other_type := o_area.item (j).type
+						l_same_parent := l_parent_type.same_type (l_other_type) and then l_parent_type.is_equivalent (l_other_type)
 						j := j + 1
 					end
 					i := i + 1
@@ -857,7 +858,8 @@ feature {NONE} -- Class initialization
 					until
 						j > l_count or else l_found
 					loop
-						l_found := l_parent_type.is_equivalent (l_area.item (j).type)
+						l_other_type := l_area.item (j).type
+						l_found := l_parent_type.same_type (l_other_type) and then l_parent_type.is_equivalent (l_other_type)
 						j := j + 1
 					end
 					l_removed_parent := not l_found

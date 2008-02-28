@@ -25,9 +25,11 @@ feature -- Initialization
 			-- Create new REQUIRE AST node.
 		do
 			require_make (a, k_as)
-			else_keyword := l_as
+			if l_as /= Void then
+				else_keyword_index := l_as.index
+			end
 		ensure
-			else_keyword_set: else_keyword = l_as
+			else_keyword_set: l_as /= Void implies else_keyword_index = l_as.index
 		end
 
 feature -- Visitor
@@ -40,8 +42,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	else_keyword: KEYWORD_AS
+	else_keyword_index: INTEGER
+			-- Index of keyword "else" associated with this structure
+
+	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "else" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := else_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Properties
 
@@ -61,8 +76,8 @@ feature -- Roundtrip/Token
 			else
 				if full_assertion_list /= Void then
 					Result := full_assertion_list.last_token (a_list)
-				else
-					Result := else_keyword.last_token (a_list)
+				elseif else_keyword_index /= 0 then
+					Result := else_keyword (a_list)
 				end
 			end
 		end

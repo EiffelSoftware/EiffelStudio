@@ -39,7 +39,7 @@ feature{NONE} -- Implementation
 				if export_clause.item.features /= Void then
 					l_all ?= export_clause.item.features
 					if l_all /= Void then
-						features.extend (create{ERT_EXPORT_FEATURE}.make (l_all.all_keyword.text (a_list), client_set (export_clause.item)))
+						features.extend (create{ERT_EXPORT_FEATURE}.make (l_all.all_keyword (a_list).text (a_list), client_set (export_clause.item)))
 					else
 						l_feature_list ?= export_clause.item.features
 						check l_feature_list /= Void end

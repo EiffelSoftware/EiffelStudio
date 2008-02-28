@@ -25,11 +25,15 @@ feature{NONE} -- Initialization
 			-- When `t' is Void it means it is a question mark.
 		do
 			initialize (t, f, o, ht)
-			agent_keyword := a_as
-			dot_symbol := d_as
+			if a_as /= Void then
+				agent_keyword_index := a_as.index
+			end
+			if d_as /= Void then
+				dot_symbol_index := d_as.index
+			end
 		ensure
-			agent_keyword_set: agent_keyword = a_as
-			dot_symbol_set: dot_symbol = d_as
+			agent_keyword_set: a_as /= Void implies agent_keyword_index = a_as.index
+			dot_symbol_set: d_as /= Void implies dot_symbol_index = d_as.index
 		end
 
 feature -- Visitor
@@ -42,11 +46,37 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	agent_keyword: KEYWORD_AS
-			-- Keyword "agent" associated with this structure
+	agent_keyword_index: INTEGER
+			-- Index of keyword "agent" associated with this structure
 
-	dot_symbol: SYMBOL_AS
+	dot_symbol_index: INTEGER
+			-- Index of symbol "." associated with this structure
+
+	agent_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "agent" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := agent_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	dot_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "." associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := dot_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Roundtrip/Token
 
@@ -59,8 +89,8 @@ feature -- Roundtrip/Token
 				if Result = Void or else Result.is_null then
 					Result := feature_name.first_token (a_list)
 				end
-			else
-				Result := agent_keyword.first_token (a_list)
+			elseif agent_keyword_index /= 0 then
+				Result := agent_keyword (a_list)
 			end
 		end
 

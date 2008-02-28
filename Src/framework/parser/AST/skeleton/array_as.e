@@ -18,18 +18,22 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (exp: like expressions; l_as, r_as: like larray) is
+	initialize (exp: like expressions; l_as, r_as: like larray_symbol) is
 			-- Create a new Manifest ARRAY AST node.
 		require
 			exp_not_void: exp /= Void
 		do
 			expressions := exp
-			larray := l_as
-			rarray := r_as
+			if l_as /= Void then
+				larray_symbol_index := l_as.index
+			end
+			if r_as /= Void then
+				rarray_symbol_index := r_as.index
+			end
 		ensure
 			expressions_set: expressions = exp
-			larray_set: larray = l_as
-			rarray_set: rarray = r_as
+			larray_symbol_set: l_as /= Void implies larray_symbol_index = l_as.index
+			rarray_symbol_set: r_as /= Void implies rarray_symbol_index = r_as.index
 		end
 
 feature -- Visitor
@@ -42,8 +46,34 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	larray, rarray: SYMBOL_AS
-			-- Symbol "<<" and ">>" associated with this structure
+	larray_symbol_index, rarray_symbol_index: INTEGER
+			-- Index of symbol "<<" and ">>" associated with this structure
+
+	larray_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "<<" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := larray_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	rarray_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol ">>" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rarray_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -54,19 +84,19 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := expressions.first_token (a_list)
+			if a_list /= Void and larray_symbol_index /= 0 then
+				Result := larray_symbol (a_list)
 			else
-				Result := larray.first_token (a_list)
+				Result := expressions.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := expressions.last_token (a_list)
+			if a_list /= Void and rarray_symbol_index /= 0 then
+				Result := rarray_symbol (a_list)
 			else
-				Result := rarray.last_token (a_list)
+				Result := expressions.last_token (a_list)
 			end
 		end
 

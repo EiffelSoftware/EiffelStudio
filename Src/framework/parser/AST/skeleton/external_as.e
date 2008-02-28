@@ -33,13 +33,17 @@ feature {NONE} -- Initialization
 				Names_heap.put (a.value)
 				alias_name_id := Names_heap.found_item
 			end
-			external_keyword := e_as
-			alias_keyword := a_as
+			if e_as /= Void then
+				external_keyword_index := e_as.index
+			end
+			if a_as /= Void then
+				alias_keyword_index := a_as.index
+			end
 			alias_name_literal := a
 		ensure
 			language_name_set: language_name = l
-			alias_keyword_set: alias_keyword = a_as
-			external_keyword_set: external_keyword = e_as
+			alias_keyword_set: a_as /= Void implies alias_keyword_index = a_as.index
+			external_keyword_set: e_as /= Void implies external_keyword_index = e_as.index
 			alias_name_literal_set: alias_name_literal = a
 		end
 
@@ -53,11 +57,37 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	alias_keyword: KEYWORD_AS
-			-- keyword "alias" associated with this class
+	alias_keyword_index: INTEGER
+			-- Index of keyword "alias" associated with this class
 
-	external_keyword: KEYWORD_AS
-			-- keyword "external" associated with this class
+	external_keyword_index: INTEGER
+			-- Index of keyword "external" associated with this class
+
+	alias_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "alias" associated with this class
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := alias_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	external_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "external" associated with this class
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := external_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	alias_name_literal: STRING_AS
 			-- String literal of alias name in this structure
@@ -75,10 +105,10 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := language_name.first_token (a_list)
+			if a_list /= Void and external_keyword_index /= 0 then
+				Result := external_keyword (a_list)
 			else
-				Result := external_keyword.first_token (a_list)
+				Result := language_name.first_token (a_list)
 			end
 		end
 

@@ -22,15 +22,30 @@ feature -- Initialization
 			-- Create new REQUIRE AST node.
 		do
 			initialize (a)
-			ensure_keyword := k_as
+			if k_as /= Void then
+				ensure_keyword_index := k_as.index
+			end
 		ensure
-			ensure_keyword_set: ensure_keyword = k_as
+			ensure_keyword_set: k_as /= Void implies ensure_keyword_index = k_as.index
 		end
 
 feature -- Roundtrip
 
-	ensure_keyword: KEYWORD_AS
-		-- Keyword "rensure" accosiated with this structure.
+	ensure_keyword_index: INTEGER
+			-- Index of keyword `ensure' associated with this structure.
+
+	ensure_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword `ensure' associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := ensure_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Visitor
 
@@ -58,8 +73,8 @@ feature -- Roundtrip/Location
 				else
 					Result := Void
 				end
-			else
-				Result := ensure_keyword.first_token (a_list)
+			elseif ensure_keyword_index /= 0 then
+				Result := ensure_keyword (a_list)
 			end
 		end
 
@@ -74,8 +89,8 @@ feature -- Roundtrip/Location
 			else
 				if full_assertion_list /= Void then
 					Result := full_assertion_list.last_token (a_list)
-				else
-					Result := ensure_keyword.last_token (a_list)
+				elseif ensure_keyword_index /= 0 then
+					Result := ensure_keyword (a_list)
 				end
 			end
 		end

@@ -26,14 +26,18 @@ feature {NONE} -- Initialization
 			correct_attachment_status: not (a_m and d_m)
 		do
 			anchor := a
-			like_keyword := l_as
-			attachment_mark := m_as
+			if m_as /= Void then
+				attachment_mark_index := m_as.index
+			end
+			if l_as /= Void then
+				like_keyword_index := l_as.index
+			end
 			has_attached_mark := a_m
 			has_detachable_mark := d_m
 		ensure
 			anchor_set: anchor = a
-			like_keyword_set: like_keyword = l_as
-			attachment_mark_set: attachment_mark = m_as
+			like_keyword_set: l_as /= Void implies like_keyword_index = l_as.index
+			attachment_mark_set: m_as /= Void implies attachment_mark_index = m_as.index
 			has_attached_mark_set: has_attached_mark = a_m
 			has_detachable_mark_set: has_detachable_mark = d_m
 		end
@@ -56,11 +60,37 @@ feature -- Status
 
 feature -- Roundtrip
 
-	attachment_mark: SYMBOL_AS
-			-- Attachment symbol (if any)
+	attachment_mark_index: INTEGER
+			-- Index of attachment symbol (if any)
 
-	like_keyword: KEYWORD_AS
-		-- Keyword "like" associated with this structure
+	like_keyword_index: INTEGER
+			-- Index of keyword "like" associated with this structure		
+
+	like_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+			-- Keyword "like" associated with this structure		
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := like_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	attachment_mark (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Attachment symbol (if any)
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := attachment_mark_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -73,12 +103,12 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list = Void then
-					Result := anchor.first_token (a_list)
-				elseif attachment_mark /= Void then
-					Result := attachment_mark.first_token (a_list)
+				if a_list /= Void and attachment_mark_index /= 0 then
+					Result := attachment_mark (a_list)
+				elseif a_list /= Void and like_keyword_index /= 0 then
+					Result := like_keyword (a_list)
 				else
-					Result := like_keyword.first_token (a_list)
+					Result := anchor.first_token (a_list)
 				end
 			end
 		end

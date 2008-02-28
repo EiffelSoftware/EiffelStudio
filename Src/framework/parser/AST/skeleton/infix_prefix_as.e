@@ -38,7 +38,11 @@ feature {NONE} -- Initialization
 			create internal_name.initialize (get_internal_alias_name)
 			internal_name.set_index (op.index)
 			internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count)
-			infix_prefix_keyword := l
+			if l /= Void then
+				infix_prefix_keyword_index := l.index
+			end
+		ensure
+			infix_prefix_keyword_set: l /= Void implies infix_prefix_keyword_index = l.index
 		end
 
 feature -- Visitor
@@ -51,8 +55,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	infix_prefix_keyword: KEYWORD_AS
+	infix_prefix_keyword_index: INTEGER
+		-- Index of keyword "infix" or "prefix" associated with this structure.
+
+	infix_prefix_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 		-- Keyword "infix" or "prefix" associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := infix_prefix_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Properties
 
@@ -115,12 +132,12 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if frozen_keyword /= Void then
-				Result := frozen_keyword.first_token (a_list)
+			if a_list /= Void and frozen_keyword_index /= 0 then
+				Result := frozen_keyword (a_list)
 			end
 			if Result = Void or else Result.is_null then
-				if infix_prefix_keyword /= Void then
-					Result := infix_prefix_keyword.first_token (a_list)
+				if a_list /= Void and infix_prefix_keyword_index /= 0 then
+					Result := infix_prefix_keyword (a_list)
 				else
 					Result := alias_name.first_token (a_list)
 				end

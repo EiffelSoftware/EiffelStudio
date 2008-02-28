@@ -105,6 +105,7 @@ inherit
 			process_formal_as,
 			process_formal_dec_as,
 			process_class_type_as,
+			process_generic_class_type_as,
 			process_named_tuple_type_as,
 			process_none_type_as,
 			process_bits_as,
@@ -1819,6 +1820,11 @@ feature {NONE} -- Implementation
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
+		do
+			process_type_as (l_as)
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
 		do
 			process_type_as (l_as)
 		end

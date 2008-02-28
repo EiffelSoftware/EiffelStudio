@@ -98,15 +98,30 @@ feature {INFIX_PREFIX_AS} -- Status setting
 
 feature -- Roundtrip
 
-	once_string_keyword: KEYWORD_AS
+	once_string_keyword_index: INTEGER
 			-- Once string keyword.
+
+	once_string_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Once string keyword
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := once_string_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	set_once_string_keyword (k_as: KEYWORD_AS) is
 			-- Set `once_keyword' with `k_as'.
 		do
-			once_string_keyword := k_as
+			if k_as /= Void then
+				once_string_keyword_index := k_as.index
+			end
 		ensure
-			once_string_keyword_set: once_string_keyword = k_as
+			once_string_keyword_set: k_as /= Void implies once_string_keyword_index = k_as.index
 		end
 
 	type: TYPE_AS

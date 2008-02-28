@@ -787,6 +787,7 @@ New_feature: Extended_feature_name
 			{
 				$$ := $2
 				if $$ /= Void then
+					$$.set_is_frozen (True)
 					$$.set_frozen_keyword ($1)
 				end
 			}
@@ -1297,7 +1298,7 @@ Identifier_list: Identifier_as_lower
 				$$ := ast_factory.new_identifier_list (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier ($$.id_list, $1)
+					ast_factory.reverse_extend_identifier ($$, $1)
 				end
 			}
 	|	Identifier_as_lower TE_COMMA Increment_counter Identifier_list 
@@ -1305,8 +1306,8 @@ Identifier_list: Identifier_as_lower
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier ($$.id_list, $1)
-					ast_factory.reverse_extend_separator ($$.id_list, $2)
+					ast_factory.reverse_extend_identifier ($$, $1)
+					ast_factory.reverse_extend_identifier_separator ($$, $2)
 				end
 			}
 	;
@@ -1754,7 +1755,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				if $$ /= Void and last_identifier_list /= Void and $1 /= Void then
 					$1.to_lower		
 					last_identifier_list.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
+					ast_factory.reverse_extend_identifier (last_identifier_list, $1)
 					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				end
 				last_identifier_list := Void     
@@ -1769,8 +1770,8 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					if last_identifier_list /= Void then
 						$1.to_lower		
 						last_identifier_list.reverse_extend ($1.name_id)
-						ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
-						ast_factory.reverse_extend_separator (last_identifier_list.id_list, $2)
+						ast_factory.reverse_extend_identifier (last_identifier_list, $1)
+						ast_factory.reverse_extend_identifier_separator (last_identifier_list, $2)
 					end
 					last_identifier_list := Void     
 				end
@@ -1784,7 +1785,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				if $$ /= Void and $1 /= Void and $3 /= Void and last_identifier_list /= Void then
 					$1.to_lower		
 					last_identifier_list.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
+					ast_factory.reverse_extend_identifier (last_identifier_list, $1)
 					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				end
 				last_identifier_list := Void

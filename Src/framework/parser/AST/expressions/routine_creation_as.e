@@ -48,23 +48,53 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	lparan_symbol, rparan_symbol: SYMBOL_AS
-			-- Symbol "(" and ")" associated with this structure
+	lparan_symbol_index, rparan_symbol_index: INTEGER
+			-- Symbol "(" and ")" associated with Current AST node
+
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "(" associated with Current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := lparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol ")" associated with Current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	set_lparan_symbol (s_as: SYMBOL_AS) is
 			-- Set `lparan_symbol' with `s_as'.
 		do
-			lparan_symbol := s_as
+			if s_as /= Void then
+				lparan_symbol_index := s_as.index
+			end
 		ensure
-			lparan_symbol_set: lparan_symbol = s_as
+			lparan_symbol_index_set: s_as /= Void implies lparan_symbol_index = s_as.index
 		end
 
 	set_rparan_symbol (s_as: SYMBOL_AS) is
 			-- Set `rparan_symbol' with `s_as'.
 		do
-			rparan_symbol := s_as
+			if s_as /= Void then
+				rparan_symbol_index := s_as.index
+			end
 		ensure
-			rparan_symbol_set: rparan_symbol = s_as
+			rparan_symbol_index_set: s_as /= Void implies rparan_symbol_index = s_as.index
 		end
 
 feature -- Attributes

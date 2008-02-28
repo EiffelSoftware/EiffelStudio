@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; g: like generics; m: SYMBOL_AS; a: like has_attached_mark; d: like has_detachable_mark) is
+	initialize (n: like class_name; m: SYMBOL_AS; a: like has_attached_mark; d: like has_detachable_mark) is
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
@@ -32,14 +32,14 @@ feature {NONE} -- Initialization
 			correct_attachment_status: not (a and d)
 		do
 			class_name := n
-			internal_generics := g
-			attachment_mark := m
+			if m /= Void then
+				attachment_mark_index := m.index
+			end
 			has_attached_mark := a
 			has_detachable_mark := d
 		ensure
 			class_name_set: class_name.name.is_equal (n.name)
-			internal_generics_set: internal_generics = g
-			attachment_mark_set: attachment_mark = m
+			attachment_mark_set: m /= Void implies attachment_mark_index = m.index
 			has_attached_mark_set: has_attached_mark = a
 			has_detachable_mark_set: has_detachable_mark = d
 		end
@@ -60,11 +60,6 @@ feature -- Attributes
 	generics: TYPE_LIST_AS is
 			-- Possible generical parameters
 		do
-			if internal_generics = Void or else internal_generics.is_empty then
-				Result := Void
-			else
-				Result := internal_generics
-			end
 		end
 
 	is_class: BOOLEAN is True
@@ -84,17 +79,53 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	attachment_mark: SYMBOL_AS
+	attachment_mark_index: INTEGER
+			-- Index of attachment symbol (if any)
+
+	expanded_keyword_index: INTEGER
+			-- Index of keyword "expanded" associated with this structure.
+
+	separate_keyword_index: INTEGER
+			-- Index of keyword "separate" associated with this structure.	
+
+	attachment_mark (a_list: LEAF_AS_LIST): SYMBOL_AS is
 			-- Attachment symbol (if any)
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := attachment_mark_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	expanded_keyword: KEYWORD_AS
+	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
 			-- Keyword "expanded" associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := expanded_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	separate_keyword: KEYWORD_AS
+	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
 			-- Keyword "separate" associated with this structure.	
-
-	internal_generics: like generics
-			-- Internal possible generical parameters
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := separate_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Roundtrip/Token
 
@@ -102,18 +133,17 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list = Void then
-					Result := class_name.first_token (a_list)
-				else
-					if attachment_mark /= Void then
-						Result := attachment_mark.first_token (a_list)
-					elseif expanded_keyword /= Void then
-						Result := expanded_keyword.first_token (a_list)
-					elseif separate_keyword /= Void then
-						Result := separate_keyword.first_token (a_list)
-					else
-						Result := class_name.first_token (a_list)
+				if a_list /= Void then
+					Result := attachment_mark (a_list)
+					if Result = Void then
+						Result := expanded_keyword (a_list)
+						if Result = Void then
+							Result := separate_keyword (a_list)
+						end
 					end
+				end
+				if Result = Void then
+					Result := class_name.first_token (a_list)
 				end
 			end
 		end
@@ -122,19 +152,7 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list = Void then
-					if generics /= Void then
-						Result := generics.last_token (a_list)
-					else
-						Result := class_name.last_token (a_list)
-					end
-				else
-					if internal_generics /= Void then
-						Result := internal_generics.last_token (a_list)
-					else
-						Result := class_name.last_token (a_list)
-					end
-				end
+				Result := class_name.last_token (a_list)
 			end
 		end
 
@@ -156,20 +174,24 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			-- Set `is_separate' to `i'.
 		do
 			is_expanded := i
-			expanded_keyword := s_as
+			if s_as /= Void then
+				expanded_keyword_index := s_as.index
+			end
 		ensure
 			is_expanded_set: is_expanded = i
-			expanded_keyword_set: expanded_keyword = s_as
+			expanded_keyword_set: s_as /= Void implies expanded_keyword_index = s_as.index
 		end
 
 	set_is_separate (i: like is_separate; s_as: like separate_keyword) is
 			-- Set `is_separate' to `i'.
 		do
 			is_separate := i
-			separate_keyword := s_as
+			if s_as /= Void then
+				separate_keyword_index := s_as.index
+			end
 		ensure
 			is_separate_set: is_separate = i
-			separate_keyword_set: separate_keyword = s_as
+			separate_keyword_set: s_as /= Void implies separate_keyword_index = s_as.index
 		end
 
 	set_class_name (s: like class_name) is
@@ -188,21 +210,6 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 				Result.append_character ('?')
 			end
 			Result.append (class_name.name)
-			if generics /= Void then
-				from
-					generics.start;
-					Result.append (" [")
-				until
-					generics.after
-				loop
-					Result.append (generics.item.dump)
-					if not generics.islast then
-						Result.append (", ")
-					end
-					generics.forth
-				end
-				Result.append ("]")
-			end
 		end
 
 indexing

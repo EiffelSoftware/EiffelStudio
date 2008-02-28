@@ -16,18 +16,20 @@ create {AST_FACTORY}
 
 feature{NONE} -- Initialization
 
-	make (a_type: like type; a_renaming: like renaming; a_end_of_renaming: like end_of_renaming) is
+	make (a_type: like type; a_renaming: like renaming; a_end_of_renaming: like end_keyword) is
 			-- Initialize instance.
 		require
 			a_type_not_void: a_type /= Void
 		do
 			type := a_type
 			renaming := a_renaming
-			end_of_renaming := a_end_of_renaming
+			if a_end_of_renaming /= Void then
+				end_keyword_index := a_end_of_renaming.index
+			end
 		ensure
 			type_set: type = a_type
 			renaming_set: renaming = a_renaming
-			end_of_renaming_set: end_of_renaming = a_end_of_renaming
+			end_keyword_set: a_end_of_renaming /= Void implies end_keyword_index = a_end_of_renaming.index
 		end
 feature -- Status
 
@@ -68,8 +70,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	end_of_renaming: KEYWORD_AS
+	end_keyword_index: INTEGER
+			-- Index of keyword for end of rename list
+
+	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword for end of rename list
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := end_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
@@ -78,8 +93,8 @@ feature -- Roundtrip
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if end_of_renaming /= Void then
-				Result := end_of_renaming.last_token (a_list)
+			if a_list /= Void and end_keyword_index /= 0 then
+				Result := end_keyword (a_list)
 			elseif renaming /= Void then
 				Result := renaming.last_token (a_list)
 			else

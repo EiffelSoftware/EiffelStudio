@@ -13,22 +13,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l, c, p, s: INTEGER) is
-			-- Initialize current with line `l', column `c' and count `s'.
+	make (l, c, p, n: INTEGER) is
+			-- Initialize current with line `l', column `c' and count `n'.
 		require
 			l_non_negative: l >= 0
 			c_non_negative: c >= 0
 			p_non_negative: p >= 0
-			s_non_negative: s >= 0
+			n_non_negative: n >= 0
 		do
-			set_position (l, c, p, s)
+			set_position (l, c, p, n)
 		ensure
 			line_set: l <= max_line implies line = l
 			no_line_set: l > max_line implies line = no_line
 			column_set: c <= max_column implies column = c
 			no_column_set: c > max_column implies column = no_column
 			position_set: position = p
-			location_count_set: location_count = s
+			location_count_set: location_count = n
 		end
 
 	make_from_other (other: LOCATION_AS) is

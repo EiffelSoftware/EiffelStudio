@@ -24,10 +24,12 @@ feature {NONE} -- Initialization
 			s_not_void: s /= Void
 		do
 			bits_symbol := s
-			bit_keyword := b_as
+			if b_as /= Void then
+				bit_keyword_index := b_as.index
+			end
 		ensure
 			bits_symbol_set: bits_symbol = s
-			bit_keyword_set: bit_keyword = b_as
+			bit_keyword_set: b_as /= Void implies bit_keyword_index = b_as.index
 		end
 
 feature -- Visitor
@@ -40,8 +42,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	bit_keyword: KEYWORD_AS
-		-- Keyword "bit" associated with this structure
+	bit_keyword_index: INTEGER
+		-- Integer of keyword "bit" associated with this structure		
+
+	bit_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+		-- Keyword "bit" associated with this structure		
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := bit_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -54,10 +69,10 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list = Void then
-					Result := bits_symbol.first_token (a_list)
+				if a_list /= Void and bit_keyword_index /= 0 then
+					Result := bit_keyword (a_list)
 				else
-					Result := bit_keyword.first_token (a_list)
+					Result := bits_symbol
 				end
 			end
 		end
@@ -66,7 +81,7 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				Result := bits_symbol.last_token (a_list)
+				Result := bits_symbol
 			end
 		end
 

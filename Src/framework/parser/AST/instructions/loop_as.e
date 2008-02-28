@@ -33,10 +33,18 @@ feature {NONE} -- Initialization
 			stop := s
 			compound := c
 			end_keyword := e
-			from_keyword := f_as
-			invariant_keyword := i_as
-			until_keyword := u_as
-			loop_keyword := l_as
+			if f_as /= Void then
+				from_keyword_index := f_as.index
+			end
+			if i_as /= Void then
+				invariant_keyword_index := i_as.index
+			end
+			if u_as /= Void then
+				until_keyword_index := u_as.index
+			end
+			if l_as /= Void then
+				loop_keyword_index := l_as.index
+			end
 		ensure
 			from_part_set: from_part = f
 			full_invariant_list_set: full_invariant_list = i
@@ -44,10 +52,10 @@ feature {NONE} -- Initialization
 			stop_set: stop = s
 			compound_set: compound = c
 			end_keyword_set: end_keyword = e
-			from_keyword_set: from_keyword = f_as
-			invariant_keyword_set: invariant_keyword = i_as
-			until_keyword_set: until_keyword = u_as
-			loop_keyword_set: loop_keyword = l_as
+			from_keyword_set: f_as /= Void implies from_keyword_index = f_as.index
+			invariant_keyword_set: i_as /= Void implies invariant_keyword_index = i_as.index
+			until_keyword_set: u_as /= Void implies until_keyword_index = u_as.index
+			loop_keyword_set: l_as /= Void implies loop_keyword_index = l_as.index
 		end
 
 feature -- Visitor
@@ -64,8 +72,60 @@ feature -- Roundtrip
 			-- Invariant assertion list that contains both complete and incomplete assertions.
 			-- e.g. "tag:expr", "tag:", "expr"
 
-	from_keyword, invariant_keyword, until_keyword, loop_keyword: KEYWORD_AS
-			-- Keyword "from", "invariant", "until" and "loop" associated with this structure
+	from_keyword_index, invariant_keyword_index, until_keyword_index, loop_keyword_index: INTEGER
+			-- Index of keyword "from", "invariant", "until" and "loop" associated with this structure
+
+	from_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "from" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := from_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	invariant_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "invariant" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := invariant_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	until_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "until"  associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := until_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	loop_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "loop" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := loop_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -91,18 +151,20 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if from_part /= Void then
-					Result := from_part.first_token (a_list)
-				elseif invariant_part /= Void then
-					Result := invariant_part.first_token (a_list)
-				elseif variant_part /= Void then
-					Result := variant_part.first_token (a_list)
-				else
-					Result := stop.first_token (a_list)
-				end
+			if a_list /= Void and from_keyword_index /= 0 then
+				Result := from_keyword (a_list)
+			elseif from_part /= Void then
+				Result := from_part.first_token (a_list)
+			elseif a_list /= Void and invariant_keyword_index /= 0 then
+				Result := invariant_keyword (a_list)
+			elseif invariant_part /= Void then
+				Result := invariant_part.first_token (a_list)
+			elseif variant_part /= Void then
+				Result := variant_part.first_token (a_list)
+			elseif a_list /= Void and until_keyword_index /= 0 then
+				Result := until_keyword (a_list)
 			else
-				Result := from_keyword.first_token (a_list)
+				Result := stop.first_token (a_list)
 			end
 		end
 

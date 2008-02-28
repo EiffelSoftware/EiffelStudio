@@ -22,9 +22,11 @@ feature{NONE} -- Initialization
 			-- Create new DO AST node.
 		do
 			initialize (c)
-			do_keyword := l_as
+			if l_as /= Void then
+				do_keyword_index := l_as.index
+			end
 		ensure
-			do_keyword_set: do_keyword = l_as
+			do_keyword_set: l_as /= Void implies do_keyword_index = l_as.index
 		end
 
 feature -- Visitor
@@ -37,8 +39,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	do_keyword: KEYWORD_AS
+	do_keyword_index: INTEGER
+			-- Index of keyword "do" associated with this structure
+
+	do_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "do" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := do_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Roundtrip/Token
 
@@ -48,8 +63,8 @@ feature -- Roundtrip/Token
 				if compound /= Void then
 					Result := compound.first_token (a_list)
 				end
-			else
-				Result := do_keyword.first_token (a_list)
+			elseif do_keyword_index /= 0 then
+				Result := do_keyword (a_list)
 			end
 		end
 
@@ -60,8 +75,8 @@ feature -- Roundtrip/Token
 			elseif a_list = Void then
 					-- Non-roundtrip mode
 				Result := Void
-			else
-				Result := do_keyword.last_token (a_list)
+			elseif do_keyword_index /= 0 then
+				Result := do_keyword (a_list)
 			end
 		end
 

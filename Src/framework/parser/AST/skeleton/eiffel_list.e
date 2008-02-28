@@ -50,10 +50,24 @@ feature {NONE} -- Initialization
 
 feature -- Roundtrip
 
-	separator_list: CONSTRUCT_LIST [AST_EIFFEL]
-		-- List to store terminals that appear in between every 2 items of this list
+	separator_list: CONSTRUCT_LIST [INTEGER]
+			-- List to store terminals that appear in between every 2 items of this list
 
-	reverse_extend_separator (l_as: AST_EIFFEL) is
+	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): LEAF_AS is
+			-- Terminals at position `i' in `separator_list' using `a_list'.
+		require
+			valid_index: separator_list.valid_index (i)
+			a_list_not_void: a_list /= Void
+		local
+			n: INTEGER
+		do
+			n := separator_list.i_th (i)
+			if a_list.valid_index (n) then
+				Result ?= a_list.i_th (n)
+			end
+		end
+
+	reverse_extend_separator (l_as: LEAF_AS) is
 			-- Add `l_as' into `separator_list'.
 		do
 			if separator_list = Void then
@@ -64,7 +78,7 @@ feature -- Roundtrip
 					check one_should_never_get_here: false end
 				end
 			end
-			separator_list.reverse_extend (l_as)
+			separator_list.reverse_extend (l_as.index)
 		end
 
 feature -- Visitor

@@ -25,9 +25,11 @@ feature{NONE} -- Initialization
 			-- When `t' is Void it means it is a question mark.
 		do
 			initialize (t, f, o, ht)
-			tilda_symbol := t_as
+			if t_as /= Void then
+				tilda_symbol_index := t_as.index
+			end
 		ensure
-			tilda_symbol_set: tilda_symbol = t_as
+			tilda_symbol_set: t_as /= Void implies tilda_symbol_index = t_as.index
 		end
 
 feature -- Visitor
@@ -40,25 +42,37 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	tilda_symbol: SYMBOL_AS
+	tilda_symbol_index: INTEGER
+			-- Index of symbol "~" or "}~" associated with this structure
+
+	tilda_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "~" or "}~" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := tilda_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list /= Void and lparan_symbol /= Void then
+			if a_list /= Void and lparan_symbol_index /= 0 then
 					-- Roundtrip mode
-				Result := lparan_symbol.first_token (a_list)
+				Result := lparan_symbol (a_list)
 			else
 				if target /= Void then
 					Result := target.first_token (a_list)
 				end
 			end
 			if Result = Void or else Result.is_null then
-				if a_list /= Void then
-						-- Roundtrip mode
-					Result := tilda_symbol.first_token (a_list)
+				if a_list /= Void and tilda_symbol_index /= 0 then
+					Result := tilda_symbol (a_list)
 				else
 					Result := feature_name.first_token (a_list)
 				end

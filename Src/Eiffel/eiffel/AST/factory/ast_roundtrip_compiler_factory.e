@@ -54,6 +54,8 @@ inherit
 
 			reverse_extend_separator,
 			reverse_extend_identifier,
+			reverse_extend_identifier_separator,
+
 			new_character_as, new_typed_char_as,
 			set_buffer, append_text_to_buffer,
 			new_once_string_keyword_as,

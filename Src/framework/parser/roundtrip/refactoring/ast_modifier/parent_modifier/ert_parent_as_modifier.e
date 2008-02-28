@@ -89,12 +89,12 @@ feature -- Applicability
 			end
 
 			if is_end_keyword_needed then
-				if parent_ast.end_keyword = Void then
+				if parent_ast.end_keyword (match_list) = Void then
 					parent_ast.append_text (end_keyword_string, match_list)
 				end
 			else
-				if parent_ast.end_keyword /= Void then
-					parent_ast.end_keyword.replace_text ("", match_list)
+				if parent_ast.end_keyword (match_list) /= Void then
+					parent_ast.end_keyword (match_list).replace_text ("", match_list)
 				end
 			end
 			applied := True
@@ -214,7 +214,7 @@ feature{NONE} -- Initialization
 					end
 					l_modifier := l_empty_modifier
 				elseif inherit_clause.i_th (i).content = Void or else inherit_clause.i_th (i).content.is_empty then
-					l_inherit_clause_name := inherit_clause.i_th (i).clause_keyword
+					l_inherit_clause_name := inherit_clause.i_th (i).clause_keyword (match_list)
 					l_empty_modifier := create{ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (l_inherit_clause_name, False, match_list)
 					l_empty_modifier.set_header_ast (l_inherit_clause_name)
 					l_modifier := l_empty_modifier
@@ -250,12 +250,12 @@ feature{NONE} -- Implementation
 		do
 			Result := True
 			if is_end_keyword_needed then
-				if parent_ast.end_keyword = Void then
+				if parent_ast.end_keyword (match_list) = Void then
 					Result := parent_ast.can_append_text (match_list)
 				end
 			else
-				if parent_ast.end_keyword /= Void then
-					Result := parent_ast.end_keyword.can_replace_text (match_list)
+				if parent_ast.end_keyword (match_list) /= Void then
+					Result := parent_ast.end_keyword (match_list).can_replace_text (match_list)
 				end
 			end
 		end
@@ -330,7 +330,7 @@ feature{NONE} -- Implementation
 				i := i + 1
 			end
 			if Result = Void then
-				Result := parent_ast.end_keyword
+				Result := parent_ast.end_keyword (match_list)
 			end
 		end
 

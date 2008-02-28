@@ -10,6 +10,10 @@ class
 
 inherit
 	BINARY_AS
+		rename
+			operator as or_keyword,
+			operator_index as or_keyword_index
+		end
 
 	PREFIX_INFIX_NAMES
 
@@ -20,14 +24,19 @@ create
 feature -- Initialization
 
 	make (l: like left; r: like right; k_as, s_as: KEYWORD_AS) is
-			--
-		local
-			l_op: EIFFEL_LIST [KEYWORD_AS]
+		require
+			l_not_void: l /= Void
+			r_not_void: r /= Void
 		do
-			create l_op.make (2)
-			l_op.extend (k_as)
-			l_op.extend (s_as)
-			initialize (l, r, l_op)
+			initialize (l, r, k_as)
+			if s_as /= Void then
+				else_keyword_index := s_as.index
+			end
+		ensure
+			left_set: left = l
+			right_set: right = r
+			or_keyword_set: k_as /= Void implies or_keyword_index = k_as.index
+			else_keyword_set: s_as /= Void implies else_keyword_index = s_as.index
 		end
 
 feature -- Properties
@@ -50,6 +59,24 @@ feature -- Visitor
 			-- process current element.
 		do
 			v.process_bin_or_else_as (Current)
+		end
+
+feature -- Roundtrip
+
+	else_keyword_index: INTEGER
+			-- Index of `then' operation AST node.
+
+	else_keyword (a_list: LEAF_AS_LIST): LEAF_AS is
+			-- Binary operation AST node.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := else_keyword_index
+			if a_list.valid_index (i) then
+				Result := a_list.i_th (i)
+			end
 		end
 
 indexing

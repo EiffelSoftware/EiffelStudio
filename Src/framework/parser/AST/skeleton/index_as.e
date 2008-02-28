@@ -25,11 +25,13 @@ feature {NONE} -- Initialization
 		do
 			tag := t
 			index_list := i
-			colon_symbol := c_as
+			if c_as /= Void then
+				colon_symbol_index := c_as.index
+			end
 		ensure
 			tag_set: tag = t
 			index_list_set: index_list = i
-			colon_symbol_set: colon_symbol = c_as
+			colon_symbol_set: c_as /= Void implies colon_symbol_index = c_as.index
 		end
 
 feature -- Visitor
@@ -42,8 +44,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	colon_symbol: SYMBOL_AS
+	colon_symbol_index: INTEGER
+			-- Index of colon symbol associated with this structure.
+
+	colon_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Colon symbol associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := colon_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 

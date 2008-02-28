@@ -28,15 +28,21 @@ feature {NONE} -- Initialization
 		do
 			target := t
 			message := m
-			dot_symbol := d_as
-			lparan_symbol := l_as
-			rparan_symbol := r_as
+			if d_as /= Void then
+				dot_symbol_index := d_as.index
+			end
+			if l_as /= Void then
+				lparan_symbol_index := l_as.index
+			end
+			if r_as /= Void then
+				rparan_symbol_index := r_as.index
+			end
 		ensure
 			target_set: target = t
 			message_set: message = m
-			dot_symbol_set: dot_symbol = d_as
-			lparan_symbol_set: lparan_symbol = l_as
-			rparan_symbol_set: rparan_symbol = r_as
+			dot_symbol_set: d_as /= Void implies dot_symbol_index = d_as.index
+			lparan_symbol_set: l_as /= Void implies lparan_symbol_index = l_as.index
+			rparan_symbol_set: r_as /= Void implies rparan_symbol_index = r_as.index
 		end
 
 feature -- Visitor
@@ -49,11 +55,64 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	dot_symbol: SYMBOL_AS
-			-- Symbol "." associated with this structure
+	dot_symbol_index: INTEGER
+			-- Index of symbol "." associated with this structure
 
-	lparan_symbol, rparan_symbol: SYMBOL_AS
-			-- Symbol "(" and ")" associated with this structure
+	lparan_symbol_index, rparan_symbol_index: INTEGER
+			-- Index of symbol "(" and ")" associated with this structure
+
+	dot_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+			-- Symbol "." associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := dot_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "(" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := lparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol ")" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+feature -- Status report
+
+	has_lparan: BOOLEAN is
+			-- Does current have `('?
+		do
+			Result := lparan_symbol_index /= 0
+		end
+
+	has_rparan: BOOLEAN is
+			-- Does current have `('?
+		do
+			Result := rparan_symbol_index /= 0
+		end
 
 feature -- Attributes
 
@@ -67,10 +126,11 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void or else lparan_symbol = Void then
+			if a_list /= Void and lparan_symbol_index /= 0 then
+				Result := lparan_symbol (a_list)
+			end
+			if Result = Void then
 				Result := target.first_token (a_list)
-			else
-				Result := lparan_symbol.first_token (a_list)
 			end
 		end
 

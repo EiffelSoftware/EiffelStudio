@@ -11,8 +11,6 @@ class
 inherit
 	EXPR_AS
 
-	LOCATION_AS
-
 create
 	initialize
 
@@ -24,11 +22,12 @@ feature{NONE} -- Initialization
 			r_as_not_void: r_as /= Void
 		do
 			result_keyword := r_as
-			address_symbol := a_as
-			make_from_other (result_keyword)
+			if a_as /= Void then
+				address_symbol_index := a_as.index
+			end
 		ensure
 			result_keyword_set: result_keyword = r_as
-			address_symbol_set: address_symbol = a_as
+			address_symbol_set: a_as /= Void implies address_symbol_index = a_as.index
 		end
 
 feature -- Visitor
@@ -41,8 +40,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	address_symbol: SYMBOL_AS
+	address_symbol_index: INTEGER
+			-- Index of symbol "$" associated with this structure
+
+	address_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "$" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := address_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	result_keyword: KEYWORD_AS
 			-- Keyword "result" associated with this structure
@@ -51,16 +63,16 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := result_keyword.first_token (a_list)
+			if a_list /= Void and address_symbol_index /= 0 then
+				Result := address_symbol (a_list)
 			else
-				Result := address_symbol.first_token (a_list)
+				Result := result_keyword
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := result_keyword.last_token (a_list)
+			Result := result_keyword
 		end
 
 feature -- Comparison
@@ -70,6 +82,9 @@ feature -- Comparison
 		do
 			Result := True
 		end
+
+invariant
+	result_keyword_not_void: result_keyword /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

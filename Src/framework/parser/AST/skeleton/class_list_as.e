@@ -32,11 +32,8 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 				Result := Precursor (a_list)
-			else
-				check
-					lcurly_symbol /= Void
-				end
-				Result := lcurly_symbol.first_token (a_list)
+			elseif lcurly_symbol_index /= 0 then
+				Result := lcurly_symbol (a_list)
 			end
 		end
 
@@ -44,33 +41,63 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 				Result := Precursor (a_list)
-			else
-				check
-					rcurly_symbol /= Void
-				end
-				Result := rcurly_symbol.last_token (a_list)
+			elseif rcurly_symbol_index /= 0 then
+				Result := rcurly_symbol (a_list)
 			end
 		end
 
 feature -- Roundtrip
 
-	lcurly_symbol, rcurly_symbol: SYMBOL_AS
-			-- Symbol "{" and "}" associated with current AST node
+	lcurly_symbol_index, rcurly_symbol_index: INTEGER
+			-- Index in a match list for tokens.
 
-	set_lcurly_symbol (a_symbol: SYMBOL_AS) is
-			-- Set `lcurly_symbol' with `a_symbol'.
+	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Left curly symbol(s) associated with this structure if any.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
 		do
-			lcurly_symbol := a_symbol
-		ensure
-			lcurly_symbol_set: lcurly_symbol = a_symbol
+			i := lcurly_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
 		end
 
-	set_rcurly_symbol (a_symbol: SYMBOL_AS) is
-			-- Set `rcurly_symbol' with `a_symbol'.
+	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Right curly symbol(s) associated with this structure
+			-- Maybe none, or maybe only left curly appears.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
 		do
-			rcurly_symbol := a_symbol
+			i := rcurly_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+feature -- Settings
+
+	set_lcurly_symbol (s_as: SYMBOL_AS) is
+			-- Set `lcurly_symbol' with `s_as'.
+		do
+			if s_as /= Void then
+				lcurly_symbol_index := s_as.index
+			end
 		ensure
-			rcurly_symbol_set: rcurly_symbol = a_symbol
+			lcurly_symbol_index_set: s_as /= Void implies lcurly_symbol_index = s_as.index
+		end
+
+	set_rcurly_symbol (s_as: SYMBOL_AS) is
+			-- Set `rcurly_symbol' with `s_as'.
+		do
+			if s_as /= Void then
+				rcurly_symbol_index := s_as.index
+			end
+		ensure
+			rcurly_symbol_index_set: s_as /= Void implies rcurly_symbol_index = s_as.index
 		end
 
 invariant

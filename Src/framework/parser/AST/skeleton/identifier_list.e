@@ -21,19 +21,49 @@ create {IDENTIFIER_LIST}
 
 feature -- Access
 
-	id_list: EIFFEL_LIST [ID_AS] is
+	id_list: CONSTRUCT_LIST [INTEGER]
 			-- List to store ID_AS objects in this structure.
+
+	separator_list: CONSTRUCT_LIST [INTEGER]
+			-- List to store terminals that appear in between every 2 items of this list
+
+	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): LEAF_AS is
+			-- Terminals at position `i' in `separator_list' using `a_list'.
+		require
+			valid_index: separator_list.valid_index (i)
+			a_list_not_void: a_list /= Void
+		local
+			n: INTEGER
 		do
-			if internal_id_list = Void then
-				create internal_id_list.make (capacity)
+			n := separator_list.i_th (i)
+			if a_list.valid_index (n) then
+				Result ?= a_list.i_th (n)
 			end
-			Result := internal_id_list
 		end
 
-feature{NONE} -- Implementation
+	reverse_extend_separator (l_as: LEAF_AS) is
+			-- Add `l_as' into `separator_list'.
+		do
+			if separator_list = Void then
+				if capacity >= 2 then
+					create separator_list.make (capacity - 1)
+				else
+						-- One should never get here as this will yield in a call on void.
+					check one_should_never_get_here: false end
+				end
+			end
+			separator_list.reverse_extend (l_as.index)
+		end
 
-	internal_id_list: EIFFEL_LIST [ID_AS];
-			-- Internal id list
+	reverse_extend_identifier (l_as: ID_AS) is
+			-- Add `l_as' into `id_list'.
+		do
+			if id_list = Void then
+				create id_list.make (capacity)
+			end
+			id_list.reverse_extend (l_as.index)
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

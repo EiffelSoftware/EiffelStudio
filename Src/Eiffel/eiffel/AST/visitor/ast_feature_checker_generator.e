@@ -709,6 +709,11 @@ feature -- Roundtrip
 		do
 		end
 
+	process_keyword_stub_as (l_as: KEYWORD_STUB_AS) is
+			-- Process `l_as'.
+		do
+		end
+
 	process_none_id_as (l_as: NONE_ID_AS) is
 			-- Process `l_as'.
 		do
@@ -4232,9 +4237,7 @@ feature -- Implementation
 			create l_unsupported
 			context.init_error (l_unsupported)
 			l_unsupported.set_message ("Operators ~ and /~ are not yet supported.")
-			if l_as.operator /= Void then
-				l_unsupported.set_location (l_as.operator.start_location)
-			end
+			l_unsupported.set_location (l_as.operator_location)
 			error_handler.insert_error (l_unsupported)
 		end
 
@@ -6050,6 +6053,11 @@ feature -- Implementation
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
+		do
+			check_type (l_as)
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
 		do
 			check_type (l_as)
 		end

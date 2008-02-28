@@ -60,39 +60,19 @@ feature -- Assembler
 			eiffel_list: EIFFEL_LIST [FEATURE_NAME]
 			l_op: STRING_AS
 			l_id: ID_AS
-			l_frozen_keyword: KEYWORD_AS
-			l_infix_prefix_as: INFIX_PREFIX_AS
-			l_infix_prefix_keyword: KEYWORD_AS
+			l_is_frozen: BOOLEAN
 		do
 			f_name := a_name
 			new_feature_as := a_ast
-			if f_name.frozen_keyword /= Void then
-				l_frozen_keyword := f_name.frozen_keyword.twin
-			end
+			l_is_frozen := f_name.is_frozen
 			if target_feature.is_infix then
 				create l_op.initialize (extract_symbol_from_infix (target_feature.feature_name), 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
-				l_infix_prefix_as ?= f_name
-				if l_infix_prefix_as = Void then
-					create l_infix_prefix_keyword.make_null
-					l_infix_prefix_keyword.set_index (f_name.internal_name.index)
-				else
-					l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
-					l_infix_prefix_keyword.set_position (0, 0, 0, 0)
-				end
-				create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_keyword)
+				create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, Void)
 			elseif target_feature.is_prefix then
 				create l_op.initialize (extract_symbol_from_prefix (target_feature.feature_name), 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
-				l_infix_prefix_as ?= f_name
-				if l_infix_prefix_as = Void then
-					create l_infix_prefix_keyword.make_null
-					l_infix_prefix_keyword.set_index (f_name.internal_name.index)
-				else
-					l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
-					l_infix_prefix_keyword.set_position (0, 0, 0, 0)
-				end
-				create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_keyword)
+				create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, Void)
 			elseif target_feature.alias_name /= Void then
 				create l_op.initialize (extract_alias_name (target_feature.alias_name), 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
@@ -110,9 +90,7 @@ feature -- Assembler
 				l_id.set_index (f_name.internal_name.index)
 				create {FEAT_NAME_ID_AS} f_name.initialize (l_id)
 			end
-			if l_frozen_keyword /= Void then
-				f_name.set_frozen_keyword (l_frozen_keyword)
-			end
+			f_name.set_is_frozen (l_is_frozen)
 			create eiffel_list.make (1);
 			eiffel_list.extend (f_name);
 			new_feature_as.set_feature_names (eiffel_list);

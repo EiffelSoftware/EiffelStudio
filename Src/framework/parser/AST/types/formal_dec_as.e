@@ -26,18 +26,24 @@ feature {NONE} -- Initialization
 				constraints := c
 			end
 			creation_feature_list := cf
-			constrain_symbol := c_as
 			formal := f
-			create_keyword := ck_as
-			end_keyword := ek_as
+			if c_as /= Void then
+				constrain_symbol_index := c_as.index
+			end
+			if ck_as /= Void then
+				create_keyword_index := ck_as.index
+			end
+			if ek_as /= Void then
+				end_keyword_index := ek_as.index
+			end
 		ensure
 			constraints_set: c /= Void implies constraints = c
 			constraints_not_void: constraints /= Void
 			creation_feature_list_set: creation_feature_list = cf
-			constrain_symbol_set: constrain_symbol = c_as
 			formal_set: formal = f
-			create_keyword_set: create_keyword = ck_as
-			end_keyword_set: end_keyword = ek_as
+			constrain_symbol_set: c_as /= Void implies constrain_symbol_index = c_as.index
+			create_keyword_set: ck_as /= Void implies create_keyword_index = ck_as.index
+			end_keyword_set: ek_as /= Void implies end_keyword_index = ek_as.index
 		end
 
 feature -- Visitor
@@ -50,17 +56,56 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	constrain_symbol: SYMBOL_AS
-			-- Symbol "->" associated with this structure
-
 	formal: FORMAL_AS
 			-- Formal generic parameter associated with this structure		
 
-	create_keyword: KEYWORD_AS
+	constrain_symbol_index: INTEGER
+			-- Symbol "->" associated with this structure
+
+	create_keyword_index: INTEGER
 			-- Keyword "create" associated with this structure
 
-	end_keyword: KEYWORD_AS
+	end_keyword_index: INTEGER
 			-- Keyword "end" associated with this structure
+
+	constrain_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "->" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := constrain_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	create_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "create" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := create_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "end" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := end_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Convenience
 
@@ -117,8 +162,8 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if end_keyword /= Void then
-				Result := end_keyword.last_token (a_list)
+			if a_list /= Void and end_keyword_index /= 0 then
+				Result := end_keyword (a_list)
 			elseif constraints /= Void then
 				Result := constraints.last_token (a_list)
 			else

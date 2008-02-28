@@ -18,18 +18,22 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (exp: like expressions; l_as, r_as: like lbracket) is
+	initialize (exp: like expressions; l_as, r_as: like lbracket_symbol) is
 			-- Create a new Manifest TUPLE AST node.
 		require
 			exp_not_void: exp /= Void
 		do
 			expressions := exp
-			lbracket:= l_as
-			rbracket := r_as
+			if l_as /= Void then
+				lbracket_symbol_index := l_as.index
+			end
+			if r_as /= Void then
+				rbracket_symbol_index := r_as.index
+			end
 		ensure
 			expressions_set: expressions = exp
-			lbracket_set: lbracket = l_as
-			rbracket_set: rbracket = r_as
+			lbracket_symbol_set: l_as /= Void implies lbracket_symbol_index = l_as.index
+			rbracket_symbol_set: r_as /= Void implies rbracket_symbol_index = r_as.index
 		end
 
 feature -- Attributes
@@ -41,19 +45,19 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := expressions.first_token (a_list)
+			if a_list /= Void and lbracket_symbol_index /= 0 then
+				Result := lbracket_symbol (a_list)
 			else
-				Result := lbracket.first_token (a_list)
+				Result := expressions.first_token (a_list)
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := expressions.last_token (a_list)
+			if a_list /= Void and rbracket_symbol_index /= 0 then
+				Result := rbracket_symbol (a_list)
 			else
-				Result := rbracket.last_token (a_list)
+				Result := expressions.last_token (a_list)
 			end
 		end
 
@@ -67,10 +71,34 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-feature -- Roundtrip
+	lbracket_symbol_index, rbracket_symbol_index: INTEGER
+			-- Index of symbol "<<" and ">>" associated with this structure
 
-	lbracket, rbracket: SYMBOL_AS
-			-- Symbol "[" and "]" associated with this structure
+	lbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "[" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := lbracket_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	rbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "]" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rbracket_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Comparison
 

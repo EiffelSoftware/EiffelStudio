@@ -12,7 +12,7 @@ inherit
 		rename
 			initialize as initialize_binary_as
 		redefine
-			is_equivalent
+			is_equivalent, operator
 		end
 
 	PREFIX_INFIX_NAMES
@@ -29,10 +29,8 @@ feature {NONE} -- Initialization
 			op_not_void: op /= Void
 			r_not_void: r /= Void
 		do
-			left := l
 			op_name := op
-			right := r
-			operator := op
+			initialize_binary_as (l, r, op)
 		ensure
 			left_set: left = l
 			op_name_set: op_name = op
@@ -43,6 +41,14 @@ feature -- Attributes
 
 	op_name: ID_AS
 			-- Free operator name
+
+	operator (a_list: LEAF_AS_LIST): LEAF_AS is
+			-- <Precursor>
+		do
+			Result := op_name
+		ensure then
+			operator_not_void: Result /= Void
+		end
 
 feature -- Properties
 
@@ -77,6 +83,9 @@ feature {BINARY_AS}
 		do
 			create op_name.initialize (extract_symbol_from_infix (name.name))
 		end
+
+invariant
+	op_name_not_void: op_name /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

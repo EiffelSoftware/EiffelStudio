@@ -39,15 +39,30 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	question_mark_symbol: SYMBOL_AS
+	question_mark_symbol_index: INTEGER
+			-- Index of symbol "?" associated with thie structure
+
+	question_mark_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "?" associated with thie structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := question_mark_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	set_question_mark_symbol (s_as: SYMBOL_AS) is
 			-- Set `question_mark_symbol' with `s_as'.
 		do
-			question_mark_symbol := s_as
+			if s_as /= Void then
+				question_mark_symbol_index := s_as.index
+			end
 		ensure
-			question_mark_symbol_set: question_mark_symbol = s_as
+			question_mark_symbol_set: s_as /= Void implies question_mark_symbol_index = s_as.index
 		end
 
 feature -- Attributes
@@ -67,8 +82,8 @@ feature -- Roundtrip/Token
 		do
 			if class_type /= Void then
 				Result := class_type.first_token (a_list)
-			elseif question_mark_symbol /= Void and then a_list /= Void then
-				Result := question_mark_symbol.first_token (a_list)
+			elseif a_list /= Void and question_mark_symbol_index /= 0 then
+				Result := question_mark_symbol (a_list)
 			elseif target /= Void then
 				Result := target.first_token (a_list)
 			elseif expression /= Void then
@@ -82,8 +97,8 @@ feature -- Roundtrip/Token
 		do
 			if class_type /= Void then
 				Result := class_type.last_token (a_list)
-			elseif question_mark_symbol /= Void and then a_list /= Void then
-				Result := question_mark_symbol.last_token (a_list)
+			elseif a_list /= Void and question_mark_symbol_index /= 0 then
+				Result := question_mark_symbol (a_list)
 			elseif target /= Void then
 				Result := target.last_token (a_list)
 			elseif expression /= Void then

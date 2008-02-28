@@ -27,7 +27,6 @@ feature -- Initialization
 			-- (`n' may be zero for empty list.)
 		do
 			Precursor {EIFFEL_LIST} (n)
-			create lookup_table.make (n)
 		end
 
 feature -- Visitor
@@ -43,10 +42,10 @@ feature -- Roundtrip/Token
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- First token in current AST node
 		do
-			if indexing_keyword = Void then
+			if a_list = Void then
 				Result := Precursor{EIFFEL_LIST} (a_list)
 			else
-				Result := indexing_keyword.first_token (a_list)
+				Result := indexing_keyword (a_list)
 			end
 		end
 
@@ -56,12 +55,13 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := Precursor{EIFFEL_LIST} (a_list)
 			else
-				if end_keyword /= Void then
-					Result := end_keyword.last_token (a_list)
-				elseif not is_empty then
-					Result := Precursor (a_list)
-				else
-					Result := indexing_keyword.last_token (a_list)
+				Result := end_keyword (a_list)
+				if Result = Void then
+					if not is_empty then
+						Result := Precursor (a_list)
+					else
+						Result := indexing_keyword (a_list)
+					end
 				end
 			end
 		end
@@ -303,28 +303,11 @@ feature -- Element change
 	update_lookup (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor.
+		obsolete
+			"Not needed anymore"
 		require
 			v_not_void: v /= Void
-		local
-			l_index: like item
 		do
-			if v.tag /= Void then
-				lookup_table.search (v.tag.name)
-				if lookup_table.found then
-						-- Merge data from two similar `Index_clause' into one.
-					l_index := lookup_table.found_item
-					l_index.index_list.append (v.index_list)
-				else
-					create l_index.initialize (v.tag, v.index_list.twin, Void)
-					lookup_table.put (l_index, l_index.tag.name)
-				end
---				if obsolete_tags.has (v.tag) then
---					Error_handler.insert_warning (
---						create {OBSOLETE_INDEXING_TAG}.make (
---							System.current_class, v.tag,
---							obsolete_tags.item (v.tag), v.start_location))
---				end
-			end
 		end
 
 feature {NONE} -- Constants
@@ -430,17 +413,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	lookup_table: HASH_TABLE [INDEX_AS, STRING]
-			-- Fast lookup table for indexing clauses
-
 	find_index_as (tag: STRING): INDEX_AS is
 			-- Find INDEX_AS object holding `tag'
 			-- Void if not found.
 		require
 			tag_not_void: tag /= Void
 			tag_not_empty: not tag.is_empty
+		local
+			i, nb: INTEGER
+			l_index: INDEX_AS
 		do
-			Result := lookup_table.item (tag)
+			from
+				i := lower
+				nb := upper
+			until
+				i > nb
+			loop
+				l_index := i_th (i)
+				if l_index.tag /= Void and then l_index.tag.name.is_equal (tag) then
+					Result := l_index
+						-- Jump out of loop
+					i := nb
+				end
+				i := i + 1
+			end
 		ensure
 			found_return_same_object: Result /= Void implies Result = find_index_as (tag)
 		end
@@ -477,26 +473,56 @@ feature {NONE} -- Implementation
 
 feature -- Roundtrip
 
-	indexing_keyword: KEYWORD_AS
-			-- Keyword "indexing" associated with current AST node
+	indexing_keyword_index: INTEGER
+			-- Index of keyword "indexing" associated with current AST node
 
-	end_keyword: KEYWORD_AS
+	end_keyword_index: INTEGER
+			-- Index of keyword "end" associated with current AST node
+
+	indexing_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "indexing" associated with current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := indexing_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
 			-- Keyword "end" associated with current AST node
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := end_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	set_indexing_keyword (a_keyword: KEYWORD_AS) is
 			-- Set `indexing_keyword' with `a_keyword'.
 		do
-			indexing_keyword := a_keyword
+			if a_keyword /= Void then
+				indexing_keyword_index := a_keyword.index
+			end
 		ensure
-			indexing_keyword_set: indexing_keyword = a_keyword
+			indexing_keyword_set: a_keyword /= Void implies indexing_keyword_index = a_keyword.index
 		end
 
 	set_end_keyword (a_keyword: KEYWORD_AS) is
 			-- Set `end_keyword' with `a_keyword'.
 		do
-			end_keyword := a_keyword
+			if a_keyword /= Void then
+				end_keyword_index := a_keyword.index
+			end
 		ensure
-			end_keyword_set: end_keyword = a_keyword
+			end_keyword_set: a_keyword /= Void implies end_keyword_index = a_keyword.index
 		end
 
 indexing

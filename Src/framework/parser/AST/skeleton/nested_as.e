@@ -28,11 +28,13 @@ feature {NONE} -- Initialization
 		do
 			target := t
 			message := m
-			dot_symbol := d_as
+			if d_as /= Void then
+				dot_symbol_index := d_as.index
+			end
 		ensure
 			target_set: target = t
 			message_set: message = m
-			dot_symbol_set: dot_symbol = d_as
+			dot_symbol_set: d_as /= Void implies dot_symbol_index = d_as.index
 		end
 
 feature -- Visitor
@@ -45,8 +47,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	dot_symbol: SYMBOL_AS
+	dot_symbol_index: INTEGER
+			-- Index of symbol "." associated with this structure
+
+	dot_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "." associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := dot_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 

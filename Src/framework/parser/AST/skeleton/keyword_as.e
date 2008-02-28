@@ -19,18 +19,18 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_code: INTEGER; a_text: STRING; l, c, p, s: INTEGER) is
+	make (a_code: INTEGER; a_text: STRING; l, c, p, n: INTEGER) is
 			-- Create an keyword object with `a_code' indicating which keyword it is.
 			-- See `EIFFEL_TOKENS' for more information about `a_code'
 			-- `a_text' is the literal text of this keyword in source code.
-			-- `l', `c', `p', `s' are positions. See `make_with_location' for more information.
+			-- `l', `c', `p', `n' are positions. See `make_with_location' for more information.
 		require
 			a_code_valid: keyword_valid (a_code)
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		do
 			code := a_code
-			make_with_location (l, c, p, s)
+			make_with_location (l, c, p, n)
 		end
 
 feature -- Status report

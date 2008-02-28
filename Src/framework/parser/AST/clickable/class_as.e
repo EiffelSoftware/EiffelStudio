@@ -117,77 +117,198 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	alias_keyword: KEYWORD_AS
+	alias_keyword_index: INTEGER
+			-- Index of keyword "alias" associated with this class
+
+	class_keyword_index: INTEGER
+			-- Index of keyword "class" associated with this class
+
+	obsolete_keyword_index: INTEGER
+			-- Index of keyword "obsolete" associated with this class	
+
+	frozen_keyword_index,
+	expanded_keyword_index,
+	deferred_keyword_index,
+	separate_keyword_index,
+	external_keyword_index: INTEGER
+			-- Index of keywords that may appear in header mark
+
+	alias_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- keyword "alias" associated with this class
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := alias_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	class_keyword: KEYWORD_AS
+	class_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- keyword "class" associated with this class
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := class_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	obsolete_keyword: KEYWORD_AS
+	obsolete_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- keyword "obsolete" associated with this class	
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := obsolete_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	frozen_keyword,
-	expanded_keyword,
-	deferred_keyword,
-	separate_keyword,
-	external_keyword: KEYWORD_AS
+	frozen_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
 			-- Keywords that may appear in header mark
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := frozen_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keywords that may appear in header mark
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := expanded_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	deferred_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keywords that may appear in header mark
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := deferred_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keywords that may appear in header mark
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := separate_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	external_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keywords that may appear in header mark
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := external_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_separate_keyword, a_external_keyword: KEYWORD_AS) is
 			-- Set header marks of a class.
 		do
-			frozen_keyword := a_frozen_keyword
-			expanded_keyword := a_expanded_keyword
-			deferred_keyword := a_deferred_keyword
-			separate_keyword := a_separate_keyword
-			external_keyword := a_external_keyword
+			if a_frozen_keyword /= Void then
+				frozen_keyword_index := a_frozen_keyword.index
+			end
+			if a_expanded_keyword /= Void then
+				expanded_keyword_index := a_expanded_keyword.index
+			end
+			if a_deferred_keyword /= Void then
+				deferred_keyword_index := a_deferred_keyword.index
+			end
+			if a_separate_keyword /= Void then
+				separate_keyword_index := a_separate_keyword.index
+			end
+			if a_external_keyword /= Void then
+				external_keyword_index := a_external_keyword.index
+			end
 		ensure
-			header_mark_set:
-				(frozen_keyword = a_frozen_keyword) and
-				(expanded_keyword = a_expanded_keyword) and
-				(deferred_keyword = a_deferred_keyword) and
-				(separate_keyword = a_separate_keyword) and
-				(external_keyword = a_external_keyword)
+			frozen_keyword_set: a_frozen_keyword /= Void implies frozen_keyword_index = a_frozen_keyword.index
+			expanded_keyword_set: a_expanded_keyword /= Void implies expanded_keyword_index = a_expanded_keyword.index
+			deferred_keyword_set: a_deferred_keyword /= Void implies deferred_keyword_index = a_deferred_keyword.index
+			separate_keyword_set: a_separate_keyword /= Void implies separate_keyword_index = a_separate_keyword.index
+			external_keyword_set: a_external_keyword /= Void implies external_keyword_index = a_external_keyword.index
 		end
 
 	set_class_keyword (k_as: KEYWORD_AS) is
 			-- Set `class_keyword' with `k_as'.
 		do
-			class_keyword := k_as
+			if k_as /= Void then
+				class_keyword_index := k_as.index
+			end
 		ensure
-			class_keyword_set: class_keyword = k_as
+			class_keyword_set: k_as /= Void implies class_keyword_index = k_as.index
 		end
 
 	set_alias_keyword (k_as: KEYWORD_AS) is
 			-- Set `alias_keyword' with `k_as'.
 		do
-			alias_keyword := k_as
+			if k_as /= Void then
+				alias_keyword_index := k_as.index
+			end
 		ensure
-			alias_keyword_set: alias_keyword = k_as
+			alias_keyword_set: k_as /= Void implies alias_keyword_index = k_as.index
 		end
 
 	set_obsolete_keyword (k_as: KEYWORD_AS) is
 			-- Set `obsolete_keyword' with `k_as'.
 		do
-			obsolete_keyword := k_as
+			if k_as /= Void then
+				obsolete_keyword_index := k_as.index
+			end
 		ensure
-			obsolete_keyword_set: obsolete_keyword = k_as
+			obsolete_keyword_set: k_as /= Void implies obsolete_keyword_index = k_as.index
 		end
 
-	first_header_mark: KEYWORD_AS is
+	first_header_mark (a_list: LEAF_AS_LIST): KEYWORD_AS is
 			-- First header mark keyword,
 			-- Void if no one appears.
+		require
+			a_list_not_void: a_list /= Void
 		do
-			if frozen_keyword /= Void then
-				Result := frozen_keyword
-			elseif deferred_keyword /= Void then
-				Result := deferred_keyword
-			elseif expanded_keyword /= Void then
-				Result := expanded_keyword
-			elseif separate_keyword /= Void then
-				Result := separate_keyword
-			elseif external_keyword /= Void then
-				Result := external_keyword
+			if frozen_keyword_index /= 0 then
+				Result := frozen_keyword (a_list)
+			elseif deferred_keyword_index /= 0 then
+				Result := deferred_keyword (a_list)
+			elseif expanded_keyword_index /= 0 then
+				Result := expanded_keyword (a_list)
+			elseif separate_keyword_index /= 0 then
+				Result := separate_keyword (a_list)
+			elseif external_keyword_index /= 0 then
+				Result := external_keyword (a_list)
 			end
 		end
 
@@ -404,13 +525,11 @@ feature -- Roundtrip/Token
 					Result := l_break
 				else
 					if internal_top_indexes /= Void then
-						Result :=internal_top_indexes.first_token (a_list)
+						Result := internal_top_indexes.first_token (a_list)
 					else
-						l_header := first_header_mark
-						if l_header /= Void then
-							Result := l_header.first_token (a_list)
-						else
-							Result :=class_keyword.first_token (a_list)
+						Result := first_header_mark (a_list)
+						if Result = Void then
+							Result := class_keyword (a_list)
 						end
 					end
 				end

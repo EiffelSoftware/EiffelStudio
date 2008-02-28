@@ -26,11 +26,13 @@ feature {NONE} -- Initialization
 			full_assertion_list := c
 			check_list := filter_tagged_list (full_assertion_list)
 			end_keyword := e
-			check_keyword := c_as
+			if c_as /= Void then
+				check_keyword_index := c_as.index
+			end
 		ensure
 			full_assertion_list_set: full_assertion_list = c
 			end_keyword_set: end_keyword = e
-			check_keyword_set: check_keyword = c_as
+			check_keyword_set: c_as /= Void implies check_keyword_index = c_as.index
 		end
 
 feature -- Visitor
@@ -43,8 +45,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	check_keyword: KEYWORD_AS
+	check_keyword_index: INTEGER
+			-- Index of keyword "check" associated with this structure
+
+	check_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "check" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := check_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Attributes
 
@@ -72,8 +87,8 @@ feature -- Roundtrip/Token
 				else
 					Result := end_keyword.first_token (a_list)
 				end
-			else
-				Result := check_keyword.first_token (a_list)
+			elseif check_keyword_index /= 0 then
+				Result := check_keyword (a_list)
 			end
 		end
 

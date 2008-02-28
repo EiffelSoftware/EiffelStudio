@@ -29,20 +29,30 @@ feature {NONE} -- Initialization
 			is_creation_procedure := cr
 			feature_name := fn
 			conversion_types := t
-			lparan_symbol := l_as
-			rparan_symbol := r_as
-			colon_symbol := c_as
-			lcurly_symbol := lc_as
-			rcurly_symbol := rc_as
+			if l_as /= Void then
+				lparan_symbol_index := l_as.index
+			end
+			if r_as /= Void then
+				rparan_symbol_index := r_as.index
+			end
+			if c_as /= Void then
+				colon_symbol_index := c_as.index
+			end
+			if lc_as /= Void then
+				lcurly_symbol_index := lc_as.index
+			end
+			if rc_as /= Void then
+				rcurly_symbol_index := rc_as.index
+			end
 		ensure
 			is_creation_procedure_set: is_creation_procedure = cr
 			feature_name_set: feature_name = fn
 			conversion_types_set: conversion_types = t
-			lparan_symbol_set: lparan_symbol = l_as
-			rparan_symbol_set: rparan_symbol = r_as
-			colon_symbol_set: colon_symbol = c_as
-			lcurly_symbol_set: lcurly_symbol = lc_as
-			rcurly_symbol_set: rcurly_symbol = rc_as
+			lparan_symbol_set: l_as /= Void implies lparan_symbol_index = l_as.index
+			rparan_symbol_set: r_as /= Void implies rparan_symbol_index = r_as.index
+			colon_symbol_set: c_as /= Void implies colon_symbol_index = c_as.index
+			lcurly_symbol_set: lc_as /= Void implies lcurly_symbol_index = lc_as.index
+			rcurly_symbol_set: rc_as /= Void implies rcurly_symbol_index = rc_as.index
 		end
 
 feature -- Visitor
@@ -55,20 +65,79 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	lparan_symbol: SYMBOL_AS
-			-- Symbol "(" associated with this structure
+	colon_symbol_index: INTEGER
+			-- Index of symbol colon associated with this structure
 
-	rparan_symbol: SYMBOL_AS
-			-- Symbol ")" associated with this structure
+	lcurly_symbol_index, rcurly_symbol_index: INTEGER
+			-- Index in a match list for symbol '{' and '}' associated with current AST
 
-	colon_symbol: SYMBOL_AS
+	lparan_symbol_index, rparan_symbol_index: INTEGER
+			-- Index of symbol "(" and ")" associated with this structure
+
+	colon_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol colon associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := colon_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	lcurly_symbol: SYMBOL_AS
-			-- Symbol "{" associated with this structure
+	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol '{' associated with current AST node if non-conforming inheritance is specified.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := lcurly_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
-	rcurly_symbol: SYMBOL_AS
-			-- Symbol "}" associated with this structure
+	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol '}' associated with current AST node if non-conforming inheritance is specified.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rcurly_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "(" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := lparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol ")" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Access
 
@@ -90,14 +159,12 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := conversion_types.last_token (a_list)
+			if a_list /= Void and rparan_symbol_index /= 0 then
+				Result := rparan_symbol (a_list)
+			elseif a_list /= Void and rcurly_symbol_index /= 0 then
+				Result := rcurly_symbol (a_list)
 			else
-				if rparan_symbol /= Void then
-					Result := rparan_symbol.last_token (a_list)
-				else
-					Result := rcurly_symbol.last_token (a_list)
-				end
+				Result := conversion_types.last_token (a_list)
 			end
 		end
 

@@ -13,6 +13,7 @@ inherit
 		redefine
 			process_precursor_as,
 			process_class_type_as,
+			process_generic_class_type_as,
 			process_named_tuple_type_as,
 			process_class_as
 		end
@@ -59,6 +60,11 @@ feature {NONE} -- Implementation
 				reference_class_not_void: reference_class /= Void
 			end
 			last_class := Universe.safe_class_named (l_as.class_name.name, reference_class.group)
+		end
+
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+		do
+			process_class_type_as (l_as)
 		end
 
 	process_class_as (l_as: CLASS_AS) is

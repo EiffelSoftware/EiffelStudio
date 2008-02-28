@@ -25,11 +25,13 @@ feature {NONE} -- Initialization
 		do
 			creation_expr := c
 			tuple := t
-			end_keyword := k_as
+			if k_as /= Void then
+				end_keyword_index := k_as.index
+			end
 		ensure
 			creation_expr_set: creation_expr = c
 			tuple_set: tuple = t
-			end_keyword_set: end_keyword = k_as
+			end_keyword_set: k_as /= Void implies end_keyword_index = k_as.index
 		end
 
 feature -- Visitor
@@ -42,8 +44,21 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	end_keyword: KEYWORD_AS
-			-- Keyword "end" in current AST node
+	end_keyword_index: INTEGER
+			-- Keyword "end" associated with this structure
+
+	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+			-- Keyword "end" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := end_keyword_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Access
 
@@ -62,14 +77,12 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if tuple /= Void then
-					Result := tuple.last_token (a_list)
-				else
-					Result := creation_expr.last_token (a_list)
-				end
+			if a_list /= Void and end_keyword_index /= 0 then
+				Result := end_keyword (a_list)
+			elseif tuple /= Void then
+				Result := tuple.last_token (a_list)
 			else
-				Result := end_keyword.last_token (a_list)
+				Result := creation_expr.last_token (a_list)
 			end
 		end
 

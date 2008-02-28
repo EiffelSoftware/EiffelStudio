@@ -20,18 +20,48 @@ feature{NONE} -- Implementation
 			-- Initialize Current with `G' and its brackets.
 		do
 			content := s_as
-			lparan_symbol := lp_as
-			rparan_symbol := rp_as
+			if lp_as /= Void then
+				lparan_symbol_index := lp_as.index
+			end
+			if rp_as /= Void then
+				rparan_symbol_index := rp_as.index
+			end
 		ensure
 			content_set: content = s_as
-			lparan_symbol_set: lparan_symbol = lp_as
-			rparan_symbol_set: rparan_symbol = rp_as
+			lparan_symbol_set: lp_as /= Void implies lparan_symbol_index = lp_as.index
+			rparan_symbol_set: rp_as /= Void implies rparan_symbol_index = rp_as.index
 		end
 
 feature -- Access: roundtrip
 
-	lparan_symbol, rparan_symbol: SYMBOL_AS
-			-- Left and right brackets associated with `content' AST node
+	lparan_symbol_index, rparan_symbol_index: INTEGER
+			-- Index of symbol "(" and ")" associated with this structure
+
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol "(" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := lparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Symbol ")" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := rparan_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
 
 feature -- Comparison
 
@@ -55,8 +85,8 @@ feature -- Roundtrip/Token
 					Result := content.first_token (a_list)
 				end
 			else
-				if lparan_symbol /= Void then
-					Result := lparan_symbol.first_token (a_list)
+				if lparan_symbol_index /= 0 and a_list /= Void then
+					Result := lparan_symbol (a_list)
 				end
 			end
 		end
@@ -69,8 +99,8 @@ feature -- Roundtrip/Token
 					Result := content.last_token (a_list)
 				end
 			else
-				if rparan_symbol /= Void then
-					Result := rparan_symbol.last_token (a_list)
+				if rparan_symbol_index /= 0 and a_list /= Void then
+					Result := rparan_symbol (a_list)
 				end
 			end
 		end

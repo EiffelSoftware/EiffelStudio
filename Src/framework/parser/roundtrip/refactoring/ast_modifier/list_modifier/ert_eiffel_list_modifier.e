@@ -220,7 +220,7 @@ feature{NONE} -- Initialization
 			loop
 				l_item_ast := eiffel_list.i_th (i)
 				if l_has_separator and i < l_cnt then
-					l_separator_ast := eiffel_list.separator_list.i_th (i)
+					l_separator_ast := eiffel_list.separator_list_i_th (i, match_list)
 				else
 					l_separator_ast := Void
 				end

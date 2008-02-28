@@ -439,11 +439,16 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 
 	on_accelerator_command (an_accel_id: INTEGER) is
 			-- Accelerator with `an_accel_id' has just been pressed.
+		local
+			l_accelerator: EV_ACCELERATOR
 		do
-			check
-				accel_list_has_an_accel_id: accel_list.has (an_accel_id)
+			l_accelerator := accel_list.item (an_accel_id)
+			if l_accelerator /= Void then
+					-- There may be rare occasions where an accelerator is in the message loop
+					-- whilst it is removed from the list so we add protection
+					-- to avoid a crash. (see bug#14044)
+				l_accelerator.actions.call (Void)
 			end
-			accel_list.item (an_accel_id).actions.call (Void)
 		end
 
 	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]

@@ -507,7 +507,6 @@ feature -- Roundtrip/Token
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		local
 			l_break: BREAK_AS
-			l_header: KEYWORD_AS
 		do
 			if a_list = Void then
 				if top_indexes /= Void then

@@ -157,8 +157,6 @@ feature -- Location
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		local
-			l_leaf: LEAF_AS
 		do
 			if a_list /= Void and obsolete_keyword_index /= 0 then
 				Result := obsolete_keyword (a_list)

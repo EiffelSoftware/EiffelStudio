@@ -17,10 +17,12 @@ feature -- Initialization
 		require
 			is_valid_site: a_site /= Void implies is_valid_site (a_site)
 		local
+			l_old_site: like site
 			l_entities: like siteable_entities
 		do
+			l_old_site := site
 			site := a_site
-			if a_site /= Void then
+			if a_site /= Void and l_old_site /= site then
 				on_sited
 			end
 

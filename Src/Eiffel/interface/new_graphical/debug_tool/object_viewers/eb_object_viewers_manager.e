@@ -2,7 +2,6 @@ indexing
 	description: "object viewer manager ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,7 +9,6 @@ class
 	EB_OBJECT_VIEWERS_MANAGER
 
 inherit
-
 	EV_SHARED_APPLICATION
 
 	EB_CONSTANTS
@@ -44,6 +42,8 @@ feature {NONE} -- Initialization
 			create {XML_DISPLAY_VIEWER_BOX} v.make (Current)
 			add_viewer (v, vr)
 			create {OBJECT_BROWSER_VIEWER_BOX} v.make (Current)
+			add_viewer (v, Void)
+			create {OBJECT_INTERNAL_VIEWER_BOX} v.make (Current)
 			add_viewer (v, Void)
 
 			build_interface

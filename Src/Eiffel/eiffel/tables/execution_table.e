@@ -378,7 +378,7 @@ feature {NONE} -- Include set
 
 feature {NONE} -- Constants
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER is 5000
 			-- Table chunk
 
 feature {NONE} -- External features

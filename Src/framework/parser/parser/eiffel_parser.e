@@ -3633,7 +3633,6 @@ end
 				yyval103 := ast_factory.new_indexing_clause_as (counter_value + 1)
 				if yyval103 /= Void and yyvs57.item (yyvsp57) /= Void then
 					yyval103.reverse_extend (yyvs57.item (yyvsp57))
-					yyval103.update_lookup (yyvs57.item (yyvsp57))
 				end
 			
 if yy_parsing_status = yyContinue then
@@ -3673,7 +3672,6 @@ end
 				yyval103 := yyvs103.item (yyvsp103)
 				if yyval103 /= Void and yyvs57.item (yyvsp57) /= Void then
 					yyval103.reverse_extend (yyvs57.item (yyvsp57))
-					yyval103.update_lookup (yyvs57.item (yyvsp57))
 				end
 			
 if yy_parsing_status = yyContinue then
@@ -3697,7 +3695,6 @@ end
 				yyval103 := ast_factory.new_indexing_clause_as (counter_value + 1)
 				if yyval103 /= Void and yyvs57.item (yyvsp57) /= Void then
 					yyval103.reverse_extend (yyvs57.item (yyvsp57))
-					yyval103.update_lookup (yyvs57.item (yyvsp57))
 				end
 			
 if yy_parsing_status = yyContinue then
@@ -3737,7 +3734,6 @@ end
 				yyval103 := yyvs103.item (yyvsp103)
 				if yyval103 /= Void and yyvs57.item (yyvsp57) /= Void then
 					yyval103.reverse_extend (yyvs57.item (yyvsp57))
-					yyval103.update_lookup (yyvs57.item (yyvsp57))
 				end
 			
 if yy_parsing_status = yyContinue then

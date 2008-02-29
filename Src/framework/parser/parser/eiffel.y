@@ -402,7 +402,6 @@ Index_list: Index_clause
 				$$ := ast_factory.new_indexing_clause_as (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					$$.update_lookup ($1)
 				end
 			}
 	|	Index_clause Increment_counter Index_list
@@ -410,7 +409,6 @@ Index_list: Index_clause
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					$$.update_lookup ($1)
 				end
 			}
 	;
@@ -420,7 +418,6 @@ Note_list: Note_entry
 				$$ := ast_factory.new_indexing_clause_as (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					$$.update_lookup ($1)
 				end
 			}
 	|	Note_entry Increment_counter Note_list
@@ -428,7 +425,6 @@ Note_list: Note_entry
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					$$.update_lookup ($1)
 				end
 			}
 	;

@@ -1,55 +1,32 @@
 indexing
 	description: "[
-		An initialization provider to initialize all services used by the Eiffel Compiler.
+		An interface for an event list item used with the event service, which is never persisted in the event list item heap.
+		See {EVENT_SERVICE_I} for more information on the event service and how items are used.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	SERVICE_INITIALIZER
+deferred class
+	EVENT_LIST_NON_PERSISTENT_ITEM_I
 
-feature -- Services
-
-	add_core_services (a_container: !SERVICE_CONTAINER)
-			-- Adds all the core services.
-			--
-			-- `a_container': The service container to add services to.
-		do
-			a_container.add_service_with_activator ({EVENT_LIST_S}, agent create_event_list_service, False)
-			a_container.add_service_with_activator ({LOGGER_S}, agent create_logger_service, False)
-			a_container.add_service_with_activator ({SESSION_MANAGER_S}, agent create_session_manager_service, False)
+inherit
+	EVENT_LIST_ITEM_I
+		redefine
+			is_persistent
 		end
 
-feature {NONE} -- Factory
+feature -- Status report
 
-	create_event_list_service: EVENT_LIST_S
-			-- Creates the event list service.
+	is_persistent: BOOLEAN
+			-- <Precursor>
 		do
-			create {EVENT_LIST} Result.make
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	create_logger_service: LOGGER_S
-			-- Creates the logger service.
-		do
-			create {LOGGER} Result.make
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
-		end
-
-	create_session_manager_service: SESSION_MANAGER_S
-			-- Creates the session manager service.
-		do
-			create {SESSION_MANAGER} Result
-		ensure
-			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			Result := False
 		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

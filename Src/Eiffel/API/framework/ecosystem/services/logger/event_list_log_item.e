@@ -1,56 +1,67 @@
 indexing
 	description: "[
-		An observer for events implemented on a {EVENT_LIST_S} service interface.
+		An implementation of an logger service ({LOGGER_SERVICE_I}) item for logged messages.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	date: "$date$";
+	revision: "$revision$"
 
-deferred class
-	EVENT_LIST_EVENT_OBSERVER
+class
+	EVENT_LIST_LOG_ITEM
 
 inherit
-	EVENT_OBSERVER_I
+	EVENT_LIST_LOG_ITEM_I
 
-feature {EVENT_LIST_S} -- Event handlers
-
-	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
-			-- Called when a event item is added to the event service.
-			--
-			-- `a_service': Event service where event was added.
-			-- `a_event_item': The event item added to the service.
-		require
-			is_interface_usable: is_interface_usable
-			a_service_attached: a_service /= Void
-			a_event_attached: a_event_item /= Void
-		do
+	EVENT_LIST_ITEM
+		rename
+			make as make_event_list_item
 		end
 
-	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
-			-- Called after a event item has been removed from the service `a_service'
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_category: like category; a_description: like description; a_level: like priority)
+			-- Initialize a new event list error item.
 			--
-			-- `a_service': Event service where the event was removed.
-			-- `a_event_item': The event item removed from the service.
+			-- `a_category': Log category, see {ENVIRONMENT_CATEGORIES}.
+			-- `a_description': Log message.
+			-- `a_level': Serverity level of the logged message.
 		require
-			is_interface_usable: is_interface_usable
-			a_service_attached: a_service /= Void
-			a_event_attached: a_event_item /= Void
+			a_category_is_valid_category: is_valid_category (a_category)
+			a_description_attached: a_description /= Void
+			not_a_description_is_empty: not a_description.is_empty
+			a_level_is_valid_priority: is_valid_priority (a_level)
 		do
+			make_event_list_item (a_category, a_level, Void)
+			description := a_description
+		ensure
+			category_set: category = a_category
+			description_set: description = a_description
+			priority_set: priority = a_level
 		end
 
-	on_event_item_changed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
-			-- Called after a event item has been changed.
+feature -- Access
+
+	description: STRING_32
+			-- Log message description
+
+feature -- Query
+
+	is_valid_data (a_data: like data): BOOLEAN
+			-- Determines is the user data `a_data' is valid for the current event item.
 			--
-			-- `a_service': Event service where the event was changed.
-			-- `a_event_item': The event item that was changed.
-		require
-			is_interface_usable: is_interface_usable
-			a_service_attached: a_service /= Void
-			a_event_attached: a_event_item /= Void
+			-- `a_data': The user data to validate.
+			-- `Result': True if the user data is valid; False otherwise.
 		do
+			Result := True
 		end
 
+invariant
+	description_attached: description /= Void
+	not_description_is_empty: not description.is_empty
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

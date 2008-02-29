@@ -35,6 +35,7 @@ feature -- Access
 			result_attached: Result /= Void
 			result_contains_attached_items: not Result.has (Void)
 			result_items_exist: Result.for_all (agent all_items.has)
+			result_contains_persistent_items_only: Result.for_all (agent {EVENT_LIST_ITEM_I}.is_persistent)
 		end
 
 	items_by_type (a_type: TYPE [EVENT_LIST_ITEM_I]; a_exact_type: BOOLEAN): DS_BILINEAR [EVENT_LIST_ITEM_I]
@@ -75,6 +76,7 @@ feature -- Access
 			result_attached: Result /= Void
 			result_contains_attached_items: not Result.has (Void)
 			result_items_exist: Result.for_all (agent all_items.has)
+			result_contains_persistent_items_only: Result.for_all (agent {EVENT_LIST_ITEM_I}.is_persistent)
 		end
 
 	all_items: DS_BILINEAR [EVENT_LIST_ITEM_I]
@@ -83,6 +85,7 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			result_contains_attached_items: not Result.has (Void)
+			result_contains_persistent_items_only: Result.for_all (agent {EVENT_LIST_ITEM_I}.is_persistent)
 		end
 
 feature {NONE} -- Access
@@ -139,7 +142,8 @@ feature -- Extension
 			not_has_event_a_event_item: not has_event_item (a_event_item)
 		deferred
 		ensure
-			has_event_a_event: has_event_item (a_event_item)
+			has_event_a_event: a_event_item.is_persistent implies has_event_item (a_event_item)
+			not_has_event_a_event: not a_event_item.is_persistent implies not has_event_item (a_event_item)
 		end
 
 feature -- Removal

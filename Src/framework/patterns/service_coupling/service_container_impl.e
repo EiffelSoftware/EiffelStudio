@@ -70,6 +70,10 @@ feature -- Query
 			if l_obj /= Void then
 				Result := reveal_service (l_obj)
 			end
+
+			if Result /= Void and then {l_provider: !SERVICE_PROVIDER} Current and then Result.site /= l_provider then
+				Result.site := l_provider
+			end
 		ensure then
 				-- If this contract is violated when you need to reveal the service. See `reveal_service'
 			not_result_is_concealer: Result /= Void implies (({SERVICE_CONCEALER}) #? Result) = Void

@@ -73,6 +73,20 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
+	retrieve_from_disk (a_file_name: STRING_8): SESSION_I
+			-- Retrieves a session object from disk, if it exists.
+			-- If no file exists then a new session is created.
+			--
+			-- `a_file_name': The full path to a file on disk to retrieve session data from.
+		require
+			is_interface_usable: is_interface_usable
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		deferred
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
 	reload (a_session: SESSION_I)
 			-- Reload a session and resets any changed session data
 			--

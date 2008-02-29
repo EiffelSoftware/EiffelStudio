@@ -1,0 +1,228 @@
+/*
+ * Generic jmake template
+ *
+ * $Id: Jmake.tmpl 91075 2005-12-28 23:58:23Z manus $
+ *
+ *  Copyright (c) 1991-1993, Raphael Manfredi
+ *  
+ *  You may redistribute only under the terms of the Artistic Licence,
+ *  as specified in the README file that comes with the distribution.
+ *  You may reuse parts of this distribution only within the terms of
+ *  that same Artistic Licence; a copy of which may be found at the root
+ *  of the source tree for dist 3.0.
+ *
+ * $Log$
+ * Revision 1.5  2005/10/13 21:55:00  manus
+ * Fixed typo `)'.
+ *
+ * Revision 1.4  2005/10/13 21:38:08  manus
+ * Added definition for JLKFLAGS.
+ * Updated definition of JLDFLAGS so that it uses specific linker flag of the
+ *   C compiler.
+ *
+ * Revision 1.3  2004/12/02 00:50:59  manus
+ * No `optimize' flag for JLDFLAGS as it makes no sense for a linker, only useful
+ *  for the C compiler.
+ *
+ * Revision 1.2  2004/11/30 00:21:14  manus
+ * New template files for runtime Makefiles with multithreaded support and
+ * shared library support.
+ *
+ * Revision 3.0.1.3  1997/02/28  14:56:16  ram
+ * patch61: lex path can now be configured
+ *
+ * Revision 3.0.1.2  1995/01/11  14:50:21  ram
+ * patch45: now pre-computes INSTALL and INSTALLDIR variables
+ *
+ * Revision 3.0.1.1  1993/08/20  07:36:36  ram
+ * patch3: config.sh searching was not aborting properly
+ *
+ * Revision 3.0  1993/08/18  12:04:16  ram
+ * Baseline for dist 3.0 netwide release.
+ *
+ */
+
+: Makefile.SH generated from Jmake.tmpl and Jmakefile <TAG>
+: $Id: Jmake.tmpl 91075 2005-12-28 23:58:23Z manus $
+
+/*************************************************************************
+ *                                                                       *
+ *                     DO NOT MODIFY BELOW THIS LINE                     *
+ *                                                                       *
+ *************************************************************************/
+
+case $CONFIG in
+'')
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
+	;;
+esac
+case "$0" in
+*/#*) cd `expr X$0 : 'X\(.*\)/'` ;;
+esac
+|expand cur!CURDIR!
+CURRENT=!cur:^\./=
+-expand
+DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
+echo "Extracting ${DIR}Makefile (with variable substitutions)"
+/*
+ * Variable pre-computation.
+ */
+?INSTALL:INSTALL=`echo $install | sed -e 's,\./i,\$(TOP)/i,'`
+?INSTALLDIR:INSTALLDIR=`echo $installdir | sed -e 's,\./i,\$(TOP)/i,'`
+DATE=`date`
+/*
+ * Makefile generation.
+ */
+$spitshell >Makefile <<!GROK!THIS!
+;########################################################################
+;# Makefile generated from Makefile.SH on $DATE
+
+SHELL = /bin/sh
+JMAKE = jmake
+TOP = TOPDIR
+CURRENT = $CURRENT
+DIR = $DIR
+?INSTALL:INSTALL = $INSTALL
+?INSTALLDIR:INSTALLDIR = $INSTALLDIR
+
+;########################################################################
+;# Parameters set by Configure -- edit config.sh if changes are needed
+
+?AR:AR = ar rc				/* FIXME */
+?BINDIR:BINDIR = $installbin
+?CC:CC = $cc
+?CP:CP = $cp
+?CPP:CPP = $cpp $cppminus $cppflags
+?CTAGS:CTAGS = ctags		/* FIXME */
+?JCFLAGS:JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
+?JMTCFLAGS:JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
+?JLDFLAGS:JLDFLAGS = \$(LDFLAGS) $ccldflags
+?JLKFLAGS:JLKFLAGS = \$(LDFLAGS) $ldflags
+?JLFLAGS:JLFLAGS = \$(LFLAGS)
+?JYFLAGS:JYFLAGS = \$(YFLAGS) $yaccflags
+?LDSHAREDFLAGS:LDSHAREDFLAGS = $ldsharedflags
+?SHAREDLINK:SHAREDLINK= $sharedlink
+?L:L = $manext
+?LD:LD = $ld
+?LEX:LEX = $lex
+?LIBS:LIBS = $libs
+?LINT:LINT = lint
+?LN:LN = $ln
+?MANSRC:MANSRC = $installmansrc
+?MAKE:MAKE = make				/* Otherwise $(MAKE) doesn't work on SONY */
+?MKDEP:MKDEP = $mkdep \$(DPFLAGS) --
+?MV:MV = $mv
+?PRIVLIB:PRIVLIB = $installprivlib
+?RANLIB:RANLIB = $ranlib
+?RM:RM = $rm -f
+?SCRIPTDIR:SCRIPTDIR = $installscript
+?SED:SED = $sed
+?YACC:YACC = $yacc
+
+/*
+ * The following will only be added if at least one initialization
+ * rule was found in the Jmakefile.
+ */
+%INIT:|skip			/* Skip if no initializations are necessary */
+;########################################################################
+;# Automatically generated parameters -- do not edit
+
+INIT_SECTION
+
+-skip				/* Initializations */
+%SUFFIX:|skip		/* Skip if no suffixes/rules are defined */
+;########################################################################
+;# New suffixes and associated building rules -- edit with care
+
+SUFFIX_SECTION
+-skip				/* Suffixes/Rules */
+!GROK!THIS!
+$spitshell >>Makefile <<'!NO!SUBS!'
+#include <Jmake.rules>
+
+%MKDEP:|skip		/* Skip if no depend target */
+;########################################################################
+;# Force 'make depend' to be performed first -- do not edit
+
+.FORCE_DEPEND::
+
+all:: .FORCE_DEPEND
+
+-skip				/* Depend target */
+;########################################################################
+;# Start of Jmakefile
+#include <Jmakefile>
+
+;########################################################################
+;# Common rules for all Makefiles -- do not edit
+/*
+ * These need to be here so that rules in Jmakefile occur first;  the blank
+ * all is to make sure that an empty Jmakefile doesn't default to make clean.
+ */
+emptyrule::
+
+CleanTarget()
+MakefileTarget()
+TagsTarget()
+
+%SUBDIRS:|skip		/* Skip if no sub-directories */
+;########################################################################
+;# Rules for building in sub-directories -- do not edit
+
+CommonSubdirsRule($(SUBDIRS))
+InstallSubdirs()
+InstallManSubdirs()
+CleanSubdirs()
+TagSubdirs($(SUBDIRS))
+MakefileSubdirs()
+MakeSubdirs()
+
+-skip				/* Sub-directories */
+?SUBDIRS:|skip		/* Skip if sub-directories */
+;########################################################################
+;# Empty rules for directories with no sub-directories -- do not edit
+
+install::
+	@echo "install in $(CURRENT) done."
+
+deinstall::
+	@echo "deinstall in $(CURRENT) done."
+
+install.man::
+	@echo "install.man in $(CURRENT) done."
+
+deinstall.man::
+	@echo "deinstall.man in $(CURRENT) done."
+
+/*
+ * Action for 'Makefiles' would be required, if a .SUFFIXES: .SH rule
+ * were added, because in that case, a "/bin/sh Makefiles.SH" would
+ * be issued and raise an error.
+ */
+Makefiles::
+
+Makefiles.SH::
+
+-skip				/* No sub-directories */
+%MKDEP:|skip		/* Skip if no depend target */
+;########################################################################
+;# Dependencies generated by make depend
+;# DO NOT DELETE THIS LINE -- make depend relies on it
+
+;# Put nothing here or make depend will gobble it up
+.FORCE_DEPEND::
+?TOP: @echo "You haven't run a 'make depend' yet!"; exit 1
+%TOP: @echo "You must run 'make depend' in $(TOP) first."; exit 1
+-skip				/* Depend target */
+!NO!SUBS!
+chmod 644 Makefile
+$eunicefix Makefile
+

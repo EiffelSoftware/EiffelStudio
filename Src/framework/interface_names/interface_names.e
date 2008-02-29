@@ -1242,6 +1242,7 @@ feature -- Label texts
 	l_no_class_bra: STRING_GENERAL is 		do Result := locale.translation ("(no_class)") end
 	l_no_cluster_bra: STRING_GENERAL is 		do Result := locale.translation ("(no_cluster)") end
 	l_no_views_are_available: STRING_GENERAL is 		do Result := locale.translation ("No views are available for this cluster") end
+	l_no_information_available: STRING_GENERAL is 		do Result := locale.translation ("No information") end
 	l_Not_in_system_no_info: STRING_GENERAL is	do Result := locale.translation("Select a class which is fully compiled to have information about it.")	end
 	l_Not_yet_called: STRING_GENERAL is			do Result := locale.translation("Not yet called")	end
 	l_Called: STRING_GENERAL is			do Result := locale.translation("Called")	end
@@ -1452,6 +1453,7 @@ feature -- Label texts
 	l_to: STRING_GENERAL is do Result := locale.translation("to") end
 	t_viewer_object_dumper_title: STRING_GENERAL is do Result := locale.translation ("Object Dump") end
 	t_viewer_object_browser_title: STRING_GENERAL is do Result := locale.translation ("Object Browse") end
+	t_viewer_object_internal_title: STRING_GENERAL is do Result := locale.translation ("Object Internal") end
 	l_viewer_drop_object_here: STRING_GENERAL is do Result := locale.translation ("<< Drop object here >>") end
 	t_viewer_xml_display_title: STRING_GENERAL is do Result := locale.translation ("XML display") end
 	l_select_viewer: STRING_GENERAL is do Result := locale.translation ("Select Viewer") end

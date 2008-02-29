@@ -95,12 +95,16 @@ feature {NONE} -- Implementation
 feature -- Access
 
 	name: STRING_GENERAL is
+			-- <Precursor>
 		do
-			Result := "Object Internal" --Interface_names.t_viewer_object_dumper_title
+			Result := Interface_names.t_viewer_object_internal_title
 		end
 
 	widget: EV_WIDGET
+			-- Widget representing Current
+
 	output: ES_GRID
+			-- Grid containing information
 
 feature -- Access
 
@@ -131,7 +135,7 @@ feature -- Change
 					if cdv /= Void then
 						info := debugger_manager.application.internal_info (cdv)
 						if info = Void or else info.is_empty then
-							grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("No information.%N"))
+							grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text (interface_names.l_no_information_available))
 						else
 							from
 								i := info.lower

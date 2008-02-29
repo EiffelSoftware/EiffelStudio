@@ -18,7 +18,7 @@ inherit
 feature
 
 	make (m: EB_OBJECT_VIEWERS_MANAGER) is
-			--
+			-- Instanciate Current
 		do
 			viewers_manager := m
 			create subviewers.make
@@ -26,32 +26,43 @@ feature
 		end
 
 	build_widget is
+			-- Build widget representing Current viewer
 		deferred
 		end
 
 feature {EB_OBJECT_VIEWERS_MANAGER} -- Properties
 
 	subviewers: LINKED_LIST [like Current]
+			-- Sub viewers
 
 feature -- Access
 
 	debugger_manager: DEBUGGER_MANAGER is
+			-- Related debugger manager
 		deferred
 		end
 
 	widget: EV_WIDGET is
+			-- Widget representing Current viewer component
 		deferred
 		end
 
 	is_valid_stone (ost: OBJECT_STONE; is_strict: BOOLEAN): BOOLEAN is
+			-- Is `ost' a valid stone for Current viewer
+			-- if `is_strict' is False, check quickly the validity of the stone
+			-- otherwise check with caution.
+			--| note: `is_strict' False is used to quickly find
+			--| the most adapted default viewer for `ost'
 		deferred
 		end
 
 	name: STRING_GENERAL is
+			-- Name of Current viewer
 		deferred
 		end
 
 	title: STRING_GENERAL
+			-- Title for Current viewer
 
 feature -- Contextual widget
 
@@ -61,6 +72,7 @@ feature -- Contextual widget
 		end
 
 	mini_tool_bar: SD_TOOL_BAR
+			-- Mini tool bar widget
 
 	build_tool_bar is
 			-- If `tool_bar' is Void, build it otherwise do nothing
@@ -68,16 +80,18 @@ feature -- Contextual widget
 		end
 
 	tool_bar: SD_TOOL_BAR
+			-- Tool bar widget
 
 feature -- Change
 
 	set_title (t: STRING_GENERAL) is
+			-- Set title
 		do
 			title := t
 		end
 
 	set_stone (st: OBJECT_STONE) is
-			--
+			-- Set stone
 		require
 			stone_valid: is_valid_stone (st, False)
 			is_running: debugger_manager.application_is_executing
@@ -88,12 +102,12 @@ feature -- Change
 		end
 
 	refresh is
-			--
+			-- Refresh output
 		deferred
 		end
 
 	clear is
-			--
+			-- Clear output
 		deferred
 		end
 
@@ -118,6 +132,7 @@ feature -- Data
 		end
 
 	retrieve_dump_value	is
+			-- Retrieve dump value
 		do
 			viewers_manager.retrieve_dump_value
 		end
@@ -130,12 +145,14 @@ feature -- Data
 
 feature -- Properties
 
-	viewers_manager: EB_OBJECT_VIEWERS_MANAGER;
+	viewers_manager: EB_OBJECT_VIEWERS_MANAGER
+			-- Associated viewers manager
 
 feature {NONE} -- Implementation
 
 	begin_with (s,t: STRING_GENERAL; ignore_leading_blank: BOOLEAN): BOOLEAN is
-			--
+			-- Does `s' beging with `t' ?
+			-- if `ignore_leading_blank' is True, ignore leading blank character
 		local
 			i, j: INTEGER
 			blank: ARRAY [NATURAL_32]

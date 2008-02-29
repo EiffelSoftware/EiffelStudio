@@ -18,10 +18,14 @@ feature -- Command
 			-- Declared as curl_easy_init().
 		local
 			l_api: POINTER
+			l_exception: CURL_DYNAMIC_LIBRARY_NOT_FOUND_EXCEPTION
 		do
 			l_api := api_loader.safe_load_api (module_name, "curl_easy_init")
 			if l_api /= default_pointer then
 				Result := c_init (l_api)
+			else
+				create l_exception.make
+				l_exception.raise
 			end
 		ensure
 			exists: Result /= default_pointer

@@ -114,7 +114,7 @@ feature -- Access
 	local_vars: ARRAY [BOOLEAN]
 			-- Local variables used have their flag set to True.
 
-	local_index_table: HASH_TABLE [INTEGER, STRING]
+	local_index_table: ARRAYED_LIST [STRING]
 			-- Index in local variable array (C code) for a given register
 
 	associated_register_table: HASH_TABLE [REGISTRABLE, STRING]
@@ -1510,9 +1510,9 @@ feature -- Access
 		local
 			key: STRING
 		do
-			if not local_index_table.has (s) then
+			if not associated_register_table.has (s) then
 				key := s.twin
-				local_index_table.put (local_index_counter, key)
+				local_index_table.extend (key)
 				local_index_counter := local_index_counter + 1
 				associated_register_table.put (r, key)
 			end
@@ -1768,7 +1768,7 @@ feature -- Access
 			--| for the compound or post- pre- or invariant routine. -- FREDD
 		local
 			nb_refs: INTEGER	-- Total number of references to be pushed
-			hash_table: HASH_TABLE [INTEGER, STRING]
+			l_table: like local_index_table
 			associated: HASH_TABLE [REGISTRABLE, STRING]
 			rname: STRING
 			position: INTEGER
@@ -1794,14 +1794,13 @@ feature -- Access
 				buf.put_integer (nb_refs)
 				buf.put_string (gc_rparan_semi_c)
 				from
-					hash_table := local_index_table
+					l_table := local_index_table
 					associated := associated_register_table
-					hash_table.start
+					l_table.start
 				until
-					hash_table.after
+					l_table.after
 				loop
-					rname := hash_table.key_for_iteration
-					position := hash_table.item_for_iteration
+					rname := l_table.item_for_iteration
 					reg := associated.item (rname)
 
 					check
@@ -1828,7 +1827,8 @@ feature -- Access
 							buf.put_local_registration (position, rname)
 						end
 					end
-					hash_table.forth
+					position := position + 1
+					l_table.forth
 				end
 			end
 		end
@@ -1918,7 +1918,7 @@ feature -- Clearing
 			-- Clear feature-specific data.
 		do
 			local_vars.clear_all
-			local_index_table.clear_all
+			local_index_table.wipe_out
 			associated_register_table.clear_all
 			local_index_counter := 0
 			dt_current := 0

@@ -298,18 +298,6 @@ feature -- Access
 			end
 		end
 
-feature -- Element change
-
-	update_lookup (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-		obsolete
-			"Not needed anymore"
-		require
-			v_not_void: v /= Void
-		do
-		end
-
 feature {NONE} -- Constants
 
 	External_header: STRING is "external_name"

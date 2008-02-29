@@ -401,6 +401,10 @@ feature -- Access
 		deferred
 		end
 
+	final_result_static_type: CLASS_C
+			-- Static type of `Current'.
+			-- Only used and set in `is_condition', not in `evaluate' or `set_expression'.
+
 	final_result_type: CLASS_C
 			-- Dynamic type of `final_result'.
 			--| Should be its dynamic type, but for implementation reasons
@@ -431,10 +435,6 @@ feature -- Access
 				end
 			end
 		end
-
-	final_result_static_type: CLASS_C
-			-- Static type of `Current'.
-			-- Only used and set in `is_condition', not in `evaluate' or `set_expression'.
 
 feature {DBG_EXPRESSION} -- Evaluation
 

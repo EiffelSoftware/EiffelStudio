@@ -689,6 +689,64 @@ feature -- Query
 		deferred
 		end
 
+	internal_info (a_value: DUMP_VALUE): ARRAY [ TUPLE [name: STRING; value: DUMP_VALUE]] is
+			-- Internal info for `a_addr'
+		require
+			is_stopped: is_stopped
+		local
+			l_int, l_dv: DUMP_VALUE
+			l_int_cl: CLASS_C
+			eval: DBG_EVALUATOR
+			n: STRING
+			f: FEATURE_I
+			params: ARRAYED_LIST [DUMP_VALUE]
+			l_info: ARRAY [STRING]
+			i: INTEGER
+		do
+			l_int_cl := debugger_manager.compiler_data.internal_class_c
+			eval := debugger_manager.dbg_evaluator
+
+			eval.reset
+			eval.create_empty_instance_of (l_int_cl.actual_type)
+			if not eval.error_occurred then
+				l_int := eval.last_result_value
+				eval.reset
+				if l_int /= Void then
+					l_info := <<
+								"class_name",
+								"type_name",
+								"dynamic_type",
+								"field_count",
+--								"deep_physical_size",
+								"physical_size"
+								>>
+					create Result.make (l_info.lower, l_info.upper)
+					from
+						create params.make (1)
+						params.extend (a_value)
+
+						i := l_info.lower
+					until
+						i > l_info.upper
+					loop
+						n := l_info[i]
+						f := l_int_cl.feature_named (n)
+						l_dv := Void
+						if f /= Void then
+							eval.reset
+							eval.evaluate_routine (Void, l_int, l_int_cl, f, params, False)
+							if not eval.error_occurred then
+								l_dv := eval.last_result_value
+							end
+							eval.reset
+						end
+						Result[i] := [n, l_dv]
+						i := i + 1
+					end
+				end
+			end
+		end
+
 feature -- Parameters
 
 	parameters: DEBUGGER_EXECUTION_PARAMETERS

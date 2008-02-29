@@ -78,7 +78,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent update_sd_tooltip (Result))
 		end
 
-feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
+feature {NONE} -- Implementation
 
 	update_sd_tooltip (toggle: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON) is
 			-- Update tooltip of `toggle'.

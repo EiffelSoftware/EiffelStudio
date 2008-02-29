@@ -173,7 +173,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
-feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
+feature {NONE} -- Implementation
 
 	add_sd_toolbar_item (a_toolbar_item: like new_sd_toolbar_item) is
 			-- Add `a_sd_toolbar_item' to `managed_sd_toolbar_items'.

@@ -58,6 +58,14 @@ feature -- Access
 			result_is_valid_data: is_valid_data (Result)
 		end
 
+feature -- Status report
+
+	is_persistent: BOOLEAN
+			-- Indicates if the event list item should remain in the event list item heap.
+		do
+			Result := True
+		end
+
 feature -- Query
 
 	is_valid_category (a_category: like category): BOOLEAN

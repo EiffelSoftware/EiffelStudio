@@ -847,7 +847,7 @@ feature {NONE} -- Events
 		require
 			a_service_attached: a_service /= Void
 			a_event_attached: a_event_item /= Void
-			a_service_contains_a_event: a_service.all_items.has (a_event_item)
+			a_service_contains_a_event: a_event_item.is_persistent implies a_service.all_items.has (a_event_item)
 		local
 			l_add: BOOLEAN
 			l_event_item: EVENT_LIST_ITEM_I
@@ -909,6 +909,7 @@ feature {NONE} -- Events
 		require
 			a_service_attached: a_service /= Void
 			a_event_attached: a_event_item /= Void
+			a_event_item_is_persistent: a_event_item.is_persistent
 			not_a_service_contains_a_event: not a_service.all_items.has (a_event_item)
 		local
 			l_grid: like grid_events
@@ -992,6 +993,7 @@ feature {NONE} -- Events
 		require
 			a_service_attached: a_service /= Void
 			a_event_attached: a_event_item /= Void
+			a_event_item_is_persistent: a_event_item.is_persistent
 			a_service_contains_a_event: a_service.all_items.has (a_event_item)
 		local
 			l_row: EV_GRID_ROW

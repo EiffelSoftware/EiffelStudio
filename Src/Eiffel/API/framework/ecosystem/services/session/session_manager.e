@@ -299,6 +299,9 @@ feature {NONE} -- Basic operation
 			l_object: ANY
 			l_file: RAW_FILE
 			l_is_dirty: BOOLEAN
+			l_logger: SERVICE_CONSUMER [LOGGER_S]
+			l_site: like site
+			l_message: !STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -316,6 +319,17 @@ feature {NONE} -- Basic operation
 					l_object := l_sed_util.retrieved (l_reader, True)
 					if l_object /= Void then
 						a_session.set_session_object (l_object)
+					else
+							-- Problem with compatibility, log.
+						l_site := site
+						if l_site /= Void then
+							create l_logger.make_with_provider (site)
+							if l_logger.is_service_available then
+									-- Log deserialization error.
+								create l_message.make_from_string ("Unable to deserialize the session data file: " + l_file.name)
+								l_logger.service.put_message_with_severity (l_message, {ENVIRONMENT_CATEGORIES}.internal_event, {PRIORITY_LEVELS}.high)
+							end
+						end
 					end
 
 					if not l_is_dirty then

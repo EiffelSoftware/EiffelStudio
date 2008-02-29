@@ -86,15 +86,17 @@ feature -- Extension
 		local
 			l_event_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
 		do
-			internal_event_items.force_last (a_event_item)
-			if internal_event_items_index.has (a_context_cookie) then
-				l_event_items := internal_event_items_index.item (a_context_cookie)
+			if a_event_item.is_persistent then
+				internal_event_items.force_last (a_event_item)
+				if internal_event_items_index.has (a_context_cookie) then
+					l_event_items := internal_event_items_index.item (a_context_cookie)
+				end
+				if l_event_items = Void then
+					create l_event_items.make (1)
+					internal_event_items_index.force_last (l_event_items, a_context_cookie)
+				end
+				l_event_items.force_last (a_event_item)
 			end
-			if l_event_items = Void then
-				create l_event_items.make (1)
-				internal_event_items_index.force_last (l_event_items, a_context_cookie)
-			end
-			l_event_items.force_last (a_event_item)
 
 				-- Fire events
 			on_item_added (a_event_item)
@@ -198,7 +200,7 @@ feature {NONE} -- Events
 			-- `a_event_item': The event item added to the service.
 		require
 			a_event_attached: a_event_item /= Void
-			current_contains_a_event: all_items.has (a_event_item)
+			current_contains_a_event: a_event_item.is_persistent implies all_items.has (a_event_item)
 		do
 			if not is_zombie and then not item_added_event.is_zombie then
 				item_added_event.publish ([Current, a_event_item])
@@ -211,6 +213,7 @@ feature {NONE} -- Events
 			-- `a_event_item': The event item removed from the service.
 		require
 			a_event_attached: a_event_item /= Void
+			a_event_item_is_persistent: a_event_item.is_persistent
 			not_current_contains_a_event: not all_items.has (a_event_item)
 		do
 			if not is_zombie and then not item_added_event.is_zombie then
@@ -224,6 +227,7 @@ feature {NONE} -- Events
 			-- `a_event_item': The event item that was changed.
 		require
 			a_event_attached: a_event_item /= Void
+			a_event_item_is_persistent: a_event_item.is_persistent
 			current_contains_a_event: all_items.has (a_event_item)
 		do
 			if not is_zombie and then not item_changed_event.is_zombie then

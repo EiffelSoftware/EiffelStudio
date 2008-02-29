@@ -18,10 +18,14 @@ feature -- Command
 			-- Declared as curl_global_init().
 		local
 			l_ptr: POINTER
+			l_exception: CURL_DYNAMIC_LIBRARY_NOT_FOUND_EXCEPTION
 		do
 			l_ptr := api_loader.safe_load_api (module_name, "curl_global_init")
 			if l_ptr /= default_pointer then
 				c_curl_global_init (l_ptr, {CURL_GLOBAL_CONSTANTS}.curl_global_all);
+			else
+				create l_exception.make
+				l_exception.raise
 			end
 		end
 

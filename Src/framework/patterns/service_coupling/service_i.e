@@ -10,6 +10,9 @@ indexing
 deferred class
 	SERVICE_I
 
+inherit
+	SITE [SERVICE_PROVIDER]
+
 indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

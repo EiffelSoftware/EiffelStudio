@@ -28,6 +28,8 @@ feature -- Query
 		require
 			a_type_attached: a_type /= Void
 		deferred
+		ensure
+			result_sited: Result /= Void implies Result.site = Current
 		end
 
 indexing

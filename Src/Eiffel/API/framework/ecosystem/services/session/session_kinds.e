@@ -20,7 +20,7 @@ inherit
 feature -- Access
 
 	frozen environment: UUID
-			-- Environment (global) session
+			-- Environment (global) session.
 		once
 			create Result.make_from_string (environment_uuid_string)
 		ensure
@@ -28,7 +28,7 @@ feature -- Access
 		end
 
 	frozen window: UUID
-			-- Environment window session
+			-- Environment window session.
 		once
 			create Result.make_from_string (window_uuid_string)
 		ensure
@@ -36,7 +36,7 @@ feature -- Access
 		end
 
 	frozen project: UUID
-			-- Project (gloabl) session
+			-- Project (gloabl) session.
 		once
 			create Result.make_from_string (project_uuid_string)
 		ensure
@@ -44,9 +44,17 @@ feature -- Access
 		end
 
 	frozen project_window: UUID
-			-- Project and environment window session
+			-- Project and environment window session.
 		once
 			create Result.make_from_string (project_window_uuid_string)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	frozen custom: UUID
+			-- Custom session.
+		once
+			create Result.make_from_string (custom_uuid_string)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -54,16 +62,19 @@ feature -- Access
 feature {SESSION_I} -- Constants
 
 	environment_uuid_string: STRING = "E1FFE100-85DE-4BDD-B99B-DB1B4895DA6C"
-			-- Environment (global) session string UUID
+			-- Environment (global) session string UUID.
 
 	window_uuid_string: STRING = "E1FFE101-B672-4D8D-BFAC-7E4467634C4A"
-			-- Environment window session string UUID
+			-- Environment window session string UUID.
 
 	project_uuid_string: STRING = "E1FFE102-C7BE-472E-93EF-A7CD63EAD1B1"
-			-- Project (gloabl) session string UUID
+			-- Project (gloabl) session string UUID.
 
 	project_window_uuid_string: STRING = "E1FFE103-CDE1-4AA1-95A7-E337BFD85C95"
-			-- Project and environment window session string UUID
+			-- Project and environment window session string UUID.
+
+	custom_uuid_string: STRING = "E1FFE104-593B-46C4-BE54-82D0D4C1033F"
+			-- Custom session string UUID.
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

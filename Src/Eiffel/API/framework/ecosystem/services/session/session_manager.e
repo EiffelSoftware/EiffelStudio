@@ -97,44 +97,64 @@ feature {NONE} -- Query
 			create l_formatter
 			create l_kinds
 
-				-- Determine session type		
-			l_kind := a_session.kind
-			if l_kind.is_equal (l_kinds.environment) then
-				l_fn := environment_file_name
-			elseif l_kind.is_equal (l_kinds.window) then
-				l_fn := window_file_name
-			elseif l_kind.is_equal (l_kinds.project) then
-				l_fn := project_file_name
-				l_conf_target := (create {SHARED_WORKBENCH}).workbench.lace.target
-				l_ver := l_conf_target.system.uuid.out
-				l_target := l_conf_target.name
-			elseif l_kind.is_equal (l_kinds.project_window) then
-				l_fn := project_window_file_name
-				l_conf_target := (create {SHARED_WORKBENCH}).workbench.lace.target
-				l_ver := l_conf_target.system.uuid.out
-				l_target := l_conf_target.name
+			if {l_session: !CUSTOM_SESSION_I} a_session then
+				Result := l_session.file_name
 			else
-					-- Unknown session kind
-				check False end
-			end
+					-- Determine session type		
+				l_kind := a_session.kind
+				if l_kind.is_equal (l_kinds.environment) then
+					l_fn := environment_file_name
+				elseif l_kind.is_equal (l_kinds.window) then
+					l_fn := window_file_name
+				elseif l_kind.is_equal (l_kinds.project) then
+					l_fn := project_file_name
+					l_conf_target := (create {SHARED_WORKBENCH}).workbench.lace.target
+					l_ver := l_conf_target.system.uuid.out
+					l_target := l_conf_target.name
+				elseif l_kind.is_equal (l_kinds.project_window) then
+					l_fn := project_window_file_name
+					l_conf_target := (create {SHARED_WORKBENCH}).workbench.lace.target
+					l_ver := l_conf_target.system.uuid.out
+					l_target := l_conf_target.name
+				else
+						-- Unknown session kind
+					check False end
+				end
 
-			check
-				l_fn_attached: l_fn /= Void
-				not_l_fn_is_empty: not l_fn.is_empty
-			end
+				check
+					l_fn_attached: l_fn /= Void
+					not_l_fn_is_empty: not l_fn.is_empty
+				end
 
-				-- Format path using collected parts
-			if l_ver /= Void then
-				l_fn := l_formatter.format (l_fn, [l_ver, l_target])
-			end
+					-- Format path using collected parts
+				if l_ver /= Void then
+					l_fn := l_formatter.format (l_fn, [l_ver, l_target])
+				end
 
-				-- Create full path
-			create l_path.make_from_string (eiffel_layout.eiffel_home.out)
-			l_path.set_file_name (l_fn)
-			Result := l_path.out
+					-- Create full path
+				create l_path.make_from_string (eiffel_layout.eiffel_home.out)
+				l_path.set_file_name (l_fn)
+				Result := l_path.out
+			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
+		end
+
+feature {NONE} -- Helpers
+
+	logger_service: !SERVICE_CONSUMER [LOGGER_S]
+			-- Access to logger service
+		do
+			if {l_service: !SERVICE_CONSUMER [LOGGER_S]} internal_logger_service then
+				Result := l_service
+			else
+				check
+					sited: site /= Void
+				end
+				create Result.make_with_provider (site)
+				internal_logger_service := Result
+			end
 		end
 
 feature -- Storage
@@ -147,6 +167,8 @@ feature -- Storage
 			l_sed_util: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_file: RAW_FILE
+			l_logger: like logger_service
+			l_message: !STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -165,6 +187,15 @@ feature -- Storage
 
 						-- Reset direty state
 					a_session.reset_is_dirty
+				end
+			else
+					-- Problem with storage, log.
+				l_logger := logger_service
+				if l_logger.is_service_available then
+						-- Log deserialization error.
+					create l_message.make_from_string ("Unable to store the session data file: ")
+					l_message.append (session_file_path (a_session))
+					l_logger.service.put_message_with_severity (l_message, {ENVIRONMENT_CATEGORIES}.internal_event, {PRIORITY_LEVELS}.high)
 				end
 			end
 
@@ -270,6 +301,21 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
+	retrieve_from_disk (a_file_name: STRING_8): SESSION_I
+			-- Retrieves a session object from disk, if it exists.
+			-- If no file exists then a new session is created.
+			--
+			-- `a_file_name': The full path to a file on disk to retrieve session data from.
+		do
+				-- Create a new custom session
+			Result := create_new_custom_session (a_file_name)
+			if Result /= Void then
+				sessions.force_last (Result)
+			end
+		ensure then
+			sessions_has_result: Result /= Void implies sessions.has (Result)
+		end
+
 	reload (a_session: SESSION_I) is
 			-- Reload a session and resets any changed session data.
 			--
@@ -321,14 +367,11 @@ feature {NONE} -- Basic operation
 						a_session.set_session_object (l_object)
 					else
 							-- Problem with compatibility, log.
-						l_site := site
-						if l_site /= Void then
-							create l_logger.make_with_provider (site)
-							if l_logger.is_service_available then
-									-- Log deserialization error.
-								create l_message.make_from_string ("Unable to deserialize the session data file: " + l_file.name)
-								l_logger.service.put_message_with_severity (l_message, {ENVIRONMENT_CATEGORIES}.internal_event, {PRIORITY_LEVELS}.high)
-							end
+						l_logger := logger_service
+						if l_logger.is_service_available then
+								-- Log deserialization error.
+							create l_message.make_from_string ("Unable to deserialize the session data file: " + l_file.name)
+							l_logger.service.put_message_with_severity (l_message, {ENVIRONMENT_CATEGORIES}.internal_event, {PRIORITY_LEVELS}.high)
 						end
 					end
 
@@ -351,12 +394,13 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Factory
 
-	create_new_session (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): SESSION_I is
+	create_new_session (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_window': The window to bind the session object to; False to make a session for the entire IDE.
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
 		require
+			is_interface_usable: is_interface_usable
 			not_a_window_is_recycled: a_window /= Void implies not a_window.is_recycled
 		local
 			l_inner_session: SESSION_I
@@ -418,6 +462,24 @@ feature {NONE} -- Factory
 			result_is_clean: Result /= Void implies not Result.is_dirty
 		end
 
+	create_new_custom_session (a_file_name: STRING_32): CUSTOM_SESSION_I
+			-- Creates a new session object
+			--
+			-- `a_file_name': The full path to a file on disk to retrieve session data from.
+		require
+			is_interface_usable: is_interface_usable
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		do
+			create {CUSTOM_SESSION} Result.make (a_file_name, Current)
+			set_session_object (Result)
+			auto_dispose (Result)
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+			result_is_clean: Result /= Void implies not Result.is_dirty
+			result_file_name_set: Result /= Void implies a_file_name.is_equal (Result.file_name)
+		end
+
 feature {NONE} -- Constants
 
 	environment_file_name: STRING_8 = ".environment.session"
@@ -429,6 +491,10 @@ feature {NONE} -- Internal implementation cache
 
 	internal_sessions: like sessions
 			-- Cached version of `sessions'
+			-- Note: Do not use directly!
+
+	internal_logger_service: SERVICE_CONSUMER [LOGGER_S]
+			-- Cached version of `logger_service'
 			-- Note: Do not use directly!
 
 ;indexing

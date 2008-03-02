@@ -4,8 +4,6 @@
 
 #include "../U/runtime.H"
 
->JMTCFLAGS
-
 ;# Files used to build the daemon
 LSRC = byte.c date.c offset.c minilzo.c
 PSTORE = pstore.c pretrieve.c
@@ -75,8 +73,8 @@ CFLAGS = $(DPFLAGS)
 
 NormalLibraryTarget(compiler,$(LSRC) $(PSTORE),$(FOBJ))
 NormalLibraryTarget(wcompiler,$(LSRC) $(PSTORE),$(WOBJ))
-CustomLibraryTarget(mtcompiler, $(MT_FOBJ))
-CustomLibraryTarget(mtwcompiler, $(MT_WOBJ))
+CustomLibraryTarget(mtcompiler,$(MT_FOBJ))
+CustomLibraryTarget(mtwcompiler,$(MT_WOBJ))
 SimpleProgramTarget(bytedump)
 SimpleProgramTarget(meltdump)
 DependTarget()

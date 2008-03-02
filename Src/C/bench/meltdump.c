@@ -938,7 +938,7 @@ static  void    analyze_desc ()
 					if ((i % 8) == 0)
 						fprintf (mfp, "\n  ");
 
-					fprintf (mfp, "%ld: (%d,%d) ",
+					fprintf (mfp, "%ld: (%d,%d,%d) ",
 							 i, dinfo [3*i], dinfo [3*i+1], dinfo [3 * i + 2]);
 				}
 

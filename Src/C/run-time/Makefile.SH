@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 1.4 2005/10/13 21:38:08 manus Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.5 PL0]
+: $X-Id: Jmake.tmpl 91075 2005-12-28 23:58:23Z manus $
 
 case $CONFIG in
 '')
-	       if test -f config.sh; then TOP=.;
-	       elif test -f ../config.sh; then TOP=..;
-	       elif test -f ../../config.sh; then TOP=../..;
-	       elif test -f ../../../config.sh; then TOP=../../..;
-	       elif test -f ../../../../config.sh; then TOP=../../../..;
-	       else
-	               echo "Can't find config.sh."; exit 1
-	       fi
-	       . $TOP/config.sh
-	       ;;
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
+	;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -22,6 +22,7 @@ DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
 
 INSTALL=`echo $install | sed -e 's,\./i,\$(TOP)/i,'`
+INSTALLDIR=`echo $installdir | sed -e 's,\./i,\$(TOP)/i,'`
 DATE=`date`
 
 $spitshell >Makefile <<!GROK!THIS!
@@ -34,6 +35,7 @@ TOP = ..
 CURRENT = $CURRENT
 DIR = $DIR
 INSTALL = $INSTALL
+INSTALLDIR = $INSTALLDIR
 
 ########################################################################
 # Parameters set by Configure -- edit config.sh if changes are needed
@@ -43,7 +45,7 @@ CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
-JLDFLAGS = \$(LDFLAGS) $ccldflags
+JLKFLAGS = \$(LDFLAGS) $ccldflags
 LDSHAREDFLAGS = $ldsharedflags
 SHAREDLINK= $sharedlink
 L = $manext
@@ -63,9 +65,9 @@ SED = $sed
 # Automatically generated parameters -- do not edit
 
 USRINC = $usrinc
-LSCRIPTS =  eif_size.h
 OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) \$(EOBJ) \$(MT_EOBJ) x2c.o
 SOURCES =  \$(LSRC) \$(OTHER) \$(WADD) x2c.c
+LSCRIPTS =  eif_size.h
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -77,7 +79,8 @@ SOURCES =  \$(LSRC) \$(OTHER) \$(WADD) x2c.c
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 1.4 2005/10/13 21:37:30 manus Exp $
+# $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
+
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -106,323 +109,323 @@ NETWORK_OBJ = $(TOP)/ipc/app/network.o
 MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 
 LSRC = malloc.c garcol.c local.c store.c retrieve.c \
-	       hash.c traverse.c hashin.c tools.c internal.c plug.c \
-	       copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
-	       hector.c cecil.c bits.c file.c dir.c misc.c \
-	       error.c umain.c memory.c argv.c boolstr.c search.c \
-	       run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
-	       eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
-	       option.c compress.c console.c
+	hash.c traverse.c hashin.c tools.c internal.c plug.c \
+	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
+	hector.c cecil.c bits.c file.c dir.c misc.c \
+	error.c umain.c memory.c argv.c boolstr.c search.c \
+	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
+	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
+	option.c compress.c console.c
 
 OTHER = main.c except.c
 
 WADD = debug.c interp.c update.c wbench.c
 
 WOBJ = \
-	       $(IDRS_OBJ) \
-	       $(LIB_IPC_ARCH) \
-	       $(NETWORK_OBJ) \
-	       debug.o \
-	       interp.o \
-	       update.o \
-	       wbench.o \
-	       wmalloc.o \
-	       wgarcol.o \
-	       wlocal.o \
-	       wstore.o \
-	       wretrieve.o \
-	       whash.o \
-	       wtraverse.o \
-	       whashin.o \
-	       wtools.o \
-	       winternal.o \
-	       wplug.o \
-	       wcopy.o \
-	       wequal.o \
-	       wlmalloc.o \
-	       wout.o \
-	       wtimer.o \
-	       wurgent.o \
-	       wsig.o \
-	       whector.o \
-	       wcecil.o \
-	       wbits.o \
-	       wfile.o \
-	       wdir.o \
-	       wmisc.o \
-	       werror.o \
-	       wumain.o \
-	       wmemory.o \
-	       wargv.o \
-	       wboolstr.o \
-	       wsearch.o \
-	       wrun_idr.o \
-	       wpath_name.o \
-	       wobject_id.o \
-	       weif_threads.o \
-	       weif_project.o \
-	       weif_rw_lock.o \
-	       wgen_conf.o \
-	       weif_type_id.o \
-	       wrout_obj.o \
-	       woption.o \
-	       wcompress.o \
-	       wconsole.o \
-	       wmain.o \
-	       wexcept.o 
+	$(IDRS_OBJ) \
+	$(LIB_IPC_ARCH) \
+	$(NETWORK_OBJ) \
+	debug.o \
+	interp.o \
+	update.o \
+	wbench.o \
+	wmalloc.o \
+	wgarcol.o \
+	wlocal.o \
+	wstore.o \
+	wretrieve.o \
+	whash.o \
+	wtraverse.o \
+	whashin.o \
+	wtools.o \
+	winternal.o \
+	wplug.o \
+	wcopy.o \
+	wequal.o \
+	wlmalloc.o \
+	wout.o \
+	wtimer.o \
+	wurgent.o \
+	wsig.o \
+	whector.o \
+	wcecil.o \
+	wbits.o \
+	wfile.o \
+	wdir.o \
+	wmisc.o \
+	werror.o \
+	wumain.o \
+	wmemory.o \
+	wargv.o \
+	wboolstr.o \
+	wsearch.o \
+	wrun_idr.o \
+	wpath_name.o \
+	wobject_id.o \
+	weif_threads.o \
+	weif_project.o \
+	weif_rw_lock.o \
+	wgen_conf.o \
+	weif_type_id.o \
+	wrout_obj.o \
+	woption.o \
+	wcompress.o \
+	wconsole.o \
+	wmain.o \
+	wexcept.o 
 
 LOBJ = \
-	       $(IDRS_OBJ) \
-	       malloc.o \
-	       garcol.o \
-	       local.o \
-	       store.o \
-	       retrieve.o \
-	       hash.o \
-	       traverse.o \
-	       hashin.o \
-	       tools.o \
-	       internal.o \
-	       plug.o \
-	       copy.o \
-	       equal.o \
-	       lmalloc.o \
-	       out.o \
-	       timer.o \
-	       urgent.o \
-	       sig.o \
-	       hector.o \
-	       cecil.o \
-	       bits.o \
-	       file.o \
-	       dir.o \
-	       misc.o \
-	       error.o \
-	       umain.o \
-	       memory.o \
-	       argv.o \
-	       boolstr.o \
-	       search.o \
-	       run_idr.o \
-	       path_name.o \
-	       object_id.o \
-	       eif_threads.o \
-	       eif_project.o \
-	       eif_rw_lock.o \
-	       gen_conf.o \
-	       eif_type_id.o \
-	       rout_obj.o \
-	       option.o \
-	       compress.o \
-	       console.o \
-	       main.o \
-	       except.o 
+	$(IDRS_OBJ) \
+	malloc.o \
+	garcol.o \
+	local.o \
+	store.o \
+	retrieve.o \
+	hash.o \
+	traverse.o \
+	hashin.o \
+	tools.o \
+	internal.o \
+	plug.o \
+	copy.o \
+	equal.o \
+	lmalloc.o \
+	out.o \
+	timer.o \
+	urgent.o \
+	sig.o \
+	hector.o \
+	cecil.o \
+	bits.o \
+	file.o \
+	dir.o \
+	misc.o \
+	error.o \
+	umain.o \
+	memory.o \
+	argv.o \
+	boolstr.o \
+	search.o \
+	run_idr.o \
+	path_name.o \
+	object_id.o \
+	eif_threads.o \
+	eif_project.o \
+	eif_rw_lock.o \
+	gen_conf.o \
+	eif_type_id.o \
+	rout_obj.o \
+	option.o \
+	compress.o \
+	console.o \
+	main.o \
+	except.o 
 
 EOBJ = \
-	       $(IDRS_OBJ) \
-	       $(LIB_IPC_ARCH) \
-	       $(EWB_PROTO_OBJ) \
-	       debug.o \
-	       interp.o \
-	       update.o \
-	       wbench.o \
-	       wmalloc.o \
-	       wgarcol.o \
-	       wlocal.o \
-	       wstore.o \
-	       wretrieve.o \
-	       whash.o \
-	       wtraverse.o \
-	       whashin.o \
-	       wtools.o \
-	       winternal.o \
-	       wplug.o \
-	       wcopy.o \
-	       wequal.o \
-	       wlmalloc.o \
-	       wout.o \
-	       wtimer.o \
-	       wurgent.o \
-	       wsig.o \
-	       whector.o \
-	       wcecil.o \
-	       wbits.o \
-	       wfile.o \
-	       wdir.o \
-	       wmisc.o \
-	       werror.o \
-	       wumain.o \
-	       wmemory.o \
-	       wargv.o \
-	       wboolstr.o \
-	       wsearch.o \
-	       wrun_idr.o \
-	       wpath_name.o \
-	       wobject_id.o \
-	       weif_threads.o \
-	       weif_project.o \
-	       weif_rw_lock.o \
-	       wgen_conf.o \
-	       weif_type_id.o \
-	       wrout_obj.o \
-	       woption.o \
-	       wcompress.o \
-	       wconsole.o \
-	       bmain.o \
-	       bexcept.o 
+	$(IDRS_OBJ) \
+	$(LIB_IPC_ARCH) \
+	$(EWB_PROTO_OBJ) \
+	debug.o \
+	interp.o \
+	update.o \
+	wbench.o \
+	wmalloc.o \
+	wgarcol.o \
+	wlocal.o \
+	wstore.o \
+	wretrieve.o \
+	whash.o \
+	wtraverse.o \
+	whashin.o \
+	wtools.o \
+	winternal.o \
+	wplug.o \
+	wcopy.o \
+	wequal.o \
+	wlmalloc.o \
+	wout.o \
+	wtimer.o \
+	wurgent.o \
+	wsig.o \
+	whector.o \
+	wcecil.o \
+	wbits.o \
+	wfile.o \
+	wdir.o \
+	wmisc.o \
+	werror.o \
+	wumain.o \
+	wmemory.o \
+	wargv.o \
+	wboolstr.o \
+	wsearch.o \
+	wrun_idr.o \
+	wpath_name.o \
+	wobject_id.o \
+	weif_threads.o \
+	weif_project.o \
+	weif_rw_lock.o \
+	wgen_conf.o \
+	weif_type_id.o \
+	wrout_obj.o \
+	woption.o \
+	wcompress.o \
+	wconsole.o \
+	bmain.o \
+	bexcept.o 
 
 MT_WOBJ = \
-	       $(MTIDRS_OBJ) \
-	       $(LIB_MTIPC_ARCH) \
-	       $(MTNETWORK_OBJ) \
-	       MTdebug.o \
-	       MTinterp.o \
-	       MTupdate.o \
-	       MTwbench.o \
-	       MTwmalloc.o \
-	       MTwgarcol.o \
-	       MTwlocal.o \
-	       MTwstore.o \
-	       MTwretrieve.o \
-	       MTwhash.o \
-	       MTwtraverse.o \
-	       MTwhashin.o \
-	       MTwtools.o \
-	       MTwinternal.o \
-	       MTwplug.o \
-	       MTwcopy.o \
-	       MTwequal.o \
-	       MTwlmalloc.o \
-	       MTwout.o \
-	       MTwtimer.o \
-	       MTwurgent.o \
-	       MTwsig.o \
-	       MTwhector.o \
-	       MTwcecil.o \
-	       MTwbits.o \
-	       MTwfile.o \
-	       MTwdir.o \
-	       MTwmisc.o \
-	       MTwerror.o \
-	       MTwumain.o \
-	       MTwmemory.o \
-	       MTwargv.o \
-	       MTwboolstr.o \
-	       MTwsearch.o \
-	       MTwrun_idr.o \
-	       MTwpath_name.o \
-	       MTwobject_id.o \
-	       MTweif_threads.o \
-	       MTweif_project.o \
-	       MTweif_rw_lock.o \
-	       MTwgen_conf.o \
-	       MTweif_type_id.o \
-	       MTwrout_obj.o \
-	       MTwoption.o \
-	       MTwcompress.o \
-	       MTwconsole.o \
-	       MTwmain.o \
-	       MTwexcept.o 
+	$(MTIDRS_OBJ) \
+	$(LIB_MTIPC_ARCH) \
+	$(MTNETWORK_OBJ) \
+	MTdebug.o \
+	MTinterp.o \
+	MTupdate.o \
+	MTwbench.o \
+	MTwmalloc.o \
+	MTwgarcol.o \
+	MTwlocal.o \
+	MTwstore.o \
+	MTwretrieve.o \
+	MTwhash.o \
+	MTwtraverse.o \
+	MTwhashin.o \
+	MTwtools.o \
+	MTwinternal.o \
+	MTwplug.o \
+	MTwcopy.o \
+	MTwequal.o \
+	MTwlmalloc.o \
+	MTwout.o \
+	MTwtimer.o \
+	MTwurgent.o \
+	MTwsig.o \
+	MTwhector.o \
+	MTwcecil.o \
+	MTwbits.o \
+	MTwfile.o \
+	MTwdir.o \
+	MTwmisc.o \
+	MTwerror.o \
+	MTwumain.o \
+	MTwmemory.o \
+	MTwargv.o \
+	MTwboolstr.o \
+	MTwsearch.o \
+	MTwrun_idr.o \
+	MTwpath_name.o \
+	MTwobject_id.o \
+	MTweif_threads.o \
+	MTweif_project.o \
+	MTweif_rw_lock.o \
+	MTwgen_conf.o \
+	MTweif_type_id.o \
+	MTwrout_obj.o \
+	MTwoption.o \
+	MTwcompress.o \
+	MTwconsole.o \
+	MTwmain.o \
+	MTwexcept.o 
 
 MT_LOBJ = \
-	       $(MTIDRS_OBJ) \
-	       MTmalloc.o \
-	       MTgarcol.o \
-	       MTlocal.o \
-	       MTstore.o \
-	       MTretrieve.o \
-	       MThash.o \
-	       MTtraverse.o \
-	       MThashin.o \
-	       MTtools.o \
-	       MTinternal.o \
-	       MTplug.o \
-	       MTcopy.o \
-	       MTequal.o \
-	       MTlmalloc.o \
-	       MTout.o \
-	       MTtimer.o \
-	       MTurgent.o \
-	       MTsig.o \
-	       MThector.o \
-	       MTcecil.o \
-	       MTbits.o \
-	       MTfile.o \
-	       MTdir.o \
-	       MTmisc.o \
-	       MTerror.o \
-	       MTumain.o \
-	       MTmemory.o \
-	       MTargv.o \
-	       MTboolstr.o \
-	       MTsearch.o \
-	       MTrun_idr.o \
-	       MTpath_name.o \
-	       MTobject_id.o \
-	       MTeif_threads.o \
-	       MTeif_project.o \
-	       MTeif_rw_lock.o \
-	       MTgen_conf.o \
-	       MTeif_type_id.o \
-	       MTrout_obj.o \
-	       MToption.o \
-	       MTcompress.o \
-	       MTconsole.o \
-	       MTmain.o \
-	       MTexcept.o 
+	$(MTIDRS_OBJ) \
+	MTmalloc.o \
+	MTgarcol.o \
+	MTlocal.o \
+	MTstore.o \
+	MTretrieve.o \
+	MThash.o \
+	MTtraverse.o \
+	MThashin.o \
+	MTtools.o \
+	MTinternal.o \
+	MTplug.o \
+	MTcopy.o \
+	MTequal.o \
+	MTlmalloc.o \
+	MTout.o \
+	MTtimer.o \
+	MTurgent.o \
+	MTsig.o \
+	MThector.o \
+	MTcecil.o \
+	MTbits.o \
+	MTfile.o \
+	MTdir.o \
+	MTmisc.o \
+	MTerror.o \
+	MTumain.o \
+	MTmemory.o \
+	MTargv.o \
+	MTboolstr.o \
+	MTsearch.o \
+	MTrun_idr.o \
+	MTpath_name.o \
+	MTobject_id.o \
+	MTeif_threads.o \
+	MTeif_project.o \
+	MTeif_rw_lock.o \
+	MTgen_conf.o \
+	MTeif_type_id.o \
+	MTrout_obj.o \
+	MToption.o \
+	MTcompress.o \
+	MTconsole.o \
+	MTmain.o \
+	MTexcept.o 
 
 MT_EOBJ = \
-	       $(MTIDRS_OBJ) \
-	       $(LIB_MTIPC_ARCH) \
-	       $(MTEWB_PROTO_OBJ) \
-	       MTdebug.o \
-	       MTinterp.o \
-	       MTupdate.o \
-	       MTwbench.o \
-	       MTwmalloc.o \
-	       MTwgarcol.o \
-	       MTwlocal.o \
-	       MTwstore.o \
-	       MTwretrieve.o \
-	       MTwhash.o \
-	       MTwtraverse.o \
-	       MTwhashin.o \
-	       MTwtools.o \
-	       MTwinternal.o \
-	       MTwplug.o \
-	       MTwcopy.o \
-	       MTwequal.o \
-	       MTwlmalloc.o \
-	       MTwout.o \
-	       MTwtimer.o \
-	       MTwurgent.o \
-	       MTwsig.o \
-	       MTwhector.o \
-	       MTwcecil.o \
-	       MTwbits.o \
-	       MTwfile.o \
-	       MTwdir.o \
-	       MTwmisc.o \
-	       MTwerror.o \
-	       MTwumain.o \
-	       MTwmemory.o \
-	       MTwargv.o \
-	       MTwboolstr.o \
-	       MTwsearch.o \
-	       MTwrun_idr.o \
-	       MTwpath_name.o \
-	       MTwobject_id.o \
-	       MTweif_threads.o \
-	       MTweif_project.o \
-	       MTweif_rw_lock.o \
-	       MTwgen_conf.o \
-	       MTweif_type_id.o \
-	       MTwrout_obj.o \
-	       MTwoption.o \
-	       MTwcompress.o \
-	       MTwconsole.o \
-	       MTbmain.o \
-	       MTbexcept.o 
+	$(MTIDRS_OBJ) \
+	$(LIB_MTIPC_ARCH) \
+	$(MTEWB_PROTO_OBJ) \
+	MTdebug.o \
+	MTinterp.o \
+	MTupdate.o \
+	MTwbench.o \
+	MTwmalloc.o \
+	MTwgarcol.o \
+	MTwlocal.o \
+	MTwstore.o \
+	MTwretrieve.o \
+	MTwhash.o \
+	MTwtraverse.o \
+	MTwhashin.o \
+	MTwtools.o \
+	MTwinternal.o \
+	MTwplug.o \
+	MTwcopy.o \
+	MTwequal.o \
+	MTwlmalloc.o \
+	MTwout.o \
+	MTwtimer.o \
+	MTwurgent.o \
+	MTwsig.o \
+	MTwhector.o \
+	MTwcecil.o \
+	MTwbits.o \
+	MTwfile.o \
+	MTwdir.o \
+	MTwmisc.o \
+	MTwerror.o \
+	MTwumain.o \
+	MTwmemory.o \
+	MTwargv.o \
+	MTwboolstr.o \
+	MTwsearch.o \
+	MTwrun_idr.o \
+	MTwpath_name.o \
+	MTwobject_id.o \
+	MTweif_threads.o \
+	MTweif_project.o \
+	MTweif_rw_lock.o \
+	MTwgen_conf.o \
+	MTweif_type_id.o \
+	MTwrout_obj.o \
+	MTwoption.o \
+	MTwcompress.o \
+	MTwconsole.o \
+	MTbmain.o \
+	MTbexcept.o 
 
 wmalloc.o: malloc.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
@@ -838,29 +841,29 @@ MTbexcept.o: except.c
 
 
 debug.o: debug.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 interp.o: interp.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 update.o: update.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wbench.o: wbench.c
-	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 
 MTdebug.o: debug.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTinterp.o: interp.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTupdate.o: update.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwbench.o: wbench.c
-	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 
 all:: eif_size.h
@@ -871,23 +874,30 @@ local_realclean::
 eif_size.h: eif_size_h.SH
 	/bin/sh eif_size_h.SH
 
-install:: $(SCRIPTS) $(LSCRIPTS)
-	@for file in $(SCRIPTS) $(LSCRIPTS); do \
-	case '${MFLAGS}' in *[i]*) set +e;; esac; \
-	(set -x; $(INSTALL) -c -m 555 $$file $(SCRIPTDIR)); \
+local_install:: $(SCRIPTS) $(LSCRIPTS)
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \
+	(set -x; test -d $(INSTALL_PREFIX)$(SCRIPTDIR) || \
+	$(INSTALLDIR) $(INSTALL_PREFIX)$(SCRIPTDIR)); \
+	for file in $(SCRIPTS) $(LSCRIPTS); do \
+	(set -x; \
+	$(INSTALL) -c -m 555 $$file $(INSTALL_PREFIX)$(SCRIPTDIR)) || \
+	exit 1; \
 	done
 
-deinstall::
+local_deinstall::
 	@for file in $(SCRIPTS) $(LSCRIPTS); do \
 	case '${MFLAGS}' in *[i]*) set +e;; esac; \
-	(set -x; $(RM) $(SCRIPTDIR)/$$file); \
+	(set -x; $(RM) $(INSTALL_PREFIX)$(SCRIPTDIR)/$$file); \
 	done
 
-install.man:: eif_size_h.man
-	$(INSTALL) -c -m 444 eif_size_h.man $(MANSRC)/eif_size.h.$(L)
+local_install.man:: eif_size_h.man
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \
+	(set -x; test -d $(INSTALL_PREFIX)$(MANSRC) || \
+	$(INSTALLDIR) $(INSTALL_PREFIX)$(MANSRC)); \
+	$(INSTALL) -c -m 444 eif_size_h.man $(INSTALL_PREFIX)$(MANSRC)/eif_size.h.$(L)
 
-deinstall.man::
-	$(RM) $(MANSRC)/eif_size.h.$(L)
+local_deinstall.man::
+	$(RM) $(INSTALL_PREFIX)$(MANSRC)/eif_size.h.$(L)
 
 all:: libmtfinalized.a
 
@@ -992,8 +1002,9 @@ local_realclean::
 
 x2c: x2c.o
 	$(RM) $@
-	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
-	$(CC) -o $@ x2c.o $(JLDFLAGS) $(LIBS)
+	if test -f $@$(_EXE); then \
+	$(MV) $@$(_EXE) $@~$(_EXE); fi
+	$(CC) -o $@ x2c.o $(JLKFLAGS) $(LIBS)
 
 all:: eif_config.h eif_portable.h eif_confmagic.h
 
@@ -1001,16 +1012,16 @@ local_realclean::
 	$(RM) eif_config.h eif_portable.h eif_confmagic.h
 
 eif_config.h: $(TOP)/eif_config.h
-	       $(RM) $@
-	       $(LN) $(TOP)/eif_config.h .
+	$(RM) $@
+	$(LN) $(TOP)/eif_config.h .
 
 eif_confmagic.h: $(TOP)/eif_confmagic.h
-	       $(RM) $@
-	       $(LN) $(TOP)/eif_confmagic.h .
+	$(RM) $@
+	$(LN) $(TOP)/eif_confmagic.h .
 
 eif_portable.h: $(TOP)/eif_portable.h
-	       $(RM) $@
-	       $(LN) $(TOP)/eif_portable.h .
+	$(RM) $@
+	$(LN) $(TOP)/eif_portable.h .
 
 depend:: ../mkdep
 
@@ -1020,9 +1031,9 @@ depend:: ../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
-	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
-	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
+	$(SED) -e 's:/usr/lib[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e '$$ b print' -e 'H; d; n; : print' \
+	-e 'x; s/\\$$//; s/\\\n//g; s/  */ /g; s/ :/:/;' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -1081,32 +1092,32 @@ $(TOP)/ipc/ewb/MTwewb_proto.o: .FORCE
 TESTS = mram gram lram eram sram
 
 test: $(TESTS)
-	       mram >test 2>&1
-	       gram >>test 2>&1
-	       lram >>test 2>&1
-	       eram >>test 2>&1
-	       sram >>test 2>&1
+	mram >test 2>&1
+	gram >>test 2>&1
+	lram >>test 2>&1
+	eram >>test 2>&1
+	sram >>test 2>&1
 
 mram: malloc.c
-	$(CC) $(JCFLAGS) -DTEST -o $@ malloc.c
+	$(CC) $(JCFLAGS) -DTEST  -o $@ malloc.c
 
 gram: garcol.c
-	$(CC) $(JCFLAGS) -DTEST -o $@ garcol.c
+	$(CC) $(JCFLAGS) -DTEST  -o $@ garcol.c
 
 lram: local.c
-	$(CC) $(JCFLAGS) -DTEST -o $@ local.c
+	$(CC) $(JCFLAGS) -DTEST  -o $@ local.c
 
 eram: except.c
-	$(CC) $(JCFLAGS) -DTEST -o $@ except.c
+	$(CC) $(JCFLAGS) -DTEST  -o $@ except.c
 
 sram: sig.c
-	$(CC) $(JCFLAGS) -DTEST -o $@ sig.c
+	$(CC) $(JCFLAGS) -DTEST  -o $@ sig.c
 
 local_realclean::
-	       $(RM) $(TESTS)
+	$(RM) $(TESTS)
 
 local_clobber::
-	       $(RM) test
+	$(RM) test
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit
@@ -1118,7 +1129,8 @@ realclean: local_realclean
 clobber: local_clobber
 
 local_clean::
-	$(RM) core *~ *.o
+	if test -f core; then $(RM) core; fi
+	$(RM) *~ *.o
 
 local_realclean:: local_clean
 
@@ -1133,7 +1145,7 @@ Makefile.SH: Jmakefile
 	fi; \
 	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
 	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
-	else touch $@; exit 0; fi
+	else touch $@; fi
 
 Makefile: Makefile.SH
 	/bin/sh Makefile.SH
@@ -1149,16 +1161,16 @@ local_clobber::
 # Empty rules for directories with no sub-directories -- do not edit
 
 install::
-	       @echo "install in $(CURRENT) done."
+	@echo "install in $(CURRENT) done."
 
 deinstall::
-	       @echo "deinstall in $(CURRENT) done."
+	@echo "deinstall in $(CURRENT) done."
 
 install.man::
-	       @echo "install.man in $(CURRENT) done."
+	@echo "install.man in $(CURRENT) done."
 
 deinstall.man::
-	       @echo "deinstall.man in $(CURRENT) done."
+	@echo "deinstall.man in $(CURRENT) done."
 
 Makefiles::
 
@@ -1174,3 +1186,4 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
+

@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 1.4 2005/10/13 21:38:08 manus Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.5 PL0]
+: $X-Id: Jmake.tmpl 91075 2005-12-28 23:58:23Z manus $
 
 case $CONFIG in
 '')
-	       if test -f config.sh; then TOP=.;
-	       elif test -f ../config.sh; then TOP=..;
-	       elif test -f ../../config.sh; then TOP=../..;
-	       elif test -f ../../../config.sh; then TOP=../../..;
-	       elif test -f ../../../../config.sh; then TOP=../../../..;
-	       else
-	               echo "Can't find config.sh."; exit 1
-	       fi
-	       . $TOP/config.sh
-	       ;;
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
+	;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -54,7 +54,7 @@ SED = $sed
 
 USRINC = $usrinc
 SOURCES =  \$(LSRC)
-OBJECTS =  \$(LOBJ) \$(WOBJ) \$(MT_LOBJ) \$(MT_WOBJ) wewb_proto.o MTwewb_proto.o
+OBJECTS =  \$(LOBJ)  \$(WOBJ)  \$(MT_LOBJ)  \$(MT_WOBJ) wewb_proto.o MTwewb_proto.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -66,7 +66,8 @@ OBJECTS =  \$(LOBJ) \$(WOBJ) \$(MT_LOBJ) \$(MT_WOBJ) wewb_proto.o MTwewb_proto.o
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 1.4 2005/10/13 21:37:30 manus Exp $
+# $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
+
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -83,44 +84,44 @@ ALL_SRC = $(LSRC)
 
 # Derived object file names
 LOBJ = \
-	       eproto.o \
-	       eif_in.o \
-	       eif_out.o \
-	       ewb_init.o \
-	       ewb_dumped.o \
-	       ewb_child.o \
-	       ewb_transfer.o \
-	       ewb_proto.o 
+	eproto.o \
+	eif_in.o \
+	eif_out.o \
+	ewb_init.o \
+	ewb_dumped.o \
+	ewb_child.o \
+	ewb_transfer.o \
+	ewb_proto.o 
 
 WOBJ = \
-	       weproto.o \
-	       weif_in.o \
-	       weif_out.o \
-	       wewb_init.o \
-	       wewb_dumped.o \
-	       wewb_child.o \
-	       wewb_transfer.o \
-	       wewb_proto.o 
+	weproto.o \
+	weif_in.o \
+	weif_out.o \
+	wewb_init.o \
+	wewb_dumped.o \
+	wewb_child.o \
+	wewb_transfer.o \
+	wewb_proto.o 
 
 MT_WOBJ = \
-	       MTweproto.o \
-	       MTweif_in.o \
-	       MTweif_out.o \
-	       MTwewb_init.o \
-	       MTwewb_dumped.o \
-	       MTwewb_child.o \
-	       MTwewb_transfer.o \
-	       MTwewb_proto.o 
+	MTweproto.o \
+	MTweif_in.o \
+	MTweif_out.o \
+	MTwewb_init.o \
+	MTwewb_dumped.o \
+	MTwewb_child.o \
+	MTwewb_transfer.o \
+	MTwewb_proto.o 
 
 MT_LOBJ = \
-	       MTeproto.o \
-	       MTeif_in.o \
-	       MTeif_out.o \
-	       MTewb_init.o \
-	       MTewb_dumped.o \
-	       MTewb_child.o \
-	       MTewb_transfer.o \
-	       MTewb_proto.o 
+	MTeproto.o \
+	MTeif_in.o \
+	MTeif_out.o \
+	MTewb_init.o \
+	MTewb_dumped.o \
+	MTewb_child.o \
+	MTewb_transfer.o \
+	MTewb_proto.o 
 
 # The following is to buiilt the multithreaded version, we creates rules to generate the MT*.o files
 MTeproto.o: eproto.c
@@ -223,9 +224,9 @@ all:: libwewb.a
 local_realclean::
 	$(RM) libwewb.a
 
-libwewb.a: $(WOBJ)
+libwewb.a:  $(WOBJ)
 	$(RM) $@
-	$(AR) $@ $(WOBJ)
+	$(AR) $@  $(WOBJ)
 	$(RANLIB) $@
 
 all:: libmtewb.a
@@ -233,9 +234,9 @@ all:: libmtewb.a
 local_realclean::
 	$(RM) libmtewb.a
 
-libmtewb.a: $(MT_LOBJ)
+libmtewb.a:  $(MT_LOBJ)
 	$(RM) $@
-	$(AR) $@ $(MT_LOBJ)
+	$(AR) $@  $(MT_LOBJ)
 	$(RANLIB) $@
 
 all:: libmtwewb.a
@@ -243,9 +244,9 @@ all:: libmtwewb.a
 local_realclean::
 	$(RM) libmtwewb.a
 
-libmtwewb.a: $(MT_WOBJ)
+libmtwewb.a:  $(MT_WOBJ)
 	$(RM) $@
-	$(AR) $@ $(MT_WOBJ)
+	$(AR) $@  $(MT_WOBJ)
 	$(RANLIB) $@
 
 all:: wewb_proto.o
@@ -266,9 +267,9 @@ depend:: ../../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
-	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
-	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
+	$(SED) -e 's:/usr/lib[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e '$$ b print' -e 'H; d; n; : print' \
+	-e 'x; s/\\$$//; s/\\\n//g; s/  */ /g; s/ :/:/;' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -287,7 +288,8 @@ realclean: local_realclean
 clobber: local_clobber
 
 local_clean::
-	$(RM) core *~ *.o
+	if test -f core; then $(RM) core; fi
+	$(RM) *~ *.o
 
 local_realclean:: local_clean
 
@@ -302,7 +304,7 @@ Makefile.SH: Jmakefile
 	fi; \
 	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
 	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
-	else touch $@; exit 0; fi
+	else touch $@; fi
 
 Makefile: Makefile.SH
 	/bin/sh Makefile.SH
@@ -318,16 +320,16 @@ local_clobber::
 # Empty rules for directories with no sub-directories -- do not edit
 
 install::
-	       @echo "install in $(CURRENT) done."
+	@echo "install in $(CURRENT) done."
 
 deinstall::
-	       @echo "deinstall in $(CURRENT) done."
+	@echo "deinstall in $(CURRENT) done."
 
 install.man::
-	       @echo "install.man in $(CURRENT) done."
+	@echo "install.man in $(CURRENT) done."
 
 deinstall.man::
-	       @echo "deinstall.man in $(CURRENT) done."
+	@echo "deinstall.man in $(CURRENT) done."
 
 Makefiles::
 
@@ -343,3 +345,4 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
+

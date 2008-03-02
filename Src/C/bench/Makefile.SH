@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 1.4 2005/10/13 21:38:08 manus Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.5 PL0]
+: $X-Id: Jmake.tmpl 91075 2005-12-28 23:58:23Z manus $
 
 case $CONFIG in
 '')
-	       if test -f config.sh; then TOP=.;
-	       elif test -f ../config.sh; then TOP=..;
-	       elif test -f ../../config.sh; then TOP=../..;
-	       elif test -f ../../../config.sh; then TOP=../../..;
-	       elif test -f ../../../../config.sh; then TOP=../../../..;
-	       else
-	               echo "Can't find config.sh."; exit 1
-	       fi
-	       . $TOP/config.sh
-	       ;;
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
+	;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -41,7 +41,7 @@ CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
-JLDFLAGS = \$(LDFLAGS) $ccldflags
+JLKFLAGS = \$(LDFLAGS) $ccldflags
 LIBS = $libs
 LINT = lint
 MAKE = make
@@ -69,7 +69,8 @@ OBJECTS =  \$(FOBJ) \$(WOBJ) \$(MT_FOBJ) \$(MT_WOBJ) bytedump.o meltdump.o
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 1.4 2005/10/13 21:37:30 manus Exp $
+# $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
+
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -94,12 +95,12 @@ FOBJ = \
 	   pretrieve.o 
 
 MT_FOBJ = \
-	       MTbyte.o \
-	       MTdate.o \
-	       MToffset.o \
-	       MTminilzo.o \
-	       MTpstore.o \
-	       MTpretrieve.o 
+	MTbyte.o \
+	MTdate.o \
+	MToffset.o \
+	MTminilzo.o \
+	MTpstore.o \
+	MTpretrieve.o 
 
 WOBJ = \
 	      byte.o \
@@ -110,12 +111,13 @@ WOBJ = \
 	       wpretrieve.o 
 
 MT_WOBJ = \
-	       MTbyte.o \
-	       MTdate.o \
-	       MToffset.o \
-	       MTminilzo.o \
-	       MTwpstore.o \
-	       MTwpretrieve.o 
+	MTbyte.o \
+	MTdate.o \
+	MToffset.o \
+	MTminilzo.o \
+	MTwpstore.o \
+	MTwpretrieve.o 
+
 wpstore.o: pstore.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
@@ -203,8 +205,9 @@ local_realclean::
 
 bytedump: bytedump.o
 	$(RM) $@
-	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
-	$(CC) -o $@ bytedump.o $(JLDFLAGS) $(LIBS)
+	if test -f $@$(_EXE); then \
+	$(MV) $@$(_EXE) $@~$(_EXE); fi
+	$(CC) -o $@ bytedump.o $(JLKFLAGS) $(LIBS)
 
 all:: meltdump
 
@@ -213,8 +216,9 @@ local_realclean::
 
 meltdump: meltdump.o
 	$(RM) $@
-	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
-	$(CC) -o $@ meltdump.o $(JLDFLAGS) $(LIBS)
+	if test -f $@$(_EXE); then \
+	$(MV) $@$(_EXE) $@~$(_EXE); fi
+	$(CC) -o $@ meltdump.o $(JLKFLAGS) $(LIBS)
 
 depend:: ../mkdep
 
@@ -224,9 +228,9 @@ depend:: ../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
-	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
-	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
+	$(SED) -e 's:/usr/lib[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e '$$ b print' -e 'H; d; n; : print' \
+	-e 'x; s/\\$$//; s/\\\n//g; s/  */ /g; s/ :/:/;' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -245,7 +249,8 @@ realclean: local_realclean
 clobber: local_clobber
 
 local_clean::
-	$(RM) core *~ *.o
+	if test -f core; then $(RM) core; fi
+	$(RM) *~ *.o
 
 local_realclean:: local_clean
 
@@ -260,7 +265,7 @@ Makefile.SH: Jmakefile
 	fi; \
 	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
 	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
-	else touch $@; exit 0; fi
+	else touch $@; fi
 
 Makefile: Makefile.SH
 	/bin/sh Makefile.SH
@@ -276,16 +281,16 @@ local_clobber::
 # Empty rules for directories with no sub-directories -- do not edit
 
 install::
-	       @echo "install in $(CURRENT) done."
+	@echo "install in $(CURRENT) done."
 
 deinstall::
-	       @echo "deinstall in $(CURRENT) done."
+	@echo "deinstall in $(CURRENT) done."
 
 install.man::
-	       @echo "install.man in $(CURRENT) done."
+	@echo "install.man in $(CURRENT) done."
 
 deinstall.man::
-	       @echo "deinstall.man in $(CURRENT) done."
+	@echo "deinstall.man in $(CURRENT) done."
 
 Makefiles::
 
@@ -301,3 +306,4 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
+

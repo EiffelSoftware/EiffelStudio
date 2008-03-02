@@ -6,9 +6,14 @@ CG = Code Generation
 6.2
 ===
 
+6.2.7.2560 non-RTEA with Kpic:
+195.62u 13.41s 4:03.06 85.9%
+190.38u 13.26s 4:04.50 83.2%
+
 6.2.7.2437 non-RTEA without Kpic light AST (exe size: 14621000, EIFGEN 152MB):
 175.04u 12.37s 3:39.79 85.2%
 177.29u 12.43s 3:50.64 82.2%
+179.74u 12.39s 3:23.26 94.5%
 
 6.2.7.2421 non-RTEA without Kpic (exe size: 14645064, EIFGEN 170MB):
 173.88u 12.35s 3:47.15 81.9%

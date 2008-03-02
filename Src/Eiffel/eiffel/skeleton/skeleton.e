@@ -400,18 +400,19 @@ feature -- Status
 			position := i
 		end;
 
-	generate_size (buffer: GENERATION_BUFFER) is
+	generate_size (buffer: GENERATION_BUFFER; as_macro: BOOLEAN) is
 			-- Generate the size of current skeleton in `buffer'.
 		require
 			good_argument: buffer /= Void;
 		local
-			expanded_desc: EXPANDED_DESC;
-			bit_desc: BITS_DESC;
-			expanded_skeleton: SKELETON;
+			expanded_desc: EXPANDED_DESC
+			bit_desc: BITS_DESC
+			expanded_skeleton: SKELETON
 			nb_ref, nb_char, nb_int16, nb_int32, nb_int64: INTEGER
 			nb_r32, nb_ptr, nb_r64, nb_bit, nb_exp: INTEGER
 			i, nb: INTEGER
 			current_area: SPECIAL [ATTR_DESC]
+			l_def_buffer: like buffer
 		do
 			nb_ref := nb_reference
 			nb_char := nb_character
@@ -424,23 +425,27 @@ feature -- Status
 			nb_bit := nb_bits
 			nb_exp := nb_expanded
 
-			buffer.put_string ("@OBJSIZ(");
-			buffer.put_integer (nb_ref + nb_exp);
-			buffer.put_character (',');
-			buffer.put_integer (nb_char);
-			buffer.put_character (',');
-			buffer.put_integer (nb_int16);
-			buffer.put_character (',');
-			buffer.put_integer (nb_int32);
-			buffer.put_character (',');
-			buffer.put_integer (nb_r32);
-			buffer.put_character (',');
-			buffer.put_integer (nb_ptr);
-			buffer.put_character (',');
-			buffer.put_integer (nb_int64);
-			buffer.put_character (',');
-			buffer.put_integer (nb_r64);
-			buffer.put_character (')');
+			l_def_buffer := definition_buffer
+			l_def_buffer.clear_all
+
+			l_def_buffer.put_string ("@OBJSIZ(")
+			l_def_buffer.put_integer (nb_ref + nb_exp)
+			l_def_buffer.put_character (',')
+			l_def_buffer.put_integer (nb_char)
+			l_def_buffer.put_character (',')
+			l_def_buffer.put_integer (nb_int16)
+			l_def_buffer.put_character (',')
+			l_def_buffer.put_integer (nb_int32)
+			l_def_buffer.put_character (',')
+			l_def_buffer.put_integer (nb_r32)
+			l_def_buffer.put_character (',')
+			l_def_buffer.put_integer (nb_ptr)
+			l_def_buffer.put_character (',')
+			l_def_buffer.put_integer (nb_int64)
+			l_def_buffer.put_character (',')
+			l_def_buffer.put_integer (nb_r64)
+			l_def_buffer.put_character (')')
+			insert_in_buffer (buffer, l_def_buffer, as_macro)
 
 			if nb_bit > 0 then
 				from
@@ -453,11 +458,13 @@ feature -- Status
 					i > nb or else current_area.item (i).level /= Bits_level
 				loop
 					bit_desc ?= current_area.item (i)
-					buffer.put_string (" + OVERHEAD + @BITOFF(");
-					buffer.put_integer (bit_desc.value);
-					buffer.put_character (')');
-					i := i + 1;
-				end;
+					buffer.put_string (" + OVERHEAD + ")
+					l_def_buffer.put_string ("@BITOFF(")
+					l_def_buffer.put_integer (bit_desc.value)
+					l_def_buffer.put_character (')')
+					insert_in_buffer (buffer, l_def_buffer, as_macro)
+					i := i + 1
+				end
 			end
 
 			if nb_exp > 0 then
@@ -471,13 +478,13 @@ feature -- Status
 					i > nb
 				loop
 					expanded_desc ?= current_area.item (i)
-					expanded_skeleton := expanded_desc.class_type.skeleton;
-					buffer.put_string (" + OVERHEAD +");
-					expanded_skeleton.generate_size (buffer);
-					i := i + 1;
+					expanded_skeleton := expanded_desc.class_type.skeleton
+					buffer.put_string (" + OVERHEAD +")
+					expanded_skeleton.generate_size (buffer, as_macro)
+					i := i + 1
 				end
 			end
-		end;
+		end
 
 	generate_workbench_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of the skeleton in workbench mode.
@@ -543,7 +550,7 @@ feature -- Status
 			end
 		end
 
-	generate_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER; is_in_attr_table: BOOLEAN) is
+	generate_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER; is_in_attr_table, as_macro: BOOLEAN) is
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in `buffer'.
 		require
@@ -551,7 +558,26 @@ feature -- Status
 			good_argument: buffer /= Void;
 		do
 			search_feature_id (feature_id);
-			generate (buffer, is_in_attr_table);
+			generate (buffer, is_in_attr_table, as_macro);
+		end;
+
+	generate_i_th_reference_offset (buffer: GENERATION_BUFFER; i: INTEGER; as_macro: BOOLEAN) is
+			-- Generate offset for reference attribute at position `i' in `buffer'.
+		require
+			good_argument: buffer /= Void;
+			i_non_negative: i >= 0
+		local
+			l_def_buffer: like definition_buffer
+		do
+			if i /= 0 then
+				l_def_buffer := definition_buffer
+				l_def_buffer.clear_all
+				buffer.put_three_character (' ', '+', ' ')
+				l_def_buffer.put_string ("@REFACS(");
+				l_def_buffer.put_integer (i);
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
+			end
 		end;
 
 	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER) is
@@ -565,7 +591,7 @@ feature -- Status
 			buffer.put_integer (workbench_offset);
 		end;
 
-	generate (buffer: GENERATION_BUFFER; is_in_attr_table: BOOLEAN) is
+	generate (buffer: GENERATION_BUFFER; is_in_attr_table, as_macro: BOOLEAN) is
 			-- Generate offset of the attribute at the current position
 		require
 			not_off: not off;
@@ -578,86 +604,103 @@ feature -- Status
 			expanded_desc: EXPANDED_DESC
 			bit_desc: BITS_DESC
 			value: INTEGER
+			l_def_buffer: like buffer
 		do
+			l_def_buffer := definition_buffer
+			l_def_buffer.clear_all
+
 			level := item.level;
 				-- Save index of current found item
 			index := position
+
 			inspect
 				level
 			when Reference_level then
 				value := index
 				if value /= 0 then
-					buffer.put_string (" + @REFACS(");
-					buffer.put_integer (value);
-					buffer.put_character (')');
+					buffer.put_three_character (' ', '+', ' ')
+					l_def_buffer.put_string ("@REFACS(");
+					l_def_buffer.put_integer (value);
+					l_def_buffer.put_character (')');
+					insert_in_buffer (buffer, l_def_buffer, as_macro)
 				elseif is_in_attr_table then
 					buffer.put_character ('0')
 				end
 			when Character_level, Boolean_level, Integer_8_level, natural_8_level then
 				nb_ref := nb_reference;
-				buffer.put_string ("+ @CHROFF(");
-				buffer.put_integer (nb_ref + nb_expanded);
-				buffer.put_character (',');
-				buffer.put_integer (index - nb_ref)
-				buffer.put_character (')');
+				buffer.put_two_character ('+', ' ')
+				l_def_buffer.put_string ("@CHROFF(");
+				l_def_buffer.put_integer (nb_ref + nb_expanded);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (index - nb_ref)
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
 			when Integer_16_level, natural_16_level then
 				nb_ref := nb_reference
 				nb_char := nb_character
-				buffer.put_string ("+ @I16OFF(")
-				buffer.put_integer (nb_ref + nb_expanded);
-				buffer.put_character (',');
-				buffer.put_integer (nb_char);
-				buffer.put_character (',');
-				buffer.put_integer (index - nb_ref - nb_char)
-				buffer.put_character (')');
+				buffer.put_two_character ('+', ' ')
+				l_def_buffer.put_string ("@I16OFF(")
+				l_def_buffer.put_integer (nb_ref + nb_expanded);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_char);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (index - nb_ref - nb_char)
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
 			when Integer_32_level, natural_32_level, wide_char_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
-				buffer.put_string ("+ @LNGOFF(");
-				buffer.put_integer (nb_ref + nb_expanded);
-				buffer.put_character (',');
-				buffer.put_integer (nb_char);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int16);
-				buffer.put_character (',');
-				buffer.put_integer (index - nb_ref - nb_char - nb_int16 )
-				buffer.put_character (')');
+				buffer.put_two_character ('+', ' ')
+				l_def_buffer.put_string ("@LNGOFF(");
+				l_def_buffer.put_integer (nb_ref + nb_expanded);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_char);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int16);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (index - nb_ref - nb_char - nb_int16 )
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
 			when Real_32_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
 				nb_int32 := nb_integer_32;
-				buffer.put_string ("+ @R32OFF(");
-				buffer.put_integer (nb_ref + nb_expanded);
-				buffer.put_character (',');
-				buffer.put_integer (nb_char);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int16);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int32);
-				buffer.put_character (',');
-				buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32)
-				buffer.put_character (')');
+				buffer.put_two_character ('+', ' ')
+				l_def_buffer.put_string ("@R32OFF(");
+				l_def_buffer.put_integer (nb_ref + nb_expanded);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_char);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int16);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32)
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
 				nb_int16 := nb_integer_16
 				nb_int32 := nb_integer_32;
 				nb_r32 := nb_real_32;
-				buffer.put_string ("+ @PTROFF(");
-				buffer.put_integer (nb_ref + nb_expanded);
-				buffer.put_character (',');
-				buffer.put_integer (nb_char);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int16);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int32);
-				buffer.put_character (',');
-				buffer.put_integer (nb_r32);
-				buffer.put_character (',');
-				buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32)
-				buffer.put_character (')');
+				buffer.put_two_character ('+', ' ')
+				l_def_buffer.put_string ("@PTROFF(");
+				l_def_buffer.put_integer (nb_ref + nb_expanded);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_char);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int16);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_r32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32)
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
 			when Integer_64_level, natural_64_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -665,21 +708,23 @@ feature -- Status
 				nb_int32 := nb_integer_32;
 				nb_r32 := nb_real_32;
 				nb_ptr := nb_pointer;
-				buffer.put_string ("+ @I64OFF(");
-				buffer.put_integer (nb_ref + nb_expanded);
-				buffer.put_character (',');
-				buffer.put_integer (nb_char);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int16);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int32);
-				buffer.put_character (',');
-				buffer.put_integer (nb_r32);
-				buffer.put_character (',');
-				buffer.put_integer (nb_ptr);
-				buffer.put_character (',');
-				buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32 - nb_ptr)
-				buffer.put_character (')');
+				buffer.put_two_character ('+', ' ')
+				l_def_buffer.put_string ("@I64OFF(");
+				l_def_buffer.put_integer (nb_ref + nb_expanded);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_char);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int16);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_r32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_ptr);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32 - nb_ptr)
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
 			when Real_64_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -688,23 +733,25 @@ feature -- Status
 				nb_r32 := nb_real_32;
 				nb_ptr := nb_pointer;
 				nb_int64 := nb_integer_64
-				buffer.put_string ("+ @R64OFF(");
-				buffer.put_integer (nb_ref + nb_expanded);
-				buffer.put_character (',');
-				buffer.put_integer (nb_char);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int16);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int32);
-				buffer.put_character (',');
-				buffer.put_integer (nb_r32);
-				buffer.put_character (',');
-				buffer.put_integer (nb_ptr);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int64);
-				buffer.put_character (',');
-				buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32 - nb_ptr - nb_int64)
-				buffer.put_character (')');
+				buffer.put_two_character ('+', ' ')
+				l_def_buffer.put_string ("@R64OFF(");
+				l_def_buffer.put_integer (nb_ref + nb_expanded);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_char);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int16);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_r32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_ptr);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int64);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_r32 - nb_ptr - nb_int64)
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
 			else
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -714,23 +761,25 @@ feature -- Status
 				nb_ptr := nb_pointer;
 				nb_int64 := nb_integer_64
 				nb_r64 := nb_real_64;
-				buffer.put_string ("+ @OBJSIZ(");
-				buffer.put_integer (nb_ref + nb_expanded);
-				buffer.put_character (',');
-				buffer.put_integer (nb_char);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int16);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int32);
-				buffer.put_character (',');
-				buffer.put_integer (nb_r32);
-				buffer.put_character (',');
-				buffer.put_integer (nb_ptr);
-				buffer.put_character (',');
-				buffer.put_integer (nb_int64);
-				buffer.put_character (',');
-				buffer.put_integer (nb_r64);
-				buffer.put_character (')');
+				buffer.put_two_character ('+', ' ')
+				l_def_buffer.put_string ("@OBJSIZ(");
+				l_def_buffer.put_integer (nb_ref + nb_expanded);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_char);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int16);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_r32);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_ptr);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_int64);
+				l_def_buffer.put_character (',');
+				l_def_buffer.put_integer (nb_r64);
+				l_def_buffer.put_character (')');
+				insert_in_buffer (buffer, l_def_buffer, as_macro)
 				if level = Bits_level then
 					from
 						current_area := area
@@ -739,10 +788,12 @@ feature -- Status
 					until
 						i >= index
 					loop
-						buffer.put_string (" + OVERHEAD + @BITOFF(");
+						buffer.put_string (" + OVERHEAD + ")
+						l_def_buffer.put_string ("@BITOFF(");
 						bit_desc ?= current_area.item (i);
-						buffer.put_integer (bit_desc.value);
-						buffer.put_character (')');
+						l_def_buffer.put_integer (bit_desc.value);
+						l_def_buffer.put_character (')');
+						insert_in_buffer (buffer, l_def_buffer, as_macro)
 						i := i + 1;
 					end;
 					buffer.put_string (" + OVERHEAD");
@@ -755,10 +806,12 @@ feature -- Status
 						until
 							current_area.item(i).level > Bits_level
 						loop
-							buffer.put_string (" + OVERHEAD + @BITOFF(")
+							buffer.put_string (" + OVERHEAD + ")
+							l_def_buffer.put_string ("@BITOFF(")
 							bit_desc ?= current_area.item (i)
-							buffer.put_integer (bit_desc.value)
-							buffer.put_character (')')
+							l_def_buffer.put_integer (bit_desc.value)
+							l_def_buffer.put_character (')')
+							insert_in_buffer (buffer, l_def_buffer, as_macro)
 							i := i + 1
 						end
 					end
@@ -773,7 +826,7 @@ feature -- Status
 						loop
 							buffer.put_string (" + OVERHEAD + ")
 							expanded_desc ?= current_area.item (i)
-							expanded_desc.class_type.skeleton.generate_size (buffer)
+							expanded_desc.class_type.skeleton.generate_size (buffer, as_macro)
 							i := i + 1
 						end
 						buffer.put_string (" + OVERHEAD")
@@ -1123,8 +1176,6 @@ feature -- Skeleton byte code
 			not empty;
 		local
 			buffer: GENERATION_BUFFER
---			rout_id: INTEGER
---			tbl: ATTR_TABLE
 			current_area: SPECIAL [ATTR_DESC]
 			i, nb: INTEGER
 		do
@@ -1138,16 +1189,13 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
---				rout_id := current_area.item (i).rout_id;
---				tbl ?= Eiffel_table.poly_table (rout_id);
 					--| In this instruction, we put `True' as second
 					--| arguments. This means we will generate something if there is nothing
 					--| to generate (ie `0'). Remember that `False' is used in all other case
---				generate_offset (buffer, tbl.first.feature_id, True)
 				position := i
-				generate (buffer, True)
+				generate (buffer, True, False)
 				buffer.put_string (",%N");
-				 i := i + 1;
+				i := i + 1;
 			end;
 			buffer.put_string ("};%N%N");
 		end;
@@ -1177,6 +1225,52 @@ feature -- Skeleton byte code
 			end;
 			buffer.put_string ("};%N%N");
 		end;
+
+feature {SKELETON} -- Convenience
+
+	definition_buffer: GENERATION_BUFFER is
+			-- Buffer used to generate the definition of a size/offsets.
+		once
+			create Result.make (64)
+		ensure
+			definition: Result /= Void
+		end
+
+	insert_in_buffer (buffer, a_def_buffer: GENERATION_BUFFER; as_macro: BOOLEAN) is
+			-- Insert `a_macro_buffer' definition into `buffer' if `as_macro', otherwise `a_def_buffer'.
+		require
+			buffer_not_void: buffer /= Void
+			a_def_buffer_not_void: a_def_buffer /= Void
+		local
+			l_string: STRING
+			i, nb: INTEGER
+		do
+			if as_macro then
+					-- Replace all '@', '(', ')' and ',' by underscores for the macro.
+				l_string := a_def_buffer.as_string
+				from
+					i := 1
+					nb := l_string.count
+				until
+					i > nb
+				loop
+					inspect l_string.item (i)
+					when '@', '(', ')', ',' then
+						l_string.put ('_', i)
+					else
+
+					end
+					i := i + 1
+				end
+				system.extend_skeleton_table (l_string, a_def_buffer.as_string)
+				buffer.put_string (l_string)
+			else
+				buffer.put_buffer (a_def_buffer)
+			end
+			a_def_buffer.clear_all
+		ensure
+			a_def_buffer_is_empty: a_def_buffer.is_empty
+		end
 
 feature {NONE} -- Implementation of quick sort algorithm
 

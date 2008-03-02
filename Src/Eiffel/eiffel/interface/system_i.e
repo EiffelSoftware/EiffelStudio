@@ -205,6 +205,12 @@ feature -- Properties
 			-- Set of the routine ids for which a type table should
 			-- be generated
 
+	skeleton_table: HASH_TABLE [STRING, STRING]
+			-- Table where all the offsets/sizes generated in finalized mode are stored.
+			-- It is then used to generate a header file that has a mapping between macros and the
+			-- actual macro for computing the object size. This is to avoid having to generate
+			-- `Dot_x' files in finalized mode.
+
 	pattern_table: PATTERN_TABLE
 			-- Pattern table
 
@@ -3017,6 +3023,7 @@ feature -- Final mode generation
 		do
 			eiffel_project.terminate_c_compilation
 			if not retried and is_finalization_needed then
+				create skeleton_table.make (400)
 				if not il_generation then
 					internal_retrieved_finalized_type_mapping := Void
 					create l_type_id_mapping.make (0, static_type_id_counter.count)
@@ -3196,6 +3203,7 @@ feature -- Final mode generation
 			exception_stack_managed := old_exception_stack_managed
 			inlining_on := old_inlining_on
 			array_optimization_on := old_array_optimization_on
+			skeleton_table := Void
 
 				-- Clean conformance table for CLASS_TYPE instances. We don't need
 				-- to store them on disk as they are recomputed at each finalization.
@@ -3736,50 +3744,50 @@ feature -- Generation
 			deg_output.display_degree_output (degree_message, 10, 10)
 			address_table.generate (True)
 
-				-- Generation of type size table
-			deg_output.display_degree_output (degree_message, 9, 10)
-			generate_size_table
-
 				-- Generation of the reference number table
-			deg_output.display_degree_output (degree_message, 8, 10)
+			deg_output.display_degree_output (degree_message, 9, 10)
 			generate_reference_table
 
 				-- Cecil structures generation
-			deg_output.display_degree_output (degree_message, 7, 10)
+			deg_output.display_degree_output (degree_message, 8, 10)
 			generate_cecil
 
 				-- Generation of the skeletons
-			deg_output.display_degree_output (degree_message, 6, 10)
+			deg_output.display_degree_output (degree_message, 7, 10)
 			generate_skeletons
 			generate_expanded_structures
 
 				-- Generation of the parent table
-			deg_output.display_degree_output (degree_message, 5, 10)
+			deg_output.display_degree_output (degree_message, 6, 10)
 			generate_parent_tables
 
 				-- Generate plug with run-time.
 				-- Has to be done before `generate_routine_table' because
 				-- this is were we mark `used' the attribute table of `lower' and
 				-- `area' used with `array_optimization'.
-			deg_output.display_degree_output (degree_message, 4, 10)
+			deg_output.display_degree_output (degree_message, 5, 10)
 			t.generate_plug
 
 				-- Routine table generation
-			deg_output.display_degree_output (degree_message, 3, 10)
+			deg_output.display_degree_output (degree_message, 4, 10)
 			generate_routine_table
 
 				-- Generate edynlib with run-time.
-			deg_output.display_degree_output (degree_message, 2, 10)
+			deg_output.display_degree_output (degree_message, 3, 10)
 			t.generate_dynamic_lib_file
 
 				-- Generate init file
-			deg_output.display_degree_output (degree_message, 1, 10)
+			deg_output.display_degree_output (degree_message, 2, 10)
 			generate_init_file
 
 				-- Generate option file
 			if keep_assertions then
 				generate_option_file (False)
 			end
+
+				-- Generation of type size table
+			deg_output.display_degree_output (degree_message, 1, 10)
+			generate_size_table
 
 				-- Generate makefile
 			deg_output.display_degree_output (degree_message, 0, 10)
@@ -4177,19 +4185,34 @@ feature -- Generation
 			l_poly_file.close
 		end
 
+	extend_skeleton_table (a_macro_name, a_macro_definition: STRING) is
+			-- Add `a_macro_name' and `a_macro_definition' into `skeleton_table'.
+		require
+			in_final_mode: in_final_mode
+			a_macro_name_not_void: a_macro_name /= Void
+			a_macro_definition_not_void: a_macro_definition /= Void
+			skeleton_table_not_void: skeleton_table /= Void
+		do
+			skeleton_table.put (a_macro_name, a_macro_definition)
+		ensure
+			inserted: skeleton_table.has (a_macro_definition) and then skeleton_table.item (a_macro_definition).is_equal (a_macro_name)
+		end
+
 	generate_size_table is
 			-- Generate the size table.
+		require
+			final_mode: in_final_mode
 		local
 			i, nb: INTEGER
 			class_type: CLASS_TYPE
 			size_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
+			l_skeleton_table: like skeleton_table
 		do
 			from
 					-- Clear buffer for current generation
 				buffer := generation_buffer
 				buffer.clear_all
-
 				i := 1
 				nb := type_id_counter.value
 				buffer.put_string ("#include %"eif_eiffel.h%"%N%
@@ -4198,21 +4221,41 @@ feature -- Generation
 				i > nb
 			loop
 				class_type := class_types.item (i)
-
-				if class_type /= Void then
-					class_type.skeleton.generate_size (buffer)
-				else
-					-- FIXME
-					-- Process_dynamic_types has been TEMPORARILY removed
-					buffer.put_string ("0")
-				end
-
+				check class_type_not_void: class_type /= Void end
+				class_type.skeleton.generate_size (buffer, False)
 				buffer.put_string (",%N")
 				i := i + 1
 			end
 			buffer.put_string ("};%N")
+			create size_file.make_c_code_file (x_gen_file_name (in_final_mode, Esize))
+			buffer.put_in_file (size_file)
+			size_file.close
 
-			create size_file.make_c_code_file (x_gen_file_name (byte_context.final_mode, Esize))
+				-- Generate the mapping between macros and the actual computation of the size.
+			from
+					-- Clear buffer for current generation
+				buffer := generation_buffer
+				buffer.clear_all
+				i := 1
+				nb := type_id_counter.value
+				buffer.put_string ("#ifndef _eoffsets_h_%N#define _eoffsets_h_")
+				buffer.put_new_line
+				buffer.put_new_line
+				l_skeleton_table := skeleton_table
+				l_skeleton_table.start
+			until
+				l_skeleton_table.after
+			loop
+				buffer.put_string ("#define ")
+				buffer.put_string (l_skeleton_table.item_for_iteration)
+				buffer.put_character (' ')
+				buffer.put_string (l_skeleton_table.key_for_iteration)
+				buffer.put_new_line
+				l_skeleton_table.forth
+			end
+			buffer.put_new_line
+			buffer.put_string ("#endif%N")
+			create size_file.make_c_code_file (x_gen_file_name (in_final_mode, Eoffsets))
 			buffer.put_in_file (size_file)
 			size_file.close
 		end

@@ -51,6 +51,12 @@ feature -- Status report
 			as_string_not_void: Result /= Void
 		end
 
+	is_empty: BOOLEAN is
+			-- Is current empty?
+		do
+			Result := count = 0
+		end
+
 feature -- Open, close buffer operations
 
 	clear_all is
@@ -117,6 +123,25 @@ feature -- Open, close buffer operations
 			end
 			file.put_string (current_buffer)
 			clear_all
+		end
+
+	put_buffer (a_buffer: like Current) is
+			-- Append `a_buffer' to Current.
+		require
+			a_buffer_not_void: a_buffer /= Void
+		local
+			l_buffers: like buffers
+		do
+			from
+				l_buffers := a_buffer.buffers
+				l_buffers.start
+			until
+				l_buffers.after
+			loop
+				put_string (l_buffers.item)
+				l_buffers.forth
+			end
+			put_string (a_buffer.current_buffer)
 		end
 
 feature -- Settings
@@ -699,7 +724,7 @@ feature {NONE} -- Implementation: Status report
 			-- Maximum length of C string literal
 			-- (CL limit is 2048 - see CL error C2026)
 
-feature {NONE} -- Implementation: Access
+feature {GENERATION_BUFFER} -- Implementation: Access
 
 	current_buffer: STRING
 			-- Currently used buffer.

@@ -702,8 +702,15 @@ feature -- Generation
 				tmp.put_character ('/')
 				tmp.put_string (estructure)
 				tmp.put_string (".h%"")
+				tmp.put_new_line
 
 				if final_mode then
+					headers.put_string ("#include %"../")
+					headers.put_string (packet_name (system_object_prefix, 1))
+					headers.put_character ('/')
+					headers.put_string (eoffsets)
+					headers.put_string (".h%"")
+					headers.put_new_line
 					headers.put_string ("%N#include %"")
 					headers.put_string (base_file_name)
 					headers.put_string (".h%"")
@@ -848,15 +855,7 @@ feature -- Generation
 			previous_file: PLAIN_TEXT_FILE
 		do
 			l_file_name := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
-			if byte_context.final_mode then
-					-- In final mode we do not check about status changes
-					-- since we delete the content of the F_code directory.
-				if has_cpp_externals_calls then
-					l_file_name.append (Dot_xpp)
-				else
-					l_file_name.append (Dot_x)
-				end
-			else
+			if byte_context.workbench_mode then
 					-- If the status of the file has been changed we delete the
 					-- previous version.
 				if has_cpp_status_changed then
@@ -871,16 +870,14 @@ feature -- Generation
 						previous_file.delete
 					end
 				end
-				if has_cpp_externals_calls then
-					l_file_name.append (Dot_cpp)
-				else
-					l_file_name.append (Dot_c)
-				end
 			end
+			if has_cpp_externals_calls then
+				l_file_name.append (Dot_cpp)
+			else
+				l_file_name.append (Dot_c)
+			end
+
 			create Result.make_c_code_file (l_file_name)
-			if byte_context.final_mode then
-				Result.insert_line_pragma
-			end
 		end
 
 	open_descriptor_file: INDENT_FILE is
@@ -963,11 +960,7 @@ feature -- Generation
 
 				-- File name
 			temp := base_file_name
-			if byte_context.final_mode then
-				temp.append (Dot_x)
-			else
-				temp.append (Dot_c)
-			end
+			temp.append (Dot_c)
 
 			f_name.set_file_name (temp)
 			Result := f_name
@@ -1028,7 +1021,7 @@ feature -- Generation
 					--| table in Final mode.
 				buffer.put_new_line
 				buffer.put_string ("offset_position = ");
-				skeleton.generate(buffer, False)
+				skeleton.generate (buffer, False, True)
 				buffer.put_character (';')
 					-- Initialize dynamic type of the bit attribute
 				buffer.put_new_line
@@ -1054,19 +1047,15 @@ feature -- Generation
 				buffer.put_new_line
 				buffer.put_string ("offset_position = ");
 				position := skeleton.position
-				skeleton.generate(buffer, False)
+				skeleton.generate(buffer, False, True)
 					-- There is a side effect with generation
 				skeleton.go_to (position)
 				buffer.put_character (';')
 
 				buffer.put_new_line
-				buffer.put_string ("*(EIF_REFERENCE *) (Current ")
+				buffer.put_string ("*(EIF_REFERENCE *) (Current")
 				value := nb_ref + i
-				if value /= 0 then
-					buffer.put_string (" + @REFACS(")
-					buffer.put_integer (value)
-					buffer.put_string (")")
-				end
+				skeleton.generate_i_th_reference_offset (buffer, value, True)
 				buffer.put_string(") = Current + offset_position;")
 				buffer.put_new_line
 
@@ -1520,7 +1509,7 @@ feature -- Structure generation
 				buffer.put_string (" {")
 				buffer.put_string ("char data [")
 				if byte_context.final_mode then
-					skeleton.generate_size (buffer)
+					skeleton.generate_size (buffer, False)
 				else
 					buffer.put_integer (skeleton.workbench_size)
 				end

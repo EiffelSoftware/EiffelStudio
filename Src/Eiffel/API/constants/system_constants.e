@@ -90,6 +90,8 @@ feature {NONE}
 
 	Esize: STRING is "esize"
 
+	Eoffsets: STRING is "eoffsets"
+
 	Eskelet: STRING is "eskelet"
 
 	Estructure: STRING is "estructure"

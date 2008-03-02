@@ -55,22 +55,6 @@ feature
 
 feature
 
-	insert_line_pragma is
-			-- Useful when files are concatenated.
-		local
-			tmp: GENERATION_BUFFER
-		do
-			put_string ("#line 2 ")
-				-- In worst case all letters are escaped as \nnn.
-				-- The string is then surrounded by double quotes.
-			create tmp.make (name.count * 4 + 2)
-			tmp.put_indivisible_string_literal (name)
-			tmp.put_in_file (Current)
-			put_string ("%N")
-		end
-
-feature
-
 	indent is
 			-- Indent next output line by one tab.
 		do

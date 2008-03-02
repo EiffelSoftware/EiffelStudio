@@ -302,7 +302,7 @@ feature -- Element Change
 						--| arguments. This means we won't generate anything if there is nothing
 						--| to generate. Remember that `True' is used in the generation of attributes
 						--| table in Final mode.
-					class_type.skeleton.generate_offset (buffer, feature_id, False)
+					class_type.skeleton.generate_offset (buffer, feature_id, False, True)
 				end
 			elseif
 				Compilation_modes.is_precompiling or

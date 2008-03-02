@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 					buf.put_string (" + OVERHEAD + ")
 					parameters.i_th (1).print_register
 					buf.put_string (" * (")
-					l_exp_class_type.skeleton.generate_size (buf)
+					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (" + OVERHEAD));")
 					buf.put_new_line
 				else
@@ -168,9 +168,9 @@ feature {NONE} -- Implementation
 					buf.put_string (" + ")
 					parameters.i_th (1).print_register
 					buf.put_string (" * (");
-					l_exp_class_type.skeleton.generate_size (buf)
+					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string ("), ")
-					l_exp_class_type.skeleton.generate_size (buf)
+					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (");")
 					buf.put_new_line
 				end
@@ -221,13 +221,13 @@ feature {NONE} -- Implementation
 					buf.put_string (" + OVERHEAD + ")
 					parameters.i_th (1).print_register
 					buf.put_string (" * (")
-					l_exp_class_type.skeleton.generate_size (buf)
+					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (" + OVERHEAD)")
 				else
 					buf.put_string (" + ")
 					parameters.i_th (1).print_register
 					buf.put_string (" * ")
-					l_exp_class_type.skeleton.generate_size (buf)
+					l_exp_class_type.skeleton.generate_size (buf, True)
 				end
 			else
 				type_c := l_gen_param.c_type
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 					buf.put_string (" + OVERHEAD + ")
 					parameters.i_th (2).print_register
 					buf.put_string (" * (")
-					l_exp_class_type.skeleton.generate_size (buf)
+					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (" + OVERHEAD));")
 					buf.put_new_line
 				else
@@ -284,11 +284,11 @@ feature {NONE} -- Implementation
 					buf.put_string (" + ")
 					parameters.i_th (2).print_register
 					buf.put_string (" * ")
-					l_exp_class_type.skeleton.generate_size (buf)
+					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_string (",")
 					parameters.i_th (1).print_register
 					buf.put_string (", ")
-					l_exp_class_type.skeleton.generate_size (buf)
+					l_exp_class_type.skeleton.generate_size (buf, True)
 					buf.put_character (')')
 					buf.put_character (';')
 					buf.put_new_line
@@ -354,17 +354,17 @@ feature {NONE} -- Implementation
 				buf.put_string (" + ")
 				parameters.i_th (2).print_register
 				buf.put_string (" * ")
-				l_exp_class_type.skeleton.generate_size (buf)
+				l_exp_class_type.skeleton.generate_size (buf, True)
 				buf.put_string (", (char *) ")
 				gen_reg.print_register
 				buf.put_string (" + ")
 				parameters.i_th (1).print_register
 				buf.put_string (" * ")
-				l_exp_class_type.skeleton.generate_size (buf)
+				l_exp_class_type.skeleton.generate_size (buf, True)
 				buf.put_string (", ")
 				parameters.i_th (3).print_register
 				buf.put_string (" * ")
-				l_exp_class_type.skeleton.generate_size (buf)
+				l_exp_class_type.skeleton.generate_size (buf, True)
 			else
 				type_c := l_gen_param.c_type
 				buf.put_string ("(")
@@ -420,17 +420,17 @@ feature {NONE} -- Implementation
 				buf.put_string (" + ")
 				parameters.i_th (3).print_register
 				buf.put_string (" * ")
-				l_exp_class_type.skeleton.generate_size (buf)
+				l_exp_class_type.skeleton.generate_size (buf, True)
 				buf.put_string (", (char *) ")
 				parameters.i_th (1).print_register
 				buf.put_string (" + ")
 				parameters.i_th (2).print_register
 				buf.put_string (" * ")
-				l_exp_class_type.skeleton.generate_size (buf)
+				l_exp_class_type.skeleton.generate_size (buf, True)
 				buf.put_string (", ")
 				parameters.i_th (4).print_register
 				buf.put_string (" * ")
-				l_exp_class_type.skeleton.generate_size (buf)
+				l_exp_class_type.skeleton.generate_size (buf, True)
 				buf.put_character (')')
 				buf.put_character (';')
 			else

@@ -300,12 +300,19 @@ feature -- Generation
 			buffer := Generation_buffer
 			buffer.clear_all
 
-			buffer.put_string ("#include %"eif_eiffel.h%"%N")
-			buffer.put_string ("#include %"eif_rout_obj.h%"%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"")
+			buffer.put_new_line
+			buffer.put_string ("#include %"eif_rout_obj.h%"")
 
+			buffer.put_new_line
 			buffer.put_string ("#include %"eaddress")
 			buffer.put_string (Dot_h)
 			buffer.put_character ('"')
+
+			if final_mode then
+				buffer.put_new_line
+				buffer.put_string ("#include %"eoffsets.h%"")
+			end
 
 			buffer.start_c_specific_code
 
@@ -392,7 +399,7 @@ feature -- Generation
 				end
 			end
 
-			create cecil_file.make_c_code_file (x_gen_file_name (final_mode, Ececil));
+			create cecil_file.make_c_code_file (gen_file_name (final_mode, Ececil));
 			if final_mode then
 				buffer.end_c_specific_code
 				buffer.put_in_file (cecil_file)

@@ -614,7 +614,7 @@ feature
 				if context.workbench_mode then
 					target_type.associated_class_type (context.context_class_type.type).skeleton.generate_workbench_size (buf)
 				else
-					target_type.associated_class_type (context.context_class_type.type).skeleton.generate_size (buf)
+					target_type.associated_class_type (context.context_class_type.type).skeleton.generate_size (buf, True)
 				end
 				buf.put_character (')')
 				buf.put_character (';')

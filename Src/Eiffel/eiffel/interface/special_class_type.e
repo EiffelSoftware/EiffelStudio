@@ -175,7 +175,7 @@ feature -- C code generation
 				-- 3. Element size
 			if l_param_is_expanded then
 				if final_mode then
-					l_exp_class_type.skeleton.generate_size (buffer)
+					l_exp_class_type.skeleton.generate_size (buffer, True)
 					if l_exp_has_references then
 						buffer.put_string (" + OVERHEAD")
 					end
@@ -351,15 +351,15 @@ feature {NONE} -- C code generation
 					if l_exp_class_type.skeleton.has_references then
 							-- Optimization: size is know at compile time
 						buffer.put_string ("ecopy(arg1, Current + OVERHEAD + arg2 * (");
-						l_exp_class_type.skeleton.generate_size (buffer)
+						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (" + OVERHEAD));")
 					else
 							-- No references, do a simple `memcpy'.
 						buffer.put_new_line
 						buffer.put_string ("memcpy(Current + arg2 * ")
-						l_exp_class_type.skeleton.generate_size (buffer)
+						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (", arg1, ")
-						l_exp_class_type.skeleton.generate_size (buffer)
+						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (");")
 					end
 				else
@@ -504,7 +504,7 @@ feature {NONE} -- C code generation
 						-- Optimization: size of expanded is known at compile time
 					if l_exp_has_references then
 						buffer.put_string ("return RTCL(Current + OVERHEAD + arg1 * (")
-						l_exp_class_type.skeleton.generate_size (buffer)
+						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (" + OVERHEAD));")
 					else
 						buffer.generate_block_open
@@ -521,9 +521,9 @@ feature {NONE} -- C code generation
 						buffer.put_new_line
 						buffer.put_string ("memcpy (Result, ")
 						buffer.put_string ("Current + arg1 * (")
-						l_exp_class_type.skeleton.generate_size (buffer)
+						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string ("), ")
-						l_exp_class_type.skeleton.generate_size (buffer)
+						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (");")
 						buffer.put_new_line
 						buffer.put_string ("RTLE;")
@@ -686,11 +686,11 @@ feature {NONE} -- C code generation
 						-- expanded.
 					if True or l_exp_class_type.skeleton.has_references then
 						buffer.put_string ("OVERHEAD + arg1 * (")
-						l_exp_class_type.skeleton.generate_size (buffer)
+						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_string (" + OVERHEAD));")
 					else
 						buffer.put_string ("arg1 * ")
-						l_exp_class_type.skeleton.generate_size (buffer)
+						l_exp_class_type.skeleton.generate_size (buffer, True)
 						buffer.put_character (')')
 						buffer.put_character (';')
 					end
@@ -906,7 +906,7 @@ feature -- IL code generation
 				l_element_type := special_type.generics.item (1)
 				if l_element_type.is_formal and not first_generic.is_formal then
 						-- Type that was provided to us didn't have much type information, we have
-						-- to rely on what we have from `Current' if it is not formal. 
+						-- to rely on what we have from `Current' if it is not formal.
 					l_element_type := first_generic
 				end
 

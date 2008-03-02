@@ -5,12 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ATTR_GENERATOR 
+class ATTR_GENERATOR
 
 inherit
 	TABLE_GENERATOR
 		rename
-			Dot_x as postfix_file_name
+			Dot_c as postfix_file_name
 		end
 
 feature -- Initialzation
@@ -21,7 +21,8 @@ feature -- Initialzation
 				-- Let's finish C code generation of current block.
 			current_buffer.end_c_specific_code
 
-			file.put_string ("#include %"eif_eiffel.h%"%N%N")
+			file.put_string ("#include %"eif_eiffel.h%"%N")
+			file.put_string ("#include %"../E1/eoffsets.h%"%N")
 		end
 
 indexing

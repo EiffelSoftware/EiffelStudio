@@ -230,11 +230,11 @@ feature {NONE} -- C code generation
 							buf.put_string (" + ")
 							buf.put_integer (position)
 							buf.put_string (" * ")
-							l_exp_class_type.skeleton.generate_size (buf)
+							l_exp_class_type.skeleton.generate_size (buf, True)
 							buf.put_string (",")
 							item_print_register (expr, target_type)
 							buf.put_string (", ")
-							l_exp_class_type.skeleton.generate_size (buf)
+							l_exp_class_type.skeleton.generate_size (buf, True)
 							buf.put_character (')')
 						end
 					end

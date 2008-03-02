@@ -1137,6 +1137,19 @@ feature -- Generation (Linking rules)
 				make_file.put_string ("/estructure.h")
 				make_file.new_line
 				make_file.new_line
+					-- Generate dependence rule for E1/eoffsets.h in final mode
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/eoffsets.h: ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/eoffsets.x")
+				make_file.new_line
+				make_file.put_string ("%T$(X2C) ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/eoffsets.x ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/eoffsets.h")
+				make_file.new_line
+				make_file.new_line
 			end
 
 			l_basket := system_baskets.item (1)
@@ -1150,7 +1163,15 @@ feature -- Generation (Linking rules)
 				make_file.put_string (l_basket.item)
 				make_file.put_string (": Makefile ")
 				make_file.put_string (packet_name (system_object_prefix, 1))
-				make_file.put_string ("/Makefile%N%Tcd ")
+				make_file.put_string ("/Makefile ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/estructure.h")
+				if system.in_final_mode then
+					make_file.put_character (' ')
+					make_file.put_string (packet_name (system_object_prefix, 1))
+					make_file.put_string ("/eoffsets.h")
+				end
+				make_file.put_string ("%N%Tcd ")
 				make_file.put_string (packet_name (system_object_prefix, 1))
 				make_file.put_string (" ; $(MAKE) ")
 				make_file.put_string (l_basket.item)
@@ -1200,7 +1221,13 @@ feature -- Generation (Linking rules)
 					make_file.put_integer (i)
 					make_file.put_string (".o: Makefile ")
 					make_file.put_string (packet_name (system_object_prefix, 1))
-					make_file.put_string ("/estructure.h%N%Tcd ")
+					make_file.put_string ("/estructure.h")
+					if system.in_final_mode then
+						make_file.put_character (' ')
+						make_file.put_string (packet_name (system_object_prefix, 1))
+						make_file.put_string ("/eoffsets.h")
+					end
+					make_file.put_string ("%N%Tcd ")
 					make_file.put_string (packet_name (C_prefix, i))
 					make_file.put_string (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
 					make_file.put_new_line

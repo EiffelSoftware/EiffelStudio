@@ -91,7 +91,7 @@ feature -- C code generation
 				l_buffer.put_string (", ")
 				l_buffer.put_type_id (l_cl_type.type_id (context.context_class_type.type))
 				l_buffer.put_string (", ")
-				l_cl_type.associated_class_type (context.context_class_type.type).skeleton.generate_size (l_buffer)
+				l_cl_type.associated_class_type (context.context_class_type.type).skeleton.generate_size (l_buffer, True)
 			else
 				if l_is_tuple then
 					l_buffer.put_string ("RTLNTS(")

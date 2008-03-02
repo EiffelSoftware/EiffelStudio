@@ -208,7 +208,7 @@ end
 					--| arguments. This means we won't generate anything if there is nothing
 					--| to generate. Remember that `True' is used in the generation of attributes
 					--| table in Final mode.
-				offset_class_type.skeleton.generate_offset (buf, real_feature_id (typ), False)
+				offset_class_type.skeleton.generate_offset (buf, real_feature_id (typ), False, True)
 			end
 			buf.put_character (')')
 		end

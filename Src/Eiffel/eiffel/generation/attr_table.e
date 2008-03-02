@@ -67,7 +67,7 @@ feature
 					from
 						first_type := system_i.class_type_of_id (type_id);
 						create l_buffer.make (50)
-						first_type.skeleton.generate_offset (l_buffer, array_item (i).feature_id, False)
+						first_type.skeleton.generate_offset (l_buffer, array_item (i).feature_id, False, False)
 						l_offset := l_buffer.as_string
 							-- We have computed the first element, we go directly to the next one.
 						i := i + 1
@@ -78,7 +78,7 @@ feature
 						cl_type := system_i.class_type_of_id (entry.type_id);
 						if cl_type.conform_to (first_type) then
 							l_buffer.clear_all
-							cl_type.skeleton.generate_offset (l_buffer, entry.feature_id, False)
+							cl_type.skeleton.generate_offset (l_buffer, entry.feature_id, False, False)
 							Result := not l_buffer.as_string.is_equal (l_offset)
 						end
 						i := i + 1
@@ -139,7 +139,7 @@ feature
 							--| In this instruction, we put `True' as second arguments.
 							--| This means we will generate something if there is nothing to
 							--| generate (ie `0'). Remember that `False' is used in all other case
-						l_class_type.skeleton.generate_offset (l_buf, entry.feature_id, True)
+						l_class_type.skeleton.generate_offset (l_buf, entry.feature_id, True, True)
 						l_attr_offset := l_buf.as_string
 						l_start := j
 						l_end := j
@@ -148,7 +148,7 @@ feature
 							--| In this instruction, we put `True' as second arguments.
 							--| This means we will generate something if there is nothing to
 							--| generate (ie `0'). Remember that `False' is used in all other case
-						l_class_type.skeleton.generate_offset (l_buf, entry.feature_id, True)
+						l_class_type.skeleton.generate_offset (l_buf, entry.feature_id, True, True)
 						l_offset := l_buf.as_string
 						if l_attr_offset.is_equal (l_offset) then
 							l_end := j

@@ -434,6 +434,10 @@ feature -- Plug and Makefile file
 			buffer.put_string ("#include %"eif_eiffel.h%"%N")
 			buffer.put_string ("#include %"eif_project.h%"%N")
 			buffer.put_string ("#include %"egc_include.h%"")
+			if final_mode then
+				buffer.put_new_line
+				buffer.put_string ("#include %"eoffsets.h%"")
+			end
 
 			buffer.start_c_specific_code
 
@@ -704,12 +708,12 @@ feature -- Plug and Makefile file
 			if final_mode then
 					-- Offset from top of STRING object to access `count' attribute of class STRING
 				buffer.put_string ("%Tegc_str_count_offset = ")
-				string_cl.types.first.skeleton.generate_offset (buffer, count_feat.feature_id, False)
+				string_cl.types.first.skeleton.generate_offset (buffer, count_feat.feature_id, False, True)
 				buffer.put_string (";%N")
 
 					-- Offset from top of STRING object to access `internal_hash_code' attribute of class STRING
 				buffer.put_string ("%Tegc_str_hash_offset = ")
-				string_cl.types.first.skeleton.generate_offset (buffer, internal_hash_code_feat.feature_id, False)
+				string_cl.types.first.skeleton.generate_offset (buffer, internal_hash_code_feat.feature_id, False, True)
 				buffer.put_string (";%N")
 			else
 				buffer.put_string ("%Tegc_strset = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
@@ -999,6 +1003,7 @@ feature -- Plug and Makefile file
 				create l_create_type.make (l_creation_type)
 				l_create_type.generate_start (buffer)
 				l_create_type.generate_gen_type_conversion (0)
+				buffer.put_new_line
 				buffer.put_string ("l_root_obj = ")
 				l_create_type.generate
 				buffer.put_character (';')
@@ -1019,7 +1024,7 @@ feature -- Plug and Makefile file
 
 			buffer.end_c_specific_code
 
-			create plug_file.make_c_code_file (x_gen_file_name (final_mode, Eplug));
+			create plug_file.make_c_code_file (gen_file_name (final_mode, Eplug));
 			buffer.put_in_file (plug_file)
 			plug_file.close
 		end

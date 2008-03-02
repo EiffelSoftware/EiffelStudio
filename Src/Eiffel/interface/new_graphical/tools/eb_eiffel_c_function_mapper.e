@@ -177,11 +177,7 @@ feature{NONE} -- Implementation
 			create l_dir.make (l_dir_name)
 			if l_dir.exists then
 				Result := full_file_name (not is_for_workbench, l_package_name, a_class_type.base_file_name, Void)
-				if is_for_workbench then
-					Result.append (dot_c)
-				else
-					Result.append (dot_x)
-				end
+				Result.append (dot_c)
 			else
 				Result := ""
 			end

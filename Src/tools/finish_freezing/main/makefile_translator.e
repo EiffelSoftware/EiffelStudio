@@ -158,6 +158,7 @@ feature -- Execution
 			l_process: PROCESS
 			l_success: BOOLEAN
 			l_flags: LIST [STRING]
+			l_file: RAW_FILE
 		do
 				-- the command to execute the make utility on this platform
 			command := options.get_string ("make_utility", "")
@@ -168,16 +169,31 @@ feature -- Execution
 			l_make_flags.left_adjust
 			l_make_flags.right_adjust
 
-				-- Launch building of `E1\estructure.h' in case it is not built and we are not
+				-- Launch building of `E1\estructure.h' and `E1\eoffsets.h' in case it is not built and we are not
 				-- in .NET mode
 			if not is_il_code then
-				l_flags := l_make_flags.split (' ')
-				l_flags.extend ("E1" + directory_separator + "estructure.h")
-				l_process := process_launcher (command, l_flags, Void)
-				l_process.launch
-				l_success := l_process.launched
-				if l_success then
-					l_process.wait_for_exit
+				create l_file.make ("E1" + directory_separator + "estructure.x")
+				if l_file.exists then
+					l_flags := l_make_flags.split (' ')
+					l_flags.extend ("E1" + directory_separator + "estructure.h")
+					l_process := process_launcher (command, l_flags, Void)
+					l_process.launch
+					l_success := l_process.launched
+					if l_success then
+						l_process.wait_for_exit
+					end
+				end
+
+				create l_file.make ("E1" + directory_separator + "eoffsets.x")
+				if l_file.exists then
+					l_flags := l_make_flags.split (' ')
+					l_flags.extend ("E1" + directory_separator + "eoffsets.h")
+					l_process := process_launcher (command, l_flags, Void)
+					l_process.launch
+					l_success := l_process.launched
+					if l_success then
+						l_process.wait_for_exit
+					end
 				end
 			end
 
@@ -631,7 +647,7 @@ feature {NONE} -- Translation
 			dir_sep_pos: INTEGER -- the position of the directory separator
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
-			is_E1_makefile, is_E1_structure: BOOLEAN
+			is_E1_makefile, is_E1_structure, is_E1_offsets: BOOLEAN
 			min: INTEGER
 			dependency: STRING
 			l_target_file: STRING
@@ -657,6 +673,7 @@ feature {NONE} -- Translation
 
 				is_E1_makefile := False
 				is_E1_structure := False
+				is_E1_offsets := False
 
 				-- get directory name and filename
 				dir_sep_pos := lastline.index_of (directory_separator.item (1), 1)
@@ -688,6 +705,8 @@ feature {NONE} -- Translation
 					is_E1_makefile := True
 				elseif filename.is_equal ("estructure") and then dir.is_equal ("E1") then
 					is_E1_structure := True
+				elseif filename.is_equal ("eoffsets") and then dir.is_equal ("E1") then
+					is_E1_offsets := True
 				else
 					l_target_file := dir + directory_separator
 						-- Last check on filename is to know if we are handling the old code
@@ -715,7 +734,7 @@ feature {NONE} -- Translation
 
 				if is_E1_makefile then
 					read_next
-				elseif is_E1_structure then
+				elseif is_E1_structure or is_E1_offsets then
 					subst_dir_sep (lastline)
 					makefile.put_string (lastline)
 					makefile.put_new_line

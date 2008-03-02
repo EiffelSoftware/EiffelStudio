@@ -857,7 +857,7 @@ end
 						if context.workbench_mode then
 							l_class_type.skeleton.generate_workbench_size (buf)
 						else
-							l_class_type.skeleton.generate_size (buf)
+							l_class_type.skeleton.generate_size (buf, True)
 						end
 						l_class_type.generate_expanded_overhead_size (buf)
 							-- We reset the flags since now we have an expanded on the C stack,
@@ -905,7 +905,7 @@ end
 						if context.workbench_mode then
 							l_class_type.skeleton.generate_workbench_size (buf)
 						else
-							l_class_type.skeleton.generate_size (buf)
+							l_class_type.skeleton.generate_size (buf, True)
 						end
 						l_class_type.generate_expanded_overhead_size (buf)
 						buf.put_string (");")

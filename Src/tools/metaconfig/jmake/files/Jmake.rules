@@ -1,32 +1,24 @@
 ;########################################################################
 ;# Jmake rules for building libraries, programs, scripts, and data files
-;# $Id: Jmake.rules 89200 2005-10-13 21:37:30Z manus $
+;# $Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
 
 /*
  *		   MACHINE-INDEPENDENT RULES -- DO NOT MODIFY
  */
 
-/* $Id: Jmake.rules 89200 2005-10-13 21:37:30Z manus $
+/* $Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
  *
- *  Copyright (c) 1991-1993, Raphael Manfredi
+ *  Copyright (c) 1991-1997, 2004-2006, Raphael Manfredi
  *  
  *  You may redistribute only under the terms of the Artistic Licence,
  *  as specified in the README file that comes with the distribution.
  *  You may reuse parts of this distribution only within the terms of
  *  that same Artistic Licence; a copy of which may be found at the root
- *  of the source tree for dist 3.0.
+ *  of the source tree for dist 4.0.
  *
- * $Log$
- * Revision 1.4  2005/10/13 21:37:30  manus
- * Reverted change so that we use JLKFLAGS when $(LD) is used. We simply made sure
- *   that JLKFLAGS will be in the Makefile.
- *
- * Revision 1.3  2004/12/01 23:57:10  manus
- * Use JLDFLAGS rather than JLKFLAGS which is not defined at all.
- *
- * Revision 1.2  2004/11/30 00:21:14  manus
- * New template files for runtime Makefiles with multithreaded support and
- * shared library support.
+ * $Log: Jmake.rules,v $
+ * Revision 3.0.1.7  2004/08/22 08:28:58  ram
+ * patch71: random cleanup
  *
  * Revision 3.0.1.6  1997/02/28  14:56:01  ram
  * patch61: now handles USRINC for dependencies
@@ -64,7 +56,6 @@
  *	of by jmake.
  */
 #define AddedByConfigure(files) @!\
->RM @!\
 local_clobber::			@@\
 	$(RM) files
 
@@ -81,7 +72,6 @@ local_clobber::			@@\
  *	Generate rules to build necessary things during make all.
  */
 #define AllTarget(depends)	@!\
->RM @!\
 all:: depends				@!\
 							@!\
 local_realclean::			@@\
@@ -95,10 +85,9 @@ local_realclean::			@@\
  *	used *inside* building rules.
  */
 #define RemoveTargetProgram(program) \
->RM @!\
->MV @@\
 	$(RM) program @@\
-	if test -f program; then $(MV) program program^^~; else exit 0; fi
+	if test -f program^^^$(_EXE); then \ @@\
+		$(MV) program^^^$(_EXE) program^^~^^^$(_EXE); fi
 
 /*
  * NormalProgramTarget:
@@ -107,10 +96,6 @@ local_realclean::			@@\
  *	multiple programs in the same Jmakefile.
  */
 #define	NormalProgramTarget(program,sources,objects)	@!\
->CC @!\
->RM @!\
->JLDFLAGS @!\
->LIBS @!\
 ++OBJECTS objects @!\
 ++SOURCES sources @!\
 NormalObjectRule()				@!\
@@ -118,7 +103,7 @@ AllTarget(program)				@!\
 								@!\
 program: objects				@@\
 	RemoveTargetProgram($@)		@@\
-	$(CC) -o $@ objects $(JLDFLAGS) $(LIBS) @!\
+	$(CC) -o $@ objects $(JLKFLAGS) $(LIBS) @!\
 
 
 /*
@@ -148,11 +133,6 @@ NormalProgramTarget(program,program.c,program.o)
  *	that describe a single program.
  */
 #define	ComplexProgramTarget(program)	@!\
->CC @!\
->JLDFLAGS @!\
->LIBS @!\
->BINDIR @!\
->MANSRC @!\
 ++OBJECTS $(OBJS) @!\
 ++SOURCES $(SRCS) @!\
 NormalObjectRule()					@!\
@@ -160,7 +140,7 @@ AllTarget(program)					@!\
 									@!\
 program: $(OBJS)					@@\
 	RemoveTargetProgram($@)			@@\
-	$(CC) -o $@ $(OBJS) $(JLDFLAGS) $(LIBS) @!\
+	$(CC) -o $@ $(OBJS) $(JLKFLAGS) $(LIBS) @!\
 									@!\
 InstallProgram(program,$(BINDIR))	@!\
 InstallManPage(program,$(MANSRC))	@!\
@@ -177,11 +157,6 @@ LintTarget()
  *	program in Jmakefiles that describe multiple programs.
  */
 #define	ComplexProgramTarget_1(program)	@!\
->CC @!\
->JLDFLAGS @!\
->LIBS @!\
->BINDIR @!\
->MANSRC @!\
 ++OBJECTS $(OBJS1) @!\
 ++SOURCES $(SRCS1) @!\
 NormalObjectRule()					@!\
@@ -189,7 +164,7 @@ AllTarget(program)					@!\
 									@!\
 program: $(OBJS1)					@@\
 	RemoveTargetProgram($@)			@@\
-	$(CC) -o $@ $(OBJS1) $(JLDFLAGS) $(LIBS) @!\
+	$(CC) -o $@ $(OBJS1) $(JLKFLAGS) $(LIBS) @!\
 									@!\
 InstallProgram(program,$(BINDIR))	@!\
 InstallManPage(program,$(MANSRC))	@!\
@@ -206,11 +181,6 @@ LintTarget()
  *	describing more than one program.
  */
 #define	ComplexProgramTarget_2(program)	@!\
->CC @!\
->JLDFLAGS @!\
->LIBS @!\
->BINDIR @!\
->MANSRC @!\
 ++OBJECTS $(OBJS2) @!\
 ++SOURCES $(SRCS2) @!\
 NormalObjectRule()					@!\
@@ -218,7 +188,7 @@ AllTarget(program)					@!\
 									@!\
 program: $(OBJS2)					@@\
 	RemoveTargetProgram($@)			@@\
-	$(CC) -o $@ $(OBJS2) $(JLDFLAGS) $(LIBS) @!\
+	$(CC) -o $@ $(OBJS2) $(JLKFLAGS) $(LIBS) @!\
 									@!\
 InstallProgram(program,$(BINDIR))	@!\
 InstallManPage(program,$(MANSRC))
@@ -232,11 +202,6 @@ InstallManPage(program,$(MANSRC))
  *	more than one program.
  */
 #define	ComplexProgramTarget_3(program) @!\
->CC @!\
->JLDFLAGS @!\
->LIBS @!\
->BINDIR @!\
->MANSRC @!\
 ++OBJECTS $(OBJS3) @!\
 ++SOURCES $(SRCS3) @!\
 NormalObjectRule()					@!\
@@ -244,7 +209,7 @@ AllTarget(program)					@!\
 									@!\
 program: $(OBJS3)					@@\
 	RemoveTargetProgram($@)			@@\
-	$(CC) -o $@ $(OBJS3) $(JLDFLAGS) $(LIBS) @!\
+	$(CC) -o $@ $(OBJS3) $(JLKFLAGS) $(LIBS) @!\
 									@!\
 InstallProgram(program,$(BINDIR))	@!\
 InstallManPage(program,$(MANSRC))
@@ -256,9 +221,6 @@ InstallManPage(program,$(MANSRC))
  *	.$manext files.
  */
 #define ComplexShellManualTarget(manpages) @!\
->INSTALL @!\
->MANSRC @!\
->RM @!\
 ++MANPAGE manpages @!\
 |once _ShellManualRule_		@!\
 |rule:.SH.$manext:			@!\
@@ -269,21 +231,18 @@ AddSuffix(.SH)				@!\
 AddSuffix(.$manext)			@!\
 AllTarget(manpages)			@!\
 							@!\
-install.man::				@@\
-	@if test "$(MANSRC)"; then \		@@\
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
-		for file in manpages; do \		@@\
-			(set -x; $(INSTALL) -c -m 444 $$file $(MANSRC)); \	@@\
-		done; \				@@\
-	else exit 0; fi			@!\
+local_install.man::			@@\
+	_MakeInstallDirIgnore($(MANSRC)) \					@@\
+	for file in manpages; do \		@@\
+		(set -x; $(INSTALL) -c -m 444 $$file \ @@\
+			$(INSTALL_PREFIX)$(MANSRC)) || exit 1; \	@@\
+	done					@!\
 							@!\
-deinstall.man::				@@\
-	@if test "$(MANSRC)"; then \		@@\
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
-		for file in manpages; do \		@@\
-			(set -x; $(RM) $(MANSRC)/$$file); \	@@\
-		done; \				@@\
-	else exit 0; fi
+local_deinstall.man::		@@\
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
+	for file in manpages; do \		@@\
+		(set -x; $(RM) $(INSTALL_PREFIX)$(MANSRC)/$$file); \	@@\
+	done
 
 
 /*
@@ -300,16 +259,14 @@ deinstall.man::				@@\
  *	Generate rules to install the indicated library.
  */
 #define	InstallLibrary(libname,dest)	@!\
->RANLIB @!\
->INSTALL @!\
->RM @!\
-install:: lib^^libname.a	@@\
-	$(INSTALL) -c -m 644 lib^^libname.a dest		@@\
+local_install:: lib^^libname.a		@@\
+	_MakeInstallDirIgnore(dest) \	@@\
+	$(INSTALL) -c -m 644 lib^^libname.a $(INSTALL_PREFIX)^^^dest		@@\
 	$(RANLIB) dest/lib^^libname.a	@@\
 	chmod 444 dest/lib^^libnane.a	@!\
-							@!\
-deinstall::					@@\
-	$(RM) dest/lib^^libname.a
+									@!\
+local_deinstall::					@@\
+	$(RM) $(INSTALL_PREFIX)^^^dest/lib^^libname.a
 
 
 /*
@@ -317,13 +274,12 @@ deinstall::					@@\
  *	Generate rules to install the shared library.
  */
 #define	InstallSharedLibrary(libname,rev,dest)	@!\
->INSTALL @!\
->RM @!\
-install:: lib^^libname.so.rev 	@@\
-	$(INSTALL) -c -m 444 lib^^libname.so.rev dest @!\
-							@!\
-deinstall::					@@\
-	$(RM) dest/lib^^libname.so.rev
+local_install:: lib^^libname.so.rev 	@@\
+	_MakeInstallDirIgnore(dest) \		@@\
+	$(INSTALL) -c -m 444 lib^^libname.so.rev $(INSTALL_PREFIX)^^^dest @!\
+										@!\
+local_deinstall::						@@\
+	$(RM) $(INSTALL_PREFIX)^^^dest/lib^^libname.so.rev
 
 
 /*
@@ -331,13 +287,12 @@ deinstall::					@@\
  *	Generate rules to install the shared library data
  */
 #define	InstallSharedLibraryData(libname,rev,dest)	@!\
->INSTALL @!\
->RM @!\
-install:: lib^^libname.sa.rev		@@\
-	$(INSTALL) -c -m 444 lib^^libname.sa.rev dest @!\
-							@!\
-deinstall::					@@\
-	$(RM) dest/lib^^libname.sa.rev
+local_install:: lib^^libname.sa.rev		@@\
+	_MakeInstallDirIgnore(dest) \		@@\
+	$(INSTALL) -c -m 444 lib^^libname.sa.rev $(INSTALL_PREFIX)^^^dest @!\
+									@!\
+local_deinstall::					@@\
+	$(RM) $(INSTALL_PREFIX)^^^dest/lib^^libname.sa.rev
 
 
 /*
@@ -346,13 +301,11 @@ deinstall::					@@\
  *	for the purposes of aliasing.
  */
 #define	InstallLibraryAlias(libname,alias,dest)	@!\
->LN @!\
->RM @!\
-install:: lib^^libname.a	@@\
+local_install:: lib^^libname.a	@@\
 	$(RM) lib^^alias.a		@@\
 	-(cd dest; $(LN) lib^^libname.a lib^^alias.a) @!\
 							@!\
-deinstall::					@@\
+local_deinstall::			@@\
 	$(RM) dest/lib^^alias.a
 
 
@@ -361,13 +314,12 @@ deinstall::					@@\
  *	Generate rules to install the indicated lint library.
  */
 #define	InstallLintLibrary(libname,dest)	@!\
->INSTALL @!\
->RM @!\
-install.ln:: llib-l^^libname.ln	@@\
-	$(INSTALL) -c -m 444 llib-l^^libname.ln dest @!\
+install.ln:: llib-l^^libname.ln			@@\
+	_MakeInstallDirIgnore(dest) \		@@\
+	$(INSTALL) -c -m 444 llib-l^^libname.ln $(INSTALL_PREFIX)^^^dest @!\
 							@!\
 deinstall.ln::				@@\
-	$(RM) dest/llib-l^^libname.ln
+	$(RM) $(INSTALL_PREFIX)^^^dest/llib-l^^libname.ln
 
 
 /*
@@ -379,14 +331,12 @@ deinstall.ln::				@@\
  *	files systems with short file names).
  */
 #define	InstallManPageLong(file,destdir,dest)	@!\
->L @!\
->INSTALL @!\
->RM @!\
-install.man:: file.man			@@\
-	$(INSTALL) -c -m 444 file.man destdir/dest.$(L) @!\
-								@!\
-deinstall.man::					@@\
-	$(RM) destdir/dest.$(L)		@!\
+local_install.man:: file.man			@@\
+	_MakeInstallDirIgnore(destdir) \	@@\
+	$(INSTALL) -c -m 444 file.man $(INSTALL_PREFIX)^^^destdir/dest.$(L) @!\
+										@!\
+local_deinstall.man::					@@\
+	$(RM) $(INSTALL_PREFIX)^^^destdir/dest.$(L)		@!\
 
 
 /*
@@ -403,13 +353,12 @@ InstallManPageLong(file,dest,file)
  *  install flags.
  */
 #define	InstallNonExec(file,dest)	@!\
->INSTALL @!\
->RM @!\
-install:: file						@@\
-	$(INSTALL) -c -m 444 file dest	@!\
-							@!\
-deinstall::					@@\
-	$(RM) dest/file
+local_install:: file				@@\
+	_MakeInstallDirIgnore(dest) \	@@\
+	$(INSTALL) -c -m 444 file $(INSTALL_PREFIX)^^^dest	@!\
+									@!\
+local_deinstall::					@@\
+	$(RM) $(INSTALL_PREFIX)^^^dest/file
 
 
 /*
@@ -418,13 +367,26 @@ deinstall::					@@\
  *	install flags.
  */
 #define InstallProgramWithFlags(program,dest,flags)	@!\
->INSTALL @!\
->RM @!\
-install:: program					@@\
-	$(INSTALL) -c -s -m 555 flags program dest @!\
-							@!\
-deinstall::					@@\
-	$(RM) dest/program
+local_install:: program				@@\
+	_MakeInstallDirIgnore(dest) \	@@\
+	$(INSTALL) -c -s -m 555 flags program^^^$(_EXE) $(INSTALL_PREFIX)^^^dest @!\
+									@!\
+local_deinstall::					@@\
+	$(RM) $(INSTALL_PREFIX)^^^dest/program^^^$(_EXE)
+
+
+/*
+ * InstallProgramNoStripWithFlags:
+ *	Generate rules to install an executable program using given
+ *	install flags.
+ */
+#define InstallProgramNoStripWithFlags(program,dest,flags)	@!\
+local_install:: program				@@\
+	_MakeInstallDirIgnore(dest) \	@@\
+	$(INSTALL) -c -m 555 flags program^^^$(_EXE) $(INSTALL_PREFIX)^^^dest @!\
+									@!\
+local_deinstall::					@@\
+	$(RM) $(INSTALL_PREFIX)^^^dest/program^^^$(_EXE)
 
 
 /*
@@ -437,18 +399,27 @@ InstallProgramWithFlags(program,dest,^^)
 
 
 /*
+ * InstallProgramNoStrip:
+ *	Generate rules to install an executable program using any special
+ *	install flags set in $(INSTALLFLAGS), but without stripping the
+ *	executable from debugging symbols.
+ */
+#define	InstallProgramNoStrip(program,dest)	@!\
+InstallProgramNoStripWithFlags(program,dest,^^)
+
+
+/*
  * InstallScriptWithFlags:
  *	Generate rules to install an executable script using given
  *	install flags.
  */
 #define InstallScriptWithFlags(script,dest,flags)	@!\
->INSTALL @!\
->RM @!\
-install:: script					@@\
-	$(INSTALL) -c -m 555 flags script dest @!\
-							@!\
-deinstall::					@@\
-	$(RM) dest/script
+local_install:: script				@@\
+	_MakeInstallDirIgnore(dest) \	@@\
+	$(INSTALL) -c -m 555 flags script $(INSTALL_PREFIX)^^^dest @!\
+									@!\
+local_deinstall::					@@\
+	$(RM) $(INSTALL_PREFIX)^^^dest/script
 
 
 /*
@@ -466,20 +437,19 @@ InstallScriptWithFlags(script,dest,^^)
  *  $(SCRIPTS) and $(LSCRIPTS) macros.
  */
 #define	InstallScripts()	@!\
->SCRIPTDIR @!\
->INSTALL @!\
->RM @!\
 |once _InstallScripts_		@!\
-install:: $(SCRIPTS) $(LSCRIPTS) @@\
-	@for file in $(SCRIPTS) $(LSCRIPTS); do \	@@\
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
-		(set -x; $(INSTALL) -c -m 555 $$file $(SCRIPTDIR)); \	@@\
+local_install:: $(SCRIPTS) $(LSCRIPTS) 			@@\
+	_MakeInstallDirIgnore($(SCRIPTDIR)) \		@@\
+	for file in $(SCRIPTS) $(LSCRIPTS); do \	@@\
+		(set -x; \	@@\
+		$(INSTALL) -c -m 555 $$file $(INSTALL_PREFIX)$(SCRIPTDIR)) || \	@@\
+		exit 1; \	@@\
 	done					@!\
 							@!\
-deinstall::					@@\
+local_deinstall::			@@\
 	@for file in $(SCRIPTS) $(LSCRIPTS); do \	@@\
 		case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
-		(set -x; $(RM) $(SCRIPTDIR)/$$file); \	@@\
+		(set -x; $(RM) $(INSTALL_PREFIX)$(SCRIPTDIR)/$$file); \	@@\
 	done					@!\
 -once
 
@@ -489,30 +459,24 @@ deinstall::					@@\
  *	in the automatically generated $(SCRIPTS) macro.
  */
 #define InstallManScripts()	@!\
->RM @!\
->INSTALL @!\
->MANSRC @!\
->L @!\
 |once _InstallManScripts_	@!\
 ?NOMAN:|skip				@!\
-install.man::				@@\
-	@if test "$(MANSRC)"; then \	@@\
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
-		for file in $(SCRIPTS); do \	@@\
-			if test -f $$file.man; then \	@@\
-				(set -x; \		@@\
-				$(INSTALL) -c -m 444 $$file.man $(MANSRC)/$$file.$(L)); \ @@\
-			fi; \				@@\
-		done; \					@@\
-	else exit 0; fi			@!\
+local_install.man::			@@\
+	_MakeInstallDirIgnore($(MANSRC)) \		@@\
+	for file in $(SCRIPTS); do \			@@\
+		if test -f $$file.man; then \		@@\
+			(set -x; \						@@\
+			$(INSTALL) -c -m 444 $$file.man \ @@\
+				$(INSTALL_PREFIX)$(MANSRC)/$$file.$(L)) || \ @@\
+				exit 1; \	@@\
+		fi; \				@@\
+	done					@!\
 							@!\
-deinstall.man::				@@\
-	@if test "$(MANSRC)"; then \	@@\
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
-		for file in $(SCRIPTS); do \	@@\
-			(set -x; $(RM) $(MANSRC)/$$file.$(L)); \	@@\
-		done; \					@@\
-	else exit 0; fi			@!\
+local_deinstall.man::		@@\
+	case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
+	for file in $(SCRIPTS); do \	@@\
+		(set -x; $(RM) $(INSTALL_PREFIX)$(MANSRC)/$$file.$(L)); \	@@\
+	done					@!\
 							@!\
 -skip						@!\
 -once
@@ -524,7 +488,6 @@ deinstall.man::				@@\
  *	Link a list of list of files from one place to another
  */
 #define LinkFileList(step,list,dir,sub)	@!\
->LN @!\
 step:: list							@@\
 	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
 	echo "	cd" dir; cd dir; for i in list; do (set -x; $(LN) sub/$$i .); done
@@ -533,40 +496,37 @@ step:: list							@@\
 /*
  * InstallMultipleDestFlags:
  *	Generate rules to install multiple files at once during a particular
- *	step in the build using a specific set of install flags. The `step'
- *	must begin with "install".
+ *	step in the build using a specific set of install flags.
  */
 #define InstallMultipleDestFlags(step,list,dest,flags)	@!\
->INSTALL @!\
->RM @!\
 step:: list							@@\
-	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
+	_MakeInstallDirIgnore(dest) \	@@\
 	for i in list; do \				@@\
-		(set -x; $(INSTALL) -c flags $$i dest); \	@@\
-	done							@!\
-									@!\
-de^^step::						@@\
-	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
-	for i in list; do \				@@\
-		(set -x; $(RM) dest/$$i); \	@@\
+		(set -x; $(INSTALL) -c flags \ @@\
+			$$i $(INSTALL_PREFIX)^^^dest) || exit 1;\	@@\
 	done
 
-
 /*
- * InstallMultipleDest:
- *	Generate rules to install multiple files at once during a particular
- *	step in the build using any install flags set in $(INSTALLFLAGS).
+ * DeinstallMultipleDest:
+ *	Generate rules to deinstall multiple files at once during a particular
+ *	step in the build.
  */
-#define InstallMultipleDest(step,list,dest)	@!\
-InstallMultipleDestFlags(step,list,dest,$(INSTALLFLAGS))
+#define DeinstallMultipleDest(step,list,dest)	@!\
+step::								@@\
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
+	for i in list; do \				@@\
+		(set -x; $(RM) $(INSTALL_PREFIX)^^^dest/$$i); \	@@\
+	done
 
 /*
  * InstallMultiple:
  *	Generate rules to install multiple files at once during the install
- *	step of the build using any install flags set in $(INSTALLFLAGS).
+ *	step of the build using any install flags set in $(INSTALLFLAGS)
+ *	and deinstall them.
  */
 #define	InstallMultiple(list,dest)	@!\
-InstallMultipleDest(install,list,dest)
+InstallMultipleDestFlags(local_install,list,dest,$(INSTALLFLAGS)) @!\
+DeinstallMultipleDest(local_deinstall,list,dest) 
 
 
 /*
@@ -575,7 +535,8 @@ InstallMultipleDest(install,list,dest)
  *	install step of the build using the given install flags.
  */
 #define InstallMultipleFlags(list,dest,flags)	@!\
-InstallMultipleDestFlags(install,list,dest,flags)
+InstallMultipleDestFlags(local_install,list,dest,flags) @!\
+DeinstallMultipleDest(local_deinstall,list,dest)
 
 
 /*
@@ -584,8 +545,8 @@ InstallMultipleDestFlags(install,list,dest,flags)
  *	during the install.man step of the build.
  */
 #define InstallMultipleMan(list,dest)	@!\
->L @!\
-InstallMultipleDest(install.$(L),list,dest)
+InstallMultipleDestFlags(local_install.man,list,dest,$(INSTALLFLAGS)) @!\
+DeinstallMultipleDest(local_deinstall.man,list,dest) 
 
 
 /*
@@ -606,9 +567,6 @@ TOPDIR/mkdep:						@!\
  *	in $(SOURCES) (automatically generated macro).
  */
 #define	DependTarget()				@!\
->MKDEP @!\
->SED @!\
->RM @!\
 +USRINC = $usrinc @!\
 |once _DependTarget_				@!\
 DependDependency()					@!\
@@ -616,9 +574,9 @@ DependDependency()					@!\
 depend::							@@\
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \ @@\
 	$(MKDEP) $(SOURCES) | \			@@\
-	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \ @@\
-		-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \ @@\
-		-e 's/ ^^ */ /g; s/ :/:/;' -e '/: *$$/d' \ @@\
+	$(SED) -e 's:/usr/lib[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \ @@\
+		-e '/: / b print' -e '$$ b print' -e 'H; d; n; : print' \ @@\
+		-e 'x; s/\\$$//; s/\\\n//g; s/ ^^ */ /g; s/ :/:/;' -e '/: *$$/d' \ @@\
 	) > Makefile.new				@@\
 	cp Makefile Makefile.bak		@@\
 	cp Makefile.new Makefile		@@\
@@ -632,7 +590,6 @@ depend::							@@\
  *	Generate rules to remove any garbage files.
  */
 #define	CleanTarget()				@!\
->RM @!\
 ?SUBDIRS:clean: sub_clean local_clean				@!\
 %SUBDIRS:clean: local_clean							@!\
 ?SUBDIRS:realclean: sub_realclean local_realclean	@!\
@@ -641,7 +598,8 @@ depend::							@@\
 %SUBDIRS:clobber: local_clobber						@!\
 									@!\
 local_clean:: 						@@\
-	$(RM) core *~ *.o				@!\
+	if test -f core; then $(RM) core; fi @@\
+	$(RM) *~ *.o					@!\
 									@!\
 local_realclean:: local_clean		@!\
 ?TOP: $(RM) -r UU					@!\
@@ -654,12 +612,30 @@ local_clobber:: local_realclean		@!\
 
 
 /*
+ * InstallTarget:
+ *	Generate rules to recursively install files
+ */
+#define	InstallTarget()											@!\
+?SUBDIRS:install:: local_install sub_install					@!\
+%SUBDIRS:install:: local_install								@!\
+?SUBDIRS:install.man:: maybe_install.man sub_install.man		@!\
+%SUBDIRS:install.man:: maybe_install.man						@!\
+?SUBDIRS:deinstall:: sub_deinstall local_deinstall				@!\
+%SUBDIRS:deinstall:: local_deinstall							@!\
+?SUBDIRS:deinstall.man:: sub_deinstall.man maybe_deinstall.man	@!\
+%SUBDIRS:deinstall.man:: maybe_deinstall.man					@!\
+																@!\
+?MANSRC:install.man-yes: local_install.man						@!\
+install.man-no:													@!\
+?MANSRC:deinstall.man-yes: local_deinstall.man					@!\
+deinstall.man-no:												@!\
+
+
+/*
  * TagsTarget:
  *	Generate rules to compute tags files for C source code.
  */
 #define	TagsTarget()				@!\
->CTAGS @!\
->RM @!\
 tags::								@@\
 	$(CTAGS) -w *.[ch]				@@\
 	$(CTAGS) -xw *.[ch] > tags		@!\
@@ -678,8 +654,6 @@ local_clobber::						@@\
  *	exists, assuming the Jmakefile is not in a production environment.
  */
 #define	BuildMakefileSH(jmakeflags)	@!\
->RM @!\
->MV @!\
 Makefile.SH: Jmakefile 				@@\
 	-@if test -f $(TOP)/.package; then \ @@\
 		if test -f Makefile.SH; then \	@@\
@@ -688,7 +662,7 @@ Makefile.SH: Jmakefile 				@@\
 		fi; \						@@\
 		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" jmakeflags; \ @@\
 		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) jmakeflags; \ @@\
-	else touch $@; exit 0; fi
+	else touch $@; fi
 
 
 /*
@@ -714,8 +688,6 @@ BuildMakefile()
  *	Generate make rule to build usual object files.
  */
 #define	NormalObjectRule()			@!\
->CC @!\
->JCFLAGS @!\
 |once _ObjectRule_					@!\
 |rule:.c.o:							@!\
 |rule: $(CC) -c $(JCFLAGS) $<		@!\
@@ -727,9 +699,6 @@ BuildMakefile()
  *	Generate make rules to build "normal" objects.
  */
 #define	NormalLibraryObjectRule()	@!\
->CC @!\
->JCFLAGS @!\
->RM @!\
 |once _ObjectRule_					@!\
 |rule:.c.o:							@!\
 |rule: $(RM) $@						@!\
@@ -742,12 +711,8 @@ BuildMakefile()
  *	Generate make rules to build both profiled and "normal" objects.
  */
 #define	ProfiledLibraryObjectRule()	@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::								@@\
-	@if [ ! -d profiled ]; then mkdir profiled; else exit 0; fi	@!\
+	@if [ ! -d profiled ]; then mkdir profiled; fi	@!\
 									@!\
 |rule:.c.o:							@!\
 |rule: $(RM) $@ profiled/$@			@!\
@@ -757,7 +722,7 @@ all::								@@\
 |rule:								@!\
 local_clean:: 						@@\
 	-@if [ -d profiled ]; then echo "	$(RM) profiled/?*.o"; \	@@\
-		$(RM) profiled/?*.o; else exit 0; fi
+		$(RM) profiled/?*.o; fi
 
 
 /*
@@ -766,12 +731,8 @@ local_clean:: 						@@\
  *	objects.
  */
 #define	DebuggedLibraryObjectRule()					@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::									@@\
-	@if [ ! -d debugger ]; then mkdir debugger; else exit 0; fi	@!\
+	@if [ ! -d debugger ]; then mkdir debugger; fi	@!\
 									@!\
 |rule:.c.o:							@!\
 |rule: $(RM) $@ debugger/$@			@!\
@@ -781,7 +742,7 @@ all::									@@\
 |rule:								@!\
 local_clean::						@@\
 	-@if [ -d debugger ]; then echo "	$(RM) debugger/?*.o"; \ @@\
-		$(RM) debugger/?*.o; else exit 0; fi
+		$(RM) debugger/?*.o; fi
 
 
 /*
@@ -790,13 +751,9 @@ local_clean::						@@\
  *	objects.
  */
 #define	DebuggedAndProfiledLibraryObjectRule()	@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::									@@\
-	@if [ ! -d profiled ]; then mkdir profiled; else exit 0; fi	@@\
-	@if [ ! -d debugger ]; then mkdir debugger; else exit 0; fi	@!\
+	@if [ ! -d profiled ]; then mkdir profiled; fi	@@\
+	@if [ ! -d debugger ]; then mkdir debugger; fi	@!\
 										@!\
 |rule:.c.o:								@!\
 |rule: $(RM) $@ profiled/$@ debugger/$@	@!\
@@ -808,9 +765,9 @@ all::									@@\
 |rule:									@!\
 local_clean::							@@\
 	-@if [ -d profiled ]; then echo "	$(RM) profiled/?*.o"; \ @@\
-		$(RM) profiled/?*.o; else exit 0; fi	@@\
+		$(RM) profiled/?*.o; fi			@@\
 	-@if [ -d debugger ]; then echo "	$(RM) debugger/?*.o"; \ @@\
-		$(RM) debugger/?*.o; else exit 0; fi
+		$(RM) debugger/?*.o; fi
 
 
 /*
@@ -818,12 +775,8 @@ local_clean::							@@\
  *	Generate make rules to build shared and "normal" object files.
  */
 #define SharedLibraryObjectRule()					@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::								@@\
-	@if [ ! -d shared ]; then mkdir shared; else exit 0; fi		@!\
+	@if [ ! -d shared ]; then mkdir shared; fi		@!\
 									@!\
 |rule:.c.o:							@!\
 |rule: $(RM) $@ shared/$@			@!\
@@ -833,7 +786,7 @@ all::								@@\
 |rule:								@!\
 local_clean::						@@\
 	-@if [ -d shared ]; then echo "	$(RM) shared/?*.o"; \		@@\
-		$(RM) shared/?*.o; else exit 0; fi
+		$(RM) shared/?*.o; fi
 
 /*
  * SharedAndDebuggedLibraryObjectRule:
@@ -841,13 +794,9 @@ local_clean::						@@\
  *	object files.
  */
 #define SharedAndDebuggedLibraryObjectRule()	@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::										@@\
-	@if [ ! -d shared ]; then mkdir shared; else exit 0; fi		@@\
-	@if [ ! -d debugger ]; then mkdir debugger; else exit 0; fi	@!\
+	@if [ ! -d shared ]; then mkdir shared; fi		@@\
+	@if [ ! -d debugger ]; then mkdir debugger; fi	@!\
 											@!\
 |rule:.c.o:									@!\
 |rule: $(RM) $@ shared/$@ debugger/$@		@!\
@@ -859,9 +808,9 @@ all::										@@\
 |rule:										@!\
 local_clean:: 								@@\
 	-@if [ -d shared ]; then echo "	$(RM) shared/?*.o"; \		@@\
-		$(RM) shared/?*.o; else exit 0; fi	@@\
+		$(RM) shared/?*.o; fi				@@\
 	-@if [ -d debugger ]; then echo "	$(RM) debugger/?*.o"; \ @@\
-		$(RM) debugger/?*.o; else exit 0; fi
+		$(RM) debugger/?*.o; fi
 
 /*
  * SpecialSharedAndDebuggedObjectRule:
@@ -869,13 +818,9 @@ local_clean:: 								@@\
  *	shared and debuggable versions.
  */
 #define	SpecialSharedAndDebuggedObjectRule(objs,depends,options)	@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::									@@\
-	@if [ ! -d shared ]; then mkdir shared; else exit 0; fi		@@\
-	@if [ ! -d debugger ]; then mkdir debugger; else exit 0; fi	@!\
+	@if [ ! -d shared ]; then mkdir shared; fi		@@\
+	@if [ ! -d debugger ]; then mkdir debugger; fi	@!\
 										@!\
 objs:	depends							@@\
 	$(RM) $@ shared/$@ debugger/$@		@@\
@@ -891,12 +836,8 @@ objs:	depends							@@\
  *	shared and debuggable versions.
  */
 #define	SpecialSharedObjectRule(objs,depends,options)		@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::									@@\
-	@if [ ! -d shared ]; then mkdir shared; else exit 0; fi		@!\
+	@if [ ! -d shared ]; then mkdir shared; fi		@!\
 										@!\
 objs:	depends							@@\
 	$(RM) $@ shared/$@ 					@@\
@@ -910,9 +851,6 @@ objs:	depends							@@\
  *	Generate rules to compile a file with special flags.
  */
 #define SpecialObjectRule(objs,depends,options)		@!\
->RM @!\
->CC @!\
->JCFLAGS @!\
 objs:	depends							@@\
 	$(RM) $@							@@\
 	$(CC) -c $(JCFLAGS) options $*.c
@@ -924,12 +862,8 @@ objs:	depends							@@\
  *	profiled version.
  */
 #define	SpecialProfiledObjectRule(objs,depends,options)			@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::									@@\
-	@if [ ! -d profiled ]; then mkdir profiled; else exit 0; fi	@!\
+	@if [ ! -d profiled ]; then mkdir profiled; fi	@!\
 										@!\
 objs:	depends							@@\
 	$(RM) $@ profiled/$@				@@\
@@ -944,12 +878,8 @@ objs:	depends							@@\
  *	debuggable version.
  */
 #define	SpecialDebuggedObjectRule(objs,depends,options)	@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::									@@\
-	@if [ ! -d debugger ]; then mkdir debugger; else exit 0; fi	@!\
+	@if [ ! -d debugger ]; then mkdir debugger; fi	@!\
 										@!\
 objs:	depends							@@\
 	$(RM) $@ debugger/$@				@@\
@@ -964,13 +894,9 @@ objs:	depends							@@\
  *	debuggable and profiled versions.
  */
 #define	SpecialDebuggedAndProfiledObjectRule(objs,depends,options)	@!\
->RM @!\
->CC @!\
->MV @!\
->JCFLAGS @!\
 all::									@@\
-	@if [ ! -d profiled ]; then mkdir profiled; else exit 0; fi	@@\
-	@if [ ! -d debugger ]; then mkdir debugger; else exit 0; fi	@!\
+	@if [ ! -d profiled ]; then mkdir profiled; fi	@@\
+	@if [ ! -d debugger ]; then mkdir debugger; fi	@!\
 										@!\
 objs:	depends							@@\
 	$(RM) $@ profiled/$@ debugger/$@	@@\
@@ -988,9 +914,6 @@ objs:	depends							@@\
  *	is not otherwise used by this rule, but is necessary for make depend.
  */
 #define	NormalLibraryTarget(libname,srclist,objlist)	@!\
->RM @!\
->AR @!\
->RANLIB @!\
 ++OBJECTS objlist @!\
 ++SOURCES srclist @!\
 NormalLibraryObjectRule()		@!\
@@ -1009,9 +932,6 @@ lib^^libname.a: objlist			@@\
  *	library gone for long periods.
  */
 #define NormalSharedLibraryTarget(libname,rev,solist)	@!\
->RM @!\
->LD @!\
->MV @!\
 AllTarget(lib^^libname.so.rev)	@!\
 									@!\
 lib^^libname.so.rev:  solist		@@\
@@ -1027,9 +947,6 @@ lib^^libname.so.rev:  solist		@@\
  *	library gone for long periods.
  */
 #define NormalSharedLibraryDataTarget(libname,rev,salist)	@!\
->RM @!\
->AR @!\
->RANLIB @!\
 AllTarget(lib^^libname.sa.rev)	@!\
 									@!\
 lib^^libname.sa.rev:  salist		@@\
@@ -1044,9 +961,6 @@ lib^^libname.sa.rev:  salist		@@\
  *	create libraries with large numbers of files.
  */
 #define	NormalLibraryTarget2(libname,srclist,objlist1,objlist2)	@!\
->RM @!\
->AR @!\
->RANLIB @!\
 ++SOURCES srclist @!\
 ++OBJECTS objlist1 @!\
 ++OBJECTS objlist2 @!\
@@ -1065,9 +979,6 @@ lib^^libname.a: objlist1 objlist2	@@\
  *	Generate rules to create a profiled library.
  */
 #define	ProfiledLibraryTarget(libname,srclist,objlist)	@!\
->RM @!\
->AR @!\
->RANLIB @!\
 ++SOURCES srclist @!\
 ++OBJECTS objlist @!\
 AllTarget(lib^^libname^^_p.a)		@!\
@@ -1083,9 +994,6 @@ lib^^libname^^_p.a: objlist			@@\
  *	Generate rules to create a debuggable library.
  */
 #define	DebuggedLibraryTarget(libname,srclist,objlist)	@!\
->RM @!\
->AR @!\
->RANLIB @!\
 ++SOURCES srclist @!\
 ++OBJECTS objlist @!\
 AllTarget(lib^^libname^^_d.a)		@!\
@@ -1101,8 +1009,6 @@ lib^^libname^^_d.a: objlist			@@\
  *	Generate rules to link one library to another.
  */
 #define	AliasedLibraryTarget(libname,alias)	@!\
->RM @!\
->LN @!\
 AllTarget(lib^^alias.a)			@!\
 								@!\
 lib^^alias.a: lib^^libname.a	@@\
@@ -1116,15 +1022,21 @@ lib^^alias.a: lib^^libname.a	@@\
  *	library.
  */
 #define	PrelinkedRelocatableTarget(objname,objlist,libs)	@!\
->RM @!\
->LD @!\
->JLKFLAGS @!\
 AllTarget(objname.o)				@!\
 									@!\
 objname.o: objlist					@@\
 	$(RM) $@						@@\
-	$(LD) $(JLKFLAGS) -r objlist -o $@ libs
+	$(LD) $(JLDFLAGS) -r objlist -o $@ libs
 
+
+/*
+ * NormalObjectTarget:
+ *	Generate rules to produce a single object file.o from a file.c.
+ */
+#define	NormalObjectTarget(file)	@!\
+++SOURCES file^^.c					@!\
+AllTarget(file^^.o)					@!\
+NormalObjectRule()
 
 /*
  * NormalRelocatableTarget:
@@ -1132,14 +1044,11 @@ objname.o: objlist					@@\
  *	library.
  */
 #define	NormalRelocatableTarget(objname,objlist)	@!\
->RM @!\
->LD @!\
->JLKFLAGS @!\
 AllTarget(objname.o)				@!\
 									@!\
 objname.o: objlist					@@\
 	$(RM) $@						@@\
-	$(LD) $(JLKFLAGS) -r objlist -o $@
+	$(LD) $(JLDFLAGS) -r objlist -o $@
 
 
 /*
@@ -1148,8 +1057,6 @@ objname.o: objlist					@@\
  *	instead of a library.
  */
 #define	ProfiledRelocatableTarget(objname,objlist)	@!\
->RM @!\
->LD @!\
 AllTarget(objname^^_p.o)		@!\
 								@!\
 objname^^_p.o: objlist			@@\
@@ -1163,8 +1070,6 @@ objname^^_p.o: objlist			@@\
  *	instead of a library.
  */
 #define	DebuggedRelocatableTarget(objname,objlist)	@!\
->RM @!\
->LD @!\
 AllTarget(objname^^_d.o)		@!\
 								@!\
 objname^^_d.o: objlist			@@\
@@ -1177,8 +1082,6 @@ objname^^_d.o: objlist			@@\
  *	library is always forced to be newer than the library itself.
  */
 #define	LintLibraryTarget(libname,srclist)	@!\
->RM @!\
->LINT @!\
 lintlib:: llib-l^^libname.ln	@!\
 								@!\
 llib-l^^libname.ln: srclist		@@\
@@ -1191,7 +1094,6 @@ llib-l^^libname.ln: srclist		@@\
  *	Generate rules to lint a set of sources.
  */
 #define NormalLintTarget(srclist)	@!\
->LINT @!\
 lint:								@@\
 	$(LINT) $(LINTFLAGS) srclist $(LINTLIBS)
 
@@ -1211,8 +1113,6 @@ NormalLintTarget($(SOURCES))	@!\
  *	Snag source file from some other directory
  */
 #define LinkSourceFile(src,dir)		@!\
->RM @!\
->LN @!\
 src:  dir/src			@@\
 	$(RM) $@			@@\
 	$(LN) $? $@			@!\
@@ -1223,13 +1123,11 @@ src:  dir/src			@@\
  *	Make includes in sub directories.
  */
 #define MakeSubincludesForBuild(step,dir,srclist)	@!\
->RM @!\
->LN @!\
 step::  dir srclist								@@\
 	@-(list=`echo srclist | sed -e 's/[^ ]*\///g'`; \		@@\
 		set -x; cd dir; $(RM) $$list)			@@\
 	@for i in srclist; do \						@@\
-		(set -x; cd dir; $(LN) ../$$i .); \		@@\
+		(set -x; cd dir; $(LN) ../$$i .) || exit 1; \		@@\
 	done										@!\
 												@!\
 MakeDirectories(dir,dir)						@!\
@@ -1237,7 +1135,7 @@ MakeDirectories(dir,dir)						@!\
 local_realclean:: 								@@\
 	@-(if [ -d dir ]; then \					@@\
 		list=`echo srclist | sed -e 's/[^ ]*\///g'`; \		@@\
-		set -x; cd dir; $(RM) $$list; else exit 0; fi)
+		set -x; cd dir; $(RM) $$list; fi)
 
 
 /*
@@ -1246,13 +1144,12 @@ local_realclean:: 								@@\
  *	verbose message and $(FLAGS) as additional flags.
  */
 #define CommonSubdirsRule(dirs) @!\
->MAKE	@!\
 subdirs: 						@@\
 	@case '${MFLAGS}' in *[ik]*) set +e;; esac; \			@@\
 	for i in dirs ;\					@@\
 	do \								@@\
 		(cd $$i ; echo $(VERB) "in $(DIR)$$i..."; \		@@\
-			$(MAKE) $(MFLAGS) $(FLAGS) $(TARGET)); \		@@\
+			$(MAKE) $(MFLAGS) $(FLAGS) $(TARGET)) || exit 1; \	@@\
 	done
 	
 
@@ -1261,13 +1158,12 @@ subdirs: 						@@\
  *	Recursively make a series of steps in the specified directories.
  */
 #define NamedTargetSubdirsRule(dirs,name,verb,flags)	@!\
->MAKE @!\
 name::									@@\
 	@case '${MFLAGS}' in *[ik]*) set +e;; esac; \		@@\
 	for i in dirs ;\					@@\
 	do \								@@\
 		(cd $$i ; echo verb "in $(DIR)$$i..."; \	@@\
-			$(MAKE) $(MFLAGS) flags name); \			@@\
+			$(MAKE) $(MFLAGS) flags name) || exit 1; \	@@\
 	done
 	
 	
@@ -1276,20 +1172,27 @@ name::									@@\
  *	Recursively make a series of steps.
  */
 #define NamedTargetSubdirs(name,verb,flags)		@!\
->MAKE	@!\
-name:: 							@@\
+name:: 									@@\
 	@$(MAKE) subdirs TARGET=name VERB=verb FLAGS=flags
 
 
 /*
- * NamedCleanTargetSubdirs:
- *	Recursively make a series of cleaning. We first clean the
- *	subdirectories, in case the Makefile is removed by the
- *	clean entry.
+ * NamedSubTargetSubdirs:
+ *	Recursively make a series of steps, like NamedTargetSubdirs.
+ *	However, the supplied "name" has "sub_" prefixed to it.
  */
-#define NamedCleanTargetSubdirs(name,verb,flags)		@!\
->MAKE	@!\
-sub_^^name:: 					@@\
+#define NamedSubTargetSubdirs(name,verb,flags)	@!\
+sub_^^^name:: 									@@\
+	@$(MAKE) subdirs TARGET=name VERB=verb FLAGS=flags
+
+/*
+ * NamedDepthTargetSubdirs:
+ *	Recursively make a series of steps. We first enter the
+ *	subdirectories, then perform the local entries.
+ *	The supplied "name" has "sub_" prefixed to it.
+ */
+#define NamedDepthTargetSubdirs(name,verb,flags)		@!\
+sub_^^^name:: 					@@\
 	@$(MAKE) subdirs TARGET=name VERB=verb FLAGS=flags	@@\
 	@echo "Back to $(CURRENT) for "name^^...
 
@@ -1326,8 +1229,8 @@ DependDirs($(SUBDIRS))
  *	files.
  */
 #define InstallSubdirs() \
-NamedTargetSubdirs(install,"Installing",^^) @!\
-NamedTargetSubdirs(deinstall,"Deinstalling",^^)
+NamedSubTargetSubdirs(install,"Installing",^^) @!\
+NamedDepthTargetSubdirs(deinstall,"Deinstalling",^^)
 
 
 /*
@@ -1335,8 +1238,8 @@ NamedTargetSubdirs(deinstall,"Deinstalling",^^)
  *	Generate rules to recursively install and deinstall manual pages.
  */
 #define InstallManSubdirs() \
-NamedTargetSubdirs(install.man,"Installing man pages",^^) @!\
-NamedTargetSubdirs(deinstall.man,"Deinstalling man pages",^^)
+NamedSubTargetSubdirs(install.man,"Installing man pages",^^) @!\
+NamedDepthTargetSubdirs(deinstall.man,"Deinstalling man pages",^^)
 
 
 /*
@@ -1352,9 +1255,9 @@ NamedTargetSubdirs(includes,including,^^)
  *	Generate rules to recursively clean out garbage files.
  */
 #define CleanSubdirs() \
-NamedCleanTargetSubdirs(clean,"Cleaning",^^)	@!\
-NamedCleanTargetSubdirs(realclean,"Real cleaning",^^)	@!\
-NamedCleanTargetSubdirs(clobber,"Clobbering",^^)
+NamedDepthTargetSubdirs(clean,"Cleaning",^^)	@!\
+NamedDepthTargetSubdirs(realclean,"Real cleaning",^^)	@!\
+NamedDepthTargetSubdirs(clobber,"Clobbering",^^)
 
 
 /*
@@ -1394,14 +1297,54 @@ LintDirs($(SUBDIRS))
 /*
  * MakeDirs:
  *	Creates a set of directories, even if some directories in the path
- *	do not already exist.There should be no '@!' at the end of the
+ *	do not already exist. There should be no '@!' at the end of the
  *	'#define' line, because this macro is used *inside* building rules.
  */
-#define MakeDirs(dirs) \
->INSTALLDIR @@\
-	@for dir in dirs; do \		@@\
-		case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
-		(set -x; test -d $$dir || $(INSTALLDIR) $$dir); \	@@\
+#define MakeDirs(dirs)	\
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \			@@\
+	for dir in dirs; do \									@@\
+		(set -x; test -d $$dir || $(INSTALLDIR) $$dir) || \ @@\
+		exit 1; \		@@\
+	done
+
+/*
+ * _MakeInstallDirs:
+ *	Creates a set of intall directories, even if some directories in the path
+ *	do not already exist. There should be no '@!' at the end of the
+ *	'#define' line, because this macro is used *inside* building rules.
+ */
+#define _MakeInstallDirs(dirs) \
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
+	for dir in dirs; do	\							@@\
+		_MakeInstallDir($$dir)	\					@@\
+	done
+
+/*
+ * _MakeInstallDir:
+ *	Internal macro to create a missing install directory.
+ */
+#define _MakeInstallDir(dir) \
+	(set -x; test -d $(INSTALL_PREFIX)^^^dir || \	@@\
+		$(INSTALLDIR) $(INSTALL_PREFIX)^^^dir);
+
+/*
+ * _MakeInstallDirIgnore:
+ *	Same as _MakeInstallDir but handles "make -i" as well.
+ */
+#define _MakeInstallDirIgnore(dir) \
+	@case '${MFLAGS}' in *[i]*) set +e;; esac;		\ @@\
+	_MakeInstallDir(dir)
+
+/*
+ * _RmInstallDirs:
+ *	Removes a set of intall directories.
+ *	There should be no '@!' at the end of the '#define' line, because this
+ *	macro is used *inside* building rules.
+ */
+#define _RmInstallDirs(dirs) \
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \	@@\
+	for dir in dirs; do \							@@\
+		(set -x; test -d $$dir && $(RM) -r $(INSTALL_PREFIX)$$dir); \	@@\
 	done
 
 /*
@@ -1419,12 +1362,11 @@ step::									@@\
  *	time (removed by deinstall).
  */
 #define MakeInstallDirectories(dirs) @!\
->RM @!\
-install::				@@\
-	MakeDirs(dirs)		@!\
-						@!\
-deinstall::				@@\
-	$(RM) -r dirs
+local_install::				@@\
+	_MakeInstallDirs(dirs)	@!\
+							@!\
+local_deinstall::			@@\
+	_RmInstallDirs(dirs)
 
 
 /*
@@ -1443,7 +1385,6 @@ MakeLintSubdirs(dirs,lintlib)
  *	not rely on the existence of a Makefile.
  */
 #define MakeMakeSubdirs(target)	@!\
->MAKE	@!\
 target::								@@\
 	@case '${MFLAGS}' in *[ik]*) set +e;; esac; \	@@\
 	for i in $(SUBDIRS);\				@@\
@@ -1451,7 +1392,7 @@ target::								@@\
 		echo "Making "target" in $(DIR)$$i..."; \	@@\
 		(cd $$i || exit 1; \			@@\
 		if test ! -f Makefile; then /bin/sh Makefile.SH; fi; \ @@\
-		$(MAKE) $(MFLAGS) target) \	@@\
+		$(MAKE) $(MFLAGS) target) || exit 1;\	@@\
 	done
 
 
@@ -1463,7 +1404,6 @@ target::								@@\
  *	outside of the source tree to be much easier.
  */
 #define MakeMakefilesSH()		@!\
->MAKE	@!\
 Makefiles.SH:: Makefile.SH				@@\
 	@case '${MFLAGS}' in *[ik]*) set +e;; esac; \	@@\
 	for i in $(SUBDIRS);\					@@\
@@ -1478,9 +1418,13 @@ Makefiles.SH:: Makefile.SH				@@\
 		/^^*) newtop="$(TOP)" ;; \		@@\
 		esac; \							@@\
 		echo "Making Makefiles.SH in $(DIR)$$i..."; \	@@\
-		(cd $$i || exit 1; $(MAKE) $(MFLAGS) -f ../Makefile \	@@\
-		Makefile TOP=$$newtop CURRENT=$(DIR)$$i;\	 	@@\
-		$(MAKE) $(MFLAGS) Makefiles.SH) \					@@\
+		(cd $$i || exit 1; \			@@\
+			if test -f Jmakefile; then \	@@\
+				$(MAKE) $(MFLAGS) -f ../Makefile \	@@\
+					Makefile TOP=$$newtop CURRENT=$(DIR)$$i && \ 	@@\
+				$(MAKE) $(MFLAGS) Makefiles.SH; \	@@\
+			fi; \						@@\
+		) || exit 1; \	@@\
 	done
 
 
@@ -1499,8 +1443,6 @@ MakeMakefilesSH()
  *	through cpp.
  */
 #define CppScriptTarget(dst,src,defs,deplist)	@!\
->RM @!\
->CPP @!\
 dst::  src deplist						@@\
 	$(RM) $@							@@\
 	$(CPP) defs <src | \				@@\
@@ -1548,7 +1490,6 @@ ShellScriptTargetExt(scripts,.SH)
  *	extension you like..
  */
 #define SimpleShellScriptTargetExt(scripts,ext)	@!\
->RM @!\
 AllTarget(scripts)			@!\
 							@!\
 |expand s!scripts!			@!\
@@ -1574,8 +1515,6 @@ SimpleShellScriptTargetExt(scripts,.SH)
  *	extension would not leave enough space for RCS ,v extension).
  */
 #define ShellScriptLongTarget(basename,scriptname) @!\
->RM @!\
->MANSRC @!\
 ++LSCRIPTS scriptname @!\
 AllTarget(scriptname)		@!\
 							@!\
@@ -1607,9 +1546,8 @@ InstallManPageLong(basename,$(MANSRC),scriptname)	@!\
  *	and forces a make of that dependency in the remote directory.
  */
 #define RemoteTargetDependency(target,directory,dependency) @!\
->MAKE @!\
 RemoteDependency(directory,dependency)	@!\
-target: directory/dependency	@!\
+target: directory/^^^dependency	@!\
 
 
 /*
@@ -1617,12 +1555,11 @@ target: directory/dependency	@!\
  *	Specify rules for making a remote dependency.
  */
 #define RemoteDependency(directory,dependency) @!\
->MAKE @!\
 ForceTarget()							@!\
-|once =directory/dependency=			@!\
-directory/dependency: .FORCE			@@\
-	@echo "Checking "dependency" in "directory"..."	@@\
-	cd directory; $(MAKE) dependency	@@\
+|once =directory/^^^dependency=			@!\
+directory/^^^dependency: .FORCE			@@\
+	@echo "Checking "^^^dependency" in "^^^directory"..."	@@\
+	cd ^^^directory; $(MAKE) ^^^dependency	@@\
 	@echo "Continuing in $(CURRENT)..."	@!\
 					@!\
 -once
@@ -1685,10 +1622,6 @@ AddSuffix(.y)					@!\
  *	derived from the source file basename provided.
  */
 #define SimpleYaccTarget(program,base) @!\
->JYFLAGS @!\
->YACC @!\
->RM @!\
->MV @!\
 ++SOURCES base.y @!\
 ++OBJECTS base.o @!\
 YaccRule()				@!\
@@ -1708,10 +1641,6 @@ local_realclean::		@@\
  *	where all the 'yy' are replaced by the specified prefix.
  */
 #define ComplexYaccTarget(program,base,prefix) @!\
->JYFLAGS @!\
->YACC @!\
->RM @!\
->SED @!\
 ++SOURCES base.y @!\
 ++OBJECTS base.o @!\
 program: base.c			@!\
@@ -1735,14 +1664,10 @@ local_realclean::		@@\
  *	to be manually given in the Jmakefile.
  */
 #define SimpleYaccInclude(base) @!\
->MV @!\
->RM @!\
 base.h: base.c		@@\
 	@if test -f y.tab.h; then \	@@\
 		echo "	$(MV) y.tab.h $@"; \	@@\
 		$(MV) y.tab.h $@; \		@@\
-	else \						@@\
-		exit 0; \				@@\
 	fi							@!\
 								@!\
 local_realclean::				@@\
@@ -1759,9 +1684,6 @@ local_realclean::				@@\
  *	to be manually given in the Jmakefile.
  */
 #define ComplexYaccInclude(base,prefix) @!\
->RM @!\
->SED @!\
->CP @!\
 base.h: base.c		@@\
 	@if test -f y.tab.h; then \	@@\
 		echo "	$(SED) -e 's/yy\(.\)/prefix\1/g' < y.tab.h > base.h"; \	@@\
@@ -1775,8 +1697,6 @@ base.h: base.c		@@\
 		$(SED) -e 's/yy\(.\)/prefix\1/g' < base.ht > base.h; \	@@\
 		echo "	$(RM) base.ht"; \ @@\
 		$(RM) base.ht; \		@@\
-	else \						@@\
-		exit 0; \				@@\
 	fi							@!\
 								@!\
 local_realclean::				@@\
@@ -1813,10 +1733,6 @@ ComplexYaccInclude(base,prefix)
  *	lex to produce a base.c file.
  */
 #define SimpleLexTarget(program,base) @!\
->JLFLAGS @!\
->LEX @!\
->RM @!\
->MV @!\
 ++SOURCES base.l @!\
 ++OBJECTS base.o @!\
 |once _LexRule_					@!\
@@ -1839,10 +1755,6 @@ local_realclean::		@@\
  *	the 'yy', so that the lexical analyzer may be identified.
  */
 #define IdentifiedLexTarget(program,base,prefix) @!\
->JLFLAGS @!\
->LEX @!\
->RM @!\
->SED @!\
 ++SOURCES base.l @!\
 ++OBJECTS base.o @!\
 program: base.c			@!\

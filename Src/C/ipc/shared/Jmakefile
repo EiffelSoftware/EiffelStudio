@@ -4,8 +4,6 @@
 
 #include "../../U/runtime.H"
 
->JMTCFLAGS
-
 /* We build a libshared.a archive for shared routines needed by both the
  * daemon and the client.
  */

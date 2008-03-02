@@ -4,8 +4,6 @@
 
 #include "../U/runtime.H"
 
->JMTCFLAGS
-
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
@@ -191,8 +189,6 @@ SimpleProgramTarget(x2c)
 
 AllTarget(eif_config.h eif_portable.h eif_confmagic.h)
 
->RM
->LN
 eif_config.h: $(TOP)/eif_config.h
 	$(RM) $@
 	$(LN) $(TOP)/eif_config.h .

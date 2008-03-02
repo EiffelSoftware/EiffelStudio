@@ -4,8 +4,6 @@
 
 #include "../../U/runtime.H"
 
->JMTCFLAGS
-
 ;# Where shared archive is located (path and name)
 LIB_RUNTIME = $(TOP)/run-time
 LIB_IDRS = $(TOP)/idrs

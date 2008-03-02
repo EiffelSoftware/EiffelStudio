@@ -4,8 +4,6 @@
 
 #include "../U/runtime.H"
 
->JMTCFLAGS
-
 DPFLAGS = -I$(TOP) -I$(TOP)/run-time
 CFLAGS = $(DPFLAGS)
 

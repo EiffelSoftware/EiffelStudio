@@ -346,7 +346,6 @@ feature {NONE} -- Basic operation
 			l_file: RAW_FILE
 			l_is_dirty: BOOLEAN
 			l_logger: SERVICE_CONSUMER [LOGGER_S]
-			l_site: like site
 			l_message: !STRING_32
 			retried: BOOLEAN
 		do

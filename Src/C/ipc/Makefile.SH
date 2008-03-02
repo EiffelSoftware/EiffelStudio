@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 1.4 2005/10/13 21:38:08 manus Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.5 PL0]
+: $X-Id: Jmake.tmpl 91075 2005-12-28 23:58:23Z manus $
 
 case $CONFIG in
 '')
-	       if test -f config.sh; then TOP=.;
-	       elif test -f ../config.sh; then TOP=..;
-	       elif test -f ../../config.sh; then TOP=../..;
-	       elif test -f ../../../config.sh; then TOP=../../..;
-	       elif test -f ../../../../config.sh; then TOP=../../../..;
-	       else
-	               echo "Can't find config.sh."; exit 1
-	       fi
-	       . $TOP/config.sh
-	       ;;
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
+	;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -50,7 +50,8 @@ SUBDIRS = \$(SUB)
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 1.4 2005/10/13 21:37:30 manus Exp $
+# $X-Id: Jmake.rules 18 2006-12-27 10:35:09Z rmanfredi $
+
 ########################################################################
 # Start of Jmakefile
 
@@ -63,7 +64,7 @@ depend::
 	for i in $(SUBDIRS) ;\
 	do \
 	(cd $$i ; echo "Depending" "in $(DIR)$$i..."; \
-	$(MAKE) $(MFLAGS)  depend); \
+	$(MAKE) $(MFLAGS)  depend) || exit 1; \
 	done
 
 lint::
@@ -71,7 +72,7 @@ lint::
 	for i in $(SUBDIRS) ;\
 	do \
 	(cd $$i ; echo "Linting" "in $(DIR)$$i..."; \
-	$(MAKE) $(MFLAGS)  lint); \
+	$(MAKE) $(MFLAGS)  lint) || exit 1; \
 	done
 
 ########################################################################
@@ -84,7 +85,8 @@ realclean: sub_realclean local_realclean
 clobber: sub_clobber local_clobber
 
 local_clean::
-	$(RM) core *~ *.o
+	if test -f core; then $(RM) core; fi
+	$(RM) *~ *.o
 
 local_realclean:: local_clean
 
@@ -99,7 +101,7 @@ Makefile.SH: Jmakefile
 	fi; \
 	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
 	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
-	else touch $@; exit 0; fi
+	else touch $@; fi
 
 Makefile: Makefile.SH
 	/bin/sh Makefile.SH
@@ -119,20 +121,22 @@ subdirs:
 	for i in $(SUBDIRS) ;\
 	do \
 	(cd $$i ; echo $(VERB) "in $(DIR)$$i..."; \
-	$(MAKE) $(MFLAGS) $(FLAGS) $(TARGET)); \
+	$(MAKE) $(MFLAGS) $(FLAGS) $(TARGET)) || exit 1; \
 	done
 
-install::
+sub_install::
 	@$(MAKE) subdirs TARGET=install VERB="Installing" FLAGS=
 
-deinstall::
+sub_deinstall::
 	@$(MAKE) subdirs TARGET=deinstall VERB="Deinstalling" FLAGS=
+	@echo "Back to $(CURRENT) for "deinstall...
 
-install.man::
+sub_install.man::
 	@$(MAKE) subdirs TARGET=install.man VERB="Installing man pages" FLAGS=
 
-deinstall.man::
+sub_deinstall.man::
 	@$(MAKE) subdirs TARGET=deinstall.man VERB="Deinstalling man pages" FLAGS=
+	@echo "Back to $(CURRENT) for "deinstall.man...
 
 sub_clean::
 	@$(MAKE) subdirs TARGET=clean VERB="Cleaning" FLAGS=
@@ -151,7 +155,7 @@ tag::
 	for i in $(SUBDIRS) ;\
 	do \
 	(cd $$i ; echo "Tagging" "in $(DIR)$$i..."; \
-	$(MAKE) $(MFLAGS)  tag); \
+	$(MAKE) $(MFLAGS)  tag) || exit 1; \
 	done
 
 Makefiles::
@@ -161,7 +165,7 @@ Makefiles::
 	echo "Making "Makefiles" in $(DIR)$$i..."; \
 	(cd $$i || exit 1; \
 	if test ! -f Makefile; then /bin/sh Makefile.SH; fi; \
-	$(MAKE) $(MFLAGS) Makefiles) \
+	$(MAKE) $(MFLAGS) Makefiles) || exit 1;\
 	done
 
 Makefiles.SH:: Makefile.SH
@@ -178,9 +182,13 @@ Makefiles.SH:: Makefile.SH
 	/*) newtop="$(TOP)" ;; \
 	esac; \
 	echo "Making Makefiles.SH in $(DIR)$$i..."; \
-	(cd $$i || exit 1; $(MAKE) $(MFLAGS) -f ../Makefile \
-	Makefile TOP=$$newtop CURRENT=$(DIR)$$i;\
-	$(MAKE) $(MFLAGS) Makefiles.SH) \
+	(cd $$i || exit 1; \
+	if test -f Jmakefile; then \
+	$(MAKE) $(MFLAGS) -f ../Makefile \
+	Makefile TOP=$$newtop CURRENT=$(DIR)$$i && \
+	$(MAKE) $(MFLAGS) Makefiles.SH; \
+	fi; \
+	) || exit 1; \
 	done
 
 all::
@@ -189,3 +197,4 @@ all::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
+

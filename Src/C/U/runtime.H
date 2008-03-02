@@ -10,9 +10,6 @@
  *      parameters are added to OBJECTS macros.
  */
 #define CustomLibraryTarget(libname,objlist)    @!\
->RM @!\
->AR @!\
->RANLIB @!\
 ++OBJECTS objlist @!\
 NormalLibraryObjectRule()               @!\
 AllTarget(lib^^libname.a)               @!\
@@ -30,9 +27,7 @@ lib^^libname.a: objlist                 @@\
  *      library gone for long periods.
  */
 #define CustomSharedLibraryTarget(libname,objlist)      @!\
->RM @!\
 >SHAREDLINK @!\
->LDSHAREDFLAGS @!\
 AllTarget(lib^^libname.so)      @!\
                                                                         @!\
 lib^^libname.so:  objlist           @@\
@@ -45,8 +40,6 @@ lib^^libname.so:  objlist           @@\
  *	file with -DTEST.
  */
 #define TestProgramTarget(name,source,flags) @!\
->CC @!\
->JCFLAGS @!\
 name: source				@@\
 	$(CC) $(JCFLAGS) -DTEST flags -o $@ source
 

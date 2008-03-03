@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			-- `a_file_name': File name to persist/retrieve a session object from.
 			-- `a_manager': Session manager that owns Current.
 		require
-			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 			a_manager_attached: a_manager /= Void
 			a_manager_is_interface_usable: a_manager.is_interface_usable
@@ -45,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING_32
+	file_name: !STRING_8
 			-- File name for the custom session
 
 ;indexing

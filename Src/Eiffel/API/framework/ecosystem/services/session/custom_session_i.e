@@ -21,16 +21,14 @@ feature -- Access
 			Result := (create {SESSION_KINDS}).custom
 		end
 
-	file_name: STRING_32
+	file_name: !STRING_8
 			-- File name for the custom session
 		deferred
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
 invariant
-	file_name_attached: file_name /= Void
 	not_file_name_is_empty: not file_name.is_empty
 
 ;indexing

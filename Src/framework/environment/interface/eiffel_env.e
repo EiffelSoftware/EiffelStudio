@@ -765,6 +765,19 @@ feature -- Access: file name
 			Result_ok: Result /= Void and then not Result.is_empty
 		end
 
+feature -- Access: user files
+
+	session_data_path: !DIRECTORY_NAME
+			-- Location of stored session data.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result ?= eiffel_home.twin
+			Result.extend_from_array (<<"session">>)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature -- Access: command name
 
 	precompilation_wizard_command_name: FILE_NAME is

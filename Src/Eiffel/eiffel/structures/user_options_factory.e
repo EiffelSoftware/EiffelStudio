@@ -25,6 +25,24 @@ feature -- Access
 	last_file_name: FILE_NAME
 			-- Last file name for last store/load operation.
 
+feature -- Query
+
+	mapped_uuid (a_file_path: STRING): ?UUID
+			-- Retrieves a mapped UUID for a given file path
+		require
+			a_file_path_attached: a_file_path /= Void
+			not_a_file_path_is_empty: not a_file_path.is_empty
+		local
+			l_uuid: STRING
+		do
+			l_uuid := mapping.item (a_file_path)
+			if l_uuid /= Void and then not l_uuid.is_empty then
+				create Result.make_from_string (l_uuid)
+			end
+		ensure
+			result_not_default: Result /= Void implies not Result.is_equal (create {UUID}.make (0, 0, 0, 0, 0))
+		end
+
 feature -- Store/Retrieve
 
 	store (a_options: USER_OPTIONS) is

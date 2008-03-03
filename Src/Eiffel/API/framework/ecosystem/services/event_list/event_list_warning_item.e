@@ -8,68 +8,24 @@ indexing
 	revision: "$revision$"
 
 class
-	EVENT_LIST_ERROR_ITEM
+	EVENT_LIST_WARNING_ITEM
 
 inherit
-	EVENT_LIST_ERROR_ITEM_I
-
-	EVENT_LIST_ITEM
-		rename
-			make as make_event_list_item
+	EVENT_LIST_ERROR_ITEM
+		redefine
+			is_warning
 		end
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_category: like category; a_description: like description; a_error: like data)
-			-- Initialize a new event list error item.
-			--
-			-- `a_category': Event item category, see {ENVIRONMENT_CATEGORIES}.
-			-- `a_description': A textual representation of the error.
-			-- `a_error': The error object associated with this event item
-		require
-			a_category_is_valid_category: is_valid_category (a_category)
-			a_description_attached: a_description /= Void
-			not_a_description_is_empty: not a_description.is_empty
-			a_error_is_valid_data: is_valid_data (a_error)
-		do
-			make_event_list_item (a_category, {PRIORITY_LEVELS}.normal, a_error)
-			description := a_description
-		ensure
-			category_set: category = a_category
-			description_set: description = a_description
-			user_data_set: data = a_error
-		end
-
-feature -- Access
-
-	description: STRING_32
-			-- Event item description
 
 feature -- Status report
 
 	is_warning: BOOLEAN
 			-- Indicates if the error item represents a warning
 		do
-			Result := False
+			Result := True
 		end
-
-feature -- Query
-
-	is_valid_data (a_data: like data): BOOLEAN
-			-- Determines is the user data `a_data' is valid for the current event item.
-			--
-			-- `a_data': The user data to validate.
-			-- `Result': True if the user data is valid; False otherwise.
-		do
-			Result := a_data /= Void and then (({ERROR}) #? a_data) /= Void
-		end
-
-invariant
-	description_attached: description /= Void
-	not_description_is_empty: not description.is_empty
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

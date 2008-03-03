@@ -280,8 +280,8 @@ feature {NONE} -- Query
 	is_error_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- Determines if event `a_event_item' is an error event
 		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error then
-				Result := not is_warning_event (a_event_item) and then (({ERROR}) #? a_event_item.data) /= Void
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then {l_error: !EVENT_LIST_ERROR_ITEM_I} a_event_item then
+				Result := not l_error.is_warning
 			end
 		ensure
 			not_is_warning_event: Result implies not is_warning_event (a_event_item)
@@ -292,8 +292,8 @@ feature {NONE} -- Query
 		require
 			a_event_item_attached: a_event_item /= Void
 		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error then
-				Result := (({WARNING}) #? a_event_item.data) /= Void
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then {l_error: !EVENT_LIST_ERROR_ITEM_I} a_event_item then
+				Result := l_error.is_warning
 			end
 		ensure
 			not_is_error_event: Result implies not is_error_event (a_event_item)
@@ -926,7 +926,6 @@ feature {NONE} -- User interface manipulation
 			l_gen: EB_EDITOR_TOKEN_GENERATOR
 			l_item: EV_GRID_LABEL_ITEM
 			l_error: ERROR
-			l_warning: WARNING
 			l_tip: EB_EDITOR_TOKEN_TOOLTIP
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
 			l_content: LIST [EDITOR_TOKEN]
@@ -1042,12 +1041,10 @@ feature {NONE} -- User interface manipulation
 					a_row.hide
 				end
 			elseif is_warning_event (a_event_item) then
-				l_warning ?= l_error
-				check
-					l_warning_attached: l_warning /= Void
-				end
-				if not show_warnings or else filter_widget /= Void and then not filter_widget.is_unfiltered (l_warning) then
-					a_row.hide
+				if {l_warning: !WARNING} l_error then
+					if not show_warnings or else filter_widget /= Void and then not filter_widget.is_unfiltered (l_warning) then
+						a_row.hide
+					end
 				end
 			else
 				check False end

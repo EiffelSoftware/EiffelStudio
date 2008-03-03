@@ -21,6 +21,13 @@ feature -- Access
 			Result := {EVENT_LIST_ITEM_TYPES}.error
 		end
 
+feature -- Status report
+
+	is_warning: BOOLEAN
+			-- Indicates if the error item represents a warning
+		deferred
+		end
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

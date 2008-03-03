@@ -11,7 +11,7 @@ indexing
 deferred class
 	EVENT_LIST_ITEM_I
 
-inherit -- {NONE}
+inherit {NONE}
 	SHARED_ENVIRONMENT_CATEGORIES
 		export
 			{NONE} all
@@ -65,7 +65,7 @@ feature -- Status report
 		do
 			Result := True
 		end
-
+		
 feature -- Query
 
 	is_valid_category (a_category: like category): BOOLEAN

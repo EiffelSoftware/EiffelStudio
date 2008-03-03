@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			l_item: TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]
 			l_internal: like internal
 			l_id: INTEGER
-			l_warning: WARNING
+			l_warning: ERROR
 			l_name: STRING
 			l_row: EV_GRID_ROW
 			l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM
@@ -191,7 +191,7 @@ feature {NONE} -- Access
 		local
 			l_result: DS_ARRAYED_LIST [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
 		once
-			create l_result.make (17)
+			create l_result.make (18)
 			l_result.put_last ([{CAT_CALL_WARNING}, True])
 			l_result.put_last ([{OBS_CLASS_WARN}, True])
 			l_result.put_last ([{OBS_FEAT_WARN}, True])
@@ -209,6 +209,7 @@ feature {NONE} -- Access
 			l_result.put_last ([{VIOP}, True])
 			l_result.put_last ([{VIRC}, True])
 			l_result.put_last ([{VJRV}, False])
+			l_result.put_last ([{VWEQ}, True])
 
 			Result := l_result
 		ensure
@@ -239,7 +240,7 @@ feature {NONE} -- User interface elements
 
 feature -- Status report
 
-	is_unfiltered (a_warning: WARNING): BOOLEAN
+	is_unfiltered (a_warning: ERROR): BOOLEAN
 			-- Determines if a warning should not be filtered.
 		local
 			l_cursor: DS_BILINEAR_CURSOR [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]

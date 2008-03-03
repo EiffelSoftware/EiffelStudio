@@ -14,12 +14,13 @@ class
 inherit
 	EB_EXEC_FORMAT_CMD
 		rename
-			User_stop_points as execution_mode
+			Run as execution_mode
 		redefine
 			make,
 			tooltext,
 			is_tooltext_important,
-			new_sd_toolbar_item
+			new_sd_toolbar_item,
+			initialize_sd_toolbar_item
 		end
 
 create
@@ -101,8 +102,13 @@ feature -- Access
 
 			Result.select_actions.put_front (agent execute_from (eb_debugger_manager.debugging_window.window))
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
+		end
 
-			Result.set_menu (drop_down_menu)
+	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON; display_text: BOOLEAN) is
+			-- <Precursor>
+		do
+			Precursor (a_item, display_text)
+			a_item.set_menu (drop_down_menu)
 		end
 
 feature {NONE} -- Attributes

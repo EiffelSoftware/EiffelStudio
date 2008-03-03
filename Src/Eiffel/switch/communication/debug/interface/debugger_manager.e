@@ -567,18 +567,20 @@ feature -- Breakpoints management
 feature {NONE} -- Breakpoints events
 
 	on_breakpoints_change_event is
+			-- <Precursor>	
 		do
 				--| For now, let's notify as new breakpoint event
 				--| Later we might try to optimize.
-			on_new_breakpoint_event
+			on_breakpoints_creation_or_removal_event
 		end
 
-	on_new_breakpoint_event is
+	on_breakpoints_creation_or_removal_event is
+			-- <Precursor>
 		do
 			if application_is_executing and then not application_is_stopped then
 				-- If the application is running (and not stopped), we
 				-- must notify it to take the new breakpoint into account.
-				application.notify_newbreakpoint
+				application.notify_breakpoints_change
 			end
 		end
 
@@ -697,6 +699,9 @@ feature -- Status
 			-- is RT_EXTENSION available ?
 			-- Value valid only during the debugging session.
 			-- Initially set just before the launching, and reset when terminated
+
+	execution_ignoring_breakpoints: BOOLEAN assign set_execution_ignoring_breakpoints
+			-- Is execution ignore breakpoints ?
 
 feature -- Parameters context
 
@@ -1148,6 +1153,29 @@ feature -- Change
 			not can_debug
 		end
 
+	do_not_stop_at_breakpoints is
+			-- Ignore breakpoints
+		do
+			set_execution_ignoring_breakpoints (True)
+		end
+
+	stop_at_breakpoints is
+			-- Stop at breakpoints
+		do
+			set_execution_ignoring_breakpoints (False)
+		end
+
+	set_execution_ignoring_breakpoints (b: like execution_ignoring_breakpoints) is
+			-- Set `execution_ignoring_breakpoints'
+		do
+			if execution_ignoring_breakpoints /= b then
+				execution_ignoring_breakpoints := b
+				if application_initialized then
+					application.ignore_breakpoints (b)
+				end
+			end
+		end
+
 feature -- Application change
 
 	activate_execution_replay_recording (a_mode: BOOLEAN) is
@@ -1261,7 +1289,7 @@ feature -- Debugging events
 
 			check application_initialized end
 			s := debugger_names.t_Application_launched.twin
-			if application.execution_mode = {EXEC_MODES}.No_stop_points then
+			if application.ignoring_breakpoints then
 				s.append (debugger_names.t_space_application_ignoring_breakpoints)
 			end
 			debugger_status_message (s)
@@ -1310,6 +1338,9 @@ feature -- Debugging events
 		require
 			app_is_executing: safe_application_is_stopped
 		do
+			check
+				execution_ignoring_breakpoints_up_to_date: execution_ignoring_breakpoints = application.ignoring_breakpoints
+			end
 		end
 
 	on_application_resumed is
@@ -1318,7 +1349,7 @@ feature -- Debugging events
 		do
 			incremente_debugging_operation_id
 				--| Display running mode, only if ignoring bp
-			if application.execution_mode = {EXEC_MODES}.No_stop_points then
+			if application.ignoring_breakpoints then
 				debugger_status_message (debugger_names.t_Running_no_stop_points)
 			else
 				debugger_status_message (debugger_names.t_Running)

@@ -11,28 +11,28 @@ class
 
 feature -- Execution mode properties
 
-	No_stop_points: INTEGER is 1;
-			-- Execution with no stop points taken into account
+	frozen is_valid_mode (a_mode: INTEGER): BOOLEAN is
+			-- Is `a_mode' valid ?
+		do
+			Result := a_mode >= Run and a_mode <= step_out
+		end
 
-	User_stop_points: INTEGER is 2;
-			-- Execution with user-defined stop points taken into account
-			-- default execution mode (big yellow arrow)
+	Run: INTEGER = 1
 
-	step_into: INTEGER is 3;
-			-- Execution with all breakable points set
-			-- the flag 'step_into' is set, so that application
-			-- know it must stop to the next breakable statement
+	Step_into: INTEGER = 2
+			-- Execution with flag 'step_into' set
+			-- so that application knows it must stop to the next breakable statement
 
-	step_by_step: INTEGER is 4;
+	Step_next: INTEGER = 3
 			-- Execution with all breakable points of current
 			-- routine set and a breakpoint set just after the
 			-- calling routine (like step-out)
 
-	Out_of_routine: INTEGER is 5;
+	Step_out: INTEGER = 4
 			-- Execution with all breakable points set except
 			-- those of the current routine.
 
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

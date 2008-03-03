@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			eb_debugger_manager := a_manager
 		end
 
-feature -- Formatting
+feature -- Execution
 
 	launch_with_parameters (a_execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS) is
 			-- Execute with `params' and using mode `a_execution_mode'
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 				if window /= Void then
 					dev := window.window
 					if not argument_dialog_is_valid then
-						create args_dialog.make (window, agent launch_with_parameters (User_stop_points, ?))
+						create args_dialog.make (window, agent launch_with_parameters (Run, ?))
 						set_argument_dialog (args_dialog)
 					else
 						argument_dialog.update

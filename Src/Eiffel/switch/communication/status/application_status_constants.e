@@ -27,9 +27,9 @@ feature {APPLICATION_STATUS_EXPORTER} -- Constants
 	Pg_interrupt: INTEGER is 4
 			-- System execution interrupted
 
-	Pg_new_breakpoint: INTEGER is 5
-			-- New breakpoints added while running. The application should stop
-			-- to record the new breakpoints.
+	Pg_update_breakpoint: INTEGER is 5
+			-- Breakpoints changed while running. The application should stop
+			-- to record the change in breakpoints.
 			-- (mainly for classic debugger)
 
 	Pg_step: INTEGER is 6

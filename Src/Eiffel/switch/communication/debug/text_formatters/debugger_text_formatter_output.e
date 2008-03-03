@@ -243,8 +243,8 @@ feature -- Application status
 					st.add_string (Interface_names.le_Implicit_exception_pending)
 					st.add_new_line
 					append_exception (appstatus, st)
-				when {APPLICATION_STATUS_CONSTANTS}.Pg_new_breakpoint then
-					st.add_string (Interface_names.le_New_breakpoint)
+				when {APPLICATION_STATUS_CONSTANTS}.Pg_update_breakpoint then
+					st.add_string (Interface_names.le_Update_breakpoint)
 					st.add_new_line
 					append_exception (appstatus ,st)
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_step then

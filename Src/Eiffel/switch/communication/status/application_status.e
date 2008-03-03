@@ -471,7 +471,7 @@ feature -- Access
 				reason = Pg_interrupt or else
 				reason = Pg_raise or else
 				reason = Pg_viol or else
-				reason = Pg_new_breakpoint or else
+				reason = Pg_update_breakpoint or else
 				reason = Pg_step
 		ensure
 			true_implies_correct_reason:
@@ -479,7 +479,7 @@ feature -- Access
 						(reason = Pg_interrupt) or else
 						(reason = Pg_raise) or else
 						(reason = Pg_viol) or else
-						(reason = Pg_new_breakpoint) or else
+						(reason = Pg_update_breakpoint) or else
 						(reason = Pg_step)
 		end
 

@@ -22,6 +22,7 @@ inherit
 			change_current_thread_id,
 			activate_execution_replay_recording,
 			disable_assertion_checking, restore_assertion_checking,
+			set_execution_ignoring_breakpoints,
 			on_application_before_launching,
 			on_application_launched,
 			on_application_before_resuming,
@@ -189,7 +190,7 @@ feature {NONE} -- Initialization
 
 --| FIXME XR: TODO: Add:
 --| 3) edit feature, feature evaluation
-			create toolbarable_commands.make (20)
+			create toolbarable_commands.make (35)
 
 			create clear_bkpt
 			clear_bkpt.enable_sensitive
@@ -253,6 +254,8 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (debug_cmd)
 			create no_stop_cmd.make (Current)
 			toolbarable_commands.extend (no_stop_cmd)
+			create ignore_breakpoints_cmd.make
+			toolbarable_commands.extend (ignore_breakpoints_cmd)
 			create stop_cmd.make (Current)
 			toolbarable_commands.extend (stop_cmd)
 			create restart_cmd.make (Current)
@@ -551,6 +554,21 @@ feature -- tools management
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
+
+				-- Separator.
+			create sep
+			Result.extend (sep)
+
+			l_item := debug_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+			l_item := no_stop_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+			l_item := ignore_breakpoints_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
 				-- Separator.
 			create sep
 			Result.extend (sep)
@@ -569,6 +587,20 @@ feature -- tools management
 			create sep
 			Result.extend (sep)
 
+			l_item := restart_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+			l_item := stop_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+			l_item := quit_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+
+				-- Separator.
+			create sep
+			Result.extend (sep)
+
 			l_item := toggle_exec_replay_recording_mode_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
@@ -579,32 +611,6 @@ feature -- tools management
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 			l_item := exec_replay_forth_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-				-- Separator.
-			create sep
-			Result.extend (sep)
-
-			l_item := debug_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-			l_item := no_stop_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-
-				-- Separator.
-			create sep
-			Result.extend (sep)
-
-
-			l_item := restart_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-			l_item := stop_cmd.new_menu_item
-			Result.extend (l_item)
-			a_recycler.auto_recycle (l_item)
-			l_item := quit_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
@@ -1028,6 +1034,7 @@ feature -- Change
 			debug_cmd.update (w)
 			restart_cmd.update (w)
 			no_stop_cmd.update (w)
+			ignore_breakpoints_cmd.update (w)
 
 			from
 				l_cmds := show_tool_commands
@@ -1178,6 +1185,7 @@ feature -- Status setting
 			step_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
+
 			assertion_checking_handler_cmd.disable_sensitive
 		end
 
@@ -1853,6 +1861,17 @@ feature {NONE} -- Breakpoints events
 
 feature -- Application change
 
+	set_execution_ignoring_breakpoints (b: like execution_ignoring_breakpoints) is
+			-- <Precursor>
+		local
+			was_ignoring_bp: BOOLEAN
+		do
+			was_ignoring_bp := execution_ignoring_breakpoints
+			Precursor (b)
+			if was_ignoring_bp /= b then
+				ignore_breakpoints_cmd.set_select (b)
+			end
+		end
 
 	activate_execution_replay_recording (a_mode: BOOLEAN) is
 			-- Activate or Deactivate execution recording
@@ -1931,6 +1950,8 @@ feature {NONE} -- Implementation
 
 	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
 
+	ignore_breakpoints_cmd: EB_DGB_IGNORE_BREAKPOINTS_CMD
+
 	options_cmd: EB_DEBUG_OPTIONS_CMD
 
 	stop_cmd: EB_EXEC_STOP_CMD
@@ -1981,6 +2002,7 @@ feature {NONE} -- Implementation
 				disable_bkpt.enable_sensitive
 				bkpt_info_cmd.enable_sensitive
 				force_debug_mode_cmd.enable_sensitive
+				ignore_breakpoints_cmd.enable_sensitive
 
 				assertion_checking_handler_cmd.disable_sensitive
 				object_storage_management_cmd.enable_sensitive
@@ -2008,6 +2030,7 @@ feature {NONE} -- Implementation
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
+			ignore_breakpoints_cmd.disable_sensitive
 
 			assertion_checking_handler_cmd.disable_sensitive
 			options_cmd.disable_sensitive
@@ -2188,6 +2211,10 @@ feature {NONE} -- Implementation
 
 			check one_button: assertion_checking_handler_cmd.managed_sd_toolbar_items.count = 1 end
 			l_sd_button := assertion_checking_handler_cmd.managed_sd_toolbar_items.first
+			l_sd_button.enable_displayed
+
+			check one_button: ignore_breakpoints_cmd.managed_sd_toolbar_items.count = 1 end
+			l_sd_button := ignore_breakpoints_cmd.managed_sd_toolbar_items.first
 			l_sd_button.enable_displayed
 
 			l_tool_bar_content := debugging_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)

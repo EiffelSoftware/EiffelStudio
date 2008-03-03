@@ -11,8 +11,8 @@ deferred class
 
 feature {BREAKPOINTS_MANAGER} -- Events
 
-	on_new_breakpoint_event is
-			-- New breakpoints occurred.
+	on_breakpoints_creation_or_removal_event is
+			-- Creation or removal of breakpoints occurred.
 		deferred
 		end
 

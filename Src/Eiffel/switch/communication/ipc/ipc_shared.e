@@ -34,7 +34,7 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_interrupt: INTEGER 			= 29 -- Debugger asking interruption of application
 	Rqst_sp_lower: INTEGER 				= 33 -- Bounds for special objects inspection
 	Rqst_metamorphose: INTEGER 			= 34 -- Convert the top-level item on the operational stack from a basic type to a reference type.
-	Rqst_new_breakpoint: INTEGER 		= 36 -- Debugger asking interruption of application in
+	Rqst_update_breakpoints: INTEGER 	= 36 -- Debugger asking interruption of application in
 											 -- order to take new breakpoint(s) into account.
 	Rqst_modify_local: INTEGER 			= 37 -- Debugger asking modification of a local item
 											 -- (argument/local variable/result).

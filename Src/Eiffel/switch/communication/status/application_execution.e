@@ -125,8 +125,13 @@ feature -- Properties
 	execution_mode: INTEGER
 			-- Execution mode (Step by step, stop at stoop points, ...)
 
+	ignoring_breakpoints: BOOLEAN
+			-- Is application ignoring breakpoints ?			
+
 	current_execution_stack_number: INTEGER
 			-- Stack number currently displaying the locals and arguments
+
+feature -- Status
 
 	is_running: BOOLEAN is
 			-- Is the application running?
@@ -310,24 +315,27 @@ feature -- Execution
 			end
 
 			bpm := Debugger_manager.breakpoints_manager
-			bpm.update -- remove breakpoint that are now useless.			
+			bpm.update -- remove breakpoint that are now useless.
+
+					--| Execution with breakpoints |--
 			inspect execution_mode
-			when {EXEC_MODES}.no_stop_points then
-					-- remove all breakpoints set by the application.
-					-- without changing their status under bench				
-				debug("debugger_trace_breakpoint")
-					print ("No stop point.%N")
+			when {EXEC_MODES}.Run then
+				if ignoring_breakpoints then
+						-- remove all breakpoints set by the application.
+						-- without changing their status under bench				
+					debug("debugger_trace_breakpoint")
+						print ("Ignoring breakpoints.%N")
+					end
+					send_no_breakpoints
+				else
+					update_breakpoints
 				end
-				send_no_breakpoints
-			when {EXEC_MODES}.User_stop_points then
-					-- Execution with no stop points set.
-				update_breakpoints
 			when {EXEC_MODES}.step_into,
-			 	 {EXEC_MODES}.step_by_step,
-			 	 {EXEC_MODES}.out_of_routine then
-				send_breakpoints_for_stepping (execution_mode)
+			 	 {EXEC_MODES}.Step_next,
+			 	 {EXEC_MODES}.step_out then
+				send_breakpoints_for_stepping (execution_mode, ignoring_breakpoints)
 			else
-					-- Unknown execution mode. Do nothing.				
+				-- Unknown execution mode. Do nothing.
 			end
 			bpm.reset_breakpoints_changed
 		end
@@ -341,7 +349,7 @@ feature -- Execution
 		deferred
 		end
 
-	notify_newbreakpoint is
+	notify_breakpoints_change is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
 			-- in order to record the new breakpoint(s) before
@@ -550,11 +558,21 @@ feature {NONE} -- Breakpoints implementation
 			end
 		end
 
-	send_breakpoints_for_stepping (a_execution_mode: INTEGER) is
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN) is
 			-- Send breakpoints for step operation
 			-- called by `send_breakpoints'
 			-- DO NOT CALL DIRECTLY
-		deferred
+		do
+			if ign_bp then
+					-- remove all breakpoints set by the application.
+					-- without changing their status under bench				
+				debug("debugger_trace_breakpoint")
+					print ("Ignoring breakpoints.%N")
+				end
+				send_no_breakpoints
+			else
+				update_breakpoints
+			end
 		end
 
 	send_no_breakpoints is
@@ -565,6 +583,9 @@ feature {NONE} -- Breakpoints implementation
 			bps: BREAK_LIST
 			loc: BREAKPOINT_LOCATION
 		do
+			debug("debugger_trace_breakpoint")
+				print ("Ignoring breakpoints.%N")
+			end
 			bps := Debugger_manager.breakpoints_manager.breakpoints
 			from
 				bps.start
@@ -627,6 +648,19 @@ feature -- RT_EXTENSION constants (note: maybe this should be in a RTDBG_CONSTAN
 	Rtdbg_op_replay_forth: INTEGER 		= 2	-- See eif_debug.h:RTDBG_OP_REPLAY_FORTH	+ {RT_DBG_EXECUTION_RECORDER}.Direction_forth 	
 	Rtdbg_op_replay_left: INTEGER 		= 3	-- See eif_debug.h:RTDBG_OP_REPLAY_LEFT 	+ {RT_DBG_EXECUTION_RECORDER}.Direction_left 	
 	Rtdbg_op_replay_right: INTEGER 		= 4	-- See eif_debug.h:RTDBG_OP_REPLAY_RIGHT	+ {RT_DBG_EXECUTION_RECORDER}.Direction_right 	
+
+feature -- Breakpoints control change
+
+	ignore_breakpoints (b: BOOLEAN) is
+			-- If `b' then ignore breakpoints during execution
+		do
+			if ignoring_breakpoints /= b then
+				ignoring_breakpoints := b
+				if is_running and then not is_stopped then
+					notify_breakpoints_change
+				end
+			end
+		end
 
 feature -- Assertion change
 
@@ -754,11 +788,10 @@ feature -- Parameters
 
 feature -- Setting
 
-	set_execution_mode (exec_mode: like execution_mode) is
+	frozen set_execution_mode (exec_mode: like execution_mode) is
 			-- Set `exec_mode' the new execution mode.
 		require
-			valid_exec_mode: exec_mode >= {EXEC_MODES}.No_stop_points and then
-					exec_mode <= {EXEC_MODES}.Out_of_routine
+			valid_exec_mode: (create {EXEC_MODES}).is_valid_mode (exec_mode)
 		do
 			execution_mode := exec_mode
 		ensure

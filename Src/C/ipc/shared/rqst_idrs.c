@@ -107,7 +107,7 @@ rt_private struct idr_discrim u_Request[] = {
 	/* 33 */ { SP_LOWER, idr_Opaque },
 	/* 34 */ { METAMORPHOSE, idr_Opaque },
 	/* 35 */ { APP_INTERRUPT_FLAG, idr_void },
-	/* 36 */ { EWB_NEWBREAKPOINT, idr_void },
+	/* 36 */ { EWB_UPDBREAKPOINTS, idr_void },
 	/* 37 */ { MODIFY_LOCAL, idr_Opaque },
 	/* 38 */ { MODIFY_ATTR, idr_Opaque },
 	/* 39 */ { DYNAMIC_EVAL, idr_Opaque },

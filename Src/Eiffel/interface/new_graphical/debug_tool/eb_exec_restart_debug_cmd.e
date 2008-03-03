@@ -14,7 +14,7 @@ class
 inherit
 	EB_EXEC_FORMAT_CMD
 		rename
-			User_stop_points as execution_mode
+			Run as execution_mode
 		redefine
 			internal_execute,
 			tooltext

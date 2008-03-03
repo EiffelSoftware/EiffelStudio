@@ -510,7 +510,7 @@ feature {NONE} -- Events
 		local
 			l_row: EV_GRID_ROW
 			l_event_item: EVENT_LIST_ITEM_I
-			l_warning: WARNING
+			l_warning: ERROR
 			l_filter_widget: like filter_widget
 			l_show: BOOLEAN
 			l_count, i: INTEGER
@@ -643,7 +643,7 @@ feature {NONE} -- Events
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
 			l_event: EVENT_LIST_ITEM_I
-			l_warning: WARNING
+			l_warning: ERROR
 			l_count, i: INTEGER
 		do
 			l_filter := filter_widget
@@ -1041,10 +1041,8 @@ feature {NONE} -- User interface manipulation
 					a_row.hide
 				end
 			elseif is_warning_event (a_event_item) then
-				if {l_warning: !WARNING} l_error then
-					if not show_warnings or else filter_widget /= Void and then not filter_widget.is_unfiltered (l_warning) then
-						a_row.hide
-					end
+				if not show_warnings or else filter_widget /= Void and then not filter_widget.is_unfiltered (l_error) then
+					a_row.hide
 				end
 			else
 				check False end

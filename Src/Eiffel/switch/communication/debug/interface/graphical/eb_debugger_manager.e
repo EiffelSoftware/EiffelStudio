@@ -1950,7 +1950,7 @@ feature {NONE} -- Implementation
 
 	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
 
-	ignore_breakpoints_cmd: EB_DGB_IGNORE_BREAKPOINTS_CMD
+	ignore_breakpoints_cmd: EB_DBG_IGNORE_BREAKPOINTS_CMD
 
 	options_cmd: EB_DEBUG_OPTIONS_CMD
 

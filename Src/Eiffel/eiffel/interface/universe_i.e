@@ -156,7 +156,7 @@ feature -- Properties
 feature -- Access
 
 	classes_with_name (a_class_name: STRING): LIST [CLASS_I] is
-			-- Classes with a lokal name of `class_name' found in the Universe.
+			-- Classes with a local name of `class_name' found in the Universe.
 			-- That means renamings on the cluster of the class itself are taken into
 			-- account, but not renamings because of the use as a library.
 			-- We also look at classes in libraries of libraries.

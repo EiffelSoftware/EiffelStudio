@@ -117,6 +117,36 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 			Result := current_line /= Void
 		end
 
+	context_line: STRING
+			-- Like current line but evaluates the surrounding context line if it hasn't
+			-- been determined.
+		local
+			l_count, i: INTEGER
+		do
+			if not has_source_text and then file_name /= Void then
+				initialize_output
+			end
+			Result := current_line
+			if Result /= Void and then not Result.is_empty then
+				from
+					i := 1
+					l_count := Result.count
+				until
+					i > l_count or not Result.item (i).is_space
+				loop
+					i := i + 1
+				end
+
+				if i > 1 then
+					if i < l_count then
+						Result := Result.substring (i, l_count)
+					else
+						create Result.make_empty
+					end
+				end
+			end
+		end
+
 	initialize_output is
 			-- Set `previous_line', `current_line' and `next_line' with their proper values
 			-- taken from file `file_name'.

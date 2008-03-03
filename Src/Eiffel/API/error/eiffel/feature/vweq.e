@@ -13,7 +13,7 @@ inherit
 
 	FEATURE_ERROR
 		redefine
-			build_explain, error_string
+			build_explain, error_string, print_single_line_error_message
 		end
 
 feature -- Properties
@@ -46,6 +46,22 @@ feature -- Output
 			a_text_formatter.add ("Right-hand type: ");
 			right_type.append_to (a_text_formatter);
 			a_text_formatter.add_new_line
+		end
+
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Displays single line help in `a_text_formatter'.
+		local
+			l_line: like context_line
+		do
+			Precursor {FEATURE_ERROR} (a_text_formatter)
+			if not has_source_text then
+				initialize_output
+			end
+			l_line := context_line
+			if l_line /= Void and not l_line.is_empty then
+				a_text_formatter.add_space
+				a_text_formatter.add (l_line)
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

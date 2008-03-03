@@ -14,7 +14,7 @@ class
 inherit
 	EB_EXEC_FORMAT_CMD
 		rename
-			step_by_step as execution_mode
+			Step_next as execution_mode
 		redefine
 			make,
 			tooltext

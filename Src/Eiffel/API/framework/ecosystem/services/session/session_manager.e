@@ -74,7 +74,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	session_file_path (a_session: SESSION_I): STRING_32 is
+	session_file_path (a_session: SESSION_I): !STRING_8 is
 			-- Retrieve a session's persisted file path
 			--
 			-- `a_session': A session to retrive a file path for
@@ -93,12 +93,14 @@ feature {NONE} -- Query
 			l_conf_target: CONF_TARGET
 			l_ver: STRING_8
 			l_target: STRING_8
+			l_workbench: ?WORKBENCH_I
+			l_window_id: NATURAL_32
 		do
 			create l_formatter
 			create l_kinds
 
 			if {l_session: !CUSTOM_SESSION_I} a_session then
-				Result := l_session.file_name
+				Result ?= l_session.file_name
 			else
 					-- Determine session type		
 				l_kind := a_session.kind
@@ -108,17 +110,30 @@ feature {NONE} -- Query
 					l_fn := window_file_name
 				elseif l_kind.is_equal (l_kinds.project) then
 					l_fn := project_file_name
-					l_conf_target := (create {SHARED_WORKBENCH}).workbench.lace.target
-					l_ver := l_conf_target.system.uuid.out
-					l_target := l_conf_target.name
 				elseif l_kind.is_equal (l_kinds.project_window) then
 					l_fn := project_window_file_name
-					l_conf_target := (create {SHARED_WORKBENCH}).workbench.lace.target
-					l_ver := l_conf_target.system.uuid.out
-					l_target := l_conf_target.name
 				else
 						-- Unknown session kind
 					check False end
+				end
+
+				if a_session.is_per_project then
+						-- Retrieve project specific information
+					l_workbench := (create {SHARED_WORKBENCH}).workbench
+					if l_workbench.system_defined then
+						l_conf_target := l_workbench.lace.target
+						if {l_uuid: !UUID} (create {USER_OPTIONS_FACTORY}).mapped_uuid (l_workbench.lace.file_name) then
+							l_ver := l_uuid.out
+						else
+							l_ver := l_conf_target.system.uuid.out
+						end
+						l_ver.replace_substring_all ("-", "")
+						l_target := l_conf_target.name
+					end
+				end
+
+				if a_session.is_per_window then
+					l_window_id := a_session.window_id
 				end
 
 				check
@@ -128,16 +143,15 @@ feature {NONE} -- Query
 
 					-- Format path using collected parts
 				if l_ver /= Void then
-					l_fn := l_formatter.format (l_fn, [l_ver, l_target])
+					l_fn := l_formatter.format (l_fn, [l_ver, l_target, l_window_id])
 				end
 
 					-- Create full path
-				create l_path.make_from_string (eiffel_layout.eiffel_home.out)
+				create l_path.make_from_string (eiffel_layout.session_data_path.out)
 				l_path.set_file_name (l_fn)
-				Result := l_path.out
+				Result ?= l_path.out
 			end
 		ensure
-			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
@@ -157,6 +171,12 @@ feature {NONE} -- Helpers
 			end
 		end
 
+	file_utilities: !FILE_UTILITIES
+			-- Access to file utilities
+		once
+			create Result
+		end
+
 feature -- Storage
 
 	store (a_session: SESSION_I) is
@@ -164,18 +184,23 @@ feature -- Storage
 			--
 			-- `a_session': Session to store.
 		local
+			l_logger: like logger_service
+			l_file_name: like session_file_path
+			l_file: RAW_FILE
 			l_sed_util: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
-			l_file: RAW_FILE
-			l_logger: like logger_service
 			l_message: !STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
 				if a_session.is_dirty and then (not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined) then
+						-- Retrieve file name and ensure the directory exists.
+					l_file_name := session_file_path (a_session)
+					file_utilities.create_directory_for_file (l_file_name)
+
 						-- Ensure the project is loaded for project sessions.
 					create l_sed_util
-					create l_file.make_open_write (session_file_path (a_session))
+					create l_file.make_open_write (l_file_name)
 					create l_writer.make (l_file)
 					l_writer.set_for_writing
 
@@ -301,7 +326,7 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_from_disk (a_file_name: STRING_8): SESSION_I
+	retrieve_from_disk (a_file_name: !STRING_8): SESSION_I
 			-- Retrieves a session object from disk, if it exists.
 			-- If no file exists then a new session is created.
 			--
@@ -461,13 +486,12 @@ feature {NONE} -- Factory
 			result_is_clean: Result /= Void implies not Result.is_dirty
 		end
 
-	create_new_custom_session (a_file_name: STRING_32): CUSTOM_SESSION_I
+	create_new_custom_session (a_file_name: !STRING_8): CUSTOM_SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_file_name': The full path to a file on disk to retrieve session data from.
 		require
 			is_interface_usable: is_interface_usable
-			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
 			create {CUSTOM_SESSION} Result.make (a_file_name, Current)
@@ -481,10 +505,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	environment_file_name: STRING_8 = ".environment.session"
-	window_file_name: STRING_8 = ".window.session"
-	project_file_name: STRING_8 = ".{1}.{2}.session"
-	project_window_file_name: STRING_8 = ".{1}.{2}.window.session"
+	environment_file_name: STRING_8 = "environment"
+	window_file_name: STRING_8 = "window_{3}"
+	project_file_name: STRING_8 = "{1}.{2}"
+	project_window_file_name: STRING_8 = "{1}.{2}.window_{3}"
 
 feature {NONE} -- Internal implementation cache
 

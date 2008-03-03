@@ -221,6 +221,43 @@ feature {NONE} -- Basic operations
 			result_contains_included_items: Result.for_all (agent is_path_applicable (?, a_include, a_exclude))
 		end
 
+feature -- Directory operations
+
+	frozen create_directory (a_path: !STRING_GENERAL)
+			-- Creates a directory and any parent directories if they do not exist.
+			--
+			-- `a_path': The directory to create.
+		require
+			not_a_path_is_empty: not a_path.is_empty
+		local
+			l_path: STRING_8
+			l_dir: KL_DIRECTORY
+		do
+			l_path := a_path.as_string_8
+			if not file_system.directory_exists (l_path) then
+				if not file_system.is_root_directory (l_path) and then {l_parent_path: !STRING_GENERAL} file_system.dirname (l_path) then
+						-- Create parent directory
+					create_directory (l_parent_path)
+				end
+				create l_dir.make (l_path)
+				l_dir.create_directory
+			end
+		ensure
+			a_path_exists: file_system.directory_exists (a_path.as_string_8)
+		end
+
+	frozen create_directory_for_file (a_file_name: !STRING_GENERAL)
+			-- Creates a directory and any parent directories if they do not exist, for a file path
+			--
+			-- `a_file_name': The suggested file name requiring a directory to exist.
+		require
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		do
+			if {l_path: !STRING_GENERAL} file_system.dirname (a_file_name.as_string_8) and then not l_path.is_empty then
+				create_directory (l_path)
+			end
+		end
+
 feature -- Formatting
 
 	frozen absolute_path (a_path: STRING_8; a_compact: BOOLEAN): !STRING_8
@@ -238,7 +275,7 @@ feature -- Formatting
 		do
 			Result ?= file_system.absolute_pathname (a_path)
 			if a_compact then
-				l_path := compact_file_path (Result)
+				l_path := compact_path (Result)
 				if l_path /= Void then
 					Result ?= l_path
 				end
@@ -249,7 +286,7 @@ feature -- Formatting
 			reuslt_is_absolute: file_system.is_absolute_pathname (Result)
 		end
 
-	frozen compact_file_path (a_path: STRING_8): STRING_8
+	frozen compact_path (a_path: STRING_8): STRING_8
 			-- Compacts a file path, removing . and ..
 			--
 			-- `a_path': A path to compact.

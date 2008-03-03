@@ -251,7 +251,7 @@ rt_public rt_uint_ptr ei_bit_size(long i, EIF_REFERENCE object)
 	
 rt_public rt_uint_ptr ei_size(EIF_REFERENCE object)
 {
-	REQUIRE ("not expanded", HEADER(object)->ov_flags & EO_EXP == 0);
+	REQUIRE ("not expanded", (HEADER(object)->ov_flags & EO_EXP) == 0);
 		/* Returns physical size occupied by `object' including its header. */
 	return (OVERHEAD + HEADER(object)->ov_size & B_SIZE);
 }

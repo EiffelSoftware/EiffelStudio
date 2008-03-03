@@ -14,10 +14,11 @@ class
 inherit
 	EB_EXEC_FORMAT_CMD
 		rename
-			No_stop_points as execution_mode
+			run as execution_mode
 		redefine
 			make,
-			tooltext
+			tooltext,
+			execute
 		end
 
 create
@@ -35,6 +36,17 @@ feature -- Initialization
 			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			set_referred_shortcut (l_shortcut)
 			accelerator.actions.extend (agent execute)
+		end
+
+feature -- Execution		
+
+	execute is
+			-- Set the execution format to `stone'.
+		do
+			if is_sensitive then
+				eb_debugger_manager.set_execution_ignoring_breakpoints (True)
+				Precursor {EB_EXEC_FORMAT_CMD}
+			end
 		end
 
 feature {NONE} -- Attributes

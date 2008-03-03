@@ -265,9 +265,9 @@ feature -- Reason for stopping
 			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_viol)
 		end
 
-	set_reason_as_new_breakpoint is
+	set_reason_as_update_breakpoints is
 		do
-			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_new_breakpoint)
+			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_update_breakpoint)
 		end
 
 	set_reason_as_step is

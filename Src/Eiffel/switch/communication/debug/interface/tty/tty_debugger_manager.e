@@ -218,7 +218,7 @@ feature -- Interaction
 				Result.quit_actions.extend (agent do inside_debugger_menu := False end)
 
 				Result.add_conditional_entry ("N", debugger_names.c_step_next,
-							agent tty_controller_do_if_stopped ({EXEC_MODES}.step_by_step, Result),
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.Step_next, Result),
 							ag_is_stopped)
 
 				Result.add_conditional_entry ("I", debugger_names.c_step_into,
@@ -226,15 +226,19 @@ feature -- Interaction
 							ag_is_stopped)
 
 				Result.add_conditional_entry ("O", debugger_names.c_step_out,
-							agent tty_controller_do_if_stopped ({EXEC_MODES}.out_of_routine, Result),
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.step_out, Result),
 							ag_is_stopped)
 
 				Result.add_conditional_entry ("C", debugger_names.c_run_to_next_stop_point,
-							agent tty_controller_do_if_stopped ({EXEC_MODES}.user_stop_points, Result),
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.Run, Result),
 							ag_is_stopped)
 
 				Result.add_conditional_entry ("G", debugger_names.c_run_without_stop_point,
-							agent tty_controller_do_if_stopped ({EXEC_MODES}.no_stop_points, Result),
+							agent tty_controller_do_if_stopped ({EXEC_MODES}.Run, Result),
+							ag_is_stopped)
+
+				Result.add_conditional_entry ("T", debugger_names.c_toggle_ignore_breakpoint,
+							agent do set_execution_ignoring_breakpoints (not execution_ignoring_breakpoints) end,
 							ag_is_stopped)
 
 				Result.add_conditional_entry ("K", debugger_names.c_kill_application, agent controller.debug_kill,

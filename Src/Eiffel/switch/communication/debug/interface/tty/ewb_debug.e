@@ -46,9 +46,9 @@ feature {NONE} -- Implementation
 			Result.add_entry ("D", debugger_names.e_set_working_directory, agent get_working_directory)
 			Result.add_entry ("I", debugger_names.e_display_parameters, agent display_params)
 			Result.add_separator (" --- ")
-			Result.add_entry ("R", debugger_names.e_start_and_stop_at_breakpoints, agent start_debugger ({EXEC_MODES}.user_stop_points))
-			Result.add_entry ("L", debugger_names.e_start_without_stopping_at_breakpoints, agent start_debugger ({EXEC_MODES}.no_stop_points))
-			Result.add_entry ("S", debugger_names.c_step_into, agent start_debugger ({EXEC_MODES}.step_into))
+			Result.add_entry ("R", debugger_names.e_start_and_stop_at_breakpoints, agent start_debugger ({EXEC_MODES}.run, False))
+			Result.add_entry ("L", debugger_names.e_start_without_stopping_at_breakpoints, agent start_debugger ({EXEC_MODES}.run, True))
+			Result.add_entry ("S", debugger_names.c_step_into, agent start_debugger ({EXEC_MODES}.step_into, False))
 			Result.add_separator (" --- ")
 			Result.add_entry ("H", debugger_names.e_help, agent Result.request_menu_display)
 			Result.add_conditional_entry ("Q", debugger_names.e_quit, agent Result.quit, agent :BOOLEAN do Result := not debugger_manager.application_is_executing end)
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	start_debugger (a_exec_mode: INTEGER) is
+	start_debugger (a_exec_mode: INTEGER; ign_bp: BOOLEAN) is
 		require
 			debugger_manager /= Void
 		local
@@ -231,6 +231,7 @@ feature {NONE} -- Implementation
 			param.set_arguments (param_args)
 			param.set_working_directory (wdir)
 			param.set_environment_variables (param_env_variables)
+			debugger_manager.set_execution_ignoring_breakpoints (ign_bp)
 			ctlr.debug_application (param, a_exec_mode)
 		end
 

@@ -114,7 +114,7 @@ feature -- Debug Operation
 							end
 							if l_app_string /= Void then
 									--| This means we are using either dbgclr or cordbg
-								if a_execution_mode = {EXEC_MODES}.User_stop_points then
+								if not manager.execution_ignoring_breakpoints then
 										--| With BP
 									if l_il_env.use_cordbg (dotnet_debugger) then
 											-- Launch cordbg.exe.
@@ -150,7 +150,7 @@ feature -- Debug Operation
 								launch_program := True
 								if
 									manager.breakpoints_manager.has_enabled_breakpoint (True)
-									and then a_execution_mode = {EXEC_MODES}.no_stop_points
+									and manager.execution_ignoring_breakpoints
 								then
 										--| FIXME:2008-01-11 (jfiat): do we also ignore hidden breakpoints ?
 										--| for now, yes
@@ -160,11 +160,11 @@ feature -- Debug Operation
 										prefstr := Void
 									end
 									discardable_if_confirmed_do (Warning_messages.w_Ignoring_all_stop_points,
-														agent debug_workbench_application (param, a_execution_mode),
+														agent debug_workbench_application (param, a_execution_mode, True),
 														2, prefstr
 													)
 								else
-									debug_workbench_application (param, a_execution_mode)
+									debug_workbench_application (param, a_execution_mode, False)
 								end
 							end
 						end
@@ -229,35 +229,28 @@ feature {DEBUGGER_MANAGER} -- Debugging operation
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			debug_operate ({EXEC_MODES}.step_by_step)
+			debug_operate ({EXEC_MODES}.Step_next)
 		end
 
 	debug_step_into is
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			debug_operate ({EXEC_MODES}.step_into)
+			debug_operate ({EXEC_MODES}.Step_into)
 		end
 
 	debug_step_out is
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			debug_operate ({EXEC_MODES}.out_of_routine)
+			debug_operate ({EXEC_MODES}.Step_out)
 		end
 
 	debug_run is
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			debug_operate ({EXEC_MODES}.user_stop_points)
-		end
-
-	debug_run_without_stop_points is
-		require
-			safe_application_is_stopped: manager.safe_application_is_stopped
-		do
-			debug_operate ({EXEC_MODES}.no_stop_points)
+			debug_operate ({EXEC_MODES}.Run)
 		end
 
 	debug_kill is
@@ -431,7 +424,7 @@ feature {NONE} -- Callbacks
 
 feature {NONE} -- debugging
 
-	debug_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER) is
+	debug_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER; ign_bp: BOOLEAN) is
 		require
 			param.working_directory /= Void
 		local
@@ -454,12 +447,13 @@ feature {NONE} -- debugging
 
 				activate_debugger_environment (True)
 				app_exec := manager.application
+				app_exec.ignore_breakpoints (manager.execution_ignoring_breakpoints)
 				app_exec.set_execution_mode (a_execution_mode)
 				app_exec.on_application_before_launching
 				app_exec.run (param)
 				if manager.application_is_executing then
 					manager.init_application
-					if app_exec.execution_mode = {EXEC_MODES}.No_stop_points then
+					if app_exec.ignoring_breakpoints then
 						manager.debugger_status_message (debugger_names.m_system_is_running_ignoring_breakpoints)
 					else
 						manager.debugger_message (debugger_names.m_system_is_running)

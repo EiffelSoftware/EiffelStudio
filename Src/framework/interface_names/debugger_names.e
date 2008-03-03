@@ -199,6 +199,8 @@ feature -- Conditional entries
 			do Result := locale.translation ("Run to next stop point") end
 	c_run_without_stop_point: STRING_GENERAL is
 			do Result := locale.translation ("Run without stop point") end
+	c_toggle_ignore_breakpoint: STRING_GENERAL is
+			do Result := locale.translation ("Toggle 'Ignore stop point'") end
 	c_kill_application: STRING_GENERAL is
 			do Result := locale.translation ("Kill application") end
 	c_pause_application: STRING_GENERAL is

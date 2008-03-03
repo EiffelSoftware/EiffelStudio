@@ -12,6 +12,7 @@ inherit
 	APPLICATION_EXECUTION
 		redefine
 			status,
+			send_breakpoints_for_stepping,
 			is_valid_object_address,
 			can_not_launch_system_message,
 			recycle,
@@ -294,9 +295,9 @@ feature -- Execution
 			inspect execution_mode
 			when {EXEC_MODES}.step_into then
 				step_into
-			when {EXEC_MODES}.step_by_step then
+			when {EXEC_MODES}.Step_next then
 				step_next
-			when {EXEC_MODES}.out_of_routine then
+			when {EXEC_MODES}.step_out then
 				step_out
 			else
 				Eifnet_debugger.set_last_control_mode_is_continue
@@ -337,7 +338,7 @@ feature -- Execution
 			end
 		end
 
-	notify_newbreakpoint is
+	notify_breakpoints_change is
 			-- Send bp update operation request to the application
 		do
 			update_breakpoints
@@ -973,7 +974,7 @@ feature {NONE} -- Stepping
 
 feature -- Breakpoints controller
 
-	send_breakpoints_for_stepping (a_execution_mode: INTEGER) is
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN) is
 			-- Send breakpoints for step operation
 			-- called by `send_breakpoints'
 			-- DO NOT CALL DIRECTLY
@@ -983,7 +984,7 @@ feature -- Breakpoints controller
 			bp: BREAKPOINT
 		do
 			if is_running then
-				update_breakpoints
+				Precursor (a_execution_mode, ign_bp)
 			else
 				debug ("debugger_trace_stepping")
 					print ("Let's add a breakpoint at the entry point of the system%N")

@@ -13,6 +13,7 @@ inherit
 		redefine
 			status,
 			send_no_breakpoints,
+			send_breakpoints_for_stepping,
 			is_valid_object_address,
 			update_critical_stack_depth,
 			can_not_launch_system_message,
@@ -172,13 +173,13 @@ feature -- Execution
 			ewb_request.send
 		end
 
-	notify_newbreakpoint is
+	notify_breakpoints_change is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
 			-- in order to record the new breakpoint(s) before
 			-- automatically resuming its execution.
 		do
-			ewb_request.make (Rqst_new_breakpoint)
+			ewb_request.make (Rqst_update_breakpoints)
 			ewb_request.send
 		end
 
@@ -318,12 +319,12 @@ feature -- Execution
 
 feature {NONE} -- Breakpoints implementation
 
-	send_breakpoints_for_stepping (a_execution_mode: INTEGER) is
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN) is
 			-- Send breakpoints for step operation
 			-- called by `send_breakpoints'
 			-- DO NOT CALL DIRECTLY
 		do
-			update_breakpoints
+			Precursor (a_execution_mode, ign_bp)
 			ewb_request.send_breakpoints_for_stepping (Current, a_execution_mode)
 		end
 

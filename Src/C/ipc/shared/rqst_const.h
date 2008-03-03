@@ -74,7 +74,7 @@
 #define SP_LOWER			33		/* Bounds for special objects inspection */
 #define METAMORPHOSE		34		/* Convert the top-level item in the operational stack from a basic type to a reference */
 #define APP_INTERRUPT_FLAG	35		/* Application sends the address of its interruption flag to daemon */
-#define EWB_NEWBREAKPOINT	36		/* Application sends the address of its interruption flag to daemon */
+#define EWB_UPDBREAKPOINTS	36		/* Application sends the address of its interruption flag to daemon */
 #define MODIFY_LOCAL		37		/* `ec' asks the æpplication to change the value of a local variable */
 #define MODIFY_ATTR			38		/* `ec' asks the application to change the value of an object attribute */
 #define DYNAMIC_EVAL		39		/* `ec' asks the application to execute a given feature on a given object */

@@ -33,7 +33,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 		do
 			object_address := obj
 			reason := reas
-			if reason /= Pg_new_breakpoint then
+			if reason /= Pg_update_breakpoint then
 					-- Compute class type.
 				dynamic_class := Eiffel_system.class_of_dynamic_id (dt, False)
 
@@ -68,9 +68,9 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			end
 		ensure
 			valid_break_index: (break_index > 0) or (break_index = 0 implies (
-					reason = Pg_new_breakpoint or reason = Pg_raise or reason = pg_viol or
+					reason = Pg_update_breakpoint or reason = Pg_raise or reason = pg_viol or
 					(e_feature /= Void and then e_feature.is_external)))
-			valid_efeature: e_feature = Void implies (reason = Pg_new_breakpoint)
+			valid_efeature: e_feature = Void implies (reason = Pg_update_breakpoint)
 		end
 
 feature -- Access

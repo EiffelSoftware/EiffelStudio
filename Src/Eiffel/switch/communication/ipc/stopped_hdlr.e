@@ -65,7 +65,7 @@ feature -- Execution
 			l_status: APPLICATION_STATUS_CLASSIC
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
-			need_to: TUPLE [stop: BOOLEAN; resend_bp: BOOLEAN]
+			need_to: TUPLE [stop: BOOLEAN; update_bp: BOOLEAN]
 		do
 			check
 				application_is_executing: debugger_manager.application_is_executing
@@ -184,15 +184,15 @@ feature -- Execution
 					--| stopped state operations   |--
 					--|----------------------------|--
 
-				if stopping_reason = Pg_new_breakpoint then
-						--| If the reason is Pg_new_breakpoint, the application sends the
-						--| new breakpoints and then automatically resume its execution.
+				if stopping_reason = Pg_update_breakpoint then
+						--| If the reason is Pg_update_breakpoint, the application sends the
+						--| new breakpoints status and then automatically resume its execution.
 					debug ("DEBUGGER_TRACE")
 						io.error.put_string ("STOPPED_HDLR: New breakpoint added, do nothing%N")
 					end
 
 					-- application has stopped to take into account the
-					-- new breakpoints. So let's send the new breakpoints
+					-- breakpoints changes. So let's send the breakpoints
 					-- to the application and resume it.
 					need_to := [False, True] -- Continue, but resend bp
 				else
@@ -203,7 +203,7 @@ feature -- Execution
 						stopping_reason
 					when Pg_raise, Pg_viol then
 						need_to.stop := execution_stopped_on_exception
-						need_to.resend_bp := False
+						need_to.update_bp := False
 					when Pg_break then
 							--| debuggee stopped on a Breakpoint
 
@@ -223,7 +223,7 @@ feature -- Execution
 						else
 							need_to := execution_stopped_on_breakpoint (cse)
 						end
-						need_to.resend_bp := need_to.stop or else breakpoints_manager.breakpoints_changed
+						need_to.update_bp := need_to.stop or else breakpoints_manager.breakpoints_changed
 					else
 						--| Nothing
 					end
@@ -244,13 +244,14 @@ feature -- Execution
 				else
 						--| We don't stop on this breakpoint,
 						--| Relaunch the application.
-					if need_to /= Void and then need_to.resend_bp then
+					if need_to /= Void and then need_to.update_bp then
 							--| if we stopped on cond bp
 							--| in case we don't really stop
 							--| we won't send again the breakpoints
 							--| since they didn't changed, and a "go to this point" may be enabled
 						l_app.continue
 					else
+							-- Shortcut breakpoint sending
 						l_app.release_all_but_kept_object
 						l_status.set_is_stopped (False)
 						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
@@ -275,7 +276,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	execution_stopped_on_breakpoint (cse: CALL_STACK_ELEMENT_CLASSIC): TUPLE [stop: BOOLEAN; resend_bp: BOOLEAN] is
+	execution_stopped_on_breakpoint (cse: CALL_STACK_ELEMENT_CLASSIC): TUPLE [stop: BOOLEAN; update_bp: BOOLEAN] is
 			-- Do we stop execution and resend breakpoints on this breakpoint event ?
 		local
 			bps: LIST [BREAKPOINT]
@@ -305,7 +306,7 @@ feature {NONE} -- Implementation
 					-- We are stopped, but there is no "set" breakpoints ...
 					-- might be a trouble, then resend bps
 				Result.stop := False
-				Result.resend_bp := True
+				Result.update_bp := True
 			end
 		end
 

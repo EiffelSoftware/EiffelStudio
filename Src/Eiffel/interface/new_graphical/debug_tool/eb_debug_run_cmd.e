@@ -93,13 +93,13 @@ feature -- Access
 feature -- Execution
 
 	execute is
-			-- Launch program in debugger with mode `User_stop_points' (i.e "Run").
+			-- Launch program in debugger with mode `Run' (i.e "Run").
 		do
-			execute_with_mode ({EXEC_MODES}.User_stop_points)
+			execute_with_mode ({EXEC_MODES}.run)
 		end
 
 	execute_with_mode (execution_mode: INTEGER) is
-			-- execute program in debugger with mode `User_stop_points' (i.e "Run").
+			-- execute program in debugger with mode `Run' (i.e "Run").
 		do
 			if
 				Eiffel_project.initialized and then

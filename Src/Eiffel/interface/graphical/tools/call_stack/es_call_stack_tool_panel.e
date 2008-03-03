@@ -610,9 +610,9 @@ feature {NONE} -- Implementation: Stop
 					m.append (exception_short_description)
 					display_exception
 					set_focus_if_visible
-				when Pg_new_breakpoint then
-					stop_cause.set_text (Interface_names.l_New_breakpoint)
-					m.append (Interface_names.l_New_breakpoint)
+				when Pg_update_breakpoint then
+					stop_cause.set_text (Interface_names.l_Update_breakpoint)
+					m.append (Interface_names.l_Update_breakpoint)
 				else
 					stop_cause.set_text (Interface_names.l_Unknown_status)
 					m.append (Interface_names.l_Unknown_status)

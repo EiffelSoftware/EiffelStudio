@@ -38,7 +38,7 @@ feature -- Formatting
 	launch_project (params: DEBUGGER_EXECUTION_PARAMETERS) is
 		do
 			if is_sensitive then
-				debugger_manager.run_project_cmd.launch_with_parameters ({EXEC_MODES}.User_stop_points, params)
+				debugger_manager.run_project_cmd.launch_with_parameters ({EXEC_MODES}.run, params)
 			end
 		end
 

@@ -67,11 +67,11 @@ feature {APPLICATION_EXECUTION} -- Breakpoints update
 					print ("curr_callstack_depth=" + app.status.current_call_stack.stack_depth.out + "%N")
 				end
 				inspect a_execution_mode
-				when {EXEC_MODES}.step_by_step then
+				when {EXEC_MODES}.Step_next then
 						-- set a stack breakpoint, set on the current stack depth plus one
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we have to add 1 for step by step)
 					send_rqst_3_integer (Rqst_break, 0, Break_set_stack_depth, +1) -- useless body_id set to zero
-				when {EXEC_MODES}.out_of_routine then
+				when {EXEC_MODES}.step_out then
 					 -- Out_of_routine
 						-- set a stack breakpoint, set on the current stack depth
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we dont have to substract 1 for step out)

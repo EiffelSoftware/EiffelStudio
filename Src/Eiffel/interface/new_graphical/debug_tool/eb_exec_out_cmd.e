@@ -14,7 +14,7 @@ class
 inherit
 	EB_EXEC_FORMAT_CMD
 		rename
-			Out_of_routine as execution_mode
+			step_out as execution_mode
 		redefine
 			make,
 			tooltext

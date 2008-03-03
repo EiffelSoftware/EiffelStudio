@@ -68,7 +68,7 @@ feature -- Notification
 			if new_or_deleted then
 				update_breakpoints_tags_provider
 			end
-			observers.do_all (agent {BREAKPOINTS_OBSERVER}.on_new_breakpoint_event)
+			observers.do_all (agent {BREAKPOINTS_OBSERVER}.on_breakpoints_creation_or_removal_event)
 		end
 
 feature -- Observers

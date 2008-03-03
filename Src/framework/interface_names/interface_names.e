@@ -172,6 +172,8 @@ feature -- Button texts
 	b_Dbg_exception_handler: STRING_GENERAL is			do Result := locale.translation("Exceptions")	end
 	b_Dbg_assertion_checking_disable: STRING_GENERAL is	do Result := locale.translation("Disable assertion checking")	end
 	b_Dbg_assertion_checking_restore: STRING_GENERAL is	do Result := locale.translation("Restore assertion checking")	end
+	b_Dbg_stop_at_breakpoints: STRING_GENERAL is	do Result := locale.translation("Stop at breakpoints")	end
+	b_Dbg_ignore_breakpoints: STRING_GENERAL is	do Result := locale.translation("Ignore breakpoints")	end
 	b_duplicate: STRING_GENERAL is						do Result := locale.translation ("Duplicate") end
 
 	b_Yes: STRING_GENERAL is							do Result := locale.translation ("Yes") end
@@ -1232,6 +1234,7 @@ feature -- Label texts
 	l_Name: STRING_GENERAL is					do Result := locale.translation("Name")	end
 	l_Name_colon: STRING_GENERAL is				do Result := locale.translation("Name:")	end
 	l_New_breakpoint: STRING_GENERAL is			do Result := locale.translation("New breakpoint(s) to commit")	end
+	l_Update_breakpoint: STRING_GENERAL is			do Result := locale.translation("Update breakpoint(s) status")	end
 	l_note: STRING_GENERAL is					do Result := locale.translation ("Note") end
 	l_no_description_text: STRING_GENERAL is 	do Result := locale.translation ("No description available for this preference.") end
 	l_no_default_value: STRING_GENERAL is		do Result := locale.translation ("No default value") end
@@ -1799,6 +1802,7 @@ feature -- Label text, no translation (for the editor)
 	le_Explicit_exception_pending: STRING is "Explicit exception pending"
 	le_Implicit_exception_pending: STRING is "Implicit exception pending"
 	le_New_breakpoint: STRING is			"New breakpoint(s) to commit"
+	le_Update_breakpoint: STRING is			"Breakpoint(s) change to commit"
 	le_Stepped: STRING is				"Step completed"
 	le_Unknown_status: STRING is			"Unknown application status"
 	le_versions: STRING is 				"versions"
@@ -2259,6 +2263,8 @@ feature -- Description texts
 
 	e_Dbg_exception_handler: STRING_GENERAL is do Result := locale.translation("Exception handling")	end
 	e_Dbg_assertion_checking: STRING_GENERAL is do Result := locale.translation("Disable or restore assertion checking handling during execution")	end
+	e_Dbg_stop_at_breakpoints: STRING_GENERAL is do Result := locale.translation("Stop at breakpoint (Stop execution when the application reach a breakpoint).")	end
+	e_Dbg_Ignore_breakpoints: STRING_GENERAL is do Result := locale.translation("Ignore breakpoint (Do not stop at any breakpoint).")	end
 
 	e_open_selection_in_editor: STRING_GENERAL is do Result := locale.translation("Open selected file name in specified external editor")	end
 	e_save_c_compilation_output: STRING_GENERAL is do Result := locale.translation("Save C Compilation output to file")	end

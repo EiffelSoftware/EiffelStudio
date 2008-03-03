@@ -78,7 +78,7 @@ extern unsigned int TIMEOUT;		/* Time out for interprocess communications */
 #define OTHER(x) ((x) == daemon_data.d_cs ? daemon_data.d_as : daemon_data.d_cs)
 
 #define INTERRUPT_APPLICATION	1
-#define NEW_BREAKPOINT_ADDED	2
+#define UPDATE_BREAKPOINTS_RQST	2
 rt_private void write_application_interruption_flag(unsigned char value); 	/* write `value' in the interruption flag
 																			 * inside application memory space */
 
@@ -207,12 +207,12 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 	case EWB_INTERRUPT:
 			/* Debugger asking to interrupt application */
 		interrupted = TRUE;
-	case EWB_NEWBREAKPOINT:
+	case EWB_UPDBREAKPOINTS:
 			/* Estudio signals the user has added new breakpoints */
 #ifdef EIF_WINDOWS
 		switch(rqst->rq_type) {
-			case EWB_NEWBREAKPOINT:
-				write_application_interruption_flag(NEW_BREAKPOINT_ADDED);
+			case EWB_UPDBREAKPOINTS:
+				write_application_interruption_flag(UPDATE_BREAKPOINTS_RQST);
 				break;
 			case EWB_INTERRUPT:
 				write_application_interruption_flag(INTERRUPT_APPLICATION);
@@ -230,8 +230,8 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 			 * and in this case kill sends the signal to estudio, which kills it */
 		{
 			switch(rqst->rq_type) {
-				case EWB_NEWBREAKPOINT:
-					write_application_interruption_flag(NEW_BREAKPOINT_ADDED);
+				case EWB_UPDBREAKPOINTS:
+					write_application_interruption_flag(UPDATE_BREAKPOINTS_RQST);
 					break;
 				case EWB_INTERRUPT:
 					write_application_interruption_flag(INTERRUPT_APPLICATION);

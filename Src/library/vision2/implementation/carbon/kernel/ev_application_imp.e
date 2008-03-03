@@ -253,6 +253,12 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 		do
 		end
 
+feature {EV_ANY} -- Implementation
+
+	is_display_remote: BOOLEAN
+			-- Is application display remote?
+			-- This function is primarily to determine if drawing to the display is optimal.
+
 feature -- Implementation
 
 	wait_for_input (msec: INTEGER) is

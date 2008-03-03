@@ -11,6 +11,30 @@ class
 
 feature -- Access
 
+	Information_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer symbolizing a piece of information.
+		do
+			create Result
+		end
+
+	Error_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer symbolizing an error.
+		do
+			create Result
+		end
+
+	Warning_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer symbolizing a warning.
+		do
+			create Result
+		end
+
+	Question_pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer symbolizing a question.
+		do
+			create Result
+		end
+
 	Information_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a piece of information.
 		do

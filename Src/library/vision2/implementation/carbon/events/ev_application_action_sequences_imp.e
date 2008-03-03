@@ -124,6 +124,12 @@ feature -- Event handling
 			create Result
 		end
 
+	create_system_color_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a system_color_change_actions.
+		do
+			create Result
+		end
+
 indexing
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end

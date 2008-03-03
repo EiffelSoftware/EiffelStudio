@@ -374,6 +374,11 @@ feature -- Drawing operations
 
 		end
 
+	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE) is
+			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
+		do
+		end
+
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local

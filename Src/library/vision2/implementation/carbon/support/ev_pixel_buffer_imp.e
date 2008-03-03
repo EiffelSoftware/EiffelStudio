@@ -103,6 +103,13 @@ feature -- Query
 		do
 		end
 
+	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
+			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
+		local
+			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
+		do
+		end
+
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementation
 
 	reusable_managed_pointer: MANAGED_POINTER

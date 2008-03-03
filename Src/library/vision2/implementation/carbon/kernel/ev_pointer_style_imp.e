@@ -97,8 +97,12 @@ feature -- Query
 	y_hotspot: INTEGER
 			-- Specifies the y-coordinate of a cursor's hot spot.
 
-feature -- Implementation
+feature -- Duplication
 
+	copy_from_pointer_style (a_pointer_style: like interface)
+			-- Copy attributes of `a_pointer_style' to `Current.
+		do
+		end
 
 feature {EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 

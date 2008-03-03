@@ -38,6 +38,12 @@ feature -- Event handling
 			create Result
 		end
 
+	create_hide_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a hide action sequence.
+		do
+			create Result
+		end
+
 indexing
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 

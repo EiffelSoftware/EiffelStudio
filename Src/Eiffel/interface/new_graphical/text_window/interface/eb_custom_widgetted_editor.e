@@ -577,6 +577,10 @@ feature {NONE} -- Implementation
 	internal_recycle is
 			-- Recycle
 		do
+			if mouse_move_idle_timer /= Void and then not mouse_move_idle_timer.is_destroyed then
+				mouse_move_idle_timer.destroy
+				mouse_move_idle_timer := Void
+			end
 			dev_window.window.focus_in_actions.prune_all (check_search_bar_visible_procedure)
 			if search_tool /= Void then
 				search_tool.first_result_reached_actions.prune_all (first_result_reached_action)

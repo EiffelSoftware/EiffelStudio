@@ -1065,10 +1065,66 @@ feature -- Measurement
 
 	physical_size (object: ANY): INTEGER is
 			-- Space occupied by `object' in bytes
+			--| In .NET, it is an approximation since .NET has not facility that returns the size
+			--| of an object. For example, we do not take into account layout/packing nor the
+			--| presence of an object header.
 		require
 			object_not_void: object /= Void
+		local
+			i, nb: INTEGER
+			l_type_id: INTEGER
 		do
-			Result := 4
+			l_type_id := dynamic_type (object)
+			from
+				i := 1
+				nb := field_count_of_type (l_type_id)
+			until
+				i > nb
+			loop
+				inspect
+					field_type_of_type (i, l_type_id)
+				when pointer_type then Result := Result + {PLATFORM}.pointer_bytes
+				when character_8_type then Result := Result + {PLATFORM}.character_8_bytes
+				when character_32_type then Result := Result + {PLATFORM}.character_32_bytes
+				when boolean_type then Result := Result + {PLATFORM}.boolean_bytes
+				when real_32_type then Result := Result + {PLATFORM}.real_32_bytes
+				when real_64_type then Result := Result + {PLATFORM}.real_64_bytes
+				when natural_8_type then Result := Result + {PLATFORM}.natural_8_bytes
+				when natural_16_type then Result := Result + {PLATFORM}.natural_16_bytes
+				when natural_32_type then Result := Result + {PLATFORM}.natural_32_bytes
+				when natural_64_type then Result := Result + {PLATFORM}.natural_64_bytes
+				when integer_8_type then Result := Result + {PLATFORM}.integer_8_bytes
+				when integer_16_type then Result := Result + {PLATFORM}.integer_16_bytes
+				when integer_32_type then Result := Result + {PLATFORM}.integer_32_bytes
+				when integer_64_type then Result := Result + {PLATFORM}.integer_64_bytes
+				else
+						-- It is a reference, which we assume to be the same as a pointer
+					Result := Result + {PLATFORM}.pointer_bytes
+				end
+				i := i + 1
+			end
+		end
+
+	deep_physical_size (object: ANY): INTEGER is
+			-- Space occupied by `object' and its children in bytes
+		require
+			object_not_void: object /= Void
+		local
+			l_traverse: SED_OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
+			l_objects: ARRAYED_LIST [ANY]
+		do
+			create l_traverse
+			l_traverse.set_root_object (object)
+			l_traverse.traverse
+			l_objects := l_traverse.visited_objects
+			from
+				l_objects.start
+			until
+				l_objects.after
+			loop
+				Result := Result + physical_size (l_objects.item)
+				l_objects.forth
+			end
 		end
 
 feature -- Marking

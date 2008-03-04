@@ -178,7 +178,7 @@ feature {NONE} -- Factory
 		require
 			a_warning_attached: a_warning /= Void
 		do
-			Result := create_error_event_item (a_warning)
+			create {EVENT_LIST_WARNING_ITEM} Result.make ({ENVIRONMENT_CATEGORIES}.compilation, a_warning.out, a_warning)
 		ensure
 			result_attached: Result /= Void
 			result_user_data_set: Result.data = a_warning

@@ -81,7 +81,6 @@ feature -- Query
 	dropdrown_width: INTEGER is
 			-- With of the dropdown area.
 		do
-			-- We plus one pixel for the middle separator in the button
 			Result := dropdown_pixel_buffer.width
 		end
 
@@ -101,7 +100,7 @@ feature -- Query
 			--	X position where dropdown button should be drawn.
 		do
 			if tool_bar /= Void then
-				Result := tool_bar.item_x (Current) + width - dropdrown_width
+				Result := tool_bar.item_x (Current) + width - dropdrown_width - 2
 			end
 		end
 

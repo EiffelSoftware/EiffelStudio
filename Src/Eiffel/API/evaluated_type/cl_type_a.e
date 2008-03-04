@@ -660,7 +660,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 					Result :=
 						associated_class.conform_to (other_class_type.associated_class) and then
 						other_class_type.valid_generic (Current) and then
-						(other_class_type.is_attached implies is_attached)
+						is_attachable_to (other_class_type)
 					if not Result and then system.il_generation and then system.system_object_class /= Void then
 							-- Any type in .NET conforms to System.Object
 						check
@@ -926,7 +926,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

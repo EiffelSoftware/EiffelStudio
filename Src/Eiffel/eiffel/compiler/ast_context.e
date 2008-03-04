@@ -272,6 +272,10 @@ feature -- Setting
 				end
 				create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
 			else
+				if not current_class_type.is_attached then
+						-- Current is always attached
+					current_class_type.set_is_implicitly_attached
+				end
 				create {AST_VARIABLE_CONTEXT} variables
 			end
 			current_feature_table := a_feat_tbl

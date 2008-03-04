@@ -401,8 +401,7 @@ feature {COMPILER_EXPORTER}
 			if not Result then
 				c ?= other
 				if c /= Void then
-					Result := is_equivalent (c) and then
-						(c.is_attached implies is_attached)
+					Result := is_equivalent (c) and then is_attachable_to (c)
 				end
 			end
 			if not Result then
@@ -517,7 +516,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

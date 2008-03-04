@@ -10,6 +10,7 @@ deferred class ATTACHABLE_TYPE_A
 inherit
 	TYPE_A
 		redefine
+			as_implicitly_attached,
 			is_attached,
 			set_attached_mark,
 			set_detachable_mark
@@ -33,6 +34,20 @@ feature -- Status report
 			-- Is the type attached?
 		do
 			Result := (attachment_bits & is_attached_mask /= 0) or else is_expanded
+		end
+
+	is_attachable_to (other: ATTACHABLE_TYPE_A): BOOLEAN
+			-- Does type preserve attachment status of other?
+		do
+			Result := other.is_attached implies is_implicitly_attached
+		end
+
+feature {ATTACHABLE_TYPE_A} -- Status report
+
+	is_implicitly_attached: BOOLEAN
+			-- Is type (implicitly) attached?
+		do
+			Result := (attachment_bits & (is_attached_mask | is_implicitly_attached_mask) /= 0) or else is_expanded
 		end
 
 feature -- Modification
@@ -65,6 +80,15 @@ feature -- Modification
 			is_attached: is_attached
 		end
 
+	set_is_implicitly_attached
+			-- Mark type as being implicitly attached, so that
+			-- it is allowed to be attached to an attached type.
+		do
+			attachment_bits := attachment_bits | is_implicitly_attached_mask
+		ensure
+			is_implicitly_attached: is_implicitly_attached
+		end
+
 feature -- Comparison
 
 	has_same_attachment_marks (other: ATTACHABLE_TYPE_A): BOOLEAN
@@ -75,6 +99,22 @@ feature -- Comparison
 			Result :=
 				has_attached_mark = other.has_attached_mark and then
 				has_detachable_mark = other.has_detachable_mark
+		end
+
+feature -- Duplication
+
+	as_implicitly_attached: like Current
+			-- Implicitly attached type
+		do
+			if is_implicitly_attached then
+				Result := Current
+			else
+				Result := duplicate
+				Result.set_is_implicitly_attached
+			end
+		ensure then
+			result_is_implicitly_attached: Result.is_implicitly_attached
+			result_is_attachable_to_attached: Result.is_attachable_to (as_attached)
 		end
 
 feature {NONE} -- Attachment properties
@@ -88,11 +128,14 @@ feature {NONE} -- Attachment properties
 	has_attached_mark_mask: NATURAL_8 is 2
 			-- Mask in `attachment_bits' that tells whether the type has an explicit attached mark
 
-	is_attached_mask: NATURAL_8 is 4;
+	is_attached_mask: NATURAL_8 is 4
 			-- Mask in `attachment_bits' that tells whether the type is attached
 
+	is_implicitly_attached_mask: NATURAL_8 is 8;
+			-- Mask in `attachment_bits' that tells whether the type is implicitly attached
+
 indexing
-	copyright:	"Copyright (c) 2007, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

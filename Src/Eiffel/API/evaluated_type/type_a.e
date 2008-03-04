@@ -731,7 +731,7 @@ feature -- Access
 		end
 
 	as_attached: like Current
-			-- Attached variant of the current type.
+			-- Attached variant of the current type
 		require
 			not_is_attached: not is_attached
 		do
@@ -742,7 +742,7 @@ feature -- Access
 		end
 
 	as_detachable: like Current
-			-- Detachable variant of the current type.
+			-- Detachable variant of the current type
 		require
 			is_attached: is_attached
 		do
@@ -750,6 +750,17 @@ feature -- Access
 			Result.set_detachable_mark
 		ensure
 			result_attached: Result /= Void
+		end
+
+	as_implicitly_attached: like Current
+			-- Implicitly attached type
+		require
+			not_is_attached: not is_attached
+		do
+			Result := Current
+		ensure
+			result_attached: Result /= Void
+			result_not_attached: not Result.is_attached
 		end
 
 feature -- Modification

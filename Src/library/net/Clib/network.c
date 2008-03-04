@@ -376,6 +376,9 @@ void host_address_from_name (EIF_POINTER addr, EIF_POINTER name)
 	/*x 32-bits netid/hostid set in addr from hostname name */
 {
 	struct hostent *hp;
+#ifdef VXWORKS
+	int h_errno = 0;
+#endif
 
 	EIF_NET_INITIALIZE;
 

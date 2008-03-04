@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="xml" uuid="FF274042-0759-4A99-9E97-391F7D35AD5B" library_target="xml">
+	<target name="xml">
+		<description>Implements a call site mechanism for use by descendents for delayed initialization.</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="false"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<cluster name="xml" location="." recursive="false"/>
+	</target>
+</system>

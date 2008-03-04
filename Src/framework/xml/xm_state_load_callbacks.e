@@ -64,6 +64,18 @@ feature -- Access
 	xml_parser: !XM_EIFFEL_PARSER
 			-- The XML parser used to in conjuntion with Current
 
+	last_error_message: !STRING_32
+			-- Last error message
+		require
+			has_error: has_error
+		do
+			if {l_msg: !like last_error_message} internal_last_error_message then
+				Result := l_msg
+			else
+				create Result.make_empty
+			end
+		end
+
 feature {NONE} -- Access
 
 	current_transition_stack: !DS_LINKED_STACK [NATURAL_8]
@@ -75,50 +87,23 @@ feature {NONE} -- Access
 	current_content_stack: !DS_LINKED_STACK [!STRING_32]
 			-- Current text content
 
-	current_content: !STRING_32
+	frozen current_state: NATURAL_8
+			-- Current state
+		require
+			not_current_transition_stack_is_empty: not current_transition_stack.is_empty
+		do
+			Result := current_transition_stack.item
+		end
+
+	frozen current_content: !STRING_32
 			-- Current content
 		require
 			not_current_content_stack_is_empty: not current_content_stack.is_empty
-		local
-			l_count, i: INTEGER
 		do
-			Result ?= current_content_stack.item.twin
 			if not is_perserving_whitespace then
-					-- Find leading non-whitespace.
-				from
-					i := 1
-					l_count := Result.count
-				until
-					i > l_count or else not Result.item (i).is_space
-				loop
-					i := i + 1
-				end
-
-				if i > 1 then
-						-- Remove leading whitespace
-					if i < l_count then
-						Result.keep_tail (Result.count - i)
-					else
-							-- Content is all whitespace
-						Result.wipe_out
-					end
-				end
-
-					-- Find trailing non-whitespace
-				from
-					l_count := Result.count
-					i := l_count
-				until
-					i = 0 or else not Result.item (i).is_space
-				loop
-					i := i - 1
-				end
-
-				if i > 0 then
-						-- Remove trailing whitespace
-					check i_positive: i > 0 end
-					Result.keep_head (i)
-				end
+				Result := prune_whitespace (current_content_stack.item)
+			else
+				Result ?= current_content_stack.item.twin
 			end
 		end
 
@@ -126,6 +111,9 @@ feature -- Status report
 
 	has_error: BOOLEAN
 			-- Indicates if Current has an error
+		do
+			Result := internal_last_error_message /= Void
+		end
 
 feature {NONE} -- Status report
 
@@ -160,11 +148,12 @@ feature {NONE} -- Basic operations
 			current_transition_stack.wipe_out
 			current_attributes.wipe_out
 
-			has_error := False
+			internal_last_error_message := Void
 		ensure
 			current_transition_stack_is_empty: current_transition_stack.is_empty
 			current_attributes_is_empty: current_attributes.is_empty
 			not_has_error: not has_error
+			internal_last_error_message_detached: internal_last_error_message = Void
 		end
 
 feature {NONE} -- Process
@@ -175,7 +164,11 @@ feature {NONE} -- Process
 			--|       The attribute table (`current_attributes') will also have been populated.
 			--
 			-- `a_state': A state id matching a tag state described in `tag_state_transitions'
+		require
+			current_state_ensured: current_state = a_state
 		deferred
+		ensure
+			current_state_unchanged: current_state = old current_state
 		end
 
 	process_end_tag_state (a_state: NATURAL_8)
@@ -184,7 +177,11 @@ feature {NONE} -- Process
 			--|       The attribute table (`current_attributes') will also have been populated.
 			--
 			-- `a_state': A state id matching a tag state described in `tag_state_transitions'
+		require
+			current_state_ensured: current_state = a_state
 		deferred
+		ensure
+			current_state_unchanged: current_state = old current_state
 		end
 
 feature {NONE} -- Query
@@ -280,8 +277,7 @@ feature {NONE} -- Action handlers
 				current_content_stack.force (create {!STRING_32}.make_empty)
 			end
 		ensure then
-			current_transition_stack_stack_unchanged: current_transition_stack.item = old current_transition_stack.item
-				and then current_transition_stack.count = old current_transition_stack.count
+			current_transition_stack_stack_unchanged: current_transition_stack.count = old current_transition_stack.count
 		end
 
 	on_attribute (a_namespace: STRING_8; a_prefix: STRING_8; a_local_part: STRING_8; a_value: STRING_8)
@@ -342,13 +338,13 @@ feature {NONE} -- Action handlers
 
 	on_content (a_content: STRING_8) is
 			-- <Precursor>
-		local
-			l_count, i: INTEGER
 		do
-			check not_current_content_stack_is_empty: not current_content_stack.is_empty end
+			if not has_error then
+				check not_current_content_stack_is_empty: not current_content_stack.is_empty end
 
-			if a_content /= Void and then {l_content: !STRING_32} a_content.as_string_32 then
-				current_content_stack.item.append (l_content)
+				if a_content /= Void and then {l_content: !STRING_32} a_content.as_string_32 then
+					current_content_stack.item.append (l_content)
+				end
 			end
 		end
 
@@ -359,6 +355,7 @@ feature {NONE} -- Action handlers
 			l_tag_transitions: like tag_state_transitions
 			l_transitions: DS_HASH_TABLE [NATURAL_8, STRING_8]
 			l_current_transition_stack: like current_transition_stack
+			l_current_state: like current_state
 			l_next_state: NATURAL_8
 		do
 			if not has_error then
@@ -372,20 +369,28 @@ feature {NONE} -- Action handlers
 				l_current_transition_stack := current_transition_stack
 				check not_l_current_transition_stack_is_empty: not l_current_transition_stack.is_empty end
 
-				l_current_transition_stack.remove
-
 					-- Retrieve the next valid state transitions.
-				l_transitions := l_tag_transitions.item (l_current_transition_stack.item)
-				if l_transitions /= Void and then l_transitions.has (l_name) then
-					l_next_state := l_transitions.item (l_name)
-					if l_next_state /= t_none then
-						process_end_tag_state (l_next_state)
+				l_current_transition_stack.remove
+				if not l_current_transition_stack.is_empty then
+					l_current_state := current_state
+				else
+					l_current_state := t_none
+				end
+				if l_tag_transitions.has (l_current_state) then
+					l_transitions := l_tag_transitions.item (l_current_state)
+					if l_transitions /= Void and then l_transitions.has (l_name) then
+						l_next_state := l_transitions.item (l_name)
+						if l_next_state /= t_none then
+							l_current_transition_stack.force (l_next_state)
+							process_end_tag_state (l_next_state)
+							l_current_transition_stack.remove
+						end
 					end
 				end
-			end
 
-				-- Remove content
-			current_content_stack.remove
+					-- Remove content
+				current_content_stack.remove
+			end
 		end
 
 	on_report_xml_error (a_message: STRING_8)
@@ -394,8 +399,10 @@ feature {NONE} -- Action handlers
 			-- `a_message': The XML error to report.
 		do
 			if a_message /= Void and then {l_message: !STRING_32} a_message.as_string_32 then
-				has_error := True
+				internal_last_error_message := l_message
 				on_error (l_message, xml_parser.line, xml_parser.column)
+			else
+				internal_last_error_message := "Unknown error!"
 			end
 		end
 
@@ -453,12 +460,15 @@ feature {NONE} -- Conversion
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			not_a_value_is_empty: not a_value.is_empty
+		local
+			l_value: like prune_whitespace
 		do
-			if a_value.is_boolean then
-				Result := a_value.to_boolean
-			elseif v_bool_one.is_equal (a_value) or else v_bool_yes.is_case_insensitive_equal (a_value) then
+			l_value := prune_whitespace (a_value)
+			if l_value.is_boolean then
+				Result := l_value.to_boolean
+			elseif v_bool_one.is_equal (l_value) or else v_bool_yes.is_case_insensitive_equal (l_value) then
 				Result := True
-			elseif v_bool_zero.is_equal (a_value) or else v_bool_no.is_case_insensitive_equal (a_value) then
+			elseif v_bool_zero.is_equal (l_value) or else v_bool_no.is_case_insensitive_equal (l_value) then
 				Result := False
 			else
 				Result := a_default
@@ -478,9 +488,12 @@ feature {NONE} -- Conversion
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			not_a_value_is_empty: not a_value.is_empty
+		local
+			l_value: like prune_whitespace
 		do
-			if a_value.is_integer_32 then
-				Result := a_value.to_integer_32
+			l_value := prune_whitespace (a_value)
+			if l_value.is_integer_32 then
+				Result := l_value.to_integer_32
 			else
 				Result := a_default
 
@@ -511,6 +524,52 @@ feature {NONE} -- Formatting
 			not_result_is_empty: not old a_text.is_empty implies not Result.is_empty
 		end
 
+	prune_whitespace (a_value: !STRING_32): !STRING_32
+			-- Prunes all leading a trailing whitespace from `a_value' and returns the result.
+			--
+			-- `a_value': THe source value to remove leading and trailing whitespace from.
+		local
+			l_count, i: INTEGER
+		do
+			Result ?= a_value.twin
+
+				-- Find leading non-whitespace.
+			from
+				i := 1
+				l_count := Result.count
+			until
+				i > l_count or else not Result.item (i).is_space
+			loop
+				i := i + 1
+			end
+
+			if i > 1 then
+					-- Remove leading whitespace
+				if i < l_count then
+					Result.keep_tail (Result.count - i)
+				else
+						-- Content is all whitespace
+					Result.wipe_out
+				end
+			end
+
+				-- Find trailing non-whitespace
+			from
+				l_count := Result.count
+				i := l_count
+			until
+				i = 0 or else not Result.item (i).is_space
+			loop
+				i := i - 1
+			end
+
+			if i > 0 then
+					-- Remove trailing whitespace
+				check i_positive: i > 0 end
+				Result.keep_head (i)
+			end
+		end
+
 	frozen escaped_character_mapping: !DS_HASH_TABLE [!STRING_32, !STRING_32]
 			-- Character mappings, given a escape string.
 		once
@@ -535,6 +594,12 @@ feature {NONE} -- State transistions
 			-- Mapping of possible attributes of tags.
 		deferred
 		end
+
+feature {NONE} -- Internal implementation cache
+
+	internal_last_error_message: STRING_32
+			-- Cached version of `last_error_message'
+			-- Note: Do not use directly!
 
 feature {NONE} -- Tag states
 

@@ -169,18 +169,29 @@ feature {NONE} -- Attributes
 				l_cb_item.select_actions.extend (agent eb_debugger_manager.set_execution_ignoring_breakpoints (True))
 			end
 
+			Result.extend (create {EV_MENU_SEPARATOR})
+
 				--| Execution parameters
 			create l_item.make_with_text (interface_names.m_Edit_execution_parameters)
-			l_item.select_actions.extend (agent button_right_click_action (0, 0, {EV_POINTER_CONSTANTS}.right, 0, 0, 0, 0, 0))
+			l_item.select_actions.extend (agent open_execution_parameters_dialog)
 			Result.extend (l_item)
 
 				--| Execution profiles
 			profs := eb_debugger_manager.profiles
 			if profs /= Void and then profs.count > 0 then
-				Result.extend (create {EV_MENU_SEPARATOR})
 				create l_submenu.make_with_text (Interface_names.m_Execution_profiles)
 				Result.extend (l_submenu)
+
 				pn := profs.last_profile_name
+
+				create l_cb_item.make_with_text (Interface_names.l_default)
+				l_submenu.extend (l_cb_item)
+				if pn = Void then
+					l_cb_item.enable_select
+				else
+					l_cb_item.select_actions.extend (agent profs.set_last_profile_by_name (Void))
+				end
+
 				from
 					profs.start
 				until

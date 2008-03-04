@@ -223,23 +223,29 @@ feature {NONE} -- Implementation
 
 	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Show the arguments dialog box when the user right clicks the button.
+		do
+			if a_button = {EV_POINTER_CONSTANTS}.right and is_sensitive then
+				open_execution_parameters_dialog
+			end
+		end
+
+	open_execution_parameters_dialog is
+			-- Show the arguments dialog
 		local
 			args_dialog: EB_ARGUMENT_DIALOG
 			window: EB_DEVELOPMENT_WINDOW
 			dev: EV_WINDOW
 		do
-			if a_button = {EV_POINTER_CONSTANTS}.right and is_sensitive then
-				window ?= window_manager.last_focused_window
-				if window /= Void then
-					dev := window.window
-					if not argument_dialog_is_valid then
-						create args_dialog.make (window, agent launch_with_parameters (Run, ?))
-						set_argument_dialog (args_dialog)
-					else
-						argument_dialog.update
-					end
-					argument_dialog.raise
+			window ?= window_manager.last_focused_window
+			if window /= Void then
+				dev := window.window
+				if not argument_dialog_is_valid then
+					create args_dialog.make (window, agent launch_with_parameters (Run, ?))
+					set_argument_dialog (args_dialog)
+				else
+					argument_dialog.update
 				end
+				argument_dialog.raise
 			end
 		end
 

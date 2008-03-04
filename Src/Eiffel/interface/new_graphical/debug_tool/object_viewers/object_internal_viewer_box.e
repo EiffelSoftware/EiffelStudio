@@ -2,7 +2,6 @@ indexing
 	description: "Object internal viewer  ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -143,7 +143,7 @@ feature {NONE} -- Initialization
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
 			scmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.toolbar_dropdown_icon_buffer)
 			scmd.set_tooltip (interface_names.f_Open_object_tool_menu)
-			scmd.add_agent (agent open_objects_menu (mini_toolbar, 0, 0))
+			scmd.add_agent (agent open_objects_menu)
 			scmd.enable_sensitive
 			Result.force_last (scmd.new_mini_sd_toolbar_item)
 
@@ -391,7 +391,7 @@ feature {NONE} -- Interface
 			g.set_configurable_target_menu_handler (agent context_menu_handler (?, ?, ?, ?, g))
 		end
 
-	open_objects_menu (w: EV_WIDGET; ax, ay: INTEGER) is
+	open_objects_menu is
 			-- Open objects tool menu
 		require
 			is_initialized: is_initialized
@@ -400,7 +400,7 @@ feature {NONE} -- Interface
 		do
 			m := tool_menu (True)
 			if m /= Void then
-				m.show_at (w, ax, ay)
+				m.show_at (mini_toolbar, 0, 0)
 			end
 		end
 

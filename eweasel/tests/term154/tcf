@@ -1,0 +1,12 @@
+test_name 	agent-return-type-crash
+test_description A system uses an agent involving a subtype of the expected agent type whose type involves a formal generic parameter. The compiler crashes instead of accepting the code.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+test_end

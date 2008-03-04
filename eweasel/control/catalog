@@ -842,6 +842,7 @@ test	wrong-attribute-dynamic-binding	final039 tcf pass finalizing
 test	dead-code-catcall			final040 tcf pass finalizing
 test	oms-ec-precondition-violation	final041 tcf pass finalizing ec_precondition
 test	inlining-finalization-crash	final042 tcf pass finalizing
+test	inlining-on-named-tuple-crash	final043 tcf pass finalizing
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime

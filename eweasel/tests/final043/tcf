@@ -1,0 +1,14 @@
+test_name inlining-on-named-tuple-crash
+test_description Trying to inline some code whose target is a named tuple element causes a crash.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_final
+compile_result   ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

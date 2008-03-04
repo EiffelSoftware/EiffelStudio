@@ -12,12 +12,12 @@ class
 
 feature -- Factory
 
-	create_code_built_in_literal_declaration (a_id: !STRING_32): !CODE_LITERAL_DECLARATION
+	create_code_built_in_literal_declaration (a_id: !STRING_8): !CODE_LITERAL_DECLARATION
 			-- Creates a built-in code literal declaration.
 			--
 			-- `a_id': A code declaration identifier.
 		do
-			create {!CODE_BUILT_IN_LITERAL_DECLARATION} Result.make (a_id, ({!CODE_FACTORY}) #? Current)
+			create {!CODE_BUILT_IN_LITERAL_DECLARATION} Result.make (a_id)
 		ensure
 			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id)
 			result_is_built_in: Result.is_built_in
@@ -26,21 +26,21 @@ feature -- Factory
 	create_code_category_collection: !CODE_CATEGORY_COLLECTION
 			-- Creates a code category collection node.
 		do
-			create Result.make (({!CODE_FACTORY}) #? Current)
+			create Result.make
 		end
 
 	create_code_declaration_collection: !CODE_DECLARATION_COLLECTION
 			-- Creates a code declarations collection node.
 		do
-			create Result.make (({!CODE_FACTORY}) #? Current)
+			create Result.make
 		end
 
-	create_code_literal_declaration (a_id: !STRING_32): !CODE_LITERAL_DECLARATION
+	create_code_literal_declaration (a_id: !STRING_8): !CODE_LITERAL_DECLARATION
 			-- Creates a code literal declaration.
 			--
 			-- `a_id': A code declaration identifier.
 		do
-			create Result.make (a_id, ({!CODE_FACTORY}) #? Current)
+			create Result.make (a_id)
 		ensure
 			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id)
 			not_result_is_built_in_set: not Result.is_built_in
@@ -49,7 +49,7 @@ feature -- Factory
 	create_code_metadata: !CODE_METADATA
 			-- Creates a code metadata section.
 		do
-			create Result.make (({!CODE_FACTORY}) #? Current)
+			create Result.make
 		end
 
 	create_code_numeric_version (a_major, a_minor, a_revision, a_qfe: NATURAL_16): !CODE_NUMERIC_VERSION
@@ -66,7 +66,7 @@ feature -- Factory
 	create_code_template_collection: !CODE_TEMPLATE_COLLECTION
 			-- Creates a code templates collections node.
 		do
-			create Result.make (({!CODE_FACTORY}) #? Current)
+			create Result.make
 		end
 
 	create_code_template_defintion: CODE_TEMPLATE_DEFINITION
@@ -78,7 +78,7 @@ feature -- Factory
 	create_code_template: !CODE_TEMPLATE
 			-- Creates a simple, unversioned code template.
 		do
-			create Result.make (({!CODE_FACTORY}) #? Current)
+			create Result.make
 		end
 
 	create_code_version (a_version: !STRING_32): !CODE_VERSION
@@ -95,7 +95,7 @@ feature -- Factory
 			--
 			-- `a_version': The version to bind the code template to.
 		do
-			create Result.make (a_version, ({!CODE_FACTORY}) #? Current)
+			create Result.make (a_version)
 		end
 
 feature -- Token factory

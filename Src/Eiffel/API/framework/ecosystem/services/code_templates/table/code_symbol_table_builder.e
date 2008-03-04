@@ -1,53 +1,73 @@
 indexing
 	description: "[
-		Represents an actual code template tokenized code template, bound to a minimum version of the Eiffel compiler.
+		Template visitor for populating a symbol table for code template evaluation.
 	]"
-	doc: "wiki://Code Templates:Versioned Code Templates"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	CODE_VERSIONED_TEMPLATE
+	CODE_SYMBOL_TABLE_BUILDER
 
 inherit
-	CODE_TEMPLATE
-		rename
-			make as make_template
-		end
+	CODE_TEMPLATE_VISITOR_ITERATOR
 
 create
-	make
+	make,
+	make_with_table
 
 feature {NONE} -- Initialization
 
-	make (a_version: like version)
-			-- Initialize a code template for a minimum version of the compiler
-			--
-			-- `a_version': The minimum version of the compiler the code template will compile with.
+	make
+			-- Initialize symbol table builder
 		do
-			version := a_version
-			make_template
+			create symbol_table.make
+		end
+
+	make_with_table (a_table: like symbol_table)
+			-- Initialize symbol table builder.
+			--
+			-- `a_table': A symbol table to populate with the declaration default values.
+		do
+			symbol_table := a_table
 		ensure
-			version_set: version = a_version
+			symbol_table_set: symbol_table = a_table
 		end
 
 feature -- Access
 
-	version: !CODE_VERSION
-			-- Minumum compiled version for the template
+	symbol_table: !CODE_SYMBOL_TABLE
+			-- Build code symbol table
 
-feature -- Query
+feature {CODE_NODE} -- Processing
 
-	is_compatible_with (a_version: !CODE_VERSION): BOOLEAN
-			-- Determines if the Current template is compatible with the specificed version
-			--
-			-- `a_version': The other version to check compatibilty with.
-			-- `Result': True if Current is compatable with the supplied version
+	process_code_literal_declaration (a_value: !CODE_LITERAL_DECLARATION) is
+			-- <Precursor>
+		local
+			l_value: !CODE_SYMBOL_VALUE
 		do
-			Result := version.is_compatible_with (a_version)
+			create l_value.make (a_value.default_value)
+			symbol_table.put (l_value, a_value.id)
 		end
+
+	process_code_template (a_value: !CODE_TEMPLATE)
+			-- <Precursor>
+		do
+		end
+
+	process_code_metadata (a_value: !CODE_METADATA)
+			-- <Precursor>
+		do
+		end
+
+	process_code_versioned_template (a_value: !CODE_VERSIONED_TEMPLATE)
+			-- <Precursor>
+		do
+		end
+
+--invariant
+--	symbol_table_attached: symbol_table /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

@@ -18,7 +18,7 @@ create
 
 feature -- Query
 
-	declaration (a_id: !STRING_32): CODE_DECLARATION
+	declaration (a_id: !STRING_8): CODE_DECLARATION
 			-- Retrieve a code declaration via an identifier
 			--
 			-- `a_id': A case-insensitive declaration identifier to retrieve a code declaration.
@@ -31,12 +31,12 @@ feature -- Query
 		do
 			l_items := items
 			if not l_items.is_empty and then {l_cursor: !DS_BILINEAR_CURSOR [!CODE_DECLARATION]} l_items.new_cursor then
-				from l_items.start until l_items.after or Result /= Void loop
+				from l_cursor.start until l_cursor.after or Result /= Void loop
 					l_decl := l_cursor.item
 					if l_decl.id.is_case_insensitive_equal (a_id) then
 						Result := l_decl
 					else
-						l_items.forth
+						l_cursor.forth
 					end
 				end
 			end

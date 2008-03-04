@@ -31,10 +31,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: like id; a_factory: like code_factory)
+	make (a_id: like id)
 			-- <Precursor>
 		do
-			Precursor {CODE_LITERAL_DECLARATION} (a_id, a_factory)
+			Precursor {CODE_LITERAL_DECLARATION} (a_id)
 			set_is_editable (False)
 		ensure then
 			not_is_editable: not is_editable

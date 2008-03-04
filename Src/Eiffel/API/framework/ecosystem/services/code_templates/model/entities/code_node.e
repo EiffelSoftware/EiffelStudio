@@ -12,15 +12,10 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_factory: like code_factory)
+	make
 			-- Initializes a code node.
-			--
-			-- `a_factory': Factory used for creating nodes.
 		do
-			code_factory := a_factory
-			initialize_nodes (a_factory)
-		ensure
-			code_factory_set: code_factory = a_factory
+			initialize_nodes (code_factory)
 		end
 
 	initialize_nodes (a_factory: like code_factory)
@@ -37,8 +32,12 @@ feature -- Access
 		deferred
 		end
 
+feature {CODE_NODE} -- Access
+
 	code_factory: !CODE_FACTORY
 			-- Factory used for creating code nodes
+		deferred
+		end
 
 feature -- Visitor
 

@@ -19,19 +19,17 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_id: like id; a_factory: like code_factory)
+	make (a_id: like id)
 			-- Initializes a code declaration node.
 			--
 			-- `a_id': A declaration identifier.
-			-- `a_factory': Factory used for creating nodes.
 		require
 			not_a_id_is_empty: not a_id.is_empty
 		do
 			set_id (a_id)
-			make_sub_node (a_factory)
+			make_sub_node
 		ensure
 			id_set: id.is_equal (a_id)
-			code_factory_set: code_factory = a_factory
 		end
 
 	initialize_nodes (a_factory: like code_factory)
@@ -44,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	id: !STRING_32 assign set_id
+	id: !STRING_8 assign set_id
 			-- Declaration identifier
 
 	description: !STRING_32 assign set_description

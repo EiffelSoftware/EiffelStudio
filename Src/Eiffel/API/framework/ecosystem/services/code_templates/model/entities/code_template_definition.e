@@ -12,11 +12,25 @@ class
 
 inherit
 	CODE_NODE
+		rename
+			make as make_node
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
+
+	make (a_factory: like code_factory)
+			-- Initializes a code node.
+			--
+			-- `a_factory': Factory used for creating nodes.
+		do
+			code_factory := a_factory
+			make_node
+		ensure
+			code_factory_set: code_factory = a_factory
+		end
 
 	initialize_nodes (a_factory: like code_factory)
 			-- Initializes the default nodes for Current.
@@ -47,6 +61,11 @@ feature -- Access
 
 	templates: !CODE_TEMPLATE_COLLECTION assign set_templates
 			-- Code templates (versioned and unversioned) for a given code file.
+
+feature {CODE_NODE} -- Access
+
+	code_factory: !CODE_FACTORY
+			-- Factory used for creating code nodes
 
 feature -- Element change
 
@@ -108,6 +127,40 @@ feature -- Element change
 			templates_assigned: templates = a_templates
 			templates_is_parented: templates.is_parented
 			templates_parent_set: templates.parent = Current
+		end
+
+feature -- Query
+
+	applicable_default_item: CODE_TEMPLATE
+			-- Attempts to retreive the default (unversioned) code template.
+			--
+			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
+		do
+			Result := templates.applicable_default_item
+		ensure
+			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
+		end
+
+	applicable_item (a_version: !STRING_32): CODE_TEMPLATE
+			-- Attempts to retreive the most applicable code template, given a string version.
+			--
+			-- `a_version': Version to find the most applicable template with.
+			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
+		require
+			not_a_version_is_empty: not a_version.is_empty
+		do
+			Result := templates.applicable_item (a_version)
+		end
+
+	applicable_item_with_version (a_version: !CODE_VERSION): CODE_TEMPLATE
+			-- Attempts to retreive the most applicable code template, given a version.
+			--
+			-- `a_version': Version to find the most applicable template with.
+			-- `Result': A code template that best matches the supplied [minimum] version; Otherwise Void if not applicable template was located.
+		require
+			not_a_version_is_default: not a_version.is_equal (create {!CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
+		do
+			Result := templates.applicable_item_with_version (a_version)
 		end
 
 feature -- Visitor

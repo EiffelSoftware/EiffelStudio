@@ -44,7 +44,6 @@ feature -- Access
 	printable_text: like text
 			-- <Precursor>
 		do
-			check is_evaluated: is_evaluated end
 			if internal_printable_text /= Void then
 				create Result.make_from_string (internal_printable_text)
 			end
@@ -54,11 +53,6 @@ feature -- Status report
 
 	is_editable: BOOLEAN assign set_is_editable
 			-- <Precursor>
-
-feature {CODE_NODE} -- Basic operations
-
-	is_evaluated: BOOLEAN
-			-- Has the current node been evaluated, by calling `evaluate'?
 
 feature -- Status setting
 
@@ -81,8 +75,6 @@ feature {CODE_NODE} -- Basic operations
 		local
 			l_value: !CODE_SYMBOL_VALUE
 		do
-			is_evaluated := False
-
 			if {l_text: !STRING_8} text.as_string_8 and then a_table.has_id (l_text) then
 					-- Fetch value from the symbol table
 				l_value := a_table.item (l_text)
@@ -91,10 +83,6 @@ feature {CODE_NODE} -- Basic operations
 					-- Use the ID
 				internal_printable_text := text
 			end
-
-			is_evaluated := True
-		ensure
-			is_evaluated: is_evaluated
 		end
 
 feature -- Output

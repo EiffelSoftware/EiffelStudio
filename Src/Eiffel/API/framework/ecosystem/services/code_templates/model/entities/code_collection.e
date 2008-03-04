@@ -31,6 +31,21 @@ feature -- Access
 			Result ?= internal_items
 		end
 
+feature {NONE} -- Access
+
+	item_equality_tester: ?KL_EQUALITY_TESTER [!G]
+			-- Optional equality tester for item comparison.
+		do
+		end
+
+feature -- Query
+
+	has (a_item: !G): BOOLEAN
+			-- Determines if a given item exists in the collection
+		do
+			Result := internal_items.has (a_item)
+		end
+
 feature -- Extension
 
 	extend (a_item: !G)
@@ -38,11 +53,11 @@ feature -- Extension
 			--
 			-- `a_item': The item to add to the collection.
 		require
-			not_items_has_a_items: not items.has (a_item)
+			not_items_has_a_items: not has (a_item)
 		do
 			internal_items.force_last (a_item)
 		ensure
-			items_has_a_items: items.has (a_item)
+			items_has_a_items: has (a_item)
 		end
 
 feature -- Removal
@@ -52,13 +67,13 @@ feature -- Removal
 			--
 			-- `a_item': The item to remove from the collection.
 		require
-			items_has_a_items: items.has (a_item)
+			items_has_a_items: has (a_item)
 		do
 			internal_items.start
 			internal_items.search_forth (a_item)
 			internal_items.remove_at
 		ensure
-			not_items_has_a_items: not items.has (a_item)
+			not_items_has_a_items: not has (a_item)
 		end
 
 feature {NONE} -- Internal implementation cache

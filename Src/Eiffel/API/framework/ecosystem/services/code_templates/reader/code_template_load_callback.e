@@ -138,11 +138,11 @@ feature {NONE} -- Production processing
 			last_code_template_definition := code_factory.create_code_template_defintion
 
 				-- Add built-in declarations
-			if {l_selected: !STRING_32} {CODE_TEMPLATE_ENTITY_NAMES}.selected_token_name.as_string_32 then
+			if {l_selected: !STRING_8} {CODE_TEMPLATE_ENTITY_NAMES}.selected_token_name.as_string_8 then
 					-- Adds built-in 'selected' text declaration
 				last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration (l_selected))
 			end
-			if {l_cursor: !STRING_32} {CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name.as_string_32 then
+			if {l_cursor: !STRING_8} {CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name.as_string_8 then
 					-- Adds built-in 'cursor' text declaration
 				last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration (l_cursor))
 			end
@@ -210,9 +210,16 @@ feature {NONE} -- Production processing
 			-- Processes a metadata category.
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
+		local
+			l_categories: !CODE_CATEGORY_COLLECTION
+			l_category: like current_content
 		do
-			if not current_content.is_empty then
-				last_code_template_definition.metadata.categories.extend (current_content)
+			l_category := current_content
+			if not l_category.is_empty then
+				l_categories := last_code_template_definition.metadata.categories
+				if not l_categories.has (l_category) then
+					l_categories.extend (l_category)
+				end
 			end
 		end
 
@@ -237,7 +244,7 @@ feature {NONE} -- Production processing
 
 				-- Fetch literal ID
 			l_attributes := current_attributes
-			if l_attributes.has (at_id) and then {l_id: !STRING_32} l_attributes.item (at_id) and then not l_id.is_empty then
+			if l_attributes.has (at_id) and then {l_id: !STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
 				if last_code_template_definition.declarations.declaration (l_id) = Void or else not is_strict then
 					l_literal := code_factory.create_code_literal_declaration (l_id)
 					if l_attributes.has (at_editable) and then {l_editable: !STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
@@ -320,7 +327,7 @@ feature {NONE} -- Action handlers
 	on_error (a_msg: !STRING_32; a_line: INTEGER_32; a_char: INTEGER_32)
 			-- <Precursor>
 		do
-
+			xml_parser.abort
 		end
 
 	on_warning (a_msg: !STRING_32; a_line: INTEGER_32; a_char: INTEGER_32)

@@ -260,10 +260,18 @@ feature {NONE} -- Implementation
 			not_craeted: wel_bitmap = Void
 		local
 			l_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_pixmap_imp: EV_PIXMAP_IMP_STATE
 		do
 			l_buffer_imp ?= a_pixel_buffer.implementation
 			check not_void: l_buffer_imp /= Void end
-			wel_bitmap := l_buffer_imp.gdip_bitmap.new_bitmap
+			if l_buffer_imp.is_gdi_plus_installed then
+				wel_bitmap := l_buffer_imp.gdip_bitmap.new_bitmap
+			else
+				l_pixmap_imp ?= l_buffer_imp.pixmap.implementation
+				check not_void: l_pixmap_imp /= Void end
+				wel_bitmap := l_pixmap_imp.get_bitmap
+			end
+
 		ensure
 			created: wel_bitmap /= Void
 		end
@@ -298,7 +306,11 @@ feature {NONE} -- Implementation
 				wel_cursor := Void
 			end
 			if wel_bitmap /= Void and then wel_bitmap.exists then
-				wel_bitmap.delete
+				if wel_bitmap.reference_tracked then
+					wel_bitmap.decrement_reference
+				else
+					wel_bitmap.delete
+				end
 				wel_bitmap := Void
 			end
 			if wel_mask_bitmap /= Void and then wel_mask_bitmap.exists then

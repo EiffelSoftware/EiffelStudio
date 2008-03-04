@@ -466,6 +466,7 @@ feature -- Accelerator, focus label and menu name
 	m_Disable_stop_points: STRING_GENERAL is	do Result := locale.translation("&Disable All Breakpoints")	end
 	m_Debug_block: STRING_GENERAL is			do Result := locale.translation("E&mbed in %"Debug...%"%TCtrl+D")	end
 	m_Execution_parameters: STRING_GENERAL is	do Result := locale.translation ("Execution &Parameters") end
+	m_Execution_profiles: STRING_GENERAL is	do Result := locale.translation ("Execution Pro&files") end
 	m_Editor: STRING_GENERAL is					do Result := locale.translation("&Editor")	end
 	m_Eiffel_introduction: STRING_GENERAL is	do Result := locale.translation("&Introduction to Eiffel")	end
 	f_Enable_stop_points: STRING_GENERAL is		do Result := locale.translation("Enable all breakpoints")	end

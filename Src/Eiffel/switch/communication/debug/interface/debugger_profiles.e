@@ -96,13 +96,23 @@ feature -- Element change
 		end
 
 	set_last_profile (v: like profile) is
-			-- Set `last_profile_name' to `v'
+			-- Set `last_profile_name' related to `v'
 		do
 			if v = Void then
 				last_profile_name := Void
 			else
 				last_profile_name := v.name
 				force (v.params, v.name)
+			end
+		end
+
+	set_last_profile_by_name (n: like last_profile_name) is
+			-- Set `last_profile_name' to `n'
+		do
+			if n /= Void and then has (n) then
+				set_last_profile (profile (n))
+			else
+				set_last_profile (Void)
 			end
 		end
 
@@ -180,6 +190,12 @@ feature -- Cursor movement
 			not_off: not after
 		do
 			Result := internal_storage.item.name
+		end
+
+	count: INTEGER is
+			-- Number of items.
+		do
+			Result := internal_storage.count
 		end
 
 feature {NONE} -- Implementation

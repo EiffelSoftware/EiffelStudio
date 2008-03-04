@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -229,12 +229,17 @@ feature -- Query
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
 		do
-			create l_file.make_open_read (a_file.as_string_8)
-			create l_reader.make (l_file)
-			l_reader.set_for_reading
-			create l_facility
-			Result ?=  l_facility.retrieved (l_reader, True)
-			l_file.close
+			create l_file.make (a_file.as_string_8)
+			if l_file.exists then
+				l_file.open_read
+				create l_reader.make (l_file)
+				l_reader.set_for_reading
+				create l_facility
+				Result ?= l_facility.retrieved (l_reader, True)
+			end
+			if not l_file.is_closed then
+				l_file.close
+			end
 		end
 
 	top_container: EV_WIDGET

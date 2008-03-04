@@ -1,11 +1,14 @@
 indexing
-	description: "stores and manages jvm classes. each class is uniquly identified by a type id.%
-                % additionaly each class has a `qualified_name'. This class %
-                %also contains some convenience functions for working %
-                %with `type_id's, `feature_id's and `routine_id's"
+	description: "[
+		Stores and manages jvm classes. each class is uniquly identified by a type id.
+		additionaly each class has a `qualified_name'. This class
+		also contains some convenience functions for working
+		with `type_id's, `feature_id's and `routine_id's
+                
+		note: do not use directly. use SHARED_JVM_CLASS_REPOSITORY instead
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "do not use directly. use SHARED_JVM_CLASS_REPOSITORY instead"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,15 +18,15 @@ class
 
 create {SHARED_JVM_CLASS_REPOSITORY} -- This class must be used by SHARED_JVM_CLASS_REPOSITORY only.
 	make
-			
+
 feature {NONE} -- Initialization
-			
+
 	make is
 		do
 		end
-			
+
 feature {ANY} -- Status
-			
+
 	has_by_id (id: INTEGER): BOOLEAN is
 			-- is a class with `id' present in repository?
 		require
@@ -39,7 +42,7 @@ feature {ANY} -- Status
 				end
 			end
 		end
-			
+
 	has_by_qualified_name (n: STRING): BOOLEAN is
 			-- is a class with name `n' present in repository?
 		require
@@ -66,9 +69,9 @@ feature {ANY} -- Status
 				end
 			end
 		end
-			
+
 	is_valid_feature_id (type_id, feature_id: INTEGER): BOOLEAN is
-			-- is `feature_id' a valid feature id for the class with the 
+			-- is `feature_id' a valid feature id for the class with the
 			-- type id `type_id' ?
 		require
 			valid_type_id: valid_id (type_id)
@@ -76,9 +79,9 @@ feature {ANY} -- Status
 			Result := item (type_id).features.valid_index (feature_id) and then
 			item (type_id).features.item (feature_id) /= Void
 		end
-			
+
 	is_written_feature_by_id (type_id, feature_id: INTEGER): BOOLEAN is
-			-- is the feature with of class `type_id' with feature id 
+			-- is the feature with of class `type_id' with feature id
 			-- `feature_id' a written feature?
 		require
 			valid_type_id: valid_id (type_id)
@@ -95,7 +98,7 @@ feature {ANY} -- Status
 		do
 			Result := id > 0
 		end
-			
+
 	item (id: INTEGER): JVM_CLASS is
 			-- access class with type id `id'
 		require
@@ -103,7 +106,7 @@ feature {ANY} -- Status
 		do
 			Result := repository.item (id)
 		end
-			
+
 	item_by_qualified_name (n: STRING): JVM_CLASS is
 			-- access class with qualified name `n'
 		require
@@ -133,7 +136,7 @@ feature {ANY} -- Status
 		end
 
 feature {ANY} -- Element Change
-			
+
 	put (n: STRING; id: INTEGER) is
 			-- adds a new java class to the repository
 			-- `n' is the fully qualified java class name
@@ -157,7 +160,7 @@ feature {ANY} -- Element Change
 			class_put: has_by_id (id)
 			name_set: item (id).qualified_name.is_equal (n)
 		end
-			
+
 	set_capacity (a: INTEGER) is
 		do
 			if
@@ -166,9 +169,9 @@ feature {ANY} -- Element Change
 				create repository.make (0, a)
 			end
 		end
-			
+
 feature {ANY} -- Code Generation
-			
+
 	generate_byte_code is
 			-- generate jvm byte code for each class in the repository
 			-- that needs to be generated (excluding external and basic types)
@@ -190,17 +193,17 @@ feature {ANY} -- Code Generation
 				i := i + 1
 			end
 		end
-			
+
 feature {NONE} -- Implementation
-			
+
 	repository: ARRAY [JVM_CLASS]
 			-- actual class container
 			-- the index of a class must always be it's `type_id'
-			
+
 	initial_repository_size: INTEGER is 100;
 			-- constant that defined the intial size of repository
 			-- for performance tweaks only
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

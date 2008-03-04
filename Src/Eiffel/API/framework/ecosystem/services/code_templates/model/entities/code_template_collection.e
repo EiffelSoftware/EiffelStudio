@@ -18,6 +18,30 @@ create
 
 feature -- Query
 
+	applicable_default_item: CODE_TEMPLATE
+			-- Attempts to retreive the default (unversioned) code template.
+			--
+			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
+		local
+			l_template: CODE_TEMPLATE
+			l_versioned_template: CODE_VERSIONED_TEMPLATE
+		do
+			if {l_templates: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE]} items.new_cursor then
+				from l_templates.start until l_templates.after or Result /= Void loop
+					l_template := l_templates.item
+					l_versioned_template ?= l_template
+					if l_versioned_template = Void then
+							-- Template is not versioned, so take the first non-versioned
+						Result := l_template
+					else
+						l_templates.forth
+					end
+				end
+			end
+		ensure
+			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
+		end
+
 	applicable_item (a_version: !STRING_32): CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a string version.
 			--
@@ -90,7 +114,6 @@ feature -- Query
 								-- No versioned template was matched, use a non-versioned template if available.
 							Result := l_template
 						end
-
 					end
 				end
 			end

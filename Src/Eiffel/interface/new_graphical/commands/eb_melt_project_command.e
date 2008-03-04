@@ -12,7 +12,8 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			tooltext,
-			is_tooltext_important
+			is_tooltext_important,
+			new_sd_toolbar_item
 		end
 
 	EB_SHARED_GRAPHICAL_COMMANDS
@@ -383,6 +384,32 @@ feature {NONE} -- Execution
 		end
 
 feature {NONE} -- Implementation
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON
+			-- Create a new docking tool bar button for this command.
+		do
+			create Result.make (Current)
+			initialize_sd_toolbar_item (Result, display_text)
+			Result.select_actions.extend (agent execute)
+			Result.set_menu (drop_down_menu)
+		end
+
+	drop_down_menu: EV_MENU is
+			-- Drop down menu for `new_sd_toolbar_item'.
+		local
+			l_item: EV_MENU_ITEM
+			l_cmd: EB_TOOLBARABLE_COMMAND
+		do
+			create Result
+			Result.extend (new_menu_item)
+			Result.extend (discover_melt_cmd.new_menu_item)
+			Result.extend (override_scan_cmd.new_menu_item)
+			Result.extend (freeze_project_cmd.new_menu_item)
+			Result.extend (finalize_project_cmd.new_menu_item)
+			Result.extend (precompilation_cmd.new_menu_item)
+		ensure
+			not_void: Result /= Void
+		end
 
 	tooltext: STRING_GENERAL is
 			-- Text displayed in toolbar

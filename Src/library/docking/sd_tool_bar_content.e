@@ -12,7 +12,7 @@ inherit
 	HASHABLE
 
 	SD_ACCESS
-	
+
 create
 	make_with_items,
 	make_with_tool_bar
@@ -24,29 +24,11 @@ feature {NONE} -- Initlization
 		require
 			a_title_not_void: a_unique_title /= Void
 			a_items_not_void: a_items /= Void
-		local
-			l_button: EV_TOOL_BAR_BUTTON
 		do
 			unique_title := a_unique_title
 			-- We set display title same as unique title by default.
 			title := a_unique_title
 			items := a_items
-
-			create tool_bar_items_texts.make (items.count)
-			from
-				items.start
-				tool_bar_items_texts.start
-			until
-				items.after
-			loop
-				l_button ?= items.item
-				if l_button /= Void then
-					tool_bar_items_texts.extend (l_button.text)
-				else
-					tool_bar_items_texts.extend ("")
-				end
-				items.forth
-			end
 		ensure
 			set: unique_title = a_unique_title
 			set: items = a_items
@@ -667,8 +649,8 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			end
 		end
 
-	tool_bar_items_texts: ARRAYED_LIST [STRING_GENERAL];
-			-- All strings on `items'.
+--	tool_bar_items_texts: ARRAYED_LIST [STRING_GENERAL];
+--			-- All strings on `items'.
 
 	item_start_index (a_group_index: INTEGER; a_inclue_invisible: BOOLEAN): INTEGER is
 			-- Start index in `items' of a group. Start index not include SD_TOOL_BAR_SEPARATOR.

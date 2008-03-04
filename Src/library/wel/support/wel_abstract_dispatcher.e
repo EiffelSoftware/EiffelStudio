@@ -112,6 +112,7 @@ feature {NONE} -- Implementation
 		rescue
 			if window /= Void and then need_decrement then
 				window.decrement_level
+				need_decrement := False
 			end
 			retried := True
 			retry
@@ -188,6 +189,7 @@ feature {NONE} -- Implementation
 		rescue
 			if window /= Void and then need_decrement then
 				window.decrement_level
+				need_decrement := False
 			end
 			retried := True
 			retry

@@ -260,7 +260,7 @@ test	compare-procedure-to-void	valid107 tcf pass validity
 test	explicit-creation-bad-generic	valid108 tcf pass validity
 test	tricky-constraint-with-generic	valid109 tcf pass validity
 test	vgcc-called-vuar1		valid112 tcf fail validity
-test	procedure-in-tuple		valid113 tcf pass validity
+test	procedure-in-tuple		valid113 tcf pass validity tuple
 test	generic-constraint-not-used	valid114 tcf fail validity
 test	two-generic-precursors		valid115 tcf fail validity
 test	invariant-result-address	valid116 tcf pass validity
@@ -310,7 +310,7 @@ test	inspect-with-anchor-type 	valid159 tcf pass validity
 test	array-double-array-none 	valid160 tcf pass validity
 test	missing-vuar-on-argument-anchor 	valid161 tcf fail validity
 test	vtat-reported-on-valid-anchoring 	valid162 tcf pass validity
-test	valid-manifest-arrays-tuples 	valid163 tcf pass validity
+test	valid-manifest-arrays-tuples 	valid163 tcf pass validity tuple
 test	agent-on-anchored-target 	valid164 tcf pass validity
 test	creation-on-anchor-which-is-formal 	valid165 tcf pass validity
 test	formal-conversion-to-reference 	valid166 tcf pass validity
@@ -325,7 +325,7 @@ test	override-bogus-export-error		valid174 tcf pass validity
 test	static-call-on-formal-generic-type valid175 tcf pass validity
 test	inherited-generic-type-validation valid176 tcf fail validity
 test	invalid-assignment-to-like-curent	valid177 tcf pass validity
-test	named-tuple-creation		valid178 tcf pass validity
+test	named-tuple-creation		valid178 tcf pass validity tuple
 test	formal-as-argument-no-conformance	valid179 tcf pass validity
 test	inherited-infix-type-checking-failure	valid180 tcf pass validity
 test	inherited-agent-with-formal-in-assertions	valid181 tcf pass validity
@@ -353,14 +353,14 @@ test	single-constraint-formal-renaming	valid202 tcf pass validity formal generic
 test	inherit-from-expanded				valid203 tcf pass validity frozen expanded
 test	recheck-assertion-feature-renamed	valid204 tcf pass validity assertion renaming
 test	recursive-generic-constraint-with-creation	valid205 tcf pass validity
-test	named-tuple-in-parent-constraint-clauses	valid206 tcf pass validity
+test	named-tuple-in-parent-constraint-clauses	valid206 tcf pass validity tuple
 test	valid-generic-derivation	valid207 tcf pass validity
 test	creation-constraint-like-current-deferred	valid208 tcf pass validity
 test	creation-constraint-like-current-deferred2	valid209 tcf pass validity
 test	vtcg-expanded	valid210 tcf pass validity
 test	vtcg-generic	valid211 tcf pass validity
 test	wrong-vgcc		valid212 tcf pass validity
-test	named-tuple-convert-conformance		valid213 tcf fail validity
+test	named-tuple-convert-conformance		valid213 tcf fail validity tuple
 test	nested-generics-creation-readiness	valid214 tcf pass validity
 test	static-comparison-test				valid215 tcf fail validity
 test	generic-creation-constraint			valid216 tcf fail validity
@@ -372,7 +372,7 @@ test	multi-error-degree-4	multierr001 tcf pass multi-errors
 test	degree-5-forget-error	multierr002 tcf pass multi-errors
 test	degree-5-infinite-loop	multierr003 tcf pass multi-errors
 test	multi-invalid-signature	multierr004 tcf pass multi-errors
-test	error-in-manifest-array-tuple	multierr005 tcf pass multi-errors
+test	error-in-manifest-array-tuple	multierr005 tcf pass multi-errors tuple
 test	error-in-elsif			multierr006 tcf pass multi-errors
 test	failing-to-recompile-descendant	multierr007 tcf pass multi-errors
 test	recompile-descendant-code	multierr008 tcf pass multi-errors
@@ -534,9 +534,9 @@ test	fix-veen-add-vrfa		incr137  tcf pass incrementality
 test	vtcg-weasel			incr138  tcf pass incrementality
 test	rename-get-new-precursor	incr139  tcf pass incrementality
 test	add-remove-root-generic		incr140  tcf pass incrementality
-test	none-then-tuple-generic		incr141  tcf pass incrementality
+test	none-then-tuple-generic		incr141  tcf pass incrementality tuple
 test	make-root-expanded-freeze	incr142  tcf pass incrementality
-test	change-expanded-tuple-bit	incr143  tcf pass incrementality
+test	change-expanded-tuple-bit	incr143  tcf pass incrementality tuple
 test	vtcg-remove-creation-feat	incr144  tcf fail incrementality
 test	add-remove-vsrt			incr145  tcf pass incrementality
 test	add-remove-constraint-vtcg	incr146  tcf pass incrementality
@@ -761,7 +761,7 @@ test	increment-character	 	melt073  tcf pass execution
 test	int64-cast-uint64	 	melt074  tcf pass execution
 test	character_32-inspect 	melt075  tcf pass execution
 test	invariant-check-melted-agent-callee melt076  tcf pass execution
-test	dollar-with-tuple		melt077  tcf pass execution
+test	dollar-with-tuple		melt077  tcf pass execution tuple
 test	dollar-with-expanded-attribute	melt078  tcf pass execution
 test	runtime-stack-corruption	melt079  tcf pass execution
 test	nan-comparison			melt080  tcf pass execution
@@ -782,12 +782,12 @@ test	deep-clone-frozen-not-equal	freez010  tcf pass freezing
 test	compare-frozen-high-bit-chars	freez011  tcf pass freezing
 test	compare-frozen-real-arg		freez012  tcf pass freezing
 test	frozen-retried-precondition	freez013  tcf pass freezing
-test	tuple-expanded-and-integer	freez014  tcf pass freezing
+test	tuple-expanded-and-integer	freez014  tcf pass freezing tuple
 test	address-of-redefined-routine	freez015  tcf fail freezing
 test	integer-8-generating-type	freez016  tcf pass freezing
 test	frozen-agent-lighter-argument	freez017  tcf pass freezing
 test	frozen-prefix-attribute		freez018  tcf pass freezing
-test	tuple-i16-plus-i8		freez019  tcf pass freezing
+test	tuple-i16-plus-i8		freez019  tcf pass freezing tuple
 test	minus-minus-double		freez020  tcf pass freezing
 test	dispose-with-rescue		freez021  tcf pass freezing
 test	anchored-double-function	freez022  tcf fail freezing
@@ -842,7 +842,7 @@ test	wrong-attribute-dynamic-binding	final039 tcf pass finalizing
 test	dead-code-catcall			final040 tcf pass finalizing
 test	oms-ec-precondition-violation	final041 tcf pass finalizing ec_precondition
 test	inlining-finalization-crash	final042 tcf pass finalizing
-test	inlining-on-named-tuple-crash	final043 tcf pass finalizing
+test	inlining-on-named-tuple-crash	final043 tcf pass finalizing tuple
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime
@@ -957,7 +957,7 @@ test	strip-bad-linked-list		exec101  tcf pass execution
 test	manifest-array-of-tiny-strings	exec102  tcf pass execution
 test	expanded-pass-current		exec103  tcf fail execution
 test	exception-in-dispose		exec104  tcf fail execution
-test	freeze-expanded-tuple-attr	exec105  tcf pass execution
+test	freeze-expanded-tuple-attr	exec105  tcf pass execution tuple
 test	put-character-255		exec106  tcf pass execution
 test	out-of-memory-panic		exec107  tcf pass execution
 test	redefine-expanded-as-attribute	exec108  tcf pass execution
@@ -975,17 +975,17 @@ test	safe-call-from-rescue		exec119  tcf pass execution
 test	multithreaded-string-blank	exec120  tcf pass execution
 test	assign-attempt-affects-source	exec121  tcf pass execution
 test	wrong-generating-type		exec122  tcf pass execution
-test	long-tuple-corrupts-memory	exec123  tcf pass execution
+test	long-tuple-corrupts-memory	exec123  tcf pass execution tuple
 test	replace-substring-with-self	exec124  tcf pass execution
 test	generic-generating-type		exec125  tcf fail execution
-test	create-tuple-of-tuples		exec126  tcf fail execution
+test	create-tuple-of-tuples		exec126  tcf fail execution tuple
 test	print-big-constant		exec127  tcf pass execution
 test	assign-attempt-redefined-type	exec128  tcf pass execution
 test	melted-boolean-to-integer	exec129  tcf pass execution
 test	negative-integer-8		exec130  tcf pass execution
 test	melted-memory-copy		exec131  tcf pass execution
 test	is-integer-accepts-invalid	exec132  tcf pass execution
-test	agent-lighter-tuple-arg		exec133  tcf pass execution
+test	agent-lighter-tuple-arg		exec133  tcf pass execution tuple
 test	insert-hash-table-zero		exec134  tcf pass execution
 test	store-expanded-retrieve-wrong	exec135  tcf pass execution
 test	store-expanded-retrieve-dies	exec136  tcf pass execution
@@ -1028,7 +1028,7 @@ test	external-static-access		exec172  tcf pass execution
 test	static-access-generic-function	exec173  tcf pass execution
 test	inherit-create-like-attr	exec174  tcf pass execution
 test	generating-type-of-any		exec175  tcf fail execution
-test	assign-attempt-anchored-tuple	exec176  tcf pass execution
+test	assign-attempt-anchored-tuple	exec176  tcf pass execution tuple
 test	generic-agent-generating-type	exec177  tcf fail execution
 test	agent-like-current-target	exec178  tcf pass execution
 test	area-wrong-generating-type	exec179  tcf pass execution
@@ -1053,13 +1053,13 @@ test	basic-type-conversion	exec197	tcf pass execution
 test	bit-test-on-integer	exec198	tcf pass execution
 test	creation-of-formal-redefined-attribute	exec199	tcf pass execution
 test	anchor-argument-anchored-on-feature-or-formal	exec200	tcf fail execution
-test	tuple-real-double		exec201	tcf pass execution
+test	tuple-real-double		exec201	tcf pass execution tuple
 test	developer-exception-with-null	exec202	tcf fail execution
 test	nested-expanded-copy		exec203 tcf pass execution
 test	old-expressions-evaluated-when-they-should-not	exec204 tcf pass execution
 test	manifest-array-waste-locals	exec205	tcf pass execution
 test	like-current-generic-parameter	exec206	tcf pass execution
-test	result-lost-in-manifest-arrays-tuples	exec207	tcf pass execution
+test	result-lost-in-manifest-arrays-tuples	exec207	tcf pass execution tuple
 test	expanded-type-intrinsic-feature	exec208 tcf pass execution
 test	once-manifest-string-in-once	exec209 tcf pass execution
 test	external-redeclared-to-attribute	exec210 tcf pass execution
@@ -1076,9 +1076,9 @@ test	character-32-truncated		exec220 tcf pass execution
 test	melted-dispose-panic		exec221 tcf pass execution
 test	expanded-reverse-attachment	exec222 tcf pass execution expanded attachment
 test	extended-agent-test exec223 tcf pass execution
-test	named-tuple-test	exec224 tcf pass execution
+test	named-tuple-test	exec224 tcf pass execution tuple
 test	expanded-generic-use	exec225 tcf pass execution expanded generic
-test	generic-named-tuple		exec226 tcf pass execution
+test	generic-named-tuple		exec226 tcf pass execution tuple
 test	expanded-assignment-attempt		exec227 tcf pass execution
 test	routine-valid-operands			exec228 tcf pass execution
 test	double-clone				exec229 tcf pass execution
@@ -1120,7 +1120,7 @@ test	agent-on-attribute-with-open-target exec264 tcf pass execution
 test	generator-on-typed-pointer	exec265 tcf pass execution
 test	feature-call-on-basic-generic	exec266 tcf pass execution generic basic
 test	expanded-formal-attached-to-reference	exec267 tcf pass execution generic basic
-test	tuple-with-basic-type		exec268 tcf pass execution generic basic
+test	tuple-with-basic-type		exec268 tcf pass execution generic basic tuple
 test	signed-unsigned-in-inspect	exec269 tcf pass execution inspect
 test	mixed-basic-type-operations	exec270 tcf pass execution inspect
 test	wrong-agent-creation-type	exec271 tcf pass execution inspect
@@ -1211,7 +1211,7 @@ test	explicit-bit-creation		term076  tcf pass termination
 test	finalize-inline-array-expanded	term077  tcf pass termination
 test	finalize-inline-small-classes	term078  tcf pass termination
 test	simple-explicit-generic-create	term079  tcf pass termination
-test	generic-constrained-by-tuple	term080  tcf pass termination
+test	generic-constrained-by-tuple	term080  tcf pass termination tuple
 test	invariant-creation-expr		term081  tcf pass termination
 test	generic-nonexistent-creator	term082  tcf pass termination
 test	generic-nonexistent-infix	term083  tcf pass termination
@@ -1393,13 +1393,13 @@ test	freeze-retrieval-mismatch	store001 tcf pass storable
 test	retrieve-corrupted-file		store002 tcf pass storable
 test	melt-retrieval-mismatch		store003 tcf pass storable
 test	melted-retrieve-list-expanded	store004 tcf pass storable
-test	store-tuple-integer		store005 tcf pass storable
+test	store-tuple-integer		store005 tcf pass storable tuple
 test	store-generic-reference-class-used-as-expanded	store006 tcf pass storable
 test	various-storable-format-testing	store007 tcf pass storable
 test	missing-type-retrieval		store008 tcf pass storable
 test	store-expanded-as-reference	store009 tcf pass storable expanded
 test	store-expanded-class-type	store010 tcf pass storable expanded
-test	tuple-57-unretrievable		store011 tcf pass storable
+test	tuple-57-unretrievable		store011 tcf pass storable tuple
 test	retrieve-corrupted-file-thread-freezes	store012 tcf pass storable thread
 test	storable-formats			store013 tcf pass storable thread
 test	storable-formats-2			store014 tcf pass storable thread
@@ -1698,7 +1698,7 @@ test	lace-remove-cluster2		fixed119 tcf pass fixed
 test	whip-that-ace			fixed120 tcf pass fixed
 test	concat-manifest-bit-array	fixed123 tcf pass fixed
 test	creation-generic-types-in-onces	fixed124 tcf pass fixed
-test	reference-assign-tuple-fail-gc	fixed125 tcf pass fixed
+test	reference-assign-tuple-fail-gc	fixed125 tcf pass fixed tuple
 test	infix-inherited-assertions	fixed126 tcf pass fixed
 test	inline-special-infix-at		fixed127 tcf pass fixed
 test	synonyms-with-indexing		fixed128 tcf pass fixed
@@ -1722,7 +1722,7 @@ test	multi-constraint-creation						multicon002 tcf pass multiconstraint
 test	multi-constraint-renaming						multicon003 tcf pass multiconstraint
 test	multi-constraint-inheritance					multicon004 tcf pass multiconstraint
 test	multi-constraint-assertions						multicon005 tcf pass multiconstraint
-test	multi-constraint-tuple							multicon006 tcf pass multiconstraint
+test	multi-constraint-tuple							multicon006 tcf pass multiconstraint tuple
 test	multi-constraint-anchor							multicon007 tcf pass multiconstraint
 test	multi-constraint-root							multicon008 tcf pass multiconstraint
 test	multi-constraint-agents							multicon009 tcf pass multiconstraint
@@ -1753,8 +1753,8 @@ test	multi-constraint-single-constraint-renaming2	multicon033 tcf pass multicons
 test	multi-constraint-recursion-bug					multicon034 tcf pass multiconstraint
 test	multi-constraint-nested-calls					multicon035 tcf pass multiconstraint
 test	multi-constraint-vtmc4							multicon036 tcf pass multiconstraint
-test	multi-constraint-tuples							multicon037 tcf pass multiconstraint
-test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint
+test	multi-constraint-tuples							multicon037 tcf pass multiconstraint tuple
+test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint tuple
 test	multi-constraint-rename-alias					multicon039 tcf pass multiconstraint
 test	multi-constraint-assigner						multicon040 tcf pass multiconstraint
 test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint
@@ -1811,7 +1811,7 @@ test	scope-after-combined-expression					attach015 tcf pass attached_types scope
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet
-test tuple-insertions-assertions		dotnet002	tcf pass dotnet
+test tuple-insertions-assertions		dotnet002	tcf pass dotnet tuple
 test copy-infinite-recursion		dotnet003	tcf pass dotnet
 test dotnet-nested-constant-access		dotnet004	tcf pass dotnet
 test multithreaded-once-routine			dotnet005	tcf pass dotnet

@@ -6,6 +6,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 			<warning name="vjrv" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
+			<warning name="vweq" enabled="false"/>
 		</option>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING

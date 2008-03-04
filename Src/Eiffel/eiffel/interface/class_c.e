@@ -1946,6 +1946,8 @@ feature -- Actual class type
 			end
 			if lace_class.is_attached_by_default then
 				Result.set_is_attached
+			else
+				Result.set_is_implicitly_attached
 			end
 		ensure
 			actual_type_not_void: Result /= Void
@@ -4410,7 +4412,7 @@ invariant
 	-- has_ast: has_ast
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

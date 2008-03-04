@@ -108,9 +108,13 @@ feature -- Settings
 			vqmc: VQMC
 		do
 			Precursor {ENCAPSULATED_I} (feat_tbl)
-			if not type.is_attached and then feat_tbl.associated_class.lace_class.is_void_safe then
+			if not type.is_attached then
 					-- Type of constant is always attached.
-				type := type.as_attached
+				if feat_tbl.associated_class.lace_class.is_void_safe then
+					type := type.as_attached
+				else
+					type := type.as_implicitly_attached
+				end
 			end
 			actual_type := type.actual_type
 			if value.valid_type (actual_type) then

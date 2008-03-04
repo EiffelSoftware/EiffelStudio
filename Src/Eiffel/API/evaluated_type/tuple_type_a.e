@@ -194,7 +194,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := 1
 					count := generics.count
 					other_count := other_generics.count
-					Result := (count >= other_count) and then (tuple_type.is_attached implies is_attached)
+					Result := count >= other_count and then is_attachable_to (tuple_type)
 				until
 					(i > other_count) or else (not Result)
 				loop
@@ -271,7 +271,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

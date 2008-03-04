@@ -548,9 +548,13 @@ end;
 			from
 				parent := parent_c.parent
 				actual_parent_type := parent_c.parent_type
-				if a_class.lace_class.is_attached_by_default and then not actual_parent_type.is_attached then
+				if not actual_parent_type.is_attached then
 					actual_parent_type := actual_parent_type.twin
-					actual_parent_type.set_is_attached
+					if a_class.lace_class.is_attached_by_default then
+						actual_parent_type.set_is_attached
+					else
+						actual_parent_type.set_is_implicitly_attached
+					end
 				end
 				create parent_type
 				parent_type.set_actual_type (actual_parent_type)
@@ -1607,7 +1611,7 @@ feature {NONE} -- Temporary body index
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

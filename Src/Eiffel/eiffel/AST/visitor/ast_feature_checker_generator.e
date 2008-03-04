@@ -1752,9 +1752,13 @@ feature -- Implementation
 			if error_level = l_error_level then
 					-- Update type stack
 				create l_tuple_type.make (system.tuple_id, last_expressions_type)
-				if not l_tuple_type.is_attached and then context.current_class.lace_class.is_void_safe then
+				if not l_tuple_type.is_attached then
 						-- Type of tuple is always attached
-					l_tuple_type := l_tuple_type.as_attached
+					if context.current_class.lace_class.is_void_safe then
+						l_tuple_type := l_tuple_type.as_attached
+					else
+						l_tuple_type := l_tuple_type.as_implicitly_attached
+					end
 				end
 				instantiator.dispatch (l_tuple_type, context.current_class)
 				last_tuple_type := l_tuple_type
@@ -1893,9 +1897,13 @@ feature -- Implementation
 						else
 							create l_array_type.make (system.array_id, l_generics)
 						end
-						if l_current_class_void_safe and then not l_array_type.is_attached then
+						if not l_array_type.is_attached then
 								-- Type of a manifest array is always attached
-							l_array_type := l_array_type.as_attached
+							if l_current_class_void_safe then
+								l_array_type := l_array_type.as_attached
+							else
+								l_array_type := l_array_type.as_implicitly_attached
+							end
 						end
 						instantiator.dispatch (l_array_type, l_current_class)
 					end
@@ -1997,6 +2005,8 @@ feature -- Implementation
 							if l_current_class_void_safe then
 									-- Type of a manifest array is always attached
 								l_array_type := l_array_type.as_attached
+							else
+								l_array_type := l_array_type.as_implicitly_attached
 							end
 							instantiator.dispatch (l_array_type, l_current_class)
 						end
@@ -2008,6 +2018,8 @@ feature -- Implementation
 						if l_current_class_void_safe then
 								-- Type of a manifest array is always attached
 							l_array_type := l_array_type.as_attached
+						else
+							l_array_type := l_array_type.as_implicitly_attached
 						end
 						instantiator.dispatch (l_array_type, l_current_class)
 					end
@@ -2051,9 +2063,13 @@ feature -- Implementation
 			t: like last_type
 		do
 			t := string_type
-			if t /= Void and then context.current_class.lace_class.is_void_safe and then not t.is_attached then
+			if t /= Void and then not t.is_attached then
 					-- Constants are always of an attached type
-				t := t.as_attached
+				if context.current_class.lace_class.is_void_safe then
+					t := t.as_attached
+				else
+					t := t.as_implicitly_attached
+				end
 			end
 			last_type := t
 			if is_byte_node_enabled then
@@ -2367,10 +2383,13 @@ feature -- Implementation
 					l_as.set_class_id (class_id_of (l_type))
 				end
 				if not l_type.is_attached and then
-					context.is_argument_attached (l_as.feature_name.name_id) and then
-					l_context_current_class.lace_class.is_void_safe
+					context.is_argument_attached (l_as.feature_name.name_id)
 				then
-					l_type := l_type.as_attached
+					if l_context_current_class.lace_class.is_void_safe then
+						l_type := l_type.as_attached
+					else
+						l_type := l_type.as_implicitly_attached
+					end
 				end
 			else
 					-- Look for a local if not in a pre- or postcondition
@@ -2641,9 +2660,13 @@ feature -- Implementation
 					-- Adapt `l_feature_i' to context of current class (e.g. if `l_parent_type' is
 					-- generic then we need to resolve formals used in `l_feature_i' but the one from
 					-- the instantiation `l_parent_type'.
-				if context.current_class.lace_class.is_attached_by_default and then not l_parent_type.is_attached then
+				if not l_parent_type.is_attached then
 					l_parent_type := l_parent_type.twin
-					l_parent_type.set_is_attached
+					if context.current_class.lace_class.is_attached_by_default then
+						l_parent_type.set_is_attached
+					else
+						l_parent_type.set_is_implicitly_attached
+					end
 				end
 				create l_instatiation_type
 				l_instatiation_type.set_actual_type (l_parent_type)
@@ -3127,9 +3150,13 @@ feature -- Implementation
 				l_as.id_list.forth
 			end
 			last_type := strip_type
-			if context.current_class.lace_class.is_void_safe and then not last_type.is_attached then
+			if not last_type.is_attached then
 					-- Type of strip expression is always attached.
-				last_type := last_type.as_attached
+				if context.current_class.lace_class.is_void_safe then
+					last_type := last_type.as_attached
+				else
+					last_type := last_type.as_implicitly_attached
+				end
 			end
 			if l_needs_byte_node then
 				last_byte_node := l_strip
@@ -3377,9 +3404,13 @@ feature -- Implementation
 			l_type := last_type
 			if l_type /= Void then
 				create l_type_type.make (system.type_class.compiled_class.class_id, << l_type >>)
-				if context.current_class.lace_class.is_void_safe and then not l_type_type.is_attached then
+				if not l_type_type.is_attached then
 						-- The type is always attached
-					l_type_type := l_type_type.as_attached
+					if context.current_class.lace_class.is_void_safe then
+						l_type_type := l_type_type.as_attached
+					else
+						l_type_type := l_type_type.as_implicitly_attached
+					end
 				end
 				instantiator.dispatch (l_type_type, context.current_class)
 				last_type := l_type_type
@@ -4451,8 +4482,12 @@ feature -- Implementation
 			check_type (l_as.type)
 			local_type := last_type
 			if local_type /= Void then
-				if not local_type.is_attached and then context.current_class.lace_class.is_void_safe then
-					local_type := local_type.as_attached
+				if not local_type.is_attached then
+					if context.current_class.lace_class.is_void_safe then
+						local_type := local_type.as_attached
+					else
+						local_type := local_type.as_implicitly_attached
+					end
 				end
 
 				local_type.check_for_obsolete_class (context.current_class)
@@ -5423,9 +5458,13 @@ feature -- Implementation
 						l_as.type.process (Current)
 						l_explicit_type := last_type
 							-- If `l_explicit_type' is Void then we stop the process here.
-						if l_explicit_type /= Void and then not l_explicit_type.is_attached and then l_current_class_void_safe then
+						if l_explicit_type /= Void and then not l_explicit_type.is_attached then
 								-- Creation type is always attached
-							l_explicit_type := l_explicit_type.as_attached
+							if l_current_class_void_safe then
+								l_explicit_type := l_explicit_type.as_attached
+							else
+								l_explicit_type := l_explicit_type.as_implicitly_attached
+							end
 							last_type := l_explicit_type
 						end
 					end
@@ -5557,9 +5596,13 @@ feature -- Implementation
 					l_vgcc3.set_location (l_as.type.start_location)
 					error_handler.insert_error (l_vgcc3)
 				else
-					if not l_creation_type.is_attached and then context.current_class.lace_class.is_void_safe then
+					if not l_creation_type.is_attached then
 							-- Type of a creation expression is always attached.
-						l_creation_type := l_creation_type.as_attached
+						if context.current_class.lace_class.is_void_safe then
+							l_creation_type := l_creation_type.as_attached
+						else
+							l_creation_type := l_creation_type.as_implicitly_attached
+						end
 						last_type := l_creation_type
 					end
 					instantiator.dispatch (l_creation_type, context.current_class)
@@ -7634,16 +7677,22 @@ feature {NONE} -- Agents
 				-- Create open argument type tuple
 			create l_tuple.make (System.tuple_id, l_oargtypes)
 			l_current_class_void_safe := context.current_class.lace_class.is_void_safe
-			if l_current_class_void_safe and then l_oargtypes.count > 0 and then not l_tuple.is_attached then
+			if l_oargtypes.count > 0 and then not l_tuple.is_attached then
 					-- Type of an argument tuple is always attached.
-				l_tuple := l_tuple.as_attached
+				if l_current_class_void_safe then
+					l_tuple := l_tuple.as_attached
+				else
+					l_tuple := l_tuple.as_implicitly_attached
+				end
 			end
 				-- Insert it as second generic parameter of ROUTINE.
 			l_generics.put (l_tuple, 2)
 
+				-- Type of an agent is always attached.
 			if l_current_class_void_safe then
-					-- Type of an agent is always attached.
 				l_result_type := l_result_type.as_attached
+			else
+				l_result_type := l_result_type.as_implicitly_attached
 			end
 
 			if is_byte_node_enabled then
@@ -8689,7 +8738,7 @@ feature {NONE} -- Implementation: catcall check
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

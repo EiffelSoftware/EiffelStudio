@@ -1,0 +1,13 @@
+test_name 	 read-only-void-test-in-assertion
+test_description Read-only void test scope should be correctly handled in assertions.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

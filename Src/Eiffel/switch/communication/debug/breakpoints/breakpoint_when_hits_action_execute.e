@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_action: BOOLEAN) is
+	make (a_action: like execute_action) is
 		do
 			set_execute_action (a_action)
 		end

@@ -541,7 +541,7 @@ feature -- Menu
 			m: EV_MENU
 			mi: EV_MENU_ITEM
 		do
-			if not objects_grids.is_empty then
+			if objects_grids /= Void and then not objects_grids.is_empty then
 				create m
 				Result := m
 				if for_tool then

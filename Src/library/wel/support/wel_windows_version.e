@@ -55,9 +55,15 @@ feature -- Exact Windows Versions
 	is_windows_xp: BOOLEAN is
 			-- Is the current program running under Windows XP (Home or Professional)?
 		do
-			Result := is_windows_NT and major_version = 5 and minor_version = 1
+			Result := is_windows_nt and major_version = 5 and minor_version = 1
 		ensure
 			windows_xp_is_nt: Result implies is_windows_nt
+		end
+
+	is_windows_vista: BOOLEAN is
+			-- If the current program running under Windows Vista?
+		do
+			Result := is_windows_nt and major_version = 6 and minor_version = 0
 		end
 
 feature -- Compatible Windows Versions
@@ -73,7 +79,7 @@ feature -- Compatible Windows Versions
 			-- Is the current program running under a version of
 			-- windows belonging to the NT family?
 			-- (Windows NT 3.51, Windows NT4, Windows 2000,
-			-- Windows XP Home/Professional)
+			-- Windows XP Home/Professional, Windows Vista)
 		do
 			Result := (internal_version & 0x80000000) = 0
 		end

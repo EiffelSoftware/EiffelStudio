@@ -49,20 +49,6 @@ feature -- Access
 
 feature -- Output
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
-			-- Build the primary context string so errors can be navigated to
-		do
-			if a_feature = Void then
-				Precursor (a_text_formatter)
-			else
-				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
-				a_text_formatter.add (".")
-				associated_class.append_name (a_text_formatter)
-				a_text_formatter.add (".")
-				a_feature.append_name (a_text_formatter)
-			end
-		end
-
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			m: STRING
@@ -94,14 +80,33 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if {l_class: !like associated_class} associated_class and then {l_feature: !like a_feature} a_feature and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
+				print_context_feature (l_formatter, l_feature, l_class)
+			else
+				Precursor (a_text_formatter)
+			end
+		end
+
 feature {NONE} -- Output
 
 	print_single_line_error_message_extended (a_text_formatter: TEXT_FORMATTER) is
 			-- Displays single line help in `a_text_formatter'.
+		local
+			l_message: STRING_GENERAL
 		do
 			a_text_formatter.add (" Call to feature `")
 			obsolete_feature.append_name (a_text_formatter)
-			a_text_formatter.add ("'.")
+			a_text_formatter.add ("'")
+			l_message := obsolete_feature.obsolete_message
+			if l_message /= Void and then not l_message.is_empty then
+				a_text_formatter.add (": ")
+				a_text_formatter.add (l_message)
+			else
+				a_text_formatter.add (".")
+			end
 		end
 
 feature -- Setting

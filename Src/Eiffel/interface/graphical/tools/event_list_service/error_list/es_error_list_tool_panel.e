@@ -237,17 +237,35 @@ feature {NONE} -- Query
 			is_appliable_event: is_appliable_event (a_event_item)
 		local
 			l_row: EV_GRID_ROW
+		do
+			l_row := find_event_row (a_event_item)
+			if l_row /= Void then
+				Result := event_context_stone_from_row (l_row)
+			end
+		end
+
+	event_context_stone_from_row (a_row: EV_GRID_ROW): STONE
+			-- Retrieve an event item's context stone, if one is available
+			--
+			-- `EV_GRID_ROW': A row to retrieve an event context from.
+			-- `Result': A context stone, if any.
+		require
+			a_row_attached: a_row /= Void
+			not_a_row_is_destroyed: not a_row.is_destroyed
+			a_row_data_set: ({EVENT_LIST_ITEM_I}) #? a_row.data /= Void
+		local
+			l_event_item: EVENT_LIST_ITEM_I
 			l_error: ERROR
 			l_line: INTEGER
 			l_classi_stone: CLASSI_STONE
 			l_classc_stone: CLASSC_STONE
 			l_line_stone: LINE_STONE
 		do
-			l_row := find_event_row (a_event_item)
-			if l_row /= Void then
-				Result ?= l_row.item (context_column).data
+			l_event_item ?= a_row.data
+			if l_event_item /= Void then
+				Result ?= a_row.item (context_column).data
 				if Result /= Void then
-					l_error ?= a_event_item.data
+					l_error ?= l_event_item.data
 					if l_error /= Void then
 						l_line := l_error.line
 						if l_line > 0 then
@@ -402,7 +420,7 @@ feature {NONE} -- Basic operations
 						l_tool.force_display
 					end
 				else
-					l_stone := event_context_stone (l_event_item)
+					l_stone := event_context_stone_from_row (a_row)
 					if l_stone /= Void and then l_stone.is_valid then
 						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 					end
@@ -933,6 +951,7 @@ feature {NONE} -- User interface manipulation
 			l_row: EV_GRID_ROW
 			l_pos_token: EDITOR_TOKEN_NUMBER
 			l_line: EIFFEL_EDITOR_LINE
+			l_context_stone: STONE
 			l_expanded: BOOLEAN
 		do
 			create l_item
@@ -1006,18 +1025,31 @@ feature {NONE} -- User interface manipulation
 					a_row.set_item (context_column, l_editor_item)
 					l_content := l_gen.last_line.content
 					if not l_content.is_empty then
-							-- Set context pebble
-						l_editor_item.set_data (l_gen.last_line.content.last.pebble)
+							-- Set context pebble by iterating through the context content to find a feature
+							-- or class token.
+						from l_content.finish until l_content.before or l_context_stone /= Void loop
+							if {l_ft: !EDITOR_TOKEN_FEATURE} l_content.item_for_iteration then
+								l_context_stone ?= l_ft.pebble
+							elseif {l_ct: !EDITOR_TOKEN_CLASS} l_content.item_for_iteration then
+								l_context_stone ?= l_ct.pebble
+							end
+							l_content.back
+						end
+						if l_context_stone /= Void then
+							l_editor_item.set_data (l_context_stone)
+						end
 					end
 				end
 
 					-- Line and column number
 				l_editor_item := Void
-				if l_error.line > 0 then
+				if l_error.line > 0 and then l_context_stone /= Void then
 						-- Created position token
 					create l_pos_token.make (l_error.line.out + ", " + l_error.column.max (1).out)
 					l_pos_token.set_is_clickable (True)
-					l_pos_token.set_pebble (event_context_stone (a_event_item))
+						-- Note: We call `event_context_stone_from_row' instead of using `l_context_stone' because
+						--       it uses line position information, unlike `l_context_stone'
+					l_pos_token.set_pebble (event_context_stone_from_row (a_row))
 
 						-- Create editor item					
 					create l_line.make_empty_line

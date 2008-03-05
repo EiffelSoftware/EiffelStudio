@@ -53,20 +53,6 @@ feature -- Properties
 
 feature -- Output
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
-			-- Build the primary context string so errors can be navigated to
-		do
-			if associated_feature = Void then
-				Precursor (a_text_formatter)
-			else
-				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
-				a_text_formatter.add (".")
-				a_text_formatter.add_class (associated_class.lace_class)
-				a_text_formatter.add (".")
-				a_text_formatter.add_feature (associated_feature, associated_feature.name)
-			end
-		end
-
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			l_name: STRING
@@ -107,6 +93,16 @@ feature -- Output
 				unused_locals.forth
 			end
 			a_text_formatter.set_context_group (l_group)
+		end
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if {l_class: !like associated_class} associated_class and then {l_feature: !like associated_feature} associated_feature and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
+				print_context_feature (l_formatter, l_feature, l_class)
+			else
+				Precursor (a_text_formatter)
+			end
 		end
 
 feature {NONE} -- Output

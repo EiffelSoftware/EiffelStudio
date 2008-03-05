@@ -14,6 +14,11 @@ inherit
 			has_associated_file, trace_primary_context, associated_class
 		end
 
+	ERROR_CONTEXT_PRINTER
+		export
+			{NONE} all
+		end
+
 feature -- Properties
 
 	associated_class: CLASS_C
@@ -33,12 +38,10 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
 			-- Build the primary context string so errors can be navigated to
 		do
-			if associated_class = Void then
-				Precursor (a_text_formatter)
+			if {l_class: !like associated_class} associated_class and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
+				print_context_class (l_formatter, l_class)
 			else
-				a_text_formatter.add_group (associated_class.group, associated_class.group.name)
-				a_text_formatter.add (".")
-				associated_class.append_name (a_text_formatter)
+				Precursor (a_text_formatter)
 			end
 		end
 

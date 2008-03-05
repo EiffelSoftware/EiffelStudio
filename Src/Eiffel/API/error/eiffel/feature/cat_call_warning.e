@@ -12,7 +12,7 @@ class CAT_CALL_WARNING
 inherit
 	EIFFEL_WARNING
 		redefine
-			build_explain, help_file_name
+			build_explain, help_file_name, trace_primary_context
 		end
 
 	SHARED_NAMES_HEAP
@@ -204,6 +204,16 @@ feature -- Output
 
 			update_statistics
 			print_statistics (a_text_formatter)
+		end
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if {l_class: !like associated_class} associated_class and then {l_feature: !like associated_feature} associated_feature and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
+				print_context_feature (l_formatter, l_feature, l_class)
+			else
+				Precursor (a_text_formatter)
+			end
 		end
 
 feature {NONE} -- Implementation

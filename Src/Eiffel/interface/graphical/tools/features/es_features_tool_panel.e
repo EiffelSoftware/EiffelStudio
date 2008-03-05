@@ -11,7 +11,7 @@ class
 	ES_FEATURES_TOOL_PANEL
 
 inherit
-	ES_DOCKABLE_STONABLE_TOOL_PANEL [EB_FEATURES_TREE]
+	ES_DOCKABLE_STONABLE_TOOL_PANEL [ES_FEATURES_GRID]
 		rename
 			user_widget as features_tree
 		redefine
@@ -30,7 +30,7 @@ create {ES_FEATURES_TOOL}
 
 feature {NONE} -- User interface initialization
 
-    build_tool_interface (a_widget: EB_FEATURES_TREE) is
+    build_tool_interface (a_widget: ES_FEATURES_GRID) is
             -- Builds the tools user interface elements.
             -- Note: This function is called prior to showing the tool for the first time.
             --
@@ -105,7 +105,7 @@ feature {NONE} -- Access
 	current_compiled_class: CLASS_C
 			-- Last synchonrized class
 
-feature {EB_FEATURES_TREE} -- Status report
+feature {ES_FEATURES_GRID, EB_FEATURES_TREE} -- Status report
 
 	is_showing_alias: BOOLEAN
 			-- Are alias' to be shown in the feature tree?
@@ -167,14 +167,14 @@ feature {NONE} -- Basic operations
 			l_tree: like features_tree
 		do
 			l_tree := features_tree
-			if a_data /= Void and then {l_node: !EV_TREE_NODE} l_tree.retrieve_item_recursively_by_data (a_data, a_compare_object) then
-				l_node.enable_select
-				if l_tree.is_displayed then
-					l_tree.ensure_item_visible (l_node)
+			if a_data /= Void and then {l_row: !EV_GRID_ROW} l_tree.retrieve_row_recursively_by_data (a_data, a_compare_object) then
+				l_row.enable_select
+				if l_row.is_displayed then
+					l_row.ensure_visible
 				end
-			elseif {l_selected_node: !EV_TREE_NODE} l_tree.selected_item then
+			elseif {l_selected_row: !EV_GRID_ROW} l_tree.selected_row then
 					-- No node located so deselect any selected node.
-				l_selected_node.disable_select
+				l_selected_row.disable_select
 			end
 		end
 
@@ -286,8 +286,8 @@ feature {NONE} -- Action handlers
 						end
 
 						if l_class_ast /= Void then
-							if l_tree.selected_item /= Void then
-								l_tree.selected_item.disable_select
+							if {l_row: !EV_GRID_ROW} l_tree.selected_row then
+								l_row.disable_select
 							end
 
 							if {l_clauses: !EIFFEL_LIST [FEATURE_CLAUSE_AS]} l_class_ast.features then
@@ -295,7 +295,7 @@ feature {NONE} -- Action handlers
 								l_tree.build_tree (l_clauses, l_class)
 							else
 									-- No items
-								l_tree.extend (create {EV_TREE_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
+								l_tree.extend_item (create {EV_GRID_LABEL_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
 							end
 						end
 					elseif {l_external_classc: !EXTERNAL_CLASS_C} l_class then
@@ -303,8 +303,8 @@ feature {NONE} -- Action handlers
 							-- sense.
 						current_compiled_class := l_class
 
-						if l_tree.selected_item /= Void then
-							l_tree.selected_item.disable_select
+						if {l_row2: !EV_GRID_ROW} l_tree.selected_row then
+							l_row2.disable_select
 						end
 						l_tree.wipe_out
 						l_tree.build_tree_for_external (l_external_classc)
@@ -314,7 +314,7 @@ feature {NONE} -- Action handlers
 					l_container.extend (l_tree)
 
 					if not l_tree.is_empty and then l_tree.is_displayed then
-						l_tree.ensure_item_visible (l_tree.first)
+						l_tree.ensure_first_row_visible
 					end
 				end
 			else
@@ -325,7 +325,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-    create_widget: EB_FEATURES_TREE
+    create_widget: ES_FEATURES_GRID
             -- Create a new container widget upon request.
             -- Note: You may build the tool elements here or in `build_tool_interface'
 		do

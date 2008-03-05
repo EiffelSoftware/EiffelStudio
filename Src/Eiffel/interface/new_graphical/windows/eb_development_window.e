@@ -1427,7 +1427,7 @@ feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 			end
 		end
 
-feature {ES_FEATURES_TOOL_PANEL, EB_FEATURES_TREE, DOTNET_CLASS_AS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
+feature {ES_FEATURES_TOOL_PANEL, ES_FEATURES_GRID, DOTNET_CLASS_AS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
 
 	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is
 			-- Set 'features' to 'a_features' and store in hash table with key 'a_type' denoting name of consumed

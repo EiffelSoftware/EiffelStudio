@@ -157,22 +157,22 @@ feature {NONE} -- Implementation: Access
 	internal: INTERNAL
 			-- Facilities to inspect.
 
-	traversable: SED_OBJECT_GRAPH_TRAVERSABLE
+	traversable: OBJECT_GRAPH_TRAVERSABLE
 			-- Object used for traversing object graph
 
 	object_indexes: SED_OBJECTS_TABLE
 			-- Mapping between object and their associated index.
 
-	breadth_first_traversable: SED_OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE is
+	breadth_first_traversable: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE is
 			-- Return an instance of OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE.
 		once
-			Result := create {SED_OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE}
+			Result := create {OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE}
 		end
 
-	depth_first_traversable: SED_OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE is
+	depth_first_traversable: OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE is
 			-- Return an instance of OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE.
 		once
-			Result := create {SED_OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE}
+			Result := create {OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE}
 		end
 
 feature {NONE} -- Implementation

@@ -51,44 +51,49 @@ feature -- Miscellaneous
 			text.process_indexing_tag_text ("compilation: ")
 			text.process_basic_text (Eiffel_ace.system.project_location.target_path)
 			text.add_new_line
-
 			text.add_new_line
 
-			root_class := Eiffel_system.root_class
-			root_cluster := Eiffel_system.root_cluster
-			text.set_context_group (root_cluster)
-			if root_class /= Void then
-				text.process_keyword_text ("Root class", Void)
-				text.add_new_line
-				text.add_indent
-				text.add_class (root_class)
+			if Eiffel_system.workbench.is_already_compiled then
+				root_class := Eiffel_system.root_class
+				root_cluster := Eiffel_system.root_cluster
+				text.set_context_group (root_cluster)
+				if root_class /= Void then
+					text.process_keyword_text ("Root class", Void)
+					text.add_new_line
+					text.add_indent
+					text.add_class (root_class)
 
-				if root_cluster /= Void then
-					text.add_space
-					text.process_symbol_text (ti_L_parenthesis)
-					text.add_group (root_cluster, root_cluster.name)
-					text.process_symbol_text (ti_R_parenthesis)
-				end
-
-				creation_name := Eiffel_system.system.root_creation_name
-				if root_class.compiled_class /= Void and creation_name /= Void then
-					if root_class.compiled_class.has_feature_table then
-						cr_f := root_class.compiled_class.feature_with_name (creation_name)
-					end
-					if cr_f /= Void then
-						text.process_symbol_text (ti_Colon)
+					if root_cluster /= Void then
 						text.add_space
-						text.add_feature (cr_f, creation_name)
-					else
+						text.process_symbol_text (ti_L_parenthesis)
+						text.add_group (root_cluster, root_cluster.name)
+						text.process_symbol_text (ti_R_parenthesis)
+					end
+
+					creation_name := Eiffel_system.system.root_creation_name
+					if root_class.compiled_class /= Void and creation_name /= Void then
+						if root_class.compiled_class.has_feature_table then
+							cr_f := root_class.compiled_class.feature_with_name (creation_name)
+						end
+						if cr_f /= Void then
+							text.process_symbol_text (ti_Colon)
+							text.add_space
+							text.add_feature (cr_f, creation_name)
+						else
+							text.process_symbol_text (ti_Colon)
+							text.add_space
+							text.add (creation_name)
+						end
+					elseif creation_name /= Void then
 						text.process_symbol_text (ti_Colon)
 						text.add_space
 						text.add (creation_name)
 					end
-				elseif creation_name /= Void then
-					text.process_symbol_text (ti_Colon)
-					text.add_space
-					text.add (creation_name)
+					text.add_new_line
+					text.add_new_line
 				end
+			else
+				text.add_comment ("System is not yet compiled.")
 				text.add_new_line
 				text.add_new_line
 			end

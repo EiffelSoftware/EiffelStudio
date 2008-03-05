@@ -628,6 +628,7 @@ feature -- Setting
 
 	discard is
 			-- Set the breakpoint to be removed.
+			--| Note: safe to call more than once
 		do
 			bench_status := Bench_breakpoint_not_set
 			condition := Void

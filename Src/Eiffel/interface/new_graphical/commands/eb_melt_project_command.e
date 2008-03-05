@@ -396,8 +396,6 @@ feature {NONE} -- Implementation
 
 	drop_down_menu: EV_MENU is
 			-- Drop down menu for `new_sd_toolbar_item'.
-		local
-			l_cmd: EB_TOOLBARABLE_COMMAND
 		do
 			create Result
 			Result.extend (new_menu_item)

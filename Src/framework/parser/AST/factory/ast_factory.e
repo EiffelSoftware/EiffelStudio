@@ -894,14 +894,14 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; attachment_mark: SYMBOL_AS; a_m, d_m: BOOLEAN): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		do
 			if n /= Void then
 				if g /= Void then
-					create {GENERIC_CLASS_TYPE_AS} Result.initialize (n, g, attachment_mark, a_m, d_m)
+					create {GENERIC_CLASS_TYPE_AS} Result.initialize (n, g)
 				else
-					create Result.initialize (n, attachment_mark, a_m, d_m)
+					create Result.initialize (n)
 				end
 			end
 		end
@@ -1498,19 +1498,19 @@ feature -- Access
 			create Result.initialize (a, once_manifest_string_count, i_as, object_test_locals)
 		end
 
-	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS; attachment_mark: SYMBOL_AS; a_m, d_m: BOOLEAN): LIKE_ID_AS is
+	new_like_id_as (a: ID_AS; l_as: KEYWORD_AS): LIKE_ID_AS is
 			-- New LIKE_ID AST node
 		do
 			if a /= Void then
-				create Result.initialize (a, l_as, attachment_mark, a_m, d_m)
+				create Result.initialize (a, l_as)
 			end
 		end
 
-	new_like_current_as (other: CURRENT_AS; l_as: KEYWORD_AS; attachment_mark: SYMBOL_AS; a_m, d_m: BOOLEAN): LIKE_CUR_AS is
+	new_like_current_as (other: CURRENT_AS; l_as: KEYWORD_AS): LIKE_CUR_AS is
 			-- New LIKE_CURRENT AST node
 		do
 			if other /= Void then
-				create Result.make (other, l_as, attachment_mark, a_m, d_m)
+				create Result.make (other, l_as)
 			end
 		end
 
@@ -1923,7 +1923,7 @@ feature -- Access
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -19,17 +19,11 @@ create
 
 feature{NONE} -- Initialization
 
-	make (c_as: KEYWORD_AS; l_as: KEYWORD_AS; m_as: SYMBOL_AS; a: like has_attached_mark; d: like has_detachable_mark) is
+	make (c_as: KEYWORD_AS; l_as: KEYWORD_AS) is
 			-- Create new LIKE_CURRENT AST node.
 		require
 			c_as_not_void: c_as /= Void
-			correct_attachment_status: not (a and d)
 		do
-			has_attached_mark := a
-			has_detachable_mark := d
-			if m_as /= Void then
-				attachment_mark_index := m_as.index
-			end
 			if l_as /= Void then
 				like_keyword_index := l_as.index
 			end
@@ -37,9 +31,6 @@ feature{NONE} -- Initialization
 		ensure
 			like_keyword_set: l_as /= Void implies like_keyword_index = l_as.index
 			current_keyword_set: current_keyword = c_as
-			attachment_mark_set: m_as /= Void implies attachment_mark_index = m_as.index
-			has_attached_mark_set: has_attached_mark = a
-			has_detachable_mark_set: has_detachable_mark = d
 		end
 
 feature -- Visitor
@@ -50,18 +41,7 @@ feature -- Visitor
 			v.process_like_cur_as (Current)
 		end
 
-feature -- Status
-
-	has_attached_mark: BOOLEAN
-			-- Is attached mark specified?
-
-	has_detachable_mark: BOOLEAN
-			-- Is detachable mark specified?
-
 feature -- Roundtrip
-
-	attachment_mark_index: INTEGER
-			-- Index of attachment symbol (if any)
 
 	like_keyword_index: INTEGER
 			-- Index of keyword "like" associated with this structure		
@@ -82,19 +62,6 @@ feature -- Roundtrip
 	current_keyword: KEYWORD_AS
 			-- Keyword "current" associated with this structure		
 
-	attachment_mark (a_list: LEAF_AS_LIST): SYMBOL_AS is
-			-- Attachment symbol (if any)
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := attachment_mark_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
-		end
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -110,9 +77,7 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list /= Void and attachment_mark_index /= 0 then
-					Result := attachment_mark (a_list)
-				elseif a_list /= Void and like_keyword_index /= 0 then
+				if a_list /= Void and like_keyword_index /= 0 then
 					Result := like_keyword (a_list)
 				else
 					Result := current_keyword.first_token (a_list)

@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 				l_clients.after
 			loop
 				create l_click_ast.initialize (l_clients.item,
-					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void, False, False))
+					create {CLASS_TYPE_AS}.initialize (l_clients.item))
 				internal_click_list.extend (l_click_ast)
 				l_clients.forth
 			end
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

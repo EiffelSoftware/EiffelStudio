@@ -122,13 +122,13 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; attachment_mark: SYMBOL_AS; a_m, d_m: BOOLEAN): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
 		do
 			if n /= Void then
 				if g /= Void then
-					create {GENERIC_CLASS_TYPE_AS} Result.initialize (n, g, attachment_mark, a_m, d_m)
+					create {GENERIC_CLASS_TYPE_AS} Result.initialize (n, g)
 				else
-					create Result.initialize (n, attachment_mark, a_m, d_m)
+					create Result.initialize (n)
 				end
 			end
 		end
@@ -417,7 +417,7 @@ feature {NONE} -- Validation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

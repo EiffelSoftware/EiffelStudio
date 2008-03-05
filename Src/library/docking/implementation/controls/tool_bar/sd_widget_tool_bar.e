@@ -104,7 +104,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
 
@@ -383,8 +383,15 @@ feature -- Query
 
 	has (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
 			-- If Current has `a_item'?
+		local
+			l_tool_bar: like tool_bar
 		do
-			Result := tool_bar.has (a_item)
+			-- When exiting Eiffel Studio, everything is recycling, `tool_bar' maybe void.
+			-- See bug#14060.
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
+				Result := l_tool_bar.has (a_item)
+			end
 		end
 
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE	is

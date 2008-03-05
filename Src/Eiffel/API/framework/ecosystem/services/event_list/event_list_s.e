@@ -29,6 +29,7 @@ feature -- Access
 			-- `a_context_cookie': A context identifier to retrieve all events for.
 			-- `Result': A list of events associated to the specified context.
 		require
+			is_interface_usable: is_interface_usable
 			a_context_is_valid_context_cookie: is_valid_context_cookie (a_context_cookie)
 		deferred
 		ensure
@@ -36,6 +37,10 @@ feature -- Access
 			result_contains_attached_items: not Result.has (Void)
 			result_items_exist: Result.for_all (agent all_items.has)
 			result_contains_persistent_items_only: Result.for_all (agent {EVENT_LIST_ITEM_I}.is_persistent)
+			result_contains_valid_items_only: Result.for_all (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+				do
+					Result := not a_item.is_invalidated
+				end)
 		end
 
 	items_by_type (a_type: TYPE [EVENT_LIST_ITEM_I]; a_exact_type: BOOLEAN): DS_BILINEAR [EVENT_LIST_ITEM_I]
@@ -43,8 +48,9 @@ feature -- Access
 			--
 			-- `a_type': The type of event items to retrieve.
 			-- `a_exact_type': When True only those events with the exact match type are result, otherwise all conforming types are returned.
-			-- `Result': A list of events conforming to `a_type'
+			-- `Result': A list of events conforming to `a_type'.
 		require
+			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
 		local
 			l_int: INTERNAL
@@ -77,21 +83,33 @@ feature -- Access
 			result_contains_attached_items: not Result.has (Void)
 			result_items_exist: Result.for_all (agent all_items.has)
 			result_contains_persistent_items_only: Result.for_all (agent {EVENT_LIST_ITEM_I}.is_persistent)
+			result_contains_valid_items_only: Result.for_all (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+				do
+					Result := not a_item.is_invalidated
+				end)
 		end
 
 	all_items: DS_BILINEAR [EVENT_LIST_ITEM_I]
-			-- Retrieves all event items managed by the current event service
+			-- Retrieves all event items managed by the current event service.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		ensure
 			result_attached: Result /= Void
 			result_contains_attached_items: not Result.has (Void)
 			result_contains_persistent_items_only: Result.for_all (agent {EVENT_LIST_ITEM_I}.is_persistent)
+			result_contains_valid_items_only: Result.for_all (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+				do
+					Result := not a_item.is_invalidated
+				end)
 		end
 
 feature {NONE} -- Access
 
 	item_types: EVENT_LIST_ITEM_TYPES
-			-- Access to event list item types
+			-- Access to event list item types.
+		require
+			is_interface_usable: is_interface_usable
 		once
 			create Result
 		ensure
@@ -104,29 +122,63 @@ feature {NONE} -- Query
 			-- List of events and associated action.
 			--
 			-- `a_observer': Event observer interface to bind agent actions to.
-			-- `Result': A list of event types paired with a associated action on the passed observer
+			-- `Result': A list of event types paired with a associated action on the passed observer.
 		do
-			create Result.make (3)
+			create Result.make (4)
 			Result.put_last ([item_added_event, agent a_observer.on_event_item_added])
 			Result.put_last ([item_removed_event, agent a_observer.on_event_item_removed])
 			Result.put_last ([item_changed_event, agent a_observer.on_event_item_changed])
+			Result.put_last ([item_adopted_event, agent a_observer.on_event_item_adopted])
 		end
 
 feature -- Events
 
 	item_added_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
-			-- Events called when an event list item is added
+			-- Events called when an event list item is added.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 
 	item_removed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
-			-- Events called when an event list item is removed
+			-- Events called when an event list item is removed.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 
 	item_changed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
-			-- Events called when an event list item is changed
+			-- Events called when an event list item is changed.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
+		end
+
+	item_adopted_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
+			-- Events called when an event list item is adopted by another parent.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+feature -- Basic operations
+
+	adopt_event_item (a_new_cookie: UUID; a_event_item: EVENT_LIST_ITEM_I)
+			-- Allows another parent to adopt an existing event item, using the new parent's context identifier.
+			--
+			-- `a_new_cookie': A context identifier used to manage the adopted event.
+			-- `a_event_item': Event list items in the list of managed events.
+		require
+			is_interface_usable: is_interface_usable
+			a_new_cookie_is_valid_context_cookie: is_valid_context_cookie (a_new_cookie)
+			a_event_itemattached: a_event_item /= Void
+			a_event_item_is_persistent: a_event_item.is_persistent
+			not_a_event_item_is_invalidated: not a_event_item.is_invalidated
+			has_event_a_event_item: has_event_item (a_event_item)
+			not_a_new_cookie_items_has_a_event_item: not items (a_new_cookie).has (a_event_item)
+		deferred
+		ensure
+			has_event_a_event: items (a_new_cookie).has (a_event_item)
 		end
 
 feature -- Extension
@@ -137,8 +189,10 @@ feature -- Extension
 			-- `a_context_cookie': A context identifier used to manage the added event.
 			-- `a_event_item': Task items to add to the list of managed events.
 		require
+			is_interface_usable: is_interface_usable
 			a_context_is_valid_context_cookie: is_valid_context_cookie (a_context_cookie)
 			a_event_itemattached: a_event_item /= Void
+			not_a_event_item_is_invalidated: not a_event_item.is_invalidated
 			not_has_event_a_event_item: not has_event_item (a_event_item)
 		deferred
 		ensure
@@ -153,6 +207,7 @@ feature -- Removal
 			--
 			-- `a_event_item': Task items to remove from the list of managed events.
 		require
+			is_interface_usable: is_interface_usable
 			a_event_item_attached: a_event_item /= Void
 			has_event_a_event_item: has_event_item (a_event_item)
 		deferred
@@ -165,6 +220,7 @@ feature -- Removal
 			--
 			-- `a_context_cookie': The context identifier to remove all events for.
 		require
+			is_interface_usable: is_interface_usable
 			a_context_is_valid_context_cookie: is_valid_context_cookie (a_context_cookie)
 		deferred
 		ensure
@@ -178,6 +234,8 @@ feature -- Query
 			--
 			-- `a_context_cookie': A context identifier used to manage the added event.
 			-- `Result': True if `a_context_cookie' is a valid cookie, False otherwise.
+		require
+			is_interface_usable: is_interface_usable
 		do
 			Result := a_context_cookie /= Void and then not a_context_cookie.is_equal (create {UUID})
 		ensure
@@ -190,6 +248,7 @@ feature -- Query
 			-- `a_event_item': A event item that may be managed by the current event service.
 			-- `Result': True if `a_event' is held my the event service, False otherwise.
 		require
+			is_interface_usable: is_interface_usable
 			a_event_item_attached: a_event_item /= Void
 		do
 			Result := all_items.has (a_event_item)
@@ -199,6 +258,7 @@ invariant
 	item_added_events_attached: item_added_event /= Void
 	item_removed_events_attached: item_removed_event /= Void
 	item_changed_events_attached: item_changed_event /= Void
+	item_adopted_event_attached: item_adopted_event /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			create item_added_event
 			create item_removed_event
 			create item_changed_event
+			create item_adopted_event
 		end
 
 feature {NONE} -- Clean up
@@ -50,6 +51,7 @@ feature {NONE} -- Clean up
 				item_added_event.dispose
 				item_removed_event.dispose
 				item_changed_event.dispose
+				item_adopted_event.dispose
 			end
 
 			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
@@ -181,6 +183,55 @@ feature -- Removal
 			end
 		end
 
+feature -- Basic operations
+
+	adopt_event_item (a_new_cookie: UUID; a_event_item: EVENT_LIST_ITEM_I)
+			-- Allows another parent to adopt an existing event item, using the new parent's context identifier.
+			--
+			-- `a_new_cookie': A context identifier used to manage the adopted event.
+			-- `a_event_item': Event list items in the list of managed events.
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [EVENT_LIST_ITEM_I], UUID]
+			l_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
+			l_old_cookie: UUID
+			l_stop: BOOLEAN
+		do
+			l_cursor := internal_event_items_index.new_cursor
+			from l_cursor.start until l_cursor.after or l_stop loop
+				l_items := l_cursor.item
+				l_stop := l_items.has (a_event_item)
+				if l_stop then
+					l_old_cookie := l_cursor.key
+					if not l_items.off and then l_items.item_for_iteration = a_event_item then
+							-- Quick removal
+						l_items.remove_at
+					else
+							-- Slower removal
+						l_items.start
+						l_items.search_forth (a_event_item)
+						l_items.remove_at
+					end
+				else
+					l_cursor.forth
+				end
+			end
+
+			check
+				item_found: l_stop
+				l_old_cookie_attached: l_old_cookie /= Void
+			end
+			if internal_event_items_index.has (a_new_cookie) then
+				l_items := internal_event_items_index.item (a_new_cookie)
+			else
+				create l_items.make (1)
+				internal_event_items_index.put_last (l_items, a_new_cookie)
+			end
+			l_items.force_last (a_event_item)
+
+				-- Publish events
+			on_item_adopted (a_event_item, a_new_cookie, l_old_cookie)
+		end
+
 feature -- Events
 
 	item_added_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
@@ -192,6 +243,9 @@ feature -- Events
 	item_changed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
 			-- Events called when an event list item is changed
 
+	item_adopted_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
+			-- Events called when an event list item is adopted by another parent
+
 feature {NONE} -- Events
 
 	on_item_added (a_event_item: EVENT_LIST_ITEM_I)
@@ -199,10 +253,11 @@ feature {NONE} -- Events
 			--
 			-- `a_event_item': The event item added to the service.
 		require
+			is_interface_usable: is_interface_usable
 			a_event_attached: a_event_item /= Void
 			current_contains_a_event: a_event_item.is_persistent implies all_items.has (a_event_item)
 		do
-			if not is_zombie and then not item_added_event.is_zombie then
+			if is_interface_usable and then item_added_event.is_interface_usable then
 				item_added_event.publish ([Current, a_event_item])
 			end
 		end
@@ -212,11 +267,12 @@ feature {NONE} -- Events
 			--
 			-- `a_event_item': The event item removed from the service.
 		require
+			is_interface_usable: is_interface_usable
 			a_event_attached: a_event_item /= Void
 			a_event_item_is_persistent: a_event_item.is_persistent
 			not_current_contains_a_event: not all_items.has (a_event_item)
 		do
-			if not is_zombie and then not item_added_event.is_zombie then
+			if is_interface_usable and then item_added_event.is_interface_usable then
 				item_removed_event.publish ([Current, a_event_item])
 			end
 		end
@@ -226,12 +282,35 @@ feature {NONE} -- Events
 			--
 			-- `a_event_item': The event item that was changed.
 		require
+			is_interface_usable: is_interface_usable
 			a_event_attached: a_event_item /= Void
 			a_event_item_is_persistent: a_event_item.is_persistent
 			current_contains_a_event: all_items.has (a_event_item)
 		do
-			if not is_zombie and then not item_changed_event.is_zombie then
+			if is_interface_usable and then item_changed_event.is_interface_usable then
 				item_changed_event.publish ([Current, a_event_item])
+			end
+		end
+
+	on_item_adopted (a_event_item: EVENT_LIST_ITEM_I; a_new_cookie: UUID; a_old_cookie: UUID)
+			-- Called after a event item has been adopted.
+			--
+			-- `a_event_item': The event item that was adopted.
+			-- `a_new_cookie': New owner cookie, that adopted the event item.
+			-- `a_old_cookie': Previous owner's cookie, that used to own the event item.
+		require
+			is_interface_usable: is_interface_usable
+			a_old_cookie_is_valid_context_cookie: is_valid_context_cookie (a_old_cookie)
+			a_new_cookie_is_valid_context_cookie: is_valid_context_cookie (a_new_cookie)
+			a_event_attached: a_event_item /= Void
+			a_event_item_is_persistent: a_event_item.is_persistent
+			not_a_event_item_is_invalidated: not a_event_item.is_invalidated
+			current_contains_a_event: all_items.has (a_event_item)
+			not_a_old_cookie_items_contains_a_event_item: not items (a_old_cookie).has (a_event_item)
+			a_new_cookie_items_contains_a_event_item: items (a_new_cookie).has (a_event_item)
+		do
+			if is_interface_usable and then item_adopted_event.is_interface_usable then
+				item_adopted_event.publish ([Current, a_event_item, a_new_cookie, a_old_cookie])
 			end
 		end
 

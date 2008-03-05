@@ -65,7 +65,12 @@ feature -- Status report
 		do
 			Result := True
 		end
-		
+
+	is_invalidated: BOOLEAN
+			-- Indicates if the item has been invalidated and should be removed
+		deferred
+		end
+
 feature -- Query
 
 	is_valid_category (a_category: like category): BOOLEAN
@@ -92,6 +97,17 @@ feature -- Query
 			-- `a_data': The user data to validate.
 			-- `Result': True if the user data is valid; False otherwise.
 		deferred
+		end
+
+feature -- Basic operations
+
+	invalidate
+			-- Invalidates the item for removal
+		require
+			not_is_invalidated: not is_invalidated
+		deferred
+		ensure
+			is_invalidated: is_invalidated
 		end
 
 ;indexing

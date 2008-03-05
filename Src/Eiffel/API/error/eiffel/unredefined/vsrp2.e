@@ -13,7 +13,7 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			trace, build_explain, subcode, is_defined
+			trace, build_explain, subcode, is_defined, trace_primary_context
 		end;
 
 feature -- Properties
@@ -58,6 +58,16 @@ feature -- Output
 			creation_feature.append_signature (a_text_formatter);
 			a_text_formatter.add_new_line;
 		end;
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like creation_feature} creation_feature and then {l_class: !like class_c} class_c then
+				print_context_feature (l_feature, l_class, l_formatter)
+			else
+				Precursor (a_text_formatter)
+			end
+		end
 
 feature {COMPILER_EXPORTER}
 

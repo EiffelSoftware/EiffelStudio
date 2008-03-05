@@ -69,12 +69,50 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
 			-- Build the primary context string so errors can be navigated to
 		do
-			if class_c = Void then
-				Precursor (a_text_formatter)
+			if {l_class: !CLASS_C} class_c and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
+				print_context_class (l_class, l_formatter)
 			else
-				a_text_formatter.add_group (class_c.group, class_c.group.name)
-				a_text_formatter.add (".")
-				class_c.append_name (a_text_formatter)
+				Precursor (a_text_formatter)
+			end
+		end
+
+feature {NONE} -- Output
+
+	print_context_group (a_group: !CONF_GROUP; a_formatter: !TEXT_FORMATTER) is
+			-- Prints a context group URI.
+		do
+			if {l_cluster: !CONF_CLUSTER} a_group then
+				if {l_parent: !CONF_GROUP} l_cluster.parent then
+					print_context_group (l_parent, a_formatter)
+					a_formatter.add (".")
+				end
+			end
+			a_formatter.add_group (a_group, a_group.name)
+		end
+
+	print_context_class (a_class: !CLASS_C; a_formatter: !TEXT_FORMATTER) is
+			-- Prints a context class URI, including the group name.
+		do
+			a_class.append_name (a_formatter)
+			if {l_group: !CONF_GROUP} a_class.group then
+				a_formatter.add_space
+				a_formatter.add (" (")
+				print_context_group (l_group, a_formatter)
+				a_formatter.add (")")
+			end
+		end
+
+	print_context_feature (a_feature: !E_FEATURE; a_class: !CLASS_C; a_formatter: !TEXT_FORMATTER) is
+			-- Prints a context feature URI, including the class and group name.
+		do
+			a_class.append_name (a_formatter)
+			a_formatter.add (".")
+			a_feature.append_name (a_formatter)
+			if {l_group: !CONF_GROUP} a_class.group then
+				a_formatter.add_space
+				a_formatter.add (" (")
+				print_context_group (l_group, a_formatter)
+				a_formatter.add (")")
 			end
 		end
 

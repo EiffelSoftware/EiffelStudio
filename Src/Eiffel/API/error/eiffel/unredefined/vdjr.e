@@ -1,20 +1,21 @@
 indexing
 
-	description: 
+	description:
 		"Error for join rule when argument number is not the same."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VDJR 
+class VDJR
 
 inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, is_defined
+			build_explain, is_defined, trace_primary_context
 		end;
+
 	SHARED_WORKBENCH
 		undefine
 			is_equal
@@ -72,6 +73,16 @@ feature -- Output
 			a_text_formatter.add_new_line;
 			print_signatures (a_text_formatter);
 		end;
+
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+			-- Build the primary context string so errors can be navigated to
+		do
+			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like new_feature} new_feature and then {l_class: !like class_c} class_c then
+				print_context_feature (l_feature, l_class, l_formatter)
+			else
+				Precursor (a_text_formatter)
+			end
+		end
 
 feature {COMPILER_EXPORTER}
 

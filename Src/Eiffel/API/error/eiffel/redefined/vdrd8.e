@@ -66,10 +66,10 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
 			-- Build the primary context string so errors can be navigated to
 		do
-			Precursor {EIFFEL_ERROR} (a_text_formatter)
-			if a_feature /= Void then
-				a_text_formatter.add (".")
-				a_feature.append_name (a_text_formatter)
+			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like a_feature} a_feature and then {l_class: !like class_c} class_c then
+				print_context_feature (l_feature, l_class, l_formatter)
+			else
+				Precursor (a_text_formatter)
 			end
 		end
 

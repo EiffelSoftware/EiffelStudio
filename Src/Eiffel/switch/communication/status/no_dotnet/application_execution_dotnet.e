@@ -20,7 +20,7 @@ feature {NONE} -- Ancestor facade
 	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) is do end
 	continue_ignoring_kept_objects is do end
 	interrupt is do end
-	notify_newbreakpoint is do  end
+	notify_breakpoints_change is do end
 	kill is do  end
 	keep_only_objects (kept_objects: LIST [STRING]) is do end
 
@@ -34,7 +34,6 @@ feature {NONE} -- Ancestor facade
 	remote_rt_object: ABSTRACT_DEBUG_VALUE is do end
 	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end
 	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end
-	send_breakpoints_for_stepping (a_execution_mode: INTEGER) is do end
 	
 
 feature -- Client facade

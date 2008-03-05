@@ -16,6 +16,9 @@ feature -- Roundtrip
 	lcurly_symbol_index, rcurly_symbol_index: INTEGER
 			-- Index in a match list for tokens.
 
+	attachment_mark_index: INTEGER
+			-- Index of attachment symbol (if any)
+
 	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
 			-- Left curly symbol(s) associated with this structure if any.
 		require
@@ -38,6 +41,19 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := rcurly_symbol_index
+			if a_list.valid_index (i) then
+				Result ?= a_list.i_th (i)
+			end
+		end
+
+	attachment_mark (a_list: LEAF_AS_LIST): SYMBOL_AS is
+			-- Attachment symbol (if any)
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := attachment_mark_index
 			if a_list.valid_index (i) then
 				Result ?= a_list.i_th (i)
 			end
@@ -69,8 +85,13 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list /= Void and lcurly_symbol_index /= 0 then
-				Result := lcurly_symbol (a_list)
+			if a_list /= Void then
+				if lcurly_symbol_index /= 0 then
+					Result := lcurly_symbol (a_list)
+				end
+				if Result = Void and then attachment_mark_index /= 0 then
+					Result := attachment_mark (a_list)
+				end
 			end
 		end
 
@@ -81,6 +102,34 @@ feature -- Roundtrip/Token
 			end
 		end
 
+feature -- Status
+
+	has_attached_mark: BOOLEAN
+			-- Is attached mark specified?
+
+	has_detachable_mark: BOOLEAN
+			-- Is detachable mark specified?
+
+feature -- Modification
+
+	set_attachment_mark (m: like attachment_mark; a: like has_attached_mark; d: like has_detachable_mark)
+		require
+			correct_attachment_status: not (a and d)
+			meaningfull_attachment_mark: (m /= Void) = (a or d)
+		do
+			if m = Void then
+				attachment_mark_index := 0
+			else
+				attachment_mark_index := m.index
+			end
+			has_attached_mark := a
+			has_detachable_mark := d
+		ensure
+			attachment_mark_set: (m = Void implies attachment_mark_index = 0) and then (m /= Void implies attachment_mark_index = m.index)
+			has_attached_mark_set: has_attached_mark = a
+			has_detachable_mark_set: has_detachable_mark = d
+		end
+
 feature -- Output
 
 	dump: STRING is
@@ -89,7 +138,7 @@ feature -- Output
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

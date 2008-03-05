@@ -264,6 +264,15 @@ feature {NONE} -- Visitor implementation
 					check failure_enabled: is_failure_enabled end
 					last_type := Void
 				else
+					if l_type /= Void then
+						if l_as.has_attached_mark then
+							l_type.set_attached_mark
+						elseif l_as.has_detachable_mark then
+							l_type.set_detachable_mark
+						elseif current_class.lace_class.is_attached_by_default then
+							l_type.set_is_attached
+						end
+					end
 					last_type := l_type
 				end
 			else

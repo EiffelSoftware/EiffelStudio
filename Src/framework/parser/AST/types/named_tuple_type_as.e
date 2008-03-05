@@ -169,7 +169,9 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (class_name, other.class_name) and then
-				equivalent (parameters, other.parameters)
+				equivalent (parameters, other.parameters) and then
+				has_attached_mark = other.has_attached_mark and then
+				has_detachable_mark = other.has_detachable_mark
 		end
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
@@ -198,7 +200,12 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			i, nb: INTEGER
 			l_generics: like generics
 		do
-			create Result.make (class_name.name.count)
+			create Result.make (class_name.name.count + 4)
+			if has_attached_mark then
+				Result.append_character ('!')
+			elseif has_detachable_mark then
+				Result.append_character ('?')
+			end
 			Result.append (class_name.name)
 			from
 				l_generics := generics
@@ -235,7 +242,7 @@ invariant
 		not parameters.arguments.is_empty
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

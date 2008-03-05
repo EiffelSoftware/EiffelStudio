@@ -990,7 +990,7 @@ feature
 	process_formal_as (l_as: FORMAL_AS) is
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
-			safe_process (l_as.attachment_mark)
+			safe_process (l_as.attachment_mark (match_list))
 			safe_process (l_as.reference_or_expanded_keyword (match_list))
 			safe_process (l_as.name)
 			safe_process (l_as.rcurly_symbol (match_list))
@@ -1030,6 +1030,7 @@ feature
 	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
 		do
 			safe_process (l_as.lcurly_symbol (match_list))
+			safe_process (l_as.attachment_mark (match_list))
 			safe_process (l_as.separate_keyword (match_list))
 			safe_process (l_as.class_name)
 			safe_process (l_as.parameters)
@@ -1406,7 +1407,7 @@ feature{NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

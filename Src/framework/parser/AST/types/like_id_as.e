@@ -19,27 +19,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like anchor; l_as: like like_keyword; m_as: like attachment_mark; a_m: like has_attached_mark; d_m: like has_detachable_mark) is
+	initialize (a: like anchor; l_as: like like_keyword) is
 			-- Create a new LIKE_ID AST node.
 		require
 			a_not_void: a /= Void
-			correct_attachment_status: not (a_m and d_m)
 		do
 			anchor := a
-			if m_as /= Void then
-				attachment_mark_index := m_as.index
-			end
 			if l_as /= Void then
 				like_keyword_index := l_as.index
 			end
-			has_attached_mark := a_m
-			has_detachable_mark := d_m
 		ensure
 			anchor_set: anchor = a
 			like_keyword_set: l_as /= Void implies like_keyword_index = l_as.index
-			attachment_mark_set: m_as /= Void implies attachment_mark_index = m_as.index
-			has_attached_mark_set: has_attached_mark = a_m
-			has_detachable_mark_set: has_detachable_mark = d_m
 		end
 
 feature -- Visitor
@@ -50,18 +41,7 @@ feature -- Visitor
 			v.process_like_id_as (Current)
 		end
 
-feature -- Status
-
-	has_attached_mark: BOOLEAN
-			-- Is attached mark specified?
-
-	has_detachable_mark: BOOLEAN
-			-- Is detachable mark specified?
-
 feature -- Roundtrip
-
-	attachment_mark_index: INTEGER
-			-- Index of attachment symbol (if any)
 
 	like_keyword_index: INTEGER
 			-- Index of keyword "like" associated with this structure		
@@ -79,19 +59,6 @@ feature -- Roundtrip
 			end
 		end
 
-	attachment_mark (a_list: LEAF_AS_LIST): SYMBOL_AS is
-			-- Attachment symbol (if any)
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := attachment_mark_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
-		end
-
 feature -- Attributes
 
 	anchor: ID_AS
@@ -103,9 +70,7 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list /= Void and attachment_mark_index /= 0 then
-					Result := attachment_mark (a_list)
-				elseif a_list /= Void and like_keyword_index /= 0 then
+				if a_list /= Void and like_keyword_index /= 0 then
 					Result := like_keyword (a_list)
 				else
 					Result := anchor.first_token (a_list)
@@ -139,7 +104,7 @@ feature -- Output
 			create Result.make (7 + anchor.name.count)
 			if has_attached_mark then
 				Result.append_character ('!')
-			else
+			elseif has_detachable_mark then
 				Result.append_character ('?')
 			end
 			Result.append ("like ")

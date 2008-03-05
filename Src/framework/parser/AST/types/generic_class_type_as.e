@@ -19,22 +19,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; g: like generics; m: SYMBOL_AS; a: like has_attached_mark; d: like has_detachable_mark) is
+	initialize (n: like class_name; g: like generics) is
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
 			g_not_void: g /= Void
 			n_upper: n.name.is_equal (n.name.as_upper)
-			correct_attachment_status: not (a and d)
 		do
-			class_type_initialize (n, m, a, d)
+			class_type_initialize (n)
 			internal_generics := g
 		ensure
 			class_name_set: class_name.name.is_equal (n.name)
 			internal_generics_set: internal_generics = g
-			attachment_mark_set: m /= Void implies attachment_mark_index = m.index
-			has_attached_mark_set: has_attached_mark = a
-			has_detachable_mark_set: has_detachable_mark = d
 		end
 
 feature -- Visitor

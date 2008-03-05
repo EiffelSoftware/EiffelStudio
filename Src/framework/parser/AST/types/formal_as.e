@@ -64,9 +64,6 @@ feature -- Roundtrip
 			end
 		end
 
-	attachment_mark: SYMBOL_AS
-			-- Attachment symbol (if any)
-
 feature -- Properties
 
 	name: ID_AS
@@ -82,25 +79,6 @@ feature -- Properties
 	is_expanded: BOOLEAN
 			-- Is Current formal to be always instantiated as an expanded type?
 
-	has_attached_mark: BOOLEAN
-			-- Is attached mark specified?
-
-	has_detachable_mark: BOOLEAN
-			-- Is detachable mark specified?
-
-feature -- Modification
-
-	set_attachment_mark (m: like attachment_mark; a: like has_attached_mark; d: like has_detachable_mark)
-		do
-			attachment_mark := m
-			has_attached_mark := a
-			has_detachable_mark := d
-		ensure
-			attachment_mark_set: attachment_mark = m
-			has_attached_mark_set: has_attached_mark = a
-			has_detachable_mark_set: has_detachable_mark = d
-		end
-
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -109,8 +87,6 @@ feature -- Roundtrip/Token
 			if Result = Void then
 				if a_list /= Void and then reference_or_expanded_keyword_index /= 0 then
 					Result := reference_or_expanded_keyword (a_list)
-				elseif a_list /= Void and then attachment_mark /= Void then
-					Result := attachment_mark.first_token (a_list)
 				else
 					Result := name.first_token (a_list)
 				end

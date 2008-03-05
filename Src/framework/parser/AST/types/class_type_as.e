@@ -24,24 +24,15 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; m: SYMBOL_AS; a: like has_attached_mark; d: like has_detachable_mark) is
+	initialize (n: like class_name) is
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
 			n_upper: n.name.is_equal (n.name.as_upper)
-			correct_attachment_status: not (a and d)
 		do
 			class_name := n
-			if m /= Void then
-				attachment_mark_index := m.index
-			end
-			has_attached_mark := a
-			has_detachable_mark := d
 		ensure
 			class_name_set: class_name.name.is_equal (n.name)
-			attachment_mark_set: m /= Void implies attachment_mark_index = m.index
-			has_attached_mark_set: has_attached_mark = a
-			has_detachable_mark_set: has_detachable_mark = d
 		end
 
 feature -- Visitor
@@ -71,35 +62,13 @@ feature -- Attributes
 	is_separate: BOOLEAN
 			-- Is current type used with `separate' keyword?
 
-	has_attached_mark: BOOLEAN
-			-- Is attached mark specified?
-
-	has_detachable_mark: BOOLEAN
-			-- Is detachable mark specified?
-
 feature -- Roundtrip
-
-	attachment_mark_index: INTEGER
-			-- Index of attachment symbol (if any)
 
 	expanded_keyword_index: INTEGER
 			-- Index of keyword "expanded" associated with this structure.
 
 	separate_keyword_index: INTEGER
 			-- Index of keyword "separate" associated with this structure.	
-
-	attachment_mark (a_list: LEAF_AS_LIST): SYMBOL_AS is
-			-- Attachment symbol (if any)
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := attachment_mark_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
-		end
 
 	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
 			-- Keyword "expanded" associated with this structure.
@@ -134,12 +103,9 @@ feature -- Roundtrip/Token
 			Result := Precursor (a_list)
 			if Result = Void then
 				if a_list /= Void then
-					Result := attachment_mark (a_list)
+					Result := expanded_keyword (a_list)
 					if Result = Void then
-						Result := expanded_keyword (a_list)
-						if Result = Void then
-							Result := separate_keyword (a_list)
-						end
+						Result := separate_keyword (a_list)
 					end
 				end
 				if Result = Void then

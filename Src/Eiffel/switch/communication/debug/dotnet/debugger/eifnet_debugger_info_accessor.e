@@ -204,7 +204,8 @@ feature -- Breakpoint related
 	current_breakpoint_location: BREAKPOINT_LOCATION is
 		do
 			check
-				managed_callback_is_breakpoint (last_managed_callback)
+				managed_callback_is_breakpoint (last_managed_callback) or
+				managed_callback_is_step_complete (last_managed_callback) --| In case we step onto an enabled breakpoint
 			end
 			Result := eifnet_debugger_info.current_breakpoint_location
 		end

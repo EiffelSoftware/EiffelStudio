@@ -152,35 +152,10 @@ feature {NONE} -- Implementation, focus event
  	splitter_brush: WEL_BRUSH is
 			-- Create the brush used to draw the invert splitter.
 		local
-			a_bitmap: WEL_BITMAP
-			string_bitmap: STRING
-			i: INTEGER
+			l_helper: WEL_BITMAP_HELPER
 		do
-				-- We create a bitmap 8x8 which follows the pattern:
-				-- black / white / black... on one line
-				-- and white / black / white... on the other.
-				-- The hexa number 0xAA correspond to the first line
-				-- and the 0x55 to the other line. Since Windows expects
-				-- value aligned on DWORD, we have gap in our strings.
-
-				-- Creating data of bitmaps
-			create string_bitmap.make (16)
-			string_bitmap.fill_blank
-			from
-				i := 1
-			until
-				i > 16
-			loop
-				string_bitmap.put ((0x000000AA).to_character_8, i)
-				string_bitmap.put ((0x00000055).to_character_8, i + 2)
-				i := i + 4
-			end
-
-				-- Then, we create the brush
-			create a_bitmap.make_direct (8, 8, 1, 1, string_bitmap)
-			create Result.make_by_pattern (a_bitmap)
-
-			a_bitmap.delete
+			create l_helper
+			Result := l_helper.half_tone_brush
 		end
 
 

@@ -105,7 +105,7 @@ feature {NONE} -- Access
 	current_compiled_class: CLASS_C
 			-- Last synchonrized class
 
-feature {ES_FEATURES_GRID, EB_FEATURES_TREE} -- Status report
+feature {ES_FEATURES_GRID} -- Status report
 
 	is_showing_alias: BOOLEAN
 			-- Are alias' to be shown in the feature tree?

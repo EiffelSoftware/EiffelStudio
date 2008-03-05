@@ -20,7 +20,7 @@ inherit {NONE}
 create {DEBUGGER_MANAGER}
 	make
 
-feature {NOINE} -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- Instanciate Current

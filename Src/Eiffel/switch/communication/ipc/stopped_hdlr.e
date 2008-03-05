@@ -53,8 +53,8 @@ feature -- Execution
 			--		* C\ipc\shared\rqst_idrs.c:idr_Stop (..)
 		local
 			feature_name: STRING
-			origine_type: INTEGER
-			dynamic_type: INTEGER
+			origine_type_id: INTEGER
+			dynamic_type_id: INTEGER
 			offset: INTEGER
 			address: STRING
 			stopping_reason: INTEGER
@@ -64,8 +64,6 @@ feature -- Execution
 			l_app: APPLICATION_EXECUTION
 			l_status: APPLICATION_STATUS_CLASSIC
 			retry_clause: BOOLEAN
-			cse: CALL_STACK_ELEMENT_CLASSIC
-			need_to: TUPLE [stop: BOOLEAN; update_bp: BOOLEAN]
 		do
 			check
 				application_is_executing: debugger_manager.application_is_executing
@@ -73,7 +71,7 @@ feature -- Execution
 
 			if not retry_clause then
 				l_app := Debugger_manager.application
-				l_app.on_application_before_stopped
+				l_app.on_application_before_paused
 				debug ("DEBUGGER_TRACE","DEBUGGER_IPC")
 					io.error.put_string (generator + ": Application is stopped%N")
 				end
@@ -109,13 +107,13 @@ feature -- Execution
 
 					--| Read origin of feature
 				read_integer
-				origine_type := last_integer + 1;
+				origine_type_id := last_integer + 1;
 
 					--| Read type of current object.
 					--| Note: the type id on the C side must be
 					--| incremented by one.
 				read_integer
-				dynamic_type := last_integer + 1;
+				dynamic_type_id := last_integer + 1;
 
 					--| Read offset in byte code.
 				read_integer
@@ -162,7 +160,7 @@ feature -- Execution
 				l_status.set_active_thread_id (thr_id)
 				l_status.set_current_thread_id (thr_id)
 
-				l_status.set (feature_name, address, origine_type, dynamic_type, offset, stopping_reason)
+				l_status.set (feature_name, address, origine_type_id, dynamic_type_id, offset, stopping_reason)
 				l_status.set_exception_occurred (exception_occurred)
 				if exception_occurred then
 					if {e: !EXCEPTION_DEBUG_VALUE} l_app.remote_current_exception_value then
@@ -184,79 +182,8 @@ feature -- Execution
 					--| stopped state operations   |--
 					--|----------------------------|--
 
-				if stopping_reason = Pg_update_breakpoint then
-						--| If the reason is Pg_update_breakpoint, the application sends the
-						--| new breakpoints status and then automatically resume its execution.
-					debug ("DEBUGGER_TRACE")
-						io.error.put_string ("STOPPED_HDLR: New breakpoint added, do nothing%N")
-					end
+				process_paused_state (stopping_reason, l_app)
 
-					-- application has stopped to take into account the
-					-- breakpoints changes. So let's send the breakpoints
-					-- to the application and resume it.
-					need_to := [False, True] -- Continue, but resend bp
-				else
-						--| The debuggee is on a real stopped state
-					need_to := [True, True]
-
-					inspect
-						stopping_reason
-					when Pg_raise, Pg_viol then
-						need_to.stop := execution_stopped_on_exception
-						need_to.update_bp := False
-					when Pg_break then
-							--| debuggee stopped on a Breakpoint
-
-							--| Initialize the stack with a dummy first call stack element
-							--| to be able to operation on the current feature
-						l_status.current_call_stack.extend (create {CALL_STACK_ELEMENT_CLASSIC}.dummy_make (feature_name, 1, True, offset, address, dynamic_type - 1, origine_type - 1))
-						l_app.set_current_execution_stack_number (1)
-
-							--| Check if this is a Conditional Breakpoint
-						cse := l_status.current_call_stack.i_th (1)
-						if
-							cse = Void
-							or else cse.is_not_valid
-							or else cse.routine = Void
-						then
-							need_to.stop := True
-						else
-							need_to := execution_stopped_on_breakpoint (cse)
-						end
-						need_to.update_bp := need_to.stop or else breakpoints_manager.breakpoints_changed
-					else
-						--| Nothing
-					end
-				end
-
-				if need_to /= Void and then need_to.stop then
-						--| Now that we know the debuggee will be really stopped
-						--| Let get the effective call stack (not the dummy)
-					l_status.reload_current_call_stack
-					l_app.set_current_execution_stack_number (l_app.number_of_stack_elements)
-
-						-- Inspect the application's current state.
-					l_app.on_application_just_stopped
-
-					debug ("DEBUGGER_TRACE")
-						io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
-					end
-				else
-						--| We don't stop on this breakpoint,
-						--| Relaunch the application.
-					if need_to /= Void and then need_to.update_bp then
-							--| if we stopped on cond bp
-							--| in case we don't really stop
-							--| we won't send again the breakpoints
-							--| since they didn't changed, and a "go to this point" may be enabled
-						l_app.continue
-					else
-							-- Shortcut breakpoint sending
-						l_app.release_all_but_kept_object
-						l_status.set_is_stopped (False)
-						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
-					end
-				end
 			else -- retry_clause
 				if l_app.is_running then
 					l_app.process_termination;
@@ -274,9 +201,114 @@ feature -- Execution
 --			retry
 		end
 
+	process_paused_state (a_pause_reason: INTEGER; a_app: APPLICATION_EXECUTION) is
+			-- Process paused state
+		local
+			need_to: TUPLE [stop: BOOLEAN; update_bp: BOOLEAN]
+			l_status: APPLICATION_STATUS
+		do
+			l_status := a_app.status
+
+			if a_pause_reason = Pg_update_breakpoint then
+					--| If the reason is Pg_update_breakpoint, the application sends the
+					--| new breakpoints status and then automatically resume its execution.
+				debug ("DEBUGGER_TRACE")
+					io.error.put_string ("STOPPED_HDLR: New breakpoint added, do nothing%N")
+				end
+
+				-- application has stopped to take into account the
+				-- breakpoints changes. So let's send the breakpoints
+				-- to the application and resume it.
+				need_to := [False, True] -- Continue, but resend bp
+			else
+					--| The debuggee is on a real stopped state
+				need_to := [True, True]
+
+				a_app.on_application_paused
+
+				inspect
+					a_pause_reason
+				when
+					{APPLICATION_STATUS_CONSTANTS}.Pg_raise,
+					{APPLICATION_STATUS_CONSTANTS}.Pg_viol then
+					need_to.stop := execution_stopped_on_exception_event (a_app)
+					need_to.update_bp := False
+				when {APPLICATION_STATUS_CONSTANTS}.Pg_break then
+						--| debuggee stopped on a Breakpoint
+					need_to := execution_stopped_on_breakpoint_event (a_app)
+					need_to.update_bp := need_to.stop or else breakpoints_manager.breakpoints_changed
+				when {APPLICATION_STATUS_CONSTANTS}.Pg_step then
+					if l_status.has_breakpoint_enabled then
+							--| Process breakpoints
+						need_to := execution_stopped_on_breakpoint (a_app)
+						need_to.update_bp := breakpoints_manager.breakpoints_changed
+					end
+					need_to.stop := True
+				else
+					--| Nothing
+				end
+			end
+
+			if need_to /= Void and then need_to.stop then
+					--| Now that we know the debuggee will be really stopped
+					--| Let get the effective call stack (not the dummy)
+				l_status.reload_current_call_stack
+				a_app.set_current_execution_stack_number (a_app.number_of_stack_elements)
+
+					-- Inspect the application's current state.
+				a_app.on_application_just_stopped
+
+				debug ("DEBUGGER_TRACE")
+					io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
+				end
+			else
+					--| We don't stop on this breakpoint,
+					--| Relaunch the application.
+				if need_to /= Void and then need_to.update_bp then
+						--| if we stopped on cond bp
+						--| in case we don't really stop
+						--| we won't send again the breakpoints
+						--| since they didn't changed, and a "go to this point" may be enabled
+					a_app.continue
+				else
+						-- Shortcut breakpoint sending
+					a_app.release_all_but_kept_object
+					l_status.set_is_stopped (False)
+					Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
-	execution_stopped_on_breakpoint (cse: CALL_STACK_ELEMENT_CLASSIC): TUPLE [stop: BOOLEAN; update_bp: BOOLEAN] is
+	execution_stopped_on_exception_event (app: APPLICATION_EXECUTION): BOOLEAN is
+			-- Do we stop execution on this exception event ?
+		require
+			exception_occurred: app.status.exception_occurred
+		do
+			Result := app.debugger_manager.process_exception
+			debug ("debugger_trace")
+				if Result then
+					io.put_string ("Catch exception")
+				else
+					io.put_string ("Ignore exception")
+				end
+				if {s: !STRING} (app.status.exception_type_name) then
+					io.put_string (": " + s)
+				end
+				io.new_line
+			end
+		end
+
+	execution_stopped_on_breakpoint_event (app: APPLICATION_EXECUTION): TUPLE [stop: BOOLEAN; update_bp: BOOLEAN] is
+			-- Do we stop execution and resend breakpoints on this breakpoint event ?
+		require
+			appstat: app.status.reason = {APPLICATION_STATUS_CONSTANTS}.Pg_break
+		do
+			Result := execution_stopped_on_breakpoint (app)
+		end
+
+	execution_stopped_on_breakpoint (app: APPLICATION_EXECUTION): TUPLE [stop: BOOLEAN; update_bp: BOOLEAN] is
 			-- Do we stop execution and resend breakpoints on this breakpoint event ?
 		local
 			bps: LIST [BREAKPOINT]
@@ -284,48 +316,52 @@ feature {NONE} -- Implementation
 			bpm: BREAKPOINTS_MANAGER
 			dbm: DEBUGGER_MANAGER
 			b: BOOLEAN
-		do
-			Result := [False, True]
 
-			dbm := debugger_manager
-			bpm := dbm.breakpoints_manager
-			loc := bpm.breakpoint_location (cse.routine, cse.break_index, False)
-			bps := bpm.breakpoints_at (loc)
-			if bps /= Void then
-				from
-					b := False
-					bps.start
-				until
-					bps.after
-				loop
-					b := b or dbm.process_breakpoint (bps.item)
-					bps.forth
-				end
-				Result.stop := b
+			l_status: APPLICATION_STATUS_CLASSIC
+			cse: CALL_STACK_ELEMENT_CLASSIC
+		do
+			l_status ?= app.status
+			Result := [False, False]
+
+				--| debuggee stopped on a Breakpoint
+
+				--| Initialize the stack with a dummy first call stack element
+				--| to be able to operation on the current feature
+--			if app. then
+--				
+--			end
+			cse := l_status.dummy_call_stack_element
+			l_status.current_call_stack.extend (cse)
+			app.set_current_execution_stack_number (1)
+
+			if
+				cse = Void
+				or else cse.is_not_valid
+				or else cse.routine = Void
+			then
+				Result.stop := True
 			else
-					-- We are stopped, but there is no "set" breakpoints ...
-					-- might be a trouble, then resend bps
-				Result.stop := False
-				Result.update_bp := True
-			end
-		end
-
-	execution_stopped_on_exception: BOOLEAN is
-			-- Do we stop execution on this exception event ?
-		require
-			exception_occurred: debugger_manager.application_status.exception_occurred
-		do
-			Result := Debugger_manager.process_exception
-			debug ("debugger_trace")
-				if Result then
-					io.put_string ("Catch exception")
+				dbm := app.debugger_manager
+				bpm := dbm.breakpoints_manager
+				loc := bpm.breakpoint_location (cse.routine, cse.break_index, False)
+				bps := bpm.breakpoints_at (loc)
+				if bps /= Void then
+					from
+						b := False
+						bps.start
+					until
+						bps.after
+					loop
+						b := b or dbm.process_breakpoint (bps.item)
+						bps.forth
+					end
+					Result.stop := b
 				else
-					io.put_string ("Ignore exception")
+						-- We are stopped, but there is no "set" breakpoints ...
+						-- might be a trouble, then resend bps
+					Result.stop := False
+					Result.update_bp := True
 				end
-				if {s: !STRING} debugger_manager.application_status.exception_type_name then
-					print (": " + s)
-				end
-				io.new_line
 			end
 		end
 

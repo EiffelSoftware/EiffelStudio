@@ -50,12 +50,6 @@ feature -- Access
 
 feature -- Recylcing
 
-	on_resumed is
-			-- Clean cached data valid only during the current stepping
-		do
-			debugger_manager.object_manager.reset
-		end
-
 	recycle is
 			-- Clean debugging session data
 		do
@@ -67,50 +61,42 @@ feature -- Recylcing
 
 feature -- Execution event callbacks
 
-	on_application_before_launching is
-		require
-			Debugger_manager_not_void: debugger_manager /= Void
-		do
-			Debugger_manager.on_application_before_launching
-		end
-
-	on_application_launched is
-		require
-			Debugger_manager_not_void: debugger_manager /= Void
-		do
-			Debugger_manager.on_application_launched
-		end
-
-	on_application_before_resuming is
+	frozen on_application_before_resuming is
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_before_resuming
 		end
 
-	on_application_resumed is
+	frozen on_application_resumed is
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
-			on_resumed
 			Debugger_manager.on_application_resumed
 		end
 
-	on_application_before_stopped is
+	frozen on_application_before_paused is
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
-			Debugger_manager.on_application_before_stopped
+			Debugger_manager.on_application_before_paused
 		end
 
-	on_application_just_stopped is
+	frozen on_application_paused is
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
+		do
+			Debugger_manager.on_application_paused
+		end
+
+	frozen on_application_just_stopped is
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_just_stopped
 		end
 
-	on_application_quit is
+	frozen on_application_quit is
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do

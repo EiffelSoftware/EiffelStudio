@@ -41,7 +41,16 @@ feature -- Initialization
 			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("run")
 			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			set_referred_shortcut (l_shortcut)
-			accelerator.actions.extend (agent execute)
+			accelerator.actions.extend (agent execute_from_accelerator)
+		end
+
+feature -- Execution
+
+	execute_from_accelerator is
+			-- Execute from accelerator
+		do
+			eb_debugger_manager.stop_at_breakpoints
+			execute
 		end
 
 feature -- Access
@@ -168,6 +177,38 @@ feature {NONE} -- Attributes
 			else
 				l_cb_item.select_actions.extend (agent eb_debugger_manager.set_execution_ignoring_breakpoints (True))
 			end
+
+				--| Execution replay recording status
+			create l_cb_item.make_with_text (interface_names.b_activate_execution_recording)
+			Result.extend (l_cb_item)
+			if eb_debugger_manager.execution_replay_recording_enabled then
+				l_cb_item.enable_select
+				l_cb_item.select_actions.extend (agent eb_debugger_manager.activate_execution_replay_recording (False))
+			else
+				l_cb_item.select_actions.extend (agent eb_debugger_manager.activate_execution_replay_recording (True))
+			end
+
+			Result.extend (create {EV_MENU_SEPARATOR})
+
+				-- Run (workbench)
+			create l_item.make_with_text (interface_names.m_run_workbench)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
+			l_item.select_actions.extend (agent
+						do
+							eb_debugger_manager.run_workbench_cmd.execute
+						end
+					)
+			Result.extend (l_item)
+
+				-- Run (finalized)
+			create l_item.make_with_text (interface_names.m_run_finalized)
+			l_item.set_pixmap (pixmaps.icon_pixmaps.debug_run_finalized_icon)
+			l_item.select_actions.extend (agent
+						do
+							eb_debugger_manager.run_finalized_cmd.execute
+						end
+					)
+			Result.extend (l_item)
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 

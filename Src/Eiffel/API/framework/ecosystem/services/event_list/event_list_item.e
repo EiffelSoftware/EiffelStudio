@@ -46,13 +46,26 @@ feature -- Access
 	data: ANY
 			-- Event item user data
 
+feature -- Status report
+
+	is_invalidated: BOOLEAN
+			-- Indicates if the item has been invalidated and should be removed
+
+feature -- Basic operations
+
+	invalidate
+			-- Invalidates the item for removal
+		do
+			is_invalidated := True
+		end
+
 invariant
 	category_is_valid_category: is_valid_category (category)
 	priority_is_valid_priority: is_valid_priority (priority)
 	data_is_valid_data: is_valid_data (data)
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

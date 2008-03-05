@@ -21,6 +21,11 @@ inherit
 
 	EIFFEL_LAYOUT
 
+	ERROR_CONTEXT_PRINTER
+		export
+			{NONE} all
+		end
+
 feature -- Display
 
 	trace (a_text_formatter: TEXT_FORMATTER; a_error: ERROR; a_kind: INTEGER) is
@@ -126,9 +131,9 @@ feature -- Processing
 				end
 			elseif type = context then
 				if {l_class2: !CLASS_C} a_value.associated_class then
-					text_formatter.add_group (l_class2.group, l_class2.group.name)
-					text_formatter.add (".")
-					text_formatter.add_class (l_class2.lace_class)
+					if {l_formatter: !TEXT_FORMATTER} text_formatter then
+						print_context_class (l_formatter, l_class2)
+					end
 				elseif a_value.file_name /= Void then
 					process_error (a_value)
 				end

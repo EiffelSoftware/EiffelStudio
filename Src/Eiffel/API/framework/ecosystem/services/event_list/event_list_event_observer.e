@@ -18,7 +18,7 @@ feature {EVENT_LIST_S} -- Event handlers
 	on_event_item_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- Called when a event item is added to the event service.
 			--
-			-- `a_service': Event service where event was added.
+			-- `a_service': Event service where event item was added.
 			-- `a_event_item': The event item added to the service.
 		require
 			is_interface_usable: is_interface_usable
@@ -30,7 +30,7 @@ feature {EVENT_LIST_S} -- Event handlers
 	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- Called after a event item has been removed from the service `a_service'
 			--
-			-- `a_service': Event service where the event was removed.
+			-- `a_service': Event service where the event item was removed.
 			-- `a_event_item': The event item removed from the service.
 		require
 			is_interface_usable: is_interface_usable
@@ -42,7 +42,7 @@ feature {EVENT_LIST_S} -- Event handlers
 	on_event_item_changed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- Called after a event item has been changed.
 			--
-			-- `a_service': Event service where the event was changed.
+			-- `a_service': Event service where the event item was changed.
 			-- `a_event_item': The event item that was changed.
 		require
 			is_interface_usable: is_interface_usable
@@ -51,6 +51,19 @@ feature {EVENT_LIST_S} -- Event handlers
 		do
 		end
 
+	on_event_item_adopted (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I; a_new_cookie: UUID; a_old_cookie: UUID)
+			-- Called after an event item has been adopted by another owner.
+			--
+			-- `a_service': Event service where the event item was adopted.
+			-- `a_event_item': The event item that was changed.
+		require
+			is_interface_usable: is_interface_usable
+			a_service_attached: a_service /= Void
+			a_event_attached: a_event_item /= Void
+			a_new_cookie_is_valid_context_cookie: a_service.is_valid_context_cookie (a_new_cookie)
+			a_old_cookie_is_valid_context_cookie: a_service.is_valid_context_cookie (a_old_cookie)
+		do
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

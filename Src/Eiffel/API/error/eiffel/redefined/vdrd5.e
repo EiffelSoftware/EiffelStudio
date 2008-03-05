@@ -68,7 +68,7 @@ feature -- Output
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like redeclaration} redeclaration and then {l_class: !like class_c} class_c then
-				print_context_feature (l_feature, l_class, l_formatter)
+				print_context_feature (l_formatter, l_feature, l_class)
 			else
 				Precursor (a_text_formatter)
 			end

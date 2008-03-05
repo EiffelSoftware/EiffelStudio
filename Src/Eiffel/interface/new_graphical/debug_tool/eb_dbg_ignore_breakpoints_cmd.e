@@ -56,6 +56,8 @@ feature -- Execution
 			end
 		end
 
+feature -- Status
+
 	breakpoints_ignored: BOOLEAN
 			-- Breakpoints ignored ?
 

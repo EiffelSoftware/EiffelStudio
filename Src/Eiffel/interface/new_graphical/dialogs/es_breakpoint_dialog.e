@@ -295,6 +295,7 @@ feature {NONE} -- Helpers
 			a_cb.select_actions.extend (agent (acb: EV_CHECK_BUTTON; aws: ARRAY [EV_WIDGET]; acl: EV_CELL; awi: EV_WIDGET)
 				local
 --					lw,lh: INTEGER
+					p: EV_CONTAINER
 				do
 					if acb.is_selected then
 						if aws /= Void and then not aws.is_empty then
@@ -302,7 +303,14 @@ feature {NONE} -- Helpers
 						end
 						if awi /= Void and acl /= Void then
 							acl.show
-							acl.replace (awi)
+							p := awi.parent
+							if p /= acl then
+								if p /= Void then
+									acl.wipe_out
+									p.prune_all (awi)
+								end
+								acl.replace (awi)
+							end
 							awi.show
 						end
 					else

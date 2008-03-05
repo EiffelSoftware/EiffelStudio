@@ -16,16 +16,14 @@ feature -- Command
 
 	init: POINTER is
 			-- Declared as curl_easy_init().
+		require
+			dynamic_library_exists: is_dynamic_library_exists
 		local
 			l_api: POINTER
-			l_exception: CURL_DYNAMIC_LIBRARY_NOT_FOUND_EXCEPTION
 		do
 			l_api := api_loader.safe_load_api (module_name, "curl_easy_init")
 			if l_api /= default_pointer then
 				Result := c_init (l_api)
-			else
-				create l_exception.make
-				l_exception.raise
 			end
 		ensure
 			exists: Result /= default_pointer
@@ -126,6 +124,14 @@ feature -- Command
 			end
 		end
 
+feature -- Query
+
+	is_dynamic_library_exists: BOOLEAN is
+			-- If dll/so files exist?
+		do
+			Result := (api_loader.module_pointer (module_name) /= default_pointer)
+		end
+		
 feature -- Special setting
 
 	set_curl_function (a_curl_function: CURL_FUNCTION) is

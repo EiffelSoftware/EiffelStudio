@@ -17,20 +17,28 @@ feature {NONE}  -- Initlization
 			-- Creation method
 		do
 			create internal_shared
-			create internal_screen
+			reset_screen
 		end
 
 feature -- Command
 
 	draw_line_area (a_start_x, a_start_y, a_width, a_height: INTEGER) is
 			-- Draw a half-tone line on screen.
+		local
+			l_dc: WEL_SCREEN_DC
+			l_spliter_brush: WEL_BRUSH
 		do
-			if last_half_tone_pixmap = Void or
-				last_half_tone_pixmap.width /= a_width or last_half_tone_pixmap.height /= a_height then
-				last_half_tone_pixmap := half_tone_pixmap (a_width, a_height)
-			end
-			screen.set_invert_mode
-			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap)
+			create l_dc
+			l_dc.get
+			l_spliter_brush := half_tone_brush
+
+			l_dc.select_brush (l_spliter_brush)
+			-- We must use pattern to draw half tone feedback on Windows Vista.
+			-- Otherwise, when erasing the background will be whole black (Vista Aero theme enabled).
+			l_dc.pat_blt (a_start_x, a_start_y, a_width, a_height, {WEL_RASTER_OPERATIONS_CONSTANTS}.patinvert)
+
+			l_spliter_brush.dispose
+			l_dc.dispose
 		end
 
 	draw_rectangle (left, top, width, height, line_width: INTEGER) is
@@ -77,7 +85,7 @@ feature -- Query
 	screen: EV_SCREEN is
 			-- Screen to draw.
 		do
-			result := internal_screen
+			Result := internal_screen
 		ensure
 			not_void: Result /= Void
 		end
@@ -183,25 +191,33 @@ feature {NONE} -- Implementation
 			draw_rectangle_internal (internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height, internal_shared.line_width)
 		end
 
-	draw_rectangle_internal (left, top, width, height, line_width: INTEGER) is
+	draw_rectangle_internal (a_left, a_top, a_width, a_height, a_line_width: INTEGER) is
 			-- Draw half-tone rectangle feedback.
 		require
-			valid: width > 0
+			valid: a_line_width > 0
 		do
 			-- Draw window area, top one.
-			draw_rectangle_internal_top (left, top, width, line_width)
+			draw_rectangle_internal_top (a_left, a_top, a_width, a_line_width)
 			-- Draw window area, bottom one.
-			draw_rectangle_internal_bottom (left, top + height - line_width, width, line_width)
+			draw_rectangle_internal_bottom (a_left, a_top + a_height - a_line_width, a_width, a_line_width)
 			-- Draw window area, left one.
-			draw_rectangle_internal_left (left, top + line_width, line_width, height - 2 * line_width)
+			draw_rectangle_internal_left (a_left, a_top + a_line_width, a_line_width, a_height - 2 * a_line_width)
 			-- Draw window area, right one.
-			draw_rectangle_internal_right (left + width - line_width, top + line_width, line_width, height - 2 * line_width)
+			draw_rectangle_internal_right (a_left + a_width - a_line_width, a_top + a_line_width, a_line_width, a_height - 2 * a_line_width)
 		end
 
 feature {NONE}  -- Implementation
 
-	last_half_tone_pixmap: EV_PIXMAP
-			-- Half tone pixmap last time drawn.
+ 	half_tone_brush: WEL_BRUSH is
+			-- Create the brush to draw resize bar feedback
+		local
+			l_helper: WEL_BITMAP_HELPER
+		do
+			create l_helper
+			Result := l_helper.half_tone_brush
+		ensure
+			not_void: Result /= Void
+		end
 
 	internal_screen: EV_SCREEN
 			-- Internal screen instance, one instance per a dragging process.

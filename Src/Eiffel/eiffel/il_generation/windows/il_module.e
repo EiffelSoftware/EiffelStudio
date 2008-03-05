@@ -933,10 +933,11 @@ feature -- Code generation
 		local
 			l_entry_type_token: INTEGER
 			l_root_creator_token: INTEGER
-			l_exception_manager_token: INTEGER
+			l_set_exception_manager_token: INTEGER
 			l_rt_extension_object_token: INTEGER
 			l_sig: like method_sig
 			l_field_sig: like field_sig
+			l_meth_sig: like method_sig
 			l_type_id: INTEGER
 			l_nb_args: INTEGER
 			l_creation_type: CREATE_TYPE
@@ -981,17 +982,17 @@ feature -- Code generation
 					Void, False)
 			end
 
-				-- Create EXCEPTION_MANAGER object and assign it to ISE_RUNTIME.
+				-- Create ISE_EXCEPTION_MANAGER object and assign it to ISE_RUNTIME.
 			il_code_generator.create_object (ise_exception_manager_type_id)
-			l_field_sig := field_sig
-			l_field_sig.reset
-			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
-				ise_exception_manager_type_token)
-			l_exception_manager_token := md_emit.define_member_ref (
-				create {UNI_STRING}.make ("exception_manager"),
-				ise_runtime_type_token,
-				l_field_sig)
-			il_code_generator.method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, l_exception_manager_token)
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_exception_manager_type_token)
+			l_set_exception_manager_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("set_exception_manager"), ise_runtime_type_token, l_meth_sig)
+			il_code_generator.method_body.put_static_call (l_set_exception_manager_token, 1, False)
 
 			if
 				not System.in_final_mode and then

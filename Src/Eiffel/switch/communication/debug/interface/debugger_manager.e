@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			create application_prelaunching_actions
 			create implementation.make (Current)
 			create breakpoints_manager.make (Void)
+			create observer_provider.make; observer_provider.attach_to_debugger (Current)
 			breakpoints_manager.add_observer (Current)
 		end
 
@@ -595,6 +596,9 @@ feature -- Properties
 	controller: DEBUGGER_CONTROLLER
 			-- Debugger controller for run, resume ...
 
+	observer_provider: DEBUGGER_OBSERVER_PROVIDER
+			-- Debugger event observer service			
+
 	dump_value_factory: DUMP_VALUE_FACTORY
 			-- Dump value factory
 
@@ -703,6 +707,9 @@ feature -- Status
 	execution_ignoring_breakpoints: BOOLEAN assign set_execution_ignoring_breakpoints
 			-- Is execution ignore breakpoints ?
 
+	execution_replay_recording_enabled: BOOLEAN assign activate_execution_replay_recording
+			-- Is execution replay recording enabled ?
+
 feature -- Parameters context
 
 --| This code may be used later to enhance display of string ...
@@ -773,7 +780,7 @@ feature -- Exception handling
 		do
 			Result := True
 			if exceptions_handler.enabled then
-				application_status.update_on_before_stopped_state
+				application_status.update_on_pre_stopped_state
 				l_name := application_status.exception_type_name
 				if l_name /= Void then
 					Result := exceptions_handler.exception_catched_by_name (l_name)
@@ -851,9 +858,13 @@ feature {DEBUGGER_OBSERVER} -- Observer implementation
 	add_observer (o: DEBUGGER_OBSERVER) is
 		do
 			observers.force (o)
+		ensure
+			o_is_attached: o.is_attached_to (Current)
 		end
 
 	remove_observer (o: DEBUGGER_OBSERVER) is
+		require
+			o_is_attached: o.is_attached_to (Current)
 		do
 			observers.prune_all (o)
 		end
@@ -1153,6 +1164,8 @@ feature -- Change
 			not can_debug
 		end
 
+feature -- Application change
+
 	do_not_stop_at_breakpoints is
 			-- Ignore breakpoints
 		do
@@ -1176,14 +1189,15 @@ feature -- Change
 			end
 		end
 
-feature -- Application change
-
-	activate_execution_replay_recording (a_mode: BOOLEAN) is
+	activate_execution_replay_recording (b: BOOLEAN) is
 			-- Activate or Deactivate execution replay recording
-		require
-			safe_application_is_stopped: safe_application_is_stopped
 		do
-			application.activate_execution_replay_recording (a_mode)
+			execution_replay_recording_enabled := b
+			if safe_application_is_stopped then
+				if application_status.replay_recording /= b then
+					application.activate_execution_replay_recording (b)
+				end
+			end
 		end
 
 	disable_assertion_checking is
@@ -1242,6 +1256,7 @@ feature -- Compilation events
 					-- Save breakpoint status and command line.
 				save_debugger_data
 			end
+			rt_extension_available := eiffel_system.system.rt_extension_class /= Void and then eiffel_system.system.rt_extension_class.is_compiled
 		end
 
 feature -- Debugging events
@@ -1260,6 +1275,8 @@ feature -- Debugging events
 	on_application_before_launching is
 		local
 			bl: BREAK_LIST
+			bploc: BREAKPOINT_LOCATION
+			bp: BREAKPOINT
 		do
 			debugging_operation_id := 0
 			compute_class_c_data
@@ -1273,8 +1290,45 @@ feature -- Debugging events
 				bl.forth
 			end
 			save_debugger_data
+
+				--| Check if RT_EXTENSION is available
 			rt_extension_available := Eiffel_system.system.rt_extension_class /= Void and then
 										Eiffel_system.system.rt_extension_class.is_compiled
+
+			if not rt_extension_available then
+				activate_execution_replay_recording (False)
+			end
+			if execution_replay_recording_enabled then
+				bploc := breakpoints_manager.entry_breakpoint_location
+				if bploc /= Void and then bploc.is_valid then
+					bp := breakpoints_manager.new_hidden_breakpoint (bploc)
+					bp.add_when_hits_action (create {BREAKPOINT_WHEN_HITS_ACTION_EXECUTE}.make (
+							agent (abp: BREAKPOINT; adbg: DEBUGGER_MANAGER)
+								do
+									adbg.activate_execution_replay_recording (True)
+										--| At this point, this is safe to delete it
+										--| since we know there is only 1 when_hits action.
+									adbg.breakpoints_manager.delete_breakpoint (abp)
+									adbg.breakpoints_manager.notify_breakpoints_changes
+								end
+							)
+						)
+					bp.set_continue_execution (True)
+					breakpoints_manager.add_breakpoint (bp)
+				end
+				add_on_stopped_action (agent (abp: BREAKPOINT; adbg: DEBUGGER_MANAGER)
+								do
+										--| In case, the hidden bp is not reached,
+										--| but we still stop, then let's delete it
+									adbg.activate_execution_replay_recording (True)
+									if abp /= Void then
+										adbg.breakpoints_manager.delete_breakpoint (abp)
+										adbg.breakpoints_manager.notify_breakpoints_changes
+									end
+								end (bp, ?),
+								True)
+			end
+
 			application_launching_in_progress := True
 			application_prelaunching_actions.call (Void)
 		end
@@ -1302,7 +1356,7 @@ feature -- Debugging events
 			display_application_status
 		end
 
-	on_application_before_stopped is
+	on_application_before_paused is
 		do
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_before_stopped %N")
@@ -1316,6 +1370,14 @@ feature -- Debugging events
 			end
 		end
 
+	on_application_paused is
+		require
+			app_is_executing: safe_application_is_stopped
+		do
+				--| Observers
+			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_paused (Current))
+		end
+
 	on_application_just_stopped is
 		require
 			app_is_executing: safe_application_is_stopped
@@ -1325,10 +1387,6 @@ feature -- Debugging events
 
 				--| Reset current stack number to 1 (top level)
 			application.set_current_execution_stack_number (1)
-
-			if has_stopped_action then
-				stopped_actions.call ([Current])
-			end
 
 				--| Observers
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_stopped (Current))
@@ -1347,6 +1405,8 @@ feature -- Debugging events
 		require
 			app_is_executing: application_is_executing and then not application_is_stopped
 		do
+			object_manager.reset
+
 			incremente_debugging_operation_id
 				--| Display running mode, only if ignoring bp
 			if application.ignoring_breakpoints then
@@ -1376,13 +1436,11 @@ feature -- Debugging events
 
 					--| Observers
 				observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_quit (Current))
+
 					--| Kept objects
 				application_status.clear_kept_objects
 			end
 
-			if has_stopped_action then
-				stopped_actions.call ([Current])
-			end
 				--| Save debug info
 			save_debugger_data
 
@@ -1403,7 +1461,6 @@ feature -- Debugging events
 		do
 			-- do_nothing
 			application_quit_actions.call (Void)
-			rt_extension_available := False
 
 			from
 				bl := breakpoints_manager.breakpoints
@@ -1424,38 +1481,18 @@ feature -- Actions
 	application_quit_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be process when the debuggee exits.
 
-feature {NONE} -- Implementation
-
-	stopped_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]]
-			-- Actions called when application has stopped.
-
 feature -- One time action
-
-	has_stopped_action: BOOLEAN is
-			-- Has `stopped_actions' some actions to be executed?
-		do
-			Result := stopped_actions /= Void and then not stopped_actions.is_empty
-		ensure
-			has_stopped_actions_definition:
-				Result = (stopped_actions /= Void and then not stopped_actions.is_empty)
-		end
 
 	add_on_stopped_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN) is
 			-- Add `p' to `stopped_actions' with `p'.
 		require
 			p_not_void: p /= Void
 		do
-			if stopped_actions = Void then
-				create stopped_actions
-			end
-			stopped_actions.extend (p)
 			if is_kamikaze then
-				stopped_actions.prune_when_called (p)
+				observer_provider.application_stopped_actions.extend_kamikaze (p)
+			else
+				observer_provider.application_stopped_actions.extend (p)
 			end
-		ensure
-			stopped_actions_not_void: stopped_actions /= Void
-			has_stopped_actions: has_stopped_action
-			stopped_actions_set: stopped_actions.has (p)
 		end
 
 feature -- Debuggee Objects management

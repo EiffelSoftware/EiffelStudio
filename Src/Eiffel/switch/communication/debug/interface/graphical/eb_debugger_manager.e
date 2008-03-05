@@ -27,7 +27,6 @@ inherit
 			on_application_launched,
 			on_application_before_resuming,
 			on_application_resumed,
-			on_application_before_stopped,
 			on_application_just_stopped,
 			on_debugging_terminated,
 			on_breakpoints_change_event,
@@ -265,7 +264,6 @@ feature {NONE} -- Initialization
 
 			create toggle_exec_replay_recording_mode_cmd.make (Current)
 			toolbarable_commands.extend (toggle_exec_replay_recording_mode_cmd)
-			toggle_exec_replay_recording_mode_cmd.disable_sensitive
 
 			create toggle_exec_replay_mode_cmd.make (Current)
 			toolbarable_commands.extend (toggle_exec_replay_mode_cmd)
@@ -1035,6 +1033,7 @@ feature -- Change
 			restart_cmd.update (w)
 			no_stop_cmd.update (w)
 			ignore_breakpoints_cmd.update (w)
+			toggle_exec_replay_recording_mode_cmd.update (w)
 
 			from
 				l_cmds := show_tool_commands
@@ -1565,7 +1564,6 @@ feature -- Debugging events
 			-- Application is about to be launched.
 		do
 			Precursor
-			toggle_exec_replay_recording_mode_cmd.reset
 			assertion_checking_handler_cmd.reset
 			disable_debugging_commands (False)
 			breakpoints_manager.notify_breakpoints_changes
@@ -1612,14 +1610,6 @@ feature -- Debugging events
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_launched : done%N")
 			end
-		end
-
-	on_application_before_stopped is
-			-- Execute command after application is
-			-- stopped in a breakpoint or an exception
-			-- occurred
-		do
-			Precursor
 		end
 
 	on_application_just_stopped is
@@ -1781,8 +1771,9 @@ feature -- Debugging events
 			reset_tools
 			assertion_checking_handler_cmd.reset
 			toggle_exec_replay_mode_cmd.reset
-			toggle_exec_replay_recording_mode_cmd.reset
-			toggle_exec_replay_recording_mode_cmd.disable_sensitive -- disable by default
+			if rt_extension_available and is_classic_project then
+				toggle_exec_replay_recording_mode_cmd.enable_sensitive
+			end
 
 			if was_executing then
 					-- Make all debugging tools disappear.
@@ -1820,6 +1811,7 @@ feature -- Debugging events
 			exec_replay_back_cmd.disable_sensitive
 			exec_replay_forth_cmd.disable_sensitive
 			object_storage_management_cmd.disable_sensitive
+
 
 			Precursor (was_executing)
 		end
@@ -1867,17 +1859,38 @@ feature -- Application change
 			was_ignoring_bp: BOOLEAN
 		do
 			was_ignoring_bp := execution_ignoring_breakpoints
-			Precursor (b)
-			if was_ignoring_bp /= b then
-				ignore_breakpoints_cmd.set_select (b)
+			Precursor {DEBUGGER_MANAGER} (b)
+			if was_ignoring_bp /= execution_ignoring_breakpoints then
+				ignore_breakpoints_cmd.set_select (execution_ignoring_breakpoints)
 			end
 		end
 
-	activate_execution_replay_recording (a_mode: BOOLEAN) is
+	activate_execution_replay_recording (b: BOOLEAN) is
 			-- Activate or Deactivate execution recording
+		local
+			was_enabled: BOOLEAN
 		do
-			Precursor {DEBUGGER_MANAGER} (a_mode)
-			toggle_exec_replay_recording_mode_cmd.set_select (a_mode)
+			was_enabled := execution_replay_recording_enabled
+			Precursor {DEBUGGER_MANAGER} (b)
+			if was_enabled /= execution_replay_recording_enabled then
+				toggle_exec_replay_recording_mode_cmd.set_select (execution_replay_recording_enabled)
+			end
+			if
+				execution_replay_recording_enabled and then
+				safe_application_is_stopped and then
+				application_status.replay_recording
+			then
+				toggle_exec_replay_mode_cmd.enable_sensitive
+			else
+				toggle_exec_replay_mode_cmd.disable_sensitive
+			end
+			if
+				application_is_executing and then
+				execution_replay_recording_enabled /= application_status.replay_recording and then
+				not application_is_stopped
+			then
+				debugger_warning_message (interface_names.l_only_available_for_stopped_application)
+			end
 		end
 
 	disable_assertion_checking is
@@ -1986,6 +1999,9 @@ feature {NONE} -- Implementation
 	enable_commands_on_project_loaded is
 			-- Enable commands when a new project has been created and compiled
 		do
+			rt_extension_available := eiffel_system.system.rt_extension_class /= Void and then
+						Eiffel_system.system.rt_extension_class.is_compiled
+
 			enable_debugging_commands
 				-- Except those 2 commands, which are valid only during execution.
 			object_storage_management_cmd.disable_sensitive
@@ -2003,6 +2019,9 @@ feature {NONE} -- Implementation
 				bkpt_info_cmd.enable_sensitive
 				force_debug_mode_cmd.enable_sensitive
 				ignore_breakpoints_cmd.enable_sensitive
+				if rt_extension_available and is_classic_project then
+					toggle_exec_replay_recording_mode_cmd.enable_sensitive
+				end
 
 				assertion_checking_handler_cmd.disable_sensitive
 				object_storage_management_cmd.enable_sensitive
@@ -2048,7 +2067,6 @@ feature {NONE} -- Implementation
 				bkpt_info_cmd.disable_sensitive
 				force_debug_mode_cmd.disable_sensitive
 			end
-
 			toggle_exec_replay_recording_mode_cmd.disable_sensitive
 
 			debug_cmd.disable_sensitive

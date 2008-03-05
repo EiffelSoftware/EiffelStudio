@@ -195,13 +195,14 @@ feature -- Values
 	body_index: INTEGER
 			-- Body index of the feature in which we are currently stopped
 
+	dynamic_type: CLASS_TYPE
+			-- Class type of object in which we are currently stopped
+
 	dynamic_class: CLASS_C
-			-- Class type of object in which we are currently
-			-- stopped
+			-- Class of object in which we are currently stopped
 
 	origin_class: CLASS_C
-			-- Origin of feature in which we are currently
-			-- stopped
+			-- Origin of feature in which we are currently stopped
 
 	break_index: INTEGER
 			-- Breakpoint at which we are currently stopped
@@ -543,17 +544,30 @@ feature -- Access
 			Result := current_eiffel_call_stack_element /= Void
 		end
 
+	has_breakpoint_enabled: BOOLEAN is
+			-- Has breakpoint enabled at current location ?
+		do
+			if e_feature /= Void then
+				Result := application.debugger_manager.breakpoints_manager.is_breakpoint_enabled (e_feature, break_index)
+			end
+		end
+
 feature -- Execution replay
 
 	replay_recording: BOOLEAN
+			-- Execution is being recorded for Exec replay functionality
 
 	replay_activated: BOOLEAN
+			-- Execution is being replayed (reviewed)
 
 	replay_depth_limit: INTEGER
+			-- Maximum depth which can be replayed
 
 	replay_depth: INTEGER
+			-- Current replayed depth
 
 	set_replay_recording (b: BOOLEAN) is
+			-- Enable or disable execution replay recording
 		require
 			stop_recording_only_if_not_replaying: b implies not replay_activated
 		do
@@ -561,7 +575,7 @@ feature -- Execution replay
 		end
 
 	set_replay_activated (b: BOOLEAN) is
-			--
+			-- Enable or Disable Execution replaying
 		require
 			activate_replay_only_if_recording: b implies replay_recording
 		do
@@ -569,7 +583,7 @@ feature -- Execution replay
 		end
 
 	set_replay_depth_limit (d: INTEGER) is
-			--
+			-- Set maximum replay depth
 		require
 			d_positive_or_zero: d >= 0
 		do
@@ -577,7 +591,7 @@ feature -- Execution replay
 		end
 
 	set_replay_depth (d: INTEGER) is
-			--
+			-- Set current replay depth
 		require
 			d_in_range: d >= 0 and d <= replay_depth_limit
 		do
@@ -586,7 +600,7 @@ feature -- Execution replay
 
 feature -- Update
 
-	update_on_before_stopped_state is
+	update_on_pre_stopped_state is
 			-- Update data which need update before application is really stopped
 		do
 		end

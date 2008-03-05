@@ -134,6 +134,8 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 						l_status.is_stopped
 						and then not l_status.is_evaluating
 					then
+						on_application_paused
+
 						if Eifnet_debugger.managed_callback_is_exit_process (cb_id) then --| Exit Process |--	
 							notify_execution_on_exit_process
 						elseif Eifnet_debugger.info.debugger_error_occurred then
@@ -1211,7 +1213,7 @@ feature {NONE} -- Events on notification
 			dbg_info := Eifnet_debugger.info
 
 --| Useless, but we may need it one day
---			on_application_before_stopped
+--			on_application_before_paused
 
 				--| on top of the stack = current stack/feature
 			set_current_execution_stack_number (1)
@@ -1241,6 +1243,10 @@ feature {NONE} -- Events on notification
 			else
 				if Eifnet_debugger.managed_callback_is_step_complete (cb_id) then
 					l_status.set_reason_as_step
+					if l_status.has_breakpoint_enabled then
+						need_to_continue := not do_stop_on_breakpoint
+					end
+					need_to_continue := False --| Just to be sure we really stop when stepping.
 				elseif Eifnet_debugger.managed_callback_is_breakpoint (cb_id) then
 					l_status.set_reason_as_break
 					need_to_continue := not do_stop_on_breakpoint
@@ -1282,27 +1288,26 @@ feature {NONE} -- Events on notification
 			l_bp: BREAKPOINT
 			loc: BREAKPOINT_LOCATION
 		do
+			loc := Eifnet_debugger.current_breakpoint_location
+			bps := debugger_manager.breakpoints_manager.breakpoints_at (loc)
+			if bps /= Void then
+				from
+					bps.start
+				until
+					bps.after
+				loop
+					l_bp := bps.item
+					if l_bp /= Void then
+						Result := Result or debugger_manager.process_breakpoint (l_bp)
+					end
+					bps.forth
+				end
+			end
 			if Eifnet_debugger.last_control_mode_is_stepping then
 				debug ("debugger_trace")
-					print ("Stepping then continue ..%N")
+					print ("Stepping, evaluate breakpoint, and then continue ..%N")
 				end
 				Result := True
-			else
-				loc := Eifnet_debugger.current_breakpoint_location
-				bps := debugger_manager.breakpoints_manager.breakpoints_at (loc)
-				if bps /= Void then
-					from
-						bps.start
-					until
-						bps.after
-					loop
-						l_bp := bps.item
-						if l_bp /= Void then
-							Result := Result or debugger_manager.process_breakpoint (l_bp)
-						end
-						bps.forth
-					end
-				end
 			end
 		end
 

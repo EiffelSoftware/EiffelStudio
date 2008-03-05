@@ -57,7 +57,7 @@ inherit
 
 create {EIFFEL_CALL_STACK}
 	make
-create {STOPPED_HDLR, APPLICATION_EXECUTION_CLASSIC}
+create {STOPPED_HDLR, APPLICATION_EXECUTION_CLASSIC, APPLICATION_STATUS_CLASSIC}
 	dummy_make
 
 feature {NONE} -- Initialization
@@ -98,19 +98,37 @@ feature {NONE} -- Initialization
 			retry
 		end
 
-	dummy_make (fn: STRING; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: STRING; type, origin: INTEGER) is
+	dummy_make (fe: E_FEATURE; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: STRING;
+				a_type: like dynamic_type; a_class: like dynamic_class; a_origin: like written_class) is
 			-- Initialize `Current' with no calls to the run-time.
 		do
-			routine_name := fn
+			if fe /= Void then
+				private_routine := fe
+				routine_name := fe.name
+			else
+				routine_name := "Unknown..."
+			end
 			level_in_stack := lvl
 			is_melted := mlt
 			break_index := br
-			dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1, False)
+
+				--| Dynamic type
+			dynamic_type := a_type
+				--| Dynamic Class
 			if dynamic_type /= Void then
 				dynamic_class := dynamic_type.associated_class
+			end
+			if dynamic_class = Void then
+				dynamic_class := a_class
+			end
+			if dynamic_class /= Void then
 				class_name := dynamic_class.name_in_upper
 			end
-			written_class := Eiffel_system.class_of_dynamic_id (origin + 1, False)
+				--| Written class (i.e: origin)
+			written_class := a_origin
+
+				--| Address and other
+
 			object_address := addr
 			object_address_to_string := object_address
 				-- set the private body index to a fake value

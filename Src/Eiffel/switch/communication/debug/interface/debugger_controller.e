@@ -449,7 +449,7 @@ feature {NONE} -- debugging
 				app_exec := manager.application
 				app_exec.ignore_breakpoints (manager.execution_ignoring_breakpoints)
 				app_exec.set_execution_mode (a_execution_mode)
-				app_exec.on_application_before_launching
+				manager.on_application_before_launching
 				app_exec.run (param)
 				if manager.application_is_executing then
 					manager.init_application
@@ -458,7 +458,7 @@ feature {NONE} -- debugging
 					else
 						manager.debugger_message (debugger_names.m_system_is_running)
 					end
-					app_exec.on_application_launched
+					manager.on_application_launched
 				else
 						-- Something went wrong
 					warning (app_exec.can_not_launch_system_message)

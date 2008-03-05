@@ -14,7 +14,7 @@ inherit
 		redefine
 			current_call_stack_element,
 			current_call_stack,
-			update_on_before_stopped_state,
+			update_on_pre_stopped_state,
 			update_on_stopped_state,
 			set_current_thread_id,
 			thread_name, thread_priority
@@ -54,6 +54,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 					dyn_ctype := dbg_recorder.class_type_for_module_class_token (curr_mod_name, curr_ctok)
 					feat_i := dbg_recorder.feature_i_by_module_feature_token (curr_mod_name, curr_ftok)
 					if dyn_ctype /= Void then
+						dynamic_type := dyn_ctype
 						dynamic_class := dyn_ctype.associated_class
 
 						if feat_i /= Void then
@@ -107,7 +108,7 @@ feature -- Update
 			end
 		end
 
-	update_on_before_stopped_state is
+	update_on_pre_stopped_state is
 			-- Update data before the application is really stopped
 		do
 			if exception_occurred then

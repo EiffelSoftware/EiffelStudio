@@ -35,7 +35,12 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			reason := reas
 			if reason /= Pg_update_breakpoint then
 					-- Compute class type.
-				dynamic_class := Eiffel_system.class_of_dynamic_id (dt, False)
+				dynamic_type := Eiffel_system.type_of_dynamic_id (dt, False)
+				if dynamic_type /= Void then
+					dynamic_class := dynamic_type.associated_class
+				else
+					dynamic_class := Eiffel_system.class_of_dynamic_id (dt, False)
+				end
 
 					-- Compute origin class type
 				origin_class := Eiffel_system.class_of_dynamic_id (ot, False)
@@ -95,6 +100,13 @@ feature {NONE} -- CallStack Impl
 			-- for thread `a_tid'.
 		do
 			create Result.make (a_stack_max_depth, a_tid)
+		end
+
+feature -- Query
+
+	dummy_call_stack_element: CALL_STACK_ELEMENT_CLASSIC is
+		do
+			create Result.dummy_make (e_feature, 1, True, break_index, object_address, dynamic_type, dynamic_class, origin_class)
 		end
 
 feature -- Values

@@ -427,7 +427,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 						s.set_current_thread_id (info.last_icd_thread_id)
 					end
 					debug ("debugger_trace_callback")
-						print (" - Info : Debuggee is STOPPED %N")
+						print (" - Info : Debuggee is PAUSED %N")
 					end
 				else
 					debug ("debugger_trace_callback")
@@ -754,7 +754,7 @@ feature {NONE} -- Callback actions
 		end
 
 	continue_on_cb (cb_id: INTEGER): BOOLEAN is
-			-- Continue witout stopping the system
+			-- Continue without stopping the system
 		do
 				--| Let's continue, we don't stop on this callback
 			call_do_continue_on_cb

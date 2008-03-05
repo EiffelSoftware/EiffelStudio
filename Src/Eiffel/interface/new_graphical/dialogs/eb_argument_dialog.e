@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_title (interface_names.t_Execution_parameters)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			Debugger_manager.add_observer (Current)
+			attach_to_debugger (debugger_manager)
 			set_size (600, 400)
 			run := cmd
 

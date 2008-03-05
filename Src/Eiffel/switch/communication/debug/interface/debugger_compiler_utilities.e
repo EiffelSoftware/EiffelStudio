@@ -46,6 +46,40 @@ feature -- Class c
 			end
 		end
 
+feature -- Entry point
+
+	frozen entry_point_class_feature: TUPLE [cl: CLASS_C; feat: FEATURE_I] is
+			-- System entry point feature
+		local
+			cl_i: CLASS_I
+			cl_c: CLASS_C
+			s: STRING
+		do
+			if eiffel_project.system_defined then
+				cl_i := eiffel_system.system.root_class
+				if cl_i /= Void then
+					cl_c := cl_i.compiled_class
+					if cl_c /= Void then
+						s := eiffel_system.system.root_creation_name
+						if s /= Void then
+							Result := [cl_c, cl_c.feature_table.item (s)]
+						end
+					end
+				end
+			end
+		end
+
+	frozen entry_point_feature: E_FEATURE is
+			-- System entry point api feature
+		local
+			t: like entry_point_class_feature
+		do
+			t := entry_point_class_feature
+			if t /= Void then
+				Result := t.feat.api_feature (t.cl.class_id)
+			end
+		end
+
 feature -- Type adaptation
 
 	frozen adapted_class_type (ctype: CLASS_TYPE; f: FEATURE_I): CLASS_TYPE is

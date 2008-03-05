@@ -61,6 +61,8 @@ feature {NONE} -- Initialization
 			build_interface
 
 			dbg := debugger_manager
+			attach_to_debugger (dbg)
+
 				-- Update the status.
 			mg := eiffel_project.manager
 			if mg.is_created then
@@ -85,8 +87,6 @@ feature {NONE} -- Initialization
 			mg.load_agents.extend (load_agent)
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
-
-			dbg.add_observer (Current)
 		end
 
 	build_interface is
@@ -269,6 +269,8 @@ feature {NONE} -- Status setting
 			mg: EB_PROJECT_MANAGER
 		do
 			Debugger_manager.remove_observer (Current)
+
+			unattach_from_debugger
 
 			mg := Eiffel_project.manager
 			mg.create_agents.prune_all (create_agent)

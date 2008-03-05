@@ -9,6 +9,12 @@ indexing
 class
 	BREAKPOINTS_MANAGER
 
+inherit {NONE}
+	DEBUGGER_COMPILER_UTILITIES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -90,6 +96,17 @@ feature -- Observers
 		end
 
 feature -- Factory
+
+	entry_breakpoint_location: BREAKPOINT_LOCATION is
+			-- Breakpint location for System's entry point
+		local
+			fe: E_FEATURE
+		do
+			fe := entry_point_feature
+			if fe /= Void then
+				Result := breakpoint_location (fe, fe.first_breakpoint_slot_index, True)
+			end
+		end
 
 	breakpoint_location (a_routine: E_FEATURE; a_breakable_index: INTEGER; reuse_location: BOOLEAN): BREAKPOINT_LOCATION is
 			-- BREAKPOINT_LOCATION for `a_routine' and `a_breakable_index'.
@@ -817,10 +834,11 @@ feature -- Breakpoints change
 	delete_breakpoint (bpk: BREAKPOINT_KEY) is
 			-- remove breakpoint related to `bpk'
 			-- if no breakpoint found, do nothing
+			--| Note: accept Void `bpk'
 		local
 			bp: BREAKPOINT
 		do
-			if breakpoints.has_key (bpk) then
+			if bpk /= Void and then breakpoints.has_key (bpk) then
 					-- yes, the breakpoint is already known, so delete it
 				bp := breakpoints.found_item
 				bp.discard

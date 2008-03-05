@@ -65,28 +65,19 @@ feature {NONE} -- Check for void test
 		require
 			equality_as_attached: equality_as /= Void
 		local
-			void_as: VOID_AS
-			expr_call_as: EXPR_CALL_AS
-			access_id_as: ACCESS_ID_AS
-			id_as: ID_AS
+			e: EXPR_AS
 		do
 			if is_negated = is_negation_expected then
-				void_as ?= equality_as.left
-				if void_as /= Void then
-					expr_call_as ?= equality_as.right
-				else
-					void_as ?= equality_as.right
-					if void_as /= Void then
-						expr_call_as ?= equality_as.left
-					end
+				if {v1: VOID_AS} equality_as.left then
+					e := equality_as.right
+				elseif {v2: VOID_AS} equality_as.right then
+					e := equality_as.left
 				end
-				if expr_call_as /= Void then
-					access_id_as ?= expr_call_as.call
-					if access_id_as /= Void then
-						id_as ?= access_id_as.feature_name
-						if id_as /= Void and then context.current_feature.argument_position (id_as.name_id) /= 0 then
-							context.add_argument_scope (id_as.name_id)
-						end
+				if {expr_call_as: EXPR_CALL_AS} e then
+					if {access_id_as: ACCESS_ID_AS} expr_call_as.call and then access_id_as.is_argument then
+						context.add_argument_scope (access_id_as.feature_name.name_id)
+					elseif {access_assert_as: ACCESS_ASSERT_AS} expr_call_as.call and then access_assert_as.is_argument then
+						context.add_argument_scope (access_assert_as.feature_name.name_id)
 					end
 				end
 			end
@@ -123,7 +114,7 @@ invariant
 	context_attached: context /= Void
 
 indexing
-	copyright:	"Copyright (c) 2007, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2008a, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

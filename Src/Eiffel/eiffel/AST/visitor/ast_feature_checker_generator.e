@@ -327,14 +327,14 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 					a_feature.check_type_validity (context.current_class)
 					if error_level = l_error_level then
 						context.set_written_class (l_written_class)
-						if not is_inherited then
+						if not is_inherited and then a_is_for_inline_agent then
 							if a_feature.has_arguments then
 								a_feature.check_argument_names (context.current_feature_table)
 							end
 						end
 						if error_level = l_error_level then
 							a_body.process (Current)
-							if not is_inherited then
+							if not is_inherited and then a_is_for_inline_agent then
 								a_feature.check_local_names (a_body)
 							end
 						end
@@ -2538,6 +2538,15 @@ feature -- Implementation
 						l_as.enable_argument
 						l_as.set_argument_position (l_arg_pos)
 						l_as.set_class_id (class_id_of (last_type))
+					end
+					if not last_type.is_attached and then
+						context.is_argument_attached (l_as.feature_name.name_id)
+					then
+						if context.current_class.lace_class.is_void_safe then
+							last_type := last_type.as_attached
+						else
+							last_type := last_type.as_implicitly_attached
+						end
 					end
 				end
 			else
@@ -6496,6 +6505,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_old_written_class: CLASS_C
 			l_written_class: CLASS_C
+			s: INTEGER
 		do
 			assert_id_set := a_feature.assert_id_set
 			if assert_id_set /= Void then
@@ -6519,15 +6529,23 @@ feature {NONE} -- Implementation
 						context.set_written_class (l_written_class)
 						if process_preconditions then
 							if assertion_info.has_precondition then
+									-- Remember current scope state
+								s := context.scope
 								set_is_checking_precondition (True)
 								routine_body.precondition.process (Current)
 								set_is_checking_precondition (False)
+									-- Revert to the original scope state
+								context.set_scope (s)
 							end
 						else
 							if assertion_info.has_postcondition then
+									-- Remember current scope state
+								s := context.scope
 								set_is_checking_postcondition (True)
 								routine_body.postcondition.process (Current)
 								set_is_checking_postcondition (False)
+									-- Revert to the original scope state
+								context.set_scope (s)
 							end
 						end
 						context.set_written_class (l_old_written_class)

@@ -1110,7 +1110,7 @@ feature -- Measurement
 		require
 			object_not_void: object /= Void
 		local
-			l_traverse: SED_OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
+			l_traverse: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
 			l_objects: ARRAYED_LIST [ANY]
 		do
 			create l_traverse

@@ -737,7 +737,7 @@ feature -- Query
 								"type_name",
 								"dynamic_type",
 								"field_count",
---								"deep_physical_size",
+								"deep_physical_size",
 								"physical_size"
 								>>
 					create Result.make (l_info.lower, l_info.upper)

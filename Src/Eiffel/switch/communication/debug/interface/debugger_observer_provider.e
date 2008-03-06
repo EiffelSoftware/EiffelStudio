@@ -14,7 +14,8 @@ inherit {NONE}
 			on_application_launched,
 			on_application_resumed,
 			on_application_stopped,
-			on_application_quit
+			on_application_exited,
+			on_debugging_terminated
 		end
 
 create {DEBUGGER_MANAGER}
@@ -81,10 +82,16 @@ feature {DEBUGGER_MANAGER} -- Implementation
 			application_stopped_actions.call ([dbg])
 		end
 
-	on_application_quit (dbg: DEBUGGER_MANAGER) is
+	on_application_exited (dbg: DEBUGGER_MANAGER) is
 			-- The debugged application has just died (exited).
 		do
 			application_exited_actions.call ([dbg])
+		end
+
+	on_debugging_terminated (dbg: DEBUGGER_MANAGER) is
+			-- The debugging is terminated.
+		do
+			debugging_terminated_actions.call ([dbg])
 		end
 
 invariant

@@ -85,8 +85,15 @@ feature {DEBUGGER_MANAGER} -- Event handling
 		do
 		end
 
-	on_application_quit (dbg: DEBUGGER_MANAGER) is
+	on_application_exited (dbg: DEBUGGER_MANAGER) is
 			-- The debugged application has just died (exited).
+		require
+			same_debugger: dbg = internal_debugger
+		do
+		end
+
+	on_debugging_terminated (dbg: DEBUGGER_MANAGER) is
+			-- The debugging is terminated.
 		require
 			same_debugger: dbg = internal_debugger
 		do

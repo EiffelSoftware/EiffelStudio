@@ -49,7 +49,7 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		redefine
-			on_application_quit,
+			on_application_exited,
 			on_application_launched,
 			on_application_resumed,
 			on_application_stopped
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Observing event handling.
 
-	on_application_quit (dbg: DEBUGGER_MANAGER) is
+	on_application_exited (dbg: DEBUGGER_MANAGER) is
 			-- Action to take when the application is killed.
 		do
 			run_button.enable_sensitive

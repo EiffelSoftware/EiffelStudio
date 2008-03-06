@@ -32,13 +32,19 @@ feature {NONE} -- Initialization
 			can_debug := True
 			set_default_parameters
 			create observers.make (3)
-			create profiles.make (10)
+
+			create implementation.make (Current)
 			create controller.make (Current)
+			create observer_provider.make;
+			observer_provider.attach_to_debugger (Current)
+
 			create application_quit_actions
 			create application_prelaunching_actions
-			create implementation.make (Current)
+
+			create profiles.make (10)
 			create breakpoints_manager.make (Void)
-			create observer_provider.make; observer_provider.attach_to_debugger (Current)
+
+
 			breakpoints_manager.add_observer (Current)
 		end
 
@@ -218,6 +224,9 @@ feature {NONE} -- Debugger session data access
 				if cons.is_service_available then
 					Result := cons.service.retrieve (True)
 					internal_session_data := Result
+
+						-- Load debugger data when first access the session
+					load_debugger_data
 				end
 			end
 		end
@@ -1435,7 +1444,7 @@ feature -- Debugging events
 				debugger_status_message (debugger_names.t_Application_exited)
 
 					--| Observers
-				observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_quit (Current))
+				observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_exited (Current))
 
 					--| Kept objects
 				application_status.clear_kept_objects

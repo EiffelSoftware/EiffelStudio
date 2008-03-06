@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	FEATURE_ADAPTATION 
+	FEATURE_ADAPTATION
 
 feature {NONE} -- Initialization
 
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			new_feature := new_feat
 		end
 
-feature -- Access 
+feature -- Access
 
 	old_features: INHERIT_FEAT
 			-- Inherited features
@@ -51,7 +51,7 @@ feature -- Checking
 			pattern_list: LIST [INTEGER]
 			origin_table: ORIGIN_TABLE)
 		is
-			-- Chec adaptation with computed new feature table `feat_tbl'.
+			-- Check adaptation with computed new feature table `feat_tbl'.
 		do
 			-- Do nothing
 		end
@@ -72,7 +72,7 @@ invariant
 	old_features_exists: old_features /= Void
 	new_feature_exists: new_feature /= Void
 	deferred_to_join: is_valid_old_features (old_features)
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -578,6 +578,11 @@ feature {NONE} -- Notebook item's behavior
 		do
 			if header_box /= Void then
 				header_box.wipe_out
+				if header_box_widget /= Void then
+					header_box_widget.replace_widget (header_box)
+					header_box_widget.update_parent_tool_bar_size
+				end
+				content.update_mini_tool_bar_size
 			end
 		ensure
 			header_box /= Void implies header_box.is_empty

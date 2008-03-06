@@ -84,6 +84,7 @@ feature {NONE} -- Initialization
 --| FIXME XR: When clusters can be moved for real, uncomment this line.
 --			drop_actions.extend (~on_cluster_drop)
 			create classes_double_click_agents.make
+			create cluster_double_click_agents.make
 			create expanded_clusters.make (20)
 			set_minimum_height (20)
 			enable_default_tree_navigation_behavior (False, False, False, True)
@@ -106,7 +107,6 @@ feature {NONE} -- Initialization
 	build_tree is
 			-- Remove and replace contents of `Current'.
 		local
-			l_target: CONF_TARGET
 			l_env: EV_ENVIRONMENT
 			l_locked: BOOLEAN
 		do
@@ -118,18 +118,34 @@ feature {NONE} -- Initialization
 				l_locked := True
 			end
 
+			build_tree_on_list (Current)
+
+			if window /= Void and l_locked then
+					-- Unlock update of window as `Current' has
+					-- been rebuilt.
+				window.unlock_update
+			end
+		end
+
+	build_tree_on_list (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE])
+			-- Build tree on `a_list'
+		require
+			a_list_not_void: a_list /= Void
+		local
+			l_target: CONF_TARGET
+		do
 				-- Remove all items, ready for rebuilding.
 			if Eiffel_project.initialized and then Universe.target /= Void then
 				store_expanded_state
 					-- Store expanded state of `Current'
 
-				wipe_out
+				a_list.wipe_out
 
 				l_target := Universe.target
 
 					-- sort clusters
 				create cluster_header.make (interface_names.l_class_tree_clusters, pixmaps.icon_pixmaps.top_level_folder_clusters_icon)
-				build_group_tree (manager.clusters, cluster_header)
+				build_group_tree (a_list, manager.clusters, cluster_header)
 				cluster_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.clusters, True), agent is_group_valid))
 				if context_menu_factory /= Void then
 					cluster_header.set_configurable_target_menu_mode
@@ -138,7 +154,7 @@ feature {NONE} -- Initialization
 
 					-- sort overrides
 				create override_header.make (interface_names.l_class_tree_overrides, pixmaps.icon_pixmaps.top_level_folder_overrides_icon)
-				build_group_tree (manager.overrides, override_header)
+				build_group_tree (a_list, manager.overrides, override_header)
 				override_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.overrides, False), agent is_group_valid))
 				if context_menu_factory /= Void then
 					override_header.set_configurable_target_menu_mode
@@ -147,7 +163,7 @@ feature {NONE} -- Initialization
 
 					-- sort libraries
 				create library_header.make (interface_names.l_class_tree_libraries, pixmaps.icon_pixmaps.top_level_folder_library_icon)
-				build_group_tree (manager.libraries, library_header)
+				build_group_tree (a_list, manager.libraries, library_header)
 				library_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.libraries, False), agent is_group_valid))
 				if context_menu_factory /= Void then
 					library_header.set_configurable_target_menu_mode
@@ -156,7 +172,7 @@ feature {NONE} -- Initialization
 
 					-- sort assemblies
 				create assembly_header.make (interface_names.l_class_tree_assemblies, pixmaps.icon_pixmaps.top_level_folder_references_icon)
-				build_group_tree (manager.assemblies, assembly_header)
+				build_group_tree (a_list, manager.assemblies, assembly_header)
 				assembly_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.assemblies, False), agent is_group_valid))
 				if context_menu_factory /= Void then
 					assembly_header.set_configurable_target_menu_mode
@@ -165,18 +181,12 @@ feature {NONE} -- Initialization
 
 					-- targets
 				if has_targets then
-					build_target_tree
+					build_target_tree (a_list)
 				end
 
 				restore_expanded_state
 					-- Restore original expanded state, stored during last call to
 					-- `store_expanded_state'				
-			end
-
-			if window /= Void and l_locked then
-					-- Unlock update of window as `Current' has
-					-- been rebuilt.
-				window.unlock_update
 			end
 		end
 
@@ -201,6 +211,12 @@ feature -- Activation
 			-- Add a double click action for classes.
 		do
 			classes_double_click_agents.extend (p)
+		end
+
+	add_double_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]) is
+			-- Add a double click action for classes.
+		do
+			cluster_double_click_agents.extend (p)
 		end
 
 	show_stone (a_stone: STONE) is
@@ -736,9 +752,11 @@ feature {NONE} -- Implementation
 	textable: EV_TEXT_COMPONENT
 			-- Text component classes should be associated with.
 
-	build_group_tree (a_grps: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]; a_header: EB_CLASSES_TREE_HEADER_ITEM) is
+	build_group_tree (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]; a_grps: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]; a_header: EB_CLASSES_TREE_HEADER_ITEM) is
 			-- Build a tree for `a_grps' under `a_header' and add it to the tree if we have elements.
+			-- Attach the tree to `a_list'
 		require
+			a_list_not_void: a_list /= Void
 			a_grps_not_void: a_grps /= Void
 			a_header_not_void: a_header /= Void
 		local
@@ -768,15 +786,26 @@ feature {NONE} -- Implementation
 					l_item.add_double_click_action_to_classes (classes_double_click_agents.item)
 					classes_double_click_agents.forth
 				end
+				from
+					cluster_double_click_agents.start
+				until
+					cluster_double_click_agents.after
+				loop
+					l_item.add_double_click_action_to_cluster (cluster_double_click_agents.item)
+					cluster_double_click_agents.forth
+				end
 				a_grps.forth
 			end
 			if not a_header.is_empty then
-				extend (a_header)
+				a_list.extend (a_header)
 			end
 		end
 
-	build_target_tree is
+	build_target_tree (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]) is
 			-- Build a tree for the targets of the current system, that make up the application target.
+			-- Attach the tree to `a_list'
+		require
+			a_list_not_void: a_list /= Void
 		local
 			l_target: CONF_TARGET
 			l_item, l_new_item: EB_CLASSES_TREE_TARGET_ITEM
@@ -793,7 +822,7 @@ feature {NONE} -- Implementation
 				l_item := l_new_item
 			end
 			target := l_item
-			extend (target)
+			a_list.extend (target)
 			target.associate_with_window (window)
 		end
 
@@ -898,11 +927,15 @@ feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY
 			-- Context menu factory
 
-	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
+	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
 			-- Agents associated to double-clicks on classes.
+
+	cluster_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
+			-- Agents associated to double-clicks on clusters.
 
 invariant
 	classes_double_click_agents_not_void: classes_double_click_agents /= Void
+	cluster_double_click_agents_not_void: cluster_double_click_agents /= Void
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 indexing

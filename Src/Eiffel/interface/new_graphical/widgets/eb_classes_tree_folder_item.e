@@ -58,6 +58,7 @@ feature -- Initialization
 				create path.make_empty
 			end
 			create classes_double_click_agents.make
+			create cluster_double_click_agents.make
 			set_data (a_cluster)
 			expand_actions.extend (agent load)
 		end
@@ -359,6 +360,17 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 						end
 						l_classes_double_click_agents.forth
 					end
+					from
+						cluster_double_click_agents.start
+					until
+						cluster_double_click_agents.after
+					loop
+						l_subfolder ?= item
+						if l_subfolder /= Void then
+							l_subfolder.add_double_click_action_to_cluster (cluster_double_click_agents.item)
+						end
+						cluster_double_click_agents.forth
+					end
 					forth
 				end
 			end
@@ -482,6 +494,35 @@ feature -- Interactivity
 			end
 		end
 
+	add_double_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]) is
+			-- Add `p' recursively to the list of actions associated with a double click in child clusters.
+		local
+			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			l_cluster: EB_SORTED_CLUSTER
+			l_group: CONF_GROUP
+		do
+			cluster_double_click_agents.extend (p)
+
+			from
+				start
+			until
+				after
+			loop
+				conv_folder ?= item
+				if conv_folder /= Void then
+					l_cluster ?= conv_folder.data
+					if l_cluster /= Void then
+						l_group := l_cluster.actual_group
+						if l_group /= Void and then (l_group.is_cluster or l_group.is_library) then
+							conv_folder.add_double_click_action_to_cluster (p)
+						end
+					end
+				end
+				forth
+			end
+			pointer_double_press_actions.extend (p)
+		end
+
 feature {NONE} -- Recyclable
 
 	internal_recycle is
@@ -501,6 +542,9 @@ feature {NONE} -- Implementation
 
 	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
 			-- Agents associated to double-clicks on classes.
+
+	cluster_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
+			-- Agents associated to double-clicks on cluster.
 
 feature {EB_CLASSES_TREE} -- Implementation
 

@@ -582,10 +582,15 @@ feature {NONE} -- Notebook item's behavior
 					header_box_widget.replace_widget (header_box)
 					header_box_widget.update_parent_tool_bar_size
 				end
-				content.update_mini_tool_bar_size
+				if
+					content /= Void and then
+					content.is_docking_manager_attached
+				then
+					content.update_mini_tool_bar_size
+				end
 			end
 		ensure
-			header_box /= Void implies header_box.is_empty
+			header_box /= Void implies header_box.count = 0
 		end
 
 	update_header_box (dbg_stopped: BOOLEAN) is
@@ -596,83 +601,87 @@ feature {NONE} -- Notebook item's behavior
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			l_fstone: FEATURE_STONE
 			l_cstone: CLASSC_STONE
-			hbox: EV_BOX
+			hbox: like header_box
 			sep: EV_CELL
 		do
 			hbox := header_box
-			if header_text_label = Void or else header_text_label.parent /= hbox then
-				clean_header_box
+			if hbox /= Void then
+				if header_text_label = Void or else header_text_label.parent /= hbox then
+					clean_header_box
 
-				create header_class_label
-				header_class_label.set_foreground_color (preferences.editor_data.class_text_color)
-				hbox.extend (header_class_label)
-				hbox.disable_item_expand (header_class_label)
+					create header_class_label
+					header_class_label.set_foreground_color (preferences.editor_data.class_text_color)
+					hbox.extend (header_class_label)
+					hbox.disable_item_expand (header_class_label)
 
-				create header_text_label
-				hbox.extend (header_text_label)
-				hbox.disable_item_expand (header_text_label)
+					create header_text_label
+					hbox.extend (header_text_label)
+					hbox.disable_item_expand (header_text_label)
 
-				create header_feature_label
-				header_feature_label.set_foreground_color (preferences.editor_data.feature_text_color)
-				hbox.extend (header_feature_label)
-				hbox.disable_item_expand (header_feature_label)
+					create header_feature_label
+					header_feature_label.set_foreground_color (preferences.editor_data.feature_text_color)
+					hbox.extend (header_feature_label)
+					hbox.disable_item_expand (header_feature_label)
 
-				create sep
-				sep.set_minimum_width (30)
-				hbox.extend (sep)
-				hbox.disable_item_expand (sep)
-			end
-			check
-				header_class_label /= Void
-				header_text_label /= Void
-				header_feature_label /= Void
-				header_text_label.parent = header_box
-			end
-			if
-				debugger_manager.application_is_executing
-			then
-				app := debugger_manager.application
-				if app.is_stopped and then dbg_stopped then
-					if not app.current_call_stack_is_empty then
-						ecse ?= current_stack_element
-						if ecse /= Void then
-							header_class_label.set_text ("{" + ecse.dynamic_class.name_in_upper.twin + "}")
-							create l_cstone.make (ecse.dynamic_class)
-							header_class_label.set_pebble (l_cstone)
-							header_class_label.set_accept_cursor (l_cstone.stone_cursor)
-							header_class_label.set_deny_cursor (l_cstone.x_stone_cursor)
+					create sep
+					sep.set_minimum_width (20)
+					hbox.extend (sep)
+					hbox.disable_item_expand (sep)
+				end
+				check
+					header_class_label /= Void
+					header_text_label /= Void
+					header_feature_label /= Void
+					header_text_label.parent = header_box
+				end
+				if
+					debugger_manager.application_is_executing
+				then
+					app := debugger_manager.application
+					if app.is_stopped and then dbg_stopped then
+						if not app.current_call_stack_is_empty then
+							ecse ?= current_stack_element
+							if ecse /= Void then
+								header_class_label.set_text ("{" + ecse.dynamic_class.name_in_upper.twin + "}")
+								create l_cstone.make (ecse.dynamic_class)
+								header_class_label.set_pebble (l_cstone)
+								header_class_label.set_accept_cursor (l_cstone.stone_cursor)
+								header_class_label.set_deny_cursor (l_cstone.x_stone_cursor)
 
-							header_text_label.set_text (".")
+								header_text_label.set_text (".")
 
-							header_feature_label.set_text (ecse.routine_name)
-							create l_fstone.make (ecse.routine)
-							header_feature_label.set_pebble (l_fstone)
-							header_feature_label.set_accept_cursor (l_fstone.stone_cursor)
-							header_feature_label.set_deny_cursor (l_fstone.x_stone_cursor)
+								header_feature_label.set_text (ecse.routine_name)
+								create l_fstone.make (ecse.routine)
+								header_feature_label.set_pebble (l_fstone)
+								header_feature_label.set_accept_cursor (l_fstone.stone_cursor)
+								header_feature_label.set_deny_cursor (l_fstone.x_stone_cursor)
+							end
+						else
+							header_class_label.remove_text
+							header_text_label.set_text (Interface_names.l_unknown_status)
+							header_feature_label.remove_text
 						end
 					else
 						header_class_label.remove_text
-						header_text_label.set_text (Interface_names.l_unknown_status)
+						header_text_label.set_text (Interface_names.l_System_running)
 						header_feature_label.remove_text
 					end
 				else
 					header_class_label.remove_text
-					header_text_label.set_text (Interface_names.l_System_running)
+					header_text_label.set_text (Interface_names.l_System_not_running)
 					header_feature_label.remove_text
 				end
-			else
-				header_class_label.remove_text
-				header_text_label.set_text (Interface_names.l_System_not_running)
-				header_feature_label.remove_text
+
+
+				header_class_label.refresh_now
+				header_text_label.refresh_now
+				header_feature_label.refresh_now
+				hbox.refresh_now
 			end
-
-			header_box_widget.update_parent_tool_bar_size
+			if header_box_widget /= Void then
+				header_box_widget.update_parent_tool_bar_size
+			end
 			content.update_mini_tool_bar_size
-
-			header_class_label.refresh_now
-			header_text_label.refresh_now
-			header_feature_label.refresh_now
-			header_box.refresh_now
 		end
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
@@ -882,9 +891,7 @@ feature {NONE} -- Update
 					end
 				end
 			end
-			if header_box /= Void then
-				update_header_box (dbg_was_stopped)
-			end
+			update_header_box (dbg_was_stopped)
 			on_objects_row_deselected (Void) -- reset toolbar buttons
 		end
 

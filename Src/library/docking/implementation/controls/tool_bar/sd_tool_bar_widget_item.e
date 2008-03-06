@@ -56,6 +56,32 @@ feature -- Query
 
 feature -- Command
 
+	replace_widget (a_widget: EV_WIDGET) is
+			-- Replace `widget' with `a_widget'.
+			-- Updated parent container if possible
+			-- In this way, we can fix mini tool bar resize problem.
+			-- The problem happens usually after `widget' actual size changed,
+			-- but in the UI, `widget' size not updated.			
+		require
+			not_void: a_widget /= Void
+			not_destroyed: not a_widget.is_destroyed
+		local
+			l_old_widget: like a_widget
+		do
+			l_old_widget := widget
+			widget := a_widget
+
+			if {l_fixed: !EV_FIXED} l_old_widget.parent then
+				check must_has: l_fixed.has (l_old_widget) end
+				l_fixed.prune (l_old_widget)
+				l_fixed.extend (a_widget)
+			else
+				check parent_must_be_ev_fixed: False end
+			end
+		ensure
+			set: widget = a_widget
+		end
+
 	update_parent_tool_bar_size is
 			-- If `widget' size changed, client programmers should call this feature
 			-- to update parent tool bar's size.

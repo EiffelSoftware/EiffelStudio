@@ -35,7 +35,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			on_application_quit,
+			on_application_exited,
 			on_application_launched,
 			on_application_resumed,
 			on_application_stopped
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation: event handling
 			end
 		end
 
-	on_application_quit (dbg: DEBUGGER_MANAGER) is
+	on_application_exited (dbg: DEBUGGER_MANAGER) is
 			-- The application has just terminated (dead).
 		do
 			running_timer.set_interval (0)
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation: event handling
 			-- The project has been created.
 		do
 			on_project_updated
-			on_application_quit (dbg)
+			on_application_exited (dbg)
 		end
 
 	on_project_loaded (dbg: DEBUGGER_MANAGER) is
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation: event handling
 					on_application_launched (dbg)
 				end
 			else
-				on_application_quit (dbg)
+				on_application_exited (dbg)
 			end
 			if not eiffel_project.workbench.is_compiling then
 				on_project_compiled (eiffel_project.workbench.successful)
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation: event handling
 			edition_icon.clear
 			edition_icon.remove_tooltip
 				--| This is probably redundant...
-			on_application_quit (dbg)
+			on_application_exited (dbg)
 		end
 
 	on_project_compiles is

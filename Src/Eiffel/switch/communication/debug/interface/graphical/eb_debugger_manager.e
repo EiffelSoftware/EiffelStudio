@@ -472,9 +472,11 @@ feature -- tools
 							end
 						end (?, Result)
 					)
+			else
+				create Result.make --| Empty is better than Void
 			end
 		ensure
-			result_attached: debugging_window /= Void implies Result /= Void
+			result_attached: Result /= Void
 		end
 
 feature -- Output visitor
@@ -704,7 +706,7 @@ feature -- tools management
 				l_wt_lst := watch_tool_list
 
 					-- Do not display shortcut if any watch tool exists.
-				if l_wt_lst /= Void and then not l_wt_lst.is_empty then
+				if not l_wt_lst.is_empty then
 					create_and_show_watch_tool_command.set_referred_shortcut (Void)
 				else
 					create_and_show_watch_tool_command.set_referred_shortcut (show_watch_tool_preference)

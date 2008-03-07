@@ -7549,7 +7549,7 @@ feature {NONE} -- Agents
 				else
 						-- generics are: base_type, open_types, result_type
 					create l_generics.make (1, 3)
-					l_generics.put (a_feat_type.instantiation_in (l_actual_target_type, cid).deep_actual_type, 3)
+					l_generics.put (a_feat_type.deep_actual_type, 3)
 					create l_result_type.make (System.function_class_id, l_generics)
 				end
 			else

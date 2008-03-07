@@ -16,7 +16,7 @@ class
 	EB_METRIC_GRID_SUPPLIER_CLIENT_CLASS_DIALOG
 
 inherit
-	EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN]]
+	EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE [indirect: BOOLEAN; referenced: BOOLEAN; syntactical: BOOLEAN]]
 		redefine
 			initialize,
 			on_ok,
@@ -121,27 +121,27 @@ feature{NONE} -- Actions
 			-- Action to be performed when dialog is displayed
 		local
 			l_value: like value
-			l_indirect: BOOLEAN_REF
-			l_referenced: BOOLEAN_REF
-			l_syntactical: BOOLEAN_REF
+			l_indirect: BOOLEAN
+			l_referenced: BOOLEAN
+			l_syntactical: BOOLEAN
 		do
 			l_value := value
 			if l_value /= Void then
-				l_indirect ?= l_value.item (1)
-				l_referenced ?= l_value.item (2)
-				l_syntactical ?= l_value.item (3)
+				l_indirect := l_value.indirect
+				l_referenced := l_value.referenced
+				l_syntactical := l_value.syntactical
 			end
-			if l_indirect /= Void and then l_indirect.item then
+			if l_indirect then
 				indirect_radio.enable_select
 			else
 				direct_radio.enable_select
 			end
-			if l_referenced /= Void and then l_referenced.item then
+			if l_referenced then
 				normal_referenced_checkbox.enable_select
 			else
 				normal_referenced_checkbox.disable_select
 			end
-			if l_syntactical /= Void and then l_syntactical.item then
+			if l_syntactical then
 				syntactical_referenced_checkbox.enable_select
 			else
 				syntactical_referenced_checkbox.disable_select

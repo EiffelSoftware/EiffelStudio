@@ -586,7 +586,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 		end
 
 	next_feature_breakable_il_range_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
-				a_current_il_offset: INTEGER): ARRAY [TUPLE [INTEGER, INTEGER]] is
+				a_current_il_offset: INTEGER): ARRAY [TUPLE [left: INTEGER; right: INTEGER]] is
 			-- IL range offset for the Eiffel line `a_line' in the step next
 		require
 			class_type_not_void: a_class_type /= Void
@@ -594,7 +594,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 		local
 			l_list: SORTED_LIST [INTEGER]
 			l_inf, l_sup: INTEGER
-			l_interval: TUPLE [INTEGER, INTEGER]
+			l_interval: TUPLE [left: INTEGER; right: INTEGER]
 			i: INTEGER
 		do
 			l_list := feature_breakable_il_offsets_sorted_list (a_class_type, a_feat)
@@ -625,7 +625,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 					until
 						i > Result.upper
 					loop
-						print (" - " + i.out + " : [" + (Result.item (i)).integer_item (1).out + " , " + (Result.item (i)).integer_item (2).out + "] %N")
+						print (" - " + i.out + " : [" + (Result.item (i)).left.out + " , " + (Result.item (i)).right.out + "] %N")
 						i := i + 1
 					end
 				end
@@ -670,7 +670,7 @@ feature {NONE} -- line debug exploitation
 			end
 		end
 
-	feature_breakable_il_offsets (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]] is
+	feature_breakable_il_offsets (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): ARRAYED_LIST [TUPLE [e_line: INTEGER; il_offset: IL_OFFSET_SET]] is
 			-- List of breakable IL Offset for `a_feat'
 		require
 			class_type_not_void: a_class_type /= Void

@@ -1062,7 +1062,7 @@ feature -- Various continuing mode from callback
 			end
 		end
 
-	call_do_step_range_on_cb (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [INTEGER, INTEGER]]) is
+	call_do_step_range_on_cb (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]]) is
 		do
 			if icor_debug_controller /= Void then
 				do_step_range (a_bstep_in, a_il_ranges)
@@ -1243,7 +1243,7 @@ feature {NONE} -- Stepping Implementation
 
 feature -- Stepping Access
 
-	do_step_range (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [INTEGER, INTEGER]]) is
+	do_step_range (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]]) is
 			-- Step next.
 		local
 			l_stepper: ICOR_DEBUG_STEPPER

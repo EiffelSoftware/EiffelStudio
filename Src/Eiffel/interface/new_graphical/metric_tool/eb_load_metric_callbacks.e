@@ -344,7 +344,7 @@ feature{NONE} -- Implementation
 		require
 			current_tester_item_attached: current_tester_item /= Void
 		do
-			current_tester_item.put (a_item, 1)
+			current_tester_item.value_retriever := a_item
 		end
 
 feature{NONE} -- Process
@@ -505,7 +505,7 @@ feature{NONE} -- Process
 					if not has_error then
 						create current_constant_value_retriever.make (last_tested_double)
 						current_value_retriever := current_constant_value_retriever
-						current_tester_item.put (current_constant_value_retriever, 1)
+						current_tester_item.value_retriever := current_constant_value_retriever
 					end
 				end
 			end
@@ -545,7 +545,7 @@ feature{NONE} -- Process
 							current_metric_value_retriever.set_is_external_delayed_domain_used (last_tested_boolean)
 						end
 						current_value_retriever := current_metric_value_retriever
-						current_tester_item.put (current_metric_value_retriever, 1)
+						current_tester_item.value_retriever := current_metric_value_retriever
 						domain_receiver_stack.extend ([agent current_metric_value_retriever.set_input_domain, False])
 					end
 				end

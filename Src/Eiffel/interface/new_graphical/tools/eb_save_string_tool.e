@@ -115,8 +115,8 @@ feature -- Save
 				if save_file_dlg /= Void then
 					create str.make_from_string (save_file_dlg.file_name)
 					l_selected_filter_index := save_file_dlg.selected_filter_index
-					if l_selected_filter_index /= 0 and then not save_file_dlg.filters.i_th (l_selected_filter_index).item (1).is_equal (All_files_filter) then
-						filter_str ?= save_file_dlg.filters.i_th (save_file_dlg.selected_filter_index).item (1)
+					if l_selected_filter_index /= 0 and then not save_file_dlg.filters.i_th (l_selected_filter_index).filter.as_string_8.is_equal (All_files_filter) then
+						filter_str := save_file_dlg.filters.i_th (save_file_dlg.selected_filter_index).filter.as_string_8
 						if filter_str.item (1) = '*' then
 							filter_str.remove (1)
 						end

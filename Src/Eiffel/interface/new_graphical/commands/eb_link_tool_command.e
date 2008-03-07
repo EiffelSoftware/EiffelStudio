@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 	undo_apply_right_angles (edge_lists: like all_saved_edges) is
 			--
 		local
-			l_item: TUPLE [EIFFEL_LINK_FIGURE, LIST [EG_EDGE]]
+			l_item: TUPLE [figure: EIFFEL_LINK_FIGURE; edges: LIST [EG_EDGE]]
 			l_figure: EIFFEL_LINK_FIGURE
 			l_saved_edges: LIST [EG_EDGE]
 		do
@@ -274,8 +274,8 @@ feature {NONE} -- Implementation
 				edge_lists.after
 			loop
 				l_item := edge_lists.item
-				l_figure ?= l_item.item (1)
-				l_saved_edges ?= l_item.item (2)
+				l_figure := l_item.figure
+				l_saved_edges := l_item.edges
 				l_figure.reset
 				l_figure.retrieve_edges (l_saved_edges)
 				edge_lists.forth

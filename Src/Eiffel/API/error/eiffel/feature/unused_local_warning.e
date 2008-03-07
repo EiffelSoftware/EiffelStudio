@@ -58,6 +58,7 @@ feature -- Output
 			l_name: STRING
 			l_type: TYPE_A
 			l_group: CONF_GROUP
+			l_unused_locals: like unused_locals
 		do
 			l_group := a_text_formatter.context_group
 			a_text_formatter.set_context_group (associated_class.group)
@@ -79,8 +80,8 @@ feature -- Output
 			until
 				unused_locals.after
 			loop
-				l_name ?= unused_locals.item.item (1)
-				l_type ?= unused_locals.item.item (2)
+				l_name := unused_locals.item.name
+				l_type := unused_locals.item.type
 				check
 					l_name_not_void: l_name /= Void
 					l_type_not_void: l_type /= Void

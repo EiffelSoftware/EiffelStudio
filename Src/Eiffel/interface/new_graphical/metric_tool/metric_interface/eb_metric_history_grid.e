@@ -896,7 +896,7 @@ feature{NONE} -- Implementation
 		local
 			l_value_tester: EB_METRIC_VALUE_TESTER
 		do
-			l_value_tester ?= a_grid_item.value.item (3)
+			l_value_tester := a_grid_item.value.a_tester
 			if l_value_tester = Void then
 				create l_value_tester.make
 			end

@@ -1282,7 +1282,7 @@ feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 			end
 		end
 
-	remove_cluster_virtual (cluster_figure: EIFFEL_CLUSTER_FIGURE; a_links: LIST [ES_ITEM]; a_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]) is
+	remove_cluster_virtual (cluster_figure: EIFFEL_CLUSTER_FIGURE; a_links: LIST [ES_ITEM]; a_classes: LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]]) is
 			-- Remove `cluster_figure' all links in `a_links' and all classes in `a_classes' at position in TUPLE by
 			-- disable `is_needed_on_diagram'.
 		local
@@ -1296,7 +1296,7 @@ feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 			until
 				a_classes.after
 			loop
-				l_class_figure ?= a_classes.item.item (1)
+				l_class_figure := a_classes.item.figure
 				remove_class_virtual (l_class_figure, empty_list)
 				a_classes.forth
 			end
@@ -1310,7 +1310,9 @@ feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 			end
 		end
 
-	reinclude_cluster (cluster_figure: EIFFEL_CLUSTER_FIGURE; a_links: LIST [ES_ITEM]; a_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]) is
+	reinclude_cluster (cluster_figure: EIFFEL_CLUSTER_FIGURE; a_links: LIST [ES_ITEM];
+				a_classes: LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]]
+			) is
 			-- Reinclude `cluster_figure', all links in `a_links' and all classes in `a_classes' at position in TUPLE
 			-- by enable `is_needed_on_diagram'.
 		local
@@ -1325,9 +1327,9 @@ feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 			until
 				a_classes.after
 			loop
-				l_class_figure ?= a_classes.item.item (1)
-				ax := a_classes.item.integer_item (2)
-				ay := a_classes.item.integer_item (3)
+				l_class_figure := a_classes.item.figure
+				ax := a_classes.item.port_x
+				ay := a_classes.item.port_y
 				reinclude_class (l_class_figure, empty_list, ax, ay)
 				a_classes.forth
 			end

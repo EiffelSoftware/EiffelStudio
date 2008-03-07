@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			nr_of_items: INTEGER
 			cluster_fig, parent_fig: EIFFEL_CLUSTER_FIGURE
 			cluster_added: BOOLEAN
-			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
+			remove_classes: like classes_to_remove_in_cluster
 			remove_links: LIST [ES_ITEM]
 			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 		do
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			es_cluster : ES_CLUSTER
 			cluster_fig, parent_fig: EIFFEL_CLUSTER_FIGURE
 			cluster_added: BOOLEAN
-			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
+			remove_classes: like classes_to_remove_in_cluster
 			remove_links: LIST [ES_ITEM]
 			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 		do
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]] is
+	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]] is
 			-- All class figures in `a_cluster' that are needed on diagram plus ther positions.
 		local
 			l_linkables: LIST [EG_LINKABLE]
@@ -826,12 +826,12 @@ feature {NONE} -- Implementation
 			fig: EIFFEL_CLASS_FIGURE
 		do
 			from
-				create {ARRAYED_LIST [ES_ITEM]}Result.make (a_classes.count * 2)
+				create {ARRAYED_LIST [ES_ITEM]} Result.make (a_classes.count * 2)
 				a_classes.start
 			until
 				a_classes.after
 			loop
-				fig ?= a_classes.item.item (1)
+				fig := a_classes.item.figure
 				Result.append (fig.model.needed_links)
 				a_classes.forth
 			end
@@ -1090,7 +1090,7 @@ feature {NONE} -- Implementation
 			cluster_fig: EIFFEL_CLUSTER_FIGURE
 			l_found_cluster: ES_CLUSTER
 			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
-			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
+			remove_classes: like classes_to_remove_in_cluster
 			remove_links: LIST [ES_ITEM]
 			l_string: STRING_GENERAL
 		do

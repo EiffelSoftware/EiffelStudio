@@ -529,7 +529,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 				label_item ?= a_label_item
 				if label_item /= Void then
 					if text_height = 0 then
-						text_height := a_font.string_size (once "a").integer_item (2)
+						text_height := a_font.string_size (once "a").height
 					end
 					client_height := label_item.height - label_item.top_border - label_item.bottom_border
 					vertical_text_offset_into_available_space := client_height - text_height

@@ -158,26 +158,25 @@ feature -- Recording Operation once_tokens
 			feature_i_not_void: a_feature_i /= Void
 		local
 			l_feature_name_id: INTEGER
-			l_entry: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			l_entry: TUPLE [data_class_tok: INTEGER_32; done_tok: INTEGER_32; result_tok: INTEGER_32; exception_tok: INTEGER_32]
 		do
 			l_feature_name_id := a_feature_i.feature_name_id
-			l_entry := [a_data_class_token, a_once_done_token, a_once_result_token, a_once_exception_token]
-
 			if not list_once_tokens.has (l_feature_name_id) then
+				l_entry := [a_data_class_token, a_once_done_token, a_once_result_token, a_once_exception_token]
 				list_once_tokens.put (l_entry , l_feature_name_id)
 			else
 				l_entry := list_once_tokens.item (l_feature_name_id)
 				if a_data_class_token /= 0 then
-					l_entry.put_integer (a_data_class_token, 1)
+					l_entry.data_class_tok := a_data_class_token
 				end
 				if a_once_done_token /= 0 then
-					l_entry.put_integer (a_once_done_token, 2)
+					l_entry.done_tok := a_once_done_token
 				end
 				if a_once_result_token /= 0 then
-					l_entry.put_integer (a_once_result_token, 3)
+					l_entry.result_tok := a_once_result_token
 				end
 				if a_once_exception_token /= 0 then
-					l_entry.put_integer (a_once_exception_token, 4)
+					l_entry.exception_tok := a_once_exception_token
 				end
 			end
 		ensure
@@ -186,7 +185,7 @@ feature -- Recording Operation once_tokens
 
 feature -- Queries IL Offsets
 
-	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]] is
+	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [e_line: INTEGER; il_offsets: IL_OFFSET_SET]] is
 			-- breakable_il_offsets associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -207,7 +206,7 @@ feature -- Queries IL Offsets
 
 feature -- Recording Operation
 
-	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]]): TUPLE [INTEGER, IL_OFFSET_SET] is
+	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]]): TUPLE [e_line: INTEGER; il_offset: IL_OFFSET_SET] is
 			-- Breakable line info for `eiffel_line' inside `a_data'
 		do
 			from
@@ -327,10 +326,10 @@ feature {NONE} -- Storage Implementation
 	list_feature_token: HASH_TABLE [INTEGER, INTEGER]
 			-- {feature_name_id} => {feature_token}
 
-	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER, INTEGER, INTEGER], INTEGER]
+	list_once_tokens: HASH_TABLE [TUPLE [data_class_tok: INTEGER; done_tok: INTEGER; result_tok: INTEGER; exception_tok: INTEGER], INTEGER]
 			-- feature_tokens[_data_class|_done|_result|_exception] <= [feature_name_id]
 
-	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]], INTEGER]
+	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST [TUPLE [e_line: INTEGER; il_offsets: IL_OFFSET_SET]], INTEGER]
 			-- [bp index => [eiffel line, List [Offset IL]] ] <= [feature_name_id]
 
 invariant

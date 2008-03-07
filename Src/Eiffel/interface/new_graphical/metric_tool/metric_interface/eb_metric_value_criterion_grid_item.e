@@ -158,7 +158,7 @@ feature -- Drop
 				if l_value = Void then
 					l_value := [l_metric.name, False, create {EB_METRIC_VALUE_TESTER}.make]
 				else
-					l_value.put (l_metric.name, 1)
+					l_value.a_metric_name := l_metric.name
 				end
 				set_value (l_value)
 			else
@@ -182,11 +182,11 @@ feature{NONE} -- Implementation
 			l_writer := token_writer
 			l_writer.set_context_group (Void)
 			l_value := value
-			l_metric_name ?= l_value.item (1)
+			l_metric_name := l_value.a_metric_name
 			if l_metric_name = Void then
 				l_metric_name := ""
 			end
-			l_tester ?= l_value.item (3)
+			l_tester := l_value.a_tester
 			if l_tester = Void then
 				create l_tester.make
 			end

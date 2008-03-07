@@ -44,7 +44,7 @@ feature -- Initialization
 			create onces.make (5)
 			create once_manifest_string_count_table.make (100)
 			create once_manifest_string_table.make (100)
-			create {LINKED_STACK [PAIR [CLASS_TYPE, CLASS_TYPE]]} class_type_stack.make
+			create class_type_stack.make
 			create generated_inlines.make (5)
 			create generic_wrappers.make (0)
 		end
@@ -79,6 +79,10 @@ feature -- Access
 			--| will be changed for assertion chaining, inlining, etc.
 
 	context_class_type: CLASS_TYPE
+			-- Class type for which the code is being generated;
+			-- it is changed for inlining
+
+	context_cl_type: CL_TYPE_A
 			-- Class type for which the code is being generated;
 			-- it is changed for inlining
 
@@ -1055,11 +1059,11 @@ feature -- Access
 			Result := current_type.associated_class
 		end
 
-	constrained_type_in (type: TYPE_A; context_type: CLASS_TYPE): TYPE_A is
+	constrained_type_in (type: TYPE_A; a_context_type: CL_TYPE_A): TYPE_A is
 			-- Constrained type `type' in the context of `context_class_type'
 		require
 			type_not_void: type /= Void
-			context_type_not_void: context_type /= Void
+			context_type_not_void: a_context_type /= Void
 		local
 			context_type_i: CL_TYPE_A
 			formal: FORMAL_A
@@ -1073,7 +1077,7 @@ feature -- Access
 			until
 				not Result.is_formal or Result.is_multi_constrained
 			loop
-				context_type_i := context_type.type
+				context_type_i := a_context_type
 				formal ?= Result
 				check
 					context_type_i.generics /= Void
@@ -1081,7 +1085,7 @@ feature -- Access
 				formal_position := formal.position
 				Result := context_type_i.generics.item (formal_position)
 				if Result.is_formal then
-					if formal.is_multi_constrained (context_type.type.associated_class) then
+					if formal.is_multi_constrained (a_context_type.associated_class) then
 						create {MULTI_FORMAL_A} Result.make (True, formal.is_expanded, formal.position)
 					else
 						Result := context_type_i.associated_class.constrained_type (formal_position)
@@ -1093,18 +1097,18 @@ feature -- Access
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	real_type_in (type: TYPE_A; context_type: CLASS_TYPE): TYPE_A is
-			-- Type `type' as seen in `context_type'
+	real_type_in (type: TYPE_A; a_context_type: CL_TYPE_A): TYPE_A is
+			-- Type `type' as seen in `a_context_type'
 		require
 			type_not_void: type /= Void
-			context_type_not_void: context_type /= Void
+			context_type_not_void: a_context_type /= Void
 		do
 			if type.is_like_current then
-				Result := context_type.type
+				Result := a_context_type
 			elseif type.is_like then
-				Result := real_type_in (type.actual_type, context_type)
+				Result := real_type_in (type.actual_type, a_context_type)
 			elseif type.is_formal then
-				Result := constrained_type_in (type, context_type)
+				Result := constrained_type_in (type, a_context_type)
 			else
 				Result := type
 			end
@@ -1113,13 +1117,13 @@ feature -- Access
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
-	real_type_in_fixed (type: TYPE_A; context_type: CLASS_TYPE): TYPE_A is
-			-- Type `type' as seen in `context_type'
+	real_type_in_fixed (type: TYPE_A; a_context_type: CL_TYPE_A): TYPE_A is
+			-- Type `type' as seen in `a_context_type'
 		require
 			type_not_void: type /= Void
-			context_type_not_void: context_type /= Void
+			context_type_not_void: a_context_type /= Void
 		do
-			Result := real_type_in (type, class_type)
+			Result := real_type_in (type, a_context_type)
 		ensure
 			result_not_void: Result /= Void
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
@@ -1135,26 +1139,26 @@ feature -- Access
 				-- If code is inherited, we first find out the type.
 			if class_type /= context_class_type then
 				Result := type.evaluated_type_in_descendant (class_type.associated_class,
-					context_class_type.associated_class, current_feature)
+					context_class_type.associated_class, Void)
 			else
 				Result := type
 			end
-				-- And then we instantiate it in the context of `context_class_type'.
-			Result := real_type_in (Result, context_class_type)
+				-- And then we instantiate it in the context of `context_cl_type'.
+			Result := real_type_in (Result, context_cl_type)
 		ensure
 			result_not_void: Result /= Void
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
 		end
 
 	real_type_fixed (type: TYPE_A): TYPE_A is
-			-- Type `type' written in `class_type' as seen in `context_class_type'
+			-- Type `type' written in `current_type' as seen in `context_class_type'
 			-- Fixed means that the possible return of a MULTI_FORMAL_A is checked and valid.
 		require
 			type_not_void: type /= Void
 			class_type_not_void: class_type /= Void
 			context_class_type_not_void: current_type /= Void
 		do
-			Result := real_type_in (type, class_type)
+			Result := real_type_in (type, current_type)
 		ensure
 			result_not_void: Result /= Void
 			result_not_formal: not Result.is_formal or Result.is_multi_constrained
@@ -1169,7 +1173,7 @@ feature -- Access
 				-- If code is inherited, we first find out the type.
 			if class_type /= context_class_type then
 				Result := type.evaluated_type_in_descendant (class_type.associated_class,
-					context_class_type.associated_class, current_feature)
+					context_class_type.associated_class, Void)
 			else
 				Result := type
 			end
@@ -1194,6 +1198,7 @@ feature -- Access
 			class_type_stack.wipe_out
 			original_class_type := t
 			context_class_type := t
+			context_cl_type := t.type
 			set_class_type (t)
 			feature_table := System.any_class.compiled_class.feature_table
 			f := feature_table.item_id ({PREDEFINED_NAMES}.copy_name_id)
@@ -1235,7 +1240,7 @@ feature -- Access
 	is_written_context: BOOLEAN is
 			-- Does current context match the context where the code is written?
 		do
-			Result := context_class_type = class_type
+			Result := original_class_type = class_type
 		end
 
 	set_class_type (t: CLASS_TYPE) is
@@ -1266,7 +1271,10 @@ feature -- Access
 			class_type_set: class_type = t
 		end
 
-	change_class_type_context (new_context_class_type: CLASS_TYPE; new_written_class_type: CLASS_TYPE) is
+	change_class_type_context (
+				new_context_class_type: CLASS_TYPE; new_context_cl_type: CL_TYPE_A;
+				new_written_class_type: CLASS_TYPE; new_written_cl_type: CL_TYPE_A)
+		is
 			-- Change the current `class_type' to `new_written_class_type',
 			-- not related to `original_class_type', but to `new_context_class_type'.
 			-- (Multiple calls to this feature are allowed and should
@@ -1278,9 +1286,11 @@ feature -- Access
 			class_type_not_void: class_type /= Void
 			is_ancestor: -- new_context_cl_type.type_a.is_conformant_to (new_written_class_type.type.type_a)
 		do
-			class_type_stack.put (create {PAIR [CLASS_TYPE, CLASS_TYPE]}.make (context_class_type, class_type))
+			class_type_stack.put ([context_class_type, context_cl_type, class_type, current_type])
 			context_class_type := new_context_class_type
+			context_cl_type := new_context_cl_type
 			set_class_type (new_written_class_type)
+			current_type := new_written_cl_type
 		ensure
 			class_type_set: class_type = new_written_class_type
 			context_class_type_set: context_class_type = new_context_class_type
@@ -1293,16 +1303,20 @@ feature -- Access
 		require
 			is_class_type_changed: is_class_type_changed
 		local
-			previous_context: PAIR [CLASS_TYPE, CLASS_TYPE]
+			previous_context: like context_stack_type
 		do
 				-- Remove stack item before calling `set_class_type'
 			previous_context := class_type_stack.item
 			class_type_stack.remove
-			context_class_type := previous_context.first
-			set_class_type (previous_context.second)
+			context_class_type := previous_context.context_type
+			context_cl_type := previous_context.cl_type
+			set_class_type (previous_context.written_type)
+			current_type := previous_context.written_cl_type
 		ensure
-			context_class_type_set: context_class_type = old class_type_stack.item.first
-			class_type_set: class_type = old class_type_stack.item.second
+			context_class_type_set: context_class_type = old class_type_stack.item.context_type
+			context_cl_type_set: context_cl_type = old class_type_stack.item.cl_type
+			class_type_set: class_type = old class_type_stack.item.written_type
+			current_type_set: current_type = old class_type_stack.item.written_cl_type
 		end
 
 	set_current_feature (f: FEATURE_I) is
@@ -1423,7 +1437,8 @@ feature -- Access
 			-- inside a once function.
 		do
 			if not in_inlined_code then
-				if not result_used and
+				if
+					not result_used and
 					real_type (byte_code.result_type).c_type.is_pointer and
 					not byte_code.is_once
 				then
@@ -2129,8 +2144,12 @@ feature {NONE} -- Generic code generation
 
 feature {NONE} -- Implementation
 
-	class_type_stack: STACK [PAIR [CLASS_TYPE, CLASS_TYPE]]
+	class_type_stack: LINKED_STACK [like context_stack_type]
 			-- Class types saved due to the context change by `change_class_type_context'
+
+	context_stack_type: TUPLE [context_type: CLASS_TYPE; cl_type: CL_TYPE_A; written_type: CLASS_TYPE; written_cl_type: CL_TYPE_A] is
+		do
+		end
 
 	expanded_descendants: PACKED_BOOLEANS
 			-- Marks for class types whether they have an expanded descendant or not

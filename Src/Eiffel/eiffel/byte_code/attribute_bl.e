@@ -126,7 +126,7 @@ end
 			if reg.is_current then
 				class_type ?= context_type
 				if class_type /= Void then
-					if Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), False) >= 0 then
+					if Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, False) >= 0 then
 						context.add_dt_current
 					end
 				end
@@ -142,7 +142,7 @@ end
 			type_i := context_type
 			if not type_i.is_basic then
 				class_type ?= type_i;	-- Cannot fail
-				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), False) >= 0
+				Result := Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, False) >= 0
 			end
 		end
 
@@ -175,7 +175,7 @@ end
 				reg.print_register
 				buf.put_character (')')
 			end
-			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), False)
+			array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, False)
 			if array_index >= 0 then
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.

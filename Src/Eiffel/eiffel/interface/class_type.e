@@ -318,6 +318,82 @@ feature -- Status report
 				Result implies associated_class.conform_to (other.associated_class)
 		end
 
+	dynamic_conform_to (a_type: TYPE_A; a_type_id: INTEGER; a_context_type: TYPE_A): BOOLEAN is
+			-- Does Current conform to `a_type' in a dynamic binding sense?
+			-- That is to say if you have Current be `B [G#1]' with a conformance
+			-- type be `B [TUPLE]' and the ancestor `a_type' be `A [TUPLE [INTEGER]]'
+			-- then it is conforming even though B [TUPLE] does not conform
+			-- to A [TUPLE [INTEGER]].
+		require
+			a_type_not_void: a_type /= Void
+			a_context_type_not_void: a_context_type /= Void
+			a_context_type_valid: a_type.is_valid_context_type (a_context_type)
+			a_type_has_class_type: a_type.has_associated_class_type (a_context_type)
+			a_type_id_valid: a_type_id >= 0
+			a_type_related_to_type_id: a_type.type_id (a_context_type) = a_type_id
+		local
+			l_generics: ARRAY [TYPE_A]
+			l_type_feat: TYPE_FEATURE_I
+			l_ancestor_class, l_class: CLASS_C
+			l_formal: FORMAL_A
+			l_type, l_descendant_type: TYPE_A
+			i, nb: INTEGER
+			l_packed: PACKED_BOOLEANS
+		do
+			Result := type_id = a_type_id
+			if not Result then
+				l_packed := conformance_table
+				if a_type_id <= l_packed.upper then
+					Result := l_packed.item (a_type_id)
+					if Result then
+							-- CLASS_TYPE are conformant, so let's verify that `a_type' is a valid ancestor.
+							-- For example `a_type' could be `A [STRING]' and current be `A [INTEGER]'
+							-- and it is clear that `A [INTEGER]' does not conform to `A [STRING]'
+							-- but class type `A [INTEGER]' does conform to `A [G#1]' the associated CLASS_TYPE
+							-- of `A [STRING]'.
+							-- Of course this is only needed when `a_type' is generics as if it is not
+							-- then the above CLASS_TYPE conformance is giving us the proper result.
+						l_generics := a_type.generics
+						if l_generics /= Void then
+							from
+								l_ancestor_class := a_type.associated_class
+								l_class := associated_class
+								i := l_generics.lower
+								nb := l_generics.upper
+							until
+								i > nb or not Result
+							loop
+									-- If actual generic parameter at position `i' in `a_type' is expanded
+									-- then we rely on CLASS_TYPE conformance. We could change this in the
+									-- future when we are handling generic expanded types.
+								l_type := l_generics.item (i).actual_type
+								if not l_type.is_expanded and not l_type.is_formal and not l_type.is_none then
+									check l_type_has_class: l_type.has_associated_class end
+									l_type_feat := l_class.generic_features.item (l_ancestor_class.formal_at_position (i).rout_id_set.first)
+									check l_type_feat_not_void: l_type_feat /= Void end
+									if l_type_feat.is_formal then
+										l_formal ?= l_type_feat.type
+										l_descendant_type := type.generics.item (l_formal.position)
+										if l_descendant_type.is_expanded then
+											Result := l_descendant_type.associated_class.simple_conform_to (l_type.associated_class)
+										end
+									else
+											-- The formal generic parameter of `a_type' was instantiated via inheritance.
+											-- Let's check that it is a conforming type to the actual generic parameter of `a_type'.
+										Result := l_type_feat.type.associated_class.simple_conform_to (l_type.associated_class)
+										if not Result then
+											do_nothing
+										end
+									end
+								end
+								i := i + 1
+							end
+						end
+					end
+				end
+			end
+		end
+
 feature -- Settings
 
 	set_is_changed (b: BOOLEAN) is
@@ -876,7 +952,6 @@ feature -- Generation
 			else
 				l_file_name.append (Dot_c)
 			end
-
 			create Result.make_c_code_file (l_file_name)
 		end
 

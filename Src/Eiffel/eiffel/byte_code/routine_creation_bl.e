@@ -227,14 +227,14 @@ feature
 			end
 			l_context := context
 
-				-- Note that we use `context.current_type' because we do not adapt
+				-- Note that we use `context.current_type/context.class_type' because we do not adapt
 				-- `a_node.class_type' to `context.context_class_type' for the simple reasons
 				-- that `feature_id' is the one from where the agent creation is declared.
 				-- If we were to adapt it, then we would need something like
 				-- `{CALL_ACCESS_B}.real_feature_id' for a proper code generation.
 
 			if not l_context.workbench_mode and then not is_inline_agent then
-				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id (context.current_type), True)
+				array_index := Eiffel_table.is_polymorphic (rout_id, class_type, context.class_type, True)
 			end
 
 			if array_index = -2 then
@@ -306,7 +306,7 @@ feature
 					l_buffer.put_string ("0),")
 				else
 					l_type_id := l_class_type.type_id
-					if l_entry.is_polymorphic (l_type_id) then
+					if l_entry.is_polymorphic (class_type, context.class_type) then
 						l_table_name := Encoder.routine_table_name (rout_id)
 						l_buffer.put_string (l_table_name)
 						l_buffer.put_string ("[Dtype((")

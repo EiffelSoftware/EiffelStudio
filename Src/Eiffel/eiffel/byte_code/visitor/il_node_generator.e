@@ -1774,8 +1774,11 @@ feature {NONE} -- Visitors
 					-- Special handling when precursor has a different expanded status
 					-- than current type. We need to find out the return type of the Precursor.
 				if l_precursor_type /= Void and then context.context_class_type.is_expanded then
-					context.change_class_type_context (l_precursor_type.associated_class_type (context.context_class_type.type),
-						l_precursor_type.associated_class_type (context.context_class_type.type))
+					context.change_class_type_context (
+						l_precursor_type.associated_class_type (context.context_class_type.type),
+						l_precursor_type.instantiated_in (context.context_class_type.type),
+						l_precursor_type.associated_class_type (context.context_class_type.type),
+						l_precursor_type.instantiated_in (context.context_class_type.type))
 					l_orig_return_type := context.real_type (a_node.type)
 					context.restore_class_type_context
 				else

@@ -138,7 +138,7 @@ feature -- C code generation
 			else
 				l_rout_id := routine_id
 				class_type_id := class_type.type_id
-				array_index := Eiffel_table.is_polymorphic (l_rout_id, class_type_id, True)
+				array_index := Eiffel_table.is_polymorphic (l_rout_id, class_type.type, class_type, True)
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation

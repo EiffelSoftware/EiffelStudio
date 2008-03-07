@@ -403,7 +403,8 @@ feature -- IL Generation
 						if not is_expanded or else feat.is_attribute or else feat.is_external then
 							generate_feature (feat, False, True, False)
 							if is_replicated then
-								byte_context.change_class_type_context (current_class_type, written_class_type)
+								byte_context.change_class_type_context (current_class_type, current_class_type.type,
+									written_class_type, written_class_type.type)
 							end
 							generate_feature_code (feat, True)
 							if is_replicated then
@@ -421,7 +422,8 @@ feature -- IL Generation
 
 					if is_expanded and then not feat.is_attribute and then not feat.is_external then
 						if is_replicated then
-							byte_context.change_class_type_context (current_class_type, written_class_type)
+							byte_context.change_class_type_context (current_class_type, current_class_type.type,
+								written_class_type, written_class_type.type)
 						end
 						generate_feature_code (feat, False)
 						if is_replicated then
@@ -476,7 +478,8 @@ feature -- IL Generation
 							feat.feature_id)
 					else
 						if is_replicated then
-							byte_context.change_class_type_context (current_class_type, written_class_type)
+							byte_context.change_class_type_context (current_class_type, current_class_type.type,
+								written_class_type, written_class_type.type)
 						end
 						generate_feature_code (feat, True)
 						if is_replicated then

@@ -33,6 +33,9 @@ feature
 	written_type_id: INTEGER
 			-- Class type ID of the class type where the feature is written
 
+	context_cl_type, written_cl_type: CL_TYPE_A
+			-- Type from where the feature is written.
+
 	result_type: TYPE_A is
 			-- Type of an inlined feature
 		do
@@ -51,15 +54,19 @@ feature
 			end
 		end
 
-	set_context_type (context_class_type, written_class_type: CLASS_TYPE) is
+	set_context_type (context_class_type: CLASS_TYPE; a_context_cl_type: CL_TYPE_A; written_class_type: CLASS_TYPE; a_type: CL_TYPE_A) is
 			-- Set a class type on which the feature is called
 			-- and a class type where the feature is written in.
 		require
 			context_class_type_not_void: context_class_type /= Void
 			written_class_type_not_void: written_class_type /= Void
+			a_context_cl_type_not_void: a_context_cl_type /= Void
+			a_type_not_void: a_type /= Void
 		do
 			context_type_id := context_class_type.type_id
 			written_type_id := written_class_type.type_id
+			context_cl_type := a_context_cl_type
+			written_cl_type := a_type
 		ensure
 			context_type_id_set: context_type_id = context_class_type.type_id
 			written_type_id_set: written_type_id = written_class_type.type_id
@@ -75,7 +82,8 @@ feature
 			local_inliner := inliner
 			local_inliner.set_inlined_feature (Current)
 			Context.change_class_type_context
-				(system.class_type_of_id (context_type_id), system.class_type_of_id (written_type_id))
+				(system.class_type_of_id (context_type_id), context_cl_type,
+				system.class_type_of_id (written_type_id), written_cl_type)
 
 			compound := byte_code.compound;
 			if compound /= Void then
@@ -130,7 +138,8 @@ feature
 
 			cl_type_i ?= context_type
 			Context.change_class_type_context
-				(system.class_type_of_id (context_type_id), system.class_type_of_id (written_type_id))
+				(system.class_type_of_id (context_type_id), context_cl_type,
+				system.class_type_of_id (written_type_id), written_cl_type)
 
 			local_is_current_temporary := reg.is_temporary or reg.is_predefined
 
@@ -263,7 +272,8 @@ feature -- Generation
 			context_class_type := system.class_type_of_id (context_type_id)
 			written_class_type := system.class_type_of_id (written_type_id)
 
-			Context.change_class_type_context (context_class_type, written_class_type)
+			Context.change_class_type_context (context_class_type, context_cl_type,
+				written_class_type, written_cl_type)
 			Context.set_inlined_current_register (current_reg)
 
 			if local_regs /= Void then
@@ -301,7 +311,8 @@ feature -- Generation
 
 				buf.put_new_line
 
-				Context.change_class_type_context (context_class_type, written_class_type)
+				Context.change_class_type_context (context_class_type, context_cl_type,
+					written_class_type, written_cl_type)
 				Context.set_inlined_current_register (current_reg)
 			end
 

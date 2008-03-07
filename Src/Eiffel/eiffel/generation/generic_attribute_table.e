@@ -53,11 +53,11 @@ feature {NONE} -- Creation
 
 feature -- Status report
 
-	is_polymorphic (type_id: INTEGER): BOOLEAN is
+	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN is
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id?
 		do
-			Result := Precursor {ATTR_TABLE} (type_id) or else Precursor {ROUT_TABLE} (type_id)
+			Result := Precursor {ATTR_TABLE} (a_type, a_context_type) or else Precursor {ROUT_TABLE} (a_type, a_context_type)
 		end
 
 feature -- Access

@@ -118,7 +118,7 @@ feature
 			is_polymorphic_access := not is_static_call and then
 					not type_i.is_basic and then
 					class_type /= Void and then
-					Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), True) >= 0;
+					Eiffel_table.is_polymorphic (routine_id, class_type,  context.context_class_type,True) >= 0;
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current;
 				context.mark_current_used
@@ -176,7 +176,7 @@ feature
 					-- polymorphic call handling.
 				array_index := -1
 			else
-				array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), True)
+				array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True)
 			end
 			if array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
@@ -292,7 +292,7 @@ feature
 		do
 			Result := context.final_mode and
 				not (encapsulated or else system.keep_assertions) and (is_static_call or
-				Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), True) < 0)
+				Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True) < 0)
 		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is

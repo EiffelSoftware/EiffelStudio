@@ -182,16 +182,16 @@ feature -- Access
 	string_width (a_string: STRING_GENERAL): INTEGER is
 			-- Width of `a_string'.
 		do
-			Result := string_size (a_string).integer_item (1)
+			Result := string_size (a_string).width
 		end
 
 	string_height (a_string: STRING_GENERAL): INTEGER is
 			-- Height of `a_string'.
 		do
-			Result := string_size (a_string).integer_item (2)
+			Result := string_size (a_string).height
 		end
 
-	string_size_extended (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size_extended (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; leading_overhang: INTEGER; trailing_overhang: INTEGER] is
 			-- [width, height, leading overhang, trailing overhang] of `a_string'.
 			-- Not all fonts have characters that fit completely within the bounds of
 			-- the standard `string_size'. See `char_abc_widths' from WEL_DC which
@@ -226,7 +226,7 @@ feature -- Access
 			metric_height: INTEGER
 			last_newline_index: INTEGER
 			optimize_for_short_strings: BOOLEAN
-			standard_result: TUPLE [INTEGER, INTEGER]
+			standard_result: like string_size
 		do
 			if a_string.is_empty then
 				cur_width := 0
@@ -323,8 +323,8 @@ feature -- Access
 						-- use `string_size' to return the best approximation.
 						-- The third and fourth values of the result will be 0.
 					standard_result := string_size (a_string)
-					cur_width := standard_result.integer_item (1)
-					cur_height := standard_result.integer_item (2)
+					cur_width := standard_result.width
+					cur_height := standard_result.height
 				end
 			end
 			Result := [cur_width, cur_height, greatest_a, greatest_c]
@@ -332,7 +332,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER] is
 			-- [width, height] of `a_string'.
 		local
 			cur_width, cur_height: INTEGER

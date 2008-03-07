@@ -20,7 +20,7 @@ inherit
 			il_type_name, generate_gen_type_il, is_generated_as_single_type,
 			generic_derivation, associated_class_type, has_associated_class_type,
 			internal_same_generic_derivation_as, internal_generic_derivation,
-			has_associated_class, is_class_valid
+			has_associated_class, is_class_valid, instantiated_in
 		end
 
 	SHARED_IL_CASING
@@ -241,6 +241,13 @@ feature -- Access
 			-- which can be used to search its associated CLASS_TYPE.
 		do
 			Result := internal_generic_derivation (0)
+		end
+
+	instantiated_in (class_type: TYPE_A): CL_TYPE_A is
+			-- <Precursor>
+			--| Redefined for refining the return type.
+		do
+			Result := Current
 		end
 
 feature -- Output
@@ -644,7 +651,6 @@ feature {COMPILER_EXPORTER} -- Conformance
 			l_other_type_set: TYPE_SET_A
 		do
 			other_class_type ?= other.conformance_type
-			l_other_type_set ?= other
 			if other_class_type /= Void then
 				if other_class_type.is_expanded then
 						-- It should be the exact same base class for expanded.
@@ -669,7 +675,8 @@ feature {COMPILER_EXPORTER} -- Conformance
 						Result := other_class_type.class_id = system.system_object_id
 					end
 				end
-			elseif l_other_type_set /= Void then
+			elseif other.is_type_set then
+				l_other_type_set ?= other.actual_type
 				Result := to_type_set.conform_to (l_other_type_set.twin)
 			end
 		end

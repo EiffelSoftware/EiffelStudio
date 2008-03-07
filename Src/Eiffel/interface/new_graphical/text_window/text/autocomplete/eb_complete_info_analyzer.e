@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 			l_class: CLASS_C
 		do
 			if a_type.is_type_set then
-				l_type_set ?= a_type
+				l_type_set ?= a_type.actual_type
 				Result := l_type_set.associated_classes
 			else
 				if a_type.has_associated_class then

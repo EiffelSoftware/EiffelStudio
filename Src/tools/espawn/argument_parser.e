@@ -54,9 +54,9 @@ feature -- Access
 		require
 			successful: successful
 		do
-			Result := not {C_CONFIG_MANAGER}.is_windows_x64 or else has_option (x86_switch)
+			Result := not {PLATFORM_CONSTANTS}.is_windows_64_bits or else has_option (x86_switch)
 		ensure
-			true_for_64bit: not {C_CONFIG_MANAGER}.is_windows_x64 implies Result
+			true_for_64bit: not {PLATFORM_CONSTANTS}.is_windows_64_bits implies Result
 		end
 
 	specific_compiler_code: STRING is
@@ -158,7 +158,7 @@ feature {NONE} -- Usage
 		once
 			create Result.make (1)
 			Result.extend (create {ARGUMENT_SWITCH}.make (manual_switch, "Supresses automatic configuration.", False, False))
-			if {C_CONFIG_MANAGER}.is_windows_x64 then
+			if {PLATFORM_CONSTANTS}.is_windows_64_bits then
 				Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Forces use of a 32bit environment.", True, False))
 			else
 				Result.extend (create {ARGUMENT_SWITCH}.make_hidden (x86_switch, "Ineffective.", True, False))

@@ -6,7 +6,13 @@ CG = Code Generation
 6.2
 ===
 
-6.2.7.2560 non-RTEA with Kpic:
+6.2.7.2648 non-RTEA with new code generation for less dynamic calls (exe size: 14874336):
+192.02u 12.55s 4:09.95 81.8% (with old compiler exe size: 15118032)
+198.26u 12.87s 4:14.72 82.8% (before bootstrap)
+193.05u 12.37s 4:07.79 82.9% (after bootstrap)
+
+6.2.7.2560 non-RTEA (always with Kpic unless specified):
+192.02u 12.55s 4:09.95 81.8%
 195.62u 13.41s 4:03.06 85.9%
 190.38u 13.26s 4:04.50 83.2%
 

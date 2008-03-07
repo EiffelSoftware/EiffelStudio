@@ -83,19 +83,19 @@ feature {NONE} -- Implementation
 			until
 				filter.item_and_filter_names.after
 			loop
-				create l_edit.make_with_text ((filter.item_and_filter_names.item_for_iteration [1]).out)
+				create l_edit.make_with_text (filter.item_and_filter_names.item_for_iteration.class_name)
 				l_edit.select_actions.extend (agent user_edit_item (l_edit))
 				l_edit.deactivate_actions.extend (agent user_edit_item_after (l_edit, 1))
 				grid.set_item (1, filter.item_and_filter_names.key_for_iteration, l_edit)
 				l_edit.set_data (filter.item_and_filter_names.item_for_iteration)
 
 				create l_check.make
-				l_check.set_selected (filter.item_and_filter_names.item_for_iteration.boolean_item (2))
+				l_check.set_selected (filter.item_and_filter_names.item_for_iteration.selected)
 				l_check.selected_changed_actions.extend (agent handle_check_box_value_changed)
 				grid.set_item (2, filter.item_and_filter_names.key_for_iteration, l_check)
 				l_check.set_data (filter.item_and_filter_names.item_for_iteration)
 
-				create l_edit.make_with_text ((filter.item_and_filter_names.item_for_iteration [3]).out)
+				create l_edit.make_with_text (filter.item_and_filter_names.item_for_iteration.description)
 				l_edit.select_actions.extend (agent user_edit_item (l_edit))
 				l_edit.deactivate_actions.extend (agent user_edit_item_after (l_edit, 3))
 				grid.set_item (3, filter.item_and_filter_names.key_for_iteration, l_edit)
@@ -110,11 +110,11 @@ feature {NONE} -- Implementation
 	handle_check_box_value_changed (a_check_item: MA_GRID_CHECK_BOX_ITEM) is
 			-- Handle the check box grid item valuse changed.
 		local
-			l_filter_data: TUPLE [STRING, BOOLEAN, STRING]
+			l_filter_data: TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING]
 		do
 			l_filter_data ?= a_check_item.data
 			check l_filter_data /= Void end
-			l_filter_data.put_boolean (a_check_item.selected, 2)
+			l_filter_data.selected := a_check_item.selected
 		end
 
 	open_clicked is
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			l_suffix: STRING
 			l_filter_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]
 		do
-			l_suffix := (filter_filter_suffix [1]).out
+			l_suffix := filter_filter_suffix.filter
 			l_suffix := l_suffix.substring (2, l_suffix.count)
 			create l_data_file.make_create_read_write (a_dlg.file_name + l_suffix)
 			l_filter_datas := hash_table_datas_to_arrayed_list_datas
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 			else
 				l_check_box ?= a_item
 				check l_check_box /= Void end
-				l_filter_data [2] := l_check_box.is_selected
+				l_filter_data.selected := l_check_box.is_selected
 			end
 		end
 
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	a_filter_data: TUPLE [STRING, BOOLEAN, STRING] is
+	a_filter_data: TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING] is
 			-- A anchor, should not be called
 		require
 			False

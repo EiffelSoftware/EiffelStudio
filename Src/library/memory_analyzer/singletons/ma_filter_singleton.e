@@ -35,15 +35,15 @@ feature  -- Filter
 				item_and_filter_names.after or
 				Result = True
 			loop
-				if (item_and_filter_names.item_for_iteration.item (1)).is_equal (a_class_name) and
-					 item_and_filter_names.item_for_iteration.boolean_item (2) then
+				if (item_and_filter_names.item_for_iteration.class_name).is_equal (a_class_name) and
+					 item_and_filter_names.item_for_iteration.selected then
 					Result := True
 				end
 
 				debug ("larry")
 					if a_class_name.is_equal ("XML_GRAPH_ROUTINES") then
-						io.put_string ("%N MA_FILTER_SINGLETON a_class_name is: " + (item_and_filter_names.item_for_iteration [1]).out + " " + a_class_name.out + " RESULT IS:" + Result.out)
-						io.put_string ("%N MA_FILTER_SINGLETON: " + (item_and_filter_names.item_for_iteration [1]).out + " " + item_and_filter_names.item_for_iteration.boolean_item (2).out)
+						io.put_string ("%N MA_FILTER_SINGLETON a_class_name is: " + item_and_filter_names.item_for_iteration.class_name + " " + a_class_name.out + " RESULT IS:" + Result.out)
+						io.put_string ("%N MA_FILTER_SINGLETON: " + item_and_filter_names.item_for_iteration.class_name + " " + item_and_filter_names.item_for_iteration.selected.out)
 					end
 				end
 				item_and_filter_names.forth
@@ -52,7 +52,7 @@ feature  -- Filter
 
 feature {MA_FILTER_WINDOW} -- Implementation
 
-	item_and_filter_names: DS_HASH_TABLE [TUPLE [STRING, BOOLEAN, STRING], INTEGER]
+	item_and_filter_names: DS_HASH_TABLE [TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING], INTEGER]
 			-- The hash table of grid items and filter datas. The second argument is the grid item index.
 			-- In the tuple, first argument is Class Name, second is Selected to Filter, third is the Description.
 

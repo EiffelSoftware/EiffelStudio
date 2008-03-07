@@ -149,22 +149,22 @@ feature -- Command
 				grid_data.after
 			loop
 				-- set state name
-				create l_item.make_with_text (grid_data.item (l_i).item (1).out)
+				create l_item.make_with_text (grid_data.item (l_i).type_name)
 				l_item.set_pixmap (icons.system_state_from_icon)
 				grid_from_state.set_item (1, l_i, l_item.deep_twin)
 				l_item.set_pixmap (icons.system_state_to_icon)
 				grid_to_state.set_item (1, l_i, l_item)
 				-- set object count
-				create l_item.make_with_text (grid_data.item (l_i).item (2).out)
+				create l_item.make_with_text (grid_data.item (l_i).e_mem.out)
 				grid_from_state.set_item (2, l_i, l_item.deep_twin)
 				grid_to_state.set_item (2, l_i, l_item)
 
 				-- set eiffel memory used
-				create l_item.make_with_text (grid_data.item (l_i).item (3).out)
+				create l_item.make_with_text (grid_data.item (l_i).c_mem.out)
 				grid_from_state.set_item (3,	l_i, l_item.deep_twin)
 				grid_to_state.set_item (3,	l_i, l_item)
 				-- set c memory used
-				create l_item.make_with_text (grid_data.item (l_i).item (4).out)
+				create l_item.make_with_text (grid_data.item (l_i).type_id.out)
 				grid_from_state.set_item (4,	l_i, l_item.deep_twin)
 				grid_to_state.set_item (4,	l_i, l_item)
 
@@ -189,12 +189,12 @@ feature {NONE} -- Implemention
 			until
 				grid_data_increased.after
 			loop
-				if not filter.filter_class (grid_data_increased.item_for_iteration.item (1).out) then
+				if not filter.filter_class (grid_data_increased.item_for_iteration.text) then
 					l_i := l_i + 1
-					create l_item.make_with_text (grid_data_increased.item_for_iteration.item (1).out)
+					create l_item.make_with_text (grid_data_increased.item_for_iteration.text)
 					l_item.set_pixmap (icons.object_grid_class_icon)
 					grid_changed.set_item (1, l_i, l_item)
-					l_int := grid_data_increased.item_for_iteration.integer_32_item (2)
+					l_int := grid_data_increased.item_for_iteration.nb
 					create l_item.make_with_text (l_int.out)
 					if l_int > 0 then
 						l_item.set_foreground_color (increased_color)
@@ -307,9 +307,9 @@ feature {NONE} -- Implemention
 			v_not_void: v /= Void
 		do
 			if sorting_order then
-				Result := u.item (1).out < v.item (1).out
+				Result := u.text < v.text
 			else
-				Result := u.item (1).out > v.item (1).out
+				Result := u.text > v.text
 			end
 		end
 
@@ -320,19 +320,19 @@ feature {NONE} -- Implemention
 			v_not_void: v /= Void
 		do
 			if sorting_order then
-				Result := u.integer_item (2) < v.integer_item (2)
+				Result := u.nb < v.nb
 			else
-				Result := v.integer_item (2) < u.integer_item (2)
+				Result := v.nb < u.nb
 			end
 		end
 
-	grid_data_increased_row: TUPLE [STRING, INTEGER] is
+	grid_data_increased_row: TUPLE [text: STRING; nb: INTEGER] is
 			-- Anchor type should not called.
+			-- first INTEGER is increased object count, second INTEGER is the increased objects type id
 		require
 			False
 		do
 		end
-
 
 	grid_data_increased: DS_ARRAYED_LIST [like grid_data_increased_row]
 			-- the objects increased, first INTEGER is increased object count, second INTEGER is the increased objects type id
@@ -340,7 +340,7 @@ feature {NONE} -- Implemention
 	grid_data: DS_ARRAYED_LIST [like row_data]
 			-- Data used to fill grid.
 
-	row_data: TUPLE [STRING, INTEGER, INTEGER, INTEGER]
+	row_data: TUPLE [type_name: STRING; e_mem: INTEGER; c_mem: INTEGER; type_id: INTEGER]
 			-- Type for the data inserted in grid
 			-- It is [Object Type Name, Eiffel Memory Used, C Memory Used, TypeId].
 

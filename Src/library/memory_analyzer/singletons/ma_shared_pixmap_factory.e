@@ -17,15 +17,15 @@ feature
 			full_path: FILE_NAME
 			retried: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
-			a_coord: TUPLE [INTEGER, INTEGER]
+			a_coord: TUPLE [x: INTEGER; y: INTEGER]
 			a_row, a_column, a_x_offset, a_y_offset: INTEGER
 		do
 			if not retried then
 				a_coord := pixmap_lookup @ fn
 				if a_coord /= Void then
 						-- We are looking up an icon with dimension `pixmap_width' by `pixmap_height'
-					a_column := a_coord.integer_32_item (2)
-					a_row := a_coord.integer_32_item (1)
+					a_column := a_coord.y
+					a_row := a_coord.x
 					a_x_offset := (a_column - 1) * (1 + pixmap_width) + 1
 					a_y_offset := (a_row - 1) * (1 + pixmap_height) + 1
 					Result := image_matrix.sub_pixmap (

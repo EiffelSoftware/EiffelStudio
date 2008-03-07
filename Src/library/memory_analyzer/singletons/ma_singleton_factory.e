@@ -189,13 +189,13 @@ feature {NONE} -- misc
 			create Result
 		end
 
-	state_file_suffix: TUPLE [STRING, STRING] is
+	state_file_suffix: TUPLE [filter: STRING; text: STRING] is
 			-- Suffix of the States File name.
 		once
 			Result := ["*.ema", "Eiffel Memory Analyzer Datas (*.ema)"]
 		end
 
-	filter_filter_suffix: TUPLE [STRING, STRING] is
+	filter_filter_suffix: TUPLE [filter: STRING; text: STRING] is
 			-- Suffix of the Filter File name.
 		once
 			Result := ["*.emf", "Eiffel Memory Analyzer Filter (*.emf)"]

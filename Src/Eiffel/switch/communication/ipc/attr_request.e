@@ -15,6 +15,7 @@ inherit
 			make as old_make
 		export
 			{NONE} all
+			{RECV_VALUE} reset_recv_value
 		redefine
 			send
 		end

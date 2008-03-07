@@ -9,6 +9,8 @@ class
 	XMI_CODE
 
 inherit
+	ANY
+	
 	SYSTEM_CONSTANTS
 		export
 			{NONE} all

@@ -10,6 +10,7 @@ class
 	DEBUGGER_CONTROLLER
 
 inherit
+	ANY
 
 	SHARED_EIFFEL_PROJECT
 		export
@@ -51,7 +52,7 @@ create {DEBUGGER_MANAGER}
 
 feature {NONE} -- Initialization
 
-	make (a_manager: DEBUGGER_MANAGER) is
+	make (a_manager: like manager) is
 			-- Initialize `Current'.
 		do
 			manager := a_manager

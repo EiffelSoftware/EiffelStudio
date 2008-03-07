@@ -33,7 +33,7 @@ inherit
 
 	SERVICE_PROVIDER
 
-create {SHARED_SERVICE_PROVIDER}
+create {SHARED_SERVICE_PROVIDER, SERVICE_HEAP}
 	make
 
 feature -- Extension

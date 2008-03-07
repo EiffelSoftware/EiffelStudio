@@ -31,6 +31,11 @@ inherit
             build_docking_content
 		end
 
+    SHARED_SERVICE_PROVIDER
+        export
+            {NONE} all
+        end
+
 inherit {NONE}
 	ES_HELP_REQUEST_BINDER
 		export
@@ -43,11 +48,6 @@ inherit {NONE}
         end
 
     ES_SHARED_FONTS_AND_COLORS
-        export
-            {NONE} all
-        end
-
-    SHARED_SERVICE_PROVIDER
         export
             {NONE} all
         end

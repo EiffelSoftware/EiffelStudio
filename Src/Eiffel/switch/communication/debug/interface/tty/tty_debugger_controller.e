@@ -18,7 +18,7 @@ inherit
 			activate_debugger_environment
 		end
 
-feature
+feature -- Access
 
 	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
 		local
@@ -57,7 +57,7 @@ feature
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- {DEBUGGER_MANAGER, SHARED_DEBUGGER_MANAGER} -- Implementation
 
 	manager: TTY_DEBUGGER_MANAGER;
 

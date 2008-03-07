@@ -18,13 +18,18 @@ inherit
 		end
 
 	SHARED_DEBUGGER_MANAGER
+		export
+			{NONE} all
+		end
 
-inherit {NONE}
 	DEBUGGER_COMPILER_UTILITIES
+		export
+			{NONE} all
+		end
 
 create
 	make
- 
+
 convert
 	dialog: {EV_DIALOG}
 

@@ -10,6 +10,8 @@ class
 	DEBUGGER_COMPILER_UTILITIES
 
 inherit
+	ANY
+	
 	COMPILER_EXPORTER
 			--| Just to be able to access E_FEATURE::associated_feature_i :(
 			--| and other expression evaluation purpose

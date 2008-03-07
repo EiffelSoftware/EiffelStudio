@@ -9,7 +9,13 @@ indexing
 class
 	BREAKPOINTS_MANAGER
 
+inherit
+	ANY
+
+	COMPILER_EXPORTER
+
 inherit {NONE}
+
 	DEBUGGER_COMPILER_UTILITIES
 		export
 			{NONE} all

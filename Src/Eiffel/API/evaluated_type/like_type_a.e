@@ -34,12 +34,14 @@ inherit
 			is_loose,
 			is_none,
 			is_reference,
+			is_type_set,
 			internal_is_valid_for_class,
 			meta_type,
 			set_attached_mark,
 			set_detachable_mark,
 			description,
 			c_type,
+			generics,
 			generated_id,
 			generate_cid, generate_cid_array, generate_cid_init,
 			make_gen_type_byte_code, generate_gen_type_il,
@@ -135,6 +137,12 @@ feature -- Properties
 			Result := actual_type.is_none
 		end
 
+	is_type_set: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := actual_type.is_type_set
+		end
+
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		deferred
@@ -182,6 +190,12 @@ feature -- Access
 	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE is
 		do
 			Result := actual_type.associated_class_type (a_context_type)
+		end
+
+	generics: ARRAY [TYPE_A] is
+			-- <Precursor>
+		do
+			Result := actual_type.generics
 		end
 
 	description: ATTR_DESC is

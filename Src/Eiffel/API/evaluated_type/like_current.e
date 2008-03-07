@@ -21,7 +21,7 @@ inherit
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			hash_code, internal_generic_derivation, internal_same_generic_derivation_as,
-			is_class_valid, skeleton_adapted_in, good_generics, has_like_current
+			is_class_valid, skeleton_adapted_in, good_generics, has_like_current, is_type_set
 		end
 
 feature -- Visitor
@@ -101,6 +101,12 @@ feature -- Properties
 
 	is_none: BOOLEAN is False
 			-- Is current actual type NONE?
+
+	is_type_set: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := conformance_type /= Void and then conformance_type.is_type_set
+		end
 
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic one?

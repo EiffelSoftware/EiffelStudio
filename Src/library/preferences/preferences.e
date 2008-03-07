@@ -405,7 +405,7 @@ feature -- Storage access
 
 feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCES_STORAGE_I} -- Implementation
 
-	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN, BOOLEAN], STRING]
+	default_values: HASH_TABLE [TUPLE [description: STRING; value: STRING; hidden: BOOLEAN; restart: BOOLEAN], STRING]
 			-- Hash table of known preference default values.  [[Description, Value, Hidden, Restart], Name].
 
 	session_values: HASH_TABLE [STRING, STRING]

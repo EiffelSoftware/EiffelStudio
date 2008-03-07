@@ -9,7 +9,7 @@ class
 	SHORTCUT_PREFERENCE
 
 inherit
-	TYPED_PREFERENCE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]]
+	TYPED_PREFERENCE [TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key_string: STRING]]
 		redefine
 			is_default_value
 		end
@@ -49,7 +49,7 @@ feature -- Access
 			l_key_code: INTEGER
 			s: STRING
 		do
-			s ?= value.reference_item (4)
+			s := value.key_string
 			l_key_code := key_code_from_key_string (s)
 			if l_key_code > 0 then
 				create Result.make_with_code (l_key_code)
@@ -171,6 +171,7 @@ feature -- Status Setting
 			end
 			values := a_value.split ('+')
 			l_value := [False, False, False, ""]
+
 			from
 				l_cnt := 1
 			until
@@ -181,19 +182,19 @@ feature -- Status Setting
 					l_value.put_boolean (True, l_cnt)
 				elseif l_cnt = values.count then
 						-- Last one is assumed to be key
-					l_value.put_reference (l_string, 4)
+					l_value.key_string := l_string
 				end
 				l_cnt := l_cnt + 1
 			end
 
-			l_string ?= l_value.reference_item (4)
+			l_string := l_value.key_string
 			l_key_code := key_code_from_key_string (l_string)
 			if l_key_code > 0 then
 				l_key := create {EV_KEY}.make_with_code (l_key_code)
 			end
-			l_alt := l_value.boolean_item (1)
-			l_ctrl := l_value.boolean_item (2)
-			l_shift := l_value.boolean_item (3)
+			l_alt := l_value.alt
+			l_ctrl := l_value.ctrl
+			l_shift := l_value.shift
 			if modifiable_with (l_key, l_alt, l_ctrl, l_shift) then
 					-- Managed shortcut value setting.
 				set_values (l_key, l_alt, l_ctrl, l_shift)
@@ -209,19 +210,19 @@ feature -- Query
 	is_alt: BOOLEAN is
 			-- Requires Alt key?
 		do
-			Result := value.boolean_item (1)
+			Result := value.alt
 		end
 
 	is_ctrl: BOOLEAN is
 			-- Requires Ctrl key?
 		do
-			Result := value.boolean_item (2)
+			Result := value.ctrl
 		end
 
 	is_shift: BOOLEAN is
 			-- Requires Shift key?
 		do
-			Result := value.boolean_item (3)
+			Result := value.shift
 		end
 
 	valid_value_string (a_string: STRING): BOOLEAN is

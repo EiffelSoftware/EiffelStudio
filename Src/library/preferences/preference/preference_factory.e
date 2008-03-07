@@ -35,18 +35,18 @@ feature -- Commands
 				l_value := preferences.session_values.item (l_fullname)
 				create Result.make_from_string_value (a_manager, a_name, l_value)
 				if preferences.default_values.has (l_fullname) then
-					Result.set_hidden (preferences.default_values.item (l_fullname).boolean_item (3))
-					Result.set_restart_required (preferences.default_values.item (l_fullname).boolean_item (4))
+					Result.set_hidden (preferences.default_values.item (l_fullname).hidden)
+					Result.set_restart_required (preferences.default_values.item (l_fullname).restart)
 				end
 			elseif preferences.default_values.has (l_fullname) then
 					-- Retrieve from default values.
-				l_value ?= preferences.default_values.item (l_fullname).item (2)
+				l_value := preferences.default_values.item (l_fullname).value
 				if l_value = Void then
 					l_value := ""
 				end
 				create Result.make_from_string_value (a_manager, a_name, l_value)
-				Result.set_hidden (preferences.default_values.item (l_fullname).boolean_item (3))
-				Result.set_restart_required (preferences.default_values.item (l_fullname).boolean_item (4))
+				Result.set_hidden (preferences.default_values.item (l_fullname).hidden)
+				Result.set_restart_required (preferences.default_values.item (l_fullname).restart)
 			else
 					-- Create with `a_value'.
 				create Result.make (a_manager, a_name, a_fallback_value)
@@ -54,8 +54,8 @@ feature -- Commands
 
 					-- Set the default value for future resetting by user.
 			if preferences.default_values.has (l_fullname) then
-				l_desc ?= preferences.default_values.item (l_fullname).item (1)
-				l_value ?= preferences.default_values.item (l_fullname).item (2)
+				l_desc := preferences.default_values.item (l_fullname).description
+				l_value := preferences.default_values.item (l_fullname).value
 				if l_desc /= Void and then not l_desc.is_empty then
 					Result.set_description (l_desc)
 				end

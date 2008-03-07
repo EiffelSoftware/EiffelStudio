@@ -299,7 +299,7 @@ feature -- Query
 
 feature {NONE} -- Implementation for `try_solve_no_space_left'
 
-	can_solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): BOOLEAN is
+	can_solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER): BOOLEAN is
 			-- If possible slove no space left?
 		require
 			not_enough_space: not is_enough_max_space (True)
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 			l_zones := internal_tool_bar_row.zones
 			l_zones.delete (internal_mediator.caller)
 			check same_size: a_possible_positions.count = l_zones.count end
-			l_size_to_reduce_left := 0 - a_possible_positions.first.integer_32_item (1)
+			l_size_to_reduce_left := 0 - a_possible_positions.first.pos
 
 			if a_hot_index /= 0 then
 				from
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 			end
 		end
 
-	solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER) is
+	solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER) is
 			-- We really solve no space left problem by reduce/expand SD_TOOL_BAR_ZONR sizes.
 		require
 			not_void: a_possible_positions /= Void
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 			l_zones := internal_tool_bar_row.zones
 			l_zones.delete (internal_mediator.caller)
 			check same_size: a_possible_positions.count = l_zones.count end
-			l_size_to_reduce_left := 0 - a_possible_positions.first.integer_32_item (1)
+			l_size_to_reduce_left := 0 - a_possible_positions.first.pos
 
 			if a_hot_index /= 0 then
 				from
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 				loop
 					l_temp_zone := l_zones.item (a_possible_positions.index)
 					l_total_reduced_size_left := l_total_reduced_size_left + l_temp_zone.assistant.reduce_size (l_size_to_reduce_left - l_total_reduced_size_left)
-					a_possible_positions.item.put_integer_32 (l_temp_zone.size, 2)
+					a_possible_positions.item.size := l_temp_zone.size
 					a_possible_positions.forth
 				end
 			end
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 					if (l_size_to_expand_right - l_total_expanded_size_right) > 0 then
 						l_temp_zone := l_zones.item (a_possible_positions.index)
 						l_total_expanded_size_right := l_total_expanded_size_right + l_temp_zone.assistant.expand_size (l_size_to_expand_right - l_total_expanded_size_right)
-						a_possible_positions.item.put_integer_32 (l_temp_zone.size, 2)
+						a_possible_positions.item.size := l_temp_zone.size
 					end
 					a_possible_positions.forth
 				end
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 
 feature {NONE} -- Implementation for `try_solve_no_space_right'
 
-	can_solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER; a_hot_position: INTEGER): BOOLEAN is
+	can_solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER; a_hot_position: INTEGER): BOOLEAN is
 			-- If possible slove no space right?
 		require
 			not_enough_space: not is_enough_max_space (True)
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 			l_zones.delete (internal_mediator.caller)
 			check same_size: a_possible_positions.count = l_zones.count end
 			if a_hot_index /= a_possible_positions.count then
-				l_size_to_reduce_right := (a_possible_positions.last.integer_32_item (1) + l_zones.last.size) - internal_tool_bar_row.size
+				l_size_to_reduce_right := (a_possible_positions.last.pos + l_zones.last.size) - internal_tool_bar_row.size
 			else
 				l_size_to_reduce_right := a_hot_position + internal_mediator.caller.size - internal_tool_bar_row.size
 			end
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 			end
 		end
 
-	solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index, a_hot_position: INTEGER) is
+	solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index, a_hot_position: INTEGER) is
 			-- We really solve no space right problem by reduce/expand SD_TOOL_BAR_ZONR sizes.
 		require
 			not_void: a_possible_positions /= Void
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 			l_zones.delete (internal_mediator.caller)
 			check same_size: a_possible_positions.count = l_zones.count end
 			if a_hot_index /= a_possible_positions.count then
-				l_size_to_reduce_right := (a_possible_positions.last.integer_32_item (1) + l_zones.last.size) - internal_tool_bar_row.size
+				l_size_to_reduce_right := (a_possible_positions.last.pos + l_zones.last.size) - internal_tool_bar_row.size
 			else
 				l_size_to_reduce_right := a_hot_position + internal_mediator.caller.size - internal_tool_bar_row.size
 			end
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 				l_temp_zone := l_zones.item (a_possible_positions.index)
 				if l_size_to_reduce_right - l_total_reduced_size_right > 0 then
 					l_total_reduced_size_right := l_total_reduced_size_right + l_temp_zone.assistant.reduce_size (l_size_to_reduce_right - l_total_reduced_size_right)
-					a_possible_positions.item.put_integer_32 (l_temp_zone.size, 2)
+					a_possible_positions.item.size := l_temp_zone.size
 					a_possible_positions.forth
 				end
 			end
@@ -570,7 +570,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 				loop
 					l_temp_zone := l_zones.item (a_possible_positions.index)
 					l_total_expanded_size_left := l_total_expanded_size_left + l_temp_zone.assistant.expand_size (l_size_to_expand_left - l_total_expanded_size_left)
-					a_possible_positions.item.put_integer_32 (l_temp_zone.size, 2)
+					a_possible_positions.item.size := l_temp_zone.size
 					a_possible_positions.back
 				end
 			end

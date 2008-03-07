@@ -12,7 +12,10 @@ deferred class
 inherit
 	CALL_STACK_ELEMENT
 
+	COMPILER_EXPORTER
+
 inherit {NONE}
+
 	DEBUGGER_COMPILER_UTILITIES
 		export
 			{NONE} all

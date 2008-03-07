@@ -40,6 +40,7 @@ inherit
 	RECV_VALUE
 		export
 			{NONE} all
+			{RECV_VALUE} reset_recv_value
 		end
 
 	SHARED_EIFNET_DEBUGGER

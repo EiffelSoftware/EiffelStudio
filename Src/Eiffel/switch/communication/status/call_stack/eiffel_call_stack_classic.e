@@ -29,6 +29,7 @@ inherit
 		export
 			{NONE} list_make
 		end
+
 	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
@@ -41,6 +42,9 @@ create {APPLICATION_STATUS_CLASSIC}
 
 create {EIFFEL_CALL_STACK_CLASSIC}
 	list_make
+
+create {TWO_WAY_LIST}
+	make_sublist
 
 feature -- Properties
 

@@ -10,7 +10,7 @@ deferred class
 	DBG_EXPRESSION_EVALUATOR
 
 inherit
-	ANY
+	COMPILER_EXPORTER
 
 inherit {NONE}
 

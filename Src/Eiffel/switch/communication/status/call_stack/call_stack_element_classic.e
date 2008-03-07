@@ -20,6 +20,7 @@ inherit
 		export
 			{NONE} all
 			{EIFFEL_CALL_STACK} error
+			{RECV_VALUE} reset_recv_value
 		end
 
 	COMPILER_EXPORTER

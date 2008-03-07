@@ -106,7 +106,7 @@ feature -- Aspects
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- {DEBUGGER_MANAGER, SHARED_DEBUGGER_MANAGER} -- Implementation
 
 	manager: EB_DEBUGGER_MANAGER;
 

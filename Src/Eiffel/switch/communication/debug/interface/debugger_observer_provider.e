@@ -8,7 +8,7 @@ indexing
 class
 	DEBUGGER_OBSERVER_PROVIDER
 
-inherit {NONE}
+inherit
 	DEBUGGER_OBSERVER
 		redefine
 			on_application_launched,

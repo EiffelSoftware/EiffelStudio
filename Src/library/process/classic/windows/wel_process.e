@@ -314,7 +314,7 @@ feature
 	startup_info: WEL_STARTUP_INFO is
 			-- Process startup information
 		local
-			l_tuple: TUPLE [POINTER, POINTER]
+			l_tuple: TUPLE [p1: POINTER; p2: POINTER]
 		do
 			create Result.make
 
@@ -327,8 +327,8 @@ feature
 				else
 					if input_pipe_needed then
 						l_tuple := file_handle.create_pipe_read_inheritable
-						child_input := l_tuple.pointer_item (1)
-						std_input := l_tuple.pointer_item (2)
+						child_input := l_tuple.p1
+						std_input := l_tuple.p2
 					else
 						child_input := file_handle.open_file_inheritable (input_file_name)
 						std_input := default_pointer
@@ -343,8 +343,8 @@ feature
 				else
 					if output_pipe_needed then
 						l_tuple := file_handle.create_pipe_write_inheritable
-						std_output := l_tuple.pointer_item (1)
-						child_output := l_tuple.pointer_item (2)
+						std_output := l_tuple.p1
+						child_output := l_tuple.p2
 					else
 						child_output := file_handle.create_file_inheritable (output_file_name, False)
 						std_output := default_pointer
@@ -366,8 +366,8 @@ feature
 					else
 						if error_pipe_needed then
 							l_tuple := file_handle.create_pipe_write_inheritable
-							std_error := l_tuple.pointer_item (1)
-							child_error := l_tuple.pointer_item (2)
+							std_error := l_tuple.p1
+							child_error := l_tuple.p2
 						else
 							child_error := file_handle.create_file_inheritable (error_file_name, False)
 							std_error := default_pointer

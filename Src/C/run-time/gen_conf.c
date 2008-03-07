@@ -2316,7 +2316,7 @@ rt_private void eif_expand_tables(int new_size)
 /* ATTENTION: kill the previous 'attention' comment.                */
 /*------------------------------------------------------------------*/
 
-rt_shared char *eif_typename (EIF_TYPE_INDEX dftype)
+rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 {
 	/* Not MT-safe. */
 	EIF_GEN_DER *gdp;

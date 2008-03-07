@@ -93,7 +93,6 @@ extern "C" {
 
 /*------------------------------------------------------------------*/
 
-extern char *eif_typename (EIF_TYPE_INDEX);
 extern char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos);
 
 #ifdef EIF_ASSERTIONS

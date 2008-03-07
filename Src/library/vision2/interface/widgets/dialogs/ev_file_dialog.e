@@ -41,7 +41,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.filter)
 		end
 
-	filters: ARRAYED_LIST [TUPLE [STRING_GENERAL, STRING_GENERAL]] is
+	filters: ARRAYED_LIST [TUPLE [filter: STRING_GENERAL; text: STRING_GENERAL]] is
 			-- All filters currently applied to file list.
 			-- First STRING represents the filter e.g "*.txt".
 			-- Second STRING represents the displayed text

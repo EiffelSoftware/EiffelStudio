@@ -199,7 +199,7 @@ feature -- Element change
 			-- current font.
 		local
 			font_imp: EV_FONT_IMP
-			t: TUPLE [INTEGER, INTEGER]
+			t: TUPLE [width: INTEGER; height: INTEGER]
 			l_text: like text
 		do
 			l_text := text
@@ -217,8 +217,8 @@ feature -- Element change
 			else
 				t := private_wel_font.string_size (l_text)
 			end
-			text_width := t.integer_item (1)
-			text_height := t.integer_item (2)
+			text_width := t.width
+			text_height := t.height
 		end
 
 

@@ -242,7 +242,7 @@ feature {EV_ANY_I} -- Initialization
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		local
-			t: TUPLE [INTEGER, INTEGER]
+			t: TUPLE [width: INTEGER; height: INTEGER]
 			a_width, a_height: INTEGER
 			l_angle: REAL
 		do
@@ -251,8 +251,8 @@ feature {EV_ANY_I} -- Initialization
 			else
 				t := private_wel_font.string_size (a_text)
 			end
-			a_width := t.integer_item (1)
-			a_height := t.integer_item (2)
+			a_width := t.width
+			a_height := t.height
 
 			l_angle := angle
 			if l_angle /= 0.0 then

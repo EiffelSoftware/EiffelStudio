@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			filter_pattern: STRING_GENERAL
 			filter_names: ARRAY [STRING_32]
 			filter_patterns: ARRAY [STRING_32]
-			filter_info: TUPLE [STRING_GENERAL, STRING_GENERAL]
+			filter_info: TUPLE [filter: STRING_GENERAL; text: STRING_GENERAL]
 		do
 				--| FIXME when `set_filter' is removed, this check for
 				--| being non empty may be removed. Julian.
@@ -181,8 +181,8 @@ feature {NONE} -- Implementation
 					filters.off
 				loop
 					filter_info := filters.item
-					filter_pattern ?= filter_info.item (1)
-					filter_name ?= filter_info.item (2)
+					filter_pattern := filter_info.filter
+					filter_name := filter_info.text
 					check filter_pattern_not_void: filter_pattern /= Void end
 					check filter_name_not_void: filter_name /= Void end
 

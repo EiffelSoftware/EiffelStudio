@@ -257,7 +257,7 @@ feature -- Status report
 			Result := wel_font.string_width (a_string)
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER] is
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and
@@ -270,7 +270,7 @@ feature -- Status report
 			-- and positive `right_offset' to `width'.
 		do
 			Result := wel_font.string_size_extended (a_string)
-			Result.put_integer_32 (0 - Result.integer_32_item (4), 4)
+			Result.right_offset := 0 - Result.right_offset
 		end
 
 	horizontal_resolution: INTEGER is

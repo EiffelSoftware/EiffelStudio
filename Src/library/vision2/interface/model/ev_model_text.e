@@ -293,19 +293,19 @@ feature {NONE} -- Implementation
 	update_dimensions is
 			-- Reassign `width' and `height'.
 		local
-			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			t: TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			l_point_array: like point_array
 			p0: EV_COORDINATE
 		do
 			t := scaled_font.string_size (text)
 
-			left_offset := t.integer_item (3)
+			left_offset := t.left_offset
 
 			l_point_array := point_array
 			p0 := l_point_array.item (0)
 
-			l_point_array.item (1).set_y_precise (p0.y_precise + t.integer_item (2))
-			l_point_array.item (2).set_x_precise (p0.x_precise + t.integer_item (1) - left_offset + t.integer_item (4))
+			l_point_array.item (1).set_y_precise (p0.y_precise + t.height)
+			l_point_array.item (2).set_x_precise (p0.x_precise + t.width - left_offset + t.right_offset)
 			center_invalidate
 		end
 

@@ -23,7 +23,7 @@ feature -- Access
 		deferred
 		end
 
-	filters: ARRAYED_LIST [TUPLE [STRING_GENERAL, STRING_GENERAL]]
+	filters: ARRAYED_LIST [TUPLE [filter: STRING_GENERAL; text: STRING_GENERAL]]
 			-- All filters currently applied to file list.
 			-- First element represents the filter e.g "*.txt".
 			-- Second element represents the displayed text

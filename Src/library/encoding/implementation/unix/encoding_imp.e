@@ -11,7 +11,16 @@ class
 inherit
 	ENCODING_I
 
+inherit {NONE}
 	CODE_SETS
+		export
+			{NONE} all
+		end
+
+	EXCEPTION_MANAGER_FACTORY
+		export
+			{NONE} all
+		end
 
 feature -- String encoding convertion
 
@@ -108,7 +117,7 @@ feature -- String encoding convertion
 			if l_pointer /= Void then
 				l_pointer.memory_free
 			end
-			l_failure ?= (create {EXCEPTION_MANAGER}).last_exception.original
+			l_failure ?= exception_manager.last_exception.original
 			if l_failure /= Void then
 					-- In the future, a proper mechanism should be worked out
 					-- to reflect such internal errors. For now the rescue

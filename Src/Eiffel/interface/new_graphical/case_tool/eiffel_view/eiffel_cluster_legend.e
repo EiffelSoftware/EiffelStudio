@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 	build_legend is
 			-- Build legend from `cluster_color_table'.
 		local
-			colors: ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]]
+			colors: ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]]
 			l_color: EV_COLOR
 			i, max: INTEGER
 			l_cluster_entry: EV_MODEL_GROUP
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 				colors := cluster_color_table.item_for_iteration
 
 				if colors.count = 1 then
-					l_color ?= colors.first.item (1)
+					l_color := colors.first.color
 				else
 					from
 						max := 0
@@ -178,9 +178,9 @@ feature {NONE} -- Implementation
 					until
 						colors.after
 					loop
-						if colors.item.integer_item (2) > max then
-							max := colors.item.integer_item (2)
-							l_color ?= colors.item.item (1)
+						if colors.item.user_count > max then
+							max := colors.item.user_count
+							l_color := colors.item.color
 						end
 						colors.forth
 					end
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			a_class_not_void: a_class /= Void
 		local
 			cluster_name: STRING
-			colors: ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]]
+			colors: ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]]
 		do
 			cluster_name := a_class.model.class_i.group.name
 			colors := cluster_color_table.item (cluster_name)
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			a_colors_not_void: a_colors /= Void
 			a_color_not_void: a_color /= Void
 		local
-			l_item: TUPLE [EV_COLOR, INTEGER]
+			l_item: TUPLE [color: EV_COLOR; user_count: INTEGER]
 			l_color: EV_COLOR
 			found: BOOLEAN
 		do
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 				a_colors.after or else found
 			loop
 				l_item := a_colors.item
-				l_color ?= l_item.item (1)
+				l_color := l_item.color
 				check
 					is_color: l_color /= Void
 				end
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 					l_color.blue = a_color.blue
 				then
 					found := True
-					l_item.put_integer (l_item.integer_item (2) + 1, 2)
+					l_item.user_count := l_item.user_count + 1
 				end
 				a_colors.forth
 			end
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			old_color_table, new_color_table: HASH_TABLE [EV_COLOR, STRING]
 			l_nodes: LIST [EG_LINKABLE_FIGURE]
 			bcf: BON_CLASS_FIGURE
-			colors: ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]]
+			colors: ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]]
 			new_color: EV_COLOR
 			color_nr: INTEGER
 		do
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 					cluster_color_table.after
 				loop
 					colors := cluster_color_table.item_for_iteration
-					colors.first.put (color_with_number (color_nr), 1)
+					colors.first.color := color_with_number (color_nr)
 					cluster_color_table.forth
 					color_nr := color_nr + 1
 				end
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 							cluster_color_table.put (colors, bcf.model.class_i.group.name)
 							color_nr := color_nr + 1
 						else
-							new_color ?= colors.first.item (1)
+							new_color := colors.first.color
 						end
 						check
 							new_color_not_void: new_color /= Void
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 	internal_colorize_button: like colorize_button
 			-- Implementation of `colorize_button'.
 
-	cluster_color_table: HASH_TABLE [ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]], STRING]
+	cluster_color_table: HASH_TABLE [ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]], STRING]
 			-- Table of cluster names and list of colors of classes of cluster with cluster
 			-- name and how many classes in the cluster have this color.
 

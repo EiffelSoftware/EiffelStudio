@@ -1850,10 +1850,10 @@ feature -- Local saving
 			l_local_info := local_info.item (a_method_token)
 			if l_local_info /= Void then
 				from
-					l_start_offset := l_local_info.integer_item (1)
-					l_end_offset := l_local_info.integer_item (2)
-					nb := l_local_info.integer_item (3)
-					l_locals ?= l_local_info.item (4)
+					l_start_offset := l_local_info.start_offset
+					l_end_offset := l_local_info.end_offset
+					nb := l_local_info.nb
+					l_locals := l_local_info.locals
 					dbg_writer.open_scope (l_start_offset)
 					l_locals.start
 					create l_sig.make
@@ -2419,20 +2419,23 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			-- Array of ModuleRef token indexed by their associated module
 
 	sequence_point: TUPLE [
-			INTEGER,			-- Offset count
-			ARRAY [INTEGER],	-- Offsets
-			ARRAY [INTEGER],	-- Start lines
-			ARRAY [INTEGER],	-- Start columns
-			ARRAY [INTEGER],	-- End lines
-			ARRAY [INTEGER],	-- End columns
-			INTEGER]			-- Written in class ID
+			offset_count: 	INTEGER;			-- Offset count
+			offsets: 		ARRAY [INTEGER];	-- Offsets
+			start_lines:	ARRAY [INTEGER];	-- Start lines
+			start_columns:	ARRAY [INTEGER];	-- Start columns
+			end_lines:		ARRAY [INTEGER];	-- End lines
+			end_columns:	ARRAY [INTEGER];	-- End columns
+			written_class_id: INTEGER			-- Written in class ID
+			]
 		is
 			-- For type definition purpose.
 		do
 		end
 
-	local_debug_info: TUPLE [INTEGER, INTEGER, INTEGER, like local_types] is
+	local_debug_info: TUPLE [start_offset: INTEGER; end_offset: INTEGER; nb: INTEGER; locals: like local_types] is
 			-- For type definition purpose.
+		require
+			False
 		do
 		end
 

@@ -382,7 +382,7 @@ feature {NONE} -- xml callbacks
 				lab := new_value_label (last_content)
 				r.set_item (2, lab)
 				if last_content.index_of ('%N', 1) > 0 then
-					r.set_height (value_font.string_size (last_content).integer_item (2))
+					r.set_height (value_font.string_size (last_content).height)
 				end
 				current_depth := current_depth - 1
 

@@ -108,14 +108,14 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	step_range (a_b_step_in: BOOLEAN; a_ranges: ARRAY [TUPLE [INTEGER, INTEGER]]) is
+	step_range (a_b_step_in: BOOLEAN; a_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]]) is
 		require
 			a_ranges /= Void
 		local
 			l_mp_ranges: MANAGED_POINTER
 			l_struct_ptr: POINTER
 			i: INTEGER
-			l_item: TUPLE [INTEGER, INTEGER]
+			l_item: TUPLE [left: INTEGER; right: INTEGER]
 			l_size: INTEGER
 		do
 			debug ("debugger_eifnet_data")
@@ -136,8 +136,8 @@ feature {ICOR_EXPORTER} -- Access
 				l_struct_ptr := l_mp_ranges.item + ((i - a_ranges.lower) * l_size)
 
 				--| Set value of Struct |--
-				set_struct_start_offset (l_struct_ptr, l_item.integer_item (1))
-				set_struct_end_offset   (l_struct_ptr, l_item.integer_item (2))
+				set_struct_start_offset (l_struct_ptr, l_item.left)
+				set_struct_end_offset   (l_struct_ptr, l_item.right)
 
 				i := i + 1
 			end

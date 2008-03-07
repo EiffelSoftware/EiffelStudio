@@ -304,7 +304,6 @@ feature -- Status Setting
 			query_grid_item: EB_PROFILE_QUERY_GRID_ROW
 			last_cluster, last_class: EB_PROFILE_QUERY_GRID_ROW
 			row: EB_PROFILE_QUERY_GRID_ROW
-			sorted_tuple: TUPLE [BOOLEAN, BOOLEAN]
 			l_class: CLASS_C
 		do
 			profiler_query := pq
@@ -562,10 +561,7 @@ feature -- Status Setting
 			output_grid.column (1).set_title ("Function")
 			output_grid.column (1).header_item.pointer_button_press_actions.force_extend (agent sort_column (1))
 			output_grid.column (1).header_item.pointer_double_press_actions.force_extend (agent resize_column (1))
-			create sorted_tuple
-			sorted_tuple.put_boolean (True, 1)
-			sorted_tuple.put_boolean (True, 2)
-			output_grid.column (1).set_data (sorted_tuple)
+			output_grid.column (1).set_data ([True, True])
 
 			if show_calls then
 				i := output_grid.column_count + 1
@@ -574,10 +570,7 @@ feature -- Status Setting
 				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (2))
 				displayed_column_indexes.put (i, 2)
 				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
-				create sorted_tuple
-				sorted_tuple.put_boolean (True, 1)
-				sorted_tuple.put_boolean (True, 2)
-				output_grid.column (i).set_data (sorted_tuple)
+				output_grid.column (i).set_data ([True, True])
 			end
 			if show_self then
 				i := output_grid.column_count + 1
@@ -586,10 +579,7 @@ feature -- Status Setting
 				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (3))
 				displayed_column_indexes.put (i, 3)
 				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
-				create sorted_tuple
-				sorted_tuple.put_boolean (True, 1)
-				sorted_tuple.put_boolean (True, 2)
-				output_grid.column (i).set_data (sorted_tuple)
+				output_grid.column (i).set_data ([True, True])
 			end
 			if show_descendents then
 				i := output_grid.column_count + 1
@@ -598,10 +588,7 @@ feature -- Status Setting
 				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (4))
 				displayed_column_indexes.put (i, 4)
 				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
-				create sorted_tuple
-				sorted_tuple.put_boolean (True, 1)
-				sorted_tuple.put_boolean (True, 2)
-				output_grid.column (i).set_data (sorted_tuple)
+				output_grid.column (i).set_data ([True, True])
 			end
 			if show_total then
 				i := output_grid.column_count + 1
@@ -610,10 +597,7 @@ feature -- Status Setting
 				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (5))
 				displayed_column_indexes.put (i, 5)
 				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
-				create sorted_tuple
-				sorted_tuple.put_boolean (True, 1)
-				sorted_tuple.put_boolean (True, 2)
-				output_grid.column (i).set_data (sorted_tuple)
+				output_grid.column (i).set_data ([True, True])
 			end
 			if show_percentage then
 				i := output_grid.column_count + 1
@@ -622,10 +606,7 @@ feature -- Status Setting
 				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (6))
 				displayed_column_indexes.put (i, 6)
 				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
-				create sorted_tuple
-				sorted_tuple.put_boolean (True, 1)
-				sorted_tuple.put_boolean (True, 2)
-				output_grid.column (i).set_data (sorted_tuple)
+				output_grid.column (i).set_data ([True, True])
 			end
 
 			rebuild_grid
@@ -1012,7 +993,7 @@ feature {NONE} -- Implementation
 			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
 		local
 			ascending: BOOLEAN
-			sorted_tuple: TUPLE [BOOLEAN, BOOLEAN]
+			sorted_tuple: TUPLE [first: BOOLEAN; second: BOOLEAN]
 		do
 			if output_grid.header.pointed_divider_index = 0 then
 
@@ -1025,13 +1006,13 @@ feature {NONE} -- Implementation
 				end
 				if not ev_application.ctrl_pressed then
 						-- Determine the direction for the sort.
-					ascending := sorted_tuple.boolean_item (1)
+					ascending := sorted_tuple.first
 
 						-- Now store the new direction for the column state.
-					sorted_tuple.put_boolean (not ascending, 1)
+					sorted_tuple.first := not ascending
 				else
-					ascending := sorted_tuple.boolean_item (2)
-					sorted_tuple.put_boolean (not ascending, 2)
+					ascending := sorted_tuple.second
+					sorted_tuple.second := not ascending
 				end
 
 					-- Now perform actual sort on data.

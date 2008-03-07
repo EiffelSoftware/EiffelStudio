@@ -10,7 +10,7 @@ class
 	EB_METRIC_VALUE_CRITERION_DIALOG
 
 inherit
-	EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE [STRING, BOOLEAN, EB_METRIC_VALUE_TESTER]]
+	EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE [a_metric_name: STRING; a_parent_used: BOOLEAN; a_tester: EB_METRIC_VALUE_TESTER]]
 		redefine
 			initialize,
 			on_ok,
@@ -175,27 +175,23 @@ feature{NONE} -- Actions
 			l_value: like value
 			l_metric_name: STRING
 			l_tester: EB_METRIC_VALUE_TESTER
-			l_use_external_delayed: BOOLEAN_REF
+			l_use_external_delayed: BOOLEAN
 		do
 			l_value := value
 			if l_value = Void then
 				l_value := ["", False, create {EB_METRIC_VALUE_TESTER}.make]
 			end
-			l_metric_name ?= l_value.item (1)
+			l_metric_name := l_value.a_metric_name
 			if l_metric_name = Void then
 				l_metric_name := ""
 			end
-			l_use_external_delayed ?= l_value.item (2)
-			if l_use_external_delayed /= Void then
-				if l_use_external_delayed.item then
-					use_external_delayed_domain_checkbox.enable_select
-				else
-					use_external_delayed_domain_checkbox.disable_select
-				end
+			l_use_external_delayed := l_value.a_parent_used
+			if l_use_external_delayed then
+				use_external_delayed_domain_checkbox.enable_select
 			else
 				use_external_delayed_domain_checkbox.disable_select
 			end
-			l_tester ?= l_value.item (3)
+			l_tester := l_value.a_tester
 			if l_tester = Void then
 				create l_tester.make
 			end

@@ -916,10 +916,10 @@ feature {NONE} -- Implementation
 			u_not_void: u /= Void
 			v_not_void: v /= Void
 		do
-			Result := (u.item (1) = v.item (1)) and (u.item (2) = v.item (2))
+			Result := (u.left = v.left) and (u.right = v.right)
 		end
 
-	link_type: TUPLE [EG_LINKABLE, EG_LINKABLE] is
+	link_type: TUPLE [left: EG_LINKABLE; right: EG_LINKABLE] is
 			-- For typing purposes only
 		do
 		end
@@ -927,7 +927,6 @@ feature {NONE} -- Implementation
 	node_type: ES_CLASS is
 			-- Type of nodes in `nodes'.
 		do
-
 		end
 
 invariant

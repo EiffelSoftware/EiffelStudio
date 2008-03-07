@@ -805,12 +805,12 @@ feature {NONE} -- Implementation
 			-- Display available views for corresponding cluster in `view_list'.
 			-- Update `view_label'.
 		local
-			l_data: TUPLE [STRING, LINKED_LIST [STRING]]
+			l_data: TUPLE [group_id: STRING; views: LINKED_LIST [STRING]]
 			views: LINKED_LIST [STRING]
 			view_name: STRING
 		do
 			l_data ?= row.data
-			views ?= l_data.item (2)
+			views := l_data.views
 			if views /= Void then
 				view_list.wipe_out
 				from
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 				until
 					views.after
 				loop
-					view_name ?= views.item
+					view_name := views.item
 					view_list.extend (create {EV_LIST_ITEM}.make_with_text (views.item))
 					views.forth
 				end
@@ -836,14 +836,14 @@ feature {NONE} -- Implementation
 			-- `set_view_button' was pressed.
 			-- Update `view_mcl'.
 		local
-			l_data: TUPLE [STRING, LINKED_LIST [STRING]]
+			l_data: TUPLE [group_id: STRING; views: LINKED_LIST [STRING]]
 			selected_row: EV_MULTI_COLUMN_LIST_ROW
 			l_group_id: STRING
 		do
 			if view_list.selected_item /= Void then
 				selected_row := view_mcl.selected_item
 				l_data ?= selected_row.data
-				l_group_id ?= l_data.item (1)
+				l_group_id := l_data.group_id
 				selected_row.finish
 				selected_row.remove
 				selected_row.extend (view_list.selected_item.text)

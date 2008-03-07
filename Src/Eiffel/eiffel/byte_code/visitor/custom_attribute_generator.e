@@ -456,12 +456,12 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	add_named_argument (a_class: CLASS_C; a_tuple: TUPLE [STRING_B, EXPR_B]) is
+	add_named_argument (a_class: CLASS_C; a_tuple: TUPLE [str: STRING_B; exp: EXPR_B]) is
 			-- Lookup named argument in `a_tuple' and insert it in `ca_blob'.
 		require
 			blob_not_void: ca_blob /= Void
 			tuple_not_void: a_tuple /= Void
-			tuple_valid: a_tuple.item (1) /= Void and then a_tuple.item (2) /= Void
+			tuple_valid: a_tuple.str /= Void and then a_tuple.exp /= Void
 		local
 			l_expr_b: EXPR_B
 			l_feat: FEATURE_I
@@ -470,8 +470,8 @@ feature {NONE} -- Implemention
 			l_feat_name: STRING
 			l_type: TYPE_A
 		do
-			l_string_b ?= a_tuple.item (1)
-			l_expr_b ?= a_tuple.item (2)
+			l_string_b := a_tuple.str
+			l_expr_b := a_tuple.exp
 			check
 				has_string: l_string_b /= Void
 				has_expression: l_expr_b /= Void

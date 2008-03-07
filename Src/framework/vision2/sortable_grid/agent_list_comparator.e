@@ -107,8 +107,7 @@ feature -- Status report
 	less_than (u, v: G): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		local
-			l_tuple: TUPLE [G, G, INTEGER]
-			l_tuple2: TUPLE [G, G, INTEGER]
+			l_tuple1, l_tuple2: TUPLE [a: G; b: G; sorting_order: INTEGER]
 			l_action_list: like action_list
 			l_sorting_order_list: like sorting_order_list
 			l_item: FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]
@@ -118,16 +117,12 @@ feature -- Status report
 			l_action_list := action_list
 			l_sorting_order_list := sorting_order_list
 
-			create l_tuple
-			l_tuple.put (u, 1)
-			l_tuple.put (v, 2)
+			l_tuple1 := [u, v, 0]
 			if action_list.count = 1 then
-				l_tuple.put (l_sorting_order_list.first, 3)
-				Result := l_action_list.first.item (l_tuple)
+				l_tuple1.sorting_order := l_sorting_order_list.first
+				Result := l_action_list.first.item (l_tuple1)
 			else
-				create l_tuple2
-				l_tuple2.put (v, 1)
-				l_tuple2.put (u, 2)
+				l_tuple2 := [v, u, 0]
 				from
 					Result := False
 					l_action_list.start
@@ -138,10 +133,10 @@ feature -- Status report
 					check l_action_list.item /= Void end
 					l_item := l_action_list.item
 					l_column_order := l_sorting_order_list.item
-					l_tuple.put (l_column_order, 3)
-					Result := l_item.item (l_tuple)
+					l_tuple1.sorting_order := l_column_order
+					Result := l_item.item (l_tuple1)
 					if not Result then
-						l_tuple2.put (l_column_order, 3)
+						l_tuple2.sorting_order := l_column_order
 						done := l_item.item (l_tuple2)
 					end
 					l_action_list.forth

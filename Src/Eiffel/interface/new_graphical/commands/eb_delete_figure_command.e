@@ -57,7 +57,7 @@ feature -- Basic operations
 	execute_with_class_list (a_stone: CLASS_FIGURE_LIST_STONE) is
 			-- Remove `a_stone' from diagram.
 		local
-			undo_list: ARRAYED_LIST [TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]]
+			undo_list: ARRAYED_LIST [TUPLE [port_x: INTEGER; port_y: INTEGER; needed_links: LIST [ES_ITEM]]]
 			l_classes: LIST [EIFFEL_CLASS_FIGURE]
 			l_world: EIFFEL_WORLD
 		do
@@ -89,7 +89,7 @@ feature -- Basic operations
 			cluster_fig: EIFFEL_CLUSTER_FIGURE
 			l_projector: EIFFEL_PROJECTOR
 			remove_links: LIST [ES_ITEM]
-			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
+			remove_classes: like classes_to_remove_in_cluster
 			cf: EIFFEL_CLASS_FIGURE
 		do
 			l_world := tool.world
@@ -105,7 +105,7 @@ feature -- Basic operations
 				until
 					remove_classes.after
 				loop
-					cf ?= remove_classes.item.item (1)
+					cf := remove_classes.item.figure
 					remove_links.append (cf.model.needed_links)
 					remove_classes.forth
 				end
@@ -116,7 +116,6 @@ feature -- Basic operations
 						[<<agent l_world.reinclude_cluster (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 			end
 		end
-
 
 	execute_with_link_midpoint (a_stone: EG_EDGE) is
 			-- Remove `a_stone' from diagram.
@@ -258,14 +257,14 @@ feature {NONE} -- Implementation
 			tool.projector.full_project
 		end
 
-	reinclude_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]; undo_list: LIST [TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]]) is
+	reinclude_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]; undo_list: LIST [TUPLE [port_x: INTEGER; port_y: INTEGER; needed_links: LIST [ES_ITEM]]]) is
 			-- Reinclude all classes in `a_list' to position in `undo_list' TUPLE and reinclude all links in `undo_list'.
 		local
 			l_world: EIFFEL_WORLD
 			es_class: ES_CLASS
 			class_fig: EIFFEL_CLASS_FIGURE
 			remove_links: LIST [ES_ITEM]
-			l_item: TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]
+			l_item: TUPLE [port_x: INTEGER; port_y: INTEGER; needed_links: LIST [ES_ITEM]]
 		do
 			l_world := tool.world
 			from
@@ -277,15 +276,15 @@ feature {NONE} -- Implementation
 				class_fig := a_list.item
 				es_class := class_fig.model
 				l_item := undo_list.item
-				remove_links ?= l_item.item (3)
-				l_world.reinclude_class (class_fig, remove_links, l_item.integer_item (1), l_item.integer_item (2))
+				remove_links := l_item.needed_links
+				l_world.reinclude_class (class_fig, remove_links, l_item.port_x, l_item.port_y)
 				a_list.forth
 				undo_list.forth
 			end
 			tool.projector.full_project
 		end
 
-	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]] is
+	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]] is
 			-- All class figures in `a_cluster' that are needed on diagram plus ther positions.
 		local
 			l_linkables: LIST [EG_LINKABLE]

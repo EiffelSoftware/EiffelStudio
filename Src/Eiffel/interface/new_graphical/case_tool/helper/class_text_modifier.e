@@ -129,10 +129,10 @@ feature -- Access
 	last_feature_as: FEATURE_AS
 			-- AST of last added feature.
 
-	last_removed_code: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
+	last_removed_code: ARRAYED_LIST [TUPLE [str: STRING; pos: INTEGER]]
 			-- List of code and positions that has been removed.
 
-	last_added_code: ARRAYED_LIST [TUPLE[STRING, INTEGER]]
+	last_added_code: ARRAYED_LIST [TUPLE [str: STRING; pos: INTEGER]]
 			-- List of added code and position.
 
 	class_as: CLASS_AS
@@ -444,13 +444,13 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	undelete_code (data: LIST [TUPLE [STRING, INTEGER]]) is
+	undelete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]]) is
 			-- Reinclude code in `data'.
 		require
 			data_not_void: data /= Void
 		local
 			class_file: PLAIN_TEXT_FILE
-			l_item: TUPLE [STRING, INTEGER]
+			l_item: TUPLE [str: STRING; pos: INTEGER]
 			str: STRING
 		do
 			create class_file.make (class_i.file_name)
@@ -468,8 +468,8 @@ feature -- Modification (Add/Remove feature)
 					data.after
 				loop
 					l_item := data.item
-					str ?= l_item.item (1)
-					insertion_position := l_item.integer_item (2)
+					str := l_item.str
+					insertion_position := l_item.pos
 					check
 						insertion_position <= text.count
 					end
@@ -480,11 +480,11 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	delete_code (data: LIST [TUPLE [STRING, INTEGER]]) is
+	delete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]]) is
 			--
 		local
 			class_file: PLAIN_TEXT_FILE
-			l_item: TUPLE [STRING, INTEGER]
+			l_item: TUPLE [str: STRING; pos: INTEGER]
 			str: STRING
 			pos: INTEGER
 		do
@@ -503,8 +503,8 @@ feature -- Modification (Add/Remove feature)
 					data.before
 				loop
 					l_item := data.item
-					str ?= l_item.item (1)
-					pos := l_item.integer_item (2)
+					str := l_item.str
+					pos := l_item.pos
 					check
 						text.has_substring (str)
 					end

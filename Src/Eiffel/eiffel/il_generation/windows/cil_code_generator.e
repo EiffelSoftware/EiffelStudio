@@ -3135,14 +3135,14 @@ feature -- IL Generation
 							l_sequence_point_list.after
 						loop
 							l_sequence_point := l_sequence_point_list.item
-							dbg_offsets_count := l_sequence_point.integer_item (1)
-							dbg_offsets ?= l_sequence_point.item (2)
-							dbg_start_lines ?= l_sequence_point.item (3)
-							dbg_start_columns ?= l_sequence_point.item (4)
-							dbg_end_lines ?= l_sequence_point.item (5)
-							dbg_end_columns ?= l_sequence_point.item (6)
+							dbg_offsets_count := l_sequence_point.offset_count
+							dbg_offsets := l_sequence_point.offsets
+							dbg_start_lines := l_sequence_point.start_lines
+							dbg_start_columns := l_sequence_point.start_columns
+							dbg_end_lines := l_sequence_point.end_lines
+							dbg_end_columns := l_sequence_point.end_columns
 							dbg_writer.define_sequence_points (
-								dbg_documents (l_sequence_point.integer_item (7)),
+								dbg_documents (l_sequence_point.written_class_id),
 								dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 								dbg_end_lines, dbg_end_columns)
 							l_sequence_point_list.forth
@@ -7557,13 +7557,14 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		end
 
 	sequence_point: TUPLE [
-			INTEGER,			-- Offset count
-			ARRAY [INTEGER],	-- Offsets
-			ARRAY [INTEGER],	-- Start lines
-			ARRAY [INTEGER],	-- Start columns
-			ARRAY [INTEGER],	-- End lines
-			ARRAY [INTEGER],	-- End columns
-			INTEGER]			-- Written in class ID
+			offset_count: 	INTEGER;			-- Offset count
+			offsets:		ARRAY [INTEGER];	-- Offsets
+			start_lines:	ARRAY [INTEGER];	-- Start lines
+			start_columns:	ARRAY [INTEGER];	-- Start columns
+			end_lines:		ARRAY [INTEGER];	-- End lines
+			end_columns:	ARRAY [INTEGER];	-- End columns
+			written_class_id:	INTEGER			-- Written in class ID
+				]
 		is
 			-- For type definition purpose.
 		do

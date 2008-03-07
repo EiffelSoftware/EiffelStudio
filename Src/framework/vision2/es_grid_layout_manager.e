@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			lst: DS_LIST [like layout]
 			lst_curs: DS_LIST_CURSOR [like layout]
 		do
-			lay.put_reference (Void, 3)
+			lay.value := Void
 			lst ?= lay.subrows
 			if lst /= Void then
 				lst_curs := lst.new_cursor
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 
 								--| Let's check difference
 							if value_agent /= Void then
-								tv := lay.item (3)
+								tv := lay.value
 								has_diff := False
 								l_val := value_agent.item ([a_row, False])
 								if tv = Void or l_val = Void then

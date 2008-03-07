@@ -961,7 +961,7 @@ feature {NONE} -- EXPR_B evaluation
 				if Byte_context.class_type = Void then
 					Byte_context.init (context_class_type)
 				else
-					Byte_context.change_class_type_context (context_class_type, context_class_type)
+					Byte_context.change_class_type_context (context_class_type, context_class_type.type, context_class_type, context_class_type.type)
 				end
 			end
 			l_type_to_create := a_creation_expr_b.info.type_to_create
@@ -1800,7 +1800,7 @@ feature -- Access
 					if Byte_context.class_type = Void then
 						Byte_context.init (context_class_type)
 					else
-						Byte_context.change_class_type_context (context_class_type, context_class_type)
+						Byte_context.change_class_type_context (context_class_type, context_class_type.type, context_class_type, context_class_type.type)
 					end
 					bak_byte_code := Byte_context.byte_code
 					if context_feature /= Void then
@@ -2067,7 +2067,7 @@ feature {NONE} -- Compiler helpers
 			a_type_i_not_void: a_type_i /= Void
 		do
 			if context_class_type /= Void then
-				Result ?= byte_context.real_type_in (a_type_i, context_class_type)
+				Result ?= byte_context.real_type_in (a_type_i, context_class_type.type)
 			end
 			if Result = Void then
 				Result := a_type_i

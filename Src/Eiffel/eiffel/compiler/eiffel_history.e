@@ -54,9 +54,8 @@ feature -- Process
 
 feature -- Status
 
-	is_polymorphic (rout_id: INTEGER; class_type_id: INTEGER
-					used_requested: BOOLEAN): INTEGER is
-			-- If the entry <`rout_id',`class_type_id'> is polymorphic, we return
+	is_polymorphic (rout_id: INTEGER; class_type: TYPE_A; a_context_type: CLASS_TYPE; used_requested: BOOLEAN): INTEGER is
+			-- If the entry <`rout_id',`class_type'> is polymorphic, we return
 			-- `min_used' if `used_requested', `min_type_id' otherwise.
 			-- If the entry is not polymorphic we return `-1'.
 			-- If the entry does not have a polymorphic table, we return `-2'
@@ -68,8 +67,9 @@ feature -- Status
 			status: BOOLEAN
 			entry: POLY_TABLE [ENTRY]
 			min_id: INTEGER
+			class_type_id: INTEGER
 		do
-			if system.class_type_of_id (class_type_id).is_expanded then
+			if class_type.is_expanded then
 					-- Call on an expanded type is not polymorphic.
 				Result := -1
 			else
@@ -89,6 +89,7 @@ feature -- Status
 						-- We already have computed something for this polymorphic
 						-- table, we just need to search for the requested `class_type_id'
 						-- to know if we can retrieve the value or if we had to compute it.
+					class_type_id := class_type.type_id (a_context_type.type)
 					if class_type_id >= min_id then
 						Result := get_value (bool_array, class_type_id - min_id)
 					else
@@ -98,7 +99,7 @@ feature -- Status
 					if Result = is_feature_not_yet_computed then
 							-- The entry has not yet been computed
 						entry := poly_table (rout_id)
-						status := entry.is_polymorphic (class_type_id)
+						status := entry.is_polymorphic (class_type, a_context_type)
 						if class_type_id >= min_id then
 							put_value (bool_array, class_type_id - min_id, status)
 						end
@@ -118,7 +119,7 @@ feature -- Status
 
 					if entry /= Void then
 							-- Store the polymorphic status of the searched entry.
-						status := entry.is_polymorphic (class_type_id)
+						status := entry.is_polymorphic (class_type, a_context_type)
 
 							-- When we are handling with a ROUT_TABLE, we need to store
 							-- the `min_used' id, otherwise its enough to store the
@@ -130,18 +131,22 @@ feature -- Status
 						end
 						min_id_table.put (min_id, rout_id)
 
-							-- Create packed booleans array with bounds `2 * min_id'
-							-- to `2 * entry.max_type_id'. `2' is because for each entry we store
-							-- two informations: `is_computed' and then `is_polymorphic'.
-						create bool_array.make (2 * (entry.max_type_id - min_id))
+							-- We can only buffer when the target of the call is not generic.
+							--| Fixme: we could still buffer if all the actual generic parameters are expanded.
+						if class_type.generics = Void then
+								-- Create packed booleans array with bounds `2 * min_id'
+								-- to `2 * entry.max_type_id'. `2' is because for each entry we store
+								-- two informations: `is_computed' and then `is_polymorphic'.
+							create bool_array.make (2 * (entry.max_type_id - min_id))
 
-							-- Store the value in the C array.
-						if class_type_id >= min_id then
-							put_value (bool_array, class_type_id - min_id, status)
+								-- Store the value in the C array.
+							if class_type_id >= min_id then
+								put_value (bool_array, class_type_id - min_id, status)
+							end
+
+								-- Insert the new computed table in the array of computed tables.
+							is_polymorphic_table.put (bool_array, rout_id)
 						end
-
-							-- Insert the new computed table in the array of computed tables.
-						is_polymorphic_table.put (bool_array, rout_id)
 
 							-- Return the result
 						if status then

@@ -280,7 +280,7 @@ feature -- Element Change
 			buffer.put_string (cur);
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
-				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False)
+				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type, class_type, False)
 				if array_index >= 0 then
 					table_name := Encoder.attribute_table_name (rout_id)
 

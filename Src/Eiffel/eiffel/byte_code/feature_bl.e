@@ -183,7 +183,7 @@ end
 			class_type ?= type_i
 			is_polymorphic_access := not type_i.is_basic and then precursor_type = Void and then
 					class_type /= Void and then
-					Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), True) >= 0
+					Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, True) >= 0
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 			end
@@ -209,7 +209,7 @@ end
 			type_i := context_type
 			if not type_i.is_basic and then precursor_type = Void then
 				class_type ?= type_i -- Cannot fail
-				Result := Eiffel_table.is_polymorphic (routine_id, class_type.type_id (context.context_class_type.type), True) >= 0
+				Result := Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, True) >= 0
 			end
 		end
 
@@ -295,7 +295,7 @@ end
 			l_keep := system.keep_assertions
 			is_nested := not is_first
 			l_par := parent
-			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id (context.context_class_type.type), True)
+			array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True)
 			buf := buffer
 			is_deferred := False
 			type_i := real_type (type)

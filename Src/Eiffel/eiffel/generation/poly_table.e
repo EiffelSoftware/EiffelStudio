@@ -105,11 +105,12 @@ feature
 		deferred
 		end
 
-	is_polymorphic (type_id: INTEGER): BOOLEAN is
-			-- Is the table polymorphic from entry indexed by `type_id' to
+	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN is
+			-- Is the table polymorphic from entry indexed by `a_type' to
 			-- the maximum entry id ?
 		require
-			positive: type_id > 0
+			a_type_not_void: a_type /= Void
+			a_context_type_not_void: a_context_type /= Void
 		deferred
 		end
 

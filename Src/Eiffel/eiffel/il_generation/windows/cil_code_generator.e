@@ -2645,7 +2645,7 @@ feature -- Features info
 			if a_type.is_none then
 				Result := System.any_class.compiled_class.types.first.type
 			else
-				Result := byte_context.real_type_in (a_type, class_type)
+				Result := byte_context.real_type_in (a_type, class_type.type)
 			end
 		ensure
 			valid_result: Result /= Void
@@ -3381,7 +3381,7 @@ feature -- IL Generation
 				generate_feature_access (target_type, target_feature.feature_id, 0, True, True)
 			end
 			generate_check_cast (byte_context.real_type_in
-				(target_feature.type, target_type.associated_class_type (current_class_type.type)),
+				(target_feature.type, target_type.associated_class_type (current_class_type.type).type),
 				byte_context.real_type (f.type))
 			generate_return (True)
 		end

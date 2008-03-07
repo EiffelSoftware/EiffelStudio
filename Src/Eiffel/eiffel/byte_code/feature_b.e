@@ -177,15 +177,26 @@ feature -- Access
 		local
 			feature_bl: FEATURE_BL
 			c: CL_TYPE_A
+			l_type: TYPE_A
 			f: FEATURE_I
 		do
 			if not context.is_written_context then
-					-- Ensure the feature is not redeclared into attribute.
+					-- Ensure the feature is not redeclared into attribute if inherited.
 				c ?= type_i
 				if c /= Void then
 					f := c.associated_class.feature_of_rout_id (routine_id)
 					if not f.is_attribute then
 						f := Void
+					elseif context.final_mode and then system.seed_of_routine_id (routine_id).has_formal then
+							-- It was originally a FEATURE_B because its seed had a formal, we still need
+							-- to call the FEATURE_B if and only if it has a conforming expanded descendand.
+						l_type := context.real_type (type)
+						if
+							context.has_expanded_descendants_information and then
+							context.has_expanded_descendants (l_type.type_id (context.context_class_type.type))
+						then
+							f := Void
+						end
 					end
 				end
 			end
@@ -320,7 +331,8 @@ feature -- Inlining
 
 				Result := parent
 			end
-			type := real_type (type)
+				-- Adapt type in current context for better results.
+			type := real_type (type).instantiated_in (context.context_cl_type)
 			if precursor_type /= Void then
 				precursor_type ?= real_type (precursor_type)
 			end
@@ -335,7 +347,7 @@ feature -- Inlining
 			inline: BOOLEAN
 			inliner: INLINER
 			type_i: TYPE_A
-			cl_type: CL_TYPE_A
+			cl_type, written_cl_type: CL_TYPE_A
 			bc: STD_BYTE_CODE
 			l_rout_table: ROUT_TABLE
 			l_body_index: INTEGER
@@ -349,7 +361,7 @@ feature -- Inlining
 				if not type_i.is_basic then
 					cl_type ?= type_i -- Cannot fail
 						-- Inline only if it is not polymorphic and if it can be inlined.
-					if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id (context.context_class_type.type), True) = -1 then
+					if Eiffel_table.is_polymorphic (routine_id, cl_type, context.context_class_type, True) = -1 then
 						l_rout_table ?= eiffel_table.poly_table (routine_id)
 						l_rout_table.goto_implemented (cl_type.type_id (context.context_class_type.type))
 							-- Only if it is implemented that we can inline it.
@@ -373,9 +385,31 @@ feature -- Inlining
 						-- Creation of a special node for the entire
 						-- feature (descendant of STD_BYTE_CODE)
 					inliner.set_current_feature_inlined
-					context_class_type := system.class_type_of_id (entry.type_id)
+
+						-- Adapt current to the appropriate context.
+						-- For example, inlining SPECIAL [G#2] from HASH_TABLE [G#1, G#2] when
+						-- the class is generated for HASH_TABLE [G#1, INTEGER] should yield
+						-- SPECIAL [INTEGER].
+					cl_type := cl_type.instantiated_in (context.context_cl_type)
+
+						-- When the code being inlined actually is actually from a descedant class,
+						-- we need to find the type which corresponds to `cl_type'. This is the case
+						-- of {LINEAR}.is_empty which only has an implementation in {SEQUENCE} coming
+						-- from {FINITE}.
+					if cl_type.class_id /= entry.class_id then
+							-- If it is different, then `entry' is defined in a descendant class of `cl_type'.
+						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
+					end
+					context_class_type := cl_type.associated_class_type (context.context_cl_type)
 					written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
-					context_class_type := written_class_type
+
+					if cl_type.class_id = f.written_in then
+						written_cl_type := cl_type
+					elseif cl_type.associated_class.simple_conform_to (f.written_class) then
+						written_cl_type := cl_type.find_class_type (f.written_class)
+					else
+						check not_possible: False end
+					end
 						-- Create inlined byte node.
 					if cl_type.associated_class.is_special then
 						create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
@@ -385,8 +419,8 @@ feature -- Inlining
 					inlined_feat_b.fill_from (Current)
 
 						-- Change context type before evaluating inlined feature byte code.
-					Context.change_class_type_context (context_class_type, written_class_type)
-					inlined_feat_b.set_context_type (context_class_type, written_class_type)
+					Context.change_class_type_context (context_class_type, cl_type, written_class_type, written_cl_type)
+					inlined_feat_b.set_context_type (context_class_type, cl_type, written_class_type, written_cl_type)
 
 					bc ?= Byte_server.disk_item (l_body_index)
 					bc := bc.pre_inlined_code

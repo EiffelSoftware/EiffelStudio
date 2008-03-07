@@ -822,6 +822,50 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			end
 		end
 
+	find_descendant_type (c: CLASS_C): CL_TYPE_A is
+			-- If all the generic derivation of a class were created, the generic derivation
+			-- that `c' would have for Current.
+		require
+			good_argument: c /= Void
+			conformance: c.conform_to (associated_class) or else True --| FIXME Manu Add CLASS_C.ancestors_from routine for non-conforming inheritance.
+		local
+			l_generics, l_result_generics: like generics
+			l_class: like associated_class
+			l_formal: FORMAL_A
+			l_type_feat: TYPE_FEATURE_I
+			i, nb: INTEGER
+		do
+			Result := c.actual_type
+			if generics /= Void and Result.generics /= Void then
+				from
+					l_class := associated_class
+					l_generics := generics
+					i := l_generics.lower
+					nb := l_generics.upper
+					l_result_generics := Result.generics
+				until
+					i > nb
+				loop
+						-- Search the TYPE_FEATURE_I routine in `c' that corresponds to the `i-th'
+						-- formal generic parameter of current.
+					l_type_feat := c.generic_features.item (l_class.formal_at_position (i).rout_id_set.first)
+					check l_type_feat_not_void: l_type_feat /= Void end
+					if l_type_feat.is_formal then
+						l_formal ?= l_type_feat.type
+						check l_formal_not_void: l_formal /= Void end
+						l_result_generics.put (l_generics.item (i), l_formal.position)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			find_descendant_type_not_void: Result /= Void
+				-- Ideally this should be that way, but often we manipulate formals and when you have
+				-- the ancestor A [G#1] and a descendant A2 (which inherits from A [DOUBLE]) the conformance
+				-- query would fail because nothing can conform to a formal apart itself.
+			conform_to: -- Result.conform_to (Current)
+		end
+
 	find_class_type (c: CLASS_C): CL_TYPE_A is
 			-- Actual type of class of id `class_id' in current
 			-- context

@@ -44,30 +44,30 @@ feature
 			Result.set_class_id (c)
 		end
 
-	is_polymorphic (type_id: INTEGER): BOOLEAN is
+	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN is
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
 			entry: ATTR_ENTRY;
 			cl_type: CLASS_TYPE;
-			first_type: CLASS_TYPE
 			i, nb, old_position: INTEGER
 			system_i: SYSTEM_I
 			l_offset: STRING
 			l_buffer: GENERATION_BUFFER
+			type_id: INTEGER
 		do
 			nb := max_position
 
 			if nb > 1 then
+				type_id := a_type.type_id (a_context_type.type)
 				old_position := position
 				system_i := System
 				goto_used (type_id);
 				i := position
 				if i <= nb then
 					from
-						first_type := system_i.class_type_of_id (type_id);
 						create l_buffer.make (50)
-						first_type.skeleton.generate_offset (l_buffer, array_item (i).feature_id, False, False)
+						system_i.class_type_of_id (type_id).skeleton.generate_offset (l_buffer, array_item (i).feature_id, False, False)
 						l_offset := l_buffer.as_string
 							-- We have computed the first element, we go directly to the next one.
 						i := i + 1
@@ -76,7 +76,7 @@ feature
 					loop
 						entry := array_item (i)
 						cl_type := system_i.class_type_of_id (entry.type_id);
-						if cl_type.conform_to (first_type) then
+						if cl_type.dynamic_conform_to (a_type, type_id, a_context_type.type) then
 							l_buffer.clear_all
 							cl_type.skeleton.generate_offset (l_buffer, entry.feature_id, False, False)
 							Result := not l_buffer.as_string.is_equal (l_offset)

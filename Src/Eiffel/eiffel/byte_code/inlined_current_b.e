@@ -66,6 +66,7 @@ feature -- Register and code generation
 			inlined_feature: INLINED_FEAT_B
 			context_class_type: CLASS_TYPE
 			written_class_type: CLASS_TYPE
+			context_cl_type, written_cl_type: CL_TYPE_A
 			current_reg: REGISTRABLE
 		do
 			--Context.current_register.print_register
@@ -74,6 +75,8 @@ feature -- Register and code generation
 
 			written_class_type := Context.class_type
 			context_class_type := Context.context_class_type
+			context_cl_type := context.context_cl_type
+			written_cl_type := context.current_type
 			current_reg := Context.inlined_current_register
 
 			Context.restore_class_type_context
@@ -81,7 +84,7 @@ feature -- Register and code generation
 
 			inlined_feature.current_reg.print_register
 
-			Context.change_class_type_context (context_class_type, written_class_type)
+			Context.change_class_type_context (context_class_type, context_cl_type, written_class_type, written_cl_type)
 			Context.set_inlined_current_register (current_reg)
 
 		end;

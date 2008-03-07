@@ -1059,7 +1059,7 @@ feature {NONE} -- Generation
 				Result := False
 			else
 				l_type_id := a_type.type_id
-				if l_entry.is_polymorphic (l_type_id) then
+				if l_entry.is_polymorphic (a_type.type, a_type) then
 					l_table_name := Encoder.routine_table_name (l_rout_id)
 					c_return_type.generate_function_cast (buffer, a_types, False)
 					buffer.put_string (l_table_name)

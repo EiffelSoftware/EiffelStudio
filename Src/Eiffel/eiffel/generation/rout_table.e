@@ -83,19 +83,20 @@ feature -- Status report
 			Result.set_class_id (c)
 		end
 
-	is_polymorphic (type_id: INTEGER): BOOLEAN is
+	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN is
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
 			first_real_body_index, first_body_index: INTEGER;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
-			first_class_type: CLASS_TYPE
 			found: BOOLEAN;
 			i, nb, old_position: INTEGER
 			system_i: SYSTEM_I
+			type_id: INTEGER
 		do
 			nb := max_position
+			type_id := a_type.type_id (a_context_type.type)
 
 			if nb > 1 then
 				old_position := position
@@ -108,13 +109,12 @@ feature -- Status report
 
 					-- We never compute the value for this entry, so we need to do it
 				from
-					first_class_type := system_i.class_type_of_id (type_id)
 				until
 					Result or else i > nb
 				loop
 					entry := array_item (i)
 					if entry.used then
-						if system_i.class_type_of_id (entry.type_id).conform_to (first_class_type) then
+						if system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, a_context_type.type) then
 							if found then
 								Result := entry.real_body_index /= first_real_body_index or
 									entry.body_index /= first_body_index
@@ -146,8 +146,8 @@ feature -- Status report
 						-- code will not be called anyway.
 					system_i := System
 					if
-						system_i.class_type_of_id (second_type_id).conform_to (
-						System_i.class_type_of_id (type_id))
+						system_i.class_type_of_id (second_type_id).dynamic_conform_to (
+							a_type, type_id, a_context_type.type)
 					then
 						Result := False
 					else

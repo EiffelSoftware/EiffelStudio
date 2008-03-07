@@ -158,7 +158,8 @@ feature -- Inlining
 		local
 			inlined_attr_b: INLINED_ATTR_B
 		do
-			type := real_type (type)
+				-- Adapt type in current context for better results.
+			type := real_type (type).instantiated_in (context.context_cl_type)
 			if parent /= Void then
 				Result := Current
 			else

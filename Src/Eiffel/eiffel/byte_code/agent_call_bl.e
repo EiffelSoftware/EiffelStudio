@@ -234,7 +234,7 @@ feature {NONE} --Implementation
 			l_feat := rout_class.feature_table.item_id (id)
 			create Result
 			Result.init (l_feat)
-			l_type_i := context.real_type_in (l_feat.type, cl_type.associated_class_type (context.context_class_type.type))
+			l_type_i := context.real_type_in (l_feat.type, cl_type.associated_class_type (context.context_class_type.type).type)
 			Result.set_type (l_type_i)
 			Result := Result.enlarged
 			Result.analyze_on (reg)
@@ -252,10 +252,10 @@ feature {NONE} --Implementation
 			l_exprs: BYTE_LIST [EXPR_B]
 			l_expr: EXPR_B
 			l_tuple_type: TUPLE_TYPE_A
-			l_class_type: CLASS_TYPE
+			l_cl_type: CL_TYPE_A
 		do
 			l_first_parameter := parameters.first
-			l_tuple_type ?= context.real_type_in (l_first_parameter.attachment_type, cl_type.associated_class_type (context.context_class_type.type))
+			l_tuple_type ?= context.real_type_in (l_first_parameter.attachment_type, cl_type.associated_class_type (context.context_class_type.type).type)
 
 			l_void ?= l_first_parameter.expression
 			if l_void /= Void then
@@ -269,14 +269,14 @@ feature {NONE} --Implementation
 						l_exprs ?= l_manifest_tuple.expressions
 						l_exprs.start
 						create optimized_parameters.make (l_exprs.count)
-						l_class_type := context.class_type
+						l_cl_type := context.class_type.type
 					until
 						optimized_parameters.full or else l_exprs.after
 					loop
 						create l_parameter
 						l_expr := l_exprs.item
 						l_parameter.set_expression (l_expr)
-						l_parameter.set_attachment_type (context.real_type_in (l_expr.type, l_class_type))
+						l_parameter.set_attachment_type (context.real_type_in (l_expr.type, l_cl_type))
 						optimized_parameters.extend (l_parameter.enlarged)
 						l_exprs.forth
 					end

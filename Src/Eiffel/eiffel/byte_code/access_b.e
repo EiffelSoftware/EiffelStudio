@@ -40,7 +40,7 @@ feature -- Access
 			l_context: like context
 		do
 			if parent = Void then
-				Result := context.context_class_type.type
+				Result := context.context_cl_type
 			elseif is_message then
 				l_context := context
 				Result := l_context.real_type (parent.target.type)
@@ -51,7 +51,7 @@ feature -- Access
 			else
 				a_parent := parent.parent
 				if a_parent = Void then
-					Result := context.context_class_type.type
+					Result := context.context_cl_type
 				else
 					l_context := context
 					Result := l_context.real_type (a_parent.target.type)

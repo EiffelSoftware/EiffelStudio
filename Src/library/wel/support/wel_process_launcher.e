@@ -44,7 +44,7 @@ feature -- Element settings
 		ensure
 			size_set: block_size = a_size
 		end
-	
+
 	run_hidden is
 			-- Should process be run hidden?
 		do
@@ -81,7 +81,7 @@ feature -- Basic Operations
 			valid_command_line: not a_command_line.is_empty
 		local
 			l_block_size: INTEGER
-			l_tuple: TUPLE [STRING]
+			l_tuple: TUPLE [str: STRING]
 		do
 			create l_tuple
 			if hidden then
@@ -97,7 +97,7 @@ feature -- Basic Operations
 				not output_pipe.last_read_successful
 			loop
 				if a_output_handler /= Void then
-					l_tuple.put (output_pipe.last_string, 1)
+					l_tuple.str := output_pipe.last_string.as_string_8
 					a_output_handler.call (l_tuple)
 				end
 				output_pipe.read_stream (l_block_size)
@@ -113,7 +113,7 @@ feature -- Basic Operations
 			input_pipe.close_input
 			input_pipe.close_output
 		end
-	
+
 	launch_and_refresh (a_command_line, a_working_directory: STRING_GENERAL; a_refresh_handler: ROUTINE [ANY, TUPLE]) is
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Calls `a_refresh_handler' regularly while waiting for end of process.
@@ -148,9 +148,9 @@ feature -- Basic Operations
 					finished := True
 				end
 			end
-			terminate_process			
+			terminate_process
 		end
-			
+
 	terminate_process is
 			-- Terminate current process (corresponding to `process_info').
 		local
@@ -172,7 +172,7 @@ feature -- Access
 
 	last_launch_successful: BOOLEAN
 			-- Was last call to `launch' successful (i.e. was process started)?
-		
+
 	last_process_result: INTEGER
 			-- Last launched process return value
 
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
 			create process_info.make
-			create a_wel_string1.make (a_command_line)	
+			create a_wel_string1.make (a_command_line)
 			if a_working_directory /= Void and then not a_working_directory.is_empty then
 				create a_wel_string2.make (a_working_directory)
 				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
@@ -274,7 +274,7 @@ feature {NONE} -- Externals
 		alias
 			"WaitForSingleObject"
 		end
-		
+
 	cwin_exit_code_process (handle: POINTER; ptr: POINTER): BOOLEAN is
 		external
 			"C [macro <winbase.h>] (HANDLE, LPDWORD): EIF_BOOLEAN"
@@ -289,7 +289,7 @@ feature {NONE} -- Externals
 		alias
 			"WAIT_OBJECT_0"
 		end
-	
+
 	cwin_infinite: INTEGER is
 			-- SDK INFINITE constant
 		external
@@ -313,7 +313,7 @@ feature {NONE} -- Externals
 		alias
 			"STILL_ACTIVE"
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

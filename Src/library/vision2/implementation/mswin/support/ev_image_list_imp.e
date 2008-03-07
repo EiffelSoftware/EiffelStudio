@@ -192,7 +192,7 @@ feature {NONE} -- Implementation (Private features)
 		local
 			item_value		: INTEGER
 			graphres		: WEL_GRAPHICAL_RESOURCE
-			loc_tuple		: TUPLE [INTEGER, INTEGER]
+			loc_tuple		: TUPLE [position: INTEGER; number: INTEGER]
 			info			: like image_list_info
 			pixmap_imp		: EV_PIXMAP_IMP_STATE
 		do
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation (Private features)
 					-- `icon' already in image list so set
 					-- `image_index' to this.
 				loc_tuple := info.item (item_value)
-				last_position := loc_tuple.integer_item (1)
+				last_position := loc_tuple.position
 			end
 
 			graphres.decrement_reference
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation (Private features)
 		local
 			item_value		: INTEGER
 			graphres		: WEL_GRAPHICAL_RESOURCE
-			loc_tuple		: TUPLE [INTEGER, INTEGER]
+			loc_tuple		: TUPLE [position: INTEGER; number: INTEGER]
 			info			: like image_list_info
 			pixmap_imp		: EV_PIXMAP_IMP_STATE
 		do
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation (Private features)
 				if item_value /= 0 and then info.has (item_value) then
 						-- `icon' already in image list so set `image_index' to this.
 					loc_tuple := info.item (item_value)
-					last_position := loc_tuple.integer_item (1)
+					last_position := loc_tuple.position
 				end
 			end
 		end
@@ -375,7 +375,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation (Attributes, Constants, ...)
 
-	image_list_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
+	image_list_info: HASH_TABLE [TUPLE [position: INTEGER; number: INTEGER], INTEGER]
 			-- A list of all items in the image list and their positions.
 			-- [[position in image list, number of items pointing to this
 			-- image], windows pointer].

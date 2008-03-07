@@ -426,7 +426,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		local
 			pre_drop_it, post_drop_it: EV_TREE_NODE_IMP
 			pt: WEL_POINT
-			offsets: TUPLE [INTEGER, INTEGER]
+			offsets: TUPLE [x_pos: INTEGER; y_pos: INTEGER]
 			item_press_actions_called: BOOLEAN
 			was_in_transport_at_start: BOOLEAN
 		do
@@ -440,8 +440,8 @@ feature {EV_ANY_I} -- WEL Implementation
 					/= Void then
 					offsets := pre_drop_it.relative_position
 					pre_drop_it.pointer_button_press_actions.call
-					([x_pos - offsets.integer_item (1) + 1,
-					y_pos - offsets.integer_item (2), button, 0.0, 0.0, 0.0,
+					([x_pos - offsets.x_pos + 1,
+					y_pos - offsets.y_pos, button, 0.0, 0.0, 0.0,
 					pt.x, pt.y])
 				end
 					-- We record that the press actions have been called.
@@ -478,8 +478,8 @@ feature {EV_ANY_I} -- WEL Implementation
 				if post_drop_it /= Void and pre_drop_it = post_drop_it and call_press_event then
 					offsets := post_drop_it.relative_position
 					post_drop_it.pointer_button_press_actions.call
-						([x_pos - offsets.integer_item (1) + 1,
-						y_pos - offsets.integer_item (2), button, 0.0, 0.0,
+						([x_pos - offsets.x_pos + 1,
+						y_pos - offsets.y_pos, button, 0.0, 0.0,
 						0.0, pt.x, pt.y])
 				end
 			end
@@ -506,15 +506,15 @@ feature {EV_ANY_I} -- WEL Implementation
 		local
 			it: EV_TREE_NODE_IMP
 			pt: WEL_POINT
-			offsets: TUPLE [INTEGER, INTEGER]
+			offsets: TUPLE [x_pos: INTEGER; y_pos: INTEGER]
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				offsets := it.relative_position
 				it.pointer_double_press_actions.call
-					([x_pos - offsets.integer_item (1) + 1,
-					y_pos - offsets.integer_item (2), button, 0.0, 0.0, 0.0,
+					([x_pos - offsets.x_pos + 1,
+					y_pos - offsets.y_pos, button, 0.0, 0.0, 0.0,
 					pt.x, pt.y])
 			end
 		end
@@ -650,15 +650,15 @@ feature {EV_ANY_I} -- WEL Implementation
 		local
 			it: EV_TREE_NODE_IMP
 			pt: WEL_POINT
-			offsets: TUPLE [INTEGER, INTEGER]
+			offsets: TUPLE [x_pos: INTEGER; y_pos: INTEGER]
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				offsets := it.relative_position
 				it.pointer_motion_actions.call (
-					[x_pos - offsets.integer_item (1) + 1,
-				y_pos - offsets.integer_item (2), 0.0, 0.0, 0.0, pt.x,
+					[x_pos - offsets.x_pos + 1,
+				y_pos - offsets.y_pos, 0.0, 0.0, 0.0, pt.x,
 					pt.y])
 			end
 			if pnd_item_source /= Void then

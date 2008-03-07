@@ -523,7 +523,7 @@ feature {NONE} -- Implementation, mouse_button_events
 	on_button_down (x_pos, y_pos, button: INTEGER) is
 			-- Executed when the a button is pressed.
 		local
-			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			t: like translate_coordinates
 			actions_called: BOOLEAN
 		do
 			--| `pointer_button_press_actions_internal' must be called before
@@ -531,112 +531,62 @@ feature {NONE} -- Implementation, mouse_button_events
 			t := translate_coordinates (x_pos, y_pos)
 			if not is_dnd_in_transport and not is_pnd_in_transport and not is_dock_executing then
 				if application_imp.pointer_button_press_actions_internal /= Void then
-					application_imp.pointer_button_press_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+					application_imp.pointer_button_press_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
 				end
-				call_pointer_actions (
-					pointer_button_press_actions_internal,
-					t.integer_item (1),
-					t.integer_item (2),
-					t.integer_item (3),
-					t.integer_item (4),
-					button
-				)
+				call_pointer_actions (pointer_button_press_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 				actions_called := True
 			end
 			if not is_destroyed and then interface.is_dockable then
-				dragable_press (
-				t.integer_item (1),
-				t.integer_item (2),
-				button,
-				t.integer_item (3),
-				t.integer_item (4))
+				dragable_press (t.x, t.y, button, t.screen_x, t.screen_y)
 			end
 				-- `widget_source_being_dragged' is not Void, if a docking
 				-- transport just started. There is no need to now call
 				-- `pnd_press' as docking will override drag and drop.
 			if not is_destroyed and not is_dock_executing then
-				pnd_press (
-					t.integer_item (1),
-					t.integer_item (2),
-					button,
-					t.integer_item (3),
-					t.integer_item (4))
+				pnd_press (t.x, t.y, button, t.screen_x, t.screen_y)
 			end
 			if not actions_called then
 				if application_imp.pointer_button_press_actions_internal /= Void then
-					application_imp.pointer_button_press_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+					application_imp.pointer_button_press_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
 				end
-				call_pointer_actions (
-					pointer_button_press_actions_internal,
-					t.integer_item (1),
-					t.integer_item (2),
-					t.integer_item (3),
-					t.integer_item (4),
-					button
-				)
+				call_pointer_actions (pointer_button_press_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 			end
 		end
 
 	on_button_up (x_pos, y_pos, button: INTEGER) is
 			-- Executed when the a button is pressed.
 		local
-			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			t: like translate_coordinates
 		do
 			t := translate_coordinates (x_pos, y_pos)
 			if application_imp.pointer_button_release_actions_internal /= Void then
-					application_imp.pointer_button_release_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
-				end
-			call_pointer_actions (
-				pointer_button_release_actions_internal,
-				t.integer_item (1),
-				t.integer_item (2),
-				t.integer_item (3),
-				t.integer_item (4),
-				button
-			)
+				application_imp.pointer_button_release_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
+			end
+			call_pointer_actions (pointer_button_release_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 		end
 
 	on_button_double_click (x_pos, y_pos, button: INTEGER) is
 			-- Executed when the a button is pressed.
 		local
-			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			t: like translate_coordinates
 			actions_called: BOOLEAN
 		do
 			t := translate_coordinates (x_pos, y_pos)
 			if not is_dnd_in_transport and not is_pnd_in_transport then
 				if application_imp.pointer_double_press_actions_internal /= Void then
-					application_imp.pointer_double_press_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+					application_imp.pointer_double_press_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
 				end
-				call_pointer_actions (
-					pointer_double_press_actions_internal,
-					t.integer_item (1),
-					t.integer_item (2),
-					t.integer_item (3),
-					t.integer_item (4),
-					button
-				)
+				call_pointer_actions (pointer_double_press_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 				actions_called := True
 			end
 
-			pnd_press (
-				t.integer_item (1),
-				t.integer_item (2),
-				button,
-				t.integer_item (3),
-				t.integer_item (4))
+			pnd_press (t.x, t.y, button, t.screen_x, t.screen_y)
 
 			if not actions_called then
 				if application_imp.pointer_double_press_actions_internal /= Void then
-					application_imp.pointer_double_press_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+					application_imp.pointer_double_press_actions_internal.call ([interface, button, t.screen_x, t.screen_y])
 				end
-				call_pointer_actions (
-					pointer_double_press_actions_internal,
-					t.integer_item (1),
-					t.integer_item (2),
-					t.integer_item (3),
-					t.integer_item (4),
-					button
-				)
+				call_pointer_actions (pointer_double_press_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 			end
 		end
 
@@ -728,7 +678,7 @@ feature {NONE} -- Implementation
 			Result.client_to_screen (ww)
 		end
 
-	translate_coordinates (a_x, a_y: INTEGER): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	translate_coordinates (a_x, a_y: INTEGER): TUPLE [x: INTEGER; y: INTEGER; screen_x: INTEGER; screen_y: INTEGER] is
 			-- For `a_x', `a_y', give actual x and y and screen x and y.
 			-- By default, actual x and y are the same as `a_x', `a_y'.
 			-- Redefined in EV_PIXMAP_IMP_WIDGET.
@@ -755,7 +705,7 @@ feature {NONE} -- Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
 		local
-			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			t: like translate_coordinates
 			track_mouse: WEL_TRACK_MOUSE_EVENT
 			track_mouse_successful: BOOLEAN
 		do
@@ -763,8 +713,10 @@ feature {NONE} -- Implementation
 				--| drop, `cursor_on_widget' is `Void' meaning every time the
 				--| mouse moves while not over the original widget for the pick,
 				--| the enter and leave actions are fired.
-			if cursor_on_widget.item = Void and x_pos >= 0 and y_pos >= 0 and
-			x_pos <= width and y_pos <= height then
+			if
+				cursor_on_widget.item = Void and x_pos >= 0 and y_pos >= 0 and
+				x_pos <= width and y_pos <= height
+			then
 					-- Create a WEL_TRACK_MOUSE_EVENT structure so
 					-- we will recieve the Wm_mouse_leave notification
 					-- message when the pointer leaves `Current'.
@@ -784,45 +736,29 @@ feature {NONE} -- Implementation
 			if (awaiting_movement and is_dockable_source (x_pos, y_pos)) or
 			application_imp.dockable_source /= Void
 			then
-				dragable_motion (
-					t.integer_item (1),
-					t.integer_item (2),
-					t.integer_item (3),
-					t.integer_item (4)
-				)
+				dragable_motion (t.x, t.y, t.screen_x, t.screen_y)
 			elseif (is_transport_enabled and mode_is_drag_and_drop) or
 				(mode_is_pick_and_drop and is_pnd_in_transport) then
 					-- Only start a pick and drop if a dock is not currently executing.
 					-- It may have been started by the previous call to `dragable_motion'.
-				pnd_motion (
-					t.integer_item (1),
-					t.integer_item (2),
-					t.integer_item (3),
-					t.integer_item (4)
-				)
+				pnd_motion (t.x, t.y, t.screen_x, t.screen_y)
 			end
 			if application_imp.pointer_motion_actions_internal /= Void then
 				if t = Void then
 					t := translate_coordinates (x_pos, y_pos)
 				end
-				if last_x /= t.integer_item (1) or last_y /= t.integer_item (2) then
-					application_imp.pointer_motion_actions_internal.call ([interface, t.integer_item (3), t.integer_item (4)])
+				if last_x /= t.x or last_y /= t.y then
+					application_imp.pointer_motion_actions_internal.call ([interface, t.screen_x, t.screen_y])
 				end
 			end
 			if pointer_motion_actions_internal /= Void then
 				if t = Void then
 					t := translate_coordinates (x_pos, y_pos)
 				end
-				if last_x /= t.integer_item (1) or last_y /= t.integer_item (2) then
-					pointer_motion_actions_internal.call ([
-						t.integer_item (1),
-						t.integer_item (2),
-						0.0, 0.0, 0.0,
-						t.integer_item (3),
-						t.integer_item (4)
-					])
-					last_x := t.integer_item (1)
-					last_y := t.integer_item (2)
+				if last_x /= t.x or last_y /= t.y then
+					pointer_motion_actions_internal.call ([t.x, t.y, 0.0, 0.0, 0.0, t.screen_x, t.screen_y ])
+					last_x := t.x
+					last_y := t.y
 				end
 			end
 		end

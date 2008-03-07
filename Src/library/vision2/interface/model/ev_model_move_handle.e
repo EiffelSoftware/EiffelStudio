@@ -69,7 +69,7 @@ feature -- Access
 	maximum_y: INTEGER
 			-- Bottom boundary.
 
-	real_position_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], TUPLE [INTEGER, INTEGER]]
+	real_position_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], TUPLE [x: INTEGER; y: INTEGER]]
 			-- User defined function that translates actual coordinates to
 			-- the coordinates `Current' will be displayed on.
 
@@ -392,7 +392,7 @@ feature {NONE} -- Events
 			new_x, new_y, a_delta_x, a_delta_y: INTEGER
 			new_scale_x, new_scale_y: DOUBLE
 			new_angle: DOUBLE
-			t: TUPLE [INTEGER, INTEGER]
+			t: TUPLE [x: INTEGER; y: INTEGER]
 			l_bounding_box: like bounding_box
 		do
 			if has_capture then
@@ -407,8 +407,8 @@ feature {NONE} -- Events
 
 					if real_position_agent /= Void then
 						t := real_position_agent.item ([new_x, new_y])
-						new_x := t.integer_item (1)
-						new_y := t.integer_item (2)
+						new_x := t.x
+						new_y := t.y
 					else
 						if world.grid_enabled and is_snapping then
 							new_x := snapped_x (new_x)

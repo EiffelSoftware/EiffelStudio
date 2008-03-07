@@ -334,7 +334,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_proportional
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER] is
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and
@@ -352,10 +352,8 @@ feature -- Status report
 			Result := implementation.string_size (a_string)
 		ensure
 			result_not_void: Result /= Void
-			bridge_ok: Result.item (1).is_equal
-				(implementation.string_size (a_string).item (1)) and
-				Result.item (2).is_equal
-				(implementation.string_size (a_string).item (2))
+			bridge_ok: Result.width.is_equal (implementation.string_size (a_string).width) and
+				Result.height.is_equal (implementation.string_size (a_string).height)
 		end
 
 feature -- Basic operations

@@ -582,13 +582,11 @@ feature {EV_TREE_IMP} -- Implementation
 			internal_children_set: internal_children = list
 		end
 
-	relative_position: TUPLE [INTEGER, INTEGER] is
+	relative_position: TUPLE [x_pos: INTEGER; y_pos: INTEGER] is
 			-- `Result' is position relative to `parent_imp'.
 		local
 			loop_parent: EV_TREE_NODE_IMP
 			counter: INTEGER
-			sx: INTEGER
-			sy: INTEGER
 			l_top_parent: EV_TREE_IMP
 		do
 			from
@@ -608,12 +606,9 @@ feature {EV_TREE_IMP} -- Implementation
 					-- As this feature has no pre-conditions, we protect against this case
 					-- as requested. See bug report 3806. Julian.
 
-				sx := top_parent_imp.indent * counter + 1
-					--|FIXME The relative y_position is always returned as 0.
-				sy := 0
-
-				Result.put_integer (sx, 1)
-				Result.put_integer (sy, 2)
+				Result.x_pos := top_parent_imp.indent * counter + 1
+					--|FIXME The relative y_position is always returned as 0.				
+				Result.y_pos := 0
 			end
 		end
 

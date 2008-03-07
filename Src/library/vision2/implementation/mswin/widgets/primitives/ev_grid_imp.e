@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER]) is
+	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [width: INTEGER; height: INTEGER]) is
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT
@@ -104,8 +104,8 @@ feature -- Access
 		do
 			font_imp ?= f.implementation
 			if s.is_empty then
-				tuple.put_integer (0, 1)
-				tuple.put_integer (0, 2)
+				tuple.width := 0
+				tuple.height := 0
 			else
 				bounding_rect := wel_rect
 				bounding_rect.set_rect (0, 0, 32767, 32767)
@@ -113,8 +113,8 @@ feature -- Access
 				screen_dc.get
 				screen_dc.select_font (font_imp.wel_font)
 				screen_dc.draw_text (s, bounding_rect, {WEL_DT_CONSTANTS}.dt_calcrect | {WEL_DT_CONSTANTS}.dt_expandtabs | {WEL_DT_CONSTANTS}.dt_noprefix)
-				tuple.put_integer (bounding_rect.width, 1)
-				tuple.put_integer (bounding_rect.height, 2)
+				tuple.width := bounding_rect.width
+				tuple.height := bounding_rect.height
 				screen_dc.unselect_font
 				screen_dc.quick_release
 			end

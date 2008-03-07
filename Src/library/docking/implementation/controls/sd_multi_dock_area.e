@@ -17,7 +17,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 create
 	make
 
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 --			l_old_spliter: SD_MIDDLE_CONTAINER -- For check only
 		do
 			if a_spliter.full then
-				l_spliter_position := spliters.item.integer_item (2)
+				l_spliter_position := spliters.item.position
 				debug ("docking")
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: open " + l_spliter_position.out)
 				end
@@ -855,7 +855,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation attributes
 
-	spliters: ARRAYED_LIST [TUPLE [SD_MIDDLE_CONTAINER, INTEGER]]
+	spliters: ARRAYED_LIST [TUPLE [middle: SD_MIDDLE_CONTAINER; position: INTEGER]]
 			-- Split areas used for save/restore spliter positions.
 
 	internal_shared: SD_SHARED

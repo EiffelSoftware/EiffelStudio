@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -320,7 +320,7 @@ feature -- Command
 			l_item: SD_TOOL_BAR_ITEM
 			l_all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_name: STRING_GENERAL
-			l_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
+			l_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; displayed: BOOLEAN]]
 			l_content: SD_TOOL_BAR_CONTENT
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
@@ -334,7 +334,7 @@ feature -- Command
 			until
 				l_data.after
 			loop
-				l_name ?= l_data.item @ 1
+				l_name := l_data.item.name
 				check not_void: l_name /= Void end
 				l_item := Void
 				if l_name.as_string_32.is_equal (l_separator.name.as_string_32) then
@@ -349,7 +349,7 @@ feature -- Command
 					loop
 						if l_all_items.item.name.as_string_32.is_equal (l_name.as_string_32) then
 							l_item := l_all_items.item
-							if not l_data.item.boolean_item (2) then
+							if not l_data.item.displayed then
 								l_item.disable_displayed
 							else
 								l_item.enable_displayed
@@ -372,7 +372,7 @@ feature -- Command
 			-- Save items layout.
 			-- (export status {NONE})
 		local
-			l_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
+			l_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; displayed: BOOLEAN]]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			from

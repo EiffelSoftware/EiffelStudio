@@ -178,7 +178,7 @@ feature -- Access
 	line_number: INTEGER
 			-- Line number where construct begins in the Eiffel source.
 
-	nested_b: NESTED_B is
+	nested_b: NESTED_BL is
 			-- Create a fake nested so that `call.is_first' is False.
 		do
 			create Result

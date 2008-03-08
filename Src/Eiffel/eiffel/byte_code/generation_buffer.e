@@ -485,6 +485,14 @@ feature -- Automatically indented output
 			l_buffer.append_character ('"')
 		end
 
+	put_escaped_string (s: STRING) is
+			-- Append string `s' and add escape character if necessary.
+		require
+			s_not_void: s /= Void
+		do
+			escape_string (current_buffer, s)
+		end
+
 	put_gtcx is
 			-- Add GTCX macro.
 		do

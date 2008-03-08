@@ -12,8 +12,6 @@ deferred class
 inherit
 	COMPILER_EXPORTER
 
-inherit {NONE}
-
 	DEBUGGER_COMPILER_UTILITIES
 
 	SHARED_BENCH_NAMES

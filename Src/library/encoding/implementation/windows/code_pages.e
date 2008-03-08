@@ -8,7 +8,7 @@ indexing
 class
 	CODE_PAGES
 
-inherit {NONE}
+inherit
 	CODE_PAGE_CONSTANTS
 
 feature -- Code-Page Identifiers

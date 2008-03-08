@@ -11,7 +11,6 @@ class
 inherit
 	ENCODING_I
 
-inherit {NONE}
 	CODE_PAGES
 		export
 			{NONE} all

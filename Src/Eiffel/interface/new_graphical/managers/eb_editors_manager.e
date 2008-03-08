@@ -11,7 +11,6 @@ class
 inherit
 	EB_RECYCLABLE
 
-inherit {NONE}
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

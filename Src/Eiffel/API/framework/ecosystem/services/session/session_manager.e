@@ -18,7 +18,6 @@ inherit
 			safe_dispose
 		end
 
-inherit {NONE}
 	EIFFEL_LAYOUT
 
 create

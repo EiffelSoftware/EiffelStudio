@@ -11,7 +11,7 @@ indexing
 deferred class
 	EVENT_LIST_ITEM_I
 
-inherit {NONE}
+inherit
 	SHARED_ENVIRONMENT_CATEGORIES
 		export
 			{NONE} all

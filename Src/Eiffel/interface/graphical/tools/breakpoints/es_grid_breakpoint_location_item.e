@@ -22,7 +22,6 @@ inherit
 			default_create, copy
 		end
 
-inherit {NONE}
 	EVS_GRID_ITEM_HELPER
 		undefine
 			default_create, copy

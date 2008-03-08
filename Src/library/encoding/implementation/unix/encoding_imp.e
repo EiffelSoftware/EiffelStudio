@@ -11,7 +11,6 @@ class
 inherit
 	ENCODING_I
 
-inherit
 	CODE_SETS
 		export
 			{NONE} all

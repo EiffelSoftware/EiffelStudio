@@ -25,7 +25,7 @@ feature -- Entries
 		do
 		end
 
-	has (original_singular: STRING_32):BOOLEAN is
+	has (original_singular: STRING_GENERAL):BOOLEAN is
 			-- Always False, as we don't have any entries
 		do
 			Result := False -- Let's be very clear on this..

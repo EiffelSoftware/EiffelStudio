@@ -19,7 +19,6 @@ inherit
 			{NONE} all
 		end
 
-inherit {NONE}
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

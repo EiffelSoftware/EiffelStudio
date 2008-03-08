@@ -24,7 +24,6 @@ inherit
 			on_handle_key
 		end
 
-inherit {NONE}
 	ES_SHARED_DIALOG_BUTTONS
 
 	ES_HELP_REQUEST_BINDER

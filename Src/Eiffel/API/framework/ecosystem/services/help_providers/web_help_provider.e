@@ -16,7 +16,6 @@ inherit
 			help_title
 		end
 
-inherit {NONE}
 	CURL_ACCESS
 		export
 			{NONE} all

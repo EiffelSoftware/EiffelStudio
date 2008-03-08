@@ -10,7 +10,7 @@ indexing
 class
 	FILE_UTILITIES
 
-inherit {NONE}
+inherit
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all

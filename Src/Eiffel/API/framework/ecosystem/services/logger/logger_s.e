@@ -15,7 +15,6 @@ inherit
 
 	USABLE_I
 
-inherit {NONE}
 	SHARED_ENVIRONMENT_CATEGORIES
 		export
 			{NONE} all

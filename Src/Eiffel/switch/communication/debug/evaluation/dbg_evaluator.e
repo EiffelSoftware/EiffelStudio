@@ -34,7 +34,6 @@ inherit
 			{NONE} all
 		end
 
-inherit {NONE}
 	DEBUGGER_COMPILER_UTILITIES
 
 --create

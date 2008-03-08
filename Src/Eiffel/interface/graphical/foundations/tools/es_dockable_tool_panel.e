@@ -36,7 +36,6 @@ inherit
             {NONE} all
         end
 
-inherit {NONE}
 	ES_HELP_REQUEST_BINDER
 		export
 			{NONE} all

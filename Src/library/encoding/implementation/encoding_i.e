@@ -8,7 +8,7 @@ indexing
 deferred class
 	ENCODING_I
 
-inherit {NONE}
+inherit
 	CODE_PAGE_CONSTANTS
 		export
 			{NONT} all

@@ -13,7 +13,6 @@ deferred class
 inherit
 	EB_RECYCLABLE
 
-inherit {NONE}
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all

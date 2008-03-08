@@ -18,7 +18,6 @@ inherit
 			on_after_initialized
 		end
 
-inherit {NONE}
 	SYSTEM_CONSTANTS
 		export
 			{NONE} all

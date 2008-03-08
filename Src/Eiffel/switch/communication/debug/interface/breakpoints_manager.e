@@ -14,8 +14,6 @@ inherit
 
 	COMPILER_EXPORTER
 
-inherit {NONE}
-
 	DEBUGGER_COMPILER_UTILITIES
 		export
 			{NONE} all

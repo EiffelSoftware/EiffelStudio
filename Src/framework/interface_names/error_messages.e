@@ -10,7 +10,7 @@ indexing
 class
 	ERROR_MESSAGES
 
-inherit {NONE}
+inherit
 	SHARED_LOCALE
 
 feature -- Access

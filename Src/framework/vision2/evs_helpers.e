@@ -10,7 +10,7 @@ indexing
 class
 	EVS_HELPERS
 
-inherit -- {NONE}
+inherit
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all

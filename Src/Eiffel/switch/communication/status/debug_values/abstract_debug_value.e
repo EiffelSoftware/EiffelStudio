@@ -56,7 +56,6 @@ inherit
 			is_equal
 		end
 
-inherit {NONE}
 	DEBUGGER_COMPILER_UTILITIES
 		undefine
 			is_equal

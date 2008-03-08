@@ -17,7 +17,6 @@ inherit
 			is_same_as
 		end
 
---inherit {NONE}
 	INTERNAL
 
 create

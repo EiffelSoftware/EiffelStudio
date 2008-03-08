@@ -58,7 +58,6 @@ inherit
 			prepare_auto_complete
 		end
 
-inherit {NONE}
 	ES_HELP_REQUEST_BINDER
 		export
 			{NONE} all

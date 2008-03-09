@@ -58,7 +58,6 @@ feature -- Output
 			l_name: STRING
 			l_type: TYPE_A
 			l_group: CONF_GROUP
-			l_unused_locals: like unused_locals
 		do
 			l_group := a_text_formatter.context_group
 			a_text_formatter.set_context_group (associated_class.group)

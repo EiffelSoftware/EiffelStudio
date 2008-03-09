@@ -78,7 +78,13 @@ feature -- Status
 					-- set to `Void' because we we have most probably a
 					-- case of a deferred feature without implementation
 					-- (This will be verified later).
-				if rout_id <= is_polymorphic_table.upper then
+					--
+					-- Note: we check for voidness of `class_type.generics' as we cannot
+					-- used the buffered information in that case which could exist
+					-- for non-generic ancestor/descendants implementing `rout_id'.
+					-- As for storing the information we could use the buffered information
+					-- if the actuals were all expanded.
+				if rout_id <= is_polymorphic_table.upper and class_type.generics = Void then
 					bool_array := is_polymorphic_table.item (rout_id)
 				end
 
@@ -140,6 +146,7 @@ feature -- Status
 							create bool_array.make (2 * (entry.max_type_id - min_id))
 
 								-- Store the value in the C array.
+							class_type_id := class_type.type_id (a_context_type.type)
 							if class_type_id >= min_id then
 								put_value (bool_array, class_type_id - min_id, status)
 							end

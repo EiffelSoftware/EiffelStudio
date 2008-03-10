@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_ACCESS
-	
+
 create
 	make
 
@@ -489,7 +489,8 @@ feature -- Querys
 			end
 			l_floating_zone ?= a_caller
 
-			if l_floating_zone /= Void or l_tool or l_editor then
+			if (l_floating_zone = Void and then (l_tool or l_editor)) or
+				(l_floating_zone /= Void and not internal_docking_manager.is_locked) then
 				create Result.make (a_caller, a_docking_manager)
 			else
 				create {SD_VOID_DOCKER_MEDIATOR} Result.make (a_caller, a_docking_manager)

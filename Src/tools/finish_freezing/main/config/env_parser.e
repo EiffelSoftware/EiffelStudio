@@ -98,7 +98,7 @@ feature {NONE} -- Basic operations
 			result_attached: Result /= Void
 		end
 
-	variables_via_evaluation: TABLE [STRING, STRING] is
+	variables_via_evaluation: HASH_TABLE [STRING, STRING] is
 			-- Retrieves a list of name/value environment variable pairs from evaluating the current environment
 			-- Using a batch file provided by `vsvars_batch_file'
 		local

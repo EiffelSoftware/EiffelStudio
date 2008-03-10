@@ -281,8 +281,10 @@ feature -- Command
 			if is_baseline_enalbed then
 				internal_border.set_show_border ({SD_ENUMERATION}.bottom, True)
 				internal_border.set_one_border_color ({SD_ENUMERATION}.bottom, internal_shared.border_color)
+				set_minimum_height (internal_shared.title_bar_height + 1)
 			else
 				internal_border.set_show_border ({SD_ENUMERATION}.bottom, False)
+				set_minimum_height (internal_shared.title_bar_height)
 			end
 		end
 

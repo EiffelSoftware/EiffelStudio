@@ -32,6 +32,11 @@ feature -- Init
 			handled_exceptions_by_name.extend ([role_stop, "*"])
 		end
 
+feature -- Specific case
+
+	catcall_warning_ignored: BOOLEAN assign set_catcall_warning_ignored
+			-- Is catcall warning ignored ?
+
 feature -- Access
 
 	enabled: BOOLEAN
@@ -90,6 +95,12 @@ feature -- Change
 			-- Disable handling	
 		do
 			enabled := False
+		end
+
+	set_catcall_warning_ignored (b: like catcall_warning_ignored) is
+			-- Set `catcall_warning_ignored' to `b'
+		do
+			catcall_warning_ignored := b
 		end
 
 	wipe_out is

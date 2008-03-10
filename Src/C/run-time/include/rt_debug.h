@@ -52,6 +52,7 @@ extern void dnotify_create_thread(EIF_THR_TYPE);
 extern void dnotify_exit_thread(EIF_THR_TYPE); 
 extern void dbstack_reset(struct dbstack *stk);
 #endif
+extern void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EIF_TYPE_INDEX a_actual_dftype);
 extern void c_opstack_reset(struct c_opstack *stk);
 #endif
 

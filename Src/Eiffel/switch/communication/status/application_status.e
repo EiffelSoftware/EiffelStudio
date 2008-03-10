@@ -275,8 +275,15 @@ feature -- Values
 feature -- Query
 
 	reason_is_overflow: BOOLEAN is
+			-- Stop reason is Overflow
 		do
-			Result := reason = pg_overflow
+			Result := reason = Pg_overflow
+		end
+
+	reason_is_catcall: BOOLEAN is
+			-- Stop reason is CatCall	
+		do
+			Result := reason = Pg_catcall
 		end
 
 feature -- Call Stack related

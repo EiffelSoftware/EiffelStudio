@@ -72,9 +72,14 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 --				Application.set_current_execution_stack (stack_num)
 			end
 		ensure
-			valid_break_index: (break_index > 0) or (break_index = 0 implies (
-					reason = Pg_update_breakpoint or reason = Pg_raise or reason = pg_viol or
-					(e_feature /= Void and then e_feature.is_external)))
+			valid_break_index: (break_index > 0) or
+						(break_index = 0 implies (
+							reason = Pg_update_breakpoint or
+							reason = Pg_raise or
+							reason = pg_viol or
+							reason = Pg_catcall or
+							(e_feature /= Void and then e_feature.is_external))
+						)
 			valid_efeature: e_feature = Void implies (reason = Pg_update_breakpoint)
 		end
 

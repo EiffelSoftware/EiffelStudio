@@ -1075,10 +1075,11 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			radio_group := rg
 		end
 
-	add_radio_button (w: EV_TOOL_BAR_ITEM) is
+	add_radio_button (w: EV_ITEM) is
 			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
+			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
 			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
@@ -1091,10 +1092,11 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			end
 		end
 
-	add_button (w: EV_TOOL_BAR_ITEM) is
+	add_button (w: EV_ITEM) is
 			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
+			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
 			button_imp: EV_TOOL_BAR_ITEM_IMP
 		do
@@ -1107,10 +1109,11 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			end
 		end
 
-	remove_radio_button (w: EV_TOOL_BAR_ITEM) is
+	remove_radio_button (w: EV_ITEM) is
 			-- Called when `w' has been removed from `Current'.
 		require
 			w_not_void: w /= Void
+			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
 			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
@@ -1121,10 +1124,11 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			end
 		end
 
-	add_toggle_button (w: EV_TOOL_BAR_ITEM) is
+	add_toggle_button (w: EV_ITEM) is
 			-- Called when `w' has been added to `Current'.
 		require
 			item_not_void: w /= Void
+			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
 		local
 			t: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 		do

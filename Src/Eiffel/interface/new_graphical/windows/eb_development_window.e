@@ -1517,19 +1517,19 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 		end
 
-	save_size is
+	save_size (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Save window size.
 		do
 			if not window.is_maximized and not window.is_minimized then
-					development_window_data.save_size (window.width, window.height)
+				development_window_data.save_size (a_width, a_height)
 			end
 		end
 
-	save_position is
+	save_position (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Save window position.
 		do
 			if not window.is_maximized and not window.is_minimized then
-				development_window_data.save_position (window.screen_x, window.screen_y)
+				development_window_data.save_position (a_x, a_y)
 			end
 		end
 

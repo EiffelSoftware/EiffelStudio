@@ -125,7 +125,6 @@ feature -- C code generation
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			class_type: CLASS_TYPE
-			class_type_id: INTEGER
 			l_rout_id: INTEGER
 		do
 			buf := buffer
@@ -137,7 +136,6 @@ feature -- C code generation
 				buf.put_character (')')
 			else
 				l_rout_id := routine_id
-				class_type_id := class_type.type_id
 				array_index := Eiffel_table.is_polymorphic (l_rout_id, class_type.type, class_type, True)
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
@@ -158,7 +156,7 @@ feature -- C code generation
 					Extern_declarations.add_routine (feature_type, table_name)
 				else
 					rout_table ?= Eiffel_table.poly_table (l_rout_id)
-					rout_table.goto_implemented (class_type_id)
+					rout_table.goto_implemented (class_type.type, class_type)
 					if rout_table.is_implemented then
 						internal_name := rout_table.feature_name
 						buf.put_string ("(EIF_POINTER) ")

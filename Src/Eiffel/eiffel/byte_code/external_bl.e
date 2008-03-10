@@ -232,9 +232,9 @@ feature
 						check
 							l_typ_not_void: l_typ /= Void
 						end
-						rout_table.goto_implemented (l_typ.type_id (context.context_class_type.type))
+						rout_table.goto_implemented (l_typ, context.context_class_type)
 					else
-						rout_table.goto_implemented (typ.type_id (context.context_class_type.type))
+						rout_table.goto_implemented (typ, context.context_class_type)
 					end
 					check
 						is_valid_routine: rout_table.is_implemented

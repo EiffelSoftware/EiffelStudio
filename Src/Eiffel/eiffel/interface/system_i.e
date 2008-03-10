@@ -4994,7 +4994,7 @@ feature -- Pattern table generation
 			if root_creation_name /= Void then
 				if final_mode then
 					rout_table ?= Eiffel_table.poly_table (rout_id)
-					rout_table.goto_implemented (cl_type.type_id)
+					rout_table.goto_implemented (cl_type.type, cl_type)
 					check
 						is_implemented: rout_table.is_implemented
 					end

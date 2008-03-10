@@ -363,7 +363,7 @@ feature -- Inlining
 						-- Inline only if it is not polymorphic and if it can be inlined.
 					if Eiffel_table.is_polymorphic (routine_id, cl_type, context.context_class_type, True) = -1 then
 						l_rout_table ?= eiffel_table.poly_table (routine_id)
-						l_rout_table.goto_implemented (cl_type.type_id (context.context_class_type.type))
+						l_rout_table.goto_implemented (cl_type, context.context_class_type)
 							-- Only if it is implemented that we can inline it.
 						if l_rout_table.is_implemented then
 							inliner := System.remover.inliner

@@ -87,7 +87,9 @@ feature -- Formatting
 						if l_digit.is_integer then
 							l_index := l_digit.to_integer
 							if l_index > 0 and l_index <= l_arg_count then
-								Result.append ((a_args @ l_index).out)
+								if a_args @ l_index /= Void then
+									Result.append ((a_args @ l_index).out)
+								end
 							else
 								raise ("Invalid format index '" + l_index.out + "'")
 							end

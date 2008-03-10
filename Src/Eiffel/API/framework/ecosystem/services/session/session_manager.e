@@ -150,7 +150,7 @@ feature {NONE} -- Query
 				l_fn := l_formatter.format (l_fn, [l_ver, l_target, l_window_id, l_extension])
 
 					-- Create full path
-				create l_path.make_from_string (eiffel_layout.user_session_path.string)
+				create l_path.make_from_string (eiffel_layout.session_data_path.string)
 				l_path.set_file_name (l_fn)
 				Result ?= l_path.out
 			end

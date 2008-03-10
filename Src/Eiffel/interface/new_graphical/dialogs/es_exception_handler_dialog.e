@@ -50,11 +50,15 @@ feature {NONE} -- User interface initialization
 			vb.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 			vb.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 
+
+			create ignore_catcall_warning_checkbox.make_with_text (interface_names.b_Ignore_catcall_warnings)
+			extend_non_expandable_to (vb, ignore_catcall_warning_checkbox)
+
 			create hb
 			hb.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
-			create handling_checkbox.make_with_text ("Filter Exceptions?")
-			create button_ignore_external_exception.make_with_text ("Ignore External Exception")
+			create handling_checkbox.make_with_text (interface_names.b_Filter_exceptions_question)
+			create button_ignore_external_exception.make_with_text (interface_names.b_Ignore_external_exception)
 			button_ignore_external_exception.select_actions.extend (agent ignore_external_exception)
 			button_ignore_external_exception.disable_sensitive
 
@@ -143,6 +147,9 @@ feature -- Widgets
 	button_close: EV_BUTTON
 			-- Dialog's button for Close.
 
+	ignore_catcall_warning_checkbox: EV_CHECK_BUTTON
+			-- Button to ignore catcall warning.
+
 	button_ignore_external_exception: EV_BUTTON
 			-- Button to ignore external exception.
 
@@ -223,6 +230,12 @@ feature -- Change
 				handling_checkbox.enable_select
 			else
 				handling_checkbox.disable_select
+			end
+
+			if exception_handler.catcall_warning_ignored then
+				ignore_catcall_warning_checkbox.enable_select
+			else
+				ignore_catcall_warning_checkbox.disable_select
 			end
 		end
 
@@ -405,6 +418,7 @@ feature {NONE} -- Implementation
 			else
 				exception_handler.disable_exception_handling
 			end
+			exception_handler.catcall_warning_ignored := ignore_catcall_warning_checkbox.is_selected
 		end
 
 	role_pattern_from_row (a_row: EV_GRID_ROW): TUPLE [role: INTEGER; pattern: STRING] is

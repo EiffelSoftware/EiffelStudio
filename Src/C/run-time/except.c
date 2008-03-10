@@ -1082,6 +1082,9 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, char *a_location
 	if (!RTRC(expected_dftype, Dftype(arg))) {
 		print_err_msg(stderr, "Catcall detected in %s for arg#%d: expected %s but got %s\n",
 			a_location, a_pos, eif_typename (expected_dftype), eif_typename (Dftype(arg)));
+#ifdef WORKBENCH
+		dcatcall(a_pos, expected_dftype, Dftype(arg));
+#endif
 	}
 }
 

@@ -15,30 +15,33 @@ inherit
 
 feature {APPLICATION_STATUS_EXPORTER} -- Constants
 
-	Pg_raise: INTEGER is 1
+	Pg_raise: INTEGER = 1
 			-- Explicitely raised exception
 
-	Pg_viol: INTEGER is 2
+	Pg_viol: INTEGER = 2
 			-- Implicitely raised exception
 
-	Pg_break: INTEGER is 3
+	Pg_break: INTEGER = 3
 			-- Breakpoint reached
 
-	Pg_interrupt: INTEGER is 4
+	Pg_interrupt: INTEGER = 4
 			-- System execution interrupted
 
-	Pg_update_breakpoint: INTEGER is 5
+	Pg_update_breakpoint: INTEGER = 5
 			-- Breakpoints changed while running. The application should stop
 			-- to record the change in breakpoints.
 			-- (mainly for classic debugger)
 
-	Pg_step: INTEGER is 6
+	Pg_step: INTEGER = 6
 			-- The application completed a step operation.
 
-	Pg_overflow: INTEGER is 7;
+	Pg_overflow: INTEGER = 7
 			-- The application might run into a stack overflow.
 
-indexing
+	Pg_catcall: INTEGER = 8
+			-- The application ran into a catcall.
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

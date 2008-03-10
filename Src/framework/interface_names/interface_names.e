@@ -221,6 +221,10 @@ feature -- Button texts
 	b_bp_context_title: STRING_GENERAL is			do Result := locale.translation("Context")	end
 	b_bp_when_hits_title: STRING_GENERAL is			do Result := locale.translation("When Hits ...")	end
 
+	b_Filter_exceptions_question: STRING_GENERAL is		do Result := locale.translation ("Filter Exceptions?") end
+	b_Ignore_external_exception: STRING_GENERAL is		do Result := locale.translation ("Ignore External Exception?") end
+	b_Ignore_catcall_warnings: STRING_GENERAL is		do Result := locale.translation ("Ignore CATCALL Warnings?") end
+
 feature -- Choices
 
 	c_right_click_receiver: HASH_TABLE [STRING_GENERAL, STRING] is

@@ -209,7 +209,9 @@ feature -- Execution
 		do
 			l_status := a_app.status
 
-			if a_pause_reason = Pg_update_breakpoint then
+			inspect
+				a_pause_reason
+			when Pg_update_breakpoint then
 					--| If the reason is Pg_update_breakpoint, the application sends the
 					--| new breakpoints status and then automatically resume its execution.
 				debug ("DEBUGGER_TRACE")
@@ -220,6 +222,14 @@ feature -- Execution
 				-- breakpoints changes. So let's send the breakpoints
 				-- to the application and resume it.
 				need_to := [False, True] -- Continue, but resend bp
+			when pg_overflow then
+				--Do nothing specific
+			when pg_catcall then
+				if debugger_manager.exceptions_handler.catcall_warning_ignored then
+					need_to := [False, False]
+				else
+					need_to := [True, False]
+				end
 			else
 					--| The debuggee is on a real stopped state
 				need_to := [True, True]

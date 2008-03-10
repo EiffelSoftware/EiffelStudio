@@ -596,6 +596,10 @@ feature {NONE} -- Implementation: Stop
 					stop_cause.set_text (Interface_names.l_Possible_overflow)
 					m.append (Interface_names.l_Possible_overflow)
 					set_focus_if_visible
+				when Pg_catcall then
+					stop_cause.set_text ("CatCall detected")
+					m.append ("CatCall detected")
+					set_focus_if_visible
 				when Pg_raise then
 					stop_cause.set_text (Interface_names.l_Explicit_exception_pending)
 					m.append (Interface_names.l_Explicit_exception_pending)

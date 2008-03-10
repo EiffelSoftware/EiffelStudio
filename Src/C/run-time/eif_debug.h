@@ -190,6 +190,7 @@ RT_LNK void 		insert_local_var (uint32 type, void *ptr);
 #define PG_NEWBREAKPOINT	5		/* New breakpoint(s) added while running */
 #define PG_STEP				6		/* Step completed */
 #define PG_OVERFLOW			7		/* A possible stack overflow has been detected */
+#define PG_CATCALL			8		/* A catcall has been detected */
 
 
 /**************/

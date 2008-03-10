@@ -652,6 +652,25 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 		}
 	}
 }
+
+/*************************************************************************************************************************
+* CATCALL handling.
+*************************************************************************************************************************/
+rt_shared void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EIF_TYPE_INDEX a_actual_dftype)
+{
+	if (debug_mode) {
+		RT_GET_CONTEXT
+		DBGMTX_LOCK;	/* Enter critical section */
+		safe_dbreak(PG_CATCALL);
+		DBGMTX_UNLOCK; /* Leave critical section */
+	} else {
+		/* If not in debugging mode */
+		/* Resume execution immediately */
+		return;
+	}
+}
+
+
 /*************************************************************************************************************************
 * Breakpoints handling.
 *************************************************************************************************************************/

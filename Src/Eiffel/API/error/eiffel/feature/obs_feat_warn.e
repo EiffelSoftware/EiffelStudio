@@ -100,7 +100,7 @@ feature {NONE} -- Output
 			a_text_formatter.add (" Call to feature `")
 			obsolete_feature.append_name (a_text_formatter)
 			a_text_formatter.add ("'")
-			l_message := obsolete_feature.obsolete_message
+			l_message := obsolete_feature.obsolete_message.twin
 			if l_message /= Void and then not l_message.is_empty then
 				l_message.replace_substring_all ("%T", "")
 				l_message.replace_substring_all ("%N", " ")

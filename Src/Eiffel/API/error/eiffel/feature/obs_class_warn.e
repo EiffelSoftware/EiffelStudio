@@ -89,7 +89,7 @@ feature {NONE} -- Output
 		do
 			a_text_formatter.add (" Use of class ")
 			obsolete_class.append_name (a_text_formatter)
-			l_message := obsolete_class.obsolete_message
+			l_message := obsolete_class.obsolete_message.twin
 			if l_message /= Void and then not l_message.is_empty then
 				l_message.replace_substring_all ("%T", "")
 				l_message.replace_substring_all ("%N", " ")

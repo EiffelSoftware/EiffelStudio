@@ -78,9 +78,7 @@ feature {SESSION_MANAGER_S} -- Access
 feature {SESSION_MANAGER_S} -- Element change
 
 	set_inner_session (a_session: like inner_session)
-			-- Sets inner session object for
-			--
-			-- `a_session': Session to set as aggregate session.
+			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
 			a_session_attached: a_session /= Void
@@ -90,6 +88,10 @@ feature {SESSION_MANAGER_S} -- Element change
 					-- remove old event handler
 				inner_session.value_changed_event.unsubscribe (agent on_inner_session_value_changed)
 			end
+
+				-- Set extension name
+			set_extension_name (a_session.extension_name)
+
 			inner_session := a_session
 			if a_session /= Void then
 					-- Set event handler for propagating value changed events
@@ -97,14 +99,13 @@ feature {SESSION_MANAGER_S} -- Element change
 			end
 		ensure
 			inner_session_set: inner_session = a_session
+			extension_name_set: equal (extension_name,  a_session.extension_name)
 		end
 
 feature -- Query
 
 	value (a_id: STRING_8): ANY assign set_value
-			-- Retrieve a piece of sessions data, indexed by an ID.
-			--
-			-- `a_id': An id to retrieve session data for
+			-- <Precursor>
 		do
 			if data.has (a_id) then
 				Result := Precursor {SESSION} (a_id)
@@ -114,9 +115,7 @@ feature -- Query
 		end
 
 	value_or_default (a_id: STRING_8; a_default_value: ANY): ANY
-			-- Retrieve a piece of sessions data, indexed by an ID.
-			--
-			-- `a_id': An id to retrieve session data for
+			-- <Precursor>
 		do
 			if data.has (a_id) then
 				Result := Precursor {SESSION} (a_id, a_default_value)
@@ -128,10 +127,7 @@ feature -- Query
 feature {NONE} -- Event handlers
 
 	on_inner_session_value_changed (a_session: SESSION; a_id: STRING_8)
-			-- Called when a value changes in the inner session
-			--
-			-- `a_id': Id of changed value.
-			-- `a_value': New value.
+			-- <Precursor>
 		require
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
@@ -145,6 +141,7 @@ feature {NONE} -- Event handlers
 
 invariant
 	inner_session_attached: is_interface_usable implies inner_session /= Void
+	extension_name_set: equal (extension_name, inner_session.extension_name)
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

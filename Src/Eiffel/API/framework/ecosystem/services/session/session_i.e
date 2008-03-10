@@ -38,6 +38,17 @@ feature -- Access
 		deferred
 		end
 
+feature {SESSION_MANAGER_S, SESSION_I} -- Access
+
+	extension_name: ?STRING_8 assign set_extension_name
+			-- Optional extension name for specialized categories
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+		end
+
 feature {SESSION_MANAGER_S} -- Access
 
 	session_object: ANY assign set_session_object
@@ -49,7 +60,39 @@ feature {SESSION_MANAGER_S} -- Access
 			result_attached: Result /= Void
 		end
 
-feature {SESSION_MANAGER_S} -- Element change
+feature -- Element change
+
+	set_value (a_value: ANY; a_id: STRING_8)
+			-- Sets a piece of sessions data
+			--
+			-- `a_value': Data to set in sessions, or Void to remove it.
+			-- `a_id': An id to index and store the session data with.
+		require
+			is_interface_usable: is_interface_usable
+			a_id_attached: a_id /= Void
+			not_a_id_is_empty: not a_id.is_empty
+			a_value_is_valid_session_value: is_valid_session_value (a_value)
+		deferred
+		ensure
+			value_set: equal (a_value, value (a_id))
+			is_dirty: not equal (a_value, old value (a_id)) implies is_dirty
+			session_set_on_session_data: {l_session_data: !SESSION_DATA_I} a_value implies (({SESSION_DATA_I}) #? a_value).session = Current
+		end
+
+feature {SESSION_MANAGER_S, SESSION_I} -- Element change
+
+	set_extension_name (a_name: like extension_name)
+			-- Set session extension name. See `extension_name' for more information.
+			--
+		require
+			is_interface_usable: is_interface_usable
+			not_a_name_is_empty: a_name /= Void implies not a_name.is_empty
+		deferred
+		ensure
+			extension_name_set: equal (a_name, extension_name)
+		end
+
+ feature {SESSION_MANAGER_S} -- Element change
 
 	set_session_object (a_object: like session_object)
 			-- Set the session object, used during deserialization.
@@ -100,7 +143,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	events (a_observer: !SESSION_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
+	events (a_observer: !SESSION_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 			-- List of events and associated action.
 			--
 			-- `a_observer': Event observer interface to bind agent actions to.
@@ -108,25 +151,6 @@ feature {NONE} -- Query
 		do
 			create Result.make (1)
 			Result.put_last ([value_changed_event, agent a_observer.on_session_value_changed])
-		end
-
-feature -- Element change
-
-	set_value (a_value: ANY; a_id: STRING_8)
-			-- Sets a piece of sessions data
-			--
-			-- `a_value': Data to set in sessions, or Void to remove it.
-			-- `a_id': An id to index and store the session data with.
-		require
-			is_interface_usable: is_interface_usable
-			a_id_attached: a_id /= Void
-			not_a_id_is_empty: not a_id.is_empty
-			a_value_is_valid_session_value: is_valid_session_value (a_value)
-		deferred
-		ensure
-			value_set: equal (a_value, value (a_id))
-			is_dirty: not equal (a_value, old value (a_id)) implies is_dirty
-			session_set_on_session_data: {l_session_data: !SESSION_DATA_I} a_value implies (({SESSION_DATA_I}) #? a_value).session = Current
 		end
 
 feature -- Status report

@@ -26,10 +26,7 @@ create
 feature {NONE} -- Clean up
 
 	safe_dispose (a_disposing: BOOLEAN)
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-			--
-			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
+			-- <Precursor>
 		local
 			l_sessions: like internal_sessions
 		do
@@ -73,11 +70,8 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	session_file_path (a_session: SESSION_I): !STRING_8 is
-			-- Retrieve a session's persisted file path
-			--
-			-- `a_session': A session to retrive a file path for
-			-- `Result': Path to a session file, which may or may not exist yet.
+	session_file_path (a_session: SESSION_I): !STRING_8
+			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
 			a_session_attached: a_session /= Void
@@ -94,6 +88,8 @@ feature {NONE} -- Query
 			l_target: STRING_8
 			l_workbench: ?WORKBENCH_I
 			l_window_id: NATURAL_32
+			l_extension: ?STRING_8
+			l_name: ?STRING_8
 		do
 			create l_formatter
 			create l_kinds
@@ -116,6 +112,7 @@ feature {NONE} -- Query
 					check False end
 				end
 
+					-- Project UUID
 				if a_session.is_per_project then
 						-- Retrieve project specific information
 					l_workbench := (create {SHARED_WORKBENCH}).workbench
@@ -131,8 +128,17 @@ feature {NONE} -- Query
 					end
 				end
 
+					-- Window ID
 				if a_session.is_per_window then
 					l_window_id := a_session.window_id
+				end
+
+					-- Extension name
+				l_name := a_session.extension_name
+				if l_name /= Void then
+					create l_extension.make (l_name.count + 1)
+					l_extension.append_character ('.')
+					l_extension.append (l_name.as_lower)
 				end
 
 				check
@@ -141,12 +147,10 @@ feature {NONE} -- Query
 				end
 
 					-- Format path using collected parts
-				if l_ver /= Void then
-					l_fn := l_formatter.format (l_fn, [l_ver, l_target, l_window_id])
-				end
+				l_fn := l_formatter.format (l_fn, [l_ver, l_target, l_window_id, l_extension])
 
 					-- Create full path
-				create l_path.make_from_string (eiffel_layout.session_data_path.out)
+				create l_path.make_from_string (eiffel_layout.user_session_path.string)
 				l_path.set_file_name (l_fn)
 				Result ?= l_path.out
 			end
@@ -178,10 +182,8 @@ feature {NONE} -- Helpers
 
 feature -- Storage
 
-	store (a_session: SESSION_I) is
-			-- Stores a particular session.
-			--
-			-- `a_session': Session to store.
+	store (a_session: SESSION_I)
+			-- <Precursor>
 		local
 			l_logger: like logger_service
 			l_file_name: like session_file_path
@@ -232,7 +234,7 @@ feature -- Storage
 		end
 
 	store_all
-			-- Stores all sessions
+			-- <Precursor>
 		local
 			l_sessions: like internal_sessions
 			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
@@ -254,47 +256,18 @@ feature -- Storage
 
 feature -- Retrieval
 
-	retrieve (a_per_project: BOOLEAN): SESSION_I
-			-- Retrieve's a sessions based on a session type id
-			--
-			-- `a_per_project': True to retireve a session for the active project, False otherwise
-			--                  Note: If no project is loaded then no sessions can be retrieved and the Result will be Void.
-		local
-			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
-			l_session: SESSION_I
+	retrieve (a_per_project: BOOLEAN): ?SESSION_I
+			-- <Precursor>
 		do
-			l_cursor := sessions.new_cursor
-			from l_cursor.start until l_cursor.after or Result /= Void loop
-				l_session := l_cursor.item
-				if l_session.is_interface_usable then
-					if a_per_project = l_session.is_per_project and not l_session.is_per_window then
-						Result := l_session
-					end
-				end
-				if Result = Void then
-					l_cursor.forth
-				end
-			end
-
-			if Result = Void then
-					-- Create a new session
-				Result := create_new_session (Void, a_per_project)
-				if Result /= Void then
-					sessions.force_last (Result)
-				end
-			end
+			Result := retrieve_extended (a_per_project, Void)
 		ensure then
 			sessions_has_result: Result /= Void implies sessions.has (Result)
 			result_consistent: Result /= Void implies Result = retrieve (a_per_project)
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_per_window (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): SESSION_I is
-			-- Retrieve's a sessions based on a session type id
-			--
-			-- `a_window': The window to retrieve a window-based session for.
-			-- `a_per_project': True to retireve a session for the active project, False otherwise
-			--                  Note: If no project is loaded then no sessions can be retrieved and the Result will be Void.
+	retrieve_extended (a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+			-- <Precursor>
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
 			l_session: SESSION_I
@@ -303,7 +276,7 @@ feature -- Retrieval
 			from l_cursor.start until l_cursor.after or Result /= Void loop
 				l_session := l_cursor.item
 				if l_session.is_interface_usable then
-					if a_per_project = l_session.is_per_project and then l_session.is_per_window and then l_session.window_id = a_window.window_id then
+					if a_per_project = l_session.is_per_project and not l_session.is_per_window and then equal (l_session.extension_name, a_extension) then
 						Result := l_session
 					end
 				end
@@ -314,22 +287,61 @@ feature -- Retrieval
 
 			if Result = Void then
 					-- Create a new session
-				Result := create_new_session (a_window, a_per_project)
+				Result := create_new_session (Void, a_per_project, a_extension)
 				if Result /= Void then
 					sessions.force_last (Result)
 				end
 			end
 		ensure then
 			sessions_has_result: Result /= Void implies sessions.has (Result)
+			result_consistent: Result /= Void implies Result = retrieve_extended (a_per_project, a_extension)
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	retrieve_per_window (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): ?SESSION_I
+			-- <Precursor>
+		do
+			Result := retrieve_per_window_extended (a_window, a_per_project, Void)
+		ensure then
+			sessions_has_result: Result /= Void implies sessions.has (Result)
 			result_consistent: Result /= Void implies Result = retrieve_per_window (a_window, a_per_project)
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_from_disk (a_file_name: !STRING_8): SESSION_I
-			-- Retrieves a session object from disk, if it exists.
-			-- If no file exists then a new session is created.
-			--
-			-- `a_file_name': The full path to a file on disk to retrieve session data from.
+	retrieve_per_window_extended (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+			-- <Precursor>
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [SESSION_I]
+			l_session: SESSION_I
+		do
+			l_cursor := sessions.new_cursor
+			from l_cursor.start until l_cursor.after or Result /= Void loop
+				l_session := l_cursor.item
+				if l_session.is_interface_usable then
+					if a_per_project = l_session.is_per_project and then l_session.is_per_window and then l_session.window_id = a_window.window_id and then equal (l_session.extension_name, a_extension) then
+						Result := l_session
+					end
+				end
+				if Result = Void then
+					l_cursor.forth
+				end
+			end
+
+			if Result = Void then
+					-- Create a new session
+				Result := create_new_session (a_window, a_per_project, a_extension)
+				if Result /= Void then
+					sessions.force_last (Result)
+				end
+			end
+		ensure then
+			sessions_has_result: Result /= Void implies sessions.has (Result)
+			result_consistent: Result /= Void implies Result = retrieve_per_window_extended (a_window, a_per_project, a_extension)
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	retrieve_from_disk (a_file_name: !STRING_8): ?SESSION_I
+			-- <Precursor>
 		do
 				-- Create a new custom session
 			Result := create_new_custom_session (a_file_name)
@@ -340,10 +352,8 @@ feature -- Retrieval
 			sessions_has_result: Result /= Void implies sessions.has (Result)
 		end
 
-	reload (a_session: SESSION_I) is
-			-- Reload a session and resets any changed session data.
-			--
-			-- `a_session': The session to reload session data for.
+	reload (a_session: SESSION_I)
+			-- <Precursor>
 		do
 			check
 				internal_sessions_attached: internal_sessions /= Void
@@ -354,7 +364,7 @@ feature -- Retrieval
 
 feature {NONE} -- Basic operation
 
-	set_session_object (a_session: SESSION_I) is
+	set_session_object (a_session: SESSION_I)
 			-- Sets a session's session object by reloading a session from disk.
 			--
 			-- `a_session': A session to set a session object for.
@@ -417,7 +427,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Factory
 
-	create_new_session (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): SESSION_I
+	create_new_session (a_window: ?EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN; a_extension: ?STRING_8): SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_window': The window to bind the session object to; False to make a session for the entire IDE.
@@ -425,6 +435,7 @@ feature {NONE} -- Factory
 		require
 			is_interface_usable: is_interface_usable
 			not_a_window_is_recycled: a_window /= Void implies not a_window.is_recycled
+			not_a_extension_is_empty: a_extension /= Void implies not a_extension.is_empty
 		local
 			l_inner_session: SESSION_I
 			l_shared: SHARED_EIFFEL_PROJECT
@@ -436,12 +447,12 @@ feature {NONE} -- Factory
 			if a_window /= Void then
 					-- Retrieve higher level session for aggregation
 				if a_per_project then
-					l_inner_session := retrieve_per_window (a_window, False)
+					l_inner_session := retrieve_per_window_extended (a_window, False, a_extension)
 				else
-					l_inner_session := retrieve (False)
+					l_inner_session := retrieve_extended (False, a_extension)
 				end
 			elseif a_per_project then
-				l_inner_session := retrieve (False)
+				l_inner_session := retrieve_extended (False, a_extension)
 			end
 
 				-- Create session object
@@ -471,6 +482,9 @@ feature {NONE} -- Factory
 				else
 					create {SESSION} Result.make_per_window (False, a_window, Current)
 				end
+				if a_extension /= Void then
+					Result.set_extension_name (a_extension)
+				end
 			end
 
 			check result_attached: Result /= Void end
@@ -483,6 +497,10 @@ feature {NONE} -- Factory
 			result_attached: not a_per_project implies Result /= Void
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 			result_is_clean: Result /= Void implies not Result.is_dirty
+			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
+			result_is_per_window: (Result /= Void and a_window /= Void) implies Result.is_per_window
+			result_window_id_set: (Result /= Void and a_window /= Void) implies (Result.window_id = a_window.window_id)
+			result_extension_set: Result /= Void implies equal (a_extension, Result.extension_name)
 		end
 
 	create_new_custom_session (a_file_name: !STRING_8): CUSTOM_SESSION_I
@@ -504,10 +522,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	environment_file_name: STRING_8 = "environment"
-	window_file_name: STRING_8 = "window_{3}"
-	project_file_name: STRING_8 = "{1}.{2}"
-	project_window_file_name: STRING_8 = "{1}.{2}.window_{3}"
+	environment_file_name: STRING_8 = "environment{4}"
+	window_file_name: STRING_8 = "window_{3}{4}"
+	project_file_name: STRING_8 = "{1}.{2}{4}"
+	project_window_file_name: STRING_8 = "{1}.{2}.window_{3}{4}"
 
 feature {NONE} -- Internal implementation cache
 

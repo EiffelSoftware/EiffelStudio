@@ -40,8 +40,8 @@ feature -- Storage
 
 feature -- Retrieval
 
-	retrieve (a_per_project: BOOLEAN): SESSION_I
-			-- Retrieve's a sessions based on a session type id
+	retrieve (a_per_project: BOOLEAN): ?SESSION_I
+			-- Retrieve's a session based on specified paramaters.
 			--
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
 			--                  Note: If no project is loaded then no sessions can be retrieved and the Result will be Void.
@@ -52,10 +52,30 @@ feature -- Retrieval
 			result_attached: not a_per_project implies Result /= Void
 			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
 			not_result_is_per_window: Result /= Void implies (not Result.is_per_window)
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_per_window (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): SESSION_I
-			-- Retrieve's a sessions based on a session type id
+	retrieve_extended (a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+			-- Retrieve's a session based on specified paramaters, using a extension name for non-global conflicting session objects.
+			--
+			-- `a_per_project': True to retireve a session for the active project, False otherwise
+			--                  Note: If no project is loaded then no sessions can be retrieved and the Result will be Void.
+			-- `a_extension': An optional session extension name used to "localize" a session from a global session. Passing
+			--                Void will retrieve the global version of a session.
+		require
+			is_interface_usable: is_interface_usable
+			not_a_extension_is_empty: a_extension /= Void implies not a_extension.is_empty
+		deferred
+		ensure
+			result_attached: not a_per_project implies Result /= Void
+			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
+			not_result_is_per_window: Result /= Void implies (not Result.is_per_window)
+			result_extension_set: Result /= Void implies equal (a_extension, Result.extension_name)
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	retrieve_per_window (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN): ?SESSION_I
+			-- Retrieve's a window session based on specified paramaters.
 			--
 			-- `a_window': The window to retrieve a window-based session for.
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
@@ -73,7 +93,29 @@ feature -- Retrieval
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	retrieve_from_disk (a_file_name: STRING_8): SESSION_I
+	retrieve_per_window_extended (a_window: EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
+			-- Retrieve's a window session based on specified paramaters, using a extension name for non-global conflicting session objects.
+			--
+			-- `a_window': The window to retrieve a window-based session for.
+			-- `a_per_project': True to retireve a session for the active project, False otherwise
+			--                  Note: If no project is loaded then no sessions can be retrieved and the Result will be Void.
+			-- `a_extension': An optional session extension name used to "localize" a session from a global session. Passing
+			--                Void will retrieve the global version of a session.
+		require
+			is_interface_usable: is_interface_usable
+			a_window_attached: a_window /= Void
+			not_a_window_is_recycled: not a_window.is_recycled
+		deferred
+		ensure
+			result_attached: not a_per_project implies Result /= Void
+			result_is_per_project: Result /= Void implies (a_per_project implies Result.is_per_project)
+			result_is_per_window: Result /= Void implies Result.is_per_window
+			result_window_id_set: Result /= Void implies (Result.window_id = a_window.window_id)
+			result_extension_set: Result /= Void implies equal (a_extension, Result.extension_name)
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	retrieve_from_disk (a_file_name: STRING_8): ?SESSION_I
 			-- Retrieves a session object from disk, if it exists.
 			-- If no file exists then a new session is created.
 			--

@@ -112,6 +112,11 @@ feature -- Access
 	manager: SESSION_MANAGER_S
 			-- Session manager current belongs to
 
+feature {SESSION_MANAGER_S, SESSION_I} -- Access
+
+	extension_name: ?STRING_8 assign set_extension_name
+			-- Optional extension name for specialized categories
+
 feature {SESSION_MANAGER_S} -- Access
 
 	frozen session_object: ANY assign set_session_object
@@ -165,13 +170,22 @@ feature -- Element change
 			end
 		end
 
+feature {SESSION_MANAGER_S, SESSION_I} -- Element change
+
+	set_extension_name (a_name: like extension_name)
+			-- <Precursor>
+		do
+			if a_name /= Void then
+				extension_name := a_name.twin
+			else
+				extension_name := Void
+			end
+		end
+
 feature {SESSION_MANAGER_S} -- Element change
 
 	set_session_object (a_object: like session_object)
-			-- Set the session object, used during deserialization.
-			-- Note: Implementers should remember to fire the change events for the set properties
-			--
-			-- `a_object': The new session object to set.
+			-- <Precursor>
 		local
 			l_old_data: like data
 			l_data: like data
@@ -482,7 +496,7 @@ feature {NONE} -- Conversion type tables
 			not_result_is_empty: not Result.is_empty
 		end
 
-	frozen type_code_of_type (a_type: TYPE [ANY]): INTEGER is
+	frozen type_code_of_type (a_type: TYPE [ANY]): INTEGER
 			-- Retrieves a dynamic type code for a type's type.
 			--
 			-- `a_type': Type to retrieve a dynamic type id for.

@@ -95,13 +95,15 @@ feature {NONE} -- Output
 	print_single_line_error_message_extended (a_text_formatter: TEXT_FORMATTER) is
 			-- Displays single line help in `a_text_formatter'.
 		local
-			l_message: STRING_GENERAL
+			l_message: STRING_8
 		do
 			a_text_formatter.add (" Call to feature `")
 			obsolete_feature.append_name (a_text_formatter)
 			a_text_formatter.add ("'")
 			l_message := obsolete_feature.obsolete_message
 			if l_message /= Void and then not l_message.is_empty then
+				l_message.replace_substring_all ("%T", "")
+				l_message.replace_substring_all ("%N", " ")
 				a_text_formatter.add (": ")
 				a_text_formatter.add (l_message)
 			else

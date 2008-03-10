@@ -210,17 +210,23 @@ feature -- Storage
 					l_sed_util.independent_store (a_session.session_object, l_writer, False)
 					l_file.flush
 					a_session.on_end_store
-
-						-- Reset direty state
-					a_session.reset_is_dirty
 				end
+
+					-- Reset dirty state.
+					-- Note: When using a project session, with no project we have to reset the dirty state
+					--       because there is no way to retrieve a session file name.
+				a_session.reset_is_dirty
 			else
 					-- Problem with storage, log.
 				l_logger := logger_service
 				if l_logger.is_service_available then
 						-- Log deserialization error.
 					create l_message.make_from_string ("Unable to store the session data file: ")
-					l_message.append (session_file_path (a_session))
+					if not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined then
+						l_message.append (session_file_path (a_session))
+					else
+						l_message.append ("<unloaded project>")
+					end
 					l_logger.service.put_message_with_severity (l_message, {ENVIRONMENT_CATEGORIES}.internal_event, {PRIORITY_LEVELS}.high)
 				end
 			end

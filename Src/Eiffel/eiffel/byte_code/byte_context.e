@@ -1138,8 +1138,14 @@ feature -- Access
 		do
 				-- If code is inherited, we first find out the type.
 			if class_type /= context_class_type then
-				Result := type.evaluated_type_in_descendant (class_type.associated_class,
-					context_class_type.associated_class, Void)
+				if system.il_generation then
+						-- Temporary workaround.
+					Result := type.evaluated_type_in_descendant (class_type.associated_class,
+						context_class_type.associated_class, current_feature)
+				else
+					Result := type.evaluated_type_in_descendant (class_type.associated_class,
+						context_class_type.associated_class, Void)
+				end
 			else
 				Result := type
 			end

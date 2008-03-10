@@ -401,6 +401,7 @@ feature -- Access queries for settings
 					a_name.is_equal (s_use_all_cluster_name_as_namespace) or
 					a_name.is_equal (s_check_vape) or
 					a_name.is_equal (s_check_for_void_target) or
+					a_name.is_equal (s_check_for_catcall_at_runtime) or
 					a_name.is_equal (s_cls_compliant) or
 					a_name.is_equal (s_dead_code_removal) or
 					a_name.is_equal (s_inlining)
@@ -428,6 +429,12 @@ feature -- Access queries for settings
 			-- Value for the `check_for_void_target' setting.
 		do
 			Result := setting_boolean (s_check_for_void_target)
+		end
+
+	setting_check_for_catcall_at_runtime: BOOLEAN is
+			-- Value for the `check_for_catcall_at_runtime' setting.
+		do
+			Result := setting_boolean (s_check_for_catcall_at_runtime)
 		end
 
 	setting_check_generic_creation_constraint: BOOLEAN is

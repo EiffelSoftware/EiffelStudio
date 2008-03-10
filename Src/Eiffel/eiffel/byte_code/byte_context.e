@@ -1848,6 +1848,50 @@ feature -- Access
 			end
 		end
 
+	generate_catcall_check_for_argument (a_type: TYPE_A; a_pos: INTEGER) is
+			-- Generate catcall check at runtime for the argument at position `a_pos' against the static
+			-- type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_pos_positive: a_pos > 0
+		local
+			l_arg: ARGUMENT_BL
+			buf: like buffer
+			l_info: CREATE_INFO
+		do
+			if a_type.c_type.is_pointer then
+				buf := buffer
+				create l_arg
+				l_arg.set_position (a_pos)
+				buf.put_new_line
+				buf.put_four_character ('i', 'f', ' ', '(')
+				l_arg.print_register
+				buf.put_three_character (')', ' ', '{')
+				buf.indent
+
+				l_info := a_type.create_info
+				l_info.generate_start (buf)
+				l_info.generate_gen_type_conversion (0)
+				buf.put_new_line
+				buf.put_string ("RTCC(")
+				l_arg.print_register
+				buf.put_four_character (',', ' ', '"', '{')
+				buf.put_string (original_class_type.type.name)
+				buf.put_two_character ('}', '.')
+				buf.put_escaped_string (current_feature.feature_name)
+				buf.put_three_character ('"', ',', ' ')
+				buf.put_integer (a_pos)
+				buf.put_two_character (',', ' ')
+				l_info.generate_type_id (buf, final_mode, 0)
+				buf.put_two_character (')', ';')
+				l_info.generate_end (buf)
+
+				buf.exdent
+				buf.put_new_line
+				buf.put_character ('}')
+			end
+		end
+
 	expanded_number (arg_pos: INTEGER): INTEGER is
 			-- Compute the argument's ordinal position within the expanded
 			-- subset of arguments.

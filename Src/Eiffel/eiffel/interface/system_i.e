@@ -3095,7 +3095,9 @@ feature -- Final mode generation
 						exception_stack_managed := keep_assertions
 					end
 
-					inlining_on := inlining_on and not remover_off
+						-- Inlining is disabled when dead code removal is off or when checking
+						-- for catcalls.
+					inlining_on := inlining_on and not remover_off and not check_for_catcall_at_runtime
 					array_optimization_on := array_optimization_on and not remover_off
 
 					byte_context.clear_system_data

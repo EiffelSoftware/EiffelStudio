@@ -809,6 +809,20 @@ feature {NONE} -- Implementation
 				system.set_check_for_void_target (True)
 			end
 
+			l_s := l_settings.item (s_check_for_catcall_at_runtime)
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_check_for_catcall_at_runtime (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name (s_check_for_catcall_at_runtime)
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_check_for_catcall_at_runtime (False)
+			end
+
 			l_s := l_settings.item (s_force_32bits)
 			if l_s /= Void then
 				if l_s.is_boolean then

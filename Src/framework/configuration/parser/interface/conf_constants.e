@@ -60,6 +60,7 @@ feature -- Settings
 	s_array_optimization: STRING is "array_optimization"
 	s_automatic_backup: STRING is "automatic_backup"
 	s_check_for_void_target: STRING is "check_for_void_target"
+	s_check_for_catcall_at_runtime: STRING is "check_for_catcall_at_runtime"
 	s_check_generic_creation_constraint: STRING is "check_generic_creation_constraint"
 	s_check_vape: STRING is "check_vape"
 	s_console_application: STRING is "console_application"

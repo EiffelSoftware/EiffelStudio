@@ -375,6 +375,9 @@ feature -- Analyzis
 				generate_save_assertion_level
 			end
 
+				-- Checkcat calls
+			generate_catcall_check
+
 				-- Precondition check generation
 			generate_precondition
 			if l_context.has_chained_prec then
@@ -1706,6 +1709,33 @@ end
 				-- Generate the update of the trace stack before quitting
 				-- the routine
 			generate_pop_execution_trace
+		end
+
+	generate_catcall_check is
+			-- Add a check for catcall at runtime.
+		local
+			i: INTEGER
+			l_argument_types: like arguments
+			l_type: TYPE_A
+		do
+			if context.workbench_mode or system.check_for_catcall_at_runtime then
+				i := argument_count
+				if i > 0 then
+					from
+						l_argument_types := arguments
+					until
+						i <= 0
+					loop
+						l_type := l_argument_types [i]
+							-- We instantiate `l_type' in current context to see if it is
+							-- really a reference
+						if context.real_type (l_type).c_type.is_pointer then
+							context.generate_catcall_check_for_argument (l_type, i)
+						end
+						i := i - 1
+					end
+				end
+			end
 		end
 
 feature -- Byte code generation

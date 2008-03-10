@@ -1073,6 +1073,18 @@ rt_public EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE Current) {
 	}
 }
 
+rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, char *a_location, int a_pos, EIF_TYPE_INDEX expected_dftype)
+{
+	REQUIRE("arg_not_null", arg);
+	REQUIRE("a_location_not_null", a_location);
+	REQUIRE("a_pos positive", a_pos > 0);
+
+	if (!RTRC(expected_dftype, Dftype(arg))) {
+		print_err_msg(stderr, "Catcall detected in %s for arg#%d: expected %s but got %s\n",
+			a_location, a_pos, eif_typename (expected_dftype), eif_typename (Dftype(arg)));
+	}
+}
+
 rt_public void eraise(char *tag, long num)
 	/* May be called from Eiffel, and INTEGER is long */
 {

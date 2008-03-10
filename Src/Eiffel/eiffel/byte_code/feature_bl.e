@@ -358,7 +358,7 @@ end
 					-- and get the routine name of the first entry in the
 					-- routine table.
 				rout_table ?= Eiffel_table.poly_table (routine_id)
-				rout_table.goto_implemented (typ.type_id (context.context_class_type.type))
+				rout_table.goto_implemented (typ, context.context_class_type)
 
 				if rout_table.is_implemented then
 					internal_name := rout_table.feature_name

@@ -275,7 +275,6 @@ feature
 			l_class_type: CLASS_TYPE
 			l_entry: POLY_TABLE [ENTRY]
 			l_table_name, l_function_name: STRING
-			l_type_id: INTEGER
 			l_rout_table: ROUT_TABLE
 			l_feat: FEATURE_I
 			l_c_return_type: TYPE_C
@@ -305,7 +304,6 @@ feature
 						-- without any implementation
 					l_buffer.put_string ("0),")
 				else
-					l_type_id := l_class_type.type_id
 					if l_entry.is_polymorphic (class_type, context.class_type) then
 						l_table_name := Encoder.routine_table_name (rout_id)
 						l_buffer.put_string (l_table_name)
@@ -320,7 +318,7 @@ feature
 						Eiffel_table.mark_used (rout_id)
 					else
 						l_rout_table ?= l_entry
-						l_rout_table.goto_implemented (l_type_id)
+						l_rout_table.goto_implemented (class_type, context.class_type)
 
 						l_feat := l_class_type.associated_class.feature_of_feature_id (feature_id)
 						l_seed := system.seed_of_routine_id (rout_id)

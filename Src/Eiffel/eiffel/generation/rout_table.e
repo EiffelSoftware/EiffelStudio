@@ -208,31 +208,31 @@ feature -- Code generation
 			end
 		end
 
-	goto_implemented (type_id: INTEGER) is
+	goto_implemented (a_type: TYPE_A; a_context_type: CLASS_TYPE) is
 			-- Go to first implemented feature available in
 			-- a static type greater than `type_id'.
 		require
-			positive: type_id > 0
+			a_type_not_void: a_type /= Void
+			a_context_type_not_void: a_context_type /= Void
 		local
 			i, nb: INTEGER
-			first_type, cl_type: CLASS_TYPE
+			type_id: INTEGER
 			l_done: BOOLEAN
 			entry: ENTRY
 			system_i: like system
 		do
 			system_i := system
+			type_id := a_type.type_id (a_context_type.type)
 			goto_used (type_id)
 			i := position
 			from
-				first_type := system_i.class_type_of_id (type_id)
 				nb := max_position
 			until
 				i > nb or l_done
 			loop
 				entry := array_item (i)
 				if entry.used then
-					cl_type := system_i.class_type_of_id (entry.type_id)
-					l_done := cl_type.conform_to (first_type)
+					l_done := system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, a_context_type.type)
 				end
 				i := i + 1
 			end

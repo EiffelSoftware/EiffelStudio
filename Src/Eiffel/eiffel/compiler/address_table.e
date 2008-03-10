@@ -1039,7 +1039,6 @@ feature {NONE} -- Generation
 			l_entry: POLY_TABLE [ENTRY]
 			l_rout_table: ROUT_TABLE
 			l_rout_id: INTEGER
-			l_type_id: INTEGER
 		do
 				-- Routine is always implemented unless found otherwise (Deferred routine
 				-- with no implementation).
@@ -1058,7 +1057,6 @@ feature {NONE} -- Generation
 				buffer.put_string (a_current_name)
 				Result := False
 			else
-				l_type_id := a_type.type_id
 				if l_entry.is_polymorphic (a_type.type, a_type) then
 					l_table_name := Encoder.routine_table_name (l_rout_id)
 					c_return_type.generate_function_cast (buffer, a_types, False)
@@ -1075,7 +1073,7 @@ feature {NONE} -- Generation
 				else
 					l_rout_table ?= l_entry
 
-					l_rout_table.goto_implemented (l_type_id)
+					l_rout_table.goto_implemented (a_type.type, a_type)
 					if l_rout_table.is_implemented then
 						c_return_type.generate_function_cast (buffer, a_types, False)
 						l_function_name := l_rout_table.feature_name + system.seed_of_routine_id (l_rout_id).generic_fingerprint

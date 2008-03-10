@@ -284,7 +284,7 @@ feature {NONE} -- C code generation
 			rout_table ?= Eiffel_table.poly_table (rout_id);
 
 				-- Generate the signature of the function
-			rout_table.goto_implemented (real_ty.type_id (context.context_class_type.type))
+			rout_table.goto_implemented (real_ty, context.context_class_type)
 			check
 				is_implemented: rout_table.is_implemented
 			end

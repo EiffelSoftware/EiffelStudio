@@ -67,6 +67,9 @@ feature -- Access
 	check_for_void_target: BOOLEAN
 			-- Are targets of a call check for Voidness?
 
+	check_for_catcall_at_runtime: BOOLEAN
+			-- Are we checking at run-time for potential catcalls?
+
 	force_32bits: BOOLEAN
 			-- Is the application going to be a 32bit bound application?
 
@@ -441,6 +444,14 @@ feature -- Update
 			check_for_void_target := b
 		ensure
 			check_for_void_target_set: check_for_void_target = b
+		end
+
+	set_check_for_catcall_at_runtime (b: BOOLEAN) is
+			-- Set `check_for_catcall_at_runtime' to `b'.
+		do
+			check_for_catcall_at_runtime := b
+		ensure
+			check_for_catcall_at_runtime_set: check_for_catcall_at_runtime = b
 		end
 
 	set_32bits (b: BOOLEAN) is

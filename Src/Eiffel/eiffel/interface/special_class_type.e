@@ -341,6 +341,23 @@ feature {NONE} -- C code generation
 				buffer.put_string ("if (arg1 == NULL) RTEC(EN_VEXP);")
 			end
 
+			if not final_mode or else system.check_for_catcall_at_runtime then
+				byte_context.set_byte_code (byte_server.disk_item (feat.body_index))
+				byte_context.set_current_feature (feat)
+				if l_param_is_expanded then
+						-- Minor hack because expanded arguments are generated with a `e' prefix
+						-- but for SPECIAL we use without the prefix because the generation is done
+						-- manually.
+					buffer.put_new_line_only
+					buffer.put_string ("#define earg1 arg1")
+				end
+				byte_context.generate_catcall_check_for_argument (gen_param, 1)
+				if l_param_is_expanded then
+					buffer.put_new_line_only
+					buffer.put_string ("#undef earg1")
+				end
+			end
+
 			generate_precondition (buffer, final_mode, "arg2")
 
 			if l_param_is_expanded then

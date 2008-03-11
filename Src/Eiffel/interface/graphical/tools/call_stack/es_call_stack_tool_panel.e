@@ -726,34 +726,43 @@ feature {NONE} -- Catcall warning access
 			rtcc: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER]
 			l_fdtype: INTEGER
 			ct: CLASS_TYPE
+			retried: BOOLEAN
 		do
-			rtcc := debugger_manager.application_status.catcall_data
-			create Result.make_from_string ("Catcall detected")
-			if rtcc /= Void then
-				Result.append_string (" for ")
-				Result.append_string (" argument#")
-				Result.append_integer (rtcc.pos)
-				Result.append_string (": expected ")
-				l_fdtype := rtcc.expected
-				ct := System.class_type_of_id (l_fdtype)
-				if ct /= Void and then ct.associated_class /= Void then
-					Result.append_string (ct.associated_class.name_in_upper)
-				else
-					Result.append_string ("type#")
-					Result.append_integer (l_fdtype)
+			if not retried then
+				rtcc := debugger_manager.application_status.catcall_data
+				create Result.make_from_string ("Catcall detected")
+				if rtcc /= Void then
+					Result.append_string (" for ")
+					Result.append_string (" argument#")
+					Result.append_integer (rtcc.pos)
+					Result.append_string (": expected ")
+					l_fdtype := rtcc.expected
+
+					ct := System.class_type_of_id (l_fdtype)
+					if ct /= Void and then ct.associated_class /= Void then
+						Result.append_string (ct.associated_class.name_in_upper)
+					else
+						Result.append_string ("type#")
+						Result.append_integer (l_fdtype)
+					end
+					Result.append_string (" but got ")
+					l_fdtype := rtcc.actual
+					ct := System.class_type_of_id (l_fdtype)
+					if ct /= Void and then ct.associated_class /= Void then
+						Result.append_string (ct.associated_class.name_in_upper)
+					else
+						Result.append_string ("type#")
+						Result.append_integer (l_fdtype)
+					end
 				end
-				Result.append_string (" but got ")
-				l_fdtype := rtcc.actual
-				ct := System.class_type_of_id (l_fdtype)
-				if ct /= Void and then ct.associated_class /= Void then
-					Result.append_string (ct.associated_class.name_in_upper)
-				else
-					Result.append_string ("type#")
-					Result.append_integer (l_fdtype)
-				end
+			else
+				create Result.make_from_string ("Catcall detected")
 			end
 		ensure
 			Result_not_void: Result /= Void
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation: threads

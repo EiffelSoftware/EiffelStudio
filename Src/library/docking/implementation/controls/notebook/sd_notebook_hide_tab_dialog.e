@@ -412,8 +412,19 @@ feature {NONE} -- Implementation functions.
 		local
 			l_tab_indicator: SD_TOOL_BAR_FONT_BUTTON
 			l_bold_font: EV_FONT
+			l_pixel_buffer: EV_PIXEL_BUFFER
+			l_content: SD_CONTENT
 		do
 			create l_tab_indicator.make
+
+			l_content := internal_notebook.content_by_tab (a_tab)
+			if l_content /= Void then
+				l_pixel_buffer := l_content.pixel_buffer
+				if l_pixel_buffer /= Void then
+					l_tab_indicator.set_pixel_buffer (l_pixel_buffer)
+				end
+			end
+
 			l_tab_indicator.set_pixmap (a_tab.pixmap)
 			l_tab_indicator.set_text (a_tab.text)
 			l_tab_indicator.set_wrap (True)

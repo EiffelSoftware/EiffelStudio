@@ -94,7 +94,6 @@ feature {NONE} -- Initialization
 			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			full_title.set_font (l_font)
 
-
 			-- We have to do it like this, otherwise when press tab key (executing next_tabstop_widget in EV_WIDGET_IMP on Windows), there will be stack overflow.
 			-- The reason of the stack overflow maybe is: the `parent' of `wel_window' is not correct.
 			internal_files_label.enable_tabable_to
@@ -127,6 +126,7 @@ feature {NONE} -- Initialization
 			l_pass_first_editor, l_pass_second_editor: BOOLEAN
 			l_first_label, l_last_label, l_first_tool_label, l_last_tool_label: SD_TOOL_BAR_RADIO_BUTTON
 			l_tools_count, l_files_count: INTEGER
+			l_pixel_buffer: EV_PIXEL_BUFFER
 		do
 			l_contents := internal_docking_manager.property.contents_by_click_order
 			from
@@ -143,6 +143,10 @@ feature {NONE} -- Initialization
 				l_label.set_data (l_content)
 
 				l_label.select_actions.extend (agent select_label_and_destroy (l_label))
+				l_pixel_buffer := l_content.pixel_buffer
+				if l_pixel_buffer /= Void then
+					l_label.set_pixel_buffer (l_pixel_buffer)
+				end
 				l_label.set_pixmap (l_content.pixmap)
 				l_label.set_text (l_content.short_title)
 				if l_content.type = {SD_ENUMERATION}.tool and l_content.is_visible then

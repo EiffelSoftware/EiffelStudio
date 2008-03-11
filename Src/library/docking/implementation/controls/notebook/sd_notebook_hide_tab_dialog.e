@@ -518,8 +518,7 @@ feature {NONE} -- Implementation functions.
 		require
 			not_void: a_content /= Void
 		do
-			a_content.focus_in_actions.call (Void)
-			internal_notebook.select_item (a_content, True)
+			internal_notebook.on_content_selected (a_content)
 		end
 
 feature {NONE}  --Implementation attributes.

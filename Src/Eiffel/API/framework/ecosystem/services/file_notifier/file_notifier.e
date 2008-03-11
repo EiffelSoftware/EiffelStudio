@@ -237,7 +237,10 @@ feature -- Basic operation
 			if l_callbacks.has (l_key) then
 					-- Unsubscribe the callback from the events object
 				l_events := l_callbacks.item (l_key)
-				l_events.unsubscribe (a_callback)
+				check l_events.is_subscribed (a_callback) end
+				if l_events.is_subscribed (a_callback) then
+					l_events.unsubscribe (a_callback)
+				end
 			end
 
 			uncheck_modifications (a_file_name)

@@ -338,8 +338,12 @@ feature {EV_ANY_I} -- Basic operation
 				check
 					child_imp_not_void: child_imp /= Void
 				end
-				test := a_child.is_equal (child_imp)
+				test := a_child = child_imp
 				Result := Result + 1
+			end
+			if not test then
+					-- If we can't find the widget then return 0.
+				Result := 0
 			end
 		end
 
@@ -363,7 +367,7 @@ feature -- Assertion features
 				check
 					child_imp_not_void: child_imp /= Void
 				end
-				Result := a_child.is_equal (child_imp)
+				Result := a_child = child_imp
 				counter := counter + 1
 			end
 		end

@@ -22,24 +22,26 @@ feature {NONE} -- Initialization
 			-- Prepare cURL environment.
 		local
 			l_curl: like curl
+			l_curls: CURL_EXTERNALS
 		do
 				-- Do global initialization
-			(create {CURL_EXTERNALS}).global_init
+			create l_curls
+			if l_curls.is_dynamic_library_exists then
+				l_curls.global_init
 
-			l_curl := curl
-			curl_hnd := l_curl.init
-			if curl_hnd /= default_pointer then
-				debug ("cURL")
-					l_curl.set_debug_function (curl_hnd)
-					l_curl.setopt_integer (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_verbose, 1)
+				l_curl := curl
+				curl_hnd := l_curl.init
+				if curl_hnd /= default_pointer then
+					debug ("cURL")
+						l_curl.set_debug_function (curl_hnd)
+						l_curl.setopt_integer (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_verbose, 1)
+					end
+					l_curl.set_write_function (curl_hnd)
+					l_curl.setopt_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_cookiefile, "cookie.txt")
+					l_curl.setopt_integer (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_ssl_verifypeer, 0)
+
+					last_result := {CURL_CODES}.curle_ok
 				end
-				l_curl.set_write_function (curl_hnd)
-				l_curl.setopt_string (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_cookiefile, "cookie.txt")
-				l_curl.setopt_integer (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_ssl_verifypeer, 0)
-
-				last_result := {CURL_CODES}.curle_ok
-			else
-				-- cURL is not available
 			end
 		end
 

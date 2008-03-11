@@ -142,6 +142,7 @@ feature -- Call Stack List management
 			break_index := 0
 			exception_occurred := False
 			exception := Void
+			catcall_data := Void
 		end
 
 feature -- Callstack
@@ -214,6 +215,9 @@ feature -- Values
 	object_address: STRING
 			-- Address of object in which we are stopped
 			-- (hector address with an indirection)
+
+	catcall_data: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER] assign set_catcall_data
+			-- Information related to last catcall warning
 
 	exception_occurred: BOOLEAN
 			-- Exception occurred ?
@@ -603,6 +607,12 @@ feature -- Execution replay
 			d_in_range: d >= 0 and d <= replay_depth_limit
 		do
 			replay_depth := d
+		end
+
+	set_catcall_data (v: like catcall_data) is
+			-- Set `catcall_data' to `v'
+		do
+			catcall_data := v
 		end
 
 feature -- Update

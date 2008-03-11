@@ -1058,6 +1058,7 @@ feature -- Label texts
 								%It need to be terminated before EiffelStudio can exist.%N%N%
 								%Terminate external command and exit?%N")	end
 
+	l_debugger_catcall_warning_message: STRING_GENERAL is		do Result := locale.translation ("CatCall detected") end
 	l_debugger_exception_message: STRING_GENERAL is do Result := locale.translation("Debugger :: Exception message")	end
 	l_default: STRING_GENERAL is				do Result := locale.translation ("default") end
 	l_Deferred: STRING_GENERAL is				do Result := locale.translation("deferred")	end
@@ -2472,5 +2473,6 @@ indexing
 		]"
 
 end -- class INTERFACE_NAMES
+
 
 

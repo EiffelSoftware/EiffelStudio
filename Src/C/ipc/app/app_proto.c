@@ -95,6 +95,7 @@ rt_private int dexecreplay(int dir, int steps);	/* ... */
 rt_private int dexecreplay_levels(int dir);		/* ... */
 rt_private void dobjectstorage_save(EIF_PSTREAM sp);				/* Save object to file */
 rt_private void dobjectstorage_load(EIF_PSTREAM sp);				/* Load stored object from file */
+rt_private void app_send_integer (EIF_PSTREAM sp, int val);
 rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int dump_type);
 rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type);
 rt_private void app_send_rt_uint_ptr_as_string (EIF_PSTREAM sp, rt_uint_ptr ref);
@@ -261,6 +262,20 @@ static int curr_modify = NO_CURRMODIF;
 				excpt->type = excpt->type | Dtype(excpt->it_ref);
 			}
 			app_send_typed_value (sp, excpt, DMP_EXCEPTION_ITEM);
+		}
+		break;
+	case LAST_RTCC_INFO:
+		/* return last RTCC information */
+		{
+			EIF_GET_CONTEXT
+			if (d_data.rtdata.rtcc.pos > 0) {
+				app_send_integer(sp, 3);
+				app_send_integer(sp, d_data.rtdata.rtcc.pos);
+				app_send_integer(sp, d_data.rtdata.rtcc.expect);
+				app_send_integer(sp, d_data.rtdata.rtcc.actual);
+			} else {
+				app_send_integer(sp, 0);
+			}
 		}
 		break;
 	case NEW_INSTANCE:
@@ -483,6 +498,12 @@ rt_private void app_send_rt_uint_ptr_as_string (EIF_PSTREAM sp, rt_uint_ptr ref)
 	app_twrite(addr, strlen(addr));
 }
 
+rt_private void app_send_integer (EIF_PSTREAM sp, EIF_INTEGER val)
+{
+	/* Send int value `val' */
+	app_twrite(&val, sizeof(EIF_INTEGER));
+}
+
 rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int a_dmp_type)
 {
 	/* 
@@ -569,11 +590,11 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 		rqst.st_wh.wh_thread_id = (rt_int_ptr) 0;			/* Thread id -> rt_int_ptr for XDR */
 	} 
 	else {
-		rqst.st_wh.wh_name = wh.wh_name;		/* Feature name */
-		rqst.st_wh.wh_obj = (rt_int_ptr) wh.wh_obj;		/* (char *) -> rt_int_ptr for XDR */
-		rqst.st_wh.wh_origin = wh.wh_origin;	/* Written where? */
-		rqst.st_wh.wh_type = wh.wh_type;		/* Dynamic type */
-		rqst.st_wh.wh_offset = wh.wh_offset;	/* Offset in byte code for melted feature, line number for frozen one */
+		rqst.st_wh.wh_name = wh.wh_name;			/* Feature name */
+		rqst.st_wh.wh_obj = (rt_int_ptr) wh.wh_obj;	/* (char *) -> rt_int_ptr for XDR */
+		rqst.st_wh.wh_origin = wh.wh_origin;		/* Written where? */
+		rqst.st_wh.wh_type = wh.wh_type;			/* Dynamic type */
+		rqst.st_wh.wh_offset = wh.wh_offset;		/* Offset in byte code for melted feature, line number for frozen one */
 
 #ifdef EIF_THREADS
 		dthread_id = (rt_uint_ptr) eif_thr_id;
@@ -603,14 +624,12 @@ rt_public void notify_rqst(EIF_PSTREAM sp, int ev_type, int ev_data)
 	app_send_packet(sp, &rqst);	/* Send notification */
 }
 
-
 rt_shared void dnotify(int evt_type, int evt_data)
 {
 	if (!debug_mode)		/* If not in debugging mode */
 		return ;			/* Resume execution immediately */
 	notify_rqst(app_sp, evt_type, evt_data);		/* Notify workbench we stopped */
 }
-
 
 /**************************************
  * RT_EXTENSION interactions          *

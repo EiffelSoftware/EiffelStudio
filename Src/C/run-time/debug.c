@@ -136,7 +136,8 @@ rt_public struct dbinfo d_data = {
 	0,				/* db_callstack_depth */
 	0,				/* db_callstack_depth_stop */
 	0,				/* db_stepinto_mode */
-	0				/* db_discard_breakpoints */
+	0,				/* db_discard_breakpoints */
+	{0, 0, 0}		/* rtdata */
 };	/* Global debugger information */
 
 /*
@@ -653,6 +654,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	}
 }
 
+
 /*************************************************************************************************************************
 * CATCALL handling.
 *************************************************************************************************************************/
@@ -660,8 +662,15 @@ rt_shared void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EI
 {
 	if (debug_mode) {
 		RT_GET_CONTEXT
+		EIF_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
+		d_data.rtdata.rtcc.pos = a_arg_position;
+		d_data.rtdata.rtcc.expect = a_expected_dftype;
+		d_data.rtdata.rtcc.actual = a_actual_dftype;
 		safe_dbreak(PG_CATCALL);
+		d_data.rtdata.rtcc.pos = 0;
+		d_data.rtdata.rtcc.expect = 0;
+		d_data.rtdata.rtcc.actual = 0;
 		DBGMTX_UNLOCK; /* Leave critical section */
 	} else {
 		/* If not in debugging mode */

@@ -35,8 +35,9 @@ typedef void GpBrush;
 typedef void GpSolidFill;
 typedef GUID CLSID;
 typedef void  EncoderParameters;
+typedef int GpMatrixOrder;  
 
-typedef INT PixelFormat;
+typedef int PixelFormat;
 typedef unsigned short UINT16;
 
 #define  WINGDIPAPI __stdcall

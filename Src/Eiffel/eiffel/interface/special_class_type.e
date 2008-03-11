@@ -351,7 +351,8 @@ feature {NONE} -- C code generation
 					buffer.put_new_line_only
 					buffer.put_string ("#define earg1 arg1")
 				end
-				byte_context.generate_catcall_check_for_argument (gen_param, Void, 1)
+				byte_context.set_has_feature_name_stored (False)
+				byte_context.generate_catcall_check_for_argument (gen_param, 1)
 				if l_param_is_expanded then
 					buffer.put_new_line_only
 					buffer.put_string ("#undef earg1")

@@ -1515,15 +1515,34 @@ end
 			-- Generate the declarations needed for exception trace, profiling and tracing handling
 		local
 			buf: GENERATION_BUFFER
+			l_count: INTEGER
 		do
 			buf := buffer
-			if exception_stack_managed or trace_enabled or profile_enabled then
+			if exception_stack_managed then
+				l_count := 1
+			end
+			if trace_enabled then
+				l_count := l_count + 1
+			end
+			if profile_enabled then
+				l_count := l_count + 1
+			end
+			if system.check_for_catcall_at_runtime then
+					-- We do `+ 2' because if you have more than one argument, then
+					-- we do not want to duplicate the feature name string especially
+					-- if nothing uses it.
+				l_count := l_count + 2
+			end
+			if l_count > 1 then
+				context.set_has_feature_name_stored (True)
 				buf.put_new_line
-				buf.put_string ("char ")
-				buf.put_string (feature_name_local)
-				buf.put_string ("[] = ")
+				buf.put_string ("char *")
+				buf.put_string ({BYTE_CONTEXT}.feature_name_local)
+				buf.put_three_character (' ', '=', ' ')
 				buf.put_string_literal (feature_name)
 				buf.put_character (';')
+			else
+				context.set_has_feature_name_stored (False)
 			end
 			if exception_stack_managed or else rescue_clause /= Void or else is_once then
 				buf.put_new_line
@@ -1659,7 +1678,7 @@ end
 			buf.put_new_line
 			buf.put_string (macro_name)
 			buf.put_character ('(')
-			buf.put_string (feature_name_local)
+			context.generate_feature_name (buf)
 			buf.put_string (gc_comma)
 			feature_origin (buf)
 			buf.put_string (gc_comma)
@@ -1680,7 +1699,7 @@ end
 			buf.put_new_line
 			buf.put_string (macro_name)
 			buf.put_character ('(')
-			buf.put_string (feature_name_local)
+			context.generate_feature_name (buf)
 			buf.put_string (gc_comma)
 			feature_origin (buf)
 			buf.put_string (gc_comma)
@@ -1729,7 +1748,6 @@ end
 			l_type: TYPE_A
 			l_any_type: CL_TYPE_A
 			l_any_class_id, l_name_id: INTEGER
-			l_feature_name: STRING
 		do
 			if context.workbench_mode or system.check_for_catcall_at_runtime then
 					-- We do not have to generate a catcall detection for some features of ANY
@@ -1756,12 +1774,7 @@ end
 									-- Only generate a catcall detection if the expected argument is different
 									-- than ANY since ANY is the ancestor to all types.
 								if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
-									if l_feature_name = Void then
-										if exception_stack_managed or profile_enabled or trace_enabled then
-											l_feature_name := feature_name_local
-										end
-									end
-									context.generate_catcall_check_for_argument (l_type, l_feature_name, i)
+									context.generate_catcall_check_for_argument (l_type, i)
 								end
 							end
 							i := i - 1
@@ -2042,11 +2055,6 @@ feature -- Inlining
 				Result := Current
 			end
 		end
-
-feature -- Constants
-
-	feature_name_local: STRING = "l_feature_name"
-			-- Name of locals storing the name of the routine.
 
 feature {NONE} -- Typing
 

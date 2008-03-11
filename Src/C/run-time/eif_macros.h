@@ -915,8 +915,9 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #define RTCV(x)	(x)
 #endif
 
-/* Detect catcall at runtime for argument 'o' at position 'i' for feature 'l' and expected dftype 't'. */
-#define RTCC(o,l,i,t) eif_check_catcall_at_runtime(o,l,i,t)
+/* Detect catcall at runtime for argument 'o' at position 'i' for feature 'f' in dtype 'd'
+ * and expected dftype 't'. */
+#define RTCC(o,d,f,i,t) eif_check_catcall_at_runtime(o,d,f,i,t)
 
 
 /* Macros for assertion checking:

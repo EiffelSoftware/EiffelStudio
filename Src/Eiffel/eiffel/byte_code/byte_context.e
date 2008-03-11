@@ -1854,7 +1854,7 @@ feature -- Access
 			end
 		end
 
-	generate_catcall_check_for_argument (a_type: TYPE_A; a_pos: INTEGER) is
+	 generate_catcall_check_for_argument (a_type: TYPE_A; a_feature_name: STRING; a_pos: INTEGER) is
 			-- Generate catcall check at runtime for the argument at position `a_pos' against the static
 			-- type `a_type'.
 		require
@@ -1864,6 +1864,7 @@ feature -- Access
 			l_arg: ARGUMENT_BL
 			buf: like buffer
 			l_info: CREATE_INFO
+			l_optimized: BOOLEAN
 		do
 			if a_type.c_type.is_pointer then
 				buf := buffer
@@ -1875,22 +1876,40 @@ feature -- Access
 				buf.put_three_character (')', ' ', '{')
 				buf.indent
 
-				l_info := a_type.create_info
-				l_info.generate_start (buf)
-				l_info.generate_gen_type_conversion (0)
+					-- Special handling of routines taking `like Current' in non-generic classes.
+					-- Those routines are safe, if the actual type of the argument is a descendant
+					-- of the class in which `current_feature' is written in.
+					-- It is only done when the context type is not generic, as otherwise it is
+					-- harder do implement.
+				l_optimized := a_type.is_like_current and original_class_type.type.generics = Void
+
+				if not l_optimized then
+					l_info := a_type.create_info
+					l_info.generate_start (buf)
+					l_info.generate_gen_type_conversion (0)
+				end
 				buf.put_new_line
 				buf.put_string ("RTCC(")
 				l_arg.print_register
-				buf.put_four_character (',', ' ', '"', '{')
-				buf.put_string (original_class_type.type.name)
-				buf.put_two_character ('}', '.')
-				buf.put_escaped_string (current_feature.feature_name)
-				buf.put_three_character ('"', ',', ' ')
+				buf.put_two_character (',', ' ')
+				byte_code.feature_origin (buf)
+				buf.put_two_character (',', ' ')
+				if a_feature_name = Void then
+					buf.put_string_literal (current_feature.feature_name)
+				else
+					buf.put_string (a_feature_name)
+				end
+				buf.put_two_character (',', ' ')
 				buf.put_integer (a_pos)
 				buf.put_two_character (',', ' ')
-				l_info.generate_type_id (buf, final_mode, 0)
-				buf.put_two_character (')', ';')
-				l_info.generate_end (buf)
+				if l_optimized then
+					byte_code.feature_origin (buf)
+					buf.put_two_character (')', ';')
+				else
+					l_info.generate_type_id (buf, final_mode, 0)
+					buf.put_two_character (')', ';')
+					l_info.generate_end (buf)
+				end
 
 				buf.exdent
 				buf.put_new_line

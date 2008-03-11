@@ -1512,12 +1512,20 @@ end
 		end
 
 	generate_execution_declarations is
-			-- Generate the declarations needed for exception trace handling
+			-- Generate the declarations needed for exception trace, profiling and tracing handling
 		local
 			buf: GENERATION_BUFFER
 		do
+			buf := buffer
+			if exception_stack_managed or trace_enabled or profile_enabled then
+				buf.put_new_line
+				buf.put_string ("char ")
+				buf.put_string (feature_name_local)
+				buf.put_string ("[] = ")
+				buf.put_string_literal (feature_name)
+				buf.put_character (';')
+			end
 			if exception_stack_managed or else rescue_clause /= Void or else is_once then
-				buf := buffer
 				buf.put_new_line
 				buf.put_string ("RTEX;")
 				if rescue_clause /= Void then
@@ -1651,7 +1659,7 @@ end
 			buf.put_new_line
 			buf.put_string (macro_name)
 			buf.put_character ('(')
-			buf.put_string_literal (feature_name)
+			buf.put_string (feature_name_local)
 			buf.put_string (gc_comma)
 			feature_origin (buf)
 			buf.put_string (gc_comma)
@@ -1663,6 +1671,8 @@ end
 			-- Generate a macro call will the feature name, the feature origin,
 			-- `Current', the number of locals, the number of arguments and the
 			-- real body id of the feature as arguments.
+		require
+			has_exception_stack: exception_stack_managed
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -1670,7 +1680,7 @@ end
 			buf.put_new_line
 			buf.put_string (macro_name)
 			buf.put_character ('(')
-			buf.put_string_literal (feature_name)
+			buf.put_string (feature_name_local)
 			buf.put_string (gc_comma)
 			feature_origin (buf)
 			buf.put_string (gc_comma)
@@ -1717,22 +1727,45 @@ end
 			i: INTEGER
 			l_argument_types: like arguments
 			l_type: TYPE_A
+			l_any_type: CL_TYPE_A
+			l_any_class_id, l_name_id: INTEGER
+			l_feature_name: STRING
 		do
 			if context.workbench_mode or system.check_for_catcall_at_runtime then
-				i := argument_count
-				if i > 0 then
-					from
-						l_argument_types := arguments
-					until
-						i <= 0
-					loop
-						l_type := l_argument_types [i]
-							-- We instantiate `l_type' in current context to see if it is
-							-- really a reference
-						if context.real_type (l_type).c_type.is_pointer then
-							context.generate_catcall_check_for_argument (l_type, i)
+					-- We do not have to generate a catcall detection for some features of ANY
+					-- which are properly handled at runtime.
+				l_name_id := context.current_feature.feature_name_id
+				l_any_class_id := system.any_id
+				if
+					context.current_feature.written_in /= l_any_class_id or else
+					(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
+					l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id)
+				then
+					i := argument_count
+					if i > 0 then
+						from
+							l_argument_types := arguments
+						until
+							i <= 0
+						loop
+							l_type := l_argument_types [i]
+								-- We instantiate `l_type' in current context to see if it is
+								-- really a reference
+							if context.real_type (l_type).c_type.is_pointer then
+								l_any_type ?= l_type
+									-- Only generate a catcall detection if the expected argument is different
+									-- than ANY since ANY is the ancestor to all types.
+								if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
+									if l_feature_name = Void then
+										if exception_stack_managed or profile_enabled or trace_enabled then
+											l_feature_name := feature_name_local
+										end
+									end
+									context.generate_catcall_check_for_argument (l_type, l_feature_name, i)
+								end
+							end
+							i := i - 1
 						end
-						i := i - 1
 					end
 				end
 			end
@@ -2009,6 +2042,11 @@ feature -- Inlining
 				Result := Current
 			end
 		end
+
+feature -- Constants
+
+	feature_name_local: STRING = "l_feature_name"
+			-- Name of locals storing the name of the routine.
 
 feature {NONE} -- Typing
 

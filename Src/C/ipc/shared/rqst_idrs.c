@@ -122,6 +122,7 @@ rt_private struct idr_discrim u_Request[] = {
 	/* 48 */ { APPLICATION_ENV, idr_void },
 	/* 49 */ { NEW_INSTANCE, idr_Opaque },
 	/* 50 */ { RT_OPERATION, idr_Opaque },
+	/* 51 */ { LAST_RTCC_INFO, idr_void },
 };
 
 /*

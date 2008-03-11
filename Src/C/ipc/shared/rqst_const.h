@@ -90,8 +90,9 @@
 #define APPLICATION_ENV		48		/* Send current env to launch application */
 #define NEW_INSTANCE		49		/* Create new instance of class */
 #define RT_OPERATION		50		/* Invoke an `RT_EXTENSION' operation */
+#define LAST_RTCC_INFO		51		/* Query last RunTime CatCall event's information */
 
-#define MAX_REQUEST_TYPE 	50		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 	51		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

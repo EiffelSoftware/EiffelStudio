@@ -596,8 +596,9 @@ feature {NONE} -- Implementation: Stop
 					m.append (Interface_names.l_Possible_overflow)
 					set_focus_if_visible
 				when Pg_catcall then
-					stop_cause.set_text ("CatCall detected")
-					m.append ("CatCall detected")
+					stop_cause.set_text (Interface_names.l_debugger_catcall_warning_message)
+					m.append (Interface_names.l_debugger_catcall_warning_message)
+					display_catcall_message
 					set_focus_if_visible
 				when Pg_raise then
 					stop_cause.set_text (Interface_names.l_Explicit_exception_pending)
@@ -700,6 +701,59 @@ feature {NONE} -- Implementation: Exceptions
 				e := fake_exception_value
 			end
 			Result := e.short_description
+		end
+
+feature {NONE} -- Catcall warning access
+
+	display_catcall_message is
+			-- Fill in the `exception' label with a text describing the catcall, if any.
+		require
+			reason_is_catcall: debugger_manager.application_status.reason_is_catcall
+		local
+			m: STRING_32
+		do
+			m := catcall_message
+			exception.set_text (m)
+			exception.set_tooltip (m)
+			exception_dialog_button.disable_sensitive
+		end
+
+	catcall_message: STRING_32 is
+			-- Catcall warning message
+		require
+			reason_is_catcall: debugger_manager.application_status.reason_is_catcall
+		local
+			rtcc: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER]
+			l_fdtype: INTEGER
+			ct: CLASS_TYPE
+		do
+			rtcc := debugger_manager.application_status.catcall_data
+			create Result.make_from_string ("Catcall detected")
+			if rtcc /= Void then
+				Result.append_string (" for ")
+				Result.append_string (" argument#")
+				Result.append_integer (rtcc.pos)
+				Result.append_string (": expected ")
+				l_fdtype := rtcc.expected + 1
+				ct := System.class_type_of_id (l_fdtype)
+				if ct /= Void and then ct.associated_class /= Void then
+					Result.append_string (ct.associated_class.name_in_upper)
+				else
+					Result.append_string ("type#")
+					Result.append_integer (l_fdtype)
+				end
+				Result.append_string (" but got ")
+				l_fdtype := rtcc.actual + 1
+				ct := System.class_type_of_id (l_fdtype)
+				if ct /= Void and then ct.associated_class /= Void then
+					Result.append_string (ct.associated_class.name_in_upper)
+				else
+					Result.append_string ("type#")
+					Result.append_integer (l_fdtype)
+				end
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: threads

@@ -52,6 +52,7 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_last_exception: INTEGER 		= 47 -- get Last exception value.	
 	Rqst_new_instance: INTEGER 			= 49 -- Create new instance of class
 	Rqst_rt_operation: INTEGER 			= 50 -- Invoke an `RT_EXTENSION' operation	
+	Rqst_last_rtcc_info: INTEGER		= 51 -- Last RunTime CatCall information (if any)
 
 feature {NONE} -- Resume
 

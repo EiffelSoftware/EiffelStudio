@@ -225,11 +225,7 @@ feature -- Execution
 			when pg_overflow then
 				--Do nothing specific
 			when pg_catcall then
-				if debugger_manager.exceptions_handler.catcall_warning_ignored then
-					need_to := [False, False]
-				else
-					need_to := [True, False]
-				end
+				need_to := [execution_stopped_on_catcall_event (a_app), False]
 			else
 					--| The debuggee is on a real stopped state
 				need_to := [True, True]
@@ -290,6 +286,39 @@ feature -- Execution
 		end
 
 feature {NONE} -- Implementation
+
+	execution_stopped_on_catcall_event (app: APPLICATION_EXECUTION): BOOLEAN is
+			-- Do we stop execution on this catcall warning event ?
+		require
+			catcall_occurred: app.status.reason_is_catcall
+		local
+			i, nb: INTEGER
+			arr: ARRAY [INTEGER]
+			l_pos, l_expect, l_actual: INTEGER
+			t: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER]
+		do
+			if app.debugger_manager.exceptions_handler.catcall_warning_ignored then
+				Result := False
+			else
+				Result := True
+
+					--| Request information
+				Cont_request.send_rqst_0 (Rqst_last_rtcc_info)
+				nb := to_integer_32 (c_tread)
+				if nb > 0 then
+					from
+						i := 1
+						create t
+					until
+						i > nb
+					loop
+						t.put_integer_32 (to_integer_32 (c_tread), i)
+						i := i + 1
+					end
+				end
+				app.status.set_catcall_data (t)
+			end
+		end
 
 	execution_stopped_on_exception_event (app: APPLICATION_EXECUTION): BOOLEAN is
 			-- Do we stop execution on this exception event ?

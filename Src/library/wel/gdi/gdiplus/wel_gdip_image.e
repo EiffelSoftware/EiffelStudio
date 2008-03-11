@@ -191,7 +191,7 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 			not_void: Result /= Void
 		end
 
-feature -- C externals
+feature {NONE} -- C externals
 
 	c_gdip_load_image_from_file (a_gdiplus_handle: POINTER; a_wchar_file_name: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
 			-- Create a Gdi+ bitmap object name from file `a_wchar_file_name'.

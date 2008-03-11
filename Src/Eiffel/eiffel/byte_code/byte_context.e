@@ -179,6 +179,9 @@ feature -- Access
 	twin_body_index: INTEGER
 			-- Body index of `twin' from ANY
 
+	has_feature_name_stored: BOOLEAN
+			-- Is string representing feature name stored in local?
+
 feature -- Setting
 
 	set_first_precondition_block_generated (v: BOOLEAN) is
@@ -259,6 +262,14 @@ feature -- Setting
 			-- Assign `s' to `saved_supplier_precondition'
 		do
 			saved_supplier_precondition := s
+		end
+
+	set_has_feature_name_stored (v: like has_feature_name_stored) is
+			-- Assign `v' to `has_feature_name_stored'.
+		do
+			has_feature_name_stored := v
+		ensure
+			has_feature_name_stored_set: has_feature_name_stored = v
 		end
 
 feature -- Code generation
@@ -1854,7 +1865,19 @@ feature -- Access
 			end
 		end
 
-	 generate_catcall_check_for_argument (a_type: TYPE_A; a_feature_name: STRING; a_pos: INTEGER) is
+	generate_feature_name (buf: GENERATION_BUFFER) is
+			-- Generate feature name in `buf'.
+		require
+			buf_not_void: buf /= Void
+		do
+			if has_feature_name_stored then
+				buf.put_string (feature_name_local)
+			else
+				buf.put_string_literal (current_feature.feature_name)
+			end
+		end
+
+	generate_catcall_check_for_argument (a_type: TYPE_A; a_pos: INTEGER) is
 			-- Generate catcall check at runtime for the argument at position `a_pos' against the static
 			-- type `a_type'.
 		require
@@ -1894,11 +1917,7 @@ feature -- Access
 				buf.put_two_character (',', ' ')
 				byte_code.feature_origin (buf)
 				buf.put_two_character (',', ' ')
-				if a_feature_name = Void then
-					buf.put_string_literal (current_feature.feature_name)
-				else
-					buf.put_string (a_feature_name)
-				end
+				generate_feature_name (buf)
 				buf.put_two_character (',', ' ')
 				buf.put_integer (a_pos)
 				buf.put_two_character (',', ' ')
@@ -2204,6 +2223,11 @@ feature -- Generic code generation
 		do
 			Result := generic_wrappers.item (body_index)
 		end
+
+feature -- Constants
+
+	feature_name_local: STRING = "l_feature_name"
+			-- Name of locals storing the name of the routine.
 
 feature {NONE} -- Generic code generation
 

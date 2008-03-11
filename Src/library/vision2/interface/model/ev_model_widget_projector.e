@@ -303,7 +303,7 @@ feature {NONE} -- Event implementation
 				action := event_fig.internal_pointer_button_press_actions
 				if action /= Void and then event_fig.is_sensitive then
 					action.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
-					if event_fig.are_events_sended_to_group then
+					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
 					else
 						event_fig := Void
@@ -340,7 +340,7 @@ feature {NONE} -- Event implementation
 				action := event_fig.internal_pointer_double_press_actions
 				if action /= Void and then event_fig.is_sensitive then
 					action.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
-					if event_fig.are_events_sended_to_group then
+					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
 					else
 						event_fig := Void
@@ -378,7 +378,7 @@ feature {NONE} -- Event implementation
 				action := event_fig.internal_pointer_button_release_actions
 				if action /= Void and then event_fig.is_sensitive then
 					action.call ([w_x, w_y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
-					if event_fig.are_events_sended_to_group then
+					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
 					else
 						event_fig := Void
@@ -448,7 +448,7 @@ feature {NONE} -- Event implementation
 						action := event_fig.internal_pointer_leave_actions
 						if action /= Void and then event_fig.is_sensitive then
 							action.call (Void)
-							if event_fig.are_events_sended_to_group then
+							if event_fig.are_events_sent_to_group then
 								event_fig := event_fig.group
 							else
 								event_fig := Void
@@ -469,10 +469,11 @@ feature {NONE} -- Event implementation
 						action := event_fig.internal_pointer_enter_actions
 						if action /= Void and then event_fig.is_sensitive then
 							action.call (Void)
-							if event_fig.are_events_sended_to_group then
+							if event_fig.are_events_sent_to_group then
 								event_fig := event_fig.group
 							else
-								event_fig := Void
+									-- Exit loop
+								event_fig := same_fig
 							end
 						else
 							event_fig := event_fig.group
@@ -515,7 +516,7 @@ feature {NONE} -- Event implementation
 				action := event_fig.internal_pointer_motion_actions
 				if action /= Void and then event_fig.is_sensitive then
 					action.call ([w_x, w_y, x_tilt, y_tilt, pressure, screen_x, screen_y])
-					if event_fig.are_events_sended_to_group then
+					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
 					else
 						event_fig := Void

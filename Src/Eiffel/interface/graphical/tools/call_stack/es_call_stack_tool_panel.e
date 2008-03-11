@@ -537,17 +537,16 @@ feature {ES_CALL_STACK_TOOL} -- Memory management
 			-- Reset tool when debugging is terminated
 		do
 			reset_update_on_idle
-
-			exception.remove_text
-			exception.remove_tooltip
-			exception_dialog_button.disable_sensitive
-			stop_cause.remove_text
-			display_box_thread (False)
-
-			save_call_stack_cmd.disable_sensitive
-			copy_call_stack_cmd.disable_sensitive
-
-			clean_stack_grid
+			if is_initialized then
+				exception.remove_text
+				exception.remove_tooltip
+				exception_dialog_button.disable_sensitive
+				stop_cause.remove_text
+				display_box_thread (False)
+				save_call_stack_cmd.disable_sensitive
+				copy_call_stack_cmd.disable_sensitive
+				clean_stack_grid
+			end
 		end
 
 feature {NONE} -- Internal memory management

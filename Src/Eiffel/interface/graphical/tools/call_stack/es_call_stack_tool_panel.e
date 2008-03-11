@@ -734,7 +734,7 @@ feature {NONE} -- Catcall warning access
 				Result.append_string (" argument#")
 				Result.append_integer (rtcc.pos)
 				Result.append_string (": expected ")
-				l_fdtype := rtcc.expected + 1
+				l_fdtype := rtcc.expected
 				ct := System.class_type_of_id (l_fdtype)
 				if ct /= Void and then ct.associated_class /= Void then
 					Result.append_string (ct.associated_class.name_in_upper)
@@ -743,7 +743,7 @@ feature {NONE} -- Catcall warning access
 					Result.append_integer (l_fdtype)
 				end
 				Result.append_string (" but got ")
-				l_fdtype := rtcc.actual + 1
+				l_fdtype := rtcc.actual
 				ct := System.class_type_of_id (l_fdtype)
 				if ct /= Void and then ct.associated_class /= Void then
 					Result.append_string (ct.associated_class.name_in_upper)

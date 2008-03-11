@@ -293,8 +293,7 @@ feature {NONE} -- Implementation
 			catcall_occurred: app.status.reason_is_catcall
 		local
 			i, nb: INTEGER
-			arr: ARRAY [INTEGER]
-			l_pos, l_expect, l_actual: INTEGER
+			l_integer: INTEGER
 			t: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER]
 		do
 			if app.debugger_manager.exceptions_handler.catcall_warning_ignored then
@@ -312,7 +311,19 @@ feature {NONE} -- Implementation
 					until
 						i > nb
 					loop
-						t.put_integer_32 (to_integer_32 (c_tread), i)
+						l_integer := to_integer_32 (c_tread)
+						inspect i
+						when 1 then
+							t.pos := l_integer
+						when 2 then
+							--| +1 : because in the runtime the id starts at 0
+							t.expected := l_integer + 1
+						when 3 then
+							--| +1 : because in the runtime the id starts at 0
+							t.actual := l_integer + 1
+						else
+							--| unexpected value!
+						end
 						i := i + 1
 					end
 				end

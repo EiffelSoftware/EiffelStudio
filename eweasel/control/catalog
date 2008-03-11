@@ -845,6 +845,7 @@ test	inlining-finalization-crash	final042 tcf pass finalizing
 test	inlining-on-named-tuple-crash	final043 tcf pass finalizing tuple
 test	wrong-dynamic-dispatch-on-generic	final044 tcf pass finalizing
 test	change-generic-finalization-crash	final045 tcf pass finalizing
+test	polymorphic-call-leak		final046 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime

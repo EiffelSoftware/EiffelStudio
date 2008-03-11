@@ -142,6 +142,16 @@ feature -- Command
 			c_gdip_draw_string (gdi_plus_handle, item, l_wel_string.item, a_length, a_font.item, a_rect_f.item, a_format.item, a_brush.item, $l_result)
 		end
 
+	 rotate_transform (a_angle: REAL)
+	 		-- Applies the specified rotation to the transformation matrix of this Graphics.
+	 		-- `a_angle': Angle of rotation in degrees.
+		local
+			l_result: INTEGER
+	 	do
+			c_gdip_rotate_world_transform (gdi_plus_handle, item, a_angle, {WEL_GDIP_MATRIX_ORDER}.prepend, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+	 	end
+
 feature -- Query
 
 	dc: WEL_MEMORY_DC  is
@@ -401,6 +411,33 @@ feature {NONE} -- C externals
 								(GDIPCONST RectF *) $a_gp_rect_f,
 								(GDIPCONST GpStringFormat *) $a_gp_string_format,
 								(GDIPCONST GpBrush *) $a_gp_brush);
+				}
+			}
+			]"
+		end
+
+	c_gdip_rotate_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_angle: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Rotate drawing in subsequent calling of `draw_xxx'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+			a_order_valid: (create {WEL_GDIP_MATRIX_ORDER}).is_valid (a_order)
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipRotateWorldTransform = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipRotateWorldTransform) {
+					GdipRotateWorldTransform = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipRotateWorldTransform");
+				}
+				if (GdipRotateWorldTransform) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, REAL, GpMatrixOrder)) GdipRotateWorldTransform)
+								((GpGraphics *) $a_graphics,
+								(REAL) $a_angle,
+								(GpMatrixOrder) $a_order);
 				}
 			}
 			]"

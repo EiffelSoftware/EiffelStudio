@@ -35,10 +35,12 @@ feature
 		end;
 
 	mem: MEM_INFO;
+	already_displayed: BOOLEAN
 
 	check_memory (m: MEM_INFO) is
 		do
-			if m.total > 50_000_000 then
+			if m.total > 50_000_000 and not already_displayed then
+				already_displayed := True
 				display_memory (m);
 			end
 		end

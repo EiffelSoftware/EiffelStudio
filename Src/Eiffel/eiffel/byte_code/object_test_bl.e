@@ -79,7 +79,11 @@ feature -- C code generation
 				context.add_dftype_current
 			end
 			expression.analyze
-			create result_register.make (boolean_type.c_type)
+			if target_type.is_expanded and then not source_type.is_expanded then
+					-- In other cases result is a constant or is calculated
+					-- using a value of an object test local.
+				create result_register.make (boolean_type.c_type)
+			end
 			expression.free_register
 			if register.is_temporary and not register_propagated then
 				register.free_register
@@ -89,10 +93,9 @@ feature -- C code generation
 	free_register
 			-- Free the registers.
 		do
---			if not register.is_temporary or else register_propagated then
---				register.free_register
---			end
-			result_register.free_register
+			if result_register /= Void then
+				result_register.free_register
+			end
 		end
 
 	unanalyze

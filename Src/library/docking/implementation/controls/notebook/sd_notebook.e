@@ -553,6 +553,20 @@ feature -- Query
 			Result := internal_docking_manager
 		end
 
+feature {SD_NOTEBOOK_HIDE_TAB_DIALOG} -- Internal commands
+
+	on_content_selected (a_content: SD_CONTENT)
+			-- Handle hidden item list select actions.
+		require
+			not_void: a_content /= Void
+		local
+			l_tab: SD_NOTEBOOK_TAB
+		do
+			l_tab := tab_by_content (a_content)
+
+			on_tab_selected (l_tab)
+		end
+
 feature {NONE}  -- Implementation
 
 	on_tab_dragging (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; a_tab: SD_NOTEBOOK_TAB) is
@@ -625,7 +639,10 @@ feature {NONE}  -- Implementation
 		end
 
 	on_tab_selected (a_tab: SD_NOTEBOOK_TAB) is
-			-- Handle notebook tab selected.
+			-- Handle notebook tab select actions.
+		require
+			not_void: a_tab /= Void
+			has: has_tab (a_tab)
 		do
 			select_item (content_by_tab (a_tab), True)
 			notify_tab (a_tab, True)

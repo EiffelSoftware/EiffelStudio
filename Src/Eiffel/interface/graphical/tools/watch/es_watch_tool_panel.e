@@ -377,8 +377,10 @@ feature -- Memory management
 		do
 			reset_update_on_idle
 			recycle_expressions
-			watches_grid.reset_layout_manager
-			clean_watched_grid
+			if is_initialized then
+				watches_grid.reset_layout_manager
+				clean_watched_grid
+			end
 			if update_commands_on_expressions_delayer /= Void then
 				update_commands_on_expressions_delayer.destroy
 				update_commands_on_expressions_delayer := Void

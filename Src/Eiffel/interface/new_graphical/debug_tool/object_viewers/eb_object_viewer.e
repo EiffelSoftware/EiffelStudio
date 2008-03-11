@@ -32,7 +32,7 @@ feature
 
 feature {EB_OBJECT_VIEWERS_MANAGER} -- Properties
 
-	subviewers: LINKED_LIST [like Current]
+	subviewers: LINKED_LIST [EB_OBJECT_VIEWER]
 			-- Sub viewers
 
 feature -- Access

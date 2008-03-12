@@ -3,6 +3,16 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2
 ===
 
+6.2.7.2702 RTEA with Dead Code Removal optimization (exe size: 48782664):
+1008.73u 38.91s 24:44.48 70.5%
+1016.36u 35.87s 25:01.79 70.0%
+
+6.2.7.2661 non-RTEA with new code generation for less dynamic calls (exe size: 49551952):
+639.87u 33.29s 18:40.09 60.0% (with old ecb compiler exe size: 48753432)
+1113.67u 36.52s 26:32.87 72.2% (before bootstrap)
+1107.45u 37.14s 27:05.47 70.4% (after bootstrap)
+1106.35u 36.64s 27:01.39 70.4%
+
 6.2.7.2437 RTEA without Kpic (exe size: 48212320, EIFGEN size: 354MB):
 986.32u 38.37s 24:38.47 69.3%
 985.44u 38.17s 24:37.58 69.2%

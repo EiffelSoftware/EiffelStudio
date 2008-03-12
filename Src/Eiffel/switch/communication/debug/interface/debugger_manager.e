@@ -222,7 +222,7 @@ feature {NONE} -- Debugger session data access
 			if Result = Void then
 				cons := session_manager
 				if cons.is_service_available then
-					Result := cons.service.retrieve (True)
+					Result := cons.service.retrieve_extended (True, once "dbg")
 					internal_session_data := Result
 
 						-- Load debugger data when first access the session

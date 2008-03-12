@@ -13,7 +13,10 @@ inherit
 			has as has_item,
 			make as table_make
 		export
-			{ANY} start, item_for_iteration, forth, after, put, has_item, cursor, go_to, valid_key
+			{ANY}
+				start, item_for_iteration, forth, after, put, has_item, cursor, go_to, valid_key, count, content,
+				is_deep_equal, is_equal, standard_is_equal, copy, deep_copy, valid_cursor, deleted_marks, same_type,
+				deep_twin
 			{NONE} all
 		redefine
 			same_keys

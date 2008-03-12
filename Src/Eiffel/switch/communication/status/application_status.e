@@ -328,6 +328,12 @@ feature -- Call Stack element related
 			end
 		end
 
+	current_eiffel_call_stack_element: EIFFEL_CALL_STACK_ELEMENT is
+			-- Current call stack element being displayed
+		do
+			Result ?= current_call_stack.i_th (Application.current_execution_stack_number)
+		end
+
 feature -- Process related access
 
 	process_id: INTEGER
@@ -456,12 +462,6 @@ feature -- Thread related change
 		end
 
 feature {NONE} -- Call stack implementation
-
-	current_eiffel_call_stack_element: EIFFEL_CALL_STACK_ELEMENT is
-			-- Current call stack element being displayed
-		do
-			Result ?= current_call_stack.i_th (Application.current_execution_stack_number)
-		end
 
 	call_stack (tid: INTEGER): like current_call_stack is
 			-- Call stack associated with thread id `tid'.

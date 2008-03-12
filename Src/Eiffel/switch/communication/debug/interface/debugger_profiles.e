@@ -101,6 +101,7 @@ feature -- Element change
 			if v = Void then
 				last_profile_name := Void
 			else
+				check v_name_not_empty: v.name /= Void and then not v.name.is_empty end
 				last_profile_name := v.name
 				force (v.params, v.name)
 			end

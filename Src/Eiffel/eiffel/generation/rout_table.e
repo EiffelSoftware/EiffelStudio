@@ -291,7 +291,8 @@ feature {NONE} -- Implementation
 			l_table_name: STRING
 			l_suffix: STRING
 		do
-			if system.routine_id_counter.is_feature_routine_id (rout_id) and then
+			if
+				system.routine_id_counter.is_feature_routine_id (rout_id) and then
 				system.seed_of_routine_id (rout_id).has_formal
 			then
 					-- Use generic wrapper of the feature.

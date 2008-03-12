@@ -14,7 +14,7 @@ inherit
 			is_fast_as_local, is_predefined,
 			calls_special_features, is_unsafe, optimized_byte_node,
 			size, pre_inlined_code, inlined_byte_code,
-			analyze, generate_on, generate_access, enlarged,
+			enlarged,
 			line_number, set_line_number
 		end
 
@@ -188,94 +188,14 @@ feature -- Inlining
 			end
 		end
 
-feature -- C Code generation
+feature -- Code generation
 
-	analyze is
-			-- Analyze current byte code.
+	enlarged: TUPLE_ACCESS_BL is
+			-- <Precursor>
 		do
+			create Result.make (tuple_type, position)
 			if source /= Void then
-				source.analyze
-			end
-		end
-
-	generate_on (a_register: REGISTRABLE) is
-			-- Generate C code for access.
-		local
-			buf: like buffer
-		do
-			buf := buffer
-			if source /= Void then
-				generate_line_info
-				generate_frozen_debugger_hook
-				source.generate
-				buf.put_string (once "eif_put_")
-				buf.put_string (tuple_element_name)
-				buf.put_string ("_item(")
-				a_register.print_register
-				buf.put_character (',')
-				buf.put_integer (position)
-				buf.put_character (',')
-				source.print_register
-				buf.put_character (')')
-			else
-				generate_internal (a_register)
-			end
-			buf.put_character (';')
-			buf.put_new_line
-		end
-
-	generate_access is
-		local
-		do
-			generate_internal (current_register)
-		end
-
-	generate_internal (a_register: REGISTRABLE) is
-		local
-			buf: like buffer
-		do
-			buf := buffer
-			buf.put_string (once "eif_")
-			buf.put_string (tuple_element_name)
-			buf.put_string ("_item(")
-			a_register.print_register
-			buf.put_character (',')
-			buf.put_integer (position)
-			buf.put_character (')')
-		end
-
-	tuple_element_name: STRING is
-			-- String representation of TUPLE element type.
-		do
-			inspect
-				tuple_element_type.c_type.sk_value
-			when {SK_CONST}.sk_bool then Result := once "boolean"
-			when {SK_CONST}.sk_char then Result := once "character"
-			when {SK_CONST}.sk_wchar then Result := once "wide_character"
-			when {SK_CONST}.sk_real32 then Result := once "real_32"
-			when {SK_CONST}.sk_real64 then Result := once "real_64"
-			when {SK_CONST}.sk_uint8 then Result := once "natural_8"
-			when {SK_CONST}.sk_uint16 then Result := once "natural_16"
-			when {SK_CONST}.sk_uint32 then Result := once "natural_32"
-			when {SK_CONST}.sk_uint64 then Result := once "natural_64"
-			when {SK_CONST}.sk_int8 then Result := once "integer_8"
-			when {SK_CONST}.sk_int16 then Result := once "integer_16"
-			when {SK_CONST}.sk_int32 then Result := once "integer_32"
-			when {SK_CONST}.sk_int64 then Result := once "integer_64"
-			when {SK_CONST}.sk_pointer then Result := once "pointer"
-			else
-				Result := once "reference"
-			end
-		ensure
-			tuple_element_name_not_void: Result /= Void
-		end
-
-	enlarged: like Current is
-			-- Enlarges current.
-		do
-			Result := Current
-			if source /= Void then
-				source := source.enlarged
+				Result.set_source (source.enlarged)
 			end
 		end
 

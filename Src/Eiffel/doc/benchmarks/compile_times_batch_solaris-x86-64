@@ -6,6 +6,13 @@ CG = Code Generation
 6.2
 ===
 
+6.2.7.2702 non-RTEA with Dead Code Removal optimization:
+189.11u 13.20s 3:30.70 96.0%
+189.14u 12.63s 3:26.08 97.9%
+
+6.2.7.2702 non-RTEA without Dead Code Removal optimization:
+198.67u 13.19s 3:36.35 97.9%
+
 6.2.7.2648 non-RTEA with new code generation for less dynamic calls (exe size: 14874336):
 192.02u 12.55s 4:09.95 81.8% (with old compiler exe size: 15118032)
 198.26u 12.87s 4:14.72 82.8% (before bootstrap)

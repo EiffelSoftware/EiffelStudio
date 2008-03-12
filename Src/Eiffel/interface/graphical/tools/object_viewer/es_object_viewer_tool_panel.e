@@ -190,23 +190,17 @@ feature -- Events
 			cl.replace (w)
 		end
 
-	is_stone_valid (a_stone: STONE): BOOLEAN is
-		local
-			ost: OBJECT_STONE
+	is_stone_valid (a_stone: ANY): BOOLEAN is
+			-- Is stone `a_stone' valid ?
 		do
-			ost ?= a_stone
-			if ost /= Void and viewers_manager /= Void then
-				Result := viewers_manager.is_stone_valid (ost)
-			end
+			Result := viewers_manager /= Void and
+					({ost: !OBJECT_STONE} a_stone and then viewers_manager.is_stone_valid (ost))
 		end
 
 	set_stone (a_stone: STONE) is
 			--	Stone dropped
-		local
-			ost: OBJECT_STONE
 		do
-			ost ?= a_stone
-			if ost /= Void then
+			if {ost: !OBJECT_STONE} a_stone then
 				viewers_manager.set_stone (ost)
 			end
 		end

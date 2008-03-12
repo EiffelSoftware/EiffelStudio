@@ -68,13 +68,13 @@ feature -- Access
 
 feature -- Access
 
-	is_valid_stone (st: OBJECT_STONE; is_strict: BOOLEAN): BOOLEAN is
+	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
 			-- Is `st' valid stone for Current?
 		local
 			dv: DUMP_VALUE
 			s: STRING
 		do
-			if st /= Void then
+			if {st: !OBJECT_STONE} a_stone then
 				dv := debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class)
 				if dv.has_formatted_output then
 					if is_strict then

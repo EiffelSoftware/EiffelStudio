@@ -180,18 +180,15 @@ feature -- Result
 	final_toolbar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- list containing the buttons to be displayed and then the ones in the pool
 
-	veto_pebble_function (an_item: SD_CUSTOMIZABLE_LIST_ITEM): BOOLEAN is
+	veto_pebble_function (a_stone: ANY): BOOLEAN is
 			-- Veto pebble function
-		local
-			l_tool_bar_item: SD_TOOL_BAR_ITEM
-			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			l_separator ?= an_item.data
-			l_tool_bar_item ?= an_item.data
-			if l_separator /= Void then
-				Result := True
-			elseif l_tool_bar_item /= Void then
-				Result := all_items.has (l_tool_bar_item)
+			if {an_item: !SD_CUSTOMIZABLE_LIST_ITEM} a_stone then
+				if {l_separator: !SD_TOOL_BAR_SEPARATOR} an_item.data then
+					Result := True
+				elseif {l_tool_bar_item: !SD_TOOL_BAR_ITEM} an_item.data then
+					Result := all_items.has (l_tool_bar_item)
+				end
 			end
 		end
 
@@ -206,7 +203,7 @@ feature -- Result
 			--
 			-- Useful only because Vision2 currently does not remember the size
 			-- of the window after a hide/show.
-			
+
 feature {NONE} -- Graphical interface
 
 	pool_list: SD_CUSTOM_TOOLBAR_LIST -- EV_LIST

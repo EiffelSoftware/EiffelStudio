@@ -69,7 +69,11 @@ feature{NONE} -- Initialization
 		do
 			Precursor (a_docking_manager)
 			content.drop_actions.extend (agent on_item_dropped)
-			content.drop_actions.set_veto_pebble_function (agent (a_stone: STONE): BOOLEAN do Result := a_stone.is_storable end)
+			content.drop_actions.set_veto_pebble_function (agent (a_stone: ANY): BOOLEAN
+						do
+							Result := {st: !STONE} a_stone and then st.is_storable
+						end
+					)
 		end
 
 	build_interface is

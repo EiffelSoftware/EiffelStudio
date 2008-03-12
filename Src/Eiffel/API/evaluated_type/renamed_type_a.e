@@ -63,7 +63,7 @@ feature -- Access
 	renaming: RENAMING_A
 			-- Renaming of features of type `type'.
 
-feature {COMPILER_EXPORTER} -- Access
+feature -- Access
 
 	associated_class: CLASS_C is
 			-- Class associated to the current type.		

@@ -67,6 +67,12 @@ feature -- Access
 			not_called : False
 		end
 
+	good_generics: BOOLEAN is
+
+		do
+			Result := True
+		end
+
 feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
@@ -79,14 +85,6 @@ feature -- Output
 		do
 			create Result.make (1)
 			Result.append (".")
-		end
-
-feature {COMPILER_EXPORTER}
-
-	good_generics: BOOLEAN is
-
-		do
-			Result := True
 		end
 
 feature {COMPILER_EXPORTER} -- Conformance

@@ -10,8 +10,9 @@ class
 
 inherit
 	ARRAYED_LIST [FEATURE_I]
-		export {CLASS_TYPE, SELECT_TABLE}
-			area
+		export
+			{COMPUTED_FEATURE_TABLE, CLASS_TYPE, SELECT_TABLE}
+				area, same_items, copy
 		end
 
 	IDABLE

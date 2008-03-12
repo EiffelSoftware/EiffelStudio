@@ -214,11 +214,11 @@ feature -- Setting
 		do
 			do_all_in_list (
 				displayer_cache.linear_representation,
-				agent (a_any: ANY)
+				agent (a_formatter: EB_FORMATTER_DISPLAYER)
 					local
 						l_displayer: EB_FORMATTER_EDITOR_DISPLAYER
 					do
-						l_displayer ?= a_any
+						l_displayer ?= a_formatter
 						if l_displayer /= Void and then l_displayer.editor /= Void then
 							l_displayer.editor.refresh
 						end
@@ -231,11 +231,11 @@ feature -- Setting
 		do
 			do_all_in_list (
 				displayer_cache.linear_representation,
-				agent (a_any: ANY)
+				agent (a_formatter: EB_FORMATTER_DISPLAYER)
 					local
 						l_displayer: EB_FORMATTER_EDITOR_DISPLAYER
 					do
-						l_displayer ?= a_any
+						l_displayer ?= a_formatter
 						if l_displayer /= Void and then l_displayer.editor /= Void then
 							l_displayer.editor.margin.refresh
 						end

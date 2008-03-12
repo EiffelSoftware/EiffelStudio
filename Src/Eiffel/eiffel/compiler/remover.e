@@ -24,7 +24,7 @@ feature
 			-- Initialization
 		do
 			old_make
-			create control.make
+			create control.make (1000)
 			create array_optimizer.make
 			create inliner.make
 		end
@@ -76,7 +76,7 @@ feature -- Inlining
 
 feature -- Control
 
-	control: LINKED_QUEUE [DEPEND_UNIT]
+	control: ARRAYED_QUEUE [DEPEND_UNIT]
 			-- Control structure for traversal in breadth first order
 
 feature {NONE}

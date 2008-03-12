@@ -308,6 +308,8 @@ feature -- Status report
 			a_type_has_class_type: a_type.has_associated_class_type (a_context_type)
 			a_type_id_valid: a_type_id >= 0
 			a_type_related_to_type_id: a_type.type_id (a_context_type) = a_type_id
+			conformance_table_not_void: conformance_table /= Void
+			final_mode: byte_context.final_mode
 		local
 			l_generics: ARRAY [TYPE_A]
 			l_type_feat: TYPE_FEATURE_I

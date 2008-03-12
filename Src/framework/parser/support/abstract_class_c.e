@@ -5,8 +5,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	ABSTRACT_CLASS_C
+
+feature -- Access
+
+	name: STRING is
+			-- Class name
+		deferred
+		ensure
+			name_not_void: name /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

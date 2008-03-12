@@ -7,6 +7,7 @@ class
 	BUILT_IN_PROCESSOR
 
 inherit
+	ANY
 
 	EIFFEL_LAYOUT
 		export
@@ -30,7 +31,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			make, current_class, file_buffer
+			make, file_buffer
 		end
 
 create
@@ -79,8 +80,6 @@ feature -- Status setting
 		end
 
 feature -- Access
-
-	current_class: CLASS_C
 
 	is_dotnet: BOOLEAN
 			-- Are we targetting .NET code?

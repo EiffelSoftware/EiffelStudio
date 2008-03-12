@@ -725,29 +725,73 @@ feature {NONE} -- Catcall warning access
 		local
 			rtcc: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER]
 			l_fdtype: INTEGER
+			l_max_type_id: INTEGER
 			ct: CLASS_TYPE
+			f: E_FEATURE
+			argname: STRING
+			argtypename: STRING
 			retried: BOOLEAN
+			ecse: EIFFEL_CALL_STACK_ELEMENT
+			l_status: APPLICATION_STATUS
 		do
 			if not retried then
-				rtcc := debugger_manager.application_status.catcall_data
+				l_status := debugger_manager.application_status
+				rtcc := l_status.catcall_data
 				create Result.make_from_string ("Catcall detected")
-				if rtcc /= Void then
+				if rtcc /= Void and then rtcc.pos > 0 then
+					if l_status.has_valid_current_eiffel_call_stack_element then
+						ecse := l_status.current_eiffel_call_stack_element
+						if ecse /= Void then
+							f := ecse.routine
+						end
+					end
+
 					Result.append_string (" for ")
+					if f /= Void then
+						if {args: !E_FEATURE_ARGUMENTS} (f.arguments) and then args.count >= rtcc.pos then
+							if {argnames: !LIST [STRING]} (args.argument_names) then
+								argnames.start
+								argnames.move (rtcc.pos - 1)
+								argname := argnames.item
+							end
+							args.start
+							args.move (rtcc.pos - 1)
+							if {typ: !TYPE_A} args.item then
+								argtypename := typ.name
+							end
+						end
+					end
 					Result.append_string (" argument#")
 					Result.append_integer (rtcc.pos)
+
+					if argname /= Void then
+						Result.append_string (" `")
+						Result.append_string (argname)
+						Result.append_character (''')
+					end
+					l_max_type_id := system.class_types.count
 					Result.append_string (": expected ")
 					l_fdtype := rtcc.expected
-
-					ct := System.class_type_of_id (l_fdtype)
+					if l_fdtype <= l_max_type_id then
+						ct := System.class_type_of_id (l_fdtype)
+					end
 					if ct /= Void and then ct.associated_class /= Void then
 						Result.append_string (ct.associated_class.name_in_upper)
 					else
 						Result.append_string ("type#")
 						Result.append_integer (l_fdtype)
+
+						if argtypename /= Void then
+							Result.append_string (" ")
+							Result.append_string (argtypename)
+						end
 					end
+
 					Result.append_string (" but got ")
 					l_fdtype := rtcc.actual
-					ct := System.class_type_of_id (l_fdtype)
+					if l_fdtype <= l_max_type_id then
+						ct := System.class_type_of_id (l_fdtype)
+					end
 					if ct /= Void and then ct.associated_class /= Void then
 						Result.append_string (ct.associated_class.name_in_upper)
 					else

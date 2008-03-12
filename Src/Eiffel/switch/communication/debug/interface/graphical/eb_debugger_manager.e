@@ -366,7 +366,10 @@ feature -- Access
 			-- Command that can disable one or more breakpoints in the system.
 
 	debug_run_cmd: EB_DEBUG_RUN_CMD
-		-- Command to run the project under debugger.
+			-- Command to run the project under debugger.
+
+	exception_handler_cmd: EB_EXCEPTION_HANDLER_CMD
+			-- Exception handler command
 
 	toggle_exec_replay_recording_mode_cmd: EB_DEBUG_TOGGLE_EXECUTION_REPLAY_RECORDING_MODE_CMD
 
@@ -1960,8 +1963,6 @@ feature {NONE} -- Implementation
 
 	set_critical_stack_depth_cmd: EB_STANDARD_CMD
 			-- Command that changes the depth at which we warn the user against a stack overflow.
-
-	exception_handler_cmd: EB_EXCEPTION_HANDLER_CMD
 
 	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
 

@@ -160,32 +160,51 @@ feature {NONE} -- Attributes
 			l_cb_item: EV_CHECK_MENU_ITEM
 			profs: DEBUGGER_PROFILES
 			k, pn: STRING_32
+			dbg: DEBUGGER_MANAGER
 		do
 			create Result
+
+			dbg := eb_debugger_manager
 
 			create l_item.make_with_text (tooltext)
 			l_item.set_pixmap (pixmap)
 			l_item.select_actions.extend (agent execute)
 			Result.extend (l_item)
 
+			Result.extend (create {EV_MENU_SEPARATOR})
+
 				--| Breakpoints status
 			create l_cb_item.make_with_text (interface_names.b_dbg_ignore_breakpoints)
 			Result.extend (l_cb_item)
-			if eb_debugger_manager.execution_ignoring_breakpoints then
+			if dbg.execution_ignoring_breakpoints then
 				l_cb_item.enable_select
-				l_cb_item.select_actions.extend (agent eb_debugger_manager.set_execution_ignoring_breakpoints (False))
+				l_cb_item.select_actions.extend (agent dbg.set_execution_ignoring_breakpoints (False))
 			else
-				l_cb_item.select_actions.extend (agent eb_debugger_manager.set_execution_ignoring_breakpoints (True))
+				l_cb_item.select_actions.extend (agent dbg.set_execution_ignoring_breakpoints (True))
 			end
+
+				--| Catcall warning status
+			if {exc_hdlr: DBG_EXCEPTION_HANDLER} (dbg.exceptions_handler) then
+				create l_cb_item.make_with_text (interface_names.b_ignore_catcall_warnings)
+				Result.extend (l_cb_item)
+
+				if exc_hdlr.catcall_warning_ignored then
+					l_cb_item.enable_select
+					l_cb_item.select_actions.extend (agent exc_hdlr.set_catcall_warning_ignored (False))
+				else
+					l_cb_item.select_actions.extend (agent exc_hdlr.set_catcall_warning_ignored (True))
+				end
+			end
+
 
 				--| Execution replay recording status
 			create l_cb_item.make_with_text (interface_names.b_activate_execution_recording)
 			Result.extend (l_cb_item)
-			if eb_debugger_manager.execution_replay_recording_enabled then
+			if dbg.execution_replay_recording_enabled then
 				l_cb_item.enable_select
-				l_cb_item.select_actions.extend (agent eb_debugger_manager.activate_execution_replay_recording (False))
+				l_cb_item.select_actions.extend (agent dbg.activate_execution_replay_recording (False))
 			else
-				l_cb_item.select_actions.extend (agent eb_debugger_manager.activate_execution_replay_recording (True))
+				l_cb_item.select_actions.extend (agent dbg.activate_execution_replay_recording (True))
 			end
 
 			Result.extend (create {EV_MENU_SEPARATOR})
@@ -212,13 +231,18 @@ feature {NONE} -- Attributes
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 
+				--| Exception handling
+			create l_item.make_with_text (interface_names.e_dbg_exception_handler)
+			l_item.select_actions.extend (agent open_exception_handler_dialog)
+			Result.extend (l_item)
+
 				--| Execution parameters
 			create l_item.make_with_text (interface_names.m_Edit_execution_parameters)
 			l_item.select_actions.extend (agent open_execution_parameters_dialog)
 			Result.extend (l_item)
 
 				--| Execution profiles
-			profs := eb_debugger_manager.profiles
+			profs := dbg.profiles
 			if profs /= Void and then profs.count > 0 then
 				create l_submenu.make_with_text (Interface_names.m_Execution_profiles)
 				Result.extend (l_submenu)

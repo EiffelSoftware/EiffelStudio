@@ -249,6 +249,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	open_exception_handler_dialog is
+			-- Show the arguments dialog
+		do
+			if eb_debugger_manager.exception_handler_cmd /= Void then
+				eb_debugger_manager.exception_handler_cmd.execute
+			end
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

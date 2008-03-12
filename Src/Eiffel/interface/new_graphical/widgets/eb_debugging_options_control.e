@@ -562,8 +562,68 @@ feature -- Status Setting
 
 feature -- Data change
 
+	new_profile: like profile_from_row is
+			-- New empty profile
+		do
+			Result := [Void, create {DEBUGGER_EXECUTION_PARAMETERS}]
+			update_title (Result)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	update_title (p: like new_profile) is
+			-- Update profile's title of `p'
+			-- with a new unused name
+		require
+			p_not_void: p /= Void
+		local
+			s32, s: STRING_32
+			args: STRING
+			i: INTEGER
+		do
+			if p.title = Void or else p.title.is_empty then
+				args := p.params.arguments
+				if args /= Void and then args.count > 0 then
+					s32 := args.to_string_32
+					from
+						i := 1
+						create s.make_from_string (s32)
+					until
+						profile_named (s) = Void
+					loop
+						s.keep_head (s32.count)
+						s.append_character (' ')
+						s.append_character ('#')
+						s.append_integer (i)
+						i := i + 1
+					end
+					s32 := s
+				else
+					s32 := interface_names.l_profile
+					from
+						i := 1
+						create s.make_from_string (s32)
+					until
+						s.count > s32.count and then profile_named (s) = Void
+					loop
+						s.keep_head (s32.count)
+						s.append_character (' ')
+						s.append_character ('#')
+						s.append_integer (i)
+						i := i + 1
+					end
+					s32 := s
+				end
+				p.title := s32
+			end
+		ensure
+			title_not_empty: p.title /= Void and then not p.title.is_empty
+		end
+
 	same_string_value (s1, s2: STRING_GENERAL): BOOLEAN is
 			-- is `s1' and `s2' the same text ?
+		require
+			same_type: (s1 /= Void and s2 /= Void) implies s1.same_type (s2)
 		do
 			if s1 = Void and s2 = Void then
 				Result := True
@@ -574,20 +634,23 @@ feature -- Data change
 			end
 		end
 
-	change_title_on (v: STRING_GENERAL; p: like profile_from_row) is
+	change_title_on (v: STRING_32; p: like profile_from_row) is
 		require
 			v /= Void
 		local
 			s: STRING_32
+			old_title: STRING_32
 		do
+			old_title := p.title
 			if v.is_empty then
 				s := Void
 			else
 				s := v.as_string_32
 			end
-			if not same_string_value (p.title, s) then
-				p.title := s
+			p.title := s
+			update_title (p)
 
+			if not same_string_value (old_title, p.title) then
 				update_title_row_of (p)
 				set_changed (p, True)
 			end
@@ -725,11 +788,9 @@ feature {NONE} -- Button Actions
 			-- Add a new profile
 		local
 			r: EV_GRID_ROW
-			p: like profile_from_row
 		do
 			profiles_grid.remove_selection
-			p := [interface_names.l_profile_no.as_string_32 + (1 + profiles_count).out, create {DEBUGGER_EXECUTION_PARAMETERS}]
-			r := added_profile_text_row (p, True)
+			r := added_profile_text_row (new_profile, True)
 			if r.is_expandable and then not r.is_expanded then
 				r.expand
 			end
@@ -770,6 +831,28 @@ feature {NONE} -- Button Actions
 				profiles_grid.remove_row (r.index)
 			end
 			set_changed (Void, True)
+		end
+
+	profile_named (a_name: STRING_32): like profile_from_row
+			-- Profile named `a_name' if any
+		local
+			r: INTEGER_32
+			l_row: EV_GRID_ROW
+		do
+			if profiles_grid.row_count > 0 then
+				from
+					r := 1
+				until
+					r > profiles_grid.row_count or Result /= Void
+				loop
+					l_row := profiles_grid.row (r)
+					Result := profile_from_row (l_row)
+					if Result /= Void and then not same_string_value (a_name, Result.title) then
+						Result := Void
+					end
+					r := r + l_row.subrow_count_recursive + 1
+				end
+			end
 		end
 
 	profiles_count: INTEGER is
@@ -891,6 +974,7 @@ feature {NONE} -- Profile actions
 					(a_prof: like profile_from_row; a_gi: EV_GRID_EDITABLE_ITEM)
 						do
 							change_title_on (a_gi.text, a_prof)
+							a_gi.set_text (a_prof.title)
 						end(p, gei)
 				)
 

@@ -1020,7 +1020,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	notebook_veto_pebble (a_stone: STONE) : BOOLEAN is
+	notebook_veto_pebble (a_stone: ANY) : BOOLEAN is
 			-- Notebook veto pebble
 		local
 			l_classi_stone: CLASSI_STONE

@@ -1318,11 +1318,11 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	is_removable_debugged_object (ost: OBJECT_STONE): BOOLEAN is
+	is_removable_debugged_object (a_stone: ANY): BOOLEAN is
 		local
 			row: EV_GRID_ROW
 		do
-			if ost /= Void then
+			if {ost: !OBJECT_STONE} a_stone then
 				row ?= ost.ev_item
 				if row /= Void then
 					Result := is_removable_debugged_object_row (row)

@@ -130,7 +130,7 @@ feature -- Basic operations
 			Result := Precursor
 			Result.drop_actions.extend (agent drop_feature_on_object_stone)
 			Result.drop_actions.extend (agent drop_object_stone)
-			Result.drop_actions.set_veto_pebble_function (agent is_resizable (?))
+			Result.drop_actions.set_veto_pebble_function (agent is_resizable)
 		end
 
 	is_resizable (st: ANY): BOOLEAN is

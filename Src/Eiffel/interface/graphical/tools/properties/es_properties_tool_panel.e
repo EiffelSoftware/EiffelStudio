@@ -267,7 +267,7 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 			stone_set: stone = a_stone
 		end
 
-	dropable (a_pebble: STONE): BOOLEAN is
+	dropable (a_pebble: ANY): BOOLEAN is
 			-- Can user drop `a_pebble' on `Current'?
 		require
 			a_pebble_not_void: a_pebble /= Void

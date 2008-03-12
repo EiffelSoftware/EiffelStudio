@@ -231,10 +231,10 @@ feature -- Access
 	is_locked: BOOLEAN
 			-- Is locked ?
 
-	is_stone_valid (st: OBJECT_STONE): BOOLEAN is
+	is_stone_valid (a_stone: ANY): BOOLEAN is
 			-- Is `st' valid stone for Current?
 		do
-			Result := st /= Void and then valid_viewer (st) /= Void
+			Result := {st: !OBJECT_STONE} a_stone and then valid_viewer (st) /= Void
 		end
 
 	current_object: OBJECT_STONE

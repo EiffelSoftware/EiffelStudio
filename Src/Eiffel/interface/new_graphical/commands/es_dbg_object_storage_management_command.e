@@ -136,10 +136,10 @@ feature -- Status report
 
 feature -- Status report
 
-	accepts_stone (st: OBJECT_STONE): BOOLEAN is
+	accepts_stone (a_stone: ANY): BOOLEAN is
 			-- Can the user drop `st'?
 		do
-			Result := st /= Void
+			Result := {st: !OBJECT_STONE} a_stone
 		end
 
 feature -- Basic operations

@@ -47,7 +47,7 @@ feature -- Access
 		deferred
 		end
 
-	is_valid_stone (ost: OBJECT_STONE; is_strict: BOOLEAN): BOOLEAN is
+	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
 			-- Is `ost' a valid stone for Current viewer
 			-- if `is_strict' is False, check quickly the validity of the stone
 			-- otherwise check with caution.

@@ -295,29 +295,6 @@ feature {NONE} -- Implementation: Access
 
 feature -- Status report
 
-	conform_to (other: CLASS_TYPE): BOOLEAN is
-			-- Does `Current' type conform to `other'?
-		require
-			other_not_void: other /= Void
-			conformance_table_not_void: conformance_table /= Void
-			final_mode: byte_context.final_mode
-		local
-			l_other_type_id: INTEGER
-			l_packed: PACKED_BOOLEANS
-		do
-			l_other_type_id := other.type_id
-			Result := l_other_type_id = type_id
-			if not Result then
-				l_packed := conformance_table
-				if l_other_type_id <= l_packed.upper then
-					Result := l_packed.item (l_other_type_id)
-				end
-			end
-		ensure
-			conform_to_definition:
-				Result implies associated_class.conform_to (other.associated_class)
-		end
-
 	dynamic_conform_to (a_type: TYPE_A; a_type_id: INTEGER; a_context_type: TYPE_A): BOOLEAN is
 			-- Does Current conform to `a_type' in a dynamic binding sense?
 			-- That is to say if you have Current be `B [G#1]' with a conformance

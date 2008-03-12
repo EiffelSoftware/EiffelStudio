@@ -17,6 +17,7 @@ inherit
 			Run as execution_mode
 		redefine
 			make,
+			execute,
 			tooltext,
 			is_tooltext_important,
 			new_sd_toolbar_item,
@@ -49,14 +50,21 @@ feature -- Execution
 	execute_from_accelerator is
 			-- Execute from accelerator
 		do
-			eb_debugger_manager.stop_at_breakpoints
 			execute
+		end
+
+	execute is
+			-- <Precursor>
+		do
+			eb_debugger_manager.stop_at_breakpoints
+			Precursor
 		end
 
 feature -- Access
 
 	set_launched (a_launched: BOOLEAN) is
 		do
+			is_launched := a_launched
 			if a_launched then
 				tooltext := Interface_names.b_Continue
 				menu_name := Interface_names.m_Debug_run_continue
@@ -121,6 +129,9 @@ feature -- Access
 		end
 
 feature {NONE} -- Attributes
+
+	is_launched: BOOLEAN
+			-- Is application launched ?
 
 	pixmap: EV_PIXMAP is
 			-- Pixmap for the button.
@@ -244,8 +255,14 @@ feature {NONE} -- Attributes
 				--| Execution profiles
 			profs := dbg.profiles
 			if profs /= Void and then profs.count > 0 then
-				create l_submenu.make_with_text (Interface_names.m_Execution_profiles)
-				Result.extend (l_submenu)
+				Result.extend (create {EV_MENU_SEPARATOR})
+
+				create l_item.make_with_text (Interface_names.m_Execution_profiles)
+				Result.extend (l_item)
+				l_item.disable_sensitive
+
+					--| Flat menu (no submenu)
+				l_submenu := Result
 
 				pn := profs.last_profile_name
 
@@ -258,6 +275,7 @@ feature {NONE} -- Attributes
 				end
 
 				from
+
 					profs.start
 				until
 					profs.after

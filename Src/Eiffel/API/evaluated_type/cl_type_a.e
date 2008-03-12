@@ -250,6 +250,40 @@ feature -- Access
 			Result := Current
 		end
 
+	meta_type: TYPE_A is
+			-- Meta type of the type
+		do
+			if is_expanded then
+				Result := Current
+			else
+				Result := system.any_type
+			end
+		end
+
+	good_generics: BOOLEAN is
+			-- Has the base class exactly the same number of generic
+			-- parameters in its formal generic declarations ?
+		do
+			Result := associated_class.generics = Void
+		end
+
+	error_generics: VTUG is
+		do
+				-- We could avoid having this check but the precondition does not tell us
+				-- we can.
+			if associated_class /= Void then
+				create {VTUG2} Result
+				Result.set_type (Current)
+				Result.set_base_class (associated_class)
+			end
+		end
+
+	has_expanded: BOOLEAN is
+			-- Has the current type some expanded types in its declration ?
+		do
+			Result := is_expanded
+		end
+
 feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
@@ -590,40 +624,6 @@ feature {COMPILER_EXPORTER} -- Settings
 			declaration_mark := separate_mark
 		ensure
 			has_separate_mark: has_separate_mark
-		end
-
-	meta_type: TYPE_A is
-			-- Meta type of the type
-		do
-			if is_expanded then
-				Result := Current
-			else
-				Result := system.any_type
-			end
-		end
-
-	good_generics: BOOLEAN is
-			-- Has the base class exactly the same number of generic
-			-- parameters in its formal generic declarations ?
-		do
-			Result := associated_class.generics = Void
-		end
-
-	error_generics: VTUG is
-		do
-				-- We could avoid having this check but the precondition does not tell us
-				-- we can.
-			if associated_class /= Void then
-				create {VTUG2} Result
-				Result.set_type (Current)
-				Result.set_base_class (associated_class)
-			end
-		end
-
-	has_expanded: BOOLEAN is
-			-- Has the current type some expanded types in its declration ?
-		do
-			Result := is_expanded
 		end
 
 feature {COMPILER_EXPORTER} -- Conformance

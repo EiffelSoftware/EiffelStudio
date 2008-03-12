@@ -73,6 +73,22 @@ feature -- Access
 			Result := c_type.sk_value
 		end
 
+	meta_type: BASIC_A is
+			-- Associated meta type
+		do
+			Result := Current
+		end
+
+	good_generics: BOOLEAN is
+			-- Has the current type the right number of generic types ?
+		do
+			Result := True
+		end
+
+	error_generics: VTUG is
+		do
+		end
+
 feature -- IL code generation
 
 	generic_il_type_name (a_context_type: TYPE_A): STRING is
@@ -193,22 +209,6 @@ feature {COMPILER_EXPORTER}
 				Result.set_expanded_class_mark
 			end
 			Result.set_reference_mark
-		end
-
-	meta_type: BASIC_A is
-			-- Associated meta type
-		do
-			Result := Current
-		end
-
-	good_generics: BOOLEAN is
-			-- Has the current type the right number of generic types ?
-		do
-			Result := True
-		end
-
-	error_generics: VTUG is
-		do
 		end
 
 invariant

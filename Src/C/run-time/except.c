@@ -58,6 +58,7 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include "rt_malloc.h"
 #include "rt_assert.h"
 #include "rt_gen_types.h"
+#include "rt_gen_conf.h"
 #include "rt_globals.h"
 
 #ifdef EIF_WINDOWS
@@ -1075,17 +1076,25 @@ rt_public EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE Current) {
 
 rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX dtype, char *a_feature_name, int a_pos, EIF_TYPE_INDEX expected_dftype)
 {
+	EIF_TYPE_INDEX dftype;
+	
 	REQUIRE("arg_not_null", arg);
 	REQUIRE("a_location_not_null", a_feature_name);
 	REQUIRE("a_pos positive", a_pos > 0);
 
-	if (!RTRC(expected_dftype, Dftype(arg))) {
-		print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
-			System(dtype).cn_generator,
-			a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (Dftype(arg)));
+	dftype = Dftype(arg);
+
+	if (!RTRC(expected_dftype, dftype)) {
+			/* Type do not conform. Let's check the particular case of BIT XX types for which we do not
+			 * actually record the full type information. */
+		if (!((dftype == egc_bit_dtype) && (eif_register_bit_type (((struct bit *) arg)->b_length) == expected_dftype))) {
+			print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
+				System(dtype).cn_generator,
+				a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
 #ifdef WORKBENCH
-		dcatcall(a_pos, expected_dftype, Dftype(arg));
+			dcatcall(a_pos, expected_dftype, dftype);
 #endif
+		}
 	}
 }
 

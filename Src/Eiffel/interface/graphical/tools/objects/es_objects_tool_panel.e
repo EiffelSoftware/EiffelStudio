@@ -752,7 +752,7 @@ feature {NONE} -- event handlers
 				print ("ES_OBJECTS_TOOL.set_stone%N")
 			end
 			if can_refresh then
-				if {conv_stack: !CALL_STACK_STONE} stone then
+				if {conv_stack: CALL_STACK_STONE} stone then
 					update
 				end
 			end
@@ -1322,7 +1322,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		local
 			row: EV_GRID_ROW
 		do
-			if {ost: !OBJECT_STONE} a_stone then
+			if {ost: OBJECT_STONE} a_stone then
 				row ?= ost.ev_item
 				if row /= Void then
 					Result := is_removable_debugged_object_row (row)

@@ -43,7 +43,7 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 
 	exception_value (a_name: STRING; a_tag: STRING_GENERAL; a_value: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE is
 		do
-			if {arv: !ABSTRACT_REFERENCE_VALUE} a_value then
+			if {arv: ABSTRACT_REFERENCE_VALUE} a_value then
 				create Result.make_with_value (arv)
 			else
 				check should_not_occurred: False end

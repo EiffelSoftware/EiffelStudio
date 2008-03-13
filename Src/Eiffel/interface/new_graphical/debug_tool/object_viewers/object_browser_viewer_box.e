@@ -89,7 +89,7 @@ feature -- Access
 	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
 			-- Is `st' valid stone for Current?
 		do
-			Result := {st: !OBJECT_STONE} a_stone
+			Result := {st: OBJECT_STONE} a_stone
 		end
 
 	objects_grid_object_line (add: STRING): ES_OBJECTS_GRID_OBJECT_LINE is

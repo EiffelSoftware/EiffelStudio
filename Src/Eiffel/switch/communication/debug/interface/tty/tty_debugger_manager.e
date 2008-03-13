@@ -474,7 +474,7 @@ feature -- Breakpoints management
 				m.add_separator (s)
 			end
 			if bp.has_when_hits_action_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}) then
-				if {x: !BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE} bp.when_hits_actions_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}).first then
+				if {x: BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE} bp.when_hits_actions_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}).first then
 					s := "Message = "
 					s.append_string_general (x.message)
 					m.add_separator (s)

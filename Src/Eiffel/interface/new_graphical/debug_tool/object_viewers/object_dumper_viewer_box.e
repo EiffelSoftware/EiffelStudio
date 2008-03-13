@@ -107,7 +107,7 @@ feature -- Access
 	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
 			-- Is `st' valid stone for Current?
 		do
-			Result := {st: !OBJECT_STONE} a_stone
+			Result := {st: OBJECT_STONE} a_stone
 		end
 
 feature -- Change

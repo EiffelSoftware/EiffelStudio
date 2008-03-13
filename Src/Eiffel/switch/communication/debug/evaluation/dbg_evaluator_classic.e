@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 					-- Receive the Result.
 				recv_value (Current)
 				if is_exception then
-					if {exv: !EXCEPTION_DEBUG_VALUE} exception_item then
+					if {exv: EXCEPTION_DEBUG_VALUE} exception_item then
 						exv.set_hector_addr
 						notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exv.long_description))
 					else

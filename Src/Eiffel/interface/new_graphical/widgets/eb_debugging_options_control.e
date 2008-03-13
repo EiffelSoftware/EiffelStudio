@@ -416,9 +416,9 @@ feature {NONE} -- Grid events
 		local
 			c: INTEGER
 		do
-			if {lst: !LIST [EV_GRID_ROW]} profiles_grid.grid_selected_top_rows (profiles_grid) then
+			if {lst: LIST [EV_GRID_ROW]} profiles_grid.grid_selected_top_rows (profiles_grid) then
 				if lst.count > 0 then
-					if {row: !EV_GRID_ROW} lst.first then
+					if {row: EV_GRID_ROW} lst.first then
 						c := profiles_grid.grid_move_top_row_node_by (profiles_grid, row.index, offset)
 						if c > 0 then
 							set_changed (Void, True)

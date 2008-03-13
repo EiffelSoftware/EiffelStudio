@@ -415,7 +415,7 @@ feature -- Remote access to RT_
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_rt_object_icd_value
-			if icdv /= Void and then {cl: !CLASS_I} system.rt_extension_class then
+			if icdv /= Void and then {cl: CLASS_I} system.rt_extension_class then
 				Result := debug_value_from_icdv (icdv, cl.compiled_class)
 			end
 
@@ -513,7 +513,7 @@ feature -- Remote access to Exceptions
 			icdv: ICOR_DEBUG_VALUE
 		do
 			icdv := remote_exception_manager_icd_value
-			if icdv /= Void and then {cl: !CLASS_I} system.ise_exception_manager_class then
+			if icdv /= Void and then {cl: CLASS_I} system.ise_exception_manager_class then
 				Result := debug_value_from_icdv (icdv, cl.compiled_class)
 			end
 		end
@@ -526,10 +526,10 @@ feature -- Remote access to Exceptions
 			if Result = Void and Eifnet_debugger.exception_occurred then
 				icdv := Eifnet_debugger.new_active_exception_value_from_thread
 				if icdv /= Void then
-					if {wrap: !ABSTRACT_REFERENCE_VALUE} eiffel_wrapper_exception (icdv) then
+					if {wrap: ABSTRACT_REFERENCE_VALUE} eiffel_wrapper_exception (icdv) then
 						create Result.make_with_value (wrap)
 
-						if {val: !ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) then
+						if {val: ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) then
 							if {s8: !STRING_8} eifnet_debugger.exception_class_name (val) then
 								Result.set_exception_others (s8, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
 							end
@@ -571,7 +571,7 @@ feature -- Remote access to Exceptions
 		require
 			e_not_void: e /= Void
 		do
-			if {v: !EIFNET_DEBUG_REFERENCE_VALUE} e.debug_value then
+			if {v: EIFNET_DEBUG_REFERENCE_VALUE} e.debug_value then
 				Result ?= v.attribute_value_for (Exception_dotnet_exception_attribute_name)
 			end
 		end
@@ -638,7 +638,7 @@ feature -- Query
 						end
 						odv := err_dv
 					elseif l_eifnet_debugger.last_once_failed then
-						if {arv: !ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) then
+						if {arv: ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) then
 							create exc_dv.make_with_value (arv)
 						else
 							check should_not_occur: False end

@@ -73,8 +73,8 @@ feature -- Change text
 			-- <Precursor>
 		do
 			breakpoints_ignored := b
-			Precursor (b)
 			update_graphical
+			Precursor (b)
 		end
 
 	update_graphical is
@@ -113,7 +113,7 @@ feature -- Change text
 				until
 					sd_toolbar_items.after
 				loop
-					if {it: !STRING_GENERAL} (sd_toolbar_items.item.text) and then not it.is_empty then
+					if {it: STRING_GENERAL} (sd_toolbar_items.item.text) and then not it.is_empty then
 						sd_toolbar_items.item.set_text (t)
 					end
 					if tt /= Void then

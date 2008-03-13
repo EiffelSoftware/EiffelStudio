@@ -139,7 +139,7 @@ feature -- Basic operations
 			bp: BREAKPOINT
 		do
 			bpm := breakpoints_manager
-			if {loc: !BREAKPOINT_LOCATION} bpm.breakpoint_location (routine, index, False) then
+			if {loc: BREAKPOINT_LOCATION} bpm.breakpoint_location (routine, index, False) then
 				if bpm.is_user_breakpoint_set_at (loc) then
 					bp := bpm.user_breakpoint_at (loc)
 				end

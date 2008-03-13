@@ -74,7 +74,7 @@ feature -- Access
 			dv: DUMP_VALUE
 			s: STRING
 		do
-			if {st: !OBJECT_STONE} a_stone then
+			if {st: OBJECT_STONE} a_stone then
 				dv := debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class)
 				if dv.has_formatted_output then
 					if is_strict then

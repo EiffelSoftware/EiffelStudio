@@ -107,7 +107,7 @@ feature {NONE} -- Implementation status
 		do
 			Result := not is_real_update_on_idle_processing
 			if Result and debugger_manager.is_dotnet_project then
-				if {app_impl: !APPLICATION_EXECUTION_DOTNET} debugger_manager.application then
+				if {app_impl: APPLICATION_EXECUTION_DOTNET} debugger_manager.application then
 					Result := not app_impl.callback_notification_processing
 				end
 			end

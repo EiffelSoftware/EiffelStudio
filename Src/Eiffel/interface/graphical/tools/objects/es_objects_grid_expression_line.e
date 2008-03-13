@@ -528,7 +528,7 @@ feature -- Graphical changes
 							elseif expression_evaluator.has_error_not_implemented then
 								set_error_pixmap (pixmaps.icon_pixmaps.compile_error_icon)
 							end
-							if {l_exception_dump_value: !DUMP_VALUE} expression_evaluator.final_result_value then
+							if {l_exception_dump_value: DUMP_VALUE} expression_evaluator.final_result_value then
 								if l_exception_dump_value.is_type_exception then
 									if expression_evaluator.has_error_exception then
 										l_title := interface_names.l_Exception_object

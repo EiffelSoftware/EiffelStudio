@@ -468,7 +468,7 @@ feature -- tools
 				l_tools.do_all (agent (a_tool: ES_TOOL [EB_TOOL]; a_result: LINKED_SET [ES_WATCH_TOOL])
 						do
 							if
-								{l_tool: !ES_WATCH_TOOL} a_tool and then
+								{l_tool: ES_WATCH_TOOL} a_tool and then
 								l_tool.is_tool_instantiated
 							then
 								a_result.extend (l_tool)
@@ -1497,7 +1497,7 @@ feature {NONE} -- Raise/unraise notification
 			l_message: !STRING_32
 			l_icon: !EV_PIXEL_BUFFER
 		do
-			if debugging_window /= Void and then {l_window: !EV_WINDOW} debugging_window.window then
+			if debugging_window /= Void and then {l_window: EV_WINDOW} debugging_window.window then
 				if raised then
 					create l_message.make_from_string (interface_names.l_Switching_to_normal_mode.as_string_32)
 					l_icon := pixmaps.icon_pixmaps.view_editor_icon_buffer
@@ -2357,7 +2357,7 @@ feature {NONE} -- Implementation
 			-- Refresh breakpoint tool if needed.
 		do
 			if debugging_window /= Void then
-				if {l_tool: !ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) then
+				if {l_tool: ES_BREAKPOINTS_TOOL} debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) then
 					if l_tool.shown then
 						l_tool.refresh
 					end

@@ -194,13 +194,13 @@ feature -- Events
 			-- Is stone `a_stone' valid ?
 		do
 			Result := viewers_manager /= Void and
-					({ost: !OBJECT_STONE} a_stone and then viewers_manager.is_stone_valid (ost))
+					({ost: OBJECT_STONE} a_stone and then viewers_manager.is_stone_valid (ost))
 		end
 
 	set_stone (a_stone: STONE) is
 			--	Stone dropped
 		do
-			if {ost: !OBJECT_STONE} a_stone then
+			if {ost: OBJECT_STONE} a_stone then
 				viewers_manager.set_stone (ost)
 			end
 		end

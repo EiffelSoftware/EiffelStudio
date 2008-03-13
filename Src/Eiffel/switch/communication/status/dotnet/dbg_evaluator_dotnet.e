@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 
 					notify_error_evaluation ("Once feature [" + f.feature_name + "]: not yet called")
 				elseif last_once_failed then
-					if {arv: !ABSTRACT_REFERENCE_VALUE} l_adv then
+					if {arv: ABSTRACT_REFERENCE_VALUE} l_adv then
 						create exc_dv.make_with_value (arv)
 					else
 						create exc_dv.make_without_any_value
@@ -764,7 +764,7 @@ feature {NONE} -- Implementation
 				if eifnet_evaluator.last_eval_aborted then
 					notify_error (Cst_error_evaluation_aborted, Void)
 				elseif eifnet_evaluator.last_eval_is_exception then
-					if {arv: !ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (l_result, Void) then
+					if {arv: ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (l_result, Void) then
 						create l_exc_dv.make_with_value (arv)
 					else
 						create l_exc_dv.make_without_any_value

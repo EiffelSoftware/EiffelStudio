@@ -1471,7 +1471,7 @@ feature -- Exception
 		local
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do
-			if {dv: !EIFNET_DEBUG_REFERENCE_VALUE} v then
+			if {dv: EIFNET_DEBUG_REFERENCE_VALUE} v then
 				l_exception_info := dv.icd_value_info
 				if l_exception_info /= Void then
 					Result := l_exception_info.value_class_name
@@ -1486,7 +1486,7 @@ feature -- Exception
 		local
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do
-			if {dv: !EIFNET_DEBUG_REFERENCE_VALUE} v then
+			if {dv: EIFNET_DEBUG_REFERENCE_VALUE} v then
 				l_exception_info := dv.icd_value_info
 				if l_exception_info /= Void then
 					Result := l_exception_info.value_module_file_name
@@ -1505,7 +1505,7 @@ feature -- Exception
 			l_to_string, l_message: STRING_32
 		do
 			if not retried then
-				if {dv: !EIFNET_DEBUG_REFERENCE_VALUE} v then
+				if {dv: EIFNET_DEBUG_REFERENCE_VALUE} v then
 					l_exception_info := dv.icd_value_info
 					if
 						l_exception_info /= Void

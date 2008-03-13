@@ -748,15 +748,15 @@ feature {NONE} -- Catcall warning access
 
 					Result.append_string (" for ")
 					if f /= Void then
-						if {args: !E_FEATURE_ARGUMENTS} (f.arguments) and then args.count >= rtcc.pos then
-							if {argnames: !LIST [STRING]} (args.argument_names) then
+						if {args: E_FEATURE_ARGUMENTS} (f.arguments) and then args.count >= rtcc.pos then
+							if {argnames: LIST [STRING]} (args.argument_names) then
 								argnames.start
 								argnames.move (rtcc.pos - 1)
 								argname := argnames.item
 							end
 							args.start
 							args.move (rtcc.pos - 1)
-							if {typ: !TYPE_A} args.item then
+							if {typ: TYPE_A} args.item then
 								argtypename := typ.name
 							end
 						end
@@ -861,7 +861,7 @@ feature {NONE} -- Implementation: threads
 
 						create mi.make_with_text_and_action ("Show threads panel", agent
 								do
-									if {th: !ES_THREADS_TOOL} eb_debugger_manager.threads_tool then
+									if {th: ES_THREADS_TOOL} eb_debugger_manager.threads_tool then
 										th.show (True)
 									end
 								end)
@@ -1390,7 +1390,7 @@ feature {NONE} -- Grid Implementation
 		require
 			a_row /= Void
 		do
-			if {lev: !INTEGER} a_row.data then
+			if {lev: INTEGER} a_row.data then
 				Result := lev
 			end
 		end

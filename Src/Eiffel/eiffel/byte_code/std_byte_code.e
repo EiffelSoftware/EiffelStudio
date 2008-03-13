@@ -74,7 +74,7 @@ feature -- Analyzis
 			workbench_mode, keep_assertions: BOOLEAN
 			type_i: TYPE_A
 			feat: FEATURE_I
-			have_precond, have_postcond, has_invariant: BOOLEAN
+			have_precond, have_postcond: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 			old_exp: UN_OLD_BL
 			l_context: like context
@@ -83,32 +83,31 @@ feature -- Analyzis
 			workbench_mode := l_context.workbench_mode
 			keep_assertions := workbench_mode or else l_context.system.keep_assertions
 			feat := l_context.current_feature
-			inh_assert := l_context.inherited_assertion
-			inh_assert.init
-			l_context.set_origin_has_precondition (True)
-			if not l_context.associated_class.is_basic and then feat.assert_id_set /= Void then
+			if keep_assertions then
+				l_context.set_origin_has_precondition (True)
+				inh_assert := l_context.inherited_assertion
+				inh_assert.init
+			end
+			if keep_assertions and not l_context.associated_class.is_basic and feat.assert_id_set /= Void then
 					--! Do not get inherited pre & post for basic types
 				formulate_inherited_assertions (feat.assert_id_set)
 			end
 			l_context.set_assertion_type (0)
 
+				-- Compute presence or not of pre/postconditions
+			if keep_assertions then
+				if l_context.origin_has_precondition then
+					have_precond := precondition /= Void or else inh_assert.has_precondition
+				end
+				have_postcond := postcondition /= Void or else inh_assert.has_postcondition
+			end
+
 				-- Enlarge the tree to get some attribute where we
 				-- can store information gathered by analyze.
-			enlarge_tree
-
-				-- Let's check if some invariants are going to be generated.
-				-- It is important to know for `compute_need_gc_hooks' which will
-				-- not try to optimize GC hooks if we are checking invariants.
-			has_invariant := keep_assertions
-
-				-- Compute presence or not of pre/postconditions
-			if l_context.origin_has_precondition then
-				have_precond := (precondition /= Void or else inh_assert.has_precondition) and then keep_assertions
-			end
-			have_postcond := (postcondition /= Void or else inh_assert.has_postcondition) and then keep_assertions
+			enlarge_body_tree (have_precond, have_postcond)
 
 				-- Check if we need GC hooks for current body.
-			l_context.compute_need_gc_hooks (have_precond or have_postcond or has_invariant)
+			l_context.compute_need_gc_hooks (keep_assertions)
 
 				-- Analyze arguments
 			analyze_arguments
@@ -1361,40 +1360,42 @@ end
 			have_assert		: BOOLEAN
 			inh_assert		: INHERITED_ASSERTION
 			buf				: GENERATION_BUFFER
+			keep_assertions: BOOLEAN
 		do
 			context.set_assertion_type (In_precondition)
 			workbench_mode := context.workbench_mode
-			inh_assert := Context.inherited_assertion
-			if Context.origin_has_precondition then
-				have_assert := (precondition /= Void or else
-								inh_assert.has_precondition) and then
-						(workbench_mode or else context.system.keep_assertions)
-			end
-			generate_invariant_before
-			if have_assert then
-				buf := buffer
-				buf.put_new_line
-				buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
-				buf.indent
-
-				if inh_assert.has_precondition then
-					inh_assert.generate_precondition
+			keep_assertions := workbench_mode or else context.system.keep_assertions
+			if keep_assertions then
+				inh_assert := Context.inherited_assertion
+				if Context.origin_has_precondition then
+					have_assert := (precondition /= Void or else inh_assert.has_precondition)
 				end
+				generate_invariant_before
+				if have_assert then
+					buf := buffer
+					buf.put_new_line
+					buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
+					buf.indent
 
-				if precondition /= Void then
-					Context.set_new_precondition_block (True)
-					precondition.generate
+					if inh_assert.has_precondition then
+						inh_assert.generate_precondition
+					end
+
+					if precondition /= Void then
+						Context.set_new_precondition_block (True)
+						precondition.generate
+					end
+
+					buf.put_new_line
+					buf.put_string ("RTJB;")
+					Context.generate_current_label_definition
+
+					buf.put_new_line
+					buf.put_string ("RTCF;")
+					buf.exdent
+					buf.put_new_line
+					buf.put_character ('}')
 				end
-
-				buf.put_new_line
-				buf.put_string ("RTJB;")
-				Context.generate_current_label_definition
-
-				buf.put_new_line
-				buf.put_string ("RTCF;")
-				buf.exdent
-				buf.put_new_line
-				buf.put_character ('}')
 			end
 		end
 
@@ -1405,29 +1406,32 @@ end
 			have_assert: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 			buf: GENERATION_BUFFER
+			keep_assertions: BOOLEAN
 		do
 			workbench_mode := context.workbench_mode
-			inh_assert := Context.inherited_assertion
-			have_assert := (postcondition /= Void or else inh_assert.has_postcondition) and then
-					(workbench_mode or else context.system.keep_assertions)
-			if have_assert then
-				buf := buffer
-				context.set_assertion_type (In_postcondition)
-				buffer.put_new_line
-				buf.put_string ("if (RTAL & CK_ENSURE) {")
-				buf.indent
+			keep_assertions := workbench_mode or else context.system.keep_assertions
+			if keep_assertions then
+				inh_assert := Context.inherited_assertion
+				have_assert := (postcondition /= Void or else inh_assert.has_postcondition)
+				if have_assert then
+					buf := buffer
+					context.set_assertion_type (In_postcondition)
+					buffer.put_new_line
+					buf.put_string ("if (RTAL & CK_ENSURE) {")
+					buf.indent
 
-				if inh_assert.has_postcondition then
-					inh_assert.generate_postcondition
+					if inh_assert.has_postcondition then
+						inh_assert.generate_postcondition
+					end
+					if postcondition /= Void then
+						postcondition.generate
+					end
+					buf.exdent
+					buf.put_new_line
+					buf.put_character ('}')
 				end
-				if postcondition /= Void then
-					postcondition.generate
-				end
-				buf.exdent
-				buf.put_new_line
-				buf.put_character ('}')
+				generate_invariant_after
 			end
-			generate_invariant_after
 		end
 
 	generate_save_assertion_level is
@@ -1518,20 +1522,22 @@ end
 			l_count: INTEGER
 		do
 			buf := buffer
-			if exception_stack_managed then
-				l_count := 1
-			end
-			if trace_enabled then
-				l_count := l_count + 1
-			end
-			if profile_enabled then
-				l_count := l_count + 1
-			end
-			if system.check_for_catcall_at_runtime then
-					-- We do `+ 2' because if you have more than one argument, then
-					-- we do not want to duplicate the feature name string especially
-					-- if nothing uses it.
-				l_count := l_count + 2
+			if context.workbench_mode then
+					-- We always buffer the routine name.
+				l_count := 2
+			else
+				if exception_stack_managed then
+					l_count := 1
+				end
+				if trace_enabled then
+					l_count := l_count + 1
+				end
+				if profile_enabled then
+					l_count := l_count + 1
+				end
+				if system.check_for_catcall_at_runtime then
+					l_count := l_count + argument_count
+				end
 			end
 			if l_count > 1 then
 				context.set_has_feature_name_stored (True)
@@ -1748,6 +1754,7 @@ end
 			l_type: TYPE_A
 			l_any_type: CL_TYPE_A
 			l_any_class_id, l_name_id: INTEGER
+			l_arg: ARGUMENT_BL
 		do
 			if context.workbench_mode or system.check_for_catcall_at_runtime then
 					-- We do not have to generate a catcall detection for some features of ANY
@@ -1774,7 +1781,11 @@ end
 									-- Only generate a catcall detection if the expected argument is different
 									-- than ANY since ANY is the ancestor to all types.
 								if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
-									context.generate_catcall_check_for_argument (l_type, i)
+									if l_arg = Void then
+										create l_arg
+									end
+									l_arg.set_position (i)
+									context.generate_catcall_check_for_argument (l_arg, l_type, i, False)
 								end
 							end
 							i := i - 1

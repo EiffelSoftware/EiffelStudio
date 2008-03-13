@@ -1877,34 +1877,33 @@ feature -- Access
 			end
 		end
 
-	generate_catcall_check_for_argument (a_type: TYPE_A; a_pos: INTEGER) is
+	generate_catcall_check_for_argument (a_register: REGISTRABLE; a_type: TYPE_A; a_pos: INTEGER; a_like_current_optimization_ok: BOOLEAN) is
 			-- Generate catcall check at runtime for the argument at position `a_pos' against the static
 			-- type `a_type'.
 		require
+			a_register_not_void: a_register /= Void
 			a_type_not_void: a_type /= Void
 			a_pos_positive: a_pos > 0
 		local
-			l_arg: ARGUMENT_BL
 			buf: like buffer
 			l_info: CREATE_INFO
 			l_optimized: BOOLEAN
 		do
-			if a_type.c_type.is_pointer then
+			if a_type.c_type.is_pointer and not a_type.is_none then
 				buf := buffer
-				create l_arg
-				l_arg.set_position (a_pos)
 				buf.put_new_line
 				buf.put_four_character ('i', 'f', ' ', '(')
-				l_arg.print_register
+				a_register.print_register
 				buf.put_three_character (')', ' ', '{')
 				buf.indent
 
-					-- Special handling of routines taking `like Current' in non-generic classes.
-					-- Those routines are safe, if the actual type of the argument is a descendant
+					-- Special handling of routines taking `like Current' in non-generic classes as long
+					-- as `a_like_current_optimization_ok' is enabled.
+					-- Usually, those routines are safe, if the actual type of the argument is a descendant
 					-- of the class in which `current_feature' is written in.
 					-- It is only done when the context type is not generic, as otherwise it is
 					-- harder do implement.
-				l_optimized := a_type.is_like_current and original_class_type.type.generics = Void
+				l_optimized := a_type.is_like_current and original_class_type.type.generics = Void and a_like_current_optimization_ok
 
 				if not l_optimized then
 					l_info := a_type.create_info
@@ -1913,7 +1912,7 @@ feature -- Access
 				end
 				buf.put_new_line
 				buf.put_string ("RTCC(")
-				l_arg.print_register
+				a_register.print_register
 				buf.put_two_character (',', ' ')
 				byte_code.feature_origin (buf)
 				buf.put_two_character (',', ' ')

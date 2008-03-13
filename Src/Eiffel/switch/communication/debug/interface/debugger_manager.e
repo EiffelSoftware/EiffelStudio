@@ -1089,6 +1089,15 @@ feature {NONE} -- Bridge to compiler data implementation
 
 feature -- Change
 
+	update_rt_extension_available is
+			-- Update value of `rt_extension_available'
+		do
+				--| Check if RT_EXTENSION is available
+			rt_extension_available := Eiffel_project.system_defined and then 
+							{cl_i: CLASS_I} Eiffel_system.system.rt_extension_class and then
+							cl_i.is_compiled
+		end
+
 	change_current_thread_id (tid: INTEGER) is
 			-- Set Current thread id to `tid'
 		local
@@ -1265,7 +1274,7 @@ feature -- Compilation events
 					-- Save breakpoint status and command line.
 				save_debugger_data
 			end
-			rt_extension_available := eiffel_system.system.rt_extension_class /= Void and then eiffel_system.system.rt_extension_class.is_compiled
+			update_rt_extension_available
 		end
 
 feature -- Debugging events
@@ -1301,8 +1310,7 @@ feature -- Debugging events
 			save_debugger_data
 
 				--| Check if RT_EXTENSION is available
-			rt_extension_available := Eiffel_system.system.rt_extension_class /= Void and then
-										Eiffel_system.system.rt_extension_class.is_compiled
+			update_rt_extension_available				
 
 			if not rt_extension_available then
 				activate_execution_replay_recording (False)
@@ -1522,6 +1530,38 @@ feature -- Debuggee Objects management
 				end
 			end
 		end
+
+feature -- Logger
+
+	log_message (s: STRING_32) is
+			-- Log message `s'
+		require
+			s_not_empty: s /= Void and then s.count > 0
+		local
+			l_logger: like logger_service
+		do
+			l_logger := logger_service
+			if l_logger.is_service_available then
+				l_logger.service.put_message_with_severity (s, {ENVIRONMENT_CATEGORIES}.debugger, {PRIORITY_LEVELS}.normal)
+			end
+		end
+
+feature {NONE} -- Logger
+
+	logger_service: !SERVICE_CONSUMER [LOGGER_S]
+			-- Access to logger service
+		do
+			if {l_service: SERVICE_CONSUMER [LOGGER_S]} internal_logger_service then
+				Result := l_service
+			else
+				create Result
+				internal_logger_service := Result
+			end
+		end
+
+	internal_logger_service: SERVICE_CONSUMER [LOGGER_S]
+			-- Cached version of `logger_service'
+			-- Note: Do not use directly!		
 
 feature {APPLICATION_EXECUTION} -- specific implementation
 

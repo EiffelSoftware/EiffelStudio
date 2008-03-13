@@ -1093,7 +1093,7 @@ feature -- Change
 			-- Update value of `rt_extension_available'
 		do
 				--| Check if RT_EXTENSION is available
-			rt_extension_available := Eiffel_project.system_defined and then 
+			rt_extension_available := Eiffel_project.system_defined and then
 							{cl_i: CLASS_I} Eiffel_system.system.rt_extension_class and then
 							cl_i.is_compiled
 		end
@@ -1310,7 +1310,7 @@ feature -- Debugging events
 			save_debugger_data
 
 				--| Check if RT_EXTENSION is available
-			update_rt_extension_available				
+			update_rt_extension_available
 
 			if not rt_extension_available then
 				activate_execution_replay_recording (False)
@@ -1542,7 +1542,7 @@ feature -- Logger
 		do
 			l_logger := logger_service
 			if l_logger.is_service_available then
-				l_logger.service.put_message_with_severity (s, {ENVIRONMENT_CATEGORIES}.debugger, {PRIORITY_LEVELS}.normal)
+				l_logger.service.put_message_with_severity (({!STRING_32}) #? s, {ENVIRONMENT_CATEGORIES}.debugger, {PRIORITY_LEVELS}.normal)
 			end
 		end
 

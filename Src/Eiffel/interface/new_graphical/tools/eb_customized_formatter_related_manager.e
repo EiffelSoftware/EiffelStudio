@@ -10,11 +10,15 @@ deferred class
 inherit
 	EB_XML_DOCUMENT_HELPER [G]
 
-	EC_EIFFEL_LAYOUT
-
 	SHARED_WORKBENCH
 
 	EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS
+
+--inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -154,7 +158,7 @@ feature{NONE} -- Implementation/Data
 	global_file_path: FILE_NAME is
 			-- Path to store global formatter related file
 		do
-			Result := formatter_file_path (eiffel_home)
+			Result := formatter_file_path (eiffel_layout.user_settings_path)
 		ensure
 			result_attached: Result /= Void
 		end

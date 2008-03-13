@@ -208,14 +208,14 @@ feature -- Command
 			create l_c_finalized_compilation_cmd.make_finalized (develop_window)
 			auto_recycle (l_c_finalized_compilation_cmd)
 			develop_window.commands.set_c_finalized_compilation_cmd (l_c_finalized_compilation_cmd)
-			if develop_window.has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				create l_show_dynamic_lib_tool.make
 				auto_recycle (l_show_dynamic_lib_tool)
 				develop_window.set_show_dynamic_lib_tool (l_show_dynamic_lib_tool)
 				develop_window.show_dynamic_lib_tool.set_menu_name (develop_window.Interface_names.m_new_dynamic_lib)
 				develop_window.show_dynamic_lib_tool.add_agent (agent develop_window.show_dynamic_library_dialog)
 			end
-			if develop_window.has_profiler then
+			if eiffel_layout.has_profiler then
 				create l_show_profiler
 				auto_recycle (l_show_profiler)
 				develop_window.commands.set_show_profiler (l_show_profiler)
@@ -1059,13 +1059,13 @@ feature{NONE} -- Implementation
 			create l_undo_accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
 			develop_window.set_undo_accelerator (l_undo_accelerator)
 
-			if develop_window.has_diagram then
+			if eiffel_layout.has_diagram then
 				l_undo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.undo_cmd).on_ctrl_z)
 			end
 
 			l_shortcut := develop_window.preferences.misc_shortcut_data.redo_shortcut
 			create l_redo_accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_alt, l_shortcut.is_ctrl, l_shortcut.is_shift)
-			if develop_window.has_diagram then
+			if eiffel_layout.has_diagram then
 				l_redo_accelerator.actions.extend (agent (develop_window.tools.diagram_tool.redo_cmd).on_ctrl_y)
 			end
 			develop_window.window.accelerators.extend (l_undo_accelerator)

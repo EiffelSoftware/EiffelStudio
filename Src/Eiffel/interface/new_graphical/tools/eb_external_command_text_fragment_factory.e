@@ -481,7 +481,7 @@ feature{NONE} -- Implementation
 		local
 			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string (eiffel_home)
+			create l_file_name.make_from_string (eiffel_layout.eiffel_home)
 			l_file_name.set_file_name ("~" + a_base_name)
 			Result := l_file_name
 		ensure
@@ -506,7 +506,7 @@ feature{NONE} -- Implementation
 			a_file_name_attached: a_file_name /= Void
 		do
 			Result := a_file_name.twin
-			if platform.is_windows and then a_file_name.index_of (' ', 1) > 0 then
+			if {PLATFORM}.is_windows and then a_file_name.index_of (' ', 1) > 0 then
 				Result.prepend_character ('%"')
 				Result.append_character ('%"')
 			end

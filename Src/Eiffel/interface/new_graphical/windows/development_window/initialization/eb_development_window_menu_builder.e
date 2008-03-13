@@ -931,19 +931,19 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
-			if develop_window.has_documentation_generation or develop_window.has_xmi_generation then
+			if eiffel_layout.has_documentation_generation or eiffel_layout.has_xmi_generation then
 					-- Separator -------------------------------------------------
 				l_project_menu.extend (create {EV_MENU_SEPARATOR})
 			end
 
-			if develop_window.has_documentation_generation then
+			if eiffel_layout.has_documentation_generation then
 					-- Generate Documentation
 				l_command_menu_item := develop_window.document_cmd.new_menu_item
 				auto_recycle (l_command_menu_item)
 				l_project_menu.extend (l_command_menu_item)
 			end
 
-			if develop_window.has_xmi_generation then
+			if eiffel_layout.has_xmi_generation then
 					-- Export XMI
 				l_command_menu_item := develop_window.export_cmd.new_menu_item
 				auto_recycle (l_command_menu_item)
@@ -983,7 +983,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Separator --------------------------------------
 			develop_window.menus.tools_menu.extend (create {EV_MENU_SEPARATOR})
 
-			if develop_window.has_profiler then
+			if eiffel_layout.has_profiler then
 					-- Profiler Window
 				l_command_menu_item := develop_window.commands.show_profiler.new_menu_item
 				auto_recycle (l_command_menu_item)
@@ -995,7 +995,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_command_menu_item)
 			develop_window.menus.tools_menu.extend (l_command_menu_item)
 
-			if develop_window.has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 					-- Dynamic Library Window
 				l_command_menu_item := develop_window.show_dynamic_lib_tool.new_menu_item
 				auto_recycle (l_command_menu_item)
@@ -1080,6 +1080,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_CLASS_TOOL})
 			insert_show_tool_menu_item (Result, {ES_FEATURE_RELATION_TOOL})
+			insert_show_tool_menu_item (Result, {ES_DEPENDENCY_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_OUTPUT_TOOL})
 			insert_show_tool_menu_item (Result, {ES_C_OUTPUT_TOOL})
@@ -1093,7 +1094,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_PROPERTIES_TOOL})
 			insert_show_tool_menu_item (Result, {ES_DIAGRAM_TOOL})
 			insert_show_tool_menu_item (Result, {ES_METRICS_TOOL})
-			insert_show_tool_menu_item (Result, {ES_DEPENDENCY_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_WINDOWS_TOOL})
 			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})

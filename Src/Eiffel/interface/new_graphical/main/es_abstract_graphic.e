@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			-- Various initialization of the compiler
 		local
 			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
-			l_layout: EC_EIFFEL_LAYOUT
+			l_layout: ES_EIFFEL_LAYOUT
 			l_ui_executor: EB_COMMAND_EXECUTOR
 			pref_strs: PREFERENCE_CONSTANTS
 			fn: FILE_NAME
@@ -80,11 +80,10 @@ feature {NONE} -- Initialization
 		do
 				-- Check that environment variables
 				-- are properly set.
-			if not is_eiffel_layout_defined then
-				create l_layout
-				l_layout.check_environment_variable
-				set_eiffel_layout (l_layout)
-			end
+			check not_is_eiffel_layout_defined: not is_eiffel_layout_defined end
+			create l_layout
+			set_eiffel_layout (l_layout)
+			l_layout.check_environment_variable
 
 			create l_compiler_setting
 			create l_ui_executor

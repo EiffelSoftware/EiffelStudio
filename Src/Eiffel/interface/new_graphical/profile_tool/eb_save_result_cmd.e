@@ -45,7 +45,7 @@ feature {EB_PROFILE_QUERY_WINDOW} -- Command Execution
 		do
 			l_pref := preferences.dialog_data.last_saved_profile_result_directory_preference
 			if l_pref.value = Void or else l_pref.value.is_empty then
-				l_pref.set_value (eiffel_layout.eiffel_projects_directory)
+				l_pref.set_value (eiffel_layout.user_projects_path.string)
 			end
 			create fsd.make_with_preference (l_pref)
 			fsd.save_actions.extend (agent save_in (fsd))

@@ -176,8 +176,8 @@ feature {AUXILIARY_FILES} -- Versioning
 				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
 				-- will get replaced by the delivery scripts (see comments for `snv_revision'.
 			create Result.make_version (
-				eiffel_layout.major_version,
-				eiffel_layout.minor_version,
+				{EIFFEL_ENVIRONMENT_CONSTANTS}.major_version,
+				{EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version,
 				(svn_revision // (9999 + 1).as_natural_32).as_natural_16,
 				(svn_revision \\ (9999 + 1).as_natural_32).as_natural_16)
 		end

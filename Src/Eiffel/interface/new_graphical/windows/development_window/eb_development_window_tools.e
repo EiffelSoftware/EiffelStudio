@@ -238,7 +238,7 @@ feature -- Commands
 			features_relation_tool.set_stone (a_stone)
 			class_tool.set_stone (a_stone)
 			dependency_tool.set_stone (a_stone)
-			if develop_window.has_diagram then
+			if eiffel_layout.has_diagram then
 				 diagram_tool.set_stone (a_stone)
 			end
 			set_stone_to_customized_tools (a_stone)
@@ -291,12 +291,12 @@ feature -- Commands
 							stone := stone.synchronized_stone
 						end
 						set_stone (stone)
-						if develop_window.has_diagram then
+						if eiffel_layout.has_diagram then
 							diagram_tool.synchronize
 						end
 					else
 						l_stone := diagram_tool.last_stone
-						if l_stone /= Void and develop_window.has_diagram then
+						if l_stone /= Void and eiffel_layout.has_diagram then
 							l_stone := l_stone.synchronized_stone
 							diagram_tool.set_stone (l_stone)
 						end
@@ -315,7 +315,7 @@ feature -- Commands
 	refresh is
 			-- Class has changed in `development_window'.
 		do
-			if develop_window.has_diagram then
+			if eiffel_layout.has_diagram then
 				 diagram_tool.synchronize
 			end
 			class_tool.refresh
@@ -538,4 +538,5 @@ feature {NONE} -- Internal implementation cache
 		]"
 
 end -- class EB_DEVELOPMENT_WINDOW_TOOLS
+
 

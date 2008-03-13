@@ -22,7 +22,11 @@ inherit
 
 	EB_SHARED_DEBUGGER_MANAGER
 
-	EC_EIFFEL_LAYOUT
+-- inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -46,11 +50,10 @@ feature -- Command
 		do
 			l_graphical_debugger ?= debugger_manager
 			if l_graphical_debugger /= Void then
-				l_fn := docking_standard_layout_path.twin
 				if not l_graphical_debugger.raised then
-					l_fn.set_file_name (standard_tools_layout_name)
+					l_fn := eiffel_layout.user_docking_standard_file_name
 				else
-					l_fn.set_file_name (standard_tools_debug_layout_name)
+					l_fn := eiffel_layout.user_docking_debug_file_name
 				end
 				develop_window.docking_manager.save_tools_config (l_fn)
 			end
@@ -61,13 +64,12 @@ feature -- Command
 		local
 			l_graphical_debugger: EB_DEBUGGER_MANAGER
 			l_file: RAW_FILE
-			l_fn: FILE_NAME
+			l_fn: STRING_8
 		do
 			l_graphical_debugger ?= debugger_manager
 			if l_graphical_debugger /= Void then
 				if l_graphical_debugger.raised then
-					l_fn := docking_standard_layout_path.twin
-					l_fn.set_file_name (standard_tools_debug_layout_name)
+					l_fn := eiffel_layout.user_docking_standard_file_name.string
 					create l_file.make (l_fn)
 					if not l_file.exists then
 						execute

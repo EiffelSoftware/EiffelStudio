@@ -11,6 +11,12 @@ class
 inherit
 	EB_SHARED_ID_SOLUTION
 
+inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -40,7 +46,7 @@ feature -- Command
 			if
 				not develop_window.development_window_data.is_force_debug_mode or
 				l_debugger_manager = Void or
-				not develop_window.docking_manager.is_config_data_valid (develop_window.docking_config_tools_file) or else
+				not develop_window.docking_manager.is_config_data_valid (eiffel_layout.user_docking_standard_file_name) or else
 				l_debugger_manager.debug_mode_forced -- There is already a window forced debug mode. We open an normal window.
 			then
 				develop_window.restore_tools_docking_layout
@@ -120,9 +126,9 @@ feature -- Command
 				develop_window.editors_manager.show_editors_possible
 				l_debugger_manager ?= develop_window.debugger_manager
 				if not l_debugger_manager.raised then
-					develop_window.docking_manager.open_maximized_tool_config (develop_window.docking_config_tools_file)
+					develop_window.docking_manager.open_maximized_tool_config (eiffel_layout.user_docking_standard_file_name)
 				else
-					develop_window.docking_manager.open_maximized_tool_config (develop_window.docking_debug_config_file)
+					develop_window.docking_manager.open_maximized_tool_config (eiffel_layout.user_docking_debug_file_name)
 				end
 
 			end

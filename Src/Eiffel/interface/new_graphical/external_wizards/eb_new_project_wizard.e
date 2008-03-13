@@ -76,7 +76,7 @@ feature -- Access
 	target_platform_supported: BOOLEAN is
 			-- Is the target platform supported by the current platform?
 		do
-			Result := target_platform.is_equal ("all") or else eiffel_layout.platform_abstraction.is_equal (target_platform)
+			Result := target_platform.is_equal ("all") or else target_platform.is_case_insensitive_equal (eiffel_layout.platform_abstraction)
 		end
 
 feature -- Status Setting

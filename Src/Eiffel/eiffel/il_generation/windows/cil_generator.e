@@ -176,7 +176,7 @@ feature -- Generation
 					cil_generator.set_window_application
 				end
 
-				if not platform_constants.is_windows_64_bits or System.force_32bits then
+				if not platform_constants.is_64_bits or System.force_32bits then
 					cil_generator.set_32bits
 				end
 

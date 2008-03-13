@@ -98,14 +98,6 @@ inherit
 			{NONE} All
 		end
 
-	EC_EIFFEL_LAYOUT
-		export
-			{EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, ES_DIAGRAM_TOOL_PANEL}
-				 has_diagram, has_metrics, has_dll_generation, has_profiler, has_documentation_generation, has_xmi_generation
-			{EB_DEBUGGER_MANAGER} Docking_standard_layout_path, standard_tools_debug_layout_name
-			{NONE} All
-		end
-
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		export
 			{NONE} all
@@ -128,6 +120,12 @@ inherit
 		end
 
 	HASHABLE
+
+inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 create {EB_DEVELOPMENT_WINDOW_DIRECTOR}
 	make
@@ -505,7 +503,7 @@ feature -- Update
 --			end
 --			tools.class_tool.invalidate
 --			tools.features_relation_tool.invalidate
-			if has_diagram then
+			if eiffel_layout.has_diagram then
 				tools.diagram_tool.synchronize
 			end
 
@@ -1110,14 +1108,14 @@ feature -- Window management
 			-- because current widgets layout is debug mode layout (not normal mode layout),
 			-- and the debug mode widgets layout is saved by EB_DEBUGGER_MANAGER already.
 			if l_eb_debugger_manager /= Void and then not l_eb_debugger_manager.is_exiting_eiffel_studio then
-				docking_manager.save_tools_config (docking_config_tools_file)
+				docking_manager.save_tools_config (eiffel_layout.user_docking_standard_file_name)
 			end
 		end
 
 	save_editors_docking_layout is
 			-- Save all editors docking layout.
 		do
-			docking_manager.save_editors_config (docking_config_editors_file)
+			docking_manager.save_editors_config (project_docking_standard_file_name)
 		end
 
 	internal_construct_standard_layout_by_code is
@@ -1219,9 +1217,9 @@ feature -- Window management
 			l_raw_file: RAW_FILE
 			l_result: BOOLEAN
 		do
-			create l_raw_file.make (docking_config_tools_file)
+			create l_raw_file.make (eiffel_layout.user_docking_standard_file_name)
 			if l_raw_file.exists then
-				l_result := docking_manager.open_tools_config (docking_config_tools_file)
+				l_result := docking_manager.open_tools_config (eiffel_layout.user_docking_standard_file_name)
 			end
 
 			if not l_result then
@@ -1236,9 +1234,9 @@ feature -- Window management
 		local
 			l_raw_file: RAW_FILE
 		do
-			create l_raw_file.make (docking_config_editors_file)
+			create l_raw_file.make (project_docking_standard_file_name)
 			if l_raw_file.exists then
-				docking_manager.open_editors_config (docking_config_editors_file)
+				docking_manager.open_editors_config (project_docking_standard_file_name)
 			end
 		end
 
@@ -1248,14 +1246,11 @@ feature -- Window management
 			l_file: RAW_FILE
 			l_result: BOOLEAN
 			retried: BOOLEAN
-			l_fn: FILE_NAME
 		do
 			if not retried then
-				l_fn := docking_standard_layout_path.twin
-				l_fn.set_file_name (standard_tools_layout_name)
-				create l_file.make (l_fn )
+				create l_file.make (eiffel_layout.user_docking_standard_file_name)
 				if l_file.exists then
-					l_result := docking_manager.open_tools_config (l_fn)
+					l_result := docking_manager.open_tools_config (eiffel_layout.user_docking_standard_file_name)
 					check l_result end
 				else
 					internal_construct_standard_layout_by_code
@@ -1289,33 +1284,6 @@ feature -- Window management
 
 				l_tools.forth
 			end
-		end
-
-	docking_config_tools_file: FILE_NAME is
-			-- Docking config file name.
-		local
-			l_env: EC_EIFFEL_LAYOUT
-		once
-			create l_env
-			create Result.make_from_string (l_env.docking_standard_layout_path)
-			Result.set_file_name ("layout.wb")
-		end
-
-	docking_config_editors_file: FILE_NAME is
-			-- Docking config file name.
-		do
-			create Result.make_from_string (project_location.target_path)
-			Result.set_file_name ("layout.wb")
-		end
-
-	docking_debug_config_file: FILE_NAME is
-			-- Docking config file when debugging.
-		local
-			l_env: EC_EIFFEL_LAYOUT
-		once
-			create l_env
-			create Result.make_from_string (l_env.docking_standard_layout_path)
-			Result.set_file_name ("debug_layout.wb")
 		end
 
 feature -- Tools & Controls
@@ -2548,6 +2516,15 @@ feature {EB_DEVELOPMENT_WINDOW_PART}
 			context_refreshing_timer := a_timer
 		ensure
 			set: context_refreshing_timer = a_timer
+		end
+
+feature -- Files (project)
+
+	project_docking_standard_file_name: !FILE_NAME
+			-- Docking config file name.
+		do
+			create Result.make_from_string (project_location.target_path)
+			Result.set_file_name (eiffel_layout.docking_standard_file)
 		end
 
 feature {NONE} -- Window management

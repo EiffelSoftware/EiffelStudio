@@ -36,14 +36,14 @@ feature -- Building commands
 			l_debugger ?= develop_window.debugger_manager
 			if l_debugger /= Void then
 				if not l_debugger.raised then
-					create l_file.make (develop_window.docking_config_tools_file)
+					create l_file.make (eiffel_layout.user_docking_standard_file_name)
 					if l_file.exists then
-						develop_window.docking_manager.open_tool_bar_item_config (develop_window.docking_config_tools_file)
+						develop_window.docking_manager.open_tool_bar_item_config (eiffel_layout.user_docking_standard_file_name)
 					end
 				else
-					create l_file.make (develop_window.docking_debug_config_file)
+					create l_file.make (eiffel_layout.user_docking_debug_file_name)
 					if l_file.exists then
-						develop_window.docking_manager.open_tool_bar_item_config (develop_window.docking_debug_config_file)
+						develop_window.docking_manager.open_tool_bar_item_config (eiffel_layout.user_docking_debug_file_name)
 					end
 				end
 			end

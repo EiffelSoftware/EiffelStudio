@@ -11,6 +11,12 @@ deferred class
 inherit
 	EB_RECYCLABLE
 
+-- inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Recycle
 
 	internal_recycle is

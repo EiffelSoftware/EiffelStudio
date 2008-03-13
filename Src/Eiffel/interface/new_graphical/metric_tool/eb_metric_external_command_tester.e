@@ -16,7 +16,10 @@ inherit
 			is_equal
 		end
 
-	EC_EIFFEL_LAYOUT
+--inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
 		undefine
 			copy,
 			is_equal
@@ -339,7 +342,7 @@ feature{EB_METRIC_EXTERNAL_COMMAND_CRITERION} -- External command evaluation
 			end
 
 				-- Test platform, for Windows, we disable the console window.
-			if platform.is_windows then
+			if {PLATFORM}.is_windows then
 				l_launcher.set_separate_console (False)
 				l_launcher.set_hidden (True)
 			end
@@ -534,4 +537,5 @@ invariant
 	error_attached: error /= Void
 
 end
+
 

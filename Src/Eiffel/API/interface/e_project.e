@@ -564,8 +564,8 @@ feature -- Update
 			else
 				path := project_directory.final_path
 			end
-			create l_cmd.make_from_string ("%"" + eiffel_layout.Freeze_command_name + "%"")
-			if comp_system.il_generation and (not eiffel_layout.platform.is_windows_64_bits or Comp_system.force_32bits) then
+			create l_cmd.make_from_string ("%"" + eiffel_layout.freeze_command_name + "%"")
+			if comp_system.il_generation and (not {PLATFORM_CONSTANTS}.is_64_bits or Comp_system.force_32bits) then
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
@@ -593,7 +593,7 @@ feature -- Update
 				path := project_directory.final_path
 			end
 			create l_cmd.make_from_string ("%"" + eiffel_layout.Freeze_command_name + "%"")
-			if comp_system.il_generation and (not eiffel_layout.platform.is_windows_64_bits or Comp_system.force_32bits) then
+			if comp_system.il_generation and (not {PLATFORM_CONSTANTS}.is_64_bits or Comp_system.force_32bits) then
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end

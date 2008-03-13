@@ -40,7 +40,7 @@ feature -- Access
 	creation_expr: CREATION_EXPR_B
 			-- Associated creation expression.
 
-	named_arguments:  ARRAYED_LIST [TUPLE [STRING_B, EXPR_B]]
+	named_arguments:  ARRAYED_LIST [TUPLE [name: STRING_B; expression: EXPR_B]]
 			-- Associated data for named arguments.
 
 feature -- Settings

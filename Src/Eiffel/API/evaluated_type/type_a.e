@@ -1261,7 +1261,9 @@ feature {TYPE_A} -- Helpers
 			other_not_void: other /= Void
 			other_derived: other.internal_generic_derivation (a_level).same_as (other)
 		do
-			Result := is_equal (other)
+			if {l_like_current: like Current} other then
+				Result := is_equal (l_like_current)
+			end
 		ensure
 				-- Only if `current_type' is Void, can we ensure that a True results means that they have
 				-- the same generic derivation.

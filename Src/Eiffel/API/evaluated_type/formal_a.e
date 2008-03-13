@@ -236,7 +236,7 @@ feature -- Access
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is `other' the same as Current ?
 		local
-			other_formal: FORMAL_A
+			other_formal: like Current
 		do
 			other_formal ?= other
 			if other_formal /= Void then

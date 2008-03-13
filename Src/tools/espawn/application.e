@@ -89,7 +89,7 @@ feature -- Basic operations
 						merge_variable (lib_var_name, l_config.lib_var, a_env)
 
 							-- Set platform name
-						if not {PLATFORM_CONSTANTS}.is_windows_64_bits or else a_options.for_32bit then
+						if not {PLATFORM_CONSTANTS}.is_64_bits or else a_options.for_32bit then
 							a_env.set_environment ("windows", ise_platform_var_name)
 						else
 							a_env.set_environment ("win64", ise_platform_var_name)

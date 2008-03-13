@@ -64,7 +64,7 @@ feature -- Query
 			-- `a_stone': Stone to determine usablity.
 			-- `Result': True if the stone can be used, False otherwise.
 		do
-			Result := {l_stone: !CALL_STACK_STONE} a_stone
+			Result := {l_stone: CALL_STACK_STONE} a_stone
 		end
 
 feature -- Access

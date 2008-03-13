@@ -640,7 +640,7 @@ feature {NONE} -- Actions implementation
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.	
 		do
 			if ab =  {EV_POINTER_CONSTANTS}.right and ev_application.ctrl_pressed then
-				if {l_stone: !STONE} grid_pebble_from_cell (a_item) and then l_stone.is_valid then
+				if {l_stone: STONE} grid_pebble_from_cell (a_item) and then l_stone.is_valid then
 					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end

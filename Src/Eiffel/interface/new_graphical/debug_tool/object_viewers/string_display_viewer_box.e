@@ -267,7 +267,7 @@ feature -- Access
 	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
 			-- Is `st' valid stone for Current?
 		do
-			Result := {st: !OBJECT_STONE} a_stone and then
+			Result := {st: OBJECT_STONE} a_stone and then
 				debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class).has_formatted_output
 		end
 

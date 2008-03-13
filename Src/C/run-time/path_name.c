@@ -588,35 +588,35 @@ rt_public EIF_REFERENCE eif_user_directory_name(void)
 		// Use the defined variable name.
 		return RTMS(getenv("ISE_USER_FILES"));
 	} else {
-		#ifdef EIF_WINDOWS
-		#if (_WIN32_IE < 0x0500)
-		#ifndef CSIDL_PERSONAL
-		#define CSIDL_PERSONAL 0x0005 /* roaming, user\My Documents */
-		#endif
-		#endif
-			char l_path[MAX_PATH + 1];
-			BOOL fResult = FALSE;
-			FARPROC sh_get_folder_path = NULL;
-			HMODULE shell32_module = LoadLibrary ("shell32.dll");
+#ifdef EIF_WINDOWS
+#if (_WIN32_IE < 0x0500)
+#ifndef CSIDL_PERSONAL
+#define CSIDL_PERSONAL 0x0005 /* roaming, user\My Documents */
+#endif
+#endif
+		char l_path[MAX_PATH + 1];
+		BOOL fResult = FALSE;
+		FARPROC sh_get_folder_path = NULL;
+		HMODULE shell32_module = LoadLibrary ("shell32.dll");
 
-			if (shell32_module) {
-				sh_get_folder_path = GetProcAddress (shell32_module, "SHGetSpecialFolderPathA");
-				if (sh_get_folder_path) {
-					fResult = (FUNCTION_CAST_TYPE(BOOL, WINAPI, (HWND, LPSTR, DWORD, BOOL)) sh_get_folder_path) (
-						NULL, l_path, CSIDL_PERSONAL, TRUE);
-				}
-				FreeLibrary(shell32_module);
+		if (shell32_module) {
+			sh_get_folder_path = GetProcAddress (shell32_module, "SHGetSpecialFolderPathA");
+			if (sh_get_folder_path) {
+				fResult = (FUNCTION_CAST_TYPE(BOOL, WINAPI, (HWND, LPSTR, DWORD, BOOL)) sh_get_folder_path) (
+					NULL, l_path, CSIDL_PERSONAL, TRUE);
 			}
+			FreeLibrary(shell32_module);
+		}
 
-			if (fResult) {
-				return RTMS(l_path);
-			} else {
-				return NULL;
-			}
-		#else
-			// Default to the user directory name
-			return eif_home_directory_name();
-		#endif
+		if (fResult) {
+			return RTMS(l_path);
+		} else {
+			return NULL;
+		}
+#else
+		// Default to the user directory name
+		return eif_home_directory_name();
+#endif
 	}
 }
 

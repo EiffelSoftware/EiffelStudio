@@ -19,7 +19,7 @@ feature -- Access
 	cache_bit_platform: STRING is
 			-- Bit platform cache used under
 		once
-			if {PLATFORM_CONSTANTS}.is_windows_64_bits then
+			if {PLATFORM_CONSTANTS}.is_64_bits then
 				Result := x64_directory_name
 			else
 				Result := x86_directory_name

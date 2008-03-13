@@ -10,10 +10,24 @@ class
 
 inherit
 	EIFFEL_ENV
+		redefine
+			creatable_directories
+		end
 
 feature -- Access
 
 	application_name: STRING is "ec";
+
+feature {NONE} -- Access
+
+	creatable_directories: !ARRAYED_LIST [STRING_8]
+			-- List of directories to be created at start up
+		once
+			Result := Precursor {EIFFEL_ENV}
+			if is_user_files_supported then
+				Result.extend (user_projects_path.string)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

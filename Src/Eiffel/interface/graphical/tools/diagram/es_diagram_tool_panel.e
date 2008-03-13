@@ -539,7 +539,9 @@ feature -- EB_TOOL features
 	build_interface is
 			-- Build interface
 		do
-			check has_case: develop_window.has_diagram end
+			check
+				has_case: (create {EIFFEL_LAYOUT}).eiffel_layout.has_diagram
+			end
 			make_with_tool
 
 			create history_manager.make (Current)
@@ -2451,4 +2453,5 @@ indexing
 		]"
 
 end -- class EB_CONTEXT_EDITOR
+
 

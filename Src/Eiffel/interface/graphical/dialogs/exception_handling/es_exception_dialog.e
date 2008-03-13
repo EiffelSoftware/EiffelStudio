@@ -255,7 +255,7 @@ feature {NONE} -- Action handlers
 			if not retried then
 				l_pref := preferences.dialog_data.last_saved_exception_directory_preference
 				if l_pref.value = Void or else l_pref.value.is_empty then
-					l_pref.set_value ((create {EIFFEL_LAYOUT}).eiffel_layout.eiffel_projects_directory)
+					l_pref.set_value ((create {EIFFEL_LAYOUT}).eiffel_layout.user_projects_path)
 				end
 				create l_save_dialog.make_with_preference (l_pref)
 				create l_constants

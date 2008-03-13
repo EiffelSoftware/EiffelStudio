@@ -10,6 +10,12 @@ indexing
 class
 	SHARED_LOCALE
 
+inherit --{NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	locale: I18N_LOCALE is
@@ -26,12 +32,12 @@ feature -- Access
 
 	locale_manager: I18N_LOCALE_MANAGER is
 			-- Locale manager
-		local
-			l_layout: EC_EIFFEL_LAYOUT
 		once
-        	create l_layout
-        	l_layout.check_environment_variable
-			create Result.make (l_layout.language_path)
+			check
+				is_eiffel_layout_defined: is_eiffel_layout_defined
+				is_valid_environment: eiffel_layout.is_valid_environment
+			end
+			create Result.make (eiffel_layout.language_path)
 		end
 
 feature -- Status change
@@ -366,5 +372,6 @@ indexing
 		]"
 
 end
+
 
 

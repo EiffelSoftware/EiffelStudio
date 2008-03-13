@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 		local
 			l_project_location: STRING
 		do
-			l_project_location := eiffel_layout.Eiffel_projects_directory.twin
+			l_project_location := eiffel_layout.user_projects_path.twin
 			if l_project_location @ l_project_location.count /= Operating_environment.Directory_separator then
 				l_project_location.append_character (Operating_environment.Directory_separator)
 			end

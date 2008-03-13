@@ -150,7 +150,7 @@ feature {NONE} -- Query
 				l_fn := l_formatter.format (l_fn, [l_ver, l_target, l_window_id, l_extension])
 
 					-- Create full path
-				create l_path.make_from_string (eiffel_layout.session_data_path.string)
+				create l_path.make_from_string (eiffel_layout.user_session_path.string)
 				l_path.set_file_name (l_fn)
 				Result ?= l_path.out
 			end
@@ -528,10 +528,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	environment_file_name: STRING_8 = "environment{4}"
-	window_file_name: STRING_8 = "window_{3}{4}"
-	project_file_name: STRING_8 = "{1}.{2}{4}"
-	project_window_file_name: STRING_8 = "{1}.{2}.window_{3}{4}"
+	environment_file_name: STRING_8 = "environment{4}.ses"
+	window_file_name: STRING_8 = "window_{3}{4}.ses"
+	project_file_name: STRING_8 = "{1}.{2}{4}.ses"
+	project_window_file_name: STRING_8 = "{1}.{2}.window_{3}{4}.ses"
 
 feature {NONE} -- Internal implementation cache
 

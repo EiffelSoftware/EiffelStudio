@@ -10,13 +10,16 @@ deferred class
 inherit
 	EB_SHARED_MANAGERS
 
-	EC_EIFFEL_LAYOUT
-
 	EB_EDITORS_MANAGER
 
 	SHARED_SERVER
 
-
+-- inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+		
 feature -- Access
 
 	new_file_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is

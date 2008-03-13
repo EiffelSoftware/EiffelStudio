@@ -8,8 +8,11 @@ indexing
 class
 	EB_NAMED_LAYOUT_MANAGER
 
-inherit
-	EC_EIFFEL_LAYOUT
+inherit --{NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -185,21 +188,12 @@ feature {NONE} -- Implementation
 
 	user_layout_path: FILE_NAME is
 			-- User layout files saving path base on Current mode (normal/debug).
-		local
-
-			l_dir: DIRECTORY
 		do
 			if is_normal_mode then
 				Result := user_layout_normal_mode_path
 			else
 				Result := user_layout_debug_mode_path
 			end
-
-			create l_dir.make (Result)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end
-			l_dir.dispose
 		ensure
 			not_void: Result /= Void
 		end
@@ -207,8 +201,7 @@ feature {NONE} -- Implementation
 	user_layout_normal_mode_path: FILE_NAME is
 			-- Normal mode user layout files saving path
 		do
-			Result := docking_standard_layout_path
-			Result.extend ("normal")
+			Result := eiffel_layout.user_docking_standard_file_name.twin
 		ensure
 			not_void: Result /= Void
 		end
@@ -216,8 +209,7 @@ feature {NONE} -- Implementation
 	user_layout_debug_mode_path: FILE_NAME is
 			-- Debug mode user layout files saving path
 		do
-			Result := docking_standard_layout_path
-			Result.extend ("debug")
+			Result := eiffel_layout.user_docking_debug_file_name.twin
 		ensure
 			not_void: Result /= Void
 		end

@@ -60,7 +60,7 @@ feature -- Access
 		do
 			Result := internal_configs
 			if Result = Void then
-				Result := create_configs (for_32bit or not is_windows_x64)
+				Result := create_configs (for_32bit or not {PLATFORM_CONSTANTS}.is_64_bits)
 				internal_configs := Result
 			end
 		ensure
@@ -210,29 +210,20 @@ feature {NONE} -- Access
 	create_configs (a_use_32bit: BOOLEAN): ARRAYED_LIST [C_CONFIG] is
 			-- Visual Studio configuration for x64/x86 platforms
 		require
-			a_use_32bit_for_x86: not a_use_32bit implies not is_windows_x64
+			a_use_32bit_for_x86: not a_use_32bit implies not {PLATFORM_CONSTANTS}.is_64_bits
 		do
-			create Result.make (5)
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ 9.0"))
+			create Result.make (7)
+			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1\WinSDK", a_use_32bit, "WSDK61", "Microsoft Windows SDK 6.1"))
 			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, "WSDK60", "Microsoft Windows SDK 6.0"))
+			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ 9.0"))
 			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ 8.0"))
-			if not is_windows_x64 or else a_use_32bit then
+			if not {PLATFORM_CONSTANTS}.is_64_bits or else a_use_32bit then
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ 7.1"))
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ 7.0"))
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ 6.0"))
 			end
 		ensure
 			result_attached: Result /= Void
-		end
-
-feature -- Externals
-
-	is_windows_x64: BOOLEAN is
-			-- Is Current running on Windows 64 bits?
-		external
-			"C macro use %"eif_eiffel.h%""
-		alias
-			"EIF_IS_64_BITS"
 		end
 
 feature {NONE} -- Internal implementation cache

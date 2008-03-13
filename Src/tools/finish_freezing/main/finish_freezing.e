@@ -202,17 +202,7 @@ feature -- Implementation
 			create reader
 			l_layout ?= eiffel_layout
 			check layout_not_void: l_layout /= Void end
-			reader.parse_file (l_layout.config_eif, a_options)
-		end
-
-feature -- Externals
-
-	is_windows_x64: BOOLEAN is
-			-- Is Current running on Windows 64 bits?
-		external
-			"C macro use %"eif_eiffel.h%""
-		alias
-			"EIF_IS_64_BITS"
+			reader.parse_file (l_layout.config_eif_file_name, a_options)
 		end
 
 feature {NONE} -- Externals

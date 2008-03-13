@@ -27,6 +27,12 @@ inherit
 			on_text_fully_loaded, on_cursor_moved
 		end
 
+inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -289,10 +295,10 @@ feature -- Agents
 			enable_commands_on_project_created
 
 			develop_window.address_manager.on_project_created
-			if develop_window.has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				develop_window.show_dynamic_lib_tool.enable_sensitive
 			end
-			if develop_window.has_profiler then
+			if eiffel_layout.has_profiler then
 				develop_window.commands.show_profiler.enable_sensitive
 			end
 			develop_window.commands.customized_formatter_command.enable_sensitive
@@ -321,10 +327,10 @@ feature -- Agents
 			create l_builder.make (develop_window)
 			l_builder.build_menu_bar
 
-			if develop_window.has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				develop_window.show_dynamic_lib_tool.disable_sensitive
 			end
-			if develop_window.has_profiler then
+			if eiffel_layout.has_profiler then
 				develop_window.commands.show_profiler.disable_sensitive
 			end
 			develop_window.commands.customized_formatter_command.enable_sensitive
@@ -391,10 +397,10 @@ feature {NONE} -- Implementation
 	enable_commands_on_project_loaded is
 			-- Enable commands when a new project has been created and compiled
 		do
-			if develop_window.has_profiler then
+			if eiffel_layout.has_profiler then
 				develop_window.commands.show_profiler.enable_sensitive
 			end
-			if develop_window.has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				develop_window.show_dynamic_lib_tool.enable_sensitive
 			end
 			develop_window.commands.system_info_cmd.enable_sensitive
@@ -414,10 +420,10 @@ feature {NONE} -- Implementation
 	disable_commands_on_project_unloaded is
 			-- Enable commands when a project has been closed.
 		do
-			if develop_window.has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				develop_window.show_dynamic_lib_tool.disable_sensitive
 			end
-			if develop_window.has_profiler then
+			if eiffel_layout.has_profiler then
 				develop_window.commands.show_profiler.disable_sensitive
 			end
 			develop_window.commands.new_class_cmd.disable_sensitive

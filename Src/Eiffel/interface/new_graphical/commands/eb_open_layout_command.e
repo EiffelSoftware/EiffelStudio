@@ -22,7 +22,11 @@ inherit
 
 	EB_SHARED_DEBUGGER_MANAGER
 
-	EC_EIFFEL_LAYOUT
+-- inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 create
 	make

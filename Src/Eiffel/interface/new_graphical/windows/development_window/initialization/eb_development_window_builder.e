@@ -14,6 +14,12 @@ inherit
 			internal_detach_entities
 		end
 
+-- inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature{NONE} -- Initlization
 
 	make (a_window: EB_DEVELOPMENT_WINDOW) is

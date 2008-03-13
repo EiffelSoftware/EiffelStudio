@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			create dependent_directories.make (55)
 			force_32bit := a_force_32bit
 
-			eiffel_dir := eiffel_layout.eiffel_installation_dir_name
+			eiffel_dir := eiffel_layout.shared_path
 			processor_count := a_processor_count
 
 			uses_precompiled := False
@@ -1407,7 +1407,7 @@ feature {NONE}	-- substitutions
 				io.put_string("%Tsubst_compiler%N")
 			end
 
-			if eiffel_layout.platform.is_windows then
+			if {PLATFORM}.is_windows then
 				line.replace_substring_all ("$(ISE_C_COMPILER)", eiffel_layout.eiffel_c_compiler)
 			end
 		end
@@ -1581,7 +1581,7 @@ feature {NONE} -- Implementation
 				io.put_string("%Tget_replacement%N")
 			end
 
-			if ({FINISH_FREEZING}.is_windows_x64 and force_32bit) and then word.is_case_insensitive_equal (once "ISE_PLATFORM") then
+			if ({PLATFORM_CONSTANTS}.is_64_bits and force_32bit) and then word.is_case_insensitive_equal (once "ISE_PLATFORM") then
 					-- Replace ISE_PLAFORM to 32bit builds on x64 platforms
 				Result := once "windows"
 			else

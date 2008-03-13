@@ -59,7 +59,7 @@ feature -- Initialization
 	make is
 			-- Initialization
 		local
-			l_layout: EC_EIFFEL_LAYOUT
+			l_layout: ES_EIFFEL_LAYOUT
 			l_eifgen_init: INIT_SERVERS
 			l_preference_access: PREFERENCES
 			new_resources: TTY_RESOURCES

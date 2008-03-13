@@ -34,7 +34,7 @@ feature -- Access
 			"EIF_IS_VMS"
 		end
 
-	frozen is_windows_64_bits: BOOLEAN is
+	frozen is_64_bits: BOOLEAN is
 			-- Is Current running on Windows 64 bits?
 		external
 			"C macro use %"eif_eiffel.h%""

@@ -143,14 +143,14 @@ feature {NONE} -- Implementation
 		local
 			a_file: RAW_FILE
 		do
-			create a_file.make (eiffel_layout.Default_config_name)
+			create a_file.make (eiffel_layout.default_config_file_name)
 			a_file.open_read
 			a_file.read_stream (a_file.count)
 			a_file.close
 			Result := a_file.last_string
 		rescue
 			add_error_message (
-				"Unable to read the template ace file '"+eiffel_layout.Default_config_name+"'%N%
+				"Unable to read the template ace file '"+eiffel_layout.default_config_file_name+"'%N%
 				%Check that the file exists and that you are allowed to read it.")
 		end
 

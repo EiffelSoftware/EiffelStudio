@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 	fill_default_libraries is
 			-- Fill in default precompiles.
 		do
-			add_configs_in_dir (eiffel_layout.eiffel_precomp_mode (target.setting_msil_generation), Void)
+			add_configs_in_dir (eiffel_layout.precomp_platform_path (target.setting_msil_generation), Void)
 		end
 
 indexing

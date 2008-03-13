@@ -10,44 +10,48 @@ class
 
 inherit
 	EIFFEL_ENV
-		redefine
-			shared_application_path
-		end
 
 feature -- Access
 
-	application_name: STRING is "finish_freezing";
+	application_name: !STRING_8 = "finish_freezing"
+			-- <Precursor>
 
-	shared_application_path: DIRECTORY_NAME is
-			-- Location of shared files specific for the current application (platform independent).
+feature -- Directories
+
+	config_eif_path: !DIRECTORY_NAME
+			-- Path to directory containing `config.eif'.
+		require
+			is_valid_environment: is_valid_environment
+			windows: {PLATFORM}.is_windows
 		once
-			Result := shared_path.twin
-			Result.extend (short_studio_name)
+			Result ?= config_path.twin
+			Result.extend_from_array (<<eiffel_platform, eiffel_c_compiler>>)
+		ensure
+			not_result_is_empty: not Result.is_empty
 		end
 
-	config_eif: FILE_NAME is
-			-- Location of `cofig.eif' file.
+feature -- Files
+
+	config_eif_file_name: !FILE_NAME
+			-- Location of `config.eif' file.
 		require
-			windows: platform.is_windows
 			is_valid_environment: is_valid_environment
+			windows: {PLATFORM}.is_windows
+		local
+			l_user: like user_priority_file_name
 		once
 			create Result.make_from_string (config_eif_path)
 			Result.set_file_name ("config")
 			Result.add_extension ("eif")
-		ensure
-			config_eif_not_void_or_empty: Result /= Void and not Result.is_empty
-		end
 
-	config_eif_path: DIRECTORY_NAME is
-			-- Path to directory containing `config.eif'.
-		require
-			windows: platform.is_windows
-			is_valid_environment: is_valid_environment
-		once
-			create Result.make_from_string (Config_path)
-			Result.extend_from_array (<<eiffel_platform, eiffel_c_compiler>>)
+			if is_user_files_supported then
+				l_user := user_priority_file_name (Result)
+				if l_user /= Void and (create {RAW_FILE}.make (l_user)).exists then
+					Result ?= l_user
+				end
+			end
 		ensure
-			config_eif_path_not_void_or_empty: Result /= Void and not Result.is_empty
+			not_result_is_empty: not Result.is_empty
 		end
 
 indexing

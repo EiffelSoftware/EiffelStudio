@@ -439,7 +439,7 @@ feature -- Locking
 		do
 			if not retried then
 				create l_file.make_open_write (lock_file_name)
-				l_file.put_string (eiffel_layout.ise_eiffel_env)
+				l_file.put_string ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
 				l_file.put_character ('=')
 				l_file.put_string (eiffel_layout.ec_command_name)
 				l_file.put_new_line

@@ -336,30 +336,46 @@ feature -- Settings
 
 	enlarge_tree is
 			-- Enlarges byte code tree for C code generation
+		do
+			enlarge_body_tree (True, True)
+		end
+
+	enlarge_body_tree (a_has_precond, a_has_postcond: BOOLEAN) is
+			-- Enlarges byte code tree for C code generation
 		local
 			inh_assert: INHERITED_ASSERTION
 		do
-			inh_assert := Context.inherited_assertion
-			if inh_assert.has_assertion then
-				inh_assert.enlarge_tree
-			end
-			if precondition /= Void then
-				Context.set_assertion_type (In_precondition)
-				precondition.enlarge_tree
-				Context.set_assertion_type (0)
+			if a_has_precond then
+				inh_assert := Context.inherited_assertion
+				if inh_assert.has_precondition then
+					inh_assert.enlarge_precondition_tree
+				end
+				if precondition /= Void then
+					Context.set_assertion_type (In_precondition)
+					precondition.enlarge_tree
+					Context.set_assertion_type (0)
+				end
 			end
 			if compound /= Void then
 				compound.enlarge_tree
 			end
-			if old_expressions /= Void then
-				--! Wipe out old expression and rebuild
-				--! it with enlarged function through
-				--! postconditions enlargement.
-				--! (Look at enlarged in class UN_OLD_B)
-				old_expressions.wipe_out
-			end
-			if postcondition /= Void then
-				postcondition.enlarge_tree
+			if a_has_postcond then
+				if inh_assert = Void then
+					inh_assert := Context.inherited_assertion
+				end
+				if inh_assert.has_postcondition then
+					inh_assert.enlarge_postcondition_tree
+				end
+				if old_expressions /= Void then
+					--! Wipe out old expression and rebuild
+					--! it with enlarged function through
+					--! postconditions enlargement.
+					--! (Look at enlarged in class UN_OLD_B)
+					old_expressions.wipe_out
+				end
+				if postcondition /= Void then
+					postcondition.enlarge_tree
+				end
 			end
 			if rescue_clause /= Void then
 				rescue_clause.enlarge_tree

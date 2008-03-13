@@ -107,13 +107,11 @@ feature -- Assertion
 			saved_result_type := Void
 		end
 
-	enlarge_tree is
-			-- Enlarges inherited assertion byte code
+	enlarge_precondition_tree is
+			-- Enlarges inherited preconditions byte code
 			-- tree for C code generation.
 		require
 			types_and_assert_count_same: valid_count
-		local
-			old_expr: LINKED_LIST [UN_OLD_B]
 		do
 			from
 				precondition_start
@@ -126,7 +124,17 @@ feature -- Assertion
 				Context.set_assertion_type (0)
 				precondition_forth
 			end
+			restore_current_context
+		end
 
+	enlarge_postcondition_tree is
+			-- Enlarges inherited postconditions byte code
+			-- tree for C code generation.
+		require
+			types_and_assert_count_same: valid_count
+		local
+			old_expr: LINKED_LIST [UN_OLD_B]
+		do
 			from
 				postcondition_start
 			until

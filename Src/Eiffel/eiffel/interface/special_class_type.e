@@ -286,6 +286,7 @@ feature {NONE} -- C code generation
 			value_arg_name: STRING
 			index_arg_name: STRING
 			l_byte_context: like byte_context
+			l_arg: ARGUMENT_BL
 		do
 			l_byte_context := byte_context
 			gen_param := first_generic
@@ -352,7 +353,9 @@ feature {NONE} -- C code generation
 					buffer.put_string ("#define earg1 arg1")
 				end
 				byte_context.set_has_feature_name_stored (False)
-				byte_context.generate_catcall_check_for_argument (gen_param, 1)
+				create l_arg
+				l_arg.set_position (1)
+				byte_context.generate_catcall_check_for_argument (l_arg, gen_param, 1, False)
 				if l_param_is_expanded then
 					buffer.put_new_line_only
 					buffer.put_string ("#undef earg1")

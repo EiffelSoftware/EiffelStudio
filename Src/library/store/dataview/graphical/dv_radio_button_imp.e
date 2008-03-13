@@ -16,15 +16,20 @@ inherit
 
 	EV_RADIO_BUTTON_IMP
 		redefine
-			interface
+			interface, radio_group
 		end
-	
+
 create
 	make
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: DV_RADIO_BUTTON;
+	interface: DV_RADIO_BUTTON
+
+feature {EV_ANY_I} -- Implementation
+
+	radio_group: LINKED_LIST [EV_RADIO_BUTTON_IMP];
+			-- <Precursor>
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

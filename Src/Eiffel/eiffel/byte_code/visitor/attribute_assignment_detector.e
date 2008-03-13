@@ -1,55 +1,51 @@
 indexing
-	description: "Collections of stateless BYTE_NODE visitors."
+	description: "Find whether or not a BYTE_NODE has an assignment to an attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SHARED_BN_STATELESS_VISITOR
+	ATTRIBUTE_ASSIGNMENT_DETECTOR
 
-feature -- Byte code generators
-
-	melted_generator: MELTED_GENERATOR is
-			-- Generator for melted code.
-		once
-			create Result
-		ensure
-			melted_generator_not_void: Result /= Void
+inherit
+	BYTE_NODE_ITERATOR
+		redefine
+			process_assign_b,
+			process_reverse_b
 		end
 
-	melted_assignment_generator: MELTED_ASSIGNMENT_GENERATOR is
-			-- Generator assignments for melted code.
-		once
-			create Result
-		ensure
-			melted_assignment_generator_not_void: Result /= Void
+feature -- Status report
+
+	has_attribute_assignment (a_node: BYTE_NODE): BOOLEAN is
+			-- Does `a_node' contain an assignment to an attribute?
+		do
+			internal_has_attribute_assignment := False
+			a_node.process (Current)
+			Result := internal_has_attribute_assignment
 		end
 
-	attribute_assignment_detector: ATTRIBUTE_ASSIGNMENT_DETECTOR is
-			-- Visitor to checker whether the byte nodes perform an attachement to an attribute.
-		once
-			create Result
-		ensure
-			attribute_assignment_detector_not_void: Result /= Void
+feature {NONE} -- Implementation: access
+
+	internal_has_attribute_assignment: BOOLEAN
+			-- Storage for `has_attribute_assignment'.
+
+feature -- Node processing
+
+	process_assign_b (a_node: ASSIGN_B) is
+			-- <Precursor>
+		do
+			if a_node.target.is_attribute then
+				internal_has_attribute_assignment := True
+			end
 		end
 
-feature -- IL code generators
-
-	cil_node_generator: IL_NODE_GENERATOR is
-			-- Generator for CIL code.
-		once
-			create Result
-		ensure
-			cil_node_generator_not_void: Result /= Void
-		end
-
-	cil_access_address_generator: IL_ACCESS_ADDRESS_GENERATOR is
-			-- Generator for loading address of an ACCESS_B node.
-		once
-			create Result
-		ensure
-			cil_access_address_generator_not_void: Result /= Void
+	process_reverse_b (a_node: REVERSE_B)  is
+			-- <Precursor>
+		do
+			if a_node.target.is_attribute then
+				internal_has_attribute_assignment := True
+			end
 		end
 
 indexing

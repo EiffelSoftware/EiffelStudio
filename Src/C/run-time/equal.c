@@ -85,13 +85,11 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 rt_public EIF_BOOLEAN eif_xequal(EIF_REFERENCE ref1, EIF_REFERENCE ref2)
 {
 	/* Expanded equality. */
-	if (ref1 == (EIF_REFERENCE) 0 && ref2 == (EIF_REFERENCE) 0)
+	if (!ref1 && !ref2) {
 		return EIF_TRUE;
+	}
 
-	if (ref1 != (EIF_REFERENCE) 0 && ref2 != (EIF_REFERENCE) 0) {
-			/* We don't care anymore about conformance, egc_equal expect
-			 * type to be equal, otherwise it returns False.
-			 */
+	if ((ref1 && ref2) && (Dftype(ref1) == Dftype(ref2))) {
 #ifdef WORKBENCH
 		EIF_TYPED_VALUE r1;
 		EIF_TYPED_VALUE r2;

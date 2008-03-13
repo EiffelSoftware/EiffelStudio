@@ -150,6 +150,10 @@ feature -- Inlining
 			expression := expression.inlined_byte_code
 		end
 
+invariant
+	expression_not_void: expression /= Void
+	target_not_void: target /= Void
+
 indexing
 	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

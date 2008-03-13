@@ -264,27 +264,29 @@ feature -- Command
 	enable_baseline is
 			-- Set `is_baseline_enalbed' with True.
 		do
-			is_baseline_enalbed := True
+			is_baseline_enabled := True
 			update_baseline
 		end
 
 	disable_baseline is
 			-- Set `is_baseline_enalbed' with false.
 		do
-			is_baseline_enalbed := False
+			is_baseline_enabled := False
 			update_baseline
 		end
 
 	update_baseline is
 			-- Update baseline state and color.
 		do
-			if is_baseline_enalbed then
-				internal_border.set_show_border ({SD_ENUMERATION}.bottom, True)
-				internal_border.set_one_border_color ({SD_ENUMERATION}.bottom, internal_shared.border_color)
-				set_minimum_height (internal_shared.title_bar_height + 1)
-			else
-				internal_border.set_show_border ({SD_ENUMERATION}.bottom, False)
-				set_minimum_height (internal_shared.title_bar_height)
+			if not is_destroyed then
+				if is_baseline_enabled then
+					internal_border.set_show_border ({SD_ENUMERATION}.bottom, True)
+					internal_border.set_one_border_color ({SD_ENUMERATION}.bottom, internal_shared.border_color)
+					set_minimum_height (internal_shared.title_bar_height + 1)
+				else
+					internal_border.set_show_border ({SD_ENUMERATION}.bottom, False)
+					set_minimum_height (internal_shared.title_bar_height)
+				end
 			end
 		end
 
@@ -354,9 +356,9 @@ feature -- Query
 			Result := is_focus_color_enable and then not internal_title.is_focused_color
 		end
 
-	is_baseline_enalbed: BOOLEAN
+	is_baseline_enabled: BOOLEAN
 			-- If there is a extra baseline?
-			-- When used by SD_FLOATING_ZONE, we should added an axtra base line to make it looks beautiful.
+			-- When used by SD_FLOATING_ZONE, we should added an extra base line to make it looks beautiful.
 
 feature -- Actions
 

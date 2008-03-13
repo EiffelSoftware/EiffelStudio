@@ -61,8 +61,10 @@ RT_LNK EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER *p);
 RT_LNK EIF_BOOLEAN eif_case_sensitive_path_names(void);
 RT_LNK EIF_REFERENCE eif_current_dir_representation(void);
 RT_LNK EIF_BOOLEAN eif_home_dir_supported(void);
+RT_LNK EIF_BOOLEAN eif_user_dir_supported(void);
 RT_LNK EIF_BOOLEAN eif_root_dir_supported(void);
 RT_LNK EIF_REFERENCE eif_home_directory_name(void);
+RT_LNK EIF_REFERENCE eif_user_directory_name(void);
 RT_LNK EIF_REFERENCE eif_root_directory_name(void);
 
 #ifdef __cplusplus

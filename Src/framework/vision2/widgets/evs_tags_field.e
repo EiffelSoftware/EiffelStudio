@@ -241,7 +241,7 @@ feature -- event
 						local
 							t: like text
 						do
-							if {s: !STRING_32} achk.data then
+							if {s: STRING_32} achk.data then
 								t := text
 								if achk.is_checked then
 									if not t.is_empty then
@@ -270,7 +270,7 @@ feature -- event
 								until
 									sn = 0
 								loop
-									if {agci: !EV_GRID_CHECKABLE_LABEL_ITEM} row.subrow (sn).item (1) then
+									if {agci: EV_GRID_CHECKABLE_LABEL_ITEM} row.subrow (sn).item (1) then
 										agci.set_is_checked (achk.is_checked)
 									end
 									sn := sn - 1

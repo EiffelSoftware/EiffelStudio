@@ -413,17 +413,17 @@ feature -- Duplication
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		do
-			if {a: !like assertions} other.assertions then
+			if {a: like assertions} other.assertions then
 				assertions := a.twin
 			else
 				assertions := Void
 			end
-			if {d: !like debugs} other.debugs then
+			if {d: like debugs} other.debugs then
 				debugs := d.twin
 			else
 				debugs := Void
 			end
-			if {s: !like description} other.description then
+			if {s: like description} other.description then
 				description := s.twin
 			else
 				description := Void
@@ -448,18 +448,18 @@ feature -- Duplication
 			is_void_safe_configured := other.is_void_safe_configured
 			is_warning := other.is_warning
 			is_warning_configured := other.is_warning_configured
-			if {l: !like local_namespace} other.local_namespace then
+			if {l: like local_namespace} other.local_namespace then
 				local_namespace := l.twin
 			else
 				local_namespace := Void
 			end
-			if {n: !like namespace} other.namespace then
+			if {n: like namespace} other.namespace then
 				namespace := n.twin
 			else
 				namespace := Void
 			end
 			syntax_level := other.syntax_level.twin
-			if {w: !like warnings} other.warnings then
+			if {w: like warnings} other.warnings then
 				warnings := w.twin
 			else
 				warnings := Void

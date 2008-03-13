@@ -125,7 +125,7 @@ feature {NONE} -- Basic operations
 					l_path_name.extend (l_directories.item (i))
 						-- Note: checking applicablity of the path does not check the include expression. This is because
 						--       directories can be excluded but not included. Files can be included.
-					if {l_path: !STRING_8} l_path_name.string and then is_path_applicable (l_path, Void, a_exclude) then
+					if {l_path: STRING_8} l_path_name.string and then is_path_applicable (l_path, Void, a_exclude) then
 						Result.put_last (l_path)
 					end
 					i := i + 1
@@ -191,7 +191,7 @@ feature {NONE} -- Basic operations
 				loop
 					create l_path_name.make_from_string (l_dn)
 					l_path_name.extend (l_files.item (i))
-					if {l_file: !STRING_8} l_path_name.string and then is_path_applicable (l_file, a_include, a_exclude) then
+					if {l_file: STRING_8} l_path_name.string and then is_path_applicable (l_file, a_include, a_exclude) then
 						Result.put_last (l_file)
 					end
 					i := i + 1
@@ -208,7 +208,7 @@ feature {NONE} -- Basic operations
 					loop
 						create l_path_name.make_from_string (l_dn)
 						l_path_name.extend (l_directories.item (i))
-						if {l_path: !STRING_8} l_path_name.string and then is_path_applicable (l_path, a_include, a_exclude) then
+						if {l_path: STRING_8} l_path_name.string and then is_path_applicable (l_path, a_include, a_exclude) then
 							Result.append_last (scan_for_files_internal (l_path, (a_levels - 1).max (-1), a_include, a_exclude, True))
 						end
 						i := i + 1
@@ -235,7 +235,7 @@ feature -- Directory operations
 		do
 			l_path := a_path.as_string_8
 			if not file_system.directory_exists (l_path) then
-				if not file_system.is_root_directory (l_path) and then {l_parent_path: !STRING_GENERAL} file_system.dirname (l_path) then
+				if not file_system.is_root_directory (l_path) and then {l_parent_path: STRING_GENERAL} file_system.dirname (l_path) then
 						-- Create parent directory
 					create_directory (l_parent_path)
 				end
@@ -253,7 +253,7 @@ feature -- Directory operations
 		require
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			if {l_path: !STRING_GENERAL} file_system.dirname (a_file_name.as_string_8) and then not l_path.is_empty then
+			if {l_path: STRING_GENERAL} file_system.dirname (a_file_name.as_string_8) and then not l_path.is_empty then
 				create_directory (l_path)
 			end
 		end

@@ -2796,7 +2796,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 #endif
 
 	/* If the garbage collector is on and the object has some references, then
-	 * adter attempting a coalescing we must update the count and copy the old
+	 * after attempting a coalescing we must update the count and copy the old
 	 * elemsize, since they are fetched by the garbage collector by first going
 	 * to the end of the object and then back by LNGPAD_2. Of course, this
 	 * matters only if coalescing has been done, which is indicated by a
@@ -2894,8 +2894,20 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 		HEADER(zone)->ov_flags = HEADER(ptr)->ov_flags;		/* Keep Eiffel flags */
 		HEADER(zone)->ov_dftype = HEADER(ptr)->ov_dftype;
 		HEADER(zone)->ov_dtype = HEADER(ptr)->ov_dtype;
-		if (!(gc_flag & GC_FREE))		/* Will GC take care of free? */
+		if (!(gc_flag & GC_FREE)) {		/* Will GC take care of free? */
 			eif_rt_xfree(ptr);					/* Free old location */
+		} else {
+				/* We cannot free the object here, but if the old object size occupied more than
+				 * 20MB and more than a quarter of the available memory we should force a full
+				 * collection as otherwise if it turns out the the old object is not referenced
+				 * anymore, it won't be collected and the memory allocated will not see this huge
+				 * free space available. See eweasel test#exec096 for an example. */
+			if ((r & B_SIZE) > 20971520) {
+				if ((r & B_SIZE) > ((rt_m_data.ml_used + rt_m_data.ml_over) / 4)) {
+					force_plsc++;
+				}
+			}
+		}
 	} else if (i == EIFFEL_T)			/* Could not reallocate object */
 		eraise("object reallocation", EN_MEM);	/* No more memory */
 		

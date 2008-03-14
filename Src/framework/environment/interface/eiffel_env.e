@@ -1316,7 +1316,7 @@ feature -- Executable names
 	prelink_name: !STRING_8 = "prelink"
 			-- Name of estudio command.
 
-	ecdbg_name: !STRING_8 = "ecdbg"
+	ecdbg_name: !STRING_8 = "ecdbgd"
 			-- Name of console line debugger command.
 
 feature {NONE} -- Configuration of layout

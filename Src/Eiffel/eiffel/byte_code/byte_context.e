@@ -1877,7 +1877,7 @@ feature -- Access
 			end
 		end
 
-	generate_catcall_check_for_argument (a_register: REGISTRABLE; a_type: TYPE_A; a_pos: INTEGER; a_like_current_optimization_ok: BOOLEAN) is
+	generate_catcall_check (a_register: REGISTRABLE; a_type: TYPE_A; a_pos: INTEGER; a_like_current_optimization_ok: BOOLEAN) is
 			-- Generate catcall check at runtime for the argument at position `a_pos' against the static
 			-- type `a_type'.
 		require
@@ -1932,6 +1932,38 @@ feature -- Access
 				buf.exdent
 				buf.put_new_line
 				buf.put_character ('}')
+			end
+		end
+
+	make_catcall_check (ba: BYTE_ARRAY; a_type: TYPE_A; a_pos: INTEGER; a_like_current_optimization_ok: BOOLEAN) is
+			-- Generate catcall check at runtime for the argument at position `a_pos' against the static
+			-- type `a_type'.
+		require
+			ba_not_void: ba /= Void
+			a_type_not_void: a_type /= Void
+			a_pos_positive: a_pos > 0
+		local
+			l_name: STRING
+		do
+			if a_type.c_type.is_pointer and not a_type.is_none then
+				ba.append ({BYTE_CONST}.bc_catcall)
+
+					-- Special handling of routines taking `like Current' in non-generic classes as long
+					-- as `a_like_current_optimization_ok' is enabled.
+					-- Usually, those routines are safe, if the actual type of the argument is a descendant
+					-- of the class in which `current_feature' is written in.
+					-- It is only done when the context type is not generic, as otherwise it is
+					-- harder do implement.
+				if a_type.is_like_current and original_class_type.type.generics = Void and a_like_current_optimization_ok then
+					class_type.type.create_info.make_byte_code (ba)
+				else
+					a_type.create_info.make_byte_code (ba)
+				end
+				ba.append_type_id (class_type.static_type_id)
+				l_name := current_feature.feature_name
+				ba.append_integer (l_name.count)
+				ba.append_raw_string (l_name)
+				ba.append_integer (a_pos)
 			end
 		end
 

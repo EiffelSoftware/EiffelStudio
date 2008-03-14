@@ -75,7 +75,7 @@ feature -- C Code generation
 				source.generate
 				if context.workbench_mode or system.check_for_catcall_at_runtime then
 					if tuple_element_type.c_type.is_pointer then
-						context.generate_catcall_check_for_argument (source, tuple_type.generics.item (position), position, False)
+						context.generate_catcall_check (source, tuple_type.generics.item (position), position, False)
 					end
 				end
 				buf.put_new_line

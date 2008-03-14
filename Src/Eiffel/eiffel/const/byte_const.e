@@ -205,9 +205,9 @@ feature -- Access
 	Bc_ceil:			CHARACTER is '%/155/';
 
 		-- Unused opcode
-	Bc_notused_156:		CHARACTER is '%/156/';
-	Bc_notused_157: 	CHARACTER is '%/157/';
-	Bc_notused_158:		CHARACTER is '%/158/';
+	Bc_catcall:			CHARACTER is '%/156/';
+	Bc_start_catcall: 	CHARACTER is '%/157/';
+	Bc_end_catcall:		CHARACTER is '%/158/';
 	Bc_notused_159:		CHARACTER is '%/159/';
 	Bc_notused_160:		CHARACTER is '%/160/';
 	Bc_notused_161:		CHARACTER is '%/161/';

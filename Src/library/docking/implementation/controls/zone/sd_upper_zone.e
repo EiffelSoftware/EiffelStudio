@@ -35,7 +35,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 feature -- Command
 
 	recover_normal_size_from_minimize is
@@ -170,6 +170,11 @@ feature -- Command
 			end
 		end
 
+	restore_from_maximized is
+			-- Restore to normal size if current maximized
+		deferred
+		end
+
 	on_minimize is
 			-- Handle minimize actions.
 		local
@@ -179,6 +184,7 @@ feature -- Command
 			l_box: SD_MIDDLE_CONTAINER
 			l_last_normal_size: INTEGER
 		do
+			restore_from_maximized
 
 			if is_minimized then
 				recover_normal_size_from_minimize

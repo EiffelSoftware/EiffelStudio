@@ -62,7 +62,7 @@ feature -- Access
 			-- Combo box to display locale list
 		local
 			l_locale_table: like locale_table
-			l_locales: LINKED_LIST [STRING_32]
+			l_locales: LINKED_LIST [STRING_GENERAL]
 		do
 			if locale_combo_internal = Void then
 				create locale_combo_internal

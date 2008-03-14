@@ -390,6 +390,7 @@ test	simple-catcall-generic		catcall002 tcf pass catcall
 test	catcall-check-failure-recursive-generic	catcall003 tcf pass catcall
 test	catcall-generic				catcall004 tcf pass catcall
 test	catcall-generic-numeric		catcall005 tcf pass catcall
+test	catcall-at-runtime-detection	catcall006 tcf pass catcall
 
 -- Incrementality tests
 

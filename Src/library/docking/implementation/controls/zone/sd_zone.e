@@ -34,7 +34,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 feature -- Command
 
 	on_normal_max_window is
@@ -267,6 +267,14 @@ feature {SD_TAB_STATE_ASSISTANT, SD_TAB_STATE, SD_DOCKING_MANAGER_QUERY} -- Maxi
 
 	internal_parent: EV_CONTAINER
 			-- Parent.
+
+	restore_from_maximized is
+			-- Restore to normal size if current maximized
+		do
+			if is_maximized then
+				on_normal_max_window
+			end
+		end
 
 feature {NONE} -- Implementation
 

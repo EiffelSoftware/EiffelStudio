@@ -787,7 +787,7 @@ rt_private void interpret(int flag, int where)
 			}
 
 		}
-		if (*IC != BC_PRECOND) {
+		if ((*IC != BC_PRECOND) && (*IC != BC_START_CATCALL)) {
 			goto enter_body; /* Start execution of a routine body. */
 		}
 		break;
@@ -869,6 +869,35 @@ rt_private void interpret(int flag, int where)
 		offset = get_int32(&IC);
 		if (!(~in_assertion & WASC(icur_dtype) & CK_ENSURE))	/* No postcondition check? */
 			IC += offset;						/* Skip postconditions */
+		break;
+
+		/* Catcall handling. */
+	case BC_START_CATCALL:
+		break;
+
+	case BC_CATCALL:
+		{
+			EIF_TYPE_INDEX l_expected_dftype;
+			EIF_TYPE_INDEX l_written_dtype;
+			EIF_REFERENCE l_obj;
+			int l_pos;
+
+			l_expected_dftype = get_creation_type();
+			l_written_dtype = get_int16(&IC);
+			string = get_string8(&IC, get_int32(&IC));
+			l_pos = get_int32(&IC);
+
+			l_obj = otop()->it_ref;
+			if (l_obj) {
+				RTCC(l_obj, l_written_dtype, (char *) string, l_pos, l_expected_dftype);
+			}
+		}
+		break;
+
+	case BC_END_CATCALL:
+		if (*IC != BC_PRECOND) {
+			goto enter_body; /* Start execution of a routine body. */
+		}
 		break;
 
 	/*

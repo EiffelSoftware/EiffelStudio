@@ -1755,6 +1755,7 @@ end
 			l_any_type: CL_TYPE_A
 			l_any_class_id, l_name_id: INTEGER
 			l_arg: ARGUMENT_BL
+			l_optimize_like_current: BOOLEAN
 		do
 			if context.workbench_mode or system.check_for_catcall_at_runtime then
 					-- We do not have to generate a catcall detection for some features of ANY
@@ -1783,9 +1784,10 @@ end
 								if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
 									if l_arg = Void then
 										create l_arg
+										l_optimize_like_current := not attribute_assignment_detector.has_attribute_assignment (Current)
 									end
 									l_arg.set_position (i)
-									context.generate_catcall_check_for_argument (l_arg, l_type, i, False)
+									context.generate_catcall_check (l_arg, l_type, i, l_optimize_like_current)
 								end
 							end
 							i := i - 1
@@ -1805,6 +1807,9 @@ feature -- Byte code generation
 		do
 				-- Allocate memory for once manifest strings if required
 			context.make_once_string_allocation_byte_code (ba, context.byte_code.once_manifest_string_count)
+
+				-- Generate catcall check
+			make_catcall_check (ba)
 
 			inh_assert := Context.inherited_assertion
 			if Context.origin_has_precondition then

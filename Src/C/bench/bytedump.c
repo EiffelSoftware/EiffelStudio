@@ -202,9 +202,9 @@ static  char    *names [] = {
 "BC_UINT64" ,
 "BC_FLOOR" ,
 "BC_CEIL" ,
-"BC_NOTUSED_156" ,
-"BC_NOTUSED_157" ,
-"BC_NOTUSED_158" ,
+"BC_CATCALL" ,
+"BC_START_CATCALL" ,
+"BC_END_CATCALL" ,
 "BC_NOTUSED_159" ,
 "BC_NOTUSED_160" ,
 "BC_NOTUSED_161" ,
@@ -651,6 +651,18 @@ static  void    print_instructions ()
 				/* If not enabled jump to 'offset' */
 				fprintf (ofp,"offset %d", get_int32(&ip));
 				break;
+
+			case BC_START_CATCALL:
+			case BC_END_CATCALL:
+				break;
+			case BC_CATCALL :
+				get_creation_type();
+					/* Static type of class */
+				print_ctype (get_int16(&ip));
+				fprintf (ofp, ".%s", get_string8(&ip, get_int32(&ip)));
+				fprintf (ofp, " @ %d", get_int32(&ip));
+				break;
+
 			case  BC_LOOP :
 				/* If not enabled jump to 'offset' */
 				fprintf (ofp,"offset %d", get_int32(&ip));

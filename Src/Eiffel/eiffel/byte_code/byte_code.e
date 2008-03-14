@@ -736,6 +736,65 @@ debug ("DEBBUGGER_HOOK")
 end
 		end
 
+	make_catcall_check (ba: BYTE_ARRAY) is
+			-- Add a check for catcall at runtime.
+		require
+			ba_not_void: ba /= Void
+		local
+			i: INTEGER
+			l_argument_types: like arguments
+			l_type: TYPE_A
+			l_any_type: CL_TYPE_A
+			l_any_class_id, l_name_id: INTEGER
+			l_arg: ARGUMENT_BL
+			l_optimize_like_current: BOOLEAN
+		do
+				-- We do not have to generate a catcall detection for some features of ANY
+				-- which are properly handled at runtime.
+			l_name_id := context.current_feature.feature_name_id
+			l_any_class_id := system.any_id
+			if
+				context.current_feature.written_in /= l_any_class_id or else
+				(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
+				l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id)
+			then
+				i := argument_count
+				if i > 0 then
+					from
+						l_argument_types := arguments
+						ba.append ({BYTE_CONST}.bc_start_catcall)
+					until
+						i <= 0
+					loop
+						l_type := l_argument_types [i]
+							-- We instantiate `l_type' in current context to see if it is
+							-- really a reference
+						if context.real_type (l_type).c_type.is_pointer then
+							l_any_type ?= l_type
+								-- Only generate a catcall detection if the expected argument is different
+								-- than ANY since ANY is the ancestor to all types.
+							if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
+								if l_arg = Void then
+									create l_arg
+									l_optimize_like_current := not attribute_assignment_detector.has_attribute_assignment (Current)
+								end
+									-- Push argument on stack.
+								l_arg.set_position (i)
+								melted_generator.generate (ba, l_arg)
+									-- Perform catcall check
+								context.make_catcall_check (ba, l_type, i, l_optimize_like_current)
+									-- Remove argument from stack.
+								ba.append ({BYTE_CONST}.bc_pop)
+								ba.append_uint32_integer (1)
+							end
+						end
+						i := i - 1
+					end
+					ba.append ({BYTE_CONST}.bc_end_catcall)
+				end
+			end
+		end
+
 	append_once_mark (ba: BYTE_ARRAY) is
 			-- Append byte code indicating a kind of a once routine
 			-- (not once, thread-relative once, process-relative once, etc.)

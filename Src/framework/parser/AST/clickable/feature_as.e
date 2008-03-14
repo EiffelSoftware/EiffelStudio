@@ -132,6 +132,7 @@ feature -- Roundtrip/Comment
 			l_retried: BOOLEAN
 			l_region: ERT_TOKEN_REGION
 			l_first_token: LEAF_AS
+			l_routine_first_token: LEAF_AS
 		do
 			if not l_retried then
 				if is_constant or is_attribute then
@@ -139,11 +140,15 @@ feature -- Roundtrip/Comment
 				else
 					l_routine ?= body.content
 					check l_routine /= Void end
-					l_end_index := l_routine.first_token (a_list).index - 1
 					l_first_token := first_token (a_list)
 					if l_first_token /= Void then
-						check l_first_token.index <= l_end_index end
-						create l_region.make (l_first_token.index, l_end_index)
+						l_routine_first_token := l_routine.first_token (a_list)
+						if l_routine_first_token /= Void then
+							l_end_index := l_routine_first_token.index - 1
+
+							check l_first_token.index <= l_end_index end
+							create l_region.make (l_first_token.index, l_end_index)
+						end
 					end
 				end
 				if l_region /= Void and then a_list.valid_region (l_region) then

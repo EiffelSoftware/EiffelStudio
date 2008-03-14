@@ -84,7 +84,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	initial_strings: ARRAY [STRING] is
+	initial_strings: ARRAY [STRING_GENERAL] is
 			-- Initial list items.
 		once
 			create Result.make (1, 9)

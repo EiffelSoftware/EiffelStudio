@@ -52,7 +52,7 @@ feature {NONE} -- Agents
 					end
 
 					-- Judge if pointer in the end dropdown area
-					if tool_bar.item_x (Current) + width - dropdrown_width < a_relative_x then
+					if dropdown_left < a_relative_x then
 						if is_dropdown_area /= True then
 							is_need_redraw := True
 						end

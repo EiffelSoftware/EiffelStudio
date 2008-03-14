@@ -1010,7 +1010,7 @@ feature -- Files (user)
 			is_user_files_supported: is_user_files_supported
 		do
 			create Result.make_from_string (user_docking_path)
-			Result.set_file_name (docking_standard_file)
+			Result.set_file_name (docking_debug_file)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

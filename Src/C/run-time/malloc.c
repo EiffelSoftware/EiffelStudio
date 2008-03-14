@@ -2901,7 +2901,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 				 * 20MB and more than a quarter of the available memory we should force a full
 				 * collection as otherwise if it turns out the the old object is not referenced
 				 * anymore, it won't be collected and the memory allocated will not see this huge
-				 * free space available. See eweasel test#exec096 for an example. */
+				 * free space available. See eweasel test#exec107 for an example. */
 			if ((r & B_SIZE) > 20971520) {
 				if ((r & B_SIZE) > ((rt_m_data.ml_used + rt_m_data.ml_over) / 4)) {
 					force_plsc++;

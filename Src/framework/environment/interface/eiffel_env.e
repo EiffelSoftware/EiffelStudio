@@ -772,16 +772,19 @@ feature -- Directories (top-level user)
 					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
 					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
 				end
-			end
-			if is_workbench then
-				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
-					l_dir.append (" (workbench)")
-				else
-					l_dir.append (wkbench_suffix)
+
+				if is_workbench then
+					if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
+						l_dir.append (" (workbench)")
+					else
+						l_dir.append (wkbench_suffix)
+					end
 				end
+				check not_l_dir_is_empty: not l_dir.is_empty end
+				Result.extend (l_dir)
+			else
+				create Result.make_from_string (l_user_files)
 			end
-			check not_l_dir_is_empty: not l_dir.is_empty end
-			Result.extend (l_dir)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

@@ -293,11 +293,13 @@ feature {NONE} -- Basic operations
 	data_from_row (a_row: EV_GRID_ROW): ANY is
 			-- Data related to `a_row'
 		do
-			if a_row /= Void and then a_row.count > 0 then
-				Result := data_from_item (a_row.item (1))
-			end
-			if Result = Void then
-				Result := a_row.data
+			if a_row /= Void then
+				if a_row.count > 0 then
+					Result := data_from_item (a_row.item (1))
+				end
+				if Result = Void then
+					Result := a_row.data
+				end
 			end
 		end
 

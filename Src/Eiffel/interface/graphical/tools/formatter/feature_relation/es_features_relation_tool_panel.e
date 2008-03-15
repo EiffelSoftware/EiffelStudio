@@ -283,7 +283,9 @@ feature {NONE} -- Event handlers
 			if (a_type & {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed) = {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed then
 				l_mode := mode
 				if l_mode = {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.basic or l_mode = {ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat then
-					refresh
+						-- For now we do not do a refresh of the feature, until we can better handle saving of the scrolled position information
+						-- and provide comments when major modifications have been made to the class.
+--					refresh
 				end
 			end
 			Precursor (a_type)

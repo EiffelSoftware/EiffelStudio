@@ -1489,7 +1489,9 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			-- Save window size.
 		do
 			if not window.is_maximized and not window.is_minimized then
-				development_window_data.save_size (a_width, a_height)
+					-- We cannot use `a_width' and `a_height' because it corresponds to
+					-- the client width and height, not the window.
+				development_window_data.save_size (window.width, window.height)
 			end
 		end
 
@@ -1497,7 +1499,9 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			-- Save window position.
 		do
 			if not window.is_maximized and not window.is_minimized then
-				development_window_data.save_position (a_x, a_y)
+					-- We cannot use `a_x' and `a_y' because it corresponds to the position
+					-- of the client area.
+				development_window_data.save_position (window.screen_x, window.screen_y)
 			end
 		end
 

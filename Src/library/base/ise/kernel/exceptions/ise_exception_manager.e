@@ -67,14 +67,20 @@ feature -- Status setting
 	ignore (a_exception: TYPE [EXCEPTION]) is
 			-- Make sure that any exception of code `code' will be
 			-- ignored. This is not the default.
+		local
+			l_type: INTEGER
 		do
-			ignored_exceptions.extend (a_exception)
+			l_type := internal_object.dynamic_type (a_exception)
+			ignored_exceptions.force (l_type, l_type)
 		end
 
 	catch (a_exception: TYPE [EXCEPTION]) is
 			-- Set type of `a_exception' `is_ignored'.
+		local
+			l_type: INTEGER
 		do
-			ignored_exceptions.prune_all (a_exception)
+			l_type := internal_object.dynamic_type (a_exception)
+			ignored_exceptions.remove (l_type)
 		end
 
 	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN) is
@@ -92,25 +98,25 @@ feature -- Status report
 	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
 			-- If set, type of `a_exception' is ignorable.
 		do
-			Result := not unignorable_exceptions.has (a_exception)
+			Result := not unignorable_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
 	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
 			-- If set, type of `a_exception' is raisable.
 		do
-			Result := not unraisable_exceptions.has (a_exception)
+			Result := not unraisable_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
 	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN is
 			-- If set, type of `a_exception' is not raised.
 		do
-			Result := ignored_exceptions.has (a_exception)
+			Result := ignored_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
 	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN is
 			-- If set, type of `a_exception' is raised.
 		do
-			Result := not ignored_exceptions.has (a_exception)
+			Result := not ignored_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
 feature {EXCEPTIONS} -- Compatibility support
@@ -312,26 +318,26 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Implementation, ignoring
 
-	ignored_exceptions: ARRAYED_SET [TYPE [EXCEPTION]] is
+	ignored_exceptions: HASH_TABLE [INTEGER, INTEGER] is
 			-- Ignored exceptions
 		once
 			create Result.make (0)
-			Result.compare_objects
 		end
 
-	unignorable_exceptions: ARRAYED_SET [TYPE [EXCEPTION]] is
+	unignorable_exceptions: HASH_TABLE [INTEGER, INTEGER] is
 			-- Unignorable exceptions
+		local
+			l_type: INTEGER
 		once
+			l_type := internal_object.dynamic_type ({VOID_TARGET})
 			create Result.make (1)
-			Result.compare_objects
-			Result.extend ({VOID_TARGET})
+			Result.force (l_type, l_type)
 		end
 
-	unraisable_exceptions: ARRAYED_SET [TYPE [EXCEPTION]] is
+	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER] is
 			-- Unraisable exceptions
 		once
 			create Result.make (0)
-			Result.compare_objects
 		end
 
 feature {NONE} -- Implementation

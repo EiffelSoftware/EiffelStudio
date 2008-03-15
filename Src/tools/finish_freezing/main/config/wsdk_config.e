@@ -27,14 +27,21 @@ feature {NONE} -- Access
 			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
 			l_layout ?= eiffel_layout
-			create Result.make (256)
 			if l_layout /= Void and then l_layout.is_valid_environment then
+				create Result.make (256)
 				Result.append (l_layout.config_eif_path)
-				Result.append ("\windows_sdk_v6.0.bat")
-			else
+				if code.is_equal ("WSDK60") then
+					Result.append ("\windows_sdk_v6.0.bat")
+				elseif code.is_equal ("WSDK61") then
+					Result.append ("\windows_sdk_v6.1.bat")
+				end
+			end
+
+			if Result = Void then
 					-- Default to using one found in SDK, typically happens for
 					-- library consumers that are used in install application or are used
 					-- with no product install base
+				create Result.make (256)
 				Result.append (install_path)
 				Result.append ("Bin\SetEnv.cmd")
 			end

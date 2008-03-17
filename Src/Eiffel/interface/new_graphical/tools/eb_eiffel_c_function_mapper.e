@@ -103,6 +103,11 @@ feature -- Access
 					create l_file.make_open_read (a_file_name)
 					create l_comment.make (20)
 					l_comment.append ("/* ")
+					l_comment.append ("{")
+					if {cl: CLASS_C} (e_feature.associated_class) then
+						l_comment.append (cl.name_in_upper)
+					end
+					l_comment.append ("}.")
 					l_comment.append (e_feature.name)
 					l_comment.append (" */")
 					l_cnt := l_comment.count

@@ -206,7 +206,7 @@ feature {CACHE_READER} -- Access
 				l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 				if internal_eiffel_cache_path.item = Void then
 					if is_eiffel_layout_defined then
-						Result := eiffel_layout.eiffel_installation_dir_name
+						Result := eiffel_layout.install_path
 					end
 					if Result = Void then
 						Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory

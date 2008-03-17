@@ -22,9 +22,9 @@ feature -- Access
 			-- List of directories to be created at start up
 		once
 			Result := Precursor {EC_EIFFEL_LAYOUT}
-			if is_user_files_supported then
-				Result.extend (user_docking_path.string)
-			end
+			Result.extend (user_templates_path.string)
+			Result.extend (user_projects_path.string)
+			Result.extend (user_docking_path.string)
 		end
 
 ;indexing

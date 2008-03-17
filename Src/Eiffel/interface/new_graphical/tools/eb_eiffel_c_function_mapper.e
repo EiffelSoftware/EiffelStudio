@@ -104,7 +104,7 @@ feature -- Access
 					create l_comment.make (20)
 					l_comment.append ("/* ")
 					l_comment.append ("{")
-					if {cl: CLASS_C} (e_feature.associated_class) then
+					if {cl: CLASS_C} (e_feature.written_class) then
 						l_comment.append (cl.name_in_upper)
 					end
 					l_comment.append ("}.")

@@ -104,7 +104,6 @@ feature {NONE} -- Access
 						Result.extend (user_project_settings_path.string)
 						Result.extend (user_session_path.string)
 					Result.extend (user_studio_path.string)
-					Result.extend (user_templates_path.string)
 			else
 				create Result.make (0)
 			end
@@ -119,7 +118,7 @@ feature -- Status update
 			-- Check if needed environment variables are set up.
 		local
 			l_product_names: PRODUCT_NAMES
-			l_op_env: OPERATING_ENVIRONMENT
+			l_op_env: like operating_environment
 			l_file: RAW_FILE
 			l_dir: DIRECTORY
 			l_value: STRING_8
@@ -137,7 +136,7 @@ feature -- Status update
 
 				-- Check environment variables
 			create l_product_names
-			create l_op_env
+			l_op_env := operating_environment
 			l_variables := required_environment_variables
 			from l_variables.start until l_variables.after loop
 				l_variable := l_variables.item
@@ -242,7 +241,7 @@ feature -- Status report
 		once
 			Result := user_directory_supported
 			if Result then
-				l_home := eif_user_directory_name
+				l_home := user_directory_name
 				Result := l_home /= Void and then not l_home.is_empty
 			end
 		end
@@ -751,21 +750,33 @@ feature -- Directories (top-level user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		local
-			l_user_files: like eif_user_directory_name
+			l_user_files: like user_directory_name
 			l_dir: !STRING_8
 		once
 			l_user_files := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_user_files_env)
 			if l_user_files = Void or else l_user_files.is_empty then
-				l_user_files := eif_user_directory_name
+				l_user_files := user_directory_name
 				create Result.make_from_string (l_user_files)
 				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
 					create l_dir.make (20)
 					l_dir.append (product_name)
-					l_dir.append_character (' ')
+					if {PLATFORM}.is_windows then
+							-- Mac is using using the unix version of ES, so skip troublesome characters
+						l_dir.append_character (' ')
+					end
 					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
-					l_dir.append_character ('.')
+					if {PLATFORM}.is_windows then
+						l_dir.append_character ('.')
+					end
 					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
-					l_dir.append (" User Files")
+					if {PLATFORM}.is_windows then
+						l_dir.append_character (' ')
+					end
+					l_dir.append ("User")
+					if {PLATFORM}.is_windows then
+						l_dir.append_character (' ')
+					end
+					l_dir.append ("Files")
 				else
 					create l_dir.make (20)
 					l_dir.append (".es")
@@ -851,7 +862,7 @@ feature -- Directories (user)
 			if l_dir /= Void then
 				Result ?= l_dir
 			else
-				create Result.make_from_string (eif_user_directory_name)
+				create Result.make_from_string (user_directory_name)
 				Result.extend (distribution_name)
 			end
 		ensure
@@ -1431,12 +1442,18 @@ feature {NONE} -- Basic operations
 			a_dir_not_void: a_dir /= Void
 		local
 			l_dir: DIRECTORY
+			l_dir_name: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
 				create l_dir.make (a_dir)
 				if not l_dir.exists then
 					l_dir.create_dir
+				end
+			else
+				if a_dir.count > 1 and then a_dir.item (a_dir.count) = operating_environment.directory_separator then
+					l_dir_name := a_dir.substring (1, a_dir.count - 1)
+					safe_create_dir (l_dir_name)
 				end
 			end
 		rescue
@@ -1654,20 +1671,69 @@ feature -- File constants (user)
 	docking_standard_file: !STRING_8 = "standard.dck"
 			-- Editor layout docking file name
 
-feature -- Externals
+feature {NONE} -- Externals
 
 	user_directory_supported: BOOLEAN = True
 			-- Is the notion of a user directory supported on this platform?
---		external
---			"C use %"eif_path_name.h%""
---		alias
---			"eif_user_dir_supported"
---		end
 
-	eif_user_directory_name: STRING_8
+	user_directory_name: STRING
+			-- Directory name corresponding to the user directory
+		local
+			l_ptr: like eif_user_directory_name
+			l_dir: C_STRING
+		do
+			l_ptr := eif_user_directory_name
+			if l_ptr /= default_pointer then
+				create l_dir.make_by_pointer (l_ptr)
+				Result := l_dir.string
+			else
+				Result := (create {EXECUTION_ENVIRONMENT}).home_directory_name
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	eif_user_directory_name: POINTER
 			-- Directory name corresponding to the user directory
 		external
-			"C use %"eif_path_name.h%""
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"[
+				char* env = getenv("ISE_USER_FILES");
+				if (env) {
+					/* Use the defined variable name. */
+					return env;
+				} else {
+				#ifdef EIF_WINDOWS
+				#ifndef CSIDL_PERSONAL
+				#define CSIDL_PERSONAL 0x0005 /* roaming, user\My Documents */
+				#endif
+					char l_path[MAX_PATH + 1];
+					BOOL fResult = FALSE;
+					FARPROC sh_get_folder_path = NULL;
+					HMODULE shell32_module = LoadLibrary (L"shell32.dll");
+
+					if (shell32_module) {
+						sh_get_folder_path = GetProcAddress (shell32_module, "SHGetSpecialFolderPathA");
+						if (sh_get_folder_path) {
+							fResult = (FUNCTION_CAST_TYPE(BOOL, WINAPI, (HWND, LPSTR, DWORD, BOOL)) sh_get_folder_path) (
+								NULL, l_path, CSIDL_PERSONAL, TRUE);
+						}
+						FreeLibrary(shell32_module);
+					}
+
+					if (fResult) {
+						char* result = (char*)malloc (sizeof (char) * (strlen (l_path) + 1));
+						memcpy (result, l_path, strlen (l_path) + 1);
+						return result;
+					} else {
+						return NULL;
+					}
+				#else
+					return NULL;
+				#endif
+				}
+			]"
 		end
 
 feature -- Preferences

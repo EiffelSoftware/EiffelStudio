@@ -488,7 +488,7 @@ feature {NONE} -- Action hanlders
 						do
 							reset_mouse_idle_timer
 							l_handler := token_handler
-							if l_handler /= Void and then l_handler.is_active and then l_handler.can_perform_exit (True) then
+							if l_handler /= Void and then l_handler.can_perform_exit (True) then
 								l_handler.perform_exit (True)
 							end
 						end)
@@ -515,18 +515,20 @@ feature {NONE} -- Action hanlders
 				l_handler := token_handler
 				if l_handler /= Void then
 					if {l_clickable_text: !CLICKABLE_TEXT} text_displayed then
-						if not l_handler.is_active then
-								-- Fetch token at current mouse position
-							create l_cursor.make_from_character_pos (1, 1, l_clickable_text)
-							position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
-							if {l_token: !EDITOR_TOKEN} l_cursor.token and then l_handler.is_applicable_token (l_token) then
-								l_handler.perform_on_token_with_mouse_coords (l_token, l_cursor.line.index, a_abs_x, a_abs_y, a_screen_x, a_screen_y)
-							else
-								l_handler.perform_reset
+							-- Fetch token at current mouse position
+						create l_cursor.make_from_character_pos (1, 1, l_clickable_text)
+						position_cursor (l_cursor, a_abs_x, a_abs_y - editor_viewport.y_offset)
+						if {l_token: !EDITOR_TOKEN} l_cursor.token then
+							if not l_handler.is_active then
+								if l_handler.is_applicable_token (l_token) then
+									l_handler.perform_on_token_with_mouse_coords (l_token, l_cursor.line.index, a_abs_x, a_abs_y, a_screen_x, a_screen_y)
+								else
+									l_handler.perform_reset
+								end
+							elseif l_handler.last_token_handled /= l_token and then l_handler.can_perform_exit (False) then
+									-- Nothing to perform so ensure exit.
+								l_handler.perform_exit (False)
 							end
-						elseif l_handler.can_perform_exit (False) then
-								-- Nothing to perform so ensure exit.
-							l_handler.perform_exit (False)
 						end
 					end
 				end

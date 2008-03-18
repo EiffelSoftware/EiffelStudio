@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 			l_hbox.extend (edit_contracts_button)
 			l_hbox.disable_item_expand (edit_contracts_button)
 
+			edit_contracts_button.hide
+
 			a_widget.extend (l_hbox)
 			a_widget.disable_item_expand (l_hbox)
 		end
@@ -163,31 +165,31 @@ feature {NONE} -- Basic operation
 			l_grid.clear
 
 			if {l_feature: !like context_feature} context_feature and {l_class: !like context_class} context_class then
-				contract_grid.set_row_count_to (1)
+--				contract_grid.set_row_count_to (1)
 
 				create l_token_text
 
-					-- Create editor signature
+--					-- Create editor signature
 				create l_generator.make
 				l_generator.enable_multiline
-				l_feature.append_signature (l_generator)
-				l_tokens := l_generator.tokens (0)
+--				l_feature.append_signature (l_generator)
+--				l_tokens := l_generator.tokens (0)
 
-				l_row := contract_grid.row (1)
-				create l_editor_item
-				l_editor_item.enable_component_pebble
-				l_editor_item.set_text_with_tokens (l_tokens)
-					-- Evaluate height
-				l_token_text.set_tokens (l_tokens)
-				l_row.set_height (l_token_text.required_height)
-					-- Set item
-				l_row.set_item (1, l_editor_item)
-					-- Clean up
-				l_generator.wipe_out_lines
+--				l_row := contract_grid.row (1)
+--				create l_editor_item
+--				l_editor_item.enable_component_pebble
+--				l_editor_item.set_text_with_tokens (l_tokens)
+--					-- Evaluate height
+--				l_token_text.set_tokens (l_tokens)
+--				l_row.set_height (l_token_text.required_height)
+--					-- Set item
+--				l_row.set_item (1, l_editor_item)
+--					-- Clean up
+--				l_generator.wipe_out_lines
 
-					-- Grid dimension adjustments
-				l_height := l_height + l_row.height
-				l_width := l_width.max (l_token_text.required_width)
+--					-- Grid dimension adjustments
+--				l_height := l_height + l_row.height
+--				l_width := l_width.max (l_token_text.required_width)
 
 					-- Comments
 				create l_editor_item
@@ -274,11 +276,18 @@ feature {NONE} -- Basic operation
 					end
 				end
 
-				l_grid.set_minimum_size (l_width + 5, l_height + 5)
+				l_grid.set_minimum_size (l_width + 5, l_height + 20)
 				l_grid.column (1).set_width (l_width + 5)
 			end
 
 			l_grid.unlock_update
+
+				-- Set contract button's edit state.
+			if context_class.group.is_readonly then
+				edit_contracts_button.hide
+			else
+			--	edit_contracts_button.show
+			end
 		end
 
 feature {NONE} -- Comment extraction
@@ -310,7 +319,7 @@ feature {NONE} -- Comment extraction
 					l_comment := l_comments.item.content
 					a_token_writer.add_comment_text ("--")
 					a_token_writer.add_comment_text (l_comment)
-					
+
 					Result.append (a_token_writer.last_line.content)
 					if not l_comments.islast then
 						Result.extend (create {EDITOR_TOKEN_EOL}.make)
@@ -347,7 +356,6 @@ feature {NONE} -- Action handlers
 --			l_manager: EB_WINDOW_MANAGER
 --			l_window: EB_DEVELOPMENT_WINDOW
 --			l_feature_stone: FEATURE_STONE
-			l_info: ES_INFORMATION_PROMPT
 		do
 --			l_manager := (create {EB_SHARED_WINDOW_MANAGER}).window_manager
 --			l_window := l_manager.last_focused_development_window
@@ -360,8 +368,8 @@ feature {NONE} -- Action handlers
 --				end
 --			end
 
-			create l_info.make_standard ("Oh, I'd bet you'd love to do this?%N%NAll in good time. Patience is a virtue.")
-			l_info.show_on_active_window
+--			create l_info.make_standard ("Oh, I'd bet you'd love to do this?%N%NAll in good time. Patience is a virtue.")
+--			l_info.show_on_active_window
 		end
 
 feature {NONE} -- Factory

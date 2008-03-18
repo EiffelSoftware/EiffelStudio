@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make (lib_name: STRING) is
 			-- Load shared library `lib_name'
 		require
-			non_Void: lib_name /= Void
+			non_void: lib_name /= Void
 			non_empty: not lib_name.is_empty
 		deferred
 		ensure

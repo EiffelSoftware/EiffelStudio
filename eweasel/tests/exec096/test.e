@@ -15,6 +15,7 @@ feature
 		local
 			k, count: INTEGER;
 		do
+			no_message_on_failure
 			count := args.item (1).to_integer;
 			!!mem.make (Eiffel_memory);
 			from 

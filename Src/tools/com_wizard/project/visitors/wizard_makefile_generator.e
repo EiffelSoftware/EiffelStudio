@@ -325,7 +325,7 @@ feature {NONE} -- Query
 			create Result.make (512)
 			Result.append ("@ECHO OFF%N")
 			Result.append ("IF %"%%ISE_EIFFEL%%.%" == %".%" SET ISE_EIFFEL=")
-			Result.append (eiffel_layout.eiffel_installation_dir_name)
+			Result.append (eiffel_layout.install_path)
 			Result.append ("%NIF %"%%ISE_PLATFORM%%.%" == %".%" SET ISE_PLATFORM=")
 			Result.append (eiffel_layout.eiffel_platform)
 			Result.append ("%NIF %"%%ISE_LIBRARY%%.%" == %".%" SET ISE_LIBRARY=")

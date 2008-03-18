@@ -19,7 +19,10 @@ inherit
 			set_popup_widget_fetch_action,
 			window_on_screen_position,
 			on_popup_widget_show_requested,
-			on_popup_widget_hidden
+			on_popup_widget_hidden,
+
+			active_border_color,
+			border_color
 		end
 
 create
@@ -38,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			editor := a_editor
 			editor_token := a_token
-			make_popup_button_window (True)
+			make_popup_button_window (False)
 		ensure
 			editor_set: editor = a_editor
 			editor_token_set: editor_token = a_token
@@ -125,9 +128,22 @@ feature {NONE} -- Access
 	background_color: EV_COLOR
 			-- Pop up window background color, as well as the token background color
 		once
-			Result := colors.tooltip_color
+			--Result := colors.tooltip_color
+			create Result.make_with_8_bit_rgb (255, 255, 255)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	border_color: EV_COLOR
+			-- <Precursor>
+		once
+			create Result.make_with_8_bit_rgb (58, 123, 252)
+		end
+
+	active_border_color: EV_COLOR
+			-- <Precursor>
+		once
+			create Result.make_with_8_bit_rgb (58, 123, 252)
 		end
 
 feature -- Element change
@@ -265,18 +281,19 @@ feature {NONE} -- Action handlers
 			is_initialize: is_initialized
 		do
 			if a_button = 1 then
-				if
-					is_popup_widget_available and then                -- Only when widgets are available can the popup widget be shown.
-					not (token_image_rectangle.x <= a_x and a_x <= token_image_rectangle.x + token_image_rectangle.width and then
-					     token_image_rectangle.y <= a_y and a_y <= token_image_rectangle.y + token_image_rectangle.height)
-				then
-					show_popup_widget
-				else
-					on_token_selected (a_x, a_y, a_screen_x, a_screen_y)
-					if internal_token_select_actions /= Void then
-						internal_token_select_actions.call ([a_x, a_y, a_screen_x, a_screen_y])
-					end
-				end
+--				if
+--					is_popup_widget_available and then                -- Only when widgets are available can the popup widget be shown.
+--					not (token_image_rectangle.x <= a_x and a_x <= token_image_rectangle.x + token_image_rectangle.width and then
+--					     token_image_rectangle.y <= a_y and a_y <= token_image_rectangle.y + token_image_rectangle.height)
+--				then
+--					show_popup_widget
+--				else
+--					on_token_selected (a_x, a_y, a_screen_x, a_screen_y)
+--					if internal_token_select_actions /= Void then
+--						internal_token_select_actions.call ([a_x, a_y, a_screen_x, a_screen_y])
+--					end
+--				end
+				on_token_selected (a_x, a_y, a_screen_x, a_screen_y)
 			end
 		end
 
@@ -319,6 +336,8 @@ feature {NONE} -- Action handlers
 				redraw_token_image
 				token_image.hide
 			end
+
+			popup_window.set_y_position (popup_window.y_position - editor_token.height)
 		end
 
 	on_popup_widget_hidden
@@ -370,6 +389,9 @@ feature {NONE} -- Basic operations
 			l_coords := render_smart_token (editor_token, token_image, 0, 0, True)
 			token_x_offset := 0 - l_coords.token_coords.x
 			token_y_offset := 0 - l_coords.token_coords.y
+
+			token_x_offset := 1
+			token_y_offset := editor_token.height
 
 			if is_initialized and is_shown then
 				if l_old_ox /= token_x_offset or l_old_oy /= token_y_offset then
@@ -423,51 +445,56 @@ feature {NONE} -- Basic operations
 				a_dc.set_background_color (background_color)
 			end
 
-			l_glyph ?= a_token
-			if l_glyph = Void then
-				l_size := a_token.font.string_size (a_token.image)
-			else
-				l_size := [l_glyph.glyph.width, l_glyph.glyph.height, 0, 0]
-			end
+--			l_glyph ?= a_token
+--			if l_glyph = Void then
+--				l_size := a_token.font.string_size (a_token.image)
+--			else
+--				l_size := [l_glyph.glyph.width, l_glyph.glyph.height, 0, 0]
+--			end
 
-				-- Image border width
-			l_border := 2
+--				-- Image border width
+--			l_border := 2
 
-				-- Set token coords, for result
-			create l_token_rect.make (a_x + l_border + 1, a_y, l_size.width + l_size.left_offset + l_size.right_offset, l_size.height)
+--				-- Set token coords, for result
+--			create l_token_rect.make (a_x + l_border + 1, a_y, l_size.width + l_size.left_offset + l_size.right_offset, l_size.height)
 
-				-- Calculate size and offset information
-			l_x_offset := l_token_rect.x + l_token_rect.width
-			if l_has_popup_widget then
-					-- Calculate offsets and extended widths for a drop down arrow.
-				l_x_offset := l_x_offset + 3
-				l_buffer := (create {EB_SHARED_PIXMAPS}).mini_pixmaps.toolbar_dropdown_icon_buffer
-				l_width := l_x_offset + l_buffer.width + l_border
-				l_height := (l_token_rect.height + l_border).max (l_buffer.height)
-				l_y_offset := (l_height - l_buffer.height)
-			else
-					-- There is no popup widget
-				l_width := l_x_offset + l_border + 1
-				l_height := l_token_rect.height
-				l_y_offset := l_height
-			end
+--				-- Calculate size and offset information
+--			l_x_offset := l_token_rect.x + l_token_rect.width
+--			if l_has_popup_widget then
+--					-- Calculate offsets and extended widths for a drop down arrow.
+--				l_x_offset := l_x_offset + 3
+--				l_buffer := (create {EB_SHARED_PIXMAPS}).mini_pixmaps.toolbar_dropdown_icon_buffer
+--				l_width := l_x_offset + l_buffer.width + l_border
+--				l_height := (l_token_rect.height + l_border).max (l_buffer.height)
+--				l_y_offset := (l_height - l_buffer.height)
+--			else
+--					-- There is no popup widget
+--				l_width := l_x_offset + l_border + 1
+--				l_height := l_token_rect.height
+--				l_y_offset := l_height
+--			end
 
-				-- Set coords for drawing area, and for result
+--				-- Set coords for drawing area, and for result
+--			create l_rect.make (a_x, a_y, l_width, l_height)
+--			if a_paint then
+--				a_dc.set_clip_area (l_rect)
+
+--					-- Perform drawing
+--				a_dc.clear_rectangle (a_x, a_y, l_width, l_height)
+--				if l_glyph = Void then
+--					a_dc.draw_text_top_left (l_token_rect.x, l_token_rect.y, a_token.image)
+--				else
+--					a_dc.draw_sub_pixel_buffer (l_token_rect.x, l_token_rect.y, l_glyph.glyph, create {EV_RECTANGLE}.make (0, 0, l_glyph.glyph.width, l_glyph.glyph.height))
+--				end
+--				if l_has_popup_widget then
+--					a_dc.draw_sub_pixel_buffer (l_x_offset + a_x, (l_y_offset + a_y) - (l_border + 1), l_buffer, create {EV_RECTANGLE}.make (0, 0, l_buffer.width, l_buffer.height))
+--				end
+--			end
+
+			l_width := a_token.width - (border_width * 2)
+			l_height := 1
 			create l_rect.make (a_x, a_y, l_width, l_height)
-			if a_paint then
-				a_dc.set_clip_area (l_rect)
-
-					-- Perform drawing
-				a_dc.clear_rectangle (a_x, a_y, l_width, l_height)
-				if l_glyph = Void then
-					a_dc.draw_text_top_left (l_token_rect.x, l_token_rect.y, a_token.image)
-				else
-					a_dc.draw_sub_pixel_buffer (l_token_rect.x, l_token_rect.y, l_glyph.glyph, create {EV_RECTANGLE}.make (0, 0, l_glyph.glyph.width, l_glyph.glyph.height))
-				end
-				if l_has_popup_widget then
-					a_dc.draw_sub_pixel_buffer (l_x_offset + a_x, (l_y_offset + a_y) - (l_border + 1), l_buffer, create {EV_RECTANGLE}.make (0, 0, l_buffer.width, l_buffer.height))
-				end
-			end
+			create l_token_rect.make (a_x, a_y, l_width, l_height)
 
 				-- Set result
 			Result := [l_rect, l_token_rect]

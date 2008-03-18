@@ -141,7 +141,7 @@ feature -- Basic operations
 			-- `a_force': True to ignore check and perform an exit; False otherwise
 		require
 			is_interface_usable: is_interface_usable
-			is_active: is_active
+--			is_active: is_active
 			can_perform_exit: can_perform_exit (a_force)
 		do
 			last_token_handled := Void
@@ -159,6 +159,9 @@ feature -- Basic operations
 			not_is_active: not is_active
 		do
 			last_token_handled := Void
+--			if can_perform_exit (False) then
+--				perform_exit (False)
+--			end
 		ensure
 			last_token_handled_detached: last_token_handled = Void
 		end

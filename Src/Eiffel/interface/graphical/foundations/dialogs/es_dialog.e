@@ -354,13 +354,49 @@ feature -- Element change
 			a_text_attached: a_text /= Void
 			not_a_text_is_empty: not a_text.is_empty
 			not_is_shown: not is_shown
+		local
+			l_old_text: STRING_32
+			l_button: EV_BUTTON
 		do
-			dialog_window_buttons.item (a_id).set_text (a_text)
-			if is_shown then
-				adjust_dialog_button_widths
+			l_button := dialog_window_buttons.item (a_id)
+			l_old_text := l_button.text
+			if l_old_text = Void or else not l_old_text.is_equal (a_text) then
+				l_button.set_text (a_text)
+				if is_shown then
+					adjust_dialog_button_widths
+				end
 			end
 		ensure
 			button_text_set: dialog_window_buttons.item (a_id).text.is_equal (a_text)
+		end
+
+	set_button_icon (a_id: INTEGER; a_icon: EV_PIXMAP)
+			-- Sets a buttons text, overriding the default.
+			--
+			-- `a_id': A button id corresponding to an actual dialog button.
+			--         Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
+			-- `a_icon': Icon to set on the button
+		require
+			is_interface_usable: is_interface_usable
+			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
+			a_icon_attached: a_icon /= Void
+			not_a_text_is_destroyed: not a_icon.is_destroyed
+			not_is_shown: not is_shown
+		local
+			l_old_icon: EV_PIXMAP
+			l_button: EV_BUTTON
+		do
+			l_button := dialog_window_buttons.item (a_id)
+			if a_icon /= l_button.pixmap then
+				if a_icon = Void then
+					l_button.remove_pixmap
+				else
+					l_button.set_pixmap (a_icon)
+				end
+				if is_shown then
+					adjust_dialog_button_widths
+				end
+			end
 		end
 
 	set_button_action (a_id: INTEGER; a_action: PROCEDURE [ANY, TUPLE])

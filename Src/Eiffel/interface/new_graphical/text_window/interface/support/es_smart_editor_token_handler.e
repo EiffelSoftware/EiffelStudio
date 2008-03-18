@@ -106,11 +106,11 @@ feature -- Query
 		do
 			Result := Precursor {ES_EDITOR_TOKEN_HANDLER} (a_force) and then popup_window /= Void and then
 				popup_window.is_interface_usable and then
-				popup_window.is_shown
+				(a_force or else popup_window.is_shown)
 
 			if Result then
 					-- Exit cannot be peformed if the window has the mouse pointer
-				Result := not popup_window.has_mouse_pointer -- and not popup_window.is_popup_widget_shown
+				Result := not popup_window.has_mouse_pointer and not popup_window.is_popup_widget_shown
 			end
 		end
 
@@ -206,92 +206,95 @@ feature -- Basic operations
 			l_can_show: BOOLEAN
 			l_cursor_token: EDITOR_TOKEN
 		do
-				-- Offset position by margin width
-			l_x_offset := editor.left_margin_width
+			if last_token_handled /= a_token then
+					-- Offset position by margin width
+				l_x_offset := editor.left_margin_width
 
-				-- Offset y position by 1 because of padding.
-			l_y_offset := 1
+					-- Offset y position by 1 because of padding.
+				l_y_offset := 1
 
-			if {l_text: !CLICKABLE_TEXT} editor.text_displayed then
-					-- Determine if a pop window can be shown.
-				l_can_show := not editor.is_empty and then editor.text_displayed /= Void
-				if l_can_show then
-					l_cursor_token := editor.text_displayed.cursor.token
-					l_can_show := l_cursor_token /= a_token or else last_token_handled /= a_token
+				if {l_text: !CLICKABLE_TEXT} editor.text_displayed then
+						-- Determine if a pop window can be shown.
+					l_can_show := not editor.is_empty and then editor.text_displayed /= Void
+					if l_can_show then
+						l_cursor_token := editor.text_displayed.cursor.token
+						l_can_show := l_cursor_token /= a_token or else last_token_handled /= a_token
+
+						if l_can_show then
+							l_token_widget := token_widget (a_token, a_line)
+							l_token_action := token_action (a_token, a_line)
+							l_can_show := l_token_widget /= Void or l_token_action /= Void
+						end
+					end
 
 					if l_can_show then
-						l_token_widget := token_widget (a_token, a_line)
-						l_token_action := token_action (a_token, a_line)
-						l_can_show := l_token_widget /= Void or l_token_action /= Void
-					end
-				end
-
-				if l_can_show then
-						-- Locate token in line
-					create l_cursor.make_from_character_pos (1, a_line, l_text)
-					l_line := l_cursor.line
-					from l_line.start until l_line.after or l_token = a_token loop
-						if l_token /= Void and then l_token.length > 0 then
-							l_x_offset := l_x_offset + l_token.width
+							-- Locate token in line
+						create l_cursor.make_from_character_pos (1, a_line, l_text)
+						l_line := l_cursor.line
+						from l_line.start until l_line.after or l_token = a_token loop
+							if l_token /= Void and then l_token.length > 0 then
+								l_x_offset := l_x_offset + l_token.width
+							end
+							l_token := l_line.item
+							l_line.forth
 						end
-						l_token := l_line.item
-						l_line.forth
-					end
 
-					if l_token = a_token then
-							-- Token located, adjust the offset
-						l_y_offset := a_y - (a_y \\ editor.line_height)
+						if l_token = a_token then
+								-- Token located, adjust the offset
+							l_y_offset := a_y - (a_y \\ editor.line_height)
+						end
 					end
 				end
-			end
 
-			if popup_window /= Void then
-					-- Remove and clean up last window
-				popup_window.recycle
-				popup_window := Void
-			end
-
-			if l_can_show and then (popup_window = Void or else not popup_window.is_interface_usable) then
-					-- Create new window
-				if {l_widget: !EV_WIDGET} l_token_widget then
-					create popup_window.make_with_widget (editor, a_token, l_widget)
-				else
-					create popup_window.make (editor, a_token)
+				if popup_window /= Void then
+						-- Remove and clean up last window
+					popup_window.recycle
+					popup_window := Void
 				end
 
-					-- Ensure the token is hidden on showing the pop up widget
-				popup_window.set_is_token_hidden_on_popup_widget_shown (True)
+				if l_can_show and then (popup_window = Void or else not popup_window.is_interface_usable) then
+						-- Create new window
+					if {l_widget: !EV_WIDGET} l_token_widget then
+						create popup_window.make_with_widget (editor, a_token, l_widget)
+					else
+						create popup_window.make (editor, a_token)
+					end
 
-				if {l_action: !PROCEDURE [ANY, TUPLE]} l_token_action then
-					popup_window.register_action (popup_window.token_select_actions, l_action)
+						-- Ensure the token is hidden on showing the pop up widget
+					popup_window.set_is_token_hidden_on_popup_widget_shown (True)
+
+					if {l_action: !PROCEDURE [ANY, TUPLE]} l_token_action then
+						popup_window.register_action (popup_window.token_select_actions, l_action)
+					end
+
+						-- Register action on hide to reset the active state.
+					popup_window.register_action (popup_window.hide_actions, agent do is_active := False end)
+
+						-- Deactivate handler, when the token is selected
+					popup_window.register_action (popup_window.token_select_actions, agent on_token_selected (popup_window, ?, ?, ?, ?))
 				end
 
-					-- Register action on hide to reset the active state.
-				popup_window.register_action (popup_window.hide_actions, agent do is_active := False end)
+					-- Display window
+				if l_can_show then
+					check
+						popup_window_attached: popup_window /= Void
+						popup_window_is_interface_usable: popup_window.is_interface_usable
+					end
 
-					-- Deactivate handler, when the token is selected
-				popup_window.register_action (popup_window.token_select_actions, agent on_token_selected (popup_window, ?, ?, ?, ?))
-			end
+						-- Show window
+					if {l_editor_widget: !EV_WIDGET} editor.editor_drawing_area then
+						popup_window.show_relative_to_widget (l_editor_widget, l_x_offset, l_y_offset, a_x, a_y)
 
-				-- Display window
-			if l_can_show then
-				check
-					popup_window_attached: popup_window /= Void
-					popup_window_is_interface_usable: popup_window.is_interface_usable
+							-- The precusor will not be called because the handler is to be considered "active".
+						last_token_handled := a_token
+						is_active := True
+					end
 				end
 
-					-- Show window
-				if {l_editor_widget: !EV_WIDGET} editor.editor_drawing_area then
-					popup_window.show_relative_to_widget (l_editor_widget, l_x_offset, l_y_offset, a_x, a_y)
-						-- The precusor will not be called because the handler is to be considered "active".
-					last_token_handled := a_token
-					is_active := True
+				if not is_active then
+						-- The token was already handled and the handler is active, so we shouldn't visit the previous implementation!
+					Precursor {ES_EDITOR_TOKEN_HANDLER} (a_token, a_line, a_x, a_y, a_screen_x, a_screen_y)
 				end
-			end
-
-			if not is_active then
-					-- The token was already handled and the handler is active, so we shouldn't visit the previous implementation!
-				Precursor {ES_EDITOR_TOKEN_HANDLER} (a_token, a_line, a_x, a_y, a_screen_x, a_screen_y)
 			end
 		ensure then
 			is_active: (popup_window /= Void and then popup_window.is_shown) implies is_active

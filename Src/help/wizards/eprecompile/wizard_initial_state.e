@@ -31,7 +31,7 @@ feature -- basic Operations
 	proceed_with_current_info is
 		do
 			Precursor
-			if eiffel_layout.Eiffel_platform /= Void and eiffel_layout.Eiffel_installation_dir_name /= Void then
+			if eiffel_layout.eiffel_platform /= Void and eiffel_layout.eiffel_install /= Void then
 				proceed_with_new_state (create {WIZARD_FIRST_STATE}.make(wizard_information))
 			else
 				proceed_with_new_state (create {WIZARD_ERROR_ENV_VAR_STATE}.make(wizard_information))

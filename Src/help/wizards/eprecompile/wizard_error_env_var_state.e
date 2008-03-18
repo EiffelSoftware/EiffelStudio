@@ -25,10 +25,10 @@ feature -- Access
 		do
 			create l_str.make (100)
 			l_str.append (interface_names.m_following_evironment_variables_not_set)
-			if eiffel_layout.Eiffel_installation_dir_name = Void then
+			if eiffel_layout.eiffel_install = Void then
 				l_str.append (" - ISE_EIFFEL%N")
 			end
-			if eiffel_layout.Eiffel_platform = Void then
+			if eiffel_layout.eiffel_platform = Void then
 				l_str.append (" - ISE_PLATFORM%N")
 			end
 			l_str.append ("%N%N")

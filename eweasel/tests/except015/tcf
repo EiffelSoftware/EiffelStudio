@@ -1,0 +1,15 @@
+test_name 	 stack-trace-indefinitely-grows
+test_description A routine that retry from an exception should have the same consistent exception stack trace.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1 200 200
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

@@ -159,8 +159,8 @@ feature {NONE} -- Implementation
 			if eiffel_layout.has_borland then
 				l_path := env.get ("PATH")
 				l_path.append (";")
-				l_path.append (eiffel_layout.Eiffel_installation_dir_name)
-				l_path.append ("\BCC55\Bin")
+				l_path.append (eiffel_layout.borland_path.string)
+				l_path.append ("\Bin")
 				env.put (l_path, "PATH")
 			end
 			if not eiffel_layout.has_borland then
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			Result := True
 			create l_finish_freezing_layout
 			l_finish_freezing_layout.check_environment_variable
-			create l_file.make (l_finish_freezing_layout.config_eif)
+			create l_file.make (l_finish_freezing_layout.config_eif_file_name.string)
 			if l_file.exists then
 				l_file.open_read
 				l_file.read_stream (l_file.count)

@@ -92,7 +92,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro <windows.h>] (LPCTSTR): EIF_POINTER"
 		alias
-			"LoadLibrary"
+			"LoadLibraryA"
 		end
 
 indexing

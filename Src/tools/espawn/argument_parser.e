@@ -140,8 +140,14 @@ feature {NONE} -- Usage
 	name: STRING_8 = "Eiffel Environment Command Spawn Utility"
 			-- Full name of application
 
-	version: STRING_8 = "6.0c"
+	version: STRING_8
 			-- Version number of application
+		do
+			create Result.make (3)
+			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_character ('.')
+			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+		end
 
 	loose_argument_description: STRING_8 = "Command or application to execute."
 			-- Description of lose argument, used in usage information

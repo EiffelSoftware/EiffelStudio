@@ -391,6 +391,7 @@ test	catcall-check-failure-recursive-generic	catcall003 tcf pass catcall
 test	catcall-generic				catcall004 tcf pass catcall
 test	catcall-generic-numeric		catcall005 tcf pass catcall
 test	catcall-at-runtime-detection	catcall006 tcf pass catcall
+test	wrong-catcall-reported-on-generic-expanded	catcall007 tcf pass catcall
 
 -- Incrementality tests
 
@@ -1140,6 +1141,7 @@ test	special-base-address		exec279 tcf fail execution expanded
 test	default-create-not-called	exec280 tcf pass execution
 test	not-equal-operator-failure	exec281 tcf pass execution expanded
 test	all-defaults-failure		exec282 tcf fail execution expanded
+test	clear-all-on-special		exec283 tcf fail execution expanded
 
 
 -- Compiler termination (exception trace, panic, etc.)

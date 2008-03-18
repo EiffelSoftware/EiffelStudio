@@ -1,0 +1,75 @@
+SPECIAL [NATURAL_64] has 10 elements.
+SPECIAL [NATURAL_32] has 10 elements.
+SPECIAL [NATURAL_16] has 10 elements.
+SPECIAL [NATURAL_8] has 10 elements.
+SPECIAL [INTEGER_64] has 10 elements.
+SPECIAL [INTEGER_32] has 10 elements.
+SPECIAL [INTEGER_16] has 10 elements.
+SPECIAL [INTEGER_8] has 10 elements.
+SPECIAL [BOOLEAN] has 10 elements.
+SPECIAL [CHARACTER_32] has 10 elements.
+SPECIAL [CHARACTER_8] has 10 elements.
+SPECIAL [POINTER] has 10 elements.
+SPECIAL [REAL_64] has 10 elements.
+SPECIAL [REAL_32] has 10 elements.
+SPECIAL [ANY] has 10 elements.
+SPECIAL [EXP1] has 10 elements.
+SPECIAL [EXP2] has 10 elements.
+SPECIAL [EXP3] has 10 elements.
+SPECIAL [EXP4] has 10 elements.
+SPECIAL [EXP5 [STRING_8]] has 10 elements.
+SPECIAL [EXP6 [STRING_8]] has 10 elements.
+SPECIAL [EXP7] has 10 elements.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+SPECIAL [NATURAL_64] has 10 elements.
+SPECIAL [NATURAL_32] has 10 elements.
+SPECIAL [NATURAL_16] has 10 elements.
+SPECIAL [NATURAL_8] has 10 elements.
+SPECIAL [INTEGER_64] has 10 elements.
+SPECIAL [INTEGER_32] has 10 elements.
+SPECIAL [INTEGER_16] has 10 elements.
+SPECIAL [INTEGER_8] has 10 elements.
+SPECIAL [BOOLEAN] has 10 elements.
+SPECIAL [CHARACTER_32] has 10 elements.
+SPECIAL [CHARACTER_8] has 10 elements.
+SPECIAL [POINTER] has 10 elements.
+SPECIAL [REAL_64] has 10 elements.
+SPECIAL [REAL_32] has 10 elements.
+SPECIAL [ANY] has 10 elements.
+SPECIAL [EXP1] has 10 elements.
+SPECIAL [EXP2] has 10 elements.
+SPECIAL [EXP3] has 10 elements.
+SPECIAL [EXP4] has 10 elements.
+SPECIAL [EXP5 [STRING_8]] has 10 elements.
+SPECIAL [EXP6 [STRING_8]] has 10 elements.
+SPECIAL [EXP7] has 10 elements.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Being called {EXP7}.copy.
+Execution completed

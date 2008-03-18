@@ -1,0 +1,48 @@
+test_name 	 clear-all-on-special
+test_description Verify that `clear_all' on various kind of special works as indicated.
+
+define VALUE 0
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	exp1.e $CLUSTER exp1.e
+copy_raw	exp2.e $CLUSTER exp2.e
+copy_raw	exp3.e $CLUSTER exp3.e
+copy_raw	exp4.e $CLUSTER exp4.e
+copy_raw	exp5.e $CLUSTER exp5.e
+copy_raw	exp6.e $CLUSTER exp6.e
+copy_raw	exp7.e $CLUSTER exp7.e
+
+compile_melted
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+define VALUE 10
+copy_sub	Ace $TEST Ace
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

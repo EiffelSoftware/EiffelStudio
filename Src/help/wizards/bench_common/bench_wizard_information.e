@@ -37,15 +37,7 @@ feature {NONE} -- Initialization
 			compile_project := True
 			ace_location := ""
 
-			if eiffel_layout.Eiffel_projects_directory /= Void and then not eiffel_layout.Eiffel_projects_directory.is_empty then
-				project_location := eiffel_layout.Eiffel_projects_directory.twin
-			else
-				if not platform_is_unix then
-					project_location := "C:\projects"
-				else
-					project_location := eiffel_layout.Home
-				end
-			end
+			project_location := eiffel_layout.user_projects_path
 			from
 				l_count := 1
 				project_name := Default_project_name + "_" + l_count.out

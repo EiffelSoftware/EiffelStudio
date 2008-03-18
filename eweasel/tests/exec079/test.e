@@ -13,7 +13,8 @@ creation
 feature
 	make (args: ARRAY [STRING]) is
 		do
-			--collection_off;
+			collection_off;
+			no_message_on_failure
 			max := args.item (1).to_integer;
 			try;
 		end

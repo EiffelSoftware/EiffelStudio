@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 						-- This ensures that the top level of the menu is actually shown.
 						-- This only needs to be done on Windows, as on Gtk, the top menu item
 						-- is actually shown.
-					if eiffel_layout.platform.is_windows then
+					if {PLATFORM}.is_windows then
 						create temp_menu
 						temp_menu.extend (menu)
 						label.pointer_button_press_actions.force_extend (agent temp_menu.show)

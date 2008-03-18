@@ -369,7 +369,7 @@ feature -- Directories (top-level)
 			l_name: !STRING
 			l_name_wb: STRING
 		once
-			l_name := eiffel_install
+			l_name ?= eiffel_install
 			if is_workbench then
 				l_name_wb := l_name.twin
 				l_name_wb.append (wkbench_suffix)
@@ -891,6 +891,8 @@ feature -- Directories (user)
 				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
 					Result ?= user_files_path.twin
 					Result.extend (projects_name)
+				elseif {PLATFORM}.is_windows then
+					create Result.make_from_string ("C:\Projects")
 				else
 					create Result.make_from_string (environment.home_directory_name)
 				end
@@ -1463,62 +1465,44 @@ feature {NONE} -- Basic operations
 
 feature -- Environment variables
 
-	eiffel_install: !STRING_8
+	eiffel_install: ?STRING_8
 			-- ISE_EIFFEL name
-		require
-			is_valid_environment: is_valid_environment
 		do
-			Result ?= get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
+			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
 		ensure
-			not_result_is_empty: not Result.is_empty
+			result_attached: is_valid_environment implies Result /= Void
+			not_result_is_empty: is_valid_environment implies not Result.is_empty
 		end
 
-	eiffel_c_compiler: !STRING_8
+	eiffel_c_compiler: ?STRING_8
 			-- ISE_C_COMPILER name.
 		require
-			is_valid_environment: is_valid_environment
 			windows: {PLATFORM}.is_windows
 		do
-			Result ?= get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_env)
+			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_c_compiler_env)
 		ensure
-			not_result_is_empty: not Result.is_empty
+			result_attached: is_valid_environment implies Result /= Void
+			not_result_is_empty: is_valid_environment implies not Result.is_empty
 		end
 
-	eiffel_platform: !STRING_8
+	eiffel_platform: ?STRING_8
 			-- ISE_PLATFORM name.
-		require
-			is_valid_environment: is_valid_environment
 		do
-			Result ?= get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_platform_env)
+			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_platform_env)
 		ensure
-			not_result_is_empty: not Result.is_empty
+			result_attached: is_valid_environment implies Result /= Void
+			not_result_is_empty: is_valid_environment implies not Result.is_empty
 		end
 
-	eiffel_library: !STRING_8
+	eiffel_library: ?STRING_8
 			-- ISE_LIBRARY directory name.
 		require
 			is_valid_environment: is_valid_environment
 		do
-			Result ?= get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env)
+			Result := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_library_env)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
-
---	eiffel_user_settings: !STRING_8
---			-- ISE_USER_SETTINGS directory name.
---		require
---			is_valid_precompile_environment: is_valid_precompile_environment
---		do
---			Result ?= get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_user_settings_env)
---		ensure
---			not_result_is_empty: not Result.is_empty
---		end
-
---	eiffel_precomp: STRING_8
---			-- ISE_PRECOMP directory name.
---		do
---			Result ?= get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_precomp_env)
---		end
 
 	platform_abstraction: !STRING_8
 			-- Abstraction between Windows and Unix.

@@ -18,7 +18,7 @@ feature {NONE} -- Constants
 			-- Default location for the precompiled base
 			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
 		once
-			create Result.make_from_string (eiffel_layout.Eiffel_installation_dir_name)
+			create Result.make_from_string (eiffel_layout.shared_path)
 			Result.extend_from_array (<<"precomp", "spec", eiffel_layout.Eiffel_platform>>)
 		end
 

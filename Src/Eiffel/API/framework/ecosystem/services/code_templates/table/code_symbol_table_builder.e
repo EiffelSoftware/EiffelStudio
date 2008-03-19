@@ -19,18 +19,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make
-			-- Initialize symbol table builder
-		do
-			create symbol_table.make
-		end
-
-	make_with_table (a_table: like symbol_table)
+	make (a_template: !CODE_TEMPLATE_DEFINITION)
 			-- Initialize symbol table builder.
 			--
+			-- `a_template': Code template to use to initialize the symbol table.
+		do
+			make_with_table (a_template, create_symbol_table)
+		end
+
+	make_with_table (a_template: !CODE_TEMPLATE_DEFINITION; a_table: like symbol_table)
+			-- Initialize symbol table builder.
+			--
+			-- `a_template': Code template to use to initialize the symbol table.
 			-- `a_table': A symbol table to populate with the declaration default values.
 		do
 			symbol_table := a_table
+			a_template.process (Current)
 		ensure
 			symbol_table_set: symbol_table = a_table
 		end
@@ -38,15 +42,24 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	symbol_table: !CODE_SYMBOL_TABLE
-			-- Build code symbol table
+			-- Built code symbol table.
+
+feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
+		end
 
 feature {CODE_NODE} -- Processing
 
-	process_code_literal_declaration (a_value: !CODE_LITERAL_DECLARATION) is
+	process_code_literal_declaration (a_value: !CODE_LITERAL_DECLARATION)
 			-- <Precursor>
 		local
 			l_value: !CODE_SYMBOL_VALUE
 		do
+				-- Ensure old value is not overwritten.
 			create l_value.make (a_value.default_value)
 			symbol_table.put (l_value, a_value.id)
 		end
@@ -66,8 +79,13 @@ feature {CODE_NODE} -- Processing
 		do
 		end
 
---invariant
---	symbol_table_attached: symbol_table /= Void
+feature {NONE} -- Factory
+
+	create_symbol_table: !CODE_SYMBOL_TABLE
+			-- Factory used to create the default symbol table
+		do
+			create Result.make
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

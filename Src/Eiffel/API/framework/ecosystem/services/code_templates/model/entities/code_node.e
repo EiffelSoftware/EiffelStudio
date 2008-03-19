@@ -10,18 +10,35 @@ indexing
 deferred class
 	CODE_NODE
 
+inherit
+	USABLE_I
+
 feature {NONE} -- Initialization
 
 	make
 			-- Initializes a code node.
 		do
-			initialize_nodes (code_factory)
+		end
+
+	frozen build_nodes (a_factory: like code_factory)
+			-- Builds the default nodes for Current.
+			--
+			-- `a_factory': Factory used for creating nodes.
+		require
+			not_is_initialized: not is_initialized
+		do
+			initialize_nodes (a_factory)
+			is_initialized := True
+		ensure
+			is_initialized: is_initialized
 		end
 
 	initialize_nodes (a_factory: like code_factory)
 			-- Initializes the default nodes for Current.
 			--
 			-- `a_factory': Factory used for creating nodes.
+		require
+			not_is_initialized: not is_initialized
 		deferred
 		end
 
@@ -29,6 +46,8 @@ feature -- Access
 
 	definition: !CODE_TEMPLATE_DEFINITION
 			-- Top level code file.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 
@@ -39,10 +58,26 @@ feature {CODE_NODE} -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	is_interface_usable: BOOLEAN
+			-- Dtermines if the interface was usable
+		do
+			Result := is_initialized
+		end
+
+feature {NONE} -- Status report
+
+	is_initialized: BOOLEAN
+			-- Is the node initialized?
+
 feature -- Visitor
 
 	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
 			-- Visit's the current node and processes it.
+		require
+			is_interface_usable: is_interface_usable
+			a_visitor_is_interface_usable: a_visitor.is_interface_usable
 		deferred
 		end
 

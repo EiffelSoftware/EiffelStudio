@@ -12,57 +12,57 @@ class
 
 feature -- Access
 
-	author_tag: STRING_8 = "author"
+	author_tag: !STRING_8 = "author"
 
-	category_tag: STRING_8 = "category"
+	category_tag: !STRING_8 = "category"
 
-	categories_tag: STRING_8 = "categories"
+	categories_tag: !STRING_8 = "categories"
 
-	code_template_tag: STRING_8 = "code_template"
+	code_template_tag: !STRING_8 = "code_template"
 
-	code_templates_tag: STRING_8 = "code_templates"
+	code_templates_tag: !STRING_8 = "code_templates"
 
-	declarations_tag: STRING_8 = "declarations"
+	declarations_tag: !STRING_8 = "declarations"
 
-	default_tag: STRING_8 = "default"
+	default_tag: !STRING_8 = "default"
 
-	description_tag: STRING_8 = "description"
+	description_tag: !STRING_8 = "description"
 
-	literal_tag: STRING_8 = "literal"
+	literal_tag: !STRING_8 = "literal"
 
-	metadata_tag: STRING_8 = "metadata"
+	metadata_tag: !STRING_8 = "metadata"
 
-	title_tag: STRING_8 = "title"
+	title_tag: !STRING_8 = "title"
 
-	shortcut_tag: STRING_8 = "shortcut"
+	shortcut_tag: !STRING_8 = "shortcut"
 
-	template_tag: STRING_8 = "template"
+	template_tag: !STRING_8 = "template"
 
-	templates_tag: STRING_8 = "templates"
+	templates_tag: !STRING_8 = "templates"
 
 feature -- Attribute
 
-	format_attribute: STRING_8 = "format"
+	format_attribute: !STRING_8 = "format"
 
-	editable_attribute: STRING_8 = "editable"
+	editable_attribute: !STRING_8 = "editable"
 
-	id_attribute: STRING_8 = "id"
+	id_attribute: !STRING_8 = "id"
 
-	version_attribute: STRING_8 = "version"
+	version_attribute: !STRING_8 = "version"
 
 feature -- Values
 
-	contract_category: STRING_8 = "contract"
+	contract_category: !STRING_8 = "contract"
 
-	code_category: STRING_8 = "code"
+	code_category: !STRING_8 = "code"
 
-	class_category: STRING_8 = "class"
+	class_category: !STRING_8 = "class"
 
 feature -- Token values
 
-	cursor_token_name: STRING_8 = "cursor"
+	cursor_token_name: !STRING_8 = "cursor"
 
-	selected_token_name: STRING_8 = "selected"
+	selected_token_name: !STRING_8 = "selected"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

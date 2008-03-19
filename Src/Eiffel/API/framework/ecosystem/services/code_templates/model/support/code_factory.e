@@ -12,44 +12,44 @@ class
 
 feature -- Factory
 
-	create_code_built_in_literal_declaration (a_id: !STRING_8): !CODE_LITERAL_DECLARATION
+	create_code_built_in_literal_declaration (a_id: !STRING_8; a_parent: CODE_DECLARATION_COLLECTION): !CODE_LITERAL_DECLARATION
 			-- Creates a built-in code literal declaration.
 			--
 			-- `a_id': A code declaration identifier.
 		do
-			create {!CODE_BUILT_IN_LITERAL_DECLARATION} Result.make (a_id)
+			create {!CODE_BUILT_IN_LITERAL_DECLARATION} Result.make (a_id, a_parent)
 		ensure
 			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id)
 			result_is_built_in: Result.is_built_in
 		end
 
-	create_code_category_collection: !CODE_CATEGORY_COLLECTION
+	create_code_category_collection (a_parent: !CODE_METADATA): !CODE_CATEGORY_COLLECTION
 			-- Creates a code category collection node.
 		do
-			create Result.make
+			create Result.make (a_parent)
 		end
 
-	create_code_declaration_collection: !CODE_DECLARATION_COLLECTION
+	create_code_declaration_collection (a_parent: !CODE_TEMPLATE_DEFINITION): !CODE_DECLARATION_COLLECTION
 			-- Creates a code declarations collection node.
 		do
-			create Result.make
+			create Result.make (a_parent)
 		end
 
-	create_code_literal_declaration (a_id: !STRING_8): !CODE_LITERAL_DECLARATION
+	create_code_literal_declaration (a_id: !STRING_8; a_parent: !CODE_DECLARATION_COLLECTION): !CODE_LITERAL_DECLARATION
 			-- Creates a code literal declaration.
 			--
 			-- `a_id': A code declaration identifier.
 		do
-			create Result.make (a_id)
+			create Result.make (a_id, a_parent)
 		ensure
 			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id)
 			not_result_is_built_in_set: not Result.is_built_in
 		end
 
-	create_code_metadata: !CODE_METADATA
+	create_code_metadata (a_parent: !CODE_TEMPLATE_DEFINITION): !CODE_METADATA
 			-- Creates a code metadata section.
 		do
-			create Result.make
+			create Result.make (a_parent)
 		end
 
 	create_code_numeric_version (a_major, a_minor, a_revision, a_qfe: NATURAL_16): !CODE_NUMERIC_VERSION
@@ -63,22 +63,22 @@ feature -- Factory
 			create Result.make (a_major, a_minor, a_revision, a_qfe)
 		end
 
-	create_code_template_collection: !CODE_TEMPLATE_COLLECTION
+	create_code_template_collection (a_parent: !CODE_TEMPLATE_DEFINITION): !CODE_TEMPLATE_COLLECTION
 			-- Creates a code templates collections node.
 		do
-			create Result.make
+			create Result.make (a_parent)
 		end
 
 	create_code_template_defintion: CODE_TEMPLATE_DEFINITION
 			-- Creates a root code template file.
 		do
-			create Result.make (({!CODE_FACTORY}) #? Current)
+			create Result.make (Current)
 		end
 
-	create_code_template: !CODE_TEMPLATE
+	create_code_template (a_parent: !CODE_TEMPLATE_COLLECTION): !CODE_TEMPLATE
 			-- Creates a simple, unversioned code template.
 		do
-			create Result.make
+			create Result.make (a_parent)
 		end
 
 	create_code_version (a_version: !STRING_32): !CODE_VERSION
@@ -89,13 +89,13 @@ feature -- Factory
 			create Result.make (a_version)
 		end
 
-	create_code_versioned_template (a_version: !CODE_VERSION): !CODE_VERSIONED_TEMPLATE
+	create_code_versioned_template (a_version: !CODE_VERSION; a_parent: !CODE_TEMPLATE_COLLECTION): !CODE_VERSIONED_TEMPLATE
 			-- Create a versioned code template, specifying the minimum version of the compiler required
 			-- to use the code template.
 			--
 			-- `a_version': The version to bind the code template to.
 		do
-			create Result.make (a_version)
+			create Result.make (a_version, a_parent)
 		end
 
 feature -- Token factory

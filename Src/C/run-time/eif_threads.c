@@ -811,11 +811,11 @@ rt_public void eif_thr_exit(void)
 
 		thread_exiting = 1;
 
-		if (l_has_parent_thread) {
 #ifdef WORKBENCH
+		if (l_has_parent_thread) {
 			dnotify_exit_thread((EIF_THR_TYPE) eif_thr_context->tid);
-#endif
 		}
+#endif
 		exitprf();
 
 		if (l_has_parent_thread) {

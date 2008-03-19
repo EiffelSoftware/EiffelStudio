@@ -858,6 +858,9 @@ test	gc-expanded-in-special	runtime003	tcf pass runtime expanded special
 test	gc-expanded-allocating-memory-in-special runtime004	tcf pass runtime expanded special
 test	adopt-wean-freeze-unfreeze-multithreaded runtime005 tcf pass runtime
 
+-- Thread
+test	 cond-timedwait-failure		thread001	tcf pass thread
+
 -- Execution
 
 test	print-double			exec001  tcf pass execution

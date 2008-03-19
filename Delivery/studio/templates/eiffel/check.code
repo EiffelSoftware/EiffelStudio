@@ -1,0 +1,20 @@
+<code_template format="1.0.0">
+    <metadata>
+      <title>check</title>
+      <description>Code template for a check contract clause.</description>
+      <author>Eiffel Software</author>
+      <shortcut>check</shortcut>
+      <categories>
+        <category>code</category>
+      </categories>
+    </metadata>
+	
+	<templates>
+		<template>
+<![CDATA[check
+	$selection$cursor
+end
+]]>
+		</template>	
+	</templates>
+</code_template>

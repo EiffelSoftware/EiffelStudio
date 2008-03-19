@@ -1,0 +1,24 @@
+<code_template format="1.0.0">
+    <metadata>
+      <title>ensure</title>
+      <description>Code template for a postcondition contract clause.</description>
+      <author>Eiffel Software</author>
+      <shortcut>ensure</shortcut>
+      <categories>
+        <category>code</category>
+      </categories>
+    </metadata>
+	
+    <declarations>	
+      <literal id="then" editable="false">
+        <default/>
+      </literal>
+    </declarations>
+	
+	<templates>
+		<template>
+<![CDATA[ensure$then
+	$selection$cursor]]>
+		</template>	
+	</templates>
+</code_template>

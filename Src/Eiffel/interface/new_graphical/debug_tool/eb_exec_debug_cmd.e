@@ -185,7 +185,7 @@ feature {NONE} -- Attributes
 			Result.extend (create {EV_MENU_SEPARATOR})
 
 				--| Breakpoints status
-			create l_cb_item.make_with_text (interface_names.b_dbg_ignore_breakpoints)
+			create l_cb_item.make_with_text (interface_names.m_Dbg_ignore_breakpoints)
 			Result.extend (l_cb_item)
 			if dbg.execution_ignoring_breakpoints then
 				l_cb_item.enable_select
@@ -196,7 +196,7 @@ feature {NONE} -- Attributes
 
 				--| Catcall warning status
 			if {exc_hdlr: DBG_EXCEPTION_HANDLER} (dbg.exceptions_handler) then
-				create l_cb_item.make_with_text (interface_names.b_ignore_catcall_warnings)
+				create l_cb_item.make_with_text (interface_names.m_Dbg_ignore_catcall_warning)
 				Result.extend (l_cb_item)
 
 				if exc_hdlr.catcall_warning_ignored then
@@ -243,7 +243,7 @@ feature {NONE} -- Attributes
 			Result.extend (create {EV_MENU_SEPARATOR})
 
 				--| Exception handling
-			create l_item.make_with_text (interface_names.e_dbg_exception_handler)
+			create l_item.make_with_text (interface_names.m_Dbg_exception_handler)
 			l_item.select_actions.extend (agent open_exception_handler_dialog)
 			Result.extend (l_item)
 
@@ -275,7 +275,6 @@ feature {NONE} -- Attributes
 				end
 
 				from
-
 					profs.start
 				until
 					profs.after
@@ -293,7 +292,6 @@ feature {NONE} -- Attributes
 					profs.forth
 				end
 			end
-
 		ensure
 			not_void: Result /= Void
 		end

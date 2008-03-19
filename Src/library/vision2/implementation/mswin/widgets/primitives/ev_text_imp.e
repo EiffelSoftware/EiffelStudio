@@ -608,7 +608,7 @@ feature {NONE} -- WEL Implementation
 				-- We keep some useful informations that will be
 				-- destroyed when calling `wel_destroy'
 			par_imp ?= parent_imp
-				-- `Current' may not have been actually phsically parented
+				-- `Current' may not have been actually physically parented
 				-- within windows yet.
 			if par_imp = Void then
 				par_imp ?= default_parent

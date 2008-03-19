@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 			tmp: STRING
 		do
 			if not retried then
-				create clf.make_from_string (eiffel_layout.Templates_path)
+				create clf.make_from_string (eiffel_layout.default_templates_path)
 				if not empty_check.is_selected then
 					clf.set_file_name ("empty")
 				else

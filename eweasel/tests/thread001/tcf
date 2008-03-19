@@ -1,0 +1,17 @@
+test_name 	 cond-timedwait-failure
+test_description A system performing repeated calls to the C underlying routine `pthread_cond_timedwait' may fail because the timeout is improperly specified.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1 500
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

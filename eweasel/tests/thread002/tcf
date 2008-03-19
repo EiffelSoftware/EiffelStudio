@@ -1,5 +1,5 @@
 test_name 	 nested-thread-exit-failure
-test_description A system creating a few threads crashes when threads exit, it does not crash if the parent thread always wait for the child thread to terminate (see commented line about `joint).
+test_description A system creating a few threads crashes when threads exit, it does not crash if the parent thread always wait for the child thread to terminate (see commented line about `join').
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e

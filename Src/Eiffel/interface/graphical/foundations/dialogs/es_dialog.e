@@ -383,7 +383,6 @@ feature -- Element change
 			not_a_text_is_destroyed: not a_icon.is_destroyed
 			not_is_shown: not is_shown
 		local
-			l_old_icon: EV_PIXMAP
 			l_button: EV_BUTTON
 		do
 			l_button := dialog_window_buttons.item (a_id)

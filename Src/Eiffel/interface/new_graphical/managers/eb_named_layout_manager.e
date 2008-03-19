@@ -35,11 +35,10 @@ feature {NONE} -- Initlization
 	init_existing_layouts is
 			-- Initialize `layouts'.
 		do
-			init_existing_layouts_imp (user_layout_normal_mode_path, True)
-			init_existing_layouts_imp (user_layout_debug_mode_path, False)
+			init_existing_layouts_imp (layout_file_path (is_normal_mode), is_normal_mode)
 		end
 
-	init_existing_layouts_imp (a_dir: FILE_NAME; a_from_normal_mode: BOOLEAN) is
+	init_existing_layouts_imp (a_dir: !DIRECTORY_NAME; a_from_normal_mode: BOOLEAN) is
 			-- Used by `init_eixisting_layouts'.
 		require
 			not_void: a_dir /= Void and then not a_dir.is_empty
@@ -60,8 +59,7 @@ feature {NONE} -- Initlization
 				until
 					l_files.after
 				loop
-					-- If file is start with `user_layout_prefix' then that is what we want.
-					if l_files.item.substring (1, user_layout_prefix.count).is_equal (user_layout_prefix) then
+					if l_files.item.item (1) /= '.' then
 						create l_fn.make_from_string (l_dir.name.twin)
 						l_fn.set_file_name (l_files.item)
 						create l_file.make_open_read (l_fn)
@@ -93,14 +91,15 @@ feature -- Command
 			not_empty: not a_name.as_string_8.is_equal ("")
 		local
 			l_fn: FILE_NAME
+			l_file_utils: FILE_UTILITIES
 		do
 			if layouts.has (a_name) then
 				l_fn := layouts.item (a_name).file_path
 			else
-				l_fn := user_layout_path
-				l_fn.set_file_name (user_layout_prefix + (layouts.count + 1).out)
+				l_fn := layout_file_name (a_name.as_string_8, is_normal_mode)
 			end
-
+			create l_file_utils
+			l_file_utils.create_directory_for_file (({!STRING_GENERAL}) #? l_fn.string)
 			development_window.docking_manager.save_tools_config_with_name (l_fn, a_name)
 		end
 
@@ -174,6 +173,34 @@ feature -- Query
 			-- All names of layouts.
 			-- Key is name of a layout.
 
+feature {NONE} -- Query
+
+	layout_file_name (a_file_name: STRING; a_normal_mode: BOOLEAN): !FILE_NAME
+			-- Retrieve a full path for a docking layout file name
+		require
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		do
+			create Result.make_from_string (layout_file_path (a_normal_mode).string)
+			Result.set_file_name (a_file_name)
+			Result.add_extension (eiffel_layout.docking_file_extension)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	layout_file_path (a_normal_mode: BOOLEAN): !DIRECTORY_NAME
+			-- Retrieve a full path for a docking layout file name
+		do
+			Result := eiffel_layout.user_docking_path.twin
+			if a_normal_mode then
+				Result.extend (user_layout_prefix + eiffel_layout.docking_standard_file)
+			else
+				Result.extend (user_layout_prefix + eiffel_layout.docking_debug_file)
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature {NONE} -- Implementation
 
 	is_normal_mode: BOOLEAN is
@@ -186,39 +213,11 @@ feature {NONE} -- Implementation
 			Result := not l_debugger.eb_debugger_manager.raised
 		end
 
-	user_layout_path: FILE_NAME is
-			-- User layout files saving path base on Current mode (normal/debug).
-		do
-			if is_normal_mode then
-				Result := user_layout_normal_mode_path
-			else
-				Result := user_layout_debug_mode_path
-			end
-		ensure
-			not_void: Result /= Void
-		end
-
-	user_layout_normal_mode_path: FILE_NAME is
-			-- Normal mode user layout files saving path
-		do
-			Result := eiffel_layout.user_docking_standard_file_name.twin
-		ensure
-			not_void: Result /= Void
-		end
-
-	user_layout_debug_mode_path: FILE_NAME is
-			-- Debug mode user layout files saving path
-		do
-			Result := eiffel_layout.user_docking_debug_file_name.twin
-		ensure
-			not_void: Result /= Void
-		end
+	user_layout_prefix: STRING = "user_"
+			-- User layout prefix
 
 	interface_names: INTERFACE_NAMES
 			-- Interface names.
-
-	user_layout_prefix: STRING is "user_layout_"
-			-- User saved named layout files prefix.
 
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Development windows related.

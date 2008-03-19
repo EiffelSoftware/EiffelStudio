@@ -1004,26 +1004,39 @@ feature -- Files
 
 feature -- Files (user)
 
-	user_docking_standard_file_name: FILE_NAME
+	user_docking_file_name (a_file_name: STRING): !FILE_NAME
 			-- Path of standard docking layout.
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
 			create Result.make_from_string (user_docking_path)
-			Result.set_file_name (docking_standard_file)
+			Result.set_file_name (a_file_name)
+			Result.add_extension (docking_file_extension)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
-	user_docking_debug_file_name: FILE_NAME
+	user_docking_standard_file_name: !FILE_NAME
 			-- Path of standard docking layout.
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		do
-			create Result.make_from_string (user_docking_path)
-			Result.set_file_name (docking_debug_file)
+		once
+			Result := user_docking_file_name (docking_standard_file)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	user_docking_debug_file_name: !FILE_NAME
+			-- Path of standard docking layout.
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+		once
+			Result := user_docking_file_name (docking_debug_file)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1649,11 +1662,13 @@ feature -- Directory constants (user)
 
 feature -- File constants (user)
 
-	docking_debug_file: !STRING_8 = "debug.dck"
+	docking_debug_file: !STRING_8 = "debug"
 			-- Debugger layout docking file name
 
-	docking_standard_file: !STRING_8 = "standard.dck"
+	docking_standard_file: !STRING_8 = "standard"
 			-- Editor layout docking file name
+
+	docking_file_extension: !STRING_8 = "dck"
 
 feature {NONE} -- Externals
 

@@ -26,6 +26,7 @@ feature -- Services
 			Precursor {SERVICE_INITIALIZER} (a_container)
 			a_container.add_service_with_activator ({FILE_NOTIFIER_S}, agent create_file_notifier_service, False)
 			a_container.add_service_with_activator ({HELP_PROVIDERS_S}, agent setup_help_providers_service, False)
+			a_container.add_service_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent create_code_template_catalog_service, False)
 		end
 
 feature {NONE} -- Help registration
@@ -66,9 +67,17 @@ feature {NONE} -- Factory
 		end
 
 	create_help_providers_service: HELP_PROVIDERS_S
-			-- Creates the editor documents table service
+			-- Creates the help providers service.
 		do
 			create {HELP_PROVIDERS} Result.make
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
+	create_code_template_catalog_service: CODE_TEMPLATE_CATALOG_S
+			-- Creates the code templates catalog service.
+		do
+			create {CODE_TEMPLATE_CATALOG} Result.make
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end

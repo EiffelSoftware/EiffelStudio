@@ -37,6 +37,7 @@
 				<warning name="once_in_generic" enabled="false"/>
 			</class_option>
 		</library>
+		<library name="xml" location="$EIFFEL_SRC\framework\xml\xml.ecf" readonly="false"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
 			<option>
 				<warning name="syntax" enabled="false"/>
@@ -102,6 +103,7 @@
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
 		<option is_void_safe="false">
+			<warning name="once_in_generic" enabled="false"/>
 		</option>
 		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">
 			<condition>

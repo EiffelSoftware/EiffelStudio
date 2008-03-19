@@ -27,8 +27,7 @@ feature {NONE} -- Initialization
 			set_description (create {!STRING_32}.make_empty)
 			set_author (create {!STRING_32}.make_empty)
 			set_shortcut (create {!STRING_32}.make_empty)
-
-			set_categories (a_factory.create_code_category_collection)
+			set_categories (a_factory.create_code_category_collection (Current))
 		end
 
 feature -- Access
@@ -85,9 +84,11 @@ feature -- Element change
 	set_categories (a_categories: like categories)
 			-- Set `categories' with `a_categories'.
 		do
-			categories ?= a_categories
+			categories := a_categories
 		ensure
 			categories_assigned: categories = a_categories
+			categories_is_parented: categories.is_parented
+			categories_parent_set: categories.parent = Current
 		end
 
 feature -- Visitor

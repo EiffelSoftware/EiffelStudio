@@ -19,15 +19,16 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_id: like id)
+	make (a_id: like id; a_parent: like parent)
 			-- Initializes a code declaration node.
 			--
 			-- `a_id': A declaration identifier.
+			-- `a_parent': Parent code node.
 		require
 			not_a_id_is_empty: not a_id.is_empty
 		do
 			set_id (a_id)
-			make_sub_node
+			make_sub_node (a_parent)
 		ensure
 			id_set: id.is_equal (a_id)
 		end

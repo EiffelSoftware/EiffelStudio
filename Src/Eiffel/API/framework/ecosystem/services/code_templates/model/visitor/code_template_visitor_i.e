@@ -10,12 +10,15 @@ indexing
 deferred class
 	CODE_TEMPLATE_VISITOR_I
 
+inherit
+	USABLE_I
+
 feature {CODE_NODE} -- Processing
 
 	process_code_category_collection (a_value: !CODE_CATEGORY_COLLECTION)
 			-- Process object `a_value'.
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -23,7 +26,7 @@ feature {CODE_NODE} -- Processing
 	process_code_declaration_collection (a_value: !CODE_DECLARATION_COLLECTION)
 			-- Process object `a_value'.
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -31,7 +34,7 @@ feature {CODE_NODE} -- Processing
 	process_code_literal_declaration (a_value: !CODE_LITERAL_DECLARATION)
 			-- Process object `a_value'.
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -39,7 +42,7 @@ feature {CODE_NODE} -- Processing
 	process_code_metadata (a_value: !CODE_METADATA)
 			-- Process object `a_value'.
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -47,7 +50,7 @@ feature {CODE_NODE} -- Processing
 	process_code_template (a_value: !CODE_TEMPLATE)
 			-- Process object `a_value'.
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -55,7 +58,7 @@ feature {CODE_NODE} -- Processing
 	process_code_template_collection (a_value: !CODE_TEMPLATE_COLLECTION)
 			-- Process object `a_value'.
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -63,7 +66,7 @@ feature {CODE_NODE} -- Processing
 	process_code_template_definition (a_value: !CODE_TEMPLATE_DEFINITION)
 			-- Process object `a_value'.
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -71,7 +74,7 @@ feature {CODE_NODE} -- Processing
 	process_code_versioned_template (a_value: !CODE_VERSIONED_TEMPLATE)
 			-- Process object `a_value'.
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
 		deferred
 		end
@@ -83,7 +86,7 @@ feature {NONE} -- Processing
 			--
 			-- `a_collection': The collection items to process.	
 		require
-			is_valid: is_valid
+			is_interface_usable: is_interface_usable
 		local
 			l_items: !DS_BILINEAR [ANY]
 		do
@@ -97,12 +100,6 @@ feature {NONE} -- Processing
 		end
 
 feature {CODE_NODE} -- Query
-
-	is_valid: BOOLEAN
-			-- Determines if `Current' is in a validate state to permit processing
-		do
-			Result := True
-		end
 
 	is_applicable_visitation_entity (a_value: !ANY): BOOLEAN
 			-- Determines if object instance `a_value' is applicable for a visitation

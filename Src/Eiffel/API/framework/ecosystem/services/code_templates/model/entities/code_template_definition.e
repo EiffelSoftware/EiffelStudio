@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- `a_factory': Factory used for creating nodes.
 		do
 			code_factory := a_factory
-			make_node
+			build_nodes (a_factory)
 		ensure
 			code_factory_set: code_factory = a_factory
 		end
@@ -37,12 +37,9 @@ feature {NONE} -- Initialization
 			--
 			-- `a_factory': Factory used for creating nodes.
 		do
-			metadata := a_factory.create_code_metadata
-			metadata.parent := Current
-			declarations := a_factory.create_code_declaration_collection
-			declarations.parent := Current
-			templates := a_factory.create_code_template_collection
-			templates.parent := Current
+			set_metadata (a_factory.create_code_metadata (Current))
+			set_declarations (a_factory.create_code_declaration_collection (Current))
+			set_templates (a_factory.create_code_template_collection (Current))
 		end
 
 feature -- Access
@@ -73,17 +70,9 @@ feature -- Element change
 			-- Sets the code file's metadata.
 			--
 			-- `a_data': Metadata node.
-		require
-			not_a_data_is_parented: not a_data.is_parented
 		do
-			if a_data /= metadata then
-				metadata.set_parent (Void)
-			else
-				a_data.parent := Current
-				metadata := a_data
-			end
+			metadata := a_data
 		ensure
-			old_metadata_parent_unset: old metadata.parent = Void
 			metadata_assigned: metadata = a_data
 			a_data_is_parented: a_data.is_parented
 			a_data_parent_set: a_data.parent = Current
@@ -93,17 +82,9 @@ feature -- Element change
 			-- Sets the code file's declarations.
 			--
 			-- `a_data': Declaration node.
-		require
-			not_a_decl_is_parented: not a_decl.is_parented
 		do
-			if a_decl /= declarations then
-				declarations.set_parent (Void)
-			else
-				a_decl.parent := Current
-				declarations := a_decl
-			end
+			declarations := a_decl
 		ensure
-			old_declarations_parent_unset: old declarations.parent = Void
 			declarations_assigned: declarations = a_decl
 			declarations_is_parented: declarations.is_parented
 			declarations_parent_set: declarations.parent = Current
@@ -113,17 +94,9 @@ feature -- Element change
 			-- Sets the code file's code templates.
 			--
 			-- `a_templates': Code templates.
-		require
-			not_a_templates_is_parented: not a_templates.is_parented
 		do
-			if a_templates /= templates then
-				templates.parent := Void
-			else
-				templates.parent := Current
-				templates := a_templates
-			end
+			templates := a_templates
 		ensure
-			old_declarations_parent_unset: old a_templates.parent = Void
 			templates_assigned: templates = a_templates
 			templates_is_parented: templates.is_parented
 			templates_parent_set: templates.parent = Current

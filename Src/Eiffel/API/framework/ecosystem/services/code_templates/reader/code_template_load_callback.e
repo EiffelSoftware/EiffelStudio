@@ -19,7 +19,8 @@ inherit
 		rename
 			make as make_es_callbacks
 		redefine
-			reset
+			reset,
+			on_error
 		end
 
 create
@@ -140,11 +141,11 @@ feature {NONE} -- Production processing
 				-- Add built-in declarations
 			if {l_selected: !STRING_8} {CODE_TEMPLATE_ENTITY_NAMES}.selected_token_name.as_string_8 then
 					-- Adds built-in 'selected' text declaration
-				last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration (l_selected))
+				last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration (l_selected, last_code_template_definition.declarations))
 			end
 			if {l_cursor: !STRING_8} {CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name.as_string_8 then
 					-- Adds built-in 'cursor' text declaration
-				last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration (l_cursor))
+				last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration (l_cursor, last_code_template_definition.declarations))
 			end
 		ensure
 			last_code_template_definition_attached: last_code_template_definition /= Void
@@ -239,18 +240,20 @@ feature {NONE} -- Production processing
 		local
 			l_literal: !CODE_LITERAL_DECLARATION
 			l_attributes: like current_attributes
+			l_declarations: !CODE_DECLARATION_COLLECTION
 		do
 			last_declaration := Void
 
 				-- Fetch literal ID
 			l_attributes := current_attributes
 			if l_attributes.has (at_id) and then {l_id: !STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
-				if last_code_template_definition.declarations.declaration (l_id) = Void or else not is_strict then
-					l_literal := code_factory.create_code_literal_declaration (l_id)
+				l_declarations := last_code_template_definition.declarations
+				if l_declarations.declaration (l_id) = Void or else not is_strict then
+					l_literal := code_factory.create_code_literal_declaration (l_id, l_declarations)
 					if l_attributes.has (at_editable) and then {l_editable: !STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
 						l_literal.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
 					end
-					last_code_template_definition.declarations.extend (l_literal)
+					l_declarations.extend (l_literal)
 					last_declaration := l_literal
 				else
 						-- Duplicate declaration
@@ -300,15 +303,17 @@ feature {NONE} -- Production processing
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
 			l_attributes: like current_attributes
+			l_templates: !CODE_TEMPLATE_COLLECTION
 			l_version: !CODE_VERSION
 			l_template: !CODE_TEMPLATE
 		do
+			l_templates := last_code_template_definition.templates
 			l_attributes := current_attributes
 			if l_attributes.has (at_version) then
 				if {l_value: !STRING_32} l_attributes.item (at_version) and then not l_value.is_empty then
 						-- Create a version template
 					l_version := format_utilities.parse_version (l_value, code_factory)
-					l_template := code_factory.create_code_versioned_template (l_version)
+					l_template := code_factory.create_code_versioned_template (l_version, l_templates)
 					l_template.set_tokens_with_text (current_content)
 					last_code_template_definition.templates.extend (l_template)
 				else
@@ -316,9 +321,9 @@ feature {NONE} -- Production processing
 				end
 			else
 					-- Create an unversioned template
-				l_template := code_factory.create_code_template
+				l_template := code_factory.create_code_template (l_templates)
 				l_template.set_tokens_with_text (current_content)
-				last_code_template_definition.templates.extend (l_template)
+				l_templates.extend (l_template)
 			end
 		end
 
@@ -327,13 +332,8 @@ feature {NONE} -- Action handlers
 	on_error (a_msg: !STRING_32; a_line: INTEGER_32; a_char: INTEGER_32)
 			-- <Precursor>
 		do
+			Precursor (a_msg, a_line, a_char)
 			xml_parser.abort
-		end
-
-	on_warning (a_msg: !STRING_32; a_line: INTEGER_32; a_char: INTEGER_32)
-			-- <Precursor>
-		do
-
 		end
 
 feature {NONE} -- State transistions

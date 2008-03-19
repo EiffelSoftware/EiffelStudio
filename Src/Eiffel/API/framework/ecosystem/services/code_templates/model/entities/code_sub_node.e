@@ -12,6 +12,25 @@ deferred class
 
 inherit
 	CODE_NODE
+		rename
+			make as make_node
+		end
+
+feature {NONE} -- Initialization
+
+	make (a_parent: like parent)
+			-- Set code template parent
+			--
+			-- `a_parent': Parent code node.
+		do
+			parent := a_parent
+			make_node
+			if not is_initialized then
+				build_nodes (code_factory)
+			end
+		ensure
+			parent_set: parent = a_parent
+		end
 
 feature -- Access
 
@@ -22,7 +41,7 @@ feature -- Access
 			Result := (({!G}) #? parent).definition
 		end
 
-	parent: G assign set_parent
+	parent: !G assign set_parent
 			-- Parent node of Current node.
 
 feature {CODE_NODE} -- Access
@@ -41,9 +60,12 @@ feature {CODE_NODE} -- Element change
 			--| Note: Use this feature with caution and ensure
 		do
 			parent := a_parent
+			if not is_initialized then
+				build_nodes (code_factory)
+			end
 		ensure
 			parent_assigned: parent = a_parent
-			is_parented: (a_parent /= Void and is_parented) or else (a_parent = Void and not is_parented)
+			is_initialized: is_initialized
 		end
 
 feature -- Query

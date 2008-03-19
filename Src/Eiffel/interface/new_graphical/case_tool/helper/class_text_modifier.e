@@ -21,6 +21,9 @@ indexing
 class
 	CLASS_TEXT_MODIFIER
 
+obsolete
+	"Use ES_CLASS_TEXT_MODIFIER instead."
+
 inherit
 	ANY
 		redefine

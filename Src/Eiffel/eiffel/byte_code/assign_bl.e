@@ -463,6 +463,7 @@ feature
 			buf: GENERATION_BUFFER
 			target_c_type: TYPE_C
 			source_type: TYPE_A
+			l_void: VOID_B
 		do
 			buf := buffer
 			generate_special (how)
@@ -495,13 +496,17 @@ feature
 					buf.put_character (')')
 					buf.put_character (';')
 				else
-					buf.put_new_line
-					buf.put_string ("RTAR(")
-					context.Current_register.print_register
-					buf.put_string (gc_comma)
-					source_print_register
-					buf.put_character (')')
-					buf.put_character (';')
+						-- Optimization: If source is `Void' then there is nothing to remember.
+					l_void ?= source
+					if l_void = Void then
+						buf.put_new_line
+						buf.put_string ("RTAR(")
+						context.Current_register.print_register
+						buf.put_string (gc_comma)
+						source_print_register
+						buf.put_character (')')
+						buf.put_character (';')
+					end
 				end
 			end
 			if how = Copy_assignment then

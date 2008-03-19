@@ -223,7 +223,7 @@ feature -- Button texts
 
 	b_Filter_exceptions_question: STRING_GENERAL is		do Result := locale.translation ("Filter Exceptions?") end
 	b_Ignore_external_exception: STRING_GENERAL is		do Result := locale.translation ("Ignore External Exception?") end
-	b_Ignore_catcall_warnings: STRING_GENERAL is		do Result := locale.translation ("Ignore CATCALL Warnings?") end
+	b_Ignore_catcall_warnings: STRING_GENERAL is		do Result := locale.translation ("Ignore Catcall Warnings?") end
 
 feature -- Choices
 
@@ -384,6 +384,9 @@ feature -- Accelerator, focus label and menu name
 	m_Dbg_assertion_checking_disable: STRING_GENERAL is	do Result := locale.translation("Disable Assertion Checking")	end
 	m_Dbg_assertion_checking_restore: STRING_GENERAL is	do Result := locale.translation("Restore Assertion Checking")	end
 	m_Dbg_exception_handler: STRING_GENERAL is	do Result := locale.translation("Exception Handling")	end
+	m_Dbg_ignore_breakpoints: STRING_GENERAL is	do Result := locale.translation("Ignore Breakpoints")	end
+	m_Dbg_ignore_catcall_warning: STRING_GENERAL is	do Result := locale.translation("Ignore Catcall Warning")	end
+
 	m_Debug_interrupt_new: STRING_GENERAL is		do Result := locale.translation("I&nterrupt Execution")	end
 	f_Debug_edit_object: STRING_GENERAL is		do Result := locale.translation("Edit Object content")	end
 	m_Debug_edit_object: STRING_GENERAL is		do Result := locale.translation("Edit Object Content")	end

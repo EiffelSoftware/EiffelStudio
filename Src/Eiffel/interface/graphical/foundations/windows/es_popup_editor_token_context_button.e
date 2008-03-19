@@ -419,14 +419,14 @@ feature {NONE} -- Basic operations
 			l_font: EV_FONT
 			l_fg_color: EV_COLOR
 			l_bg_color: EV_COLOR
-			l_size: TUPLE [width, height, left_offset, right_offset: INTEGER]
-			l_x_offset: INTEGER
-			l_y_offset: INTEGER
+--			l_size: TUPLE [width, height, left_offset, right_offset: INTEGER]
+--			l_x_offset: INTEGER
+--			l_y_offset: INTEGER
 			l_width: INTEGER
 			l_height: INTEGER
-			l_buffer: EV_PIXEL_BUFFER
-			l_glyph: EDITOR_TOKEN_GLYPH
-			l_border: INTEGER
+--			l_buffer: EV_PIXEL_BUFFER
+--			l_glyph: EDITOR_TOKEN_GLYPH
+--			l_border: INTEGER
 			l_has_popup_widget: like is_popup_widget_available
 			l_token_rect: !EV_RECTANGLE
 			l_rect: !EV_RECTANGLE

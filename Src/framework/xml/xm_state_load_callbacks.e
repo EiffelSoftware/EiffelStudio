@@ -212,6 +212,44 @@ feature {NONE} -- Query
 					a_name.is_case_insensitive_equal (schema_location_tag)
 		end
 
+feature {NONE} -- Actions
+
+	frozen error_reported_actions: !ACTION_SEQUENCE [TUPLE [a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32]]
+			-- Actions used to recieve notification of an error
+			--
+			-- `a_msg': Message and cause of the error.
+			-- `a_line': Offending one-based line index of the error.
+			-- `a_index': Offending one-base character index, on the line, of the error.
+			--            Will be zero if the line is empty.
+		do
+			if internal_error_reported_actions /= Void then
+				Result ?= internal_error_reported_actions
+			else
+				create Result
+				internal_error_reported_actions := Result
+			end
+		ensure
+			result_consistent: Result = error_reported_actions
+		end
+
+	frozen warning_reported_actions: !ACTION_SEQUENCE [TUPLE [a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32]]
+			-- Actions used to recieve notification of an warning
+			--
+			-- `a_msg': Message and cause of the warning.
+			-- `a_line': Offending one-based line index of the warning.
+			-- `a_index': Offending one-base character index, on the line, of the warning.
+			--            Will be zero if the line is empty.		
+		do
+			if internal_warning_reported_actions /= Void then
+				Result ?= internal_warning_reported_actions
+			else
+				create Result
+				internal_warning_reported_actions := Result
+			end
+		ensure
+			result_consistent: Result = warning_reported_actions
+		end
+
 feature {NONE} -- Action handlers
 
 	on_start
@@ -429,7 +467,10 @@ feature {NONE} -- Reporting
 			not_a_msg_is_empty: not a_msg.is_empty
 			a_line_positive: a_line >= 1
 			a_index_non_negative: a_index >= 0
-		deferred
+		do
+			if internal_error_reported_actions /= Void then
+				internal_error_reported_actions.call ([a_msg, a_line, a_index])
+			end
 		ensure
 			has_error: has_error
 		end
@@ -445,7 +486,10 @@ feature {NONE} -- Reporting
 			not_a_msg_is_empty: not a_msg.is_empty
 			a_line_positive: a_line >= 1
 			a_index_non_negative: a_index >= 0
-		deferred
+		do
+			if internal_warning_reported_actions /= Void then
+				internal_warning_reported_actions.call ([a_msg, a_line, a_index])
+			end
 		end
 
 feature {NONE} -- Conversion
@@ -599,6 +643,14 @@ feature {NONE} -- Internal implementation cache
 
 	internal_last_error_message: STRING_32
 			-- Cached version of `last_error_message'
+			-- Note: Do not use directly!
+
+	internal_error_reported_actions: ACTION_SEQUENCE [TUPLE [a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32]]
+			-- Cached version of `last_error_message'
+			-- Note: Do not use directly!
+
+	internal_warning_reported_actions: ACTION_SEQUENCE [TUPLE [a_msg: !STRING_32; a_line: INTEGER_32; a_index: INTEGER_32]]
+			-- Cached version of `warning_reported_actions'
 			-- Note: Do not use directly!
 
 feature {NONE} -- Tag states

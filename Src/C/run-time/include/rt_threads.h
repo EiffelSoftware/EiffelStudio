@@ -166,7 +166,14 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
 		struct timeval now; \
 		gettime(&now); \
 		tspec.tv_sec = now.tv_sec + l_seconds; \
-		tspec.tv_nsec = now.tv_usec * 1000 + l_nano_seconds; \
+		l_nano_seconds += (now.tv_usec * 1000); \
+		tspec.tv_nsec = l_nano_seconds; \
+			/* If `l_nano_seconds' is greater than 1 second, we need to update `tspec' \
+			 * accordingly otherwise we may get EINVAL on some platforms. */ \
+		if (l_nano_seconds > 1000000000) { \
+			tspec.tv_sec++; \
+			tspec.tv_nsec -= 1000000000; \
+		} \
 		res = pthread_cond_timedwait (pcond, pmutex, &tspec); \
 		if (res && !((res == ETIMEDOUT) || (res == ETIME))) eraise (msg, EN_EXT); \
 		result_success = (res != ETIMEDOUT ? 1 : 0); \

@@ -142,7 +142,8 @@ feature -- Quick search bar basic operation
 			search_bar_exists: search_bar /= Void
 			search_bar_not_destroyed: not search_bar.is_destroyed
 		do
-			set_quick_search_mode (true)
+			-- Commented out to prevent QSB flickering.
+			-- set_quick_search_mode (true)
 			if not search_tool.is_visible then
 				search_bar.show
 			end
@@ -295,7 +296,9 @@ feature {NONE} -- Quick search bar.
 			Precursor {EB_EDITOR}
 			if search_bar /= Void and then not search_bar.is_destroyed and then search_bar.is_displayed then
 				if not search_bar.has_focus_on_widgets and not focusing_search_bar then
-					hide_search_bar
+					-- Commented out to prevent QSB flickering.
+					-- hide_search_bar
+					close_quick_search_bar
 				else
 					if not search_bar.is_displayed then
 						show_search_bar
@@ -311,7 +314,9 @@ feature {NONE} -- Quick search bar.
 		do
 			if is_initialized then
 				if not has_focus and not search_bar.has_focus_on_widgets then
-					hide_search_bar
+					-- Commented out to prevent QSB flickering.
+					-- hide_search_bar
+					close_quick_search_bar
 				end
 			end
 		end

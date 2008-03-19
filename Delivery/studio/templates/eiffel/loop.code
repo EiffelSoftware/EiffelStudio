@@ -1,0 +1,21 @@
+<code_template format="1.0.0">
+    <metadata>
+      <title>loop</title>
+      <description>Code template for a loop contract clause.</description>
+      <author>Eiffel Software</author>
+      <shortcut>loop</shortcut>
+      <categories>
+        <category>code</category>
+      </categories>
+    </metadata>
+	
+	<templates>
+		<template>
+<![CDATA[invariant
+	$selection$cursor
+variant
+	
+]]>
+		</template>	
+	</templates>
+</code_template>

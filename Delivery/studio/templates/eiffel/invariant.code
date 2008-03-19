@@ -1,0 +1,19 @@
+<code_template format="1.0.0">
+    <metadata>
+      <title>invariant</title>
+      <description>Code template for a invariant contract clause.</description>
+      <author>Eiffel Software</author>
+      <shortcut>invariant</shortcut>
+      <categories>
+        <category>code</category>
+      </categories>
+    </metadata>
+	
+	<templates>
+		<template>
+<![CDATA[invariant
+	$selection$cursor
+]]>
+		</template>	
+	</templates>
+</code_template>

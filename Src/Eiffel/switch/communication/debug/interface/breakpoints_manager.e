@@ -438,7 +438,7 @@ feature -- Breakpoints tags
 				bps.after
 			loop
 				bp := bps.item_for_iteration
-				if not bp.is_hidden then
+				if not bp.is_hidden and then not bp.is_corrupted then
 					btp.add_tag (bp.to_tag_path)
 					tp.add_tags (bp.tags_as_array)
 				end

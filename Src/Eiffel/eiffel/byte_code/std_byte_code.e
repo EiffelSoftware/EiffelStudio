@@ -930,6 +930,7 @@ end
 			l_buffer: like buffer
 			is_workbench: BOOLEAN
 			l_class_type: CLASS_TYPE
+			l_name: STRING
 		do
 			l_buffer := buffer
 			is_workbench := context.workbench_mode
@@ -946,10 +947,15 @@ end
 						type_i := real_type (locals.item (i))
 						if type_i.is_true_expanded then
 							local_var.set_position (i)
-							type_i.generate_expanded_initialization (l_buffer, local_var.register_name, context.context_class_type.type)
+							l_class_type := type_i.associated_class_type (context.context_cl_type)
+							l_name := local_var.register_name
+							l_class_type.generate_expanded_initialization (l_buffer, l_name, l_name, True)
 						elseif type_i.is_bit then
 							local_var.set_position (i)
-							type_i.generate_expanded_creation (l_buffer, local_var.register_name, context.class_type)
+							l_buffer.put_string (local_var.register_name)
+							l_buffer.put_three_character (' ', '=', ' ')
+							type_i.c_type.generate_default_value (l_buffer)
+							l_buffer.put_two_character (';', '%N')
 						end
 					end
 					i := i + 1
@@ -959,15 +965,14 @@ end
 				type_i := real_type (result_type)
 				if type_i.is_true_expanded then
 					l_class_type := type_i.associated_class_type (context.context_class_type.type)
-					l_class_type.generate_expanded_creation (l_buffer,
-						context.result_register.register_name, result_type, context.class_type)
-					l_class_type.generate_expanded_initialization (l_buffer,
-						context.result_register.register_name, context.result_register.register_name, True)
+					l_name := context.result_register.register_name
+					l_class_type.generate_expanded_creation (l_buffer, l_name, result_type, context.context_class_type)
+					l_class_type.generate_expanded_initialization (l_buffer, l_name, l_name, True)
 				elseif type_i.is_bit then
-					type_i.generate_expanded_creation (l_buffer,
-						context.result_register.register_name, context.class_type)
-					type_i.generate_expanded_initialization (l_buffer,
-						context.result_register.register_name, context.context_class_type.type)
+					l_buffer.put_string (context.result_register.register_name)
+					l_buffer.put_three_character (' ', '=', ' ')
+					type_i.c_type.generate_default_value (l_buffer)
+					l_buffer.put_two_character (';', '%N')
 				end
 			end
 		end

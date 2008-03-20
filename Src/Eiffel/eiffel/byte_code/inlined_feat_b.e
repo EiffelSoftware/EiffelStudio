@@ -560,6 +560,7 @@ feature {NONE} -- Registers
 	reset_register_value (a_type: TYPE_A; reg: REGISTER) is
 		local
 			buf: GENERATION_BUFFER
+			l_class_type: CLASS_TYPE
 		do
 			buf := buffer
 			buf.put_new_line
@@ -568,7 +569,8 @@ feature {NONE} -- Registers
 			reg.c_type.generate_cast (buf);
 			buf.put_string (" 0;");
 			if a_type.is_true_expanded then
-				a_type.generate_expanded_creation (buf, reg.register_name, context.class_type)
+				l_class_type := a_type.associated_class_type (context.context_class_type.type)
+				l_class_type.generate_expanded_creation (buf, reg.register_name, a_type, context.context_class_type)
 			end
 		end
 

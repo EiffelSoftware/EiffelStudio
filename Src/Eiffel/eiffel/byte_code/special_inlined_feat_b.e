@@ -61,6 +61,13 @@ feature -- Generation
 				else
 					generate_move (gen_reg, True)
 				end
+			when {PREDEFINED_NAMES}.clear_all_name_id then
+				if generic_type.is_true_expanded then
+					Precursor {INLINED_FEAT_B} (gen_reg)
+				else
+					generate_clear_all (gen_reg)
+				end
+
 			when {PREDEFINED_NAMES}.count_name_id then
 				buf := buffer
 				buf.put_new_line
@@ -87,10 +94,10 @@ feature {NONE} -- Status report
 			-- Is current type of generic parameter G in SPECIAL [G] is
 			-- expanded with references?
 		local
-			l_cl_item_type: CL_TYPE_A
+			l_cl_item_type: TYPE_A
 		do
-			l_cl_item_type ?= generic_type
-			if l_cl_item_type /= Void and l_cl_item_type.is_true_expanded then
+			l_cl_item_type := generic_type
+			if l_cl_item_type.is_true_expanded then
 				Result := l_cl_item_type.associated_class_type (context.context_class_type.type).skeleton.has_references
 			end
 		end
@@ -104,7 +111,7 @@ feature {NONE} -- Status report
 						-- When there is no parent it means that the call is done
 						-- within the SPECIAL class. So we can safely extract the type
 						-- from the current class type being generated.
-					l_special_type ?= Context.current_type
+					l_special_type ?= Context.context_cl_type
 				else
 					if parent.target = Current then
 							-- This is the case of (area.item (i).feature_call).
@@ -131,7 +138,6 @@ feature {NONE} -- Implementation
 			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -143,11 +149,10 @@ feature {NONE} -- Implementation
 			l_gen_param := generic_type
 			l_param_is_expanded := l_gen_param.is_true_expanded
 
-			buf.put_new_line
 			if l_param_is_expanded then
-				l_exp_type ?= l_gen_param;
-				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
+				l_exp_class_type := l_gen_param.associated_class_type (context.context_class_type.type)
 				if l_exp_class_type.skeleton.has_references then
+					buf.put_new_line
 					result_reg.print_register
 					buf.put_string (" = RTCL(")
 					gen_reg.print_register
@@ -160,7 +165,19 @@ feature {NONE} -- Implementation
 				else
 						-- No need to protect target register, because it is
 						-- protected by the routine calling `item'.
-					l_exp_type.generate_expanded_creation (buf, result_reg.register_name, context.class_type)
+						-- Note: We also need to set the inlined register to `gen_reg' (not to `current_reg
+						-- because `current_reg' would need to be initialized and we do not do that for
+						-- inlined features of SPECIAL) so that the creation is done using the proper object.
+						-- We also need to change the context otherwise it fails at execution time
+						-- (see eweasel test#exec147)
+					context.change_class_type_context (system.class_type_of_id (context_type_id), context_cl_type,
+						system.class_type_of_id (written_type_id), written_cl_type)
+					context.set_inlined_current_register (gen_reg)
+					l_exp_class_type.generate_expanded_creation (buf, result_reg.register_name,
+						create {FORMAL_A}.make (False, False, 1), context.context_class_type)
+					context.restore_class_type_context
+					context.set_inlined_current_register (Void)
+					buf.put_new_line
 					buf.put_string ("memcpy (")
 					result_reg.print_register
 					buf.put_string (", ")
@@ -175,6 +192,7 @@ feature {NONE} -- Implementation
 					buf.put_new_line
 				end
 			else
+				buf.put_new_line
 				type_c := l_gen_param.c_type
 				result_reg.print_register
 				buf.put_string (" = *(")
@@ -197,7 +215,6 @@ feature {NONE} -- Implementation
 			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -215,8 +232,7 @@ feature {NONE} -- Implementation
 			l_param_is_expanded := l_gen_param.is_true_expanded
 
 			if l_param_is_expanded then
-				l_exp_type ?= l_gen_param
-				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
+				l_exp_class_type := l_gen_param.associated_class_type (context.context_class_type.type)
 				if l_exp_class_type.skeleton.has_references then
 					buf.put_string (" + OVERHEAD + ")
 					parameters.i_th (1).print_register
@@ -251,7 +267,6 @@ feature {NONE} -- Implementation
 			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -265,8 +280,7 @@ feature {NONE} -- Implementation
 
 			buf.put_new_line
 			if l_param_is_expanded then
-				l_exp_type ?= l_gen_param
-				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
+				l_exp_class_type := l_gen_param.associated_class_type (context.context_class_type.type)
 				if l_exp_class_type.skeleton.has_references then
 					buf.put_string ("ecopy(")
 					parameters.i_th (1).print_register
@@ -326,7 +340,6 @@ feature {NONE} -- Implementation
 			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -346,8 +359,7 @@ feature {NONE} -- Implementation
 			end
 
 			if l_param_is_expanded then
-				l_exp_type ?= l_gen_param
-				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
+				l_exp_class_type := l_gen_param.associated_class_type (context.context_class_type.type)
 
 				buf.put_string ("((char *)")
 				gen_reg.print_register
@@ -398,7 +410,6 @@ feature {NONE} -- Implementation
 			l_gen_param: TYPE_A
 			type_c: TYPE_C
 			l_param_is_expanded: BOOLEAN
-			l_exp_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			parameters.generate
@@ -412,8 +423,7 @@ feature {NONE} -- Implementation
 
 			buf.put_new_line
 			if l_param_is_expanded then
-				l_exp_type ?= l_gen_param
-				l_exp_class_type := l_exp_type.associated_class_type (context.context_class_type.type)
+				l_exp_class_type := l_gen_param.associated_class_type (context.context_class_type.type)
 
 				buf.put_string ("memmove((char *)")
 				gen_reg.print_register
@@ -468,6 +478,27 @@ feature {NONE} -- Implementation
 				buf.put_character (';')
 			end
 
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_clear_all (gen_reg: REGISTRABLE) is
+			-- Generate inlined version of `clear_all'.
+		require
+			gen_reg_not_void: gen_reg /= Void
+			not_is_expanded_with_side_effect: not generic_type.is_true_expanded
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.clear_all) */")
+			buf.put_new_line
+			buf.put_string ("memset (")
+			gen_reg.print_register
+			buf.put_string (", 0, (HEADER(")
+			gen_reg.print_register
+			buf.put_string (")->ov_size & B_SIZE) - LNGPAD_2);")
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end

@@ -19,7 +19,7 @@ inherit
 
 feature -- Query
 
-	frozen is_path_applicable (a_path: !STRING_8; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER): BOOLEAN
+	frozen is_path_applicable (a_path: STRING_GENERAL; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): BOOLEAN
 			-- Determines if a path is applicable given inclusion/exclusion expressions.
 			--
 			-- `a_path': Path to determine inclusion.
@@ -27,23 +27,27 @@ feature -- Query
 			-- `a_exclude': An exclusion regular expression, or Void if an exclusion expression is not required.
 			-- `Result': True if the path is an applicable inclusive path; False otherwise.
 		require
+			a_path_attached: a_path /= Void
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
+		local
+			l_path: STRING
 		do
 			Result := a_include = Void and a_exclude = Void
 			if not Result then
+				l_path := a_path.as_string_8
 				if a_exclude /= Void then
-					Result := not a_exclude.matches (a_path)
+					Result := not a_exclude.matches (l_path)
 				end
 				if a_include /= Void then
-					Result := a_include.matches (a_path)
+					Result := a_include.matches (l_path)
 				end
 			end
 		end
 
 feature -- Basic operations
 
-	frozen scan_for_folders (a_folder: !STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER): !DS_ARRAYED_LIST [!STRING_8]
+	frozen scan_for_folders (a_folder: STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): !DS_ARRAYED_LIST [!STRING]
 			-- Scans a folder for matching folders.
 			--
 			-- `a_folder': Folder location to scan.
@@ -51,6 +55,7 @@ feature -- Basic operations
 			-- `a_include': Regular expression used to progressively include files/folders.
 			-- `a_exclude': Regulat expression used to exclude files/folders.
 		require
+			a_folder_attached: a_folder /= Void
 			not_a_folder_is_empty: not a_folder.is_empty
 			a_folder_exists: file_system.directory_exists (a_folder.as_string_8)
 			a_levels_is_valid: a_levels >= -1
@@ -59,10 +64,13 @@ feature -- Basic operations
 		do
 			Result := scan_for_folders_internal (a_folder, a_levels, a_include, a_exclude, False)
 		ensure
-			result_contains_included_items: Result.for_all (agent is_path_applicable (?, a_include, a_exclude))
+			result_contains_included_items: Result.for_all (agent (a_ia_item: !STRING; a_ia_include: ?RX_PCRE_MATCHER; a_ia_exclude: ?RX_PCRE_MATCHER): BOOLEAN
+				do
+					Result := is_path_applicable (a_ia_item, a_ia_include, a_ia_exclude)
+				end)
 		end
 
-	frozen scan_for_files (a_folder: !STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER): !DS_ARRAYED_LIST [!STRING_8]
+	frozen scan_for_files (a_folder: STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER): !DS_ARRAYED_LIST [!STRING]
 			-- Scans a folder for matching files.
 			--
 			-- `a_folder': Folder location to scan.
@@ -70,20 +78,24 @@ feature -- Basic operations
 			-- `a_include': Regular expression used to progressively include files/folders.
 			-- `a_exclude': Regulat expression used to exclude files/folders.
 		require
+			a_folder_attached: a_folder /= Void
 			not_a_folder_is_empty: not a_folder.is_empty
 			a_folder_exists: file_system.directory_exists (a_folder.as_string_8)
 			a_levels_is_valid: a_levels >= -1
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
 		do
-			Result := scan_for_files_internal (a_folder, a_levels, a_include, a_exclude, False)
+			Result := scan_for_files_internal (({!STRING_GENERAL}) #? a_folder, a_levels, a_include, a_exclude, False)
 		ensure
-			result_contains_included_items: Result.for_all (agent is_path_applicable (?, a_include, a_exclude))
+			result_contains_included_items: Result.for_all (agent (a_ia_item: !STRING; a_ia_include: ?RX_PCRE_MATCHER; a_ia_exclude: ?RX_PCRE_MATCHER): BOOLEAN
+				do
+					Result := is_path_applicable (a_ia_item, a_ia_include, a_ia_exclude)
+				end)
 		end
 
 feature {NONE} -- Basic operations
 
-	frozen scan_for_folders_internal (a_folder: !STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): !DS_ARRAYED_LIST [!STRING_8]
+	frozen scan_for_folders_internal (a_folder: !STRING_GENERAL; a_levels: INTEGER_32; a_include: ?RX_PCRE_MATCHER; a_exclude: ?RX_PCRE_MATCHER; a_recursive: BOOLEAN): !DS_ARRAYED_LIST [!STRING]
 			-- Scans a folder for matching folders.
 			--
 			-- `a_folder': Folder location to scan.
@@ -97,11 +109,11 @@ feature {NONE} -- Basic operations
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
 		local
-			l_dn: STRING_8
+			l_dn: STRING
 			l_dir: KL_DIRECTORY
-			l_directories: ARRAY [STRING_8]
+			l_directories: ARRAY [STRING]
 			l_count, i: INTEGER
-			l_sub_results: !DS_ARRAYED_LIST [!STRING_8]
+			l_sub_results: !DS_ARRAYED_LIST [!STRING]
 			l_path_name: DIRECTORY_NAME
 		do
 			if a_recursive then
@@ -125,7 +137,7 @@ feature {NONE} -- Basic operations
 					l_path_name.extend (l_directories.item (i))
 						-- Note: checking applicablity of the path does not check the include expression. This is because
 						--       directories can be excluded but not included. Files can be included.
-					if {l_path: STRING_8} l_path_name.string and then is_path_applicable (l_path, Void, a_exclude) then
+					if {l_path: STRING} l_path_name.string and then is_path_applicable (l_path, Void, a_exclude) then
 						Result.put_last (l_path)
 					end
 					i := i + 1
@@ -148,10 +160,13 @@ feature {NONE} -- Basic operations
 				create Result.make (0)
 			end
 		ensure
-			result_contains_included_items: Result.for_all (agent is_path_applicable (?, a_include, a_exclude))
+			result_contains_included_items: Result.for_all (agent (a_ia_item: !STRING; a_ia_include: ?RX_PCRE_MATCHER; a_ia_exclude: ?RX_PCRE_MATCHER): BOOLEAN
+				do
+					Result := is_path_applicable (a_ia_item, a_ia_include, a_ia_exclude)
+				end)
 		end
 
-	frozen scan_for_files_internal (a_folder: !STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): !DS_ARRAYED_LIST [!STRING_8]
+	frozen scan_for_files_internal (a_folder: !STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): !DS_ARRAYED_LIST [!STRING]
 			-- Scans a folder for matching files.
 			--
 			-- `a_folder': Folder location to scan.
@@ -165,10 +180,10 @@ feature {NONE} -- Basic operations
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
 		local
-			l_dn: STRING_8
+			l_dn: STRING
 			l_dir: KL_DIRECTORY
-			l_files: ARRAY [STRING_8]
-			l_directories: ARRAY [STRING_8]
+			l_files: ARRAY [STRING]
+			l_directories: ARRAY [STRING]
 			l_count, i: INTEGER
 			l_path_name: DIRECTORY_NAME
 		do
@@ -191,7 +206,7 @@ feature {NONE} -- Basic operations
 				loop
 					create l_path_name.make_from_string (l_dn)
 					l_path_name.extend (l_files.item (i))
-					if {l_file: STRING_8} l_path_name.string and then is_path_applicable (l_file, a_include, a_exclude) then
+					if {l_file: STRING} l_path_name.string and then is_path_applicable (l_file, a_include, a_exclude) then
 						Result.put_last (l_file)
 					end
 					i := i + 1
@@ -208,7 +223,7 @@ feature {NONE} -- Basic operations
 					loop
 						create l_path_name.make_from_string (l_dn)
 						l_path_name.extend (l_directories.item (i))
-						if {l_path: STRING_8} l_path_name.string and then is_path_applicable (l_path, a_include, a_exclude) then
+						if {l_path: STRING} l_path_name.string and then is_path_applicable (l_path, a_include, a_exclude) then
 							Result.append_last (scan_for_files_internal (l_path, (a_levels - 1).max (-1), a_include, a_exclude, True))
 						end
 						i := i + 1
@@ -218,19 +233,23 @@ feature {NONE} -- Basic operations
 				create Result.make (0)
 			end
 		ensure
-			result_contains_included_items: Result.for_all (agent is_path_applicable (?, a_include, a_exclude))
+			result_contains_included_items: Result.for_all (agent (a_ia_item: !STRING; a_ia_include: ?RX_PCRE_MATCHER; a_ia_exclude: ?RX_PCRE_MATCHER): BOOLEAN
+				do
+					Result := is_path_applicable (a_ia_item, a_ia_include, a_ia_exclude)
+				end)
 		end
 
 feature -- Directory operations
 
-	frozen create_directory (a_path: !STRING_GENERAL)
+	frozen create_directory (a_path: STRING_GENERAL)
 			-- Creates a directory and any parent directories if they do not exist.
 			--
 			-- `a_path': The directory to create.
 		require
+			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		local
-			l_path: STRING_8
+			l_path: STRING
 			l_dir: KL_DIRECTORY
 		do
 			l_path := a_path.as_string_8
@@ -246,11 +265,12 @@ feature -- Directory operations
 			a_path_exists: file_system.directory_exists (a_path.as_string_8)
 		end
 
-	frozen create_directory_for_file (a_file_name: !STRING_GENERAL)
+	frozen create_directory_for_file (a_file_name: STRING_GENERAL)
 			-- Creates a directory and any parent directories if they do not exist, for a file path
 			--
 			-- `a_file_name': The suggested file name requiring a directory to exist.
 		require
+			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
 			if {l_path: STRING_GENERAL} file_system.dirname (a_file_name.as_string_8) and then not l_path.is_empty then
@@ -260,7 +280,7 @@ feature -- Directory operations
 
 feature -- Formatting
 
-	frozen absolute_path (a_path: STRING_8; a_compact: BOOLEAN): !STRING_8
+	frozen absolute_path (a_path: STRING_GENERAL; a_compact: BOOLEAN): !STRING
 			-- Creates an absolute compacted path (provided the path could be compacted).
 			--
 			-- `a_path': The source path to convert to an absolute path.
@@ -269,11 +289,11 @@ feature -- Formatting
 		require
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
-			a_path_exists: file_system.file_exists (a_path) or file_system.directory_exists (a_path)
+			a_path_exists: file_system.file_exists (a_path.as_string_8) or file_system.directory_exists (a_path.as_string_8)
 		local
-			l_path: STRING_8
+			l_path: STRING
 		do
-			Result ?= file_system.absolute_pathname (a_path)
+			Result ?= file_system.absolute_pathname (a_path.as_string_8)
 			if a_compact then
 				l_path := compact_path (Result)
 				if l_path /= Void then
@@ -286,7 +306,7 @@ feature -- Formatting
 			reuslt_is_absolute: file_system.is_absolute_pathname (Result)
 		end
 
-	frozen compact_path (a_path: STRING_8): STRING_8
+	frozen compact_path (a_path: STRING_GENERAL): ?STRING
 			-- Compacts a file path, removing . and ..
 			--
 			-- `a_path': A path to compact.
@@ -296,14 +316,14 @@ feature -- Formatting
 			not_a_path_is_empty: not a_path.is_empty
 		local
 			l_sep: CHARACTER
-			l_parts: LIST [STRING_8]
-			l_part: STRING_8
+			l_parts: LIST [STRING]
+			l_part: STRING
 			l_error: BOOLEAN
 		do
 			l_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
 
 				-- Separate path
-			l_parts := a_path.split (l_sep)
+			l_parts := a_path.as_string_8.split (l_sep)
 			from l_parts.start until l_parts.after or l_error loop
 				l_part := l_parts.item
 				if l_part.is_equal (".") then

@@ -590,7 +590,7 @@ feature {NONE} -- Formatting
 			if i > 1 then
 					-- Remove leading whitespace
 				if i < l_count then
-					Result.keep_tail (Result.count - i)
+					Result.keep_tail (Result.count - (i - 1))
 				else
 						-- Content is all whitespace
 					Result.wipe_out

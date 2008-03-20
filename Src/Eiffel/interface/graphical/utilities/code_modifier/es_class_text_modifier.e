@@ -20,11 +20,11 @@ inherit {NONE}
 		end
 
 create
-	make_with_class
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_class (a_class: like context_class)
+	make (a_class: like context_class)
 			-- Initialize a class text modifier using a context class.
 			--
 			-- `a_class': Associated context class to modify class text for.
@@ -385,7 +385,7 @@ feature -- Batch processing
 
 feature -- Modifications (positional)
 
-	insert_code (a_pos: INTEGER; a_code: !STRING_8)
+	insert_code (a_pos: INTEGER; a_code: ?STRING_GENERAL)
 			-- Inserts code at a given position.
 			--
 			-- `a_pos': Original position, in characters to insert code into.
@@ -393,23 +393,24 @@ feature -- Modifications (positional)
 			is_prepared: is_prepared
 			a_pos_positive: a_pos > 0
 			a_pos_small_enough: a_pos <= original_text.count
+			a_code_attached: a_code /= Void
 			not_a_code_is_empty: not a_code.is_empty
 		local
-			l_data: like modified_data
+			l_data: !like modified_data
 			l_pos: INTEGER
 		do
 			l_data := modified_data
 			l_pos := l_data.adjusted_position (a_pos)
-			l_data.text.insert_string (a_code, l_pos)
+			l_data.text.insert_string (a_code.as_string_8, l_pos)
 			l_data.adjust_position (a_pos, a_code.count)
 			set_is_dirty (True)
 		ensure
 			text_count_increased: text.count = old text.count + a_code.count
-			text_inserted: text.substring (a_pos, a_pos + a_code.count - 1).is_equal (a_code)
+			text_inserted: a_code.as_string_8.is_equal (text.substring (a_pos, a_pos + a_code.count - 1))
 			is_dirty: is_dirty
 		end
 
-	replace_code (a_start_pos: INTEGER; a_end_pos: INTEGER; a_code: !STRING_8)
+	replace_code (a_start_pos: INTEGER; a_end_pos: INTEGER; a_code: ?STRING_GENERAL)
 			-- Replaces a region of code at a given position.
 			--
 			-- `a_start_pos': Original position, in characters to start the code replacement.
@@ -421,21 +422,22 @@ feature -- Modifications (positional)
 			a_start_pos_small_enough: a_start_pos < original_text.count
 			a_end_pos_big_enough: a_end_pos > a_start_pos
 			a_end_pos_small_enough: a_start_pos <= original_text.count
+			a_code_attached: a_code /= Void
 			not_a_code_is_empty: not a_code.is_empty
 		local
-			l_data: like modified_data
+			l_data: !like modified_data
 			l_start_pos: INTEGER
 			l_end_pos: INTEGER
 		do
 			l_data := modified_data
 			l_start_pos := l_data.adjusted_position (a_start_pos)
 			l_end_pos := l_data.adjusted_position (a_end_pos)
-			l_data.text.replace_substring (a_code, l_start_pos, l_end_pos)
+			l_data.text.replace_substring (a_code.as_string_8, l_start_pos, l_end_pos)
 			l_data.adjust_position (a_start_pos, (a_end_pos - a_start_pos) + a_code.count)
 			set_is_dirty (True)
 		ensure
 			text_count_increased: text.count = old text.count + a_code.count - (a_end_pos - a_start_pos - 1)
-			text_inserted: text.substring (a_start_pos, a_code.count).is_equal (a_code)
+			text_inserted: a_code.as_string_8.is_equal (text.substring (a_start_pos, a_code.count))
 			is_dirty: is_dirty
 		end
 
@@ -451,7 +453,7 @@ feature -- Modifications (positional)
 			a_end_pos_big_enough: a_end_pos > a_start_pos
 			a_end_pos_small_enough: a_start_pos <= original_text.count
 		local
-			l_data: like modified_data
+			l_data: !like modified_data
 			l_start_pos: INTEGER
 			l_end_pos: INTEGER
 		do
@@ -471,7 +473,7 @@ feature {NONE} -- Factory
 	create_modified_data: like modified_data
 			-- Creates a new class modifier data object based on Current's state
 		local
-			l_class: like context_class
+			l_class: !like context_class
 			l_editor: like active_editor_for_class
 			l_text: !STRING
 		do

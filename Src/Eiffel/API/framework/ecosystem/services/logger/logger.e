@@ -130,20 +130,28 @@ feature -- Element change
 
 feature -- Extension
 
-	put_message_with_severity (a_msg: !STRING_32; a_cat: NATURAL_8; a_level: INTEGER_8)
+	put_message_with_severity (a_msg: STRING_GENERAL; a_cat: NATURAL_8; a_level: INTEGER_8)
 			-- <Precursor>
 		local
 			l_item: like create_event_list_log_item
 			l_service: like event_list_service
 		do
-			l_service := event_list_service
-			if l_service.is_service_available then
-				l_item := create_event_list_log_item (a_msg, a_cat, a_level)
-				l_service.service.put_event_item (context_cookie, l_item)
-			end
+			if {l_string: !STRING_32} a_msg.as_string_32 then
+				l_service := event_list_service
+				if l_service.is_service_available then
+					l_item := create_event_list_log_item (l_string, a_cat, a_level)
+					l_service.service.put_event_item (context_cookie, l_item)
+				end
 
-				-- Publish events
-			message_logged_events.publish ([a_msg, a_cat, a_level])
+					-- Publish events
+				message_logged_events.publish ([l_string, a_cat, a_level])
+			end
+		end
+
+	put_message_format_with_severity (a_msg: STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8; a_level: INTEGER_8)
+			-- <Precursor>
+		do
+			put_message_with_severity ((create {STRING_FORMATTER}).format_unicode (a_msg, a_args), a_cat, a_level)
 		end
 
 feature -- Removal

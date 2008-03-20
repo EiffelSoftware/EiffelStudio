@@ -104,7 +104,17 @@ feature -- Element change
 
 feature -- Query
 
-	applicable_default_item: CODE_TEMPLATE
+	applicable_item: ?CODE_TEMPLATE
+			-- Attempts to retreive the most applicable code template for the version of the compiler.
+			--
+			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
+		do
+			Result := templates.applicable_item
+		ensure
+			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
+		end
+
+	applicable_default_item: ?CODE_TEMPLATE
 			-- Attempts to retreive the default (unversioned) code template.
 			--
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
@@ -114,7 +124,7 @@ feature -- Query
 			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
 		end
 
-	applicable_item (a_version: !STRING_32): CODE_TEMPLATE
+	applicable_item_with_version (a_version: !STRING_32): ?CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a string version.
 			--
 			-- `a_version': Version to find the most applicable template with.
@@ -122,10 +132,10 @@ feature -- Query
 		require
 			not_a_version_is_empty: not a_version.is_empty
 		do
-			Result := templates.applicable_item (a_version)
+			Result := templates.applicable_item_with_version (a_version)
 		end
 
-	applicable_item_with_version (a_version: !CODE_VERSION): CODE_TEMPLATE
+	applicable_item_with_code_version (a_version: !CODE_VERSION): ?CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a version.
 			--
 			-- `a_version': Version to find the most applicable template with.
@@ -133,7 +143,7 @@ feature -- Query
 		require
 			not_a_version_is_default: not a_version.is_equal (create {!CODE_NUMERIC_VERSION}.make (0, 0, 0, 0))
 		do
-			Result := templates.applicable_item_with_version (a_version)
+			Result := templates.applicable_item_with_code_version (a_version)
 		end
 
 feature -- Visitor

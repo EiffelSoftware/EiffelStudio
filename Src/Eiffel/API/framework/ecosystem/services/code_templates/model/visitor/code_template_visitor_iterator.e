@@ -42,9 +42,15 @@ feature {CODE_NODE} -- Processing
 	process_code_template_definition (a_value: !CODE_TEMPLATE_DEFINITION)
 			-- Process object `a_value'.
 		do
-			process_code_metadata (a_value.metadata)
-			process_code_declaration_collection (a_value.declarations)
-			process_code_template_collection (a_value.templates)
+			if is_applicable_visitation_entity (a_value.metadata) then
+				process_code_metadata (a_value.metadata)
+			end
+			if is_applicable_visitation_entity (a_value.declarations) then
+				process_code_declaration_collection (a_value.declarations)
+			end
+			if is_applicable_visitation_entity (a_value.templates) then
+				process_code_template_collection (a_value.templates)
+			end
 		end
 
 ;indexing

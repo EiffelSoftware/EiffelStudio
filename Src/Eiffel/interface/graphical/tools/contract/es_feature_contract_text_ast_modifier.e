@@ -1,74 +1,42 @@
 indexing
 	description: "[
-		A dictionary of code template definition file XML tag, attribute and value names.
+		A feature contract text modifier for changing contracts on features.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	CODE_TEMPLATE_ENTITY_NAMES
+deferred class
+	ES_FEATURE_CONTRACT_TEXT_MODIFIER [G -> AST_EIFFEL]
 
-feature -- Access
+inherit
+	ES_CONTRACT_TEXT_MODIFIER [G]
+		rename
+			make as make_with_class
+		redefine
+			modified_data,
+			create_modified_data
+		end
 
-	author_tag: !STRING_8 = "author"
+	ES_FEATURE_TEXT_AST_MODIFIER
+		redefine
+			modified_data,
+			create_modified_data
+		end
 
-	category_tag: !STRING_8 = "category"
+feature {NONE} -- Access
 
-	categories_tag: !STRING_8 = "categories"
+	modified_data: !ES_FEATURE_TEXT_AST_MODIFIER_DATA
+			-- <Precursor {ES_FEATURE_TEXT_AST_MODIFIER}>
 
-	code_template_tag: !STRING_8 = "code_template"
+feature {NONE} -- Factory
 
-	code_templates_tag: !STRING_8 = "code_templates"
-
-	declarations_tag: !STRING_8 = "declarations"
-
-	default_tag: !STRING_8 = "default"
-
-	description_tag: !STRING_8 = "description"
-
-	literal_tag: !STRING_8 = "literal"
-
-	metadata_tag: !STRING_8 = "metadata"
-
-	title_tag: !STRING_8 = "title"
-
-	shortcut_tag: !STRING_8 = "shortcut"
-
-	template_tag: !STRING_8 = "template"
-
-	templates_tag: !STRING_8 = "templates"
-
-feature -- Attribute
-
-	format_attribute: !STRING_8 = "format"
-
-	editable_attribute: !STRING_8 = "editable"
-
-	id_attribute: !STRING_8 = "id"
-
-	version_attribute: !STRING_8 = "version"
-
-feature -- Values
-
-	contract_category: !STRING_8 = "contract"
-
-	code_category: !STRING_8 = "code"
-
-	class_category: !STRING_8 = "class"
-
-feature -- Token values
-
-	cursor_token_name: !STRING_8 = "cursor"
-
-	selection_token_name: !STRING_8 = "selection"
-
-feature -- Delimiters
-
-	template_start_delimiter: !STRING_8 = "~#"
-
-	template_end_delimiter: !STRING_8 = "#~"
+	create_modified_data: !like modified_data
+			-- <Precursor {ES_FEATURE_TEXT_AST_MODIFIER}>
+		do
+			Result := Precursor {ES_FEATURE_TEXT_AST_MODIFIER}
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

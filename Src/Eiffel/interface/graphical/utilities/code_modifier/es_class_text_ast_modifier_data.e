@@ -54,10 +54,10 @@ feature -- Basic operations
 	prepare
 			-- <Precursor>
 		local
-			l_class: like associated_class
+			l_parser: !like parser
+			l_class: !like associated_class
 			l_current_class: ?CLASS_C
 			l_current_group: ?CONF_GROUP
-			l_parser: like parser
 			l_errors: LINKED_LIST [ERROR]
 			l_error_index: INTEGER
 			retried: BOOLEAN

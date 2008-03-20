@@ -80,6 +80,53 @@ feature {NONE} -- Basic operations
 			last_code_template_definition_detached: last_code_template_definition = Void
 		end
 
+feature -- Formatting
+
+	format_template (a_template: !STRING_32): !STRING_32
+			-- Formats a template examining extracting it if any template delimiter are defined.
+			--
+			-- `a_template': The orginal template text to extract a delimited template from
+			-- `Result': The extracted template.
+		require
+			not_a_template_is_empty: not a_template.is_empty
+		local
+			l_delimiter: STRING_32
+			l_stop: BOOLEAN
+			l_result: ?STRING_32
+			l_start, l_end: INTEGER
+			l_count, i: INTEGER
+		do
+			l_count := a_template.count
+
+			l_delimiter := {CODE_TEMPLATE_ENTITY_NAMES}.template_start_delimiter
+			l_start := a_template.index_of (l_delimiter @ 1, 1)
+			if l_start > 0 and l_start < l_count and then l_delimiter.is_equal (a_template.substring (l_start, l_start + (l_delimiter.count - 1))) then
+				l_start := l_start + l_delimiter.count
+				l_delimiter := {CODE_TEMPLATE_ENTITY_NAMES}.template_end_delimiter
+				l_end := a_template.last_index_of (l_delimiter @ l_delimiter.count, a_template.count)
+				if l_end > l_start and then l_delimiter.is_equal (a_template.substring (l_end - (l_delimiter.count - 1), l_end)) then
+					l_end := l_end - l_delimiter.count
+					from until not a_template.item (l_start).is_space or l_stop loop
+						l_stop := a_template.item (l_start) = '%N'
+						l_start := l_start + 1
+					end
+
+					l_stop := False
+					from until l_stop loop
+						l_stop := not a_template.item (l_end).is_space or else a_template.item (l_end) = '%N'
+						l_end := l_end - 1
+					end
+					if l_start < l_end then
+						l_result ?= a_template.substring (l_start, l_end)
+					end
+				end
+			end
+			if l_result = Void then
+				l_result := a_template
+			end
+			Result ?= l_result
+		end
+
 feature {NONE} -- Process
 
 	process_tag_state (a_state: NATURAL_8)
@@ -139,14 +186,11 @@ feature {NONE} -- Production processing
 			last_code_template_definition := code_factory.create_code_template_defintion
 
 				-- Add built-in declarations
-			if {l_selected: !STRING_8} {CODE_TEMPLATE_ENTITY_NAMES}.selected_token_name.as_string_8 then
-					-- Adds built-in 'selected' text declaration
-				last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration (l_selected, last_code_template_definition.declarations))
-			end
-			if {l_cursor: !STRING_8} {CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name.as_string_8 then
-					-- Adds built-in 'cursor' text declaration
-				last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration (l_cursor, last_code_template_definition.declarations))
-			end
+
+				-- Adds built-in 'selected' text declaration
+			last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration ({CODE_TEMPLATE_ENTITY_NAMES}.selection_token_name, last_code_template_definition.declarations))
+				-- Adds built-in 'cursor' text declaration
+			last_code_template_definition.declarations.extend (code_factory.create_code_built_in_literal_declaration ({CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name, last_code_template_definition.declarations))
 		ensure
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		end
@@ -302,11 +346,17 @@ feature {NONE} -- Production processing
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
 		local
-			l_attributes: like current_attributes
+			l_attributes: !like current_attributes
 			l_templates: !CODE_TEMPLATE_COLLECTION
 			l_version: !CODE_VERSION
 			l_template: !CODE_TEMPLATE
+			l_text: !like current_content
 		do
+			l_text := current_content
+			if not l_text.is_empty then
+				l_text := format_template (l_text)
+			end
+
 			l_templates := last_code_template_definition.templates
 			l_attributes := current_attributes
 			if l_attributes.has (at_version) then
@@ -314,7 +364,7 @@ feature {NONE} -- Production processing
 						-- Create a version template
 					l_version := format_utilities.parse_version (l_value, code_factory)
 					l_template := code_factory.create_code_versioned_template (l_version, l_templates)
-					l_template.set_tokens_with_text (current_content)
+					l_template.set_tokens_with_text (l_text)
 					last_code_template_definition.templates.extend (l_template)
 				else
 					on_report_xml_error ("Template version attribute must contain a value!")
@@ -322,7 +372,7 @@ feature {NONE} -- Production processing
 			else
 					-- Create an unversioned template
 				l_template := code_factory.create_code_template (l_templates)
-				l_template.set_tokens_with_text (current_content)
+				l_template.set_tokens_with_text (l_text)
 				l_templates.extend (l_template)
 			end
 		end

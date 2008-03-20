@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		do
 			create cataloged_folder_files.make_default
 			create cataloged_template_definitions.make_default
-			if {PLATFORM}.is_windows and then {l_tester: !KL_EQUALITY_TESTER [!STRING_8]} create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER} then
+			if {PLATFORM}.is_windows and then {l_tester: !KL_EQUALITY_TESTER [!STRING]} create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER} then
 				cataloged_folder_files.set_key_equality_tester (l_tester)
 				cataloged_template_definitions.set_key_equality_tester (l_tester)
 			end
@@ -65,44 +65,46 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!STRING_8], !STRING_8]
+	cataloged_folder_files: !DS_HASH_TABLE [!DS_ARRAYED_LIST [!STRING], !STRING_8]
 			-- Cataloged folders, where template files are extracted from.
 			-- Key: Folder path
 			-- Value: List of file names
 
-	cataloged_template_definitions: !DS_HASH_TABLE [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !STRING_8]
+	cataloged_template_definitions: !DS_HASH_TABLE [TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], !STRING]
 			-- Cataloged code template definitions, with reference count.
 			-- Key: Code template definition file name
 			-- Value: A code template definition with a cataloged reference count.
 
 feature -- Status report
 
-	is_cataloged (a_folder: !STRING_8): BOOLEAN
+	is_cataloged (a_folder: STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		do
-			Result := cataloged_folder_files.has (a_folder)
+			Result := cataloged_folder_files.has (({!STRING_8}) #? a_folder.as_string_8)
 		ensure then
-			cataloged_folder_files_has_a_folder: Result implies cataloged_folder_files.has (a_folder)
+			cataloged_folder_files_has_a_folder: Result implies cataloged_folder_files.has (({!STRING_8}) #? a_folder.as_string_8)
 		end
 
 feature -- Query
 
-	template_by_file_name (a_file_name: !STRING_8): ?CODE_TEMPLATE_DEFINITION
+	template_by_file_name (a_file_name: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
 			l_templates: like cataloged_template_definitions
 			l_file: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
+			l_fn: !STRING_8
 		do
+			l_fn ?= a_file_name.as_string_8
 			l_templates := cataloged_template_definitions
-			if l_templates.has (a_file_name) then
-				l_file := l_templates.item (a_file_name)
+			if l_templates.has (l_fn) then
+				l_file := l_templates.item (l_fn)
 				if l_file /= Void then
 					Result := l_file.definition
 				end
 			end
 		end
 
-	template_by_title (a_title: !STRING_32): ?CODE_TEMPLATE_DEFINITION
+	template_by_title (a_title: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
 			l_template: !CODE_TEMPLATE_DEFINITION
@@ -110,7 +112,7 @@ feature -- Query
 			if {l_cursor: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]} code_templates.new_cursor then
 				from l_cursor.finish until l_cursor.before or Result /= Void loop
 					l_template := l_cursor.item
-					if l_template.metadata.title.is_equal (a_title) then
+					if a_title.as_string_32.is_equal (l_template.metadata.title) then
 						Result := l_template
 					end
 					l_cursor.back
@@ -118,7 +120,7 @@ feature -- Query
 			end
 		end
 
-	template_by_shortcut (a_shortcut: !STRING_32): ?CODE_TEMPLATE_DEFINITION
+	template_by_shortcut (a_shortcut: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
 			l_template: !CODE_TEMPLATE_DEFINITION
@@ -126,7 +128,7 @@ feature -- Query
 			if {l_cursor: !DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]} code_templates.new_cursor then
 				from l_cursor.finish until l_cursor.before or Result /= Void loop
 					l_template := l_cursor.item
-					if l_template.metadata.shortcut.is_equal (a_shortcut) then
+					if a_shortcut.as_string_32.is_equal (l_template.metadata.shortcut) then
 						Result := l_template
 					end
 					l_cursor.back
@@ -134,7 +136,7 @@ feature -- Query
 			end
 		end
 
-	templates_by_category (a_categories: !DS_BILINEAR [!STRING_32]): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+	templates_by_category (a_categories: DS_BILINEAR [STRING_GENERAL]): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
 			-- <Precursor>
 		local
 			l_categories: !CODE_CATEGORY_COLLECTION
@@ -173,17 +175,14 @@ feature {NONE} -- Helpers
 			if {l_service: !SERVICE_CONSUMER [LOGGER_S]} internal_logger_service then
 				Result := l_service
 			else
-				check
-					sited: site /= Void
-				end
-				create Result.make_with_provider (site)
+				create Result
 				internal_logger_service := Result
 			end
 		end
 
 feature -- Basic operations
 
-	rescan (a_folder: !STRING_8)
+	rescan (a_folder: STRING_GENERAL)
 			-- <Precursor>
 		do
 			remove_catalog (a_folder)
@@ -216,7 +215,7 @@ feature -- Basic operations
 
 feature -- Extension
 
-	extend_catalog (a_folder: !STRING_8)
+	extend_catalog (a_folder: STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_definitions: like cataloged_template_definitions
@@ -239,7 +238,7 @@ feature -- Extension
 						create l_definition
 						l_definition.definition := build_template (l_files.item_for_iteration)
 						l_definition.ref_count := 1
-						l_definitions.put_last (l_definition, l_file)
+						l_definitions.force_last (l_definition, l_file)
 
 						if l_definition.definition /= Void then
 								-- A new declaration was added, so invalidate the cached code templates
@@ -251,12 +250,12 @@ feature -- Extension
 			end
 
 				-- Extends the folder catalog
-			cataloged_folder_files.put (l_files, a_folder)
+			cataloged_folder_files.put (l_files, ({!STRING}) #? a_folder.as_string_8)
 		end
 
 feature -- Removal
 
-	remove_catalog (a_folder: !STRING_8)
+	remove_catalog (a_folder: STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_catalog: like cataloged_folder_files
@@ -264,9 +263,11 @@ feature -- Removal
 			l_definitions: like cataloged_template_definitions
 			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_file: !STRING_8
+			l_folder: !STRING_8
 		do
+			l_folder ?= a_folder.as_string_8
 			l_catalog := cataloged_folder_files
-			l_files := l_catalog.item (a_folder)
+			l_files := l_catalog.item (l_folder)
 			if not l_files.is_empty then
 				l_definitions := cataloged_template_definitions
 				from l_files.start until l_files.after loop
@@ -292,7 +293,7 @@ feature -- Removal
 			end
 
 				-- Remove from the folder/file catalog.
-			l_catalog.remove (a_folder)
+			l_catalog.remove (l_folder)
 		end
 
 feature {NONE} -- Helpers

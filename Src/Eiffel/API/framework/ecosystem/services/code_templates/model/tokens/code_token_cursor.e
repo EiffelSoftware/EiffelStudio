@@ -15,7 +15,8 @@ inherit
 		rename
 			make as make_token_id
 		redefine
-			printable_text
+			printable_text,
+			process
 		end
 
 create
@@ -36,6 +37,14 @@ feature -- Access
 		do
 				-- No printable text.
 			create Result.make_empty
+		end
+
+feature -- Visitor
+
+	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+			-- <Precursor>
+		do
+			a_visitor.process_code_token_cursor (Current)
 		end
 
 ;indexing

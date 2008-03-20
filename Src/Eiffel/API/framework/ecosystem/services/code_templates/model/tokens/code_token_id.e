@@ -17,6 +17,7 @@ inherit
 		redefine
 			is_editable,
 			printable_text,
+			process,
 			out
 		end
 
@@ -44,8 +45,11 @@ feature -- Access
 	printable_text: like text
 			-- <Precursor>
 		do
-			if internal_printable_text /= Void then
-				create Result.make_from_string (internal_printable_text)
+			if internal_printable_text = Void then
+				create Result.make_empty
+				internal_printable_text := Result
+			else
+				Result ?= internal_printable_text
 			end
 		end
 
@@ -66,7 +70,7 @@ feature -- Status setting
 			is_editable_set: is_editable = a_editable
 		end
 
-feature {CODE_NODE} -- Basic operations
+feature -- Basic operations
 
 	evaluate (a_table: !CODE_SYMBOL_TABLE)
 			-- Evalutes the current token to determine it's printable value.
@@ -83,6 +87,14 @@ feature {CODE_NODE} -- Basic operations
 					-- Use the ID
 				internal_printable_text := text
 			end
+		end
+
+feature -- Visitor
+
+	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+			-- <Precursor>
+		do
+			a_visitor.process_code_token_id (Current)
 		end
 
 feature -- Output

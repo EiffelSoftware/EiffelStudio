@@ -28,47 +28,53 @@ feature -- Access
 
 feature -- Status report
 
-	is_cataloged (a_folder: !STRING_8): BOOLEAN
+	is_cataloged (a_folder: STRING_GENERAL): BOOLEAN
 			-- Determines if a folder is currently cataloged
 		require
 			is_interface_usable: is_interface_usable
+			a_folder_attached: a_folder /= Void
 			not_a_folder_is_empty: not a_folder.is_empty
 		deferred
 		end
 
 feature -- Query
 
-	template_by_file_name (a_file_name: !STRING_8): ?CODE_TEMPLATE_DEFINITION
+	template_by_file_name (a_file_name: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 		require
 			is_interface_usable: is_interface_usable
+			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		deferred
 		end
 
-	template_by_title (a_title: !STRING_32): ?CODE_TEMPLATE_DEFINITION
+	template_by_title (a_title: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 		require
 			is_interface_usable: is_interface_usable
+			a_title_attached: a_title /= Void
 			not_a_title_is_empty: not a_title.is_empty
 		deferred
 		end
 
-	template_by_shortcut (a_shortcut: !STRING_32): ?CODE_TEMPLATE_DEFINITION
+	template_by_shortcut (a_shortcut: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
 		require
 			is_interface_usable: is_interface_usable
+			a_shortcut_attached: a_shortcut /= Void
 			not_a_shortcut_is_empty: not a_shortcut.is_empty
 		deferred
 		end
 
-	templates_by_category (a_categories: !DS_BILINEAR [!STRING_32]): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+	templates_by_category (a_categories: DS_BILINEAR [STRING_GENERAL]): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
 		require
 			is_interface_usable: is_interface_usable
+			a_categories_attached: a_categories /= Void
+			a_categories_contains_attached_items: not a_categories.has (Void)
 			not_a_categories_is_empty: not a_categories.is_empty
 		deferred
 		end
 
 feature -- Basic operations
 
-	rescan (a_folder: !STRING_8)
+	rescan (a_folder: STRING_GENERAL)
 			-- Rescans an existing catalog and update the templates associated with the cataloged folder.
 			--
 			-- `a_folder': The cataloged folder to rescan and update the templates
@@ -90,8 +96,8 @@ feature -- Basic operations
 
 feature -- Extension
 
-	extend_catalog (a_folder: !STRING_8)
-			--
+	extend_catalog (a_folder: STRING_GENERAL)
+			-- Extends the code template catalog with a folder full of templates
 		require
 			is_interface_usable: is_interface_usable
 			not_a_folder_is_empty: not a_folder.is_empty
@@ -103,7 +109,7 @@ feature -- Extension
 
 feature -- Removal
 
-	remove_catalog (a_folder: !STRING_8)
+	remove_catalog (a_folder: STRING_GENERAL)
 		require
 			is_interface_usable: is_interface_usable
 			not_a_folder_is_empty: not a_folder.is_empty

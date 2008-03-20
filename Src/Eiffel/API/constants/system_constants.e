@@ -168,7 +168,7 @@ feature {NONE}
 	data_directory: STRING is "Data"
 			-- Directory name `Data'
 
-feature {AUXILIARY_FILES} -- Versioning
+feature-- Versioning
 
 	Compiler_version_number: CONF_VERSION is
 			-- Version of the compiler
@@ -180,14 +180,6 @@ feature {AUXILIARY_FILES} -- Versioning
 				{EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version,
 				(svn_revision // (9999 + 1).as_natural_32).as_natural_16,
 				(svn_revision \\ (9999 + 1).as_natural_32).as_natural_16)
-		end
-
-	svn_revision: NATURAL_32 is
-			-- SVN revision that build the compiler.
-			-- We use `0000' because it is replaced by the actual svn revision number
-			-- when doing a delivery.
-		do
-			Result := 0000
 		end
 
 	Version_number: STRING is
@@ -204,11 +196,23 @@ feature {AUXILIARY_FILES} -- Versioning
 			Result.append_string (eiffel_layout.eiffel_platform)
 		end
 
-	Version_tag: INTEGER is 0x026
-
 	Version_type_name: STRING is "GPL Edition";
 			-- Name of version, e.g. GPL edition, Enterprise Edition,...
 			-- Default: "GPL Edition"
+
+feature {AUXILIARY_FILES} -- Versioning
+
+	svn_revision: NATURAL_32 is
+			-- SVN revision that build the compiler.
+			-- We use `0000' because it is replaced by the actual svn revision number
+			-- when doing a delivery.
+		do
+			Result := 0000
+		end
+
+	Version_tag: INTEGER is 0x026
+
+
 
 	Version_info: STRING is "";
 			-- Information on the version

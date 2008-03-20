@@ -17,6 +17,9 @@ inherit
 			create_modified_data
 		end
 
+create
+	make
+
 feature -- Access
 
 	ast: ?CLASS_AS
@@ -60,7 +63,7 @@ feature -- Status report
 
 feature -- Query
 
-	ast_position (a_ast: AST_EIFFEL): TUPLE [start_position: INTEGER; end_position: INTEGER]
+	ast_position (a_ast: ?AST_EIFFEL): TUPLE [start_position: INTEGER; end_position: INTEGER]
 			-- Retrieve an AST node's position.
 			-- Note: The result is unadjusted! To account for ajustement, pass through `modified_data.adjusted_position'.
 			--
@@ -92,7 +95,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	remove_ast_code (a_ast: AST_EIFFEL; a_remove_ws: BOOLEAN)
+	remove_ast_code (a_ast: ?AST_EIFFEL; a_remove_ws: BOOLEAN)
 			-- Removes an AST node and sets `insertion_position' to the beginning of the removed AST position.
 			--
 			-- `a_ast': The AST node to remove from the code.
@@ -126,7 +129,7 @@ feature -- Basic operations
 				end
 
 				if i <= l_count then
-					if l_text.item (i) /= '%N' then
+					if l_nl_switched or l_text.item (i) /= '%N' then
 							-- Remove the last in
 						i := i - 1
 					end
@@ -140,10 +143,10 @@ feature -- Basic operations
 
 feature {NONE} -- Factory
 
-	create_modified_data: like modified_data
+	create_modified_data: !like modified_data
 			-- <Precursor>
 		local
-			l_class: like context_class
+			l_class: !like context_class
 			l_editor: like active_editor_for_class
 			l_text: !STRING
 		do

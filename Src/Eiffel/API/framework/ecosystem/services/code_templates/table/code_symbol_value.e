@@ -11,7 +11,8 @@ class
 	CODE_SYMBOL_VALUE
 
 create
-	make
+	make,
+	make_empty
 
 feature {NONE} -- Initialization
 
@@ -25,12 +26,22 @@ feature {NONE} -- Initialization
 			default_value_set: a_default.is_equal (default_value)
 		end
 
+	make_empty
+			-- Initializes a code symbol value using a empty value string.
+		do
+			create default_value.make_empty
+		end
+
 feature -- Access
 
-	value: !STRING_32
+	value: !STRING_32 assign set_value
 			-- The actual value, having been processed
 		do
-			Result := default_value.twin
+			if internal_value /= Void then
+				Result ?= internal_value.twin
+			else
+				Result := default_value.twin
+			end
 		end
 
 	default_value: !STRING_32
@@ -40,6 +51,24 @@ feature {CODE_SYMBOL_TABLE} -- Access
 
 	symbol_table: ?CODE_SYMBOL_TABLE assign set_symbol_table
 			-- Symbol table of code values where Current resides
+
+feature -- Element change
+
+	set_value (a_value: like value)
+			-- Set the code symbol value
+		local
+			l_table: like symbol_table
+		do
+			if internal_value = Void or else not internal_value.is_equal (a_value) then
+				internal_value := a_value
+				l_table := symbol_table
+				if l_table /= Void and then {l_id: !STRING} l_table.id_of_value (Current)  then
+					l_table.value_changed_events.publish ([l_id])
+				end
+			end
+		ensure
+			value_set: value.is_equal (a_value)
+		end
 
 feature {CODE_SYMBOL_TABLE} -- Element change
 
@@ -53,6 +82,12 @@ feature {CODE_SYMBOL_TABLE} -- Element change
 		ensure
 			symbol_table_set: symbol_table = a_table
 		end
+
+feature {NONE} -- Internal implementation cache
+
+	internal_value: ?STRING_32
+			-- Cached value of `value'
+			-- Note: Do not use directly!
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

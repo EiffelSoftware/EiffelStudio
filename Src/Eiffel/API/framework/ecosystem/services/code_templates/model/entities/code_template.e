@@ -108,18 +108,12 @@ feature -- Visitor
 
 feature -- Basic operations
 
-	process_tokens (a_table: !CODE_SYMBOL_TABLE) is
-			-- Processes the tokens using a symbol table.
+	process_tokens (a_visitor: !CODE_TOKEN_VISITOR_I)
+			-- Processes all tokens.
 			--
-			-- `a_table': Symbol table used to process code tokens.
+			-- `a_visitor': Visitor to process all tokens with
 		do
-			internal_tokens.do_all (agent (a_token: !CODE_TOKEN; a_sym_table: !CODE_SYMBOL_TABLE)
-					-- Processes all of the ID tokens, using a supplied symbol table
-				do
-					if {l_token: !CODE_TOKEN_ID} a_token then
-						l_token.evaluate (a_sym_table)
-					end
-				end)
+			internal_tokens.do_all (agent {!CODE_TOKEN}.process (a_visitor))
 		end
 
 feature {NONE} -- Internal implementation cache

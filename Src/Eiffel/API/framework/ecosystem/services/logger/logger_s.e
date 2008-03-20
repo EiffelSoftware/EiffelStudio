@@ -51,20 +51,37 @@ feature -- Element change
 
 feature -- Extension
 
-	put_message (a_msg: !STRING_32; a_cat: NATURAL_8)
+	put_message (a_msg: STRING_GENERAL; a_cat: NATURAL_8)
 			-- Logs a message.
 			--
 			-- `a_msg': Message text to log.
 			-- `a_cat': A message category, see {ENVIRONMENT_CATEGORIES}.
 		require
 			is_interface_usable: is_interface_usable
+			a_msg_attached: a_msg /= Void
 			not_a_msg_is_empty: not a_msg.is_empty
 			a_cat_is_empty_is_valid_category: is_valid_category (a_cat)
 		do
 			put_message_with_severity (a_msg, a_cat, {PRIORITY_LEVELS}.normal)
 		end
 
-	put_message_with_severity (a_msg: !STRING_32; a_cat: NATURAL_8; a_level: INTEGER_8)
+	put_message_format (a_msg: STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8)
+			-- Logs a message using a format string and arguments.
+			--
+			-- `a_msg': Format string message.
+			-- `a_args': Arguments to replace in the format message.
+			-- `a_cat': A message category, see {ENVIRONMENT_CATEGORIES}.
+		require
+			is_interface_usable: is_interface_usable
+			a_msg_attached: a_msg /= Void
+			not_a_msg_is_empty: not a_msg.is_empty
+			a_args_attached: a_args /= Void
+			a_cat_is_empty_is_valid_category: is_valid_category (a_cat)
+		do
+			put_message_format_with_severity (a_msg, a_args, a_cat, {PRIORITY_LEVELS}.normal)
+		end
+
+	put_message_with_severity (a_msg: STRING_GENERAL; a_cat: NATURAL_8; a_level: INTEGER_8)
 			-- Logs a message specifiying a serverity level.
 			--
 			-- `a_msg': Message text to log.
@@ -72,7 +89,24 @@ feature -- Extension
 			-- `a_level': A serverity level for the message, See {PRIORITY_LEVELS}.
 		require
 			is_interface_usable: is_interface_usable
+			a_msg_attached: a_msg /= Void
 			not_a_msg_is_empty: not a_msg.is_empty
+			a_cat_is_empty_is_valid_category: is_valid_category (a_cat)
+			a_level_is_valid_severity_level: is_valid_severity_level (a_level)
+		deferred
+		end
+
+	put_message_format_with_severity (a_msg: STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8; a_level: INTEGER_8)
+			-- Logs a message specifiying a serverity level using a format string and arguments.
+			--
+			-- `a_msg': Format string message.
+			-- `a_cat': A message category, see {ENVIRONMENT_CATEGORIES}.
+			-- `a_level': A serverity level for the message, See {PRIORITY_LEVELS}.
+		require
+			is_interface_usable: is_interface_usable
+			a_msg_attached: a_msg /= Void
+			not_a_msg_is_empty: not a_msg.is_empty
+			a_args_attached: a_args /= Void
 			a_cat_is_empty_is_valid_category: is_valid_category (a_cat)
 			a_level_is_valid_severity_level: is_valid_severity_level (a_level)
 		deferred

@@ -37,7 +37,7 @@ feature -- Access
 					-- values may be fetched lazily, when using function evaluation
 				Result := content_table.item (a_id)
 			else
-				--create Result.make_empty
+				create Result.make_empty
 			end
 		end
 
@@ -59,6 +59,24 @@ feature -- Element change
 		do
 			a_value.set_symbol_table (Current)
 			content_table.put (a_value, a_id)
+			value_changed_events.publish ([a_id])
+		ensure
+			has_id_a_id: has_id (a_id)
+			a_value_set: item (a_id).is_equal (a_value)
+			a_value_symbol_table_set: a_value.symbol_table = Current
+		end
+
+	force (a_value: !CODE_SYMBOL_VALUE; a_id: !STRING_8)
+			-- Forces extending of the symbol table with a new id/value pair.
+			--
+			-- `a_value': A value to associated with an indentifier in the symbol table.
+			-- `a_id': The indentifier to associate with the value.
+		require
+			not_a_id_is_empty: not a_id.is_empty
+		do
+			a_value.set_symbol_table (Current)
+			content_table.force (a_value, a_id)
+			value_changed_events.publish ([a_id])
 		ensure
 			has_id_a_id: has_id (a_id)
 			a_value_set: item (a_id).is_equal (a_value)
@@ -67,13 +85,35 @@ feature -- Element change
 
 feature -- Query
 
-	has_id (a_id: !STRING_8): BOOLEAN
+	has_id (a_id: !STRING): BOOLEAN
 			-- Determines if the symbol table contains an identifier.
 			--
 			-- `a_id': The identifier to check for existence.
 			-- `Result': True if the identifier exists in the table; False otherwise
+		require
+			not_a_id_is_empty: not a_id.is_empty
 		do
 			Result := content_table.has (a_id)
+		ensure
+			content_table_has_a_id: Result implies content_table.has (a_id)
+		end
+
+feature {CODE_SYMBOL_VALUE} -- Query
+
+	id_of_value (a_value: !CODE_SYMBOL_VALUE): ?STRING
+			-- Retrieves the ID of a code symbol value.
+			--
+			-- `a_value': The value to retrieve an ID for
+			-- `Result': An id in teh current table or Void if the value was not located.
+		do
+			content_table.start
+			content_table.search_forth (a_value)
+			if not content_table.after then
+				Result := content_table.key_for_iteration
+			end
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+			has_id_result: Result /= Void implies has_id (({!STRING}) #? Result)
 		end
 
 feature -- Events

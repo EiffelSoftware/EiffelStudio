@@ -53,6 +53,14 @@ feature -- Query
 			not_a_text_is_empty: Result implies not a_text.is_empty
 		end
 
+feature -- Visitor
+
+	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+			-- <Precursor>
+		do
+			a_visitor.process_code_token_text (Current)
+		end
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

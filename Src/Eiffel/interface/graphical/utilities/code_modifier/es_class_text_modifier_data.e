@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like associated_class; a_text: like text)
+	make (a_class: !like associated_class; a_text: !like text)
 			-- Initializes the data required to perform class modifications.
 			--
 			-- `a_class': The associated class to perform modifications on.

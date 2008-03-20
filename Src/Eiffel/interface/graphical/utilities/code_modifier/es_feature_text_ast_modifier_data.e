@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		A code token to represent a replacable (non-editable) code identifier reference.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,13 +8,16 @@ indexing
 	revision: "$Revision$"
 
 class
-	CODE_TOKEN_ID_REF
+	ES_FEATURE_TEXT_AST_MODIFIER_DATA
 
 inherit
-	CODE_TOKEN
+	ES_CLASS_TEXT_AST_MODIFIER_DATA
+		rename
+			make as make_with_class
 		redefine
-			printable_text,
-			out
+			is_ast_available,
+			prepare,
+			reset
 		end
 
 create
@@ -22,67 +25,65 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_token: like code_token_id)
-			-- Initializes the code token reference using a code token id.
+	make (a_class: !like associated_class; a_feature: !like associated_feature; a_text: !like text)
+			-- Initializes the data required to perform class modifications.
 			--
-			-- `a_token': A code token the current token references.
+			-- `a_class': The associated class to perform modifications on.
+			-- `a_feature': The associated feature to perform modifications on.
+			-- `a_text': Actual class text to modify.
 		do
-			code_token_id := a_token
+			associated_feature := a_feature
+			make_with_class (a_class, a_text)
 		ensure
-			code_token_id_set: code_token_id = a_token
+			associated_class_set: associated_class = a_class
+			associated_feature_set: associated_feature = a_feature
+			text_set: text.is_equal (a_text)
 		end
 
 feature -- Access
 
-	printable_text: like text
-			-- <Precursor>
-		do
-			Result := code_token_id.printable_text
-		end
+	ast_feature: ?FEATURE_AS
+			-- Root AST node of prepared class.
 
-	text: !STRING_32
-			-- <Precursor>
-		do
-			Result := code_token_id.text
-		end
+feature {NONE} -- Access
 
-	code_token_id: !CODE_TOKEN_ID
-			-- Reference code token id, use to extract the values
+	associated_feature: !E_FEATURE
+			-- Feature associated with Current
 
 feature -- Status report
 
-	frozen is_editable: BOOLEAN
-			-- <Precursor>
+	is_ast_available: BOOLEAN
+			-- Indicates if the AST information is available.
 		do
-			Result := False
+			Result := Precursor {ES_CLASS_TEXT_AST_MODIFIER_DATA} and then ast_feature /= Void
+		ensure then
+			ast_feature_attached: Result implies ast_feature /= Void
 		end
 
-feature -- Query
+feature -- Basic operations
 
-	is_valid_text (a_text: like text): BOOLEAN
+	prepare
 			-- <Precursor>
+		local
+			l_ast: like ast
 		do
-			Result := True
+			Precursor {ES_CLASS_TEXT_AST_MODIFIER_DATA}
+			l_ast := ast
+			if l_ast /= Void then
+				ast_feature := l_ast.feature_of_name (associated_feature.name, False)
+			end
 		end
 
-feature -- Visitor
+feature {ES_CLASS_TEXT_MODIFIER} -- Basic operations
 
-	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+	reset
 			-- <Precursor>
 		do
-			a_visitor.process_code_token_id_ref (Current)
+			Precursor {ES_CLASS_TEXT_AST_MODIFIER_DATA}
+			ast_feature := Void
+		ensure then
+			ast_feature: ast_feature = Void
 		end
-
-feature -- Output
-
-	out: STRING_8
-			-- <Precursor>
-		do
-			Result := code_token_id.out
-		end
-
-invariant
-	not_is_editable: not is_editable
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

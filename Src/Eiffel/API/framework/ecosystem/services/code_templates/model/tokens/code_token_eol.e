@@ -14,6 +14,8 @@ inherit
 	CODE_TOKEN_TEXT
 		rename
 			make as make_token
+		redefine
+			process
 		end
 
 create
@@ -25,6 +27,14 @@ feature {NONE} -- Initialization
 			-- Initializes a End-Of-Line code token.
 		do
 			make_token (create {!STRING_32}.make_from_string ("%N"))
+		end
+
+feature -- Visitor
+
+	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+			-- <Precursor>
+		do
+			a_visitor.process_code_token_eol (Current)
 		end
 
 ;indexing

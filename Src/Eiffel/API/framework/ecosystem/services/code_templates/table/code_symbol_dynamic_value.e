@@ -95,12 +95,6 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-feature {NONE} -- Internal implementation cache
-
-	internal_value: ?STRING_32
-			-- Cached value of `value'
-			-- Note: Do not use directly!
-
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

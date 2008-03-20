@@ -82,6 +82,9 @@ feature -- Basic operations
 								if l_cont then
 									l_buffer.append_character (c)
 									i := i + 1
+								else
+										-- Back step to ensure that `c' is included in the next top-level iteration.
+									i := i - 1
 								end
 							end
 
@@ -94,7 +97,12 @@ feature -- Basic operations
 									Result.force_last (a_factory.create_id_ref_token (l_token_id))
 								else
 										-- Creates an editable id token
-									l_token_id := a_factory.create_id_token (l_id)
+									if l_id.as_string_8.is_equal ({CODE_TEMPLATE_ENTITY_NAMES}.cursor_token_name) then
+										l_token_id := a_factory.create_cursor_token
+									else
+										l_token_id := a_factory.create_id_token (l_id)
+									end
+
 									Result.force_last (l_token_id)
 									l_id_table.put (l_token_id, l_id)
 								end

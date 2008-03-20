@@ -18,7 +18,23 @@ create
 
 feature -- Query
 
-	applicable_default_item: CODE_TEMPLATE
+	applicable_item: ?CODE_TEMPLATE
+			-- Attempts to retreive the most applicable code template for the version of the compiler.
+			--
+			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
+		local
+			l_version: !STRING_32
+		do
+			l_version ?= (create {SYSTEM_CONSTANTS}).compiler_version_number.version.as_string_32
+			Result := applicable_item_with_version (l_version)
+			if Result = Void then
+				Result := applicable_default_item
+			end
+		ensure
+			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
+		end
+
+	applicable_default_item: ?CODE_TEMPLATE
 			-- Attempts to retreive the default (unversioned) code template.
 			--
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
@@ -42,7 +58,7 @@ feature -- Query
 			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
 		end
 
-	applicable_item (a_version: !STRING_32): CODE_TEMPLATE
+	applicable_item_with_version (a_version: !STRING_32): ?CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a string version.
 			--
 			-- `a_version': Version to find the most applicable template with.
@@ -53,10 +69,10 @@ feature -- Query
 			l_version: !CODE_VERSION
 		do
 			l_version := (create {CODE_FORMAT_UTILITIES}).parse_version (a_version, create {!CODE_FACTORY})
-			Result := applicable_item_with_version (l_version)
+			Result := applicable_item_with_code_version (l_version)
 		end
 
-	applicable_item_with_version (a_version: !CODE_VERSION): CODE_TEMPLATE
+	applicable_item_with_code_version (a_version: !CODE_VERSION): ?CODE_TEMPLATE
 			-- Attempts to retreive the most applicable code template, given a version.
 			--
 			-- `a_version': Version to find the most applicable template with.

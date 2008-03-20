@@ -48,6 +48,15 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Visitor
+
+	process (a_visitor: !CODE_TOKEN_VISITOR_I)
+			-- Visit's the current token and processes it.
+		require
+			a_visitor_is_interface_usable: a_visitor.is_interface_usable
+		deferred
+		end
+
 feature -- Output
 
 	out: STRING_8

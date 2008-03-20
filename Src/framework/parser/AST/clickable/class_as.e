@@ -731,11 +731,14 @@ feature -- Query
 			Result := ({!BILINEAR [!FEATURE_AS]}) #? l_result
 		end
 
-	feature_of_name (a_name: !STRING_GENERAL; a_reverse_lookup: BOOLEAN): FEATURE_AS
+	feature_of_name (a_name: STRING_GENERAL; a_reverse_lookup: BOOLEAN): FEATURE_AS
 			-- Retrieves the first located feature using the supplied feature name.
 			--
 			-- `a_name': The feature name to retrieve a feature AS node for.
 			-- `a_reverse_lookup': True to lookup a feature from the end to the beginning.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_fccursor, l_fcursor: INTEGER
 		do

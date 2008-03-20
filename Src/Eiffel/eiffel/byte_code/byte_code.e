@@ -824,8 +824,7 @@ end
 				position > nb
 			loop
 					-- Local SK value
-				Context.add_local
-						(context.real_type (locals.item (position)))
+				Context.add_local (context.real_type (locals.item (position)))
 				position := position + 1
 			end
 			l_old_expressions := old_expressions

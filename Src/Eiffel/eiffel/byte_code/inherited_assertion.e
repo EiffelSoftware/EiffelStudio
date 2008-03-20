@@ -682,8 +682,7 @@ feature -- inherited postcondition
 						old_expressions.after
 					loop
 						item := old_expressions.item
-						Context.add_local
-								(context.real_type (item.type))
+						Context.add_local (context.real_type (item.type))
 						item.set_position (position)
 						position := position + 1
 						Context.add_local (item.exception_type)

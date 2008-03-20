@@ -68,27 +68,20 @@ feature -- Byte code generation
 			ba_not_void: ba /= Void
 		local
 			gen_param: TYPE_A
-			expanded_type: CL_TYPE_A
 			l_bit: BITS_A
 			l_param_is_expanded: BOOLEAN
-			type_c: TYPE_C
 			final_mode: BOOLEAN
 		do
 			gen_param := first_generic
 			l_param_is_expanded := gen_param.is_true_expanded
 			final_mode := byte_context.final_mode
-			type_c := gen_param.c_type
 
 			ba.append_boolean (not gen_param.is_expanded)
 			ba.append_boolean (gen_param.is_basic)
 			ba.append_boolean (gen_param.is_bit)
 			ba.append_boolean (l_param_is_expanded)
 			if l_param_is_expanded then
-				expanded_type ?= gen_param
-				check
-					expanded_type_not_void: expanded_type /= Void
-				end
-				ba.append_short_integer (expanded_type.static_type_id (Void) - 1)
+				ba.append_short_integer (gen_param.static_type_id (Void) - 1)
 			else
 				ba.append_uint32_integer (gen_param.sk_value (Void))
 			end
@@ -111,7 +104,6 @@ feature -- C code generation
 			nb_register_not_void: nb_register /= Void
 		local
 			gen_param: TYPE_A
-			expanded_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			l_exp_has_references: BOOLEAN
 			l_bit: BITS_A
@@ -140,11 +132,7 @@ feature -- C code generation
 			end
 
 			if l_param_is_expanded then
-				expanded_type ?= gen_param
-				check
-					expanded_type_not_void: expanded_type /= Void
-				end
-				l_exp_class_type := expanded_type.associated_class_type (Void)
+				l_exp_class_type := gen_param.associated_class_type (Void)
 				l_exp_has_references := l_exp_class_type.skeleton.has_references
 			end
 
@@ -259,6 +247,14 @@ feature -- C code generation
 					-- so that it is thread safe (no GC sync calls in body).
 				generate_base_address (feat, buffer)
 
+			when {PREDEFINED_NAMES}.clear_all_name_id then
+					-- Generate `clear_all' of class SPECIAL for more efficiency.
+				if first_generic.is_true_expanded then
+					Precursor {CLASS_TYPE} (feat, buffer)
+				else
+					generate_clear_all (feat, buffer)
+				end
+
 			else
 					-- Basic generation
 				Precursor {CLASS_TYPE} (feat, buffer);
@@ -275,7 +271,6 @@ feature {NONE} -- C code generation
 			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.put_name_id
 		local
 			gen_param: TYPE_A
-			expanded_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
@@ -343,22 +338,24 @@ feature {NONE} -- C code generation
 			end
 
 			if not final_mode or else system.check_for_catcall_at_runtime then
-				byte_context.set_byte_code (byte_server.disk_item (feat.body_index))
-				byte_context.set_current_feature (feat)
-				if l_param_is_expanded then
-						-- Minor hack because expanded arguments are generated with a `e' prefix
-						-- but for SPECIAL we use without the prefix because the generation is done
-						-- manually.
-					buffer.put_new_line_only
-					buffer.put_string ("#define earg1 arg1")
-				end
-				byte_context.set_has_feature_name_stored (False)
-				create l_arg
-				l_arg.set_position (1)
-				byte_context.generate_catcall_check (l_arg, gen_param, 1, False)
-				if l_param_is_expanded then
-					buffer.put_new_line_only
-					buffer.put_string ("#undef earg1")
+				if gen_param.c_type.is_pointer then
+					byte_context.set_byte_code (byte_server.disk_item (feat.body_index))
+					byte_context.set_current_feature (feat)
+					if l_param_is_expanded then
+							-- Minor hack because expanded arguments are generated with a `e' prefix
+							-- but for SPECIAL we use without the prefix because the generation is done
+							-- manually.
+						buffer.put_new_line_only
+						buffer.put_string ("#define earg1 arg1")
+					end
+					byte_context.set_has_feature_name_stored (False)
+					create l_arg
+					l_arg.set_position (1)
+					byte_context.generate_catcall_check (l_arg, create {FORMAL_A}.make (False, False, 1), 1, False)
+					if l_param_is_expanded then
+						buffer.put_new_line_only
+						buffer.put_string ("#undef earg1")
+					end
 				end
 			end
 
@@ -366,8 +363,7 @@ feature {NONE} -- C code generation
 
 			if l_param_is_expanded then
 				if final_mode then
-					expanded_type ?= gen_param
-					l_exp_class_type := expanded_type.associated_class_type (Void)
+					l_exp_class_type := gen_param.associated_class_type (Void)
 					buffer.put_new_line
 					if l_exp_class_type.skeleton.has_references then
 							-- Optimization: size is know at compile time
@@ -453,7 +449,6 @@ feature {NONE} -- C code generation
 				feat.feature_name_id = {PREDEFINED_NAMES}.infix_at_name_id
 		local
 			gen_param: TYPE_A
-			expanded_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
@@ -495,8 +490,7 @@ feature {NONE} -- C code generation
 			buffer.put_gtcx
 
 			if l_param_is_expanded and final_mode then
-				expanded_type ?= gen_param;
-				l_exp_class_type := expanded_type.associated_class_type (Void)
+				l_exp_class_type := gen_param.associated_class_type (Void)
 				l_exp_has_references := l_exp_class_type.skeleton.has_references
 				if not l_exp_has_references then
 					buffer.put_new_line
@@ -536,7 +530,7 @@ feature {NONE} -- C code generation
 						buffer.put_new_line
 						buffer.put_string ("RTLR(0, Current);")
 							-- Create expanded type based on the actual generic parameter, and not
-							-- on the recorded derivation (as it would not work if `expanded_type' is
+							-- on the recorded derivation (as it would not work if `gen_param' is
 							-- generic. (See eweasel test#exec282 for an example where it does not work).
 						l_exp_class_type.generate_expanded_creation (buffer, "Result", create {FORMAL_A}.make (False, False, 1), Current)
 						buffer.put_new_line
@@ -635,7 +629,6 @@ feature {NONE} -- C code generation
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			encoded_name: STRING
-			expanded_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 			result_type_name: STRING
 			index_type_name: STRING
@@ -699,8 +692,7 @@ feature {NONE} -- C code generation
 			buffer.put_string ("(Current + ")
 			if l_param_is_expanded then
 				if l_byte_context.final_mode then
-					expanded_type ?= gen_param
-					l_exp_class_type := expanded_type.associated_class_type (Void)
+					l_exp_class_type := gen_param.associated_class_type (Void)
 						-- It is set to True because at the moment we need a header in
 						-- order to call inherited features in an expanded class. This is
 						-- necessary until we are able to do a flat code generation for
@@ -794,6 +786,33 @@ feature {NONE} -- C code generation
 				buffer.put_new_line
 				buffer.put_string ("return r;")
 			end
+			buffer.generate_block_close
+				-- Separation for formatting
+			buffer.put_new_line
+			byte_context.clear_feature_data
+		end
+
+	generate_clear_all (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+			-- Generate `clear_all' from SPECIAL using `memset' for increased efficiency.
+		require
+			good_argument: buffer /= Void;
+			feat_exists: feat /= Void;
+			consistency: feat.feature_name_id = {PREDEFINED_NAMES}.clear_all_name_id
+			not_is_expanded_with_side_effect: not first_generic.is_true_expanded
+		local
+			encoded_name: STRING
+		do
+			feat.generate_header (Current, buffer)
+			encoded_name := Encoder.feature_name (type_id, feat.body_index)
+			System.used_features_log_file.add (Current, "clear_all", encoded_name)
+
+			buffer.generate_function_signature ("void", encoded_name, True,
+				byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
+
+			buffer.generate_block_open
+				-- We zeroed the memory used by the SPECIAL instance.
+			buffer.put_new_line
+			buffer.put_string ("memset (Current, 0, (HEADER(Current)->ov_size & B_SIZE) - LNGPAD_2);")
 			buffer.generate_block_close
 				-- Separation for formatting
 			buffer.put_new_line

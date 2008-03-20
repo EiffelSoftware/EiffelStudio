@@ -143,7 +143,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_incompatible_project (a_msg: STRING) is
+	report_incompatible_project (a_msg: STRING_GENERAL) is
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		local

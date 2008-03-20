@@ -13,4 +13,17 @@ feature
 			create Result
 		end
 
+
+	new_list: ARRAYED_LIST [like new_tuple] is
+		do
+			create stack.make (10)
+			Result := stack.item
+		end
+
+	new_tuple: TUPLE [INTEGER, INTEGER] is
+		do
+		end
+
+	stack: ARRAYED_LIST [like new_list]
+
 end

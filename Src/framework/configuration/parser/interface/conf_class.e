@@ -174,7 +174,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	overriden_by: like class_type
 			-- The class that overrides this class.
 
-	overrides: ARRAYED_LIST [like class_type]
+	overrides: ARRAYED_LIST [CONF_CLASS]
 			-- The classes that this class overrides.
 
 feature -- Status report

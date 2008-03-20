@@ -13,6 +13,8 @@ deferred class
 inherit
 	SERVICE_CONTAINER
 
+	SERVICE_PROVIDER
+
 feature {NONE} -- Initialization
 
 	make is

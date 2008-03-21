@@ -86,7 +86,6 @@ feature -- Register and code generation
 
 			Context.change_class_type_context (context_class_type, context_cl_type, written_class_type, written_cl_type)
 			Context.set_inlined_current_register (current_reg)
-
 		end;
 
 	register_name: STRING is

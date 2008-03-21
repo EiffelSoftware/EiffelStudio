@@ -2048,6 +2048,17 @@ feature -- Inlining
 					i := i + 1
 				end
 			end
+			if arguments /= Void then
+				from
+					i := arguments.lower
+					nb := arguments.upper
+				until
+					i > nb
+				loop
+					arguments.put (real_type (arguments.item (i)), i)
+					i := i + 1
+				end
+			end
 			if compound /= Void then
 				compound := compound.pre_inlined_code
 			end

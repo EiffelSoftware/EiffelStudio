@@ -15,12 +15,11 @@ inherit
 			has_expanded, internal_is_valid_for_class, convert_to, description,
 			is_full_named_type, is_external, is_enum, is_conformant_to,
 			hash_code, sk_value, is_optimized_as_frozen, generated_id,
-			generate_cecil_value, element_type, generate_expanded_creation,
-			generate_expanded_initialization, adapted_in,
+			generate_cecil_value, element_type, adapted_in,
 			il_type_name, generate_gen_type_il, is_generated_as_single_type,
 			generic_derivation, associated_class_type, has_associated_class_type,
 			internal_same_generic_derivation_as, internal_generic_derivation,
-			has_associated_class, is_class_valid, instantiated_in
+			has_associated_class, is_class_valid, instantiated_in, deep_actual_type
 		end
 
 	SHARED_IL_CASING
@@ -211,6 +210,13 @@ feature -- Access
 	associated_class_type (context_type: TYPE_A): CLASS_TYPE is
 		do
 			Result := associated_class.types.search_item (context_type, Current)
+		end
+
+	deep_actual_type: like Current is
+			-- <Precursor>
+			--| Redefined for getting a more precise type.
+		do
+			Result := Current
 		end
 
 	sk_value (a_context_type: TYPE_A): INTEGER is
@@ -533,18 +539,6 @@ feature -- C code generation
 			end
 			buffer.put_three_character (' ', '+', ' ')
 			buffer.put_type_id (type_id (a_context_type))
-		end
-
-	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: CLASS_TYPE) is
-			-- Generate object associated to current and initializes it.
-		do
-			associated_class_type (a_context_type.type).generate_expanded_creation (buffer, target_name, Current, a_context_type)
-		end
-
-	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: TYPE_A) is
-			-- Generate creation of expanded object associated to Current.
-		do
-			associated_class_type (a_context_type).generate_expanded_initialization (buffer, target_name, target_name, True)
 		end
 
 feature {TYPE_A} -- Helpers

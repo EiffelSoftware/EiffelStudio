@@ -17,7 +17,6 @@ inherit
 			same_as, ext_append_to,
 			is_equivalent, process,
 			generate_cid, generate_cid_array, generate_cid_init,
-			generate_expanded_creation, generate_expanded_initialization,
 			make_gen_type_byte_code, associated_class_type, has_associated_class_type,
 			metamorphose, is_external, reference_type
 		end
@@ -152,20 +151,6 @@ feature -- Generic conformance
 		end
 
 feature -- C code generation
-
-	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: CLASS_TYPE) is
-			-- Generate object associated to current.
-		do
-			buffer.put_string (target_name)
-			buffer.put_three_character (' ', '=', ' ')
-			c_type.generate_default_value (buffer)
-			buffer.put_two_character (';', '%N')
-		end
-
-	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: TYPE_A) is
-			-- Generate creation of expanded object associated to Current.
-		do
-		end
 
 	metamorphose (reg, value: REGISTRABLE; buffer: GENERATION_BUFFER) is
 			-- Generate the metamorphism from simple type to reference and

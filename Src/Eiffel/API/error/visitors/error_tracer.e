@@ -189,9 +189,9 @@ feature -- Processing
 				text_formatter.add (a_value.warning_message)
 			elseif type = context then
 				if {l_class2: !CLASS_C} a_value.associated_class then
-					text_formatter.add_group (l_class2.group, l_class2.group.name)
-					text_formatter.add (".")
-					text_formatter.add_class (l_class2.lace_class)
+					if {l_formatter: !TEXT_FORMATTER} text_formatter then
+						print_context_class (text_formatter, l_class2)
+					end
 				else
 					trace_primary_context (text_formatter, a_value)
 				end

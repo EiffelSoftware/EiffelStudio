@@ -129,6 +129,14 @@ feature
 				-- First, standard analysis of the call
 			Precursor {FEATURE_BL} (reg)
 
+			local_regs := get_inlined_registers (byte_code.locals)
+			argument_regs := get_inlined_param_registers (byte_code.arguments)
+
+			r_type := result_type
+			if not r_type.is_void then
+				result_reg := get_inline_register (r_type)
+			end
+
 			reg_type := reg.c_type
 
 				-- Instantiation of the result type (used by INLINED_RESULT_B)
@@ -182,14 +190,6 @@ feature
 
 			Context.set_inlined_current_register (current_reg)
 
-			local_regs := get_inlined_registers (byte_code.locals)
-			argument_regs := get_inlined_param_registers (byte_code.arguments)
-
-			r_type := result_type
-			if not r_type.is_void then
-				result_reg := get_inline_register (r_type)
-			end
-
 			if compound /= Void then
 				compound.analyze
 			end
@@ -216,7 +216,9 @@ feature
 	argument_type (pos: INTEGER): TYPE_A is
 			-- Type of the argument at position `pos'
 		do
-			Result := real_type (byte_code.arguments.item (pos))
+				-- No need to call `real_type' here, it was already done when `byte_code' was
+				-- processed by `pre_inlined_code'.
+			Result := byte_code.arguments.item (pos)
 		end
 
 feature -- Generation
@@ -423,7 +425,7 @@ feature {NONE} -- Registers
 			i ,count: INTEGER
 			is_param_temporary_reg: BOOLEAN
 			local_reg: REGISTRABLE
-			p: PARAMETER_B
+			l_param: PARAMETER_B
 			expr: EXPR_B
 			nest, msg: NESTED_B
 			void_reg: VOID_REGISTER
@@ -441,9 +443,10 @@ feature {NONE} -- Registers
 				until
 					i > count
 				loop
-					is_param_temporary_reg := false;
+					is_param_temporary_reg := False;
 
-					expr := parameters.item;
+					l_param := parameters.item
+					expr := l_param
 
 						-- First, let's check if we have a local (LOCAL_BL):
 					if expr.is_temporary or expr.is_predefined then
@@ -452,34 +455,30 @@ feature {NONE} -- Registers
 					else
 						local_reg := expr.register;
 						if local_reg = Void then
-								-- Let's check if we have a parameter (PARAMETER_BL):
-							p ?= expr;
-							if p /= Void then
-									-- We have a parameter.
-								expr := p.expression;
-									-- If the rest fails, at least local_reg will be this,
-									-- which includes the ATTRIBUTE_BL case.
-								local_reg := expr.register;
-									-- Do we have a local (LOCAL_BL)?
-								if expr.is_temporary or expr.is_predefined then
-									local_reg := expr;
-									is_param_temporary_reg := True
-								else
-										-- We might have a nested call: `a.b.c.d'. The
-										-- register we're looking for is d's, but we have to
-										-- traverse the nested calls first:
-									nest ?= expr;
-									if nest /= Void then
-										from
-											msg := nest;
-										until
-											msg = Void
-										loop
-											nest := msg;
-											msg ?= msg.message
-										end;
-										local_reg := nest.register
-									end
+								-- We have a parameter.
+							expr := l_param.expression;
+								-- If the rest fails, at least local_reg will be this,
+								-- which includes the ATTRIBUTE_BL case.
+							local_reg := expr.register;
+								-- Do we have a local (LOCAL_BL)?
+							if expr.is_temporary or expr.is_predefined then
+								local_reg := expr;
+								is_param_temporary_reg := True
+							else
+									-- We might have a nested call: `a.b.c.d'. The
+									-- register we're looking for is d's, but we have to
+									-- traverse the nested calls first:
+								nest ?= expr;
+								if nest /= Void then
+									from
+										msg := nest;
+									until
+										msg = Void
+									loop
+										nest := msg;
+										msg ?= msg.message
+									end;
+									local_reg := nest.register
 								end
 							end
 						end
@@ -495,11 +494,11 @@ feature {NONE} -- Registers
 						end
 					end;
 
-					if is_param_temporary_reg and p /= Void then
+					if is_param_temporary_reg then
 							-- We only forbid inlining if basic types are not matching,
 							-- to force a C cast to be performed.
 						is_param_temporary_reg := not expr.type.is_basic or else
-							expr.type.same_as (p.attachment_type)
+							expr.type.same_as (l_param.attachment_type)
 					end
 
 					temporary_parameters.put (is_param_temporary_reg, i);
@@ -507,7 +506,7 @@ feature {NONE} -- Registers
 					if is_param_temporary_reg then
 						Result.put (local_reg, i)
 					else
-						Result.put (get_inline_register(real_type (a.item (i))), i)
+						Result.put (get_inline_register(a.item (i)), i)
 					end;
 
 					i := i + 1;
@@ -571,6 +570,7 @@ feature {NONE} -- Registers
 			if a_type.is_true_expanded then
 				l_class_type := a_type.associated_class_type (context.context_class_type.type)
 				l_class_type.generate_expanded_creation (buf, reg.register_name, a_type, context.context_class_type)
+				l_class_type.generate_expanded_initialization (buf, reg.register_name, reg.register_name, True)
 			end
 		end
 

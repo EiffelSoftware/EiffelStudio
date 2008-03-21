@@ -353,8 +353,7 @@ feature -- Inlining
 			l_body_index: INTEGER
 			entry: ROUT_ENTRY
 			f: FEATURE_I
-			context_class_type: CLASS_TYPE
-			written_class_type: CLASS_TYPE
+			context_class_type, written_class_type: CLASS_TYPE
 		do
 			if not is_once then
 				type_i := context_type
@@ -376,8 +375,9 @@ feature -- Inlining
 			end
 
 			if inline then
-					-- Ensure the feature is not redeclared into attribute or external routine
+					-- Get information on the routine being inlined.
 				f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
+					-- Ensure the feature is not redeclared into attribute or external routine
 				if f.is_attribute or else f.is_external then
 						-- Create new byte node and process it instead of the current one
 					Result := byte_node (f).inlined_byte_code
@@ -390,26 +390,87 @@ feature -- Inlining
 						-- For example, inlining SPECIAL [G#2] from HASH_TABLE [G#1, G#2] when
 						-- the class is generated for HASH_TABLE [G#1, INTEGER] should yield
 						-- SPECIAL [INTEGER].
-					cl_type := cl_type.instantiated_in (context.context_cl_type)
+						-- We also use `deep_actual_type' to get rid of the anchors since we do
+						-- not care about them and actually they can cause trouble (see eweasel
+						-- test#final047).
+					cl_type := cl_type.instantiated_in (context.context_cl_type).deep_actual_type
 
-						-- When the code being inlined actually is actually from a descedant class,
-						-- we need to find the type which corresponds to `cl_type'. This is the case
-						-- of {LINEAR}.is_empty which only has an implementation in {SEQUENCE} coming
-						-- from {FINITE}.
-					if cl_type.class_id /= entry.class_id then
-							-- If it is different, then `entry' is defined in a descendant class of `cl_type'.
-						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
-					end
-					context_class_type := cl_type.associated_class_type (context.context_cl_type)
-					written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
+						-- When the feature being inlined is implemented in a descendant or ancestor
+						-- class of `cl_type' then we can perform inlining by providing two different
+						-- contests (the target type/ the written type).
+						-- If it is not the case, we have to do inlining differently (see the `else'
+						-- part of the following if statement to see the explanation why doing
+						-- it the same would yield a wrong result) by not really inlining, but
+						-- by generating the code from the context in which it is defined.
+					if
+						cl_type.associated_class.simple_conform_to (f.written_class) or
+						f.written_class.simple_conform_to (cl_type.associated_class)
+					then
+						if cl_type.class_id /= entry.class_id then
+								-- If it is different, then `entry' is defined in a descendant class
+								-- of `cl_type'.
+							cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
+						else
+							cl_type := cl_type
+						end
+							-- We should now have conformance the other way around or the same class.
+						check cl_type.associated_class.simple_conform_to (f.written_class) end
 
-					if cl_type.class_id = f.written_in then
-						written_cl_type := cl_type
-					elseif cl_type.associated_class.simple_conform_to (f.written_class) then
-						written_cl_type := cl_type.find_class_type (f.written_class)
+							-- Get the CLASS_TYPE from `cl_type'.
+						context_class_type := cl_type.associated_class_type (context.context_cl_type)
+							-- Get the CLASS_TYPE for the class defining `f'.
+						written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
+
+							-- Get the actual type for code generation.
+							-- Below, optimization if `f' is written in `cl_type'.
+						if cl_type.class_id = f.written_in then
+							written_cl_type := cl_type
+						else
+							written_cl_type := cl_type.find_class_type (f.written_class)
+						end
 					else
-						check not_possible: False end
+							-- We are going to perform the inlining as if we were generating the class in
+							-- which `f' is defined. To be clear, here is a sample:
+							-- class A [G] feature f is do g end g deferred end end
+							-- class B [H] feature g is do end end
+							-- class C [G] inherit A [G] B [X] end
+							-- class X end
+							-- So when generating the code for A.f, we inline g, but we do it as if the code
+							-- in A.f was:
+							-- f is do
+							-- 	local
+							--		b: B [X]
+							--	do
+							--		b ?= Current -- Assignment cannot fail.
+							--		b.g
+							-- end
+							-- The
+							--
+
+							-- It is clear that in that case the implemented version of `f' cannot be in
+							-- `cl_type', otherwise we would go via the `then' part of the current
+							-- if then else.
+						check cl_type.class_id /= entry.class_id end
+							-- Using the example above, we get `C [G]'
+						cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
+							-- `f' cannot be implemented in the descendant version for which the first
+							-- implementation of `f' appears, otherwise we would go via the `then' part
+							-- of the current if then else.
+						check cl_type.class_id /= f.written_in end
+							-- Get the CLASS_TYPE corresponding to `C [G#1]'.
+						context_class_type := cl_type.associated_class_type (context.context_cl_type)
+							-- Get the CLASS_TYPE where `g' is coming from, that is to say `B [G#1]'.
+						written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
+							-- The actual type during code generation, i.e. B [X].
+						check cl_type.associated_class.simple_conform_to (f.written_class) end
+						written_cl_type := cl_type.find_class_type (f.written_class)
+
+							-- Here we are going to do the inlining, but we are going to use written_cl_type
+							-- all the time.
+						context_class_type := written_class_type
+						cl_type := written_cl_type
 					end
+
 						-- Create inlined byte node.
 					if cl_type.associated_class.is_special then
 						create {SPECIAL_INLINED_FEAT_B} inlined_feat_b

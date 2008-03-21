@@ -14,6 +14,7 @@ inherit
 			same_as
 		redefine
 			actual_type,
+			deep_actual_type,
 			conformance_type,
 			convert_to,
 			has_associated_class,
@@ -55,6 +56,12 @@ feature -- Properties
 
 	actual_type: TYPE_A
 			-- Actual type of the anchored type in a given class
+
+	deep_actual_type: TYPE_A is
+			-- <Precursor>
+		do
+			Result := actual_type.deep_actual_type
+		end
 
 	conformance_type: TYPE_A is
 			-- Type which is used to check conformance

@@ -166,27 +166,6 @@ feature -- C code generation
 			c_type.generate_sk_value (buffer)
 		end
 
-	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: CLASS_TYPE) is
-			-- Generate object associated to current and initializes it.
-		require
-			buffer_not_void: buffer /= Void
-			target_name_not_void: target_name /= Void
-			a_context_type_not_void: a_context_type /= Void
-		do
-		end
-
-	generate_expanded_initialization (buffer: GENERATION_BUFFER; target_name: STRING; a_context_type: TYPE_A) is
-			-- Initializes object associated to current.
-		require
-			buffer_not_void: buffer /= Void
-			target_name_not_void: target_name /= Void
-			target_name_not_empty: not target_name.is_empty
-			a_context_type_not_void: a_context_type /= Void
-			context_type_valid: is_valid_context_type (a_context_type)
-			has_associated_class_type: has_associated_class_type (a_context_type)
-		do
-		end
-
 feature -- IL code generation
 
 	element_type: INTEGER_8 is
@@ -268,6 +247,7 @@ feature -- IL code generation
 		require
 			a_context_class_not_void: a_context_class /= Void
 			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 		do
 		end
 
@@ -1009,7 +989,10 @@ feature -- Access
 			-- Update `last_conversion_info' of AST_CONTEXT.
 		require
 			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			a_target_type_not_void: a_target_type /= Void
+			a_target_type_valid: a_target_type.is_valid
 		do
 			Result := False
 			context.set_last_conversion_info (Void)
@@ -1144,6 +1127,8 @@ feature -- Access
 			-- Check validity of `labels' of current in `a_context_class'.
 		require
 			a_context_class_not_void: a_context_class /= Void
+			a_context_class_valid: a_context_class.is_valid
+			a_context_valid_for_current: is_valid_for_class (a_context_class)
 		do
 		end
 

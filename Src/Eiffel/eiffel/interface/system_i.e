@@ -3515,6 +3515,8 @@ feature {NONE} -- Finalization implementation
 			deg_output.put_start_degree (-3, j)
 			class_array := classes
 			nb := class_counter.count
+-- Comment out the line below to quickly debug generation bug in finalized mode:
+--			universe.class_named ("TEST", root_class.group).compiled_class.pass4
 			from
 				i := 1
 			until

@@ -811,10 +811,16 @@ feature -- Registers
 	Current_register: REGISTRABLE is
 			-- An instance of Current register for local var index computation
 		do
-			Result := inlined_current_register
-			if Result = Void then
+			if inlined_current_register /= Void then
+				Result := inlined_current_b
+			else
 				Result := Current_b
 			end
+		end
+
+	inlined_current_b: INLINED_CURRENT_B
+		once
+			create Result
 		end
 
 	Current_b: CURRENT_BL is
@@ -1075,8 +1081,8 @@ feature -- Access
 		require
 			type_not_void: type /= Void
 			context_type_not_void: a_context_type /= Void
+			context_type_generics: type.is_formal implies a_context_type.generics /= Void
 		local
-			context_type_i: CL_TYPE_A
 			formal: FORMAL_A
 			formal_position: INTEGER
 		do
@@ -1088,18 +1094,15 @@ feature -- Access
 			until
 				not Result.is_formal or Result.is_multi_constrained
 			loop
-				context_type_i := a_context_type
 				formal ?= Result
-				check
-					context_type_i.generics /= Void
-				end
+				check formal_not_void: formal /= Void end
 				formal_position := formal.position
-				Result := context_type_i.generics.item (formal_position)
+				Result := a_context_type.generics.item (formal_position)
 				if Result.is_formal then
 					if formal.is_multi_constrained (a_context_type.associated_class) then
 						create {MULTI_FORMAL_A} Result.make (True, formal.is_expanded, formal.position)
 					else
-						Result := context_type_i.associated_class.constrained_type (formal_position)
+						Result := a_context_type.associated_class.constrained_type (formal_position)
 					end
 				end
 			end

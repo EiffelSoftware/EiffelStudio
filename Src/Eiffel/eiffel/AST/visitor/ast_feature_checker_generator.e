@@ -1881,21 +1881,15 @@ feature -- Implementation
 						end
 					end
 					if not l_has_error then
-							-- We could keep `l_gen_type' for `l_array_type', but unfortunately it
-							-- causes the eweasel test `term131' to fail because if it contains an
-							-- anchor then it is not marked as used for dead code removal (because
-							-- anchor appears in signature and signatures are not solved for dependances
-							-- at degree 4) and we would crash while generating the table at the very
-							-- end of finalization.
-							-- For now we use `l_type_a.deep_actual_type' (which removes any usage of
-							-- the anchor) to solve the problem.
-						create l_generics.make (1, 1)
-						l_generics.put (l_type_a.deep_actual_type, 1)
 						if is_checking_cas then
+								-- Create a .NET array
 							check l_gen_type.class_id = system.native_array_id end
+							create l_generics.make (1, 1)
+							l_generics.put (l_type_a, 1)
 							create {NATIVE_ARRAY_TYPE_A} l_array_type.make (system.native_array_id, l_generics)
 						else
-							create l_array_type.make (system.array_id, l_generics)
+								-- We can reuse the target type for the ARRAY type.
+							l_array_type := l_gen_type
 						end
 						if not l_array_type.is_attached then
 								-- Type of a manifest array is always attached
@@ -5116,6 +5110,7 @@ feature -- Implementation
 				end
 			else
 				if l_generic_type /= Void  then
+					l_generic_type.reset_constraint_error_list
 					l_generic_type.check_constraints (l_context_current_class , context.current_feature, True)
 					l_generic_type.generate_error_from_creation_constraint_list (l_context_current_class , context.current_feature, a_location)
 				end
@@ -8226,7 +8221,6 @@ feature {NONE} -- Implementation
 			l_class_id := -1
 			if l_type_a.is_formal then
 				cl := context.current_class
---				cl := last_type.associated_class
 				l_formal ?= l_type_a
 				if l_formal.is_multi_constrained (cl) then
 					--	l_class_id := -1

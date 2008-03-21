@@ -785,7 +785,7 @@ feature -- Directories (top-level user)
 				end
 
 				if is_workbench then
-					if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
+					if {PLATFORM}.is_windows then
 						l_dir.append (" (workbench)")
 					else
 						l_dir.append (wkbench_suffix)
@@ -794,6 +794,13 @@ feature -- Directories (top-level user)
 				check not_l_dir_is_empty: not l_dir.is_empty end
 				Result.extend (l_dir)
 			else
+				if is_workbench then
+					if {PLATFORM}.is_windows then
+						l_user_files.append (" (workbench)")
+					else
+						l_user_files.append (wkbench_suffix)
+					end
+				end
 				create Result.make_from_string (l_user_files)
 			end
 		ensure

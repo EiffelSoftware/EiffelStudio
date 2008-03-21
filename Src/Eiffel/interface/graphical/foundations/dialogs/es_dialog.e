@@ -739,7 +739,13 @@ feature {NONE} -- Basic operation
 			from l_buttons.start until l_buttons.after loop
 				l_button := l_buttons.item
 				check l_button_attached: l_button /= Void end
-				l_min_width := l_min_width.max (l_button.font.string_width (l_button.text) + l_padding)
+				if l_button.pixmap = Void then
+					l_min_width := l_min_width.max (l_button.font.string_width (l_button.text) + l_padding)
+				else
+						-- Account for icon width, plus extra for style
+					l_min_width := l_min_width.max (l_button.font.string_width (l_button.text) + l_padding + l_button.pixmap.width + 10)
+				end
+
 				l_buttons.forth
 			end
 

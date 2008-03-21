@@ -190,7 +190,7 @@ feature -- Processing
 			elseif type = context then
 				if {l_class2: !CLASS_C} a_value.associated_class then
 					if {l_formatter: !TEXT_FORMATTER} text_formatter then
-						print_context_class (text_formatter, l_class2)
+						print_context_class (l_formatter, l_class2)
 					end
 				else
 					trace_primary_context (text_formatter, a_value)

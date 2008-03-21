@@ -1368,7 +1368,7 @@ feature -- Status setting
 			l_file: RAW_FILE
 			l_fn: STRING_8
 		do
-			l_fn := eiffel_layout.user_docking_standard_file_name.string
+			l_fn := eiffel_layout.user_docking_debug_file_name.string
 			create l_file.make (l_fn)
 			if l_file.exists then
 				l_result := debugging_window.docking_manager.open_tools_config (l_fn)

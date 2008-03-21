@@ -41,7 +41,7 @@ feature {NONE} -- Initlization
 	init_existing_layouts_imp (a_dir: !DIRECTORY_NAME; a_from_normal_mode: BOOLEAN) is
 			-- Used by `init_eixisting_layouts'.
 		require
-			not_void: a_dir /= Void and then not a_dir.is_empty
+			dir_not_empty: not a_dir.is_empty
 		local
 			l_dir: DIRECTORY
 			l_files: ARRAYED_LIST [STRING]

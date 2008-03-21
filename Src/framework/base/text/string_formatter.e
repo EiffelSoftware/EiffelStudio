@@ -16,7 +16,7 @@ inherit
 
 feature -- Formatting
 
-	format (a_str: STRING; a_args: TUPLE): STRING is
+	format (a_str: STRING_GENERAL; a_args: TUPLE): !STRING
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
 			-- and object's value at `a_args' @ i.
 			--
@@ -37,18 +37,49 @@ feature -- Formatting
 			not_a_str_is_empty: not a_str.is_empty
 			a_args_not_void: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
+		do
+			Result ?= format_unicode (a_str, a_args).as_string_8
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	format_unicode (a_str: STRING_GENERAL; a_args: TUPLE): !STRING_32 is
+			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
+			-- and object's value at `a_args' @ i.
+			--
+			-- Example:
+			--     format ("Hello there {1}", ["Mr. Dobbs"])
+			-- Yields:
+			--     Hello there Mr. Dobbs.
+			--
+			-- The '{' '}' are defined by `open_char' and `close_char' respectivly. To escape open and close
+			-- parameters qualifiers simply double them up.
+			--
+			-- Example:
+			--     format ("He}}llo there {{", ["Mr. Dobbs"])
+			-- Yields:
+			--     He}llo there {
+		require
+			a_str_attached: a_str /= Void
+			not_a_str_is_empty: not a_str.is_empty
+			a_args_not_void: a_args /= Void
+			not_a_args_is_empty: not a_args.is_empty
 		local
+			l_str: STRING_32
 			l_count: INTEGER
 			l_arg_count: INTEGER
 			l_match: BOOLEAN
 			l_skip: BOOLEAN
-			l_digit: STRING
+			l_digit: STRING_32
 			l_index: INTEGER
+			l_exception: STRING_FORMAT_EXCEPTION
 			i: INTEGER
-			c, n: CHARACTER
-			o, cl: CHARACTER
+			c, n: CHARACTER_32
+			o, cl: CHARACTER_32
 		do
-			l_count := a_str.count
+			l_str := a_str.as_string_32
+			l_count := l_str.count
 			l_arg_count := a_args.count
 			o := open_char
 			cl := close_char
@@ -61,9 +92,9 @@ feature -- Formatting
 			until
 				i > l_count
 			loop
-				c := a_str @ i
+				c := l_str @ i
 				if i < l_count then
-					n := a_str @ (i + 1)
+					n := l_str @ (i + 1)
 				end
 				if c = o then
 					if i < l_count then
@@ -91,10 +122,15 @@ feature -- Formatting
 									Result.append ((a_args @ l_index).out)
 								end
 							else
-								raise ("Invalid format index '" + l_index.out + "'")
+								create l_exception
+								l_exception.set_message ("No value specified for given index.")
 							end
 						else
-							raise ("NaN '" + l_digit + "'")
+							create l_exception
+							l_exception.set_message ("NaN index.")
+						end
+						if l_exception /= Void then
+							l_exception.raise
 						end
 						l_digit.wipe_out
 					end
@@ -106,18 +142,37 @@ feature -- Formatting
 				i := i + 1
 			end
 		ensure
-			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	ellipse (a_str: STRING; a_max_len: INTEGER): STRING is
+	ellipse (a_str: STRING; a_max_len: INTEGER): !STRING
 			-- If `a_str' is bigger than `ellipse_threshold'
 		require
 			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
 			a_max_len_big_enough: a_max_len > 3
 		do
+			create Result.make_from_string (a_str.as_string_8)
 			Result := a_str.twin
+			if Result.count > a_max_len then
+				Result.keep_head (a_max_len - 3)
+				Result.append (once "...")
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_ellipsed: Result.count <= a_max_len
+			result_not_is_a_str: Result /= a_str
+		end
+
+	ellipse_unicode (a_str: STRING_GENERAL; a_max_len: INTEGER): !STRING_32
+			-- If `a_str' is bigger than `ellipse_threshold'
+		require
+			a_str_attached: a_str /= Void
+			not_a_str_is_empty: not a_str.is_empty
+			a_max_len_big_enough: a_max_len > 3
+		do
+			create Result.make_from_string (a_str.as_string_32)
 			if Result.count > a_max_len then
 				Result.keep_head (a_max_len - 3)
 				Result.append (once "...")

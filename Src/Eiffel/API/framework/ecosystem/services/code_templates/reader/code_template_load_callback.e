@@ -94,7 +94,7 @@ feature -- Formatting
 			l_stop: BOOLEAN
 			l_result: ?STRING_32
 			l_start, l_end: INTEGER
-			l_count, i: INTEGER
+			l_count: INTEGER
 		do
 			l_count := a_template.count
 

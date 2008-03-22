@@ -3,6 +3,11 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2
 ===
 
+6.2.7.2838 RTEA with some new code optimization (exec size: 48059536):
+624.00u 36.78s 19:09.65 57.4% (with ecb compiler)
+1061.11u 39.68s 28:30.24 64.3%
+1065.37u 36.65s 29:08.12 63.0%
+
 6.2.7.2702 RTEA with Dead Code Removal optimization (exe size: 48782664):
 607.88u 33.02s 18:14.30 58.5% (with ecb compiler)
 1008.73u 38.91s 24:44.48 70.5%

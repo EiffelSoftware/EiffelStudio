@@ -17,6 +17,8 @@ feature
 	new_list: ARRAYED_LIST [like new_tuple] is
 		do
 			create stack.make (10)
+			stack.extend (Void)
+			stack.start
 			Result := stack.item
 		end
 

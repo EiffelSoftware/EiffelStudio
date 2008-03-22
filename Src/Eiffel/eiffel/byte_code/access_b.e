@@ -400,11 +400,6 @@ feature -- Conveniences
 			Result := parent.message.canonical = Current
 		end
 
-	is_attribute: BOOLEAN is
-			-- Is Current an access to an attribute ?
-		do
-		end
-
 	is_feature: BOOLEAN is
 			-- Is Current an access to an Eiffel feature ?
 		do

@@ -98,6 +98,8 @@ end
 			tmp_register: REGISTER
 			access_b: ACCESS_B
 			basic_i: BASIC_A
+			l_optimizable: BOOLEAN
+			l_nested: NESTED_B
 		do
 debug
 io.error.put_string ("In feature_bl [analyze_on]: ")
@@ -121,11 +123,34 @@ end
 			if parameters /= Void then
 				-- If we have only one parameter and it is a single access to
 				-- an attribute, then expand it in-line.
-				if parameters.count = 1 then
-					access_b ?= parameters.first
-					if access_b /= Void and then access_b.is_attribute then
+				from
+					l_optimizable := True
+					parameters.start
+				until
+					parameters.after
+				loop
+					access_b ?= parameters.item.expression
+					if access_b = Void or else not access_b.is_attribute then
+						l_nested ?= parameters.item.expression
+						if
+							l_nested = Void or else
+							(not (l_nested.target.is_predefined or l_nested.target.is_attribute) or not l_nested.message.is_attribute)
+						then
+							l_optimizable := False
+							parameters.finish
+						end
+					end
+					parameters.forth
+				end
+				if l_optimizable then
+					from
+						parameters.start
+					until
+						parameters.after
+					loop
 						context.init_propagation
-						access_b.propagate (No_register)
+						parameters.item.propagate (No_register)
+						parameters.forth
 					end
 				end
 				parameters.analyze

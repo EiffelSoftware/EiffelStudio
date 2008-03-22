@@ -1,7 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-deferred class CALL_B 
+deferred class CALL_B
 
 inherit
 
@@ -33,6 +33,11 @@ feature
 		do
 			parent := p;
 		end;
+
+	is_attribute: BOOLEAN is
+			-- Is Current an access to an attribute ?
+		do
+		end
 
 	is_simple_expr: BOOLEAN is
 			-- A call/access is a simple expression

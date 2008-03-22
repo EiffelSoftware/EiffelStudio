@@ -11,7 +11,8 @@ feature
 		do
 			create {TEST2} l_test2
 			l_test2.go_i_th (create {TEST4})
-			l_test2.new_list.do_nothing
+			if l_test2.new_list /= Void then
+			end
 		end
 
 end

@@ -817,40 +817,40 @@ test	finalize-skip-rescue-clause	final011  tcf pass finalizing
 test	finalize-cast-func-result	final012  tcf pass finalizing
 test	finalize-array-opt-expanded	final013  tcf pass finalizing
 test	finalize-redef-external-macro	final014  tcf pass finalizing
-test	finalize-inline-precursor	final015  tcf pass finalizing
+test	finalize-inline-precursor	final015  tcf pass finalizing inlining
 test	finalize-array-opt-2		final016  tcf pass finalizing
 test	finalize-delayed-deferred-call	final017  tcf pass finalizing
-test	finalize-inline-none-proc	final018  tcf pass finalizing
-test	inline-generic-assign-attempt	final019  tcf pass finalizing
+test	finalize-inline-none-proc	final018  tcf pass finalizing inlining
+test	inline-generic-assign-attempt	final019  tcf pass finalizing inlining
 test	finalize-or-else-true		final020  tcf pass execution
 test	finalize-mult-double-constant	final021  tcf pass execution
 test	expanded-generic-return-type	final022  tcf pass execution
 test	bigger-array-of-bit		final023  tcf pass execution
 test	finalize-skip-invariant		final024  tcf fail finalizing
-test	inline-pass-expanded		final025  tcf pass finalizing
-test	c-inline-function-ten-args	final026  tcf pass finalizing
-test	inline-linked-list-expanded	final027  tcf pass finalizing
+test	inline-pass-expanded		final025  tcf pass finalizing inlining
+test	c-inline-function-ten-args	final026  tcf pass finalizing inlining
+test	inline-linked-list-expanded	final027  tcf pass finalizing inlining
 test	vicious-finalize-bug		final028  tcf pass finalizing
-test	inline-arrayed-list-expanded	final029  tcf pass finalizing
-test	inline-void-argument		final030  tcf pass finalizing
+test	inline-arrayed-list-expanded	final029  tcf pass finalizing inlining
+test	inline-void-argument		final030  tcf pass finalizing inlining
 test	precursor-call-current-instead-of-precursor	final031  tcf pass finalizing
 test	finalize-manifest-type-expr	final032  tcf pass finalizing
-test	inline-once-string	final033  tcf pass finalizing
-test	inline-deferred-routine-with-only-one-implementation	final034  tcf pass finalizing
+test	inline-once-string	final033  tcf pass finalizing inlining
+test	inline-deferred-routine-with-only-one-implementation	final034  tcf pass finalizing inlining
 test	dynamic-deferred-routine-implemented-in-generic	final035  tcf pass finalizing
-test	inline-deferred-routine-with-one-external-implementation	final036  tcf pass finalizing
-test	inline-deferred-routine-with-constants-implementations	final037  tcf pass finalizing
+test	inline-deferred-routine-with-one-external-implementation	final036  tcf pass finalizing inlining
+test	inline-deferred-routine-with-constants-implementations	final037  tcf pass finalizing inlining
 test	agent_to_feature_of_generic_class final038 tcf pass finalizing
 test	wrong-attribute-dynamic-binding	final039 tcf pass finalizing
 test	dead-code-catcall			final040 tcf pass finalizing
 test	oms-ec-precondition-violation	final041 tcf pass finalizing ec_precondition
-test	inlining-finalization-crash	final042 tcf pass finalizing
-test	inlining-on-named-tuple-crash	final043 tcf pass finalizing tuple
+test	inlining-finalization-crash	final042 tcf pass finalizing inlining
+test	inlining-on-named-tuple-crash	final043 tcf pass finalizing tuple inlining
 test	wrong-dynamic-dispatch-on-generic	final044 tcf pass finalizing
 test	change-generic-finalization-crash	final045 tcf pass finalizing
 test	polymorphic-call-leak		final046 tcf fail finalizing
-test	inlining-with-anchor		final047 tcf pass finalizing
-test	inlining-deferred-from-other-branch	final048 tcf pass finalizing
+test	inlining-with-anchor		final047 tcf pass finalizing inlining
+test	inlining-deferred-from-other-branch	final048 tcf pass finalizing inlining
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime
@@ -912,7 +912,7 @@ test	auto-resize-exp-arrayed-list	exec044  tcf pass execution
 test	reference-to-sub-object		exec045  tcf pass execution
 if not DOTNET test	class-invariant-fail-panic	exec046  tcf pass execution
 test	clearer-ref-to-sub-object	exec047  tcf fail execution
-test	inline-external-root-proc	exec048  tcf pass execution
+test	inline-external-root-proc	exec048  tcf pass execution inlining
 test	wrong-alt-precondition-order	exec049  tcf fail execution
 test	join-effect-precond-skipped	exec050  tcf fail execution
 test	attribute-postcondition-lost	exec051  tcf fail execution
@@ -1212,25 +1212,25 @@ test	many-long-bit-constants		term061  tcf pass termination
 test	manifest-array-at-sign		term062  tcf pass termination
 test	non-windows-dll-external	term063  tcf pass termination
 test	external-omit-signature-args	term064  tcf pass termination
-test	finalize-big-inline-size	term065  tcf pass termination
-test	finalize-inline-remove-dead	term067  tcf pass termination
+test	finalize-big-inline-size	term065  tcf pass termination inlining
+test	finalize-inline-remove-dead	term067  tcf pass termination inlining
 test	too-many-signature-arguments	term069  tcf pass termination
 test	very-long-token			term070  tcf pass termination
 test	finalize-prefix-attribute	term071  tcf pass termination
 test	finalize-deferred-feature-call	term072  tcf pass termination
 test	finalize-array-opt-remove-dead	term073  tcf pass termination
-test	finalize-inline-strip-expr	term074  tcf pass termination
+test	finalize-inline-strip-expr	term074  tcf pass termination inlining
 test	assign-creation-expression	term075  tcf pass termination
 test	explicit-bit-creation		term076  tcf pass termination
-test	finalize-inline-array-expanded	term077  tcf pass termination
-test	finalize-inline-small-classes	term078  tcf pass termination
+test	finalize-inline-array-expanded	term077  tcf pass termination inlining
+test	finalize-inline-small-classes	term078  tcf pass termination inlining
 test	simple-explicit-generic-create	term079  tcf pass termination
 test	generic-constrained-by-tuple	term080  tcf pass termination tuple
 test	invariant-creation-expr		term081  tcf pass termination
 test	generic-nonexistent-creator	term082  tcf pass termination
 test	generic-nonexistent-infix	term083  tcf pass termination
 test	finalize-creation-expression	term084  tcf pass termination
-test	finalize-inline-delayed-call	term085  tcf pass termination
+test	finalize-inline-delayed-call	term085  tcf pass termination inlining
 test	invariant-delayed-closed-target	term086  tcf pass termination
 test	generic-creation-no-constraint	term087  tcf pass termination
 test	none-delayed-call		term088  tcf pass termination
@@ -1241,7 +1241,7 @@ test	generic-constrained-by-none	term092  tcf pass termination
 test	generic-constrained-by-self	term093  tcf fail termination
 test	inherit-generic-and-any		term094  tcf pass termination
 test	generic-constrained-by-integer	term095  tcf pass termination
-test	finalize-inline-infix-external	term096  tcf pass termination
+test	finalize-inline-infix-external	term096  tcf pass termination inlining
 test	long-system-name		term098  tcf fail termination
 test	external-c-plus-plus		term100  tcf pass termination
 test	slash-in-cluster-tag		term101  tcf fail termination
@@ -1260,7 +1260,7 @@ test	msil-generation-yes		term113  tcf pass termination
 test	remove-formal-generic		term114  tcf pass termination
 test	change-generic-create		term115  tcf fail termination
 test	change-sysname-and-root		term116  tcf pass termination
-test	inline-numeric-plus-numeric	term117  tcf pass termination
+test	inline-numeric-plus-numeric	term117  tcf pass termination inlining
 test	finalize-many-expanded-attrs	term118  tcf pass termination
 test	remove-constraint-veen-die	term119  tcf fail termination
 test	inspect-big-range		term120  tcf fail termination skip
@@ -1273,7 +1273,7 @@ test	unreachable-visible-generic	term126  tcf pass termination
 test	manifest-array-to-array-conformance term127  tcf fail termination
 test	infinite-loop-expanded-generics	term128  tcf fail termination manual
 test	create-generic-result-any	term129  tcf pass termination
-test	inline-routine-with-formal-conversion	term130 tcf pass termination
+test	inline-routine-with-formal-conversion	term130 tcf pass termination inlining
 test	finalize-manifest-array-with-anchor	term131 tcf pass termination
 test	anchored-generic-like-type	term132 tcf pass termination
 test	dynamic-generic-type	term133 tcf pass termination
@@ -1322,7 +1322,7 @@ test	visible-export-nonexistent-feat	lace022 tcf fail lace
 test	lace-debug-key-subset		lace024 tcf pass lace
 test	visible-cluster-case-sensitive	lace025 tcf pass lace
 test	visible-under-same-name		lace029 tcf fail lace
-test	inlining-size-non-integer	lace030 tcf pass lace
+test	inlining-size-non-integer	lace030 tcf pass lace inlining
 test	lace-system-special-chars	lace031 tcf fail lace
 
 -- C code compilation/linking
@@ -1363,7 +1363,7 @@ test	finalize-precomp-assertion-all	ccomp033 tcf pass c_compilation
 test	finalize-deferred-delayed-call	ccomp034 tcf pass c_compilation
 test	address-of-generic-attribute	ccomp035 tcf pass c_compilation
 test	address-of-default-rescue	ccomp036 tcf pass c_compilation
-test	inline-prefix-call		ccomp037 tcf fail c_compilation
+test	inline-prefix-call		ccomp037 tcf fail c_compilation inlining
 test	finalize-prefix-constant	ccomp038 tcf pass c_compilation
 test	frozen-real-constant		ccomp039 tcf pass c_compilation
 test	c-header-mismatch		ccomp040 tcf pass c_compilation
@@ -1371,19 +1371,19 @@ test	generic-create-double		ccomp041 tcf pass c_compilation
 test	minus-minus-real		ccomp042 tcf pass c_compilation
 test	c-header-mismatch-2		ccomp043 tcf pass c_compilation
 test	finalize-precomp-no-dead	ccomp044 tcf pass c_compilation
-test	finalize-ext-exp-inline-create	ccomp045 tcf pass c_compilation
-test	inline-c-ten-pass-local		ccomp046 tcf pass c_compilation
-test	inline-c-arg-prefix-other	ccomp047 tcf pass c_compilation
+test	finalize-ext-exp-inline-create	ccomp045 tcf pass c_compilation inlining
+test	inline-c-ten-pass-local		ccomp046 tcf pass c_compilation inlining
+test	inline-c-arg-prefix-other	ccomp047 tcf pass c_compilation inlining
 test	pass-void-to-double		ccomp048 tcf pass c_compilation
 test	slash-power-on-formal-bad-code	ccomp049 tcf pass c_compilation
 test	print-pointer-local-address	ccomp050 tcf pass c_compilation
-test	inline-expanded-conversion	ccomp051 tcf pass c_compilation
+test	inline-expanded-conversion	ccomp051 tcf pass c_compilation inlining
 test	create-generic-conform-double	ccomp052 tcf pass c_compilation
 test	long-string-generation		ccomp053 tcf pass c_compilation
-test	inline-incorrect-with-cpp	ccomp054 tcf pass c_compilation
+test	inline-incorrect-with-cpp	ccomp054 tcf pass c_compilation inlining
 test	polymorphic-dollar-agent-incorrect-wrapper	ccomp055 tcf pass c_compilation
 test	bad-macro-wrapping			ccomp056 tcf pass c_compilation
-test	bad-boolean-inline			ccomp057 tcf pass c_compilation
+test	bad-boolean-inline			ccomp057 tcf pass c_compilation inlining
 test	agent-on-constant-attribute ccomp058 tcf pass c_compilation
 test	add-generic-c-compile-failure ccomp059 tcf fail c_compilation
 test	last-reverse-assignment-to-expanded	ccomp060 tcf pass c_compilation expanded
@@ -1714,11 +1714,11 @@ test	concat-manifest-bit-array	fixed123 tcf pass fixed
 test	creation-generic-types-in-onces	fixed124 tcf pass fixed
 test	reference-assign-tuple-fail-gc	fixed125 tcf pass fixed tuple
 test	infix-inherited-assertions	fixed126 tcf pass fixed
-test	inline-special-infix-at		fixed127 tcf pass fixed
+test	inline-special-infix-at		fixed127 tcf pass fixed inlining
 test	synonyms-with-indexing		fixed128 tcf pass fixed
 test	elseif-with-compound		fixed129 tcf pass fixed
 test	attribute-in-inherited-assertion	fixed130 tcf pass fixed
-test	external-inline-boolean	fixed131 tcf pass fixed
+test	external-inline-boolean	fixed131 tcf pass fixed inlining
 test	class-name-in-multiline-string	fixed132 tcf pass fixed
 test	generic-constraint-to-none	fixed133 tcf pass fixed
 

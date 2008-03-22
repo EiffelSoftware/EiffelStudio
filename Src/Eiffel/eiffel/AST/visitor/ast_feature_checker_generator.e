@@ -1891,6 +1891,13 @@ feature -- Implementation
 								-- We can reuse the target type for the ARRAY type.
 							l_array_type := l_gen_type
 						end
+						if is_qualified_call then
+								-- When the manifest array appears in a qualified call, the anchors if any should
+								-- be resolved in the context of the target of the qualified call and not Current
+								-- (See eweasel test#term106 for an example). However the code generation does not
+								-- support that, so we remove the anchors.
+							l_array_type := l_array_type.deep_actual_type
+						end
 						if not l_array_type.is_attached then
 								-- Type of a manifest array is always attached
 							if l_current_class_void_safe then

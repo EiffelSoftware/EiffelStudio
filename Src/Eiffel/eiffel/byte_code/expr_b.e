@@ -232,8 +232,8 @@ feature -- C generation
 		do
 			source_type := context.real_type (type)
 			Result :=
-				target_type.is_reference and then source_type.is_expanded or else
-				target_type.is_true_expanded or else source_type.is_reference
+				(target_type.is_reference and source_type.is_expanded) or
+				(target_type.is_true_expanded or (source_type.is_reference and is_dynamic_clone_required (source_type)))
 		end
 
 	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_A) is
@@ -276,7 +276,7 @@ feature -- C generation
 				buf.put_string ("RTRCL(")
 				print_register
 				buf.put_string (gc_rparan_semi_c)
-			elseif expression_type.is_reference then
+			elseif expression_type.is_reference and is_dynamic_clone_required (expression_type) then
 				buf.put_new_line
 				target_register.print_register
 				buf.put_string (" = ")

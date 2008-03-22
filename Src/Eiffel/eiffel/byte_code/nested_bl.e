@@ -225,16 +225,14 @@ feature
 			msg_target: ACCESS_B
 			access_expr_b: ACCESS_EXPR_B
 		do
-debug
-io.error.put_string ("In nested_bl%N")
-end
 			msg_target := message.target
 			if parent = Void then
 				access_expr_b ?= target
 					-- If we are at the top of the tree hierarchy, then
 					-- this has never been analyzed. If the access has
 					-- no parameters, then it will be expanded in-line.
-				if target.parameters = Void
+				if
+					target.parameters = Void and then
 						-- Make sure the target is NOT an attribute. then that
 						-- it is not polymorphic, otherwise we would call an
 						-- Eiffel function to evaluate the Current AND the Dtype
@@ -243,26 +241,17 @@ end
 						-- polymorphic one...
 						-- Check also that target is not a parenthesized expression
 						-- that could enclose an attribute, a polymorphic call, etc.
-				and then
-					-- This test leads to an optimization for t.f (ref).
-					-- The generated_code was E_f (E_t (l[0]), ref)
-					-- Possible problems for the GC depending on the order
-					-- of evaluation of the parameters of a C function
-					-- The C standard doesn't specify anything
-					-- Problem discovered during the DOS port.
-					-- The optimization can still be done for calls like t.f:
-					-- E_f (E_t (l[0])) is valid and does not need a register
-					-- Xavier
-
-					message.target.parameters = Void
-				and then not
-					(target.is_attribute
-					or
-					target.is_polymorphic
-					or
-					access_expr_b /= Void
-					or
-					msg_target.is_polymorphic)
+					message.target.parameters = Void and then
+						-- This test leads to an optimization for t.f (ref).
+						-- The generated_code was E_f (E_t (l[0]), ref)
+						-- Possible problems for the GC depending on the order
+						-- of evaluation of the parameters of a C function
+						-- The C standard doesn't specify anything
+						-- Problem discovered during the DOS port.
+						-- The optimization can still be done for calls like t.f:
+						-- E_f (E_t (l[0])) is valid and does not need a register
+						-- Xavier
+					not (target.is_attribute or target.is_polymorphic or access_expr_b /= Void or msg_target.is_polymorphic)
 				then
 					context.init_propagation
 					target.propagate (No_register)
@@ -282,26 +271,6 @@ end
 					-- get overwritten if re-used now).
 				get_register
 			end
-debug
-io.error.put_string ("TARGET REGISTER%N")
-if target.register /= Void then
-	io.error.put_string (target.register.out)
-else
-	io.error.put_string ("%TVOID%N")
-end
-io.error.put_string ("MESSAGE TARGET REGISTER%N")
-if msg_target.register /= Void then
-	io.error.put_string (msg_target.register.out)
-else
-	io.error.put_string ("%TVOID%N")
-end
-io.error.put_string ("CURRENT REGISTER%N")
-if register /= Void then
-	io.error.put_string (register.out)
-else
-	io.error.put_string ("%TVOID%N")
-end
-end
 			if register /= No_register then
 				if (parent = Void) then
 						-- First call. Otherwise, target is freed by parent.
@@ -323,9 +292,6 @@ end
 					-- We are not the last call on the chain.
 				message.analyze
 			end
-debug
-io.error.put_string ("Out nested_bl%N")
-end
 		end
 
 	generate is

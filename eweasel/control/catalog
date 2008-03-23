@@ -579,7 +579,7 @@ test	make-const-variable-freeze	incr180  tcf pass incrementality
 test	constant-variable-function	incr181  tcf pass incrementality
 test	add-inherited-assertions	incr182  tcf pass incrementality
 test	default-create-add-body		incr183  tcf pass incrementality
-test	turn-off-multithreaded		incr184  tcf fail incrementality
+test	turn-off-multithreaded		incr184  tcf fail incrementality multithreaded
 test	change-cplusplus-to-c		incr185  tcf pass incrementality
 test	redefine-to-rename-refreeze	incr186  tcf pass incrementality
 test	env-in-braces-bogus-vd01	incr187  tcf pass incrementality
@@ -630,7 +630,7 @@ test	vncp-sneak			incr231  tcf fail incrementality
 test	vifi-sneak			incr232  tcf fail incrementality
 test	bogus-vtct			incr233  tcf pass incrementality
 test	expanded-main-entry-vanished	incr234  tcf fail incrementality
-test	once-status-change		incr235  tcf pass incrementality
+test	once-status-change		incr235  tcf pass incrementality multithreaded
 test	generic-status-change	incr236	tcf pass incrementality
 test	remove-convert-clause	incr237	tcf pass incrementality
 test	infinite-recompilation	incr238	tcf pass incrementality
@@ -857,11 +857,11 @@ test	gc-tracking-001		runtime001	tcf pass runtime
 test	gc-tracking-002		runtime002	tcf pass runtime
 test	gc-expanded-in-special	runtime003	tcf pass runtime expanded special
 test	gc-expanded-allocating-memory-in-special runtime004	tcf pass runtime expanded special
-test	adopt-wean-freeze-unfreeze-multithreaded runtime005 tcf pass runtime
+test	adopt-wean-freeze-unfreeze-multithreaded runtime005 tcf pass runtime multithreaded
 
 -- Thread
-test	 cond-timedwait-failure		thread001	tcf pass thread
-test	 nested-thread-exit-failure	thread002	tcf fail thread
+test	 cond-timedwait-failure		thread001	tcf pass multithreaded
+test	 nested-thread-exit-failure	thread002	tcf fail multithreaded
 
 -- Execution
 
@@ -984,7 +984,7 @@ test	agent-expanded-target		exec116  tcf pass execution
 test	print-integer64			exec117  tcf pass execution
 test	print-max-negative-smallint	exec118  tcf pass execution
 test	safe-call-from-rescue		exec119  tcf pass execution
-test	multithreaded-string-blank	exec120  tcf pass execution
+test	multithreaded-string-blank	exec120  tcf pass execution multithreaded
 test	assign-attempt-affects-source	exec121  tcf pass execution
 test	wrong-generating-type		exec122  tcf pass execution
 test	long-tuple-corrupts-memory	exec123  tcf pass execution tuple
@@ -1033,7 +1033,7 @@ test	negative-hex-constant		exec165  tcf pass execution
 test	expanded-arg-macro-with-cast	exec166  tcf pass execution
 test	external-precond-string-arg	exec167  tcf pass execution
 test	external-infix-feature		exec168  tcf pass execution
-test	multithreaded-memory-leak	exec169  tcf pass execution
+test	multithreaded-memory-leak	exec169  tcf pass execution multithreaded
 test	external-precursor		exec170  tcf pass execution
 test	very-big-gc-chunk-size		exec171  tcf fail execution skip
 test	external-static-access		exec172  tcf pass execution
@@ -1048,17 +1048,17 @@ test	unavailable-exception-trace	exec180  tcf pass execution
 test	wrong-exp-attribute-type	exec181  tcf pass execution
 test	wrong-dynamic-type		exec182  tcf pass execution
 test	special-expanded-access		exec183  tcf pass execution
-test	once-manifest-string		exec184  tcf pass execution
+test	once-manifest-string		exec184  tcf pass execution multithreaded
 test	array-expanded-expanded 	exec185  tcf pass execution
 test	once-optimization		exec186  tcf pass execution
 test	negative-hexadecimal		exec187  tcf pass execution
 test	integer-overflow-type		exec188  tcf pass execution
-test	global-once-feature		exec189  tcf pass execution
-test	once-in-generic-class		exec190  tcf pass execution
+test	global-once-feature		exec189  tcf pass execution multithreaded
+test	once-in-generic-class		exec190  tcf pass execution multithreaded
 test	once-with-exception		exec191  tcf pass execution
 test	system-return-code		exec192 tcf pass execution
 test	catch-stack-overflow		exec193 tcf pass execution
-test	thread-assertion-monitoring	exec194 tcf pass execution
+test	thread-assertion-monitoring	exec194 tcf pass execution multithreaded
 test	last-exception-after-call	exec195 tcf pass execution
 test	inspect-on-character-interval	exec196 tcf pass execution
 test	basic-type-conversion	exec197	tcf pass execution
@@ -1390,11 +1390,11 @@ test	last-reverse-assignment-to-expanded	ccomp060 tcf pass c_compilation expande
 test	adding-removing-classes-c-compile-error	ccomp061 tcf pass c_compilation expanded
 test	once-manifest-string-in-cpp-file	ccomp062 tcf pass c_compilation
 test	feature-call-via-cecil			ccomp063 tcf pass c_compilation
-test	deferred-to-string-constant	ccomp064 tcf pass finalizing
+test	deferred-to-string-constant	ccomp064 tcf pass finalizing multithreaded
 test	built-in-unary-plus	ccomp065 tcf fail c_compilation
 test	expanded-generic-conformance-c-bad-finalization	ccomp066 tcf fail c_compilation
 if WINDOWS test	dll-generation-failure	ccomp067 tcf fail c_compilation
-test	once-global-procedure-c-failure	ccomp068 tcf fail c_compilation
+test	once-global-procedure-c-failure	ccomp068 tcf fail c_compilation multithreaded
 test	line-generation-finalize-bug	ccomp069 tcf pass c_compilation
 test	code-formatting					ccomp070 tcf pass c_compilation
 test	assign-attempt-on-basic-type	ccomp071 tcf pass c_compilation
@@ -1414,9 +1414,9 @@ test	missing-type-retrieval		store008 tcf pass storable
 test	store-expanded-as-reference	store009 tcf pass storable expanded
 test	store-expanded-class-type	store010 tcf pass storable expanded
 test	tuple-57-unretrievable		store011 tcf pass storable tuple
-test	retrieve-corrupted-file-thread-freezes	store012 tcf pass storable thread
-test	storable-formats			store013 tcf pass storable thread
-test	storable-formats-2			store014 tcf pass storable thread
+test	retrieve-corrupted-file-thread-freezes	store012 tcf pass storable multithreaded
+test	storable-formats			store013 tcf pass storable
+test	storable-formats-2			store014 tcf pass storable
 test	retrieve-mismatch-serialization-failure	store015 tcf pass storable exception
 
 
@@ -1820,7 +1820,7 @@ test	correct-attached-predicate-precedence-semantics	attach011 tcf fail object_t
 test	object-test-chain								attach012 tcf pass object_test execution
 test	object-test-code-generation						attach013 tcf pass object_test execution
 test	read-only-void-test-in-assertion				attach014 tcf pass attached_types scope local
-test	scope-after-combined-expression					attach015 tcf pass attached_types scope local
+
 
 
 -- .NET specific test
@@ -1828,7 +1828,7 @@ if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet
 test tuple-insertions-assertions		dotnet002	tcf pass dotnet tuple
 test copy-infinite-recursion		dotnet003	tcf pass dotnet
 test dotnet-nested-constant-access		dotnet004	tcf pass dotnet
-test multithreaded-once-routine			dotnet005	tcf pass dotnet
+test multithreaded-once-routine			dotnet005	tcf pass dotnet multithreaded
 if DOTNET test dotnet-float-literal		dotnet006	tcf pass dotnet
 if DOTNET test system-object-creation	dotnet007	tcf pass dotnet
 if DOTNET test dotnet-expanded-any-conversion	dotnet008	tcf pass dotnet

@@ -70,6 +70,8 @@ feature -- Access
 		once
 			if {PLATFORM}.is_windows then
 				Result := "exe"
+			else
+				create Result.make_empty
 			end
 		ensure
 			not_result_is_empty: {PLATFORM}.is_windows implies not Result.is_empty
@@ -1146,7 +1148,7 @@ feature -- Files (commands)
 		once
 			Result.make_from_string (bin_path)
 			Result.set_file_name (estudio_name)
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure
@@ -1160,7 +1162,7 @@ feature -- Files (commands)
 		once
 			create Result.make_from_string (bin_path)
 			Result.set_file_name (ec_name)
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure
@@ -1173,7 +1175,7 @@ feature -- Files (commands)
 		once
 			create Result.make_from_string (bin_path)
 			Result.set_file_name (finish_freezing_script)
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure
@@ -1191,7 +1193,7 @@ feature -- Files (commands)
 				create Result.make_from_string (bin_path)
 			end
 			Result.set_file_name (emake_name)
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure
@@ -1209,7 +1211,7 @@ feature -- Files (commands)
 				create Result.make_from_string (bin_path)
 			end
 			Result.set_file_name (quick_finalize_name)
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure
@@ -1227,7 +1229,7 @@ feature -- Files (commands)
 				create Result.make_from_string (bin_path)
 			end
 			Result.set_file_name (x2c_name)
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure
@@ -1244,7 +1246,7 @@ feature -- Files (commands)
 				create Result.make_from_string (bin_path)
 			end
 			Result.set_file_name (prelink_name)
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure
@@ -1262,7 +1264,7 @@ feature -- Files (commands)
 				create Result.make_from_string (bin_path)
 			end
 			Result.set_file_name (ecdbg_name)
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure
@@ -1290,7 +1292,7 @@ feature -- Files (commands)
 			create Result.make_from_string (precompilation_wizard_resources_path)
 			Result.extend_from_array (<<spec_name, eiffel_platform>>)
 			Result.set_file_name ("wizard")
-			if {PLATFORM}.is_windows then
+			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
 			end
 		ensure

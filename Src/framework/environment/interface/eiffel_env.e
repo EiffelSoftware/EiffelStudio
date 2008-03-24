@@ -74,6 +74,7 @@ feature -- Access
 				create Result.make_empty
 			end
 		ensure
+			executable_suffix_not_void: Result /= Void
 			not_result_is_empty: {PLATFORM}.is_windows implies not Result.is_empty
 		end
 

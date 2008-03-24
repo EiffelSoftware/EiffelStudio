@@ -647,7 +647,6 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 
 	start_routine_ctxt_t *routine_ctxt;
 	volatile EIF_INTEGER l_is_initialized = 0;
-	EIF_OBJECT root_object = NULL;
 	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
 #ifndef EIF_WINDOWS
 	EIF_THR_ATTR_TYPE attr;
@@ -657,7 +656,6 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
 	routine_ctxt->current = eif_adopt (thr_root_obj);
-	root_object = routine_ctxt->current;
 	routine_ctxt->is_initialized = &l_is_initialized;
 	routine_ctxt->routine = init_func;
 	routine_ctxt->tid = tid;
@@ -698,7 +696,6 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	}
 	EIF_EXIT_C;
 	RTGC;
-	eif_wean (root_object);
 }
 
 #ifdef VXWORKS
@@ -715,7 +712,6 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 	 * the Eiffel objects allocated in this thread.
 	 */
 
-	EIF_REFERENCE root_object = NULL;
 	start_routine_ctxt_t *routine_ctxt = (start_routine_ctxt_t *)arg;
 		/* To prevent current thread to return too soon after call
 		 * to EIF_THR_CREATE or EIF_THR_CREATE_WITH_ATTR.
@@ -753,11 +749,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		xinitint();
 #endif
 			/* Protect root object so that it can be freed in `eif_thr_exit'. */
-		RT_GC_PROTECT(root_object);
-		root_object = eif_access(routine_ctxt->current);
-		routine_ctxt->current = eif_protect(root_object);
 		*routine_ctxt->is_initialized = 1;
-		RT_GC_WEAN(root_object);
 			/* Call the `execute' routine of the thread */
 #ifdef WORKBENCH
 		dnotify_create_thread((EIF_THR_TYPE) eif_thr_id);
@@ -784,7 +776,6 @@ rt_public void eif_thr_exit(void)
 	 */
 
 	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
 
 	if (!thread_exiting) {
 #ifdef LMALLOC_CHECK
@@ -807,7 +798,6 @@ rt_public void eif_thr_exit(void)
 		
 		int ret;	/* Return Status of "eifaddr_offset". */
 		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
-		EIF_REFERENCE thread_object = NULL;
 
 		thread_exiting = 1;
 
@@ -819,20 +809,21 @@ rt_public void eif_thr_exit(void)
 		exitprf();
 
 		if (l_has_parent_thread) {
-			RT_GC_PROTECT(thread_object);
 #ifndef EIF_NO_CONDVAR
 			l_chld_cond = eif_thr_context->children_cond; 
 #endif
 			l_chld_mutex = eif_thr_context->children_mutex;
 			l_addr_n_children = eif_thr_context->addr_n_children;
-			thread_object = eif_wean(eif_thr_context->current);
-			offset = eifaddr_offset (thread_object, "terminated", &ret);
+			offset = eifaddr_offset (eif_access(eif_thr_context->current), "terminated", &ret);
 			CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
 				/* Set the `terminated' field of the twin thread object to True so that
 				 * it knows the thread is terminated */
-			*(EIF_BOOLEAN *) (thread_object + offset) = EIF_TRUE;
-			RT_GC_WEAN(thread_object);
+			*(EIF_BOOLEAN *) (eif_access(eif_thr_context->current) + offset) = EIF_TRUE;
+				
+				/* Remove current object from hector and reset entry to NULL. */
+			eif_wean(eif_thr_context->current);
+			eif_thr_context->current = NULL;
 
 				/* Prevent other threads to wait for current thread in case 
 				 * one of the following calls is blocking. */

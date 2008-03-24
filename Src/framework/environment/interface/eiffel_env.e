@@ -35,9 +35,11 @@ feature -- Access
 	product_version_name: !STRING_8
 			-- Versioned name of the product.
 		once
-			create Result.make_from_string (product_name + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
 			if is_unix_layout then
+				create Result.make_from_string (product_name + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
 				Result.to_lower
+			else
+				create Result.make_from_string (product_name + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -103,6 +105,7 @@ feature {NONE} -- Access
 			if is_user_files_supported then
 				create Result.make (4)
 				Result.extend (user_files_path.string)
+				Result.extend (user_application_files_path)
 					Result.extend (user_settings_path.string)
 						Result.extend (user_project_settings_path.string)
 						Result.extend (user_session_path.string)
@@ -656,7 +659,7 @@ feature -- Directories (distribution)
 			-- Path to user code template, to merge with the ones from the installation.
 		require
 			is_valid_environment: is_valid_environment
-		do
+		once
 			Result ?= shared_application_path.twin
 			Result.extend (templates_name)
 		ensure
@@ -668,7 +671,7 @@ feature -- Directories (distribution)
 		require
 			not_unix_layout: not is_unix_layout
 			is_valid_environment: is_valid_environment
-		do
+		once
 			if is_unix_layout then
 				Result ?= unix_layout_base_path
 				Result.extend (bin_name)
@@ -747,6 +750,44 @@ feature -- Directories (distribution)
 
 feature -- Directories (top-level user)
 
+	user_application_files_path: !DIRECTORY_NAME
+			-- User based application configuration Eiffel files (hidden).
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+		local
+			l_dir: !STRING_8
+		once
+			if operating_environment.home_directory_supported then
+				create Result.make_from_string  ((create {EXECUTION_ENVIRONMENT}).home_directory_name)
+				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
+						-- Add company directory
+					Result.extend (eiffel_software_name)
+						-- Create directory now
+					safe_create_dir (Result.string)
+						-- Build versioned sub-directory
+					create l_dir.make (20)
+					l_dir.append (product_version_name)
+				else
+					create l_dir.make (20)
+					l_dir.append (".es")
+					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+				end
+
+				if is_workbench then
+					l_dir.append (wkbench_suffix)
+				end
+				check not_l_dir_is_empty: not l_dir.is_empty end
+				Result.extend (l_dir)
+			else
+				Result ?= user_files_path.twin
+				Result.extend (settings_name)
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 	user_files_path: !DIRECTORY_NAME
 			-- User based Eiffel files.
 		require
@@ -755,10 +796,19 @@ feature -- Directories (top-level user)
 		local
 			l_user_files: like user_directory_name
 			l_dir: !STRING_8
+			l_directory: !DIRECTORY
 		once
 			l_user_files := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_user_files_env)
 			if l_user_files = Void or else l_user_files.is_empty then
 				l_user_files := user_directory_name
+
+					-- Check the user files directory exists and that it can be written to
+				safe_create_dir (l_user_files)
+				create l_directory.make (l_user_files)
+				if not l_directory.exists or else not l_directory.is_writable then
+					Result ?= eiffel_home.twin
+				end
+
 				create Result.make_from_string (l_user_files)
 				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
 					create l_dir.make (20)
@@ -817,9 +867,8 @@ feature -- Directories (user)
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		do
-			Result ?= user_files_path.twin
-			Result.extend (settings_name)
+		once
+			Result ?= user_application_files_path.twin
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -829,7 +878,7 @@ feature -- Directories (user)
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		do
+		once
 			Result ?= user_settings_path.twin
 			Result.extend (projects_name)
 		ensure
@@ -841,7 +890,7 @@ feature -- Directories (user)
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		do
+		once
 			Result ?= user_settings_path.twin
 			Result.extend (docking_name)
 		ensure
@@ -853,7 +902,7 @@ feature -- Directories (user)
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		do
+		once
 			Result ?= user_settings_path.twin
 			Result.extend (session_name)
 		ensure
@@ -867,7 +916,7 @@ feature -- Directories (user)
 			is_user_files_supported: is_user_files_supported
 		local
 			l_dir: like user_priority_path
-		do
+		once
 			l_dir := user_priority_path (application_path)
 			if l_dir /= Void then
 				Result ?= l_dir
@@ -884,7 +933,7 @@ feature -- Directories (user)
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		do
+		once
 			Result ?= user_files_path.twin
 			Result.extend (templates_name)
 		ensure
@@ -1670,6 +1719,9 @@ feature -- Directory constants (user)
 	session_name: !STRING_8 = "session"
 			-- User session data folder name.
 
+	eiffel_software_name: !STRING_8 = "Eiffel Software"
+			-- Company folder name
+
 feature -- File constants (user)
 
 	docking_debug_file: !STRING_8 = "debug"
@@ -1760,7 +1812,7 @@ feature -- Preferences
 					Result.append (wkbench_suffix)
 				end
 			else
-				create fname.make_from_string (user_session_path)
+				create fname.make_from_string (user_settings_path)
 				fname.set_file_name (application_name + "rc" + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
 				Result ?= fname.string
 			end
@@ -1772,21 +1824,33 @@ feature -- Preferences
 			-- Platform independent preferences.
 		require
 			is_valid_environment: is_valid_environment
-		do
+		local
+			l_fn: like user_priority_file_name
+		once
 			create Result.make_from_string (eifinit_path)
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
+			l_fn := user_priority_file_name (Result)
+			if l_fn /= Void then
+				Result ?= l_fn
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
 	platform_preferences: !FILE_NAME
 			-- Platform specific preferences.
-		do
+		local
+			l_fn: like user_priority_file_name
+		once
 			create Result.make_from_string (eifinit_path)
 			Result.extend_from_array (<<spec_name, platform_abstraction>>)
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
+			l_fn := user_priority_file_name (Result)
+			if l_fn /= Void then
+				Result ?= l_fn
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

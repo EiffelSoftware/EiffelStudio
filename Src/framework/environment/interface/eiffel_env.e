@@ -760,7 +760,7 @@ feature -- Directories (top-level user)
 		once
 			if operating_environment.home_directory_supported then
 				create Result.make_from_string  ((create {EXECUTION_ENVIRONMENT}).home_directory_name)
-				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
+				if {PLATFORM}.is_windows then
 						-- Add company directory
 					Result.extend (eiffel_software_name)
 						-- Create directory now
@@ -813,23 +813,11 @@ feature -- Directories (top-level user)
 				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
 					create l_dir.make (20)
 					l_dir.append (product_name)
-					if {PLATFORM}.is_windows then
-							-- Mac is using using the unix version of ES, so skip troublesome characters
-						l_dir.append_character (' ')
-					end
+					l_dir.append_character (' ')
 					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
-					if {PLATFORM}.is_windows then
-						l_dir.append_character ('.')
-					end
+					l_dir.append_character ('.')
 					l_dir.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
-					if {PLATFORM}.is_windows then
-						l_dir.append_character (' ')
-					end
-					l_dir.append ("User")
-					if {PLATFORM}.is_windows then
-						l_dir.append_character (' ')
-					end
-					l_dir.append ("Files")
+					l_dir.append (" User Files")
 				else
 					create l_dir.make (20)
 					l_dir.append (".es")
@@ -838,7 +826,7 @@ feature -- Directories (top-level user)
 				end
 
 				if is_workbench then
-					if {PLATFORM}.is_windows then
+					if {PLATFORM}.is_windows or else {PLATFORM}.is_mac  then
 						l_dir.append (" (workbench)")
 					else
 						l_dir.append (wkbench_suffix)

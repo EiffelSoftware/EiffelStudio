@@ -144,7 +144,7 @@ feature {NONE} -- Local scopes
 	object_test_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
 			-- Types of object-test locals indexes by their name id
 
-feature {AST_FEATURE_CHECKER_GENERATOR} -- Local scopes
+feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 
 	next_object_test_local_position: INTEGER
 			-- Position of a next object test local
@@ -196,7 +196,7 @@ feature -- Scope state
 			remove_scopes (scope_count - s)
 		end
 
-feature {AST_SCOPE_MATCHER} -- Local scopes
+feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes
 
 	scope_count: INTEGER
 			-- Number of active scopes

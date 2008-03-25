@@ -118,6 +118,15 @@ feature -- Type checking
 			end
 		end
 
+	type_a_from_type_as (a_type_as: TYPE_AS): TYPE_A is
+			-- TYPE_A related to `a_type_as'.
+		do
+			reset
+			type_a_checker.init_for_checking (context.current_feature, context.current_class, Void, error_handler)
+			check_type (a_type_as)
+			Result := last_type
+		end
+
 feature {NONE} -- Implementation
 
 	check_type (a_type: TYPE_AS) is

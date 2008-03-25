@@ -2,7 +2,6 @@ indexing
 	description : "Objects used to evaluate a DBG_EXPRESSION ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
 	fixme: "FIXME jfiat [2007/05/07] : factorize code between evaluate_array_const_b and evaluate_tuple_const_b"
@@ -108,6 +107,10 @@ feature {DBG_EXPRESSION} -- Evaluation
 						set_context_data (Void, dobj.dtype, dobj.class_type)
 					end
 					dobj := Void
+				end
+
+				debug ("debugger_evaluator")
+					display_context_information
 				end
 
 				if
@@ -1743,6 +1746,60 @@ feature -- Change Context
 			end
 		end
 
+	display_context_information	is
+		local
+			ca: like context_address
+			cc: like context_class
+			cct: like context_class_type
+			cf: like context_feature
+			r: BOOLEAN
+		do
+			if not r then
+				ca := context_address
+				cc := context_class
+				cct := context_class_type
+				cf := context_feature
+
+				io.put_string ("%NExpression=" + dbg_expression.expression + "%N")
+				io.put_string (" address=")
+				if ca /= Void then
+					io.put_string (ca)
+				else
+					io.put_string ("")
+				end
+				io.put_new_line
+
+				io.put_string (" class=")
+				if cc /= Void then
+					io.put_string (cc.name_in_upper)
+				else
+					io.put_string ("")
+				end
+				io.put_new_line
+
+
+				io.put_string (" type=")
+				if cct /= Void then
+					io.put_string (cct.associated_class.name_in_upper)
+				else
+					io.put_string ("")
+				end
+				io.put_new_line
+
+				io.put_string (" feature==")
+				if cf /= Void then
+					io.put_string (cf.feature_name)
+				else
+					io.put_string ("")
+				end
+				io.put_new_line
+			end
+		rescue
+			r := True
+			retry
+		end
+
+
 feature -- Access
 
 	byte_node_computed: BOOLEAN
@@ -1958,6 +2015,7 @@ feature {NONE} -- Implementation
 										--| so there is no need to "twin" it
 									Ast_context.set_locals (l_ct_locals)
 								end
+								add_object_test_locals_info_to_ast_context (context_feature.e_feature)
 							end
 						elseif on_object and then context_class /= Void then
 							l_cl := context_class
@@ -2059,6 +2117,44 @@ feature {NONE} -- Implementation
 
 	internal_byte_node: like  byte_node
 			-- Cached `byte_node'
+
+feature {NONE} -- OT locals
+
+	add_object_test_locals_info_to_ast_context (f: E_FEATURE) is
+			-- Add object test locals to the context
+		require
+			f_not_void: f /= Void
+		local
+			lst: LIST [TUPLE [id_as: ID_AS; type_as: TYPE_AS]]
+			ta: TYPE_A
+			tu: TUPLE [id_as: ID_AS; type_as: TYPE_AS]
+			li: LOCAL_INFO
+			ast_v: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR
+			l_name_id: INTEGER
+		do
+			lst := f.object_test_locals
+			if lst /= Void and then not lst.is_empty then
+				create ast_v
+				ast_v.init (Ast_context)
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					tu := lst.item_for_iteration
+					l_name_id := tu.id_as.name_id
+					create li
+					li.set_position (Ast_context.next_object_test_local_position)
+					ta := ast_v.type_a_from_type_as (tu.type_as)
+					li.set_type (ta)
+					li.set_is_used (True)
+
+					Ast_context.add_object_test_local (li, l_name_id)
+					Ast_context.add_object_test_scope (l_name_id)
+					lst.forth
+				end
+			end
+		end
 
 feature {NONE} -- Compiler helpers
 

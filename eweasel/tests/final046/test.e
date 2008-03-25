@@ -12,9 +12,11 @@ feature
 			k, count: INTEGER
 			fname1: STRING
 			fname2: MY_STRING
+			b: B [INTEGER]
 		do
 			create mem.make (Eiffel_memory)
 			(create {MEMORY}).collection_off
+			create b
 			create fname2.make_from_string ("abc")
 			fname1 := fname2
 
@@ -24,20 +26,23 @@ feature
 			until
 				k > count
 			loop
-				try (fname1)
+				try (fname1, b)
 				mem.update (Eiffel_memory);
 				check_memory (mem);
 				k := k + 1;
 			end
 		end;
 
-	try (fname: STRING)
+	try (fname: STRING; a: A [INTEGER])
 		require
 			fname_not_void: fname /= Void
+		local
+			i: INTEGER
 		do
 			if not fname.has (Version_separator) then
 				fname.extend (Version_separator)
 			end
+			i := a.item_bis (1)
 		end
 
 	version_separator: CHARACTER = ';'

@@ -1,13 +1,14 @@
 class TEST
 inherit
 	MEM_CONST
+	ARGUMENTS
 
-creation
+create
 	make
 
 feature
 
-	make (args: ARRAY [STRING]) is
+	make is
 		local
 			k, count: INTEGER
 			fname1: STRING
@@ -22,18 +23,18 @@ feature
 
 			from
 				k := 1;
-				count := args.item (1).to_integer
+				count := argument (1).to_integer
 			until
 				k > count
 			loop
-				try (fname1, b)
+				try (fname1, b, k)
 				mem.update (Eiffel_memory);
 				check_memory (mem);
 				k := k + 1;
 			end
 		end;
 
-	try (fname: STRING; a: A [INTEGER])
+	try (fname: STRING; a: A [INTEGER]; v: INTEGER)
 		require
 			fname_not_void: fname /= Void
 		local
@@ -42,7 +43,10 @@ feature
 			if not fname.has (Version_separator) then
 				fname.extend (Version_separator)
 			end
-			i := a.item_bis (1)
+			i := a.item (v)
+			if i /= v + v then
+				io.put_string ("Bug%N")
+			end
 		end
 
 	version_separator: CHARACTER = ';'
@@ -57,7 +61,7 @@ feature
 				display_memory (m);
 			end
 		end
-	
+
 	display_memory (m: MEM_INFO) is
 		do
 			io.putint (m.type);

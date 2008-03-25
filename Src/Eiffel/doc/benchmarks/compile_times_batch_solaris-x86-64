@@ -6,6 +6,10 @@ CG = Code Generation
 6.2
 ===
 
+6.2.7.2839 non-RTEA with removal of object creation at runtime for polymorphic calls:
+185.64u 13.58s 3:56.49 84.2% (before bootstrap, exe size: 14561528)
+174.19u 13.04s 3:43.32 83.8% (after bootstrap, exe size: 14523944)
+
 6.2.7.2702 non-RTEA with Dead Code Removal optimization:
 189.11u 13.20s 3:30.70 96.0%
 189.14u 12.63s 3:26.08 97.9%

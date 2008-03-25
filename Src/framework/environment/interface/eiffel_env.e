@@ -756,16 +756,34 @@ feature -- Directories (top-level user)
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		local
-			l_dir: !STRING_8
+			l_dir: like get_environment
+			l_dir_name: ?DIRECTORY_NAME
 		once
-			if operating_environment.home_directory_supported then
-				create Result.make_from_string  ((create {EXECUTION_ENVIRONMENT}).home_directory_name)
+			l_dir := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_app_data_env)
+			if l_dir = Void or else l_dir.is_empty then
+					-- Attempt to use home location.
+				if operating_environment.home_directory_supported then
+					create l_dir_name.make_from_string  ((create {EXECUTION_ENVIRONMENT}).home_directory_name)
+					safe_create_dir (l_dir_name.string)
+					if {PLATFORM}.is_windows then
+							-- Add company directory
+						l_dir_name.extend (eiffel_software_name)
+						safe_create_dir (l_dir_name.string)
+					end
+				end
+			else
+					-- Use environment variable
+				create l_dir_name.make_from_string (l_dir)
+				safe_create_dir (l_dir_name.string)
+			end
+
+			if l_dir_name = Void then
+					-- No user set variable or the home directory is not supported
+				l_dir_name ?= user_files_path.twin
+				safe_create_dir (l_dir_name.string)
+				l_dir_name.extend (settings_name)
+			else
 				if {PLATFORM}.is_windows then
-						-- Add company directory
-					Result.extend (eiffel_software_name)
-						-- Create directory now
-					safe_create_dir (Result.string)
-						-- Build versioned sub-directory
 					create l_dir.make (20)
 					l_dir.append (product_version_name)
 				else
@@ -778,12 +796,10 @@ feature -- Directories (top-level user)
 				if is_workbench then
 					l_dir.append (wkbench_suffix)
 				end
-				check not_l_dir_is_empty: not l_dir.is_empty end
-				Result.extend (l_dir)
-			else
-				Result ?= user_files_path.twin
-				Result.extend (settings_name)
+				l_dir_name.extend (l_dir)
 			end
+
+			Result ?= l_dir_name
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

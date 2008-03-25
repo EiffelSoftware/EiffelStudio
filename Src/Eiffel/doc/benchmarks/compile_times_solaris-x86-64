@@ -6,6 +6,7 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2.7.2839 non-RTEA with removal of object creation at runtime for polymorphic calls (5109 classes):
 1028.84u 39.38s 26:38.59 66.8% (before bootstrap, exe size: 47989456)
 945.43u 39.28s 27:38.25 59.3% (after bootstrap, exe size: 47887696)
+583.70u 35.90s 18:33.25 55.6% (after bootstrap compiled with new ecb)
 
 6.2.7.2838 RTEA with some new code optimization (exec size: 48059536):
 624.00u 36.78s 19:09.65 57.4% (with ecb compiler)

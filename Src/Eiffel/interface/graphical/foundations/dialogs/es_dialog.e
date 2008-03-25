@@ -642,10 +642,14 @@ feature -- Basic operations
 			l_dev_window: like development_window
 			l_window: EV_WINDOW
 		do
-			l_dev_window := development_window
-			if l_dev_window /= Void then
-				l_window := l_dev_window.window
+			l_window := helpers.parent_window_of_focused_widget
+			if l_window = Void then
+				l_dev_window := development_window
+				if l_dev_window /= Void then
+					l_window := l_dev_window.window
+				end
 			end
+
 			if l_window /= Void then
 				show (l_window)
 			else

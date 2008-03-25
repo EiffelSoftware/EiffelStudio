@@ -94,6 +94,20 @@ feature -- Query
 			end
 		end
 
+	parent_window_of_focused_widget: EV_WINDOW is
+			-- Parent window of current focused widget
+			-- Result maybe void.
+		local
+			l_application: EV_APPLICATION
+			l_env: EV_ENVIRONMENT
+		do
+			create l_env
+			l_application := l_env.application
+			if {l_widget: EV_WIDGET} l_application.focused_widget then
+				Result := widget_top_level_window (l_widget, False)
+			end
+		end
+
 feature -- Screen
 
 	window_working_area (a_window: EV_WINDOW): TUPLE [x, y, width, height: INTEGER] is

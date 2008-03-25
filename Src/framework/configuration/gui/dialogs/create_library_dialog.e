@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 				-- look for configuration files under $ISE_LIBRARY/library or $ISE_LIBRARY/library/somedirectory
 			create l_dir.make (eiffel_layout.Library_path)
 			if l_dir.is_readable then
-				add_configs_in_dir (eiffel_layout.Library_path, eiffel_layout.library_path)
+				add_configs_in_dir (eiffel_layout.library_path.string, {EIFFEL_ENV}.library_name)
 				l_subdirs := l_dir.directory_names
 				if l_subdirs /= Void then
 					from
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 						l_lib_name := eiffel_layout.library_path.twin
 						l_lib_name.append_character (operating_environment.directory_separator)
 						l_lib_name.append (l_subdirs.item (i))
-						add_configs_in_dir (l_lib_name, eiffel_layout.library_path.string + "\" + l_subdirs.item (i))
+						add_configs_in_dir (l_lib_name, {EIFFEL_ENV}.library_name + "\" + l_subdirs.item (i))
 						i := i +1
 					end
 				end

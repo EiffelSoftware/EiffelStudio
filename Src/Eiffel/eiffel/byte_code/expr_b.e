@@ -283,6 +283,11 @@ feature -- C generation
 				generate_dynamic_clone (Current, expression_type)
 				buf.put_character (';')
 			elseif target_register /= Void and then target_register /= register then
+					-- The case where we created a register in the parent node to hold the value.
+					-- Currently it can only be when Current is a constant expression which is
+					-- used as argument of a polymorphic routine call and we pass the address
+					-- of the varable, and since it is a constant, we need to assign it first to
+					-- a variable.
 				buf.put_new_line
 				target_register.print_register
 				buf.put_string (" = ")

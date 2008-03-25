@@ -241,7 +241,7 @@ feature -- Basic operations
 
 						if l_token = a_token then
 								-- Token located, adjust the offset
-							l_y_offset := a_y - (a_y \\ editor.line_height)
+							l_y_offset := (a_y - (a_y \\ editor.line_height))
 						end
 					end
 				end
@@ -261,7 +261,8 @@ feature -- Basic operations
 					end
 
 						-- Ensure the token is hidden on showing the pop up widget
-					popup_window.set_is_token_hidden_on_popup_widget_shown (True)
+					popup_window.set_is_token_hidden_on_popup_widget_shown (False)
+					popup_window.set_is_beam_indicator (True)
 
 					if {l_action: !PROCEDURE [ANY, TUPLE]} l_token_action then
 						popup_window.register_action (popup_window.token_select_actions, l_action)

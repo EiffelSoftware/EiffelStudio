@@ -3,7 +3,7 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2
 ===
 
-6.2.7.2839 non-RTEA with removal of object creation at runtime for polymorphic calls:
+6.2.7.2839 non-RTEA with removal of object creation at runtime for polymorphic calls (5109 classes):
 1028.84u 39.38s 26:38.59 66.8% (before bootstrap, exe size: 47989456)
 945.43u 39.28s 27:38.25 59.3% (after bootstrap, exe size: 47887696)
 

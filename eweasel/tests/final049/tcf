@@ -1,0 +1,19 @@
+test_name 	 polymorphic-call-on-formal-seed
+test_description Verify that polymorphic calls on a routine whose argument is a formal generic parameter but guaranteed to remain a basic type for dynamic dispatch is properly generated.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 a.e  $CLUSTER a.e
+copy_raw 	 b.e  $CLUSTER b.e
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+test_end

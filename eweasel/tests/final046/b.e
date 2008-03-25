@@ -1,20 +1,17 @@
 class
-	B [G]
+	B [G -> NUMERIC]
 
 inherit
 	A [G]
 		redefine
-			item, item_bis
+			item
 		end
 
-feature -- 
+feature --
 
-	item (v: G): INTEGER is
+	item (v: G): G is
 		do
-		end
-
-	item_bis (v: INTEGER): G is
-		do
+			Result := v + v
 		end
 
 end

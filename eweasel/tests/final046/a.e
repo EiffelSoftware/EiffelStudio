@@ -1,14 +1,11 @@
 class
-	A [G]
+	A [G -> NUMERIC]
 
 feature
 
-	item (v: G): INTEGER is
+	item (v: G): G is
 		do
-		end
-
-	item_bis (v: INTEGER): G is
-		do
+			Result := v + v
 		end
 
 end

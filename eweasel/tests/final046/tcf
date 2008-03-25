@@ -3,6 +3,8 @@ test_description A system disable the GC and perform a dynamic call that should 
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 a.e  $CLUSTER a.e
+copy_raw 	 b.e  $CLUSTER b.e
 copy_raw 	 my_string.e  $CLUSTER my_string.e
 compile_frozen
 compile_result 	 ok

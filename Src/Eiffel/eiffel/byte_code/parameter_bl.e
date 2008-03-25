@@ -15,21 +15,49 @@ inherit
 			free_register, print_register, propagate, c_type
 		end
 
-feature
+feature -- Status report
+
+	is_address_needed: BOOLEAN
+			-- Does current parameter needs to be passed as address rather than an object?
+
+feature -- Access
 
 	register: REGISTRABLE;
 			-- Register used to store metamorphosed value
+
+	c_type: TYPE_C is
+			-- C type of the attachment target
+		do
+			Result := real_type (attachment_type).c_type
+		end
+
+feature -- Element change
+
+	compute_is_address_needed is
+			-- Compute value for `is_address_needed'.
+		require
+			not_il_generation: not system.il_generation
+		local
+			l_expr_type, l_target_type: TYPE_A
+		do
+			if (is_formal and context.final_mode) and then parent.is_polymorphic then
+				l_target_type := context.real_type (internal_attachment_type)
+				l_expr_type := context.real_type (expression.type)
+				is_address_needed := l_target_type.is_basic and l_expr_type.is_basic
+				check
+					validity: is_address_needed implies l_target_type.same_as (l_expr_type)
+				end
+			else
+				is_address_needed := False
+			end
+		end
+
+feature -- Settings
 
 	set_register (r: REGISTRABLE) is
 			-- Assign `r' to `register'
 		do
 			register := r;
-		end;
-
-	c_type: TYPE_C is
-			-- C type of the attachment target
-		do
-			Result := real_type (attachment_type).c_type;
 		end;
 
 	propagate (r: REGISTRABLE) is
@@ -52,12 +80,35 @@ feature
 
 	analyze is
 			-- Analyze expression
+		local
+			l_expression: like expression
+			l_is_predefined: BOOLEAN
 		do
-			expression.analyze;
+			l_expression := expression
+			l_expression.analyze;
 			if is_compaund then
 				register := context.get_argument_register (c_type)
-			elseif expression.is_register_required (real_type (attachment_type)) then
-				get_register
+			else
+				compute_is_address_needed
+				if is_address_needed then
+					check
+						no_register_needed_in_theory:
+							not l_expression.is_register_required (real_type (internal_attachment_type))
+					end
+						-- We cannot use `l_expression.is_predefined' because here we are looking to see if
+						-- there is a register storage for `l_expression'.
+					l_is_predefined := l_expression.is_local or l_expression.is_argument or
+						l_expression.is_result or l_expression.is_current
+					if not l_is_predefined and l_expression.register = Void then
+							-- An address was required due to polymorphic call but `l_expression' does not
+							-- store its result in a register, so we need a register to store the value
+							-- of the expression, so that we can pass its address later.
+						set_register (create {REGISTER}.make (real_type (internal_attachment_type).c_type))
+					end
+				elseif l_expression.is_register_required (real_type (attachment_type)) then
+						-- We are in the case where `internal_attachment_type' is different from `attachement_type'
+					get_register
+				end
 			end
 		end
 
@@ -78,8 +129,17 @@ feature
 			if source_type.is_none and target_type.is_expanded then
 				buffer.put_new_line
 				buffer.put_string ("RTEC(EN_VEXP);")
-			else
+			elseif is_compaund then
 				expression.generate_for_type (register, target_type)
+			else
+				if is_address_needed then
+					check
+						no_register_needed_in_theory: not expression.is_register_required (real_type (internal_attachment_type))
+					end
+					expression.generate_for_type (register, real_type (internal_attachment_type))
+				else
+					expression.generate_for_type (register, target_type)
+				end
 			end
 		end
 
@@ -102,6 +162,9 @@ feature
 			elseif target_type.is_none then
 				buf.put_string ("(EIF_REFERENCE) 0");
 			elseif register /= Void then
+				if is_address_needed then
+					buf.put_string ("(EIF_REFERENCE) &")
+				end
 				register.print_register
 			elseif target_type.is_true_expanded then
 					-- The callee is responsible for cloning the reference.
@@ -131,16 +194,10 @@ feature
 					end;
 				end
 			else
-					-- In that case, we have been careful not to propagate any
-					-- 'No_register' value. However, this does not mean there
-					-- is an attached register if the source is basic (e.g. if
-					-- we have the constant '4' or '5 - 3'). This is where
-					-- the 'register' attribute plays its role...
-				if source_type.is_expanded then
-					register.print_register;
-				else
-					expression.print_register;
-				end;
+				if is_address_needed then
+					buf.put_string ("(EIF_REFERENCE) &")
+				end
+				expression.print_register;
 			end;
 		end;
 

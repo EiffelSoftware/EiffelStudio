@@ -200,6 +200,12 @@ feature {NONE} -- Basic operation
 
 				if is_showing_comments then
 					l_tokens := feature_comment_tokens (l_feature, l_generator)
+					if l_tokens = Void or else l_tokens.is_empty then
+							-- Create empty comments
+						create {ARRAYED_LIST [EDITOR_TOKEN]} l_tokens.make (2)
+						l_tokens.extend (create {EDITOR_TOKEN_TABULATION}.make (2))
+						l_tokens.extend (create {EDITOR_TOKEN_COMMENT}.make ("-- " + interface_names.h_no_comments_for_feature))
+					end
 					if l_tokens /= Void then
 						l_editor_item.set_text_with_tokens (l_tokens)
 						l_generator.wipe_out_lines
@@ -276,8 +282,8 @@ feature {NONE} -- Basic operation
 					end
 				end
 
-				l_grid.set_minimum_size (l_width + 5, l_height + 20)
-				l_grid.column (1).set_width (l_width + 5)
+				l_grid.set_minimum_size (l_width + 20, l_height + 6)
+				l_grid.column (1).set_width (l_width + 2)
 			end
 
 			l_grid.unlock_update
@@ -286,7 +292,7 @@ feature {NONE} -- Basic operation
 			if context_class.group.is_readonly then
 				edit_contracts_button.hide
 			else
-			--	edit_contracts_button.show
+				edit_contracts_button.show
 			end
 		end
 

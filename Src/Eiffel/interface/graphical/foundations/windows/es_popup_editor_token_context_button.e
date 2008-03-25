@@ -20,7 +20,7 @@ inherit
 			window_on_screen_position,
 			on_popup_widget_show_requested,
 			on_popup_widget_hidden,
-
+			on_before_show,
 			active_border_color,
 			border_color
 		end
@@ -78,7 +78,6 @@ feature {NONE} -- Initialization
 
 				-- Token image		
 			create token_image
-			redraw_token_image
 
 			l_box.extend (token_image)
 			l_box.disable_item_expand (token_image)
@@ -174,29 +173,47 @@ feature -- Element change
 
 feature -- Status report
 
-	is_token_hidden_on_popup_widget_shown: BOOLEAN
+	is_token_hidden_on_popup_widget_shown: BOOLEAN assign set_is_token_hidden_on_popup_widget_shown
 			-- Indicates if the token image should be hidden when the popup widget is shown.
+
+	is_beam_indicator: BOOLEAN assign set_is_beam_indicator
+			-- Indicates if the displayed pop-up button is a beam indicator instead of a token selector.
 
 feature -- Status setting
 
 	set_is_token_hidden_on_popup_widget_shown (a_hide: like is_token_hidden_on_popup_widget_shown)
 			-- Shows/hides the token when the pop up widget is displayed.
+			-- Note: This option cannot be used with beam indicators.
 			--
 			-- `a_hide': True to hide the token when the popup widget is displayed; False to ensure it's always visible it.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized or is_initialized
+			not_is_shown: not is_shown
 		do
 			is_token_hidden_on_popup_widget_shown := a_hide
-			if is_popup_widget_shown then
-				if a_hide then
-					token_image.hide
-				else
-					token_image.show
-				end
-			end
 		ensure
 			is_token_hidden_on_popup_widget_shown_set: is_token_hidden_on_popup_widget_shown = a_hide
+		end
+
+	set_is_beam_indicator (a_use_beam: like is_beam_indicator)
+			-- Enabled/disables to the use of a beam-style indicator instead of a token selector.
+			-- Note: When enabling a beam indicator, `is_token_hidden_on_popup_widget_shown' will be set to False because
+			--       it is useless.
+			--
+			-- `a_use_beam': True to use a beam indicator, False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initialized
+			not_is_shown: not is_shown
+		do
+			is_beam_indicator := a_use_beam
+			if a_use_beam then
+				is_token_hidden_on_popup_widget_shown := False
+			end
+		ensure
+			is_beam_indicator_set: is_beam_indicator = a_use_beam
+			not_is_token_hidden_on_popup_widget_shown: a_use_beam implies not is_token_hidden_on_popup_widget_shown
 		end
 
 feature -- Actions
@@ -243,16 +260,14 @@ feature {NONE} -- Query
 				l_widget := l_window
 			end
 
-			Result := helpers.suggest_pop_up_widget_location_with_size (editor.widget,
-				requested_x_position + (l_window.screen_x - token_image.screen_x) + token_x_offset,
-				requested_y_position + (l_window.screen_y - token_image.screen_y) + token_y_offset,
+				-- Change the widget to the active window when Larry commits changes to {EVS_HELPERS}.
+			Result := helpers.suggest_pop_up_widget_location_with_size (editor.editor_drawing_area,
+				(requested_x_position + token_x_offset) - border_width,
+				(requested_y_position + token_y_offset) - border_width,
 				l_window.width,
 				l_window.height)
 
-			if {PLATFORM}.is_windows then
-					-- Currently a hack
-				Result := [Result.x, Result.y + 1]
-			end
+			Result := [Result.x - border_width, Result.y]
 		end
 
 feature -- Status report
@@ -281,19 +296,29 @@ feature {NONE} -- Action handlers
 			is_initialize: is_initialized
 		do
 			if a_button = 1 then
---				if
---					is_popup_widget_available and then                -- Only when widgets are available can the popup widget be shown.
---					not (token_image_rectangle.x <= a_x and a_x <= token_image_rectangle.x + token_image_rectangle.width and then
---					     token_image_rectangle.y <= a_y and a_y <= token_image_rectangle.y + token_image_rectangle.height)
---				then
---					show_popup_widget
---				else
---					on_token_selected (a_x, a_y, a_screen_x, a_screen_y)
---					if internal_token_select_actions /= Void then
---						internal_token_select_actions.call ([a_x, a_y, a_screen_x, a_screen_y])
---					end
---				end
-				on_token_selected (a_x, a_y, a_screen_x, a_screen_y)
+				if is_beam_indicator then
+					if is_popup_widget_available then
+							-- Show popup widget, if available.
+						show_popup_widget
+					end
+				else
+						-- Using token selector indicator style
+					if
+						is_popup_widget_available and then                -- Only when widgets are available can the popup widget be shown.
+						not (token_image_rectangle.x <= a_x and a_x <= token_image_rectangle.x + token_image_rectangle.width and then
+						     token_image_rectangle.y <= a_y and a_y <= token_image_rectangle.y + token_image_rectangle.height)
+					then
+							-- The token was not selected.
+						show_popup_widget
+					else
+							-- Token was selected
+						on_token_selected (a_x, a_y, a_screen_x, a_screen_y)
+						if internal_token_select_actions /= Void then
+							internal_token_select_actions.call ([a_x, a_y, a_screen_x, a_screen_y])
+						end
+					end
+					on_token_selected (a_x, a_y, a_screen_x, a_screen_y)
+				end
 			end
 		end
 
@@ -332,8 +357,8 @@ feature {NONE} -- Action handlers
 				end
 			end
 
-			if is_token_hidden_on_popup_widget_shown then
-				redraw_token_image
+			redraw_token_image
+			if is_beam_indicator or else is_token_hidden_on_popup_widget_shown then
 				token_image.hide
 			end
 
@@ -346,6 +371,19 @@ feature {NONE} -- Action handlers
 			Precursor {ES_POPUP_BUTTON_WINDOW}
 			redraw_token_image
 			token_image.show
+		end
+
+	on_before_show
+			-- <Precursor>
+		do
+			Precursor {ES_POPUP_BUTTON_WINDOW}
+			if is_popup_widget_shown and then is_token_hidden_on_popup_widget_shown then
+				token_image.hide
+				redraw_token_image
+			else
+				redraw_token_image
+				token_image.show
+			end
 		end
 
 feature {NONE} -- User interface elements
@@ -388,10 +426,12 @@ feature {NONE} -- Basic operations
 
 			l_coords := render_smart_token (editor_token, token_image, 0, 0, True)
 			token_x_offset := 0 - l_coords.token_coords.x
-			token_y_offset := 0 - l_coords.token_coords.y
+			if is_beam_indicator then
+				token_y_offset := editor_token.height + border_width
+			else
+				token_y_offset := 0 - l_coords.token_coords.y
+			end
 
-			token_x_offset := 1
-			token_y_offset := editor_token.height
 
 			if is_initialized and is_shown then
 				if l_old_ox /= token_x_offset or l_old_oy /= token_y_offset then
@@ -419,20 +459,18 @@ feature {NONE} -- Basic operations
 			l_font: EV_FONT
 			l_fg_color: EV_COLOR
 			l_bg_color: EV_COLOR
---			l_size: TUPLE [width, height, left_offset, right_offset: INTEGER]
---			l_x_offset: INTEGER
---			l_y_offset: INTEGER
+			l_size: TUPLE [width, height, left_offset, right_offset: INTEGER]
+			l_x_offset: INTEGER
+			l_y_offset: INTEGER
 			l_width: INTEGER
 			l_height: INTEGER
---			l_buffer: EV_PIXEL_BUFFER
---			l_glyph: EDITOR_TOKEN_GLYPH
---			l_border: INTEGER
+			l_buffer: EV_PIXEL_BUFFER
+			l_glyph: EDITOR_TOKEN_GLYPH
+			l_border: INTEGER
 			l_has_popup_widget: like is_popup_widget_available
 			l_token_rect: !EV_RECTANGLE
 			l_rect: !EV_RECTANGLE
 		do
-			l_has_popup_widget := is_popup_widget_available and then not is_popup_widget_shown
-
 			if a_paint then
 					-- Hold on to existing information for later restore.
 				l_font := a_dc.font
@@ -445,56 +483,66 @@ feature {NONE} -- Basic operations
 				a_dc.set_background_color (background_color)
 			end
 
---			l_glyph ?= a_token
---			if l_glyph = Void then
---				l_size := a_token.font.string_size (a_token.image)
---			else
---				l_size := [l_glyph.glyph.width, l_glyph.glyph.height, 0, 0]
---			end
+			l_glyph ?= a_token
+			if l_glyph = Void then
+				l_size := a_token.font.string_size (a_token.image)
+			else
+				l_size := [l_glyph.glyph.width, l_glyph.glyph.height, 0, 0]
+			end
 
---				-- Image border width
---			l_border := 2
+			if is_beam_indicator then
+					-- Draw simple beam indicator
+				create l_token_rect.make (a_x, a_y, l_size.width, 1)
+				l_rect := l_token_rect.twin
+			else
+					-- Render token image
 
---				-- Set token coords, for result
---			create l_token_rect.make (a_x + l_border + 1, a_y, l_size.width + l_size.left_offset + l_size.right_offset, l_size.height)
+					-- Image border width
+				l_border := 2
 
---				-- Calculate size and offset information
---			l_x_offset := l_token_rect.x + l_token_rect.width
---			if l_has_popup_widget then
---					-- Calculate offsets and extended widths for a drop down arrow.
---				l_x_offset := l_x_offset + 3
---				l_buffer := (create {EB_SHARED_PIXMAPS}).mini_pixmaps.toolbar_dropdown_icon_buffer
---				l_width := l_x_offset + l_buffer.width + l_border
---				l_height := (l_token_rect.height + l_border).max (l_buffer.height)
---				l_y_offset := (l_height - l_buffer.height)
---			else
---					-- There is no popup widget
---				l_width := l_x_offset + l_border + 1
---				l_height := l_token_rect.height
---				l_y_offset := l_height
---			end
+					-- Set token coords, for result
+				create l_token_rect.make (a_x + l_border + 1, a_y, l_size.width + l_size.left_offset + l_size.right_offset, l_size.height)
 
---				-- Set coords for drawing area, and for result
---			create l_rect.make (a_x, a_y, l_width, l_height)
---			if a_paint then
---				a_dc.set_clip_area (l_rect)
+				l_has_popup_widget := is_popup_widget_available and then not is_popup_widget_shown
 
---					-- Perform drawing
---				a_dc.clear_rectangle (a_x, a_y, l_width, l_height)
---				if l_glyph = Void then
---					a_dc.draw_text_top_left (l_token_rect.x, l_token_rect.y, a_token.image)
---				else
---					a_dc.draw_sub_pixel_buffer (l_token_rect.x, l_token_rect.y, l_glyph.glyph, create {EV_RECTANGLE}.make (0, 0, l_glyph.glyph.width, l_glyph.glyph.height))
---				end
---				if l_has_popup_widget then
---					a_dc.draw_sub_pixel_buffer (l_x_offset + a_x, (l_y_offset + a_y) - (l_border + 1), l_buffer, create {EV_RECTANGLE}.make (0, 0, l_buffer.width, l_buffer.height))
---				end
---			end
+					-- Calculate size and offset information
+				l_x_offset := l_token_rect.x + l_token_rect.width
+				if l_has_popup_widget then
+						-- Calculate offsets and extended widths for a drop down arrow.
+					l_x_offset := l_x_offset + 3
+					l_buffer := (create {EB_SHARED_PIXMAPS}).mini_pixmaps.toolbar_dropdown_icon_buffer
+					l_width := l_x_offset + l_buffer.width + l_border
+					l_height := (l_token_rect.height + l_border).max (l_buffer.height)
+					l_y_offset := (l_height - l_buffer.height)
+				else
+						-- There is no popup widget
+					l_width := l_x_offset + l_border + 1
+					l_height := l_token_rect.height
+					l_y_offset := l_height
+				end
 
-			l_width := a_token.width - (border_width * 2)
-			l_height := 1
-			create l_rect.make (a_x, a_y, l_width, l_height)
-			create l_token_rect.make (a_x, a_y, l_width, l_height)
+					-- Set coords for drawing area, and for result
+				create l_rect.make (a_x, a_y, l_width, l_height)
+				if a_paint then
+					a_dc.set_clip_area (l_rect)
+
+						-- Perform drawing
+					a_dc.clear_rectangle (a_x, a_y, l_width, l_height)
+					if l_glyph = Void then
+						a_dc.draw_text_top_left (l_token_rect.x, l_token_rect.y, a_token.image)
+					else
+						a_dc.draw_sub_pixel_buffer (l_token_rect.x, l_token_rect.y, l_glyph.glyph, create {EV_RECTANGLE}.make (0, 0, l_glyph.glyph.width, l_glyph.glyph.height))
+					end
+					if l_has_popup_widget then
+						a_dc.draw_sub_pixel_buffer (l_x_offset + a_x, (l_y_offset + a_y) - (l_border + 1), l_buffer, create {EV_RECTANGLE}.make (0, 0, l_buffer.width, l_buffer.height))
+					end
+				end
+			end
+
+			check
+				l_rect_attached: l_rect /= Void
+				l_token_rect_attached: l_token_rect /= Void
+			end
 
 				-- Set result
 			Result := [l_rect, l_token_rect]
@@ -515,6 +563,7 @@ feature {NONE} -- Internal implementation cache
 
 invariant
 	editor_is_interface_usable: editor.is_interface_usable
+	not_is_beam_indicator: is_token_hidden_on_popup_widget_shown implies not is_beam_indicator
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

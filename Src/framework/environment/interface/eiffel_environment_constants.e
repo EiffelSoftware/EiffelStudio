@@ -33,6 +33,9 @@ feature -- Variable names
 	ise_user_files_env: STRING = "ISE_USER_FILES"
 			-- User files location
 
+	ise_app_data_env: STRING = "ISE_APP_DATA"
+			-- User configuration files location
+
 	ec_name_env: STRING = "EC_NAME"
 			-- ec executable name.
 

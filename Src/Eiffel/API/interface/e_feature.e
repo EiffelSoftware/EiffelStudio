@@ -247,7 +247,7 @@ feature -- Properties
 		do
 		end;
 
-	object_test_locals: LIST [TUPLE [ID_AS, TYPE_AS]] is
+	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]] is
 			-- Object test locals mentioned in the routine
 		do
 		end

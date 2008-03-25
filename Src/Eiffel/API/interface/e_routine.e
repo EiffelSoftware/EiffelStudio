@@ -99,7 +99,7 @@ feature -- Access
 			end
 		end
 
-	object_test_locals: LIST [TUPLE [ID_AS, TYPE_AS]] is
+	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]] is
 			-- Object test locals mentioned in the routine
 		local
 			routine_as: ROUTINE_AS

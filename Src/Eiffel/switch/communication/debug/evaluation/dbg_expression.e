@@ -5,9 +5,9 @@ indexing
 				%a class-related one, etc.)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author: jfiat $"
-	date: "$Date: 2007-11-03 11:16:36 +0100 (Sat, 03 Nov 2007) $"
-	revision: "$Revision: 71031 $"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DBG_EXPRESSION
@@ -25,13 +25,6 @@ inherit
 		export
 			{NONE} all
 		end
-
---	COMPILER_EXPORTER
---			--| Just to be able to access E_FEATURE::associated_feature_i :(
---			--| and other expression evaluation purpose
---		export
---			{NONE} all
---		end
 
 create
 	make_with_class,

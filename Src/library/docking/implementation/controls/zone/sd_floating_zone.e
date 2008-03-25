@@ -469,20 +469,22 @@ feature {NONE} -- Agents
 			l_last_zone: SD_ZONE
 			l_zones: like all_zones
 		do
-			if internal_docking_manager.property.last_focus_content /= Void then
-				l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
-				if not has_recursive (l_last_zone) then
-					l_zones := all_zones
-					if l_zones.count > 0 then
-						-- If the first content is not visible, it means the floating zone is showing for the first time.
-						if l_zones.first.content.is_visible then
-							l_zones.first.content.set_focus
+			if {l_content: SD_CONTENT} internal_docking_manager.property.last_focus_content then
+				if {l_state: SD_STATE} l_content.state then
+					l_last_zone := l_state.zone
+					if not has_recursive (l_last_zone) then
+						l_zones := all_zones
+						if l_zones.count > 0 then
+							-- If the first content is not visible, it means the floating zone is showing for the first time.
+							if l_zones.first.content.is_visible then
+								l_zones.first.content.set_focus
+							end
 						end
+					else
+						l_last_zone.set_focus_color (True)
 					end
-				else
-					l_last_zone.set_focus_color (True)
+					internal_title_bar.enable_focus_color
 				end
-				internal_title_bar.enable_focus_color
 			end
 		end
 
@@ -491,11 +493,13 @@ feature {NONE} -- Agents
 		local
 			l_last_zone: SD_ZONE
 		do
-			if internal_docking_manager.property.last_focus_content /= Void then
-				l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
-				if not is_destroyed and then has_recursive (l_last_zone) then
-					internal_title_bar.enable_non_focus_active_color
-					l_last_zone.set_non_focus_selection_color
+			if {l_content: SD_CONTENT} internal_docking_manager.property.last_focus_content then
+				if {l_state: SD_STATE} l_content.state then
+					l_last_zone := l_state.zone
+					if not is_destroyed and then has_recursive (l_last_zone) then
+						internal_title_bar.enable_non_focus_active_color
+						l_last_zone.set_non_focus_selection_color
+					end
 				end
 			end
 		end

@@ -188,6 +188,7 @@ feature -- Button texts
 	b_overwrite: STRING_GENERAL is						do Result := locale.translation("Overwrite") end
 	b_append: STRING_GENERAL is							do Result := locale.translation("Append") end
 	b_ignore: STRING_GENERAL is							do Result := locale.translation("Ignore") end
+	b_force_exit: STRING_GENERAL is						do Result := locale.translation("Force Exit") end
 
 	b_error: STRING_GENERAL is							do Result := locale.translation("Error") end
 	b_errors: STRING_GENERAL is							do Result := locale.translation("Errors") end
@@ -296,6 +297,7 @@ feature -- Help text
 	h_No_help_available: STRING is				do Result := locale.translation("No help available for this element").out	end
 	h_refactoring_compiled: STRING is			do Result := locale.translation("Renames only occurrences of the class name in compiled classes.").out	end
 	h_refactoring_all_classes: STRING is		do Result := locale.translation("Renames occurrences of the class name in any class. (Slow)").out	end
+	h_no_comments_for_feature: STRING is		do Result := locale.translation("No comments for feature.").out	end
 
 feature -- File names
 

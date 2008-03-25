@@ -2211,38 +2211,49 @@ feature {NONE} -- Implementation
 			l_tool: EB_TOOL
 			l_last_watch_tool: ES_WATCH_TOOL
 			l_refer_tool_content: SD_CONTENT
-			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_sd_button: SD_TOOL_BAR_ITEM
-			l_buttons: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_wt_lst: like watch_tool_list
 		do
 			-- Setup toolbar buttons
 			check one_button: restart_cmd.managed_sd_toolbar_items.count = 1 end
 			l_sd_button := restart_cmd.managed_sd_toolbar_items.first
-			l_sd_button.enable_displayed
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
 
 			check one_button: stop_cmd.managed_sd_toolbar_items.count = 1 end
 			l_sd_button := stop_cmd.managed_sd_toolbar_items.first
-			l_sd_button.enable_displayed
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
 
 			check one_button: quit_cmd.managed_sd_toolbar_items.count = 1 end
 			l_sd_button := quit_cmd.managed_sd_toolbar_items.first
-			l_sd_button.enable_displayed
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
 
 			check one_button: assertion_checking_handler_cmd.managed_sd_toolbar_items.count = 1 end
 			l_sd_button := assertion_checking_handler_cmd.managed_sd_toolbar_items.first
-			l_sd_button.enable_displayed
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
 
 			check one_button: ignore_breakpoints_cmd.managed_sd_toolbar_items.count = 1 end
 			l_sd_button := ignore_breakpoints_cmd.managed_sd_toolbar_items.first
-			l_sd_button.enable_displayed
+			if l_sd_button /= Void then
+				l_sd_button.enable_displayed
+			end
 
-			l_tool_bar_content := debugging_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)
-			check not_void: l_tool_bar_content /= Void end
-			l_buttons := l_tool_bar_content.items
-			l_buttons.go_i_th (l_buttons.index_of (l_sd_button, 1))
-			l_buttons.put_left (create {SD_TOOL_BAR_SEPARATOR}.make)
-			l_tool_bar_content.refresh
+			if {l_tool_bar_content: SD_TOOL_BAR_CONTENT} (debugging_window.docking_manager.tool_bar_manager.content_by_title (interface_names.to_project_toolbar)) then
+				if l_sd_button /= Void then
+					if {l_buttons: ARRAYED_LIST [SD_TOOL_BAR_ITEM]} l_tool_bar_content.items then
+						l_buttons.go_i_th (l_buttons.index_of (l_sd_button, 1))
+						l_buttons.put_left (create {SD_TOOL_BAR_SEPARATOR}.make)
+					end
+				end
+				l_tool_bar_content.refresh
+			end
 
 			-- Setup tools
 			debugging_window.close_all_tools
@@ -2264,9 +2275,9 @@ feature {NONE} -- Implementation
 
 				--| Objects tool			
 			objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
-			if objects_tool.panel.content.is_visible then
-				objects_tool.panel.content.set_focus
-			end
+				--| FIXME: here we call the show actions, because it is not done by the docking library: CHECK THIS
+			objects_tool.panel.content.show_actions.call (Void)
+			objects_tool.show (True)
 			l_refer_tool_content := objects_tool.panel.content
 
 				--| Breakpoints tool

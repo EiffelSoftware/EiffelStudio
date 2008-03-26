@@ -116,6 +116,11 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack hec_stack_cx;		/* Indirection table "hector stack" for references passed to C*/
 #endif
 	int16 caller_assertion_level_cx;	/* Assertion level of the caller */
+
+		/* Polymorphism. */
+	int eif_optimize_return_cx;	/* Should caller optimize return? */
+	EIF_TYPED_VALUE eif_optimized_return_value_cx;	/* Location where data is stored. */
+	
 } eif_global_context_t;
 
 
@@ -214,6 +219,9 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 #define prof_stack			(eif_globals->prof_stack_cx)
 
 #define socket_fides		(eif_globals->socket_fides_cx)
+
+#define eif_optimize_return	(eif_globals->eif_optimize_return_cx)			/* rt_public */
+#define eif_optimized_return_value	(eif_globals->eif_optimized_return_value_cx)			/* rt_public */
 
 #ifdef EIF_TLS_WRAP
 RT_LNK EIF_TSD_TYPE eif_global_key_get (void);

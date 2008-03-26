@@ -38,6 +38,7 @@
 #define _eif_plug_h_
 
 #include "eif_portable.h"
+#include "eif_types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,6 +47,8 @@ extern "C" {
 #ifndef EIF_THREADS
 RT_LNK int nstcall;	/* Nested call global variable: signals a nested call and
 					 * trigger an invariant check in generated C routines  */
+RT_LNK int eif_optimize_return;	/* Signals a polymorphic call to not create an Eiffel object. */
+RT_LNK EIF_TYPED_VALUE eif_optimized_return_value;		/* Location where optimized call store result. */
 #endif
 
 /* Structure used to represent bits in the object. The first long integer

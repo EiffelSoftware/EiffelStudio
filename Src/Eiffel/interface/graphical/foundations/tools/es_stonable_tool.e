@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ES_STONABLE_TOOL [G -> {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET], ES_STONABLE_I}]
+	ES_STONABLE_TOOL [G -> ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET]]
 
 inherit
 	ES_TOOL [G]

@@ -184,6 +184,8 @@ feature -- Access
 
 				Result.attach_to_docking_manager (window.docking_manager)
 				build_tool (Result)
+
+				on_tool_instantiated
 			end
 		ensure
 			result_attached: Result /= Void
@@ -368,6 +370,16 @@ feature -- Basic operations
 			is_hide_requested := True
 			close
 			is_hide_requested := False
+		end
+
+feature -- Action handlers
+
+	on_tool_instantiated
+			-- Called when a tool panel is instatiated
+		require
+			is_interface_usable: is_interface_usable
+			is_tool_instantiated: is_tool_instantiated
+		do
 		end
 
 feature -- Events

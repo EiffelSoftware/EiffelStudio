@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ES_PERSISTABLE_STONABLE_TOOL [G -> {ES_DOCKABLE_TOOL_PANEL [EV_WIDGET], ES_STONABLE_I}]
+	ES_PERSISTABLE_STONABLE_TOOL [G -> ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET]]
 
 inherit
 	ES_STONABLE_TOOL [G]
@@ -23,6 +23,14 @@ inherit
 			out
 		redefine
 			on_session_value_changed
+		end
+
+--inherit {NONE}
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		undefine
+			out
 		end
 
 feature {NONE} -- Clean up
@@ -64,21 +72,26 @@ feature -- Element change
 			-- <Precursor>
 		local
 			l_old_stone: like stone
+			l_old_is_processing_persistance: like is_processing_persistance
 		do
 			l_old_stone := stone
 
 			Precursor {ES_STONABLE_TOOL} (a_stone)
 
-			if l_old_stone /= stone and then is_stone_persistable then
+			if not is_processing_persistance and then l_old_stone /= stone and then is_stone_persistable then
 					-- Store changed stone in the session.
 
 				if {l_session: !like stone_session} stone_session then
+					l_old_is_processing_persistance := is_processing_persistance
+					is_processing_persistance := True
+
 					persist_stone (l_session, stone)
 
-						-- Indicate there is stone information
-					l_session.set_value (stone /= Void, tool_session_id (stone_session_id))
+					is_processing_persistance := l_old_is_processing_persistance
 				end
 			end
+		rescue
+			is_processing_persistance := l_old_is_processing_persistance
 		end
 
 feature {NONE} -- Status report
@@ -94,6 +107,9 @@ feature {NONE} -- Status report
 			stone_session_attached: Result implies stone_session /= Void
 		end
 
+	is_processing_persistance: BOOLEAN
+			-- Indicates if stone persistance is currently being processed
+
 feature -- Query
 
 	frozen tool_session_id (a_id: !STRING): !STRING
@@ -107,11 +123,11 @@ feature -- Query
 			l_count, i: INTEGER
 		do
 			l_count := a_id.count
-			i := a_id.last_index_of (',', l_count)
+			i := a_id.last_index_of ('.', l_count)
 			if i > 1 and i < l_count then
-				Result ?= a_id.substring (1, i - 1) + "." + generating_type.as_lower + a_id.substring (i + 1, l_count)
+				Result ?= a_id.substring (1, i - 1) + "." + generating_type.as_lower + "." + a_id.substring (i + 1, l_count)
 			else
-				Result ?= generating_type.as_lower + "." + a_id
+				Result ?= a_id + "." + generating_type.as_lower
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -126,9 +142,23 @@ feature {NONE} -- Helpers
 			create Result
 		end
 
+	frozen persistance_utilities: !ES_PERSISTABLE_STONE_UTILITIES
+			-- Access to persistance utilties for stone persistance
+		local
+			l_utils: like internal_persistance_utilities
+		do
+			l_utils := internal_persistance_utilities
+			if l_utils = Void then
+				Result := create_persistance_utilities
+				internal_persistance_utilities := Result
+			else
+				Result ?= l_utils
+			end
+		end
+
 feature {NONE} -- Basic operations
 
-	resurrect_stone (a_sesson: !SESSION_I): ?STONE
+	resurrect_stone (a_session: !SESSION_I): ?STONE
 			-- Resurrects a stone from previously stored session data.
 			--
 			-- `a_session': The session object to retrieve stone information from.
@@ -136,13 +166,19 @@ feature {NONE} -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_stone_persistable: is_stone_persistable
-			a_sesson_is_interface_usable: a_sesson.is_interface_usable
-		deferred
+			a_session_is_interface_usable: a_session.is_interface_usable
+		do
+			if workbench.system_defined and then workbench.is_in_stable_state then
+				Result := persistance_utilities.resurrect_stone (a_session, tool_session_id (stone_session_id))
+				if Result /= Void and then not is_stone_usable (Result) then
+					Result := Void
+				end
+			end
 		ensure
 			result_is_stone_usable: Result /= Void implies is_stone_usable (Result)
 		end
 
-	persist_stone (a_sesson: !SESSION_I; a_stone: ?STONE)
+	persist_stone (a_session: !SESSION_I; a_stone: ?STONE)
 			-- Stores a stone's reference information in the given session, for later resurrection.
 			-- Note: Do *not* store the stone object in the session! This will include too much data.
 			--
@@ -151,9 +187,12 @@ feature {NONE} -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			is_stone_persistable: is_stone_persistable
-			a_sesson_is_interface_usable: a_sesson.is_interface_usable
+			a_session_is_interface_usable: a_session.is_interface_usable
 			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
-		deferred
+		do
+			if workbench.system_defined and then workbench.is_in_stable_state then
+				persistance_utilities.persist_stone (a_session, tool_session_id (stone_session_id), a_stone)
+			end
 		end
 
 feature -- Action handlers
@@ -194,19 +233,31 @@ feature {SESSION_I} -- Event handlers
 		do
 			Precursor {SESSION_EVENT_OBSERVER} (a_session, a_id)
 
-			if a_id.is_equal (tool_session_id (stone_session_id)) then
+			if not is_processing_persistance and then a_id.is_equal (tool_session_id (stone_session_id)) then
 					-- The session value changed
 				if {l_session: SESSION_I} a_session then
-					l_stone_available ?= l_session.value (tool_session_id (stone_session_id))
-					if l_stone_available /= Void and then l_stone_available.item then
-							-- Resurrect stone and set.
-						l_stone := resurrect_stone (l_session)
-						if l_stone /= stone then
-							set_stone (l_stone)
-						end
+						-- Resurrect stone and set.
+					l_stone := resurrect_stone (l_session)
+					if l_stone /= stone then
+							-- Set persistance state, so the stone is no re-persisted.
+						is_processing_persistance := True
+						set_stone (l_stone)
+						is_processing_persistance := False
 					end
 				end
 			end
+		ensure then
+			is_processing_persistance_unchanged: is_processing_persistance = old is_processing_persistance
+		end
+
+feature {NONE} -- Factory
+
+	create_persistance_utilities: !ES_PERSISTABLE_STONE_UTILITIES
+			-- Creates a stone persistance utility.
+		do
+			create Result.make (False)
+		ensure
+			not_result_raise_events: not Result.raise_events
 		end
 
 feature -- Constants
@@ -217,6 +268,10 @@ feature {NONE} -- Internal implementation cache
 
 	internal_stone_session: like stone_session
 			-- Cached version of `stone_session'
+			-- Note: Do not use directly!
+
+	internal_persistance_utilities: like persistance_utilities
+			-- Cached version of `persistance_utilities'
 			-- Note: Do not use directly!
 
 ;indexing

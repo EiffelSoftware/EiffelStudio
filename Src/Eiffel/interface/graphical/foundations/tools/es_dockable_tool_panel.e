@@ -260,12 +260,13 @@ feature {NONE} -- Access
                 Result := create_widget
                 auto_recycle (Result)
 
+				internal_user_widget := Result
+
                     -- If user widget is siteable then site with the development window
                 l_site ?= Result
                 if l_site /= Void then
                     l_site.set_site (develop_window)
                 end
-                internal_user_widget := Result
             end
         ensure then
             result_attached: Result /= Void

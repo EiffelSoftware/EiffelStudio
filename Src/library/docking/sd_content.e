@@ -12,7 +12,7 @@ inherit
 	HASHABLE
 
 	SD_ACCESS
-	
+
 create
 	make_with_widget_title_pixmap,
 	make_with_widget
@@ -393,9 +393,18 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 			not_auto_hide: a_relative.state_value /= {SD_ENUMERATION}.auto_hide
 			not_destroyed: not is_destroyed
+		local
+			l_old_is_visible: BOOLEAN
 		do
+			l_old_is_visible := is_visible
+
 			set_visible (True)
    			state.change_zone_split_area (a_relative.state.zone, a_direction)
+
+			if not l_old_is_visible then
+				show_actions.call (Void)
+			end
+
    			set_focus
    		end
 
@@ -406,10 +415,19 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 			not_destroyed: not is_destroyed
+		local
+			l_old_is_visible: BOOLEAN
 		do
+			l_old_is_visible := is_visible
+
 			set_visible (True)
 			state.set_direction (a_direction)
 			state.dock_at_top_level (docking_manager.query.inner_container_main)
+
+			if not l_old_is_visible then
+				show_actions.call (Void)
+			end
+
 			set_focus
 		end
 
@@ -432,9 +450,18 @@ feature -- Set Position
 			attached: is_docking_manager_attached
 			manager_has_content: manager_has_content (Current)
 			not_destroyed: not is_destroyed
+		local
+			l_old_is_visible: BOOLEAN
 		do
+			l_old_is_visible := is_visible
+
 			set_visible (True)
 			state.float (a_screen_x, a_screen_y)
+
+			if not l_old_is_visible then
+				show_actions.call (Void)
+			end
+
 			set_focus
 		end
 
@@ -477,10 +504,19 @@ feature -- Set Position
 			editor_place_holder_in: manager_has_place_holder
 			is_editor: type = {SD_ENUMERATION}.editor
 			not_destroyed: not is_destroyed
+		local
+			l_old_is_visible: BOOLEAN
 		do
+			l_old_is_visible := is_visible
+
 			set_visible (True)
 			set_relative (docking_manager.zones.place_holder_content, {SD_ENUMERATION}.top)
 			docking_manager.zones.place_holder_content.close
+
+			if not l_old_is_visible then
+				show_actions.call (Void)
+			end
+
 			set_focus
 		ensure
 			no_place_holder: not manager_has_place_holder

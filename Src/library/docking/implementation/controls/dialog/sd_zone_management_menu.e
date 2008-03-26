@@ -82,15 +82,10 @@ feature {NONE}  -- Agents
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_contents := internal_notebook.contents
-			from
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				l_contents.item.close_request_actions.call (Void)
-				l_contents.forth
-			end
+			-- First we close others, finally we close selected `a_content'
+			-- This way is faster than just closing contents one by one.
+			on_close_others (a_content)
+			a_content.close_request_actions.call (Void)
 		end
 
 feature {NONE} -- Implementation

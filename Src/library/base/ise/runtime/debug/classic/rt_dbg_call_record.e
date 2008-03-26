@@ -46,16 +46,16 @@ feature -- Properties
 	object: ANY
 			-- Target object.
 
-	parent: like Current
+	parent: ?like Current
 			-- Parent's call record.
 
-	call_records: ARRAYED_LIST [like Current]
+	call_records: ?ARRAYED_LIST [like Current]
 			-- Sub call records.
 
-	field_records: ARRAYED_LIST [RT_DBG_RECORD]
+	field_records: ?ARRAYED_LIST [RT_DBG_RECORD]
 			-- Recorded fields from target `object'.			
 
-	flat_field_records: ARRAYED_LIST [TUPLE [obj: ANY; rec: RT_DBG_RECORD]]
+	flat_field_records: ?ARRAYED_LIST [TUPLE [obj: ANY; rec: RT_DBG_RECORD]]
 
 feature -- Status
 
@@ -74,9 +74,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 					or else not parent.call_records.has (p)
 		do
 			parent := p
-			parent.add_record (Current)
+			p.add_record (Current)
 		ensure
-			in_parent_records: parent.call_records.has (Current)
+			in_parent_records: {s: like parent} parent and then {c: like call_records} s.call_records and then c.has (Current)
 		end
 
 	add_record (c: like Current)
@@ -90,7 +90,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			end
 			call_records.extend (c)
 		ensure
-			in_records: call_records.has (c)
+			in_records: {r: like call_records} call_records and then r.has (c)
 		end
 
 	remove_parent
@@ -113,9 +113,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			end
 
 			debug ("RT_EXTENSION")
-				if rs /= Void then
-					dtrace_indent (depth); dtrace ("record_fields -> " + rs.count.out + " value(s).%N")
-					rs.do_all (agent (r: RT_DBG_RECORD)
+				if {ar: like field_records} rs then
+					dtrace_indent (depth); dtrace ("record_fields -> " + ar.count.out + " value(s).%N")
+					ar.do_all (agent (r: RT_DBG_RECORD)
 						do
 							dtrace (" -> " + r.position.out + ") " + r.to_string + "%N")
 						end)
@@ -161,7 +161,6 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			ot: ARRAYED_LIST [ANY] -- indexed by `oi'
 			ort: ARRAY [LIST [RT_DBG_RECORD]] -- indexed by `oi'
 			orcds: LIST [RT_DBG_RECORD]
-			ffrcds: like flat_field_records
 			tr: TUPLE [obj: ANY; rec: RT_DBG_RECORD]
 			o: ANY
 			oi: INTEGER
@@ -170,9 +169,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			n: INTEGER
 			retried: BOOLEAN
 		do
-			if not retried then
-				ffrcds := flat_field_records
-				check ffrcds /= Void end
+			if not retried and then {ffrcds: like flat_field_records} flat_field_records then
 				n := 0
 				if ffrcds.count > 1 then
 					from
@@ -263,30 +260,25 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 
 	field_records_count: INTEGER
 			-- Count of `field_records'.
-		local
-			rcds: like field_records
 		do
-			rcds := field_records
-			if rcds /= Void then
+			if {rcds: like field_records} field_records then
 				Result := rcds.count
 			end
 		end
 
-	record_count_but (c: like Current): INTEGER
+	record_count_but (c: ?like Current): INTEGER
 			-- Number of records contained by Current and sub calls
 			-- apart from the records contained by `c' (and sub calls)
 		local
 			r: like Current
-			lst: like call_records
 		do
-			if is_flat then
-				Result := flat_field_records.count
+			if is_flat and then {ffr: like flat_field_records} flat_field_records then
+				Result := ffr.count
 			else
-				if field_records /= Void then
-					Result := field_records.count
+				if {f: like field_records} field_records then
+					Result := f.count
 				end
-				lst := call_records
-				if lst /= Void then
+				if {lst: like call_records} call_records then
 					from
 						lst.start
 					until
@@ -305,18 +297,17 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 	bottom: like Current
 			-- Bottom's call record.
 		do
-			if parent = Void then
-				Result := Current
-			else
-				Result := parent.bottom
+			Result := Current
+			if {p: like parent} parent then
+				Result := p.bottom
 			end
 		end
 
 	available_calls_to_bottom: INTEGER
 			-- Number of available calls to reach the bottom record.
 		do
-			if parent /= Void then
-				Result := parent.available_calls_to_bottom
+			if {p: like parent} parent then
+				Result := p.available_calls_to_bottom
 			end
 			Result := Result + 1
 		end
@@ -326,14 +317,16 @@ feature -- debug
 	debug_output: STRING
 			-- Debug output as string representation
 		do
-			if object /= Void then
-				Result := "{" + object.generator + "}."
+			Result := "{"
+			if {o: like object} object then
+				Result.append_string (o.generator)
 			else
-				Result := "{_}."
+				Result.append_character ('_')
 			end
+			Result.append_string ("}.")
 
-			if feature_name /= Void then
-				Result.append (feature_name + " ")
+			if {f: like feature_name} feature_name then
+				Result.append (f + " ")
 			end
 			Result.append (feature_rout_id.out + " <" + depth.out + ">")
 			if is_flat then
@@ -341,7 +334,7 @@ feature -- debug
 			end
 		end
 
-	feature_name: STRING
+	feature_name: ?STRING
 			-- Optional feature name (for debugging purpose).
 
 	set_feature_name (fn: like feature_name) is
@@ -353,7 +346,7 @@ feature -- debug
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

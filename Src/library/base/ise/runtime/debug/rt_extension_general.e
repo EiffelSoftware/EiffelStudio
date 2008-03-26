@@ -26,13 +26,13 @@ feature -- RT extension identifiers (check eif_debug.h uses the same values)
 
 feature -- Object storage Access
 
-	saved_object_to (r: ANY; fn: STRING): ANY
+	saved_object_to (r: ?ANY; fn: STRING): ?ANY
 			-- Save object `r' into file `fn'
 		local
 			file: RAW_FILE
 		do
 			create file.make (fn)
-			if not file.exists or else file.is_writable then
+			if r /= Void and then (not file.exists or else file.is_writable) then
 				file.create_read_write
 				file.independent_store (r)
 				file.close
@@ -42,30 +42,29 @@ feature -- Object storage Access
 			end
 		end
 
-	object_loaded_from (r: ANY; fn: STRING): ANY
+	object_loaded_from (r: ?ANY; fn: STRING): ?ANY
 			-- Loaded object from file `fn'.
 			-- if `r' is Void return a new object
 			-- else load into `r'
 			-- If failure then results Void object.
 		local
-			o1, o2: ANY
+			o: ANY
 			file: RAW_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
-				o1 := r
 				create file.make (fn)
 				if file.exists and then file.is_readable then
 					file.open_read
-					o2 := file.retrieved
+					o := file.retrieved
 					file.close
-					if o1 /= Void then
-						if o2 /= Void and then o1.same_type (o2) then
+					if {o1: ANY} r then
+						if {o2: ANY} o and then o1.same_type (o2) then
 							o1.standard_copy (o2)
 							Result := o1
 						end
 					else
-						Result := o2
+						Result := o
 					end
 				else
 					Result := Void
@@ -80,7 +79,7 @@ feature -- Object storage Access
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

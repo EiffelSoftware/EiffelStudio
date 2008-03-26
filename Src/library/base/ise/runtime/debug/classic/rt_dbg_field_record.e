@@ -40,24 +40,18 @@ feature -- Properties
 feature -- Access
 
 	is_same_as (other: RT_DBG_RECORD): BOOLEAN
-		local
-			c: like Current
 		do
 			if Precursor {RT_DBG_RECORD} (other) then
-				c ?= other
-				Result := c /= Void and then value = c.value
+				Result := {c: like Current} other and then value = c.value
 			end
 		end
 
 	to_string: STRING
 			-- String representation
-		local
-			v: ANY
 		do
 			inspect type
 			when {INTERNAL}.reference_type then
-				v ?= value
-				if v = Void then
+				if not {v: ANY} value then
 					Result := "Void"
 				else
 					Result := ($v).out
@@ -65,7 +59,9 @@ feature -- Access
 			when {INTERNAL}.expanded_type then
 				Result := ($value).out
 			else
-				Result := value.out
+				if {b: like value} value then
+					Result := b.out
+				end
 			end
 		end
 
@@ -101,14 +97,11 @@ feature -- Runtime
 
 	revert (obj: ANY)
 			-- Revert previous change due to Current to `obj'
-		local
-			bak: like backup
 		do
 			debug ("RT_EXTENSION")
 				dtrace (generator + ".revert (" + obj.generator + " #" + index.out + ")%N")
 			end
-			bak := backup
-			if bak /= Void then
+			if {bak: like backup} backup then
 				set_object_field (obj, bak)
 				set_backup (Void)
 				debug ("RT_EXTENSION")
@@ -123,73 +116,74 @@ feature {NONE} -- Internal Implementation
 			-- Set object field defined by `r' on target `obj'
 		local
 			i: like index
-			l_fr_integer_8: RT_DBG_FIELD_RECORD [INTEGER_8]
-			l_fr_integer_16: RT_DBG_FIELD_RECORD [INTEGER_16]
-			l_fr_integer_32: RT_DBG_FIELD_RECORD [INTEGER_32]
-			l_fr_integer_64: RT_DBG_FIELD_RECORD [INTEGER_64]
-			l_fr_natural_8: RT_DBG_FIELD_RECORD [NATURAL_8]
-			l_fr_natural_16: RT_DBG_FIELD_RECORD [NATURAL_16]
-			l_fr_natural_32: RT_DBG_FIELD_RECORD [NATURAL_32]
-			l_fr_natural_64: RT_DBG_FIELD_RECORD [NATURAL_64]
-			l_fr_pointer: RT_DBG_FIELD_RECORD [POINTER]
-			l_fr_any: RT_DBG_FIELD_RECORD [ANY]
-			l_fr_boolean: RT_DBG_FIELD_RECORD [BOOLEAN]
-			l_fr_real_32: RT_DBG_FIELD_RECORD [REAL_32]
-			l_fr_real_64: RT_DBG_FIELD_RECORD [REAL_64]
-			l_fr_character_8: RT_DBG_FIELD_RECORD [CHARACTER_8]
-			l_fr_character_32: RT_DBG_FIELD_RECORD [CHARACTER_32]
 		do
 			i := index
 			inspect
 				r.type
 			when Integer_8_type then
-				l_fr_integer_8 ?= r
-				set_integer_8_field (i, obj, (l_fr_integer_8).value)
+				if {l_fr_integer_8: RT_DBG_FIELD_RECORD [INTEGER_8]} r then
+					set_integer_8_field (i, obj, (l_fr_integer_8).value)
+				end
 			when Integer_16_type then
-				l_fr_integer_16 ?= r
-				set_integer_16_field (i, obj, (l_fr_integer_16).value)
+				if {l_fr_integer_16: RT_DBG_FIELD_RECORD [INTEGER_16]} r then
+					set_integer_16_field (i, obj, (l_fr_integer_16).value)
+				end
 			when integer_32_type then
-				l_fr_integer_32 ?= r
-				set_integer_32_field (i, obj, (l_fr_integer_32).value)
+				if {l_fr_integer_32: RT_DBG_FIELD_RECORD [INTEGER_32]} r then
+					set_integer_32_field (i, obj, (l_fr_integer_32).value)
+				end
 			when Integer_64_type then
-				l_fr_integer_64 ?= r
-				set_integer_64_field (i, obj, (l_fr_integer_64).value)
+				if {l_fr_integer_64: RT_DBG_FIELD_RECORD [INTEGER_64]} r then
+					set_integer_64_field (i, obj, (l_fr_integer_64).value)
+				end
 			when Natural_8_type then
-				l_fr_natural_8 ?= r
-				set_natural_8_field (i, obj, (l_fr_natural_8).value)
+				if {l_fr_natural_8: RT_DBG_FIELD_RECORD [NATURAL_8]} r then
+					set_natural_8_field (i, obj, (l_fr_natural_8).value)
+				end
 			when Natural_16_type then
-				l_fr_natural_16 ?= r
-				set_natural_16_field (i, obj, (l_fr_natural_16).value)
+				if {l_fr_natural_16: RT_DBG_FIELD_RECORD [NATURAL_16]} r then
+					set_natural_16_field (i, obj, (l_fr_natural_16).value)
+				end
 			when natural_32_type then
-				l_fr_natural_32 ?= r
-				set_natural_32_field (i, obj, (l_fr_natural_32).value)
+				if {l_fr_natural_32: RT_DBG_FIELD_RECORD [NATURAL_32]} r then
+					set_natural_32_field (i, obj, (l_fr_natural_32).value)
+				end
 			when Natural_64_type then
-				l_fr_natural_64 ?= r
-				set_natural_64_field (i, obj, (l_fr_natural_64).value)
+				if {l_fr_natural_64: RT_DBG_FIELD_RECORD [NATURAL_64]} r then
+					set_natural_64_field (i, obj, (l_fr_natural_64).value)
+				end
 			when Pointer_type then
-				l_fr_pointer ?= r
-				set_pointer_field (i, obj, (l_fr_pointer).value)
+				if {l_fr_pointer: RT_DBG_FIELD_RECORD [POINTER]} r then
+					set_pointer_field (i, obj, (l_fr_pointer).value)
+				end
 			when Reference_type then
-				l_fr_any ?= r
-				set_reference_field (i, obj, (l_fr_any).value)
+				if {l_fr_any: RT_DBG_FIELD_RECORD [ANY]} r then
+					set_reference_field (i, obj, (l_fr_any).value)
+				end
 			when Expanded_type then
-				l_fr_any ?= r
-				set_reference_field (i, obj, (l_fr_any).value)
+				if {l_fr_eany: RT_DBG_FIELD_RECORD [ANY]} r then
+					set_reference_field (i, obj, (l_fr_eany).value)
+				end
 			when Boolean_type then
-				l_fr_boolean ?= r
-				set_boolean_field (i, obj, (l_fr_boolean).value)
+				if {l_fr_boolean: RT_DBG_FIELD_RECORD [BOOLEAN]} r then
+					set_boolean_field (i, obj, (l_fr_boolean).value)
+				end
 			when real_32_type then
-				l_fr_real_32 ?= r
-				set_real_32_field (i, obj, (l_fr_real_32).value)
+				if {l_fr_real_32: RT_DBG_FIELD_RECORD [REAL_32]} r then
+					set_real_32_field (i, obj, (l_fr_real_32).value)
+				end
 			when real_64_type then
-				l_fr_real_64 ?= r
-				set_real_64_field (i, obj, (l_fr_real_64).value)
+				if {l_fr_real_64: RT_DBG_FIELD_RECORD [REAL_64]} r then
+					set_real_64_field (i, obj, (l_fr_real_64).value)
+				end
 			when character_8_type then
-				l_fr_character_8 ?= r
-				set_character_8_field (i, obj, (l_fr_character_8).value)
+				if {l_fr_character_8: RT_DBG_FIELD_RECORD [CHARACTER_8]} r then
+					set_character_8_field (i, obj, (l_fr_character_8).value)
+				end
 			when character_32_type then
-				l_fr_character_32 ?= r
-				set_character_32_field (i, obj, (l_fr_character_32).value)
+				if {l_fr_character_32: RT_DBG_FIELD_RECORD [CHARACTER_32]} r then
+					set_character_32_field (i, obj, (l_fr_character_32).value)
+				end
 --			when Bit_type then
 --			when none_type then
 			else
@@ -198,7 +192,7 @@ feature {NONE} -- Internal Implementation
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

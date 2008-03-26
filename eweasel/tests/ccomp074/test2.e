@@ -6,4 +6,8 @@ feature
 		deferred
 		end
 
+	item_name: INTEGER is
+		deferred
+		end
+
 end

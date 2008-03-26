@@ -59,13 +59,13 @@ feature -- Execution
 	execute is
 			-- Execute Current.
 		do
-			debugger_manager.controller.start_workbench_application (debugger_manager.current_execution_parameters)
+			debugger_manager.controller.start_finalized_application (debugger_manager.current_execution_parameters)
 		end
 
 	execute_with_parameters (params: DEBUGGER_EXECUTION_PARAMETERS) is
 			-- Execute Current with parameters.
 		do
-			debugger_manager.controller.start_workbench_application (debugger_manager.resolved_execution_parameters  (params))
+			debugger_manager.controller.start_finalized_application (debugger_manager.resolved_execution_parameters  (params))
 		end
 
 feature -- Properties

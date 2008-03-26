@@ -2737,14 +2737,18 @@ feature -- Properties
 			-- Parent class types
 			-- List containing both conforming and non-conforming parent class types of `Current'.
 		local
+			l_conforming_parents: like conforming_parents
 			l_non_conforming_parents: like non_conforming_parents
 		do
 			Result := conforming_parents
 			l_non_conforming_parents := non_conforming_parents
 			if Result /= Void then
 				if l_non_conforming_parents /= Void then
-					Result := Result.twin
-						-- We need to twin the result if appending to avoid side effect.
+						-- We cannot just append `l_non_conforming_parents' to a clone
+						-- of Result, because its size is fixed and cannot be increased.
+					l_conforming_parents := Result
+					create Result.make (l_conforming_parents.count + l_non_conforming_parents.count)
+					Result.append (l_conforming_parents)
 					Result.append (l_non_conforming_parents)
 				end
 			else

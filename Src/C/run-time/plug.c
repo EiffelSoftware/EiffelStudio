@@ -79,6 +79,26 @@ doc:	</attribute>
 */
 rt_public int nstcall = 0;
 rt_public int16 caller_assertion_level = 0;
+
+/*
+doc:	<attribute name="eif_optimize_return" return_type="int" export="public">
+doc:		<summary>Is current call a polymorphic call whose result type is a basic one and that does not need an object creation? If this is the case, the result of the call is stored in `eif_optimized_return_value'. Note that we use EIF_TYPED_VALUE and not just EIF_VALUE because the Eiffel compiler only knows about the former.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_public int eif_optimize_return = 0;
+
+/*
+doc:	<attribute name="eif_optimized_return_value" return_type="EIF_TYPED_VALUE" export="public">
+doc:		<summary>When a polymorphic call is optimized for the return type, the value is stored in this location (it cannot be stored on the stack since the stack is unwinded, thus this variable).</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_TYPED_VALUE eif_optimized_return_value;
 #endif /* EIF_THREADS */
 
 rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int where);		/* Internal invariant control loop */

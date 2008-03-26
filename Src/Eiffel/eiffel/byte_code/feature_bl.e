@@ -244,12 +244,11 @@ end
 			buf: GENERATION_BUFFER
 			l_type_c: TYPE_C
 		do
-			is_direct_once.set_item (False)
 			generate_access_on_type (gen_reg, class_type)
 			buf := buffer
-			if not is_deferred then
+			if not is_deferred.item then
 				if is_direct_once.item then
-					if system.keep_assertions then
+					if is_right_parenthesis_needed.item then
 						buf.put_character (')')
 					end
 					buf.put_character (',')
@@ -279,7 +278,7 @@ end
 						generate_parameters_list
 					end
 					buf.put_character (')')
-					if system.keep_assertions then
+					if is_right_parenthesis_needed.item then
 						buf.put_character (')')
 					end
 				end
@@ -293,7 +292,7 @@ end
 					l_type_c.generate_default_value (buf)
 				end
 				buf.put_character (')')
-				if system.keep_assertions then
+				if is_right_parenthesis_needed.item then
 					buf.put_character (')')
 				end
 			end
@@ -322,12 +321,15 @@ end
 			l_par := parent
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True)
 			buf := buffer
-			is_deferred := False
+				-- Initialize variable being caried from `generate_access_on_type' to `generate_end'.
+			is_deferred.put (False)
+			is_direct_once.put (False)
+			is_right_parenthesis_needed.put (l_keep)
 			type_i := real_type (type)
 			type_c := type_i.c_type
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
-				is_deferred := True
+				is_deferred.put (True)
 				if l_keep then
 					buf.put_character ('(')
 				end
@@ -341,13 +343,17 @@ end
 					-- just `is_formal' because otherwise if you have `like x' and `x: G'
 					-- then we would fail to detect that.
 				if system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then type_i.is_basic then
-						-- Feature returns a reference that need to be used as a basic one.
+						-- Feature returns a reference that needs to be used as a basic one.
+					is_right_parenthesis_needed.put (True)
 					buf.put_character ('*')
 					type_c.generate_access_cast (buf)
 					type_c := reference_c_type
-				end
-				if l_keep then
+					buf.put_string ("(eif_optimize_return = 1, ")
+				elseif l_keep then
 					buf.put_character ('(')
+				end
+
+				if l_keep then
 					if is_nested and then need_invariant then
 						buf.put_string ("nstcall = 1, ")
 					else
@@ -394,7 +400,7 @@ end
 					if f.is_once and then context.is_once_call_optimized then
 							-- Routine contracts (require, ensure, invariant) should not be checked
 							-- and value of already called once routine can be retrieved from memory
-						is_direct_once.set_item (True)
+						is_direct_once.put (True)
 						context.generate_once_optimized_call_start (type_c, index, is_process_relative, buf)
 					end
 
@@ -414,7 +420,7 @@ end
 					end
 				else
 						-- Call to a deferred feature without implementation
-					is_deferred := True
+					is_deferred.put (True)
 				end
 				if l_keep then
 					buf.put_character ('(')
@@ -424,7 +430,7 @@ end
 						buf.put_string ("nstcall = 0, ")
 					end
 				end
-				if is_deferred then
+				if is_deferred.item then
 					buf.put_string ("(RTNR")
 				else
 					buf.put_string (internal_name)
@@ -441,7 +447,7 @@ end
 			i, nb: INTEGER
 			p: like parameters
 		do
-			if not is_deferred then
+			if not is_deferred.item then
 				p := parameters
 				if p /= Void then
 					buf := buffer
@@ -505,13 +511,29 @@ end
 
 feature {NONE} -- Implementation
 
-	is_deferred: BOOLEAN
+	is_deferred: CELL [BOOLEAN] is
 			-- Is current feature call a deferred feature without implementation?
+		once
+			create Result
+		ensure
+			is_deferred_not_void: Result /= Void
+		end
 
-	is_direct_once: BOOLEAN_REF is
+	is_direct_once: CELL [BOOLEAN] is
 			-- Is current call done on a once which value can be accessed directly?
 		once
 			create Result
+		ensure
+			is_direct_once_not_void: Result /= Void
+		end
+
+	is_right_parenthesis_needed: CELL [BOOLEAN] is
+			-- Does current call require to close a parenthesis?
+			-- Case when one use `nstcall' or `eif_optimize_return'.
+		once
+			create Result
+		ensure
+			is_right_parenthesis_needed_not_void: Result /= Void
 		end
 
 indexing

@@ -643,12 +643,39 @@ feature -- Analyzis
 							end
 							buf.put_string (gc_rparan_semi_c)
 							if not seed_type.is_void and then basic_i /= Void then
+								buf.put_new_line
+								buf.put_character ('{')
+								buf.indent
+								buf.put_gtcx
+								buf.put_new_line
+								buf.put_string ("if (eif_optimize_return) {")
+								buf.indent
+								buf.put_new_line
+								buf.put_string ("eif_optimize_return = 0;")
+								buf.put_new_line
+								buf.put_string ("eif_optimized_return_value.")
+								basic_i.c_type.generate_typed_field (buf)
+								buf.put_string (" = r;")
+								buf.put_new_line
+								buf.put_string ("return (EIF_REFERENCE) &eif_optimized_return_value.")
+								basic_i.c_type.generate_typed_field (buf)
+								buf.put_character (';')
+								buf.exdent
+								buf.put_new_line
+								buf.put_string ("} else {")
+								buf.indent
 								basic_i.metamorphose (l_context.result_register, create {NAMED_REGISTER}.make ("r", basic_i.c_type), buf)
 								buf.put_character (';')
 								buf.put_new_line
 								buf.put_string ("return ")
 								l_context.result_register.print_register
 								buf.put_character (';')
+								buf.exdent
+								buf.put_new_line
+								buf.put_character ('}')
+								buf.exdent
+								buf.put_new_line
+								buf.put_character ('}')
 							end
 							buf.generate_block_close
 						end

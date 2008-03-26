@@ -1,0 +1,14 @@
+test_name loop-variant-syntax
+test_description Loop variant can be placed at the end of a loop.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result syntax_warning TEST 24
+
+execute_work NONE exec_output_m
+execute_result ok
+compare exec_output_m output
+
+test_end

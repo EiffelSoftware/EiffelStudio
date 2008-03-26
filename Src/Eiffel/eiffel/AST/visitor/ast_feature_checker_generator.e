@@ -2447,8 +2447,7 @@ feature -- Implementation
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type, l_last_id)
 						if l_needs_byte_node then
-							create l_local
-							l_local.set_position (l_local_info.position)
+							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
 							last_byte_node := l_local
 						end
 						if not is_inherited then
@@ -2501,6 +2500,8 @@ feature -- Implementation
 			l_veen2b: VEEN2B
 			l_last_id: INTEGER
 			l_error_level: NATURAL_32
+			l_type: like last_type
+			l_local: LOCAL_B
 		do
 			-- No need for `last_type.actual_type' as here `last_type' is equal to
 			-- `context.current_class_type' since we start a feature call.
@@ -2563,16 +2564,40 @@ feature -- Implementation
 					l_veen2b.set_location (l_as.feature_name)
 					error_handler.insert_error (l_veen2b)
 				else
-						-- Look for a feature
-					l_feature := Void
-					if is_inherited then
-						l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
-					end
-					process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
-					if error_level = l_error_level and not is_inherited then
-							-- set some type attributes of the node
-						l_as.set_routine_ids (last_routine_id_set)
-						l_as.set_class_id (l_last_id)  -- last_type_of_call.associated_class.class_id -- seems to be wrong...
+					l_local_info := context.object_test_local (l_as.feature_name.name_id)
+					if l_local_info /= Void then
+						l_local_info.set_is_used (True)
+						last_access_writable := False
+						if l_as.parameters /= Void then
+							create l_vuar1
+							context.init_error (l_vuar1)
+							l_vuar1.set_local_name (l_as.feature_name.name)
+							l_vuar1.set_location (l_as.feature_name)
+							error_handler.insert_error (l_vuar1)
+						end
+						l_type := l_local_info.type
+						l_type := l_type.instantiation_in (last_type, l_last_id)
+						if is_byte_node_enabled then
+							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
+							last_byte_node := l_local
+						end
+						if not is_inherited then
+							l_as.enable_object_test_local
+							l_as.set_class_id (class_id_of (l_type))
+						end
+						last_type := l_type
+					else
+							-- Look for a feature
+						l_feature := Void
+						if is_inherited then
+							l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
+						end
+						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
+						if error_level = l_error_level and not is_inherited then
+								-- set some type attributes of the node
+							l_as.set_routine_ids (last_routine_id_set)
+							l_as.set_class_id (l_last_id)  -- last_type_of_call.associated_class.class_id -- seems to be wrong...
+						end
 					end
 				end
 			end
@@ -2790,6 +2815,7 @@ feature -- Implementation
 			l_vxrc: VXRC
 			l_byte_code: BYTE_CODE
 			l_list: BYTE_LIST [BYTE_NODE]
+			l_assertion_byte_code: ASSERTION_BYTE_CODE
 			l_needs_byte_node: BOOLEAN
 			s: INTEGER
 			l_error_level: NATURAL_32
@@ -2824,7 +2850,7 @@ feature -- Implementation
 				set_is_checking_precondition (True)
 				l_as.precondition.process (Current)
 				if l_needs_byte_node then
-					l_list ?= last_byte_node
+					l_assertion_byte_code ?= last_byte_node
 				end
 					-- Reset the levels to default values
 				set_is_checking_precondition (False)
@@ -2841,8 +2867,7 @@ feature -- Implementation
 				l_as.routine_body.process (Current)
 				if l_needs_byte_node and then error_level = l_error_level then
 					l_byte_code ?= last_byte_node
-					context.init_byte_code (l_byte_code)
-					l_byte_code.set_precondition (l_list)
+					l_byte_code.set_precondition (l_assertion_byte_code)
 				end
 
 				l_feat_type := current_feature.type
@@ -2880,8 +2905,8 @@ feature -- Implementation
 					set_is_checking_postcondition (True)
 					l_as.postcondition.process (Current)
 					if l_needs_byte_node and then error_level = l_error_level then
-						l_list ?= last_byte_node
-						l_byte_code.set_postcondition (l_list)
+						l_assertion_byte_code ?= last_byte_node
+						l_byte_code.set_postcondition (l_assertion_byte_code)
 					end
 						-- Reset the level
 					set_is_checking_postcondition (False)
@@ -2930,6 +2955,7 @@ feature -- Implementation
 
 			if error_level = l_error_level then
 				if l_needs_byte_node then
+					context.init_byte_code (l_byte_code)
 					if old_expressions /= Void and then not old_expressions.is_empty then
 						l_byte_code.set_old_expressions (old_expressions)
 					end
@@ -2960,10 +2986,10 @@ feature -- Implementation
 
 	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
 		do
-			process_eiffel_list_with_matcher (l_as, Void)
+			process_eiffel_list_with_matcher (l_as, Void, Void)
 		end
 
-	process_eiffel_list_with_matcher (l_as: EIFFEL_LIST [AST_EIFFEL]; m: AST_SCOPE_MATCHER) is
+	process_eiffel_list_with_matcher (l_as: EIFFEL_LIST [AST_EIFFEL]; m: AST_SCOPE_MATCHER; b: BYTE_LIST [BYTE_NODE]) is
 		local
 			l_cursor: INTEGER
 			l_list: BYTE_LIST [BYTE_NODE]
@@ -2973,7 +2999,11 @@ feature -- Implementation
 
 			if is_byte_node_enabled then
 				from
-					create l_list.make (l_as.count)
+					if b = Void then
+						create l_list.make (l_as.count)
+					else
+						l_list := b
+					end
 				until
 					l_as.after
 				loop
@@ -3347,52 +3377,67 @@ feature -- Implementation
 						l_as.enable_local
 					end
 				else
-					if is_inherited then
-						l_feature := context.current_class.feature_of_rout_id (l_as.routine_ids.first)
-					else
-						l_feature := context.current_class.feature_table.item_id (l_as.feature_name.internal_name.name_id)
-					end
-					if l_feature = Void then
-						create l_veen
-						context.init_error (l_veen)
-						l_veen.set_identifier (l_as.feature_name.internal_name.name)
-						l_veen.set_location (l_as.feature_name.start_location)
-						error_handler.insert_error (l_veen)
-					else
-						if l_feature.is_constant then
-							create l_vzaa1
-							context.init_error (l_vzaa1)
-							l_vzaa1.set_address_name (l_as.feature_name.internal_name.name)
-							l_vzaa1.set_location (l_as.feature_name.start_location)
-							error_handler.insert_error (l_vzaa1)
-						elseif l_feature.is_external then
-							create l_unsupported
-							context.init_error (l_unsupported)
-							l_unsupported.set_message ("The $ operator is not supported on externals.")
-							l_unsupported.set_location (l_as.feature_name.start_location)
-							error_handler.insert_error (l_unsupported)
-						elseif l_feature.is_attribute then
-							l_type := l_feature.type.actual_type
-							create {TYPED_POINTER_A} last_type.make_typed (l_type)
-						else
-							last_type := Pointer_type
+					l_local_info := context.object_test_local (l_as.feature_name.internal_name.name_id)
+					if l_local_info /= Void then
+						l_local_info.set_is_used (True)
+						last_access_writable := False
+						l_type := l_local_info.type
+						l_type := l_type.instantiation_in (last_type, l_last_id)
+						if l_needs_byte_node then
+							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
+							create {HECTOR_B} last_byte_node.make_with_type (l_local, last_type)
 						end
-
-						if error_level = l_error_level then
-								-- Dependance
-							create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
-							context.supplier_ids.extend (l_depend_unit)
-
-							if l_needs_byte_node then
-								if l_feature.is_attribute then
-									l_access := l_feature.access (l_type, False)
-									create {HECTOR_B} last_byte_node.make_with_type (l_access, last_type)
-								else
-									create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
-								end
+						if not is_inherited then
+							l_as.enable_object_test_local
+						end
+					else
+						if is_inherited then
+							l_feature := context.current_class.feature_of_rout_id (l_as.routine_ids.first)
+						else
+							l_feature := context.current_class.feature_table.item_id (l_as.feature_name.internal_name.name_id)
+						end
+						if l_feature = Void then
+							create l_veen
+							context.init_error (l_veen)
+							l_veen.set_identifier (l_as.feature_name.internal_name.name)
+							l_veen.set_location (l_as.feature_name.start_location)
+							error_handler.insert_error (l_veen)
+						else
+							if l_feature.is_constant then
+								create l_vzaa1
+								context.init_error (l_vzaa1)
+								l_vzaa1.set_address_name (l_as.feature_name.internal_name.name)
+								l_vzaa1.set_location (l_as.feature_name.start_location)
+								error_handler.insert_error (l_vzaa1)
+							elseif l_feature.is_external then
+								create l_unsupported
+								context.init_error (l_unsupported)
+								l_unsupported.set_message ("The $ operator is not supported on externals.")
+								l_unsupported.set_location (l_as.feature_name.start_location)
+								error_handler.insert_error (l_unsupported)
+							elseif l_feature.is_attribute then
+								l_type := l_feature.type.actual_type
+								create {TYPED_POINTER_A} last_type.make_typed (l_type)
+							else
+								last_type := Pointer_type
 							end
-							if not is_inherited then
-								l_as.set_routine_ids (l_feature.rout_id_set)
+
+							if error_level = l_error_level then
+									-- Dependance
+								create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+								context.supplier_ids.extend (l_depend_unit)
+
+								if l_needs_byte_node then
+									if l_feature.is_attribute then
+										l_access := l_feature.access (l_type, False)
+										create {HECTOR_B} last_byte_node.make_with_type (l_access, last_type)
+									else
+										create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
+									end
+								end
+								if not is_inherited then
+									l_as.set_routine_ids (l_feature.rout_id_set)
+								end
 							end
 						end
 					end
@@ -4443,7 +4488,7 @@ feature -- Implementation
 			local_name_id: INTEGER
 			local_type: TYPE_A
 			local_info: LOCAL_INFO
-			local_b: LOCAL_B
+			local_b: OBJECT_TEST_LOCAL_B
 			expr: EXPR_B
 			not_implemented: NOT_SUPPORTED
 		do
@@ -4521,8 +4566,7 @@ feature -- Implementation
 				l_as.expression.process (Current)
 				if l_needs_byte_node and then last_type /= Void then
 					expr ?= last_byte_node
-					create local_b
-					local_b.set_position (local_info.position)
+					create local_b.make (local_info.position, current_feature.body_index)
 					create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, local_type.create_info)
 				end
 			end
@@ -5017,7 +5061,7 @@ feature -- Implementation
 		do
 			if l_as.check_list /= Void then
 				set_is_checking_check (True)
-				process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION})
+				process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}, Void)
 				set_is_checking_check (False)
 
 				if is_byte_node_enabled then
@@ -6319,30 +6363,98 @@ feature -- Implementation
 		end
 
 	process_ensure_as (l_as: ENSURE_AS) is
+		local
+			a: EIFFEL_LIST [TAGGED_AS]
+			b: ASSERTION_BYTE_CODE
+			i: INTEGER
 		do
-			if l_as.assertions /= Void then
-				l_as.assertions.process (Current)
+			a := l_as.assertions
+			if a /= Void then
+				if is_byte_node_enabled then
+					create b.make (a.count)
+					i := context.next_object_test_local_position
+				end
+				process_eiffel_list_with_matcher (a, Void, b)
+				if b /= Void then
+					if b.is_empty then
+						b := Void
+					else
+						context.init_assertion_byte_code (b, i)
+					end
+					last_byte_node := b
+				end
 			end
 		end
 
 	process_ensure_then_as (l_as: ENSURE_THEN_AS) is
+		local
+			a: EIFFEL_LIST [TAGGED_AS]
+			b: ASSERTION_BYTE_CODE
+			i: INTEGER
 		do
-			if l_as.assertions /= Void then
-				l_as.assertions.process (Current)
+			a := l_as.assertions
+			if a /= Void then
+				if is_byte_node_enabled then
+					create b.make (a.count)
+					i := context.next_object_test_local_position
+				end
+				process_eiffel_list_with_matcher (a, Void, b)
+				if b /= Void then
+					if b.is_empty then
+						b := Void
+					else
+						context.init_assertion_byte_code (b, i)
+					end
+					last_byte_node := b
+				end
 			end
 		end
 
 	process_require_as (l_as: REQUIRE_AS) is
+		local
+			a: EIFFEL_LIST [TAGGED_AS]
+			b: ASSERTION_BYTE_CODE
+			i: INTEGER
 		do
-			if l_as.assertions /= Void then
-				process_eiffel_list_with_matcher (l_as.assertions, create {AST_SCOPE_ASSERTION})
+			a := l_as.assertions
+			if a /= Void then
+				if is_byte_node_enabled then
+					create b.make (a.count)
+					i := context.next_object_test_local_position
+				end
+				process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}, b)
+				if b /= Void then
+					if b.is_empty then
+						b := Void
+					else
+						context.init_assertion_byte_code (b, i)
+					end
+					last_byte_node := b
+				end
 			end
 		end
 
 	process_require_else_as (l_as: REQUIRE_ELSE_AS) is
+		local
+			a: EIFFEL_LIST [TAGGED_AS]
+			b: ASSERTION_BYTE_CODE
+			i: INTEGER
 		do
-			if l_as.assertions /= Void then
-				l_as.assertions.process (Current)
+			a := l_as.assertions
+			if a /= Void then
+				if is_byte_node_enabled then
+					create b.make (a.count)
+					i := context.next_object_test_local_position
+				end
+				process_eiffel_list_with_matcher (a, Void, b)
+				if b /= Void then
+					if b.is_empty then
+						b := Void
+					else
+						context.init_assertion_byte_code (b, i)
+					end
+					last_byte_node := b
+				end
 			end
 		end
 

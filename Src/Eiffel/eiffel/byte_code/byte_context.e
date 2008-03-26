@@ -47,6 +47,7 @@ feature -- Initialization
 			create class_type_stack.make
 			create generated_inlines.make (5)
 			create generic_wrappers.make (0)
+			create object_test_local_offset.make (0)
 		end
 
 feature -- Access
@@ -1688,6 +1689,7 @@ feature -- Access
 			local_index_table := saved_context.local_index_table
 			local_index_counter := saved_context.local_index_counter
 			associated_register_table := saved_context.associated_register_table
+			object_test_local_offset := saved_context.object_test_local_offset
 		end
 
 	generate_current_dtype is
@@ -2041,6 +2043,49 @@ feature -- Access
 			local_list.put_right (t)
 		end
 
+feature -- Object test code generation
+
+	add_object_test_locals (types: ARRAY [TYPE_A]; body_id: INTEGER; c: CLASS_TYPE)
+			-- Add object test locals of types `types' from feature
+			-- of body id `body_id' in class type `c'.
+		require
+			different_body_id: body_id /= current_feature.body_index
+			c_attached: c /= Void
+		do
+			if types /= Void and then not object_test_local_offset.has (body_id) then
+				object_test_local_offset.force (local_list.count - types.lower + 1, body_id)
+				types.do_all (
+					agent (t: TYPE_A; ct: CLASS_TYPE)
+						do
+							local_list.extend (real_type_in (t, ct.type))
+						end
+					(?, c)
+				)
+			end
+		end
+
+	object_test_local_position (l: OBJECT_TEST_LOCAL_B): INTEGER
+			-- Position of a given object test local `l' in the list of locals.
+		require
+			l_attached: l /= Void
+		do
+			if l.body_id = byte_code.body_index then
+					-- Object test is declared in the current feature.
+				Result := byte_code.local_count + l.position
+			else
+					-- Object test is in the inherited code.
+				check
+					code_id_registered: object_test_local_offset.has (l.body_id)
+				end
+				Result := object_test_local_offset [l.body_id] + l.position
+			end
+		end
+
+feature {BYTE_CONTEXT} -- Object test code generation
+
+	object_test_local_offset: HASH_TABLE [INTEGER, INTEGER]
+			-- Offset of inherited object test locals indexed by code_id
+
 feature -- Clearing
 
 	array_opt_clear is
@@ -2075,6 +2120,7 @@ feature -- Clearing
 				-- This should not be necessary but may limit the
 				-- effect of bugs in register allocation (if any).
 			register_server.clear_all
+			object_test_local_offset.wipe_out
 		end
 
 	clear_class_type_data is
@@ -2288,9 +2334,10 @@ invariant
 	once_manifest_string_table_not_void: once_manifest_string_table /= Void
 	class_type_valid_with_current_type: class_type /= Void implies class_type.type = current_type
 	class_type_stack_not_void: class_type_stack /= Void
+	object_test_local_offset_attached: object_test_local_offset /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,6 +15,7 @@ inherit
 			process_attribute_b,
 			process_current_b,
 			process_local_b,
+			process_object_test_local_b,
 			process_result_b
 		end
 
@@ -73,6 +74,11 @@ feature {NONE} -- Implementation
 			il_generator.generate_local_address (a_node.position)
 		end
 
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+		do
+			il_generator.generate_local_address (context.object_test_local_position (a_node))
+		end
+
 	process_result_b (a_node: RESULT_B) is
 			-- Process `a_node'.
 		do
@@ -80,7 +86,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

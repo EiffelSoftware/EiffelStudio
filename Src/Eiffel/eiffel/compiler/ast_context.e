@@ -149,7 +149,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 	next_object_test_local_position: INTEGER
 			-- Position of a next object test local
 		do
-			Result := locals.count + object_test_locals.count + 1
+			Result := object_test_locals.count + 1
 		end
 
 	add_object_test_local (l: LOCAL_INFO; id: INTEGER)
@@ -384,10 +384,10 @@ feature -- Setting
 					object_test_locals.after
 				loop
 					local_info := object_test_locals.item_for_iteration
-					local_dec.put (local_info.type, local_info.position)
+					local_dec.put (local_info.type, locals.count + local_info.position)
 					object_test_locals.forth
 				end
-				byte_code.set_locals (local_dec)
+				byte_code.set_locals (local_dec, locals.count)
 			end
 				-- Arguments declarations
 			argument_count := current_feature.argument_count
@@ -403,6 +403,37 @@ feature -- Setting
 					i := i + 1
 				end
 				byte_code.set_arguments (local_dec)
+			end
+		end
+
+	init_assertion_byte_code (b: ASSERTION_BYTE_CODE; first_object_test_local_position: INTEGER)
+			-- Initialize assertion byte code `b' given the first used
+			-- object test local position `first_object_test_local_position'.
+		require
+			b_attached: b /= Void
+		local
+			i: LOCAL_INFO
+			l: ARRAY [TYPE_A]
+		do
+			if not object_test_locals.is_empty then
+				from
+					object_test_locals.start
+				until
+					object_test_locals.after
+				loop
+					i := object_test_locals.item_for_iteration
+					if i.position >= first_object_test_local_position then
+							-- An object test local is declared inside this assertion.
+							-- It should be recorded to allow code generation when
+							-- assertion is inherited.
+						if l = Void then
+							create l.make (first_object_test_local_position, i.position)
+						end
+						l.force (i.type, i.position)
+					end
+					object_test_locals.forth
+				end
+				b.set_object_test_locals (l)
 			end
 		end
 

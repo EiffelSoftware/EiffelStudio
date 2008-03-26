@@ -115,7 +115,7 @@ feature -- Generation
 			end
 
 				-- Set up the local variables
-			a_body.setup_local_variables
+			a_body.setup_local_variables (True)
 
 				-- Initialize use of local variables to IL side
 			r_type := context.real_type (a_body.result_type)
@@ -335,7 +335,7 @@ feature -- Generation
 		require
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
-			is_creatable: a_node.is_creatable
+			is_writable: not a_node.read_only
 			source_type_not_void: source_type /= Void
 		local
 			target_type: TYPE_A
@@ -2435,6 +2435,16 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+		do
+			if need_access_address (a_node, is_nested_call) then
+				il_generator.generate_local_address (context.object_test_local_position (a_node))
+			else
+				il_generator.generate_local (context.object_test_local_position (a_node))
+			end
+			is_nested_call := False
+		end
+
 	process_once_string_b (a_node: ONCE_STRING_B) is
 			-- Process `a_node'.
 		do
@@ -3583,7 +3593,7 @@ feature {NONE} -- Implementation: assignments
 		require
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
-			is_creatable: a_node.is_creatable
+			is_writable: not a_node.read_only
 			target_type_not_void: target_type /= Void
 			source_type_not_void: source_type /= Void
 		local
@@ -3632,8 +3642,12 @@ feature {NONE} -- Implementation: assignments
 						cl_type.implemented_type (attr.written_in), attr.attribute_id)
 				end
 			elseif a_node.is_local then
-				loc ?= a_node
-				il_generator.generate_local_assignment (loc.position)
+				if {o: OBJECT_TEST_LOCAL_B} a_node then
+					il_generator.generate_local_assignment (context.object_test_local_position (o))
+				else
+					loc ?= a_node
+					il_generator.generate_local_assignment (loc.position)
+				end
 			elseif a_node.is_result then
 				res ?= a_node
 				il_generator.generate_result_assignment
@@ -4453,7 +4467,7 @@ feature {NONE} -- Convenience
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

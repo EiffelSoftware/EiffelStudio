@@ -43,12 +43,6 @@
 
 #include "eif_portable.h"
 #include "eif_constants.h"
-#ifdef EIF_TID
-#include "eif_threads.h"
-#endif	/* EIF_TID */
-#ifdef EIF_THREADS
-#include "eif_threads.h"
-#endif
 #include <setjmp.h>
 
 #ifdef __cplusplus
@@ -331,7 +325,7 @@ union overhead {
 		} ovu;
 		rt_uint_ptr ovs_size;
 #ifdef EIF_TID
-        EIF_THR_TYPE *ovs_tid;          /* thread id of creator thread */
+        void *ovs_tid;          /* thread id of creator thread */
 #endif  /* EIF_TID */
 	} ov_head;
 #if MEM_ALIGNBYTES > 8

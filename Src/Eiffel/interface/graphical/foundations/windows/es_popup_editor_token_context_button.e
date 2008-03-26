@@ -539,11 +539,6 @@ feature {NONE} -- Basic operations
 				end
 			end
 
-			check
-				l_rect_attached: l_rect /= Void
-				l_token_rect_attached: l_token_rect /= Void
-			end
-
 				-- Set result
 			Result := [l_rect, l_token_rect]
 

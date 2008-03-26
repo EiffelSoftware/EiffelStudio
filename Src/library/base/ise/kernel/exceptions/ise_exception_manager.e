@@ -48,13 +48,13 @@ feature -- Raise
 		do
 			if not a_exception.is_ignored then
 				set_last_exception (a_exception)
-				if a_exception.meaning /= Void then
-					c_meaning := a_exception.meaning.to_c
+				if {s: STRING} a_exception.meaning then
+					c_meaning := s.to_c
 				else
 					c_meaning := ("").to_c
 				end
-				if a_exception.message /= Void then
-					c_message := a_exception.message.to_c
+				if {m: STRING} a_exception.message then
+					c_message := m.to_c
 				else
 					c_message := ("").to_c
 				end
@@ -121,7 +121,7 @@ feature -- Status report
 
 feature {EXCEPTIONS} -- Compatibility support
 
-	type_of_code (a_code: INTEGER): TYPE [EXCEPTION]
+	type_of_code (a_code: INTEGER): ?TYPE [EXCEPTION]
 			-- Exception type of `a_code'
 		do
 			inspect a_code
@@ -196,7 +196,7 @@ feature {EXCEPTIONS} -- Compatibility support
 			end
 		end
 
-	exception_from_code (a_code: INTEGER): EXCEPTION is
+	exception_from_code (a_code: INTEGER): ?EXCEPTION is
 			-- Create exception object from `a_code'
 		do
 			inspect a_code
@@ -299,9 +299,8 @@ feature {NONE} -- Element change
 		do
 			exception_data_cell.put ([code, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, trace, line_number, is_invariant_entry])
 			if new_obj then
-				l_exception := exception_from_data
-				if l_exception /= Void then
-					set_last_exception (l_exception)
+				if {e: EXCEPTION} exception_from_data then
+					set_last_exception (e)
 				end
 			else
 					-- This exception was raised from Eiffel code.
@@ -344,11 +343,8 @@ feature {NONE} -- Implementation
 
 	is_code_ignored (a_code: INTEGER): BOOLEAN is
 			-- Is exception of `a_code' ignored?
-		local
-			l_type: TYPE [EXCEPTION]
 		do
-			l_type := type_of_code (a_code)
-			if l_type /= Void then
+			if {l_type: TYPE [EXCEPTION]} type_of_code (a_code) then
 				Result := is_ignored (l_type)
 			else
 				Result := True
@@ -371,64 +367,39 @@ feature {NONE} -- Cells
 
 feature {NONE} -- Implementation
 
-	exception_from_data: EXCEPTION is
+	exception_from_data: ?EXCEPTION is
 			-- Create an exception object `exception_data'
-		local
-			l_data: like exception_data
-			l_rf: ROUTINE_FAILURE
-			l_ov: OLD_VIOLATION
-			l_inva: INVARIANT_VIOLATION
-			l_sig: OPERATING_SYSTEM_SIGNAL_FAILURE
-			l_io: IO_FAILURE
-			l_sys: OPERATING_SYSTEM_FAILURE
-			l_com: COM_FAILURE
 		do
-			l_data := exception_data
-			if l_data /= Void then
-				Result := exception_from_code (l_data.code)
-				l_rf ?= Result
-				if l_rf /= Void then
-					Result.set_throwing_exception (last_exception)
+			if
+				{l_data: like exception_data} exception_data and then
+				{e: EXCEPTION} exception_from_code (l_data.code)
+			then
+				if {l_rf: ROUTINE_FAILURE} e then
+					e.set_throwing_exception (last_exception)
 					l_rf.set_routine_name (l_data.rf_routine)
 					l_rf.set_class_name (l_data.rf_class)
+				elseif {l_ov: OLD_VIOLATION} e then
+					e.set_throwing_exception (last_exception)
 				else
-					l_ov ?= Result
-					if l_ov /= Void then
-						Result.set_throwing_exception (last_exception)
-					else
-						l_inva ?= Result
-						if l_inva /= Void then
-							l_inva.set_is_entry (l_data.is_invariant_entry)
-						else
-							l_sig ?= Result
-							if l_sig /= Void then
-								l_sig.set_signal_code (l_data.signal_code)
-							else
-								l_io ?= Result
-								if l_io /= Void then
-									l_io.set_error_code (l_data.error_code)
-								else
-									l_sys ?= Result
-									if l_sys /= Void then
-										l_sys.set_error_code (l_data.error_code)
-									else
-										l_com ?= Result
-										if l_com /= Void then
-											l_com.set_hresult_code (l_data.signal_code)
-											l_com.set_exception_information (l_data.tag)
-										end
-									end
-								end
-							end
-
-						end
-						Result.set_throwing_exception (Result)
+					if {l_inva: INVARIANT_VIOLATION} e then
+						l_inva.set_is_entry (l_data.is_invariant_entry)
+					elseif {l_sig: OPERATING_SYSTEM_SIGNAL_FAILURE} e then
+						l_sig.set_signal_code (l_data.signal_code)
+					elseif {l_io: IO_FAILURE} e then
+						l_io.set_error_code (l_data.error_code)
+					elseif {l_sys: OPERATING_SYSTEM_FAILURE} e then
+						l_sys.set_error_code (l_data.error_code)
+					elseif {l_com: COM_FAILURE} e then
+						l_com.set_hresult_code (l_data.signal_code)
+						l_com.set_exception_information (l_data.tag)
 					end
+					e.set_throwing_exception (e)
 				end
-				Result.set_exception_trace (l_data.trace)
-				Result.set_message (l_data.tag)
-				Result.set_recipient_name (l_data.recipient)
-				Result.set_type_name (l_data.eclass)
+				e.set_exception_trace (l_data.trace)
+				e.set_message (l_data.tag)
+				e.set_recipient_name (l_data.recipient)
+				e.set_type_name (l_data.eclass)
+				Result := e
 			end
 		end
 
@@ -444,13 +415,13 @@ feature {NONE} -- Implementation
 		do
 			if not a_exception.is_ignored then
 				set_last_exception (a_exception)
-				if a_exception.meaning /= Void then
-					c_meaning := a_exception.meaning.to_c
+				if {s: STRING} a_exception.meaning  then
+					c_meaning := s.to_c
 				else
 					c_meaning := ("").to_c
 				end
-				if a_exception.message /= Void then
-					c_message := a_exception.message.to_c
+				if {m: STRING} a_exception.message  then
+					c_message := m.to_c
 				else
 					c_message := ("").to_c
 				end
@@ -500,7 +471,7 @@ feature {NONE} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

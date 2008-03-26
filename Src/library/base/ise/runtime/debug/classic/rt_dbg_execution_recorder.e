@@ -44,8 +44,8 @@ feature {RT_EXTENSION} -- Change
 			top_callstack_record := Void
 			bottom_callstack_record := Void
 			record_count := 0
-			if replay_stack /= Void then
-				replay_stack.wipe_out
+			if {r: like replay_stack} replay_stack then
+				r.wipe_out
 				replay_stack := Void
 			end
 			last_replay_operation_failed := False
@@ -72,10 +72,10 @@ feature -- Properties
 			-- Maximum number of records.
 			-- `0' stands for no limit.
 
-	top_callstack_record: RT_DBG_CALL_RECORD
+	top_callstack_record: ?RT_DBG_CALL_RECORD
 			-- Current top callstack record.
 
-	bottom_callstack_record: RT_DBG_CALL_RECORD
+	bottom_callstack_record: ?RT_DBG_CALL_RECORD
 			-- Bottom (or root) callstack record.
 
 feature -- Constants from eif_debug.h
@@ -99,7 +99,6 @@ feature -- Access
 		local
 			r: RT_DBG_CALL_RECORD
 			fn: STRING
-			flds: LIST [RT_DBG_RECORD]
 		do
 			debug ("RT_EXTENSION")
 				dtrace_indent (dep); dtrace ("enter_feature (" + ref.generating_type + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
@@ -115,13 +114,12 @@ feature -- Access
 				r.set_feature_name (fn)
 			end
 			r.record_fields
-			flds := r.field_records
-			if flds /= Void and then not flds.is_empty then
+			if {flds: LIST [RT_DBG_RECORD]} r.field_records and then not flds.is_empty then
 				increment_records_count (flds.count)
 			end
 
-			if top_callstack_record /= Void then
-				r.attach_to (top_callstack_record)
+			if {t: like top_callstack_record} top_callstack_record then
+				r.attach_to (t)
 			end
 			top_callstack_record := r
 
@@ -136,7 +134,6 @@ feature -- Access
 		local
 			r,pr,c: RT_DBG_CALL_RECORD
 			subs: LIST [like top_callstack_record]
-			flds: LIST [RT_DBG_RECORD]
 		do
 			debug ("RT_EXTENSION")
 				dtrace_indent (dep); dtrace ("enter_rescue (" + ref.generating_type + ", " + dep.out + ")");
@@ -179,8 +176,7 @@ feature -- Access
 				end
 
 				r.record_fields
-				flds := r.field_records
-				if flds /= Void and then not flds.is_empty then
+				if {flds: LIST [RT_DBG_RECORD]} r.field_records and then not flds.is_empty then
 					increment_records_count (flds.count)
 				end
 				top_callstack_record := r
@@ -189,20 +185,17 @@ feature -- Access
 
 	leave_feature (ref: ANY; cid,fid: INTEGER; dep: INTEGER)
 			-- Leave feature `{cid}.fid' on object `ref', depth is `dep'
-		local
-			r: like top_callstack_record
 		do
 			debug ("RT_EXTENSION")
 				dtrace_indent (dep); dtrace ("leave_feature (" + ref.generating_type + " <" + ($ref).out + ">, " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
 			end
 
-			if top_callstack_record = Void then
+			if not {r: like top_callstack_record} top_callstack_record then
 				--| This can occurs if the recording started deeper in the call stack.
 				--| in this case, do not record anything until we enter again inside a feature
 				--| In the meantime, just discard the recorded data
 				--| Note: in the future, when we'll support move_left/move_right, we'll handle this case.
 			else
-				r := top_callstack_record
 				if r = bottom_callstack_record then
 					check parent_is_void: r.parent = Void end
 
@@ -296,7 +289,7 @@ feature -- Replay operation
 	last_replay_operation_failed: BOOLEAN
 			-- Does last replay operation failed ?
 
-	replay_stack: LINKED_LIST [TUPLE [record: like top_callstack_record; chgs: LIST [TUPLE [ANY,RT_DBG_RECORD]]]]
+	replay_stack: ?LINKED_LIST [TUPLE [record: like top_callstack_record; chgs: LIST [TUPLE [ANY,RT_DBG_RECORD]]]]
 			-- Replay operation stacks.
 			-- useful to "revert" the replay steps.
 
@@ -304,7 +297,7 @@ feature -- Replay operation
 			-- Replay execution back
 		local
 			n, r, p: like top_callstack_record
-			chgs: LIST [TUPLE [ANY, RT_DBG_RECORD]]
+			chgs: ?LIST [TUPLE [ANY, RT_DBG_RECORD]]
 		do
 			r := top_callstack_record
 			p := top_callstack_record.parent
@@ -401,7 +394,7 @@ feature -- Internal helper
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

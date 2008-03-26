@@ -20,25 +20,27 @@ feature -- Object access
 			Result := field_count (obj)
 		end
 
-	object_records (obj: ANY): ARRAYED_LIST [RT_DBG_RECORD] is
+	object_records (obj: ANY): ?ARRAYED_LIST [RT_DBG_RECORD] is
 		local
 			i, cnb: INTEGER
+			r: ARRAYED_LIST [RT_DBG_RECORD]
 		do
 			cnb := object_field_count (obj)
 			if cnb > 0 then
-				create Result.make (cnb)
+				create r.make (cnb)
 				from
 					i := 1
 				until
 					i > cnb
 				loop
-					Result.extend (object_record (i, obj))
+					r.extend (object_record (i, obj))
 					i := i + 1
 				end
+				Result := r
 			end
 		end
 
-	object_record (i: INTEGER; obj: ANY): RT_DBG_RECORD is
+	object_record (i: INTEGER; obj: ANY): ?RT_DBG_RECORD is
 		local
 			ft: INTEGER
 		do
@@ -91,24 +93,21 @@ feature -- Object access
 
 feature -- Query
 
-	changes_between (csr1, csr2: RT_DBG_CALL_RECORD): ARRAYED_LIST [TUPLE [obj: ANY; record: RT_DBG_RECORD]] is
+	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ARRAYED_LIST [TUPLE [obj: ANY; record: RT_DBG_RECORD]] is
 			-- from `r1' to -beginning-of- `r2'.
 		require
 			csr1_not_void: csr1 /= Void
 		local
 			o: ANY
 			chgs: like changes_between
-			flds: LIST [RT_DBG_RECORD]
-			rcds: LIST [RT_DBG_CALL_RECORD]
 			r: RT_DBG_RECORD
 		do
-			if csr1.is_flat then
-				Result := csr1.flat_field_records
+			create Result.make (10)
+			if csr1.is_flat and then {fr: like changes_between} csr1.flat_field_records then
+				Result := fr
 			else
-				create Result.make (10)
 					--| Keep Full records
-				flds := csr1.field_records
-				if flds /= Void then
+				if {flds: LIST [RT_DBG_RECORD]} csr1.field_records then
 					from
 						o := csr1.object
 						flds.start
@@ -120,8 +119,7 @@ feature -- Query
 						flds.forth
 					end
 				end
-				rcds := csr1.call_records
-				if rcds /= Void then
+				if {rcds: LIST [RT_DBG_CALL_RECORD]} csr1.call_records then
 					from
 						rcds.start
 					until
@@ -148,7 +146,7 @@ feature {NONE} -- External implementation
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

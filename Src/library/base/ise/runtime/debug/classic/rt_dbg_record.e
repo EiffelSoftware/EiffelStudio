@@ -21,7 +21,7 @@ feature -- Properties
 	type: INTEGER
 			-- Type of record value.
 
-	backup: RT_DBG_RECORD
+	backup: ?RT_DBG_RECORD
 			-- Backup value after restore operation.
 
 feature -- Access
@@ -79,7 +79,7 @@ feature -- Runtime
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

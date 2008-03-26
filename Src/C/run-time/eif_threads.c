@@ -646,7 +646,6 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	RT_GET_CONTEXT
 
 	start_routine_ctxt_t *routine_ctxt;
-	volatile EIF_INTEGER l_is_initialized = 0;
 	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
 #ifndef EIF_WINDOWS
 	EIF_THR_ATTR_TYPE attr;
@@ -656,7 +655,6 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
 	routine_ctxt->current = eif_adopt (thr_root_obj);
-	routine_ctxt->is_initialized = &l_is_initialized;
 	routine_ctxt->routine = init_func;
 	routine_ctxt->tid = tid;
 	routine_ctxt->addr_n_children = &n_children;
@@ -688,14 +686,6 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	LAUNCH_MUTEX_UNLOCK;
 	SIGRESUME;
 	last_child = tid;
-		/* Wait until child thread is initialized so that we can safely
-		 * unprotect `thr_root_obj'. */
-	EIF_ENTER_C;
-	while (!l_is_initialized) {
-		EIF_THR_YIELD;	
-	}
-	EIF_EXIT_C;
-	RTGC;
 }
 
 #ifdef VXWORKS
@@ -748,8 +738,6 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 #ifdef WORKBENCH
 		xinitint();
 #endif
-			/* Protect root object so that it can be freed in `eif_thr_exit'. */
-		*routine_ctxt->is_initialized = 1;
 			/* Call the `execute' routine of the thread */
 #ifdef WORKBENCH
 		dnotify_create_thread((EIF_THR_TYPE) eif_thr_id);

@@ -370,7 +370,7 @@ feature -- Status report
 				if target.setting_use_all_cluster_name_as_namespace then
 					l_path := path.twin
 					l_path.replace_substring_all ("/", ".")
-					if l_path.item (1) = '.' then
+					if not l_path.is_empty and then l_path.item (1) = '.' then
 						l_path.remove_head (1)
 					end
 					if not l_path.is_empty then

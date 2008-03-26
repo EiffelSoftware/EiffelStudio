@@ -108,6 +108,31 @@ feature {NONE} -- Basic opertations
         				end
 					end
         		end, a_excluded)
+
+        	propagate_drop_veto_actions (a_excluded)
+        end
+
+	propagate_drop_veto_actions (a_excluded: ARRAY [EV_WIDGET])
+			-- Propagates the stone drop actions to all widgets, to force the stone to be set on the panel.
+			--
+			-- `a_exclude': An array of widgets to exluding the the propagation of actions, or Void to include all widgets.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized or is_initializing
+        do
+        		-- Set drop actions on all widgets
+			propagate_action (user_widget, agent (a_widget: EV_WIDGET)
+					-- Propagating the action to set the veto pebble function.
+				do
+					user_widget.drop_actions.set_veto_pebble_function (agent (a_pebble: ANY): BOOLEAN
+						do
+							if {l_stone: STONE} a_pebble then
+								Result := not is_stone_usable (l_stone)
+							else
+								Result := True
+							end
+						end)
+				end, Void)
         end
 
 feature -- Synchronization

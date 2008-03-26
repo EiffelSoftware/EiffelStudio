@@ -240,6 +240,7 @@ feature {NONE} -- Implementation
 			l_str: STRING
 			l_added_pre: HASH_TABLE [STRING, STRING]
 			l_found, l_is_unselected: BOOLEAN
+			l_set_default_locale: BOOLEAN
 		do
 			if is_gui then
 				l_select_lang := locale_id_preference.selected_value
@@ -307,7 +308,25 @@ feature {NONE} -- Implementation
 				end
 				locale_id_preference.set_value_from_string (l_available_lang)
 			else
-				set_system_locale
+				if is_eiffel_layout_defined then
+					l_select_lang := eiffel_layout.get_environment ("ISE_LANG")
+					if l_select_lang /= Void and then not l_select_lang.is_empty then
+						create l_id.make_from_string (l_select_lang)
+						if locale_manager.has_locale (l_id) then
+							set_locale_with_id (l_select_lang)
+						else
+							l_set_default_locale := True
+						end
+					else
+						l_set_default_locale := True
+					end
+				else
+					l_set_default_locale := True
+				end
+
+				if l_set_default_locale then
+					set_system_locale
+				end
 			end
 		end
 

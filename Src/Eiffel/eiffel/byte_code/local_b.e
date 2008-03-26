@@ -34,7 +34,7 @@ feature
 			-- Position of the local in the list `locals' of the root
 			-- byte code
 
-	read_only: BOOLEAN is false
+	read_only: BOOLEAN = False
 			-- Is the access only a read-only one ?
 
 	type: TYPE_A is
@@ -52,9 +52,12 @@ feature
 			Result := True
 		end
 
-	is_creatable: BOOLEAN is True
+	is_creatable: BOOLEAN
 			-- Can an access to a local variable be the target for
-			-- a creation ?
+			-- a creation?
+		do
+			Result := True
+		end
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access as Current ?

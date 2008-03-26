@@ -98,12 +98,15 @@ feature -- Access
 			-- Result type of the feature: can be Void.
 
 	locals: ARRAY [TYPE_A]
-			-- List of local types of the feature: can be Void.
+			-- List of local types of the feature, including its object test locals: can be Void.
 
-	precondition: BYTE_LIST [BYTE_NODE]
+	local_count: INTEGER
+			-- Number of local variables declared in the feature
+
+	precondition: ASSERTION_BYTE_CODE
 			-- List of ASSERT_B instances: can be Void.
 
-	postcondition: BYTE_LIST [BYTE_NODE]
+	postcondition: ASSERTION_BYTE_CODE
 			-- List of ASSERT_B instances: can be Void.
 
 	old_expressions: LINKED_LIST [UN_OLD_B]
@@ -318,10 +321,18 @@ feature -- Settings
 			arguments := a
 		end
 
-	set_locals (l: like locals) is
-			-- Assign `l' to `locals'.
+	set_locals (l: like locals; n: like local_count)
+			-- Assign `l' to `locals' and `n' to `local_count'.
+		require
+			l_attached: n > 0 implies l /= Void
+			n_non_negative: n >= 0
+			n_small_enough: l /= Void implies n <= l.count
 		do
 			locals := l
+			local_count := n
+		ensure
+			locals_set: locals = l
+			local_count_set: local_count = n
 		end
 
 	set_once_manifest_string_count (oms_count: like once_manifest_string_count) is
@@ -636,7 +647,7 @@ feature -- Byte code generation
 			Temp_byte_code_array.append_short_integer (argument_count)
 
 				-- Set up the local variables
-			setup_local_variables
+			setup_local_variables (True)
 
 				-- Feature name
 			ba.append_raw_string (feature_name)
@@ -806,9 +817,9 @@ end
 			ba.append ('%U')
 		end
 
-	setup_local_variables is
-			-- Set the local variable type (which includes old expressions)
-			-- for the interpreter.
+	setup_local_variables (is_old_expression_included: BOOLEAN)
+			-- Set the local variable type (which includes old expressions
+			-- if `is_old_expression_included' is true).
 		local
 			nb, i, position: INTEGER
 			item: UN_OLD_B
@@ -817,45 +828,56 @@ end
 			l_il_generation: BOOLEAN
 			assert_chheck: BOOLEAN
 		do
-			from
-				position := 1
-				nb := local_count
-			until
-				position > nb
-			loop
-					-- Local SK value
-				Context.add_local (context.real_type (locals.item (position)))
-				position := position + 1
-			end
-			l_old_expressions := old_expressions
-			l_il_generation := System.il_generation
-			assert_chheck := context.workbench_mode or
-				context.system.keep_assertions
-			if
-				(not l_il_generation and then l_old_expressions /= Void) or else
-				(l_il_generation and then l_old_expressions /= Void and then
-				assert_chheck)
-			then
+			if locals /= Void then
 				from
-					nb := l_old_expressions.count
-					l_old_expressions.start
-					i := 1
+					position := 1
+					nb := locals.count
 				until
-					i > nb
+					position > nb
 				loop
-					item := l_old_expressions.item
-					l_type := context.real_type (item.type)
-					Context.add_local (l_type)
-					item.set_position (position)
+						-- Local SK value
+					Context.add_local
+						(context.real_type (locals.item (position)))
 					position := position + 1
-					Context.add_local (item.exception_type)
-					item.set_exception_position (position)
-					position := position + 1
-					l_old_expressions.forth
-					i := i + 1
 				end
 			end
-			Context.inherited_assertion.setup_local_variables (position)
+			assert_chheck := context.workbench_mode or
+				context.system.keep_assertions
+			if assert_chheck then
+				Context.inherited_assertion.add_object_test_locals
+			end
+			if is_old_expression_included then
+				position := context.local_list.count + 1
+				l_old_expressions := old_expressions
+				l_il_generation := System.il_generation
+				if
+					(not l_il_generation and then l_old_expressions /= Void) or else
+					(l_il_generation and then l_old_expressions /= Void and then
+					assert_chheck)
+				then
+					from
+						nb := l_old_expressions.count
+						l_old_expressions.start
+						i := 1
+					until
+						i > nb
+					loop
+						item := l_old_expressions.item
+						l_type := context.real_type (item.type)
+						Context.add_local (l_type)
+						item.set_position (position)
+						position := position + 1
+						Context.add_local (item.exception_type)
+						item.set_exception_position (position)
+						position := position + 1
+						l_old_expressions.forth
+						i := i + 1
+					end
+				end
+				if assert_chheck then
+					Context.inherited_assertion.setup_local_variables (position)
+				end
+			end
 		end
 
 	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR) is
@@ -871,14 +893,6 @@ end
 		do
 			if arguments /= Void then
 				Result := arguments.count
-			end
-		end
-
-	local_count: INTEGER is
-			-- Number of local variables
-		do
-			if locals /= Void then
-				Result := locals.count
 			end
 		end
 
@@ -952,7 +966,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,7 +11,10 @@ class
 inherit
 	ASSIGNMENT_GENERATOR
 		redefine
-			process_local_b, process_attribute_b, process_result_b
+			process_attribute_b,
+			process_local_b,
+			process_object_test_local_b,
+			process_result_b
 		end
 
 	SHARED_BYTE_CONTEXT
@@ -70,6 +73,11 @@ feature {NONE} -- Implementation
 			-- Process `a_node'.
 		do
 			ba.append_short_integer (a_node.position)
+		end
+
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+		do
+			ba.append_short_integer (context.object_test_local_position (a_node))
 		end
 
 	process_result_b (a_node: RESULT_B) is

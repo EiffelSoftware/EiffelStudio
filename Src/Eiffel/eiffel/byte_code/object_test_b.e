@@ -58,7 +58,7 @@ feature -- Visitor
 
 feature -- Access
 
-	target: LOCAL_B
+	target: OBJECT_TEST_LOCAL_B
 			-- Object test local
 
 	expression: EXPR_B

@@ -37,6 +37,47 @@ feature -- Creation
 			create old_expression_list.make
 		end
 
+feature -- Locals
+
+	add_object_test_locals
+			-- Add object test locals to the context.
+		local
+			a: like precondition_list
+			b: like precondition_body_indices
+			t: like precondition_types
+		do
+			from
+				a := precondition_list
+				a.start
+				b := precondition_body_indices
+				b.start
+				t := precondition_types
+				t.start
+			until
+				t.after
+			loop
+				context.add_object_test_locals (a.item.object_test_locals, b.item, t.item)
+				a.forth
+				b.forth
+				t.forth
+			end
+			from
+				a := postcondition_list
+				a.start
+				b := postcondition_body_indices
+				b.start
+				t := postcondition_types
+				t.start
+			until
+				t.after
+			loop
+				context.add_object_test_locals (a.item.object_test_locals, b.item, t.item)
+				a.forth
+				b.forth
+				t.forth
+			end
+		end
+
 feature -- Assertion
 
 	saved_class_type: CLASS_TYPE
@@ -56,12 +97,19 @@ feature -- Assertion
 
 	restore_current_context is
 			-- Restore details of current context.
+		local
+			o: like saved_old_expressions
 		do
 			Context.set_class_type (saved_class_type)
 			Context.set_original_body_index (saved_body_index)
 			Context.byte_code.set_arguments (saved_arguments)
 			Context.byte_code.set_result_type (saved_result_type)
-			Context.byte_code.set_old_expressions (saved_old_expressions)
+			o := saved_old_expressions
+			if o = Void or else o.is_empty then
+				Context.byte_code.set_old_expressions (Void)
+			else
+				Context.byte_code.set_old_expressions (o)
+			end
 		ensure
 			restored: restored
 		end
@@ -72,12 +120,19 @@ feature -- Assertion
 			not_initialzed: saved_class_type = Void and then
 							saved_arguments = Void and then
 							saved_result_type = Void
+		local
+			o: like saved_old_expressions
 		do
 			saved_class_type := Context.class_type
 			saved_body_index := Context.original_body_index
 			saved_arguments := Context.byte_code.arguments
 			saved_result_type := Context.byte_code.result_type
-			saved_old_expressions := Context.byte_code.old_expressions
+			o := Context.byte_code.old_expressions
+			if o = Void or else o.is_empty then
+				saved_old_expressions := Void
+			else
+				saved_old_expressions := o
+			end
 		end
 
 	has_assertion: BOOLEAN is
@@ -215,7 +270,7 @@ feature -- Assertion
 
 feature -- Inherited precondition
 
-	precondition_list: LINKED_LIST [BYTE_LIST [BYTE_NODE]]
+	precondition_list: LINKED_LIST [ASSERTION_BYTE_CODE]
 			-- List of inherited precondition
 
 	prec_arg_list: LINKED_LIST [ARRAY[TYPE_A]]
@@ -428,7 +483,7 @@ feature -- Inherited precondition
 
 feature -- inherited postcondition
 
-	postcondition_list: LINKED_LIST [BYTE_LIST [BYTE_NODE]]
+	postcondition_list: LINKED_LIST [ASSERTION_BYTE_CODE]
 			-- List of inherited postcondition
 
 	post_arg_list: LINKED_LIST [ARRAY [TYPE_A]]
@@ -850,7 +905,7 @@ feature -- inherited postcondition
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

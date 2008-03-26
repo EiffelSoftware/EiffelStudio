@@ -568,6 +568,12 @@ feature {BYTE_NODE} -- Visitors
 			postorder_process (a_node)
 		end
 
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+		do
+			preorder_process (a_node)
+			postorder_process (a_node)
+		end
+
 	process_once_string_b (a_node: ONCE_STRING_B) is
 			-- Process `a_node'.
 		do
@@ -757,7 +763,7 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

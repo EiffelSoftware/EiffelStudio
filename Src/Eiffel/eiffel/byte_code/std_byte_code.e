@@ -94,6 +94,10 @@ feature -- Analyzis
 			end
 			l_context.set_assertion_type (0)
 
+				-- Local variables should be recorded because their types
+				-- are used to evaluate types of object test locals.
+			setup_local_variables (False)
+
 				-- Compute presence or not of pre/postconditions
 			if keep_assertions then
 				if l_context.origin_has_precondition then
@@ -1047,27 +1051,27 @@ end
 			count	: INTEGER
 			type_i	: TYPE_A
 			buf		: GENERATION_BUFFER
+			local_types: LIST [TYPE_A]
 		do
 			if context.workbench_mode then
 				buf := buffer
-				if locals /= Void then
-					from
-						count := locals.count
-						i := locals.lower
-					until
-						i > count
-					loop
-						type_i := real_type (locals.item (i))
-							-- Local reference variable are declared via
-							-- the local variable array "l[]"
-						buf.put_new_line
-						buf.put_string ("RTLU(")
-						type_i.c_type.generate_sk_value (buf)
-						buf.put_string (", &loc")
-						buf.put_integer (i)
-						buf.put_string (");")
-						i := i + 1
-					end
+				local_types := context.local_list
+				from
+					count := local_types.count
+					i := 1
+				until
+					i > count
+				loop
+					type_i := real_type (local_types.i_th (i))
+						-- Local reference variable are declared via
+						-- the local variable array "l[]"
+					buf.put_new_line
+					buf.put_string ("RTLU(")
+					type_i.c_type.generate_sk_value (buf)
+					buf.put_string (", &loc")
+					buf.put_integer (i)
+					buf.put_string (");")
+					i := i + 1
 				end
 			end
 		end
@@ -1146,6 +1150,7 @@ end
 			l_loc_name: STRING
 			l_type: CL_TYPE_A
 			l_class_type: CLASS_TYPE
+			local_types: LIST [TYPE_A]
 		do
 				-- Cache accessed attributes
 			buf := buffer
@@ -1153,60 +1158,62 @@ end
 			has_rescue := rescue_clause /= Void
 			l_is_once := is_once
 
-			if locals /= Void then
-				from
-					count := locals.count
-					used_upper := context.local_vars.upper
-					i := locals.lower
-				until
-					i > count
-				loop
-					type_i := real_type (locals.item (i))
-							-- Check whether the variable is used or not.
-					if i > used_upper then
-						used_local := False
-					else
-						used_local := context.local_vars.item(i)
-					end
-
-							-- Generate only if variable used
-					if wkb_mode or (used_local or type_i.is_true_expanded) then
-							-- Local reference variable are declared via
-							-- the local variable array "l[]".
-						if type_i.is_true_expanded then
-							create l_loc_name.make (6)
-							l_loc_name.append ("sloc")
-							l_loc_name.append_integer (i)
-							l_type ?= type_i
-							check
-									-- Only a CL_TYPE_A could be an expanded
-								l_type_not_void: l_type /= Void
-							end
-							l_class_type := l_type.associated_class_type (context.context_class_type.type)
-							l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
-						end
-						buf.put_new_line
-						type_i.c_type.generate (buf)
-						if has_rescue then
-							buf.put_string ("EIF_VOLATILE ")
-						end
-						buf.put_string ("loc")
-						buf.put_integer (i)
-						buf.put_string (" = ")
-						if type_i.is_true_expanded then
-							type_i.c_type.generate_cast (buf)
-							buf.put_character ('(')
-							buf.put_string (l_loc_name)
-							buf.put_string (".data")
-							l_class_type.generate_expanded_overhead_size (buf)
-							buf.put_string (");")
-						else
-							type_i.c_type.generate_cast (buf)
-							buf.put_two_character ('0', ';')
-						end
-					end
-					i := i + 1
+			local_types := context.local_list
+			from
+				count := local_types.count
+				used_upper := context.local_vars.upper
+				i := 1
+			until
+				i > count
+			loop
+				type_i := real_type (local_types.i_th (i))
+						-- Check whether the variable is used or not.
+				if i >= local_count then
+						-- Object test locals are always used.
+					used_local := True
+				elseif i > used_upper then
+					used_local := False
+				else
+					used_local := context.local_vars.item(i)
 				end
+
+						-- Generate only if variable used
+				if wkb_mode or (used_local or type_i.is_true_expanded) then
+						-- Local reference variable are declared via
+						-- the local variable array "l[]".
+					if type_i.is_true_expanded then
+						create l_loc_name.make (6)
+						l_loc_name.append ("sloc")
+						l_loc_name.append_integer (i)
+						l_type ?= type_i
+						check
+								-- Only a CL_TYPE_A could be an expanded
+							l_type_not_void: l_type /= Void
+						end
+						l_class_type := l_type.associated_class_type (context.context_class_type.type)
+						l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
+					end
+					buf.put_new_line
+					type_i.c_type.generate (buf)
+					if has_rescue then
+						buf.put_string ("EIF_VOLATILE ")
+					end
+					buf.put_string ("loc")
+					buf.put_integer (i)
+					buf.put_string (" = ")
+					if type_i.is_true_expanded then
+						type_i.c_type.generate_cast (buf)
+						buf.put_character ('(')
+						buf.put_string (l_loc_name)
+						buf.put_string (".data")
+						l_class_type.generate_expanded_overhead_size (buf)
+						buf.put_string (");")
+					else
+						type_i.c_type.generate_cast (buf)
+						buf.put_two_character ('0', ';')
+					end
+				end
+				i := i + 1
 			end
 
 				-- Generate local declaration for storing exception object.
@@ -1637,10 +1644,7 @@ end
 		do
 			if context.workbench_mode then
 				-- we have saved at least Result and Current
-				i := 2
-				if locals /= Void then
-					i := i + locals.count
-				end
+				i := context.local_list.count + 2
 				if arguments /= Void then
 					i := i + arguments.count
 				end
@@ -1744,7 +1748,7 @@ end
 			context.Current_register.print_register
 			buf.put_string (gc_comma)
 			if locals /= Void then
-				buf.put_integer (locals.count)
+				buf.put_integer (local_count)
 			else
 				buf.put_integer (0)
 			end

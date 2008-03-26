@@ -129,13 +129,13 @@ feature -- Properties
 	is_reference: BOOLEAN is
 			-- Is current actual type a reference one?
 		do
-			Result := actual_type.is_reference
+			Result := {a: like actual_type} actual_type and then a.is_reference
 		end
 
 	is_expanded: BOOLEAN is
 			-- Is current actual type an expanded one?
 		do
-			Result := actual_type.is_expanded
+			Result := {a: like actual_type} actual_type and then a.is_expanded
 		end
 
 	is_none: BOOLEAN is
@@ -439,7 +439,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

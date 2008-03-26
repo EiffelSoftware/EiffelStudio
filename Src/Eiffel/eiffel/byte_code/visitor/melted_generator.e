@@ -1275,10 +1275,16 @@ feature {NONE} -- Visitors
 			else
 					-- Target is a reference, source is a reference, or both
 				ba.append (bc_object_test)
-				ba.append_short_integer (a_node.target.position)
+				ba.append_short_integer (context.object_test_local_position (a_node.target))
 					-- Generate type of target
 				a_node.info.make_byte_code (ba)
 			end
+		end
+
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+		do
+			ba.append (bc_local)
+			ba.append_short_integer (context.object_test_local_position (a_node))
 		end
 
 	process_once_string_b (a_node: ONCE_STRING_B) is
@@ -2026,7 +2032,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

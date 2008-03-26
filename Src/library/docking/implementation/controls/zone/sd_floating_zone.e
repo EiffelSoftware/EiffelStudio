@@ -47,7 +47,7 @@ inherit
 			{NONE} all
 			{ANY} set_position, set_size, screen_x, screen_y
 			{SD_DOCKING_MANAGER_COMMAND} accelerators
-			{SD_DOCKING_STATE} set_width, set_height
+			{SD_DOCKING_STATE, SD_STATE_VOID} set_width, set_height
 			{SD_DOCKING_MANAGER_COMMAND} hide
 		redefine
 			hide,

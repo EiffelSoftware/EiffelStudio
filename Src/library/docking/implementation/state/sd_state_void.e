@@ -111,6 +111,8 @@ feature -- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
 			l_floating_state: SD_FLOATING_STATE
+			l_env: EV_ENVIRONMENT
+			l_platform: PLATFORM
 		do
 			content.set_visible (True)
 			internal_docking_manager.command.lock_update (Void, True)
@@ -119,6 +121,17 @@ feature -- Redefine.
 			l_docking_state.dock_at_top_level (l_floating_state.inner_container)
 			change_state (l_docking_state)
 			l_floating_state.set_size (last_floating_width, last_floating_height)
+
+			create l_platform
+			if not l_platform.is_windows then
+				-- Similar to {SD_DOCKING_STATE}.show, we have to do something special for GTK.
+				-- See bug#14105
+				if {l_floating_zone: !SD_FLOATING_ZONE} l_floating_state.zone then
+					create l_env
+					l_env.application.do_once_on_idle (agent set_size_in_idle (last_floating_width, last_floating_height, l_floating_zone))
+				end
+			end
+
 			internal_docking_manager.command.unlock_update
 		ensure then
 			state_changed: internal_content.state /= Current
@@ -249,6 +262,19 @@ feature -- Contract support
 			-- If content valid?
 		do
 			Result := internal_docking_manager.has_content (a_content)
+		end
+
+feature {NONE} -- Implementation
+
+	set_size_in_idle (a_width, a_height: INTEGER; a_zone: !SD_FLOATING_ZONE) is
+			-- Set `a_zone''s size with `a_width' and `a_height'.
+		require
+			valid: a_width >= 0 and a_height >= 0
+		do
+			if not a_zone.is_destroyed then
+				a_zone.set_width (a_width)
+				a_zone.set_height (a_height)
+			end
 		end
 
 invariant

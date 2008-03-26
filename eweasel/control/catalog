@@ -1402,6 +1402,7 @@ test	code-formatting					ccomp070 tcf pass c_compilation
 test	assign-attempt-on-basic-type	ccomp071 tcf pass c_compilation
 test	polymorphic-feature-address-bad-code	ccomp072 tcf pass c_compilation
 test	agent-with-like-bad-declaration	ccomp073 tcf pass c_compilation
+test	expanded-generic-wrong-c-with-multiple-ancestor	ccomp074 tcf fail c_compilation
 
 -- Storable tests
 

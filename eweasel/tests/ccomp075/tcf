@@ -1,0 +1,14 @@
+test_name 	 missing-undef-c-compiler-error
+test_description An Eiffel external C routine is using the same name as one of our variable generated name but because we do not undefine that definition it causes the C compilation to fail for that Eiffel C external.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test.h $CLUSTER test.h
+
+compile_frozen
+compile_result 	ok
+	
+c_compile_work
+c_compile_result ok
+
+test_end

@@ -141,6 +141,10 @@ feature
 				buf.put_new_line
 				buf.put_string ("RTLE;");
 			end;
+
+				-- Undefines all macros defined for temporary locals.
+			context.generate_temporary_ref_macro_undefintion
+
 				-- End of C routine
 			buf.generate_block_close
 

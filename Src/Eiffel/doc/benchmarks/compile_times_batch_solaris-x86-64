@@ -6,6 +6,10 @@ CG = Code Generation
 6.2
 ===
 
+6.2.7.2874 RTEA with new EiffelBase rewrite for void safety:
+175.23u 12.46s 3:41.89 84.5%
+174.46u 12.50s 3:46.15 82.6%
+
 6.2.7.2839 non-RTEA with removal of object creation at runtime for return value of polymorphic calls:
 172.99u 13.00s 3:43.66 83.1% (before bootstrap, exe size: 14525896)
 169.98u 13.10s 3:37.98 83.9% (after bootstrap, exe size: 14544104)

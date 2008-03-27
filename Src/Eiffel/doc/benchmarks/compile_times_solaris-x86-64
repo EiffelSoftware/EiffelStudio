@@ -3,13 +3,17 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 6.2
 ===
 
-6.2.7.2839 non-RTEA with removal of object creation at runtime for return value of polymorphic calls:
+6.2.7.2874 RTEA with new EiffelBase rewrite for void safety:
+933.49u 39.44s 26:06.14 62.1%
+931.07u 36.52s 28:39.01 56.2%
+
+6.2.7.2839 RTEA with removal of object creation at runtime for return value of polymorphic calls:
 945.62u 35.73s 28:09.63 58.0% (before bootstrap, exe size: 47897264)
 921.22u 34.71s 24:16.58 65.6% (after bootstrap, exe size: 47932832)
 914.03u 34.68s 25:26.11 62.1%  "
 564.57u 33.65s 20:05.93 49.6% (after bootstrap compiled with new ecb)
 
-6.2.7.2839 non-RTEA with removal of object creation at runtime for arguments of polymorphic calls (5109 classes):
+6.2.7.2839 RTEA with removal of object creation at runtime for arguments of polymorphic calls (5109 classes):
 1028.84u 39.38s 26:38.59 66.8% (before bootstrap, exe size: 47989456)
 945.43u 39.28s 27:38.25 59.3% (after bootstrap, exe size: 47887696)
 583.70u 35.90s 18:33.25 55.6% (after bootstrap compiled with new ecb)
@@ -24,7 +28,7 @@ Solaris 10 x86-64 with dual AMD64 248 (2.2GHz)
 1008.73u 38.91s 24:44.48 70.5%
 1016.36u 35.87s 25:01.79 70.0%
 
-6.2.7.2661 non-RTEA with new code generation for less dynamic calls (exe size: 49551952):
+6.2.7.2661 RTEA with new code generation for less dynamic calls (exe size: 49551952):
 639.87u 33.29s 18:40.09 60.0% (with old ecb compiler exe size: 48753432)
 1113.67u 36.52s 26:32.87 72.2% (before bootstrap)
 1107.45u 37.14s 27:05.47 70.4% (after bootstrap)

@@ -448,6 +448,9 @@ feature -- Analyzis
 				generate_return_exp
 			end
 
+				-- Undefines all macros defined for temporary locals.
+			context.generate_temporary_ref_macro_undefintion
+
 				-- End of C function
 			if l_is_once then
 				buf.put_new_line_only

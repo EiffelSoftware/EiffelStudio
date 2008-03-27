@@ -848,6 +848,7 @@ feature -- Registers
 		require
 			t_attached: t /= Void
 			valid_t: not t.is_void
+			is_workbench_mode: workbench_mode
 		do
 			create Result.make_with_level (t.level + (c_nb_types - 1))
 		ensure
@@ -939,11 +940,11 @@ feature {NONE} -- Registers: implementation
 			buf.put_integer (n)
 		end
 
-	register_names: ARRAY [STRING] is
+	register_names: SPECIAL [STRING] is
 			-- Names of registers indexed by their level
 		once
 				-- `c_void' is not used.
-			create Result.make (1, (c_nb_types - 1) * 2)
+			create Result.make (c_nb_types * 2)
 				-- Simple registers.
 			Result.put ("ti1_", c_int8)
 			Result.put ("ti2_", c_int16)
@@ -1554,6 +1555,9 @@ feature -- Access
 			end
 		end
 
+	needs_macro_undefinition: BOOLEAN
+			-- Does C code generation needs to undefine some macros defined in body?
+
 	need_gc_hook: BOOLEAN
 			-- Do we need to generate GC hooks?
 			-- Computed by compute_need_gc_hooks for each instance of BYTE_CODE.
@@ -1726,6 +1730,7 @@ feature -- Access
 		local
 			i, j, nb_vars: INTEGER
 		do
+			needs_macro_undefinition := False
 			from
 				i := (c_nb_types - 1) * 2
 			until
@@ -1744,6 +1749,36 @@ feature -- Access
 			end
 		end
 
+	generate_temporary_ref_macro_undefintion is
+			-- Generate #undef statements for macros being generated to access wrapped arguments.
+		local
+			i, j, nb_vars: INTEGER
+			buf: like buffer
+		do
+			if needs_macro_undefinition then
+				needs_macro_undefinition := False
+				from
+					buf := buffer
+					i := (c_nb_types - 1) * 2
+				until
+					i < c_nb_types
+				loop
+					from
+						j := 1
+						nb_vars := register_server.needed_registers_by_clevel (i)
+					until
+						j > nb_vars
+					loop
+						buf.put_new_line_only
+						buf.put_string ("#undef ")
+						put_register_name (i, j, buf)
+						j := j + 1
+					end
+					i := i - 1
+				end
+			end
+		end
+
 	generate_tmp_var (ctype, num: INTEGER) is
 			-- Generate declaration for temporary variable `num'
 			-- whose C type is `ctype'.
@@ -1759,7 +1794,11 @@ feature -- Access
 			value_type := register_type (ctype)
 			if ctype >= c_nb_types 	then
 					-- This is a register to hold generic argument value
+				check
+					is_workbench_mode: workbench_mode
+				end
 				is_generic := True
+				needs_macro_undefinition := True
 				variable_type := once "EIF_TYPED_VALUE"
 			else
 				variable_type := value_type.c_string
@@ -1776,9 +1815,6 @@ feature -- Access
 				buf.put_string (once "x = {0, ")
 				buf.put_string (register_sk_value (ctype))
 				buf.put_string ("};")
-				buf.put_new_line_only
-				buf.put_string ("#undef ")
-				put_register_name (ctype, num, buf)
 				buf.put_new_line_only
 				buf.put_string ("#define ")
 				put_register_name (ctype, num, buf)

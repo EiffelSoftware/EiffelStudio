@@ -19,8 +19,8 @@ iff not defined NO_COMPILE then
 		echo Cannot find a version of MinGW under ISE_EIFFEL. Cannot continue
 		CANCEL
 	endiff
-	iff "%@SEARCH[ec.exe]" == "" then
-		echo Cannot find a version of ec. Cannot continue
+	iff "%@SEARCH[ecb.exe]" == "" then
+		echo Cannot find a version of ecb. Cannot continue
 		CANCEL
 	endiff
 	iff isdir %EIFFEL_SRC then
@@ -71,8 +71,8 @@ echo STUDIO_DIR is %STUDIO_DIR
 echo DOCUMENT_DIR is %DOCUMENT_DIR
 echo Log file is %INSTALL_LOG
 echo The revision that will be generated will be %ORIGO_SVN_REVISION
-echo ec version is:
-ec -version
+echo ecb version is:
+ecb -version
 echo -----------------------------
 iff defined NO_COMPILE then
 	echo No compilation will be performed (including EiffelStudio's compilation)

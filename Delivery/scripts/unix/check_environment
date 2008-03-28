@@ -17,9 +17,9 @@ if [ ! "$NO_COMPILE" ]; then
 		echo FINALIZATION_DIR not defined. Cannot continue
 		CANCEL
 	fi
-	which ec >> $INSTALL_LOG
+	which ecb >> $INSTALL_LOG
 	if [ $? -ne	0 ]; then
-		echo Cannot find a version of ec. Cannot continue
+		echo Cannot find a version of ecb. Cannot continue
 		CANCEL
 	fi
 fi
@@ -47,8 +47,8 @@ echo INSTALL_DIR is $INSTALL_DIR
 echo DOCUMENT_DIR is $DOCUMENT_DIR
 echo Log file is $INSTALL_LOG
 echo The revision that will be generated will be $ORIGO_SVN_REVISION
-echo ec version is:
-ec -version
+echo ecb version is:
+ecb -version
 echo -----------------------------
 if [ "$NO_COMPILE" ]; then
 	echo "No compilation will be performed (including EiffelStudio's compilation)"

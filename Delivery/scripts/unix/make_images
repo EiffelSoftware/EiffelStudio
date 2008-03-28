@@ -45,8 +45,11 @@ cp -r runtimes/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 
 remtrace Preparing GPL version
 bunzip2 -c $EXPORT_DIR/ecs/ec_gpl.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+bunzip2 -c $EXPORT_DIR/ecs/ecb_gpl.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 
 remtrace Building GPL CD image
 mv Eiffel62 cdrom
@@ -60,8 +63,11 @@ bzip2 Eiffel62_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Preparing Enterprise version
 	bunzip2 -c $EXPORT_DIR/ecs/ec_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	bunzip2 -c $EXPORT_DIR/ecs/ecb_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 
 	remtrace copying CD key validator
 	move setup $INSTALL_DIR/register

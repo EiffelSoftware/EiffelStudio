@@ -71,6 +71,17 @@ if [ ! "$NO_NEW_EC" ]; then
 	clean_project
 	move ec.tar.bz2 $EXPORT_DIR/ec_gpl.tar.bz2
 
+	remtrace Batch version
+	clean_project
+	finalize ec.ecf batch
+	tgz_ccode batch ecb.tar.bz2
+	if [ ! -f ecb.tar.bz2 ]; then
+		echo Could not finalize a new batch version
+		CANCEL
+	fi
+	clean_project
+	move ecb.tar.bz2 $EXPORT_DIR/ecb_gpl.tar.bz2
+
 	if [ "$MULTIPLE_EDITIONS" ]; then
 		remtrace Enterprise version edition
 		cd $FINALIZATION_DIR
@@ -88,6 +99,17 @@ if [ ! "$NO_NEW_EC" ]; then
 		fi
 		clean_project
 		move ec.tar.bz2 $EXPORT_DIR/ec_ent.tar.bz2
+
+		remtrace Batch version
+		clean_project
+		finalize ec.ecf batch
+		tgz_ccode batch ecb.tar.bz2
+		if [ ! -f ecb.tar.bz2 ]; then
+			echo Could not finalize a new batch version
+			CANCEL
+		fi
+		clean_project
+		move ecb.tar.bz2 $EXPORT_DIR/ecb_ent.tar.bz2
 	fi
 else
 	# FIXME doesn't work.

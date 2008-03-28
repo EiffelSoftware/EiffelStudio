@@ -1563,7 +1563,9 @@ feature -- Access
 	new_object_test_as (start: SYMBOL_AS; name: ID_AS; type: TYPE_AS; expression: EXPR_AS): OBJECT_TEST_AS is
 			-- New OBJECT_TEST_AS node
 		do
-			create Result.make (start, name, type, expression)
+			if name /= Void and type /= Void and expression /= Void then
+				create Result.make (start, name, type, expression)
+			end
 		end
 
 	new_once_as (c: EIFFEL_LIST [INSTRUCTION_AS]; k_as: KEYWORD_AS): ONCE_AS is

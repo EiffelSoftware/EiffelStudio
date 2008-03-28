@@ -123,6 +123,7 @@ iff defined BUILD_ENTERPRISE_ONLY then
 	sed -e "s/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
 	move new_system_constants.e system_constants.e
 	cdd %FINALIZATION_DIR
+
 	clean_project
 	finalize ec.ecf bench
 	cleanup_eiffel bench ec.exe
@@ -131,6 +132,15 @@ iff defined BUILD_ENTERPRISE_ONLY then
 		CANCEL
 	endiff
 	move ec.exe %INSTALL_DIR\releases\enterprise_version
+
+	clean_project
+	finalize ec.ecf batch
+	cleanup_eiffel batch ecb.exe
+	iff not exist ecb.exe then
+		remtrace Could not finalize a new batch version of the compiler
+		CANCEL
+	endiff
+	move ecb.exe %INSTALL_DIR\releases\enterprise_version
 else
 	iff not defined NO_NEW_EC then
 		remtrace GPL edition
@@ -147,6 +157,15 @@ else
 		endiff
 		move ec.exe %INSTALL_DIR\releases\gpl_version
 
+		clean_project
+		finalize ec.ecf batch
+		cleanup_eiffel batch ecb.exe
+		iff not exist ecb.exe then
+			remtrace Could not finalize a new batch version of the compiler
+			CANCEL
+		endiff
+		move ecb.exe %INSTALL_DIR\releases\gpl_version
+
 		remtrace Enterprise edition for EiffelStudio
 		cdd %EIFFEL_SRC\Eiffel\API\constants
 		sed -e "s/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
@@ -162,6 +181,14 @@ else
 		endiff
 		move ec.exe %INSTALL_DIR\releases\enterprise_version
 
+		clean_project
+		finalize ec.ecf batch
+		cleanup_eiffel batch ecb.exe
+		iff not exist ecb.exe then
+			remtrace Could not finalize a new batch version of the compiler
+			CANCEL
+		endiff
+		move ecb.exe %INSTALL_DIR\releases\enterprise_version
 	endiff
 endiff
 

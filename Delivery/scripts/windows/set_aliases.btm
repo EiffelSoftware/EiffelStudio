@@ -66,10 +66,10 @@ REM Eiffel Compilation
 REM Remove a project from the current directory, if any
 alias clean_project `iff exist EIFGENs .or. isdir EIFGENs then & fullrd EIFGENs & endiff`
 REM Finalize at the Eiffel level only
-alias finalize `iff "%2" == "" then & ec -local -finalize -c_compile -config %$ >>& %INSTALL_LOG & else & ec -local -finalize -c_compile -config %1 -target %2 >>& %INSTALL_LOG & endiff`
+alias finalize `iff "%2" == "" then & ecb -local -finalize -c_compile -config %$ >>& %INSTALL_LOG & else & ecb -local -finalize -c_compile -config %1 -target %2 >>& %INSTALL_LOG & endiff`
 REM Melt at the Eiffel level only
-alias melt `ec -local -config %$ >>& %INSTALL_LOG`
-alias freeze `ec -local -freeze -c_compile -config %$ >>& %INSTALL_LOG`
+alias melt `ecb -local -config %$ >>& %INSTALL_LOG`
+alias freeze `ecb -local -freeze -c_compile -config %$ >>& %INSTALL_LOG`
 REM Move up the generated finalized exe (its name is the parameter) and delete the compiled files
 alias cleanup_dotnet_eiffel `if exist EIFGENs\%1\F_code\%2 move EIFGENs\%1\F_code\%2 .  & if exist EIFGENs\%1\F_code\lib*.dll move EIFGENs\%1\F_code\lib*.dll . & if exist EIFGENs\%1\F_code\Assemblies move EIFGENs\%1\F_code\Assemblies\*.dll . &  clean_project`
 alias cleanup_eiffel `if exist EIFGENs\%1\F_code\%2 move EIFGENs\%1\F_code\%2 . & clean_project`

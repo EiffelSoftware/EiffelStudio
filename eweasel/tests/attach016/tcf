@@ -1,0 +1,28 @@
+test_name 	 anchored-object-test-local
+test_description Anchored object test local should be considered attached either in void-safe and non-void-safe contexts.
+
+define VOID_SAFE "true"
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+cleanup_compile
+
+define VOID_SAFE "false"
+
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+
+test_end

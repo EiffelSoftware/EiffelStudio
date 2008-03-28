@@ -73,6 +73,8 @@ md $INSTALL_DIR
 cd $INSTALL_DIR
 remtrace studio
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/studio studio 
+fullrd studio/spec/windows
+fullrd studio/spec/win64
 fullrd studio/config/windows
 fullrd studio/wizards/new_projects/wizard
 fullrf studio/wizards/new_projects/wizard.dsc

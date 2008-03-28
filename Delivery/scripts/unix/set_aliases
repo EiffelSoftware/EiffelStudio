@@ -194,7 +194,7 @@ fullrd F_code
 # Finalize at the Eiffel level only
 finalize ()
 {
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -local -batch -finalize -config $1 -target $2 >> $INSTALL_LOG 2>&1
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ecb -local -batch -finalize -config $1 -target $2 >> $INSTALL_LOG 2>&1
 if [ ! -f EIFGENs/$2/F_code/Makefile.SH ]; then
 echo "Couldn't finalize $1"
 CANCEL

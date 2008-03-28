@@ -1826,6 +1826,7 @@ test	object-test-chain								attach012 tcf pass object_test execution
 test	object-test-code-generation						attach013 tcf pass object_test execution
 test	read-only-void-test-in-assertion				attach014 tcf pass attached_types scope local
 test	scope-after-combined-expression					attach015 tcf pass attached_types scope local
+test	anchored-object-test-local						attach016 tcf pass object_test attached_types anchored_types
 
 
 -- .NET specific test

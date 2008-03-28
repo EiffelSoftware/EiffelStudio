@@ -331,8 +331,9 @@ feature -- Inlining
 
 				Result := parent
 			end
-				-- Adapt type in current context for better results.
-			type := real_type (type).instantiated_in (context.context_cl_type)
+				-- Adapt type in current context for better results. We have to remove
+				-- the anchors otherwise it does not work, see eweasel test#final050.
+			type := real_type (type.deep_actual_type).instantiated_in (context.context_cl_type)
 			if precursor_type /= Void then
 				precursor_type ?= real_type (precursor_type)
 			end
@@ -484,10 +485,19 @@ feature -- Inlining
 					inlined_feat_b.set_context_type (context_class_type, cl_type, written_class_type, written_cl_type)
 
 					bc ?= Byte_server.disk_item (l_body_index)
+					check bc_not_void: bc /= Void end
+
+						-- We set the `byte_code' of `inlined_feat_b' because we need to be set
+						-- when handling in `pre_inlined_code' the type of attributes which relies
+						-- on the type of the arguments of the inlined routine.
+						-- This works because `bc' and `bc.pre_inlined_code' are the same object although
+						-- the content is modified.
+					inlined_feat_b.set_inlined_byte_code (bc)
+					inliner.set_inlined_feature (inlined_feat_b)
 					bc := bc.pre_inlined_code
+					check same_bc: bc = inlined_feat_b.byte_code end
 					Context.restore_class_type_context
 
-					inlined_feat_b.set_inlined_byte_code (bc)
 					Result := inlined_feat_b
 				end
 			else

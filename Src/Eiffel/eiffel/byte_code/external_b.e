@@ -306,7 +306,9 @@ feature -- Inlining
 
 				Result := parent;
 			end
-			type := real_type (type)
+				-- Adapt type in current context for better results. We have to remove
+				-- the anchors otherwise it does not work, see eweasel test#final050.
+			type := real_type (type.deep_actual_type).instantiated_in (context.context_cl_type)
 			if static_class_type /= Void then
 				static_class_type ?= real_type (static_class_type)
 			end

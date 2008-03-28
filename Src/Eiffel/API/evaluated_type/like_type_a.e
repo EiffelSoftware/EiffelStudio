@@ -40,6 +40,7 @@ inherit
 			meta_type,
 			set_attached_mark,
 			set_detachable_mark,
+			set_is_implicitly_attached,
 			description,
 			c_type,
 			generics,
@@ -312,6 +313,17 @@ feature -- Modification
 			a := actual_type
 			if not is_expanded and then a /= Void and then actual_type.is_attached then
 				actual_type := a.as_detachable
+			end
+		end
+
+	set_is_implicitly_attached
+		local
+			a: like actual_type
+		do
+			Precursor
+			a := actual_type
+			if a /= Void and then not a.is_attached then
+				actual_type := a.as_implicitly_attached
 			end
 		end
 

@@ -15,7 +15,7 @@ inherit
 			generics, has_associated_class, has_associated_class_type, instantiated_in, duplicate,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
-			set_attached_mark, set_detachable_mark, description, c_type, is_explicit,
+			set_attached_mark, set_detachable_mark, set_is_implicitly_attached, description, c_type, is_explicit,
 			generated_id, generate_cid, generate_cid_array, generate_cid_init,
 			make_gen_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
@@ -369,6 +369,17 @@ feature {COMPILER_EXPORTER} -- Modification
 			Precursor
 			if not is_expanded and then conformance_type.is_attached then
 				conformance_type := conformance_type.as_detachable
+			end
+		end
+
+	set_is_implicitly_attached
+		local
+			a: like conformance_type
+		do
+			Precursor
+			a := conformance_type
+			if a /= Void and then not a.is_attached then
+				conformance_type := a.as_implicitly_attached
 			end
 		end
 

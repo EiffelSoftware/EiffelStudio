@@ -134,7 +134,8 @@ feature -- Inlining
 
 	size: INTEGER_32
 		do
-			Result := expression.size + 1
+				-- Cannot inline at the moment, because the register mapping is not done properly
+			Result := 101
 		end
 
 	pre_inlined_code: like Current

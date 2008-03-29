@@ -188,6 +188,14 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
+	frozen send_message_timeout (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER; fuflags, utimeout: INTEGER; lpdwresult: TYPED_POINTER [INTEGER]) is
+			-- SDK SendMessageTimeout
+		external
+			"C inline use <windows.h>"
+		alias
+			"SendMessageTimeout ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam, (UINT) $fuflags, (UINT) $utimeout, (PDWORD_PTR) $lpdwresult)"
+		end
+
 feature -- File Drop Handling
 
 	frozen drag_query_file (hdrop: POINTER; ifile: INTEGER; buffer_pointer: POINTER; buffer_size: INTEGER): INTEGER is

@@ -1751,7 +1751,7 @@ end
 			context.Current_register.print_register
 			buf.put_string (gc_comma)
 			if locals /= Void then
-				buf.put_integer (local_count)
+				buf.put_integer (context.local_list.count)
 			else
 				buf.put_integer (0)
 			end

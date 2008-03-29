@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="command_tunnel" uuid="06A383F3-F4AC-48EE-A806-3E5075EFF5FD" library_target="command_tunnel">
+	<target name="command_tunnel">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option>
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false"/>
+		<cluster name="command_tunnel" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/spec$</exclude>
+			</file_rule>
+			<option namespace="CommandTunnel"/>
+		</cluster>
+		<cluster name="unix" location="spec\unix\">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</cluster>
+		<cluster name="windows" location="spec\windows\">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+			<option namespace="CommandTunnel"/>
+		</cluster>
+	</target>
+</system>

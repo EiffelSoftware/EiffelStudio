@@ -40,4 +40,18 @@ void cwel_enum_child_windows_procedure (
 }
 #endif
 
+/*---------------------------------------------------------------------------*/
+/* FUNC: cwel_enum_windows_procedure                                             */
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+void cwel_enum_windows_procedure (
+#ifndef EIF_IL_DLL
+		EIF_OBJECT pCurrObject,
+#endif
+		void *fnptr);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* __WEL_ENUM_CHILD_WINDOWS_H_ */

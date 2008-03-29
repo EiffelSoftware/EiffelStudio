@@ -1,0 +1,27 @@
+test_name 	 nested-like-code-generation-crash
+test_description A call being regenerated (case of inherited assertions) with anchors in the signature of the routine causes the compiler because the anchors are related to a different class than current one being generated.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+copy_raw 	 test3.e  $CLUSTER test3.e
+copy_raw 	 test4.e  $CLUSTER test4.e
+copy_raw 	 test5.e  $CLUSTER test5.e
+
+compile_melted
+compile_result ok
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+compile_final_keep
+compile_result ok
+
+c_compile_final
+c_compile_final ok
+
+test_end

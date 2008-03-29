@@ -18,6 +18,7 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sybfront.h>
 #include <sybdb.h>
@@ -37,6 +38,10 @@ static int data_type, size, max_size, * past_time;
 static char * error_message;
 static char date_string[30];
 static char * tmp_st;
+
+/* Prototypes. */
+int syb_get_integer_data (int no_des, int i);
+int syb_first_descriptor_available ();
 
 void * safe_alloc (void *ptr)
 {

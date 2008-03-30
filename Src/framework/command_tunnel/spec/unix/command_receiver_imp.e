@@ -11,8 +11,6 @@ class
 inherit
 	COMMAND_RECEIVER_I
 
-	WEL_COMMAND
-
 	COMMAND_CONSTANTS
 		export
 			{NONE} all

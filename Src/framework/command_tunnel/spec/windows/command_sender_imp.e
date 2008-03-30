@@ -80,12 +80,6 @@ feature {NONE} -- Access
 
 	last_process: INTEGER
 
-	wel_api: WEL_API is
-			-- WEL apis.
-		once
-			create Result
-		end
-
 feature {NONE} -- Implementation
 
 	enum_windows_proc (hwnd: POINTER): BOOLEAN is
@@ -110,7 +104,7 @@ feature {NONE} -- Implementation
 				if {lt_key: STRING}last_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
 						-- If the receiver return True, it means that the receiver handles the message.
 						-- Window enumerating will stop.
-					Result := wel_api.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
+					Result := {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
 					last_command_handled := last_command_handled or Result
 				end
 			end
@@ -140,7 +134,7 @@ feature {NONE} -- Implementation
 						-- |Fixeme: Information loss when converting to STRING_8.
 					l_string := l_string.to_string_8
 					if {lt_key: STRING}last_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
-						last_command_handled := wel_api.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
+						last_command_handled := {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
 							-- The window of the process has been found, stop enumerating.
 						Result := False
 					end

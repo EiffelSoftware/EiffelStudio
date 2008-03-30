@@ -137,6 +137,7 @@ feature -- Access
 			if old_min_width /= minimum_width or old_min_height /= minimum_height then
 				child_has_resized (item_imp, minimum_height-old_min_height, minimum_width-old_min_width)
 			end
+			set_item_resize(first, False)
 		end
 
 	set_second (an_item: like item) is
@@ -160,6 +161,7 @@ feature -- Access
 			if old_min_width /= minimum_width or old_min_height /= minimum_height then
 				child_has_resized (item_imp, minimum_height-old_min_height, minimum_width-old_min_width)
 			end
+			set_item_resize (second, True)
 		end
 
 	prune (an_item: like item) is
@@ -193,7 +195,7 @@ feature -- Access
 	enable_item_expand (an_item: like item) is
 			-- Let `an_item' expand when `Current' is resized.
 		do
-
+			set_item_resize (an_item, True)
 		end
 
 	disable_item_expand (an_item: like item) is

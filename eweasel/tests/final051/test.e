@@ -12,6 +12,7 @@ feature {NONE} -- Creation
 			create t2
 			t1 := t2
 			t1.make (4.5, Void)
+			io.put_new_line
 		end
 
 end

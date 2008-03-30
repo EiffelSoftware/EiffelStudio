@@ -854,6 +854,7 @@ test	inlining-with-anchor		final047 tcf pass finalizing inlining
 test	inlining-deferred-from-other-branch	final048 tcf pass finalizing inlining
 test	polymorphic-call-on-formal-seed	final049 tcf pass finalizing
 test	inlining-with-anchor-2		final050 tcf pass finalizing inlining
+test	wrong-polymorphic-wrapper	final051 tcf pass finalizing
 
 -- Runtime
 test	gc-tracking-001		runtime001	tcf pass runtime

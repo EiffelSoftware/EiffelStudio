@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 			create username_text
 			username_text.set_minimum_width (190)
 			register_action (username_text.change_actions, agent enable_login)
+			suppress_confirmation_key_close (username_text)
 			l_hbox.extend (username_text)
 
 			l_vbox.extend (l_hbox)
@@ -89,6 +90,7 @@ feature {NONE} -- Initialization
 			l_hbox.disable_item_expand (l_pass_label)
 			create password_text
 			register_action (password_text.change_actions, agent enable_login)
+			suppress_confirmation_key_close (password_text)
 			password_text.set_minimum_width (190)
 			l_hbox.extend (password_text)
 
@@ -112,6 +114,7 @@ feature {NONE} -- Initialization
 			create login_button.make_with_text ("Login...")
 			login_button.set_minimum_width ({ES_UI_CONSTANTS}.dialog_button_width)
 			register_action (login_button.select_actions, agent on_login)
+			suppress_confirmation_key_close (login_button)
 			l_hbox.extend (login_button)
 			l_hbox.disable_item_expand (login_button)
 
@@ -185,6 +188,7 @@ feature {NONE} -- Initialization
 			synopsis_text.set_text (synopsis)
 			register_action (synopsis_text.focus_in_actions, agent on_text_component_focused (synopsis_text))
 			register_action (synopsis_text.focus_out_actions, agent on_text_component_focused_out (synopsis_text, default_synopsis))
+			suppress_confirmation_key_close (synopsis_text)
 			l_vbox.extend (synopsis_text)
 			l_vbox.disable_item_expand (synopsis_text)
 
@@ -193,6 +197,7 @@ feature {NONE} -- Initialization
 			description_text.set_minimum_size (400, 100)
 			register_action (description_text.focus_in_actions, agent on_text_component_focused (description_text))
 			register_action (description_text.focus_out_actions, agent on_text_component_focused_out (description_text, default_description))
+			suppress_confirmation_key_close (description_text)
 			l_vbox.extend (description_text)
 
 				-- Public bug
@@ -214,9 +219,6 @@ feature {NONE} -- Initialization
 
 			description_text.focus_in_actions.extend (agent on_focus_in)
 			description_text.focus_out_actions.extend (agent on_focus_out)
-
-				-- Suppress close on ENTER in the description text
-			suppress_confirmation_key_close (description_text)
 		end
 
 	on_after_initialized

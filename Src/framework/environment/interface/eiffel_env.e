@@ -1200,7 +1200,7 @@ feature -- Files (commands)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result.make_from_string (bin_path)
+			create Result.make_from_string (bin_path)
 			Result.set_file_name (estudio_name)
 			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)

@@ -8,6 +8,9 @@ indexing
 class
 	WEL_GDIP_IMAGE_FORMAT
 
+obsolete
+	"Use {WEL_GDIP_IMAGE_ENCODER} instead"
+
 create
 	make
 
@@ -47,7 +50,7 @@ feature -- Query
 				l_all_encoders.forth
 			end
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

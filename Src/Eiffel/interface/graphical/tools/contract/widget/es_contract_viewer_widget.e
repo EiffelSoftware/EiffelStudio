@@ -47,12 +47,17 @@ feature {NONE} -- Initialization
 			create l_hbox
 			l_hbox.extend (create {EV_CELL})
 
+			create edit_contract_label.make_with_text ("Edit Contracts...")
+			edit_contract_label.align_text_right
+			register_action (edit_contract_label.select_actions, agent on_edit_contracts)
+			l_hbox.extend (edit_contract_label)
+
 				-- Edit contracts button
 			create edit_contracts_button.make_with_text ("Edit Contracts...")
 			edit_contracts_button.set_tooltip ("Edit the contracts for this feature.")
 			register_action (edit_contracts_button.select_actions, agent on_edit_contracts)
-			l_hbox.extend (edit_contracts_button)
-			l_hbox.disable_item_expand (edit_contracts_button)
+--			l_hbox.extend (edit_contracts_button)
+--			l_hbox.disable_item_expand (edit_contracts_button)
 
 			edit_contracts_button.hide
 
@@ -290,9 +295,9 @@ feature {NONE} -- Basic operation
 
 				-- Set contract button's edit state.
 			if context_class.group.is_readonly then
-				edit_contracts_button.hide
+				edit_contract_label.set_text ("View Contracts...")
 			else
-				edit_contracts_button.show
+				edit_contract_label.set_text ("Edit Contracts...")
 			end
 		end
 
@@ -349,6 +354,9 @@ feature {NONE} -- User interface elements
 	edit_contracts_button: !EV_BUTTON
 			-- Button used to edit the contracts
 
+	edit_contract_label: !EVS_LINK_LABEL
+			-- Label used to edit contracts
+
 feature {NONE} -- Action handlers
 
 	on_edit_contracts
@@ -359,23 +367,39 @@ feature {NONE} -- Action handlers
 			context_feature_attached: context_feature /= Void
 			context_class_attached: context_class /= Void
 		local
---			l_manager: EB_WINDOW_MANAGER
---			l_window: EB_DEVELOPMENT_WINDOW
---			l_feature_stone: FEATURE_STONE
+			l_manager: EB_WINDOW_MANAGER
+			l_window: EB_DEVELOPMENT_WINDOW
+			l_feature_stone: FEATURE_STONE
+			l_mod: ES_INVARIANT_CONTRACT_TEXT_MODIFIER
+			l_contracts: DS_ARRAYED_LIST [STRING_8]
 		do
+			create l_mod.make (({!CLASS_I}) #? context_class.lace_class)
+			l_mod.prepare
+
+			create l_contracts.make (2)
+			l_contracts.put_last ("test_attached: test /= Void")
+			l_contracts.put_last ("test_is_empty: test.is_empty")
+			l_mod.replace_contracts (l_contracts)
+
+			l_mod.commit
+
+			l_mod.prepare
+			l_contracts.wipe_out
+			l_mod.replace_contracts (l_contracts)
+
 --			l_manager := (create {EB_SHARED_WINDOW_MANAGER}).window_manager
 --			l_window := l_manager.last_focused_development_window
 --			if l_window /= Void and l_window.is_interface_usable then
 --				if {l_tool: !ES_CONTRACT_TOOL} l_window.shell_tools.tool ({ES_CONTRACT_TOOL}) and then l_tool.is_interface_usable then
 --						-- Show and activate focus on the tool.
 --					create l_feature_stone.make (context_feature)
---					l_tool.set_stone (l_feature_stone)
---					l_tool.show (True)
+--					check l_feature_stone_is_stone_usable: l_tool.is_stone_usable (l_feature_stone) end
+--					if l_tool.query_set_stone (l_feature_stone) then
+--						l_tool.set_stone (l_feature_stone)
+--						l_tool.show (True)
+--					end
 --				end
 --			end
-
---			create l_info.make_standard ("Oh, I'd bet you'd love to do this?%N%NAll in good time. Patience is a virtue.")
---			l_info.show_on_active_window
 		end
 
 feature {NONE} -- Factory

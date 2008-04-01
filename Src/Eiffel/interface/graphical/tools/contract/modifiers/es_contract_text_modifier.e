@@ -13,6 +13,16 @@ deferred class
 inherit
 	ES_CLASS_TEXT_AST_MODIFIER
 
+feature -- Access
+
+	contract_ast: ?G
+			-- Applicable contract AST node
+		require
+			is_prepared: is_prepared
+			is_ast_available: is_ast_available
+		deferred
+		end
+
 feature {NONE} -- Access
 
 	template: ?CODE_TEMPLATE_DEFINITION
@@ -64,14 +74,6 @@ feature {NONE} -- Query
 			result_positive: Result > 0
 		end
 
-	contract_ast: ?G
-			-- Applicable contract AST node
-		require
-			is_prepared: is_prepared
-			is_ast_available: is_ast_available
-		deferred
-		end
-
 feature -- Basic operations
 
 	replace_contracts (a_assertions: DS_BILINEAR [STRING])
@@ -92,7 +94,6 @@ feature -- Basic operations
 			l_value: !CODE_SYMBOL_VALUE
 			l_renderer: !CODE_TEMPLATE_STRING_RENDERER
 			l_contract_ast: ?G
-			l_t: CODE_TEMPLATE_DEFINITION
 			l_version: !CODE_VERSION
 		do
 			if not a_assertions.is_empty then
@@ -147,10 +148,9 @@ feature -- Basic operations
 					else
 							-- Report error
 						if logger.is_service_available then
-							logger.service.put_message_format_with_severity ("No suitable contract template could be found for `{1}' in {2}, for the current version of the compiler.", [template_identifier, context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
+							logger.service.put_message_format_with_severity ("No suitable contract template could be found for `{1}' in {2}, for the current version of the compiler.", [template_identifier, context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.high)
 						end
 					end
-
 				end
 			end
 
@@ -158,11 +158,6 @@ feature -- Basic operations
 			if l_contract_ast /= Void then
 					-- Remove the contracts, because we've added the contracts anyway.
 				remove_ast_code (l_contract_ast, True)
-			end
-
-				-- Report replacement
-			if logger.is_service_available then
-				logger.service.put_message_format_with_severity ("Contracts were replaced in {1}.", [context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
 			end
 		end
 

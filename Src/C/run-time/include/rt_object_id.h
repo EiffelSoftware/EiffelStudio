@@ -47,10 +47,6 @@ extern "C" {
 extern struct stack object_id_stack;	/* Stack where objects referenced through `object_id' are stored
 										 * See class IDENTIFIED */	
 
-#ifdef EIF_ASSERTIONS
-extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE); 
-#endif
-
 #ifdef EIF_THREADS
 extern EIF_LW_MUTEX_TYPE *eif_object_id_stack_mutex;
 #endif

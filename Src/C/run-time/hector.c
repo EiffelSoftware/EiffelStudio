@@ -45,6 +45,7 @@ doc:<file name="hector.c" header="eif_hector.h" version="$Id$" summary="Handling
 #include "eif_except.h"
 #include "eif_cecil.h"
 #include "eif_hector.h"
+#include "rt_assert.h"
 
 #ifdef ISE_GC
 #ifndef EIF_THREADS
@@ -253,17 +254,33 @@ rt_public EIF_REFERENCE eif_wean(EIF_OBJECT object)
 	EIF_REFERENCE ret;
 
 	EIFMTX_LOCK
-	if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
-		EIFMTX_UNLOCK
-		plsc();									/* Run GC cycle */
-		EIFMTX_LOCK
-		if (-1 == epush(&free_stack, object)) {	/* Again, we can't */
+		/* We need to ensure that `object' is indeed coming from an object protected via eif_protect.
+		 * If this is not the case then we can have some memory corruption later one. */
+	REQUIRE("object in hec_save", st_address_in_stack (&hec_saved, object));
+	if (!st_has(&free_stack, object)) {
+		if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
 			EIFMTX_UNLOCK
-			eraise("hector weaning", EN_MEM);	/* No more memory */
+			plsc();									/* Run GC cycle */
+			EIFMTX_LOCK
+			if (-1 == epush(&free_stack, object)) {	/* Again, we can't */
+				EIFMTX_UNLOCK
+				eraise("hector weaning", EN_MEM);	/* No more memory */
+			}
 		}
+		ret = eif_access(object);
+		eif_access(object) = (EIF_REFERENCE) 0;		/* Reset hector's entry */
+	} else {
+			/* For some reasons, we are in case of double free. OK, I've put a check statement so that
+			 * we can easily put a breakpoint if this was to happen. In theory, we should never go there
+			 * unless the user calls `eif_wean' twice on the same object, but there are some code around
+			 * that might just do that. For example, `eif_wean' is called from `dispose' on an Eiffel
+			 * object which is duplicated via `deep_twin', then `dispose' is going to be called twice on
+			 * the same address.
+			 */
+		CHECK("eif_wean double-free", 0);
+		ret = NULL;
+		CHECK("NULL object inside", ret == eif_access(object));
 	}
-	ret = eif_access(object);
-	eif_access(object) = (EIF_REFERENCE) 0;		/* Reset hector's entry */
 	EIFMTX_UNLOCK
 
 	return ret;				/* return unprotected address */

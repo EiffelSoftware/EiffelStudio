@@ -58,9 +58,6 @@ rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st,
 rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr, EIF_BOOLEAN reuse_free);
 rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
 rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
-#ifdef EIF_ASSERTIONS
-rt_shared EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object);
-#endif
 
 #ifdef EIF_THREADS
 /*
@@ -113,13 +110,12 @@ rt_public EIF_INTEGER eif_object_id (EIF_OBJECT object)
 #ifdef ISE_GC
 	EIF_INTEGER id;
 
-  		/* Make sure object is not already in Object ID stack,
+	EIF_OBJECT_ID_LOCK;
+		/* Make sure object is not already in Object ID stack,
 		 * because otherwise when the object is disposed only
 		 * one entry will be deleted, not the other one
 		 * and therefore corrupting GC memory */
-  	REQUIRE ("Not in Object ID stack", !has_object(&object_id_stack, eif_access (object)));
-
-	EIF_OBJECT_ID_LOCK;
+	REQUIRE ("Not in Object ID stack", !st_has (&object_id_stack, eif_access (object)));
 	id = private_object_id(eif_access(object), &object_id_stack, &max_object_id);
 	EIF_OBJECT_ID_UNLOCK;
 
@@ -150,11 +146,12 @@ rt_public EIF_REFERENCE eif_id_object(EIF_INTEGER id)
 	
 	EIF_OBJECT_ID_LOCK;
 	ref = private_id_object (id, &object_id_stack, max_object_id);
-	EIF_OBJECT_ID_UNLOCK;
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-  	ENSURE ("Object found", (!ref) || (ref && has_object(&object_id_stack, ref)));
+	ENSURE ("Object found", (!ref) || (ref && st_has(&object_id_stack, ref)));
 #endif
+
+	EIF_OBJECT_ID_UNLOCK;
 
 	return ref;
 #else
@@ -172,12 +169,13 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 #ifdef ISE_GC
 	EIF_OBJECT_ID_LOCK;
 	private_object_id_free(id, &object_id_stack, max_object_id);
-	EIF_OBJECT_ID_UNLOCK;
 
 	ENSURE ("Object of id must be free", eif_id_object(id) == NULL);
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	ENSURE ("Object of id is not in Object ID stack", !has_object(&object_id_stack, ref));
+	ENSURE ("Object of id is not in Object ID stack", !st_has(&object_id_stack, ref));
 #endif
+
+	EIF_OBJECT_ID_UNLOCK;
 #endif
 }
 
@@ -400,36 +398,6 @@ rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INT
 	eif_access((char *)((char **)end->sk_arena + (id % STACK_SIZE))) = (EIF_REFERENCE) 0;
 
 }
-
-
-#ifdef EIF_ASSERTIONS
-rt_shared EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
-{
-	struct stchunk *ck;
-	unsigned int i = 0;
-	EIF_REFERENCE *address;
-	EIF_BOOLEAN Result = EIF_FALSE;
-
-	EIF_OBJECT_ID_LOCK;
-		/* Loop through all the chunks */
-	for (ck = st->st_hd; ck != NULL; i++, ck = ck->sk_next){
-			/* Starting address is end of chunk for full chunks and
-			 * current insertion position for the last one */
-		if (ck == st->st_cur)
-			address = st->st_top - 1;
-		else
-			address = ck->sk_end - 1;
-
-		for (; address >= ck->sk_arena; address--) {
-			if (*address == object)
-					/* Object is in the stack */
-				Result = EIF_TRUE;
-		}
-	}
-	EIF_OBJECT_ID_UNLOCK;
-	return Result;
-}
-#endif
 
 #endif /* ISE_GC */
 

@@ -719,6 +719,7 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
 rt_shared int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
+rt_shared int st_has (register struct stack *stck, register void *);
 #ifdef ISE_GC
 
 /* Marking algorithm */
@@ -2951,7 +2952,7 @@ rt_private int sweep_from_space(void)
 				}
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 				CHECK ("Cannot be in object ID stack",
-					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
+					!st_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
 #endif
 			}
 		} else {
@@ -3023,7 +3024,7 @@ rt_private int sweep_from_space(void)
 					}
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 					CHECK ("Cannot be in object ID stack",
-						!has_object (&object_id_stack, (EIF_REFERENCE) next + 1));
+						!st_has (&object_id_stack, (EIF_REFERENCE) next + 1));
 #endif
 
 					rt_m_data.ml_over -= OVERHEAD;		/* Memory accounting */
@@ -4417,7 +4418,7 @@ rt_private void update_memory_set ()
 				rt_g_data.status = gc_status;		/* Restore previous GC status.*/
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 				CHECK ("Cannot be in object ID stack",
-					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
+					!st_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
 #endif
 			}
 
@@ -4677,7 +4678,7 @@ rt_shared void gfree(register union overhead *zone)
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 	CHECK ("Cannot be in object ID stack",
-		!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
+		!st_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
 #endif
 
 #ifdef DEBUG
@@ -5006,6 +5007,64 @@ rt_shared int st_extend(register struct stack *stk, register int size)
 	SIGRESUME;								/* End of critical section */
 
 	return 0;			/* Everything is ok */
+}
+
+/*
+doc:	<routine name="st_address_in_stack" return_type="int" export="shared">
+doc:		<summary>Search if `address' is indeed an address from the various arenas of `st'.</summary>
+doc:		<param name="st" type="struct stack *">Stack in which we are looking for `address'.</param>
+doc:		<param name="address" type="void *">Address being looked for in `st'.</param>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `st'.</synchronization>
+doc:	</routine>
+*/
+rt_shared int st_address_in_stack (struct stack *st, void *address)
+{
+	struct stchunk *ck;
+
+		/* Loop through all the chunks */
+	for (ck = st->st_hd; ck != NULL; ck = ck->sk_next){
+			/* Perform bounds check on address. */
+		if
+			(((rt_uint_ptr) ck->sk_arena <= (rt_uint_ptr) address) &&
+			((rt_uint_ptr) ck->sk_end > (rt_uint_ptr) address))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+/*
+doc:	<routine name="st_has" return_type="int" export="shared">
+doc:		<summary>Search if `data' is present in `st'.</summary>
+doc:		<param name="st" type="struct stack *">Stack in which we are looking for `data'.</param>
+doc:		<param name="data" type="void *">Data being looked for in `st'.</param>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `st'.</synchronization>
+doc:	</routine>
+*/
+rt_shared int st_has (struct stack *st, void *data)
+{
+	struct stchunk *ck;
+	char **address;
+
+		/* Loop through all the chunks */
+	for (ck = st->st_hd; ck != NULL; ck = ck->sk_next){
+			/* Starting address is end of chunk for full chunks and
+			 * current insertion position for the last one */
+		if (ck == st->st_cur)
+			address = st->st_top - 1;
+		else
+			address = ck->sk_end - 1;
+
+		for (; address >= ck->sk_arena; address--) {
+			if (*address == data)
+					/* Object is in the stack. We exit the loop. */
+				return 1;
+		}
+	}
+	return 0;
 }
 
 rt_shared void st_truncate(register struct stack *stk)

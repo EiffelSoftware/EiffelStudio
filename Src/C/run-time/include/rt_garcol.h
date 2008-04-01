@@ -158,10 +158,12 @@ extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 RT_LNK int epush(register struct stack *stk, register void *value);	/* Push an addess on a run-time stack */
 
 extern EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);	/* Creates an empty stack */
-extern  int st_extend(register struct stack *stk, register int size);	/* Extends a stack */
+extern int st_extend(register struct stack *stk, register int size);	/* Extends a stack */
 extern void st_truncate(register struct stack *stk);	/* Truncate stack if necessary */
 extern void st_wipe_out(register struct stchunk *chunk);/* Remove unneeded chunk from stack */
 extern void st_reset(register struct stack *stk);/* Clean stack */
+extern int st_has(register struct stack *stk, register void * data);
+extern int st_address_in_stack (struct stack *st, void *address);
 
 /* Once indexes:
  * 	ALLOC_ONCE_INDEXES allocates array of once indexes

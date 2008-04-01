@@ -1,66 +1,33 @@
 indexing
 	description: "[
-		A shim, allowing a context stone to be pushed, for EiffelStudio tools, providing access to information required without having to actually initialize the tool.
+		An observer for events implemented on a file notifier {FILE_NOTIFIER_S} service interface.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision$"
+	revision: "$Revision $"
 
 deferred class
-	ES_STONABLE_TOOL [G -> ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET]]
+	FILE_NOTIFIER_EVENT_OBSERVER
 
 inherit
-	ES_TOOL [G]
+	EVENT_OBSERVER_I
 
-	ES_STONABLE_I
-		undefine
-			out
-		redefine
-			set_stone,
-			query_set_stone
-		end
+feature {FILE_NOTIFIER_S} -- Event handlers
 
-feature -- Access
-
-	stone: STONE assign set_stone
-			-- <Precursor>
-
-feature -- Element change
-
-	set_stone (a_stone: like stone)
-			-- <Precursor>
+	on_file_modified (a_file_name: !STRING_32; a_modification_type: NATURAL_8)
+			-- Called when a file has been modifications.
+			--
+			-- `a_file_name': The name of the file modified.
+			-- `a_modification_type': The type of modification applied to the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for the respective flags
+		require
+			is_interface_usable: is_interface_usable
+			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			stone := a_stone
-			if is_tool_instantiated then
-				panel.set_stone (a_stone)
-			end
-		end
-
-feature -- Basic operations
-
-	query_set_stone (a_stone: ?STONE): BOOLEAN
-			-- <Precursor>
-		do
-			if is_tool_instantiated then
-				Result := panel.query_set_stone (a_stone)
-			else
-				Result := Precursor (a_stone)
-			end
-		end
-
-feature -- Synchronization
-
-	synchronize
-			-- <Precursor>
-		do
-			if is_tool_instantiated then
-				panel.synchronize
-			end
 		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

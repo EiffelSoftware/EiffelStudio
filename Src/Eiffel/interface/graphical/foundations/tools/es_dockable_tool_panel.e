@@ -423,6 +423,19 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
+	frozen project_window_session_data: SESSION_I
+			-- Provides access to the environment session data
+		require
+			is_initialized: is_initialized or is_initializing
+			not_is_recycled: not is_recycled or is_recycling
+			is_session_manager_available: session_manager.is_service_available
+		do
+			Result := session_manager.service.retrieve_per_window (develop_window, True)
+		ensure
+			result_attached: Result /= Void
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
 	show_polling_timer: EV_TIMEOUT
 			-- A timer used to poll the true display of a user widget.
 			-- See `on_shown' for usage.

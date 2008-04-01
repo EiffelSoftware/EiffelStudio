@@ -15,8 +15,8 @@ inherit
 
 feature -- Access
 
-	stone: STONE assign set_stone
-			-- Last set stone
+	stone: ?STONE assign set_stone
+			-- Last set stone.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -24,8 +24,9 @@ feature -- Access
 
 feature -- Element change
 
-	set_stone (a_stone: like stone)
+	set_stone (a_stone: ?STONE)
 			-- Sets last stone.
+			-- Note: Be sure to call `query_set_stone', where applicable.
 			--
 			-- `a_stone': Stone to set.
 		require
@@ -33,12 +34,22 @@ feature -- Element change
 			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
 		deferred
 		ensure
-			stone_set: stone = a_stone
+			stone_set: equal (stone, a_stone)
+		end
+
+feature -- Status report
+
+	has_stone: BOOLEAN
+			-- Indicates if Current has a stone set.
+		do
+			Result := stone /= Void
+		ensure
+			stone_attached: (Result and stone /= Void) or else (not Result and stone = Void)
 		end
 
 feature -- Query
 
-	is_stone_usable (a_stone: STONE): BOOLEAN
+	is_stone_usable (a_stone: ?STONE): BOOLEAN
 			-- Determines if a stone can be used by Current.
 			--
 			-- `a_stone': Stone to determine usablity.
@@ -47,6 +58,21 @@ feature -- Query
 			is_interface_usable: is_interface_usable
 			a_stone_attached: a_stone /= Void
 		deferred
+		end
+
+feature -- Basic operations
+
+	query_set_stone (a_stone: ?STONE): BOOLEAN
+			-- Determines if a stone can be set, possibly using a UI to ask the user for confirmation.
+			-- Note: This function should not be used in any contracts due to the possibility of UI presentation.
+			--
+			-- `a_stone': Stone to query if setting is possible.
+			-- `Result': True if the stone can be set, False otherwise.
+		require
+			is_interface_usable: is_interface_usable
+			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
+		do
+			Result := True
 		end
 
 feature -- Synchronization

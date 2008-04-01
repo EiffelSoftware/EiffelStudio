@@ -798,30 +798,37 @@ feature {NONE} -- Exit implementation
 	confirm_and_quit is
 			-- If a compilation is under way, do not exit.
 		local
-			l_exit_save_prompt: ES_EXIT_SAVE_FILES_PROMPT
+			l_exit_save_prompt: ES_SAVE_CLASSES_PROMPT
+			l_warning: ES_WARNING_PROMPT
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
+			l_exit: BOOLEAN
 		do
 			if Eiffel_project.initialized and then Eiffel_project.is_compiling then
-				Exit_application_cmd.set_already_confirmed (True)
-				prompts.show_warning_prompt (warning_messages.w_exiting_stops_compilation, Void, Void)
-			elseif has_modified_windows then
-				exit_application_cmd.set_already_confirmed (True)
-
-				create l_classes.make_default
-				all_modified_classes.do_all (agent l_classes.force_last)
-				create l_exit_save_prompt.make (l_classes)
-				l_exit_save_prompt.show_on_active_window
-				if l_exit_save_prompt.dialog_result = dialog_buttons.yes_button then
-					save_and_quit
-				elseif l_exit_save_prompt.dialog_result = dialog_buttons.no_button then
-					quit
-				else
-					-- Do not exit
-				end
+				create l_warning.make_standard_with_cancel (warning_messages.w_exiting_stops_compilation)
+				l_warning.set_button_text ({ES_DIALOG_BUTTONS}.ok_button, interface_names.b_force_exit)
+				l_warning.set_button_icon ({ES_DIALOG_BUTTONS}.ok_button, pixmaps.icon_pixmaps.general_warning_icon)
+				l_warning.set_button_text ({ES_DIALOG_BUTTONS}.cancel_button, interface_names.b_ok)
+				l_warning.show_on_active_window
+				l_exit := l_warning.dialog_result = {ES_DIALOG_BUTTONS}.ok_button
 			else
-				quit
+				l_exit := True
 			end
 
+			if l_exit then
+				if has_modified_windows then
+					exit_application_cmd.set_already_confirmed (True)
+
+					create l_classes.make_default
+					all_modified_classes.do_all (agent l_classes.force_last)
+					create l_exit_save_prompt.make_standard_with_cancel (interface_names.l_exit_warning)
+					l_exit_save_prompt.classes := l_classes
+					l_exit_save_prompt.set_button_action (l_exit_save_prompt.dialog_buttons.yes_button, agent save_and_quit)
+					l_exit_save_prompt.set_button_action (l_exit_save_prompt.dialog_buttons.no_button, agent quit)
+					l_exit_save_prompt.show_on_active_window
+				else
+					quit
+				end
+			end
 		end
 
 	kill_process_and_confirm_quit is

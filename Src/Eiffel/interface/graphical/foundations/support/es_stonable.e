@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		A shim, allowing a context stone to be pushed, for EiffelStudio tools, providing access to information required without having to actually initialize the tool.
+		Basic implementation of {ES_STONABLE_I}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,18 +8,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ES_STONABLE_TOOL [G -> ES_DOCKABLE_STONABLE_TOOL_PANEL [EV_WIDGET]]
+	ES_STONABLE
 
 inherit
-	ES_TOOL [G]
-
 	ES_STONABLE_I
-		undefine
-			out
-		redefine
-			set_stone,
-			query_set_stone
-		end
 
 feature -- Access
 
@@ -31,36 +23,23 @@ feature -- Element change
 	set_stone (a_stone: like stone)
 			-- <Precursor>
 		do
-			stone := a_stone
-			if is_tool_instantiated then
-				panel.set_stone (a_stone)
+			if stone /= a_stone then
+				stone := a_stone
+				on_stone_changed
 			end
 		end
 
-feature -- Basic operations
+feature {NONE} -- Action handler
 
-	query_set_stone (a_stone: ?STONE): BOOLEAN
-			-- <Precursor>
-		do
-			if is_tool_instantiated then
-				Result := panel.query_set_stone (a_stone)
-			else
-				Result := Precursor (a_stone)
-			end
-		end
-
-feature -- Synchronization
-
-	synchronize
-			-- <Precursor>
-		do
-			if is_tool_instantiated then
-				panel.synchronize
-			end
+	on_stone_changed
+			-- Called when the stone changed.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
 		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

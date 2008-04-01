@@ -1564,7 +1564,7 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 
 				if shell_tools.is_interface_usable then
 						-- Remove stone from tool.
-					if {l_stonable: !ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) then
+					if {l_stonable: !ES_STONABLE_I} shell_tools.tool ({ES_FEATURES_TOOL}) and then l_stonable.query_set_stone (Void) then
 						l_stonable.set_stone (Void)
 					end
 				end

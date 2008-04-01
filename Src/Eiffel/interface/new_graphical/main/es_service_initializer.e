@@ -16,6 +16,12 @@ inherit
 			add_core_services
 		end
 
+--inherit {NONE}
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature -- Services
 
 	add_core_services (a_container: !SERVICE_CONTAINER)
@@ -76,8 +82,15 @@ feature {NONE} -- Factory
 
 	create_code_template_catalog_service: CODE_TEMPLATE_CATALOG_S
 			-- Creates the code templates catalog service.
+		local
+			l_contracts: !DIRECTORY_NAME
 		do
 			create {CODE_TEMPLATE_CATALOG} Result.make
+			l_contracts ?= eiffel_layout.templates_path.twin
+			Result.extend_catalog (l_contracts.string)
+			l_contracts.extend ("eiffel")
+			Result.extend_catalog (l_contracts.string)
+			Result.extend_catalog (eiffel_layout.user_templates_path.string)
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end

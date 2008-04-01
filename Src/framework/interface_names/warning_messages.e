@@ -970,8 +970,7 @@ feature -- Warning messages
 
 	w_Specify_a_class: STRING_GENERAL is do Result := locale.translation ("Please specify a compiled class (or * for all classes).") end
 
-	w_Exiting_stops_compilation: STRING_GENERAL is do Result := locale.translation ("It is not possible to exit EiffelStudio%N%
-																					%while the project is being compiled.") end
+	w_Exiting_stops_compilation: STRING_GENERAL is do Result := locale.translation ("It is not possible to exit EiffelStudio while the project is being compiled.") end
 
 	w_Save_before_closing: STRING_GENERAL is do Result := locale.translation ("Do you want to save your changes%N%
 																			%before closing the window?") end

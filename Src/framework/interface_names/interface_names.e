@@ -714,6 +714,10 @@ feature -- Menu entries
 	m_go_to_next_warning: STRING_GENERAL is 			do Result := locale.translation ("Go to Next &Warning") end
 	m_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to Previous War&ning") end
 
+	m_edit_preconditions: STRING_GENERAL is 			do Result := locale.translation ("&Preconditions") end
+	m_edit_postconditions: STRING_GENERAL is 			do Result := locale.translation ("P&ostconditions") end
+	m_edit_invariants: STRING_GENERAL is 				do Result := locale.translation ("&Invariants") end
+
 feature -- Tool tips
 
 	f_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Navigates to the next error or the first error found if the end of the list is reached") end
@@ -2349,6 +2353,10 @@ feature -- Description text, no translation (for the editor).
 feature -- Error
 
 	err_error: STRING_GENERAL is do Result := locale.translation ("Error ") end
+
+feature -- General
+
+	unknown_string: STRING_GENERAL is do Result := locale.translation ("???") end
 
 feature -- Wizard texts
 

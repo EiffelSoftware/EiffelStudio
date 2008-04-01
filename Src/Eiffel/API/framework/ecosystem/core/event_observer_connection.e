@@ -28,7 +28,7 @@ feature {NONE} -- Clean up
 						-- If the following is violated then some object did not disconnect the events
 					internal_connected_event_observers_is_empty: internal_connected_event_observers /= Void implies internal_connected_event_observers.is_empty
 				end
-				
+
 				if internal_connected_event_observers /= Void then
 					internal_connected_event_observers.do_all (agent (a_ia_observer: G)
 						do
@@ -141,7 +141,7 @@ feature -- Event connection
 			connected_event_observers.search_forth (a_observer)
 			connected_event_observers.remove_at
 		ensure then
-			connected_event_observers_has_a_observer: connected_event_observers.has (a_observer)
+			not_connected_event_observers_has_a_observer: not connected_event_observers.has (a_observer)
 		end
 
 feature {NONE} -- Internal implementation cache

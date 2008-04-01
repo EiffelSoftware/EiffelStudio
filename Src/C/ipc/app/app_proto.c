@@ -555,7 +555,6 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 	 * a proper exception tag if that is the reason we stopped.
 	 */
 	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
 	Request rqst;			/* XDR request built */
 	struct where wh;		/* Where did the program stop? */
 

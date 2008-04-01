@@ -127,9 +127,6 @@ feature {NONE} -- Status report
 	is_committing: BOOLEAN
 			-- Indicates if modiciations commits are being performed.
 
-	is_diff_merge_required: BOOLEAN
-			-- Indicate if a merge using a diff is required to commit the changes.
-
 feature -- Query
 
 	initial_whitespace (a_pos: INTEGER): !STRING_8
@@ -317,6 +314,11 @@ feature -- Basic operations
 						l_editor.set_editor_text (l_new_text)
 						l_set_in_editor := True
 
+						if logger.is_service_available then
+								-- Log change
+							logger.service.put_message_format ("Modified class {1} using {2} in IDE editor", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
+						end
+
 							-- Reset position information.
 						l_line_count := l_editor.number_of_lines
 						l_editor.set_first_line_displayed (l_first_line.min (l_line_count), True)
@@ -335,7 +337,9 @@ feature -- Basic operations
 			if not l_set_in_editor then
 				if (create {RAW_FILE}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
-					l_new_text := merge_text (context_class.text)
+					l_new_text := context_class.text
+					l_new_text.prune_all ('%R')
+					l_new_text := merge_text (l_new_text)
 				else
 					l_new_text := text
 				end
@@ -346,6 +350,11 @@ feature -- Basic operations
 
 					-- Update class file data time stamp
 				original_file_date := context_class.file_date
+
+				if logger.is_service_available then
+						-- Log change
+					logger.service.put_message_format ("Modified class {1} using {2} on disk.", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
+				end
 			end
 
 				-- Reset cached data
@@ -354,11 +363,9 @@ feature -- Basic operations
 
 			set_is_dirty (False)
 			is_committing := False
-			is_diff_merge_required := False
 		ensure
 			not_is_dirty: not is_dirty
 			not_is_prepared: not is_prepared
-			not_is_diff_merge_required: not is_diff_merge_required
 			text_is_equal_original_text: text.is_equal (original_text)
 			is_committing_unchanged: is_committing = old is_committing
 		rescue
@@ -380,7 +387,6 @@ feature -- Basic operations
 		ensure
 			not_is_dirty: not is_dirty
 			not_is_prepared: not is_prepared
-			is_diff_merge_required_unchanged: is_diff_merge_required = old is_diff_merge_required
 		end
 
 feature {NONE} -- Basic operations
@@ -399,13 +405,18 @@ feature {NONE} -- Basic operations
 			l_patch: STRING
 		do
 			create l_diff
-			l_diff.set_text (a_current_text, text)
+			l_diff.set_text (original_text, text)
 			l_diff.compute_diff
 			l_patch := l_diff.unified
 			if l_patch /= Void and then not l_patch.is_empty then
 				Result ?= l_diff.patch (a_current_text, l_patch, False)
 			else
 				Result ?= text
+			end
+
+			if logger.is_service_available then
+					-- Log merge
+				logger.service.put_message_format_with_severity ("A class text merge was perform because {1} was modified.", [context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
 			end
 		end
 

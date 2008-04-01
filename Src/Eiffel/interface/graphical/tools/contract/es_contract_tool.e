@@ -11,7 +11,7 @@ frozen class
 	ES_CONTRACT_TOOL
 
 inherit
-	ES_STONABLE_TOOL [ES_CONTRACT_TOOL_PANEL]
+	ES_PERSISTABLE_STONABLE_TOOL [ES_CONTRACT_TOOL_PANEL]
 
 create {NONE}
 	default_create
@@ -54,16 +54,12 @@ feature -- Query
 			--
 			-- `a_stone': Stone to determine usablity.
 			-- `Result': True if the stone can be used, False otherwise.
-		local
-			l_feature: E_FEATURE
 		do
 			if {l_fs: !FEATURE_STONE} a_stone then
-				l_feature := l_fs.e_feature
-			elseif  {l_bs: !BREAKABLE_STONE} a_stone then
-				l_feature := l_bs.routine
+				Result := {l_routine: !E_ROUTINE} l_fs.e_feature
+			elseif  {l_bs: !CLASSC_STONE} a_stone then
+				Result := True
 			end
-			
-			Result := {l_routine: !E_ROUTINE} l_feature
 		end
 
 feature {NONE} -- Factory

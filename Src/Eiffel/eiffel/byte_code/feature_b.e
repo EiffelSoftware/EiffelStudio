@@ -189,7 +189,7 @@ feature -- Access
 						f := Void
 					elseif context.final_mode and then system.seed_of_routine_id (routine_id).has_formal then
 							-- It was originally a FEATURE_B because its seed had a formal, we still need
-							-- to call the FEATURE_B if and only if it has a conforming expanded descendand.
+							-- to call the FEATURE_B if and only if it has a conforming expanded descendant.
 						l_type := context.real_type (type)
 						if
 							context.has_expanded_descendants_information and then

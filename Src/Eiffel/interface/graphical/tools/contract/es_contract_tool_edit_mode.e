@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Collection of user interface error messages.
+		Various edit modes for the contract edition tool {ES_CONTRACT_TOOL}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,18 +8,34 @@ indexing
 	revision: "$Revision$"
 
 class
-	ERROR_MESSAGES
-
-inherit
-	SHARED_LOCALE
+	ES_CONTRACT_TOOL_EDIT_MODE
 
 feature -- Access
 
-	e_code_template_parse (a_error: STRING_GENERAL; a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to parse the code template  '$1'. Error: $2.", [a_file_name, a_error]) end
-	e_code_template_read (a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to read the code template file '$1'.", [a_file_name]) end
+	preconditions: NATURAL_8 = 0x00
+			-- Feature preconditions contract edit mode.
+
+	postconditions: NATURAL_8 = 0x01
+			-- Feature postconditions contract edit mode.
+
+	invariants: NATURAL_8 = 0x2
+			-- Class invariants contract edit mode.
+
+feature -- Query
+
+	is_valid_mode (a_mode: NATURAL_8): BOOLEAN
+			-- Determines if a mode is a valid feature view mode.
+			--
+			-- `a_mode': Mode to determine for validity
+			-- `Result': True if the mode is valid; False otherwise.
+		do
+			Result := (a_mode = preconditions or
+				a_mode = postconditions or
+				a_mode = invariants)
+		end
 
 ;indexing
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

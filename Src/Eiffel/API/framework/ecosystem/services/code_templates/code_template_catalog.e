@@ -223,7 +223,7 @@ feature -- Extension
 			l_files: !DS_ARRAYED_LIST [!STRING_8]
 			l_file: !STRING_8
 		do
-			l_files := file_utilities.scan_for_files (a_folder, -1, Void, Void)
+			l_files := file_utilities.scan_for_files (a_folder, -1, code_file_regex, Void)
 			if not l_files.is_empty then
 				l_definitions := cataloged_template_definitions
 				from l_files.start until l_files.after loop
@@ -346,7 +346,7 @@ feature {NONE} -- Basic operations
 							logger_service.service.put_message_with_severity (
 								(create {ERROR_MESSAGES}).e_code_template_parse (l_callbacks.last_error_message, a_file_name),
 								{ENVIRONMENT_CATEGORIES}.internal_event,
-								{PRIORITY_LEVELS}.normal)
+								{PRIORITY_LEVELS}.high)
 						end
 					end
 				end
@@ -356,12 +356,24 @@ feature {NONE} -- Basic operations
 					logger_service.service.put_message_with_severity (
 						(create {ERROR_MESSAGES}).e_code_template_read (a_file_name),
 						{ENVIRONMENT_CATEGORIES}.internal_event,
-						{PRIORITY_LEVELS}.normal)
+						{PRIORITY_LEVELS}.high)
 				end
 			end
 		rescue
 			retried := True
 			retry
+		end
+
+feature {NONE} -- Regular expressions
+
+	frozen code_file_regex: !RX_PCRE_MATCHER
+			-- Regular expression for match code template file names
+		once
+			create Result.make
+			Result.set_caseless (True)
+			Result.compile ("\.code$")
+		ensure
+			result_is_compiled: Result.is_compiled
 		end
 
 feature {NONE} -- Internal implementation cache

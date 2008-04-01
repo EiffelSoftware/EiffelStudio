@@ -191,25 +191,34 @@ feature -- Access
 			done: BOOLEAN
 			l_null: POINTER
 		do
-				-- Get the size of the key and class to be retrieved.
-			res := cwin_reg_value_number(key, l_null, l_null, l_null, l_null,
-				$key_size, $class_size, l_null, l_null, l_null, l_null, l_null)
+			key_size := 64
+			class_size := 20
+			create key_name.make_empty (key_size)
+			create class_name.make_empty (class_size)
+			create file_time.make
+			res := cwin_reg_enum_key (
+				key, index, key_name.item, $key_size,
+				l_null, class_name.item, $class_size, file_time.item)
+			if res = error_more_data then
+					-- Get the size of the key and class to be retrieved and repeat
+					-- the call with the new sizes.
+				res := cwin_reg_value_number(key, l_null, l_null, l_null, l_null,
+					$key_size, $class_size, l_null, l_null, l_null, l_null, l_null)
+				if res = error_success then
+						-- Add +1 for null terminator character
+					key_size := key_size + 1
+					class_size := class_size + 1
+					create key_name.make_empty (key_size)
+					create class_name.make_empty (class_size)
+					res := cwin_reg_enum_key (
+						key, index, key_name.item, $key_size,
+						l_null, class_name.item, $class_size, file_time.item)
+				end
+			end
 			last_call_successful := res = Error_success
 			if last_call_successful then
-					-- Add +1 for null terminator character
-				key_size := key_size + 1
-				class_size := class_size + 1
-				create key_name.make_empty (key_size)
-				create class_name.make_empty (class_size)
-				create file_time.make
-				res := cwin_reg_enum_key (
-					key, index, key_name.item, $key_size,
-					l_null, class_name.item, $class_size, file_time.item)
-				last_call_successful := res = Error_success
-				if last_call_successful then
-					create Result.make (key_name.substring (1, key_size),
-						class_name.substring (1, class_size), file_time)
-				end
+				create Result.make (key_name.substring (1, key_size),
+					class_name.substring (1, class_size), file_time)
 			end
 		end
 

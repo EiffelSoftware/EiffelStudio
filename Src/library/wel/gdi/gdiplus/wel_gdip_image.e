@@ -25,47 +25,53 @@ feature -- Command
 		end
 
 	save_image_to_file (a_file_name: STRING) is
-			-- Save datas to a file.
+			-- Save data to a file.
 		require
 			not_void: a_file_name /= Void
 		local
-			l_format: WEL_GDIP_IMAGE_FORMAT
-			l_constants: WEL_GDIP_IMAGE_FORMAT_CONSTANTS
+			l_format: WEL_GDIP_IMAGE_ENCODER
 		do
-			if raw_format /= Void then
-				l_format := find_format
-			else
-				-- Is memoryBMP, we use PNG for saving as defualt.
-				create l_constants
-				l_format := l_constants.png
-			end
+			l_format := format_for_save_file
 
-			save_image_to_file_with_format (a_file_name, l_format)
+			save_image_to_file_with_encoder (a_file_name, l_format)
 		end
 
-	save_image_to_file_with_format (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_FORMAT) is
-			-- Save datas to a file.
+	save_image_to_file_with_parameters (a_file_name: STRING; a_parameters: WEL_GDIP_IMAGE_ENCODER_PARAMETERS) is
+			-- Save data to a file with `a_parameters' options
+		require
+			not_void: a_file_name /= Void
+		local
+			l_format: WEL_GDIP_IMAGE_ENCODER
+		do
+			l_format := format_for_save_file
+
+			save_image_to_file_with_encoder_and_parameters (a_file_name, l_format, a_parameters)
+		end
+
+	save_image_to_file_with_encoder (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_ENCODER) is
+			-- Save data to a file with image encoder parameter
+		require
+			not_void: a_file_name /= Void
+			not_void: a_format /= Void
+		do
+			save_image_to_file_with_encoder_and_parameters (a_file_name, a_format, Void)
+		end
+
+	save_image_to_file_with_encoder_and_parameters (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: WEL_GDIP_IMAGE_ENCODER_PARAMETERS) is
+			-- Save data to a file with image encoder and parameters
 		require
 			not_void: a_file_name /= Void
 			not_void: a_format /= Void
 		local
 			l_result: INTEGER
-			l_format: WEL_GDIP_IMAGE_CODEC_INFO
 			l_wel_string: WEL_STRING
-			l_constants: WEL_GDIP_IMAGE_FORMAT_CONSTANTS
+			l_parameters: POINTER
 		do
-			if raw_format /= Void then
-				l_format := a_format.find_encoder
-			end
-
-			if l_format = Void then
-				-- Can't find related encoder, we used png encoder as default.
-				create l_constants
-				l_format := l_constants.png.find_encoder
-			end
-
 			create l_wel_string.make (a_file_name)
-			c_gdip_save_image_to_file (gdi_plus_handle, item, l_wel_string.item, l_format.cls_id.item, default_pointer, $l_result)
+			if a_parameters /= Void then
+				l_parameters := a_parameters.item.item
+			end
+			c_gdip_save_image_to_file (gdi_plus_handle, item, l_wel_string.item, a_format.guid.item, l_parameters, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -167,13 +173,13 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 			end
 		end
 
-	find_format: WEL_GDIP_IMAGE_FORMAT is
+	find_format: WEL_GDIP_IMAGE_ENCODER is
 			-- Find image encoder.
 		require
 			format_recorded: raw_format /= Void
 		local
-			l_all_format: ARRAYED_LIST [WEL_GDIP_IMAGE_FORMAT]
-			l_constants: WEL_GDIP_IMAGE_FORMAT_CONSTANTS
+			l_all_format: ARRAYED_LIST [WEL_GDIP_IMAGE_ENCODER]
+			l_constants: WEL_GDIP_IMAGE_ENCODER_CONSTANTS
 		do
 			from
 				create l_constants
@@ -186,6 +192,22 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 					Result := l_all_format.item
 				end
 				l_all_format.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	format_for_save_file: WEL_GDIP_IMAGE_ENCODER is
+			-- Find proper image encoder for saving the image to file
+		local
+			l_constants: WEL_GDIP_IMAGE_ENCODER_CONSTANTS
+		do
+			if raw_format /= Void then
+				Result := find_format
+			else
+				-- Is memoryBMP, we use PNG for saving as defualt.
+				create l_constants
+				Result := l_constants.png
 			end
 		ensure
 			not_void: Result /= Void
@@ -406,6 +428,22 @@ feature {NONE} -- C externals
 				}
 			}
 			]"
+		end
+
+feature -- Obsolete
+
+	save_image_to_file_with_format (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_FORMAT) is
+			-- Save data to a file with image format parameter
+		obsolete
+			"Use save_image_to_file_with_encoder instead"
+		require
+			not_void: a_file_name /= Void
+			not_void: a_format /= Void
+		local
+			l_encoder: WEL_GDIP_IMAGE_ENCODER
+		do
+			create l_encoder.make (a_format.guid)
+			save_image_to_file_with_encoder_and_parameters (a_file_name, l_encoder, Void)
 		end
 
 indexing

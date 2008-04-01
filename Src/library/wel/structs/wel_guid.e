@@ -121,6 +121,9 @@ feature -- Access
 			Result := internal_item.item
 		end
 
+	size: INTEGER is 16
+			-- Size of structure.
+			
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -142,9 +145,6 @@ feature {WEL_GUID} -- Access
 
 	internal_item: MANAGED_POINTER
 			-- To hold data of Current.
-
-	size: INTEGER is 16
-			-- Size of structure.
 
 	data_1_pos: INTEGER is 0
 	data_2_pos: INTEGER is 4

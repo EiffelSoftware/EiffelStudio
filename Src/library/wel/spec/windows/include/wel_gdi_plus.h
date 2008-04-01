@@ -61,6 +61,13 @@ typedef struct {
 
 typedef DWORD ARGB;
 
+typedef struct {
+	GUID Guid;
+	ULONG NumberOfValues;
+	ULONG Type;
+	void *Value;
+} ImageEncoderParameter;
+
 #define GDIPCONST const
 
 typedef enum Status

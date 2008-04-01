@@ -54,7 +54,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	tokens (a_indents: INTEGER): !ARRAYED_LIST [EDITOR_TOKEN]
+	tokens (a_indents: INTEGER): !LINKED_LIST [EDITOR_TOKEN]
 			-- Create a list of editor tokens from lines `a_lines'
 			--
 			-- `a_indents': The number of surplus indentations to push the result tokens to.
@@ -80,7 +80,7 @@ feature -- Access
 				end
 			end
 
-			create Result.make (20)
+			create Result.make
 			l_cursor := l_lines.cursor
 			from l_lines.start until l_lines.after loop
 				l_tokens := l_lines.item.content
@@ -169,7 +169,9 @@ feature -- Setting
 	wipe_out_lines is
 			-- Wipe out `lines'.
 		do
-			lines.wipe_out
+			if lines_internal /= Void then
+				lines_internal.wipe_out
+			end
 			create last_line.make_empty_line
 		ensure
 			lines_is_empty: lines.is_empty

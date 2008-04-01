@@ -416,7 +416,7 @@ feature{NONE} -- Redraw
 			l_x_offset := border_line_width + left_border
 			if pixmap /= Void then
 				draw_pixmap (a_drawable, l_x_offset)
-				l_x_offset := pixmap.width + spacing
+				l_x_offset := l_x_offset + pixmap.width + spacing
 			end
 			l_token_text := editor_token_text
 			l_token_text.set_overriden_selection_colors (parent.focused_selection_color, parent.non_focused_selection_color)

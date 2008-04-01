@@ -48,12 +48,24 @@ feature -- Basic operations
 	execute is
 			-- Exit application. Ask the user to save unsaved files and ask for
 			-- confirmation on exit.
+		local
+			l_warning: ES_WARNING_PROMPT
+			l_exit: BOOLEAN
 		do
 			already_confirmed := False
+
 			if Workbench.is_compiling then
-				already_confirmed := True
-				prompts.show_warning_prompt (warning_messages.w_exiting_stops_compilation, Void, Void)
+				create l_warning.make_standard_with_cancel (warning_messages.w_exiting_stops_compilation)
+				l_warning.set_button_text ({ES_DIALOG_BUTTONS}.ok_button, interface_names.b_force_exit)
+				l_warning.set_button_icon ({ES_DIALOG_BUTTONS}.ok_button, pixmaps.icon_pixmaps.general_warning_icon)
+				l_warning.set_button_text ({ES_DIALOG_BUTTONS}.cancel_button, interface_names.b_ok)
+				l_warning.show_on_active_window
+				l_exit := l_warning.dialog_result = {ES_DIALOG_BUTTONS}.ok_button
 			else
+				l_exit := True
+			end
+
+			if l_exit then
 				if process_manager.is_process_running then
 					process_manager.confirm_process_termination_for_quiting (agent confirm_stop_debug, agent do_nothing, window_manager.last_focused_window.window)
 				else
@@ -163,7 +175,7 @@ feature {NONE} -- Callbacks
 	confirm_and_exit is
 			-- Ask to save files, to confirm if necessary and exit.
 		local
-			l_exit_save_prompt: ES_EXIT_SAVE_FILES_PROMPT
+			l_exit_save_prompt: ES_SAVE_CLASSES_PROMPT
 			l_list: DS_ARRAYED_LIST [CLASS_I]
 		do
 			if window_manager.has_modified_windows then
@@ -171,15 +183,12 @@ feature {NONE} -- Callbacks
 
 				create l_list.make_default
 				window_manager.all_modified_classes.do_all (agent l_list.force_last)
-				create l_exit_save_prompt.make (l_list)
+
+				create l_exit_save_prompt.make_standard_with_cancel (interface_names.l_exit_warning)
+				l_exit_save_prompt.classes := l_list
+				l_exit_save_prompt.set_button_action (l_exit_save_prompt.dialog_buttons.yes_button, agent save_and_exit)
+				l_exit_save_prompt.set_button_action (l_exit_save_prompt.dialog_buttons.no_button, agent exit_application)
 				l_exit_save_prompt.show_on_active_window
-				if l_exit_save_prompt.dialog_result = dialog_buttons.yes_button then
-					save_and_exit
-				elseif l_exit_save_prompt.dialog_result = dialog_buttons.no_button then
-					exit_application
-				else
-					-- Do not exit
-				end
 			else
 				ask_confirmation
 			end

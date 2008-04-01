@@ -229,7 +229,6 @@ feature {SESSION_I} -- Event handlers
 			-- <Precursor>
 		local
 			l_stone: ?STONE
-			l_stone_available: ?BOOLEAN_REF
 		do
 			Precursor {SESSION_EVENT_OBSERVER} (a_session, a_id)
 
@@ -238,7 +237,7 @@ feature {SESSION_I} -- Event handlers
 				if {l_session: SESSION_I} a_session then
 						-- Resurrect stone and set.
 					l_stone := resurrect_stone (l_session)
-					if l_stone /= stone then
+					if l_stone /= stone and then is_stone_usable (l_stone) and then query_set_stone (l_stone) then
 							-- Set persistance state, so the stone is no re-persisted.
 						is_processing_persistance := True
 						set_stone (l_stone)
@@ -266,11 +265,11 @@ feature -- Constants
 
 feature {NONE} -- Internal implementation cache
 
-	internal_stone_session: like stone_session
+	internal_stone_session: ?SESSION_I
 			-- Cached version of `stone_session'
 			-- Note: Do not use directly!
 
-	internal_persistance_utilities: like persistance_utilities
+	internal_persistance_utilities: ?ES_PERSISTABLE_STONE_UTILITIES
 			-- Cached version of `persistance_utilities'
 			-- Note: Do not use directly!
 

@@ -12,6 +12,9 @@ class
 
 inherit
 	ES_MODIFIABLE
+		redefine
+			internal_recycle
+		end
 
 inherit {NONE}
 	EB_SHARED_WINDOW_MANAGER
@@ -46,11 +49,20 @@ feature {NONE} -- Initialization
 				create l_text.make_empty
 			end
 			original_text ?= l_text
+			original_file_date := a_class.file_date
 
 			modified_data := create_modified_data
 		ensure
 			context_class_set: context_class = a_class
 			not_is_dirty: not is_dirty
+		end
+
+feature -- Clean up
+
+	internal_recycle
+			-- <Precursor>
+		do
+
 		end
 
 feature -- Access
@@ -64,6 +76,8 @@ feature -- Access
 	text: !STRING
 			-- Modified class text, valid only when prepared.
 			-- Note: For preformance reasons, the result is not twined.
+		require
+			is_interface_usable: is_interface_usable
 		local
 			l_text: ?STRING
 		do
@@ -77,6 +91,9 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	original_file_date: INTEGER
+			-- Last modified file date
+
 	modified_data: !ES_CLASS_TEXT_MODIFIER_DATA
 			-- Active modified class text data
 
@@ -84,6 +101,8 @@ feature -- Status report
 
 	is_prepared: BOOLEAN
 			-- Indicates if Current has been prepared for special modifications.
+		require
+			is_interface_usable: is_interface_usable
 		do
 			Result := modified_data.is_prepared
 		ensure
@@ -92,6 +111,8 @@ feature -- Status report
 
 	is_modifiable: BOOLEAN
 			-- Indicates if the context class can be modified, or if any modifications can be performed.
+		require
+			is_interface_usable: is_interface_usable
 		do
 			Result := not context_class.is_read_only
 		ensure
@@ -101,6 +122,14 @@ feature -- Status report
 	is_commit_deferred: BOOLEAN
 			-- Indicates if modiciations commits deferred until the end of batch processing.
 
+feature {NONE} -- Status report
+
+	is_committing: BOOLEAN
+			-- Indicates if modiciations commits are being performed.
+
+	is_diff_merge_required: BOOLEAN
+			-- Indicate if a merge using a diff is required to commit the changes.
+
 feature -- Query
 
 	initial_whitespace (a_pos: INTEGER): !STRING_8
@@ -109,6 +138,7 @@ feature -- Query
 			-- `a_pos': Orginal position in `original_text' to retrieve the whitespace for.
 			-- `Result': The initial whitespace string.
 		require
+			is_interface_usable: is_interface_usable
 			a_pos_non_negative: a_pos > 0
 			a_pos_small_enough: a_pos <= text.count
 		local
@@ -148,6 +178,8 @@ feature {NONE} -- Query
 			--
 			-- `a_class': The class to retrieve the most applicable editor for.
 			-- `Result': An editor which the supplied class is edited using, or Void if not being edited.
+		require
+			is_interface_usable: is_interface_usable
 		local
 			l_editor: EB_SMART_EDITOR
 			l_editors: DS_ARRAYED_LIST [EB_SMART_EDITOR]
@@ -174,6 +206,8 @@ feature {NONE} -- Query
 			--
 			-- `a_class': The class to retrieve the most applicable editors for.
 			-- `Result': A list of editors editing the supplied class.
+		require
+			is_interface_usable: is_interface_usable
 		local
 			l_windows: BILINEAR [EB_WINDOW]
 			l_editor_manager: EB_EDITORS_MANAGER
@@ -219,6 +253,7 @@ feature -- Basic operations
 	prepare
 			-- Prepare class text modifier for special modification.
 		require
+			is_interface_usable: is_interface_usable
 			not_is_dirty: not is_dirty
 		do
 			original_text ?= modified_data.text.twin
@@ -234,6 +269,7 @@ feature -- Basic operations
 			-- Note: The side affect if calling commit is that all you will need to call prepare again to make
 			--       further special modifications.
 		require
+			is_interface_usable: is_interface_usable
 			is_dirty: is_dirty
 			is_modifiable: is_modifiable
 			not_is_commit_deferred: not is_commit_deferred
@@ -241,6 +277,7 @@ feature -- Basic operations
 			l_editors: like active_editors_for_class
 			l_editor: EB_SMART_EDITOR
 			l_text: SMART_TEXT
+			l_new_text: STRING
 			l_first_line: INTEGER
 			l_line: INTEGER
 			l_col: INTEGER
@@ -249,6 +286,11 @@ feature -- Basic operations
 			l_set_in_editor: BOOLEAN
 			l_save: EB_SAVE_FILE
 		do
+			check
+				not_is_committing: not is_committing
+			end
+			is_committing := True
+
 			l_editors := active_editors_for_class (context_class)
 			if not l_editors.is_empty then
 					-- There are editors available, attempt to set to the active editor(s).
@@ -266,7 +308,13 @@ feature -- Basic operations
 						end
 
 							-- Set text.
-						l_editor.set_editor_text (text)
+						if l_editor.text_displayed.is_modified then
+								-- Need to use merge
+							l_new_text := merge_text (l_text.text)
+						else
+							l_new_text := text
+						end
+						l_editor.set_editor_text (l_new_text)
 						l_set_in_editor := True
 
 							-- Reset position information.
@@ -285,9 +333,19 @@ feature -- Basic operations
 			end
 
 			if not l_set_in_editor then
+				if (create {RAW_FILE}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
+						-- Need to use merge
+					l_new_text := merge_text (context_class.text)
+				else
+					l_new_text := text
+				end
+
 					-- No editors, save directly to disk.
 				create l_save
-				l_save.save (context_class.file_name, text)
+				l_save.save (context_class.file_name, l_new_text)
+
+					-- Update class file data time stamp
+				original_file_date := context_class.file_date
 			end
 
 				-- Reset cached data
@@ -295,22 +353,60 @@ feature -- Basic operations
 			modified_data.reset
 
 			set_is_dirty (False)
+			is_committing := False
+			is_diff_merge_required := False
 		ensure
 			not_is_dirty: not is_dirty
 			not_is_prepared: not is_prepared
+			not_is_diff_merge_required: not is_diff_merge_required
 			text_is_equal_original_text: text.is_equal (original_text)
+			is_committing_unchanged: is_committing = old is_committing
+		rescue
+			is_committing := False
 		end
 
 	rollback
 			-- Reverts back the last changes made to the last state as determine when Current was initialized.
 		require
+			is_interface_usable: is_interface_usable
 			is_dirty: is_dirty
 		do
+			check
+				not_is_committing: not is_committing
+			end
+
 			modified_data := create_modified_data
 			set_is_dirty (False)
 		ensure
 			not_is_dirty: not is_dirty
 			not_is_prepared: not is_prepared
+			is_diff_merge_required_unchanged: is_diff_merge_required = old is_diff_merge_required
+		end
+
+feature {NONE} -- Basic operations
+
+	merge_text (a_current_text: STRING): !like text
+			-- Retrieves the merged text, using a modified source as the base.
+			--
+			-- `a_current_text': The text currently found on disk or in an editor.
+			-- `Result': The result of a merge
+		require
+			is_interface_usable: is_interface_usable
+			is_dirty: is_dirty
+			a_current_text_attached: a_current_text /= Void
+		local
+			l_diff: DIFF_TEXT
+			l_patch: STRING
+		do
+			create l_diff
+			l_diff.set_text (a_current_text, text)
+			l_diff.compute_diff
+			l_patch := l_diff.unified
+			if l_patch /= Void and then not l_patch.is_empty then
+				Result ?= l_diff.patch (a_current_text, l_patch, False)
+			else
+				Result ?= text
+			end
 		end
 
 feature -- Batch processing
@@ -320,6 +416,7 @@ feature -- Batch processing
 			--
 			-- `a_prepare': True to prepare for special modifications; False otherwise.
 		require
+			is_interface_usable: is_interface_usable
 			not_is_commit_deferred: not is_commit_deferred
 			is_modifiable: is_modifiable
 		do
@@ -337,6 +434,7 @@ feature -- Batch processing
 			--
 			-- `a_commit': True to commit any modifications; False otherwise.
 		require
+			is_interface_usable: is_interface_usable
 			is_commit_deferred: is_commit_deferred
 			is_modifiable: is_modifiable
 		do
@@ -352,6 +450,7 @@ feature -- Batch processing
 	rollback_batch_modifications
 			-- Rollback any modifications made since the last commit during batch modifications.
 		require
+			is_interface_usable: is_interface_usable
 			is_commit_deferred: is_commit_deferred
 			is_modifiable: is_modifiable
 		do
@@ -371,6 +470,7 @@ feature -- Batch processing
 			-- `a_prepare': True to prepare for special modifications; False otherwise.
 			-- `a_commit': True to commit any modifications; False otherwise.
 		require
+			is_interface_usable: is_interface_usable
 			not_is_commit_deferred: not is_commit_deferred
 			is_modifiable: is_modifiable
 		do
@@ -390,6 +490,7 @@ feature -- Modifications (positional)
 			--
 			-- `a_pos': Original position, in characters to insert code into.
 		require
+			is_interface_usable: is_interface_usable
 			is_prepared: is_prepared
 			a_pos_positive: a_pos > 0
 			a_pos_small_enough: a_pos <= original_text.count
@@ -417,6 +518,7 @@ feature -- Modifications (positional)
 			-- `a_end_pos': Original position, in characters to end the code replacement.
 			-- `a_code': Code to replace.
 		require
+			is_interface_usable: is_interface_usable
 			is_prepared: is_prepared
 			a_start_pos_non_negative: a_start_pos >= 0
 			a_start_pos_small_enough: a_start_pos < original_text.count
@@ -447,6 +549,7 @@ feature -- Modifications (positional)
 			-- `a_start_pos': Original position, in characters to start the code removal.
 			-- `a_end_pos': Original position, in characters to end the code removal.
 		require
+			is_interface_usable: is_interface_usable
 			is_prepared: is_prepared
 			a_start_pos_non_negative: a_start_pos >= 0
 			a_start_pos_small_enough: a_start_pos < original_text.count
@@ -472,6 +575,8 @@ feature {NONE} -- Factory
 
 	create_modified_data: like modified_data
 			-- Creates a new class modifier data object based on Current's state
+		require
+			is_interface_usable: is_interface_usable
 		local
 			l_class: !like context_class
 			l_editor: like active_editor_for_class

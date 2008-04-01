@@ -17,6 +17,11 @@ class
 inherit
 	FILE_NOTIFIER_S
 
+	EVENT_OBSERVER_CONNECTION [!FILE_NOTIFIER_EVENT_OBSERVER]
+		redefine
+			safe_dispose
+		end
+
 	SAFE_DISPOSABLE
 
 create
@@ -52,6 +57,8 @@ feature {NONE} -- Clean up
 				file_records.wipe_out
 				file_modified_events.dispose
 			end
+
+			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
 		end
 
 feature {NONE} -- Access
@@ -84,6 +91,18 @@ feature -- Query
 			Result := file_records.has (file_name_key (a_file_name))
 		ensure then
 			file_records_has_a_file_name: Result implies file_records.has (file_name_key (a_file_name))
+		end
+
+feature {NONE} -- Query
+
+	events (a_observer: !FILE_NOTIFIER_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			-- List of events and associated action.
+			--
+			-- `a_observer': Event observer interface to bind agent actions to.
+			-- `Result': A list of event types paired with a associated action on the passed observer.
+		do
+			create Result.make (1)
+			Result.put_last ([file_modified_events, agent a_observer.on_file_modified])
 		end
 
 feature -- Basic operation

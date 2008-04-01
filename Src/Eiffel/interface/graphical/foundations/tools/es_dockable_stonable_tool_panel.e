@@ -41,7 +41,7 @@ feature {NONE} -- Access
 
 feature {ES_STONABLE_I, ES_TOOL} -- Element change
 
-	frozen set_stone (a_stone: like stone)
+	set_stone (a_stone: like stone)
 			-- Sets last stone.
 			--
 			-- `a_stone': Stone to set.
@@ -104,7 +104,9 @@ feature {NONE} -- Basic opertations
       							-- Force stone on descriptor, which will optimize the display of the stone on Current.
 	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
 	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
-	        				tool_descriptor.set_stone (l_stone)
+	        				if tool_descriptor.query_set_stone (l_stone) then
+	        					tool_descriptor.set_stone (l_stone)
+	        				end
         				end
 					end
         		end, a_excluded)

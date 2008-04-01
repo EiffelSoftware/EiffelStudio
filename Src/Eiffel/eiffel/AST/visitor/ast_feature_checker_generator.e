@@ -3383,6 +3383,7 @@ feature -- Implementation
 						last_access_writable := False
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type, l_last_id)
+						create {TYPED_POINTER_A} last_type.make_typed (l_type)
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
 							create {HECTOR_B} last_byte_node.make_with_type (l_local, last_type)

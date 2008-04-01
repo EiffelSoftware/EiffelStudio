@@ -219,7 +219,7 @@ feature {NONE} -- Registry Paths
 		once
 			l_root := registry_root_path
 			create Result.make (l_root.count + 16)
-			Result.append (registry_root_path)
+			Result.append (l_root)
 			Result.append ("AssemblyFolders")
 		ensure
 			result_attached: Result /= Void
@@ -237,7 +237,7 @@ feature {NONE} -- Registry Paths
 				l_root := registry_root_path
 				l_version := clr_version
 				create Result.make (l_root.count + l_version.count + 18)
-				Result.append (registry_root_path)
+				Result.append (l_root)
 				Result.append (clr_version)
 				Result.append (once "\AssemblyFoldersEx")
 				internal_versioned_registry_root_path := Result

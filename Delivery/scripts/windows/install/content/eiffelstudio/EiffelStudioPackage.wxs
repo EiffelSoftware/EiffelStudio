@@ -14,7 +14,7 @@
 		<Property Id="PRECOMPILE">vision2</Property>
 		<Property Id="EIFFELPROJECTSDIR" Secure="yes" />
 		<Property Id="SHORTCUTPATH"><![CDATA[hh]]></Property>
-    <Property Id="ISELANG">en_US</Property>
+		<Property Id="ISELANG">en_US</Property>
 		<!-- END PROPERTIES -->
 
 		<!-- PACKAGE CONTENT -->
@@ -32,7 +32,7 @@
 					<RegistryValue Id="RegVal.eiffel.ise_c_compiler" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_platform" Name="ISE_PLATFORM" Value="$(var.IsePlatform)" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel.ise_projects" Name="ISE_PROJECTS" Value="[EIFFELPROJECTSDIR]" Type="string"/>
-          <RegistryValue Id="RegVal.eiffel.ise_lang" Name="ISE_LANG" Value="[ISELANG]" Type="string"/>
+					<RegistryValue Id="RegVal.eiffel.ise_lang" Name="ISE_LANG" Value="[ISELANG]" Type="string"/>
 				</RegistryKey>
 				<RegistryKey Id="Reg.eiffel.finish_freezing" Root="HKLM" Key="Software\ISE\$(var.ProductKey)\finish_freezing" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel.ff.ise_cflags" Name="ISE_CFLAGS" Value="" Type="string"/>
@@ -74,48 +74,48 @@
 			<Directory Id="Dir.Core.library" Name="library"/>
 		</DirectoryRef>
 
-    <!-- PROGIDS -->
-    <DirectoryRef Id="Dir.Core.esbuilder.spec.$(var.IsePlatform).bin" >
-      <Component Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Guid="BA8812BD-C38D-44AA-9FE9-A85DBB4CF493" Win64="$(var.IsWin64)">
-        <!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
-        <File Id="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Name="esbuilder.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"/>
-        <ProgId Id="build.project" Description="EiffelBuild project" Icon="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" IconIndex="0" >
-          <Extension Id="bpr">
-            <MIME ContentType="text/xml" />
-            <Verb Id="bpr" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
-          </Extension>
-        </ProgId>
-      </Component>
-    </DirectoryRef>
-    <DirectoryRef Id="Dir.Core.studio.spec.$(var.IsePlatform).bin" >
-      <Component Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Guid="4AECBDF8-9061-4260-A4C1-A54F0E163A3F" Win64="$(var.IsWin64)">
-        <!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
-        <File Id="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Name="estudio.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\studio\spec\$(var.IsePlatform)\bin\estudio.exe"/>
-        <ProgId Id="estudio_ecf.project" Description="EiffelStudio project" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="1" >
-          <Extension Id="ecf">
-            <MIME ContentType="text/xml" />
-            <Verb Id="open" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-            <Verb Id="compile" Argument="-config &quot;%1&quot; -melt" Command="Compile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-            <Verb Id="precompile" Argument="-config &quot;%1&quot; -precompile" Command="Precompile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-            <Verb Id="freeze" Argument="-config &quot;%1&quot; -freeze" Command="Freeze" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-            <Verb Id="finalize" Argument="-config &quot;%1&quot; -finalize" Command="Finalize" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
-          </Extension>
-        </ProgId>
-        <ProgId Id="estudio_e.class" Description="Eiffel Classes" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="2" >
-          <Extension Id="e" >
-            <MIME ContentType="text/plain" />
-          </Extension>
-        </ProgId>
-      </Component>
-    </DirectoryRef>
-    <!-- END PROGIDS -->
+		<!-- PROGIDS -->
+		<DirectoryRef Id="Dir.Core.esbuilder.spec.$(var.IsePlatform).bin" >
+			<Component Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Guid="BA8812BD-C38D-44AA-9FE9-A85DBB4CF493" Win64="$(var.IsWin64)">
+				<!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
+				<File Id="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" Name="esbuilder.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"/>
+				<ProgId Id="build.project" Description="EiffelBuild project" Icon="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" IconIndex="0" >
+					<Extension Id="bpr">
+						<MIME ContentType="text/xml" />
+						<Verb Id="bpr" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
+					</Extension>
+				</ProgId>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id="Dir.Core.studio.spec.$(var.IsePlatform).bin" >
+			<Component Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Guid="4AECBDF8-9061-4260-A4C1-A54F0E163A3F" Win64="$(var.IsWin64)">
+				<!-- Wix needs an absolute path to the file, so we use the INSTALL_DIR environment variable which is set when building the MSI -->
+				<File Id="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" Name="estudio.exe" DiskId="1" Source="$(env.INSTALL_DIR)\EiffelStudio\studio\spec\$(var.IsePlatform)\bin\estudio.exe"/>
+				<ProgId Id="estudio_ecf.project" Description="EiffelStudio project" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="1" >
+					<Extension Id="ecf">
+						<MIME ContentType="text/xml" />
+						<Verb Id="open" Argument="&quot;%1&quot;" Command="Open" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+						<Verb Id="compile" Argument="-config &quot;%1&quot; -melt" Command="Compile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+						<Verb Id="precompile" Argument="-config &quot;%1&quot; -precompile" Command="Precompile" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+						<Verb Id="freeze" Argument="-config &quot;%1&quot; -freeze" Command="Freeze" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+						<Verb Id="finalize" Argument="-config &quot;%1&quot; -finalize" Command="Finalize" TargetFile="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
+					</Extension>
+				</ProgId>
+				<ProgId Id="estudio_e.class" Description="Eiffel Classes" Icon="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" IconIndex="2" >
+					<Extension Id="e" >
+						<MIME ContentType="text/plain" />
+					</Extension>
+				</ProgId>
+			</Component>
+		</DirectoryRef>
+		<!-- END PROGIDS -->
 
 		<DirectoryRef Id="TARGETDIR">
 			<Directory Id="DesktopFolder" Name="." />
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))">
 						<!-- Shortcuts and file association -->
-					<Component  Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D"  Win64="$(var.IsWin64)">
+					<Component Id="Comp.studio_shortcuts" Guid="FD521BF7-9521-4808-8F85-DAACEBEF291D" Win64="$(var.IsWin64)">
 						<RegistryKey Id="Reg.Dummy.1" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 						<CreateFolder />
 						<RemoveFolder Id="EiffelStudio" On="uninstall" Directory="EiffelStudio"/>
@@ -133,7 +133,7 @@
 							/>
 					</Component>
 					<Directory Id="EiffelStudio.Documentation" Name="Documentation">
-						<Component Id="Comp.studio_shortcuts.documentation" Guid="1EA184EF-4B61-4664-8959-44BCE2773F0D"  Win64="$(var.IsWin64)">
+						<Component Id="Comp.studio_shortcuts.documentation" Guid="1EA184EF-4B61-4664-8959-44BCE2773F0D" Win64="$(var.IsWin64)">
 							<RegistryKey Id="Reg.Dummy.2" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 							<CreateFolder />
 							<RemoveFolder Id="EiffelStudio.Documentation" On="uninstall" Directory="EiffelStudio.Documentation"/>
@@ -154,7 +154,7 @@
 						</Component>
 					</Directory>
 					<Directory Id="EiffelStudio.Tools" Name="Tools">
-						<Component Id="Comp.studio_shortcuts.tools" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6"  Win64="$(var.IsWin64)">
+						<Component Id="Comp.studio_shortcuts.tools" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6" Win64="$(var.IsWin64)">
 							<RegistryKey Id="Reg.Dummy.3" Root="HKCU" Key="Software\ISE\$(var.ProductKey)\Install" Action="createAndRemoveOnUninstall"/>
 							<CreateFolder />
 							<RemoveFolder Id="EiffelStudio.Tools" On="uninstall" Directory="EiffelStudio.Tools"/>
@@ -187,7 +187,7 @@
 		<!-- END PACKAGE CONTENT -->
 
 		<!-- FEATURES -->
-    <Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
+		<Feature Id="Feat.root" Title="$(var.ProductName)" Description="$(var.ProductDescription)" TypicalDefault="install" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
 			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="1" Display="hidden">
 				<ComponentRef Id="Comp.app_icon" />
 				<ComponentRef Id="Comp.studio_registries" />

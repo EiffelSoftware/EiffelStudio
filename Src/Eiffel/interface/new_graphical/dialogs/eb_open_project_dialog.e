@@ -152,6 +152,9 @@ feature {NONE} -- Actions
 					dialog.set_pointer_style (l_pointer)
 				end
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	update_preferences is

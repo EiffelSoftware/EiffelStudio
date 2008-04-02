@@ -610,18 +610,21 @@ feature {NONE} -- Factory
 		require
 			a_mode_is_valid: (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (a_mode)
 		local
-			l_result: STRING_GENERAL
+			l_result: STRING_32
 		do
 			inspect a_mode
 			when {ES_CONTRACT_TOOL_EDIT_MODE}.preconditions then
-				l_result := interface_names.m_edit_preconditions.as_string_32
+				l_result := interface_names.m_edit_preconditions
 			when {ES_CONTRACT_TOOL_EDIT_MODE}.postconditions then
-				l_result := interface_names.m_edit_postconditions.as_string_32
+				l_result := interface_names.m_edit_postconditions
 			when {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
-				l_result := interface_names.m_edit_invariants.as_string_32
+				l_result := interface_names.m_edit_invariants
 			else
-				l_result := interface_names.unknown_string.as_string_32
+				l_result := interface_names.unknown_string
 			end
+				-- Remove ampersand from menu name.
+			l_result ?= l_result.twin
+			l_result.replace_substring_all ("&", "")
 			create Result.make_from_string (l_result.as_string_32)
 		ensure
 			not_result_is_empty: not Result.is_empty

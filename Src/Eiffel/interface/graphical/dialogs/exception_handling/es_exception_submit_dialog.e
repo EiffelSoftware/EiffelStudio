@@ -755,13 +755,23 @@ feature {NONE} -- Reporting
 		local
 			l_report: COMM_SUPPORT_BUG_REPORT
 			l_thanks: ES_INFORMATION_PROMPT
+			l_transistion: ES_POPUP_TRANSITION_WINDOW
+			l_message: !STRING_32
 		do
+			create l_message.make_from_string ("Submitting bug report, please wait...")
+			create l_transistion.make_with_icon (l_message, stock_pixmaps.tool_output_failed_icon_buffer)
+			if {l_window: !EV_WINDOW} dialog then
+				l_transistion.show_relative_to_window (l_window)
+			end
+
 			create l_report.make (synopsis, description, compiler_version_number.version)
 			l_report.environment := workbench_name + " " + version_number
 			l_report.to_reproduce := "Please see description"
 			l_report.confidential := not make_public_check.is_selected
 
 			support_login.report_bug (l_report)
+
+			l_transistion.hide
 
 			create l_thanks.make_standard ("The submitted report is now available at http://support.eiffel.com.")
 			l_thanks.set_sub_title ("Thank you for the bug report")

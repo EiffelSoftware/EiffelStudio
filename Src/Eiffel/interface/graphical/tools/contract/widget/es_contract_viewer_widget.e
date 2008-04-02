@@ -370,36 +370,20 @@ feature {NONE} -- Action handlers
 			l_manager: EB_WINDOW_MANAGER
 			l_window: EB_DEVELOPMENT_WINDOW
 			l_feature_stone: FEATURE_STONE
-			l_mod: ES_INVARIANT_CONTRACT_TEXT_MODIFIER
-			l_contracts: DS_ARRAYED_LIST [STRING_8]
 		do
-			create l_mod.make (({!CLASS_I}) #? context_class.lace_class)
-			l_mod.prepare
-
-			create l_contracts.make (2)
-			l_contracts.put_last ("test_attached: test /= Void")
-			l_contracts.put_last ("test_is_empty: test.is_empty")
-			l_mod.replace_contracts (l_contracts)
-
-			l_mod.commit
-
-			l_mod.prepare
-			l_contracts.wipe_out
-			l_mod.replace_contracts (l_contracts)
-
---			l_manager := (create {EB_SHARED_WINDOW_MANAGER}).window_manager
---			l_window := l_manager.last_focused_development_window
---			if l_window /= Void and l_window.is_interface_usable then
---				if {l_tool: !ES_CONTRACT_TOOL} l_window.shell_tools.tool ({ES_CONTRACT_TOOL}) and then l_tool.is_interface_usable then
---						-- Show and activate focus on the tool.
---					create l_feature_stone.make (context_feature)
---					check l_feature_stone_is_stone_usable: l_tool.is_stone_usable (l_feature_stone) end
---					if l_tool.query_set_stone (l_feature_stone) then
---						l_tool.set_stone (l_feature_stone)
---						l_tool.show (True)
---					end
---				end
---			end
+			l_manager := (create {EB_SHARED_WINDOW_MANAGER}).window_manager
+			l_window := l_manager.last_focused_development_window
+			if l_window /= Void and l_window.is_interface_usable then
+				if {l_tool: !ES_CONTRACT_TOOL} l_window.shell_tools.tool ({ES_CONTRACT_TOOL}) and then l_tool.is_interface_usable then
+						-- Show and activate focus on the tool.
+					create l_feature_stone.make (context_feature)
+					check l_feature_stone_is_stone_usable: l_tool.is_stone_usable (l_feature_stone) end
+					if l_tool.query_set_stone (l_feature_stone) then
+						l_tool.set_stone (l_feature_stone)
+						l_tool.show (True)
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Factory

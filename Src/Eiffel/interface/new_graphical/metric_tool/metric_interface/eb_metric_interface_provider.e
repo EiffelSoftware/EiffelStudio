@@ -424,7 +424,7 @@ feature -- Pick and drop
 			conv_fst ?= st
 			if conv_fst = Void then
 				a_metric_tool.develop_window.tools.class_tool.set_stone (st)
-				a_metric_tool.develop_window.tools.class_tool.content.show
+				a_metric_tool.develop_window.tools.class_tool.show
 				a_metric_tool.develop_window.tools.class_tool.content.set_focus
 				a_metric_tool.develop_window.tools.class_tool.set_focus
 			else
@@ -439,7 +439,7 @@ feature -- Pick and drop
 			a_metric_tool_attached: a_metric_tool /= Void
 		do
 			a_metric_tool.develop_window.tools.features_relation_tool.set_stone (st)
-			a_metric_tool.develop_window.tools.features_relation_tool.content.show
+			a_metric_tool.develop_window.tools.features_relation_tool.show
 			a_metric_tool.develop_window.tools.features_relation_tool.content.set_focus
 			a_metric_tool.develop_window.tools.features_relation_tool.set_focus
 		end

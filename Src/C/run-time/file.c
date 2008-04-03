@@ -779,20 +779,13 @@ rt_public EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound)
 	 * return the number of characters read.
 	 */
 
-	EIF_INTEGER amount = bound;	/* Number of characters to be read */
-	int c = 0;					/* Last char read */
-	
-	while (amount-- > 0) {
-		c = getc(f);
-		if (c == EOF)
-			break;
-		*s++ = (char) c;
+	size_t amount = fread(s, sizeof(char), (size_t) bound, f);
+
+	if (ferror(f)) {	/* An I/O error occurred */
+		eise_io("FILE: unable to read stream.");					/* Raise exception */
 	}
 
-	if (c == EOF && ferror(f))	/* An I/O error occurred */
-		eise_io("FILE: unable to read stream.");					/* Raise exception */
-
-	return bound - amount - 1;	/* Number of characters read */
+	return (EIF_INTEGER) amount;	/* Number of characters read */
 }
 
 rt_public EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start)

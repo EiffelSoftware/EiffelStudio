@@ -2682,13 +2682,17 @@ feature -- Properties
 			-- Parent classes.
 		local
 			l_non_conforming_parents_classes: like non_conforming_parents_classes
+			l_conforming_parents_classes: like conforming_parents_classes
 		do
 			Result := conforming_parents_classes
 			l_non_conforming_parents_classes := non_conforming_parents_classes
 			if Result /= Void then
 				if l_non_conforming_parents_classes /= Void then
-					Result := Result.twin
-						-- We have to twin the list to avoid side effect whilst appending.
+						-- We cannot just append `l_non_conforming_parents_classes' to a clone
+						-- of Result, because its size is fixed and cannot be increased.
+					l_conforming_parents_classes := Result
+					create Result.make (l_conforming_parents_classes.count + l_non_conforming_parents_classes.count)
+					Result.append (l_conforming_parents_classes)
 					Result.append (l_non_conforming_parents_classes)
 				end
 			else

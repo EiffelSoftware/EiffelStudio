@@ -208,10 +208,12 @@ feature -- Initialization
 			if output_window /= Void and then not output_window.is_closed then
 				output_window.close
 			end
+			print_gc_statistics
 		rescue
 			if error_handler.is_developer_exception then
 				Error_handler.trace
 				if stop_on_error then
+					print_gc_statistics
 					die (-1)
 				end
 				if command_line_io.termination_requested then
@@ -310,6 +312,9 @@ feature -- Properties
 	has_no_library_conversion: BOOLEAN
 			-- Should we not convert clusters into libraries?
 
+	is_gc_stats_enabled: BOOLEAN
+			-- Will compiler display some GC timing at the end of a compilation?
+
 	help_messages: HASH_TABLE [STRING_GENERAL, STRING] is
 			-- Help message table
 		once
@@ -348,6 +353,7 @@ feature -- Properties
 			Result.put (batch_help, batch_cmd_name)
 			Result.put (clean_help, clean_cmd_name)
 			Result.put (gui_help, gui_cmd_name)
+			Result.put (gc_stats_help, gc_stats_cmd_name)
 			add_help_special_cmds
 		end
 
@@ -430,7 +436,8 @@ feature -- Output
 				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name] |%N%
 				%%T[class_file.e [-library library_name]] |%N%
 				%%T-stop | -no_library |%N%
-				%%T-project_path Project_directory_path | -file File]%N")
+				%%T-project_path Project_directory_path | -file File |%N%
+				%%T-gc_stats]%N")
 		end
 
 	print_version is
@@ -480,6 +487,37 @@ feature -- Output
 			io.put_string (": ")
 			localized_print (txt)
 			io.put_string (".%N")
+		end
+
+	print_gc_statistics is
+			-- Display some GC statistics if `is_gc_stats_enabled'.
+		local
+			l_mem: MEMORY
+			l_mem_info: MEM_INFO
+			l_full_gc_info, l_part_gc_info: GC_INFO
+		do
+			if is_gc_stats_enabled then
+				create l_mem
+				l_mem_info := l_mem.memory_statistics ({MEM_CONST}.eiffel_memory)
+				print ("Total memory is " + l_mem_info.total.out + "%N")
+				print ("Used memory is " + (l_mem_info.used + l_mem_info.overhead).out + "%N")
+				print ("Free memory is " + l_mem_info.free.out + "%N")
+
+				l_full_gc_info := l_mem.gc_statistics ({MEM_CONST}.full_collector)
+				print ("GC full cycle is " + l_full_gc_info.cycle_count.out + "%N")
+				print ("GC full cycle is " + l_full_gc_info.cpu_time_average.out + "%N")
+
+				l_part_gc_info := l_mem.gc_statistics ({MEM_CONST}.incremental_collector)
+				print ("GC incremental cycle is " + l_part_gc_info.cycle_count.out + "%N")
+				print ("GC incremental cycle is " + l_part_gc_info.cpu_time_average.out + "%N")
+				print ("CPU time " + l_part_gc_info.cpu_total_time.out + "%N")
+				print ("Kernel time " + l_part_gc_info.sys_total_time.out + "%N")
+				print ("Full Collection period " + l_mem.collection_period.out + "%N")
+				print ("GC percentage time " +
+					(100 * (((l_full_gc_info.cycle_count * l_full_gc_info.cpu_time_average) +
+					 (l_part_gc_info.cycle_count * l_part_gc_info.cpu_time_average)) /
+					 l_part_gc_info.cpu_total_time)).out + "%N%N")
+			end
 		end
 
 feature -- Update
@@ -1043,6 +1081,12 @@ feature -- Update
 			elseif option.is_equal ("-no_library") then
 					-- Compiler will read user configuration file for that project
 				has_no_library_conversion := True
+
+			elseif option.is_equal ("-gc_stats") then
+					-- Compiler will display some GC timing at the end of a compilation.
+				is_gc_stats_enabled := True
+					-- Start accounting for GC statistics.
+				(create {MEMORY}).enable_time_accounting
 
 			elseif option.is_equal ("-file") then
 				if current_option < argument_count then

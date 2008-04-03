@@ -210,7 +210,9 @@ feature {NONE}
 
 	text_doc_help: STRING_GENERAL is do Result := locale.translation ("Generate text form of all classes in system") end
 
-	version_help: STRING_GENERAL is do Result := locale.translation ("show compiler version number") end;
+	version_help: STRING_GENERAL is do Result := locale.translation ("show compiler version number") end
+
+	gc_stats_help: STRING_GENERAL is do Result := locale.translation ("Show GC statistics") end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

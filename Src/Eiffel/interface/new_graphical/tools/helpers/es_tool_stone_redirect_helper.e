@@ -90,15 +90,11 @@ feature {NONE} -- Redirects
 		do
 			l_feature_stone ?= a_stone
 			if l_feature_stone /= Void then
-				l_feature_tool := development_window.tools.features_relation_tool
-				l_feature_tool.set_stone (a_stone)
-				l_feature_tool.content.show
-				l_feature_tool.content.set_focus
-				l_feature_tool.set_focus
+				drop_feature (l_feature_stone)
 			else
 				l_class_tool := development_window.tools.class_tool
 				l_class_tool.set_stone (a_stone)
-				l_class_tool.content.show
+				l_class_tool.show
 				l_class_tool.content.set_focus
 				l_class_tool.set_focus
 			end
@@ -116,7 +112,7 @@ feature {NONE} -- Redirects
 		do
 			l_feature_tool := development_window.tools.features_relation_tool
 			l_feature_tool.set_stone (a_stone)
-			l_feature_tool.content.show
+			l_feature_tool.show
 			l_feature_tool.content.set_focus
 			l_feature_tool.set_focus
 		end

@@ -250,14 +250,12 @@ feature {NONE} -- Implementation
 			if l_feature_stone /= Void then
 				l_feature_tool := develop_window.tools.features_relation_tool
 				l_feature_tool.set_stone (st)
-				l_feature_tool.content.show
-				l_feature_tool.content.set_focus
+				l_feature_tool.show
 				l_feature_tool.set_focus
 			else
 				l_class_tool := develop_window.tools.class_tool
 				l_class_tool.set_stone (st)
-				l_class_tool.content.show
-				l_class_tool.content.set_focus
+				l_class_tool.show
 				l_class_tool.set_focus
 			end
 		end
@@ -271,7 +269,7 @@ feature {NONE} -- Implementation
 		do
 			l_feature_tool := develop_window.tools.features_relation_tool
 			l_feature_tool.set_stone (st)
-			l_feature_tool.content.show
+			l_feature_tool.show
 			l_feature_tool.content.set_focus
 			l_feature_tool.set_focus
 		end

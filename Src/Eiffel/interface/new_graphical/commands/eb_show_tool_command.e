@@ -121,7 +121,7 @@ feature -- Execution
 				l_shared.set_default_screen_x (l_x)
 				l_shared.set_default_screen_y (l_y)
 
-				tool.content.show
+				tool.show
 			end
 			tool.content.set_focus
 		end

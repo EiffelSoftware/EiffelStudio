@@ -173,6 +173,7 @@
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="false"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="false" use_application_options="true"/>
+		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf" readonly="false"/>
 		<cluster name="compiler_api_profiler" location="$EIFFEL_SRC\Eiffel\API\profiler\" recursive="true"/>
 		<cluster name="compiler_api_ql" location="$EIFFEL_SRC\Eiffel\API\query_language\" recursive="true"/>
 		<cluster name="compiler_api_queries" location="$EIFFEL_SRC\Eiffel\API\queries\" recursive="true"/>

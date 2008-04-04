@@ -191,25 +191,12 @@ rt_public EIF_REFERENCE eif_freeze(EIF_OBJECT object)
 		return root;					/* Freezing succeded */
 	}
 
-	/* Now the lengthy part, with a generation collection cycle... We change
-	 * artificially the age of the object to the maximum possible age, then
-	 * we make sure the tenure limit is low enough to ensure the tenuring of
-	 * the object.
-	 */
-
-	zone->ov_flags |= EO_AGE;			/* Maximum reachable age */
-	if (tenure == eif_tenure_max) {		/* Tenure fixed to maximum age ? */ 
-		tenure = eif_tenure_max - 1;	/* Ensure object will be tenured */
-	}
-	collect();							/* Run a generation scavenging cycle */
-	root = eif_access(object);			/* Update that reference too */
+	/* Now the lengthy part, with a generation collection cycle... */
+	root = eif_tenure_object (root);
 	zone = HEADER(root);				/* Get new zone (object has moved) */
-	if (!(zone->ov_size & B_BUSY)) {	/* Object still in generation zone */
-		return NULL;					/* Could not tenure, freeze failed */
-	} else {
-		zone->ov_size |= B_C;			/* Make it a C block now */
-		return root;					/* Freezing succeeded, new location */
-	}
+	CHECK("Not in generation zone", zone->ov_size & B_BUSY) 
+	zone->ov_size |= B_C;			/* Make it a C block now */
+	return root;					/* Freezing succeeded, new location */
 }
 
 /*

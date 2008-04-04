@@ -98,6 +98,7 @@ feature {NONE} -- Initialization
 			-- Initialize the dialog with a regular layout (Create/Open project)
 		do
 			show_open_project_frame := True
+			incoming_command_manager.notify_created_starting_dialog (Current)
 			build_interface
 		end
 
@@ -105,6 +106,7 @@ feature {NONE} -- Initialization
 			-- Initialize the dialog with the "Create Project" frame only.
 		do
 			show_open_project_frame := False
+			incoming_command_manager.notify_created_starting_dialog (Current)
 			build_interface
 		end
 
@@ -263,6 +265,7 @@ feature {NONE} -- Execution
 			ok_selected := False
 			update_preferences
 			destroy
+			incoming_command_manager.notify_closing_starting_dialog
 		end
 
 	on_item_deselected is
@@ -281,7 +284,6 @@ feature {NONE} -- Execution
 		do
 			update_preferences
 			ok_selected := True
-
 				-- Create a new project using an ISE Wizard
 			if not wizards_list.selected_rows.is_empty then
 				check parent_window_not_void: parent_window /= Void end
@@ -294,6 +296,7 @@ feature {NONE} -- Execution
 			else
 				check no_item_selected: False end
 			end
+			incoming_command_manager.notify_closing_starting_dialog
 
 		end
 

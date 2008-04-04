@@ -16,6 +16,8 @@ inherit
 
 	PLATFORM
 
+	COMMAND_PROTOCOL_NAMES
+
 create
 	make
 
@@ -31,10 +33,23 @@ feature -- Initialization
 			get_environment
 			check_environment
 			if is_environment_valid then
-				if is_splashing then
-					display_splasher
+				if not is_ec_action then
+					if is_splashing then
+						display_splasher
+					end
+					do_ec_launching
+				else
+					create command_sender
+					broadcast_command
+						-- Command has been broadcasted,
+						-- If no running ec process responses to handle it,
+						-- We start new ec process and pass it command.
+					if not last_command_handled then
+						launch_ec_with_action
+					else
+						do_exit_launcher
+					end
 				end
-				do_ec_launching
 			end
 		end
 
@@ -43,6 +58,22 @@ feature -- Initialization
 			is_environment_valid: is_environment_valid
 		do
 			launch_ec
+		end
+
+	launch_ec_with_action is
+			-- Launch ec with `ec_action'
+		require
+			is_environment_valid: is_environment_valid
+		local
+			l_wait_ec_start: EV_TIMEOUT
+		do
+			if is_splashing then
+				display_splasher
+			end
+			do_ec_launching
+			create l_wait_ec_start
+			l_wait_ec_start.actions.extend (agent send_command_to_launched_ec_and_exit)
+			l_wait_ec_start.set_interval (5 * 1000)
 		end
 
 feature -- Launching
@@ -59,6 +90,8 @@ feature -- Launching
 			io.error.put_string ("     /w         : wait until launched process exits %N")
 			io.error.put_string ("     /nosplash  : no splash screen %N")
 			io.error.put_string ("     /ec_name   : overwrite EC_NAME value %N")
+			io.error.put_string ("     /ec_action <action> %N")
+			io.error.put_string ("                : Send <action> to suitable running ec, or start new ec if needed. %N")
 			io.error.put_string ("  * ec's parameters %N")
 			io.error.put_string ("     any ec's command line parameters (-config, -target, -project_path ...)%N")
 			io.error.put_string ("     if there is only one parameter, this is the eiffel configuration file (file.ecf)%N")
@@ -156,7 +189,10 @@ feature -- Launching
 				print (generator + " : launching process ... %N")
 			end
 			process.launch
-
+					-- Record the launched ec process ID.
+			if process.launched then
+				last_launched_ec_pid := process.id
+			end
 			if process.launched and keep_estudio_terminal then
 				if not is_waiting then
 					close_splasher (splash_delay)
@@ -273,6 +309,50 @@ feature -- Properties
 
 	argument_variables: HASH_TABLE [STRING, STRING]
 
+feature {NONE} -- Command sender
+
+	broadcast_command is
+			-- Broadcast `ec_action' as command to EiffelStudio processes.
+		require
+			command_sender_not_void: command_sender /= Void
+		do
+			last_command_handled := False
+			if {lt_action: STRING}ec_action then
+				command_sender.send_command (lt_action, eiffel_studio_key)
+				last_command_handled := command_sender.last_command_handled
+			end
+		end
+
+	send_command_to_launched_ec_and_exit is
+			-- Broadcast `ec_action' as command to EiffelStudio processes.
+		require
+			command_sender_not_void: command_sender /= Void
+		do
+			last_command_handled := False
+			if {lt_action: STRING}ec_action then
+				command_sender.send_command_process (lt_action, eiffel_studio_key, last_launched_ec_pid)
+				last_command_handled := command_sender.last_command_handled
+			end
+			exit_launcher
+		end
+
+	last_command_handled: BOOLEAN
+			-- Was last command handled?
+
+	last_launched_ec_pid: INTEGER
+			-- Last process ID of launched ec.
+
+	command_sender: ?COMMAND_SENDER
+			-- Command sender
+
+	is_ec_action: BOOLEAN
+			-- Is "/ec_action" specified?
+
+	ec_action: STRING
+			-- Command for opened ec.
+
+	ec_action_string: STRING = "ECACTION"
+
 feature -- Environment
 
 	cmdline_arguments: ARGUMENTS
@@ -331,6 +411,16 @@ feature -- Environment
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
 							argument_variables.put (cmdline_argument (1), {EIFFEL_ENVIRONMENT_CONSTANTS}.Ec_name_env)
+						end
+					elseif s.is_equal ("/ec_action") then
+						is_ec_action := True
+						cmdline_remove_head (1)
+						if cmdline_arguments_count > 0 then
+							argument_variables.put (cmdline_argument (1), ec_action_string)
+							if {lt_string: STRING}cmdline_argument (1) then
+								ec_action_parser.parse (lt_string)
+								ec_action := ec_action_parser.last_command
+							end
 						end
 					else
 						io.error.put_string (" * Ignoring flag [" + s + "]%N")
@@ -484,6 +574,11 @@ feature {NONE} -- Implementations
 		end
 
 	Execution_environment: EXECUTION_ENVIRONMENT is
+		once
+			create Result
+		end
+
+	ec_action_parser: EC_ACTION_PARSER is
 		once
 			create Result
 		end

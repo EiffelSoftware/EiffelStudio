@@ -57,14 +57,20 @@ feature {NONE} -- Implementation
 		local
 			l_wel_string: WEL_STRING
 			l_string: STRING
+			l_result: BOOLEAN
 		do
-			if message_information /= Void and then {lt_action: PROCEDURE [ANY, TUPLE [STRING]]}interface.external_command_action then
+			if message_information /= Void and then {lt_action: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]}interface.external_command_action then
 				l_wel_string := command_string (message_information.l_param)
 					-- |Fixme: Causes information loss doing as_string_8.
 				l_string := l_wel_string.string.as_string_8
 				if not l_string.is_empty and then l_string.starts_with (ise_command) then
 					l_string.remove_head (ise_command.count)
-					lt_action.call ([l_string])
+					l_result := lt_action.item ([l_string])
+					if l_result then
+						message_window.set_message_return_value (to_lresult (1))
+					else
+						message_window.set_message_return_value (to_lresult (0))
+					end
 				end
 			end
 		end
@@ -81,7 +87,15 @@ feature {NONE} -- Implementation
 			create Result.make_by_pointer_and_count (l_p, l_count)
 		end
 
-	c_pointer_from_wm_copydata (a_pointer: POINTER; a_count: TYPED_POINTER [INTEGER]): POINTER is
+	frozen to_lresult (i: INTEGER): POINTER is
+			-- Convert integer value `i' in a valid LRESULT value.
+		external
+			"C inline use <windows.h>"
+		alias
+			"(EIF_POINTER) (LRESULT) $i"
+		end
+
+	frozen c_pointer_from_wm_copydata (a_pointer: POINTER; a_count: TYPED_POINTER [INTEGER]): POINTER is
 			-- Data from COPYDATASTRUCT structure.
 		external
 			"C inline"

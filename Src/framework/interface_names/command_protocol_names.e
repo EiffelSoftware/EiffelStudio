@@ -1,66 +1,40 @@
 indexing
-	description: "Register of action to process external command other process."
+	description: "[
+					Names of command tunnel protocol. No translation is needed, because the protocol is transparent for end users.
+					This class is used cross processes.
+				]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	COMMAND_RECEIVER
+	COMMAND_PROTOCOL_NAMES
 
-create
-	make_key
+feature -- Modules
 
-feature {NONE} -- Initialization
+	compiler_module: !STRING = "com.eiffel.compiler"
 
-	make_key (a_key: !STRING) is
-			-- Initialization
-		do
-			key := a_key
-			create_implementation
-		end
+	eis_incoming_module: !STRING = "com.eiffel.eis_incoming"
 
-feature -- Access
+feature -- Predefined status ("com.eiffel.compiler")
 
-	external_command_action: ?FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
-			-- Function to be called when command is received.
-			-- Return True to claim that the command can be handled.
+	project_ready: !STRING = "project_ready"
 
-	key: !STRING
-			-- The key to identify current
+feature -- Command tunnel keys
 
-feature -- Element change
+	eiffel_studio_key: !STRING = "06504BCF-876A-4F90-B7DA-ED15920217BB"
+		-- Key for EiffelStudio to setup command tunnel.
 
-	set_external_command_action (a_action: like external_command_action) is
-			-- Set `external_command_action' with `a_action'
-		do
-			external_command_action := a_action
-		ensure
-			external_command_action_set: external_command_action = a_action
-		end
+feature -- Others
 
-	destroy is
-			-- Destroy the receiver
-		do
-			if implementation /= Void then
-				implementation.destroy
-				implementation := Void
-			end
-		end
+	component_separator: CHARACTER = '&'
 
-feature {NONE} -- Implementation
+	attribute_separator: CHARACTER = '='
 
-	implementation: ?COMMAND_RECEIVER_I
+	system_separator: CHARACTER = '.'
 
-feature {NONE} -- Implementation
-
-	create_implementation is
-			-- Create implementation
-		do
-			create {COMMAND_RECEIVER_IMP}implementation.make (Current)
-		ensure
-			implementation_not_void: implementation /= Void
-		end
+	eiffel_protocol: !STRING = "eiffel://";
 
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"

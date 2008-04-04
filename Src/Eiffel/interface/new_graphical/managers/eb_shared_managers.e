@@ -107,6 +107,12 @@ feature -- Status report
 			create Result.make
 		end
 
+	incoming_command_manager: ES_INCOMING_COMMAND_MANAGER is
+			-- Incoming command manager
+		do
+			Result := incoming_command_manager_cell.item
+		end
+
 feature {NONE} -- Implementation
 
 	Recent_projects_manager_cell: CELL [EB_RECENT_PROJECTS_MANAGER] is
@@ -129,6 +135,12 @@ feature {NONE} -- Implementation
 
 	C_compilation_output_manager_cell: CELL [EB_C_COMPILATION_OUTPUT_MANAGER] is
 			-- C compiler output manager
+		once
+			create Result.put (Void)
+		end
+
+	incoming_command_manager_cell: CELL [ES_INCOMING_COMMAND_MANAGER] is
+			-- Incoming command manager
 		once
 			create Result.put (Void)
 		end

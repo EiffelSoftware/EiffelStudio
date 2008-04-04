@@ -115,6 +115,8 @@ RT_LNK void register_oms (EIF_REFERENCE *address);	/* Register an address of a o
 RT_LNK void eif_gc_stop(void);				/* Stop the garbage collector */
 RT_LNK void eif_gc_run(void);				/* Restart the garbage collector */
 
+RT_LNK EIF_REFERENCE eif_tenure_object(EIF_REFERENCE);
+
 #ifdef __cplusplus
 }
 #endif

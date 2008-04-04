@@ -498,9 +498,8 @@ rt_private rt_uint_ptr size_table[TENURE_MAX];		/* Amount of bytes/age */
 /*
 doc:	<attribute name="tenure" return_type="int" export="shared">
 doc:		<summary>Maximum age for tenuring.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None since initialized in `main.c'.</synchronization>
-doc:		<fixme>Because `tenure' is also accessed in `hector' this causes a potential thread safe access. We need to protect his access in `efreeze'.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None while initialized in `main.c' but use `eif_gc_mutex' when updating its value.</synchronization>
 doc:	</attribute>
 */
 rt_shared int tenure;
@@ -4630,6 +4629,43 @@ rt_public void erembq(EIF_REFERENCE obj)
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
 }
 
+/*
+doc:	<routine name="eif_tenure_object" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Given an object, if the object is still in the scavenge zone, promotes it outside of the savenge zone. This is used for `eif_freeze'. If it fails, it raises an out of memory exception.</summary>.
+doc:		<param name="obj" type="EIF_REFERENCE *">Object to promote.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE eif_tenure_object(EIF_REFERENCE obj)
+{
+	EIF_GET_CONTEXT
+	union overhead *zone;
+
+	REQUIRE("object not null", obj);
+
+	zone = HEADER(obj);
+
+		/* If object is already outside the scavenge zone, nothing to be done. */
+	if (!(zone->ov_size & B_BUSY)) {
+		RT_GC_PROTECT(obj);
+			/* We change artificially the age of the object to the maximum possible age.
+			 * If we cannot tenure the object, we trigger a full collection and if it is
+			 * still failing after that we raise a no-more memory exception. */
+		zone->ov_flags |= EO_AGE;			/* Maximum reachable age */
+		collect();							/* Run a generation scavenging cycle */
+		zone = HEADER(obj);					/* Get new zone (object has moved) */
+		if (!(zone->ov_size & B_BUSY)) {	/* Object still in generation zone */
+			urgent_plsc(&obj);
+			if (!(zone->ov_size & B_BUSY)) {	/* Object still in generation zone */
+				enomem(MTC_NOARG);						/* Critical exception */
+			}
+		}
+		RT_GC_WEAN(obj);
+	}
+	ENSURE("Outside scavenge zone", (HEADER(obj)->ov_size) & B_BUSY);
+	return obj;					/* Promotion succeeded, return new location. */
+}
 
 /*
  * Freeing objects: each class has a chance to redefine the 'dispose' routine

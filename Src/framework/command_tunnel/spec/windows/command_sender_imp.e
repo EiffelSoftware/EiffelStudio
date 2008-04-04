@@ -108,8 +108,8 @@ feature {NONE} -- Implementation
 				if {lt_key: STRING}last_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
 						-- If the receiver return True, it means that the receiver handles the message.
 						-- Window enumerating will stop.
-					Result := {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
-					last_command_handled := last_command_handled or Result
+					Result := not {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
+					last_command_handled := last_command_handled or not Result
 				end
 			end
 		end

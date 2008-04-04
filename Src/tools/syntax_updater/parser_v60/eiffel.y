@@ -393,7 +393,6 @@ Index_list: Index_clause
 				$$ := ast_factory.new_indexing_clause_as (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					$$.update_lookup ($1)
 				end
 			}
 	|	Index_clause Increment_counter Index_list
@@ -401,7 +400,6 @@ Index_list: Index_clause
 				$$ := $3
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
-					$$.update_lookup ($1)
 				end
 			}
 	;
@@ -943,7 +941,7 @@ Parent: Parent_clause ASemi
 	;
 
 Parent_class_type: Class_identifier Generics_opt
-			{ $$ := ast_factory.new_class_type_as ($1, $2, Void) }
+			{ $$ := ast_factory.new_class_type_as ($1, $2) }
 	;
 
 Parent_clause: Parent_class_type
@@ -1201,7 +1199,7 @@ Identifier_list: Identifier_as_lower
 				$$ := ast_factory.new_identifier_list (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier ($$.id_list, $1)
+					ast_factory.reverse_extend_identifier ($$, $1)
 				end
 			}
 	|	Identifier_as_lower TE_COMMA Increment_counter Identifier_list 
@@ -1209,8 +1207,8 @@ Identifier_list: Identifier_as_lower
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier ($$.id_list, $1)
-					ast_factory.reverse_extend_separator ($$.id_list, $2)
+					ast_factory.reverse_extend_identifier ($$, $1)
+					ast_factory.reverse_extend_identifier_separator ($$, $2)
 				end
 			}
 	;
@@ -1481,7 +1479,7 @@ Attached_type: Attached_class_type
 	
 Type_no_id: 
 		Class_identifier Generics
-			{ $$ := new_class_type ($1, $2, Void) }
+			{ $$ := new_class_type ($1, $2) }
 	|	Tuple_type
 			{ $$ := $1 }
 	|	Non_class_type
@@ -1512,17 +1510,37 @@ Non_class_type: TE_EXPANDED Attached_class_type
 	|	TE_BIT Identifier_as_lower
 			{ $$ := ast_factory.new_bits_symbol_as ($2, $1) }
 	|	TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($2, $1, Void) }
+			{ $$ := ast_factory.new_like_id_as ($2, $1) }
 	|	TE_BANG TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($3, $2, $1) }
+			{
+				$$ := ast_factory.new_like_id_as ($3, $2)
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, True, False)
+				end
+			}
 	|	TE_QUESTION TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($3, $2, $1) }
+			{
+				$$ := ast_factory.new_like_id_as ($3, $2)
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, False, True)
+				end
+			}
 	|	TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($2, $1, Void) }
+			{ $$ := ast_factory.new_like_current_as ($2, $1) }
 	|	TE_BANG TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($3, $2, $1) }
+			{
+				$$ := ast_factory.new_like_current_as ($3, $2)
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, True, False)
+				end
+			}
 	|	TE_QUESTION TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($3, $2, $1) }
+			{
+				$$ := ast_factory.new_like_current_as ($3, $2)
+				if $$ /= Void then
+					$$.set_attachment_mark ($1, False, True)
+				end
+			}
 	;
 
 Class_or_tuple_type: Class_type
@@ -1532,15 +1550,15 @@ Class_or_tuple_type: Class_type
 	;
 
 Attached_class_type: Class_identifier Generics_opt
-			{ $$ := new_class_type ($1, $2, Void) }
+			{ $$ := new_class_type ($1, $2) }
 	;
 
 Class_type: Attached_class_type
 			{ $$ := $1 }
 	| TE_BANG Class_identifier Generics_opt
-			{ $$ := new_class_type ($2, $3, $1) }
+			{ $$ := new_class_type ($2, $3) }
 	| TE_QUESTION Class_identifier Generics_opt
-			{ $$ := new_class_type ($2, $3, $1) }
+			{ $$ := new_class_type ($2, $3) }
 	;
 
 Generics_opt: -- Empty
@@ -1589,14 +1607,14 @@ Type_list_impl: Type
 	;
 
 Tuple_type: TE_TUPLE
-			{ $$ := ast_factory.new_class_type_as ($1, Void, Void) }
+			{ $$ := ast_factory.new_class_type_as ($1, Void) }
 	|	TE_TUPLE Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
 			  	last_type_list := ast_factory.new_eiffel_list_type (0)
 				if last_type_list /= Void then
 					last_type_list.set_positions ($4, $5)
 				end
-				$$ := ast_factory.new_class_type_as ($1, last_type_list, Void)
+				$$ := ast_factory.new_class_type_as ($1, last_type_list)
 				last_type_list := Void
 				remove_counter
 				remove_counter2
@@ -1606,7 +1624,7 @@ Tuple_type: TE_TUPLE
 				if $5 /= Void then
 					$5.set_positions ($4, last_rsqure.item)
 				end
-				$$ := ast_factory.new_class_type_as ($1, $5, Void)
+				$$ := ast_factory.new_class_type_as ($1, $5)
 				last_rsqure.remove
 				remove_counter
 				remove_counter2
@@ -1634,7 +1652,7 @@ Actual_parameter_list:	Type TE_RSQURE
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
 					$1.to_upper		
-					$$.reverse_extend (new_class_type ($1, Void, Void))
+					$$.reverse_extend (new_class_type ($1, Void))
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
@@ -1656,7 +1674,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				if $$ /= Void and last_identifier_list /= Void and $1 /= Void then
 					$1.to_lower		
 					last_identifier_list.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
+					ast_factory.reverse_extend_identifier (last_identifier_list, $1)
 					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				end
 				last_identifier_list := Void     
@@ -1671,8 +1689,8 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					if last_identifier_list /= Void then
 						$1.to_lower		
 						last_identifier_list.reverse_extend ($1.name_id)
-						ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
-						ast_factory.reverse_extend_separator (last_identifier_list.id_list, $2)
+						ast_factory.reverse_extend_identifier (last_identifier_list, $1)
+						ast_factory.reverse_extend_identifier_separator (last_identifier_list, $2)
 					end
 					last_identifier_list := Void     
 				end
@@ -1686,7 +1704,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				if $$ /= Void and $1 /= Void and $3 /= Void and last_identifier_list /= Void then
 					$1.to_lower		
 					last_identifier_list.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
+					ast_factory.reverse_extend_identifier (last_identifier_list, $1)
 					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
 				end
 				last_identifier_list := Void
@@ -2613,7 +2631,7 @@ A_precursor: TE_PRECURSOR Parameters
 			{ $$ := ast_factory.new_precursor_as ($1, Void, $2) }
 	|	TE_PRECURSOR TE_LCURLY Class_identifier TE_RCURLY Parameters
 			{
-				temp_class_type_as := ast_factory.new_class_type_as ($3, Void, Void)
+				temp_class_type_as := ast_factory.new_class_type_as ($3, Void)
 				if temp_class_type_as /= Void then
 					temp_class_type_as.set_lcurly_symbol ($2)
 					temp_class_type_as.set_rcurly_symbol ($4)
@@ -2760,16 +2778,7 @@ Class_identifier: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub (last_keyword_as_id_index)
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
-				end
-
-				if last_id_as_value /= Void then
-					last_id_as_value.to_upper
-				end
+				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, False)
 				$$ := last_id_as_value
 			}
 	;
@@ -2791,15 +2800,7 @@ Identifier_as_lower: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub (last_keyword_as_id_index)
-				if has_syntax_warning then
-					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
-				end
-				if last_id_as_value /= Void then
-					last_id_as_value.to_lower
-				end
+				process_id_as_with_existing_stub ($1, last_keyword_as_id_index, True)
 				$$ := last_id_as_value
 			}
 	;

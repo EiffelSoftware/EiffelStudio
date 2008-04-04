@@ -188,7 +188,6 @@ feature -- Access
 			key_name, class_name: WEL_STRING
 			key_size, class_size: INTEGER
 			res: INTEGER
-			done: BOOLEAN
 			l_null: POINTER
 		do
 			key_size := 64

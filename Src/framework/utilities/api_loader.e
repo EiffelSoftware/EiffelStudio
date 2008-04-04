@@ -15,6 +15,7 @@ feature -- Query
 
 	safe_load_api (a_module_name: STRING; a_api_name: STRING): POINTER is
 			-- Safe loading `a_api_name' in `a_module_name' if possible.
+			-- `a_module_name' is case sensitive.
 		require
 			not_void: a_module_name /= Void and then not a_module_name.is_empty
 			not_void: a_api_name /= Void and then not a_api_name.is_empty

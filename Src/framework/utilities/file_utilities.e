@@ -223,7 +223,7 @@ feature {NONE} -- Basic operations
 					loop
 						create l_path_name.make_from_string (l_dn)
 						l_path_name.extend (l_directories.item (i))
-						if {l_path: STRING} l_path_name.string and then is_path_applicable (l_path, a_include, a_exclude) then
+						if {l_path: STRING} l_path_name.string then
 							Result.append_last (scan_for_files_internal (l_path, (a_levels - 1).max (-1), a_include, a_exclude, True))
 						end
 						i := i + 1

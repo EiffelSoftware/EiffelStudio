@@ -170,12 +170,12 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 			compiler_initialization
 
-				-- Initialize external command manager
-			incoming_command_manager_cell.put (create {ES_INCOMING_COMMAND_MANAGER}.make (create {ES_COMMAND_RECEIVER_CALLBACKS}.make))
-
 				-- Create a development window
 			window_manager.create_window
 			first_window := window_manager.last_created_window
+
+				-- Initialize external command manager
+			incoming_command_manager_cell.put (create {ES_INCOMING_COMMAND_MANAGER}.make (create {ES_COMMAND_RECEIVER_CALLBACKS}.make))
 
 				-- If some more arguments were specified, it means that we either asked to retrieve
 				-- an existing project, or to create one.

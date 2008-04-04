@@ -274,10 +274,9 @@ feature {NONE} -- EIS implementation
 							project_searcher.search_project (lt_path, l_system_name, l_system_uuid, l_target_name, l_target_uuid)
 							if project_searcher.project_found and then {lt_project: STRING}project_searcher.found_project then
 								discard_start_dialog := True
+									-- Trying to open the project directly, the starting window is not needed anymore.
 								if starting_dialog /= Void and then not starting_dialog.is_destroyed then
-									l_window := starting_dialog
-								else
-									create l_window
+									starting_dialog.destroy
 								end
 								if project_searcher.found_project_option /= Void and then project_searcher.found_project_option.target.last_location /= Void then
 									l_project_path := project_searcher.found_project_option.target.last_location
@@ -288,6 +287,7 @@ feature {NONE} -- EIS implementation
 								if l_chosen_target = Void then
 									l_chosen_target := l_target_name
 								end
+								l_window := window_manager.last_created_window.window
 								create l_loader.make (l_window)
 								l_loader.set_is_project_location_requested (False)
 								l_loader.open_project_file (lt_project, l_chosen_target, l_project_path, False)

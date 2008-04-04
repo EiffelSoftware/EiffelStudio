@@ -64,16 +64,11 @@ feature -- Initialization
 			-- Launch ec with `ec_action'
 		require
 			is_environment_valid: is_environment_valid
-		local
-			l_wait_ec_start: EV_TIMEOUT
 		do
 			if is_splashing then
 				display_splasher
 			end
 			do_ec_launching
-			create l_wait_ec_start
-			l_wait_ec_start.actions.extend (agent send_command_to_launched_ec_and_exit)
-			l_wait_ec_start.set_interval (5 * 1000)
 		end
 
 feature -- Launching
@@ -178,7 +173,10 @@ feature -- Launching
 					process.redirect_error_to_agent (agent on_output)
 				end
 			else
-				process.set_on_successful_launch_handler (agent do_exit_launcher)
+				if not is_ec_action then
+						-- If `is_ec_action', the program will try exiting when command sending finished.
+					process.set_on_successful_launch_handler (agent do_exit_launcher)
+				end
 			end
 
 			process.set_on_terminate_handler (agent do_exit_launcher)
@@ -201,8 +199,11 @@ feature -- Launching
 				has_exited_timeout.actions.extend (agent exit_if_process_has_exited (process))
 				has_exited_timeout.set_interval (5 * 1000)
 			else
-				is_waiting := False
-				do_exit_launcher
+				if not is_ec_action then
+						-- If `is_ec_action', the program will try exiting when command sending finished.
+					is_waiting := False
+					do_exit_launcher
+				end
 			end
 		end
 
@@ -324,16 +325,35 @@ feature {NONE} -- Command sender
 		end
 
 	send_command_to_launched_ec_and_exit is
-			-- Broadcast `ec_action' as command to EiffelStudio processes.
+			-- Send command to last launched ec and exit.
+			-- If trial exceeds the maximum times, exit.
 		require
 			command_sender_not_void: command_sender /= Void
 		do
 			last_command_handled := False
-			if {lt_action: STRING}ec_action then
-				command_sender.send_command_process (lt_action, eiffel_studio_key, last_launched_ec_pid)
-				last_command_handled := command_sender.last_command_handled
+			debug ("LAUNCHER")
+				print ("Launched process ID: " + last_launched_ec_pid.out + "%N")
 			end
-			exit_launcher
+			if {lt_action: STRING}ec_action and then last_launched_ec_pid > 0 then
+				command_sender.send_command_process (lt_action, eiffel_studio_key, last_launched_ec_pid)
+				command_sent_trial := command_sent_trial + 1
+				last_command_handled := command_sender.last_command_handled
+				if command_send_timeout /= Void and then not command_send_timeout.is_destroyed then
+					command_send_timeout.destroy
+				end
+				if not last_command_handled and not command_sender.last_command_reached and then command_sent_trial < max_command_sent_trial then
+					debug ("LAUNCHER")
+						print ("New timeout...%N")
+					end
+					create command_send_timeout
+					command_send_timeout.actions.extend (agent send_command_to_launched_ec_and_exit)
+					command_send_timeout.set_interval (send_command_interval)
+				else
+					do_exit_launcher
+				end
+			else
+				do_exit_launcher
+			end
 		end
 
 	last_command_handled: BOOLEAN
@@ -351,7 +371,17 @@ feature {NONE} -- Command sender
 	ec_action: STRING
 			-- Command for opened ec.
 
+	command_sent_trial: INTEGER
+			-- Number of trial to send command to newly launched ec.
+
+	max_command_sent_trial: INTEGER = 10
+			-- Max trial of command sending.
+
+	send_command_interval: INTEGER = 3_000
+
 	ec_action_string: STRING = "ECACTION"
+
+	command_send_timeout: EV_TIMEOUT
 
 feature -- Environment
 

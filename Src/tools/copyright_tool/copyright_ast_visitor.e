@@ -45,7 +45,7 @@ feature
 			if l_as.internal_top_indexes /= Void then
 				processing_top_index_clause := true
 				top_index_modified := true
-				last_top_insert_ast := l_as.internal_top_indexes.indexing_keyword
+				last_top_insert_ast := l_as.internal_top_indexes.indexing_keyword (match_list)
 			else
 				l_string := build_top_index
 				l_as.first_token (match_list).prepend_text (l_string, match_list)
@@ -112,7 +112,7 @@ feature
 							index_clauses.extend (l_index_as)
 						end
 						if i <= l_count then
-							safe_process (l_as.separator_list.i_th (i))
+							safe_process (l_as.separator_list_i_th (i, match_list))
 							i := i + 1
 						end
 						l_as.forth
@@ -131,7 +131,7 @@ feature
 					loop
 						safe_process (l_as.item)
 						if i <= l_count then
-							safe_process (l_as.separator_list.i_th (i))
+							safe_process (l_as.separator_list_i_th (i, match_list))
 							i := i + 1
 						end
 						l_as.forth

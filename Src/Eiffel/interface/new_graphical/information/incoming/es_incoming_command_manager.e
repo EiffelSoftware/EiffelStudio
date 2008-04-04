@@ -76,9 +76,6 @@ feature -- Action
 				end
 				command_receiver_callback.on_command_finished
 				Result := command_receiver_callback.command_resolved
-				if command_receiver_callback.discard_start_dialog and then starting_dialog /= Void and then not starting_dialog.is_destroyed then
-					starting_dialog.destroy
-				end
 			end
 		end
 

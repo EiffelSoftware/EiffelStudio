@@ -28,6 +28,11 @@ feature -- Querry
 		deferred
 		end
 
+	last_command_reached: BOOLEAN
+			-- Has last by `send_command_process' really reached the target process?
+		deferred
+		end
+
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

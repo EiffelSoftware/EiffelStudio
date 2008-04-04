@@ -29,6 +29,9 @@ feature -- Querry
 
 	last_command_handled: BOOLEAN
 			-- <precursor>
+			
+	last_command_reached: BOOLEAN
+			-- <precursor>
 
 feature {NONE} -- Implementation
 

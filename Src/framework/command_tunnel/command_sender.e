@@ -46,6 +46,14 @@ feature -- Querry
 			end
 		end
 
+	last_command_reached: BOOLEAN
+			-- See if last command has really reached the target process by `send_command_process'.
+		do
+			if implementation /= Void then
+				Result := implementation.last_command_reached
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: ?COMMAND_SENDER_I

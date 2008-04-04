@@ -53,6 +53,7 @@ feature -- Operation
 		do
 			last_key := a_key
 			last_command_handled := False
+			last_command_reached := False
 			if not a_string.is_empty then
 					-- We add an `ise_command' constants as prefix of the real string sent
 					-- to avoid messages sent by other unknown processes.
@@ -72,6 +73,9 @@ feature -- Operation
 feature {NONE} -- Access
 
 	last_command_handled: BOOLEAN
+			-- <precursor>
+
+	last_command_reached: BOOLEAN
 			-- <precursor>
 
 	last_key: STRING
@@ -136,6 +140,7 @@ feature {NONE} -- Implementation
 					if {lt_key: STRING}last_key and then last_copydata /= default_pointer and then lt_key.is_equal (l_string) then
 						last_command_handled := {WEL_API}.send_message_result_boolean (hwnd, {WEL_WM_CONSTANTS}.WM_COPYDATA, default_pointer, last_copydata)
 							-- The window of the process has been found, stop enumerating.
+						last_command_reached := True
 						Result := False
 					end
 				end

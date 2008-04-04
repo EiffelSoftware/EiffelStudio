@@ -16,7 +16,8 @@ inherit
 			make, new_splasher,
 			exit_launcher, do_exit_launcher,
 			do_ec_launching,
-			close_splasher
+			close_splasher,
+			launch_ec_with_action
 		end
 
 	EV_APPLICATION
@@ -67,6 +68,13 @@ feature {NONE} -- Creation
 			create timeout.make_with_interval (splash_delay)
 			timeout.actions.extend (agent exit_launcher)
 			timeout.actions.extend_kamikaze (agent timeout.destroy)
+		end
+
+	launch_ec_with_action is
+			-- <Precursor>
+		do
+			Precursor
+			post_launch_actions.extend_kamikaze (agent send_command_to_launched_ec_and_exit)
 		end
 
 	exit_launcher is

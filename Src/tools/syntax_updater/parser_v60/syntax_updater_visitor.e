@@ -40,32 +40,35 @@ feature -- AST visiting
 
 	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
 			-- Process `l_as'.
+		local
+			l_tilda: SYMBOL_AS
 		do
 			is_updated := True
 			process_following_breaks
 			context.add_string ("agent ")
+			l_tilda := l_as.tilda_symbol (match_list)
 			if l_as.target /= Void then
-				safe_process (l_as.lparan_symbol)
+				safe_process (l_as.lparan_symbol (match_list))
 				l_as.target.process (Current)
-				safe_process (l_as.rparan_symbol)
+				safe_process (l_as.rparan_symbol (match_list))
 				remove_following_spaces
-				if l_as.tilda_symbol /= Void then
-					if l_as.tilda_symbol.code = {EIFFEL_TOKENS}.te_curlytilde then
+				if l_tilda /= Void then
+					if l_tilda.code = {EIFFEL_TOKENS}.te_curlytilde then
 						context.add_string ("}.")
 					else
 						context.add_string (".")
 					end
-					process_leading_leaves (l_as.tilda_symbol.index)
-					last_index := l_as.tilda_symbol.index
+					process_leading_leaves (l_as.tilda_symbol_index)
+					last_index := l_as.tilda_symbol_index
 				else
 					context.add_string (".")
 				end
-			elseif l_as.tilda_symbol /= Void then
-				process_leading_leaves (l_as.tilda_symbol.index)
-				if l_as.tilda_symbol.code = {EIFFEL_TOKENS}.te_curlytilde then
+			elseif l_tilda /= Void then
+				process_leading_leaves (l_as.tilda_symbol_index)
+				if l_tilda.code = {EIFFEL_TOKENS}.te_curlytilde then
 					context.add_string ("}")
 				end
-				last_index := l_as.tilda_symbol.index
+				last_index := l_as.tilda_symbol_index
 			end
 			remove_following_spaces
 			safe_process (l_as.feature_name)
@@ -132,16 +135,18 @@ feature -- AST visiting
 	process_create_as (l_as: CREATE_AS) is
 		local
 			l_str: STRING
+			l_keyword: KEYWORD_AS
 		do
-			if l_as.create_creation_keyword /= Void then
-				l_str := l_as.create_creation_keyword.literal_text (match_list)
+			l_keyword := l_as.create_creation_keyword (match_list)
+			if l_keyword /= Void then
+				l_str := l_keyword.literal_text (match_list)
 				if l_str.is_case_insensitive_equal ("creation") then
 					is_updated := True
-					process_leading_leaves (l_as.create_creation_keyword.index)
-					last_index := l_as.create_creation_keyword.index
+					process_leading_leaves (l_as.create_creation_keyword_index)
+					last_index := l_as.create_creation_keyword_index
 					context.add_string ("create")
 				else
-					l_as.create_creation_keyword.process (Current)
+					l_keyword.process (Current)
 				end
 			end
 			safe_process (l_as.clients)
@@ -151,17 +156,17 @@ feature -- AST visiting
 	process_static_access_as (l_as: STATIC_ACCESS_AS) is
 			-- Process `l_as'.
 		do
-			if l_as.feature_keyword /= Void then
+			if l_as.feature_keyword (match_list) /= Void then
 					-- Process the previous white spaces, ignore `feature' and remove
 					-- remaining spaces.
 				is_updated := True
-				process_leading_leaves (l_as.feature_keyword.index)
-				last_index := l_as.feature_keyword.index
+				process_leading_leaves (l_as.feature_keyword_index)
+				last_index := l_as.feature_keyword_index
 				remove_following_spaces
 			end
 				-- Normal processing
 			safe_process (l_as.class_type)
-			safe_process (l_as.dot_symbol)
+			safe_process (l_as.dot_symbol (match_list))
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_parameters)
 		end

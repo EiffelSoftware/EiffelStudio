@@ -15,7 +15,8 @@ inherit
 			generics, has_associated_class, has_associated_class_type, instantiated_in, duplicate,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
-			set_attached_mark, set_detachable_mark, set_is_implicitly_attached, description, c_type, is_explicit,
+			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
+			unset_is_implicitly_attached, description, c_type, is_explicit,
 			generated_id, generate_cid, generate_cid_array, generate_cid_init,
 			make_gen_type_byte_code, generate_gen_type_il, internal_is_valid_for_class,
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
@@ -343,13 +344,17 @@ feature {COMPILER_EXPORTER} -- Modification
 					conformance_type := a
 				end
 			elseif has_detachable_mark then
-				if not a.is_expanded and then a.is_attached then
+				if not a.is_expanded and then (a.is_attached or else a.is_implicitly_attached) then
 					conformance_type := a.as_detachable
 				else
 					conformance_type := a
 				end
 			else
-				conformance_type := a
+				if not is_implicitly_attached and then a.is_implicitly_attached then
+					conformance_type := a.as_implicitly_detachable
+				else
+					conformance_type := a
+				end
 			end
 			actual_type := Current
 		end
@@ -367,7 +372,7 @@ feature {COMPILER_EXPORTER} -- Modification
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			Precursor
-			if not is_expanded and then conformance_type.is_attached then
+			if not is_expanded and then (conformance_type.is_attached or else conformance_type.is_implicitly_attached) then
 				conformance_type := conformance_type.as_detachable
 			end
 		end
@@ -378,8 +383,19 @@ feature {COMPILER_EXPORTER} -- Modification
 		do
 			Precursor
 			a := conformance_type
-			if a /= Void and then not a.is_attached then
+			if a /= Void and then not a.is_attached and then not a.is_implicitly_attached then
 				conformance_type := a.as_implicitly_attached
+			end
+		end
+
+	unset_is_implicitly_attached
+		local
+			a: like conformance_type
+		do
+			Precursor
+			a := conformance_type
+			if a /= Void and then not a.is_attached and then a.is_implicitly_attached then
+				conformance_type := a.as_implicitly_detachable
 			end
 		end
 
@@ -423,9 +439,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 					Result := Result.as_attached
 				end
 			elseif has_detachable_mark then
-				if not Result.is_expanded and then Result.is_attached then
+				if not Result.is_expanded and then (Result.is_attached or else Result.is_implicitly_attached) then
 					Result := Result.as_detachable
 				end
+			elseif not is_implicitly_attached and then Result.is_implicitly_attached then
+				Result := Result.as_implicitly_detachable
 			end
 		end
 
@@ -456,9 +474,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 					Result := Result.as_attached
 				end
 			elseif has_detachable_mark then
-				if not Result.is_expanded and then Result.is_attached then
+				if not Result.is_expanded and then (Result.is_attached or else Result.is_implicitly_attached) then
 					Result := Result.as_detachable
 				end
+			elseif not is_implicitly_attached and then Result.is_implicitly_attached then
+				Result := Result.as_implicitly_detachable
 			end
 		end
 

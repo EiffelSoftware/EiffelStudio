@@ -41,6 +41,7 @@ inherit
 			set_attached_mark,
 			set_detachable_mark,
 			set_is_implicitly_attached,
+			unset_is_implicitly_attached,
 			description,
 			c_type,
 			generics,
@@ -72,8 +73,10 @@ feature -- Properties
 			Result := actual_type.conformance_type
 			if has_attached_mark and then not Result.is_attached then
 				Result := Result.as_attached
-			elseif has_detachable_mark and then Result.is_attached then
+			elseif has_detachable_mark and then (Result.is_attached or else Result.is_implicitly_attached) then
 				Result := Result.as_detachable
+			elseif not is_implicitly_attached and then Result.is_implicitly_attached then
+				Result := Result.as_implicitly_detachable
 			end
 		end
 
@@ -228,13 +231,17 @@ feature -- Primitives
 					actual_type := a
 				end
 			elseif has_detachable_mark then
-				if not a.is_expanded and then a.is_attached then
+				if not a.is_expanded and then (a.is_attached or else a.is_implicitly_attached) then
 					actual_type := a.as_detachable
 				else
 					actual_type := a
 				end
 			else
-				actual_type := a
+				if not is_implicitly_attached and then a.is_implicitly_attached then
+					actual_type := a.as_implicitly_detachable
+				else
+					actual_type := a
+				end
 			end
 		end
 
@@ -311,7 +318,7 @@ feature -- Modification
 		do
 			Precursor
 			a := actual_type
-			if not is_expanded and then a /= Void and then actual_type.is_attached then
+			if not is_expanded and then a /= Void and then (a.is_attached or else a.is_implicitly_attached) then
 				actual_type := a.as_detachable
 			end
 		end
@@ -322,8 +329,19 @@ feature -- Modification
 		do
 			Precursor
 			a := actual_type
-			if a /= Void and then not a.is_attached then
+			if a /= Void and then not a.is_attached and then not a.is_implicitly_attached then
 				actual_type := a.as_implicitly_attached
+			end
+		end
+
+	unset_is_implicitly_attached
+		local
+			a: like actual_type
+		do
+			Precursor
+			a := actual_type
+			if a /= Void and then not a.is_attached and then a.is_implicitly_attached then
+				actual_type := a.as_implicitly_detachable
 			end
 		end
 

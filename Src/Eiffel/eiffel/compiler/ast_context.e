@@ -104,7 +104,7 @@ feature -- Access
 	used_local_names: SEARCH_TABLE [INTEGER]
 			-- Local names that are already used by enclosing features
 
-	used_object_test_local_names: SEARCH_TABLE [INTEGER]
+	used_object_test_local_names: SEARCH_TABLE [INTEGER_32]
 			-- Names of object-test locals used by enclosing features
 
 	set_used_argument_names (table: like used_argument_names) is
@@ -119,7 +119,7 @@ feature -- Access
 			used_local_names := table
 		end
 
-	is_name_used (id: INTEGER): BOOLEAN is
+	is_name_used (id: INTEGER_32): BOOLEAN is
 			-- Is the name with id `id' already used in an enclosing feature?
 		do
 			if used_argument_names /= Void then
@@ -133,7 +133,7 @@ feature -- Access
 			end
 		end
 
-	is_object_test_local_used (id: INTEGER): BOOLEAN
+	is_object_test_local_used (id: INTEGER_32): BOOLEAN
 			-- Is the name `id' already used in an object test of an enclosing feature?
 		do
 			Result := used_object_test_local_names.has (id)
@@ -141,8 +141,11 @@ feature -- Access
 
 feature {NONE} -- Local scopes
 
-	object_test_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
+	object_test_locals: HASH_TABLE [LOCAL_INFO, INTEGER_32]
 			-- Types of object-test locals indexes by their name id
+
+	result_id: INTEGER_32 = 0x7fffffff
+			-- Name ID that is used for the special entity "Result"
 
 feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 
@@ -152,7 +155,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 			Result := object_test_locals.count + 1
 		end
 
-	add_object_test_local (l: LOCAL_INFO; id: INTEGER)
+	add_object_test_local (l: LOCAL_INFO; id: INTEGER_32)
 			-- Add a new object test local of type `t' with name `id'.
 		require
 			l_attached: l /= Void
@@ -161,7 +164,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 			used_object_test_local_names.put (id)
 		end
 
-	object_test_local (id: INTEGER): LOCAL_INFO
+	object_test_local (id: INTEGER_32): LOCAL_INFO
 			-- Information about object-test local of name `id' if such
 			-- a local is currently in scope
 		do
@@ -170,16 +173,54 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 			end
 		end
 
-	is_argument_attached (id: INTEGER): BOOLEAN
+feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status report
+
+	is_argument_attached (id: INTEGER_32): BOOLEAN
 			-- Is argument `id' in the scope where it is considered attached?
 		do
 			Result := scopes.has (id)
 		end
 
+	is_local_attached (id: INTEGER_32): BOOLEAN
+			-- Is local `id' in the scope where it is considered attached?
+		local
+			i: INTEGER
+			e: INTEGER_32
+		do
+			from
+				i := scopes.count
+			until
+				i <= 0
+			loop
+				e := scopes [i]
+				if e = - id then
+						-- Local cannot be considered attached
+					i := 0
+				elseif e = id then
+						-- Local is attached
+					Result := True
+					i := 0
+				end
+				i := i - 1
+			end
+		end
+
+	is_result_attached: BOOLEAN
+			-- Is special entity "Result" in the scope where it is considered attached?
+		do
+			Result := is_local_attached (result_id)
+		end
+
 feature {AST_CONTEXT} -- Local scopes
 
-	scopes: STACK [INTEGER_32]
+	scopes: ARRAYED_LIST [INTEGER_32]
 			-- Currently active scopes
+
+	scope_count: INTEGER
+			-- Number of active scopes
+		do
+			Result := scopes.count
+		end
 
 feature -- Scope state
 
@@ -192,51 +233,78 @@ feature -- Scope state
 
 	set_scope (s: like scope)
 			-- Reset `scope' to the previously recorded scope ID `s'.
-		do
-			remove_scopes (scope_count - s)
-		end
-
-feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes
-
-	scope_count: INTEGER
-			-- Number of active scopes
-		do
-			Result := scopes.count
-		end
-
-	add_argument_scope (id: INTEGER)
-			-- Add a scope for an argument identified by `id'.
-		do
-			scopes.put (id)
-		ensure
-			scope_count_inremented: scope_count = old scope_count +1
-		end
-
-	add_object_test_scope (id: INTEGER)
-			-- Add a scope for an object-test local identified by `id'.
-		do
-			scopes.put (id)
-		ensure
-			scope_count_inremented: scope_count = old scope_count +1
-		end
-
-	remove_scopes (n: like scope_count)
-			-- Remove `n' last scopes from the context.
 		require
-			valid_n: 0 <= n and n <= scope_count
+			valid_s: s <= scope
 		local
 			i: like scope_count
 		do
 			from
-				i := n
+				i := scope_count - s
 			until
 				i <= 0
 			loop
+				scopes.finish
 				scopes.remove
 				i := i - 1
 			end
 		ensure
-			scopes_updated: scopes.count = old scopes.count - n
+			scope_set: scope = s
+		end
+
+feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
+
+	add_argument_scope (id: INTEGER_32)
+			-- Add a scope for an argument identified by `id'.
+		do
+			scopes.extend (id)
+		ensure
+			scope_count_inremented: scope_count = old scope_count + 1
+		end
+
+	add_local_scope (id: INTEGER_32)
+			-- Add a scope for a local identified by `id'.
+		do
+			scopes.extend (id)
+		ensure
+			scope_count_inremented: scope_count = old scope_count + 1
+		end
+
+	add_result_scope
+			-- Add a scope for the special entity "Result".
+		do
+			add_local_scope (result_id)
+		ensure
+			scope_count_inremented: scope_count = old scope_count + 1
+		end
+
+feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes: modification
+
+	add_object_test_scope (id: INTEGER_32)
+			-- Add a scope for an object-test local identified by `id'.
+		do
+			scopes.extend (id)
+		ensure
+			scope_count_inremented: scope_count = old scope_count +1
+		end
+
+feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
+
+	remove_local_scope (id: INTEGER_32)
+			-- Mark that an attached scope of a local identified by `id' is terminated.
+		do
+			if is_local_attached (id) then
+				scopes.extend (-id)
+			end
+		ensure
+			local_scope_removed: not is_local_attached (id)
+		end
+
+	remove_result_scope
+			-- Mark that an attached scope of the special entity "Result" is terminated.
+		do
+			remove_local_scope (result_id)
+		ensure
+			result_scope_removed: not is_result_attached
 		end
 
 feature -- Variable context
@@ -272,7 +340,9 @@ feature -- Setting
 				end
 				create {AST_VOID_SAFE_VARIABLE_CONTEXT} variables
 			else
-				if not current_class_type.is_attached then
+				if not current_class_type.is_attached and then
+					not current_class_type.is_implicitly_attached
+				then
 						-- Current is always attached
 					current_class_type.set_is_implicitly_attached
 				end

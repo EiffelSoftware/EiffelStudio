@@ -11,7 +11,9 @@ inherit
 	TYPE_A
 		redefine
 			as_implicitly_attached,
+			as_implicitly_detachable,
 			is_attached,
+			is_implicitly_attached,
 			set_attached_mark,
 			set_detachable_mark
 		end
@@ -41,8 +43,6 @@ feature -- Status report
 		do
 			Result := other.is_attached implies is_implicitly_attached
 		end
-
-feature {ATTACHABLE_TYPE_A} -- Status report
 
 	is_implicitly_attached: BOOLEAN
 			-- Is type (implicitly) attached?
@@ -89,6 +89,18 @@ feature -- Modification
 			is_implicitly_attached: is_implicitly_attached
 		end
 
+	unset_is_implicitly_attached
+			-- Mark type as being implicitly detachable, so that
+			-- it is not allowed to be attached to an attached type.
+		require
+			not_is_attached: not is_attached
+			is_implicitly_attached: is_implicitly_attached
+		do
+			attachment_bits := attachment_bits.bit_xor (is_implicitly_attached_mask)
+		ensure
+			not_is_implicitly_attached: not is_implicitly_attached
+		end
+
 feature -- Comparison
 
 	has_same_attachment_marks (other: ATTACHABLE_TYPE_A): BOOLEAN
@@ -115,6 +127,17 @@ feature -- Duplication
 		ensure then
 			result_is_implicitly_attached: Result.is_implicitly_attached
 			result_is_attachable_to_attached: Result.is_attachable_to (as_attached)
+		end
+
+	as_implicitly_detachable: like Current
+			-- Implicitly detachable type
+		do
+			if not is_attached and then is_implicitly_attached then
+				Result := duplicate
+				Result.unset_is_implicitly_attached
+			else
+				Result := Current
+			end
 		end
 
 feature {NONE} -- Attachment properties

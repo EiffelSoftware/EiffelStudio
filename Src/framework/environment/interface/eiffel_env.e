@@ -1803,7 +1803,7 @@ feature {NONE} -- Externals
 
 feature -- Preferences
 
-	Eiffel_preferences: !STRING_8
+	Eiffel_preferences: STRING_8
 			-- Preferences location
 		require
 			is_valid_environment: is_valid_environment

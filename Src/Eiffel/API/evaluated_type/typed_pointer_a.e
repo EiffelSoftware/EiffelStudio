@@ -32,7 +32,8 @@ inherit
 
 	GEN_TYPE_A
 		undefine
-			meta_type, is_basic, feature_type, description, instantiated_description,
+			meta_type, is_basic,
+			description, instantiated_description,
 			generate_cecil_value, sk_value, element_type, cl_make
 		redefine
 			is_typed_pointer, c_type, associated_class, process, reference_type,
@@ -123,7 +124,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

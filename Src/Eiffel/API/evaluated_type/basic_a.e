@@ -13,7 +13,7 @@ inherit
 		undefine
 			c_type
 		redefine
-			feature_type, instantiation_in, instantiation_of,
+			instantiation_in, instantiation_of,
 			meta_type, is_basic, reference_type,
 			good_generics, internal_is_valid_for_class, error_generics, description,
 			generic_il_type_name, hash_code, internal_generic_derivation,
@@ -183,11 +183,11 @@ feature {TYPE_A} -- Helpers
 
 feature {COMPILER_EXPORTER}
 
-	feature_type (f: FEATURE_I): TYPE_A is
-			-- Type of the feature `f' in the context of Current
-		do
-			Result ?= f.type
-		end
+--	feature_type (f: FEATURE_I): TYPE_A is
+--			-- Type of the feature `f' in the context of Current
+--		do
+--			Result ?= f.type
+--		end
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiated type in the context of `type'
@@ -216,7 +216,7 @@ invariant
 	is_expanded: is_expanded
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

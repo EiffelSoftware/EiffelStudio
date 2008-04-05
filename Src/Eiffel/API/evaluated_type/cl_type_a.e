@@ -757,20 +757,6 @@ feature {COMPILER_EXPORTER} -- Conformance
 
 feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
-	feature_type (f: FEATURE_I): TYPE_A is
-			-- Instantiation of the feature type in the context of
-			-- current
-		require
-			good_argument: f /= Void
-			associated_class.conform_to (f.written_class)
-			feature_type_is_solved: f.type.is_solved
-		local
-			feat_type: TYPE_A
-		do
-			feat_type ?= f.type
-			Result := feat_type.instantiation_in (Current, f.written_in)
-		end
-
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in `written_id'

@@ -1,43 +1,39 @@
 indexing
-	description: "Detector of local scopes for conjunctive expression."
+	description: "Detector of local scopes for an associative expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	AST_SCOPE_CONJUNCTIVE_EXPRESSION
+deferred class AST_SCOPE_EXPRESSION
 
 inherit
-	AST_SCOPE_EXPRESSION
+	AST_SCOPE_MATCHER
 		redefine
-			process_bin_and_as,
-			process_bin_and_then_as
+			process_paran_as
 		end
 
 feature {AST_EIFFEL} -- Visitor pattern
 
-	process_bin_and_as (l_as: BIN_AND_AS)
+	process_paran_as (l_as: PARAN_AS)
+		local
+			old_is_nested: BOOLEAN
 		do
-			if is_nested then
-				l_as.left.process (Current)
-			end
-			l_as.right.process (Current)
+			old_is_nested := is_nested
+			is_nested := True
+			Precursor (l_as)
+			is_nested := old_is_nested
 		end
 
-	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
-		do
-			l_as.left.process (Current)
-			l_as.right.process (Current)
-		end
+feature {NONE} -- Status report
 
-feature {NONE} -- Status
-
-	is_negation_expected: BOOLEAN is False;
-			-- Is negated value of a boolean expression expected?
+	is_nested: BOOLEAN;
+			-- Is current expression nested, so that associativity rules
+			-- should not be taken into account that is important for
+			-- strict operators?
 
 indexing
-	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
+	copyright:	"Copyright (c) 2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

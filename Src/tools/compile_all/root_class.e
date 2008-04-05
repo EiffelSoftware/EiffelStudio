@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 		do
 				-- create state for conditioning
 			create l_version.make (1)
-			l_version.force (create {CONF_VERSION}.make_version (eiffel_layout.major_version, eiffel_layout.minor_version, 0, 0), v_compiler)
+			l_version.force (create {CONF_VERSION}.make_version ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version, {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version, 0, 0), v_compiler)
 			create l_state.make (pf_windows, build_workbench, a_target.setting_multithreaded, a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
 
 				-- setup ISE_PRECOMP

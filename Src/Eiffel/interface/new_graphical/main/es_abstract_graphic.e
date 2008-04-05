@@ -250,6 +250,10 @@ feature {NONE} -- Exception handling
 		do
 				-- Attempt to salvage any open files
 			try_to_save_files
+
+				-- Attempts to store session data
+			try_to_save_session_data
+
 				-- Raise exception dialog
 			clean_exit (a_exception.exception_trace)
 		end
@@ -284,6 +288,26 @@ feature {NONE} -- Exception handling
 				end
 			else
 				prompts.show_error_prompt (warning_messages.w_backup_failed, parent_for_dialog, Void)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	try_to_save_session_data
+			-- In case of a crash, try to store the session data.
+		local
+			l_service: !SERVICE_CONSUMER [SESSION_MANAGER_S]
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_service
+				if l_service.is_service_available and then l_service.service.is_interface_usable then
+						-- Stores all session data.
+					l_service.service.store_all
+				end
+			else
+				prompts.show_error_prompt (interface_messages.e_save_session_data_failed, parent_for_dialog, Void)
 			end
 		rescue
 			retried := True

@@ -13,12 +13,17 @@ class
 inherit
 	ES_FEATURE_CONTRACT_EDITOR_CONTEXT
 
-feature {NONE} -- Factory
+feature {NONE} -- Contracts
 
-	create_text_modifier: !ES_POSTCONDITION_CONTRACT_TEXT_MODIFIER
+	contracts_for_feature (a_feature: !FEATURE_AS): ?EIFFEL_LIST [TAGGED_AS]
 			-- <Precursor>
+		local
+			l_routine: ?ROUTINE_AS
 		do
-			create Result.make (context_feature, context_class)
+			l_routine ?= a_feature.body.content
+			if l_routine /= Void and then l_routine.has_postcondition then
+				Result := l_routine.postcondition.assertions
+			end
 		end
 
 feature {NONE} -- Population
@@ -38,12 +43,21 @@ feature {NONE} -- Population
 			end
 		end
 
-feature -- Query
+feature {NONE} -- Factory
 
-	has_contracts_in_class (a_class: !CLASS_C): BOOLEAN
+	create_text_modifier: !ES_POSTCONDITION_CONTRACT_TEXT_MODIFIER
 			-- <Precursor>
 		do
-			Result := context_feature.has_postcondition
+			create Result.make (context_feature, context_class)
+		end
+
+	create_parent_text_modifier (a_parent: !CLASS_C): !ES_POSTCONDITION_CONTRACT_TEXT_MODIFIER
+			-- <Precursor>
+		local
+			l_class_i: !CLASS_I
+		do
+			l_class_i ?= a_parent.lace_class
+			create Result.make (context_feature, l_class_i)
 		end
 
 ;indexing

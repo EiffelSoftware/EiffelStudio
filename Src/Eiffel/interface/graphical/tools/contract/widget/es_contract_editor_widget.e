@@ -11,7 +11,7 @@ class
 	ES_CONTRACT_EDITOR_WIDGET
 
 inherit
-	ES_WIDGET [ES_GRID]
+	ES_WINDOW_WIDGET [ES_GRID]
 		redefine
 			on_before_initialize
 		end
@@ -34,12 +34,22 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			l_col: EV_GRID_COLUMN
+			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
+			create l_support.make_with_grid (edit_contract_grid)
+			l_support.synchronize_color_or_font_change_with_editor
+			l_support.enable_grid_item_pnd_support
+			l_support.enable_ctrl_right_click_to_open_new_window
+			l_support.set_context_menu_factory_function (agent (develop_window.menus).context_menu_factory)
+			auto_recycle (l_support)
+
 			edit_contract_grid.set_column_count_to (context_column)
 			edit_contract_grid.enable_auto_size_best_fit_column (contract_column)
 			edit_contract_grid.enable_tree
 			edit_contract_grid.enable_single_row_selection
 			edit_contract_grid.set_subrow_indent (tab_indent_spacing.as_integer_32)
+			edit_contract_grid.hide_tree_node_connectors
+			edit_contract_grid.disable_row_height_fixed
 
 				-- Colors
 			edit_contract_grid.set_focused_selection_color (colors.grid_focus_selection_color)
@@ -58,12 +68,12 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			create commit_edit_actions
-			Precursor {ES_WIDGET}
+			Precursor
 		end
 
 feature -- Access
 
-	context: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSC_STONE] assign set_context
+	context: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE] assign set_context
 			-- Contract editor context information
 
 feature {NONE} -- Access
@@ -109,6 +119,11 @@ feature -- Status report
 			context_attached: Result implies context /= Void
 		end
 
+feature {NONE} -- Status report
+
+	is_showing_all_rows: BOOLEAN = False
+			-- Indicates if all rows should be shown, even if there are not contracts.
+
 feature {NONE} -- Helpers
 
 	frozen context_printer: !ERROR_CONTEXT_PRINTER
@@ -117,10 +132,16 @@ feature {NONE} -- Helpers
 			create Result
 		end
 
-	frozen pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+	frozen pixmap_factory: !EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 			-- Pixmap factory
 		once
 			create Result
+		end
+
+	frozen token_scanner: !EDITOR_EIFFEL_SCANNER
+			-- Scanner used to tokenize Eiffel code
+		once
+			create Result.make
 		end
 
 feature {NONE} -- User interface elements
@@ -141,8 +162,8 @@ feature -- Basic operations
 			has_context: has_context
 		local
 			l_grid: !like edit_contract_grid
-			l_parents: !DS_ARRAYED_LIST [!CLASS_C]
-			l_parent: !CLASS_C
+			l_parents: !DS_LIST [CLASS_C]
+			l_parent: !CLASS_I
 			l_row: !EV_GRID_ROW
 			l_col: EV_GRID_COLUMN
 			i: INTEGER
@@ -157,16 +178,16 @@ feature -- Basic operations
 			l_grid.column (context_column).set_width (16)
 
 			if {l_context: !like context} context then
-					-- Add first row for edits
+					-- Extract contracts for current class
 				l_grid.set_row_count_to (l_grid.row_count + 1)
 				l_row ?= l_grid.row (1)
-				populate_editable_contracts_row (l_context.context_class, l_row, l_context)
+				populate_contracts_row (l_context.context_class, l_row, l_context)
 
 					-- Traverse through parents
 				l_parents := l_context.context_parents
 				if not l_parents.is_empty then
 					from l_parents.start until l_parents.after loop
-						l_parent := l_parents.item_for_iteration
+						l_parent ?= l_parents.item_for_iteration.lace_class
 						i := l_grid.row_count + 1
 						l_grid.set_row_count_to (i)
 						l_row ?= l_grid.row (i)
@@ -192,24 +213,7 @@ feature -- Actions
 
 feature {NONE} -- Population
 
-	populate_editable_contracts_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context)
-			-- Populates an editable grid row for a given class.
-			--| Note: There should only be one editable row (for now), which is the top most row.
-			--
-			-- `a_class': Current class where the context feature resides.
-			-- `a_row': The grid row to populate with the current contract information.
-			-- `a_context': The editor context used to populate the editable contracts.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_is_parented: a_row.parent = edit_contract_grid
-			a_context_has_stone: a_context.has_stone
-		do
-			populate_contract_header_row (a_class, a_row, a_context)
-		end
-
-	populate_contracts_row (a_class: !CLASS_C; a_row: !EV_GRID_ROW; a_context: !like context) is
+	populate_contracts_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context) is
 			-- Populates a inherited read-only grid row for a given class.
 			--
 			-- `a_class': Current class where the context feature resides.
@@ -222,103 +226,164 @@ feature {NONE} -- Population
 			a_row_is_parented: a_row.parent = edit_contract_grid
 			a_context_has_stone: a_context.has_stone
 		local
-			l_assertions: ?ASSERTION_SERVER
-			l_invariants: ?INVARIANT_SERVER
-			l_chain: ?CHAINED_ASSERTIONS
-			l_adapter: !FEATURE_ADAPTER
-			l_old_class: CLASS_C
-			l_e_feature: E_FEATURE
-			l_feature_i: FEATURE_I
-			l_decorator: TEXT_FORMATTER_DECORATOR
-			l_formatter: EB_EDITOR_TOKEN_GENERATOR
-			l_invariant: INVARIANT_AS
-			l_tagged_list: EIFFEL_LIST [TAGGED_AS]
-			l_tagged: TAGGED_AS
-			l_row: EV_GRID_ROW
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-
-			l_invariant_modifier: ?ES_INVARIANT_CONTRACT_TEXT_MODIFIER
 			l_grid: like edit_contract_grid
-			l_tokens: !LINKED_LIST [EDITOR_TOKEN]
+			l_editable: BOOLEAN
+			l_mod_contract: TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+			l_contracts: !DS_LIST [TAGGED_AS]
+			l_tagged: TAGGED_AS
+			l_decorator: TEXT_FORMATTER_DECORATOR
+			l_token_generator: EB_EDITOR_TOKEN_GENERATOR
+			l_row: EV_GRID_ROW
+			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_label_item: EV_GRID_LABEL_ITEM
+			l_item: EV_GRID_ITEM
+			l_scanner: ?like token_scanner
+			l_tagged_text: STRING
+			l_editable_lines: LIST [STRING]
+			l_editor_tokens: LINKED_LIST [EDITOR_TOKEN]
+			l_line: EIFFEL_EDITOR_LINE
+			l_left_border: INTEGER
+			l_shared_writer: EB_SHARED_WRITER
+			l_fonts: SPECIAL [EV_FONT]
 			i: INTEGER
 		do
+			populate_contract_header_row (a_class, a_row, a_context)
+
 			l_grid := edit_contract_grid
-			if {l_class: !CLASS_I} a_class.lace_class then
-				populate_contract_header_row (l_class, a_row, a_context)
+
+				-- Retrieve context information
+			l_editable := a_context.context_class = a_class and not a_class.is_read_only
+			l_mod_contract := a_context.contracts_for_class (a_class, l_editable)
+
+				-- Retrieve width of left indent for items
+			l_left_border := (create {EDITOR_TOKEN_TABULATION}.make (1)).width
+
+				-- Set row's data to include the class text modifier
+			if l_editable then
+					-- For now we only allow edits on the context class/feature.
+				a_row.set_data (l_mod_contract.modifier)
+				l_scanner := token_scanner
+				l_scanner.reset
+				l_scanner.set_current_class (a_class.config_class)
+			else
+				a_row.set_background_color (colors.grid_read_only_background_color)
 			end
 
-			l_old_class := system.current_class
-			system.set_current_class (a_class)
-
-			if {l_context: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
-				if a_class.has_feature_table then
-						-- Attempt to locate original feature.
-					l_feature_i := a_class.feature_table.feature_of_rout_id_set (l_context.context_feature.rout_id_set)
-					if l_feature_i /= Void then
-						l_e_feature := l_feature_i.api_feature (a_class.class_id)
-						create l_assertions.make_for_feature (l_feature_i, l_feature_i.body)
-						l_chain := l_assertions.current_assertion
-					end
-				end
-			else
-					-- Class invariant contracts.
-				l_invariant_modifier ?= context.text_modifier
-				if l_invariant_modifier /= Void then
-					if not l_invariant_modifier.is_prepared then
-						l_invariant_modifier.prepare
-					end
-					l_invariant := l_invariant_modifier.contract_ast
+				-- Populate contracts, if any
+			l_contracts := l_mod_contract.contracts
+			if not l_contracts.is_empty then
+				a_row.insert_subrows (l_contracts.count, 1)
+				if not l_editable then
+						-- Create token generator for use later.
+					create l_token_generator.make
 				end
 
-				if l_invariant = Void then
-						-- Unparsed AST, use stored AST instead
-					l_invariant := a_class.invariant_ast
-				end
-				if l_invariant /= Void then
-						-- Create formatter and decorator for tokenizing AST.
-					create l_formatter.make
-					l_formatter.enable_multiline
-					create l_decorator.make (a_class, l_formatter)
+				from
+					i := 1
+					l_contracts.start
+				until
+					l_contracts.after
+				loop
+					l_tagged := l_contracts.item_for_iteration
+					check l_tagged_attached: l_tagged /= Void end
+					if l_tagged /= Void then
+						l_row := a_row.subrow (i)
 
-						-- Extract invariants.
-					l_tagged_list := l_invariant.assertion_list
-					if l_tagged_list /= Void and then not l_tagged_list.is_empty then
-						a_row.insert_subrows (l_tagged_list.count, 1)
+						if l_editable then
+							check
+								l_scanner_attached: l_scanner /= Void
+								ast_match_list_attached: l_mod_contract.modifier.ast_match_list /= Void
+							end
+							l_tagged_text := l_tagged.text (l_mod_contract.modifier.ast_match_list)
+							l_editable_lines := l_tagged_text.split ('%N')
 
-						from i := 1 l_tagged_list.start until l_tagged_list.after loop
-							l_tagged := l_tagged_list.item
-							l_row := a_row.subrow (i)
+								-- Editable items are not clickable. This is because the AST data is live, and un-annotated.
+								-- However, we'll do our best to make them a pretty as possible.
+								-- FIXME: Implement clickable behavior like the editor.
+							create l_editor_tokens.make
 
+								-- Iterate through the lines to build a token list
+							from l_editable_lines.start until l_editable_lines.after loop
+								if l_editable_lines.islast then
+									l_scanner.execute (l_editable_lines.item)
+								else
+									l_scanner.execute (l_editable_lines.item + "%N")
+								end
+								create l_line.make_from_lexer (l_scanner)
+								l_editor_tokens.append (l_line.content)
+								l_editable_lines.forth
+							end
+							l_scanner.reset
+
+							if l_editor_tokens.is_empty then
+									-- Create the text item (fail safe)
+								l_editor_tokens.extend (create {EDITOR_TOKEN_TEXT}.make (l_tagged_text))
+							end
+
+								-- Create the editor item
+							create l_editor_item
+							l_editor_item.set_text_with_tokens (l_editor_tokens)
+							l_item := l_editor_item
+
+							l_row.set_height (l_row.height.max (l_editor_item.required_height_for_text_and_component))
+						else
 								-- Perform formatting with decorator, enabling clickable text.
+							create l_decorator.make (a_class.compiled_class, l_token_generator)
 							l_decorator.format_ast (l_tagged)
 
 								-- Add contract item
-							create l_item
-							l_item.set_text_with_tokens (l_formatter.tokens (1))
-							l_row.set_item (contract_column, l_item)
-							l_grid.grid_row_fill_empty_cells (l_row)
+							create l_editor_item
+							l_editor_item.set_text_with_tokens (l_token_generator.tokens (0))
+							l_item := l_editor_item
 
-								-- Clear formatters
-							l_formatter.wipe_out_lines
+							l_row.set_height (l_row.height.max (l_editor_item.required_height_for_text_and_component))
 
-								-- Ensure item is expandable
-							a_row.ensure_expandable
-
-							l_tagged_list.forth
-							i := i + 1
+								-- Clear formatter
+							l_token_generator.wipe_out_lines
 						end
+						l_editor_item.set_left_border (l_left_border)
+
+						l_row.set_item (contract_column, l_item)
+
+						if not l_editable then
+								-- Disable selection of non-editable rows
+							l_row.set_background_color (colors.grid_read_only_background_color)
+							l_item.disable_select
+							l_row.disable_select
+							a_row.disable_select
+						end
+						l_grid.grid_row_fill_empty_cells (l_row)
+
+							-- Ensure item is expandable
+						a_row.ensure_expandable
+
+						l_item := Void
+						i := i + 1
 					end
+					l_contracts.forth
 				end
+			elseif l_editable then
+					-- Add - add contract sub row
+				a_row.insert_subrows (1, 1)
+				l_row := a_row.subrow (a_row.subrow_count)
+
+					-- Use an editor grid item to replicate the style
+				create l_editor_item.make_with_text ("no contracts")
+				l_editor_item.set_pixmap (stock_pixmaps.general_warning_icon)
+
+				l_editor_item.set_left_border (l_left_border)
+				check not_l_row_has_item: l_row.item (contract_column) = Void end
+				l_row.set_item (contract_column, l_editor_item)
+				l_grid.grid_row_fill_empty_cells (l_row)
+			elseif not is_showing_all_rows then
+					-- Hide the row because there are no contracts
+				a_row.hide
 			end
+
 
 			if a_row.is_expandable then
 				a_row.expand
 			end
-
-			if l_assertions /= Void then
-				l_chain := l_assertions.current_assertion
-			end
-			system.set_current_class (l_old_class)
 		end
 
 	populate_contract_header_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context) is
@@ -344,7 +409,6 @@ feature {NONE} -- Population
 			l_parents: LIST [CLASS_C]
 		do
 			a_row.clear
-			--a_row.ensure_expandable
 
 				-- Context class
 			create l_generator.make

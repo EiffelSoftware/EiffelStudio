@@ -1,39 +1,22 @@
 indexing
-	description: "interface names used in batch compiler."
+	description: "[
+		Interface Error, Warning and information messages.
+	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
+	status: "See notice at end of class.";
+	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	SHARED_BATCH_NAMES
+	INTERFACE_MESSAGES
 
 inherit
-	SHARED_LOCALE
+	ERROR_MESSAGES
 
-feature -- Names
+	WARNING_MESSAGES
 
-	warnings: WARNING_MESSAGES
-			-- Warning messages.
-		once
-			Result := messages
-		end
-
-	messages: INTERFACE_MESSAGES
-			-- Interface messages.
-		once
-			create Result
-		end
-
-	ewb_names: EWB_NAMES
-			-- Names used in tty.
-		once
-			create Result
-		end
-
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+;indexing
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

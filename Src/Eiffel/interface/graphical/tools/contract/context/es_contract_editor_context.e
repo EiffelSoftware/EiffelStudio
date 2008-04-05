@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ES_CONTRACT_EDITOR_CONTEXT [G -> CLASSC_STONE]
+	ES_CONTRACT_EDITOR_CONTEXT [G -> CLASSI_STONE]
 
 inherit
 	EB_RECYCLABLE
@@ -56,20 +56,33 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
-			Result ?= context_stone.e_class.lace_class
+			Result ?= context_stone.class_i
 		end
 
-	context_parents: !DS_ARRAYED_LIST [!CLASS_C]
+	context_parents: !DS_LIST [CLASS_C]
 			-- Context parent classes containing contracts
 		require
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
-		deferred
+		local
+			l_list: !DS_LIST [CLASS_C]
+			l_result: !DS_LINKED_LIST [CLASS_C]
+		do
+			if internal_context_parents = Void then
+				create l_result.make_default
+				l_list ?= l_result
+				calculate_parents (context_class, l_list)
+				internal_context_parents := l_result
+				Result ?= l_result
+			else
+				Result ?= internal_context_parents
+			end
 		ensure
---			result_items_has_contracts_in_class: Result.for_all (agent has_contracts_in_class)
+			result_contains_attached_item: not Result.has (Void)
+			result_consistent: Result = context_parents
 		end
 
-	text_modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
+	text_modifier: !like create_text_modifier
 			-- Access to text modifier used to modify the contracts
 		require
 			is_interface_usable: is_interface_usable
@@ -86,6 +99,27 @@ feature -- Access
 			end
 		ensure
 			result_is_interface_usable: Result.is_interface_usable
+			result_consistent: Result = text_modifier
+		end
+
+feature -- Contracts
+
+	contracts_for_class (a_class: !CLASS_I; a_live: BOOLEAN): !TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+			-- Retrieves the contacts for a given class with an associated text modifier.
+			--
+			-- `a_class': The class interface to retrieve the contracts for.
+			-- `a_live': True to retrieve the live (possibly uncompiled) contracts for a class; False to use the compiled data.
+			-- `Result': A text modifier used to modify the class and a list of contracts discovered in the specified class.
+			--           Note: The modifier will only be prepared when using the live contracts.
+		require
+			is_interface_usable: is_interface_usable
+			has_stone: has_stone
+		deferred
+		ensure
+			result_contracts_contains_attached_items: not Result.contracts.has (Void)
+			result_modifier_is_prepared: a_live implies Result.modifier.is_prepared
+			result_modifier_is_interface_usable: Result.modifier.is_interface_usable
+			result_contracts_is_empty: (not a_live and not a_class.is_compiled) implies Result.contracts.is_empty
 		end
 
 feature -- Element change
@@ -94,6 +128,9 @@ feature -- Element change
 			-- <Precursor>
 		do
 			if stone /= a_stone then
+					-- Reset any cached data
+				reset
+
 				if internal_text_modifier /= Void then
 					internal_text_modifier.recycle
 				end
@@ -136,15 +173,19 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	has_contracts_in_class (a_class: !CLASS_C): BOOLEAN
-			-- Indicates if the context has contracts to offer for a given class.
+feature {NONE} -- Query
+
+	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
+			-- Context parent classes containing contracts
 			--
-			-- `a_class': Class (Current or parent of) to determine if contracts are available in.
-			-- `Result': True if there are contracts to offer; False otherwise.
+			-- `a_class': The class to retrieve applicable parent for.
+			-- `a_list': The list to populate the discovered parent classes into.
 		require
 			is_interface_usable: is_interface_usable
-			has_stone: has_stone
+			a_list_contains_attached_items: not a_list.has (Void)
 		deferred
+		ensure
+			a_list_contains_attached_items: not a_list.has (Void)
 		end
 
 feature -- Basic operations
@@ -158,11 +199,10 @@ feature -- Basic operations
 		do
 			if not retried then
 				if not equal (stone, a_stone) then
-					Result := True
-					Result := False --not is_dirty
+					Result := not is_dirty
 					if not Result then
 							-- There should be sufficent editor context if the contents of the tool has been modified
-						--check has_stone: has_stone end
+						check has_stone: has_stone end
 
 							-- Ask user about saving changes
 						if has_stone then
@@ -202,6 +242,20 @@ feature -- Basic operations
 			not_is_dirty: not is_dirty
 		end
 
+feature {NONE} -- Basic operation
+
+	reset
+			-- Resets any cached data
+		require
+			is_interface_usable: is_interface_usable
+		do
+			internal_text_modifier := Void
+			internal_context_parents := Void
+		ensure
+			internal_text_modifier_detached: internal_text_modifier = Void
+			internal_context_parents_detached: internal_context_parents = Void
+		end
+
 feature -- Synchronization
 
 	synchronize
@@ -222,10 +276,28 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
+	create_parent_text_modifier (a_parent: !CLASS_C): ?like create_text_modifier
+			-- Creates a text modifier for a given parent class.
+			--
+			-- `a_parent': A parent class to generate a modifier for.
+			-- `Result': A text modifier for the parent class.
+		require
+			is_interface_usable: is_interface_usable
+			has_stone: has_stone
+			context_parents_has_a_parent: context_parents.has (a_parent)
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Internal implementation cache
 
-	internal_text_modifier: ?ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
+	internal_text_modifier: ?like text_modifier
 			-- Cached version `text_modifier'
+			-- Note: Do not use directly!
+
+	internal_context_parents: ?like context_parents
+			-- Cached version `context_parentes'
 			-- Note: Do not use directly!
 
 ;indexing

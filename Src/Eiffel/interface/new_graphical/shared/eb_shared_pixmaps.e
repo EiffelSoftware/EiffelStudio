@@ -23,6 +23,27 @@ inherit
 			{NONE} all
 		end
 
+feature -- Utility
+
+	icon_buffer_with_overlay (a_icon: EV_PIXEL_BUFFER; a_overlay: EV_PIXEL_BUFFER): EV_PIXEL_BUFFER
+			-- Creates a icon with an overlay icon
+		require
+			a_icon_attached: a_icon /= Void
+			not_a_icon_is_destroyed: not a_icon.is_destroyed
+			a_icon_big_enough: a_icon.width <= 16 and a_icon.height <= 16
+			a_overlay_big_enough: a_overlay.width = 10 and a_overlay.height = 10
+		local
+			l_buffer: EV_PIXEL_BUFFER
+		do
+			create l_buffer.make_with_size (16, 16)
+			l_buffer.draw_pixel_buffer_with_x_y (0, 0, a_icon)
+			l_buffer.draw_pixel_buffer_with_x_y (6, 6, a_overlay)
+			Result := l_buffer
+		ensure
+			result_attached: Result /= Void
+			not_result_is_destroyed: not Result.is_destroyed
+		end
+
 feature -- Access
 
 	mini_pixmaps: ES_PIXMAPS_10X10 is

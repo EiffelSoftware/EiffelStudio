@@ -62,7 +62,6 @@ feature -- Basic Operations
 			l_props: LIST [INI_PROPERTY]
 			l_prop: INI_PROPERTY
 			l_cursor: CURSOR
-			l_cn: STRING
 			l_of: STRING
 			l_buffer: STRING
 		do
@@ -186,7 +185,6 @@ feature {NONE} -- Processing
 	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32)
 			-- Processes a literal from an INI matrix file.
 		local
-			l_label: STRING
 			l_prefix: STRING
 			l_full_name: STRING
 			l_name: STRING
@@ -194,7 +192,6 @@ feature {NONE} -- Processing
 			l_bsuffix: like buffer_suffix
 			l_fname: STRING
 			l_bname: STRING
-			l_section: INI_SECTION
 		do
 			l_fsuffix := tile_suffix
 			l_bsuffix := buffer_suffix

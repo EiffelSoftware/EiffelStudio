@@ -1,39 +1,59 @@
 indexing
-	description: "interface names used in batch compiler."
+	description: "[
+		A foundation widget that provides access to the host development window.
+	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
+	status: "See notice at end of class.";
+	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	SHARED_BATCH_NAMES
+deferred class
+	ES_WINDOW_WIDGET [G -> EV_WIDGET]
 
 inherit
-	SHARED_LOCALE
-
-feature -- Names
-
-	warnings: WARNING_MESSAGES
-			-- Warning messages.
-		once
-			Result := messages
+	ES_WIDGET [G]
+		rename
+			make as make_widget
+		redefine
+			internal_detach_entities
 		end
 
-	messages: INTERFACE_MESSAGES
-			-- Interface messages.
-		once
-			create Result
+feature {NONE} -- Initialization
+
+	make (a_window: like develop_window)
+			-- Initializes a foundation widget
+		require
+			a_window_attached: a_window /= Void
+			a_window_is_interface_usable: a_window.is_interface_usable
+		do
+			develop_window := a_window
+			make_widget
+		ensure
+			is_initialized: is_initialized
+			is_initializing_unchanged: old is_initializing = is_initializing
 		end
 
-	ewb_names: EWB_NAMES
-			-- Names used in tty.
-		once
-			create Result
+feature -- Clean up
+
+	internal_detach_entities
+			-- <Precursor>
+		do
+			Precursor
+			develop_window := Void
+		ensure then
+			develop_window_detached: develop_window = Void
 		end
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+feature -- Access
+
+	develop_window: ?EB_DEVELOPMENT_WINDOW
+			-- Access to the development window
+
+invariant
+	develop_window_attached: is_interface_usable implies develop_window /= Void
+
+;indexing
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

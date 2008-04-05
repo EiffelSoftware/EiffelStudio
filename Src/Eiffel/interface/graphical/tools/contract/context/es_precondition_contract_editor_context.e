@@ -13,12 +13,17 @@ class
 inherit
 	ES_FEATURE_CONTRACT_EDITOR_CONTEXT
 
-feature -- Query
+feature {NONE} -- Contracts
 
-	has_contracts_in_class (a_class: !CLASS_C): BOOLEAN
+	contracts_for_feature (a_feature: !FEATURE_AS): ?EIFFEL_LIST [TAGGED_AS]
 			-- <Precursor>
+		local
+			l_routine: ?ROUTINE_AS
 		do
-			Result := context_feature.has_precondition
+			l_routine ?= a_feature.body.content
+			if l_routine /= Void and then l_routine.has_precondition then
+				Result := l_routine.precondition.assertions
+			end
 		end
 
 feature {NONE} -- Population
@@ -44,6 +49,15 @@ feature {NONE} -- Factory
 			-- <Precursor>
 		do
 			create Result.make (context_feature, context_class)
+		end
+
+	create_parent_text_modifier (a_parent: !CLASS_C): !ES_PRECONDITION_CONTRACT_TEXT_MODIFIER
+			-- <Precursor>
+		local
+			l_class_i: !CLASS_I
+		do
+			l_class_i ?= a_parent.lace_class
+			create Result.make (context_feature, l_class_i)
 		end
 
 ;indexing

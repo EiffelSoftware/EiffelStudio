@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
             -- `a_widget': A widget to build the tool interface using.
 		do
 				-- `contract_editor'
-			create contract_editor.make
+			create contract_editor.make (develop_window)
 
 			a_widget.extend (contract_editor.widget)
 
@@ -124,7 +124,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Basic operations
 
 feature {NONE} -- Query
 
-	context_for_mode: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSC_STONE]
+	context_for_mode: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- Fetches an editor context given a stone
 		require
 			is_interface_usable: is_interface_usable
@@ -197,9 +197,9 @@ feature {NONE} -- User interface manipulation
 			is_initialized: is_initialized
 		do
 			if a_enable then
-				add_contract_button.enable_sensitive
-				remove_contract_button.enable_sensitive
-				edit_contract_button.enable_sensitive
+				--add_contract_button.enable_sensitive
+				--remove_contract_button.enable_sensitive
+				--edit_contract_button.enable_sensitive
 			else
 				add_contract_button.disable_sensitive
 				remove_contract_button.disable_sensitive
@@ -441,16 +441,16 @@ feature {NONE} -- Factory
 			l_dual_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			l_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
+			l_menu_radio_item: EV_RADIO_MENU_ITEM
 		do
-			create Result.make (8)
+			create Result.make (11)
 
 				-- Save contract button
 			create l_dual_button.make
 			l_dual_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
 			l_dual_button.set_pixmap (stock_pixmaps.general_save_icon)
 			l_dual_button.set_tooltip ("Save modifications to class.")
-		--	l_dual_button.disable_sensitive
-
+			l_dual_button.disable_sensitive
 			save_modifications_button := l_dual_button
 			Result.put_last (l_dual_button)
 
@@ -475,7 +475,6 @@ feature {NONE} -- Factory
 			l_button.set_pixmap (stock_pixmaps.general_add_icon)
 			l_button.set_tooltip ("Adds a new contract.")
 			l_button.disable_sensitive
-
 			add_contract_button := l_button
 			Result.put_last (l_button)
 
@@ -496,21 +495,19 @@ feature {NONE} -- Factory
 			l_button.set_pixmap (stock_pixmaps.general_edit_icon)
 			l_button.set_tooltip ("Edit the selected contract.")
 			l_button.disable_sensitive
-
 			edit_contract_button := l_button
 			Result.put_last (l_button)
-		end
 
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			-- Retrieves a list of tool bar items that should be displayed at the top, but right aligned.
-			-- Note: Redefine to add a right tool bar.
-		local
-			l_button: SD_TOOL_BAR_BUTTON
-			l_dual_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
-			l_menu: EV_MENU
-			l_menu_item: EV_RADIO_MENU_ITEM
-		do
-			create Result.make (3)
+				-- Refresh contracts button
+			create l_button.make
+			l_button.set_pixel_buffer (stock_pixmaps.general_refresh_icon_buffer)
+			l_button.set_pixmap (stock_pixmaps.general_refresh_icon)
+			l_button.set_tooltip ("Refresh the current contracts to include an undetected changes.")
+			l_button.disable_sensitive
+			--refresh_button := l_button
+			Result.put_last (l_button)
+
+			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Contract selection button
 			create l_dual_button.make
@@ -523,19 +520,38 @@ feature {NONE} -- Factory
 
 				-- Create menu for contract selection button
 			create l_menu
-			create l_menu_item.make_with_text (contract_mode_label ({ES_CONTRACT_TOOL_EDIT_MODE}.preconditions))
-			l_menu.extend (l_menu_item)
-			l_menu_item.enable_select
-			preconditions_menu_item := l_menu_item
+			create l_menu_radio_item.make_with_text (contract_mode_label ({ES_CONTRACT_TOOL_EDIT_MODE}.preconditions))
+			l_menu.extend (l_menu_radio_item)
+			l_menu_radio_item.enable_select
+			preconditions_menu_item := l_menu_radio_item
 
-			create l_menu_item.make_with_text (contract_mode_label ({ES_CONTRACT_TOOL_EDIT_MODE}.postconditions))
-			l_menu.extend (l_menu_item)
-			postconditions_menu_item := l_menu_item
+			create l_menu_radio_item.make_with_text (contract_mode_label ({ES_CONTRACT_TOOL_EDIT_MODE}.postconditions))
+			l_menu.extend (l_menu_radio_item)
+			postconditions_menu_item := l_menu_radio_item
 
-			create l_menu_item.make_with_text (contract_mode_label ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants))
-			l_menu.extend (l_menu_item)
-			invaraints_menu_item := l_menu_item
+			create l_menu_radio_item.make_with_text (contract_mode_label ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants))
+			l_menu.extend (l_menu_radio_item)
+			invaraints_menu_item := l_menu_radio_item
 			l_dual_button.set_menu (l_menu)
+		end
+
+	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items that should be displayed at the top, but right aligned.
+			-- Note: Redefine to add a right tool bar.
+		local
+			l_button: SD_TOOL_BAR_BUTTON
+			l_toggle_button: SD_TOOL_BAR_TOGGLE_BUTTON
+		do
+			create Result.make (3)
+
+				-- Show hidden rows button
+			create l_toggle_button.make
+			l_toggle_button.set_pixel_buffer (stock_pixmaps.general_show_hidden_icon_buffer)
+			l_toggle_button.set_pixmap (stock_pixmaps.general_show_hidden_icon)
+			l_toggle_button.set_tooltip ("Shows/hides the hidden contract place holders for inherited contracts.")
+			l_toggle_button.disable_sensitive
+			--show_hidden_rows_button := l_button
+			Result.put_last (l_toggle_button)
 
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 

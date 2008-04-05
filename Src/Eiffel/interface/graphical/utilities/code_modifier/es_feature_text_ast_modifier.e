@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 			a_class_is_compiled: a_class.is_compiled
 			is_feature_of_current_class: a_feature.written_class = a_class.compiled_class
 		do
-			context_feature := a_feature
+			context_feature := find_actual_context_feature (a_feature, a_class)
 			make_with_class (a_class)
 		ensure
-			context_feature_set: context_feature = a_feature
+			context_feature_set: equal (context_feature, find_actual_context_feature (a_feature, a_class))
 			context_class_set: context_class = a_class
 		end
 
@@ -53,13 +53,54 @@ feature -- Access
 			Result := modified_data.ast_feature
 		end
 
+	context_feature: !E_FEATURE
+			-- Context feature.
+
 feature {NONE} -- Access
 
 	modified_data: !ES_FEATURE_TEXT_AST_MODIFIER_DATA
 			-- <Precursor>
 
-	context_feature: !E_FEATURE
-			-- Context feature.
+feature {NONE} -- Query
+
+	find_actual_context_feature (a_feature: !like context_feature; a_class: !like context_class): !like context_feature
+			-- Locates the actual context feature given a class.
+			--
+			-- `a_feature': The feature to resolve an actual feature for.
+			-- `a_class': The class to retrieve a feature from.
+			-- `Result': A feature that actually is belongs of the supplied class.
+		require
+			is_interface_usable: is_interface_usable
+			a_class_is_compiled: a_class.is_compiled
+		local
+			l_e_feature: !E_FEATURE
+			l_feature_i: ?FEATURE_I
+			l_class_c: !CLASS_C
+			l_result: ?like context_feature
+		do
+			if a_class.is_compiled then
+				l_class_c ?= a_class.compiled_class
+				if a_feature.written_in = l_class_c then
+					Result := a_feature
+				else
+					if l_class_c /= Void and then l_class_c.has_feature_table then
+						l_feature_i := l_class_c.feature_table.feature_of_rout_id_set (a_feature.rout_id_set)
+						check l_feature_i_attached: l_feature_i /= Void end
+						if l_feature_i /= Void and then l_feature_i.written_class = l_class_c then
+							l_result ?= l_feature_i.api_feature (l_class_c.class_id)
+						end
+					end
+				end
+			end
+
+			if l_result = Void then
+					-- Should never end up here!
+				check False end
+				Result := a_feature
+			else
+				Result ?= l_result
+			end
+		end
 
 feature {NONE} -- Factory
 

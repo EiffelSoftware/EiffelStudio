@@ -28,12 +28,10 @@ feature {NONE} -- Ancestor facade
 	debug_value_at_address_with_class (a_addr: STRING_8; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is do  end
 	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is do  end
 
-	query_replay_status (direction: INTEGER): INTEGER is do end
-	remotely_store_object (oa: STRING; fn: STRING): BOOLEAN is do end
-	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is do end
 	remote_rt_object: ABSTRACT_DEBUG_VALUE is do end
 	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end
 	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end
+	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) is do end
 	
 
 feature -- Client facade

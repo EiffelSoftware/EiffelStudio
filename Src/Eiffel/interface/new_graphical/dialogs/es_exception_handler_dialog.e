@@ -51,8 +51,11 @@ feature {NONE} -- User interface initialization
 			vb.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 
 
-			create ignore_catcall_warning_checkbox.make_with_text (interface_names.b_Ignore_catcall_warnings)
-			extend_non_expandable_to (vb, ignore_catcall_warning_checkbox)
+			create disable_catcall_console_warning_checkbox.make_with_text (interface_names.b_Disable_catcall_console_warnings)
+			extend_non_expandable_to (vb, disable_catcall_console_warning_checkbox)
+
+			create disable_catcall_debugger_warning_checkbox.make_with_text (interface_names.b_Disable_catcall_debugger_warnings)
+			extend_non_expandable_to (vb, disable_catcall_debugger_warning_checkbox)
 
 			create hb
 			hb.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
@@ -147,8 +150,11 @@ feature -- Widgets
 	button_close: EV_BUTTON
 			-- Dialog's button for Close.
 
-	ignore_catcall_warning_checkbox: EV_CHECK_BUTTON
-			-- Button to ignore catcall warning.
+	disable_catcall_console_warning_checkbox: EV_CHECK_BUTTON
+			-- Button to ignore catcall console warning.
+
+	disable_catcall_debugger_warning_checkbox: EV_CHECK_BUTTON
+			-- Button to ignore catcall debugger warning.			
 
 	button_ignore_external_exception: EV_BUTTON
 			-- Button to ignore external exception.
@@ -232,10 +238,15 @@ feature -- Change
 				handling_checkbox.disable_select
 			end
 
-			if exception_handler.catcall_warning_ignored then
-				ignore_catcall_warning_checkbox.enable_select
+			if exception_handler.catcall_console_warning_disabled then
+				disable_catcall_console_warning_checkbox.enable_select
 			else
-				ignore_catcall_warning_checkbox.disable_select
+				disable_catcall_console_warning_checkbox.disable_select
+			end
+			if exception_handler.catcall_debugger_warning_disabled then
+				disable_catcall_debugger_warning_checkbox.enable_select
+			else
+				disable_catcall_debugger_warning_checkbox.disable_select
 			end
 		end
 
@@ -418,7 +429,7 @@ feature {NONE} -- Implementation
 			else
 				exception_handler.disable_exception_handling
 			end
-			exception_handler.catcall_warning_ignored := ignore_catcall_warning_checkbox.is_selected
+			debugger_manager.set_catcall_detection_mode (not disable_catcall_console_warning_checkbox.is_selected, not disable_catcall_debugger_warning_checkbox.is_selected)
 		end
 
 	role_pattern_from_row (a_row: EV_GRID_ROW): TUPLE [role: INTEGER; pattern: STRING] is

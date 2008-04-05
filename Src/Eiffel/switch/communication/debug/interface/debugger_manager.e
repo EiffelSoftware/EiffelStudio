@@ -94,7 +94,7 @@ feature -- Application execution
 		end
 
 	init_application is
-			-- Initialize application
+			-- Initialize application environment
 		require
 			application_not_void: application /= Void
 		do
@@ -1218,6 +1218,62 @@ feature -- Application change
 			end
 		end
 
+	set_catcall_detection_in_console (b: BOOLEAN) is
+			-- set catcall detection mode in console
+		do
+			set_catcall_detection_mode (b, not exceptions_handler.catcall_debugger_warning_disabled)
+		end
+
+	set_catcall_detection_in_debugger (b: BOOLEAN) is
+			-- set catcall detection mode in debugger
+		do
+			set_catcall_detection_mode (not exceptions_handler.catcall_console_warning_disabled, b)
+		end
+
+	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) is
+		do
+			if {exc_hld: like exceptions_handler} exceptions_handler then
+				if exc_hld.catcall_console_warning_disabled /= not a_console then
+					exc_hld.set_catcall_console_warning_disabled (not a_console)
+				end
+				if exc_hld.catcall_debugger_warning_disabled /= not a_dbg then
+					exc_hld.set_catcall_debugger_warning_disabled (not a_dbg)
+				end
+			end
+
+			if application_initialized then
+				safe_update_catcall_detection_mode
+			end
+		end
+
+	safe_update_catcall_detection_mode is
+			-- Update catcall detection mode
+		require
+			application_initialized: application_initialized
+		do
+			if safe_application_is_stopped then
+				update_catcall_detection_mode
+			else
+				add_on_update_action (agent (adbg: DEBUGGER_MANAGER)
+						require
+							safe_application_is_stopped: safe_application_is_stopped
+						do
+							adbg.update_catcall_detection_mode
+						end,
+					True)
+			end
+		end
+
+	update_catcall_detection_mode is
+			-- pdate catcall detection mode
+		require
+			safe_application_is_stopped: safe_application_is_stopped
+		do
+			if {exc_hld: like exceptions_handler} exceptions_handler then
+				application.set_catcall_detection_mode (not exc_hld.catcall_console_warning_disabled, not exc_hld.catcall_debugger_warning_disabled)
+			end
+		end
+
 	disable_assertion_checking is
 			-- Disable assertion checking
 		require
@@ -1280,6 +1336,8 @@ feature -- Compilation events
 feature -- Debugging events
 
 	debugging_operation_id: NATURAL_32
+			-- Debugging operation id, to dentify the current status
+			--| Note: might need to move this to APPLICATION_* classes
 
 	incremente_debugging_operation_id is
 		do
@@ -1316,6 +1374,7 @@ feature -- Debugging events
 				activate_execution_replay_recording (False)
 			end
 			if execution_replay_recording_enabled then
+				--| Issue if run without breakpoints !
 				bploc := breakpoints_manager.entry_breakpoint_location
 				if bploc /= Void and then bploc.is_valid then
 					bp := breakpoints_manager.new_hidden_breakpoint (bploc)
@@ -1348,6 +1407,14 @@ feature -- Debugging events
 
 			application_launching_in_progress := True
 			application_prelaunching_actions.call (Void)
+		end
+
+	on_application_initialized is
+			-- Application is launched but stopped at the entry point for now
+			--| just before the resume. The state should not be considered as a valid stopped state
+			--| but this can be used to intialized extra application parameters
+		do
+			update_catcall_detection_mode
 		end
 
 	on_application_launched is
@@ -1393,6 +1460,14 @@ feature -- Debugging events
 		do
 				--| Observers
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_paused (Current))
+		end
+
+	on_application_debugger_update is
+		require
+			app_is_executing: safe_application_is_stopped
+		do
+				--| Observers
+			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_debugger_update (Current))
 		end
 
 	on_application_just_stopped is
@@ -1462,7 +1537,6 @@ feature -- Debugging events
 			save_debugger_data
 
 			destroy_application
-			reset_class_c_data
 
 			on_debugging_terminated (was_executing)
 			debug ("debugger_trace_synchro")
@@ -1488,6 +1562,7 @@ feature -- Debugging events
 				bl.item_for_iteration.revert_session_data
 				bl.forth
 			end
+			reset_class_c_data
 		end
 
 feature -- Actions
@@ -1509,6 +1584,18 @@ feature -- One time action
 				observer_provider.application_stopped_actions.extend_kamikaze (p)
 			else
 				observer_provider.application_stopped_actions.extend (p)
+			end
+		end
+
+	add_on_update_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN) is
+			-- Add `p' to `stopped_actions' with `p'.
+		require
+			p_not_void: p /= Void
+		do
+			if is_kamikaze then
+				observer_provider.application_debugger_update_actions.extend_kamikaze (p)
+			else
+				observer_provider.application_debugger_update_actions.extend (p)
 			end
 		end
 

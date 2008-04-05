@@ -2204,6 +2204,9 @@ feature -- Debugger
 	breakpoint_slots_number: INTEGER
 			-- current number of breakpoint slots known
 
+	breakpoint_nested_slots_number: INTEGER
+			-- current number of breakpoint nested slots known
+
 	set_instruction_line (l: like instruction_line) is
 			-- Assign `l' to `instruction_line' and position FIFO stack at the
 			-- beginning as a side effect, ready for usage by byte code classes.
@@ -2218,7 +2221,17 @@ feature -- Debugger
 			-- to get a "line number" when recording a breakable point
 		do
 			breakpoint_slots_number := breakpoint_slots_number + 1
+			breakpoint_nested_slots_number := 0
 			Result := breakpoint_slots_number
+		end
+
+	get_next_breakpoint_nested_slot: INTEGER is
+			-- increase the current number of breakpoint nested slots and then
+			-- return the current number of breakpoint nested slots. It is used
+			-- to get a "line nested number" when recording a breakable nested point
+		do
+			breakpoint_nested_slots_number := breakpoint_nested_slots_number + 1
+			Result := breakpoint_nested_slots_number
 		end
 
 	get_breakpoint_slot: INTEGER is
@@ -2228,10 +2241,18 @@ feature -- Debugger
 			Result := breakpoint_slots_number
 		end
 
+	get_breakpoint_nested_slot: INTEGER is
+			-- Return the current number of breakpoint nested slots. It is used
+			-- to get a "line nested number" when recording a breakable nested point
+		do
+			Result := breakpoint_nested_slots_number
+		end
+
 	set_breakpoint_slot (a_number: INTEGER) is
 			-- Set the current number of breakpoint slots to `a_number'
 		do
 			breakpoint_slots_number := a_number
+			breakpoint_nested_slots_number := 0
 		end
 
 	byte_prepend (ba, array: BYTE_ARRAY) is

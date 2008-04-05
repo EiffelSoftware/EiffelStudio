@@ -163,6 +163,8 @@ feature {NONE} -- Initialization
 			stack_grid.key_press_actions.extend (agent key_pressed)
 			stack_grid.set_item_pebble_function (agent on_grid_item_pebble_function)
 			stack_grid.set_item_accept_cursor_function (agent on_grid_item_accept_cursor_function)
+				--| Action/event on call stack grid (replay mode)
+			stack_grid.row_expand_actions.extend (agent on_row_expanded)
 
 				--| Context menu handler
 			development_window ?= develop_window
@@ -427,12 +429,23 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 		local
 			dbg: like debugger_manager
 			li, m: INTEGER
+			r: INTEGER
 		do
 			dbg := debugger_manager
 			replay_controls_label.set_text ((1 + dep).out + "/" + (1 + deplim).out)
 			replay_controls_label.refresh_now
 			if stack_grid /= Void then
 				stack_grid.remove_selection
+			end
+			if stack_grid.row_count > 0 then
+				from
+					r := 1
+				until
+					r > stack_grid.row_count
+				loop
+					stack_grid.grid_remove_and_clear_subrows_from (stack_grid.row (r))
+					r := r + 1
+				end
 			end
 			if deplim = 0 then
 				li := 1
@@ -729,6 +742,7 @@ feature {NONE} -- Catcall warning access
 			ct: CLASS_TYPE
 			f: E_FEATURE
 			argname: STRING
+			l_static_argtypename,
 			argtypename: STRING
 			retried: BOOLEAN
 			ecse: EIFFEL_CALL_STACK_ELEMENT
@@ -747,6 +761,7 @@ feature {NONE} -- Catcall warning access
 					end
 
 					Result.append_string (" for ")
+						--| Get info with compiler data
 					if f /= Void then
 						if {args: E_FEATURE_ARGUMENTS} (f.arguments) and then args.count >= rtcc.pos then
 							if {argnames: LIST [STRING]} (args.argument_names) then
@@ -757,7 +772,7 @@ feature {NONE} -- Catcall warning access
 							args.start
 							args.move (rtcc.pos - 1)
 							if {typ: TYPE_A} args.item then
-								argtypename := typ.name
+								l_static_argtypename := typ.name
 							end
 						end
 					end
@@ -770,34 +785,58 @@ feature {NONE} -- Catcall warning access
 						Result.append_character (''')
 					end
 					l_max_type_id := system.class_types.count
+
 					Result.append_string (": expected ")
+					ct := Void
+
 					l_fdtype := rtcc.expected
 					if l_fdtype <= l_max_type_id then
+							--| Try with compiler data						
 						ct := System.class_type_of_id (l_fdtype)
-					end
-					if ct /= Void and then ct.associated_class /= Void then
-						Result.append_string (ct.associated_class.name_in_upper)
-					else
-						Result.append_string ("type#")
-						Result.append_integer (l_fdtype)
-
-						if argtypename /= Void then
-							Result.append_string (" ")
-							Result.append_string (argtypename)
+						if ct /= Void and then ct.associated_class /= Void then
+							if not ct.is_generic then
+								argtypename := ct.associated_class.name_in_upper
+							end
 						end
 					end
+					if argtypename = Void then
+							--| Try with evaluation on app						
+						argtypename := debugger_manager.application.internal_type_name_of_type (l_fdtype - 1) --| -1: to convert to runtime type id
+					end
+					if argtypename = Void then
+						if l_static_argtypename /= Void then
+							argtypename := l_static_argtypename.twin
+						else
+							argtypename := ""
+						end
+						argtypename.append_string (" (type#")
+						argtypename.append_integer (l_fdtype)
+						argtypename.append_string (")")
+					end
+					Result.append_string (" ")
+					Result.append_string (argtypename)
+					argtypename := Void
 
 					Result.append_string (" but got ")
 					l_fdtype := rtcc.actual
+						--| Try with compiler data
 					if l_fdtype <= l_max_type_id then
 						ct := System.class_type_of_id (l_fdtype)
+						if ct /= Void and then ct.associated_class /= Void and then not ct.is_generic then
+							argtypename := ct.associated_class.name_in_upper
+						end
 					end
-					if ct /= Void and then ct.associated_class /= Void then
-						Result.append_string (ct.associated_class.name_in_upper)
+						--| Try with evaluation on app
+					if argtypename = Void then
+						argtypename := debugger_manager.application.internal_type_name_of_type (l_fdtype - 1) --| -1: to convert to runtime type id
+					end
+					if argtypename /= Void then
+						Result.append_string (argtypename)
 					else
 						Result.append_string ("type#")
 						Result.append_integer (l_fdtype)
 					end
+					argtypename := Void
 				end
 			else
 				create Result.make_from_string ("Catcall detected")
@@ -1141,7 +1180,11 @@ feature {NONE} -- Stack grid implementation
 				Result := row.item (c)
 			end
 			if Result = Void then
-				compute_stack_grid_row (row)
+				if execution_replay_activated then
+					compute_replayed_stack_grid_row (row)
+				else
+					compute_stack_grid_row (row)
+				end
 
 					--| fill_empty_cells of `row'
 				n := stack_grid.column_count
@@ -1187,119 +1230,120 @@ feature {NONE} -- Stack grid implementation
 			if stack_data /= Void and then stack_data.valid_index (level) then
 				cse := stack_data [level]
 			end
-			check cse_not_void: cse /= Void end
+			check cse_not_void: not execution_replay_activated implies cse /= Void end
+			if cse /= Void then
+				create l_tooltip.make (10)
+				e_cse ?= cse
 
-			create l_tooltip.make (10)
-			e_cse ?= cse
-
-				--| Class name
-			l_class_info := cse.class_name
-			if l_class_info /= Void then
-				l_tooltip.append ("{" + l_class_info + "}.")
-			end
-
-				--| Break Index
-			l_breakindex_info := cse.break_index.out
-
-				--| Routine name
-			l_feature_name := cse.routine_name
-			if l_feature_name /= Void then
-				l_feature_name := l_feature_name.twin
-			else
-				create l_feature_name.make_empty
-			end
---| Decide later, if we want the  "@bp-index" visible
---			if l_feature_name /= Void then
---				l_feature_name.append (" @" + l_breakindex_info.out)
---			end
-
-			l_tooltip.append (l_feature_name)
-
-				--| Object address
-			l_obj_address_info := cse.object_address
-
-			if e_cse /= Void then
-					--| Origin class
-				dc := e_cse.dynamic_class
-				oc := e_cse.written_class
-				if oc /= Void then
-					l_orig_class_info := oc.name_in_upper
-					l_same_name := dc /= Void and then oc.same_type (dc) and then oc.is_equal (dc)
-					if not l_same_name then
-						l_tooltip.prepend_string (interface_names.l_from_class (l_orig_class_info))
-					end
-				else
-					l_orig_class_info := Interface_names.l_Same_class_name
+					--| Class name
+				l_class_info := cse.class_name
+				if l_class_info /= Void then
+					l_tooltip.append ("{" + l_class_info + "}.")
 				end
+
+					--| Break Index
+				l_breakindex_info := cse.break_index.out
 
 					--| Routine name
-				l_has_rescue := e_cse.has_rescue
-				if l_has_rescue then
-					l_tooltip.append_string (interface_names.l_feature_has_rescue_clause)
+				l_feature_name := cse.routine_name
+				if l_feature_name /= Void then
+					l_feature_name := l_feature_name.twin
+				else
+					create l_feature_name.make_empty
 				end
-				l_is_melted := e_cse.is_melted
-				if l_is_melted then
-					l_tooltip.append_string (interface_names.l_compilation_equal_melted)
+--| Decide later, if we want the  "@bp-index" visible
+--				if l_feature_name /= Void then
+--					l_feature_name.append (" @" + l_breakindex_info.out)
+--				end
+
+				l_tooltip.append (l_feature_name)
+
+					--| Object address
+				l_obj_address_info := cse.object_address
+
+				if e_cse /= Void then
+						--| Origin class
+					dc := e_cse.dynamic_class
+					oc := e_cse.written_class
+					if oc /= Void then
+						l_orig_class_info := oc.name_in_upper
+						l_same_name := dc /= Void and then oc.same_type (dc) and then oc.is_equal (dc)
+						if not l_same_name then
+							l_tooltip.prepend_string (interface_names.l_from_class (l_orig_class_info))
+						end
+					else
+						l_orig_class_info := Interface_names.l_Same_class_name
+					end
+
+						--| Routine name
+					l_has_rescue := e_cse.has_rescue
+					if l_has_rescue then
+						l_tooltip.append_string (interface_names.l_feature_has_rescue_clause)
+					end
+					l_is_melted := e_cse.is_melted
+					if l_is_melted then
+						l_tooltip.append_string (interface_names.l_compilation_equal_melted)
+					end
+
+					dotnet_cse ?= e_cse
+					if dotnet_cse /= Void and then dotnet_cse.dotnet_module_name /= Void then
+						l_tooltip.append_string (interface_names.l_module_is (dotnet_cse.dotnet_module_name))
+					end
+
+					a_row.set_data (level)
+				else --| It means, this is an EXTERNAL_CALL_STACK_ELEMENT
+					l_orig_class_info := ""
+					ext_cse ?= cse
+					if ext_cse /= Void then
+						l_extra_info := ext_cse.info
+					end
+					a_row.set_data (- level) -- This is not a valid Eiffel call stack element.
 				end
 
-				dotnet_cse ?= e_cse
-				if dotnet_cse /= Void and then dotnet_cse.dotnet_module_name /= Void then
-					l_tooltip.append_string (interface_names.l_module_is (dotnet_cse.dotnet_module_name))
+				check debugger_manager.application_is_executing end
+				app_exec := Debugger_manager.application
+					--| Tooltip addition
+				l_nb_stack := app_exec.status.current_call_stack.count
+				l_tooltip.prepend_string ((cse.level_in_stack).out + "/" + l_nb_stack.out + ": ")
+				l_tooltip.append_string (interface_names.l_break_index_is (l_breakindex_info))
+				l_tooltip.append_string (interface_names.l_address_is (l_obj_address_info))
+				if l_extra_info /= Void then
+					l_tooltip.append_string ("%N    + " + l_extra_info)
 				end
 
-				a_row.set_data (level)
-			else --| It means, this is an EXTERNAL_CALL_STACK_ELEMENT
-				l_orig_class_info := ""
-				ext_cse ?= cse
-				if ext_cse /= Void then
-					l_extra_info := ext_cse.info
+					--| Fill columns
+				if l_is_melted or l_has_rescue then
+					create glabp.make_with_text (l_feature_name)
+					glabp.set_pixmaps_on_right_count (2)
+					if l_is_melted then
+						glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_is_melted_icon, 1)
+					end
+					if l_has_rescue then
+						glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_has_rescue_icon, 2)
+					end
+					glab := glabp
+				else
+					create glab.make_with_text (l_feature_name)
 				end
-				a_row.set_data (- level) -- This is not a valid Eiffel call stack element.
-			end
+				glab.set_tooltip (l_tooltip)
+				a_row.set_item (Feature_column_index, glab)
 
-			check debugger_manager.application_is_executing end
-			app_exec := Debugger_manager.application
-				--| Tooltip addition
-			l_nb_stack := app_exec.status.current_call_stack.count
-			l_tooltip.prepend_string ((cse.level_in_stack).out + "/" + l_nb_stack.out + ": ")
-			l_tooltip.append_string (interface_names.l_break_index_is (l_breakindex_info))
-			l_tooltip.append_string (interface_names.l_address_is (l_obj_address_info))
-			if l_extra_info /= Void then
-				l_tooltip.append_string ("%N    + " + l_extra_info)
-			end
+				create glab.make_with_text (l_class_info)
+				glab.set_tooltip (l_class_info)
+				a_row.set_item (Dtype_column_index, glab)
 
-				--| Fill columns
-			if l_is_melted or l_has_rescue then
-				create glabp.make_with_text (l_feature_name)
-				glabp.set_pixmaps_on_right_count (2)
-				if l_is_melted then
-					glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_is_melted_icon, 1)
+				create glab.make_with_text (l_orig_class_info)
+				if l_same_name then
+					glab.set_foreground_color (unsensitive_fg_color)
 				end
-				if l_has_rescue then
-					glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_has_rescue_icon, 2)
+				glab.set_tooltip (l_orig_class_info)
+				a_row.set_item (Stype_column_index, glab)
+
+					--| Set GUI behavior
+				refresh_stack_grid_row (a_row, app_exec.current_execution_stack_number)
+				if level = app_exec.current_execution_stack_number then
+					arrowed_level := level
 				end
-				glab := glabp
-			else
-				create glab.make_with_text (l_feature_name)
-			end
-			glab.set_tooltip (l_tooltip)
-			a_row.set_item (Feature_column_index, glab)
-
-			create glab.make_with_text (l_class_info)
-			glab.set_tooltip (l_class_info)
-			a_row.set_item (Dtype_column_index, glab)
-
-			create glab.make_with_text (l_orig_class_info)
-			if l_same_name then
-				glab.set_foreground_color (unsensitive_fg_color)
-			end
-			glab.set_tooltip (l_orig_class_info)
-			a_row.set_item (Stype_column_index, glab)
-
-				--| Set GUI behavior
-			refresh_stack_grid_row (a_row, app_exec.current_execution_stack_number)
-			if level = app_exec.current_execution_stack_number then
-				arrowed_level := level
 			end
 		end
 
@@ -1347,6 +1391,130 @@ feature {NONE} -- Stack grid implementation
 			end
 		end
 
+	compute_replayed_stack_grid_row (a_row: EV_GRID_ROW) is
+			-- Compute item for `a_row' when `execution_replay_activated' is True
+		require
+			a_row_not_void: a_row /= Void
+		local
+			cse: REPLAYED_CALL_STACK_ELEMENT
+			dc, oc: CLASS_C
+			l_tooltip: STRING_32
+			l_nb_stack: INTEGER
+			l_feature_name: STRING
+			rt_info_avail: BOOLEAN
+			l_is_melted: BOOLEAN
+			l_has_rescue: BOOLEAN
+			l_class_info: STRING
+			l_orig_class_info: STRING_GENERAL
+			l_same_name: BOOLEAN
+			l_breakindex_info: STRING
+			glab: EV_GRID_LABEL_ITEM
+			glabp: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
+			app_exec: APPLICATION_EXECUTION
+		do
+			cse := replayed_call_stack_element_from_row (a_row)
+			if cse = Void then
+				compute_stack_grid_row (a_row)
+			else
+				if cse /= Void then
+					create l_tooltip.make (10)
+
+						--| Class name
+					l_class_info := cse.class_name
+					if l_class_info /= Void then
+						l_tooltip.append ("{" + l_class_info + "}.")
+					end
+
+						--| Break Index
+					l_breakindex_info := cse.break_index.out
+
+						--| Routine name
+					l_feature_name := cse.routine_name
+					if l_feature_name /= Void then
+						l_feature_name := l_feature_name.twin
+					else
+						create l_feature_name.make_empty
+					end
+--| Decide later, if we want the  "@bp-index" visible
+--					if l_feature_name /= Void then
+--						l_feature_name.append (" @" + l_breakindex_info.out)
+--					end
+
+					l_tooltip.append (l_feature_name)
+
+						--| Origin class
+					dc := cse.dynamic_class
+					oc := cse.written_class
+					if oc /= Void then
+						l_orig_class_info := oc.name_in_upper
+						l_same_name := dc /= Void and then oc.same_type (dc) and then oc.is_equal (dc)
+						if not l_same_name then
+							l_tooltip.prepend_string (interface_names.l_from_class (l_orig_class_info))
+						end
+					else
+						l_orig_class_info := Interface_names.l_Same_class_name
+					end
+
+					rt_info_avail := cse.rt_information_available
+
+						--| Routine name
+					l_has_rescue := cse.has_rescue
+					if l_has_rescue then
+						l_tooltip.append_string (interface_names.l_feature_has_rescue_clause)
+					end
+					l_is_melted := cse.is_melted
+					if l_is_melted then
+						l_tooltip.append_string (interface_names.l_compilation_equal_melted)
+					end
+
+					check debugger_manager.application_is_executing end
+					app_exec := Debugger_manager.application
+						--| Tooltip addition
+					l_nb_stack := app_exec.status.current_call_stack.count
+					l_tooltip.prepend_string (cse.remote_id + ": ")
+					l_tooltip.append_string (interface_names.l_break_index_is (l_breakindex_info))
+					l_tooltip.prepend_string (cse.id + "%N")
+
+						--| Fill columns
+					if l_is_melted or l_has_rescue then
+						create glabp.make_with_text (l_feature_name)
+						glabp.set_pixmaps_on_right_count (2)
+						if l_is_melted then
+							glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_is_melted_icon, 1)
+						end
+						if l_has_rescue then
+							glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_has_rescue_icon, 2)
+						end
+						glab := glabp
+					else
+						create glab.make_with_text (l_feature_name)
+					end
+					if rt_info_avail then
+						glab.set_font (fonts.highlighted_label_font)
+					else
+						glab.set_font (fonts.italic_label_font)
+					end
+
+					glab.set_tooltip (l_tooltip)
+					a_row.set_item (Feature_column_index, glab)
+
+					create glab.make_with_text (l_class_info)
+					glab.set_tooltip (l_class_info)
+					a_row.set_item (Dtype_column_index, glab)
+
+					create glab.make_with_text (l_orig_class_info)
+					if l_same_name then
+						glab.set_foreground_color (unsensitive_fg_color)
+					end
+					glab.set_tooltip (l_orig_class_info)
+					a_row.set_item (Stype_column_index, glab)
+
+						--| Set GUI behavior
+					refresh_stack_grid_row (a_row, app_exec.current_execution_stack_number)
+				end
+			end
+		end
+
 feature {NONE} -- Stone handlers
 
 	on_stone_changed is
@@ -1385,6 +1553,37 @@ feature {NONE} -- Stone handlers
 
 feature {NONE} -- Grid Implementation
 
+	replayed_call_stack_element_from_row (a_row: EV_GRID_ROW): REPLAYED_CALL_STACK_ELEMENT is
+			-- Call stack level related to `a_row'.
+		require
+			a_row /= Void
+		do
+			Result ?= a_row.data
+		end
+
+	replayed_call_stack_element_from_row_with_rt_info (a_row: EV_GRID_ROW): REPLAYED_CALL_STACK_ELEMENT is
+			-- Call stack level related to `a_row'.
+		require
+			a_row /= Void
+		do
+			Result := replayed_call_stack_element_from_row (a_row)
+			if Result /= Void and then not Result.rt_information_available then
+				if {p: EV_GRID_ROW} a_row.parent_row then
+					Result := replayed_call_stack_element_from_row_with_rt_info (p)
+				end
+			end
+		ensure
+			Result_with_rt_info: Result /= Void implies Result.rt_information_available
+		end
+
+	level_associated_with (rep: !REPLAYED_CALL_STACK_ELEMENT): INTEGER is
+			-- Level associated with replayed call stack
+		do
+			if rep.rt_information_available then
+				Result := debugger_manager.application_status.current_call_stack.stack_depth - rep.depth + 1
+			end
+		end
+
 	level_from_row (a_row: EV_GRID_ROW): INTEGER is
 			-- Call stack level related to `a_row'.
 		require
@@ -1422,7 +1621,6 @@ feature {NONE} -- Grid Implementation
 			-- Action when mouse click on `stack_grid'
 		local
 			l_row: EV_GRID_ROW
-			level: INTEGER
 		do
 			if a_button = 1 and a_item /= Void then
 				if
@@ -1432,10 +1630,7 @@ feature {NONE} -- Grid Implementation
 				then
 					l_row := a_item.row
 					if l_row /= Void then
-						level := level_from_row (l_row)
-						if level > 0 then
-							select_element_by_level (level)
-						end
+						select_element_by_row (l_row)
 					end
 				end
 			end
@@ -1474,6 +1669,40 @@ feature {NONE} -- Grid Implementation
 			Result := Cursors.cur_setstop
 		end
 
+	select_element_by_row (a_row: EV_GRID_ROW) is
+			-- Select element from `a_row'
+		require
+			a_row_not_void: a_row /= Void
+		local
+			st: FEATURE_STONE
+			l: INTEGER
+		do
+			if {lev: INTEGER} level_from_row (a_row) and then lev > 0 then
+				select_element_by_level (lev)
+			elseif {rep: like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row (a_row) then
+				if rep.rt_information_available then
+					l := level_associated_with (rep)
+				end
+				if l = 0 then
+						--| Change call stack element with the best stack possible
+					if {rep2: like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row_with_rt_info (a_row) then
+						l := level_associated_with (rep2)
+					end
+
+						--| And then switch to the associated feature
+					if {fe: E_FEATURE} rep.e_feature then
+						create st.make (fe)
+					end
+				end
+				if l > 0 then
+					select_element_by_level	(l)
+				end
+				if st /= Void and then st.is_valid then
+					eb_debugger_manager.launch_stone (st)
+				end
+			end
+		end
+
 	select_element_by_level (level: INTEGER) is
 			-- Set stone in the  develpment window.
 		require
@@ -1490,16 +1719,70 @@ feature {NONE} -- Grid Implementation
 	key_pressed (a_key: EV_KEY) is
 			-- If `a_key' is enter, set the selected stack element as the new stone.
 		local
-			level: INTEGER
 			l_row: EV_GRID_ROW
 		do
 			if a_key.code = Key_enter then
 				l_row := stack_grid.single_selected_row
 				if l_row /= Void then
-					level := level_from_row (l_row)
-					if level > 0 then
-						select_element_by_level (level)
-						stack_grid.set_focus
+					select_element_by_row (l_row)
+					stack_grid.set_focus
+				end
+			end
+		end
+
+	on_row_expanded	(a_row: EV_GRID_ROW) is
+			-- `a_row' is expanding
+		require
+			execution_replay_activated: execution_replay_activated
+		local
+			lev: INTEGER
+			r: EV_GRID_ROW
+		do
+			if execution_replay_activated then
+				if
+					a_row /= Void and then a_row.parent /= Void and then a_row.subrow_count = 0
+				then
+					lev := level_from_row (a_row)
+					if lev > 0 then
+						if {rcse: REPLAYED_CALL_STACK_ELEMENT } debugger_manager.application.replay_callstack_details ((-lev).out, 1) then
+							a_row.insert_subrows (1, a_row.subrow_count + 1)
+							r := a_row.subrow (a_row.subrow_count)
+							fill_replayed_call_stack (r, rcse)
+						end
+					elseif {rcse2: REPLAYED_CALL_STACK_ELEMENT} a_row.data then
+						if rcse2.calls_count > 0 and then rcse2.calls = Void then
+							if {rcse3: REPLAYED_CALL_STACK_ELEMENT} debugger_manager.application.replay_callstack_details (rcse2.id, 1) then
+								rcse2.calls := rcse3.calls
+								fill_replayed_call_stack (a_row, rcse2)
+							end
+						end
+					end
+				end
+			end
+		end
+
+	fill_replayed_call_stack (a_row: EV_GRID_ROW; rcse: REPLAYED_CALL_STACK_ELEMENT) is
+		local
+			r: EV_GRID_ROW
+			i: INTEGER
+		do
+			if rcse /= Void then
+				a_row.set_data (rcse)
+				check a_row.subrow_count = 0 end
+				if rcse.calls_count > 0 then
+					if {subrcse: ARRAY [REPLAYED_CALL_STACK_ELEMENT]} rcse.calls then
+						from
+							i := subrcse.lower
+						until
+							i > subrcse.upper
+						loop
+							a_row.insert_subrows (1, a_row.subrow_count + 1)
+							r := a_row.subrow (a_row.subrow_count)
+							fill_replayed_call_stack (r, subrcse[i])
+							i := i + 1
+						end
+					else
+						a_row.ensure_expandable
 					end
 				end
 			end

@@ -504,6 +504,7 @@ rt_private void interpret(int flag, int where)
 	int volatile code;			/* Current intepreted byte code */
 	EIF_TYPED_VALUE * volatile last;	/* Last pushed value */
 	long volatile offset = 0;			/* Offset for jumps and al */
+	long volatile offset_n = 0;		/* Nested Offset for jumps and al */
 	unsigned char * volatile string;		/* Strings for assertions tag */
 	EIF_TYPE_INDEX volatile type;			/* Often used to hold type values */
 	uint32 sk_type;
@@ -1327,6 +1328,8 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RASSIGN\n");
 #endif
+
+		RTDBGA_LOCAL(icurrent->it_ref,0,rtype,0,1);
 		memcpy (iresult, opop(), ITEM_SZ);
 		/* Register once function if needed. This has to be done constantly
 		 * whenever the Result is changed, in case the once calls another
@@ -1348,6 +1351,8 @@ rt_private void interpret(int flag, int where)
 
 			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
+
+			RTDBGA_LOCAL(icurrent->it_ref,0,rtype,1,1);
 			eif_std_ref_copy(ref, iresult->it_ref);
 			if (is_once) {
 				last = iresult;
@@ -1370,6 +1375,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_LASSIGN\n");
 #endif
 		code = get_int16(&IC);		/* Get the local number (from 1 to locnum) */
+		RTDBGA_LOCAL(icurrent->it_ref,code,loc (code)->type,0,1);
 		memcpy (loc (code) , opop(), ITEM_SZ);
 		break;
 
@@ -1400,9 +1406,11 @@ rt_private void interpret(int flag, int where)
 #endif
 		{	EIF_REFERENCE ref = opop()->it_ref;
 
-			if (ref == NULL)
+			if (ref == NULL) {
 				xraise(EN_VEXP);	/* Void assigned to expanded */
+			}
 			code = get_int16(&IC);		/* Get the local # (from 1 to locnum) */
+			RTDBGA_LOCAL(icurrent->it_ref,code,loc(code)->type,1,1);
 			eif_std_ref_copy(ref, loc(code)->it_ref);		/* Copy */
 		}
 		break;
@@ -1416,11 +1424,14 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			uint32 type;
+			long att_offset;
 
 			offset = get_int32(&IC);		/* Get the feature id */
 			code = get_int16(&IC);			/* Get the static type */
-			type = get_uint32(&IC);		/* Get attribute meta-type */
-			assign(RTWA(code, offset, icur_dtype), type);
+			type = get_uint32(&IC);			/* Get attribute meta-type */
+			att_offset = RTWA(code, offset, icur_dtype);
+			RTDBGA_ATTRB(icurrent->it_ref,att_offset,type,0,0);
+			assign(att_offset, type);
 		}
 		break;
 
@@ -1434,11 +1445,14 @@ rt_private void interpret(int flag, int where)
 		{
 			int32 origin, ooffset;
 			uint32 type;
+			long att_offset;
 
 			origin = get_int32(&IC);		/* Get the origin class id */
 			ooffset = get_int32(&IC);		/* Get the offset in origin */
-			type = get_uint32(&IC);		/* Get attribute meta-type */
-			assign(RTWPA(origin, ooffset, icur_dtype), type);
+			type = get_uint32(&IC);			/* Get attribute meta-type */
+			att_offset = RTWPA(origin, ooffset, icur_dtype);
+			RTDBGA_ATTRB(icurrent->it_ref,att_offset,type,0,1);
+			assign(att_offset, type);
 		}
 		break;
 
@@ -1452,15 +1466,18 @@ rt_private void interpret(int flag, int where)
 		{
 			/* struct ac_info *info; */ /* %%ss removed */
 			EIF_REFERENCE ref;
+			long att_offset;
 
 			ref = opop()->it_ref;		/* Expression type */
-			if (ref == (EIF_REFERENCE) 0)
+			if (ref == (EIF_REFERENCE) 0) {
 				xraise(EN_VEXP);		/* Void assigned to expanded */
+			}
 			offset = get_int32(&IC);		/* Get the feature id */
 			code = get_int16(&IC);			/* Get the static type */
 			sk_type = get_uint32(&IC);		/* Get attribute meta-type */
-			offset = RTWA(code, offset, icur_dtype);
-			eif_std_ref_copy (ref, icurrent->it_ref + offset);
+			att_offset = RTWA(code, offset, icur_dtype);
+			RTDBGA_ATTRB(icurrent->it_ref,att_offset,sk_type,1,0);
+			eif_std_ref_copy (ref, icurrent->it_ref + att_offset);
 		}
 		break;
 
@@ -1477,18 +1494,20 @@ rt_private void interpret(int flag, int where)
 			int32 origin, ooffset;
 
 			ref = opop()->it_ref;		/* Expression type */
-			if (ref == (EIF_REFERENCE) 0)
+			if (ref == (EIF_REFERENCE) 0) {
 				xraise(EN_VEXP);		/* Void assigned to expanded */
+			}
 			origin = get_int32(&IC);		/* Get the origin class id */
 			ooffset = get_int32(&IC);		/* Get the offset in origin */
 			sk_type = get_uint32(&IC);		/* Get attribute meta-type */
 			offset = RTWPA(origin, ooffset, icur_dtype);
+			RTDBGA_ATTRB(icurrent->it_ref,offset,sk_type,1,1);
 			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
 		break;
 
 	/*
-	 * Attchement to NONE entity
+	 * Attachement to NONE entity
 	 */
 	case BC_NONE_ASSIGN:
 #ifdef DEBUG
@@ -1498,7 +1517,7 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
-	 * Reverese assignment to Result.
+	 * Reverse assignment to Result.
 	 */
 	case BC_RREVERSE:
 #ifdef DEBUG
@@ -3415,9 +3434,10 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_NHOOK\n");
 #endif
 		offset = get_int32(&IC);		/* retrieve the parameter of BC_NHOOK: line number */
+		offset_n = get_int32(&IC);	/* retrieve the 2nd parameter of BC_NHOOK: line number */
 		saved_scur = scur;			/* save feature context */
 		saved_stop = stop;			/* save feature context */
-		dstop_nested(dtop()->dc_exec,offset);	/* Debugger hook - stop point reached */
+		dstop_nested(dtop()->dc_exec,offset,offset_n);	/* Debugger hook - stop point reached */ /* FIXME */
 		saved_scur = NULL;			/* reset feature context */
 		saved_stop = NULL;			/* reset feature context */
 		break;
@@ -5920,8 +5940,7 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 					value -> value = * iresult; /* Then return it */
 					value -> address = & (iresult -> item);
 					return;
-				}
-				else {
+				} else {
 					value -> value.type = SK_VOID; /* Else signal out of range */
 					value -> value.it_ptr = 0;
 					value -> address = (void *) 0;
@@ -6033,6 +6052,10 @@ rt_public void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 star
 			}
 		}
 	}
+
+	/*
+	fprintf(stderr,"ivalue (value, code=0x%X, num=%d, start=0x%X) locnum=%d -> ip: type:0x%X address:0x%X\n",code, num, start, clocnum, value->value.type, value->address);
+	*/
 	return;
 
 	/* NOT REACHED */

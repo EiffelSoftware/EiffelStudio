@@ -123,8 +123,8 @@
 #define RQST_RTOP_OPTION				0
 #define RQST_RTOP_EXEC_REPLAY			1
 #define RQST_RTOP_DUMP_OBJECT			2
-#define RQST_RTOP_OBJECT_STORAGE_SAVE	3
-#define RQST_RTOP_OBJECT_STORAGE_LOAD	4
+
+#define RQST_RTOP_SET_CATCALL_DETECTION 10
 
 /* Special object inspection */
 #define DEFAULT_SLICE	50		/* Default maximum number of items to be sent */

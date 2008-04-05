@@ -15,14 +15,10 @@ feature -- RT extension identifiers (check eif_debug.h uses the same values)
 
 	Op_enter_feature: 		INTEGER = 10
 	Op_leave_feature: 		INTEGER = 11
-	Op_rescue_feature: 		INTEGER = 13
-
-	Op_exec_replay_record: 	INTEGER = 15
-	Op_exec_replay: 		INTEGER = 16
-	Op_exec_replay_query: 	INTEGER = 17
-
-	Op_object_storage_save: INTEGER = 31
-	Op_object_storage_load: INTEGER = 32
+	Op_rescue_feature: 		INTEGER = 12
+	Op_rt_hook:				INTEGER = 13
+	Op_rt_assign_attrib:	INTEGER = 14
+	Op_rt_assign_local:		INTEGER = 15
 
 feature -- Object storage Access
 

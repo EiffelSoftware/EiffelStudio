@@ -1082,18 +1082,23 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX d
 	REQUIRE("a_location_not_null", a_feature_name);
 	REQUIRE("a_pos positive", a_pos > 0);
 
-	dftype = Dftype(arg);
-
-	if (!RTRC(expected_dftype, dftype)) {
-			/* Type do not conform. Let's check the particular case of BIT XX types for which we do not
-			 * actually record the full type information. */
-		if (!((dftype == egc_bit_dtype) && (eif_register_bit_type (((struct bit *) arg)->b_length) == expected_dftype))) {
-			print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
-				System(dtype).cn_generator,
-				a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
+	if (catcall_detection_enabled) {
+		dftype = Dftype(arg);
+		if (!RTRC(expected_dftype, dftype)) {
+				/* Type do not conform. Let's check the particular case of BIT XX types for which we do not
+				 * actually record the full type information. */
+			if (!((dftype == egc_bit_dtype) && (eif_register_bit_type (((struct bit *) arg)->b_length) == expected_dftype))) {
+				if (catcall_detection_console_enabled) {
+					print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
+						System(dtype).cn_generator,
+						a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
+				}
 #ifdef WORKBENCH
-			dcatcall(a_pos, expected_dftype, dftype);
+				if (catcall_detection_debugger_enabled) {
+					dcatcall(a_pos, expected_dftype, dftype);
+				}
 #endif
+			}
 		}
 	}
 }

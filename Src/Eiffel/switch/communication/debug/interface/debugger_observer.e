@@ -78,6 +78,13 @@ feature {DEBUGGER_MANAGER} -- Event handling
 		do
 		end
 
+	on_application_debugger_update (dbg: DEBUGGER_MANAGER) is
+			-- The debugged application has paused for debugger update
+		require
+			same_debugger: dbg = internal_debugger
+		do
+		end
+
 	on_application_stopped (dbg: DEBUGGER_MANAGER) is
 			-- The debugged application has stopped
 		require

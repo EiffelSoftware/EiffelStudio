@@ -49,7 +49,9 @@ extern "C" {
 /* Returns name of the i_th logical field of `object'. */
 #define ei_field_name_of_type(i,type_id)	(System(To_dtype(type_id)).cn_names[i])
 
+RT_LNK char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE object);
 RT_LNK char *ei_field (long i, EIF_REFERENCE object);
+RT_LNK long ei_eif_type(uint32 field_type);
 RT_LNK long ei_field_type_of_type(long i, EIF_INTEGER type_id);
 RT_LNK long ei_field_static_type_of_type(long i, EIF_INTEGER type_id);
 RT_LNK char *ei_exp_type(long i, EIF_REFERENCE object);

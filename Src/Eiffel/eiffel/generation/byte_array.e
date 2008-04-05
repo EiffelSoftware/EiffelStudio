@@ -554,12 +554,13 @@ feature -- Debugger
 			append_integer_32 (lnr)
 		end
 
-	generate_melted_debugger_hook_nested(lnr: INTEGER) is
+	generate_melted_debugger_hook_nested(lnr, nr: INTEGER) is
 			-- Write continue mark (where breakpoint may be set).
 			-- lnr is the current breakable line number index (nested call).
 		do
 			append ({BYTE_CONST}.bc_nhook)
-			append_integer_32 (lnr)
+			append_integer_32 (lnr) -- breakable index
+			append_integer_32 (nr) -- breakable nested index
 		end
 
 feature {BYTE_ARRAY} -- Access

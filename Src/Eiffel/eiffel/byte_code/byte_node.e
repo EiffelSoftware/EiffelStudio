@@ -88,16 +88,113 @@ feature -- Eiffel source line information
 			context.set_breakpoint_slot (a_hook_number)
 		end
 
+	generate_frozen_debugger_recording_assignment (a_target: ACCESS_B) is
+			-- Generate an assignment hook for exec replay
+		require
+			workbench_mode: context.workbench_mode
+		local
+			buf: like buffer
+			l_base_class: CLASS_C
+			l_rout_info: ROUT_INFO
+			l_code: INTEGER
+			l_sk_type: INTEGER
+			l_offset: INTEGER
+			l_precomp: INTEGER
+			l_expanded: INTEGER
+		do
+			if
+--| FIXME jfiat [2008/04/05] : partial commit, this "False" condition will be be removed soon.
+				False and -- For now disabled
+				a_target.is_assignable
+			then
+				buf := buffer
+				l_sk_type := context.real_type (a_target.type).sk_value (context.context_class_type.type)
+				buf.put_new_line
+				if a_target.is_attribute then
+					--| Note: cf {MELTED_ASSIGNMENT_GENERATOR}.process_attribute_b ...
+					if {attb: !ATTRIBUTE_B} a_target then
+						if {l_instant_context_type: CL_TYPE_A} attb.context_type then
+							l_base_class := l_instant_context_type.associated_class
+							if Compilation_modes.is_precompiling or else l_base_class.is_precompiled then
+								l_precomp := 1
+								l_rout_info := system.rout_info_table.item (attb.routine_id)
+								l_code := l_rout_info.origin
+								l_offset := l_rout_info.offset
+							else
+								l_code := l_instant_context_type.static_type_id (context.context_class_type.type) - 1
+								l_offset := attb.attribute_id
+							end
+						end
+						if l_precomp = 1 then
+							buf.put_string ("RTDBGAPA (Current,Dtype(Current),")
+						else
+							buf.put_string ("RTDBGAA (Current,Dtype(Current),")
+						end
+						if attb.type.is_expanded then
+							l_expanded := 1
+						end
+
+						buf.put_integer (l_code)
+						buf.put_character (',')
+						buf.put_integer (l_offset)
+						buf.put_character (',')
+						buf.put_integer (l_sk_type)
+						buf.put_character (',')
+						buf.put_integer (l_expanded)
+						buf.put_two_character (')', ';')
+						buf.put_string (" /* " + attb.attribute_name + " */")
+					end
+				elseif a_target.is_local then
+					if {locb: !LOCAL_B} a_target then
+						buf.put_string ("RTDBGAL (Current,")
+						buf.put_integer (locb.position)
+						buf.put_character (',')
+						buf.put_integer (l_sk_type)
+						buf.put_character (',')
+						if locb.type.is_expanded then
+							buf.put_integer (1)
+						else
+							buf.put_integer (0)
+						end
+						buf.put_two_character (',', '0') --| not melted						
+						buf.put_two_character (')', ';')
+						buf.put_string (" /* " + locb.register_name + " */")
+					end
+				elseif a_target.is_result then
+					if {resb: !RESULT_B} a_target then
+						buf.put_string ("RTDBGAL (Current,0,") --| Let's say Result's position = 0
+						buf.put_integer (l_sk_type)
+						buf.put_character (',')
+						if resb.type.is_expanded then
+							buf.put_integer (1)
+						else
+							buf.put_integer (0)
+						end
+						buf.put_two_character (',', '0') --| not melted						
+						buf.put_two_character (')', ';')
+						buf.put_string (" /* Result */")
+					end
+				elseif a_target.is_current then
+					if {curb: !CURRENT_B} a_target then
+						buf.put_string ("/* RTDBGA CURRENT .. */")
+					end
+				end
+				buf.put_new_line
+			end
+		end
+
 	generate_frozen_debugger_hook is
 			-- Generate the hook for the C debugger for the
 			-- line number `lnr' (line number means breakpoint slot)
 		local
 			lnr: INTEGER
 			l_buffer: like buffer
+			ctx: like context
 		do
-			if not context.final_mode or else System.exception_stack_managed then
-				if context.current_feature /= Void and then context.current_feature.supports_step_in then
-					lnr := context.get_next_breakpoint_slot
+			ctx := context
+			if not ctx.final_mode or else System.exception_stack_managed then
+				if ctx.current_feature /= Void and ctx.current_feature.supports_step_in then
+					lnr := ctx.get_next_breakpoint_slot
 					check
 						lnr > 0
 					end
@@ -171,7 +268,13 @@ feature -- Eiffel source line information
 						l_buffer.put_new_line
 						l_buffer.put_string(RTNHOOK_OPEN)
 						l_buffer.put_integer(lnr)
+
+						lnr := context.get_next_breakpoint_nested_slot
+						l_buffer.put_character (',')
+						l_buffer.put_integer(lnr)
+
 						l_buffer.put_two_character (')', ';')
+
 					end
 				end
 			end

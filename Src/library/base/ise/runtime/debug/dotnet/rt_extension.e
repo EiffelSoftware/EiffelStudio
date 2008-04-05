@@ -24,15 +24,16 @@ feature -- Notification
 				inspect a_id
 				when Op_enter_feature,
 					 Op_leave_feature,
-					 Op_exec_replay_record,
-					 Op_exec_replay,
-					 Op_exec_replay_query
+					 Op_rescue_feature,
+					 Op_rt_hook,
+					 Op_rt_assign_attrib,
+					 Op_rt_assign_local
 				then
 					-- Not yet implemented on dotnet platform
-				when Op_object_storage_save then
-					process_object_storage_save (object_storage_argument (a_data))
-				when Op_object_storage_load then
-					process_object_storage_load (object_storage_argument (a_data))
+--				when Op_object_storage_save then
+--					process_object_storage_save (object_storage_argument (a_data))
+--				when Op_object_storage_load then
+--					process_object_storage_load (object_storage_argument (a_data))
 				else
 					debug ("RT_EXTENSION")
 						dtrace ("Error: " + out + " ->" + a_id.out + "%N")
@@ -54,12 +55,13 @@ feature -- Notification
 		do
 			if not retried then
 				inspect a_id
-				when Op_enter_feature, Op_leave_feature, Op_rescue_feature,
-					 Op_exec_replay_record, Op_exec_replay, Op_exec_replay_query
-				then
+				when Op_enter_feature, Op_leave_feature, Op_rescue_feature, 
+					Op_rt_hook,	Op_rt_assign_attrib, Op_rt_assign_local then
 					-- Not yet implemented on dotnet platform
-				when Op_object_storage_save, Op_object_storage_load then
-					create {like object_storage_argument} Result
+--				when Op_exec_replay_record, Op_exec_replay, Op_exec_replay_query then
+--					-- Not yet implemented on dotnet platform
+--				when Op_object_storage_save, Op_object_storage_load then
+--					create {like object_storage_argument} Result
 				else
 				end
 			end
@@ -74,32 +76,32 @@ feature -- Notification
 
 feature {NONE} -- Object storage
 
-	object_storage_argument (t: TUPLE): TUPLE [ref: ANY; fn: POINTER; succeed: BOOLEAN]
-			-- Argument for `process_object_storage_save' and `process_object_storage_load'.
-		do
-			Result ?= t
-		end
-
-	process_object_storage_save (t: like object_storage_argument)
-			-- Process the object saving for `t' data
-		local
-			fn: STRING
-		do
-			create fn.make_from_c (t.fn)
-			t.succeed := saved_object_to (t.ref, fn) /= Void
-		end
-
-	process_object_storage_load (t: like object_storage_argument)
-			-- Process the object loading for `t' data
-		local
-			obj: ANY
-			fn: STRING
-		do
-			create fn.make_from_c (t.fn)
-			obj := object_loaded_from (t.ref, fn)
-			t.succeed := obj /= Void
-			t.ref := obj
-		end
+--	object_storage_argument (t: TUPLE): TUPLE [ref: ANY; fn: POINTER; succeed: BOOLEAN]
+--			-- Argument for `process_object_storage_save' and `process_object_storage_load'.
+--		do
+--			Result ?= t
+--		end
+--
+--	process_object_storage_save (t: like object_storage_argument)
+--			-- Process the object saving for `t' data
+--		local
+--			fn: STRING
+--		do
+--			create fn.make_from_c (t.fn)
+--			t.succeed := saved_object_to (t.ref, fn) /= Void
+--		end
+--
+--	process_object_storage_load (t: like object_storage_argument)
+--			-- Process the object loading for `t' data
+--		local
+--			obj: ANY
+--			fn: STRING
+--		do
+--			create fn.make_from_c (t.fn)
+--			obj := object_loaded_from (t.ref, fn)
+--			t.succeed := obj /= Void
+--			t.ref := obj
+--		end
 
 invariant
 	no_attribute: (create {INTERNAL}).field_count (Current) = 0

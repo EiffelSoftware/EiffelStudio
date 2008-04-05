@@ -91,7 +91,7 @@ extern void dostk(void);					/* Set operational stack context */
 
 /* execution with breakpoints control */
 RT_LNK void dstop(struct ex_vect *exvect, uint32 offset);	/* Breakable point reached */
-RT_LNK void dstop_nested(struct ex_vect *exvect, uint32 offset);	/* Breakable point reached (nested call) */
+RT_LNK void dstop_nested(struct ex_vect *exvect, uint32 offset, uint32 nested_break_index);	/* Breakable point reached (nested call) */
 extern void dsync(void);									/* (Re)synchronize d_data cached information */
 extern void dsetbreak(BODY_INDEX body_id, int offset, int what);/* Set/remove breakpoint in feature */
 extern void dbreak_clear_table(void);							/* Clear all known bps */
@@ -110,19 +110,14 @@ extern void dmove(int offset);							/* Move active routine cursor */
 #define RTDBG_EVENT_ENTER_FEATURE		10	/*  See {RT_EXTENSION}.Op_enter_feature */
 #define RTDBG_EVENT_LEAVE_FEATURE		11	/*  See {RT_EXTENSION}.Op_leave_feature */ 
 #define RTDBG_EVENT_RESCUE_FEATURE		12	/*  See {RT_EXTENSION}.Op_rescue_feature */ 
+#define RTDBG_EVENT_RT_HOOK				13	/*  See {RT_EXTENSION}.Op_rt_hook		 */ 
+#define RTDBG_EVENT_RT_ASSIGN_ATTRIB	14	/*  See {RT_EXTENSION}.Op_rt_assign_attrib */ 
+#define RTDBG_EVENT_RT_ASSIGN_LOCAL		15	/*  See {RT_EXTENSION}.Op_rt_assign_local  */ 
 
-#define RTDBG_EVENT_REPLAY_RECORD		15	/*  See {RT_EXTENSION}.Op_exec_replay_record */
-#define RTDBG_EVENT_REPLAY				16	/*  See {RT_EXTENSION}.Op_exec_replay */
-#define RTDBG_EVENT_REPLAY_QUERY		17	/*  See {RT_EXTENSION}.Op_exec_replay_query */
-
-#define RTDBG_EVENT_OBJECT_STORAGE_SAVE	31	/*  See {RT_EXTENSION}.Op_object_storage_save */
-#define RTDBG_EVENT_OBJECT_STORAGE_LOAD	32	/*  See {RT_EXTENSION}.Op_object_storage_load */
+#define RTDBG_OP_ASSIGN_LOCAL			1	/* See {RT_DBG_EXECUTION_RECORDER}.Op_assign_local */
+#define RTDBG_OP_ASSIGN_ATTRB			2	/* See {RT_DBG_EXECUTION_RECORDER}.Op_assign_attribute */
 
 #define RTDBG_OP_REPLAY_RECORD			0	/* See {RT_EXTENSION}.Op_exec_replay_record */
-#define RTDBG_OP_REPLAY_BACK			1	/* See {RT_DBG_EXECUTION_RECORDER}.Direction_back */
-#define RTDBG_OP_REPLAY_FORTH			2	/* See {RT_DBG_EXECUTION_RECORDER}.Direction_forth */
-#define RTDBG_OP_REPLAY_LEFT			3	/* See {RT_DBG_EXECUTION_RECORDER}.Direction_left */
-#define RTDBG_OP_REPLAY_RIGHT			4	/* See {RT_DBG_EXECUTION_RECORDER}.Direction_right */
 
 /* Macro related to RT_ eiffel class and Execution replay
  *  RT_ENTER_EIFFELCODE enter into RT_ Eiffel class code
@@ -130,18 +125,62 @@ extern void dmove(int offset);							/* Move active routine cursor */
  *  RTDBGE	notify RT_ debugger when entering a feature
  *  RTDBGL	notify RT_ debugger when leaving a feature
  *  RTDBGR  notify RT_ debugger when entering a rescue clause
+ *  RTDBGH  notify RT_ debugger when reaching a RTHOOK or RTNHOOK
+ *  RTDBGA_LOCAL  notify RT_ debugger when Local is changed
+ *  RTDBGA_ATTRB  notify RT_ debugger when Attrib is changed
+ *  RTDBGAL  notify RT_ debugger when Local is changed
+ *  RTDBGAA  notify RT_ debugger when Attrib is changed
+ *  RTDBGAPA  notify RT_ debugger when Attrib is changed for precompilation
  */
 
-extern void rt_ext_notify_event (int op, char* curr, int cid, int fid, int dep, char* pfn);
+extern void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int i3, char* pfn);
+extern void rt_ext_notify_assign (int op, EIF_REFERENCE ref, long a_pos, int a_dyn_type, int a_static_type, int a_feat_id, 
+		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted);
+extern int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE* new_value);
+extern char* rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type);
 		
-#define RT_ENTER_EIFFELCODE is_inside_rt_eiffel_code = 1;
-#define RT_EXIT_EIFFELCODE is_inside_rt_eiffel_code = 0;
+#define RT_ENTER_EIFFELCODE is_inside_rt_eiffel_code++
+#define RT_EXIT_EIFFELCODE is_inside_rt_eiffel_code--
+
 #define RTDBGE(cid,fid,curr,dep,fn)	\
 		rt_ext_notify_event (RTDBG_EVENT_ENTER_FEATURE, curr, cid, fid, dep, fn);
 #define RTDBGL(cid,fid,curr,dep)	\
 		rt_ext_notify_event (RTDBG_EVENT_LEAVE_FEATURE, curr, cid, fid, dep, (char*) NULL);
-#define RTDBGR(curr,dep)	\
-		rt_ext_notify_event (RTDBG_EVENT_RESCUE_FEATURE, curr, 0, 0, dep, (char*) NULL);
+#define RTDBGR(cid,fid,curr,dep)	\
+		rt_ext_notify_event (RTDBG_EVENT_RESCUE_FEATURE, curr, cid, fid, dep, (char*) NULL);
+
+/* uncomment to use new feature of exec replay .. in progress (experimental)
+ * #define RTDBG_EXECREPLAY_V2
+ */
+#ifdef RTDBG_EXECREPLAY_V2
+
+#define RTDBGH(bp_i, bp_ni)	\
+		rt_ext_notify_event (RTDBG_EVENT_RT_HOOK, (EIF_REFERENCE) 0, bp_i, bp_ni, 0, (char*) NULL);
+
+#define RTDBGA_LOCAL(curr,n,t,x,m)		\
+		rt_ext_notify_assign (RTDBG_EVENT_RT_ASSIGN_LOCAL, curr, n, 0,0,0, t, x,0,m);
+		/* curr=object; n=position; t=type; x=(1:expanded; 0:normal) */
+#define RTDBGA_ATTRB(curr,n,t,x,p)	\
+		rt_ext_notify_assign (RTDBG_EVENT_RT_ASSIGN_ATTRIB, curr, n, 0,0,0, t, x,p,0);
+		/* curr=object; n=offset; t=type; x=(1:expanded; 0:normal) p=(1:precomp; 0:normal) */
+
+#define RTDBGAL(curr,n,t,x,m)	RTDBGA_LOCAL(curr,n,t,x,m)
+#define RTDBGAA(curr,d,s,f,t,x)	\
+		rt_ext_notify_assign (RTDBG_EVENT_RT_ASSIGN_ATTRIB, curr, 0, s,f,d, t, x,0,0);
+		/* curr=object; n=offset; t=type; x=(1:expanded; 0:normal) */
+#define RTDBGAPA(curr,d,s,f,t,x)	\
+		rt_ext_notify_assign (RTDBG_EVENT_RT_ASSIGN_ATTRIB, curr, 0, s,f,d, t, x,1,0);
+		/* curr=object; n=offset; t=type; x=(1:expanded; 0:normal) */
+
+#else
+/* Exec replay disabled for this current integration */
+#define RTDBGH(bp_i, bp_ni)	
+#define RTDBGA_LOCAL(curr,n,t,x,m)
+#define RTDBGA_ATTRB(curr,n,t,x,p)	
+#define RTDBGAL(curr,n,t,x,m)	
+#define RTDBGAA(curr,d,s,f,t,x)
+#define RTDBGAPA(curr,d,s,f,t,x)
+#endif
 
 #endif /* WORKBENCH */
 

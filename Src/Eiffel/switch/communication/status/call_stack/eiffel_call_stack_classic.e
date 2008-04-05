@@ -48,11 +48,8 @@ create {TWO_WAY_LIST}
 
 feature -- Properties
 
-	stack_depth: INTEGER is
-			-- FIXME jfiat: this is count for now .. but fix this !!
-		do
-			Result := count
-		end
+	stack_depth: INTEGER
+			-- Current call stack depth
 
 	error_occurred: BOOLEAN;
 			-- Did an error occurred when retrieving the eiffel stack?
@@ -90,7 +87,12 @@ feature {APPLICATION_STATUS} -- Restricted Access
 			from
 				tid :=  thread_id
 				send_dump_stack_request (n, tid)
-				level := 1			-- we start from the top of the call stack.
+
+					--| Read callstack depth
+				stack_depth := to_integer_32 (c_tread)
+
+					--| we start from the top of the call stack.
+				level := 1
 				create call.make(level, tid)
 			until
 				call.is_exhausted or call.error

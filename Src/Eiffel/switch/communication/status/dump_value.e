@@ -408,7 +408,9 @@ feature -- Status report
 			-- Complete string value representation.
 			-- it can be Void!
 		do
-			Result := raw_string_representation (0, -1)
+			if address /= Void and has_formatted_output then
+				Result := raw_string_representation (0, -1)
+			end
 		end
 
 	truncated_string_representation (min, max: INTEGER): STRING_32 is

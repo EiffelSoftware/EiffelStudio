@@ -998,8 +998,8 @@ RT_LNK EIF_TYPE_INDEX fcount;
 					if (prof_stack) saved_prof_top = prof_stack->st_top; \
 					start: exvect->ex_jbuf = &exenv; RTES
 
-#define RTEU d_data.db_callstack_depth = db_cstack; exresc(MTC exvect);	\
-					RTDBGR(exvect->ex_id,db_cstack);
+#define RTEU 		d_data.db_callstack_depth = db_cstack; exresc(MTC exvect);	\
+					RTDBGR(exvect->ex_orig,exvect->ex_bodyid,exvect->ex_id,db_cstack);
 
 #define RTE_T \
 	current_call_level = trace_call_level; \
@@ -1042,15 +1042,15 @@ RT_LNK EIF_TYPE_INDEX fcount;
 
 /* new debug */
 #ifdef WORKBENCH
-#define RTLU(x,y)	insert_local_var (x, (void *) y)
-#define RTLO(n)		clean_local_vars (n)
-#define RTHOOK(n)	dstop (exvect, n)
-#define RTNHOOK(n)	dstop_nested (exvect, n)
+#define RTLU(x,y)		insert_local_var (x, (void *) y)
+#define RTLO(n)			clean_local_vars (n)
+#define RTHOOK(n)		dstop (exvect, n);
+#define RTNHOOK(n,m)	dstop_nested (exvect, n, m);
 #else
 #define RTLU(x,y)
 #define RTLO(n)	
-#define RTHOOK(n)	exvect->ex_linenum = n
-#define RTNHOOK(n)
+#define RTHOOK(n)		exvect->ex_linenum = n
+#define RTNHOOK(n,m)
 #endif
 
 /* Old expression evaluation */
@@ -1219,8 +1219,8 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #define RTVI(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,1)
 #define RTCI(x)			chkcinv(MTC x)
 #else
-#define RTIV(x)			if (~in_assertion & is_nested) chkinv(MTC x,0)
-#define RTVI(x)			if (~in_assertion & is_nested) chkinv(MTC x,1)
+#define RTIV(x)			if (~in_assertion && is_nested) chkinv(MTC x,0)
+#define RTVI(x)			if (~in_assertion && is_nested) chkinv(MTC x,1)
 #define RTCI(x)			if (~in_assertion) chkinv(MTC x,1)
 #endif
 

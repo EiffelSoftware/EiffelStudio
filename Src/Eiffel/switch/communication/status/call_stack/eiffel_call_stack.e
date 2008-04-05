@@ -52,6 +52,21 @@ feature -- Access
 		deferred
 		end
 
+	eiffel_call_stack_element (dep: INTEGER): EIFFEL_CALL_STACK_ELEMENT is
+			-- Call stack element of depth `dep'
+		do
+			from
+				start
+			until
+				after or Result /= Void
+			loop
+				if {c: EIFFEL_CALL_STACK_ELEMENT} item and then stack_depth - c.level_in_stack + 1 = dep then
+					Result := c
+				end
+				forth
+			end
+		end
+
 feature -- Queries
 
 	to_string: STRING is
@@ -79,6 +94,24 @@ feature -- Change
 			-- Add `v' to end.
 			-- Do not move cursor.
 		deferred
+		end
+
+	reset_call_stack_depth (dep: INTEGER) is
+			-- Reset call stack element of callstack depth `dep'
+		do
+			if {c: like eiffel_call_stack_element} eiffel_call_stack_element (dep) then
+				c.reset_stack
+			end
+		end
+
+	reset_call_stack_level (lev: INTEGER) is
+			-- Reset call stack element of callstack level `lev'
+		do
+			if valid_index (lev) then
+				if {c: like eiffel_call_stack_element} i_th (lev) then
+					c.reset_stack
+				end
+			end
 		end
 
 feature -- Cursor movement

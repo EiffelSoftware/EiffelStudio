@@ -85,8 +85,7 @@ feature -- Rt operations
 	Rtop_option: INTEGER 				= 0	-- See rqst_constant.h:RQST_RTOP_OPTION
 	Rtop_exec_replay: INTEGER 			= 1	-- See rqst_constant.h:RQST_RTOP_EXEC_REPLAY
 	Rtop_dump_object: INTEGER 			= 2	-- See rqst_constant.h:RQST_RTOP_DUMP_OBJECT
-	Rtop_object_storage_save: INTEGER 	= 3	-- See rqst_constant.h:RQST_RTOP_OBJECT_STORAGE_SAVE
-	Rtop_object_storage_load: INTEGER 	= 4	-- See rqst_constant.h:RQST_RTOP_OBJECT_STORAGE_LOAD
+	Rtop_set_catcall_detection: INTEGER = 10	-- See rqst_constant.h:RQST_RTOP_SET_CATCALL_DETECTION
 
 feature {APPLICATION_STATUS} -- Implementation
 

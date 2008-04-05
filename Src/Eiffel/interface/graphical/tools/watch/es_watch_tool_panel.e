@@ -1278,6 +1278,19 @@ feature -- Access
 			a_item.refresh
 		end
 
+	add_dump_value (dv: DUMP_VALUE) is
+			-- Add value `dv' to the watch tool's grid
+		local
+			expr: DBG_EXPRESSION
+		do
+			if dv.dynamic_class = Void then
+				create expr.make_for_context ("Void")
+			else
+				create expr.make_as_object (dv.dynamic_class, dv.address)
+			end
+			add_expression (expr, False)
+		end
+
 	add_debug_value (dv: ABSTRACT_DEBUG_VALUE) is
 			-- Add value `dv' to the watch tool's grid
 		local

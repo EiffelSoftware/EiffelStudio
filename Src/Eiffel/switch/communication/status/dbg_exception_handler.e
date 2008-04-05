@@ -34,8 +34,11 @@ feature -- Init
 
 feature -- Specific case
 
-	catcall_warning_ignored: BOOLEAN assign set_catcall_warning_ignored
-			-- Is catcall warning ignored ?
+	catcall_console_warning_disabled: BOOLEAN assign set_catcall_console_warning_disabled
+			-- Is catcall console warning disabled ?
+
+	catcall_debugger_warning_disabled: BOOLEAN assign set_catcall_debugger_warning_disabled
+			-- Is catcall debugger warning disabled ?			
 
 feature -- Access
 
@@ -97,10 +100,16 @@ feature -- Change
 			enabled := False
 		end
 
-	set_catcall_warning_ignored (b: like catcall_warning_ignored) is
-			-- Set `catcall_warning_ignored' to `b'
+	set_catcall_console_warning_disabled (b: like catcall_console_warning_disabled) is
+			-- Set `catcall_console_warning_disabled' to `b'
 		do
-			catcall_warning_ignored := b
+			catcall_console_warning_disabled := b
+		end
+
+	set_catcall_debugger_warning_disabled (b: like catcall_debugger_warning_disabled) is
+			-- Set `catcall_debugger_warning_disabled' to `b'
+		do
+			catcall_debugger_warning_disabled := b
 		end
 
 	wipe_out is

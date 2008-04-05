@@ -175,7 +175,7 @@ feature {NONE} -- Initialization
 	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Build docking content
 		do
-			Precursor (a_docking_manager)
+			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (a_docking_manager)
 			content.drop_actions.extend (agent add_debugged_object)
 			content.drop_actions.extend (agent drop_stack_element)
 		end

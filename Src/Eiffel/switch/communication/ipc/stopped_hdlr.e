@@ -1,6 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class STOPPED_HDLR
 
 inherit
@@ -163,7 +164,7 @@ feature -- Execution
 				l_status.set (feature_name, address, origine_type_id, dynamic_type_id, offset, stopping_reason)
 				l_status.set_exception_occurred (exception_occurred)
 				if exception_occurred then
-					if {e: !EXCEPTION_DEBUG_VALUE} l_app.remote_current_exception_value then
+					if {e: EXCEPTION_DEBUG_VALUE} l_app.remote_current_exception_value then
 						e.update_data
 						l_status.set_exception (e)
 					else
@@ -217,6 +218,8 @@ feature -- Execution
 				debug ("DEBUGGER_TRACE")
 					io.error.put_string ("STOPPED_HDLR: New breakpoint added, do nothing%N")
 				end
+
+				a_app.on_application_debugger_update
 
 				-- application has stopped to take into account the
 				-- breakpoints changes. So let's send the breakpoints
@@ -296,7 +299,8 @@ feature {NONE} -- Implementation
 			l_integer: INTEGER
 			t: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER]
 		do
-			if app.debugger_manager.exceptions_handler.catcall_warning_ignored then
+			if app.debugger_manager.exceptions_handler.catcall_debugger_warning_disabled then
+				debugger_manager.update_catcall_detection_mode
 				Result := False
 			else
 				Result := True
@@ -343,7 +347,7 @@ feature {NONE} -- Implementation
 				else
 					io.put_string ("Ignore exception")
 				end
-				if {s: !STRING} (app.status.exception_type_name) then
+				if {s: STRING} (app.status.exception_type_name) then
 					io.put_string (": " + s)
 				end
 				io.new_line

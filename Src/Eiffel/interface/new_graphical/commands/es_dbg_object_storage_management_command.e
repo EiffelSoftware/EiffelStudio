@@ -156,7 +156,6 @@ feature -- Basic operations
 			-- Pop up a new empty dialog.
 		local
 			dlg: ES_DBG_OBJECT_STORAGE_MANAGEMENT_DIALOG
-			dv: ABSTRACT_DEBUG_VALUE
 		do
 			if
 				debugger_manager.safe_application_is_stopped and then
@@ -168,9 +167,8 @@ feature -- Basic operations
 				dlg.set_is_modal (True)
 				dlg.show_on_active_window
 
-				dv := dlg.object_value
-				if dv /= Void and then active_watch_tool /= Void then
-					active_watch_tool.add_debug_value (dv)
+				if active_watch_tool /= Void and {dv: DUMP_VALUE} dlg.object_value then
+					active_watch_tool.add_dump_value (dv)
 				end
 			end
 		end

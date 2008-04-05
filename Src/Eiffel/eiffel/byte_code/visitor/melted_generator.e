@@ -2018,7 +2018,7 @@ feature {NONE} -- Implementation
 	generate_melted_debugger_hook_nested is
 			-- Record breakable point for nested call
 		local
-			l_line: INTEGER
+			l_line, l_nested: INTEGER
 		do
 			if context.current_feature /= Void and then context.current_feature.supports_step_in then
 				l_line := context.get_breakpoint_slot
@@ -2026,7 +2026,8 @@ feature {NONE} -- Implementation
 						-- Generate a hook when there is really need for one.
 						-- (E.g. we do not need a hook for the code generation
 						-- of an invariant).
-					ba.generate_melted_debugger_hook_nested (l_line)
+					l_nested := context.get_next_breakpoint_nested_slot
+					ba.generate_melted_debugger_hook_nested (l_line, l_nested)
 				end
 			end
 		end

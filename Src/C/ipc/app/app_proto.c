@@ -91,10 +91,6 @@ rt_private void obj_inspect(EIF_OBJ object);
 rt_private void bit_inspect(EIF_OBJ object);
 rt_private void string_inspect(EIF_OBJ object);		/* String object inspection */
 rt_private void load_bc(int slots, int amount);		/* Load byte code information */
-rt_private int dexecreplay(int dir, int steps);	/* ... */
-rt_private int dexecreplay_levels(int dir);		/* ... */
-rt_private void dobjectstorage_save(EIF_PSTREAM sp);				/* Save object to file */
-rt_private void dobjectstorage_load(EIF_PSTREAM sp);				/* Load stored object from file */
 rt_private void app_send_integer (EIF_PSTREAM sp, int val);
 rt_private void app_send_reference (EIF_PSTREAM sp, EIF_REFERENCE ref, int dump_type);
 rt_private void app_send_typed_value (EIF_PSTREAM sp, EIF_TYPED_VALUE *ip, int a_dmp_type);
@@ -104,6 +100,7 @@ rt_private long sp_lower, sp_upper;					/* Special objects' bounds to be inspect
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
 
 rt_private void set_check_assert (int v) ;	/* Set current assertion checking off/on */
+rt_private void set_catcall_detection_mode (EIF_PSTREAM sp, int a_console, int a_dbg); /* Set catcall_detection mode */
 extern char *simple_out(EIF_TYPED_VALUE *);	/* Out routine for simple time (from run-time) */
 
 /* debugging macro */
@@ -236,18 +233,18 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case DUMP_STACK:						/* General stack dump request */
 		dthread_prepare();
-		send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
+		{
+			EIF_GET_CONTEXT
+			app_send_integer (sp, d_data.db_callstack_depth);		/* Callstack depth */
+			send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
+		}
 		dthread_restore();
 		break;
 	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=dynamic_type / arg4=is_external / arg5=is_precompiled / arg6=is_basic_type / arg7=is_static_call */
 		{
-			int b;
-			b = exec_recording_enabled;
-			exec_recording_enabled = 0;
 			dthread_prepare();
 			dynamic_evaluation(sp, arg_1, arg_2, arg_3, (arg_4 >> 1) & 1, (arg_4 >> 2) & 1, (arg_4 >> 3) & 1);
 			dthread_restore();
-			exec_recording_enabled = b;
 		}
 		break;
 	case LAST_EXCEPTION:
@@ -308,31 +305,27 @@ static int curr_modify = NO_CURRMODIF;
 	case RT_OPERATION:
 		dthread_prepare();
 		switch (arg_1) {
-			case RQST_RTOP_EXEC_REPLAY:
-				/*    arg_2: record; arg_3: value */
-				/* or arg_2: up,down,left,right; arg_3: steps */
-				{
-					if (arg_2 == RTDBG_OP_REPLAY_RECORD) {
-						dexecreplay(RTDBG_OP_REPLAY_RECORD, arg_3);
-					} else if (arg_3 == 0) { /* no steps .. then this is a question */
-						int l = 0;
-						l = dexecreplay_levels(arg_2);
-						app_twrite (&l, sizeof(int));
-					} else {
-						EIF_BOOLEAN b = EIF_FALSE;
-						b = EIF_TEST(dexecreplay(arg_2, arg_3) == 1);; 
-						app_twrite (&b, sizeof(EIF_BOOLEAN));
-					};
-				};
-				break;
 			case RQST_RTOP_DUMP_OBJECT:
 				dbg_dump_rt_extension_object(sp);
 				break;
-			case RQST_RTOP_OBJECT_STORAGE_SAVE:
-				dobjectstorage_save (sp);
+			case RQST_RTOP_EXEC_REPLAY:
+				/*    arg_2: record; arg_3: value (0 or 1) */
+				/* or arg_2: up,down,left,right; arg_3: steps */
+				{
+					if (arg_2 == RTDBG_OP_REPLAY_RECORD) {
+						EIF_GET_CONTEXT
+						is_inside_rt_eiffel_code = 0;
+						if (rt_extension_obj == NULL) {
+								/* Do not enable exec recording if `rt_extension_obj' is not available ! */
+							exec_recording_enabled = 0;
+						} else {
+							exec_recording_enabled = ((int) arg_3 == 1)?1:0;
+						}
+					};
+				};
 				break;
-			case RQST_RTOP_OBJECT_STORAGE_LOAD:
-				dobjectstorage_load (sp);
+			case RQST_RTOP_SET_CATCALL_DETECTION:
+				set_catcall_detection_mode (sp, (int) arg_2, (int) arg_3);
 				break;
 			default:
 				break;
@@ -630,215 +623,6 @@ rt_shared void dnotify(int evt_type, int evt_data)
 	notify_rqst(app_sp, evt_type, evt_data);		/* Notify workbench we stopped */
 }
 
-/**************************************
- * RT_EXTENSION interactions          *
- **************************************/
-
-#define rtd_arg_value(x,i,t) ((EIF_TYPED_VALUE *)x.it_r + i)->it_ ## t
-
-rt_private EIF_TYPED_VALUE dinvoke_rt_extension_argument (int op)
-{
-	EIF_TYPED_VALUE rtd_op;
-	rtd_op.it_i4 = op;
-	rtd_op.type = SK_INT32; 
-	return (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);
-}
-
-rt_private void dinvoke_rt_extension (int op, EIF_TYPED_VALUE rtd_arg)
-{
-	EIF_TYPED_VALUE rtd_op;
-	rtd_op.it_i4 = op;
-	rtd_op.type = SK_INT32; 
-	(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);
-}
-
-rt_private int dexecreplay_levels (int dir) 
-	/* 
-	 * Return the potential steps in the direction `dir'
-	 */
-{
-	EIF_TYPED_VALUE rtd_arg;						
-	EIF_GET_CONTEXT;
-	switch (dir) {
-		case RTDBG_OP_REPLAY_BACK:
-		case RTDBG_OP_REPLAY_FORTH:
-			CHECK("Execution recording must be on", exec_recording_enabled == 1);	
-			CHECK("is_inside_rt_eiffel_code should be False", is_inside_rt_eiffel_code != 0);	
-			RT_ENTER_EIFFELCODE; /* Stop the recording */
-			rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_REPLAY_QUERY);
-			rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) dir; 	/* back,forth,... */
-			dinvoke_rt_extension (RTDBG_EVENT_REPLAY_QUERY, rtd_arg);
-			RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
-			return (int) rtd_arg_value(rtd_arg, 2, i4);
-			break;
-		case RTDBG_OP_REPLAY_LEFT:
-			/* Direction not yet supported */
-		case RTDBG_OP_REPLAY_RIGHT:
-			/* Direction not yet supported */
-		default:
-			return 0;
-			break;
-	}
-}
-
-rt_private int dexecreplay (int op, int val) 
-	/* Execution replay
-	 * if op is RTDBG_OP_REPLAY_RECORD then (de)activate recording according to `val'
-	 * else `op' is a direction
-	 * op = back,forth,left,right
-	 * val: nb of steps in the direction `op'
-	 */
-{
-	EIF_TYPED_VALUE rtd_arg;
-	EIF_GET_CONTEXT;
-	switch (op) {
-		case RTDBG_OP_REPLAY_RECORD:
-			if (rt_extension_obj == NULL) {
-					/* Do not enable exec recording if `rt_extension_obj' is not available ! */
-				exec_recording_enabled = 0;
-			} else {
-				exec_recording_enabled = ((int) val == 1)?1:0;
-				RT_ENTER_EIFFELCODE; /* Stop the recording */
-				rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_REPLAY_RECORD);
-				rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) exec_recording_enabled; /* 1=True or not_1=False */
-				dinvoke_rt_extension (RTDBG_EVENT_REPLAY_RECORD, rtd_arg);
-				RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
-			}
-			break;
-		case RTDBG_OP_REPLAY_BACK:
-		case RTDBG_OP_REPLAY_FORTH:
-			CHECK("Execution recording must be on", exec_recording_enabled == 1);	
-			CHECK("is_inside_rt_eiffel_code should be False", is_inside_rt_eiffel_code != 0);	
-			RT_ENTER_EIFFELCODE; /* Stop the recording */
-			rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_REPLAY);
-			rtd_arg_value(rtd_arg, 1, i4) = (EIF_INTEGER_32) op; 	/* back,forth,... */
-			rtd_arg_value(rtd_arg, 2, i4) = (EIF_INTEGER_32) val; 	/* nb steps */
-			dinvoke_rt_extension (RTDBG_EVENT_REPLAY, rtd_arg);
-			RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
-			return (int) rtd_arg_value(rtd_arg, 2, i4);
-			break;
-		case RTDBG_OP_REPLAY_LEFT:
-		case RTDBG_OP_REPLAY_RIGHT:
-		default:
-			return -1;
-			break;
-	}
-	return 1;
-}
-
-rt_private void dobjectstorage_save (EIF_PSTREAM sp)
-{
-	EIF_TYPED_VALUE *ip = NULL;
-	Request rqst;			/* Loading request */
-	char *s = NULL;
-	EIF_TYPED_VALUE *pv = NULL;
-
-	EIF_GET_CONTEXT
-
-		/* Get and pop last value */
-	pv = opop();
-
-	/* Get file name */
-	Request_Clean (rqst);
-	/* Get request */
-#ifdef EIF_WINDOWS
-	if (-1 == app_recv_packet(sp, &rqst, TRUE)) 
-#else
-	if (-1 == app_recv_packet(sp, &rqst))
-#endif
-	{
-		send_ack(sp, AK_ERROR);		/* Protocol error */
-		return;
-	}
-	if (rqst.rq_type == DUMPED && rqst.rq_dump.dmp_type == DMP_ITEM) {
-		ip = rqst.rq_dump.dmp_item;
-		if ((ip != NULL) && (ip->type & SK_HEAD) == SK_STRING) {
-			s = (char*) ip->it_ref;
-		}
-		ip = NULL;
-	}
-	if (s == NULL) {
-		send_ack(sp, AK_ERROR);		/* Protocol error */
-		return;
-	} else if (rt_extension_obj == NULL) {
-		send_ack(sp, AK_ERROR); 	/* rt_extension_obj is not available */
-		return;
-	} else {
-		/* Call RT_EXTENSION */
-		EIF_TYPED_VALUE rtd_arg;						
-		EIF_BOOLEAN b = EIF_FALSE;
-		send_ack(sp, AK_OK);
-		RT_ENTER_EIFFELCODE; /* Stop the recording */
-		rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_OBJECT_STORAGE_SAVE);	/* Obj Storage Save */
-		rtd_arg_value(rtd_arg, 1, r) = (EIF_REFERENCE) (pv->item.r); 			/* Object 			*/
-		rtd_arg_value(rtd_arg, 2, p) = s;									 	/* Filename 		*/
-		dinvoke_rt_extension (RTDBG_EVENT_OBJECT_STORAGE_SAVE, rtd_arg);
-		RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
-		b = EIF_TEST((int) (rtd_arg_value(rtd_arg, 3, i4) == 1));
-		app_twrite (&b, sizeof(EIF_BOOLEAN));
-	};
-}
-
-rt_private void dobjectstorage_load (EIF_PSTREAM sp)
-{
-	EIF_TYPED_VALUE *ip = NULL;
-	Request rqst;			/* Loading request */
-	char *s = NULL;
-	EIF_TYPED_VALUE *pv = NULL;
-	EIF_REFERENCE tmp = NULL;
-
-	EIF_GET_CONTEXT
-
-		/* Get and pop last value */
-	pv = opop();
-
-	/* Get file name */
-	Request_Clean (rqst);
-	/* Get request */
-#ifdef EIF_WINDOWS
-	if (-1 == app_recv_packet(sp, &rqst, TRUE)) 
-#else
-	if (-1 == app_recv_packet(sp, &rqst))
-#endif
-	{
-		send_ack(sp, AK_ERROR);		/* Protocol error */
-		return;
-	}
-	if (rqst.rq_type == DUMPED && rqst.rq_dump.dmp_type == DMP_ITEM) {
-		ip = rqst.rq_dump.dmp_item;
-		if ((ip != NULL) && (ip->type & SK_HEAD) == SK_STRING) {
-			s = (char*) ip->it_ref;
-		}
-		ip = NULL;
-	}
-	if (s == NULL) {
-		send_ack(sp, AK_ERROR);		/* Protocol error */
-		return;
-	} else if (rt_extension_obj == NULL) {
-		send_ack(sp, AK_ERROR); 	/* rt_extension_obj is not available */
-		return;
-	} else {
-		/* Call RT_EXTENSION */
-		EIF_TYPED_VALUE rtd_arg;						
-		send_ack(sp, AK_OK);
-		RT_ENTER_EIFFELCODE; /* Stop the recording */
-		rtd_arg = dinvoke_rt_extension_argument (RTDBG_EVENT_OBJECT_STORAGE_LOAD);	/* Obj Storage Load */
-		rtd_arg_value(rtd_arg, 1, r) = (EIF_REFERENCE) (pv->item.r); 			/* Object 			*/
-		rtd_arg_value(rtd_arg, 2, p) = s;									 	/* Filename 		*/
-		dinvoke_rt_extension (RTDBG_EVENT_OBJECT_STORAGE_LOAD, rtd_arg);
-		RT_EXIT_EIFFELCODE; /* (Re)Start the recording */
-		tmp = (EIF_REFERENCE) rtd_arg_value(rtd_arg, 1, r);
-	}
-
-	app_send_reference (sp, tmp, DMP_ITEM);
-}
-
-#undef rtd_arg_value
-
-/*                                      *
- * End of RT_EXTENSION interactions     *
- ****************************************/
-
 
 /* Encapsulate the 'modify_local' function */
 rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, EIF_TYPED_VALUE *ip)
@@ -1040,6 +824,15 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 	default:
 		eif_panic("BUG once inspect");
 	}
+}
+
+rt_private void set_catcall_detection_mode (EIF_PSTREAM sp, int a_console, int a_dbg) 
+{
+	/* Set current catcall_detection mode off/on */
+	app_send_integer (sp, catcall_detection_console_enabled);
+	app_send_integer (sp, catcall_detection_debugger_enabled);
+	set_catcall_detection_console(a_console);
+	set_catcall_detection_debugger(a_dbg);
 }
 
 rt_private void set_check_assert (int v) 
@@ -1993,11 +1786,16 @@ rt_private void dbg_new_instance_of_type (EIF_PSTREAM sp, EIF_TYPE_INDEX typeid)
 rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype_or_origin, int dtype, int is_precompiled, int is_basic_type, int is_static_call)
 {
 	EIF_TYPED_VALUE *ip;
+
+	int b = exec_recording_enabled;
 	int exception_occured = 0;	/* Exception occurred ? */
+
+	exec_recording_enabled = 0; /* Disable execution recording status */
  
-	c_opush(0);	/*Is needed since the stack management seems to have problems with uninitialized c stack*/
+	c_opush(0); /*Is needed since the stack management seems to have problems with uninitialized c stack*/
+	c_opop(); 
 	ip = dynamic_eval_dbg(fid_or_offset,stype_or_origin, dtype, is_precompiled, is_basic_type, is_static_call, previous_otop, &exception_occured);
-	c_opop();
+
 	if (ip == (EIF_TYPED_VALUE *) 0) {
 		app_send_typed_value (sp, NULL, DMP_VOID);
 	} else {
@@ -2011,6 +1809,8 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int fid_or_offset, int stype
 	/* reset info concerning otop */
 	previous_otop = NULL;
 	otop_recorded = 0;
+
+	exec_recording_enabled = b; /* Restore execution recording status */
 }
 
 

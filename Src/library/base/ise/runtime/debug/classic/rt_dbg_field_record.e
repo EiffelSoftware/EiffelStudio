@@ -11,10 +11,7 @@ class
 inherit
 	RT_DBG_RECORD
 		rename
-			position as index,
-			set_position as set_index
-		redefine
-			is_same_as
+			position as index
 		end
 
 	INTERNAL
@@ -24,9 +21,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (i,t: INTEGER; v: like value)
+	make (obj: !ANY; i,t: INTEGER; v: like value)
 			-- Make field record with index `i', type `t' an value `v'
 		do
+			object := obj
 			index := i
 			type := t
 			value := v
@@ -34,16 +32,33 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
+	object: !ANY
+			-- Associated object.
+
 	value: G
 			-- Associated value.
 
 feature -- Access
 
-	is_same_as (other: RT_DBG_RECORD): BOOLEAN
+	current_value_record: RT_DBG_RECORD
+			-- Record for current value
 		do
-			if Precursor {RT_DBG_RECORD} (other) then
-				Result := {c: like Current} other and then value = c.value
-			end
+			Result := object_record (index, object)
+		end
+
+	associated_object: ANY
+			-- Associated object, if any
+		do
+			Result := object
+		end
+
+	is_local_record: BOOLEAN = False
+			-- <Precursor>
+
+	is_same_as (other: !RT_DBG_RECORD): BOOLEAN
+			-- Is Current same as `other' ?
+		do
+			Result := {c: like Current} other and then index = c.index and then value = c.value
 		end
 
 	to_string: STRING
@@ -51,68 +66,70 @@ feature -- Access
 		do
 			inspect type
 			when {INTERNAL}.reference_type then
-				if not {v: ANY} value then
-					Result := "Void"
-				else
+				if {v: ANY} value then
 					Result := ($v).out
+				else
+					Result := "Void"
 				end
 			when {INTERNAL}.expanded_type then
 				Result := ($value).out
 			else
-				if {b: like value} value then
-					Result := b.out
+				if {v2: like value} value then
+					Result := v2.out
+				else
+					check False end
 				end
 			end
 		end
 
 feature -- Change properties
 
-	set_value (v: like value)
-			-- Set `value'
+	get_value
+			-- Get value on `obj'
 		do
-			value := v
+			if {v: like value} field (index, object) then
+				value := v
+			else
+				value := default_value
+			end
 		end
 
 feature -- Runtime
 
-	restore (obj: ANY; bak: RT_DBG_RECORD)
-			-- Restore `value' on `obj', and associate `bak' as `backup'
+	restore (val: !RT_DBG_RECORD)
+			-- Restore `value' on `object', and associate `val' as `backup'
 		do
 			debug ("RT_EXTENSION")
-				dtrace (generator + ".restore (" + obj.generator + " #" + index.out + ")%N")
- 				dtrace (" -> " + field_name (index,obj) + ": offset " + field_offset (index, obj).out + "%N")
+				dtrace (generator + ".restore (" + object.generator + " #" + index.out + ")%N")
+ 				dtrace (" -> " + field_name (index, object) + ": offset " + field_offset (index, object).out + "%N")
 			end
-			if is_same_as (bak) then
+			if is_same_as (val) then
 				debug ("RT_EXTENSION")
 					dtrace (" -> unchanged because same value [" + to_string + "].%N")
 				end
 			else
-				set_backup (bak)
-				set_object_field (obj, Current)
+				set_object_field (object, Current)
 				debug ("RT_EXTENSION")
-					dtrace (" -> restored: from [" + bak.to_string + "] to [" + to_string + "] %N")
+					dtrace (" -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
 				end
 			end
 		end
 
-	revert (obj: ANY)
-			-- Revert previous change due to Current to `obj'
+	revert (bak: !RT_DBG_RECORD)
+			-- Revert previous change due to Current to `object'
 		do
 			debug ("RT_EXTENSION")
-				dtrace (generator + ".revert (" + obj.generator + " #" + index.out + ")%N")
+				dtrace (generator + ".revert (" + object.generator + " #" + index.out + ")%N")
 			end
-			if {bak: like backup} backup then
-				set_object_field (obj, bak)
-				set_backup (Void)
-				debug ("RT_EXTENSION")
-					dtrace (" -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
-				end
+			set_object_field (object, bak)
+			debug ("RT_EXTENSION")
+				dtrace (" -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
 			end
 		end
 
 feature {NONE} -- Internal Implementation
 
-	set_object_field (obj: ANY; r: RT_DBG_RECORD)
+	set_object_field (obj: !ANY; r: !RT_DBG_RECORD)
 			-- Set object field defined by `r' on target `obj'
 		local
 			i: like index
@@ -188,6 +205,13 @@ feature {NONE} -- Internal Implementation
 --			when none_type then
 			else
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	default_value: G is
+			-- Default value
+		do
 		end
 
 indexing

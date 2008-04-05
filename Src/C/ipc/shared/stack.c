@@ -82,6 +82,7 @@ rt_private struct dump 	*variable_item(int variable_type, uint32 n, uint32 start
 
 /* Public Routines declarations */
 rt_public void 			send_stack(EIF_PSTREAM s, uint32 elem_nb);	/* Dump the application */
+rt_public EIF_DEBUG_VALUE local_debug_value(uint32 stack_depth, uint32 loc_type, uint32 loc_number);
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, 
                                      uint32 loc_number, EIF_TYPED_VALUE *new_value); /* modify a local value */
 rt_public void			send_stack_variables(EIF_PSTREAM s, int where);	/* Dump the locals and arguments of a feature */
@@ -323,7 +324,7 @@ rt_private void init_var_dump(struct dcall *call)
  * arguments of a feature located on level `level' down the stack         *
  **************************************************************************/
 rt_private uint32 go_ith_stack_level(int level)
-	{
+{
 	EIF_GET_CONTEXT
 
 	struct ex_vect *top;		/* Exception vector */
@@ -333,16 +334,16 @@ rt_private uint32 go_ith_stack_level(int level)
 								/* within whole operation stack */
 	int i;						/* Current level */
 
-	for (i=0; i<level; i++)
-		{
+	for (i=0; i<level; i++) {
 		/* We either finished dealing with previous melted vector, or it was simply
 	   	* not associated with a melted feature. So go on and grab next one, unless
    		* the end of the stack has been reached.
    		*/
 		if (eif_stack.st_cur->sk_arena == eif_stack.st_top) {
 				/* Reached end of chunck, go to previous chunck if any */
-			if (eif_stack.st_cur->sk_prev == NULL)
+			if (eif_stack.st_cur->sk_prev == NULL) {
 				return EIF_NO_ITEM; /* no previous chunck ==> end of stack */
+			}
 
 				/* There is a previous chunck, switch to it */
 			eif_stack.st_cur = eif_stack.st_cur->sk_prev;
@@ -353,32 +354,37 @@ rt_private uint32 go_ith_stack_level(int level)
 		top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
 		expop (&eif_stack);
 
-		if ( !( (top->ex_type == EX_CALL ||	top->ex_type == EX_RETY || top->ex_type == EX_RESC) && top->exu.exur.exur_id != 0))
-			{
+		if ( !( 
+				(top->ex_type == EX_CALL || top->ex_type == EX_RETY || top->ex_type == EX_RESC) 
+				&& (top->exu.exur.exur_id != 0)
+			) ) {
 			i--;		/* Rewind - This item should not be taken into account. */
 			continue;	/* This vector should be ignored */
-			}
+		}
 
-		/* Now check whether by chance the vector associated with the callling
+		/* Now check whether by chance the vector associated with the calling
 	   	* context on top of the debugger's stack is precisely the one we've just
    		* popped. That would mean we reached a melted feature...
    		*/
 		dc = safe_dtop();				/* Returns null pointer if empty */
-		if (dc != NULL && (dc->dc_exec == top))	/* We've reached a melted feature */
-			{
+		if (dc != NULL && (dc->dc_exec == top)) {	/* We've reached a melted feature */
 			init_var_dump(dc);		/* Make this feature "active" */
-			if (i!=level-1)
+			if (i!=level-1) {
 				dpop();
 			}
-		else
-			{
+		} else {
 			copy = *top;
-			if (i!=level-1)
+			if (i!=level-1) {
 				start += copy.ex_locnum + copy.ex_argnum + 2; /* + 2 = + Current + result */
 			}
 		}
-	return start;			/* Pointer to static data */
 	}
+#ifdef DEBUG
+	fprintf(stderr, "go_ith_stack_level (level=%d) -> start=0x%x (%d) locnum=%d argnum=%d \n", level, start, start, copy.ex_locnum, copy.ex_argnum);
+#endif
+	
+	return start;			/* Pointer to static data */
+}
 
 /************************************************************************** 
  * NAME: variables                                                        * 
@@ -512,6 +518,58 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 	}
 
 /************************************************************************** 
+ * NAME: stack_debug_value                                                * 
+ * ARGS: stack_depth : Depth where feature is situated inside callstack   * 
+ *       loc_type  : Type of the stack. Can be DLT_ARGUMENT=0             * 
+ *                   DLT_LOCALVAR=1 or DLT_RESULT=2                       * 
+ *       loc_number: number of the argument/local variable on the stack   * 
+ * RET:  returns                                                          * 
+ *           EIF_DEBUG_VALUE if the stack item was found                  * 
+ *           NULL if something went wrong.                                *  
+ *------------------------------------------------------------------------* 
+ * access the stack debug value of a  local_variable/argument/result      * 
+ * of a feature                                                           * 
+ **************************************************************************/
+
+rt_public EIF_DEBUG_VALUE stack_debug_value(uint32 stack_level, uint32 loc_type, uint32 loc_number)
+{
+	/* Stack debug value for stack_depth, loc_type, and loc_number */
+	EIF_GET_CONTEXT
+
+	EIF_DEBUG_VALUE	ip;					/* Partial dump pointer */
+	uint32 	start = 0;			/* start of operation stack for current feature within whole operation stack */
+
+	save_stacks(); /* save context */
+	start = go_ith_stack_level(stack_level); /* go down the the call stack to set our feature "active" */
+#ifdef DEBUG
+	fprintf(stderr, "stack_debug_value (%d/%d) -> start=0x%x (%d) \n", stack_level, d_data.db_callstack_depth, start, start);
+#endif
+
+	if (start != EIF_NO_ITEM) {
+		
+		/* get the address of the stack item */
+		switch(loc_type) {
+		case DLT_ARGUMENT:
+			ivalue(&ip, IV_ARG, loc_number-1, start);
+			break;
+		
+		case DLT_LOCALVAR:
+			ivalue(&ip, IV_LOCAL, loc_number-1, start);
+			break;
+
+		case DLT_RESULT:
+			ivalue(&ip, IV_RESULT, 0 /*useless*/, start);
+			break;
+		default:
+			break;
+		}
+	}
+
+	restore_stacks(); /* restore context (so that RTMS can run properly) */
+	return ip;
+}
+
+/************************************************************************** 
  * NAME: modify_local                                                     * 
  * ARGS: loc_depth : Depth where the feature is situated inside callstack * 
  *       loc_type  : Type of the local. Can be DLT_ARGUMENT=0             * 
@@ -519,7 +577,7 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
  *       loc_number: number of the argument/local variable on the stack   * 
  *       new_value : new value to assign to the local                     * 
  * RET:  returns                                                          * 
- *           0 if the local item has beem successfully modified.          * 
+ *           0 if the local item has been successfully modified.          * 
  *           1 if something else went wrong.                              *  
  *           2 if you have tried to modify an expanded reference.         * 
  *           3 if you have passed a bad value for loc_type			      *  
@@ -527,6 +585,7 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
  * modify the value of a local variable / an argument / the result        * 
  * of a feature with the given new value                                  * 
  **************************************************************************/
+
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE *new_value)
 	{
 	EIF_GET_CONTEXT
@@ -596,7 +655,9 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 			goto lblError;
 		}
 
+	goto lblError;
 	/* everything went ok, error_code is equal to 0 */
+
 lblError_restore_context:
 	restore_stacks(); /* restore context */
 

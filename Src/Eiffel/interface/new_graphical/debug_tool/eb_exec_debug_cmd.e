@@ -196,17 +196,25 @@ feature {NONE} -- Attributes
 
 				--| Catcall warning status
 			if {exc_hdlr: DBG_EXCEPTION_HANDLER} (dbg.exceptions_handler) then
-				create l_cb_item.make_with_text (interface_names.m_Dbg_ignore_catcall_warning)
+				create l_cb_item.make_with_text (interface_names.m_Dbg_disable_catcall_console_warning)
 				Result.extend (l_cb_item)
-
-				if exc_hdlr.catcall_warning_ignored then
+				if exc_hdlr.catcall_console_warning_disabled then
 					l_cb_item.enable_select
-					l_cb_item.select_actions.extend (agent exc_hdlr.set_catcall_warning_ignored (False))
+					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_console (True))
 				else
-					l_cb_item.select_actions.extend (agent exc_hdlr.set_catcall_warning_ignored (True))
+					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_console (False))
 				end
-			end
 
+				create l_cb_item.make_with_text (interface_names.m_Dbg_disable_catcall_debugger_warning)
+				Result.extend (l_cb_item)
+				if exc_hdlr.catcall_debugger_warning_disabled then
+					l_cb_item.enable_select
+					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_debugger (True))
+				else
+					l_cb_item.select_actions.extend (agent dbg.set_catcall_detection_in_debugger (False))
+				end
+
+			end
 
 				--| Execution replay recording status
 			create l_cb_item.make_with_text (interface_names.b_activate_execution_recording)

@@ -15,7 +15,8 @@ inherit
 			on_application_resumed,
 			on_application_stopped,
 			on_application_exited,
-			on_debugging_terminated
+			on_debugging_terminated,
+			on_application_debugger_update
 		end
 
 create {DEBUGGER_MANAGER}
@@ -31,6 +32,7 @@ feature {NONE} -- Initialization
 			create application_stopped_actions
 			create application_exited_actions
 			create debugging_terminated_actions
+			create application_debugger_update_actions
 		end
 
 feature -- Recycling
@@ -42,6 +44,9 @@ feature -- Recycling
 			application_launched_actions.wipe_out
 			application_resumed_actions.wipe_out
 			application_stopped_actions.wipe_out
+			debugging_terminated_actions.wipe_out
+			application_debugger_update_actions.wipe_out
+
 			unattach_from_debugger
 		end
 
@@ -62,6 +67,9 @@ feature -- Actions
 	debugging_terminated_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]]
 			-- Debugging terminated
 
+	application_debugger_update_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]]
+			-- Action to be triggered when application is paused for debugger update
+
 feature {DEBUGGER_MANAGER} -- Implementation
 
 	on_application_launched (dbg: DEBUGGER_MANAGER) is
@@ -74,6 +82,12 @@ feature {DEBUGGER_MANAGER} -- Implementation
 			-- The debugged application has been resumed after a stop.
 		do
 			application_resumed_actions.call ([dbg])
+		end
+
+	on_application_debugger_update (dbg: DEBUGGER_MANAGER) is
+			-- The debugging is terminated.
+		do
+			application_debugger_update_actions.call ([dbg])
 		end
 
 	on_application_stopped (dbg: DEBUGGER_MANAGER) is

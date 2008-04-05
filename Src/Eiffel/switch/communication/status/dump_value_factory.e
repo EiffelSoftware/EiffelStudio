@@ -171,16 +171,21 @@ feature -- Access
 			init_value (Result)
 		end
 
-	new_object_value (addr: STRING; dtype: CLASS_C): DUMP_VALUE is
+	new_object_value (addr: STRING; a_dtype: CLASS_C): DUMP_VALUE is
 			-- make a object item initialized to `value'
 		local
 			dvnet: DUMP_VALUE_DOTNET
+			dtype: CLASS_C
 		do
 			if debugger_manager.is_dotnet_project then
 				create dvnet.make_empty (debugger_manager)
 				Result := dvnet
 			else
 				create Result.make_empty (debugger_manager)
+			end
+			dtype := a_dtype
+			if dtype = Void and then addr /= Void then
+				dtype := debugger_manager.object_manager.class_c_at_address (addr)
 			end
 			Result.set_object_value (addr, dtype)
 			init_value (Result)

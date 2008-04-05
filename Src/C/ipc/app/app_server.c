@@ -49,6 +49,7 @@
 #include "server.h"
 #include "rt_debug.h"
 #include "rt_main.h" /* For debug_mode. */
+#include "rt_macros.h" /* For catcall detection mode macros. */
 
 #ifndef EIF_WINDOWS
 #include <unistd.h>
@@ -224,7 +225,10 @@ rt_shared void winit(void)
 		return;		
 	}
 	
-	debug_mode = 1;				/* Debugging is allowed */
+	debug_mode = 1;					/* Debugging is allowed */
+	set_catcall_detection_console(1); /* catcall detection in console */
+	set_catcall_detection_debugger(1); /* catcall detection in debugger is enabled */
+
 
 	/* Create a stream, which associates the two ends of the pair of pipes
 	 * opened with the parent. The STREAM provides a bidrectional abstraction.

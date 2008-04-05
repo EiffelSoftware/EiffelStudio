@@ -338,6 +338,9 @@ feature
 		do
 			generate_line_info
 			generate_frozen_debugger_hook
+			if context.workbench_mode then
+				generate_frozen_debugger_recording_assignment (target)
+			end
 			if last_in_result then
 					-- Assignement in Result is the last expression and
 					-- the source does not use GCable variable, or only in

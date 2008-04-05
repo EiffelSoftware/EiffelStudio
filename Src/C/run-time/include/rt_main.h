@@ -60,6 +60,7 @@ extern int cc_for_speed;		/* Optimized for speed or for memory */
 extern char *starting_working_directory;
 
 extern int debug_mode;
+extern int catcall_detection_mode;
 extern unsigned TIMEOUT;		/* Time out on reads */
 
 #ifdef EIF_WINDOWS

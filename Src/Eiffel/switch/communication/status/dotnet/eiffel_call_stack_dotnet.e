@@ -66,7 +66,7 @@ create {EIFFEL_CALL_STACK_DOTNET}
 feature -- Properties
 
 	stack_depth: INTEGER is
-			--
+			-- Current call stack depth.
 		do
 			-- FIXME jfiat: this is count for now ... but fix this !
 			Result := count
@@ -182,7 +182,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 											-- Reset data for next call stack
 										call := Void
 
-	-- FIXME jfiat 2004-07-08 : maybe optimize by using external on pointer
+										--| FIXME jfiat 2004-07-08 : maybe optimize by using external on pointer
 										l_func := l_frame.get_function
 										l_feature_token := l_func.get_token
 										l_class         := l_func.get_class

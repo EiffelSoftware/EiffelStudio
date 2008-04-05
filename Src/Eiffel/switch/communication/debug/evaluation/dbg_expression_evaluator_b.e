@@ -1389,10 +1389,14 @@ feature {NONE} -- EXPR_B evaluation
 					False -- Shouldn't occur.
 				end
 			else
-				dv :=  cse.arguments.i_th (l_argument_b.position)
-				tmp_result_value := dv.dump_value
-				tmp_result_static_type := tmp_result_value.dynamic_class
-				-- FIXME jfiat [2004/02/26] : optimisation : maybe compute the static type ....
+				dv :=  cse.argument (l_argument_b.position)
+				if dv /= Void then
+					tmp_result_value := dv.dump_value
+					tmp_result_static_type := tmp_result_value.dynamic_class
+					-- FIXME jfiat [2004/02/26] : optimisation : maybe compute the static type ....
+				else
+					notify_error_evaluation ("Argument not found at position #" + l_argument_b.position.out)
+				end
 			end
 		end
 

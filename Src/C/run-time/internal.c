@@ -49,29 +49,15 @@ doc:<file name="internal.c" header="eif_internal.h" version="$Id$" summary="Exte
 
 #include <string.h>
 
-
-rt_public char *ei_field (long i, EIF_REFERENCE object)
+rt_public char *ei_field_at (long offset, uint32 field_type, EIF_REFERENCE object)
 {
-	/* Returns the object referenced by the i_th field of `object'.
+	/* Returns the object at `offset' of `object'.
 	 * Take care of normal and expanded types.
 	 */
 
-	struct cnode *obj_desc;
-	EIF_TYPE_INDEX dtype = Dtype(object);
-	uint32 field_type;
 	EIF_REFERENCE o_ref, new_obj;
-#ifdef WORKBENCH
-	long offset;
-#endif
 
-	obj_desc = &System(dtype);
-	field_type = obj_desc->cn_types[i];
-#ifndef WORKBENCH
-	o_ref = object + obj_desc->cn_offsets[i];
-#else
-	CAttrOffs(offset,obj_desc->cn_attr[i],dtype);
 	o_ref = object + offset;
-#endif
 	switch (field_type & SK_HEAD) {
 	case SK_CHAR:
 		{
@@ -83,10 +69,10 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 		}
 	case SK_BOOL:
 		{
-			EIF_BOOLEAN val = *(EIF_CHARACTER *) o_ref;
+			EIF_BOOLEAN val = *(EIF_BOOLEAN *) o_ref;
 
 			new_obj = RTLN(egc_bool_ref_dtype);
-			*(EIF_CHARACTER *) new_obj = val;
+			*(EIF_BOOLEAN *) new_obj = val;
 			return new_obj;
 		}
 	case SK_WCHAR:
@@ -194,6 +180,28 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 	}
 }
 
+rt_public char *ei_field (long i, EIF_REFERENCE object)
+{
+	/* Returns the object referenced by the i_th field of `object'.
+	 * Take care of normal and expanded types.
+	 */
+
+	struct cnode *obj_desc;
+	EIF_TYPE_INDEX dtype = Dtype(object);
+	uint32 field_type;
+	long offset;
+
+	obj_desc = &System(dtype);
+	field_type = obj_desc->cn_types[i];
+#ifndef WORKBENCH
+	offset = obj_desc->cn_offsets[i];
+#else
+	CAttrOffs(offset,obj_desc->cn_attr[i],dtype);
+#endif
+
+	return ei_field_at (offset, field_type, object);
+}
+
 rt_public long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
 {
 	/* Returns dynamic type of i-th logical field of `type_id' as
@@ -205,12 +213,10 @@ rt_public long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
 	return eif_compound_id (0, (EIF_TYPE_INDEX) type_id, typearr [1], typearr);
 }
 
-rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
+rt_public long ei_eif_type(uint32 field_type)
 {
-	/* Returns type of i-th logical field of `object'. */
+	/* Returns Eiffel type of field type `field_type'. */
 	/* Look at `eif_cecil.h' for constants definitions */
-
-	uint32 field_type = System(To_dtype(type_id)).cn_types[i];
 
 	switch (field_type & SK_HEAD) {
 	case SK_REF:	return EIF_REFERENCE_TYPE;
@@ -231,6 +237,15 @@ rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
 	case SK_BIT:	return EIF_BIT_TYPE;
 	default:		return EIF_POINTER_TYPE;
 	}
+}
+
+rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
+{
+	/* Returns type of i-th logical field of `object'. */
+	/* Look at `eif_cecil.h' for constants definitions */
+
+	uint32 field_type = System(To_dtype(type_id)).cn_types[i];
+	return ei_eif_type (field_type);
 }
 
 rt_public char *ei_exp_type(long i, EIF_REFERENCE object)

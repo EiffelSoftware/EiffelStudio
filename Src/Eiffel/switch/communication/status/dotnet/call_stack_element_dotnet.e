@@ -12,7 +12,8 @@ inherit
 		rename
 			current_object_value as current_object
 		redefine
-			make
+			make,
+			reset_stack
 		end
 
 	COMPILER_EXPORTER
@@ -293,6 +294,17 @@ feature -- Dotnet Properties
 				initialize_dotnet_info
 			end
 			Result := private_dotnet_module_filename
+		end
+		
+feature -- Stack reset
+
+	reset_stack is
+			-- <Precursor>
+		do
+			Precursor
+			initialized_arguments := False
+			initialized_current_object := False
+			initialized_locals := False
 		end
 
 feature {NONE} -- Implementation Dotnet Properties

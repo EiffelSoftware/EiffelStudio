@@ -17,7 +17,8 @@ inherit
 			can_not_launch_system_message,
 			recycle,
 			clean_on_process_termination,
-			make_with_debugger
+			make_with_debugger,
+			remotely_store_object, remotely_loaded_object
 		end
 
 	SHARED_EIFNET_DEBUGGER
@@ -379,13 +380,6 @@ feature -- Execution
 
 feature -- Remote access to RT_
 
-	query_replay_status (direction: INTEGER): INTEGER is
-			-- Query number of available steps in `direction'.
-		do
-				--| Not Yet Implemented for dotnet !
-			to_implement ("Add support for execution replay to dotnet system.")
-		end
-
 	remote_rt_object_icd_value: ICOR_DEBUG_VALUE is
 			-- Return the remote rt_object
 		local
@@ -429,11 +423,11 @@ feature -- Remote access to RT_
 			rto: like remote_rt_object
 			icdf: ICOR_DEBUG_FUNCTION
 			args: ARRAY [ICOR_DEBUG_VALUE]
-			dv: EIFNET_ABSTRACT_DEBUG_VALUE
 			i_ref, i_fn: ICOR_DEBUG_VALUE
 		do
-			dv ?= kept_object_item (oa)
-			if dv /= Void then
+			--| This is optimization for dotnet
+			--| do not call Precursor
+			if {dv: EIFNET_ABSTRACT_DEBUG_VALUE} kept_object_item (oa) then
 				rto := remote_rt_object
 				if rto /= Void then
 					icdf := rto.icd_value_info.value_icd_function ("saved_object_to")
@@ -452,19 +446,19 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_loaded_object (oa: STRING; fn: STRING): ABSTRACT_DEBUG_VALUE is
+	remotely_loaded_object (oa: STRING; fn: STRING): DUMP_VALUE is
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		local
 			icdv, r: ICOR_DEBUG_VALUE
-			rto: like remote_rt_object
 			icdf: ICOR_DEBUG_FUNCTION
 			args: ARRAY [ICOR_DEBUG_VALUE]
 			dv: EIFNET_ABSTRACT_DEBUG_VALUE
 			i_ref, i_fn: ICOR_DEBUG_VALUE
 		do
-			rto := remote_rt_object
-			if rto /= Void then
+			--| This is optimization for dotnet
+			--| do not call Precursor
+			if {rto: like remote_rt_object} remote_rt_object then
 				icdv := rto.icd_referenced_value
 				icdf := rto.icd_value_info.value_icd_function ("object_loaded_from")
 				if icdf /= Void then
@@ -477,7 +471,9 @@ feature -- Remote access to RT_
 					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
 					args := <<icdv, i_ref, i_fn>>
 					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
-					Result := debug_value_from_icdv (r, Void)
+					if {adv: ABSTRACT_DEBUG_VALUE} debug_value_from_icdv (r, Void) then
+						Result := adv.dump_value
+					end
 				end
 			end
 		end
@@ -576,6 +572,13 @@ feature -- Remote access to Exceptions
 			end
 		end
 
+feature -- Catcall detection change
+
+	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) is
+			-- <Precursor>
+		do
+			fixme ("Eiffel runtime catcall detection not available for dotnet")
+		end
 
 feature {NONE} -- Assertion change Implementation
 

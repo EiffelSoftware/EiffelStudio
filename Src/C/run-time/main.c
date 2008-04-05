@@ -74,6 +74,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_garcol.h"
 #include "rt_debug.h"
 #include "rt_main.h"
+#include "rt_macros.h"
 
 #ifdef BOEHM_GC
 #include "rt_boehm.h"
@@ -413,13 +414,24 @@ rt_public int is_debug_mode (void){
 /*
 doc:	<routine name="set_debug_mode" return_type="void" export="public">
 doc:		<summary>Public assigner to `debug_mode'.</summary>
-doc:		<thread_safety>Safe</thread_safety>
+doc:		<thread_safety>Probably Safe</thread_safety>
 doc:	</routine>
 */
 
 rt_public void set_debug_mode (int v){
 	debug_mode = v;
 }
+
+/*
+doc:	<attribute name="catcall_detection_mode" return_type="int" export="private">
+doc:		<summary>This variable records whether the workbench application detect catcall or not in workbench mode (debug_mode has to be true)
+doc:		</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by `winit' at the beginning and only one thread can modify `catcall_detection_mode' while debugging.</synchronization>
+doc:	</attribute>
+*/
+rt_shared int catcall_detection_mode = default_catcall_detection_mode;	/* Assume we detect catcall at runtime */
 
 rt_public void once_init (void)
 {

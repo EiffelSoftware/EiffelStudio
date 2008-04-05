@@ -137,7 +137,7 @@ feature -- Access
 
 	object_stone: OBJECT_STONE
 
-	object_value: ABSTRACT_DEBUG_VALUE
+	object_value: DUMP_VALUE
 
 	icon: EV_PIXEL_BUFFER
 			-- The dialog's icon

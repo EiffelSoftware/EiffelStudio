@@ -1104,6 +1104,9 @@ feature -- Status setting
 						exec_replay_back_cmd.disable_sensitive
 						exec_replay_forth_cmd.disable_sensitive
 					end
+					objects_tool.request_update
+					object_viewer_tool.request_update
+					watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 					call_stack_tool.set_execution_replay_level (d, m)
 				else
 					exec_replay_back_cmd.disable_sensitive

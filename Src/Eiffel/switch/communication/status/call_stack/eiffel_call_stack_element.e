@@ -154,9 +154,34 @@ feature -- Properties
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty
 		end
 
+	argument (pos: INTEGER): ABSTRACT_DEBUG_VALUE is
+			-- Argument at position `pos'
+		do
+			if {args: like arguments} arguments then
+				if args.valid_index (pos) then
+					Result := args.i_th (pos)
+				end
+			end
+		end
+
+
+feature -- Stack reset
+
+	reset_stack is
+			-- Reset stack data (locals, arguments, result, ..)
+		do
+			initialized := False
+			private_arguments := Void
+			private_locals := Void
+			private_result := Void
+		ensure
+			not_initialized: not initialized
+		end
+
 feature {NONE} -- Implementation
 
 	initialize_stack is
+			-- Initialize stack data (locals, arguments, result, ..)
 		require
 			not_initialized: not initialized
 		deferred

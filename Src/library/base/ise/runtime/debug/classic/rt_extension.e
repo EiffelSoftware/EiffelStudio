@@ -18,28 +18,57 @@ feature -- Notification
 		local
 			retried: BOOLEAN
 		do
+--FIXME: when compiler is fixed regarding the use of like ... in regard with attached nature
+--		 use the following code, to improve readibility and avoid error.
+--					if {t_ef: like events_feature_argument} a_data then
 			if not retried then
 				inspect a_id
 				when Op_enter_feature then
-					process_enter_feature (events_feature_argument (a_data))
-				when Op_leave_feature then
-					process_leave_feature (events_feature_argument (a_data))
-				when Op_rescue_feature then
-					process_rescue_feature (events_feature_argument (a_data))
-				when Op_exec_replay_record then
-					process_execution_replay_record (exec_replay_argument (a_data))
-				when Op_exec_replay then
-					process_execution_replay (exec_replay_argument (a_data))
-				when Op_exec_replay_query then
-					process_execution_replay_query (exec_replay_argument (a_data))
-				when Op_object_storage_save then
-					process_object_storage_save (object_storage_argument (a_data))
-				when Op_object_storage_load then
-					process_object_storage_load (object_storage_argument (a_data))
-				else
-					debug ("RT_EXTENSION")
-						dtrace ("Error: " + out + " ->" + a_id.out + "%N")
+					if {t_ef: TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level: INTEGER; pfn: POINTER]} a_data then
+						process_enter_feature (t_ef)
+					else
+						check valid_tuple_data: False end
 					end
+					reset_events_feature_argument (a_data)
+				when Op_leave_feature then
+					if {t_lf: TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level: INTEGER; pfn: POINTER]} a_data then
+						process_leave_feature (t_lf)
+					else
+						check valid_tuple_data: False end
+					end
+					reset_events_feature_argument (a_data)
+				when Op_rescue_feature then
+					if {t_rf: TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level: INTEGER; pfn: POINTER]} a_data then
+						process_rescue_feature (t_rf)
+					else
+						check valid_tuple_data: False end
+					end
+					reset_events_feature_argument (a_data)
+				when Op_rt_hook then
+					if {t_rh: TUPLE [unused_ref: ANY; bp_i: INTEGER; bp_ni: INTEGER; unused_i3: INTEGER; unused_pfn: POINTER]} a_data then
+						process_rt_hook (t_rh)
+					else
+						check valid_tuple_data: False end
+					end
+					reset_events_feature_argument (a_data)
+				when Op_rt_assign_attrib then
+					if {t_att: TUPLE [ref: ANY; a_loc: INTEGER; a_type: INTEGER; a_info: INTEGER; unused_pfn: POINTER]} a_data then
+						process_rt_assign ({RT_DBG_EXECUTION_RECORDER}.Assign_attribute_kind, t_att)
+					else
+						check valid_tuple_data: False end
+					end
+					reset_events_feature_argument (a_data)
+				when Op_rt_assign_local then
+					if {t_loc: TUPLE [ref: ANY; a_loc: INTEGER; a_type: INTEGER; a_info: INTEGER; unused_pfn: POINTER]} a_data then
+						process_rt_assign ({RT_DBG_EXECUTION_RECORDER}.Assign_local_kind, t_loc)
+					else
+						check valid_tuple_data: False end
+					end
+					reset_events_feature_argument (a_data)
+				else
+--					debug ("RT_EXTENSION")
+						dtrace ("Error: " + out + " ->" + a_id.out + "%N")
+--					end
 				end
 			end
 		rescue
@@ -50,20 +79,29 @@ feature -- Notification
 			retry
 		end
 
-	notify_argument (a_id: INTEGER): ?TUPLE
+	notify_argument (a_id: INTEGER): ?TUPLE is
 			-- Empty argument container for operation `a_id'.
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				inspect a_id
-				when Op_enter_feature, Op_leave_feature, Op_rescue_feature then
-					create {like events_feature_argument} Result
-				when Op_exec_replay_record, Op_exec_replay, Op_exec_replay_query then
-					create {like exec_replay_argument} Result
-				when Op_object_storage_save, Op_object_storage_load then
-					create {like object_storage_argument} Result
+				if cached_arguments.has_key (a_id) then
+					Result := cached_arguments.found_item
+					check Result /= Void end
 				else
+					inspect a_id
+					when Op_enter_feature, Op_leave_feature, Op_rescue_feature, Op_rt_hook,
+						Op_rt_assign_attrib, Op_rt_assign_local
+					then
+						create {like events_feature_argument} Result
+					else
+--						debug ("RT_EXTENSION")
+							dtrace ("Error: RT_EXTENSION.notify_argument (" + a_id.out + "): unmatched id !%N")
+--						end
+					end
+					if {t: TUPLE} Result then
+						cached_arguments.force (t, a_id)
+					end
 				end
 			end
 		rescue
@@ -74,102 +112,112 @@ feature -- Notification
 			retry
 		end
 
+	cached_arguments: !HASH_TABLE [!TUPLE, INTEGER]
+			-- Cached argument to use less temporary objects
+		once
+			create Result.make (11)
+		end
+
 feature {NONE} -- Execution replay
 
-	events_feature_argument (t: TUPLE): ?TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level:INTEGER; fn: POINTER]
+	events_feature_argument (t: TUPLE): ?TUPLE [ref: ANY; cid: INTEGER; fid: INTEGER; level: INTEGER; pfn: POINTER]
 			-- Argument for `process_*_feature'.
 		do
 			Result ?= t
 		end
 
-	exec_replay_argument (t: TUPLE): ?TUPLE [op: INTEGER; val: INTEGER]
-			-- Argument for `process_execution_replay'
+	reset_events_feature_argument (t: TUPLE)
+			-- Reset argument for `process_*_feature'.
+		local
+			p: POINTER
 		do
-			Result ?= t
-		end
-
-	process_enter_feature (a_data: like events_feature_argument)
-			-- Execution enters a feature
-		require
-			execution_recording_not_void: execution_recorder /= Void
-			a_data_attached: a_data /= Void
-		do
-			if {r: like execution_recorder} execution_recorder then
-				r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level, a_data.fn)
+			if {ot: like events_feature_argument} t then
+				ot.ref := Void
+				ot.cid := 0
+				ot.fid := 0
+				ot.level := 0
+				ot.pfn := p
 			end
 		end
 
-	process_rescue_feature (a_data: like events_feature_argument)
+	process_enter_feature (a_data: !like events_feature_argument)
 			-- Execution enters a feature
 		require
 			execution_recording_not_void: execution_recorder /= Void
-			a_data_attached: a_data /= Void
 		do
 			if {r: like execution_recorder} execution_recorder then
-				r.enter_rescue (a_data.ref, a_data.level)
+				r.enter_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level, a_data.pfn)
 			end
 		end
 
-	process_leave_feature (a_data: like events_feature_argument)
+	process_rescue_feature (a_data: !like events_feature_argument)
+			-- Execution enters a feature
+		require
+			execution_recording_not_void: execution_recorder /= Void
+		do
+			if {r: like execution_recorder} execution_recorder then
+				r.enter_rescue (a_data.ref, a_data.cid, a_data.fid, a_data.level)
+			end
+		end
+
+	process_leave_feature (a_data: !like events_feature_argument)
 			-- Execution leaves a feature
 		require
 			execution_recording_not_void: execution_recorder /= Void
-			a_data_attached: a_data /= Void
 		do
 			if {r: like execution_recorder} execution_recorder then
 				r.leave_feature (a_data.ref, a_data.cid, a_data.fid, a_data.level)
 			end
 		end
 
-	process_execution_replay_record (a_data: like exec_replay_argument)
-			-- (De)Activate execution recording
+	process_rt_hook (a_data: !TUPLE [unused_ref: ANY; bp_i: INTEGER; bp_ni: INTEGER; unused_i3: INTEGER; unused_pfn: POINTER])
+			-- Execution reach a RTHOOK or RTNHOOK point
 		require
-			a_data_attached: a_data /= Void
-		local
-			n: like new_execution_recorder
+			execution_recording_not_void: execution_recorder /= Void
 		do
-			if a_data.op.to_boolean then --| True: 1; False: 0
+			if {r: like execution_recorder} execution_recorder then
+				r.notify_rt_hook (a_data.bp_i, a_data.bp_ni)
+			end
+		end
+
+	process_rt_assign (a_var_type: INTEGER; a_data: !TUPLE [ref: ANY; a_loc: INTEGER; a_type: INTEGER; a_info: INTEGER; unused_pfn: POINTER])
+			-- Local variable assignment event
+		require
+			execution_recording_not_void: execution_recorder /= Void
+		local
+			x,p,m: BOOLEAN
+		do
+			x := (a_data.a_info & 0x1).to_boolean
+			p := ((a_data.a_info & 0x2) |>> 1).to_boolean
+			m := ((a_data.a_info & 0x4) |>> 2).to_boolean
+			check x.to_integer + (p.to_integer |<< 1) + (m.to_integer |<< 2) = a_data.a_info end
+
+			if {r: like execution_recorder} execution_recorder then
+				r.notify_rt_assign (a_data.ref, a_var_type, a_data.a_loc, a_data.a_type.to_natural_32, x, p, m)
+			end
+		end
+
+	activate_execution_replay_recording (b: BOOLEAN; ref: ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER)
+			-- Start or Stop execution replay recording
+		local
+			r: like execution_recorder
+		do
+			if b then
 				check execution_recorder = Void end
-				n := new_execution_recorder
-				execution_recorder_cell.replace (n)
-				n.start_recording
+				r := new_execution_recorder
+				execution_recorder_cell.replace (r)
+				r.start_recording (ref, cid, fid, dep)
 			else
-				if {r: like execution_recorder} execution_recorder then
-					r.stop_recording
-				end
+				r := execution_recorder
+				r.stop_recording
 				execution_recorder_cell.replace (Void)
 			end
 		ensure
-			recorder_if_on: a_data.op = 1 implies execution_recorder /= Void
-			no_recorder_if_off: a_data.op /= 1 implies execution_recorder = Void
+			recorder_if_on: b implies execution_recorder /= Void
+			no_recorder_if_off: not b implies execution_recorder = Void
 		end
 
-	process_execution_replay (a_data: like exec_replay_argument)
-			-- Replay execution
-		require
-			execution_recording_not_void: execution_recorder /= Void
-			a_data_attached: a_data /= Void
-		do
-			if {r: like execution_recorder} execution_recorder then
-				r.replay (a_data.op, a_data.val)
-				if r.last_replay_operation_failed then
-					a_data.val := 0
-				end
-			end
-		end
-
-	process_execution_replay_query (a_data: like exec_replay_argument)
-			-- Query about available steps for execution replay
-		require
-			execution_recording_not_void: execution_recorder /= Void
-			a_data_attached: a_data /= Void
-		do
-			if {r: like execution_recorder} execution_recorder then
-				a_data.val := r.replay_query (a_data.op)
-			end
-		end
-
-	new_execution_recorder: RT_DBG_EXECUTION_RECORDER
+	new_execution_recorder: like execution_recorder
 			-- New Execution recorder.
 		do
 			create Result.make
@@ -178,15 +226,17 @@ feature {NONE} -- Execution replay
 				--|		+ 0 for unlimited number of records.
 --			r.set_maximum_record_count (10_000) -- Limited to 10_000 records
 --			r.set_maximum_record_count (0)	-- No limit
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	execution_recorder: ?like new_execution_recorder
+	execution_recorder: ?RT_DBG_EXECUTION_RECORDER
 			-- Once per thread record.
 		do
 			Result := execution_recorder_cell.item
 		end
 
-	execution_recorder_cell: CELL [?RT_DBG_EXECUTION_RECORDER]
+	execution_recorder_cell: !CELL [?RT_DBG_EXECUTION_RECORDER]
 			-- Cell containing the once per thread recorder, if activated.
 		indexing
 			description: "Once per thread"
@@ -194,37 +244,20 @@ feature {NONE} -- Execution replay
 			create Result
 		end
 
-feature {NONE} -- Object storage
+feature -- debug purpose: to remove
 
-	object_storage_argument (t: TUPLE): ?TUPLE [ref: ?ANY; fn: POINTER; succeed: BOOLEAN]
-			-- Argument for `process_object_storage_save' and `process_object_storage_load'.
-		do
-			Result ?= t
-		end
-
-	process_object_storage_save (t: like object_storage_argument)
-			-- Process the object saving for `t' data
-		require
-			t_attached: t /= Void
-		local
-			fn: STRING
-		do
-			create fn.make_from_c (t.fn)
-			t.succeed := saved_object_to (t.ref, fn) /= Void
-		end
-
-	process_object_storage_load (t: like object_storage_argument)
-			-- Process the object loading for `t' data
-		require
-			t_attached: t /= Void
-		local
-			obj: ?ANY
-			fn: STRING
-		do
-			create fn.make_from_c (t.fn)
-			obj := object_loaded_from (t.ref, fn)
-			t.succeed := obj /= Void
-			t.ref := obj
+	frozen c_is_inside_rt_eiffel_code: INTEGER is
+		external
+			"C inline use %"eif_debug.h%""
+		alias
+			"[
+				#ifdef WORKBENCH
+					EIF_GET_CONTEXT
+					return is_inside_rt_eiffel_code;
+				#else
+					return 0;
+				#endif
+			]"
 		end
 
 invariant

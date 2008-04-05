@@ -29,6 +29,15 @@ feature -- General fonts
 			result_attached: Result /= Void
 		end
 
+	italic_label_font: EV_FONT
+			-- Access to italic widget font with highlighting
+		once
+			Result := standard_label_font.twin
+			Result.set_shape ({EV_FONT_CONSTANTS}.Shape_italic)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Prompts
 
 	prompt_sub_title_font: EV_FONT

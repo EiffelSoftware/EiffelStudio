@@ -160,6 +160,24 @@ rt_public void undiscard_breakpoints(void); /* re-authorize the debugger to stop
 #define UNDISCARD_BREAKPOINTS
 #endif
 
+/* macro to handle catcall status */
+#define set_catcall_detection_mode_for(b,t)	catcall_detection_mode = b?(catcall_detection_mode | t):(catcall_detection_enabled & ~t)
+#define set_catcall_detection_console(b)	set_catcall_detection_mode_for(b,0x1)
+#define catcall_detection_enabled	(catcall_detection_mode)
+#define catcall_detection_console_enabled	(catcall_detection_mode & 0x1)
+#ifdef WORKBENCH
+#define default_catcall_detection_mode	(0x1 | 0x2)
+#define set_catcall_detection_debugger(b)	set_catcall_detection_mode_for(b,0x2)
+#define catcall_detection_debugger_enabled	(catcall_detection_mode & 0x2)
+#else
+#define default_catcall_detection_mode	(0)
+#endif
+
+/* macro to handle assertion status */
+#ifdef WORKBENCH
+#define IS_OUTSIDE_ASSERTION (~in_assertion)
+#endif
+
 #ifdef __cplusplus
 }
 #endif

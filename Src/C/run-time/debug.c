@@ -212,7 +212,7 @@ rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 rt_shared void debug_initialize(void);	/* Initialize debug information */
 rt_public void dnotify(int, int);		/* Notify the daemon event and data, no answer waited */
 rt_public void dstop(struct ex_vect *exvect, uint32 offset); /* Breakable point reached */
-rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index); /* Breakable point in the middle of a nested call reached */
+rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 nested_break_index); /* Breakable point in the middle of a nested call reached */
 rt_public void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
 rt_private void dbreak_create_table(void);
 rt_shared void dbreak_free_table(void);
@@ -332,6 +332,7 @@ rt_public void discard_breakpoints()
 
 	EIF_GET_CONTEXT
 	d_data.db_discard_breakpoints++; 
+	RT_ENTER_EIFFELCODE;
 }
 
 rt_public void undiscard_breakpoints()
@@ -355,6 +356,7 @@ rt_public void undiscard_breakpoints()
 	 */
 
 	EIF_GET_CONTEXT
+	RT_EXIT_EIFFELCODE;
 	d_data.db_discard_breakpoints--;
 }
 
@@ -549,72 +551,71 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 						 * from Estudio, we can avoid the execution of this declaration
  						 * when the application is started from the command line
  						 */
-		if (
-				!d_data.db_discard_breakpoints
-				&& !is_inside_rt_eiffel_code
-				) 
-		{
-			int stopped = 0;
-			BODY_INDEX bodyid = exvect->ex_bodyid;
+		if (is_inside_rt_eiffel_code == 0) {
+			RTDBGH(break_index, 0);
+			if (!d_data.db_discard_breakpoints ) {
+				int stopped = 0;
+				BODY_INDEX bodyid = exvect->ex_bodyid;
 
-			DBGMTX_LOCK;	/* Enter critical section */
- 
-			if (should_be_interrupted() && dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
-					/* update previous value for next call */
-				previous_bodyid = bodyid;
-				previous_break_index = break_index;
-				stopped = 1;
-			}
-			else if
-				(d_data.db_stepinto_mode /* test stepinto flag */
-				|| d_data.db_callstack_depth < d_data.db_callstack_depth_stop) /* test the stack depth */
-			{
-				d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
-				d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
-				safe_dbreak(PG_STEP);				/* Stop the application because we stepped */
-
-				/* update previous value for next call (if it's a nested call) */
-				previous_bodyid = bodyid;
-				previous_break_index = break_index;
-				stopped = 1;
-			} 
-			if (already_warned) {
-				if (d_data.db_callstack_depth < critical_stack_depth) {
-					already_warned = 0;
+				DBGMTX_LOCK;	/* Enter critical section */
+	 
+				if (should_be_interrupted() && dinterrupt()) {	/* Ask daemon whether application should be interrupted here.*/
+						/* update previous value for next call */
+					previous_bodyid = bodyid;
+					previous_break_index = break_index;
+					stopped = 1;
 				}
-			}
-			else if (d_data.db_callstack_depth >= critical_stack_depth && !stopped)
-				/* On entering a routine, check we're not overflowing */
-			{
-					/* We may have detected a stack overflow */
-				already_warned = 1;
-				safe_dbreak (PG_OVERFLOW);
+				else if
+					(d_data.db_stepinto_mode /* test stepinto flag */
+					|| d_data.db_callstack_depth < d_data.db_callstack_depth_stop) /* test the stack depth */
+				{
+					d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
+					d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
+					safe_dbreak(PG_STEP);				/* Stop the application because we stepped */
+
 					/* update previous value for next call (if it's a nested call) */
-				previous_bodyid = bodyid;
-				previous_break_index = break_index;
-				stopped = 1;
+					previous_bodyid = bodyid;
+					previous_break_index = break_index;
+					stopped = 1;
+				} 
+				if (already_warned) {
+					if (d_data.db_callstack_depth < critical_stack_depth) {
+						already_warned = 0;
+					}
+				}
+				else if (d_data.db_callstack_depth >= critical_stack_depth && !stopped)
+					/* On entering a routine, check we're not overflowing */
+				{
+						/* We may have detected a stack overflow */
+					already_warned = 1;
+					safe_dbreak (PG_OVERFLOW);
+						/* update previous value for next call (if it's a nested call) */
+					previous_bodyid = bodyid;
+					previous_break_index = break_index;
+					stopped = 1;
+				}
+				if (is_dbreak_set(bodyid, break_index) && !stopped) /* test the presence of a breakpoint */
+				{
+					d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
+	/* The debuggee does not always stop on breakpoint (conditional bp)
+	 * then we should not reset `db_callstack_depth_stop' value !!
+	 *
+	 * 				d_data.db_callstack_depth_stop = 0;	
+	 */
+					safe_dbreak(PG_BREAK);
+						/* update previous value for next call (if it's a nested call) */
+					previous_bodyid = bodyid;
+					previous_break_index = break_index;
+					stopped = 1;
+				}
+				DBGMTX_UNLOCK; /* Leave critical section */
 			}
-			if (is_dbreak_set(bodyid, break_index) && !stopped) /* test the presence of a breakpoint */
-			{
-				d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not already cleared */
-/* The debuggee does not always stop on breakpoint (conditional bp)
- * then we should not reset `db_callstack_depth_stop' value !!
- *
- * 				d_data.db_callstack_depth_stop = 0;	
- */
-				safe_dbreak(PG_BREAK);
-					/* update previous value for next call (if it's a nested call) */
-				previous_bodyid = bodyid;
-				previous_break_index = break_index;
-				stopped = 1;
-			}
-			DBGMTX_UNLOCK; /* Leave critical section */
 		}
 	}
 }
 
 /* dstop for nested calls */
-rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
+rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 nested_break_index)
 	/* args: ex_vect, current execution vector     */
 	/*       break_index, current offset (i.e. line number in stoppoints mode) within feature */
 {
@@ -627,29 +628,28 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	   					* when the application is started from the command line
 	   					*/
 
-		if (
-				!d_data.db_discard_breakpoints
-				&& !is_inside_rt_eiffel_code
-			) 
-		{
-			BODY_INDEX bodyid = exvect->ex_bodyid;
-			DBGMTX_LOCK;	/* Enter critical section */
-				
-			if (previous_bodyid == bodyid && previous_break_index == break_index) {
-				/* We are in a middle of a qualified call, then ignore stop */
-			} else {
-				if (d_data.db_stepinto_mode || d_data.db_callstack_depth < d_data.db_callstack_depth_stop) {
-						/* IF: (test stepinto flag) or (test the stack depth) */
-					d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not
-														   already cleared 							 */
-					d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
-					safe_dbreak(PG_STEP);		 		/* stop the application */
+		if (is_inside_rt_eiffel_code == 0) {
+			RTDBGH(break_index, nested_break_index);
+			if (!d_data.db_discard_breakpoints) {
+				BODY_INDEX bodyid = exvect->ex_bodyid;
+				DBGMTX_LOCK;	/* Enter critical section */
+					
+				if (previous_bodyid == bodyid && previous_break_index == break_index) {
+					/* We are in a middle of a qualified call, then ignore stop */
+				} else {
+					if (d_data.db_stepinto_mode || d_data.db_callstack_depth < d_data.db_callstack_depth_stop) {
+							/* IF: (test stepinto flag) or (test the stack depth) */
+						d_data.db_stepinto_mode = 0;		/* remove the stepinto flag if it was not
+															   already cleared 							 */
+						d_data.db_callstack_depth_stop = 0;	/* remove the stack stop if it was activated */
+						safe_dbreak(PG_STEP);		 		/* stop the application */
+					}
 				}
-			}
 
-			/* we don't test the other case: breakpoint & interruption to avoid
-			 * stopping in the middle of a nested call */
-			DBGMTX_UNLOCK; /* Leave critical section */
+				/* we don't test the other case: breakpoint & interruption to avoid
+				 * stopping in the middle of a nested call */
+				DBGMTX_UNLOCK; /* Leave critical section */
+			}
 		}
 	}
 }
@@ -658,11 +658,15 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 /*************************************************************************************************************************
 * CATCALL handling.
 *************************************************************************************************************************/
+#ifdef WORKBENCH
 rt_shared void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EIF_TYPE_INDEX a_actual_dftype)
 {
+	REQUIRE("catcall detection debugger enabled", catcall_detection_debugger_enabled);
 	if (debug_mode) {
 		RT_GET_CONTEXT
 		EIF_GET_CONTEXT
+
+
 		DBGMTX_LOCK;	/* Enter critical section */
 		d_data.rtdata.rtcc.pos = a_arg_position;
 		d_data.rtdata.rtcc.expect = a_expected_dftype;
@@ -678,6 +682,7 @@ rt_shared void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EI
 		return;
 	}
 }
+#endif
 
 
 /*************************************************************************************************************************
@@ -1070,10 +1075,11 @@ rt_shared void ewhere(struct where *where)
 	/* Now compute things the remote process will like to know. First, the
 	 * dynamic type of the current object...
 	 */
-	if (ex->ex_id != 0)
+	if (ex->ex_id != 0) {
 		where->wh_type = Dtype(ex->ex_id);	/* Dynamic type */
-	else
+	} else {
 		where->wh_type = -1;
+	}
 
 	/* If the execution top calling context on the debugger's stack has its
 	 * pointer within the Eiffel stack equal to 'ex', then we can say for sure
@@ -2124,31 +2130,323 @@ rt_public void c_wipe_out(register struct c_stochunk *chunk)
  * RT_EXTENSION interaction for debugging
  */
 #ifdef WORKBENCH
-rt_public void rt_ext_notify_event (int op, char* curr, int cid, int fid, int dep, char* pfn)
+rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int i3, char* ptr)
 {
-	EIF_GET_CONTEXT
-	if (	
-			exec_recording_enabled == 1 &&
-			is_inside_rt_eiffel_code != 1 &&
-			rt_extension_obj != NULL
-		)
-	{	
-		EIF_TYPED_VALUE rtd_arg;						
-		EIF_TYPED_VALUE rtd_op;
-		RT_ENTER_EIFFELCODE;								
-		rtd_op.it_i4 = op;
-		rtd_op.type = SK_INT32;
-		rtd_arg = (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);	
-		((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r = ((EIF_REFERENCE) curr); 	
-		((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) cid); 	
-		((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) fid); 	
-		((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) dep); 
-		if (op == RTDBG_EVENT_ENTER_FEATURE) {
-			((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_p = pfn;
-		};
-		(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
-		RT_EXIT_EIFFELCODE;
+
+	if (exec_recording_enabled == 1) {
+		EIF_GET_CONTEXT
+		if (is_inside_rt_eiffel_code == 0 && rt_extension_obj != NULL && ~in_assertion) {	
+			/* Disabled if 
+			 * 		- inside rt eiffel code
+			 * 		- rt_extension_obj NULL
+			 * 		- inside assertion
+			 */
+
+			EIF_TYPED_VALUE rtd_arg;						
+			EIF_TYPED_VALUE rtd_op;
+			RT_ENTER_EIFFELCODE;
+			{
+			volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE);
+
+			RT_GC_PROTECT(ref);     /* Protect `ref' since it may move if GC called */
+			rtd_op.it_i4 = op;
+			rtd_op.type = SK_INT32;
+			rtd_arg = (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);
+			RT_GC_PROTECT (rtd_arg.it_r);
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r  = ((EIF_REFERENCE) ref);
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) i1);
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) i2); 
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) i3); 
+			if (op == RTDBG_EVENT_ENTER_FEATURE) {
+				((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_p = ptr;
+			};
+			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
+			RT_GC_WEAN(rtd_arg.it_r);
+			RT_GC_WEAN(ref);      /* Unprotect `ref'. No more collection is expected. */
+			c_check_assert (rtdbg_asserting);
+			}
+			RT_EXIT_EIFFELCODE;
+		};	
 	};	
+}
+rt_public void rt_ext_notify_assign (int op, EIF_REFERENCE ref, long a_pos, int a_static_type, int32 a_feat_id, int a_dyn_type,  
+		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted)
+{
+
+	if (exec_recording_enabled == 1) {
+		EIF_GET_CONTEXT
+		if (is_inside_rt_eiffel_code == 0 && rt_extension_obj != NULL && ~in_assertion) {	
+			/* Disabled if 
+			 * 		- inside rt eiffel code
+			 * 		- rt_extension_obj NULL
+			 * 		- inside assertion
+			 */
+
+			EIF_TYPED_VALUE rtd_arg;						
+			EIF_TYPED_VALUE rtd_op;
+			long l_pos = 0;
+
+			l_pos = a_pos;
+			switch (op) {
+			case RTDBG_EVENT_RT_ASSIGN_LOCAL:
+				break;
+			case RTDBG_EVENT_RT_ASSIGN_ATTRIB:
+				if (l_pos == 0 && a_static_type > 0 && a_feat_id > 0) {
+					if (a_precompiled == 1) {
+						l_pos = RTWPA(a_static_type, a_feat_id, a_dyn_type);
+					} else {
+						l_pos = RTWA(a_static_type, a_feat_id, a_dyn_type);
+					}
+				}
+				break;
+			default:
+				break;
+			}
+
+#ifdef DEBUG
+			fprintf(stdout, "rt_ext_notify_assign (op=%d, ref, %d, %d, %d, %d, %s) \n", op, i1, i2, i3, ptr);
+#endif
+
+			RT_ENTER_EIFFELCODE;
+			{
+			volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE);
+
+			RT_GC_PROTECT(ref);     /* Protect `ref' since it may move if GC called */
+			rtd_op.it_i4 = op;
+			rtd_op.type = SK_INT32;
+			rtd_arg = (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);
+			RT_GC_PROTECT (rtd_arg.it_r);
+
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r  = ((EIF_REFERENCE) ref);
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) l_pos);
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) a_rt_type); 
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) (a_expanded + (a_precompiled << 1) + (a_melted << 2)) );
+			/* FIXME jfiat [2008/04/02] : Could be use to pass the value ... -> optimisation for later
+			if (op == RTDBG_EVENT_ENTER_FEATURE) {
+				((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_p = ptr;
+			};
+			*/
+
+			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
+			RT_GC_WEAN(rtd_arg.it_r);
+			RT_GC_WEAN(ref);      /* Unprotect `ref'. No more collection is expected. */
+			c_check_assert (rtdbg_asserting);
+			}
+			RT_EXIT_EIFFELCODE;
+		};	
+	};	
+}
+
+
+extern EIF_DEBUG_VALUE stack_debug_value(uint32 stack_depth, uint32 loc_type, uint32 loc_number);
+
+rt_public char* rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type)
+{
+	/* 
+	 * Get value for stack variable of type `loc_type' at position `loc_number', in the stack of depth `stack_depth'
+	 */
+
+	EIF_DEBUG_VALUE ip;
+	EIF_REFERENCE new_obj;
+	uint32 stack_level;
+
+	EIF_GET_CONTEXT;
+
+	stack_level = d_data.db_callstack_depth - stack_depth + 1;
+
+	ip = stack_debug_value (stack_level, loc_type, loc_number);
+	if (ip.address == (char*)0) {
+		return (EIF_REFERENCE) 0;
+	} else {
+#ifdef DEBUG				
+		if ((ip.value.type & SK_HEAD) != (a_rt_type & SK_HEAD)) {
+			if (((ip.value.type & SK_HEAD) == SK_VOID)) {
+				// ,...
+			} else {
+				fprintf(stderr,"rt_dbg_stack_value (dep=%d, loc_type=0x%X, loc_number=%d) -> ERROR ip: type:0x%X rt_type=0x%X\n", stack_depth, loc_type, loc_number, ip.value.type, a_rt_type & SK_HEAD);
+			}
+		}
+#endif
+
+		switch (ip.value.type & SK_HEAD) {
+		case SK_BOOL:
+			{
+				EIF_BOOLEAN val = (EIF_BOOLEAN) ip.value.it_b;
+				new_obj = RTLN(egc_bool_ref_dtype);
+				*(EIF_BOOLEAN *) new_obj = val;
+				return new_obj;
+			}
+		case SK_CHAR:
+			{
+				EIF_CHARACTER val = (EIF_CHARACTER) ip.value.it_c1;
+				new_obj = RTLN(egc_char_ref_dtype);
+				*(EIF_CHARACTER *) new_obj = val;
+				return new_obj;
+			}
+		case SK_WCHAR:
+			{
+				EIF_WIDE_CHAR val = (EIF_WIDE_CHAR) ip.value.it_c4;
+				new_obj = RTLN(egc_wchar_ref_dtype);
+				*(EIF_WIDE_CHAR *) new_obj = val;
+				return new_obj;
+			}
+		case SK_UINT8:
+			{
+				EIF_NATURAL_8 val = (EIF_NATURAL_8 ) ip.value.it_n1;
+				new_obj = RTLN(egc_uint8_ref_dtype);
+				*(EIF_NATURAL_8 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_UINT16:
+			{
+				EIF_NATURAL_16 val = (EIF_NATURAL_16 ) ip.value.it_n2;
+				new_obj = RTLN(egc_uint16_ref_dtype);
+				*(EIF_NATURAL_16 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_UINT32:
+			{
+				EIF_NATURAL_32 val = (EIF_NATURAL_32 ) ip.value.it_n4;
+				new_obj = RTLN(egc_uint32_ref_dtype);
+				*(EIF_NATURAL_32 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_UINT64:
+			{
+				EIF_NATURAL_64 val = (EIF_NATURAL_64 ) ip.value.it_n8;
+				new_obj = RTLN(egc_uint64_ref_dtype);
+				*(EIF_NATURAL_64 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_INT8:
+			{
+				EIF_INTEGER_8 val = (EIF_INTEGER_8) ip.value.it_i1;
+				new_obj = RTLN(egc_int8_ref_dtype);
+				*(EIF_INTEGER_8 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_INT16:
+			{
+				EIF_INTEGER_16 val = (EIF_INTEGER_16) ip.value.it_i2;
+				new_obj = RTLN(egc_int16_ref_dtype);
+				*(EIF_INTEGER_16 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_INT32:
+			{
+				EIF_INTEGER_32 val = (EIF_INTEGER_32) ip.value.it_i4;
+				new_obj = RTLN(egc_int32_ref_dtype);
+				*(EIF_INTEGER_32 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_INT64:
+			{
+				EIF_INTEGER_64 val = (EIF_INTEGER_64) ip.value.it_i8;
+				new_obj = RTLN(egc_int64_ref_dtype);
+				*(EIF_INTEGER_64 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_REAL32:
+			{
+				EIF_REAL_32 val = (EIF_REAL_32) ip.value.it_r4;
+				new_obj = RTLN(egc_real32_ref_dtype);
+				*(EIF_REAL_32 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_REAL64:
+			{
+				EIF_REAL_64 val = (EIF_REAL_64) ip.value.it_r8;
+				new_obj = RTLN(egc_real64_ref_dtype);
+				*(EIF_REAL_64 *) new_obj = val;
+				return new_obj;
+			}
+		case SK_POINTER:
+			{
+				EIF_POINTER val = (EIF_POINTER) ip.value.it_p;
+				new_obj = RTLN(egc_point_ref_dtype);
+				*(EIF_POINTER *) new_obj = val;
+				return new_obj;
+			}
+		case SK_REF:
+			return (EIF_REFERENCE) ip.value.it_r;	/* Return reference */
+		case SK_EXP:
+			return RTCL(ip.value.it_r);			/* Return copy of expanded object */
+		default:
+			return (EIF_REFERENCE) 0;
+		}
+	}
+}
+
+rt_public int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE* new_value)
+{
+	/* 
+	 * Set value for stack variable of type `loc_type' at position `loc_number', in the stack of depth `stack_depth'
+	 */
+
+	EIF_DEBUG_VALUE ip;
+	unsigned char 	error_code = 0;		/* error code - different from zero means that an error occurred */
+	char 			*new_object = NULL;	/* new value for the local variable if it's a reference */
+	uint32 stack_level;
+
+	EIF_GET_CONTEXT;
+
+	stack_level = d_data.db_callstack_depth - stack_depth + 1;
+	ip = stack_debug_value (stack_level, loc_type, loc_number);
+
+#ifdef DEBUG
+	fprintf(stderr,"rt_dbg_set_stack_value: depth=%d level=%d loc_type=0x%X pos=%d new_value_type=ox%X \n", stack_depth, stack_level, loc_type, loc_number, new_value->type);
+#endif
+
+	if (ip.address == (char*)0) {
+		return 0;
+	} else {
+#ifdef DEBUG
+		if ((ip.value.type & SK_HEAD) != (new_value->type & SK_HEAD)) {
+			if (((ip.value.type & SK_HEAD) == SK_REF) && ((new_value->type & SK_HEAD) == SK_VOID)) {
+				// ,...
+			} else {
+				fprintf(stderr,"rt_dbg_set_stack_value (dep=%d, loc_type=0x%X, loc_number=%d) -> ERROR ip: type:0x%X new_value->type=0x%X\n", stack_depth, loc_type, loc_number, ip.value.type, new_value->type);
+			}
+		}
+		fprintf(stderr,"rt_dbg_set_stack_value -> ip: type:0x%X address:0x%X  new_value->type=0x%X\n", ip.value.type, ip.address, new_value->type);
+#endif
+		switch (new_value->type & SK_HEAD) {
+		case SK_BOOL: *(EIF_BOOLEAN *)(ip.address) = new_value->it_bool; break;
+		case SK_CHAR: *(EIF_CHARACTER *)(ip.address) = new_value->it_char; break;
+		case SK_WCHAR: *(EIF_WIDE_CHAR *)(ip.address) = new_value->it_wchar; break;
+		case SK_UINT8: *(EIF_NATURAL_8 *)(ip.address) = new_value->it_uint8; break;
+		case SK_UINT16: *(EIF_NATURAL_16 *)(ip.address) = new_value->it_uint16; break;
+		case SK_UINT32: *(EIF_NATURAL_32 *)(ip.address) = new_value->it_uint32; break;
+		case SK_UINT64: *(EIF_NATURAL_64 *)(ip.address) = new_value->it_uint64; break;
+		case SK_INT8: *(EIF_INTEGER_8 *)(ip.address) = new_value->it_int8; break;
+		case SK_INT16: *(EIF_INTEGER_16 *)(ip.address) = new_value->it_int16; break;
+		case SK_INT32: *(EIF_INTEGER_32 *)(ip.address) = new_value->it_int32; break;
+		case SK_INT64: *(EIF_INTEGER_64 *)(ip.address) = new_value->it_int64; break;
+		case SK_REAL32: *(EIF_REAL_32 *)(ip.address) = new_value->it_real32; break;
+		case SK_REAL64: *(EIF_REAL_64 *)(ip.address) = new_value->it_real64; break;
+		case SK_POINTER: *(EIF_POINTER *)(ip.address) = new_value->it_ptr; break;
+		case SK_STRING: *(EIF_REFERENCE *)(ip.address) = RTMS(new_value->it_ref); break;
+		case SK_VOID:
+			(ip.value.type) = SK_VOID;
+			*(EIF_REFERENCE *)(ip.address) = (EIF_REFERENCE) 0;
+			break;
+		case SK_REF:
+			new_object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
+			*(EIF_REFERENCE *)(ip.address) = new_object;
+			break;
+		case SK_BIT:
+			error_code = 1; /* not yet implemented */
+			break;
+		case SK_EXP:
+			error_code = 2; /* modifying  an expanded reference is not allowed */
+			break;
+		default:
+			/* unexpected value, error: set the error flag */
+			error_code = 1;
+			break;
+		}
+	}
+	return error_code;
 }
 
 

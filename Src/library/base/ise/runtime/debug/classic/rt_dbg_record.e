@@ -13,29 +13,43 @@ inherit
 
 	RT_DBG_COMMON
 
+	RT_DBG_INTERNAL
+
 feature -- Properties
 
 	position: INTEGER
 			-- Position of record.
 
 	type: INTEGER
-			-- Type of record value.
-
-	backup: ?RT_DBG_RECORD
-			-- Backup value after restore operation.
+			-- Eiffel type of record value.
 
 feature -- Access
 
-	debug_output: STRING
-		do
-			Result := "#" + position.out + " = " + to_string
+	current_value_record: RT_DBG_RECORD
+			-- Record for current value
+		deferred
 		end
 
-	is_same_as (other: RT_DBG_RECORD): BOOLEAN
-			-- Is Current same as `other' ?
+	debug_output: STRING
 		do
-			Result := position = other.position
-			check same_type: Result implies type = other.type end
+			Result := generating_type + ": #" + position.out + " = " + to_string
+		end
+
+	associated_object: ANY
+			-- Associated object, if any
+		deferred
+		end
+
+	is_local_record: BOOLEAN 
+			-- Is local record ?
+		deferred
+		end
+
+	is_same_as (other: !RT_DBG_RECORD): BOOLEAN
+			-- Is Current same as `other' ?
+		deferred
+		ensure
+			same_type: Result implies type = other.type
 		end
 
 	to_string: STRING
@@ -44,35 +58,20 @@ feature -- Access
 
 feature -- Change properties
 
-	set_position (v: like position)
-			-- Set `position'
-		do
-			position := v
-		end
-
-	set_type (v: like type)
-			-- Set `type'
-		do
-			type := v
-		end
-
-	set_backup (v: like backup)
-			-- Set `backup'
-		do
-			backup := v
+	get_value
+			-- Get value
+		deferred
 		end
 
 feature -- Runtime
 
-	restore (obj: ANY; bak: RT_DBG_RECORD)
-			-- Restore Current on target `obj',
-			-- and associate the backup value to `bak'
-		require
-			no_backup: backup = Void
+	restore (val: !RT_DBG_RECORD)
+			-- Restore Current record
+			-- and associate the backup value to `val'
 		deferred
 		end
 
-	revert (obj: ANY)
+	revert (bak: !RT_DBG_RECORD)
 			-- Revert previous `restore' using the associated `backup' value
 		deferred
 		end

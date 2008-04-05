@@ -112,6 +112,14 @@ feature -- Grids
 			result_attached: Result /= Void
 		end
 
+	grid_read_only_background_color: EV_COLOR
+			-- Grid item default background color for read-only items
+		once
+			create Result.make_with_8_bit_rgb (245, 245, 245)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Prompts
 
 	prompt_sub_title_forground_color: EV_COLOR

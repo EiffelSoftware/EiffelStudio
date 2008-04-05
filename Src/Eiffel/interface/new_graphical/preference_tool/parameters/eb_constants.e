@@ -26,6 +26,12 @@ feature {EB_TOOL} -- Resources
 			Result := (create {SHARED_BENCH_NAMES}).names
 		end
 
+	Interface_messages: INTERFACE_MESSAGES
+			-- Interface messages.
+		once
+			Result := (create {SHARED_BENCH_NAMES}).messages
+		end
+
 	Warning_messages: WARNING_MESSAGES is
 			-- All warnings used in the interface
 		once

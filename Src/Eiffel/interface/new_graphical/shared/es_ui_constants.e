@@ -17,6 +17,9 @@ feature -- Access
 	cell_vertical_separator_width: INTEGER = 6
 	cell_horizontal_separator_height: INTEGER = 6
 
+	sub_widget_indent_width: INTEGER = 20
+			-- Width of indent used to display tree-style (dependent widgets)
+
 feature -- Button
 
 	button_height: INTEGER = 23

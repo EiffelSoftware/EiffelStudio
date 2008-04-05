@@ -11,7 +11,35 @@ deferred class
 	ES_CLASS_CONTRACT_EDITOR_CONTEXT
 
 inherit
-	ES_CONTRACT_EDITOR_CONTEXT [CLASSC_STONE]
+	ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+
+feature {NONE} -- Query
+
+	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
+			-- <Precursor>
+		local
+			l_class_i: !CLASS_I
+			l_class_C: !CLASS_C
+			l_list: LIST [CLASS_C]
+			l_cursor: CURSOR
+		do
+			if a_class.is_compiled then
+				l_list := a_class.compiled_class.parents_classes
+				if l_list /= Void and then not l_list.is_empty then
+					l_cursor := l_list.cursor
+					from l_list.start until l_list.after loop
+						l_class_c ?=  l_list.item
+						if not a_list.has (l_class_c) then
+							a_list.force_last (l_class_c)
+							l_class_i ?= l_class_c.lace_class
+							calculate_parents (l_class_i, a_list)
+						end
+						l_list.forth
+					end
+					l_list.go_to (l_cursor)
+				end
+			end
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

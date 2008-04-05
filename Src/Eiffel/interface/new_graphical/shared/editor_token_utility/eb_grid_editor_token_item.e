@@ -137,6 +137,22 @@ feature -- Access
 			end
 		end
 
+	required_width_for_text_and_component: INTEGER_32
+			-- Required width in pixel to display text and components.
+		do
+			Result := editor_token_text.required_width + required_component_width
+		ensure
+			result_attached: Result >= 0
+		end
+
+	required_height_for_text_and_component: INTEGER_32
+			-- Required height in pixel to display text and components.	
+		do
+			Result := editor_token_text.required_height.max (required_component_height)
+		ensure
+			result_attached: Result >= 0
+		end
+
 feature -- Status report
 
 	is_full_select_enabled: BOOLEAN
@@ -642,22 +658,6 @@ feature -- Pick and drop
 		end
 
 feature{NONE} -- Implementation
-
-	required_width_for_text_and_component: INTEGER_32
-			-- Required width in pixel to display text and components.
-		do
-			Result := editor_token_text.required_width + required_component_width
-		ensure
-			result_attached: Result >= 0
-		end
-
-	required_height_for_text_and_component: INTEGER_32
-			-- Required height in pixel to display text and components.	
-		do
-			Result := editor_token_text.required_height.max (required_component_height)
-		ensure
-			result_attached: Result >= 0
-		end
 
 	draw_pixmap (a_drawable: EV_DRAWABLE; a_start_x: INTEGER_32)
 			-- Display `pixmap' in `a_drawable' from `a_start_x'.

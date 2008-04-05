@@ -28,24 +28,94 @@ feature -- Access
 			Result ?= context_stone.e_feature
 		end
 
-	context_parents: !DS_ARRAYED_LIST [!CLASS_C]
-			-- Context parent classes containing contracts
+feature -- Contracts
+
+	contracts_for_class (a_class: !CLASS_I; a_live: BOOLEAN): !TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+			-- <Precursor>
 		local
-			l_list: LIST [CLASS_C]
+			l_modifier: !like create_text_modifier
+			l_e_feature: ?like context_feature
+			l_feature_i: ?FEATURE_I
+			l_class_i: !CLASS_I
+			l_class_c: !CLASS_C
+			l_feature_as: ?FEATURE_AS
+			l_ensure_as: ?ENSURE_AS
+			l_assertions: ?EIFFEL_LIST [TAGGED_AS]
 			l_cursor: CURSOR
+			l_result: !DS_ARRAYED_LIST [TAGGED_AS]
 		do
-			create Result.make_default
-			l_list := context_feature.precursors
-			if l_list /= Void then
-				l_cursor := l_list.cursor
-				from l_list.start until l_list.after loop
-					if {l_class: !CLASS_C} l_list.item then
-						Result.force_last (l_class)
+			create l_result.make_default
+
+			if a_class = context_class then
+				l_modifier ?= text_modifier
+				l_e_feature := context_feature
+			else
+					-- Create a temporary context object to fetch a text modifier.
+				if a_class.is_compiled then
+					l_class_c ?= a_class.compiled_class
+					if l_class_c /= Void and then l_class_c.has_feature_table then
+						l_feature_i := l_class_c.feature_table.feature_of_rout_id_set (context_feature.rout_id_set)
+						check l_feature_i_attached: l_feature_i /= Void end
+						if l_feature_i /= Void then
+							l_e_feature ?= l_feature_i.api_feature (context_class.compiled_class.class_id)
+							check l_e_feature_attached: l_e_feature /= Void end
+							if l_e_feature /= Void then
+								l_modifier ?= create_parent_text_modifier (l_class_c)
+							end
+						end
 					end
-					l_list.forth
 				end
-				l_list.go_to (l_cursor)
 			end
+
+			if a_live then
+					-- We have a text modifier now, extract the contracts
+				if not l_modifier.is_prepared then
+						-- Prepare to parse class
+					l_modifier.prepare
+				end
+
+					-- Use live AST
+				l_feature_as := l_modifier.ast_feature
+			end
+
+			if l_feature_as = Void then
+				check l_e_feature_attached: l_e_feature /= Void end
+
+					-- Class contains syntax errors or request to use the non-live data, use compiled data
+				l_class_i := context_class
+				if l_class_i.is_compiled then
+					l_class_c ?= l_class_i.compiled_class
+					check l_class_c_attached: l_class_c /= Void end
+					if l_class_c /= Void then
+						l_feature_as := l_class_c.ast.feature_of_name (l_e_feature.name, False)
+					end
+				end
+			end
+
+			if l_feature_as /= Void then
+					-- Extract contracts
+				l_assertions := contracts_for_feature (({!FEATURE_AS}) #? l_feature_as)
+				if l_assertions /= Void then
+					l_cursor := l_assertions.cursor
+					from l_assertions.start until l_assertions.after loop
+						l_result.force_last (l_assertions.item)
+						l_assertions.forth
+					end
+					l_assertions.go_to (l_cursor)
+				end
+			end
+
+			Result ?= [l_result, l_modifier]
+		end
+
+feature {NONE} -- Contracts
+
+	contracts_for_feature (a_feature: !FEATURE_AS): ?EIFFEL_LIST [TAGGED_AS]
+			-- Retrieves a list of contracts given a feature.
+		require
+			is_interface_usable: is_interface_usable
+			has_stone: has_stone
+		deferred
 		end
 
 feature -- Status report
@@ -63,6 +133,39 @@ feature -- Status report
 			end
 		ensure then
 			is_class_stone: (Result and a_stone /= Void) implies ({E_ROUTINE}) #? (({FEATURE_STONE}) #? a_stone).e_feature /= Void
+		end
+
+feature {NONE} -- Query
+
+	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
+			-- <Precursor>
+		local
+			l_result: !DS_ARRAYED_LIST [CLASS_C]
+			l_precusors: ?ARRAYED_LIST [CLASS_C]
+			l_feature_i: ?FEATURE_I
+			l_e_feature: ?E_FEATURE
+			l_class_c: CLASS_C
+		do
+			create l_result.make_default
+			if a_class = context_class then
+				l_e_feature := context_feature
+			elseif a_class.is_compiled then
+				l_class_c := a_class.compiled_class
+				l_feature_i := l_class_c.feature_table.feature_of_rout_id_set (context_feature.rout_id_set)
+				check l_feature_i_attached: l_feature_i /= Void end
+				if l_feature_i /= Void then
+					l_e_feature := l_feature_i.api_feature (l_class_c.class_id)
+					check l_e_feature_attached: l_e_feature /= Void end
+				end
+			end
+
+			if l_e_feature /= Void then
+				l_precusors := l_e_feature.precursors
+				if l_precusors /= Void then
+					l_result.resize (l_precusors.count.max (l_result.capacity))
+					l_precusors.do_all (agent l_result.put_last)
+				end
+			end
 		end
 
 feature -- Basic operations
@@ -101,6 +204,13 @@ feature -- Basic operations
 		rescue
 			retried := True
 			retry
+		end
+
+feature {NONE} -- Factory
+
+	create_text_modifier: ?ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
+			-- Creates a text modifier
+		deferred
 		end
 
 ;indexing

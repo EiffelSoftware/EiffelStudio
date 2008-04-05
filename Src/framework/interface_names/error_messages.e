@@ -18,6 +18,10 @@ feature -- Access
 	e_code_template_parse (a_error: STRING_GENERAL; a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to parse the code template  '$1'. Error: $2.", [a_file_name, a_error]) end
 	e_code_template_read (a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to read the code template file '$1'.", [a_file_name]) end
 
+feature -- Prompts
+
+	e_save_session_data_failed: !STRING_32 do Result ?= locale.translation ("There was an error when trying to store the EiffelStudio session data.") end
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

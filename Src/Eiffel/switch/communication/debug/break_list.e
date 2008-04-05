@@ -48,8 +48,13 @@ feature {NONE} -- Initialization
 			until
 				lst.after
 			loop
-				bp := lst.item_for_iteration.copy_for_saving
-				put (bp, bp)
+				bp := lst.item_for_iteration
+				if bp.is_hidden or bp.is_corrupted then
+					--| do not save this bp
+				else
+					bp := bp.copy_for_saving
+					put (bp, bp)
+				end
 				lst.forth
 			end
 		end

@@ -66,18 +66,47 @@ feature {NONE} -- Check for void test
 			equality_as_attached: equality_as /= Void
 		local
 			e: EXPR_AS
+			left: EXPR_AS
+			right: EXPR_AS
 		do
 			if is_negated = is_negation_expected then
-				if {v1: VOID_AS} equality_as.left then
-					e := equality_as.right
-				elseif {v2: VOID_AS} equality_as.right then
-					e := equality_as.left
+					-- Remove parentheses surrounding left expression
+				from
+					left := equality_as.left
+				until
+					not {left_paran_as: PARAN_AS} left
+				loop
+					left := left_paran_as.expr
+				end
+					-- Remove parentheses surrounding right expression
+				from
+					right := equality_as.right
+				until
+					not {right_paran_as: PARAN_AS} right
+				loop
+					right := right_paran_as.expr
+				end
+					-- Check that one side of the equality expression is "Void".
+				if {v1: VOID_AS} left then
+					e := right
+				elseif {v2: VOID_AS} right then
+					e := left
 				end
 				if {expr_call_as: EXPR_CALL_AS} e then
-					if {access_id_as: ACCESS_ID_AS} expr_call_as.call and then access_id_as.is_argument then
-						context.add_argument_scope (access_id_as.feature_name.name_id)
-					elseif {access_assert_as: ACCESS_ASSERT_AS} expr_call_as.call and then access_assert_as.is_argument then
-						context.add_argument_scope (access_assert_as.feature_name.name_id)
+					if {access_id_as: ACCESS_ID_AS} expr_call_as.call then
+						if access_id_as.is_argument then
+							context.add_argument_scope (access_id_as.feature_name.name_id)
+						elseif access_id_as.is_local then
+							context.add_local_scope (access_id_as.feature_name.name_id)
+						end
+					elseif {access_assert_as: ACCESS_ASSERT_AS} expr_call_as.call then
+						if access_assert_as.is_argument then
+							context.add_argument_scope (access_assert_as.feature_name.name_id)
+						elseif access_assert_as.is_local then
+							context.add_local_scope (access_assert_as.feature_name.name_id)
+						end
+					elseif {result_as: RESULT_AS} expr_call_as.call then
+						context.add_result_scope
 					end
 				end
 			end
@@ -114,7 +143,7 @@ invariant
 	context_attached: context /= Void
 
 indexing
-	copyright:	"Copyright (c) 2007-2008a, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

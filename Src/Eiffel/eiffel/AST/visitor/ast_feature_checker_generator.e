@@ -769,7 +769,7 @@ feature -- Roundtrip
 					-- written, since those are not inherited.
 				l_feature :=
 					system.class_of_id (l_as.class_id).eiffel_class_c.inline_agent_of_rout_id (l_as.inl_rout_id).duplicate
-				l_feature.instantiation_in (context.current_class_type.conformance_type)
+				l_feature.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable)
 			else
 				if is_byte_node_enabled then
 
@@ -1370,7 +1370,7 @@ feature -- Implementation
 											current_target_type := Void
 										else
 											current_target_type :=
-												l_formal_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
+												l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 										end
 										l_parameters.i_th (i).process (Current)
 										if last_type /= Void then
@@ -1401,7 +1401,7 @@ feature -- Implementation
 										if l_formal_arg_type.is_like_argument then
 											l_like_arg_type := l_formal_arg_type.actual_argument_type (l_arg_types)
 											l_like_arg_type :=
-												l_like_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
+												l_like_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 												-- Check that `l_arg_type' is compatible to its `like argument'.
 												-- Once this is done, then type checking is done on the real
 												-- type of the routine, not the anchor.
@@ -1417,7 +1417,7 @@ feature -- Implementation
 											-- Adapted type in case it is a formal generic parameter or a like.
 										l_formal_arg_type := adapted_type (l_formal_arg_type, l_last_type, l_last_constrained)
 											-- Actual type of feature argument
-										l_formal_arg_type := l_formal_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
+										l_formal_arg_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 
 											-- Conformance: take care of constrained genericity
 											-- We must generate an error when `l_formal_arg_type' becomes
@@ -1476,7 +1476,7 @@ feature -- Implementation
 												-- This fix is incomplete since it does not take care of types
 												-- that are redefined as expanded.
 											if a_precursor_type /= Void and l_last_class.is_expanded then
-												l_parameter.set_attachment_type (l_formal_arg_type.instantiation_in (a_precursor_type, a_precursor_type.associated_class.class_id))
+												l_parameter.set_attachment_type (l_formal_arg_type.instantiation_in (a_precursor_type.as_implicitly_detachable, a_precursor_type.associated_class.class_id))
 											else
 												l_parameter.set_attachment_type (l_formal_arg_type)
 												if not system.il_generation then
@@ -1527,7 +1527,7 @@ feature -- Implementation
 									l_result_type := l_pure_result_type.actual_argument_type (l_feature.arguments)
 								end
 							end
-							l_result_type := l_result_type.instantiation_in (l_last_type, l_last_id).actual_type
+							l_result_type := l_result_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 							if l_arg_types /= Void and then l_pure_result_type.is_like_argument and then is_byte_node_enabled then
 									-- Ensure the expandedness status of the result type matches
 									-- the expandedness status of the argument it is anchored to (if any).
@@ -1756,7 +1756,7 @@ feature -- Implementation
 						-- Type of tuple is always attached
 					if context.current_class.lace_class.is_void_safe then
 						l_tuple_type := l_tuple_type.as_attached
-					else
+					elseif not l_tuple_type.is_implicitly_attached then
 						l_tuple_type := l_tuple_type.as_implicitly_attached
 					end
 				end
@@ -1902,7 +1902,7 @@ feature -- Implementation
 								-- Type of a manifest array is always attached
 							if l_current_class_void_safe then
 								l_array_type := l_array_type.as_attached
-							else
+							elseif not l_array_type.is_implicitly_attached then
 								l_array_type := l_array_type.as_implicitly_attached
 							end
 						end
@@ -2068,7 +2068,7 @@ feature -- Implementation
 					-- Constants are always of an attached type
 				if context.current_class.lace_class.is_void_safe then
 					t := t.as_attached
-				else
+				elseif not t.is_implicitly_attached then
 					t := t.as_implicitly_attached
 				end
 			end
@@ -2154,20 +2154,36 @@ feature -- Implementation
 					reset_types
 				else
 						-- Update the type stack
-					last_type := l_feat_type
 					last_access_writable := True
-					if l_feat_type.is_attached and then not l_feat_type.is_expanded then
-							-- Take care only for non-self-initializing locals.
-						if is_in_assignment or else is_target_of_creation_instruction then
-								-- Mark that Result is initialized.
-							record_initialized_result
-						elseif not is_checking_postcondition and then not context.variables.is_result_set then
-								-- Result is not properly initialized.
-							error_handler.insert_error (create {VEVI}.make_result (context, l_as))
-								-- Mark that Result is initialized to avoid repeated errors.
-							context.variables.set_result
+					if l_feat_type.is_attached then
+						if not l_feat_type.is_expanded then
+								-- Take care only for non-self-initializing locals.
+							if is_in_assignment or else is_target_of_creation_instruction then
+									-- Mark that Result is initialized.
+								record_initialized_result
+							elseif not is_checking_postcondition and then not context.variables.is_result_set then
+									-- Result is not properly initialized.
+								error_handler.insert_error (create {VEVI}.make_result (context, l_as))
+									-- Mark that Result is initialized to avoid repeated errors.
+								context.variables.set_result
+							end
+						end
+					elseif is_in_assignment or else is_target_of_creation_instruction then
+							-- "Result" might change its attachment status.
+							-- It is recorded for future checks because
+							-- it might be still safe to use it in the expression
+							-- before actual reattachment takes place.
+						last_reinitialized_local := result_name_id
+					elseif context.is_result_attached then
+							-- "Result" is of a detachable type, but it's safe
+							-- to use it as an attached one.
+						if context.current_class.lace_class.is_void_safe then
+							l_feat_type := l_feat_type.as_attached
+						else
+							l_feat_type := l_feat_type.as_implicitly_attached
 						end
 					end
+					last_type := l_feat_type
 					if is_byte_node_enabled then
 						create {RESULT_B} last_byte_node
 					end
@@ -2370,7 +2386,7 @@ feature -- Implementation
 			if l_arg_pos /= 0 then
 					-- Found argument
 				l_type := l_feature.arguments.i_th (l_arg_pos)
-				l_type := l_type.actual_type.instantiation_in (last_type, l_last_id)
+				l_type := l_type.actual_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 				l_has_vuar_error := l_as.parameters /= Void
 				if l_needs_byte_node then
 					create l_argument
@@ -2388,7 +2404,7 @@ feature -- Implementation
 				then
 					if l_context_current_class.lace_class.is_void_safe then
 						l_type := l_type.as_attached
-					else
+					elseif not l_type.is_implicitly_attached then
 						l_type := l_type.as_implicitly_attached
 					end
 				end
@@ -2403,7 +2419,7 @@ feature -- Implementation
 					last_access_writable := True
 					l_has_vuar_error := l_as.parameters /= Void
 					l_type := l_local_info.type
-					l_type := l_type.instantiation_in (last_type, l_last_id)
+					l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 					if l_needs_byte_node then
 						create l_local
 						l_local.set_position (l_local_info.position)
@@ -2421,16 +2437,32 @@ feature -- Implementation
 						l_veen2b.set_identifier (l_as.feature_name.name)
 						l_veen2b.set_location (l_as.feature_name)
 						error_handler.insert_error (l_veen2b)
-					elseif l_type.is_attached and then not l_type.is_expanded then
-							-- Take care only for non-self-initializing locals.
-						if is_in_assignment or else is_target_of_creation_instruction then
-								-- Mark that the local is initialized.
-							record_initialized_local (l_local_info.position)
-						elseif not context.variables.is_local_set (l_local_info.position) then
-								-- Local is not properly initialized.
-							error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
-								-- Mark that the local is initialized to avoid repeated errors.
-							context.variables.set_local (l_local_info.position)
+					elseif l_type.is_attached then
+						if not l_type.is_expanded  then
+								-- Take care only for non-self-initializing locals.
+							if is_in_assignment or else is_target_of_creation_instruction then
+									-- Mark that the local is initialized.
+								record_initialized_local (l_local_info.position)
+							elseif not context.variables.is_local_set (l_local_info.position) then
+									-- Local is not properly initialized.
+								error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
+									-- Mark that the local is initialized to avoid repeated errors.
+								context.variables.set_local (l_local_info.position)
+							end
+						end
+					elseif is_in_assignment or else is_target_of_creation_instruction then
+							-- The local might change its attachment status.
+							-- It is recorded for future checks because
+							-- it might be still safe to use the local in the expression
+							-- before actual reattachment takes place.
+						last_reinitialized_local := l_as.feature_name.name_id
+					elseif context.is_local_attached (l_as.feature_name.name_id) then
+							-- Local is of a detachable type, but it's safe
+							-- to use it as an attached one.
+						if l_context_current_class.lace_class.is_void_safe then
+							l_type := l_type.as_attached
+						else
+							l_type := l_type.as_implicitly_attached
 						end
 					end
 					if not is_inherited then
@@ -2445,7 +2477,7 @@ feature -- Implementation
 						last_access_writable := False
 						l_has_vuar_error := l_as.parameters /= Void
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type, l_last_id)
+						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
 							last_byte_node := l_local
@@ -2522,7 +2554,7 @@ feature -- Implementation
 					-- Found argument
 				l_arg_type := l_feature.arguments.i_th (l_arg_pos)
 
-				last_type := l_arg_type.actual_type.instantiation_in (last_type, l_last_id)
+				last_type := l_arg_type.actual_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 				if l_as.parameters /= Void then
 					create l_vuar1
 					context.init_error (l_vuar1)
@@ -2546,7 +2578,7 @@ feature -- Implementation
 					then
 						if context.current_class.lace_class.is_void_safe then
 							last_type := last_type.as_attached
-						else
+						elseif not last_type.is_implicitly_attached then
 							last_type := last_type.as_implicitly_attached
 						end
 					end
@@ -2576,7 +2608,7 @@ feature -- Implementation
 							error_handler.insert_error (l_vuar1)
 						end
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type, l_last_id)
+						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						if is_byte_node_enabled then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
 							last_byte_node := l_local
@@ -3194,7 +3226,7 @@ feature -- Implementation
 					-- Type of strip expression is always attached.
 				if context.current_class.lace_class.is_void_safe then
 					last_type := last_type.as_attached
-				else
+				elseif not last_type.is_implicitly_attached then
 					last_type := last_type.as_implicitly_attached
 				end
 			end
@@ -3332,7 +3364,7 @@ feature -- Implementation
 			if l_arg_pos /= 0 then
 					-- Found argument
 				l_type := l_feature.arguments.i_th (l_arg_pos)
-				l_type := l_type.actual_type.instantiation_in (last_type, l_last_id)
+				l_type := l_type.actual_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 				create {TYPED_POINTER_A} last_type.make_typed (l_type)
 				if l_needs_byte_node then
 					create l_argument
@@ -3352,7 +3384,7 @@ feature -- Implementation
 						-- Local found
 					l_local_info.set_is_used (True)
 					l_type := l_local_info.type
-					l_type := l_type.instantiation_in (last_type, l_last_id)
+					l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 					create {TYPED_POINTER_A} last_type.make_typed (l_type)
 					if l_needs_byte_node then
 						create l_local
@@ -3382,7 +3414,7 @@ feature -- Implementation
 						l_local_info.set_is_used (True)
 						last_access_writable := False
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type, l_last_id)
+						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
 						create {TYPED_POINTER_A} last_type.make_typed (l_type)
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index)
@@ -3464,7 +3496,7 @@ feature -- Implementation
 						-- The type is always attached
 					if context.current_class.lace_class.is_void_safe then
 						l_type_type := l_type_type.as_attached
-					else
+					elseif not l_type_type.is_implicitly_attached then
 						l_type_type := l_type_type.as_implicitly_attached
 					end
 				end
@@ -3769,12 +3801,12 @@ feature -- Implementation
 										else
 												-- Usual case
 											l_prefix_feature_type := l_prefix_feature_type.instantiation_in
-															(last_type, l_last_class.class_id).actual_type
+															(last_type.as_implicitly_detachable, l_last_class.class_id).actual_type
 										end
 									else
 											-- Usual case
 										l_prefix_feature_type := l_prefix_feature_type.instantiation_in
-														(last_type, l_last_class.class_id).actual_type
+														(last_type.as_implicitly_detachable, l_last_class.class_id).actual_type
 									end
 								end
 								if l_is_assigner_call then
@@ -4063,7 +4095,7 @@ feature -- Implementation
 							else
 									-- Usual case
 								l_infix_type := adapted_type (l_infix_type, l_left_type.actual_type, l_left_constrained)
-								l_infix_type := l_infix_type.instantiation_in (l_target_type, l_left_id).actual_type
+								l_infix_type := l_infix_type.instantiation_in (l_target_type.as_implicitly_detachable, l_left_id).actual_type
 							end
 
 							if l_is_assigner_call then
@@ -4448,7 +4480,7 @@ feature -- Implementation
 						is_qualified_call := True
 						process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
 						if error_level = l_error_level then
-							last_type := bracket_feature.type.instantiation_in (target_type, l_last_class_id).actual_type
+							last_type := bracket_feature.type.instantiation_in (target_type.as_implicitly_detachable, l_last_class_id).actual_type
 							is_qualified_call := l_is_qualified_call
 
 							if is_byte_node_enabled then
@@ -4541,7 +4573,7 @@ feature -- Implementation
 				if not local_type.is_attached then
 					if context.current_class.lace_class.is_void_safe then
 						local_type := local_type.as_attached
-					else
+					elseif not local_type.is_implicitly_attached then
 						local_type := local_type.as_implicitly_attached
 					end
 				end
@@ -4693,6 +4725,7 @@ feature -- Implementation
 			l_vjar: VJAR
 			l_vncb: VNCB
 			l_initialized_variable: like last_initialized_variable
+			l_reinitialized_local: like last_reinitialized_local
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -4700,12 +4733,14 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 				-- Type check the target
+			last_reinitialized_local := 0
 			set_is_in_assignment (True)
 			last_access_writable := False
 			l_as.target.process (Current)
 			set_is_in_assignment (False)
 				-- Record initialized variable to commit it after the expression is processed.
 			l_initialized_variable := last_initialized_variable
+			l_reinitialized_local := last_reinitialized_local
 			l_target_type := last_type
 			if l_target_type /= Void then
 				current_target_type := l_target_type
@@ -4759,6 +4794,23 @@ feature -- Implementation
 						l_assign.set_source (l_source_expr)
 						l_assign.set_line_pragma (l_as.line_pragma)
 						last_byte_node := l_assign
+					end
+					if l_reinitialized_local /= 0 and then not l_target_type.is_attached then
+						if l_source_type.is_attached or else l_source_type.is_implicitly_attached then
+								-- Local variable is initialized to a non-void value.
+							if l_reinitialized_local = result_name_id then
+								context.add_result_scope
+							else
+								context.add_local_scope (l_reinitialized_local)
+							end
+						else
+								-- Local variable might become Void.
+							if l_reinitialized_local = result_name_id then
+								context.remove_result_scope
+							else
+								context.remove_local_scope (l_reinitialized_local)
+							end
+						end
 					end
 				end
 				commit_initialized_variable (l_initialized_variable)
@@ -5475,6 +5527,7 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
 			l_initialized_variable: like last_initialized_variable
+			l_reinitialized_local: like last_reinitialized_local
 			l_current_class_void_safe: BOOLEAN
 		do
 			l_error_level := error_level
@@ -5487,9 +5540,11 @@ feature -- Implementation
 				-- not just a normal feature call. It is reset as soon as it is processed.
 			is_target_of_creation_instruction := True
 			last_access_writable := False
+			last_reinitialized_local := 0
 			l_as.target.process (Current)
 				-- Record initialized variable to commit it after the call is processed.
 			l_initialized_variable := last_initialized_variable
+			l_reinitialized_local := last_reinitialized_local
 				-- Although it might be already reset when `target' is indeed
 				-- a feature of the current class, it is not reset when it is a local,
 				-- that's why we reset it.
@@ -5518,7 +5573,7 @@ feature -- Implementation
 								-- Creation type is always attached
 							if l_current_class_void_safe then
 								l_explicit_type := l_explicit_type.as_attached
-							else
+							elseif not l_explicit_type.is_implicitly_attached then
 								l_explicit_type := l_explicit_type.as_implicitly_attached
 							end
 							last_type := l_explicit_type
@@ -5623,6 +5678,14 @@ feature -- Implementation
 					end
 				end
 				commit_initialized_variable (l_initialized_variable)
+				if l_reinitialized_local /= 0 and then not l_target_type.is_attached then
+						-- Local variable is now attached.
+					if l_reinitialized_local = result_name_id then
+						context.add_result_scope
+					else
+						context.add_local_scope (l_reinitialized_local)
+					end
+				end
 			end
 			reset_types
 		end
@@ -5656,7 +5719,7 @@ feature -- Implementation
 							-- Type of a creation expression is always attached.
 						if context.current_class.lace_class.is_void_safe then
 							l_creation_type := l_creation_type.as_attached
-						else
+						elseif not l_creation_type.is_implicitly_attached then
 							l_creation_type := l_creation_type.as_implicitly_attached
 						end
 						last_type := l_creation_type
@@ -7078,7 +7141,7 @@ feature {NONE} -- Implementation
 							-- Conformance initialization
 							-- Argument conformance: infix feature must have one argument
 						l_arg_type := l_infix.arguments.i_th (1)
-						l_arg_type := l_arg_type.instantiation_in (a_left_type,
+						l_arg_type := l_arg_type.instantiation_in (a_left_type.as_implicitly_detachable,
 							l_class.class_id).actual_type
 
 						if not a_right_type.conform_to (l_arg_type) then
@@ -7617,7 +7680,7 @@ feature {NONE} -- Implementation: overloading
 
 				-- Instantiation of `Result' in context of target represented by `a_type' and
 				-- `last_id'.
-			Result := Result.instantiation_in (a_type, last_id).actual_type
+			Result := Result.instantiation_in (a_type.as_implicitly_detachable, last_id).actual_type
 		ensure
 			feature_arg_type_not_void: Result /= Void
 		end
@@ -7784,7 +7847,7 @@ feature {NONE} -- Agents
 					end
 
 						-- Evaluate type of operand in current context
-					l_arg_type := l_arg_type.instantiation_in (l_actual_target_type, cid).deep_actual_type
+					l_arg_type := l_arg_type.instantiation_in (l_actual_target_type.as_implicitly_detachable, cid).deep_actual_type
 
 						-- If it is open insert it in `l_oargtypes' and insert
 						-- position in `l_last_open_positions'.
@@ -7814,7 +7877,7 @@ feature {NONE} -- Agents
 					-- Type of an argument tuple is always attached.
 				if l_current_class_void_safe then
 					l_tuple := l_tuple.as_attached
-				else
+				elseif not l_tuple.is_implicitly_attached then
 					l_tuple := l_tuple.as_implicitly_attached
 				end
 			end
@@ -8663,6 +8726,13 @@ feature {NONE} -- Variable initialization
 				context.variables.set_local (initialized_variable)
 			end
 		end
+
+	last_reinitialized_local: INTEGER_32
+			-- Name ID of the last reinitialized local (the one that is assigned a new value)
+
+	result_name_id: INTEGER_32 = 0x7fffffff
+			-- Value of `last_reinitialized_local' that indicates
+			-- that the local is a special entity "Result"
 
 feature {NONE} -- Implementation: Error handling
 

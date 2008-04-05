@@ -577,7 +577,16 @@ feature -- Properties
 	is_attached: BOOLEAN is
 			-- Is type attached?
 		do
-					-- False by default
+				-- False by default
+		end
+
+	is_implicitly_attached: BOOLEAN
+			-- Is type (implicitly) attached?
+			-- True means it's safe to attach value of this type
+			-- to an attached entity without compromizing its
+			-- attachment status.
+		do
+				-- False by default
 		end
 
 	is_standalone: BOOLEAN is
@@ -725,7 +734,7 @@ feature -- Access
 	as_detachable: like Current
 			-- Detachable variant of the current type
 		require
-			is_attached: is_attached
+			is_attached: is_attached or else is_implicitly_attached
 		do
 			Result := duplicate
 			Result.set_detachable_mark
@@ -737,11 +746,20 @@ feature -- Access
 			-- Implicitly attached type
 		require
 			not_is_attached: not is_attached
+			not_is_implicitly_attached: not is_implicitly_attached
 		do
 			Result := Current
 		ensure
 			result_attached: Result /= Void
 			result_not_attached: not Result.is_attached
+		end
+
+	as_implicitly_detachable: like Current
+			-- Implicitly detachable type
+		do
+			Result := Current
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Modification

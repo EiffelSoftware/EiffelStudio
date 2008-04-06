@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	File_buffer: YY_FILE_BUFFER is
 			-- Parser input file buffer
 		once
-			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 50000)
+			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 500)
 		ensure
 			file_buffer_not_void: Result /= Void
 		end

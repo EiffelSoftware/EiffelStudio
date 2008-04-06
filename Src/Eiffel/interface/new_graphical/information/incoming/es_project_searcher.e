@@ -88,7 +88,6 @@ feature {NONE} -- Implemetation
 		local
 			l_file_uti: FILE_UTILITIES
 			l_files: !DS_ARRAYED_LIST [!STRING]
-			l_dir: KL_DIRECTORY
 		do
 			if file_system.directory_exists (a_path) then
 				create l_file_uti

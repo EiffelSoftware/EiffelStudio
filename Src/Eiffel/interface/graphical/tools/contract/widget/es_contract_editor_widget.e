@@ -235,7 +235,6 @@ feature {NONE} -- Population
 			l_token_generator: EB_EDITOR_TOKEN_GENERATOR
 			l_row: EV_GRID_ROW
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_label_item: EV_GRID_LABEL_ITEM
 			l_item: EV_GRID_ITEM
 			l_scanner: ?like token_scanner
 			l_tagged_text: STRING
@@ -243,8 +242,6 @@ feature {NONE} -- Population
 			l_editor_tokens: LINKED_LIST [EDITOR_TOKEN]
 			l_line: EIFFEL_EDITOR_LINE
 			l_left_border: INTEGER
-			l_shared_writer: EB_SHARED_WRITER
-			l_fonts: SPECIAL [EV_FONT]
 			i: INTEGER
 		do
 			populate_contract_header_row (a_class, a_row, a_context)

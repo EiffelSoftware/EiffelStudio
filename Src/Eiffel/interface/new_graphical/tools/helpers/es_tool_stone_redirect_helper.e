@@ -85,7 +85,6 @@ feature {NONE} -- Redirects
 			a_stone_attached: a_stone /= Void
 		local
 			l_class_tool: ES_CLASS_TOOL_PANEL
-			l_feature_tool: ES_FEATURES_RELATION_TOOL_PANEL
 			l_feature_stone: FEATURE_STONE
 		do
 			l_feature_stone ?= a_stone

@@ -153,7 +153,6 @@ feature -- Formatting
 			a_max_len_big_enough: a_max_len > 3
 		do
 			create Result.make_from_string (a_str.as_string_8)
-			Result := a_str.twin
 			if Result.count > a_max_len then
 				Result.keep_head (a_max_len - 3)
 				Result.append (once "...")

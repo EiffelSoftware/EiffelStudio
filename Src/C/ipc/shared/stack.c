@@ -534,7 +534,6 @@ rt_public void send_once_result(EIF_PSTREAM s, MTOT OResult, int otype)
 rt_public EIF_DEBUG_VALUE stack_debug_value(uint32 stack_level, uint32 loc_type, uint32 loc_number)
 {
 	/* Stack debug value for stack_depth, loc_type, and loc_number */
-	EIF_GET_CONTEXT
 
 	EIF_DEBUG_VALUE	ip;					/* Partial dump pointer */
 	uint32 	start = 0;			/* start of operation stack for current feature within whole operation stack */

@@ -47,8 +47,6 @@ feature -- Output
 		require
 			a_formatter_attached: a_formatter /= Void
 			a_class_attached: a_class /= Void
-		local
-			l_class: !CLASS_C
 		do
 			a_class.append_name (a_formatter)
 			if {l_group: !CONF_GROUP} a_class.group then

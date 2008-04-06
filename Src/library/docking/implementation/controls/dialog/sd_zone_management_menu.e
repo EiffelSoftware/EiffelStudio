@@ -79,8 +79,6 @@ feature {NONE}  -- Agents
 			-- Handle close all event.
 		require
 			not_void: a_content /= Void
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			-- First we close others, finally we close selected `a_content'
 			-- This way is faster than just closing contents one by one.

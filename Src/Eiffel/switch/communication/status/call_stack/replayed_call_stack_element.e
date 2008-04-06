@@ -306,7 +306,6 @@ feature -- Access
 
 	to_string: !STRING is
 		local
-			ct: CLASS_TYPE
 			fi: FEATURE_I
 		do
 			fi := feature_i

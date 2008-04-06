@@ -94,7 +94,6 @@ feature -- Basic operations
 			l_value: !CODE_SYMBOL_VALUE
 			l_renderer: !CODE_TEMPLATE_STRING_RENDERER
 			l_contract_ast: ?G
-			l_version: !CODE_VERSION
 		do
 			if not a_assertions.is_empty then
 					-- No preconditions (or invalid AST)

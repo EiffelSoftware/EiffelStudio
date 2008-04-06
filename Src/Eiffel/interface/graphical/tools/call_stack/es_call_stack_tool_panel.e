@@ -1576,8 +1576,10 @@ feature {NONE} -- Grid Implementation
 			Result_with_rt_info: Result /= Void implies Result.rt_information_available
 		end
 
-	level_associated_with (rep: !REPLAYED_CALL_STACK_ELEMENT): INTEGER is
+	level_associated_with (rep: REPLAYED_CALL_STACK_ELEMENT): INTEGER is
 			-- Level associated with replayed call stack
+		require
+			rep_not_void: rep /= Void
 		do
 			if rep.rt_information_available then
 				Result := debugger_manager.application_status.current_call_stack.stack_depth - rep.depth + 1

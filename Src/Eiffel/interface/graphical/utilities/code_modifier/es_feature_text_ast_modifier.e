@@ -63,7 +63,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	find_actual_context_feature (a_feature: !like context_feature; a_class: !like context_class): !like context_feature
+	find_actual_context_feature (a_feature: !like context_feature; a_class: !like context_class): !like context_feature is
 			-- Locates the actual context feature given a class.
 			--
 			-- `a_feature': The feature to resolve an actual feature for.
@@ -73,17 +73,16 @@ feature {NONE} -- Query
 			is_interface_usable: is_interface_usable
 			a_class_is_compiled: a_class.is_compiled
 		local
-			l_e_feature: !E_FEATURE
 			l_feature_i: ?FEATURE_I
-			l_class_c: !CLASS_C
+			l_class_c: CLASS_C
 			l_result: ?like context_feature
 		do
 			if a_class.is_compiled then
 				l_class_c ?= a_class.compiled_class
-				if a_feature.written_in = l_class_c then
-					Result := a_feature
-				else
-					if l_class_c /= Void and then l_class_c.has_feature_table then
+				if l_class_c /= Void then
+					if a_feature.written_in = l_class_c.class_id then
+						Result := a_feature
+					elseif l_class_c.has_feature_table then
 						l_feature_i := l_class_c.feature_table.feature_of_rout_id_set (a_feature.rout_id_set)
 						check l_feature_i_attached: l_feature_i /= Void end
 						if l_feature_i /= Void and then l_feature_i.written_class = l_class_c then

@@ -276,7 +276,7 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
-	create_parent_text_modifier (a_parent: !CLASS_C): ?like create_text_modifier
+	create_parent_text_modifier (a_parent: CLASS_C): ?like create_text_modifier
 			-- Creates a text modifier for a given parent class.
 			--
 			-- `a_parent': A parent class to generate a modifier for.
@@ -284,6 +284,7 @@ feature {NONE} -- Factory
 		require
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
+			a_parent_not_void: a_parent /= Void
 			context_parents_has_a_parent: context_parents.has (a_parent)
 		deferred
 		ensure

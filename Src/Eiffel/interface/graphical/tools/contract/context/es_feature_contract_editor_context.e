@@ -37,9 +37,8 @@ feature -- Contracts
 			l_e_feature: ?like context_feature
 			l_feature_i: ?FEATURE_I
 			l_class_i: !CLASS_I
-			l_class_c: !CLASS_C
+			l_class_c: CLASS_C
 			l_feature_as: ?FEATURE_AS
-			l_ensure_as: ?ENSURE_AS
 			l_assertions: ?EIFFEL_LIST [TAGGED_AS]
 			l_cursor: CURSOR
 			l_result: !DS_ARRAYED_LIST [TAGGED_AS]

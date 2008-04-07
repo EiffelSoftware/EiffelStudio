@@ -67,6 +67,19 @@
 					<RegistryValue Id="RegVal.VS" Value="[INSTALLDIR]\studio\spec\$(var.IsePlatform)\lib\" Type="string"/>
 				</RegistryKey>
 			</Component>
+				<!-- Registry settings for eiffel protocol -->
+			<Component Id="Comp.eiffel_protocol" Guid="C03F5EC1-8FED-42eb-895E-14A8FDD61B17" Win64="$(var.IsWin64)">
+				<RegistryKey Id="Reg.eiffel_protocol" Root="HKCR" Key="eiffel" Action="createAndRemoveOnUninstall">
+					<RegistryValue Id="RegVal.eiffel_protocol.default" Value="URL:Eiffel Protocol" Type="string"/>
+					<RegistryValue Id="RegVal.eiffel_protocol.url" Name="URL Protocol" Value="" Type="string"/>
+					<RegistryKey Id="Reg.eiffel_protocol.defaulticon" Key="DefaultIcon" Action="createAndRemoveOnUninstall">
+						<RegistryValue Id="RegVal.eiffel_protocol.defaulticon.default" Value="[INSTALLDIR]\studio\spec\$(var.IsePlatform)\bin\estudio.exe" Type="string"/>
+					</RegistryKey>
+					<RegistryKey Id="Reg.eiffel_protocol.shell" Key="shell\open\command" Action="createAndRemoveOnUninstall">
+						<RegistryValue Id="RegVal.eiffel_protocol.shell.default" Value="&quot;[INSTALLDIR]\studio\spec\$(var.IsePlatform)\bin\estudio.exe&quot; /ec_action eisi:&quot;%1&quot;" Type="string"/>
+					</RegistryKey>
+				</RegistryKey>
+			</Component>
 			<?ifndef x64?>
 				<Directory Id="Dir.gcc" Name="gcc"/>
 			<?endif?>
@@ -195,6 +208,7 @@
 				<ComponentRef Id="Comp.studio_shortcuts" />
 				<ComponentRef Id="Comp.studio_shortcuts.documentation" />
 				<ComponentRef Id="Comp.studio_shortcuts.tools" />
+				<ComponentRef Id="Comp.eiffel_protocol" />
 				<ComponentRef Id="Comp.eiffel_projects" />
 				<ComponentRef Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
 				<ComponentRef Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />

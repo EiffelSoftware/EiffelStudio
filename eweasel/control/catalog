@@ -1438,30 +1438,30 @@ test	rename-inherited-bad-flat	flat006	 tcf pass flat manual
 
 -- Library class tests
 
-test	unix-file-start-precond-error	lib001	 tcf pass library
-test	string-copy-valid-count		lib002	 tcf pass library
-test	file-copy-to			lib003	 tcf pass library
-test	putenv-with-null		lib004	 tcf pass library
-test	append-empty-arrayed_list	lib005	 tcf pass library
-test	string-incorrect-hash-code	lib006	 tcf pass library
-test	ptf-file-go			lib007	 tcf pass library
-test	ptf-file-move			lib008	 tcf pass library
-test	ptf-file-nextline		lib009	 tcf pass library
-test	ptf-file-file-append		lib010	 tcf pass library
-test	ptf-file-position		lib011	 tcf pass library
-test	ptf-file-read-character		lib012	 tcf pass library
-test	ptf-file-read-stream		lib013	 tcf pass library
-test	ptf-file-recede			lib014	 tcf pass library
-test	ptf-file-start			lib015	 tcf pass library
-test	ptf-file-read-line		lib016	 tcf pass library
-test	ptf-file-back			lib017	 tcf pass library
-test	ptf-file-close			lib018	 tcf pass library
-test	ptf-file-count			lib019	 tcf pass library
-test	ptf-file-create			lib020	 tcf pass library
-test	ptf-file-extend			lib021	 tcf pass library
-test	ptf-file-finish			lib022	 tcf pass library
-test	ptf-file-forth			lib023	 tcf pass library
-test	file-change-name		lib024	 tcf pass library
+test	unix-file-start-precond-error	lib001	 tcf pass library file
+test	string-copy-valid-count		lib002	 tcf pass library file
+test	file-copy-to			lib003	 tcf pass library file
+test	putenv-with-null		lib004	 tcf pass library file
+test	append-empty-arrayed_list	lib005	 tcf pass library file
+test	string-incorrect-hash-code	lib006	 tcf pass library file
+test	ptf-file-go			lib007	 tcf pass library file
+test	ptf-file-move			lib008	 tcf pass library file
+test	ptf-file-nextline		lib009	 tcf pass library file
+test	ptf-file-file-append		lib010	 tcf pass library file
+test	ptf-file-position		lib011	 tcf pass library file
+test	ptf-file-read-character		lib012	 tcf pass library file
+test	ptf-file-read-stream		lib013	 tcf pass library file
+test	ptf-file-recede			lib014	 tcf pass library file
+test	ptf-file-start			lib015	 tcf pass library file
+test	ptf-file-read-line		lib016	 tcf pass library file
+test	ptf-file-back			lib017	 tcf pass library file
+test	ptf-file-close			lib018	 tcf pass library file
+test	ptf-file-count			lib019	 tcf pass library file
+test	ptf-file-create			lib020	 tcf pass library file
+test	ptf-file-extend			lib021	 tcf pass library file
+test	ptf-file-finish			lib022	 tcf pass library file
+test	ptf-file-forth			lib023	 tcf pass library file
+test	file-change-name		lib024	 tcf pass library file
 
 
 -- TUPLE tests
@@ -1475,6 +1475,10 @@ test	named-tuple-assignment	tuple007	tcf	pass tuple
 test	named-tuple-same-labels	tuple008	tcf	pass tuple
 test	named-tuple-same-labels-crash	tuple009	tcf	pass tuple
 test	internal-tuple-creation	tuple010	tcf	pass tuple
+
+-- ~ operator test
+test	tilde-on-basic-type		tilde001	tcf pass tilde
+
 
 -- Systematic validity tests
 

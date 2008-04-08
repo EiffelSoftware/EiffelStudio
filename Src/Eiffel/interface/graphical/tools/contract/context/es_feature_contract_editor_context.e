@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		A base contract editor ({ES_CONTRACT_EDITOR_WIDGET}) context for class feature-level contracts.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,8 +13,7 @@ deferred class
 inherit
 	ES_CONTRACT_EDITOR_CONTEXT [FEATURE_STONE]
 		redefine
-			is_stone_usable,
-			query_set_stone
+			is_stone_usable
 		end
 
 feature -- Access
@@ -165,44 +164,6 @@ feature {NONE} -- Query
 					l_precusors.do_all (agent l_result.put_last)
 				end
 			end
-		end
-
-feature -- Basic operations
-
-	query_set_stone (a_stone: ?STONE): BOOLEAN
-			-- <Precursor>
-		local
-			l_save_prompt: ES_SAVE_FEATURES_PROMPT
-			l_features: DS_ARRAYED_LIST [E_FEATURE]
-			retried: BOOLEAN
-		do
-			if not retried then
-				if not equal (stone, a_stone) then
-					Result := not is_dirty
-					if not Result then
-							-- There should be sufficent editor context if the contents of the tool has been modified
-						check has_stone: has_stone end
-
-						-- Ask user about saving changes
-						create l_features.make (1)
-						l_features.put_last (context_feature)
-						create l_save_prompt.make_standard_with_cancel ("The contract tool has unsaved feature(s) modifications.%NDo you wanted to save the following features?")
-						l_save_prompt.features := l_features
-						l_save_prompt.show_on_active_window
-						if l_save_prompt.dialog_result = {ES_DIALOG_BUTTONS}.yes_button then
-							commit_changes
-							Result := True
-						elseif l_save_prompt.dialog_result = {ES_DIALOG_BUTTONS}.no_button then
-							Result := True
-						end
-					end
-				end
-			else
-				Result := False
-			end
-		rescue
-			retried := True
-			retry
 		end
 
 feature {NONE} -- Factory

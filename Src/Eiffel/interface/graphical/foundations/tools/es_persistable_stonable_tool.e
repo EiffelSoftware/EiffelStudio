@@ -13,6 +13,7 @@ deferred class
 inherit
 	ES_STONABLE_TOOL [G]
 		redefine
+			initialize,
 			internal_recycle,
 			set_stone,
 			on_tool_instantiated
@@ -31,6 +32,14 @@ inherit
 			{NONE} all
 		undefine
 			out
+		end
+
+feature {NONE} -- Initialization
+
+	initialize
+			-- Called when Current has been sited
+		do
+			Precursor {ES_STONABLE_TOOL}
 		end
 
 feature {NONE} -- Clean up
@@ -80,12 +89,16 @@ feature -- Element change
 
 			if not is_processing_persistance and then l_old_stone /= stone and then is_stone_persistable then
 					-- Store changed stone in the session.
-
 				if {l_session: !like stone_session} stone_session then
 					l_old_is_processing_persistance := is_processing_persistance
 					is_processing_persistance := True
 
 					persist_stone (l_session, stone)
+					l_session.value_changed_event.perform_suspended_action (agent (a_ia_session: !like stone_session; a_ia_store: BOOLEAN)
+							-- HACK: Using an inline agents to circumvent a compiled bug with agent Tuple Boolean conversion with a target type ANY.
+						do
+							a_ia_session.set_value (a_ia_store, tool_session_id (stone_session_id))
+						end (l_session, stone /= Void))
 
 					is_processing_persistance := l_old_is_processing_persistance
 				end
@@ -201,20 +214,16 @@ feature -- Action handlers
 			-- <Precursor>
 		local
 			l_stone: ?STONE
-			l_stone_available: ?BOOLEAN_REF
 		do
 			Precursor {ES_STONABLE_TOOL}
 
 			if is_stone_persistable and then stone = Void then
 					-- Store stone in the project window session
 				if {l_session: !like stone_session} stone_session then
-					l_stone_available ?= l_session.value (tool_session_id (stone_session_id))
-					if l_stone_available /= Void and then l_stone_available.item then
-							-- Resurrect stone and set if necessary.
-						l_stone := resurrect_stone (l_session)
-						if l_stone /= Void and l_stone /= stone then
-							set_stone (l_stone)
-						end
+						-- Resurrect stone and set if necessary.
+					l_stone := resurrect_stone (l_session)
+					if l_stone /= Void and l_stone /= stone then
+						set_stone (l_stone)
 					end
 
 						-- Register to recieve notification of changes to the session value.
@@ -237,10 +246,10 @@ feature {SESSION_I} -- Event handlers
 				if {l_session: SESSION_I} a_session then
 						-- Resurrect stone and set.
 					l_stone := resurrect_stone (l_session)
-					if l_stone /= stone and then is_stone_usable (l_stone) and then query_set_stone (l_stone) then
+					if l_stone /= stone and then (l_stone = Void or else is_stone_usable (l_stone)) then
 							-- Set persistance state, so the stone is no re-persisted.
 						is_processing_persistance := True
-						set_stone (l_stone)
+						set_stone_with_query (l_stone)
 						is_processing_persistance := False
 					end
 				end

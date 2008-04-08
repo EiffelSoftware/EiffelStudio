@@ -15,8 +15,10 @@ inherit
 		redefine
 			on_after_initialized,
 			internal_recycle,
+			query_set_stone,
+			synchronize,
 			create_right_tool_bar_items,
-			query_set_stone
+			on_show
 		end
 
 	SESSION_EVENT_OBSERVER
@@ -30,7 +32,9 @@ inherit
 		undefine
 			internal_detach_entities
 		redefine
-			internal_recycle
+			internal_recycle,
+			query_save_modified,
+			on_dirty_state_changed
 		end
 
 create {ES_CONTRACT_TOOL}
@@ -49,34 +53,39 @@ feature {NONE} -- Initialization
 
 			a_widget.extend (contract_editor.widget)
 
+			register_action (save_modifications_button.select_actions, agent on_save)
 			register_action (add_contract_button.select_actions, agent on_add_contract)
 			register_action (remove_contract_button.select_actions, agent on_remove_contract)
 			register_action (edit_contract_button.select_actions, agent on_edit_contract)
+			register_action (refresh_button.select_actions, agent on_refresh)
 			register_action (contract_mode_button.select_actions, agent on_contract_mode_selected)
-			register_action (preconditions_menu_item.select_actions, agent on_contract_mode_changed ({ES_CONTRACT_TOOL_EDIT_MODE}.preconditions))
-			register_action (postconditions_menu_item.select_actions, agent on_contract_mode_changed ({ES_CONTRACT_TOOL_EDIT_MODE}.postconditions))
-			register_action (invaraints_menu_item.select_actions, agent on_contract_mode_changed ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants))
+			register_action (preconditions_menu_item.select_actions, agent set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.preconditions))
+			register_action (postconditions_menu_item.select_actions, agent set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.postconditions))
+			register_action (invaraints_menu_item.select_actions, agent set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants))
+			register_action (show_all_lines_button.select_actions, agent on_show_all_rows)
 			register_action (show_callers_button.select_actions, agent on_show_callers)
+
+				-- Register action to perform updates on focus
+			register_action (content.focus_in_actions, agent update_if_modified)
 		end
 
 	on_after_initialized
 			-- <Precursor>
-		local
-			l_mode: NATURAL_8_REF
 		do
 			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 			propagate_drop_actions (Void)
 
 			if session_manager.is_service_available then
-					-- Retrieve contract mode from the project session.
-				l_mode ?= project_window_session_data.value (contract_mode_session_id)
-				if l_mode /= Void then
-					set_contract_mode (l_mode.item)
-				end
-
 					-- Connect session observer.
 				project_window_session_data.connect_events (Current)
 			end
+
+				-- Performs UI initialization
+			set_contract_mode (contract_mode)
+			set_is_showing_all_rows (is_showing_all_rows)
+
+				-- Set button states
+			update_stone_buttons
 		end
 
 feature {NONE} -- Clean up
@@ -96,28 +105,140 @@ feature {NONE} -- Clean up
 			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
-feature -- Access
-
-	context_feature: ?E_ROUTINE
-			-- Current feature being edited.
-			-- Note: It's called `context_feature' because
+feature {NONE} -- Access
 
 	contract_mode: NATURAL_8 assign set_contract_mode
 			-- Contract edition mode.
 			-- See {ES_CONTRACT_TOOL_EDIT_MODE} for applicable modes.
+		do
+			if session_manager.is_service_available then
+				if {l_mode: NATURAL_8_REF} project_window_session_data.value (contract_mode_session_id) and then (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (l_mode.item) then
+					Result := l_mode.item
+				else
+					Result := {ES_CONTRACT_TOOL_EDIT_MODE}.preconditions
+				end
+			end
+		end
 
-feature {ES_STONABLE_I, ES_TOOL} -- Basic operations
+	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+			-- Available editor context.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_stone: has_stone
+		do
+			check contract_editor_has_context: contract_editor.has_context end
+			Result ?= contract_editor.context
+		end
+
+feature {NONE} -- Element change
+
+	set_contract_mode (a_mode: like contract_mode)
+			-- Sets the current contract edition mode.
+			--
+			-- `a_mode': The contract edition mode to see. See {ES_CONTRACT_TOOL_EDIT_MODE} for applicable modes
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_mode_is_valid_mode: (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (a_mode)
+		do
+			contract_mode_button.set_text (contract_mode_label (a_mode))
+			inspect a_mode
+			when {ES_CONTRACT_TOOL_EDIT_MODE}.preconditions then
+				preconditions_menu_item.enable_select
+			when {ES_CONTRACT_TOOL_EDIT_MODE}.postconditions then
+				postconditions_menu_item.enable_select
+			when {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
+				invaraints_menu_item.enable_select
+			end
+
+			if session_manager.is_service_available then
+				project_window_session_data.value_changed_event.perform_suspended_action (agent (ia_mode: like contract_mode)
+					do
+						project_window_session_data.set_value (ia_mode, contract_mode_session_id)
+					end (a_mode))
+			end
+
+				-- Make this check before updating incase the mode determination changes in the future.
+			check contract_mode_set: contract_mode = a_mode end
+			if has_stone and stone_change_notified then
+				refresh_stone
+			end
+		ensure
+			contract_mode_set: contract_mode = a_mode
+		end
+
+feature {NONE} -- Status report
+
+	is_showing_all_rows: BOOLEAN assign set_is_showing_all_rows
+			-- Indicates if all contract rows should be shown.
+			-- Note: By default only those entities with contracts are shown.
+		require
+			is_interface_usable: is_interface_usable
+		do
+			if session_manager.is_service_available then
+				if {l_value: BOOLEAN_REF} window_session_data.value (show_all_lines_session_id) then
+					Result := l_value.item
+				end
+			end
+		end
+
+	is_saving: BOOLEAN
+			-- Indicates if Current's modifications are currently being saved
+
+feature {NONE} -- Status setting
+
+	set_is_showing_all_rows (a_show: like is_showing_all_rows)
+			-- Set status to show/hide rows without contracts.
+			--
+			-- `a_show': True to show all rows; False to show only rows with contracts
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_running: BOOLEAN
+		do
+			if show_all_lines_button.is_selected /= a_show then
+				l_running := show_all_lines_button.select_actions.state = {ACTION_SEQUENCE [TUPLE]}.normal_state
+				if l_running then
+					show_all_lines_button.select_actions.block
+				end
+				if a_show then
+					show_all_lines_button.enable_select
+				else
+					show_all_lines_button.disable_select
+				end
+				if l_running then
+					show_all_lines_button.select_actions.resume
+				end
+			end
+
+			contract_editor.is_showing_all_rows := a_show
+
+			if session_manager.is_service_available then
+				window_session_data.set_value (a_show, show_all_lines_session_id)
+			end
+		ensure
+			is_showing_all_rows_set: is_showing_all_rows = a_show
+		end
+
+feature {ES_STONABLE_I, ES_TOOL} -- Query
 
 	query_set_stone (a_stone: ?STONE): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_stone)
-			if Result and then is_initialized then -- and then is_dirty then
+			if Result and then is_initialized then
+				if is_dirty then
+						-- Check with user if they want to save any modifications.
+					Result := query_save_modified
+				end
+
 					-- Delegate the query to the actual editor.
-				if contract_editor.has_context then
+				if Result and then has_stone then
 						-- Note: Using Void is somewhat of a hack because a context cannot be set an incorrect stone (i.e Class context being set a feature stone)
 						--       For this we use Void because it triggers a request to change the stone.
-					Result := contract_editor.context.query_set_stone (Void)
+					Result := context.query_set_stone (Void)
 				end
 			end
 		end
@@ -142,10 +263,116 @@ feature {NONE} -- Query
 
 			if Result /= Void and then Result.is_stone_usable (stone) then
 					-- Set stone on context
-				Result.stone := stone
+				Result.set_stone_with_query (stone)
+			else
+				Result := Void
 			end
 		ensure
 			stone_set: Result /= Void implies Result.stone = stone
+		end
+
+	query_save_modified: BOOLEAN
+			-- Performs a query, generally involving some user interaction, determining if an action can be performed
+			-- given a dirty state.
+		local
+			l_save_classes_prompt: ES_SAVE_CLASSES_PROMPT
+			l_save_feature_prompt: ES_SAVE_FEATURES_PROMPT
+			l_classes: DS_ARRAYED_LIST [CLASS_I]
+			l_features: DS_ARRAYED_LIST [E_FEATURE]
+			l_prompt: ES_PROMPT
+		do
+			check is_initialized: is_initialized end
+			if contract_editor.has_context then
+				if {l_feat_context: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
+					create l_features.make_from_array (<<l_feat_context.context_feature>>)
+					create l_save_feature_prompt.make_standard_with_cancel ("The contract tool has unsaved class feature changes.%NDo you wanted to save the following feature(s)?")
+					l_save_feature_prompt.features := l_features
+					l_prompt := l_save_feature_prompt
+				elseif {l_class_context: ES_CLASS_CONTRACT_EDITOR_CONTEXT} context then
+					create l_classes.make_from_array (<<l_class_context.context_class>>)
+					create l_save_classes_prompt.make_standard_with_cancel ("The contract tool has unsaved class changes.%NDo you wanted to save the following class(es)?")
+					l_save_classes_prompt.classes := l_classes
+					l_prompt := l_save_classes_prompt
+				end
+				check l_prompt_attached: l_prompt /= Void end
+				l_prompt.set_button_action (l_prompt.dialog_buttons.yes_button, agent on_save)
+				l_prompt.show_on_active_window
+				Result := l_prompt.dialog_result /= {ES_DIALOG_BUTTONS}.cancel_button
+			else
+				Result := Precursor
+			end
+		end
+
+--	is_editable_row (a_row: !EV_GRID_ROW): BOOLEAN
+--			-- Determines if a row is editable
+--			--
+--			-- `a_row': A row to determine editability.
+--			-- `Result': True if the row is editable; False otherwise.
+--		do
+--			Result := True
+--		end
+
+feature {NONE} -- Basic operations
+
+	update
+			-- Updates the view with an new context.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			not_is_dirty: not is_dirty
+		do
+			if has_stone and then {l_context: !like context_for_mode} context_for_mode then
+				execute_with_busy_cursor (agent contract_editor.set_context (l_context))
+			end
+			update_stone_buttons
+		ensure
+			not_is_dirty: not is_dirty
+		end
+
+	update_if_modified
+			-- Performs an update if the class file has been modified
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			if has_stone and then file_notifier.is_service_available and then {l_fn: !STRING_32} context.context_class.file_name.string.as_string_32 then
+					-- Poll for modifications, which will call `on_file_modified' if have occurred.
+				file_notifier.service.poll_modifications (l_fn).do_nothing
+			end
+		end
+
+	save_contracts
+			-- Saves the currently modified contracts.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			is_dirty: is_dirty
+		do
+			set_is_dirty (False)
+		ensure
+			not_is_dirty: not is_dirty
+		end
+
+feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
+
+	synchronize
+			-- Synchronizes any new data (compiled or other wise)
+		do
+			if is_initialized then
+				is_in_stone_synchronization := True
+				update
+				is_in_stone_synchronization := False
+			end
+		rescue
+			is_in_stone_synchronization := False
+		end
+
+feature {NONE} -- Helpers
+
+	frozen file_notifier: !SERVICE_CONSUMER [FILE_NOTIFIER_S]
+			-- Access to the file notifier service
+		once
+			create Result
 		end
 
 feature {NONE} -- User interface elements
@@ -168,11 +395,11 @@ feature {NONE} -- User interface elements
 	edit_contract_button: ?SD_TOOL_BAR_BUTTON
 			-- Button to edit a selected contract.
 
+	refresh_button: ?SD_TOOL_BAR_BUTTON
+			-- Button to refresh the selected contract.
+
 	contract_mode_button: ?SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button to select the contract edit mode.
-
-	show_callers_button: ?SD_TOOL_BAR_BUTTON
-			-- Button to show the callers of the edited feature.
 
 	preconditions_menu_item: ?EV_RADIO_MENU_ITEM
 			-- Menu item to show preconditions.
@@ -183,23 +410,60 @@ feature {NONE} -- User interface elements
 	invaraints_menu_item: ?EV_RADIO_MENU_ITEM
 			-- Menu item to show invariants.
 
+	show_all_lines_button: ?SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Button to show/hide hidden non-contract enabled rows.
+
+	show_callers_button: ?SD_TOOL_BAR_BUTTON
+			-- Button to show the callers of the edited feature.
+
 	contract_editor: ?ES_CONTRACT_EDITOR_WIDGET
 			-- The editor used to edit the contracts.
 
 feature {NONE} -- User interface manipulation
 
-	update_context_buttons (a_enable: BOOLEAN)
-			-- Updates the context buttons based on a supplied state.
+	update_stone_buttons
+			-- Updates the buttons based on a stone.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			if {l_fstone: FEATURE_STONE} stone then
+					-- Feature context
+				contract_mode_button.enable_sensitive
+				invaraints_menu_item.disable_sensitive
+				refresh_button.enable_sensitive
+				show_all_lines_button.enable_sensitive
+				show_callers_button.enable_sensitive
+			elseif contract_editor.has_context then
+					-- Class context
+				contract_mode_button.disable_sensitive
+				refresh_button.enable_sensitive
+				show_all_lines_button.enable_sensitive
+				show_callers_button.enable_sensitive
+			else
+					-- No context
+				contract_mode_button.enable_sensitive
+				invaraints_menu_item.enable_sensitive
+				refresh_button.disable_sensitive
+				show_all_lines_button.disable_sensitive
+				show_callers_button.disable_sensitive
+			end
+
+			update_editable_buttons (has_stone and then context.is_editable)
+		end
+
+	update_editable_buttons (a_editable: BOOLEAN)
+			-- Updates the editable context buttons based on a supplied state.
 			--
 			-- `a_enable': True to enable the context button; False otherwise.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if a_enable then
-				--add_contract_button.enable_sensitive
-				--remove_contract_button.enable_sensitive
-				--edit_contract_button.enable_sensitive
+			if a_editable then
+				add_contract_button.enable_sensitive
+				remove_contract_button.enable_sensitive
+				edit_contract_button.enable_sensitive
 			else
 				add_contract_button.disable_sensitive
 				remove_contract_button.disable_sensitive
@@ -207,15 +471,12 @@ feature {NONE} -- User interface manipulation
 			end
 		end
 
-feature {NONE} -- Query
-
-	is_editable_row (a_row: !EV_GRID_ROW): BOOLEAN
-			-- Determines if a row is editable
-			--
-			-- `a_row': A row to determine editability.
-			-- `Result': True if the row is editable; False otherwise.
+	update_row_buttons
+			-- Updates the buttons based on a stone.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
-			Result := True
 		end
 
 feature {NONE} -- Actions handlers
@@ -228,87 +489,8 @@ feature {NONE} -- Actions handlers
 			a_row_attached: a_row /= Void
 		do
 			if {l_row: EV_GRID_ROW} a_row then
-				update_context_buttons (is_editable_row (l_row))
+				--update_context_buttons (is_editable_row (l_row))
 			end
-		end
-
-feature {NONE} -- Basic operations
-
-	update
-			-- Updates the view with a compiled feature
-		local
---			l_text: STRING_32
---			l_feature: FEATURE_I
---			l_class: CLASS_C
---			l_class_as: CLASS_AS
---			l_feature_as: FEATURE_AS
---			l_routine_as: ROUTINE_AS
---			l_require_as: REQUIRE_AS
---			l_assertions: EIFFEL_LIST [TAGGED_AS]
---			l_assertion: TAGGED_AS
---			l_yank: YANK_STRING_WINDOW
---			l_class_text: STRING_8
---			l_assert_server: ASSERTION_SERVER
---			l_cassert: CHAINED_ASSERTIONS
---			l_decorator: FEAT_TEXT_FORMATTER_DECORATOR
-		do
-			if has_stone and then {l_context: !like context_for_mode} context_for_mode then
-				contract_editor.set_context (l_context)
-			end
---			create l_text.make_empty
---			if {l_routine: !like context_feature} context_feature then
---				l_text.append (l_routine.feature_signature + "%N")
---				l_feature := l_routine.associated_class.feature_of_feature_id (l_routine.feature_id)
---				if l_feature /= Void then
---					l_class := context_feature.written_class
---					if l_class /= Void then
---						l_class_text := l_class.text
---						l_class_as := l_class.ast
---						if l_class_as /= Void and {l_name: !STRING_GENERAL} l_routine.name then
---							l_feature_as := l_class_as.feature_of_name (l_name, False)
-
---							create l_assert_server.make_for_feature (l_feature, l_feature_as)
---							l_cassert := l_assert_server.current_assertion
-
---							create l_yank.make
---							create l_decorator.make (l_class, l_yank)
---							--l_decorator.set_context_group (l_class.group)
---							l_decorator.init_feature_context (l_feature, l_feature, l_feature_as)
---							l_cassert.format_precondition (l_decorator)
-
---							l_text.append (l_yank.stored_output)
-
-----							l_routine_as ?= l_feature_as.body.content
-----							if l_routine_as /= Void then
-----								l_require_as := l_routine_as.precondition
-----								if l_require_as /= Void then
-----									l_assertions := l_require_as.assertions
-----									if l_assertions /= Void and then not l_assertions.is_empty then
-
-----										from l_assertions.start until l_assertions.after loop
-----											l_assertion := l_assertions.item
-----											if l_assertion /= Void then
-----												l_yank.put_string (l_class_text.substring (l_assertion.start_position, l_assertion.end_position))
-----												l_yank.put_new_line
-----												l_yank.put_new_line
-----											end
-----											l_assertions.forth
-----										end
-
-----									end
-----									l_text.append (l_yank.stored_output)
-----								end
-----							end
---						end
---					end
---					if l_routine.has_precondition then
---						l_text.append ("PRECONDITIONS: %N")
---					end
---				else
---					check False end
---				end
---			end
-----			contract_view.set_text (l_text)
 		end
 
 feature {SESSION_I} -- Event handlers
@@ -323,54 +505,83 @@ feature {SESSION_I} -- Event handlers
 		do
 			Precursor {SESSION_EVENT_OBSERVER} (a_session, a_id)
 			if a_id.is_equal (contract_mode_session_id) then
-				l_mode ?= session_data.value (contract_mode_session_id)
+				l_mode ?= project_window_session_data.value (contract_mode_session_id)
 				if l_mode /= Void then
 					set_contract_mode (l_mode.item)
 				end
 			end
 		end
 
+feature {NONE} -- Event handlers
+
+	on_dirty_state_changed
+			-- <Precursor>
+		do
+			Precursor
+			if is_interface_usable and then is_initialized then
+				if is_dirty then
+					save_modifications_button.enable_sensitive
+				else
+					save_modifications_button.disable_sensitive
+				end
+			end
+		end
+
+	on_file_modified (a_modification_type: NATURAL_8)
+			-- Called when a file is modified externally of Current.
+			--
+			-- `a_modification_type': The type of modification applied to the file. See FILE_NOTIFIER_MODIFICATION_TYPES for the respective flags
+		do
+			if is_initialized and then has_stone and then not is_saving then
+				if (a_modification_type & {FILE_NOTIFIER_MODIFICATION_TYPES}.file_deleted) = {FILE_NOTIFIER_MODIFICATION_TYPES}.file_deleted then
+					set_stone (Void)
+				elseif not is_dirty then
+					refresh_stone
+				end
+			end
+		end
+
 feature {NONE} -- Action handlers
 
-	on_stone_changed
-			-- Called when the set stone changes.
-			-- Note: This routine can be called when `stone' is Void, to indicate a stone has been cleared.
-			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit
-			--       setting or through compile synchronization.
+	on_stone_changed (a_old_stone: ?like stone)
+			-- <Precursor>
+		local
+			l_service: FILE_NOTIFIER_S
 		do
-			if {l_stone: !FEATURE_STONE} stone then
-				context_feature ?= l_stone.e_feature
-				add_contract_button.enable_sensitive
-				remove_contract_button.enable_sensitive
-				show_callers_button.enable_sensitive
+			if file_notifier.is_service_available then
+				l_service := file_notifier.service
+				if a_old_stone /= Void and then {l_old_cs: !CLASSI_STONE} a_old_stone and then {l_old_fn: !STRING_32} l_old_cs.class_i.file_name.string.as_string_32 then
+						-- Remove old monitor
+					if l_service.is_monitoring (l_old_fn) then
+						l_service.uncheck_modifications_with_callback (l_old_fn, agent on_file_modified)
+					end
+				end
 
+				if stone /= Void and then {l_new_cs: !CLASSI_STONE} stone and then {l_new_fn: !STRING_32} l_new_cs.class_i.file_name.string.as_string_32 then
+						-- Add monitor
+					l_service.check_modifications_with_callback (l_new_fn, agent on_file_modified)
+				end
+			end
+
+			if {l_fs: !FEATURE_STONE} stone then
 				if contract_mode = {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
 						-- A feature was dropped so we should switch to a feature contract mode.
 						-- Calling `set_contract_mode' will call `update'
 					set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.preconditions)
-				else
-					update
 				end
-
-					-- Modes can be switched
-				contract_mode_button.enable_sensitive
 			else
-				context_feature := Void
-				add_contract_button.disable_sensitive
-				remove_contract_button.disable_sensitive
-				show_callers_button.disable_sensitive
-
-				if contract_mode /= {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
-						-- A feature was dropped so we should switch to a feature contract mode.
-						-- Calling `set_contract_mode' will call `update'
-					set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants)
-				else
-					update
+				if {l_cs: !CLASSI_STONE} stone then
+					if contract_mode /= {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
+							-- A feature was dropped so we should switch to a feature contract mode.
+							-- Calling `set_contract_mode' will call `update'
+						set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants)
+					end
 				end
-
-					-- Modes can be switched
-				contract_mode_button.disable_sensitive
 			end
+
+			set_is_dirty (False)
+			update
+			update_stone_buttons
 
 				-- Update session.
 				-- This is done here because it only needs to be persisted when there is a stone change.
@@ -379,20 +590,29 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_show_callers
-			-- Called when the user chooses to show the callers of the edited contracts
+	on_show
+			-- <Precursor>
+		do
+			Precursor
+			update_if_modified
+		end
+
+	on_save
+			-- Called when the user chooses to save the modified contracts
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			context_feature_attached: context_feature /= Void
+			has_stone: has_stone
+			is_dirty: is_dirty
+			not_is_saving: not is_saving
 		do
-			if {l_feature: !E_FEATURE} context_feature then
-				if {l_tool: !ES_FEATURE_RELATION_TOOL} develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) then
-						-- Display feature relation tool using callers mode.
-					l_tool.set_mode_with_stone ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callers, create {!FEATURE_STONE}.make (l_feature))
-					l_tool.show (True)
-				end
-			end
+			is_saving := True
+			context.text_modifier.commit
+			set_is_dirty (False)
+			is_saving := False
+		ensure
+			not_is_dirty: not is_dirty
+			is_saving_unchanged: is_saving = old is_saving
 		end
 
 	on_add_contract
@@ -400,9 +620,20 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			context_feature_attached: context_feature /= Void
+			has_stone: has_stone
+		local
+--			l_context: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+--			l_modifider: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
 		do
+--			if contract_editor.has_context then
+--				l_context := contract_editor.context
+--				if l_context /= Void then
+--					l_modifider := l_context.text_modifier
 
+--					--l_modifider.replace_contracts ()
+--				end
+--			end
+			set_is_dirty (True)
 		end
 
 	on_remove_contract
@@ -410,9 +641,8 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			context_feature_attached: context_feature /= Void
+			has_stone: has_stone
 		do
-
 		end
 
 	on_edit_contract
@@ -420,10 +650,64 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			context_feature_attached: context_feature /= Void
+			has_stone: has_stone
 		do
-
 		end
+
+	on_refresh
+			-- Called when the user chooses to refresh the contracts
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			refresh_stone
+		end
+
+	on_contract_mode_selected
+			-- Called when the user selects the contract mode button.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_mode: like contract_mode
+		do
+			if contract_mode /= {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
+				l_mode := contract_mode + 1
+				if not (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (l_mode) or l_mode = {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
+					l_mode := {ES_CONTRACT_TOOL_EDIT_MODE}.preconditions
+				end
+				perform_query_save_modified (agent set_contract_mode (l_mode))
+			end
+		end
+
+	on_show_all_rows
+			-- Called when the user chooses to show all the contract rows.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			set_is_showing_all_rows (show_all_lines_button.is_selected)
+		end
+
+	on_show_callers
+			-- Called when the user chooses to show the callers of the edited contracts
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_stone: has_stone
+		do
+--			if {l_feature: !E_FEATURE} contract_editor.context then
+--				if {l_tool: !ES_FEATURE_RELATION_TOOL} develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) then
+--						-- Display feature relation tool using callers mode.
+--					l_tool.set_mode_with_stone ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callers, create {!FEATURE_STONE}.make (l_feature))
+--					l_tool.show (True)
+--				end
+--			else
+
+--			end
+		end
+
+
 
 feature {NONE} -- Factory
 
@@ -475,6 +759,7 @@ feature {NONE} -- Factory
 			l_button.set_pixmap (stock_pixmaps.general_add_icon)
 			l_button.set_tooltip ("Adds a new contract.")
 			l_button.disable_sensitive
+
 			add_contract_button := l_button
 			Result.put_last (l_button)
 
@@ -504,14 +789,14 @@ feature {NONE} -- Factory
 			l_button.set_pixmap (stock_pixmaps.general_refresh_icon)
 			l_button.set_tooltip ("Refresh the current contracts to include an undetected changes.")
 			l_button.disable_sensitive
-			--refresh_button := l_button
+			refresh_button := l_button
 			Result.put_last (l_button)
 
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Contract selection button
 			create l_dual_button.make
-			l_dual_button.set_text ("Preconditions")
+			l_dual_button.set_text (contract_mode_label (contract_mode))
 			l_dual_button.set_pixel_buffer (stock_pixmaps.view_contracts_icon_buffer)
 			l_dual_button.set_pixmap (stock_pixmaps.view_contracts_icon)
 			l_dual_button.set_tooltip ("Select the contracts to edit.")
@@ -550,7 +835,7 @@ feature {NONE} -- Factory
 			l_toggle_button.set_pixmap (stock_pixmaps.general_show_hidden_icon)
 			l_toggle_button.set_tooltip ("Shows/hides the hidden contract place holders for inherited contracts.")
 			l_toggle_button.disable_sensitive
-			--show_hidden_rows_button := l_button
+			show_all_lines_button := l_toggle_button
 			Result.put_last (l_toggle_button)
 
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
@@ -565,58 +850,7 @@ feature {NONE} -- Factory
 			Result.put_last (l_button)
 		end
 
-	on_contract_mode_selected
-			-- Called when the user selects the contract mode button.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		local
-			l_mode: like contract_mode
-		do
-			l_mode := contract_mode + 1
-			if l_mode > {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
-				l_mode := {ES_CONTRACT_TOOL_EDIT_MODE}.preconditions
-			end
-			set_contract_mode (l_mode)
-		end
 
-	set_contract_mode (a_mode: like contract_mode)
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		do
-			if contract_mode /= a_mode then
-				inspect a_mode
-				when {ES_CONTRACT_TOOL_EDIT_MODE}.preconditions then
-					preconditions_menu_item.enable_select
-				when {ES_CONTRACT_TOOL_EDIT_MODE}.postconditions then
-					postconditions_menu_item.enable_select
-				when {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
-					invaraints_menu_item.enable_select
-				end
-				on_contract_mode_changed (a_mode)
-			end
-		ensure
-			contract_mode_set: contract_mode = a_mode
-		end
-
-	on_contract_mode_changed (a_mode: like contract_mode)
-			-- Called when the user changes the edit mode.
-			--
-			-- `a_mode': An edit mode. See {ES_CONTRACT_TOOL_EDIT_MODE} for possible values.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_mode_is_valid: (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (a_mode)
-		do
-			if contract_mode /= a_mode then
-				contract_mode := a_mode
-				contract_mode_button.set_text (contract_mode_label (a_mode))
-				update
-			end
-		ensure
-			contract_mode_set: contract_mode = a_mode
-		end
 
 	contract_mode_label (a_mode: like contract_mode): !STRING_32
 			-- Retrieve the edit label for a given an edit mode.
@@ -649,6 +883,7 @@ feature {NONE} -- Factory
 feature {NONE} -- Constants
 
 	contract_mode_session_id: !STRING = "com.eiffel.contract_tool.mode"
+	show_all_lines_session_id: !STRING = "com.eiffel.contract_tool.show_all_lines"
 
 invariant
 	add_contract_button_attached: is_initialized implies add_contract_button /= Void

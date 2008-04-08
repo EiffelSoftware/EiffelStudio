@@ -81,7 +81,7 @@ feature {NONE} -- Query
 				l_class_c ?= a_class.compiled_class
 				if l_class_c /= Void then
 					if a_feature.written_in = l_class_c.class_id then
-						Result := a_feature
+						l_result := a_feature
 					elseif l_class_c.has_feature_table then
 						l_feature_i := l_class_c.feature_table.feature_of_rout_id_set (a_feature.rout_id_set)
 						check l_feature_i_attached: l_feature_i /= Void end

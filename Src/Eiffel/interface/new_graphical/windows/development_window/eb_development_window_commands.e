@@ -144,6 +144,9 @@ feature -- Query
 	go_to_previous_warning_command: ES_PREVIOUS_WARNING_COMMAND
 			-- Go to previous warning command
 
+	edit_contracts_command: !ES_EDIT_CONTRACTS_COMMAND
+			-- Edit contracts command
+
 feature -- Commands
 
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
@@ -502,6 +505,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			go_to_previous_warning_command := a_command
 		ensure
 			go_to_previous_warning_command_set: go_to_previous_warning_command = a_command
+		end
+
+	set_edit_contracts_command (a_command: like edit_contracts_command)
+			-- Sets `edit_contracts_command' with `a_command'
+		do
+			edit_contracts_command := a_command
+		ensure
+			edit_contracts_command_set: edit_contracts_command = a_command
 		end
 
 feature -- Recycle

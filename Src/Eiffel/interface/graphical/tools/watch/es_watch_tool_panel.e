@@ -294,7 +294,7 @@ feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
 feature {NONE} -- Stone handlers
 
-	on_stone_changed is
+	on_stone_changed (a_old_stone: ?like stone) is
 			-- Assign `a_stone' as new stone.
 		local
 			cst: CALL_STACK_STONE

@@ -24,9 +24,10 @@ feature -- Access
 
 feature -- Element change
 
-	set_stone (a_stone: ?STONE)
-			-- Sets last stone.
-			-- Note: Be sure to call `query_set_stone', where applicable.
+	set_stone (a_stone: ?like stone)
+			-- Sets current stone.
+			-- Note: This call is unprotected and will set the stone regardless. For a protected call
+			--       use `set_stone_with_query', which will interactive with the user if necessary
 			--
 			-- `a_stone': Stone to set.
 		require
@@ -35,6 +36,30 @@ feature -- Element change
 		deferred
 		ensure
 			stone_set: equal (stone, a_stone)
+		end
+
+	frozen set_stone_with_query (a_stone: ?like stone)
+			-- Sets the current stone and preforms a protected call to ensure a stone can be set.
+			-- This does not guarentee a stone will be set because it depends on possible user interaction
+			-- to confirm setting.
+			--
+			-- `a_stone': Stone to set.
+		require
+			is_interface_usable: is_interface_usable
+			not_is_setting_stone_with_query: not is_setting_stone_with_query
+			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
+		do
+			if not is_setting_stone_with_query then
+				if query_set_stone (a_stone) then
+					is_setting_stone_with_query := True
+					set_stone (a_stone)
+					is_setting_stone_with_query := False
+				end
+			else
+				set_stone (a_stone)
+			end
+		ensure
+			is_setting_stone_with_query_unchanged: is_setting_stone_with_query = old is_setting_stone_with_query
 		end
 
 feature -- Status report
@@ -47,22 +72,24 @@ feature -- Status report
 			stone_attached: (Result and stone /= Void) or else (not Result and stone = Void)
 		end
 
+feature -- Status report
+
+	is_setting_stone_with_query: BOOLEAN
+			-- Indicates if a stone is currenly being set using `set_stone_with_query'
+
 feature -- Query
 
-	is_stone_usable (a_stone: ?STONE): BOOLEAN
+	is_stone_usable (a_stone: ?like stone): BOOLEAN
 			-- Determines if a stone can be used by Current.
 			--
 			-- `a_stone': Stone to determine usablity.
 			-- `Result': True if the stone can be used, False otherwise.
 		require
 			is_interface_usable: is_interface_usable
-			a_stone_attached: a_stone /= Void
 		deferred
 		end
 
-feature -- Basic operations
-
-	query_set_stone (a_stone: ?STONE): BOOLEAN
+	query_set_stone (a_stone: ?like stone): BOOLEAN
 			-- Determines if a stone can be set, possibly using a UI to ask the user for confirmation.
 			-- Note: This function should not be used in any contracts due to the possibility of UI presentation.
 			--
@@ -71,8 +98,38 @@ feature -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 			a_stone_is_stone_usable: a_stone /= Void implies is_stone_usable (a_stone)
+			not_is_setting_stone_with_query: not is_setting_stone_with_query
 		do
 			Result := True
+		end
+
+feature -- Basic operations
+
+	refresh_stone
+			-- Refreshes current stone.
+			-- Note: Refreshing performs a query to `query_set_stone' to ensure any resistance is handled correctly.
+			--       This means clients should not perform any checks using `query_set_stone' themselves.
+		require
+			is_interface_usable: is_interface_usable
+			has_stone: has_stone
+			not_is_setting_stone_with_query: not is_setting_stone_with_query
+		local
+			l_stone: like stone
+		do
+			l_stone := stone
+			if l_stone /= Void and then (is_setting_stone_with_query or else query_set_stone (Void)) then
+				is_setting_stone_with_query := True
+				set_stone (Void)
+				if is_stone_usable (l_stone) then
+						-- Recheck usability, just in case.
+					set_stone (l_stone)
+				else
+					check False end
+				end
+				is_setting_stone_with_query := False
+			end
+		ensure
+			is_setting_stone_with_query_unchanged: is_setting_stone_with_query = old is_setting_stone_with_query
 		end
 
 feature -- Synchronization
@@ -81,6 +138,7 @@ feature -- Synchronization
 			-- Synchronizes any new data (compiled or other wise)
 		require
 			is_interface_usable: is_interface_usable
+			not_is_setting_stone_with_query: not is_setting_stone_with_query
 		deferred
 		end
 

@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		A contract editor ({ES_CONTRACT_EDITOR_WIDGET}) context for class invariant contracts.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

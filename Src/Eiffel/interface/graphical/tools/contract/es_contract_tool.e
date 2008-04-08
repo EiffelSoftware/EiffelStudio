@@ -57,8 +57,10 @@ feature -- Query
 		do
 			if {l_fs: !FEATURE_STONE} a_stone then
 				Result := {l_routine: !E_ROUTINE} l_fs.e_feature
-			elseif  {l_bs: !CLASSC_STONE} a_stone then
+			elseif {l_bs: !CLASSI_STONE} a_stone then
 				Result := True
+			else
+				Result := a_stone = Void
 			end
 		end
 

@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		A custom widget for viewing the contract and comments of a particular feature.
+		A custom widget for viewing the contracts and comments of a particular feature.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -378,10 +378,8 @@ feature {NONE} -- Action handlers
 						-- Show and activate focus on the tool.
 					create l_feature_stone.make (context_feature)
 					check l_feature_stone_is_stone_usable: l_tool.is_stone_usable (l_feature_stone) end
-					if l_tool.query_set_stone (l_feature_stone) then
-						l_tool.set_stone (l_feature_stone)
-						l_tool.show (True)
-					end
+					l_tool.set_stone_with_query (l_feature_stone)
+					l_tool.show (True)
 				end
 			end
 		end

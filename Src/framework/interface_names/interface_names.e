@@ -723,6 +723,11 @@ feature -- Menu entries
 	m_edit_postconditions: STRING_GENERAL is 			do Result := locale.translation ("P&ostconditions") end
 	m_edit_invariants: STRING_GENERAL is 				do Result := locale.translation ("&Invariants") end
 
+	m_edit_feature_contracts (a_name: STRING_GENERAL): STRING_GENERAL
+		do Result := locale.formatted_string (locale.translation ("Ed&it Contracts for '$1'"), [a_name]) end
+	m_edit_class_contracts (a_name: STRING_GENERAL): STRING_GENERAL
+		do Result := locale.formatted_string (locale.translation ("Ed&it Invariants for '$1'"), [a_name]) end
+
 feature -- Tool tips
 
 	f_go_to_next_error: STRING_GENERAL is 				do Result := locale.translation ("Navigates to the next error or the first error found if the end of the list is reached") end

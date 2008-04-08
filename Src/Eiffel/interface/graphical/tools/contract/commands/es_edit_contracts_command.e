@@ -1,47 +1,40 @@
 indexing
 	description: "[
-		A base contract editor ({ES_CONTRACT_EDITOR_WIDGET}) context for class-level contracts.
+		Command to show and edit contracts, via a context menu.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
-	ES_CLASS_CONTRACT_EDITOR_CONTEXT
+class
+	ES_EDIT_CONTRACTS_COMMAND
 
 inherit
-	ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+	ES_SHOW_TOOL_COMMAND
+		redefine
+			menu_name
+		end
 
-feature {NONE} -- Query
+create
+	make
 
-	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
+feature -- Access
+
+	menu_name: STRING_GENERAL
 			-- <Precursor>
-		local
-			l_class_i: !CLASS_I
-			l_class_C: !CLASS_C
-			l_list: LIST [CLASS_C]
-			l_cursor: CURSOR
 		do
-			if a_class.is_compiled then
-				l_list := a_class.compiled_class.parents_classes
-				if l_list /= Void and then not l_list.is_empty then
-					l_cursor := l_list.cursor
-					from l_list.start until l_list.after loop
-						l_class_c ?=  l_list.item
-						if not a_list.has (l_class_c) then
-							a_list.force_last (l_class_c)
-							l_class_i ?= l_class_c.lace_class
-							calculate_parents (l_class_i, a_list)
-						end
-						l_list.forth
-					end
-					l_list.go_to (l_cursor)
-				end
+			if {l_fs: FEATURE_STONE} stone then
+				Result := interface_names.m_edit_feature_contracts (l_fs.e_feature.name)
+			elseif {l_cs: CLASSI_STONE} stone then
+				Result := interface_names.m_edit_class_contracts (l_cs.class_i.name)
+			else
+					-- Default to the tool name
+				Result := Precursor {ES_SHOW_TOOL_COMMAND}
 			end
 		end
 
-;indexing
+indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

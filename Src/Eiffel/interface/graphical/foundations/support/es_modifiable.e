@@ -18,33 +18,63 @@ inherit
 feature {NONE} -- Clean up
 
 	internal_recycle
-			-- To be called when the button has became useless.
-			-- Note: It's recommended that you do not detach objects here.
+			-- <Precursor>
 		do
-			if internal_dirty_events /= Void then
-				internal_dirty_events.wipe_out
+			if internal_dirty_state_change_event /= Void then
+				internal_dirty_state_change_event.dispose
 			end
 		ensure then
-			internal_dirty_events_disposed: (old internal_dirty_events /= Void) implies not (old internal_dirty_events).is_empty
+			internal_dirty_state_change_event_disposed: (old internal_dirty_state_change_event /= Void) implies (old internal_dirty_state_change_event).is_zombie
+		end
+
+feature -- Status report
+
+	is_dirty: BOOLEAN
+			-- <Precursor>
+
+feature {NONE} -- Status setting
+
+	set_is_dirty (a_dirty: like is_dirty)
+			-- <Precursor>
+		local
+			l_old_is_dirty: like is_dirty
+		do
+			l_old_is_dirty := is_dirty
+			if l_old_is_dirty /= a_dirty then
+				is_dirty := a_dirty
+				on_dirty_state_changed
+				if internal_dirty_state_change_event /= Void then
+					internal_dirty_state_change_event.publish ([a_dirty])
+				end
+			end
 		end
 
 feature -- Events
 
-	dirty_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE [is_dirty: BOOLEAN]]
-			-- Actions called when the dirty state chages
+	dirty_state_change_event: !EVENT_TYPE [TUPLE [is_dirty: BOOLEAN]]
+			-- <Precursor>
 		do
-			if internal_dirty_events = Void then
+			if internal_dirty_state_change_event = Void then
 				create Result
-				internal_dirty_events := Result
+				internal_dirty_state_change_event := Result
 			else
-				Result ?= internal_dirty_events
+				Result ?= internal_dirty_state_change_event
 			end
+		end
+
+feature {NONE} -- Event handlers
+
+	on_dirty_state_changed
+			-- Called when the dirty state changes
+		require
+			is_interface_usable: is_interface_usable
+		do
 		end
 
 feature {NONE} -- Internal implementation cache
 
-	internal_dirty_events: EV_LITE_ACTION_SEQUENCE [TUPLE [is_dirty: BOOLEAN]]
-			-- Cached version of `dirty_events'
+	internal_dirty_state_change_event: ?like dirty_state_change_event
+			-- Cached version of `dirty_state_change_event'
 			-- Note: Do not use directly!
 
 ;indexing

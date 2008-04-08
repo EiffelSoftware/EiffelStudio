@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Feature text modifier for modifying contract postconditions.
+		Class text modifier for modifying invariant contracts.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

@@ -45,6 +45,8 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 			-- Sets last stone.
 			--
 			-- `a_stone': Stone to set.
+		local
+			l_old_stone: ?like stone
 		do
 			if a_stone /= stone then
 					-- Client is setting the stone directly, and not through {ES_STONABLE_TOOL}
@@ -58,7 +60,7 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 			end
 
 			if is_initialized and not stone_change_notified then
-				internal_on_stone_changed
+				internal_on_stone_changed (tool_descriptor.previous_stone)
 			end
 		end
 
@@ -99,14 +101,12 @@ feature {NONE} -- Basic opertations
         	propagate_register_action (user_widget, agent {EV_WIDGET}.drop_actions, agent (a_pebble: ANY)
         			-- Propagate the stone drop actions	
         		do
-        			if is_interface_usable and is_initialized and then {l_stone: !STONE} a_pebble then
-        				if tool_descriptor.is_interface_usable and then tool_descriptor.is_stone_usable (l_stone) then
+        			if is_interface_usable and is_initialized and then tool_descriptor.is_interface_usable then
+        				if {l_stone: !STONE} a_pebble and then tool_descriptor.is_stone_usable (l_stone) then
       							-- Force stone on descriptor, which will optimize the display of the stone on Current.
 	        					-- I cannot see any reason why the tool would not be shown when a drop action occurs (unless the action is published programmatically),
 	        					-- but going through the descriptor is the safest and most optimized means of setting a stone.
-	        				if tool_descriptor.query_set_stone (l_stone) then
-	        					tool_descriptor.set_stone (l_stone)
-	        				end
+        					tool_descriptor.set_stone_with_query (l_stone)
         				end
 					end
         		end, a_excluded)
@@ -137,7 +137,7 @@ feature {NONE} -- Basic opertations
 				end, Void)
         end
 
-feature -- Synchronization
+feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 
 	synchronize
 			-- Synchronizes any new data (compiled or other wise)
@@ -151,7 +151,7 @@ feature -- Synchronization
 					stone_change_notified := False
 					is_in_stone_synchronization := True
 					l_new_stone := l_new_stone.synchronized_stone
-					if is_stone_usable (l_new_stone) then
+					if l_new_stone /= stone and then (l_new_stone = Void or else is_stone_usable (l_new_stone)) then
 						set_stone (l_new_stone)
 					end
 					is_in_stone_synchronization := False
@@ -170,12 +170,12 @@ feature {NONE} -- Action handlers
 
         	if not stone_change_notified and (stone = Void or else is_stone_usable (stone)) then
         			-- Synchronize stone and by-pass display checks because the UI is shown.
-				on_stone_changed
+				on_stone_changed (tool_descriptor.previous_stone)
 				stone_change_notified := True
         	end
 		end
 
-	on_stone_changed
+	on_stone_changed (a_old_stone: ?like stone)
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' is Void, to indicate a stone has been cleared.
 			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit
@@ -191,7 +191,7 @@ feature {NONE} -- Action handlers
 			not_stone_change_notified: not stone_change_notified
 		end
 
-	frozen internal_on_stone_changed
+	frozen internal_on_stone_changed (a_old_stone: ?like stone)
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' if Void.
 		require
@@ -200,7 +200,7 @@ feature {NONE} -- Action handlers
 			not_stone_change_notified: not stone_change_notified
 		do
 			if shown then
-				on_stone_changed
+				on_stone_changed (a_old_stone)
 				stone_change_notified := True
 			end
 		ensure

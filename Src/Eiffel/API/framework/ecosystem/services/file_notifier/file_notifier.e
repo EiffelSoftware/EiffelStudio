@@ -42,10 +42,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Clean up
 
 	safe_dispose (a_disposing: BOOLEAN)
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-			--
-			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
+			-- <Precursor>
 		do
 			if a_disposing then
 				file_modified_callbacks.do_all (agent (a_events: !EVENT_TYPE [TUPLE [modification_type: NATURAL_8]])
@@ -83,10 +80,7 @@ feature {NONE} -- Status report
 feature -- Query
 
 	is_monitoring (a_file_name: !STRING_32): BOOLEAN
-			-- Determines if a file is being monitored.
-			--
-			-- `a_file_name': The file name to determine if change notifications are being published for.
-			-- `Result': True if the file is being monitored, False otherwise.
+			-- <Precursor>
 		do
 			Result := file_records.has (file_name_key (a_file_name))
 		ensure then
@@ -108,46 +102,15 @@ feature {NONE} -- Query
 feature -- Basic operation
 
 	check_modifications (a_file_name: !STRING_32)
-			-- Checks a file for any modifications.
-			-- Note: This must be called everytime a client wants to determine if a file has changed. The appropriate modification
-			--       event will be fired based on the file state. There is no real automatic solution because of the last of file
-			--       system event notifications on Unix.
-			--
-			--       Be sure to call `uncheck_modifications' when notification is no longer needed.
-			--
-			-- `a_file_name': The file to check for modifications.
+			-- <Precursor>
 		local
 			l_key: like file_name_key
 			l_records: like file_records
 			l_record: FILE_NOTIFIER_RECORD
-			l_events: like file_modified_events
-			l_modification_type: NATURAL_8
-			l_timestamp: INTEGER
 		do
 			l_key := file_name_key (a_file_name)
 			l_records := file_records
-			if l_records.has (l_key) then
-				l_record := l_records.item (l_key)
-				l_timestamp := l_record.time_stamp
-				l_record.refresh
-				if l_record.file_exists then
-					if l_record.time_stamp /= l_timestamp then
-							-- The file has been modified, as the timestamps have changed
-						l_modification_type := {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed
-					end
-				else
-						-- The file has been deleted since the last refresh
-					l_modification_type := {FILE_NOTIFIER_MODIFICATION_TYPES}.file_deleted
-				end
-
-				l_events := file_modified_events
-				if l_modification_type /= 0 and then not l_events.is_suspended then
-						-- Only call the actions if they are not suspended.
-					is_modification_self_published := True
-					l_events.publish ([a_file_name, l_modification_type])
-					is_modification_self_published := False
-				end
-			else
+			if not l_records.has (l_key) then
 					-- Create a new record and add it to the record table
 				create l_record.make (a_file_name)
 				if {l_new_record: !FILE_NOTIFIER_RECORD} l_record then
@@ -158,25 +121,14 @@ feature -- Basic operation
 			check l_record_attached: l_record /= Void end
 			l_record.increment_monitor_lock
 		ensure then
-			not_is_modification_self_published_unchanged: not is_modification_self_published
 			a_file_name_added: file_records.has (file_name_key (a_file_name))
 			a_file_name_record_monitored: file_records.item (file_name_key (a_file_name)).is_monitoring
 --			a_file_name_record_monitor_count_increased: old file_records.has (file_name_key (a_file_name)) implies
 --				file_records.item (file_name_key (a_file_name)).monitor_count = old file_records.item (file_name_key (a_file_name)).monitor_count + 1
-		rescue
-			is_modification_self_published := False
 		end
 
 	check_modifications_with_callback (a_file_name: !STRING_32; a_callback: PROCEDURE [ANY, TUPLE [modification_type: NATURAL_8]])
-			-- Checks a file for any modifications.
-			-- Note: This must be called everytime a client wants to determine if a file has changed. The appropriate modification
-			--       event will be fired based on the file state. There is no real automatic solution because of the last of file
-			--       system event notifications on Unix.
-			--
-			--       Be sure to call `uncheck_modifications_with_callback' when notification is no longer needed.
-			--
-			-- `a_file_name': The full path to the file to check for modifications.
-			-- `a_callback': The agent to call back when the file is modified.
+			-- <Precursor>
 		local
 			l_key: like file_name_key
 			l_callbacks: like file_modified_callbacks
@@ -196,7 +148,6 @@ feature -- Basic operation
 				-- Now perform the check, which will call the call back if a modification has taken place.
 			check_modifications (a_file_name)
 		ensure then
-			not_is_modification_self_published_unchanged: not is_modification_self_published
 			a_file_name_added: file_records.has (file_name_key (a_file_name))
 			a_file_name_record_monitored: file_records.item (file_name_key (a_file_name)).is_monitoring
 --			a_file_name_record_monitor_count_increased: old file_records.has (file_name_key (a_file_name)) implies
@@ -204,12 +155,7 @@ feature -- Basic operation
 		end
 
 	uncheck_modifications (a_file_name: !STRING_32)
-			-- Indicates to the service that the file no longer needs to be monitored.
-			-- Note: Unchecking a file does not necessarly mean that it is no longer monitored. Other parts of the
-			--       system could be moniroting the same file. However, it is somewhat important that for every check call
-			--       there is a corresponding uncheck call.
-			--
-			-- `a_file_name': The full path to the file to remove modifications checks for.
+			-- <Precursor>
 		local
 			l_key: like file_name_key
 			l_records: like file_records
@@ -238,14 +184,7 @@ feature -- Basic operation
 		end
 
 	uncheck_modifications_with_callback (a_file_name: !STRING_32; a_callback: PROCEDURE [ANY, TUPLE [modification_type: NATURAL_8]])
-			-- Indicates to the service that the file no longer needs to be monitored.
-			-- Note: Unchecking a file does not necessarly mean that it is no longer monitored. Other parts of the
-			--       system could be moniroting the same file. However, it is (very* important that for every check call
-			--       there is a corresponding uncheck call or the actions will be called even after an action handler's
-			--       has no use for the notifications. In addition a lingering agent will cause memory leaks.
-			--
-			-- `a_file_name': The full path to the file to remove modifications checks for.
-			-- `a_callback': The agent that was use to call back when the file is modified.
+			-- <Precursor>
 		local
 			l_key: like file_name_key
 			l_callbacks: like file_modified_callbacks
@@ -266,6 +205,41 @@ feature -- Basic operation
 		ensure then
 			a_file_name_removed: (old file_records.has (file_name_key (a_file_name))) and then not (old file_records.item (file_name_key (a_file_name))).is_monitoring implies not file_records.has (file_name_key (a_file_name))
 			a_file_name_record_monitor_count_decreased: file_records.has (file_name_key (a_file_name)) implies file_records.item (file_name_key (a_file_name)).monitor_count = old file_records.item (file_name_key (a_file_name)).monitor_count - 1
+		end
+
+	poll_modifications (a_file_name: !STRING_32): NATURAL_8
+			-- <Precursor>
+		local
+			l_key: like file_name_key
+			l_records: like file_records
+			l_record: FILE_NOTIFIER_RECORD
+			l_events: like file_modified_events
+			l_timestamp: INTEGER
+		do
+			l_key := file_name_key (a_file_name)
+			l_records := file_records
+			if l_records.has (l_key) then
+				l_record := l_records.item (l_key)
+				l_timestamp := l_record.time_stamp
+				l_record.refresh
+				if l_record.file_exists then
+					if l_record.time_stamp /= l_timestamp then
+							-- The file has been modified, as the timestamps have changed
+						Result := {FILE_NOTIFIER_MODIFICATION_TYPES}.file_changed
+					end
+				else
+						-- The file has been deleted since the last refresh
+					Result := {FILE_NOTIFIER_MODIFICATION_TYPES}.file_deleted
+				end
+
+				l_events := file_modified_events
+				if Result /= 0 and then not l_events.is_suspended then
+						-- Only call the actions if they are not suspended.
+					is_modification_self_published := True
+					l_events.publish ([a_file_name, Result])
+					is_modification_self_published := False
+				end
+			end
 		end
 
 feature {NONE} -- Formatting
@@ -291,10 +265,7 @@ feature {NONE} -- Formatting
 feature -- Events
 
 	file_modified_events: !EVENT_TYPE [TUPLE [file_name: !STRING_32; modification_type: NATURAL_8]]
-			-- Events fired after check a file and discovering there have been modifications.
-			--
-			-- `file_name': The name of the file modified.
-			-- `modification_type': The type of modification applied to the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for the respective flags
+			-- <Precursor>
 
 feature -- Event handlers
 

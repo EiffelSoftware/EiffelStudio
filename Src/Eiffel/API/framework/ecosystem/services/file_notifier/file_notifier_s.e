@@ -56,6 +56,8 @@ feature -- Basic operations
 			--
 			--       Be sure to call `uncheck_modifications' when notification is no longer needed.
 			--
+			--       To perform update checks use `poll_modifications'.
+			--
 			-- `a_file_name': The file to check for modifications.
 		require
 			is_interface_usable: is_interface_usable
@@ -72,6 +74,8 @@ feature -- Basic operations
 			--       system event notifications on Unix.
 			--
 			--       Be sure to call `uncheck_modifications_with_callback' when notification is no longer needed.
+			--
+			--       To perform update checks use `poll_modifications'.
 			--
 			-- `a_file_name': The full path to the file to check for modifications.
 			-- `a_callback': The agent to call back when the file is modified.
@@ -110,6 +114,18 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name)
 			a_callback_attached: a_callback /= Void
+		deferred
+		end
+
+	poll_modifications (a_file_name: !STRING_32): NATURAL_8
+			-- Polls the modification state of a file and returns the modified state.
+			-- Note: Calling this will also update any monitors.
+			--
+			-- `a_file_name': The file name to determine if change notifications are being published for.
+			-- `Result': The type of modification applied to the file. See {FILE_NOTIFIER_MODIFICATION_TYPES} for the respective flags
+		require
+			is_interface_usable: is_interface_usable
+			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name)
 		deferred
 		end
 

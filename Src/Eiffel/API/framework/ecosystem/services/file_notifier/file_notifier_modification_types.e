@@ -14,6 +14,9 @@ class
 
 feature -- Access
 
+	no_change: NATURAL_8 = 0x0
+			-- No change occurred
+
 	file_changed: NATURAL_8 = 0x1
 			-- File was changed
 

@@ -141,17 +141,22 @@ feature -- Publication
 		require
 			not_is_zombie: not is_zombie
 			a_args_attached: a_args /= Void
+		local
+			l_actions: like suicide_actions
 		do
 			if not is_suspended then
+					-- We cache the suicide actions because a subscriber may dispose of Current while publishing.
+				l_actions := suicide_actions
 				subscribers.do_all (agent {PROCEDURE [ANY, EVENT_DATA]}.call (a_args))
-				if not suicide_actions.is_empty then
+				if not l_actions.is_empty then
 						-- Remove actions
-					suicide_actions.do_all (agent unsubscribe)
-					suicide_actions.wipe_out
+					l_actions.do_all (agent unsubscribe)
+					l_actions.wipe_out
 				end
 			end
 		ensure
-			subscribers_index_unmoved: subscribers.index = old subscribers.index
+			subscribers_index_unmoved: not is_zombie implies (subscribers.index = old subscribers.index)
+			suicide_actions_index_unmoved: not is_zombie implies (suicide_actions.index = old suicide_actions.index)
 		end
 
 feature {NONE} -- Access

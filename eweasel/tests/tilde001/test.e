@@ -31,6 +31,7 @@ feature
 			r4: REAL_32
 			r8: REAL_64
 		do
+			test_false_boolean (i1 ~ Void)
 			test_true_boolean (i1 ~ i1)
 			test_true_boolean (i1 ~ i2)
 			test_true_boolean (i1 ~ i4)
@@ -46,6 +47,7 @@ feature
 			test_true_boolean (i1 ~ r4)
 			test_true_boolean (i1 ~ r8)
 
+			test_false_boolean (i2 ~ Void)
 			test_true_boolean (i2 ~ i1)
 			test_true_boolean (i2 ~ i2)
 			test_true_boolean (i2 ~ i4)
@@ -61,6 +63,7 @@ feature
 			test_true_boolean (i2 ~ r4)
 			test_true_boolean (i2 ~ r8)
 
+			test_false_boolean (i4 ~ Void)
 			test_true_boolean (i4 ~ i1)
 			test_true_boolean (i4 ~ i2)
 			test_true_boolean (i4 ~ i4)
@@ -76,6 +79,7 @@ feature
 			test_true_boolean (i4 ~ r4)
 			test_true_boolean (i4 ~ r8)
 
+			test_false_boolean (i8 ~ Void)
 			test_true_boolean (i8 ~ i1)
 			test_true_boolean (i8 ~ i2)
 			test_true_boolean (i8 ~ i4)
@@ -91,6 +95,7 @@ feature
 			test_true_boolean (i8 ~ r4)
 			test_true_boolean (i8 ~ r8)
 
+			test_false_boolean (n1 ~ Void)
 			test_false_boolean (n1 ~ i1)
 			test_true_boolean (n1 ~ i2)
 			test_true_boolean (n1 ~ i4)
@@ -106,6 +111,7 @@ feature
 			test_true_boolean (n1 ~ r4)
 			test_true_boolean (n1 ~ r8)
 
+			test_false_boolean (n2 ~ Void)
 			test_false_boolean (n2 ~ i1)
 			test_false_boolean (n2 ~ i2)
 			test_true_boolean (n2 ~ i4)
@@ -121,6 +127,7 @@ feature
 			test_true_boolean (n2 ~ r4)
 			test_true_boolean (n2 ~ r8)
 
+			test_false_boolean (n4 ~ Void)
 			test_false_boolean (n4 ~ i1)
 			test_false_boolean (n4 ~ i2)
 			test_false_boolean (n4 ~ i4)
@@ -136,6 +143,7 @@ feature
 			test_true_boolean (n4 ~ r4)
 			test_true_boolean (n4 ~ r8)
 
+			test_false_boolean (n8 ~ Void)
 			test_false_boolean (n8 ~ i1)
 			test_false_boolean (n8 ~ i2)
 			test_false_boolean (n8 ~ i4)
@@ -151,6 +159,7 @@ feature
 			test_true_boolean (n8 ~ r4)
 			test_true_boolean (n8 ~ r8)
 
+			test_false_boolean (c1 ~ Void)
 			test_false_boolean (c1 ~ i1)
 			test_false_boolean (c1 ~ i2)
 			test_false_boolean (c1 ~ i4)
@@ -166,6 +175,7 @@ feature
 			test_false_boolean (c1 ~ r4)
 			test_false_boolean (c1 ~ r8)
 
+			test_false_boolean (c4 ~ Void)
 			test_false_boolean (c4 ~ i1)
 			test_false_boolean (c4 ~ i2)
 			test_false_boolean (c4 ~ i4)
@@ -181,6 +191,7 @@ feature
 			test_false_boolean (c4 ~ r4)
 			test_false_boolean (c4 ~ r8)
 
+			test_false_boolean (p ~ Void)
 			test_false_boolean (p ~ i1)
 			test_false_boolean (p ~ i2)
 			test_false_boolean (p ~ i4)
@@ -196,6 +207,7 @@ feature
 			test_false_boolean (p ~ r4)
 			test_false_boolean (p ~ r8)
 
+			test_false_boolean (b ~ Void)
 			test_false_boolean (b ~ i1)
 			test_false_boolean (b ~ i2)
 			test_false_boolean (b ~ i4)
@@ -211,6 +223,7 @@ feature
 			test_false_boolean (b ~ r4)
 			test_false_boolean (b ~ r8)
 
+			test_false_boolean (r4 ~ Void)
 			test_true_boolean (r4 ~ i1)
 			test_true_boolean (r4 ~ i2)
 			test_true_boolean (r4 ~ i4)
@@ -226,6 +239,7 @@ feature
 			test_true_boolean (r4 ~ r4)
 			test_true_boolean (r4 ~ r8)
 
+			test_false_boolean (r8 ~ Void)
 			test_true_boolean (r8 ~ i1)
 			test_true_boolean (r8 ~ i2)
 			test_true_boolean (r8 ~ i4)
@@ -240,6 +254,22 @@ feature
 			test_false_boolean (r8 ~ b)
 			test_true_boolean (r8 ~ r4)
 			test_true_boolean (r8 ~ r8)
+
+			test_true_boolean (Void ~ Void)
+			test_false_boolean (Void ~ i1)
+			test_false_boolean (Void ~ i2)
+			test_false_boolean (Void ~ i4)
+			test_false_boolean (Void ~ i8)
+			test_false_boolean (Void ~ n1)
+			test_false_boolean (Void ~ n2)
+			test_false_boolean (Void ~ n4)
+			test_false_boolean (Void ~ n8)
+			test_false_boolean (Void ~ c1)
+			test_false_boolean (Void ~ c4)
+			test_false_boolean (Void ~ p)
+			test_false_boolean (Void ~ b)
+			test_false_boolean (Void ~ r4)
+			test_false_boolean (Void ~ r8)
 		end
 
 	test_not_tilde_between_basic_types is
@@ -259,6 +289,8 @@ feature
 			r4: REAL_32
 			r8: REAL_64
 		do
+			io.do_nothing
+			test_true_boolean (i1 /~ Void)
 			test_false_boolean (i1 /~ i1)
 			test_false_boolean (i1 /~ i2)
 			test_false_boolean (i1 /~ i4)
@@ -274,6 +306,7 @@ feature
 			test_false_boolean (i1 /~ r4)
 			test_false_boolean (i1 /~ r8)
 
+			test_true_boolean (i2 /~ Void)
 			test_false_boolean (i2 /~ i1)
 			test_false_boolean (i2 /~ i2)
 			test_false_boolean (i2 /~ i4)
@@ -289,6 +322,7 @@ feature
 			test_false_boolean (i2 /~ r4)
 			test_false_boolean (i2 /~ r8)
 
+			test_true_boolean (i4 /~ Void)
 			test_false_boolean (i4 /~ i1)
 			test_false_boolean (i4 /~ i2)
 			test_false_boolean (i4 /~ i4)
@@ -304,6 +338,7 @@ feature
 			test_false_boolean (i4 /~ r4)
 			test_false_boolean (i4 /~ r8)
 
+			test_true_boolean (i8 /~ Void)
 			test_false_boolean (i8 /~ i1)
 			test_false_boolean (i8 /~ i2)
 			test_false_boolean (i8 /~ i4)
@@ -319,6 +354,7 @@ feature
 			test_false_boolean (i8 /~ r4)
 			test_false_boolean (i8 /~ r8)
 
+			test_true_boolean (n1 /~ Void)
 			test_true_boolean (n1 /~ i1)
 			test_false_boolean (n1 /~ i2)
 			test_false_boolean (n1 /~ i4)
@@ -334,6 +370,7 @@ feature
 			test_false_boolean (n1 /~ r4)
 			test_false_boolean (n1 /~ r8)
 
+			test_true_boolean (n2 /~ Void)
 			test_true_boolean (n2 /~ i1)
 			test_true_boolean (n2 /~ i2)
 			test_false_boolean (n2 /~ i4)
@@ -349,6 +386,7 @@ feature
 			test_false_boolean (n2 /~ r4)
 			test_false_boolean (n2 /~ r8)
 
+			test_true_boolean (n4 /~ Void)
 			test_true_boolean (n4 /~ i1)
 			test_true_boolean (n4 /~ i2)
 			test_true_boolean (n4 /~ i4)
@@ -364,6 +402,7 @@ feature
 			test_false_boolean (n4 /~ r4)
 			test_false_boolean (n4 /~ r8)
 
+			test_true_boolean (n8 /~ Void)
 			test_true_boolean (n8 /~ i1)
 			test_true_boolean (n8 /~ i2)
 			test_true_boolean (n8 /~ i4)
@@ -379,6 +418,7 @@ feature
 			test_false_boolean (n8 /~ r4)
 			test_false_boolean (n8 /~ r8)
 
+			test_true_boolean (c1 /~ Void)
 			test_true_boolean (c1 /~ i1)
 			test_true_boolean (c1 /~ i2)
 			test_true_boolean (c1 /~ i4)
@@ -394,6 +434,7 @@ feature
 			test_true_boolean (c1 /~ r4)
 			test_true_boolean (c1 /~ r8)
 
+			test_true_boolean (c4 /~ Void)
 			test_true_boolean (c4 /~ i1)
 			test_true_boolean (c4 /~ i2)
 			test_true_boolean (c4 /~ i4)
@@ -409,6 +450,7 @@ feature
 			test_true_boolean (c4 /~ r4)
 			test_true_boolean (c4 /~ r8)
 
+			test_true_boolean (p /~ Void)
 			test_true_boolean (p /~ i1)
 			test_true_boolean (p /~ i2)
 			test_true_boolean (p /~ i4)
@@ -424,6 +466,7 @@ feature
 			test_true_boolean (p /~ r4)
 			test_true_boolean (p /~ r8)
 
+			test_true_boolean (b /~ Void)
 			test_true_boolean (b /~ i1)
 			test_true_boolean (b /~ i2)
 			test_true_boolean (b /~ i4)
@@ -439,6 +482,7 @@ feature
 			test_true_boolean (b /~ r4)
 			test_true_boolean (b /~ r8)
 
+			test_true_boolean (r4 /~ Void)
 			test_false_boolean (r4 /~ i1)
 			test_false_boolean (r4 /~ i2)
 			test_false_boolean (r4 /~ i4)
@@ -454,6 +498,7 @@ feature
 			test_false_boolean (r4 /~ r4)
 			test_false_boolean (r4 /~ r8)
 
+			test_true_boolean (r8 /~ Void)
 			test_false_boolean (r8 /~ i1)
 			test_false_boolean (r8 /~ i2)
 			test_false_boolean (r8 /~ i4)
@@ -468,6 +513,22 @@ feature
 			test_true_boolean (r8 /~ b)
 			test_false_boolean (r8 /~ r4)
 			test_false_boolean (r8 /~ r8)
+
+			test_false_boolean (Void /~ Void)
+			test_true_boolean (Void /~ i1)
+			test_true_boolean (Void /~ i2)
+			test_true_boolean (Void /~ i4)
+			test_true_boolean (Void /~ i8)
+			test_true_boolean (Void /~ n1)
+			test_true_boolean (Void /~ n2)
+			test_true_boolean (Void /~ n4)
+			test_true_boolean (Void /~ n8)
+			test_true_boolean (Void /~ c1)
+			test_true_boolean (Void /~ c4)
+			test_true_boolean (Void /~ p)
+			test_true_boolean (Void /~ b)
+			test_true_boolean (Void /~ r4)
+			test_true_boolean (Void /~ r8)
 		end
 
 	test_tilde_basic_reference_types is
@@ -488,7 +549,10 @@ feature
 			r8: REAL_64
 			a: ANY
 		do
+			test_true_boolean (a ~ Void)
+
 			a := i1
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_true_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -506,6 +570,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := i2
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_true_boolean (a ~ i2)
@@ -523,6 +588,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := i4
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -540,6 +606,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := i8
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -557,6 +624,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := n1
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -574,6 +642,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := n2
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -591,6 +660,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := n4
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -608,6 +678,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := n8
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -625,6 +696,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := c1
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -642,6 +714,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := c4
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -659,6 +732,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := p
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -676,6 +750,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := b
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -693,6 +768,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := r4
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -710,6 +786,7 @@ feature
 			test_false_boolean (a ~ r8)
 
 			a := r8
+			test_false_boolean (a ~ Void)
 			test_true_boolean (a ~ a)
 			test_false_boolean (a ~ i1)
 			test_false_boolean (a ~ i2)
@@ -745,7 +822,10 @@ feature
 			r8: REAL_64
 			a: ANY
 		do
+			test_false_boolean (a /~ Void)
+
 			a := i1
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_false_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -763,6 +843,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := i2
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_false_boolean (a /~ i2)
@@ -780,6 +861,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := i4
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -797,6 +879,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := i8
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -814,6 +897,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := n1
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -831,6 +915,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := n2
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -848,6 +933,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := n4
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -865,6 +951,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := n8
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -882,6 +969,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := c1
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -899,6 +987,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := c4
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -916,6 +1005,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := p
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -933,6 +1023,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := b
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -950,6 +1041,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := r4
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)
@@ -967,6 +1059,7 @@ feature
 			test_true_boolean (a /~ r8)
 
 			a := r8
+			test_true_boolean (a /~ Void)
 			test_false_boolean (a /~ a)
 			test_true_boolean (a /~ i1)
 			test_true_boolean (a /~ i2)

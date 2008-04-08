@@ -2632,11 +2632,19 @@ rt_private void interpret(int flag, int where)
 	dprintf(2)("BC_STANDARD_EQUAL\n");
 #endif
 		{	EIF_REFERENCE ref;
+			unsigned long stagval = tagval;	/* Save tag value */
+			unsigned char *OLD_IC;			/* IC back-up */
 
 			ref = opop()->it_ref;
 			last = otop();
+			OLD_IC = IC;
 			last->it_char = (char) RTEQ(ref, last->it_ref);
+			IC = OLD_IC;			/* IC back-up */
 			last->type = SK_BOOL;
+			if (tagval != stagval) {
+					/* Melted code was called, we need to resynchronize. */
+				sync_registers(MTC scur, stop);
+			}
 		}
 		break;
 
@@ -2648,11 +2656,19 @@ rt_private void interpret(int flag, int where)
 	dprintf(2)("BC_CEQUAL\n");
 #endif
 		{	EIF_REFERENCE ref;
+			unsigned long stagval = tagval;	/* Save tag value */
+			unsigned char *OLD_IC;			/* IC back-up */
 
 			ref = opop()->it_ref;
 			last = otop();
+			OLD_IC = IC;
 			last->it_char = (char) RTCEQ(ref, last->it_ref);
+			IC = OLD_IC;
 			last->type = SK_BOOL;
+			if (tagval != stagval) {
+					/* Melted code was called, we need to resynchronize. */
+				sync_registers(MTC scur, stop);
+			}
 		}
 		break;
 

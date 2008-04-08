@@ -745,7 +745,7 @@ feature {NONE} -- Row actions
 
 feature {NONE} -- event handlers
 
-	on_stone_changed is
+	on_stone_changed (a_old_stone: ?like stone) is
 			-- Assign `a_stone' as new stone.
 		do
 			debug ("debug_recv")

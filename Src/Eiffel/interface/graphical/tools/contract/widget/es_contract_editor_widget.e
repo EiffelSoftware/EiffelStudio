@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		A widget used to view and edit (when not the class is not read-only) contracts, given a context {ES_CONTRACT_EDITOR_CONTEXT} object.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -119,10 +119,46 @@ feature -- Status report
 			context_attached: Result implies context /= Void
 		end
 
-feature {NONE} -- Status report
+	is_showing_all_rows: BOOLEAN assign set_is_showing_all_rows
+			-- Indicates if all contract rows should be shown.
+			-- Note: By default only those entities with contracts are shown.
 
-	is_showing_all_rows: BOOLEAN = False
-			-- Indicates if all rows should be shown, even if there are not contracts.
+feature -- Status setting
+
+	set_is_showing_all_rows (a_show: like is_showing_all_rows)
+			-- Set status to show/hide rows without contracts.
+			--
+			-- `a_show': True to show all rows; False to show only rows with contracts
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_grid: like edit_contract_grid
+			l_row: EV_GRID_ROW
+			i, l_count: INTEGER
+		do
+			if is_showing_all_rows /= a_show then
+				if is_initialized and has_context then
+					l_grid := edit_contract_grid
+					l_count := l_grid.row_count
+					from i := 1 until i > l_count loop
+						l_row := l_grid.row (i)
+						if l_row.subrow_count = 0 then
+							if a_show then
+								l_row.show
+							else
+								check not_first_row: l_row.index > 1 end
+								l_row.hide
+							end
+						end
+						i := i + 1 + l_row.subrow_count_recursive
+					end
+				end
+
+				is_showing_all_rows := a_show
+			end
+		ensure
+			is_showing_all_rows_set: is_showing_all_rows = a_show
+		end
 
 feature {NONE} -- Helpers
 
@@ -359,8 +395,9 @@ feature {NONE} -- Population
 					end
 					l_contracts.forth
 				end
-			elseif l_editable then
-					-- Add - add contract sub row
+			elseif l_editable or else a_row.index = 1 then
+					-- Add "no contract" sub row for first item, as first items represent the context
+					-- class and should always be seen.
 				a_row.insert_subrows (1, 1)
 				l_row := a_row.subrow (a_row.subrow_count)
 
@@ -372,6 +409,14 @@ feature {NONE} -- Population
 				check not_l_row_has_item: l_row.item (contract_column) = Void end
 				l_row.set_item (contract_column, l_editor_item)
 				l_grid.grid_row_fill_empty_cells (l_row)
+
+				if not l_editable then
+						-- Disable selection of non-editable rows
+					l_row.set_background_color (colors.grid_read_only_background_color)
+					l_editor_item.disable_select
+					l_row.disable_select
+					a_row.disable_select
+				end
 			elseif not is_showing_all_rows then
 					-- Hide the row because there are no contracts
 				a_row.hide

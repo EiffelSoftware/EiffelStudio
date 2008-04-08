@@ -20,19 +20,24 @@ feature -- Access
 
 feature -- Element change
 
-	set_stone (a_stone: like stone)
+	set_stone (a_stone: ?like stone)
 			-- <Precursor>
+		local
+			l_old_stone: ?like stone
 		do
-			if stone /= a_stone then
+			l_old_stone := stone
+			if l_old_stone /= a_stone then
 				stone := a_stone
-				on_stone_changed
+				on_stone_changed (l_old_stone)
 			end
 		end
 
 feature {NONE} -- Action handler
 
-	on_stone_changed
+	on_stone_changed (a_old_stone: ?like stone)
 			-- Called when the stone changed.
+			--
+			-- `a_old_stone': Previous stone set in Current.
 		require
 			is_interface_usable: is_interface_usable
 		deferred

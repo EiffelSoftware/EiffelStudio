@@ -147,6 +147,8 @@ feature -- Command
 			l_lock_editor_docking_command: EB_LOCK_EDITOR_DOCKING_COMMAND
 			l_minimize_editors_command: EB_MINIMIZE_EDITORS_COMMAND
 			l_restore_editors_command: EB_RESTORE_EDITORS_COMMAND
+
+			l_edit_contracts_command: ES_EDIT_CONTRACTS_COMMAND
 		do
 				-- Directly call a un-redefine init_commands in EB_DEVELOPMENT_WINDOW
 				-- Non-docking Eiffel Studio was call Precursor
@@ -348,6 +350,9 @@ feature -- Command
 
 			develop_window.commands.set_customized_formatter_command (create {EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND})
 			develop_window.commands.set_customized_tool_command (create {EB_SETUP_CUSTOMIZED_TOOL_COMMAND})
+
+			create l_edit_contracts_command.make (develop_window.shell_tools.tool ({ES_CONTRACT_TOOL}))
+			develop_window.commands.set_edit_contracts_command (l_edit_contracts_command)
 
 				-- Add history commands to toolbarable_commands.
 				-- Setup its accelerators.

@@ -13,31 +13,19 @@ deferred class
 inherit
 	ES_TOOL [G]
 
-	ES_STONABLE_I
+	ES_STONABLE
 		undefine
 			out
 		redefine
-			set_stone,
 			query_set_stone
 		end
 
-feature -- Access
+feature {ES_DOCKABLE_STONABLE_TOOL_PANEL} -- Access
 
-	stone: STONE assign set_stone
-			-- <Precursor>
+	previous_stone: ?STONE
+			-- Previous stone of `stone', if any
 
-feature -- Element change
-
-	set_stone (a_stone: like stone)
-			-- <Precursor>
-		do
-			stone := a_stone
-			if is_tool_instantiated then
-				panel.set_stone (a_stone)
-			end
-		end
-
-feature -- Basic operations
+feature {NONE} -- Basic operations
 
 	query_set_stone (a_stone: ?STONE): BOOLEAN
 			-- <Precursor>
@@ -47,6 +35,19 @@ feature -- Basic operations
 			else
 				Result := Precursor (a_stone)
 			end
+		end
+
+feature {NONE} -- Action handler
+
+	on_stone_changed (a_old_stone: ?like stone)
+			-- <Precusor>
+		do
+			previous_stone := a_old_stone
+			if is_tool_instantiated then
+				panel.set_stone (stone)
+			end
+		ensure then
+			previous_stone_set: is_tool_instantiated implies previous_stone = a_old_stone
 		end
 
 feature -- Synchronization

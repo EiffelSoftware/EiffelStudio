@@ -169,11 +169,9 @@ feature {NONE} -- Implementation functions
 			end
 
 				-- Refresh the tools.
--- Bug in frozen code generation that prevents this object test for working correctly.
---			if {l_stonable: !ES_STONABLE_I} develop_window.shell_tools.tool ({ES_FEATURES_TOOL}) then
 			l_stonable ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
-			if l_stonable /= Void and then l_stonable.is_stone_usable (a_stone) and then l_stonable.query_set_stone (a_stone) then
-				l_stonable.set_stone (a_stone)
+			if l_stonable = Void or else l_stonable.is_stone_usable (a_stone) then
+				l_stonable.set_stone_with_query (a_stone)
 			end
 
 			develop_window.tools.cluster_tool.set_stone (a_stone)

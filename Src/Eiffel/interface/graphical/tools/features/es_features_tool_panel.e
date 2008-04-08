@@ -254,7 +254,7 @@ feature {NONE} -- Action handlers
 			features_tree.update_all
 		end
 
-	on_stone_changed
+	on_stone_changed (a_old_stone: ?like stone)
 			-- Called when the set stone changes.
 			-- Note: This routine can be called when `stone' is Void, to indicate a stone has been cleared.
 			--       Be sure to check `is_in_stone_synchronization' to determine if a stone has change through an explicit

@@ -28,6 +28,8 @@ inherit
 			mini_pixel_buffer
 		end
 
+	ES_STONABLE
+
 	SHARED_LOCALE
 
 create
@@ -120,6 +122,19 @@ feature -- Access
 	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Mini pixel buffer
 
+feature -- Query
+
+	is_stone_usable (a_stone: ?STONE): BOOLEAN
+			-- <Precursor>
+		local
+			l_stonable: ?ES_STONABLE_I
+		do
+			l_stonable ?= tool
+			if l_stonable /= Void then
+				Result := l_stonable.is_stone_usable (a_stone)
+			end
+		end
+
 feature -- Execution
 
 	execute is
@@ -129,11 +144,19 @@ feature -- Execution
 			l_x, l_y: INTEGER
 			l_window: EV_WINDOW
 			l_content: SD_CONTENT
+			l_stonable: ?ES_STONABLE_I
 		do
 			-- We have to check whether docking manager has Current tool's SD_CONTENT since debugger related tools not exist in normal mode.
 			-- They only exist in debug mode. See bug#13826.
 			l_content := tool.panel.content
 			if l_content /= Void and then l_content.is_docking_manager_attached  then
+				l_stonable ?= tool
+				if l_stonable /= Void and then stone /= Void and then not stone.is_equal (l_stonable.stone) then
+						-- We check if the stone is attached to prevent the existing stone from being wiped out.
+					check is_stone_usable: l_stonable.is_stone_usable (stone) end
+					l_stonable.set_stone_with_query (stone)
+				end
+
 				if not tool.panel.shown then
 					create l_shared
 					l_window := tool.window.window
@@ -157,6 +180,13 @@ feature -- Basic operations
 			initialize_sd_toolbar_item (Result, a_display_text)
 			Result.select_actions.extend (agent execute)
 			Result.select_actions.extend (agent update_sd_tooltip (Result))
+		end
+
+feature -- Synchronization
+
+	synchronize
+			-- <Precursor>
+		do
 		end
 
 feature -- Element change
@@ -185,6 +215,13 @@ feature -- Element change
 			mini_pixel_buffer := a_mini_pixel_buffer
 		ensure
 			mini_pixmap_set: mini_pixel_buffer = a_mini_pixel_buffer
+		end
+
+feature {NONE} -- Action handler
+
+	on_stone_changed (a_old_stone: ?like stone)
+			-- <Precursor>
+		do
 		end
 
 feature {NONE} -- Implementation

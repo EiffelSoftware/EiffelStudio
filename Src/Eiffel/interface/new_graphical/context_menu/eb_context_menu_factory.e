@@ -599,6 +599,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_menu_not_void: a_menu /= Void
 		local
 			l_stone: STONE
+			l_menu_item: like extend_show_tool_command
 		do
 			l_stone := a_stone
 			a_menu.extend (dev_window.commands.new_tab_cmd.new_menu_item_unmanaged)
@@ -622,6 +623,16 @@ feature {NONE} -- Menu section, Granularity 1.
 				a_menu.last.set_text (names.m_context_menu_external_editor (last_type, last_name))
 				a_menu.last.select_actions.wipe_out
 				a_menu.last.select_actions.extend (agent (dev_window.commands.shell_cmd).execute_with_stone (l_stone))
+			end
+
+			if {l_cs: CLASSI_STONE} a_stone and then dev_window.commands.edit_contracts_command.is_stone_usable (l_cs) then
+				l_menu_item := extend_show_tool_command (dev_window.commands.edit_contracts_command, l_cs)
+				if l_cs.class_i.is_read_only then
+					l_menu_item.disable_sensitive
+				else
+					l_menu_item.enable_sensitive
+				end
+				a_menu.extend (l_menu_item)
 			end
 		end
 
@@ -1290,6 +1301,39 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 		end
 
+	extend_show_tool_command (a_cmd: ES_SHOW_TOOL_COMMAND; a_stone: STONE): !EV_MENU_ITEM
+			-- Extends a menu item to show a stonable tool.
+		require
+			a_cmd_is_attached: a_cmd /= Void
+			a_cmd_is_interface_usable: a_cmd.is_interface_usable
+			a_stone_is_usable: a_cmd.is_stone_usable (a_stone)
+			a_stone_attached: a_stone /= Void
+		local
+			l_menu_item: ?EV_MENU_ITEM
+			l_old_stone: STONE
+		do
+				-- Set the stone temporarly to retrieve the menu name, if it's based on the set stone.
+			l_old_stone := a_cmd.stone
+			a_cmd.set_stone (a_stone)
+			l_menu_item := a_cmd.new_menu_item_unmanaged
+			if l_menu_item = Void then
+				create l_menu_item.make_with_text (a_cmd.menu_name)
+			end
+			Result ?= l_menu_item
+			a_cmd.set_stone (l_old_stone)
+
+				-- Extend the menu.
+			Result.select_actions.wipe_out
+			Result.select_actions.extend (agent (a_ia_stone: STONE; a_ia_cmd: ES_SHOW_TOOL_COMMAND)
+					-- Perform an action that sets a stone an executes the tool
+				do
+					check
+						a_ia_stone_is_usable: a_ia_cmd.is_stone_usable (a_ia_stone)
+					end
+					a_ia_cmd.set_stone (a_ia_stone)
+					a_ia_cmd.execute
+				end (a_stone, a_cmd))
+		end
 
 feature {NONE} -- Diagram menu section, Granularity 1.
 

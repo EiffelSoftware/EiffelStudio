@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		A base contract editor widget ({ES_CONTRACT_EDITOR_WIDGET}) class for specifying context objects, used to populate the widget.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,11 +12,6 @@ deferred class
 
 inherit
 	EB_RECYCLABLE
-
-	ES_MODIFIABLE
-		redefine
-			internal_recycle
-		end
 
 	ES_STONABLE_I
 		redefine
@@ -31,7 +26,6 @@ feature {NONE} -- Clean up
 			if internal_text_modifier /= Void then
 				internal_text_modifier.recycle
 			end
-			Precursor {ES_MODIFIABLE}
 		ensure then
 			internal_text_modifier_is_recycled: (old internal_text_modifier) /= Void implies (old internal_text_modifier).is_recycled
 		end
@@ -158,6 +152,17 @@ feature -- Status report
 			is_class_stone: Result implies (a_stone = Void or else (({G}) #? a_stone) /= Void)
 		end
 
+	is_editable: BOOLEAN
+			-- Indicates if the context allows for modifications
+		require
+			is_interface_usable: is_interface_usable
+			has_stone: has_stone
+		do
+			Result := not context_class.is_read_only
+		ensure
+			context_class_is_writable: Result implies not context_class.is_read_only
+		end
+
 feature -- Query
 
 	contract_keywords (a_origin: BOOLEAN): !ARRAYED_LIST [EDITOR_TOKEN]
@@ -192,68 +197,26 @@ feature -- Basic operations
 
 	query_set_stone (a_stone: ?STONE): BOOLEAN
 			-- <Precursor>
-		local
-			l_save_prompt: ES_SAVE_CLASSES_PROMPT
-			l_classes: DS_ARRAYED_LIST [CLASS_I]
-			retried: BOOLEAN
 		do
-			if not retried then
-				if not equal (stone, a_stone) then
-					Result := not is_dirty
-					if not Result then
-							-- There should be sufficent editor context if the contents of the tool has been modified
-						check has_stone: has_stone end
-
-							-- Ask user about saving changes
-						if has_stone then
-							create l_classes.make (1)
-							l_classes.put_last (context_class)
-							create l_save_prompt.make_standard_with_cancel ("The contract tool has unsaved class changes.%NDo you wanted to save the following class(es)?")
-							l_save_prompt.classes := l_classes
-							l_save_prompt.show_on_active_window
-							if l_save_prompt.dialog_result = {ES_DIALOG_BUTTONS}.yes_button then
-								commit_changes
-								Result := True
-							elseif l_save_prompt.dialog_result = {ES_DIALOG_BUTTONS}.no_button then
-								Result := True
-							end
-						else
-							Result := True
-						end
-					end
-				end
-			else
-				Result := False
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	commit_changes
-			-- Commits the changes made.
-		require
-			is_interface_usable: is_interface_usable
-			--is_dirty: is_dirty
-		do
-			text_modifier.commit
-			set_is_dirty (False)
-		ensure
-			not_is_dirty: not is_dirty
+			Result := True
 		end
 
 feature {NONE} -- Basic operation
 
 	reset
-			-- Resets any cached data
+			-- Resets any cached data associated with a particular stone.
 		require
 			is_interface_usable: is_interface_usable
 		do
-			internal_text_modifier := Void
+			if internal_text_modifier /= Void then
+				internal_text_modifier.recycle
+				internal_text_modifier := Void
+			end
 			internal_context_parents := Void
 		ensure
 			internal_text_modifier_detached: internal_text_modifier = Void
 			internal_context_parents_detached: internal_context_parents = Void
+
 		end
 
 feature -- Synchronization

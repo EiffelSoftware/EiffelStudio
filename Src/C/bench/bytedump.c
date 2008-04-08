@@ -1285,7 +1285,7 @@ static  void    print_instructions ()
 				break;
 			case  BC_NHOOK :
 				/* For debugger */
-				fprintf (ofp,"%d", get_int32(&ip));
+				fprintf (ofp,"%d,%d", get_int32(&ip), get_int32(&ip));
 				break;
 			case  BC_GOTO_BODY :
 				/* Offset */

@@ -97,6 +97,8 @@ feature -- Basic operations
 				from until l_errors.count = l_error_index loop
 					l_errors.remove_right
 				end
+			else
+				l_errors.wipe_out
 			end
 
 			if retried then

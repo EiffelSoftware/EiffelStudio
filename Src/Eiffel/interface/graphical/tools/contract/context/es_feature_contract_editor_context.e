@@ -72,8 +72,10 @@ feature -- Contracts
 					l_modifier.prepare
 				end
 
-					-- Use live AST
-				l_feature_as := l_modifier.ast_feature
+				if l_modifier.is_ast_available then
+						-- Use live AST
+					l_feature_as := l_modifier.ast_feature
+				end
 			end
 
 			if l_feature_as = Void then
@@ -138,13 +140,11 @@ feature {NONE} -- Query
 	calculate_parents (a_class: !CLASS_I; a_list: !DS_LIST [CLASS_C])
 			-- <Precursor>
 		local
-			l_result: !DS_ARRAYED_LIST [CLASS_C]
 			l_precusors: ?ARRAYED_LIST [CLASS_C]
 			l_feature_i: ?FEATURE_I
 			l_e_feature: ?E_FEATURE
 			l_class_c: CLASS_C
 		do
-			create l_result.make_default
 			if a_class = context_class then
 				l_e_feature := context_feature
 			elseif a_class.is_compiled then
@@ -160,8 +160,7 @@ feature {NONE} -- Query
 			if l_e_feature /= Void then
 				l_precusors := l_e_feature.precursors
 				if l_precusors /= Void then
-					l_result.resize (l_precusors.count.max (l_result.capacity))
-					l_precusors.do_all (agent l_result.put_last)
+					l_precusors.do_all (agent a_list.put_last)
 				end
 			end
 		end

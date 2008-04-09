@@ -73,6 +73,15 @@
 #define seekdir   eifrt_vms_seekdir
 #define telldir   eifrt_vms_telldir
 #endif /* USE_VMS_JACKETS */
+
+/* language, locale, and i18n stuff */
+#define nl_langinfo eifrt_vms_nl_langinfo
+#undef setlocale
+#define setlocale   eifrt_vms_setlocale
+#define iconv_open  eifrt_vms_iconv_open
+#define iconv_close eifrt_vms_iconv_close
+#define iconv       eifrt_vms_iconv
+
 #endif /* EIF_VMS */
 
 

@@ -138,6 +138,11 @@ doc:	</attribute>
 rt_private stack_t c_sig_stk;
 #endif
 
+#ifdef EIF_VMS	/* signal handling control for CECIL: only on VMS for now */
+rt_private struct ex_vect* esig_cecil_exvect;
+rt_private int esig_cecil_call_nest_level;
+#endif
+
 
 /* Routine declarations */
 rt_shared Signal_t ehandler(int sig);
@@ -1357,6 +1362,25 @@ void esigresdef(long int sig)
 	}
 #endif
 }
+
+
+#ifdef EIF_VMS	/* signal handling control for CECIL only on VMS for now */
+void esig_cecil_register (struct ex_vect* exvp)
+{
+	esig_cecil_exvect = exvp;
+}
+
+void esig_cecil_enter (void)
+{
+	++esig_cecil_call_nest_level;
+}
+
+void esig_cecil_exit (void)
+{
+	--esig_cecil_call_nest_level;
+}
+#endif /* EIF_VMS */
+
 
 #ifdef TEST
 

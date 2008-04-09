@@ -326,9 +326,11 @@ rt_private EIF_OBJECT hpop(void)
 				top = free_stack.st_end = s->sk_end;/* The end of the chunk */
 				free_stack.st_top = --top;			/* Backup one location */
 				result = *top;
+				st_truncate (&free_stack);
 			}
 		}
 	}
+	ENSURE("Removed", !st_has(&free_stack, result));
 	return (EIF_OBJECT) result;
 }
 

@@ -43,7 +43,7 @@
 
 #ifndef DEBUG	/* if not already defined */
 #define DEBUG	/* force debug for now */
-#define DEBUG	/* this one generates a warning */
+//#define DEBUG 2	/* this one generates a warning */
 #endif
 
 #define WRITE_ASYNC 1	/* 1 = always, 2 = if O_NDELAY in pipe() call */

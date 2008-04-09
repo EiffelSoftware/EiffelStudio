@@ -1847,6 +1847,10 @@ feature -- Label texts
 	l_hide_help:STRING_GENERAL is 					do Result := locale.translation ("Hide Help...") end
 	l_code_results: STRING_GENERAL is 				do Result := locale.translation ("Code Results:") end
 	l_code_declarations_value: STRING_GENERAL is 	do Result := locale.translation ("'s Value:") end
+	l_code_declarations_conform (a_type: STRING_GENERAL): STRING_GENERAL is
+		do
+			Result := locale.formatted_string ("(must conform to $1)", [a_type])
+		end
 
 feature -- Label text, no translation (for the editor)
 

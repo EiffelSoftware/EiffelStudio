@@ -64,6 +64,16 @@ feature {CODE_NODE} -- Processing
 			symbol_table.put (l_value, a_value.id)
 		end
 
+	process_code_object_declaration (a_value: !CODE_OBJECT_DECLARATION)
+			-- <Precursor>
+		local
+			l_value: !CODE_SYMBOL_VALUE
+		do
+				-- Ensure old value is not overwritten.
+			create l_value.make (a_value.default_value)
+			symbol_table.put (l_value, a_value.id)
+		end
+
 	process_code_template (a_value: !CODE_TEMPLATE)
 			-- <Precursor>
 		do

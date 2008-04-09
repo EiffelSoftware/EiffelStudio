@@ -128,11 +128,16 @@ feature {NONE} -- Initialization
 			l_label.align_text_left
 			l_text := a_declaration.description
 			if l_text.is_empty then
-				l_text := a_declaration.id.as_string_32 + interface_names.l_code_declarations_value
+				l_text := a_declaration.id.as_string_32 + interface_names.l_code_declarations_value.twin
+				l_text.prune_all_trailing ('.')
 			else
 				l_text ?= l_text.twin
-				l_text.append (":")
 			end
+			if {l_object: CODE_OBJECT_DECLARATION} a_declaration then
+				l_text.append_character (' ')
+				l_text.append (interface_names.l_code_declarations_conform (l_object.must_conform_to))
+			end
+			l_text.append (":")
 			l_label.set_text (l_text)
 
 			a_container.extend (l_label)
@@ -144,9 +149,11 @@ feature {NONE} -- Initialization
 					-- Use ID as the default value.
 				l_text := a_declaration.id
 			end
-			create l_edit.make_with_text (l_text)
+			l_edit := create_declaratoion_text_widget (a_declaration)
+			l_edit.set_text (l_text)
 			register_action (l_edit.change_actions, agent on_text_changed (l_edit, a_declaration.id))
 			register_action (l_edit.focus_in_actions, agent on_text_focused (l_edit, a_declaration.id))
+			suppress_confirmation_key_close (l_edit)
 			a_container.extend (l_edit)
 			a_container.disable_item_expand (l_edit)
 
@@ -387,6 +394,14 @@ feature {NONE} -- Factory
 
 	create_template_renderer: !CODE_TEMPLATE_STRING_RENDERER
 			-- Creates a new template renderer for code template evaluation
+		require
+			is_interface_usable: is_interface_usable
+		do
+			create Result
+		end
+
+	create_declaratoion_text_widget (a_declaration: !CODE_DECLARATION): !EV_TEXT_FIELD
+			-- Create a new text widget for a given code declaration
 		require
 			is_interface_usable: is_interface_usable
 		do

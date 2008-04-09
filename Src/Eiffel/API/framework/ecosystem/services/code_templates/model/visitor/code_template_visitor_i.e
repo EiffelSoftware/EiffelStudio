@@ -47,6 +47,14 @@ feature {CODE_NODE} -- Processing
 		deferred
 		end
 
+	process_code_object_declaration (a_value: !CODE_OBJECT_DECLARATION)
+			-- Process object `a_value'.
+		require
+			is_interface_usable: is_interface_usable
+			is_applicable_visitation_entity: is_applicable_visitation_entity (a_value)
+		deferred
+		end
+
 	process_code_template (a_value: !CODE_TEMPLATE)
 			-- Process object `a_value'.
 		require

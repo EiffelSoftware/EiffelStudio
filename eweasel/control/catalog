@@ -1479,6 +1479,7 @@ test	internal-tuple-creation	tuple010	tcf	pass tuple
 -- ~ operator test
 test	tilde-on-basic-type		tilde001	tcf pass tilde
 test	tilde-on-expanded-type	tilde002	tcf pass tilde
+test	tilde-on-formal-type	tilde003	tcf pass tilde
 
 
 -- Systematic validity tests

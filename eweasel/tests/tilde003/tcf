@@ -1,0 +1,30 @@
+test_name 	 tilde-on-formal-type
+test_description Check proper semantic of the ~ operator when applied to generic formals.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output1
+execute_result	ok
+compare	exec_output1 output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work	NONE exec_output2
+execute_result	ok
+compare	exec_output2 output
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result	ok
+execute_final	NONE	exec_output3
+execute_result ok
+compare	exec_output3 output
+
+test_end

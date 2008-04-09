@@ -1,0 +1,21 @@
+<code_template format="1.0.0">
+    <metadata>
+      <title>Attached Contract</title>
+      <description>Code template for creating an attached test contract.</description>
+      <author>Eiffel Software</author>
+      <shortcut>attached</shortcut>
+      <categories>
+		<category>contract</category>
+      </categories>
+    </metadata>
+	
+    <declarations>	
+      <object id="var" editable="true" conforms_to="ANY">
+		<description>The variable to test for attachement</description>
+      </object>
+    </declarations>
+	
+	<templates>
+		<template>${var}_attached: $var /= Void</template>	
+	</templates>
+</code_template>

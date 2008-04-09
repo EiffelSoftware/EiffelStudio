@@ -40,6 +40,10 @@ feature -- Status report
 feature -- Query
 
 	template_by_file_name (a_file_name: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+			-- Retrieves the first code template defintion match by a specified file name.
+			--
+			-- `a_file_name': The full path to a code template definition file.
+			-- `Result': A code template definition or Void if there was an error loading the code template.
 		require
 			is_interface_usable: is_interface_usable
 			a_file_name_attached: a_file_name /= Void
@@ -48,6 +52,10 @@ feature -- Query
 		end
 
 	template_by_title (a_title: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+			-- Retrieves the first code template defintion match by a specified title.
+			--
+			-- `a_title': The title to match a code template definition to in the catalog.
+			-- `Result': A code template definition or Void if no match was made.
 		require
 			is_interface_usable: is_interface_usable
 			a_title_attached: a_title /= Void
@@ -56,6 +64,10 @@ feature -- Query
 		end
 
 	template_by_shortcut (a_shortcut: STRING_GENERAL): ?CODE_TEMPLATE_DEFINITION
+			-- Retrieves the first code template defintion match by a specified shortcut.
+			--
+			-- `a_shortcut': The shortcut to match a code template definition to in the catalog.
+			-- `Result': A code template definition or Void if no match was made.
 		require
 			is_interface_usable: is_interface_usable
 			a_shortcut_attached: a_shortcut /= Void
@@ -63,7 +75,13 @@ feature -- Query
 		deferred
 		end
 
-	templates_by_category (a_categories: DS_BILINEAR [STRING_GENERAL]): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+	templates_by_category (a_categories: DS_BILINEAR [STRING_GENERAL]; a_conjunctive: BOOLEAN): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+			-- Retrieves a list of code template defintions by specifying a list of matching categories.
+			--
+			-- `a_categories': The categories to match code templates for in the catalog.
+			-- `a_conjunctive': True to ensure the result list contains code template definitions that contain all the specified categories; False
+			--                  to retrieve a list of code template definitions that match any category.
+			-- `Result': A list of matched code template definitions.
 		require
 			is_interface_usable: is_interface_usable
 			a_categories_attached: a_categories /= Void

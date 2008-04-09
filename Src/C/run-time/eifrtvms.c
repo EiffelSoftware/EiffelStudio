@@ -685,6 +685,216 @@ rt_public int eifrt_vms_unlink (const char *name) {
 #endif // moose
 #endif  /* EIF_VMS_OLD */
 
+/*** I18N (Internationalization) stuff ***/
+
+//#define VMS_TRACE
+
+/* local forward references */
+static const char* spaces (size_t len) ;
+static const char* safe_string (const char*p) ;
+
+
+#include <locale.h>
+#define NeedFunction_Prototypes
+char* eifrt_vms_setlocale (int category, const char* locale)
+{
+    char *res, *res1;
+    static uint once = FALSE;
+    static const char* default_locale = NULL;
+    char *DECC$SETLOCALE (int category, const char* locale);
+    char *__XSETLOCALE (int category, const char* locale);
+
+    if (!once) {
+	once = TRUE;
+	res = DECC$SETLOCALE (LC_ALL, NULL);
+	default_locale = strdup (res);
+#ifdef VMS_TRACE
+	printf ("eifrtvms: first call to setlocale (LC_ALL,NULL) = %s\n", default_locale);
+#endif
+    }
+#ifdef VMS_TRACE
+    printf ("eifrtvms: setlocale(%d, \"%s\")\n", category, safe_string(locale));
+#endif
+    res1 = DECC$SETLOCALE (category, locale);
+    res = __XSETLOCALE (category, locale);
+#ifdef VMS_TRACE
+    printf ("  returning \"%s\"\n", safe_string(res));
+#endif
+    return res;
+}
+
+
+#include <langinfo.h>
+/* Currently, Eiffel I18N library I18N_POSIX_CONSTANTS uses hard-coded values for nl_langinfo item codes */
+/* This table those values to to corresponding VMS values */
+#define NL_ITEM(itm, eifval) NL_ENT (eifval, itm, #itm)
+#define NL_ENT(e,i,n) { e, i, n }
+typedef struct { int32 eifval; nl_item vmsval; const char* nam;} eifrt_vms_nl_map_item_t;
+static eifrt_vms_nl_map_item_t eifrt_vms_nl_item_map[] = {
+	//{"CODESET", CODESET, 0x0 }, 
+	NL_ITEM (CODESET, 0), 
+	NL_ITEM (ABDAY_1, 0x20000), NL_ITEM (ABDAY_2, 0x20001), NL_ITEM (ABDAY_3, 0x20002), NL_ITEM (ABDAY_4, 0x20003), 
+	NL_ITEM (ABDAY_5, 0x20004), NL_ITEM (ABDAY_6, 0x20005), NL_ITEM (ABDAY_7, 0x20006), 
+	NL_ITEM (DAY_1, 0x20007), NL_ITEM (DAY_2, 0x20008), NL_ITEM (DAY_3, 0x20009), NL_ITEM (DAY_4, 0x2000A), 
+	NL_ITEM (DAY_5, 0x2000B), NL_ITEM (DAY_6, 0x2000C), NL_ITEM (DAY_7, 0x2000D), 
+	NL_ITEM (ABMON_1, 0x2000E), NL_ITEM (ABMON_2, 0x2000F), NL_ITEM (ABMON_3, 0x20010), NL_ITEM (ABMON_4, 0x20011), 
+	NL_ITEM (ABMON_5, 0x20012), NL_ITEM (ABMON_6, 0x20013), NL_ITEM (ABMON_7, 0x20014), NL_ITEM (ABMON_8, 0x20015),  
+	NL_ITEM (ABMON_9, 0x20016), NL_ITEM (ABMON_10, 0x20017), NL_ITEM (ABMON_11, 0x20018), NL_ITEM (ABMON_12, 0x20019), 
+	NL_ITEM (MON_1, 0x2001A), NL_ITEM (MON_2, 0x2001B), NL_ITEM (MON_3, 0x2001C), NL_ITEM (MON_4, 0x2001D), 
+	NL_ITEM (MON_5, 0x2001E), NL_ITEM (MON_6, 0x2001F), NL_ITEM (MON_7, 0x20020), NL_ITEM (MON_8, 0x20021), 
+	NL_ITEM (MON_9, 0x20022), NL_ITEM (MON_10, 0x20023), NL_ITEM (MON_11, 0x20024), NL_ITEM (MON_12, 0x20025), 
+	NL_ITEM (AM_STR, 0x20026), NL_ITEM (PM_STR, 0x20027), 
+	NL_ITEM (D_T_FMT, 0x20028), NL_ITEM (D_FMT, 0x20029), NL_ITEM (T_FMT, 0x2002A), 
+	NL_ITEM (T_FMT_AMPM, 0x2002B), NL_ITEM (CRNCYSTR, 0x4000F)
+#ifdef moose  /* currently undefined in {I18N_POSIX_CONSTANTS.E} */
+	NL_ITEM (RADIXCHAR, ), NL_ITEM (THOUSEP, ), 
+	NL_ITEM (YESSTR, ), NL_ITEM (NOSTR, ), 
+	NL_ITEM (ERA, ), NL_ITEM (ERA_D_FMT, ), 
+	NL_ITEM (ALT_DIGITS, ), 
+	NL_ITEM (YESEXPR, ), NL_ITEM (NOEXPR, ), 
+	NL_ITEM (ERA_T_FMT, ), NL_ITEM (ERA_D_T_FMT, )
+#endif
+};
+
+
+/* 'cause I've got... */
+#define CARDINALITY(a)  ( sizeof(a) / sizeof((a)[0]) )
+
+static int eifrt_vms_nl_item_compare (const eifrt_vms_nl_map_item_t* p1, const eifrt_vms_nl_map_item_t* p2)
+{
+    if (p1->eifval < p2->eifval)
+	return (-1);
+    else if (p1->eifval == p2->eifval)
+	return (0);
+    else
+	return (1);
+}
+
+
+char* eifrt_vms_nl_langinfo (nl_item item)
+{   char *res;
+    eifrt_vms_nl_map_item_t* nlp;
+    nl_item itm = item;
+    char *DECC$NL_LANGINFO (nl_item item);
+    static int sorted;
+
+    res = DECC$NL_LANGINFO (item);
+    res = DECC$NL_LANGINFO (itm);
+    nlp = bsearch (&item, eifrt_vms_nl_item_map, CARDINALITY(eifrt_vms_nl_item_map), sizeof (*eifrt_vms_nl_item_map), 
+		(int (*)(const void*, const void*))eifrt_vms_nl_item_compare);
+    if (nlp) {
+#ifdef VMS_TRACE
+	printf ("eifrtvms: nl_langinfo(\"%s\" (0x%x, mapped from 0x%x)\n", safe_string (nlp->nam), nlp->vmsval, item);
+#endif
+	res = DECC$NL_LANGINFO (nlp->vmsval);
+    } else {
+#ifdef VMS_TRACE
+	printf ("eifrtvms: nl_langinfo(unknown item code %d\n", item);
+#endif
+	res = DECC$NL_LANGINFO (item);
+    }
+#ifdef VMS_TRACE
+    printf ("  returning \"%s\"\n", safe_string(res));
+#endif
+    return res;
+}
+
+/*** ICONV jackets ***/
+
+#include <iconv.h>
+
+size_t eifrt_vms_iconv (iconv_t cd, char **inpbuf, size_t *inpbytesleft, char **outbuf, size_t *outbytesleft)
+{
+    size_t DECC$ICONV (iconv_t, char**, size_t*, char**, size_t*);
+    return DECC$ICONV (cd, inpbuf, inpbytesleft, outbuf, outbytesleft);
+}
+
+int eifrt_vms_iconv_close (iconv_t cd)
+{
+    int DECC$ICONV_CLOSE (iconv_t);
+    return DECC$ICONV_CLOSE (cd);
+}
+
+iconv_t eifrt_vms_iconv_open (const char *tocode, const char *fromcode)
+{   
+    iconv_t res;
+    int err, erv;
+    static const char *altcode = "ISO8859-1";
+    static int level = 0;
+    iconv_t DECC$ICONV_OPEN (const char* tocode, const char* fromcode);
+
+    ++level;
+#ifdef VMS_TRACE
+    printf ("eifrtvms: %siconv_open (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (fromcode));
+#endif
+    res = DECC$ICONV_OPEN (tocode, fromcode);
+    if (res == (iconv_t)-1) {
+	err = errno;
+	erv = vaxc$errno;
+	if (!strcasecmp (fromcode, "ASCII")) {
+#ifdef VMS_TRACE
+	    printf (" %sfailed, retrying with (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (altcode));
+#endif
+	    res = eifrt_vms_iconv_open (tocode, altcode);
+	} else if (!strcasecmp (tocode, "ASCII")) {
+#ifdef VMS_TRACE
+	    printf (" %sfailed, retrying with (\"%s\", \"%s\")\n", spaces(level), safe_string (tocode), safe_string (altcode));
+#endif
+	    res = eifrt_vms_iconv_open (altcode, fromcode);
+	}
+    }
+    if (res == (iconv_t)-1) {
+	err = errno;
+	erv = vaxc$errno;
+#ifdef VMS_TRACE
+	printf (" %siconv_open failed, errno: %d [%s]\n", spaces(level), errno == EVMSERR ? vaxc$errno : errno, strerror (errno, vaxc$errno));
+#endif
+    } else {
+#ifdef VMS_TRACE
+	if (level == 1) 
+	    printf (" %siconv_open succeeded (return 0x0%07Lp.\n", spaces(level), res);
+#endif
+    }
+    --level;
+    return res;
+}
+
+
+/* cached string of spaces of length `len' */
+static char* spacedup (size_t len) ;
+static const char* spaces (size_t len)
+{
+    char* res;
+    size_t cur;
+    static char* cachep = NULL;
+
+    if (cachep == NULL) 
+	res = cachep = spacedup (cur = len);
+    else if (len <= (cur = strlen(cachep))) 
+	res = cachep + cur - len;
+    else {
+	free (cachep);
+	res = cachep = spacedup (len);
+	}
+    return res;
+}
+/* allocate a string of length `len' filled with spaces */
+static char* spacedup (size_t len)
+{
+    char* res;
+    res = malloc (len + 1);
+    memset (res, ' ', len);
+    res[len] = '\0';
+    return res;
+}
+
+static const char* safe_string (const char* p)
+{
+    if (p == NULL)
+	return "<NULL>";
+    else return p;
+}
+
 
 #ifdef TEST
 #include <stdio.h>
@@ -718,6 +928,7 @@ main (int argc, char* argv[])
 	int ii;
 	const char* p;
 
+#ifdef moose2
     if (argc < 2) {
 	printf ("Usage: %s <environment_variable>...\n", argv[0]);
     } else {
@@ -731,6 +942,16 @@ main (int argc, char* argv[])
 		printf ("eifrt_vms_getenv() returns \"%s\"\n", p);
 	    }
 	}
+    }
+#endif /* moose2 */
+
+    if (argc < 2) {
+	printf ("Usage: %s <eiffel_i18n_posix_value>...\n", argv[0]);
+    } else {
+	for (ii=1;  ii < argc;  ++ii) {
+	    p = argv[ii];
+	    
+	} /* end for */
     }
 
 }

@@ -82,8 +82,8 @@ feature -- Basic operations
 								if l_cont then
 									l_buffer.append_character (c)
 									i := i + 1
-								else
-										-- Back step to ensure that `c' is included in the next top-level iteration.
+								elseif not l_match_para then
+										-- Back step to ensure that `c' is included in the next top-level iteration, unless it's a parathensis closing character
 									i := i - 1
 								end
 							end

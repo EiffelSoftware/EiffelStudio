@@ -1843,8 +1843,10 @@ feature -- Label texts
 
 	l_always_compile_before_debug:STRING_GENERAL is 	do Result := locale.translation ("always compile before executing.") end
 
-	l_show_help:STRING_GENERAL is 	do Result := locale.translation ("Show Help...") end
-	l_hide_help:STRING_GENERAL is 	do Result := locale.translation ("Hide Help...") end
+	l_show_help:STRING_GENERAL is 					do Result := locale.translation ("Show Help...") end
+	l_hide_help:STRING_GENERAL is 					do Result := locale.translation ("Hide Help...") end
+	l_code_results: STRING_GENERAL is 				do Result := locale.translation ("Code Results:") end
+	l_code_declarations_value: STRING_GENERAL is 	do Result := locale.translation ("'s Value:") end
 
 feature -- Label text, no translation (for the editor)
 
@@ -2161,6 +2163,8 @@ feature -- Title part
 	t_debugger_warning: STRING_GENERAL is				do Result := locale.translation ("EiffelStudio Warning") end
 	t_debugger_question: STRING_GENERAL is				do Result := locale.translation ("EiffelStudio Question") end
 	t_debugger_info: STRING_GENERAL is					do Result := locale.translation ("EiffelStudio Information") end
+
+	t_code_template_evaluator: STRING_GENERAL is		do Result := locale.translation ("Code Template Evaluator") end
 
 feature -- Sub titles
 

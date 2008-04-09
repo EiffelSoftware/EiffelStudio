@@ -56,6 +56,13 @@ RT_LNK char esigdefined(long int sig);	/* Is signal defined? */
 RT_LNK void esigresall(void);	/* Reset all signal to their default handling */
 RT_LNK void esigresdef(long int sig);	/* Reset a signal to its default handling */
 
+#ifdef EIF_VMS 
+/* CECIL calls to control signal handling */
+RT_LNK void esig_cecil_register(struct ex_vect*);   /* enable CECIL control of signal handling */
+RT_LNK void esig_cecil_enter(void);	/* increment signal handling call counter */
+RT_LNK void esig_cecil_exit(void);	/* decrement signal handling call counter */
+#endif /* EIF_VMS */
+
 #ifdef __cplusplus
 }
 #endif

@@ -1199,9 +1199,9 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; 
 				a_val.type = SK_REF; 
-			#endif
 				a_val.it_ref = (EIF_REFERENCE) &($a_ref);
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#endif
 			]"
 		end
 	frozen c_set_void_stack_value (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER): INTEGER is

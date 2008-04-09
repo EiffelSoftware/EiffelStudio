@@ -27,7 +27,7 @@ SED = /bin/sed
 # Automatically generated parameters -- do not edit
 
 SOURCES =  $(LSRC)
-OBJECTS = idrs.obj mtidrs.obj
+OBJECTS = idrs.obj # mtidrs.obj
 
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files

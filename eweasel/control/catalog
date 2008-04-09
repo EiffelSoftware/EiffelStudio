@@ -684,6 +684,7 @@ test	partial-generic-addition-crash	incr285 tcf pass incrementality
 test	change-export-create-generic-contraint-error-ignored	incr286  tcf fail incrementality
 test	inherit-crash-after-update		incr287  tcf pass incrementality
 test	large-formal-changes			incr288  tcf pass incrementality
+test	change-system-crash				incr289  tcf pass incrementality
 
 
 -- Melting

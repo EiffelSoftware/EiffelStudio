@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 		do
 			Result := current_class /= Void
 			check
-				current_group /= Void
+				Result implies current_group /= Void
 			end
 		end
 

@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			default_create
 			align_text_left
 			create text.make_empty
-			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (200, 200, 200))
 			resize_actions.extend (agent (a,b,c,d: INTEGER_32)
 				do
 					resize_actions.block

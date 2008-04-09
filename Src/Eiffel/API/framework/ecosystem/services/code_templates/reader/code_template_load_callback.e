@@ -285,6 +285,7 @@ feature {NONE} -- Production processing
 			l_literal: !CODE_LITERAL_DECLARATION
 			l_attributes: like current_attributes
 			l_declarations: !CODE_DECLARATION_COLLECTION
+			l_default: !STRING_32
 		do
 			last_declaration := Void
 
@@ -296,6 +297,11 @@ feature {NONE} -- Production processing
 					l_literal := code_factory.create_code_literal_declaration (l_id, l_declarations)
 					if l_attributes.has (at_editable) and then {l_editable: !STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
 						l_literal.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
+					end
+						-- Set the default value to the declaration name
+					if l_literal.is_editable then
+						create l_default.make_from_string (l_id.as_string_32)
+						l_literal.default_value := l_default
 					end
 					l_declarations.extend (l_literal)
 					last_declaration := l_literal

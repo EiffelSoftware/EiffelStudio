@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			-- `a_feature': Associated context feature to modify the class text for.
 		require
 			a_class_is_compiled: a_class.is_compiled
-			is_feature_of_current_class: a_feature.written_class = a_class.compiled_class
 		do
 			context_feature := find_actual_context_feature (a_feature, a_class)
 			make_with_class (a_class)

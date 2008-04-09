@@ -45,8 +45,10 @@ feature -- Contracts
 					l_modifier.prepare
 				end
 
-					-- Use live AST
-				l_class_as := l_modifier.ast
+				if l_modifier.is_ast_available then
+						-- Use live AST
+					l_class_as := l_modifier.ast
+				end
 			end
 
 			if l_class_as = Void then

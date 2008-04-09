@@ -8,7 +8,7 @@ class
 	TEST1 [G -> DOUBLE]
 feature
 	
-	square (x: G): G is
+	square (x: G): DOUBLE is
 		do
 			Result := x * x;
 		end

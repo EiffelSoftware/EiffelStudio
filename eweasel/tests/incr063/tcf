@@ -10,10 +10,10 @@ test_name 	 bogus-vaol2
 test_description An `old' expression in a postcondition invariant references an unknown identifier and then the reference to this identifier is removed
 
 copy_sub 	 Ace $TEST Ace
-define		 POSTCONDITION "old a = old a"
+define		 POSTCONDITION "old a = old b"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VEEN
+compile_result 	 validity_error TEST VEEN VEEN
 
 define		 POSTCONDITION "old 1 = old 2"
 copy_sub 	 test.e  $CLUSTER test.e

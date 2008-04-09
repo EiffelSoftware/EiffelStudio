@@ -109,7 +109,8 @@ rt_public EIF_INTEGER eif_system (char *s)
 {
 	EIF_INTEGER result;
 
-#ifdef EIF_VMS_V6_ONLY	/* if s contains any VMS filespec delimiters, prepend 'RUN ' command */
+#ifdef EIF_VMS_V6_ONLY	
+	/* if s contains any VMS filespec delimiters, prepend 'RUN ' command */
 	{ /* if it contains a '[' before a space (ie. no verb), prepend "run " */
 		/* ***VMS FIXME*** revisit this for long filenames - may contain space in filename */
 		char *p = strchr (s, '[');
@@ -128,9 +129,9 @@ rt_public EIF_INTEGER eif_system (char *s)
 #elif defined EIF_VMS
 	result = eifrt_vms_spawn (s, EIFRT_VMS_SPAWN_FLAG_TRANSLATE);	    /* synchronous spawn */
 
-#else /* (not) EIF_VMS */
+#else
 	result = (EIF_INTEGER) system (s);
-#endif /* EIF_VMS */
+#endif
 
 	return result;
 }
@@ -271,6 +272,21 @@ rt_public char * eif_getenv (char * k)
 	return (char *) getenv (k);
 #endif
 }
+
+/* Variant of eif_getenv() that bypasses the VMS-specific hack in	    */
+/* eifrt_vms_getenv(). This is intended to be used for programs that	    */
+/* require the real value of the environment variable (logical name) for    */
+/* reporting purposes. It is called by a variant of get in a VMS-specific   */
+/* descendant of EXECUTION_ENVIRONMENT.					    */
+/* For non-VMS platforms, it is the same as eif_getenv().		    */
+rt_public char* eif_getenv_native (char* nam)
+{
+#ifdef EIF_VMS
+#undef getenv
+#define getenv DECC$GETENV
+#endif
+	return getenv (nam);
+} /* end eif_getenv_native() */
 
 rt_shared union overhead * eif_header (EIF_REFERENCE object) {
 	REQUIRE("object not null", object);

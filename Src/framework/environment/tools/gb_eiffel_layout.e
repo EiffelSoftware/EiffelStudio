@@ -11,11 +11,20 @@ class GB_EIFFEL_LAYOUT
 
 inherit
 	EIFFEL_ENV
+		redefine
+			distribution_name
+		end
 
 feature -- Access
 
-	application_name: STRING is "esbuilder";
-			-- Name of current application
+	application_name: STRING is "esbuilder"
+			-- <Precursor>
+
+	distribution_name: !STRING_8
+			-- <Precursor>
+		once
+			Result := application_name
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

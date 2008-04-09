@@ -5084,15 +5084,18 @@ rt_shared int st_has (struct stack *st, void *data)
 {
 	struct stchunk *ck;
 	char **address;
+	int done = 0;
 
 		/* Loop through all the chunks */
-	for (ck = st->st_hd; ck != NULL; ck = ck->sk_next){
+	for (ck = st->st_hd; ck != NULL && !done; ck = ck->sk_next){
 			/* Starting address is end of chunk for full chunks and
 			 * current insertion position for the last one */
-		if (ck == st->st_cur)
+		if (ck == st->st_cur) {
 			address = st->st_top - 1;
-		else
+			done = 1;
+		} else {
 			address = ck->sk_end - 1;
+		}
 
 		for (; address >= ck->sk_arena; address--) {
 			if (*address == data)

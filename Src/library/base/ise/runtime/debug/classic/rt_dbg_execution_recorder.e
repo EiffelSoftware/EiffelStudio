@@ -340,56 +340,56 @@ feature -- Event
 			is_not_replaying: not is_replaying
 			top_call_stack_record_not_void: top_callstack_record /= Void
 		local
-			s32: STRING_32
+			l_str: STRING
 			r: like callstack_record
 		do
 			debug ("RT_EXTENSION")
-				s32 := once ""
-				s32.wipe_out
+				l_str := once ""
+				l_str.wipe_out
 				r := top_callstack_record
 				inspect a_var_kind
 				when Assign_local_kind then
 					if a_id = 0 then
-						s32.append_string ("[rt_assign]: Result")
-						s32.append_integer (a_id)
+						l_str.append_string ("[rt_assign]: Result")
+						l_str.append_integer (a_id)
 					else
-						s32.append_string ("[rt_assign]: local#")
-						s32.append_integer (a_id)
+						l_str.append_string ("[rt_assign]: local#")
+						l_str.append_integer (a_id)
 					end
 				when Assign_attribute_kind then
-					s32.append_string ("[rt_assign]: attribute#")
-					s32.append_integer (a_id)
+					l_str.append_string ("[rt_assign]: attribute#")
+					l_str.append_integer (a_id)
 					if a_type > 0 then
-						s32.append_string (" <type:0x")
-						s32.append_string (a_type.to_hex_string)
-						s32.append_string (">")
+						l_str.append_string (" <type:0x")
+						l_str.append_string (a_type.to_hex_string)
+						l_str.append_string (">")
 					end
 				else
-					s32.append_string ("[rt_assign]: ERROR (#")
-					s32.append_integer (a_id)
-					s32.append_string (")")
+					l_str.append_string ("[rt_assign]: ERROR (#")
+					l_str.append_integer (a_id)
+					l_str.append_string (")")
 				end
 
 				if ref /= Void then
-					s32.append_string (" {"+ ($ref).out +"}")
+					l_str.append_string (" {"+ ($ref).out +"}")
 				else
-					s32.append_string (" {Void}")
+					l_str.append_string (" {Void}")
 				end
 				if a_is_expanded then
-					s32.append_string (" +expanded")
+					l_str.append_string (" +expanded")
 				end
 				if a_is_precompiled then
-					s32.append_string (" +precompiled")
+					l_str.append_string (" +precompiled")
 				end
 				if a_is_melted then
-					s32.append_string (" +melted")
+					l_str.append_string (" +melted")
 				end
 				if r /= Void then
-					s32.append_string (" - ")
-					s32.append_string (r.debug_output) --to_string (True))
+					l_str.append_string (" - ")
+					l_str.append_string (r.debug_output) --to_string (True))
 					dtrace_indent (r.depth);
 				end
-				dtrace (s32 + "%N")
+				dtrace (l_str + "%N")
 			end
 
 			inspect a_var_kind

@@ -136,7 +136,7 @@ feature -- Query
 			end
 		end
 
-	templates_by_category (a_categories: DS_BILINEAR [STRING_GENERAL]): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
+	templates_by_category (a_categories: DS_BILINEAR [STRING_GENERAL]; a_conjunctive: BOOLEAN): !DS_ARRAYED_LIST [!CODE_TEMPLATE_DEFINITION]
 			-- <Precursor>
 		local
 			l_categories: !CODE_CATEGORY_COLLECTION
@@ -153,12 +153,22 @@ feature -- Query
 								-- Iterate supplied applicable categories for a matching code template definition category.
 							l_continue := False
 							l_categories := l_definition.metadata.categories
-							from l_cat_cursor.start until l_cat_cursor.after or l_continue loop
-								l_continue := l_categories.has (l_cat_cursor.item)
-								if l_continue then
+							if a_conjunctive then
+								from l_cat_cursor.start until l_cat_cursor.after or not l_categories.has (l_cat_cursor.item) loop
+									l_cat_cursor.forth
+								end
+								if l_cat_cursor.after then
+										-- Contains all categories
 									Result.force_last (l_definition)
 								end
-								l_cat_cursor.forth
+							else
+								from l_cat_cursor.start until l_cat_cursor.after or l_continue loop
+									l_continue := l_categories.has (l_cat_cursor.item)
+									if l_continue then
+										Result.force_last (l_definition)
+									end
+									l_cat_cursor.forth
+								end
 							end
 						end
 						l_cursor.forth

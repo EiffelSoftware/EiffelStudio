@@ -39,7 +39,7 @@
 /* $Id$ */
 
 #ifdef __VMS  /* scope: to end of file */
-#pragma module VMS_NAMES	/* force uppercase module name */
+#pragma module VMS_NAMES "VMS_Eiffel_62_xxx/32"	/* force uppercase module name, ident */
 
 
 /* Native code on VMS defaults to coercing all external names to UPPERCASE.	*/
@@ -116,10 +116,14 @@ rt_public EIFUVISEX (void)
 
 
 /*** hector.c ***/
-rt_public EIF_REFERENCE EWEAN (EIF_OBJECT object)
+rt_public EIF_REFERENCE EIF_WEAN (EIF_OBJECT object)
+    { return eif_wean (object); }
+rt_public EIF_REFERENCE EWEAN (EIF_OBJECT object)   /* ewean: old (< 6.0) name for eif_wean */
     { return eif_wean (object); }
 
-rt_public EIF_OBJECT HENTER (EIF_REFERENCE object)
+rt_public EIF_OBJECT EIF_PROTECT (EIF_REFERENCE object)
+    { return eif_protect (object); }
+rt_public EIF_OBJECT HENTER (EIF_REFERENCE object)  /* henter: old (<6.0) name for eif_protect */
     { return eif_protect (object); }
 
 
@@ -224,6 +228,12 @@ rt_public pid_t eifrt_vms_fork_jacket (void)
 {
     fprintf (stderr, "*** undefined %s()) called ***\n", __func__);
     return (pid_t)-1;
+}
+
+rt_public int tcsetpgrp (void)
+{
+    fprintf (stderr, "*** undefined %s()) called ***\n", __func__);
+    return -1;
 }
 
 

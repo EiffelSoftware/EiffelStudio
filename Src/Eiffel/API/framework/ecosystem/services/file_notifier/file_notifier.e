@@ -116,6 +116,8 @@ feature -- Basic operation
 				if {l_new_record: !FILE_NOTIFIER_RECORD} l_record then
 					l_records.put (l_new_record, l_key)
 				end
+			else
+				l_record := l_records.item (l_key)
 			end
 
 			check l_record_attached: l_record /= Void end

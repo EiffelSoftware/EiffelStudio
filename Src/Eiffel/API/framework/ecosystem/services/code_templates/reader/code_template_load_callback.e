@@ -143,6 +143,8 @@ feature {NONE} -- Process
 				process_declarations
 			when t_literal then
 				process_declaration_literal
+			when t_object then
+				process_declaration_object
 			when t_templates then
 				process_templates
 			else
@@ -316,6 +318,53 @@ feature {NONE} -- Production processing
 			last_declaration_changed: not has_error implies last_declaration /= old last_declaration
 		end
 
+	process_declaration_object
+			-- Processes a single declaration object node.
+		require
+			last_code_template_definition_attached: last_code_template_definition /= Void
+			last_declaration_detached: last_declaration = Void
+		local
+			l_object: !CODE_OBJECT_DECLARATION
+			l_attributes: like current_attributes
+			l_declarations: !CODE_DECLARATION_COLLECTION
+			l_default: !STRING_32
+		do
+			last_declaration := Void
+
+				-- Fetch object ID
+			l_attributes := current_attributes
+			if l_attributes.has (at_id) and then {l_id: !STRING_8} l_attributes.item (at_id).as_string_8 and then not l_id.is_empty then
+				l_declarations := last_code_template_definition.declarations
+				if l_declarations.declaration (l_id) = Void or else not is_strict then
+					l_object := code_factory.create_code_object_declaration (l_id, l_declarations)
+					if l_attributes.has (at_editable) and then {l_editable: !STRING_32} l_attributes.item (at_editable) and then not l_editable.is_empty then
+						l_object.is_editable := to_boolean ({CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute, l_editable, False)
+					end
+
+					if l_object.is_editable then
+							-- Set the default value to the declaration name
+						create l_default.make_from_string (l_id.as_string_32)
+						l_object.default_value := l_default
+					end
+
+					if l_attributes.has (at_conforms_to) and then {l_type: !STRING_32} l_attributes.item (at_conforms_to) and then not l_type.is_empty then
+							-- Set the conformance type
+						l_object.must_conform_to := l_type
+					end
+
+					l_declarations.extend (l_object)
+					last_declaration := l_object
+				else
+						-- Duplicate declaration
+					on_report_xml_error ("A declaration using the id '" + l_id + "' has already been taken!")
+				end
+			else
+				on_report_xml_error ("Declaration literal is missing an 'id' attribute!")
+			end
+		ensure
+			last_declaration_changed: not has_error implies last_declaration /= old last_declaration
+		end
+
 	process_declaration_description
 			-- Processes a declaration's description.
 		require
@@ -399,7 +448,7 @@ feature {NONE} -- State transistions
 		local
 			l_trans: !DS_HASH_TABLE [NATURAL_8, STRING_8]
 		once
-			create Result.make (7)
+			create Result.make (8)
 
 				-- XML
 				-- => code_template
@@ -439,16 +488,26 @@ feature {NONE} -- State transistions
 
 				-- declarations
 				-- => literal
-			create l_trans.make (1)
+			create l_trans.make (2)
 			l_trans.put (t_literal, {CODE_TEMPLATE_ENTITY_NAMES}.literal_tag)
+			l_trans.put (t_object, {CODE_TEMPLATE_ENTITY_NAMES}.object_tag)
 			Result.put (l_trans, t_declarations)
 
 				-- literal
 				-- => description
+				-- => default
 			create l_trans.make (2)
 			l_trans.put (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
 			l_trans.put (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
 			Result.put (l_trans, t_literal)
+
+				-- object
+				-- => description
+				-- => default
+			create l_trans.make (2)
+			l_trans.put (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
+			l_trans.put (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
+			Result.put (l_trans, t_object)
 
 				-- templates
 				-- => template
@@ -462,7 +521,7 @@ feature {NONE} -- State transistions
 		local
 			l_attr: !DS_HASH_TABLE [NATURAL_8, STRING_8]
 		once
-			create Result.make (3)
+			create Result.make (4)
 
 				-- code_template
 				-- @ format
@@ -477,6 +536,16 @@ feature {NONE} -- State transistions
 			l_attr.put (at_id, {CODE_TEMPLATE_ENTITY_NAMES}.id_attribute)
 			l_attr.put (at_editable, {CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute)
 			Result.put (l_attr, t_literal)
+
+				-- object
+				-- @ id
+				-- @ editable
+				-- @ conforms_to
+			create l_attr.make (3)
+			l_attr.put (at_id, {CODE_TEMPLATE_ENTITY_NAMES}.id_attribute)
+			l_attr.put (at_editable, {CODE_TEMPLATE_ENTITY_NAMES}.editable_attribute)
+			l_attr.put (at_conforms_to, {CODE_TEMPLATE_ENTITY_NAMES}.conforms_to_attribute)
+			Result.put (l_attr, t_object)
 
 				-- template
 				-- @ version
@@ -499,10 +568,11 @@ feature {NONE} -- Tag states
 
 	t_declarations: NATURAL_8        = 0x09
 	t_literal: NATURAL_8             = 0x0A
-	t_default: NATURAL_8             = 0x0B
+	t_object:  NATURAL_8             = 0x0B
+	t_default: NATURAL_8             = 0x0C
 
-	t_templates: NATURAL_8           = 0x0C
-	t_template: NATURAL_8            = 0x0D
+	t_templates: NATURAL_8           = 0x0D
+	t_template: NATURAL_8            = 0x0E
 
 feature {NONE} -- Attributes states
 
@@ -510,8 +580,9 @@ feature {NONE} -- Attributes states
 
 	at_id: NATURAL_8                 = 0x51
 	at_editable: NATURAL_8           = 0x52
+	at_conforms_to: NATURAL_8        = 0x53
 
-	at_version: NATURAL_8            = 0x53
+	at_version: NATURAL_8            = 0x54
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

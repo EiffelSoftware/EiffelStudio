@@ -1,78 +1,66 @@
 indexing
 	description: "[
-		A dictionary of code template definition file XML tag, attribute and value names.
+		A object declaration for replacement in a selected template, like a literal ({CODE_LITERAL_DECLARATION}) but uses type conformance.
 	]"
+	doc: "wiki://Code Templates:Literal Declarations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	CODE_TEMPLATE_ENTITY_NAMES
+	CODE_OBJECT_DECLARATION
+
+inherit
+	CODE_LITERAL_DECLARATION
+		redefine
+			initialize_nodes,
+			process
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	initialize_nodes (a_factory: like code_factory)
+			-- Initializes the default nodes for Current.
+			--
+			-- `a_factory': Factory used for creating nodes.
+		do
+			create must_conform_to.make_from_string ("ANY")
+			Precursor (a_factory)
+		end
 
 feature -- Access
 
-	author_tag: !STRING_8 = "author"
+	must_conform_to: !STRING_32 assign set_must_conform_to
+			-- A object value conformance type.
 
-	category_tag: !STRING_8 = "category"
+feature -- Element change
 
-	categories_tag: !STRING_8 = "categories"
+	set_must_conform_to (a_type: like must_conform_to)
+			-- Set the object value conformance type.
+			--
+			-- `a_type': The type the object literal must conform to.
+		require
+			not_a_type_is_empty: not a_type.is_empty
+		do
+			must_conform_to ?= a_type.twin
+		ensure
+			must_conform_to_set: must_conform_to.is_equal (a_type)
+		end
 
-	code_template_tag: !STRING_8 = "code_template"
+feature -- Visitor
 
-	code_templates_tag: !STRING_8 = "code_templates"
+	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
+			-- <Precursor>
+		do
+			a_visitor.process_code_object_declaration (Current)
+		end
 
-	declarations_tag: !STRING_8 = "declarations"
-
-	default_tag: !STRING_8 = "default"
-
-	description_tag: !STRING_8 = "description"
-
-	literal_tag: !STRING_8 = "literal"
-
-	metadata_tag: !STRING_8 = "metadata"
-
-	object_tag: !STRING_8 = "object"
-
-	template_tag: !STRING_8 = "template"
-
-	templates_tag: !STRING_8 = "templates"
-
-	title_tag: !STRING_8 = "title"
-
-	shortcut_tag: !STRING_8 = "shortcut"
-
-feature -- Attribute
-
-	conforms_to_attribute: !STRING_8 = "conforms_to"
-
-	editable_attribute: !STRING_8 = "editable"
-
-	format_attribute: !STRING_8 = "format"
-
-	id_attribute: !STRING_8 = "id"
-
-	version_attribute: !STRING_8 = "version"
-
-feature -- Values
-
-	code_category: !STRING_8 = "code"
-
-	contract_category: !STRING_8 = "contract"
-
-	class_category: !STRING_8 = "class"
-
-feature -- Token values
-
-	cursor_token_name: !STRING_8 = "cursor"
-
-	selection_token_name: !STRING_8 = "selection"
-
-feature -- Delimiters
-
-	template_start_delimiter: !STRING_8 = "~#"
-
-	template_end_delimiter: !STRING_8 = "#~"
+invariant
+	not_must_conform_to_is_empty: not must_conform_to.is_empty
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

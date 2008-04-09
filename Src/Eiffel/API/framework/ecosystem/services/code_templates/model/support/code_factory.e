@@ -63,6 +63,17 @@ feature -- Factory
 			create Result.make (a_major, a_minor, a_revision, a_qfe)
 		end
 
+	create_code_object_declaration (a_id: !STRING_8; a_parent: !CODE_DECLARATION_COLLECTION): !CODE_OBJECT_DECLARATION
+			-- Creates a code object declaration.
+			--
+			-- `a_id': A code declaration identifier.
+		do
+			create Result.make (a_id, a_parent)
+		ensure
+			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id)
+			not_result_is_built_in_set: not Result.is_built_in
+		end
+
 	create_code_template_collection (a_parent: !CODE_TEMPLATE_DEFINITION): !CODE_TEMPLATE_COLLECTION
 			-- Creates a code templates collections node.
 		do

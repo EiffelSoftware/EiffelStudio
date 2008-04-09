@@ -72,7 +72,7 @@ feature -- Visitor
 	process (a_visitor: !CODE_TEMPLATE_VISITOR_I)
 			-- <Precursor>
 		do
-			a_visitor.process_code_literal_declaration (({!CODE_LITERAL_DECLARATION}) #? Current)
+			a_visitor.process_code_literal_declaration (Current)
 		end
 
 ;indexing

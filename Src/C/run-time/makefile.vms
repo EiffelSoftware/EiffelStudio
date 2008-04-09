@@ -316,7 +316,7 @@ NETWORK = network.olb
 libs : runtime #wkbench
 lib : runtime #wkbench
 runtime : finalized
-finalized : finalized.olb MTfinalized.olb
+finalized : finalized.olb # MTfinalized.olb
 wkbench : wkbench.olb
 #no no no finalized.olb wkbench.olb : $(MAKEFILE_DEPENDENCIES)
 
@@ -384,9 +384,8 @@ deinstall.man ::
 	$(RM) $(MANSRC)/size.h.$(L)
 
 EIFLIB = ise_eiffel\:[studio.spec.$(ISE_PLATFORM).lib]
-eiflib : $(EIFLIB)finalized.olb $(EIFLIB)MTfinalized.olb
-
-eiflib_finalized : $(EIFLIB)finalized.olb
+eiflib : $(EIFLIB)finalized.olb # $(EIFLIB)MTfinalized.olb
+#eiflib_finalized : $(EIFLIB)finalized.olb
 
 $(EIFLIB)finalized.olb : []finalized.olb
 	copy $^ $(EIFLIB)
@@ -395,7 +394,8 @@ $(EIFLIB)MTfinalized.olb : []MTfinalized.olb
 	copy $^ $(EIFLIB)
 
 
-all :: finalized.olb
+#all :: finalized.olb
+all :: finalized
 
 local_realclean ::
 	$(RM) finalized.olb;*
@@ -407,7 +407,7 @@ finalized.olb : $(VMS_OBJ) $(LOBJ) $(LOBJ_EXTRA)
 	@purge/nolog *.*obj*
 	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
-all :: MTfinalized.olb
+#all :: MTfinalized.olb
 
 #MTfinalized.olb : finalized.olb
 #	copy $^ $@
@@ -451,7 +451,6 @@ wkbench.olb : $(WKOBJ) $(COMOBJ)
 	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
 
 #all :: ebench.olb
-
 
 local_realclean :: 
 	$(RM) ebench.olb

@@ -1,37 +1,33 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class BIN_EQ_BL
+	date: "$Date$"
+	revision: "$Revision$"
+
+class BIN_NOT_TILDE_B
 
 inherit
-	BIN_EQ_B
+	BIN_TILDE_B
 		redefine
-			left_register, set_left_register,
-			right_register, set_right_register
+			process,
+			enlarged
 		end;
 
-create
-	make
+feature -- Visitor
 
-feature
-
-	left_register: REGISTRABLE;
-			-- Where metamorphosed left value is kept
-
-	right_register: REGISTRABLE;
-			-- Where metamorphosed right value is kept
-
-	set_left_register (r: REGISTRABLE) is
-			-- Assign `r' to `left_register'
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
 		do
-			left_register := r;
-		end;
+			v.process_bin_not_tilde_b (Current)
+		end
 
-	set_right_register (r: REGISTRABLE) is
-			-- Assign `r' to `right_register'
+feature -- Access
+
+	enlarged: EXPR_B is
+			-- Enlarge node
 		do
-			right_register := r;
-		end;
+			create {BIN_NOT_TILDE_BL} Result.make (left.enlarged, right.enlarged)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

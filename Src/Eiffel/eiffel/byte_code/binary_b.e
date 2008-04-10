@@ -22,6 +22,21 @@ inherit
 
 	IL_CONST
 
+feature {NONE} -- Initialization
+
+	make (a_left: like left; a_right: like right) is
+			-- Create new BIN_EQ_BL instance with `a_left' and `a_right'.
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+		do
+			left := a_left
+			right := a_right
+		ensure
+			left_set: left = a_left
+			right_set: right = a_right
+		end
+
 feature -- Initialization
 
 	init (a: CALL_ACCESS_B) is

@@ -1117,6 +1117,13 @@ feature {NONE} -- Visitors
 			generate_bin_equal_b (a_node, il_ne)
 		end
 
+	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B) is
+			-- Process `a_node'.
+		do
+			process_bin_tilde_b (a_node)
+			il_generator.generate_unary_operator (il_not)
+		end
+
 	process_bin_or_b (a_node: BIN_OR_B) is
 			-- Process `a_node'.
 		do
@@ -1204,6 +1211,76 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_star)
+		end
+
+	process_bin_tilde_b (a_node: BIN_TILDE_B) is
+			-- Process `a_node'.
+		local
+			l_lt, l_rt: TYPE_A
+			l_continue_label: IL_LABEL
+			l_end_label: IL_LABEL
+		do
+			l_lt := context.real_type (a_node.left.type)
+			l_rt := context.real_type (a_node.right.type)
+
+			if l_lt.is_basic and then l_rt.is_basic then
+					-- From the byte node generation, we know that they must
+					-- be of the same type, otherwise something else than a
+					-- BIN_TILDE_B node is generated.
+				check
+					same_basic_type: l_lt.same_as (l_rt)
+				end
+				a_node.left.process (Current)
+				a_node.right.process (Current)
+				il_generator.generate_binary_operator (il_eq, l_lt.is_natural)
+			elseif (l_lt.is_expanded and then l_rt.is_none) or else (l_lt.is_none and then l_rt.is_expanded) then
+					-- An expanded type is neither Void, so we simply evaluate the expressions and
+					-- then remove them from the stack to insert the expected value.
+				a_node.left.process (Current)
+				il_generator.pop
+				a_node.right.process (Current)
+				il_generator.pop
+				il_generator.put_boolean_constant (False)
+			else
+					-- Generate left operand.
+				generate_expression_il_for_type (a_node.left, any_type)
+				if l_lt.is_reference then
+						-- Check for voidness.
+					l_continue_label := il_generator.create_label
+					l_end_label := il_generator.create_label
+					il_generator.duplicate_top
+					il_generator.branch_on_true (l_continue_label)
+					il_generator.pop
+					il_generator.put_boolean_constant (False)
+					il_generator.branch_to (l_end_label)
+					il_generator.mark_label (l_continue_label)
+				end
+
+					-- Generate right operand.
+				generate_expression_il_for_type (a_node.right, any_type)
+				if l_rt.is_reference then
+						-- Check for voidness.
+					l_continue_label := il_generator.create_label
+					l_end_label := il_generator.create_label
+					il_generator.duplicate_top
+					il_generator.branch_on_true (l_continue_label)
+						-- Remove left operand as well.
+					il_generator.pop
+					il_generator.pop
+					il_generator.put_boolean_constant (False)
+					il_generator.branch_to (l_end_label)
+					il_generator.mark_label (l_continue_label)
+				end
+
+					-- FIXME: This call assumes that `is_equal' from ANY always takes
+					-- `like Current' as argument, but actually it could be different.
+				il_generator.generate_object_equality_test
+
+					-- Mark end of equality expression (if required).
+				if l_end_label /= Void then
+					il_generator.mark_label (l_end_label)
+				end
+			end
 		end
 
 	process_bin_xor_b (a_node: BIN_XOR_B) is

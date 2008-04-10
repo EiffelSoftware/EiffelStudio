@@ -1,37 +1,51 @@
 indexing
+	description: "Node for /~ equality operator for C code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class BIN_EQ_BL
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	BIN_NOT_TILDE_BL
 
 inherit
-	BIN_EQ_B
+	BIN_NOT_TILDE_B
+		undefine
+			free_register, analyze, unanalyze,
+			print_register, generate, generate_operator
+		end
+
+	BIN_TILDE_BL
+		undefine
+			process, enlarged
 		redefine
-			left_register, set_left_register,
-			right_register, set_right_register
-		end;
+			generate_operator,
+			generate_boolean_constant,
+			generate_negation
+		end
 
 create
 	make
 
-feature
+feature -- C code generation
 
-	left_register: REGISTRABLE;
-			-- Where metamorphosed left value is kept
-
-	right_register: REGISTRABLE;
-			-- Where metamorphosed right value is kept
-
-	set_left_register (r: REGISTRABLE) is
-			-- Assign `r' to `left_register'
+	generate_operator (a_buffer: GENERATION_BUFFER) is
+			-- Generate the operator
 		do
-			left_register := r;
+			a_buffer.put_four_character (' ', '!', '=', ' ')
 		end;
 
-	set_right_register (r: REGISTRABLE) is
-			-- Assign `r' to `right_register'
+	generate_boolean_constant is
+			-- Generate true constant
 		do
-			right_register := r;
+			buffer.put_string ("EIF_TRUE");
 		end;
+
+	generate_negation is
+			-- Generate negation of an equality test (if required).
+		do
+			buffer.put_character ('!')
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

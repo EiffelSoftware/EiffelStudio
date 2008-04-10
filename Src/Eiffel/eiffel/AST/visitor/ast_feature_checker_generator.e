@@ -5083,6 +5083,7 @@ feature -- Implementation
 			l_vjrv2: VJRV2
 			l_attribute: ATTRIBUTE_B
 			l_create_info: CREATE_INFO
+			l_reinitialized_local: like last_reinitialized_local
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -5090,11 +5091,13 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 				-- Type check the target
+			last_reinitialized_local := 0
 			last_access_writable := False
 			set_is_in_assignment (True)
 			l_as.target.process (Current)
 			set_is_in_assignment (False)
 			l_target_type := last_type
+			l_reinitialized_local := last_reinitialized_local
 			if l_target_type /= Void then
 				current_target_type := l_target_type
 
@@ -5184,6 +5187,14 @@ feature -- Implementation
 
 						l_reverse.set_info (l_create_info)
 						last_byte_node := l_reverse
+					end
+					if l_reinitialized_local /= 0 then
+							-- Local variable might become Void.
+						if l_reinitialized_local = result_name_id then
+							context.remove_result_scope
+						else
+							context.remove_local_scope (l_reinitialized_local)
+						end
 					end
 				end
 			end

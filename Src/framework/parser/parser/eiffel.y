@@ -27,9 +27,7 @@ create
 %left		TE_OR
 %left		TE_XOR
 %left		TE_AND
--- Uncomment when Tilda_agent_call is removed.
---%left 		TE_TILDE TE_NOT_TILDE TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE
-%left 		TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE
+%left 		TE_TILDE TE_NOT_TILDE TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE
 %left		TE_PLUS TE_MINUS
 %left		TE_STAR TE_SLASH TE_MOD TE_DIV
 %right		TE_POWER
@@ -161,7 +159,6 @@ create
 %type <ROUT_BODY_AS>		Routine_body
 %type <ROUTINE_AS>			Routine Optional_attribute_or_routine
 %type <ROUTINE_CREATION_AS>	Agent_call
-%type <PAIR[ROUTINE_CREATION_AS, LOCATION_AS]> Tilda_agent_call
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
@@ -210,7 +207,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 127
+%expect 109
 
 %%
 
@@ -2366,17 +2363,6 @@ Agent_call:
 				$$ := ast_factory.new_agent_routine_creation_as (Void, $4, $5, True, $1, $3)
 			end
 		}
-	|	Tilda_agent_call
-		{
-			if $1 /= Void then
-				$$ := $1.first
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1.first), token_column ($1.first),
-						filename, once "Use keyword `agent' instead."))
-				end
-			end
-		}
 	;
 	
 Optional_formal_arguments:
@@ -2397,54 +2383,6 @@ Optional_attribute_or_routine:
 		Routine
 		{
 			$$ := $1
-		}
-	;
-
---Note: Manu 02/07/2004: we need to expand `Agent_target' otherwise it causes some
--- Reduce/Reduce conflict. `Tilda_agent_call' should be written as:
---Tilda_agent_call:	TE_TILDE Identifier_as_lower Delayed_actuals
---		{ $$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as (Void, Void, Void), $2, $3, False) }
---	|	Agent_targt TE_TILDE Identifier_as_lower Delayed_actuals
---		{ $$ := ast_factory.new_old_routine_creation_as ($3, $1, $3, $4, True) }
---	;
-Tilda_agent_call: TE_TILDE Identifier_as_lower Delayed_actuals
-		{
-			$$ := ast_factory.new_old_routine_creation_as ($2, Void, $2, $3, False, $1)
-		}
-	|	Identifier_as_lower TE_TILDE Identifier_as_lower Delayed_actuals
-		{
-			$$ := ast_factory.new_old_routine_creation_as ($1, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as ($1, Void), Void), $3, $4, True, $2)
-		}
-	|	TE_LPARAN Expression TE_RPARAN TE_TILDE Identifier_as_lower Delayed_actuals
-		{
-			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as (Void, Void, $2), $5, $6, True, $4)
-			if $$ /= Void and then $$.first /= Void	then
-				$$.first.set_lparan_symbol ($1)
-				$$.first.set_rparan_symbol ($3)
-			end
-		}
-	|	TE_RESULT TE_TILDE Identifier_as_lower Delayed_actuals
-		{
-			$$ := ast_factory.new_old_routine_creation_as ($3, ast_factory.new_operand_as (Void, $1, Void), $3, $4, True, $2)
-		}
-	|	TE_CURRENT TE_TILDE Identifier_as_lower Delayed_actuals
-		{
-			$$ := ast_factory.new_old_routine_creation_as ($3, ast_factory.new_operand_as (Void, $1, Void), $3, $4, True, $2)
-		}
-	|	TE_LCURLY Type TE_CURLYTILDE Identifier_as_lower Delayed_actuals
-		{
-			if $2 /= Void then
-				$2.set_lcurly_symbol ($1)
-			end
-			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as ($2, Void, Void), $4, $5, True, $3)
-		}
-	|	TE_QUESTION TE_TILDE Identifier_as_lower Delayed_actuals
-		{
-			temp_operand_as := ast_factory.new_operand_as (Void, Void, Void)
-			if temp_operand_as /= Void then
-				temp_operand_as.set_question_mark_symbol ($1)
-			end
-			$$ := ast_factory.new_old_routine_creation_as ($3, temp_operand_as, $3, $4, True, $2)
 		}
 	;
 
@@ -2601,11 +2539,10 @@ Expression:
 			{ $$ := $1 }
 	|	Typed_expression
 			{ $$ := $1; has_type := True }
--- To uncomment when Tilda_agent_call are really removed from parser
---	|	Expression TE_TILDE Expression
---			{ $$ := ast_factory.new_bin_tilde_as ($1, $3, $2); has_type := True }
---	|	Expression TE_NOT_TILDE Expression
---			{ $$ := ast_factory.new_bin_not_tilde_as ($1, $3, $2); has_type := True }
+	|	Expression TE_TILDE Expression
+			{ $$ := ast_factory.new_bin_tilde_as ($1, $3, $2); has_type := True }
+	|	Expression TE_NOT_TILDE Expression
+			{ $$ := ast_factory.new_bin_not_tilde_as ($1, $3, $2); has_type := True }
 	|	Expression TE_EQ Expression
 			{ $$ := ast_factory.new_bin_eq_as ($1, $3, $2); has_type := True }
 	|	Expression TE_NE Expression

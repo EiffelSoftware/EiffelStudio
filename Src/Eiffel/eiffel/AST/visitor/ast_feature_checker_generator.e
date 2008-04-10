@@ -4267,81 +4267,81 @@ feature -- Implementation
 				-- First type check the left member
 			l_as.left.process (Current)
 			l_left_type := last_type
-			if l_left_type /= Void then
-				if l_needs_byte_node then
-					l_left_expr ?= last_byte_node
-				end
+			if l_left_type /= Void and l_needs_byte_node then
+				l_left_expr ?= last_byte_node
+			end
 
+				-- Then type check the right member
+			l_as.right.process (Current)
+			l_right_type := last_type
+			if l_right_type /= Void and l_needs_byte_node then
+				l_right_expr ?= last_byte_node
+			end
+
+			if l_left_type /= Void and then l_right_type /= Void then
+					-- Check if `l_left_type' conforms to `l_right_type' or if
+					-- `l_right_type' conforms to `l_left_type'.
 				if not is_inherited then
 					l_as.set_class_id (class_id_of (l_left_type))
 				end
-
-					-- Then type check the right member
-				l_as.right.process (Current)
-				l_right_type := last_type
-				if l_right_type /= Void then
-					if l_needs_byte_node then
-						l_right_expr ?= last_byte_node
-					end
-
-						-- Check if `l_left_type' conforms to `l_right_type' or if
-						-- `l_right_type' conforms to `l_left_type'.
-					if
-						not (l_left_type.conform_to (l_right_type.actual_type) or else
-						l_right_type.conform_to (l_left_type.actual_type))
-					then
-						if l_right_type.convert_to (context.current_class, l_left_type.actual_type) then
+				if
+					not (l_left_type.conform_to (l_right_type.actual_type) or else
+					l_right_type.conform_to (l_left_type.actual_type))
+				then
+					if l_right_type.convert_to (context.current_class, l_left_type.actual_type) then
+						l_conv_info := context.last_conversion_info
+						if l_conv_info.has_depend_unit then
+							context.supplier_ids.extend (l_conv_info.depend_unit)
+						end
+						if l_needs_byte_node then
+							l_right_expr := l_conv_info.byte_node (l_right_expr)
+						end
+					else
+						if l_left_type.convert_to (context.current_class, l_right_type.actual_type) then
 							l_conv_info := context.last_conversion_info
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
 							end
 							if l_needs_byte_node then
-								l_right_expr := l_conv_info.byte_node (l_right_expr)
+								l_left_expr := l_conv_info.byte_node (l_left_expr)
 							end
-						else
-							if l_left_type.convert_to (context.current_class, l_right_type.actual_type) then
-								l_conv_info := context.last_conversion_info
-								if l_conv_info.has_depend_unit then
-									context.supplier_ids.extend (l_conv_info.depend_unit)
-								end
-								if l_needs_byte_node then
-									l_left_expr := l_conv_info.byte_node (l_left_expr)
-								end
-							elseif not is_inherited then
-								if context.current_class.is_warning_enabled (w_vweq) then
-									create l_vweq
-									context.init_error (l_vweq)
-									l_vweq.set_left_type (l_left_type)
-									l_vweq.set_right_type (l_right_type)
-									l_vweq.set_location (l_as.operator_location)
-									error_handler.insert_warning (l_vweq)
-								end
-								if l_left_type.is_basic and l_right_type.is_basic then
-										-- Non-compatible basic type always implies a False/true comparison.
-									l_is_byte_node_simplified := True
-								end
+						elseif not is_inherited then
+							if context.current_class.is_warning_enabled (w_vweq) then
+								create l_vweq
+								context.init_error (l_vweq)
+								l_vweq.set_left_type (l_left_type)
+								l_vweq.set_right_type (l_right_type)
+								l_vweq.set_location (l_as.operator_location)
+								error_handler.insert_warning (l_vweq)
+							end
+							if l_left_type.is_basic and l_right_type.is_basic then
+									-- Non-compatible basic type always implies a False/true comparison.
+								l_is_byte_node_simplified := True
 							end
 						end
 					end
+				end
 
-					if l_needs_byte_node then
-						if l_is_byte_node_simplified then
-							l_ne_as ?= l_as
-							if l_ne_as /= Void then
-								create {BOOL_CONST_B} last_byte_node.make (True)
-							else
-								create {BOOL_CONST_B} last_byte_node.make (False)
-							end
+				if l_needs_byte_node then
+					if l_is_byte_node_simplified then
+						l_ne_as ?= l_as
+						if l_ne_as /= Void then
+							create {BOOL_CONST_B} last_byte_node.make (True)
 						else
-							l_binary := byte_anchor.binary_node (l_as)
-							l_binary.set_left (l_left_expr)
-							l_binary.set_right (l_right_expr)
-							last_byte_node := l_binary
+							create {BOOL_CONST_B} last_byte_node.make (False)
 						end
+					else
+						l_binary := byte_anchor.binary_node (l_as)
+						l_binary.set_left (l_left_expr)
+						l_binary.set_right (l_right_expr)
+						last_byte_node := l_binary
 					end
-					last_type := boolean_type
 				end
 			end
+				-- Regardless of a failure in either expressions, we can still assume the return
+				-- type to be a BOOLEAN, that way we can detect all the other errors in the englobing
+				-- expressions if any.
+			last_type := boolean_type
 		end
 
 	process_bin_ne_as (l_as: BIN_NE_AS) is
@@ -4351,13 +4351,95 @@ feature -- Implementation
 
 	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
 		local
-			l_unsupported: NOT_SUPPORTED
+			l_left_type, l_right_type: TYPE_A
+			l_left_expr, l_right_expr: EXPR_B
+			l_conv_info: CONVERSION_INFO
+			l_binary: BINARY_B
+			l_vweq: VWEQ
+			l_needs_byte_node: BOOLEAN
+			l_is_byte_node_simplified: BOOLEAN
+			l_not_tilde_as: BIN_NOT_TILDE_AS
 		do
-			create l_unsupported
-			context.init_error (l_unsupported)
-			l_unsupported.set_message ("Operators ~ and /~ are not yet supported.")
-			l_unsupported.set_location (l_as.operator_location)
-			error_handler.insert_error (l_unsupported)
+			l_needs_byte_node := is_byte_node_enabled
+
+				-- First type check the left member
+			l_as.left.process (Current)
+			l_left_type := last_type
+			if l_left_type /= Void and l_needs_byte_node then
+				l_left_expr ?= last_byte_node
+			end
+
+				-- Then type check the right member
+			l_as.right.process (Current)
+			l_right_type := last_type
+			if l_right_type /= Void and l_needs_byte_node then
+				l_right_expr ?= last_byte_node
+			end
+
+			if l_left_type /= Void and then l_right_type /= Void then
+					-- Check if `l_left_type' conforms to `l_right_type' or if
+					-- `l_right_type' conforms to `l_left_type'.
+				if not is_inherited then
+					l_as.set_class_id (class_id_of (l_left_type))
+				end
+				if
+					not (l_left_type.conform_to (l_right_type.actual_type) or else
+					l_right_type.conform_to (l_left_type.actual_type))
+				then
+					if l_right_type.convert_to (context.current_class, l_left_type.actual_type) then
+						l_conv_info := context.last_conversion_info
+						if l_conv_info.has_depend_unit then
+							context.supplier_ids.extend (l_conv_info.depend_unit)
+						end
+						if l_needs_byte_node then
+							l_right_expr := l_conv_info.byte_node (l_right_expr)
+						end
+					else
+						if l_left_type.convert_to (context.current_class, l_right_type.actual_type) then
+							l_conv_info := context.last_conversion_info
+							if l_conv_info.has_depend_unit then
+								context.supplier_ids.extend (l_conv_info.depend_unit)
+							end
+							if l_needs_byte_node then
+								l_left_expr := l_conv_info.byte_node (l_left_expr)
+							end
+						elseif not is_inherited then
+							if context.current_class.is_warning_enabled (w_vweq) then
+								create l_vweq
+								context.init_error (l_vweq)
+								l_vweq.set_left_type (l_left_type)
+								l_vweq.set_right_type (l_right_type)
+								l_vweq.set_location (l_as.operator_location)
+								error_handler.insert_warning (l_vweq)
+							end
+							if l_left_type.is_basic and l_right_type.is_basic then
+									-- Non-compatible basic type always implies a False/true comparison.
+								l_is_byte_node_simplified := True
+							end
+						end
+					end
+				end
+
+				if l_needs_byte_node then
+					if l_is_byte_node_simplified then
+						l_not_tilde_as ?= l_as
+						if l_not_tilde_as /= Void then
+							create {BOOL_CONST_B} last_byte_node.make (True)
+						else
+							create {BOOL_CONST_B} last_byte_node.make (False)
+						end
+					else
+						l_binary := byte_anchor.binary_node (l_as)
+						l_binary.set_left (l_left_expr)
+						l_binary.set_right (l_right_expr)
+						last_byte_node := l_binary
+					end
+				end
+			end
+				-- Regardless of a failure in either expressions, we can still assume the return
+				-- type to be a BOOLEAN, that way we can detect all the other errors in the englobing
+				-- expressions if any.
+			last_type := boolean_type
 		end
 
 	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is

@@ -120,6 +120,11 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
+	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B) is
+			-- Process `a_node'.
+		do
+		end
+
 	process_bin_or_b (a_node: BIN_OR_B) is
 			-- Process `a_node'.
 		do
@@ -146,6 +151,11 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 	process_bin_star_b (a_node: BIN_STAR_B) is
+			-- Process `a_node'.
+		do
+		end
+
+	process_bin_tilde_b (a_node: BIN_TILDE_B) is
 			-- Process `a_node'.
 		do
 		end

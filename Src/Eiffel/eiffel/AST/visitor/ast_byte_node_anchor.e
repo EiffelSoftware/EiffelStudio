@@ -179,12 +179,12 @@ feature {NONE} -- Implementation
 
 	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
 		do
-				-- To be implemented
+			create {BIN_TILDE_B} last_binary_node
 		end
 
 	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
 		do
-				-- To be implemented
+			create {BIN_NOT_TILDE_B} last_binary_node
 		end
 
 indexing

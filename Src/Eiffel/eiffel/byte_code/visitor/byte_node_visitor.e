@@ -230,6 +230,15 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
+	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B) is
+			-- Process `a_node'.
+		require
+			is_valid: is_valid
+			a_node_not_void: a_node /= Void
+			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
 	process_bin_or_b (a_node: BIN_OR_B) is
 			-- Process `a_node'.
 		require
@@ -276,6 +285,15 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 	process_bin_star_b (a_node: BIN_STAR_B) is
+			-- Process `a_node'.
+		require
+			is_valid: is_valid
+			a_node_not_void: a_node /= Void
+			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
+	process_bin_tilde_b (a_node: BIN_TILDE_B) is
 			-- Process `a_node'.
 		require
 			is_valid: is_valid

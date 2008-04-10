@@ -24,7 +24,7 @@
   </target>
 
   <target name="carbon_init">
-    <set name="ewg.c_compile.options" value="-isysroot /Developer/SDKs/MacOSX10.4u.sdk"/>
+    <set name="ewg.c_compile.options" value="-isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4"/>
   </target>
 
 </project>

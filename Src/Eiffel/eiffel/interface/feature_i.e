@@ -907,11 +907,8 @@ end
 			-- Is feature still valid?
 			-- Incrementality: The types of arguments and/or result
 			-- are still defined in system
-		local
-			type_a: TYPE_A
 		do
-			type_a ?= type
-			Result := type_a.is_valid
+			Result := type.is_valid
 			if Result and then has_arguments then
 				Result := arguments.is_valid
 			end

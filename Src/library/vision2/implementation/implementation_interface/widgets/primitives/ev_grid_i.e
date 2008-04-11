@@ -3585,7 +3585,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			-- Construct the default `expand_node_pixmap'.
 		local
 			start_offset, end_offset, middle_offset: INTEGER
-		do
+		once
 			start_offset := 2
 			end_offset := tree_node_button_dimension - start_offset - 1
 			middle_offset := tree_node_button_dimension // 2
@@ -3606,7 +3606,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			-- Construct the default `collapse_node_pixmap'.
 		local
 			start_offset, end_offset, middle_offset: INTEGER
-		do
+		once
 			start_offset := 2
 			end_offset := tree_node_button_dimension - start_offset - 1
 			middle_offset := tree_node_button_dimension // 2

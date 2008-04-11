@@ -828,19 +828,7 @@ end
 			l_il_generation: BOOLEAN
 			assert_chheck: BOOLEAN
 		do
-			if locals /= Void then
-				from
-					position := 1
-					nb := locals.count
-				until
-					position > nb
-				loop
-						-- Local SK value
-					Context.add_local
-						(context.real_type (locals.item (position)))
-					position := position + 1
-				end
-			end
+			context.add_locals (locals)
 			assert_chheck := context.workbench_mode or
 				context.system.keep_assertions
 			if assert_chheck then

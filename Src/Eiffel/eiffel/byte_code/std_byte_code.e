@@ -344,7 +344,7 @@ feature -- Analyzis
 			l_context.generate_gc_hooks (False)
 
 				-- Record the locals, arguments and Current address for debugging.
-			generate_push_db
+			l_context.generate_push_debug_locals (result_type, arguments)
 
 				-- Separate declaration from the rest.
 			buf.put_new_line
@@ -1011,149 +1011,14 @@ end
 			end
 		end
 
-	generate_save_args is
-			-- Push the addresses of the arguments on the local variable stack.
-		local
-			i		: INTEGER
-			count	: INTEGER
-			type_i	: TYPE_A
-			buf		: GENERATION_BUFFER
-		do
-			if context.workbench_mode then
-				buf := buffer
-				if arguments /= Void then
-					from
-						count := arguments.count
-						i := arguments.lower
-					until
-						i > count
-					loop
-						type_i := real_type (arguments.item (i))
-							-- Local reference variable are declared via
-							-- the local variable array "l[]"
-						buf.put_new_line
-						buf.put_string ("RTLU(")
-						type_i.c_type.generate_sk_value (buf)
-						if type_i.is_true_expanded then
-							buf.put_string (",&earg")
-						else
-							buf.put_string (",&arg")
-						end
-						buf.put_integer (i)
-						buf.put_string (");")
-						i := i + 1
-					end
-				end
-			end
-		end
-
-	generate_save_locals is
-			-- Push the addresses of the local variables on the local variable stack.
-		local
-			i		: INTEGER
-			count	: INTEGER
-			type_i	: TYPE_A
-			buf		: GENERATION_BUFFER
-			local_types: LIST [TYPE_A]
-		do
-			if context.workbench_mode then
-				buf := buffer
-				local_types := context.local_list
-				from
-					count := local_types.count
-					i := 1
-				until
-					i > count
-				loop
-					type_i := real_type (local_types.i_th (i))
-						-- Local reference variable are declared via
-						-- the local variable array "l[]"
-					buf.put_new_line
-					buf.put_string ("RTLU(")
-					type_i.c_type.generate_sk_value (buf)
-					buf.put_string (", &loc")
-					buf.put_integer (i)
-					buf.put_string (");")
-					i := i + 1
-				end
-			end
-		end
-
-	generate_save_current is
-			-- Push the current object address on the local variable stack.
-		local
-			buf	: GENERATION_BUFFER
-		do
-			if context.workbench_mode then
-				buf := buffer
-				buf.put_new_line
-				buf.put_string ("RTLU (SK_REF, &Current);")
-			end
-		end
-
-	generate_save_result is
-			-- Push the address of Result on the local variable stack.
-		local
-			buf		: GENERATION_BUFFER
-			type_i	: TYPE_A
-		do
-			if context.workbench_mode then
-				buf := buffer
-				if (not result_type.is_void) then
-					type_i := real_type (context.byte_code.result_type)
-					buf.put_new_line
-					buf.put_string ("RTLU (")
-					type_i.c_type.generate_sk_value (buf)
-					buf.put_string (", &Result);")
-				else
-					buf.put_new_line
-					buf.put_string ("RTLU (SK_VOID, NULL);")
-				end
-			end
-		end
-
-	generate_push_db is
-			-- generate the macros to save the arguments, locals and so of the feature
-			-- in the c debug pile.
-		local
-			buf	: GENERATION_BUFFER
-		do
-			if context.workbench_mode then
-					-- first we save the Result register
-				generate_save_result
-					-- then we push the arguments of the function
-				generate_save_args
-					-- then we push current
-				generate_save_current
-					-- finally we push the local variables
-				generate_save_locals
-
-					-- Now we record the level of the local variable stack
-					-- to restore it in case of a rescue.
-				if rescue_clause /= Void then
-					buf := buffer
-					buf.put_new_line
-					buf.put_string ("RTLXL;")
-				end
-			end
-		end
-
 	generate_locals is
 			-- Declare C local variables
 		local
 			i: INTEGER
-			count: INTEGER
-			type_i: TYPE_A
 			buf: GENERATION_BUFFER
-			used_local: BOOLEAN
 			wkb_mode: BOOLEAN
-			used_upper: INTEGER
 			has_rescue: BOOLEAN
 			l_is_once: BOOLEAN
-			l_loc_name: STRING
-			l_type: CL_TYPE_A
-			l_class_type: CLASS_TYPE
-			local_types: LIST [TYPE_A]
 		do
 				-- Cache accessed attributes
 			buf := buffer
@@ -1161,63 +1026,7 @@ end
 			has_rescue := rescue_clause /= Void
 			l_is_once := is_once
 
-			local_types := context.local_list
-			from
-				count := local_types.count
-				used_upper := context.local_vars.upper
-				i := 1
-			until
-				i > count
-			loop
-				type_i := real_type (local_types.i_th (i))
-						-- Check whether the variable is used or not.
-				if i >= local_count then
-						-- Object test locals are always used.
-					used_local := True
-				elseif i > used_upper then
-					used_local := False
-				else
-					used_local := context.local_vars.item(i)
-				end
-
-						-- Generate only if variable used
-				if wkb_mode or (used_local or type_i.is_true_expanded) then
-						-- Local reference variable are declared via
-						-- the local variable array "l[]".
-					if type_i.is_true_expanded then
-						create l_loc_name.make (6)
-						l_loc_name.append ("sloc")
-						l_loc_name.append_integer (i)
-						l_type ?= type_i
-						check
-								-- Only a CL_TYPE_A could be an expanded
-							l_type_not_void: l_type /= Void
-						end
-						l_class_type := l_type.associated_class_type (context.context_class_type.type)
-						l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
-					end
-					buf.put_new_line
-					type_i.c_type.generate (buf)
-					if has_rescue then
-						buf.put_string ("EIF_VOLATILE ")
-					end
-					buf.put_string ("loc")
-					buf.put_integer (i)
-					buf.put_string (" = ")
-					if type_i.is_true_expanded then
-						type_i.c_type.generate_cast (buf)
-						buf.put_character ('(')
-						buf.put_string (l_loc_name)
-						buf.put_string (".data")
-						l_class_type.generate_expanded_overhead_size (buf)
-						buf.put_string (");")
-					else
-						type_i.c_type.generate_cast (buf)
-						buf.put_two_character ('0', ';')
-					end
-				end
-				i := i + 1
-			end
+			context.generate_local_declaration (local_count, has_rescue)
 
 				-- Generate local declaration for storing exception object.
 			if has_rescue then
@@ -1638,27 +1447,6 @@ end
 			end
 		end
 
-	generate_pop_debug_locals is
-			-- Generate the cleaning of the locals stack used by the debugger
-			-- when stopped in a C function
-		local
-			buf: GENERATION_BUFFER
-			i: INTEGER
-		do
-			if context.workbench_mode then
-				-- we have saved at least Result and Current
-				i := context.local_list.count + 2
-				if arguments /= Void then
-					i := i + arguments.count
-				end
-				buf := buffer
-				buf.put_new_line
-				buf.put_string ("RTLO(")
-				buf.put_integer (i)
-				buf.put_string (");")
-			end
-		end
-
 	trace_enabled: BOOLEAN is
 			-- Is the trace enabled for the associated class
 			-- in final mode?
@@ -1775,7 +1563,7 @@ end
 				-- Generate the remove of the GC hooks
 			context.remove_gc_hooks
 				-- Generate the update of the locals stack used to debug in C
-			generate_pop_debug_locals
+			context.generate_pop_debug_locals (arguments)
 				-- Generate trace macro (stop)
 			generate_trace_stop
 				-- Generate profile macro (stop)

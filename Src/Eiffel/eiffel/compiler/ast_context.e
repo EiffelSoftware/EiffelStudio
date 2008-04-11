@@ -509,6 +509,27 @@ feature -- Setting
 			end
 		end
 
+	init_invariant_byte_code (b: INVARIANT_B)
+			-- Initialize class invariant byte code `b'
+		local
+			i: LOCAL_INFO
+			l: ARRAY [TYPE_A]
+		do
+			if not object_test_locals.is_empty then
+				create l.make (1, object_test_locals.count)
+				from
+					object_test_locals.start
+				until
+					object_test_locals.after
+				loop
+					i := object_test_locals.item_for_iteration
+					l.force (i.type, i.position)
+					object_test_locals.forth
+				end
+				b.set_object_test_locals (l)
+			end
+		end
+
 	set_current_inline_agent_body (body: like current_inline_agent_body) is
 			-- Sets the current inline agent body
 		do

@@ -45,8 +45,6 @@ feature {ES_STONABLE_I, ES_TOOL} -- Element change
 			-- Sets last stone.
 			--
 			-- `a_stone': Stone to set.
-		local
-			l_old_stone: ?like stone
 		do
 			if a_stone /= stone then
 					-- Client is setting the stone directly, and not through {ES_STONABLE_TOOL}

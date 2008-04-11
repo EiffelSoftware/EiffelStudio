@@ -2079,6 +2079,209 @@ feature -- Access
 			local_list.put_right (t)
 		end
 
+	add_locals (l: ARRAY [TYPE_A])
+			-- Add all locals from `l'.
+		local
+			i: INTEGER
+		do
+			if l /= Void then
+				from
+					i := l.lower
+				until
+					i > l.upper
+				loop
+					add_local (real_type (l [i]))
+					i := i + 1
+				end
+			end
+		end
+
+feature -- C code generation: locals
+
+	generate_local_declaration (local_count: INTEGER; is_exception_safe: BOOLEAN)
+			-- Generate declaration of local variables with the first
+			-- `local_count' being "normal" locals and preserving their
+			-- values on exceptions if `is_exception_safe' is True.
+		local
+			i: INTEGER
+			count: INTEGER
+			type_i: TYPE_A
+			buf: GENERATION_BUFFER
+			used_local: BOOLEAN
+			wkb_mode: BOOLEAN
+			used_upper: INTEGER
+			l_loc_name: STRING
+			l_type: CL_TYPE_A
+			l_class_type: CLASS_TYPE
+			local_types: LIST [TYPE_A]
+			modifier: STRING
+		do
+			buf := buffer
+			wkb_mode := workbench_mode
+			if is_exception_safe then
+				modifier := "EIF_VOLATILE "
+			end
+
+			local_types := local_list
+			from
+				count := local_types.count
+				used_upper := local_vars.upper
+				i := 1
+			until
+				i > count
+			loop
+				type_i := real_type (local_types.i_th (i))
+						-- Check whether the variable is used or not.
+				if i >= local_count then
+						-- Object test locals are always used.
+					used_local := True
+				elseif i > used_upper then
+					used_local := False
+				else
+					used_local := local_vars.item(i)
+				end
+
+						-- Generate only if variable used
+				if wkb_mode or (used_local or type_i.is_true_expanded) then
+						-- Local reference variable are declared via
+						-- the local variable array "l[]".
+					if type_i.is_true_expanded then
+						create l_loc_name.make (6)
+						l_loc_name.append ("sloc")
+						l_loc_name.append_integer (i)
+						l_type ?= type_i
+						check
+								-- Only a CL_TYPE_A could be an expanded
+							l_type_not_void: l_type /= Void
+						end
+						l_class_type := l_type.associated_class_type (context_class_type.type)
+						l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
+					end
+					buf.put_new_line
+					type_i.c_type.generate (buf)
+					if modifier /= Void then
+						buf.put_string (modifier)
+					end
+					buf.put_string ("loc")
+					buf.put_integer (i)
+					buf.put_string (" = ")
+					if type_i.is_true_expanded then
+						type_i.c_type.generate_cast (buf)
+						buf.put_character ('(')
+						buf.put_string (l_loc_name)
+						buf.put_string (".data")
+						l_class_type.generate_expanded_overhead_size (buf)
+						buf.put_string (");")
+					else
+						type_i.c_type.generate_cast (buf)
+						buf.put_two_character ('0', ';')
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	generate_push_debug_locals (result_type: TYPE_A; arguments: ARRAY [TYPE_A])
+			-- Generate the macros to save the arguments, locals, etc.
+			-- of the feature in the C debug pile.
+		local
+			buf: GENERATION_BUFFER
+			type_i: TYPE_A
+			local_types: LIST [TYPE_A]
+			i: INTEGER
+			n: INTEGER
+		do
+			if workbench_mode then
+				buf := buffer
+					-- First save the Result register.
+				if result_type /= Void and then not result_type.is_void then
+					type_i := real_type (result_type)
+					buf.put_new_line
+					buf.put_string ("RTLU (")
+					type_i.c_type.generate_sk_value (buf)
+					buf.put_string (", &Result);")
+				else
+					buf.put_new_line
+					buf.put_string ("RTLU (SK_VOID, NULL);")
+				end
+					-- Then push the arguments of the feature (if any).
+				if arguments /= Void then
+					from
+						n := arguments.count
+						i := 1
+					until
+						i > n
+					loop
+						type_i := real_type (arguments [i])
+							-- Local reference variable are declared via
+							-- the local variable array "l[]"
+						buf.put_new_line
+						buf.put_string ("RTLU(")
+						type_i.c_type.generate_sk_value (buf)
+						if type_i.is_true_expanded then
+							buf.put_string (",&earg")
+						else
+							buf.put_string (",&arg")
+						end
+						buf.put_integer (i)
+						buf.put_string (");")
+						i := i + 1
+					end
+				end
+					-- Then push Current.
+				buf.put_new_line
+				buf.put_string ("RTLU (SK_REF, &Current);")
+					-- Finally push the local variables.
+				local_types := local_list
+				from
+					n := local_types.count
+					i := 1
+				until
+					i > n
+				loop
+					type_i := real_type (local_types.i_th (i))
+						-- Local reference variable are declared via
+						-- the local variable array "l[]"
+					buf.put_new_line
+					buf.put_string ("RTLU(")
+					type_i.c_type.generate_sk_value (buf)
+					buf.put_string (", &loc")
+					buf.put_integer (i)
+					buf.put_string (");")
+					i := i + 1
+				end
+
+					-- Now we record the level of the local variable stack
+					-- to restore it in case of a rescue.
+				if has_rescue then
+					buf := buffer
+					buf.put_new_line
+					buf.put_string ("RTLXL;")
+				end
+			end
+		end
+
+	generate_pop_debug_locals (arguments: ARRAY [TYPE_A]) is
+			-- Generate the cleaning of the locals stack used by the debugger
+			-- when stopped in a C function.
+		local
+			buf: GENERATION_BUFFER
+			i: INTEGER
+		do
+			if workbench_mode then
+				-- we have saved at least Result and Current
+				i := local_list.count + 2
+				if arguments /= Void then
+					i := i + arguments.count
+				end
+				buf := buffer
+				buf.put_new_line
+				buf.put_string ("RTLO(")
+				buf.put_integer (i)
+				buf.put_string (");")
+			end
+		end
+
 feature -- Object test code generation
 
 	add_object_test_locals (types: ARRAY [TYPE_A]; body_id: INTEGER; c: CLASS_TYPE)
@@ -2105,7 +2308,11 @@ feature -- Object test code generation
 		require
 			l_attached: l /= Void
 		do
-			if l.body_id = byte_code.body_index then
+			if assertion_type = in_invariant then
+					-- Object test is declared in class invariant.
+					-- There is no dedicated byte code.
+				Result := l.position
+			elseif l.body_id = byte_code.body_index then
 					-- Object test is declared in the current feature.
 				Result := byte_code.local_count + l.position
 			else

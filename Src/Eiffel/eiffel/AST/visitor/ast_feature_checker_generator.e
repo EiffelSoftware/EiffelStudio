@@ -209,6 +209,7 @@ feature -- Type checking
 				l_invariant.set_class_id (context.current_class.class_id)
 				l_invariant.set_byte_list (l_list)
 				l_invariant.set_once_manifest_string_count (a_clause.once_manifest_string_count)
+				context.init_invariant_byte_code (l_invariant)
 				last_byte_node := l_invariant
 			end
 		end
@@ -2327,24 +2328,49 @@ feature -- Implementation
 	process_access_inv_as (l_as: ACCESS_INV_AS) is
 		local
 			l_class_id: INTEGER
-			l_type_a: TYPE_A
+			l_type: TYPE_A
 			l_feature: FEATURE_I
 			l_error_level: NATURAL_32
+			l_local_info: LOCAL_INFO
+			l_vuar1: VUAR1
 		do
-			l_type_a := last_type.actual_type
+			l_type := last_type.actual_type
 			check
-				not_formal: not l_type_a.is_formal
+				not_formal: not l_type.is_formal
 			end
-			l_class_id := l_type_a.associated_class.class_id
-			if is_inherited then
-				l_feature := l_type_a.associated_class.feature_of_rout_id (l_as.routine_ids.first)
-			end
-			l_error_level := error_level
-			process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
-			if error_level = l_error_level and not is_inherited then
-					-- set some type attributes of the node
-				l_as.set_class_id (l_class_id)
-				l_as.set_routine_ids (last_routine_id_set)
+			l_class_id := l_type.associated_class.class_id
+			l_local_info := context.object_test_local (l_as.feature_name.name_id)
+			if l_local_info /= Void then
+				l_local_info.set_is_used (True)
+				last_access_writable := False
+				if l_as.parameters /= Void then
+					create l_vuar1
+					context.init_error (l_vuar1)
+					l_vuar1.set_local_name (l_as.feature_name.name)
+					l_vuar1.set_location (l_as.feature_name)
+					error_handler.insert_error (l_vuar1)
+				end
+				l_type := l_local_info.type
+				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, last_type.associated_class.class_id)
+				if is_byte_node_enabled then
+					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index)
+				end
+				if not is_inherited then
+					l_as.enable_object_test_local
+					l_as.set_class_id (class_id_of (l_type))
+				end
+				last_type := l_type
+			else
+				if is_inherited then
+					l_feature := l_type.associated_class.feature_of_rout_id (l_as.routine_ids.first)
+				end
+				l_error_level := error_level
+				process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
+				if error_level = l_error_level and not is_inherited then
+						-- set some type attributes of the node
+					l_as.set_class_id (l_class_id)
+					l_as.set_routine_ids (last_routine_id_set)
+				end
 			end
 		end
 

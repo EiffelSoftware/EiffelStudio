@@ -2163,15 +2163,26 @@ feature {NONE} -- Visitors
 
 	process_invariant_b (a_node: INVARIANT_B) is
 			-- Process `a_node'.
+		local
+			l: LINKED_LIST [TYPE_A]
 		do
 			context.local_list.wipe_out
+			context.add_locals (a_node.object_test_locals)
 			context.set_assertion_type ({ASSERT_TYPE}.in_invariant)
 
 			context.set_original_body_index (a_node.associated_class.invariant_feature.body_index)
 
-				-- Allocate memory for once manifest strings if required
+				-- Allocate memory for once manifest strings if required.
 			if a_node.once_manifest_string_count > 0 then
 				il_generator.generate_once_string_allocation (a_node.once_manifest_string_count)
+			end
+
+				-- Record local variable information.
+			l := context.local_list
+			il_generator.set_local_count (l.count)
+
+			if not l.is_empty then
+				generate_il_local_info (l)
 			end
 
 			il_generator.generate_invariant_body (a_node.byte_list)

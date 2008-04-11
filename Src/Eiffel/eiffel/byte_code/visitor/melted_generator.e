@@ -1088,6 +1088,7 @@ feature {NONE} -- Visitors
 			l_context := context
 			l_local_list := l_context.local_list
 			l_local_list.wipe_out
+			l_context.add_locals (a_node.object_test_locals)
 
 			create l_tmp_ba.make
 			l_tmp_ba.clear

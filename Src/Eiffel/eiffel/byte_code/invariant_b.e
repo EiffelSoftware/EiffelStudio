@@ -34,7 +34,10 @@ feature -- Access
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings in class invariant
 
-feature -- Settings
+	object_test_locals: ARRAY [TYPE_A]
+			-- Object test locals indexed with the corresponding object test locals positions
+
+feature {AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -- Modification
 
 	set_byte_list (b: like byte_list) is
 			-- Assign `b' to `byte_list'.
@@ -54,6 +57,17 @@ feature -- Settings
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
 
+	set_object_test_locals (l: like object_test_locals)
+			-- Attach `l' to `object_test_locals'.
+		require
+			l_attached: l /= Void
+			l_normalized: l.lower = 1
+		do
+			object_test_locals := l
+		ensure
+			object_test_locals_set: object_test_locals = l
+		end
+
 feature
 
 	associated_class: CLASS_C is
@@ -67,15 +81,28 @@ feature
 		require
 			has_invariant: byte_list /= Void
 		local
-			i: INTEGER;
-			body_index: INTEGER;
-			internal_name: STRING;
+			i: INTEGER
+			body_index: INTEGER
+			internal_name: STRING
 			buf: GENERATION_BUFFER
+			o: like object_test_locals
 		do
 			buf := buffer
 
 				-- Set the control flag for enlarging the assertions
 			context.set_assertion_type (In_invariant);
+
+			o := object_test_locals
+			if o /= Void then
+				from
+					i := o.lower
+				until
+					i > o.upper
+				loop
+					context.add_local (context.real_type (o [i]))
+					i := i + 1
+				end
+			end
 
 			byte_list.enlarge_tree;
 			byte_list.analyze;
@@ -104,6 +131,7 @@ feature
 			buf.generate_block_open
 			buf.put_gtcx
 
+			context.generate_local_declaration (0, False)
 				-- Generation of temporary variables under the control
 				-- of the GC
 			context.generate_temporary_ref_variables;
@@ -130,10 +158,16 @@ feature
 				-- Generate GC hooks
 			context.generate_gc_hooks (True);
 
+				-- Generate debug information about object test locals, Current.
+			context.generate_push_debug_locals (Void, Void)
+
 				-- Allocate memory for once manifest strings.
 			context.generate_once_manifest_string_allocation (once_manifest_string_count)
 
 			byte_list.generate;
+
+				-- Generate the update of the locals stack used to debug.
+			context.generate_pop_debug_locals (Void)
 
 				-- Remove gc hooks
 			i := context.ref_var_used;
@@ -156,7 +190,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

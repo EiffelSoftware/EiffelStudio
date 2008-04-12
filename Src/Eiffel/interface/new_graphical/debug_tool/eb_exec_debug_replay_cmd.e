@@ -24,20 +24,34 @@ inherit
 
 create
 	make_back,
-	make_forth
+	make_forth,
+	make_left,
+	make_right
 
 feature {NONE} -- Initialization
 
 	make_back (a_manager: like debugger_manager)
 			-- Initialize `Current'.
 		do
-			make_with_direction (a_manager, 1)
+			make_with_direction (a_manager, {APPLICATION_EXECUTION}.rtdbg_op_replay_back)
 		end
 
 	make_forth (a_manager: like debugger_manager)
 			-- Initialize `Current'.
 		do
-			make_with_direction (a_manager, 2)
+			make_with_direction (a_manager, {APPLICATION_EXECUTION}.rtdbg_op_replay_forth)
+		end
+
+	make_left (a_manager: like debugger_manager)
+			-- Initialize `Current'.
+		do
+			make_with_direction (a_manager, {APPLICATION_EXECUTION}.rtdbg_op_replay_left)
+		end
+
+	make_right (a_manager: like debugger_manager)
+			-- Initialize `Current'.
+		do
+			make_with_direction (a_manager, {APPLICATION_EXECUTION}.rtdbg_op_replay_right)
 		end
 
 	make_with_direction (a_manager: like debugger_manager; a_dir: like direction)
@@ -46,13 +60,13 @@ feature {NONE} -- Initialization
 			direction := a_dir
 
 			inspect direction
-			when 1 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_back then
 				name := "ExecReplayBack"
-			when 2 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_forth then
 				name := "ExecReplayForth"
-			when 3 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_left then
 				name := "ExecReplayLeft"
-			when 4 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_right then
 				name := "ExecReplayRight"
 			else
 				name := "ExecReplay"
@@ -76,15 +90,10 @@ feature -- Execution
 		do
 			dm := debugger_manager
 			if dm.safe_application_is_stopped then
-				inspect direction
-				when 1 then
-					b := dm.application.replay (1)
-				when 2 then
-					b := dm.application.replay (2)
-				else
-					b := False
+				b := dm.application.replay (direction)
+				if not b then
+					prompts.show_error_prompt ("Execution replay failed", Void, Void)
 				end
-				check replay_succeed: b = True end
 				dm.update_execution_replay
 			end
 		end
@@ -106,13 +115,13 @@ feature {NONE} -- Attributes
 			-- Tooltip displayed on `Current's buttons.
 		do
 			inspect direction
-			when 1 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_back then
 				Result := Interface_names.e_Exec_replay_back
-			when 2 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_forth then
 				Result := Interface_names.e_Exec_replay_forth
-			when 3 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_left then
 				Result := Interface_names.e_Exec_replay_left
-			when 4 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_right then
 				Result := Interface_names.e_Exec_replay_right
 			else
 				Result := Interface_names.e_Exec_replay
@@ -123,13 +132,13 @@ feature {NONE} -- Attributes
 			-- Text displayed on `Current's buttons.
 		do
 			inspect direction
-			when 1 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_back then
 				Result := Interface_names.b_Exec_replay_back
-			when 2 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_forth then
 				Result := Interface_names.b_Exec_replay_forth
-			when 3 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_left then
 				Result := Interface_names.b_Exec_replay_left
-			when 4 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_right then
 				Result := Interface_names.b_Exec_replay_right
 			else
 			end
@@ -142,13 +151,13 @@ feature {NONE} -- Attributes
 			-- Menu entry corresponding to `Current'.
 		do
 			inspect direction
-			when 1 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_back then
 				Result := Interface_names.m_Exec_replay_back
-			when 2 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_forth then
 				Result := Interface_names.m_Exec_replay_forth
-			when 3 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_left then
 				Result := Interface_names.m_Exec_replay_left
-			when 4 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_right then
 				Result := Interface_names.m_Exec_replay_right
 			else
 			end
@@ -158,13 +167,13 @@ feature {NONE} -- Attributes
 			-- Pixmap representing `Current' on buttons.
 		do
 			inspect direction
-			when 1 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_back then
 				Result := pixmaps.icon_pixmaps.general_arrow_down_icon
-			when 2 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_forth then
 				Result := pixmaps.icon_pixmaps.general_arrow_up_icon
-			when 3 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_left then
 				Result := pixmaps.icon_pixmaps.general_move_left_icon
-			when 4 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_right then
 				Result := pixmaps.icon_pixmaps.general_move_right_icon
 			else
 			end
@@ -174,13 +183,13 @@ feature {NONE} -- Attributes
 			-- Pixel buffer representing the command.
 		do
 			inspect direction
-			when 1 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_back then
 				Result := pixmaps.icon_pixmaps.general_arrow_down_icon_buffer
-			when 2 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_forth then
 				Result := pixmaps.icon_pixmaps.general_arrow_up_icon_buffer
-			when 3 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_left then
 				Result := pixmaps.icon_pixmaps.general_move_left_icon_buffer
-			when 4 then
+			when {APPLICATION_EXECUTION}.rtdbg_op_replay_right then
 				Result := pixmaps.icon_pixmaps.general_move_right_icon_buffer
 			else
 			end

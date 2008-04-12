@@ -19,18 +19,20 @@ feature -- Query
 			csr1_not_void: csr1 /= Void
 		local
 			chgs: like changes_between
-			rcds: LIST [RT_DBG_CALL_RECORD]
+			c,v: CURSOR
 		do
 			if csr1.is_flat then
 				Result := csr1.flat_value_records
 			else
-				create Result.make (10)
+				create Result.make (30)
 					--| Get Full records
 				if {flds: LIST [RT_DBG_RECORD]} csr1.value_records then
+					v := flds.cursor
 					Result.append (flds)
+					flds.go_to (v)
 				end
-				rcds := csr1.call_records
-				if rcds /= Void then
+				if {rcds: LIST [RT_DBG_CALL_RECORD]} csr1.call_records then
+					c := rcds.cursor
 					from
 						rcds.start
 					until
@@ -40,6 +42,7 @@ feature -- Query
 						Result.append (chgs)
 						rcds.forth
 					end
+					rcds.go_to (c)
 				end
 			end
 			if get_and_remove then

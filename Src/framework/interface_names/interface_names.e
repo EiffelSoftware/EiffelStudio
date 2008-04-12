@@ -200,10 +200,13 @@ feature -- Button texts
 	b_Activate_execution_replay_mode: STRING_GENERAL is 		do Result := locale.translation("Replay mode")	end
 	b_Deactivate_execution_replay_mode: STRING_GENERAL is 	do Result := locale.translation("Execution mode")	end
 
-	b_Exec_replay_back: STRING_GENERAL is	do Result := locale.translation("Replay Back")	end
-	b_Exec_replay_forth: STRING_GENERAL is	do Result := locale.translation("Replay Forth")	end
-	b_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Replay Left")	end
-	b_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Replay Right")	end
+	b_Exec_replay_back: STRING_GENERAL is	do Result := locale.translation("Back")	end
+	b_Exec_replay_forth: STRING_GENERAL is	do Result := locale.translation("Forth")	end
+	b_Exec_replay_left: STRING_GENERAL is	do Result := locale.translation("Left")	end
+	b_Exec_replay_right: STRING_GENERAL is	do Result := locale.translation("Right")	end
+	b_Exec_replay_to: STRING_GENERAL is	do Result := locale.translation("Go to")	end
+	t_Exec_replay_to: STRING_GENERAL is	do Result := locale.translation("Replay execution to selected call.")	end
+
 
 	b_Control_debuggee_object_storage: STRING_GENERAL is	do Result := locale.translation("Debuggee Object Storage")	end
 	b_Save_object: STRING_GENERAL is					do Result := locale.translation("Save Object")	end
@@ -1943,6 +1946,7 @@ feature -- Title part
 	t_Organize_favorites: STRING_GENERAL is				do Result := locale.translation("Organize Favorites")	end
 	t_Profile_query_window: STRING_GENERAL is			do Result := locale.translation("Profile Query Window")	end
 	t_Profiler_wizard: STRING_GENERAL is				do Result := locale.translation("Profiler Wizard")	end
+	t_Position: STRING_GENERAL is						do Result := locale.translation("Position")	end
 	t_Project: STRING is
 		once
 			Result := Workbench_name

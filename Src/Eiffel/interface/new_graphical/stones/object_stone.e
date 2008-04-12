@@ -19,6 +19,9 @@ inherit
 		end
 
 	SHARED_DEBUGGER_MANAGER
+		export
+			{NONE}
+		end
 
 create
 	make

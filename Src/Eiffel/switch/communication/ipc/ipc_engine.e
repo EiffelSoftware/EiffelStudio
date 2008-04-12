@@ -170,7 +170,7 @@ feature -- Launching
 					from
 						n := 0
 					until
-						not is_ecdbgd_alive or n > 1000 --| timeout: 1000ms
+						not is_ecdbgd_alive or n > 100 --| timeout: 100ms
 					loop
 						sleep (1_000_000) -- i.e: 1 ms
 						n := n + 1

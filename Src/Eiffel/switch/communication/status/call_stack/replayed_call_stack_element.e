@@ -25,13 +25,14 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			p,q,i: INTEGER
+			m: BOOLEAN
 		do
 			id := a_id
 
 			-- format:
-			--|	[depth.cid.fid.line.nested%T]  -> no sub calls
-			--|	[depth.cid.fid.line.nested%T#?+N()] -> N sub calls available
-			--|	[depth.cid.fid.line.nested%T#?+N([...][...])]
+			--|	[depth.cid.fid.line.nested.replayed_line.replayed_nested%T]  -> no sub calls
+			--|	[depth.cid.fid.line.nested.replayed_line.replayed_nested%T#?+N()] -> N sub calls available
+			--|	[depth.cid.fid.line.nested.replayed_line.replayed_nested%T#?+N([...][...])]
 			--| check: to_string
 
 			if s32.count > 0 then
@@ -69,12 +70,19 @@ feature {NONE} -- Initialization
 								until
 									p >= (s32.count - 2)
 								loop
+									if s32.item (p) = '!' then
+										m := True
+										p := p + 1
+									else
+										m := False
+									end
 									check valid_left_limit: s32.item (p) = '[' end
 									q := index_of_right_limit_position (s32, p + 1)
 									if q /= 0 then
 										check not_empty_substring: p < q  end
 										check valid_index: i <= calls_count end
 										calls[i] := create {like Current}.make_from_string (id + "." + i.out , s32.substring (p, q))
+										calls[i].set_active_replayed (m)
 										i := i + 1
 										p := q + 1
 									else
@@ -130,7 +138,7 @@ feature {NONE} -- Initialization
 			lst: LIST [STRING_32]
 		do
 			lst := s32.split ('.')
-			check lst.count = 6 end
+			check lst.count = 6 or lst.count = 8 end
 			lst.start
 			depth := lst.item.to_integer_32
 			lst.forth
@@ -143,6 +151,12 @@ feature {NONE} -- Initialization
 			break_index := lst.item.to_integer_32
 			lst.forth
 			break_nested_index := lst.item.to_integer_32
+			if not lst.after then
+				lst.forth
+				replayed_break_index := lst.item.to_integer_32
+				lst.forth
+				replayed_break_nested_index := lst.item.to_integer_32
+			end
 
 			ct := eiffel_system.system.class_type_of_id (dynamic_class_type_id)
 			if ct /= Void then
@@ -230,7 +244,6 @@ feature -- Properties
 			end
 		end
 
-
 	depth: INTEGER
 			-- Depth in call stack
 
@@ -240,11 +253,20 @@ feature -- Properties
 	break_nested_index: INTEGER
 			-- Breakable slot nested index
 
+	replayed_break_index: INTEGER
+			-- Replayed breakable slot index		
+
+	replayed_break_nested_index: INTEGER
+			-- Replayed breakable slot nested index	
+
 	calls: ARRAY [like Current] assign set_calls
 			-- Calls from Current
 
 	calls_count: INTEGER
 			-- Calls' count
+
+	is_active_replayed: BOOLEAN assign set_active_replayed
+			-- Is Current the active replayed call ?
 
 	is_flat: BOOLEAN
 			-- Is flat record ?
@@ -302,6 +324,12 @@ feature -- change
 			calls := v
 		end
 
+	set_active_replayed (b: BOOLEAN) is
+			-- Set `is_active_replayed'
+		do
+			is_active_replayed := b
+		end
+
 feature -- Access
 
 	to_string: !STRING is
@@ -312,8 +340,15 @@ feature -- Access
 
 			create Result.make_from_string (id)
 			Result.append_string (" -> ")
+			if is_active_replayed then
+				Result.append_character ('!')
+			end
 			Result.append_character ('[')
 			Result.append_string (remote_id)
+			Result.append_character ('.')
+			Result.append_integer (replayed_break_index)
+			Result.append_character ('.')
+			Result.append_integer (replayed_break_nested_index)
 			Result.append_character ('%T')
 			if is_flat then
 				Result.append_character ('#')

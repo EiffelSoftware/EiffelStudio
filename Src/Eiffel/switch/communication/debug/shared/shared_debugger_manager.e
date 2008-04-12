@@ -68,7 +68,7 @@ feature {NONE} -- Cell
 				-- Load application context (command line and breakpoints)
 			dm := Debugger_manager_cell.item
 			if dm /= Void then
-				dm.load_debugger_data
+				dm.load_all_debugger_data
 			end
 		end
 
@@ -80,7 +80,7 @@ feature {NONE} -- Cell
 				-- Save application context (command line and breakpoints)
 			dm := Debugger_manager_cell.item
 			if dm /= Void then
-				dm.save_debugger_data
+				dm.save_all_debugger_data
 			end
 		end
 

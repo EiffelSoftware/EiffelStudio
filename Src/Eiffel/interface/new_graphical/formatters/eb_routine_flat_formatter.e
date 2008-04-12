@@ -80,29 +80,21 @@ feature -- Formatting
 	show_debugged_line is
 			-- Update arrows in formatter and ensure that arrows is visible.
 		local
-			stel: EIFFEL_CALL_STACK_ELEMENT
-			l_line: INTEGER
+			t: TUPLE [line: INTEGER; fid: INTEGER]
+			dm: like debugger_manager
 		do
 			if displayed and selected then
 				if associated_feature /= Void then
-					if
-						Debugger_manager.safe_application_is_stopped
-						and then Debugger_manager.application_status.current_call_stack /= Void
-					then
-						stel  ?= Debugger_manager.application_status.current_call_stack_element
-						if
-							stel /= Void and then stel.routine /= Void
-							and then stel.routine.body_id_for_ast = associated_feature.body_index
-						then
-							l_line := stel.break_index
-							if l_line > 0 then
-								editor.display_breakpoint_number_when_ready (l_line, stel.routine.feature_id)
-									-- Refresh is needed on the margin because if we are showing the same
-									-- feature but from a different CALL_STACK_ELEMENT (case of recursive call)
-									-- we need to refresh it to show/hide the green arrow representing
-									-- where the execution is in the call stack history.
-								editor.margin.refresh
-							end
+					dm := debugger_manager
+					if dm.safe_application_is_stopped then
+						t := dm.application_status.debugged_position_information (associated_feature)
+						if t /= Void and then t.line > 0 then
+							editor.display_breakpoint_number_when_ready (t.line, t.fid)
+								-- Refresh is needed on the margin because if we are showing the same
+								-- feature but from a different CALL_STACK_ELEMENT (case of recursive call)
+								-- we need to refresh it to show/hide the green arrow representing
+								-- where the execution is in the call stack history.
+							editor.margin.refresh
 						end
 					end
 				end

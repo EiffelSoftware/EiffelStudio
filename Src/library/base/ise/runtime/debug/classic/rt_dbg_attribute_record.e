@@ -12,6 +12,8 @@ inherit
 	RT_DBG_RECORD
 		rename
 			position as offset
+		redefine
+			debug_output
 		end
 
 create
@@ -62,6 +64,11 @@ feature -- Access
 			Result := {c: like Current} other and then offset = c.offset and then value = c.value
 		end
 
+	debug_output: STRING
+		do
+			Result := Precursor + " (object=" + object.generating_type + ")"
+		end
+
 	to_string: STRING
 			-- String representation
 		do
@@ -96,17 +103,17 @@ feature -- Runtime
 	restore (val: !RT_DBG_RECORD)
 			-- Restore `value' on `object'
 		do
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".restore (" + object.generator + " #" + offset.out + ")%N")
  				dtrace (" -> " + field_name_at (offset, object) + "%N")
 			end
 			if is_same_as (val) then
-				debug ("RT_EXTENSION")
+				debug ("RT_DBG_REPLAY")
 					dtrace (" -> unchanged because same value [" + to_string + "].%N")
 				end
 			else
 				set_attribute_from_record (object, Current)
-				debug ("RT_EXTENSION")
+				debug ("RT_DBG_REPLAY")
 					dtrace (" -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
 				end
 			end
@@ -115,11 +122,11 @@ feature -- Runtime
 	revert (bak: !RT_DBG_RECORD)
 			-- Revert previous change due to Current to `object'
 		do
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".revert (" + object.generator + " #" + offset.out + ")%N")
 			end
 			set_attribute_from_record (object, bak)
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (" -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
 			end
 		end

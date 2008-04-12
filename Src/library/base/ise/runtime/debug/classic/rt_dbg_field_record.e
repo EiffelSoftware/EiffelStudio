@@ -99,17 +99,17 @@ feature -- Runtime
 	restore (val: !RT_DBG_RECORD)
 			-- Restore `value' on `object', and associate `val' as `backup'
 		do
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".restore (" + object.generator + " #" + index.out + ")%N")
  				dtrace (" -> " + field_name (index, object) + ": offset " + field_offset (index, object).out + "%N")
 			end
 			if is_same_as (val) then
-				debug ("RT_EXTENSION")
+				debug ("RT_DBG_REPLAY")
 					dtrace (" -> unchanged because same value [" + to_string + "].%N")
 				end
 			else
 				set_object_field (object, Current)
-				debug ("RT_EXTENSION")
+				debug ("RT_DBG_REPLAY")
 					dtrace (" -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
 				end
 			end
@@ -118,11 +118,11 @@ feature -- Runtime
 	revert (bak: !RT_DBG_RECORD)
 			-- Revert previous change due to Current to `object'
 		do
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".revert (" + object.generator + " #" + index.out + ")%N")
 			end
 			set_object_field (object, bak)
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (" -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
 			end
 		end

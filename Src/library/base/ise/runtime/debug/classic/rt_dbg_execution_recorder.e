@@ -390,11 +390,12 @@ feature -- Event
 			is_not_replaying: not is_replaying
 		do
 			if {r: like callstack_record} top_callstack_record then
-				debug ("RT_DBG_WARNING")
-					print ("Warning: hook mismatch on depth now=" + dep.out + " top.depth=" + r.depth.out + "%N")
-				end
 				if r.depth = dep then
 					r.register_position (bp_i, bp_ni)
+				else
+					debug ("RT_DBG_WARNING")
+						print ("Warning: hook mismatch on depth now=" + dep.out + " top.depth=" + r.depth.out + "%N")
+					end
 				end
 			end
 		end

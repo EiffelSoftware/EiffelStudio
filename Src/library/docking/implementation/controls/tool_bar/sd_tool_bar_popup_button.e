@@ -118,6 +118,18 @@ feature -- Query
 			end
 		end
 
+feature -- Basic operations
+
+	perform_select
+			-- Performs a selection
+		require
+			not_is_destroyed: not is_destroyed
+			is_displayed: is_displayed
+			has_function: menu /= Void or menu_function /= Void or popup_widget /= Void
+		do
+			on_select
+		end
+
 feature {NONE} -- Implementation
 
 	popup: EV_POPUP_WINDOW is

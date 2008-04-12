@@ -73,8 +73,10 @@ feature {NONE} -- Initialization
 					-- set the private to a fake value
 				private_body_index := -1
 
-				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Creating item%N"); end
-				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_recv_c%N"); end
+				debug ("DEBUGGER_TRACE")
+					io.error.put_string ("%T%T" + generator + ": Creating item%N");
+					io.error.put_string ("%T%T" + generator + ": init_recv_c%N");
+				end
 				Init_recv_c
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_rout_c%N"); end
 				Init_rout_c

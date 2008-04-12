@@ -537,6 +537,9 @@ rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 }
 #endif
 
+#define RT_DEBUG_ENABLED(cond,d) d
+//#define RT_DEBUG_ENABLED(cond,d) cond
+
 rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	/* args: ex_vect, current execution vector     */
 	/*       break_index, current offset (i.e. line number in stoppoints mode) within feature */
@@ -551,8 +554,8 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 						 * from Estudio, we can avoid the execution of this declaration
  						 * when the application is started from the command line
  						 */
-		if (is_inside_rt_eiffel_code == 0) {
-			RTDBGH(break_index, 0);
+		if (RT_DEBUG_ENABLED(is_inside_rt_eiffel_code == 0,1)) {
+			RTDBGH(d_data.db_callstack_depth, break_index, 0);
 			if (!d_data.db_discard_breakpoints ) {
 				int stopped = 0;
 				BODY_INDEX bodyid = exvect->ex_bodyid;
@@ -628,8 +631,8 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 	   					* when the application is started from the command line
 	   					*/
 
-		if (is_inside_rt_eiffel_code == 0) {
-			RTDBGH(break_index, nested_break_index);
+		if (RT_DEBUG_ENABLED(is_inside_rt_eiffel_code == 0,1)) {
+			RTDBGH(d_data.db_callstack_depth, break_index, nested_break_index);
 			if (!d_data.db_discard_breakpoints) {
 				BODY_INDEX bodyid = exvect->ex_bodyid;
 				DBGMTX_LOCK;	/* Enter critical section */
@@ -2130,7 +2133,7 @@ rt_public void c_wipe_out(register struct c_stochunk *chunk)
  * RT_EXTENSION interaction for debugging
  */
 #ifdef WORKBENCH
-rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int i3, char* ptr)
+rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int i3)
 {
 
 	if (exec_recording_enabled == 1) {
@@ -2146,7 +2149,7 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 			EIF_TYPED_VALUE rtd_op;
 			RT_ENTER_EIFFELCODE;
 			{
-			volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE);
+			RT_DEBUG_ENABLED(volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE),);
 
 			RT_GC_PROTECT(ref);     /* Protect `ref' since it may move if GC called */
 			rtd_op.it_i4 = op;
@@ -2157,19 +2160,16 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) i1);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) i2); 
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) i3); 
-			if (op == RTDBG_EVENT_ENTER_FEATURE) {
-				((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_p = ptr;
-			};
 			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
 			RT_GC_WEAN(rtd_arg.it_r);
 			RT_GC_WEAN(ref);      /* Unprotect `ref'. No more collection is expected. */
-			c_check_assert (rtdbg_asserting);
+			RT_DEBUG_ENABLED(c_check_assert (rtdbg_asserting),);
 			}
 			RT_EXIT_EIFFELCODE;
 		};	
 	};	
 }
-rt_public void rt_ext_notify_assign (int op, EIF_REFERENCE ref, long a_pos, int a_static_type, int32 a_feat_id, int a_dyn_type,  
+rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_static_type, int32 a_feat_id, int a_dyn_type,  
 		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted)
 {
 
@@ -2204,12 +2204,12 @@ rt_public void rt_ext_notify_assign (int op, EIF_REFERENCE ref, long a_pos, int 
 			}
 
 #ifdef DEBUG
-			fprintf(stdout, "rt_ext_notify_assign (op=%d, ref, %d, %d, %d, %d, %s) \n", op, i1, i2, i3, ptr);
+			fprintf(stdout, "rt_ext_notify_assign (op=%d, dep=%d, ref, pos=%d, st=%d, fid=%d, dt=%d, rt=0x%X, , , ) \n", op, dep, a_pos, a_static_type, a_feat_id, a_dyn_type, a_rt_type);
 #endif
 
 			RT_ENTER_EIFFELCODE;
 			{
-			volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE);
+			RT_DEBUG_ENABLED(volatile EIF_BOOLEAN rtdbg_asserting = c_check_assert (EIF_FALSE),);
 
 			RT_GC_PROTECT(ref);     /* Protect `ref' since it may move if GC called */
 			rtd_op.it_i4 = op;
@@ -2218,19 +2218,15 @@ rt_public void rt_ext_notify_assign (int op, EIF_REFERENCE ref, long a_pos, int 
 			RT_GC_PROTECT (rtd_arg.it_r);
 
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r  = ((EIF_REFERENCE) ref);
-			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) l_pos);
-			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) a_rt_type); 
-			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) (a_expanded + (a_precompiled << 1) + (a_melted << 2)) );
-			/* FIXME jfiat [2008/04/02] : Could be use to pass the value ... -> optimisation for later
-			if (op == RTDBG_EVENT_ENTER_FEATURE) {
-				((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_p = ptr;
-			};
-			*/
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) dep);
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) l_pos);
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) a_rt_type); 
+			((EIF_TYPED_VALUE *)rtd_arg.it_r+5)->it_i4 = ((EIF_INTEGER_32) (a_expanded + (a_precompiled << 1) + (a_melted << 2)) );
 
 			(*egc_rt_extension_notify)(rt_extension_obj, rtd_op, rtd_arg);			
 			RT_GC_WEAN(rtd_arg.it_r);
 			RT_GC_WEAN(ref);      /* Unprotect `ref'. No more collection is expected. */
-			c_check_assert (rtdbg_asserting);
+			RT_DEBUG_ENABLED(c_check_assert (rtdbg_asserting),);
 			}
 			RT_EXIT_EIFFELCODE;
 		};	
@@ -2258,15 +2254,13 @@ rt_public char* rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 
 	if (ip.address == (char*)0) {
 		return (EIF_REFERENCE) 0;
 	} else {
-#ifdef DEBUG				
 		if ((ip.value.type & SK_HEAD) != (a_rt_type & SK_HEAD)) {
 			if (((ip.value.type & SK_HEAD) == SK_VOID)) {
 				// ,...
 			} else {
-				fprintf(stderr,"rt_dbg_stack_value (dep=%d, loc_type=0x%X, loc_number=%d) -> ERROR ip: type:0x%X rt_type=0x%X\n", stack_depth, loc_type, loc_number, ip.value.type, a_rt_type & SK_HEAD);
+				print_err_msg (stderr,"[Execution recording] Error: rt_dbg_stack_value (dep=%d, loc_type=0x%X, loc_number=%d) -> ERROR ip: type:0x%X rt_type=0x%X\n", stack_depth, loc_type, loc_number, ip.value.type, a_rt_type & SK_HEAD);
 			}
 		}
-#endif
 
 		switch (ip.value.type & SK_HEAD) {
 		case SK_BOOL:
@@ -2400,14 +2394,14 @@ rt_public int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint3
 	if (ip.address == (char*)0) {
 		return 0;
 	} else {
-#ifdef DEBUG
 		if ((ip.value.type & SK_HEAD) != (new_value->type & SK_HEAD)) {
 			if (((ip.value.type & SK_HEAD) == SK_REF) && ((new_value->type & SK_HEAD) == SK_VOID)) {
 				// ,...
 			} else {
-				fprintf(stderr,"rt_dbg_set_stack_value (dep=%d, loc_type=0x%X, loc_number=%d) -> ERROR ip: type:0x%X new_value->type=0x%X\n", stack_depth, loc_type, loc_number, ip.value.type, new_value->type);
+				print_err_msg(stderr,"[Execution replaying] Error: rt_dbg_set_stack_value (dep=%d, loc_type=0x%X, loc_number=%d) -> ERROR ip: type:0x%X new_value->type=0x%X\n", stack_depth, loc_type, loc_number, ip.value.type, new_value->type);
 			}
 		}
+#ifdef DEBUG
 		fprintf(stderr,"rt_dbg_set_stack_value -> ip: type:0x%X address:0x%X  new_value->type=0x%X\n", ip.value.type, ip.address, new_value->type);
 #endif
 		switch (new_value->type & SK_HEAD) {

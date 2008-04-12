@@ -295,6 +295,14 @@ feature -- Call Stack related
 	current_call_stack: EIFFEL_CALL_STACK
 			-- Current Call Stack regarding Thread Id.
 
+	current_call_stack_depth: INTEGER is
+			-- Stack depth of `current_call_stack'
+		do
+			if current_call_stack /= Void then
+				Result := current_call_stack.stack_depth
+			end
+		end
+
 	has_call_stack_by_thread_id (tid: INTEGER): BOOLEAN is
 		do
 			Result := call_stack_list.has (tid)
@@ -495,6 +503,26 @@ feature -- Access
 						(reason = Pg_step)
 		end
 
+	debugged_position_information (fe: E_FEATURE): TUPLE [break_index: INTEGER; fid: INTEGER] is
+			-- Information about debugged position
+		do
+			if current_call_stack /= Void then
+				if
+					{rep: like current_replayed_call} current_replayed_call  and then
+					{r_fe: E_FEATURE} rep.e_feature and then
+					r_fe.body_id_for_ast = fe.body_index
+				then
+					Result := [rep.replayed_break_index, r_fe.feature_id]
+				elseif
+					{stel: EIFFEL_CALL_STACK_ELEMENT} current_call_stack_element and then
+					{ot_fe: E_FEATURE} stel.routine and then
+					ot_fe.body_id_for_ast = fe.body_index
+				then
+					Result := [stel.break_index, ot_fe.feature_id]
+				end
+			end
+		end
+
 	is_at (f_body_index: INTEGER; index: INTEGER): BOOLEAN is
 			-- Is the program stopped at the given index in the given feature ?
 			-- Returns False when the couple ('f','index') cannot be found on the stack.
@@ -502,19 +530,28 @@ feature -- Access
 			-- Returns True when the couple ('f','index') is active (i.e is the current
 			--	       active feature on stack)
 		local
-			stack_elem: EIFFEL_CALL_STACK_ELEMENT
-			current_execution_stack_number: INTEGER
-			l_ccs: EIFFEL_CALL_STACK
+			n: INTEGER
 		do
 			if is_stopped then
-				l_ccs := current_call_stack
-				if l_ccs /= Void and then not l_ccs.is_empty then
-					current_execution_stack_number := Application.current_execution_stack_number
-					stack_elem ?= l_ccs.i_th (Application.current_execution_stack_number)
-					Result := stack_elem /= Void
-							and then stack_elem.routine /= Void
-							and then f_body_index = stack_elem.body_index
-							and then index = stack_elem.break_index
+				if {crep: like current_replayed_call} current_replayed_call then
+					if crep.replayed_break_index = index then
+						Result := {fi: FEATURE_I} crep.feature_i and then fi.body_index = f_body_index
+					end
+				end
+				if not Result then
+					if {rep: like replayed_call} replayed_call then
+						if rep.line = index then
+							Result := {f: E_FEATURE} rep.feat and then f.body_index = f_body_index
+						end
+					else
+						if {l_ccs: EIFFEL_CALL_STACK} current_call_stack and then not l_ccs.is_empty then
+							n := Application.current_execution_stack_number
+							Result := {stack_elem: EIFFEL_CALL_STACK_ELEMENT} l_ccs.i_th (n)
+									and then stack_elem.break_index = index
+									and then {ef: E_FEATURE} stack_elem.routine
+									and then ef.body_index = f_body_index
+						end
+					end
 				end
 			end
 		end
@@ -524,17 +561,21 @@ feature -- Access
 			-- Return False if the couple ('f','index') is somewhere else in the stack,
 			-- 		or if the couple ('f','index') is not in the stack.
 		local
-			stack_elem: EIFFEL_CALL_STACK_ELEMENT
-			l_ccs: EIFFEL_CALL_STACK
+			n: INTEGER
 		do
 			if is_stopped then
-				l_ccs := current_call_stack
-				if l_ccs /= Void and then not l_ccs.is_empty then
-					stack_elem ?= l_ccs.i_th (1)
-					Result := stack_elem /= Void
-							and then stack_elem.routine /= Void
-							and then f_body_index = stack_elem.body_index
-							and then index = stack_elem.break_index
+				if {rep: like current_replayed_call} current_replayed_call then
+					if rep.replayed_break_index = index then
+						Result := {fi: FEATURE_I} rep.feature_i and then fi.body_index = f_body_index
+					end
+				else
+					if {l_ccs: EIFFEL_CALL_STACK} current_call_stack and then not l_ccs.is_empty then
+						n := 1
+						Result := {stack_elem: EIFFEL_CALL_STACK_ELEMENT} l_ccs.i_th (n)
+								and then stack_elem.break_index = index
+								and then {ef: E_FEATURE} stack_elem.routine
+								and then ef.body_index = f_body_index
+					end
 				end
 			end
 		end
@@ -571,11 +612,24 @@ feature -- Execution replay
 	replay_activated: BOOLEAN
 			-- Execution is being replayed (reviewed)
 
-	replay_depth_limit: INTEGER
+	replay_level_limit: INTEGER
 			-- Maximum depth which can be replayed
 
-	replay_depth: INTEGER
+	replayed_depth: INTEGER is
 			-- Current replayed depth
+		do
+			if {rc: like current_replayed_call} current_replayed_call then
+				Result := rc.depth
+			else
+				--| 0 which mean ... not replayed
+			end
+		end
+
+	replayed_call: TUPLE [feat: E_FEATURE; line: INTEGER]
+			-- Current display replayed call info
+
+	current_replayed_call: REPLAYED_CALL_STACK_ELEMENT
+			-- Top replayed call
 
 	set_replay_recording (b: BOOLEAN) is
 			-- Enable or disable execution replay recording
@@ -591,22 +645,30 @@ feature -- Execution replay
 			activate_replay_only_if_recording: b implies replay_recording
 		do
 			replay_activated := b
+			if not b then
+				replayed_call := Void
+				current_replayed_call := Void
+			end
 		end
 
-	set_replay_depth_limit (d: INTEGER) is
-			-- Set maximum replay depth
+	set_replay_level_limit (d: INTEGER) is
+			-- Set maximum replay level
 		require
 			d_positive_or_zero: d >= 0
 		do
-			replay_depth_limit := d
+			replay_level_limit := d
 		end
 
-	set_replay_depth (d: INTEGER) is
-			-- Set current replay depth
-		require
-			d_in_range: d >= 0 and d <= replay_depth_limit
+	set_replayed_call (d: like replayed_call) is
+			-- set current replayed call
 		do
-			replay_depth := d
+			replayed_call := d
+		end
+
+	set_current_replayed_call (d: like current_replayed_call) is
+			-- Set `current_replayed_call'
+		do
+			current_replayed_call := d
 		end
 
 	set_catcall_data (v: like catcall_data) is

@@ -226,13 +226,34 @@ feature {NONE} -- Debugger session data access
 					internal_session_data := Result
 
 						-- Load debugger data when first access the session
-					load_debugger_data
+					load_all_debugger_data
+				end
+			end
+		end
+
+	profiles_session_data: SESSION_I is
+			-- Session data
+		local
+			cons: like session_manager
+		do
+			Result := internal_profiles_session_data
+			if Result = Void then
+				cons := session_manager
+				if cons.is_service_available then
+					Result := cons.service.retrieve_extended (True, once "dbg-profiles")
+					internal_profiles_session_data := Result
+
+						-- Load debugger data when first access the session
+					load_profiles_data
 				end
 			end
 		end
 
 	internal_session_data: like session_data
 			-- cached version of `session_data'
+
+	internal_profiles_session_data: like profiles_session_data
+			-- cached version of `profiles_session_data'
 
 	Profiles_session_data_id: STRING is "com.eiffel.debugger.profiles"
 			-- Id for session data related to profiles
@@ -245,50 +266,61 @@ feature {NONE} -- Debugger session data access
 
 feature {NONE} -- Debugger session data change
 
-	force_save_session_data is
-			-- Force storing of `session_data'
+	force_save_session_data (a_session_data: SESSION_I) is
+			-- Force storing of `a_session_data'
 		local
 			cons: like session_manager
 		do
 			cons := session_manager
 			if cons.is_service_available then
-				cons.service.store (session_data)
+				cons.service.store (a_session_data)
 			end
 		end
 
 feature -- Debugger data change		
 
-	load_debugger_data is
-			-- Load debug information from the file `raw_filename'
+	load_all_debugger_data is
+			-- Load debug information
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				load_profiles_data
+				load_breakpoints_data
+				load_exceptions_handler_data
+
+				implementation.load_system_dependent_debug_info
+			else
+				check should_not_occurs: False end
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
+	load_breakpoints_data is
+			-- Load breakpoints data
 		local
 			bplst: BREAK_LIST
-			prof: like profiles
-			loading_rescued: BOOLEAN
-			full_load_rescued: BOOLEAN
-			dbg_session: like session_data
+			rescued, loading_rescued: BOOLEAN
+			dbg_session: SESSION_I
 		do
-			if not full_load_rescued then
+			if not rescued then
 				if not loading_rescued then
 					dbg_session := session_data
-					prof ?= dbg_session.value (Profiles_session_data_id)
-   					bplst ?= dbg_session.value (Breakpoints_session_data_id)
-					internal_exceptions_handler ?= dbg_session.value (Exception_handler_session_data_id)
-
-					if prof /= Void then
-						profiles := prof
-					else
-						check profiles /= Void end
-					end
+					bplst ?= dbg_session.value (Breakpoints_session_data_id)
 
 					breakpoints_manager.set_breakpoints (bplst)
 							-- Reset information about the application
 							-- contained in the breakpoints (if any).
 					breakpoints_manager.restore
 					breakpoints_manager.breakpoints.reload
+
+				else
+					-- Loading Issue !
 				end
 
-					--| Effective file loading done, now process the applicative loading
-				implementation.load_system_dependent_debug_info
+					--| Effective file loading done, now process the applicative loading				
 				breakpoints_manager.update_breakpoints_tags_provider
 				breakpoints_manager.resynchronize_breakpoints
 			else
@@ -299,37 +331,67 @@ feature -- Debugger data change
 			if not loading_rescued then
 				loading_rescued := True
 			else
-				full_load_rescued := True
+				rescued := True
 			end
 			retry
 		end
 
-	save_profiles is
-			-- Save profile
+	load_exceptions_handler_data is
+			-- Load exceptions_handler data
 		local
-			retried: BOOLEAN
+			loading_rescued: BOOLEAN
+			dbg_session: SESSION_I
 		do
-			if not retried then
-					-- Effective saving
-				session_data.set_value (profiles, Profiles_session_data_id)
-				profiles.prepare_for_storage
-
-				force_save_session_data
+			if not loading_rescued then
+				dbg_session := session_data
+				internal_exceptions_handler ?= dbg_session.value (Exception_handler_session_data_id)
 			else
-				set_error_message ("Unable to save debugger's profiles%N")
+				-- Issue !
 			end
 		rescue
-			retried := True
+			loading_rescued := True
 			retry
 		end
 
-	save_debugger_data is
+	load_profiles_data is
+			-- Load profiles
+		local
+			prof: like profiles
+			rescued: BOOLEAN
+			dbg_session: SESSION_I
+		do
+			if not rescued then
+				dbg_session := profiles_session_data
+				prof ?= dbg_session.value (Profiles_session_data_id)
+
+				if prof /= Void then
+					profiles := prof
+				else
+					check profiles /= Void end
+				end
+			else
+				-- Issue !
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
+	save_all_debugger_data is
 			-- Save debug informations into the file `raw_filename'.
+		do
+			save_profiles_data
+			save_breakpoints_data
+			save_exceptions_handler_data
+		end
+
+	save_breakpoints_data is
+			-- Save breakpoints and exceptions_handler data
 		local
 			retried: BOOLEAN
 			bplst: BREAK_LIST
 			old_bplist: BREAK_LIST
-			dbg_session: like session_data
+			dbg_session: SESSION_I
 		do
 			if not retried then
 					-- backup current list
@@ -347,9 +409,33 @@ feature -- Debugger data change
 					--| Set breakpoints (this is a copy, thus new object, and then it will be stored)
    				dbg_session.set_value (bplst, Breakpoints_session_data_id)
 
-					--| Set profiles
-				dbg_session.set_value (profiles, Profiles_session_data_id)
-				profiles.prepare_for_storage
+   					--| Force storage
+				force_save_session_data (dbg_session)
+
+				bplst := Void
+
+				breakpoints_manager.set_breakpoints (old_bplist)
+			else
+				set_error_message ("Unable to save debugger's breakpoints%N")
+			end
+		rescue
+			if old_bplist /= Void then
+				breakpoints_manager.set_breakpoints (old_bplist)
+				old_bplist := Void
+			end
+			retried := True
+			retry
+		end
+
+	save_exceptions_handler_data is
+			-- Save exceptions_handler data
+		local
+			retried: BOOLEAN
+			dbg_session: SESSION_I
+		do
+			if not retried then
+					-- Effective saving
+				dbg_session := session_data
 
 					--| Set exceptions handler
    				dbg_session.set_value (internal_exceptions_handler, Exception_handler_session_data_id)
@@ -358,19 +444,33 @@ feature -- Debugger data change
    				end
 
    					--| Force storage
-				force_save_session_data
-
-				bplst := Void
-
-				breakpoints_manager.set_breakpoints (old_bplist)
+				force_save_session_data (dbg_session)
 			else
-				set_error_message ("Unable to save debugger's properties%N")
+				set_error_message ("Unable to save exceptions handler's data%N")
 			end
 		rescue
-			if old_bplist /= Void then
-				breakpoints_manager.set_breakpoints (old_bplist)
-				old_bplist := Void
+			retried := True
+			retry
+		end
+
+	save_profiles_data is
+			-- Save profiles
+		local
+			retried: BOOLEAN
+			dbg_session: SESSION_I
+		do
+			if not retried then
+				dbg_session := profiles_session_data
+
+					-- Effective saving
+				dbg_session.set_value (profiles, Profiles_session_data_id)
+				profiles.prepare_for_storage
+
+				force_save_session_data (dbg_session)
+			else
+				set_error_message ("Unable to save debugger's profiles%N")
 			end
+		rescue
 			retried := True
 			retry
 		end
@@ -1203,6 +1303,13 @@ feature -- Application change
 				execution_ignoring_breakpoints := b
 				if application_initialized then
 					application.ignore_breakpoints (b)
+					if not application_is_stopped then
+						if b then
+							debugger_status_message (debugger_names.t_Running_no_stop_points)
+						else
+							debugger_status_message (debugger_names.t_Running)
+						end
+					end
 				end
 			end
 		end
@@ -1328,7 +1435,7 @@ feature -- Compilation events
 					breakpoints_manager.resynchronize_breakpoints
 				end
 					-- Save breakpoint status and command line.
-				save_debugger_data
+				save_breakpoints_data
 			end
 			update_rt_extension_available
 		end
@@ -1365,7 +1472,7 @@ feature -- Debugging events
 				bl.item_for_iteration.reset_session_data
 				bl.forth
 			end
-			save_debugger_data
+			save_breakpoints_data
 
 				--| Check if RT_EXTENSION is available
 			update_rt_extension_available
@@ -1534,7 +1641,7 @@ feature -- Debugging events
 			end
 
 				--| Save debug info
-			save_debugger_data
+			save_breakpoints_data
 
 			destroy_application
 

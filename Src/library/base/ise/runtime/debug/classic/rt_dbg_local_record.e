@@ -34,7 +34,7 @@ feature -- RT internals
 			-- Object attached at local position `pos' for depth `dep'
 			-- (directly or through a reference)
 		require
-			index_large_enough: pos >= 1
+			index_large_enough: pos >= 0
 		local
 			a_loc_type: INTEGER
 		do
@@ -134,16 +134,16 @@ feature -- Runtime
 	restore (val: !RT_DBG_RECORD)
 			-- Restore `value' , and associate `val' as `backup'
 		do
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".restore: depth=" + callstack_depth.out + " #" + position.out + "%N")
 			end
 			if is_same_as (val) then
-				debug ("RT_EXTENSION")
+				debug ("RT_DBG_REPLAY")
 					dtrace (" -> unchanged because same value [" + to_string + "].%N")
 				end
 			else
 				set_local_from_record (Current)
-				debug ("RT_EXTENSION")
+				debug ("RT_DBG_REPLAY")
 					dtrace (" -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
 				end
 			end
@@ -152,11 +152,11 @@ feature -- Runtime
 	revert (bak: !RT_DBG_RECORD)
 			-- Revert previous change due to Current
 		do
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".revert: depth=" + callstack_depth.out + " #" + position.out + "%N")
 			end
 			set_local_from_record (bak)
-			debug ("RT_EXTENSION")
+			debug ("RT_DBG_REPLAY")
 				dtrace (" -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
 			end
 		end

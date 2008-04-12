@@ -103,8 +103,6 @@ feature -- Eiffel source line information
 			l_expanded: INTEGER
 		do
 			if
---| FIXME jfiat [2008/04/05] : partial commit, this "False" condition will be be removed soon.
-				False and -- For now disabled
 				a_target.is_assignable
 			then
 				buf := buffer

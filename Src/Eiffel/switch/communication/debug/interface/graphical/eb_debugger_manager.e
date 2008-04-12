@@ -271,10 +271,17 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (exec_replay_back_cmd)
 			create exec_replay_forth_cmd.make_forth (Current)
 			toolbarable_commands.extend (exec_replay_forth_cmd)
+			create exec_replay_left_cmd.make_left (Current)
+			toolbarable_commands.extend (exec_replay_left_cmd)
+			create exec_replay_right_cmd.make_right (Current)
+			toolbarable_commands.extend (exec_replay_right_cmd)
+
 
 			toggle_exec_replay_mode_cmd.disable_sensitive
 			exec_replay_back_cmd.disable_sensitive
 			exec_replay_forth_cmd.disable_sensitive
+			exec_replay_left_cmd.disable_sensitive
+			exec_replay_right_cmd.disable_sensitive
 
 			step_cmd.enable_sensitive
 			into_cmd.enable_sensitive
@@ -380,6 +387,12 @@ feature -- Access
 
 	exec_replay_forth_cmd: EB_EXEC_DEBUG_REPLAY_CMD
 			-- Command that can exec replay forth the execution
+
+	exec_replay_left_cmd: EB_EXEC_DEBUG_REPLAY_CMD
+			-- Command that can exec replay left the execution
+
+	exec_replay_right_cmd: EB_EXEC_DEBUG_REPLAY_CMD
+			-- Command that can exec replay right the execution			
 
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_AND_MENUABLE_COMMAND]
 			-- All commands that can be put in a toolbar.
@@ -614,6 +627,12 @@ feature -- tools management
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 			l_item := exec_replay_forth_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+			l_item := exec_replay_right_cmd.new_menu_item
+			Result.extend (l_item)
+			a_recycler.auto_recycle (l_item)
+			l_item := exec_replay_left_cmd.new_menu_item
 			Result.extend (l_item)
 			a_recycler.auto_recycle (l_item)
 
@@ -1082,36 +1101,49 @@ feature -- Status setting
 			-- Update execution replay commands and widgets
 		local
 			xr: BOOLEAN
-			d, m: INTEGER
+			lev, m: INTEGER
 		do
 			if safe_application_is_stopped then
 				xr := application_status.replay_activated
 				if xr then
-					d := application_status.replay_depth
-					m := application_status.replay_depth_limit
-					if 0 <= d and d <= m then
-						if d < m then
-							exec_replay_back_cmd.enable_sensitive
-						else
-							exec_replay_back_cmd.disable_sensitive
-						end
-						if 0 < d then
-							exec_replay_forth_cmd.enable_sensitive
-						else
-							exec_replay_forth_cmd.disable_sensitive
-						end
-					else
-						exec_replay_back_cmd.disable_sensitive
-						exec_replay_forth_cmd.disable_sensitive
-					end
+					exec_replay_left_cmd.enable_sensitive
+					exec_replay_right_cmd.enable_sensitive
+
 					objects_tool.request_update
 					object_viewer_tool.request_update
 					watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
-					call_stack_tool.set_execution_replay_level (d, m)
+
+					if {rep: REPLAYED_CALL_STACK_ELEMENT} application_status.current_replayed_call then
+						lev := application_status.current_call_stack_depth - rep.depth + 1
+						m := application_status.replay_level_limit
+						--| FIXME: jfiat: improve this part to control left,right ...
+						if 1 <= lev and lev <= m then
+							if lev < m then
+								exec_replay_back_cmd.enable_sensitive
+							else
+								exec_replay_back_cmd.disable_sensitive
+							end
+							if 1 < lev then
+								exec_replay_forth_cmd.enable_sensitive
+							else
+								exec_replay_forth_cmd.disable_sensitive
+							end
+						else
+							exec_replay_back_cmd.disable_sensitive
+							exec_replay_forth_cmd.disable_sensitive
+						end
+						call_stack_tool.set_execution_replay_level (lev, m, rep)
+					else
+						check should_not_occurs: False end
+					end
 				else
 					exec_replay_back_cmd.disable_sensitive
 					exec_replay_forth_cmd.disable_sensitive
-					call_stack_tool.set_execution_replay_level (0, 0)
+					exec_replay_left_cmd.disable_sensitive
+					exec_replay_right_cmd.disable_sensitive
+
+					application.set_current_execution_stack_number (0)
+					call_stack_tool.set_execution_replay_level (0, 0, Void)
 				end
 			end
 		end
@@ -1119,11 +1151,11 @@ feature -- Status setting
 	activate_execution_replay_mode (b: BOOLEAN) is
 			-- Activate or Deactivate execution replay mode
 		local
-			dlim: INTEGER
+			levlim: INTEGER
 		do
 			if safe_application_is_stopped then
 				application.activate_execution_replay_mode (b)
-				dlim := application.status.replay_depth_limit
+				levlim := application.status.replay_level_limit
 			end
 			if b then
 				disable_debugging_commands (False)
@@ -1136,7 +1168,7 @@ feature -- Status setting
 				toggle_exec_replay_recording_mode_cmd.enable_sensitive
 				toggle_exec_replay_mode_cmd.enable_sensitive
 			end
-			call_stack_tool.activate_execution_replay_mode (b, dlim)
+			call_stack_tool.activate_execution_replay_mode (b, levlim)
 			update_execution_replay
 		end
 
@@ -1453,12 +1485,10 @@ feature -- Status setting
 	set_stone (st: STONE) is
 			-- Propagate `st' to tools.
 		local
-			cst: CALL_STACK_STONE
 			propagate_stone: BOOLEAN
 		do
 			if raised then
-				cst ?= st
-				if cst /= Void then
+				if {cst: CALL_STACK_STONE} st then
 					if application_is_executing then
 						propagate_stone := application.current_execution_stack_number /= cst.level_number
 						application.set_current_execution_stack_number (cst.level_number)
@@ -1555,14 +1585,23 @@ feature -- Debugging events
 
 	launch_stone (st: STONE) is
 			-- Set `st' in the debugging window as the new stone.
-		local
-			feat_tool: ES_FEATURE_RELATION_TOOL
 		do
 			record_objects_grids_layout
 			if debugging_window /= Void then
-				feat_tool ?= debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL})
-				feat_tool.set_mode ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat)
-				feat_tool.show (False)
+				if {appstatus: APPLICATION_STATUS} application_status then
+					if
+						appstatus.replay_activated and then
+						{rep: REPLAYED_CALL_STACK_STONE} st
+					then
+						appstatus.set_replayed_call ([rep.e_feature, rep.call_position.line])
+					else
+						appstatus.set_replayed_call (Void)
+					end
+				end
+				if {feat_tool: ES_FEATURE_RELATION_TOOL} debugging_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) then
+					feat_tool.set_mode ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.flat)
+					feat_tool.show (False)
+				end
 				debugging_window.tools.launch_stone (st)
 			end
 		end
@@ -1817,6 +1856,8 @@ feature -- Debugging events
 			toggle_exec_replay_mode_cmd.disable_sensitive
 			exec_replay_back_cmd.disable_sensitive
 			exec_replay_forth_cmd.disable_sensitive
+			exec_replay_left_cmd.disable_sensitive
+			exec_replay_right_cmd.disable_sensitive
 			object_storage_management_cmd.disable_sensitive
 
 
@@ -2278,8 +2319,6 @@ feature {NONE} -- Implementation
 
 				--| Objects tool			
 			objects_tool.panel.content.set_top ({SD_ENUMERATION}.bottom)
-				--| FIXME: here we call the show actions, because it is not done by the docking library: CHECK THIS
-			objects_tool.panel.content.show_actions.call (Void)
 			objects_tool.show (True)
 			l_refer_tool_content := objects_tool.panel.content
 

@@ -18,26 +18,26 @@ create {NONE}
 
 feature {DEBUGGER_MANAGER} -- Access
 
-	activate_execution_replay_mode (b: BOOLEAN; deplim: INTEGER_32)
+	activate_execution_replay_mode (b: BOOLEAN; levlim: INTEGER_32)
 			-- Activate or not the execution replay mode according to `b'
-			-- and using `deplim' as depth limit
+			-- and using `levlim' as level limit
 		do
 			if is_tool_instantiated then
-				panel.activate_execution_replay_mode (b, deplim)
+				panel.activate_execution_replay_mode (b, levlim)
 				if b then
 					show (False)
 				end
 			end
 		end
 
-	set_execution_replay_level (dep: INTEGER_32; deplim: INTEGER_32) is
+	set_execution_replay_level (dep: INTEGER_32; deplim: INTEGER_32; rep: REPLAYED_CALL_STACK_ELEMENT) is
 			-- Set execution replay active level on the panel
 		require
 			app_is_stopped: debugger_manager.safe_application_is_stopped
 			in_range: deplim > 0 implies dep <= deplim
 		do
 			if is_tool_instantiated then
-				panel.set_execution_replay_level (dep, deplim)
+				panel.set_execution_replay_level (dep, deplim, rep)
 			end
 		end
 

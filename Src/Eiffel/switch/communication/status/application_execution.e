@@ -180,12 +180,20 @@ feature -- Access
 		require
 			is_running: is_running
 			is_stopped: is_stopped
-		local
-			ecs: EIFFEL_CALL_STACK
 		do
-			ecs := status.current_call_stack
-			if ecs /= Void then
+			if {ecs: EIFFEL_CALL_STACK} status.current_call_stack then
 				Result := ecs.count
+			end
+		end
+
+	current_call_stack_depth: INTEGER is
+			-- Current call stack's depth
+		require
+			is_running: is_running
+			is_stopped: is_stopped
+		do
+			if {ecs: EIFFEL_CALL_STACK} status.current_call_stack then
+				Result := ecs.stack_depth
 			end
 		end
 
@@ -391,7 +399,7 @@ feature -- Remote access to RT_
 			fi: FEATURE_I
 			i32cl: CLASS_C
 			ref: DUMP_VALUE
-			cid,fid,dep: INTEGER
+			cid,fid,dep,line: INTEGER
 			bool: BOOLEAN
 			dbg: DEBUGGER_MANAGER
 		do
@@ -409,6 +417,7 @@ feature -- Remote access to RT_
 				cid := 0
 				fid := 0
 				dep := 0
+				line := 0
 				if b then
 					if {ecse: EIFFEL_CALL_STACK_ELEMENT} status.current_eiffel_call_stack_element then
 						if {adv: ABSTRACT_DEBUG_VALUE} ecse.current_object_value then
@@ -424,8 +433,9 @@ feature -- Remote access to RT_
 						else
 							fid := fi.body_index - 1
 						end
+						line := ecse.break_index
 					end
-					dep := status.current_call_stack.stack_depth
+					dep := current_call_stack_depth
 				end
 				if ref = Void then
 					ref := dv_fact.new_void_value (dbg.compiler_data.any_class_c)
@@ -434,6 +444,7 @@ feature -- Remote access to RT_
 				params.extend (dv_fact.new_integer_32_value (cid, i32cl)) -- cid
 				params.extend (dv_fact.new_integer_32_value (fid, i32cl)) -- fid
 				params.extend (dv_fact.new_integer_32_value (dep, i32cl)) -- dep
+				params.extend (dv_fact.new_integer_32_value (line, i32cl)) -- line
 
 				bool := command_evaluation_on (rto, Void, rto.dynamic_class, "activate_execution_replay_recording", params)
 			end
@@ -446,29 +457,40 @@ feature -- Remote access to RT_
 		require
 			turned_on_when_stopped: b implies status.is_stopped
 			replay_activation_change: b /= status.replay_activated
+			replay_depth_is_valid: (b and status.replayed_depth = 0) or (not b and status.replayed_depth <= current_call_stack_depth)
 		local
-			d: INTEGER
-			r: BOOLEAN
+			sd,d: INTEGER
 		do
 			if b then
 				status.set_replay_activated (True)
-				check status.replay_depth = 0 end
+				check status.replayed_depth = 0 end
 
 				remote_activate_replay (True)
 
 				d := query_replay_status (Rtdbg_op_replay_back)
-				status.set_replay_depth_limit (d)
+				status.set_replay_level_limit (d)
 			else
+				d := status.replayed_depth
 				remote_activate_replay (False)
-				status.set_replay_activated (False)
-
-				check
-					r and status.replay_depth = 0
+					--| Reset data of replayed stacks
+				if {ccs: EIFFEL_CALL_STACK} status.current_call_stack then
+					from
+						sd := ccs.stack_depth
+					until
+						d > sd
+					loop
+						ccs.reset_call_stack_depth (d)
+						d := d + 1
+					end
 				end
+				debugger_manager.incremente_debugging_operation_id
+				status.set_replay_activated (False)
+				status.set_replay_level_limit (0)
+				status.set_current_replayed_call (Void)
 			end
 		ensure
 			replay_activated: status.replay_activated = b
-			replay_depth_is_zero: status.replay_depth = 0
+			replay_depth_is_valid: (not b and status.replayed_depth = 0) or (b and status.replayed_depth = current_call_stack_depth)
 		end
 
 	remote_activate_replay (b: BOOLEAN) is
@@ -485,6 +507,11 @@ feature -- Remote access to RT_
 				create params.make (1)
 				params.extend (dv_fact.new_boolean_value (b, dbg.compiler_data.boolean_class_c))
 				res := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "activate_replay", params)
+				if res and then {rcse: REPLAYED_CALL_STACK_ELEMENT} current_replayed_call then
+					status.set_current_replayed_call (rcse)
+				else
+					status.set_current_replayed_call (Void)
+				end
 			end
 		end
 
@@ -503,18 +530,10 @@ feature -- Remote access to RT_
 			dbg: DEBUGGER_MANAGER
 		do
 			dir := direction
-			prev_d := status.replay_depth
-			inspect dir
-			when Rtdbg_op_replay_back then
-				d := prev_d + 1
-			when Rtdbg_op_replay_forth then
-				d := prev_d - 1
-			else
-				d := prev_d
-			end
-			status.set_replay_depth (d)
+			prev_d := status.replayed_depth
 
 			nb := 1
+
 			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
 				dbg := debugger_manager
 				dv_fact := dbg.dump_value_factory
@@ -524,10 +543,71 @@ feature -- Remote access to RT_
 				params.extend (dv_fact.new_integer_32_value (nb, i32cl))
 
 				if {ccs: EIFFEL_CALL_STACK} status.current_call_stack then
-					ccs.reset_call_stack_level (prev_d + 1)
-					ccs.reset_call_stack_level (d + 1)
+					ccs.reset_call_stack_depth (prev_d)
+					Result := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replay", params)
+					if Result then
+						if {rcse: REPLAYED_CALL_STACK_ELEMENT} current_replayed_call then
+							status.set_current_replayed_call (rcse)
+						else
+							check should_not_occur: False end
+						end
+					else
+						--| Error, so keep current data
+						--| Note: or maybe ... popup error message, and exit debugging ..?
+--						status.set_current_replayed_call (Void)
+					end
+					d := status.replayed_depth
+					if d > 0 then
+						ccs.reset_call_stack_depth (d)
+					end
+					debugger_manager.incremente_debugging_operation_id
 				end
-				Result := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replay", params)
+			end
+		end
+
+	replay_to_point (a_id: STRING): BOOLEAN is
+			-- Replay to point identified by `a_id'
+		local
+			params: ARRAYED_LIST [DUMP_VALUE]
+			dv_fact: DUMP_VALUE_FACTORY
+			dbg: DEBUGGER_MANAGER
+			prev_d,d1,d2: INTEGER
+		do
+			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
+				prev_d := status.replayed_depth
+
+				dbg := debugger_manager
+				dv_fact := dbg.dump_value_factory
+				create params.make (1)
+				params.extend (dv_fact.new_manifest_string_value (a_id, dbg.compiler_data.string_8_class_c))
+				Result := command_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replay_to_point", params)
+				if Result then
+					if {rcse: REPLAYED_CALL_STACK_ELEMENT} current_replayed_call then
+						status.set_current_replayed_call (rcse)
+					else
+						check should_not_occur: False end
+					end
+				else
+					--| Error, so keep current data
+					--| Note: or maybe ... popup error message, and exit debugging ..?
+--						status.set_current_replayed_call (Void)
+				end
+				if {ccs: EIFFEL_CALL_STACK} status.current_call_stack then
+					from
+						d2 := status.replayed_depth
+						if d2 > prev_d then
+							d1 := prev_d
+						else
+							d1 := d2
+							d2 := prev_d
+						end
+					until
+						d1 > d2
+					loop
+						ccs.reset_call_stack_depth (d1)
+						d1 := d1 + 1
+					end
+				end
 				debugger_manager.incremente_debugging_operation_id
 			end
 		end
@@ -557,7 +637,27 @@ feature -- Remote access to RT_
 			end
 		end
 
+	current_replayed_call: REPLAYED_CALL_STACK_ELEMENT is
+		local
+			dv_fact: DUMP_VALUE_FACTORY
+			dv: DUMP_VALUE
+			dbg: DEBUGGER_MANAGER
+		do
+			if {ex_rec_dv: DUMP_VALUE} remote_rt_execution_recorder_value then
+				dbg := debugger_manager
+				dv_fact := dbg.dump_value_factory
+				dv := query_evaluation_on (Void, ex_rec_dv, ex_rec_dv.dynamic_class, "replayed_call_details", Void)
+				if dv /= Void and then not dv.is_void then
+					if {s32: STRING_32} dv.string_representation and then s32.count > 0 then
+						create Result.make_from_string ("" , s32)
+					end
+				end
+			end
+		end
+
 	replay_callstack_details (a_id: STRING; nb: INTEGER): REPLAYED_CALL_STACK_ELEMENT is
+			-- Details related to replayed callstack identified by `a_id'
+			-- get the information for `nb' levels
 		local
 			params: ARRAYED_LIST [DUMP_VALUE]
 			dv_fact: DUMP_VALUE_FACTORY

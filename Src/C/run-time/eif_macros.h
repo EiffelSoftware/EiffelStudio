@@ -989,10 +989,11 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #ifdef WORKBENCH
 #define RTEX		struct ex_vect * EIF_VOLATILE exvect; uint32 EIF_VOLATILE db_cstack
 #define RTEAA(x,y,z,i,j,b) exvect = new_exset(x, y, z,i,j,b); db_cstack = ++d_data.db_callstack_depth; \
-					RTDBGE(y,b,z,db_cstack,x);
+					RTDBGE(y,b,z,db_cstack);
 #define RTEE		RTDBGL(exvect->ex_orig,exvect->ex_bodyid,exvect->ex_id,db_cstack); \
 					RTSO; d_data.db_callstack_depth = --db_cstack; expop(&eif_stack)
-#define RTEOK		RTSO; d_data.db_callstack_depth = --db_cstack; exok ()
+#define RTEOK		RTDBGL(exvect->ex_orig,exvect->ex_bodyid,exvect->ex_id,db_cstack); \
+					RTSO; d_data.db_callstack_depth = --db_cstack; exok ()
 
 #define RTEJ		current_call_level = trace_call_level; \
 					if (prof_stack) saved_prof_top = prof_stack->st_top; \

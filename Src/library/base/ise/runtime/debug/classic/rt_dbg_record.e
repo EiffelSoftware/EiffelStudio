@@ -23,6 +23,9 @@ feature -- Properties
 	type: INTEGER
 			-- Eiffel type of record value.
 
+	breakable_info: ?TUPLE [line: INTEGER; nested: INTEGER]
+			-- breakable information
+
 feature -- Access
 
 	current_value_record: RT_DBG_RECORD
@@ -40,7 +43,7 @@ feature -- Access
 		deferred
 		end
 
-	is_local_record: BOOLEAN 
+	is_local_record: BOOLEAN
 			-- Is local record ?
 		deferred
 		end
@@ -54,6 +57,14 @@ feature -- Access
 
 	to_string: STRING
 		deferred
+		end
+
+feature -- Change
+
+	set_breakable_info (v: like breakable_info)
+			-- Set `breakable_info'
+		do
+			breakable_info := v
 		end
 
 feature -- Change properties

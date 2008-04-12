@@ -70,11 +70,10 @@ feature {NONE} -- Implementation
 				create dbg.make
 				dbg.set_events_handler (create {TTY_DEBUGGER_EVENTS_HANDLER}.make)
 				set_debugger_manager (dbg)
-				dbg.load_debugger_data
+				dbg.load_all_debugger_data
 
 				if param_working_directory = Void or else param_working_directory.is_empty then
 					create shared_eiffel
---					shared_eiffel.eiffel_project.
 					param_working_directory := Execution_environment.current_working_directory
 				end
 			end

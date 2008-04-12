@@ -148,11 +148,15 @@ feature {NONE} -- Initialization
 			stack_grid.enable_partial_dynamic_content
 			stack_grid.set_dynamic_content_function (agent compute_stack_grid_item)
 			stack_grid.enable_border
+			stack_grid.enable_resize_column (Feature_column_index)
+			stack_grid.enable_resize_column (Position_column_index)
 
 ----| FIXME Jfiat: Use session to store/restore column widths
-			stack_grid.set_column_count_to (3)
+			stack_grid.set_column_count_to (4)
 			stack_grid.column (Feature_column_index).set_title (Interface_names.t_Feature)
 			stack_grid.column (Feature_column_index).set_width (120)
+			stack_grid.column (Position_column_index).set_title (" @") --Interface_names.t_Position)
+			stack_grid.column (Position_column_index).set_width (20)
 			stack_grid.column (Dtype_column_index).set_title (Interface_names.t_Dynamic_type)
 			stack_grid.column (Dtype_column_index).set_width (100)
 			stack_grid.column (Stype_column_index).set_title (Interface_names.t_Static_type)
@@ -165,6 +169,8 @@ feature {NONE} -- Initialization
 			stack_grid.set_item_accept_cursor_function (agent on_grid_item_accept_cursor_function)
 				--| Action/event on call stack grid (replay mode)
 			stack_grid.row_expand_actions.extend (agent on_row_expanded)
+			stack_grid.row_select_actions.extend (agent on_row_selected)
+			stack_grid.row_deselect_actions.extend (agent on_row_deselected)
 
 				--| Context menu handler
 			development_window ?= develop_window
@@ -244,12 +250,12 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Factory
 
-    create_widget: EV_VERTICAL_BOX
-            -- Create a new container widget upon request.
-            -- Note: You may build the tool elements here or in `build_tool_interface'
-        do
-        	Create Result
-        end
+	create_widget: EV_VERTICAL_BOX
+			-- Create a new container widget upon request.
+			-- Note: You may build the tool elements here or in `build_tool_interface'
+		do
+			Create Result
+		end
 
 	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
@@ -317,12 +323,25 @@ feature {NONE} -- Factory
 			-- Build `box_replay_controls' widget
 		local
 			tb: SD_TOOL_BAR
+			but: SD_TOOL_BAR_BUTTON
 		do
 			create box_replay_controls
 			create tb.make
 			box_replay_controls.extend (tb)
 			tb.extend (eb_debugger_manager.exec_replay_back_cmd.new_sd_toolbar_item (True))
 			tb.extend (eb_debugger_manager.exec_replay_forth_cmd.new_sd_toolbar_item (True))
+			tb.extend (eb_debugger_manager.exec_replay_left_cmd.new_sd_toolbar_item (True))
+			tb.extend (eb_debugger_manager.exec_replay_right_cmd.new_sd_toolbar_item (True))
+
+			create but.make
+			but.set_text (interface_names.b_Exec_replay_to)
+			but.set_tooltip (interface_names.t_Exec_replay_to)
+			but.set_pixel_buffer (pixmaps.mini_pixmaps.general_search_icon_buffer)
+			but.select_actions.extend (agent replay_to_selected_row)
+			tb.extend (but)
+			replay_to_but := but
+			replay_to_but.disable_sensitive
+
 			create replay_controls_label
 			box_replay_controls.extend (replay_controls_label)
 			box_replay_controls.set_background_color (row_replayable_bg_color)
@@ -330,13 +349,16 @@ feature {NONE} -- Factory
 			tb.compute_minimum_size
 		end
 
+	replay_to_but: SD_TOOL_BAR_BUTTON
+			-- Replay to button
+
 feature {NONE} -- Internal Properties
 
 	execution_replay_activated: BOOLEAN
 			-- Is Execution replay activated ?
 
-	execution_replay_depth_limit_level: INTEGER
-			-- Maximal depth level
+	execution_replay_level_limit: INTEGER
+			-- Maximal level limit
 
 	stack_data: ARRAY [CALL_STACK_ELEMENT]
 			-- Data associated to the `stack_grid' row's data
@@ -393,16 +415,22 @@ feature {NONE} -- Commands
 
 feature {ES_CALL_STACK_TOOL} -- UI access
 
-	activate_execution_replay_mode (b: BOOLEAN; deplim: INTEGER) is
+	activate_execution_replay_mode (b: BOOLEAN; levlim: INTEGER) is
 			-- Enable or disable execution replay
 		do
 			execution_replay_activated := b
-			execution_replay_depth_limit_level := deplim
+			execution_replay_level_limit := levlim
 			if b and then not box_replay_controls.is_show_requested then
 				box_replay_controls.show
-				replay_controls_label.set_text ("../" + deplim.out)
+				replay_to_but.enable_sensitive
+				debug
+					replay_controls_label.set_text ("LevelMax=" + levlim.out)
+				end
 			else
-				replay_controls_label.remove_text
+				debug
+					replay_controls_label.remove_text
+				end
+				replay_to_but.disable_sensitive
 				box_replay_controls.hide
 			end
 			if stack_grid /= Void then
@@ -419,25 +447,43 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 			end
 		end
 
-	set_execution_replay_level (dep: INTEGER; deplim: INTEGER) is
-			-- Set the execution replay level to `dep'
-			-- in the limits of `deplim'
+	set_execution_replay_level (lev: INTEGER; levlim: INTEGER; rep: REPLAYED_CALL_STACK_ELEMENT) is
+			-- Set the execution replay level to `lev'
+			-- in the limits of `levlim'
 			-- i.e: refresh the stack_grid using the adapted colors
 		require
 			app_is_stopped: debugger_manager.safe_application_is_stopped
-			in_range: deplim > 0 implies dep <= deplim
-		local
-			dbg: like debugger_manager
-			li, m: INTEGER
-			r: INTEGER
+			in_range: levlim > 0 implies lev <= levlim
 		do
-			dbg := debugger_manager
-			replay_controls_label.set_text ((1 + dep).out + "/" + (1 + deplim).out)
+			if rep /= Void then
+				replay_controls_label.set_text (rep.depth.out + ".(" + rep.replayed_break_index.out + "," + rep.replayed_break_nested_index.out + ")")
+			else
+				replay_controls_label.remove_text
+			end
 			replay_controls_label.refresh_now
+
 			if stack_grid /= Void then
 				stack_grid.remove_selection
+				replay_to_but.disable_sensitive
 			end
-			if stack_grid.row_count > 0 then
+			marked_level := lev
+				--| We need to remove replayed rows,
+				--| since the replayed info might have changed
+			remove_replayed_rows
+			stack_grid.clear
+			if lev > 0 then
+				select_element_by_level (lev)
+			else
+				select_element_by_level (1)
+			end
+		end
+
+	remove_replayed_rows is
+			-- Remove all rows related to replayed call
+		local
+			r: INTEGER
+		do
+			if execution_replay_activated and stack_grid.row_count > 0 then
 				from
 					r := 1
 				until
@@ -447,21 +493,34 @@ feature {ES_CALL_STACK_TOOL} -- UI access
 					r := r + 1
 				end
 			end
-			if deplim = 0 then
-				li := 1
-			else
-				li := (1 + dep).min (stack_grid.row_count) --| Fixme				
-			end
-			if li > 0 then
-				if li /= marked_level then
-					m := marked_level
-					marked_level := li
-					row_for_level (m).clear --| refresh
+		end
+
+feature {NONE} -- Replay helpers
+
+	replay_to_selected_row is
+			-- Replay to selected row
+		require
+			execution_replay_activated: execution_replay_activated
+		local
+			b: BOOLEAN
+			lev: INTEGER
+			l_id: STRING
+		do
+			if {l_row: EV_GRID_ROW} stack_grid.single_selected_row then
+				if {rcse: like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row (l_row) then
+					l_id := rcse.id
+				else
+					lev := level_from_row (l_row)
+					if lev > 0 then
+						l_id := "-" + lev.out
+					end
 				end
-				select_element_by_level (li)
-				row_for_level (marked_level).clear --| refresh
-			else
-				marked_level := 0
+			end
+			if l_id /= Void then
+				b := debugger_manager.application.replay_to_point (l_id)
+				if b then
+					eb_debugger_manager.update_execution_replay
+				end
 			end
 		end
 
@@ -470,6 +529,7 @@ feature -- Change
 	refresh is
 			-- Refresh call stack
 		do
+			remove_replayed_rows
 			stack_grid.clear
 		end
 
@@ -1328,10 +1388,16 @@ feature {NONE} -- Stack grid implementation
 				glab.set_tooltip (l_tooltip)
 				a_row.set_item (Feature_column_index, glab)
 
+					--| Position
+				create glab.make_with_text (cse.break_index.out)
+				a_row.set_item (Position_column_index, glab)
+
+					--| Dynamic Type
 				create glab.make_with_text (l_class_info)
 				glab.set_tooltip (l_class_info)
 				a_row.set_item (Dtype_column_index, glab)
 
+					--| Origine Type
 				create glab.make_with_text (l_orig_class_info)
 				if l_same_name then
 					glab.set_foreground_color (unsensitive_fg_color)
@@ -1340,10 +1406,13 @@ feature {NONE} -- Stack grid implementation
 				a_row.set_item (Stype_column_index, glab)
 
 					--| Set GUI behavior
-				refresh_stack_grid_row (a_row, app_exec.current_execution_stack_number)
 				if level = app_exec.current_execution_stack_number then
 					arrowed_level := level
 				end
+				if level = app_exec.current_execution_stack_number then
+					arrowed_level := level
+				end
+				refresh_stack_grid_row (a_row, app_exec.current_execution_stack_number)
 			end
 		end
 
@@ -1379,7 +1448,7 @@ feature {NONE} -- Stack grid implementation
 				end
 			end
 			if execution_replay_activated then
-				if level - 1 <= execution_replay_depth_limit_level then
+				if level - 1 <= execution_replay_level_limit then
 					a_row.ensure_expandable
 					a_row.set_background_color (row_replayable_bg_color)
 				end
@@ -1396,6 +1465,7 @@ feature {NONE} -- Stack grid implementation
 		require
 			a_row_not_void: a_row /= Void
 		local
+			rcse: REPLAYED_CALL_STACK_ELEMENT
 			cse: REPLAYED_CALL_STACK_ELEMENT
 			dc, oc: CLASS_C
 			l_tooltip: STRING_32
@@ -1408,13 +1478,24 @@ feature {NONE} -- Stack grid implementation
 			l_orig_class_info: STRING_GENERAL
 			l_same_name: BOOLEAN
 			l_breakindex_info: STRING
-			glab: EV_GRID_LABEL_ITEM
+			featlab,glab: EV_GRID_LABEL_ITEM
 			glabp: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 			app_exec: APPLICATION_EXECUTION
 		do
+			check debugger_manager.application_is_executing end
+			app_exec := Debugger_manager.application
+			rcse := app_exec.status.current_replayed_call
+
 			cse := replayed_call_stack_element_from_row (a_row)
 			if cse = Void then
 				compute_stack_grid_row (a_row)
+				if
+					a_row.is_expandable and then
+					rcse /= Void and then
+					level_from_row (a_row) = level_associated_with (rcse)
+				then
+					a_row.expand
+				end
 			else
 				if cse /= Void then
 					create l_tooltip.make (10)
@@ -1467,8 +1548,6 @@ feature {NONE} -- Stack grid implementation
 						l_tooltip.append_string (interface_names.l_compilation_equal_melted)
 					end
 
-					check debugger_manager.application_is_executing end
-					app_exec := Debugger_manager.application
 						--| Tooltip addition
 					l_nb_stack := app_exec.status.current_call_stack.count
 					l_tooltip.prepend_string (cse.remote_id + ": ")
@@ -1477,7 +1556,7 @@ feature {NONE} -- Stack grid implementation
 
 						--| Fill columns
 					if l_is_melted or l_has_rescue then
-						create glabp.make_with_text (l_feature_name)
+						create glabp.make_with_text (cse.break_index.out + ": " + l_feature_name)
 						glabp.set_pixmaps_on_right_count (2)
 						if l_is_melted then
 							glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_is_melted_icon, 1)
@@ -1487,21 +1566,39 @@ feature {NONE} -- Stack grid implementation
 						end
 						glab := glabp
 					else
-						create glab.make_with_text (l_feature_name)
+						if cse.break_nested_index > 0 then
+							create glab.make_with_text (cse.break_index.out + "." + cse.break_nested_index.out + ": " + l_feature_name)
+						else
+							create glab.make_with_text (cse.break_index.out + ": " + l_feature_name)
+						end
 					end
 					if rt_info_avail then
 						glab.set_font (fonts.highlighted_label_font)
 					else
 						glab.set_font (fonts.italic_label_font)
 					end
-
+					featlab := glab
+					l_tooltip.append ("%NReplayed: (" + cse.replayed_break_index.out + ", " + cse.replayed_break_nested_index.out + ")")
+					if cse.is_active_replayed then
+						l_tooltip.append ("%NIsActive=True")
+					end
 					glab.set_tooltip (l_tooltip)
 					a_row.set_item (Feature_column_index, glab)
 
+						--| Position
+					if cse.replayed_break_nested_index > 0 then
+						create glab.make_with_text (cse.replayed_break_index.out + "." + cse.replayed_break_nested_index.out)
+					else
+						create glab.make_with_text (cse.replayed_break_index.out)
+					end
+					a_row.set_item (Position_column_index, glab)
+
+						--| Dynamic type
 					create glab.make_with_text (l_class_info)
 					glab.set_tooltip (l_class_info)
 					a_row.set_item (Dtype_column_index, glab)
 
+						--| Original type
 					create glab.make_with_text (l_orig_class_info)
 					if l_same_name then
 						glab.set_foreground_color (unsensitive_fg_color)
@@ -1510,7 +1607,24 @@ feature {NONE} -- Stack grid implementation
 					a_row.set_item (Stype_column_index, glab)
 
 						--| Set GUI behavior
-					refresh_stack_grid_row (a_row, app_exec.current_execution_stack_number)
+--					refresh_stack_grid_row (a_row, app_exec.current_execution_stack_number)
+
+					if cse.rt_information_available then
+						if rcse /= Void and then cse.depth = rcse.depth then
+							featlab.set_pixmap (pixmaps.icon_pixmaps.callstack_marked_arrow_icon)
+							if a_row.is_expandable then
+								a_row.expand
+							end
+						elseif level_associated_with (cse) = app_exec.current_execution_stack_number then
+							featlab.set_pixmap (pixmaps.icon_pixmaps.callstack_active_arrow_icon)
+						end
+					else
+						if cse.is_active_replayed then
+							featlab.set_pixmap (pixmaps.icon_pixmaps.callstack_replayed_active_icon)
+						else
+							featlab.set_pixmap (pixmaps.icon_pixmaps.callstack_replayed_empty_icon)
+						end
+					end
 				end
 			end
 		end
@@ -1519,29 +1633,10 @@ feature {NONE} -- Stone handlers
 
 	on_stone_changed (a_old_stone: ?like stone) is
 			-- Assign `a_stone' as new stone.
-		local
-			st: CALL_STACK_STONE
-			new_level: INTEGER
-			count: INTEGER
-			l_row: EV_GRID_ROW
-			old_current_level: INTEGER
 		do
-			st ?= stone
-			if st /= Void then
-				old_current_level := arrowed_level
-				new_level := st.level_number
-
-					-- Stack grid
-				count := stack_grid.row_count
-				if old_current_level >= 1 and then count >= old_current_level then
-					l_row := stack_grid.row (old_current_level)
-					l_row.clear -- refresh
-				end
-				if new_level >= 1 and then count >= new_level then
-					l_row := stack_grid.row (new_level)
-					arrowed_level := new_level
-					l_row.clear -- refresh
-				end
+			if {st: CALL_STACK_STONE} stone then
+				arrowed_level := st.level_number
+				stack_grid.clear
 			end
 		end
 
@@ -1581,7 +1676,7 @@ feature {NONE} -- Grid Implementation
 		require
 			rep_not_void: rep /= Void
 		do
-			if rep.rt_information_available then
+			if rep.rt_information_available and rep.depth > 0 then
 				Result := debugger_manager.application_status.current_call_stack.stack_depth - rep.depth + 1
 			end
 		end
@@ -1677,6 +1772,7 @@ feature {NONE} -- Grid Implementation
 			a_row_not_void: a_row /= Void
 		local
 			st: FEATURE_STONE
+			rst: REPLAYED_CALL_STACK_STONE
 			l: INTEGER
 		do
 			if {lev: INTEGER} level_from_row (a_row) and then lev > 0 then
@@ -1684,15 +1780,37 @@ feature {NONE} -- Grid Implementation
 			elseif {rep: like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row (a_row) then
 				if rep.rt_information_available then
 					l := level_associated_with (rep)
+					if
+						rep.replayed_break_index /= rep.break_index --| later take also into account nested index...
+					then
+						if {rep_fe: E_FEATURE} rep.e_feature then
+							create rst.make (rep_fe, [rep.replayed_break_index, rep.replayed_break_nested_index])
+							st := rst
+						end
+					end
 				end
 				if l = 0 then
 						--| Change call stack element with the best stack possible
-					if {rep2: like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row_with_rt_info (a_row) then
-						l := level_associated_with (rep2)
+					if
+						{pr: EV_GRID_ROW} a_row.parent_row and then
+						{rep_par: like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row (pr)
+					then
+						if rep_par.rt_information_available then
+								--| If parent has rt_information_available
+							l := level_associated_with (rep_par)
+						else --| Else find a parent replayed call with rt_information_available
+							if {rep2: like replayed_call_stack_element_from_row} replayed_call_stack_element_from_row_with_rt_info (pr) then
+								l := level_associated_with (rep2)
+							end
+						end
+						if {rep_par_fe: E_FEATURE} rep_par.e_feature then
+							create rst.make (rep_par_fe, [rep.break_index, rep.break_nested_index])
+							st := rst
+						end
 					end
 
 						--| And then switch to the associated feature
-					if {fe: E_FEATURE} rep.e_feature then
+					if st = Void and {fe: E_FEATURE} rep.e_feature then
 						create st.make (fe)
 					end
 				end
@@ -1708,7 +1826,7 @@ feature {NONE} -- Grid Implementation
 	select_element_by_level (level: INTEGER) is
 			-- Set stone in the  develpment window.
 		require
-			valid_level: level > 0 and level <= stack_grid.row_count
+			valid_level: level > 0 and level <= debugger_manager.application.number_of_stack_elements
 		local
 			st: CALL_STACK_STONE
 		do
@@ -1729,6 +1847,22 @@ feature {NONE} -- Grid Implementation
 					select_element_by_row (l_row)
 					stack_grid.set_focus
 				end
+			end
+		end
+
+	on_row_selected	(a_row: EV_GRID_ROW) is
+			-- `a_row' is selected
+		do
+			if execution_replay_activated then
+				replay_to_but.enable_sensitive
+			end
+		end
+
+	on_row_deselected	(a_row: EV_GRID_ROW) is
+			-- `a_row' is deselected
+		do
+			if execution_replay_activated then
+				replay_to_but.disable_sensitive
 			end
 		end
 
@@ -1760,6 +1894,7 @@ feature {NONE} -- Grid Implementation
 						end
 					end
 				end
+				stack_grid.request_columns_auto_resizing
 			end
 		end
 
@@ -1794,6 +1929,9 @@ feature {NONE} -- Constants
 
 	Feature_column_index: INTEGER = 1
 			-- Index of column for Feature name
+
+	Position_column_index: INTEGER = 4
+			-- Index of column for Position information
 
 	Dtype_column_index: INTEGER = 2
 			-- Index of column for Dynamic type

@@ -207,7 +207,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 				end
 			end
 			profs.set_last_profile (t)
-			debugger_manager.save_profiles
+			debugger_manager.save_profiles_data
 
 			set_changed (Void, False)
 		end

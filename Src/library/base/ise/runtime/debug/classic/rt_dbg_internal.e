@@ -19,11 +19,13 @@ inherit
 feature -- Object access
 
 	frozen object_field_count (obj: !ANY): INTEGER is
+			-- Field_count on `obj'
 		do
 			Result := field_count (obj)
 		end
 
 	frozen object_records (obj: !ANY): ?ARRAYED_LIST [RT_DBG_RECORD] is
+			-- List of field records on `obj'
 		local
 			i, cnb: INTEGER
 			r: !like object_records
@@ -605,39 +607,6 @@ end
 			end
 		end
 
---	frozen c_set_field_at (off: INTEGER; a_ftype: INTEGER; ptr: POINTER; object: POINTER) is
---		external
---			"C inline use %"eif_internal.h%""
---		alias
---			"[
---				EIF_REFERENCE o_ref;
---				o_ref = ((EIF_REFERENCE)$object + (long)$off);
---				switch ($a_ftype & SK_HEAD) {
---				case SK_BOOL: 	*(EIF_BOOLEAN *)    o_ref = (EIF_BOOLEAN)    (*(EIF_BOOLEAN *)$ptr); break;
---				case SK_CHAR: 	*(EIF_CHARACTER *)  o_ref = (EIF_CHARACTER)  (*(EIF_CHARACTER *)$ptr); break;
---				case SK_WCHAR: 	*(EIF_WIDE_CHAR *)  o_ref = (EIF_WIDE_CHAR)  (*(EIF_WIDE_CHAR *)$ptr); break;
---				case SK_UINT8: 	*(EIF_NATURAL_8 *)  o_ref = (EIF_NATURAL_8)  (*(EIF_NATURAL_8 *)$ptr); break;
---				case SK_UINT16: *(EIF_NATURAL_16 *) o_ref = (EIF_NATURAL_16) (*(EIF_NATURAL_16 *)$ptr); break;
---				case SK_UINT32: *(EIF_NATURAL_32 *) o_ref = (EIF_NATURAL_32) (*(EIF_NATURAL_32 *)$ptr); break;
---				case SK_UINT64: *(EIF_NATURAL_64 *) o_ref = (EIF_NATURAL_64) (*(EIF_NATURAL_64 *)$ptr); break;
---				case SK_INT8: 	*(EIF_INTEGER_8 *)  o_ref = (EIF_INTEGER_8)  (*(EIF_INTEGER_8 *)$ptr); break;
---				case SK_INT16: 	*(EIF_INTEGER_16 *) o_ref = (EIF_INTEGER_16) (*(EIF_INTEGER_16 *)$ptr); break;
---				case SK_INT32: 	*(EIF_INTEGER_32 *) o_ref = (EIF_INTEGER_32) (*(EIF_INTEGER_32 *)$ptr); break;
---				case SK_INT64: 	*(EIF_INTEGER_64 *) o_ref = (EIF_INTEGER_64) (*(EIF_INTEGER_64 *)$ptr); break;
---				case SK_REAL32: *(EIF_REAL_32 *)    o_ref = (EIF_REAL_32)    (*(EIF_REAL_32 *)$ptr); break;
---				case SK_REAL64: *(EIF_REAL_64 *)    o_ref = (EIF_REAL_64)    (*(EIF_REAL_64 *)$ptr); break;
---				case SK_POINTER:*(EIF_POINTER *)    o_ref = (EIF_POINTER)    (*(EIF_POINTER *)$ptr); break;
---				case SK_REF: RTAR((EIF_REFERENCE)$object,(*(EIF_REFERENCE *)$ptr));
---								*(EIF_REFERENCE *)  o_ref = (EIF_REFERENCE)  (*(EIF_REFERENCE *)$ptr); break;
---				case SK_EXP: RTAR((EIF_REFERENCE)$object,(*(EIF_REFERENCE *)$ptr));
---								*(EIF_REFERENCE *)  o_ref = (EIF_REFERENCE)  (*(EIF_REFERENCE *)$ptr); break;
---					/* FIXME jfiat [2008/03/18] : ... */
---				default:
---					break;
---				}
---			]"
---		end
-
 	frozen c_set_boolean_field_at (off: INTEGER; value: BOOLEAN; object: POINTER) is
 		external
 			"C inline use %"eif_internal.h%""
@@ -953,7 +922,6 @@ feature -- Change local
 				end
 			end
 			a_eif_type := eif_type (a_rt_type)
---			print ("eif type=0x" + a_eif_type.to_hex_string + "%N")
 			inspect a_eif_type
 			when boolean_type then
 				if {bool: BOOLEAN} value then
@@ -1031,7 +999,6 @@ feature -- Change local
 			end
 
 		end
-
 
 	frozen c_set_boolean_stack_value (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_bool: BOOLEAN): INTEGER is
 		external
@@ -1285,7 +1252,6 @@ feature -- Testing
 				end
 				s.append ("%N")
 				print (s)
---				s.wipe_out
 
 				r := set_stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type, val)
 
@@ -1302,7 +1268,6 @@ feature -- Testing
 			retried := True
 			retry
 		end
-
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

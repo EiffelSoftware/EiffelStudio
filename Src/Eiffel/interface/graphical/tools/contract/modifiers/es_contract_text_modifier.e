@@ -23,6 +23,16 @@ feature -- Access
 		deferred
 		end
 
+	contract_insertion_position: INTEGER
+			-- Retrieve the start location for contract insertion
+		require
+			is_prepared: is_prepared
+			is_ast_available: is_ast_available
+		deferred
+		ensure
+			result_positive: Result > 0
+		end
+
 feature {NONE} -- Access
 
 	template: ?CODE_TEMPLATE_DEFINITION
@@ -60,18 +70,6 @@ feature {NONE} -- Helpers
 			create Result
 		ensure
 			result_attached: Result /= Void
-		end
-
-feature {NONE} -- Query
-
-	contract_insertion_position: INTEGER
-			-- Retrieve the start location for contract insertion
-		require
-			is_prepared: is_prepared
-			is_ast_available: is_ast_available
-		deferred
-		ensure
-			result_positive: Result > 0
 		end
 
 feature -- Basic operations

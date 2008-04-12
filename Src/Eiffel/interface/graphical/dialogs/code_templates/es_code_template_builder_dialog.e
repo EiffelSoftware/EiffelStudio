@@ -188,7 +188,7 @@ feature {NONE} -- Access
 	code_template: !CODE_TEMPLATE
 			-- The code template used to build the UI.
 
-	code_symbol_table: !CODE_SYMBOL_TABLE
+	frozen code_symbol_table: !CODE_SYMBOL_TABLE
 			-- Symbol table used to evaluate the code template.
 		do
 			if internal_code_symbol_table = Void then
@@ -259,7 +259,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Helpers
 
-	template_renderer: !CODE_TEMPLATE_STRING_RENDERER
+	frozen template_renderer: !CODE_TEMPLATE_STRING_RENDERER
 			-- Renderer used for evaluating the code template.
 		require
 			is_interface_usable: is_interface_usable
@@ -417,9 +417,6 @@ feature {NONE} -- Internal implementation cache
 	internal_code_symbol_table: ?like code_symbol_table
 			-- Cached version of `code_symbol_table'
 			-- Note: Do not use directly!
-
-	internal_code_result: !like code_result
-			-- Unprotected version of `code_result'
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

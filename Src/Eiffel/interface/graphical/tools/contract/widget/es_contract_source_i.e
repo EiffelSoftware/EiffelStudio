@@ -1,70 +1,29 @@
 indexing
 	description: "[
-		Class text modifier for modifying invariant contracts.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	ES_INVARIANT_CONTRACT_TEXT_MODIFIER
-
-inherit
-	ES_CONTRACT_TEXT_MODIFIER [INVARIANT_AS]
-
-create
-	make
+deferred class
+	ES_CONTRACT_SOURCE_I
 
 feature -- Access
 
-	contract_ast: ?INVARIANT_AS
-			-- <Precursor>
-		do
-			Result := ast.invariant_part
+	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+			-- Context associated with a contract source
+		deferred
 		end
 
-	contract_insertion_position: INTEGER
-			-- <Precursor>
-		local
-			l_ast: like contract_ast
-			l_indexing: INDEXING_CLAUSE_AS
-		do
-			l_ast := contract_ast
-			if l_ast /= Void then
-				Result := ast_position (l_ast).start_position
-			else
-					-- Try bottom indexing
-				l_indexing := ast.bottom_indexes
-				if l_indexing /= Void then
-					Result := ast_position (l_indexing).start_position
-				else
-						-- Use end keyword
-					check
-						ast_end_keyword_attached: ast.end_keyword /= Void
-					end
-					Result := ast_position (ast.end_keyword).start_position
-				end
-			end
-			Result := modified_data.adjusted_position (Result)
-		end
+feature -- Status report
 
-
-feature {NONE} -- Access
-
-	template_identifier: !STRING_32
-			-- <Precursor>
-		once
-			create Result.make_from_string ("invariant")
-		end
-
-feature {NONE} -- Element change
-
-	set_template_values (a_table: !CODE_SYMBOL_TABLE)
-			-- Sets the values use in rendering a template.
-			--
-			-- `a_table': The symbol table used to render a template
-		do
+	is_editable: BOOLEAN
+			-- Indicates if the contract source is editable
+		deferred
+		ensure
+			not_read_only: Result implies not context.context_class.is_read_only
 		end
 
 ;indexing

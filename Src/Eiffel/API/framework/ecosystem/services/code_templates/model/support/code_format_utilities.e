@@ -21,36 +21,36 @@ feature -- Parsing
 		require
 			not_a_version_is_empty: not a_version.is_empty
 		local
-			l_exp: like version_regex
-			l_match: STRING_8
-			l_part: NATURAL_16
+			l_parts: LIST [STRING_32]
+			l_part: STRING_32
+			l_ver: NATURAL_16
 			l_major: NATURAL_16
 			l_minor: NATURAL_16
 			l_revision: NATURAL_16
 			l_qfe: NATURAL_16
 			l_count, i, j: INTEGER
 		do
-			l_exp := version_regex
-			l_exp.match (a_version)
-			if l_exp.has_matched then
+			if version_regex.matches (a_version) then
 					-- Valid numeric version, extract version parts
+				l_parts := a_version.split ('.')
 				from
-					l_count := l_exp.match_count
+					i := 1
+					l_count := l_parts.count
 				until
 					i = l_count or j = 4
 				loop
-					l_match := l_exp.captured_substring (i)
-					if l_match.is_natural_64 then
-						l_part := l_match.to_natural_64.as_natural_16
+					l_part := l_parts.i_th (i)
+					if l_part.is_natural_64 then
+						l_ver := l_part.to_natural_64.as_natural_16
 						inspect j
 						when 0 then
-							l_major := l_part
+							l_major := l_ver
 						when 1 then
-							l_minor := l_part
+							l_minor := l_ver
 						when 2 then
-							l_revision := l_part
+							l_revision := l_ver
 						when 3 then
-							l_qfe := l_part
+							l_qfe := l_ver
 						end
 						j := j + 1
 					end
@@ -90,7 +90,7 @@ feature {CODE_VERSION} -- Access
 			-- Raw version regular expression
 		once
 			create Result.make
-			Result.compile ("((^|[\.\-_])([\d]+)){1,4}")
+			Result.compile ("((^|[\.\-_])(([\d]+)){1,4})")
 		ensure
 			result_is_compiled: Result.is_compiled
 		end

@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 			-- `a_factory': Factory used for creating nodes.
 		do
 			create internal_items.make_default
+			internal_items.set_equality_tester (item_equality_tester)
 		end
 
 feature -- Access

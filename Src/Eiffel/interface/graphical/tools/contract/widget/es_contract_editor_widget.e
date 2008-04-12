@@ -50,12 +50,29 @@ feature {NONE} -- Initialization
 			edit_contract_grid.set_subrow_indent (tab_indent_spacing.as_integer_32)
 			edit_contract_grid.hide_tree_node_connectors
 			edit_contract_grid.disable_row_height_fixed
+			edit_contract_grid.enable_always_selected
 
 				-- Colors
 			edit_contract_grid.set_focused_selection_color (colors.grid_focus_selection_color)
 			edit_contract_grid.set_focused_selection_text_color (colors.grid_focus_selection_text_color)
 			edit_contract_grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
 			edit_contract_grid.set_non_focused_selection_text_color (colors.grid_unfocus_selection_text_color)
+
+			register_action (edit_contract_grid.row_select_actions, agent (a_row: EV_GRID_ROW)
+					-- Call the source select actions
+				local
+					l_source: ?ES_CONTRACT_SOURCE_I
+				do
+					if is_interface_usable and then is_initialized then
+						l_source ?= a_row.data
+						if l_source /= Void then
+							source_selection_actions.call ([l_source])
+						else
+								-- Where did the contract source go?
+							check False end
+						end
+					end
+				end)
 
 				-- Columns
 			l_col := edit_contract_grid.column (contract_column)
@@ -68,6 +85,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			create commit_edit_actions
+			create source_selection_actions
 			Precursor
 		end
 
@@ -75,6 +93,35 @@ feature -- Access
 
 	context: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE] assign set_context
 			-- Contract editor context information
+
+	context_contracts: !DS_ARRAYED_LIST [!ES_CONTRACT_LINE]
+			-- Retrieves just the context's contracts.
+			-- Note: Only the top contracts are returned because we only support edition of the context contracts,
+			--       in the future this may change.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_context: has_context
+		local
+			l_grid: !like edit_contract_grid
+			l_row: EV_GRID_ROW
+			l_sub_row: EV_GRID_ROW
+			l_count, i: INTEGER
+		do
+			l_grid := edit_contract_grid
+			if l_grid.row_count > 0 then
+				create Result.make_default
+				l_row := l_grid.row (1)
+				l_count := l_row.subrow_count_recursive
+				from i := 1 until i > l_count loop
+					l_sub_row := l_row.subrow (i)
+					if {l_line: !ES_CONTRACT_LINE} l_sub_row.data then
+						Result.force_last (l_line)
+					end
+					i := i + l_sub_row.subrow_count_recursive + 1
+				end
+			end
+		end
 
 feature {NONE} -- Access
 
@@ -102,7 +149,7 @@ feature -- Element change
 			if context /= a_context then
 				context := a_context
 				if is_initialized then
-					update
+					refresh
 				end
 			end
 		ensure
@@ -160,44 +207,44 @@ feature -- Status setting
 			is_showing_all_rows_set: is_showing_all_rows = a_show
 		end
 
-feature {NONE} -- Helpers
+feature -- Query
 
-	frozen context_printer: !ERROR_CONTEXT_PRINTER
-			-- Printer used to print context information
-		once
-			create Result
-		end
-
-	frozen pixmap_factory: !EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
-			-- Pixmap factory
-		once
-			create Result
-		end
-
-	frozen token_scanner: !EDITOR_EIFFEL_SCANNER
-			-- Scanner used to tokenize Eiffel code
-		once
-			create Result.make
-		end
-
-feature {NONE} -- User interface elements
-
-	edit_contract_grid: !ES_GRID
-			-- The grid used to display and edit the contracts for the current context
+	selected_source: ?ES_CONTRACT_SOURCE_I
+			-- The currently active contract source.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
-			Result ?= widget
+			l_rows := edit_contract_grid.selected_rows
+			if not l_rows.is_empty then
+				Result ?= l_rows.last.data
+			end
+		end
+
+	selected_line: ?ES_CONTRACT_LINE
+			-- The currently active selected contract line.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		do
+			Result ?= selected_source
 		end
 
 feature -- Basic operations
 
-	update
-			-- Updates the context information and refreshes the contracts
+	refresh
+			-- Updates the context information and refreshes the contracts.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			has_context: has_context
 		local
 			l_grid: !like edit_contract_grid
+			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
+			l_selected_index: INTEGER
+			l_visible_index: INTEGER
 			l_parents: !DS_LIST [CLASS_C]
 			l_parent: !CLASS_I
 			l_row: !EV_GRID_ROW
@@ -205,6 +252,19 @@ feature -- Basic operations
 			i: INTEGER
 		do
 			l_grid := edit_contract_grid
+
+			if l_grid.row_count > 0 then
+					-- Retireve selected index
+				l_selected_rows := l_grid.selected_rows
+				if l_selected_rows.is_empty then
+					l_selected_index := 1
+				else
+					l_selected_index := l_selected_rows.first.index
+				end
+
+					-- Retireve first visible index
+				l_visible_index := l_grid.first_visible_row.index
+			end
 
 				-- Remove existing items
 			l_grid.lock_update
@@ -237,15 +297,142 @@ feature -- Basic operations
 			l_col := l_grid.column (context_column)
 			l_col.set_width (l_col.width + 4)
 
+			if l_grid.row_count > 0 then
+					-- Reduce preservation indexes
+				if l_grid.row_count < l_selected_index then
+					l_selected_index := l_grid.row_count
+				end
+				if l_grid.row_count < l_visible_index then
+					l_visible_index := l_grid.row_count
+				end
+
+					-- Enable initial selection
+				l_grid.row (l_selected_index.max (1)).enable_select
+				l_grid.set_first_visible_row (l_visible_index.max (1))
+			else
+					-- Call the deselect actions, to notify clients that there is no valid selection
+				source_selection_actions.call ([Void])
+			end
+
 			l_grid.unlock_update
 		rescue
 			l_grid.unlock_update
+		end
+
+feature -- Extension
+
+	add_contract (a_tag: !STRING; a_contract: !STRING; a_source: ES_CONTRACT_SOURCE_I)
+			-- Adds a contract
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_context: has_context
+			not_a_tag_is_empty: not a_tag.is_empty
+		do
+
+		end
+
+	remove_contract (a_line: !ES_CONTRACT_LINE)
+			-- Removes a contract.
+			--
+			-- `a_line': A contract line to remove from the editor.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_context: has_context
+			a_line_source_is_editable: a_line.source.is_editable
+			a_line_is_editable: a_line.is_editable
+			context_contracts_has_a_source: context_contracts.has (a_line)
+		local
+			l_grid: !like edit_contract_grid
+			l_row: EV_GRID_ROW
+			l_sub_row: EV_GRID_ROW
+			l_source: !ES_CONTRACT_SOURCE_I
+			l_count, i: INTEGER
+			l_sub_count, j: INTEGER
+			l_removed: BOOLEAN
+		do
+			l_source := a_line.source
+			l_grid := edit_contract_grid
+			l_count := l_grid.row_count
+			from i := 1 until i > l_count or l_removed loop
+				l_row := l_grid.row (i)
+				if l_row.data = l_source then
+						-- Matching source
+					l_sub_count := l_row.subrow_count_recursive
+					from j := 1 until j > l_sub_count or l_removed loop
+						l_sub_row := l_row.subrow (j)
+						if l_sub_row.data = a_line then
+							l_grid.remove_row (l_sub_row.index)
+							l_removed := True
+						else
+							j := j + l_sub_row.subrow_count_recursive + 1
+						end
+					end
+
+					check removed: l_removed end
+				else
+					i := i + l_row.subrow_count_recursive + 1
+				end
+			end
+
+			check removed: l_removed end
+		end
+
+	replace_contract (a_tag: !STRING; a_contract: !STRING; a_line: !ES_CONTRACT_LINE)
+			-- Replaces an existing contract
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_context: has_context
+			not_a_tag_is_empty: not a_tag.is_empty
+			not_a_contract_is_empty: not a_contract.is_empty
+			a_line_source_is_editable: a_line.source.is_editable
+			a_line_is_editable: a_line.is_editable
+			context_contracts_has_a_source: context_contracts.has (a_line)
+		do
+
+		end
+
+feature {NONE} -- Helpers
+
+	frozen context_printer: !ERROR_CONTEXT_PRINTER
+			-- Printer used to print context information
+		once
+			create Result
+		end
+
+	frozen pixmap_factory: !EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+			-- Pixmap factory
+		once
+			create Result
+		end
+
+	frozen token_scanner: !EDITOR_EIFFEL_SCANNER
+			-- Scanner used to tokenize Eiffel code
+		once
+			create Result.make
+		end
+
+feature {NONE} -- User interface elements
+
+	edit_contract_grid: !ES_GRID
+			-- The grid used to display and edit the contracts for the current context
+		do
+			Result ?= widget
 		end
 
 feature -- Actions
 
 	commit_edit_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE [code: !STRING_32; old_code: STRING_32]]
 			-- Actions called to inform subscribers of the commit actions just taken place.
+			--
+			-- `' DO NOT USE
+
+	source_selection_actions: !EV_LITE_ACTION_SEQUENCE [!TUPLE [source: ?ES_CONTRACT_SOURCE_I]]
+			-- Actions called when a contract source is selected/deselected
+			--
+			-- `source': The selected source or Void if not source was selected
 
 feature {NONE} -- Population
 
@@ -258,6 +445,7 @@ feature {NONE} -- Population
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			has_context: has_context
 			not_a_row_is_destroyed: not a_row.is_destroyed
 			a_row_is_parented: a_row.parent = edit_contract_grid
 			a_context_has_stone: a_context.has_stone
@@ -278,6 +466,9 @@ feature {NONE} -- Population
 			l_editor_tokens: LINKED_LIST [EDITOR_TOKEN]
 			l_line: EIFFEL_EDITOR_LINE
 			l_left_border: INTEGER
+			l_class_c: CLASS_C
+			l_contract_source: !ES_CONTRACT_SOURCE
+			l_contract_line: !ES_CONTRACT_LINE
 			i: INTEGER
 		do
 			populate_contract_header_row (a_class, a_row, a_context)
@@ -288,13 +479,15 @@ feature {NONE} -- Population
 			l_editable := a_context.context_class = a_class and not a_class.is_read_only
 			l_mod_contract := a_context.contracts_for_class (a_class, l_editable)
 
+			create l_contract_source.make (a_context, l_editable)
+			a_row.set_data (l_contract_source)
+
 				-- Retrieve width of left indent for items
 			l_left_border := (create {EDITOR_TOKEN_TABULATION}.make (1)).width
 
 				-- Set row's data to include the class text modifier
 			if l_editable then
 					-- For now we only allow edits on the context class/feature.
-				a_row.set_data (l_mod_contract.modifier)
 				l_scanner := token_scanner
 				l_scanner.reset
 				l_scanner.set_current_class (a_class.config_class)
@@ -327,6 +520,7 @@ feature {NONE} -- Population
 								l_scanner_attached: l_scanner /= Void
 								ast_match_list_attached: l_mod_contract.modifier.ast_match_list /= Void
 							end
+
 							l_tagged_text := l_tagged.text (l_mod_contract.modifier.ast_match_list)
 							l_editable_lines := l_tagged_text.split ('%N')
 
@@ -361,8 +555,11 @@ feature {NONE} -- Population
 							l_row.set_height (l_row.height.max (l_editor_item.required_height_for_text_and_component))
 						else
 								-- Perform formatting with decorator, enabling clickable text.
-							create l_decorator.make (a_class.compiled_class, l_token_generator)
+							l_class_c := a_class.compiled_class
+							create l_decorator.make (l_class_c, l_token_generator)
 							l_decorator.format_ast (l_tagged)
+
+							l_tagged_text := l_tagged.text (l_class_c.match_list_server.item (l_class_c.class_id))
 
 								-- Add contract item
 							create l_editor_item
@@ -375,8 +572,11 @@ feature {NONE} -- Population
 							l_token_generator.wipe_out_lines
 						end
 						l_editor_item.set_left_border (l_left_border)
-
 						l_row.set_item (contract_column, l_item)
+
+							-- Set contract line data
+						create l_contract_line.make_from_string (l_tagged_text, l_contract_source)
+						l_row.set_data (l_contract_line)
 
 						if not l_editable then
 								-- Disable selection of non-editable rows
@@ -389,6 +589,10 @@ feature {NONE} -- Population
 
 							-- Ensure item is expandable
 						a_row.ensure_expandable
+						if not a_row.is_expanded then
+								-- Expand now to stop refresh flashing.
+							a_row.expand
+						end
 
 						l_item := Void
 						i := i + 1
@@ -410,6 +614,9 @@ feature {NONE} -- Population
 				l_row.set_item (contract_column, l_editor_item)
 				l_grid.grid_row_fill_empty_cells (l_row)
 
+					-- Expand row
+				a_row.expand
+
 				if not l_editable then
 						-- Disable selection of non-editable rows
 					l_row.set_background_color (colors.grid_read_only_background_color)
@@ -417,15 +624,15 @@ feature {NONE} -- Population
 					l_row.disable_select
 					a_row.disable_select
 				end
+
+					-- Set the source, to enable clients to recieve information regarding the editable options of the source.
+				l_row.set_data (l_contract_source)
 			elseif not is_showing_all_rows then
 					-- Hide the row because there are no contracts
 				a_row.hide
 			end
-
-
-			if a_row.is_expandable then
-				a_row.expand
-			end
+		ensure
+			a_row_data_set_to_contract_source: (({ES_CONTRACT_SOURCE_I}) #? a_row.data) /= Void
 		end
 
 	populate_contract_header_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context) is
@@ -437,6 +644,7 @@ feature {NONE} -- Population
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+			has_context: has_context
 			not_a_row_is_destroyed: not a_row.is_destroyed
 			a_row_is_parented: a_row.parent = edit_contract_grid
 			a_context_has_stone: a_context.has_stone

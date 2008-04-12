@@ -440,6 +440,70 @@ feature -- Query
 			l_windows.go_i_th (i)
 		end
 
+	active_editor_for_class (a_class: CLASS_I): ?EB_SMART_EDITOR
+			-- Attempts to retrieve the most applicable editor for a given class.
+			--
+			-- `a_class': The class to retrieve the most applicable editor for.
+			-- `Result': An editor which the supplied class is edited using, or Void if not being edited.
+		require
+			a_class_attached: a_class /= Void
+		local
+			l_editor: EB_SMART_EDITOR
+			l_editors: DS_ARRAYED_LIST [EB_SMART_EDITOR]
+		do
+			l_editors := active_editors_for_class (a_class)
+			if not l_editors.is_empty then
+				from l_editors.start until l_editors.after loop
+					l_editor := l_editors.item_for_iteration
+					if Result = Void then
+						Result := l_editor
+					elseif l_editor.text_displayed.is_modified then
+							-- Use modified version
+						Result := l_editor
+					end
+					l_editors.forth
+				end
+			end
+		end
+
+	active_editors_for_class (a_class: CLASS_I): !DS_ARRAYED_LIST [EB_SMART_EDITOR]
+			-- Retrieves all applicable editors for a given class.
+			--
+			-- `a_class': The class to retrieve the most applicable editors for.
+			-- `Result': A list of editors editing the supplied class.
+		require
+			a_class_attached: a_class /= Void
+		local
+			l_windows: like windows
+			l_editor_manager: EB_EDITORS_MANAGER
+			l_editor: EB_SMART_EDITOR
+			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
+		do
+			create Result.make_default
+
+			l_windows := windows
+			if l_windows /= Void and then not l_windows.is_empty then
+				from l_windows.start until l_windows.after loop
+					if {l_dev_window: EB_DEVELOPMENT_WINDOW} l_windows.item_for_iteration then
+						l_editor_manager := l_dev_window.editors_manager
+						if l_editor_manager /= Void then
+							l_editors := l_editor_manager.editor_editing (a_class)
+							if l_editors /= Void and then not l_editors.is_empty then
+								from l_editors.start until l_editors.after loop
+									l_editor := l_editors.item_for_iteration
+									Result.force_last (l_editor)
+									l_editors.forth
+								end
+							end
+						end
+					end
+					l_windows.forth
+				end
+			end
+		ensure
+			result_contains_attached_items: not Result.has (Void)
+		end
+
 feature -- Actions on a given window
 
 	show_window (a_window: EB_WINDOW)  is

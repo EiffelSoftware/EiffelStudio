@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: !STRING
+	text: !STRING assign set_text
 			-- Modified text.
 
 feature {NONE} -- Access
@@ -57,6 +57,17 @@ feature {NONE} -- Access
 
 	position_adjustments: !DS_LINKED_LIST [TUPLE [position: INTEGER; adjustment: INTEGER]]
 			-- Positional adjustments for batch modifications.
+
+feature {ES_CLASS_TEXT_MODIFIER}
+
+	set_text (a_text: !like text)
+			-- Sets new modifier text.
+			-- Note: Please use only when commiting changes for synchronization purposes
+		do
+			text := a_text
+		ensure
+			text_set: text.is_equal (a_text)
+		end
 
 feature -- Status report
 

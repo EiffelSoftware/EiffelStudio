@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			retried := True
 			retry
 		end
-		
+
 feature -- Access
 
 	pixel_width: INTEGER is 16
@@ -1922,76 +1922,112 @@ feature -- Access
 			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 8))
 		end
 
+	frozen callstack_replayed_active_icon: !EV_PIXMAP is
+			-- Access to 'replayed active' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (4, 8))
+		end
+
+	frozen callstack_replayed_active_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'replayed active' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 8))
+		end
+
+	frozen callstack_replayed_empty_icon: !EV_PIXMAP is
+			-- Access to 'replayed empty' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (5, 8))
+		end
+
+	frozen callstack_replayed_empty_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'replayed empty' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 8))
+		end
+
+	frozen callstack_replayed_marked_icon: !EV_PIXMAP is
+			-- Access to 'replayed marked' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (6, 8))
+		end
+
+	frozen callstack_replayed_marked_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'replayed marked' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 8))
+		end
+
 	frozen debugger_environment_force_debug_mode_icon: !EV_PIXMAP is
 			-- Access to 'force debug mode' pixmap.
 		once
-			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (4, 8))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (7, 8))
 		end
 
 	frozen debugger_environment_force_debug_mode_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'force debug mode' pixmap pixel buffer.
 		once
-			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 8))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 8))
 		end
 
 	frozen debugger_environment_with_breakpoints_icon: !EV_PIXMAP is
 			-- Access to 'with breakpoints' pixmap.
 		once
-			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (5, 8))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (8, 8))
 		end
 
 	frozen debugger_environment_with_breakpoints_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'with breakpoints' pixmap pixel buffer.
 		once
-			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 8))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 8))
 		end
 
 	frozen debugger_environment_without_breakpoints_icon: !EV_PIXMAP is
 			-- Access to 'without breakpoints' pixmap.
 		once
-			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (6, 8))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (9, 8))
 		end
 
 	frozen debugger_environment_without_breakpoints_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'without breakpoints' pixmap pixel buffer.
 		once
-			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 8))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 8))
 		end
 
 	frozen execution_record_icon: !EV_PIXMAP is
 			-- Access to 'record' pixmap.
 		once
-			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (7, 8))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (10, 8))
 		end
 
 	frozen execution_record_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'record' pixmap pixel buffer.
 		once
-			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 8))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 8))
 		end
 
 	frozen execution_replay_icon: !EV_PIXMAP is
 			-- Access to 'replay' pixmap.
 		once
-			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (8, 8))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (11, 8))
 		end
 
 	frozen execution_replay_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'replay' pixmap pixel buffer.
 		once
-			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 8))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 8))
 		end
 
 	frozen execution_object_storage_icon: !EV_PIXMAP is
 			-- Access to 'object storage' pixmap.
 		once
-			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (9, 8))
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (12, 8))
 		end
 
 	frozen execution_object_storage_icon_buffer: !EV_PIXEL_BUFFER is
 			-- Access to 'object storage' pixmap pixel buffer.
 		once
-			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 8))
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 8))
 		end
 
 	frozen general_blank_icon: !EV_PIXMAP is
@@ -4790,7 +4826,7 @@ feature -- Access
 			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 21))
 		end
 
-		
+
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): !EV_RECTANGLE is

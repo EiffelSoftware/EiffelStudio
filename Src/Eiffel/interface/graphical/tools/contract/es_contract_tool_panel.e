@@ -52,9 +52,10 @@ feature {NONE} -- Initialization
 			create contract_editor.make (develop_window)
 
 			a_widget.extend (contract_editor.widget)
+			register_action (contract_editor.source_selection_actions, agent on_source_selected_in_editor)
 
 			register_action (save_modifications_button.select_actions, agent on_save)
-			register_action (add_contract_button.select_actions, agent on_add_contract)
+			register_action (add_contract_button.select_actions, agent add_contract_button.perform_select)
 			register_action (remove_contract_button.select_actions, agent on_remove_contract)
 			register_action (edit_contract_button.select_actions, agent on_edit_contract)
 			register_action (refresh_button.select_actions, agent on_refresh)
@@ -67,6 +68,10 @@ feature {NONE} -- Initialization
 
 				-- Register action to perform updates on focus
 			register_action (content.focus_in_actions, agent update_if_modified)
+
+				-- Register menu item actions
+			register_action (add_manual_menu_item.select_actions, agent on_add_contract)
+			register_action (add_from_template_menu.select_actions, agent on_add_contract_from_template)
 		end
 
 	on_after_initialized
@@ -78,6 +83,15 @@ feature {NONE} -- Initialization
 			if session_manager.is_service_available then
 					-- Connect session observer.
 				project_window_session_data.connect_events (Current)
+			end
+
+			if code_template_catalog.is_service_available then
+					-- Update the menu
+				update_code_template_list
+			else
+					-- Disable the menu entries because they cannot be used
+				add_from_template_for_entity_menu.disable_sensitive
+				add_from_template_menu.disable_sensitive
 			end
 
 				-- Performs UI initialization
@@ -129,6 +143,20 @@ feature {NONE} -- Access
 		do
 			check contract_editor_has_context: contract_editor.has_context end
 			Result ?= contract_editor.context
+		end
+
+	contract_code_templates: !DS_BILINEAR [!CODE_TEMPLATE_DEFINITION]
+			-- Code template definitions for contracts.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			code_template_catalog_is_service_available: code_template_catalog.is_service_available
+		local
+			l_categories: DS_ARRAYED_LIST [STRING_32]
+		once
+			create l_categories.make (1)
+			l_categories.put_last ({CODE_TEMPLATE_ENTITY_NAMES}.contract_category)
+			Result ?= code_template_catalog.service.templates_by_category (l_categories, False)
 		end
 
 feature {NONE} -- Element change
@@ -314,6 +342,20 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
+	refresh_context
+			-- Refreshes the editor to include new changes.
+			-- Note: This only refreshes the already set context information and will not go out to disk or the editor
+			--       to refresh the context context. For this use `update'. However be sure the editor contains loaded
+			--       text or your will recieve stale content.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_stone: has_stone
+			not_is_dirty: not is_dirty
+		do
+			execute_with_busy_cursor (agent contract_editor.refresh)
+		end
+
 	update
 			-- Updates the view with an new context.
 		require
@@ -353,6 +395,30 @@ feature {NONE} -- Basic operations
 			not_is_dirty: not is_dirty
 		end
 
+feature {NONE} -- Extension
+
+	add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION) is
+			-- Adds a contract from a template definition
+			--
+			-- `a_template' The template to use to add a contract with.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_template: ?CODE_TEMPLATE
+			l_dialog: ES_CODE_TEMPLATE_BUILDER_DIALOG
+			l_error: ES_ERROR_PROMPT
+		do
+			l_template := a_template.applicable_item
+			if l_template /= Void then
+				create l_dialog.make (l_template)
+				l_dialog.show_on_active_window
+			else
+				create l_error.make_standard ("Unable to find an applicable template for the current version of EiffelStudio.")
+				l_error.show_on_active_window
+			end
+		end
+
 feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 
 	synchronize
@@ -375,6 +441,12 @@ feature {NONE} -- Helpers
 			create Result
 		end
 
+	frozen code_template_catalog: !SERVICE_CONSUMER [CODE_TEMPLATE_CATALOG_S]
+			-- Access to the code template catalog service
+		once
+			create Result
+		end
+
 feature {NONE} -- User interface elements
 
 	save_modifications_button:? SD_TOOL_BAR_DUAL_POPUP_BUTTON
@@ -386,8 +458,17 @@ feature {NONE} -- User interface elements
 	save_and_open_menu_item: ?EV_MENU_ITEM
 			-- Menu item to save contracts and open modified class.
 
-	add_contract_button: ?SD_TOOL_BAR_BUTTON
+	add_contract_button: ?SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Button to add a new contract to the current feature.
+
+	add_manual_menu_item: ?EV_MENU_ITEM
+			-- Menu item to save contracts.
+
+	add_from_template_menu: ?EV_MENU
+			-- Menu to save contracts and open modified class.
+
+	add_from_template_for_entity_menu: ?EV_MENU
+			-- Menu to add a template contract for a given argument/class attribute
 
 	remove_contract_button: ?SD_TOOL_BAR_BUTTON
 			-- Button to remove a selected contract.
@@ -449,7 +530,15 @@ feature {NONE} -- User interface manipulation
 				show_callers_button.disable_sensitive
 			end
 
-			update_editable_buttons (has_stone and then context.is_editable)
+			if contract_editor.has_context then
+				if contract_mode = {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
+					add_from_template_for_entity_menu.set_text ("Add Contract for Class Attribute")
+				else
+					add_from_template_for_entity_menu.set_text ("Add Contract for Argument")
+				end
+			end
+
+			update_editable_buttons (has_stone and then contract_editor.selected_source /= Void and then contract_editor.selected_source.is_editable)
 		end
 
 	update_editable_buttons (a_editable: BOOLEAN)
@@ -468,6 +557,42 @@ feature {NONE} -- User interface manipulation
 				add_contract_button.disable_sensitive
 				remove_contract_button.disable_sensitive
 				edit_contract_button.disable_sensitive
+			end
+		end
+
+	update_code_template_list
+			-- Updates the code template list for the add from template menu.
+			--| Should only be called once per object
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			code_template_catalog_is_service_available: code_template_catalog.is_service_available
+			add_from_template_menu_is_empty: add_from_template_menu.is_empty
+		local
+			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
+			l_definition: !CODE_TEMPLATE_DEFINITION
+			l_title: !STRING_32
+			l_menu: !EV_MENU
+			l_menu_item: EV_MENU_ITEM
+		do
+			l_menu ?= add_from_template_menu
+			l_menu.wipe_out
+
+			l_cursor := contract_code_templates.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_definition := l_cursor.item
+				l_title := l_definition.metadata.title
+				if l_title.is_empty then
+					l_title := l_definition.metadata.shortcut
+				end
+				if not l_title.is_empty then
+					create l_menu_item.make_with_text (l_title)
+					l_menu_item.set_pixmap (stock_pixmaps.general_document_icon)
+					l_menu_item.set_data (l_definition)
+					l_menu_item.select_actions.extend (agent add_contract_from_template (l_definition))
+					l_menu.extend (l_menu_item)
+				end
+				l_cursor.forth
 			end
 		end
 
@@ -531,12 +656,19 @@ feature {NONE} -- Event handlers
 			-- Called when a file is modified externally of Current.
 			--
 			-- `a_modification_type': The type of modification applied to the file. See FILE_NOTIFIER_MODIFICATION_TYPES for the respective flags
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		do
 			if is_initialized and then has_stone and then not is_saving then
-				if (a_modification_type & {FILE_NOTIFIER_MODIFICATION_TYPES}.file_deleted) = {FILE_NOTIFIER_MODIFICATION_TYPES}.file_deleted then
-					set_stone (Void)
-				elseif not is_dirty then
-					refresh_stone
+				if shown then
+					if (a_modification_type & {FILE_NOTIFIER_MODIFICATION_TYPES}.file_deleted) = {FILE_NOTIFIER_MODIFICATION_TYPES}.file_deleted then
+						set_stone (Void)
+					elseif not is_dirty then
+						refresh_stone
+					end
+				else
+					last_file_change_notified_agent := agent on_file_modified (a_modification_type)
 				end
 			end
 		end
@@ -581,7 +713,6 @@ feature {NONE} -- Action handlers
 
 			set_is_dirty (False)
 			update
-			update_stone_buttons
 
 				-- Update session.
 				-- This is done here because it only needs to be persisted when there is a stone change.
@@ -594,7 +725,16 @@ feature {NONE} -- Action handlers
 			-- <Precursor>
 		do
 			Precursor
-			update_if_modified
+			if last_file_change_notified_agent /= Void then
+					-- There was a file change notification issued when the tool was not shown
+				last_file_change_notified_agent.call (Void)
+				last_file_change_notified_agent := Void
+			else
+					-- Just for piece of mind, update if the file was modified
+				update_if_modified
+			end
+		ensure then
+			last_file_change_notified_agent_detached: last_file_change_notified_agent = Void
 		end
 
 	on_save
@@ -605,14 +745,52 @@ feature {NONE} -- Action handlers
 			has_stone: has_stone
 			is_dirty: is_dirty
 			not_is_saving: not is_saving
+		local
+			l_contracts: !DS_ARRAYED_LIST [!ES_CONTRACT_LINE]
+			l_assertions: !DS_ARRAYED_LIST [STRING]
+
+			l_error: ES_ERROR_PROMPT
+			retried: BOOLEAN
 		do
-			is_saving := True
-			context.text_modifier.commit
-			set_is_dirty (False)
-			is_saving := False
+			if not retried then
+				is_saving := True
+				if {l_modifier: ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} context.text_modifier then
+					l_contracts := contract_editor.context_contracts
+					if not l_contracts.is_empty then
+						create l_assertions.make (l_contracts.count)
+						from l_contracts.start until l_contracts.after loop
+							l_assertions.put_last (l_contracts.item_for_iteration.string)
+							l_contracts.forth
+						end
+					else
+						create l_assertions.make (0)
+					end
+					l_modifier.replace_contracts (l_assertions)
+					if l_modifier.is_dirty then
+						l_modifier.commit
+							-- Check affected classes and open, if requested.
+
+							-- Perform an update to recieve the most current information
+						set_is_dirty (False)
+						refresh_context
+					else
+						check False end
+					end
+				else
+					check False end
+				end
+
+				is_saving := False
+			else
+				create l_error.make_standard ("There was a problem saving the contracts. Please check you have access to the class file.")
+				l_error.show_on_active_window
+			end
 		ensure
-			not_is_dirty: not is_dirty
 			is_saving_unchanged: is_saving = old is_saving
+		rescue
+			retried := True
+			is_saving := False
+			retry
 		end
 
 	on_add_contract
@@ -622,18 +800,60 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			has_stone: has_stone
 		local
---			l_context: ?ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
---			l_modifider: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]
+			l_window_manager: EB_SHARED_WINDOW_MANAGER
+			l_editors: !DS_ARRAYED_LIST [EB_SMART_EDITOR]
+			l_editor: EB_SMART_EDITOR
 		do
---			if contract_editor.has_context then
---				l_context := contract_editor.context
---				if l_context /= Void then
---					l_modifider := l_context.text_modifier
+			create l_window_manager
+			l_editors := l_window_manager.window_manager.active_editors_for_class (context.context_class)
+			if not l_editors.is_empty then
+				from l_editors.start until l_editors.after loop
+					if l_editors.item_for_iteration.is_editable then
+						l_editors.forth
+					else
+						l_editors.remove_at
+					end
+				end
+			end
+			if not l_editors.is_empty then
+					-- Point to the existing editor
+				l_editor := l_editors.first
+			else
+					-- No editor exists, open a new one
+				develop_window.commands.new_tab_cmd.execute_with_stone (create {CLASSI_STONE}.make (context.context_class))
+				l_editor := develop_window.editors_manager.editor_with_class (context.context_class.file_name)
+			end
 
---					--l_modifider.replace_contracts ()
---				end
---			end
-			set_is_dirty (True)
+			--l_editor.display_line_at_top_when_ready (context.text_modifier.contract_ast.start_location.line, 1)
+		end
+
+	on_add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION)
+			-- Called when the user chooses to add a new contract, from a template, to the existing feature.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_stone: has_stone
+		local
+			l_template: ?CODE_TEMPLATE
+			l_dialog: ES_CODE_TEMPLATE_BUILDER_DIALOG
+			l_error: ES_ERROR_PROMPT
+			l_contract: !STRING_32
+		do
+			l_template := a_template.applicable_item
+			if l_template /= Void then
+				create l_dialog.make (l_template)
+				l_dialog.show_on_active_window
+				if l_dialog.dialog_result = l_dialog.dialog_buttons.ok_button then
+						-- User committed changes
+					l_contract := l_dialog.code_result
+					if not l_contract.is_empty then
+
+					end
+				end
+			else
+				create l_error.make_standard ("Unable to find an applicable template for the current version of EiffelStudio.")
+				l_error.show_on_active_window
+			end
 		end
 
 	on_remove_contract
@@ -642,7 +862,22 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			has_stone: has_stone
+		local
+			l_source: ?ES_CONTRACT_SOURCE_I
+			l_question: ES_QUESTION_WARNING_PROMPT
 		do
+			l_source := contract_editor.selected_source
+			if l_source /= Void then
+				if {l_line: ES_CONTRACT_LINE} l_source then
+						-- Remove selected contracts
+					contract_editor.remove_contract (l_line)
+					set_is_dirty (True)
+				else
+						-- User chooses to remove all contracts
+					create l_question.make_standard_with_cancel ("Performing a removal like this will removal all the contracts.%NDo you want to continue?")
+					l_question.show_on_active_window
+				end
+			end
 		end
 
 	on_edit_contract
@@ -707,7 +942,18 @@ feature {NONE} -- Action handlers
 --			end
 		end
 
+	on_source_selected_in_editor (a_source: ?ES_CONTRACT_SOURCE_I)
+			-- Called when the editor recieves a selection/deselection of a source row.
+			--
+			-- `a_source': A source row (or a contrac line {ES_CONTRACT_LINE}) or Void to indicate a deselection.
+		do
+			update_editable_buttons (a_source /= Void and then a_source.is_editable)
+		end
 
+feature {NONE} -- Action agents
+
+	last_file_change_notified_agent: PROCEDURE [ANY, TUPLE]
+			-- Last agent set for file notifications when the tool was not displayed
 
 feature {NONE} -- Factory
 
@@ -724,6 +970,7 @@ feature {NONE} -- Factory
 			l_button: SD_TOOL_BAR_BUTTON
 			l_dual_button: SD_TOOL_BAR_DUAL_POPUP_BUTTON
 			l_menu: EV_MENU
+			l_sub_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
 			l_menu_radio_item: EV_RADIO_MENU_ITEM
 		do
@@ -754,14 +1001,30 @@ feature {NONE} -- Factory
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Add contract button
-			create l_button.make
-			l_button.set_pixel_buffer (stock_pixmaps.general_add_icon_buffer)
-			l_button.set_pixmap (stock_pixmaps.general_add_icon)
-			l_button.set_tooltip ("Adds a new contract.")
-			l_button.disable_sensitive
+			create l_dual_button.make
+			l_dual_button.set_pixel_buffer (stock_pixmaps.general_add_icon_buffer)
+			l_dual_button.set_pixmap (stock_pixmaps.general_add_icon)
+			l_dual_button.set_tooltip ("Adds a new contract.")
+			l_dual_button.disable_sensitive
+			add_contract_button := l_dual_button
+			Result.put_last (l_dual_button)
 
-			add_contract_button := l_button
-			Result.put_last (l_button)
+				-- Create menu for add selection button
+			create l_menu
+			create l_menu_item.make_with_text ("&Add Contract...")
+			l_menu.set_pixmap (stock_pixmaps.general_add_icon)
+			l_menu.extend (l_menu_item)
+			add_manual_menu_item := l_menu_item
+
+			create l_sub_menu.make_with_text ("&Add Contract from Template...")
+			l_menu.extend (l_sub_menu)
+			add_from_template_menu := l_sub_menu
+
+			create l_sub_menu.make_with_text ("&Add Contract for Entity")
+			l_menu.extend (l_sub_menu)
+			add_from_template_for_entity_menu := l_sub_menu
+
+			l_dual_button.set_menu (l_menu)
 
 				-- Remove contract button
 			create l_button.make
@@ -850,8 +1113,6 @@ feature {NONE} -- Factory
 			Result.put_last (l_button)
 		end
 
-
-
 	contract_mode_label (a_mode: like contract_mode): !STRING_32
 			-- Retrieve the edit label for a given an edit mode.
 			--
@@ -886,15 +1147,23 @@ feature {NONE} -- Constants
 	show_all_lines_session_id: !STRING = "com.eiffel.contract_tool.show_all_lines"
 
 invariant
-	add_contract_button_attached: is_initialized implies add_contract_button /= Void
-	remove_contract_button_attached: is_initialized implies remove_contract_button /= Void
-	edit_contract_button_attached: is_initialized implies edit_contract_button /= Void
-	contract_mode_button_attached: is_initialized implies contract_mode_button /= Void
-	show_callers_button_attached: is_initialized implies show_callers_button /= Void
-	preconditions_menu_item_attached: is_initialized implies preconditions_menu_item /= Void
-	postconditions_menu_item_attached: is_initialized implies postconditions_menu_item /= Void
-	invaraints_menu_item_attached: is_initialized implies invaraints_menu_item /= Void
-	contract_editor_attached: is_initialized implies contract_editor /= Void
+	save_modifications_button_attached: (is_initialized and is_interface_usable) implies save_modifications_button /= Void
+	save_menu_item_attached: (is_initialized and is_interface_usable) implies save_menu_item /= Void
+	save_and_open_menu_item_attached: (is_initialized and is_interface_usable) implies save_and_open_menu_item /= Void
+	add_contract_button_attached: (is_initialized and is_interface_usable) implies add_contract_button /= Void
+	add_manual_menu_item_attached: (is_initialized and is_interface_usable) implies add_manual_menu_item /= Void
+	add_from_template_menu_attached: (is_initialized and is_interface_usable) implies add_from_template_menu /= Void
+	add_from_template_for_entity_menu_attached: (is_initialized and is_interface_usable) implies add_from_template_for_entity_menu /= Void
+	remove_contract_button_attached: (is_initialized and is_interface_usable) implies remove_contract_button /= Void
+	edit_contract_button_attached: (is_initialized and is_interface_usable) implies edit_contract_button /= Void
+	refresh_button_attached: (is_initialized and is_interface_usable) implies refresh_button /= Void
+	contract_mode_button_attached: (is_initialized and is_interface_usable) implies contract_mode_button /= Void
+	preconditions_menu_item_attached: (is_initialized and is_interface_usable) implies preconditions_menu_item /= Void
+	postconditions_menu_item_attached: (is_initialized and is_interface_usable) implies postconditions_menu_item /= Void
+	invaraints_menu_item_attached: (is_initialized and is_interface_usable) implies invaraints_menu_item /= Void
+	show_all_lines_button_attached: (is_initialized and is_interface_usable) implies show_all_lines_button /= Void
+	show_callers_button_attached: (is_initialized and is_interface_usable) implies show_callers_button /= Void
+	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

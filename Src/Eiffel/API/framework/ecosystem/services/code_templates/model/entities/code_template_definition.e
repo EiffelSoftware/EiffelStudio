@@ -110,8 +110,6 @@ feature -- Query
 			-- `Result': A code template with no version; Otherwise Void if not applicable template was located.
 		do
 			Result := templates.applicable_item
-		ensure
-			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
 		end
 
 	applicable_default_item: ?CODE_TEMPLATE

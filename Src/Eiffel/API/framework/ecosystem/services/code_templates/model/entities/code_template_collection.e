@@ -30,8 +30,6 @@ feature -- Query
 			if Result = Void then
 				Result := applicable_default_item
 			end
-		ensure
-			result_is_unversioned: ({CODE_VERSIONED_TEMPLATE}) #? Result = Void
 		end
 
 	applicable_default_item: ?CODE_TEMPLATE

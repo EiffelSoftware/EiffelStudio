@@ -273,8 +273,9 @@ feature -- Basic operations
 		local
 			l_editors: like active_editors_for_class
 			l_editor: EB_SMART_EDITOR
+			l_recent_editor: EB_SMART_EDITOR
 			l_text: SMART_TEXT
-			l_new_text: STRING
+			l_new_text: !STRING
 			l_first_line: INTEGER
 			l_line: INTEGER
 			l_col: INTEGER
@@ -291,6 +292,16 @@ feature -- Basic operations
 			l_editors := active_editors_for_class (context_class)
 			if not l_editors.is_empty then
 					-- There are editors available, attempt to set to the active editor(s).
+				from l_editors.start until l_editors.after or l_recent_editor /= Void loop
+					l_editor := l_editors.item_for_iteration
+					if l_editor.is_editable and then l_editor.text_is_fully_loaded and then l_editor.text_displayed.is_modified then
+							-- There is an editor that has been modified, make this the most recent.
+						l_recent_editor := l_editor
+					else
+						l_editors.forth
+					end
+				end
+
 				from l_editors.start until l_editors.after loop
 					l_editor := l_editors.item_for_iteration
 					if l_editor.is_editable then
@@ -304,13 +315,18 @@ feature -- Basic operations
 							l_col := l_text.cursor.x_in_characters
 						end
 
-							-- Set text.
-						if l_editor.text_displayed.is_modified then
-								-- Need to use merge
-							l_new_text := merge_text (l_text.text)
-						else
-							l_new_text := text
+							-- Set text, always using a merge.
+						l_new_text := merge_text (l_text.text)
+
+							-- Set text to `modified_data' for use in `prepare'
+						if l_recent_editor = l_editor then
+								-- Set modified data text to the most recent editor
+							modified_data.text := l_new_text
+						elseif l_recent_editor = Void and then l_editors.is_last then
+								-- No recent editor, just use the last editor's text
+							modified_data.text := l_new_text
 						end
+
 						l_editor.set_editor_text (l_new_text)
 						l_set_in_editor := True
 
@@ -337,12 +353,14 @@ feature -- Basic operations
 			if not l_set_in_editor then
 				if (create {RAW_FILE}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
-					l_new_text := context_class.text
+					l_new_text ?= context_class.text
 					l_new_text.prune_all ('%R')
 					l_new_text := merge_text (l_new_text)
 				else
 					l_new_text := text
 				end
+					-- Set text to `modified_data' for use in `prepare'
+				modified_data.text := l_new_text
 
 					-- No editors, save directly to disk.
 				create l_save

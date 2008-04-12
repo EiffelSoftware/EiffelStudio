@@ -16,6 +16,45 @@ inherit
 create
 	make
 
+feature -- Access
+
+	contract_ast: ?ENSURE_AS
+			-- <Precursor>
+		local
+			l_routine: ?ROUTINE_AS
+		do
+			l_routine ?= ast_feature.body.content
+			if l_routine /= Void then
+				Result := l_routine.postcondition
+			end
+		end
+
+	contract_insertion_position: INTEGER
+			-- <Precursor>
+		local
+			l_ast: like contract_ast
+			l_routine: ?ROUTINE_AS
+			l_locals: ?LOCAL_DEC_LIST_AS
+		do
+			l_ast := contract_ast
+			if l_ast /= Void then
+				Result := ast_position (l_ast).start_position
+			else
+				l_routine ?= ast_feature.body.content
+				if l_routine /= Void then
+					l_locals := l_routine.internal_locals
+					if l_locals = Void then
+							-- No locals, use routine body
+						Result := ast_position (l_routine.routine_body).start_position
+					else
+						Result := ast_position (l_locals).start_position
+					end
+				end
+			end
+			Result := modified_data.adjusted_position (Result)
+		end
+
+
 feature {NONE} -- Access
 
 	template_identifier: !STRING_32
@@ -45,44 +84,6 @@ feature {NONE} -- Element change
 				create l_value.make (l_str_value)
 			end
 			a_table.force (l_value, then_id_name)
-		end
-
-feature {NONE} -- Query
-
-	contract_insertion_position: INTEGER
-			-- <Precursor>
-		local
-			l_ast: like contract_ast
-			l_routine: ?ROUTINE_AS
-			l_locals: ?LOCAL_DEC_LIST_AS
-		do
-			l_ast := contract_ast
-			if l_ast /= Void then
-				Result := ast_position (l_ast).start_position
-			else
-				l_routine ?= ast_feature.body.content
-				if l_routine /= Void then
-					l_locals := l_routine.internal_locals
-					if l_locals = Void then
-							-- No locals, use routine body
-						Result := ast_position (l_routine.routine_body).start_position
-					else
-						Result := ast_position (l_locals).start_position
-					end
-				end
-			end
-			Result := modified_data.adjusted_position (Result)
-		end
-
-	contract_ast: ?ENSURE_AS
-			-- <Precursor>
-		local
-			l_routine: ?ROUTINE_AS
-		do
-			l_routine ?= ast_feature.body.content
-			if l_routine /= Void then
-				Result := l_routine.postcondition
-			end
 		end
 
 feature {NONE} -- Constants

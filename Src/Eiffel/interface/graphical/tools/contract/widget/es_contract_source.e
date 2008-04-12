@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Class text modifier for modifying invariant contracts.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,64 +8,37 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_INVARIANT_CONTRACT_TEXT_MODIFIER
+	ES_CONTRACT_SOURCE
 
 inherit
-	ES_CONTRACT_TEXT_MODIFIER [INVARIANT_AS]
+	ES_CONTRACT_SOURCE_I
 
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_context: like context; a_editable: like is_editable)
+			-- Initializes a contract source.
+		require
+			a_context_is_interface_usable: a_context.is_interface_usable
+		do
+			context := a_context
+			is_editable := a_editable
+		ensure
+			context_set: context = a_context
+			is_editable_set: is_editable = a_editable
+		end
+
 feature -- Access
 
-	contract_ast: ?INVARIANT_AS
+	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- <Precursor>
-		do
-			Result := ast.invariant_part
-		end
 
-	contract_insertion_position: INTEGER
+feature -- Status report
+
+	is_editable: BOOLEAN
 			-- <Precursor>
-		local
-			l_ast: like contract_ast
-			l_indexing: INDEXING_CLAUSE_AS
-		do
-			l_ast := contract_ast
-			if l_ast /= Void then
-				Result := ast_position (l_ast).start_position
-			else
-					-- Try bottom indexing
-				l_indexing := ast.bottom_indexes
-				if l_indexing /= Void then
-					Result := ast_position (l_indexing).start_position
-				else
-						-- Use end keyword
-					check
-						ast_end_keyword_attached: ast.end_keyword /= Void
-					end
-					Result := ast_position (ast.end_keyword).start_position
-				end
-			end
-			Result := modified_data.adjusted_position (Result)
-		end
-
-
-feature {NONE} -- Access
-
-	template_identifier: !STRING_32
-			-- <Precursor>
-		once
-			create Result.make_from_string ("invariant")
-		end
-
-feature {NONE} -- Element change
-
-	set_template_values (a_table: !CODE_SYMBOL_TABLE)
-			-- Sets the values use in rendering a template.
-			--
-			-- `a_table': The symbol table used to render a template
-		do
-		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

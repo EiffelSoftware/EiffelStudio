@@ -537,8 +537,10 @@ rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 }
 #endif
 
+/*
 #define RT_DEBUG_ENABLED(cond,d) d
-//#define RT_DEBUG_ENABLED(cond,d) cond
+*/
+#define RT_DEBUG_ENABLED(cond,d) cond
 
 rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	/* args: ex_vect, current execution vector     */

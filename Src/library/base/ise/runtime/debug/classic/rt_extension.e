@@ -132,8 +132,6 @@ feature {NONE} -- Execution replay
 
 	reset_events_feature_argument (t: TUPLE)
 			-- Reset argument for `process_*_feature'.
-		local
-			p: POINTER
 		do
 			if {ot: like events_feature_argument} t then
 				ot.ref := Void
@@ -145,8 +143,6 @@ feature {NONE} -- Execution replay
 
 	reset_events_assign_argument (t: TUPLE)
 			-- Reset argument for `process_*_feature'.
-		local
-			p: POINTER
 		do
 			if {ot: like events_assign_argument} t then
 				ot.ref := Void

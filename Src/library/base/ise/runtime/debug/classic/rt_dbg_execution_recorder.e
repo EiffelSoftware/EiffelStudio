@@ -224,7 +224,6 @@ feature -- Event
 			cid_positive: cid >= 0 --| 0 might stands for ANY
 		local
 			r: RT_DBG_CALL_RECORD
-			fn: STRING
 		do
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep); dtrace ("enter_feature (" + ref.generating_type + ", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
@@ -277,7 +276,6 @@ feature -- Event
 			is_not_replaying: not is_replaying
 		local
 			r: RT_DBG_CALL_RECORD
-			c: !RT_DBG_CALL_RECORD
 		do
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep); dtrace ("enter_rescue (" + ref.generating_type + ", " + dep.out + ")");
@@ -533,7 +531,6 @@ feature -- Replay
 	replay_to_point	(a_id: !STRING): BOOLEAN
 			-- Replay execution to point identified by `a_id'
 		local
-			curr: like replayed_call
 			d1,d2: INTEGER
 		do
 			debug ("RT_DBG_REPLAY")

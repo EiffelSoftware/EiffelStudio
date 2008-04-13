@@ -1,0 +1,18 @@
+test_name date-duration-with-leap-years
+test_description	Computation the duration or adding months when we cross a leap year gives a day duration off by 1.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

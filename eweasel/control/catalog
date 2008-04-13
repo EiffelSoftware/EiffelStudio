@@ -16,6 +16,7 @@ test	date-duration			duration002 tcf pass time
 test	date-time-duration		duration003 tcf pass time
 test	large-date-time-duration	duration004 tcf pass time
 test	time-bug-reports		time001 tcf pass time
+test	 date-duration-with-leap-years	time002 tcf pass time
 
 -- EiffelBase tests
 

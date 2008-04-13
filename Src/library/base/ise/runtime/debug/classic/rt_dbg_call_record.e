@@ -570,11 +570,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 				r := call_records.i_th (i)
 				if sub_id = Void then
 					Result := r
-				else --if r /= Void then
-					check r /= Void end
-					if r = Void then
-						dtrace_indent (depth); dtrace ("call_by_id -> ERROR %N")
-					end
+				else
 					Result := r.call_by_id (sub_id)
 				end
 			end

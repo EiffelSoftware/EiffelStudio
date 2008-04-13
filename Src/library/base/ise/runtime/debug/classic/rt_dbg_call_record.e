@@ -148,7 +148,6 @@ feature -- Status
 					l_calls.before or not Result
 				loop
 					c := l_calls.item
-					check c_not_void: c /= Void end
 					Result := c.is_closed
 					l_calls.back
 				end
@@ -273,7 +272,6 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 					l_calls.before
 				loop
 					c := l_calls.item
-					check c_not_void: c /= Void end
 					if not c.is_closed then
 						c.deep_close
 					end

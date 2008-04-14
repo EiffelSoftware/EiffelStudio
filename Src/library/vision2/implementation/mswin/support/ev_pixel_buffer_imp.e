@@ -317,9 +317,13 @@ feature -- Command
 				-- EV_FONT.name and WEL_LOG_FONT.name all return "".
 				check only_roman_supported_currently: a_font.family = {EV_FONT_CONSTANTS}.family_roman end
 				create l_font_family.make_with_name ("Times New Roman")
-
+				
 				create l_font.make (l_font_family, a_font.height_in_points)
+
 				l_graphics.draw_string (a_text, a_text.count, l_font, a_point.x, a_point.y)
+
+				l_font.dispose
+				l_font_family.dispose
 			else
 				pixmap.set_font (a_font)
 				pixmap.draw_text_top_left (a_point.x, a_point.y, a_text)

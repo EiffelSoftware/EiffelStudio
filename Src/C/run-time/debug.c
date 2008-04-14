@@ -558,7 +558,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
  						 */
 		if (RT_DEBUG_ENABLED(is_inside_rt_eiffel_code == 0,1)) {
 			RTDBGH(d_data.db_callstack_depth, break_index, 0);
-			if (!d_data.db_discard_breakpoints ) {
+			if (!BREAKPOINTS_DISCARDED) {
 				int stopped = 0;
 				BODY_INDEX bodyid = exvect->ex_bodyid;
 
@@ -635,7 +635,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 
 		if (RT_DEBUG_ENABLED(is_inside_rt_eiffel_code == 0,1)) {
 			RTDBGH(d_data.db_callstack_depth, break_index, nested_break_index);
-			if (!d_data.db_discard_breakpoints) {
+			if (!BREAKPOINTS_DISCARDED) {
 				BODY_INDEX bodyid = exvect->ex_bodyid;
 				DBGMTX_LOCK;	/* Enter critical section */
 					

@@ -101,7 +101,7 @@ feature {NONE} -- C externals
 		end
 
 	c_gdip_get_generic_font_family_sans_serif (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
-			--
+			-- Get generic font family sans serif
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias

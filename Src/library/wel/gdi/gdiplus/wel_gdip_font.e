@@ -10,6 +10,9 @@ class
 
 inherit
 	WEL_GDIP_ANY
+		redefine
+			destroy_item
+		end
 
 create
 	make,
@@ -39,10 +42,24 @@ feature{NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+feature -- Delete
+
+	destroy_item is
+			-- Redefine
+		local
+			l_result: INTEGER
+		do
+			if item /= default_pointer then
+				c_gdip_delete_font (gdi_plus_handle, item, $l_result)
+				check ok: l_result = {WEL_GDIP_STATUS}.ok end
+				item := default_pointer
+			end
+		end
+
 feature {NONE} -- C externals
 
 	c_gdip_create_font (a_gdiplus_handle: POINTER; a_font_family: POINTER; a_em_size: REAL; a_style, a_unit: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
-			--	Create a Gdi+ font.
+			--	Create a Gdi+ font
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 		external
@@ -66,6 +83,30 @@ feature {NONE} -- C externals
 								(GpFont **) &l_result);
 				}				
 				return (EIF_POINTER) l_result;
+			}
+			]"
+		end
+
+	c_gdip_delete_font (a_gdiplus_handle: POINTER; a_gdiplus_font: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+			--	Delete a Gdi+ font
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			exists: a_gdiplus_font /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipDeleteFont = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipDeleteFont) {
+					GdipDeleteFont = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDeleteFont");
+				}
+				if (GdipDeleteFont) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpFont *)) GdipDeleteFont)
+								((GpFont *) $a_gdiplus_font);
+				}
 			}
 			]"
 		end

@@ -3588,7 +3588,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 	EIF_GET_CONTEXT
 
 #ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	
 	{
@@ -3716,7 +3716,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 	}
 
 #ifdef WORKBENCH
-	undiscard_breakpoints(); /* the debugger can now stop again */
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
 #endif
 
 	if (except_code == EN_OMEM || except_code == EN_MEM) {
@@ -3738,11 +3738,11 @@ rt_public void set_last_exception (EIF_REFERENCE ex)
 #endif
 
 #ifdef WORKBENCH
-		discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 		(egc_set_last_exception)(except_mnger, _ex);
 #ifdef WORKBENCH
-		undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+		UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	}
 }
@@ -3758,12 +3758,12 @@ rt_public EIF_REFERENCE last_exception (void)
 
 	if (except_mnger) { /* In case get called in `dispose' */
 #ifdef WORKBENCH
-		discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 		_re = (egc_last_exception)(except_mnger);
 
 #ifdef WORKBENCH
-		undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+		UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 
 #ifdef WORKBENCH
@@ -3825,11 +3825,11 @@ rt_private int is_ex_ignored (int ex_code)
 #endif
 
 #ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	result = (egc_is_code_ignored)(except_mnger, code);
 #ifdef WORKBENCH
-	undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 
 #ifdef WORKBENCH
@@ -3855,11 +3855,11 @@ rt_public void init_emnger (void)
 		failure(); /* No enough memory to init the application */
 	}
 #ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 	(egc_init_exception_manager)(except_mnger);
 #ifdef WORKBENCH
-	undiscard_breakpoints(); /* prevent the debugger from stopping in the following functions */
+	UNDISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
 }
 

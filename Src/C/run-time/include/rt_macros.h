@@ -155,9 +155,12 @@ rt_public void discard_breakpoints(void);	/* Avoid debugger to stop while in GC 
 rt_public void undiscard_breakpoints(void); /* re-authorize the debugger to stop */
 #define DISCARD_BREAKPOINTS	discard_breakpoints();
 #define UNDISCARD_BREAKPOINTS	undiscard_breakpoints();
+#define BREAKPOINTS_DISCARDED	(d_data.db_discard_breakpoints)
+
 #else
 #define DISCARD_BREAKPOINTS
 #define UNDISCARD_BREAKPOINTS
+#define BREAKPOINTS_DISCARDED	(1)
 #endif
 
 /* macro to handle catcall status */
@@ -171,11 +174,6 @@ rt_public void undiscard_breakpoints(void); /* re-authorize the debugger to stop
 #define catcall_detection_debugger_enabled	(catcall_detection_mode & 0x2)
 #else
 #define default_catcall_detection_mode	(0)
-#endif
-
-/* macro to handle assertion status */
-#ifdef WORKBENCH
-#define IS_OUTSIDE_ASSERTION (~in_assertion)
 #endif
 
 #ifdef __cplusplus

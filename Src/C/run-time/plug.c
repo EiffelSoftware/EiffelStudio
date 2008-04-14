@@ -62,11 +62,7 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #include "rt_gen_types.h"
 #include "rt_garcol.h"
 #include "rt_globals.h"
-
-#ifdef WORKBENCH
-rt_public void discard_breakpoints(void);
-rt_public void undiscard_breakpoints(void);
-#endif
+#include "rt_macros.h"
 
 #ifndef EIF_THREADS
 /*
@@ -127,7 +123,7 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 	RT_GC_PROTECT(array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
 #ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
 	{
 		EIF_TYPED_VALUE u_lower;
 		EIF_TYPED_VALUE u_upper;
@@ -152,7 +148,7 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 	}
 
 #ifdef WORKBENCH
-	undiscard_breakpoints(); /* the debugger can now stop again */
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
 #endif
 	RT_GC_WEAN_N(2);		/* Remove protection for the area and the array */
 	return array;
@@ -354,14 +350,14 @@ rt_public EIF_REFERENCE makestr_with_hash (register char *s, register size_t len
 	RT_GC_PROTECT(string); /* Protect address in case it moves */
 
 #ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
 #endif
 	nstcall = 0;
 	RT_STRING_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
 	RT_STRING_SET_HASH_CODE(string, a_hash);
 	RT_STRING_SET_COUNT(string, len);
 #ifdef WORKBENCH
-	undiscard_breakpoints(); /* the debugger can now stop again */
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
 #endif
 
 	/* Copy C string `s' in special object `area' of the new string
@@ -398,14 +394,14 @@ rt_public EIF_REFERENCE makestr_with_hash_as_old (register char *s, register siz
 	RT_GC_PROTECT(string); /* Protect address in case it moves */
 
 #ifdef WORKBENCH
-	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
 #endif
 	nstcall = 0;
 	RT_STRING_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
 	RT_STRING_SET_HASH_CODE(string, a_hash);
 	RT_STRING_SET_COUNT(string, len);
 #ifdef WORKBENCH
-	undiscard_breakpoints(); /* the debugger can now stop again */
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
 #endif
 
 	/* Copy C string `s' in special object `area' of the new string
@@ -533,17 +529,19 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
 	/* The list of parent dynamic types is always terminated by a
 	 * -1 value. -- FREDD
 	 */
-	while ((p_type = *cn_parents++) != TERMINATOR)
+	while ((p_type = *cn_parents++) != TERMINATOR) {
 		/* Call to potential parent invariant */
 		recursive_chkinv(MTC p_type, obj, where);
+	}
 
 	/* Invariant check */
 #ifndef WORKBENCH
 	{
 		void (*cn_inv)(EIF_REFERENCE, EIF_INTEGER);
 		cn_inv = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) node->cn_inv;
-		if (cn_inv)
+		if (cn_inv) {
 			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) cn_inv)(obj, where);
+		}
 	}
 #else
 	{
@@ -555,9 +553,8 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
 			if (egc_frozen [body_id]) {	/* Frozen invariant */
 				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) egc_frozen[body_id])
 				  	(obj, where);
-			} else 
+			} else {
 				/* Melted invariant */
-			{					
 				last = iget();
 				last->type = SK_REF;
 				last->it_ref = obj;

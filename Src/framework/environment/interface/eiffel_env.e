@@ -785,7 +785,7 @@ feature -- Directories (top-level user)
 			else
 				if {PLATFORM}.is_windows then
 					create l_dir.make (20)
-					l_dir.append (product_version_name)
+					l_dir.append (product_version_name.as_lower)
 				else
 					create l_dir.make (20)
 					l_dir.append (".es")

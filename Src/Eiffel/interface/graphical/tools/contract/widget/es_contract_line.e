@@ -40,10 +40,12 @@ feature {NONE} -- Initialization
 		require
 			not_a_contract_is_empty: not a_contract.is_empty
 		do
-			make ("unnamed", a_contract, a_source)
+			make ("_", a_contract, a_source)
+			tag.wipe_out
 		ensure
 			contract_set: contract.is_equal (a_contract)
 			source_set: source = a_source
+			is_tagless: is_tagless
 		end
 
 	make_from_string (a_string: STRING_GENERAL; a_source: like source)
@@ -65,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tag: !STRING
+	tag: !STRING assign set_tag
 			-- Contract tag
 
 	contract: !STRING assign set_contract
@@ -116,6 +118,12 @@ feature -- Status report
 			Result := source.is_editable
 		end
 
+	is_tagless: BOOLEAN
+			-- Indicates if the contract is without a tag
+		do
+			Result := tag.is_empty
+		end
+
 feature {NONE} -- Basic operations
 
 	split_contract_data (a_string: STRING): !TUPLE [tag: like tag; contract: like contract]
@@ -143,8 +151,10 @@ feature -- Output
 			-- Retrieve a string representation of the contract line
 		do
 			create Result.make (75)
-			Result.append (tag)
-			Result.append (": ")
+			if not is_tagless then
+				Result.append (tag)
+				Result.append (": ")
+			end
 			Result.append (contract)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -162,7 +172,6 @@ feature {NONE} -- Regular expressions
 		end
 
 invariant
-	not_tag_is_empty: not tag.is_empty
 	not_contract_is_empty: not contract.is_empty
 
 ;indexing

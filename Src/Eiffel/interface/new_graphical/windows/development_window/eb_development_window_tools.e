@@ -10,7 +10,7 @@ class
 
 obsolete
 	"[
-		This class is being deprecated and will not be available in the 6.2 release cycle.
+		This class is being deprecated and may not be available in the 6.3 release cycle.
 		Tool access should now be facilitated through {ES_SHELL_TOOLS}.tool passing
 		a tool shim type.
 	]"

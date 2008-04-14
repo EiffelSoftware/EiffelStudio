@@ -35,6 +35,12 @@ feature -- Access
 	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- <Precursor>
 
+	source: !ES_CONTRACT_SOURCE_I
+			-- <Precursor>
+		do
+			Result := Current
+		end
+
 feature -- Status report
 
 	is_editable: BOOLEAN

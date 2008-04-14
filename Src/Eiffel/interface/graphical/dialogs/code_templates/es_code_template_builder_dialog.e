@@ -201,6 +201,8 @@ feature {NONE} -- Access
 			result_consistent: Result = code_symbol_table
 		end
 
+feature {NONE} -- Dialog access
+
 	icon: !EV_PIXEL_BUFFER
 			-- <Precursor>
 		do

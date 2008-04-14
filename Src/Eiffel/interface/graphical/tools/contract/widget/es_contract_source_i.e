@@ -17,6 +17,11 @@ feature -- Access
 		deferred
 		end
 
+	source: !ES_CONTRACT_SOURCE_I
+			-- The actual contract source
+		deferred
+		end
+
 feature -- Status report
 
 	is_editable: BOOLEAN

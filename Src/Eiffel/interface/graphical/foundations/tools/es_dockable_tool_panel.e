@@ -113,6 +113,9 @@ feature {NONE} -- Initialization
         require
         	is_initialized: is_initialized
         do
+        	register_action (user_widget.key_press_actions, agent on_key_pressed)
+        	register_action (user_widget.key_release_actions, agent on_key_released)
+
         	if {l_window: !EV_WINDOW} content then
         			-- Set up help shortcut binding
         		bind_help_shortcut (l_window)
@@ -741,6 +744,61 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			shown: shown
 			user_widget_is_displayed: user_widget.is_displayed
+		do
+		end
+
+feature {NONE} -- Action Handlers
+
+	frozen on_key_pressed (a_key: EV_KEY)
+			-- Called when the tool recieves a key press
+			--
+			-- `a_key': The key pressed.
+		local
+			l_application: like ev_application
+			l_handled: BOOLEAN
+			l_widget: EV_WIDGET
+		do
+			if a_key /= Void and then is_interface_usable and then is_initialized then
+				l_application := ev_application
+				l_widget := l_application.focused_widget
+				if l_widget /= Void and then l_widget.default_key_processing_handler /= Void then
+					l_handled := l_widget.default_key_processing_handler.item ([a_key])
+				end
+				if not l_handled and then is_interface_usable then
+						-- We have to check is the interface is usable because the window may have been closed/destroyed
+						-- but the key processor opts not to return it being handled.
+					l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, False)
+				end
+			end
+		end
+
+	frozen on_key_released (a_key: EV_KEY)
+			-- Called when the tool recieves a key release
+			--
+			-- `a_key': The key released.
+		local
+			l_application: like ev_application
+			l_handled: BOOLEAN
+		do
+			if a_key /= Void and then is_interface_usable and then is_initialized then
+				l_application := ev_application
+				l_handled := on_handle_key (a_key, l_application.alt_pressed, l_application.ctrl_pressed, l_application.shift_pressed, True)
+			end
+		end
+
+	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
+			-- Called when the tool recieve a key event
+			--
+			-- `a_key': The key pressed.
+			-- `a_alt': True if the ALT key was pressed; False otherwise
+			-- `a_ctrl': True if the CTRL key was pressed; False otherwise
+			-- `a_shift': True if the SHIFT key was pressed; False otherwise
+			-- `a_released': True if the key event pertains to the release of a key, False to indicate a press.
+			-- `Result': True to indicate the key was handled
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			a_key_attached: a_key /= Void
 		do
 		end
 

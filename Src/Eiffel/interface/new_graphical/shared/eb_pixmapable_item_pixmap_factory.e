@@ -12,7 +12,7 @@ class
 inherit
 	EB_CONSTANTS
 
-feature -- Query
+feature -- Query (Pixmap)
 
 	pixmap_from_group (a_group: CONF_GROUP): EV_PIXMAP
 		require
@@ -290,6 +290,229 @@ feature -- Query
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Query (Pixel buffer)
+
+	pixel_buffer_from_class_i (a_class: CLASS_I): EV_PIXEL_BUFFER is
+			-- Return pixmap based on `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_compiled_class: CLASS_C
+			l_conf_class: CONF_CLASS
+			l_classi: CLASS_I
+			l_comp: CLASS_C
+			l_pixcode: NATURAL_8
+			l_overrides: ARRAYED_LIST [CONF_CLASS]
+			l_overrides_valid: BOOLEAN
+		do
+			l_conf_class := a_class.config_class
+
+			if a_class.is_read_only then
+				l_pixcode := l_pixcode | readonly_flag
+			end
+			if a_class.is_compiled then
+				l_pixcode := l_pixcode | compiled_flag
+				l_compiled_class := a_class.compiled_class
+				if l_compiled_class.is_expanded then
+					l_pixcode := l_pixcode | expanded_flag
+				elseif l_compiled_class.is_frozen then
+					l_pixcode := l_pixcode | frozen_flag
+				elseif l_compiled_class.is_deferred then
+					l_pixcode := l_pixcode | deferred_flag
+				end
+			end
+			if l_conf_class.does_override then
+				l_pixcode := l_pixcode | overrides_flag
+
+					-- compiled if any class overriden class is compiled
+				from
+					l_overrides := l_conf_class.overrides
+					l_overrides.start
+				until
+					l_overrides.after or l_comp /= Void
+				loop
+					if l_overrides.item.is_valid then
+						l_overrides_valid := True
+						if l_overrides.item.is_compiled then
+							l_classi ?= l_overrides.item
+							check
+								classi: l_classi /= Void
+							end
+							l_comp := l_classi.compiled_class
+						end
+					end
+					l_overrides.forth
+				end
+				if l_overrides_valid then
+					if l_comp = Void then
+							-- No compiled version
+						l_pixcode := l_pixcode & compiled_flag.bit_not
+					else
+						l_pixcode := l_pixcode | compiled_flag
+					end
+				end
+			elseif l_conf_class.is_overriden and then l_conf_class.overriden_by.is_valid then
+				l_pixcode := l_pixcode | overriden_flag
+			end
+			if l_pixcode = 0 then
+				l_pixcode := none_flag
+			end
+
+			check correct_pixcode: class_icon_map.has (l_pixcode) end
+			Result := class_icon_map.item (l_pixcode)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	pixel_buffer_from_e_feature (a_feature: E_FEATURE): EV_PIXEL_BUFFER is
+			-- Sets `a_item' pixmap based on `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_name: STRING
+		do
+			l_name := a_feature.assigner_name
+			if l_name = Void or else l_name.is_empty then
+				if a_feature.is_attribute then
+					if a_feature.is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_attribute_icon_buffer
+					elseif a_feature.is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_attribute_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_attribute_icon_buffer
+					end
+				elseif a_feature.is_deferred then
+					if a_feature.is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_deferred_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_deferred_icon_buffer
+					end
+				elseif a_feature.is_once or else a_feature.is_constant then
+					if a_feature.is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_once_icon_buffer
+					elseif a_feature.is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_once_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_once_icon_buffer
+					end
+				elseif a_feature.is_external then
+					if a_feature.associated_class = Void or else not a_feature.associated_class.is_true_external then
+						if a_feature.is_obsolete then
+							Result := pixmaps.icon_pixmaps.feature_obsolete_external_icon_buffer
+						elseif a_feature.is_frozen then
+							Result := pixmaps.icon_pixmaps.feature_frozen_external_icon_buffer
+						else
+							Result := pixmaps.icon_pixmaps.feature_external_icon_buffer
+						end
+					end
+				end
+				if Result = Void then
+					if a_feature.is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_routine_icon_buffer
+					elseif a_feature.is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_routine_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_routine_icon_buffer
+					end
+				end
+			else
+				if a_feature.is_deferred then
+					if a_feature.is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_deferred_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_deferred_icon_buffer
+					end
+				else
+					if a_feature.is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_assigner_icon_buffer
+					elseif a_feature.is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_assigner_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_assigner_icon_buffer
+					end
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	pixel_buffer_from_feature_ast (is_class_external: BOOLEAN; a_feature_as: FEATURE_AS; a_name_pos: INTEGER): EV_PIXEL_BUFFER is
+			-- Pixmaps from features.
+		require
+			a_feature_as_not_void: a_feature_as /= Void
+			a_feature_has_name: a_feature_as.feature_names /= Void
+			a_name_pos_valid: a_name_pos >= 1 and a_name_pos <= a_feature_as.feature_names.count
+		local
+			a_name: FEATURE_NAME
+			a_body: BODY_AS
+			a_routine: ROUTINE_AS
+			l_is_obsolete: BOOLEAN
+			l_is_frozen: BOOLEAN
+			l_assinger: BOOLEAN
+		do
+			a_name := a_feature_as.feature_names.i_th (a_name_pos)
+			a_body := a_feature_as.body
+			l_assinger := a_body.assigner /= Void and then not a_body.assigner.name.is_empty
+			a_routine ?= a_body.content
+			l_is_obsolete := (a_routine /= Void and then a_routine.obsolete_message /= Void)
+			l_is_frozen := a_name.is_frozen
+
+			if not l_assinger then
+				if a_feature_as.is_attribute then
+					if l_is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_attribute_icon_buffer
+					elseif l_is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_attribute_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_attribute_icon_buffer
+					end
+				elseif a_feature_as.is_deferred then
+					if l_is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_deferred_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_deferred_icon_buffer
+					end
+				elseif (a_routine /= Void and then a_routine.is_once) or else a_feature_as.is_constant then
+					if l_is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_once_icon_buffer
+					elseif l_is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_once_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_once_icon_buffer
+					end
+				elseif not is_class_external then
+					if a_routine /= Void and then a_routine.is_external then
+						if l_is_obsolete then
+							Result := pixmaps.icon_pixmaps.feature_obsolete_external_icon_buffer
+						elseif l_is_frozen then
+							Result := pixmaps.icon_pixmaps.feature_frozen_external_icon_buffer
+						else
+							Result := pixmaps.icon_pixmaps.feature_external_icon_buffer
+						end
+					end
+				end
+				if Result = Void then
+					if l_is_obsolete then
+						Result := pixmaps.icon_pixmaps.feature_obsolete_routine_icon_buffer
+					elseif l_is_frozen then
+						Result := pixmaps.icon_pixmaps.feature_frozen_routine_icon_buffer
+					else
+						Result := pixmaps.icon_pixmaps.feature_routine_icon_buffer
+					end
+				end
+			else
+				if l_is_obsolete then
+					Result := pixmaps.icon_pixmaps.feature_obsolete_assigner_icon_buffer
+				elseif l_is_frozen then
+					Result := pixmaps.icon_pixmaps.feature_frozen_assigner_icon_buffer
+				else
+					Result := pixmaps.icon_pixmaps.feature_assigner_icon_buffer
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Access

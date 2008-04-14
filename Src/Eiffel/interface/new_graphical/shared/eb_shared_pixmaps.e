@@ -25,22 +25,59 @@ inherit
 
 feature -- Utility
 
-	icon_buffer_with_overlay (a_icon: EV_PIXEL_BUFFER; a_overlay: EV_PIXEL_BUFFER): EV_PIXEL_BUFFER
-			-- Creates a icon with an overlay icon
+	icon_buffer_with_overlay (a_icon: EV_PIXEL_BUFFER; a_overlay: EV_PIXEL_BUFFER; a_x_offset: NATURAL_8; a_y_offset: NATURAL_8): !EV_PIXEL_BUFFER
+			-- Creates a new icon with a supplied overlay.
+			--
+			-- `a_icon': The original icon to draw an overlay on top of.
+			-- `a_overlay': An overlay icon.
+			-- `a_x_offset': X positional offset on the icon to start drawing the overlay at.
+			-- `a_y_offset': Y positional offset on the icon to start drawing the overlay at.
+			-- `Result': A buffer result of the overlay.
 		require
 			a_icon_attached: a_icon /= Void
 			not_a_icon_is_destroyed: not a_icon.is_destroyed
-			a_icon_big_enough: a_icon.width <= 16 and a_icon.height <= 16
-			a_overlay_big_enough: a_overlay.width = 10 and a_overlay.height = 10
+			a_overlay_attached: a_overlay /= Void
+			not_a_overlay_is_destoryed: not a_overlay.is_destroyed
+			a_icon_big_enough: a_icon.width > 0 and a_icon.height > 0
+			a_overlay_big_enough: a_overlay.width > 0 and a_overlay.height > 0
 		local
-			l_buffer: EV_PIXEL_BUFFER
+			l_width: INTEGER
+			l_height: INTEGER
 		do
-			create l_buffer.make_with_size (16, 16)
-			l_buffer.draw_pixel_buffer_with_x_y (0, 0, a_icon)
-			l_buffer.draw_pixel_buffer_with_x_y (6, 6, a_overlay)
-			Result := l_buffer
+			l_width := a_icon.width.max (a_overlay.width + a_x_offset)
+			l_height := a_icon.height.max (a_overlay.height + a_y_offset)
+			create Result.make_with_size (l_width, l_height)
+			Result.draw_pixel_buffer_with_x_y (0, 0, a_icon)
+			Result.draw_pixel_buffer_with_x_y (a_x_offset, a_y_offset, a_overlay)
 		ensure
-			result_attached: Result /= Void
+			not_result_is_destroyed: not Result.is_destroyed
+		end
+
+	icon_with_overlay (a_icon: EV_PIXMAP; a_overlay: EV_PIXEL_BUFFER; a_x_offset: NATURAL_8; a_y_offset: NATURAL_8): !EV_PIXMAP
+			-- Creates a new icon with a supplied overlay.
+			--
+			-- `a_icon': The original icon to draw an overlay on top of.
+			-- `a_overlay': An overlay icon.
+			-- `a_x_offset': X positional offset on the icon to start drawing the overlay at.
+			-- `a_y_offset': Y positional offset on the icon to start drawing the overlay at.
+			-- `Result': A buffer result of the overlay.
+		require
+			a_icon_attached: a_icon /= Void
+			not_a_icon_is_destroyed: not a_icon.is_destroyed
+			a_overlay_attached: a_overlay /= Void
+			not_a_overlay_is_destoryed: not a_overlay.is_destroyed
+			a_icon_big_enough: a_icon.width > 0 and a_icon.height > 0
+			a_overlay_big_enough: a_overlay.width > 0 and a_overlay.height > 0
+		local
+			l_width: INTEGER
+			l_height: INTEGER
+		do
+			l_width := a_icon.width.max (a_overlay.width + a_x_offset)
+			l_height := a_icon.height.max (a_overlay.height + a_y_offset)
+			create Result.make_with_size (l_width, l_height)
+			Result.draw_sub_pixmap (0, 0, a_icon, create {EV_RECTANGLE}.make (0, 0, a_icon.width, a_icon.height))
+			Result.draw_sub_pixel_buffer (a_x_offset, a_y_offset, a_overlay, create {EV_RECTANGLE}.make (0, 0, a_overlay.width, a_overlay.height))
+		ensure
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 

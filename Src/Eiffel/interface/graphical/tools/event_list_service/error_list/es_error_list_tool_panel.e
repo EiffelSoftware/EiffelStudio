@@ -320,10 +320,7 @@ feature {NONE} -- Query
 feature {ES_ERROR_LIST_TOOL} -- Navigation
 
 	go_to_next_error (a_cycle: BOOLEAN)
-			-- Goes to next error in the list.
-			--
-			-- `a_cycle': Specify true to jump back to the beginning of the list when reaching the end, False to perform
-			--            not action when the end has been reached.
+			-- <Precursor>
 		do
 			if show_errors then
 				if error_count > 0 then
@@ -341,10 +338,7 @@ feature {ES_ERROR_LIST_TOOL} -- Navigation
 		end
 
 	go_to_previous_error (a_cycle: BOOLEAN)
-			-- Goes to previous error in the list.
-			--
-			-- `a_cycle': Specify true to jump to the end of the list when reaching the start, False to perform
-			--            not action when the start has been reached.
+			-- <Precursor>
 		do
 			if show_errors then
 				if error_count > 0 then
@@ -362,10 +356,7 @@ feature {ES_ERROR_LIST_TOOL} -- Navigation
 		end
 
 	go_to_next_warning (a_cycle: BOOLEAN)
-			-- Goes to next warning in the list.
-			--
-			-- `a_cycle': Specify true to jump back to the beginning of the list when reaching the end, False to perform
-			--            not action when the end has been reached.
+			-- <Precursor>
 		do
 			if show_warnings then
 				if warning_count > 0 then
@@ -380,10 +371,7 @@ feature {ES_ERROR_LIST_TOOL} -- Navigation
 		end
 
 	go_to_previous_warning (a_cycle: BOOLEAN)
-			-- Goes to previous warning in the list.
-			--
-			-- `a_cycle': Specify true to jump to the end of the list when reaching the start, False to perform
-			--            not action when the start has been reached.
+			-- <Precursor>
 		do
 			if show_warnings then
 				if warning_count > 0 then
@@ -399,10 +387,8 @@ feature {ES_ERROR_LIST_TOOL} -- Navigation
 
 feature {NONE} -- Basic operations
 
-	do_default_action (a_row: EV_GRID_ROW) is
-			-- Performs a default actions for a given row.
-			--
-			-- `a_row': The row the user requested an action to be performed on.
+	do_default_action (a_row: EV_GRID_ROW)
+			-- <Precursor>
 		local
 			l_event_item: EVENT_LIST_ITEM_I
 			l_stone: STONE
@@ -431,10 +417,7 @@ feature {NONE} -- Basic operations
 feature {NONE} -- Events
 
 	on_event_added (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
-			-- Called when a event item is added to the event service.
-			--
-			-- `a_service': Event service where event was added.
-			-- `a_event_item': The event item added to the service.
+			-- <Precursor>
 		local
 			l_applicable: BOOLEAN
 		do
@@ -463,10 +446,7 @@ feature {NONE} -- Events
 		end
 
 	on_event_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I) is
-			-- Called after a event item has been removed from the service `a_service'
-			--
-			-- `a_service': Event service where the event was removed.
-			-- `a_event_item': The event item removed from the service.
+			-- <Precursor>
 		local
 			l_applicable: BOOLEAN
 		do
@@ -495,6 +475,9 @@ feature {NONE} -- Events
 
 	on_toogle_errors_button is
 			-- Called when `errors_button' is selected
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		local
 			l_row: EV_GRID_ROW
 			l_event_item: EVENT_LIST_ITEM_I
@@ -525,6 +508,9 @@ feature {NONE} -- Events
 
 	on_toogle_warnings_button is
 			-- Called when `warnings_button' is selected
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		local
 			l_row: EV_GRID_ROW
 			l_event_item: EVENT_LIST_ITEM_I
@@ -632,30 +618,40 @@ feature {NONE} -- Events
 		end
 
 	on_error_info
-			-- Call when the error information button is clicked
+			-- Call when the error information button is clicked.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		local
 			l_event: EVENT_LIST_ITEM_I
 			l_error: ERROR
 		do
-			if grid_events.selected_rows.is_empty then
-				error_info_command.execute
-			else
+			if not grid_events.selected_rows.is_empty then
 					-- Retrieve event item set from {ES_EVENT_LIST_TOOL_PANEL_BASE}.on_event_added
 				l_event ?= grid_events.selected_rows.first.data
-				check
-					l_event_attached: l_event /= Void
+				if l_event /= Void then
+						-- Now retrieve error item
+					l_error ?= l_event.data
+					check
+						l_error_attached: l_error /= Void
+					end
+
 				end
-					-- Now retrieve error item
-				l_error ?= l_event.data
-				check
-					l_error_attached: l_error /= Void
-				end
+			end
+
+			if l_error = Void then
+					-- No error found. This can happen when the expanded information row is selected.
+				error_info_command.execute
+			else
 				error_info_command.execute_with_stone (create {ERROR_STONE}.make (l_error))
 			end
 		end
 
 	on_warnings_filter_changed (a_type: TYPE [ANY]; a_exact_only: BOOLEAN; a_exclude: BOOLEAN)
 			-- Called when the filter has been changed
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 		local
 			l_filter: ES_WARNINGS_FILTER_WIDGET
 			l_grid: like grid_events
@@ -705,7 +701,8 @@ feature {NONE} -- Events
 	on_session_value_changed (a_session: SESSION; a_id: STRING_8) is
 			-- Called when the session changes
 		require
-			not_is_recycled: not is_recycled
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
 			a_session_attached: a_session /= Void
 			a_session_is_interface_usable: a_session.is_interface_usable
 		do

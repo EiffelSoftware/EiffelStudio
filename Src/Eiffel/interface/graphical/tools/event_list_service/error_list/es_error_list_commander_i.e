@@ -10,6 +10,9 @@ indexing
 deferred class
 	ES_ERROR_LIST_COMMANDER_I
 
+inherit
+	USABLE_I
+
 feature -- Basic operations
 
 	go_to_next_error (a_cycle: BOOLEAN)
@@ -17,6 +20,8 @@ feature -- Basic operations
 			--
 			-- `a_cycle': Specify true to jump back to the beginning of the list when reaching the end, False to perform
 			--            not action when the end has been reached.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 
@@ -25,6 +30,8 @@ feature -- Basic operations
 			--
 			-- `a_cycle': Specify true to jump to the end of the list when reaching the start, False to perform
 			--            not action when the start has been reached.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 
@@ -33,6 +40,8 @@ feature -- Basic operations
 			--
 			-- `a_cycle': Specify true to jump back to the beginning of the list when reaching the end, False to perform
 			--            not action when the end has been reached.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 
@@ -41,6 +50,8 @@ feature -- Basic operations
 			--
 			-- `a_cycle': Specify true to jump to the end of the list when reaching the start, False to perform
 			--            not action when the start has been reached.
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 

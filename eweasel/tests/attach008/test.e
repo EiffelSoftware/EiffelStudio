@@ -3,19 +3,28 @@ class TEST
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Creation
 
 	make
+			-- Run test.
 		do
-			string:= ("Test%N").as_string_8
-			print (string)
+			a:= "Test OK"
+				-- Cause class invariant to be checked.
+			Current.f
+				-- Report test result.
+			io.put_string (a.out)
+			io.put_new_line
 		end
 
-feature -- Access
+feature {TEST} -- Test
 
-	string: STRING_GENERAL
-	
+	a: ANY
+
+	f
+		do
+		end
+
 invariant
-	string_is_8bit: {l_str: !STRING_8} string
-	
+	is_string: {s: !STRING} a and then s.is_equal ("Test OK")
+
 end

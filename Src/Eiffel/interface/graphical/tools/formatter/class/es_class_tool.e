@@ -13,6 +13,11 @@ frozen class
 inherit
 	ES_FORMATTER_TOOL [ES_CLASS_TOOL_PANEL]
 
+	ES_CLASS_TOOL_COMMANDER_I
+		undefine
+			out
+		end
+
 create {NONE}
 	default_create
 
@@ -46,6 +51,46 @@ feature -- Access
 			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
 		do
 			Result := "show_class_tool"
+		end
+
+	mode: NATURAL_8 assign set_mode
+			-- <Precursor>
+		do
+			if is_tool_instantiated then
+				Result := panel.mode
+			else
+				Result := {ES_CLASS_TOOL_VIEW_MODES}.ancestors
+			end
+		end
+
+feature -- Element change
+
+	set_mode (a_mode: like mode)
+			-- <Precursor>
+		do
+				-- Setting a mode will force the creation of the tool, by design.
+			panel.set_mode (a_mode)
+		end
+
+	set_mode_with_stone (a_mode: like mode; a_stone: STONE)
+			-- <Precursor>
+		local
+			l_stone: CLASSC_STONE
+		do
+				-- First clear the stone, for performance reasons
+			panel.set_stone (Void)
+
+				-- Now set the mode and stone.
+			set_mode (a_mode)
+			l_stone ?= a_stone
+			if l_stone = Void and then {l_cis: CLASSI_STONE} a_stone then
+				if l_cis.class_i.is_compiled then
+					create l_stone.make (l_cis.class_i.compiled_class)
+				end
+			end
+			if l_stone /= Void then
+				panel.set_stone (l_stone)
+			end
 		end
 
 feature -- Status report

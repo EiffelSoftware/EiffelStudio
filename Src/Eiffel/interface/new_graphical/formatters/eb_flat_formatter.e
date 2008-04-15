@@ -63,6 +63,14 @@ feature {NONE} -- Properties
 	post_fix: STRING is "flt"
 			-- String symbol of the command, used as an extension when saving.
 
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_CLASS_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_CLASS_TOOL_VIEW_MODES}.flat
+		end
+
 feature -- Status Setting
 
 	set_class (a_class: CLASS_C) is

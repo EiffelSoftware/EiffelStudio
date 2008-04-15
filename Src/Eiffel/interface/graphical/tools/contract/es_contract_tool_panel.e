@@ -522,8 +522,8 @@ feature {NONE} -- User interface manipulation
 				refresh_button.enable_sensitive
 				show_all_lines_button.enable_sensitive
 				show_callers_button.enable_sensitive
-				show_callers_button.set_pixmap (stock_pixmaps.class_clients_icon)
-				show_callers_button.set_pixel_buffer (stock_pixmaps.class_clients_icon_buffer)
+				show_callers_button.set_pixmap (stock_pixmaps.class_descendents_icon)
+				show_callers_button.set_pixel_buffer (stock_pixmaps.class_descendents_icon_buffer)
 			else
 					-- No context
 				contract_mode_button.enable_sensitive
@@ -1119,15 +1119,21 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			has_stone: has_stone
 		do
---			if {l_feature: !E_FEATURE} contract_editor.context then
---				if {l_tool: !ES_FEATURE_RELATION_TOOL} develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) then
---						-- Display feature relation tool using callers mode.
---					l_tool.set_mode_with_stone ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callers, create {!FEATURE_STONE}.make (l_feature))
---					l_tool.show (True)
---				end
---			else
-
---			end
+			if {l_fc: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
+				if {l_ftool: !ES_FEATURE_RELATION_TOOL} develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) then
+						-- Display feature relation tool using callers mode.
+					l_ftool.set_mode_with_stone ({ES_FEATURE_RELATION_TOOL_VIEW_MODES}.callers, create {!FEATURE_STONE}.make (l_fc.context_feature))
+					l_ftool.show (True)
+				end
+			elseif {l_cc: ES_CLASS_CONTRACT_EDITOR_CONTEXT} context then
+				if {l_ctool: !ES_CLASS_TOOL} develop_window.shell_tools.tool ({ES_CLASS_TOOL}) then
+						-- Display feature relation tool using callers mode.
+					l_ctool.set_mode_with_stone ({ES_CLASS_TOOL_VIEW_MODES}.descendents, create {!CLASSI_STONE}.make (l_cc.context_class))
+					l_ctool.show (True)
+				end
+			else
+				check False end
+			end
 		end
 
 	on_source_selected_in_editor (a_source: ?ES_CONTRACT_SOURCE_I)

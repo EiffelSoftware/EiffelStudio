@@ -55,6 +55,13 @@ feature -- Properties
 		do
 			Result := preferences.class_browser_data.class_client_view_sorting_order_preference
 		end
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_CLASS_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_CLASS_TOOL_VIEW_MODES}.clients
+		end
 
 feature -- Status report
 

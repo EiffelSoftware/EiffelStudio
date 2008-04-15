@@ -56,6 +56,13 @@ feature {NONE} -- Properties
 			-- String symbol of the command, used as an extension when saving.
 
 	formatted_text: TEXT_FORMATTER
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_CLASS_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_CLASS_TOOL_VIEW_MODES}.clickable
+		end
 
 feature -- Status Setting
 

@@ -68,6 +68,14 @@ feature {NONE} -- Properties
 	class_i: EXTERNAL_CLASS_I
 			-- Class currently associated with `Current'.
 
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_CLASS_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_CLASS_TOOL_VIEW_MODES}.short
+		end
+
 feature {NONE} -- Implementation
 
 	class_cmd: E_SHOW_FLAT

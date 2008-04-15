@@ -2147,7 +2147,7 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 			 * 		- inside assertion
 			 */
 
-			EIF_TYPED_VALUE rtd_arg;						
+			EIF_TYPED_VALUE rtd_arg;
 			EIF_TYPED_VALUE rtd_op;
 			RT_ENTER_EIFFELCODE;
 			{
@@ -2159,6 +2159,7 @@ rt_public void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, i
 			rtd_arg = (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);
 			RT_GC_PROTECT (rtd_arg.it_r);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r  = ((EIF_REFERENCE) ref);
+			RTAR(rtd_arg.it_r,ref);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) i1);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) i2); 
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) i3); 
@@ -2218,8 +2219,8 @@ rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_
 			rtd_op.type = SK_INT32;
 			rtd_arg = (*egc_rt_extension_notify_argument)(rt_extension_obj, rtd_op);
 			RT_GC_PROTECT (rtd_arg.it_r);
-
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+1)->it_r  = ((EIF_REFERENCE) ref);
+			RTAR(rtd_arg.it_r,ref);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+2)->it_i4 = ((EIF_INTEGER_32) dep);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+3)->it_i4 = ((EIF_INTEGER_32) l_pos);
 			((EIF_TYPED_VALUE *)rtd_arg.it_r+4)->it_i4 = ((EIF_INTEGER_32) a_rt_type); 

@@ -18,6 +18,11 @@ inherit
 			stone
 		end
 
+	ES_CLASS_TOOL_COMMANDER_I
+		export
+			{ES_CLASS_TOOL} all
+		end
+
 create
 	make
 
@@ -46,6 +51,72 @@ feature -- Access
 			-- Message to be displayed in `output_line' when no stone is set
 		do
 			Result := Interface_names.l_Not_in_system_no_info
+		end
+
+feature {ES_CLASS_TOOL} -- Access
+
+	mode: NATURAL_8 assign set_mode
+			-- The feature relation tool's view mode.
+			-- See {ES_FEATURE_RELATION_TOOL_VIEW_MODES} for applicable values.
+		local
+			l_formatters: like predefined_formatters
+			l_cursor: CURSOR
+			l_stop: BOOLEAN
+		do
+			l_formatters := predefined_formatters
+			l_cursor := l_formatters.cursor
+			from l_formatters.start until l_formatters.after or l_stop loop
+				if {l_formatter: !EB_CLASS_INFO_FORMATTER} l_formatters.item and then l_formatter.selected then
+					Result := l_formatter.mode
+					l_stop := True
+				else
+					l_formatters.forth
+				end
+			end
+			l_formatters.go_to (l_cursor)
+		ensure then
+			formatters_unmoved: formatters.cursor.is_equal (old formatters.cursor)
+		end
+
+feature {ES_CLASS_TOOL} -- Element change
+
+	set_mode (a_mode: like mode)
+			-- <Precursor>
+		local
+			l_formatters: like predefined_formatters
+			l_cursor: CURSOR
+			l_stop: BOOLEAN
+		do
+			if a_mode /= mode then
+				l_formatters := predefined_formatters
+				l_cursor := l_formatters.cursor
+				from l_formatters.start until l_formatters.after or l_stop loop
+					if {l_formatter: !EB_CLASS_INFO_FORMATTER} l_formatters.item and then l_formatter.mode = a_mode then
+							-- Execute formatter
+						l_formatter.execute
+						l_stop := True
+					else
+						l_formatters.forth
+					end
+				end
+				l_formatters.go_to (l_cursor)
+			end
+		ensure then
+			formatters_unmoved: formatters.cursor.is_equal (old formatters.cursor)
+		end
+
+	set_mode_with_stone (a_mode: like mode; a_stone: STONE)
+			-- <Precursor>
+		do
+				-- First clear the stone, for performance reasons
+			set_stone (Void)
+
+				-- Now set the mode and stone.
+			set_mode (a_mode)
+			set_stone (a_stone)
+		ensure then
+			formatters_unmoved: formatters.cursor.is_equal (old formatters.cursor)
+			stone_set: stone = a_stone
 		end
 
 feature -- Status setting

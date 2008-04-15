@@ -31,6 +31,15 @@ feature -- Properties
 			end
 		end
 
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_CLASS_TOOL_VIEW_MODES} for applicable values.
+		deferred
+		ensure
+			result_is_valid_mode: (create {ES_CLASS_TOOL_VIEW_MODES}).is_valid_mode (Result)
+		end
+
 feature -- Status report
 
 	is_dotnet_mode: BOOLEAN

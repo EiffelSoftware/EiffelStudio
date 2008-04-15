@@ -46,6 +46,13 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "exp"
 			-- String symbol of the command, used as an extension when saving.
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_CLASS_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_CLASS_TOOL_VIEW_MODES}.exported
+		end
 
 feature {NONE} -- Implementation
 

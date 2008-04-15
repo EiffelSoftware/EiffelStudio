@@ -60,6 +60,13 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showtext_new
 		end
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_CLASS_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_CLASS_TOOL_VIEW_MODES}.basic
+		end
 
 feature -- Formatting
 

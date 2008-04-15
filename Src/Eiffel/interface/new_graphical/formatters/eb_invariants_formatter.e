@@ -60,6 +60,14 @@ feature {NONE} -- Properties
 			Result := True
 		end
 
+feature -- Access
+
+	mode: NATURAL_8
+			-- Formatter mode, see {ES_CLASS_TOOL_VIEW_MODES} for applicable values.
+		do
+			Result := {ES_CLASS_TOOL_VIEW_MODES}.invariants
+		end
+
 feature {NONE} -- Implementation
 
 	create_class_cmd is

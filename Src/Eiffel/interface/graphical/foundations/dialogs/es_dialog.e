@@ -774,7 +774,7 @@ feature -- Actions
 			-- Actions performed when the window is shown
 
 	frozen hide_actions: !EV_LITE_ACTION_SEQUENCE [TUPLE]
-			-- Actions performed when the window is shown
+			-- Actions performed when the window is hided
 
 feature {NONE} -- Action handlers
 

@@ -27,6 +27,13 @@ class TIME inherit
 			is_equal, out
 		end
 
+	DEBUG_OUTPUT
+		export
+			{NONE} all
+		undefine
+			is_equal, out
+		end
+
 create
 
 	make,
@@ -58,7 +65,7 @@ feature -- Initialization
 		end
 
 	make_fine (h, m: INTEGER; s: DOUBLE) is
-			-- Set `hour, `minute' and `second' to `h', `m' and truncated to 
+			-- Set `hour, `minute' and `second' to `h', `m' and truncated to
 			-- integer part of `s' respectively.
 			-- Set `fractional_second' to the fractional part of `s'.
 		require
@@ -151,7 +158,7 @@ feature -- Initialization
 			time := code_string.create_time (s)
 			make_fine (time.hour, time.minute, time.fine_second)
 		end
-		
+
 	make_by_compact_time (c_t: INTEGER) is
 			-- Initialize from `compact_time'.
 		require
@@ -187,10 +194,10 @@ feature -- Comparison
 
 feature -- Measurement
 
-	duration: TIME_DURATION is 
-			-- Duration elapsed from midnight 
-		do 
-			create Result.make_fine (hour, minute, fine_second) 
+	duration: TIME_DURATION is
+			-- Duration elapsed from midnight
+		do
+			create Result.make_fine (hour, minute, fine_second)
 		ensure then
 			seconds_large_enough: duration.seconds_count >= 0
 			seconds_small_enough: duration.seconds_count < Seconds_in_day
@@ -241,9 +248,9 @@ feature -- Basic operations
 		do
 			total_second := second + s
 			if (total_second < 0 or else total_second >= Seconds_in_minute) then
-				set_fine_second (mod (total_second, Seconds_in_minute) + 
+				set_fine_second (mod (total_second, Seconds_in_minute) +
 					fractional_second)
-				minute_add (div (total_second, Seconds_in_minute))	
+				minute_add (div (total_second, Seconds_in_minute))
 			else
 				set_fine_second (total_second + fractional_second)
 			end
@@ -257,13 +264,13 @@ feature -- Basic operations
 		do
 			total_second:= fine_second + f
 			if (total_second < 0 or else total_second >= Seconds_in_minute) then
-				set_fine_second (total_second - div (total_second.floor, 
+				set_fine_second (total_second - div (total_second.floor,
 					Seconds_in_minute) * Seconds_in_minute)
 				minute_add (div (total_second.floor, Seconds_in_minute))
 			else
 				set_fine_second (total_second)
 			end
-		end;	
+		end;
 
 	minute_add (m: INTEGER) is
 			-- Add `m' minutes to the current object.
@@ -295,7 +302,7 @@ feature -- Basic operations
 				minute_forth
 			end
 		end
-	
+
 	second_back is
 			-- Move to previous second.
 		do
@@ -305,7 +312,7 @@ feature -- Basic operations
 				set_fine_second (Seconds_in_minute - 1)
 				minute_back
 			end
-		end;	
+		end;
 
 	minute_forth is
 			-- Move to next minute.
@@ -348,10 +355,10 @@ feature -- Basic operations
 				set_hour (Hours_in_day - 1)
 			end
 		end
-		
+
 feature -- Output
 
-	out: STRING is
+	debug_output, out: STRING is
 			-- Printable representation of time with "standard"
 			-- Form: `time_default_format_string'
 		do
@@ -368,19 +375,19 @@ feature -- Output
 		do
 			create code.make (s)
 			Result := code.create_time_string (Current)
-		end	
-	
+		end
+
 invariant
 
 	second_large_enough: second >= 0
 	second_small_enough: second < seconds_in_minute
 	fractionals_large_enough: fractional_second >= 0
 	fractionals_small_enough: fractional_second < 1
-	minute_large_enough: minute >= 0;	 
+	minute_large_enough: minute >= 0;
 	minute_small_enough: minute < minutes_in_hour
 	hour_large_enough: hour >= 0
 	hour_small_enough: hour < hours_in_day
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

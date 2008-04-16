@@ -41,13 +41,13 @@ feature {NONE} -- Initialization
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt ("Cannot read pixmap file:%N" + l_file + ".%N%NPlease make sure the installation is not corrupted.", Void, Void)
 
 					-- Fail safe, use blank pixmap
-				create raw_buffer.make_with_size ((33 * 16) + 1,(23 * 16) + 1)
+				create raw_buffer.make_with_size ((33 * 16) + 1,(25 * 16) + 1)
 			end
 		rescue
 			retried := True
 			retry
 		end
-
+		
 feature -- Access
 
 	pixel_width: INTEGER is 16
@@ -59,7 +59,7 @@ feature -- Access
 	width: INTEGER is 33
 			-- Matrix width
 
-	height: INTEGER is 23
+	height: INTEGER is 25
 			-- Matrix height
 
 	frozen expanded_normal_icon: !EV_PIXMAP is
@@ -4826,7 +4826,247 @@ feature -- Access
 			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 21))
 		end
 
+	frozen information_tag_icon: !EV_PIXMAP is
+			-- Access to 'tag' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (1, 24))
+		end
 
+	frozen information_tag_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'tag' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 24))
+		end
+
+	frozen information_tags_icon: !EV_PIXMAP is
+			-- Access to 'tags' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (2, 24))
+		end
+
+	frozen information_tags_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'tags' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 24))
+		end
+
+	frozen information_no_tag_icon: !EV_PIXMAP is
+			-- Access to 'no tag' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (3, 24))
+		end
+
+	frozen information_no_tag_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'no tag' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 24))
+		end
+
+	frozen information_affected_items_icon: !EV_PIXMAP is
+			-- Access to 'affected items' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (4, 24))
+		end
+
+	frozen information_affected_items_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'affected items' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 24))
+		end
+
+	frozen information_auto_sweeping_icon: !EV_PIXMAP is
+			-- Access to 'auto sweeping' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (5, 24))
+		end
+
+	frozen information_auto_sweeping_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'auto sweeping' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 24))
+		end
+
+	frozen information_sweep_now_icon: !EV_PIXMAP is
+			-- Access to 'sweep now' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (6, 24))
+		end
+
+	frozen information_sweep_now_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'sweep now' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 24))
+		end
+
+	frozen testing_new_unit_test_icon: !EV_PIXMAP is
+			-- Access to 'new_unit_test' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (1, 25))
+		end
+
+	frozen testing_new_unit_test_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'new_unit_test' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (1, 25))
+		end
+
+	frozen testing_next_failed_test_icon: !EV_PIXMAP is
+			-- Access to 'next_failed_test' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (2, 25))
+		end
+
+	frozen testing_next_failed_test_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'next_failed_test' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (2, 25))
+		end
+
+	frozen testing_previous_failed_test_icon: !EV_PIXMAP is
+			-- Access to 'previous_failed_test' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (3, 25))
+		end
+
+	frozen testing_previous_failed_test_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'previous_failed_test' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (3, 25))
+		end
+
+	frozen testing_show_failures_only_icon: !EV_PIXMAP is
+			-- Access to 'show_failures_only' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (4, 25))
+		end
+
+	frozen testing_show_failures_only_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'show_failures_only' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 25))
+		end
+
+	frozen testing_run_last_tests_icon: !EV_PIXMAP is
+			-- Access to 'run_last_tests' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (5, 25))
+		end
+
+	frozen testing_run_last_tests_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'run_last_tests' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 25))
+		end
+
+	frozen testing_run_last_failed_tests_first_icon: !EV_PIXMAP is
+			-- Access to 'run_last_failed_tests_first' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (6, 25))
+		end
+
+	frozen testing_run_last_failed_tests_first_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'run_last_failed_tests_first' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (6, 25))
+		end
+
+	frozen testing_stop_test_run_icon: !EV_PIXMAP is
+			-- Access to 'stop_test_run' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (7, 25))
+		end
+
+	frozen testing_stop_test_run_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'stop_test_run' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 25))
+		end
+
+	frozen testing_all_test_runs_icon: !EV_PIXMAP is
+			-- Access to 'all_test_runs' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (8, 25))
+		end
+
+	frozen testing_all_test_runs_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'all_test_runs' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 25))
+		end
+
+	frozen testing_see_failure_trace_icon: !EV_PIXMAP is
+			-- Access to 'see_failure_trace' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (9, 25))
+		end
+
+	frozen testing_see_failure_trace_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'see_failure_trace' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (9, 25))
+		end
+
+	frozen testing_compare_with_expected_result_icon: !EV_PIXMAP is
+			-- Access to 'compare_with_expected_result' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (10, 25))
+		end
+
+	frozen testing_compare_with_expected_result_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'compare_with_expected_result' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 25))
+		end
+
+	frozen testing_tool_icon: !EV_PIXMAP is
+			-- Access to 'tool' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (11, 25))
+		end
+
+	frozen testing_tool_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'tool' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 25))
+		end
+
+	frozen testing_result_tool_icon: !EV_PIXMAP is
+			-- Access to 'result_tool' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (12, 25))
+		end
+
+	frozen testing_result_tool_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'result_tool' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 25))
+		end
+
+	frozen testing_update_test_case_last_changed_time_icon: !EV_PIXMAP is
+			-- Access to 'update_test_case_last_changed_time' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (13, 25))
+		end
+
+	frozen testing_update_test_case_last_changed_time_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'update_test_case_last_changed_time' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 25))
+		end
+
+	frozen testing_delete_test_case_icon: !EV_PIXMAP is
+			-- Access to 'delete_test_case' pixmap.
+		once
+			Result := ({!EV_PIXMAP}) #? raw_buffer.sub_pixmap (pixel_rectangle (14, 25))
+		end
+
+	frozen testing_delete_test_case_icon_buffer: !EV_PIXEL_BUFFER is
+			-- Access to 'delete_test_case' pixmap pixel buffer.
+		once
+			Result := ({!EV_PIXEL_BUFFER}) #? raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 25))
+		end
+
+		
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): !EV_RECTANGLE is
@@ -4835,7 +5075,7 @@ feature {NONE} -- Query
 			a_x_positive: a_x > 0
 			a_x_small_enough: a_x <= 33
 			a_y_positive: a_y > 0
-			a_y_small_enough: a_y <= 23
+			a_y_small_enough: a_y <= 25
 		local
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER

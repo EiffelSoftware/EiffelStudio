@@ -1418,7 +1418,6 @@ feature {NONE} -- Configuration of layout
 		once
 			create Result.make
 			Result.set_directory ("usr")
-			Result.extend ("local")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

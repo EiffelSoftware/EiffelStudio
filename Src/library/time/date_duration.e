@@ -15,7 +15,7 @@ class DATE_DURATION inherit
 
 	DATE_CONSTANTS
 		undefine
-			is_equal	
+			is_equal
 		end
 
 	DATE_MEASUREMENT
@@ -24,7 +24,7 @@ class DATE_DURATION inherit
 		end
 
 create
- 
+
 	make, make_by_days
 
 feature -- Initialization
@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Access
 
-	Zero: DATE_DURATION is 
+	Zero: DATE_DURATION is
 			-- Neutral element for "+" and "-"
 		once
 				create Result.make_by_days (0)
@@ -73,70 +73,21 @@ feature -- Attribute
 
 	origin_date: DATE
 			-- Origin date of duration
-	
+
 	days_count: INTEGER is
 			-- Number of days in duration
 		require
 			origin_date_set: has_origin_date
 		local
-			tmp: DATE
-			tmp_dur: like Current
-			i: INTEGER
+			l_canonical: like Current
 		do
-			tmp := origin_date.twin
-			tmp_dur := twin
-			tmp_dur := tmp_dur.to_canonical (origin_date)
-			if is_positive then
-				from
-					i := 1
-				until
-					i > tmp_dur.year
-				loop
-					if is_leap_year (tmp.year) then
-						Result := Result + Days_in_leap_year
-					else
-						Result := Result + Days_in_non_leap_year
-					end
-					tmp.year_forth
-					i := i + 1
-				end
-				from
-					i := 1
-				until
-					i > tmp_dur.month
-				loop
-					Result := Result + days_in_i_th_month (tmp.month, tmp.year)
-					tmp.month_forth
-					i := i + 1
-				end
-				Result := Result + tmp_dur.day
-			elseif is_negative then
-				from
-					i := -1
-				until
-					i < tmp_dur.year
-				loop
-					tmp.year_back
-					if is_leap_year (tmp.year) then
-						Result := Result - Days_in_leap_year
-					else
-						Result := Result - Days_in_non_leap_year
-					end
-					i := i - 1
-				end
-				from
-					i := -1
-				until
-					i < tmp_dur.month
-				loop
-					tmp.month_back
-					Result := Result - days_in_i_th_month (tmp.month, tmp.year)
-					i := i - 1
-				end
-				Result := Result + tmp_dur.day
+			l_canonical := to_canonical (origin_date)
+			Result := (origin_date + l_canonical).days - origin_date.days
+			if is_negative then
+				Result := -Result
 			end
 		end
-	
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -149,19 +100,19 @@ feature -- Comparison
 				Result := False
 			end
 		ensure then
-			definite_duration: (definite and then other.definite) implies 
+			definite_duration: (definite and then other.definite) implies
 				Result = (day < other.day)
-			non_definite_duration: 
+			non_definite_duration:
 				(not definite or else not other.definite) implies Result = False
 		end
-	
+
 	is_equal (other: like Current): BOOLEAN is
 			-- Are the current object and `other' equal?
 		do
 			Result := year = other.year and then month = other.month and then
 				day = other.day
 		ensure then
-			result_definition: Result = (year = other.year and then 
+			result_definition: Result = (year = other.year and then
 					month = other.month and then day = other.day)
 		end
 
@@ -182,12 +133,12 @@ feature -- Status report
 			-- 	If addition will yield a date after `date', then:
 			--		`year' positive,
 			--		`month' between 0 and `Months_in_year - 1',
-			--		`day' between 0 and (number of days of the month before 
+			--		`day' between 0 and (number of days of the month before
 			--		the yielded) - 1?
 			-- 	If addition will yield a date before `date', then:
-			--		`year' negative, 
-			--		`month' between `1 - Months_in_year' and 0, 
-			--		`day' between (number of days of the month before the 
+			--		`year' negative,
+			--		`month' between `1 - Months_in_year' and 0,
+			--		`day' between (number of days of the month before the
 			--		yielded) and 0?
 		require
 			date_exist: date /= Void
@@ -198,13 +149,13 @@ feature -- Status report
 			final_date := date + Current
 			if final_date >= date then
 					create d.make (year, month + 1, 0)
-					limit_date := date + d; 
+					limit_date := date + d;
 					Result := (year >= 0) and then (month >= 0) and then
 						(month < Months_in_year) and then
 						(day >= 0) and then (final_date < limit_date)
 			else
 					create d.make (year, month - 1, 0)
-					limit_date := date + d; 
+					limit_date := date + d;
 					Result := (year <= 0) and then (month <= 0)
 						and then (month > -Months_in_year)
 						and then (day <= 0) and then (final_date > limit_date)
@@ -232,7 +183,7 @@ feature -- Status setting
 		ensure
 			origin_date_set: origin_date = d
 		end
-		
+
 feature -- Element Change
 
 	set_day (d: INTEGER) is
@@ -290,7 +241,7 @@ feature -- Basic operations
 	infix "+" (other: like Current): like Current is
 			-- Sum of current object with `other'
 		do
-			create Result.make (year + other.year, month + other.month, 
+			create Result.make (year + other.year, month + other.month,
 				day + other.day)
 			if origin_date /= Void then
 				Result.set_origin_date (origin_date.twin)
@@ -300,7 +251,7 @@ feature -- Basic operations
 		ensure then
 			origin_equal: equal (origin_date, Result.origin_date)
 		end
-	
+
 	prefix "-": like Current is
 			-- Unary minus
 		do
@@ -316,62 +267,62 @@ feature -- Basic operations
 
 feature -- Conversion
 
-	to_canonical (start_date: DATE): like Current is 
-			-- A new duration, equivalent to current one 
-			-- and canonical for `date' 
+	to_canonical (start_date: DATE): like Current is
+			-- A new duration, equivalent to current one
+			-- and canonical for `date'
 		require
 			start_date_not_void: start_date /= Void
-		local 
+		local
 			date_tmp, final_date: DATE
-			d1: INTEGER 
-		do 
-			if canonical (start_date) then 
+			d1: INTEGER
+		do
+			if canonical (start_date) then
 				Result := deep_twin
-			else 
-				final_date := start_date + Current; 
-				d1 := (final_date.year - start_date.year) * Months_in_year + 
+			else
+				final_date := start_date + Current;
+				d1 := (final_date.year - start_date.year) * Months_in_year +
 					final_date.month - start_date.month
 				date_tmp := start_date.twin
 				date_tmp.month_add (d1)
 				if final_date >= start_date then
 					if date_tmp <= final_date then
-						create Result.make (d1 // Months_in_year, 
+						create Result.make (d1 // Months_in_year,
 							d1 \\ Months_in_year, final_date.day - date_tmp.day)
 					else
 						d1 := d1 - 1
 						date_tmp.month_back
-						if start_date.days_in_i_th_month (date_tmp.month, 
-							date_tmp.year) < start_date.day then 
-							create Result.make (d1 // Months_in_year, 
+						if start_date.days_in_i_th_month (date_tmp.month,
+							date_tmp.year) < start_date.day then
+							create Result.make (d1 // Months_in_year,
 								d1 \\ Months_in_year, final_date.day)
-						else 
-							create Result.make (d1 // Months_in_year, 
+						else
+							create Result.make (d1 // Months_in_year,
 								d1 \\ Months_in_year,
-								final_date.day + 
-								start_date.days_in_i_th_month (date_tmp.month, 
-								date_tmp.year) - start_date.day) 
+								final_date.day +
+								start_date.days_in_i_th_month (date_tmp.month,
+								date_tmp.year) - start_date.day)
 						end
 					end
-				else 
-					if date_tmp >= final_date then 
-						create Result.make (d1 // Months_in_year, 
+				else
+					if date_tmp >= final_date then
+						create Result.make (d1 // Months_in_year,
 							d1 \\ Months_in_year, final_date.day - date_tmp.day)
 					else
 						d1 := d1 + 1
 						date_tmp.month_forth
-						create Result.make (d1 // Months_in_year, 
+						create Result.make (d1 // Months_in_year,
 							d1 \\ Months_in_year,
-							final_date.day - start_date.days_in_i_th_month 
-							(final_date.month, final_date.year) - date_tmp.day) 
-					end 
-				end 
-			end 
-		ensure 
-			canonical_result: Result.canonical (start_date) 
+							final_date.day - start_date.days_in_i_th_month
+							(final_date.month, final_date.year) - date_tmp.day)
+					end
+				end
+			end
+		ensure
+			canonical_result: Result.canonical (start_date)
 			duration_not_changed: equal (start_date + Current,
-					start_date + Result) 
-		end; 
- 
+					start_date + Result)
+		end;
+
 	to_definite (date: DATE) is
 			-- Make current duration definite.
 		require
@@ -380,7 +331,7 @@ feature -- Conversion
 			final_date: DATE
 		do
 			final_date := date + Current
-			make_by_days (final_date.days - date.days)	
+			make_by_days (final_date.days - date.days)
 		ensure
 			definite_result: definite
 		end
@@ -398,7 +349,7 @@ feature -- Conversion
 
 invariant
 
-	equal_signs: (has_origin_date and then canonical (origin_date)) implies 
+	equal_signs: (has_origin_date and then canonical (origin_date)) implies
 			(day >= 0 and month >= 0 and year >= 0) or
 			(day <= 0 and month <= 0 and year <= 0)
 

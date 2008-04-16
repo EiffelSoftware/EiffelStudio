@@ -181,6 +181,8 @@ feature -- Object access
 			"[
 			#ifdef WORKBENCH
 				return RTUD($tid);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -196,6 +198,8 @@ feature -- Object access
 			"[
 			#ifdef WORKBENCH
 				return RTID($fid);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -683,6 +687,8 @@ feature -- Access local
 			"[
 			#ifdef WORKBENCH
 				return (EIF_REFERENCE) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
+			#else
+				return NULL;
 			#endif
 			]"
 		end
@@ -801,6 +807,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_BOOL; a_val.it_bool = (EIF_BOOLEAN) $a_bool;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -812,6 +820,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_CHAR; a_val.it_c1 = (EIF_CHARACTER) $a_ch8;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -823,6 +833,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_WCHAR; a_val.it_c4 = (EIF_WIDE_CHAR) $a_ch32;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -835,6 +847,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_UINT8; a_val.it_n1 = (EIF_NATURAL_8) $a_n8;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -846,6 +860,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_UINT16; a_val.it_n2 = (EIF_NATURAL_16) $a_n16;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -857,6 +873,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_UINT32; a_val.it_n4 = (EIF_NATURAL_32) $a_n32;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -868,6 +886,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_UINT64; a_val.it_n8 = (EIF_NATURAL_64) $a_n64;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -880,6 +900,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_INT8; a_val.it_i1 = (EIF_INTEGER_8) $a_i8;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -891,6 +913,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_INT16; a_val.it_i2 = (EIF_INTEGER_16) $a_i16;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -902,6 +926,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_INT32; a_val.it_i4 = (EIF_INTEGER_32) $a_i32;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -913,6 +939,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_INT64; a_val.it_i8 = (EIF_INTEGER_64) $a_i64;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -924,6 +952,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_REAL32; a_val.it_r4 = (EIF_REAL_32) $a_i32;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -935,6 +965,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_REAL64; a_val.it_r8 = (EIF_REAL_64) $a_i64;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -946,6 +978,8 @@ feature -- Change local
 			#ifdef WORKBENCH
 				EIF_TYPED_VALUE a_val; a_val.type = SK_POINTER; a_val.it_p = (EIF_POINTER) $a_p;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -961,6 +995,8 @@ feature -- Change local
 				a_val.type = SK_REF; 
 				a_val.it_ref = (EIF_REFERENCE) &($a_ref);
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end
@@ -974,6 +1010,8 @@ feature -- Change local
 				a_val.type = SK_VOID; 
 				a_val.it_ref = (char*) 0;
 				return rt_dbg_set_stack_value ((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (EIF_TYPED_VALUE*) &a_val);
+			#else
+				return 0;
 			#endif
 			]"
 		end

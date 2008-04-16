@@ -8,6 +8,7 @@ copy_raw 	application.e $CLUSTER application.e
 compile_melted
 compile_result 	ok
 c_compile_work
+c_compile_result ok
 execute_work	NONE exec_output
 execute_result ok
 if DOTNET compare		exec_output output1
@@ -17,6 +18,7 @@ cleanup_compile
 compile_frozen
 compile_result 	ok
 c_compile_work
+c_compile_result ok
 execute_work	NONE exec_output1
 execute_result 	ok
 if DOTNET compare		exec_output output1
@@ -26,6 +28,7 @@ cleanup_compile
 compile_final_keep
 compile_result 	ok
 c_compile_final
+c_compile_result ok
 execute_final	NONE exec_output2
 execute_result ok
 compare		exec_output2 output1

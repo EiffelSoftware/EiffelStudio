@@ -101,9 +101,10 @@ feature {NONE} -- Initialization
 			a_container.disable_item_expand (l_code_result_label)
 
 				-- Template result
-			create l_code_result_view
-			l_code_result_view.current_class.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
+			create l_code_result_view.make (development_window)
 			l_code_result_view.disable_line_numbers
+			l_code_result_view.disable_editable
+			l_code_result_view.set_read_only (True)
 			l_code_result_view.widget.set_minimum_size (400, 100)
 			l_code_result_view.widget.set_border_width (1)
 			l_code_result_view.widget.set_background_color (colors.stock_colors.color_3d_shadow)
@@ -315,7 +316,7 @@ feature {NONE} -- User interface elements
 	edited_declaration_text_fields: !DS_HASH_SET [!STRING]
 			-- The set of user edited declaration fields
 
-	code_result_view: !SELECTABLE_TEXT_PANEL
+	code_result_view: !EB_SMART_EDITOR
 			-- Widget containing the result of the evaluated code template
 
 feature {NONE} -- Action handlers

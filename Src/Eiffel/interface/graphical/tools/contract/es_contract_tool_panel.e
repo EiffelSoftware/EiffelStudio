@@ -213,6 +213,9 @@ feature {NONE} -- Status report
 	is_saving: BOOLEAN
 			-- Indicates if Current's modifications are currently being saved
 
+	is_class_file_modified_externally: BOOLEAN
+			-- Indicates if the context class was modified externally.
+
 feature {NONE} -- Status setting
 
 	set_is_showing_all_rows (a_show: like is_showing_all_rows)
@@ -312,12 +315,16 @@ feature {NONE} -- Query
 			if contract_editor.has_context then
 				if {l_feat_context: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
 					create l_features.make_from_array (<<l_feat_context.context_feature>>)
-					create l_save_feature_prompt.make_standard_with_cancel ("The contract tool has unsaved class feature changes.%NDo you wanted to save the following feature(s)?")
+					create l_save_feature_prompt.make_standard_with_cancel (
+						"The Contract Tool has unsaved class feature changes.%N%N%
+						%Do you wanted to save the following feature?")
 					l_save_feature_prompt.features := l_features
 					l_prompt := l_save_feature_prompt
 				elseif {l_class_context: ES_CLASS_CONTRACT_EDITOR_CONTEXT} context then
 					create l_classes.make_from_array (<<l_class_context.context_class>>)
-					create l_save_classes_prompt.make_standard_with_cancel ("The contract tool has unsaved class changes.%NDo you wanted to save the following class(es)?")
+					create l_save_classes_prompt.make_standard_with_cancel (
+						"The Contract Tool has unsaved class changes.%N%N%
+						%Do you wanted to save the following class?")
 					l_save_classes_prompt.classes := l_classes
 					l_prompt := l_save_classes_prompt
 				end
@@ -645,7 +652,10 @@ feature {NONE} -- Event handlers
 				else
 					save_modifications_button.disable_sensitive
 				end
+				is_class_file_modified_externally := False
 			end
+		ensure then
+			not_is_class_file_modified_externally: not is_class_file_modified_externally
 		end
 
 	on_file_modified (a_modification_type: NATURAL_8)
@@ -665,6 +675,11 @@ feature {NONE} -- Event handlers
 					end
 				else
 					last_file_change_notified_agent := agent on_file_modified (a_modification_type)
+				end
+
+				if is_dirty then
+						-- There have been modifications so preseve the state because the next save should notify the user.
+					is_class_file_modified_externally := True
 				end
 			end
 		end
@@ -808,34 +823,46 @@ feature {NONE} -- Action handlers
 			l_contracts: !DS_BILINEAR [!ES_CONTRACT_LINE]
 			l_assertions: !DS_ARRAYED_LIST [STRING]
 			l_error: ES_ERROR_PROMPT
+			l_question: ES_QUESTION_WARNING_PROMPT
 			retried: BOOLEAN
 		do
 			if not retried then
 				is_saving := True
-				if {l_modifier: ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} context.text_modifier then
-					l_contracts := contract_editor.context_contracts
-					if not l_contracts.is_empty then
-						create l_assertions.make (l_contracts.count)
-						from l_contracts.start until l_contracts.after loop
-							l_assertions.put_last (l_contracts.item_for_iteration.string)
-							l_contracts.forth
-						end
-					else
-						create l_assertions.make (0)
-					end
-					l_modifier.replace_contracts (l_assertions)
-					if l_modifier.is_dirty then
-						l_modifier.commit
-							-- Check affected classes and open, if requested.
+				if is_class_file_modified_externally then
+					create l_question.make_standard (
+						"The associated class file has been modified outside on the Contract Tool.%
+						%The changes will be merged but there is a possibility of data loss.%N%N%
+						%Do you want save and merge your changes?")
 
-							-- Perform an update to recieve the most current information
-						set_is_dirty (False)
-						refresh_context
+					l_question.show_on_active_window
+				end
+
+				if l_question = Void or else l_question.dialog_result = l_question.default_confirm_button then
+					if {l_modifier: ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} context.text_modifier then
+						l_contracts := contract_editor.context_contracts
+						if not l_contracts.is_empty then
+							create l_assertions.make (l_contracts.count)
+							from l_contracts.start until l_contracts.after loop
+								l_assertions.put_last (l_contracts.item_for_iteration.string)
+								l_contracts.forth
+							end
+						else
+							create l_assertions.make (0)
+						end
+						l_modifier.replace_contracts (l_assertions)
+						if l_modifier.is_dirty then
+							l_modifier.commit
+								-- Check affected classes and open, if requested.
+
+								-- Perform an update to recieve the most current information
+							set_is_dirty (False)
+							refresh_context
+						else
+							check False end
+						end
 					else
 						check False end
 					end
-				else
-					check False end
 				end
 
 				is_saving := False
@@ -890,13 +917,25 @@ feature {NONE} -- Action handlers
 			contract_editor_source_is_editable: contract_editor.selected_source.is_editable
 		local
 			l_template: ?CODE_TEMPLATE
-			l_dialog: ES_CODE_TEMPLATE_BUILDER_DIALOG
-			l_error: ES_ERROR_PROMPT
+			l_dialog: !ES_CODE_COMPLETABLE_TEMPLATE_BUILDER_DIALOG
+			l_provider: !EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+			l_error: !ES_ERROR_PROMPT
 			l_contract: !STRING_32
 		do
 			l_template := a_template.applicable_item
 			if l_template /= Void and {l_source: ES_CONTRACT_SOURCE_I} contract_editor.selected_source then
 				create l_dialog.make (l_template)
+
+				if context.context_class.is_compiled then
+						-- Set completion provider
+					if {l_fcontext: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
+						create l_provider.make (l_fcontext.context_class.compiled_class, l_fcontext.text_modifier.ast_feature)
+					else
+						create l_provider.make (context.context_class.compiled_class, Void)
+					end
+					l_dialog.set_completion_provider (l_provider)
+				end
+
 				l_dialog.show_on_active_window
 				if l_dialog.dialog_result = l_dialog.default_confirm_button then
 						-- User committed changes
@@ -935,7 +974,9 @@ feature {NONE} -- Action handlers
 					set_is_dirty (True)
 				else
 						-- User chooses to remove all contracts
-					create l_question.make_standard ("Performing a removal on the contract declaration will removal ALL the contracts underneath.%NAre you sure this is what you want to do?")
+					create l_question.make_standard (
+						"Performing a removal on the contract declaration will removal ALL the contracts underneath.%N%N%
+						%Are you want to remove all the contract?")
 					l_question.show_on_active_window
 				end
 			end

@@ -1,7 +1,6 @@
 indexing
 	description: "[
-		A basic implementation of {ES_CONTRACT_SOURCE_I} for editor source nodes that represents contracts but are not actually
-		a contract themselves.
+
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -9,43 +8,34 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_CONTRACT_SOURCE
+	ES_CONTRACT_BUILDER_DIALOG
 
 inherit
-	ES_CONTRACT_SOURCE_I
-
-create
-	make
+	ES_CODE_TEMPLATE_BUILDER_DIALOG
+		rename
+			make as make_builder_dialog
+		redefine
+		end
 
 feature {NONE} -- Initialization
 
-	make (a_context: like context; a_editable: like is_editable)
-			-- Initializes a contract source.
+	make (a_template: !like code_template; a_context: like contract_context)
+			-- Initialize dialog using a specific development window
 		require
+			a_template_is_interface_usable: a_template.is_interface_usable
 			a_context_is_interface_usable: a_context.is_interface_usable
 		do
-			context := a_context
-			is_editable := a_editable
+			contract_context := a_context
+			make_builder_dialog (a_template)
 		ensure
-			context_set: context = a_context
-			is_editable_set: is_editable = a_editable
+			code_template_set: code_template = a_template
+			contract_context_set: contract_context = a_context
 		end
 
 feature -- Access
 
-	context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
-			-- <Precursor>
-
-	source: !ES_CONTRACT_SOURCE_I
-			-- <Precursor>
-		do
-			Result := Current
-		end
-
-feature -- Status report
-
-	is_editable: BOOLEAN
-			-- <Precursor>
+	contract_context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
+			-- The contract editor context used to apply an commited changes
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

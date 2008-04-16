@@ -28,6 +28,11 @@ feature -- Frames
 
 	frame_border: INTEGER = 6
 
+feature -- Label
+
+	label_vertical_padding: INTEGER = 3
+	label_horizontal_padding: INTEGER = 4
+
 feature -- Notebook
 
 	notebook_border: INTEGER = 4

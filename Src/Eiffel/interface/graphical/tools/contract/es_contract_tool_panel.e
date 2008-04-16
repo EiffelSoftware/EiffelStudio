@@ -394,30 +394,6 @@ feature {NONE} -- Basic operations
 			not_is_dirty: not is_dirty
 		end
 
-feature {NONE} -- Extension
-
-	add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION) is
-			-- Adds a contract from a template definition
-			--
-			-- `a_template' The template to use to add a contract with.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		local
-			l_template: ?CODE_TEMPLATE
-			l_dialog: ES_CODE_TEMPLATE_BUILDER_DIALOG
-			l_error: ES_ERROR_PROMPT
-		do
-			l_template := a_template.applicable_item
-			if l_template /= Void then
-				create l_dialog.make (l_template)
-				l_dialog.show_on_active_window
-			else
-				create l_error.make_standard ("Unable to find an applicable template for the current version of EiffelStudio.")
-				l_error.show_on_active_window
-			end
-		end
-
 feature {ES_STONABLE_I, ES_TOOL} -- Synchronization
 
 	synchronize
@@ -617,7 +593,7 @@ feature {NONE} -- User interface manipulation
 					create l_menu_item.make_with_text (l_title)
 					l_menu_item.set_pixmap (stock_pixmaps.general_document_icon)
 					l_menu_item.set_data (l_definition)
-					l_menu_item.select_actions.extend (agent add_contract_from_template (l_definition))
+					l_menu_item.select_actions.extend (agent on_add_contract_from_template (l_definition))
 					l_menu.extend (l_menu_item)
 				end
 				l_cursor.forth
@@ -884,32 +860,19 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			has_stone: has_stone
+			contract_editor_has_selected_source: contract_editor.selected_source /= Void
+			contract_editor_source_is_editable: contract_editor.selected_source.is_editable
 		local
-			l_window_manager: EB_SHARED_WINDOW_MANAGER
-			l_editors: !DS_ARRAYED_LIST [EB_SMART_EDITOR]
-			l_editor: EB_SMART_EDITOR
+			l_dialog: ES_ADD_CONTRACT_DIALOG
+			l_source: !ES_CONTRACT_SOURCE_I
 		do
-			create l_window_manager
-			l_editors := l_window_manager.window_manager.active_editors_for_class (context.context_class)
-			if not l_editors.is_empty then
-				from l_editors.start until l_editors.after loop
-					if l_editors.item_for_iteration.is_editable then
-						l_editors.forth
-					else
-						l_editors.remove_at
-					end
-				end
+			l_source ?= contract_editor.selected_source
+			create l_dialog.make
+			l_dialog.show_on_active_window
+			if l_dialog.dialog_result = l_dialog.default_confirm_button then
+				contract_editor.add_contract (l_dialog.contract.tag, l_dialog.contract.contract, l_source)
+				set_is_dirty (True)
 			end
-			if not l_editors.is_empty then
-					-- Point to the existing editor
-				l_editor := l_editors.first
-			else
-					-- No editor exists, open a new one
-				develop_window.commands.new_tab_cmd.execute_with_stone (create {CLASSI_STONE}.make (context.context_class))
-				l_editor := develop_window.editors_manager.editor_with_class (context.context_class.file_name)
-			end
-
-			--l_editor.display_line_at_top_when_ready (context.text_modifier.contract_ast.start_location.line, 1)
 
 				-- Set focus back to editor.
 			contract_editor.widget.set_focus
@@ -917,10 +880,14 @@ feature {NONE} -- Action handlers
 
 	on_add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION)
 			-- Called when the user chooses to add a new contract, from a template, to the existing feature.
+			--
+			-- `a_template': The template to use to render a contract.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			has_stone: has_stone
+			contract_editor_has_selected_source: contract_editor.selected_source /= Void
+			contract_editor_source_is_editable: contract_editor.selected_source.is_editable
 		local
 			l_template: ?CODE_TEMPLATE
 			l_dialog: ES_CODE_TEMPLATE_BUILDER_DIALOG
@@ -928,14 +895,15 @@ feature {NONE} -- Action handlers
 			l_contract: !STRING_32
 		do
 			l_template := a_template.applicable_item
-			if l_template /= Void then
+			if l_template /= Void and {l_source: ES_CONTRACT_SOURCE_I} contract_editor.selected_source then
 				create l_dialog.make (l_template)
 				l_dialog.show_on_active_window
-				if l_dialog.dialog_result = l_dialog.dialog_buttons.ok_button then
+				if l_dialog.dialog_result = l_dialog.default_confirm_button then
 						-- User committed changes
-					l_contract := l_dialog.code_result
+					l_contract ?= l_dialog.code_result
 					if not l_contract.is_empty then
-
+						contract_editor.add_contract_string (l_contract, l_source)
+						set_is_dirty (True)
 					end
 				end
 			else
@@ -984,7 +952,20 @@ feature {NONE} -- Action handlers
 			has_stone: has_stone
 			contract_editor_has_selected_line: contract_editor.selected_line /= Void
 			contract_editor_line_is_editable: contract_editor.selected_line.is_editable
+		local
+			l_line: !ES_CONTRACT_LINE
+			l_contract: ?TUPLE [tag: !STRING_32; contract: !STRING_32]
+			l_dialog: ES_EDIT_CONTRACT_DIALOG
 		do
+			l_line ?= contract_editor.selected_line
+			create l_dialog.make
+			l_dialog.set_contract (l_line.tag, l_line.contract)
+			l_dialog.show_on_active_window
+			if l_dialog.dialog_result = l_dialog.default_confirm_button then
+				l_contract := l_dialog.contract
+				contract_editor.replace_contract (l_contract.tag, l_contract.contract, l_line)
+			end
+
 				-- Set focus back to editor.
 			contract_editor.widget.set_focus
 		end

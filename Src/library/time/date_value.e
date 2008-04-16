@@ -10,7 +10,7 @@ class DATE_VALUE
 
 inherit
 	DATE_MEASUREMENT
-	
+
 	MISMATCH_CORRECTOR
 		redefine
 			correct_mismatch
@@ -31,7 +31,7 @@ feature -- Access
 		end
 
 	year: INTEGER is
-			-- Year of the current object 
+			-- Year of the current object
 		do
 			Result := ((ordered_compact_date & year_mask) |>> year_shift) & 0x0000FFFF
 		end
@@ -48,7 +48,7 @@ feature -- Access
 
 	ordered_compact_date: INTEGER
 			-- Year, month, day coded for fast comparison between dates.
-			
+
 feature -- Element change
 
 	set_date (y, m, d: INTEGER) is
@@ -56,7 +56,7 @@ feature -- Element change
 		local
 			l_date: like ordered_compact_date
 		do
-				-- Same as 
+				-- Same as
 			l_date := l_date & day_mask.bit_not
 			l_date := l_date | d
 
@@ -65,7 +65,7 @@ feature -- Element change
 
 			l_date := l_date & year_mask.bit_not
 			l_date := l_date | (y |<< year_shift)
-			
+
 			ordered_compact_date := l_date
 		end
 
@@ -90,7 +90,7 @@ feature -- Element change
 			l_date := l_date | (m |<< month_shift)
 			ordered_compact_date := l_date
 		end
-	
+
 	set_year (y: INTEGER) is
 			-- Set `year' to `y'.
 		local
@@ -140,14 +140,14 @@ feature -- Correction
 				Precursor {MISMATCH_CORRECTOR}
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	day_mask: INTEGER is 0x000000FF
 	month_mask: INTEGER is 0x0000FF00
 	year_mask: INTEGER is 0xFFFF0000
 			-- Mask used to extract/set `year', `month' and `day'.
-			
+
 	year_shift: INTEGER is 16
 	month_shift: INTEGER is 8
 	day_shift: INTEGER is 0

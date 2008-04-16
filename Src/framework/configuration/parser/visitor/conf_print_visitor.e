@@ -104,6 +104,7 @@ feature -- Visit nodes
 			end
 			append_text (">%N")
 			indent := indent + 1
+			append_note_tag (a_system)
 			append_description_tag (a_system.description)
 
 			Precursor (a_system)
@@ -133,6 +134,7 @@ feature -- Visit nodes
 			end
 			append_text (">%N")
 			indent := indent + 1
+			append_note_tag (a_target)
 			append_description_tag (a_target.description)
 			l_root := a_target.internal_root
 			if l_root /= Void then
@@ -938,6 +940,7 @@ feature {NONE} -- Implementation
 			append_text (">%N")
 			indent := indent + 1
 			last_count := text.count
+			append_note_tag (a_group)
 			append_description_tag (a_group.description)
 			append_conditionals (a_group.internal_conditions, a_group.is_assembly)
 			append_options (a_group.internal_options, Void)
@@ -1029,6 +1032,42 @@ feature {NONE} -- Implementation
 						current_is_subcluster := True
 						ai_cluster.process (Current)
 					end)
+			end
+		end
+
+	append_note_tag (a_notable: CONF_NOTABLE) is
+			-- Append `a_notes'.
+		local
+			l_names, l_values: ARRAYED_LIST [STRING]
+			l_note: HASH_TABLE [STRING, STRING]
+			l_notes: ARRAYED_LIST [HASH_TABLE [STRING, STRING]]
+		do
+			l_notes := a_notable.notes
+			if l_notes /= Void and then not l_notes.is_empty then
+				from
+					l_notes.start
+				until
+					l_notes.after
+				loop
+					l_note := l_notes.item_for_iteration
+					if not l_note.is_empty then
+						create l_names.make (1)
+						create l_values.make (1)
+						from
+							l_note.start
+						until
+							l_note.after
+						loop
+							if not l_note.key_for_iteration.is_empty then
+								l_names.extend (l_note.key_for_iteration)
+								l_values.extend (l_note.item_for_iteration)
+							end
+							l_note.forth
+						end
+						append_tag ("note", Void, l_names, l_values)
+					end
+					l_notes.forth
+				end
 			end
 		end
 

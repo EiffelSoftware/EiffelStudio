@@ -15,8 +15,8 @@ feature -- Access
 	frozen default_help: !UUID
 			-- Default help system.
 		once
-				-- Compiled HTML help system is the default help for now.
-			Result := wiki
+				-- Compiled URI help system is the default help for now.
+			Result := raw_uri
 		end
 
 	frozen chm: !UUID
@@ -31,10 +31,38 @@ feature -- Access
 			create Result.make_from_string (wiki_uuid_string)
 		end
 
+	frozen raw_uri: !UUID
+			-- Raw URI help system
+		once
+			create Result.make_from_string (raw_uri_uuid_string)
+		end
+
+	frozen pdf: !UUID
+			-- PDF help system
+		once
+			create Result.make_from_string (pdf_uuid_string)
+		end
+
+	frozen doc: !UUID
+			-- Microsoft DOC help system
+		once
+			create Result.make_from_string (doc_uuid_string)
+		end
+
+	frozen eis_default: !UUID
+			-- Default EIS provider
+		once
+			create Result.make_from_string (eis_uuid_string)
+		end
+
 feature -- Constants
 
-	chm_uuid_string: !STRING_8     = "E1FFE14E-B816-4675-B15D-087E948DA79A"
-	wiki_uuid_string: !STRING_8    = "E1FFE14E-64D2-4F19-B2E5-BC121E228FE4"
+	chm_uuid_string: !STRING_8     	= "E1FFE14E-B816-4675-B15D-087E948DA79A"
+	wiki_uuid_string: !STRING_8    	= "E1FFE14E-64D2-4F19-B2E5-BC121E228FE4"
+	raw_uri_uuid_string: !STRING_8	= "742EC425-77EE-4B54-9152-29E845758329"
+	pdf_uuid_string: !STRING_8		= "BA35A9BB-5B69-4BD3-88B3-FB8DAE5CA08E"
+	doc_uuid_string: !STRING_8		= "49CA2564-83BB-45AE-95C0-491245F4FB3C"
+	eis_uuid_string: !STRING_8		= "309C1917-9AB0-44E0-AD42-53C2E5F7FD16"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

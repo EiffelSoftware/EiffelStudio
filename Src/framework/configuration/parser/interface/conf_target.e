@@ -19,6 +19,8 @@ inherit
 
 	DEBUG_OUTPUT
 
+	CONF_NOTABLE
+
 create {CONF_PARSE_FACTORY}
 	make
 

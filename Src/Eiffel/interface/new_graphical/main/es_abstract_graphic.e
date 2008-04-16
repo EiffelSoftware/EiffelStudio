@@ -176,6 +176,9 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 				-- Initialize external command manager
 			incoming_command_manager_cell.put (create {ES_INCOMING_COMMAND_MANAGER}.make (create {ES_COMMAND_RECEIVER_CALLBACKS}.make))
+				-- Retrive EIS storage when project loaded.
+				-- Put font in case the background visitor has been started in prior agents.
+			eiffel_project.manager.load_agents.put_front (agent eis_manager.retrieve_storage)
 
 				-- If some more arguments were specified, it means that we either asked to retrieve
 				-- an existing project, or to create one.

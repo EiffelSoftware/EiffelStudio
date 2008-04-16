@@ -62,6 +62,7 @@ feature -- Access (Target)
 		local
 			uuid: STRING
 			l_target: CONF_TARGET
+			l_target_name: STRING
 			l_uuid: UUID
 		do
 			last_target_uuid := Void
@@ -70,9 +71,11 @@ feature -- Access (Target)
 			if strings.count >= target_id_sections then
 				uuid := decode (strings.i_th (target_id_sections - 1))
 				last_target_uuid := uuid
-				last_target_name := decode (strings.i_th (target_id_sections))
+				l_target_name := decode (strings.i_th (target_id_sections))
+				last_target_name := l_target_name
 				if universe.target.system.uuid.out.is_equal (uuid) then
-					l_target := universe.target
+						-- Get the target from current system by name.
+					l_target := universe.target.system.targets.item (l_target_name)
 				else
 					create l_uuid
 					if l_uuid.is_valid_uuid (uuid) then
@@ -272,6 +275,18 @@ feature -- Access (Feature)
 			result_not_void: Result /= Void
 		end
 
+	id_of_feature_ast (a_class: CONF_CLASS; a_ast: FEATURE_AS): STRING is
+			-- Unique id of a feature in the system
+			-- `id_of_class'(associate class) + name_sep + feature_name
+		require
+			a_class_not_void: a_class /= Void
+			a_ast_not_void: a_ast /= Void
+		do
+			Result := id_of_class (a_class)
+			Result.extend (name_sep)
+			Result.append (encode (a_ast.feature_name.name))
+		end
+
 feature -- ID modification
 
 	substitute_target_uuid (a_id: STRING; a_target_uuid: STRING): STRING is
@@ -390,6 +405,99 @@ feature -- UUID generation
 		ensure
 			result_not_void: Result /= Void
 		end
+
+feature -- Querry
+
+	id_valid (a_id: !STRING): BOOLEAN is
+			-- Does `a_id' represent an existing item in the system?
+		local
+			l_type: like most_possible_type_of_id
+		do
+			l_type := most_possible_type_of_id (a_id)
+			if l_type >= min_type and then l_type <= max_type then
+				inspect l_type
+				when target_type then
+					Result := target_of_id (a_id) /= Void
+				when group_type then
+					Result := group_of_id (a_id) /= Void
+				when folder_type then
+					Result := folder_of_id (a_id) /= Void
+				when class_type then
+					Result := class_of_id (a_id) /= Void
+				when feature_type then
+					Result := feature_of_id (a_id) /= Void
+				else
+				end
+			end
+		end
+
+	possible_name_of_id (a_id: !STRING): !STRING is
+			-- Extracted name from `a_id'
+			-- Despite of id type, the last section is extracted as name.
+			-- Target id is not appliable.
+		require
+			not_target_id: most_possible_type_of_id (a_id) /= target_type
+		local
+			l_strings: like strings
+		do
+			l_strings := a_id.split (name_sep)
+			if {lt_name: STRING}decode (l_strings.last) then
+				Result := lt_name
+			else
+				create Result.make_empty
+			end
+		end
+
+	most_possible_type_of_id (a_id: !STRING): NATURAL is
+			-- Most possible type of the given `a_id'
+			-- target, group, folder, class or feature.
+			-- This querry can not distinguish folder and class.
+			-- In this case, `class_type' is returned by default.
+		local
+			l_strings: LIST [STRING]
+			l_count: INTEGER
+		do
+			l_strings := a_id.split (name_sep)
+			l_count := l_strings.count
+			if l_count = target_id_sections then
+				Result := target_type
+			elseif l_count = group_id_sections then
+				Result := group_type
+			elseif l_count = folder_id_sections then
+					-- We cannot distinguish it is a class id or a folder simply by sections.
+					-- To avoid overload, we do not try to go further detecting.
+					-- `class_type' is simply returned.
+					-- The following check shows the reason, class id and folder id have the same sections.
+				Result := class_type
+				check
+					class_id_sections_the_same_as_folder_id_sections:
+						class_id_sections = folder_id_sections
+				end
+			elseif l_count = class_id_sections then
+				Result := class_type
+			elseif l_count = feature_id_sections then
+				Result := feature_type
+			else
+			end
+		end
+
+	id_type_valid (a_id_type: NATURAL): BOOLEAN is
+			-- Is `a_id_type' valid?
+		do
+			if a_id_type <= max_type and a_id_type > min_type then
+				Result := True
+			end
+		end
+
+feature -- ID type
+
+	target_type: NATURAL is 1
+	group_type: NATURAL is 2
+	folder_type: NATURAL is 3
+	class_type: NATURAL is 4
+	feature_type: NATURAL is 5
+	min_type: NATURAL is once Result := target_type end
+	max_type: NATURAL is once Result := feature_type end
 
 feature {NONE} -- Access
 

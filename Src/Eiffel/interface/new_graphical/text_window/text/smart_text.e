@@ -108,7 +108,9 @@ feature -- Status report
 			-- Feature containg current cursor.
 			-- Void if not exists.
 		do
-			Result := click_tool.feature_containing_cursor (cursor)
+			if cursor /= Void then
+				Result := click_tool.feature_containing_cursor (cursor)
+			end
 		ensure
 			valid_result: Result /= Void implies (Result.feat_as /= Void and Result.name /= Void)
 		end

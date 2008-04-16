@@ -20,11 +20,11 @@ feature -- Initialization
 			a_project_not_void: a_project /= Void
 		do
 			project := a_project
-			create load_agents.make (10)
-			create close_agents.make (10)
-			create create_agents.make (10)
-			create compile_start_agents.make (10)
-			create compile_stop_agents.make (10)
+			create load_agents
+			create close_agents
+			create create_agents
+			create compile_start_agents
+			create compile_stop_agents
 		ensure
 			project_set: project = a_project
 		end
@@ -42,19 +42,19 @@ feature -- Access
 
 feature -- Event handlers
 
-	load_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	load_agents: ACTION_SEQUENCE [TUPLE]
 			-- Agents called when the associated project is retrieved.
 
-	close_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	close_agents: ACTION_SEQUENCE [TUPLE]
 			-- Agents called when the associated project is closed.
 
-	create_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	create_agents: ACTION_SEQUENCE [TUPLE]
 			-- Agents called when the associated project is created.
 
-	compile_start_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	compile_start_agents: ACTION_SEQUENCE [TUPLE]
 			-- Agents called when the associated project starts compiling.
 
-	compile_stop_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	compile_stop_agents: ACTION_SEQUENCE [TUPLE]
 			-- Agents called when the associated project finishes compiling.
 
 feature -- Status report
@@ -73,17 +73,9 @@ feature -- Basic operations
 			l_load_agents: like load_agents
 		do
 			is_project_loaded := True
-
-			from
 					-- We need to twin the list as items may be removed as a result or iteration.
-				l_load_agents := load_agents.twin
-				l_load_agents.start
-			until
-				l_load_agents.after
-			loop
-				l_load_agents.item.call (Void)
-				l_load_agents.forth
-			end
+			l_load_agents := load_agents.twin
+			l_load_agents.call (Void)
 		end
 
 	on_project_create is
@@ -98,16 +90,9 @@ feature -- Basic operations
 			end
 			project.project_directory.create_lock_file
 			is_created := True
-			from
-					-- We need to twin the list as items may be removed as a result or iteration.
-				l_create_agents := create_agents.twin
-				l_create_agents.start
-			until
-				l_create_agents.after
-			loop
-				l_create_agents.item.call (Void)
-				l_create_agents.forth
-			end
+				-- We need to twin the list as items may be removed as a result or iteration.
+			l_create_agents := create_agents.twin
+			l_create_agents.call (Void)
 		end
 
 	on_project_close is
@@ -121,16 +106,9 @@ feature -- Basic operations
 			is_project_loaded := False
 			is_created := False
 
-			from
-					-- We need to twin the list as items may be removed as a result or iteration.
-				l_close_agents := close_agents.twin
-				l_close_agents.start
-			until
-				l_close_agents.after
-			loop
-				l_close_agents.item.call (Void)
-				l_close_agents.forth
-			end
+				-- We need to twin the list as items may be removed as a result or iteration.
+			l_close_agents := close_agents.twin
+			l_close_agents.call (Void)
 		end
 
 	on_project_compiles is
@@ -138,14 +116,7 @@ feature -- Basic operations
 		require
 			project_created: is_created
 		do
-			from
-				compile_start_agents.start
-			until
-				compile_start_agents.after
-			loop
-				compile_start_agents.item.call (Void)
-				compile_start_agents.forth
-			end
+			compile_start_agents.call (Void)
 		end
 
 	on_project_recompiled (is_successful: BOOLEAN) is
@@ -153,14 +124,7 @@ feature -- Basic operations
 		require
 			project_created: is_created
 		do
-			from
-				compile_stop_agents.start
-			until
-				compile_stop_agents.after
-			loop
-				compile_stop_agents.item.call ([is_successful])
-				compile_stop_agents.forth
-			end
+			compile_stop_agents.call ([is_successful])
 		end
 
 invariant

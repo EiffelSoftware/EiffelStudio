@@ -6,6 +6,7 @@
 	<xs:element name="system">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element name="note" type="note" minOccurs="0"/>
 				<xs:element name="description" type="xs:string" minOccurs="0"/>
 				<xs:element name="target" type="target" maxOccurs="unbounded"/>
 			</xs:sequence>
@@ -15,6 +16,10 @@
 			<xs:attribute name="library_target" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
+	
+	<xs:complexType name="note">
+		<xs:anyAttribute/>
+	</xs:complexType>
 
 	<xs:simpleType name="uuid">
 		<xs:restriction base="xs:string">
@@ -35,6 +40,7 @@
 
 	<xs:complexType name="target">
 		<xs:sequence>
+			<xs:element name="note" type="note" minOccurs="0"/>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
 			<xs:element name="root" type="root" minOccurs="0"/>
 			<xs:element name="version" type="version" minOccurs="0"/>
@@ -328,6 +334,7 @@
 
 	<xs:complexType name="group">
 		<xs:sequence>
+			<xs:element name="note" type="note" minOccurs="0"/>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
 			<xs:element name="option" type="option" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="renaming" type="renaming" minOccurs="0" maxOccurs="unbounded"/>

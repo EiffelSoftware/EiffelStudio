@@ -11,9 +11,13 @@ deferred class
 	WEB_HELP_PROVIDER
 
 inherit
-	HELP_PROVIDER_I
+	RAW_URI_HELP_PROVIDER
+		undefine
+			document_protocol,
+			document_description
 		redefine
-			help_title
+			help_title,
+			show_help
 		end
 
 	CURL_ACCESS
@@ -23,7 +27,7 @@ inherit
 
 feature -- Access
 
-	help_title (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL): !STRING_32
+	help_title (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_32
 			-- A human readable title for a help document, given a context id and section.
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
@@ -33,7 +37,7 @@ feature -- Access
 					-- `is_accessible' requires calling {CURL_ACCESS}.make
 				Result := l_title
 			else
-				Result := Precursor {HELP_PROVIDER_I} (a_context_id, a_section)
+				Result := Precursor {RAW_URI_HELP_PROVIDER} (a_context_id, a_section)
 			end
 		end
 
@@ -63,28 +67,19 @@ feature {NONE} -- Access
 			result_is_printable: Result.is_printable
 		end
 
-feature -- Status report
-
-	is_interface_usable: BOOLEAN
-			-- Dtermines if the interface was usable
-		once
-			Result := True
-		end
-
 feature {NONE} -- Query
 
-	full_url (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL): !STRING_8
+	full_url (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_8
 			-- Full URL to navigate to, base on the help content context.
 		require
 			not_a_context_id_is_empty: not a_context_id.is_empty
-			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
 		do
 			create {!STRING_8} Result.make (256)
 			Result.append (base_url.as_string_8)
 			Result.append (format_context_id (a_context_id).as_string_8)
-			if {l_section: !STRING_GENERAL} a_section and then not l_section.is_empty then
+			if a_section /= Void then
 				Result.append_character (section_url_separator)
-				Result.append (format_context_section (l_section).as_string_8)
+				Result.append (format_context_section (a_section.section).as_string_8)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -135,37 +130,13 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL)
+	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
 			-- Attempts to show help for a specific context using the current help provider.
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
 			-- `a_section': An optional section to locate sub context in the to-be-shown help document.
 		do
-			launch_url (full_url (a_context_id, a_section))
-		end
-
-feature {NONE} -- Basic operations
-
-	launch_url (a_url: !STRING_8)
-			-- Launches url in the default web browser.
-			--
-			-- `a_url': The URL to launch in a web-browser.
-		require
-			not_a_url_is_empty: not a_url.is_empty
-		local
-			l_cmd: STRING_8
-		do
-			if {PLATFORM}.is_windows then
-					-- Use start command to open a URL
-				l_cmd := "cmd /C start " + a_url
-			else
-					-- Simple python script to open a URL, for now.
-				l_cmd := "python -c %"import webbrowser; webbrowser.open ('" + a_url + "')%""
-			end
-			if {l_process: !PROCESS} (create {PROCESS_FACTORY}).process_launcher (l_cmd, Void, Void) then
-				l_process.set_hidden (True)
-				l_process.launch
-			end
+			Precursor (full_url (a_context_id, a_section), a_section)
 		end
 
 feature {NONE} -- Formatting

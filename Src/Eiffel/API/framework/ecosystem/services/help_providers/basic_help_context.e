@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			-- Initialize a help context using a set of help context information.
 		require
 			not_a_context_is_empty: not a_context.is_empty
-			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
 		do
 			help_context_id := a_context
 			help_context_section := a_section
@@ -42,7 +41,7 @@ feature -- Access
 	help_context_id: !STRING_GENERAL
 			-- A contextual identifer to link an associated help through.
 
-	help_context_section: ?STRING_GENERAL
+	help_context_section: ?HELP_CONTEXT_SECTION_STRING
 			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
 
 	help_provider: !UUID

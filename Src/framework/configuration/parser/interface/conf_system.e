@@ -15,6 +15,8 @@ class
 inherit
 	CONF_VISITABLE
 
+	CONF_NOTABLE
+
 	CONF_FILE_DATE
 		export
 			{NONE} all

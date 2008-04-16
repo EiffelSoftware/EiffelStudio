@@ -48,7 +48,7 @@ feature {HELP_PROVIDERS_S} -- Element change
 
 feature -- Basic operations
 
-	show_help (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL)
+	show_help (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I)
 			-- Attempts to show help for a specific context using the current help provider
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
@@ -57,11 +57,10 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			not_a_context_id_is_empty: not a_context_id.is_empty
 			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
-			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
 		deferred
 		end
 
-	help_title (a_context_id: !STRING_GENERAL; a_section: ?STRING_GENERAL): !STRING_32
+	help_title (a_context_id: !STRING_GENERAL; a_section: ?HELP_CONTEXT_SECTION_I): !STRING_32
 			-- A human readable title for a help document, given a context id and section.
 			--
 			-- `a_context_id': The primary help provider's linkable context content id, used to locate a help document.
@@ -70,7 +69,6 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			not_a_context_id_is_empty: not a_context_id.is_empty
 			a_context_id_is_valid_context_id: is_valid_context_id (a_context_id)
-			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
 		do
 			create Result.make (50)
 			Result.append (a_context_id.as_string_32)

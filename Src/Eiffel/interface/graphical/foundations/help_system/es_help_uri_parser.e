@@ -86,9 +86,15 @@ feature {NONE} -- Factory
 			not_a_protocol_is_empty: not a_protocol.is_empty
 			not_a_context_id_is_empty: not a_context_id.is_empty
 			not_a_section_is_empty: a_section /= Void implies not a_section.is_empty
+		local
+			l_section: !STRING_GENERAL
 		do
 			if {l_kind: !UUID} help_provider_for_protocol (a_protocol) then
-				create {!BASIC_HELP_CONTEXT} Result.make (a_context_id, a_section, l_kind)
+				if {lt_section: STRING_GENERAL}a_section and then not a_section.is_empty then
+					create {!BASIC_HELP_CONTEXT} Result.make (a_context_id, create {HELP_CONTEXT_SECTION_STRING}.make (lt_section), l_kind)
+				else
+					create {!BASIC_HELP_CONTEXT} Result.make (a_context_id, Void, l_kind)
+				end
 			end
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable

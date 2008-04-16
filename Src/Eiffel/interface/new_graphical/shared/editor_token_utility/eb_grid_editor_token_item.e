@@ -558,6 +558,8 @@ feature{NONE} -- Implementation
 			end
 		end
 
+feature {EB_GRID_EDITOR_TOKEN_ITEM} -- Implementation
+
 	editor_token_text: EB_EDITOR_TOKEN_TEXT is
 			-- Editor token text
 		require

@@ -25,14 +25,20 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	help_context_section: ?STRING_GENERAL
+	help_context_section: ?HELP_CONTEXT_SECTION_I
 			-- An optional sub-section in the help document, located using `help_context_id' to navigate to.
 		require
 			is_interface_usable: is_interface_usable
 			is_help_available: is_help_available
 		deferred
-		ensure
-			not_result_is_empty: Result /= Void implies not Result.is_empty
+		end
+
+	help_context_description: ?STRING_GENERAL
+			-- An optional description of the context.
+		require
+			is_interface_usable: is_interface_usable
+			is_help_available: is_help_available
+		deferred
 		end
 
 	help_provider: !UUID

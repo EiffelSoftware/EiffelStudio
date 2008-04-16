@@ -60,6 +60,10 @@ feature {NONE} -- Help registration
 		do
 			create l_kinds
 			a_service.register_provider (l_kinds.wiki, {WIKI_HELP_PROVIDER})
+			a_service.register_provider (l_kinds.raw_uri, {RAW_URI_HELP_PROVIDER})
+			a_service.register_provider (l_kinds.pdf, {PDF_HELP_PROVIDER})
+			a_service.register_provider (l_kinds.doc, {DOC_HELP_PROVIDER})
+			a_service.register_provider (l_kinds.eis_default, {EIS_DEFAULT_HELP_PROVIDER})
 		end
 
 feature {NONE} -- Factory

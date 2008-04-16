@@ -1095,6 +1095,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_DIAGRAM_TOOL})
 			insert_show_tool_menu_item (Result, {ES_METRICS_TOOL})
 			insert_show_tool_menu_item (Result, {ES_CONTRACT_TOOL})
+			insert_show_tool_menu_item (Result, {ES_INFORMATION_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_WINDOWS_TOOL})
 			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})

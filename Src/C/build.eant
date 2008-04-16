@@ -21,6 +21,21 @@ when switching from non dll to dll, don't forget to clean
 	<target name="compile">
 		<geant target="compile_runtime" />
 	</target>
+	<target name="recompile">
+		<geant target="clean" />
+		<geant target="compile_runtime" />
+	</target>
+	<target name="compile_runtime_silent">
+		<set name="_SILENT" value="true" />
+		<geant target="compile_runtime" />
+		<unset name="_SILENT" />
+	</target>
+	<target name="compile_runtime_dll_silent">
+		<set name="_SILENT" value="true" />
+		<geant target="compile_runtime_dll" />
+		<unset name="_SILENT" />
+	</target>
+
 	<target name="compile_runtime">
 		<geant target="_compile_runtime" arguments=" " />
 	</target>
@@ -52,25 +67,36 @@ when switching from non dll to dll, don't forget to clean
 	<target name="_compile_runtime">
 		<argument name="_rt_type_" /><!-- ' ' or 'dll' -->
 
-		<echo message="- Compile Runtime ${_rt_type_}" />
+		<echo message="- Runtime ${_rt_type_}: compiling ..." />
 		<!-- Windows -->
 		<set name="runtime_c_compiler" value="m" if="-${ISE_C_COMPILER}-=--" />
 		<set name="runtime_c_compiler" value="m" if="${ISE_C_COMPILER}=msc" />
 		<set name="runtime_c_compiler" value="b" if="${ISE_C_COMPILER}=bcb" />
 		<set name="runtime_c_compiler" value="g" if="${ISE_C_COMPILER}=mingw" />
-		<exec executable="configure.bat win32 ${runtime_c_compiler} ${_rt_type_} " if="${ISE_PLATFORM}=windows" 
-			accept_errors="true" exit_code_variable="return_code" 
-			/>
-		<exec executable="configure.bat win64 ${runtime_c_compiler} ${_rt_type_} " if="${ISE_PLATFORM}=win64" 
-			accept_errors="true" exit_code_variable="return_code" 
-			/>
+
+		<!-- Windows -->
+		<set name="_cmd" value="configure.bat win32 ${runtime_c_compiler} ${_rt_type_}" if="${ISE_PLATFORM}=windows" />
+		<set name="_cmd" value="configure.bat win64 ${runtime_c_compiler} ${_rt_type_}" if="${ISE_PLATFORM}=win64" />
+
+		<!-- Unices -->
+		<set name="_cmd" value="echo 'y\n' | ./quick_configure " unless="${is_windows}" /><!-- or "echo 'n\nn\nn\n' |..." to recompile -->
+
+		<!-- silent ? -->
+		<set name="l_silent" value=" > NUL:" if="$is_windows" />
+		<set name="l_silent" value=" > /dev/null" unless="$is_windows" />
+		<set name="_cmd" value="${_cmd} ${l_silent}" if="${_SILENT}=true" />
+		<unset name="l_silent" />
+
+		<!-- execution ? -->
+		<exec executable="${_cmd} " accept_errors="true" exit_code_variable="return_code" />
+
+		<!-- cleaning -->
+		<unset name="_cmd" />
 		<unset name="runtime_c_compiler" />
 
-		<!-- unices -->
-		<exec executable="echo 'y\n' | ./quick_configure" unless="${is_windows}" 
-			accept_errors="true" exit_code_variable="return_code" 
-			/>
-		<!-- or "echo 'n\nn\nn\n' |..." to recompile -->
+		<!-- result -->
+		<echo message="- Runtime ${_rt_type_}: compiled." if="$return_code=0" />
+		<echo message="- Runtime ${_rt_type_}: compilation failed (code:$return_code)" unless="$return_code=0" />
 	</target>
 	
 </project>

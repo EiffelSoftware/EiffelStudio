@@ -7,7 +7,7 @@
 	<inherit>
 		<parent location="${PROJECT_ec_bench.absdir}/_inc/_eiffel_tools_compilation.eant">
 			<redefine target="init"/>
-			<redefine target="before"/>
+			<redefine target="copy_resources"/>
 		</parent>
 	</inherit>
 
@@ -18,12 +18,13 @@
 		<geant target="set_NAME" arguments="ec" />
 	</target>
 
-	<target name="before" if="$is_windows">
-		<precursor/>
+	<target name="copy_resources" if="$is_windows">
+		<argument name="a_dir" />
+		<precursor arguments="$a_dir" />
 		<set name="_ecf_dir" value="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" />
-		<copy dir="$_ecf_dir" file="ec.rc" to_directory="$_COMP_DIR" />
-		<copy dir="$_ecf_dir" file="ec.ico" to_directory="$_COMP_DIR" />
-		<copy dir="$_ecf_dir" file="ec.exe.manifest" to_directory="$_COMP_DIR" />
+		<copy dir="$_ecf_dir" file="ec.rc" to_directory="$a_dir" />
+		<copy dir="$_ecf_dir" file="ec.ico" to_directory="$a_dir" />
+		<copy dir="$_ecf_dir" file="ec.exe.manifest" to_directory="$a_dir" />
 		<unset name="_ecf_dir" />
 	</target>
 

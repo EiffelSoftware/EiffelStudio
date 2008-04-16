@@ -30,20 +30,34 @@
 		<available resource="${config_local_path}" variable="config_local_available"/>
 		<geant target="create_config_local_script"  unless="${config_local_available}=true"/>
 		<geant file="${config_local_path}" target="init" reuse_variables="true" fork="false" />
+
 		<available resource="${ISE_EIFFEL}_wkbench" variable="ise_wkbench_available"/>
 		<geant target="create_wkbench" unless="${ise_wkbench_available}=true" />
+
+		<!-- we support both location for Delivery, under Src, or under Trunk -->
+		<set name="delivery_dir" value="${EIFFEL_SRC}${path_separator}..${path_separator}Delivery" unless="${delivery_dir}"/>
+		<available resource="${delivery_dir}" variable="tmp_d_available"/>
+		<set name="delivery_dir" value="${EIFFEL_SRC}${path_separator}Delivery" if="${tmp_d_available}=false"/>
+		<unset name="tmp_d_available" />
+
+		<!-- rewrite config file, just to be sure, script is up to date -->
+		<geant target="create_config_local_script"  if="${config_local_available}=true" />
+		<unset name="config_local_available" />
+
+		<!-- let's continue -->
 	</target>
 
 	<target name="create_config_local_script" >
 		<echo message="Creating local config script [${config_local_path}]" />
+		<set name="compile_dir" value="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" unless="$compile_dir" />
 		<echo to_file="${config_local_path}">
 &lt;project name="LocalConfig" default="init"&gt;
 	&lt;target name="init" &gt;
-		&lt;set name="compile_dir" value="&#36;{EIFFEL_SRC}&#36;{path_separator}Eiffel&#36;{path_separator}Ace" /&gt;
-		&lt;set name="delivery_dir" value="&#36;{EIFFEL_SRC}&#36;{path_separator}Delivery"  /&gt;
+		&lt;set name="compile_dir" value="#compile_dir#" unless="$compile_dir" /&gt;
 	&lt;/target&gt;
 &lt;/project&gt;
 		</echo>
+		<replace file="$config_local_path" token="#compile_dir#" replace="$compile_dir" flags="g" />
 	</target>
 
 	<!-- Targets -->
@@ -65,11 +79,6 @@
 		<geant target="copy_from_delivery" if="${tmp0_available}=true" />
 		<echo message="! Unavailable: Delivery folder= ${delivery_dir}" unless="${tmp0_available}=true" />
 
-		<mkdir directory="${ISE_EIFFEL}_wkbench${path_separator}library" />
-		<available resource="${EIFFEL_SRC}${path_separator}library" variable="tmp0_available" />
-		<geant target="copy_from_library" if="${tmp0_available}=true" />
-		<echo message="! Unavailable: EIFFEL_SRC/library folder= ${EIFFEL_SRC}${path_separator}library" unless="${tmp0_available}=true" />
-
 		<mkdir directory="${wb_platform_dir}" />
 
 		<available resource="${ise_platform_dir}" variable="tmp0_available" />
@@ -84,6 +93,12 @@
 		<available resource="${wcode_dir}" variable="tmp0_available" />
 		<geant target="copy_from_to_w_code" if="${tmp0_available}=true" />
 		<echo message="! Unavailable: W_code folder= ${wcode_dir}" unless="${tmp0_available}=true" />
+
+		<!-- libraries -->
+		<mkdir directory="${ISE_EIFFEL}_wkbench${path_separator}library" />
+		<available resource="${EIFFEL_SRC}${path_separator}library" variable="tmp0_available" />
+		<geant target="copy_from_library" if="${tmp0_available}=true" />
+		<echo message="! Unavailable: EIFFEL_SRC/library folder= ${EIFFEL_SRC}${path_separator}library" unless="${tmp0_available}=true" />
 
 		<geant target="update_executable_properties" />
 	</target>

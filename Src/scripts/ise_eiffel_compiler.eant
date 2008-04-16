@@ -35,6 +35,7 @@
 		<set name="force_gui" value="false"  unless="$force_gui"/>
 		<set name="c_compile" value="true"  unless="$c_compile"/>
 		<set name="use_settings" value="false"  unless="$use_settings"/>
+		<set name="force_silent" value="true"  unless="$force_silent"/>
 	</target>
 
 	<target name="check_available">
@@ -242,7 +243,7 @@
 
 		<echo message=" DIR=${a_comp_dir}" if="$verbose=true" />
 		<echo message=" OUT=${a_output_dir}" if="$verbose=true" />
-		<echo message=" CMD=${eccmd}" />
+		<echo message=" CMD=${eccmd}" if="$verbose=true" />
 
 		<geant target="check_available" >
 			<argument name="a_res" value="$a_comp_dir" />
@@ -252,11 +253,12 @@
 		<mkdir directory="$a_comp_dir" if="${tmp_ok}=false"/>
 		<unset name="tmp_ok" />
 
-		<exec executable="${eccmd}"
-			dir="${a_comp_dir}" 
-			accept_errors="true"
-			exit_code_variable="return_code" 
-		/>
+		<geant target="exec" >
+			<argument name="a_cmd" value="$eccmd" />
+			<argument name="a_dir" value="$a_comp_dir" />
+			<argument name="a_var" value="return_code" />
+			<argument name="a_silent" value="$force_silent" />
+		</geant>
 		<unset name="eccmd" />
 		<set name="L_is_from_f_code" 	value="true" 	if="${a_compilation_mode}=finalize" />
 		<set name="L_is_from_f_code" 	value="false" 	unless="${a_compilation_mode}=finalize" />
@@ -288,6 +290,24 @@
 
 		<unset name="L_ec_c_comp_dir" />
 		<unset name="L_is_from_f_code" />
+	</target>
+
+	<target name="exec" >
+		<description>Execute 'exec' </description>
+		<argument name="a_cmd" />
+		<argument name="a_dir" />
+		<argument name="a_var" />
+		<argument name="a_silent" />
+
+		<set name="l_silent_cmd" value=" > NUL: 2>&amp;1 " if="$is_windows" />
+		<set name="l_silent_cmd" value=" > /dev/null" unless="$is_windows" />
+		<set name="l_silent_cmd" value="" unless="$a_silent=true" />
+		<set name="l_silent_cmd" value="" if="$verbose=true" />
+
+		<exec executable="$a_cmd$l_silent_cmd" dir="$a_dir" 
+			accept_errors="true" exit_code_variable="$a_var" 
+		/>
+		<unset name="l_silent_cmd" />
 	</target>
 
 	<target name="_tpl_compile_check_success" >

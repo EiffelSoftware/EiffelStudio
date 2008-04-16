@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<project name="F_CODE" default="help" >
+	<target name="help" >
+		<echo message="usage:" />
+		<echo message="  compile" />
+		<echo message="  clean" />
+		<echo message="  clobber" />
+	</target>
+
+	<target name="clean" >
+		<exec executable="make clean" dir="#NAME#_EIFGENs/#TARGET#/F_code" unless="$is_windows" />
+		<delete if="$is_windows" dir="#NAME#_EIFGENs/#TARGET#/F_code" >
+			<fileset include="@(**/Makefile|**/*.obj|**/*.lib|**/finished|**/*.exe|**/*.lnk|**/*.res)" />
+		</delete>
+		<delete file="#NAME#_EIFGENs/#TARGET#/F_code/#NAME#${exe}" />
+	</target>
+
+	<target name="clobber" depend="clean">
+		<delete file="#NAME#${exe}" />
+	</target>
+
+	<target name="compile" >
+		<exec executable="finish_freezing > NUL: 2>&amp;1" dir="#NAME#_EIFGENs/#TARGET#/F_code" if="$is_windows" />
+		<exec executable="finish_freezing > /dev/null" dir="#NAME#_EIFGENs/#TARGET#/F_code" unless="$is_windows" />
+
+		<available dir="#NAME#_EIFGENs/#TARGET#/F_code" resource="#NAME#${exe}" variable="tmp_#NAME#_available" />
+		<copy dir="#NAME#_EIFGENs/#TARGET#/F_code" file="#NAME#${exe}" to_file="${F_CODE.absdir}/#NAME#${exe}" if="${tmp_#NAME#_available}=true" />
+		<set name="return_code" value="0" if="$tmp_#NAME#_available=true" />
+		<set name="return_code" value="1" unless="$tmp_#NAME#_available=true" />
+		<unset name="tmp_#NAME#_available" />
+	</target>
+
+	<target name="install" >
+		<argument name="a_output_dir" />
+		<available dir="#NAME#_EIFGENs/#TARGET#/F_code" resource="#NAME#${exe}" variable="tmp_#NAME#_available" />
+		<copy dir="${F_CODE.absdir}" file="#NAME#${exe}" to_file="${a_output_dir}/#NAME#${exe}" if="${tmp_#NAME#_available}=true" />
+		<unset name="tmp_#NAME#_available" />
+	</target>
+
+</project>

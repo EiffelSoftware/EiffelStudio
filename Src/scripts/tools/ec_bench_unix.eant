@@ -12,11 +12,15 @@
 
 	<target name="init" >
 		<precursor/>
+		<setenv name="EC_NAME" value="$ISE_EIFFEL${path_separator}studio${path_separator}spec${path_separator}$ISE_PLATFORM${path_separator}bin${path_separator}ec${exe}" />
 		<setenv name="ISE_PLATFORM" value="linux-x86" />
 		<set name="ISE_PLATFORM" value="linux-x86" />
 		<geant target="set_ECF" arguments="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace${path_separator}ec.ecf" />
 		<geant target="set_TARGET" arguments="bench_unix" />
 		<geant target="set_NAME" arguments="ec" />
+
+		<geant target="set_SKIP" arguments="true" unless="${is_windows}"/>
+		<geant target="set_SKIP_MESSAGE" arguments="Skipped: [ec_bench_unix] is for Windows usage" unless="${is_windows}"/>
 	</target>
 
 </project>

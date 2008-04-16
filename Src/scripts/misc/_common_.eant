@@ -40,7 +40,7 @@
 	-->
 
 	<target name="init" >
-		<echo message="- Check environment" />
+		<echo message="- Check environment" if="$verbose=true" />
 		<set name="environment_valid" value="true" />
 		<geant target="check_environment" />
 		<exit code="1" if="${environment_valid}=false" />
@@ -48,6 +48,10 @@
 	</target>
 
 	<target name="_log" >
+		<argument name="a_msg" />
+		<echo message="$a_msg" />
+	</target>
+	<target name="_logv" if="$verbose=true" >
 		<argument name="a_msg" />
 		<echo message="$a_msg" />
 	</target>

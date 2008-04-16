@@ -29,7 +29,7 @@
 		<set name="L_wizards_comp_dir" value="${A_comp_dir}${path_separator}wizards" />
 		<set name="L_error_occurred" value="false" />
 		<mkdir directory="${L_wizards_comp_dir}" />
-		<!-- <geant target="compile_a_wizard" arguments="new_projects,wizard,wizard_wizard"/> -->
+		<!-- <geant target="compile_a_wizard" arguments="new_projects,wizard,wizard_wizard" /> -->
 		<geant target="get_a_wizard" arguments="new_projects,vision2,vision2_wizard,${L_wizards_comp_dir}"/>
 		<set name="L_error_occurred" value="true" unless="${return_code}=0" />
 		<geant target="get_a_wizard" arguments="others,precompile,precompile_wizard,${L_wizards_comp_dir}"/>

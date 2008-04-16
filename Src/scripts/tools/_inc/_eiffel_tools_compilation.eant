@@ -15,9 +15,33 @@
 		<echo message=" geant precompile" />
 		<echo message=" geant clean" />
 		<echo message="" />
+		<echo message=" geant estudio        :open EiffelStudio" />
+		<echo message=" geant menu           :menu interface" />
+		<echo message="" />
 		<echo message="defines:" />
 		<echo message=" -Dforce_clean={true|false}		(default=false)" />
 		<echo message=" -Dforce_batch={true|false}		(default=true)"  />
+		<echo message=" -Dforce_gui={true|false}		(default=false)"  />
+	</target>
+
+	<target name="menu" depend="init">
+		<echo message=" 1) compile" />
+		<echo message=" 2) finalize" />
+		<echo message=" 3) freeze" />
+		<echo message=" 4) melt" />
+		<echo message=" 5) precompile" />
+		<echo message=" 6) clean" />
+		<echo message=" 7) estudio         :open EiffelStudio" />
+		<echo message=" Q) Quit" />
+		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,5,6,7,Q,q" />
+		<set name="answer" value="q" if="$answer=Q" />
+		<geant if="$answer=1" target="compile"	/>
+		<geant if="$answer=2" target="finalize"	/>
+		<geant if="$answer=3" target="freeze"	/>
+		<geant if="$answer=4" target="melt"	/>
+		<geant if="$answer=5" target="precompile"	/>
+		<geant if="$answer=6" target="clean"	/>
+		<geant if="$answer=7" target="estudio"	/>
 	</target>
 
 	<target name="init">
@@ -43,7 +67,13 @@
 	</target>
 
 	<target name="before" depend="init">
+		<geant target="copy_resources" arguments="$_COMP_DIR" />
 	</target>
+
+	<target name="copy_resources" depend="init">
+		<argument name="a_dir" />
+	</target>
+
 	<target name="after" depend="init">
 	</target>
 
@@ -81,6 +111,18 @@
 
 	<target name="precompile" depend="init">
 		<geant target="_tpl_compile_" arguments="precompile" />
+	</target>
+
+	<target name="estudio" depend="init">
+
+		<set name="old_force_gui" value="$force_gui" if="$force_gui" />
+		<set name="force_gui" value="true" />
+
+		<geant target="_tpl_compile_" arguments="melt" />
+
+		<set name="force_gui" value="$old_force_gui" if="$old_force_gui" />
+		<unset name="force_gui" unless="$old_force_gui" />
+		<unset name="old_force_gui" />
 	</target>
 
 	<target name="clean" depend="init_skip" unless="$_SKIP=true">
@@ -130,6 +172,9 @@
 	<target name="generate_f_code" depend="init" >
 		<argument name="a_comp_dir" />
 		<argument name="a_out_dir" />
+		<argument name="a_force_clean" />
+		<argument name="a_force_batch" />
+
 		<set name="_COMP_DIR" value="$a_comp_dir" unless="-$a_comp_dir-=--" />
 
 		<geant target="require" arguments="true" />
@@ -146,15 +191,22 @@
 			<argument name="a_name" value="$_NAME" />
 			<argument name="a_comp_dir" value="$_COMP_DIR" />
 			<argument name="a_output_dir" value="" />
-			<argument name="a_clean" value="" />
-			<argument name="a_batch" value="" />
+			<argument name="a_clean" value="$a_force_clean" />
+			<argument name="a_batch" value="$a_force_batch" />
 			<argument name="a_c_compile" value="false" />
 		</geant>
-		<echo message="f code generated" if="$return_code=0" />
-		<mkdir directory="$a_out_dir" />
-		<geant target="get_abs_cwd" arguments="l_abs_out_dir" dir="$a_out_dir" />
-		<echo message="go" if="$return_code=0" />
-		<copy dir="$_COMP_DIR/EIFGENs/$_TARGET/F_code" to_directory="$l_abs_out_dir/${_TARGET}_${_NAME}__F_code" >
+		<echo message="F_code generated" if="$return_code=0" />
+		<mkdir directory="$a_out_dir" if="$return_code=0" />
+		<geant target="get_abs_cwd" arguments="l_abs_out_dir" dir="$a_out_dir" if="$return_code=0" />
+
+		<geant target="copy_resources" arguments="$l_abs_out_dir" if="$l_abs_out_dir" />
+		<copy to_file="$l_abs_out_dir/build.eant" file="${_EIFFEL_TOOLS_COMPILATION.absdir}/_f_code_tpl_" if="$l_abs_out_dir" />
+		<replace file="$l_abs_out_dir/build.eant" token="#NAME#" replace="$_NAME" flags="g" if="$l_abs_out_dir" />
+		<replace file="$l_abs_out_dir/build.eant" token="#TARGET#" replace="$_TARGET" flags="g" if="$l_abs_out_dir" />
+
+		<set name="l_abs_out_dir" value="$l_abs_out_dir${path_separator}${_NAME}_EIFGENs${path_separator}${_TARGET}${path_separator}F_code" if="$l_abs_out_dir" />
+		<echo message="Copying F_code to $l_abs_out_dir " if="$l_abs_out_dir" />
+		<copy dir="$_COMP_DIR/EIFGENs/$_TARGET/F_code" to_directory="$l_abs_out_dir" if="$l_abs_out_dir" >
 			<fileset include="@(**/*)" />
 		</copy>		
 		<unset name="l_abs_out_dir" />
@@ -164,6 +216,9 @@
 	<target name="c_compile_f_code" depend="init" >
 		<argument name="a_comp_dir" />
 		<argument name="a_out_dir" />
+		<argument name="a_force_clean" />
+		<argument name="a_force_batch" />
+
 		<set name="_COMP_DIR" value="$a_comp_dir" unless="-$a_comp_dir-=--" />
 
 		<geant target="require" arguments="true" />

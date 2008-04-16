@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<project name="PROJECT_gobo_gepp" default="help">
+	<description>
+		description: "gobo_gepp compilation"
+	</description>
+	<inherit>
+		<parent location="${PROJECT_gobo_gepp.absdir}/_inc/_eiffel_tools_compilation.eant">
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="init" >
+		<precursor/>
+		<geant target="set_ECF" arguments="${ISE_LIBRARY}${path_separator}library${path_separator}gobo${path_separator}src${path_separator}gepp.ecf" />
+		<geant target="set_TARGET" arguments="gepp" />
+		<geant target="set_NAME" arguments="gepp" />
+	</target>
+
+</project>

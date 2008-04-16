@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+
+<project name="MENU_SCRIPT" default="menu">
+	<description>
+		description: "delivery building"
+		author: "Jocelyn Fiat and others"
+		note: "This script could be split into severals scripts, one for each product"
+	</description>
+
+	<inherit>
+		<parent location="${MENU_SCRIPT.absdir}/deliv.eant">
+			<redefine target="menu"/>
+		</parent>
+	</inherit>
+	
+	<target name="menu">
+		<echo message=""/>
+		<echo message="### Main Menu ###"/>
+		<echo message=""/>
+		<echo message=" 1) clean ..." />
+		<echo message=" 2) build_delivery (includes 3,4)" />
+		<echo message=" == Compilation ==" />
+		<echo message=" 3) make_binaries" />
+		<echo message=" 4) make_f_codes" />
+		<echo message=" 5) make_documentation" />
+		<echo message=" == Installation ==" />
+		<echo message=" 6) install_delivery" />
+		<echo message=" 7) install_minimal_delivery" />
+		<echo message=" ====" />
+		<echo message=" 8) individual operations" />
+		<echo message=" ====" />
+		<echo message=" w) install_eweasel" />
+		<echo message=" ====" />
+		<echo message=" o) Options" />
+		<echo message=" H) Help" />
+		<echo message=" Q) quit" />
+		<input message=" -> " variable="answer" answer_required="true" validargs="1,2,3,4,5,6,7,8,w,h,H,o,Q,q" />
+		<set name="answer" value="o" if="$answer=O" />
+		<set name="answer" value="h" if="$answer=H" />
+		<set name="answer" value="q" if="$answer=Q" />
+		<set name="answer" value="w" if="$answer=W" />
+
+		<geant if="$answer=1" target="_menu_clean" 				/>
+		<geant if="$answer=2" target="build_delivery" 			/>
+
+		<geant if="$answer=3" target="make_binaries" 			/>
+		<geant if="$answer=4" target="make_f_codes" 			/>
+		<geant if="$answer=5" target="make_documentation" 		/>
+
+		<geant if="$answer=6" target="install_delivery" 		/>
+		<geant if="$answer=7" target="install_minimal_delivery"	/>
+
+		<geant if="$answer=8" target="_menu_sub"				/>
+
+		<geant if="$answer=w" target="install_eweasel"			/>
+
+		<geant if="$answer=o" target="_menu_options" 			/>
+		<geant if="$answer=o" target="menu"			 			/>
+
+		<geant if="$answer=h" target="help" 					/>
+	</target>
+
+	<target name="_menu_sub">
+		<echo message=""/>
+		<echo message=" ### Menu [Individual Operations] ###"/>
+		<echo message=" 1) Make Delivery structure"/>
+		<echo message=" 2) Install binaries"/>
+		<echo message=" 3) Install library"/>
+		<echo message=" 4) Install example"/>
+		<echo message=" 5) Install documentation"/>
+		<echo message=""/>
+		<echo message=" ====" />
+		<echo message="Q) quit" />
+		<input message=" -> " variable="answer_sub" answer_required="true" validargs="1,2,3,4,5,Q,q" />
+		<geant if="$answer_sub=1" target="make_delivery_structure" 		/>
+		<geant if="$answer_sub=2" target="install_binaries" 			/>
+		<geant if="$answer_sub=3" target="install_library" 				/>
+		<geant if="$answer_sub=4" target="install_examples" 			/>
+		<geant if="$answer_sub=5" target="install_documentation" 		/>
+	</target>
+
+	<target name="_menu_options" depend="init_options" >
+		<echo message=""/>
+		<echo message=" ### Menu [Options] ###"/>
+		<echo message=""/>
+		<echo message=" == General == " />
+		<geant target="_menu_options_entry" arguments="1,Exit on failure,$_EXIT_ON_FAILURE" />
+		<geant target="_menu_options_entry" arguments="2,Include Develop Pack,$_INCLUDE_DEVPACK" />
+		<geant target="_menu_options_entry" arguments="3,Include Dotnet,$_INCLUDE_DOTNET" />
+		<echo message=" == Compilation == " />
+		<geant target="_menu_options_entry" arguments="4,Clean after compilation,$_CLEAN_AFTER_COMPILE" />
+		<geant target="_menu_options_entry" arguments="5,Clean before compiling,$_FORCE_CLEAN" />
+		<geant target="_menu_options_entry" arguments="6,Batch compilation,$_FORCE_BATCH" />
+		<geant target="_menu_options_entry" arguments="7,Silent compilation,$_FORCE_SILENT" />
+		<echo message=" ==== " />
+		<echo message=" S) Save settings to current folder [local_config.eant]" />
+		<echo message=" Q) back to previous menu" />
+		<input message=" -> " variable="answer_option" answer_required="true" validargs="1,2,3,4,5,6,7,s,S,q,Q" />
+		<geant if="$answer_option=1" target="_toggle_boolean_value" arguments="_EXIT_ON_FAILURE,$_EXIT_ON_FAILURE" />
+		<geant if="$answer_option=2" target="_toggle_boolean_value" arguments="_INCLUDE_DEVPACK,$_INCLUDE_DEVPACK" />
+		<geant if="$answer_option=3" target="_toggle_boolean_value" arguments="_INCLUDE_DOTNET,$_INCLUDE_DOTNET" />
+		<geant if="$answer_option=4" target="_toggle_boolean_value" arguments="_CLEAN_AFTER_COMPILE,$_CLEAN_AFTER_COMPILE"  />
+		<geant if="$answer_option=5" target="_toggle_boolean_value" arguments="_FORCE_CLEAN,$_FORCE_CLEAN" />
+		<geant if="$answer_option=6" target="_toggle_boolean_value" arguments="_FORCE_BATCH,$_FORCE_BATCH" />
+		<geant if="$answer_option=7" target="_toggle_boolean_value" arguments="_FORCE_SILENT,$_FORCE_SILENT" />
+
+		<set name="answer_option" value="s" if="$answer_option=S" />
+		<geant if="$answer_option=s" target="save_local_config" />
+
+		<set name="answer_option" value="q" if="$answer_option=Q" />
+		<geant target="_menu_options" unless="$answer_option=q" />
+	</target>
+	<target name="_menu_options_entry" >
+		<argument name="a_id" />
+		<argument name="a_mesg" />
+		<argument name="a_checked" />
+
+		<set name="tX" value="X" if="$a_checked=true" />
+		<set name="tX" value=" " unless="$a_checked=true" />
+		<echo message=" $a_id) [$tX] $a_mesg" 	/>
+		<unset name="tX" />
+	</target>
+
+	<target name="_menu_clean">
+		<echo message=""/>
+		<echo message=" ### Menu [Clean] ###"/>
+		<echo message=""/>
+		<echo message=" 1) clean all: 2(3),4,5" />
+		<echo message=" ==== " />
+		<echo message=" 2) clean binaries folder (bin)" />
+		<echo message=" 3) clean temporary folders (spec/..,ISE_EIFFEL)" />
+		<echo message=" 4) clean compilation folder (EIFGENs)" />
+		<echo message=" 5) clean target delivery folder (EiffelXX)" />
+		<echo message=" ====" />
+		<echo message="Q) quit" />
+		<input message=" -> " variable="answer_clean" answer_required="true" validargs="1,2,3,4,5,Q,q" />
+		<geant if="$answer_clean=1" target="clean_all" 		/>
+		<geant if="$answer_clean=2" target="clean_binaries_folder" 		/>
+		<geant if="$answer_clean=3" target="clean_temporary_folders" 	/>
+		<geant if="$answer_clean=4" target="clean_compilation_folder" 	/>
+		<geant if="$answer_clean=5" target="clean_delivery_structure" 	/>
+	</target>
+
+	<target name="_toggle_boolean_value" >
+		<argument name="a_name" />
+		<argument name="a_value" />
+		<set name="$a_name" value="true" if="$a_value=false"/>
+		<set name="$a_name" value="false" if="$a_value=true"/>
+	</target>
+
+</project>

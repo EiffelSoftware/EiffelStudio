@@ -137,7 +137,7 @@ extern void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int 
 extern void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_dyn_type, int a_static_type, int a_feat_id, 
 		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted);
 extern int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE* new_value);
-extern char* rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type);
+extern EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type);
 		
 #define RT_ENTER_EIFFELCODE is_inside_rt_eiffel_code++
 #define RT_EXIT_EIFFELCODE is_inside_rt_eiffel_code--

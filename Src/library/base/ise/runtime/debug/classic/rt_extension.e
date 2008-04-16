@@ -69,9 +69,7 @@ feature -- Notification
 				end
 			end
 		rescue
-			debug ("RT_EXTENSION")
-				dtrace ("Error: Rescue -> RT_EXTENSION.notify (" + a_id.out + ", a_data)%N")
-			end
+			dtrace ("Error: Rescue -> RT_EXTENSION.notify (" + a_id.out + ", a_data)%N")
 			retried := True
 			retry
 		end
@@ -82,10 +80,8 @@ feature -- Notification
 			retried: BOOLEAN
 		do
 			if not retried then
-				if cached_arguments.has_key (a_id) then
-					Result := cached_arguments.found_item
-					check Result /= Void end
-				else
+				Result := cached_arguments[a_id]
+				if Result = Void then
 					inspect a_id
 					when Op_enter_feature, Op_leave_feature, Op_rescue_feature, Op_rt_hook then
 						create {like events_feature_argument} Result
@@ -96,23 +92,20 @@ feature -- Notification
 							dtrace ("Error: RT_EXTENSION.notify_argument (" + a_id.out + "): unmatched id !%N")
 						end
 					end
-					if {t: TUPLE} Result then
-						cached_arguments.force (t, a_id)
-					end
+					cached_arguments[a_id] := Result
 				end
 			end
 		rescue
-			debug ("RT_EXTENSION")
-				dtrace ("Error: Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
-			end
+			dtrace ("Error: Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
 			retried := True
 			retry
 		end
 
-	cached_arguments: !HASH_TABLE [!TUPLE, INTEGER]
+	cached_arguments: !ARRAY [TUPLE]
 			-- Cached argument to use less temporary objects
 		once
-			create Result.make (11)
+				--| Make sure, the id are contigus, and in this range !
+			create Result.make (Op_enter_feature, Op_rt_assign_local)
 		end
 
 feature {NONE} -- Execution replay
@@ -215,6 +208,46 @@ feature {NONE} -- Execution replay
 			end
 		end
 
+	new_execution_recorder: !like execution_recorder
+			-- New Execution recorder.
+			-- You can overwrite default parameters in this feature.
+			-- Check `{RT_DBG_EXECUTION_RECORDER}.make' to see the default values.
+			--| Note: in the future, there will be a way to set those parameter from the debugger
+		do
+			create Result.make
+				--| Uncomment on of the following lines if you want to set
+				--|		+ 10_000 as maximum number of value records
+				--|		+ 0 for unlimited number of value records.
+				--| Default: 1_000_000 
+--			Result.set_maximum_record_count (10_000) -- Limited to 10_000 records
+--			Result.set_maximum_record_count (0)	-- No limit
+			Result.set_maximum_record_count (100_000)
+
+				--| when leaving a feature, flatten all the value record from call records, and its sub calls
+				--| Default: True
+--			Result.set_flatten_when_closing (False)
+
+				--| When we flatten call records' value, do we keep the sub-call records (i.e: the execution calls history)?
+				--| Default: True
+--			Result.set_keep_calls_records (False)
+		end
+
+	execution_recorder: ?RT_DBG_EXECUTION_RECORDER
+			-- Once per thread record.
+		do
+			Result := execution_recorder_cell.item
+		end
+
+	execution_recorder_cell: !CELL [?RT_DBG_EXECUTION_RECORDER]
+			-- Cell containing the once per thread recorder, if activated.
+		indexing
+			description: "Once per thread"
+		once
+			create Result
+		end
+
+feature -- Execution replay		
+
 	activate_execution_replay_recording (b: BOOLEAN; ref: ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; break_index: INTEGER)
 			-- Start or Stop execution replay recording
 		local
@@ -235,34 +268,27 @@ feature {NONE} -- Execution replay
 			no_recorder_if_off: not b implies execution_recorder = Void
 		end
 
-	new_execution_recorder: !like execution_recorder
-			-- New Execution recorder.
-		do
-			create Result.make
-				--| Uncomment on of the following lines if you want to set
-				--|		+ 10_000 as maximum number of records
-				--|		+ 0 for unlimited number of records.
---			Result.set_maximum_record_count (10_000) -- Limited to 10_000 records
---			Result.set_maximum_record_count (0)	-- No limit
---			Result.set_flatten_when_closing (False)
---			Result.set_keep_calls_records (True)
-		end
-
-	execution_recorder: ?RT_DBG_EXECUTION_RECORDER
-			-- Once per thread record.
-		do
-			Result := execution_recorder_cell.item
-		end
-
-	execution_recorder_cell: !CELL [?RT_DBG_EXECUTION_RECORDER]
-			-- Cell containing the once per thread recorder, if activated.
-		indexing
-			description: "Once per thread"
-		once
-			create Result
-		end
-
 feature -- debug purpose: to remove
+
+	test_activate_recording (ref: ANY; fid: INTEGER; dep: INTEGER; bpline: INTEGER) is
+		require
+			ref_attached: ref /= Void
+		do
+			activate_execution_replay_recording (True, ref, (create {INTERNAL}).dynamic_type (ref), fid, dep, bpline)
+			c_activate_recording
+		end
+
+	frozen c_activate_recording is
+		external
+			"C inline use %"eif_main.h%""
+		alias
+			"[
+				EIF_GET_CONTEXT
+				is_inside_rt_eiffel_code = 0;
+				exec_recording_enabled = 1;
+				set_debug_mode (1);
+			]"
+		end
 
 	frozen c_is_inside_rt_eiffel_code: INTEGER is
 		external

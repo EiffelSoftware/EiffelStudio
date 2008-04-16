@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	RT_DBG_RECORD
+	RT_DBG_VALUE_RECORD
 
 inherit
 	DEBUG_OUTPUT
@@ -28,7 +28,7 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: RT_DBG_RECORD
+	current_value_record: RT_DBG_VALUE_RECORD
 			-- Record for current value
 		deferred
 		end
@@ -48,7 +48,7 @@ feature -- Access
 		deferred
 		end
 
-	is_same_as (other: !RT_DBG_RECORD): BOOLEAN
+	is_same_as (other: !RT_DBG_VALUE_RECORD): BOOLEAN
 			-- Is Current same as `other' ?
 		deferred
 		ensure
@@ -76,13 +76,13 @@ feature -- Change properties
 
 feature -- Runtime
 
-	restore (val: !RT_DBG_RECORD)
+	restore (val: !RT_DBG_VALUE_RECORD)
 			-- Restore Current record
 			-- and associate the backup value to `val'
 		deferred
 		end
 
-	revert (bak: !RT_DBG_RECORD)
+	revert (bak: !RT_DBG_VALUE_RECORD)
 			-- Revert previous `restore' using the associated `backup' value
 		deferred
 		end

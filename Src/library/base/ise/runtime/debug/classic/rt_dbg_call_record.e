@@ -52,8 +52,11 @@ feature -- Properties
 
 	dynamic_class_type_id: INTEGER
 			-- Related dynamic class type id.
+		local
+			o: ANY
 		do
-			if {o: ANY} object then
+			o := object
+			if o /= Void then
 				Result := rt_dynamic_type (o) --class_type_id
 			end
 		end
@@ -73,13 +76,19 @@ feature -- Properties
 	parent: ?like Current
 			-- Parent's call record.
 
+	steps: !ARRAYED_LIST [BOOLEAN]
+			-- Steps data
+			--| True->value;False->call
+			--| When not is_replaying, Cursor is always `after'
+			--| When is_replaying, Cursor point to replayed position's step
+
 	call_records: ?ARRAYED_LIST [!like Current]
 			-- Sub call records.
 
-	value_records: ?ARRAYED_LIST [RT_DBG_RECORD]
+	value_records: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Recorded values (assignment...)
 
-	flat_value_records: ?ARRAYED_LIST [RT_DBG_RECORD]
+	flat_value_records: ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Flat value records list
 
 feature -- Measure
@@ -203,7 +212,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			parent := Void
 		end
 
-	add_value_record (v: !RT_DBG_RECORD)
+	add_value_record (v: !RT_DBG_VALUE_RECORD)
 			-- Add value record
 		require
 			is_not_flat: not is_flat
@@ -244,9 +253,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			debug ("RT_DBG_RECORD")
 				if {ot_rs: like value_records} rs then
 					dtrace_indent (depth); dtrace ("record_fields -> " + ot_rs.count.out + " value(s).%N")
-					ot_rs.do_all (agent (r: RT_DBG_RECORD)
+					ot_rs.do_all (agent (r: RT_DBG_VALUE_RECORD)
 						do
-							if {ot_r: RT_DBG_RECORD} r then
+							if {ot_r: RT_DBG_VALUE_RECORD} r then
 								dtrace (" -> " + ot_r.position.out + ") " + ot_r.to_string + "%N")
 							end
 						end)
@@ -396,9 +405,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			is_flat: is_flat
 		local
 			ot: ARRAYED_LIST [ANY] -- indexed by `oi'
-			ort: ARRAY [LIST [RT_DBG_RECORD]] -- indexed by `oi'
-			orcds: LIST [RT_DBG_RECORD]
-			rec: RT_DBG_RECORD
+			ort: ARRAY [LIST [RT_DBG_VALUE_RECORD]] -- indexed by `oi'
+			orcds: LIST [RT_DBG_VALUE_RECORD]
+			rec: RT_DBG_VALUE_RECORD
 			o: ANY
 			oi: INTEGER
 			b: BOOLEAN
@@ -428,7 +437,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 									ot.force (o)
 									ot.finish
 									oi := ot.index
-									create {ARRAYED_LIST [RT_DBG_RECORD]} orcds.make (10)
+									create {ARRAYED_LIST [RT_DBG_VALUE_RECORD]} orcds.make (10)
 									if not ort.valid_index (oi) then
 										ort.grow (oi + ort.count // 2)
 									end
@@ -738,12 +747,6 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			Result := recorder.is_replaying
 		end
 
-	steps: !ARRAYED_LIST [BOOLEAN]
-			-- Steps data
-			--| True->value;False->call
-			--| When not is_replaying, Cursor is always `after'
-			--| When is_replaying, Cursor point to replayed position's step
-
 	replayed_position_is_first: BOOLEAN
 			-- Replayed position is first
 		require
@@ -773,7 +776,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			end
 		end
 
-	left_step: ARRAYED_LIST [RT_DBG_RECORD]
+	left_step: ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Record between current and previous step
 			--| also move replayed cursors
 		require
@@ -865,9 +868,7 @@ feature {NONE} -- Steps implementation
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (depth); dtrace (depth.out + " -> register_call_step @" + last_position.line.out + " %N")
 			end
-			steps.force (False)
-			steps.finish
-			steps.move (+1)
+			register_step (False)
 		ensure
 			steps_is_after: steps.after
 		end
@@ -880,9 +881,24 @@ feature {NONE} -- Steps implementation
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (depth); dtrace (depth.out + " -> register_value_step @" + last_position.line.out + " %N")
 			end
-			steps.force (True)
-			steps.finish
-			steps.move (+1)
+			register_step (True)
+		ensure
+			steps_is_after: steps.after
+		end
+
+	register_step (b: BOOLEAN)
+			-- Register a step
+			--| b=True : value step (assignment)
+			--| b=False: call step
+		require
+			not_is_flat: not is_flat
+		local
+			l_steps: like steps
+		do
+			l_steps := steps
+			l_steps.force (b)
+			l_steps.finish
+			l_steps.move (+1)
 		ensure
 			steps_is_after: steps.after
 		end

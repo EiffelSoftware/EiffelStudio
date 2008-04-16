@@ -234,7 +234,7 @@ feature -- Event
 --| We do not use it anymore, however, we might need to reuse it, with external calls
 --| need to check/test this. Since we don't have hands on what the external could do on the Eiffel objects
 --			r.record_fields
---			if {flds: LIST [RT_DBG_RECORD]} r.field_records and then not flds.is_empty then
+--			if {flds: LIST [RT_DBG_VALUE_RECORD]} r.field_records and then not flds.is_empty then
 --				increment_records_count (flds.count)
 --			end
 
@@ -406,10 +406,9 @@ feature -- Event
 			top_call_stack_record_not_void: top_callstack_record /= Void
 			valid_xpm_value: valid_xpm_value (a_xpm)
 		do
-
 			if {t: like top_callstack_record} top_callstack_record then
 				check same_associated_depth: a_dep = t.depth end
-				if {l_record: RT_DBG_RECORD} object_attribute_record (a_offset, a_type, ref) then
+				if {l_record: RT_DBG_VALUE_RECORD} object_attribute_record (a_offset, a_type, ref) then
 					debug ("RT_DBG_RECORD")
 						print ("Att Assign=> " + l_record.debug_output + "%N")
 					end
@@ -432,11 +431,13 @@ feature -- Event
 			valid_xpm_value: valid_xpm_value (a_xpm)
 		do
 			if {t: like top_callstack_record} top_callstack_record then
-				if a_dep /= t.depth then
-					print ("Loc Assign: dep=" + a_dep.out + "; pos=" + a_position.out + " -> depth mismatch %N")
+				debug ("RT_DBG_WARNING")
+					if a_dep /= t.depth and t.depth /= 0 then
+						print ("Loc Assign: dep=" + a_dep.out + "; pos=" + a_position.out + " -> depth mismatch %N")
+					end
 				end
 				check same_associated_depth: a_dep = t.depth end
-				if {l_record: RT_DBG_RECORD} object_local_record (a_dep, a_position, a_type) then
+				if {l_record: RT_DBG_VALUE_RECORD} object_local_record (a_dep, a_position, a_type) then
 					debug ("RT_DBG_RECORD")
 						print ("Loc Assign=> " + l_record.debug_output + "%N")
 					end
@@ -688,7 +689,7 @@ feature -- Replay operation
 	replayed_call: ?RT_DBG_CALL_RECORD
 			-- Current replayed call stack record
 
-	replay_stack: ?LINKED_LIST [TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]]]
+	replay_stack: ?LINKED_LIST [TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]]
 			-- Replay operation stacks.
 			-- useful to "revert" the replay steps.
 
@@ -698,8 +699,8 @@ feature -- Replay operation
 			is_replaying: is_replaying
 		local
 			n, r, p: like replayed_call
-			l_records: ?LIST [RT_DBG_RECORD]
-			chgs: ?ARRAYED_LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]
+			l_records: ?LIST [RT_DBG_VALUE_RECORD]
+			chgs: ?ARRAYED_LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("replay_back -start- %N")
@@ -720,7 +721,7 @@ feature -- Replay operation
 				l_records := changes_between (r, n, False)
 			end
 			if not last_replay_operation_failed then
-				if {ot_records: LIST [RT_DBG_RECORD]} l_records then
+				if {ot_records: LIST [RT_DBG_VALUE_RECORD]} l_records then
 					create chgs.make (ot_records.count)
 					from
 						ot_records.finish
@@ -730,8 +731,8 @@ feature -- Replay operation
 						debug ("RT_DBG_REPLAY")
 							print ("replay_back -> " + ot_records.item_for_iteration.debug_output + " %N")
 						end
-						if {ot_rec: RT_DBG_RECORD} ot_records.item_for_iteration then
-							if {val: RT_DBG_RECORD} ot_rec.current_value_record then
+						if {ot_rec: RT_DBG_VALUE_RECORD} ot_records.item_for_iteration then
+							if {val: RT_DBG_VALUE_RECORD} ot_rec.current_value_record then
 								chgs.force ([ot_rec, val])
 								ot_rec.restore (val)
 							else
@@ -755,7 +756,7 @@ feature -- Replay operation
 			is_replaying: is_replaying
 		local
 			n, r: like replayed_call
-			chgs: ?ARRAYED_LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]
+			chgs: ?ARRAYED_LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]
 			r_pos_line: INTEGER
 			done: BOOLEAN
 		do
@@ -773,7 +774,7 @@ feature -- Replay operation
 			until
 				done
 			loop
-				if {ot_records: LIST [RT_DBG_RECORD]} r.left_step then
+				if {ot_records: LIST [RT_DBG_VALUE_RECORD]} r.left_step then
 					last_replay_operation_failed := False
 					if replay_stack = Void then
 						create replay_stack.make
@@ -789,8 +790,8 @@ feature -- Replay operation
 						debug ("RT_DBG_REPLAY")
 							print ("replay_left -> " + ot_records.item_for_iteration.debug_output + " %N")
 						end
-						if {ot_rec: RT_DBG_RECORD} ot_records.item_for_iteration then
-							if {val: RT_DBG_RECORD} ot_rec.current_value_record then
+						if {ot_rec: RT_DBG_VALUE_RECORD} ot_records.item_for_iteration then
+							if {val: RT_DBG_VALUE_RECORD} ot_rec.current_value_record then
 								chgs.force ([ot_rec, val])
 								ot_rec.restore (val)
 							else
@@ -837,7 +838,7 @@ feature -- Replay operation
 			replay_stack_not_empty: replay_stack /= Void and then not replay_stack.is_empty
 		local
 			r,n: like replayed_call
-			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]]
+			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
 			done: BOOLEAN
 		do
 			debug ("RT_DBG_REPLAY")
@@ -862,7 +863,7 @@ feature -- Replay operation
 
 						--| Replay
 					n := t.call_record
-					if {ot_chgs: LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]} t.chgs then
+					if {ot_chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]} t.chgs then
 						from
 							ot_chgs.finish
 						until
@@ -871,7 +872,7 @@ feature -- Replay operation
 							debug ("RT_DBG_REPLAY")
 								print ("replay_forth -> " + ot_chgs.item_for_iteration.record.debug_output + " %N")
 							end
-							if {ch: TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]} ot_chgs.item_for_iteration then
+							if {ch: TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]} ot_chgs.item_for_iteration then
 								ch.record.revert (ch.backup)
 							end
 							ot_chgs.back
@@ -904,7 +905,7 @@ feature -- Replay operation
 			replay_stack_not_empty: replay_stack /= Void and then not replay_stack.is_empty
 		local
 			r,n: like replayed_call
-			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]]
+			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
 			r_pos_line: INTEGER
 			done: BOOLEAN
 		do
@@ -932,7 +933,7 @@ feature -- Replay operation
 
 						--| Replay
 
-					if {ot_chgs: LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]} t.chgs then
+					if {ot_chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]} t.chgs then
 						from
 							ot_chgs.finish
 						until
@@ -941,7 +942,7 @@ feature -- Replay operation
 							debug ("RT_DBG_REPLAY")
 								print ("replay_right -> " + ot_chgs.index.out + ") " + ot_chgs.item_for_iteration.record.debug_output + " %N")
 							end
-							if {ch: TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]} ot_chgs.item_for_iteration then
+							if {ch: TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]} ot_chgs.item_for_iteration then
 								ch.record.revert (ch.backup)
 							end
 							ot_chgs.back
@@ -980,7 +981,7 @@ feature -- Replay operation
 			is_replaying: is_replaying
 		local
 			r,n: like replayed_call
-			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]]
+			t: TUPLE [call_record: like callstack_record; chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]]
 		do
 			debug ("RT_DBG_REPLAY")
 				print ("revert_replay_stack -start-%N")
@@ -998,7 +999,7 @@ feature -- Replay operation
 
 						--| Replay
 					n := t.call_record
-					if {ot_chgs: LIST [TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]]} t.chgs then
+					if {ot_chgs: LIST [TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]]} t.chgs then
 						from
 							ot_chgs.finish
 						until
@@ -1007,7 +1008,7 @@ feature -- Replay operation
 							debug ("RT_DBG_REPLAY")
 								print ("revert_replay_stack -> " + ot_chgs.item_for_iteration.record.debug_output + " %N")
 							end
-							if {ch: TUPLE [record: !RT_DBG_RECORD; backup: !RT_DBG_RECORD]} ot_chgs.item_for_iteration then
+							if {ch: TUPLE [record: !RT_DBG_VALUE_RECORD; backup: !RT_DBG_VALUE_RECORD]} ot_chgs.item_for_iteration then
 								ch.record.revert (ch.backup)
 							end
 							ot_chgs.back

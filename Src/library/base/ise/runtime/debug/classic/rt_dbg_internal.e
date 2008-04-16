@@ -24,7 +24,7 @@ feature -- Object access
 			Result := field_count (obj)
 		end
 
-	frozen object_records (obj: !ANY): ?ARRAYED_LIST [RT_DBG_RECORD] is
+	frozen object_records (obj: !ANY): ?ARRAYED_LIST [RT_DBG_VALUE_RECORD] is
 			-- List of field records on `obj'
 		local
 			i, cnb: INTEGER
@@ -137,50 +137,11 @@ feature -- Object access
 			-- (directly or through a reference)
 		require
 			index_large_enough: pos >= 1
-		local
-			t: INTEGER
 		do
-			if a_rt_type > 0 then
-				t := eif_type (a_rt_type)
-				debug ("RT_DBG_INTERNAL")
-					print ("%Nstack_value_at (" + dep.out + ", " + pos.out + ", 0x" + a_rt_type.to_hex_string + "->" + t.out + ")%N")
-				end
-				inspect t
-				when boolean_type then
-					Result := c_boolean_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when character_8_type then
-					Result := c_character_8_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when character_32_type then
-					Result := c_character_32_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when natural_8_type then
-					Result := c_natural_8_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when natural_16_type then
-					Result := c_natural_16_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when natural_32_type then
-					Result := c_natural_32_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when natural_64_type then
-					Result := c_natural_64_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when integer_8_type then
-					Result := c_integer_8_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when integer_16_type then
-					Result := c_integer_16_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when integer_32_type then
-					Result := c_integer_32_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when integer_64_type then
-					Result := c_integer_64_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when real_32_type then
-					Result := c_real_32_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when real_64_type then
-					Result := c_real_64_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when pointer_type then
-					Result := c_pointer_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				when reference_type then
-					Result := c_stack_value_at (dep, a_loc_type, pos, a_rt_type)
-				else
-				end
-			else
-				Result := c_stack_value_at (dep, a_loc_type, pos, a_rt_type)
+			debug ("RT_DBG_INTERNAL")
+				print ("%Nstack_value_at (" + dep.out + ", " + pos.out + ", 0x" + a_rt_type.to_hex_string + ")%N")
 			end
+			Result := c_stack_value_at (dep, a_loc_type, pos, a_rt_type)
 			debug ("RT_DBG_INTERNAL")
 				print ("stack_value_at -> ")
 				if Result /= Void then
@@ -241,7 +202,7 @@ feature -- Object access
 
 feature {NONE} -- Factory
 
-	frozen object_record (i: INTEGER; obj: !ANY): ?RT_DBG_RECORD is
+	frozen object_record (i: INTEGER; obj: !ANY): ?RT_DBG_VALUE_RECORD is
 		local
 			ft: INTEGER
 		do
@@ -286,7 +247,7 @@ feature {NONE} -- Factory
 			end
 		end
 
-	frozen object_attribute_record (off: INTEGER; t: NATURAL_32; obj: !ANY): ?RT_DBG_RECORD is
+	frozen object_attribute_record (off: INTEGER; t: NATURAL_32; obj: !ANY): ?RT_DBG_VALUE_RECORD is
 			-- Record for attribute of type `t' at offset `o' on object `obj'
 		local
 			ft: INTEGER
@@ -331,21 +292,19 @@ feature {NONE} -- Factory
 			end
 		end
 
-	frozen object_local_record (dep: INTEGER; pos: INTEGER; t: NATURAL_32): ?RT_DBG_RECORD is
+	frozen object_local_record (dep: INTEGER; pos: INTEGER; t: NATURAL_32): ?RT_DBG_VALUE_RECORD is
 			-- Local or Result value record.
 		local
 			ft: INTEGER
 		do
 			ft := eif_type (t)
 			inspect ft
-			when Integer_8_type then
-				create {RT_DBG_LOCAL_RECORD [INTEGER_8]} Result.make (dep, pos, ft, t)
-			when Integer_16_type then
-				create {RT_DBG_LOCAL_RECORD [INTEGER_16]} Result.make (dep, pos, ft, t)
-			when integer_32_type then
-				create {RT_DBG_LOCAL_RECORD [INTEGER_32]} Result.make (dep, pos, ft, t)
-			when Integer_64_type then
-				create {RT_DBG_LOCAL_RECORD [INTEGER_64]} Result.make (dep, pos, ft, t)
+			when Boolean_type then
+				create {RT_DBG_LOCAL_RECORD [BOOLEAN]} Result.make (dep, pos, ft, t)
+			when character_8_type then
+				create {RT_DBG_LOCAL_RECORD [CHARACTER_8]} Result.make (dep, pos, ft, t)
+			when character_32_type then
+				create {RT_DBG_LOCAL_RECORD [CHARACTER_32]} Result.make (dep, pos, ft, t)
 			when natural_8_type then
 				create {RT_DBG_LOCAL_RECORD [NATURAL_8]} Result.make (dep, pos, ft, t)
 			when natural_16_type then
@@ -354,24 +313,26 @@ feature {NONE} -- Factory
 				create {RT_DBG_LOCAL_RECORD [NATURAL_32]} Result.make (dep, pos, ft, t)
 			when natural_64_type then
 				create {RT_DBG_LOCAL_RECORD [NATURAL_64]} Result.make (dep, pos, ft, t)
+			when Integer_8_type then
+				create {RT_DBG_LOCAL_RECORD [INTEGER_8]} Result.make (dep, pos, ft, t)
+			when Integer_16_type then
+				create {RT_DBG_LOCAL_RECORD [INTEGER_16]} Result.make (dep, pos, ft, t)
+			when integer_32_type then
+				create {RT_DBG_LOCAL_RECORD [INTEGER_32]} Result.make (dep, pos, ft, t)
+			when Integer_64_type then
+				create {RT_DBG_LOCAL_RECORD [INTEGER_64]} Result.make (dep, pos, ft, t)
+			when real_32_type then
+				create {RT_DBG_LOCAL_RECORD [REAL_32]} Result.make (dep, pos, ft, t)
+			when real_64_type then
+				create {RT_DBG_LOCAL_RECORD [REAL_64]} Result.make (dep, pos, ft, t)
 			when Pointer_type then
 				create {RT_DBG_LOCAL_RECORD [POINTER]} Result.make (dep, pos, ft, t)
 			when Reference_type then
 				create {RT_DBG_LOCAL_RECORD [ANY]} Result.make (dep, pos, ft, t)
 			when Expanded_type then
 				create {RT_DBG_LOCAL_RECORD [ANY]} Result.make (dep, pos, ft, t)
-			when Boolean_type then
-				create {RT_DBG_LOCAL_RECORD [BOOLEAN]} Result.make (dep, pos, ft, t)
-			when real_32_type then
-				create {RT_DBG_LOCAL_RECORD [REAL_32]} Result.make (dep, pos, ft, t)
-			when real_64_type then
-				create {RT_DBG_LOCAL_RECORD [REAL_64]} Result.make (dep, pos, ft, t)
-			when character_8_type then
-				create {RT_DBG_LOCAL_RECORD [CHARACTER_8]} Result.make (dep, pos, ft, t)
-			when character_32_type then
-				create {RT_DBG_LOCAL_RECORD [CHARACTER_32]} Result.make (dep, pos, ft, t)
---			when Bit_type then
---			when none_type then
+			when Bit_type then
+			when none_type then
 			else
 			end
 			if Result /= Void then
@@ -713,174 +674,6 @@ end
 		end
 
 feature -- Access local
-
-	frozen c_boolean_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): BOOLEAN is
-			-- BOOLEAN value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_BOOLEAN *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_character_8_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): CHARACTER_8 is
-			-- CHARACTER_8 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_CHARACTER *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_character_32_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): CHARACTER_32 is
-			-- CHARACTER_32 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_WIDE_CHAR *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_natural_8_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): NATURAL_8 is
-			-- NATURAL_8 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_NATURAL_8 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_natural_16_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): NATURAL_16 is
-			-- NATURAL_16 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_NATURAL_16 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_natural_32_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): NATURAL_32 is
-			-- NATURAL_32 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_NATURAL_32 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_natural_64_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): NATURAL_64 is
-			-- NATURAL_64 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_NATURAL_64 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_integer_8_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): INTEGER_8 is
-			-- INTEGER_8 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_INTEGER_8 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_integer_16_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): INTEGER_16 is
-			-- INTEGER_16 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_INTEGER_16 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_integer_32_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): INTEGER_32 is
-			-- INTEGER_32 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_INTEGER_32 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_integer_64_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): INTEGER_64 is
-			-- INTEGER_64 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_INTEGER_64 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_real_32_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): REAL_32 is
-			-- REAL_32 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_REAL_32 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_real_64_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): REAL_64 is
-			-- REAL_64 value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_REAL_64 *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
-
-	frozen c_pointer_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): POINTER is
-			-- POINTER value referenced at offset `off' on `object'
-		external
-			"C inline use %"eif_debug.h%""
-		alias
-			"[
-			#ifdef WORKBENCH
-				return *(EIF_POINTER *) rt_dbg_stack_value((uint32)$dep, (uint32)$a_loc_type, (uint32)$pos, (uint32)$a_rt_type);
-			#endif
-			]"
-		end
 
 	frozen c_stack_value_at (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_rt_type: NATURAL_32): ANY is
 			-- Object value referenced at `off' offset of `object'

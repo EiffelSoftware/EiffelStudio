@@ -1,6 +1,6 @@
 indexing
 	description: "[
-
+		A contract source interface for retrieving information on contracts.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

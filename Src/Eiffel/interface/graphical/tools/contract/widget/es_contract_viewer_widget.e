@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		A custom widget for viewing the contracts and comments of a particular feature.
+		A widget for viewing the contracts and comments of a particular feature.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";

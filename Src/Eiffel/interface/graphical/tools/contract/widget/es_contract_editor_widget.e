@@ -383,15 +383,66 @@ feature {NONE} -- Basic operations
 
 feature -- Modification
 
-	add_contract (a_tag: !STRING; a_contract: !STRING; a_source: !ES_CONTRACT_SOURCE_I)
-			-- Adds a contract
+	add_contract (a_tag: !STRING_32; a_contract: !STRING_32; a_source: !ES_CONTRACT_SOURCE_I)
+			-- Adds a contract using a seperate tag name and contract.
+			--
+			-- `a_tag': The contract tag name.
+			-- `a_contract': The actual contract code.
+			-- `a_source': The editable source to add the contract after
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			has_context: has_context
-			not_a_tag_is_empty: not a_tag.is_empty
-			a_source_is_editable: a_source.is_editable
+			not_a_contract_is_empty: not a_contract.is_empty
+			a_source_is_editable: a_source.source.is_editable
+		local
+			l_line: ES_CONTRACT_LINE
 		do
+			if a_tag.is_empty then
+				create l_line.make_without_tag (a_contract, a_source)
+			else
+				create l_line.make (a_tag, a_contract, a_source)
+			end
+			add_contract_string (l_line.string, a_source)
+		end
+
+	add_contract_string (a_contract: !STRING_32; a_source: !ES_CONTRACT_SOURCE_I)
+			-- Adds a contract using a contract string, containing both a tag name and contract as if it was extracted directly
+			-- from the editor.
+			--
+			-- `a_tag': The contract tag name.
+			-- `a_contract': The actual contract code.
+			-- `a_source': The editable source to add the contract after
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+			has_context: has_context
+			not_a_contract_is_empty: not a_contract.is_empty
+			a_source_is_editable: a_source.source.is_editable
+		local
+			l_new_row: !EV_GRID_ROW
+			l_selected: BOOLEAN
+			i: INTEGER
+		do
+			if {l_row: EV_GRID_ROW} find_row (a_source) then
+				l_selected := l_row.is_selected
+				if l_row.parent_row = Void then
+					if l_row.subrow_count = 0 or else not context_contracts.is_empty then
+						l_row.insert_subrow (1)
+					else
+						-- There is a place holder, just reuse it.
+					end
+					l_new_row ?= l_row.subrow (1)
+				else
+					i := l_row.index - l_row.parent_row.index + 1
+					l_row.parent_row.insert_subrow (i)
+					l_new_row ?= l_row.parent_row.subrow (i)
+				end
+				populate_editable_contract_row (a_contract, a_source, l_new_row)
+				if l_selected then
+					l_new_row.enable_select
+				end
+			end
 			internal_context_contracts := Void
 		end
 
@@ -458,7 +509,7 @@ feature -- Modification
 			internal_context_contracts := Void
 		end
 
-	replace_contract (a_tag: !STRING; a_contract: !STRING; a_line: !ES_CONTRACT_LINE)
+	replace_contract (a_tag: !STRING_32; a_contract: !STRING_32; a_line: !ES_CONTRACT_LINE)
 			-- Replaces an existing contract.
 			-- Note: `a_line' will probably be invalid after replacing the contract. There is no guarentee of it remaining the same.
 			--
@@ -517,8 +568,15 @@ feature -- Modification
 				edit_contract_grid.row_select_actions.block
 				l_selected := l_row.is_selected
 				l_other_selected := l_other_row.is_selected
+
+					-- Populate row and re-set data
 				populate_editable_contract_row (a_other_line.string, a_other_line.source, l_row)
+				l_row.set_data (a_other_line)
+
+					-- Populate row and re-set data
 				populate_editable_contract_row (a_line.string, a_line.source, l_other_row)
+				l_row.set_data (a_line)
+
 				internal_context_contracts := Void
 				edit_contract_grid.row_select_actions.resume
 				if l_selected then
@@ -716,7 +774,7 @@ feature {NONE} -- Population
 						l_row.set_item (contract_column, l_item)
 
 							-- Set contract line data
-						create l_contract_line.make_from_string (l_tagged_text, l_contract_source)
+						create l_contract_line.make_from_string (({!STRING_32}) #? l_tagged_text.as_string_32, l_contract_source)
 						l_row.set_data (l_contract_line)
 
 						if not l_editable then
@@ -884,7 +942,7 @@ feature {NONE} -- Population
 			end
 		end
 
-	populate_editable_contract_row (a_contract: !STRING; a_source: !ES_CONTRACT_SOURCE_I; a_row: !EV_GRID_ROW)
+	populate_editable_contract_row (a_contract: !STRING_32; a_source: !ES_CONTRACT_SOURCE_I; a_row: !EV_GRID_ROW)
 			-- Populates a inherited read-only grid row for a given class.
 			--
 			-- `a_class': Current class where the context feature resides.
@@ -903,7 +961,7 @@ feature {NONE} -- Population
 			l_selected: BOOLEAN
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_scanner: !like token_scanner
-			l_editable_lines: LIST [STRING]
+			l_editable_lines: LIST [STRING_32]
 			l_editor_tokens: LINKED_LIST [EDITOR_TOKEN]
 			l_line: EIFFEL_EDITOR_LINE
 			l_contract_line: !ES_CONTRACT_LINE
@@ -958,7 +1016,7 @@ feature {NONE} -- Population
 			a_row_selected: old a_row.is_selected implies a_row.is_selected
 		end
 
-	populate_clickable_contract_row (a_contract: !STRING; a_row: !EV_GRID_ROW)
+	populate_clickable_contract_row (a_contract: !STRING_32; a_row: !EV_GRID_ROW)
 			-- Populates a inherited read-only grid row for a given class.
 			--
 			-- `a_class': Current class where the context feature resides.

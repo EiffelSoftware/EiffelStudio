@@ -263,7 +263,7 @@ feature {NONE} -- Access
 			-- Access to top-level parent window
 		require
 			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
+			is_initialized: internal_development_window /= Void or else (is_initialized or is_initializing)
 		local
 			l_window: EV_WINDOW
 			l_windows: BILINEAR [EB_WINDOW]

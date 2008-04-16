@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			create l_code_result_view
 			l_code_result_view.current_class.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
 			l_code_result_view.disable_line_numbers
-			l_code_result_view.widget.set_minimum_size (300, 100)
+			l_code_result_view.widget.set_minimum_size (400, 100)
 			l_code_result_view.widget.set_border_width (1)
 			l_code_result_view.widget.set_background_color (colors.stock_colors.color_3d_shadow)
 			a_container.extend (l_code_result_view.widget)
@@ -122,7 +122,11 @@ feature {NONE} -- Initialization
 			l_label: EV_LABEL
 			l_edit: !EV_TEXT_FIELD
 			l_text: STRING_32
+			l_vbox: EV_VERTICAL_BOX
 		do
+			create l_vbox
+			l_vbox.set_padding ({ES_UI_CONSTANTS}.label_vertical_padding)
+
 				-- Create description
 			create l_label
 			l_label.align_text_left
@@ -140,8 +144,8 @@ feature {NONE} -- Initialization
 			l_text.append (":")
 			l_label.set_text (l_text)
 
-			a_container.extend (l_label)
-			a_container.disable_item_expand (l_label)
+			l_vbox.extend (l_label)
+			l_vbox.disable_item_expand (l_label)
 
 				-- Create field
 			l_text := a_declaration.default_value
@@ -149,13 +153,17 @@ feature {NONE} -- Initialization
 					-- Use ID as the default value.
 				l_text := a_declaration.id
 			end
-			l_edit := create_declaratoion_text_widget (a_declaration)
+			l_edit := create_declaration_text_widget (a_declaration)
 			l_edit.set_text (l_text)
+			l_edit.set_font (preferences.editor_data.editor_font_preference.value)
 			register_action (l_edit.change_actions, agent on_text_changed (l_edit, a_declaration.id))
 			register_action (l_edit.focus_in_actions, agent on_text_focused (l_edit, a_declaration.id))
 			suppress_confirmation_key_close (l_edit)
-			a_container.extend (l_edit)
-			a_container.disable_item_expand (l_edit)
+			l_vbox.extend (l_edit)
+			l_vbox.disable_item_expand (l_edit)
+
+			a_container.extend (l_vbox)
+			a_container.disable_item_expand (l_vbox)
 
 			declaration_text_fields.force_last (l_edit, a_declaration.id)
 		ensure
@@ -201,7 +209,7 @@ feature {NONE} -- Access
 			result_consistent: Result = code_symbol_table
 		end
 
-feature {NONE} -- Dialog access
+feature -- Dialog access
 
 	icon: !EV_PIXEL_BUFFER
 			-- <Precursor>
@@ -268,6 +276,7 @@ feature {NONE} -- Helpers
 		do
 			if internal_template_renderer = Void then
 				Result := create_template_renderer
+				auto_recycle (Result)
 				internal_template_renderer := Result
 			else
 				Result ?= internal_template_renderer
@@ -402,7 +411,7 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-	create_declaratoion_text_widget (a_declaration: !CODE_DECLARATION): !EV_TEXT_FIELD
+	create_declaration_text_widget (a_declaration: !CODE_DECLARATION): !EV_TEXT_FIELD
 			-- Create a new text widget for a given code declaration
 		require
 			is_interface_usable: is_interface_usable

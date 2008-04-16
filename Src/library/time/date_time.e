@@ -19,7 +19,7 @@ class DATE_TIME inherit
 		undefine
 			is_equal, fractional_second
 		redefine
-			date, 
+			date,
 			time,
 			copy,
 			out
@@ -29,8 +29,15 @@ class DATE_TIME inherit
 		rename
 			set_date as set_compact_date
 		undefine
-			copy, is_equal, out, year, month, day, hour, minute, second, 
+			copy, is_equal, out, year, month, day, hour, minute, second,
 			fine_second
+		end
+
+	DEBUG_OUTPUT
+		export
+			{NONE} all
+		undefine
+			is_equal, copy, out
 		end
 
 create
@@ -45,14 +52,14 @@ create
 	make_from_string_with_base,
 	make_from_string_default,
 	make_from_string_default_with_base
-	
 
-feature -- Initialization 
+
+feature -- Initialization
 
 	make (y, mo, d, h, mi, s: INTEGER) is
 			-- Set `year', `month' `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `mi', `s'.
-		require 
+		require
 			correct_date_time: is_correct_date_time (y, mo, d, h, mi, s, False)
 		do
 			create date.make (y, mo, d)
@@ -65,7 +72,7 @@ feature -- Initialization
 			minute_set: minute = mi
 			second_set: second = s
 		end
- 
+
 	make_fine (y, mo, d, h, mi: INTEGER; s: DOUBLE) is
 			-- Set `year', `month' `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `m', `s'.
@@ -85,36 +92,36 @@ feature -- Initialization
 
 	make_by_date_time (d: DATE; t: TIME) is
 			-- Set `date' to `d' and `time' to `t'
-		require 
-			d_exists: d /= Void; 
-			t_exists: t /= Void 
-		do 
-			date := d; 
-			time := t 
-		ensure 
-			date_set: date = d; 
-			time_set: time = t 
-		end; 
- 
+		require
+			d_exists: d /= Void;
+			t_exists: t /= Void
+		do
+			date := d;
+			time := t
+		ensure
+			date_set: date = d;
+			time_set: time = t
+		end;
+
 	make_by_date (d: DATE) is
 			-- Set `date' to `d' and `time' to origin of time.
-		require 
-			d_exists: d /= Void; 
-		do 
+		require
+			d_exists: d /= Void;
+		do
 			date := d
-			create time.make (0, 0, 0); 
-		ensure 
-			date_set: date = d; 
-			time_set: time.is_equal (time.origin) 
-		end; 
- 
+			create time.make (0, 0, 0);
+		ensure
+			date_set: date = d;
+			time_set: time.is_equal (time.origin)
+		end;
+
 	make_now is
 			-- Get the date and the time from the system.
 		local
 			l_date: C_DATE
-		do 
+		do
 			create l_date
-			create date.make (l_date.year_now, l_date.month_now, l_date.day_now) 
+			create date.make (l_date.year_now, l_date.month_now, l_date.day_now)
 			create time.make_fine (l_date.hour_now, l_date.minute_now,
 				l_date.second_now + l_date.millisecond_now / 1000)
 		end
@@ -123,9 +130,9 @@ feature -- Initialization
 			-- Get the date and the time from the system.
 		local
 			l_date: C_DATE
-		do 
+		do
 			create l_date.make_utc
-			create date.make (l_date.year_now, l_date.month_now, l_date.day_now) 
+			create date.make (l_date.year_now, l_date.month_now, l_date.day_now)
 			create time.make_fine (l_date.hour_now, l_date.minute_now,
 				l_date.second_now + l_date.millisecond_now / 1000)
 		end
@@ -148,7 +155,7 @@ feature -- Initialization
 		require
 			s_exists: s /= Void
 			base_valid: base > 0 and (base \\ 100 = 0)
-			date_time_valid: 
+			date_time_valid:
 					date_time_valid_with_base (s, default_format_string, base)
 		do
 			make_from_string_with_base (s, default_format_string, base)
@@ -191,12 +198,12 @@ feature -- Initialization
 		end
 
 feature -- Access
-			
+
 	date: DATE
 			-- Date of the current object
- 
+
 	time: TIME
-			-- Time of the current object 
+			-- Time of the current object
 
 	origin: DATE_TIME is
 			-- Origin date with origin time
@@ -221,7 +228,7 @@ feature -- Access
 		do
 			Result := time.duration
 		end
-	
+
 	seconds: INTEGER is
 			-- Number of seconds elapsed from midnight of the current date
 		do
@@ -244,36 +251,36 @@ feature -- Comparison
 			Result := equal (date, other.date) and then equal (time, other.time)
 		end
 
-feature -- Measurement 
- 
-	duration: DATE_TIME_DURATION is 
-			-- Definite duration elapsed from `origin' 
+feature -- Measurement
+
+	duration: DATE_TIME_DURATION is
+			-- Definite duration elapsed from `origin'
 		do
 			create Result.make_by_date_time (date_duration, time_duration)
 		ensure then
-			definite_result: Result.definite 
-		end 
+			definite_result: Result.definite
+		end
 
 feature -- Element Change
 
-	set_date (d: DATE) is 
+	set_date (d: DATE) is
 			-- Set `date' to `d'.
-		require 
+		require
 			d_exists: d /= Void
-		do 
+		do
 			date := d
-		ensure 
+		ensure
 			date_set: date = d
 		end
- 
-	set_time (t: TIME) is 
-			-- Set `time' to `t'. 
-		require 
+
+	set_time (t: TIME) is
+			-- Set `time' to `t'.
+		require
 			t_exists: t /= Void
-		do 
+		do
 			time := t
-		ensure 
-			time_set: time = t 
+		ensure
+			time_set: time = t
 		end
 
 	copy (other: like Current) is
@@ -294,7 +301,7 @@ feature -- Basic operations
 		ensure
 			result_exists: Result /= Void
 		end
-	
+
 	add (dtd: DATE_TIME_DURATION) is
 			-- Adds `dtd' to current duration
 		do
@@ -307,12 +314,12 @@ feature -- Basic operations
 			day_add ((dtd.time + time_duration).to_days)
 			time := time.origin + (dtd.time + time_duration).time_modulo_day
 		end
-	
+
 	relative_duration (other: like Current): DATE_TIME_DURATION is
 			-- Duration from `other' to current date
 		do
 			create Result.make_fine (0, 0, days - other.days,
-				hour - other.hour, minute - other.minute, 
+				hour - other.hour, minute - other.minute,
 				fine_second - other.fine_second)
 			Result := Result.to_canonical (other)
 			Result.set_origin_date_time (other.twin)
@@ -320,18 +327,18 @@ feature -- Basic operations
 			origin_set: equal (other, Result.origin_date_time)
 		end
 
-	definite_duration (other: like Current): DATE_TIME_DURATION is 
+	definite_duration (other: like Current): DATE_TIME_DURATION is
 			-- Duration from `other' to the current date, converted to a
 			-- definite duration
 		require
 			other_exists: other /= Void
-		do 
+		do
 			Result := relative_duration (other)
 			Result.date.to_definite (other.date)
 		ensure
 			definite_result: Result.definite
-		end; 
- 
+		end;
+
 	day_add (d: INTEGER) is
 			-- Add `d' days to the current date.
 		do
@@ -390,7 +397,7 @@ feature -- Basic operations
 		do
 			total_second := time.fine_second + s
 			if (total_second < 0 or else total_second >= Seconds_in_minute) then
-				time.set_fine_second (total_second - div (total_second.floor, 
+				time.set_fine_second (total_second - div (total_second.floor,
 					Seconds_in_minute) * Seconds_in_minute)
 				minute_add (div (total_second.floor, Seconds_in_minute))
 			else
@@ -400,7 +407,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	out: STRING is
+	debug_output, out: STRING is
 			-- Printable representation of the current object
 			-- With "standard" form: `default_format_string'
 		do

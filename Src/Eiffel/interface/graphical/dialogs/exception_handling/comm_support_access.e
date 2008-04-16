@@ -148,6 +148,7 @@ feature -- HTML query
 feature {NONE} -- HTML query
 
 	find_expression (a_pattern: STRING_GENERAL; a_source: STRING_GENERAL): STRING_GENERAL
+			-- Use Gobo regular expression to find `a_pattern' in `a_source'
 		require
 			a_pattern_attached: a_pattern /= Void
 			not_a_pattern_is_empty: not a_pattern.is_empty

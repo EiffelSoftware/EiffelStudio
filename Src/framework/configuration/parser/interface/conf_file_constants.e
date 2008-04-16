@@ -40,16 +40,25 @@ feature {NONE} -- Constants
 			Result := namespace_1_3_0 +" http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd"
 		end
 
+	namespace_1_4_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-4-0"
+			-- Namespace of the 6.2 release
+
+	schema_1_4_0: STRING is
+			-- Schema of the 6.2 release
+		once
+			Result := namespace_1_4_0 +" http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd"
+		end
+
 	Latest_namespace: STRING is
 			-- Latest configuration namespace
 		once
-			Result := namespace_1_3_0
+			Result := namespace_1_4_0
 		end
 
 	Latest_schema: STRING is
 			-- Latest schema location
 		once
-			Result := schema_1_3_0
+			Result := schema_1_4_0
 		end
 
 indexing

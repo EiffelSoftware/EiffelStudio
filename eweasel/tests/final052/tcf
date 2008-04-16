@@ -1,0 +1,25 @@
+test_name	wrong-polymorphic-wrapper-2
+test_description When you implement a routine involving either formal generics or references with a routine only involving basic types there are some missing generic wrappers for the polymorphic calls.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+copy_raw	 test1.e $CLUSTER test1.e
+copy_raw	 test2.e $CLUSTER test2.e
+copy_raw	 test3.e $CLUSTER test3.e
+copy_raw	 test4.e $CLUSTER test4.e
+copy_raw	 test5.e $CLUSTER test5.e
+copy_raw	 test6.e $CLUSTER test6.e
+copy_raw	 test7.e $CLUSTER test7.e
+copy_raw	 test8.e $CLUSTER test8.e
+
+compile_final
+compile_result 	ok
+	
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

@@ -27,8 +27,15 @@ class DATE inherit
 			is_equal, out
 		end
 
+	DEBUG_OUTPUT
+		export
+			{NONE} all
+		undefine
+			is_equal, out
+		end
+
 create
- 
+
 	make,
 	make_month_day_year,
 	make_day_month_year,
@@ -140,7 +147,7 @@ feature -- Initialization
 		require
 			s_exists: s /= Void
 			base_valid: base > 0 and (base \\ 100 = 0)
-			date_valid: 
+			date_valid:
 				date_valid_with_base (s, Date_default_format_string, base)
 		do
 			make_from_string_with_base (s, Date_default_format_string, base)
@@ -236,7 +243,7 @@ feature -- Measurement
 	duration: DATE_DURATION is
 			-- Definite duration elapsed since `origin'
 		do
-			create Result.make_by_days (days_from (origin.year) + year_day - 
+			create Result.make_by_days (days_from (origin.year) + year_day -
 				origin.year_day)
 		ensure then
 			definite_result: Result.definite
@@ -262,19 +269,22 @@ feature -- Status report
 	days_at_month: INTEGER is
 			-- Number of days from the beginning of the year
 			-- until the beginning of the current month
+		local
+			l_month: INTEGER
 		do
-			Result := days_at_months @ month
-			if leap_year and then month > 2 then
+			l_month := month
+			Result := days_at_months @ l_month
+			if l_month > 2 and then leap_year then
 				Result := Result + 1
 			end
 		ensure
 			positive_result: Result >= 0
 		end
-		
+
 	year_day: INTEGER is
 			-- Number of days from the beginning of the year
 		do
-			Result := days_at_month + day 
+			Result := days_at_month + day
 		ensure
 			result_large_enough: Result >= 1
 			result_small_enough: Result <= days_in_year
@@ -289,7 +299,7 @@ feature -- Status report
 				if day_of_january_1st > 0 then
 					Result := div (year_day - day_of_the_week, days_in_week) + 1
 				else
-					Result := div (year_day - day_of_the_week + 
+					Result := div (year_day - day_of_the_week +
 						day_of_january_1st - 1, days_in_week)
 				end
 			else
@@ -297,7 +307,7 @@ feature -- Status report
 			end
 		ensure
 			positive_result: Result >= 0
-			Result_small_enough: Result < Max_weeks_in_year	
+			Result_small_enough: Result < Max_weeks_in_year
 		end
 
 	days_in_year: INTEGER is
@@ -309,7 +319,7 @@ feature -- Status report
 				Result := days_in_non_leap_year
 			end
 		ensure
-			valid_result: 
+			valid_result:
 				(leap_year implies Result = days_in_leap_year) and then
 					(not leap_year implies Result = days_in_non_leap_year)
 		end
@@ -329,18 +339,21 @@ feature -- Status report
 			january_1st: DATE
 		do
 			create january_1st.make (year, 1, 1)
-			Result := january_1st.day_of_the_week 
+			Result := january_1st.day_of_the_week
 		ensure
 			day_of_the_week_definition: Result > 0 and then Result < 8
 		end
 
 	days_from (y: INTEGER): INTEGER is
 			-- Days between the current year and year `y'
+		local
+			l_year: like year
 		do
-			Result := (year - y) * days_in_non_leap_year +
-				(div (year - 1, 4) - div (y - 1, 4)) -
-				(div (year - 1, 100) - div (y - 1, 100)) +
-				(div (year - 1, 400) - div (y - 1, 400))
+			l_year := year
+			Result := (l_year - y) * days_in_non_leap_year +
+				(div (l_year - 1, 4) - div (y - 1, 4)) -
+				(div (l_year - 1, 100) - div (y - 1, 100)) +
+				(div (l_year - 1, 400) - div (y - 1, 400))
 		end
 
 feature -- Conversion
@@ -361,7 +374,7 @@ feature -- Basic operations
 			Result.add (d)
 		ensure
 			result_exists: Result /= Void
-			definite_set: d.definite implies 
+			definite_set: d.definite implies
 					(Result - Current).duration.is_equal (d)
 		end
 
@@ -426,7 +439,7 @@ feature -- Basic operations
 
 	month_forth is
 			-- Move to next month.
-			-- Can move days backward if next month has less days than the 
+			-- Can move days backward if next month has less days than the
 			-- current month.
 		local
 			days_in_new_month: INTEGER
@@ -445,7 +458,7 @@ feature -- Basic operations
 
 	month_back is
 			-- Move to previous month.
-			-- Can move days backward if previous month has less days than the 
+			-- Can move days backward if previous month has less days than the
 			-- current month.
 		local
 			days_in_new_month: INTEGER
@@ -466,27 +479,37 @@ feature -- Basic operations
 			-- Add `m' months to the current date.
 			-- Can move days backward.
 		local
-			new_month: INTEGER
+			new_month, new_year: INTEGER
 			days_in_new_month: INTEGER
+			l_old_month, l_old_day: INTEGER
 		do
-			new_month := mod ((month + m - 1), Months_in_year) + 1
-			set_year (year + div ((month + m - 1), Months_in_year))
-			days_in_new_month := days_in_i_th_month (new_month, year)
-			if day > days_in_new_month then
-				set_day (days_in_new_month)
+			l_old_month := month
+			new_month := mod ((l_old_month + m - 1), Months_in_year) + 1
+			new_year := year + div ((l_old_month + m - 1), Months_in_year)
+			days_in_new_month := days_in_i_th_month (new_month, new_year)
+			l_old_day := day
+			if l_old_day > days_in_new_month then
+				set_date (new_year, new_month, days_in_new_month)
+			else
+				set_date (new_year, new_month, l_old_day)
 			end
-			set_month (new_month)
 		end
 
 	year_forth is
 			-- Move to next year.
 			-- May cut the 29th february.
+		local
+			l_year, l_month: INTEGER
+			l_days_in_month: INTEGER
 		do
-			if day > days_in_i_th_month (month, year + 1) then
-				set_day (days_in_i_th_month (month, year + 1))
-			end;	
-			set_year (year + 1)
-		
+			l_month := month
+			l_year := year
+			l_days_in_month := days_in_i_th_month (l_month, l_year + 1)
+			if day > l_days_in_month then
+				set_day (l_days_in_month)
+			end
+			set_year (l_year + 1)
+
 		ensure
 			year_increased: year = old year + 1
 		end
@@ -497,7 +520,7 @@ feature -- Basic operations
 		do
 			if day > days_in_i_th_month (month, year - 1) then
 				set_day (days_in_i_th_month (month, year - 1))
-			end;	
+			end;
 			set_year (year - 1)
 		ensure
 			year_decreased: year = old year - 1
@@ -509,7 +532,7 @@ feature -- Basic operations
 		do
 			if day > days_in_i_th_month (month, year + y) then
 				set_day (days_in_i_th_month (month, year + y))
-			end;	
+			end;
 			set_year (year + y)
 		ensure
 			year_set: year = old year + y
@@ -524,7 +547,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	out: STRING is
+	debug_output, out: STRING is
 			-- Printable representation of `Current' with "standard"
 			-- Form: `date_default_format_string'
 		do
@@ -545,15 +568,15 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	days_at_months: ARRAY [INTEGER] is
+	days_at_months: SPECIAL [INTEGER] is
 			-- Array containing number of days from the end of
 			-- the year to each month of a non-leap year
 		once
-			Result := <<0, 31, 59, 90, 120, 151, 181, 212, 243,
-				273, 304, 334>>
+			Result := (<<0, 0, 31, 59, 90, 120, 151, 181, 212, 243,
+				273, 304, 334>>).area
 		ensure
 			result_exists: Result /= Void
-			count_is_months_in_year: Result.count = Months_in_year
+			count_is_months_in_year: Result.count - 1 = Months_in_year
 		end
 
 invariant

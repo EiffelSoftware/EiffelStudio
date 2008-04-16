@@ -195,7 +195,7 @@ feature {NONE} -- Query
 				end
 			end
 		ensure
-			result_is_editable: Result /= Void implies Result.is_editable
+			result_is_editable: Result /= Void implies (not Result.is_read_only and then Result.allow_edition)
 		end
 
 	active_editors_for_class (a_class: !CLASS_I): !DS_ARRAYED_LIST [EB_SMART_EDITOR]
@@ -222,7 +222,15 @@ feature {NONE} -- Query
 						if l_editors /= Void and then not l_editors.is_empty then
 							from l_editors.start until l_editors.after loop
 								l_editor := l_editors.item_for_iteration
-								if l_editor /= Void and then l_editor.is_editable then
+									-- We don't use `l_editor.is_editable', because we simply load text in the editor later
+									-- `text_displayed.text_being_processed' is not a matter.
+									-- Doing this make it possible to use more than one modifier in single message loop.
+									-- Or `text_displayed.text_being_processed' is possible set with `True' by the first modifier
+									-- (text loading is pending on idle).
+									-- Hence the second modifier can not apply to current editor but the actual file.
+									-- `is_editable' should be used when we have done real text modificaton in the editor rather than
+									-- Simple reloading.
+								if l_editor /= Void and then not l_editor.is_read_only and then l_editor.allow_edition then
 									Result.force_last (l_editor)
 								end
 								l_editors.forth
@@ -234,7 +242,8 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_contains_attached_items: not Result.has (Void)
-			result_contains_editable_items: Result.for_all (agent {EB_SMART_EDITOR}.is_editable)
+			result_contains_editable_items: Result.for_all (agent (a_editor: EB_SMART_EDITOR): BOOLEAN
+															do Result := not a_editor.is_read_only and then a_editor.allow_edition end)
 		end
 
 feature {NONE} -- Helpers
@@ -304,7 +313,12 @@ feature -- Basic operations
 
 				from l_editors.start until l_editors.after loop
 					l_editor := l_editors.item_for_iteration
-					if l_editor.is_editable then
+						-- We don't use `l_editor.is_editable', because we simply load text in the editor later
+						-- `text_displayed.text_being_processed' is not a matter.
+						-- Doing this make it possible to use more than one modifiers in one procedure.
+						-- Or `text_displayed.text_being_processed' is possible set with `True' (text loading is pending on idle),
+						-- Hence the second modifier can not applied to current editor.
+					if not l_editor.is_read_only and then l_editor.allow_edition then
 						l_editor.no_save_before_next_load
 
 							-- Fetch position information.

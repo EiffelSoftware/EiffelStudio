@@ -333,6 +333,7 @@ feature -- Accelerator, focus label and menu name
 	m_auto_expressions: STRING_GENERAL is		do Result := locale.translation("Auto expressions")	end
 	m_auto_expression_context: STRING_GENERAL is		do Result := locale.translation("Auto expression")	end
 	t_auto_expressions: STRING_GENERAL is		do Result := locale.translation("Enable auto expressions ?%N(add contextual symbols automatically)")	end
+	t_auto_sweeping_the_system: STRING_GENERAL is		do Result := locale.translation ("Enable auto-sweeping the system for information?")	end
 	l_all_classes: STRING_GENERAL is			do Result := locale.translation("All Classes")	end
 	l_all_tags: STRING_GENERAL is				do Result := locale.translation ("All tags") end
 	l_affected_items: STRING_GENERAL is			do Result := locale.translation ("Affected items") end
@@ -668,6 +669,7 @@ feature -- Accelerator, focus label and menu name
 	m_restart_application: STRING_GENERAL is do Result := locale.translation ("Restart application") end
 	f_restart_application: STRING_GENERAL is do Result := locale.translation ("Restart application") end
 	t_setup_customized_formatter: STRING_GENERAL is do Result := locale.translation ("Setup Customized Formatters") end
+	t_sweeping_the_system_now: STRING_GENERAL is		do Result := locale.translation ("Sweep the system now.")	end
 	f_customize_formatter: STRING_GENERAL is do Result := locale.translation ("Customize formatters") end
 	f_add_formatter: STRING_GENERAL is do Result := locale.translation ("Add customized formatter") end
 	f_remove_formatter: STRING_GENERAL is do Result := locale.translation ("Remove selected customized formatter") end
@@ -697,6 +699,7 @@ feature -- Accelerator, focus label and menu name
 	l_stone_name: STRING_GENERAL is do Result := locale.translation ("Stone name") end
 	l_feature_stone_name: STRING_GENERAL is do Result := locale.translation ("Feature stone") end
 	l_uncompiled_class_stone_name: STRING_GENERAL is do Result := locale.translation ("Uncompiled class stone") end
+	l_unnamed: STRING_GENERAL is do Result := locale.translation ("Unnamed") end
 	l_compiled_class_stone_name: STRING_GENERAL is do Result := locale.translation ("Compiled class stone") end
 	l_group_stone_name: STRING_GENERAL is do Result := locale.translation ("Group stone") end
 	l_target_stone_name: STRING_GENERAL is do Result := locale.translation ("Target stone") end
@@ -1025,7 +1028,7 @@ feature -- Label texts
 	l_Condition: STRING_GENERAL is				do Result := locale.translation("Condition")	end
 	l_Confirm_kill: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to stop the execution?")	end
 	l_Confirm_kill_and_restart: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to stop and restart the execution?")	end
-
+	l_confirm_delete_selected_items: STRING_GENERAL is			do Result := locale.translation("Are you sure you want to delete selected items forever?")	end
 	l_constructing_diagram_for (a_name: STRING_GENERAL): STRING_GENERAL is			do Result := locale.formatted_string (locale.translation("Constructing diagram for $1"), [a_name])	end
 	l_Context: STRING_GENERAL is				do Result := locale.translation("Context")	end
 	l_context_dot: STRING_GENERAL is			do Result := locale.translation("Context ...") end
@@ -1226,6 +1229,13 @@ feature -- Label texts
 	l_indexing_clause_error: STRING_GENERAL is			do Result := locale.translation("Indexing clause has syntax error")	end
 	l_invariants: STRING_GENERAL is				do Result := locale.translation("Invariants")	end
 	l_items_without_tag: STRING_GENERAL is				do Result := locale.translation("Items without tag")	end
+	l_item_is_not_writable (a_item: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_class_not_void: a_item /= Void
+		do
+			Result := locale.formatted_string (locale.translation("Item $1 is not writable."), [a_item])
+		end
+	l_item_selected_is_not_writable: STRING_GENERAL is	do	Result := locale.translation("Item selected is not writable.")	end
 	l_Is_true: STRING_GENERAL is				do Result := locale.translation("Is True")	end
 	l_Language_type: STRING_GENERAL is			do Result := locale.translation("Language type")	end
 	l_Library: STRING_GENERAL is				do Result := locale.translation("library")	end
@@ -1845,6 +1855,7 @@ feature -- Label texts
 	l_go_to_previous_warning: STRING_GENERAL is 		do Result := locale.translation ("Go to previous warning") end
 
 	l_always_compile_before_debug:STRING_GENERAL is 	do Result := locale.translation ("always compile before executing.") end
+	l_always_delete_without_asking:STRING_GENERAL is 	do Result := locale.translation ("always delete without asking.") end
 
 	l_show_help:STRING_GENERAL is 					do Result := locale.translation ("Show Help...") end
 	l_hide_help:STRING_GENERAL is 					do Result := locale.translation ("Hide Help...") end
@@ -1909,6 +1920,7 @@ feature -- Title part
 	t_choose_name_for_new_configuration_file: STRING_GENERAL is do Result := locale.translation ("Choose name for new configuration file") end
 	t_Choose_project_and_directory: STRING_GENERAL is 	do Result := locale.translation("Choose Your Project Name and Directory")	end
 	t_Class: STRING_GENERAL is							do Result := locale.translation("Class")	end
+	t_clean_up_affected_items: STRING_GENERAL is		do Result := locale.translation("Clean up affected items.")	end
 	t_Clients_of: STRING_GENERAL is						do Result := locale.translation("Clients of Class ")	end
 	t_Creation_routine: STRING_GENERAL is				do Result := locale.translation("Creation Procedure")	end
 	t_configuration_loading_error: STRING_GENERAL is	do Result := locale.translation("Configuration Loading Error")	end
@@ -1919,6 +1931,7 @@ feature -- Title part
 		once
 			Result := locale.formatted_string (locale.translation("From $1"), [Workbench_name])
 		end
+	t_delete_selected_items: STRING_GENERAL is			do Result := locale.translation("Delete selected items.")	end
 	t_Deleting_files: STRING_GENERAL is					do Result := locale.translation("Deleting Files")	end
 	t_Dummy: STRING_GENERAL is							do Result := locale.translation("Dummy")	end
 	t_Dynamic_lib_window: STRING_GENERAL is 			do Result := locale.translation("Dynamic Library Builder")	end

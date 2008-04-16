@@ -120,6 +120,14 @@ feature -- Grids
 			result_attached: Result /= Void
 		end
 
+	grid_editor_token_choice_selected_background_color: EV_COLOR
+			-- Editor token choice selected background color
+		once
+			create Result.make_with_8_bit_rgb (194, 216, 255)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Prompts
 
 	prompt_sub_title_forground_color: EV_COLOR

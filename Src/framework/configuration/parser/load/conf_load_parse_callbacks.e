@@ -105,7 +105,6 @@ feature -- Callbacks
 					a_local_part.is_case_insensitive_equal ("schemaLocation")
 				then
 					a_local_part.to_lower
-
 						-- check if the attribute is valid for the current state
 					l_attr := tag_attributes.item (current_tag.item)
 					if l_attr /= Void then
@@ -114,7 +113,11 @@ feature -- Callbacks
 					if current_attributes = Void then
 						create current_attributes.make (1)
 					end
+					if current_attributes_undefined = Void then
+						create current_attributes_undefined.make (1)
+					end
 					if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
+							-- Check and put defined attributes in `current_attributes'.
 						if not a_value.is_empty then
 							a_value.replace_substring_all (lt_entity, lt_string)
 							a_value.replace_substring_all (gt_entity, gt_string)
@@ -122,6 +125,11 @@ feature -- Callbacks
 						else
 							set_parse_error_message (conf_interface_names.e_parse_invalid_value (a_local_part))
 						end
+					elseif tag_with_undefined_attributes.has (current_tag.item) and then not current_attributes_undefined.has (a_local_part) then
+							-- Put undefined attributes in `current_attributes_undefined'.
+						a_value.replace_substring_all (lt_entity, lt_string)
+						a_value.replace_substring_all (gt_entity, gt_string)
+						current_attributes_undefined.force (a_value, a_local_part)
 					else
 						if is_unknown_version then
 								-- unknown version, just add a warning
@@ -215,9 +223,12 @@ feature -- Callbacks
 					process_custom_attributes
 				when t_mapping then
 					process_mapping_attributes
+				when t_note then
+					process_note_attributes
 				else
 				end
 				current_attributes.clear_all
+				current_attributes_undefined.clear_all
 			end
 		end
 
@@ -1566,6 +1577,26 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
+	process_note_attributes is
+			-- Process attributes of note tag.
+		require
+			system_or_group_or_target: last_system /= Void or current_group /= Void or current_target /= Void
+		local
+			l_attrs: like current_attributes_undefined
+		do
+				-- All notes attributes are undefined.
+			l_attrs := current_attributes_undefined
+			if l_attrs /= Void then
+				if current_group /= Void then
+					current_group.add_note (l_attrs.twin)
+				elseif current_target /= Void then
+					current_target.add_note (l_attrs.twin)
+				elseif last_system /= Void then
+					last_system.add_note (l_attrs.twin)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation content processing
 
 	process_description_content is
@@ -1649,6 +1680,11 @@ feature {NONE} -- Implementation
 
 	current_attributes: HASH_TABLE [STRING, INTEGER]
 			-- The values of the current attributes.
+			-- Defined attributes.
+
+	current_attributes_undefined: HASH_TABLE [STRING, STRING]
+			-- The values of the current attributes.
+			-- Undefined attributes.
 
 feature {NONE} -- Implementation state transitions
 
@@ -1673,6 +1709,7 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_trans, t_system)
 
 				-- target
+				-- => note
 				-- => description
 				-- => root
 				-- => version
@@ -1693,7 +1730,8 @@ feature {NONE} -- Implementation state transitions
 				-- => assembly
 				-- => cluster
 				-- => override
-			create l_trans.make (19)
+			create l_trans.make (21)
+			l_trans.force (t_note, "note")
 			l_trans.force (t_description, "description")
 			l_trans.force (t_root, "root")
 			l_trans.force (t_version, "version")
@@ -1763,6 +1801,7 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_trans, t_external_make)
 
 				-- assembly
+				-- => note
 				-- => description
 				-- => option
 				-- => renaming
@@ -1791,6 +1830,7 @@ feature {NONE} -- Implementation state transitions
 				-- => cluster
 			l_trans := l_trans.twin
 			l_trans.remove ("renaming")
+			l_trans.force (t_note, "note")
 			l_trans.force (t_file_rule, "file_rule")
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_uses, "uses")
@@ -1856,6 +1896,10 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_extends, "extends")
 			l_attr.force (at_abstract, "abstract")
 			Result.force (l_attr, t_target)
+
+				-- note
+			create l_attr.make (0)
+			Result.force (l_attr, t_note)
 
 				-- root
 				-- * cluster
@@ -2112,6 +2156,13 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_attr, t_mapping)
 		end
 
+	tag_with_undefined_attributes: SEARCH_TABLE [INTEGER]
+			-- Tags may contain undefined attributes.
+		once
+			create Result.make (1)
+			Result.force (t_note)
+		end
+
 feature {NONE} -- Implementation constants
 
 		-- Tag states
@@ -2156,6 +2207,7 @@ feature {NONE} -- Implementation constants
 	t_visible: INTEGER is 39
 	t_overrides: INTEGER is 40
 	t_mapping: INTEGER is 41
+	t_note: INTEGER is 42
 
 		-- Attribute states
 	at_abstract: INTEGER is 1000

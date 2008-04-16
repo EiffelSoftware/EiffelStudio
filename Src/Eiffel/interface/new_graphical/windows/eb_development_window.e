@@ -565,6 +565,16 @@ feature -- Update
 			--| FIXME ARNAUD: To be implemented
 		end
 
+	update_eis_system is
+			-- Update EIS storage and the tool if needed.
+		do
+			if {l_info_tool: !ES_INFORMATION_TOOL} shell_tools.tool ({ES_INFORMATION_TOOL}) then
+					-- Update Information tool.
+				l_info_tool.synchronize
+				l_info_tool.request_eis_visit
+			end
+		end
+
 feature -- Stone process
 
 	stone: STONE
@@ -971,6 +981,7 @@ feature -- Resource Update
 					-- Update features tool.
 				l_features_tool.synchronize
 			end
+			update_eis_system
 			refresh_cursor_position
 			refresh_context_info
 			unlock_update
@@ -1185,6 +1196,8 @@ feature -- Window management
 
 			l_tool := tools.metric_tool
 			l_tool.content.set_tab_with (tools.dependency_tool.content, False)
+
+			shell_tools.tool ({ES_INFORMATION_TOOL}).panel.content.set_tab_with (l_tool.content, False)
 
 			-- Tool bars
 			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.to_standard_toolbar)

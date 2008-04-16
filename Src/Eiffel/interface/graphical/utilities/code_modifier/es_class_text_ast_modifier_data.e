@@ -58,6 +58,7 @@ feature -- Basic operations
 			l_class: !like associated_class
 			l_current_class: ?CLASS_C
 			l_current_group: ?CONF_GROUP
+			l_options: CONF_OPTION
 			l_errors: LINKED_LIST [ERROR]
 			l_error_index: INTEGER
 			retried: BOOLEAN
@@ -79,6 +80,9 @@ feature -- Basic operations
 
 					-- Perform parse
 				l_parser := parser
+				l_options := l_class.config_class.options
+				l_parser.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
+				l_parser.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
 				l_parser.parse_from_string (text)
 				if l_parser.root_node /= Void and then l_parser.match_list /= Void then
 					ast := l_parser.root_node

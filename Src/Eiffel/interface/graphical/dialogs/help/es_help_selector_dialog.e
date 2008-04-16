@@ -231,7 +231,7 @@ feature {NONE} -- Query
 			else
 				create {!STRING_32} Result.make (100)
 				Result.append (a_context.help_context_id)
-				if {l_section: !STRING_GENERAL} a_context.help_context_section then
+				if {l_section: !STRING_GENERAL} a_context.help_context_section.section then
 					Result.append (", ")
 					Result.append (l_section)
 				end
@@ -362,6 +362,7 @@ feature {NONE} -- Factory
 				-- Document title
 			create l_item.make_with_text (help_context_document_title (a_context))
 			l_item.set_pixmap (stock_pixmaps.general_document_icon)
+			l_item.set_tooltip (a_context.help_context_description)
 			if l_available then
 				l_item.set_foreground_color (colors.grid_item_text_color)
 			else

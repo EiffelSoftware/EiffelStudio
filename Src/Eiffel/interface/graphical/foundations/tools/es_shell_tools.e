@@ -228,7 +228,7 @@ feature {NONE} -- Access
 		local
 			l_tools: DS_ARRAYED_LIST [TYPE [ES_TOOL [EB_TOOL]]]
 		once
-			create l_tools.make (23)
+			create l_tools.make (24)
 
 				-- Common tools
 			l_tools.put_last ({ES_CLASS_TOOL})
@@ -248,6 +248,7 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_SEARCH_TOOL})
 			l_tools.put_last ({ES_WINDOWS_TOOL})
 			l_tools.put_last ({ES_CONTRACT_TOOL})
+			l_tools.put_last ({ES_INFORMATION_TOOL})
 
 				-- Custom formatter tools
 				-- FIXME: Custom formatter tools have been tricking to adapt for 6.1. Given the time-frame

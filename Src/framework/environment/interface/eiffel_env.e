@@ -1736,6 +1736,9 @@ feature -- File constants (user)
 
 	docking_file_extension: !STRING_8 = "dck"
 
+	eis_storage_file: !STRING_8 = "eis_storage"
+			-- EIS storage file name.
+
 feature {NONE} -- Externals
 
 	user_directory_supported: BOOLEAN = True

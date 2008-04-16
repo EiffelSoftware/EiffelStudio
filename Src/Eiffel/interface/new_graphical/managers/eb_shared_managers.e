@@ -113,6 +113,12 @@ feature -- Status report
 			Result := incoming_command_manager_cell.item
 		end
 
+	eis_manager: ES_EIS_MANAGER
+			-- EIS manager
+		once
+			create Result
+		end
+
 feature {NONE} -- Implementation
 
 	Recent_projects_manager_cell: CELL [EB_RECENT_PROJECTS_MANAGER] is

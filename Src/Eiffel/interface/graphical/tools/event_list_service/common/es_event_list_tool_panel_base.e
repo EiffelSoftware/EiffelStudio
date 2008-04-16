@@ -662,6 +662,7 @@ feature {NONE} -- Sort handling
 			l_count, i: INTEGER
 			l_event_items: DS_ARRAYED_LIST [TUPLE [event_item: EVENT_LIST_ITEM_I; expand: BOOLEAN]]
 			l_event_item: EVENT_LIST_ITEM_I
+			l_sub_row_count: INTEGER
 		do
 			create l_sorter.make (a_comparator)
 
@@ -706,7 +707,11 @@ feature {NONE} -- Sort handling
 					l_row.expand
 				end
 
-				i := i + 1 + l_row.subrow_count_recursive
+				if l_row.parent /= Void then
+					l_sub_row_count := l_row.subrow_count_recursive
+				end
+
+				i := i + 1 + l_sub_row_count
 				l_event_items.forth
 			end
 
@@ -783,11 +788,12 @@ feature {NONE} -- Query
 				l_item := a_row.item (i)
 				if l_item /= Void then
 					l_text := row_item_text (l_item)
+					if l_text /= Void and then not l_text.is_empty then
+						Result.append (l_text)
+						Result.append_character ('%T')
+					end
 				end
-				if l_text /= Void and then not l_text.is_empty then
-					Result.append (l_text)
-					Result.append_character ('%T')
-				end
+
 				i := i + 1
 			end
 			if not Result.is_empty then

@@ -218,7 +218,7 @@ feature {NONE} -- Execution replay
 				--| Uncomment on of the following lines if you want to set
 				--|		+ 10_000 as maximum number of value records
 				--|		+ 0 for unlimited number of value records.
-				--| Default: 1_000_000 
+				--| Default: 1_000_000
 --			Result.set_maximum_record_count (10_000) -- Limited to 10_000 records
 --			Result.set_maximum_record_count (0)	-- No limit
 			Result.set_maximum_record_count (100_000)
@@ -283,10 +283,12 @@ feature -- debug purpose: to remove
 			"C inline use %"eif_main.h%""
 		alias
 			"[
-				EIF_GET_CONTEXT
-				is_inside_rt_eiffel_code = 0;
-				exec_recording_enabled = 1;
-				set_debug_mode (1);
+				#ifdef WORKBENCH
+					EIF_GET_CONTEXT
+					is_inside_rt_eiffel_code = 0;
+					exec_recording_enabled = 1;
+					set_debug_mode (1);
+				#endif
 			]"
 		end
 

@@ -9,7 +9,7 @@ class
 	RT_DBG_ATTRIBUTE_RECORD [G]
 
 inherit
-	RT_DBG_RECORD
+	RT_DBG_VALUE_RECORD
 		rename
 			position as offset
 		redefine
@@ -44,7 +44,7 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: RT_DBG_RECORD
+	current_value_record: RT_DBG_VALUE_RECORD
 			-- Record for current value
 		do
 			Result := object_attribute_record (offset, rt_type, object)
@@ -59,7 +59,7 @@ feature -- Access
 	is_local_record: BOOLEAN = False
 			-- <Precursor>
 
-	is_same_as (other: !RT_DBG_RECORD): BOOLEAN
+	is_same_as (other: !RT_DBG_VALUE_RECORD): BOOLEAN
 		do
 			Result := {c: like Current} other and then offset = c.offset and then value = c.value
 		end
@@ -100,7 +100,7 @@ feature -- Change properties
 
 feature -- Runtime
 
-	restore (val: !RT_DBG_RECORD)
+	restore (val: !RT_DBG_VALUE_RECORD)
 			-- Restore `value' on `object'
 		do
 			debug ("RT_DBG_REPLAY")
@@ -119,7 +119,7 @@ feature -- Runtime
 			end
 		end
 
-	revert (bak: !RT_DBG_RECORD)
+	revert (bak: !RT_DBG_VALUE_RECORD)
 			-- Revert previous change due to Current to `object'
 		do
 			debug ("RT_DBG_REPLAY")
@@ -133,7 +133,7 @@ feature -- Runtime
 
 feature {NONE} -- Internal Implementation
 
-	set_attribute_from_record (obj: !ANY; r: !RT_DBG_RECORD)
+	set_attribute_from_record (obj: !ANY; r: !RT_DBG_VALUE_RECORD)
 			-- Set object field defined by `r' on target `obj'
 		do
 			if {ot_record: RT_DBG_ATTRIBUTE_RECORD [like value]} r then

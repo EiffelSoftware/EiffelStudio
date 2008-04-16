@@ -988,8 +988,8 @@ RT_LNK EIF_TYPE_INDEX fcount;
 
 #ifdef WORKBENCH
 #define RTEX		struct ex_vect * EIF_VOLATILE exvect; uint32 EIF_VOLATILE db_cstack
-#define RTEAA(x,y,z,i,j,b) exvect = new_exset(x, y, z,i,j,b); db_cstack = ++d_data.db_callstack_depth; \
-					RTDBGE(y,b,z,db_cstack);
+#define RTEAA(x,y,z,i,j,b) exvect = new_exset(x, y, z,i,j,b); db_cstack = ++d_data.db_callstack_depth;
+#define RTDBGEAA(y,z,b)		RTDBGE(y,b,z,db_cstack);
 #define RTEE		RTDBGL(exvect->ex_orig,exvect->ex_bodyid,exvect->ex_id,db_cstack); \
 					RTSO; d_data.db_callstack_depth = --db_cstack; expop(&eif_stack)
 #define RTEOK		RTDBGL(exvect->ex_orig,exvect->ex_bodyid,exvect->ex_id,db_cstack); \
@@ -1012,6 +1012,7 @@ RT_LNK EIF_TYPE_INDEX fcount;
 #else
 #define RTEX		struct ex_vect * EIF_VOLATILE exvect
 #define RTEAA(x,y,z,i,j,b) exvect = new_exset(x, y, z, 0, 0, 0)
+#define RTDBGEAA(y,z,b)
 #define RTEE		expop(&eif_stack)
 #define RTEOK		exok ()
 #define RTEJ		start: exvect->ex_jbuf = &exenv; RTES

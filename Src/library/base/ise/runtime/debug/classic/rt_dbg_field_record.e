@@ -9,7 +9,7 @@ class
 	RT_DBG_FIELD_RECORD [G]
 
 inherit
-	RT_DBG_RECORD
+	RT_DBG_VALUE_RECORD
 		rename
 			position as index
 		end
@@ -40,7 +40,7 @@ feature -- Properties
 
 feature -- Access
 
-	current_value_record: RT_DBG_RECORD
+	current_value_record: RT_DBG_VALUE_RECORD
 			-- Record for current value
 		do
 			Result := object_record (index, object)
@@ -55,7 +55,7 @@ feature -- Access
 	is_local_record: BOOLEAN = False
 			-- <Precursor>
 
-	is_same_as (other: !RT_DBG_RECORD): BOOLEAN
+	is_same_as (other: !RT_DBG_VALUE_RECORD): BOOLEAN
 			-- Is Current same as `other' ?
 		do
 			Result := {c: like Current} other and then index = c.index and then value = c.value
@@ -96,7 +96,7 @@ feature -- Change properties
 
 feature -- Runtime
 
-	restore (val: !RT_DBG_RECORD)
+	restore (val: !RT_DBG_VALUE_RECORD)
 			-- Restore `value' on `object', and associate `val' as `backup'
 		do
 			debug ("RT_DBG_REPLAY")
@@ -115,7 +115,7 @@ feature -- Runtime
 			end
 		end
 
-	revert (bak: !RT_DBG_RECORD)
+	revert (bak: !RT_DBG_VALUE_RECORD)
 			-- Revert previous change due to Current to `object'
 		do
 			debug ("RT_DBG_REPLAY")
@@ -129,7 +129,7 @@ feature -- Runtime
 
 feature {NONE} -- Internal Implementation
 
-	set_object_field (obj: !ANY; r: !RT_DBG_RECORD)
+	set_object_field (obj: !ANY; r: !RT_DBG_VALUE_RECORD)
 			-- Set object field defined by `r' on target `obj'
 		local
 			i: like index

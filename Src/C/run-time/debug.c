@@ -2239,15 +2239,15 @@ rt_public void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_
 
 extern EIF_DEBUG_VALUE stack_debug_value(uint32 stack_depth, uint32 loc_type, uint32 loc_number);
 
-rt_public char* rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type)
+rt_public EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type)
 {
 	/* 
 	 * Get value for stack variable of type `loc_type' at position `loc_number', in the stack of depth `stack_depth'
 	 */
 
 	EIF_DEBUG_VALUE ip;
-	EIF_REFERENCE new_obj;
 	uint32 stack_level;
+	EIF_REFERENCE new_obj;
 
 	EIF_GET_CONTEXT;
 
@@ -2269,98 +2269,98 @@ rt_public char* rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 
 		case SK_BOOL:
 			{
 				EIF_BOOLEAN val = (EIF_BOOLEAN) ip.value.it_b;
-				new_obj = RTLN(egc_bool_ref_dtype);
+				new_obj = RTLN(egc_bool_dtype);
 				*(EIF_BOOLEAN *) new_obj = val;
 				return new_obj;
 			}
 		case SK_CHAR:
 			{
 				EIF_CHARACTER val = (EIF_CHARACTER) ip.value.it_c1;
-				new_obj = RTLN(egc_char_ref_dtype);
+				new_obj = RTLN(egc_char_dtype);
 				*(EIF_CHARACTER *) new_obj = val;
 				return new_obj;
 			}
 		case SK_WCHAR:
 			{
 				EIF_WIDE_CHAR val = (EIF_WIDE_CHAR) ip.value.it_c4;
-				new_obj = RTLN(egc_wchar_ref_dtype);
+				new_obj = RTLN(egc_wchar_dtype);
 				*(EIF_WIDE_CHAR *) new_obj = val;
 				return new_obj;
 			}
 		case SK_UINT8:
 			{
 				EIF_NATURAL_8 val = (EIF_NATURAL_8 ) ip.value.it_n1;
-				new_obj = RTLN(egc_uint8_ref_dtype);
+				new_obj = RTLN(egc_uint8_dtype);
 				*(EIF_NATURAL_8 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_UINT16:
 			{
 				EIF_NATURAL_16 val = (EIF_NATURAL_16 ) ip.value.it_n2;
-				new_obj = RTLN(egc_uint16_ref_dtype);
+				new_obj = RTLN(egc_uint16_dtype);
 				*(EIF_NATURAL_16 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_UINT32:
 			{
 				EIF_NATURAL_32 val = (EIF_NATURAL_32 ) ip.value.it_n4;
-				new_obj = RTLN(egc_uint32_ref_dtype);
+				new_obj = RTLN(egc_uint32_dtype);
 				*(EIF_NATURAL_32 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_UINT64:
 			{
 				EIF_NATURAL_64 val = (EIF_NATURAL_64 ) ip.value.it_n8;
-				new_obj = RTLN(egc_uint64_ref_dtype);
+				new_obj = RTLN(egc_uint64_dtype);
 				*(EIF_NATURAL_64 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_INT8:
 			{
 				EIF_INTEGER_8 val = (EIF_INTEGER_8) ip.value.it_i1;
-				new_obj = RTLN(egc_int8_ref_dtype);
+				new_obj = RTLN(egc_int8_dtype);
 				*(EIF_INTEGER_8 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_INT16:
 			{
 				EIF_INTEGER_16 val = (EIF_INTEGER_16) ip.value.it_i2;
-				new_obj = RTLN(egc_int16_ref_dtype);
+				new_obj = RTLN(egc_int16_dtype);
 				*(EIF_INTEGER_16 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_INT32:
 			{
 				EIF_INTEGER_32 val = (EIF_INTEGER_32) ip.value.it_i4;
-				new_obj = RTLN(egc_int32_ref_dtype);
+				new_obj = RTLN(egc_int32_dtype);
 				*(EIF_INTEGER_32 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_INT64:
 			{
 				EIF_INTEGER_64 val = (EIF_INTEGER_64) ip.value.it_i8;
-				new_obj = RTLN(egc_int64_ref_dtype);
+				new_obj = RTLN(egc_int64_dtype);
 				*(EIF_INTEGER_64 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_REAL32:
 			{
 				EIF_REAL_32 val = (EIF_REAL_32) ip.value.it_r4;
-				new_obj = RTLN(egc_real32_ref_dtype);
+				new_obj = RTLN(egc_real32_dtype);
 				*(EIF_REAL_32 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_REAL64:
 			{
 				EIF_REAL_64 val = (EIF_REAL_64) ip.value.it_r8;
-				new_obj = RTLN(egc_real64_ref_dtype);
+				new_obj = RTLN(egc_real64_dtype);
 				*(EIF_REAL_64 *) new_obj = val;
 				return new_obj;
 			}
 		case SK_POINTER:
 			{
 				EIF_POINTER val = (EIF_POINTER) ip.value.it_p;
-				new_obj = RTLN(egc_point_ref_dtype);
+				new_obj = RTLN(egc_point_dtype);
 				*(EIF_POINTER *) new_obj = val;
 				return new_obj;
 			}

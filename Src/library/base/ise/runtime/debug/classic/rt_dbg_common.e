@@ -13,7 +13,7 @@ inherit
 
 feature -- Query
 
-	changes_between (csr1, csr2: RT_DBG_CALL_RECORD; get_and_remove: BOOLEAN): ARRAYED_LIST [RT_DBG_RECORD] is
+	changes_between (csr1, csr2: RT_DBG_CALL_RECORD; get_and_remove: BOOLEAN): ARRAYED_LIST [RT_DBG_VALUE_RECORD] is
 			-- from `r1' to -beginning-of- `r2'.
 		require
 			csr1_not_void: csr1 /= Void
@@ -26,7 +26,7 @@ feature -- Query
 			else
 				create Result.make (30)
 					--| Get Full records
-				if {flds: LIST [RT_DBG_RECORD]} csr1.value_records then
+				if {flds: LIST [RT_DBG_VALUE_RECORD]} csr1.value_records then
 					v := flds.cursor
 					Result.append (flds)
 					flds.go_to (v)

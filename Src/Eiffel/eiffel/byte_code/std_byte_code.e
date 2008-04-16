@@ -378,6 +378,9 @@ feature -- Analyzis
 				generate_save_assertion_level
 			end
 
+				-- Record enter feature execution
+			generate_rtdbgd_enter
+
 				-- Checkcat calls
 			generate_catcall_check
 
@@ -1431,6 +1434,25 @@ end
 					--   implicitly by a code of once routine
 				buffer.put_new_line
 				buffer.put_string ("RTEV;")
+			end
+		end
+
+	generate_rtdbgd_enter is
+			-- Generate the execution recording for enter feature
+		local
+			buf: GENERATION_BUFFER
+		do
+			if context.workbench_mode then
+				buf := buffer
+				buf.put_new_line
+				buf.put_string ("RTDBGEAA")
+				buf.put_character ('(')
+				feature_origin (buf)
+				buf.put_string (gc_comma)
+				context.current_register.print_register
+				buf.put_string (gc_comma)
+				buf.put_real_body_id (real_body_id)
+				buf.put_string (gc_rparan_semi_c)
 			end
 		end
 

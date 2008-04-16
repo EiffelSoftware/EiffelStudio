@@ -124,58 +124,72 @@ feature -- Eiffel source line information
 							end
 						end
 						if l_precomp = 1 then
-							buf.put_string ("RTDBGAPA (Current,Dtype(Current),")
+							buf.put_string ("RTDBGAPA")
 						else
-							buf.put_string ("RTDBGAA (Current,Dtype(Current),")
+							buf.put_string ("RTDBGAA")
 						end
+						buf.put_character ('(')
+						context.current_register.print_register
+						buf.put_string (gc_comma)
+						context.generate_current_dtype
+						buf.put_string (gc_comma)
+
 						if attb.type.is_expanded then
 							l_expanded := 1
 						end
 
 						buf.put_integer (l_code)
-						buf.put_character (',')
+						buf.put_string (gc_comma)
 						buf.put_integer (l_offset)
-						buf.put_character (',')
+						buf.put_string (gc_comma)
 						buf.put_integer (l_sk_type)
-						buf.put_character (',')
+						buf.put_string (gc_comma)
 						buf.put_integer (l_expanded)
-						buf.put_two_character (')', ';')
+						buf.put_string (gc_rparan_semi_c)
 						buf.put_string (" /* " + attb.attribute_name + " */")
 					end
 				elseif a_target.is_local then
 					if {locb: !LOCAL_B} a_target then
-						buf.put_string ("RTDBGAL (Current,")
+						buf.put_string ("RTDBGAL(")
+						context.current_register.print_register
+						buf.put_string (gc_comma)
 						buf.put_integer (locb.position)
-						buf.put_character (',')
+						buf.put_string (gc_comma)
 						buf.put_integer (l_sk_type)
-						buf.put_character (',')
+						buf.put_string (gc_comma)
 						if locb.type.is_expanded then
 							buf.put_integer (1)
 						else
 							buf.put_integer (0)
 						end
-						buf.put_two_character (',', '0') --| not melted						
-						buf.put_two_character (')', ';')
+						buf.put_string (gc_comma)
+						buf.put_integer (0) --| not melted						
+						buf.put_string (gc_rparan_semi_c)
 						buf.put_string (" /* " + locb.register_name + " */")
 					end
 				elseif a_target.is_result then
 					if {resb: !RESULT_B} a_target then
-						buf.put_string ("RTDBGAL (Current,0,") --| Let's say Result's position = 0
+						buf.put_string ("RTDBGAL(")
+						context.current_register.print_register
+						buf.put_string (gc_comma)
+						buf.put_integer (0) --| Let's say Result's position = 0
+						buf.put_string (gc_comma)
 						buf.put_integer (l_sk_type)
-						buf.put_character (',')
+						buf.put_string (gc_comma)
 						if resb.type.is_expanded then
 							buf.put_integer (1)
 						else
 							buf.put_integer (0)
 						end
 						buf.put_two_character (',', '0') --| not melted						
-						buf.put_two_character (')', ';')
+						buf.put_string (gc_rparan_semi_c)
 						buf.put_string (" /* Result */")
 					end
-				elseif a_target.is_current then
-					if {curb: !CURRENT_B} a_target then
-						buf.put_string ("/* RTDBGA CURRENT .. */")
-					end
+--| Keep comment for later.					
+--				elseif a_target.is_current then
+--					if {curb: !CURRENT_B} a_target then
+--						buf.put_string ("/* RTDBGA CURRENT .. */")
+--					end
 				end
 				buf.put_new_line
 			end

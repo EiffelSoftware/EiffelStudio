@@ -735,6 +735,7 @@ rt_private void interpret(int flag, int where)
 			 * stack).
 			 */
 			RTEAA((char *) string, type, (icurrent->it_ref), (unsigned char)locnum, (unsigned char)argnum, body_id);
+			RTDBGEAA(type, (icurrent->it_ref), body_id);
 			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
 			scur = op_stack.st_cur;		/* Save stack context */

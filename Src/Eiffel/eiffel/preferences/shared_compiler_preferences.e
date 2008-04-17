@@ -34,6 +34,8 @@ feature {NONE} -- Implementation
 
 	preferences_cell: CELL [COMPILER_PREFERENCES] is
 			-- Once cell.
+		indexing
+			once_status: global
 		once
 			create Result
 			Result.put (create {COMPILER_PREFERENCES}.make (create {PREFERENCES}.make))

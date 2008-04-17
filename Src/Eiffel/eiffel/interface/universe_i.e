@@ -281,6 +281,39 @@ feature -- Access
 			end
 		end
 
+	group_of_name_recursive (a_group_name: STRING): ARRAYED_SET [CONF_GROUP] is
+			-- Group whose name is `a_group_name'.
+			-- This feature will find all groups in the system recursively.
+		require
+			not_void: a_group_name /= Void
+			a_group_name_lower: a_group_name.is_equal (a_group_name.as_lower)
+		local
+			l_groups: like groups
+			l_found_item: CONF_GROUP
+		do
+			create {ARRAYED_SET [CONF_GROUP]} Result.make (10)
+			l_found_item := group_of_name (a_group_name)
+			if l_found_item /= Void then
+				Result.extend (l_found_item)
+			end
+
+			from
+				create group_visited.make (groups.count)
+				l_groups := groups
+				l_groups.start
+			until
+				l_groups.after
+			loop
+				group_of_name_recursive_imp (a_group_name, l_groups.item_for_iteration, Result)
+
+				l_groups.forth
+			end
+			group_visited := Void
+		ensure
+			not_void: Result /= Void
+			cleared: group_visited = Void
+		end
+
 	cluster_of_location (a_directory: STRING): LIST [CONF_CLUSTER] is
 			-- Find cluster for `a_directory'.
 		require
@@ -585,6 +618,43 @@ feature {COMPILER_EXPORTER} -- Precompilation
 			precomp_ids.conservative_resize (1, nb)
 			precomp_ids.put (System.compilation_id, nb)
 		end
+
+feature {NONE} -- Implementation
+
+	group_of_name_recursive_imp (a_group_name: STRING; a_group_to_search: CONF_GROUP; a_result: ARRAYED_SET [CONF_GROUP])is
+			-- Group whose name is `a_group_name'
+		require
+			not_void: a_group_name /= Void
+			a_group_name_lower: a_group_name.is_equal (a_group_name.as_lower)
+			not_void: a_group_to_search /= Void
+			not_void: a_result /= Void
+			ready: group_visited /= Void
+		local
+			l_found_item: CONF_GROUP
+			l_groups: DS_HASH_SET [CONF_GROUP]
+		do
+			group_visited.extend (a_group_to_search)
+			l_found_item := a_group_to_search.sub_group_by_name (a_group_name)
+			if l_found_item /= Void then
+				a_result.extend (l_found_item)
+			end
+
+			from
+				l_groups := a_group_to_search.accessible_groups
+				l_groups.start
+			until
+				l_groups.after
+			loop
+				if not group_visited.has (l_groups.item_for_iteration) then
+					group_of_name_recursive_imp (a_group_name, l_groups.item_for_iteration, a_result)
+				end
+
+				l_groups.forth
+			end
+		end
+
+	group_visited: ARRAYED_LIST [CONF_GROUP]
+			-- Group visited used by `group_of_name_recursive_imp'
 
 invariant
 	new_target_in_conf_system: (conf_system /= Void and new_target /= Void) implies new_target.system = conf_system

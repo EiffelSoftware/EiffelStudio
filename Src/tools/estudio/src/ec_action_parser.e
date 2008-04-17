@@ -8,9 +8,6 @@ indexing
 class
 	EC_ACTION_PARSER
 
-inherit
-	COMMAND_PROTOCOL_NAMES
-
 feature -- Action
 
 	parse (a_string: !STRING) is
@@ -32,9 +29,9 @@ feature -- Action
 					-- Remove "eisi:"
 				l_string.remove_head (l_prefix_count)
 
-				l_result := label (compiler_module)
-				l_result.append (label (project_ready))
-				l_result.append (label (eis_incoming_module))
+				l_result := label ({COMMAND_PROTOCOL_NAMES}.compiler_module)
+				l_result.append (label ({COMMAND_PROTOCOL_NAMES}.project_ready))
+				l_result.append (label ({COMMAND_PROTOCOL_NAMES}.eis_incoming_module))
 				l_result.append (label (l_string))
 			end
 			last_command := l_result

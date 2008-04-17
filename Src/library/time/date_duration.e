@@ -78,14 +78,8 @@ feature -- Attribute
 			-- Number of days in duration
 		require
 			origin_date_set: has_origin_date
-		local
-			l_canonical: like Current
 		do
-			l_canonical := to_canonical (origin_date)
-			Result := (origin_date + l_canonical).days - origin_date.days
-			if is_negative then
-				Result := -Result
-			end
+			Result := (origin_date + to_canonical (origin_date)).days - origin_date.days
 		end
 
 feature -- Comparison

@@ -1,34 +1,39 @@
 indexing
 	description: "[
-		Type identifiers for event list items so code that cannot perform object tests (internal or external)
-		can identify the event list item type.
-	]"
+					Event list which has data about a test case run result
+																			]"
+	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	EVENT_LIST_ITEM_TYPES
+	EVENT_LIST_TESTING_RESULT_ITEM
 
-feature -- Access
+inherit
+	EVENT_LIST_TEST_ITEM
 
-	unknown: NATURAL_8 = 0
-			-- Unknown event list item type
+create
+	make
 
-	error: NATURAL_8 = 1
-			-- Error event list item
+feature {NONE} -- Redefine
 
-	log: NATURAL_8 = 2
-			-- Logger event list item type
+	is_valid_data (a_data: ANY): BOOLEAN is
+			-- Redefine
+		do
+			Result := {l_test: ES_EWEASEL_TEST_RESULT_ITEM} a_data
+		end
 
-	testing: NATURAL_8 = 3
-			-- Testing event list item type
+	description: STRING_32 is
+			-- Redefine
+		do
+			Result := "Event list which has data about a test case run result"
+		end
 
-;indexing
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -39,15 +44,15 @@ feature -- Access
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software

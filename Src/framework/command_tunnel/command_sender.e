@@ -8,12 +8,6 @@ indexing
 class
 	COMMAND_SENDER
 
-inherit
-	COMMAND_CONSTANTS
-		export
-			{NONE} all
-		end
-
 feature -- Operation
 
 	send_command (a_string, a_key: !STRING) is

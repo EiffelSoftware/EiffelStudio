@@ -13,11 +13,6 @@ inherit
 
 	WEL_COMMAND
 
-	COMMAND_CONSTANTS
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -63,8 +58,8 @@ feature {NONE} -- Implementation
 				l_wel_string := command_string (message_information.l_param)
 					-- |Fixme: Causes information loss doing as_string_8.
 				l_string := l_wel_string.string.as_string_8
-				if not l_string.is_empty and then l_string.starts_with (ise_command) then
-					l_string.remove_head (ise_command.count)
+				if not l_string.is_empty and then l_string.starts_with ({COMMAND_CONSTANTS}.ise_command) then
+					l_string.remove_head ({COMMAND_CONSTANTS}.ise_command.count)
 					l_result := lt_action.item ([l_string])
 					if l_result then
 						message_window.set_message_return_value (to_lresult (1))

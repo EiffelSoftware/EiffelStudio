@@ -51,6 +51,19 @@ feature {NONE} -- Initialization
 		do
 			register_action (contract_editor.source_selection_actions, agent on_source_selected_in_editor)
 
+				-- Register action to edit on double click
+			register_action (contract_editor.widget.pointer_double_press_item_actions, agent (ia_x, ia_y, ia_button: INTEGER_32; ia_x_tilt, ia_y_tilt, ia_pressure: REAL_64; ia_screen_x, ia_screen_y: INTEGER_32)
+				require
+					is_interface_usable: is_interface_usable
+					is_initialized: is_initialized
+				do
+					if ia_button = 1 then
+						if has_stone and then contract_editor.selected_line /= Void and then contract_editor.selected_line.is_editable then
+							on_edit_contract
+						end
+					end
+				end)
+
 			register_action (save_modifications_button.select_actions, agent on_save)
 			register_action (add_contract_button.select_actions, agent add_contract_button.perform_select)
 			register_action (remove_contract_button.select_actions, agent on_remove_contract)

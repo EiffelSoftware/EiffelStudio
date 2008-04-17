@@ -30,6 +30,9 @@ feature -- Access
 	refactoring: NATURAL_8 = 5
 			-- Refactoring engine
 
+	testing: NATURAL_8 = 6
+			-- Testing related
+
 feature -- Query
 
 	is_valid_category (a_cat: NATURAL_8): BOOLEAN
@@ -44,7 +47,8 @@ feature -- Query
 				a_cat = compilation or
 				a_cat = debugger or
 				a_cat = editor or
-				a_cat = refactoring
+				a_cat = refactoring or
+				a_cat = testing
 		end
 
 ;indexing

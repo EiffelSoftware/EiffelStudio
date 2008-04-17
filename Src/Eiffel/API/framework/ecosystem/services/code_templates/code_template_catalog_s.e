@@ -112,6 +112,26 @@ feature -- Basic operations
 		deferred
 		end
 
+feature {NONE} -- Basic operation
+
+	sort_templates_by_title (a_list: DS_INDEXABLE [!CODE_TEMPLATE_DEFINITION])
+			-- Sorts a template list by title.
+			--
+			-- `a_list': A template list to sort by title.
+		require
+			is_interface_usable: is_interface_usable
+		local
+			l_comparer: AGENT_BASED_EQUALITY_TESTER [!CODE_TEMPLATE_DEFINITION]
+			l_sorter: DS_QUICK_SORTER [!CODE_TEMPLATE_DEFINITION]
+		do
+			create l_comparer.make (agent (ia_template, ia_other_template: !CODE_TEMPLATE_DEFINITION): BOOLEAN
+				do
+					Result := ia_template.metadata.title < ia_other_template.metadata.title
+				end)
+			create l_sorter.make (l_comparer)
+			l_sorter.sort (a_list)
+		end
+
 feature -- Extension
 
 	extend_catalog (a_folder: STRING_GENERAL)

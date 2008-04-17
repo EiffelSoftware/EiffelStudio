@@ -290,6 +290,12 @@ feature -- Properties
 			-- Table indexed by missing classnames where elements are
 			-- classes referencing the missing classname.
 
+	unref_classes_snapshot: like unref_classes is
+			-- Snapshot of `unref_classes'
+		do
+			Result := unref_classes.twin
+		end
+
 	missing_classes_warning: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
 			-- Table indexed by missing classnames for which we only generate a
 			-- warning where elements are classes referencing the missing classname.
@@ -1092,11 +1098,21 @@ end
 				check_unique_class_names
 			end
 
+			rebuild_configuration_actions.call ([])
+
 			is_force_rebuild := False
 		rescue
 				-- An exception occur during system analysis, we should force a rebuild
 				-- at next compilation. This addresses bug#12911.
 			is_force_rebuild := True
+		end
+
+	rebuild_configuration_actions: !ACTION_SEQUENCE [TUPLE[]] is
+			-- Rebuild configuration actions hooks.
+		indexing
+			once_status: global
+		once
+			create Result
 		end
 
 	check_unique_class_names is

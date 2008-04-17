@@ -62,15 +62,15 @@ feature
 				i = 2000
 			loop
 				from
-					j := 1
+					j := -1
 				until
-					j = 750
+					j = -750
 				loop
 					d2 := d1.twin
-					d2.day_add (-j)
+					d2.day_add (j)
 					dur := d2.relative_duration (d1)
 					test_true_boolean (dur.days_count = j)
-					j := j + 1
+					j := j - 1
 				end
 				d1.day_add (-1)
 				i := i + 1

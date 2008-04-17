@@ -16,8 +16,6 @@ inherit
 
 	PLATFORM
 
-	COMMAND_PROTOCOL_NAMES
-
 create
 	make
 
@@ -319,7 +317,7 @@ feature {NONE} -- Command sender
 		do
 			last_command_handled := False
 			if {lt_action: STRING}ec_action then
-				command_sender.send_command (lt_action, eiffel_studio_key)
+				command_sender.send_command (lt_action, {COMMAND_PROTOCOL_NAMES}.eiffel_studio_key)
 				last_command_handled := command_sender.last_command_handled
 			end
 		end
@@ -335,7 +333,7 @@ feature {NONE} -- Command sender
 				print ("Launched process ID: " + last_launched_ec_pid.out + "%N")
 			end
 			if {lt_action: STRING}ec_action and then last_launched_ec_pid > 0 then
-				command_sender.send_command_process (lt_action, eiffel_studio_key, last_launched_ec_pid)
+				command_sender.send_command_process (lt_action, {COMMAND_PROTOCOL_NAMES}.eiffel_studio_key, last_launched_ec_pid)
 				command_sent_trial := command_sent_trial + 1
 				last_command_handled := command_sender.last_command_handled
 				if command_send_timeout /= Void and then not command_send_timeout.is_destroyed then

@@ -555,9 +555,9 @@ feature {NONE} -- User interface manipulation
 			l_source := l_editor.selected_source
 			if l_source /= Void and then l_source.is_editable then
 				add_contract_button.enable_sensitive
-				remove_contract_button.enable_sensitive
 				l_line := l_editor.selected_line
 				if l_line /= Void then
+					remove_contract_button.enable_sensitive
 					edit_contract_button.enable_sensitive
 					l_contracts := l_editor.context_contracts
 					if l_contracts.is_empty or else l_contracts.last /= l_line then
@@ -571,6 +571,7 @@ feature {NONE} -- User interface manipulation
 						move_contract_up_button.disable_sensitive
 					end
 				else
+					remove_contract_button.disable_sensitive
 					edit_contract_button.disable_sensitive
 					move_contract_down_button.disable_sensitive
 					move_contract_up_button.disable_sensitive
@@ -841,7 +842,16 @@ feature {NONE} -- Action handlers
 		do
 			if not retried then
 				is_saving := True
-				if is_class_file_modified_externally then
+
+					-- Temporary
+				create l_question.make_standard (
+					"The Contract Tool is not quite finished and as a result saving could result in incorrectly formatted code. %
+					%In some cases applying the changes can cause syntax errors.%N%N%
+					%This issue will be fixed very soon.%N%N%
+					%Do you want to take the risk and save your changes?")
+				l_question.show_on_active_window
+
+				if l_question.dialog_result = l_question.default_confirm_button and then is_class_file_modified_externally then
 					create l_question.make_standard (
 						"The associated class file has been modified outside on the Contract Tool.%
 						%The changes will be merged but there is a possibility of data loss.%N%N%

@@ -1,6 +1,9 @@
 class
 	TEST
 
+inherit
+	ARGUMENTS
+
 create
 	make
 
@@ -13,7 +16,14 @@ feature
 			d_diff: DATE_DURATION
 			dur: DATE_DURATION
 			i, j: INTEGER
+			l_days: INTEGER
 		do
+			if argument_count >= 1 and then not argument (1).is_integer then
+				l_days := argument (1).to_integer
+			else
+				l_days := 1
+			end
+
 				-- Simple checks for `month_add' which should we would be violating some assertions
 			create d1.make (2008, 1, 29)
 			d1.month_add (13)
@@ -28,14 +38,14 @@ feature
 			d_diff := d2.relative_duration (d1)
 			test_true_boolean (d_diff.days_count = 305)
 
-				-- Iterate for 2000 days (i.e. we will have at least a leap year
+				-- Iterate for `l_days' days (i.e. we will have at least a leap year
 				-- in the process) and for each date, add between 1 to 750 days
 				-- (i.e. at leat 2 years) to ensure that duration is properly computed.
 			from
 				i := 1
 				create d1.make (2000, 1, 1)
 			until
-				i = 2000
+				i = l_days
 			loop
 				from
 					j := 1
@@ -52,14 +62,14 @@ feature
 				i := i + 1
 			end
 
-				-- Iterate for 2000 days (i.e. we will have at least a leap year
+				-- Iterate for `l_days' days (i.e. we will have at least a leap year
 				-- in the process) and for each date, add between 1 to 750 days
 				-- (i.e. at leat 2 years) to ensure that duration is properly computed.
 			from
 				i := 1
 				create d1.make (2000, 1, 1)
 			until
-				i = 2000
+				i = l_days
 			loop
 				from
 					j := -1

@@ -80,7 +80,7 @@ feature -- Settings
 				element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
 				token /= 0
 		do
-			set_type (element_type, token)
+			set_element_type (element_type, token)
 			state := parameter_state
 		ensure
 			state_set: state = parameter_state

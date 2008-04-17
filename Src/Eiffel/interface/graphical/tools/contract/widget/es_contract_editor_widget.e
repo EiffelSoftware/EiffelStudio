@@ -438,12 +438,15 @@ feature -- Modification
 					l_row.parent_row.insert_subrow (i)
 					l_new_row ?= l_row.parent_row.subrow (i)
 				end
-				populate_editable_contract_row (a_contract, a_source, l_new_row)
+				edit_contract_grid.row_select_actions.block
+				populate_editable_contract_row (a_contract, a_source.source, l_new_row)
+				edit_contract_grid.row_select_actions.resume
+
+				internal_context_contracts := Void
 				if l_selected then
 					l_new_row.enable_select
 				end
 			end
-			internal_context_contracts := Void
 		end
 
 	remove_contract (a_line: !ES_CONTRACT_LINE)
@@ -480,6 +483,7 @@ feature -- Modification
 						if l_sub_row.data = a_line then
 							l_selected := l_sub_row.is_selected
 							l_grid.remove_row (l_sub_row.index)
+							internal_context_contracts := Void
 							l_removed := True
 							if l_selected then
 									-- Perform re-selection
@@ -506,7 +510,6 @@ feature -- Modification
 			end
 
 			check removed: l_removed end
-			internal_context_contracts := Void
 		end
 
 	replace_contract (a_tag: !STRING_32; a_contract: !STRING_32; a_line: !ES_CONTRACT_LINE)
@@ -535,8 +538,8 @@ feature -- Modification
 				l_line := a_line.twin
 				l_line.tag := a_tag
 				l_line.contract := a_contract
-				populate_editable_contract_row (l_line.string, l_line.source, l_row)
 				internal_context_contracts := Void
+				populate_editable_contract_row (l_line.string, l_line.source, l_row)
 			end
 		end
 
@@ -575,7 +578,7 @@ feature -- Modification
 
 					-- Populate row and re-set data
 				populate_editable_contract_row (a_line.string, a_line.source, l_other_row)
-				l_row.set_data (a_line)
+				l_other_row.set_data (a_line)
 
 				internal_context_contracts := Void
 				edit_contract_grid.row_select_actions.resume
@@ -1011,6 +1014,7 @@ feature {NONE} -- Population
 
 			if l_selected then
 				a_row.enable_select
+				edit_contract_grid.row_select_actions.call ([a_row])
 			end
 		ensure
 			a_row_selected: old a_row.is_selected implies a_row.is_selected

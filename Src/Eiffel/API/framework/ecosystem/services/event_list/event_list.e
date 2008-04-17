@@ -65,7 +65,10 @@ feature -- Access
 			-- `a_context_cookie': A context identifier to retrieve all events for.
 			-- `Result': A list of events associated to the specified context.
 		do
-			Result := internal_event_items_index.item (a_context_cookie)
+			if internal_event_items_index.has (a_context_cookie) then
+				Result := internal_event_items_index.item (a_context_cookie)
+			end
+			
 			if Result = Void then
 					-- It's possible that an invalid context was specified.
 				create {DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]}Result.make (0)

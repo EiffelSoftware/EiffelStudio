@@ -15,7 +15,9 @@ feature {NONE} -- Creation
 			t3_bis: TEST3_BIS
 			t2_bis: TEST2_BIS
 			t3: TEST3 [INTEGER]
+			t3_any: TEST3 [ANY]
 			t2: TEST2 [REAL_64]
+			t2_any: TEST2 [ANY]
 			t1: TEST1
 		do
 			create t9
@@ -70,6 +72,10 @@ feature {NONE} -- Creation
 			print (t3.query (6))
 			io.put_new_line
 
+			t3_any := t5
+			print (t3_any.query (6))
+			io.put_new_line
+
 				-- Checking polymorphism on `t4'
 			print (t4.query (6))
 			io.put_new_line
@@ -82,6 +88,10 @@ feature {NONE} -- Creation
 			print (t2.query (6))
 			io.put_new_line
 
+			t2_any := t4
+			print (t2_any.query (6))
+			io.put_new_line
+
 				-- Checking polymorphism on `t3_bis'
 			print (t3_bis.query (6))
 			io.put_new_line
@@ -90,12 +100,21 @@ feature {NONE} -- Creation
 			print (t3.query (6))
 			io.put_new_line
 
+			t3_any := t3_bis
+			print (t3_any.query (6))
+			io.put_new_line
+
+
 				-- Checking polymorphism on `t2_bis'
 			print (t2_bis.query (6))
 			io.put_new_line
 
 			t2 := t2_bis
 			print (t2.query (6))
+			io.put_new_line
+
+			t2_any := t2_bis
+			print (t2_any.query (6))
 			io.put_new_line
 		end
 

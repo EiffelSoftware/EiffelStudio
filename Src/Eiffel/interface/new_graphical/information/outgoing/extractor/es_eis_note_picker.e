@@ -28,18 +28,18 @@ feature {NONE} -- Implementation
 			tags_not_void: a_eis_tuple.tags /= Void
 			others_not_void: a_eis_tuple.others /= Void
 		do
-			if a_eis_tuple.name = Void and then a_key.is_case_insensitive_equal (eis_tokens.name_string) then
+			if a_eis_tuple.name = Void and then a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.name_string) then
 				a_eis_tuple.name := a_value
-			elseif a_eis_tuple.protocol = Void and then a_key.is_case_insensitive_equal (eis_tokens.protocol_string) then
+			elseif a_eis_tuple.protocol = Void and then a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.protocol_string) then
 				a_eis_tuple.protocol := a_value
-			elseif a_eis_tuple.source = Void and then a_key.is_case_insensitive_equal (eis_tokens.source_string) then
+			elseif a_eis_tuple.source = Void and then a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.source_string) then
 				a_eis_tuple.source := a_value
-			elseif a_key.is_case_insensitive_equal (eis_tokens.tag_string) then
+			elseif a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.tag_string) then
 						-- To add more tags support.
 				a_eis_tuple.tags := parse_tags (a_value)
 			else
 					-- Others
-				if not a_key.is_case_insensitive_equal (eis_tokens.ise_support_string) then
+				if not a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.ise_support_string) then
 					a_eis_tuple.others.force (a_value, a_key)
 				end
 			end
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 							id: STRING;
 							others: HASH_TABLE [STRING_32, STRING_32]]
 		do
-			if a_index.tag /= Void and then a_index.tag.name.is_case_insensitive_equal (eis_tokens.eis_string) then
+			if a_index.tag /= Void and then a_index.tag.name.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 				l_index_list := a_index.index_list
 				l_entry_tuple := [Void, Void, Void, Void, Void, Void]
 				create l_others.make (3)
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 						else
 								-- Don't recognize the attribute
 								-- Put it into others as key, and put in value a `void_string' token.
-							l_entry_tuple.others.force (eis_tokens.void_string, l_attribute_pair)
+							l_entry_tuple.others.force ({ES_EIS_TOKENS}.void_string, l_attribute_pair)
 						end
 					end
 					l_index_list.forth
@@ -121,8 +121,8 @@ feature {NONE} -- Implementation
 							others: HASH_TABLE [STRING_32, STRING_32]]
 		do
 			if a_note /= Void then
-				a_note.search (eis_tokens.ise_support_string)
-				if a_note.found and then a_note.found_item.is_case_insensitive_equal (eis_tokens.eis_string) then
+				a_note.search ({ES_EIS_TOKENS}.ise_support_string)
+				if a_note.found and then a_note.found_item.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 					create l_entry_tuple
 					l_entry_tuple.id := l_id
 					create l_others.make (3)
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			-- tag string should be in the form of "tag1, tag2, tag3"
 		do
 			if {lt_tag_string: STRING_32}a_tag_string.as_string_32 then
-				if {lt_splitted: !ARRAYED_LIST [!STRING_32]}lt_tag_string.split (eis_tokens.tag_seperator) then
+				if {lt_splitted: !ARRAYED_LIST [!STRING_32]}lt_tag_string.split ({ES_EIS_TOKENS}.tag_seperator) then
 					lt_splitted.do_all (
 							agent (aa_string: !STRING_32)
 								do
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			-- Or ""other1=value1", other2=value2, "other3=value3""
 		do
 			if {lt_tag_string: STRING_32}a_others_string then
-				if {lt_splitted: !ARRAYED_LIST [!STRING_32]}lt_tag_string.split (eis_tokens.attribute_seperator) then
+				if {lt_splitted: !ARRAYED_LIST [!STRING_32]}lt_tag_string.split ({ES_EIS_TOKENS}.attribute_seperator) then
 					create Result.make (1)
 					lt_splitted.do_all (
 							agent (aa_string: !STRING_32; a_result: !HASH_TABLE [STRING_32, STRING_32])

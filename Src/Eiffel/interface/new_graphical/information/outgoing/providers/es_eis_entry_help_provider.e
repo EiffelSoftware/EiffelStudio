@@ -54,16 +54,16 @@ feature {NONE} -- Variable expansion
 					end
 
 					if {lt_target: STRING}id_solution.last_target_name then
-						Result.force (lt_target, eis_tokens.target_name_var_name)
+						Result.force (lt_target, {ES_EIS_TOKENS}.target_name_var_name)
 					end
 					if {lt_group: STRING}id_solution.last_group_name then
-						Result.force (lt_group, eis_tokens.group_name_var_name)
+						Result.force (lt_group, {ES_EIS_TOKENS}.group_name_var_name)
 					end
 					if {lt_class: STRING}id_solution.last_class_name then
-						Result.force (lt_class, eis_tokens.class_name_var_name)
+						Result.force (lt_class, {ES_EIS_TOKENS}.class_name_var_name)
 					end
 					if {lt_feature: STRING}id_solution.last_feature_name then
-						Result.force (lt_feature, eis_tokens.feature_name_var_name)
+						Result.force (lt_feature, {ES_EIS_TOKENS}.feature_name_var_name)
 					end
 				end
 				Result.merge (Precursor)

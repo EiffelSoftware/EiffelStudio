@@ -268,11 +268,11 @@ feature {NONE} -- Initialization
 
 feature -- Synchronization
 
-	synchronize
-			-- Synchronize
+	refresh_list
+			-- Refresh the entry list.
 		do
 			if tree /= Void then
-				tree.synchronize
+				tree.rebuild_list_if_possible
 			end
 		end
 
@@ -376,14 +376,14 @@ feature -- Progress notification
 			-- On finishing progress
 		do
 			background_sweeping_progress_bar.set_proportion (0)
-			synchronize
+			refresh_list
 		end
 
 	on_progress_stop is
 			-- On stop visiting the system
 		do
 			background_sweeping_progress_bar.set_proportion (0)
-			synchronize
+			refresh_list
 		end
 
 feature {NONE} -- Implementation

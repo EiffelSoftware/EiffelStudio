@@ -141,6 +141,7 @@ feature -- Query
 		local
 			l_categories: !CODE_CATEGORY_COLLECTION
 			l_item: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
+			l_indexable: !DS_INDEXABLE [!CODE_TEMPLATE_DEFINITION]
 			l_continue: BOOLEAN
 		do
 			create Result.make_default
@@ -175,6 +176,8 @@ feature -- Query
 					end
 				end
 			end
+			l_indexable ?= Result
+			sort_templates_by_title (l_indexable)
 		end
 
 feature {NONE} -- Helpers

@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make (a_category: like category; a_priority: like priority; a_data: like data)
 			-- Initialize a new event list error item.
 			--
-			-- `a_category': Event item category, see {EVENT_LIST_ITEM_CATEGORIES}
+			-- `a_category': Event item category, see {EVENT_LIST_ITEM_TYPES}
 			-- `a_description': A textual representation of the error
 			-- `a_data': The error object associated with this event ite
 		require

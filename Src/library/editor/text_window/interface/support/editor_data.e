@@ -446,22 +446,16 @@ feature {ANY} -- Preferences
 feature -- Misc	
 
 	plain_white: EV_COLOR is
-		indexing
-			once_status: global
 		once
 			create Result.make_with_8_bit_rgb (255, 255, 255)
 		end
 
 	plain_gray: EV_COLOR is
-		indexing
-			once_status: global
 		once
 			create Result.make_with_8_bit_rgb (64, 64, 64)
 		end
 
 	plain_black: EV_COLOR is
-		indexing
-			once_status: global
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 0)
 		end
@@ -555,16 +549,12 @@ feature {NONE} -- Implementation
 
 	colors: SPECIAL [EV_COLOR] is
 			-- Color table
-		indexing
-			once_status: global
 		once
 			create Result.make (max_color_id + 1)
 		end
 
 	fonts: SPECIAL [EV_FONT] is
 			-- Font table
-		indexing
-			once_status: global
 		once
 			create Result.make (max_font_id + 1)
 		end

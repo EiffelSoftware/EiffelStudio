@@ -33,6 +33,8 @@ feature -- Command
 			if l_test_result_tool /= Void and then l_test_result_tool.is_initialized then
 				l_test_result_tool.test_run_result_grid_manager.reset
 			end
+
+			clear_buffer_string_moving
 		ensure
 			cleared: all_output_string.is_empty
 			cleared: buffer_string.is_empty
@@ -40,20 +42,46 @@ feature -- Command
 		end
 
 	on_eweasel_output (a_string: STRING) is
-			-- Handle eWeasel output string.
-		require
-			not_void: a_string /= Void and then not a_string.is_empty
+			-- Handle eWeasel output from process library
+			-- Note, this is called in another thread but not Eiffel Studio UI thread
 		do
-			all_output_string.append (a_string)
-			prcess_output (a_string, False)
-		ensure
-			added: all_output_string.has_substring (a_string)
+			mutex.lock
+			output_buffer.append (a_string)
+			mutex.unlock
 		end
 
 	on_eweasel_exit is
 			-- Handle eWeasel output string just after eWeasel exited.
 		do
 			prcess_output ("", True)
+		end
+
+	start_buffer_string_moving is
+			-- Call `move_process_library_output_to_testing_tool' in idle actions
+		require
+			cleared: is_idle_agent_cleared
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			buffer_string_moving_agent := agent move_process_library_output_to_testing_tool
+			create l_env
+			l_env.application.add_idle_action (buffer_string_moving_agent)
+		ensure
+			created: buffer_string_moving_agent /= Void
+		end
+
+	clear_buffer_string_moving is
+			-- Clear `buffer_string_moving_agent' if possible
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			if buffer_string_moving_agent /= Void then
+				create l_env
+				l_env.application.remove_idle_action (buffer_string_moving_agent)
+				buffer_string_moving_agent := Void
+			end
+		ensure
+			cleared: is_idle_agent_cleared
 		end
 
 	prcess_output (a_string: STRING; a_on_exit: BOOLEAN) is
@@ -147,8 +175,6 @@ feature -- Query
 
 	all_hanlders: ARRAYED_LIST [ES_EWEASEL_RESULT_HANDLER] is
 			-- All result handlers
-		indexing
-			once_status: global
 		once
 			create Result.make (5)
 
@@ -164,6 +190,12 @@ feature -- Query
 
 		ensure
 			not_void: Result /= Void
+		end
+
+	is_idle_agent_cleared: BOOLEAN is
+			-- If `buffer_string_moving_agent' clear ?
+		do
+			Result := buffer_string_moving_agent = Void
 		end
 
 feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
@@ -227,6 +259,52 @@ feature {NONE} -- Implementation
 			Result := internal_all_output_string
 		ensure
 			not_void: Result /= Void
+		end
+
+	output_buffer: STRING is
+			-- Thread library output buffer
+			-- This is the ONLY multi-thread critical section of testing tool
+		indexing
+			once_status: global
+		once
+			create Result.make_empty
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {NONE} -- Multi-thread implementation
+
+	mutex: MUTEX is
+			-- Mutex used by
+		indexing
+			once_status: global
+		once
+			create Result.make
+		end
+
+	buffer_string_moving_agent: PROCEDURE [ES_EWEASEL_RESULT_ANALYZER, TUPLE]
+			-- Agent instance which created by `start_buffer_string_moving'
+
+	move_process_library_output_to_testing_tool is
+			-- Move process library output to Eiffel Studio UI thread in idle actions
+		do
+			mutex.lock
+			if not output_buffer.is_empty then
+				on_eweasel_output_testing_tool (output_buffer)
+				output_buffer.wipe_out
+			end
+			mutex.unlock
+		end
+
+	on_eweasel_output_testing_tool (a_string: STRING) is
+			-- Handle eWeasel output string in Eiffel Studio UI thread
+		require
+			not_void: a_string /= Void and then not a_string.is_empty
+		do
+			all_output_string.append (a_string)
+			prcess_output (a_string, False)
+		ensure
+			added: all_output_string.has_substring (a_string)
 		end
 
 feature {NONE} -- Cache

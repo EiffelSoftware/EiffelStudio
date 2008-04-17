@@ -1109,8 +1109,6 @@ end
 
 	rebuild_configuration_actions: !ACTION_SEQUENCE [TUPLE[]] is
 			-- Rebuild configuration actions hooks.
-		indexing
-			once_status: global
 		once
 			create Result
 		end

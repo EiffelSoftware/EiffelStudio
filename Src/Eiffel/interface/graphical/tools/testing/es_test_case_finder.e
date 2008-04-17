@@ -107,8 +107,6 @@ feature -- Query
 
 	all_test_case_classes: !ARRAYED_LIST [CLASS_I] is
 			-- All test case classes in Current whole system
-		indexing
-			once_status: global
 		once
 			create Result.make (100)
 		end
@@ -117,8 +115,6 @@ feature {NONE} -- Implementation
 
 	agent_cell: !CELL [PROCEDURE [ES_TEST_CASE_FINDER, TUPLE]] is
 			-- Agent cell for `add_all_test_case_classes_to_compile'
-		indexing
-			once_status: global
 		once
 			create Result
 		end

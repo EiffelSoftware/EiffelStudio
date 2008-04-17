@@ -24,8 +24,6 @@ feature -- Access
 
 	frozen service_provider: SERVICE_PROVIDER is
 			-- Shared access to the global service provider
-		indexing
-			once_status: global -- We must use global thread once here, otherwise SERVICE_CONSUMER will not work.
 		local
 			l_provider: SERVICE_HEAP
 			l_container: SERVICE_CONTAINER

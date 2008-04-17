@@ -113,7 +113,7 @@ feature -- Command
 		do
 			if catalog_manager.update_catalog_file (a_failed_first) then
 				result_analyzer.reset
-
+				result_analyzer.start_buffer_string_moving
 				process.launch
 
 				check not_void: testing_tool /= Void end
@@ -377,6 +377,7 @@ feature {NONE} -- Porcess event handler
 			if l_testing_tool /= Void then
 				l_testing_tool.test_case_grid_manager.refresh_time_columns
 			end
+			result_analyzer.clear_buffer_string_moving
 		end
 
 	on_terminate is
@@ -384,6 +385,7 @@ feature {NONE} -- Porcess event handler
 		do
 			swtich_buttons_states_on_exit
 			testing_result_tool.test_run_result_grid_manager.save_test_run_data_to_session
+			result_analyzer.clear_buffer_string_moving
 		end
 
 feature {NONE} -- Internal instance holders

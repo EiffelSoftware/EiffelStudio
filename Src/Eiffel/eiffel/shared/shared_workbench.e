@@ -13,8 +13,6 @@ feature -- Access
 
 	Workbench: WORKBENCH_I is
 			-- Shared access to the workbench
-		indexing
-			once_status: global
 		once
 			create Result
 		ensure
@@ -23,8 +21,6 @@ feature -- Access
 
 	System: SYSTEM_I is
 			-- Shared access to the current system
-		indexing
-			once_status: global
 		require
 			system_defined: Workbench.system_defined
 		once
@@ -35,8 +31,6 @@ feature -- Access
 
 	Universe: UNIVERSE_I is
 			-- Shared access to the current universe
-		indexing
-			once_status: global
 		require
 			universe_defined: workbench.universe_defined
 		once
@@ -47,8 +41,6 @@ feature -- Access
 
 	Lace: LACE_I is
 			-- Access to the lace controller
-		indexing
-			once_status: global
 		once
 			Result := Workbench.lace
 		end

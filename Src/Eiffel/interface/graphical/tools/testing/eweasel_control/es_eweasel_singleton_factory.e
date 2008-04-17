@@ -14,16 +14,12 @@ feature -- Query
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER is
 			-- Execution manger singleton factory method
-		indexing
-			once_status: global
 		once
 			create Result.make
 		end
 
 	result_analyzer: !ES_EWEASEL_RESULT_ANALYZER is
 			-- Result analyzer singleton factory method
-		indexing
-			once_status: global
 		once
 			create Result.make
 		end

@@ -12,8 +12,6 @@ feature -- Resources
 
 	panel_manager: TEXT_PANEL_MANAGER is
 			-- List of open panels
-		indexing
-			once_status: global
 		once
 			create Result
 		end
@@ -38,24 +36,18 @@ feature {NONE} -- Implementation
 
 	editor_preferences_cell: CELL [EDITOR_DATA] is
 			--
-		indexing
-			once_status: global
 		once
 			create Result
 		end
 
 	initialized_cell: CELL [BOOLEAN] is
 			--
-		indexing
-			once_status: global
 		once
 			create Result
 		end
 
 	preference_codes: SHARED_PREFERENCE_CODES is
 	        -- Document preference codes
-		indexing
-			once_status: global
 	    once
 	        create Result
 	    end

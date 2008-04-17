@@ -164,12 +164,12 @@ feature {ES_EIS_TOOL_WIDGET} -- Event handlers
 			end
 		end
 
-feature -- Synchronization
+feature -- Operation
 
-	synchronize
-			-- <Precursor>
+	refresh_list
+			-- Refresh the entry list.
 		do
-			user_widget.synchronize
+			user_widget.refresh_list
 		end
 
 	request_eis_visit

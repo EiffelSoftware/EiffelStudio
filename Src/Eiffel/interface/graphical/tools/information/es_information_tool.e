@@ -47,24 +47,13 @@ feature -- Access
 			Result := "show_information_tool"
 		end
 
-feature -- Query
+feature -- Operation
 
-	is_stone_usable (a_stone: STONE): BOOLEAN
-			-- Determines if a stone can be used by Current.
-			--
-			-- `a_stone': Stone to determine usablity.
-			-- `Result': True if the stone can be used, False otherwise.
-		do
-			Result := True
-		end
-
-feature -- Synchronization
-
-	synchronize
-			-- <Precursor>
+	refresh_list
+			-- Refresh the entry list.
 		do
 			if is_tool_instantiated then
-				panel.synchronize
+				panel.refresh_list
 			end
 		end
 

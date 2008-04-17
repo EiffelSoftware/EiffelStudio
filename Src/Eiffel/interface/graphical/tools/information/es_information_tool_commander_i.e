@@ -11,6 +11,22 @@ deferred class
 inherit
 	USABLE_I
 
+feature -- Basic operations
+
+	refresh_list
+			-- Refresh the entry list.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+	request_eis_visit
+			-- Reqest EIS background visiting to collect information into EIS storage.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
 indexing
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

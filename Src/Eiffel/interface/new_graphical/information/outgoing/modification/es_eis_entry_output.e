@@ -20,58 +20,58 @@ feature -- Operation
 			l_comma_needed: BOOLEAN
 		do
 			if not is_for_conf then
-				create l_output.make_from_string (eis_tokens.eis_string)
+				create l_output.make_from_string ({ES_EIS_TOKENS}.eis_string)
 				l_output.append (": ")
 				if a_entry.name /= Void then
-					l_output.append (quoted_string (eis_tokens.name_string + eis_tokens.value_assignment + a_entry.name))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.name_string + {ES_EIS_TOKENS}.value_assignment + a_entry.name))
 					l_comma_needed := True
 				end
 				if a_entry.protocol /= Void then
 					if l_comma_needed then
-						l_output.append_character (eis_tokens.attribute_seperator)
-						l_output.append_character (eis_tokens.space)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string (eis_tokens.protocol_string + eis_tokens.value_assignment + a_entry.protocol))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.protocol_string + {ES_EIS_TOKENS}.value_assignment + a_entry.protocol))
 					l_comma_needed := True
 				end
 				if a_entry.source /= Void then
 					if l_comma_needed then
-						l_output.append_character (eis_tokens.attribute_seperator)
-						l_output.append_character (eis_tokens.space)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string (eis_tokens.source_string + eis_tokens.value_assignment + a_entry.source))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.source_string + {ES_EIS_TOKENS}.value_assignment + a_entry.source))
 					l_comma_needed := True
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
 					if l_comma_needed then
-						l_output.append_character (eis_tokens.attribute_seperator)
-						l_output.append_character (eis_tokens.space)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string (eis_tokens.tag_string + eis_tokens.value_assignment + tags_as_code (a_entry)))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.tag_string + {ES_EIS_TOKENS}.value_assignment + tags_as_code (a_entry)))
 					l_comma_needed := True
 				end
 				if a_entry.others /= Void and then not a_entry.others.is_empty then
 					if l_comma_needed then
-						l_output.append_character (eis_tokens.attribute_seperator)
-						l_output.append_character (eis_tokens.space)
+						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
 					l_output.append (others_as_code (a_entry))
 				end
 			else
 				create last_output_conf.make (2)
 					-- Add the ise_support attribute.
-				last_output_conf.force (eis_tokens.eis_string, eis_tokens.ise_support_string)
+				last_output_conf.force ({ES_EIS_TOKENS}.eis_string, {ES_EIS_TOKENS}.ise_support_string)
 				if a_entry.name /= Void then
-					last_output_conf.force (a_entry.name, eis_tokens.name_string)
+					last_output_conf.force (a_entry.name, {ES_EIS_TOKENS}.name_string)
 				end
 				if a_entry.protocol /= Void then
-					last_output_conf.force (a_entry.protocol, eis_tokens.protocol_string)
+					last_output_conf.force (a_entry.protocol, {ES_EIS_TOKENS}.protocol_string)
 				end
 				if a_entry.source /= Void then
-					last_output_conf.force (a_entry.source, eis_tokens.source_string)
+					last_output_conf.force (a_entry.source, {ES_EIS_TOKENS}.source_string)
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
-					last_output_conf.force (tags_as_code (a_entry), eis_tokens.tag_string)
+					last_output_conf.force (tags_as_code (a_entry), {ES_EIS_TOKENS}.tag_string)
 				end
 				if {lt_others: HASH_TABLE [STRING_32, STRING_32]}a_entry.others and then not a_entry.others.is_empty then
 					from
@@ -132,8 +132,8 @@ feature -- Access
 					if not lt_tags.item.is_empty then
 						Result.append (lt_tags.item)
 						if not lt_tags.islast then
-							Result.append_character (eis_tokens.tag_seperator)
-							Result.append_character (eis_tokens.space)
+							Result.append_character ({ES_EIS_TOKENS}.tag_seperator)
+							Result.append_character ({ES_EIS_TOKENS}.space)
 						end
 						l_found := True
 					end
@@ -164,14 +164,14 @@ feature -- Access
 					i := i + 1
 					create l_attr.make_from_string (lt_others.key_for_iteration)
 					l_value := lt_others.item_for_iteration
-					if not l_value.is_equal (eis_tokens.void_string) then
-						l_attr.append (eis_tokens.value_assignment)
+					if not l_value.is_equal ({ES_EIS_TOKENS}.void_string) then
+						l_attr.append ({ES_EIS_TOKENS}.value_assignment)
 						l_attr.append (l_value)
 					end
 					Result.append (quoted_string (l_attr))
 					if i < l_count then
-						Result.append_character (eis_tokens.attribute_seperator)
-						Result.append_character (eis_tokens.space)
+						Result.append_character ({ES_EIS_TOKENS}.attribute_seperator)
+						Result.append_character ({ES_EIS_TOKENS}.space)
 					end
 					lt_others.forth
 				end

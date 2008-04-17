@@ -11,11 +11,6 @@ class
 inherit
 	COMMAND_RECEIVER
 
-	COMMAND_PROTOCOL_NAMES
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -25,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Initialization
 		do
 			command_receiver_callback := a_call_back
-			make_key (eiffel_studio_key)
+			make_key ({COMMAND_PROTOCOL_NAMES}.eiffel_studio_key)
 			set_external_command_action (agent external_command_action_handler)
 		end
 

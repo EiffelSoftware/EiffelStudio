@@ -14,11 +14,6 @@ inherit
 			{NONE} all
 		end
 
-	COMMAND_PROTOCOL_NAMES
-		export
-			{NONE} all
-		end
-
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -96,10 +91,10 @@ feature -- Callbacks
 					-- Start to analyse action
 			if action_found then
 					-- EIS incoming module
-				if action_module.is_case_insensitive_equal (eis_incoming_module) then
+				if action_module.is_case_insensitive_equal ({COMMAND_PROTOCOL_NAMES}.eis_incoming_module) then
 					if {lt_action: STRING}action.twin then
-						if lt_action.starts_with (eiffel_protocol) then
-							lt_action.remove_head (eiffel_protocol.count)
+						if lt_action.starts_with ({COMMAND_PROTOCOL_NAMES}.eiffel_protocol) then
+							lt_action.remove_head ({COMMAND_PROTOCOL_NAMES}.eiffel_protocol.count)
 								-- Remove the trailing '/' if any.
 							if lt_action.item (lt_action.count) = '/' then
 								lt_action.remove_tail (1)
@@ -156,14 +151,14 @@ feature {NONE} -- EIS implementation
 	extract_eis_attributes (a_string: !STRING) is
 			-- Extract attributes from the reference.
 		require
-			eiffel_protocol_removed: not a_string.starts_with (eiffel_protocol)
+			eiffel_protocol_removed: not a_string.starts_with ({COMMAND_PROTOCOL_NAMES}.eiffel_protocol)
 		local
 			l_splits: LIST [STRING]
 			l_splitted_attrs: LIST [STRING]
 			l_string: STRING
 			l_attr_name, l_attr_value: STRING
 		do
-			l_splits := a_string.split (component_separator)
+			l_splits := a_string.split ({COMMAND_PROTOCOL_NAMES}.component_separator)
 			from
 				l_splits.start
 			until
@@ -172,7 +167,7 @@ feature {NONE} -- EIS implementation
 				l_string := l_splits.item
 				l_string.left_adjust
 				l_string.right_adjust
-				l_splitted_attrs := l_string.split (attribute_separator)
+				l_splitted_attrs := l_string.split ({COMMAND_PROTOCOL_NAMES}.attribute_separator)
 					--| Example:
 					--| system=base.6D7FF712-BBA5-4AC0-AABF-2D9880493A01
 					--| target=base
@@ -246,7 +241,7 @@ feature {NONE} -- EIS implementation
 				l_feature_name := eis_component_found_table.found_item
 			end
 
-			if condition_found and then condition_module.is_case_insensitive_equal (compiler_module) and then condition.is_case_insensitive_equal (project_ready) then
+			if condition_found and then condition_module.is_case_insensitive_equal ({COMMAND_PROTOCOL_NAMES}.compiler_module) and then condition.is_case_insensitive_equal ({COMMAND_PROTOCOL_NAMES}.project_ready) then
 				if eiffel_project.initialized then
 					locate (l_system_name, l_system_uuid, l_target_name, l_target_uuid, l_group_name, l_class_name, l_feature_name)
 				else
@@ -559,7 +554,7 @@ feature {NONE} -- EIS implementation
 			l_dot_index: INTEGER
 			l_tuuid: UUID
 		do
-			l_dot_index := a_raw_string.index_of (system_separator, 1)
+			l_dot_index := a_raw_string.index_of ({COMMAND_PROTOCOL_NAMES}.system_separator, 1)
 			if l_dot_index = 0 then
 				create l_tuuid
 				if l_tuuid.is_valid_uuid (a_raw_string) then

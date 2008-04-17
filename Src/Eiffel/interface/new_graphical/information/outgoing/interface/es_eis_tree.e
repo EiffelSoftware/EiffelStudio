@@ -170,9 +170,9 @@ feature {NONE} -- Initialization
 			affected_header.extend (l_item)
 		end
 
-feature -- Synchronization
+feature -- Operation
 
-	synchronize is
+	rebuild_list_if_possible is
 			-- Synchronize
 		do
 			if old_view /= Void then

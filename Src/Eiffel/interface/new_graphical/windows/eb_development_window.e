@@ -568,10 +568,10 @@ feature -- Update
 	update_eis_system is
 			-- Update EIS storage and the tool if needed.
 		do
-			if {l_info_tool: !ES_INFORMATION_TOOL} shell_tools.tool ({ES_INFORMATION_TOOL}) then
+			if {l_info_tool_commander: !ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) then
 					-- Update Information tool.
-				l_info_tool.synchronize
-				l_info_tool.request_eis_visit
+				l_info_tool_commander.refresh_list
+				l_info_tool_commander.request_eis_visit
 			end
 		end
 

@@ -27,12 +27,6 @@ feature -- Access
 			create Result
 		end
 
-	eis_tokens: !ES_EIS_TOKENS
-			-- All used tokens
-		once
-			create Result
-		end
-
 	eis_output: ES_EIS_ENTRY_OUTPUT	is
 			-- EIS output
 			-- Entry to codes.

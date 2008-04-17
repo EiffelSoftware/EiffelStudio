@@ -415,23 +415,25 @@ feature {NONE} -- Implementation: event handling
 	on_project_loaded (dbg: DEBUGGER_MANAGER) is
 			-- The project has been loaded.
 		do
-			set_project_name (current_project_name)
-			if has_modified_classes then
-				on_project_edited
-			else
-				on_project_updated
-			end
-			if dbg.application_is_executing then
-				if dbg.application_is_stopped then
-					on_application_stopped (dbg)
+			if not is_recycled then
+				set_project_name (current_project_name)
+				if has_modified_classes then
+					on_project_edited
 				else
-					on_application_launched (dbg)
+					on_project_updated
 				end
-			else
-				on_application_exited (dbg)
-			end
-			if not eiffel_project.workbench.is_compiling then
-				on_project_compiled (eiffel_project.workbench.successful)
+				if dbg.application_is_executing then
+					if dbg.application_is_stopped then
+						on_application_stopped (dbg)
+					else
+						on_application_launched (dbg)
+					end
+				else
+					on_application_exited (dbg)
+				end
+				if not eiffel_project.workbench.is_compiling then
+					on_project_compiled (eiffel_project.workbench.successful)
+				end
 			end
 		end
 

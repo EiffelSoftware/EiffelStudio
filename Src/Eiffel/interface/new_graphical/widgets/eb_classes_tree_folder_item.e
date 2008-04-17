@@ -33,7 +33,9 @@ inherit
 
 create
 	make,
-	make_sub
+	make_sub,
+	make_with_option,
+	make_with_all_options
 
 feature -- Initialization
 
@@ -61,7 +63,31 @@ feature -- Initialization
 			create cluster_double_click_agents.make
 			set_data (a_cluster)
 			expand_actions.extend (agent load)
+			is_show_classes := True
 		end
+
+	make_with_all_options (a_cluster: EB_SORTED_CLUSTER; a_path: STRING; a_show_classes: BOOLEAN)
+			-- Create with various options
+		require
+			a_cluster_ok: a_cluster /= Void
+			a_path_ok: a_path /= Void
+			sub_elements_imply_initialized: not a_path.is_empty implies a_cluster.is_initialized
+		do
+			make_sub (a_cluster, a_path)
+			is_show_classes := a_show_classes
+		end
+
+	make_with_option (a_cluster: EB_SORTED_CLUSTER; a_show_classes: BOOLEAN)
+			-- Create with option `a_show_classes'
+		require
+			a_cluster_ok: a_cluster /= Void
+		do
+			make (a_cluster)
+			is_show_classes := a_show_classes
+		end
+
+	is_show_classes: BOOLEAN
+		-- Show classes notes?
 
 feature -- Status report
 
@@ -138,6 +164,16 @@ feature -- Status setting
 			name_set: name /= Void
 		end
 
+	set_associated_textable (a_textable: EV_TEXT_COMPONENT) is
+			-- Associate `Current' with `textable' and change event handling.
+		require
+			a_textable /= Void
+		do
+			associated_textable := a_textable
+			select_actions.wipe_out
+			select_actions.extend (agent print_name)
+		end
+
 	add_class (a_class: CLASS_I) is
 			-- Add `a_class' to `Current' at its right place.
 		local
@@ -188,7 +224,7 @@ feature -- Status setting
 
 feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 
-	load is
+	 load
 			-- Load the classes and the sub_clusters of `data'.
 		local
 			subfolders: SORTABLE_ARRAY [STRING]
@@ -236,14 +272,18 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						i > up
 					loop
-						l_sub_path := path+"/"+subfolders[i]
+						l_sub_path := path + cluster_separator + subfolders[i]
 						if l_fr.is_included (l_sub_path) then
-							create l_subfolder.make_sub (data, l_sub_path)
+							create l_subfolder.make_with_all_options (data, l_sub_path, is_show_classes)
 							if associated_window /= Void then
 								l_subfolder.associate_with_window (associated_window)
 							end
 							if associated_textable /= Void then
 								l_subfolder.associate_textable_with_classes (associated_textable)
+							end
+
+							if associated_textable /= Void and not is_show_classes then
+								l_subfolder.set_associated_textable (associated_textable)
 							end
 
 							extend (l_subfolder)
@@ -253,7 +293,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				end
 				-- if we are an assembly show subfolders
 			elseif group.is_assembly or group.is_physical_assembly then
-				l_hash_set := data.sub_folders.item (path+"/")
+				l_hash_set := data.sub_folders.item (path + cluster_separator)
 				if l_hash_set /= Void then
 					create subfolders.make (1, l_hash_set.count)
 					from
@@ -273,14 +313,16 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						i > up
 					loop
-						create l_subfolder.make_sub (data, path+"/"+subfolders[i])
+						create l_subfolder.make_with_all_options (data, path+ cluster_separator +subfolders[i], is_show_classes)
 						if associated_window /= Void then
 							l_subfolder.associate_with_window (associated_window)
 						end
 						if associated_textable /= Void then
 							l_subfolder.associate_textable_with_classes (associated_textable)
 						end
-
+						if associated_textable /= Void and not is_show_classes then
+							l_subfolder.set_associated_textable (associated_textable)
+						end
 						extend (l_subfolder)
 						i := i + 1
 					end
@@ -305,32 +347,36 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 
 				-- show classes for clusters and assemblies
 			if data.is_cluster or (data.is_assembly or data.is_physial_assembly) then
-				classes := data.sub_classes.item (path+"/")
-				if classes /= Void then
-					from
-						classes.start
-					until
-						classes.after
-					loop
-						if classes.item_for_iteration.is_valid then
-							l_name := classes.item_for_iteration.name.twin
-							if data.renaming.has (l_name) then
-								l_name := data.renaming.item (l_name)
-							end
-							l_name.prepend (data.name_prefix)
-							create a_class.make (classes.item_for_iteration, l_name)
-							if associated_window /= Void then
-								a_class.set_associated_window (associated_window)
-							end
-							if associated_textable /= Void then
-								a_class.set_associated_textable (associated_textable)
-							end
+				if is_show_classes then
+					classes := data.sub_classes.item (path + cluster_separator)
+					if classes /= Void then
+						from
+							classes.start
+						until
+							classes.after
+						loop
+							if classes.item_for_iteration.is_valid then
+								l_name := classes.item_for_iteration.name.twin
+								if data.renaming.has (l_name) then
+									l_name := data.renaming.item (l_name)
+								end
+								l_name.prepend (data.name_prefix)
+								create a_class.make (classes.item_for_iteration, l_name)
+								if associated_window /= Void then
+									a_class.set_associated_window (associated_window)
+								end
+								if associated_textable /= Void then
+									a_class.set_associated_textable (associated_textable)
+								end
 
-							a_class.load_overriden_children
-							extend (a_class)
+								a_class.load_overriden_children
+								extend (a_class)
+							end
+							classes.forth
 						end
-						classes.forth
 					end
+				else
+					set_associated_textable (associated_textable)
 				end
 			end
 
@@ -392,6 +438,9 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				-- then expanded.
 			expand_actions.wipe_out
 		end
+
+	cluster_separator: STRING is "/"
+			-- Cluster sub path separator
 
 	on_class_drop (cstone: CLASSI_STONE) is
 			-- A class was dropped in `Current'.
@@ -566,12 +615,12 @@ feature {EB_CLASSES_TREE} -- Implementation
 				-- sub elements
 			else
 					-- check classes
-				l_has_children := data.sub_classes.has (path + "/")
+				l_has_children := data.sub_classes.has (path + cluster_separator)
 
 					-- check folders
 				if not l_has_children then
 					if data.is_assembly then
-						l_has_children := data.sub_folders.has (path + "/")
+						l_has_children := data.sub_folders.has (path + cluster_separator)
 					elseif data.is_cluster then
 						create l_dir.make (data.actual_group.location.build_path (path, ""))
 						l_sub_dirs := l_dir.directory_names
@@ -583,7 +632,7 @@ feature {EB_CLASSES_TREE} -- Implementation
 							until
 								i > up or l_has_children
 							loop
-								l_sub_path := path+"/"+l_sub_dirs[i]
+								l_sub_path := path + cluster_separator + l_sub_dirs[i]
 								if l_fr.is_included (l_sub_path) then
 									l_has_children := True
 								end
@@ -613,7 +662,7 @@ feature {NONE} -- Implementation
 				Result.append (a_assembly.assembly_name)
 				if not path.is_empty then
 					l_tmp := path.twin
-					l_tmp.replace_substring_all ("/", ".")
+					l_tmp.replace_substring_all (cluster_separator, ".")
 					Result.append (l_tmp)
 				end
 				Result.append ("%N")
@@ -718,7 +767,7 @@ feature {NONE} -- Implementation
 					a_groups.after
 				loop
 					l_group := a_groups.item_for_iteration
-					create a_folder.make (l_group)
+					create a_folder.make_with_option (l_group, is_show_classes)
 
 					if associated_window /= Void then
 						a_folder.associate_with_window (associated_window)
@@ -738,6 +787,40 @@ feature {NONE} -- Implementation
 					extend (a_folder)
 					a_groups.forth
 				end
+		end
+
+	print_name is
+			-- Print class name in textable, the associated text component.
+		local
+			l_tmp: STRING
+			l_current_cluster: STRING
+		do
+			l_tmp := path
+			if associated_textable /= Void then
+				if l_tmp /= Void and not l_tmp.is_empty then
+					l_current_cluster := l_tmp.twin
+					check noly_one: cluster_separator.count = 1 end
+					l_current_cluster := data.actual_cluster.cluster_name + l_current_cluster
+				elseif data.is_cluster then
+					l_current_cluster := data.actual_cluster.cluster_name
+				else
+
+				end
+
+				if l_current_cluster /= Void then
+					associated_textable.set_text (l_current_cluster)
+					-- We set result here, query by EB_CHOOSE_CLUSTER_DIALOG.
+					associated_textable.set_data ([id_solution.id_of_group (data.actual_cluster), path])
+				end
+			end
+		end
+
+	id_solution: EB_SHARED_ID_SOLUTION
+			-- ID solution
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
 		end
 
 invariant

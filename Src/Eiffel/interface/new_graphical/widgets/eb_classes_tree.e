@@ -70,7 +70,8 @@ inherit
 
 create
 	make,
-	make_without_targets
+	make_without_targets,
+	make_with_options
 
 feature {NONE} -- Initialization
 
@@ -89,6 +90,7 @@ feature {NONE} -- Initialization
 			set_minimum_height (20)
 			enable_default_tree_navigation_behavior (False, False, False, True)
 			has_targets := True
+			is_show_classes := True
 		end
 
 	make_without_targets (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY) is
@@ -96,6 +98,17 @@ feature {NONE} -- Initialization
 		do
 			make (a_context_menu_factory)
 			has_targets := False
+		end
+
+	make_with_options (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_show_targets, a_show_classes: BOOLEAN)
+			-- Create a tree with options
+		do
+			make (a_context_menu_factory)
+			has_targets := a_show_targets
+			is_show_classes := a_show_classes
+		ensure
+			set: has_targets = a_show_targets
+			set: is_show_classes = a_show_classes
 		end
 
 	prepare is
@@ -769,7 +782,11 @@ feature {NONE} -- Implementation
 				a_grps.after
 			loop
 				l_group := a_grps.item_for_iteration
-				create l_item.make (l_group)
+				create l_item.make_with_option (l_group, is_show_classes)
+				
+				if textable /= void and not is_show_classes then
+				l_item.set_associated_textable (textable)
+				end
 
 				a_header.extend (l_item)
 				if window /= Void then
@@ -921,6 +938,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	is_show_classes: BOOLEAN
+			-- Show classes notes?
 
 feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
 

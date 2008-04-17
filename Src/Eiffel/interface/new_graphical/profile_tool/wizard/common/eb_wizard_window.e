@@ -131,6 +131,12 @@ feature {EB_WIZARD_STATE_WINDOW} -- Basic Operations
 			next_b.disable_sensitive
 		end
 
+	enable_next_button is
+			-- Enable the Next/Finish button
+		do
+			next_b.enable_sensitive
+		end
+
 	disable_back_button is
 			-- Enable the Next/Finish button
 		do

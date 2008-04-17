@@ -11,7 +11,6 @@ class
 inherit
 	EB_SHARED_ID_SOLUTION
 
-inherit {NONE}
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

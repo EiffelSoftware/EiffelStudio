@@ -135,6 +135,12 @@ feature -- Pngs
 			Result := load_pixmap_from_repository ("bm_wizard_profiler_icon")
 		end
 
+	bm_Wizard_testing_icon: EV_PIXMAP is
+			-- Icon Bitmap for the wizards
+		once
+			Result := load_pixmap_from_repository ("bm_wizard_testing_icon")
+		end
+
 	bm_Borland: EV_PIXMAP is
 			-- Bitmap for "About dialog" when Borland C++ is installed.
 		once

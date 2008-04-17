@@ -32,10 +32,8 @@ feature -- Contracts
 	contracts_for_class (a_class: !CLASS_I; a_live: BOOLEAN): !TUPLE [contracts: !DS_LIST [TAGGED_AS]; modifier: !ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
 			-- <Precursor>
 		local
-			l_modifier: !like create_text_modifier
+			l_modifier: ?like create_text_modifier
 			l_e_feature: ?like context_feature
-			l_feature_i: ?FEATURE_I
-			l_class_i: !CLASS_I
 			l_class_c: CLASS_C
 			l_feature_as: ?FEATURE_AS
 			l_assertions: ?EIFFEL_LIST [TAGGED_AS]
@@ -45,25 +43,21 @@ feature -- Contracts
 			create l_result.make_default
 
 			if a_class = context_class then
-				l_modifier ?= text_modifier
+				l_modifier := text_modifier
 				l_e_feature := context_feature
 			else
 					-- Create a temporary context object to fetch a text modifier.
 				if a_class.is_compiled then
 					l_class_c ?= a_class.compiled_class
-					if l_class_c /= Void and then l_class_c.has_feature_table then
-						l_feature_i := l_class_c.feature_table.feature_of_rout_id_set (context_feature.rout_id_set)
-						check l_feature_i_attached: l_feature_i /= Void end
-						if l_feature_i /= Void then
-							l_e_feature ?= l_feature_i.api_feature (context_class.compiled_class.class_id)
-							check l_e_feature_attached: l_e_feature /= Void end
-							if l_e_feature /= Void then
-								l_modifier ?= create_parent_text_modifier (l_class_c)
-							end
-						end
+					if l_class_c /= Void then
+						check has_feature_table: l_class_c.has_feature_table end
+						l_modifier := create_parent_text_modifier (l_class_c)
+						l_e_feature ?= l_modifier.context_feature
 					end
 				end
 			end
+
+			check l_modifier_attached: l_modifier /= Void end
 
 			if a_live then
 					-- We have a text modifier now, extract the contracts
@@ -82,14 +76,13 @@ feature -- Contracts
 				check l_e_feature_attached: l_e_feature /= Void end
 
 					-- Class contains syntax errors or request to use the non-live data, use compiled data
-				l_class_i := context_class
-				if l_class_i.is_compiled then
-					l_class_c ?= l_class_i.compiled_class
-					check l_class_c_attached: l_class_c /= Void end
-					if l_class_c /= Void then
-						l_feature_as := l_class_c.ast.feature_of_name (l_e_feature.name, False)
-					end
-				end
+--				if a_class.is_compiled then
+--					l_class_c ?= a_class.compiled_class
+--					check l_class_c_attached: l_class_c /= Void end
+--					if l_class_c /= Void then
+						l_feature_as := l_e_feature.ast
+--					end
+--				end
 			end
 
 			if l_feature_as /= Void then
@@ -105,7 +98,7 @@ feature -- Contracts
 				end
 			end
 
-			Result ?= [l_result, l_modifier]
+			Result ?= [l_result, ({!ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]}) #? l_modifier]
 		end
 
 feature {NONE} -- Contracts

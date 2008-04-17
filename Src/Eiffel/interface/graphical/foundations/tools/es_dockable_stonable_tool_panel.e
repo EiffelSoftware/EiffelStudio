@@ -127,7 +127,7 @@ feature {NONE} -- Basic opertations
 					user_widget.drop_actions.set_veto_pebble_function (agent (a_pebble: ANY): BOOLEAN
 						do
 							if {l_stone: STONE} a_pebble then
-								Result := not is_stone_usable (l_stone)
+								Result := is_stone_usable (l_stone)
 							else
 								Result := True
 							end

@@ -1,28 +1,39 @@
 indexing
-	description: "Shared window manager"
-	legal: "See notice at end of class."
+	description: "[
+					Context UUID used in event list service
+																					]"
 	status: "See notice at end of class."
-	author: "Xavier Rousselot"
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_SHARED_WINDOW_MANAGER
+	ES_TESTING_EVENT_LIST_CONTEXTS
 
-feature -- Access
+feature -- Enumeration
 
-	window_manager: EB_WINDOW_MANAGER is
-			-- Window manager for ebench windows
-		indexing
-			once_status: global
+	all_test_runs_dialog: !UUID is
+			-- Used by {ES_ALL_TEST_RUN_RESULTS_DIALOG}
 		once
-			create Result.make
+			create Result.make_from_string ("0BFCC3DB-268C-4DE2-8125-3BC3AB2E2CB0")
+		end
+
+	eweasel_result_analyzer: !UUID is
+			-- Used by {EWEASEL_RESULT_ANALYZER}
+		once
+			create Result.make_from_string ("8BC8DAE7-7B87-4116-9CE8-D91A60400C83")
+		end
+
+	es_test_case_grid_manager: !UUID is
+			-- Used by {ES_TEST_CASE_GRID_MANAGER}
+		once
+			create Result.make_from_string ("2F589F5C-8B51-4B25-B53E-5284CE8D2459")
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -33,15 +44,15 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
@@ -51,4 +62,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SHARED_WINDOW_MANAGER
+end

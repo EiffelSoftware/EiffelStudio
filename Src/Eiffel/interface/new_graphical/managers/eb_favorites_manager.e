@@ -137,12 +137,9 @@ feature -- Basic Operations
 		do
 			l_window := development_window
 			l_factory := l_window.menus.context_menu_factory
-			create choose_class_dialog.make (l_factory)
-			if a_window /= Void then
-			 	choose_class_dialog.show_modal_to_window (a_window)
-			else
-				choose_class_dialog.show_modal_to_window (l_window.window)
-			end
+			create choose_class_dialog.make
+			choose_class_dialog.show_on_active_window
+
 			if choose_class_dialog.selected then
 				class_name := choose_class_dialog.class_name
 				favorites.add_class (class_name)

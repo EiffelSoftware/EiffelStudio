@@ -1,28 +1,37 @@
 indexing
-	description: "Shared window manager"
-	legal: "See notice at end of class."
+	description: "[
+					eWeasel managers who are responding for eWeasel 
+					test case creation, executions, result analyzing.
+																								]"
 	status: "See notice at end of class."
-	author: "Xavier Rousselot"
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	EB_SHARED_WINDOW_MANAGER
+deferred class
+	ES_EWEASEL_SUB_MANAGER
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	window_manager: EB_WINDOW_MANAGER is
-			-- Window manager for ebench windows
-		indexing
-			once_status: global
-		once
-			create Result.make
+	make is
+			-- Creation method
+		do
 		end
 
+feature -- Query
+
+	manager: !ES_EWEASEL_EXECUTION_MANAGER is
+			-- Chief manager
+		local
+			l_shared: ES_EWEASEL_SINGLETON_FACTORY
+		do
+			create l_shared
+			Result := l_shared.manager
+		end
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -33,15 +42,15 @@ indexing
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software
@@ -51,4 +60,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SHARED_WINDOW_MANAGER
+end

@@ -18,7 +18,7 @@ feature
 			i, j: INTEGER
 			l_days: INTEGER
 		do
-			if argument_count >= 1 and then not argument (1).is_integer then
+			if argument_count >= 1 and then argument (1).is_integer then
 				l_days := argument (1).to_integer
 			else
 				l_days := 1

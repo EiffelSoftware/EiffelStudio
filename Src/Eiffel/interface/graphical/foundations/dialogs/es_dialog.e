@@ -94,10 +94,11 @@ feature {NONE} -- Initialization
 	       			if l_sp_info /= Void then
 	       					-- Previous session data is available
 	       				create l_screen
-	       				if (l_sp_info.x >= 0 and then l_sp_info.x < l_screen.virtual_width) and (l_sp_info.y >= 0 and then l_sp_info.y < l_screen.virtual_height) then
-	       						-- Ensure dialog is not off-screen
-	       					dialog.set_position (l_sp_info.x, l_sp_info.y)
-	       				end
+-- Currently the saved position is not used because it should be saved relative to the parent window.
+--	       				if (l_sp_info.x >= 0 and then l_sp_info.x < l_screen.virtual_width) and (l_sp_info.y >= 0 and then l_sp_info.y < l_screen.virtual_height) then
+--	       						-- Ensure dialog is not off-screen
+--	       					dialog.set_position (l_sp_info.x, l_sp_info.y)
+--	       				end
 	       				dialog.set_size (l_sp_info.width, l_sp_info.height)
 	       			end
 

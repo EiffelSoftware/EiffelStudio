@@ -16,8 +16,6 @@ inherit
 			{NONE}all
 		end
 
-	COMMAND_CONSTANTS
-
 feature -- Operation
 
 	send_command (a_string, a_key: !STRING) is
@@ -32,7 +30,7 @@ feature -- Operation
 			if not a_string.is_empty then
 					-- We add an `ise_command' constants as prefix of the real string sent
 					-- to avoid messages send by other unknown processes.
-				l_string_to_send := ise_command + a_string
+				l_string_to_send := {COMMAND_CONSTANTS}.ise_command + a_string
 				create l_wel_string.make (l_string_to_send)
 				l_copydata := c_new_copydatastruct (l_wel_string.item, l_wel_string.bytes_count)
 				last_copydata := l_copydata
@@ -57,7 +55,7 @@ feature -- Operation
 			if not a_string.is_empty then
 					-- We add an `ise_command' constants as prefix of the real string sent
 					-- to avoid messages sent by other unknown processes.
-				l_string_to_send := ise_command + a_string
+				l_string_to_send := {COMMAND_CONSTANTS}.ise_command + a_string
 				create l_wel_string.make (l_string_to_send)
 				l_copydata := c_new_copydatastruct (l_wel_string.item, l_wel_string.bytes_count)
 				last_copydata := l_copydata

@@ -325,6 +325,10 @@ feature {NONE} -- Implementation commands
 				if l_lines /= Void then
 					l_sub_row.set_height (l_row_height * l_lines.count)
 				end
+
+				if unit_test_manager.see_testing_failure_trace_command.is_selected then
+					a_parent_row.expand
+				end
 			end
 		end
 

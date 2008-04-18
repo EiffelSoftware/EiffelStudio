@@ -141,6 +141,7 @@ feature {NONE} -- Redefine
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
 			l_manager: ES_EWEASEL_EXECUTION_MANAGER
+			l_show_failure_trace_button: SD_TOOL_BAR_BUTTON
 		do
 			create l_shared
 			l_manager := l_shared.manager
@@ -148,7 +149,12 @@ feature {NONE} -- Redefine
 			create Result.make (3)
 			Result.force_last (l_manager.all_test_run_results_command.new_sd_toolbar_item (False))
 
-			Result.force_last (l_manager.see_testing_failure_trace_command.new_sd_toolbar_item (False))
+			l_show_failure_trace_button := l_manager.see_testing_failure_trace_command.new_sd_toolbar_item (False)
+			l_show_failure_trace_button.select_actions.extend (agent set_is_failure_trace_button_enabled)
+			if is_failure_trace_button_enabled then
+				l_manager.see_testing_failure_trace_command.enable_select
+			end
+			Result.force_last (l_show_failure_trace_button)
 
 			-- FIXIT: This button is not implemented now
 --			Result.force_last (l_manager.compare_with_expected_result_command.new_sd_toolbar_item (False))
@@ -191,6 +197,27 @@ feature -- Query
 		end
 
 feature {NONE} -- Implementation
+
+	set_is_failure_trace_button_enabled is
+			-- Set `session_data_id_show_failure_trace_enabled' session data
+		local
+			l_shared: ES_EWEASEL_SINGLETON_FACTORY
+		do
+			create l_shared
+			session_data.set_value (l_shared.manager.see_testing_failure_trace_command.is_selected, session_data_id_show_failure_trace_enabled)
+		end
+
+	is_failure_trace_button_enabled: BOOLEAN is
+			-- If failure trace button enabled in last time running Eiffel Studio?
+		do
+			if {l_result: BOOLEAN} session_data.value (session_data_id_show_failure_trace_enabled) then
+				Result := l_result
+			end
+		end
+
+	session_data_id_show_failure_trace_enabled: STRING is "com.eiffel.testing.show_failure_trace_enabled"
+			-- Session data used for session service	
+			-- This id means whether show failure trace button is selected	
 
 	failure_trace_grid: ES_GRID
 			-- Grid to show all failed test run results.

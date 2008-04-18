@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	execute is
-			-- Redefine
+			-- <Precursor>
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
 		do
@@ -37,15 +37,36 @@ feature -- Command
 			l_shared.manager.testing_result_tool.test_run_result_grid_manager.show_all_failure_traces (not is_selected)
 		end
 
-feature {NONE} -- Implementation
+	enable_select is
+			-- Enable selected all managed tool bar buttons
+		local
+			l_list: like managed_sd_toolbar_items
+		do
+			from
+				l_list := managed_sd_toolbar_items
+				l_list.start
+			until
+				l_list.after
+			loop
+				l_list.item.enable_select
+
+				l_list.forth
+			end
+		ensure
+			seleceted: not managed_sd_toolbar_items.is_empty implies is_selected
+		end
+
+feature -- Query
 
 	is_selected: BOOLEAN is
-			-- Redefine
+			-- <Precursor>
 		do
 			if not managed_sd_toolbar_items.is_empty then
 				Result := managed_sd_toolbar_items.first.is_selected
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).

@@ -35,6 +35,7 @@ feature -- Access
 			l_ast: like contract_ast
 			l_routine: ?ROUTINE_AS
 			l_locals: ?LOCAL_DEC_LIST_AS
+			l_kw: ?KEYWORD_AS
 		do
 			l_ast := contract_ast
 			if l_ast /= Void then
@@ -42,18 +43,20 @@ feature -- Access
 			else
 				l_routine ?= ast_feature.body.content
 				if l_routine /= Void then
-					l_locals := l_routine.internal_locals
-					if l_locals = Void then
-							-- No locals, use routine body
-						Result := ast_position (l_routine.routine_body).start_position
-					else
-						Result := ast_position (l_locals).start_position
+					l_kw := l_routine.rescue_keyword (modified_data.ast_match_list)
+					if l_kw = Void then
+						l_kw := l_routine.end_keyword
+					end
+						-- If the following check is violated then syntax invalid
+						-- data slipped through, the AST should be available at this point.
+					check l_kw_attached: l_kw /= Void end
+					if l_kw /= Void then
+						Result := ast_position (l_kw).start_position
 					end
 				end
 			end
 			Result := modified_data.adjusted_position (Result)
 		end
-
 
 feature {NONE} -- Access
 

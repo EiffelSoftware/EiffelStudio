@@ -798,11 +798,19 @@ feature -- Refactoring
 
 feature -- Contract tool
 
-	w_contract_tool_merge_changes: STRING_GENERAL
+	w_contract_tool_merge_changes (a_name: STRING_GENERAL): STRING_GENERAL
 		do
-			Result := locale.translation ("The associated class file has been modified outside on the Contract Tool.%
+			Result := locale.formatted_string ("The associated class file for $1 has been modified outside on the Contract Tool.%
 				%The changes will be merged but there is a possibility of data loss.%N%N%
-				%Do you want save and merge your changes?")
+				%Do you want continue saving and merging your changes?", [a_name])
+		end
+
+	w_contract_tool_merge_syntax_invalid_changes (a_name: STRING_GENERAL): STRING_GENERAL
+		do
+			Result := locale.formatted_string ("The associated class file for $1 currently contains syntax errors. It is possible %
+				%to continue merging these changes but the Contract Tool will be unable to edit the contracts for this class %
+				%after saving.%N%N%
+				%Do you want to continue saving the changes to a syntax invalid class?", [a_name])
 		end
 
 	w_contract_tool_removal_all: STRING_GENERAL

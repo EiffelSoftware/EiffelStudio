@@ -113,7 +113,7 @@ feature -- Contracts
 			result_contracts_contains_attached_items: not Result.contracts.has (Void)
 			result_modifier_is_prepared: a_live implies Result.modifier.is_prepared
 			result_modifier_is_interface_usable: Result.modifier.is_interface_usable
-			result_contracts_is_empty: (not a_live and not a_class.is_compiled) implies Result.contracts.is_empty
+			result_contracts_is_empty: ((not a_live and not a_class.is_compiled) or (a_live and not Result.modifier.is_ast_available)) implies Result.contracts.is_empty
 		end
 
 feature -- Element change

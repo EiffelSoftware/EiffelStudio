@@ -72,17 +72,11 @@ feature -- Contracts
 				end
 			end
 
-			if l_feature_as = Void then
+			if l_feature_as = Void and not a_live then
 				check l_e_feature_attached: l_e_feature /= Void end
 
 					-- Class contains syntax errors or request to use the non-live data, use compiled data
---				if a_class.is_compiled then
---					l_class_c ?= a_class.compiled_class
---					check l_class_c_attached: l_class_c /= Void end
---					if l_class_c /= Void then
-						l_feature_as := l_e_feature.ast
---					end
---				end
+				l_feature_as := l_e_feature.ast
 			end
 
 			if l_feature_as /= Void then

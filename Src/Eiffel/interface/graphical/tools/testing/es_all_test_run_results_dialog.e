@@ -238,10 +238,17 @@ feature {NONE} -- Agents
 			l_all_test_results: !ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_current_row: EV_GRID_ROW
+			l_factory: ES_EWEASEL_SINGLETON_FACTORY
 		do
 			l_selected_rows := grid.selected_rows
 			if l_selected_rows.count > 0 then
 				check l_selected_rows.count < 2 end
+
+				create l_factory
+				if l_factory.manager.testing_tool /= Void then
+					l_factory.manager.testing_tool.reset
+				end
+
 				l_current_row := l_selected_rows.first
 				if {l_test_result_item: EVENT_LIST_TEST_RUN_ITEM} l_current_row.data  then
 					if {l_current_data: ES_EWEASEL_TEST_RUN_DATA_ITEM} l_test_result_item.data then
@@ -301,7 +308,7 @@ feature {NONE} -- Agents
 					-- We should first collect a list of rows, then remove the rows in another loop
 					-- since row index will be changed in `remove_data'
 
-					if not lt_row.is_displayed then
+					if not lt_row.is_show_requested then
 						l_rows.extend (lt_row)
 					end
 				end

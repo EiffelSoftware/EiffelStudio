@@ -110,7 +110,11 @@ typedef unsigned long VMS_STS;		/* VMS status (condition) value */
 
 /* 32 bit specific definitions */
 typedef void* void_ptr32;
+typedef const void* const_void_ptr32;
 typedef char* char_ptr32;
+typedef const char* const_char_ptr32;
+typedef char** char_ptr_ptr32;
+typedef size_t* size_t_ptr32;
 typedef struct dsc$descriptor DX32;		/* 32 bit descriptor type */
 #define DX32_INIT(siz,ptr,typ,class)	siz, typ,class, ptr
 /* declare/initialize descriptor d with several flavours */

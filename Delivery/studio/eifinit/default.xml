@@ -711,6 +711,7 @@
 	<PREF NAME="shortcuts.view.tools.show_diagram_tool" DESCRIPTION="Shortcut to display Diagram tool."><SHORTCUT Ctrl="True" Alt="True">I</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_class_tool" DESCRIPTION="Shortcut to display Class tool."><SHORTCUT Ctrl="True" Alt="True">C</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_feature_relation_tool" DESCRIPTION="Shortcut to display Feature Relation tool."><SHORTCUT Ctrl="True" Alt="True">V</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.tools.show_contract_tool" DESCRIPTION="Shortcut to display the Contract Editor tool."><SHORTCUT Ctrl="True" Alt="True">G</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_favorites_tool" DESCRIPTION="Shortcut to display Favorites tool."><SHORTCUT Ctrl="True" Alt="True">A</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_windows_tool" DESCRIPTION="Shortcut to display Windows tool."><SHORTCUT Ctrl="True" Alt="True">N</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_breakpoints_tool" DESCRIPTION="Shortcut to display Breakpoints tool."><SHORTCUT Ctrl="True" Alt="True">B</SHORTCUT></PREF>

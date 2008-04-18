@@ -252,7 +252,7 @@ feature {NONE} -- Implementation commands
 			l_current_session_data: ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]
 		do
 			l_list := all_test_runs_from_grid
-			if {l_session_data: ES_EWEASEL_TEST_RUN_DATA_ITEM} session_data.current_session_data then -- FIXIT: How to find current session data?
+			if {l_session_data: ES_EWEASEL_TEST_RUN_DATA_ITEM} session_data.current_session_data then
 				l_current_session_data := l_session_data.test_run_data
 				if l_current_session_data /= Void then
 					check same_size: l_list.count = l_current_session_data.count end

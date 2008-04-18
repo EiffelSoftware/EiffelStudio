@@ -21,6 +21,15 @@ feature -- Access
 			Result := c_console_code_page.out
 		end
 
+	set_console_code_page (a_codepage: NATURAL_32) is
+			-- Set code page for console output
+		local
+			l_result: INTEGER
+		do
+			l_result := c_set_console_code_page (a_codepage)
+			check success: l_result /= 0 end
+		end
+
 feature {NONE} -- Implementation
 
 	c_console_code_page: INTEGER is
@@ -30,6 +39,20 @@ feature {NONE} -- Implementation
 		alias
 			"[
 				return (EIF_INTEGER_32)GetConsoleOutputCP ();
+			]"
+		end
+
+	c_set_console_code_page (a_codepage: NATURAL_32): INTEGER is
+			-- Set output codepage with `a_codepage'
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				EIF_INTEGER_32 l_result;
+				
+				l_result = SetConsoleOutputCP ((EIF_NATURAL_32) $a_codepage);
+				
+				return l_result;
 			]"
 		end
 

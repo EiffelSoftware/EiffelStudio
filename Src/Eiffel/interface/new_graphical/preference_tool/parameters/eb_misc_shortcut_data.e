@@ -186,6 +186,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([True, True, False, key_strings.item (Key_i).twin.as_string_8], "show_diagram_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_c).twin.as_string_8], "show_class_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_v).twin.as_string_8], "show_feature_relation_tool")
+			l_hash.put ([True, True, False, key_strings.item (Key_g).twin.as_string_8], "show_contract_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_a).twin.as_string_8], "show_favorites_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_n).twin.as_string_8], "show_windows_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_b).twin.as_string_8], "show_breakpoints_tool")

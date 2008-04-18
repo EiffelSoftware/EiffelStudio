@@ -1,9 +1,9 @@
 indexing
 	description: "configuration values from CONFIG.EIF"
 	author: "David Schwartz"
-	date: "$Date$"
-	revision: "$Revision$"
-	archive: "$Archive: $"
+	Date: "$Date$"
+	Revision: "$Revision$"
+	ID:		"$ID: $"
 
 class ES5SH_CONFIGURATION
 

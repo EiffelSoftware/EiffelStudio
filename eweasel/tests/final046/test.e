@@ -49,6 +49,8 @@ feature
 			if not fname.has (Version_separator) then
 				fname.extend (Version_separator)
 			end
+			if c.attr = v then
+			end
 			if c.has (v) then
 			end
 			i := c.item (v)
@@ -56,6 +58,8 @@ feature
 				io.put_string ("Bug for C%N")
 			end
 
+			if a.attr = v then
+			end
 			if a.has (v) then
 			end
 			i := a.item (v)

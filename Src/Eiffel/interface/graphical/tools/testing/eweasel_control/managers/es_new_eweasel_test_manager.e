@@ -407,6 +407,7 @@ feature {NONE} -- File contents
 			-- Default Eiffel config file content.
 		local
 			l_file: RAW_FILE
+			l_uuid: UUID_GENERATOR
 		do
 			create l_file.make (ecf_content_file_name)
 			create Result.make_empty
@@ -418,6 +419,10 @@ feature {NONE} -- File contents
 
 				-- Set class name
 				Result.replace_substring_all ("$ROOT_CLASS", test_case_root_class_name)
+
+				-- Set UUID
+				create l_uuid
+				Result.replace_substring_all ("$UUID", l_uuid.generate_uuid.out)
 			else
 				Result := ""
 				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.name), Void, Void)

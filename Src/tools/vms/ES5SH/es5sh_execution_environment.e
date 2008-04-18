@@ -3,7 +3,7 @@ indexing
 	author: "David Schwartz $"
 	Date: "$Date$"
 	Revision: "$Revision$"
-	ID:		"$ID: $"
+	Id:		"$Id$"
 
 class ES5SH_EXECUTION_ENVIRONMENT
 

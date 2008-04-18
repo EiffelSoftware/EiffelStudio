@@ -8,7 +8,7 @@ indexing
 	Version: "V6.2-001"
 	Date: "$Date$"
 	Revision: "$Revision$"
-	ID:		"$ID: $"
+	Id:		"$Id$"
 	Notes: "*** be sure to update pretty_version string in ES5SH_COMMON to match the Version here"
 
 --

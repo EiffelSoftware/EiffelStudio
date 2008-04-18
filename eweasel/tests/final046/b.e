@@ -4,7 +4,7 @@ class
 inherit
 	A [G]
 		redefine
-			item
+			item, has
 		end
 
 feature --
@@ -12,6 +12,10 @@ feature --
 	item (v: G): G is
 		do
 			Result := v + v
+		end
+
+	has (v: G): BOOLEAN is
+		do
 		end
 
 end

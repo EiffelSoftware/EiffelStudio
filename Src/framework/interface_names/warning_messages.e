@@ -796,6 +796,21 @@ feature -- Refactoring
 	w_Select_class_feature_to_rename: STRING_GENERAL is do Result := locale.translation ("Select class or feature to rename.%NEither use pick and drop or target the editor to the feature or class.") end
 	w_Select_feature_to_pull: STRING_GENERAL is do Result := locale.translation ("Select a feature to pull up.%NEither use pick and drop or target the editor to the feature to pull up.") end
 
+feature -- Contract tool
+
+	w_contract_tool_merge_changes: STRING_GENERAL
+		do
+			Result := locale.translation ("The associated class file has been modified outside on the Contract Tool.%
+				%The changes will be merged but there is a possibility of data loss.%N%N%
+				%Do you want save and merge your changes?")
+		end
+
+	w_contract_tool_removal_all: STRING_GENERAL
+		do
+			Result := locale.translation ("Performing a removal on the contract declaration will removal ALL the contracts underneath.%N%N%
+				%Are you want to remove all the contract?")
+		end
+
 feature -- Warning messages
 
 	w_Assertion_warning: STRING_GENERAL is

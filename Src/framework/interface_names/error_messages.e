@@ -13,10 +13,15 @@ class
 inherit
 	SHARED_LOCALE
 
-feature -- Access
+feature -- Code template
 
 	e_code_template_parse (a_error: STRING_GENERAL; a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to parse the code template  '$1'. Error: $2.", [a_file_name, a_error]) end
 	e_code_template_read (a_file_name: STRING_GENERAL): !STRING_32 do Result ?= locale.formatted_string ("Unable to read the code template file '$1'.", [a_file_name]) end
+	e_code_template_unable_to_find_template: !STRING_32 do Result ?= locale.translation ("Unable to find an applicable template for the current version of EiffelStudio.") end
+
+feature -- Contract tool
+
+	e_contract_tool_save_failed: !STRING_32 do Result ?= locale.translation ("There was a problem saving the contracts. Please check you have access to the class file.") end
 
 feature -- Prompts
 

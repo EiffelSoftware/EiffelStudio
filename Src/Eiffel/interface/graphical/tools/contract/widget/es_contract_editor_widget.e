@@ -1028,7 +1028,7 @@ feature {NONE} -- Population
 			a_row.clear
 
 				-- Use an editor grid item to replicate the style
-			create l_editor_item.make_with_text ("No contracts found.")
+			create l_editor_item.make_with_text (interface_names.t_contract_no_contracts.as_string_8)
 			l_editor_item.set_pixmap (stock_pixmaps.general_warning_icon)
 			l_editor_item.set_left_border (tab_indent_spacing)
 			a_row.set_item (contract_column, l_editor_item)
@@ -1064,9 +1064,9 @@ feature {NONE} -- Population
 			a_row.clear
 
 			create l_token_generator.make
-			l_token_generator.add ("The contracts cannot be show for class ")
+			l_token_generator.add (interface_names.t_contract_syntax_error_1)
 			l_token_generator.add_class (a_class)
-			l_token_generator.add (" because it contains syntax errors.")
+			l_token_generator.add (interface_names.t_contract_syntax_error_2)
 
 			create l_editor_item
 			l_editor_item.set_pixmap (stock_pixmaps.general_error_icon)

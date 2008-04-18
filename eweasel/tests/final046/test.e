@@ -43,6 +43,8 @@ feature
 			if not fname.has (Version_separator) then
 				fname.extend (Version_separator)
 			end
+			if a.has (v) then
+			end
 			i := a.item (v)
 			if i /= v + v then
 				io.put_string ("Bug%N")

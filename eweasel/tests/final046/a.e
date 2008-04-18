@@ -8,4 +8,8 @@ feature
 			Result := v + v
 		end
 
+	has (v: G): BOOLEAN is
+		do
+		end
+
 end

@@ -1,0 +1,24 @@
+<code_template format="1.0.0">
+	<metadata>
+		<title>Has Item</title>
+		<description>Code template for testing a container structure has an item.</description>
+		<author>Eiffel Software</author>
+		<shortcut>has_item</shortcut>
+		<categories>
+			<category>contract</category>
+		</categories>
+	</metadata>
+	
+	<declarations>	
+		<object id="container" editable="true" conforms_to="CONTAINER">
+			<description>An attached container variable.</description>
+		</object>
+		<object id="item" editable="true" conforms_to="ANY">
+			<description>An expression yielding an attached item that should be in the supplied container.</description>
+		</object>
+	</declarations>
+	
+	<templates>
+		<template>${container}_has_item: ${container}.has (${item})</template>	
+	</templates>
+</code_template>

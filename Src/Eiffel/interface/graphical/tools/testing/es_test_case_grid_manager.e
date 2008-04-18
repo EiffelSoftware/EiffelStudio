@@ -245,26 +245,28 @@ feature -- Command
 					if {lt_row: EV_GRID_ROW} l_grid_row then
 						l_test_case_item := test_case_item_from (lt_row)
 					else
-						check not_possible: False end
+						-- We haven't found related test case row
 					end
 				else
 					check not_possible: False end
 				end
 
 				-- Update test case item data
-				l_test_case_item.set_last_run_result (a_result.result_type)
-				l_test_case_item.set_last_run_time (a_result.test_run_time)
+				if l_test_case_item /= Void then
+					l_test_case_item.set_last_run_result (a_result.result_type)
+					l_test_case_item.set_last_run_time (a_result.test_run_time)
 
-				if a_result.result_type = {ES_EWEASEL_RESULT_TYPE}.error then
-					error_count := error_count + 1
-					update_failure_and_error_label
-				elseif a_result.result_type = {ES_EWEASEL_RESULT_TYPE}.failed then
-					failure_count := failure_count + 1
-					update_failure_and_error_label
-				end
+					if a_result.result_type = {ES_EWEASEL_RESULT_TYPE}.error then
+						error_count := error_count + 1
+						update_failure_and_error_label
+					elseif a_result.result_type = {ES_EWEASEL_RESULT_TYPE}.failed then
+						failure_count := failure_count + 1
+						update_failure_and_error_label
+					end
 
-				if {l_label_item: EV_GRID_LABEL_ITEM} l_grid_row.item (5) then
-					update_row_forground_color_base_on_result (l_label_item, a_result.result_type)
+					if {l_label_item: EV_GRID_LABEL_ITEM} l_grid_row.item (5) then
+						update_row_forground_color_base_on_result (l_label_item, a_result.result_type)
+					end
 				end
 			end
 

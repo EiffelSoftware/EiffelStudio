@@ -243,11 +243,7 @@ feature {NONE} -- Implementation routines
 					l_file.flush
 					l_file.close
 				end
---				l_tmp_name := l_file_name_helper.short_name_of (lt_string)
---				if l_tmp_name = Void then
---					-- Convert to short name failed, we use orignal long file name.
---					create {FILE_NAME} l_tmp_name.make_from_string (Result)
---				end
+				l_tmp_name := l_file_name_helper.short_name_of (lt_string)
 			end
 
 			create Result.make_from_string (l_tmp_name.as_string_8)

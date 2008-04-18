@@ -12,12 +12,12 @@ class
 
 feature -- Query
 
-	short_name_of (a_long_file_name: !STRING_32): STRING_32 is
+	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_GENERAL is
 			-- Short name of `a_long_file_name'
 			-- Result is Void if error
 			-- File must exists before convert to short name
 		do
-			if {l_result: STRING_32} implementation.short_name_of (a_long_file_name) then
+			if {l_result: STRING_GENERAL} implementation.short_name_of (a_long_file_name) then
 				Result := l_result
 			end
 		end

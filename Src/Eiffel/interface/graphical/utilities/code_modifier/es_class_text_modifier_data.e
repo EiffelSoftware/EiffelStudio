@@ -58,7 +58,7 @@ feature {NONE} -- Access
 	position_adjustments: !DS_LINKED_LIST [TUPLE [position: INTEGER; adjustment: INTEGER]]
 			-- Positional adjustments for batch modifications.
 
-feature {ES_CLASS_TEXT_MODIFIER}
+feature {ES_CLASS_TEXT_MODIFIER} -- Element change
 
 	set_text (a_text: !like text)
 			-- Sets new modifier text.

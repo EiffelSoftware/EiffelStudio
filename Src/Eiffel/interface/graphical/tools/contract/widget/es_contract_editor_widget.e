@@ -710,7 +710,7 @@ feature {NONE} -- Population
 
 				-- Populate contracts, if any
 			l_contracts := l_mod_contract.contracts
-			if not l_contracts.is_empty then
+			if not l_contracts.is_empty and then (not l_editable or else l_mod_contract.modifier.is_ast_available) then
 				a_row.insert_subrows (l_contracts.count, 1)
 				if not l_editable then
 						-- Create token generator for use later.
@@ -812,7 +812,6 @@ feature {NONE} -- Population
 			end
 		ensure
 			a_row_data_set: a_context.text_modifier.is_ast_available implies (({ES_CONTRACT_SOURCE_I}) #? a_row.data) /= Void
-			a_row_data_unset: not a_context.text_modifier.is_ast_available implies a_row.data = Void
 		end
 
 	populate_contract_header_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context; a_editable: BOOLEAN)

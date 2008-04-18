@@ -661,12 +661,20 @@ feature {NONE} -- Event handlers
 		do
 			Precursor
 			if is_interface_usable and then is_initialized then
+				if is_class_file_modified_externally then
+						-- Update the save button, because it may have been modified due to external file
+						-- modifications.
+					save_modifications_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
+					save_modifications_button.set_pixmap (stock_pixmaps.general_save_icon)
+
+					is_class_file_modified_externally := False
+				end
+
 				if is_dirty then
 					save_modifications_button.enable_sensitive
 				else
 					save_modifications_button.disable_sensitive
 				end
-				is_class_file_modified_externally := False
 			end
 		ensure then
 			not_is_class_file_modified_externally: not is_class_file_modified_externally
@@ -679,6 +687,8 @@ feature {NONE} -- Event handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
+		local
+			l_new_buffer: EV_PIXEL_BUFFER
 		do
 			if is_initialized and then has_stone and then not is_saving then
 				if shown then
@@ -686,6 +696,13 @@ feature {NONE} -- Event handlers
 						set_stone (Void)
 					elseif not is_dirty then
 						refresh_stone
+					else
+						check is_dirty: is_dirty end
+
+							-- Add a warning overlay to the save button
+						l_new_buffer := (create {EB_SHARED_PIXMAPS}).icon_buffer_with_overlay (stock_pixmaps.general_save_icon_buffer, stock_pixmaps.overlay_warning_icon_buffer, 0, 0)
+						save_modifications_button.set_pixel_buffer (l_new_buffer)
+						save_modifications_button.set_pixmap (l_new_buffer)
 					end
 				else
 					last_file_change_notified_agent := agent on_file_modified (a_modification_type)
@@ -838,22 +855,28 @@ feature {NONE} -- Action handlers
 			l_assertions: !DS_ARRAYED_LIST [STRING]
 			l_error: ES_ERROR_PROMPT
 			l_question: ES_QUESTION_WARNING_PROMPT
+			l_check_modifier: ES_CLASS_TEXT_AST_MODIFIER
 			retried: BOOLEAN
 		do
 			if not retried then
 				is_saving := True
 
-					-- Temporary
-				create l_question.make_standard (
-					"The Contract Tool is not quite finished and as a result saving could result in incorrectly formatted code. %
-					%In some cases applying the changes can cause syntax errors.%N%N%
-					%This issue will be fixed very soon.%N%N%
-					%Do you want to take the risk and save your changes?")
-				l_question.show_on_active_window
-
-				if l_question.dialog_result = l_question.default_confirm_button and then is_class_file_modified_externally then
-					create l_question.make_standard (messages.w_contract_tool_merge_changes)
+				if is_class_file_modified_externally then
+					create l_question.make_standard (messages.w_contract_tool_merge_changes (context.context_class.name))
 					l_question.show_on_active_window
+				end
+
+				if l_question = Void or else l_question.dialog_result = l_question.default_confirm_button then
+						-- Warn user about syntax invalid class files
+					create l_check_modifier.make (context.context_class)
+					l_check_modifier.prepare
+					if not l_check_modifier.is_ast_available then
+							-- The class contains syntax errors
+						if l_question.dialog_result = l_question.default_confirm_button and then is_class_file_modified_externally then
+							create l_question.make_standard (messages.w_contract_tool_merge_syntax_invalid_changes (context.context_class.name))
+							l_question.show_on_active_window
+						end
+					end
 				end
 
 				if l_question = Void or else l_question.dialog_result = l_question.default_confirm_button then
@@ -871,7 +894,6 @@ feature {NONE} -- Action handlers
 						l_modifier.replace_contracts (l_assertions)
 						if l_modifier.is_dirty then
 							l_modifier.commit
-								-- Check affected classes and open, if requested.
 
 								-- Perform an update to recieve the most current information
 							set_is_dirty (False)
@@ -1019,9 +1041,13 @@ feature {NONE} -- Action handlers
 			create l_dialog.make
 			l_dialog.set_contract (l_line.tag, l_line.contract)
 			l_dialog.show_on_active_window
-			if l_dialog.dialog_result = l_dialog.default_confirm_button then
+			if l_dialog.dialog_result = l_dialog.default_confirm_button and then l_dialog.is_dirty then
 				l_contract := l_dialog.contract
-				contract_editor.replace_contract (l_contract.tag, l_contract.contract, l_line)
+				if not (l_line.tag.is_equal (l_contract.tag) and then l_line.contract.is_equal (l_contract.contract)) then
+						-- Contract actually changed
+					contract_editor.replace_contract (l_contract.tag, l_contract.contract, l_line)
+					set_is_dirty (True)
+				end
 			end
 
 				-- Set focus back to editor.

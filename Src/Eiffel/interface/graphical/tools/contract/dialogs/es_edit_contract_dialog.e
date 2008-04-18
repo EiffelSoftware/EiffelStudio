@@ -13,12 +13,40 @@ class
 inherit
 	ES_ADD_CONTRACT_DIALOG
 		redefine
+			on_after_initialized,
+			internal_recycle,
 			icon,
-			title
+			title,
+			on_ok
+		end
+
+	ES_MODIFIABLE
+		redefine
+			internal_recycle
 		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	on_after_initialized
+			-- <Precursor>
+		do
+			Precursor
+			set_is_dirty (False)
+		ensure then
+			not_is_dirty: not is_dirty
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle
+			-- <Precursor>
+		do
+			Precursor {ES_ADD_CONTRACT_DIALOG}
+			Precursor {ES_MODIFIABLE}
+		end
 
 feature -- Element change
 
@@ -32,7 +60,9 @@ feature -- Element change
 		do
 			tag_text.set_text (({!STRING_32}) #? a_tag.as_string_32)
 			contract_editor.load_text (a_contract.as_string_8)
+			set_is_dirty (False)
 		ensure
+			not_is_dirty: not is_dirty
 			--tag_text_set: a_tag.is_equal (tag_text.text.as_string_8)
 			--contract_editor_text_set: contract_editor.text.is_equal (a_contract)
 		end
@@ -49,6 +79,17 @@ feature -- Dialog access
 			-- <Precursor>
 		do
 			Result := "Edit Contract"
+		end
+
+feature {NONE} -- Action handler
+
+	on_ok
+			-- <Precursor>
+		do
+			Precursor
+			set_is_dirty (True)
+		ensure then
+			is_dirty: is_dirty
 		end
 
 ;indexing

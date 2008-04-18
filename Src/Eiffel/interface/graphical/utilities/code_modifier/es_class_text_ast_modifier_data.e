@@ -84,9 +84,12 @@ feature -- Basic operations
 				l_parser.set_is_indexing_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_standard)
 				l_parser.set_is_note_keyword (l_options.syntax_level.item /= {CONF_OPTION}.syntax_level_obsolete)
 				l_parser.parse_from_string (text)
-				if l_parser.root_node /= Void and then l_parser.match_list /= Void then
+				if l_errors.is_empty and then l_parser.root_node /= Void and then l_parser.match_list /= Void then
 					ast := l_parser.root_node
 					ast_match_list := l_parser.match_list
+				else
+					ast := Void
+					ast_match_list := Void
 				end
 
 				inst_context.set_group (l_current_group)

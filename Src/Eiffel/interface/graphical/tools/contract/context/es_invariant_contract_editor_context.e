@@ -51,7 +51,7 @@ feature -- Contracts
 				end
 			end
 
-			if l_class_as = Void then
+			if l_class_as = Void and not a_live then
 					-- Class contains syntax errors or request to use the non-live data, use compiled data
 				l_class_i := l_modifier.context_class
 				if l_class_i.is_compiled then

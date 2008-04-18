@@ -187,14 +187,21 @@ rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
 	VMS_STS sts;
 	char vms_dir [PATH_MAX +1];
 
-//	if (strchr(dir, '/')) {	    /* if dir contains a '/' it might be a Unix filespec */
+	//if (strchr(dir, '/')) {	    /* if dir contains a '/' it might be a Unix filespec */
 		int res = decc$to_vms (dir, stupid_vms_trick, 0, 2);
 		if (res) dir = strcpy (vms_dir, stupid_vms_name);
-//	}
+	//}
 	/* perform a parse on the name supplied */
 	/* ***VMS FIXME*** change to use NAML (64 bit) blocks to remove warnings and potential pointer truncation */
-	fab.fab$l_dna = (char*)dnm; fab.fab$b_dns = strlen(dnm);
-	fab.fab$l_fna = (char*)dir; fab.fab$b_fns = strlen(dir);
+#if __INITIAL_POINTER_SIZE > 32
+	fab.fab$l_dna = (char*)dnm; 
+	fab.fab$l_fna = (char*)dir; 
+#else
+	fab.fab$l_dna = (char*)dnm; 
+	fab.fab$l_fna = (char*)dir; 
+#endif
+	fab.fab$b_dns = strlen(dnm);
+	fab.fab$b_fns = strlen(dir);
 	fab.fab$l_nam = &nam;
 	nam.nam$l_esa = esb; nam.nam$b_ess = sizeof esb -1;
 	nam.nam$l_rsa = rsb; nam.nam$b_rss = sizeof rsb -1;
@@ -696,18 +703,19 @@ static const char* safe_string (const char*p) ;
 
 #include <locale.h>
 #define NeedFunction_Prototypes
-char* eifrt_vms_setlocale (int category, const char* locale)
+/* setlocale is 32-bit only */
+char_ptr32 eifrt_vms_setlocale (int category, const char* locale)
 {
-    char *res, *res1;
+    char_ptr32 res, res1;
     static uint once = FALSE;
-    static const char* default_locale = NULL;
-    char *DECC$SETLOCALE (int category, const char* locale);
-    char *__XSETLOCALE (int category, const char* locale);
+    static const_char_ptr32 default_locale = NULL;
+    char_ptr32 DECC$SETLOCALE (int category, const char* locale);
+    char_ptr32 __XSETLOCALE (int category, const char* locale);
 
     if (!once) {
 	once = TRUE;
 	res = DECC$SETLOCALE (LC_ALL, NULL);
-	default_locale = strdup (res);
+	default_locale = _strdup32 (res);
 #ifdef VMS_TRACE
 	printf ("eifrtvms: first call to setlocale (LC_ALL,NULL) = %s\n", default_locale);
 #endif
@@ -771,11 +779,12 @@ static int eifrt_vms_nl_item_compare (const eifrt_vms_nl_map_item_t* p1, const e
 }
 
 
-char* eifrt_vms_nl_langinfo (nl_item item)
-{   char *res;
+char_ptr32 eifrt_vms_nl_langinfo (nl_item item)
+{   
+    char_ptr32 res;
     eifrt_vms_nl_map_item_t* nlp;
     nl_item itm = item;
-    char *DECC$NL_LANGINFO (nl_item item);
+    char_ptr32 DECC$NL_LANGINFO (nl_item item);
     static int sorted;
 
     res = DECC$NL_LANGINFO (item);
@@ -803,10 +812,12 @@ char* eifrt_vms_nl_langinfo (nl_item item)
 
 #include <iconv.h>
 
-size_t eifrt_vms_iconv (iconv_t cd, char **inpbuf, size_t *inpbytesleft, char **outbuf, size_t *outbytesleft)
+size_t eifrt_vms_iconv (iconv_t cd, char_ptr_ptr32 inpbuf, size_t_ptr32 inpbytesleft, char_ptr_ptr32 outbuf, size_t_ptr32 outbytesleft)
 {
-    size_t DECC$ICONV (iconv_t, char**, size_t*, char**, size_t*);
-    return DECC$ICONV (cd, inpbuf, inpbytesleft, outbuf, outbytesleft);
+    size_t res;
+    size_t DECC$ICONV (iconv_t cd, char_ptr_ptr32 inpbf, size_t_ptr32 inpbytleft, char_ptr_ptr32 outbf, size_t_ptr32 outbytleft);
+    res = DECC$ICONV (cd, inpbuf, inpbytesleft, outbuf, outbytesleft);
+    return res;
 }
 
 int eifrt_vms_iconv_close (iconv_t cd)

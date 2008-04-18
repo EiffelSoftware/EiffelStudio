@@ -123,6 +123,7 @@ feature {NONE} -- Implementation
 			create cluster
 			cluster.set_text (interface_names.l_Please_select)
 			l_h_box.extend (cluster)
+			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
 			create l_button.make_with_text (interface_names.b_browse)
 			l_button.select_actions.extend (agent on_browse_for_cluster)
@@ -203,7 +204,8 @@ feature {NONE} -- Implementation
 
 			-- Class under test.
 			create l_h_box
-
+			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
+			
 			create l_label.make_with_text (interface_names.l_class_under_test)
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)

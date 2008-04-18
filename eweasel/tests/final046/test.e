@@ -14,10 +14,14 @@ feature
 			fname1: STRING
 			fname2: MY_STRING
 			b: B [INTEGER]
+			d: D [INTEGER]
+			c: C [ANY]
 		do
 			create mem.make (Eiffel_memory)
 			(create {MEMORY}).collection_off
 			create b
+			create d
+			c := d
 			create fname2.make_from_string ("abc")
 			fname1 := fname2
 
@@ -27,15 +31,17 @@ feature
 			until
 				k > count
 			loop
-				try (fname1, b, k)
+				try (fname1, b, d, k)
 				mem.update (Eiffel_memory);
 				check_memory (mem);
 				k := k + 1;
 			end
 		end;
 
-	try (fname: STRING; a: A [INTEGER]; v: INTEGER)
+	try (fname: STRING; a: A [INTEGER]; c: C [INTEGER]; v: INTEGER)
 		require
+			a_not_void: a /= Void
+			c_not_void: c /= Void
 			fname_not_void: fname /= Void
 		local
 			i: INTEGER
@@ -43,11 +49,18 @@ feature
 			if not fname.has (Version_separator) then
 				fname.extend (Version_separator)
 			end
+			if c.has (v) then
+			end
+			i := c.item (v)
+			if i /= v + v then
+				io.put_string ("Bug for C%N")
+			end
+
 			if a.has (v) then
 			end
 			i := a.item (v)
 			if i /= v + v then
-				io.put_string ("Bug%N")
+				io.put_string ("Bug for A%N")
 			end
 		end
 

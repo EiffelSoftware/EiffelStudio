@@ -852,11 +852,7 @@ feature {NONE} -- Action handlers
 				l_question.show_on_active_window
 
 				if l_question.dialog_result = l_question.default_confirm_button and then is_class_file_modified_externally then
-					create l_question.make_standard (
-						"The associated class file has been modified outside on the Contract Tool.%
-						%The changes will be merged but there is a possibility of data loss.%N%N%
-						%Do you want save and merge your changes?")
-
+					create l_question.make_standard (messages.w_contract_tool_merge_changes)
 					l_question.show_on_active_window
 				end
 
@@ -890,7 +886,7 @@ feature {NONE} -- Action handlers
 
 				is_saving := False
 			else
-				create l_error.make_standard ("There was a problem saving the contracts. Please check you have access to the class file.")
+				create l_error.make_standard (messages.e_contract_tool_save_failed)
 				l_error.show_on_active_window
 			end
 
@@ -969,7 +965,7 @@ feature {NONE} -- Action handlers
 					end
 				end
 			else
-				create l_error.make_standard ("Unable to find an applicable template for the current version of EiffelStudio.")
+				create l_error.make_standard (messages.e_code_template_unable_to_find_template)
 				l_error.show_on_active_window
 			end
 
@@ -997,9 +993,7 @@ feature {NONE} -- Action handlers
 					set_is_dirty (True)
 				else
 						-- User chooses to remove all contracts
-					create l_question.make_standard (
-						"Performing a removal on the contract declaration will removal ALL the contracts underneath.%N%N%
-						%Are you want to remove all the contract?")
+					create l_question.make_standard (messages.w_contract_tool_removal_all)
 					l_question.show_on_active_window
 				end
 			end
@@ -1221,30 +1215,29 @@ feature {NONE} -- Factory
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_save_icon)
-			l_button.set_tooltip ("Save modifications to class.")
+			l_button.set_tooltip (interface_names.t_contract_save_to_class)
 			l_button.disable_sensitive
 			save_modifications_button := l_button
 			Result.put_last (l_button)
-
 			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Add contract button
 			create l_dual_button.make
 			l_dual_button.set_pixel_buffer (stock_pixmaps.general_add_icon_buffer)
 			l_dual_button.set_pixmap (stock_pixmaps.general_add_icon)
-			l_dual_button.set_tooltip ("Adds a new contract.")
+			l_dual_button.set_tooltip (interface_names.t_contract_add_contract)
 			l_dual_button.disable_sensitive
 			add_contract_button := l_dual_button
 			Result.put_last (l_dual_button)
 
 				-- Create menu for add selection button
 			create l_menu
-			create l_menu_item.make_with_text ("&Add Contract...")
+			create l_menu_item.make_with_text (interface_names.m_contract_add_contract)
 			l_menu.set_pixmap (stock_pixmaps.general_add_icon)
 			l_menu.extend (l_menu_item)
 			add_manual_menu_item := l_menu_item
 
-			create l_sub_menu.make_with_text ("&Add Contract from Template")
+			create l_sub_menu.make_with_text (interface_names.m_contract_add_contract_from_template)
 			l_menu.extend (l_sub_menu)
 			add_from_template_menu := l_sub_menu
 
@@ -1258,7 +1251,7 @@ feature {NONE} -- Factory
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_remove_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_remove_icon)
-			l_button.set_tooltip ("Removes the selected contract(s).")
+			l_button.set_tooltip (interface_names.t_contract_remove_selected)
 			l_button.disable_sensitive
 			remove_contract_button := l_button
 			Result.put_last (l_button)
@@ -1267,7 +1260,7 @@ feature {NONE} -- Factory
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_edit_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_edit_icon)
-			l_button.set_tooltip ("Edit the selected contract.")
+			l_button.set_tooltip (interface_names.t_contract_edit_selected)
 			l_button.disable_sensitive
 			edit_contract_button := l_button
 			Result.put_last (l_button)
@@ -1276,7 +1269,7 @@ feature {NONE} -- Factory
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_move_up_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_move_up_icon)
-			l_button.set_tooltip ("Move the selected contract up.")
+			l_button.set_tooltip (interface_names.t_contract_move_selected_up)
 			l_button.disable_sensitive
 			move_contract_up_button := l_button
 			Result.put_last (l_button)
@@ -1285,7 +1278,7 @@ feature {NONE} -- Factory
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_move_down_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_move_down_icon)
-			l_button.set_tooltip ("Move the selected contract down.")
+			l_button.set_tooltip (interface_names.t_contract_move_selected_down)
 			l_button.disable_sensitive
 			move_contract_down_button := l_button
 			Result.put_last (l_button)
@@ -1296,7 +1289,7 @@ feature {NONE} -- Factory
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_refresh_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_refresh_icon)
-			l_button.set_tooltip ("Refresh the current contracts to include an undetected changes.")
+			l_button.set_tooltip (interface_names.t_contract_refresh)
 			l_button.disable_sensitive
 			refresh_button := l_button
 			Result.put_last (l_button)
@@ -1306,7 +1299,7 @@ feature {NONE} -- Factory
 			l_dual_button.set_text (contract_mode_label (contract_mode))
 			l_dual_button.set_pixel_buffer (stock_pixmaps.view_contracts_icon_buffer)
 			l_dual_button.set_pixmap (stock_pixmaps.view_contracts_icon)
-			l_dual_button.set_tooltip ("Select the contracts to edit.")
+			l_dual_button.set_tooltip (interface_names.t_contract_select_mode)
 			contract_mode_button := l_dual_button
 			Result.put_last (l_dual_button)
 
@@ -1340,7 +1333,7 @@ feature {NONE} -- Factory
 			create l_toggle_button.make
 			l_toggle_button.set_pixel_buffer (stock_pixmaps.general_show_hidden_icon_buffer)
 			l_toggle_button.set_pixmap (stock_pixmaps.general_show_hidden_icon)
-			l_toggle_button.set_tooltip ("Shows/hides the hidden contract place holders for inherited contracts.")
+			l_toggle_button.set_tooltip (interface_names.t_contract_show_all_lines)
 			l_toggle_button.disable_sensitive
 			show_all_lines_button := l_toggle_button
 			Result.put_last (l_toggle_button)
@@ -1351,7 +1344,7 @@ feature {NONE} -- Factory
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.feature_callees_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.feature_callees_icon)
-			l_button.set_tooltip ("Show the callers of the currently edited feature.")
+			l_button.set_tooltip (interface_names.t_contract_show_callers)
 			l_button.disable_sensitive
 			show_callers_button := l_button
 			Result.put_last (l_button)

@@ -1,9 +1,12 @@
 indexing
 	description: "common ancestor/utility for ES5SH"
+	name: "EIFFEL_SRC:[ES5SH]ES5SH_COMMON.E"
 	author: "David Schwartz"
-	date: "$Date$"
-	revision: "$Revision$"
-	archive: "$Archive: $"
+	Version: "V6.2-001"
+	Date: "$Date$"
+	Revision: "$Revision$"
+	ID:		"$ID: $"
+	Notes: "*** be sure to update pretty_version string below to match the Version here"
 
 class
 	ES5SH_COMMON
@@ -11,7 +14,7 @@ class
 feature -- Access
 
 	pretty_name:	STRING is	"ES5SH"
-	pretty_version: STRING is	"es5sh X5.7-008"
+	pretty_version: STRING is	"es5sh X6.2-001"
 	default_date_time_format: STRING  is "[0]dd-mmm-yyyy [0]hh:[0]mi:[0]ss"
 	default_time_format: STRING is "[0]hh:[0]mi:[0]ss"
 	default_wrap_margin: INTEGER is 80

@@ -5,14 +5,18 @@ indexing
 	original: 01,Jan,1995
 	last: 22,Aug,1998
 	modified_by: "David Schwartz (davids), VMS diehard"
-	Version: "X5.7-008"
-	Note: "*** be sure to update pretty_version string in ES5SH_COMMON to match the one here"
+	Version: "V6.2-001"
+	Date: "$Date$"
+	Revision: "$Revision$"
+	ID:		"$ID: $"
+	Notes: "*** be sure to update pretty_version string in ES5SH_COMMON to match the Version here"
 
 --
 -- working:
 --
 -- changes for Eiffel 6.x
 --  remove enclosing quotes from -I specifiers
+--  update big_file generation (just make it a bunch of #includes), use .c for finalized (no more big_file*.x)
 --
 -- changes for Eiffel 5.7.65176
 -- 		
@@ -1725,7 +1729,7 @@ feature -- Produce output files
 			end -- loop externals_list
 			l_file.put_string (l_cmd + " 'p2'%N")
 			l_file.put_string ("[.E1]emain.obj%N")
-			l_file.put_string ("!" + eiffel_library_filespec.out + "/include=EIF_PROJECT%N")
+			l_file.put_string (eiffel_library_filespec.out + "/include=EIF_PROJECT%N")
 
 			-- preprocess application_dependencies: prepend SYS$DISK if no device (prevent defaulting from Eiffel library)
 			from
@@ -3925,6 +3929,10 @@ invariant
 end -- class ES5SH
 
 --|--------------------------------------------------------------------------
+--
+--
+-- 16-Apr-2008	6.2-xxx
+--	restore force /include=EIF_PROJECT
 --
 -- date tbs	5.7-002
 --	refactor: create ES5SH_COMMON, ES5SH_CONFIGURATION

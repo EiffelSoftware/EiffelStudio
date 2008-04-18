@@ -1,9 +1,9 @@
 indexing
 	description: "VMS-specific extension to EXECUTION_ENVIRONMENT for ES5SH"
 	author: "David Schwartz $"
-	date: "$Date$"
-	revision: "$Revision$"
-	archive: "$Archive: $"
+	Date: "$Date$"
+	Revision: "$Revision$"
+	ID:		"$ID: $"
 
 class ES5SH_EXECUTION_ENVIRONMENT
 

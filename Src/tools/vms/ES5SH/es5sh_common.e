@@ -5,7 +5,7 @@ indexing
 	Version: "V6.2-001"
 	Date: "$Date$"
 	Revision: "$Revision$"
-	ID:		"$ID: $"
+	Id:		"$Id$"
 	Notes: "*** be sure to update pretty_version string below to match the Version here"
 
 class
@@ -597,7 +597,7 @@ feature -- Output
     -t test (suppress Makefile generation and make)
     -v verbose output 
     -z bypass big_file (concatenated source file) generation
-nb: -l and -o are mutually exclusive; the default is 
+nb: -l and -o are mutually exclusive; the default is
 }" )
 		if generate_object_libraries_default then
 			print (" -l (generate object libraries).%N%N")

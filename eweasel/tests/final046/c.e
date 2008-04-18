@@ -12,4 +12,6 @@ feature
 		do
 		end
 
+	attr: G
+
 end

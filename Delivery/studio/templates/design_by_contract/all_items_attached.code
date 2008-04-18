@@ -1,0 +1,21 @@
+<code_template format="1.0.0">
+	<metadata>
+		<title>All Items Attached</title>
+		<description>Code template for testing a container structure has only attached items.</description>
+		<author>Eiffel Software</author>
+		<shortcut>all_attached</shortcut>
+		<categories>
+			<category>contract</category>
+		</categories>
+	</metadata>
+	
+	<declarations>	
+		<object id="container" editable="true" conforms_to="CONTAINER">
+			<description>An attached container variable.</description>
+		</object>
+	</declarations>
+	
+	<templates>
+		<template>${container}_has_attached_items: not ${container}.has (Void)</template>	
+	</templates>
+</code_template>

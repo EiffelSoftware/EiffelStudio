@@ -1,0 +1,21 @@
+<code_template format="1.0.0">
+	<metadata>
+		<title>Positive Count</title>
+		<description>Code template for testing an entites count is greater than zero.</description>
+		<author>Eiffel Software</author>
+		<shortcut>pcnt</shortcut>
+		<categories>
+			<category>contract</category>
+		</categories>
+	</metadata>
+	
+	<declarations>	
+		<object id="var" editable="true" conforms_to="FINITE">
+			<description>A variable to test for a positive count on.</description>
+		</object>
+	</declarations>
+	
+	<templates>
+		<template>${var}_positive: ${var}.count > 0</template>	
+	</templates>
+</code_template>

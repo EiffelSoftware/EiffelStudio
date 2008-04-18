@@ -39,6 +39,8 @@ feature {NONE} -- Implementation
 	find_expression (a_pattern: STRING_GENERAL; a_source: STRING_GENERAL): TUPLE [a_result_string: STRING_GENERAL; a_result_index: INTEGER]
 			-- Use Gobo regular expression to find `a_pattern' in `a_source'
 			-- FIXIT: Copy from {COMM_SUPPORT_ACCESS}, merge?
+			-- Note, this feature only match the first item.
+			-- It means, in the remaing `a_source' maybe there are other matched items.
 		require
 			a_pattern_attached: a_pattern /= Void
 			not_a_pattern_is_empty: not a_pattern.is_empty
@@ -53,13 +55,6 @@ feature {NONE} -- Implementation
 
 			if l_matcher.has_matched then
 				Result := [l_matcher.captured_substring (1), l_matcher.captured_end_position (1)]
-				check
-					single_match: (agent (a_matcher: RX_PCRE_MATCHER): BOOLEAN
-						do
-							a_matcher.next_match
-							Result := not a_matcher.has_matched
-						end).item ([l_matcher])
-				end
 			end
 		end
 indexing

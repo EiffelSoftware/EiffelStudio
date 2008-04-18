@@ -91,34 +91,45 @@ feature -- Command
 		local
 			l_handler: like all_hanlders
 			l_item: ES_EWEASEL_TEST_RESULT_ITEM
+			l_need_iteration: BOOLEAN
 		do
 			if not a_string.is_empty then
 				buffer_string.append (a_string)
 			end
 
 			from
-				l_handler := all_hanlders
-				l_handler.start
+				l_need_iteration := is_need_iteration (buffer_string) or a_on_exit
 			until
-				l_handler.after or l_item /= Void
+				not l_need_iteration
 			loop
-				if a_on_exit then
-					l_item := l_handler.item.handle_output_on_exit (buffer_string)
-				else
-					l_item := l_handler.item.handle_output (buffer_string)
+				from
+					l_handler := all_hanlders
+					l_handler.start
+				until
+					l_handler.after or l_item /= Void
+				loop
+					if a_on_exit then
+						l_item := l_handler.item.handle_output_on_exit (buffer_string)
+					else
+						l_item := l_handler.item.handle_output (buffer_string)
+					end
+
+					l_handler.forth
 				end
 
-				l_handler.forth
+				check on_exit_must_handled: a_on_exit implies l_item /= Void end
+
+				if l_item /= Void then
+					process_result (l_item)
+				end
+				check handled: lines_cell.item = Void and one_block_cell.item = Void end
+
+				-- We start to check if still need interation
+				l_item := Void
+				l_need_iteration := is_need_iteration (buffer_string)
 			end
-
-			check on_exit_must_handled: a_on_exit implies l_item /= Void end
-
-			if l_item /= Void then
-				process_result (l_item)
-			end
-
 		ensure
-			cleared: lines_cell.item = Void and one_block_cell.item = Void
+			cleared:
 		end
 
 	process_result (a_item: ES_EWEASEL_TEST_RESULT_ITEM) is
@@ -272,6 +283,15 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
+	is_need_iteration (a_buffer_string: STRING): BOOLEAN is
+			-- If `a_buffer_string' contain a eweasel block which need analyze
+		local
+			l_finder: ES_EWEASEL_OUTPUT_REGULAR_EXPRESSION_FINDER
+		do
+			create l_finder
+			Result := l_finder.one_result_block (a_buffer_string) /= Void
+		end
+		
 feature {NONE} -- Multi-thread implementation
 
 	mutex: MUTEX is

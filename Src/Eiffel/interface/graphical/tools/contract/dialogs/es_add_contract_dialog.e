@@ -229,8 +229,8 @@ feature {NONE} -- Regular expression
 
 invariant
 	contract_attached: (dialog_result = default_confirm_button and not is_shown) implies contract /= Void
-	contract_tag_is_valid: contract /= Void implies contract.tag /= Void and then not contract.tag.is_empty
-	contract_tag_is_valid: contract /= Void implies contract.contract /= Void and then not contract.contract.is_empty
+	contract_tag_is_valid: contract /= Void implies not contract.tag.is_empty
+	contract_tag_is_valid: contract /= Void implies not contract.contract.is_empty
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

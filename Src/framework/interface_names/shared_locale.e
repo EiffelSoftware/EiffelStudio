@@ -10,7 +10,9 @@ indexing
 class
 	SHARED_LOCALE
 
-inherit --{NONE}
+inherit
+	ANY
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all

@@ -4,10 +4,18 @@ class
 inherit
 	TEST1 [G]
 		redefine
-			make
+			make, make2
 		end
 
 feature
+
+	make2 (v: like int; g: like item) is
+		do
+			print (v)
+			print (' ')
+			print (g)
+			print ("%N")
+		end
 
 	make (v: like int; g: like item) is
 		external

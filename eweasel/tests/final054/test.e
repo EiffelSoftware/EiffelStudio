@@ -13,15 +13,19 @@ feature {NONE} -- Creation
 		do
 			create t2
 			t2.make (2, 4)
+			t2.make2 (2, 4)
 
 			t2_a := t2
 			t2_a.make (2, 4)
+			t2_a.make2 (2, 4)
 
 			t1 := t2
 			t1.make (2, 4)
+			t1.make2 (2, 4)
 
 			t1_a := t2
 			t1_a.make (2, 4)
+			t1_a.make2 (2, 4)
 		end
 
 end

@@ -20,4 +20,20 @@ copy_raw 	parent_rev1.e $CLUSTER parent.e
 compile_melted
 compile_result	validity_warning TEST VJRV(1)
 
+copy_raw 	parent.e $CLUSTER parent.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	parent_rev1.e $CLUSTER parent.e
+compile_melted
+compile_result	validity_warning TEST VJRV(1)
+
+copy_raw 	parent.e $CLUSTER parent.e
+compile_melted
+compile_result 	ok
+
+copy_raw 	parent_rev1.e $CLUSTER parent.e
+compile_melted
+compile_result	validity_warning TEST VJRV(1)
+
 test_end

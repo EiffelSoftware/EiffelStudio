@@ -132,9 +132,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use <wel_gdi_plus.h>"
 		alias
-			"[
-				& (((ImageEncoderParameter *)$a_item)->Guid)
-			]"
+			"return (EIF_POINTER) &(((ImageEncoderParameter *)$a_item)->Guid);"
 		end
 
 	c_set_guid (a_item: POINTER; a_guid: POINTER) is
@@ -144,11 +142,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use <wel_gdi_plus.h>"
 		alias
-			"[
-			{
-				((ImageEncoderParameter *)$a_item)->Guid = * ((GUID *)$a_guid);
-			}
-			]"
+			"((ImageEncoderParameter *)$a_item)->Guid = * ((GUID *)$a_guid);"
 		end
 
 	c_number_of_values (a_item: POINTER): NATURAL_64 is
@@ -158,9 +152,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use <wel_gdi_plus.h>"
 		alias
-			"[
-				((ImageEncoderParameter *)$a_item)->NumberOfValues
-			]"
+			"return (EIF_NATURAL_64) ((ImageEncoderParameter *)$a_item)->NumberOfValues;"
 		end
 
 	c_set_number_of_values (a_item: POINTER; a_number: NATURAL_64) is
@@ -170,11 +162,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use <wel_gdi_plus.h>"
 		alias
-			"[
-			{
-				((ImageEncoderParameter *)$a_item)->NumberOfValues = (EIF_NATURAL_64)$a_number;
-			}
-			]"
+			"((ImageEncoderParameter *)$a_item)->NumberOfValues = (ULONG)$a_number;"
 		end
 
 	c_type (a_item: POINTER): NATURAL_64 is
@@ -184,9 +172,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use <wel_gdi_plus.h>"
 		alias
-			"[
-				((ImageEncoderParameter *)$a_item)->Type
-			]"
+			"return (EIF_NATURAL_64) ((ImageEncoderParameter *)$a_item)->Type;"
 		end
 
 	c_set_type (a_item: POINTER; a_type: NATURAL_64) is
@@ -196,11 +182,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use <wel_gdi_plus.h>"
 		alias
-			"[
-			{
-				((ImageEncoderParameter *)$a_item)->Type = (EIF_NATURAL_64)$a_type;
-			}
-			]"
+			"((ImageEncoderParameter *)$a_item)->Type = (ULONG)$a_type;"
 		end
 
 	c_value (a_item: POINTER): POINTER is
@@ -210,9 +192,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use <wel_gdi_plus.h>"
 		alias
-			"[
-				((ImageEncoderParameter *)$a_item)->Value
-			]"
+			"return (EIF_POINTER) ((ImageEncoderParameter *)$a_item)->Value;"
 		end
 
 	c_set_value (a_item: POINTER; a_value: POINTER) is
@@ -222,11 +202,7 @@ feature {NONE} -- C externals
 		external
 			"C inline use <wel_gdi_plus.h>"
 		alias
-			"[
-			{
-				((ImageEncoderParameter *)$a_item)->Value = (EIF_POINTER)$a_value;
-			}
-			]"
+			"((ImageEncoderParameter *)$a_item)->Value = $a_value;"
 		end
 
 indexing

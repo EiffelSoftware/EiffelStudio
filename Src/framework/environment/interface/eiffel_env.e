@@ -10,6 +10,8 @@ indexing
 deferred class EIFFEL_ENV
 
 inherit
+	ANY
+
 	EIFFEL_ENVIRONMENT_CONSTANTS
 		export
 			{NONE} all

@@ -13,6 +13,9 @@ inherit
 create
 	make
 
+create {ASSERTION_BYTE_CODE}
+	make_filled
+
 feature -- Access
 
 	object_test_locals: ARRAY [TYPE_A]

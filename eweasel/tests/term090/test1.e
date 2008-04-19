@@ -9,7 +9,7 @@ feature
 	weasel: G is
 		do
 			!!Result.make (0)
-			print (Result~make)
+			print (agent Result.make)
 		end
 
 end

@@ -646,16 +646,22 @@ feature
 				buf := buffer
 				buf.put_new_line
 				buf.put_string ("RTEC(EN_VEXP);")
-			elseif target_type.is_basic or else source_type.is_reference then
+			elseif
+				target_type.is_basic and then source_type.is_basic or else
+				target_type.is_reference and then source_type.is_reference
+			then
 					-- Reattachment of basic type to basic type or
 					-- of reference type to reference type.
 				generate_last_assignment (Simple_assignment)
 			elseif source_type.is_basic then
 					-- Reattachment of basic type to reference type.
 				generate_last_assignment (Metamorphose_assignment)
-			else
+			elseif target_type.is_reference then
 					-- Reattachment of expanded type to reference type.
 				generate_last_assignment (Clone_assignment)
+			else
+					-- Reattachment of reference type to basic type/expanded type.
+				generate_last_assignment (Unmetamorphose_assignment)
 			end
 		end
 
@@ -672,10 +678,18 @@ feature
 				-- is the last instruction.
 			buf.put_new_line
 			buf.put_string ("return ")
-				-- Always ensure that we perform a cast to type of target.
-				-- Cast in case of basic type will never loose information
-				-- as it has been validated by the Eiffel compiler.
-			target.c_type.generate_cast (buf)
+			if how = Unmetamorphose_assignment then
+					-- Reattachment of reference type to basic. It cannot be reattachment
+					-- to an expanded type since this is prevented during analysis.
+				check is_basic_type: context.real_type (target.type).is_basic end
+				buf.put_character ('*')
+				target.c_type.generate_access_cast (buf)
+			else
+					-- Always ensure that we perform a cast to type of target.
+					-- Cast in case of basic type will never loose information
+					-- as it has been validated by the Eiffel compiler.
+				target.c_type.generate_cast (buf)
+			end
 			source_print_register
 			buf.put_character (';')
 		end

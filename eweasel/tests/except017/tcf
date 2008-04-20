@@ -1,0 +1,20 @@
+test_name 	 queries_of_exceptions_class_2
+test_description Show correct behaviors of `exception', `tag_name', `recipient_name' and `class_name' and their respective original forms in class EXCEPTIONS.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+compile_melted
+compile_result 	 ok
+
+compile_melted
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output
+execute_result ok
+if DOTNET compare		exec_output output_dotnet
+if not DOTNET compare		exec_output output
+
+test_end

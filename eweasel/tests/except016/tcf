@@ -1,4 +1,4 @@
-test_name 	 querries_of_exceptions_class_1
+test_name 	 queries_of_exceptions_class_1
 test_description Show correct behaviors of `is_developer_exception_of_name', `assertion_violation' and `is_signal' in class EXCEPTIONS.
 
 copy_sub 	 Ace $TEST Ace

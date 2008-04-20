@@ -74,7 +74,8 @@ test	raise-and-catch-user-defined-exception	except012 tcf pass exception
 test	ignoring-developer-exception	except013 tcf pass exception
 test	raising-catching-exception-in-once except014 tcf pass exception
 test	stack-trace-indefinitely-grows	except015 tcf pass exception
-test	querries_of_exceptions_class_1 except016 tcf pass exception
+test	queries_of_exceptions_class_1 except016 tcf pass exception
+test	queries_of_exceptions_class_2 except017 tcf pass exception
 
 
 -- Non Conforming Inheritance

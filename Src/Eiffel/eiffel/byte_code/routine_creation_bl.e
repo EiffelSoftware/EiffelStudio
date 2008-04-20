@@ -279,7 +279,6 @@ feature
 			l_feat: FEATURE_I
 			l_c_return_type: TYPE_C
 			l_args: ARRAY [STRING_8]
-			l_seed: FEATURE_I
 			l_return_type_string: STRING
 			l_buffer: like buffer
 			l_context: like context
@@ -299,7 +298,7 @@ feature
 				l_class_type := class_type.associated_class_type (context.current_type)
 				l_entry :=  Eiffel_table.poly_table (rout_id)
 
-				if l_entry = Void then
+				if l_entry.is_deferred then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
 					l_buffer.put_string ("0),")
@@ -321,22 +320,14 @@ feature
 						l_rout_table.goto_implemented (class_type, context.class_type)
 
 						l_feat := l_class_type.associated_class.feature_of_feature_id (feature_id)
-						l_seed := system.seed_of_routine_id (rout_id)
-							-- It is pretty important that we use `actual_type.is_formal' and not
-							-- just `is_formal' because otherwise if you have `like x' and `x: G'
-							-- then we would fail to detect that.
-						if l_seed.type.actual_type.is_formal then
-							l_c_return_type := reference_c_type
-						else
-							l_c_return_type := system.address_table.solved_type (l_class_type, l_feat.type)
-						end
+						l_c_return_type := system.address_table.solved_type (l_class_type, l_feat.type)
 						l_return_type_string := l_c_return_type.c_string
 						if l_rout_table.is_implemented then
-							l_function_name := l_rout_table.feature_name + system.seed_of_routine_id (rout_id).generic_fingerprint
+							l_function_name := l_rout_table.feature_name
 							l_buffer.put_string (l_function_name)
 							l_buffer.put_string ("),")
 							if l_feat.has_arguments then
-								l_args := system.address_table.arg_types (l_class_type, l_feat.arguments, True, l_seed)
+								l_args := system.address_table.arg_types (l_class_type, l_feat.arguments, True, Void)
 							else
 								l_args := <<"EIF_REFERENCE">>
 							end

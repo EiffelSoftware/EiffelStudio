@@ -11,7 +11,7 @@ inherit
 
 	POLY_TABLE [ROUT_ENTRY]
 		redefine
-			is_attribute_table, is_routine_table, tmp_poly_table
+			is_attribute_table, is_routine_table, tmp_poly_table, extend, merge
 		end
 
 	SHARED_GENERATOR
@@ -39,8 +39,44 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_PATTERN_TABLE
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_BYTE_CONTEXT
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
+
+feature -- Insertion
+
+	extend (v: ROUT_ENTRY) is
+			-- <Precursor>
+		do
+			Precursor {POLY_TABLE} (v)
+				-- Now compute the new value of `pattern_id'.
+			if pattern_id = -2 then
+				pattern_id := v.pattern_id
+			elseif pattern_id /= v.pattern_id then
+				pattern_id := -1
+			end
+		end
+
+	merge (other: like Current) is
+			-- <Precursor>
+		do
+			Precursor {POLY_TABLE} (other)
+				-- Now compute the new value of `pattern_id'.
+			if pattern_id = -2 then
+				pattern_id := other.pattern_id
+			elseif pattern_id /= other.pattern_id then
+				pattern_id := - 1
+			end
+		end
 
 feature -- Status report
 
@@ -87,8 +123,7 @@ feature -- Status report
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
-			first_real_body_index, first_body_index: INTEGER;
-			second_type_id: INTEGER;
+			first_real_body_index, first_body_index, first_pattern_id: INTEGER;
 			entry: ROUT_ENTRY;
 			found: BOOLEAN;
 			i, nb, old_position: INTEGER
@@ -102,13 +137,15 @@ feature -- Status report
 				old_position := position
 				system_i := System
 
-					-- Go to the entry of type id greater or equal than `type_id':
-					-- note that deferred feature have no entries in the tables
-				goto_used (type_id)
-				i := position
-
-					-- We never compute the value for this entry, so we need to do it
 				from
+						-- Go to the entry of type id equal to `type_id'
+					goto (type_id)
+					i := position
+						-- Polymorphism implies also that they have the same `pattern_id'.
+						-- See eweasel test#final052 for an example where it is important.
+					first_pattern_id := array_item (i).pattern_id
+					goto_used_from_position (i)
+					i := position
 				until
 					Result or else i > nb
 				loop
@@ -117,7 +154,8 @@ feature -- Status report
 						if system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, a_context_type.type) then
 							if found then
 								Result := entry.real_body_index /= first_real_body_index or
-									entry.body_index /= first_body_index
+									entry.body_index /= first_body_index or
+									entry.pattern_id /= first_pattern_id
 							else
 								found := True
 								first_real_body_index := entry.real_body_index
@@ -129,33 +167,8 @@ feature -- Status report
 				end
 				position := old_position
 			else
-					-- It is the case of a routine alone in its table. It is possibly a routine
-					-- with one implementation which is an origin, or the implementation of a
-					-- deferred routine.
-				second_type_id := array_item (lower).type_id
-				if type_id = second_type_id then
-						-- Only one routine in table
-					Result := False
-				else
-						-- Case of a deferred routine with possibly one implementation. We can
-						-- only check if implementation is defined in a class type that conforms to
-						-- `type_id'.
-						-- FIXME: Manu 06/05/2003: If it does not then it is marked polymorphic
-						-- although the code generation should consider it as a non-implemented
-						-- deferred routine. However it does not matter because the generated
-						-- code will not be called anyway.
-					system_i := System
-					if
-						system_i.class_type_of_id (second_type_id).dynamic_conform_to (
-							a_type, type_id, a_context_type.type)
-					then
-						Result := False
-					else
-							-- This is the case of a routine which has not implementation for
-							-- `type_id'.
-						Result := True
-					end
-				end
+					-- Only one entry, it is clearly non-polymorphic.
+				Result := False
 			end
 		end
 
@@ -218,7 +231,7 @@ feature -- Code generation
 			i, nb: INTEGER
 			type_id: INTEGER
 			l_done: BOOLEAN
-			entry: ENTRY
+			entry: ROUT_ENTRY
 			system_i: like system
 		do
 			system_i := system
@@ -287,17 +300,14 @@ feature {NONE} -- Implementation
 			i, j, nb, index: INTEGER;
 			l_start, l_end: INTEGER
 			l_generate_entry: BOOLEAN
-			l_routine_name: STRING;
+			l_routine_name, l_wrapped_name: STRING;
 			l_table_name: STRING
-			l_suffix: STRING
+			l_wrappers: SEARCH_TABLE [STRING]
+			l_seed_pattern_id, l_pattern_id: INTEGER
+			l_seed: FEATURE_I
+			l_c_pattern: C_PATTERN
+			l_c_pattern_info: C_PATTERN_INFO
 		do
-			if
-				system.routine_id_counter.is_feature_routine_id (rout_id) and then
-				system.seed_of_routine_id (rout_id).has_formal
-			then
-					-- Use generic wrapper of the feature.
-				l_suffix := system.seed_of_routine_id (rout_id).generic_fingerprint
-			end
 				-- We generate a compact table initialization, that is to say if two or more
 				-- consecutives rows are identical we will generate a loop to fill the rows
 			from
@@ -317,6 +327,42 @@ feature {NONE} -- Implementation
 				j := an_offset
 				nb := a_max;
 				index := position
+					-- Compute the `pattern_id' for the current routine:
+					-- If `pattern_id' is changing, we take the first one if it is not coming
+					-- from a feature which has some formals, otherwise we create a pattern ID
+					-- to cover all the possible cases.
+					--| If we are handling a fake `rout_id' then the `pattern_id' should be the same for all entries.
+				check
+					consistent: not system.routine_id_counter.is_feature_routine_id (rout_id) implies has_one_signature
+				end
+				if not has_one_signature then
+					l_seed := system.seed_of_routine_id (rout_id)
+					if l_seed.has_formal then
+							-- The most generic parameter we can get which can be used for the various kind
+							-- of generic derivations of a generic class. For example, if you have A [G, H]
+							-- but that in your system you only have instanced of A [ANY, INTEGER] and A [INTEGER, ANY]
+							-- then to properly do the polymorphic accesses you need a common ancestor to both
+							-- generic derivation. Since we cannot create the common ancestor, we simply take the
+							-- PATTERN for the feature and immediately request its C_PATTERN which will give
+							-- us the same data if we had A [ANY, ANY] in the universe.
+						l_c_pattern := l_seed.pattern.c_pattern
+						create l_c_pattern_info.make (l_c_pattern)
+						pattern_table.c_patterns.search (l_c_pattern_info)
+						if pattern_table.c_patterns.found then
+							l_seed_pattern_id := pattern_table.c_patterns.found_item.c_pattern_id
+						else
+							l_seed_pattern_id := pattern_table.c_pattern_id_counter.next
+							l_c_pattern_info.set_c_pattern_id (l_seed_pattern_id)
+							pattern_table.c_patterns.put (l_c_pattern_info)
+							pattern_table.c_patterns_by_ids.put (l_c_pattern_info, l_c_pattern_info.c_pattern_id)
+						end
+					else
+						l_seed_pattern_id := array_item (lower).pattern_id
+					end
+				else
+					l_seed_pattern_id := pattern_id
+				end
+				wrapper_buffer.clear_all
 			until
 				i > nb
 			loop
@@ -347,14 +393,34 @@ feature {NONE} -- Implementation
 					l_generate_entry := False
 					if l_rout_entry /= Void then
 						l_routine_name := l_rout_entry.routine_name
-						if l_suffix /= Void then
-							l_routine_name.append_string (l_suffix)
-						end
-						generate_loop_initialization (buffer, l_table_name, l_routine_name,
-							l_start, l_end)
+						if l_seed_pattern_id > 0 then
+							l_pattern_id := l_rout_entry.pattern_id
+							if l_seed_pattern_id /= l_pattern_id then
+									-- A wrapper needs to be used/generated.
+								l_wrapped_name := l_routine_name.twin
+								l_wrapped_name.append_character ('_')
+								l_wrapped_name.append_integer (rout_id)
 
-							-- Remember external routine declaration
-						Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+								if l_wrappers = Void then
+									create l_wrappers.make (10)
+								end
+								if not l_wrappers.has (l_wrapped_name) then
+										-- We need to generate a wrapper.
+									generate_wrapper (wrapper_buffer, l_rout_entry, l_seed_pattern_id, l_pattern_id, l_wrapped_name, l_routine_name)
+									l_wrappers.put (l_wrapped_name)
+								end
+								l_routine_name := l_wrapped_name
+							else
+									-- Remember external routine declaration
+								Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+							end
+						else
+								-- Remember external routine declaration
+							Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+						end
+						generate_loop_initialization (buffer, l_table_name, l_routine_name, l_start, l_end)
+
+							-- Prepare for next iteration.
 						l_rout_entry := entry
 						l_start := j
 						l_end := j
@@ -365,20 +431,189 @@ feature {NONE} -- Implementation
 			end;
 			if l_rout_entry /= Void then
 				l_routine_name := l_rout_entry.routine_name
-				if l_suffix /= Void then
-					l_routine_name.append_string (l_suffix)
+				if l_seed_pattern_id > 0 then
+					l_pattern_id := l_rout_entry.pattern_id
+					if l_seed_pattern_id /= l_pattern_id then
+							-- A wrapper needs to be used/generated.
+						l_wrapped_name := l_routine_name.twin
+						l_wrapped_name.append_character ('_')
+						l_wrapped_name.append_integer (rout_id)
+
+						if l_wrappers = Void then
+							create l_wrappers.make (10)
+						end
+						if not l_wrappers.has (l_wrapped_name) then
+								-- We need to generate a wrapper.
+							generate_wrapper (wrapper_buffer, l_rout_entry, l_seed_pattern_id, l_pattern_id, l_wrapped_name, l_routine_name)
+							l_wrappers.put (l_wrapped_name)
+						end
+						l_routine_name := l_wrapped_name
+					else
+							-- Remember external routine declaration
+						Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+					end
+				else
+						-- Remember external routine declaration
+					Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
 				end
-				generate_loop_initialization (buffer, l_table_name, l_routine_name,
-					l_start, l_end)
-
-					-- Remember external routine declaration
-				Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+				generate_loop_initialization (buffer, l_table_name, l_routine_name, l_start, l_end)
 			end
-
 			buffer.exdent
 			buffer.put_new_line
 			buffer.put_string ("}")
+				-- Add wrappers if any.
+			buffer.put_buffer (wrapper_buffer)
 			buffer.put_new_line
+		end
+
+	generate_wrapper (buffer: GENERATION_BUFFER; a_entry: ROUT_ENTRY; a_seed_pattern_id, a_pattern_id: INTEGER; a_wrapped_name, a_routine_name: STRING) is
+			-- Generate wrapper for `a_routine_name' called `a_wrapped_name' using signature information from `a_seed_pattern_id' and `a_pattern_id'.
+		require
+			buffer_not_void: buffer /= Void
+			a_entry_not_void: a_entry /= Void
+			a_seed_pattern_id_positive: a_seed_pattern_id > 0
+			a_pattern_id_positive: a_pattern_id > 0
+			a_wrapped_name_not_void: a_wrapped_name /= Void
+			a_wrapped_name_not_empty: not a_wrapped_name.is_empty
+			a_routine_name_not_void: a_routine_name /= Void
+			a_routine_name_not_empty: not a_routine_name.is_empty
+		local
+			l_seed_c_pattern, l_c_pattern: C_PATTERN
+			l_result_string: STRING
+			l_arg_names, l_arg_types: ARRAY [STRING]
+			l_seed_type, l_type: TYPE_C
+			l_is_return_value_boxed: BOOLEAN
+			l_type_a: TYPE_A
+			l_basic_type: BASIC_A
+			i, nb: INTEGER
+			l_feat: FEATURE_I
+			l_old_buffer: GENERATION_BUFFER
+		do
+			l_seed_c_pattern := pattern_table.c_patterns_by_ids.item (a_seed_pattern_id).pattern
+			l_c_pattern := pattern_table.c_patterns_by_ids.item (a_pattern_id).pattern
+
+				-- We first generate the signature using `l_seed_c_pattern'.
+			l_result_string := l_seed_c_pattern.result_type.c_string
+			l_arg_names := l_seed_c_pattern.argument_name_array
+			l_arg_types := l_seed_c_pattern.argument_type_array
+			extern_declarations.add_routine_with_signature (l_result_string, a_wrapped_name, l_arg_types)
+			extern_declarations.add_routine (l_c_pattern.result_type, a_routine_name)
+
+			buffer.generate_function_signature (l_result_string, a_wrapped_name, False, Void, l_arg_names, l_arg_types)
+			buffer.generate_block_open
+			buffer.put_new_line
+			l_seed_type := l_seed_c_pattern.result_type
+			l_type := l_c_pattern.result_type
+			if not l_seed_type.is_void then
+				check actual_not_void: not l_type.is_void end
+				if l_seed_type.same_as (l_type) then
+					buffer.put_string ("return ")
+				else
+						-- The declaration are different, we need to adapt the return type.
+						-- Currently we can only accept that the seed type is a reference
+						-- and the current type a basic type but we could easily change
+						-- that in the future if the language rules were to change.
+					check
+						different_types: l_seed_type.is_pointer and not l_type.is_pointer
+					end
+						-- In this case, we need to box the result type and for that we need
+						-- to store the boxed result in `Result' and the actual result in `r'.
+					l_seed_type.generate (buffer)
+					buffer.put_string ("Result;")
+					buffer.put_new_line;
+					l_type.generate (buffer)
+					buffer.put_four_character ('r', ' ', '=', ' ')
+					l_is_return_value_boxed := True
+				end
+			end
+			buffer.put_character ('(')
+			l_type.generate_function_cast (buffer, l_c_pattern.argument_type_array, False)
+			buffer.put_string (a_routine_name)
+			buffer.put_two_character (')', '(')
+				-- Now generate the arguments.
+			from
+					-- First current
+				buffer.put_string (l_arg_names.item (1))
+				i := 2
+				nb := l_arg_types.count
+			until
+				i > nb
+			loop
+				buffer.put_two_character (',', ' ')
+					-- It is `i - 1' because they do not include Current.
+				l_seed_type := l_seed_c_pattern.argument_types.item (i - 1)
+				l_type := l_c_pattern.argument_types.item (i - 1)
+				if not l_seed_type.same_as (l_type) then
+						-- The declaration are different, we need to adapt the argument.
+						-- Currently we can only accept that the seed type is a reference
+						-- and the current type a basic type but we could easily change
+						-- that in the future if the language rules were to change.
+					check
+						different_types: l_seed_type.is_pointer and not l_type.is_pointer
+					end
+						-- Unbox the value
+					buffer.put_character ('*')
+					l_type.generate_access_cast (buffer)
+				end
+				buffer.put_string (l_arg_names.item (i))
+				i := i + 1
+			end
+			buffer.put_two_character (')', ';')
+			if l_is_return_value_boxed then
+					-- Generate boxing of result type with an optimization to not recreate
+					-- an object all the time, only when necessary.
+				l_seed_type := l_seed_c_pattern.result_type
+				l_type := l_c_pattern.result_type
+				buffer.generate_block_open
+				buffer.put_gtcx
+				buffer.put_new_line
+				buffer.put_string ("if (eif_optimize_return) {")
+				buffer.indent
+				buffer.put_new_line
+				buffer.put_string ("eif_optimize_return = 0;")
+				buffer.put_new_line
+				buffer.put_string ("eif_optimized_return_value.")
+				l_type.generate_typed_field (buffer)
+				buffer.put_string (" = r;")
+				buffer.put_new_line
+				buffer.put_string ("return (EIF_REFERENCE) &eif_optimized_return_value.")
+				l_type.generate_typed_field (buffer)
+				buffer.put_character (';')
+				buffer.exdent
+				buffer.put_new_line
+				buffer.put_string ("} else {")
+				buffer.indent
+					-- Because `TYPE_C' do not carry much type information, we need to get it back
+					-- from the FEATURE_I instance.
+				l_feat := a_entry.written_class.feature_of_body_index (a_entry.body_index)
+				check
+					l_feat_not_void: l_feat /= Void
+				end
+					-- Instantiate the return type of the query into the context of the CLASS_TYPE
+					-- to get the appropriate type.
+				l_type_a := l_feat.type.instantiated_in (a_entry.written_class_type.type).actual_type
+				if l_type_a.is_like_current then
+					l_type_a := l_type_a.conformance_type
+				end
+				l_basic_type ?= l_type_a
+				check is_basic_type: l_basic_type /= Void end
+					-- Because `metamorphose' indirectly uses BYTE_CONTEXT.buffer we need to configure
+					-- it to use `buffer' instead.
+				l_old_buffer := context.buffer
+				context.set_buffer (buffer)
+				l_basic_type.metamorphose (
+					create {NAMED_REGISTER}.make ("Result", l_seed_type),
+					create {NAMED_REGISTER}.make ("r", l_type), buffer)
+				context.set_buffer (l_old_buffer)
+				buffer.put_character (';')
+				buffer.put_new_line
+				buffer.put_string ("return Result;")
+				buffer.exdent
+				buffer.put_new_line
+				buffer.put_character ('}')
+				buffer.generate_block_close
+			end
+			buffer.generate_block_close
 		end
 
 	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_routine_name: STRING; a_lower, a_upper: INTEGER) is
@@ -435,6 +670,14 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			generate_type_table (rout_generator)
+		end
+
+	wrapper_buffer: GENERATION_BUFFER is
+			-- Buffer to generate a polymorphic wrapper.
+		once
+			create Result.make (500)
+		ensure
+			wrapper_buffer_not_void: Result /= Void
 		end
 
 indexing

@@ -357,7 +357,7 @@ feature -- Access
 		do
 			if is_inline_agent then
 				l_written_class := written_class;
-				Result := l_written_class.feature_i_with_body_index (enclosing_body_id)
+				Result := l_written_class.feature_of_body_index (enclosing_body_id)
 				if Result = Void then
 					Result := l_written_class.invariant_feature
 				end
@@ -1589,8 +1589,6 @@ feature -- Polymorphism
 
  	new_rout_entry: ROUT_ENTRY is
  			-- New routine unit
- 		require
- 			not_deferred: not is_deferred
  		do
  			create Result
  			Result.set_body_index (body_index)
@@ -1598,6 +1596,7 @@ feature -- Polymorphism
  			Result.set_written_in (written_in)
  			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)
+			Result.set_is_deferred (is_deferred)
  		end
 
  	new_attr_entry: ATTR_ENTRY is
@@ -2516,7 +2515,7 @@ feature -- Pattern
 	pattern: PATTERN is
 			-- Feature pattern
 		do
-			create Result.make (type.actual_type.meta_type)
+			create Result.make (type.meta_type)
 			if argument_count > 0 then
 				Result.set_argument_types (arguments.pattern_types)
 			end
@@ -2791,7 +2790,7 @@ feature -- Api creation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {FEATURE_I} -- Implementation
 
 	new_api_feature: E_FEATURE is
 			-- API feature creation
@@ -2844,7 +2843,7 @@ feature {NONE} -- Implementation
 			export_none_status_not_void: Result /= Void
 		end
 
-feature {INHERIT_TABLE} -- Access
+feature {INHERIT_TABLE, FEATURE_I} -- Access
 
 	private_external_name_id: INTEGER
 			-- External name id of feature if any in IL generation.

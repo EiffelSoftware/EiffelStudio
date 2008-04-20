@@ -86,11 +86,8 @@ feature
 			-- Instantiation of `pattern' in the context of `type'.
 		require
 			good_argument: type /= Void
-			consistency1: type.associated_class.conform_to (associated_class)
-			pattern_valid: pattern.is_valid (associated_class)
 		do
-			Result := pattern
-			Result := Result.instantiation_in (associated_class.meta_type (type))
+			Result := pattern.instantiation_in (type)
 		ensure
 			result_not_void: Result /= Void
 		end

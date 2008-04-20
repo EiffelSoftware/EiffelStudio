@@ -77,6 +77,9 @@ feature -- Initialization
 		do
 			rout_id := routine_id
 			array_make (1, 1)
+				-- By default all tables are considered using only deferred routines.
+			is_deferred := True
+			pattern_id := -2
 		end
 
 	create_block (n: INTEGER) is
@@ -205,6 +208,21 @@ feature
 			end;
 		end
 
+	is_deferred: BOOLEAN
+			-- Is the table only containing deferred routines?
+
+	pattern_id: INTEGER
+			-- Is the table only containing routines with the same `pattern_id'?
+			-- `-1' otherwise and `-2' when not yet computed.
+			--| Currently it is only checked for ROUT_TABLE we could possibly do
+			--| the same for ATTR_TABLE.
+
+	has_one_signature: BOOLEAN is
+			-- Is the table only containing features with the same signature?
+		do
+			Result := pattern_id >= 0
+		end
+
 	goto (type_id: INTEGER) is
 			-- Move cursor to the first entry of type_id `type_id'
 			-- associated to an effective class (non-deferred).
@@ -224,6 +242,26 @@ feature
 		do
 			from
 				i := binary_search (type_id)
+				nb := max_position
+			until
+				array_item(i).used or else i = nb
+			loop
+				i := i + 1
+			end
+			position := i
+		end
+
+	goto_used_from_position (a_pos: INTEGER) is
+			-- Move cursor to the first entry after position `a_pos'
+			-- associated to an used effective class (non-deferred).
+		require
+			a_pos_positive: a_pos >= 0
+			not_too_big: a_pos <= max_position
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := a_pos
 				nb := max_position
 			until
 				array_item(i).used or else i = nb
@@ -465,9 +503,17 @@ feature -- Iteration
 feature -- Insertion
 
 	extend (v: T) is
+			-- Add `v' to the end of `Current'.
 		do
 			max_position := max_position + 1
+			if not v.is_deferred then
+				is_deferred := False
+			end
 			put (v, max_position)
+		ensure
+			max_position_updated: max_position = old max_position + 1
+			inserted: array_item (max_position) = v
+			is_deferred_set: not v.is_deferred implies not is_deferred
 		end
 
 	merge (other: like Current) is
@@ -484,6 +530,11 @@ feature -- Insertion
 			o_max := other.max_position
 			nb := i + o_max
 			max_position := nb
+
+				-- Reset `is_deferred' flag if other contains no deferred entries.
+			if not other.is_deferred then
+				is_deferred := False
+			end
 
 			if (nb > upper) then
 				increase_size (nb - i)

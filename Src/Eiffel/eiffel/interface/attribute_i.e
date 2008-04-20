@@ -159,10 +159,6 @@ feature -- Element Change
 			result_type: TYPE_A
 			internal_name: STRING
 			return_type_name: STRING
-			rout_ids: like rout_id_set
-			rout_id: INTEGER
-			basic_i: BASIC_A
-			i: INTEGER
 			l_byte_context: like byte_context
 		do
 			if used then
@@ -208,51 +204,6 @@ feature -- Element Change
 
 				buffer.generate_block_close
 				buffer.put_new_line
-
-				if byte_context.final_mode then
-							-- Generate generic wrappers if required.
-					from
-						rout_ids := rout_id_set
-						i := rout_ids.count
-					until
-						i <= 0
-					loop
-						rout_id := rout_ids.item (i)
-						if system.seed_of_routine_id (rout_id).has_formal then
-								-- Generate generic wrapper.
-							buffer.generate_function_signature
-								("EIF_REFERENCE", internal_name + "1", True,
-								 l_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
-							buffer.generate_block_open
-							basic_i ?= result_type
-							buffer.put_new_line
-							if basic_i /= Void then
-								buffer.put_string ("EIF_REFERENCE Result;")
-								buffer.put_new_line
-								basic_i.c_type.generate (buffer)
-								buffer.put_string ("r = ")
-							else
-								buffer.put_string ("return ")
-							end
-							generate_attribute_access (class_type, buffer, "Current")
-							buffer.put_character (';')
-							buffer.put_new_line
-							if basic_i /= Void then
-								basic_i.metamorphose (create {NAMED_REGISTER}.make ("Result", reference_c_type), create {NAMED_REGISTER}.make ("r", basic_i.c_type), buffer)
-								buffer.put_character (';')
-								buffer.put_new_line
-								buffer.put_string ("return Result;")
-								buffer.put_new_line
-							end
-							buffer.generate_block_close
-							buffer.put_new_line
-							l_byte_context.clear_feature_data
-								-- Only 1 wrapper is generated.
-							i := 1
-						end
-						i := i - 1
-					end
-				end
 				buffer.put_new_line
 			end
 		end

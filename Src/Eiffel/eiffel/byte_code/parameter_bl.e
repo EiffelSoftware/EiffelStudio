@@ -40,7 +40,10 @@ feature -- Element change
 		local
 			l_expr_type, l_target_type: TYPE_A
 		do
-			if (is_formal and context.final_mode) and then parent.is_polymorphic then
+			if
+				(is_formal and context.final_mode) and then
+				parent.is_polymorphic and then not parent.has_one_signature
+			then
 				l_target_type := context.real_type (internal_attachment_type)
 				l_expr_type := context.real_type (expression.type)
 				is_address_needed := l_target_type.is_basic and l_expr_type.is_basic

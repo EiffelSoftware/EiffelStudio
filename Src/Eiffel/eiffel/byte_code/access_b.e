@@ -202,6 +202,13 @@ feature -- Status
 			Result := False
 		end
 
+	has_one_signature: BOOLEAN is
+			-- Is the access always using the same signature regardless of the version
+			-- being called polymorphically?
+		do
+			Result := True
+		end
+
 feature -- Element change
 
 	propagate (r: REGISTRABLE) is

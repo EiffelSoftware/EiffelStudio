@@ -259,11 +259,7 @@ feature -- Access
 	meta_type: TYPE_A is
 			-- Meta type of the type
 		do
-			if is_expanded then
-				Result := Current
-			else
-				Result := system.any_type
-			end
+			Result := system.any_type
 		end
 
 	good_generics: BOOLEAN is

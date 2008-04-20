@@ -17,19 +17,28 @@ inherit
 			generate_access_on_type,
 			generate_end,
 			is_polymorphic,
+			has_one_signature,
 			unanalyze
 		end
 
 create
 	make
 
-feature
+feature -- Status Report
 
 	is_polymorphic: BOOLEAN is
-			-- Is the feature call polymorphic ?
+			-- <Precursor>
 		do
-			Result := True;
-		end;
+			Result := True
+		end
+
+	has_one_signature: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := False
+		end
+
+feature -- C code generation
 
 	analyze_on (reg: REGISTRABLE) is
 			-- Analyze feature call on `reg'.

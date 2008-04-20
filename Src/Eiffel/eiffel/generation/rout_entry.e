@@ -10,7 +10,7 @@ class ROUT_ENTRY
 inherit
 	ATTR_ENTRY
 		redefine
-			 entry, is_attribute, update, used
+			 entry, is_attribute, update, used, is_deferred
 		end
 
 	SHARED_ID_TABLES
@@ -28,7 +28,8 @@ feature -- Access
 			-- Type id where the feature is written in
 
 	pattern_id: INTEGER
-			-- Pattern id of the entry
+			-- Pattern id of the entry when `written_class_type' is not specified,
+			-- otherwise the C pattern ID. The later is used for finalization.
 
 	written_in: INTEGER
 			-- Id of the class where the associated feature of the
@@ -36,6 +37,9 @@ feature -- Access
 
 	is_attribute: BOOLEAN
 			-- Is the entry associated with an attribute?
+
+	is_deferred: BOOLEAN
+			-- Is the entry associated with a deferred routine?
 
 feature -- Comparison
 
@@ -63,8 +67,20 @@ feature -- Settings
 
 	set_pattern_id (i: INTEGER) is
 			-- Assign `i' to `pattern_id'.
+		require
+			i_positive: i > 0
 		do
 			pattern_id := i
+		ensure
+			pattern_id_set: pattern_id = i
+		end
+
+	set_is_deferred (v: BOOLEAN) is
+			-- Assign `v' to `is_deferred'.
+		do
+			is_deferred := v
+		ensure
+			is_deferred_set: is_deferred = v
 		end
 
 	set_written_in (i: INTEGER) is
@@ -106,6 +122,8 @@ io.error.put_string (written_class.name)
 io.error.put_new_line
 end
 			Result.set_written_type_id (written_class.meta_type (class_type).type_id)
+				-- It is ok to call `written_class_type' since the above line is initializing it.
+			Result.set_pattern_id (pattern_table.c_pattern_id (pattern_id, Result.written_class_type))
 			if is_attribute then
 				Result.set_is_attribute
 			end
@@ -117,6 +135,8 @@ feature -- update
 		do
 			Precursor (class_type)
 			set_written_type_id (written_class.meta_type (class_type).type_id)
+				-- It is ok to call `written_class_type' since the above line is initializing it.
+			set_pattern_id (pattern_table.c_pattern_id (pattern_id, written_class_type))
 		end
 
 feature -- from ROUT_ENTRY
@@ -127,12 +147,14 @@ feature -- from ROUT_ENTRY
 			remover: REMOVER
 			system_i: SYSTEM_I
 		do
-			system_i := System
-			remover := system_i.remover
-			Result := remover = Void or else		-- Workbench mode
-				system_i.remover_off or else		-- Dead code removal disconnected
-				-- is_marked or else
-				remover.is_alive (body_index)		-- Final mode
+			if not is_deferred then
+				system_i := System
+				remover := system_i.remover
+				Result := remover = Void or else		-- Workbench mode
+					system_i.remover_off or else		-- Dead code removal disconnected
+					-- is_marked or else
+					remover.is_alive (body_index)		-- Final mode
+			end
 		end
 
 	routine_name: STRING is

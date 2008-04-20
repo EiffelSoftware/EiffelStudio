@@ -1,6 +1,7 @@
 indexing
 	description: "Byte node representing a call (either call or item) to an agent"
-	author: ""
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 

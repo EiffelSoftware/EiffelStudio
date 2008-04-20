@@ -530,10 +530,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result := conformance_type.convert_to (a_context_class, a_target_type)
 		end
 
-	meta_type: TYPE_A is
+	meta_type: LIKE_CURRENT is
 			-- Meta type.
 		do
-			Result := conformance_type.meta_type
+				-- Because `like Current' could possibly means a basic type
+				-- when processing an inherited routine using `like Current'
+				-- we keep LIKE_CURRENT for the metatype, but simply replace
+				-- its `conformance_type' with its `meta_type'.
+			create {LIKE_CURRENT} Result
+			Result.set_actual_type (conformance_type.meta_type)
 		end
 
 indexing

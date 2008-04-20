@@ -15,7 +15,8 @@ inherit
 			basic_register,
 			has_call, current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
-			analyze_on, analyze, generate_end, allocates_memory
+			analyze_on, analyze, generate_end, allocates_memory,
+			is_polymorphic, has_one_signature
 		end;
 
 	SHARED_TABLE;
@@ -148,6 +149,25 @@ feature
 			do_generate (reg);
 		end;
 
+	is_polymorphic: BOOLEAN is
+			-- Is access polymorphic ?
+		local
+			class_type: CL_TYPE_A
+			type_i: TYPE_A
+		do
+			type_i := context_type
+			if not type_i.is_basic and then static_class_type = Void then
+				class_type ?= type_i -- Cannot fail
+				Result := Eiffel_table.is_polymorphic (routine_id, class_type, context.context_class_type, True) >= 0
+			end
+		end
+
+	has_one_signature: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := Eiffel_table.poly_table (routine_id).has_one_signature
+		end
+
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
 			-- Generate external call in a `typ' context
 		local
@@ -187,7 +207,10 @@ feature
 					-- It is pretty important that we use `actual_type.is_formal' and not
 					-- just `is_formal' because otherwise if you have `like x' and `x: G'
 					-- then we would fail to detect that.
-				if system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then l_type_i.is_basic then
+				if
+					system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then
+					l_type_i.is_basic and then not has_one_signature
+				then
 						-- Feature returns a reference that need to be used as a basic one.
 					buf.put_character ('*')
 					type_c.generate_access_cast (buf)
@@ -411,7 +434,7 @@ feature
 			written_in := e.written_in
 			external_name_id := e.external_name_id;
 			type := e.type;
-			parameters := e.parameters;
+			set_parameters (e.parameters)
 			l_encapsulated := e.encapsulated
 			extension := e.extension;
 			feature_id := e.feature_id;

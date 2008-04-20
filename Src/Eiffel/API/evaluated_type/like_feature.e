@@ -83,11 +83,7 @@ feature -- Status Report
 		do
 			if system.in_final_mode then
 				table := Eiffel_table.poly_table (routine_id)
-				if table = Void then
-					Result := True
-				else
-					Result := table.has_one_type
-				end
+				Result := table.has_one_type
 			else
 				Result := False
 			end

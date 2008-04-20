@@ -35,6 +35,8 @@ feature
 			create rout_id_set.make
 			rout_id_set.put (System.routine_id_counter.invariant_rout_id)
 			written_in := a_class.class_id
+				-- We can safely process the pattern here.
+			process_pattern
 		end
 
 feature -- IL code generation

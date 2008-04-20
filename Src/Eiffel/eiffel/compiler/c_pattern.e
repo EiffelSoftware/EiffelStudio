@@ -181,7 +181,7 @@ feature -- Pattern generation
 			end;
 		end;
 
-	argument_type_array: ARRAY [STRING] is
+	workbench_argument_type_array: ARRAY [STRING] is
 			-- Argument types for code generation
 		local
 			i, j, nb: INTEGER
@@ -196,6 +196,28 @@ feature -- Pattern generation
 				i > nb
 			loop
 				Result.put ("EIF_TYPED_VALUE", j)
+				i := i + 1;
+				j := j + 1;
+			end
+		ensure
+			workench_argument_type_array_not_void: Result /= Void
+		end
+
+	argument_type_array: ARRAY [STRING] is
+			-- Argument types for code generation
+		local
+			i, j, nb: INTEGER
+		do
+			nb := argument_count
+			create Result.make (1, nb + 1)
+			Result.put ("EIF_REFERENCE", 1)
+			j := 2
+			from
+				i := 1;
+			until
+				i > nb
+			loop
+				Result.put (argument_types.item (i).c_string, j)
 				i := i + 1;
 				j := j + 1;
 			end;
@@ -294,7 +316,7 @@ feature -- Pattern generation
 				result_string := "EIF_TYPED_VALUE"
 			end
 
-			arg_types := argument_type_array
+			arg_types := workbench_argument_type_array
 
 			buffer.generate_function_signature
 				(result_string, f_name, False, buffer,
@@ -410,7 +432,7 @@ feature -- Pattern generation
 			end
 			buffer.put_character ('(')
 				-- Patterns are only in workbench mode generation
-			result_type.generate_function_cast (buffer, argument_type_array, True)
+			result_type.generate_function_cast (buffer, workbench_argument_type_array, True)
 			buffer.put_string ("ptr)(")
 			nb := argument_count
 			buffer.put_string ("Current")
@@ -441,7 +463,7 @@ feature {NONE} -- Implemantation
 			first_type_not_void: first_type /= Void
 			other_type_not_void: other_type /= Void
 		do
-			Result := first_type.is_equal (other_type)
+			Result := first_type.same_as (other_type)
 		end
 
 invariant

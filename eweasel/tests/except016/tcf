@@ -1,0 +1,18 @@
+test_name 	 querries_of_exceptions_class_1
+test_description Show correct behaviors of `is_developer_exception_of_name', `assertion_violation' and `is_signal' in class EXCEPTIONS.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+compile_melted
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+test_end

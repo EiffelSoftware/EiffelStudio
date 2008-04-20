@@ -43,11 +43,12 @@ create {EB_FEATURE_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; a_name: STRING; a_name_is_ambiguated: BOOLEAN) is
+	make (a_feature: E_FEATURE; a_name: STRING; a_name_is_ambiguated, a_is_upper: BOOLEAN) is
 			-- Create and initialize a new completion feature using `a_feature'
 			-- `a_name' is either an ambiguated name when `a_name_is_ambiguated',
 			-- or a fixed name when not `a_name_is_ambiguated'.
 			-- When `a_name' is Void, `a_name_is_ambiguated' is discarded.
+			-- When `a_is_upper', it means that first letter should be in upper.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
@@ -77,11 +78,17 @@ feature {NONE} -- Initialization
 
 			create insert_name_internal.make (name.count + feature_signature.count)
 			insert_name_internal.append (name)
+			if a_is_upper then
+				insert_name_internal.put (insert_name_internal.item (1).as_upper, 1)
+			end
 			insert_name_internal.append (feature_signature)
 
 			if a_name_is_ambiguated then
 				create full_insert_name_internal.make (associated_feature.name.count + feature_signature.count)
 				full_insert_name_internal.append (associated_feature.name)
+				if a_is_upper then
+					full_insert_name_internal.put (full_insert_name_internal.item (1).as_upper, 1)
+				end
 				full_insert_name_internal.append (feature_signature)
 			else
 				full_insert_name_internal := insert_name_internal

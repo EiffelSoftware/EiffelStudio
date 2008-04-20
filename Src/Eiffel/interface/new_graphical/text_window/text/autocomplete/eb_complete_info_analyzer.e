@@ -658,17 +658,21 @@ feature {NONE} -- Implementation
 		local
 			l_feature: EB_FEATURE_FOR_COMPLETION
 		do
-			if feat.is_infix then
-				create l_feature.make (feat, Void, False)
-				l_feature.set_has_dot (False)
-				insert_in_completion_possibilities (l_feature)
-			elseif not feat.is_prefix then
-				create l_feature.make (feat, Void, False)
-				if (feat.is_once or feat.is_constant) and preferences.editor_data.once_and_constant_in_upper then
-					l_feature.put ((l_feature @ 1).upper, 1)
+			if not feat.is_prefix then
+				create l_feature.make (feat, Void, False, is_upper_required (feat))
+				if feat.is_infix then
+					l_feature.set_has_dot (False)
 				end
 				insert_in_completion_possibilities (l_feature)
 			end
+		end
+
+	is_upper_required (a_feat: E_FEATURE): BOOLEAN is
+			-- Did user configured his system to have once and constants with an upper case?
+		require
+			a_feat_not_void: a_feat /= Void
+		do
+			Result := not (a_feat.is_infix or a_feat.is_prefix) and (a_feat.is_once or a_feat.is_constant) and preferences.editor_data.once_and_constant_in_upper
 		end
 
 	matches (str, pat: STRING): BOOLEAN is
@@ -767,7 +771,7 @@ feature {NONE} -- Implementation
 								-- Create child node and insert it into father node.
 							create l_feature.make (l_e_feature,
 													names_heap.item (l_overloaded_names.key_for_iteration),
-													True)
+													True, is_upper_required (l_e_feature))
 							l_father.add_child (l_feature)
 								-- Remove child feature from inserted_feature_table.
 							inserted_feature_table.remove (l_features.item)
@@ -1376,7 +1380,7 @@ feature {NONE} -- Implementation
 						l_features_found_count := l_type_set.e_feature_state_by_name_id (l_new_name_id).features_found_count
 						if l_features_found_count = 1 then
 							if l_new_name_id /= l_name_id then
-								create l_name_for_completion.make (a_feat, names_heap.item (l_new_name_id), False)
+								create l_name_for_completion.make (a_feat, names_heap.item (l_new_name_id), False, is_upper_required (a_feat))
 								insert_in_completion_possibilities (l_name_for_completion)
 							else
 								add_feature_to_completion_possibilities (a_feat)

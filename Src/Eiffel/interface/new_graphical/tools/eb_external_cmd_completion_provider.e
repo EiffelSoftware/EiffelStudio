@@ -24,6 +24,8 @@ inherit
 
 	QL_SHARED
 
+	EB_SHARED_PREFERENCES
+
 	SHARED_WORKBENCH
 
 create
@@ -165,7 +167,7 @@ feature{NONE} -- Implementation
 					l_feature_table.after
 				loop
 					l_feature := l_feature_table.item_for_iteration.e_feature
-					create l_feature_item.make (l_feature, Void, False)
+					create l_feature_item.make (l_feature, Void, False, is_upper_required (l_feature))
 					l_feature_item.set_insert_name (l_feature.name)
 					Result.put (l_feature_item, l_index)
 					l_index := l_index + 1
@@ -177,6 +179,14 @@ feature{NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	is_upper_required (a_feat: E_FEATURE): BOOLEAN is
+			-- Did user configured his system to have once and constants with an upper case?
+		require
+			a_feat_not_void: a_feat /= Void
+		do
+			Result := not (a_feat.is_infix or a_feat.is_prefix) and (a_feat.is_once or a_feat.is_constant) and preferences.editor_data.once_and_constant_in_upper
 		end
 
 	placeholder_possibilities: like completion_possibilities is

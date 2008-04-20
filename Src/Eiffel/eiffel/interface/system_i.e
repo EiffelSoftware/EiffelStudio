@@ -1899,6 +1899,9 @@ end
 					--| someone removed an inheritance link to DISPOSABLE.
 				reset_disposable_descendants
 
+					-- Process the C pattern table
+				pattern_table.process
+
 				debug ("timing")
 					create d2.make_now
 					print ("After degreee 3 duration: ")
@@ -2915,12 +2918,6 @@ feature -- Freeezing
 
 			address_table.update_ids
 
-				-- Process the C pattern table
-debug ("ACTIVITY")
-	io.error.put_string ("pattern_table.process%N")
-end
-			pattern_table.process
-
 debug ("ACTIVITY")
 	io.error.put_string ("Clear the melted code servers%N")
 end
@@ -3202,6 +3199,7 @@ feature -- Final mode generation
 						process_dynamic_types (True, l_type_id_mapping)
 					end
 				end
+				skeleton_table := Void
 				private_finalize := False
 			end
 		rescue

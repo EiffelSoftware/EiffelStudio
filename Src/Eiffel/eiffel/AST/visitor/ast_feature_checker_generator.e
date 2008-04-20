@@ -3124,14 +3124,16 @@ feature -- Implementation
 			l_vwbe3: VWBE3
 			l_assert: ASSERT_B
 			l_expr: EXPR_B
+			l_error_level: NATURAL_32
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
 			reset_for_unqualified_call_checking
 
+			l_error_level := error_level
 			l_as.expr.process (Current)
 
-			if last_type /= Void then
+			if error_level = l_error_level then
 					-- Check if the type of the expression is boolean
 				if not last_type.actual_type.is_boolean then
 					create l_vwbe3
@@ -8331,7 +8333,7 @@ feature {NONE} -- Agents
 				not l_enclosing_feature.is_inline_agent
 			loop
 				l_new_enclosing_feature :=
-					l_cur_class.feature_i_with_body_index (l_enclosing_feature.enclosing_body_id)
+					l_cur_class.feature_of_body_index (l_enclosing_feature.enclosing_body_id)
 				if l_new_enclosing_feature = Void then
 						-- then it has to be the class invariant feature
 					check
@@ -8411,7 +8413,7 @@ feature {NONE} -- Precursor handling
 			rout_id: INTEGER
 			parents: FIXED_LIST [CL_TYPE_A]
 			a_parent: CLASS_C
-			a_feature: E_FEATURE
+			a_feature: FEATURE_I
 			p_name: STRING
 			spec_p_name: STRING
 			p_list: HASH_TABLE [CL_TYPE_A, STRING]
@@ -8466,7 +8468,7 @@ feature {NONE} -- Precursor handling
 						i > rc
 					loop
 						rout_id   := rout_id_set.item (i)
-						a_feature := a_parent.feature_with_rout_id (rout_id)
+						a_feature := a_parent.feature_of_rout_id (rout_id)
 
 						if a_feature /= Void and then not a_feature.is_deferred  then
 								-- Ok, add parent.

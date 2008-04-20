@@ -80,7 +80,7 @@ feature -- C code generation
 		do
 			if context.final_mode then
 				entry := Eiffel_table.poly_table (routine_id)
-				if entry /= Void and then (not entry.has_one_type or else is_generic) then
+				if not entry.has_one_type or else is_generic then
 						-- We are in polymorphic case
 					context.mark_current_used
 					context.add_dftype_current
@@ -101,7 +101,7 @@ feature -- C code generation
 			if final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 
-				if table = Void then
+				if table.is_deferred then
 					-- Creation with `like feature' where
 					-- feature is deferred and has no effective
 					-- version anywhere.
@@ -233,12 +233,7 @@ feature -- Genericity
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
-
-				if table = Void then
-					Result := True
-				else
-					Result := table.has_one_type
-				end
+				Result := table.has_one_type
 			else
 				Result := False
 			end
@@ -267,7 +262,7 @@ feature -- Genericity
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 
-				if table = Void then
+				if table.is_deferred then
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
@@ -346,7 +341,7 @@ feature -- Genericity
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 
-				if table = Void then
+				if table.is_deferred then
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
@@ -390,7 +385,7 @@ feature -- Genericity
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 
-				if table = Void then
+				if table.is_deferred then
 						-- Creation with `like feature' where feature is
 						-- deferred and has no effective version anywhere.
 						-- Create anything - cannot be called anyway
@@ -490,8 +485,7 @@ feature -- Genericity
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
-
-				if table /= Void and then table.has_one_type then
+				if table.has_one_type then
 					Result ?= table.first.type
 				end
 			end

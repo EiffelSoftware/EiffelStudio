@@ -10,7 +10,7 @@ inherit
 		rename
 			make as make_node
 		redefine
-			free_register,
+			free_register, has_one_signature,
 			is_feature_call, basic_register, generate_parameters_list,
 			generate_access_on_type, is_polymorphic, has_call,
 			set_register, register, set_parent, parent, generate_access,
@@ -238,6 +238,12 @@ end
 			end
 		end
 
+	has_one_signature: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := Eiffel_table.poly_table (routine_id).has_one_signature
+		end
+
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
 			-- Generate final portion of C code.
 		local
@@ -342,7 +348,10 @@ end
 					-- It is pretty important that we use `actual_type.is_formal' and not
 					-- just `is_formal' because otherwise if you have `like x' and `x: G'
 					-- then we would fail to detect that.
-				if system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then type_i.is_basic then
+				if
+					system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then
+					type_i.is_basic and then not has_one_signature
+				then
 						-- Feature returns a reference that needs to be used as a basic one.
 					is_right_parenthesis_needed.put (True)
 					buf.put_character ('*')

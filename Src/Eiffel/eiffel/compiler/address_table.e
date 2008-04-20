@@ -676,7 +676,7 @@ feature {NONE} -- Generation
 			l_current_name: STRING
 			l_is_implemented: BOOLEAN
 			l_type: CLASS_TYPE
-			seed: FEATURE_I
+			original_seed, seed: FEATURE_I
 			reference_arg: ARRAY [BOOLEAN]
 			reference_arg_count: INTEGER
 			formal_arg: ARRAY [BOOLEAN]
@@ -692,8 +692,10 @@ feature {NONE} -- Generation
 			rout_id := a_feature.rout_id_set.first
 			if is_for_agent and then not a_feature.is_inline_agent then
 				seed := system.seed_of_routine_id (rout_id)
-				if not seed.has_formal and then final_mode then
+				if final_mode and not seed.has_formal then
 					seed := Void
+				else
+					original_seed := seed
 				end
 			end
 			if a_feature.has_arguments then
@@ -750,6 +752,16 @@ feature {NONE} -- Generation
 			loop
 				l_type := types.item
 				cursor := types.cursor
+					-- If the call is never polymorphic (it means the arguments are always the same)
+					-- and we do not need to adapt the arguments.
+				if
+					final_mode and then
+					(a_feature.is_inline_agent or else not is_polymorphic (a_feature, l_type))
+				then
+					seed := Void
+				else
+					seed := original_seed
+				end
 
 				function_name := calc_function_name (is_for_agent, feature_id, l_type.static_type_id,
 													 omap, a_oargs_encapsulated)
@@ -778,7 +790,7 @@ feature {NONE} -- Generation
 				end
 
 				has_creation := False
-				if formal_arg_count > 0 then
+				if seed /= Void and formal_arg_count > 0 then
 						-- Figure out all the reference arguments that are not at the positions
 						-- of formal generics.
 					from
@@ -1049,7 +1061,7 @@ feature {NONE} -- Generation
 			l_entry :=  Eiffel_table.poly_table (l_rout_id)
 
 			buffer.put_character ('(')
-			if l_entry = Void then
+			if l_entry.is_deferred then
 					-- Function pointer associated to a deferred feature
 					-- without any implementation
 				c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>, False)
@@ -1076,7 +1088,7 @@ feature {NONE} -- Generation
 					l_rout_table.goto_implemented (a_type.type, a_type)
 					if l_rout_table.is_implemented then
 						c_return_type.generate_function_cast (buffer, a_types, False)
-						l_function_name := l_rout_table.feature_name + system.seed_of_routine_id (l_rout_id).generic_fingerprint
+						l_function_name := l_rout_table.feature_name
 						buffer.put_string (l_function_name)
 						buffer.put_string (")(")
 						extern_declarations.add_routine_with_signature (c_return_type.c_string,
@@ -1093,6 +1105,37 @@ feature {NONE} -- Generation
 					end
 				end
 
+			end
+		end
+
+	is_polymorphic (a_feature: FEATURE_I; a_type: CLASS_TYPE): BOOLEAN is
+			-- Is `a_feature' polymorphic for type `a_type' for all its
+			-- seeds?
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_inline_agent: not a_feature.is_inline_agent
+			a_type_not_void: a_type /= Void
+		local
+			l_rout_id_set: ROUT_ID_SET
+			i, nb: INTEGER
+			l_rout_id: INTEGER
+			l_entry: POLY_TABLE [ENTRY]
+			l_tables: like eiffel_table
+		do
+			from
+				l_rout_id_set := a_feature.rout_id_set
+				l_tables := eiffel_table
+				i := l_rout_id_set.lower
+				nb := l_rout_id_set.count
+			until
+				i > nb or Result
+			loop
+				l_rout_id := l_rout_id_set.item (i)
+				l_entry :=  l_tables.poly_table (l_rout_id)
+				if l_entry.is_polymorphic (a_type.type, a_type) then
+					Result := True
+				end
+				i := i + 1
 			end
 		end
 

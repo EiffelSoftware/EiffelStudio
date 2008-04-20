@@ -38,7 +38,10 @@ feature -- Access
 	attachment_type: TYPE_A is
 			-- Type to which the expression is attached
 		do
-			if not system.il_generation and then context.final_mode and then is_formal and then parent.is_polymorphic then
+			if
+				not system.il_generation and then context.final_mode and then
+				is_formal and then parent.is_polymorphic and then not parent.has_one_signature
+			then
 				Result := system.any_type
 			else
 				Result := internal_attachment_type

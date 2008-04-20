@@ -18,11 +18,11 @@ inherit
 			generate as generate_attribute_table
 		undefine
 			is_routine_table,
-			tmp_poly_table
+			tmp_poly_table,
+			merge,
+			extend
 		redefine
 			is_polymorphic,
-			make,
-			merge,
 			new_entry,
 			write
 		end
@@ -34,22 +34,12 @@ inherit
 			is_attribute_table, write_for_type
 		redefine
 			is_polymorphic,
-			make,
-			merge,
 			new_entry,
 			write
 		end
 
 create
 	make
-
-feature {NONE} -- Creation
-
-	make (routine_id: INTEGER) is
-			-- Create table with associated `routine_id'
-		do
-			Precursor {ROUT_TABLE} (routine_id)
-		end
 
 feature -- Status report
 
@@ -67,14 +57,6 @@ feature -- Access
 		do
 			Result := f.new_rout_entry
 			Result.set_class_id (c)
-		end
-
-feature -- Modification
-
-	merge (other: like Current) is
-			-- Put `other' into Current
-		do
-			Precursor (other)
 		end
 
 feature -- Code generation

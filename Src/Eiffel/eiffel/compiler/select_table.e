@@ -168,19 +168,17 @@ feature -- Final mode
 				l_table.after
 			loop
 				l_feature_i := l_table.item_for_iteration
-				if l_feature_i.has_entry then
-					l_id_set := l_feature_i.rout_id_set
-					l_control.add_new (l_feature_i, id, l_id_set.first)
-					nb := l_id_set.count
-					if nb > 1 then
-						from
-							i := 2
-						until
-							i > nb
-						loop
-							l_control.add_new (l_feature_i, id, l_id_set.item (i))
-							i := i + 1
-						end
+				l_id_set := l_feature_i.rout_id_set
+				l_control.add_new (l_feature_i, id, l_id_set.first)
+				nb := l_id_set.count
+				if nb > 1 then
+					from
+						i := 2
+					until
+						i > nb
+					loop
+						l_control.add_new (l_feature_i, id, l_id_set.item (i))
+						i := i + 1
 					end
 				end
 				l_table.forth

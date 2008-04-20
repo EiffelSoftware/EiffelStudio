@@ -18,7 +18,9 @@ inherit
 			generate_end,
 			need_invariant,
 			set_need_invariant,
-			unanalyze
+			unanalyze,
+			is_polymorphic,
+			has_one_signature
 		end
 
 create
@@ -35,6 +37,18 @@ feature -- Access
 
 	need_invariant: BOOLEAN
 			-- Does the call need an invariant check ?
+
+	is_polymorphic: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := True
+		end
+
+	has_one_signature: BOOLEAN is
+			-- <Precursor>
+		do
+			Result := False
+		end
 
 feature -- Settings
 

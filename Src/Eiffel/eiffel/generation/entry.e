@@ -56,6 +56,11 @@ feature -- for dead code removal
 		do
 		end
 
+	is_deferred: BOOLEAN is
+			-- Is the feature_i associated a deferred routine?
+		do
+		end
+
 	feature_id: INTEGER
 			-- feature id of the feature associated to the entry
 
@@ -82,7 +87,7 @@ feature -- Previously in POLY_UNIT
 			-- Assign `t' to `type_a'.
 		do
 			type_a := t
-		end;
+		end
 
 feature -- previously in POLY_UNIT
 

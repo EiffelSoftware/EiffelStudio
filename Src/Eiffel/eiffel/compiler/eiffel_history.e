@@ -29,12 +29,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	poly_table (rout_id: INTEGER): POLY_TABLE [ENTRY] is
-			-- Routine table of id `rout_id'
+
+	poly_table (a_rout_id: INTEGER): POLY_TABLE [ENTRY] is
+			-- Routine table of id `a_rout_id'
+		require
+			a_rout_id_positive: a_rout_id > 0
+			has_table: has_poly_table (a_rout_id)
 		do
-				-- Not in cache and the routine id is not associated
-				-- to a routine table of deferred features only.
-			Result := Tmp_poly_server.item (rout_id)
+			Result := Tmp_poly_server.item (a_rout_id)
+		ensure
+			poly_table_not_void: Result /= Void
 		end
 
 	used: PACKED_BOOLEANS
@@ -53,6 +57,14 @@ feature -- Process
 		end
 
 feature -- Status
+
+	has_poly_table (a_rout_id: INTEGER): BOOLEAN is
+			-- Do we have an entry for `a_rout_id'?
+		require
+			a_rout_id_positive: a_rout_id > 0
+		do
+			Result := tmp_poly_server.has (a_rout_id)
+		end
 
 	is_polymorphic (rout_id: INTEGER; class_type: TYPE_A; a_context_type: CLASS_TYPE; used_requested: BOOLEAN): INTEGER is
 			-- If the entry <`rout_id',`class_type'> is polymorphic, we return
@@ -74,10 +86,7 @@ feature -- Status
 				Result := -1
 			else
 					-- Get the array corresponding to the searched value
-					-- if it is a valid `rout_id', if not `bool_array' is
-					-- set to `Void' because we we have most probably a
-					-- case of a deferred feature without implementation
-					-- (This will be verified later).
+					-- if it is a valid `rout_id'.
 					--
 					-- Note: we check for voidness of `class_type.generics' as we cannot
 					-- used the buffered information in that case which could exist
@@ -123,7 +132,10 @@ feature -- Status
 						-- First time, the information for <`rout_id',`class_type_id'> is requested
 					entry := poly_table (rout_id)
 
-					if entry /= Void then
+					if entry.is_deferred then
+							-- All routines of the table are deferred.
+						Result := -2
+					else
 							-- Store the polymorphic status of the searched entry.
 						status := entry.is_polymorphic (class_type, a_context_type)
 
@@ -161,11 +173,6 @@ feature -- Status
 						else
 							Result := -1
 						end
-					else
-							-- In case there is no polymorphic table associated to `rout_id'
-							-- we don't do anything and next time we will go to the same place.
-							-- Most probably a deferred feature without implementation
-						Result := -2
 					end
 				end
 			end
@@ -245,11 +252,8 @@ feature {NONE} -- Implementation
 			i := 2 * index
 				-- We already know that `index' is positive. If `index' has
 				-- a greater value than the expected one, it means that we
-				-- are either in an incremental finalization or that we are
-				-- using a precompiled library. And that it means that we
-				-- are currently on a deferred routine that is not part
-				-- of the POLY_TABLE, thus we need to do some computation
-				-- about the polymorphism status.
+				-- haven't yet computed the polymorphism status for a given
+				-- CLASS_TYPE.
 			if bool_array.valid_index (i + 1) then
 				if bool_array.item (i) then
 					if bool_array.item (i + 1) then

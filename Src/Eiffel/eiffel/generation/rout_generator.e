@@ -29,7 +29,10 @@ feature
 			file.put_string (Epoly);
 			file.put_integer (file_counter);
 			file.put_string (Dot_h);
-			file.put_string ("%"%N%N");
+			file.put_string ("%"%N");
+				-- We need to include `E1/efoffsets.h' since we generate
+				-- some size macros.
+			file.put_string ("#include %"../E1/eoffsets.h%"%N")
 		end;
 
 	finish_file is

@@ -43,6 +43,9 @@ feature
 	c_patterns: SEARCH_TABLE [C_PATTERN_INFO]
 			-- Non formal patterns present already in the system
 
+	c_patterns_by_ids: HASH_TABLE [C_PATTERN_INFO, INTEGER]
+			-- Same as `c_patterns' but indexed by the `c_pattern_id'.
+
 	pattern_id_counter: COMPILER_COUNTER
 			-- Pattern id counter
 
@@ -58,6 +61,7 @@ feature
 			create c_pattern_id_counter
 			create pattern_id_counter.make
 			create c_patterns.make (Chunk)
+			create c_patterns_by_ids.make (Chunk)
 		end
 
 	Chunk: INTEGER is 100
@@ -91,11 +95,14 @@ feature
 						if not c_patterns.has (c_pattern_info) then
 							c_pattern_info.set_c_pattern_id (c_pattern_id_counter.next)
 							c_patterns.put (c_pattern_info)
+							c_patterns_by_ids.put (c_pattern_info, c_pattern_info.c_pattern_id)
 						end
 						types.forth
 					end
+					info_array.forth
+				else
+					info_array.remove (info_array.key_for_iteration)
 				end
-				info_array.forth
 			end
 		end
 

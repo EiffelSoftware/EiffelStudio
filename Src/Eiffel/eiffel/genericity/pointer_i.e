@@ -9,6 +9,9 @@ class POINTER_I
 
 inherit
 	BASIC_I
+		redefine
+			same_as
+		end
 
 feature -- Access
 
@@ -74,6 +77,15 @@ feature -- C code generation
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			buffer.put_string ({SK_CONST}.sk_pointer_string)
+		end
+
+feature -- Comparison
+
+	same_as (other: TYPE_C): BOOLEAN is
+			-- Is Current same as other?
+		do
+				-- It really has to be POINTER_I, it cannot be the descendant TYPED_POINTER_I
+			Result := same_type (other) and level = other.level
 		end
 
 feature {NONE} -- Constants

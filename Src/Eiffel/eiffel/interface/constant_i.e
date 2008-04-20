@@ -208,10 +208,6 @@ feature -- C code generation
 			local_byte_context: BYTE_CONTEXT
 			local_is_once: BOOLEAN
 			header_buffer: GENERATION_BUFFER
-			rout_ids: like rout_id_set
-			rout_id: INTEGER
-			basic_i: BASIC_A
-			i: INTEGER
 		do
 			if used then
 				local_byte_context := byte_context
@@ -299,70 +295,6 @@ feature -- C code generation
 				buffer.put_character (';')
 				buffer.generate_block_close
 				buffer.put_new_line
-				if local_byte_context.final_mode then
-							-- Generate generic wrappers if required.
-					from
-						rout_ids := rout_id_set
-						i := rout_ids.count
-					until
-						i <= 0
-					loop
-						rout_id := rout_ids.item (i)
-						if system.seed_of_routine_id (rout_id).has_formal then
-								-- Generate generic wrapper.
-							if local_is_once then
-								buffer.generate_function_signature
-									("EIF_REFERENCE", internal_name + "1", True,
-									 local_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
-								buffer.generate_block_open
-								buffer.put_gtcx
-								buffer.put_new_line
-								if System.has_multithreaded then
-									buffer.put_string ("RTOUC (")
-									buffer.put_integer (local_byte_context.thread_relative_once_index (body_index))
-								else
-									buffer.put_string ("RTOSC (")
-									buffer.put_integer (body_index)
-								end
-								buffer.put_character (',')
-								value.generate (buffer)
-								buffer.put_character (')')
-							else
-								buffer.generate_function_signature
-									("EIF_REFERENCE", internal_name + "1", True,
-									 local_byte_context.header_buffer, <<"Current">>, <<"EIF_REFERENCE">>)
-								buffer.generate_block_open
-								buffer.put_new_line
-								if type_c.is_pointer then
-									buffer.put_string ("return ")
-								else
-									buffer.put_string ("EIF_REFERENCE Result;")
-									buffer.put_new_line
-									type_c.generate (buffer)
-									buffer.put_string ("r = ")
-								end
-								type_c.generate_cast (buffer)
-								value.generate (buffer)
-								if not type_c.is_pointer then
-									buffer.put_character (';')
-									buffer.put_new_line
-									basic_i ?= type
-									basic_i.metamorphose (create {NAMED_REGISTER}.make ("Result", reference_c_type), create {NAMED_REGISTER}.make ("r", type_c), buffer)
-									buffer.put_character (';')
-									buffer.put_new_line
-									buffer.put_string ("return Result")
-								end
-							end
-							buffer.put_character (';')
-							buffer.generate_block_close
-							buffer.put_new_line
-							local_byte_context.clear_feature_data
-								-- Only 1 wrapper is generated.
-							i := 1
-						end
-						i := i - 1
-					end
-				end
 			elseif not System.is_used (Current) then
 				System.removed_log_file.add (class_type, feature_name)
 			end

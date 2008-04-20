@@ -518,6 +518,8 @@ feature -- Comparison
 								end
 							end
 							Result := False
+								-- One day, I changed `f2' by `f1' and the eweasel test#incr139 was broken,
+								-- so I guess this is why we have to use `f2'.
 							create depend_unit.make (feat_tbl_id, f2)
 							pass2_ctrl.propagators.extend (depend_unit)
 							if not is_freeze_requested and then c.visible_level.is_visible (f1, feat_tbl_id) then
@@ -682,7 +684,7 @@ end
 			end
 
 			if feat_tbl_id /= 0 then
-					-- Bug fix: moving a class around can crete problems:
+					-- Bug fix: moving a class around can create problems:
 					-- class test1 t: TEST2 end; class test2 inherit t1 end
 					-- class test2 moved from one cluster to another
 					-- Iteration on the features removed by `update_table'
@@ -745,9 +747,11 @@ end
 
 feature -- Check
 
-	update_table is
+	update_table (a_class_id: INTEGER) is
 			-- Check if the references to the supplier classes
 			-- are still valid and remove the entry otherwise
+		require
+			a_class_id_positive: a_class_id > 0
 		local
 			f: FEATURE_I
 			l_features: like features
@@ -767,13 +771,13 @@ debug ("ACTIVITY")
 	io.error.put_string (f.feature_name)
 	io.error.put_string (" removed%N")
 end
-					Tmp_ast_server.desactive (f.body_index)
-
-					-- There is no need for a corresponding "reactivate" here
-					-- since it will be done in by pass2 in `feature_unit' if need be
-
-					removed_feature_ids.extend ([f.rout_id_set.first, f.body_index])
-					remove (f.feature_name_id)
+					if f.written_in = a_class_id then
+							-- There is no need for a corresponding "reactivate" here
+							-- since it will be done in by pass2 in `feature_unit' if need be
+						Tmp_ast_server.desactive (f.body_index)
+						removed_feature_ids.extend ([f.rout_id_set.first, f.body_index])
+						remove (f.feature_name_id)
+					end
 					l_features.remove
 				else
 					l_features.forth

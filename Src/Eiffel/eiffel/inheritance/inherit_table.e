@@ -507,7 +507,7 @@ end;
 					-- No previous compilation.
 				feature_table := Empty_table
 			else
-				feature_table.update_table
+				feature_table.update_table (id)
 			end;
 				-- Prepare `inherited_features'.
 			inherited_features.set_feat_tbl_id (id);
@@ -516,7 +516,7 @@ end;
 			if previous_feature_table /= Void then
 					-- There was an error and a feature table has been already
 					-- computed for this class.
-				previous_feature_table.update_table;
+				previous_feature_table.update_table (id);
 			end;
 		end;
 

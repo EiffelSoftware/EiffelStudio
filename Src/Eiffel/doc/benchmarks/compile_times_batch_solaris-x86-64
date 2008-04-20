@@ -6,7 +6,12 @@ CG = Code Generation
 6.2
 ===
 
-6.2.7.2874 RTEA with new EiffelBase rewrite for void safety:
+6.7.73124 non-RTEA with new code generation for polymorphic wrapper:
+174.01u 13.51s 3:57.06 79.1% (before bootstrap, exe size: 14657384)
+180.91u 12.47s 3:49.99 84.0% (after bootstrap, exe size: 14579192)
+179.58u 12.65s 3:47.60 84.4%  "
+
+6.2.7.2874 non-RTEA with new EiffelBase rewrite for void safety:
 175.23u 12.46s 3:41.89 84.5%
 174.46u 12.50s 3:46.15 82.6%
 

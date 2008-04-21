@@ -10,7 +10,7 @@ class
 
 feature -- Query
 
-	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_GENERAL is
+	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_32 is
 			-- Short name of `a_long_file_name'
 		local
 			l_helper: WEL_FILE_NAME_HELPER

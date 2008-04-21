@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	short_path_name (a_file_name: !STRING_GENERAL): STRING_GENERAL is
+	short_path_name (a_file_name: !STRING_GENERAL): STRING_32 is
 			-- Short path name of `a_file_name'
 			-- File/directory must exists before convert to short name
 		local
@@ -29,7 +29,7 @@ feature -- Access
 				Result := l_wel_string_result.string
 			else
 				-- Error
-				Result := a_file_name
+				Result := a_file_name.as_string_32
 			end
 		end
 

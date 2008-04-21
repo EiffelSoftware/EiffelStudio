@@ -79,7 +79,7 @@ feature -- Generation
 		local
 			r_type: TYPE_A
 			cl_type_i: CL_TYPE_A
-			local_list: LINKED_LIST [TYPE_A]
+			local_list: ARRAYED_LIST [TYPE_A]
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
 			class_c: CLASS_C
@@ -275,6 +275,7 @@ feature -- Generation
 				if inh_assert.has_postcondition then
 					inh_assert.generate_il_postcondition (Current)
 				end
+				context.set_assertion_type (0)
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
 				il_generator.mark_label (end_of_assertion)
@@ -550,9 +551,10 @@ feature {NONE} -- Implementation
 			il_generator.put_boolean_constant (False)
 			il_generator.generate_set_assertion_status
 			il_generator.mark_label (end_of_assertion)
+			context.set_assertion_type (0)
 		end
 
-	generate_il_local_info (local_list: LINKED_LIST [TYPE_A]) is
+	generate_il_local_info (local_list: ARRAYED_LIST [TYPE_A]) is
 			-- Generate IL info for local variables in `local_list'.
 		require
 			is_valid: is_valid
@@ -630,7 +632,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_locals (local_list: LINKED_LIST [TYPE_A]) is
+	initialize_locals (local_list: ARRAYED_LIST [TYPE_A]) is
 			-- Generate code to initialize local variables of the current routine
 			-- taking their types from `local_list'.
 		require
@@ -1399,6 +1401,7 @@ feature {NONE} -- Visitors
 				context.set_assertion_type ({ASSERT_TYPE}.in_check)
 				Il_generator.put_silent_line_info (a_node.line_number)
 				a_node.check_list.process (Current)
+				context.set_assertion_type (0)
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
 				Il_generator.mark_label (l_label)
@@ -2164,7 +2167,7 @@ feature {NONE} -- Visitors
 	process_invariant_b (a_node: INVARIANT_B) is
 			-- Process `a_node'.
 		local
-			l: LINKED_LIST [TYPE_A]
+			l: ARRAYED_LIST [TYPE_A]
 		do
 			context.local_list.wipe_out
 			context.add_locals (a_node.object_test_locals)
@@ -2186,6 +2189,7 @@ feature {NONE} -- Visitors
 			end
 
 			il_generator.generate_invariant_body (a_node.byte_list)
+			context.set_assertion_type (0)
 		end
 
 	process_local_b (a_node: LOCAL_B) is
@@ -2203,7 +2207,7 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_test_label, l_end_label, l_label: IL_LABEL
-			l_local_list: LINKED_LIST [TYPE_A]
+			l_local_list: ARRAYED_LIST [TYPE_A]
 			l_variant_local_number: INTEGER
 			l_check_assertion: BOOLEAN
 		do
@@ -2232,11 +2236,13 @@ feature {NONE} -- Visitors
 				if a_node.invariant_part /= Void then
 					context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
 					a_node.invariant_part.process (Current)
+					context.set_assertion_type (0)
 				end
 					-- Variant loop byte code
 				if a_node.variant_part /= Void then
 					context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
 					generate_il_variant_init (a_node.variant_part, l_variant_local_number)
+					context.set_assertion_type (0)
 				end
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
@@ -2273,12 +2279,14 @@ feature {NONE} -- Visitors
 				if a_node.invariant_part /= Void then
 					context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
 					a_node.invariant_part.process (Current)
+					context.set_assertion_type (0)
 				end
 
 					-- Variant loop byte code
 				if a_node.variant_part /= Void then
 					context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
 					generate_il_variant_check (a_node.variant_part, l_variant_local_number)
+					context.set_assertion_type (0)
 				end
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status

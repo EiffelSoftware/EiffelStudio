@@ -1081,7 +1081,7 @@ feature {NONE} -- Visitors
 	process_invariant_b (a_node: INVARIANT_B) is
 			-- Process `a_node'.
 		local
-			l_local_list: LINKED_LIST [TYPE_A]
+			l_local_list: ARRAYED_LIST [TYPE_A]
 			l_tmp_ba: BYTE_ARRAY
 			l_context: like context
 		do
@@ -1147,7 +1147,7 @@ feature {NONE} -- Visitors
 	process_loop_b (a_node: LOOP_B) is
 			-- Process `a_node'.
 		local
-			local_list: LINKED_LIST [TYPE_A]
+			local_list: ARRAYED_LIST [TYPE_A]
 			variant_local_number: INTEGER
 			invariant_breakpoint_slot: INTEGER
 			body_breakpoint_slot: INTEGER

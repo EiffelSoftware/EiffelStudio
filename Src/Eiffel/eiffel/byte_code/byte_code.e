@@ -607,7 +607,7 @@ feature -- Byte code generation
 		local
 			i, nb: INTEGER
 			l_type, l_adapted_type: TYPE_A;
-			local_list: LINKED_LIST [TYPE_A]
+			local_list: ARRAYED_LIST [TYPE_A]
 			bit_i: BITS_A
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I

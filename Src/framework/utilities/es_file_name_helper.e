@@ -12,7 +12,7 @@ class
 
 feature -- Query
 
-	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_GENERAL is
+	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_32 is
 			-- Short name of `a_long_file_name'
 			-- Result is Void if error
 			-- File must exists before convert to short name

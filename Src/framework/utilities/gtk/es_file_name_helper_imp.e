@@ -10,11 +10,11 @@ class
 
 feature -- Query
 
-	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_GENERAL is
+	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_32 is
 			-- Short name of `a_long_file_name'
 		do
 			-- FIXIT: not implemented yet
-			Result := a_long_file_name
+			Result := a_long_file_name.as_string_32
 		end
 
 indexing

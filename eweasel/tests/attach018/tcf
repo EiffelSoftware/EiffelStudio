@@ -1,0 +1,14 @@
+test_name 	 object-test-finalization-crash
+test_description An object test in a routine would cause the compiler during finalization if the invariant routine is generated before the routine.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	ok
+
+compile_final
+compile_result	ok
+
+test_end

@@ -25,9 +25,11 @@ feature {NONE} -- Initialization
 			dll_name_not_empty: not dll_name.is_empty
 		local
 			a_wel_string: WEL_STRING
+			l_api: WEL_API
 		do
 			create a_wel_string.make (dll_name)
-			item := cwin_load_library (a_wel_string.item)
+			create l_api
+			item := l_api.load_module (a_wel_string.item)
 		end
 
 	make_permanent (dll_name: STRING) is
@@ -67,15 +69,33 @@ feature -- Access
 	is_loaded_at_all_time: BOOLEAN
 			-- Is current dll to be loaded at all time?
 
+	loal_api (a_name: STRING): POINTER is
+			-- Load api which name is `a_name' in current dll
+		require
+			exists: item /= default_pointer
+			exists: a_name /= Void
+		local
+			l_c_string: C_STRING
+			l_api: WEL_API
+		do
+			create l_c_string.make (a_name)
+			create l_api
+			Result := l_api.loal_api (item, l_c_string.item)
+		end
+
 feature {NONE} -- Removal
 
 	destroy_item is
 			-- Free the library.
 		local
 			a_default_pointer: POINTER
+			l_api: WEL_API
+			l_result: BOOLEAN
 		do
 			if not is_loaded_at_all_time then
-				cwin_free_library (item)
+				create l_api
+				l_result := l_api.free_module (item)
+				check success: l_result = True end
 			end
 			item := a_default_pointer
 		end
@@ -87,14 +107,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_load_library (dll_name: POINTER): POINTER is
-			-- SDK LoadLibrary
-		external
-			"C [macro <wel.h>] (LPCTSTR): EIF_POINTER"
-		alias
-			"LoadLibrary"
-		end
-
 	cwin_permanent_load_library (dll_name: POINTER): POINTER is
 			-- Wrapper around LoadLibrary which will automatically
 			-- free the dll at the end of system execution.
@@ -102,14 +114,6 @@ feature {NONE} -- Externals
 			"C [macro %"eif_misc.h%"] (char *): EIF_POINTER"
 		alias
 			"eif_load_dll"
-		end
-
-	cwin_free_library (a_item: POINTER) is
-			-- SDK FreeLibrary
-		external
-			"C [macro <wel.h>] (HINSTANCE)"
-		alias
-			"FreeLibrary"
 		end
 
 	cwin_get_module_file_name (hinstance, buffer: POINTER;

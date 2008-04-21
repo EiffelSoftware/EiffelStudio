@@ -61,7 +61,7 @@ feature -- Access
 			p: like position
 		do
 			p := context.object_test_local_position (Current)
-			if System.in_final_mode and then System.inlining_on then
+			if not system.il_generation and system.in_final_mode and then system.inlining_on then
 					-- {BYTE_CONTEXT}.local_list might be not initialized,
 					-- but we can use recorded locals of the current feature
 					-- because the object test local is not inherited.

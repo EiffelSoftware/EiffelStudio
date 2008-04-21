@@ -38,7 +38,7 @@ feature -- Initialization
 			create local_vars.make (1, 50)
 			create local_index_table.make (10)
 			create associated_register_table.make (10)
-			create local_list.make
+			create local_list.make (10)
 			create inherited_assertion.make
 			create global_onces.make (5)
 			create onces.make (5)
@@ -2065,7 +2065,7 @@ feature -- Access
 			end
 		end
 
-	local_list: LINKED_LIST [TYPE_A]
+	local_list: ARRAYED_LIST [TYPE_A]
 			-- Local type list for byte code: it includes Eiffel local
 			-- variables types, variant local integer and hector
 			-- temporary varaibles
@@ -2075,8 +2075,7 @@ feature -- Access
 		require
 			good_argument: t /= Void
 		do
-			local_list.finish
-			local_list.put_right (t)
+			local_list.extend (t)
 		end
 
 	add_locals (l: ARRAY [TYPE_A])

@@ -25,11 +25,9 @@ feature {NONE} -- Initialization
 			dll_name_not_empty: not dll_name.is_empty
 		local
 			a_wel_string: WEL_STRING
-			l_api: WEL_API
 		do
 			create a_wel_string.make (dll_name)
-			create l_api
-			item := l_api.load_module (a_wel_string.item)
+			item := {WEL_API}.load_module (a_wel_string.item)
 		end
 
 	make_permanent (dll_name: STRING) is
@@ -76,11 +74,9 @@ feature -- Access
 			exists: a_name /= Void
 		local
 			l_c_string: C_STRING
-			l_api: WEL_API
 		do
 			create l_c_string.make (a_name)
-			create l_api
-			Result := l_api.loal_api (item, l_c_string.item)
+			Result := {WEL_API}.loal_api (item, l_c_string.item)
 		end
 
 feature {NONE} -- Removal
@@ -89,12 +85,10 @@ feature {NONE} -- Removal
 			-- Free the library.
 		local
 			a_default_pointer: POINTER
-			l_api: WEL_API
 			l_result: BOOLEAN
 		do
 			if not is_loaded_at_all_time then
-				create l_api
-				l_result := l_api.free_module (item)
+				l_result := {WEL_API}.free_module (item)
 				check success: l_result = True end
 			end
 			item := a_default_pointer

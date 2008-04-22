@@ -330,8 +330,6 @@ feature -- API
 	frozen load_module (a_name: POINTER): POINTER is
 			-- Load module with `a_name'.
 			-- `a_name' is LPCTSTR, we should use WEL_STRING here.
-		require
-			exists: a_name /= default_pointer
 		external
 			"C inline use <windows.h>"
 		alias
@@ -340,8 +338,6 @@ feature -- API
 
 	frozen free_module (a_module: POINTER): BOOLEAN is
 			-- Free module which instance is `a_module'
-		require
-			exists: a_module /= default_pointer
 		external
 			"C inline use <windows.h>"
 		alias
@@ -350,9 +346,6 @@ feature -- API
 
 	frozen loal_api (a_module: POINTER; a_name: POINTER): POINTER is
 			-- Load api which name is `a_name' in `a_module'
-		require
-			exists: a_module /= default_pointer
-			exists: a_name /= default_pointer
 		external
 			"C inline use <windows.h>"
 		alias

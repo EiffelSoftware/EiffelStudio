@@ -77,7 +77,7 @@ MT_FOBJ = MTbyte.obj MTdate.obj MTencode.obj MToffset.obj MTminilzo.obj MTpstore
 WOBJ = byte.obj date.obj encode.obj offset.obj minilzo.obj pstore.obj_wk pretrieve.obj_wk
 #MT_WOBJ = MTbyte.obj MTdate.obj MTencode.obj MToffset.obj MTminilzo.obj MTwpstore.obj MTwpretrieve.obj 
 
-LOBJ = $(FOBJ) $(WOBJ) $(MT_FOBJ) $(MT_WOBJ)
+LOBJ = $(FOBJ) $(WOBJ) # $(MT_FOBJ) $(MT_WOBJ)
 
 DEPENDENCIES = $(TOP)/eif_config.h $(TOP)/eif_portable.h $(TOP)/eif_confmagic.h $(MAKEFILE_DEPENDENCIES) 
 $(LOBJ) : $(DEPENDENCIES)	# make objects depend on local Makefile
@@ -86,14 +86,14 @@ $(LOBJ) : $(DEPENDENCIES)	# make objects depend on local Makefile
 THISLIB = compiler.olb
 #MTLIB = compiler_MT.olb		# this is a hack, fix it later
 WKLIB = compiler_wk.olb
-LIBS = compiler.olb mtcompiler.olb # $(THISLIB) $(MTLIB) $(WKLIB)
+LIBS = compiler.olb # mtcompiler.olb # $(THISLIB) $(MTLIB) $(WKLIB)
 
 all :: $(LIBS)
 complete : FORCE all
 FORCE:
 
 #LISTINGS = $(patsubst %.obj,%.lis,$(LOBJ))
-LISTINGS = $(patsubst %.obj,%.lis,$(FOBJ)) $(patsubst %.obj_wk,%.lis_wk,$(WOBJ)) $(patsubst %.obj,%.lis,$(MT_FOBJ)) $(patsubst %.obj,%.lis,$(MT_WOBJ)) 
+LISTINGS = $(patsubst %.obj,%.lis,$(FOBJ)) $(patsubst %.obj_wk,%.lis_wk,$(WOBJ)) # $(patsubst %.obj,%.lis,$(MT_FOBJ)) $(patsubst %.obj,%.lis,$(MT_WOBJ)) 
 $(LISTINGS) : $(MAKEFILE_DEPENDENCIES) 
 listings : $(LISTINGS)
 #	@write sys$$output "listings = $(LISTINGS)"

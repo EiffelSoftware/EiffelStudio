@@ -184,7 +184,10 @@ feature
 
 				-- Separation for formatting
 			buf.put_new_line
-		end;
+
+				-- Reset assertion type
+			context.set_assertion_type (0)
+		end
 
 invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0

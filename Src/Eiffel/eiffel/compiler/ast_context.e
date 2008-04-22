@@ -554,10 +554,17 @@ feature -- Managing the type stack
 			-- analyzed feature.
 		do
 			current_feature := Void
-			locals.clear_all
 			last_conversion_info := Void
 			supplier_ids.wipe_out
 			written_class := Void
+			clear_local_context
+		end
+
+	clear_local_context
+			-- Clear context specific to local declarations
+			-- such as object test locals
+		do
+			locals.clear_all
 			object_test_locals.wipe_out
 			used_object_test_local_names.wipe_out
 			scopes.wipe_out

@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			l_result_string := l_seed_c_pattern.result_type.c_string
 			l_arg_names := l_seed_c_pattern.argument_name_array
 			l_arg_types := l_seed_c_pattern.argument_type_array
-			extern_declarations.add_routine_with_signature (l_result_string, a_wrapped_name, l_arg_types)
+			extern_declarations.add_wrapper_with_signature (l_result_string, a_wrapped_name, l_arg_types)
 			extern_declarations.add_routine (l_c_pattern.result_type, a_routine_name)
 
 			buffer.generate_function_signature (l_result_string, a_wrapped_name, False, Void, l_arg_names, l_arg_types)

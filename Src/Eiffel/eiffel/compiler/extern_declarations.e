@@ -26,6 +26,7 @@ feature -- Initialization
 			create routine_tables.make (50)
 			create attribute_tables.make (50)
 			create routines.make (50)
+			create wrappers.make (50)
 			create type_tables.make (50)
 			create onces_table.make (10)
 		end
@@ -71,15 +72,8 @@ feature -- Settings
 		require
 			rout_name_exists: rout_name /= Void
 			type_exists: type /= Void
-		local
-			r_name: STRING
 		do
-			create r_name.make (rout_name.count + 3)
-			r_name.append (rout_name)
-			r_name.append_character ('(')
-			r_name.append_character (')')
-			r_name.append_character (';')
-			routines.put (type.c_string, r_name)
+			routines.put (new_signature (type.c_string, rout_name, Void))
 		end
 
 	add_routine_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING]) is
@@ -88,37 +82,25 @@ feature -- Settings
 		require
 			type_exists: type /= Void
 			rout_name_exists: rout_name /= Void
-		local
-			i: INTEGER
-			nb: INTEGER
-			signature: STRING
-			sep: STRING
 		do
-			create signature.make (48)
-			signature.append (rout_name + "(")
-			if argument_types /= Void then
-				from
-					sep := ", "
-					i := 1
-					nb := argument_types.count
-				until
-					i > nb
-				loop
-					if i /= 1 then
-						signature.append (sep)
-					end
-					signature.append (argument_types @ i)
-					i := i + 1
-				end
-			end
-			signature.append (");")
-			routines.put (type, signature)
+			routines.put (new_signature (type, rout_name, argument_types))
+		end
+
+	add_wrapper_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING]) is
+			-- Add one routine of name `rout_name' and C type `type' and with argument types
+			-- `arguments_types
+		require
+			type_exists: type /= Void
+			rout_name_exists: rout_name /= Void
+		do
+			wrappers.put (new_signature (type, rout_name, argument_types))
 		end
 
 	wipe_out is
 			-- Wipe out current structure
 		do
 			routines.clear_all
+			wrappers.clear_all
 			routine_tables.clear_all
 			attribute_tables.clear_all
 			type_tables.clear_all
@@ -157,6 +139,7 @@ feature -- Settings
 			buffer_not_void: buffer /= Void
 		local
 			local_routines: like routines
+			local_wrappers: like wrappers
 			local_routine_tables: SEARCH_TABLE [STRING]
 			local_attribute_tables: SEARCH_TABLE [STRING]
 			local_type_tables: SEARCH_TABLE [STRING]
@@ -171,8 +154,17 @@ feature -- Settings
 			loop
 				buffer.put_string ("%Nextern ")
 				buffer.put_string (local_routines.item_for_iteration)
-				buffer.put_character (' ')
-				buffer.put_string (local_routines.key_for_iteration)
+				local_routines.forth
+			end
+
+			from
+				local_routines := wrappers
+				local_routines.start
+			until
+				local_routines.after
+			loop
+				buffer.put_string ("%Nstatic ")
+				buffer.put_string (local_routines.item_for_iteration)
 				local_routines.forth
 			end
 
@@ -243,6 +235,44 @@ feature -- Settings
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	new_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING]): STRING is
+			-- Add one routine of name `rout_name' and C type `type' and with argument types
+			-- `arguments_types
+		require
+			type_exists: type /= Void
+			rout_name_exists: rout_name /= Void
+		local
+			i: INTEGER
+			nb: INTEGER
+		do
+			create Result.make (48)
+			Result.append (type)
+			Result.append_character (' ')
+			Result.append (rout_name)
+			Result.append_character ('(')
+			if argument_types /= Void then
+				from
+					i := 1
+					nb := argument_types.count
+				until
+					i > nb
+				loop
+					if i /= 1 then
+						Result.append_character (',')
+						Result.append_character (' ')
+					end
+					Result.append (argument_types @ i)
+					i := i + 1
+				end
+			end
+			Result.append_character (')')
+			Result.append_character (';')
+		ensure
+			new_signature_not_void: Result /= Void
+		end
+
 feature {NONE} -- Attributes
 
 	routine_tables: SEARCH_TABLE [STRING]
@@ -254,8 +284,11 @@ feature {NONE} -- Attributes
 	type_tables: SEARCH_TABLE [STRING]
 			-- Type table name
 
-	routines: HASH_TABLE [STRING, STRING]
+	routines: SEARCH_TABLE [STRING]
 			-- Routine names
+
+	wrappers: SEARCH_TABLE [STRING]
+			-- Polymorphic wrappers
 
 	onces_table: HASH_TABLE [TYPE_C, INTEGER];
 			-- Once names

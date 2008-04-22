@@ -322,7 +322,6 @@ feature {NONE} -- Production processing
 			-- Processes a single declaration object node.
 		require
 			last_code_template_definition_attached: last_code_template_definition /= Void
-			last_declaration_detached: last_declaration = Void
 		local
 			l_object: !CODE_OBJECT_DECLARATION
 			l_attributes: like current_attributes

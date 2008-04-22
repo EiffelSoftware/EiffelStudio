@@ -346,7 +346,7 @@ feature {NONE} -- Comment extraction
 			result_contains_attached_items: Result /= Void implies not Result.has (Void)
 		end
 
-feature {NONE} -- User interface elements
+feature -- User interface elements
 
 	contract_grid: !ES_GRID
 			-- The grid used to show the contracts
@@ -373,6 +373,9 @@ feature {NONE} -- Action handlers
 		do
 			l_manager := (create {EB_SHARED_WINDOW_MANAGER}).window_manager
 			l_window := l_manager.last_focused_development_window
+
+			window.hide
+
 			if l_window /= Void and l_window.is_interface_usable then
 				if {l_tool: !ES_CONTRACT_TOOL} l_window.shell_tools.tool ({ES_CONTRACT_TOOL}) and then l_tool.is_interface_usable then
 						-- Show and activate focus on the tool.

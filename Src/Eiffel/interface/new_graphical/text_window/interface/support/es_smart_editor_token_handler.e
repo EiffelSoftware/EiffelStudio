@@ -117,7 +117,15 @@ feature {NONE} -- Query
 						l_feature := l_class.feature_with_name (l_fstart.image)
 						if {l_feat: !E_FEATURE} l_feature then
 							create l_viewer.make
-							l_viewer.set_is_showing_full_contracts (True)
+								-- Register the close action for the widget
+							l_viewer.register_action (l_viewer.edit_contract_label.select_actions, agent
+								do
+									if popup_window /= Void then
+										popup_window.recycle
+										popup_window := Void
+									end
+								end)
+							l_viewer.is_showing_full_contracts := True
 							l_viewer.set_context (l_class, l_feat)
 							Result := l_viewer.widget
 						end
@@ -164,8 +172,10 @@ feature -- Basic operations
 			l_token_action: PROCEDURE [ANY, TUPLE]
 			l_can_show: BOOLEAN
 			l_cursor_token: EDITOR_TOKEN
+			l_window: like popup_window
 		do
-			if last_token_handled /= a_token then
+			l_window := popup_window
+			if last_token_handled /= a_token or else l_window = Void or else not l_window.is_interface_usable or else not l_window.is_shown then
 					-- Offset position by margin width
 				l_x_offset := editor.left_margin_width
 
@@ -205,45 +215,48 @@ feature -- Basic operations
 					end
 				end
 
-				if popup_window /= Void then
+				if l_window /= Void then
 						-- Remove and clean up last window
-					popup_window.recycle
+					l_window.recycle
+					l_window := Void
 					popup_window := Void
 				end
 
-				if l_can_show and then (popup_window = Void or else not popup_window.is_interface_usable) then
+				if l_can_show and then (l_window = Void or else not l_window.is_interface_usable) then
 						-- Create new window
 					if {l_widget: !EV_WIDGET} l_token_widget then
-						create popup_window.make_with_widget (editor, a_token, l_widget)
+						create l_window.make_with_widget (editor, a_token, l_widget)
 					else
-						create popup_window.make (editor, a_token)
+						create l_window.make (editor, a_token)
 					end
 
 						-- Ensure the token is hidden on showing the pop up widget
-					popup_window.set_is_token_hidden_on_popup_widget_shown (False)
-					popup_window.set_is_beam_indicator (True)
+					l_window.set_is_token_hidden_on_popup_widget_shown (False)
+					l_window.set_is_beam_indicator (True)
 
 					if {l_action: !PROCEDURE [ANY, TUPLE]} l_token_action then
-						popup_window.register_action (popup_window.token_select_actions, l_action)
+						l_window.register_action (l_window.token_select_actions, l_action)
 					end
 
 						-- Register action on hide to reset the active state.
-					popup_window.register_action (popup_window.hide_actions, agent do is_active := False end)
+					l_window.register_action (l_window.hide_actions, agent do is_active := False end)
 
 						-- Deactivate handler, when the token is selected
-					popup_window.register_action (popup_window.token_select_actions, agent on_token_selected (popup_window, ?, ?, ?, ?))
+					l_window.register_action (l_window.token_select_actions, agent on_token_selected (l_window, ?, ?, ?, ?))
+
+					popup_window := l_window
 				end
 
 					-- Display window
 				if l_can_show then
 					check
-						popup_window_attached: popup_window /= Void
-						popup_window_is_interface_usable: popup_window.is_interface_usable
+						l_window_attached: l_window /= Void
+						l_window_is_interface_usable: l_window.is_interface_usable
 					end
 
 						-- Show window
 					if {l_editor_widget: !EV_WIDGET} editor.editor_drawing_area then
-						popup_window.show_relative_to_widget (l_editor_widget, l_x_offset, l_y_offset, a_x, a_y)
+						l_window.show_relative_to_widget (l_editor_widget, l_x_offset, l_y_offset, a_x, a_y)
 
 							-- The precusor will not be called because the handler is to be considered "active".
 						last_token_handled := a_token

@@ -699,7 +699,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			end
 		end
 
-feature {EB_SAVE_FILE_COMMAND, EB_SAVE_ALL_FILE_COMMAND, EB_DEVELOPMENT_WINDOW} -- Docking title
+feature {EB_SAVE_FILE_COMMAND, EB_SAVE_ALL_FILE_COMMAND, EB_DEVELOPMENT_WINDOW, EB_STONE_CHECKER} -- Docking title
 
 	set_title_saved (a_saved: BOOLEAN) is
 			-- Set '*' in the title base on `a_saved'.

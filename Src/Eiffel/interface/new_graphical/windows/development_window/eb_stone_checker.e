@@ -99,7 +99,7 @@ feature {NONE} -- Implementation functions
 			line_stone ?= a_stone
 
 				-- Refresh editor in stone.
-			develop_window.refresh_tab (a_stone)
+			refresh_all_tabs (a_stone)
 
 		end
 
@@ -884,6 +884,81 @@ feature {NONE} -- Implementation functions
 			l_basic_formatter.set_must_format (True)
 			l_basic_formatter.format
 			l_basic_formatter.ensure_display_in_widget_owner
+		end
+
+	refresh_all_tabs (a_stone: STONE) is
+			-- Refresh all editor tabs
+		require
+			not_void: develop_window /= Void
+			not_void: a_stone /= Void
+		local
+			l_editors_mamager: EB_EDITORS_MANAGER
+			l_all_editors: ARRAYED_LIST [EB_SMART_EDITOR]
+			l_one_editor: EB_SMART_EDITOR
+			l_current_editor: EB_SMART_EDITOR
+		do
+			l_editors_mamager := develop_window.editors_manager
+			if l_editors_mamager /= Void then
+				from
+					l_all_editors := l_editors_mamager.editors
+					l_current_editor := l_editors_mamager.current_editor
+					l_all_editors.start
+				until
+					l_all_editors.after
+				loop
+					l_one_editor := l_all_editors.item
+
+					check not_void: l_one_editor /= Void end
+					if l_one_editor = l_current_editor then
+						-- We refresh current editor with lastest stone
+						refresh_a_tab (a_stone, l_one_editor, l_editors_mamager)
+					else
+						refresh_a_tab (l_one_editor.stone, l_one_editor, l_editors_mamager)
+					end
+
+					l_all_editors.forth
+				end
+				l_current_editor.set_title_saved (not develop_window.changed)
+			end
+		end
+
+	refresh_a_tab (a_stone: STONE; a_editor: EB_SMART_EDITOR; a_editor_manager: EB_EDITORS_MANAGER) is
+			-- Refresh `a_editor' notebook tab's pixmap and title
+			-- `a_stone' can be void, then this feature will use stone from `a_editor'
+		require
+			not_void: a_editor /= Void
+			not_void: a_editor_manager /= Void
+			not_void: develop_window /= Void
+		local
+			l_class_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_group: CONF_GROUP
+			l_content: SD_CONTENT
+			l_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		do
+			if a_editor /= Void then
+				create l_factory
+				if a_stone /= Void and then not a_stone.is_equal (a_editor.stone) then
+					l_class_stone ?= a_stone
+					l_cluster_stone ?= a_stone
+				else
+					l_class_stone ?= a_editor.stone
+					l_cluster_stone ?= a_editor.stone
+				end
+
+				l_content := a_editor.docking_content
+				if l_class_stone /= Void and then l_class_stone.is_valid then
+					l_content.set_pixmap (l_factory.pixmap_from_class_i (l_class_stone.class_i))
+					l_content.set_short_title (l_class_stone.class_name)
+					l_content.set_long_title (l_class_stone.class_name)
+				elseif l_cluster_stone /= Void then
+					l_group := l_cluster_stone.group
+					l_content.set_pixmap (l_factory.pixmap_from_group (l_group))
+					l_content.set_short_title (l_group.name)
+					l_content.set_long_title (l_group.name)
+				end
+				a_editor_manager.update_content_description (a_stone, l_content)
+			end
 		end
 
 feature {NONE} -- Implementation attributes

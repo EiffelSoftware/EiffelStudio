@@ -1,8 +1,8 @@
 indexing
 	description: "[
-						Default hanlder for eWeasel output.
-						This handler is the LAST one hanlde eWeasel output.
-						This handler will generate {EWEASEL_TEST_RESULT_ITEM} definitely on eWeasel test exit.
+						Default hanlder for eweasel output.
+						This handler is the LAST one hanlde eweasel output.
+						This handler will generate {EWEASEL_TEST_RESULT_ITEM} definitely on eweasel test exit.
 																												]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -71,10 +71,10 @@ feature {NONE} -- Redefine
 feature {NONE} -- Implementation
 
 	is_on_exit: BOOLEAN
-			-- If exiting eWeasel?
+			-- If exiting eweasel?
 
 	eweasel_unknow_result: STRING_GENERAL is
-			-- String for unhandled eWeasel output
+			-- String for unhandled eweasel output
 		local
 			l_shared: SHARED_BENCH_NAMES
 		do

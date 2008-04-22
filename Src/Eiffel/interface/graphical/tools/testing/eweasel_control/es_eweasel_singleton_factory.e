@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Singleton factory for eWeasel managers
+						Singleton factory for eweasel managers
 																		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."

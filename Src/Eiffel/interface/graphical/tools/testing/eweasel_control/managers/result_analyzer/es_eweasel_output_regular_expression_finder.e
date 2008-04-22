@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Regular expression utility to find text blocks in eWeasel output.
+					Regular expression utility to find text blocks in eweasel output.
 																					]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Query
 		end
 
 	class_name_in (a_string: STRING): STRING_GENERAL is
-			-- Class name in frist line of eWeasel output which surrounded by "[]"
+			-- Class name in frist line of eweasel output which surrounded by "[]"
 			-- Result void if not found
 		require
 			not_void: a_string /= Void

@@ -79,7 +79,7 @@ feature {ES_TESTING_TOOL_PANEL} -- Implementation
 		end
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER
-			-- eWeasel execution manager
+			-- eweasel execution manager
 
 ;indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

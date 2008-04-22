@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Chief manager of eWeasel affairs
+						Chief manager of eweasel affairs
 																								]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -94,7 +94,7 @@ feature -- Command
 		end
 
 	stop_eweasel is
-			-- Terminate eWeasel testing
+			-- Terminate eweasel testing
 			-- We can ensure eweasel is terminated
 		do
 			if is_eweasel_running then
@@ -104,7 +104,7 @@ feature -- Command
 		end
 
 	launch_eweasel (a_failed_first: BOOLEAN) is
-			-- Start eWeasel testing if possible
+			-- Start eweasel testing if possible
 			-- To query result, use `is_eweasel_running'
 		require
 			not_running: not is_eweasel_running
@@ -128,7 +128,7 @@ feature -- Command
 feature -- Query
 
 	environment_manager: ES_EWEASEL_ENVIRONMENT_MANAGER is
-			-- All enviroment variables used by eWeasel
+			-- All enviroment variables used by eweasel
 		do
 			if internal_environment_manager = Void then
 				create internal_environment_manager.make
@@ -139,7 +139,7 @@ feature -- Query
 		end
 
 	catalog_manager: ES_EWEASEL_CATALOG_FILE_MANAGER is
-			-- eWeasel catalog file manager
+			-- eweasel catalog file manager
 		do
 			if internal_catalog_manager = Void then
 				create internal_catalog_manager.make
@@ -150,7 +150,7 @@ feature -- Query
 		end
 
 	is_eweasel_running: BOOLEAN is
-			-- If eWeasel process is running?
+			-- If eweasel process is running?
 		do
 			Result := process.is_running
 		end
@@ -206,7 +206,7 @@ feature -- Query
 feature -- UI commands
 
 	new_manual_test_command: !ES_NEW_UNIT_TEST_CASE_COMMAND is
-			-- New manual/eWeasel test case command
+			-- New manual/eweasel test case command
 		once
 			create Result.make (Current)
 		end
@@ -280,7 +280,7 @@ feature -- UI commands
 feature {ES_EWEASEL_CATALOG_FILE_MANAGER} -- Internal query
 
 	result_analyzer: ES_EWEASEL_RESULT_ANALYZER is
-			--	analyzer which analyze eWeasel ouputs
+			--	analyzer which analyze eweasel ouputs
 		do
 			if internal_result_analyzer = Void then
 				create internal_result_analyzer.make
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 		end
 
 	new_process: like internal_process is
-			-- Create a new eWeasel process
+			-- Create a new eweasel process
 			-- ONLY used by `process'.
 		local
 			l_factory: PROCESS_FACTORY
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 		end
 
 	swtich_buttons_states_on_exit is
-			-- Switch buttons states on eWeasel exit/terminate
+			-- Switch buttons states on eweasel exit/terminate
 		do
 			start_test_run_command.enable_sensitive
 			start_test_run_failed_first_command.enable_sensitive
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Porcess event handler
 
 	on_exit is
-			-- Handle eWeasel process exit action
+			-- Handle eweasel process exit action
 		local
 			l_testing_tool: like testing_tool
 			l_testing_result_tool: like testing_result_tool
@@ -381,7 +381,7 @@ feature {NONE} -- Porcess event handler
 		end
 
 	on_terminate is
-			-- Handle eWeasel terminate action
+			-- Handle eweasel terminate action
 		do
 			swtich_buttons_states_on_exit
 			testing_result_tool.test_run_result_grid_manager.save_test_run_data_to_session

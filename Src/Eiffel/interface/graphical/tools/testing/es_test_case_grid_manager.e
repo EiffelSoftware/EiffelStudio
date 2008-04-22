@@ -561,7 +561,7 @@ feature {NONE} -- Implementation queries
 		end
 
 	manager: ES_EWEASEL_EXECUTION_MANAGER is
-			-- Chief eWeasel execution manager
+			-- Chief eweasel execution manager
 		local
 			l_panel: ES_TESTING_TOOL_PANEL
 		do
@@ -754,7 +754,7 @@ feature {NONE} -- Implementation commands
 					create l_grid_helper.make (grid)
 					l_grid_item := l_grid_helper.new_editor_token_item (create {STRING}.make_from_string (a_test_case.class_i.name.as_upper))
 				when 2 then
-					create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text ("eWeasel") -- Hidden column
+					create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text ("eweasel") -- Hidden column
 				when 3 then
 					create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text ("false") -- Hidden column
 				when 4 then

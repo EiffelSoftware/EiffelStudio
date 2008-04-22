@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					eWeasel managers who are responding for eWeasel 
+					eweasel managers who are responding for eweasel 
 					test case creation, executions, result analyzing.
 																								]"
 	status: "See notice at end of class."

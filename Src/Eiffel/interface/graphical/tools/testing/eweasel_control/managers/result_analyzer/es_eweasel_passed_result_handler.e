@@ -1,7 +1,7 @@
 indexing
 	description: "[
 					Handler for failed passed output
-					If eWeasel have passed output, this handler will generate a {EWEASEL_TEST_RESULT_ITEM}
+					If eweasel have passed output, this handler will generate a {EWEASEL_TEST_RESULT_ITEM}
 																											]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 		end
 
 	passed_signature: STRING is ": passed";
-			-- eWeasel passed result output signature string
+			-- eweasel passed result output signature string
 
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

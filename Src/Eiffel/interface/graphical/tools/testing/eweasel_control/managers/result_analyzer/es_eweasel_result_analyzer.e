@@ -1,7 +1,7 @@
 indexing
 	description: "[
-					eWeasel Result Analyzer.
-					Convert eWeasel string output to {ES_EWEASEL_TEST_RESULT_ITEM}
+					eweasel Result Analyzer.
+					Convert eweasel string output to {ES_EWEASEL_TEST_RESULT_ITEM}
 																				]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -42,7 +42,7 @@ feature -- Command
 		end
 
 	on_eweasel_output (a_string: STRING) is
-			-- Handle eWeasel output from process library
+			-- Handle eweasel output from process library
 			-- Note, this is called in another thread but not Eiffel Studio UI thread
 		do
 			mutex.lock
@@ -51,7 +51,7 @@ feature -- Command
 		end
 
 	on_eweasel_exit is
-			-- Handle eWeasel output string just after eWeasel exited.
+			-- Handle eweasel output string just after eweasel exited.
 		do
 			prcess_output ("", True)
 		end
@@ -174,7 +174,7 @@ feature -- Query
 			-- How many test cases expected to run
 
 	all_results: ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM] is
-			-- All result items analyzed from eWeasel output.
+			-- All result items analyzed from eweasel output.
 		do
 			if internal_all_results = Void then
 				create internal_all_results.make (100)
@@ -212,7 +212,7 @@ feature -- Query
 feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 
 	one_block_cell: CELL [TUPLE [content: STRING_GENERAL; end_index: INTEGER]]
-			-- One eWeasel output block of a test case run
+			-- One eweasel output block of a test case run
 			-- This feature is used by all {EWEASEL_RESULT_HANDLER} during a execution of `prcess_output'
 		indexing
 			once_status: global
@@ -251,7 +251,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 feature {NONE} -- Implementation
 
 	buffer_string: STRING
-			-- Buffer eWeasel string waiting for parse.
+			-- Buffer eweasel string waiting for parse.
 		do
 			if internal_buffer_string = Void then
 				create internal_buffer_string.make_empty
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 		end
 
 	all_output_string: STRING is
-			-- All eWeasel output string.
+			-- All eweasel output string.
 		do
 			if internal_all_output_string = Void then
 				create internal_all_output_string.make_empty
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			create l_finder
 			Result := l_finder.one_result_block (a_buffer_string) /= Void
 		end
-		
+
 feature {NONE} -- Multi-thread implementation
 
 	mutex: MUTEX is
@@ -317,7 +317,7 @@ feature {NONE} -- Multi-thread implementation
 		end
 
 	on_eweasel_output_testing_tool (a_string: STRING) is
-			-- Handle eWeasel output string in Eiffel Studio UI thread
+			-- Handle eweasel output string in Eiffel Studio UI thread
 		require
 			not_void: a_string /= Void and then not a_string.is_empty
 		do

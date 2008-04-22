@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Manager which can generate eWeasel testing catalog file.
+					Manager which can generate eweasel testing catalog file.
 																				]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -43,7 +43,7 @@ feature -- Command
 					if l_last_test_cases_folder = Void or else not l_last_test_cases_folder.same_string (l_catalog_content.item.a_test_cases_folder) then
 						l_last_test_cases_folder := l_catalog_content.item.a_test_cases_folder
 
-						-- Convert to short name, otherwise eWeasel will not recognize the long names.
+						-- Convert to short name, otherwise eweasel will not recognize the long names.
 						if {lt_string: STRING_32} l_last_test_cases_folder.as_string_32 then
 							l_short_name := short_name_of (lt_string)
 							check not_void: l_short_name /= Void end
@@ -59,7 +59,7 @@ feature -- Command
 
 					append_new_tast_case_line (l_catalog_content.item.a_test_case_name, l_catalog_content.item.a_test_case_directory)
 
-					-- FIXIT: eWeasel bug? last test case line will be ignored.
+					-- FIXIT: eweasel bug? last test case line will be ignored.
 					if l_catalog_content.islast then
 						append_new_tast_case_line (l_catalog_content.item.a_test_case_name, l_catalog_content.item.a_test_case_directory)
 					end
@@ -72,7 +72,7 @@ feature -- Command
 
 	append_catalog_parameter (a_list: LIST [STRING]) is
 			-- Append catalog parameter
-			-- This feature used by Process library as eWeasel execution paramters
+			-- This feature used by Process library as eweasel execution paramters
 		require
 			not_void: a_list /= Void
 		do
@@ -91,7 +91,7 @@ feature -- Query
 		end
 
 	generate_catalog_file_from_test_case_grid (a_failed_first: BOOLEAN): BOOLEAN is
-			-- Generate eWeasel catalog file base on selected rows in test case grid
+			-- Generate eweasel catalog file base on selected rows in test case grid
 			-- Result false if no catalog file content generated
 		local
 			l_selected: !ARRAYED_LIST [EVENT_LIST_TEST_CASE_ITEM]
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation routines
 		end
 
 	full_file_name: FILE_NAME is
-			-- Full file name (path included) of eWeasel catalog file.
+			-- Full file name (path included) of eweasel catalog file.
 		local
 			l_file_name_helper: ES_FILE_NAME_HELPER
 			l_tmp_name: STRING_GENERAL

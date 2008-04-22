@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Manager to set eWeasel command line parameters.
+					Manager to set eweasel command line parameters.
 																					]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 feature -- Command
 
 	append_init_parameter (a_list: LIST [STRING]) is
-			-- Append eWeasel process command line parameters.
+			-- Append eweasel process command line parameters.
 		require
 			not_void: a_list /= Void
 		do
@@ -29,7 +29,7 @@ feature -- Command
 			a_list.extend ("-output")
 			a_list.extend (manager.environment_manager.output.as_string_8)
 
-			-- eWeasel need `ISE_EIFFEL' and `ISE_PLATFORM' as paramters to find ec.exe
+			-- eweasel need `ISE_EIFFEL' and `ISE_PLATFORM' as paramters to find ec.exe
 			a_list.extend ("-define")
 			a_list.extend ("ISE_EIFFEL")
 			a_list.extend (manager.environment_manager.ise_eiffel.as_string_8)

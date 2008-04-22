@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Compare eWeasel acutal output result with expected result command
+						Compare eweasel acutal output result with expected result command
 						This command is used in {ES_TESTING_RESULT_TOOL_PANEL}
 																							]"
 	status: "See notice at end of class."
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 		end
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER;
-			-- eWeasel chief manager		
+			-- eweasel chief manager		
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

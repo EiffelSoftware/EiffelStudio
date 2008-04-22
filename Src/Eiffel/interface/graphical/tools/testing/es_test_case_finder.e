@@ -80,7 +80,7 @@ feature -- Query
 				until
 					l_list.after or Result /= Void
 				loop
-						-- FIXIT: eWeasel result's output only have CLASS_NAME, how can I identify which class should be
+						-- FIXIT: eweasel result's output only have CLASS_NAME, how can I identify which class should be
 						-- if there are duplicated classes with same name.
 						-- Now, we first find the item in system. If we found duplicated classes, the find the item
 						-- again in all known test case classes

@@ -404,7 +404,7 @@ feature {NONE} -- Implementation queries
 		end
 
 	result_item_of (a_row: !EV_GRID_ROW): ES_EWEASEL_TEST_RESULT_ITEM is
-			-- eWeasel result item data in `a_row'
+			-- eweasel result item data in `a_row'
 		do
 			if {l_event_data: EVENT_LIST_TESTING_RESULT_ITEM} a_row.data then
 				if {l_test_case: ES_EWEASEL_TEST_RESULT_ITEM} l_event_data.data then

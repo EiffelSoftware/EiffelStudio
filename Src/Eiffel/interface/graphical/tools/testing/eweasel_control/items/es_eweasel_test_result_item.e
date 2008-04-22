@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					All information of one eWeasel test case run result.
+					All information of one eweasel test case run result.
 					This class can be used for session data storage.
 																							]"
 	status: "See notice at end of class."
@@ -14,13 +14,13 @@ class
 feature -- Query
 
 	title: STRING_GENERAL
-			-- eWeasel test result title
+			-- eweasel test result title
 
 	execution_error_in: STRING_GENERAL
-			-- Error line in eWeasel test
+			-- Error line in eweasel test
 
 	orignal_eweasel_ouput: STRING
-			-- eWeasel orignal intact output
+			-- eweasel orignal intact output
 
 	test_run_time: DT_DATE_TIME
 			-- Last test run time
@@ -140,7 +140,7 @@ feature -- Not used for the moment
 			-- Test case SVN folder
 
 	original_text: STRING_GENERAL
-			-- Orignal text in eWeasel
+			-- Orignal text in eweasel
 
 	set_description (a_text: STRING_GENERAL) is
 			-- set `description' with `a_text'

@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Handler for eWeasel initial control file error
+					Handler for eweasel initial control file error
 																						]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."

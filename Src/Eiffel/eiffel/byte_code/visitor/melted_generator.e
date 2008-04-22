@@ -1135,6 +1135,9 @@ feature {NONE} -- Visitors
 			end
 
 			l_context.byte_prepend (ba, l_tmp_ba)
+
+				-- Reset assertion type
+			l_context.set_assertion_type (0)
 		end
 
 	process_local_b (a_node: LOCAL_B) is

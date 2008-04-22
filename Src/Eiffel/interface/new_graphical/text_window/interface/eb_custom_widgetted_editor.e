@@ -491,10 +491,14 @@ feature {NONE} -- Action hanlders
 						local
 							l_handler: like token_handler
 						do
-							reset_mouse_idle_timer
-							l_handler := token_handler
-							if l_handler /= Void and then l_handler.can_perform_exit (True) then
-								l_handler.perform_exit (True)
+							if {PLATFORM}.is_windows then
+									-- On Windows-based systems we can exit the processing immediately. On GTK this
+									-- action is fired too soon to perform the immediate exit.
+								reset_mouse_idle_timer
+								l_handler := token_handler
+								if l_handler /= Void and then l_handler.can_perform_exit (True) then
+									l_handler.perform_exit (True)
+								end
 							end
 						end)
 				else

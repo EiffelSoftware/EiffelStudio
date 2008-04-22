@@ -313,7 +313,6 @@ feature {NONE} -- Action handlers
 					popup_widget_activate_timer.destroy
 					popup_widget_activate_timer := Void
 				end)
-		ensure then
 		end
 
 	on_pointer_leave

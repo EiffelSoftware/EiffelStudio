@@ -162,6 +162,7 @@ feature -- Properties
 			if tool_bar /= Void then
 				tool_bar.need_calculate_size
 			end
+			refresh
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
@@ -177,6 +178,7 @@ feature -- Properties
 			if tool_bar /= Void then
 				tool_bar.need_calculate_size
 			end
+			refresh
 		ensure
 			set: pixel_buffer = a_pixel_buffer
 		end
@@ -266,6 +268,19 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_ITEM} -- Internal issues
 		end
 
 feature {NONE} -- Implementation
+
+	refresh is
+			-- Refresh button drawing if possible
+			-- This is useful just after `pixel_buffer' or `bitmap' changed
+		local
+			l_tool_bar: SD_TOOL_BAR
+		do
+			l_tool_bar := tool_bar
+			if l_tool_bar /= Void then
+				is_need_redraw := True
+				l_tool_bar.update
+			end
+		end
 
 	internal_drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Drop actions.

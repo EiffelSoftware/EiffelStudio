@@ -6804,10 +6804,10 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_old_written_class: CLASS_C
 			l_written_class: CLASS_C
-			s: INTEGER
 		do
 			assert_id_set := a_feature.assert_id_set
 			if assert_id_set /= Void then
+				context.clear_local_context
 				is_inherited := True
 				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				from
@@ -6828,23 +6828,17 @@ feature {NONE} -- Implementation
 						context.set_written_class (l_written_class)
 						if process_preconditions then
 							if assertion_info.has_precondition then
-									-- Remember current scope state
-								s := context.scope
 								set_is_checking_precondition (True)
 								routine_body.precondition.process (Current)
 								set_is_checking_precondition (False)
-									-- Revert to the original scope state
-								context.set_scope (s)
+								context.clear_local_context
 							end
 						else
 							if assertion_info.has_postcondition then
-									-- Remember current scope state
-								s := context.scope
 								set_is_checking_postcondition (True)
 								routine_body.postcondition.process (Current)
 								set_is_checking_postcondition (False)
-									-- Revert to the original scope state
-								context.set_scope (s)
+								context.clear_local_context
 							end
 						end
 						context.set_written_class (l_old_written_class)

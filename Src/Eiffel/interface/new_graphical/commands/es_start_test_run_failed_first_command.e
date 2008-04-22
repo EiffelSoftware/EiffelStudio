@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 		end
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER;
-			-- eWeasel chief manager
+			-- eweasel chief manager
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

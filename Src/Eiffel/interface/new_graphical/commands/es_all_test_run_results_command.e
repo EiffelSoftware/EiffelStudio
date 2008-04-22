@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		end
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER
-			-- eWeasel chief manager
+			-- eweasel chief manager
 
 feature -- Command
 

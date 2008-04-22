@@ -4,7 +4,7 @@ indexing
 					The files including:
 						test case Eiffel class file
 						test case ecf file
-						eWeasel control file tcf file
+						eweasel control file tcf file
 						test case note file
 																			]"
 	status: "See notice at end of class."
@@ -87,7 +87,7 @@ feature -- Query
 		end
 
 	test_case_root_class_name: STRING is
-			-- Root eWeasel test case Eiffel class name
+			-- Root eweasel test case Eiffel class name
 		do
 			Result := manager.environment_manager.test_case_root_eiffel_class_name
 		end
@@ -103,7 +103,7 @@ feature -- Query
 feature {NONE} -- Implementation
 
 	add_folder is
-			-- Create eWeasel testing folder
+			-- Create eweasel testing folder
 		local
 			l_dir: DIRECTORY
 		do
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_files is
-			-- Add all files of a new eWeasel unit test.
+			-- Add all files of a new eweasel unit test.
 		local
 			l_retry: BOOLEAN
 			l_prompt: ES_PROMPT_PROVIDER
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_file_tcf is
-			-- Add eWeasel test control file
+			-- Add eweasel test control file
 		local
 			l_io: IO_MEDIUM
 			l_file_name: FILE_NAME

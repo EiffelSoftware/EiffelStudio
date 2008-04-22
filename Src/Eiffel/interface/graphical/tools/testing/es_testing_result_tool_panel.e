@@ -1,9 +1,9 @@
 indexing
 	description: "[
-						This tool showing result from eWeasel tests.
+						This tool showing result from eweasel tests.
 						This tool can also manage all test run data, compare test results etc.
 						
-						The eWeasel tests is controled by {ES_TESTING_TOOL_PANEL}
+						The eweasel tests is controled by {ES_TESTING_TOOL_PANEL}
 																					]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."

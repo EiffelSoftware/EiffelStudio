@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Handler which remove first two lines of eWeasel output.
+						Handler which remove first two lines of eweasel output.
 						The two lines are `signature' and `signature_2'	
 						This handler will not generate {EWEASEL_TEST_RESULT_ITEM}
 																					]"
@@ -55,11 +55,11 @@ feature {NONE} -- Implementation
 		end
 
 	signature: STRING is "EiffelWeasel test execution manager%R"
-			-- eWeasel first line of output
+			-- eweasel first line of output
 
 	signature_2: STRING is "(version 1.0.001)%R";
-			-- eWeasel second line of output
-			-- FIXIT: This value have to be changed if eWeasel version changed.
+			-- eweasel second line of output
+			-- FIXIT: This value have to be changed if eweasel version changed.
 
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

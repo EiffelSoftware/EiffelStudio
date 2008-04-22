@@ -26,7 +26,7 @@ feature -- Enmueration
 	error: INTEGER is 3
 			-- Error
 			-- This means test has not been successfully lanuched.
-			-- Maybe due to parse error in eWeasel tcf file, etc.
+			-- Maybe due to parse error in eweasel tcf file, etc.
 
 feature -- Query
 

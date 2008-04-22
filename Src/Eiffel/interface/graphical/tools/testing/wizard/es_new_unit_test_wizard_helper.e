@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Helper functions used by eWeasel test case creation wizard
+						Helper functions used by eweasel test case creation wizard
 																					]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."

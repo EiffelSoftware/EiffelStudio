@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					eWeasel test case creation wizard information
+					eweasel test case creation wizard information
 																			]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."

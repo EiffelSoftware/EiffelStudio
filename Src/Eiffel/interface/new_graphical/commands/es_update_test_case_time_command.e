@@ -37,7 +37,7 @@ feature -- Command
 feature {ES_TESTING_TOOL_PANEL} -- Implementation
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER
-			-- eWeasel chief manager
+			-- eweasel chief manager
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).

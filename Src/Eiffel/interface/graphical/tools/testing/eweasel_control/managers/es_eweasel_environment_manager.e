@@ -25,14 +25,14 @@ create
 feature -- Query
 
 	path: !DIRECTORY_NAME is
-			-- eWeasel root path.
+			-- eweasel root path.
 		do
 			Result := eiffel_layout.shared_path.twin
 			Result.extend ("eweasel")
 		end
 
 	test_case_directory: STRING
-			-- Directory where new eWeasel test case exists and new test case will be created.
+			-- Directory where new eweasel test case exists and new test case will be created.
 
 	tcf_file_name: STRING is "tcf"
 			-- Testing control file name
@@ -84,16 +84,16 @@ feature -- Command
 			set: test_case_directory = a_path
 		end
 
-feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eWeasel command line
+feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eweasel command line
 
 	eweasel: !STRING is
-			-- eWeasel path
+			-- eweasel path
 		do
 			Result := path.twin
 		end
 
 	include: !STRING is
-			-- eWeasel include folder
+			-- eweasel include folder
 		local
 			l_path: like path
 		do
@@ -103,7 +103,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eWe
 		end
 
 	init: !STRING is
-			-- eWeasel init folder
+			-- eweasel init folder
 		local
 			l_path: like path
 		do
@@ -115,7 +115,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eWe
 		end
 
 	eweasel_platform: !STRING is
-			-- eWeasel platform
+			-- eweasel platform
 		local
 			l_platform: PLATFORM
 		do
@@ -131,7 +131,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eWe
 		end
 
 	eweasel_platform_value: STRING is "1"
-			-- eWeasel platform value
+			-- eweasel platform value
 
 	platform_type: !STRING is
 			-- Platform type
@@ -173,7 +173,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eWe
 		end
 
 	output: !STRING_GENERAL  is
-			-- eWeasel temporary output directory
+			-- eweasel temporary output directory
 		local
 			l_dir_name: DIRECTORY_NAME
 			l_final_dir_name: STRING_GENERAL

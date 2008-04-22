@@ -1,7 +1,7 @@
 indexing
 	description: "[
-					Handler for failed eWeasel output
-					If eWeasel have failed output, this handler will generate a {EWEASEL_TEST_RESULT_ITEM}
+					Handler for failed eweasel output
+					If eweasel have failed output, this handler will generate a {EWEASEL_TEST_RESULT_ITEM}
 																											]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 		end
 
 	signature: STRING is ": failed";
-			-- eWeasel output failed signature string.
+			-- eweasel output failed signature string.
 
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

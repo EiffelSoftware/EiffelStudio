@@ -2,10 +2,10 @@ indexing
 	description: "[
 						Testing tool main control panel.
 						
-						This tool can create, execute and analyze eWeasel tests
+						This tool can create, execute and analyze eweasel tests
 						The detailed test run result avaliable in {ES_TESTING_RESULT_TOOL}						
 						
-						This tool is used for eWeasel testing for the moment.
+						This tool is used for eweasel testing for the moment.
 						In future, maybe CDD and Autotest will be integrated.
 																				]"
 	status: "See notice at end of class."

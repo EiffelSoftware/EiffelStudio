@@ -73,7 +73,7 @@ feature {ES_TESTING_TOOL_PANEL} -- Implementation
 		end
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER;
-			-- eWeasel execution chief manager
+			-- eweasel execution chief manager
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

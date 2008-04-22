@@ -1,7 +1,7 @@
 indexing
 	description: "[
-					Analyze eWeasel result output.
-					Descendants will generate a {EWEASEL_TEST_RESULT_ITEM} if they find related eWeasel out string.
+					Analyze eweasel result output.
+					Descendants will generate a {EWEASEL_TEST_RESULT_ITEM} if they find related eweasel out string.
 					Chain of responsibility pattern.
 																														]"
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Command
 		end
 
 	handle_output_on_exit (a_eweasel_output: STRING): ES_EWEASEL_TEST_RESULT_ITEM
-			-- Just after eWeasel executable exited, analyze `a_eweasel_output' if possible.
+			-- Just after eweasel executable exited, analyze `a_eweasel_output' if possible.
 			-- If success, Result not Void.
 		require
 			not_void: a_eweasel_output /= Void
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 
 	pre_process_on_exit (a_eweasel_buffer_output: STRING) is
 				-- Find one result block in `a_eweasel_buffer_output'.
-				-- Almost same as `pre_process' except it handle special cases on eWeasel exit
+				-- Almost same as `pre_process' except it handle special cases on eweasel exit
 		require
 			not_void: a_eweasel_buffer_output /= Void
 		local

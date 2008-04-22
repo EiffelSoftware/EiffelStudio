@@ -1379,35 +1379,6 @@ feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 			is_dropping_on_editor := a_dropping
 		end
 
-	refresh_tab (a_stone: STONE) is
-			-- Refresh pixmap and title of current editor's tab.
-		local
-			l_class_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_group: CONF_GROUP
-			l_content: SD_CONTENT
-		do
-			if editors_manager.current_editor /= Void then
-				if a_stone /= Void then
-					l_class_stone ?= a_stone
-					l_cluster_stone ?= a_stone
-					l_content := editors_manager.current_editor.docking_content
-					if l_class_stone /= Void and then l_class_stone.is_valid then
-						l_content.set_pixmap (pixmap_from_class_i (l_class_stone.class_i))
-						l_content.set_short_title (l_class_stone.class_name)
-						l_content.set_long_title (l_class_stone.class_name)
-						editors_manager.current_editor.set_title_saved (not changed)
-					elseif l_cluster_stone /= Void then
-						l_group := l_cluster_stone.group
-						l_content.set_pixmap (pixmap_from_group (l_group))
-						l_content.set_short_title (l_group.name)
-						l_content.set_long_title (l_group.name)
-					end
-					editors_manager.update_content_description (a_stone, l_content)
-				end
-			end
-		end
-
 feature {ES_FEATURES_TOOL_PANEL, ES_FEATURES_GRID, DOTNET_CLASS_AS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
 
 	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is

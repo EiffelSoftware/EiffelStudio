@@ -235,6 +235,7 @@ feature {NONE} -- Implementation
 			l_content := eiffel_test_case_class_content
 			if l_content /= Void then
 				-- Added texts to file
+				add_class_comment (l_content)
 				add_predefined_features (l_content)
 				add_features_to_test (l_content)
 				add_make_content (l_content)
@@ -243,6 +244,23 @@ feature {NONE} -- Implementation
 			l_io.close
 		ensure
 			file_created:
+		end
+
+	add_class_comment (a_file_content: STRING) is
+			-- Add class comment
+		require
+			not_void: a_file_content /= Void
+		local
+			l_features_to_test: ARRAYED_LIST [E_FEATURE]
+		do
+			l_features_to_test := wizard_information.features_to_test
+			if l_features_to_test /= Void and then not l_features_to_test.is_empty then
+				a_file_content.replace_substring_all (class_comment_string, "%N%T%T%T%T%TClass {" + l_features_to_test.first.associated_class.name_in_upper + "} will be tested in this test case.")
+			else
+				a_file_content.replace_substring_all (class_comment_string, "")
+			end
+		ensure
+			replaced: not a_file_content.has_substring (class_comment_string)
 		end
 
 	add_make_content (a_file_content: STRING) is
@@ -594,6 +612,12 @@ feature {NONE} -- File contents
 			else
 				check not_possible: False end
 			end
+		end
+
+	class_comment_string: !STRING is
+			-- $ string in template file
+		do
+			create Result.make_from_string ("$CLASS_COMMENT")
 		end
 
 	start_after_test_actions_template_string: !STRING is

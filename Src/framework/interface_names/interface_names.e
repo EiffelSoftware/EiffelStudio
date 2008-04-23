@@ -1887,6 +1887,7 @@ feature -- Label texts
 
 	l_show_help:STRING_GENERAL is 					do Result := locale.translation ("Show Help...") end
 	l_hide_help:STRING_GENERAL is 					do Result := locale.translation ("Hide Help...") end
+	l_contracts: STRING_GENERAL is 					do Result := locale.translation ("Contracts") end
 	l_code_results: STRING_GENERAL is 				do Result := locale.translation ("Code Results:") end
 	l_code_declarations_value: STRING_GENERAL is 	do Result := locale.translation ("'s Value:") end
 	l_code_declarations_conform (a_type: STRING_GENERAL): STRING_GENERAL is

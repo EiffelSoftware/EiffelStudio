@@ -62,7 +62,7 @@ feature {NONE} -- Iniitalization
 			l_col.set_width (100)
 
 			l_col := a_widget.column (context_column)
-			l_col.set_title (interface_names.l_context)
+			l_col.set_title (interface_names.l_location)
 			l_col.set_width (200)
 
 			l_col := a_widget.column (position_column)

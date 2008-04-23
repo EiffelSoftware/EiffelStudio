@@ -123,7 +123,7 @@ io.error.put_new_line
 end
 			Result.set_written_type_id (written_class.meta_type (class_type).type_id)
 				-- It is ok to call `written_class_type' since the above line is initializing it.
-			Result.set_pattern_id (pattern_table.c_pattern_id (pattern_id, Result.written_class_type))
+			Result.set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, Result.written_class_type))
 			if is_attribute then
 				Result.set_is_attribute
 			end
@@ -136,7 +136,7 @@ feature -- update
 			Precursor (class_type)
 			set_written_type_id (written_class.meta_type (class_type).type_id)
 				-- It is ok to call `written_class_type' since the above line is initializing it.
-			set_pattern_id (pattern_table.c_pattern_id (pattern_id, written_class_type))
+			set_pattern_id (pattern_table.c_pattern_id_in (pattern_id, written_class_type))
 		end
 
 feature -- from ROUT_ENTRY

@@ -4791,34 +4791,42 @@ end
 			i, nb: INTEGER
 			class_type: CLASS_TYPE
 			l_void: VOID_A
+			l_c_pattern_id: INTEGER
 		do
 			if remover /= Void then
 					-- Ensure that initialization routines are marked `used'.
 				remover.used_table.put (True, body_index_counter.initialization_body_index)
 			end
-			from
-				create rout_table.make (routine_id_counter.initialization_rout_id)
-				create l_void
-				i := 1
-				nb := Type_id_counter.value
-				rout_table.create_block (nb)
-			until
-				i > nb
-			loop
-				class_type := class_types.item (i)
-				if class_type /= Void and then class_type.has_creation_routine then
-					create rout_entry
-					rout_entry.set_type_id (i)
-					rout_entry.set_type (l_void)
-					rout_entry.set_written_type_id (i)
-					rout_entry.set_body_index (body_index_counter.initialization_body_index)
-					rout_table.extend (rout_entry)
+			i := 1
+			nb := Type_id_counter.value
+			if i <= nb then
+					-- Fetch the C pattern ID of the initialization routine.
+				l_c_pattern_id := pattern_table.c_pattern_id (
+					create {C_PATTERN}.make (create {VOID_I},
+						<< create {REFERENCE_I}, create {REFERENCE_I} >>))
+				from
+					create rout_table.make (routine_id_counter.initialization_rout_id)
+					create l_void
+					rout_table.create_block (nb)
+				until
+					i > nb
+				loop
+					class_type := class_types.item (i)
+					if class_type /= Void and then class_type.has_creation_routine then
+						create rout_entry
+						rout_entry.set_type_id (i)
+						rout_entry.set_type (l_void)
+						rout_entry.set_written_type_id (i)
+						rout_entry.set_pattern_id (l_c_pattern_id)
+						rout_entry.set_body_index (body_index_counter.initialization_body_index)
+						rout_table.extend (rout_entry)
+					end
+					i := i + 1
 				end
-				i := i + 1
+				rout_table.sort
 			end
-			rout_table.sort
 			rout_table.generate_full (routine_id_counter.initialization_rout_id,
-													header_generation_buffer)
+				header_generation_buffer)
 		end
 
 	generate_expanded_creation_table is
@@ -4852,6 +4860,8 @@ end
 						rout_entry.set_type (l_void)
 						rout_entry.set_written_type_id (
 							class_type.type.implemented_type (l_class.creation_feature.written_in).type_id (Void))
+						rout_entry.set_pattern_id (pattern_table.c_pattern_id_in (l_class.creation_feature.pattern_id,
+							rout_entry.written_class_type))
 						rout_entry.set_body_index (l_class.creation_feature.body_index)
 						rout_table.extend (rout_entry)
 					end

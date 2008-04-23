@@ -121,7 +121,7 @@ feature -- Access
 		do
 			written_class := System.class_of_id (written_in)
 			written_type :=	class_type.written_type (written_class)
-			Result := Pattern_table.c_pattern_id (pattern_id, written_type) - 1
+			Result := Pattern_table.c_pattern_id_in (pattern_id, written_type) - 1
 		end
 
 	is_valid: BOOLEAN is

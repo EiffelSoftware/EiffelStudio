@@ -1,56 +1,39 @@
 indexing
+	description: "[
+		Record all the possible signatures that an Eiffel system may have. We have 2 kinds of patterns:
+		1 - pattern taken directly from source code possibly instantiated in generic derivations: PATTERN
+		2 - associated C signature of the patterns obtained by (1): C_PATTERN
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Table of patterns
 
 class PATTERN_TABLE
 
 inherit
-
 	SEARCH_TABLE [PATTERN_INFO]
 		rename
 			make as search_table_make
 		end
+
 	SHARED_CODE_FILES
 		undefine
 			copy, is_equal
 		end
+
 	SHARED_WORKBENCH
 		undefine
 			copy, is_equal
 		end
+
 	SHARED_GENERATION
 		undefine
 			copy, is_equal
 		end
 
 create
-
 	make
 
-feature
-
-	patterns: SEARCH_TABLE [PATTERN]
-			-- Shared references on patterns
-
-	info_array: HASH_TABLE [PATTERN_INFO, INTEGER]
-			-- Table of pattern information in order to reference them
-			-- through an index.
-
-	last_pattern_id: INTEGER
-			-- Pattern id processed after last insertion
-
-	c_patterns: SEARCH_TABLE [C_PATTERN_INFO]
-			-- Non formal patterns present already in the system
-
-	c_patterns_by_ids: HASH_TABLE [C_PATTERN_INFO, INTEGER]
-			-- Same as `c_patterns' but indexed by the `c_pattern_id'.
-
-	pattern_id_counter: COMPILER_COUNTER
-			-- Pattern id counter
-
-	c_pattern_id_counter: COUNTER
-			-- Counter of C patterns
+feature {NONE} -- Implementation
 
 	make is
 			-- Table creation
@@ -64,8 +47,83 @@ feature
 			create c_patterns_by_ids.make (Chunk)
 		end
 
-	Chunk: INTEGER is 100
-			-- Table chunk
+feature -- Access
+
+	last_pattern_id: INTEGER
+			-- Pattern id processed after last insertion
+
+	pattern_of_id (i: INTEGER; type: CLASS_TYPE): PATTERN is
+			-- Pattern information of id `i'.
+		require
+			i_positive: i > 0
+			valid_id: has_pattern_of_id (i)
+			type_not_void: type /= Void
+		do
+			Result := info_array.item (i).instantiation_in (type)
+		end
+
+	c_pattern_id_in (pattern_id: INTEGER; cl_type: CLASS_TYPE): INTEGER is
+			-- C pattern ID of pattern `pattern_id' instantiated in `cl_type'.
+		require
+			pattern_id_positive: pattern_id > 0
+			has_pattern_id: has_pattern_of_id (pattern_id)
+			good_type: cl_type /= Void
+		do
+			Result := c_pattern_id (pattern_of_id (pattern_id, cl_type).c_pattern)
+		ensure
+			c_pattern_id_in_positive: Result > 0
+		end
+
+	c_pattern_id (a_c_pattern: C_PATTERN): INTEGER is
+			-- C pattern ID from `a_c_pattern'.
+			-- Side effect: Update `c_patterns' and `c_patterns_by_ids' if not present.
+		require
+			a_c_pattern_not_void: a_c_pattern /= Void
+		do
+			marker.set_pattern (a_c_pattern)
+			c_patterns.search (marker)
+			if c_patterns.found then
+				Result := c_patterns.found_item.c_pattern_id
+			else
+				insert_c_pattern (a_c_pattern)
+					-- Optimization to avoid searching again
+				Result := c_pattern_id_counter.value
+				check
+					optimization_ok: Result = c_pattern_id (a_c_pattern)
+				end
+			end
+		ensure
+			c_pattern_id_positive: Result > 0
+		end
+
+	c_pattern_of_id (a_pattern_id: INTEGER): C_PATTERN is
+			-- C pattern of ID `a_pattern_id'.
+		require
+			a_pattern_id_positive: a_pattern_id > 0
+		do
+			Result := c_patterns_by_ids.item (a_pattern_id).pattern
+		end
+
+feature -- Status report
+
+	has_c_pattern (a_c_pattern: C_PATTERN): BOOLEAN is
+			-- Is `a_c_pattern' present in Current?
+		require
+			a_c_pattern_not_void: a_c_pattern /= Void
+		do
+			marker.set_pattern (a_c_pattern)
+			Result := c_patterns.has (marker)
+		end
+
+	has_pattern_of_id (a_pattern_id: INTEGER): BOOLEAN is
+			-- Is pattern of Id `a_pattern_id' present?
+		require
+			a_pattern_id_positive: a_pattern_id > 0
+		do
+			Result := info_array.has (a_pattern_id)
+		end
+
+feature -- Processing
 
 	process is
 			-- Process the table of C patterns
@@ -73,7 +131,6 @@ feature
 			c_pattern: C_PATTERN
 			types: TYPE_LIST
 			info: PATTERN_INFO
-			c_pattern_info: C_PATTERN_INFO
 			assoc_class: CLASS_C
 		do
 			from
@@ -91,11 +148,8 @@ feature
 						types.after
 					loop
 						c_pattern := info.instantiation_in (types.item).c_pattern
-						create c_pattern_info.make (c_pattern)
-						if not c_patterns.has (c_pattern_info) then
-							c_pattern_info.set_c_pattern_id (c_pattern_id_counter.next)
-							c_patterns.put (c_pattern_info)
-							c_patterns_by_ids.put (c_pattern_info, c_pattern_info.c_pattern_id)
+						if not has_c_pattern (c_pattern) then
+							insert_c_pattern (c_pattern)
 						end
 						types.forth
 					end
@@ -105,6 +159,8 @@ feature
 				end
 			end
 		end
+
+feature -- Element change
 
 	insert (written_in: INTEGER; pattern: PATTERN) is
 		require
@@ -132,37 +188,20 @@ feature
 			end
 		end
 
-	pattern_of_id (i: INTEGER; type: CLASS_TYPE): PATTERN is
-			-- Pattern information of id `i'.
+	insert_c_pattern (a_c_pattern: C_PATTERN) is
+			-- Insert `a_c_pattern' in Current and gives it a new C pattern ID.
 		require
-			valid_id: info_array.has (i)
-		do
-			Result := info_array.item (i).instantiation_in (type)
-		end
-
-	c_pattern_id (pattern_id: INTEGER; cl_type: CLASS_TYPE): INTEGER is
-			-- Pattern id of C pattern `p'
-		require
-			good_type: cl_type /= Void
+			a_c_pattern_not_void: a_c_pattern /= Void
+			not_has_c_pattern: not has_c_pattern (a_c_pattern)
 		local
-			info: C_PATTERN_INFO
+			l_c_pattern_info: C_PATTERN_INFO
+			l_c_pattern_id: INTEGER
 		do
-			Marker.set_pattern (pattern_of_id (pattern_id, cl_type).c_pattern)
-			info := c_patterns.item (Marker)
-			if info /= Void then
-				Result := info.c_pattern_id
-			end
-		end
-
-	Marker: C_PATTERN_INFO is
-			-- Marker for search in `c_patterns'
-		local
-			l_pattern: C_PATTERN
-			l_shared_types: SHARED_TYPE_I
-		once
-			create l_shared_types
-			create l_pattern.make (l_shared_types.Void_c_type)
-			create Result.make (l_pattern)
+			create l_c_pattern_info.make (a_c_pattern)
+			l_c_pattern_id := c_pattern_id_counter.next
+			l_c_pattern_info.set_c_pattern_id (l_c_pattern_id)
+			c_patterns.put (l_c_pattern_info)
+			c_patterns_by_ids.put (l_c_pattern_info, l_c_pattern_id)
 		end
 
 feature -- Generation
@@ -226,8 +265,44 @@ feature -- Generation
 			end
 		end
 
-invariant
+feature {NONE} -- Impementation: Access
 
+	patterns: SEARCH_TABLE [PATTERN]
+			-- Shared references on patterns
+
+	info_array: HASH_TABLE [PATTERN_INFO, INTEGER]
+			-- Table of pattern information in order to reference them
+			-- through an index.
+
+	c_patterns: SEARCH_TABLE [C_PATTERN_INFO]
+			-- Non formal patterns present already in the system
+
+	c_patterns_by_ids: HASH_TABLE [C_PATTERN_INFO, INTEGER]
+			-- Same as `c_patterns' but indexed by the `c_pattern_id'.
+
+	pattern_id_counter: COMPILER_COUNTER
+			-- Pattern id counter
+
+	c_pattern_id_counter: COUNTER
+			-- Counter of C patterns
+
+	Chunk: INTEGER is 100
+			-- Table chunk
+
+	Marker: C_PATTERN_INFO is
+			-- Marker for search in `c_patterns'
+		local
+			l_pattern: C_PATTERN
+			l_shared_types: SHARED_TYPE_I
+		once
+			create l_shared_types
+			create l_pattern.make (l_shared_types.Void_c_type, Void)
+			create Result.make (l_pattern)
+		ensure
+			marker_not_void: Result /= Void
+		end
+
+invariant
 	patterns_exists: patterns /= Void
 	info_array_exists: info_array /= Void
 

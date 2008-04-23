@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			l_seed_pattern_id, l_pattern_id: INTEGER
 			l_seed: FEATURE_I
 			l_c_pattern: C_PATTERN
-			l_c_pattern_info: C_PATTERN_INFO
+			l_c_pattern_args: ARRAY [STRING]
 		do
 				-- We generate a compact table initialization, that is to say if two or more
 				-- consecutives rows are identical we will generate a loop to fill the rows
@@ -346,22 +346,20 @@ feature {NONE} -- Implementation
 							-- PATTERN for the feature and immediately request its C_PATTERN which will give
 							-- us the same data if we had A [ANY, ANY] in the universe.
 						l_c_pattern := l_seed.pattern.c_pattern
-						create l_c_pattern_info.make (l_c_pattern)
-						pattern_table.c_patterns.search (l_c_pattern_info)
-						if pattern_table.c_patterns.found then
-							l_seed_pattern_id := pattern_table.c_patterns.found_item.c_pattern_id
-						else
-							l_seed_pattern_id := pattern_table.c_pattern_id_counter.next
-							l_c_pattern_info.set_c_pattern_id (l_seed_pattern_id)
-							pattern_table.c_patterns.put (l_c_pattern_info)
-							pattern_table.c_patterns_by_ids.put (l_c_pattern_info, l_c_pattern_info.c_pattern_id)
-						end
+						l_seed_pattern_id := pattern_table.c_pattern_id (l_c_pattern)
 					else
 						l_seed_pattern_id := array_item (lower).pattern_id
+						l_c_pattern := pattern_table.c_pattern_of_id (l_seed_pattern_id)
 					end
 				else
 					l_seed_pattern_id := pattern_id
+					l_c_pattern := pattern_table.c_pattern_of_id (l_seed_pattern_id)
 				end
+				check
+					l_seed_pattern_id_positive: l_seed_pattern_id > 0
+				end
+					-- Get the argument for the pattern.
+				l_c_pattern_args := l_c_pattern.argument_type_array
 				wrapper_buffer.clear_all
 			until
 				i > nb
@@ -393,30 +391,25 @@ feature {NONE} -- Implementation
 					l_generate_entry := False
 					if l_rout_entry /= Void then
 						l_routine_name := l_rout_entry.routine_name
-						if l_seed_pattern_id > 0 then
-							l_pattern_id := l_rout_entry.pattern_id
-							if l_seed_pattern_id /= l_pattern_id then
-									-- A wrapper needs to be used/generated.
-								l_wrapped_name := l_routine_name.twin
-								l_wrapped_name.append_character ('_')
-								l_wrapped_name.append_integer (rout_id)
+						l_pattern_id := l_rout_entry.pattern_id
+						if l_seed_pattern_id /= l_pattern_id then
+								-- A wrapper needs to be used/generated.
+							l_wrapped_name := l_routine_name.twin
+							l_wrapped_name.append_character ('_')
+							l_wrapped_name.append_integer (rout_id)
 
-								if l_wrappers = Void then
-									create l_wrappers.make (10)
-								end
-								if not l_wrappers.has (l_wrapped_name) then
-										-- We need to generate a wrapper.
-									generate_wrapper (wrapper_buffer, l_rout_entry, l_seed_pattern_id, l_pattern_id, l_wrapped_name, l_routine_name)
-									l_wrappers.put (l_wrapped_name)
-								end
-								l_routine_name := l_wrapped_name
-							else
-									-- Remember external routine declaration
-								Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+							if l_wrappers = Void then
+								create l_wrappers.make (10)
 							end
+							if not l_wrappers.has (l_wrapped_name) then
+									-- We need to generate a wrapper.
+								generate_wrapper (wrapper_buffer, l_rout_entry, l_seed_pattern_id, l_pattern_id, l_wrapped_name, l_routine_name)
+								l_wrappers.put (l_wrapped_name)
+							end
+							l_routine_name := l_wrapped_name
 						else
 								-- Remember external routine declaration
-							Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+							extern_declarations.add_routine_with_signature (l_c_pattern.result_type.c_string, l_routine_name, l_c_pattern_args)
 						end
 						generate_loop_initialization (buffer, l_table_name, l_routine_name, l_start, l_end)
 
@@ -431,30 +424,25 @@ feature {NONE} -- Implementation
 			end;
 			if l_rout_entry /= Void then
 				l_routine_name := l_rout_entry.routine_name
-				if l_seed_pattern_id > 0 then
-					l_pattern_id := l_rout_entry.pattern_id
-					if l_seed_pattern_id /= l_pattern_id then
-							-- A wrapper needs to be used/generated.
-						l_wrapped_name := l_routine_name.twin
-						l_wrapped_name.append_character ('_')
-						l_wrapped_name.append_integer (rout_id)
+				l_pattern_id := l_rout_entry.pattern_id
+				if l_seed_pattern_id /= l_pattern_id then
+						-- A wrapper needs to be used/generated.
+					l_wrapped_name := l_routine_name.twin
+					l_wrapped_name.append_character ('_')
+					l_wrapped_name.append_integer (rout_id)
 
-						if l_wrappers = Void then
-							create l_wrappers.make (10)
-						end
-						if not l_wrappers.has (l_wrapped_name) then
-								-- We need to generate a wrapper.
-							generate_wrapper (wrapper_buffer, l_rout_entry, l_seed_pattern_id, l_pattern_id, l_wrapped_name, l_routine_name)
-							l_wrappers.put (l_wrapped_name)
-						end
-						l_routine_name := l_wrapped_name
-					else
-							-- Remember external routine declaration
-						Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+					if l_wrappers = Void then
+						create l_wrappers.make (10)
 					end
+					if not l_wrappers.has (l_wrapped_name) then
+							-- We need to generate a wrapper.
+						generate_wrapper (wrapper_buffer, l_rout_entry, l_seed_pattern_id, l_pattern_id, l_wrapped_name, l_routine_name)
+						l_wrappers.put (l_wrapped_name)
+					end
+					l_routine_name := l_wrapped_name
 				else
 						-- Remember external routine declaration
-					Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+					extern_declarations.add_routine_with_signature (l_c_pattern.result_type.c_string, l_routine_name, l_c_pattern_args)
 				end
 				generate_loop_initialization (buffer, l_table_name, l_routine_name, l_start, l_end)
 			end
@@ -489,15 +477,15 @@ feature {NONE} -- Implementation
 			l_feat: FEATURE_I
 			l_old_buffer: GENERATION_BUFFER
 		do
-			l_seed_c_pattern := pattern_table.c_patterns_by_ids.item (a_seed_pattern_id).pattern
-			l_c_pattern := pattern_table.c_patterns_by_ids.item (a_pattern_id).pattern
+			l_seed_c_pattern := pattern_table.c_pattern_of_id (a_seed_pattern_id)
+			l_c_pattern := pattern_table.c_pattern_of_id (a_pattern_id)
 
 				-- We first generate the signature using `l_seed_c_pattern'.
 			l_result_string := l_seed_c_pattern.result_type.c_string
 			l_arg_names := l_seed_c_pattern.argument_name_array
 			l_arg_types := l_seed_c_pattern.argument_type_array
 			extern_declarations.add_wrapper_with_signature (l_result_string, a_wrapped_name, l_arg_types)
-			extern_declarations.add_routine (l_c_pattern.result_type, a_routine_name)
+			extern_declarations.add_routine_with_signature (l_c_pattern.result_type.c_string, a_routine_name, l_c_pattern.argument_type_array)
 
 			buffer.generate_function_signature (l_result_string, a_wrapped_name, False, Void, l_arg_names, l_arg_types)
 			buffer.generate_block_open
@@ -526,10 +514,8 @@ feature {NONE} -- Implementation
 					l_is_return_value_boxed := True
 				end
 			end
-			buffer.put_character ('(')
-			l_type.generate_function_cast (buffer, l_c_pattern.argument_type_array, False)
 			buffer.put_string (a_routine_name)
-			buffer.put_two_character (')', '(')
+			buffer.put_character ('(')
 				-- Now generate the arguments.
 			from
 					-- First current

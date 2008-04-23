@@ -161,7 +161,6 @@ feature
 			new_arguments: ARRAY [TYPE_C];
 			i, arg_count: INTEGER;
 		do
-			create Result.make (result_type.c_type);
 			arg_count := argument_count;
 			if arg_count > 0 then
 				create new_arguments.make (1, arg_count);
@@ -173,8 +172,8 @@ feature
 					new_arguments.put (argument_types.item (i).c_type, i);
 					i := i + 1;
 				end;
-				Result.set_argument_types (new_arguments);
 			end;
+			create Result.make (result_type.c_type, new_arguments);
 		end;
 
 feature -- Hash code

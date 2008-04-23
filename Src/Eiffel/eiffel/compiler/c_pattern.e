@@ -35,8 +35,21 @@ inherit
 		end
 
 create
-
 	make
+
+feature {NONE} -- Initialization
+
+	make (t: TYPE_C; a_args: like argument_types) is
+			-- Creation of a pattern with a result meta type
+		require
+			valid_type: t /= Void;
+		do
+			result_type := t
+			argument_types := a_args
+		ensure
+			result_type_set: result_type = t
+			argument_types_set: argument_types = a_args
+		end
 
 feature
 
@@ -45,20 +58,6 @@ feature
 
 	argument_types: ARRAY [TYPE_C];
 			-- Meta types of the arguments
-
-	set_argument_types (a: like argument_types) is
-			-- Assign `a' to `argument_types'.
-		do
-			argument_types := a;
-		end;
-
-	make (t: TYPE_C) is
-			-- Creation of a pattern with a result meta type
-		require
-			good_argument: t /= Void;
-		do
-			result_type := t;
-		end;
 
 	argument_count: INTEGER is
 			-- Number of arguments

@@ -97,7 +97,7 @@ feature {NONE} -- Wizard UI Implementation
 	display_state_text
 			-- Redefine
 		do
-			title.set_text (interface_names.t_test_features)
+			title.set_text (interface_names.t_features_to_test)
 			subtitle.set_text (interface_names.t_Select_features_for_which)
 		end
 
@@ -150,12 +150,12 @@ feature {NONE} -- Wizard UI Implementation
 			create l_v_box
 			l_v_box.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
-			create l_button.make_with_text (interface_names.b_check_all)
+			create l_button.make_with_text (interface_names.b_check)
 			l_button.select_actions.extend (agent on_check_all)
 			l_v_box.extend (l_button)
 			l_v_box.disable_item_expand (l_button)
 
-			create l_button.make_with_text (interface_names.b_uncheck_all)
+			create l_button.make_with_text (interface_names.b_uncheck)
 			l_button.select_actions.extend (agent on_uncheck_all)
 			l_v_box.extend (l_button)
 			l_v_box.disable_item_expand (l_button)

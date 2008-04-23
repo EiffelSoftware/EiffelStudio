@@ -1315,11 +1315,7 @@ feature -- Label texts
 	l_Object_attributes: STRING_GENERAL is		do Result := locale.translation("Attributes")	end
 	l_object_tool_left: STRING_GENERAL is		do Result := locale.translation("Objects tool: left")	end
 	l_object_tool_right: STRING_GENERAL is		do Result := locale.translation("Objects tool: right")	end
-	l_on_after_test_runs: STRING_GENERAL is		do Result := "on_after_test_runs" end
-	l_on_before_test_runs: STRING_GENERAL is		do Result := "on_before_test_runs" end
 	l_On_object: STRING_GENERAL is				do Result := locale.translation("On object")	end
-	l_on_before_test_run: STRING_GENERAL is				do Result := "on_before_test_run" end
-	l_on_after_test_run: STRING_GENERAL is			do Result := "on_after_test_run" end
 	l_As_object: STRING_GENERAL is				do Result := locale.translation("As object")	end
 	l_Onces: STRING_GENERAL is					do Result := locale.translation("Once routines and constants")	end
 	l_Once_routines: STRING_GENERAL is			do Result := locale.translation("Once routines")	end
@@ -1367,6 +1363,8 @@ feature -- Label texts
 	l_protocol: STRING_GENERAL is			do Result := locale.translation("Protocol")	end
 	l_Public_key_token: STRING_GENERAL is		do Result := locale.translation ("PublicKeyToken") end
 	l_Put_text_right_text: STRING_GENERAL is 	do Result := locale.translation("Show selective text on the right of buttons")	end
+	l_run_before_each: STRING_GENERAL is		do Result := "run_before_each" end
+	l_run_after_each: STRING_GENERAL is			do Result := "run_after_each" end
 	l_Show_all_text: STRING_GENERAL is			do Result := locale.translation("Show text labels")	end
 	l_Switching_to_debug_mode: STRING_GENERAL is do Result := locale.translation("Switching to debug mode...")	end
 	l_Switching_to_normal_mode: STRING_GENERAL is do Result := locale.translation("Switching to edit mode...")	end
@@ -1399,6 +1397,8 @@ feature -- Label texts
 	l_Routines: STRING_GENERAL is				do Result := locale.translation("Routines")	end
 	l_Runtime_information_record: STRING_GENERAL is do Result := locale.translation("Run-time information record")	end
 	l_Runs: STRING_GENERAL is					do Result := locale.translation("Runs")	end
+	l_run_after_all: STRING_GENERAL is			do Result := "run_after_all" end
+	l_run_before_all: STRING_GENERAL is			do Result := "run_before_all" end
 	l_Same_class_name: STRING_GENERAL is		do Result := locale.translation("---")	end
 	l_Scope: STRING_GENERAL is 					do Result := locale.translation("Scope")	end
 	l_Search_backward: STRING_GENERAL is		do Result := locale.translation("Search backwards")	end

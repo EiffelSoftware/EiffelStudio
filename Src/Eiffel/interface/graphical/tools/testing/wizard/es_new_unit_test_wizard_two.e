@@ -61,16 +61,16 @@ feature {NONE} -- Initialization
 					class_under_test.set_text (wizard_information.class_under_test)
 				end
 
-				if wizard_information.is_on_after_test_run_selected then
+				if wizard_information.is_run_after_each_selected then
 					on_after_test_run.enable_select
 				end
-				if wizard_information.is_on_after_test_runs_selected then
+				if wizard_information.is_run_after_all_selected then
 					on_after_all_test_runs.enable_select
 				end
-				if wizard_information.is_on_before_test_run_selected then
+				if wizard_information.is_run_before_each_selected then
 					on_before_test_run.enable_select
 				end
-				if wizard_information.is_on_before_test_runs_selected then
+				if wizard_information.is_run_before_all_selected then
 					on_before_all_test_runs.enable_select
 				end
 			end
@@ -170,13 +170,13 @@ feature {NONE} -- Implementation
 			create l_v_box_2
 
 			create on_before_all_test_runs
-			on_before_all_test_runs.set_text (interface_names.l_on_before_test_runs)
-			on_before_all_test_runs.select_actions.extend (agent on_on_before_all_test_runs_selected)
+			on_before_all_test_runs.set_text (interface_names.l_run_before_all)
+			on_before_all_test_runs.select_actions.extend (agent on_run_before_all_selected)
 			l_v_box_2.extend (on_before_all_test_runs)
 
 			create on_before_test_run
-			on_before_test_run.set_text (interface_names.l_on_before_test_run)
-			on_before_test_run.select_actions.extend (agent on_on_before_test_run_selected)
+			on_before_test_run.set_text (interface_names.l_run_before_each)
+			on_before_test_run.select_actions.extend (agent on_run_before_each_selected)
 			l_v_box_2.extend (on_before_test_run)
 
 			l_h_box.extend (l_v_box_2)
@@ -184,13 +184,13 @@ feature {NONE} -- Implementation
 			create l_v_box_2
 
 			create on_after_all_test_runs
-			on_after_all_test_runs.set_text (interface_names.l_on_after_test_runs)
-			on_after_all_test_runs.select_actions.extend (agent on_on_after_all_test_runs_selected)
+			on_after_all_test_runs.set_text (interface_names.l_run_after_all)
+			on_after_all_test_runs.select_actions.extend (agent on_run_after_all_selected)
 			l_v_box_2.extend (on_after_all_test_runs)
 
 			create on_after_test_run
-			on_after_test_run.set_text (interface_names.l_on_after_test_run)
-			on_after_test_run.select_actions.extend (agent on_on_after_test_run_selected)
+			on_after_test_run.set_text (interface_names.l_run_after_each)
+			on_after_test_run.select_actions.extend (agent on_run_after_each_selected)
 			l_v_box_2.extend (on_after_test_run)
 
 			l_h_box.extend (l_v_box_2)
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			-- Class under test.
 			create l_h_box
 			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-			
+
 			create l_label.make_with_text (interface_names.l_class_under_test)
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)
@@ -369,28 +369,28 @@ feature {NONE}	-- Agents
 			end
 		end
 
-	on_on_before_all_test_runs_selected is
+	on_run_before_all_selected is
 			-- Handle select actions of `on_before_all_test_runs'
 		do
-			wizard_information.set_is_on_before_all_test_runs_selected (on_before_all_test_runs.is_selected)
+			wizard_information.set_run_before_all_selected (on_before_all_test_runs.is_selected)
 		end
 
-	on_on_after_all_test_runs_selected is
+	on_run_after_all_selected is
 			-- Handle select actions of `on_after_all_test_runs'
 		do
-			wizard_information.set_is_on_after_all_test_runs_selected (on_after_all_test_runs.is_selected)
+			wizard_information.set_run_after_all_selected (on_after_all_test_runs.is_selected)
 		end
 
-	on_on_before_test_run_selected is
+	on_run_before_each_selected is
 			-- Handle select actions of `on_before_test_run'
 		do
-			wizard_information.set_is_on_before_test_run_selected (on_before_test_run.is_selected)
+			wizard_information.set_run_before_each_selected (on_before_test_run.is_selected)
 		end
 
-	on_on_after_test_run_selected is
+	on_run_after_each_selected is
 			-- Handle select actions of `on_after_test_run'
 		do
-			wizard_information.set_is_on_after_test_run_selected (on_after_test_run.is_selected)
+			wizard_information.set_run_after_each_selected (on_after_test_run.is_selected)
 		end
 
 feature {NONE} -- UI widgets

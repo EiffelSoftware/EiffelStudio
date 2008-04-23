@@ -15,7 +15,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Creation method
+			--$MAKE_COMMENT
 		do$start_test_class_actions_in_make$core_test_in_make$after_test_class_actions_in_make
 		end
 

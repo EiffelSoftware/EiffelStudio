@@ -713,11 +713,11 @@ feature {NONE} -- Implementation commands
 					if {l_last_run_time: DT_DATE_TIME} l_item.last_run_time and {l_changed_time: DT_DATE_TIME} l_item.changed_time then
 						if l_last_run_time < l_changed_time then
 							-- Changed
-							l_label_item.set_text (interface_names.l_true)
+							l_label_item.set_text (interface_names.b_yes)
 
 						else
 							-- Not changed
-							l_label_item.set_text (interface_names.l_false)
+							l_label_item.set_text (interface_names.b_no)
 						end
 					end
 				end

@@ -253,6 +253,13 @@ feature {NONE} -- Implementation
 			l_features_to_test: ARRAYED_LIST [E_FEATURE]
 			l_feature_test_content: STRING
 		do
+			l_features_to_test := wizard_information.features_to_test
+			if l_features_to_test /= Void and then not l_features_to_test.is_empty then
+				a_file_content.replace_substring_all ("$MAKE_COMMENT", " Setup and run test case for class {" + l_features_to_test.first.associated_class.name_in_upper + "}")
+			else
+				a_file_content.replace_substring_all ("$MAKE_COMMENT", " Setup and run test case")
+			end
+
 			if wizard_information.is_run_before_all_selected then
 				a_file_content.replace_substring_all (start_test_class_actions_in_make_template_string, "%N%T%T%T" + run_before_all_string)
 			else
@@ -266,7 +273,6 @@ feature {NONE} -- Implementation
 			end
 
 			-- Fill test features part
-			l_features_to_test := wizard_information.features_to_test
 			if l_features_to_test /= Void and then not l_features_to_test.is_empty then
 				from
 					create l_feature_test_content.make_empty
@@ -291,7 +297,7 @@ feature {NONE} -- Implementation
 
 				a_file_content.replace_substring_all (core_test_in_make_template_string, l_feature_test_content)
 			else
-				a_file_content.replace_substring_all (core_test_in_make_template_string, "%N%T%T%T--Please add your tests here")
+				a_file_content.replace_substring_all (core_test_in_make_template_string, "%N%T%T%T-- Please add your tests here")
 			end
 		ensure
 			replaced: not a_file_content.has_substring (start_test_class_actions_in_make_template_string)

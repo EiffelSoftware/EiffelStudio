@@ -46,7 +46,7 @@ feature -- Button texts
 	b_Browse: STRING_GENERAL is							do Result := locale.translation("Browse...")	end
 	b_C_functions: STRING_GENERAL is					do Result := locale.translation("C Functions")	end
 	b_change: STRING_GENERAL is 						do Result := locale.translation ("Change")	end
-	b_check_all: STRING_GENERAL is						do Result := locale.translation ("Check All") end
+	b_check: STRING_GENERAL is							do Result := locale.translation ("Check") end
 	b_Close: STRING_GENERAL is							do Result := locale.translation("Close")	end
 	b_Close_tool (a_tool: STRING_GENERAL): STRING_GENERAL is
 		require a_tool_not_void: a_tool /= Void
@@ -134,7 +134,7 @@ feature -- Button texts
 	b_Show_test_run_cases: STRING_GENERAL is			do Result := locale.translation("Show Test Run Cases")	end
 	b_Print: STRING_GENERAL is							do Result := locale.translation("Print")	end
 	b_Undo: STRING_GENERAL is							do Result := locale.translation("Undo")	end
-	b_Uncheck_all: STRING_GENERAL is					do Result := locale.translation ("Uncheck All") end
+	b_Uncheck: STRING_GENERAL is						do Result := locale.translation ("Uncheck") end
 	b_Redo: STRING_GENERAL is							do Result := locale.translation("Redo")	end
 	b_Create_new_cluster: STRING_GENERAL is				do Result := locale.translation("Add Cluster")	end
 	b_Create_new_library: STRING_GENERAL is				do Result := locale.translation("Add Library")	end
@@ -2038,9 +2038,9 @@ feature -- Title part
 	t_Slice_limits: STRING_GENERAL is					do Result := locale.translation("Choose New Slice Limits for Special Objects")	end
 	t_System: STRING_GENERAL is							do Result := locale.translation("Project Settings")	end
 	t_target_selection: STRING_GENERAL is 				do Result := locale.translation ("Target Selection") end
-	t_test_features: STRING_GENERAL is					do Result := locale.translation("Test Features")	end
+	t_features_to_test: STRING_GENERAL is				do Result := locale.translation("Features To Test")	end
 	t_test_count: STRING_GENERAL is						do Result := locale.translation("Test Count")	end
-	t_test_runs_history: STRING_GENERAL is			do Result := locale.translation("Test Runs History")	end
+	t_test_runs_history: STRING_GENERAL is				do Result := locale.translation("Test Runs History")	end
 	t_this_file_has_been_modified: STRING_GENERAL is 	do Result := locale.translation ("This file has been modified by another editor.") end
 	t_Empty_development_window: STRING_GENERAL is 		do Result := locale.translation("Empty Development Tool")	end
 	t_Autocomplete_window: STRING_GENERAL is			do Result := locale.translation("Auto-Complete")	end

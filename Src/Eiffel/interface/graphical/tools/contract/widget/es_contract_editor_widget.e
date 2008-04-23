@@ -71,9 +71,9 @@ feature {NONE} -- Initialization
 
 				-- Columns
 			l_col := edit_contract_grid.column (contract_column)
-			l_col.set_title ("Contracts")
+			l_col.set_title (interface_names.l_contracts)
 			l_col := edit_contract_grid.column (context_column)
-			l_col.set_title ("Context")
+			l_col.set_title (interface_names.l_location)
 		end
 
 	on_before_initialize
@@ -789,7 +789,7 @@ feature {NONE} -- Population
 				a_row.insert_subrows (1, 1)
 				l_row ?= a_row.subrow (a_row.subrow_count)
 
-				if a_context.text_modifier.is_ast_available then
+				if not l_editable or else a_context.text_modifier.is_ast_available then
 					populate_no_contract_row (l_row)
 				else
 						-- If not ast is available then there was a syntax error
@@ -1016,7 +1016,6 @@ feature {NONE} -- Population
 			has_context: has_context
 			not_a_row_is_destroyed: not a_row.is_destroyed
 			a_row_is_parented: a_row.parent = edit_contract_grid
-			a_row_parent_row_data_set: a_row.parent_row.data /= Void
 		local
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_selected: BOOLEAN

@@ -142,7 +142,7 @@ feature {NONE} -- Clean up
 			if code_template_catalog.is_service_available then
 				if code_template_catalog.service.is_connected (Current) then
 						-- Disconnect catalog change observer.
-					code_template_catalog.service.connect_events (Current)
+					code_template_catalog.service.disconnect_events (Current)
 				end
 			end
 

@@ -1979,7 +1979,7 @@ feature -- Title part
 	t_external_command: STRING_GENERAL is				do Result := locale.translation("External Command")	end
 	t_external_commands: STRING_GENERAL is				do Result := locale.translation("External Commands")	end
 	t_External_edition: STRING_GENERAL is				do Result := locale.translation("External Edition")	end
-	t_eweasel_unhandled_output: STRING_GENERAL is		do Result := locale.translation("eWeasel unhandled output")	end
+	t_eweasel_unhandled_output: STRING_GENERAL is		do Result := locale.translation("eweasel unhandled output")	end
 	t_Feature: STRING_GENERAL is						do Result := locale.translation("In Feature")	end
 	t_Feature_properties: STRING_GENERAL is				do Result := locale.translation("Feature Properties")	end
 	t_File_selection: STRING_GENERAL is					do Result := locale.translation("File Selection")	end
@@ -1998,11 +1998,6 @@ feature -- Title part
 	t_New_unit_test_wizard: STRING_GENERAL is			do Result := locale.translation("New Unit Test Wizard")	end
 	t_New_unit_test_case: STRING_GENERAL is				do Result := locale.translation("New Unit Test Case")	end
 	t_Using_this_wizard: STRING_GENERAL is				do Result := locale.translation("Using this wizard you can create whole set of unit test files.%N%
-																						%%N%
-																						%Unit test is used to validate that individual units of source%N%
-																						%code are working properly. In Eiffel, the smallest unit is%N%
-																						%a feature, which may belong to a base class, deferred class%N%
-																						%or descendant class.%N%
 																						%%N%
 																						%After run this wizard, an Eiffel class file, an Ecf file, a Tcf%N%
 																						%file and a Note file will be generated at the cluster%N%
@@ -2216,7 +2211,7 @@ feature -- Title part
 	t_Search_Report_tool: STRING_GENERAL is				do Result := locale.translation ("Search Report")	end
 	t_See_failure_trace: STRING_GENERAL is				do Result := locale.translation ("See Failure Trace")	end
 	t_Windows_tool: STRING_GENERAL is					do Result := locale.translation ("Windows")	end
-	t_Welcome_to_new_unit_test_wizard: STRING_GENERAL is	do Result := locale.translation ("Welcome to the New Unit Test Wizard.")	end
+	t_Welcome_to_new_unit_test_wizard: STRING_GENERAL is	do Result := locale.translation ("New Unit Test Wizard")	end
 	t_Watch_tool: STRING_GENERAL is						do Result := locale.translation ("Watch")	end
 	t_watch_tool_error_message: STRING_GENERAL is		do Result := locale.translation ("Watch tool :: error message")	end
 	t_warning: STRING_GENERAL is 						do Result := locale.translation ("Warning") end

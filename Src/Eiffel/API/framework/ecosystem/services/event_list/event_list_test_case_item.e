@@ -12,7 +12,7 @@ class
 	EVENT_LIST_TEST_CASE_ITEM
 
 inherit
-	EVENT_LIST_TEST_ITEM
+	EVENT_LIST_TEST_ITEM_I
 		redefine
 			is_valid_data
 		end

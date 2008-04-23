@@ -7,6 +7,10 @@
 class TEST
 inherit
 	TEST1
+		redefine
+			a
+		end
+
 creation
 	make
 
@@ -17,5 +21,7 @@ feature
 		do
 
 		end
+
+	a: C
 
 end

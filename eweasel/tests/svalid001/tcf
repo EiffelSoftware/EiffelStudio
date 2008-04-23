@@ -4,6 +4,9 @@ test_description An infix routine call with a conversion fails to type check in 
 copy_sub	Ace	$TEST Ace
 copy_raw	test.e	$CLUSTER test.e
 copy_raw	test1.e	$CLUSTER test1.e
+copy_raw	a.e	$CLUSTER a.e
+copy_raw	b.e	$CLUSTER b.e
+copy_raw	c.e	$CLUSTER c.e
 
 compile_melted
 compile_result ok

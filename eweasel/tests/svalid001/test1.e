@@ -9,12 +9,16 @@ class TEST1
 feature
 
 	make is
-			--
 		local
-			size: INTEGER
+			b: B
 		do
-			size := (size * (2 ^ size)).truncated_to_integer
+			f (a, b)
 		end
 
-	string: STRING
+	f (b1, b2: B) is
+		do
+		end
+
+	a: A
+
 end

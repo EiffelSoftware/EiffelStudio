@@ -6,7 +6,11 @@ CG = Code Generation
 6.2
 ===
 
-6.7.73124 non-RTEA with new code generation for polymorphic wrapper:
+6.2.7.3140 non-RTEA with updated generation for polymorphic wrapper:
+177.46u 13.21s 3:49.06 83.2%
+177.21u 13.16s 3:43.44 85.1%
+
+6.2.7.3124 non-RTEA with new code generation for polymorphic wrapper:
 174.01u 13.51s 3:57.06 79.1% (before bootstrap, exe size: 14657384)
 180.91u 12.47s 3:49.99 84.0% (after bootstrap, exe size: 14579192)
 179.58u 12.65s 3:47.60 84.4%  "

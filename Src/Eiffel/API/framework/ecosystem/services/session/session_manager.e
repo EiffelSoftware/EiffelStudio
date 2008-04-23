@@ -51,20 +51,28 @@ feature {NONE} -- Clean up
 			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
 		end
 
+feature -- Access
+
+	active_sessions: !DS_ARRAYED_LIST [SESSION_I]
+			-- <Precursor>
+		do
+			create Result.make_from_linear (sessions)
+		end
+
 feature {NONE} -- Access
 
-	sessions: DS_ARRAYED_LIST [SESSION_I]
+	sessions: !DS_ARRAYED_LIST [SESSION_I]
 			-- List of retrieve sessions
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := internal_sessions
-			if Result = Void then
+			if internal_sessions = Void then
 				create Result.make_default
 				internal_sessions := Result
+			else
+				Result ?= internal_sessions
 			end
 		ensure
-			result_attached: Result /= Void
 			result_consistent: Result = sessions
 		end
 
@@ -366,6 +374,7 @@ feature -- Retrieval
 				internal_sessions_has_a_session: internal_sessions.has (a_session)
 			end
 			set_session_object (a_session)
+			a_session.reset_is_dirty
 		end
 
 feature {NONE} -- Basic operation
@@ -384,14 +393,11 @@ feature {NONE} -- Basic operation
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_object: ANY
 			l_file: RAW_FILE
-			l_is_dirty: BOOLEAN
 			l_logger: SERVICE_CONSUMER [LOGGER_S]
 			l_message: !STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_is_dirty := a_session.is_dirty
-
 				create l_sed_util
 				create l_file.make (session_file_path (a_session))
 				if l_file.exists then
@@ -413,11 +419,6 @@ feature {NONE} -- Basic operation
 							l_logger.service.put_message_with_severity (l_message, {ENVIRONMENT_CATEGORIES}.internal_event, {PRIORITY_LEVELS}.high)
 						end
 					end
-
-					if not l_is_dirty then
-							-- Reset direty state
-						a_session.reset_is_dirty
-					end
 				end
 			end
 
@@ -433,7 +434,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Factory
 
-	create_new_session (a_window: ?EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN; a_extension: ?STRING_8): SESSION_I
+	create_new_session (a_window: ?EB_DEVELOPMENT_WINDOW; a_per_project: BOOLEAN; a_extension: ?STRING_8): ?SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_window': The window to bind the session object to; False to make a session for the entire IDE.
@@ -509,7 +510,7 @@ feature {NONE} -- Factory
 			result_extension_set: Result /= Void implies equal (a_extension, Result.extension_name)
 		end
 
-	create_new_custom_session (a_file_name: !STRING_8): CUSTOM_SESSION_I
+	create_new_custom_session (a_file_name: !STRING_8): ?CUSTOM_SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_file_name': The full path to a file on disk to retrieve session data from.
@@ -535,7 +536,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Internal implementation cache
 
-	internal_sessions: like sessions
+	internal_sessions: ?like sessions
 			-- Cached version of `sessions'
 			-- Note: Do not use directly!
 

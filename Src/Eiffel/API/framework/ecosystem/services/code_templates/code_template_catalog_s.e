@@ -13,7 +13,7 @@ deferred class
 inherit
 	SERVICE_I
 
-	USABLE_I
+	EVENT_OBSERVER_CONNECTION_I [!CODE_TEMPLATE_CATALOG_OBSERVER]
 
 feature -- Access
 
@@ -87,6 +87,25 @@ feature -- Query
 			a_categories_attached: a_categories /= Void
 			a_categories_contains_attached_items: not a_categories.has (Void)
 			not_a_categories_is_empty: not a_categories.is_empty
+		deferred
+		end
+
+feature {NONE} -- Query
+
+	events (a_observer: !CODE_TEMPLATE_CATALOG_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			-- <Precursor>
+		do
+			create Result.make (4)
+			Result.put_last ([catalog_changed_event, agent a_observer.on_catalog_changed])
+		end
+
+feature -- Events
+
+	catalog_changed_event: EVENT_TYPE [TUPLE]
+			-- Events called when the catalog is modified in some way; templates added, templates removed
+			-- or a rescan was performed
+		require
+			is_interface_usable: is_interface_usable
 		deferred
 		end
 

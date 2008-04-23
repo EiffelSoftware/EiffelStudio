@@ -19,7 +19,7 @@ deferred class
 inherit
 	SERVICE_I
 
-	EVENT_OBSERVER_CONNECTION_I [!EVENT_LIST_EVENT_OBSERVER]
+	EVENT_OBSERVER_CONNECTION_I [!EVENT_LIST_OBSERVER]
 
 feature -- Access
 
@@ -118,11 +118,8 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	events (a_observer: !EVENT_LIST_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
-			-- List of events and associated action.
-			--
-			-- `a_observer': Event observer interface to bind agent actions to.
-			-- `Result': A list of event types paired with a associated action on the passed observer.
+	events (a_observer: !EVENT_LIST_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+			-- <Precursor>
 		do
 			create Result.make (4)
 			Result.put_last ([item_added_event, agent a_observer.on_event_item_added])

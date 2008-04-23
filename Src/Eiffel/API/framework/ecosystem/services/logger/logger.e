@@ -16,7 +16,7 @@ inherit
 			on_sited
 		end
 
-	EVENT_LIST_EVENT_OBSERVER
+	EVENT_LIST_OBSERVER
 		redefine
 			on_event_item_added,
 			on_event_item_removed
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			l_service: like event_list_service
 		do
 			l_service := event_list_service
-			if l_service.is_service_available and then {l_observer: !EVENT_LIST_EVENT_OBSERVER} Current then
+			if l_service.is_service_available and then {l_observer: !EVENT_LIST_OBSERVER} Current then
 					-- Connect observer
 				l_service.service.connect_events (l_observer)
 			end
@@ -69,7 +69,7 @@ feature {NONE} -- Clean up
 				clear_log
 
 				l_service := event_list_service
-				if l_service.is_service_available and then {l_observer: !EVENT_LIST_EVENT_OBSERVER} Current and then l_service.service.is_connected (l_observer) then
+				if l_service.is_service_available and then {l_observer: !EVENT_LIST_OBSERVER} Current and then l_service.service.is_connected (l_observer) then
 						-- Disconnect observer
 					l_service.service.disconnect_events (l_observer)
 				end

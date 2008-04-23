@@ -91,7 +91,6 @@ feature -- Element change
 			--
 			-- `a_tag': The contract tag
 		require
-			not_a_tag_is_empty: not a_tag.is_empty
 			is_editable: is_editable
 		do
 			tag := a_tag
@@ -186,6 +185,8 @@ feature {NONE} -- Regular expressions
 
 invariant
 	not_contract_is_empty: not contract.is_empty
+	is_tagless: tag.is_empty implies is_tagless
+	not_is_tagless: not tag.is_empty implies not is_tagless
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

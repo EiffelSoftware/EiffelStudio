@@ -29,6 +29,13 @@ inherit
 			on_session_value_changed
 		end
 
+	CODE_TEMPLATE_CATALOG_OBSERVER
+		export
+			{NONE} all
+		redefine
+			on_catalog_changed
+		end
+
 	ES_MODIFIABLE
 		undefine
 			internal_detach_entities
@@ -98,6 +105,11 @@ feature {NONE} -- Initialization
 			end
 
 			if code_template_catalog.is_service_available then
+					-- Connect code template catalog observer, to recieve change notifications.
+				code_template_catalog.service.connect_events (Current)
+			end
+
+			if code_template_catalog.is_service_available then
 					-- Update the menu
 				update_code_template_list
 			else
@@ -122,8 +134,15 @@ feature {NONE} -- Clean up
 		do
 			if session_manager.is_service_available then
 				if project_window_session_data.is_connected (Current) then
-						-- Retrieve contract mode from the project session.
+						-- Disconnect session value change observer.
 					project_window_session_data.disconnect_events (Current)
+				end
+			end
+
+			if code_template_catalog.is_service_available then
+				if code_template_catalog.service.is_connected (Current) then
+						-- Disconnect catalog change observer.
+					code_template_catalog.service.connect_events (Current)
 				end
 			end
 
@@ -165,7 +184,7 @@ feature {NONE} -- Access
 			code_template_catalog_is_service_available: code_template_catalog.is_service_available
 		local
 			l_categories: DS_ARRAYED_LIST [STRING_32]
-		once
+		do
 			create l_categories.make (1)
 			l_categories.put_last ({CODE_TEMPLATE_ENTITY_NAMES}.contract_category)
 			Result ?= code_template_catalog.service.templates_by_category (l_categories, False)
@@ -587,12 +606,10 @@ feature {NONE} -- User interface manipulation
 
 	update_code_template_list
 			-- Updates the code template list for the add from template menu.
-			--| Note: Should only be called once per object!
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			code_template_catalog_is_service_available: code_template_catalog.is_service_available
-			add_from_template_menu_is_empty: add_from_template_menu.is_empty
 		local
 			l_cursor: DS_BILINEAR_CURSOR [!CODE_TEMPLATE_DEFINITION]
 			l_definition: !CODE_TEMPLATE_DEFINITION
@@ -638,10 +655,7 @@ feature {NONE} -- Actions handlers
 feature {SESSION_I} -- Event handlers
 
 	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
-			-- Called when a event item is added to the event service.
-			--
-			-- `a_session': The session where the value changed.
-			-- `a_id': The session data identifier of the changed value.
+			-- <Precursor>
 		local
 			l_mode: NATURAL_8_REF
 		do
@@ -651,6 +665,18 @@ feature {SESSION_I} -- Event handlers
 				if l_mode /= Void then
 					set_contract_mode (l_mode.item)
 				end
+			end
+		end
+
+feature {CODE_TEMPLATE_CATALOG_S} -- Event handlers
+
+	on_catalog_changed
+			-- <Precursor>
+		do
+			Precursor {CODE_TEMPLATE_CATALOG_OBSERVER}
+			if is_initialized then
+					-- Update the code templates menu
+				update_code_template_list
 			end
 		end
 

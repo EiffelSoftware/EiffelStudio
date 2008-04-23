@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision $"
 
 deferred class
-	EVENT_LIST_EVENT_OBSERVER
+	EVENT_LIST_OBSERVER
 
 inherit
 	EVENT_OBSERVER_I

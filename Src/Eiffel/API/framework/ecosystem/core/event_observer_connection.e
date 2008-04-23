@@ -13,7 +13,10 @@ deferred class
 inherit
 	EVENT_OBSERVER_CONNECTION_I [G]
 
-	SAFE_DISPOSABLE
+	SAFE_AUTO_DISPOSABLE
+		redefine
+			safe_dispose
+		end
 
 feature {NONE} -- Clean up
 
@@ -37,6 +40,7 @@ feature {NONE} -- Clean up
 					internal_connected_event_observers.wipe_out
 				end
 			end
+			Precursor {SAFE_AUTO_DISPOSABLE} (a_disposing)
 		ensure then
 			internal_connected_event_observers_is_empty: old internal_connected_event_observers /= Void implies (old internal_connected_event_observers).is_empty
 		end

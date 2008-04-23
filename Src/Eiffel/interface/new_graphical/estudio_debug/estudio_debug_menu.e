@@ -38,7 +38,8 @@ feature {NONE} -- Initialization
 
 	make_with_window (w: EV_WINDOW) is
 		local
-			menu_item: EV_MENU_ITEM
+			menu_item: !EV_MENU_ITEM
+			menu: !EV_MENU
 		do
 			window := w
 			default_create
@@ -67,6 +68,79 @@ feature {NONE} -- Initialization
 				--| Recenter all floating tools
 			create menu_item.make_with_text_and_action ("Center Floating tools", agent center_floating_tools)
 			extend (menu_item)
+
+			extend (create {EV_MENU_SEPARATOR})
+
+				--| Services
+			create menu.make_with_text ("Services")
+			extend (menu)
+			build_services_sub_menu (menu)
+		end
+
+	build_services_sub_menu (a_menu: !EV_MENU)
+			-- Builds the services submenu
+		require
+			not_a_menu_is_destroyed: not a_menu.is_destroyed
+		local
+			l_menu_item: !EV_MENU_ITEM
+		do
+			create l_menu_item.make_with_text_and_action ("Save All Session Data", agent save_session_data)
+			a_menu.extend (l_menu_item)
+			if not session_manager.is_service_available then
+				l_menu_item.disable_sensitive
+			end
+
+			create l_menu_item.make_with_text_and_action ("Restore All Session Data", agent restore_session_data)
+			a_menu.extend (l_menu_item)
+			if not session_manager.is_service_available then
+				l_menu_item.disable_sensitive
+			end
+
+			a_menu.extend (create {EV_MENU_SEPARATOR})
+
+			create l_menu_item.make_with_text_and_action ("Rescan Code Template Catalog", agent rescan_code_template_catalog)
+			a_menu.extend (l_menu_item)
+			if not code_template_catalog.is_service_available then
+				l_menu_item.disable_sensitive
+			end
+		end
+
+	save_session_data
+			-- Immediatly saves all the session data.
+		require
+			is_service_available: session_manager.is_service_available
+		do
+			session_manager.service.store_all
+		end
+
+	restore_session_data
+			-- Immediatly restores all the session data to the last saved state.
+		require
+			is_service_available: session_manager.is_service_available
+		do
+			session_manager.service.active_sessions.do_all (agent (session_manager.service).reload)
+		end
+
+	rescan_code_template_catalog
+			-- Rescans the code template catalog to retrieve updated templates and any new templates.
+		require
+			is_service_available: code_template_catalog.is_service_available
+		do
+			code_template_catalog.service.rescan_catalog
+		end
+
+feature {NONE} -- Services
+
+	frozen session_manager: !SERVICE_CONSUMER [SESSION_MANAGER_S]
+			-- Access to the session manager service
+		once
+			create Result
+		end
+
+	frozen code_template_catalog: !SERVICE_CONSUMER [CODE_TEMPLATE_CATALOG_S]
+			-- Access to the code template catalog service
+		once
+			create Result
 		end
 
 feature {NONE} -- Actions

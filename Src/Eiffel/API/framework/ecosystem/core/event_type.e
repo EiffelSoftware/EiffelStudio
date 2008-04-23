@@ -140,7 +140,6 @@ feature -- Publication
 			-- `a_args': Public context arguments to forward to all subscribers
 		require
 			not_is_zombie: not is_zombie
-			a_args_attached: a_args /= Void
 		local
 			l_actions: like suicide_actions
 		do

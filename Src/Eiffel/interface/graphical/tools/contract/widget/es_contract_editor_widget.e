@@ -538,7 +538,6 @@ feature -- Modification
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			has_context: has_context
-			not_a_tag_is_empty: not a_tag.is_empty
 			not_a_contract_is_empty: not a_contract.is_empty
 			a_line_source_is_editable: a_line.source.is_editable
 			a_line_is_editable: a_line.is_editable
@@ -802,7 +801,6 @@ feature {NONE} -- Population
 
 				if not l_editable then
 						-- Disable selection of non-editable rows
-					l_editor_item.disable_select
 					l_row.disable_select
 					a_row.disable_select
 				end
@@ -1027,7 +1025,13 @@ feature {NONE} -- Population
 			a_row.clear
 
 				-- Use an editor grid item to replicate the style
-			create l_editor_item.make_with_text (interface_names.t_contract_no_contracts.as_string_8)
+			if {l_pre: ES_PRECONDITION_CONTRACT_EDITOR_CONTEXT} context then
+				create l_editor_item.make_with_text (interface_names.t_contract_no_preconditions.as_string_8)
+			elseif {l_post: ES_POSTCONDITION_CONTRACT_EDITOR_CONTEXT} context then
+				create l_editor_item.make_with_text (interface_names.t_contract_no_postcondtions.as_string_8)
+			else
+				create l_editor_item.make_with_text (interface_names.t_contract_no_invariants.as_string_8)
+			end
 			l_editor_item.set_pixmap (stock_pixmaps.general_warning_icon)
 			l_editor_item.set_left_border (tab_indent_spacing)
 			a_row.set_item (contract_column, l_editor_item)

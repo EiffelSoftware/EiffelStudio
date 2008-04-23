@@ -53,12 +53,12 @@ feature -- Status report
 
 	is_ast_available: BOOLEAN
 			-- Indicates if the AST information is available.
-		require
-			is_prepared: is_prepared
 		do
-			Result := modified_data.is_ast_available
+			if modified_data.is_prepared then
+				Result := modified_data.is_ast_available
+			end
 		ensure
-			modified_data_is_ast_available: Result implies modified_data.is_ast_available
+			modified_data_is_ast_available: Result implies (modified_data.is_prepared and then modified_data.is_ast_available)
 		end
 
 feature -- Query

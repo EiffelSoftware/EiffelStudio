@@ -13,7 +13,7 @@ class
 inherit
 	CODE_TEMPLATE_CATALOG_S
 
-	SAFE_AUTO_DISPOSABLE
+	EVENT_OBSERVER_CONNECTION [!CODE_TEMPLATE_CATALOG_OBSERVER]
 
 	KL_SHARED_FILE_SYSTEM
 		export
@@ -28,6 +28,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes the code template catalog
 		do
+			create catalog_changed_event
+			auto_dispose (catalog_changed_event)
+
 			create cataloged_folder_files.make_default
 			create cataloged_template_definitions.make_default
 			if {PLATFORM}.is_windows and then {l_tester: !KL_EQUALITY_TESTER [!STRING]} create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER} then
@@ -180,6 +183,11 @@ feature -- Query
 			sort_templates_by_title (l_indexable)
 		end
 
+feature -- Events
+
+	catalog_changed_event: EVENT_TYPE [TUPLE]
+			-- <Precursor>
+
 feature {NONE} -- Helpers
 
 	logger_service: !SERVICE_CONSUMER [LOGGER_S]
@@ -197,9 +205,19 @@ feature -- Basic operations
 
 	rescan (a_folder: STRING_GENERAL)
 			-- <Precursor>
+		local
+			l_empty: BOOLEAN
 		do
-			remove_catalog (a_folder)
-			extend_catalog (a_folder)
+			l_empty := cataloged_folder_files.is_empty
+			if not catalog_changed_event.is_suspended then
+				catalog_changed_event.perform_suspended_action (agent rescan (a_folder))
+				if not l_empty or else l_empty /= cataloged_folder_files.is_empty then
+					catalog_changed_event.publish (Void)
+				end
+			elseif not l_empty then
+				remove_catalog (a_folder)
+				extend_catalog (a_folder)
+			end
 		ensure then
 			cataloged_folder_files_count_unchanged: cataloged_folder_files.count = old cataloged_folder_files.count
 		end
@@ -207,19 +225,28 @@ feature -- Basic operations
 	rescan_catalog
 			-- <Precursor>
 		local
-			l_keys: DS_BILINEAR [!STRING_8]
+			l_keys: DS_ARRAYED_LIST [!STRING_8]
+			l_empty: BOOLEAN
 		do
-			l_keys := cataloged_folder_files.keys.twin
+			if not catalog_changed_event.is_suspended then
+				l_empty := cataloged_folder_files.is_empty
+				catalog_changed_event.perform_suspended_action (agent rescan_catalog)
+				if not l_empty or else l_empty /= cataloged_folder_files.is_empty then
+					catalog_changed_event.publish (Void)
+				end
+			else
+				create l_keys.make_from_linear (cataloged_folder_files.keys)
 
-				-- Remove cataloged data.
-			cataloged_folder_files.wipe_out
-			cataloged_template_definitions.wipe_out
+					-- Remove cataloged data.
+				cataloged_folder_files.wipe_out
+				cataloged_template_definitions.wipe_out
 
-			if not l_keys.is_empty then
-					-- Extend catalogs
-				from l_keys.start until l_keys.after loop
-					extend_catalog (l_keys.item_for_iteration)
-					l_keys.forth
+				if not l_keys.is_empty then
+						-- Extend catalogs
+					from l_keys.start until l_keys.after loop
+						extend_catalog (l_keys.item_for_iteration)
+						l_keys.forth
+					end
 				end
 			end
 		ensure then
@@ -235,6 +262,7 @@ feature -- Extension
 			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_files: !DS_ARRAYED_LIST [!STRING_8]
 			l_file: !STRING_8
+			l_changed: BOOLEAN
 		do
 			l_files := file_utilities.scan_for_files (a_folder, -1, code_file_regex, Void)
 			if not l_files.is_empty then
@@ -252,6 +280,7 @@ feature -- Extension
 						l_definition.definition := build_template (l_files.item_for_iteration)
 						l_definition.ref_count := 1
 						l_definitions.force_last (l_definition, l_file)
+						l_changed := True
 
 						if l_definition.definition /= Void then
 								-- A new declaration was added, so invalidate the cached code templates
@@ -264,6 +293,10 @@ feature -- Extension
 
 				-- Extends the folder catalog
 			cataloged_folder_files.put (l_files, ({!STRING}) #? a_folder.as_string_8)
+
+			if l_changed then
+				catalog_changed_event.publish (Void)
+			end
 		end
 
 feature -- Removal
@@ -277,6 +310,7 @@ feature -- Removal
 			l_definition: TUPLE [definition: ?CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
 			l_file: !STRING_8
 			l_folder: !STRING_8
+			l_changed: BOOLEAN
 		do
 			l_folder ?= a_folder.as_string_8
 			l_catalog := cataloged_folder_files
@@ -291,6 +325,7 @@ feature -- Removal
 						l_definition.ref_count := l_definition.ref_count - 1
 						if l_definition.ref_count = 0 then
 							l_definitions.remove (l_file)
+							l_changed := True
 
 							if l_definition.definition /= Void then
 									-- An existing declaration was remove, so invalidate the cached code templates
@@ -307,6 +342,10 @@ feature -- Removal
 
 				-- Remove from the folder/file catalog.
 			l_catalog.remove (l_folder)
+
+			if l_changed then
+				catalog_changed_event.publish (Void)
+			end
 		end
 
 feature {NONE} -- Helpers
@@ -350,6 +389,7 @@ feature {NONE} -- Basic operations
 						l_parser_callbacks_set: l_parser.callbacks = l_callbacks
 					end
 					l_parser.parse_from_stream (l_resolver.last_stream)
+					l_resolver.last_stream.close
 					if not l_callbacks.has_error then
 							-- Successful parse, return the template.
 						Result := l_callbacks.last_code_template_definition
@@ -364,6 +404,10 @@ feature {NONE} -- Basic operations
 					end
 				end
 			else
+				if l_resolver.last_stream /= Void then
+					l_resolver.last_stream.close
+				end
+
 					-- Log failed load error
 				if logger_service.is_service_available then
 					logger_service.service.put_message_with_severity (

@@ -16,6 +16,17 @@ inherit
 
 	USABLE_I
 
+feature -- Access
+
+	active_sessions: !DS_ARRAYED_LIST [SESSION_I]
+			-- List of currently active sessions.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_has_attached_items: not Result.has (Void)
+		end
+
 feature -- Storage
 
 	store (a_session: SESSION_I)

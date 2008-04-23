@@ -1,94 +1,25 @@
 indexing
 	description: "[
-		A dialog used to edit an existing contract in the contract tool {ES_CONTRACT_TOOL}.
+		An observer for events implemented on a {CODE_TEMPLATE_CATALOG_S} service interface.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	ES_EDIT_CONTRACT_DIALOG
+deferred class
+	CODE_TEMPLATE_CATALOG_OBSERVER
 
 inherit
-	ES_ADD_CONTRACT_DIALOG
-		redefine
-			on_after_initialized,
-			internal_recycle,
-			icon,
-			title,
-			on_ok
-		end
+	EVENT_OBSERVER_I
 
-	ES_MODIFIABLE
-		redefine
-			internal_recycle
-		end
+feature {CODE_TEMPLATE_CATALOG_S} -- Event handlers
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	on_after_initialized
-			-- <Precursor>
-		do
-			Precursor
-			set_is_dirty (False)
-		ensure then
-			not_is_dirty: not is_dirty
-		end
-
-feature {NONE} -- Clean up
-
-	internal_recycle
-			-- <Precursor>
-		do
-			Precursor {ES_ADD_CONTRACT_DIALOG}
-			Precursor {ES_MODIFIABLE}
-		end
-
-feature -- Element change
-
-	set_contract (a_tag: !STRING_GENERAL; a_contract: !STRING_GENERAL)
-			-- Set the contract text.
+	on_catalog_changed
+			-- Called when the code template catalog is updated in any respect.
 		require
 			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			not_a_contract_is_empty: not a_contract.is_empty
 		do
-			tag_text.set_text (({!STRING_32}) #? a_tag.as_string_32)
-			contract_editor.load_text (a_contract.as_string_8)
-			set_is_dirty (False)
-		ensure
-			not_is_dirty: not is_dirty
-			--tag_text_set: a_tag.is_equal (tag_text.text.as_string_8)
-			--contract_editor_text_set: contract_editor.text.is_equal (a_contract)
-		end
-
-feature -- Dialog access
-
-	icon: EV_PIXEL_BUFFER
-			-- <Precursor>
-		once
-			Result := stock_pixmaps.tool_contract_editor_icon_buffer
-		end
-
-	title: STRING_32
-			-- <Precursor>
-		do
-			Result := "Edit Contract"
-		end
-
-feature {NONE} -- Action handler
-
-	on_ok
-			-- <Precursor>
-		do
-			Precursor
-			set_is_dirty (True)
-		ensure then
-			is_dirty: is_dirty
 		end
 
 ;indexing

@@ -92,7 +92,9 @@ feature {NONE} -- Initialization
 			register_kamikaze_action (show_actions, agent
 				do
 					tag_text.text_field.set_focus
-					tag_text.text_field.select_all
+					if not tag_text.text_field.text.is_empty then
+						tag_text.text_field.select_all
+					end
 				end)
 
 				-- Set default contract text
@@ -170,7 +172,7 @@ feature {NONE} -- Validation
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if contract_tag_name_regex.matches (a_text.as_string_8) then
+			if a_text.is_empty or else contract_tag_name_regex.matches (a_text.as_string_8) then
 				Result := [True, Void]
 			else
 				Result := [False, ("The contract tag name is not a valid Eiffel identifier.").as_string_32]

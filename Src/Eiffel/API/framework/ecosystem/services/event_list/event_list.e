@@ -14,12 +14,7 @@ class
 inherit
 	EVENT_LIST_S
 
-	EVENT_OBSERVER_CONNECTION [!EVENT_LIST_EVENT_OBSERVER]
-		redefine
-			safe_dispose
-		end
-
-	SAFE_DISPOSABLE
+	EVENT_OBSERVER_CONNECTION [!EVENT_LIST_OBSERVER]
 
 create
 	make
@@ -34,41 +29,24 @@ feature {NONE} -- Initialization
 
 				-- Initialize events
 			create item_added_event
+			auto_dispose (item_added_event)
 			create item_removed_event
+			auto_dispose (item_removed_event)
 			create item_changed_event
+			auto_dispose (item_changed_event)
 			create item_adopted_event
-		end
-
-feature {NONE} -- Clean up
-
-	safe_dispose (a_disposing: BOOLEAN) is
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-			--
-			-- `a_disposing': True if Current is being explictly disposed of, False to indicate finalization.
-		do
-			if a_disposing then
-				item_added_event.dispose
-				item_removed_event.dispose
-				item_changed_event.dispose
-				item_adopted_event.dispose
-			end
-
-			Precursor {EVENT_OBSERVER_CONNECTION} (a_disposing)
+			auto_dispose (item_adopted_event)
 		end
 
 feature -- Access
 
 	items (a_context_cookie: UUID): DS_BILINEAR [EVENT_LIST_ITEM_I]
-			-- Retrieves all event items associated with a context.
-			--
-			-- `a_context_cookie': A context identifier to retrieve all events for.
-			-- `Result': A list of events associated to the specified context.
+			-- <Precursor>
 		do
 			if internal_event_items_index.has (a_context_cookie) then
 				Result := internal_event_items_index.item (a_context_cookie)
 			end
-			
+
 			if Result = Void then
 					-- It's possible that an invalid context was specified.
 				create {DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]}Result.make (0)
@@ -76,7 +54,7 @@ feature -- Access
 		end
 
 	all_items: DS_BILINEAR [EVENT_LIST_ITEM_I]
-			-- Retrieves all events managed by the current event service
+			-- <Precursor>
 		do
 			Result := internal_event_items
 		end
@@ -84,10 +62,7 @@ feature -- Access
 feature -- Extension
 
 	put_event_item (a_context_cookie: UUID; a_event_item: EVENT_LIST_ITEM_I)
-			-- Add a context-bound event item to the list of events managed by this service.
-			--
-			-- `a_context_cookie': A context identifier used to manage the added event.
-			-- `a_event_item': Event items to add to the list of managed events.
+			-- <Precursor>
 		local
 			l_event_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
 		do
@@ -110,9 +85,7 @@ feature -- Extension
 feature -- Removal
 
 	prune_event_item (a_event_item: EVENT_LIST_ITEM_I)
-			-- Removes a event item from the list of events managed by this service.
-			--
-			-- `a_event_item': Event items to remove from the list of managed events.
+			-- <Precursor>
 		local
 			l_event_items_cursor: DS_ARRAYED_LIST_CURSOR [EVENT_LIST_ITEM_I]
 			l_index_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [EVENT_LIST_ITEM_I], UUID]
@@ -150,9 +123,7 @@ feature -- Removal
 		end
 
 	prune_event_items (a_context_cookie: UUID)
-			-- Removes all event items, from the list of events managed by this service, associated with a context.
-			--
-			-- `a_context_cookie': The context identifier to remove all events for.
+			-- <Precursor>
 		local
 			l_index_events: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
 			l_event_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
@@ -189,10 +160,7 @@ feature -- Removal
 feature -- Basic operations
 
 	adopt_event_item (a_new_cookie: UUID; a_event_item: EVENT_LIST_ITEM_I)
-			-- Allows another parent to adopt an existing event item, using the new parent's context identifier.
-			--
-			-- `a_new_cookie': A context identifier used to manage the adopted event.
-			-- `a_event_item': Event list items in the list of managed events.
+			-- <Precursor>
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [EVENT_LIST_ITEM_I], UUID]
 			l_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
@@ -238,16 +206,16 @@ feature -- Basic operations
 feature -- Events
 
 	item_added_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
-			-- Events called when an event list item is added
+			-- <Precursor>
 
 	item_removed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
-			-- Events called when an event list item is removed
+			-- <Precursor>
 
 	item_changed_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I]]
-			-- Events called when an event list item is changed
+			-- <Precursor>
 
 	item_adopted_event: EVENT_TYPE [TUPLE [service: EVENT_LIST_S; event_item: EVENT_LIST_ITEM_I; new_cookie: UUID; old_cookie: UUID]]
-			-- Events called when an event list item is adopted by another parent
+			-- <Precursor>
 
 feature {NONE} -- Events
 

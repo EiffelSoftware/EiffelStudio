@@ -735,8 +735,8 @@ feature -- Menu entries
 	m_edit_preconditions: STRING_GENERAL is 			do Result := locale.translation ("&Preconditions") end
 	m_edit_postconditions: STRING_GENERAL is 			do Result := locale.translation ("P&ostconditions") end
 	m_edit_invariants: STRING_GENERAL is 				do Result := locale.translation ("&Invariants") end
-	m_contract_add_contract: STRING_GENERAL 			do Result := locale.translation ("&Add Contract...") end
-	m_contract_add_contract_from_template: STRING_GENERAL do Result := locale.translation ("&Add Contract from Template") end
+	m_contract_add_contract: STRING_GENERAL 			do Result := locale.translation ("&Add Custom...") end
+	m_contract_add_contract_from_template: STRING_GENERAL do Result := locale.translation ("&Add from Template") end
 
 	m_edit_feature_contracts (a_name: STRING_GENERAL): STRING_GENERAL
 		do Result := locale.formatted_string (locale.translation ("Ed&it Contracts for '$1'"), [a_name]) end
@@ -2258,19 +2258,21 @@ feature -- Title part
 	t_code_template_evaluator: STRING_GENERAL is		do Result := locale.translation ("Code Template Evaluator") end
 
 		-- Contract tool
-	t_contract_save_to_class: STRING_GENERAL 			do Result := locale.translation ("Save modifications to class.") end
+	t_contract_save_to_class: STRING_GENERAL 			do Result := locale.translation ("Saves modifications to the associated class.") end
 	t_contract_add_contract: STRING_GENERAL				do Result := locale.translation ("Adds a new contract.") end
 	t_contract_remove_selected: STRING_GENERAL			do Result := locale.translation ("Removes the selected contract.") end
-	t_contract_edit_selected: STRING_GENERAL 			do Result := locale.translation ("Edit the selected contract.") end
-	t_contract_move_selected_up: STRING_GENERAL 		do Result := locale.translation ("Move the selected contract up.") end
-	t_contract_move_selected_down: STRING_GENERAL 		do Result := locale.translation ("Move the selected contract down.") end
-	t_contract_refresh: STRING_GENERAL 					do Result := locale.translation ("Refresh the current contracts to include an undetected changes.") end
-	t_contract_select_mode: STRING_GENERAL 				do Result := locale.translation ("Select the contracts to edit.") end
+	t_contract_edit_selected: STRING_GENERAL 			do Result := locale.translation ("Edits the selected contract.") end
+	t_contract_move_selected_up: STRING_GENERAL 		do Result := locale.translation ("Moves the selected contract up.") end
+	t_contract_move_selected_down: STRING_GENERAL 		do Result := locale.translation ("Moves the selected contract down.") end
+	t_contract_refresh: STRING_GENERAL 					do Result := locale.translation ("Refreshes the current contracts to include any unsaved, undetected editor changes.") end
+	t_contract_select_mode: STRING_GENERAL 				do Result := locale.translation ("Selects the type of contracts to edit.") end
 	t_contract_show_all_lines: STRING_GENERAL 			do Result := locale.translation ("Shows/hides the hidden contract place holders for inherited contracts.") end
-	t_contract_show_callers: STRING_GENERAL 			do Result := locale.translation ("Show the callers of the currently edited feature.") end
-	t_contract_syntax_error_1: STRING_GENERAL 			do Result := locale.translation ("The contracts cannot be show for class ") end
+	t_contract_show_callers: STRING_GENERAL 			do Result := locale.translation ("Shows the callers of the currently edited feature.") end
+	t_contract_syntax_error_1: STRING_GENERAL 			do Result := locale.translation ("The contracts cannot be shown for class ") end
 	t_contract_syntax_error_2: STRING_GENERAL 			do Result := locale.translation (" because it contains syntax errors.") end
-	t_contract_no_contracts: STRING_GENERAL 			do Result := locale.translation ("No contracts found.") end
+	t_contract_no_preconditions: STRING_GENERAL 		do Result := locale.translation ("No preconditions added yet.") end
+	t_contract_no_postcondtions: STRING_GENERAL 		do Result := locale.translation ("No postconditions added yet.") end
+	t_contract_no_invariants: STRING_GENERAL 			do Result := locale.translation ("No invariants added yet.") end
 
 feature -- Sub titles
 

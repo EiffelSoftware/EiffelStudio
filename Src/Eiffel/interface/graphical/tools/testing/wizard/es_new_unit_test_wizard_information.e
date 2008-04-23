@@ -98,16 +98,16 @@ feature -- Query
 	features_to_test: ARRAYED_LIST [E_FEATURE]
 			-- Features in `class_under_test' which will be tested.
 
-	is_on_before_test_runs_selected: BOOLEAN
+	is_run_before_all_selected: BOOLEAN
 			-- If `on_before_all_test_runs' check box selected?
 
-	is_on_after_test_runs_selected: BOOLEAN
+	is_run_after_all_selected: BOOLEAN
 			-- If `on_after_all_test_runs' check box selected?
 
-	is_on_before_test_run_selected: BOOLEAN
+	is_run_before_each_selected: BOOLEAN
 			-- If `on_before_test_run' check box selected?						
 
-	is_on_after_test_run_selected: BOOLEAN
+	is_run_after_each_selected: BOOLEAN
 			-- If `on_after_test_run' check box selected?
 
 	is_add_frozen_feature_stubs_selected: BOOLEAN
@@ -197,39 +197,39 @@ feature -- Command
 			set: internal_cluster_sub_path = a_path
 		end
 
-	set_is_on_after_all_test_runs_selected (a_bool: like is_on_after_test_runs_selected) is
-			-- Set `is_on_after_test_runs_selected' with `a_bool'
+	set_run_after_all_selected (a_bool: like is_run_after_all_selected) is
+			-- Set `is_run_after_all_selected' with `a_bool'
 		do
-			is_on_after_test_runs_selected := a_bool
+			is_run_after_all_selected := a_bool
 		ensure
-			set: is_on_after_test_runs_selected = a_bool
+			set: is_run_after_all_selected = a_bool
 		end
 
-	set_is_on_before_all_test_runs_selected (a_bool: like is_on_before_test_runs_selected) is
-			-- Set `is_on_before_test_runs_selected' with `a_bool'
+	set_run_before_all_selected (a_bool: like is_run_before_all_selected) is
+			-- Set `is_run_before_all_selected' with `a_bool'
 		do
-			is_on_before_test_runs_selected := a_bool
+			is_run_before_all_selected := a_bool
 		ensure
-			set: is_on_before_test_runs_selected = a_bool
+			set: is_run_before_all_selected = a_bool
 		end
 
-	set_is_on_before_test_run_selected (a_bool: like is_on_before_test_run_selected) is
-			-- Set `is_on_before_test_run_selected' with `a_bool'
+	set_run_before_each_selected (a_bool: like is_run_before_each_selected) is
+			-- Set `is_run_before_each_selected' with `a_bool'
 		do
-			is_on_before_test_run_selected := a_bool
+			is_run_before_each_selected := a_bool
 		ensure
-			set: is_on_before_test_run_selected = a_bool
+			set: is_run_before_each_selected = a_bool
 		end
 
-	set_is_on_after_test_run_selected (a_bool: like is_on_after_test_run_selected) is
-			-- Set `is_on_after_test_run_selected' with `a_bool'
+	set_run_after_each_selected (a_bool: like is_run_after_each_selected) is
+			-- Set `is_run_after_each_selected' with `a_bool'
 		do
-			is_on_after_test_run_selected := a_bool
+			is_run_after_each_selected := a_bool
 		ensure
-			set: is_on_after_test_run_selected = a_bool
+			set: is_run_after_each_selected = a_bool
 		end
 
-	set_is_add_frozen_feature_stubs_selected (a_bool: like is_add_frozen_feature_stubs_selected) is
+	set_add_frozen_feature_stubs_selected (a_bool: like is_add_frozen_feature_stubs_selected) is
 			-- Set `is_add_frozen_feature_stubs_selected' with `a_bool'
 		do
 			is_add_frozen_feature_stubs_selected := a_bool
@@ -237,7 +237,7 @@ feature -- Command
 			set: is_add_frozen_feature_stubs_selected = a_bool
 		end
 
-	set_is_add_to_be_implemented_selected (a_bool: like is_add_to_be_implemented_selected) is
+	set_add_to_be_implemented_selected (a_bool: like is_add_to_be_implemented_selected) is
 			-- Set `is_add_to_be_implemented_selected' with `a_bool'
 		do
 			is_add_to_be_implemented_selected := a_bool

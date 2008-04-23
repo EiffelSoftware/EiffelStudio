@@ -250,13 +250,13 @@ feature {NONE} -- Wizard UI Implementation
 	on_add_to_be_implemented_checks_selected is
 			-- On `add_to_be_implemented_checks' selected
 		do
-			wizard_information.set_is_add_to_be_implemented_selected (add_to_be_implemented_checks.is_selected)
+			wizard_information.set_add_to_be_implemented_selected (add_to_be_implemented_checks.is_selected)
 		end
 
 	on_add_frozen_feature_stubs_selected is
 			-- On `add_frozen_feature_stubs' selected
 		do
-			wizard_information.set_is_add_frozen_feature_stubs_selected (add_frozen_feature_stubs.is_selected)
+			wizard_information.set_add_frozen_feature_stubs_selected (add_frozen_feature_stubs.is_selected)
 		end
 
 	check_feature_clause_sub_notes (a_item: EV_TREE_ITEM; a_check: BOOLEAN)

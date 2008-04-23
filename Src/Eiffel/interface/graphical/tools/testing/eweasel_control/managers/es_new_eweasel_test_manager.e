@@ -253,14 +253,14 @@ feature {NONE} -- Implementation
 			l_features_to_test: ARRAYED_LIST [E_FEATURE]
 			l_feature_test_content: STRING
 		do
-			if wizard_information.is_on_before_test_runs_selected then
-				a_file_content.replace_substring_all (start_test_class_actions_in_make_template_string, "%N%T%T%T" + on_before_test_runs_string)
+			if wizard_information.is_run_before_all_selected then
+				a_file_content.replace_substring_all (start_test_class_actions_in_make_template_string, "%N%T%T%T" + run_before_all_string)
 			else
 				a_file_content.replace_substring_all (start_test_class_actions_in_make_template_string, "")
 			end
 
-			if wizard_information.is_on_after_test_runs_selected then
-				a_file_content.replace_substring_all (after_test_class_actions_in_make_template_string, "%N%N%T%T%T" + on_after_test_runs_string)
+			if wizard_information.is_run_after_all_selected then
+				a_file_content.replace_substring_all (after_test_class_actions_in_make_template_string, "%N%N%T%T%T" + run_after_all_string)
 			else
 				a_file_content.replace_substring_all (after_test_class_actions_in_make_template_string, "")
 			end
@@ -276,14 +276,14 @@ feature {NONE} -- Implementation
 				loop
 					l_feature_test_content.append ("%N")
 
-					if wizard_information.is_on_before_test_run_selected then
-						l_feature_test_content.append ("%N%T%T%T" + on_before_test_run_string)
+					if wizard_information.is_run_before_each_selected then
+						l_feature_test_content.append ("%N%T%T%T" + run_before_each_string)
 					end
 
 					l_feature_test_content.append ("%N%T%T%T" + test_feature_name (l_features_to_test.item.name))
 
-					if wizard_information.is_on_after_test_run_selected then
-						l_feature_test_content.append ("%N%T%T%T" + on_after_test_run_string)
+					if wizard_information.is_run_after_each_selected then
+						l_feature_test_content.append ("%N%T%T%T" + run_after_each_string)
 					end
 
 					l_features_to_test.forth
@@ -307,24 +307,23 @@ feature {NONE} -- Implementation
 		local
 			l_redefined_features: STRING
 		do
-			if wizard_information.is_on_after_test_runs_selected or wizard_information.is_on_after_test_run_selected or
-				wizard_information.is_on_before_test_runs_selected or wizard_information.is_on_before_test_run_selected then
+			if wizard_information.is_run_after_all_selected or wizard_information.is_run_after_each_selected or
+				wizard_information.is_run_before_all_selected or wizard_information.is_run_before_each_selected then
 
 				create l_redefined_features.make_empty
 
-				if wizard_information.is_on_after_test_runs_selected then
-					l_redefined_features.append ("%N%N%T" + feature_content(on_after_test_runs_string, "Do cleanup work after all test runs"))
+				if wizard_information.is_run_before_all_selected then
+					l_redefined_features.append ("%N%N%T" + feature_content(run_before_all_string, "Do prepare work before all test runs"))
 				end
-				if wizard_information.is_on_after_test_run_selected then
-					l_redefined_features.append ("%N%N%T" + feature_content(on_after_test_run_string, "Do cleanup work after a test run"))
+				if wizard_information.is_run_before_each_selected then
+					l_redefined_features.append ("%N%N%T" + feature_content(run_before_each_string, "Do prepare work before a test run"))
 				end
-				if wizard_information.is_on_before_test_runs_selected then
-					l_redefined_features.append ("%N%N%T" + feature_content(on_before_test_runs_string, "Do prepare work before all test runs"))
+				if wizard_information.is_run_after_each_selected then
+					l_redefined_features.append ("%N%N%T" + feature_content(run_after_each_string, "Do cleanup work after a test run"))
 				end
-				if wizard_information.is_on_before_test_run_selected then
-					l_redefined_features.append ("%N%N%T" + feature_content(on_before_test_run_string, "Do prepare work before a test run"))
+				if wizard_information.is_run_after_all_selected then
+					l_redefined_features.append ("%N%N%T" + feature_content(run_after_all_string, "Do cleanup work after all test runs"))
 				end
-
 				a_file_content.replace_substring_all (start_after_test_actions_template_string, l_redefined_features)
 			else
 				-- None selected, we should remove all of them
@@ -551,28 +550,44 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_tcf_template.txt")
 		end
 
-	on_before_test_runs_string: !STRING is
+	run_before_all_string: !STRING is
 			-- Predefined feature name
 		do
-			create Result.make_from_string ("on_before_test_runs")
+			if {l_string: STRING} interface_names.l_run_before_all then
+				Result := l_string
+			else
+				check not_possible: False end
+			end
 		end
 
-	on_after_test_runs_string: !STRING is
+	run_after_all_string: !STRING is
 			-- Predefined feature name
 		do
-			create Result.make_from_string ("on_after_test_runs")
+			if {l_string: STRING} interface_names.l_run_after_all then
+				Result := l_string
+			else
+				check not_possible: False end
+			end
 		end
 
-	on_before_test_run_string: !STRING is
+	run_before_each_string: !STRING is
 			-- Predefined feature name
 		do
-			create Result.make_from_string ("on_before_test_run")
+			if {l_string: STRING} interface_names.l_run_before_each then
+				Result := l_string
+			else
+				check not_possible: False end
+			end
 		end
 
-	on_after_test_run_string: !STRING is
+	run_after_each_string: !STRING is
 			-- Predefined feature name
 		do
-			create Result.make_from_string ("on_after_test_run")
+			if {l_string: STRING} interface_names.l_run_after_each then
+				Result := l_string
+			else
+				check not_possible: False end
+			end
 		end
 
 	start_after_test_actions_template_string: !STRING is

@@ -16,6 +16,7 @@ compile_melted
 compile_result 	 ok
 
 execute_work 	 NONE exec_output1
+execute_result   ok
 compare 	 exec_output1 output1
 
 define		 BIT_LENGTH "11"
@@ -24,6 +25,7 @@ compile_melted
 compile_result 	 ok
 
 execute_work 	 NONE exec_output2
+execute_result   ok
 compare 	 exec_output2 output2
 
 test_end

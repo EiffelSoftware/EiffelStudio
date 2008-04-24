@@ -38,7 +38,13 @@ feature
 				second_trace := exception_trace
 				if not first_trace.is_equal (second_trace) then
 					print ("Not the same trace%N")
-					die (1)
+					io.new_line
+					print ("First trace:%N")
+					print (first_trace)
+					io.new_line
+					print ("Second trace:%N")
+					print (second_trace)
+					die (0)
 				end
 			end
 			retry;

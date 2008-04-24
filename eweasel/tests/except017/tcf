@@ -6,12 +6,7 @@ copy_raw 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 
 compile_melted
-compile_result 	 ok
-
-compile_melted
 compile_result 	ok
-c_compile_work
-c_compile_result ok
 execute_work	NONE exec_output
 execute_result ok
 if DOTNET compare		exec_output output_dotnet

@@ -18,6 +18,16 @@
 			<warning name="vweq" enabled="false"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<external_include location=". `$ISE_LIBRARY/library/encoding/implementation/unix/Clib/iconv-config --include_path`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_library location="`$ISE_LIBRARY/library/encoding/implementation/unix/Clib/iconv-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_library>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="encoding" location=".\">
 			<option namespace="Encoding">

@@ -165,7 +165,7 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -I/usr/local/include'
+	ccflags='-pipe'
 fi
 ccldflags=''
 if [ -n "$CPP" ]; then

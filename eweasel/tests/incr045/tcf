@@ -15,6 +15,7 @@ compile_melted
 compile_result 	ok
 
 execute_work NONE exec_output1
+execute_result  ok
 compare exec_output1 output1
 
 copy_raw 	test_rev1.e $CLUSTER test.e

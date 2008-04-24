@@ -4,10 +4,7 @@ test_description Show correct behaviors of `is_developer_exception_of_name', `as
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 
-compile_melted
-compile_result 	 ok
-
-compile_melted
+compile_frozen
 compile_result 	ok
 c_compile_work
 c_compile_result ok

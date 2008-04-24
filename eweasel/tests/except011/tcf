@@ -8,8 +8,6 @@ copy_raw 	application.e $CLUSTER application.e
 
 compile_melted
 compile_result 	ok
-c_compile_work
-c_compile_result ok
 execute_work	NONE exec_output
 execute_result ok
 if DOTNET compare		exec_output output1

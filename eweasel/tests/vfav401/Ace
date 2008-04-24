@@ -78,6 +78,12 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 					<dotnet value="true"/>
 				</condition>
 			</file_rule>
+			<file_rule>
+				<exclude>/kernel/exceptions/exception.e$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
+			</file_rule>
 		</cluster>
 		<cluster name="ise" location="$BASE_ISE" recursive="true">
 			<file_rule>

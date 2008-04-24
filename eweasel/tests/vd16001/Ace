@@ -39,7 +39,11 @@
 		</cluster>
 		$KERNEL_DOTNET
 		<cluster name="exceptions_ise" location="$EXCEPTIONS_ISE\" recursive="True"/>
-		<cluster name="exceptions_elks" location="$EXCEPTIONS_ELKS\" recursive="True"/>
+		<cluster name="exceptions_elks" location="$EXCEPTIONS_ELKS\" recursive="True">
+			<file_rule>
+				<exclude>/exception.e$</exclude>
+			</file_rule>
+		</cluster>
 		<cluster name="list" location="$LIST\"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 		<cluster name="set" location="$SET\" recursive="True"/>

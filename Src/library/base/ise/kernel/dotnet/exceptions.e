@@ -35,31 +35,37 @@ feature -- Status report
 			-- Is last exception originally due to a violated
 			-- assertion or non-decreasing variant?
 		local
-			l_exception: ASSERTION_VIOLATION
+			l_exception: EXCEPTION
+			l_av: ASSERTION_VIOLATION
 		do
-			l_exception ?= exception_manager.last_exception
-			Result := (l_exception /= Void)
+			l_exception := exception_manager.last_exception
+			if l_exception /= Void then
+				l_av ?= l_exception.original
+				Result := (l_av /= Void)
+			end
 		end
 
 	is_developer_exception: BOOLEAN is
 			-- Is the last exception originally due to
 			-- a developer exception?
 		local
-			l_exception: DEVELOPER_EXCEPTION
+			l_exception: EXCEPTION
+			l_de: DEVELOPER_EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
-			Result := (l_exception /= Void)
+			l_exception := exception_manager.last_exception
+			if l_exception /= Void then
+				l_de ?= l_exception.original
+				Result := (l_de /= Void)
+			end
 		end
 
 	is_developer_exception_of_name (name: STRING): BOOLEAN is
 			-- Is the last exception originally due to a developer
 			-- exception of name `name'?
-		local
-			l_exception: DEVELOPER_EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
-			Result := is_developer_exception and then
-						equal (name, l_exception.message)
+			if is_developer_exception then
+				Result := equal (name, developer_exception_name)
+			end
 		end
 
 	developer_exception_name: STRING is
@@ -67,9 +73,9 @@ feature -- Status report
 		require
 			applicable: is_developer_exception
 		local
-			l_exception: DEVELOPER_EXCEPTION
+			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception ?= exception_manager.last_exception.original
 			Result := l_exception.message
 		end
 
@@ -77,10 +83,14 @@ feature -- Status report
 			-- Is last exception originally due to an external
 			-- event (operating system signal)?
 		local
-			l_exception: OPERATING_SYSTEM_SIGNAL_FAILURE
+			l_exception: EXCEPTION
+			l_sf: OPERATING_SYSTEM_SIGNAL_FAILURE
 		do
-			l_exception ?= exception_manager.last_exception
-			Result := (l_exception /= Void)
+			l_exception := exception_manager.last_exception
+			if l_exception /= Void then
+				l_sf ?= l_exception.original
+				Result := (l_sf /= Void)
+			end
 		end
 
 	is_system_exception: BOOLEAN is
@@ -88,16 +98,19 @@ feature -- Status report
 			-- external event (operating system error)?
 		local
 
-			l_system_failure: SYS_EXCEPTION
+			l_sf: OPERATING_SYSTEM_FAILURE
 			l_exception, l_external: EXCEPTION
 		do
 			l_exception := exception_manager.last_exception
-			l_external := exception_manager.exception_from_code (external_exception)
-			if l_exception /= Void and then l_external /= Void then
-				Result := l_exception.conforms_to (l_external)
-				if not Result then
-					l_system_failure ?= l_exception
-					Result := (l_system_failure /= Void)
+			if l_exception /= Void then
+				l_exception := l_exception.original
+				l_external := exception_manager.exception_from_code (external_exception)
+				if l_external /= Void then
+					Result := l_exception.conforms_to (l_external)
+					if not Result then
+						l_sf ?= l_exception
+						Result := (l_sf /= Void)
+					end
 				end
 			end
 		end
@@ -107,7 +120,7 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
 				Result := l_exception.message
 			end
@@ -119,7 +132,7 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
 				Result := l_exception.recipient_name
 			end
@@ -131,7 +144,7 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
 				Result := l_exception.type_name
 			end
@@ -142,7 +155,7 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
 				Result := l_exception.code
 			end
@@ -153,9 +166,9 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
-				Result := l_exception.exception_trace
+				Result := l_exception.original.exception_trace
 			end
 		end
 
@@ -165,7 +178,7 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
 				Result := l_exception.original.message
 			end
@@ -177,7 +190,7 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
 				Result := l_exception.original.code
 			end
@@ -189,7 +202,7 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
 				Result := l_exception.original.recipient_name
 			end
@@ -201,7 +214,7 @@ feature -- Status report
 		local
 			l_exception: EXCEPTION
 		do
-			l_exception ?= exception_manager.last_exception
+			l_exception := exception_manager.last_exception
 			if l_exception /= Void then
 				Result := l_exception.original.type_name
 			end

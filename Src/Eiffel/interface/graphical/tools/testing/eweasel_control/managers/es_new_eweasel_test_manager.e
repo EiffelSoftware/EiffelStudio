@@ -404,12 +404,8 @@ feature {NONE} -- Implementation
 			valid: wizard_information /= Void
 		do
 			create Result.make_empty
-			if wizard_information.is_add_frozen_feature_stubs_selected then
-				Result.append ("frozen " + a_feature_name + " is %N")
-			else
-				Result.append (a_feature_name + " is %N")
-			end
-
+			Result.append (a_feature_name + " is %N")
+		
 			if a_comment /= Void then
 				Result.append ("			-- " + a_comment + "%N")
 			else

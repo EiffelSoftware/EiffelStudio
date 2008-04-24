@@ -23,7 +23,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
-		<external_library location="`$ISE_LIBRARY/library/encoding/implementation/unix/Clib/iconv-config --library`">
+		<external_library location="`$(ISE_LIBRARY)/library/encoding/implementation/unix/Clib/iconv-config --library`">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>

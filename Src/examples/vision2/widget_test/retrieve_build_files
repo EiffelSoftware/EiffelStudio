@@ -2,7 +2,7 @@
 
 # Check out the appropriate tag depending on arguments
 if [ $# -eq 0 ]; then
-	svntag="https://eiffelsoftware.origo.ethz.ch/svn/es/trunk"
+	svntag="https://svn.origo.ethz.ch/eiffelstudio/trunk"
 else
 	svntag=$*
 fi

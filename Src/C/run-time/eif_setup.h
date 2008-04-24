@@ -124,7 +124,8 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	if ( ((echval) = setjmp(exenv)) ) \
 		fail_func(); \
 	if (root_obj == (char *)0) \
-		root_obj = cmalloc(1);
+		root_obj = cmalloc(1); \
+	init_emnger();
 #else	/* !_CRAY */
 #define EIF_RT_BASIC_SETUP(fail_func) \
 	EIF_GET_CONTEXT \
@@ -138,7 +139,8 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	if ( setjmp(exenv)) \
 		fail_func(); \
 	if (root_obj == (char *)0) \
-		root_obj = cmalloc(1);
+		root_obj = cmalloc(1); \
+	init_emnger();
 #endif	/* !_CRAY */
 
 #define EIF_RT_BASIC_CLEANUP \

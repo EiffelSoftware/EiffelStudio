@@ -3567,7 +3567,8 @@ rt_public void draise(long code, char *meaning, char *message)
 		}
 		trace->ex_linenum = line_number;	/* Save line number in trace */
 	}
-
+	SIGRESUME;			/* End of critical section, dispatch queued signals */	
+	
 	make_exception (code, -1, -1, echtg, reci_name, Origin(eclass), "", "", -1, 0, 0);
 
 #ifndef NOHOOK
@@ -3846,8 +3847,11 @@ rt_public void init_emnger (void)
 	 */
 {
 	RT_GET_CONTEXT
-
-	except_mnger = RTLNSMART(egc_except_emnger_dtype);
+	
+		/* No need to create the global instance, when it has already been created by one thread. */
+	if (!except_mnger){	
+		except_mnger = RTLNSMART(egc_except_emnger_dtype);
+	}
 	ex_string.used = 0;
 	ex_string.size = TRACE_SZ;
 	ex_string.area = (char *) eif_malloc(TRACE_SZ);

@@ -742,6 +742,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 #ifdef WORKBENCH
 		dnotify_create_thread((EIF_THR_TYPE) eif_thr_id);
 #endif
+		init_emnger(); /* Initialize objects hold by exception manager */
 		(FUNCTION_CAST(void,(EIF_REFERENCE)) execute)(eif_access(routine_ctxt->current));
 
 		exok();

@@ -1,6 +1,6 @@
 @echo off
 if .%1. == .. (
-set SVN_URL=https://eiffelsoftware.origo.ethz.ch/svn/es/trunk
+set SVN_URL=https://svn.origo.ethz.ch/eiffelstudio/trunk
 ) else (
 set SVN_URL=%*
 )

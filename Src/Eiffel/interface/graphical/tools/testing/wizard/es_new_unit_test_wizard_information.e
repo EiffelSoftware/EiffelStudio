@@ -110,9 +110,6 @@ feature -- Query
 	is_run_after_each_selected: BOOLEAN
 			-- If `on_after_test_run' check box selected?
 
-	is_add_frozen_feature_stubs_selected: BOOLEAN
-			-- If `add_forzen_feature_stubs' check box selected?
-
 	is_add_to_be_implemented_selected: BOOLEAN
 			-- If `add_to_be_implemented' check box selected?
 
@@ -227,14 +224,6 @@ feature -- Command
 			is_run_after_each_selected := a_bool
 		ensure
 			set: is_run_after_each_selected = a_bool
-		end
-
-	set_add_frozen_feature_stubs_selected (a_bool: like is_add_frozen_feature_stubs_selected) is
-			-- Set `is_add_frozen_feature_stubs_selected' with `a_bool'
-		do
-			is_add_frozen_feature_stubs_selected := a_bool
-		ensure
-			set: is_add_frozen_feature_stubs_selected = a_bool
 		end
 
 	set_add_to_be_implemented_selected (a_bool: like is_add_to_be_implemented_selected) is

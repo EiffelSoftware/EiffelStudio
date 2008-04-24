@@ -84,9 +84,6 @@ feature {NONE} -- Implementation
 					l_tree_items.forth
 				end
 			end
-			if wizard_information.is_add_frozen_feature_stubs_selected then
-				add_frozen_feature_stubs.enable_select
-			end
 			if wizard_information.is_add_to_be_implemented_selected then
 				add_to_be_implemented_checks.enable_select
 			end
@@ -185,10 +182,6 @@ feature {NONE} -- Wizard UI Implementation
 			create l_v_box
 			l_v_box.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 
-			create add_frozen_feature_stubs.make_with_text (interface_names.l_add_forzen_feature_stubs)
-			add_frozen_feature_stubs.select_actions.extend (agent on_add_frozen_feature_stubs_selected)
-			l_v_box.extend (add_frozen_feature_stubs)
-
 			create add_to_be_implemented_checks.make_with_text (interface_names.l_add_to_be_implemented_checks)
 			add_to_be_implemented_checks.select_actions.extend (agent on_add_to_be_implemented_checks_selected)
 			l_v_box.extend (add_to_be_implemented_checks)
@@ -251,12 +244,6 @@ feature {NONE} -- Wizard UI Implementation
 			-- On `add_to_be_implemented_checks' selected
 		do
 			wizard_information.set_add_to_be_implemented_selected (add_to_be_implemented_checks.is_selected)
-		end
-
-	on_add_frozen_feature_stubs_selected is
-			-- On `add_frozen_feature_stubs' selected
-		do
-			wizard_information.set_add_frozen_feature_stubs_selected (add_frozen_feature_stubs.is_selected)
 		end
 
 	check_feature_clause_sub_notes (a_item: EV_TREE_ITEM; a_check: BOOLEAN)
@@ -371,9 +358,6 @@ feature {NONE} -- Wizard UI Implementation
 		do
 			check_all_imp (False)
 		end
-
-	add_frozen_feature_stubs: EV_CHECK_BUTTON
-			-- Check button for `add frozen feature stubs'
 
 	add_to_be_implemented_checks: EV_CHECK_BUTTON
 			-- Check button for `add "to be implemented" checks'

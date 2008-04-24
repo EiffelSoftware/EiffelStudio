@@ -12,13 +12,6 @@ class
 	EXCEPTION
 
 inherit
-	APPLICATION_EXCEPTION
-		rename
-			message as dotnet_message
-		redefine
-			dotnet_message
-		end
-
 	EXCEPTION_MANAGER_FACTORY
 
 create
@@ -53,18 +46,23 @@ feature -- Raise
 feature -- Access
 
 	meaning: STRING is
-			-- A message in English describing what `except' is
+			-- A message in English describing what current exception is
 		do
 			Result := internal_meaning
 		end
 
 	message: STRING
-			-- A message in English describing what `except' is
+			-- Message(Tag) of current exception
 
 	exception_trace: STRING is
 			-- String representation of current exception trace
 		do
-			create Result.make_from_cil (stack_trace)
+			Result := internal_trace
+		end
+
+	code: INTEGER is
+			-- Code of the exception.
+		do
 		end
 
 	frozen original: EXCEPTION is
@@ -77,11 +75,6 @@ feature -- Access
 			end
 		ensure
 			original_not_void: Result /= Void
-		end
-
-	code: INTEGER is
-			-- Code of the exception.
-		do
 		end
 
 	frozen throwing_exception: EXCEPTION
@@ -151,7 +144,7 @@ feature -- Status report
 		end
 
 	frozen is_ignored: BOOLEAN is
-			-- If set, no exception is raised.
+			-- If set, current exception is not raised.
 		local
 			l_internal: INTERNAL
 			l_type: TYPE [EXCEPTION]
@@ -165,7 +158,7 @@ feature -- Status report
 		end
 
 	frozen is_caught: BOOLEAN is
-			-- If set, exception is raised.
+			-- If set, current exception is raised.
 		do
 			Result := not is_ignored
 		ensure
@@ -208,12 +201,6 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			end
 		end
 
-	frozen set_type_name (a_type: like type_name) is
-			-- Set `type_name' with `a_type'
-		do
-			type_name := a_type
-		end
-
 	frozen set_recipient_name (a_name: like recipient_name) is
 			-- Set `recipient_name' with `a_name'
 		do
@@ -226,32 +213,28 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			line_number := a_number
 		end
 
-	frozen internal_is_ignorable: BOOLEAN
-			-- Internal `is_ignorable'
-
 	internal_meaning: STRING is
 			-- Internal `meaning'
 		once
 			Result := "General exception."
 		end
 
-	exception_message: STRING is
+	frozen set_type_name (a_type: like type_name) is
+			-- Set `type_name' with `a_type'
 		do
-			Result := internal_meaning
-			if Result /= Void then
-				Result := "Code: " + code.out + " (" + Result + ")"
-			else
-				Result := "Code: " + code.out
-			end
-			if message /= Void then
-				Result := Result + " Tag: " + message
-			end
+			type_name := a_type
 		end
 
-	frozen dotnet_message: SYSTEM_STRING is
-			-- Message for the .NET runtime.
+	frozen internal_is_ignorable: BOOLEAN
+			-- Internal `is_ignorable'
+
+	frozen set_exception_trace (a_trace: like exception_trace) is
+			-- Set `exception_trace' with `a_trace'.
 		do
-			Result := exception_message
+			internal_trace := a_trace
 		end
+
+	internal_trace: STRING
+			-- String representation of the exception trace
 
 end

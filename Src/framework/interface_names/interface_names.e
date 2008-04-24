@@ -797,7 +797,7 @@ feature -- Formatter displayer names
 
 	l_formatter_invalid_metric: STRING_GENERAL do Result := locale.translation ("Specified metric is not defined or invalid, this will cause current formatter not usable") end
 	l_add_stone_handler: STRING_GENERAL is do Result := locale.translation ("Add new stone handler") end
-	l_add_to_be_implemented_checks: STRING_GENERAL is do Result := locale.translation ("Add `to be implemented' checks") end
+	l_add_to_be_implemented_checks: STRING_GENERAL is do Result := locale.translation ("Add `to_implement' calls") end
 	l_remove_stone_handler: STRING_GENERAL is do Result := locale.translation ("Remove selected stone handler") end
 	l_stone_handler: STRING_GENERAL is do Result := locale.translation ("Stone handler") end
 	l_stone_handler_help: STRING_GENERAL is do Result := locale.translation ("Specify default tools for specific stones") end

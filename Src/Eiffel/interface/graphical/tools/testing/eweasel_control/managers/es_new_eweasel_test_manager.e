@@ -235,15 +235,36 @@ feature {NONE} -- Implementation
 			l_content := eiffel_test_case_class_content
 			if l_content /= Void then
 				-- Added texts to file
+				is_to_implemented_used := False
 				add_class_comment (l_content)
 				add_predefined_features (l_content)
 				add_features_to_test (l_content)
 				add_make_content (l_content)
+				add_inherit_class (l_content)
 				l_io.put_string (l_content)
 			end
 			l_io.close
 		ensure
 			file_created:
+		end
+
+	add_inherit_class (a_file_content: STRING) is
+			-- Add class inherit texts
+		require
+			not_void: a_file_content /= Void
+		local
+			l_inherit_string: STRING
+		do
+			if is_to_implemented_used then
+				create l_inherit_string.make_empty
+				l_inherit_string.append ("%N%Ninherit")
+				l_inherit_string.append ("%N%TREFACTORING_HELPER")
+				a_file_content.replace_substring_all (inherit_class_template_string, l_inherit_string)
+			else
+				a_file_content.replace_substring_all (inherit_class_template_string, "")
+			end
+		ensure
+			replaced: not a_file_content.has_substring (inherit_class_template_string)
 		end
 
 	add_class_comment (a_file_content: STRING) is
@@ -405,20 +426,24 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_empty
 			Result.append (a_feature_name + " is %N")
-		
+
 			if a_comment /= Void then
 				Result.append ("			-- " + a_comment + "%N")
 			else
-				Result.append ("			-- Redefine%N")
+				Result.append ("			-- %N")
 			end
 			Result.append ("		do%N")
 			if wizard_information.is_add_to_be_implemented_selected then
-				Result.append ("			check to_be_implemented: False end%N")
+				Result.append ("			to_implement (%"" + "{" + test_case_root_class_name + "}." + a_feature_name + "%")%N")
+				is_to_implemented_used := True
 			end
 			Result.append ("		end")
 		ensure
 			not_void: Result /= Void
 		end
+
+	is_to_implemented_used: BOOLEAN
+			-- If any `to_implement' texts generated?
 
 feature {NONE} -- File contents
 
@@ -644,6 +669,12 @@ feature {NONE} -- File contents
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$features_to_test")
+		end
+
+	inherit_class_template_string: !STRING is
+			-- $ string in template file
+		do
+			create Result.make_from_string ("$INHERIT_CLASS")
 		end
 
 feature {NONE} -- Utility

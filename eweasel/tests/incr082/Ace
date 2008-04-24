@@ -38,6 +38,7 @@
 			<file_rule>
 				$DOTNET_EXCLUDE
 				$EXCLUDE
+				<exclude>/exception.e$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="exceptions_ise" location="$EXCEPTIONS_ISE\" recursive="True"/>

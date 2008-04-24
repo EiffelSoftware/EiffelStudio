@@ -5,9 +5,3 @@ unfixperm="chmod u-rwx"
 # Fix permissions of files that need to be made readable to produce tar file
 
 echo "Fixing permissions of test files that need to be made unreadable"
-$unfixperm $EWEASEL/tests/vd01001/xxx
-$unfixperm $EWEASEL/tests/vd02001/usefile
-$unfixperm $EWEASEL/tests/vd07001/badfile
-$unfixperm $EWEASEL/tests/vd12001/badfile
-$unfixperm $EWEASEL/tests/vd17001/badfile
-

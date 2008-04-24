@@ -5,9 +5,4 @@ fixperm="chmod u+rwx"
 # Fix permissions of files that need to be made readable to produce tar file
 
 echo "Fixing permissions of test files that need to be made readable"
-$fixperm $EWEASEL/tests/vd01001/xxx
-$fixperm $EWEASEL/tests/vd02001/usefile
-$fixperm $EWEASEL/tests/vd07001/badfile
-$fixperm $EWEASEL/tests/vd12001/badfile
-$fixperm $EWEASEL/tests/vd17001/badfile
 

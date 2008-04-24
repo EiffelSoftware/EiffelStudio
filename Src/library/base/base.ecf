@@ -79,6 +79,12 @@
 					<dotnet value="true"/>
 				</condition>
 			</file_rule>
+			<file_rule>
+				<exclude>/kernel/exceptions/exception.e$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
+			</file_rule>
 		</cluster>
 		<cluster name="ise" location="ise\" recursive="true">
 			<option namespace="Base">
@@ -91,6 +97,7 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/classic$</exclude>
+				<exclude>/kernel/exceptions/exception.e$</exclude>
 				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
 				<exclude>/kernel/exceptions/io_failure.e$</exclude>
 				<condition>

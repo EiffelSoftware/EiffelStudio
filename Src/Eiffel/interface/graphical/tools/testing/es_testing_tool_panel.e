@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 		local
 			l_box: EV_BOX
 			l_string: STRING_GENERAL
-			l_contants: EV_LAYOUT_CONSTANTS
 			l_level_2_2_vertical_box: EV_VERTICAL_BOX
 			l_top_container: EV_VERTICAL_BOX
 			l_tool_bar: SD_TOOL_BAR
@@ -44,13 +43,11 @@ feature {NONE} -- Initialization
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_grid)
 			test_case_grid := a_grid
 
-			create l_contants
-
 			-- Level 2 2nd box
 			l_top_container := widget
 			create l_level_2_2_vertical_box
 			create {EV_HORIZONTAL_BOX} l_box
-			l_box.set_border_width (l_contants.default_border_size)
+			l_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 			l_level_2_2_vertical_box.extend (l_box)
 			l_level_2_2_vertical_box.disable_item_expand (l_box)
 
@@ -68,7 +65,7 @@ feature {NONE} -- Initialization
 			l_box.extend (failures_label)
 
 			create {EV_HORIZONTAL_BOX} l_box
-			l_box.set_border_width (l_contants.default_border_size)
+			l_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 			l_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 			l_level_2_2_vertical_box.extend (l_box)
 			l_level_2_2_vertical_box.disable_item_expand (l_box)
@@ -87,8 +84,8 @@ feature {NONE} -- Initialization
 			enable_sorting_on_columns (test_case_grid_manager.all_columns)
 			enable_copy_to_clipboard
 
-			l_level_2_2_vertical_box.set_padding_width (l_contants.default_padding_size)
-			l_level_2_2_vertical_box.set_border_width (l_contants.default_border_size)
+			l_level_2_2_vertical_box.set_border_width ({ES_UI_CONSTANTS}.frame_border)
+			l_level_2_2_vertical_box.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 			l_top_container.extend (l_level_2_2_vertical_box)
 			l_top_container.disable_item_expand (l_level_2_2_vertical_box)
 		ensure then

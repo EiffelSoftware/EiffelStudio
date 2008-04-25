@@ -25,10 +25,10 @@ if [ -n "$ISE_EIFFEL" ]; then
 	rt_templates=$ISE_EIFFEL/studio/config/$ISE_PLATFORM/templates
 	x2c=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/x2c
 else
-	rt_include=$ISE_PREFIX/include/eiffel$rt_version
-	rt_lib=$ISE_PREFIX/$ISE_LIB_NAME/eiffel$rt_version
-	rt_templates=$ISE_PREFIX/share/eiffel$rt_version/ec/config/$ISE_PLATFORM/templates
-	x2c=$ISE_PREFIX/$ISE_LIB_NAME/eiffel$rt_version/ec/x2c
+	rt_include=$ISE_PREFIX/include/eiffelstudio-$rt_version
+	rt_lib=$ISE_PREFIX/$ISE_LIB_NAME/eiffelstudio-$rt_version
+	rt_templates=$ISE_PREFIX/share/eiffelstudio-$rt_version/studio/config/$ISE_PLATFORM/templates
+	x2c=$ISE_PREFIX/$ISE_LIB_NAME/eiffelstudio-$rt_version/studio/x2c
 fi
 if [ -n "$CC" ]; then
 	cc=$CC

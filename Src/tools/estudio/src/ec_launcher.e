@@ -434,7 +434,7 @@ feature -- Environment
 					elseif s.is_equal ("/w") then
 						is_waiting := True
 					elseif s.is_equal ("/nosplash") then
-						is_splashing := True
+						is_splashing := False
 					elseif s.is_equal ("/ec_name") then
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then

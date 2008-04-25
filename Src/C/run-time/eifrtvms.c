@@ -80,6 +80,9 @@ globalvalue eifrt_vms__pointer_size__DEFAULT = sizeof(void*);
 #endif
 globalvalue eifrt_vms__pointer_size = sizeof (void*);
 
+#if __INITIAL_POINTER_SIZE <= 32
+#define _strdup32(s) strdup(s)
+#endif
 
 
 rt_shared const char eifrt_vms_valid_filename_chars[]

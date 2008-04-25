@@ -19,15 +19,16 @@ class CONSOLE inherit
 		export
 			{NONE}
 				all
+			{CONSOLE} open_read, close, internal_stream
 			{ANY}
 				separator, append, file_pointer, last_character, last_integer,
 				last_real, last_string, last_double, file_readable,
 				lastchar, lastint, lastreal, laststring, lastdouble,
-				read_character, readchar, read_real, 
+				read_character, readchar, read_real,
 				last_integer_32, last_integer_8, last_integer_16, last_integer_64,
 				last_natural_8, last_natural_16, last_natural, last_natural_32,
 				last_natural_64,
-				read_line, read_stream, read_word, 
+				read_line, read_stream, read_word,
 				put_boolean, put_real, put_double, put_string, put_character,
 				put_new_line, new_line, readint, readreal, readline, readstream,
 				readword,  putbool, putreal, putdouble, putstring, putchar,
@@ -35,15 +36,17 @@ class CONSOLE inherit
 				read_natural_8, read_natural_16, read_natural, read_natural_32, read_natural_64,
 				put_integer_8, put_integer_16, putint, put_integer, put_integer_32, put_integer_64,
 				put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
-				dispose, before, readable, is_closed
+				dispose, before, readable, is_closed, extendible, is_open_write
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			close, dispose, end_of_file, next_line,
 			read_integer_with_no_type, read_double, readdouble,
-			read_character, readchar, 
+			read_character, readchar,
 			read_line, readline,
 			back
 		end
+
+	ANY
 
 create {STD_FILES}
 	make_open_stdin, make_open_stdout, make_open_stderr
@@ -96,13 +99,17 @@ feature -- Status report
 			-- Has an EOF been detected?
 			-- Always false for a console.
 
+	count: INTEGER is 1
+			-- Useless for CONSOLE class.
+			--| `count' is non null not to invalidate invariant clauses.
+
 feature -- Cursor movement
 
 	back is
 			-- Not supported on console
 		do
 		end
-		
+
 feature -- Removal
 
 	close is
@@ -114,7 +121,7 @@ feature -- Removal
 			-- This is closed by the operating system at completion.
 		do
 		end
-		
+
 feature -- Input
 
 	read_character, readchar is
@@ -135,7 +142,7 @@ feature -- Input
 						if a_code = -1 then
 							internal_end_of_file := True
 						end
-						a_code := 10	
+						a_code := 10
 				end
 				last_character := a_code.to_character_8
 			end
@@ -146,7 +153,7 @@ feature -- Input
 			-- from file. Make result available in `last_double'.
 		do
 			read_number_sequence (ctor_convertor, {NUMERIC_INFORMATION}.type_double)
-			last_double := ctor_convertor.parsed_double			
+			last_double := ctor_convertor.parsed_double
 				-- Consume all left characters until we meet a new-line character.
 			consume_characters
 		end
@@ -208,9 +215,9 @@ feature -- Input
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation	
-		
+
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
 			-- at current position.
@@ -219,26 +226,22 @@ feature {NONE} -- Implementation
 				-- Consume all left characters until we meet a new-line character.
 			consume_characters
 		end
-		
+
 	consume_characters is
-			-- Consume all characters from current position 
+			-- Consume all characters from current position
 			-- until we meet a new-line character.
 		do
 			from
-				
+
 			until
-				end_of_file or last_character = '%N' 
+				end_of_file or last_character = '%N'
 			loop
 				read_character
-			end			
+			end
 		end
-		
+
 
 feature {NONE} -- Inapplicable
-
-	count: INTEGER is 1
-			-- Useless for CONSOLE class.
-			--| `count' is non null not to invalidate invariant clauses.
 
 	is_empty: BOOLEAN is False;
 			-- Useless for CONSOLE class.

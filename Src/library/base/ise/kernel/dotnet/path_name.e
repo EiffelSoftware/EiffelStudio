@@ -18,9 +18,10 @@ inherit
 			make_from_string as string_make_from_string,
 			extend as string_extend
 		export
-			{NONE} all
-			{ANY} is_empty, empty, to_c, to_cil, wipe_out, out, string, twin
-			{PATH_NAME} count, area, infix "<"
+			{PATH_NAME} all
+			{ANY} is_empty, empty, to_c, to_cil, wipe_out, out, string, twin, prunable
+		undefine
+			new_string
 		redefine
 			is_equal
 		end

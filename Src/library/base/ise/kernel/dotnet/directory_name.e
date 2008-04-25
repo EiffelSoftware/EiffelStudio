@@ -17,6 +17,9 @@ inherit
 create
 	make, make_from_string
 
+create {DIRECTORY_NAME}
+	string_make
+
 feature
 
 	is_valid: BOOLEAN is
@@ -25,6 +28,14 @@ feature
 			Result := True
 		end
 
+feature {NONE} -- Implementation
+
+	new_string (n: INTEGER): like Current is
+			-- New instance of current with space for at least `n' characters.
+		do
+			create Result.string_make (n)
+		end
+		
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

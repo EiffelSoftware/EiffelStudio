@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+   <metadata>
+      <title>Value Big Enough</title>
+      <description>Code template contract predicate to ensure a value is big enough according to a range's lower bound</description>
+      <author>Eiffel Software</author>
+      <shortcut>big_enough</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+   </metadata>
+   
+   <declarations>
+      <object id="value" editable="True" conforms_to="NUMERICAL">
+         <description>A arbitary value</description>
+      </object>
+      <object id="lower" editable="True" conforms_to="NUMERICAL">
+         <description>A range's lower bound</description>
+      </object>
+   </declarations>
+   
+   <templates>
+      <template>${value}_big_enough: ${value} &gt;= ${lower}${end}</template>
+   </templates>
+</code_template>

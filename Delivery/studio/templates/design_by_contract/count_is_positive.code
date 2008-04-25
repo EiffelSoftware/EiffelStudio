@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
   <metadata>
-    <title>Not Is Empty</title>
-    <description>Code template contract predicate to ensure a finite entity is not empty</description>
+    <title>Count Is Positive</title>
+    <description>Code template contract predicate to ensure an entity's count is greater than zero</description>
     <author>Eiffel Software</author>
-    <shortcut>not_is_empty</shortcut>
+    <shortcut>pcnt</shortcut>
       <categories>
          <category>Eiffel</category>
          <category>code</category>
@@ -14,11 +13,11 @@
   
   <declarations>  
     <object id="var" editable="true" conforms_to="FINITE">
-      <description>An attached variable with access to an `is_empty' status function</description>
+      <description>A variable to test for a positive count on</description>
     </object>
   </declarations>
   
   <templates>
-    <template>not_${var}_is_empty: not ${var}.is_empty${end}</template>  
+    <template>${var}_is_positive: ${var}.count > 0${end}</template>  
   </templates>
 </code_template>

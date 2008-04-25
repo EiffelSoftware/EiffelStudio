@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+   <metadata>
+      <title>Is null pointer</title>
+      <description>Code template contract predicate to ensure an entity represents a valid pointer</description>
+      <author>Eiffel Software</author>
+      <shortcut>not_is_null</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+   </metadata>
+   
+   <declarations>
+      <literal id="pointer" editable="True" conforms_to="POINTER">
+         <description>A entity representing a pointer</description>
+      </literal>
+   </declarations>
+   
+   <templates>
+      <template>not_${pointer}_is_null: ${pointer} /= default_pointer${end}</template>
+   </templates>
+</code_template>

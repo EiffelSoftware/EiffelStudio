@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+   <metadata>
+      <title>Not Directory Exists</title>
+      <description>Code template contract predicate to ensure a directory does not exists on a local or networked drive</description>
+      <author>Eiffel Software</author>
+      <shortcut>not_dir_exists</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+   </metadata>
+   
+   <declarations>
+      <object id="path" editable="True" conforms_to="STRING_GENERAL">
+         <description>A string variable containing a path to a directory</description>
+      </object>
+   </declarations>
+   
+   <templates>
+      <template>not_${path}_exists: not (create {DIRECTORY}.make (${path})).exists${end}</template>
+   </templates>
+</code_template>

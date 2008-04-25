@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+  <metadata>
+    <title>Is Detached or Empty</title>
+    <description>Code template contract predicate to ensure a finite entity is detached or is empty</description>
+    <author>Eiffel Software</author>
+    <shortcut>is_detached_or_empty</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+  </metadata>
+  
+  <declarations>  
+    <object id="var" editable="true" conforms_to="FINITE">
+      <description>An attached variable with access to an `is_empty' status function</description>
+    </object>
+  </declarations>
+  
+  <templates>
+    <template>${var}_is_detached_or_empty: ${var} = Void or else ${var}.is_empty${end}</template>  
+  </templates>
+</code_template>

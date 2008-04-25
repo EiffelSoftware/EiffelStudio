@@ -13,12 +13,12 @@
    </metadata>
    
    <declarations>
-      <object id="path" editable="True" conforms_to="STRING_GENERAL">
+      <object id="file" editable="True" conforms_to="STRING_GENERAL">
          <description>A string variable containing a path to a file</description>
       </object>
    </declarations>
    
    <templates>
-      <template>${path}_exists: (create {RAW_FILE}.make (${path})).exists${end}</template>
+      <template>${file}_exists: (create {RAW_FILE}.make (${file})).exists${end}</template>
    </templates>
 </code_template>

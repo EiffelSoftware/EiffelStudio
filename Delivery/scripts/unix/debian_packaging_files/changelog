@@ -1,0 +1,5 @@
+${ise:product} (${version}-1) optional; urgency=low
+
+  * Added Changelog for compliance with debian rules.
+
+ -- ${ise:name} <${ise:email}>  ${datetime}

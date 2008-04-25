@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	clean_screen is
-			-- Clean Current screen, in order to display only 
+			-- Clean Current screen, in order to display only
 			-- the current sub-window.
 		do
 			main_box.wipe_out
@@ -47,6 +47,7 @@ feature -- Basic Operations
 		end
 
 	display_state_text is
+			-- Display texts about current state
 		require
 			texts_exists: title /= Void and message /= Void
 		deferred
@@ -55,7 +56,7 @@ feature -- Basic Operations
 		end
 
 	proceed_with_current_info is
-			-- Process user entries, and 
+			-- Process user entries, and
 			-- perform actions accordingly.
 			-- This is executed when user press 'Next'.
 		deferred

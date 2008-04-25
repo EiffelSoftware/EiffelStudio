@@ -149,13 +149,7 @@ feature {NONE} -- Initialization
 			l_vbox.disable_item_expand (l_label)
 
 				-- Create field
-			l_text := a_declaration.default_value
-			if l_text.is_empty then
-					-- Use ID as the default value.
-				l_text := a_declaration.id
-			end
 			l_edit := create_declaration_text_widget (a_declaration)
-			l_edit.set_text (l_text)
 			l_edit.set_font (preferences.editor_data.editor_font_preference.value)
 			register_action (l_edit.change_actions, agent on_text_changed (l_edit, a_declaration.id))
 			register_action (l_edit.focus_in_actions, agent on_text_focused (l_edit, a_declaration.id))
@@ -184,6 +178,7 @@ feature {NONE} -- Initialization
 			-- <Precusor>
 		do
 			Precursor
+			code_symbol_table.value_changed_events.subscribe (agent on_code_symbol_table_value_changed)
 			update_code_result
 		end
 
@@ -191,11 +186,6 @@ feature -- Access
 
 	code_result: !STRING_32
 			-- Current result of user input
-
-feature {NONE} -- Access
-
-	code_template: !CODE_TEMPLATE
-			-- The code template used to build the UI.
 
 	frozen code_symbol_table: !CODE_SYMBOL_TABLE
 			-- Symbol table used to evaluate the code template.
@@ -209,6 +199,11 @@ feature {NONE} -- Access
 		ensure
 			result_consistent: Result = code_symbol_table
 		end
+
+feature {NONE} -- Access
+
+	code_template: !CODE_TEMPLATE
+			-- The code template used to build the UI.
 
 feature -- Dialog access
 
@@ -318,6 +313,27 @@ feature {NONE} -- User interface elements
 
 	code_result_view: !EB_SMART_EDITOR
 			-- Widget containing the result of the evaluated code template
+
+feature -- Events handlers
+
+	on_code_symbol_table_value_changed (a_id: !STRING_8)
+			-- Called when a value in the symbol table changes
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_field: EV_TEXT_FIELD
+			l_text: STRING_GENERAL
+		do
+			if declaration_text_fields.has (a_id) then
+				l_field := declaration_text_fields.item (a_id)
+				if l_field /= Void and then code_symbol_table.has_id (a_id) then
+					l_field.set_text (code_symbol_table.item (a_id).value)
+				else
+					l_field.set_text ("")
+				end
+			end
+		end
 
 feature {NONE} -- Action handlers
 

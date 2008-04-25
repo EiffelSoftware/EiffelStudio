@@ -238,7 +238,7 @@ feature -- Command
 			l_grid_row: EV_GRID_ROW
 			l_test_case_item: ES_EWEASEL_TEST_CASE_ITEM
 		do
-			if {lt_class_name: STRING} a_result.root_class_name then
+			if {lt_class_name: STRING} a_result.root_class_name.as_string_8 then
 				l_test_run_class := conf_class_of (lt_class_name)
 				if {lt_conf_class: CONF_CLASS} l_test_run_class then
 					l_grid_row := test_case_row_related_with (lt_conf_class)
@@ -714,7 +714,6 @@ feature {NONE} -- Implementation commands
 						if l_last_run_time < l_changed_time then
 							-- Changed
 							l_label_item.set_text (interface_names.b_yes)
-
 						else
 							-- Not changed
 							l_label_item.set_text (interface_names.b_no)

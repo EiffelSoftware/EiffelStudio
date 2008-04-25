@@ -1943,7 +1943,7 @@ feature -- Title part
 		end
 	t_Add_search_scope: STRING_GENERAL is				do Result := locale.translation("Add Search Scope")	end
 	t_Alias: STRING_GENERAL is							do Result := locale.translation("Alias")	end
-	t_All_test_runs: STRING_GENERAL is					do Result := locale.translation("All Test Runs")	end
+	t_All_test_runs: STRING_GENERAL is					do Result := locale.translation("Show test run history dialog")	end
 	t_Calling_convention: STRING_GENERAL is				do Result := locale.translation("Calling Convention")	end
 	t_Changed_after_last_run: STRING_GENERAL is			do Result := locale.translation("Changed After Last Run")	end
 	t_Changed_time: STRING_GENERAL is					do Result := locale.translation("Changed Time")	end
@@ -1989,10 +1989,10 @@ feature -- Title part
 	t_finish_freezing_status: STRING_GENERAL is			do Result := locale.translation("Finish Freezing Status")	end
 	t_Index: STRING_GENERAL is							do Result := locale.translation("Index")	end
 	t_New_class: STRING_GENERAL is						do Result := locale.translation("New Class")	end
-	t_Next_failed_test: STRING_GENERAL is				do Result := locale.translation("Next Failed Test")	end
+	t_Next_failed_test: STRING_GENERAL is				do Result := locale.translation("Show next failed test")	end
 	t_New_cluster: STRING_GENERAL is					do Result := locale.translation("Add Cluster")	end
 	t_New_expression: STRING_GENERAL is					do Result := locale.translation("New Expression")	end
-	t_New_manual_test_case: STRING_GENERAL is			do Result := locale.translation("New Manual Test Case")	end
+	t_New_manual_test_case: STRING_GENERAL is			do Result := locale.translation("Add a new test case")	end
 	t_Not_run_yet: STRING_GENERAL is					do Result := locale.translation("Not run yet") end
 	t_Not_updated: STRING_GENERAL is					do Result := locale.translation("Not updated") end
 	t_Edit_expression: STRING_GENERAL is				do Result := locale.translation("Edit Expression")	end
@@ -2007,7 +2007,7 @@ feature -- Title part
 																						%%N%
 																						%To continue, click Next.%N")	end
 	t_Unit_test_files_will_be_generated: STRING_GENERAL is	do Result := locale.translation("Unit test files will be generated.")	end
-	t_Update_test_case_last_changed_time: STRING_GENERAL is	do Result := locale.translation("Update Last Changed Time")	end
+	t_Update_test_case_last_changed_time: STRING_GENERAL is	do Result := locale.translation("Update last changed time")	end
 	t_Open_backup: STRING_GENERAL is					do Result := locale.translation("Backup Found")	end
 	t_Organize_favorites: STRING_GENERAL is				do Result := locale.translation("Organize Favorites")	end
 	t_Profile_query_window: STRING_GENERAL is			do Result := locale.translation("Profile Query Window")	end
@@ -2019,8 +2019,8 @@ feature -- Title part
 		end
 	t_project_documentation: STRING_GENERAL is			do Result := locale.translation("Project documentation")	end
 	t_Preference_window: STRING_GENERAL is				do Result := locale.translation("Preferences")	end
-	t_Previous_failed_test: STRING_GENERAL is			do Result := locale.translation("Previous Failed Test")	end
-	t_save_backup: STRING_GENERAL is					do Result := locale.translation ("Save Backup") end
+	t_Previous_failed_test: STRING_GENERAL is			do Result := locale.translation("Show previous failed test")	end
+	t_save_backup: STRING_GENERAL is					do Result := locale.translation("Save Backup") end
 	t_Select_class: STRING_GENERAL is					do Result := locale.translation("Select Class")	end
 	t_Select_cluster: STRING_GENERAL is					do Result := locale.translation("Select Cluster")	end
 	t_Select_feature: STRING_GENERAL is					do Result := locale.translation("Select Feature")	end
@@ -2034,8 +2034,8 @@ feature -- Title part
 		once
 			Result := Workbench_name
 		end
-	t_Stop_test_run: STRING_GENERAL is					do Result := locale.translation("Stop Test Run")	end
-	t_Show_failures_only: STRING_GENERAL is				do Result := locale.translation("Show Failures Only")	end
+	t_Stop_test_run: STRING_GENERAL is					do Result := locale.translation("Stop test run")	end
+	t_Show_failures_only: STRING_GENERAL is				do Result := locale.translation("Show failures only")	end
 	t_precompile_progress: STRING_GENERAL is 			do Result := locale.translation ("Precompilation Progress") end
 	t_Slice_limits: STRING_GENERAL is					do Result := locale.translation("Choose New Slice Limits for Special Objects")	end
 	t_System: STRING_GENERAL is							do Result := locale.translation("Project Settings")	end
@@ -2211,7 +2211,7 @@ feature -- Title part
 	t_question: STRING_GENERAL is 						do Result := locale.translation ("Question") end
 	t_Search_tool: STRING_GENERAL is					do Result := locale.translation ("Search")	end
 	t_Search_Report_tool: STRING_GENERAL is				do Result := locale.translation ("Search Report")	end
-	t_See_failure_trace: STRING_GENERAL is				do Result := locale.translation ("See Failure Trace")	end
+	t_See_failure_trace: STRING_GENERAL is				do Result := locale.translation ("See failure trace")	end
 	t_Windows_tool: STRING_GENERAL is					do Result := locale.translation ("Windows")	end
 	t_Welcome_to_new_unit_test_wizard: STRING_GENERAL is	do Result := locale.translation ("New Unit Test Wizard")	end
 	t_Watch_tool: STRING_GENERAL is						do Result := locale.translation ("Watch")	end
@@ -2240,9 +2240,9 @@ feature -- Title part
 	t_Overwite_layout: STRING_GENERAL is				do Result := locale.translation ("Overwrite Layout") end
 	t_open_c_file: STRING_GENERAL is					do Result := locale.translation ("Open C file") end
 	t_reference_position: STRING_GENERAL is				do Result := locale.translation ("Positions") end
-	t_Remove_selected_test_cases: STRING_GENERAL is				do Result := locale.translation ("Remove Selected Test Cases") end
-	t_run_last_failed_tests_first: STRING_GENERAL is	do Result := locale.translation ("Start Test Run Failed First") end
-	t_run_last_tests: STRING_GENERAL is					do Result := locale.translation ("Start Test Run") end
+	t_Remove_selected_test_cases: STRING_GENERAL is		do Result := locale.translation ("Remove selected test cases") end
+	t_run_last_failed_tests_first: STRING_GENERAL is	do Result := locale.translation ("Start test run failed first") end
+	t_run_last_tests: STRING_GENERAL is					do Result := locale.translation ("Start test run") end
 	t_customized_formatter_setup: STRING_GENERAL is 	do Result := locale.translation ("Setup customized formatters") end
 	t_errors_and_warnings_tool: STRING_GENERAL is		do Result := locale.translation ("Error List") end
 

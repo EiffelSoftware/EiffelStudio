@@ -12,6 +12,9 @@ class
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			executable
+		end
 
 create
 	make
@@ -32,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	execute is
-			-- Redefine
+			-- <Precursor>
 		do
 			manager.launch_eweasel (False)
 			if manager.is_eweasel_running then
@@ -40,6 +43,17 @@ feature -- Command
 				manager.start_test_run_failed_first_command.disable_sensitive
 				manager.stop_test_run_command.enable_sensitive
 			end
+		end
+
+feature -- Query
+
+	executable: BOOLEAN is
+			-- <Precursor>
+		local
+			l_factory: ES_EWEASEL_SINGLETON_FACTORY
+		do
+			create l_factory
+			Result := l_factory.manager.testing_tool /= Void
 		end
 
 feature {ES_TESTING_TOOL_PANEL} -- Implementation

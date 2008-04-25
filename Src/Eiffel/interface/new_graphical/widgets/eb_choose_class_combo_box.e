@@ -30,15 +30,8 @@ feature {NONE} -- Initialization
 
 	prepare is
 			-- Create the controls and setup the layout
-		local
 		do
 		end
-
-feature -- Activation
-
-feature -- Access
-
-feature {NONE} -- Implementation
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -73,4 +66,4 @@ indexing
 		]"
 
 end -- class EB_CHOOSE_CLASS_COMBO_BOX
-	
+

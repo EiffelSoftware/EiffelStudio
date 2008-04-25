@@ -4,7 +4,7 @@ define_file		EWEASEL_FREEZE	$ISE_EIFFEL studio spec $ISE_PLATFORM bin finish_fre
 define_file		EWEASEL_EXECUTE $EWEASEL bin eiffel_execute.bat
 
 -- EiffelBase platform specific directories
-define	KERNEL_CLASSIC	"<cluster name="kernel" location="$ISE_EIFFEL\library\base\elks\kernel"><file_rule><exclude>ise_runtime.e</exclude><exclude>system_string.e</exclude></file_rule></cluster><cluster name="exceptions" location="$ISE_EIFFEL\library\base\ise\kernel\exceptions"/><cluster name="elks_exceptions" location="$ISE_EIFFEL\library\base\elks\kernel\exceptions"><file_rule><exclude>/exception.e$</exclude></file_rule></cluster>"
+define	KERNEL_CLASSIC	"<cluster name="kernel" location="$ISE_EIFFEL\library\base\elks\kernel"><file_rule><exclude>ise_runtime.e</exclude><exclude>system_string.e</exclude></file_rule></cluster><cluster name="exceptions" location="$ISE_EIFFEL\library\base\ise\kernel\exceptions"/><cluster name="elks_exceptions" location="$ISE_EIFFEL\library\base\elks\kernel\exceptions"/>"
 define	KERNEL_DOTNET	"<override name="kernel_dotnet" location="$ISE_EIFFEL\library\base\ise\kernel\dotnet"/>"
 define	SUPPORT_DOTNET	"<override name="support_dotnet" location="$ISE_EIFFEL\library\base\ise\support\dotnet"/>"
 define	KERNEL_DOTNET_NO_EXCEPTION "<override name="kernel_dotnet" location="$ISE_EIFFEL\library\base\ise\kernel\dotnet"><file_rule><exclude>exception.e</exclude><exclude>exception_manager.e</exclude><exclude>exception_manager.e</exclude><exclude>dotnet_exception_wapper.e</exclude><exclude>dotnet_exception.e</exclude><exclude>operating_system_failure.e</exclude><exclude>operating_system_signal_failure.e</exclude><exclude>void_target.e</exclude></file_rule><condition><dotnet value="true"/></condition></override>"

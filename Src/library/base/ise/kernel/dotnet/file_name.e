@@ -13,6 +13,9 @@ inherit
 create
 	make, make_from_string, make_temporary_name
 
+create {FILE_NAME}
+	string_make
+
 feature {NONE} -- Initialization
 
 	make_temporary_name is
@@ -71,6 +74,14 @@ feature -- Status setting
 		do
 			append_character ('.')
 			append (ext)
+		end
+
+feature {NONE} -- Implementation
+
+	new_string (n: INTEGER): like Current is
+			-- New instance of current with space for at least `n' characters.
+		do
+			create Result.string_make (n)
 		end
 
 indexing

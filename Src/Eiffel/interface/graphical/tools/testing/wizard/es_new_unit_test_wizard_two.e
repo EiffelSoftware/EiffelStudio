@@ -29,7 +29,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_info: like wizard_information) is
-			-- Redefine
+			-- <Precursor>
 		do
 			wizard_information := an_info
 			first_window.disable_next_button
@@ -40,22 +40,16 @@ feature {NONE} -- Initialization
 	update_ui_with_wizard_information
 			-- Fill text entries if possible
 			-- This is useful when end users navigating back and forth
-		local
-			l_full_cluster: STRING
-			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
-			l_cluster_path: STRING
 		do
-			if wizard_information.cluster /= Void and wizard_information.new_class_name /= Void then
-				l_full_cluster := wizard_information.cluster.cluster_name.twin
-				l_cluster_path := wizard_information.cluster_path
-				if l_cluster_path /= Void and then not l_cluster_path.is_empty then
-					create l_helper
-					l_full_cluster.append (l_helper.cluster_separator)
-					l_full_cluster.append (l_cluster_path)
-				end
-				cluster.set_text (l_full_cluster)
+			if wizard_information.new_class_name /= Void then
 
-				class_name.set_text (wizard_information.new_class_name)
+				if {lt_string: STRING_32} wizard_information.test_case_name.as_string_32 then
+					test_case_name.set_text (lt_string)
+				end
+
+				if {lt_string_2: STRING_32} wizard_information.new_class_name.as_string_32 then
+					class_name.set_text (lt_string_2)
+				end
 
 				if wizard_information.class_under_test /= Void then
 					class_under_test.set_text (wizard_information.class_under_test)
@@ -79,56 +73,44 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	display_state_text
-			-- Redefine
+			-- <Precursor>
 		do
 			title.set_text (title_string)
 			subtitle.set_text (message_string)
 		end
 
 	proceed_with_current_info
-			-- Redefine
-		local
-			l_error: ES_ERROR_PROMPT
+			-- <Precursor>
 		do
 			if not class_name.text.is_empty and not is_new_class_name_already_exists then
-				if class_under_test.text.is_empty then
-					proceed_with_new_state(create {ES_NEW_UNIT_TEST_WIZARD_FINAL}.make (wizard_information))
-				elseif is_class_under_test_name_valid then
-					proceed_with_new_state(create {ES_NEW_UNIT_TEST_WIZARD_THREE}.make (wizard_information))
-				else
-					create l_error.make_standard (interface_names.d_Class_under_test_not_valid)
-					l_error.show_on_active_window
-				end
+				proceed_with_new_state (create {ES_NEW_UNIT_TEST_WIZARD_THREE}.make (wizard_information))
 			end
 		end
 
 	build
-			-- Redefine
+			-- <Precursor>
 		local
 			l_h_box: EV_HORIZONTAL_BOX
 			l_v_box, l_v_box_2: EV_VERTICAL_BOX
 			l_label: EV_LABEL
-			l_button: EV_BUTTON
 			l_top_container: EV_BOX
+			l_button: EV_BUTTON
+			l_tmp_text_filed: EV_TEXT_FIELD
 		do
 			l_top_container := wizard_information.helper.parent_parent_of (choice_box)
 
 			-- Cluster
 			create l_h_box
 
-			create l_label.make_with_text (interface_names.l_cluster_colon)
+			create l_label.make_with_text (interface_names.l_test_case_name_colon)
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)
 
-			create cluster
-			cluster.set_text (interface_names.l_Please_select)
-			l_h_box.extend (cluster)
+			create l_tmp_text_filed
+			l_tmp_text_filed.change_actions.extend (agent on_test_case_name_change)
+			create test_case_name.make (l_tmp_text_filed, agent on_valid_test_case_name)
+			l_h_box.extend (test_case_name)
 			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
-
-			create l_button.make_with_text (interface_names.b_browse)
-			l_button.select_actions.extend (agent on_browse_for_cluster)
-			l_h_box.extend (l_button)
-			l_h_box.disable_item_expand (l_button)
 
 			l_top_container.extend (l_h_box)
 			l_top_container.disable_item_expand (l_h_box)
@@ -139,13 +121,15 @@ feature {NONE} -- Implementation
 			-- Class name
 			create l_h_box
 
-			create l_label.make_with_text (interface_names.l_name_colon)
+			create l_label.make_with_text (interface_names.l_root_class_name)
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)
 
-			create class_name
-			class_name.change_actions.extend (agent on_class_name_change)
+			create l_tmp_text_filed
+			l_tmp_text_filed.change_actions.extend (agent on_class_name_change)
+			create class_name.make (l_tmp_text_filed, agent on_valid_class_name)
 			l_h_box.extend (class_name)
+			l_h_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
 			l_top_container.extend (l_h_box)
 			l_top_container.disable_item_expand (l_h_box)
@@ -230,7 +214,7 @@ feature {NONE} -- Implementation
 		local
 			l_enable_next: BOOLEAN
 		do
-			l_enable_next :=  wizard_information.is_valid
+			l_enable_next :=  wizard_information.is_valid_without_cluster
 			if l_enable_next and not a_force_disable then
 				first_window.enable_next_button
 			else
@@ -239,26 +223,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE}	-- Agents
-
-	on_browse_for_cluster
-			-- Browse for cluster where new unit test class located.
-		local
-			l_all_cluster: ES_CHOOSE_CLUSTER_DIALOG
-			l_cluster: STRING
-		do
-			create l_all_cluster.make
-			l_all_cluster.show_on_active_window
-
-			l_cluster := l_all_cluster.selected_cluster_and_path
-			if l_cluster /= Void then
-				wizard_information.set_cluster (l_cluster)
-				cluster.set_text (l_cluster)
-				if l_all_cluster.cluster_id /= Void then
-					wizard_information.set_cluster_id_and_path (l_all_cluster.cluster_id, l_all_cluster.cluster_sub_path)
-					update_next_button_sensitivity (False)
-				end
-			end
-		end
 
 	on_browse_for_class
 			-- Browse for class which will be tested.
@@ -304,69 +268,60 @@ feature {NONE}	-- Agents
 
 		end
 
-	on_cluster_changed is
-			-- Handler for `cluster'.change_actions
-			-- FIXIT: We havn't find a good way to write the unique cluster path now. We disable text field sensitive.
+	on_valid_test_case_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32] is
+			-- Valid test case name `a_string'
 		local
-			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
-			l_cluster: STRING
 			l_valid: BOOLEAN
-			l_color: EV_STOCK_COLORS
 		do
-			if not internal_ignore_text_change_actions then
-				l_cluster := cluster.text
-
-				create l_helper
-				l_valid := 	not l_cluster.is_empty and then
-							l_helper.is_cluster_full_path_valid (l_cluster)
-
-				create l_color
-				if not l_valid then
-					cluster.set_foreground_color (l_color.red)
-					update_next_button_sensitivity (True)
-				else
-					cluster.set_foreground_color (l_color.default_foreground_color)
-					wizard_information.set_cluster (l_cluster)
-					update_next_button_sensitivity (False)
-				end
-
-				internal_ignore_text_change_actions := False
-			end
-
+			l_valid := 	not a_string.is_empty and then
+				 		(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string) -- We use class name rule to check test case name
+			 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, Void] then
+			 	Result := l_result
+			 end
 		end
 
-	on_class_name_change
-			-- Handler for `class_name'.change_actions.
+	on_test_case_name_change
+			-- Handler for `test_case_name'.change_actions.
 		local
 			l_color: EV_STOCK_COLORS
 			l_text: STRING
 			l_old_position: INTEGER
 			l_valid: BOOLEAN
 		do
-			if not internal_ignore_text_change_actions then
-				internal_ignore_text_change_actions := True
+			l_valid := test_case_name.is_valid and then not test_case_name.text.is_empty
+			if not l_valid then
+				update_next_button_sensitivity (True)
+			else
+				wizard_information.set_test_case_name (test_case_name.text)
 
-				l_text := class_name.text.as_upper
-				l_old_position := class_name.caret_position
-				class_name.set_text (l_text) -- This call will trigger `on_class_name_change' again.
-				class_name.set_caret_position (l_old_position)
-
-				l_valid := 	not l_text.is_empty and then
-							not is_new_class_name_already_exists and then
-						  	(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (l_text)
-
-				create l_color
-				if not l_valid then
-					class_name.set_foreground_color (l_color.red)
-					update_next_button_sensitivity (True)
-				else
-					class_name.set_foreground_color (l_color.default_foreground_color)
-					wizard_information.set_new_class_name (l_text)
-					update_next_button_sensitivity (False)
-				end
-
-				internal_ignore_text_change_actions := False
+				update_next_button_sensitivity (False)
 			end
+		end
+
+	on_valid_class_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32] is
+			-- Valid class name `a_string'
+		local
+			l_valid: BOOLEAN
+		do
+			l_valid := 	not a_string.is_empty and then
+						not is_new_class_name_already_exists and then
+			  			(create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_string)
+			 if {l_result: TUPLE [BOOLEAN, STRING_32]} [l_valid, Void] then
+			 	Result := l_result
+			 end
+		end
+
+	on_class_name_change
+			-- Handler for `class_name'.change_actions.
+		do
+
+			if not class_name.is_valid or else class_name.text.is_empty then
+				update_next_button_sensitivity (True)
+			else
+				wizard_information.set_new_class_name (class_name.text)
+				update_next_button_sensitivity (False)
+			end
+
 		end
 
 	on_run_before_all_selected is
@@ -395,11 +350,11 @@ feature {NONE}	-- Agents
 
 feature {NONE} -- UI widgets
 
-	cluster: EV_LABEL
-			-- Text field for cluster selection.
+	test_case_name: ES_VALIDATION_TEXT_FIELD
+			-- Text field for test case name
 
-	class_name: EV_TEXT_FIELD
-			-- Text field for class name.
+	class_name: ES_VALIDATION_TEXT_FIELD
+			-- Text field for class name
 
 	on_before_all_test_runs: EV_CHECK_BUTTON
 			-- Check button for `on_before_all_test_runs'
@@ -450,7 +405,7 @@ feature {NONE} -- Query
 			l_list: LIST [CLASS_I]
 		do
 			if not a_class_name.is_empty then
-				l_list := universe.classes_with_name (a_class_name)
+				l_list := universe.classes_with_name (a_class_name.as_upper)
 				Result := l_list.count > 0
 			end
 		end
@@ -467,12 +422,8 @@ feature {NONE} -- Query
 			Result := interface_names.t_Enter_name_of_the_unit_test
 		end
 
-	internal_ignore_text_change_actions: BOOLEAN
-			-- Ignore text change actions?
-			-- Used by `on_class_name_change' only.
-
 	wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION;
-			-- Redefine
+			-- <Precursor>
 
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"

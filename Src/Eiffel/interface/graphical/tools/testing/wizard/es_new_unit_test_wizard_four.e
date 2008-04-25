@@ -1,6 +1,6 @@
 indexing
 	description: "[
-						Third page of new unit test wizard
+						Fourth page of new unit test wizard
 
 																			]"
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	ES_NEW_UNIT_TEST_WIZARD_THREE
+	ES_NEW_UNIT_TEST_WIZARD_FOUR
 
 inherit
 	EB_WIZARD_INTERMEDIARY_STATE_WINDOW

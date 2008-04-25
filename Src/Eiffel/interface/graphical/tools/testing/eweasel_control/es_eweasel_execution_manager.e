@@ -38,6 +38,8 @@ feature -- Command
 			l_helper: EVS_HELPERS
 			l_wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION
 			l_window: EV_WINDOW
+			l_path_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
+			l_cluster_path: STRING
 		do
 			create l_helper
 			l_window := l_helper.parent_window_of_focused_widget
@@ -50,17 +52,21 @@ feature -- Command
 			l_wizard_information := l_manager.wizard_info
 
 			if l_wizard_information.is_valid then
-				create l_dir.make_from_string (l_wizard_information.new_class_name.as_lower)
+				create l_dir.make_from_string (l_wizard_information.test_case_name.as_lower)
 
 				create l_new.make
 				l_new.set_wizard_information (l_wizard_information)
 				l_new.set_target_test_case_folder (l_dir)
 				environment_manager.set_test_case_root_eiffel_class_name (l_wizard_information.new_class_name)
 				environment_manager.set_test_case_directory (l_wizard_information.cluster_directory)
+				environment_manager.set_test_case_name (l_wizard_information.test_case_name)
 				l_new.add_whole_set_of_files
 
 				-- Force compiler to compile the new class, then open it in new tab.
-				compile_and_open_new_unit_test_class (l_wizard_information.new_class_file_name, l_wizard_information.cluster, l_wizard_information.cluster_path)
+				-- Add test case folder name to end of cluster path, we do it here since this directory maybe renamed automatically
+				create l_path_helper
+				l_cluster_path := l_wizard_information.cluster_path + l_path_helper.cluster_separator + l_new.folder_name
+				compile_and_open_new_unit_test_class (l_wizard_information.new_class_file_name, l_wizard_information.cluster, l_cluster_path)
 
 			else
 				-- Inforation is not valid, we do noting. Just quit.
@@ -77,15 +83,9 @@ feature -- Command
 		local
 			l_window: EB_SHARED_WINDOW_MANAGER
 			l_class_stone: CLASSI_STONE
-			l_cluster_path: STRING
-			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
 			l_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			create l_helper
-			-- Add test case folder name to end of cluster path
-			l_cluster_path := a_cluster_sub_path + l_helper.cluster_separator + environment_manager.test_case_root_eiffel_class_name.as_lower
-
-			manager.add_class_to_cluster (a_new_class_file_name, a_cluster, l_cluster_path)
+			manager.add_class_to_cluster (a_new_class_file_name, a_cluster, a_cluster_sub_path)
 
 			create l_class_stone.make (manager.last_added_class)
 			create l_window

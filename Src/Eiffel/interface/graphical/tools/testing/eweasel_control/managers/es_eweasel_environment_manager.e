@@ -60,6 +60,9 @@ feature -- Query
 			Result := l_shared.eiffel_project.project_directory.target_path.twin
 		end
 
+	test_case_name: STRING
+			-- Test case name
+
 feature -- Command
 
 	set_test_case_root_eiffel_class_name (a_name: like test_case_root_eiffel_class_name)
@@ -82,6 +85,17 @@ feature -- Command
 			test_case_directory := a_path
 		ensure
 			set: test_case_directory = a_path
+		end
+
+	set_test_case_name (a_name: STRING) is
+			-- Set `test_case_name' with `a_name'
+			-- This feature is used by {ES_EWEASEL_EXECUTION_MANAGER}.create_unit_test_case
+		require
+			not_void: a_name /= Void
+		do
+			test_case_name := a_name
+		ensure
+			set: test_case_name = a_name
 		end
 
 feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eweasel command line

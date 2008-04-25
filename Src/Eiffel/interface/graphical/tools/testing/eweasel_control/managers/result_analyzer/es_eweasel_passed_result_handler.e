@@ -23,8 +23,8 @@ feature {NONE} -- Implementation
 				create Result
 				Result.set_result_type ({ES_EWEASEL_RESULT_TYPE}.passed)
 				Result.set_original_eweasel_ouput (to_one_string (a_lines.twin))
-				Result.set_title (a_lines.first)
-				Result.set_root_class_name (class_name_in_string (a_lines.first))
+				Result.set_title (a_lines.first.twin)
+				Result.set_root_class_name (class_name_in_string (a_lines.first.twin))
 				if {l_test: ES_EWEASEL_TEST_RESULT_ITEM} Result then
 					set_with_current_item (l_test)
 				end

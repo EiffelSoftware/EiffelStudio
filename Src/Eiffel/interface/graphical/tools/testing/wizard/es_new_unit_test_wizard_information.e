@@ -32,6 +32,9 @@ feature  {NONE} -- Initialization
 
 feature -- Query
 
+	test_case_name: STRING
+			-- Test case name
+
 	new_class_name: STRING
 			-- Class name for the new class which will be created
 
@@ -68,13 +71,8 @@ feature -- Query
 			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
 		do
 			if is_valid then
-				if internal_cluster_sub_path /= Void then
-					Result := internal_cluster_sub_path
-					check not_void_at_same_time: internal_cluster_id /= Void end
-				else
-					create l_helper
-					Result := l_helper.split_cluster_name_and_path (internal_cluster).cluster_path
-				end
+				Result := internal_cluster_sub_path
+				check not_void_at_same_time: internal_cluster_id /= Void end
 			end
 		end
 
@@ -88,8 +86,6 @@ feature -- Query
 			create l_helper
 			if internal_cluster_id /= Void then
 				Result := l_helper.cluster_path_by_id_and_sub_path (internal_cluster_id, internal_cluster_sub_path)
-			else
-				Result := l_helper.cluster_path (internal_cluster)
 			end
 		ensure
 			not_void: Result /= Void
@@ -130,25 +126,34 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+	is_valid_without_cluster: BOOLEAN
+			-- Same as `is_valid' except this feature don't check if cluster reated information
+		do
+			Result := (new_class_name /= Void and then not new_class_name.is_empty) and
+					(test_case_name /= Void and then not test_case_name.is_empty)
+		end
+
 	is_valid: BOOLEAN
 			-- If Current information valid for new eweasel test case creation?
 		local
 			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
-			l_cluster_valid: BOOLEAN
 		do
-			l_cluster_valid := internal_cluster /= Void and then not internal_cluster.is_empty
-			if not l_cluster_valid then
-				l_cluster_valid := internal_cluster_id /= Void and then not internal_cluster_id.is_empty
-			end
-			Result := (new_class_name /= Void and then not new_class_name.is_empty) and l_cluster_valid
-
-			if Result then
-				create l_helper
-				Result := l_helper.is_cluster_full_path_valid (internal_cluster)
+			if is_valid_without_cluster then
+				Result := internal_cluster_id /= Void and then not internal_cluster_id.is_empty
 			end
 		end
 
 feature -- Command
+
+	set_test_case_name (a_name: STRING)
+			-- Set `test_case_name' with `a_name'
+		require
+			not_void: a_name /= Void
+		do
+			test_case_name := a_name
+		ensure
+			set: test_case_name = a_name
+		end
 
 	set_class_under_test (a_class_name: STRING)
 			-- Set `class_under_test' with `a_class_name'
@@ -170,18 +175,7 @@ feature -- Command
 			set: new_class_name = a_class_name
 		end
 
-	set_cluster (a_cluster: like internal_cluster)
-			-- Set `internal_cluster' with `a_cluster'
-		require
-			not_void: a_cluster /= Void
-			valid: (create {ES_CLUSTER_NAME_AND_PATH_HELPER}).is_cluster_full_path_valid (a_cluster)
-		do
-			internal_cluster := a_cluster
-		ensure
-			set: internal_cluster = a_cluster
-		end
-
-	set_cluster_id_and_path (a_cluster_id: like internal_cluster; a_path: STRING)
+	set_cluster_id_and_path (a_cluster_id: STRING; a_path: STRING)
 			-- Set `internal_cluster' with `a_cluster'
 		require
 			not_void: a_cluster_id /= Void
@@ -244,11 +238,6 @@ feature {NONE} -- Implementation
 
 	internal_cluster_id, internal_cluster_sub_path: STRING
 			-- cluster and its sub path.
-
-	internal_cluster: STRING
-			-- Cluster name
-			-- Because cluster name maybe duplicated in system.
-			-- Use `internal_cluster_id' first if it's not void.
 
 invariant
 	not_void: features_to_test /= Void

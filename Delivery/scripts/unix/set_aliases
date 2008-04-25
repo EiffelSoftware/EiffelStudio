@@ -1,18 +1,28 @@
 #!/bin/sh
 
 # Define some parameters
+# Versioning
+MAJOR_NUMBER=6
+MINOR_NUMBER=2
 # Base path for unix layout
 UNIX_BASE_PATH=/usr
 # Name for the lib directory
-UNIX_LIB_NAME=lib64
+UNIX_LIB_NAME=lib
+# Product suffix for binaries
+PRODUCT_VERSION=$MAJOR_NUMBER$MINOR_NUMBER
+# Product name for unix layout and packaging
+PRODUCT=eiffelstudio-$MAJOR_NUMBER.$MINOR_NUMBER
+# Version
+VERSION=$MAJOR_NUMBER.$MINOR_NUMBER.0
+
 # File in which the status of the installation generation is logged
 INSTALL_LOG=`pwd`/install.log
 # File in which the status of the installation compilation is logged
 COMPILE_LOG=`pwd`/compile.log
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=`pwd`/Eiffel62
+INSTALL_DIR=`pwd`/Eiffel$MAJOR_NUMBER$MINOR_NUMBER
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=`pwd`/Eiffel62
+FINAL_INSTALL_DIR=`pwd`/Eiffel$MAJOR_NUMBER$MINOR_NUMBER
 # Where documentation will be generated
 DOCUMENT_DIR=`pwd`
 # Where all.tar.bz2 files should be stored
@@ -51,7 +61,7 @@ mv $*
 }
 md ()
 {
-mkdir $*
+mkdir -p $*
 }
 # Compress a file and move it to $EXPORT_DIR
 tgz ()

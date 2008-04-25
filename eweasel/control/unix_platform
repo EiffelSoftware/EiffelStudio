@@ -4,7 +4,7 @@ define_file		EWEASEL_FREEZE	$EWEASEL bin eiffel_freeze
 define_file		EWEASEL_EXECUTE $EWEASEL bin eiffel_execute
 
 -- EiffelBase platform specific directories
-define	KERNEL_CLASSIC	"<cluster name="kernel" location="$ISE_EIFFEL\library\base\elks\kernel"/><cluster name="exceptions" location="$ISE_EIFFEL\library\base\ise\kernel\exceptions"/><cluster name="elks_exceptions" location="$ISE_EIFFEL\library\base\elks\kernel\exceptions"><file_rule><exclude>/exception.e$</exclude></file_rule></cluster>"
+define	KERNEL_CLASSIC	"<cluster name="kernel" location="$ISE_EIFFEL\library\base\elks\kernel"/><cluster name="exceptions" location="$ISE_EIFFEL\library\base\ise\kernel\exceptions"/><cluster name="elks_exceptions" location="$ISE_EIFFEL\library\base\elks\kernel\exceptions"/>"
 define	KERNEL_DOTNET	""
 define	SUPPORT_DOTNET	""
 

@@ -18,6 +18,6 @@
       </literal>
    </declarations>
    <templates>
-      <template>${feature_name}_is_consistent: Result ~= ${feature_name}${end}</template>
+      <template>result_is_consistent: Result ~ ${feature_name}${end}</template>
    </templates>
 </code_template>

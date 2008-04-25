@@ -21,6 +21,6 @@
       </object>
    </declarations>
    <templates>
-      <template>${target}_set: ${target} ~= ${source}${end}</template>
+      <template>${target}_set: ${target} ~ ${source}${end}</template>
    </templates>
 </code_template>

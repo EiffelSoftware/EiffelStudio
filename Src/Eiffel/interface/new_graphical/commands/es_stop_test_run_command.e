@@ -56,13 +56,13 @@ feature {ES_TESTING_TOOL_PANEL} -- Implementation
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.testing_stop_test_run_icon
+			Result := pixmaps.icon_pixmaps.debug_stop_icon
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER is
 			-- Pixel buffer representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.testing_stop_test_run_icon_buffer
+			Result := pixmaps.icon_pixmaps.debug_stop_icon_buffer
 		end
 
 	name: STRING_GENERAL is

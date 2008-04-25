@@ -22,7 +22,6 @@ inherit
 			{ES_EWEASEL_EXECUTION_MANAGER}  interface_names
 		redefine
 			on_after_initialized,
-			create_right_tool_bar_items,
 			build_tool_interface,
 			is_appliable_event
 		end
@@ -186,11 +185,6 @@ feature {NONE} -- Initialization
 		end
 
 	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
-			-- <Precursor>
-		do
-		end
-
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- <Precursor>
 		local
 			l_constants: EB_CONSTANTS

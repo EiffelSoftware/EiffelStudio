@@ -20,7 +20,6 @@ inherit
 		redefine
 			build_tool_interface,
 			on_after_initialized,
-			create_right_tool_bar_items,
 			is_appliable_event,
 			row_item_text
 		end
@@ -135,12 +134,6 @@ feature {NONE} -- Redefine
 		end
 
 	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
-			-- <Precursor>
-		do
-			-- No left tool bar buttons for the moment
-		end
-
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- <Precursor>
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY

@@ -34,7 +34,6 @@ feature -- Access
 		local
 			l_ast: like contract_ast
 			l_routine: ?ROUTINE_AS
-			l_locals: ?LOCAL_DEC_LIST_AS
 			l_kw: ?KEYWORD_AS
 		do
 			l_ast := contract_ast

@@ -972,7 +972,7 @@ feature {NONE} -- Action handlers
 			contract_editor.widget.set_focus
 		end
 
-	on_add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION)
+	on_add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION) is
 			-- Called when the user chooses to add a new contract, from a template, to the existing feature.
 			--
 			-- `a_template': The template to use to render a contract.
@@ -988,6 +988,8 @@ feature {NONE} -- Action handlers
 			l_provider: !EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 			l_error: !ES_ERROR_PROMPT
 			l_contract: !STRING_32
+			l_symbol_table: !CODE_SYMBOL_TABLE
+			l_value: !CODE_SYMBOL_VALUE
 		do
 			l_template := a_template.applicable_item
 			if l_template /= Void and {l_source: ES_CONTRACT_SOURCE_I} contract_editor.selected_source then
@@ -1001,6 +1003,27 @@ feature {NONE} -- Action handlers
 						create l_provider.make (context.context_class.compiled_class, Void)
 					end
 					l_dialog.set_completion_provider (l_provider)
+				end
+
+					-- Set context symbol information
+				l_symbol_table := l_dialog.code_symbol_table
+				if {l_fc: ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context then
+					if l_symbol_table.has_id (feature_name_symbol_id) then
+						l_value := l_symbol_table.item (feature_name_symbol_id)
+						l_value.set_value (({!STRING_32}) #? l_fc.context_feature.name.as_string_32)
+					else
+						create l_value.make (({!STRING_32}) #? l_fc.context_feature.name)
+						l_symbol_table.put (l_value, feature_name_symbol_id)
+					end
+				end
+				if {l_cc: ES_CLASS_CONTRACT_EDITOR_CONTEXT} context then
+					if l_symbol_table.has_id (feature_name_symbol_id) then
+						l_value := l_symbol_table.item (class_name_symbol_id)
+						l_value.set_value (({!STRING_32}) #? l_cc.context_class.name.as_string_32)
+					else
+						create l_value.make (({!STRING_32}) #? l_cc.context_class.name.as_string_32)
+						l_symbol_table.put (l_value, class_name_symbol_id)
+					end
 				end
 
 				l_dialog.show_on_active_window
@@ -1434,6 +1457,8 @@ feature {NONE} -- Constants
 
 	contract_mode_session_id: !STRING = "com.eiffel.contract_tool.mode"
 	show_all_lines_session_id: !STRING = "com.eiffel.contract_tool.show_all_lines"
+	class_name_symbol_id: !STRING = "class_name"
+	feature_name_symbol_id: !STRING = "feature_name"
 
 invariant
 	save_modifications_button_attached: (is_initialized and is_interface_usable) implies save_modifications_button /= Void

@@ -1332,7 +1332,7 @@ feature -- Label texts
 	l_parents: STRING_GENERAL is				do Result := locale.translation("Parents:")	end
 	l_Path: STRING_GENERAL is					do Result := locale.translation("Path")	end
 	l_Platform: STRING_GENERAL is				do Result := locale.translation ("Platform") end
-	l_Please_select: STRING_GENERAL is			do Result := locale.translation ("Please select...") end
+	l_please_select: STRING_GENERAL is			do Result := locale.translation ("Please select a cluster where test case files will be generated.") end
 	l_position: STRING_GENERAL is 				do Result := locale.translation ("Position") end
 	l_Possible_overflow: STRING_GENERAL is		do Result := locale.translation("Possible stack overflow")	end
 	l_precompile: STRING_GENERAL is				do Result := locale.translation("Precompile")	end
@@ -1599,7 +1599,8 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("Extracting $1 of $2 ..."), [a_command_name, a_object_name])
 		end
 
-	l_history_discarded_string: STRING_GENERAL is do Result := locale.translation ("--- History discarded ---") end
+	l_test_case_name_colon: STRING_GENERAL is 		do Result := locale.translation("Test case name:")	end
+	l_history_discarded_string: STRING_GENERAL is 	do Result := locale.translation ("--- History discarded ---") end
 
 	l_item_is_attached_to (a_title, a_name: STRING_GENERAL): STRING_GENERAL is
 		require

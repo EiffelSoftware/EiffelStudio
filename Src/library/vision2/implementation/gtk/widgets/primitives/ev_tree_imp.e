@@ -294,13 +294,13 @@ feature -- Status report
 			a_depth := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_depth (a_tree_path)
 			a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 			from
-				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes * a_depth)
+				create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes * a_depth)
 				a_tree_node := i_th (mp.read_integer_32 (0) + 1)
 				i := 1
 			until
 				i = a_depth
 			loop
-				a_tree_node := a_tree_node.i_th (mp.read_integer_32 (i * App_implementation.integer_bytes) + 1)
+				a_tree_node := a_tree_node.i_th (mp.read_integer_32 (i * {PLATFORM}.integer_32_bytes) + 1)
 				i := i + 1
 			end
 			Result ?= a_tree_node.implementation
@@ -560,14 +560,14 @@ feature {EV_TREE_NODE_IMP}
 				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 				a_depth := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_depth (a_tree_path)
 				from
-					create mp.share_from_pointer (a_int_ptr, app_implementation.integer_bytes * a_depth)
+					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes * a_depth)
 					current_depth_index := mp.read_integer_32 (0) + 1
 					a_tree_node_imp ?= child_array.i_th (current_depth_index).implementation
 					i := 1
 				until
 					i = a_depth
 				loop
-					current_depth_index := mp.read_integer_32 (i * app_implementation.integer_bytes) + 1
+					current_depth_index := mp.read_integer_32 (i * {PLATFORM}.integer_32_bytes) + 1
 					a_tree_node_imp ?= a_tree_node_imp.child_array.i_th (current_depth_index).implementation
 					i := i + 1
 				end

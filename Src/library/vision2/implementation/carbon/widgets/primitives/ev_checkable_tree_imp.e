@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 --			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_iter (tree_store, a_tree_iter.item, a_tree_path)
 --			if a_success then
 --				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
---				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+--				create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 --				a_tree_item := child_array @ (mp.read_integer_32 (0) + 1)
 --				a_gvalue := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
 --				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)

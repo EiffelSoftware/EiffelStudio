@@ -490,7 +490,7 @@ feature -- Access
 			if a_tree_path_list /= NULL then
 					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
-					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 					Result := ((ev_children @ (mp.read_integer_32 (0) + 1)).interface)
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
 					{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
@@ -521,7 +521,7 @@ feature -- Access
 				loop
 					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
-					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 					Result.extend ((ev_children @ (mp.read_integer_32 (0) + 1)).interface)
 					a_tree_path_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_tree_path_list)
 				end
@@ -989,7 +989,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
 			if a_success then
 				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
-				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+				create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
 				Result := mp.read_integer_32 (0) + 1
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 			end

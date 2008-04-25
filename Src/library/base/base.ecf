@@ -4,6 +4,7 @@
 		<description>FreeELKS: Library of reusable components for Eiffel.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
+		<note ise_support="eis" name="ELKS" tag="Open source" src="http://www.ecma.com" test="test"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
@@ -79,12 +80,6 @@
 					<dotnet value="true"/>
 				</condition>
 			</file_rule>
-			<file_rule>
-				<exclude>/kernel/exceptions/exception.e$</exclude>
-				<condition>
-					<dotnet value="false"/>
-				</condition>
-			</file_rule>
 		</cluster>
 		<cluster name="ise" location="ise\" recursive="true">
 			<option namespace="Base">
@@ -97,7 +92,6 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/classic$</exclude>
-				<exclude>/kernel/exceptions/exception.e$</exclude>
 				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
 				<exclude>/kernel/exceptions/io_failure.e$</exclude>
 				<condition>

@@ -3,7 +3,7 @@
     <title>Count Is Positive</title>
     <description>Code template contract predicate to ensure an entity's count is greater than zero</description>
     <author>Eiffel Software</author>
-    <shortcut>pcnt</shortcut>
+    <shortcut>pos_count</shortcut>
       <categories>
          <category>Eiffel</category>
          <category>code</category>

@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			-- Cluster
 			create l_h_box
 
---			create l_label.make_with_text (interface_names.l_test_case_name_colon)
+			create l_label.make_with_text ("FIXME")
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)
 

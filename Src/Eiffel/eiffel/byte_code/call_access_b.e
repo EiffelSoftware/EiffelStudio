@@ -399,6 +399,7 @@ feature -- Byte code generation
 		require
 			gen_reg_not_void: gen_reg /= Void
 			meta_reg_not_void: meta_reg /= Void
+			class_type_not_void: class_type /= Void
 			basic_type_not_void: basic_type /= Void
 			buf_not_void: buf /= Void
 		local

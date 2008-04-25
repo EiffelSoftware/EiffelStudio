@@ -28,8 +28,12 @@ feature -- Access
 
 	product_name: !STRING_8
 			-- Name of the product.
-		do
-			Result := "Eiffel"
+		once
+			if is_unix_layout then
+				Result := "eiffelstudio"
+			else
+				Result := "Eiffel"
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -38,7 +42,7 @@ feature -- Access
 			-- Versioned name of the product.
 		once
 			if is_unix_layout then
-				create Result.make_from_string (product_name + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
+				create Result.make_from_string (product_name + "-" + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
 				Result.to_lower
 			else
 				create Result.make_from_string (product_name + {EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
@@ -88,8 +92,8 @@ feature {NONE} -- Access
 			-- List of required environment variables.
 		once
 			create Result.make (4)
-			Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env, True])
 			if not is_unix_layout then
+				Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env, True])
 				Result.extend ([{EIFFEL_ENVIRONMENT_CONSTANTS}.ise_platform_env, False])
 			end
 			if {PLATFORM}.is_windows then
@@ -139,7 +143,7 @@ feature -- Status update
 			if {PLATFORM_CONSTANTS}.is_unix then
 					-- On Unix platforms, if not ISE_EIFFEL is defined then it's probably the unix layout.
 				l_value := get_environment ({EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
-				is_unix_layout := l_value = Void or l_value.is_empty
+				is_unix_layout := (l_value = Void) or else l_value.is_empty
 			end
 
 				-- Check environment variables
@@ -150,14 +154,14 @@ feature -- Status update
 				l_variable := l_variables.item
 				l_value := get_environment (l_variable.var)
 
-				if l_value.item (l_value.count) = l_op_env.directory_separator and then ({PLATFORM}.is_windows or else not (l_value.is_equal ("/") or l_value.is_equal ("~/"))) then
+				if l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then ({PLATFORM}.is_windows or else not (l_value.is_equal ("/") or l_value.is_equal ("~/"))) then
 						-- Remove trailing directory separator
 					l_value.prune_all_trailing (l_op_env.directory_separator)
 				end
 
 				if l_value = Void or else l_value.is_empty then
 					io.error.put_string (l_product_names.workbench_name)
-					io.error.put_string (": the environment variable $" + l_variable.var + " has not set!%N")
+					io.error.put_string (": the environment variable $" + l_variable.var + " has not been set!%N")
 					l_is_valid := False
 				elseif l_variable.is_directory and then not (create {DIRECTORY}.make (l_value)).exists then
 					io.error.put_string (l_product_names.workbench_name)
@@ -178,7 +182,9 @@ feature -- Status update
 
 					-- Set new ISE_EIFFEL variable. This is done to ensure that the workbench path is
 					-- set correctly, or if in unix layout that ISE_EIFFEL is set
-				set_environment (shared_path, {EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
+				if not is_unix_layout then
+					set_environment (shared_path, {EIFFEL_ENVIRONMENT_CONSTANTS}.ise_eiffel_env)
+				end
 
 					-- Set Unix platform
 				if is_unix_layout then
@@ -372,12 +378,15 @@ feature -- Directories (top-level)
 			--       be using the platform independent `shared_path'.
 		require
 			is_valid_environment: is_valid_environment
-			not_unix_layout: not is_unix_layout
 		local
 			l_name: !STRING
 			l_name_wb: STRING
 		once
-			l_name ?= eiffel_install
+			if is_unix_layout then
+				l_name := shared_path
+			else
+				l_name ?= eiffel_install
+			end
 			if is_workbench then
 				l_name_wb := l_name.twin
 				l_name_wb.append (wkbench_suffix)
@@ -671,11 +680,10 @@ feature -- Directories (distribution)
 	bin_path: !DIRECTORY_NAME
 			-- Location of binary compiler components.
 		require
-			not_unix_layout: not is_unix_layout
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result ?= unix_layout_base_path
+				Result ?= unix_layout_base_path.twin
 				Result.extend (bin_name)
 			else
 				Result ?= shared_application_path.twin
@@ -923,9 +931,11 @@ feature -- Directories (user)
 		local
 			l_dir: like user_priority_path
 		once
-			l_dir := user_priority_path (application_path)
+			if is_user_files_supported then
+				l_dir := user_priority_path (shared_application_path)
+			end
 			if l_dir /= Void then
-				Result ?= l_dir
+				Result := l_dir
 			else
 				create Result.make_from_string (user_directory_name)
 				Result.extend (distribution_name)
@@ -1135,13 +1145,29 @@ feature -- Directories (platform independent)
 			-- Location of shared files (platform independent).
 		require
 			is_valid_environment: is_valid_environment
+		local
+			l_name: STRING_8
+			l_name_wb: STRING_8
 		once
 			if is_unix_layout then
 				Result ?= unix_layout_base_path.twin
 				Result.extend_from_array (<<"share", product_version_name>>)
+				l_name := Result
 			else
-				Result ?= install_path.twin
+				l_name := eiffel_install
 			end
+			if is_workbench then
+				l_name_wb := l_name.twin
+				l_name_wb.append (wkbench_suffix)
+				if (create {DIRECTORY}.make (l_name_wb)).exists then
+						-- The workbench version exists, so use that directory instead.
+					l_name ?= l_name_wb
+				end
+			end
+			check
+				not_l_name_is_empty: not l_name.is_empty
+			end
+			create Result.make_from_string (l_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1152,13 +1178,7 @@ feature -- Directories (platform independent)
 			is_valid_environment: is_valid_environment
 		once
 			Result ?= shared_path.twin
-				-- Patrickr, 11/01/06 hack for backwards compatibility, the application is ec but
-				-- the directory is studio
-			if is_unix_layout then
-				Result.extend (application_name)
-			else
-				Result.extend (distribution_name)
-			end
+			Result.extend (distribution_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1184,13 +1204,7 @@ feature -- Directories (platform independent)
 			is_valid_environment: is_valid_environment
 		once
 			Result ?= lib_path.twin
-				-- Patrickr, 11/01/06 hack for backwards compatibility, the application is ec but
-				-- the directory is studio
-			if is_unix_layout then
-				Result.extend (application_name)
-			else
-				Result.extend (distribution_name)
-			end
+			Result.extend (distribution_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1362,7 +1376,7 @@ feature -- Executable names
 		once
 			create Result.make_from_string ("estudio")
 			if is_unix_layout then
-				Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
+				Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1380,7 +1394,7 @@ feature -- Executable names
 				create Result.make (6)
 				Result.append ("ec")
 				if is_unix_layout then
-					Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
+					Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
 				end
 			end
 		ensure
@@ -1392,7 +1406,7 @@ feature -- Executable names
 		once
 			create Result.make_from_string ("finish_freezing")
 			if is_unix_layout then
-				Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + "." + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
+				Result.append ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version.out + {EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version.out)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+   <metadata>
+      <title>Changed</title>
+      <description>Code template contract to ensure a class attribute has unchanged during the execution of a routine</description>
+      <author>Eiffel Software</author>
+      <shortcut>changed</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+   </metadata>
+   
+   <declarations>
+      <object id="var" editable="True" conforms_to="ANY">
+         <description>A class attribute that should differ after execution</description>
+      </object>
+   </declarations>
+   <templates>
+      <template>${var}_unchanged: ${var} /~ old ${var}${end}</template>
+   </templates>
+</code_template>

@@ -139,7 +139,6 @@ feature -- Settings
 			buffer_not_void: buffer /= Void
 		local
 			local_routines: like routines
-			local_wrappers: like wrappers
 			local_routine_tables: SEARCH_TABLE [STRING]
 			local_attribute_tables: SEARCH_TABLE [STRING]
 			local_type_tables: SEARCH_TABLE [STRING]

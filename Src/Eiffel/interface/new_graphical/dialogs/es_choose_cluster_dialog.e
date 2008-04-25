@@ -25,13 +25,26 @@ create
 
 feature -- Query
 
-	selected_cluster_and_path: STRING
+	selected_cluster_and_path: STRING is
 			-- Selected cluster name and path
 			-- This value set by `On_ok'
+		do
+			Result := ui_builder.selected_cluster_and_path
+		end
 
-	cluster_id, cluster_sub_path: STRING
-			-- Cluster Id and its sub path.
+	cluster_id: STRING is
+			-- Cluster ID
 			-- Maybe void if end user not pressed any cluster tree node.
+		do
+			Result := ui_builder.cluster_id
+		end
+
+	 cluster_sub_path: STRING is
+			-- Cluster sub path.
+			-- Maybe void if end user not pressed any cluster tree node.
+		do
+			Result := ui_builder.cluster_sub_path
+		end
 
 feature {NONE} -- Redefine
 
@@ -47,66 +60,12 @@ feature {NONE} -- Redefine
 			controls_box: EV_VERTICAL_BOX
 			l_layouts: EV_LAYOUT_CONSTANTS
 		do
-			create l_layouts
+			ui_builder.prepare (a_context_menu_factory, a_container)
+			cluster_name_entry := ui_builder.cluster_name_entry
+			classes_tree := ui_builder.classes_tree
 
 			set_button_action_before_close ({ES_DIALOG_BUTTONS}.ok_button, agent on_ok)
 			set_button_action ({ES_DIALOG_BUTTONS}.cancel_button, agent on_cancel)
-
-				-- Create the controls.
-			create cluster_name_entry.make
-			cluster_name_entry.disable_sensitive
-			cluster_name_entry.change_actions.extend (agent on_cluster_name_changed)
-			create classes_tree.make_with_options (a_context_menu_factory, False, False)
-			classes_tree.set_minimum_width (l_layouts.dialog_unit_to_pixels(300))
-			classes_tree.set_minimum_height (l_layouts.dialog_unit_to_pixels(200))
-
-			classes_tree.associate_textable_with_classes (cluster_name_entry)
-			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
-
-			classes_tree.refresh
-
-				-- Create the left panel: a Combo Box to type the name of the class
-				-- and a tree to select the class.
-			create controls_box
-			controls_box.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
-			controls_box.set_border_width ({ES_UI_CONSTANTS}.dialog_border)
-			controls_box.extend (cluster_name_entry)
-			controls_box.disable_item_expand (cluster_name_entry)
-
-			controls_box.extend (classes_tree)
-
-				-- Pack the buttons_box and the controls.
-			a_container.extend (controls_box)
-		end
-
-	on_ok is
-			-- Terminate the dialog.
-		local
-			l_entry_text: STRING
-
-			l_valid_cluster_and_path: BOOLEAN
-
-			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
-			l_cluster_name_and_path: TUPLE [a_cluster_id, a_cluster_sub_path: STRING]
-		do
-			create l_helper
-
-			l_entry_text := cluster_name_entry.text
-			l_valid_cluster_and_path := l_helper.is_cluster_full_path_valid (l_entry_text)
-			if not l_valid_cluster_and_path then -- No cluster has such a name.
-				cluster_name_entry.set_text (Interface_names.l_unknown_cluster_name)
-				cluster_name_entry.select_all
-
-				veto_close
-			else
-				selected_cluster_and_path := l_entry_text
-
-				l_cluster_name_and_path ?= cluster_name_entry.data
-				if l_cluster_name_and_path /= Void then
-					cluster_id := l_cluster_name_and_path.a_cluster_id
-					cluster_sub_path := l_cluster_name_and_path.a_cluster_sub_path
-				end
-			end
 		end
 
 	title: STRING_32
@@ -115,28 +74,20 @@ feature {NONE} -- Redefine
 			Result := Interface_names.t_choose_cluster
 		end
 
-	on_cluster_name_changed
-			-- Handle cluster name entry (combo box) text change actions.
-		local
-			l_text: STRING
-			l_valid: BOOLEAN
-			l_stock_colors: EV_STOCK_COLORS
-			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
+	on_ok is
+			-- <Precursor>
 		do
-			create l_helper
-
-			l_text := cluster_name_entry.text
-			if l_text /= Void and then not l_text.is_empty then
-				-- Check if cluster name and path valid
-				l_valid := l_helper.is_cluster_full_path_valid (l_text)
+			if not ui_builder.on_ok then
+				veto_close
 			end
+		end
 
-			create l_stock_colors
-			if l_valid then
-				cluster_name_entry.set_foreground_color (l_stock_colors.default_foreground_color)
-			else
-				cluster_name_entry.set_foreground_color (l_stock_colors.red)
-			end
+feature {NONE} -- Implementation
+
+	ui_builder: !ES_CHOOSE_CLUSTER_UI_BUILDER is
+			-- UI builder
+		once
+			create Result
 		end
 
 indexing

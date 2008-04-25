@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
   <metadata>
-    <title>Not Is Empty</title>
-    <description>Code template contract predicate to ensure a finite entity is not empty</description>
+    <title>Is Detached or Not Empty</title>
+    <description>Code template contract predicate to ensure a finite entity is either detached or attached and is not empty</description>
     <author>Eiffel Software</author>
-    <shortcut>not_is_empty</shortcut>
+    <shortcut>is_detached_or_not_empty</shortcut>
       <categories>
          <category>Eiffel</category>
          <category>code</category>
@@ -19,6 +19,6 @@
   </declarations>
   
   <templates>
-    <template>not_${var}_is_empty: not ${var}.is_empty${end}</template>  
+    <template>not_${var}_is_detached_or_not_empty: ${var} /= Void implies not ${var}.is_empty${end}</template>  
   </templates>
 </code_template>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+   <metadata>
+      <title>Assigned</title>
+      <description>Code template contract to ensure a class' attribute has been assigned</description>
+      <author>Eiffel Software</author>
+      <shortcut>assigned</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+   </metadata>
+   
+   <declarations>
+      <object id="target" editable="True" conforms_to="ANY">
+         <description>A class attribute that should be assigned</description>
+      </object >
+      <object id="source" editable="True" conforms_to="ANY">
+         <description>A source entity, most likely a routine argument, that should have been used to assign to a class attribute</description>
+      </object>
+   </declarations>
+   <templates>
+      <template>${target}_set: equal (${target}, ${source})${end}</template>
+   </templates>
+</code_template>

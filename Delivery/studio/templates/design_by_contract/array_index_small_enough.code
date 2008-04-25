@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+   <metadata>
+      <title>Array Index Small Enough</title>
+      <description>Code template contract predicate to ensure an array indexing is small enough according to its upper bound</description>
+      <author>Eiffel Software</author>
+      <shortcut>asmall_enough</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+   </metadata>
+   
+   <declarations>
+      <object id="array" editable="True" conforms_to="ARRAY [ANY]">
+         <description>An attached array entity</description>
+      </object>
+      <object id="index" editable="True" conforms_to="NUMERICAL">
+         <description>A index to the specified array item</description>
+      </object>
+   </declarations>
+   
+   <templates>
+      <template>${index}_small_enough: ${index} &lt;= ${array}.upper${end}</template>
+   </templates>
+</code_template>

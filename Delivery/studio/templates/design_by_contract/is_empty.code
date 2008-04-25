@@ -1,21 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
-	<metadata>
-		<title>Is Empty</title>
-		<description>Code template for creating empty test contract.</description>
-		<author>Eiffel Software</author>
-		<shortcut>empty</shortcut>
-		<categories>
-			<category>contract</category>
-		</categories>
-	</metadata>
-	
-	<declarations>	
-		<object id="var" editable="true" conforms_to="FINITE">
-			<description>An attached variable with access to an `is_empty' predicate.</description>
-		</object>
-	</declarations>
-	
-	<templates>
-		<template>${var}_is_empty: ${var}.is_empty</template>	
-	</templates>
+  <metadata>
+    <title>Is Empty</title>
+    <description>Code template contract predicate to ensure a finite entity is empty</description>
+    <author>Eiffel Software</author>
+    <shortcut>is_empty</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+  </metadata>
+  
+  <declarations>  
+    <object id="var" editable="true" conforms_to="FINITE">
+      <description>An attached variable with access to an `is_empty' status function</description>
+    </object>
+  </declarations>
+  
+  <templates>
+    <template>${var}_is_empty: ${var}.is_empty${end}</template>  
+  </templates>
 </code_template>

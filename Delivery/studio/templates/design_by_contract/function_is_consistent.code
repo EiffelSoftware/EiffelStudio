@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+   <metadata>
+      <title>Consistent Is Consistent</title>
+      <description>Code template contract to ensure repeated calls to a function yield the same result</description>
+      <author>Eiffel Software</author>
+      <shortcut>consistent</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+   </metadata>
+   
+   <declarations>
+      <literal id="feature_name" editable="True">
+         <description>The name of the function who's result should remain consistent</description>
+      </literal>
+   </declarations>
+   <templates>
+      <template>${feature_name}_is_consistent: Result ~= ${feature_name}${end}</template>
+   </templates>
+</code_template>

@@ -1,21 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
-	<metadata>
-		<title>All Items Attached</title>
-		<description>Code template for testing a container structure has only attached items.</description>
-		<author>Eiffel Software</author>
-		<shortcut>all_attached</shortcut>
-		<categories>
-			<category>contract</category>
-		</categories>
-	</metadata>
-	
-	<declarations>	
-		<object id="container" editable="true" conforms_to="CONTAINER">
-			<description>An attached container variable.</description>
-		</object>
-	</declarations>
-	
-	<templates>
-		<template>${container}_has_attached_items: not ${container}.has (Void)</template>	
-	</templates>
+  <metadata>
+    <title>All Items Unattached</title>
+    <description>Code template contract predicate to ensure a chained container structure has only attached items</description>
+    <author>Eiffel Software</author>
+    <shortcut>all_unattached</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+  </metadata>
+  
+  <declarations>  
+    <object id="container" editable="true" conforms_to="CHAIN">
+      <description>An attached chain container entity</description>
+    </object>
+  </declarations>
+  
+  <templates>
+    <template>${container}_items_unattached: ${container}.occurances (Void) = ${container}.count${end}</template>  
+  </templates>
 </code_template>

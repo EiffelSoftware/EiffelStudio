@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+   <metadata>
+      <title>Is Negative</title>
+      <description>Code template contract predicate for ensuring an entity is a negative numerical</description>
+      <author>Eiffel Software</author>
+      <shortcut>is_neg</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+   </metadata>
+   
+   <declarations>
+      <object id="integer" editable="True" conforms_to="NUMERICAL">
+         <description>An integer entity</description>
+      </object>
+   </declarations>
+   
+   <templates>
+      <template>${integer}_is_negative: ${integer} &lt; 0${end}</template>
+   </templates>
+</code_template>

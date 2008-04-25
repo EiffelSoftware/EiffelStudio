@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<code_template format="1.0.0">
+  <metadata>
+    <title>Not Has Item</title>
+    <description>Code template contract predicate to ensure a container structure does not have an item</description>
+    <author>Eiffel Software</author>
+    <shortcut>not_has_item</shortcut>
+      <categories>
+         <category>Eiffel</category>
+         <category>code</category>
+         <category>contract</category>
+      </categories>
+  </metadata>
+  
+  <declarations>  
+    <object id="container" editable="true" conforms_to="CONTAINER">
+      <description>An attached container variable to check the item's absence</description>
+    </object>
+    <object id="item" editable="true" conforms_to="ANY">
+      <description>An entity returning the item to ensure the absense of</description>
+    </object>
+  </declarations>
+  
+  <templates>
+    <template>not_${container}_has_item: not ${container}.has (${item})${end}</template>  
+  </templates>
+</code_template>

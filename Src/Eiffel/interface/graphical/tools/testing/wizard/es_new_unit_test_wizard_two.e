@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			-- Cluster
 			create l_h_box
 
-			create l_label.make_with_text (interface_names.l_test_case_name_colon)
+--			create l_label.make_with_text (interface_names.l_test_case_name_colon)
 			l_h_box.extend (l_label)
 			l_h_box.disable_item_expand (l_label)
 
@@ -283,9 +283,6 @@ feature {NONE}	-- Agents
 	on_test_case_name_change
 			-- Handler for `test_case_name'.change_actions.
 		local
-			l_color: EV_STOCK_COLORS
-			l_text: STRING
-			l_old_position: INTEGER
 			l_valid: BOOLEAN
 		do
 			l_valid := test_case_name.is_valid and then not test_case_name.text.is_empty

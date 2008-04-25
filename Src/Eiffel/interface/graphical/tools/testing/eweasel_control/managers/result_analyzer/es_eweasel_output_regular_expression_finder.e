@@ -21,16 +21,19 @@ feature -- Query
 		end
 
 	class_name_in (a_string: STRING): STRING_GENERAL is
-			-- Class name in frist line of eweasel output which surrounded by "[]"
+			-- Class name in frist line of eweasel output
 			-- Result void if not found
 		require
 			not_void: a_string /= Void
 		local
-			l_tmp: like find_expression
+			l_first_blank_index: INTEGER
 		do
-			l_tmp := find_expression ("\[([a-zA-Z][a-zA-Z0-9_]*)\]", a_string)
-			if l_tmp /= Void then
-				Result := l_tmp.a_result_string
+			if a_string.count > 1 then
+				l_first_blank_index := a_string.substring_index (" ", 1)
+				check not_the_first: l_first_blank_index /= 1 end
+				Result := a_string.substring (1, l_first_blank_index - 1)
+				Result := Result.as_string_32.as_upper
+				check class_name_right: (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (Result.as_string_8) end
 			end
 		end
 

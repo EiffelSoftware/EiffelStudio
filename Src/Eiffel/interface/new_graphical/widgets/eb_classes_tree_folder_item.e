@@ -808,9 +808,12 @@ feature {NONE} -- Implementation
 				end
 
 				if l_current_cluster /= Void then
-					associated_textable.set_text (l_current_cluster)
 					-- We set result here, query by EB_CHOOSE_CLUSTER_DIALOG.
+					-- We first set data, then set text, so clients can hook to `change_actions' of `associated_textable' to query the data
 					associated_textable.set_data ([id_solution.id_of_group (data.actual_cluster), path])
+
+					associated_textable.set_text (l_current_cluster)
+
 				end
 			end
 		end

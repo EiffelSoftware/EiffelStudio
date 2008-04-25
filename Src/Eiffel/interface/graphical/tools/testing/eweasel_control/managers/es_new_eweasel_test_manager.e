@@ -104,13 +104,31 @@ feature {NONE} -- Implementation
 
 	add_folder is
 			-- Create eweasel testing folder
+			-- This feature will gurantee create a fresh new directory
+			-- If `full_target_test_case_folder' already exists before this call,
+			-- then new folder name xx_2, xx_3 wiil be used
 		local
 			l_dir: DIRECTORY
+			l_created: BOOLEAN
+			l_orignal_folder: DIRECTORY_NAME
+			l_count: INTEGER
 		do
-			create l_dir.make (full_target_test_case_folder)
-			if not l_dir.exists then
-				l_dir.create_dir
-				check created: l_dir.exists end
+			from
+				create l_dir.make (full_target_test_case_folder)
+				l_orignal_folder := folder_name
+				l_count := 1
+			until
+				l_created
+			loop
+				if not l_dir.exists then
+					l_dir.create_dir
+					check created: l_dir.exists end
+					l_created := True
+				else
+					set_target_test_case_folder (l_orignal_folder + "_" + l_count.out)
+					create l_dir.make (full_target_test_case_folder)
+				end
+				l_count :=  l_count + 1
 			end
 		ensure
 			exists: (create {DIRECTORY}.make (full_target_test_case_folder)).exists
@@ -479,7 +497,7 @@ feature {NONE} -- File contents
 			-- Test case name.
 			-- The Result same as test root class name for the moment
 		do
-			Result := test_case_root_class_name
+			Result := wizard_information.test_case_name.as_lower
 		end
 
 	tcf_content: STRING is

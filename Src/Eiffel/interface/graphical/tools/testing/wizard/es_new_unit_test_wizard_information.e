@@ -67,8 +67,6 @@ feature -- Query
 			-- Cluster path which used by Eiffel system internally.
 			-- Separated by {ES_CLUSTER_NAME_AND_PATH_HELPER}.cluster_separator.
 			-- This is not file system path.
-		local
-			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
 		do
 			if is_valid then
 				Result := internal_cluster_sub_path
@@ -135,8 +133,6 @@ feature -- Query
 
 	is_valid: BOOLEAN
 			-- If Current information valid for new eweasel test case creation?
-		local
-			l_helper: ES_CLUSTER_NAME_AND_PATH_HELPER
 		do
 			if is_valid_without_cluster then
 				Result := internal_cluster_id /= Void and then not internal_cluster_id.is_empty

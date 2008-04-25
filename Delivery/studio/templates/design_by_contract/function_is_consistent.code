@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <code_template format="1.0.0">
    <metadata>
-      <title>Consistent Is Consistent</title>
+      <title>Function Is Consistent</title>
       <description>Code template contract to ensure repeated calls to a function yield the same result</description>
       <author>Eiffel Software</author>
       <shortcut>consistent</shortcut>

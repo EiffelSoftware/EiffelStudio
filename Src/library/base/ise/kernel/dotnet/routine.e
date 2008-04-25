@@ -131,12 +131,12 @@ feature -- Status report
 				and then (is_cleanup_needed = other.is_cleanup_needed)
 				and then deep_equal (open_map, other.open_map)
 
-			if Result then 
+			if Result then
 				int_ops := internal_operands
-				other_int_ops := other.internal_operands 
+				other_int_ops := other.internal_operands
 				if int_ops.count = other_int_ops.count then
 					from i := int_ops.lower until not Result or else i > other_int_ops.upper loop
-						e := int_ops.item (i)	
+						e := int_ops.item (i)
 						oe := other_int_ops.item (i)
 						vt ?= e
 						if vt /= Void then
@@ -152,7 +152,7 @@ feature -- Status report
 						i := i + 1
 					end
 				end
-			end				
+			end
 		end
 
 	valid_operands (args: OPEN_ARGS): BOOLEAN is
@@ -187,6 +187,12 @@ feature -- Status report
 					i := i + 1
 				end
 			end
+		end
+
+	is_target_closed: BOOLEAN is
+			-- Is target for current agent closed, i.e. specified at creation time?
+		do
+			Result := open_map = void or else not (open_map.count > 0 and then open_map.item (0) = 1)
 		end
 
 feature -- Measurement
@@ -236,6 +242,18 @@ feature -- Element change
 		ensure
 			operands_set: (operands /= Void implies equal (operands, args)) or
 				(operands = Void implies (args = Void or else args.is_empty))
+		end
+
+	set_target (a_target: like target) is
+		require
+			a_target_not_void: a_target /= Void
+			is_target_closed: is_target_closed
+			target_not_void: target /= Void
+			same_target_type: target.same_type (a_target)
+		do
+			target_object := a_target
+		ensure
+			target_set: target = a_target
 		end
 
 feature -- Duplication
@@ -326,7 +344,7 @@ feature {ROUTINE} -- Implementation
 			rout_disp := {METHOD_BASE}.get_method_from_handle (handle)
 
 			l_closed_count := closed_args.count
-			
+
 			if omap /= Void then
 				open_map := omap.to_cil
 				l_open_count := omap.count
@@ -360,7 +378,7 @@ feature {ROUTINE} -- Implementation
 			else
 				l_next_open := {INTEGER}.max_value
 			end
-			
+
 			if l_closed_count > 0 then
 				from
 				until
@@ -385,7 +403,7 @@ feature {ROUTINE} -- Implementation
 				end
 			end
 			internal_operands := l_internal
-		
+
 --			compute_is_cleanup_needed (closed_args)
 		end
 

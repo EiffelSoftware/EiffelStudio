@@ -68,7 +68,7 @@ feature -- Query
 			create l_shared
 			l_universe := l_shared.universe
 
-			l_list := l_universe.classes_with_name (a_class_name)
+			l_list := l_universe.classes_with_name (a_class_name.as_upper)
 			if l_list.count = 1 then
 				Result := l_list.first
 			elseif l_list.count > 1  then

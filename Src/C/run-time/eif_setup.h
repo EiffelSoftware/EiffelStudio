@@ -159,14 +159,16 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	eif_thr_init_root(); \
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
-	eif_rtinit(0, NULL, NULL);
+	eif_rtinit(0, NULL, NULL); \
+	init_emnger();
 #else
 #define EIF_INITIALIZE(fail_func) \
 	eif_alloc_init(); \
 	eif_thr_init_root(); \
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
-	eif_rtinit(argc, argv, envp);
+	eif_rtinit(argc, argv, envp); \
+	init_emnger();
 #endif
 
 #ifdef WORKBENCH
@@ -213,7 +215,8 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 	eif_alloc_init(); \
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
-	eif_rtinit(argc, argv, envp);
+	eif_rtinit(argc, argv, envp); \
+	init_emnger();
 
 #define EIF_REGISTER_THREAD(fail_func) \
 	Oops, trying to use multithreading facilities without proper flags

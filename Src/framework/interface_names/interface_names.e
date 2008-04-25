@@ -1945,8 +1945,8 @@ feature -- Title part
 	t_Alias: STRING_GENERAL is							do Result := locale.translation("Alias")	end
 	t_All_test_runs: STRING_GENERAL is					do Result := locale.translation("All Test Runs")	end
 	t_Calling_convention: STRING_GENERAL is				do Result := locale.translation("Calling Convention")	end
-	t_Changed_after_last_run: STRING_GENERAL is			do Result := locale.translation("Changed after last run")	end
-	t_Changed_time: STRING_GENERAL is					do Result := locale.translation("Changed time")	end
+	t_Changed_after_last_run: STRING_GENERAL is			do Result := locale.translation("Changed After Last Run")	end
+	t_Changed_time: STRING_GENERAL is					do Result := locale.translation("Changed Time")	end
 	t_Choose_class: STRING_GENERAL is					do Result := locale.translation("Choose a Class")	end
 	t_Choose_cluster: STRING_GENERAL is					do Result := locale.translation("Choose a Cluster")	end
 	t_Choose_directory: STRING_GENERAL is 				do Result := locale.translation("Choose Your Directory")	end

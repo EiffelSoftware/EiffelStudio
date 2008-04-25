@@ -121,6 +121,10 @@ feature {NONE} -- Redefine
 										l_testing_tool.content.set_focus
 										l_testing_tool.test_case_grid_manager.unselect_all_rows
 										l_row.enable_select
+										-- Start test for that row
+										if l_factory.manager.start_test_run_command.executable then
+											l_factory.manager.start_test_run_command.execute
+										end
 									end
 								end
 							end

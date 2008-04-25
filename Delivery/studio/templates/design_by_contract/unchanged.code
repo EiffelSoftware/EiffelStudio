@@ -18,6 +18,6 @@
       </object>
    </declarations>
    <templates>
-      <template>${var}_unchanged: ${var} ~= old ${var}${end}</template>
+      <template>${var}_unchanged: ${var} ~ old ${var}${end}</template>
    </templates>
 </code_template>

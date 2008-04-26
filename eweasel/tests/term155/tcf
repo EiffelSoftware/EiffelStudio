@@ -24,4 +24,11 @@ compile_result ok
 c_compile_final
 c_compile_final ok
 
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_final ok
+
+
 test_end

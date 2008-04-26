@@ -323,7 +323,6 @@ feature -- Events handlers
 			is_initialized: is_initialized
 		local
 			l_field: EV_TEXT_FIELD
-			l_text: STRING_GENERAL
 		do
 			if declaration_text_fields.has (a_id) then
 				l_field := declaration_text_fields.item (a_id)

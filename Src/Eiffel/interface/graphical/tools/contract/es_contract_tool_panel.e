@@ -1012,7 +1012,7 @@ feature {NONE} -- Action handlers
 						l_value := l_symbol_table.item (feature_name_symbol_id)
 						l_value.set_value (({!STRING_32}) #? l_fc.context_feature.name.as_string_32)
 					else
-						create l_value.make (({!STRING_32}) #? l_fc.context_feature.name)
+						create l_value.make (({!STRING_32}) #? l_fc.context_feature.name.as_string_32)
 						l_symbol_table.put (l_value, feature_name_symbol_id)
 					end
 				end

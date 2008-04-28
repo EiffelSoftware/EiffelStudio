@@ -92,6 +92,7 @@ feature -- Basic operations
 			l_value: !CODE_SYMBOL_VALUE
 			l_renderer: !CODE_TEMPLATE_STRING_RENDERER
 			l_contract_ast: ?G
+			l_contract: STRING_32
 		do
 			if not a_assertions.is_empty then
 					-- No preconditions (or invalid AST)
@@ -113,7 +114,9 @@ feature -- Basic operations
 								-- The template already contains the spacing necessary.
 							l_code.append ("%T")
 						end
-						l_code.append (a_assertions.item_for_iteration)
+						l_contract := a_assertions.item_for_iteration.twin
+						l_contract.replace_substring_all ("%N", "%N%T")
+						l_code.append (l_contract)
 						l_code.append ("%N")
 						a_assertions.forth
 					end

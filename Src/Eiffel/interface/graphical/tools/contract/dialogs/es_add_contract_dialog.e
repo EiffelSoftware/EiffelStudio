@@ -78,6 +78,8 @@ feature {NONE} -- Initialization
 			l_vbox.extend (l_border)
 			a_container.extend (l_vbox)
 
+			propagate_action (contract_editor.widget, agent suppress_confirmation_key_close, Void)
+			propagate_action (contract_editor.editor_drawing_area, agent suppress_confirmation_key_close, Void)
 			set_button_action_before_close (default_confirm_button, agent on_ok)
 		end
 

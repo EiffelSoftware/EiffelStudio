@@ -183,6 +183,71 @@ feature -- Formatting
 			result_not_is_a_str: Result /= a_str
 		end
 
+feature -- Formatting
+
+	tabbify (a_str: STRING_GENERAL; a_tab_chars: INTEGER): !STRING
+			-- Tabbifies a string by replacing spaces with tabs.
+			--
+			-- `a_str': A string to tabbify.
+			-- `a_tab_chars': Number of space characters in a tab.
+			-- `Result': A tabbified string.
+		require
+			a_line_attached: a_str /= Void
+			not_a_str_is_empty: not a_str.is_empty
+			a_tab_chars_positive: a_tab_chars > 0
+		do
+			Result ?= tabbify_unicode (a_str, a_tab_chars).as_string_8
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	tabbify_unicode (a_str: STRING_GENERAL; a_tab_chars: INTEGER): !STRING_32
+			-- Tabbifies a string by replacing spaces with tabs.
+			--
+			-- `a_str': A string to tabbify.
+			-- `a_tab_chars': Number of space characters in a tab.
+			-- `Result': A tabbified string.
+		require
+			a_line_attached: a_str /= Void
+			not_a_str_is_empty: not a_str.is_empty
+			a_tab_chars_positive: a_tab_chars > 0
+		local
+			l_str: STRING_32
+			l_spaces: INTEGER
+			l_reset: BOOLEAN
+			i, l_count: INTEGER
+			c: CHARACTER_32
+		do
+			l_str := a_str.as_string_32
+			l_count := l_str.count
+			create Result.make (l_count)
+			from i := 1 until i > l_count loop
+				c := l_str.item (i)
+				if c = ' ' then
+					l_reset := l_spaces = 3
+					if not l_reset then
+						l_spaces := l_spaces + 1
+					end
+				elseif c = '%T' then
+					l_reset := True
+				else
+					Result.append_character (c)
+					l_spaces := 0
+					l_reset := False
+				end
+				if l_reset then
+					Result.append_character ('%T')
+					l_spaces := 0
+				end
+				i := i + 1
+			end
+			if l_spaces > 0 then
+				Result.append (create {STRING_32}.make_filled (' ', l_spaces))
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature {NONE} -- Symbols
 
 	open_char: CHARACTER is '{'

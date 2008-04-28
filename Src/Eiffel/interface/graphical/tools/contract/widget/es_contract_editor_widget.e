@@ -630,6 +630,12 @@ feature {NONE} -- Helpers
 			create Result.make
 		end
 
+	frozen string_formatter: !STRING_FORMATTER
+			-- Formatter used to format strings
+		once
+			create Result
+		end
+
 feature {NONE} -- User interface elements
 
 	edit_contract_grid: !ES_GRID
@@ -734,6 +740,13 @@ feature {NONE} -- Population
 							end
 
 							l_tagged_text := l_tagged.text (l_mod_contract.modifier.ast_match_list)
+								-- Because the tagged text is coming from an AST node the initial tabbing is missing.
+							if {l_inv: ES_INVARIANT_CONTRACT_EDITOR_CONTEXT} context then
+								l_tagged_text.prepend ("%T")
+							else
+								l_tagged_text.prepend ("%T%T%T")
+							end
+								-- Call will set row data!
 							populate_editable_contract_row (({!STRING_32}) #? l_tagged_text.as_string_32, l_contract_source, l_row)
 						else
 								-- Perform formatting with decorator, enabling clickable text.
@@ -761,11 +774,11 @@ feature {NONE} -- Population
 
 								-- Clear formatter
 							l_token_generator.wipe_out_lines
-						end
 
-							-- Set contract line data
-						create l_contract_line.make_from_string (({!STRING_32}) #? l_tagged_text.as_string_32, l_contract_source)
-						l_row.set_data (l_contract_line)
+								-- Set contract line data
+							create l_contract_line.make_from_string (({!STRING_32}) #? l_tagged_text.as_string_32, l_contract_source)
+							l_row.set_data (l_contract_line)
+						end
 
 						if not l_editable then
 							l_row.disable_select
@@ -955,7 +968,9 @@ feature {NONE} -- Population
 			a_row.clear
 
 			l_scanner := token_scanner
-			l_editable_lines := a_contract.split ('%N')
+
+			create l_contract_line.make_from_string (a_contract, a_source)
+			l_editable_lines := l_contract_line.string.split ('%N')
 
 				-- Editable items are not clickable. This is because the AST data is live, and un-annotated.
 				-- However, we'll do our best to make them a pretty as possible.
@@ -985,18 +1000,15 @@ feature {NONE} -- Population
 			create l_editor_item
 			l_editor_item.set_text_with_tokens (l_editor_tokens)
 
-			a_row.set_height (a_row.height.max (l_editor_item.required_height_for_text_and_component))
+			a_row.set_height (l_editor_item.required_height_for_text_and_component)
 
 			l_editor_item.set_left_border (tab_indent_spacing)
 			a_row.set_item (contract_column, l_editor_item)
 
 				-- Set contract line data
-			create l_contract_line.make_from_string (a_contract, a_source)
 			a_row.set_data (l_contract_line)
 
 			edit_contract_grid.grid_row_fill_empty_cells (a_row)
-
-			a_row.set_height (a_row.height.max (l_editor_item.required_height_for_text_and_component))
 
 			if l_selected then
 				a_row.disable_select

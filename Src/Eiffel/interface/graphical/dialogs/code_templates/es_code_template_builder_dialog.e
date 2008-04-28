@@ -18,6 +18,7 @@ inherit
 			on_before_initialize,
 			on_after_initialized,
 			on_shown,
+			internal_recycle,
 			is_size_and_position_remembered
 		end
 
@@ -149,7 +150,12 @@ feature {NONE} -- Initialization
 			l_vbox.disable_item_expand (l_label)
 
 				-- Create field
+			l_text := a_declaration.default_value
+			if l_text.is_empty then
+				l_text := a_declaration.id
+			end
 			l_edit := create_declaration_text_widget (a_declaration)
+			l_edit.set_text (l_text)
 			l_edit.set_font (preferences.editor_data.editor_font_preference.value)
 			register_action (l_edit.change_actions, agent on_text_changed (l_edit, a_declaration.id))
 			register_action (l_edit.focus_in_actions, agent on_text_focused (l_edit, a_declaration.id))
@@ -180,6 +186,20 @@ feature {NONE} -- Initialization
 			Precursor
 			code_symbol_table.value_changed_events.subscribe (agent on_code_symbol_table_value_changed)
 			update_code_result
+		end
+
+feature {NONE} -- Clean up
+
+	internal_recycle
+			-- <Precursor>
+		local
+			l_action: PROCEDURE [ANY, TUPLE [!STRING]]
+		do
+			l_action := agent on_code_symbol_table_value_changed
+			if code_symbol_table.value_changed_events.is_subscribed (l_action) then
+				code_symbol_table.value_changed_events.unsubscribe (l_action)
+			end
+			Precursor
 		end
 
 feature -- Access
@@ -324,12 +344,14 @@ feature -- Events handlers
 		local
 			l_field: EV_TEXT_FIELD
 		do
-			if declaration_text_fields.has (a_id) then
-				l_field := declaration_text_fields.item (a_id)
-				if l_field /= Void and then code_symbol_table.has_id (a_id) then
-					l_field.set_text (code_symbol_table.item (a_id).value)
-				else
-					l_field.set_text ("")
+			if not is_shown then
+				if declaration_text_fields.has (a_id) then
+					l_field := declaration_text_fields.item (a_id)
+					if l_field /= Void and then code_symbol_table.has_id (a_id) then
+						l_field.set_text (code_symbol_table.item (a_id).value)
+					else
+						l_field.set_text ("")
+					end
 				end
 			end
 		end
@@ -400,8 +422,10 @@ feature {NONE} -- Action handlers
 		do
 			if not edited_declaration_text_fields.has (a_id) then
 					-- Select the entire text for easy replacement
-				a_sender.set_caret_position (a_sender.text.count)
-				a_sender.select_all
+				if a_sender.text /= Void and then not a_sender.text.is_empty then
+					a_sender.set_caret_position (a_sender.text.count)
+					a_sender.select_all
+				end
 			end
 		end
 

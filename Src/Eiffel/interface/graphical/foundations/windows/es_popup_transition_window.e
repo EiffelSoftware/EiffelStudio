@@ -15,6 +15,7 @@ inherit
 		rename
 			make as make_popup_window
 		redefine
+			on_after_initialized,
 			border_color,
 			is_focus_sensitive,
 			is_pointer_sensitive
@@ -94,6 +95,15 @@ feature {NONE} -- Initialization
 				-- Set white background color for icon pixmap because the propgation ignores pixmaps by default.
 			icon_pixmap.set_background_color (colors.stock_colors.white)
 			icon_pixmap.set_foreground_color (colors.stock_colors.white)
+		end
+
+	on_after_initialized
+			-- <Precursor>
+		do
+			Precursor
+
+				-- Set wait cursor on window
+			register_kamikaze_action (show_actions, agent popup_window.set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.wait_cursor)))
 		end
 
 feature -- Access

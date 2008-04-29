@@ -2162,11 +2162,15 @@ feature -- Implementation
 							if is_in_assignment or else is_target_of_creation_instruction then
 									-- Mark that Result is initialized.
 								record_initialized_result
-							elseif not is_checking_postcondition and then not context.variables.is_result_set then
+								last_reinitialized_local := result_name_id
+							elseif not is_checking_postcondition and then
+								not context.is_result_attached and then
+								context.current_class.lace_class.is_void_safe
+							then
 									-- Result is not properly initialized.
 								error_handler.insert_error (create {VEVI}.make_result (context, l_as))
 									-- Mark that Result is initialized to avoid repeated errors.
-								context.variables.set_result
+								context.add_result_instruction_scope
 							end
 						end
 					elseif is_in_assignment or else is_target_of_creation_instruction then
@@ -2469,11 +2473,14 @@ feature -- Implementation
 							if is_in_assignment or else is_target_of_creation_instruction then
 									-- Mark that the local is initialized.
 								record_initialized_local (l_local_info.position)
-							elseif not context.variables.is_local_set (l_local_info.position) then
+								last_reinitialized_local := l_as.feature_name.name_id
+							elseif not context.is_local_attached (l_as.feature_name.name_id) and then
+								context.current_class.lace_class.is_void_safe
+							then
 									-- Local is not properly initialized.
 								error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
 									-- Mark that the local is initialized to avoid repeated errors.
-								context.variables.set_local (l_local_info.position)
+								context.add_local_instruction_scope (l_as.feature_name.name_id)
 							end
 						end
 					elseif is_in_assignment or else is_target_of_creation_instruction then
@@ -2485,7 +2492,7 @@ feature -- Implementation
 					elseif context.is_local_attached (l_as.feature_name.name_id) then
 							-- Local is of a detachable type, but it's safe
 							-- to use it as an attached one.
-						if l_context_current_class.lace_class.is_void_safe then
+						if context.current_class.lace_class.is_void_safe then
 							l_type := l_type.as_attached
 						else
 							l_type := l_type.as_implicitly_attached
@@ -2922,6 +2929,7 @@ feature -- Implementation
 
 			if not l_has_invalid_locals then
 					-- Check body
+				context.init_variable_scopes
 				l_as.routine_body.process (Current)
 				if l_needs_byte_node and then error_level = l_error_level then
 					l_byte_code ?= last_byte_node
@@ -2932,7 +2940,8 @@ feature -- Implementation
 				if
 					l_feat_type.is_attached and then
 					not l_feat_type.is_expanded and then
-					not context.variables.is_result_initialized and then
+					not context.is_result_attached and then
+					context.current_class.lace_class.is_void_safe and then
 					not current_feature.is_deferred
 				then
 						-- Result is not properly initialized.
@@ -2989,6 +2998,7 @@ feature -- Implementation
 				elseif not l_has_invalid_locals then
 						-- Set mark of context
 					is_in_rescue := True
+					context.init_variable_scopes
 					process_compound (l_as.rescue_clause)
 					if l_needs_byte_node and then error_level = l_error_level then
 						l_list ?= last_byte_node
@@ -4905,13 +4915,13 @@ feature -- Implementation
 						l_assign.set_line_pragma (l_as.line_pragma)
 						last_byte_node := l_assign
 					end
-					if l_reinitialized_local /= 0 and then not l_target_type.is_attached then
+					if l_reinitialized_local /= 0 then -- and then not l_target_type.is_attached then
 						if l_source_type.is_attached or else l_source_type.is_implicitly_attached then
 								-- Local variable is initialized to a non-void value.
 							if l_reinitialized_local = result_name_id then
-								context.add_result_scope
+								context.add_result_instruction_scope
 							else
-								context.add_local_scope (l_reinitialized_local)
+								context.add_local_instruction_scope (l_reinitialized_local)
 							end
 						else
 								-- Local variable might become Void.
@@ -5799,12 +5809,12 @@ feature -- Implementation
 					end
 				end
 				commit_initialized_variable (l_initialized_variable)
-				if l_reinitialized_local /= 0 and then not l_target_type.is_attached then
+				if l_reinitialized_local /= 0 then -- and then not l_target_type.is_attached then
 						-- Local variable is now attached.
 					if l_reinitialized_local = result_name_id then
-						context.add_result_scope
+						context.add_result_instruction_scope
 					else
-						context.add_local_scope (l_reinitialized_local)
+						context.add_local_instruction_scope (l_reinitialized_local)
 					end
 				end
 			end
@@ -5881,7 +5891,9 @@ feature -- Implementation
 			l_node_keys: ARRAYED_LIST [STRING]
 		do
 			if l_as.compound /= Void then
+				context.scope_keeper.enter_realm
 				process_compound (l_as.compound)
+				context.scope_keeper.leave_optional_realm
 				if is_byte_node_enabled then
 					l_list ?= last_byte_node
 					create l_debug
@@ -5948,6 +5960,7 @@ feature -- Implementation
 			end
 
 				-- Type check on compound
+			context.scope_keeper.enter_realm
 			create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
 			s := context.scope
 			scope_matcher.add_scopes (l_as.condition, context)
@@ -5959,10 +5972,12 @@ feature -- Implementation
 				end
 			end
 			context.set_scope (s)
+			context.scope_keeper.save_sibling
 
 			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
 			s := context.scope
 			scope_matcher.add_scopes (l_as.condition, context)
+			context.scope_keeper.update_realm
 
 				-- Type check on alternaltives compounds
 			if l_as.elsif_list /= Void then
@@ -5980,8 +5995,12 @@ feature -- Implementation
 					l_if.set_else_part (l_list)
 				end
 			end
+				-- Even though Else part might be empty,
+				-- we record its void safety information.
+			context.scope_keeper.save_sibling
 
 			context.set_scope (s)
+			context.scope_keeper.leave_realm
 
 			if l_needs_byte_node then
 				l_if.set_line_number (l_as.condition.start_location.line)
@@ -6042,6 +6061,7 @@ feature -- Implementation
 					create l_controler.make (l_constraint_type)
 					inspect_controlers.put_front (l_controler)
 
+					context.scope_keeper.enter_realm
 					if l_as.case_list /= Void then
 						l_as.case_list.process (Current)
 						if l_needs_byte_node then
@@ -6053,11 +6073,13 @@ feature -- Implementation
 
 					if l_as.else_part /= Void then
 						process_compound (l_as.else_part)
+						context.scope_keeper.save_sibling
 						if l_needs_byte_node then
 							l_list ?= last_byte_node
 							l_inspect.set_else_part (l_list)
 						end
 					end
+					context.scope_keeper.leave_realm
 					if l_needs_byte_node then
 						l_inspect.set_line_number (l_as.switch.start_location.line)
 						l_inspect.set_end_location (l_as.end_keyword)
@@ -6158,6 +6180,10 @@ feature -- Implementation
 
 				if l_as.compound /= Void then
 						-- Type check the loop compound
+					context.scope_keeper.enter_realm
+						-- After the loop we have to merge current and loop body
+						-- scope information, so the current one is saved here.
+					context.scope_keeper.save_sibling
 					create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
 					s := context.scope
 					scope_matcher.add_scopes (l_as.stop, context)
@@ -6167,6 +6193,12 @@ feature -- Implementation
 						l_loop.set_compound (l_list)
 					end
 					context.set_scope (s)
+						-- Take into account loop body scope information.
+					context.scope_keeper.save_sibling
+					context.scope_keeper.leave_realm
+						-- Take exit condition into account.
+					create {AST_SCOPE_CONJUNCTIVE_CONDITION} scope_matcher
+					scope_matcher.add_scopes (l_as.stop, context)
 				end
 
 				if l_needs_byte_node then
@@ -6451,10 +6483,12 @@ feature -- Implementation
 				end
 			end
 			context.set_scope (s)
+			context.scope_keeper.save_sibling
 
 				-- Add scopes for the parts that follow this one.
 			create {AST_SCOPE_DISJUNCTIVE_CONDITION} scope_matcher
 			scope_matcher.add_scopes (l_as.expr, context)
+			context.scope_keeper.update_realm
 
 			if not l_has_error and l_needs_byte_node then
 				l_elsif.set_line_number (l_as.expr.start_location.line)
@@ -6545,6 +6579,7 @@ feature -- Implementation
 				end
 				last_byte_node := l_case
 			end
+			context.scope_keeper.save_sibling
 		end
 
 	process_ensure_as (l_as: ENSURE_AS) is
@@ -8833,12 +8868,8 @@ feature {NONE} -- Variable initialization
 	commit_initialized_variable (initialized_variable: like last_initialized_variable)
 			-- Mark that a previously recorded variable is now properly set.
 		do
-			if initialized_variable = 0 then
-				context.variables.set_result
-			elseif initialized_variable < 0 then
+			if initialized_variable < 0 then
 				context.variables.set_attribute (- initialized_variable)
-			else
-				context.variables.set_local (initialized_variable)
 			end
 		end
 

@@ -2154,7 +2154,7 @@ feature {NONE} -- OT locals
 					li.set_is_used (True)
 
 					Ast_context.add_object_test_local (li, l_name_id)
-					Ast_context.add_object_test_scope (l_name_id)
+					Ast_context.add_object_test_expression_scope (l_name_id)
 					lst.forth
 				end
 			end
@@ -2200,7 +2200,7 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

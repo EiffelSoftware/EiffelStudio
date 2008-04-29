@@ -41,7 +41,7 @@ feature {AST_EIFFEL} -- Visitor pattern
 	process_object_test_as (l_as: OBJECT_TEST_AS)
 		do
 			if is_negated = is_negation_expected then
-				context.add_object_test_scope (l_as.name.name_id)
+				add_object_test_scope (l_as.name.name_id)
 			end
 		end
 
@@ -95,18 +95,18 @@ feature {NONE} -- Check for void test
 				if {expr_call_as: EXPR_CALL_AS} e then
 					if {access_id_as: ACCESS_ID_AS} expr_call_as.call then
 						if access_id_as.is_argument then
-							context.add_argument_scope (access_id_as.feature_name.name_id)
+							add_argument_scope (access_id_as.feature_name.name_id)
 						elseif access_id_as.is_local then
-							context.add_local_scope (access_id_as.feature_name.name_id)
+							add_local_scope (access_id_as.feature_name.name_id)
 						end
 					elseif {access_assert_as: ACCESS_ASSERT_AS} expr_call_as.call then
 						if access_assert_as.is_argument then
-							context.add_argument_scope (access_assert_as.feature_name.name_id)
+							add_argument_scope (access_assert_as.feature_name.name_id)
 						elseif access_assert_as.is_local then
-							context.add_local_scope (access_assert_as.feature_name.name_id)
+							add_local_scope (access_assert_as.feature_name.name_id)
 						end
 					elseif {result_as: RESULT_AS} expr_call_as.call then
-						context.add_result_scope
+						add_result_scope
 					end
 				end
 			end
@@ -128,6 +128,30 @@ feature {NONE} -- Context
 
 	context: AST_CONTEXT
 			-- Associated AST context
+
+	add_argument_scope (id: INTEGER_32)
+			-- Add scope of a non-void argument.
+		do
+			context.add_argument_instruction_scope (id)
+		end
+
+	add_local_scope (id: INTEGER_32)
+			-- Add scope of a non-void local.
+		do
+			context.add_local_instruction_scope (id)
+		end
+
+	add_object_test_scope (id: INTEGER_32)
+			-- Add scope of an object test.
+		do
+			context.add_object_test_instruction_scope (id)
+		end
+
+	add_result_scope
+			-- Add scope of a non-void Result.
+		do
+			context.add_result_instruction_scope
+		end
 
 feature {NONE} -- Status
 

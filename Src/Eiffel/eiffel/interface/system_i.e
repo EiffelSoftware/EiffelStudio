@@ -5058,10 +5058,6 @@ feature -- Pattern table generation
 				buffer.put_string ("};")
 			end
 
-				-- Initialize exception manager.
-			buffer.put_new_line
-			buffer.put_string ("init_emnger();")
-
 			if final_mode then
 				if root_creation_name /= Void then
 					buffer.put_new_line

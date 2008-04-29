@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			auto_recycle (contract_editor)
 			contract_editor.disable_line_numbers
 			contract_editor.disable_has_breakable_slots
-			contract_editor.widget.set_minimum_size (400, 100)
+			contract_editor.widget.set_minimum_size (450, 60)
 			create l_border.make (contract_editor.widget)
 			auto_recycle (l_border)
 			l_vbox.extend (l_border)

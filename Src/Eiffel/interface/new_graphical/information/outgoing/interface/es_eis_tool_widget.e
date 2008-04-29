@@ -234,7 +234,6 @@ feature {NONE} -- Initialization
 		local
 			l_vbox: EV_VERTICAL_BOX
 			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
-			l_hbox: EV_HORIZONTAL_BOX
 		do
 			create l_vbox
 			split_area.set_second (l_vbox)
@@ -248,7 +247,6 @@ feature {NONE} -- Initialization
 			l_support.enable_ctrl_right_click_to_open_new_window
 			l_support.synchronize_scroll_behavior_with_editor
 			l_support.set_context_menu_factory_function (agent context_menu_factory)
-
 		end
 
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY

@@ -77,8 +77,6 @@ feature {NONE} -- Wizard UI Implementation
 			l_cluster_name_and_path: TUPLE [a_cluster_id: STRING_8; a_cluster_sub_path: STRING_8]
 			l_cluster_id: STRING
 			l_cluster_path: STRING
-			l_id: EB_SHARED_ID_SOLUTION
-			l_cluster: CLUSTER_I
 		do
 			l_cluster_name_and_path ?= ui_builder.cluster_name_entry.data
 			if l_cluster_name_and_path /= Void then

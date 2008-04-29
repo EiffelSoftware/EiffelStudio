@@ -97,6 +97,7 @@ feature {NONE} -- Variable expansion
 			-- A table of context variables, indexed by a variable name
 		do
 			Result := environment_variables
+			Result.merge (es_built_in_variables)
 		end
 
 	format_uris (a_uri: !STRING)
@@ -231,6 +232,14 @@ feature {NONE} -- Variable expansion
 			if {lt_table: HASH_TABLE [STRING_8, STRING_8]}starting_environment_variables then
 				Result := lt_table
 			end
+		end
+
+	es_built_in_variables: !HASH_TABLE [STRING_8, STRING_8] is
+			-- ES built-in variables.
+		once
+			create Result.make (2)
+			Result.put ("http://dev.eiffel.com", "ISE_WIKI")
+			Result.put ("http://www.eiffelroom.com", "EIFFELROOM")
 		end
 
 indexing

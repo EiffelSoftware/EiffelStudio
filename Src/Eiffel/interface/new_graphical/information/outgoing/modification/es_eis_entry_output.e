@@ -116,7 +116,7 @@ feature -- Access
 	last_output_conf: HASH_TABLE [STRING, STRING]
 			-- Last output of conf note.
 
-	tags_as_code (a_entry: !EIS_ENTRY): ?STRING_32 is
+	tags_as_code (a_entry: !EIS_ENTRY): !STRING_32 is
 			-- Tags as a string of code.
 			-- Unquoted
 		local
@@ -139,19 +139,20 @@ feature -- Access
 					end
 					lt_tags.forth
 				end
-				if not l_found then
-					Result := Void
-				end
+			end
+			if not l_found then
+				create Result.make_empty
 			end
 		end
 
-	others_as_code (a_entry: !EIS_ENTRY): ?STRING_32 is
+	others_as_code (a_entry: !EIS_ENTRY): !STRING_32 is
 			-- Others as string of code.
 			-- Quoted
 		local
 			l_attr: STRING_32
 			i, l_count: INTEGER
 			l_value: STRING_32
+			l_found: BOOLEAN
 		do
 			if {lt_others: HASH_TABLE [STRING_32, STRING_32]}a_entry.others then
 				create Result.make (10)
@@ -172,9 +173,13 @@ feature -- Access
 					if i < l_count then
 						Result.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						Result.append_character ({ES_EIS_TOKENS}.space)
+						l_found := True
 					end
 					lt_others.forth
 				end
+			end
+			if not l_found then
+			 	create Result.make_empty
 			end
 		end
 

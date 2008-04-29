@@ -419,6 +419,7 @@ feature {NONE} -- Callbacks
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: !EIS_ENTRY
+			l_done: BOOLEAN
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_name: STRING_32}a_item.text then
 				if lt_entry.name /= Void and then lt_name.is_equal (lt_entry.name) then
@@ -431,16 +432,20 @@ feature {NONE} -- Callbacks
 							end
 							l_new_entry.set_name (lt_name)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
-								-- Modify the name in the entry when the modification is done
-							lt_entry.set_name (lt_name)
+							l_done := True
 						elseif {lt_class: CLASS_I}id_solution.class_of_id (lt_entry.id) then
 							if {lt_new_entry1: EIS_ENTRY}lt_entry.twin then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_name (lt_name)
 							modify_entry_in_class (lt_entry, l_new_entry, lt_class)
-								-- Modify the name in the entry when the modification is done
+							l_done := True
+						end
+							-- Modify the name in the entry when the modification is done
+						if l_done then
+							storage.deregister_entry (lt_entry, component_id)
 							lt_entry.set_name (lt_name)
+							storage.register_entry (lt_entry, component_id)
 						end
 					end
 				end
@@ -452,6 +457,7 @@ feature {NONE} -- Callbacks
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: !EIS_ENTRY
+			l_done: BOOLEAN
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_protocol: STRING_32}a_item.text then
 				if lt_entry.protocol /= Void and then lt_protocol.is_equal (lt_entry.protocol) then
@@ -464,16 +470,20 @@ feature {NONE} -- Callbacks
 							end
 							l_new_entry.set_protocol (lt_protocol)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
-								-- Modify the protocol in the entry when the modification is done
-							lt_entry.set_protocol (lt_protocol)
+							l_done := True
 						elseif {lt_class: CLASS_I}id_solution.class_of_id (lt_entry.id) then
 							if {lt_new_entry1: EIS_ENTRY}lt_entry.twin then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_protocol (lt_protocol)
 							modify_entry_in_class (lt_entry, l_new_entry, lt_class)
-								-- Modify the protocol in the entry when the modification is done
+							l_done := True
+						end
+							-- Modify the protocol in the entry when the modification is done
+						if l_done then
+							storage.deregister_entry (lt_entry, component_id)
 							lt_entry.set_protocol (lt_protocol)
+							storage.register_entry (lt_entry, component_id)
 						end
 					end
 				end
@@ -485,6 +495,7 @@ feature {NONE} -- Callbacks
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: !EIS_ENTRY
+			l_done: BOOLEAN
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_source: STRING_32}a_item.text then
 				if lt_entry.source /= Void and then lt_source.is_equal (lt_entry.source) then
@@ -497,16 +508,20 @@ feature {NONE} -- Callbacks
 							end
 							l_new_entry.set_source (lt_source)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
-								-- Modify the source in the entry when the modification is done
-							lt_entry.set_source (lt_source)
+							l_done := True
 						elseif {lt_class: CLASS_I}id_solution.class_of_id (lt_entry.id) then
 							if {lt_new_entry1: EIS_ENTRY}lt_entry.twin then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_source (lt_source)
 							modify_entry_in_class (lt_entry, l_new_entry, lt_class)
-								-- Modify the source in the entry when the modification is done
+							l_done := True
+						end
+							-- Modify the source in the entry when the modification is done
+						if l_done then
+							storage.deregister_entry (lt_entry, component_id)
 							lt_entry.set_source (lt_source)
+							storage.register_entry (lt_entry, component_id)
 						end
 					end
 				end
@@ -519,6 +534,7 @@ feature {NONE} -- Callbacks
 		local
 			l_new_entry: !EIS_ENTRY
 			l_tags: !ARRAYED_LIST [!STRING_32]
+			l_done: BOOLEAN
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_tags: STRING_32}a_item.text then
 					 -- |FIXME: Bad conversion, should not convert to string_8.
@@ -536,24 +552,20 @@ feature {NONE} -- Callbacks
 							end
 							l_new_entry.set_tags (l_tags)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
-								-- Modify the tags in the entry when the modification is done
-							if {lt_id: STRING}component_id then
-								storage.deregister_entry (lt_entry, lt_id)
-								lt_entry.set_tags (l_tags)
-								storage.register_entry (lt_entry, lt_id)
-							end
+							l_done := True
 						elseif {lt_class: CLASS_I}id_solution.class_of_id (lt_entry.id) then
 							if {lt_new_entry1: EIS_ENTRY}lt_entry.twin then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_tags (l_tags)
 							modify_entry_in_class (lt_entry, l_new_entry, lt_class)
-								-- Modify the tags in the entry when the modification is done
-							if {lt_id1: STRING}component_id then
-								storage.deregister_entry (lt_entry, lt_id1)
-								lt_entry.set_tags (l_tags)
-								storage.register_entry (lt_entry, lt_id1)
-							end
+							l_done := True
+						end
+							-- Modify the tags in the entry when the modification is done
+						if l_done then
+							storage.deregister_entry (lt_entry, component_id)
+							lt_entry.set_tags (l_tags)
+							storage.register_entry (lt_entry, component_id)
 						end
 					end
 				end
@@ -566,6 +578,7 @@ feature {NONE} -- Callbacks
 		local
 			l_new_entry: !EIS_ENTRY
 			l_others: !HASH_TABLE [STRING_32, STRING_32]
+			l_done: BOOLEAN
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data and then {lt_others: STRING_32}a_item.text then
 				l_others := parse_others (lt_others)
@@ -580,16 +593,20 @@ feature {NONE} -- Callbacks
 							end
 							l_new_entry.set_others (l_others)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
-								-- Modify the others in the entry when the modification is done
-							lt_entry.set_others (l_others)
+							l_done := True
 						elseif {lt_class: CLASS_I}id_solution.class_of_id (lt_entry.id) then
 							if {lt_new_entry1: EIS_ENTRY}lt_entry.twin then
 								l_new_entry := lt_new_entry1
 							end
 							l_new_entry.set_others (l_others)
 							modify_entry_in_class (lt_entry, l_new_entry, lt_class)
-								-- Modify the others in the entry when the modification is done
+							l_done := True
+						end
+							-- Modify the others in the entry when the modification is done
+						if l_done then
+							storage.deregister_entry (lt_entry, component_id)
 							lt_entry.set_others (l_others)
+							storage.register_entry (lt_entry, component_id)
 						end
 					end
 				end
@@ -631,7 +648,9 @@ feature {NONE} -- Callbacks
 									-- Remove the eis from current feature.
 								remove_entry_in_feature (l_eis_entry, lt_current_feature)
 									-- Change the id of the entry
+								storage.deregister_entry (l_eis_entry, component_id)
 								l_eis_entry.set_id (component_id)
+								storage.register_entry (l_eis_entry, component_id)
 							end
 						else
 							prompts.show_error_prompt (interface_names.l_syntax_error, Void, Void)
@@ -661,7 +680,9 @@ feature {NONE} -- Callbacks
 									remove_entry_in_class (l_eis_entry, lt_current_class)
 								end
 										-- Change the id of the entry
+								storage.deregister_entry (l_eis_entry, component_id)
 								l_eis_entry.set_id (id_solution.id_of_feature (lt_feature))
+								storage.register_entry (l_eis_entry, component_id)
 							end
 						else
 							prompts.show_error_prompt (interface_names.l_syntax_error, Void, Void)

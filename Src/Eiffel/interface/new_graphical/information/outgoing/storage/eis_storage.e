@@ -179,6 +179,9 @@ feature -- Element change
 			-- Deregister entries of `a_component_id'.
 			-- Syncronize servers
 		do
+				-- We need to correctly remove old entries first, and sync tag server.
+			deregister_entries_of_component_id (a_component_id)
+				-- Start registration.
 			from
 				a_entries.start
 			until

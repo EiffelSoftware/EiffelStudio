@@ -1965,7 +1965,7 @@ feature -- Title part
 		once
 			Result := locale.formatted_string (locale.translation("From $1"), [Workbench_name])
 		end
-	t_delete_selected_items: STRING_GENERAL is			do Result := locale.translation("Delete selected items.")	end
+	t_delete_selected_items: STRING_GENERAL is			do Result := locale.translation("Delete selected items in the list.")	end
 	t_Deleting_files: STRING_GENERAL is					do Result := locale.translation("Deleting Files")	end
 	t_Dummy: STRING_GENERAL is							do Result := locale.translation("Dummy")	end
 	t_Dynamic_lib_window: STRING_GENERAL is 			do Result := locale.translation("Dynamic Library Builder")	end

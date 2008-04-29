@@ -158,28 +158,38 @@ feature -- Comparison
 		do
 				-- Compare name
 			Result := not ((name = Void) xor (other.name = Void))
-			if Result and then name /= Void then
-				Result := name.is_case_insensitive_equal (other.name)
+			if Result then
+				if name /= Void then
+					Result := name.is_case_insensitive_equal (other.name)
+				end
 				if Result then
 						-- Compare source
 					Result := not ((source = Void) xor (other.source = Void))
-					if Result and then source /= Void then
-						Result := source.is_case_insensitive_equal (other.source)
+					if Result then
+						if source /= Void then
+							Result := source.is_case_insensitive_equal (other.source)
+						end
 						if Result then
 								-- Compare protocol
 							Result := not ((protocol = Void) xor (other.protocol = Void))
-							if Result and then protocol /= Void then
-								Result := protocol.is_case_insensitive_equal (other.protocol)
+							if Result then
+								if protocol /= Void then
+									Result := protocol.is_case_insensitive_equal (other.protocol)
+								end
 								if Result then
 										-- Compare tags
 									Result := not ((tags = Void) xor (other.tags = Void))
-									if Result and then tags /= Void then
-										Result := tags_as_string.is_case_insensitive_equal (other.tags_as_string)
+									if Result then
+										if tags /= Void then
+											Result := tags_as_string.is_case_insensitive_equal (other.tags_as_string)
+										end
 										if Result then
 												-- Compare others
 											Result := not ((others = Void) xor (other.others = Void))
-											if Result and then others /= Void then
-												Result := others_as_string.is_case_insensitive_equal (other.others_as_string)
+											if Result then
+												if others /= Void then
+													Result := others_as_string.is_case_insensitive_equal (other.others_as_string)
+												end
 											end
 										end
 									end

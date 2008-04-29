@@ -140,7 +140,9 @@ feature {NONE} -- Initialization
 			until
 				l_tags.after
 			loop
-				l_managed_tags.extend (l_tags.key_for_iteration)
+				if not l_tags.key_for_iteration.is_empty then
+					l_managed_tags.extend (l_tags.key_for_iteration)
+				end
 				l_tags.forth
 			end
 			if not l_managed_tags.is_empty then

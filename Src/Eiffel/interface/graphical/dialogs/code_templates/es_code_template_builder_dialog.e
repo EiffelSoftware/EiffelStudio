@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			l_code_result_view.disable_line_numbers
 			l_code_result_view.disable_editable
 			l_code_result_view.set_read_only (True)
-			l_code_result_view.widget.set_minimum_size (400, 100)
+			l_code_result_view.widget.set_minimum_size (450, 80)
 			l_code_result_view.widget.set_border_width (1)
 			l_code_result_view.widget.set_background_color (colors.stock_colors.color_3d_shadow)
 			a_container.extend (l_code_result_view.widget)

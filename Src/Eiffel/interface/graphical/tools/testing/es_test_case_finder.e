@@ -161,6 +161,7 @@ feature {NONE} -- Implementation
 			l_modifier: ES_CLASS_TEXT_AST_MODIFIER
 			l_indexing: INDEXING_CLAUSE_AS
 			l_class_as: CLASS_AS
+			l_tag: ID_AS
 		do
 			create l_modifier.make (a_class)
 			l_modifier.prepare
@@ -176,8 +177,11 @@ feature {NONE} -- Implementation
 					until
 						l_indexing.after or Result
 					loop
-						if {lt_name: STRING} l_indexing.item.tag.name then
-							Result := lt_name.is_equal (a_indexing_to_test)
+						l_tag := l_indexing.item.tag
+						if l_tag /= Void then
+							if {lt_name: STRING} l_tag.name then
+								Result := lt_name.is_equal (a_indexing_to_test)
+							end
 						end
 						l_indexing.forth
 					end

@@ -819,6 +819,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 		egc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) egc_routdisp;
 	}
 #endif
+	init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
 }
 
 rt_public void failure(void)

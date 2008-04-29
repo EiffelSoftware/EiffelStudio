@@ -17,26 +17,6 @@ feature -- Status report
 			Result := True
 		end
 
-	is_local_set (id: INTEGER): BOOLEAN
-			-- Is a local identified by `id' set (for the current compound)?
-		require
-			id_positive: id > 0
-		do
-			Result := True
-		end
-
-	is_result_set: BOOLEAN
-			-- Is Result set (for the current compound)?
-		do
-			Result := True
-		end
-
-	is_result_initialized: BOOLEAN
-			-- Is Result of a function initialized at end of a feature body?
-		do
-			Result := True
-		end
-
 	is_attribute_initialized (feature_id: INTEGER): BOOLEAN
 			-- Is attribute of `feature_id' initialized at end of a feature body?
 		do
@@ -72,27 +52,13 @@ feature -- Modification
 			is_attribute_set: is_attribute_set (feature_id)
 		end
 
-	set_local (id: INTEGER)
-			-- Mark that a local identified by `id' is set.
-		do
-		ensure
-			is_local_set: is_local_set (id)
-		end
-
-	set_result
-			-- Mark that Result is set.
-		do
-		ensure
-			is_result_set: is_result_set
-		end
-
 	wipe_out
 			-- Remove any information about variables usage.
 		do
 		end
 
 indexing
-	copyright:	"Copyright (c) 2007, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -183,32 +183,20 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status rep
 
 	is_local_attached (id: INTEGER_32): BOOLEAN
 			-- Is local `id' in the scope where it is considered attached?
-		local
-			i: INTEGER
-			e: INTEGER_32
 		do
-			from
-				i := scopes.count
-			until
-				i <= 0
-			loop
-				e := scopes [i]
-				if e = - id then
-						-- Local cannot be considered attached
-					i := 0
-				elseif e = id then
-						-- Local is attached
-					Result := True
-					i := 0
-				end
-				i := i - 1
+			Result := scope_keeper.is_local_attached (locals.item (id).position)
+			if not Result then
+				Result := scopes.has (id)
 			end
 		end
 
 	is_result_attached: BOOLEAN
 			-- Is special entity "Result" in the scope where it is considered attached?
 		do
-			Result := is_local_attached (result_id)
+			Result := scope_keeper.is_result_attached
+			if not Result then
+				Result := scopes.has (result_id)
+			end
 		end
 
 feature {AST_CONTEXT} -- Local scopes
@@ -251,35 +239,82 @@ feature -- Scope state
 			scope_set: scope = s
 		end
 
+	init_variable_scopes
+			-- Prepare structures to track variable scopes.
+		do
+			create scope_keeper.make (locals.count)
+		ensure
+			scope_keeper_attached: scope_keeper /= Void
+			scope_keeper_initialized: scope_keeper.local_count = locals.count
+		end
+
+	scope_keeper: AST_SCOPE_KEEPER
+			-- Keeper of scopes of non-void variables
+
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
-	add_argument_scope (id: INTEGER_32)
+	add_argument_expression_scope (id: INTEGER_32)
 			-- Add a scope for an argument identified by `id'.
 		do
 			scopes.extend (id)
 		ensure
 			scope_count_inremented: scope_count = old scope_count + 1
+			is_argument_attached: is_argument_attached (id)
 		end
 
-	add_local_scope (id: INTEGER_32)
+	add_local_expression_scope (id: INTEGER_32)
 			-- Add a scope for a local identified by `id'.
 		do
 			scopes.extend (id)
 		ensure
 			scope_count_inremented: scope_count = old scope_count + 1
+			is_local_attached: is_local_attached (id)
 		end
 
-	add_result_scope
+	add_result_expression_scope
 			-- Add a scope for the special entity "Result".
 		do
-			add_local_scope (result_id)
+			scopes.extend (result_id)
 		ensure
 			scope_count_inremented: scope_count = old scope_count + 1
+			is_result_attached: is_result_attached
+		end
+
+	add_argument_instruction_scope (id: INTEGER_32)
+			-- Add a scope for an argument identified by `id'.
+		do
+			scopes.extend (id)
+		ensure
+			is_argument_attached: is_argument_attached (id)
+		end
+
+	add_local_instruction_scope (id: INTEGER_32)
+			-- Add a scope for a local identified by `id'.
+		do
+			scope_keeper.start_local_scope (locals.item (id).position)
+		ensure
+			is_local_attached: is_local_attached (id)
+		end
+
+	add_result_instruction_scope
+			-- Add a scope for the special entity "Result".
+		do
+			scope_keeper.start_result_scope
+		ensure
+			is_result_attached: is_result_attached
 		end
 
 feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT} -- Local scopes: modification
 
-	add_object_test_scope (id: INTEGER_32)
+	add_object_test_expression_scope (id: INTEGER_32)
+			-- Add a scope for an object-test local identified by `id'.
+		do
+			scopes.extend (id)
+		ensure
+			scope_count_inremented: scope_count = old scope_count +1
+		end
+
+	add_object_test_instruction_scope (id: INTEGER_32)
 			-- Add a scope for an object-test local identified by `id'.
 		do
 			scopes.extend (id)
@@ -292,9 +327,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 	remove_local_scope (id: INTEGER_32)
 			-- Mark that an attached scope of a local identified by `id' is terminated.
 		do
-			if is_local_attached (id) then
-				scopes.extend (-id)
-			end
+			scope_keeper.stop_local_scope (locals.item (id).position)
 		ensure
 			local_scope_removed: not is_local_attached (id)
 		end
@@ -302,7 +335,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 	remove_result_scope
 			-- Mark that an attached scope of the special entity "Result" is terminated.
 		do
-			remove_local_scope (result_id)
+			scope_keeper.stop_result_scope
 		ensure
 			result_scope_removed: not is_result_attached
 		end
@@ -583,6 +616,7 @@ feature	-- Saving contexts
 			used_argument_names := Void
 			used_local_names := Void
 			scopes.copy (Result.scopes)
+			scope_keeper := Void
 		end
 
 	restore (context: AST_CONTEXT) is

@@ -9,7 +9,7 @@ class
 	AST_SCOPE_IMPLICATIVE_EXPRESSION
 
 inherit
-	AST_SCOPE_MATCHER
+	AST_SCOPE_EXPRESSION
 		redefine
 			process_bin_and_as,
 			process_bin_and_then_as

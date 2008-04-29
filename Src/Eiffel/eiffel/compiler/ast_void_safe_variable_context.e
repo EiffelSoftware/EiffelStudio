@@ -14,13 +14,8 @@ inherit
 				enter_compound,
 				is_attribute_initialized,
 				is_attribute_set,
-				is_local_set,
-				is_result_initialized,
-				is_result_set,
 				leave_compound,
 				set_attribute,
-				set_local,
-				set_result,
 				start_creation_procedure,
 				start_feature,
 				wipe_out
@@ -43,23 +38,8 @@ feature -- Status report
 			Result := not is_creation_procedure or else set_variables.has (- feature_id)
 		end
 
-	is_local_set (id: INTEGER): BOOLEAN
-			-- Is a local identified by `id' set (for the current compound)?
-		do
-			Result := set_variables.has (id)
-		end
-
-	is_result_set: BOOLEAN
-			-- Is Result set (for the current compound)?
-		do
-			Result := set_variables.has (0)
-		end
-
 	is_creation_procedure: BOOLEAN
 			-- Is creation procedure being processed?
-
-	is_result_initialized: BOOLEAN
-			-- Is Result of a function initialized at end of a feature body?
 
 	is_attribute_initialized (feature_id: INTEGER): BOOLEAN
 			-- Is attribute of `feature_id' initialized at end of a feature body?
@@ -132,39 +112,12 @@ feature -- Modification
 			variable_count_incremented: (is_creation_procedure and then not old is_attribute_set (feature_id)) implies nested_variables.item = old nested_variables.item + 1
 		end
 
-	set_local (id: INTEGER)
-			-- Mark that a local identified by `id' is set.
-		do
-			if not is_local_set (id) then
-				set_variables.put (id)
-				nested_variables.replace (nested_variables.item + 1)
-			end
-		ensure then
-			variable_count_incremented: (not old is_local_set (id)) implies nested_variables.item = old nested_variables.item + 1
-		end
-
-	set_result
-			-- Mark that Result is set.
-		do
-			if not is_result_set then
-				set_variables.put (0)
-				nested_variables.replace (nested_variables.item + 1)
-				if nested_variables.count = 1 then
-						-- Result is set on the top level of the feature body.
-					is_result_initialized := True
-				end
-			end
-		ensure then
-			variable_count_incremented: (not old is_result_set) implies nested_variables.item = old nested_variables.item + 1
-		end
-
 	wipe_out
 			-- Remove any information about variables usage.
 		do
 			set_variables.wipe_out
 			nested_variables.wipe_out
 			initialized_attributes.wipe_out
-			is_result_initialized := False
 		end
 
 feature {NONE} -- Variable stacks
@@ -181,7 +134,7 @@ feature {NONE} -- Variable stacks
 			-- Set of attributes that are properly initialized at the top level of a routine
 
 indexing
-	copyright:	"Copyright (c) 2007, Eiffel Software"
+	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

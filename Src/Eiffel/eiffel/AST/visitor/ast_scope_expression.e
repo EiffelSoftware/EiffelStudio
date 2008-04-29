@@ -10,6 +10,10 @@ deferred class AST_SCOPE_EXPRESSION
 inherit
 	AST_SCOPE_MATCHER
 		redefine
+			add_argument_scope,
+			add_local_scope,
+			add_object_test_scope,
+			add_result_scope,
 			process_paran_as
 		end
 
@@ -27,10 +31,36 @@ feature {AST_EIFFEL} -- Visitor pattern
 
 feature {NONE} -- Status report
 
-	is_nested: BOOLEAN;
+	is_nested: BOOLEAN
 			-- Is current expression nested, so that associativity rules
 			-- should not be taken into account that is important for
 			-- strict operators?
+
+feature {NONE} -- Context
+
+	add_argument_scope (id: INTEGER_32)
+			-- Add scope of a non-void argument.
+		do
+			context.add_argument_expression_scope (id)
+		end
+
+	add_local_scope (id: INTEGER_32)
+			-- Add scope of a non-void local.
+		do
+			context.add_local_expression_scope (id)
+		end
+
+	add_object_test_scope (id: INTEGER_32)
+			-- Add scope of an object test.
+		do
+			context.add_object_test_expression_scope (id)
+		end
+
+	add_result_scope
+			-- Add scope of a non-void Result.
+		do
+			context.add_result_expression_scope
+		end
 
 indexing
 	copyright:	"Copyright (c) 2008, Eiffel Software"

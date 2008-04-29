@@ -294,7 +294,9 @@ feature {NONE} -- Callbacks
 							modify_entry_in_conf (lt_entry, l_new_entry, conf_notable, lt_system)
 								-- Modify the name in the entry when the modification is done
 							if last_entry_modified then
+								storage.deregister_entry (lt_entry, component_id)
 								lt_entry.set_name (lt_name)
+								storage.register_entry (lt_entry, component_id)
 							end
 						end
 					end
@@ -321,7 +323,9 @@ feature {NONE} -- Callbacks
 							modify_entry_in_conf (lt_entry, l_new_entry, conf_notable, lt_system)
 								-- Modify the protocol in the entry when the modification is done
 							if last_entry_modified then
+								storage.deregister_entry (lt_entry, component_id)
 								lt_entry.set_protocol (lt_protocol)
+								storage.register_entry (lt_entry, component_id)
 							end
 						end
 					end
@@ -348,7 +352,9 @@ feature {NONE} -- Callbacks
 							modify_entry_in_conf (lt_entry, l_new_entry, conf_notable, lt_system)
 								-- Modify the source in the entry when the modification is done
 							if last_entry_modified then
+								storage.deregister_entry (lt_entry, component_id)
 								lt_entry.set_source (lt_source)
+								storage.register_entry (lt_entry, component_id)
 							end
 						end
 					end
@@ -413,7 +419,9 @@ feature {NONE} -- Callbacks
 							modify_entry_in_conf (lt_entry, l_new_entry, conf_notable, lt_system)
 								-- Modify the others in the entry when the modification is done
 							if last_entry_modified then
+								storage.deregister_entry (lt_entry, component_id)
 								lt_entry.set_others (l_others)
+								storage.register_entry (lt_entry, component_id)
 							end
 						end
 					end

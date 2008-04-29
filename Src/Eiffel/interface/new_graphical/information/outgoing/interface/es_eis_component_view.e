@@ -337,7 +337,7 @@ feature {NONE} -- Initialization
 	setup_grid_from_component is
 			-- Fill data into the displaying grid from given `component'.
 		do
-			create extracted_entries.make_from_array (new_extractor.eis_full_entries.linear_representation)
+			create extracted_entries.make_from_array (new_extractor.eis_entries.linear_representation)
 			cached_column := sorting_column
 			cached_descend := descend_order
 			new_sorter.sort (extracted_entries)
@@ -700,9 +700,6 @@ feature {NONE} -- Grid items
 			l_editable_item: !EV_GRID_EDITABLE_ITEM
 		do
 			l_tags := eis_output.tags_as_code (a_entry)
-			if l_tags = Void then
-				create l_tags.make_empty
-			end
 			if entry_editable (a_entry) then
 				create l_editable_item.make_with_text (l_tags)
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
@@ -717,13 +714,10 @@ feature {NONE} -- Grid items
 	others_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM is
 			-- Grid item of others from an EIS entry.
 		local
-			l_others: STRING_32
+			l_others: !STRING_32
 			l_editable_item: !EV_GRID_EDITABLE_ITEM
 		do
 			l_others := eis_output.others_as_code (a_entry)
-			if l_others = Void then
-				create l_others.make_empty
-			end
 			if entry_editable (a_entry) then
 				create l_editable_item.make_with_text (l_others)
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))

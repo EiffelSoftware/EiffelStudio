@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 			l_vbox: EV_VERTICAL_BOX
 			l_whole_vbox: EV_VERTICAL_BOX
 			l_hsep: EV_HORIZONTAL_SEPARATOR
+			l_button: SD_TOOL_BAR_BUTTON
 		do
 			create l_frame
 			extend (l_frame)
@@ -126,6 +127,12 @@ feature {NONE} -- Initialization
 			sweep_now_button.set_pixel_buffer (pixmaps.icon_pixmaps.information_sweep_now_icon_buffer)
 			sweep_now_button.select_actions.extend (agent panel.sweep_now)
 			l_toolbar.extend (sweep_now_button)
+				-- Delete button
+			create l_button.make
+			l_button.set_tooltip (interface_names.t_delete_selected_items)
+			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_delete_icon_buffer)
+			l_button.select_actions.extend (agent on_entry_delete)
+			l_toolbar.extend (l_button)
 
 			l_progress_hbox.extend (l_toolbar)
 			l_toolbar.compute_minimum_size
@@ -226,8 +233,6 @@ feature {NONE} -- Initialization
 			-- EIS item detail panel.
 		local
 			l_vbox: EV_VERTICAL_BOX
-			l_toolbar: SD_TOOL_BAR
-			l_button: SD_TOOL_BAR_BUTTON
 			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 			l_hbox: EV_HORIZONTAL_BOX
 		do
@@ -244,23 +249,6 @@ feature {NONE} -- Initialization
 			l_support.synchronize_scroll_behavior_with_editor
 			l_support.set_context_menu_factory_function (agent context_menu_factory)
 
-				-- Tool bar
-			create l_hbox
-			l_vbox.extend (l_hbox)
-			l_vbox.disable_item_expand (l_hbox)
-
-			create l_toolbar.make
-			create l_button.make
-			l_button.set_tooltip (interface_names.t_delete_selected_items)
-			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_delete_icon_buffer)
-			l_button.select_actions.extend (agent on_entry_delete)
-			l_toolbar.extend (l_button)
-			l_toolbar.compute_minimum_size
-
-			l_hbox.extend (l_toolbar)
-			l_hbox.disable_item_expand (l_toolbar)
-
-			l_hbox.extend (create {EV_CELL})
 		end
 
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY

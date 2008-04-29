@@ -40,6 +40,7 @@ feature {NONE} -- Variable expansion
 			if {entry: EIS_ENTRY}last_entry then
 				create Result.make (5)
 				if {l_id: STRING}entry.id then
+					l_target := id_solution.target_of_id (l_id)
 					l_type := id_solution.most_possible_type_of_id (l_id)
 					if l_type = id_solution.feature_type then
 						l_feature := id_solution.feature_of_id (l_id)
@@ -49,8 +50,6 @@ feature {NONE} -- Variable expansion
 						l_folder := id_solution.folder_of_id (l_id)
 					elseif l_type = id_solution.group_type then
 						l_group := id_solution.group_of_id (l_id)
-					elseif l_type = id_solution.target_type then
-						l_target := id_solution.target_of_id (l_id)
 					end
 
 					if {lt_target: STRING}id_solution.last_target_name then
@@ -64,6 +63,10 @@ feature {NONE} -- Variable expansion
 					end
 					if {lt_feature: STRING}id_solution.last_feature_name then
 						Result.force (lt_feature, {ES_EIS_TOKENS}.feature_name_var_name)
+					end
+						-- Add variables defined in the target.
+					if l_target /= Void then
+						Result.merge (l_target.variables)
 					end
 				end
 				Result.merge (Precursor)

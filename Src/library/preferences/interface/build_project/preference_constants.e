@@ -58,7 +58,7 @@ feature -- Access
 	preferences_title: STRING_GENERAL is 	do Result := "Preferences" end
 	restore_preference_string: STRING_GENERAL is do Result := "This will reset ALL preferences to their default values%N and all previous settings will be overwritten.  Are you sure?" end
 	shortcut_modification_denied: STRING_GENERAL is do Result := "Shortcut modification failed. It is either used by a fixed shortcut or reserved by the system." end
-	preferenese_root: STRING_GENERAL is do Result := "Preferences root" end
+	preferences_root: STRING_GENERAL is do Result := "Preferences root" end
 
 	Alt_text: STRING is "Alt"
 	Ctrl_text: STRING is "Ctrl"

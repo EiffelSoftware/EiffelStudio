@@ -47,14 +47,15 @@ feature {NONE} -- Initialization
 			-- New window.  Redefined to register EiffelStudio specific preference widgets for
 			-- special preference types.
 		do
-			default_create
-			parent_window := Current
 			view_make_with_hidden (a_preferences, a_show_hidden_flag)
 
+			default_create
+			parent_window := Current
+
 			check
-				preferenese_root_is_valid_as_string_8: preferenese_root.is_valid_as_string_8
+				preferenese_root_is_valid_as_string_8: preferences_root.is_valid_as_string_8
 			end
-			root_node_text := preferenese_root.as_string_8
+			root_node_text := preferences_root.as_string_8
 			set_size (640, 460)
 			set_title (preferences_title)
 			fill_list

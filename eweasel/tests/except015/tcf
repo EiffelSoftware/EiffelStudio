@@ -3,7 +3,6 @@ test_description A routine that retry from an exception should have the same con
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
-copy_raw 	 test1.e  $CLUSTER test1.e
 
 compile_melted
 compile_result 	 ok

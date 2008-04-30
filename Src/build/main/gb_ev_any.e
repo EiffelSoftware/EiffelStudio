@@ -299,11 +299,23 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	for_first_object (p: Procedure [EV_ANY, TUPLE]) is
+	for_first_object (p: PROCEDURE [EV_ANY, TUPLE]) is
 			-- Call `p' on the first_item in `objects'.
+		require
+			p_not_void: p /= Void
+			objects_not_empty: not objects.is_empty
+		local
+			l_tuple: TUPLE
 		do
-			objects.start
-			p.call ([objects.item])
+			l_tuple := p.empty_operands
+			if l_tuple.valid_index (1) then
+				check
+					valid_item: l_tuple.valid_type_for_index (objects.first, 1)
+				end
+				l_tuple.put (objects.first, 1)
+			end
+			check valid_operands: p.valid_operands (l_tuple) end
+			p.call (l_tuple)
 			object.update_first_instances (p)
 			enable_project_modified
 		end
@@ -318,6 +330,7 @@ feature {NONE} -- Implementation
 			p_not_void: p /= Void
 		local
 			current_object: GB_OBJECT
+			l_tuple: TUPLE [GB_OBJECT]
 		do
 			from
 				an_object.instance_referers.start
@@ -325,7 +338,15 @@ feature {NONE} -- Implementation
 				an_object.instance_referers.off
 			loop
 				current_object := components.object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
-				p.call ([current_object])
+				l_tuple := p.empty_operands
+				if l_tuple.valid_index (1) then
+					check
+						valid_item: l_tuple.valid_type_for_index (current_object, 1)
+					end
+					l_tuple.put (current_object, 1)
+				end
+				check valid_operands: p.valid_operands (l_tuple) end
+				p.call (l_tuple)
 				for_all_instance_referers (current_object, p)
 				an_object.instance_referers.forth
 			end

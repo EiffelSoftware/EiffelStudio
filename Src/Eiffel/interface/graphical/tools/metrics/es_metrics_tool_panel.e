@@ -15,7 +15,8 @@ inherit
 			make,
 			show,
 			internal_recycle,
-			close
+			close,
+			attach_to_docking_manager
 		end
 
 	SHARED_WORKBENCH
@@ -83,8 +84,15 @@ feature -- Initialization
 			end
 		end
 
+	attach_to_docking_manager (a_manager: SD_DOCKING_MANAGER) is
+			-- <Precursor>
+		do
+			Precursor {EB_TOOL} (a_manager)
+			content.show_actions.extend (agent on_select)
+		end
+
 	build_interface is
-			-- Redefine
+			-- <Precursor>
 		do
 		end
 
@@ -121,14 +129,14 @@ feature -- Actions
 		end
 
 	show is
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {EB_TOOL}
 			on_select
 		end
 
 	close is
-			-- Redefine
+			-- <Precursor>
 		do
 			Precursor {EB_TOOL}
 			on_deselect

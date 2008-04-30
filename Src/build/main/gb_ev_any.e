@@ -277,14 +277,13 @@ feature {GB_OBJECT} -- Status setting
 feature {NONE} -- Implementation
 
 	ev_type: EV_ANY is
-
-		-- Vision2 type represented by `Current'.
-		-- Only used with `like' in descendents.
-		-- Always `Void'.
+			-- Vision2 type represented by `Current'.
+			-- Only used with `like' in descendents.
+			-- Always `Void'.
 		deferred
 		end
 
-	for_all_objects (p: Procedure [EV_ANY, TUPLE]) is
+	for_all_objects (p: PROCEDURE [EV_ANY, TUPLE]) is
 			-- Call `p' on every item in `objects'.
 		do
 			from
@@ -292,7 +291,7 @@ feature {NONE} -- Implementation
 			until
 				objects.off
 			loop
-				p.call ([objects.item])
+				for_one_object (objects.item, p)
 				objects.forth
 			end
 			object.update_instances (p)
@@ -304,20 +303,29 @@ feature {NONE} -- Implementation
 		require
 			p_not_void: p /= Void
 			objects_not_empty: not objects.is_empty
+		do
+			for_one_object (objects.first, p)
+			object.update_first_instances (p)
+			enable_project_modified
+		end
+
+	for_one_object (a_object: like ev_type; p: PROCEDURE [EV_ANY, TUPLE]) is
+			-- Call `p' on `a_object'.
+		require
+			a_object_not_void: a_object /= Void
+			p_not_void: p /= Void
 		local
 			l_tuple: TUPLE
 		do
 			l_tuple := p.empty_operands
 			if l_tuple.valid_index (1) then
 				check
-					valid_item: l_tuple.valid_type_for_index (objects.first, 1)
+					valid_item: l_tuple.valid_type_for_index (a_object, 1)
 				end
-				l_tuple.put (objects.first, 1)
+				l_tuple.put (a_object, 1)
 			end
 			check valid_operands: p.valid_operands (l_tuple) end
 			p.call (l_tuple)
-			object.update_first_instances (p)
-			enable_project_modified
 		end
 
 	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is

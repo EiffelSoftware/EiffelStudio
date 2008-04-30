@@ -30,6 +30,8 @@ feature -- Basic operations
 			-- Stop at current point in list on `abort'.
 		local
 			snapshot: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [ANY]]]
+			l_is_accepting: BOOLEAN
+			l_tuple: TUPLE [ANY]
 		do
 			create snapshot.make (count)
 			snapshot.fill (Current)
@@ -40,6 +42,7 @@ feature -- Basic operations
 			then
 				from
 					is_aborted_stack.extend (False)
+					l_is_accepting := veto_pebble_function_result (a_pebble_tuple.item (1))
 					snapshot.start
 				variant
 					snapshot.count + 1 - snapshot.index
@@ -47,17 +50,10 @@ feature -- Basic operations
 					snapshot.index > snapshot.count
 					or is_aborted_stack.item
 				loop
-					if snapshot.item.valid_operands (a_pebble_tuple) then
-						if
-							veto_pebble_function /= Void and then
-							veto_pebble_function.valid_operands (a_pebble_tuple)
-						then
-							if veto_pebble_function.item (a_pebble_tuple) then
-								snapshot.item.call (a_pebble_tuple)
-							end
-						else
-							snapshot.item.call (a_pebble_tuple)
-						end
+					if snapshot.item.valid_operands (a_pebble_tuple) and l_is_accepting then
+						l_tuple := snapshot.item.empty_operands
+						l_tuple.put (a_pebble_tuple.item (1), 1)
+						snapshot.item.call (l_tuple)
 					end
 					snapshot.forth
 				end
@@ -89,27 +85,21 @@ feature -- Status report
 			a_pebble_not_void: a_pebble /= Void
 		local
 			cur: CURSOR
-			a_tuple: TUPLE [ANY]
+			l_tuple: TUPLE [ANY]
+			l_is_accepting: BOOLEAN
 		do
 			from
+				l_is_accepting := veto_pebble_function_result (a_pebble)
+				l_tuple := [a_pebble]
 				cur := cursor
-				a_tuple := [a_pebble]
 				start
 			until
 				Result or else after
 			loop
-				Result := item.valid_operands (a_tuple)
-				if
-					Result and then
-					veto_pebble_function /= Void and then
-					veto_pebble_function.valid_operands (a_tuple)
-				then
-					Result := veto_pebble_function.item (a_tuple)
-				end
+				Result := item.valid_operands (l_tuple) and l_is_accepting
 				forth
 			end
 			go_to (cur)
-
 		end
 
 	veto_pebble_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
@@ -122,6 +112,27 @@ feature -- Element change
 		obsolete
 			"Removed because did nothing useful."
 		do
+		end
+
+feature {NONE} -- Convenience
+
+	veto_pebble_function_result (a_pebble: ANY): BOOLEAN is
+			-- Find out the computation of `veto_pebble_function' with `a_pebble'.
+		local
+			l_tuple: TUPLE [ANY]
+		do
+			if veto_pebble_function /= Void then
+				l_tuple := veto_pebble_function.empty_operands
+				if l_tuple.valid_type_for_index (a_pebble, 1) then
+					l_tuple.put (a_pebble, 1)
+					Result := veto_pebble_function.valid_operands (l_tuple) and then
+						veto_pebble_function.item (l_tuple)
+				else
+					Result := True
+				end
+			else
+				Result := True
+			end
 		end
 
 indexing

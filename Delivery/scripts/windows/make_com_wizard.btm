@@ -3,6 +3,8 @@ copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %STUDIO_DIR\wizards\com\res
 
 remtrace Compile the COM wizard
 cdd %EIFFEL_SRC\tools\com_wizard\root
+bash %INIT_DIR\set_version.sh %EIFFEL_SRC 0000 argument_parser.e
+
 clean_project
 finalize com_wizard.ecf
 cleanup_eiffel com_wizard com_wizard.exe

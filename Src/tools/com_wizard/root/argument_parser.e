@@ -16,12 +16,19 @@ inherit
 			make as make_parser
 		export
 			{NONE} all
-			{ANY} execute, successful
+			{ANY} execute, executed, successful
 		redefine
 			switch_groups,
 			switch_appurtenances,
 			post_process_arguments
 		end
+
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
+	ANY
 
 create
 	make
@@ -283,8 +290,28 @@ feature {NONE} -- Usage
 	name: STRING_8 = "Eiffel COM Wizard"
 			-- Full name of application
 
-	version: STRING_8 = "2.1.???"
-			-- Version number of application	
+	version: STRING_8 is
+			-- Version number of application
+		do
+			create Result.make (10)
+			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
+			Result.append_character ('.')
+			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version)
+			Result.append_character ('.')
+				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
+				-- will get replaced by the delivery scripts (see comments for `svn_revision'.
+			Result.append_integer (svn_revision // (9999 + 1))
+			Result.append_character ('.')
+			Result.append_integer (svn_revision \\ (9999 + 1))
+		end
+
+	svn_revision: INTEGER is
+			-- SVN revision that build the compiler.
+			-- We use `0000' because it is replaced by the actual svn revision number
+			-- when doing a delivery.
+		do
+			Result := 0000
+		end
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application

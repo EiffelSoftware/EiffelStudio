@@ -346,14 +346,34 @@ feature -- Element Change
 		end
 
 	set_project_name (a_name: like project_name) is
-			-- Set `project_name' with `a_name'.
+			-- Set `project_name' with `a_name' and replace all non-alpha-numeric
+			-- characters with underscores.
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
+		local
+			i, nb: INTEGER
+			l_project_name: like project_name
 		do
-			project_name := a_name
+			from
+				i := 1
+				l_project_name := a_name
+				nb := l_project_name.count
+			until
+				i > nb
+			loop
+				if not a_name.item (i).is_alpha_numeric then
+					if l_project_name = a_name then
+						l_project_name := a_name.twin
+					end
+					l_project_name.put ('_', i)
+				end
+				i := i + 1
+			end
+			project_name := l_project_name
 		ensure
-			project_name_set: project_name = a_name
+			project_name_updated: project_name /= Void and then not project_name.is_empty
+			project_name_preserved: valid_characters (a_name) implies project_name = a_name
 		end
 
 	set_idl_file_name (a_idl_file_name: like idl_file_name) is
@@ -485,6 +505,31 @@ feature -- Element Change
 			abort_request_actions.finish
 			abort_request_actions.remove
 			abort_request_actions_mutex.unlock
+		end
+
+	valid_characters (a_name: STRING): BOOLEAN is
+			-- Does `a_name' contain valid characters for a c++ identifier
+		require
+			initialized_name: a_name /= void
+		local
+			i, nb: INTEGER
+			l_char: CHARACTER
+		do
+			if not a_name.is_empty and then (a_name.item (1).is_alpha or a_name.item (1) = '_') then
+				from
+					i := 2
+					nb := a_name.count
+					Result := True
+				until
+					i > nb or not Result
+				loop
+					l_char := a_name.item (i)
+					Result := l_char.is_alpha_numeric or l_char = '_'
+					i := i + 1
+				end
+			end
+		ensure
+			starts_without_number: Result implies not (a_name.item (1).is_digit)
 		end
 
 feature {NONE} -- Implementation

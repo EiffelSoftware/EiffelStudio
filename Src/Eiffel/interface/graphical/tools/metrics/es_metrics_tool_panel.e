@@ -49,7 +49,6 @@ feature -- Initialization
 			create widget
 			create metric_notebook
 
-			notify_project_loaded_agent := agent notify_project_loaded
 			notify_project_unloaded_agent := agent notify_project_unloaded
 
 			create metric_evaluation_panel.make (Current)
@@ -57,7 +56,14 @@ feature -- Initialization
 			create metric_archive_panel.make (Current)
 			create detail_result_panel.make (Current)
 			create metric_history_panel.make (Current)
-			eiffel_project.manager.load_agents.extend (notify_project_loaded_agent)
+
+			if not eiffel_project.manager.is_project_loaded then
+				notify_project_loaded_agent := agent notify_project_loaded
+				eiffel_project.manager.load_agents.extend (notify_project_loaded_agent)
+			else
+				notify_project_loaded
+			end
+
 			eiffel_project.manager.close_agents.extend (notify_project_unloaded_agent)
 
 			metric_notebook.extend (metric_evaluation_panel)
@@ -296,7 +302,9 @@ feature {NONE} -- Memory management
 			detail_result_panel := Void
 			metric_history_panel := Void
 			uninstall_agents (metric_manager)
-			eiffel_project.manager.load_agents.prune_all (notify_project_loaded_agent)
+			if notify_project_loaded_agent /= Void then
+				eiffel_project.manager.load_agents.prune_all (notify_project_loaded_agent)
+			end
 			eiffel_project.manager.close_agents.prune_all (notify_project_unloaded_agent)
 			Precursor {EB_TOOL}
 		end
@@ -511,30 +519,30 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation
 
-		send_metric_value_in_history_actions_internal: like send_metric_value_in_history_actions;
-			-- Implementation of `send_metric_value_in_history_actions'
+	send_metric_value_in_history_actions_internal: like send_metric_value_in_history_actions;
+		-- Implementation of `send_metric_value_in_history_actions'
 
-		notify_project_loaded is
-				-- Notify `metric_manager' that project has been loaded.
-			do
-				if not metric_manager.is_project_loaded then
-					metric_manager.on_project_loaded
-				end
+	notify_project_loaded is
+			-- Notify `metric_manager' that project has been loaded.
+		do
+			if not metric_manager.is_project_loaded then
+				metric_manager.on_project_loaded
 			end
+		end
 
-		notify_project_unloaded is
-				-- Notify `metric_manager' that project has been unloaded.
-			do
-				if metric_manager.is_project_loaded then
-					metric_manager.on_project_unloaded
-				end
+	notify_project_unloaded is
+			-- Notify `metric_manager' that project has been unloaded.
+		do
+			if metric_manager.is_project_loaded then
+				metric_manager.on_project_unloaded
 			end
+		end
 
-		notify_project_loaded_agent: PROCEDURE [ANY, TUPLE]
-				-- Agent of `notify_project_loaded'
+	notify_project_loaded_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `notify_project_loaded'
 
-		notify_project_unloaded_agent: PROCEDURE [ANY, TUPLE]
-				-- Agent of `notify_project_unloaded'
+	notify_project_unloaded_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `notify_project_unloaded'
 
 feature{EB_METRIC_EVALUATION_PANEL} -- Title change
 
@@ -568,7 +576,6 @@ feature{EB_METRIC_EVALUATION_PANEL} -- Title change
 		end
 
 invariant
-	notify_project_loaded_agent_attached: notify_project_loaded_agent /= Void
 	notify_project_unloaded_agent_attached: notify_project_unloaded_agent /= Void
 
 indexing

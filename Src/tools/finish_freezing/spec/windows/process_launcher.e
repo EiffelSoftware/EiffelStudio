@@ -10,6 +10,8 @@ class
 	PROCESS_LAUNCHER
 
 inherit
+	ANY
+
 	WEL_PROCESS_CREATION_CONSTANTS
 		export
 			{NONE} all
@@ -43,23 +45,23 @@ feature -- Basic Operations
 			create a_wel_string1.make (a_command_line)
 			create a_wel_string2.make (a_working_directory)
 			last_launch_successful := cwin_create_process (
-				default_pointer, 
+				default_pointer,
 				a_wel_string1.item,
-				default_pointer, 
-				default_pointer, 
-				True, 
-				cwin_create_new_console, 
-				default_pointer, 
+				default_pointer,
+				default_pointer,
+				True,
+				cwin_create_new_console,
+				default_pointer,
 				a_wel_string2.item,
-				startup_info.item, 
+				startup_info.item,
 				process_info.item)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	process_info: WEL_PROCESS_INFO
 			-- Process information
-	
+
 	startup_info: WEL_STARTUP_INFO is
 			-- Process startup information
 		do

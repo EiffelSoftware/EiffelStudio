@@ -11,7 +11,6 @@ class
 	GB_XML_HANDLER
 
 inherit
-
 	INTERNAL
 		export
 			{NONE} all
@@ -36,6 +35,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 create
 	make_with_components

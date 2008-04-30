@@ -16,6 +16,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	make_child,
 	make_root

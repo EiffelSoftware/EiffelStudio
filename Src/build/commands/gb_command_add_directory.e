@@ -10,11 +10,7 @@ class
 	GB_COMMAND_ADD_DIRECTORY
 
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 	GB_FILE_UTILITIES
 		export

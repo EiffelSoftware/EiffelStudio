@@ -8,29 +8,28 @@ indexing
 
 class
 	GB_COMMAND_DELETE_OBJECT
-	
+
 inherit
-	
-	GB_WIDGET_UTILITIES
-		export
-			{NONE} all
-		end
-	
-	INTERNAL
-		export
-			{NONE} all
-		end
-		
 	GB_COMMAND_ADD_OBJECT
 		rename
 			make as old_make
 		redefine
 			execute, undo, textual_representation
 		end
-	
-create	
+
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
+
+	INTERNAL
+		export
+			{NONE} all
+		end
+
+create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
@@ -55,7 +54,7 @@ feature -- Basic Operation
 			end
 			components.commands.update
 		end
-		
+
 	undo is
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
@@ -64,7 +63,7 @@ feature -- Basic Operation
 			internal_execute (child_id, parent_id, 0, insert_position, 0)
 			components.commands.update
 		end
-		
+
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		local
@@ -79,7 +78,7 @@ feature -- Basic Operation
 			else
 				child_name := child_object.short_type
 			end
-			
+
 			if not parent_object.name.is_empty then
 				parent_name := parent_object.name
 			else

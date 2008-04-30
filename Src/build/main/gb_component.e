@@ -10,7 +10,6 @@ class
 	GB_COMPONENT
 
 inherit
-
 	GB_XML_OBJECT_BUILDER
 		export
 			{NONE} all
@@ -25,6 +24,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 create
 

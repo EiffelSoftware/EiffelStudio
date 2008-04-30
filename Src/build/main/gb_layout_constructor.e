@@ -12,7 +12,6 @@ class
 inherit
 	EV_TREE
 		export
-			{NONE} all
 			{ANY} first, parent, is_destroyed, is_displayed,
 				has_recursively, selected_item, is_empty, has_focus
 		undefine

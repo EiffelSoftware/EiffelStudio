@@ -8,13 +8,13 @@ indexing
 
 class
 	GB_TABLE_OBJECT
-	
+
 inherit
 	GB_CONTAINER_OBJECT
 		redefine
 			object, add_child_object
 		end
-		
+
 	DOUBLE_MATH
 		undefine
 			copy
@@ -28,7 +28,7 @@ feature -- Access
 
 	object: EV_TABLE
 
-feature -- Basic operation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position representing `position'
@@ -42,7 +42,7 @@ feature -- Basic operation
 				object_is_a_widget: widget /= Void
 			end
 			object.extend (widget)
-			
+
 			widget ?= an_object.display_object
 			check
 				display_object_is_a_widget: widget /= Void
@@ -58,9 +58,9 @@ feature -- Basic operation
 			end
 			add_child (an_object, position)
 		end
-		
+
 feature {GB_OBJECT_HANDLER} -- Implementation
-		
+
 	resize_to_accomodate (children_count: INTEGER) is
 			-- Resize `display_object' and `object' of `object' to
 			-- smallest square dimensions that will accomodate `children_count'

@@ -9,12 +9,9 @@ class
 	GB_CLIPBOARD
 
 inherit
-	GB_SHARED_PIXMAPS
-		export
-			{NONE} all
-		end
-
 	GB_COMMAND_ADD_OBJECT
+
+	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		end

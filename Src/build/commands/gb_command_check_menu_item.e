@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	GB_COMMAND_CHECK_MENU_ITEM 
+	GB_COMMAND_CHECK_MENU_ITEM
 
 inherit
 	GB_COMMAND_MENU_ITEM
@@ -26,10 +26,12 @@ inherit
 create
 	make
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECK_MENU_ITEM_I
 			-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.

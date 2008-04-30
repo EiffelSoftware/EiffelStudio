@@ -23,17 +23,17 @@ feature -- Access
 
 	object: EV_TREE
 		-- The vision2 object that `Current' represents.
-	
+
 	display_object: EV_TREE
 		-- The representation of `object' used in `build_window'.
-	
+
 	is_full: BOOLEAN is
 			-- Is `Current' full?
 		do
 			Result := False
 		end
-	
-feature {GB_TYPE_SELECTOR_ITEM} -- Implementation
+
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Implementation
 
 	accepts_child (a_type: STRING): BOOLEAN is
 			-- Does current accept new objects of

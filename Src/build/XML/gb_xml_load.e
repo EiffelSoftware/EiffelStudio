@@ -11,7 +11,6 @@ class
 	GB_XML_LOAD
 
 inherit
-
 	GB_XML_UTILITIES
 		export
 			{NONE} all
@@ -57,6 +56,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 create
 	make_with_components

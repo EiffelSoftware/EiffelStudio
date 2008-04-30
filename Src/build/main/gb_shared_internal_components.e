@@ -11,7 +11,6 @@ class
 	GB_SHARED_INTERNAL_COMPONENTS
 
 inherit
-
 	GB_INTERFACE_CONSTANTS
 		export
 			{NONE} all
@@ -21,6 +20,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature -- Access
 

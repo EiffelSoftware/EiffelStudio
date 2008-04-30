@@ -10,11 +10,7 @@ class
 	GB_COMMAND_CHANGE_TYPE
 
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 create
 	make

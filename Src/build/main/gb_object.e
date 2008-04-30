@@ -10,7 +10,6 @@ deferred class
 	GB_OBJECT
 
 inherit
-
 	GB_XML_OBJECT_BUILDER
 		export
 			{NONE} all
@@ -30,6 +29,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature {GB_OBJECT_HANDLER} -- Initialization
 
@@ -59,7 +60,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			components_set: components = a_components
 		end
 
-	make_with_type_and_object (a_type: STRING; an_object: EV_ANY; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_type_and_object (a_type: STRING; an_object: like object; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current', attach `an_object' to `object',
 			-- `a_type' to `type' and `a_components' to `components'.
 		require
@@ -1763,21 +1764,17 @@ feature -- Contract Support
 
 feature {NONE} -- Implementation
 
-	vision2_object_from_type (a_type: STRING): EV_ANY is
+	vision2_object_from_type (a_type: STRING): like object is
 			-- `Result' is a vision2 object of type `a_type'
 		require
 			a_type_not_void: a_type /= Void
 		local
 			passed: BOOLEAN
-			an_object: EV_ANY
 		do
 			passed := {ISE_RUNTIME}.check_assert (False)
-			an_object ?= new_instance_of (dynamic_type_from_string (type))
-			an_object.default_create
-			if passed then
-				passed := {ISE_RUNTIME}.check_assert (True)
-			end
-			Result := an_object
+			Result ?= new_instance_of (dynamic_type_from_string (type))
+			Result.default_create
+			passed := {ISE_RUNTIME}.check_assert (passed)
 		ensure
 			result_not_void: Result /= Void
 		end

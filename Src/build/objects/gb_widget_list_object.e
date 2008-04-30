@@ -24,12 +24,12 @@ feature -- Access
 	object: EV_WIDGET_LIST
 		-- Vision2 object referenced by `Current'.
 		-- This is used in the display window.
-	
+
 	display_object: GB_WIDGET_LIST_DISPLAY_OBJECT
 		-- The display object used to represent `object'.
 		-- This is used in the builder window.
 
-feature -- Basic operation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.
@@ -57,7 +57,7 @@ feature -- Basic operation
 					box.disable_item_expand (widget)
 				end
 			end
-			
+
 				-- Perform special processing of `layout_item' children
 				-- as locked instances must not show their children.
 			if layout_item.data = Void then

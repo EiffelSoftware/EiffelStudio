@@ -9,11 +9,7 @@ class
 	GB_COMMAND_DELETE_WINDOW_OBJECT
 
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 	GB_WIDGET_UTILITIES
 		export

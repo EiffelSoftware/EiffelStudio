@@ -10,11 +10,9 @@ class
 	GB_TYPE_SELECTOR
 
 inherit
-
 	EV_CELL
 		export
 			{ANY} parent, is_displayed
-			{NONE} all
 		undefine
 			is_in_default_state
 		redefine

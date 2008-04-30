@@ -9,11 +9,7 @@ class
 	GB_COMMAND_MOVE_WINDOW
 
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 	GB_WIDGET_UTILITIES
 		export

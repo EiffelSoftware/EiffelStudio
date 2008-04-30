@@ -10,8 +10,6 @@ class
 
 inherit
 	GB_TYPE_SELECTOR_ITEM
-		export
-			{NONE} all
 		redefine
 			item
 		end

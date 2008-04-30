@@ -9,11 +9,7 @@ class
 	GB_COMMAND_ADD_CONSTANT
 
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 	GB_CONSTANTS
 		export

@@ -38,17 +38,14 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	check_pressed_digit (a_widget: EV_WIDGET; a_str: STRING_GENERAL) is
+	check_pressed_digit (a_widget: EV_WIDGET; a_str: STRING_32) is
 			-- Check `a_key' to see if a digit is pressed.
 			-- Fired from actions of `timer'.
-		local
-			l_str: STRING_32
 		do
 			is_digit_pressed := False
 			if a_str /= Void and then a_str.count = 1 then
-				l_str := a_str.as_string_32
-				if l_str.is_integer then
-					digit := l_str.to_integer
+				if a_str.is_integer then
+					digit := a_str.to_integer
 					check digit_valid: digit >= 0 and digit <= 9 end
 					is_digit_pressed := True
 				else

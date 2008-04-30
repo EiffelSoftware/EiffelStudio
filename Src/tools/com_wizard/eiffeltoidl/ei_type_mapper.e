@@ -24,6 +24,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	make
 
@@ -59,7 +61,7 @@ feature {NONE} -- Initialization
 
 			create cell_types.make (3)
 			cell_types.compare_objects
-			
+
 			cell_types.put (Bstr, String_type)
 			cell_types.put (Com_date_type, Date_time)
 			cell_types.put (Iunknown, Ecom_unknown_interface)
@@ -101,11 +103,11 @@ feature -- Status report
 		do
 			if in_types.has (l_type) or inout_types.has (l_type) then
 				Result := True
-			elseif is_array (l_type) then 
+			elseif is_array (l_type) then
 				Result := in_types.has (inner_type (l_type))
 			elseif is_cell (l_type) then
 				Result := supported_eiffel_type (inner_type (l_type))
-			else 
+			else
 				Result := False
 			end
 		end
@@ -155,7 +157,7 @@ feature {NONE} -- Implementation
 			non_void_type: l_type /= Void
 			valid_type: not l_type.is_empty
 		do
-			Result := l_type.substring (1, 4).is_equal (Cell_type) 
+			Result := l_type.substring (1, 4).is_equal (Cell_type)
 		end
 
 	is_array (l_type: STRING): BOOLEAN is
@@ -203,10 +205,10 @@ feature {NONE} -- Implementation
 			valid_type: not l_type.is_empty
 			generic_type: is_array (l_type) or is_cell (l_type)
 		do
-			Result := l_type.substring (l_type.index_of ('%(', 1) + 1, 
+			Result := l_type.substring (l_type.index_of ('%(', 1) + 1,
 										l_type.last_index_of ('%)', l_type.count) -1 )
 		end
-		
+
 	com_cell_type (l_type: STRING): STRING is
 			-- Com pointer type of Eiffel 'l_type'
 		require

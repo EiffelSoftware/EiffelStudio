@@ -10,11 +10,7 @@ class
 	GB_COMMAND_NAME_CHANGE
 
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 	GB_GENERAL_UTILITIES
 		export

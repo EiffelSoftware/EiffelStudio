@@ -12,11 +12,7 @@ class
 	GB_COMMAND_CONVERT_TO_TOP_LEVEL
 
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 	GB_WIDGET_UTILITIES
 		export

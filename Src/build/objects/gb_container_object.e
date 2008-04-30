@@ -13,7 +13,7 @@ inherit
 	GB_PARENT_OBJECT
 		export
 			{ANY} dynamic_type, dynamic_type_from_string,
-				type_conforms_to
+				type_conforms_to, is_valid_type_string
 		redefine
 			object, display_object, is_full,
 			build_display_object, delete,
@@ -40,6 +40,14 @@ feature -- Access
 
 feature -- Basic operation
 
+	is_full: BOOLEAN is
+			-- Is `Current' full?
+		do
+			Result := object.full
+		end
+
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
+
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.
 			-- This is redefined in descendents as insertion at position `position'
@@ -54,12 +62,6 @@ feature -- Basic operation
 			one_item_added_to_display_object: not type_conforms_to (dynamic_type (object), dynamic_type_from_string (Ev_table_string)) and
 			not type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_MENU_BAR_OBJECT")) implies display_object.child.count = old display_object.child.count + 1
 --FIXME			one_item_added_to_layout_item: not old layout_item.has (an_object.layout_item) implies layout_item.count = old layout_item.count + 1
-		end
-
-	is_full: BOOLEAN is
-			-- Is `Current' full?
-		do
-			Result := object.full
 		end
 
 feature {GB_OBJECT} -- Delete
@@ -97,7 +99,7 @@ feature {GB_OBJECT} -- Delete
 			end
 		end
 
-feature -- Access
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Access
 
 	accepts_child (a_type: STRING): BOOLEAN is
 			-- Does `Current' accept `an_object'?
@@ -115,7 +117,7 @@ feature {NONE} -- Implementation
 			-- Build `display_object' from type of `Current'
 			-- and hence `object'.
 		local
-			widget: EV_CONTAINER
+			widget: like object
 		do
 			widget ?= vision2_object_from_type (type)
 			check

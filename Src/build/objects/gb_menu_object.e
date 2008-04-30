@@ -37,7 +37,7 @@ feature -- Access
 		end
 
 
-feature {GB_OBJECT_HANDLER} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.
@@ -63,7 +63,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			add_child (an_object, position)
 		end
 
-feature {GB_OBJECT_HANDLER} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Access
 
 	accepts_child (a_type: STRING): BOOLEAN is
 			-- Does `Current' accept `an_object'. By default,

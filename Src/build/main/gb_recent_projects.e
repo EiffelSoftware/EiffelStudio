@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
 	components: GB_INTERNAL_COMPONENTS is

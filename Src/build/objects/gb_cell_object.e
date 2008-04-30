@@ -37,7 +37,7 @@ feature -- Access
 			Result := object.full
 		end
 
-feature -- Basic operations
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current'.
@@ -66,7 +66,7 @@ feature -- Basic operations
 			object_not_empty: not type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_MENU_BAR_OBJECT")) implies not object.is_empty
 		end
 
-feature -- Access
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Access
 
 	accepts_child (a_type: STRING):BOOLEAN is
 			-- Does `Current' accept `an_object'?
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			-- Build `display_object' from type of `Current'
 			-- and hence `object'.
 		local
-			container: EV_CONTAINER
+			container: EV_CELL
 		do
 			container ?= vision2_object_from_type (type)
 			check

@@ -11,7 +11,6 @@ class
 	GB_SIMPLE_XML_FILE_HANDLER
 
 inherit
-
 	GB_CONSTANTS
 		export
 			{NONE} all
@@ -31,6 +30,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 create
 	make_with_components

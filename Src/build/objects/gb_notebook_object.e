@@ -26,7 +26,7 @@ feature -- Access
 			-- Vision2 object referenced by `Current'.
 			-- This is used in the display window.
 
-feature -- Element change
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.

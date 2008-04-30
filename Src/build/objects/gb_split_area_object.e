@@ -26,12 +26,12 @@ feature -- Access
 	object: EV_SPLIT_AREA
 		-- The vision2 object that `Current' represents.
 		-- This is used in the display window.
-	
+
 	display_object: GB_SPLIT_AREA_DISPLAY_OBJECT
 		-- The representation of `object' used in `build_window'.
 		-- This is used in the builder window.
 
-feature -- Basic operation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.
@@ -50,7 +50,7 @@ feature -- Basic operation
 			check
 				display_object_not_void: widget2 /= Void
 			end
-			
+
 				-- We need to put in the first position if
 				-- there is currently a second position.
 			if position = 1 or (position = 2 and object.second /=  Void) then
@@ -91,7 +91,7 @@ feature -- Basic operation
 				add_child (an_object, 2)
 			end
 		end
-		
+
 invariant
 	has_no_more_than_two_children: children.count <= 2
 

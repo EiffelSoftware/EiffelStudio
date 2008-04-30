@@ -9,11 +9,7 @@ indexing
 class
 	GB_COMMAND_ADD_WINDOW
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 	GB_WIDGET_UTILITIES
 		export

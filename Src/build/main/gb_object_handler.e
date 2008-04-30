@@ -13,7 +13,7 @@ inherit
 	INTERNAL
 		export
 			{NONE} all
-			{ANY} dynamic_type_from_string, is_instance_of
+			{ANY} dynamic_type_from_string, is_instance_of, is_valid_type_string
 		end
 
 	GB_CONSTANTS
@@ -48,6 +48,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 create
 	make_with_components

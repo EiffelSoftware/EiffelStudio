@@ -17,11 +17,13 @@ inherit
 			{NONE} all
 			{GB_OBJECT_EDITOR} default_create
 		end
-	
+
 	EV_ANY_HANDLER
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature -- Access
 
@@ -48,7 +50,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	all_objects: HASH_TABLE [EV_ANY, STRING] is

@@ -7,27 +7,23 @@ indexing
 
 class
 	GB_COMMAND_DELETE_CONSTANT
-	
+
 inherit
-	
 	GB_COMMAND
-		export
-			{NONE} all
-		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	--| FIXME, constants are now no longer undoable.
 	--| Hence the commented sections in this class.
-	
+
 	components: GB_INTERNAL_COMPONENTS
 
 	make (constant: GB_CONSTANT; a_component: GB_INTERNAL_COMPONENTS) is
@@ -64,7 +60,7 @@ feature -- Basic Operation
 				editors.i_th (editors.index).constant_removed (internal_constant)
 				editors.forth
 			end
-			components.constants.remove_constant (internal_constant)			
+			components.constants.remove_constant (internal_constant)
 			components.commands.update
 		end
 
@@ -101,7 +97,7 @@ feature -- Basic Operation
 --			end
 --			command_handler.update
 		end
-		
+
 	textual_representation: STRING is
 			-- Text representation of command executed.
 		do

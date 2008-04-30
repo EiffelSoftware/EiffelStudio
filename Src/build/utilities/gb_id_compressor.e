@@ -11,11 +11,12 @@ class
 	GB_ID_COMPRESSOR
 
 inherit
-
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
+
+	ANY
 
 create
 	make_with_components

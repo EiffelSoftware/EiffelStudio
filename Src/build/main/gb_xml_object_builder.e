@@ -10,7 +10,6 @@ deferred class
 	GB_XML_OBJECT_BUILDER
 
 inherit
-
 	GB_SHARED_DEFERRED_BUILDER
 		export
 			{NONE} all
@@ -41,6 +40,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature -- Access
 

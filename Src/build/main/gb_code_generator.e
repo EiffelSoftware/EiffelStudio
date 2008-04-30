@@ -59,6 +59,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	make_with_components
 

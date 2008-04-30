@@ -10,7 +10,6 @@ deferred class
 	GB_TYPE_SELECTOR_ITEM
 
 inherit
-
 	INTERNAL
 		export
 			{NONE} all
@@ -20,6 +19,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature {NONE} -- Initialization
 

@@ -9,11 +9,7 @@ class
 	GB_COMMAND_ADD_OBJECT
 
 inherit
-
 	GB_COMMAND
-		export
-			{NONE} all
-		end
 
 	GB_WIDGET_UTILITIES
 		export

@@ -9,7 +9,6 @@ class
 	GB_WIDGET_SELECTOR_COMMON_ITEM
 
 inherit
-
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
@@ -19,6 +18,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature -- Access
 

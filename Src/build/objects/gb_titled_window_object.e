@@ -8,7 +8,7 @@ indexing
 
 class
 	GB_TITLED_WINDOW_OBJECT
-	
+
 inherit
 	GB_CELL_OBJECT
 		redefine
@@ -16,28 +16,28 @@ inherit
 			add_new_object_wrapper, add_new_component_wrapper, can_add_child, add_child_object, accepts_child,
 			generate_xml, modify_from_xml
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		undefine
 			copy
 		end
-		
+
 create
 	make_with_type,
 	make_with_type_and_object
-	
+
 feature -- Access
 
 	object: EV_TITLED_WINDOW
 		-- The vision2 object that `Current' represents.
 		-- This is used in the display window.
-	
+
 	display_object: GB_CELL_DISPLAY_OBJECT
 		-- The representation of `object' used in `build_window'.
 		-- This is used in the builder window.
-		
+
 	is_full: BOOLEAN is
 			-- Is `Current' full?
 		do
@@ -68,7 +68,7 @@ feature -- Access
 					add_new_object_in_parent (an_object)
 				end
 			end
-		end		
+		end
 
 	add_new_component_wrapper (a_component: GB_COMPONENT) is
 			-- If shift pressed then add `a_component' to
@@ -91,7 +91,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	can_add_child (object_representation: ANY): BOOLEAN is
 			-- May an object represented by `object_representation' be added
 			-- to `Current'?
@@ -113,7 +113,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	update_objects is
 			-- Reset `object' and `display_object' to be up to
 			-- date with `display_window' and `builder_window'.
@@ -123,7 +123,7 @@ feature -- Access
 			object := components.tools.display_window
 			display_object.set_child (components.tools.Builder_window)
 		end
-		
+
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current'.
 		local
@@ -155,7 +155,7 @@ feature -- Access
 					layout_item.start
 					layout_item.put_left (menu_object.layout_item)
 					if layout_item.is_expandable then
-						layout_item.expand	
+						layout_item.expand
 					end
 				end
 			else
@@ -173,7 +173,7 @@ feature -- Access
 				add_child (an_object, children.count + 1)
 			end
 		end
-		
+
 	accepts_child (a_type: STRING):BOOLEAN is
 			-- Does `Current' accept `an_object'. By default,
 			-- widgets are accepted. Redefine in primitives
@@ -187,7 +187,7 @@ feature -- Access
 				Result := True
 			end
 		end
-		
+
 	add_new_menu_bar_component (a_component: GB_COMPONENT) is
 			-- Add a new menu bar component to `Current'.
 		local
@@ -216,7 +216,7 @@ feature -- Access
 			-- becuase we are adding a menu. This therefore, is a bit of a hack
 			-- but as far as I know, this is the only place in Vision2
 			-- where we may have to do something like this.
-			
+
 				-- Note that we do not have to handle the case where the menu bar
 				-- is already contained in `Current', as it will be impossible
 				-- to drop in this case.
@@ -228,9 +228,9 @@ feature -- Access
 				layout_item.expand
 			end
 		end
-		
+
 feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Basic operation
-		
+
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of specific attributes of `Current'
 			-- in `element'. For now, only a name needs to be stored.
@@ -241,7 +241,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Bas
 				add_element_containing_boolean (element, root_window_string, True)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update `Current' based on information held in `element'.
 		local
@@ -256,7 +256,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Bas
 				set_as_root_window
 			end
 		end
-		
+
 feature {GB_WIDGET_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
 
 	set_as_root_window is
@@ -271,7 +271,7 @@ feature {GB_WIDGET_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 			widget_selector_item.set_pixmap (Icon_titled_window_main @ 1)
 			components.object_handler.set_root_window (Current)
 		end
-		
+
 	update_as_root_window_changing is
 			-- Update `Current' to reflect that fact that it is no longer the main
 			-- window for the system.
@@ -279,10 +279,10 @@ feature {GB_WIDGET_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 			layout_item.set_pixmap (pixmap_by_name (type.as_lower))
 			widget_selector_item.set_pixmap (pixmap_by_name (type.as_lower))
 		end
-		
+
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	set_object (a_window: EV_TITLED_WINDOW) is
+	set_object (a_window: like object) is
 			-- Assign `a_window' to `object'.
 		require
 			object_not_void: a_window /= Void
@@ -303,7 +303,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			set_display_object (builder_win)
 			connect_display_object_events
 		end
-		
+
 	set_display_object  (display_win: GB_BUILDER_WINDOW) is
 			-- Assign `display_win' to `display_object'.
 		require

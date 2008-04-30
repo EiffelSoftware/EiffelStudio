@@ -152,7 +152,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 		local
 			pixmap_file: RAW_FILE
 		do
-			pixmap_filename := file_name.as_string_8.twin
+			pixmap_filename := file_name.as_string_8.string
 			create pixmap_file.make_open_read (pixmap_filename)
 			pixmap_file.close
 

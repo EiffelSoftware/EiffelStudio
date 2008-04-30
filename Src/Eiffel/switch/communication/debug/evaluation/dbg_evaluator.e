@@ -280,53 +280,60 @@ feature {NONE} -- Parameters Implementation
 			--| Warning: for classic system be sure `Init_recv_c' had been done before
 		require
 			f_is_not_attribute: f = Void or else not f.is_attribute
-			params /= Void and then not params.is_empty
+			params_not_empty: params /= Void and then not params.is_empty
 		local
 			dmp: DUMP_VALUE
 			bak_cc: CLASS_C
 			l_type: TYPE_A
 		do
 				--| Prepare parameters ...
-			bak_cc := System.current_class
-			if dt /= Void then
-				System.set_current_class (dt.associated_class)
-			end
-			parameters_init (params.count)
-			from
-				params.start
-			until
-				params.after or error_occurred
-			loop
-				dmp := params.item
-					-- We need to evaluate feature argument in the context of `dt'
-					-- it might have some formal and the metamorphose should only appear
-					-- when there is indeed a type difference and not because the expected
-					-- argument is a formal parameter and the actual argument value is
-					-- a basic type.
-					-- This happen when evaluation `my_hash_table.item (1)' where
-					-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]',
-					-- or when evaluating `test.has_item (1)' if `test' is a descendant
-					-- of `HASH_TABLE [INTEGER, XXXX]'.
-				if dmp.is_basic then
-					if f /= Void and dt /= Void then
-						l_type := f.arguments.i_th (params.index).instantiation_in (dt.type, f.written_in)
-						if not l_type.is_basic then
-							parameters_push_and_metamorphose (dmp)
+			if f /= Void and then f.argument_count /= params.count then
+				notify_error_evaluation (debugger_names.msg_error_evaluation_wrong_nb_of_args (f.argument_count, params.count))
+			else
+				bak_cc := System.current_class
+				if dt /= Void then
+					System.set_current_class (dt.associated_class)
+				end
+				parameters_init (params.count)
+				from
+					params.start
+				until
+					params.after or error_occurred
+				loop
+					dmp := params.item
+						-- We need to evaluate feature argument in the context of `dt'
+						-- it might have some formal and the metamorphose should only appear
+						-- when there is indeed a type difference and not because the expected
+						-- argument is a formal parameter and the actual argument value is
+						-- a basic type.
+						-- This happen when evaluation `my_hash_table.item (1)' where
+						-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]',
+						-- or when evaluating `test.has_item (1)' if `test' is a descendant
+						-- of `HASH_TABLE [INTEGER, XXXX]'.
+					check dmp_not_void: dmp /= Void end
+					if dmp.is_basic then
+						if dt /= Void and f /= Void then
+							if {ta: TYPE_A} f.arguments.i_th (params.index) then
+								l_type := ta.instantiation_in (dt.type, f.written_in)
+							end
+							if l_type /= Void and then not l_type.is_basic then
+								parameters_push_and_metamorphose (dmp)
+							else
+								parameters_push (dmp)
+							end
 						else
+							-- FIXME jfiat : in very specific case we have  'f =  Void'
+							-- i.e: when we have only the feature_name with no more info
 							parameters_push (dmp)
 						end
 					else
-						-- FIXME jfiat : in very specific case we have  'f =  Void'
-						-- i.e: when we have only the feature_name with no more info
 						parameters_push (dmp)
 					end
-				else
-					parameters_push (dmp)
+					params.forth
 				end
-				params.forth
-			end
-			if bak_cc /= Void then
-				System.set_current_class (bak_cc)
+				if bak_cc /= Void then
+					System.set_current_class (bak_cc)
+				end
 			end
 		end
 

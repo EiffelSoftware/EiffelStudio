@@ -816,7 +816,7 @@ feature -- Status
 	execution_ignoring_breakpoints: BOOLEAN assign set_execution_ignoring_breakpoints
 			-- Is execution ignore breakpoints ?
 
-	execution_replay_recording_enabled: BOOLEAN assign activate_execution_replay_recording
+	execution_replay_recording_enabled: BOOLEAN
 			-- Is execution replay recording enabled ?
 
 feature -- Parameters context
@@ -1316,11 +1316,17 @@ feature -- Application change
 
 	activate_execution_replay_recording (b: BOOLEAN) is
 			-- Activate or Deactivate execution replay recording
+		local
+			r: BOOLEAN
 		do
 			execution_replay_recording_enabled := b
 			if safe_application_is_stopped then
 				if application_status.replay_recording /= b then
-					application.activate_execution_replay_recording (b)
+					r := application.activate_execution_replay_recording (b)
+					if b and not r then
+							--| Let's try to stop the recording if possible.
+						r := application.activate_execution_replay_recording (not b)
+					end
 				end
 			end
 		end

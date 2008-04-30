@@ -247,11 +247,11 @@ feature -- Remote access to RT_
 			ewb_request.reset_recv_value
 		end
 
-	activate_execution_replay_recording (b: BOOLEAN) is
+	activate_execution_replay_recording (b: BOOLEAN): BOOLEAN is
 			-- Activate Execution replay recording on debuggee depending of `b'
 		do
 			cont_request.send_rqst_3_integer (rqst_rt_operation, rtop_exec_replay, rtdbg_op_replay_record, b.to_integer)
-			Precursor {APPLICATION_EXECUTION} (b)
+			Result := Precursor {APPLICATION_EXECUTION} (b)
 		end
 
 	remote_current_exception_value: EXCEPTION_DEBUG_VALUE is

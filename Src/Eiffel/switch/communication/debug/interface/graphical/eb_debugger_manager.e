@@ -1920,6 +1920,9 @@ feature -- Application change
 		do
 			was_enabled := execution_replay_recording_enabled
 			Precursor {DEBUGGER_MANAGER} (b)
+			if b /= execution_replay_recording_enabled then
+				debugger_warning_message ("Execution recording operation failed")
+			end
 			if was_enabled /= execution_replay_recording_enabled then
 				toggle_exec_replay_recording_mode_cmd.set_select (execution_replay_recording_enabled)
 			end

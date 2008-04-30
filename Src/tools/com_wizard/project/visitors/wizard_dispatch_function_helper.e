@@ -10,24 +10,26 @@ class
 
 inherit
 	ECOM_FUNC_KIND
-		export 
+		export
 			{NONE} all
 		end
 
 	WIZARD_WRITER_DICTIONARY
-		export 
+		export
 			{NONE} all
 		end
 
 	ECOM_VAR_TYPE
-		export 
+		export
 			{NONE} all
 		end
 
 	ECOM_PARAM_FLAGS
-		export 
+		export
 			{NONE} all
 		end
+
+	ANY
 
 feature -- Basic operations
 

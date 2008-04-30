@@ -29,9 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
-	generate is 
+	generate is
 			-- Generated Eiffel registration code.
 		deferred
 		end
@@ -63,7 +65,7 @@ feature -- Access
 feature -- Basic operations
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
-		deferred		
+		deferred
 		end
 
 indexing

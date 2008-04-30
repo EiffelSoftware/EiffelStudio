@@ -19,8 +19,10 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
-	generate 
+	generate
 
 feature -- Basic operations
 
@@ -35,25 +37,25 @@ feature -- Basic operations
 			cpp_writer.set_header_file_name (Ecom_generated_rt_globals_header_file_name)
 			cpp_writer.set_header ("Global variables used in generated code.")
 			cpp_writer.add_import ("ecom_rt_globals.h")
-			
+
 			from
 				Generated_ec_mappers.start
 			until
-				Generated_ec_mappers.after				
+				Generated_ec_mappers.after
 			loop
 				cpp_writer.add_import (Generated_ec_mappers.item.definition_header_file_name)
 				Generated_ec_mappers.forth
 			end
-			
+
 			from
 				Generated_ce_mappers.start
 			until
-				Generated_ce_mappers.after				
+				Generated_ce_mappers.after
 			loop
 				cpp_writer.add_import (Generated_ce_mappers.item.definition_header_file_name)
 				Generated_ce_mappers.forth
 			end
-			
+
 			from
 				Generated_ec_mappers.start
 			until

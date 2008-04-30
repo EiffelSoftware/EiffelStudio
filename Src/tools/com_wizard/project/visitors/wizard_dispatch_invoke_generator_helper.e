@@ -10,22 +10,22 @@ class
 
 inherit
 	WIZARD_WRITER_DICTIONARY
-		export 
+		export
 			{NONE} all
 		end
 
 	WIZARD_GUIDS
-		export 
+		export
 			{NONE} all
 		end
 
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
-		export 
+		export
 			{NONE} all
 		end
 
 	ECOM_VAR_TYPE
-		export 
+		export
 			{NONE} all
 		end
 
@@ -43,6 +43,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature -- Access
 
@@ -63,7 +65,7 @@ feature -- Access
 	%						pExcepInfo->wCode = HRESULT_CODE (hr);%N%
 	%					}"
 		end
-			
+
 feature -- Basic operations
 
 	add_ref_to_interface_variable (a_visitor: WIZARD_DATA_TYPE_VISITOR; a_variable_name: STRING): STRING is
@@ -74,9 +76,9 @@ feature -- Basic operations
 			valid_name: not a_variable_name.is_empty
 		do
 			create Result.make (100)
-			if 
+			if
 				a_visitor.is_interface_pointer and
-				(a_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+				(a_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or
 				a_visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 			then
 				Result.append ("(")
@@ -84,9 +86,9 @@ feature -- Basic operations
 				Result.append (")->AddRef ();%N%T%T%T%T")
 			end
 
-			if 
+			if
 				a_visitor.is_interface_pointer_pointer and
-				(a_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
+				(a_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or
 				a_visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 			then
 				Result.append ("(*(")
@@ -111,9 +113,9 @@ feature -- Basic operations
 			elseif a_visitor.c_type.substring_index (idispatch_type, 1) /= 0 then
 				Result := idispatch_type.twin
 			else
-				check 
+				check
 					interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
-						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer					
+						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer
 				end
 				pointed_descriptor ?= a_data_type_descriptor
 				check
@@ -159,9 +161,9 @@ feature -- Basic operations
 			elseif a_visitor.c_type.substring_index (idispatch_type, 1) /= 0 then
 				Result := Idispatch_guid
 			else
-				check 
+				check
 					interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
-						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer					
+						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer
 				end
 				pointed_descriptor ?= a_data_type_descriptor
 				check
@@ -173,7 +175,7 @@ feature -- Basic operations
 			non_void_guid: Result /= Void
 		end
 
-	get_interface_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING; 
+	get_interface_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING;
 					counter: INTEGER): STRING is
 			-- Get intergace pointer from Variant.
 		require
@@ -187,7 +189,7 @@ feature -- Basic operations
 			valid_variant_field_name: not variant_field_name.is_empty
 		do
 				create Result.make (300)
-				
+
 				Result.append ("%N%T%T%T%T{%N%T%T%T%T%T")
 				Result.append (unknown_name)
 				Result.append (" tmp_")
@@ -209,7 +211,7 @@ feature -- Basic operations
 			valid_result: not Result.is_empty
 		end
 
-	get_interface_pointer_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING; 
+	get_interface_pointer_pointer (unknown_name, a_variable_name, a_variant_name, variant_field_name: STRING;
 					counter: INTEGER): STRING is
 			-- Get intergace pointer from Variant.
 		require
@@ -240,12 +242,12 @@ feature -- Basic operations
 				Result.append_integer (counter)
 				Result.append (", (void**)(&tmp_tmp_")
 				Result.append (a_variable_name)
-				Result.append ("));%N%T%T%T%T}%N%T%T%T%T")				
+				Result.append ("));%N%T%T%T%T}%N%T%T%T%T")
 		ensure
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
 		end
-		
+
 	get_argument_from_variant (a_data_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
 				a_variable_name, a_variant_name: STRING;
 				counter: INTEGER; a_argument_count: INTEGER): STRING is
@@ -296,7 +298,7 @@ feature -- Basic operations
 				Result.append ("%N%T%T%T%T")
 				Result.append (check_failer (a_argument_count, "", "DISP_E_TYPEMISMATCH"))
 				Result.append ("%T")
-			elseif 
+			elseif
 				(l_visitor.is_interface_pointer_pointer or l_visitor.is_coclass_pointer_pointer) and
 					not (l_visitor.c_type.substring_index (Iunknown_type, 1) > 0 or l_visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 			then
@@ -323,7 +325,7 @@ feature -- Basic operations
 				Result.append ("%T")
 				Result.append (a_variable_name)
 				Result.append (" = &tmp_tmp_")
-				Result.append (a_variable_name)						
+				Result.append (a_variable_name)
 				Result.append (";%N%T%T%T%T")
 			elseif l_visitor.is_structure then
 				Result.append (l_visitor.c_type)

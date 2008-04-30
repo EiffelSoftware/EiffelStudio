@@ -19,6 +19,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Operations
 
 	visit (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is
@@ -96,7 +98,7 @@ feature -- Processing
 					-- generate set/get for structure item (Eiffel + C)
 					-- call `process_record' if it was not processed
 				-- if field type is enumeration then
-					-- 
+					--
 				-- if field type is union then
 					--
 		require
@@ -107,7 +109,7 @@ feature -- Processing
 	process_union (union_descriptor: WIZARD_UNION_DESCRIPTOR) is
 			-- process union
 			-- generate code for union described by `union_descriptor'
-			-- for every field in union 
+			-- for every field in union
 				-- generate set/get for current type in union (Eiffel + C)
 			-- generated code for descriminators
 			-- Union is not implemented

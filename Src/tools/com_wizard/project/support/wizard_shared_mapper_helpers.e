@@ -19,9 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
-	Ecom_generated_rt_globals_header_file_name: STRING is 
+	Ecom_generated_rt_globals_header_file_name: STRING is
 			-- C++ class header file contains information that all generated class require
 			-- e.g. global variables, system header files etc.
 		once
@@ -32,13 +34,13 @@ feature -- Access
 			Result.append (".h")
 		end
 
-	Generated_ec_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS] is 
+	Generated_ec_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS] is
 			-- C++ classes holding generated Eiffel to C mappers
 		once
 			create {ARRAYED_LIST [WIZARD_WRITER_MAPPER_CLASS]} Result.make (5)
 		end
 
-	Generated_ce_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS] is 
+	Generated_ce_mappers: LIST [WIZARD_WRITER_MAPPER_CLASS] is
 			-- C++ classes holding generated C to Eiffel mappers
 		once
 			create {ARRAYED_LIST [WIZARD_WRITER_MAPPER_CLASS]} Result.make (5)

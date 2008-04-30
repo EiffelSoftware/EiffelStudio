@@ -26,6 +26,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	Resource_file_extension: STRING is ".rc"
@@ -52,7 +54,7 @@ feature -- Basic operations
 			a_file.close
 		end
 
-	Generated_resource_file: STRING is 
+	Generated_resource_file: STRING is
 			-- Resource file content
 		local
 			str_buffer: STRING
@@ -60,7 +62,7 @@ feature -- Basic operations
 			create Result.make (100)
 			Result.append ("1 typelib ")
 			Result.append (Double_quote)
-			
+
 			str_buffer := environment.type_library_file_name.twin
 			str_buffer.replace_substring_all ("%H", "%H%H")
 

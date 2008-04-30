@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
 	iid_name (a_name: STRING): STRING is
@@ -25,7 +27,7 @@ feature -- Basic operations
 			create Result.make (100)
 			Result.append ("IID_")
 			Result.append (a_name)
-			if 
+			if
 				not a_name.is_equal ("IDispatch") and
 				not a_name.is_equal ("IUnknown") and
 				not a_name.is_equal ("IConnectionPointContainer") and
@@ -48,7 +50,7 @@ feature -- Basic operations
 			non_void_guid: a_guid /= Void
 		do
 			create Result.make (1000)
-			if 
+			if
 				not a_name.is_equal ("IDispatch") and
 				not a_name.is_equal ("IUnknown") and
 				not a_name.is_equal ("IConnectionPointContainer") and

@@ -14,18 +14,20 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
-	create_data_type_descriptor (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC; 
+	create_data_type_descriptor (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC;
 				a_system_description: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_DATA_TYPE_DESCRIPTOR is
 			-- Create 'Result' according to type
 		local
 			l_var_type: INTEGER
-			l_automation_creator: WIZARD_AUTOMATION_DATA_TYPE_CREATOR 
-			l_pointed_creator: WIZARD_POINTED_DATA_TYPE_CREATOR 
-			l_safearray_creator: WIZARD_SAFEARRAY_DATA_TYPE_CREATOR 
-			l_array_creator: WIZARD_ARRAY_DATA_TYPE_CREATOR 
-			l_user_defined_creator: WIZARD_USER_DEFINED_DATA_TYPE_CREATOR 
+			l_automation_creator: WIZARD_AUTOMATION_DATA_TYPE_CREATOR
+			l_pointed_creator: WIZARD_POINTED_DATA_TYPE_CREATOR
+			l_safearray_creator: WIZARD_SAFEARRAY_DATA_TYPE_CREATOR
+			l_array_creator: WIZARD_ARRAY_DATA_TYPE_CREATOR
+			l_user_defined_creator: WIZARD_USER_DEFINED_DATA_TYPE_CREATOR
 		do
 			l_var_type := a_type_desc.var_type
 			if is_user_defined (l_var_type) then

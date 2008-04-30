@@ -11,9 +11,10 @@ deferred class
 inherit
 	WIZARD_WRITER_DICTIONARY
 		export
-			{NONE} all;
-			{ANY} generator
+			{NONE} all
 		end
+
+	ANY
 
 feature -- Access
 

@@ -10,15 +10,16 @@ class
 
 inherit
 	WIZARD_DISPATCH_INVOKE_GENERATOR_HELPER
-		export 
+		export
 			{NONE} all
 		end
 
 	WIZARD_DISPATCH_FUNCTION_HELPER
-		export 
+		export
 			{NONE} all
 		end
 
+	ANY
 
 create
 	make
@@ -43,13 +44,13 @@ feature -- Access
 
 	body: STRING
 			-- Case body.
-		
-	local_buffer: STRING 
+
+	local_buffer: STRING
 			-- Additional buffer.
-			
+
 	release_interfaces: STRING
 			-- Release interfaces after function call.
-	
+
 	func_desc: WIZARD_FUNCTION_DESCRIPTOR
 			-- Function descriptor.
 
@@ -60,7 +61,7 @@ feature -- Staus report.
 		do
 			Result := func_desc.func_kind = func_dispatch
 		end
-		
+
 	argument_count: INTEGER is
 			-- Number of arguments.
 		local
@@ -81,19 +82,19 @@ feature -- Staus report.
 				end
 			end
 		end
-	
+
 	has_arguments: BOOLEAN is
 			-- Does function have arguments?
 		do
 			Result := argument_count > 0
 		end
-		
+
 	has_result: BOOLEAN is
 			-- Does routine have result?
 		do
 			Result := does_routine_have_result (func_desc)
 		end
-		
+
 	result_type_visitor: WIZARD_DATA_TYPE_VISITOR is
 			-- Return type visitor.
 		require
@@ -116,14 +117,14 @@ feature -- Staus report.
 		ensure
 			non_void_visitor: Result /= Void
 		end
-	
+
 	return_hresult: BOOLEAN is
 			-- Does Vtable function return HRESULT?
 		do
 			Result := is_dispatch_function or
 				func_desc.return_type.type = Vt_hresult
 		end
-	
+
 feature -- Basic operations
 
 	release_interface_pointer_code (an_argument_name: STRING): STRING is
@@ -164,7 +165,7 @@ feature -- Basic operations
 			non_void_code: Result /= Void
 			valid_code: not Result.is_empty
 		end
-	
+
 	process_arguments is
 			-- Process function arguments.
 		require
@@ -181,7 +182,7 @@ feature -- Basic operations
 				func_desc.arguments.start
 				counter := 0
 			until
-				counter = argument_count 
+				counter = argument_count
 			loop
 				if counter /= 0 then
 					body.append (", ")
@@ -200,11 +201,11 @@ feature -- Basic operations
 				func_desc.arguments.start
 				counter := 0
 			until
-				counter = argument_count 
+				counter = argument_count
 			loop
 				visitor := func_desc.arguments.item.type.visitor
 				body.append ("%N%T%T%T%T")
-				body.append (get_argument_from_variant (func_desc.arguments.item.type, "arg_" + counter.out, "tmp_value %(" + counter.out +"%)", counter, argument_count))				
+				body.append (get_argument_from_variant (func_desc.arguments.item.type, "arg_" + counter.out, "tmp_value %(" + counter.out +"%)", counter, argument_count))
 				if (visitor.is_interface_pointer or visitor.is_coclass_pointer) and not is_paramflag_fout (func_desc.arguments.item.flags) then
 					release_interfaces.append (release_interface_pointer_code ("arg_" + counter.out))
 				elseif (visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer) and not is_paramflag_fout (func_desc.arguments.item.flags) then
@@ -214,7 +215,7 @@ feature -- Basic operations
 				func_desc.arguments.forth
 			end
 		end
-	
+
 	process_result (visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- Process function result.
 		require
@@ -285,7 +286,7 @@ feature -- Basic operations
 			local_buffer.append (New_line_tab_tab_tab)
 			local_buffer.append (Tab_tab)
 		end
-	
+
 	call_vtable_function is
 			-- Generate call to Vtable function.
 		require
@@ -302,7 +303,7 @@ feature -- Basic operations
 				from
 					counter := 0
 				until
-					counter = argument_count 
+					counter = argument_count
 				loop
 					body.append (" arg_")
 					body.append_integer (counter)
@@ -318,7 +319,7 @@ feature -- Basic operations
 			end
 			body.append (");%N%T%T%T%T")
 		end
-		
+
 	function_case_body: STRING is
 			-- Case statement for function descriptor
 		require
@@ -327,7 +328,7 @@ feature -- Basic operations
 			dispatch: BOOLEAN
 		do
 			dispatch := func_desc.func_kind = func_dispatch
-			
+
 			create body.make (1000)
 			body.append ("%N%T%T%T{%N%T%T%T%T")
 			body.append ("if (pDispParams->cArgs != ")
@@ -335,13 +336,13 @@ feature -- Basic operations
 			body.append (")%N%T%T%T%T%T")
 			body.append ("return DISP_E_BADPARAMCOUNT;%N%N%T%T%T%T")
 			if has_arguments then
-				process_arguments 
+				process_arguments
 			end
 			if has_result  then
 				process_result (result_type_visitor )
 			end
 			body.append ("%N%T%T%T%T")
-			call_vtable_function 
+			call_vtable_function
 			body.append ("%N%T%T%T%T")
 			if return_hresult then
 				body.append (check_failer (argument_count, excepinfo_setting, "DISP_E_EXCEPTION"))
@@ -355,7 +356,7 @@ feature -- Basic operations
 				body.append ("%T")
 				body.append (release_interfaces)
 				body.append ("CoTaskMemFree (tmp_value);%N%T%T%T")
-			end		
+			end
 			body.append ("}")
 			Result := body
 		ensure

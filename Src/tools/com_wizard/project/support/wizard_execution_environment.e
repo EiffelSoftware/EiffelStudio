@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature {NONE} -- Implementation
 
 	Env: EXECUTION_ENVIRONMENT is

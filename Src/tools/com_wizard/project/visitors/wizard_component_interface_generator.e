@@ -19,6 +19,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	interface: WIZARD_INTERFACE_DESCRIPTOR
@@ -46,18 +48,18 @@ feature -- Basic operations
 					l_already_generated := l_interface.is_implementing_coclass (l_coclass) or
 											is_interface_generated_for_coclass (l_interface, l_coclass)
 				end
-			
+
 				if not l_already_generated and not l_interface.is_iunknown and not l_interface.is_idispatch then
 					if l_coclass /= Void then
 						-- Now register the fact that this interface was already generated for that coclass
 						-- This is necessary because two interfaces may inherit from a common interface that
-						-- is not implemented by the coclass (the feature names will be identical because we 
+						-- is not implemented by the coclass (the feature names will be identical because we
 						-- want to merge).
 						add_generated_interface_for_coclass (l_interface, l_coclass)
 					end
 					generate_functions_and_properties (l_interface)
 				end
-			end		
+			end
 
 			l_properties := a_interface.properties
 			if not l_properties.is_empty then
@@ -109,7 +111,7 @@ feature {NONE} -- Implementation
 			finished: finished
 		deferred
 		end
-	
+
 	is_interface_generated_for_coclass (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN is
 			-- Was interface `a_interface' already generated in context of coclass `a_coclass'?
 		require
@@ -146,7 +148,7 @@ feature {NONE} -- Implementation
 			added: generated_coclasses.has (a_coclass.guid.out) and then
 						generated_coclasses.item (a_coclass.guid.out).has (a_interface.guid.out)
 		end
-		
+
 	generated_coclasses: HASH_TABLE [HASH_TABLE [STRING, STRING], STRING]
 			-- Table of table of generated interfaces guids indexed by coclass guids
 

@@ -14,22 +14,24 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	Initialization: INTEGER is 1
-	
+
 	Access: INTEGER is 2
-	
+
 	Measurement: INTEGER is 3
 
 	Status_report: INTEGER is 4
-	
+
 	Element_change: INTEGER is 5
-	
+
 	Basic_operations: INTEGER is 6
 
 	Implementation: INTEGER is 7
-	
+
 	Externals: INTEGER is 8
 
 	feature_clauses: HASH_TABLE [STRING, INTEGER] is
@@ -60,9 +62,9 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-	
+
 	Externals_title: STRING is "Externals";
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

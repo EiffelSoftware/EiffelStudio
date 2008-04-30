@@ -16,6 +16,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	coclass: WIZARD_COCLASS_DESCRIPTOR
@@ -79,7 +81,7 @@ feature -- Basic operations
 				system_descriptor.interfaces.prune_all (an_implemented_interface)
 			end
 		ensure
-			system_does_not_have: not system_descriptor.interfaces.has (an_implemented_interface) 
+			system_does_not_have: not system_descriptor.interfaces.has (an_implemented_interface)
 		end
 
 feature {NONE} -- Implementation

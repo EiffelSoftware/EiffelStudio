@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Initialization
 
 	initialize_checker is
@@ -22,7 +24,7 @@ feature -- Initialization
 			create {ARRAYED_LIST [STRING]} errors.make (5)
 			errors.compare_objects
 		end
-		
+
 feature -- Access
 
 	is_valid: BOOLEAN is
@@ -30,7 +32,7 @@ feature -- Access
 		do
 			Result := errors.is_empty
 		end
-	
+
 	errors: LIST [STRING]
 			-- Errors caused by validity checking
 

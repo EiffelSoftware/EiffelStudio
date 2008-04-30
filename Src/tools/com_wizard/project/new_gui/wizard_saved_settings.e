@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	max_count: INTEGER is
@@ -42,7 +44,7 @@ feature -- Element Change
 		ensure
 			max_count_set: max_count = a_max_count
 		end
-		
+
 feature -- Basic Operations
 
 	initialize_combo (a_combo: EV_COMBO_BOX; a_name: STRING) is

@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
 	enable_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is

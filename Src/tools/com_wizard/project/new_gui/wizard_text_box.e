@@ -25,6 +25,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Initialization
 
 	setup (a_label: STRING; a_key: like key; a_text_processor: like text_processor; a_enter_processor: like enter_processor; a_select_processor: like select_processor) is
@@ -68,7 +70,7 @@ feature -- Initialization
 			-- Initialize background color
 			on_mouse_leave
 		end
-		
+
 feature -- Access
 
 	value: STRING is
@@ -133,7 +135,7 @@ feature -- Basic Operations
 		do
 			excluded := True
 		end
-		
+
 	remove_active_item is
 			-- Remove selected item from list.
 		do
@@ -141,13 +143,13 @@ feature -- Basic Operations
 			text_combo.remove
 			text_combo.set_text (text_combo.first.text)
 		end
-	
+
 	initialize_focus is
 			-- Give focus to combo.
 		do
 			text_combo.set_focus
 		end
-		
+
 feature -- Element Change
 
 	set_default_text (a_text: like default_text) is
@@ -159,7 +161,7 @@ feature -- Element Change
 		ensure
 			default_text_set: default_text = a_text
 		end
-	
+
 	set_save_on_return (a_value: like save_on_return) is
 			-- Set `save_on_return' with `a_value'.
 		do
@@ -170,7 +172,7 @@ feature -- Element Change
 		ensure
 			save_on_return_set: save_on_return = a_value
 		end
-	
+
 feature {NONE} -- Events Handling
 
 	on_change is
@@ -242,7 +244,7 @@ feature {NONE} -- Events Handling
 				text_combo.set_text (default_text)
 			end
 		end
-		
+
 feature {NONE} -- Private Access
 
 	text_processor: FUNCTION [ANY, TUPLE [STRING], WIZARD_VALIDITY_STATUS]
@@ -258,7 +260,7 @@ feature {NONE} -- Private Access
 	key: STRING
 			-- Key used to store and retrieve combo box items
 
-	text_combo: EV_COMBO_BOX is 
+	text_combo: EV_COMBO_BOX is
 			-- Text combo
 		deferred
 		end
@@ -267,7 +269,7 @@ feature {NONE} -- Private Access
 			-- Caption label
 		deferred
 		end
-	
+
 	auto_save: BOOLEAN
 			-- If `True' then text of combo is persisted after each change that
 			-- yield to a valid content
@@ -277,7 +279,7 @@ feature {NONE} -- Private Access
 
 	internal_save_on_return: BOOLEAN_REF;
 			-- Cell for `save_on_return'
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

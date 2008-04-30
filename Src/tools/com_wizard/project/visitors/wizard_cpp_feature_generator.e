@@ -34,6 +34,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature {NONE} -- Implementation
 
 	check_interface_pointer (a_interface_name, a_variable_name: STRING): STRING is

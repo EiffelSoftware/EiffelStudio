@@ -21,13 +21,7 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
-
-	default_dispinterface (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
-			-- Default dispinterface.
-		do
-			Result := a_interface.interface_descriptor
-		end
+	ANY
 
 feature -- Basic operations
 
@@ -86,9 +80,29 @@ feature -- Basic operations
 			a_factory.process_coclass_c_server
 		end
 
+	default_dispinterface_name (a_interface: WIZARD_COMPONENT_DESCRIPTOR): STRING is
+			-- Name of default dispinterface.
+		local
+			l_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
+		do
+			l_interface ?= a_interface
+			check l_interface_not_void: l_interface /= Void end
+			Result := l_interface.interface_descriptor.name
+		end
+
+	default_dispinterface (a_interface: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
+			-- Default dispinterface.
+		local
+			l_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
+		do
+			l_interface ?= a_interface
+			check l_interface_not_void: l_interface /= Void end
+			Result := l_interface.interface_descriptor
+		end
+
 feature {NONE} -- Implementation
 
-	add_constructor (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	add_constructor (a_interface: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add constructor.
 		do
 
@@ -117,13 +131,7 @@ feature {NONE} -- Implementation
 			non_void_constructor: Result /= Void
 		end
 
-	default_dispinterface_name (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): STRING is
-			-- Name of default dispinterface.
-		do
-			Result := a_interface.interface_descriptor.name
-		end
-
-	add_query_interface (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
+	add_query_interface (a_interface: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add function 'QueryInterface'
 		local
 			l_writer: WIZARD_WRITER_C_FUNCTION
@@ -140,14 +148,14 @@ feature {NONE} -- Implementation
 			create l_body.make (1000)
 			l_body.append (Tab)
 
-			l_interface := a_interface.interface_descriptor
+			l_interface := default_dispinterface (a_interface)
 			l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, Iunknown_clsid))
 
 			if dispatch_interface then
 				l_body.append (Space)
 				l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, iid_name (Idispatch_type)))
 			end
-			
+
 			from
 			until
 				l_interface = Void or else l_interface.is_iunknown or else l_interface.is_idispatch
@@ -156,7 +164,7 @@ feature {NONE} -- Implementation
 				l_body.append (case_body_in_query_interface (l_interface.c_type_name, l_interface.namespace, iid_name (l_interface.name)))
 				l_interface := l_interface.inherited_interface
 			end
-			
+
 			l_body.append ("%N%T%Treturn (*ppv = 0), E_NOINTERFACE;%N%N%T")
 			l_body.append ("reinterpret_cast<IUnknown *>(*ppv)->AddRef();%N%T")
 			l_body.append ("return S_OK;")

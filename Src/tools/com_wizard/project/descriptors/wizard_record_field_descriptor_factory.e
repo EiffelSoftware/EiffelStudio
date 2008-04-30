@@ -29,9 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
-	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_index: INTEGER; 
+	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_index: INTEGER;
 				a_system_descriptor: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_RECORD_FIELD_DESCRIPTOR is
 			-- Initialize
 		local

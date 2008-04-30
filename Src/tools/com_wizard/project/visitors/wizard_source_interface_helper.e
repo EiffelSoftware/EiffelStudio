@@ -14,9 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
-	connection_point_inner_class_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR; 
+	connection_point_inner_class_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR;
 				a_coclass_writer: WIZARD_WRITER_CPP_CLASS): STRING is
 			-- Name of inner class.
 		require
@@ -32,8 +34,8 @@ feature -- Basic operations
 			non_void_name: Result /= Void
 			valid_name: not Result.is_empty
 		end
-		
-	connection_point_attrubute_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR; 
+
+	connection_point_attrubute_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR;
 				a_coclass_writer: WIZARD_WRITER_CPP_CLASS): STRING is
 			-- Name of connection point attribute.
 		require

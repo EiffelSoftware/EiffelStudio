@@ -32,6 +32,8 @@ inherit
 			{ANY} is_valid_type_kind
 		end
 
+	ANY
+
 feature -- Access
 
 	Registration_class_creation_routine: STRING is "make"
@@ -94,7 +96,7 @@ feature -- Basic Operations
 			from
 				i := 1
 				previous_upper := True
-			variant 
+			variant
 				a_name.count - i + 1
 			until
 				i > a_name.count
@@ -135,7 +137,7 @@ feature -- Basic Operations
 				if standard_structures.has (a_name) then
 					Result := standard_structures.item (a_name).twin
 				end
-			elseif 
+			elseif
 				(a_type = Tkind_interface) or
 				(a_type = Tkind_dispatch)
 			then
@@ -242,7 +244,7 @@ feature -- Basic Operations
 		ensure
 			non_void_variable_name: Result /= Void
 		end
-		
+
 	standard_structures: HASH_TABLE [STRING, STRING] is
 			-- Names of standard structures.
 			-- Where item is Eiffel name, and key is C name

@@ -13,8 +13,6 @@ inherit
 		rename
 			field_label as text_label,
 			field_combo as text_combo
-		export
-			{NONE} all
 		end
 
 	WIZARD_TEXT_BOX
@@ -25,7 +23,7 @@ inherit
 		redefine
 			on_mouse_leave
 		end
-	
+
 feature -- Access
 
 	focus_lost_actions: LIST [ROUTINE [ANY, TUPLE[]]] is
@@ -38,7 +36,7 @@ feature -- Access
 		ensure
 			attached_actions: Result /= Void
 		end
-		
+
 feature {NONE} -- Event Handling
 
 	on_mouse_leave is

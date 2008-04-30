@@ -5,7 +5,7 @@ indexing
 	date:  "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	WIZARD_FUNCTION_GENERATOR
 
 inherit
@@ -18,6 +18,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature {NONE}
 

@@ -496,8 +496,10 @@ feature -- Remote access to Exceptions
 					if ftok > 0 then
 						icl := m.get_class_from_token (ctok)
 						f := eifnet_debugger.new_active_frame
-						Result := icl.get_static_field_value (ftok, f)
-						f.clean_on_dispose
+						if f /= Void then
+							Result := icl.get_static_field_value (ftok, f)
+							f.clean_on_dispose
+						end
 					end
 				end
 			end
@@ -518,20 +520,33 @@ feature -- Remote access to Exceptions
 			-- `{EXCEPTION_MANAGER}.last_exception' aka `{ISE_RUNTIME}.last_exception' value
 		local
 			icdv: ICOR_DEBUG_VALUE
+			val: ABSTRACT_REFERENCE_VALUE
 		do
 			if Result = Void and Eifnet_debugger.exception_occurred then
 				icdv := Eifnet_debugger.new_active_exception_value_from_thread
 				if icdv /= Void then
+					val ?= debug_value_from_icdv (icdv, Void)
 					if {wrap: ABSTRACT_REFERENCE_VALUE} eiffel_wrapper_exception (icdv) then
 						create Result.make_with_value (wrap)
-
-						if {val: ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) then
-							if {s8: !STRING_8} eifnet_debugger.exception_class_name (val) then
-								Result.set_exception_others (s8, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
+					else
+						--| should not occur but:
+						--| Met this case on dotnet 2.0 when there is a missing dll
+						--| cf. bug#14258
+						create Result.make_without_any_value
+					end
+					if val /= Void then
+						check Result_not_void: Result /= Void end
+						if {s8: STRING_8} eifnet_debugger.exception_class_name (val) then
+							Result.set_exception_others (s8, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
+							if not Result.has_value then
+								--| Let's use the il type name as meaning
+								Result.set_user_meaning (s8)
 							end
 						end
-					else
-						check should_not_occur: False end
+						if not Result.has_value and then {s32: STRING_32} eifnet_debugger.exception_text (val) then
+							--| Let's use the il exception text
+							Result.set_user_text (s32)
+						end
 					end
 				end
 			end

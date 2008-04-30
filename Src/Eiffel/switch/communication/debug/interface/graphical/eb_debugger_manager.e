@@ -1917,13 +1917,18 @@ feature -- Application change
 			-- Activate or Deactivate execution recording
 		local
 			was_enabled: BOOLEAN
+			error_occurred: BOOLEAN
 		do
 			was_enabled := execution_replay_recording_enabled
 			Precursor {DEBUGGER_MANAGER} (b)
-			if b /= execution_replay_recording_enabled then
+			error_occurred := b /= execution_replay_recording_enabled
+			if error_occurred then
 				debugger_warning_message ("Execution recording operation failed")
 			end
-			if was_enabled /= execution_replay_recording_enabled then
+			if
+				was_enabled /= execution_replay_recording_enabled or
+				error_occurred
+			then
 				toggle_exec_replay_recording_mode_cmd.set_select (execution_replay_recording_enabled)
 			end
 			if

@@ -1326,6 +1326,7 @@ feature -- Application change
 					if b and not r then
 							--| Let's try to stop the recording if possible.
 						r := application.activate_execution_replay_recording (not b)
+						execution_replay_recording_enabled := not b
 					end
 				end
 			end

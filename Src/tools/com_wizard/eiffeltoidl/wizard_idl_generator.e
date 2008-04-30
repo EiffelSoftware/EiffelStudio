@@ -19,6 +19,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	destination_folder: STRING

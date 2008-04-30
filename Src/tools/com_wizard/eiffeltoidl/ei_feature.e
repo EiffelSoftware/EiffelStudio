@@ -19,9 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (r_name: STRING) is
@@ -35,7 +37,7 @@ feature {NONE} -- Initialization
 			create result_type.make (0)
 			create comment.make (0)
 		ensure
-			name_set: name.is_equal (r_name)		
+			name_set: name.is_equal (r_name)
 		end
 
 feature -- Access
@@ -62,7 +64,7 @@ feature -- Element change
 		do
 			name := f_name.twin
 		ensure
-			name_set: name.is_equal (f_name)	
+			name_set: name.is_equal (f_name)
 		end
 
 	set_comment (new_comment: STRING) is

@@ -5,6 +5,8 @@ class
 	MAKEFILE_TRANSLATOR
 
 inherit
+	ANY
+
 	PATH_CONVERTER
 		export
 			{NONE} all

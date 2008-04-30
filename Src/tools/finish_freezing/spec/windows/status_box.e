@@ -7,6 +7,8 @@ class
 	STATUS_BOX
 
 inherit
+	ANY
+
 	WEL_MB_CONSTANTS
 		export
 			{NONE} all

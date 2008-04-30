@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-2-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-2-0 http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd" name="finish_freezing" uuid="4054F4B6-BAD4-4CA2-8732-682E43F9FC39" library_target="c_config_library">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="finish_freezing" uuid="4054F4B6-BAD4-4CA2-8732-682E43F9FC39" library_target="c_config_library">
 	<target name="c_config_library" abstract="true">
 		<file_rule>
 			<exclude>\.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false">
+		<option trace="false" profile="false" debug="false" full_class_checking="true">
 			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

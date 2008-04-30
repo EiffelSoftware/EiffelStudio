@@ -164,8 +164,8 @@ feature -- Basic operations
 		end
 
 	load_metrics_and_display_error (a_force: BOOLEAN; a_msg: STRING_GENERAL) is
-			-- Load metrics is they are not already loaded.
-			-- If `a_force' is True, load metrics even thought they are already loaded.
+			-- Load metrics if they are not already loaded.
+			-- If `a_force' is True, load metrics even though they are already loaded.
 			-- When loading metrics, `a_msg' will be displayed in a dialog.
 			-- Error will be displayed if any.
 		require

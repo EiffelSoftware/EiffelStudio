@@ -52,6 +52,7 @@ debuild --check-dirname-level 0 binary-arch
 echo Finished building package $PRODUCT
 
 # Remove all temporary files
+cd ../
 dh_clean
 rm -rf debian
 

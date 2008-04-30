@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="estudio" uuid="4C9D0872-E7FA-47F2-A7B3-C9F5681D58CD">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="estudio" uuid="4C9D0872-E7FA-47F2-A7B3-C9F5681D58CD">
 	<target name="common">
-		<option profile="false" debug="false" warning="true">
+		<option profile="false" debug="false" warning="true" full_class_checking="true">
 			<debug name="__unnamed_debug__" enabled="true"/>
 			<debug name="launcher" enabled="true"/>
 			<assertions precondition="true" check="true"/>
@@ -15,9 +15,9 @@
 		<setting name="line_generation" value="False"/>
 		<setting name="multithreaded" value="True"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>

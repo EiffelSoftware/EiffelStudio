@@ -12,6 +12,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	Temporary_input_file_name: STRING is "Input_File"

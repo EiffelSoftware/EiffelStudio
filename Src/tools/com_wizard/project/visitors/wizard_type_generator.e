@@ -25,6 +25,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic Operations
 
 	generate (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is

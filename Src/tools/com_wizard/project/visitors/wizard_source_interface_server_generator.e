@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
 	add_feature_name (an_interface: WIZARD_INTERFACE_DESCRIPTOR): STRING is
@@ -63,7 +65,7 @@ feature -- Basic operations
 			non_void_name: Result /= Void
 			valid_name: not Result.is_empty
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -15,6 +15,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	make
 
@@ -31,7 +33,7 @@ feature -- Access
 
 	Default_profile: STRING is "default"
 			-- Name of default profile
-		
+
 	available_profiles: LIST [STRING] is
 			-- List of available profiles
 		do
@@ -42,7 +44,7 @@ feature -- Access
 				create {ARRAYED_LIST [STRING]} Result.make (0)
 			end
 		end
-		
+
 	active_profile: STRING
 			-- Active profile
 
@@ -63,7 +65,7 @@ feature -- Access
 			-- This flag prevents saving profile while it's being set
 
 feature -- Element Settings
-		
+
 	set_active_profile (a_profile: like active_profile) is
 			-- Set `active_profile' with `a_profile'.
 		require
@@ -103,7 +105,7 @@ feature -- Element Settings
 		ensure
 			save_blocked_set: save_blocked = a_value
 		end
-		
+
 feature -- Basic Operations
 
 	save_active_profile is
@@ -116,7 +118,7 @@ feature -- Basic Operations
 				save_active_profile_as (active_profile)
 			end
 		end
-		
+
 	search_active_profile (a_name: STRING) is
 			-- Search items of active profile if any for item with name `a_name'.
 			-- Set `found_item' and `found' accordingly.
@@ -170,7 +172,7 @@ feature -- Basic Operations
 				end
 			end
 		end
-		
+
 feature {WIZARD_MAIN_WINDOW} -- Implementation
 
 	Profiles_key: STRING is "Profiles"
@@ -185,7 +187,7 @@ feature {NONE} -- Implementation
 			save_active_profile_as (a_profile)
 			set_active_profile (a_profile)
 		end
-	
+
 	save_active_profile_as (a_profile: STRING) is
 			-- Save current profile with name `a_profile'.
 		require
@@ -217,7 +219,7 @@ feature {NONE} -- Implementation
 				save_list (l_profiles, Profiles_key)
 			end
 		end
-		
+
 	Profile_key_suffix: STRING is "_profile_key"
 			-- Registry key name suffix for key storing profiles
 

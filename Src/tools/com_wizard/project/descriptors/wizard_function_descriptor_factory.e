@@ -9,7 +9,7 @@ class
 	WIZARD_FUNCTION_DESCRIPTOR_FACTORY
 
 inherit
-	WIZARD_SHARED_DESCRIPTOR_FACTORIES	
+	WIZARD_SHARED_DESCRIPTOR_FACTORIES
 		export
 			{NONE} all
 		end
@@ -48,6 +48,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature -- Basic operations
 
@@ -116,7 +118,7 @@ feature -- Basic operations
 	create_arguments (some_names: ARRAY[STRING]; count: INTEGER; parameters: ARRAY [ECOM_ELEM_DESC]; a_type_info: ECOM_TYPE_INFO): LIST [WIZARD_PARAM_DESCRIPTOR] is
 			-- Create arguments
 		require
-			non_void_names: some_names /= Void 
+			non_void_names: some_names /= Void
 			valid_parameters: parameters /= Void and then parameters.count = count
 			valid_type_info: a_type_info /= Void
 		local
@@ -200,7 +202,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	name: STRING
 			-- Function name
 
@@ -232,7 +234,7 @@ feature {NONE} -- Implementation
 			-- Invokation kind
 			-- See class ECOM_INVOKE_KIND for return values
 
-	call_conv: INTEGER 
+	call_conv: INTEGER
 			-- Function's calling convention
 
 	return_type: WIZARD_DATA_TYPE_DESCRIPTOR
@@ -247,7 +249,7 @@ feature {NONE} -- External
 		alias
 			"sizeof (int*)"
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

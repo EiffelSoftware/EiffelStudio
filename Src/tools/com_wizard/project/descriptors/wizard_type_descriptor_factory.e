@@ -29,6 +29,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
 	create_type_descriptor (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_TYPE_DESCRIPTOR is
@@ -37,11 +39,11 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void
 		local
 			type: INTEGER
-			Alias_creator: WIZARD_ALIAS_DESCRIPTOR_CREATOR 
-			Enum_creator: WIZARD_ENUM_DESCRIPTOR_CREATOR 
-			Record_creator: WIZARD_RECORD_DESCRIPTOR_CREATOR 
-			Interface_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR 
-			Coclass_creator: WIZARD_COCLASS_DESCRIPTOR_CREATOR 
+			Alias_creator: WIZARD_ALIAS_DESCRIPTOR_CREATOR
+			Enum_creator: WIZARD_ENUM_DESCRIPTOR_CREATOR
+			Record_creator: WIZARD_RECORD_DESCRIPTOR_CREATOR
+			Interface_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR
+			Coclass_creator: WIZARD_COCLASS_DESCRIPTOR_CREATOR
 		do
 			type := a_type_info.type_attr.type_kind
 			if type = Tkind_enum then
@@ -71,7 +73,7 @@ feature -- Basic operations
 			if Result /= Void then
 				message_output.add_message (Result.creation_message)
 			end
-		end	
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

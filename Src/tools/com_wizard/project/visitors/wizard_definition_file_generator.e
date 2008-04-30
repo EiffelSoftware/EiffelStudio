@@ -20,6 +20,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	definition_file_writer: WIZARD_WRITER_DEFINITION_FILE

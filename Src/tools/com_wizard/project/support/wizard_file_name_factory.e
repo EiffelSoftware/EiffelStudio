@@ -18,11 +18,13 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	OPERATING_ENVIRONMENT
 		export
 			{NONE} all
 		end
+
+	ANY
 
 feature -- Access
 
@@ -39,7 +41,7 @@ feature -- Access
 		do
 			Result := declaration_header_file_name (last_created_header_file_name)
 		end
-			
+
 feature -- Basic operations
 
 	create_file_name (a_generator: WIZARD_TYPE_GENERATOR; a_writer: WIZARD_WRITER) is
@@ -99,9 +101,9 @@ feature -- Basic operations
 			-- File name for inner class.
 		do
 			transient_writer := a_writer
-			
+
 			create_directory_prefix (Server)
-			
+
 			process_c (True)
 			transient_writer := Void
 		end
@@ -119,19 +121,19 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 		do
 			process_c_common
 		end
-		
+
 	process_alias_eiffel_client is
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
-		
+
 	process_alias_eiffel_server is
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
-		
+
 	process_coclass_c_client is
 			-- Create filename for `a_generator'.
 		do
@@ -141,9 +143,9 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 	process_coclass_c_server is
 			-- Create filename for `a_generator'.
 		do
-			process_c_server 
+			process_c_server
 		end
-		
+
 	process_coclass_eiffel_client is
 			-- Create filename for `a_generator'.
 		do
@@ -159,7 +161,7 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 			add_subdirectory (Interface_proxy)
 			process_eiffel
 		end
-		
+
 	process_coclass_eiffel_server is
 			-- Create filename for `a_generator'.
 		do
@@ -175,7 +177,7 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 			add_subdirectory (Interface_stub)
 			process_eiffel
 		end
-		
+
 	process_enum_c_client is
 			-- Create filename for `a_generator'.
 		do
@@ -187,19 +189,19 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 		do
 			process_c_common
 		end
-		
+
 	process_enum_eiffel_client is
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
-		
+
 	process_enum_eiffel_server  is
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
-		
+
 	process_interface_c_client is
 			-- Create filename for `a_generator'.
 		do
@@ -211,19 +213,19 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 		do
 			process_c_common
 		end
-		
+
 	process_interface_eiffel_client is
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_interface
 		end
-		
+
 	process_interface_eiffel_server is
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_interface
 		end
-		
+
 	process_record_c_client is
 			-- Create filename for `a_generator'.
 		do
@@ -235,19 +237,19 @@ feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 		do
 			process_c_common
 		end
-		
+
 	process_record_eiffel_client is
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
-		
+
 	process_record_eiffel_server is
 			-- Create filename for `a_generator'.
 		do
 			process_eiffel_structure
 		end
-	
+
 	process_class_object is
 			-- Create filename for `a_generator'.
 		do
@@ -267,7 +269,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_name: a_name /= Void
 		local
-			i, l_count: INTEGER 
+			i, l_count: INTEGER
 		do
 			l_count := a_name.count
 			if not a_name.is_empty then

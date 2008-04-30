@@ -23,7 +23,9 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
+	ANY
+
 feature -- Access
 
 	title: STRING is
@@ -62,9 +64,6 @@ feature {NONE} -- Implementation
 			-- Implementation of `execute'.
 		deferred
 		end
-
-invariant
-	valid_steps_count: steps_count > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

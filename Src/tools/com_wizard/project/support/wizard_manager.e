@@ -34,6 +34,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	Analysis_title: STRING is "Analysing Type Library"

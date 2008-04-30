@@ -35,6 +35,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 create
 	make
 
@@ -77,7 +79,7 @@ feature {NONE} -- Initialization
 			c_names.put (Carray, Vt_carray)
 			c_names.put (Typedef, Vt_userdefined)
 			c_names.put (Hresult, Vt_error)
-	
+
 			create eiffel_names.make (20)
 
 			eiffel_names.put (Void_type, Vt_empty)
@@ -234,7 +236,7 @@ feature -- Access
 			-- C name of constant `a_var_type'
 		require
 			valid_var_type: valid_var_type (a_var_type)
-		do	
+		do
 			Result := c_names.item (a_var_type).twin
 		ensure
 			non_void_c_name: Result /= Void
@@ -245,7 +247,7 @@ feature -- Access
 			-- Eiffel name of constant `a_var_type'
 		require
 			valid_var_type: valid_var_type (a_var_type)
-		do	
+		do
 			Result := eiffel_names.item (a_var_type).twin
 		ensure
 			non_void_eiffel_name: Result /= Void
@@ -289,7 +291,7 @@ feature -- Access
 			-- CE conversion function name of constant `a_var_type'
 		require
 			valid_var_type: valid_var_type (a_var_type)
-		do	
+		do
 			Result := ce_array_function_names.item (a_var_type).twin
 		ensure
 			non_void_ce_array_function_name: Result /= Void
@@ -300,7 +302,7 @@ feature -- Access
 			-- EC conversion function name of constant `a_var_type'
 		require
 			valid_var_type: valid_var_type (a_var_type)
-		do	
+		do
 			Result := ec_array_function_names.item (a_var_type).twin
 		ensure
 			non_void_ec_array_function_name: Result /= Void

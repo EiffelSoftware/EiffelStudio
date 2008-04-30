@@ -13,7 +13,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
@@ -44,6 +44,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	generated_code: STRING is
@@ -52,7 +54,7 @@ feature -- Access
 			ready: can_generate
 		deferred
 		end
-	
+
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		deferred

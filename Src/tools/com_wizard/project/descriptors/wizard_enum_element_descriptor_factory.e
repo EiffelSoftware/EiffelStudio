@@ -19,9 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Basic operations
 
-	create_descriptor (a_documentation: ECOM_DOCUMENTATION; 
+	create_descriptor (a_documentation: ECOM_DOCUMENTATION;
 					a_value: INTEGER): WIZARD_ENUM_ELEMENT_DESCRIPTOR is
 			-- Create description of element of enumerartion
 		require

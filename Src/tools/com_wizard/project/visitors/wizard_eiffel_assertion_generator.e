@@ -20,7 +20,7 @@ inherit
 		end
 
 	WIZARD_WRITER_DICTIONARY
-		export 
+		export
 			{NONE} all
 		end
 
@@ -29,14 +29,16 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
-	
+
  	assertions: LIST [WIZARD_WRITER_ASSERTION]
 			-- Assertions
 
 feature -- Basic operation
 
-	generate_precondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 
+	generate_precondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
 					in_param, out_param: BOOLEAN) is
 			-- Generate precondition.
 		require
@@ -49,14 +51,14 @@ feature -- Basic operation
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} assertions.make (20)
-		
-			l_visitor := a_type.visitor 
 
-			if 
-				not l_visitor.is_basic_type and 
-				not is_boolean (l_visitor.vt_type) and 
-				not l_visitor.is_enumeration and 
-				not l_visitor.is_interface_pointer and 
+			l_visitor := a_type.visitor
+
+			if
+				not l_visitor.is_basic_type and
+				not is_boolean (l_visitor.vt_type) and
+				not l_visitor.is_enumeration and
+				not l_visitor.is_interface_pointer and
 				not l_visitor.is_coclass_pointer and
 				l_visitor.vt_type /= Vt_lpstr and
 				l_visitor.vt_type /= Vt_lpwstr and
@@ -65,7 +67,7 @@ feature -- Basic operation
 				create l_tag.make (100)
 				l_tag.append ("attached_")
 				l_tag.append (a_name)
-				
+
 				create l_body.make (100)
 				l_body.append (a_name)
 				l_body.append (" /= Void")
@@ -76,7 +78,7 @@ feature -- Basic operation
 
 				l_writer := additional_precondition (a_name, a_type, l_visitor, in_param, out_param)
 				if l_writer /= Void then
-					assertions.extend (l_writer)				
+					assertions.extend (l_writer)
 				end
 			end
 			l_visitor := Void
@@ -84,7 +86,7 @@ feature -- Basic operation
 			non_void_assertions: assertions /= Void
 		end
 
-	generate_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 
+	generate_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
 					ret_val: BOOLEAN) is
 			-- Generate postcondition.
 		require
@@ -96,12 +98,12 @@ feature -- Basic operation
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} assertions.make (20)
-			l_visitor := a_type.visitor 
+			l_visitor := a_type.visitor
 
 			if not l_visitor.is_basic_type and not is_boolean (l_visitor.vt_type) and not l_visitor.is_enumeration then
 				l_writer := additional_postcondition (a_name, a_type, l_visitor, ret_val)
 				if l_writer /= Void then
-					assertions.extend (l_writer)				
+					assertions.extend (l_writer)
 				end
 			end
 			l_visitor := Void
@@ -110,9 +112,9 @@ feature -- Basic operation
 		end
 
 
-feature {NONE}  
+feature {NONE}
 
-	additional_precondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 
+	additional_precondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
 		a_visitor: WIZARD_DATA_TYPE_VISITOR; a_in_param, a_out_param: BOOLEAN): WIZARD_WRITER_ASSERTION is
 			-- A writer
 		require
@@ -160,7 +162,7 @@ feature {NONE}
 			end
 		end
 
-	additional_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 
+	additional_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR;
 		a_visitor: WIZARD_DATA_TYPE_VISITOR; ret_val: BOOLEAN): WIZARD_WRITER_ASSERTION is
 			-- A writer
 		require
@@ -192,13 +194,13 @@ feature {NONE}
 					create l_tag.make (100)
 					l_tag.append ("valid_")
 					l_tag.append (a_name)
-					
+
 					create l_body.make (100)
 					l_body.append ("Result")
 					l_body.append (".item /= default_pointer")
 					create Result.make (l_tag, l_body)
 
-				elseif 
+				elseif
 					not a_visitor.is_basic_type_ref and
 					not a_visitor.is_structure_pointer and
 					not a_visitor.is_interface_pointer and
@@ -261,7 +263,7 @@ feature {NONE}
 			l_type := l_descriptor.pointed_data_type_descriptor.type
 			l_is_pointer := is_ptr (l_type) or is_void (l_type)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -19,6 +19,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	Shared_file_name_factory: WIZARD_FILE_NAME_FACTORY is
@@ -44,7 +46,7 @@ feature -- Access
 		once
 			create Result
 		end
-		
+
 	Formatter: STRING is "f"
 			-- Message formatter.
 

@@ -14,6 +14,8 @@ inherit
 			{NONE} all
 		end
 
+	ANY
+
 feature -- Access
 
 	c_access_feature: WIZARD_WRITER_C_FUNCTION
@@ -22,7 +24,7 @@ feature -- Access
 	c_setting_feature: WIZARD_WRITER_C_FUNCTION
 			-- C setting feature
 
-	c_header_file: STRING 
+	c_header_file: STRING
 			-- C header file name.
 			-- Header file describing property type.
 

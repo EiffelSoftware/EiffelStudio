@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	WIZARD_COMPONENT_EIFFEL_GENERATOR 
+	WIZARD_COMPONENT_EIFFEL_GENERATOR
 
 
 inherit
@@ -20,6 +20,7 @@ inherit
 			{NONE} all
 		end
 
+	ANY
 
 feature {NONE} -- Implementation
 

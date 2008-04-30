@@ -10,8 +10,6 @@ class
 
 inherit
 	EV_WEL_CONTAINER
-		export
-			{NONE} all
 		redefine
 			create_implementation,
 			implementation
@@ -45,7 +43,7 @@ feature -- Access
 		ensure
 			valid_count: Result >= 0
 		end
-		
+
 feature -- Basic Operations
 
 	set_text (a_text: STRING) is
@@ -55,7 +53,7 @@ feature -- Basic Operations
 		do
 			implementation.set_text (a_text)
 		end
-	
+
 	save (a_file_name: STRING) is
 			-- Save content to `a_file_name'.
 		require
@@ -84,16 +82,19 @@ feature -- Basic Operations
 			implementation.hide_scroll_bars
 		end
 
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: WIZARD_TEXT_IMP
+			-- Implementation
+
 feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of `Current'.
 		do
-			create implementation.make (Current) 
+			create implementation.make (Current)
 		end
-
-	implementation: WIZARD_TEXT_IMP;
-			-- Implementation
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

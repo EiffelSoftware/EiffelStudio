@@ -914,6 +914,8 @@ feature {NONE} -- Validation
 			l_switch: ARGUMENT_SWITCH
 			l_cursor: CURSOR
 			l_valid: BOOLEAN
+			l_switches: ARRAY [ARGUMENT_SWITCH]
+			i, nb: INTEGER
 		do
 			l_extend_groups := expanded_switch_groups.twin
 
@@ -936,10 +938,20 @@ feature {NONE} -- Validation
 			if not l_extend_groups.is_empty then
 					-- Check optional
 				from l_extend_groups.start until l_extend_groups.after loop
-					l_valid := l_extend_groups.item.switches.for_all (agent (a_item: ARGUMENT_SWITCH; a_options: LIST [ARGUMENT_OPTION]): BOOLEAN
-						do
-							Result := a_item.optional or else has_option (a_item.id)
-						end (?, l_options))
+					from
+						l_switches := l_extend_groups.item.switches
+						i := l_switches.lower
+						nb := l_switches.upper
+						l_valid := True
+					until
+						i > nb or not l_valid
+					loop
+						l_switch := l_switches.item (i)
+						if l_switch /= Void then
+							l_valid := l_switch.optional or else has_option (l_switch.id)
+						end
+						i := i + 1
+					end
 					if not l_valid then
 						l_extend_groups.remove
 					else

@@ -390,7 +390,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	activate_execution_replay_recording (b: BOOLEAN) is
+	activate_execution_replay_recording (b: BOOLEAN): BOOLEAN is
 			-- Activate Execution replay recording on debuggee depending of `b'
 		local
 			params: ARRAYED_LIST [DUMP_VALUE]
@@ -400,7 +400,6 @@ feature -- Remote access to RT_
 			i32cl: CLASS_C
 			ref: DUMP_VALUE
 			cid,fid,dep,line: INTEGER
-			bool: BOOLEAN
 			dbg: DEBUGGER_MANAGER
 		do
 			check execution_replay_recording_not_b: b /= status.replay_recording end
@@ -412,8 +411,6 @@ feature -- Remote access to RT_
 				dv_fact := dbg.dump_value_factory
 				i32cl := dbg.compiler_data.integer_32_class_c
 
-				create params.make (5)
-				params.extend (dv_fact.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
 				cid := 0
 				fid := 0
 				dep := 0
@@ -440,13 +437,15 @@ feature -- Remote access to RT_
 				if ref = Void then
 					ref := dv_fact.new_void_value (dbg.compiler_data.any_class_c)
 				end
-				params.extend (ref) -- ref					
+				create params.make (6) -- 	(b: BOOLEAN; ref: ANY; cid: INTEGER; fid: INTEGER; dep: INTEGER; break_index: INTEGER)
+				params.extend (dv_fact.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
+				params.extend (ref) -- ref				
 				params.extend (dv_fact.new_integer_32_value (cid, i32cl)) -- cid
 				params.extend (dv_fact.new_integer_32_value (fid, i32cl)) -- fid
 				params.extend (dv_fact.new_integer_32_value (dep, i32cl)) -- dep
-				params.extend (dv_fact.new_integer_32_value (line, i32cl)) -- line
+				params.extend (dv_fact.new_integer_32_value (line, i32cl)) -- break_index
 
-				bool := command_evaluation_on (rto, Void, rto.dynamic_class, "activate_execution_replay_recording", params)
+				Result := command_evaluation_on (rto, Void, rto.dynamic_class, "activate_execution_replay_recording", params)
 			end
 		ensure
 			execution_replay_recording: status.replay_recording = b
@@ -845,23 +844,35 @@ feature -- Expression evaluation
 		local
 			dbg_eval: DBG_EVALUATOR
 			tgt: DUMP_VALUE
+			rescued: BOOLEAN
 		do
-			if is_stopped then
-				tgt := obj
-				if tgt = Void and e /= Void then
-					tgt := e.dump_value
+			if rescued then
+				restore_assertion_check
+				if dbg_eval /= Void then
+					dbg_eval.reset
 				end
-				if tgt /= Void then
-					disable_assertion_check
-					dbg_eval := debugger_manager.dbg_evaluator
-					dbg_eval.reset
+				Result := False
+			else
+				if is_stopped then
+					tgt := obj
+					if tgt = Void and e /= Void then
+						tgt := e.dump_value
+					end
+					if tgt /= Void then
+						disable_assertion_check
+						dbg_eval := debugger_manager.dbg_evaluator
+						dbg_eval.reset
 
-					dbg_eval.evaluate_routine (Void, tgt, cl, f, params, tgt = Void)
-					Result := not dbg_eval.error_occurred
-					restore_assertion_check
-					dbg_eval.reset
+						dbg_eval.evaluate_routine (Void, tgt, cl, f, params, tgt = Void)
+						Result := not dbg_eval.error_occurred
+						restore_assertion_check
+						dbg_eval.reset
+					end
 				end
 			end
+		rescue
+			rescued := True
+			retry
 		end
 
 	attribute_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C): DUMP_VALUE is
@@ -1038,7 +1049,7 @@ feature -- Assertion change
 	restore_assertion_check is
 			-- Send a message to the application to restore the previous assertion check status
 		require
-			last_assertion_check_stack_not_empty: not last_assertion_check_stack.is_empty
+			restore_assertion_check_available: restore_assertion_check_available
 		local
 			b: BOOLEAN
 		do
@@ -1047,7 +1058,13 @@ feature -- Assertion change
 			b := impl_check_assert (b)
 		end
 
-	last_assertion_check_stack: LINKED_STACK [BOOLEAN]
+	restore_assertion_check_available: BOOLEAN is
+			-- Is `restore_assertion_check' available ?
+		do
+			Result := not last_assertion_check_stack.is_empty
+		end
+
+	last_assertion_check_stack: !LINKED_STACK [BOOLEAN]
 			-- Last assertion check value when it had been disabled by `disable_assertion_check'.
 
 feature {NONE} -- Assertion change Implementation

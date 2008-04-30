@@ -473,6 +473,11 @@ feature -- Expression evaluation messages
 			end
 		end
 
+	msg_error_evaluation_wrong_nb_of_args (fnb,pnb: INTEGER): STRING_GENERAL is
+		do 
+			Result := locale.formatted_string (locale.translation ("Wrong number of argument: $2 instead of $1 ."), [fnb, pnb]) 
+		end
+
 	msg_error_evaluation_aborted (cname,fname: STRING_GENERAL): STRING_GENERAL is
 		require
 			cname_not_void: cname /= Void

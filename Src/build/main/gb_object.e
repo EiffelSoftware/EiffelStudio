@@ -655,7 +655,7 @@ feature {GB_COMMAND_ADD_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
 					-- We must only set up these events for widgets, as items do not have the correct
 					-- events that we can hook to.
 				if type_conforms_to (dynamic_type_from_string (type), dynamic_type_from_string (Ev_widget_string)) then
-					set_up_display_object_events (display_object, object)
+					set_up_display_object_events
 				end
 			end
 		ensure
@@ -1320,16 +1320,13 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 			end
 		end
 
-	set_up_display_object_events (a_display_object, an_object: EV_ANY) is
+	set_up_display_object_events is
 			-- Add events necessary for `display_object'.
 			-- Some objects such as EV_TOGGLE_BUTTON can be modified
 			-- by the user in the display window. We need to set up events
 			-- on `display_object' so that we can notify the system that the
 			-- change has taken place. There are only a few such events
 			-- like these, but we need to be able to handle them.
-		require
-			display_object_not_void: a_display_object /= Void
-			object_not_void: an_object /= Void
 		local
 			handler: GB_EV_HANDLER
 			supported_types: ARRAYED_LIST [STRING]
@@ -1345,12 +1342,12 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 			loop
 				current_type := supported_types.item
 				current_type.to_upper
-				if is_instance_of (display_object, dynamic_type_from_string (current_type.substring (4, current_type.count))) then
+				if is_instance_of (object, dynamic_type_from_string (current_type.substring (4, current_type.count))) then
 					gb_ev_any ?= new_instance_of (dynamic_type_from_string (current_type))
 					gb_ev_any.set_components (components)
 					gb_ev_any.default_create
 					if gb_ev_any.has_user_events then
-						gb_ev_any.set_up_user_events (Current, a_display_object, an_object)
+						gb_ev_any.set_up_user_events (Current, display_object, object)
 					end
 				end
 				supported_types.forth

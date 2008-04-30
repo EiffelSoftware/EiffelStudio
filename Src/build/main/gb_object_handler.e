@@ -1030,7 +1030,7 @@ feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 				new_object.build_display_object
 					-- We only set up the user events on widgets at the moment.
 				if type_conforms_to (dynamic_type_from_string (new_object.type), dynamic_type_from_string (Ev_widget_string)) then
-					new_object.set_up_display_object_events (new_object.display_object, new_object.object)
+					new_object.set_up_display_object_events
 				end
 			end
 		ensure

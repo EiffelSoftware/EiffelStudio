@@ -30,10 +30,12 @@ feature -- Access
 		once
 			create Result.make (100)
 			Result.compare_objects
+			Result.force (Agent_keyword, Agent_keyword)
 			Result.force (Alias_keyword, Alias_keyword)
 			Result.force (All_keyword, All_keyword)
 			Result.force (And_keyword, And_keyword)
 			Result.force (As_keyword, As_keyword)
+			Result.force (Attribute_keyword, Attribute_keyword)
 			Result.force (Check_keyword, Check_keyword)
 			Result.force (Class_keyword, Class_keyword)
 			Result.force (Convert_keyword, Convert_keyword)
@@ -64,6 +66,7 @@ feature -- Access
 			Result.force (Local_keyword, Local_keyword)
 			Result.force (Loop_keyword, Loop_keyword)
 			Result.force (Not_keyword, Not_keyword)
+			Result.force (Note_keyword, Note_keyword)
 			Result.force (Obsolete_keyword, Obsolete_keyword)
 			Result.force (Old_keyword, Old_keyword)
 			Result.force (Once_keyword, Once_keyword)

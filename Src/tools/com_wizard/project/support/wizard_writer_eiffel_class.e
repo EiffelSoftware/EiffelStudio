@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	WIZARD_WRITER_EIFFEL_CLASS
 
 inherit
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	generated_code: STRING is
 			-- Generated code
 		local
@@ -38,7 +38,7 @@ feature -- Access
 		do
 			Result := "indexing%N%Tdescription: %""
 			Result.append (description)
-			Result.append ("%"%N%Tnote: ")
+			Result.append ("%"%N%Tgenerator: ")
 			Result.append (Wizard_note)
 			Result.append ("%N%N")
 			if is_deferred then
@@ -118,7 +118,7 @@ feature -- Access
 
 	class_name: STRING
 			-- Class name
-			
+
 	description: STRING
 			-- Indexing clause description part
 
@@ -133,7 +133,7 @@ feature -- Access
 
 	features: HASH_TABLE [LIST [WIZARD_WRITER_FEATURE], INTEGER]
 			-- List of features
-	
+
 	invariants: LIST [WIZARD_WRITER_ASSERTION]
 			-- List of invariants
 
@@ -142,7 +142,7 @@ feature -- Access
 		do
 			Result := class_name /= Void and then not class_name.is_empty
 		end
-				
+
 	empty_creation_routines: BOOLEAN
 			-- Should `create' be specified without any creation routines?
 
@@ -168,7 +168,7 @@ feature -- Element Change
 		ensure
 			class_name_set: class_name = a_class_name
 		end
-	
+
 	set_description (a_description: like description) is
 			-- Set `description' with `a_description'.
 		require
@@ -178,7 +178,7 @@ feature -- Element Change
 		ensure
 			description_set: description = a_description
 		end
-		
+
 	add_inherit_clause (a_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Add inherit clause `a_clause' for class `a_class_name'.
 		require
@@ -188,7 +188,7 @@ feature -- Element Change
 		ensure
 			extended: inherit_clauses.last = a_clause
 		end
-	
+
 	add_creation_routine (a_creation_routine: STRING) is
 			-- Add `a_creation_routine' to creation routines.
 		require
@@ -199,7 +199,7 @@ feature -- Element Change
 		ensure
 			extended: creation_routines.last = a_creation_routine
 		end
-	
+
 	add_feature (a_feature: WIZARD_WRITER_FEATURE; a_clause: INTEGER) is
 			-- Add `a_feature' to list of features.
 		require
@@ -224,7 +224,7 @@ feature -- Element Change
 		ensure
 			extended: invariants.last = an_invariant
 		end
-	
+
 	set_deferred is
 			-- Set `is_deferred' to `True'.
 		do
@@ -232,7 +232,7 @@ feature -- Element Change
 		ensure
 			is_deferred: is_deferred
 		end
-	
+
 	set_effective is
 			-- Set `is_deferred' to `False'.
 		do

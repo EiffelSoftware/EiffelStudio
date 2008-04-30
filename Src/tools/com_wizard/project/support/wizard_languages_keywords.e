@@ -31,6 +31,12 @@ feature -- Eiffel keywords
 	
 	Alias_keyword: STRING is "alias"
 
+	Agent_keyword: STRING is "agent"
+
+	Attribute_keyword: STRING is "attribute"
+
+	Note_keyword: STRING is "note"
+
 	Deferred_keyword: STRING is "deferred"
 
 	Require_keyword: STRING is "require"

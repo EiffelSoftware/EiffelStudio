@@ -1,20 +1,34 @@
 #!/bin/sh
 set -e
 
-if [ $# != 1 ]; then
-	echo Usage: $0 platform
-	exit 1
+if [ ! "$ISE_EIFFEL" ]; then
+        echo '$ISE_EIFFEL not defined. Cannot continue'
+        exit 1
 fi
 
+if [ ! "$ISE_PLATFORM" ]; then
+	echo '$ISE_PLATFORM not defined. Cannot continue'
+        exit 1
+fi
+echo "Using EiffelStudio delivery in $ISE_EIFFEL"
 
-# Define environment variables
-. ./set_aliases
-PLATFORM=$1
-DOCS_DIR=/usr/share/doc/$PRODUCT/docs
+
+# Exctract EiffelStudio version
+export VERSION=`$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version | sed "s/^[A-Za-z ]*\([0-9\.]\+\).*/\1/"`
+MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]\).*/\1/"`
+MINOR_NUMBER=`echo $VERSION | sed "s/^[0-9].\([0-9]\).*/\1/"`
+echo "EiffelStudio version $VERSION will be used for debian package"
+
+
+# Define packaging directories
+export PRODUCT=eiffelstudio-$MAJOR_NUMBER.$MINOR_NUMBER
 export PACKAGING_DIR=`pwd`/packaging
 export DEBIAN_DIR=$PACKAGING_DIR/debian
-export PRODUCT
-export VERSION
+DOCS_DIR=/usr/share/doc/$PRODUCT/docs
+
+
+# Create unix layout in debian directoy
+./make_unix_layout $DEBIAN_DIR/$PRODUCT
 
 
 # Prepare debian packaging files
@@ -24,18 +38,14 @@ echo '#!/bin/sh' > $DEBIAN_DIR/$PRODUCT.postinst > $DEBIAN_DIR/$PRODUCT.prerm
 sh $PACKAGING_DIR/postinstall.sh >> $DEBIAN_DIR/$PRODUCT.postinst
 sh $PACKAGING_DIR/preremove.sh >> $DEBIAN_DIR/$PRODUCT.prerm
 
-
-# Create unix layout in debian directory
-./make_unix_layout $PLATFORM $INSTALL_DIR $DEBIAN_DIR/$PRODUCT
-
 cd $DEBIAN_DIR
 
 
 # First we check if there are any docs (architecture independent)
 if test -d "$PRODUCT$DOCS_DIR"; then
-	safe_md $PRODUCT-doc$DOCS_DIR
-	move $PRODUCT$DOCS_DIR/* $PRODUCT-doc$DOCS_DIR/
-	fullrd $PRODUCT$DOCS_DIR
+	mkdir -p $PRODUCT-doc$DOCS_DIR
+	mv $PRODUCT$DOCS_DIR/* $PRODUCT-doc$DOCS_DIR/
+	rm -rf $PRODUCT$DOCS_DIR
 
 	debuild --check-dirname-level 0 binary-indep
 	echo Finished building package $PRODUCT-doc

@@ -84,7 +84,7 @@ binary-common:
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
-	dh_builddeb --destdir=../../
+	dh_builddeb
 #	dh_clean -k -s
 # Build architecture independant packages using the common target.
 binary-indep: build-indep install-indep

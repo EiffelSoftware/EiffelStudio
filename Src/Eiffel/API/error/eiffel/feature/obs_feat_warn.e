@@ -32,10 +32,6 @@ feature -- Properties
 	obsolete_feature: E_FEATURE;
 			-- feature name
 
-	a_feature: E_FEATURE;
-			-- Feature using the obsolete
-			-- (Void `a_feature' implies feature is invariant)
-
 feature -- Access
 
 	is_defined: BOOLEAN is
@@ -55,10 +51,10 @@ feature -- Output
 		do
 			a_text_formatter.add ("Class: ")
 			associated_class.append_name (a_text_formatter)
-			if a_feature /= Void then
+			if associated_feature /= Void then
 				a_text_formatter.add_new_line
 				a_text_formatter.add ("Feature: ")
-				a_feature.append_name (a_text_formatter)
+				associated_feature.append_name (a_text_formatter)
 			else
 				a_text_formatter.add_new_line
 				a_text_formatter.add ("Feature: invariant")
@@ -83,7 +79,7 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
 			-- Build the primary context string so errors can be navigated to
 		do
-			if {l_class: !like associated_class} associated_class and then {l_feature: !like a_feature} a_feature and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
+			if {l_class: !like associated_class} associated_class and then {l_feature: !like associated_feature} associated_feature and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
 				print_context_feature (l_formatter, l_feature, l_class)
 			else
 				Precursor (a_text_formatter)
@@ -119,16 +115,6 @@ feature -- Setting
 			valid_f: f /= Void
 		do
 			obsolete_feature := f.api_feature (f.written_in)
-		end;
-
-	set_feature (f: FEATURE_I) is
-			-- Assign `f' to `feature'
-		require
-			valid_associated_class: associated_class /= Void
-		do
-			if f /= Void then
-				a_feature := f.enclosing_feature.api_feature (associated_class.class_id)
-			end
 		end;
 
 indexing

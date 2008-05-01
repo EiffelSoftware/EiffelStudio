@@ -936,7 +936,7 @@ feature {NONE} -- Implementation
 				create l_preference
 				-- Normal text font
 				l_font := l_preference.preferences.editor_data.font
-				l_new_height := l_font.height + a_delta
+				l_new_height := l_font.height - a_delta
 				if l_new_height > 0 then
 					l_font.set_height (l_new_height)
 					l_preference.preferences.editor_data.editor_font_preference.set_value (l_font)
@@ -944,13 +944,11 @@ feature {NONE} -- Implementation
 
 				-- Keyword font
 				l_font := l_preference.preferences.editor_data.keyword_font
-				l_new_height := l_font.height + a_delta
+				l_new_height := l_font.height - a_delta
 				if l_new_height > 0 then
 					l_font.set_height (l_new_height)
 					l_preference.preferences.editor_data.keyword_font_preference.set_value (l_font)
 				end
-
-				l_preference.preferences.editor_data.update_font
 			else
 				Precursor {EB_CLICKABLE_EDITOR}(a_delta)
 			end

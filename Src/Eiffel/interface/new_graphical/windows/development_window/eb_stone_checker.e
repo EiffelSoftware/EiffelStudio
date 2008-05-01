@@ -918,7 +918,9 @@ feature {NONE} -- Implementation functions
 
 					l_all_editors.forth
 				end
-				l_current_editor.set_title_saved (not develop_window.changed)
+				if l_current_editor /= Void then
+					l_current_editor.set_title_saved (not develop_window.changed)
+				end
 			end
 		end
 

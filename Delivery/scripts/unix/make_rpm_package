@@ -44,6 +44,7 @@ echo %_use_internal_dependency_generator 0 >> $RPMMACRO
 
 # Prepare spec files
 sh $RPM_DIR/eiffelstudio.spec.sh
+cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE
 
 
 # If we have a $DOCS_DIR move it to a seperate

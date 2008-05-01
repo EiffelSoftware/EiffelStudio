@@ -34,6 +34,7 @@ DOCS_DIR=/usr/share/doc/$PRODUCT/docs
 # Prepare debian packaging files
 sh $DEBIAN_DIR/control.sh
 sh $DEBIAN_DIR/changelog.sh
+cp $PACKAGING_DIR/license $DEBIAN_DIR/copyright
 echo '#!/bin/sh' > $DEBIAN_DIR/$PRODUCT.postinst > $DEBIAN_DIR/$PRODUCT.prerm
 sh $PACKAGING_DIR/postinstall.sh >> $DEBIAN_DIR/$PRODUCT.postinst
 sh $PACKAGING_DIR/preremove.sh >> $DEBIAN_DIR/$PRODUCT.prerm

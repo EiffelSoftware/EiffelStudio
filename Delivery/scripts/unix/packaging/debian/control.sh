@@ -19,14 +19,17 @@ Priority: optional
 Architecture: any
 Depends: \${shlibs:Depends}
 Description: $summary
- TODO: longer description of EiffelStudio
+!GROK!THIS!
 
+sed "s/\(.*\)/ \1/" $PACKAGING_DIR/description >> $DEBIAN_DIR/control
 
+$spitshell >> $DEBIAN_DIR/control <<!GROK!THIS!
 Package: $PRODUCT-doc
 Section: doc
 Priority: optional
 Architecture: all
 Depends: 
 Description: $summary (Documentation)
- TODO: longer description of Eiffel Documentation
 !GROK!THIS!
+
+sed "s/\(.*\)/ \1/" $PACKAGING_DIR/description >> $DEBIAN_DIR/control

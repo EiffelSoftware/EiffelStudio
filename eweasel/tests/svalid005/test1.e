@@ -12,6 +12,8 @@ feature
 
 	f (aasdas: A) is
 		do
+			if {a: A} io then
+			end
 		end
 
 end

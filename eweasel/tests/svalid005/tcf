@@ -8,6 +8,6 @@ copy_raw	test2.e	$CLUSTER test2.e
 copy_raw	a.e	$CLUSTER a.e
 
 compile_melted
-compile_result	validity_warning TEST1 Obsolete Obsolete
+compile_result	validity_warning TEST1 Obsolete Obsolete Obsolete
 
 test_end

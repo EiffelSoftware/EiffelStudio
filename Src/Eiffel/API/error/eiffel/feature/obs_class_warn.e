@@ -21,6 +21,9 @@ feature -- Properties
 	obsolete_class: CLASS_C;
 			-- Obsolete class
 
+	associated_feature: E_FEATURE;
+			-- Feature using the obsolete
+
 	code: STRING is
 			-- Error code
 		do
@@ -60,6 +63,11 @@ feature -- Output
 			a_text_formatter.add ("Class: ")
 			associated_class.append_name (a_text_formatter)
 			a_text_formatter.add_new_line
+			if associated_feature /= Void then
+				a_text_formatter.add ("Feature: ")
+				associated_feature.append_name (a_text_formatter)
+				a_text_formatter.add_new_line
+			end
 			a_text_formatter.add ("Obsolete class: ")
 			obsolete_class.append_name (a_text_formatter)
 			a_text_formatter.add_new_line
@@ -115,6 +123,17 @@ feature {COMPILER_EXPORTER}
 		do
 			obsolete_class := c
 		end;
+
+	set_feature (f: FEATURE_I) is
+			-- Assign `f' to `feature'
+		require
+			f_not_void: f /= Void
+			valid_associated_class: associated_class /= Void
+		do
+			associated_feature := f.enclosing_feature.api_feature (associated_class.class_id)
+		ensure
+			associated_feature_not_void: associated_feature /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

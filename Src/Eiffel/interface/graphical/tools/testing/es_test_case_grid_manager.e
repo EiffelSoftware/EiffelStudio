@@ -238,34 +238,36 @@ feature -- Command
 			l_grid_row: EV_GRID_ROW
 			l_test_case_item: ES_EWEASEL_TEST_CASE_ITEM
 		do
-			if {lt_class_name: STRING} a_result.root_class_name.as_string_8 then
-				l_test_run_class := conf_class_of (lt_class_name)
-				if {lt_conf_class: CONF_CLASS} l_test_run_class then
-					l_grid_row := test_case_row_related_with (lt_conf_class)
-					if {lt_row: EV_GRID_ROW} l_grid_row then
-						l_test_case_item := test_case_item_from (lt_row)
+			if a_result.root_class_name /= Void then
+				if {lt_class_name: STRING} a_result.root_class_name.as_string_8 then
+					l_test_run_class := conf_class_of (lt_class_name)
+					if {lt_conf_class: CONF_CLASS} l_test_run_class then
+						l_grid_row := test_case_row_related_with (lt_conf_class)
+						if {lt_row: EV_GRID_ROW} l_grid_row then
+							l_test_case_item := test_case_item_from (lt_row)
+						else
+							-- We haven't found related test case row
+						end
 					else
-						-- We haven't found related test case row
-					end
-				else
-					check not_possible: False end
-				end
-
-				-- Update test case item data
-				if l_test_case_item /= Void then
-					l_test_case_item.set_last_run_result (a_result.result_type)
-					l_test_case_item.set_last_run_time (a_result.test_run_time)
-
-					if a_result.result_type = {ES_EWEASEL_RESULT_TYPE}.error then
-						error_count := error_count + 1
-						update_failure_and_error_label
-					elseif a_result.result_type = {ES_EWEASEL_RESULT_TYPE}.failed then
-						failure_count := failure_count + 1
-						update_failure_and_error_label
+						check not_possible: False end
 					end
 
-					if {l_label_item: EV_GRID_LABEL_ITEM} l_grid_row.item (5) then
-						update_row_forground_color_base_on_result (l_label_item, a_result.result_type)
+					-- Update test case item data
+					if l_test_case_item /= Void then
+						l_test_case_item.set_last_run_result (a_result.result_type)
+						l_test_case_item.set_last_run_time (a_result.test_run_time)
+
+						if a_result.result_type = {ES_EWEASEL_RESULT_TYPE}.error then
+							error_count := error_count + 1
+							update_failure_and_error_label
+						elseif a_result.result_type = {ES_EWEASEL_RESULT_TYPE}.failed then
+							failure_count := failure_count + 1
+							update_failure_and_error_label
+						end
+
+						if {l_label_item: EV_GRID_LABEL_ITEM} l_grid_row.item (5) then
+							update_row_forground_color_base_on_result (l_label_item, a_result.result_type)
+						end
 					end
 				end
 			end
@@ -597,6 +599,21 @@ feature {NONE} -- Implementation queries
 			Result := l_enum.es_test_case_grid_manager
 		end
 
+	default_grid_background_color: EV_COLOR is
+			-- Default grid background color
+		local
+			l_grid: EV_GRID
+		once
+			create l_grid
+			Result := l_grid.background_color
+		end
+
+	colors: !ES_COLORS is
+			-- Color helper
+		once
+			create Result
+		end
+
 feature {NONE} -- Implementation commands
 
 	update_failure_and_error_label is
@@ -698,6 +715,7 @@ feature {NONE} -- Implementation commands
 			l_test_cases: like all_test_cases_from_grid
 			l_item: ES_EWEASEL_TEST_CASE_ITEM
 			l_grid: like grid
+			l_row: EV_GRID_ROW
 		do
 			from
 				l_grid := grid
@@ -708,16 +726,14 @@ feature {NONE} -- Implementation commands
 			loop
 				l_item := l_test_cases.item
 
-				if {l_label_item: EV_GRID_LABEL_ITEM} l_grid.item (7, l_test_cases.index) then
-
-					if {l_last_run_time: DT_DATE_TIME} l_item.last_run_time and {l_changed_time: DT_DATE_TIME} l_item.changed_time then
-						if l_last_run_time < l_changed_time then
-							-- Changed
-							l_label_item.set_text (interface_names.b_yes)
-						else
-							-- Not changed
-							l_label_item.set_text (interface_names.b_no)
-						end
+				l_row := l_grid.row (l_test_cases.index)
+				if {l_last_run_time: DT_DATE_TIME} l_item.last_run_time and {l_changed_time: DT_DATE_TIME} l_item.changed_time then
+					if l_last_run_time < l_changed_time then
+						-- Changed
+						l_row.set_background_color (colors.grid_different_value_background_color)
+					else
+						-- Not changed
+						l_row.set_background_color (default_grid_background_color)
 					end
 				end
 
@@ -739,11 +755,22 @@ feature {NONE} -- Implementation commands
 			l_changed_time: STRING_GENERAL
 			l_last_result_label_item: !EV_GRID_LABEL_ITEM
 			l_changed_date_time, l_last_run_date_time: DT_DATE_TIME
-			l_changed_string: STRING_GENERAL
 		do
 			from
 				l_all_columns := all_columns_titles
 				l_all_columns.start
+
+				if {l_data_3: ES_EWEASEL_TEST_CASE_ITEM} test_case_item_from (a_row) then
+					l_changed_date_time := l_data_3.changed_time
+					l_last_run_date_time := l_data_3.last_run_time
+					if l_changed_date_time /= Void and l_last_run_date_time /= Void then
+						if l_changed_date_time > l_last_run_date_time then
+							a_row.set_background_color (colors.grid_different_value_background_color)
+						else
+							a_row.set_background_color (default_grid_background_color)
+						end
+					end
+				end
 			until
 				l_all_columns.after
 			loop
@@ -784,18 +811,6 @@ feature {NONE} -- Implementation commands
 					l_edit_item.deactivate_actions.extend (agent on_tag_item_deactive)
 
 					l_grid_item := l_edit_item
-				when 7 then
-					if {l_data_3: ES_EWEASEL_TEST_CASE_ITEM} test_case_item_from (a_row) then
-						l_changed_date_time := l_data_3.changed_time
-						l_last_run_date_time := l_data_3.last_run_time
-						if l_changed_date_time /= Void and l_last_run_date_time /= Void then
-							l_changed_string := (l_changed_date_time > l_last_run_date_time).out
-						else
-							l_changed_string := interface_names.t_not_updated
-						end
-					end
-
-					create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text (l_changed_string)
 				else
 					check not_possible: False end
 				end
@@ -811,17 +826,16 @@ feature {NONE} -- Implementation commands
 	all_columns_titles: ARRAYED_LIST [STRING_GENERAL] is
 			-- All columns titles in `grid'
 		once
-			create Result.make (7)
+			create Result.make (6)
 			Result.extend (interface_names.l_name)
 			Result.extend ("Runner") -- Hidden for the moment
 			Result.extend ("Auto generated") -- Hiddent for the moment
 			Result.extend (interface_names.t_changed_time)
 			Result.extend (interface_names.t_result)
 			Result.extend (interface_names.l_tags)
-			Result.extend (interface_names.t_changed_after_last_run) --  Changed after last test run?
 		ensure
 			not_void: Result /= Void
-			column_count_right: Result.count = 7
+			column_count_right: Result.count = 6
 		end
 
 	select_next_or_previous_failed_row (a_select_next: BOOLEAN) is

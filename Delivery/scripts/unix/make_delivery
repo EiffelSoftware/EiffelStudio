@@ -257,7 +257,6 @@ if [ ! "$NO_INSTALL" ]; then
 	copy make_debian_pkg $EXPORT_DIR
 	copy make_rpm_package $EXPORT_DIR
 	copy packaging $EXPORT_DIR
-	copy debian_packaging_files $EXPORT_DIR
 		# Now edit `set_aliases' in $EXPORT_DIR as we are now going for compilation mode.
 	cd $EXPORT_DIR
 	rm -f tmp

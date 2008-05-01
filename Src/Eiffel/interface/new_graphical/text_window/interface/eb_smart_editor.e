@@ -33,6 +33,7 @@ inherit
 			on_text_edited,
 			on_text_reset,
 			on_key_down,
+			on_mouse_wheel,
 			make,
 			create_token_handler
 		end
@@ -919,6 +920,40 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+	on_mouse_wheel (a_delta: INTEGER) is
+			-- <Precursor>
+		local
+			l_env: EV_ENVIRONMENT
+			l_preference: EB_SHARED_PREFERENCES
+
+			l_font: EV_FONT
+			l_new_height: INTEGER
+		do
+			create l_env
+			if l_env.application.ctrl_pressed then
+				create l_preference
+				-- Normal text font
+				l_font := l_preference.preferences.editor_data.font
+				l_new_height := l_font.height + a_delta
+				if l_new_height > 0 then
+					l_font.set_height (l_new_height)
+					l_preference.preferences.editor_data.editor_font_preference.set_value (l_font)
+				end
+
+				-- Keyword font
+				l_font := l_preference.preferences.editor_data.keyword_font
+				l_new_height := l_font.height + a_delta
+				if l_new_height > 0 then
+					l_font.set_height (l_new_height)
+					l_preference.preferences.editor_data.keyword_font_preference.set_value (l_font)
+				end
+
+				l_preference.preferences.editor_data.update_font
+			else
+				Precursor {EB_CLICKABLE_EDITOR}(a_delta)
+			end
 		end
 
 feature -- Text Loading	

@@ -43,7 +43,7 @@ feature {NONE} -- Population
 			l_item.set_pixmap (pixmap_factory.pixmap_from_e_feature (a_entity))
 			l_item.set_tooltip (a_entity.name + " from " + a_entity.written_class.name_in_upper)
 			l_item.set_font (fonts.prompt_text_font)
-			l_item.set_foreground_color (colors.prompt_text_forground_color)
+			l_item.set_foreground_color (colors.prompt_text_foreground_color)
 			l_item.set_left_border (25)
 
 --			l_item.set_text_with_tokens (l_generator.tokens (0))

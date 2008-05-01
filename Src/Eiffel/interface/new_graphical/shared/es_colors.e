@@ -128,10 +128,16 @@ feature -- Grids
 			result_attached: Result /= Void
 		end
 
+	grid_different_value_background_color: EV_COLOR
+			-- Different value background color
+		once
+			create Result.make_with_8_bit_rgb (255,210,210)
+		end
+
 feature -- Prompts
 
-	prompt_sub_title_forground_color: EV_COLOR
-			-- Forground color for title text on prompt dialogs
+	prompt_sub_title_foreground_color: EV_COLOR
+			-- Foreground color for title text on prompt dialogs
 		once
 			if {PLATFORM}.is_windows then
 				create Result.make_with_8_bit_rgb (117, 143, 198)
@@ -142,7 +148,7 @@ feature -- Prompts
 			result_attached: Result /= Void
 		end
 
-	prompt_text_forground_color: EV_COLOR
+	prompt_text_foreground_color: EV_COLOR
 			-- Foreground color for all other text on prompt dialog
 		once
 			if {PLATFORM}.is_windows then

@@ -1,5 +1,5 @@
 
-summary="TODO: short description of EiffelStudio"
+summary="EiffelStudio Integrated Development Environment"
 ise_name="Eiffel Software INC."
 ise_email=info@eiffel.com
 license=GPL

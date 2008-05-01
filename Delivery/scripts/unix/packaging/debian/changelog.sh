@@ -9,9 +9,10 @@ esac
 case "$O" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
-$spitshell <<!GROK!THIS!
-set -e
-echo Removing precompiles
+$spitshell > $DEBIAN_DIR/changelog <<!GROK!THIS!
+$PRODUCT ($VERSION-1) optional; urgency=low
 
-rm -rf /usr/lib/$PRODUCT/precomp/spec/unix/EIFGENs
+  * Added Changelog for compliance with debian rules.
+
+ -- $ise_name <$ise_email>  `date -R`
 !GROK!THIS!

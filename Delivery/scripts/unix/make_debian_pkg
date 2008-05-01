@@ -1,58 +1,63 @@
 #!/bin/sh
 set -e
 
-export ISE_NAME="Eiffel Software"
-export ISE_EMAIL=info@eiffel.com
-
-
 if [ $# != 1 ]; then
-    echo Usage: $0 platform
-    exit 1
+	echo Usage: $0 platform
+	exit 1
 fi
 
-PLATFORM=$1
 
+# Define environment variables
 . ./set_aliases
+PLATFORM=$1
+DOCS_DIR=/usr/share/doc/$PRODUCT/docs
+export PACKAGING_DIR=`pwd`/packaging
+export DEBIAN_DIR=$PACKAGING_DIR/debian
+export PRODUCT
+export VERSION
 
-export DOCS_DIR=usr/share/doc/$PRODUCT/docs
 
-mkdir debian
+# Prepare debian packaging files
+sh $DEBIAN_DIR/control.sh
+sh $DEBIAN_DIR/changelog.sh
+echo '#!/bin/sh' > $DEBIAN_DIR/$PRODUCT.postinst > $DEBIAN_DIR/$PRODUCT.prerm
+sh $PACKAGING_DIR/postinstall.sh >> $DEBIAN_DIR/$PRODUCT.postinst
+sh $PACKAGING_DIR/preremove.sh >> $DEBIAN_DIR/$PRODUCT.prerm
 
-# Generate debian package files
-SED='sed -e "s/\${ise:product}/$PRODUCT/" -e "s/\${ise:name}/$ISE_NAME/" -e "s/\${ise:email}/$ISE_EMAIL/" -e "s/\${version}/$VERSION/" -e "s/\${datetime}/`date -R`/"'
-eval "$SED debian_packaging_files/control > debian/control"
-eval "$SED debian_packaging_files/changelog > debian/changelog"
-eval "$SED debian_packaging_files/postinst > debian/$PRODUCT.postinst"
-eval "$SED debian_packaging_files/prerm > debian/$PRODUCT.prerm"
 
-copy debian_packaging_files/rules debian/rules
-copy debian_packaging_files/compat debian/compat
-copy debian_packaging_files/copyright debian/$PRODUCT.copyright
-copy debian_packaging_files/copyright debian/$PRODUCT-doc.copyright
+# Create unix layout in debian directory
+./make_unix_layout $PLATFORM $INSTALL_DIR $DEBIAN_DIR/$PRODUCT
 
-./make_unix_layout $PLATFORM $INSTALL_DIR `pwd`/debian/$PRODUCT/
+cd $DEBIAN_DIR
 
-cd debian
 
 # First we check if there are any docs (architecture independent)
+if test -d "$PRODUCT$DOCS_DIR"; then
+	safe_md $PRODUCT-doc$DOCS_DIR
+	move $PRODUCT$DOCS_DIR/* $PRODUCT-doc$DOCS_DIR/
+	fullrd $PRODUCT$DOCS_DIR
 
-if test -d "$PRODUCT/usr/share/doc/$PRODUCT/docs"; then
-    safe_md $PRODUCT-doc/usr/share/doc/$PRODUCT
-    move $PRODUCT/usr/share/doc/$PRODUCT/docs $PRODUCT-doc/usr/share/doc/$PRODUCT
+	debuild --check-dirname-level 0 binary-indep
+	echo Finished building package $PRODUCT-doc
 
-    debuild --check-dirname-level 0 binary-indep > $INSTALL_LOG
-    echo Finished building package $PRODUCT-doc
+	# Clean up doc related build files
+	rm -rf $DEBIAN_DIR/$PRODUCT-doc
 else
-    echo $0: No /usr/share/doc/$PRODUCT/docs not present, $PRODUCT-doc package will not be created
+	echo "$0: No $DOCS_DIR present, $PRODUCT-doc package will not be created"
 fi
 
-# Then we build the main package (architecture dependent)
 
+# Then we build the main package (architecture dependent)
 debuild --check-dirname-level 0 binary-arch
 echo Finished building package $PRODUCT
 
-# Remove all temporary files
+
+# Clean up all build files
 cd ../
 dh_clean
-rm -rf debian
+rm -rf $DEBIAN_DIR/$PRODUCT
+rm -f $DEBIAN_DIR/$PRODUCT.postinst
+rm -f $DEBIAN_DIR/$PRODUCT.prerm
+rm -f $DEBIAN_DIR/control
+rm -f $DEBIAN_DIR/changelog
 

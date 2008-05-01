@@ -1,94 +1,110 @@
 #!/bin/sh
 set -e
 
-if [ $# != 3 ]; then 
-	echo Usage: make_unix_layout platform source destination
+if [ ! "$ISE_EIFFEL" ]; then
+	echo '$ISE_EIFFEL not defined. Cannot continue'
 	exit 1
 fi
 
-export ISE_PLATFORM=$1
+if [ ! "$ISE_PLATFORM" ]; then
+	echo '$ISE_PLATFORM not defined. Cannot continue'
+	exit 1
+fi
 
-# Set up the environment
-. ./set_aliases
+if [ $# != 1 ]; then 
+	echo Usage: $0 destination
+	exit 1
+fi
 
-SRC_DIR=$2
-DST_DIR=$3
+
+# Exctract EiffelStudio version                                                                                            
+export VERSION=`$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -version | sed "s/^[A-Za-z ]*\([0-9\.]\+\).*/\1/"`
+MAJOR_NUMBER=`echo $VERSION | sed "s/^\([0-9]\).*/\1/"`
+MINOR_NUMBER=`echo $VERSION | sed "s/^[0-9].\([0-9]\).*/\1/"`
+PRODUCT_VERSION=$MAJOR_NUMBER$MINOR_NUMBER
+echo "Binaries in /usr/bin will have suffix $PRODUCT_VERSION (e.g. ec$PRODUCT_VERSION)"
+
 
 # some helper variables
 UNIX_PLATFORM=unix
-BASE_PATH=$DST_DIR$UNIX_BASE_PATH
+UNIX_BASE_PATH=/usr
+DST_DIR=$1
 
+BASE_PATH=$DST_DIR$UNIX_BASE_PATH
 BIN_DIR=$BASE_PATH/bin
 INCLUDE_DIR=$BASE_PATH/include/$PRODUCT
-LIB_DIR=$BASE_PATH/$UNIX_LIB_NAME/$PRODUCT
+LIB_DIR=$BASE_PATH/lib/$PRODUCT
 LIB_BIN_DIR=$LIB_DIR/studio
 SHARE_DIR=$BASE_PATH/share/$PRODUCT
 DOC_DIR=$BASE_PATH/share/doc/$PRODUCT
-SRC_BIN_DIR=$SRC_DIR/studio/spec/$ISE_PLATFORM/bin
+SRC_BIN_DIR=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin
+
 
 # Create basic directory layout
-
 if test -d $DST_DIR; then
     echo $0: $DST_DIR exists already, please remove or choose a different directory for unix layout
     exit 1
 fi
 
-safe_md $BIN_DIR
-safe_md $INCLUDE_DIR
-safe_md $LIB_DIR
-safe_md $LIB_BIN_DIR
-safe_md $SHARE_DIR
-safe_md $DOC_DIR
+mkdir -p $BIN_DIR
+mkdir -p $INCLUDE_DIR
+mkdir -p $LIB_DIR
+mkdir -p $LIB_BIN_DIR
+mkdir -p $SHARE_DIR
+mkdir -p $DOC_DIR
 
 # Copy runtime
-copy $SRC_DIR/studio/spec/$ISE_PLATFORM/include/* $INCLUDE_DIR
-copy $SRC_DIR/studio/spec/$ISE_PLATFORM/lib/* $LIB_DIR
+cp -r $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include/* $INCLUDE_DIR
+cp -r $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib/* $LIB_DIR
 
 # Copy library
-copy $SRC_DIR/library $LIB_DIR
-copy $SRC_DIR/precomp $LIB_DIR
+cp -r $ISE_EIFFEL/library $LIB_DIR
+
+# Copy precompile without EIFGENs
+mkdir -p $LIB_DIR/precomp/spec/$UNIX_PLATFORM
+cp $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/* $LIB_DIR/precomp/spec/$UNIX_PLATFORM/
 
 # Copy documentation
-copy $SRC_DIR/VERSION $DOC_DIR
-copy $SRC_DIR/INSTALL.readme $DOC_DIR
-copy $SRC_DIR/examples $DOC_DIR
+cp $ISE_EIFFEL/VERSION $DOC_DIR
+cp $ISE_EIFFEL/INSTALL.readme $DOC_DIR
+cp -r $ISE_EIFFEL/examples $DOC_DIR
 
-if test -d "$SRC_DIR/docs"; then
-    copy $SRC_DIR/docs $DOC_DIR
+if test -d "$ISE_EIFFEL/docs"; then
+    cp -r $ISE_EIFFEL/docs $DOC_DIR
 else
     echo $0: New unix layout will not contain eiffel documentation
 fi
 
 # Copy esbuilder
-copy $SRC_DIR/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder $BIN_DIR/esbuilder$PRODUCT_VERSION
-copy $SRC_DIR/esbuilder $SHARE_DIR
-fullrd $SHARE_DIR/esbuilder/spec
+cp $ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder $BIN_DIR/esbuilder$PRODUCT_VERSION
+cp -r $ISE_EIFFEL/esbuilder $SHARE_DIR
+rm -r $SHARE_DIR/esbuilder/spec
 
 # Copy vision2_demo
-copy $SRC_DIR/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demo $BIN_DIR/vision2_demo$PRODUCT_VERSION
-copy $SRC_DIR/vision2_demo $SHARE_DIR
-copy $SRC_DIR/vision2_demo/readme.html $DOC_DIR/readme-vision2_demo.html
-fullrd $SHARE_DIR/vision2_demo/spec
-fullrf $SHARE_DIR/vision2_demo/readme.htlm
+cp $ISE_EIFFEL/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demo $BIN_DIR/vision2_demo$PRODUCT_VERSION
+cp -r $ISE_EIFFEL/vision2_demo $SHARE_DIR
+cp $ISE_EIFFEL/vision2_demo/readme.html $DOC_DIR/readme-vision2_demo.html
+rm -r $SHARE_DIR/vision2_demo/spec
+rm -f $SHARE_DIR/vision2_demo/readme.html
 
 # Copy internal binaries
-copy $SRC_BIN_DIR/ecdbgd $LIB_BIN_DIR/ecdbgd
-copy $SRC_BIN_DIR/prelink $LIB_BIN_DIR/prelink
-copy $SRC_BIN_DIR/quick_finalize $LIB_BIN_DIR/quick_finalize
-copy $SRC_BIN_DIR/x2c $LIB_BIN_DIR/x2c
+cp $SRC_BIN_DIR/ecdbgd $LIB_BIN_DIR/ecdbgd
+cp $SRC_BIN_DIR/prelink $LIB_BIN_DIR/prelink
+cp $SRC_BIN_DIR/quick_finalize $LIB_BIN_DIR/quick_finalize
+cp $SRC_BIN_DIR/x2c $LIB_BIN_DIR/x2c
 
 # Copy main binaries
-copy $SRC_BIN_DIR/ec $BIN_DIR/ec$PRODUCT_VERSION
-copy $SRC_BIN_DIR/estudio $BIN_DIR/estudio$PRODUCT_VERSION
-copy $SRC_BIN_DIR/finish_freezing $BIN_DIR/finish_freezing$PRODUCT_VERSION
+cp $SRC_BIN_DIR/ec $BIN_DIR/ec$PRODUCT_VERSION
+cp $SRC_BIN_DIR/estudio $BIN_DIR/estudio$PRODUCT_VERSION
+cp $SRC_BIN_DIR/finish_freezing $BIN_DIR/finish_freezing$PRODUCT_VERSION
 
 # Copy wizards
-copy $SRC_DIR/studio/wizards $LIB_BIN_DIR
+cp -r $ISE_EIFFEL/studio/wizards $LIB_BIN_DIR
 
 # Copy studio
-copy $SRC_DIR/studio $SHARE_DIR/studio
-fullrd $SHARE_DIR/studio/spec
-fullrd $SHARE_DIR/studio/wizards
+cp -r $ISE_EIFFEL/studio $SHARE_DIR/studio
+rm -r $SHARE_DIR/studio/spec
+rm -r $SHARE_DIR/studio/wizards
 
 OLD_PWD=`pwd`
 # Create symlinks
@@ -101,11 +117,10 @@ ln -s vision2_demo$PRODUCT_VERSION vision2_demo
 cd $OLD_PWD
 
 if [ $ISE_PLATFORM != "unix" ]; then
-    move $LIB_DIR/precomp/spec/$ISE_PLATFORM $LIB_DIR/precomp/spec/unix
-    move $LIB_BIN_DIR/wizards/new_projects/vision2/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/new_projects/vision2/spec/unix
-    move $LIB_BIN_DIR/wizards/others/precompile/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/others/precompile/spec/unix
-    move $LIB_DIR/library/gobo/spec/$ISE_PLATFORM $LIB_DIR/library/gobo/spec/unix
-    move $LIB_DIR/library/vision2/spec/$ISE_PLATFORM $LIB_DIR/library/vision2/spec/unix
-    move $LIB_DIR/library/net/spec/$ISE_PLATFORM $LIB_DIR/library/net/spec/unix
-    move $SHARE_DIR/studio/config/$ISE_PLATFORM $SHARE_DIR/studio/config/unix
+    mv $LIB_BIN_DIR/wizards/new_projects/vision2/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/new_projects/vision2/spec/unix
+    mv $LIB_BIN_DIR/wizards/others/precompile/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/others/precompile/spec/unix
+    mv $LIB_DIR/library/gobo/spec/$ISE_PLATFORM $LIB_DIR/library/gobo/spec/unix
+    mv $LIB_DIR/library/vision2/spec/$ISE_PLATFORM $LIB_DIR/library/vision2/spec/unix
+    mv $LIB_DIR/library/net/spec/$ISE_PLATFORM $LIB_DIR/library/net/spec/unix
+    mv $SHARE_DIR/studio/config/$ISE_PLATFORM $SHARE_DIR/studio/config/unix
 fi

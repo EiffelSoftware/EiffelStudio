@@ -265,10 +265,7 @@ if [ ! "$NO_INSTALL" ]; then
 	mv -f tmp set_aliases
 		# Update the revision number as well
 	FILE_SVN_REVISION=`$INIT_DIR/set_version.sh $EIFFEL_SRC`
-	RELEASE_NUMBER=`expr $FILE_SVN_REVISION / 10000`
-	BUILD_NUMBER=`expr $FILE_SVN_REVISION % 10000`
-	VERSION=$MAJOR_NUMBER.$MINOR_NUMBER.$RELEASE_NUMBER.$BUILD_NUMBER
-	sed -e "s/^FILE_SVN_REVISION.*$/FILE_SVN_REVISION=$FILE_SVN_REVISION/g" -e "s/^VERSION.*$/VERSION=$VERSION/g" set_aliases > tmp
+	sed -e "s/^FILE_SVN_REVISION.*$/FILE_SVN_REVISION=$FILE_SVN_REVISION/g" set_aliases > tmp
 	rm -f set_aliases
 	mv -f tmp set_aliases
 	cd $INIT_DIR

@@ -254,7 +254,7 @@ if [ ! "$NO_INSTALL" ]; then
  
 	# Scripts for building unix layout/packages
 	copy make_unix_layout $EXPORT_DIR
-	copy make_debian_pkg $EXPORT_DIR
+	copy make_debian_package $EXPORT_DIR
 	copy make_rpm_package $EXPORT_DIR
 	copy packaging $EXPORT_DIR
 		# Now edit `set_aliases' in $EXPORT_DIR as we are now going for compilation mode.

@@ -167,7 +167,7 @@ feature {NONE} -- User interface initialization
 			create prompt_sub_title_label.make
 			prompt_sub_title_label.align_text_left
 			prompt_sub_title_label.set_font (fonts.prompt_sub_title_font)
-			prompt_sub_title_label.set_foreground_color (colors.prompt_sub_title_forground_color)
+			prompt_sub_title_label.set_foreground_color (colors.prompt_sub_title_foreground_color)
 			prompt_sub_title_label.set_is_text_wrapped (True)
 			prompt_sub_title_label.hide
 
@@ -175,7 +175,7 @@ feature {NONE} -- User interface initialization
 			create prompt_text.make
 			prompt_text.align_text_left
 			prompt_text.set_font (fonts.prompt_text_font)
-			prompt_text.set_foreground_color (colors.prompt_text_forground_color)
+			prompt_text.set_foreground_color (colors.prompt_text_foreground_color)
 			prompt_text.set_is_text_wrapped (True)
 			prompt_text.hide
 

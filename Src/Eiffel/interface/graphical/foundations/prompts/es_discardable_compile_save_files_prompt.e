@@ -97,7 +97,7 @@ feature {NONE} -- User interface initialization
 			l_item.set_pixmap (pixmap_factory.pixmap_from_class_i (a_class))
 			l_item.set_tooltip (a_class.file_name)
 			l_item.set_font (fonts.prompt_text_font)
-			l_item.set_foreground_color (colors.prompt_text_forground_color)
+			l_item.set_foreground_color (colors.prompt_text_foreground_color)
 			l_item.set_left_border (25)
 
 			a_row.set_item (1, l_item)

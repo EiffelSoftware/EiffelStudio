@@ -988,8 +988,11 @@ feature -- Graphical look
 		end
 
 	Highlight_different_value_bg_color: EV_COLOR is
+		local
+			l_colors: ES_COLORS
 		once
-			create Result.make_with_8_bit_rgb (255,210,210)
+			create l_colors
+			Result := l_colors.grid_different_value_background_color
 		end
 
 indexing

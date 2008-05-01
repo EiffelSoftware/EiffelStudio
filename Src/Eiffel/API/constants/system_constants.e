@@ -174,7 +174,7 @@ feature-- Versioning
 			-- Version of the compiler
 		once
 				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
-				-- will get replaced by the delivery scripts (see comments for `snv_revision'.
+				-- will get replaced by the delivery scripts (see comments for `svn_revision'.
 			create Result.make_version (
 				{EIFFEL_ENVIRONMENT_CONSTANTS}.major_version,
 				{EIFFEL_ENVIRONMENT_CONSTANTS}.minor_version,

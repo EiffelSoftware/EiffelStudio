@@ -1847,6 +1847,7 @@ test	scope-after-combined-expression					attach015 tcf pass attached_types scope
 test	anchored-object-test-local						attach016 tcf pass object_test attached_types anchored_types
 test	 object-test-in-assertion						attach017 tcf pass object_test system-validity
 test	 object-test-finalization-crash					attach018 tcf pass object_test
+test	object-test-invariant-any-to-expanded			attach019 tcf fail object_test expanded system-validity
 
 
 -- .NET specific test

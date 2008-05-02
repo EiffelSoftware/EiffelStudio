@@ -12,6 +12,9 @@ deferred class
 
 inherit
 	DISPOSABLE
+		export
+			{NONE} all
+		end
 
 inherit {NONE}
 	SHARED_DYNAMIC_API_LOADER
@@ -39,26 +42,40 @@ feature {NONE} -- Initialize
 
 feature -- Clean up
 
-	dispose
-			-- <Precursor>
+	unload
+			-- Unloads the Current loaded library.
+		local
+			l_handle: like module_handle
 		do
-			if module_handle /= default_pointer then
+			l_handle := module_handle
+			if l_handle /= default_pointer then
 				clean_up
+				api_loader.unload_library (l_handle)
 				module_handle := default_pointer
 			end
 		ensure then
-			not_is_interface_usable: not is_interface_usable
 			module_handle_is_null: module_handle = default_pointer
+			not_is_interface_usable: not is_interface_usable
+		end
+
+feature {NONE} -- Clean up
+
+	frozen dispose
+			-- <Precursor>
+		do
+			unload
 		end
 
 feature {NONE} -- Clean up
 
 	clean_up
 			-- Cleans up any resources or makes additional calls, to the loaded library, to
-			-- perform correct clean up
+			-- perform correct clean up.
 		require
 			not_module_handle_is_null: module_handle /= default_pointer
 		deferred
+		ensure
+			module_handle_unchanged: module_handle = old module_handle
 		end
 
 feature {NONE} -- Access

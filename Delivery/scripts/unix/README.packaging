@@ -1,0 +1,12 @@
+
+Creating packages for Linux distributions
+-----------------------------------------
+
+If you want to create a Debian/RPM packge of EiffelStudio, use one of these scripts:
+
+  * make_debian_package
+  * make_rpm_package
+
+For details see http://dev.eiffel.com/Linux_Packages
+
+

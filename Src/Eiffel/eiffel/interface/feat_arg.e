@@ -204,7 +204,7 @@ feature -- Checking
 					-- Process anchored type for argument types
 					-- Check validity of a generic type
 				a_checker.check_type_validity (l_type, Void)
-				l_type.check_for_obsolete_class (a_context_class)
+				l_type.check_for_obsolete_class (a_context_class, a_feature)
 				i := i + 1
 			end
 		end

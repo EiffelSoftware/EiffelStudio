@@ -1846,7 +1846,7 @@ feature -- Signature checking
 					Current, a_context_class.feature_table, Void, error_handler)
 				if not l_type.is_void then
 					type_a_checker.check_type_validity (l_type, Void)
-					l_type.check_for_obsolete_class (a_context_class)
+					l_type.check_for_obsolete_class (a_context_class, Current)
 				end
 				if arguments /= Void then
 						-- Check types of arguments

@@ -145,7 +145,7 @@ feature -- Initialization/Checking
 											Error_handler.insert_error (l_vncp)
 											has_error := True
 										else
-											l_named_type.check_for_obsolete_class (a_class)
+											l_named_type.check_for_obsolete_class (a_class, Void)
 
 												-- Check that specified routine argument or return
 												-- type matches conversion type `l_named_type'.

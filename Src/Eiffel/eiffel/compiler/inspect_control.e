@@ -201,9 +201,9 @@ feature {STATIC_ACCESS_AS} -- Visitor
 				then
 					create obs_warn
 					obs_warn.set_class (context.current_class)
+					obs_warn.set_feature (context.current_feature)
 					obs_warn.set_obsolete_class (class_c)
 					obs_warn.set_obsolete_feature (feature_i)
-					obs_warn.set_feature (context.current_feature)
 					error_handler.insert_warning (obs_warn)
 				end
 				if not is_inherited then

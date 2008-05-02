@@ -197,6 +197,7 @@ feature -- Constants
 	free_preallocated_trace_id: INTEGER is 184
 	any_name_id: INTEGER is 185
 	system_void_name_id: INTEGER is 186
+	call_name_id: INTEGER is 187
 
 feature -- Classification
 

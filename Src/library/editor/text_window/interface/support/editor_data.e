@@ -48,13 +48,14 @@ feature {NONE} -- Initialization
 	update_font is
 			-- Font was changed, must redraw tokens due to possible width change.
 		do
+			init_fonts
+
 			line_height_cell.put (calculate_line_height)
 			font_offset_cell.put (calculate_font_offset)
 			is_fixed_width_cell.put (
 				(not font.is_proportional and not keyword_font.is_proportional) and then
 				font.width = keyword_font.width)
-			font_width_cell.put (font.width)
-			init_fonts
+			font_width_cell.put (font_with_zoom_factor_cell.item.width)
 
 			from
 				panel_manager.panels.start
@@ -330,6 +331,9 @@ feature {ANY} -- Preferences
 	keyword_font_preference: FONT_PREFERENCE
 			-- Font for keywords.
 
+	font_zoom_factor_preference: INTEGER_PREFERENCE
+			-- Zoom factor which setting by `ctrl + mouse wheel'
+
 	header_font_preference: FONT_PREFERENCE
 			-- Font for header panel tabs preference
 
@@ -478,6 +482,7 @@ feature {NONE} -- Preference Strings
 	automatic_update_string: STRING is "editor.general.automatic_update"
 	editor_font_string: STRING is "editor.general.editor_font"
 	keyword_font_string: STRING is "editor.general.keyword_font"
+	font_zoom_factor_string: STRING is "editor.general.font_zoom_factor"
 	header_font_string: STRING is "editor.general.header_font"
 	highlight_document_changes_string: STRING is "editor.general.highlight_document_changes_between_saves"
 
@@ -589,8 +594,14 @@ feature {NONE} -- Implementation
 	init_fonts is
 			-- Init `fonts'.
 		do
-			fonts.put (editor_font_preference.value, editor_font_id)
-			fonts.put (keyword_font_preference.value, keyword_font_id)
+			font_with_zoom_factor_cell.put (calculate_font_with_zoom_factor)
+			keyword_font_with_zoom_factor_cell.put (calculate_keyword_font_with_zoom_factor)
+
+			fonts.put (font_with_zoom_factor_cell.item, editor_font_id)
+			fonts.put (keyword_font_with_zoom_factor_cell.item, keyword_font_id)
+		ensure
+			set: font_of_id (editor_font_id) /= Void
+			set: font_of_id (keyword_font_id) /= Void
 		end
 
 	initialize_preferences is
@@ -617,6 +628,8 @@ feature {NONE} -- Implementation
 			automatic_update_preference := l_manager.new_boolean_preference_value (l_manager, automatic_update_string, True)
 			show_line_numbers_preference := l_manager.new_boolean_preference_value (l_manager, show_line_numbers_string, False)
 			smart_home_preference := l_manager.new_boolean_preference_value (l_manager, smart_home_string, True)
+			font_zoom_factor_preference := l_manager.new_integer_preference_value (l_manager, font_zoom_factor_string, 0)
+			font_zoom_factor_cell.put (font_zoom_factor_preference)
 			editor_font_preference := l_manager.new_font_preference_value (l_manager, editor_font_string, create {EV_FONT})
 			font_cell.put (editor_font_preference)
 			header_font_preference := l_manager.new_font_preference_value (l_manager, header_font_string, create {EV_FONT})
@@ -673,6 +686,7 @@ feature {NONE} -- Implementation
 			automatic_update_preference.change_actions.extend (agent update)
 			editor_font_preference.change_actions.extend (agent update_font)
 			keyword_font_preference.change_actions.extend (agent update_font)
+			font_zoom_factor_preference.change_actions.extend (agent update_font)
 			header_font_preference.change_actions.extend (agent update)
 		end
 

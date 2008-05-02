@@ -702,7 +702,7 @@ feature -- Graphical interface
 		end
 
 	reference_window: EV_WINDOW is
-			-- Window which error dialogs will be shown relative to.  Void if not set using `set_reference_window'.
+			-- Window which error dialogs will be shown relative to. Void if not set using `set_reference_window'.
 		do
 			Result := internal_reference_window
 		end

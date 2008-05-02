@@ -548,7 +548,7 @@ feature {NONE} -- Init colors and fonts.
 		end
 
 	init_fonts is
-			--
+			-- <Precursor>
 		do
 			Precursor
 		end
@@ -636,6 +636,7 @@ feature {NONE} -- Initialization
 			local_background_color_preference.set_auto_preference (normal_background_color_preference)
 
 			keyword_font_preference.change_actions.extend (agent update)
+			font_zoom_factor_preference.change_actions.extend (agent update_font)
 			normal_text_color_preference.change_actions.extend (agent update)
 			normal_background_color_preference.change_actions.extend (agent update)
 			selection_text_color_preference.change_actions.extend (agent update)
@@ -1105,6 +1106,7 @@ feature -- Keybord shortcuts Customization
 invariant
 	preferences_not_void: preferences /= Void
 	keyword_font_preference_not_void: keyword_font_preference /= Void
+	editor_font_zoom_factor_preference: font_zoom_factor_preference /= Void
 	smart_indentation_preference_not_void: smart_indentation_preference /= Void
 	normal_text_color_preference_not_void: normal_text_color_preference /= Void
 	normal_background_color_preference_not_void: normal_background_color_preference /= Void

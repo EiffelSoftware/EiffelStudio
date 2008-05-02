@@ -57,7 +57,8 @@ feature {NONE} -- User interface initialization
 			if session_manager.is_service_available then
 					-- Hook up events
 				l_session := session_data
-				l_session.value_changed_event.subscribe (agent on_session_value_changed)
+				on_session_value_changed_agent := agent on_session_value_changed
+				l_session.value_changed_event.subscribe (on_session_value_changed_agent)
 
 					-- Retrieve session data and set button states
 				if {l_toggle: BOOLEAN_REF} l_session.value_or_default (auto_sweep_session_id, False) then
@@ -93,7 +94,9 @@ feature {NONE} -- Clean up
 		do
 			if is_initialized then
 				if session_manager.is_service_available then
-					session_data.value_changed_event.unsubscribe (agent on_session_value_changed)
+					if on_session_value_changed_agent /= Void then
+						session_data.value_changed_event.unsubscribe (on_session_value_changed_agent)
+					end
 				end
 			end
 			if {lt_observer: PROGRESS_OBSERVER}user_widget then
@@ -213,6 +216,9 @@ feature {NONE} -- Implementation
 
 	is_visit_requested: BOOLEAN
 			-- Is backgroud visiting requested?
+			
+	on_session_value_changed_agent: PROCEDURE [ANY, TUPLE [SESSION_I, STRING_8]]
+				-- Agent created in `build_tool_interface'
 
 	auto_background_visiting is
 			-- Auto background visiting

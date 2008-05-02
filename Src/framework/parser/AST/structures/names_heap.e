@@ -358,6 +358,7 @@ feature {NONE} -- Implementation: access
 			put ("free_preallocated_trace") check found_item = free_preallocated_trace_id end
 			put ("any") check found_item = any_name_id end
 			put ("System.Void") check found_item = system_void_name_id end
+			put ("call") check found_item = call_name_id end
 		end
 
 invariant

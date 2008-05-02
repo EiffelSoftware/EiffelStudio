@@ -30,6 +30,12 @@ feature -- Enumeration
 			create Result.make_from_string ("2F589F5C-8B51-4B25-B53E-5284CE8D2459")
 		end
 
+	execution_manager: !UUID is
+			-- Used by {ES_EWEASEL_EXECUTION_MANAGER}
+		once
+			create Result.make_from_string ("75B5C239-304C-4AD6-8A72-D748670510B4")
+		end
+
 indexing
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

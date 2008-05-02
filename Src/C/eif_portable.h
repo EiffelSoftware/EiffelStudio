@@ -99,6 +99,8 @@ extern "C" {
  */
 #ifdef EIF_VMS
 #include <ints.h>		/* VMS: integer sizes are architecture dependent */
+#elif EIF_OS == EIF_OS_HAIKU
+#include <SupportDefs.h>
 #elif INTSIZE < 4
 typedef int int16;
 typedef long int32;
@@ -131,6 +133,8 @@ typedef unsigned __int64	uintptr_t;
 typedef unsigned int		uintptr_t;
 #endif
 #endif
+
+#elif EIF_OS == EIF_OS_HAIKU
 
 #elif defined(EIF_SOLARIS)
 

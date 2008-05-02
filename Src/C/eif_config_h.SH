@@ -694,7 +694,8 @@ $inttypes_include
 #define EIF_OS_OPENBSD 	9
 #define EIF_OS_UNICOS 	10
 #define EIF_OS_VXWORKS	11
-#define EIF_OS_VMS		12
+#define EIF_OS_VMS	12
+#define EIF_OS_HAIKU	13
 
 /* Define EIF_OS value */
 #define EIF_OS $eif_os

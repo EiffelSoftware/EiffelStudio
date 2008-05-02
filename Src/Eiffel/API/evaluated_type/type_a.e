@@ -1213,7 +1213,7 @@ feature -- Access
 		deferred
 		end
 
-	check_for_obsolete_class (current_class: CLASS_C) is
+	check_for_obsolete_class (current_class: CLASS_C; current_feature: FEATURE_I) is
 			-- Check for obsolete class from Current. If
 			-- obsolete then display warning message.
 		require
@@ -1222,12 +1222,15 @@ feature -- Access
 			ass_class: CLASS_C
 			warn: OBS_CLASS_WARN
 		do
-			if not current_class.is_obsolete then
+			if not current_class.is_obsolete and (current_feature = Void or else not current_feature.is_obsolete) then
 		   		if actual_type.has_associated_class then
 					ass_class := actual_type.associated_class
 					if ass_class.is_obsolete and then ass_class.lace_class.options.is_warning_enabled (w_obsolete_class) then
 						create warn
 						warn.set_class (current_class)
+						if current_feature /= Void then
+							warn.set_feature (current_feature)
+						end
 						warn.set_obsolete_class (ass_class)
 						Error_handler.insert_warning (warn)
 					end

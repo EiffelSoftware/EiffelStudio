@@ -1572,9 +1572,11 @@ feature -- Implementation
 							then
 								create l_obs_warn
 								l_obs_warn.set_class (context.current_class)
+								if current_feature /= Void then
+									l_obs_warn.set_feature (current_feature)
+								end
 								l_obs_warn.set_obsolete_class (l_last_constrained.associated_class)
 								l_obs_warn.set_obsolete_feature (l_feature)
-								l_obs_warn.set_feature (current_feature)
 								error_handler.insert_warning (l_obs_warn)
 							end
 							if
@@ -4698,7 +4700,10 @@ feature -- Implementation
 					end
 				end
 
-				local_type.check_for_obsolete_class (context.current_class)
+				if not is_inherited then
+						-- No need to recheck for obsolete classes when checking inherited code.
+					local_type.check_for_obsolete_class (context.current_class, context.current_feature)
+				end
 
 				if current_feature.written_in = context.current_class.class_id then
 					Instantiator.dispatch (local_type, context.current_class)
@@ -8800,7 +8805,10 @@ feature {NONE} -- Implementation: checking locals
 							context.supplier_ids.add_supplier (l_solved_type.associated_class)
 						end
 
-						l_solved_type.check_for_obsolete_class (context.current_class)
+						if not is_inherited then
+								-- No need to recheck for obsolete classes when checking inherited code.
+							l_solved_type.check_for_obsolete_class (context.current_class, context.current_feature)
+						end
 					end
 					l_as.locals.forth
 				end

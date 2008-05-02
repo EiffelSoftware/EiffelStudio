@@ -562,6 +562,7 @@
 	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Courier New-r-regular-8-modern</FONT></PREF>
 	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font." HIDDEN="True"><FONT>Courier New-r-regular-8-modern</FONT></PREF>
 	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font"><FONT>Courier New-r-bold-8-modern</FONT></PREF>
+	<PREF NAME="editor.general.font_zoom_factor" DESCRIPTION="Zoom factor of editor font, set by ctrl + mouse wheel."><INTEGER>0</INTEGER></PREF>
 	<PREF NAME="editor.general.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."><INTEGER>8</INTEGER></PREF>
 	<PREF NAME="editor.general.scrolling_common_line_count" DESCRIPTION="Number of lines that will stay visible when you perform a page down or a page up operation."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="editor.general.mouse_wheel_scroll_full_page" DESCRIPTION="Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"><BOOLEAN>False</BOOLEAN></PREF>

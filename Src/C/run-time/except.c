@@ -1932,6 +1932,7 @@ rt_public void exok(void)
 }
 
 /* Clears the exception stack */
+/* FIXME: This method should be merged with `unwind_trace', since they are for the same goal. */
 rt_public void exclear(void)
 {
 	RT_GET_CONTEXT

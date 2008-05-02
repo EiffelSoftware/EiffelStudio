@@ -3,32 +3,26 @@ class
 	
 inherit
 	MEMORY
-	
-	EXCEPTIONS
 
 create
 	make
 
 feature -- Initialization
 
-	make (args: ARRAY [STRING]) is
+	make is
 		do
-			count := args.item (1).to_integer;
 			create e
-			info := memory_statistics (Total_memory)
 			test
 		end
 
 	test is
-		local
-			i: INTEGER
-			l_mem: INTEGER
-			l_retried: BOOLEAN
 		do
 			if i < count then
 				if l_retried then
 					full_collect
-					io.standard_default.flush
+					if info = Void then
+						info := memory_statistics (Total_memory)
+					end
 					info.update (total_memory)
 					l_mem := info.used
 				end
@@ -46,11 +40,15 @@ feature -- Initialization
 			retry
 		end
 		
+	i: INTEGER
+	l_mem: INTEGER
+	l_retried: BOOLEAN
+		
 	info: MEM_INFO
 
 	e: DEVELOPER_EXCEPTION
 	
-	count: INTEGER
+	count: INTEGER = 10000
 	
 	mem: INTEGER
 

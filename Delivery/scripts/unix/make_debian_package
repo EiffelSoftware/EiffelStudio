@@ -31,11 +31,19 @@ DOCS_DIR=/usr/share/doc/$PRODUCT/docs
 ./make_unix_layout $DEBIAN_DIR/$PRODUCT
 
 
+# NOTE: this will be moved to the make_unix_layout script
+mkdir -p $DEBIAN_DIR/$PRODUCT/usr/share/applications
+mkdir -p $DEBIAN_DIR/$PRODUCT/usr/share/icons
+cp $PACKAGING_DIR/desktop $DEBIAN_DIR/$PRODUCT/usr/share/applications/eiffelstudio.desktop
+cp $PACKAGING_DIR/logo.png $DEBIAN_DIR/$PRODUCT/usr/share/icons/eiffelstudio.png
+
+
 # Prepare debian packaging files
 sh $DEBIAN_DIR/control.sh
 sh $DEBIAN_DIR/changelog.sh
 cp $PACKAGING_DIR/license $DEBIAN_DIR/copyright
-echo '#!/bin/sh' > $DEBIAN_DIR/$PRODUCT.postinst > $DEBIAN_DIR/$PRODUCT.prerm
+echo '#!/bin/sh' > $DEBIAN_DIR/$PRODUCT.postinst
+echo '#!/bin/sh' > $DEBIAN_DIR/$PRODUCT.prerm
 sh $PACKAGING_DIR/postinstall.sh >> $DEBIAN_DIR/$PRODUCT.postinst
 sh $PACKAGING_DIR/preremove.sh >> $DEBIAN_DIR/$PRODUCT.prerm
 
@@ -66,9 +74,10 @@ echo Finished building package $PRODUCT
 # Clean up all build files
 cd ../
 dh_clean
-rm -rf $DEBIAN_DIR/$PRODUCT
-rm -f $DEBIAN_DIR/$PRODUCT.postinst
-rm -f $DEBIAN_DIR/$PRODUCT.prerm
-rm -f $DEBIAN_DIR/control
-rm -f $DEBIAN_DIR/changelog
+rm -r $DEBIAN_DIR/$PRODUCT
+rm $DEBIAN_DIR/$PRODUCT.postinst
+rm $DEBIAN_DIR/$PRODUCT.prerm
+rm $DEBIAN_DIR/copyright
+rm $DEBIAN_DIR/control
+rm $DEBIAN_DIR/changelog
 

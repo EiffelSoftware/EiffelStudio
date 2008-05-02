@@ -21,9 +21,11 @@ Depends: \${shlibs:Depends}
 Description: $summary
 !GROK!THIS!
 
-sed "s/\(.*\)/ \1/" $PACKAGING_DIR/description >> $DEBIAN_DIR/control
+sed -e "s/^\(.\+\)$/ \1/" -e "s/^$/ ./" $PACKAGING_DIR/description >> $DEBIAN_DIR/control
 
 $spitshell >> $DEBIAN_DIR/control <<!GROK!THIS!
+
+
 Package: $PRODUCT-doc
 Section: doc
 Priority: optional
@@ -32,4 +34,4 @@ Depends:
 Description: $summary (Documentation)
 !GROK!THIS!
 
-sed "s/\(.*\)/ \1/" $PACKAGING_DIR/description >> $DEBIAN_DIR/control
+sed -e "s/^\(.\+\)$/ \1/" -e "s/^$/ ./" $PACKAGING_DIR/description >> $DEBIAN_DIR/control

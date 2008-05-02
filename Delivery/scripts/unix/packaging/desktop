@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=EiffelStudio
+Comment=EiffelStudio Integrated Development Environment
+Exec=/usr/bin/estudio
+Terminal=false
+Type=Application
+Icon=eiffelstudio
+Categories=Development

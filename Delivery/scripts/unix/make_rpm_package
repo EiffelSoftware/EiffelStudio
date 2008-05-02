@@ -42,6 +42,12 @@ echo %_use_internal_dependency_generator 0 >> $RPMMACRO
 ./make_unix_layout $RPM_DIR/eiffelstudio
 
 
+# NOTE: this will be moved to the make_unix_layout script
+mkdir -p $RPM_DIR/eiffelstudio/usr/share/applications
+mkdir -p $RPM_DIR/eiffelstudio/usr/share/icons
+cp $PACKAGING_DIR/desktop $RPM_DIR/eiffelstudio/usr/share/applications/eiffelstudio.desktop
+cp $PACKAGING_DIR/logo.png $RPM_DIR/eiffelstudio/usr/share/icons/eiffelstudio.png
+
 # Prepare spec files
 sh $RPM_DIR/eiffelstudio.spec.sh
 cp $PACKAGING_DIR/license $RPM_DIR/eiffelstudio/usr/share/doc/$PRODUCT/LICENSE

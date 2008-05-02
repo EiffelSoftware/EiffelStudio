@@ -42,6 +42,11 @@ feature
 		external
 			"C signature (gchar*, GModuleFlags): GModule* use <gmodule.h>"
 		end
+		
+	frozen g_module_close (a_module: POINTER): BOOLEAN
+		external
+			"C signature (GModule*): gboolean use <gmodule.h>"
+		end
 
 	frozen g_source_remove (a_tag: NATURAL_32): BOOLEAN is
 		external

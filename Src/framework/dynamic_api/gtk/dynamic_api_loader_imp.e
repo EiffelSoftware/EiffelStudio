@@ -53,6 +53,15 @@ feature -- Basic operations
 			create l_path.make (a_path)
 			Result := {EV_GTK_EXTERNALS}.g_module_open (a_path.item, 0)
 		end
+		
+	unload_library (a_hnd: POINTER)
+			-- <Precursor>
+		local
+			l_result: BOOLEAN
+		do
+			l_result := {EV_GTK_EXTERNALS}.g_module_close (a_hnd)
+			check library_freed: l_result end
+		end
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"

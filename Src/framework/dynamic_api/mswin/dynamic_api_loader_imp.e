@@ -51,6 +51,15 @@ feature -- Basic operations
 			Result := c_load_library (l_path.item)
 		end
 
+	unload_library (a_hnd: POINTER)
+			-- <Precursor>
+		local
+			l_result: BOOLEAN
+		do
+			l_result := c_free_library (a_hnd)
+			check library_freed: l_result end
+		end
+
 feature {NONE} -- Externals
 
 	c_load_library (a_path: POINTER): POINTER
@@ -79,6 +88,21 @@ feature {NONE} -- Externals
 			"C inline use <windows.h>"
 		alias
 			"return GetProcAddress ((HMODULE) $a_hnd, (LPCSTR)$a_api_name);"
+		end
+
+	c_free_library (a_hnd: POINTER): BOOLEAN
+			-- The FreeLibrary function decrements the reference count of the loaded dynamic-link library
+			-- (DLL). When the reference count reaches zero, the module is unmapped from the address space
+			-- of the calling process and the handle is no longer valid.
+			--
+			-- `a_hnd': Handle to the loaded DLL module.
+			-- `Result': True if the free succeeds, False otherwise.
+		require
+			not_a_hnd_is_null: a_hnd /= default_pointer
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_BOOLEAN) FreeLibrary ((HMODULE)$a_hnd);"
 		end
 
 ;indexing

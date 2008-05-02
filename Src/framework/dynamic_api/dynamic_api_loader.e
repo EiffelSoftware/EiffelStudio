@@ -76,6 +76,15 @@ feature -- Basic operations
 		deferred
 		end
 
+	unload_library (a_hnd: POINTER)
+			-- Attempts to unloads a dynamic library using a library name.
+			--
+			-- `a_hnd': The module handle pointer returned from `load_library' or `load_library_from_path'.
+		require
+			not_a_hnd_is_null: a_hnd /= default_pointer
+		deferred
+		end
+
 ;indexing
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

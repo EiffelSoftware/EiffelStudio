@@ -6,9 +6,27 @@ copy_raw 	 test.e  $CLUSTER test.e
 
 compile_melted
 compile_result 	 ok
+execute_work	NONE exec_output 200 200
+execute_result ok
+compare		exec_output output
 
-execute_work	 NONE exec_output1 200 200
-execute_result	 ok
-compare		 exec_output1 output
+cleanup_compile
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output1 200 200
+execute_result 	ok
+compare		exec_output1 output
+
+cleanup_compile
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output2 200 200
+execute_result ok
+compare		exec_output2 output
+
 
 test_end

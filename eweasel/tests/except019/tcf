@@ -1,0 +1,31 @@
+test_name 	 memory_leak_when_retried
+test_description Reveals a C memory leak when `loc_stack' has not been allocated before Eiffel call but allocated in the call, rescue at that level resets the stack, hence losses the allocated chunk of memory.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output 10000
+execute_result 	ok
+compare		exec_output output
+
+cleanup_compile
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output1 10000
+execute_result ok
+compare		exec_output1 output
+
+cleanup_compile
+compile_melted
+compile_result 	 ok
+execute_work	NONE exec_output2 10000
+execute_result ok
+compare		exec_output2 output
+
+test_end

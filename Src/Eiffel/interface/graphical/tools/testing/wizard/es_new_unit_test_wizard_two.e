@@ -99,6 +99,9 @@ feature {NONE} -- Implementation
 		do
 			l_top_container := wizard_information.helper.parent_parent_of (choice_box)
 
+			-- We want the part at top is expanded when resizing
+			l_top_container.extend (create {EV_CELL})
+
 			-- Cluster
 			create l_h_box
 
@@ -205,6 +208,9 @@ feature {NONE} -- Implementation
 
 			l_top_container.extend (l_h_box)
 			l_top_container.disable_item_expand (l_h_box)
+
+			-- We want the part below an entry is expanded when resizing
+			l_top_container.extend (create {EV_CELL})
 
 			update_ui_with_wizard_information
 		end

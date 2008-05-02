@@ -191,7 +191,8 @@ rt_public struct ex_vect *exft(void);	/* Entry in feature with rescue clause */
 /* Exception recovery mechanism, only for runtime usage */
 rt_public void exok(void);				/* Resumption has been successful */
 rt_public void exclear(void);			/* Clears the exception stack */
-rt_private jmp_buf *backtrack(void);		/* Backtrack in the calling stack */
+rt_private jmp_buf *backtrack(void);	/* Backtrack in the calling stack */
+rt_private void unwind_trace (void);	/* Unwind the trace stack */
 rt_private void excur(void);			/* Current exception code in previous level */
 rt_private char *extag(struct ex_vect *trace);			/* Recompute exception tag */
 
@@ -559,20 +560,24 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 
 	expop(&eif_trace);					/* Remove EN_ILVL */
 	echlvl--;							/* And decrease exception level */
-	rout_vect = extop(&eif_trace);		/* Top of exception trace stack */
+		/* Unwind the trace stack, to forget last exception */
+	unwind_trace();						
 
+	rout_vect = extop(&eif_trace);		/* Top of exception trace stack */
+	if (rout_vect){
 #ifdef MAY_PANIC
-	switch (rout_vect->ex_type) {		/* Consistency check */
-	case EN_FAIL:						/* Routine failure */
-	case EN_RES:						/* Resumption failed */
-		rout_vect->ex_retry = 1;		/* Function has been retried */
-		break;							/* Ok for these two */
-	default:
-		eif_panic(RT_BOTCHED_MSG);
-	}
+		switch (rout_vect->ex_type) {		/* Consistency check */
+		case EN_FAIL:						/* Routine failure */
+		case EN_RES:						/* Resumption failed */
+			rout_vect->ex_retry = 1;		/* Function has been retried */
+			break;							/* Ok for these two */
+		default:
+			eif_panic(RT_BOTCHED_MSG);
+		}
 #else
-	rout_vect->ex_retry = 1;		/* Function has been retried */
+		rout_vect->ex_retry = 1;		/* Function has been retried */
 #endif
+	}
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
@@ -1921,35 +1926,10 @@ rt_public void exok(void)
 		expop(&eif_stack);				/* Will panic if we underflow */
 	}
 
-	/* Now deal with the trace stack. If the exception level is 0, we can reset
-	 * the whole stack. Otherwise, we have to unwind it until we find the
-	 * "New level" pseudo-vector.
-	 */
-	if (echlvl == 0) {			/* Optimization (no nested exceptions) */
-		start = eif_trace.st_cur = eif_trace.st_hd;	/* Back to first chunk */
-		eif_trace.st_top = start->sk_arena;			/* Reset initial state */
-		eif_trace.st_end = start->sk_end;			/* Stack has been cleared */
-		echval = 0;				/* No more pending exception */
-		echmem = 0;				/* We seem to have recovered from out of mem */
-	} else {					/* Normal case (should rarely occur) */
-		while ((top = extop(&eif_trace))) {
-			if (top->ex_type == EN_ILVL && top->ex_lvl == echlvl) {
-				break;			/* Found matching level record */
-			}
-			expop(&eif_trace);	/* Will panic if we underflow */
-		}
-		echmem &= ~MEM_FSTK;	/* Eiffel trace stack no longer full */
-		if ((struct ex_vect *) 0 == extop(&eif_trace)) {	/* Empty stack */
-			echval = 0;			/* No more pending exception */
-			echmem = 0;			/* We have recovered from this out of mem */
-		} else {				/* Still some exceptions pending */
-			excur();			/* Recompute current exception at this level */
-		}
-	}
+	unwind_trace();
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
-
 
 /* Clears the exception stack */
 rt_public void exclear(void)
@@ -1988,6 +1968,42 @@ rt_public void exclear(void)
 	echmem = 0;			/* We have recovered from this out of mem */
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
+}
+
+/* Unwind the trace stack, removing unneeded trace elements.
+ * Note that this is critical section, signal blocking should be enbraced. */
+rt_private void unwind_trace (void)
+{
+	/* If the exception level is 0, we can reset
+	 * the whole stack. Otherwise, we have to unwind it until we find the
+	 * "New level" pseudo-vector.
+	 */
+	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+	struct ex_vect *top;		/* Top of calling stack */
+	struct stxchunk *start;	/* First chunk in trace stack */
+
+	if (echlvl == 0) {			/* Optimization (no nested exceptions) */
+		start = eif_trace.st_cur = eif_trace.st_hd;	/* Back to first chunk */
+		eif_trace.st_top = start->sk_arena;			/* Reset initial state */
+		eif_trace.st_end = start->sk_end;			/* Stack has been cleared */
+		echval = 0;				/* No more pending exception */
+		echmem = 0;				/* We seem to have recovered from out of mem */
+	} else {					/* Normal case (should rarely occur) */
+		while ((top = extop(&eif_trace))) {
+			if (top->ex_type == EN_ILVL && top->ex_lvl == echlvl) {
+				break;			/* Found matching level record */
+			}
+			expop(&eif_trace);	/* Will panic if we underflow */
+		}
+		echmem &= ~MEM_FSTK;	/* Eiffel trace stack no longer full */
+		if ((struct ex_vect *) 0 == extop(&eif_trace)) {	/* Empty stack */
+			echval = 0;			/* No more pending exception */
+			echmem = 0;			/* We have recovered from this out of mem */
+		} else {				/* Still some exceptions pending */
+			excur();			/* Recompute current exception at this level */
+		}
+	}
 }
 
 rt_private void excur(void)

@@ -67,7 +67,6 @@ feature -- Command
 				create l_path_helper
 				l_cluster_path := l_wizard_information.cluster_path + l_path_helper.cluster_separator + l_new.folder_name
 				compile_and_open_new_unit_test_class (l_wizard_information.new_class_file_name, l_wizard_information.cluster, l_cluster_path)
-
 			else
 				-- Inforation is not valid, we do noting. Just quit.
 			end
@@ -84,6 +83,10 @@ feature -- Command
 			l_window: EB_SHARED_WINDOW_MANAGER
 			l_class_stone: CLASSI_STONE
 			l_dev_window: EB_DEVELOPMENT_WINDOW
+			l_service: SERVICE_CONSUMER [EVENT_LIST_S]
+			l_uuid: ES_TESTING_EVENT_LIST_CONTEXTS
+			l_event_item: EVENT_LIST_TEST_CASE_ITEM
+			l_data_item: ES_EWEASEL_TEST_CASE_ITEM
 		do
 			manager.add_class_to_cluster (a_new_class_file_name, a_cluster, a_cluster_sub_path)
 
@@ -91,6 +94,15 @@ feature -- Command
 			create l_window
 			l_dev_window := l_window.window_manager.last_focused_development_window
 			l_dev_window.commands.new_tab_cmd.execute_with_stone (l_class_stone)
+
+			create l_service
+			if l_service.is_service_available then
+				create l_data_item
+				l_data_item.set_class_i (manager.last_added_class)
+				create l_event_item.make ({ENVIRONMENT_CATEGORIES}.testing, 0, l_data_item)
+				create l_uuid
+				l_service.service.put_event_item (l_uuid.execution_manager, l_event_item)
+			end
 		end
 
 	stop_eweasel is

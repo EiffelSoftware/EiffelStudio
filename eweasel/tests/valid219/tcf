@@ -1,0 +1,13 @@
+test_name	obsolete-warning-in-obsolete-feature
+test_description When an obsolete routine is using an obsolete class or routine we should not raise a warning.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+copy_raw	test2.e	$CLUSTER test2.e
+copy_raw	a.e	$CLUSTER a.e
+
+compile_melted
+compile_result	validity_warning TEST1 Obsolete
+
+test_end

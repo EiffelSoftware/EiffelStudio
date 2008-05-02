@@ -44,7 +44,7 @@ feature -- Initialization
 			create onces.make (5)
 			create once_manifest_string_count_table.make (100)
 			create once_manifest_string_table.make (100)
-			create class_type_stack.make
+			create class_type_stack.make (10)
 			create generated_inlines.make (5)
 			create generic_wrappers.make (0)
 			create object_test_local_offset.make (0)
@@ -2580,7 +2580,7 @@ feature {NONE} -- Generic code generation
 
 feature {NONE} -- Implementation
 
-	class_type_stack: LINKED_STACK [like context_stack_type]
+	class_type_stack: ARRAYED_STACK [like context_stack_type]
 			-- Class types saved due to the context change by `change_class_type_context'
 
 	context_stack_type: TUPLE [context_type: CLASS_TYPE; cl_type: CL_TYPE_A; written_type: CLASS_TYPE; written_cl_type: CL_TYPE_A] is

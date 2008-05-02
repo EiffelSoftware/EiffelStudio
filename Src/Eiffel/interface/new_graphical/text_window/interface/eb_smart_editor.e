@@ -927,28 +927,13 @@ feature {NONE} -- Implementation
 		local
 			l_env: EV_ENVIRONMENT
 			l_preference: EB_SHARED_PREFERENCES
-
-			l_font: EV_FONT
-			l_new_height: INTEGER
+			l_old_value: INTEGER
 		do
 			create l_env
 			if l_env.application.ctrl_pressed then
 				create l_preference
-				-- Normal text font
-				l_font := l_preference.preferences.editor_data.font
-				l_new_height := l_font.height - a_delta
-				if l_new_height > 0 then
-					l_font.set_height (l_new_height)
-					l_preference.preferences.editor_data.editor_font_preference.set_value (l_font)
-				end
-
-				-- Keyword font
-				l_font := l_preference.preferences.editor_data.keyword_font
-				l_new_height := l_font.height - a_delta
-				if l_new_height > 0 then
-					l_font.set_height (l_new_height)
-					l_preference.preferences.editor_data.keyword_font_preference.set_value (l_font)
-				end
+				l_old_value := l_preference.preferences.editor_data.font_zoom_factor_preference.value
+				l_preference.preferences.editor_data.font_zoom_factor_preference.set_value (l_old_value + a_delta)
 			else
 				Precursor {EB_CLICKABLE_EDITOR}(a_delta)
 			end

@@ -69,6 +69,12 @@ feature {EDITOR_DATA} -- Implementation
 			create Result
 		end
 
+	font_zoom_factor_cell: CELL [INTEGER_PREFERENCE] is
+			-- Cached version of font factory for `font' and `keyword_font'
+		once
+			create Result
+		end
+
 	header_font_cell: CELL [FONT_PREFERENCE] is
 			-- Cached version of `font' for header panel.
 		once
@@ -80,7 +86,7 @@ feature {EDITOR_DATA} -- Implementation
 		local
 			loc_font_width: INTEGER
 		once
-			loc_font_width := font.width
+			loc_font_width := font_with_zoom_factor_cell.item.width
 			create Result.put (loc_font_width)
 		end
 
@@ -92,13 +98,29 @@ feature {EDITOR_DATA} -- Implementation
 			is_fixed_width_cell_not_void: Result /= Void
 		end
 
+	font_with_zoom_factor_cell: CELL [EV_FONT] is
+			-- Font with zoom factor cell
+		once
+			create Result.put (calculate_font_with_zoom_factor)
+		ensure
+			not_void: Result /= Void
+		end
+
+	keyword_font_with_zoom_factor_cell: CELL [EV_FONT] is
+			-- Keyword font with zoom factor cell
+		once
+			create Result.put (calculate_keyword_font_with_zoom_factor)
+		ensure
+			not_void: Result /= Void
+		end
+
 	line_height_font: EV_FONT is
 			-- Font used to calculate line height
 		do
-			if keyword_font_cell.item.value.height > font_cell.item.value.height then
-				Result := keyword_font_cell.item.value
+			if keyword_font_with_zoom_factor_cell.item.height > font_with_zoom_factor_cell.item.height then
+				Result := keyword_font_with_zoom_factor_cell.item
 			else
-				Result := font_cell.item.value
+				Result := font_with_zoom_factor_cell.item
 			end
 		end
 
@@ -128,6 +150,30 @@ feature {EDITOR_DATA} -- Implementation
 			loc_font := line_height_font
 				-- Windows text editors seem to use an extra pixel spacing.
 			Result := loc_font.ascent + loc_font.descent + {PLATFORM}.is_windows.to_integer
+		end
+
+	calculate_font_with_zoom_factor: EV_FONT is
+			-- Font with zoom factor
+		local
+			l_height: INTEGER
+		do
+			Result := font_cell.item.value.twin
+			l_height := Result.height + font_zoom_factor_cell.item.value
+			if l_height > 0 then
+				Result.set_height (l_height)
+			end
+		end
+
+	calculate_keyword_font_with_zoom_factor: EV_FONT is
+			-- Keyword font with zoom factor
+		local
+			l_height: INTEGER
+		do
+			Result := keyword_font_cell.item.value.twin
+			l_height := Result.height + font_zoom_factor_cell.item.value
+			if l_height > 0 then
+				Result.set_height (l_height)
+			end
 		end
 
 indexing

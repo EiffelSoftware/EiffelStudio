@@ -940,46 +940,54 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Actual type of Current; recursive version for generics
 		local
 			i: INTEGER
-			new_generics: like generics
+			l_old_generics, l_new_generics: like generics
+			l_prev_type, l_new_type: TYPE_A
 		do
-			if not has_like then
-				Result := Current
-			else
-				from
-					i := generics.count
-					create new_generics.make (1, i)
-				until
-					i <= 0
-				loop
-					new_generics.put (generics.item (i).deep_actual_type, i)
-					i := i - 1
+			Result := Current
+			from
+				l_old_generics := Result.generics
+				i := l_old_generics.count
+			until
+				i <= 0
+			loop
+				l_prev_type := l_old_generics.item (i)
+				l_new_type := l_prev_type.deep_actual_type
+				if l_prev_type /= l_new_type then
+					if l_new_generics = Void then
+							-- Void modifying original type.
+						Result := Result.duplicate
+						l_new_generics := Result.generics
+					end
+					l_new_generics.put (l_new_type, i)
 				end
-				Result := twin
-				Result.set_generics (new_generics)
+				i := i - 1
 			end
 		end
 
 	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): like Current is
 		local
-			i, count: INTEGER
-			new_generics: like generics
+			i: INTEGER
+			l_old_generics, l_new_generics: like generics
+			l_prev_type, l_new_type: TYPE_A
 		do
-			if not has_like then
-				Result := Current
-			else
-				from
-					i := 1
-					count := generics.count
-					create new_generics.make (1, count)
-				until
-					i > count
-				loop
-					new_generics.put (generics.item (i).actual_argument_type (a_arg_types), i)
-					i := i + 1
+			Result := Current
+			from
+				l_old_generics := Result.generics
+				i := l_old_generics.count
+			until
+				i <= 0
+			loop
+				l_prev_type := l_old_generics.item (i)
+				l_new_type := l_prev_type.actual_argument_type (a_arg_types)
+				if l_prev_type /= l_new_type then
+					if l_new_generics = Void then
+							-- Void modifying original type.
+						Result := Result.duplicate
+						l_new_generics := Result.generics
+					end
+					l_new_generics.put (l_new_type, i)
 				end
-				Result := twin
-				Result.set_generics (new_generics)
-				Result.set_mark (declaration_mark)
+				i := i - 1
 			end
 		end
 

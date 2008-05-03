@@ -73,8 +73,8 @@ echo Finished building package $PRODUCT
 
 # Clean up all build files
 cd ../
-dh_clean
 rm -r $DEBIAN_DIR/$PRODUCT
+dh_clean
 rm $DEBIAN_DIR/$PRODUCT.postinst
 rm $DEBIAN_DIR/$PRODUCT.prerm
 rm $DEBIAN_DIR/copyright

@@ -817,12 +817,26 @@ rt_private void interpret(int flag, int where)
 		loc_set.st_cur = l_cur;
 		if (l_cur) loc_set.st_end = l_cur->sk_end;
 		loc_set.st_top = l_top;
-		loc_stack.st_cur = ls_cur;
-		if (ls_cur) loc_stack.st_end = ls_cur->sk_end;
-		loc_stack.st_top = ls_top;
-		hec_stack.st_cur = h_cur;
-		if (h_cur) hec_stack.st_end = h_cur->sk_end;
-		hec_stack.st_top = h_top;
+
+		if (ls_top){
+			loc_stack.st_cur = ls_cur;
+			if (ls_cur) loc_stack.st_end = ls_cur->sk_end;
+			loc_stack.st_top = ls_top;
+		}else if (loc_stack.st_top) { /* There was no chunk allocated when saving, but allocated at excution in between */
+			loc_stack.st_cur = loc_stack.st_hd;
+			loc_stack.st_top = loc_stack.st_cur->sk_arena;
+			loc_stack.st_end = loc_stack.st_cur->sk_end;
+		}
+
+		if (h_top) {
+			hec_stack.st_cur = h_cur;
+			if (h_cur) hec_stack.st_end = h_cur->sk_end;
+			hec_stack.st_top = h_top;
+		}else if (hec_stack.st_top) { /* There was no chunk allocated when saving, but allocated at excution in between */
+			hec_stack.st_cur = hec_stack.st_hd;
+			hec_stack.st_top = hec_stack.st_cur->sk_arena;
+			hec_stack.st_end = hec_stack.st_cur->sk_end;
+		}
 #endif
 		sync_registers(MTC scur, stop);
 		RTEU;

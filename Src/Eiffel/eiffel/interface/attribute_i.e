@@ -132,11 +132,19 @@ feature -- Element Change
 		local
 			attribute_b: ATTRIBUTE_B
 			external_b: EXTERNAL_B
+			l_type: TYPE_A
 		do
+			if is_qualified then
+					-- To fix eweasel test#term155 we remove all anchors from
+					-- calls after the first dot in a call chain.
+				l_type := access_type.deep_actual_type
+			else
+				l_type := access_type
+			end
 			if extension /= Void then
 				create external_b
 				external_b.init (Current)
-				external_b.set_type (access_type)
+				external_b.set_type (l_type)
 				external_b.set_external_name_id (external_name_id)
 				external_b.set_extension (extension)
 				Result := external_b
@@ -146,7 +154,7 @@ feature -- Element Change
 			else
 				create attribute_b
 				attribute_b.init (Current)
-				attribute_b.set_type (access_type)
+				attribute_b.set_type (l_type)
 				Result := attribute_b
 			end
 		end

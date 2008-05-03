@@ -31,14 +31,22 @@ feature -- Access
 			-- New ACCESS_B structure for current deferred routine
 		local
 			external_b: EXTERNAL_B
+			l_type: TYPE_A
 		do
 			check
 				not_a_static_binding: static_type = Void
 			end
 			if extension /= Void then
+				if is_qualified then
+						-- To fix eweasel test#term155 we remove all anchors from
+						-- calls after the first dot in a call chain.
+					l_type := access_type.deep_actual_type
+				else
+					l_type := access_type
+				end
 				create external_b
 				external_b.init (Current)
-				external_b.set_type (access_type)
+				external_b.set_type (l_type)
 				external_b.set_external_name_id (external_name_id)
 				external_b.set_extension (extension)
 				Result := external_b

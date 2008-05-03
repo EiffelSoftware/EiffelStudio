@@ -17,7 +17,7 @@ Package: $PRODUCT
 Section: devel
 Priority: optional
 Architecture: any
-Depends: \${shlibs:Depends}
+Depends: \${shlibs:Depends}, gcc, libgtk2.0-dev, libxtst-dev
 Description: $summary
 !GROK!THIS!
 

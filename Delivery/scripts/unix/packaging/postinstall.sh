@@ -21,28 +21,22 @@ echo "Do you want to precompile EiffelVision (might take a while) ? [y/n]"
 read prec_vision2
 
 INIT_DIR=`pwd`
+export ISE_EIFFEL=""
+export ISE_PLATFORM=""
 
 if [ "\$prec_base" = "y" ]; then
 	echo Precompile EiffelBase
 	cd /usr/lib/$PRODUCT/precomp/spec/unix
-	rm -rf /usr/lib/$PRODUCT/precomp/spec/unix/EIFGENs/base
+	rm -rf /usr/lib/$PRODUCT/precomp/spec/unix/EIFGENs/base*
 	/usr/bin/ec -precompile -config base.ecf -c_compile -clean
+	/usr/bin/ec -precompile -config base-mt.ecf -c_compile -clean
 fi
 if [ "\$prec_vision2" = "y" ]; then
-	if which pkg-config > /dev/null 2>&1 ; then
-		if pkg-config --atleast-version=2.4 gtk+-2.0 ; then
-			echo Precompile EiffelVision
-			cd /usr/lib/$PRODUCT/precomp/spec/unix
-			rm -rf /usr/lib/$PRODUCT/precomp/spec/unix/EIFGENs/vision2
-			/usr/bin/ec -precompile -config vision2.ecf -c_compile -clean
-		else
-			echo "GTK 2.4 does not seem to be installed"
-			echo "Precompilation of EiffelVision interrupted."
-		fi
-	else
-		echo "GTK 2.4 does not seem to be installed"
-		echo "Precompilation of EiffelVision interrupted."
-	fi
+	echo Precompile EiffelVision
+	cd /usr/lib/$PRODUCT/precomp/spec/unix
+	rm -rf /usr/lib/$PRODUCT/precomp/spec/unix/EIFGENs/vision2
+	/usr/bin/ec -precompile -config vision2.ecf -c_compile -clean
+	/usr/bin/ec -precompile -config vision2-mt.ecf -c_compile -clean
 fi
 
 cd $INIT_DIR

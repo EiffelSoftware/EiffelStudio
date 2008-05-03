@@ -2581,25 +2581,33 @@ feature -- Byte code access
 			access_type_not_void: access_type /= Void
 		local
 			is_in_op: BOOLEAN
+			l_type: TYPE_A
 		do
+			if is_qualified then
+					-- To fix eweasel test#term155 we remove all anchors from
+					-- calls after the first dot in a call chain.
+				l_type := access_type.deep_actual_type
+			else
+				l_type := access_type
+			end
 			is_in_op := written_in = System.function_class_id or else
 						written_in = System.predicate_class_id or else
 						written_in = System.procedure_class_id
 
 			if is_in_op then
-				if equal (feature_name, "call") then
-					create {AGENT_CALL_B} Result.make (Current, access_type, static_type, False)
-				elseif equal (feature_name, "item") then
-					create {AGENT_CALL_B} Result.make (Current, access_type, static_type, True)
+				if feature_name_id = {PREDEFINED_NAMES}.call_name_id then
+					create {AGENT_CALL_B} Result.make (Current, l_type, static_type, False)
+				elseif feature_name_id = {PREDEFINED_NAMES}.item_name_id then
+					create {AGENT_CALL_B} Result.make (Current, l_type, static_type, True)
 				end
 			end
 
 			if Result = Void then
 				if written_in = System.any_id then
 						-- Feature written in ANY.
-					create {ANY_FEATURE_B} Result.make (Current, access_type, static_type)
+					create {ANY_FEATURE_B} Result.make (Current, l_type, static_type)
 				else
-					create {FEATURE_B} Result.make (Current, access_type, static_type)
+					create {FEATURE_B} Result.make (Current, l_type, static_type)
 				end
 			end
 		ensure

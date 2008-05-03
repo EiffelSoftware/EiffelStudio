@@ -1103,9 +1103,15 @@ RT_LNK EIF_TYPE_INDEX fcount;
 	EIF_REFERENCE * volatile ht = hec_stack.st_top; \
 	struct stchunk * volatile hc = hec_stack.st_cur
 #define RTHS \
-	hec_stack.st_cur = hc; \
-	if (hc) hec_stack.st_end = hc->sk_end; \
-	hec_stack.st_top = ht
+	if (ht){ \
+		hec_stack.st_cur = hc; \
+		if (hc) hec_stack.st_end = hc->sk_end; \
+		hec_stack.st_top = ht; \
+	}else if (hec_stack.st_top) { \
+		hec_stack.st_cur = hec_stack.st_hd; \
+		hec_stack.st_top = hec_stack.st_cur->sk_arena; \
+		hec_stack.st_end = hec_stack.st_cur->sk_end; \
+	}
 #else
 #define RTHP(x) (x)
 #define RTHF(x)
@@ -1123,9 +1129,15 @@ RT_LNK EIF_TYPE_INDEX fcount;
 	EIF_REFERENCE * volatile lst = loc_stack.st_top; \
 	struct stchunk * volatile lsc = loc_stack.st_cur
 #define RTLS \
-	loc_stack.st_cur = lsc; \
-	if (lsc) loc_stack.st_end = lsc->sk_end; \
-	loc_stack.st_top = lst
+	if (lst){ \
+		loc_stack.st_cur = lsc; \
+		if (lsc) loc_stack.st_end = lsc->sk_end; \
+		loc_stack.st_top = lst; \
+	}else if (loc_stack.st_top) { \
+		loc_stack.st_cur = loc_stack.st_hd; \
+		loc_stack.st_top = loc_stack.st_cur->sk_arena; \
+		loc_stack.st_end = loc_stack.st_cur->sk_end; \
+	}
 #else
 #define RTXLS \
 	EIF_REFERENCE lst

@@ -131,7 +131,7 @@ move quick_finalize.tar.bz2 $EXPORT_DIR
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Compiling CD key validator
 	cd $EIFFEL_SRC/tools
-	co $DEFAULT_ISE_SVN/Src/tools/cd_key_validator cd_key_validator 
+	exprt $DEFAULT_ISE_SVN/Src/tools/cd_key_validator cd_key_validator 
 	if [ -d cd_key_validator ]; then
 		cd cd_key_validator/eiffel_studio_52
 		clean_project

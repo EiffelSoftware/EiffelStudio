@@ -8,7 +8,7 @@ remtrace Checkout and compile the Documentation tool
 cd $EIFFEL_SRC
 safe_md tools
 cd $EIFFEL_SRC/tools
-co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd $EIFFEL_SRC/tools/doc_builder
 ec -local -batch -finalize -config doc_builder.ecf -c_compile >> $INSTALL_LOG 2>&1
 if [ ! -f EIFGENs/doc_builder/F_code/doc_builder ]; then

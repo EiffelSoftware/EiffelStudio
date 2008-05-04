@@ -140,7 +140,8 @@ if [ ! "$NO_COMPILE" ]; then
 		fullrd $EIFFEL_SRC
 	fi
 	md $EIFFEL_SRC
-	co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src $EIFFEL_SRC
+	co -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src $EIFFEL_SRC
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src $EIFFEL_SRC
 
 	if [ -n "$UNIX_BASE_PATH" ]; then
 		remtrace Adjusting unix base path
@@ -178,10 +179,10 @@ if [ ! "$NO_COMPILE" ]; then
 
 	remtrace ISE specific files
 	cd $EIFFEL_SRC
-	co $DEFAULT_ISE_SVN/Src/library/keygen library/keygen
+	exprt $DEFAULT_ISE_SVN/Src/library/keygen library/keygen
 	cd tools
-	co $DEFAULT_ISE_SVN/Src/tools/activation activation
-	co $DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
+	exprt $DEFAULT_ISE_SVN/Src/tools/activation activation
+	exprt $DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
 	cd $INIT_DIR
 
 	remtrace Update all libraries

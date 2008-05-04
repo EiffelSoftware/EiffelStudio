@@ -52,7 +52,7 @@ feature -- Access
 		deferred
 		end;
 
-	Size_limit: INTEGER is 20000;
+	Size_limit: INTEGER is 10000;
 			-- Limit of size for each generated file
 
 	new_file: INDENT_FILE is

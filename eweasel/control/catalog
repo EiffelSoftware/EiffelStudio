@@ -1325,6 +1325,7 @@ test	config-target-extends-itself	config004 tcf pass config
 test	config-remove-library			config005 tcf pass config
 test	config-debugs					config006 tcf pass config
 test	config-rename-change			config007 tcf pass config
+test	config-missing-name-attribute	config008 tcf pass config
 
 -- Lace
 

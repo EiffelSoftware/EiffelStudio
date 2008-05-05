@@ -196,7 +196,7 @@ feature {NONE} -- Initialization
 			Result.force_last (unit_test_manager.start_test_run_failed_first_command.new_sd_toolbar_item (False))
 
 			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
-			
+
 			l_shim ?= develop_window.shell_tools.tool ({ES_TESTING_RESULT_TOOL})
 			if l_shim /= Void then
 				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
@@ -211,7 +211,7 @@ feature {NONE} -- Initialization
 			l_string: STRING_GENERAL
 			l_v_box: EV_VERTICAL_BOX
 			l_h_box: EV_HORIZONTAL_BOX
-			l_pixmap, l_temp_pixmap: EV_PIXMAP
+			l_pixmap: EV_PIXMAP
 			l_constants: EB_CONSTANTS
 		do
 			l_string := runs_string.twin

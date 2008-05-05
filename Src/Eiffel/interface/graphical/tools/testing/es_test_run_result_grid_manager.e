@@ -378,7 +378,7 @@ feature {NONE} -- Implementation queries
 
 			Result.extend (interface_names.l_error)
 			Result.extend (interface_names.t_time)
-			Result.extend (interface_names.l_source)
+			Result.extend (interface_names.l_context)
 			Result.extend (interface_names.l_tags)
 		ensure
 			not_void: Result /= Void

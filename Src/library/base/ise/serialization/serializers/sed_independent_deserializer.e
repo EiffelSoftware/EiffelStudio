@@ -23,22 +23,30 @@ create
 
 feature {NONE} -- Implementation: access
 
-	attributes_mapping: SPECIAL [SPECIAL [INTEGER]]
+	attributes_mapping: ?SPECIAL [SPECIAL [INTEGER]]
 			-- Mapping for each dynamic type id between old attribute location
 			-- and new attribute location.
 
 	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER is
-			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id 
+			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id
 			-- is now `a_new_type_id', retrieve new offset in `a_new_type_id'.
+		local
+			a: like attributes_mapping
 		do
-			check
-				attributes_mapping_not_void: attributes_mapping /= Void
-				attributes_mapping_has_dtype: attributes_mapping.valid_index (a_new_type_id)
-				attributes_mapping_not_void_item: attributes_mapping.item (a_new_type_id) /= Void
-				attributes_mapping_has_offset: attributes_mapping.item (a_new_type_id).valid_index (a_old_offset)
-				attributes_mapping_has_mapping: attributes_mapping.item (a_new_type_id).item (a_old_offset) >= 0
+			a := attributes_mapping
+			if a /= Void then
+				check
+					attributes_mapping_has_dtype: a.valid_index (a_new_type_id)
+					attributes_mapping_not_void_item: a.item (a_new_type_id) /= Void
+					attributes_mapping_has_offset: a.item (a_new_type_id).valid_index (a_old_offset)
+					attributes_mapping_has_mapping: a.item (a_new_type_id).item (a_old_offset) >= 0
+				end
+				Result := a.item (a_new_type_id).item (a_old_offset)
+			else
+				check
+					attributes_mapping_not_void: False
+				end
 			end
-			Result := attributes_mapping.item (a_new_type_id).item (a_old_offset)
 		end
 
 feature {NONE} -- Implementation
@@ -99,7 +107,7 @@ feature {NONE} -- Implementation
 				loop
 						-- Read old dynamic type
 					l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
-	
+
 						-- Read type string associated to `l_old_dtype' and find dynamic type
 						-- in current system.
 					l_type_str := l_deser.read_string_8
@@ -120,7 +128,7 @@ feature {NONE} -- Implementation
 						-- Now set `dynamic_type_table' as all old dynamic type IDs have
 						-- be read and resolved.
 					dynamic_type_table := l_table
-	
+
 						-- Read attributes map for each dynamic type.
 					from
 						i := 0
@@ -130,7 +138,7 @@ feature {NONE} -- Implementation
 					loop
 							-- Read old dynamic type.
 						l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
-	
+
 							-- Read attributes description
 						read_attributes (l_table.item (l_old_dtype))
 						if has_error then
@@ -162,6 +170,7 @@ feature {NONE} -- Implementation
 			l_name: STRING
 			l_dtype, l_field_count: INTEGER
 			i, nb: INTEGER
+			a: like attributes_mapping
 		do
 			l_deser := deserializer
 
@@ -177,7 +186,7 @@ feature {NONE} -- Implementation
 				from
 					i := 1
 					l_map := attributes_map (a_dtype, l_field_count)
-					nb := nb + 1				
+					nb := nb + 1
 					create l_mapping.make (nb)
 				until
 					i = nb
@@ -202,11 +211,14 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				if not has_error then
-					if not attributes_mapping.valid_index (a_dtype) then
-						attributes_mapping := attributes_mapping.resized_area ((a_dtype + 1).max (
-							attributes_mapping.count * 2))
+					a := attributes_mapping
+					if a /= Void then
+						if not a.valid_index (a_dtype) then
+							a := a.resized_area ((a_dtype + 1).max (a.count * 2))
+							attributes_mapping := a
+						end
+						a.put (l_mapping, a_dtype)
 					end
-					attributes_mapping.put (l_mapping, a_dtype)
 				end
 			end
 		end
@@ -231,7 +243,7 @@ feature {NONE} -- Implementation
 				i = nb
 			loop
 				Result.put (
-					[i, l_int.field_static_type_of_type (i, a_dtype)], 
+					[i, l_int.field_static_type_of_type (i, a_dtype)],
 					l_int.field_name_of_type (i, a_dtype))
 				i := i + 1
 			end
@@ -250,7 +262,7 @@ feature {NONE} -- Cleaning
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -259,10 +271,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

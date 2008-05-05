@@ -25,7 +25,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize current to read or write from `a_medium'.
 		do
-			make_with_buffer (create {MANAGED_POINTER}.make (default_buffer_size))
+			create {MANAGED_POINTER} buffer.make (default_buffer_size)
+			buffer_size := default_buffer_size
 		ensure
 			buffer_set: buffer /= Void
 			buffer_size_set: buffer_size = default_buffer_size
@@ -79,7 +80,7 @@ feature {NONE} -- Buffer update
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

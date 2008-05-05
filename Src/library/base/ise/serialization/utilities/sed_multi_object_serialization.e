@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	deserialized_object: ANY
+	deserialized_object: ?ANY
 			-- Last deserialized object
 
 	last_file_position: INTEGER
@@ -41,7 +41,7 @@ feature -- Basic Operations
 			valid_path: (create {RAW_FILE}.make (path)).exists
 		local
 			retried: BOOLEAN
-			l_raw_file: RAW_FILE
+			l_raw_file: ?RAW_FILE
 			l_reader: SED_MEDIUM_READER_WRITER
 		do
 			if not retried then
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			non_void_object: a /= Void
 			non_void_path: path /= Void
 		local
-			l_raw_file: RAW_FILE
+			l_raw_file: ?RAW_FILE
 			l_writer: SED_MEDIUM_READER_WRITER
 			retried: BOOLEAN
 		do
@@ -116,7 +116,7 @@ feature {NONE} -- Logging
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

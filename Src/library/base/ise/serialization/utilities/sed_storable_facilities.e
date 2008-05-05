@@ -70,15 +70,14 @@ feature -- Serialization routines
 			a_writer.write_footer
 		end
 
-	retrieved (a_reader: SED_READER_WRITER; a_is_gc_enabled: BOOLEAN): ANY is
+	retrieved (a_reader: SED_READER_WRITER; a_is_gc_enabled: BOOLEAN): ?ANY is
 			-- Deserialization of object from `a_reader'.
 			-- Garbage collection will be enabled if `a_is_gc_enabled'.
 		require
 			a_reader_not_void: a_reader /= Void
 			a_reader_ready: a_reader.is_ready_for_reading
 		local
-			l_deserializer: SED_SESSION_DESERIALIZER
-			l_has_error: BOOLEAN
+			l_deserializer: ?SED_SESSION_DESERIALIZER
 		do
 			a_reader.read_header
 			inspect
@@ -88,10 +87,9 @@ feature -- Serialization routines
 			when eiffel_independent_store then l_deserializer := independent_deserializer (a_reader)
 			else
 				-- Incorrect type
-				l_has_error := True
 			end
 
-			if not l_has_error then
+			if l_deserializer /= Void then
 				l_deserializer.decode (a_is_gc_enabled)
 				if not l_deserializer.has_error then
 					Result := l_deserializer.last_decoded_object
@@ -251,7 +249,7 @@ feature {NONE} -- Data
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

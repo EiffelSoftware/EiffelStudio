@@ -36,7 +36,7 @@ feature -- Access
 	deserializer: SED_READER_WRITER
 			-- Serializer used to decode data
 
-	last_decoded_object: ANY
+	last_decoded_object: ?ANY
 			-- Object decoded during last call to `decode'
 
 feature -- Status report
@@ -63,7 +63,7 @@ feature -- Basic operations
 			-- Decode object graph stored in `deserializer'.
 		local
 			l_count: NATURAL_32
-			l_mem: like memory
+			l_mem: ?like memory
 			l_is_collecting: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -90,7 +90,7 @@ feature -- Basic operations
 				end
 			end
 				-- Restore GC status
-			if l_is_collecting then
+			if l_is_collecting and then l_mem /= Void then
 				l_mem.collection_on
 			end
 
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation: Access
 	object_references: SPECIAL [ANY]
 			-- Mapping between reference ID and the associated object.
 
-	missing_references: SPECIAL [ARRAYED_LIST [like new_tuple]]
+	missing_references: ?SPECIAL [?ARRAYED_LIST [like new_tuple]]
 			-- When decoding an object some of its references might not be decoded yet, so
 			-- we store the object index, the field position in this object and the reference id.
 
@@ -130,15 +130,20 @@ feature {NONE} -- Cleaning
 
 	clear_internal_data is
 			-- Clear all allocated data
+		local
+			l: like list_stack
+			t: like tuple_stack
 		do
 			missing_references := Void
 			create object_references.make (0)
-			if tuple_stack /= Void then
-				tuple_stack.wipe_out
+			t := tuple_stack
+			if t /= Void then
+				t.wipe_out
 				tuple_stack := Void
 			end
-			if list_stack /= Void then
-				list_stack.wipe_out
+			l := list_stack
+			if l /= Void then
+				l.wipe_out
 				list_stack := Void
 			end
 		end
@@ -424,49 +429,45 @@ feature {NONE} -- Implementation
 			an_index_non_negative: an_index >= 0
 		local
 			l_deser: like deserializer
-			l_tuple: TUPLE
 			i, nb: INTEGER
 		do
 			l_deser := deserializer
-			l_tuple ?= an_obj
-			check
-				l_tuple_not_void: l_tuple /= Void
-			end
+			if {l_tuple: TUPLE} an_obj then
+				from
+					i := 1
+					nb := l_tuple.count + 1
+				until
+					i = nb
+				loop
+					inspect l_deser.read_natural_8
+					when {TUPLE}.boolean_code then l_tuple.put_boolean (l_deser.read_boolean, i)
 
-			from
-				i := 1
-				nb := l_tuple.count + 1
-			until
-				i = nb
-			loop
-				inspect l_deser.read_natural_8
-				when {TUPLE}.boolean_code then l_tuple.put_boolean (l_deser.read_boolean, i)
+					when {TUPLE}.character_8_code then l_tuple.put_character_8 (l_deser.read_character_8, i)
+					when {TUPLE}.character_32_code then l_tuple.put_character_32 (l_deser.read_character_32, i)
 
-				when {TUPLE}.character_8_code then l_tuple.put_character_8 (l_deser.read_character_8, i)
-				when {TUPLE}.character_32_code then l_tuple.put_character_32 (l_deser.read_character_32, i)
+					when {TUPLE}.natural_8_code then l_tuple.put_natural_8 (l_deser.read_natural_8, i)
+					when {TUPLE}.natural_16_code then l_tuple.put_natural_16 (l_deser.read_natural_16, i)
+					when {TUPLE}.natural_32_code then l_tuple.put_natural_32 (l_deser.read_natural_32, i)
+					when {TUPLE}.natural_64_code then l_tuple.put_natural_64 (l_deser.read_natural_64, i)
 
-				when {TUPLE}.natural_8_code then l_tuple.put_natural_8 (l_deser.read_natural_8, i)
-				when {TUPLE}.natural_16_code then l_tuple.put_natural_16 (l_deser.read_natural_16, i)
-				when {TUPLE}.natural_32_code then l_tuple.put_natural_32 (l_deser.read_natural_32, i)
-				when {TUPLE}.natural_64_code then l_tuple.put_natural_64 (l_deser.read_natural_64, i)
+					when {TUPLE}.integer_8_code then l_tuple.put_integer_8 (l_deser.read_integer_8, i)
+					when {TUPLE}.integer_16_code then l_tuple.put_integer_16 (l_deser.read_integer_16, i)
+					when {TUPLE}.integer_32_code then l_tuple.put_integer_32 (l_deser.read_integer_32, i)
+					when {TUPLE}.integer_64_code then l_tuple.put_integer_64 (l_deser.read_integer_64, i)
 
-				when {TUPLE}.integer_8_code then l_tuple.put_integer_8 (l_deser.read_integer_8, i)
-				when {TUPLE}.integer_16_code then l_tuple.put_integer_16 (l_deser.read_integer_16, i)
-				when {TUPLE}.integer_32_code then l_tuple.put_integer_32 (l_deser.read_integer_32, i)
-				when {TUPLE}.integer_64_code then l_tuple.put_integer_64 (l_deser.read_integer_64, i)
+					when {TUPLE}.real_32_code then l_tuple.put_real_32 (l_deser.read_real_32, i)
+					when {TUPLE}.real_64_code then l_tuple.put_real_64 (l_deser.read_real_64, i)
 
-				when {TUPLE}.real_32_code then l_tuple.put_real_32 (l_deser.read_real_32, i)
-				when {TUPLE}.real_64_code then l_tuple.put_real_64 (l_deser.read_real_64, i)
+					when {TUPLE}.pointer_code then l_tuple.put_pointer (l_deser.read_pointer, i)
 
-				when {TUPLE}.pointer_code then l_tuple.put_pointer (l_deser.read_pointer, i)
-
-				when {TUPLE}.reference_code then decode_reference (l_tuple, an_index, i)
-				else
-					check
-						False
+					when {TUPLE}.reference_code then decode_reference (l_tuple, an_index, i)
+					else
+						check
+							False
+						end
 					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -513,98 +514,113 @@ feature {NONE} -- Implementation
 			an_obj_not_void: an_obj /= Void
 			an_obj_is_special: internal.is_special (an_obj)
 			an_index_non_negative: an_index >= 0
-		local
-			l_spec_boolean: SPECIAL [BOOLEAN]
-			l_spec_character_8: SPECIAL [CHARACTER_8]
-			l_spec_character_32: SPECIAL [CHARACTER_32]
-			l_spec_natural_8: SPECIAL [NATURAL_8]
-			l_spec_natural_16: SPECIAL [NATURAL_16]
-			l_spec_natural_32: SPECIAL [NATURAL_32]
-			l_spec_natural_64: SPECIAL [NATURAL_64]
-			l_spec_integer_8: SPECIAL [INTEGER_8]
-			l_spec_integer_16: SPECIAL [INTEGER_16]
-			l_spec_integer_32: SPECIAL [INTEGER]
-			l_spec_integer_64: SPECIAL [INTEGER_64]
-			l_spec_real_32: SPECIAL [REAL]
-			l_spec_real_64: SPECIAL [DOUBLE]
-			l_spec_pointer: SPECIAL [POINTER]
-			l_spec_any: SPECIAL [ANY]
 		do
 			inspect an_item_type
 			when {INTERNAL}.boolean_type then
-				l_spec_boolean ?= an_obj
-				check l_spec_boolean_not_void: l_spec_boolean /= Void end
-				decode_special_boolean (l_spec_boolean)
+				if {l_spec_boolean: SPECIAL [BOOLEAN]} an_obj then
+					decode_special_boolean (l_spec_boolean)
+				else
+					check l_spec_boolean_not_void: False end
+				end
 
 			when {INTERNAL}.character_8_type then
-				l_spec_character_8 ?= an_obj
-				check l_spec_character_8_not_void: l_spec_character_8 /= Void end
-				decode_special_character_8 (l_spec_character_8)
+				if {l_spec_character_8: SPECIAL [CHARACTER_8]} an_obj then
+					decode_special_character_8 (l_spec_character_8)
+				else
+					check l_spec_character_8_not_void: False end
+				end
 
 			when {INTERNAL}.character_32_type then
-				l_spec_character_32 ?= an_obj
-				check l_spec_character_32_not_void: l_spec_character_32 /= Void end
-				decode_special_character_32 (l_spec_character_32)
+				if {l_spec_character_32: SPECIAL [CHARACTER_32]} an_obj then
+					decode_special_character_32 (l_spec_character_32)
+				else
+					check l_spec_character_32_not_void: False end
+				end
 
 			when {INTERNAL}.natural_8_type then
-				l_spec_natural_8 ?= an_obj
-				check l_spec_natural_8_not_void: l_spec_natural_8 /= Void end
-				decode_special_natural_8 (l_spec_natural_8)
+				if {l_spec_natural_8: SPECIAL [NATURAL_8]} an_obj then
+					decode_special_natural_8 (l_spec_natural_8)
+				else
+					check l_spec_natural_8_not_void: False end
+				end
 
 			when {INTERNAL}.natural_16_type then
-				l_spec_natural_16 ?= an_obj
-				check l_spec_natural_16_not_void: l_spec_natural_16 /= Void end
-				decode_special_natural_16 (l_spec_natural_16)
+				if {l_spec_natural_16: SPECIAL [NATURAL_16]} an_obj then
+					decode_special_natural_16 (l_spec_natural_16)
+				else
+					check l_spec_natural_16_not_void: False end
+				end
 
 			when {INTERNAL}.natural_32_type then
-				l_spec_natural_32 ?= an_obj
-				check l_spec_natural_32_not_void: l_spec_natural_32 /= Void end
-				decode_special_natural_32 (l_spec_natural_32)
+				if {l_spec_natural_32: SPECIAL [NATURAL_32]} an_obj then
+					decode_special_natural_32 (l_spec_natural_32)
+				else
+					check l_spec_natural_32_not_void: False end
+				end
 
 			when {INTERNAL}.natural_64_type then
-				l_spec_natural_64 ?= an_obj
-				check l_spec_natural_64_not_void: l_spec_natural_64 /= Void end
-				decode_special_natural_64 (l_spec_natural_64)
+				if {l_spec_natural_64: SPECIAL [NATURAL_64]} an_obj then
+					decode_special_natural_64 (l_spec_natural_64)
+				else
+					check l_spec_natural_64_not_void: False end
+				end
 
 			when {INTERNAL}.integer_8_type then
-				l_spec_integer_8 ?= an_obj
-				check l_spec_integer_8_not_void: l_spec_integer_8 /= Void end
-				decode_special_integer_8 (l_spec_integer_8)
+				if {l_spec_integer_8: SPECIAL [INTEGER_8]} an_obj then
+					decode_special_integer_8 (l_spec_integer_8)
+				else
+					check l_spec_integer_8_not_void: False end
+				end
 
 			when {INTERNAL}.integer_16_type then
-				l_spec_integer_16 ?= an_obj
-				check l_spec_integer_16_not_void: l_spec_integer_16 /= Void end
-				decode_special_integer_16 (l_spec_integer_16)
+				if {l_spec_integer_16: SPECIAL [INTEGER_16]} an_obj then
+					decode_special_integer_16 (l_spec_integer_16)
+				else
+					check l_spec_integer_16_not_void: False end
+				end
 
 			when {INTERNAL}.integer_32_type then
-				l_spec_integer_32 ?= an_obj
-				check l_spec_integer_32_not_void: l_spec_integer_32 /= Void end
-				decode_special_integer_32 (l_spec_integer_32)
+				if {l_spec_integer_32: SPECIAL [INTEGER]} an_obj then
+					decode_special_integer_32 (l_spec_integer_32)
+				else
+					check l_spec_integer_32_not_void: False end
+				end
 
 			when {INTERNAL}.integer_64_type then
-				l_spec_integer_64 ?= an_obj
-				check l_spec_integer_64_not_void: l_spec_integer_64 /= Void end
-				decode_special_integer_64 (l_spec_integer_64)
+				if {l_spec_integer_64: SPECIAL [INTEGER_64]} an_obj then
+					decode_special_integer_64 (l_spec_integer_64)
+				else
+					check l_spec_integer_64_not_void: False end
+				end
 
 			when {INTERNAL}.real_32_type then
-				l_spec_real_32 ?= an_obj
-				check l_spec_real_32_not_void: l_spec_real_32 /= Void end
-				decode_special_real_32 (l_spec_real_32)
+				if {l_spec_real_32: SPECIAL [REAL]} an_obj then
+					decode_special_real_32 (l_spec_real_32)
+				else
+					check l_spec_real_32_not_void: False end
+				end
+
 			when {INTERNAL}.real_64_type then
-				l_spec_real_64 ?= an_obj
-				check l_spec_real_64_not_void: l_spec_real_64 /= Void end
-				decode_special_real_64 (l_spec_real_64)
+				if {l_spec_real_64: SPECIAL [DOUBLE]} an_obj then
+					decode_special_real_64 (l_spec_real_64)
+				else
+					check l_spec_real_64_not_void: False end
+				end
 
 			when {INTERNAL}.pointer_type then
-				l_spec_pointer ?= an_obj
-				check l_spec_pointer_not_void: l_spec_pointer /= Void end
-				decode_special_pointer (l_spec_pointer)
+				if {l_spec_pointer: SPECIAL [POINTER]} an_obj then
+					decode_special_pointer (l_spec_pointer)
+				else
+					check l_spec_pointer_not_void: False end
+				end
 
 			else
 				check an_item_type_valid: an_item_type = {INTERNAL}.reference_type end
-				l_spec_any ?= an_obj
-				check l_spec_any_not_void: l_spec_any /= Void end
-				decode_special_reference (l_spec_any, an_index)
+				if {l_spec_any: SPECIAL [ANY]} an_obj then
+					decode_special_reference (l_spec_any, an_index)
+				else
+					check l_spec_any_not_void: False end
+				end
 			end
 		end
 
@@ -903,7 +919,7 @@ feature {NONE} -- Implementation
 			l_nat32: NATURAL_32
 			l_index: INTEGER
 			l_sub_obj: ANY
-			l_list: ARRAYED_LIST [like new_tuple]
+			l_list: ?ARRAYED_LIST [like new_tuple]
 			l_tuple: like new_tuple
 			l_missing: like missing_references
 		do
@@ -945,17 +961,17 @@ feature {NONE} -- Implementation
 			an_index_positive_for_normal_object: not internal.is_special (an_obj) implies an_index > 0
 		local
 			l_int: like internal
-			l_spec: SPECIAL [ANY]
-			l_tuple: TUPLE
 		do
 			l_int := internal
 
 			if l_int.is_special (an_obj) then
-				l_spec ?= an_obj
-				l_spec.put (a_sub_obj, an_index)
+				if {l_spec: SPECIAL [ANY]} an_obj then
+					l_spec.put (a_sub_obj, an_index)
+				end
 			elseif l_int.is_tuple (an_obj) then
-				l_tuple ?= an_obj
-				l_tuple.put_reference (a_sub_obj, an_index)
+				if {l_tuple: TUPLE} an_obj then
+					l_tuple.put_reference (a_sub_obj, an_index)
+				end
 			else
 				l_int.set_reference_field (an_index, an_obj, a_sub_obj)
 			end
@@ -967,7 +983,7 @@ feature {NONE} -- Implementation
 			l_missing_references: like missing_references
 			l_object_references: like object_references
 			l_tuple: like new_tuple
-			l_list: ARRAYED_LIST [like new_tuple]
+			l_list: ?ARRAYED_LIST [like new_tuple]
 			l_tuple_stack: like tuple_stack
 			l_list_stack: like list_stack
 		do
@@ -1040,10 +1056,10 @@ feature {NONE} -- Implementation
 			new_list_not_void: Result /= Void
 		end
 
-	tuple_stack: ARRAYED_STACK [like new_tuple]
+	tuple_stack: ?ARRAYED_STACK [like new_tuple]
 			-- Storage for `new_tuple'.
 
-	list_stack: ARRAYED_STACK [like new_list]
+	list_stack: ?ARRAYED_STACK [like new_list]
 			-- Storage for `new_list'.
 
 	memory: MEMORY is
@@ -1061,7 +1077,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -1070,10 +1086,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

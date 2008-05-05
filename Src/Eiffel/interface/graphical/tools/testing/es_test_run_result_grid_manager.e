@@ -103,6 +103,14 @@ feature -- Command
 						l_grid_item.set_tooltip (a_item.orignal_eweasel_ouput)
 					end
 				when 2 then
+					if {l_time: DT_DATE_TIME} a_item.test_run_time then
+						create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text (l_time.out)
+					else
+						create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text (time_string)
+					end
+				when 3 then
+					l_grid_item := add_column_source (a_item, a_row)
+				when 4 then
 					l_tag_string := a_item.tag
 					if l_tag_string = Void then
 						l_tag_string := tag_string
@@ -112,15 +120,6 @@ feature -- Command
 					l_edit_item.deactivate_actions.extend (agent on_tag_item_deactive)
 
 					l_grid_item := l_edit_item
-
-				when 3 then
-					if {l_time: DT_DATE_TIME} a_item.test_run_time then
-						create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text (l_time.out)
-					else
-						create {EV_GRID_LABEL_ITEM} l_grid_item.make_with_text (time_string)
-					end
-				when 4 then
-					l_grid_item := add_column_source (a_item, a_row)
 				else
 					check not_possible: False end
 				end
@@ -378,9 +377,9 @@ feature {NONE} -- Implementation queries
 			create Result.make (4)
 
 			Result.extend (interface_names.l_error)
-			Result.extend (interface_names.l_tags)
 			Result.extend (interface_names.t_time)
 			Result.extend (interface_names.l_source)
+			Result.extend (interface_names.l_tags)
 		ensure
 			not_void: Result /= Void
 			column_count_right: Result.count = 4

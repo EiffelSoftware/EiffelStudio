@@ -1,0 +1,17 @@
+test_name	config-missing-name-attribute
+test_description A config file without a name attribute causes the compiler to crash.
+
+define NAME_ATTR ""
+copy_sub 	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error NONE VD00
+
+define NAME_ATTR "name="test""
+copy_sub 	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+
+test_end
